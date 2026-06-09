@@ -3725,6 +3725,7 @@ export enum PaymentProviderType {
 
 export enum PaymentState {
   Canceled = 'canceled',
+  Chargeback = 'chargeback',
   Created = 'created',
   Declined = 'declined',
   Paid = 'paid',
@@ -5500,6 +5501,7 @@ export type SubscriptionDeactivation = {
 };
 
 export enum SubscriptionDeactivationReason {
+  Chargeback = 'chargeback',
   InvoiceNotPaid = 'invoiceNotPaid',
   None = 'none',
   UserReplacedSubscription = 'userReplacedSubscription',

@@ -327,9 +327,10 @@ describe('PayrexxPaymentProvider', () => {
   });
 
   describe('checkIntentStatus', () => {
-    it('should throw on unmappable transaction status', async () => {
+    it('should return null on an unmappable transaction status instead of throwing', async () => {
       const transaction = {
         status: 'refunded',
+        referenceId: 'subscription-1',
       } as Transaction;
       transactionClient.retrieveTransaction = jest
         .fn()
@@ -337,7 +338,7 @@ describe('PayrexxPaymentProvider', () => {
 
       await expect(
         payrexx.checkIntentStatus({ intentID: '5', paymentID: '123' })
-      ).rejects.toThrow('Unmappable Payrexx transaction status');
+      ).resolves.toBeNull();
     });
 
     it('should throw on empty transaction referenceId', async () => {
@@ -373,7 +374,7 @@ describe('PayrexxPaymentProvider', () => {
       expect(gatewayClient.getGateway).not.toBeCalled();
     });
 
-    it('should throw on unmappable gateway status', async () => {
+    it('should return null on an unmappable gateway status instead of throwing', async () => {
       const gateway = {
         status: 'unknown status' as any,
       } as Gateway;
@@ -382,7 +383,7 @@ describe('PayrexxPaymentProvider', () => {
 
       await expect(
         payrexx.checkIntentStatus({ intentID: '6', paymentID: '123' })
-      ).rejects.toThrow('Unmappable Payrexx gateway status');
+      ).resolves.toBeNull();
     });
 
     it('should throw on empty gateway referenceId', async () => {

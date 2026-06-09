@@ -506,6 +506,10 @@ export class SubscriptionService {
           paymentID: payment.id,
         });
 
+        if (!intentState) {
+          continue;
+        }
+
         await paymentProvider.updatePaymentWithIntentState({
           intentState,
         });

@@ -2524,6 +2524,7 @@ enum PaymentProviderType {
 
 enum PaymentState {
   canceled
+  chargeback
   created
   declined
   paid
@@ -3760,6 +3761,7 @@ type SubscriptionDeactivation {
 }
 
 enum SubscriptionDeactivationReason {
+  chargeback
   invoiceNotPaid
   none
   userReplacedSubscription

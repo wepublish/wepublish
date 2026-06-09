@@ -667,4 +667,41 @@ describe('SubscriptionPaymentsService', () => {
     expect(checkIntentStatus).not.toHaveBeenCalled();
     expect(updatePaymentWithIntentState).not.toHaveBeenCalled();
   });
+
+  it('checkInvoiceState skips updating the payment when checkIntentStatus returns null', async () => {
+    const mockInvoice = {
+      id: 'invoice-1',
+      subscription: {
+        paymentMethod: {
+          paymentProviderID: 'provider-1',
+        },
+        memberPlan: {},
+        user: { paymentProviderCustomers: [] },
+      },
+      items: [],
+      subscriptionPeriods: [],
+    };
+
+    const checkIntentStatus = jest.fn().mockResolvedValue(null);
+    const updatePaymentWithIntentState = jest.fn();
+    const paymentProvider = {
+      checkIntentStatus,
+      updatePaymentWithIntentState,
+    };
+    const paymentsService = {
+      findById: jest.fn().mockReturnValue(paymentProvider),
+      findByInvoiceId: jest
+        .fn()
+        .mockResolvedValue([{ id: 'pay-1', intentID: 'intent-1' }]),
+    };
+    const subscriptionService = new SubscriptionService(
+      prismaMock as any,
+      paymentsService as any
+    );
+
+    await subscriptionService.checkInvoiceState(mockInvoice as any);
+
+    expect(checkIntentStatus).toHaveBeenCalledTimes(1);
+    expect(updatePaymentWithIntentState).not.toHaveBeenCalled();
+  });
 });

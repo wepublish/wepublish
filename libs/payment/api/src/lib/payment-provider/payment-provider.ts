@@ -111,7 +111,7 @@ export interface PaymentProvider {
 
   createIntent(props: CreatePaymentIntentProps): Promise<Intent>;
 
-  checkIntentStatus(props: CheckIntentProps): Promise<IntentState>;
+  checkIntentStatus(props: CheckIntentProps): Promise<IntentState | null>;
 
   updatePaymentWithIntentState(
     props: UpdatePaymentWithIntentStateProps
@@ -161,7 +161,9 @@ export abstract class BasePaymentProvider implements PaymentProvider {
 
   abstract createIntent(props: CreatePaymentIntentProps): Promise<Intent>;
 
-  abstract checkIntentStatus(props: CheckIntentProps): Promise<IntentState>;
+  abstract checkIntentStatus(
+    props: CheckIntentProps
+  ): Promise<IntentState | null>;
 
   async updateRemoteSubscriptionAmount(
     props: UpdateRemoteSubscriptionAmountProps
