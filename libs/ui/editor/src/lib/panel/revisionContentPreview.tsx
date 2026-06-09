@@ -126,17 +126,6 @@ export function RevisionContentPreview({
           <CircularProgress />
         </Box>
       : <>
-          {subtitle && (
-            <Header>
-              <Typography
-                variant="subtitle1"
-                color="text.secondary"
-              >
-                {subtitle}
-              </Typography>
-            </Header>
-          )}
-
           <ReadOnlyBlocks>
             <BlockList
               value={blocks}
