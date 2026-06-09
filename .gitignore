@@ -27,3 +27,8 @@ tools/removed_keys.json
 
 # typescript
 tsconfig.tsbuildinfo
+
+# local TLS certificates / keys (e.g. mkcert dev certs) — never commit
+apps/eenews/certificates/
+*.pem
+*.key
