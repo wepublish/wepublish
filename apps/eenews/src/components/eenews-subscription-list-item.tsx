@@ -5,15 +5,13 @@ import {
   Link,
 } from '@wepublish/website/builder';
 
-import { eenewsColors } from '../theme';
-
 const Row = styled(Link)`
   display: grid;
   grid-template-columns: 1.4fr repeat(3, 1fr) auto;
   gap: 16px;
   padding: 22px 0;
   align-items: center;
-  border-bottom: 1px solid ${eenewsColors.line};
+  border-bottom: 1px solid ${({ theme }) => theme.palette.divider};
   text-decoration: none;
   color: inherit;
   cursor: pointer;
@@ -31,40 +29,40 @@ const Row = styled(Link)`
 
 const Name = styled(Typography)`
   display: block;
-  color: ${eenewsColors.accent};
+  color: ${({ theme }) => theme.palette.primary.main};
   margin: 0 0 4px;
 `;
 
 const Meta = styled(Typography)`
   display: block;
-  color: ${eenewsColors.muted};
+  color: ${({ theme }) => theme.palette.text.secondary};
 `;
 
 const Label = styled(Typography)`
   display: block;
-  color: ${eenewsColors.muted};
+  color: ${({ theme }) => theme.palette.text.secondary};
   margin-bottom: 4px;
 `;
 
 const Value = styled(Typography)`
   display: block;
-  color: ${eenewsColors.accent};
+  color: ${({ theme }) => theme.palette.primary.main};
 `;
 
 const Arrow = styled('span')`
   width: 32px;
   height: 32px;
-  border: 1.5px solid ${eenewsColors.accent};
+  border: 1.5px solid ${({ theme }) => theme.palette.primary.main};
   border-radius: 50%;
   display: grid;
   place-items: center;
-  color: ${eenewsColors.accent};
+  color: ${({ theme }) => theme.palette.primary.main};
   transition:
     background 0.15s,
     color 0.15s;
   ${Row}:hover & {
-    background: ${eenewsColors.accent};
-    color: ${eenewsColors.white};
+    background: ${({ theme }) => theme.palette.primary.main};
+    color: ${({ theme }) => theme.palette.background.paper};
   }
   ${({ theme }) => theme.breakpoints.down('md')} {
     display: none;

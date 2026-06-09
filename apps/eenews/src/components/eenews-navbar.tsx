@@ -6,10 +6,10 @@ import {
 } from '@wepublish/website/api';
 import { BuilderNavbarProps, Link } from '@wepublish/website/builder';
 import { useRouter } from 'next/router';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { MdClose, MdMenu, MdSearch } from 'react-icons/md';
 
-import { eenewsColors } from '../theme';
+import { Advertisement } from './advertisement';
 import { EenewsMegaMenu } from './eenews-mega-menu';
 
 const navigationLinkToUrl = (
@@ -45,16 +45,16 @@ const Header = styled('header', {
   position: sticky;
   top: 0;
   z-index: 30;
-  background: ${eenewsColors.bg};
+  background: ${({ theme }) => theme.palette.background.default};
 `;
 
 const TopBar = styled('div')`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 56px;
-  border-bottom: 1.5px solid ${eenewsColors.accent};
-  color: ${eenewsColors.accent};
+  padding: 0 56px 14px;
+  border-bottom: 1.5px solid ${({ theme }) => theme.palette.primary.main};
+  color: ${({ theme }) => theme.palette.primary.main};
 
   ${({ theme }) => theme.breakpoints.down('md')} {
     padding: 10px 20px;
@@ -77,7 +77,7 @@ const TopBarSep = styled('span')`
 `;
 
 const TopBarLink = styled(Link)`
-  color: ${eenewsColors.accent};
+  color: ${({ theme }) => theme.palette.primary.main};
   text-decoration: none;
   &:hover {
     text-decoration: underline;
@@ -90,12 +90,12 @@ const InvoicePill = styled(Link)`
   gap: 8px;
   padding: 5px 12px 5px 10px;
   border-radius: 999px;
-  background: ${eenewsColors.alert};
-  color: ${eenewsColors.white};
+  background: ${({ theme }) => theme.palette.error.main};
+  color: ${({ theme }) => theme.palette.background.paper};
   text-transform: none;
   text-decoration: none;
   &:hover {
-    background: ${eenewsColors.alertDeep};
+    background: ${({ theme }) => theme.palette.error.dark};
     text-decoration: none;
   }
 `;
@@ -104,7 +104,7 @@ const InvoiceDot = styled('span')`
   width: 7px;
   height: 7px;
   border-radius: 999px;
-  background: ${eenewsColors.white};
+  background: ${({ theme }) => theme.palette.background.paper};
   animation: pulse-dot 1.6s infinite;
 
   @keyframes pulse-dot {
@@ -120,7 +120,9 @@ const InvoiceDot = styled('span')`
   }
 `;
 
-const Hero = styled('div')<{ isAnimating: boolean }>`
+const Hero = styled('div', {
+  shouldForwardProp: p => p !== 'isAnimating' && p !== 'isOpen',
+})<{ isAnimating: boolean; isOpen: boolean }>`
   position: relative;
   background-image: linear-gradient(
     90deg,
@@ -129,21 +131,23 @@ const Hero = styled('div')<{ isAnimating: boolean }>`
     #98d6c0 65%,
     #84cdc4 100%
   );
-  border-bottom: 1.5px solid ${eenewsColors.accent};
-  transition: border-bottom-color 0.12s ease;
-  ${({ isAnimating }) =>
-    isAnimating &&
+  border-bottom: 1.5px solid ${({ theme }) => theme.palette.primary.main};
+  transition: border-bottom-color 0.3s ease;
+  ${({ isOpen, isAnimating }) =>
+    (isOpen || isAnimating) &&
     css`
       border-bottom-color: transparent;
+      transition: border-bottom-color 0.04s ease;
     `}
 `;
 
 const HeroInner = styled('div')`
-  max-width: 1340px;
+  max-width: calc(var(--max-width) + var(--skycraper-width));
   margin: 0 auto;
   padding: 0 56px;
   display: flex;
   flex-direction: column;
+  min-height: 230px;
 
   ${({ theme }) => theme.breakpoints.down('md')} {
     padding: 0 20px;
@@ -155,7 +159,7 @@ const HeroRow = styled('div')`
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
   gap: 24px;
-  padding: 22px 0 16px;
+  padding: 38px 0 28px;
 
   ${({ theme }) => theme.breakpoints.down('md')} {
     grid-template-columns: auto 1fr auto;
@@ -179,19 +183,19 @@ const IconBtn = styled('button', {
   width: 42px;
   height: 42px;
   border-radius: 6px;
-  border: 2px solid ${eenewsColors.accent};
-  background: ${({ isActive }) =>
-    isActive ? eenewsColors.accent : 'transparent'};
-  color: ${({ isActive }) =>
-    isActive ? eenewsColors.tag : eenewsColors.accent};
+  border: 2px solid ${({ theme }) => theme.palette.primary.main};
+  background: ${({ theme, isActive }) =>
+    isActive ? theme.palette.primary.main : 'transparent'};
+  color: ${({ theme, isActive }) =>
+    isActive ? theme.palette.secondary.main : theme.palette.primary.main};
   display: inline-flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: background 120ms ease;
   &:hover {
-    background: ${({ isActive }) =>
-      isActive ? eenewsColors.accent : 'rgba(255,255,255,0.45)'};
+    background: ${({ theme, isActive }) =>
+      isActive ? theme.palette.primary.main : 'rgba(255,255,255,0.45)'};
   }
 `;
 
@@ -199,9 +203,9 @@ const IconBtnLink = styled(Link)`
   width: 42px;
   height: 42px;
   border-radius: 6px;
-  border: 2px solid ${eenewsColors.accent};
+  border: 2px solid ${({ theme }) => theme.palette.primary.main};
   background: transparent;
-  color: ${eenewsColors.accent};
+  color: ${({ theme }) => theme.palette.primary.main};
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -216,16 +220,16 @@ const SupportBtn = styled(Link)`
   height: 42px;
   padding: 0 22px;
   border-radius: 6px;
-  border: 2px solid ${eenewsColors.accent};
+  border: 2px solid ${({ theme }) => theme.palette.primary.main};
   background: transparent;
-  color: ${eenewsColors.accent};
+  color: ${({ theme }) => theme.palette.primary.main};
   display: inline-flex;
   align-items: center;
   text-decoration: none;
   transition: all 120ms ease;
   &:hover {
-    background: ${eenewsColors.accent};
-    color: ${eenewsColors.white};
+    background: ${({ theme }) => theme.palette.primary.main};
+    color: ${({ theme }) => theme.palette.background.paper};
   }
   ${({ theme }) => theme.breakpoints.down('md')} {
     padding: 0 14px;
@@ -236,7 +240,7 @@ const LogoLink = styled(Link)`
   display: inline-flex;
   align-items: center;
   text-decoration: none;
-  color: ${eenewsColors.accent};
+  color: ${({ theme }) => theme.palette.primary.main};
   background: none;
   border: 0;
   padding: 0;
@@ -297,7 +301,7 @@ const NavLink = styled(Link, {
   background: none;
   border: 0;
   padding: 0;
-  color: ${eenewsColors.accent};
+  color: ${({ theme }) => theme.palette.primary.main};
   font-weight: ${({ isActive }) => (isActive ? 700 : 300)};
   font-size: 22px;
   letter-spacing: -0.005em;
@@ -311,6 +315,8 @@ const NavLink = styled(Link, {
   }
 `;
 
+const LeaderboardPlacer = styled('div')``;
+
 export const EenewsNavbar = ({
   className,
   slug,
@@ -321,6 +327,7 @@ export const EenewsNavbar = ({
   children,
 }: BuilderNavbarProps) => {
   const router = useRouter();
+  const navbarRef = useRef<HTMLElement>(null);
   const [isOpen, setOpen] = useState(false);
   const [animating, setAnimating] = useState(false);
   const [today, setToday] = useState<string>('');
@@ -328,6 +335,34 @@ export const EenewsNavbar = ({
   useEffect(() => {
     setToday(formatDateDE(new Date()));
   }, []);
+
+  const updateNavbarHeight = useCallback(() => {
+    const el = navbarRef.current;
+    if (!el) {
+      return;
+    }
+    el.ownerDocument.documentElement.style.setProperty(
+      '--navbar-height',
+      `${el.getBoundingClientRect().height}px`
+    );
+  }, []);
+
+  useEffect(() => {
+    const el = navbarRef.current;
+    if (!el) {
+      return;
+    }
+
+    if (typeof ResizeObserver !== 'undefined') {
+      const observer = new ResizeObserver(() => updateNavbarHeight());
+      observer.observe(el);
+      return () => observer.disconnect();
+    }
+
+    updateNavbarHeight();
+    window.addEventListener('resize', updateNavbarHeight);
+    return () => window.removeEventListener('resize', updateNavbarHeight);
+  }, [updateNavbarHeight]);
 
   const close = useCallback(() => setOpen(false), []);
 
@@ -361,11 +396,34 @@ export const EenewsNavbar = ({
     if (!url) {
       return false;
     }
-    return router.asPath === url || router.asPath.startsWith(url + '/');
+    const path = router.asPath.split(/[?#]/)[0];
+    return path === url || path.startsWith(url + '/');
+  };
+
+  const tagSlugFromPath = (path: string): string | undefined => {
+    const match = path.match(/^\/a\/tag\/(.+)$/);
+    return match ? decodeURIComponent(match[1]).toLowerCase() : undefined;
+  };
+  const topicSlugs = new Set(
+    (mainNav?.links ?? [])
+      .map(l => {
+        const u = navigationLinkToUrl(l);
+        return u ? tagSlugFromPath(u) : undefined;
+      })
+      .filter((s): s is string => Boolean(s))
+  );
+  const isDossierActive = (): boolean => {
+    const path = router.asPath.split(/[?#]/)[0];
+    if (path === '/a/tag') {
+      return true;
+    }
+    const slug = tagSlugFromPath(path);
+    return slug ? !topicSlugs.has(slug) : false;
   };
 
   return (
     <Header
+      ref={navbarRef}
       className={className}
       isOpen={isOpen}
       isAnimating={animating}
@@ -379,6 +437,9 @@ export const EenewsNavbar = ({
             {today}
           </Typography>
         </TopBarLeft>
+        <LeaderboardPlacer>
+          <Advertisement type={'leaderboard'} />
+        </LeaderboardPlacer>
         <TopBarRight>
           {hasUnpaidInvoices && (
             <InvoicePill
@@ -420,7 +481,10 @@ export const EenewsNavbar = ({
         </TopBarRight>
       </TopBar>
 
-      <Hero isAnimating={animating}>
+      <Hero
+        isAnimating={animating}
+        isOpen={isOpen}
+      >
         <HeroInner>
           <HeroRow>
             <HeroActions>
@@ -471,11 +535,13 @@ export const EenewsNavbar = ({
               if (!url) {
                 return null;
               }
+              const isActive =
+                url === '/a/tag' ? isDossierActive() : isActiveUrl(url);
               return (
                 <NavLink
                   key={`${link.label}-${idx}`}
                   href={url}
-                  isActive={isActiveUrl(url)}
+                  isActive={isActive}
                 >
                   {link.label}
                 </NavLink>

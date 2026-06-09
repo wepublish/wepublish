@@ -93,6 +93,10 @@ declare module '@mui/material/styles' {
     btnDefault?: CSSProperties;
     supportBtn?: CSSProperties;
   }
+
+  interface TypeBackground {
+    alt: string;
+  }
 }
 
 declare module '@mui/material/Typography' {

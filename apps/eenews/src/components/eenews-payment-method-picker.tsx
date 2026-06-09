@@ -2,8 +2,6 @@ import styled from '@emotion/styled';
 import { Typography } from '@mui/material';
 import { BuilderPaymentMethodPickerProps } from '@wepublish/website/builder';
 
-import { eenewsColors } from '../theme';
-
 const Wrap = styled('div')`
   display: grid;
   gap: 12px;
@@ -17,10 +15,11 @@ const Row = styled('label', {
   gap: 18px;
   padding: 18px 22px;
   border: 1.5px solid
-    ${({ selected }) => (selected ? eenewsColors.accent : eenewsColors.line)};
+    ${({ theme, selected }) =>
+      selected ? theme.palette.primary.main : theme.palette.divider};
   border-width: ${({ selected }) => (selected ? 2 : 1.5)}px;
-  background: ${({ selected }) =>
-    selected ? eenewsColors.bgAlt : eenewsColors.white};
+  background: ${({ theme, selected }) =>
+    selected ? theme.palette.background.alt : theme.palette.background.paper};
   cursor: pointer;
   align-items: center;
 `;
@@ -30,8 +29,8 @@ const Ic = styled('span')`
   height: 44px;
   display: grid;
   place-items: center;
-  background: ${eenewsColors.accent};
-  color: ${eenewsColors.white};
+  background: ${({ theme }) => theme.palette.primary.main};
+  color: ${({ theme }) => theme.palette.background.paper};
 `;
 
 const Radio = styled('span', {
@@ -41,15 +40,16 @@ const Radio = styled('span', {
   height: 22px;
   border-radius: 50%;
   border: ${({ selected }) => (selected ? 2 : 1.5)}px solid
-    ${({ selected }) => (selected ? eenewsColors.accent : eenewsColors.line)};
+    ${({ theme, selected }) =>
+      selected ? theme.palette.primary.main : theme.palette.divider};
   display: grid;
   place-items: center;
   &::after {
     content: '';
     width: 10px;
     height: 10px;
-    background: ${({ selected }) =>
-      selected ? eenewsColors.accent : 'transparent'};
+    background: ${({ theme, selected }) =>
+      selected ? theme.palette.primary.main : 'transparent'};
     border-radius: 50%;
   }
 `;

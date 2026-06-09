@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import { PropsWithChildren } from 'react';
 
 const Shell = styled('div')`
-  max-width: 1340px;
+  max-width: var(--max-width);
   margin: 0 auto;
   padding: 56px;
   box-sizing: border-box;

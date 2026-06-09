@@ -15,7 +15,6 @@ import {
 } from '@wepublish/website/builder';
 import { MdChevronLeft } from 'react-icons/md';
 
-import { eenewsColors } from '../theme';
 import { ArticlePropertiesContext } from './article-properties-context';
 import { EenewsTeaser } from './blocks/eenews-teaser';
 
@@ -36,7 +35,7 @@ const BackLink = styled(Link)`
   border: 0;
   padding: 0;
   margin: 0 0 40px;
-  color: ${eenewsColors.accent};
+  color: ${({ theme }) => theme.palette.primary.main};
   text-decoration: none;
   &:hover {
     text-decoration: underline;
@@ -48,7 +47,7 @@ const Eyebrow = styled('div')`
   align-items: center;
   gap: 8px;
   margin-bottom: 16px;
-  color: ${eenewsColors.accent};
+  color: ${({ theme }) => theme.palette.primary.main};
 `;
 
 const MetaSep = styled('span')`
@@ -60,14 +59,14 @@ const MetaSep = styled('span')`
 const TitleLine = styled(Typography)`
   display: block;
   margin: 0 0 28px;
-  color: ${eenewsColors.accent};
+  color: ${({ theme }) => theme.palette.primary.main};
   text-wrap: balance;
 `;
 
 const LeadTop = styled(Typography)`
   display: block;
   margin: 0 0 20px;
-  color: ${eenewsColors.accent};
+  color: ${({ theme }) => theme.palette.primary.main};
 `;
 
 const Byline = styled('div')`
@@ -76,7 +75,7 @@ const Byline = styled('div')`
   gap: 18px;
   margin: 0 0 28px;
   padding-bottom: 18px;
-  border-bottom: 1px solid ${eenewsColors.line};
+  border-bottom: 1px solid ${({ theme }) => theme.palette.divider};
 `;
 
 const BylineItem = styled('span')`
@@ -86,11 +85,11 @@ const BylineItem = styled('span')`
 `;
 
 const BylineName = styled(Typography)`
-  color: ${eenewsColors.accent};
+  color: ${({ theme }) => theme.palette.primary.main};
 `;
 
 const BylineRole = styled(Typography)`
-  color: ${eenewsColors.muted};
+  color: ${({ theme }) => theme.palette.text.secondary};
 `;
 
 const HeroFigure = styled('figure')`
@@ -117,18 +116,18 @@ const BreakingBadge = styled(Typography)`
   height: 30px;
   padding: 0 14px;
   background: #d6342f;
-  color: ${eenewsColors.white};
+  color: ${({ theme }) => theme.palette.background.paper};
   border-radius: 3px;
 `;
 
 const Body = styled('div')`
-  color: ${eenewsColors.text};
+  color: ${({ theme }) => theme.palette.text.primary};
 `;
 
 const ShareRow = styled('div')`
   margin-top: 48px;
   padding-top: 24px;
-  border-top: 1px solid ${eenewsColors.line};
+  border-top: 1px solid ${({ theme }) => theme.palette.divider};
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -136,7 +135,7 @@ const ShareRow = styled('div')`
 `;
 
 const ShareLabel = styled(Typography)`
-  color: ${eenewsColors.accent};
+  color: ${({ theme }) => theme.palette.primary.main};
 `;
 
 const Likes = styled('div')`
@@ -144,11 +143,11 @@ const Likes = styled('div')`
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  color: ${eenewsColors.muted};
+  color: ${({ theme }) => theme.palette.text.secondary};
 `;
 
 const Related = styled('section')`
-  max-width: 1340px;
+  max-width: var(--max-width);
   margin: 0 auto;
   padding: 48px 56px 80px;
   ${({ theme }) => theme.breakpoints.down('sm')} {
@@ -160,7 +159,7 @@ const RelatedTitle = styled(Typography)`
   display: block;
   margin: 0 0 28px;
   text-align: center;
-  color: ${eenewsColors.accent};
+  color: ${({ theme }) => theme.palette.primary.main};
 `;
 
 const RelatedGrid = styled('div')`
@@ -223,6 +222,7 @@ export const EenewsArticle = ({
 
   const latest = article.latest;
   const dateStr = formatDateDE(article.publishedAt);
+  const topicLabel = article.tags?.find(t => t.main)?.tag ?? undefined;
   const authors = (latest.authors ?? []).filter(a => !a.hideOnArticle);
   const hero = latest.image ?? undefined;
   const url = article.url ?? '';
@@ -249,10 +249,10 @@ export const EenewsArticle = ({
         )}
 
         <Eyebrow>
-          {latest.preTitle && (
-            <Typography variant="articleEyebrow">{latest.preTitle}</Typography>
+          {topicLabel && (
+            <Typography variant="articleEyebrow">{topicLabel}</Typography>
           )}
-          {latest.preTitle && dateStr && <MetaSep>|</MetaSep>}
+          {topicLabel && dateStr && <MetaSep>|</MetaSep>}
           {dateStr && (
             <Typography variant="articleEyebrow">{dateStr}</Typography>
           )}

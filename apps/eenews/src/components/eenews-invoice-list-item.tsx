@@ -2,15 +2,13 @@ import styled from '@emotion/styled';
 import { Button, Typography } from '@mui/material';
 import { BuilderInvoiceListItemProps } from '@wepublish/website/builder';
 
-import { eenewsColors } from '../theme';
-
 const Row = styled('div')`
   display: grid;
   grid-template-columns: 110px 1fr 130px 100px auto;
   gap: 16px;
   align-items: center;
   padding: 14px 0;
-  border-bottom: 1px solid ${eenewsColors.line};
+  border-bottom: 1px solid ${({ theme }) => theme.palette.divider};
   &:last-child {
     border-bottom: 0;
   }
@@ -22,22 +20,22 @@ const Row = styled('div')`
 
 const Nr = styled(Typography)`
   display: block;
-  color: ${eenewsColors.accent};
+  color: ${({ theme }) => theme.palette.primary.main};
 `;
 
 const Desc = styled(Typography)`
   display: block;
-  color: ${eenewsColors.text};
+  color: ${({ theme }) => theme.palette.text.primary};
 `;
 
 const Date = styled(Typography)`
   display: block;
-  color: ${eenewsColors.muted};
+  color: ${({ theme }) => theme.palette.text.secondary};
 `;
 
 const Amount = styled(Typography)`
   display: block;
-  color: ${eenewsColors.accent};
+  color: ${({ theme }) => theme.palette.primary.main};
   text-align: right;
   ${({ theme }) => theme.breakpoints.down('md')} {
     text-align: left;

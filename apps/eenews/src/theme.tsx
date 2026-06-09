@@ -1,6 +1,7 @@
 import { createTheme, Theme, ThemeOptions } from '@mui/material';
 import { theme as WePTheme } from '@wepublish/ui';
 import { Manrope, Source_Serif_4 } from 'next/font/google';
+import localFont from 'next/font/local';
 import { PartialDeep } from 'type-fest';
 
 const manrope = Manrope({
@@ -9,6 +10,36 @@ const manrope = Manrope({
   subsets: ['latin', 'latin-ext'],
   display: 'swap',
   preload: true,
+});
+
+export const gilroy = localFont({
+  src: [
+    {
+      path: '../public/fonts/gilroy/Gilroy-Light.woff2',
+      weight: '300',
+      style: 'normal',
+    },
+    {
+      path: '../public/fonts/gilroy/Gilroy.woff2',
+      weight: '400',
+      style: 'normal',
+    },
+    {
+      path: '../public/fonts/gilroy/Gilroy-Medium.woff2',
+      weight: '500',
+      style: 'normal',
+    },
+    {
+      path: '../public/fonts/gilroy/Gilroy-Bold.woff2',
+      weight: '700',
+      style: 'normal',
+    },
+    {
+      path: '../public/fonts/gilroy/Gilroy-ExtraBold.woff2',
+      weight: '800',
+      style: 'normal',
+    },
+  ],
 });
 
 const sourceSerif = Source_Serif_4({
@@ -20,6 +51,7 @@ const sourceSerif = Source_Serif_4({
 });
 
 const sans = [manrope.style.fontFamily, 'system-ui', 'sans-serif'].join(',');
+
 const serif = [
   sourceSerif.style.fontFamily,
   '"Source Serif Pro"',
@@ -83,11 +115,16 @@ const ui = (
 
 const theme = createTheme(WePTheme, {
   palette: {
-    primary: { main: eenewsColors.accent, contrastText: eenewsColors.white },
+    primary: {
+      main: eenewsColors.accent,
+      dark: eenewsColors.accentDark,
+      contrastText: eenewsColors.white,
+    },
     secondary: { main: eenewsColors.tag, contrastText: eenewsColors.accent },
     background: {
       default: eenewsColors.bg,
       paper: eenewsColors.white,
+      alt: eenewsColors.bgAlt,
     },
     text: {
       primary: eenewsColors.text,

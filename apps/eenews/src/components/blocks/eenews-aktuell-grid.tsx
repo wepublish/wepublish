@@ -8,11 +8,11 @@ import {
 } from '@wepublish/website/builder';
 import { useRouter } from 'next/router';
 
-import { eenewsColors } from '../../theme';
+import { enrichTeasersWithAds } from '../teasers/eenews-teaser-ads';
 import { EenewsTeaser } from './eenews-teaser';
 
 const Section = styled('section')`
-  background: ${eenewsColors.bg};
+  background: ${({ theme }) => theme.palette.background.default};
   padding: 56px;
   ${({ theme }) => theme.breakpoints.down('md')} {
     padding: 36px 20px;
@@ -20,7 +20,7 @@ const Section = styled('section')`
 `;
 
 const Head = styled('div')`
-  max-width: 1340px;
+  max-width: var(--max-width);
   margin: 0 auto 28px;
   display: flex;
   align-items: flex-end;
@@ -34,7 +34,7 @@ const Head = styled('div')`
 
 const Title = styled(Typography)`
   display: block;
-  color: ${eenewsColors.accent};
+  color: ${({ theme }) => theme.palette.primary.main};
   margin: 0;
 `;
 
@@ -42,14 +42,14 @@ const Toggle = styled('div')`
   display: inline-flex;
   gap: 18px;
   align-items: center;
-  color: ${eenewsColors.accent};
+  color: ${({ theme }) => theme.palette.primary.main};
 `;
 
 const ToggleSep = styled('span')`
   display: inline-block;
   width: 1px;
   height: 22px;
-  background: ${eenewsColors.accent};
+  background: ${({ theme }) => theme.palette.primary.main};
   opacity: 0.6;
   margin: 0 2px;
 `;
@@ -60,7 +60,7 @@ const ToggleLink = styled('a', {
   background: none;
   border: 0;
   padding: 4px 2px;
-  color: ${eenewsColors.accent};
+  color: ${({ theme }) => theme.palette.primary.main};
   opacity: ${({ isActive }) => (isActive ? 1 : 0.55)};
   font-weight: ${({ isActive }) => (isActive ? 700 : 400)};
   text-decoration: none;
@@ -71,7 +71,7 @@ const ToggleLink = styled('a', {
 `;
 
 const Grid = styled('div')`
-  max-width: 1340px;
+  max-width: var(--max-width);
   margin: 0 auto;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -96,7 +96,7 @@ export const EenewsAktuellGrid = ({
   const {
     blocks: { Teaser },
   } = useWebsiteBuilder();
-  const filled = (teasers ?? []).filter(isFilledTeaser);
+  const filled = enrichTeasersWithAds((teasers ?? []).filter(isFilledTeaser));
 
   const isCH = router.asPath === '/';
   const isIntl = router.asPath.startsWith('/a/tag/international');

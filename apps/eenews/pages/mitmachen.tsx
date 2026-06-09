@@ -12,7 +12,6 @@ import { NextPageContext } from 'next';
 import { ComponentProps } from 'react';
 
 import { EenewsPageShell } from '../src/components/eenews-page-shell';
-import { eenewsColors } from '../src/theme';
 
 const IntroShell = styled(EenewsPageShell)`
   padding-top: 36px;
@@ -31,7 +30,7 @@ const IntroTitle = styled(Typography)`
   line-height: 1;
   font-weight: 800;
   letter-spacing: -0.02em;
-  color: ${eenewsColors.accent};
+  color: ${({ theme }) => theme.palette.primary.main};
 `;
 
 const BodyShell = styled(EenewsPageShell)`
@@ -49,7 +48,7 @@ const BodyInner = styled('div')`
 
 const BodyParagraph = styled(Typography)`
   display: block;
-  color: ${eenewsColors.text};
+  color: ${({ theme }) => theme.palette.text.primary};
   margin: 0;
 `;
 

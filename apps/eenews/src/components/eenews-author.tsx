@@ -7,20 +7,19 @@ import {
   WebsiteBuilderProvider,
 } from '@wepublish/website/builder';
 
-import { eenewsColors } from '../theme';
 import { EenewsTeaser } from './blocks/eenews-teaser';
 
 const Hero = styled('section')`
   padding: 64px 56px 48px;
-  background: ${eenewsColors.bg};
-  border-bottom: 1px solid ${eenewsColors.line};
+  background: ${({ theme }) => theme.palette.background.default};
+  border-bottom: 1px solid ${({ theme }) => theme.palette.divider};
   ${({ theme }) => theme.breakpoints.down('sm')} {
     padding: 32px 20px 24px;
   }
 `;
 
 const HeroInner = styled('div')`
-  max-width: 1340px;
+  max-width: var(--max-width);
   margin: 0 auto;
   display: grid;
   grid-template-columns: 160px 1fr;
@@ -36,10 +35,10 @@ const AvatarLarge = styled('div')`
   width: 160px;
   height: 160px;
   border-radius: 50%;
-  background: ${eenewsColors.tag};
+  background: ${({ theme }) => theme.palette.secondary.main};
   display: grid;
   place-items: center;
-  color: ${eenewsColors.accent};
+  color: ${({ theme }) => theme.palette.primary.main};
   ${({ theme }) => theme.breakpoints.down('sm')} {
     width: 96px;
     height: 96px;
@@ -53,33 +52,33 @@ const AvatarInitials = styled(Typography)`
 const Name = styled(Typography)`
   display: block;
   margin: 0 0 8px;
-  color: ${eenewsColors.accent};
+  color: ${({ theme }) => theme.palette.primary.main};
 `;
 
 const Role = styled(Typography)`
   display: block;
-  color: ${eenewsColors.accent};
+  color: ${({ theme }) => theme.palette.primary.main};
   opacity: 0.7;
   margin-bottom: 16px;
 `;
 
 const Bio = styled(Typography)`
   display: block;
-  color: ${eenewsColors.text};
+  color: ${({ theme }) => theme.palette.text.primary};
   max-width: 64ch;
   margin: 0;
 `;
 
 const ArticlesSection = styled('section')`
   padding: 56px;
-  background: ${eenewsColors.bg};
+  background: ${({ theme }) => theme.palette.background.default};
   ${({ theme }) => theme.breakpoints.down('md')} {
     padding: 36px 20px;
   }
 `;
 
 const Grid = styled('div')`
-  max-width: 1340px;
+  max-width: var(--max-width);
   margin: 0 auto;
   display: grid;
   grid-template-columns: repeat(3, 1fr);

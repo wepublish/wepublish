@@ -1,12 +1,10 @@
 import styled from '@emotion/styled';
-import { Typography } from '@mui/material';
+import { Typography, useTheme } from '@mui/material';
 import {
   FullNavigationFragment,
   NavigationListQuery,
 } from '@wepublish/website/api';
 import { BuilderFooterProps, Link } from '@wepublish/website/builder';
-
-import { eenewsColors } from '../theme';
 
 const navigationLinkToUrl = (
   link: FullNavigationFragment['links'][number]
@@ -28,7 +26,7 @@ const findNavBySlug = (
   data?.navigations?.find(n => n.key === key) ?? undefined;
 
 const Wrapper = styled('footer')`
-  background: ${eenewsColors.accent};
+  background: ${({ theme }) => theme.palette.primary.main};
   color: #d8ecf6;
   padding: 56px 56px 24px;
   margin-top: auto;
@@ -38,7 +36,7 @@ const Wrapper = styled('footer')`
 `;
 
 const Inner = styled('div')`
-  max-width: 1340px;
+  max-width: calc(var(--max-width) + var(--skycraper-width));
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1.4fr 1fr 1fr 1.2fr;
@@ -57,7 +55,7 @@ const Col = styled('div')``;
 const Heading = styled(Typography)`
   display: block;
   margin: 0 0 14px;
-  color: ${eenewsColors.white};
+  color: ${({ theme }) => theme.palette.background.paper};
 `;
 
 const Tagline = styled(Typography)`
@@ -79,7 +77,7 @@ const ColLink = styled(Link)`
   color: #d8ecf6;
   text-decoration: none;
   &:hover {
-    color: ${eenewsColors.white};
+    color: ${({ theme }) => theme.palette.background.paper};
   }
 `;
 
@@ -87,16 +85,16 @@ const SupportBtn = styled(Link)`
   height: 42px;
   padding: 0 22px;
   border-radius: 6px;
-  border: 2px solid ${eenewsColors.white};
+  border: 2px solid ${({ theme }) => theme.palette.background.paper};
   background: transparent;
-  color: ${eenewsColors.white};
+  color: ${({ theme }) => theme.palette.background.paper};
   display: inline-flex;
   align-items: center;
   text-decoration: none;
   transition: all 120ms ease;
   &:hover {
-    background: ${eenewsColors.white};
-    color: ${eenewsColors.accent};
+    background: ${({ theme }) => theme.palette.background.paper};
+    color: ${({ theme }) => theme.palette.primary.main};
   }
 `;
 
@@ -109,7 +107,7 @@ const FooterLogo = styled('img')`
 `;
 
 const Bottom = styled('div')`
-  max-width: 1340px;
+  max-width: var(--max-width);
   margin: 24px auto 0;
   color: rgba(255, 255, 255, 0.55);
   display: flex;
@@ -127,7 +125,7 @@ const PoweredBy = styled(Link)`
   text-decoration: none;
   transition: color 140ms;
   &:hover {
-    color: ${eenewsColors.white};
+    color: ${({ theme }) => theme.palette.background.paper};
   }
 `;
 
@@ -153,6 +151,7 @@ export const EenewsFooter = ({
   categorySlugs,
   data,
 }: BuilderFooterProps) => {
+  const theme = useTheme();
   const themenSlug = categorySlugs?.[0]?.[0];
   const magazinSlug = categorySlugs?.[0]?.[1];
 
@@ -259,7 +258,7 @@ export const EenewsFooter = ({
             <rect
               width="141.6"
               height="23.7"
-              fill={eenewsColors.accent}
+              fill={theme.palette.primary.main}
             />
             <g fill="currentColor">
               <path d="M73.6 10.3v3.2q0 2.4-1.8 2.4c-1.8 0-1.7-.8-1.7-2.2V7.3h-3.3v7.4c0 2.6 1.6 4.4 4 4.4s2.5-.5 3.2-1.4v1.2h3.2V7.1h-3.4v3.1h-.2zm21.8-3.8v12.1h3.3V3.4h-3.3zm10.3-3.1h-3.3v3.1h3.3zm-3.4 6.9v8.4h3.3V9.4h-3.3zm-44-3.4c-1.4 0-2.4.5-3.2 1.6V7.2h-4.6l-.5 3.1h1.8v11.8h3.3v-4.5c1.2 1 2 1.3 3.4 1.3 3 0 5.5-2.7 5.5-5.9s-2.6-6-5.7-6m-.4 8.7c-1.6 0-2.8-1.2-2.8-2.8s1.3-2.8 2.8-2.8 2.8 1.2 2.8 2.8-1.2 2.8-2.8 2.8m74.1-.2v-3.7c0-3-1.6-4.9-4-4.9s-2.4.6-3.1 1.8V3.4h-3.3v15.3h3.3v-6.1c0-1.5.7-2.3 2-2.3s1.9.7 1.9 2.4v6h4.5l.5-3.1H132zm-16.8-8.2c-.5-.4-1.2-.6-2-.6-2.4 0-4.3 1.7-4.3 3.8s.5 2.2 1.5 2.7c.7.5.9.5 3 1.1 1.2.4 1.6.6 1.6 1.2s-.5 1-1.2 1-1.7-.1-1.8-1h-2.8l-.5 2.9h3.1c.7.4 1.5.7 2.4.7 2.4 0 4.3-1.7 4.3-3.9s0-1-.3-1.5c-.5-1-1.2-1.5-2.7-2l-1.5-.4c-1.2-.3-1.5-.6-1.5-1.1s.5-.8 1.1-.8 1.5 0 1.6.8h2.8l.5-2.9zm-27.8-.4c-1.4 0-2.4.4-3.1 1.3V3.4h-4.6l-.5 3.1H81v12.1h3.3v-1.3c.9 1.1 1.9 1.5 3.2 1.5 3 0 5.5-2.7 5.5-6s-2.5-6-5.6-6m-.5 8.9c-1.5 0-2.7-1.3-2.7-2.8s1.2-2.8 2.7-2.8 2.7 1.2 2.7 2.8-1.2 2.8-2.7 2.8" />
@@ -271,7 +270,7 @@ export const EenewsFooter = ({
               fill="currentColor"
             />
             <g
-              fill={eenewsColors.accent}
+              fill={theme.palette.primary.main}
               clipPath="url(#ee-wp-clip)"
             >
               <path d="M73.6 10.3v3.2q0 2.4-1.8 2.4c-1.8 0-1.7-.8-1.7-2.2V7.3h-3.3v7.4c0 2.6 1.6 4.4 4 4.4s2.5-.5 3.2-1.4v1.2h3.2V7.1h-3.4v3.1h-.2zm21.8-3.8v12.1h3.3V3.4h-3.3zm10.3-3.1h-3.3v3.1h3.3zm-3.4 6.9v8.4h3.3V9.4h-3.3zm-44-3.4c-1.4 0-2.4.5-3.2 1.6V7.2h-4.6l-.5 3.1h1.8v11.8h3.3v-4.5c1.2 1 2 1.3 3.4 1.3 3 0 5.5-2.7 5.5-5.9s-2.6-6-5.7-6m-.4 8.7c-1.6 0-2.8-1.2-2.8-2.8s1.3-2.8 2.8-2.8 2.8 1.2 2.8 2.8-1.2 2.8-2.8 2.8m74.1-.2v-3.7c0-3-1.6-4.9-4-4.9s-2.4.6-3.1 1.8V3.4h-3.3v15.3h3.3v-6.1c0-1.5.7-2.3 2-2.3s1.9.7 1.9 2.4v6h4.5l.5-3.1H132zm-16.8-8.2c-.5-.4-1.2-.6-2-.6-2.4 0-4.3 1.7-4.3 3.8s.5 2.2 1.5 2.7c.7.5.9.5 3 1.1 1.2.4 1.6.6 1.6 1.2s-.5 1-1.2 1-1.7-.1-1.8-1h-2.8l-.5 2.9h3.1c.7.4 1.5.7 2.4.7 2.4 0 4.3-1.7 4.3-3.9s0-1-.3-1.5c-.5-1-1.2-1.5-2.7-2l-1.5-.4c-1.2-.3-1.5-.6-1.5-1.1s.5-.8 1.1-.8 1.5 0 1.6.8h2.8l.5-2.9zm-27.8-.4c-1.4 0-2.4.4-3.1 1.3V3.4h-4.6l-.5 3.1H81v12.1h3.3v-1.3c.9 1.1 1.9 1.5 3.2 1.5 3 0 5.5-2.7 5.5-6s-2.5-6-5.6-6m-.5 8.9c-1.5 0-2.7-1.3-2.7-2.8s1.2-2.8 2.7-2.8 2.7 1.2 2.7 2.8-1.2 2.8-2.7 2.8" />

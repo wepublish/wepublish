@@ -2,20 +2,18 @@ import styled from '@emotion/styled';
 import { Radio, Typography } from '@mui/material';
 import { BuilderMemberPlanItemProps } from '@wepublish/website/builder';
 
-import { eenewsColors } from '../theme';
-
 const PlanCard = styled('label', {
   shouldForwardProp: p => p !== 'selected',
 })<{ selected?: boolean }>`
   position: relative;
-  background: ${({ selected }) =>
-    selected ? eenewsColors.accent : eenewsColors.white};
-  color: ${({ selected }) =>
-    selected ? eenewsColors.white : eenewsColors.accent};
-  border: ${({ selected }) =>
+  background: ${({ theme, selected }) =>
+    selected ? theme.palette.primary.main : theme.palette.background.paper};
+  color: ${({ theme, selected }) =>
+    selected ? theme.palette.background.paper : theme.palette.primary.main};
+  border: ${({ theme, selected }) =>
     selected ?
-      `2px solid ${eenewsColors.accent}`
-    : `1.5px solid ${eenewsColors.accent}`};
+      `2px solid ${theme.palette.primary.main}`
+    : `1.5px solid ${theme.palette.primary.main}`};
   padding: 36px 32px;
   display: flex;
   flex-direction: column;
@@ -72,11 +70,11 @@ const SelectButton = styled('span', {
   padding: 0 22px;
   border-radius: 6px;
   border: 1px solid
-    ${({ selected }) => (selected ? eenewsColors.white : eenewsColors.accent)};
-  background: ${({ selected }) =>
-    selected ? eenewsColors.white : 'transparent'};
-  color: ${({ selected }) =>
-    selected ? eenewsColors.accent : eenewsColors.accent};
+    ${({ theme, selected }) =>
+      selected ? theme.palette.background.paper : theme.palette.primary.main};
+  background: ${({ theme, selected }) =>
+    selected ? theme.palette.background.paper : 'transparent'};
+  color: ${({ theme }) => theme.palette.primary.main};
   font-family: inherit;
   font-weight: 700;
   font-size: 15px;
@@ -87,10 +85,10 @@ const SelectButton = styled('span', {
     border-color 160ms ease;
 
   ${PlanCard}:hover & {
-    background: ${({ selected }) =>
-      selected ? eenewsColors.white : eenewsColors.accent};
-    color: ${({ selected }) =>
-      selected ? eenewsColors.accent : eenewsColors.white};
+    background: ${({ theme, selected }) =>
+      selected ? theme.palette.background.paper : theme.palette.primary.main};
+    color: ${({ theme, selected }) =>
+      selected ? theme.palette.primary.main : theme.palette.background.paper};
   }
 `;
 

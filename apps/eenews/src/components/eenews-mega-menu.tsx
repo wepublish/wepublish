@@ -6,8 +6,6 @@ import {
 } from '@wepublish/website/api';
 import { Link } from '@wepublish/website/builder';
 
-import { eenewsColors } from '../theme';
-
 const navigationLinkToUrl = (
   link: FullNavigationFragment['links'][number]
 ): string | undefined => {
@@ -31,7 +29,7 @@ const MegaOverlay = styled('div', {
   shouldForwardProp: p => p !== 'isOpen',
 })<{ isOpen: boolean }>`
   position: absolute;
-  top: 90px;
+  top: 140px;
   left: 0;
   right: 0;
   z-index: 5;
@@ -47,22 +45,22 @@ const MegaOverlay = styled('div', {
     #98d6c0 65%,
     #84cdc4 100%
   );
-  border-bottom: 0 solid ${eenewsColors.accent};
+  border-bottom: 0 solid ${({ theme }) => theme.palette.primary.main};
   box-shadow: 0 8px 24px rgba(25, 90, 125, 0);
   transition:
-    max-height 0.4s cubic-bezier(0.22, 0.61, 0.36, 1),
-    opacity 0.25s ease,
-    padding 0.4s cubic-bezier(0.22, 0.61, 0.36, 1),
-    border-bottom-width 0.4s cubic-bezier(0.22, 0.61, 0.36, 1),
+    max-height 0.55s cubic-bezier(0.22, 0.61, 0.36, 1),
+    opacity 0.55s ease,
+    padding 0.55s cubic-bezier(0.22, 0.61, 0.36, 1),
+    border-bottom-width 0.55s cubic-bezier(0.22, 0.61, 0.36, 1),
     box-shadow 0.3s ease;
 
-  ${({ isOpen }) =>
+  ${({ theme, isOpen }) =>
     isOpen &&
     css`
       max-height: 700px;
       opacity: 1;
       padding: 28px 0 36px;
-      border-bottom: 1.5px solid ${eenewsColors.accent};
+      border-bottom: 1.5px solid ${theme.palette.primary.main};
       box-shadow: 0 28px 28px -12px rgba(25, 90, 125, 0.16);
     `}
 
@@ -76,12 +74,12 @@ const MegaOverlay = styled('div', {
 `;
 
 const MegaGrid = styled('div')`
-  max-width: 1340px;
+  max-width: var(--max-width);
   margin: 0 auto;
   padding: 0 56px;
   box-sizing: border-box;
   display: grid;
-  grid-template-columns: 1fr 2fr 1fr 1.2fr;
+  grid-template-columns: 1fr 1fr 1fr 1.2fr;
   gap: 32px 56px;
   align-items: start;
 
@@ -97,19 +95,9 @@ const MegaGrid = styled('div')`
   }
 `;
 
-const Dossiers2Col = styled('div')`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0 32px;
-
-  ${({ theme }) => theme.breakpoints.down('lg')} {
-    grid-template-columns: 1fr;
-  }
-`;
-
 const ColHeading = styled(Typography)`
   margin: 0 0 8px;
-  color: ${eenewsColors.accent};
+  color: ${({ theme }) => theme.palette.primary.main};
 `;
 
 const ColList = styled('ul')`
@@ -120,15 +108,18 @@ const ColList = styled('ul')`
 
 const ColItem = styled('li')`
   line-height: 42px;
+  white-space: nowrap;
 `;
 
 const ColLink = styled(Link)`
-  color: ${eenewsColors.accent};
+  color: ${({ theme }) => theme.palette.primary.main};
   text-decoration: none;
   transition: opacity 120ms ease;
   &:hover {
-    opacity: 0.65;
+    opacity: 1;
     text-decoration: underline;
+    text-underline-offset: 4px;
+    text-decoration-thickness: 1px;
   }
 `;
 
@@ -153,11 +144,6 @@ export const EenewsMegaMenu = ({
   const region = findNavBySlug(data, shelf[2] ?? '');
   const about = findNavBySlug(data, shelf[3] ?? '');
   const aboutSecondary = findNavBySlug(data, shelf[4] ?? '');
-
-  const dossierLinks = dossiers?.links ?? [];
-  const halfIdx = Math.ceil(dossierLinks.length / 2);
-  const dossiersLeft = dossierLinks.slice(0, halfIdx);
-  const dossiersRight = dossierLinks.slice(halfIdx);
 
   const renderList = (
     nav: FullNavigationFragment | undefined,
@@ -200,48 +186,7 @@ export const EenewsMegaMenu = ({
             <ColHeading variant="megaCol">
               {dossiers.name || 'Dossiers'}
             </ColHeading>
-            <Dossiers2Col>
-              <ColList>
-                {dossiersLeft.map((link, idx) => {
-                  const url = navigationLinkToUrl(link);
-                  if (!url) {
-                    return null;
-                  }
-                  return (
-                    <ColItem key={`${link.label}-${idx}`}>
-                      <ColLink href={url}>
-                        <Typography
-                          variant="megaItem"
-                          component="span"
-                        >
-                          {link.label}
-                        </Typography>
-                      </ColLink>
-                    </ColItem>
-                  );
-                })}
-              </ColList>
-              <ColList>
-                {dossiersRight.map((link, idx) => {
-                  const url = navigationLinkToUrl(link);
-                  if (!url) {
-                    return null;
-                  }
-                  return (
-                    <ColItem key={`${link.label}-${idx}`}>
-                      <ColLink href={url}>
-                        <Typography
-                          variant="megaItem"
-                          component="span"
-                        >
-                          {link.label}
-                        </Typography>
-                      </ColLink>
-                    </ColItem>
-                  );
-                })}
-              </ColList>
-            </Dossiers2Col>
+            <ColList>{renderList(dossiers)}</ColList>
           </div>
         )}
 

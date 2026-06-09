@@ -8,11 +8,10 @@ import {
   WebsiteBuilderProvider,
 } from '@wepublish/website/builder';
 
-import { eenewsColors } from '../../theme';
 import { EenewsTeaser } from './eenews-teaser';
 
 const Section = styled('section')`
-  background: ${eenewsColors.bgAlt};
+  background: ${({ theme }) => theme.palette.background.alt};
   padding: 56px;
   ${({ theme }) => theme.breakpoints.down('md')} {
     padding: 36px 20px;
@@ -20,7 +19,7 @@ const Section = styled('section')`
 `;
 
 const Head = styled('div')`
-  max-width: 1340px;
+  max-width: var(--max-width);
   margin: 0 auto 28px;
   display: flex;
   align-items: flex-end;
@@ -34,18 +33,18 @@ const Head = styled('div')`
 
 const Title = styled(Typography)`
   display: block;
-  color: ${eenewsColors.accent};
+  color: ${({ theme }) => theme.palette.primary.main};
   margin: 0;
 `;
 
 const AllLink = styled(Link)`
-  color: ${eenewsColors.accent};
+  color: ${({ theme }) => theme.palette.primary.main};
   text-decoration: underline;
   text-underline-offset: 4px;
 `;
 
 const Grid = styled('div')`
-  max-width: 1340px;
+  max-width: var(--max-width);
   margin: 0 auto;
   display: grid;
   grid-template-columns: repeat(3, 1fr);

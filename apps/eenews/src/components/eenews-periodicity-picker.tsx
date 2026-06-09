@@ -3,11 +3,9 @@ import { Typography } from '@mui/material';
 import { PaymentPeriodicity } from '@wepublish/website/api';
 import { BuilderPeriodicityPickerProps } from '@wepublish/website/builder';
 
-import { eenewsColors } from '../theme';
-
 const Toggle = styled('div')`
   display: inline-flex;
-  border: 2px solid ${eenewsColors.accent};
+  border: 2px solid ${({ theme }) => theme.palette.primary.main};
   border-radius: 999px;
   overflow: hidden;
   padding: 3px;
@@ -17,8 +15,10 @@ const Pill = styled('button', {
   shouldForwardProp: p => p !== 'active',
 })<{ active: boolean }>`
   appearance: none;
-  background: ${({ active }) => (active ? eenewsColors.accent : 'transparent')};
-  color: ${({ active }) => (active ? eenewsColors.white : eenewsColors.accent)};
+  background: ${({ theme, active }) =>
+    active ? theme.palette.primary.main : 'transparent'};
+  color: ${({ theme, active }) =>
+    active ? theme.palette.background.paper : theme.palette.primary.main};
   border: 0;
   padding: 8px 18px;
   border-radius: 999px;

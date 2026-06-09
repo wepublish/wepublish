@@ -1,10 +1,9 @@
 import styled from '@emotion/styled';
+import { Theme } from '@mui/material';
 import { MdChevronLeft, MdChevronRight } from 'react-icons/md';
 
-import { eenewsColors } from '../theme';
-
 const Nav = styled('nav')`
-  max-width: 1340px;
+  max-width: var(--max-width);
   margin: 56px auto 0;
   display: flex;
   align-items: center;
@@ -13,7 +12,7 @@ const Nav = styled('nav')`
   flex-wrap: wrap;
 `;
 
-const buttonBase = `
+const buttonBase = (theme: Theme) => `
   min-width: 42px;
   height: 42px;
   padding: 0 10px;
@@ -21,7 +20,7 @@ const buttonBase = `
   align-items: center;
   justify-content: center;
   background: transparent;
-  color: ${eenewsColors.accent};
+  color: ${theme.palette.primary.main};
   border: 0;
   border-radius: 5px;
   font-family: inherit;
@@ -39,19 +38,19 @@ const buttonBase = `
 const PageNum = styled('button', {
   shouldForwardProp: p => p !== 'isActive',
 })<{ isActive: boolean }>`
-  ${buttonBase}
-  background: ${({ isActive }) =>
-    isActive ? eenewsColors.accent : 'transparent'};
-  color: ${({ isActive }) =>
-    isActive ? eenewsColors.tag : eenewsColors.accent};
+  ${({ theme }) => buttonBase(theme)}
+  background: ${({ theme, isActive }) =>
+    isActive ? theme.palette.primary.main : 'transparent'};
+  color: ${({ theme, isActive }) =>
+    isActive ? theme.palette.secondary.main : theme.palette.primary.main};
   &:hover {
-    background: ${({ isActive }) =>
-      isActive ? eenewsColors.accent : 'rgba(25, 90, 125, 0.10)'};
+    background: ${({ theme, isActive }) =>
+      isActive ? theme.palette.primary.main : 'rgba(25, 90, 125, 0.10)'};
   }
 `;
 
 const PageArrow = styled('button')`
-  ${buttonBase}
+  ${({ theme }) => buttonBase(theme)}
   padding: 0;
   width: 42px;
   &:hover:not(:disabled) {
@@ -69,7 +68,7 @@ const Ellipsis = styled('span')`
   justify-content: center;
   min-width: 32px;
   height: 42px;
-  color: ${eenewsColors.accent};
+  color: ${({ theme }) => theme.palette.primary.main};
   font-family: inherit;
   font-weight: 700;
   font-size: 22px;

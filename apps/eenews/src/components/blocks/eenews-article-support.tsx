@@ -2,13 +2,11 @@ import styled from '@emotion/styled';
 import { Typography } from '@mui/material';
 import { BuilderBreakBlockProps } from '@wepublish/website/builder';
 
-import { eenewsColors } from '../../theme';
-
 const Callout = styled('aside')`
   margin: 32px 0;
   padding: 20px 24px;
-  border: 1.5px solid ${eenewsColors.accent};
-  color: ${eenewsColors.accent};
+  border: 1.5px solid ${({ theme }) => theme.palette.primary.main};
+  color: ${({ theme }) => theme.palette.primary.main};
 `;
 
 export const EenewsArticleSupportCallout = ({

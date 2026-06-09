@@ -1,20 +1,23 @@
 import styled from '@emotion/styled';
-import { Typography } from '@mui/material';
+import { Typography, useTheme } from '@mui/material';
 import {
   selectTeaserDate,
   selectTeaserImage,
   selectTeaserLead,
-  selectTeaserPreTitle,
   selectTeaserTitle,
   selectTeaserUrl,
 } from '@wepublish/block-content/website';
 import { BuilderTeaserProps, Image, Link } from '@wepublish/website/builder';
+import { useContext } from 'react';
 
-import { eenewsColors } from '../../theme';
+import { ActiveBadgeTagContext } from '../../context/active-badge-tag-context';
+import { Advertisement } from '../advertisement';
 import { EeNewsBlockType } from '../block-styles/eenews-block-styles';
+import { isAdTeaser } from '../teasers/eenews-teaser-ads';
 import {
   selectTeaserBreaking,
   selectTeaserTag,
+  selectTeaserTopic,
 } from '../teasers/eenews-teaser-selectors';
 
 const Card = styled(Link)`
@@ -52,7 +55,7 @@ const TagChip = styled('span')`
   position: absolute;
   top: 0;
   left: 0;
-  color: ${eenewsColors.accent};
+  color: ${({ theme }) => theme.palette.primary.main};
   padding: 8px 14px 7px;
   text-transform: capitalize;
 `;
@@ -75,14 +78,14 @@ const BreakingBadge = styled(Typography)`
   height: 24px;
   padding: 0 9px;
   background: #d6342f;
-  color: ${eenewsColors.white};
+  color: ${({ theme }) => theme.palette.background.paper};
   line-height: 1;
   border-radius: 3px;
 `;
 
 const Meta = styled(Typography)`
   display: block;
-  color: ${eenewsColors.accent};
+  color: ${({ theme }) => theme.palette.primary.main};
   margin-top: 2px;
 `;
 
@@ -92,16 +95,20 @@ const MetaSep = styled('span')`
   opacity: 0.7;
 `;
 
+const MetaTopic = styled('span')`
+  text-transform: capitalize;
+`;
+
 const Title = styled(Typography)`
   display: block;
-  color: ${eenewsColors.accent};
+  color: ${({ theme }) => theme.palette.primary.main};
   margin: 0;
   text-wrap: balance;
 `;
 
 const Excerpt = styled(Typography)`
   display: block;
-  color: ${eenewsColors.text};
+  color: ${({ theme }) => theme.palette.text.primary};
   margin: 4px 0 0;
   text-wrap: pretty;
 `;
@@ -126,17 +133,24 @@ export const EenewsTeaser = ({
   blockStyle,
   className,
 }: BuilderTeaserProps) => {
+  const theme = useTheme();
+  const priorityBadgeTag = useContext(ActiveBadgeTagContext);
+
   if (!teaser) {
     return null;
   }
 
+  if (isAdTeaser(teaser)) {
+    return <Advertisement type="medium-rectangle" />;
+  }
+
   const title = selectTeaserTitle(teaser);
-  const preTitle = selectTeaserPreTitle(teaser);
   const lead = selectTeaserLead(teaser);
   const image = selectTeaserImage(teaser);
   const url = selectTeaserUrl(teaser);
   const date = selectTeaserDate(teaser);
-  const tag = selectTeaserTag(teaser);
+  const tag = selectTeaserTag(teaser, priorityBadgeTag);
+  const topic = selectTeaserTopic(teaser);
   const breaking = selectTeaserBreaking(teaser);
 
   if (!url) {
@@ -145,6 +159,25 @@ export const EenewsTeaser = ({
 
   const showTagChip =
     blockStyle !== EeNewsBlockType.AktuellGrid && tag !== undefined;
+
+  const TITLE_SPLIT_LENGTH = 34;
+  const LEAD_MAX_LENGTH = 120;
+  const truncatedTitle =
+    title && title.length > TITLE_SPLIT_LENGTH ?
+      `${title.slice(0, TITLE_SPLIT_LENGTH).trimEnd()}…`
+    : title;
+  let displayTitle = title;
+  let displayLead = lead;
+  if (!lead && title && title.length > TITLE_SPLIT_LENGTH) {
+    displayTitle = truncatedTitle;
+    displayLead = title;
+  } else if (lead) {
+    displayTitle = truncatedTitle;
+    displayLead =
+      lead.length > LEAD_MAX_LENGTH ?
+        `${lead.slice(0, LEAD_MAX_LENGTH).trimEnd()}…`
+      : lead;
+  }
 
   return (
     <Card
@@ -159,7 +192,9 @@ export const EenewsTeaser = ({
           />
         )}
         {showTagChip && tag && (
-          <TagChip style={{ background: tag.color ?? eenewsColors.tag }}>
+          <TagChip
+            style={{ background: tag.color ?? theme.palette.secondary.main }}
+          >
             <Typography
               variant="teaserTagChip"
               component="span"
@@ -176,14 +211,14 @@ export const EenewsTeaser = ({
       </ImageFrame>
 
       <Meta variant="teaserMeta">
-        {preTitle ?? ''}
-        {preTitle && date && <MetaSep>|</MetaSep>}
+        {topic && <MetaTopic>{topic.tag}</MetaTopic>}
+        {topic && date && <MetaSep>|</MetaSep>}
         {date && formatDateDE(date)}
       </Meta>
 
-      <Title variant="teaserTitle">{title}</Title>
+      <Title variant="teaserTitle">{displayTitle}</Title>
 
-      {lead && <Excerpt variant="teaserExcerpt">{lead}</Excerpt>}
+      {displayLead && <Excerpt variant="teaserExcerpt">{displayLead}</Excerpt>}
     </Card>
   );
 };

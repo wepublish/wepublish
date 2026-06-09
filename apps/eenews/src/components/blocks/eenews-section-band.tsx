@@ -2,11 +2,9 @@ import styled from '@emotion/styled';
 import { BlockRenderer } from '@wepublish/block-content/website';
 import { BuilderFlexBlockProps } from '@wepublish/website/builder';
 
-import { eenewsColors } from '../../theme';
-
 const Band = styled('section')`
-  background: ${eenewsColors.tag};
-  border-bottom: 1.5px solid ${eenewsColors.accent};
+  background: ${({ theme }) => theme.palette.secondary.main};
+  border-bottom: 1.5px solid ${({ theme }) => theme.palette.primary.main};
   padding: 48px 56px 40px;
 
   ${({ theme }) => theme.breakpoints.down('md')} {
@@ -15,7 +13,7 @@ const Band = styled('section')`
 `;
 
 const Inner = styled('div')`
-  max-width: 1340px;
+  max-width: var(--max-width);
   margin: 0 auto;
 `;
 
