@@ -1,3 +1,10 @@
+fragment SlimPaywall on Paywall {
+  memberPlans {
+    name
+    tags
+  }
+}
+
 fragment FullPaywall on Paywall {
   id
   active
@@ -22,20 +29,27 @@ fragment FullPaywall on Paywall {
   hideContentAfter
 }
 
-fragment ArticleRevisionWithoutBlocks on ArticleRevision {
+fragment SlimArticleRevision on ArticleRevision {
   id
   publishedAt
   preTitle
   title
   lead
-  lead
-  title
-  canonicalUrl
   breaking
 
   authors {
     ...SlimAuthor
   }
+
+  image {
+    ...SlimImage
+  }
+}
+
+fragment FullArticleRevision on ArticleRevision {
+  ...SlimArticleRevision
+
+  canonicalUrl
 
   image {
     ...FullImage
@@ -50,10 +64,6 @@ fragment ArticleRevisionWithoutBlocks on ArticleRevision {
   properties {
     ...FullProperty
   }
-}
-
-fragment FullArticleRevision on ArticleRevision {
-  ...ArticleRevisionWithoutBlocks
 
   blocks {
     ...FullBlock
@@ -64,7 +74,7 @@ fragment FullArticleRevision on ArticleRevision {
   }
 }
 
-fragment ArticleWithoutBlocks on Article {
+fragment SlimArticle on Article {
   id
   publishedAt
   url
@@ -76,25 +86,30 @@ fragment ArticleWithoutBlocks on Article {
     ...FullTag
   }
 
-  trackingPixels {
-    ...FullTrackingPixel
-  }
-
   latest {
-    ...ArticleRevisionWithoutBlocks
+    ...SlimArticleRevision
   }
 
+  paywall {
+    ...SlimPaywall
+  }
+
+  peerId
   peer {
     ...FullPeer
+  }
+}
+
+fragment FullArticle on Article {
+  ...SlimArticle
+
+  trackingPixels {
+    ...FullTrackingPixel
   }
 
   paywall {
     ...FullPaywall
   }
-}
-
-fragment FullArticle on Article {
-  ...ArticleWithoutBlocks
 
   latest {
     ...FullArticleRevision
@@ -124,7 +139,7 @@ query ArticleList(
     sort: $sort
   ) {
     nodes {
-      ...ArticleWithoutBlocks
+      ...SlimArticle
     }
 
     pageInfo {

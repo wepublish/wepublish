@@ -11,10 +11,7 @@
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
       "rules": {
-        "@next/next/no-html-link-for-pages": [
-          "error",
-          "apps/ganzgraz/pages"
-        ],
+        "@next/next/no-html-link-for-pages": ["error", "apps/ganzgraz/pages"],
         "simple-import-sort/imports": 1,
         "simple-import-sort/exports": 1
       }

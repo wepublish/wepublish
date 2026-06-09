@@ -7,6 +7,7 @@ import {
   useInvoicesQuery,
   useUpgradeSubscriptionInfoLazyQuery,
   useResubscribeMutation,
+  useCreateSubscriptionInfoLazyQuery,
 } from '@wepublish/website/api';
 import { useSubscribe, useUpgrade } from '@wepublish/payment/website';
 
@@ -26,6 +27,9 @@ export function SubscribeBlockProvider({ children }: PropsWithChildren) {
   const upgradeInfo = useUpgradeSubscriptionInfoLazyQuery({
     fetchPolicy: 'cache-first',
   });
+  const subscribeInfo = useCreateSubscriptionInfoLazyQuery({
+    fetchPolicy: 'cache-first',
+  });
   const { register, challenge } = useRegister();
   const resubscribe = useResubscribeMutation();
 
@@ -37,6 +41,7 @@ export function SubscribeBlockProvider({ children }: PropsWithChildren) {
         subscribe,
         upgrade,
         upgradeInfo,
+        subscribeInfo,
         redirectPages: subscribeRedirectPages ?? upgradeRedirectPages,
         stripeClientSecret:
           subscribeStripeClientSecret ?? upgradeStripeClientSecret,

@@ -8,9 +8,9 @@ import { useEffect, useState } from 'react';
 
 import {
   BlockContent,
-  TeaserGridBlock,
-  TeaserListBlock,
-  TeaserSlotsBlock,
+  FullTeaserGridBlockFragment,
+  FullTeaserListBlockFragment,
+  FullTeaserSlotsBlockFragment,
 } from '@wepublish/website/api';
 import { hasBlockStyle } from '../../has-blockstyle';
 import {
@@ -278,8 +278,11 @@ export const TeaserSlider = ({
 };
 
 export const isTeaserSliderBlockStyle = (
-  block: BlockContent
-): block is TeaserGridBlock | TeaserListBlock | TeaserSlotsBlock =>
+  block: Pick<BlockContent, '__typename'>
+): block is
+  | FullTeaserGridBlockFragment
+  | FullTeaserListBlockFragment
+  | FullTeaserSlotsBlockFragment =>
   allPass([
     hasBlockStyle('Slider'),
     anyPass([isTeaserGridBlock, isTeaserListBlock, isTeaserSlotsBlock]),

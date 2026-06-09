@@ -2,8 +2,8 @@ import { css } from '@mui/material';
 import styled from '@emotion/styled';
 import {
   BlockContent,
-  FlexTeaser,
-  TeaserGridFlexBlock as TeaserGridFlexBlockType,
+  FullFlexTeaserFragment,
+  FullTeaserGridFlexBlockFragment,
 } from '@wepublish/website/api';
 import {
   BuilderTeaserGridFlexBlockProps,
@@ -15,7 +15,7 @@ import { isFilledTeaser } from './teaser-grid-block';
 
 export const isTeaserGridFlexBlock = (
   block: Pick<BlockContent, '__typename'>
-): block is TeaserGridFlexBlockType =>
+): block is FullTeaserGridFlexBlockFragment =>
   block.__typename === 'TeaserGridFlexBlock';
 
 export const TeaserGridFlexBlockWrapper = styled('div')`
@@ -36,12 +36,12 @@ export const TeaserGridFlexBlockWrapper = styled('div')`
   `}
 `;
 
-const sortFlexTeasersByYAndX = sortWith<FlexTeaser>([
+const sortFlexTeasersByYAndX = sortWith<FullFlexTeaserFragment>([
   ascend(teaser => teaser.alignment.y),
   ascend(teaser => teaser.alignment.x),
 ]);
 
-export const omitEmptyFlexTeasers = filter<FlexTeaser>(teaser =>
+export const omitEmptyFlexTeasers = filter<FullFlexTeaserFragment>(teaser =>
   isFilledTeaser(teaser.teaser)
 );
 

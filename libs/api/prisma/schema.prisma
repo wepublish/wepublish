@@ -467,6 +467,9 @@ model InvoiceItem {
   invoices  Invoice? @relation(fields: [invoiceId], references: [id], onDelete: SetNull)
   invoiceId String?
 
+  voucher   Voucher? @relation(fields: [voucherId], references: [id], onDelete: SetNull)
+  voucherId String?
+
   @@map("invoices.items")
 }
 
@@ -598,6 +601,7 @@ model MemberPlan {
 
   crowdfundings Crowdfunding[]
   paywalls      PaywallMemberplan[]
+  vouchers      Voucher[]
 
   @@index([name])
   @@map("member.plans")
@@ -1857,4 +1861,57 @@ model MailchimpSyncError {
 
   @@unique([userId, syncProviderId])
   @@map("mailchimp_sync_errors")
+}
+
+model WebsiteSettings {
+  id         String   @id @default(cuid())
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  // Analytics
+  analyticsGAEnabled Boolean @default(false)
+  analyticsGAId      String?
+
+  analyticsGTMEnabled Boolean @default(false)
+  analyticsGTMId      String?
+
+  analyticsPAEnabled Boolean @default(false)
+  analyticsPAId      String?
+
+  analyticsPiwikEnabled Boolean @default(false)
+  analyticsPiwikId      String?
+
+  // Ads
+  adsSparkLoopEnabled Boolean @default(false)
+  adsSparkLoopId      String?
+
+  // Mails
+  mailMailchimpEnabled Boolean @default(false)
+  mailMailchimpKey     String?
+
+  // Theme
+  theme Json @default("{}")
+  fonts Json @default("[]")
+
+  @@map("settings.website")
+}
+
+model Voucher {
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  code            String @unique
+  discountPercent Int
+
+  validFrom DateTime
+  validTo   DateTime
+
+  memberPlan   MemberPlan @relation(fields: [memberPlanId], references: [id], onDelete: Cascade)
+  memberPlanId String
+
+  invoiceItems InvoiceItem[]
+
+  @@unique([code, memberPlanId])
+  @@map("vouchers")
 }

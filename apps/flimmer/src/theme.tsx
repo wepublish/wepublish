@@ -63,7 +63,9 @@ const theme = createTheme(WePTheme, {
     subtitle2: {
       fontFamily: [rubik.style.fontFamily, 'sans-serif'].join(','),
     },
-    fontFamily: [rubik.style.fontFamily, 'sans-serif'].join(','),
+    allVariants: {
+      fontFamily: [rubik.style.fontFamily, 'sans-serif'].join(','),
+    },
   },
   components: {
     MuiButton: {

@@ -139,6 +139,7 @@ export function SingleGenericIntegrationForm<
       timeStyle: 'short',
     }).format(dateObj);
   };
+
   const resolvedFields = useMemo(
     () => (typeof fields === 'function' ? fields(setting) : fields),
     [fields, setting]
