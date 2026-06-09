@@ -18,8 +18,8 @@ import { MdClose } from 'react-icons/md';
 
 import { ActiveBadgeTagContext } from '../context/active-badge-tag-context';
 import { EenewsTeaser } from './blocks/eenews-teaser';
+import { EenewsTeaserSkeleton } from './blocks/eenews-teaser-skeleton';
 import { EenewsPagination } from './eenews-pagination';
-import { enrichTeasersWithAds } from './teasers/eenews-teaser-ads';
 import { isAllowedTagName } from './teasers/eenews-teaser-selectors';
 
 const navigationLinkToUrl = (
@@ -190,6 +190,51 @@ const EmptyState = styled(Typography)`
   padding: 32px 0;
 `;
 
+type TopicFilterChipProps = {
+  topicTagId: string;
+  chipTagId: string;
+  href: string;
+  chipColor: string;
+  isActive: boolean;
+  label: string;
+};
+
+// Renders a topic-page filter chip only when its "topic ∩ chip" intersection has at
+// least one article, so no chip selection can lead to an empty page. The count is
+// prefetched in getStaticProps, so this cache-first read resolves from the hydrated
+// Apollo cache — no extra request, no flash.
+const TopicFilterChip = ({
+  topicTagId,
+  chipTagId,
+  href,
+  chipColor,
+  isActive,
+  label,
+}: TopicFilterChipProps) => {
+  const { data } = useArticleListQuery({
+    fetchPolicy: 'cache-first',
+    variables: {
+      take: 1,
+      skip: 0,
+      filter: { tagsInclude: [topicTagId, chipTagId] },
+    },
+  });
+
+  if (!data?.articles?.totalCount) {
+    return null;
+  }
+
+  return (
+    <Chip
+      href={href}
+      chipColor={chipColor}
+      isActive={isActive}
+    >
+      <Typography variant="teaserTagChip">{label}</Typography>
+    </Chip>
+  );
+};
+
 export const EenewsTagPage = ({
   className,
   tag: tagResult,
@@ -270,20 +315,20 @@ export const EenewsTagPage = ({
 
   const articlesData =
     isIntersection ? filteredArticles.data : articlesResult.data;
+  const articlesLoading =
+    isIntersection ? filteredArticles.loading : articlesResult.loading;
   const articles = articlesData?.articles?.nodes ?? [];
-  const teasers = enrichTeasersWithAds(
-    articles.map(
-      article =>
-        ({
-          __typename: 'ArticleTeaser',
-          style: 'DEFAULT',
-          image: null,
-          preTitle: null,
-          title: null,
-          lead: null,
-          article,
-        }) as unknown as FullTeaserFragment
-    )
+  const teasers = articles.map(
+    article =>
+      ({
+        __typename: 'ArticleTeaser',
+        style: 'DEFAULT',
+        image: null,
+        preTitle: null,
+        title: null,
+        lead: null,
+        article,
+      }) as unknown as FullTeaserFragment
   );
   const totalCount = articlesData?.articles?.totalCount ?? 0;
   const currentPage = Math.floor(skip / take) + 1;
@@ -337,11 +382,33 @@ export const EenewsTagPage = ({
               } else {
                 href = chipActive ? '/a/tag' : url;
               }
+              const chipColor = resolveChipColor(url);
+
+              // On topic pages, only show a chip whose topic∩chip intersection has
+              // articles (availability prefetched in getStaticProps).
+              if (isTopicPage && tag?.id) {
+                const chipTagId = tagIdByName.get(slug);
+                if (!chipTagId) {
+                  return null;
+                }
+                return (
+                  <TopicFilterChip
+                    key={`${link.label}-${idx}`}
+                    topicTagId={tag.id}
+                    chipTagId={chipTagId}
+                    href={href}
+                    chipColor={chipColor}
+                    isActive={chipActive}
+                    label={link.label}
+                  />
+                );
+              }
+
               return (
                 <Chip
                   key={`${link.label}-${idx}`}
                   href={href}
-                  chipColor={resolveChipColor(url)}
+                  chipColor={chipColor}
                   isActive={chipActive}
                 >
                   <Typography variant="teaserTagChip">{link.label}</Typography>
@@ -361,7 +428,13 @@ export const EenewsTagPage = ({
       )}
 
       <Section>
-        {articles.length === 0 ?
+        {articles.length === 0 && articlesLoading ?
+          <Grid>
+            {Array.from({ length: take }).map((_, idx) => (
+              <EenewsTeaserSkeleton key={idx} />
+            ))}
+          </Grid>
+        : articles.length === 0 ?
           <EmptyState variant="sectionToggle">Keine Beiträge.</EmptyState>
         : <Grid>
             <ActiveBadgeTagContext.Provider value={activeChipSlug}>

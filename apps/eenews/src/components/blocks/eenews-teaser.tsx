@@ -38,7 +38,7 @@ const ImageFrame = styled('div')`
   width: 100%;
   aspect-ratio: 4 / 3;
   overflow: hidden;
-  background: #e6ece9;
+  background: #e6ece9 url('/skeleton.gif') center / cover no-repeat;
 `;
 
 const TeaserImage = styled(Image)`

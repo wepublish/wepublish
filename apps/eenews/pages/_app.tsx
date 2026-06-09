@@ -43,7 +43,9 @@ import { zodI18nMap } from 'zod-i18n-map';
 import { Advertisement } from '../src/components/advertisement';
 import { EenewsBlockRenderer } from '../src/components/block-renderer/eenews-block-renderer';
 import { EenewsTeaser } from '../src/components/blocks/eenews-teaser';
+import { EenewsTeaserGrid } from '../src/components/blocks/eenews-teaser-grid';
 import { EenewsArticle } from '../src/components/eenews-article';
+import { EenewsBuilderPagination } from '../src/components/eenews-builder-pagination';
 import { EenewsAuthor } from '../src/components/eenews-author';
 import { EenewsAuthorListItem } from '../src/components/eenews-author-list-item';
 import { EenewsContentWrapper } from '../src/components/eenews-content-wrapper';
@@ -162,8 +164,15 @@ function CustomApp({
               PaymentMethodPicker={EenewsPaymentMethodPicker}
               SubscriptionListItem={EenewsSubscriptionListItem}
               InvoiceListItem={EenewsInvoiceListItem}
-              blocks={{ Renderer: EenewsBlockRenderer, Teaser: EenewsTeaser }}
-              elements={{ Link: NextWepublishLink }}
+              blocks={{
+                Renderer: EenewsBlockRenderer,
+                Teaser: EenewsTeaser,
+                TeaserGrid: EenewsTeaserGrid,
+              }}
+              elements={{
+                Link: NextWepublishLink,
+                Pagination: EenewsBuilderPagination,
+              }}
               date={{ format: dateFormatter }}
               meta={{ siteTitle }}
               ContentWrapper={EenewsContentWrapper}

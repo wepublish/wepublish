@@ -13,7 +13,7 @@ const toEeNewsTag = (tag: RawTag | undefined): EeNewsTag | undefined => {
 
 const FRENCH_ARTICLES_TAGS = ['article en français', 'articles en français'];
 
-const ALLOWED_TAGS = new Set([
+export const ALLOWED_TAG_NAMES = [
   'articles en français',
   'aeesuisse',
   'the smarter e',
@@ -25,10 +25,17 @@ const ALLOWED_TAGS = new Set([
   'mobilität',
   'fossile energien',
   'klima',
-]);
+];
+
+const ALLOWED_TAGS = new Set(ALLOWED_TAG_NAMES);
 
 export const isAllowedTagName = (name: string | null | undefined): boolean =>
   ALLOWED_TAGS.has(name?.toLowerCase().trim() ?? '');
+
+export const resolveWhitelistTagIds = (
+  nodes: ReadonlyArray<{ id: string; tag?: string | null }>
+): string[] =>
+  nodes.filter(node => isAllowedTagName(node.tag)).map(node => node.id);
 
 const isFrenchArticlesTag = (tag: { tag?: string | null }): boolean =>
   FRENCH_ARTICLES_TAGS.includes(tag.tag?.toLowerCase().trim() ?? '');

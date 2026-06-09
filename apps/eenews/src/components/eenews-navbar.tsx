@@ -48,13 +48,33 @@ const Header = styled('header', {
   background: ${({ theme }) => theme.palette.background.default};
 `;
 
-const TopBar = styled('div')`
+const TopBar = styled('div', {
+  shouldForwardProp: p => p !== 'isScrolled',
+})<{ isScrolled?: boolean }>`
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 56px 14px;
   border-bottom: 1.5px solid ${({ theme }) => theme.palette.primary.main};
   color: ${({ theme }) => theme.palette.primary.main};
+  max-height: 200px;
+  overflow: hidden;
+  opacity: 1;
+  transition:
+    max-height 0.35s cubic-bezier(0.22, 0.61, 0.36, 1),
+    opacity 0.3s ease,
+    padding 0.35s cubic-bezier(0.22, 0.61, 0.36, 1);
+
+  ${({ isScrolled }) =>
+    isScrolled &&
+    css`
+      max-height: 0;
+      padding-top: 0;
+      padding-bottom: 0;
+      opacity: 0;
+      border-bottom-color: transparent;
+      pointer-events: none;
+    `}
 
   ${({ theme }) => theme.breakpoints.down('md')} {
     padding: 10px 20px;
@@ -141,25 +161,44 @@ const Hero = styled('div', {
     `}
 `;
 
-const HeroInner = styled('div')`
+const HeroInner = styled('div', {
+  shouldForwardProp: p => p !== 'isScrolled',
+})<{ isScrolled?: boolean }>`
   max-width: calc(var(--max-width) + var(--skycraper-width));
   margin: 0 auto;
   padding: 0 56px;
   display: flex;
   flex-direction: column;
   min-height: 230px;
+  transition: min-height 0.35s cubic-bezier(0.22, 0.61, 0.36, 1);
+
+  ${({ isScrolled }) =>
+    isScrolled &&
+    css`
+      min-height: 95px;
+      justify-content: center;
+    `}
 
   ${({ theme }) => theme.breakpoints.down('md')} {
     padding: 0 20px;
   }
 `;
 
-const HeroRow = styled('div')`
+const HeroRow = styled('div', {
+  shouldForwardProp: p => p !== 'isScrolled',
+})<{ isScrolled?: boolean }>`
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
   gap: 24px;
   padding: 38px 0 28px;
+  transition: padding 0.35s cubic-bezier(0.22, 0.61, 0.36, 1);
+
+  ${({ isScrolled }) =>
+    isScrolled &&
+    css`
+      padding: 0;
+    `}
 
   ${({ theme }) => theme.breakpoints.down('md')} {
     grid-template-columns: auto 1fr auto;
@@ -248,18 +287,28 @@ const LogoLink = styled(Link)`
   z-index: 6;
 `;
 
-const LogoImg = styled('img')`
+const LogoImg = styled('img', {
+  shouldForwardProp: p => p !== 'isScrolled',
+})<{ isScrolled?: boolean }>`
   width: 240px;
   height: auto;
   display: block;
+  transition: width 0.35s cubic-bezier(0.22, 0.61, 0.36, 1);
+
+  ${({ isScrolled }) =>
+    isScrolled &&
+    css`
+      width: 180px;
+    `}
+
   ${({ theme }) => theme.breakpoints.down('md')} {
     width: 180px;
   }
 `;
 
 const BottomNav = styled('nav', {
-  shouldForwardProp: p => p !== 'isOpen',
-})<{ isOpen: boolean }>`
+  shouldForwardProp: p => p !== 'isOpen' && p !== 'isScrolled',
+})<{ isOpen: boolean; isScrolled?: boolean }>`
   display: flex;
   gap: 44px;
   justify-content: space-between;
@@ -275,6 +324,16 @@ const BottomNav = styled('nav', {
     max-height 0.35s cubic-bezier(0.22, 0.61, 0.36, 1),
     opacity 0.45s ease 0.15s,
     padding 0.35s cubic-bezier(0.22, 0.61, 0.36, 1);
+
+  ${({ isScrolled }) =>
+    isScrolled &&
+    css`
+      max-height: 0;
+      padding: 0;
+      opacity: 0;
+      pointer-events: none;
+      visibility: hidden;
+    `}
 
   ${({ isOpen }) =>
     isOpen &&
@@ -331,9 +390,19 @@ export const EenewsNavbar = ({
   const [isOpen, setOpen] = useState(false);
   const [animating, setAnimating] = useState(false);
   const [today, setToday] = useState<string>('');
+  const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
     setToday(formatDateDE(new Date()));
+  }, []);
+
+  // Collapse the hero into a slim strip (and fade out the nav) once the page is
+  // scrolled; the top bar always stays visible. Mirrors the tsri/hauptstadt pattern.
+  useEffect(() => {
+    const onScroll = () => setIsScrolled(window.scrollY > 1);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
   const updateNavbarHeight = useCallback(() => {
@@ -428,7 +497,7 @@ export const EenewsNavbar = ({
       isOpen={isOpen}
       isAnimating={animating}
     >
-      <TopBar>
+      <TopBar isScrolled={isScrolled}>
         <TopBarLeft>
           <Typography
             variant="topbarDate"
@@ -485,8 +554,8 @@ export const EenewsNavbar = ({
         isAnimating={animating}
         isOpen={isOpen}
       >
-        <HeroInner>
-          <HeroRow>
+        <HeroInner isScrolled={isScrolled}>
+          <HeroRow isScrolled={isScrolled}>
             <HeroActions>
               <IconBtn
                 type="button"
@@ -514,6 +583,7 @@ export const EenewsNavbar = ({
               <LogoImg
                 src="/ee-news-logo.png"
                 alt="ee-news"
+                isScrolled={isScrolled}
               />
             </LogoLink>
 
@@ -529,7 +599,10 @@ export const EenewsNavbar = ({
             </HeroActionsRight>
           </HeroRow>
 
-          <BottomNav isOpen={isOpen}>
+          <BottomNav
+            isOpen={isOpen}
+            isScrolled={isScrolled}
+          >
             {mainNav?.links.map((link, idx) => {
               const url = navigationLinkToUrl(link);
               if (!url) {
@@ -552,6 +625,7 @@ export const EenewsNavbar = ({
 
         <EenewsMegaMenu
           isOpen={isOpen}
+          isScrolled={isScrolled}
           data={data}
           categorySlugs={categorySlugs}
         />

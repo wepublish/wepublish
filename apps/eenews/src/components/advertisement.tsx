@@ -76,6 +76,7 @@ const AdvertisementComponent = ({ type }: AdvertisementProps) => {
 
 const AdBox = styled(Box)`
   margin: 0 auto;
+  background: #e6ece9 url('/skeleton.gif') center / cover no-repeat;
 
   img {
     height: 100%;
@@ -85,10 +86,13 @@ const AdBox = styled(Box)`
 
 const Leaderboard = styled(AdBox)`
   & {
-    max-height: 90px;
-    height: auto;
+    height: 90px;
     aspect-ratio: 728/90;
     margin: 0 auto;
+  }
+
+  &:empty {
+    display: none;
   }
 `;
 

@@ -8,6 +8,8 @@ import {
   getApiClient,
   NavigationListDocument,
   PeerProfileDocument,
+  TagListDocument,
+  TagListQuery,
   TagQuery,
   useArticleListQuery,
 } from '@wepublish/website/api';
@@ -17,6 +19,7 @@ import { useRouter } from 'next/router';
 import { z } from 'zod';
 
 import { EenewsTagPage } from '../../../src/components/eenews-tag-page';
+import { resolveWhitelistTagIds } from '../../../src/components/teasers/eenews-teaser-selectors';
 
 const TAKE = 24;
 
@@ -37,13 +40,20 @@ function toApolloResult<T>(
   return { data, loading, error: undefined };
 }
 
-export default function DossierIndex() {
+type DossierIndexProps = {
+  whitelistTagIds?: string[];
+};
+
+export default function DossierIndex({
+  whitelistTagIds = [],
+}: DossierIndexProps) {
   const { query, replace } = useRouter();
   const { page } = pageSchema.parse(query);
 
   const variables: Partial<ArticleListQueryVariables> = {
     take: TAKE,
     skip: (page - 1) * TAKE,
+    filter: whitelistTagIds.length ? { tags: whitelistTagIds } : undefined,
   };
 
   const articlesQuery = useArticleListQuery({
@@ -84,16 +94,27 @@ export const getStaticProps: GetStaticProps = async () => {
   }
 
   const client = getApiClient(getApiUrl(), []);
+
+  const tagListResult = await client.query<TagListQuery>({
+    query: TagListDocument,
+    variables: { take: 100 },
+  });
+  const whitelistTagIds = resolveWhitelistTagIds(
+    tagListResult.data?.tags?.nodes ?? []
+  );
+
+  const filter = whitelistTagIds.length ? { tags: whitelistTagIds } : undefined;
+
   await Promise.all([
     client.query({
       query: ArticleListDocument,
-      variables: { take: TAKE, skip: 0 },
+      variables: { take: TAKE, skip: 0, filter },
     }),
     client.query({ query: NavigationListDocument }),
     client.query({ query: PeerProfileDocument }),
   ]);
 
-  const props = addClientCacheToProps(client, {});
+  const props = addClientCacheToProps(client, { whitelistTagIds });
 
   return {
     props,

@@ -26,10 +26,10 @@ const findNavBySlug = (
   data?.navigations?.find(n => n.key === key) ?? undefined;
 
 const MegaOverlay = styled('div', {
-  shouldForwardProp: p => p !== 'isOpen',
-})<{ isOpen: boolean }>`
+  shouldForwardProp: p => p !== 'isOpen' && p !== 'isScrolled',
+})<{ isOpen: boolean; isScrolled?: boolean }>`
   position: absolute;
-  top: 140px;
+  top: ${({ isScrolled }) => (isScrolled ? '95px' : '140px')};
   left: 0;
   right: 0;
   z-index: 5;
@@ -52,7 +52,8 @@ const MegaOverlay = styled('div', {
     opacity 0.55s ease,
     padding 0.55s cubic-bezier(0.22, 0.61, 0.36, 1),
     border-bottom-width 0.55s cubic-bezier(0.22, 0.61, 0.36, 1),
-    box-shadow 0.3s ease;
+    box-shadow 0.3s ease,
+    top 0.35s cubic-bezier(0.22, 0.61, 0.36, 1);
 
   ${({ theme, isOpen }) =>
     isOpen &&
@@ -129,12 +130,14 @@ const SecondaryFoot = styled('div')`
 
 export type EenewsMegaMenuProps = {
   isOpen: boolean;
+  isScrolled?: boolean;
   data: NavigationListQuery | undefined;
   categorySlugs: string[][];
 };
 
 export const EenewsMegaMenu = ({
   isOpen,
+  isScrolled,
   data,
   categorySlugs,
 }: EenewsMegaMenuProps) => {
@@ -171,6 +174,7 @@ export const EenewsMegaMenu = ({
   return (
     <MegaOverlay
       isOpen={isOpen}
+      isScrolled={isScrolled}
       aria-hidden={!isOpen}
     >
       <MegaGrid>
