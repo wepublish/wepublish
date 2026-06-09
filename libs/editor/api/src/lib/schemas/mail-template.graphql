@@ -7,8 +7,46 @@ query MailTemplate {
   }
 }
 
+query MailTemplateContent($id: ID!) {
+  mailTemplate(id: $id) {
+    ...FullMailTemplate
+    content {
+      html
+      subject
+    }
+  }
+}
+
+query MailTemplatePlaceholders {
+  mailTemplatePlaceholders {
+    event
+    placeholders {
+      key
+      example
+    }
+  }
+}
+
 mutation SynchronizeMailTemplates {
   syncTemplates
+}
+
+mutation CreateMailTemplate($input: MailTemplateCreateInput!) {
+  createMailTemplate(input: $input) {
+    ...FullMailTemplate
+  }
+}
+
+mutation UpdateMailTemplate($id: ID!, $input: MailTemplateUpdateInput!) {
+  updateMailTemplate(id: $id, input: $input) {
+    ...FullMailTemplate
+  }
+}
+
+mutation DeleteMailTemplate($id: ID!) {
+  deleteMailTemplate(id: $id) {
+    id
+  }
 }
 
 fragment FullMailTemplate on MailTemplateWithUrlAndStatusModel {
@@ -23,4 +61,5 @@ fragment FullMailTemplate on MailTemplateWithUrlAndStatusModel {
 
 fragment FullMailProvider on MailProviderModel {
   name
+  type
 }

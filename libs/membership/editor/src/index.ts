@@ -1,5 +1,6 @@
 export * from './lib/dashboard/dashboard';
 export * from './lib/mail-template/mail-template-list';
+export * from './lib/mail-template/mail-template-edit';
 export * from './lib/mail-template/placeholder-list';
 export * from './lib/memberplan/memberplan-edit';
 export * from './lib/system-mail/system-mail-list';
