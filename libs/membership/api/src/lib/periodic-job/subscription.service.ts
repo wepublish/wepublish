@@ -7,7 +7,6 @@ import {
   Invoice,
   InvoiceItem,
   MemberPlan,
-  Payment,
   PaymentMethod,
   PaymentPeriodicity,
   PaymentProviderCustomer,
@@ -154,7 +153,6 @@ export class SubscriptionService {
         },
       },
       include: {
-        payments: true,
         subscription: {
           include: {
             paymentMethod: true,
@@ -171,9 +169,7 @@ export class SubscriptionService {
       },
     });
 
-    return invoices.filter(
-      invoice => !this.hasInFlightPaymentWithinGracePeriod(invoice, runDate)
-    );
+    return this.filterOutInvoicesWithRecentInFlightPayment(invoices, runDate);
   }
 
   /**
@@ -195,7 +191,6 @@ export class SubscriptionService {
         },
       },
       include: {
-        payments: true,
         subscription: {
           include: {
             user: true,
@@ -205,33 +200,44 @@ export class SubscriptionService {
       },
     });
 
-    return invoices.filter(
-      invoice => !this.hasInFlightPaymentWithinGracePeriod(invoice, runDate)
-    );
+    return this.filterOutInvoicesWithRecentInFlightPayment(invoices, runDate);
   }
 
   /**
-   * Whether an invoice still has a payment that is being confirmed by the
-   * provider within the payment method's grace period. Async methods (e.g.
-   * SEPA direct debit via Mollie) stay in a processing state for several days;
-   * the invoice must not be re-charged or deactivated until the grace period
-   * elapses, after which a stuck payment no longer protects the invoice.
+   * Drops invoices that still have a payment being confirmed by the provider
+   * within the payment method's grace period. Async methods (e.g. SEPA direct
+   * debit via Mollie) stay in a processing state for several days; the invoice
+   * must not be re-charged or deactivated until the grace period elapses, after
+   * which a stuck payment no longer protects the invoice. Payments are queried
+   * separately so no foreign key relation to invoices is required.
    */
-  private hasInFlightPaymentWithinGracePeriod(
-    invoice: {
-      payments: Payment[];
+  private async filterOutInvoicesWithRecentInFlightPayment<
+    T extends {
+      id: string;
       subscription: { paymentMethod: PaymentMethod } | null;
     },
-    runDate: Date
-  ): boolean {
-    const gracePeriod = invoice.subscription?.paymentMethod?.gracePeriod ?? 0;
-    const cutoff = sub(runDate, { days: gracePeriod });
+  >(invoices: T[], runDate: Date): Promise<T[]> {
+    if (invoices.length === 0) {
+      return invoices;
+    }
 
-    return invoice.payments.some(
-      payment =>
-        IN_FLIGHT_PAYMENT_STATES.includes(payment.state) &&
-        payment.createdAt >= cutoff
-    );
+    const inFlightPayments = await this.prismaService.payment.findMany({
+      where: {
+        invoiceID: { in: invoices.map(invoice => invoice.id) },
+        state: { in: IN_FLIGHT_PAYMENT_STATES },
+      },
+      select: { invoiceID: true, createdAt: true },
+    });
+
+    return invoices.filter(invoice => {
+      const gracePeriod = invoice.subscription?.paymentMethod?.gracePeriod ?? 0;
+      const cutoff = sub(runDate, { days: gracePeriod });
+
+      return !inFlightPayments.some(
+        payment =>
+          payment.invoiceID === invoice.id && payment.createdAt >= cutoff
+      );
+    });
   }
 
   /**

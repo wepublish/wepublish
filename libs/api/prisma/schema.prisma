@@ -492,7 +492,6 @@ model Invoice {
   subscription   Subscription? @relation(fields: [subscriptionID], references: [id], onDelete: SetNull)
 
   subscriptionPeriods SubscriptionPeriod[]
-  payments            Payment[]
 
   @@index([mail])
   @@index([subscriptionID])
@@ -782,7 +781,6 @@ model Payment {
   createdAt    DateTime     @default(now())
   modifiedAt   DateTime     @updatedAt
   invoiceID    String
-  invoice      Invoice      @relation(fields: [invoiceID], references: [id], onDelete: Cascade)
   state        PaymentState
   intentID     String?
   intentSecret String?

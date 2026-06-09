@@ -86,7 +86,7 @@ describe('SubscriptionPaymentsService', () => {
         create: jest.fn(),
       },
       payment: {
-        findMany: jest.fn(),
+        findMany: jest.fn().mockResolvedValue([]),
         create: jest.fn(),
       },
       subscriptionDeactivation: {
@@ -160,7 +160,6 @@ describe('SubscriptionPaymentsService', () => {
         dueAt: sub(new Date(), { days: 1 }),
         paidAt: null,
         canceledAt: null,
-        payments: [],
         subscription: {
           confirmed: true,
         },
@@ -170,7 +169,6 @@ describe('SubscriptionPaymentsService', () => {
         dueAt: add(new Date(), { seconds: 10 }),
         paidAt: null,
         canceledAt: null,
-        payments: [],
         subscription: {
           confirmed: true,
         },
@@ -192,24 +190,19 @@ describe('SubscriptionPaymentsService', () => {
       {
         id: 'fresh-in-flight',
         subscription: { confirmed: true, paymentMethod: { gracePeriod: 14 } },
-        payments: [
-          { state: PaymentState.processing, createdAt: new Date('2026-06-14') },
-        ],
       },
       {
         id: 'stale-in-flight',
         subscription: { confirmed: true, paymentMethod: { gracePeriod: 14 } },
-        payments: [
-          { state: PaymentState.processing, createdAt: new Date('2026-05-01') },
-        ],
       },
       {
         id: 'no-in-flight',
         subscription: { confirmed: true, paymentMethod: { gracePeriod: 14 } },
-        payments: [
-          { state: PaymentState.requiresUserAction, createdAt: runDate },
-        ],
       },
+    ]);
+    prismaMock.payment.findMany!.mockResolvedValue([
+      { invoiceID: 'fresh-in-flight', createdAt: new Date('2026-06-14') },
+      { invoiceID: 'stale-in-flight', createdAt: new Date('2026-05-01') },
     ]);
 
     const result = await subscriptionService.findUnpaidDueInvoices(runDate);
@@ -227,7 +220,6 @@ describe('SubscriptionPaymentsService', () => {
         dueAt: sub(new Date(), { days: 1 }),
         paidAt: null,
         canceledAt: null,
-        payments: [],
         subscription: {
           confirmed: true,
         },
@@ -237,7 +229,6 @@ describe('SubscriptionPaymentsService', () => {
         dueAt: sub(new Date(), { days: 1 }),
         paidAt: null,
         canceledAt: null,
-        payments: [],
         subscription: {
           confirmed: false,
         },
@@ -263,7 +254,6 @@ describe('SubscriptionPaymentsService', () => {
         paidAt: null,
         canceledAt: null,
         subscriptionID: 'sub-1',
-        payments: [],
         subscription: {
           confirmed: true,
         },
@@ -287,7 +277,6 @@ describe('SubscriptionPaymentsService', () => {
         scheduledDeactivationAt: sub(new Date(), { days: 1 }),
         paidAt: null,
         canceledAt: null,
-        payments: [],
       },
     ];
 
@@ -307,17 +296,15 @@ describe('SubscriptionPaymentsService', () => {
       {
         id: 'fresh-in-flight',
         subscription: { paymentMethod: { gracePeriod: 14 } },
-        payments: [
-          { state: PaymentState.processing, createdAt: new Date('2026-06-10') },
-        ],
       },
       {
         id: 'stale-in-flight',
         subscription: { paymentMethod: { gracePeriod: 14 } },
-        payments: [
-          { state: PaymentState.processing, createdAt: new Date('2026-05-01') },
-        ],
       },
+    ]);
+    prismaMock.payment.findMany!.mockResolvedValue([
+      { invoiceID: 'fresh-in-flight', createdAt: new Date('2026-06-10') },
+      { invoiceID: 'stale-in-flight', createdAt: new Date('2026-05-01') },
     ]);
 
     const result =
