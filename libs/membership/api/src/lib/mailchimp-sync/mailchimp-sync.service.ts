@@ -859,8 +859,14 @@ export class MailchimpSyncService {
           return false;
         };
 
-        if (matches(data.currentSubscription?.memberPlan.slug)) return '1';
-        if (data.subscriptions.some(s => matches(s.memberPlan.slug))) {
+        const now = new Date();
+        const matchingSubs = data.subscriptions.filter(s =>
+          matches(s.memberPlan.slug)
+        );
+        if (matchingSubs.some(s => this.isSubscriptionActive(s, now))) {
+          return '1';
+        }
+        if (matchingSubs.length > 0) {
           return '-1';
         }
         return '';
