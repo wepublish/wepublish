@@ -11,6 +11,8 @@ import { ContentWrapper } from '@wepublish/content/website';
 import { ArticleTrackingPixels } from './article-tracking-pixels';
 import { Paywall } from '@wepublish/website/builder';
 import { css, SerializedStyles } from '@emotion/react';
+import { useMemo } from 'react';
+import { IFrameBlockContext } from '@wepublish/block-content/website';
 
 export const ArticleInfoWrapper = styled('aside')`
   display: grid;
@@ -84,6 +86,13 @@ export function Article({
 
   const article = data?.article as ArticleType | undefined;
 
+  const iframeBlockContext = useMemo(
+    () => ({
+      tags: article?.tags?.flatMap(t => (t.tag ? [t.tag] : [])) ?? [],
+    }),
+    [article]
+  );
+
   return (
     <ArticleWrapper
       className={className}
@@ -94,11 +103,13 @@ export function Article({
       {article && <ArticleSEO article={article} />}
 
       {article && (
-        <Blocks
-          key={article.id}
-          blocks={(article.latest.blocks as BlockContent[]) ?? []}
-          type="Article"
-        />
+        <IFrameBlockContext.Provider value={iframeBlockContext}>
+          <Blocks
+            key={article.id}
+            blocks={(article.latest.blocks as BlockContent[]) ?? []}
+            type="Article"
+          />
+        </IFrameBlockContext.Provider>
       )}
 
       <ArticleInfoWrapper>

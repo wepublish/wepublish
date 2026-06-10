@@ -52,7 +52,7 @@ let settings: ClientSettings;
 export function getSettings(): ClientSettings {
   if (!settings) {
     const defaultSettings = {
-      apiURL: 'http://localhost:4000',
+      apiURL: 'https://api-hauptstadt.wepublish.cloud',
       wepOneURL: 'https://one-admin.wepublish.cloud',
       imgMinSizeToCompress: 10,
     };
