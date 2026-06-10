@@ -1,0 +1,76 @@
+# We.Publish — Public Knowledge Pack
+
+> A compact, source-linked public knowledge pack for AI agents and developers. Public information only (see Boundaries). For full detail, follow the canonical docs at https://docs.wepublish.ch/. Last updated 2026-06-10.
+
+## Overview of the We.Publish CMS
+
+We.Publish is an open-source (MIT) platform for media organisations. Architecture:
+
+- **Backend:** NestJS + Prisma ORM + PostgreSQL, code-first GraphQL API.
+- **Editor:** React/Next.js admin UI for content, members, settings.
+- **Website Builder:** a Next.js (Pages Router) + MUI + Apollo Client framework that renders publisher websites from the CMS API.
+
+Core domain objects: articles, pages, authors, navigations, images, comments, events, member plans, payment methods, subscriptions, peers, settings. Docs: https://docs.wepublish.ch/
+
+## Publisher concepts
+
+Publishers manage content (articles/pages built from typed **blocks**), site **navigations**, branding, membership, and optional cooperation with other publishers (**peering**). Publisher docs: https://docs.wepublish.ch/publisher-dokumentation/
+
+## Editor, navigation & logo basics
+
+- Sites use named navigations; the website framework expects keys such as `main`, `header`, `footer`, and `icons`.
+- Branding (site name, logo, theme colours) and a call-to-action are part of the site profile.
+- Editor guide — navigation & logo: https://docs.wepublish.ch/publisher-dokumentation/editor/navigation-and-logo
+
+## Payment, subscription & member-plan concepts (public)
+
+- **Member plans** define what a supporter can buy: amount/month, currency, available payment methods, periodicities.
+- **Payment methods** connect plans to payment providers; at least one active method is needed to sell subscriptions.
+- **Subscriptions** are created by members against a plan + payment method + periodicity.
+- Provider credentials/secrets and individual member data are **never public** — only the concepts are.
+
+## Peering concepts (public)
+
+Publishers can **peer** to share/syndicate content. A peer has a public profile (name, call-to-action, logo). Peering is optional. Peer tokens and credentials are private.
+
+## Website Builder Framework overview
+
+- Next.js **Pages Router** (not App Router), React, MUI, Emotion.
+- Apollo Client + GraphQL with code-generated typed hooks/documents.
+- Content is composed of typed blocks (title, rich text, image, teaser grids/slots, embeds, etc.); **teasers** are the central media-site component.
+- ISR data fetching; magic-link (passwordless) authentication; paywall vs. newsletter-banner patterns.
+- Overview: https://docs.wepublish.ch/developers/website-builder/framework-overview · New site: https://docs.wepublish.ch/developers/website-builder/new-website-setup
+
+## API / client overview
+
+- Apollo GraphQL served at the **`/v1`** convention; configured via `API_URL` (e.g. `https://api.<site>/v1`).
+- Generated typed hooks/documents (graphql-codegen); the website prefetches queries in `getStaticProps` and components read from cache.
+- API docs: https://docs.wepublish.ch/developers/api · API client: https://docs.wepublish.ch/developers/website-builder/api-client
+
+## Common public troubleshooting paths
+
+- "Site nav/logo missing" → ensure required navigations (`main`/`header`/`footer`/`icons`) exist and branding is set (editor docs).
+- "Can't subscribe" → at least one **active** payment method + a member plan with a price and an attached payment method.
+- "New website setup" → follow the new-website-setup guide; set `API_URL`/`WEBSITE_URL`.
+- For anything needing live tenant state or account data, escalate to authenticated support.
+
+## Support escalation path
+
+Public docs first (links above). Account/payment/tenant-specific issues → the publisher's authenticated We.Publish support channel. Public chat must not attempt tenant-specific answers.
+
+## Boundaries and private-data rules
+
+Public only. Excluded: private media/tenant setup, live CMS state, member data, payment/provider secrets, credentials, internal strategy, Slack/Linear/private support content, private repositories, staging tenant details.
+
+## Source index
+
+- Docs home: https://docs.wepublish.ch/
+- Publisher docs: https://docs.wepublish.ch/publisher-dokumentation/
+- Editor navigation & logo: https://docs.wepublish.ch/publisher-dokumentation/editor/navigation-and-logo
+- Developer docs: https://docs.wepublish.ch/developers/
+- Framework overview: https://docs.wepublish.ch/developers/website-builder/framework-overview
+- New website setup: https://docs.wepublish.ch/developers/website-builder/new-website-setup
+- API: https://docs.wepublish.ch/developers/api
+- API client: https://docs.wepublish.ch/developers/website-builder/api-client
+- Website: https://wepublish.ch/
+- Source (MIT): https://github.com/wepublish/wepublish

@@ -1,0 +1,50 @@
+# We.Publish
+
+> Public context for AI agents and search tools. We.Publish is an open-source platform and CMS for media organisations (newsrooms), enabling publishing, membership/subscriptions, and content cooperation (peering) between media. This file is a curated map of **public** documentation — not internal or tenant-specific data.
+
+## What We.Publish Is
+
+An open-source (MIT) content & membership platform for journalism: a NestJS + Prisma + PostgreSQL GraphQL CMS, a React/Next.js editor, and a Next.js "Website Builder" framework that renders publisher websites. It supports articles, pages, navigations, membership plans, subscriptions, payments, and peering between publishers.
+
+## Canonical Documentation
+
+- Docs home: https://docs.wepublish.ch/
+- Website: https://wepublish.ch/
+
+## Publisher Documentation
+
+- Publisher docs (editor, navigation, logos, content): https://docs.wepublish.ch/publisher-dokumentation/
+- Editor — navigation & logo: https://docs.wepublish.ch/publisher-dokumentation/editor/navigation-and-logo
+
+## Developer Documentation
+
+- Developer docs: https://docs.wepublish.ch/developers/
+
+## Website Builder Framework
+
+- Framework overview: https://docs.wepublish.ch/developers/website-builder/framework-overview
+- New website setup: https://docs.wepublish.ch/developers/website-builder/new-website-setup
+- Next.js (Pages Router) + MUI + Apollo Client; consumes the We.Publish CMS API.
+
+## API and GraphQL
+
+- API docs: https://docs.wepublish.ch/developers/api
+- API client: https://docs.wepublish.ch/developers/website-builder/api-client
+- Apollo GraphQL, single endpoint at the `/v1` convention, generated typed hooks/documents, configured via `API_URL`.
+
+## Support and Onboarding
+
+- Start from the public docs above. For account-, payment-, or tenant-specific help, use the publisher's authenticated We.Publish support channel — not public chat.
+
+## Public Repository
+
+- Source (MIT): https://github.com/wepublish/wepublish
+- Public MCP (developer/docs context): https://github.com/wepublish/wepublish-mcp
+
+## Boundaries
+
+This file and `/llms-full.txt` contain only public information. They do **not** include: private media/tenant setup, live CMS state, member data, payment/provider secrets, credentials, internal strategy, or private support history. Tenant-specific answers require authenticated support, never public context.
+
+## Last Updated
+
+2026-06-10
