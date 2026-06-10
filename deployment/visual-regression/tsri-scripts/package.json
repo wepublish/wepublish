@@ -1,0 +1,13 @@
+{
+  "name": "tsri-screenshot-tests",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cross-browser screenshot regression tests using Playwright",
+  "scripts": {
+    "test": "node tsri-scenario.js"
+  },
+  "dependencies": {
+    "@vizzly-testing/honeydiff": "0.10.1",
+    "playwright": "1.60.0"
+  }
+}
