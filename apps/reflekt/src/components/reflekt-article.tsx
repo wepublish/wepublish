@@ -21,7 +21,10 @@ import {
 import { CommentListWrapper } from '@wepublish/comments/website';
 import { ContentWrapper } from '@wepublish/content/website';
 import { SubscribeWrapper } from '@wepublish/membership/website';
-import { Article as ArticleType, BlockContent } from '@wepublish/website/api';
+import {
+  Article as ArticleType,
+  FullArticleFragment,
+} from '@wepublish/website/api';
 import {
   BuilderArticleProps,
   PeerInformation,
@@ -209,7 +212,7 @@ export function ReflektArticle({
 
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
 
-  const article = data?.article as ArticleType | undefined;
+  const article = data?.article as FullArticleFragment | undefined;
 
   return (
     <ArticleWrapper
@@ -220,7 +223,7 @@ export function ReflektArticle({
     >
       {isDesktop && articleGlobalStyles}
 
-      {article && <ArticleSEO article={article} />}
+      {article && <ArticleSEO article={article as unknown as ArticleType} />}
 
       {article && (
         <ArticlePropertiesContext.Provider
@@ -228,7 +231,7 @@ export function ReflektArticle({
         >
           <Blocks
             key={article.id}
-            blocks={(article.latest.blocks as BlockContent[]) ?? []}
+            blocks={article.latest.blocks ?? []}
             type="Article"
           />
         </ArticlePropertiesContext.Provider>

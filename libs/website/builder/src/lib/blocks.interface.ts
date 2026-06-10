@@ -32,14 +32,8 @@ import {
   FullBlockFragment,
 } from '@wepublish/website/api';
 
-export type BlockSibling = {
-  typeName: string;
-  blockStyle?: string;
-};
-
 export type BuilderBlockRendererProps = {
   className?: string;
-  siblings?: Array<BlockSibling>;
   block: FullBlockFragment;
   index: number;
   count: number;
@@ -53,7 +47,6 @@ export type BuilderBlocksProps = {
 
 export type BlockProps = {
   className?: string;
-  siblings?: Array<BlockSibling>;
 };
 
 type WithBlockProps<T> = Omit<T, 'type'> & BlockProps;

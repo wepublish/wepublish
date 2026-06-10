@@ -1,7 +1,7 @@
-import { BlockContent, usePageQuery } from '@wepublish/website/api';
+import { FullBlockFragment, usePageQuery } from '@wepublish/website/api';
 
 export type FooterContent = {
-  blocks: BlockContent[];
+  blocks: FullBlockFragment[];
 } | null;
 
 export const useGetFooterContent = (): FooterContent => {
@@ -13,7 +13,7 @@ export const useGetFooterContent = (): FooterContent => {
   });
 
   const footerContent = pageData?.page && {
-    blocks: (pageData.page.latest.blocks as BlockContent[]) ?? [],
+    blocks: pageData.page.latest.blocks ?? [],
   };
 
   return footerContent || null;

@@ -14,7 +14,7 @@ import {} from '@wepublish/block-content/website';
 import {
   FlexAlignment,
   FullImageFragment,
-  Teaser as TeaserType,
+  FullTeaserFragment,
 } from '@wepublish/website/api';
 import {
   BuilderTeaserProps,
@@ -26,7 +26,7 @@ import { Trans, useTranslation } from 'react-i18next';
 
 import { robotoMono } from '../../theme';
 
-export const selectTeaserAuthors = (teaser: TeaserType) => {
+export const selectTeaserAuthors = (teaser: FullTeaserFragment) => {
   switch (teaser.__typename) {
     case 'PageTeaser': {
       return null;
@@ -44,7 +44,7 @@ export const selectTeaserAuthors = (teaser: TeaserType) => {
   }
 };
 
-export const selectTeaserLeadColor = (teaser: TeaserType) => {
+export const selectTeaserLeadColor = (teaser: FullTeaserFragment) => {
   let leadColor = 'white';
 
   if (teaser.__typename === 'ArticleTeaser') {

@@ -1,16 +1,13 @@
-import {
-  BlockRenderer,
-  collectSiblings,
-} from '@wepublish/block-content/website';
+import { BlockRenderer } from '@wepublish/block-content/website';
 import { ImageContext } from '@wepublish/image/website';
 import {
   BuilderBlockRendererProps,
   BuilderBlocksProps,
-  useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { cond } from 'ramda';
 import { memo, useMemo } from 'react';
 
+import { BlockSibling, collectSiblings } from './block-siblings';
 import { TsriTabbedContent } from './block-layouts/tsri-base-tabbed-content';
 import {
   isTsriSidebarContent,
@@ -22,7 +19,9 @@ import {
 } from './break-blocks/tsri-sidebar-content-alt-color';
 import { isTabbedContentBlockStyle } from './tabbed-content/tabbed-content';
 
-export const TsriBlockRenderer = (props: BuilderBlockRendererProps) => {
+export const TsriBlockRenderer = (
+  props: BuilderBlockRendererProps & { siblings?: BlockSibling[] }
+) => {
   const extraBlockMap = useMemo(
     () =>
       cond([
@@ -60,10 +59,6 @@ export const TsriBlockRenderer = (props: BuilderBlockRendererProps) => {
 
 // eslint-disable-next-line react/display-name
 export const TsriBlocks = memo(({ blocks, type }: BuilderBlocksProps) => {
-  const {
-    blocks: { Renderer },
-  } = useWebsiteBuilder();
-
   const siblings = collectSiblings(blocks);
 
   return (
@@ -81,7 +76,7 @@ export const TsriBlocks = memo(({ blocks, type }: BuilderBlocksProps) => {
             : {}
           }
         >
-          <Renderer
+          <TsriBlockRenderer
             block={block}
             index={index}
             count={blocks.length}

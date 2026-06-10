@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react';
 
-type ArticleProperty = { key: string; value: string; public: boolean };
+type ArticleProperty = { key: string; value: string; public?: boolean };
 
 export const ArticlePropertiesContext = createContext<ArticleProperty[]>([]);
 

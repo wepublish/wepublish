@@ -2,7 +2,7 @@ import {
   ArticleListWrapper,
   articleToTeaser,
 } from '@wepublish/article/website';
-import { Article } from '@wepublish/website/api';
+import { FullArticleTeaserFragment } from '@wepublish/website/api';
 import {
   BuilderArticleListProps,
   useWebsiteBuilder,
@@ -23,7 +23,9 @@ export const ReflektArticleList = ({
   const teasers = useMemo(
     () =>
       data?.articles?.nodes.map(article =>
-        articleToTeaser(article as Article)
+        articleToTeaser(
+          article as unknown as FullArticleTeaserFragment['article']
+        )
       ) ?? [],
     [data?.articles?.nodes]
   );

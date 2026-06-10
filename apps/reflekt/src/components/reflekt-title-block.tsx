@@ -11,6 +11,7 @@ import {
 import { ComponentType } from 'react';
 
 import { ReflektBlockStyles } from './block-styles/reflekt-block-styles';
+import { BlockSibling } from './block-siblings';
 
 export const isTitleBlock = (
   block: Pick<BlockContent, '__typename'>
@@ -38,7 +39,8 @@ export const ReflektTitleBlock = ({
   lead,
   className,
   siblings,
-}: BuilderTitleBlockProps & TitleBlockComponents) => {
+}: BuilderTitleBlockProps &
+  TitleBlockComponents & { siblings?: BlockSibling[] }) => {
   const {
     elements: { H2 },
   } = useWebsiteBuilder();

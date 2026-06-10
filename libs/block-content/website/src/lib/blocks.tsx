@@ -1,5 +1,4 @@
 import {
-  BlockSibling,
   BuilderBlockRendererProps,
   BuilderBlocksProps,
   BuilderBreakBlockProps,
@@ -60,10 +59,9 @@ import {
 } from './block-styles/alternating/is-alternating';
 import { isTeaserSlotsBlock } from './teaser/teaser-slots-block';
 import { css } from '@emotion/react';
-import { BlockContent } from '@wepublish/website/api';
 
 export const BlockRenderer = memo(
-  ({ block, className, siblings }: BuilderBlockRendererProps) => {
+  ({ block, className }: BuilderBlockRendererProps) => {
     const { blocks, blockStyles } = useWebsiteBuilder();
 
     const emptyBlockCss = css`
@@ -93,7 +91,6 @@ export const BlockRenderer = memo(
           <blockStyles.ImageSlider
             {...block}
             className={className}
-            siblings={siblings}
           />
         ),
       ],
@@ -103,7 +100,6 @@ export const BlockRenderer = memo(
           <blockStyles.TeaserSlider
             {...block}
             className={className}
-            siblings={siblings}
           />
         ),
       ],
@@ -113,7 +109,6 @@ export const BlockRenderer = memo(
           <blockStyles.FocusTeaser
             {...block}
             className={className}
-            siblings={siblings}
           />
         ),
       ],
@@ -123,7 +118,6 @@ export const BlockRenderer = memo(
           <blockStyles.ContextBox
             {...block}
             className={className}
-            siblings={siblings}
           />
         ),
       ],
@@ -133,7 +127,6 @@ export const BlockRenderer = memo(
           <blockStyles.Banner
             {...block}
             className={className}
-            siblings={siblings}
           />
         ),
       ],
@@ -143,7 +136,6 @@ export const BlockRenderer = memo(
           <blockStyles.AlternatingTeaserGrid
             {...block}
             className={className}
-            siblings={siblings}
           />
         ),
       ],
@@ -153,7 +145,6 @@ export const BlockRenderer = memo(
           <blockStyles.AlternatingTeaserList
             {...block}
             className={className}
-            siblings={siblings}
           />
         ),
       ],
@@ -163,7 +154,6 @@ export const BlockRenderer = memo(
           <blockStyles.AlternatingTeaserSlots
             {...block}
             className={className}
-            siblings={siblings}
           />
         ),
       ],
@@ -176,7 +166,6 @@ export const BlockRenderer = memo(
           <blocks.FacebookPost
             {...block}
             className={className}
-            siblings={siblings}
           />
         ),
       ],
@@ -186,7 +175,6 @@ export const BlockRenderer = memo(
           <blocks.FacebookVideo
             {...block}
             className={className}
-            siblings={siblings}
           />
         ),
       ],
@@ -199,7 +187,6 @@ export const BlockRenderer = memo(
           <blocks.IFrame
             {...block}
             className={className}
-            siblings={siblings}
           />
         ),
       ],
@@ -209,7 +196,6 @@ export const BlockRenderer = memo(
           <blocks.BildwurfAd
             {...block}
             className={className}
-            siblings={siblings}
           />
         ),
       ],
@@ -219,7 +205,6 @@ export const BlockRenderer = memo(
           <blocks.InstagramPost
             {...block}
             className={className}
-            siblings={siblings}
           />
         ),
       ],
@@ -229,7 +214,6 @@ export const BlockRenderer = memo(
           <blocks.SoundCloudTrack
             {...block}
             className={className}
-            siblings={siblings}
           />
         ),
       ],
@@ -239,7 +223,6 @@ export const BlockRenderer = memo(
           <blocks.TikTokVideo
             {...block}
             className={className}
-            siblings={siblings}
           />
         ),
       ],
@@ -249,7 +232,6 @@ export const BlockRenderer = memo(
           <blocks.TwitterTweet
             {...block}
             className={className}
-            siblings={siblings}
           />
         ),
       ],
@@ -259,7 +241,6 @@ export const BlockRenderer = memo(
           <blocks.VimeoVideo
             {...block}
             className={className}
-            siblings={siblings}
           />
         ),
       ],
@@ -269,7 +250,6 @@ export const BlockRenderer = memo(
           <blocks.YouTubeVideo
             {...block}
             className={className}
-            siblings={siblings}
           />
         ),
       ],
@@ -279,7 +259,6 @@ export const BlockRenderer = memo(
           <blocks.StreamableVideo
             {...block}
             className={className}
-            siblings={siblings}
           />
         ),
       ],
@@ -289,7 +268,6 @@ export const BlockRenderer = memo(
           <blocks.PolisConversation
             {...block}
             className={className}
-            siblings={siblings}
           />
         ),
       ],
@@ -302,7 +280,6 @@ export const BlockRenderer = memo(
           <blocks.TeaserGridFlex
             {...block}
             className={className}
-            siblings={siblings}
           />
         ),
       ],
@@ -312,7 +289,6 @@ export const BlockRenderer = memo(
           <blocks.TeaserGrid
             {...block}
             className={className}
-            siblings={siblings}
           />
         ),
       ],
@@ -322,7 +298,6 @@ export const BlockRenderer = memo(
           <blocks.TeaserList
             {...block}
             className={className}
-            siblings={siblings}
           />
         ),
       ],
@@ -332,7 +307,6 @@ export const BlockRenderer = memo(
           <blocks.TeaserSlots
             {...block}
             className={className}
-            siblings={siblings}
           />
         ),
       ],
@@ -345,7 +319,6 @@ export const BlockRenderer = memo(
           <blocks.Image
             {...block}
             className={className}
-            siblings={siblings}
           />
         ),
       ],
@@ -355,7 +328,6 @@ export const BlockRenderer = memo(
           <blocks.ImageGallery
             {...block}
             className={className}
-            siblings={siblings}
           />
         ),
       ],
@@ -374,7 +346,6 @@ export const BlockRenderer = memo(
             <blocks.Crowdfunding
               {...(block as BuilderCrowdfundingBlockProps)}
               className={className}
-              siblings={siblings}
             />
           ),
         ],
@@ -384,7 +355,6 @@ export const BlockRenderer = memo(
             <blocks.Title
               {...(block as BuilderTitleBlockProps)}
               className={className}
-              siblings={siblings}
             />
           ),
         ],
@@ -394,7 +364,6 @@ export const BlockRenderer = memo(
             <blocks.Quote
               {...(block as BuilderQuoteBlockProps)}
               className={className}
-              siblings={siblings}
             />
           ),
         ],
@@ -404,7 +373,6 @@ export const BlockRenderer = memo(
             <blocks.Break
               {...(block as BuilderBreakBlockProps)}
               className={className}
-              siblings={siblings}
             />
           ),
         ],
@@ -414,7 +382,6 @@ export const BlockRenderer = memo(
             <blocks.RichText
               {...(block as BuilderRichTextBlockProps)}
               className={className}
-              siblings={siblings}
             />
           ),
         ],
@@ -424,7 +391,6 @@ export const BlockRenderer = memo(
             <blocks.HTML
               {...(block as BuilderHTMLBlockProps)}
               className={className}
-              siblings={siblings}
             />
           ),
         ],
@@ -434,7 +400,6 @@ export const BlockRenderer = memo(
             <blocks.Subscribe
               {...(block as BuilderSubscribeBlockProps)}
               className={className}
-              siblings={siblings}
             />
           ),
         ],
@@ -444,7 +409,6 @@ export const BlockRenderer = memo(
             <blocks.Event
               {...(block as BuilderEventBlockProps)}
               className={className}
-              siblings={siblings}
             />
           ),
         ],
@@ -454,7 +418,6 @@ export const BlockRenderer = memo(
             <blocks.Poll
               {...(block as BuilderPollBlockProps)}
               className={className}
-              siblings={siblings}
             />
           ),
         ],
@@ -464,7 +427,6 @@ export const BlockRenderer = memo(
             <blocks.Listicle
               {...(block as BuilderListicleBlockProps)}
               className={className}
-              siblings={siblings}
             />
           ),
         ],
@@ -474,7 +436,6 @@ export const BlockRenderer = memo(
             <blocks.Comment
               {...(block as BuilderCommentBlockProps)}
               className={className}
-              siblings={siblings}
             />
           ),
         ],
@@ -484,7 +445,6 @@ export const BlockRenderer = memo(
             <blocks.FlexBlock
               {...(block as BuilderFlexBlockProps)}
               className={className}
-              siblings={siblings}
             />
           ),
         ],
@@ -493,20 +453,10 @@ export const BlockRenderer = memo(
   }
 );
 
-export const collectSiblings = (blocks: BlockContent[]) => {
-  const siblings = blocks.map(b => ({
-    typeName: b.__typename,
-    blockStyle: b.blockStyle,
-  })) as BlockSibling[];
-  return siblings;
-};
-
 export const Blocks = memo(({ blocks, type }: BuilderBlocksProps) => {
   const {
     blocks: { Renderer },
   } = useWebsiteBuilder();
-
-  const siblings = collectSiblings(blocks);
 
   return (
     <>
@@ -528,7 +478,6 @@ export const Blocks = memo(({ blocks, type }: BuilderBlocksProps) => {
             index={index}
             count={blocks.length}
             type={type}
-            siblings={siblings}
           />
         </ImageContext.Provider>
       ))}

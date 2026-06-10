@@ -2,21 +2,20 @@ import { css, Theme } from '@emotion/react';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import {
   BlockRenderer,
-  collectSiblings,
   isImageBlock,
   isRichTextBlock,
   isSubscribeBlock,
   isTitleBlock,
 } from '@wepublish/block-content/website';
+import { BlockSibling, collectSiblings } from './block-siblings';
 import { ImageContext } from '@wepublish/image/website';
-import { BlockContent } from '@wepublish/website/api';
+import { FullBlockFragment } from '@wepublish/website/api';
 import {
   BuilderBlockRendererProps,
   BuilderBlocksProps,
   BuilderBreakBlockProps,
   BuilderFlexBlockProps,
   BuilderTeaserSlotsBlockProps,
-  useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { allPass, anyPass, cond } from 'ramda';
 import {
@@ -58,7 +57,9 @@ const ClientOnly = ({ children }: PropsWithChildren) => {
   return mounted ? <>{children}</> : null;
 };
 
-export const ReflektBlockRenderer = (props: BuilderBlockRendererProps) => {
+export const ReflektBlockRenderer = (
+  props: BuilderBlockRendererProps & { siblings?: BlockSibling[] }
+) => {
   const isMobile = useMediaQuery((theme: Theme) =>
     theme.breakpoints.down('md')
   );
@@ -68,60 +69,35 @@ export const ReflektBlockRenderer = (props: BuilderBlockRendererProps) => {
       cond([
         [
           isCollapsibleContent,
-          (block: BuilderBreakBlockProps) => (
-            <CollapsibleContent
-              {...block}
-              siblings={props.siblings}
-            />
-          ),
+          (block: BuilderBreakBlockProps) => <CollapsibleContent {...block} />,
         ],
         [
           isCollapsibleDownloads,
           (block: BuilderBreakBlockProps) => (
-            <CollapsibleDownloads
-              {...block}
-              siblings={props.siblings}
-            />
+            <CollapsibleDownloads {...block} />
           ),
         ],
         [
           isTextWithImageBreakBlock,
           (block: BuilderBreakBlockProps) => (
-            <TextWithImageBreakBlock
-              {...block}
-              siblings={props.siblings}
-            />
+            <TextWithImageBreakBlock {...block} />
           ),
         ],
         [
           isTextWithImageAltColorBreakBlock,
           (block: BuilderBreakBlockProps) => (
-            <TextWithImageAltColorBreakBlock
-              {...block}
-              siblings={props.siblings}
-            />
+            <TextWithImageAltColorBreakBlock {...block} />
           ),
         ],
-        [
-          isToc,
-          (block: BuilderBreakBlockProps) => (
-            <Toc
-              {...block}
-              siblings={props.siblings}
-            />
-          ),
-        ],
+        [isToc, (block: BuilderBreakBlockProps) => <Toc {...block} />],
         [
           isFlexBlockFullsizeImage,
           (block: BuilderFlexBlockProps) => (
-            <FlexBlockFullsizeImage
-              {...block}
-              siblings={props.siblings}
-            />
+            <FlexBlockFullsizeImage {...block} />
           ),
         ],
-      ]) as (block: BlockContent) => JSX.Element | undefined,
-    [props.siblings]
+      ]) as (block: FullBlockFragment) => JSX.Element | undefined,
+    []
   );
 
   const styles = useMemo(
@@ -136,7 +112,7 @@ export const ReflektBlockRenderer = (props: BuilderBlockRendererProps) => {
         ],
         [
           allPass([
-            (block: BlockContent) =>
+            (block: FullBlockFragment) =>
               isTeaserSlotsTopic(block as BuilderTeaserSlotsBlockProps),
             () => isMobile,
           ]),
@@ -147,7 +123,7 @@ export const ReflektBlockRenderer = (props: BuilderBlockRendererProps) => {
         ],
         [
           allPass([
-            (block: BlockContent) =>
+            (block: FullBlockFragment) =>
               anyPass([
                 isImageBlock,
                 isRichTextBlock,
@@ -180,12 +156,7 @@ export const ReflektBlockRenderer = (props: BuilderBlockRendererProps) => {
     props.block.__typename === 'SoundCloudTrackBlock' ||
     props.block.__typename === 'IFrameBlock';
 
-  const fallbackRenderer = (
-    <BlockRenderer
-      {...props}
-      siblings={props.siblings}
-    />
-  );
+  const fallbackRenderer = <BlockRenderer {...props} />;
 
   const defaultBlock =
     extraBlockMap(props.block) ??
@@ -207,10 +178,6 @@ export const ReflektBlockRenderer = (props: BuilderBlockRendererProps) => {
 
 // eslint-disable-next-line react/display-name
 export const ReflektBlocks = memo(({ blocks, type }: BuilderBlocksProps) => {
-  const {
-    blocks: { Renderer },
-  } = useWebsiteBuilder();
-
   const siblings = collectSiblings(blocks);
 
   return (
@@ -228,7 +195,7 @@ export const ReflektBlocks = memo(({ blocks, type }: BuilderBlocksProps) => {
             : {}
           }
         >
-          <Renderer
+          <ReflektBlockRenderer
             block={block}
             index={index}
             count={blocks.length}

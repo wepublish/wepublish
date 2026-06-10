@@ -18,6 +18,7 @@ import {
   type FlexBlock as FlexBlockType,
   BlockContent,
   FlexAlignment,
+  FullBlockFragment,
   IFrameBlock as IFrameBlockType,
   VimeoVideoBlock as VimeoVideoBlockType,
   YouTubeVideoBlock as YouTubeVideoBlockType,
@@ -523,7 +524,7 @@ export const FlexBlockHero = ({
                   )}
                 </YouTubeVideoBlockWrapper>
               : <Renderer
-                  block={nestedBlock.block as BlockContent}
+                  block={nestedBlock.block as FullBlockFragment}
                   type={
                     (
                       (type as unknown as BuilderBlockRendererProps['type']) ===

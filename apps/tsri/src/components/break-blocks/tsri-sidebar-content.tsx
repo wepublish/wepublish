@@ -3,7 +3,6 @@ import { css, Theme, Typography, useTheme } from '@mui/material';
 import { hasBlockStyle, isBreakBlock } from '@wepublish/block-content/website';
 import { BlockContent, FullBreakBlockFragment } from '@wepublish/website/api';
 import {
-  BlockSibling,
   BuilderBreakBlockProps,
   Button,
   Image,
@@ -13,6 +12,8 @@ import {
 import { allPass } from 'ramda';
 import { useMemo } from 'react';
 import { Element } from 'slate';
+
+import { BlockSibling } from '../block-siblings';
 
 import { TsriBreakBlockType } from './tsri-base-break-block';
 
