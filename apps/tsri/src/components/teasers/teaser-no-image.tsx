@@ -47,12 +47,13 @@ export const TeaserNoImage = styled(TsriTeaser)`
   }
 
   ${TeaserPreTitle} {
-    padding: calc(var(--tw, 100cqw) * 0.0065) calc(var(--tw, 100cqw) * 0.015);
+    padding: calc(var(--tw, 100cqw) * 0.0065) calc(var(--tw, 100cqw) * 0.015)
+      calc(var(--tw, 100cqw) * 0.1);
   }
 
   ${TeaserTitle} {
     padding: calc(var(--tw, 100cqw) * 0.022) calc(var(--tw, 100cqw) * 0.015)
-      calc(var(--tw, 100cqw) * 0.04);
+      calc(var(--tw, 100cqw) * 0.1);
   }
 
   ${TeaserMetadata} {

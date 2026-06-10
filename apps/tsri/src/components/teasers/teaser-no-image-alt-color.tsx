@@ -55,7 +55,8 @@ export const TeaserNoImageAltColor = styled(TsriTeaser)`
   }
 
   ${TeaserPreTitle} {
-    padding: calc(var(--tw, 100cqw) * 0.0065) calc(var(--tw, 100cqw) * 0.015);
+    padding: calc(var(--tw, 100cqw) * 0.0065) calc(var(--tw, 100cqw) * 0.015)
+      calc(var(--tw, 100cqw) * 0.1);
   }
 
   ${TeaserTitle} {
