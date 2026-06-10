@@ -7,6 +7,19 @@ const { startAndSeedDb } = require("./temporary-postgres.js");
 const { startProject, teardownProcesses } = require("./processes.js");
 const path = require('path');
 const { createContainer, startContainer, attachContainer, buildImage, removeContainer, waitContainer } = require("./docker-api.js");
+const { createServer } = require("node:net");
+
+function getFreePort() {
+  return new Promise((resolve, reject) => {
+    const srv = createServer();
+    srv.unref();
+    srv.on("error", reject);
+    srv.listen(0, () => {
+      const { port } = srv.address();
+      srv.close(() => resolve(port));
+    });
+  });
+}
 
 function createContainerConfig(
   containerName,
@@ -84,10 +97,10 @@ async function main(medium, baselineCommitHash, currentCommitHash, apiPort, uiPo
     process.exit(1);
   }
 
-  const apiPortBaseline = apiPort + 1000;
-  const apiPortCurrent = apiPort + 1001;
-  const uiPortBaseline = uiPort + 1000;
-  const uiPortCurrent = uiPort + 1001;
+  const apiPortBaseline = await getFreePort();
+  const apiPortCurrent = await getFreePort();
+  const uiPortBaseline = await getFreePort();
+  const uiPortCurrent = await getFreePort();
   const logPathCurrent = `${medium}/logs/current`;
   const logPathBaseline = `${medium}/logs/baseline`;
   const artifactsPath = `${medium}/artifacts`;
