@@ -22,7 +22,6 @@ import { ReactNode, SyntheticEvent, useId, useState } from 'react';
 export const TabbedContentWrapper = styled('div')`
   width: 100%;
   grid-column: -1/1;
-  container: tabbed-content/inline-size;
 `;
 
 interface TabPanelBaseProps {
