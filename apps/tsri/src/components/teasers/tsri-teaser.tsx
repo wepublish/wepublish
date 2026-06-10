@@ -184,8 +184,6 @@ export const TeaserContentWrapper = styled('article')`
 export const TeaserTitle = styled('h1')`
   grid-row: 3;
   grid-column: 2 / 3;
-  position: relative;
-  z-index: 1;
 `;
 
 export const TeaserLead = styled('p')``;
