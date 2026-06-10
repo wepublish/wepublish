@@ -23,6 +23,7 @@ export const ReflektSubscribe = styled(SubscribeBlock)`
   grid-template-columns: 1fr;
   grid-template-areas:
     'memberPlans'
+    'monthlyAmount'
     'userForm'
     'transactionFee'
     'submit'
@@ -38,7 +39,6 @@ export const ReflektSubscribe = styled(SubscribeBlock)`
     }
   }
 
-  ${SubscribeSection}[data-area='monthlyAmount'],
   ${SubscribeSection}[data-area='returning'],
   ${SubscribeNarrowSection}[data-area='voucher'] {
     display: none;

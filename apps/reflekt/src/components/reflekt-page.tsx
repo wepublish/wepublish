@@ -28,15 +28,29 @@ const StyledReflektPage = styled(Page)`
     grid-template-columns: 1fr;
     justify-content: stretch;
   }
+
+  &.hide-amount-slider [data-area='monthlyAmount'] {
+    display: none;
+  }
 `;
 
 const pageGlobalStyles = <GlobalStyles styles={fullWidthMainSpacer} />;
 export const ReflektPage = (props: BuilderPageProps) => {
+  const hideAmountSlider =
+    props.data?.page?.latest?.properties?.find(
+      p => p.key === 'hideAmountSlider'
+    )?.value === 'true';
+
   return (
     <ContentWidthProvider fullWidth>
       {pageGlobalStyles}
 
-      <StyledReflektPage {...props} />
+      <StyledReflektPage
+        {...props}
+        className={[props.className, hideAmountSlider && 'hide-amount-slider']
+          .filter(Boolean)
+          .join(' ')}
+      />
     </ContentWidthProvider>
   );
 };

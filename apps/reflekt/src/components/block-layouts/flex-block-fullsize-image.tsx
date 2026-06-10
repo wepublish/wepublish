@@ -8,7 +8,11 @@ import {
   isFlexBlock,
   RichTextBlockWrapper,
 } from '@wepublish/block-content/website';
-import { BlockContent, FlexAlignment } from '@wepublish/website/api';
+import {
+  BlockContent,
+  FlexAlignment,
+  FullBlockFragment,
+} from '@wepublish/website/api';
 import {
   BuilderBlockRendererProps,
   BuilderFlexBlockProps,
@@ -518,7 +522,7 @@ export const FlexBlockFullsizeImage = ({
             {...(nestedBlock.alignment as FlexAlignment)}
           >
             <Renderer
-              block={nestedBlock.block as BlockContent}
+              block={nestedBlock.block as FullBlockFragment}
               type={
                 (
                   (type as unknown as BuilderBlockRendererProps['type']) ===
