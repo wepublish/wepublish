@@ -20,6 +20,12 @@ export abstract class BaseToken {
 
   @Field()
   name!: string;
+
+  @Field(() => [String], {
+    description:
+      'Role IDs whose permissions this token carries (used for service/peer tokens).',
+  })
+  roleIDs!: string[];
 }
 
 @ObjectType({
@@ -40,7 +46,15 @@ export class CreateTokenInput extends PickType(
   TokenWithSecret,
   ['name'] as const,
   ArgsType
-) {}
+) {
+  @Field(() => [String], {
+    nullable: true,
+    defaultValue: [],
+    description:
+      'Role IDs whose permissions the token should carry. Defaults to none.',
+  })
+  roleIDs?: string[];
+}
 
 @ArgsType()
 export class UpdateTokenInput extends PartialType(CreateTokenInput, ArgsType) {

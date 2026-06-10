@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
-import { CreateTokenInput } from './token.model';
+import { CreateTokenInput, UpdateTokenInput } from './token.model';
 import * as crypto from 'crypto';
 
 export function generateToken() {
@@ -17,7 +17,18 @@ export class TokenService {
 
   async createToken(input: CreateTokenInput) {
     return this.prisma.token.create({
-      data: { ...input, token: generateToken() },
+      data: {
+        name: input.name,
+        roleIDs: input.roleIDs ?? [],
+        token: generateToken(),
+      },
+    });
+  }
+
+  async updateToken({ id, ...data }: UpdateTokenInput) {
+    return this.prisma.token.update({
+      where: { id },
+      data,
     });
   }
 
