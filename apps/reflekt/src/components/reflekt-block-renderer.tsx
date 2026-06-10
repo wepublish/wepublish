@@ -16,6 +16,7 @@ import {
   BuilderBreakBlockProps,
   BuilderFlexBlockProps,
   BuilderTeaserSlotsBlockProps,
+  useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { allPass, anyPass, cond } from 'ramda';
 import {
@@ -162,7 +163,7 @@ export const ReflektBlockRenderer = (
     extraBlockMap(props.block) ??
     (isEmbed ? <ClientOnly>{fallbackRenderer}</ClientOnly> : fallbackRenderer);
 
-  if (props.type === 'Page') {
+  if (props.type === 'Page' && (props.level ?? 0) === 0) {
     return (
       <MainSpacer
         maxWidth="lg"
@@ -178,6 +179,10 @@ export const ReflektBlockRenderer = (
 
 // eslint-disable-next-line react/display-name
 export const ReflektBlocks = memo(({ blocks, type }: BuilderBlocksProps) => {
+  const {
+    blocks: { Renderer },
+  } = useWebsiteBuilder();
+  const TypedRenderer = Renderer as typeof ReflektBlockRenderer;
   const siblings = collectSiblings(blocks);
 
   return (
@@ -195,7 +200,7 @@ export const ReflektBlocks = memo(({ blocks, type }: BuilderBlocksProps) => {
             : {}
           }
         >
-          <ReflektBlockRenderer
+          <TypedRenderer
             block={block}
             index={index}
             count={blocks.length}

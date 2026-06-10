@@ -1,15 +1,20 @@
 import styled from '@emotion/styled';
 import { alpha, Link as MuiLink, Typography, useTheme } from '@mui/material';
 import { forceHideBanner } from '@wepublish/banner/website';
+import { BlockRenderer } from '@wepublish/block-content/website';
 import {
   FooterCategory as FooterCategoryDefault,
   navigationLinkToUrl,
 } from '@wepublish/navigation/website';
 import { TextToIcon } from '@wepublish/ui';
 import { FullNavigationFragment } from '@wepublish/website/api';
-import { Link } from '@wepublish/website/builder';
-import { BuilderFooterProps } from '@wepublish/website/builder';
-import { useWebsiteBuilder } from '@wepublish/website/builder';
+import {
+  BuilderBlockRendererProps,
+  BuilderFooterProps,
+  Link,
+  useWebsiteBuilder,
+  WebsiteBuilderProvider,
+} from '@wepublish/website/builder';
 import { PropsWithChildren } from 'react';
 import { useIntersectionObserver } from 'usehooks-ts';
 
@@ -49,6 +54,10 @@ export const FooterMain = styled('div')`
     padding-right: 0;
   }
 `;
+
+const FooterBlockRenderer = (props: BuilderBlockRendererProps) => (
+  <BlockRenderer {...props} />
+);
 
 const FooterContentWrapper = styled('div')`
   grid-column: -1 / 1;
@@ -369,11 +378,13 @@ export const FooterPaper = ({
       {children}
       {footerContent && footerContent.blocks.length > 0 && (
         <FooterContentWrapper>
-          <Blocks
-            key={'footer'}
-            blocks={footerContent.blocks}
-            type="Custom"
-          />
+          <WebsiteBuilderProvider blocks={{ Renderer: FooterBlockRenderer }}>
+            <Blocks
+              key={'footer'}
+              blocks={footerContent.blocks}
+              type="Page"
+            />
+          </WebsiteBuilderProvider>
 
           <PoweredBy
             href="https://wepublish.ch/"

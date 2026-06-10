@@ -49,7 +49,11 @@ export const FlexBlock = ({
   className,
   blocks,
   type,
-}: BuilderFlexBlockProps & { type?: BuilderBlockRendererProps['type'] }) => {
+  level,
+}: BuilderFlexBlockProps & {
+  type?: BuilderBlockRendererProps['type'];
+  level?: number;
+}) => {
   const {
     blocks: { Renderer },
   } = useWebsiteBuilder();
@@ -68,14 +72,8 @@ export const FlexBlock = ({
           >
             <Renderer
               block={nestedBlock.block as FullBlockFragment}
-              type={
-                (
-                  (type as unknown as BuilderBlockRendererProps['type']) ===
-                  'Article'
-                ) ?
-                  'ArticleNested'
-                : 'PageNested'
-              }
+              type={type ?? 'Page'}
+              level={(level ?? 0) + 1}
               index={index}
               count={sortedBlocks.length}
             />

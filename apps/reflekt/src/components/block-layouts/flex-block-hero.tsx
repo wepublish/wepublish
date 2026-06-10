@@ -150,11 +150,12 @@ const EndMask = styled('div')`
 
 type HeroVimeoVideoProps = {
   videoId: string;
+  noLoop: boolean;
 };
 
-const HeroVimeoVideo = ({ videoId }: HeroVimeoVideoProps) => (
+const HeroVimeoVideo = ({ videoId, noLoop }: HeroVimeoVideoProps) => (
   <HeroVimeoPlayer
-    src={`https://player.vimeo.com/video/${videoId}?background=1&autoplay=1&muted=1&loop=1&controls=0&title=0&byline=0&portrait=0`}
+    src={`https://player.vimeo.com/video/${videoId}?background=1&autoplay=1&muted=1&loop=${noLoop ? 0 : 1}&controls=0&title=0&byline=0&portrait=0`}
     allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
     title="hero video"
   />
@@ -388,7 +389,11 @@ export const FlexBlockHero = ({
   className,
   blocks,
   type,
-}: BuilderFlexBlockProps & { type?: BuilderBlockRendererProps['type'] }) => {
+  level,
+}: BuilderFlexBlockProps & {
+  type?: BuilderBlockRendererProps['type'];
+  level?: number;
+}) => {
   const {
     blocks: { Renderer },
   } = useWebsiteBuilder();
@@ -471,7 +476,10 @@ export const FlexBlockHero = ({
                       noLoop={!!noLoop}
                     />
                   : isVimeoBlock && vimeoId ?
-                    <HeroVimeoVideo videoId={vimeoId} />
+                    <HeroVimeoVideo
+                      videoId={vimeoId}
+                      noLoop={!!noLoop}
+                    />
                   : <HeroYouTubeVideo
                       videoUrl={videoUrl}
                       isActiveBlock={isActiveBlock}
@@ -525,14 +533,8 @@ export const FlexBlockHero = ({
                 </YouTubeVideoBlockWrapper>
               : <Renderer
                   block={nestedBlock.block as FullBlockFragment}
-                  type={
-                    (
-                      (type as unknown as BuilderBlockRendererProps['type']) ===
-                      'Article'
-                    ) ?
-                      'ArticleNested'
-                    : 'PageNested'
-                  }
+                  type={type ?? 'Page'}
+                  level={(level ?? 0) + 1}
                   index={index}
                   count={sortedBlocks.length}
                 />
