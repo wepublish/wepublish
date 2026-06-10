@@ -53,7 +53,7 @@ export const TeaserNoImage = styled(TsriTeaser)`
 
   ${TeaserTitle} {
     padding: calc(var(--tw, 100cqw) * 0.022) calc(var(--tw, 100cqw) * 0.015)
-      calc(var(--tw, 100cqw) * 0.1);
+      calc(var(--tw, 100cqw) * 0.04);
   }
 
   ${TeaserMetadata} {
