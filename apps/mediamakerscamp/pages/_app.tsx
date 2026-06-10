@@ -93,7 +93,7 @@ function CustomApp({
   emotionCache,
   websiteSettings,
 }: CustomAppProps) {
-  const siteTitle = 'We.Publish';
+  const siteTitle = 'Media Makers Camp';
 
   // Emotion cache from _document is not supplied when client side rendering
   // Compat removes certain warnings that are irrelevant to us
