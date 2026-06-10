@@ -20,8 +20,6 @@ async function killPortIfOccupied(port) {
 }
 
 function spawnAndWaitFor(cmd, args, readyString, logPrefix, env = {}, cwd = process.cwd()) {
-  //console.log(`PATH: ${process.env.PATH}`);
-  //console.log(`cwd: ${cwd}`);
   return new Promise((resolve, reject) => {
     let resolved = false;
     const proc = spawn(cmd, args, {
