@@ -14,6 +14,7 @@ import {
 import {
   useUpdateWebsiteSettingsMutation,
   useWebsiteSettingsLazyQuery,
+  WebsiteSettingsDocument,
 } from '@wepublish/editor/api';
 import { Controller, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
@@ -65,6 +66,23 @@ const analyticsSchema = z.object({
   }),
 });
 
+const stripTypename = <T,>(value: T): T => {
+  if (Array.isArray(value)) {
+    return value.map(stripTypename) as unknown as T;
+  }
+  if (value && typeof value === 'object') {
+    const out: Record<string, unknown> = {};
+    for (const [k, v] of Object.entries(value as Record<string, unknown>)) {
+      if (k === '__typename') {
+        continue;
+      }
+      out[k] = stripTypename(v);
+    }
+    return out as T;
+  }
+  return value;
+};
+
 export const WebsiteAnalyticsWrapper = styled.form`
   display: grid;
   gap: 24px;
@@ -109,6 +127,7 @@ export const WebsiteAnalytics = () => {
     control,
     handleSubmit,
     watch,
+    reset,
     formState: { isLoading },
   } = useForm<z.infer<typeof analyticsSchema>>({
     resolver: zodResolver(analyticsSchema),
@@ -117,7 +136,7 @@ export const WebsiteAnalytics = () => {
       const data = await loadSettings();
 
       return (
-        data.data?.websiteSettings.analytics ??
+        stripTypename(data.data?.websiteSettings.analytics) ??
         (payload as z.infer<typeof analyticsSchema>)
       );
     },
@@ -126,7 +145,15 @@ export const WebsiteAnalytics = () => {
   const onSubmit = handleSubmit(data => {
     updateWebsiteSettings({
       variables: {
-        analytics: data,
+        analytics: stripTypename(data),
+      },
+      refetchQueries: [{ query: WebsiteSettingsDocument }],
+      awaitRefetchQueries: true,
+      onCompleted: result => {
+        const fresh = stripTypename(result.updateWebsiteSettings?.analytics);
+        if (fresh) {
+          reset(fresh);
+        }
       },
     });
   }, console.warn);
