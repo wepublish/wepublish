@@ -2,6 +2,19 @@ const { promisify } = require("util");
 const fs = require('fs/promises');
 const fsSync = require('fs');
 const { exec, spawn } = require("child_process");
+const { createServer } = require("node:net");
+
+function getFreePort() {
+  return new Promise((resolve, reject) => {
+    const srv = createServer();
+    srv.unref();
+    srv.on("error", reject);
+    srv.listen(0, () => {
+      const { port } = srv.address();
+      srv.close(() => resolve(port));
+    });
+  });
+}
 
 const execAsync = promisify(exec);
 
@@ -82,7 +95,7 @@ async function startApi(jwtPublicKey, jwtPrivateKey, mediaServerUrl, dbConnectio
 
 async function startUi(medium, logDir, workTreeDir, port, apiPort) {
   console.log(`building ui`);
-  const apiUrl = `http://localhost:${apiPort}`;
+  const apiUrl = `localhost:${apiPort}`;
   await execAsync(`npx nx build ${medium} --verbose`, {
     cwd: workTreeDir, env: {
       ...process.env,
@@ -124,4 +137,4 @@ async function stopProject(apiProcess, uiProcess) {
   teardownProcesses([apiProcess, uiProcess]);
 }
 
-module.exports = { startProject, stopProject, teardownProcesses };
+module.exports = { startProject, stopProject, teardownProcesses, getFreePort };

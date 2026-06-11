@@ -34,10 +34,14 @@ async function visitPagesAndTakeScreenshots(context, baseUrl, pagesToVisit) {
   }));
 }
 
-async function captureAllDevices(captureFn, baselinePort, currentPort, config = DEFAULT_CONFIG) {
+async function captureAllDevices(captureFn, host, baselinePort, currentPort, config = DEFAULT_CONFIG) {
   console.log("capturing screenshots...");
   const launchers = { chromium, firefox, webkit };
-  const url = (port) => `http://localhost:${port}`;
+  const url = (port) => `http://${host}:${port}`;
+  const baselineUrl = url(baselinePort);
+  const currentUrl = url(currentPort);
+  console.log(`running queries against baseline url: ${baselineUrl}`);
+  console.log(`running queries against current url: ${currentUrl}`);
   // Cache the launch promise (not the resolved browser) so concurrent devices
   // sharing an engine await the same launch instead of racing to start two.
   const browserPromises = {};
@@ -49,8 +53,8 @@ async function captureAllDevices(captureFn, baselinePort, currentPort, config = 
       const currentContext = await browser.newContext({ ...deviceDescriptor });
       try {
         const [baselineShots, currentShots] = await Promise.all([
-          captureFn(baselineContext, url(baselinePort)),
-          captureFn(currentContext, url(currentPort)),
+          captureFn(baselineContext, baselineUrl),
+          captureFn(currentContext, currentUrl),
         ]);
         return { deviceName, baselineShots, currentShots };
       } finally {

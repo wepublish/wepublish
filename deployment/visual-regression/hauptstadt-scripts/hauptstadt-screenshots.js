@@ -37,10 +37,11 @@ const PAGES_TO_VISIT = [
   }
 ];
 
-async function test(artifactsPath, baselineCommitHash, currentCommitHash, baselinePort, currentPort) {
+async function test(artifactsPath, baselineCommitHash, currentCommitHash, host, baselinePort, currentPort) {
   const artifactsPathInContainer = "/app/artifacts";
   const captures = await captureAllDevices(
     (context, url) => visitPagesAndTakeScreenshots(context, url, PAGES_TO_VISIT),
+    host,
     baselinePort,
     currentPort,
   );
@@ -52,4 +53,4 @@ async function test(artifactsPath, baselineCommitHash, currentCommitHash, baseli
   reportResults("hauptstadt", baselineCommitHash, currentCommitHash, deviceResults, artifactsPathInContainer, artifactsPath);
 }
 
-test(process.env.ARTIFACTS_PATH, process.env.BASELINE_COMMIT, process.env.CURRENT_COMMIT, process.env.BASELINE_PORT, process.env.CURRENT_PORT);
+test(process.env.ARTIFACTS_PATH, process.env.BASELINE_COMMIT, process.env.CURRENT_COMMIT, process.env.HOST, process.env.BASELINE_PORT, process.env.CURRENT_PORT);

@@ -4,63 +4,58 @@ const { promisify } = require('util');
 const exec = promisify(require('child_process').exec);
 const { pullDbDump } = require("./pull-db-dump.js");
 const { startAndSeedDb } = require("./temporary-postgres.js");
-const { startProject, teardownProcesses } = require("./processes.js");
+const { startProject, teardownProcesses, getFreePort } = require("./processes.js");
 const path = require('path');
 const { createContainer, startContainer, attachContainer, buildImage, removeContainer, waitContainer } = require("./docker-api.js");
-const { createServer } = require("node:net");
 
-function getFreePort() {
-  return new Promise((resolve, reject) => {
-    const srv = createServer();
-    srv.unref();
-    srv.on("error", reject);
-    srv.listen(0, () => {
-      const { port } = srv.address();
-      srv.close(() => resolve(port));
-    });
-  });
-}
-
-function createContainerConfig(
-  containerName,
-  imageName,
-  artifactsPath,
+function createScreenshotContainerConfig(
+  medium,
   baselineCommit,
   currentCommit,
   baselineUiPort,
   currentUiPort,
 ) {
+  const artifactsPath = `./${medium}/artifacts`;
+  const hostConfig = {
+    Init: true,
+    IpcMode: "host",
+    Binds: [`${path.resolve(artifactsPath)}:/app/artifacts`],
+  };
+  const isLinux = process.platform === "linux";
+  if (isLinux) {
+    // Share the host net namespace: container's localhost == host's localhost.
+    // we need this to be able to reach the ui inside the container
+    hostConfig.NetworkMode = "host";
+  } else {
+    // macOS: reach the host via the Docker-provided alias.
+    //probably works on Windows as well, not tested
+    hostConfig.ExtraHosts = ["host.docker.internal:host-gateway"];
+  }
+  const host = isLinux ? "localhost" : "host.docker.internal";
   return {
-    name: containerName,
-    Image: imageName,
+    name: `${medium}-screenshots`,
+    Image: `${medium}-screenshots`,
     Env: [
       `ARTIFACTS_PATH=${path.resolve(artifactsPath)}`,
       `BASELINE_COMMIT=${baselineCommit}`,
       `CURRENT_COMMIT=${currentCommit}`,
+      `HOST=${host}`,
       `BASELINE_PORT=${baselineUiPort}`,
       `CURRENT_PORT=${currentUiPort}`,
     ],
-    HostConfig: {
-      Init: true,
-      IpcMode: "host",
-      NetworkMode: "host",
-      Binds: [`${path.resolve(artifactsPath)}:/app/artifacts`],
-    },
+    HostConfig: hostConfig,
   };
 }
 
 async function createScreenshotContainer(medium, baselineCommit, currentCommit, baselineUiPort, currentUiPort) {
-  const imageTag = `${medium}-screenshots`;
-  const containerConfig = createContainerConfig(
-    imageTag,
-    imageTag,
-    `./${medium}/artifacts`,
+  const containerConfig = createScreenshotContainerConfig(
+    medium,
     baselineCommit,
     currentCommit,
     baselineUiPort,
     currentUiPort
   );
-  await removeContainer(imageTag);
+  await removeContainer(`${medium}-screenshots`);
   return await createContainer(containerConfig);
 }
 
@@ -111,7 +106,8 @@ async function main(medium, baselineCommitHash, currentCommitHash, apiPort, uiPo
 
   console.log("preparing...");
   await deleteAndCreateFolders([logPathCurrent, logPathBaseline, artifactsPath]);
-  const screenshotContainerPromise = buildImage(`${medium}-screenshots`, ".", `${medium}-scripts/Dockerfile`, `${medium}/logs`).then(_ => createScreenshotContainer(medium, baselineCommitHash, currentCommitHash, uiPortBaseline, uiPortCurrent));
+  const screenshotContainerPromise = buildImage(`${medium}-screenshots`, ".", `${medium}-scripts/Dockerfile`, `${medium}/logs`).then(_ =>
+    createScreenshotContainer(medium, baselineCommitHash, currentCommitHash, uiPortBaseline, uiPortCurrent));
   const dumpPromise = pullDbDump(medium);
   const baselineDbPromise = dumpPromise.then(dump => startAndSeedDb(dump, "baseline"));
   const currentDbPromise = dumpPromise.then(dump => startAndSeedDb(dump, "current"));
