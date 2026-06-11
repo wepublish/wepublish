@@ -48,6 +48,9 @@ async function captureAllDevices(captureFn, host, baselinePort, currentPort, con
   const getBrowser = (name) => (browserPromises[name] ??= launchers[name].launch());
   try {
     return await Promise.all(config.map(async ({ deviceName, deviceDescriptor, browserName }) => {
+      if (!deviceDescriptor) {
+        throw new Error(`Unknown Playwright device: "${deviceName}"`);
+      }
       const browser = await getBrowser(browserName);
       const baselineContext = await browser.newContext({ ...deviceDescriptor });
       const currentContext = await browser.newContext({ ...deviceDescriptor });
@@ -72,8 +75,8 @@ const DEFAULT_CONFIG = [
   { deviceName: 'Desktop Chrome', deviceDescriptor: devices['Desktop Chrome'], browserName: 'chromium' },
   { deviceName: 'Desktop Firefox', deviceDescriptor: devices['Desktop Firefox'], browserName: 'firefox' },
   { deviceName: 'Desktop Safari', deviceDescriptor: devices['Desktop Safari'], browserName: 'webkit' },
-  { deviceName: 'Pixel 10', deviceDescriptor: devices['Pixel 10'], browserName: 'chromium' },
-  { deviceName: 'iPhone 16', deviceDescriptor: devices['iPhone 16'], browserName: 'webkit' },
+  { deviceName: 'Pixel 7', deviceDescriptor: devices['Pixel 7'], browserName: 'chromium' },
+  { deviceName: 'iPhone 15', deviceDescriptor: devices['iPhone 15'], browserName: 'webkit' },
 ];
 
 module.exports = { visitPage, visitPagesAndTakeScreenshots, captureAllDevices };
