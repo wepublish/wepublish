@@ -46,8 +46,8 @@ const AdvertisementComponent = ({ type }: AdvertisementProps) => {
         <Leaderboard>
           <ReviveAd
             key={version}
-            reviveId={'7a948e8c545680d495088107b33f1f92'}
-            zoneId={'2'}
+            reviveId={'727bec5e09208690b050ccfc6a45d384'}
+            zoneId={'29587'}
           />
         </Leaderboard>
       );
@@ -56,8 +56,8 @@ const AdvertisementComponent = ({ type }: AdvertisementProps) => {
         <Skyscraper>
           <ReviveAd
             key={version}
-            reviveId={'7a948e8c545680d495088107b33f1f92'}
-            zoneId={'3'}
+            reviveId={'727bec5e09208690b050ccfc6a45d384'}
+            zoneId={'29588'}
           />
         </Skyscraper>
       );
@@ -66,8 +66,8 @@ const AdvertisementComponent = ({ type }: AdvertisementProps) => {
         <MediumRectangle>
           <ReviveAd
             key={version}
-            reviveId={'7a948e8c545680d495088107b33f1f92'}
-            zoneId={'4'}
+            reviveId={'727bec5e09208690b050ccfc6a45d384'}
+            zoneId={'29589'}
           />
         </MediumRectangle>
       );

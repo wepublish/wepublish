@@ -45,9 +45,9 @@ import { EenewsBlockRenderer } from '../src/components/block-renderer/eenews-blo
 import { EenewsTeaser } from '../src/components/blocks/eenews-teaser';
 import { EenewsTeaserGrid } from '../src/components/blocks/eenews-teaser-grid';
 import { EenewsArticle } from '../src/components/eenews-article';
-import { EenewsBuilderPagination } from '../src/components/eenews-builder-pagination';
 import { EenewsAuthor } from '../src/components/eenews-author';
 import { EenewsAuthorListItem } from '../src/components/eenews-author-list-item';
+import { EenewsBuilderPagination } from '../src/components/eenews-builder-pagination';
 import { EenewsContentWrapper } from '../src/components/eenews-content-wrapper';
 import { EenewsFooter } from '../src/components/eenews-footer';
 import { EenewsGlobalStyles } from '../src/components/eenews-global-styles';
@@ -251,7 +251,7 @@ function CustomApp({
                 </Head>
 
                 <Script
-                  src="https://macbook-pro-brew.tail5ae9ba.ts.net/www/delivery/asyncjs.php"
+                  src="//servedby.revive-adserver.net/asyncjs.php"
                   async
                 />
 
