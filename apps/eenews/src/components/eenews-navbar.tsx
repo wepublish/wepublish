@@ -396,8 +396,6 @@ export const EenewsNavbar = ({
     setToday(formatDateDE(new Date()));
   }, []);
 
-  // Collapse the hero into a slim strip (and fade out the nav) once the page is
-  // scrolled; the top bar always stays visible. Mirrors the tsri/hauptstadt pattern.
   useEffect(() => {
     const onScroll = () => setIsScrolled(window.scrollY > 1);
     onScroll();

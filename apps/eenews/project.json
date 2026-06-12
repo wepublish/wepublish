@@ -29,8 +29,7 @@
       "configurations": {
         "development": {
           "buildTarget": "eenews:build:development",
-          "dev": true,
-          "experimentalHttps": true
+          "dev": true
         },
         "production": {
           "buildTarget": "eenews:build:production",

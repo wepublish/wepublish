@@ -8,8 +8,8 @@ import {
 } from '@wepublish/website/builder';
 import { useRouter } from 'next/router';
 
+import { EenewsTeaser } from '../teasers/eenews-teaser';
 import { enrichTeasersWithAds } from '../teasers/eenews-teaser-ads';
-import { EenewsTeaser } from './eenews-teaser';
 
 const Section = styled('section')`
   background: ${({ theme }) => theme.palette.background.default};

@@ -10,7 +10,7 @@ import {
   WebsiteBuilderProvider,
 } from '@wepublish/website/builder';
 
-import { EenewsTeaser } from './blocks/eenews-teaser';
+import { EenewsTeaser } from './teasers/eenews-teaser';
 
 const Hero = styled('section')`
   padding: 64px 56px 48px;

@@ -1,8 +1,5 @@
 import styled from '@emotion/styled';
 
-// Skeleton placeholder mirroring EenewsTeaser's card so loading grids reserve a
-// reasonable average height (no layout shift). Uses the prototype's shimmer
-// (#e6ece9 + skeleton.gif) for the image, matching the real teaser image frame.
 const shimmer = `#e6ece9 url('/skeleton.gif') center / cover no-repeat`;
 
 const Card = styled('div')`

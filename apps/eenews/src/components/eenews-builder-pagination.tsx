@@ -3,9 +3,6 @@ import { ChangeEvent } from 'react';
 
 import { EenewsPagination } from './eenews-pagination';
 
-// Adapter so the website-builder `Pagination` element (MUI PaginationProps) renders
-// the eenews pagination used across the site (e.g. on the search results page).
-// Registered in _app's `elements`.
 export const EenewsBuilderPagination = ({
   page,
   count,

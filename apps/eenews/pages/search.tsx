@@ -46,10 +46,6 @@ const searchPageSchema = z.object({
   q: z.coerce.string().nullish(),
 });
 
-// Forked from the generic SearchPage (@wepublish/utils/website) so the results
-// render through EenewsTeaserGrid with skeletons while loading and through the
-// eenews pagination — the generic version can't pass a loading signal into the
-// teaser grid. Server-side prefetching is unchanged (getServerSideProps reused).
 export default function Search({
   query,
 }: InferGetServerSidePropsType<typeof SearchPageGetServerSideProps>) {

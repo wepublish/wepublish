@@ -8,7 +8,7 @@ import {
   WebsiteBuilderProvider,
 } from '@wepublish/website/builder';
 
-import { EenewsTeaser } from './eenews-teaser';
+import { EenewsTeaser } from '../teasers/eenews-teaser';
 
 const Section = styled('section')`
   background: ${({ theme }) => theme.palette.background.alt};

@@ -47,10 +47,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     client.query({ query: PeerProfileDocument }),
   ]);
 
-  // On topic pages the filter bar offers "topic ∩ chip" intersections. Prefetch a
-  // 1-row availability probe for each whitelisted chip so EenewsTagPage can read the
-  // counts cache-first and hide chips whose intersection would be empty. Probe the
-  // whole whitelist (a superset of the rendered chips) so every rendered chip is covered.
   if (topicTag.main) {
     const tagListResult = await client.query<TagListQuery>({
       query: TagListDocument,

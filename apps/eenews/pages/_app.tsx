@@ -42,7 +42,6 @@ import { zodI18nMap } from 'zod-i18n-map';
 
 import { Advertisement } from '../src/components/advertisement';
 import { EenewsBlockRenderer } from '../src/components/block-renderer/eenews-block-renderer';
-import { EenewsTeaser } from '../src/components/blocks/eenews-teaser';
 import { EenewsTeaserGrid } from '../src/components/blocks/eenews-teaser-grid';
 import { EenewsArticle } from '../src/components/eenews-article';
 import { EenewsAuthor } from '../src/components/eenews-author';
@@ -59,6 +58,7 @@ import { EenewsPaymentMethodPicker } from '../src/components/eenews-payment-meth
 import { EenewsPeriodicityPicker } from '../src/components/eenews-periodicity-picker';
 import { EenewsSubscriptionListItem } from '../src/components/eenews-subscription-list-item';
 import { EenewsTagPage } from '../src/components/eenews-tag-page';
+import { EenewsTeaser } from '../src/components/teasers/eenews-teaser';
 import { AdsProvider } from '../src/context/ads-context';
 import eenewsTheme from '../src/theme';
 setDefaultOptions({
@@ -86,6 +86,10 @@ const MainContent = styled('main')`
     min(var(--max-width), 100%)
     minmax(0, 1fr);
   width: 100%;
+
+  ${eenewsTheme.breakpoints.up('md')} {
+    min-height: max(100vh, 700px);
+  }
 `;
 
 const ContentArea = styled('div')`

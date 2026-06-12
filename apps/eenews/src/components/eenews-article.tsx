@@ -16,7 +16,7 @@ import {
 import { MdChevronLeft } from 'react-icons/md';
 
 import { ArticlePropertiesContext } from './article-properties-context';
-import { EenewsTeaser } from './blocks/eenews-teaser';
+import { EenewsTeaser } from './teasers/eenews-teaser';
 
 const Wrapper = styled('article')`
   max-width: 760px;

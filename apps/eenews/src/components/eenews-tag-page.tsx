@@ -17,10 +17,10 @@ import { useRouter } from 'next/router';
 import { MdClose } from 'react-icons/md';
 
 import { ActiveBadgeTagContext } from '../context/active-badge-tag-context';
-import { EenewsTeaser } from './blocks/eenews-teaser';
-import { EenewsTeaserSkeleton } from './blocks/eenews-teaser-skeleton';
 import { EenewsPagination } from './eenews-pagination';
+import { EenewsTeaser } from './teasers/eenews-teaser';
 import { isAllowedTagName } from './teasers/eenews-teaser-selectors';
+import { EenewsTeaserSkeleton } from './teasers/eenews-teaser-skeleton';
 
 const navigationLinkToUrl = (
   link: FullNavigationFragment['links'][number]
@@ -199,10 +199,6 @@ type TopicFilterChipProps = {
   label: string;
 };
 
-// Renders a topic-page filter chip only when its "topic ∩ chip" intersection has at
-// least one article, so no chip selection can lead to an empty page. The count is
-// prefetched in getStaticProps, so this cache-first read resolves from the hydrated
-// Apollo cache — no extra request, no flash.
 const TopicFilterChip = ({
   topicTagId,
   chipTagId,
@@ -384,8 +380,6 @@ export const EenewsTagPage = ({
               }
               const chipColor = resolveChipColor(url);
 
-              // On topic pages, only show a chip whose topic∩chip intersection has
-              // articles (availability prefetched in getStaticProps).
               if (isTopicPage && tag?.id) {
                 const chipTagId = tagIdByName.get(slug);
                 if (!chipTagId) {

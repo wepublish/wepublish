@@ -11,7 +11,7 @@ const toEeNewsTag = (tag: RawTag | undefined): EeNewsTag | undefined => {
   return { id: tag.id, tag: tag.tag, color: tag.color ?? undefined };
 };
 
-const FRENCH_ARTICLES_TAGS = ['article en français', 'articles en français'];
+const FRENCH_ARTICLES_TAGS = ['articles en français'];
 
 export const ALLOWED_TAG_NAMES = [
   'articles en français',

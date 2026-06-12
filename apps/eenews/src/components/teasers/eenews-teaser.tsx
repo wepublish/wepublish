@@ -13,12 +13,12 @@ import { useContext } from 'react';
 import { ActiveBadgeTagContext } from '../../context/active-badge-tag-context';
 import { Advertisement } from '../advertisement';
 import { EeNewsBlockType } from '../block-styles/eenews-block-styles';
-import { isAdTeaser } from '../teasers/eenews-teaser-ads';
+import { isAdTeaser } from './eenews-teaser-ads';
 import {
   selectTeaserBreaking,
   selectTeaserTag,
   selectTeaserTopic,
-} from '../teasers/eenews-teaser-selectors';
+} from './eenews-teaser-selectors';
 
 const Card = styled(Link)`
   display: flex;
@@ -160,14 +160,18 @@ export const EenewsTeaser = ({
   const showTagChip =
     blockStyle !== EeNewsBlockType.AktuellGrid && tag !== undefined;
 
-  const TITLE_SPLIT_LENGTH = 34;
+  const TITLE_SPLIT_LENGTH = 50;
   const LEAD_MAX_LENGTH = 120;
+
   const truncatedTitle =
     title && title.length > TITLE_SPLIT_LENGTH ?
       `${title.slice(0, TITLE_SPLIT_LENGTH).trimEnd()}…`
     : title;
+
   let displayTitle = title;
+
   let displayLead = lead;
+
   if (!lead && title && title.length > TITLE_SPLIT_LENGTH) {
     displayTitle = truncatedTitle;
     displayLead = title;

@@ -7,9 +7,13 @@ const Shell = styled('div')`
   padding: 56px;
   box-sizing: border-box;
   width: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: 28px;
 
   ${({ theme }) => theme.breakpoints.down('md')} {
     padding: 36px 20px;
+    row-gap: 20px;
   }
 `;
 

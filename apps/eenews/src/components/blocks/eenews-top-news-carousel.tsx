@@ -12,7 +12,7 @@ import { useKeenSlider } from 'keen-slider/react';
 import { useEffect, useMemo, useState } from 'react';
 import { MdChevronLeft, MdChevronRight } from 'react-icons/md';
 
-import { EenewsTeaser } from './eenews-teaser';
+import { EenewsTeaser } from '../teasers/eenews-teaser';
 
 const Section = styled('section')`
   background: ${({ theme }) => theme.palette.background.paper};

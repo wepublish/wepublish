@@ -7,8 +7,8 @@ import {
 } from '@wepublish/website/builder';
 
 import { EeNewsBlockType } from '../block-styles/eenews-block-styles';
-import { EenewsTeaser } from './eenews-teaser';
-import { EenewsTeaserSkeleton } from './eenews-teaser-skeleton';
+import { EenewsTeaser } from '../teasers/eenews-teaser';
+import { EenewsTeaserSkeleton } from '../teasers/eenews-teaser-skeleton';
 
 type EenewsTeaserGridProps = BuilderTeaserGridBlockProps & {
   loading?: boolean;
@@ -33,10 +33,6 @@ const Grid = styled('div', {
   }
 `;
 
-// Shared teaser grid that renders the same card layout as the home sections
-// (Top-News, Aktuell, Dossiers). Registered as the website-builder `TeaserGrid`
-// override so the search results and any teaser-grid block share it, and used
-// directly on the article archive (`/a`).
 export const EenewsTeaserGrid = ({
   teasers,
   numColumns,
@@ -51,9 +47,6 @@ export const EenewsTeaserGrid = ({
   const columns = numColumns || 3;
   const filled = (teasers ?? []).filter(isFilledTeaser);
 
-  // While loading with nothing to show yet, render skeleton cards so the grid
-  // reserves its space instead of popping in. Existing cards are kept during
-  // background revalidation (filled.length > 0).
   if (!filled.length && loading) {
     return (
       <Grid

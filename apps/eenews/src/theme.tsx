@@ -1,4 +1,4 @@
-import { createTheme, Theme, ThemeOptions } from '@mui/material';
+import { createTheme, CSSObject, Theme, ThemeOptions } from '@mui/material';
 import { theme as WePTheme } from '@wepublish/ui';
 import { Manrope, Source_Serif_4 } from 'next/font/google';
 import localFont from 'next/font/local';
@@ -74,29 +74,38 @@ export const eenewsColors = {
   white: '#ffffff',
 } as const;
 
+const toVariant = (style: CSSObject): React.CSSProperties =>
+  style as React.CSSProperties;
+
 const heading = (
   fontSize: string,
   lineHeight: number,
   weight: number,
   letterSpacing: string | undefined
-): React.CSSProperties => ({
-  fontFamily: sans,
-  fontSize,
-  fontWeight: weight,
-  lineHeight,
-  ...(letterSpacing ? { letterSpacing } : {}),
-});
+): React.CSSProperties =>
+  toVariant({
+    '&': {
+      fontFamily: sans,
+      fontSize,
+      fontWeight: weight,
+      lineHeight,
+      ...(letterSpacing ? { letterSpacing } : {}),
+    },
+  });
 
 const body = (
   fontSize: string,
   lineHeight: number,
   weight = 400
-): React.CSSProperties => ({
-  fontFamily: serif,
-  fontSize,
-  fontWeight: weight,
-  lineHeight,
-});
+): React.CSSProperties =>
+  toVariant({
+    '&': {
+      fontFamily: serif,
+      fontSize,
+      fontWeight: weight,
+      lineHeight,
+    },
+  });
 
 const ui = (
   fontSize: string,
@@ -104,14 +113,17 @@ const ui = (
   lineHeight = 1,
   letterSpacing?: string,
   uppercase = false
-): React.CSSProperties => ({
-  fontFamily: sans,
-  fontSize,
-  fontWeight: weight,
-  lineHeight,
-  ...(letterSpacing ? { letterSpacing } : {}),
-  ...(uppercase ? { textTransform: 'uppercase' as const } : {}),
-});
+): React.CSSProperties =>
+  toVariant({
+    '&': {
+      fontFamily: sans,
+      fontSize,
+      fontWeight: weight,
+      lineHeight,
+      ...(letterSpacing ? { letterSpacing } : {}),
+      ...(uppercase ? { textTransform: 'uppercase' as const } : {}),
+    },
+  });
 
 const theme = createTheme(WePTheme, {
   palette: {
@@ -177,7 +189,7 @@ const theme = createTheme(WePTheme, {
     articleQuoteCite: ui('14px', 400, 1),
     articleSupport: heading('19px', 1.35, 700, undefined),
     articleCaption: ui('14px', 400, 1.4),
-    teaserTitle: heading('26px', 1.12, 800, '-0.018em'),
+    teaserTitle: heading('24px', 1.12, 800, '-0.018em'),
     teaserMeta: ui('14px', 700, 1),
     teaserExcerpt: body('16px', 1.5, 400),
     teaserTagChip: ui('14px', 600, 1, '0.005em'),
