@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { useUser } from '@wepublish/authentication/website';
 import { SubscribeBlock } from '@wepublish/block-content/website';
-import { SubscribeButton, VoucherSection } from '@wepublish/membership/website';
+import { SubscribeButton } from '@wepublish/membership/website';
 import { useSubscriptionsQuery } from '@wepublish/website/api';
 import { BuilderSubscribeBlockProps } from '@wepublish/website/builder';
 import { useRouter } from 'next/router';
@@ -15,10 +15,6 @@ import {
 import { ForceUpgradeContext } from './hauptstadt-page';
 
 const StyledSubscribeBlock = styled(SubscribeBlock)`
-  ${VoucherSection} {
-    display: grid;
-  }
-
   ${SubscribeButton} {
     font-weight: 500;
   }
