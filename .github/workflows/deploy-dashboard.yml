@@ -1,10 +1,13 @@
 name: Deploy overview dashboard
 
 on:
-  # Refresh as soon as any production deployment finishes.
-  deployment_status:
-  # Fallback so the page never goes more than 30 min out of date even if the
-  # deploy workflow forgets to record a status (e.g. canceled jobs).
+  # Refresh the moment a production deploy is tagged. This is also when the
+  # deploy commit is still the tip of its source branch, so the branch label
+  # gets captured and persisted before later work moves the branch on.
+  push:
+    tags:
+      - 'deploy_*'
+  # Fallback so the page never goes more than 30 min out of date.
   schedule:
     - cron: '*/30 * * * *'
   # Manual trigger.

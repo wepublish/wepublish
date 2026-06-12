@@ -28,6 +28,11 @@ const REPO = process.env.GITHUB_REPOSITORY ?? 'wepublish/wepublish';
 const [OWNER, REPO_NAME] = REPO.split('/');
 const WORKFLOW_FILE = process.env.WORKFLOW_FILE ?? 'on-tag-deploy-production.yml';
 const TAG_PREFIX = process.env.TAG_PREFIX ?? 'deploy_';
+// Optional override for the currently-published dashboard URL, used to read
+// back the persisted branch store. Falls back to the repo's GitHub Pages URL.
+const DASHBOARD_URL = process.env.DASHBOARD_URL;
+// <script> id under which the tag→branch store is embedded in the page.
+const STORE_ID = 'deploy-branch-store';
 
 if (!GITHUB_TOKEN) {
   console.error('GITHUB_TOKEN is required');
@@ -106,6 +111,59 @@ const getBranchForCommit = async sha => {
   } catch {
     return null;
   }
+};
+
+// The published dashboard is its own store: each page embeds a tag→branch map
+// as a JSON island. Reading it back lets a deploy keep its branch label even
+// after work continues on that branch (the commit is no longer the branch
+// head), since the tag is immutable until the next deploy.
+const resolvePublishedUrl = async () => {
+  if (DASHBOARD_URL) {
+    return DASHBOARD_URL;
+  }
+  try {
+    const pages = await api(`/repos/${OWNER}/${REPO_NAME}/pages`);
+    return pages.html_url ?? null;
+  } catch {
+    return null;
+  }
+};
+
+const loadBranchStore = async () => {
+  const url = await resolvePublishedUrl();
+  if (!url) {
+    return new Map();
+  }
+  try {
+    // Cache-buster: GitHub Pages sits behind a CDN, and a stale copy could
+    // miss a just-captured branch and trigger a needless re-resolve.
+    const res = await fetch(`${url}${url.includes('?') ? '&' : '?'}_=${Date.now()}`, {
+      headers: { 'Cache-Control': 'no-cache' },
+    });
+    if (!res.ok) {
+      return new Map();
+    }
+    const html = await res.text();
+    const m = html.match(
+      new RegExp(`<script id="${STORE_ID}" type="application/json">([\\s\\S]*?)</script>`)
+    );
+    if (!m) {
+      return new Map();
+    }
+    const obj = JSON.parse(m[1]);
+    return new Map(Object.entries(obj));
+  } catch (err) {
+    console.warn(`Could not load branch store: ${err.message}`);
+    return new Map();
+  }
+};
+
+// Embed the store as an HTML-safe JSON island. Escaping "<" prevents a branch
+// name containing "</script>" from breaking out of the script element.
+const renderBranchStore = store => {
+  const obj = Object.fromEntries(store);
+  const json = JSON.stringify(obj).replace(/</g, '\\u003c');
+  return `    <script id="${STORE_ID}" type="application/json">${json}</script>`;
 };
 
 const ago = iso => {
@@ -188,7 +246,7 @@ const renderCard = ({ project, run, branch }) => {
 
 const renderEmpty = () => `      <p class="empty">No production deployments found. Tag a release (deploy_&lt;project&gt;_…) to populate this dashboard.</p>`;
 
-const renderPage = cards => `<!doctype html>
+const renderPage = (cards, store) => `<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -223,6 +281,7 @@ const renderPage = cards => `<!doctype html>
 ${cards.length ? cards.join('\n') : renderEmpty()}
     </section>
     <p class="meta">Last refreshed <time datetime="${new Date().toISOString()}">${new Date().toUTCString()}</time> · <a href="https://github.com/${OWNER}/${REPO_NAME}/actions/workflows/${encodeURIComponent(WORKFLOW_FILE)}">All production deploys on GitHub</a></p>
+${renderBranchStore(store)}
   </body>
 </html>
 `;
@@ -232,17 +291,30 @@ const main = async () => {
   console.log(`Found ${entries.length} project(s) with production deploys`);
   // Most recently deployed first.
   entries.sort((a, b) => new Date(b.run.created_at) - new Date(a.run.created_at));
-  // Resolve the source branch per deploy commit (only known when the commit is
-  // still a branch head — i.e. feature/hotfix deploys).
+  // The source branch is only resolvable while the deploy commit is still a
+  // branch head. Capture it once per deploy tag and persist it, so the label
+  // survives later work on that branch and only changes on the next deploy.
+  const prev = await loadBranchStore();
+  const store = new Map();
   await Promise.all(
     entries.map(async entry => {
-      entry.branch = await getBranchForCommit(entry.run.head_sha);
+      const tag = entry.run.head_branch;
+      if (prev.has(tag)) {
+        entry.branch = prev.get(tag);
+      } else {
+        entry.branch = await getBranchForCommit(entry.run.head_sha);
+      }
+      // Rebuild the store from current tags only, so it never grows unbounded.
+      store.set(tag, entry.branch ?? null);
     })
   );
   const cards = entries.map(renderCard);
   mkdirSync('dist', { recursive: true });
-  writeFileSync(resolve('dist', 'index.html'), renderPage(cards));
-  console.log(`Wrote dist/index.html with ${cards.length} card(s)`);
+  writeFileSync(resolve('dist', 'index.html'), renderPage(cards, store));
+  const carried = entries.filter(e => prev.has(e.run.head_branch)).length;
+  console.log(
+    `Wrote dist/index.html with ${cards.length} card(s); ${carried} branch(es) carried from store, ${cards.length - carried} freshly resolved`
+  );
 };
 
 main().catch(err => {
