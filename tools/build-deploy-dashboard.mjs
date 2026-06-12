@@ -1,14 +1,22 @@
 #!/usr/bin/env node
 // Build a static HTML dashboard showing the current production deployment of
-// every app, sourced from the GitHub Deployments API.
+// every app, sourced from the "deploy production" GitHub Actions workflow.
+//
+// Production deploys are triggered by git tags of the form
+// `deploy_<project>_<YYYYMMDDHHMM>`, which run the workflow defined in
+// WORKFLOW_FILE. Each workflow run carries the project (via the tag in
+// head_branch), the commit, the actor, the timestamp and the run status, so
+// the workflow-runs API is the source of truth — not the (long-abandoned)
+// GitHub Deployments API.
 //
 // Environment variables:
-//   GITHUB_TOKEN      Token with `deployments: read` (provided automatically in
-//                     GitHub Actions).
+//   GITHUB_TOKEN      Token with `actions: read` / `repo` scope (provided
+//                     automatically in GitHub Actions).
 //   GITHUB_REPOSITORY "<owner>/<repo>" (set by Actions). Falls back to
 //                     "wepublish/wepublish" for local runs.
-//   ENV_PREFIX        Optional. Environment-name prefix used to filter which
-//                     environments are shown. Defaults to "production-".
+//   WORKFLOW_FILE     Optional. Workflow file name. Defaults to
+//                     "on-tag-deploy-production.yml".
+//   TAG_PREFIX        Optional. Deploy-tag prefix. Defaults to "deploy_".
 //
 // Output: dist/index.html
 
@@ -18,7 +26,8 @@ import { resolve } from 'node:path';
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 const REPO = process.env.GITHUB_REPOSITORY ?? 'wepublish/wepublish';
 const [OWNER, REPO_NAME] = REPO.split('/');
-const ENV_PREFIX = process.env.ENV_PREFIX ?? 'production-';
+const WORKFLOW_FILE = process.env.WORKFLOW_FILE ?? 'on-tag-deploy-production.yml';
+const TAG_PREFIX = process.env.TAG_PREFIX ?? 'deploy_';
 
 if (!GITHUB_TOKEN) {
   console.error('GITHUB_TOKEN is required');
@@ -40,28 +49,47 @@ const api = async path => {
   return res.json();
 };
 
-const listEnvironments = async () => {
-  const data = await api(
-    `/repos/${OWNER}/${REPO_NAME}/environments?per_page=100`
-  );
-  return (data.environments ?? [])
-    .map(e => e.name)
-    .filter(name => name.startsWith(ENV_PREFIX));
-};
-
-const getLatestDeployment = async env => {
-  const list = await api(
-    `/repos/${OWNER}/${REPO_NAME}/deployments?environment=${encodeURIComponent(env)}&per_page=1`
-  );
-  if (!list.length) {
+// Parse `deploy_<project>_<YYYYMMDDHHMM>` → { project, stamp }. Project names
+// may contain hyphens (e.g. "next-bajour"), so only the trailing 12-digit
+// timestamp is split off. Returns null for tags that don't match.
+const parseTag = tag => {
+  if (!tag || !tag.startsWith(TAG_PREFIX)) {
     return null;
   }
-  const deployment = list[0];
-  const [statuses, commit] = await Promise.all([
-    api(deployment.statuses_url),
-    api(`/repos/${OWNER}/${REPO_NAME}/commits/${deployment.sha}`),
-  ]);
-  return { deployment, status: statuses[0] ?? null, commit };
+  const rest = tag.slice(TAG_PREFIX.length);
+  const m = rest.match(/^(.+)_(\d{12})$/);
+  if (!m) {
+    return null;
+  }
+  return { project: m[1], stamp: m[2] };
+};
+
+// Fetch production workflow runs (newest first) and keep the latest run per
+// project. The first run seen for a project is the newest, since the API
+// returns runs in descending creation order.
+const listLatestRunsByProject = async () => {
+  const perPage = 100;
+  const maxPages = 6;
+  const latest = new Map();
+  for (let page = 1; page <= maxPages; page++) {
+    const data = await api(
+      `/repos/${OWNER}/${REPO_NAME}/actions/workflows/${encodeURIComponent(WORKFLOW_FILE)}/runs?per_page=${perPage}&page=${page}`
+    );
+    const runs = data.workflow_runs ?? [];
+    for (const run of runs) {
+      const parsed = parseTag(run.head_branch);
+      if (!parsed) {
+        continue;
+      }
+      if (!latest.has(parsed.project)) {
+        latest.set(parsed.project, { ...parsed, run });
+      }
+    }
+    if (runs.length < perPage) {
+      break;
+    }
+  }
+  return [...latest.values()];
 };
 
 const ago = iso => {
@@ -88,29 +116,47 @@ const escapeHtml = s =>
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;');
 
-const renderCard = ({ env, deployment, status, commit }) => {
-  const project = env.slice(ENV_PREFIX.length);
-  const sha = deployment.sha.slice(0, 7);
-  const ref = deployment.ref;
-  const msg = (commit.commit.message || '').split('\n')[0];
-  const actor = deployment.creator?.login ?? '—';
-  const time = status?.created_at ?? deployment.created_at;
-  const state = status?.state ?? 'pending';
+// Map a workflow run's status/conclusion to a display state.
+const runState = run => {
+  if (run.status !== 'completed') {
+    return 'pending';
+  }
+  if (run.conclusion === 'success') {
+    return 'success';
+  }
+  if (run.conclusion === 'failure' || run.conclusion === 'timed_out') {
+    return 'failure';
+  }
+  if (run.conclusion === 'cancelled') {
+    return 'cancelled';
+  }
+  return 'pending';
+};
+
+const renderCard = ({ project, run }) => {
+  const sha = (run.head_sha ?? '').slice(0, 7);
+  const msg = (run.display_title || run.head_commit?.message || '').split('\n')[0];
+  const actor = run.actor?.login ?? run.triggering_actor?.login ?? '—';
+  const time = run.created_at;
+  const state = runState(run);
   const stateClass =
     state === 'success' ? 'ok'
-    : state === 'failure' || state === 'error' ? 'fail'
+    : state === 'failure' ? 'fail'
+    : state === 'cancelled' ? 'fail'
     : 'pending';
   const stateMark =
     state === 'success' ? '✓'
-    : state === 'failure' || state === 'error' ? '✕'
+    : state === 'failure' ? '✕'
+    : state === 'cancelled' ? '⊘'
     : '…';
-  const commitUrl = `https://github.com/${OWNER}/${REPO_NAME}/commit/${deployment.sha}`;
+  const commitUrl = `https://github.com/${OWNER}/${REPO_NAME}/commit/${run.head_sha}`;
+  const runUrl = run.html_url;
   return `      <article class="card ${stateClass}">
         <header>
           <h2>${escapeHtml(project)}</h2>
           <span class="state" aria-label="${escapeHtml(state)}">${stateMark}</span>
         </header>
-        <div class="ref">${escapeHtml(ref)}</div>
+        <a class="ref" href="${escapeHtml(runUrl)}">${escapeHtml(run.head_branch)}</a>
         <a class="sha" href="${commitUrl}"><code>${escapeHtml(sha)}</code></a>
         <div class="msg">${escapeHtml(msg)}</div>
         <footer>
@@ -120,7 +166,7 @@ const renderCard = ({ env, deployment, status, commit }) => {
       </article>`;
 };
 
-const renderEmpty = () => `      <p class="empty">No production deployments recorded yet. Tag a release to populate this dashboard.</p>`;
+const renderEmpty = () => `      <p class="empty">No production deployments found. Tag a release (deploy_&lt;project&gt;_…) to populate this dashboard.</p>`;
 
 const renderPage = cards => `<!doctype html>
 <html lang="en">
@@ -140,7 +186,7 @@ const renderPage = cards => `<!doctype html>
       .ok .state { color: #16a34a; }
       .fail .state { color: #dc2626; }
       .pending .state { color: #d97706; }
-      .ref { font-size: 0.85rem; opacity: 0.8; }
+      .ref { font-size: 0.85rem; opacity: 0.8; text-decoration: none; }
       .sha { font-family: ui-monospace, monospace; font-size: 0.85rem; text-decoration: none; opacity: 0.9; }
       .sha code { background: color-mix(in oklab, Canvas 86%, CanvasText 14%); padding: 0.05rem 0.4rem; border-radius: 4px; }
       .msg { font-size: 0.9rem; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; opacity: 0.9; }
@@ -155,25 +201,16 @@ const renderPage = cards => `<!doctype html>
     <section class="grid">
 ${cards.length ? cards.join('\n') : renderEmpty()}
     </section>
-    <p class="meta">Last refreshed <time datetime="${new Date().toISOString()}">${new Date().toUTCString()}</time> · <a href="https://github.com/${OWNER}/${REPO_NAME}/deployments">All deployments on GitHub</a></p>
+    <p class="meta">Last refreshed <time datetime="${new Date().toISOString()}">${new Date().toUTCString()}</time> · <a href="https://github.com/${OWNER}/${REPO_NAME}/actions/workflows/${encodeURIComponent(WORKFLOW_FILE)}">All production deploys on GitHub</a></p>
   </body>
 </html>
 `;
 
 const main = async () => {
-  const envs = (await listEnvironments()).sort();
-  console.log(`Found ${envs.length} environments matching prefix "${ENV_PREFIX}"`);
-  const entries = [];
-  for (const env of envs) {
-    try {
-      const data = await getLatestDeployment(env);
-      if (data) {
-        entries.push({ env, ...data });
-      }
-    } catch (err) {
-      console.warn(`Skipping ${env}: ${err.message}`);
-    }
-  }
+  const entries = await listLatestRunsByProject();
+  console.log(`Found ${entries.length} project(s) with production deploys`);
+  // Most recently deployed first.
+  entries.sort((a, b) => new Date(b.run.created_at) - new Date(a.run.created_at));
   const cards = entries.map(renderCard);
   mkdirSync('dist', { recursive: true });
   writeFileSync(resolve('dist', 'index.html'), renderPage(cards));
