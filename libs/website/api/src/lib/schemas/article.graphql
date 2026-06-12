@@ -1,5 +1,8 @@
 fragment SlimPaywall on Paywall {
+  id
+  anyMemberPlan
   memberPlans {
+    id
     name
     tags
   }
