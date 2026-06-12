@@ -18,6 +18,32 @@ function normalizePath(pathname: string): string {
   return '/' + stack.join('/');
 }
 
+export function sanitizeLogField(value: string): string {
+  const sanitized = Array.from(value)
+    .map(character => {
+      if (character === '\n' || character === '\r' || character === '\t') {
+        return ' ';
+      }
+
+      const code = character.charCodeAt(0);
+      return code < 32 || code === 127 ? '?' : character;
+    })
+    .join('');
+
+  return sanitized.slice(0, 200);
+}
+
+function sanitizeLogError(error: unknown) {
+  if (error instanceof Error) {
+    return {
+      name: sanitizeLogField(error.name),
+      message: sanitizeLogField(error.message),
+    };
+  }
+
+  return { name: 'UnknownError' };
+}
+
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
@@ -26,9 +52,10 @@ export async function middleware(request: NextRequest) {
 
   // Reject if normalization changed the path (means suspicious input)
   if (normalizedPath !== pathname) {
-    console.warn(
-      `Path normalization changed path: ${pathname} -> ${normalizedPath}`
-    );
+    console.warn('Path normalization changed path', {
+      pathname: sanitizeLogField(pathname),
+      normalizedPath: sanitizeLogField(normalizedPath),
+    });
     return NextResponse.next();
   }
 
@@ -41,7 +68,9 @@ export async function middleware(request: NextRequest) {
   // Validate pathname to prevent SSRF attacks
   const pathValidation = /^\/[a-zA-Z0-9\-_/.+ :]+\.html$/;
   if (!pathValidation.test(decodedPathname)) {
-    console.warn(`Invalid pathname pattern: ${pathname}`);
+    console.warn('Invalid pathname pattern', {
+      pathname: sanitizeLogField(pathname),
+    });
     return NextResponse.next();
   }
 
@@ -72,7 +101,11 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(externalUrl, 302);
     }
   } catch (error) {
-    console.warn(`Error checking ${externalUrl} :`, error);
+    console.warn('Error checking archive URL', {
+      origin: externalHostname,
+      pathname: sanitizeLogField(pathname),
+      error: sanitizeLogError(error),
+    });
   }
 
   return NextResponse.next();
