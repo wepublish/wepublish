@@ -154,20 +154,109 @@ export enum StateColor {
   none = 'white',
 }
 
+const ALLOWED_URL_PROTOCOLS = new Set(['http:', 'https:']);
+
 export function validateURL(url: string) {
-  if (url) {
-    const pattern = new RegExp(
-      '^(https?:\\/\\/)?' + // protocol
-        '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
-        '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
-        '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
-        '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
-        '(\\#[-a-z\\d_]*)?$',
-      'i'
-    );
-    return pattern.test(url);
+  const input = url.trim();
+
+  if (!input || hasWhitespace(input)) {
+    return false;
   }
-  return false;
+
+  try {
+    const parsed = new URL(
+      hasExplicitScheme(input) ? input : `https://${input}`
+    );
+
+    return (
+      ALLOWED_URL_PROTOCOLS.has(parsed.protocol) &&
+      !parsed.username &&
+      !parsed.password &&
+      isValidUrlHostname(parsed.hostname)
+    );
+  } catch {
+    return false;
+  }
+}
+
+function hasExplicitScheme(value: string) {
+  return /^[a-z][a-z0-9+.-]*:\/\//i.test(value);
+}
+
+function hasWhitespace(value: string) {
+  return Array.from(value).some(character => character.trim() === '');
+}
+
+function isValidUrlHostname(hostname: string) {
+  const normalized = hostname.endsWith('.') ? hostname.slice(0, -1) : hostname;
+
+  if (!normalized || normalized.length > 253) {
+    return false;
+  }
+
+  if (isValidIPv4Address(normalized)) {
+    return true;
+  }
+
+  const labels = normalized.toLowerCase().split('.');
+  const topLevelDomain = labels[labels.length - 1];
+
+  return (
+    labels.length > 1 &&
+    topLevelDomain.length >= 2 &&
+    Array.from(topLevelDomain).every(character =>
+      isAsciiLetter(character.charCodeAt(0))
+    ) &&
+    labels.every(isValidDnsLabel)
+  );
+}
+
+function isValidIPv4Address(hostname: string) {
+  const parts = hostname.split('.');
+
+  return (
+    parts.length === 4 &&
+    parts.every(part => {
+      if (!part || part.length > 3) {
+        return false;
+      }
+
+      if (
+        !Array.from(part).every(character =>
+          isAsciiDigit(character.charCodeAt(0))
+        )
+      ) {
+        return false;
+      }
+
+      const value = Number(part);
+      return Number.isInteger(value) && value >= 0 && value <= 255;
+    })
+  );
+}
+
+function isValidDnsLabel(label: string) {
+  if (
+    !label ||
+    label.length > 63 ||
+    label.startsWith('-') ||
+    label.endsWith('-')
+  ) {
+    return false;
+  }
+
+  return Array.from(label).every(character => {
+    const code = character.charCodeAt(0);
+    return isAsciiLetter(code) || isAsciiDigit(code) || character === '-';
+  });
+}
+
+function isAsciiLetter(code: number) {
+  return (code >= 65 && code <= 90) || (code >= 97 && code <= 122);
+}
+
+function isAsciiDigit(code: number) {
+  return code >= 48 && code <= 57;
 }
 
 export function flattenDOMTokenList(list: DOMTokenList) {
