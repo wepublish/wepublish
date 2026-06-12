@@ -92,6 +92,22 @@ const listLatestRunsByProject = async () => {
   return [...latest.values()];
 };
 
+// Recover the branch a deploy was cut from. A git tag points to a commit, not
+// a branch, so this is only knowable when the deployed commit is still the
+// head of some branch — typically feature/hotfix deploys. Mainline deploys
+// (commit already buried under later commits on the production branch) return
+// null, since the source branch can't be attributed reliably.
+const getBranchForCommit = async sha => {
+  try {
+    const branches = await api(
+      `/repos/${OWNER}/${REPO_NAME}/commits/${sha}/branches-where-head`
+    );
+    return branches.length ? branches[0].name : null;
+  } catch {
+    return null;
+  }
+};
+
 const ago = iso => {
   const ms = Date.now() - new Date(iso).getTime();
   const min = Math.floor(ms / 60000);
@@ -133,7 +149,7 @@ const runState = run => {
   return 'pending';
 };
 
-const renderCard = ({ project, run }) => {
+const renderCard = ({ project, run, branch }) => {
   const sha = (run.head_sha ?? '').slice(0, 7);
   const msg = (run.display_title || run.head_commit?.message || '').split('\n')[0];
   const actor = run.actor?.login ?? run.triggering_actor?.login ?? '—';
@@ -151,12 +167,16 @@ const renderCard = ({ project, run }) => {
     : '…';
   const commitUrl = `https://github.com/${OWNER}/${REPO_NAME}/commit/${run.head_sha}`;
   const runUrl = run.html_url;
+  const branchUrl = `https://github.com/${OWNER}/${REPO_NAME}/tree/${encodeURIComponent(branch ?? '')}`;
+  const branchLine = branch
+    ? `\n        <a class="branch" href="${branchUrl}" title="branch this deploy was cut from">⎇ ${escapeHtml(branch)}</a>`
+    : '';
   return `      <article class="card ${stateClass}">
         <header>
           <h2>${escapeHtml(project)}</h2>
           <span class="state" aria-label="${escapeHtml(state)}">${stateMark}</span>
         </header>
-        <a class="ref" href="${escapeHtml(runUrl)}">${escapeHtml(run.head_branch)}</a>
+        <a class="ref" href="${escapeHtml(runUrl)}">${escapeHtml(run.head_branch)}</a>${branchLine}
         <a class="sha" href="${commitUrl}"><code>${escapeHtml(sha)}</code></a>
         <div class="msg">${escapeHtml(msg)}</div>
         <footer>
@@ -187,6 +207,7 @@ const renderPage = cards => `<!doctype html>
       .fail .state { color: #dc2626; }
       .pending .state { color: #d97706; }
       .ref { font-size: 0.85rem; opacity: 0.8; text-decoration: none; }
+      .branch { font-size: 0.8rem; opacity: 0.7; text-decoration: none; font-family: ui-monospace, monospace; }
       .sha { font-family: ui-monospace, monospace; font-size: 0.85rem; text-decoration: none; opacity: 0.9; }
       .sha code { background: color-mix(in oklab, Canvas 86%, CanvasText 14%); padding: 0.05rem 0.4rem; border-radius: 4px; }
       .msg { font-size: 0.9rem; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; opacity: 0.9; }
@@ -211,6 +232,13 @@ const main = async () => {
   console.log(`Found ${entries.length} project(s) with production deploys`);
   // Most recently deployed first.
   entries.sort((a, b) => new Date(b.run.created_at) - new Date(a.run.created_at));
+  // Resolve the source branch per deploy commit (only known when the commit is
+  // still a branch head — i.e. feature/hotfix deploys).
+  await Promise.all(
+    entries.map(async entry => {
+      entry.branch = await getBranchForCommit(entry.run.head_sha);
+    })
+  );
   const cards = entries.map(renderCard);
   mkdirSync('dist', { recursive: true });
   writeFileSync(resolve('dist', 'index.html'), renderPage(cards));
