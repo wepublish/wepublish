@@ -67,6 +67,11 @@ export type AllowedSettingVals = {
   stringChoice?: Maybe<Array<Scalars['String']>>;
 };
 
+export enum AmountSelectionLayout {
+  Picker = 'Picker',
+  Slider = 'Slider',
+}
+
 export enum AnalyticsProviderType {
   Google = 'GOOGLE',
 }
@@ -91,6 +96,7 @@ export type Article = HasOptionalPaywall &
     previewUrl: Scalars['String'];
     published?: Maybe<ArticleRevision>;
     publishedAt?: Maybe<Scalars['DateTime']>;
+    revisions: Array<ArticleRevision>;
     shared: Scalars['Boolean'];
     slug?: Maybe<Scalars['String']>;
     tags: Array<Tag>;
@@ -141,6 +147,7 @@ export type ArticleNavigationLink = BaseNavigationLink &
 
 export type ArticleRevision = HasBlockContent & {
   __typename?: 'ArticleRevision';
+  archivedAt?: Maybe<Scalars['DateTime']>;
   authors: Array<Author>;
   blocks: Array<BlockContent>;
   breaking: Scalars['Boolean'];
@@ -1702,13 +1709,27 @@ export enum LoginStatus {
   Unsubscribed = 'UNSUBSCRIBED',
 }
 
+export type MailPlaceholderGroupModel = {
+  __typename?: 'MailPlaceholderGroupModel';
+  event: Scalars['String'];
+  placeholders: Array<MailPlaceholderModel>;
+};
+
+export type MailPlaceholderModel = {
+  __typename?: 'MailPlaceholderModel';
+  example: Scalars['String'];
+  key: Scalars['String'];
+};
+
 export type MailProviderModel = {
   __typename?: 'MailProviderModel';
   name: Scalars['String'];
+  type?: Maybe<MailProviderType>;
 };
 
 export enum MailProviderType {
   Mailchimp = 'MAILCHIMP',
+  Mailersend = 'MAILERSEND',
   Mailgun = 'MAILGUN',
   Slack = 'SLACK',
 }
@@ -1804,6 +1825,7 @@ export type MemberPlan = HasImage & {
   amountPerMonthMax?: Maybe<Scalars['Int']>;
   amountPerMonthMin: Scalars['Int'];
   amountPerMonthTarget?: Maybe<Scalars['Int']>;
+  amountSelectionLayout: AmountSelectionLayout;
   availablePaymentMethods: Array<AvailablePaymentMethod>;
   confirmationPage?: Maybe<Page>;
   confirmationPageId?: Maybe<Scalars['String']>;
@@ -1820,6 +1842,7 @@ export type MemberPlan = HasImage & {
   migrateToTargetPaymentMethod?: Maybe<PaymentMethod>;
   migrateToTargetPaymentMethodID?: Maybe<Scalars['String']>;
   name: Scalars['String'];
+  presetAmounts: Array<Scalars['Int']>;
   productType: ProductType;
   shortDescription?: Maybe<Scalars['RichText']>;
   slug: Scalars['String'];
@@ -2010,6 +2033,10 @@ export type Mutation = {
   deleteUserRole: UserRole;
   /** Deletes an existing voucher. */
   deleteVoucher: Voucher;
+  /** Discards the current draft and reverts to the latest published revision. */
+  discardArticleDraft: Article;
+  /** Discards the current draft and reverts to the latest published revision. */
+  discardPageDraft: Page;
   /** Dislikes an article. */
   dislikeArticle: Article;
   /** Simulates a mailchimp sync without making changes. Returns what would be updated. */
@@ -2061,6 +2088,10 @@ export type Mutation = {
   resetPasswordWithToken: Scalars['Boolean'];
   /** Resets the two-factor authentication configuration for a user. The user will need to set up 2FA again on next login. */
   resetUserTotp: Scalars['Boolean'];
+  /** Restores an older revision of an article as a new draft. */
+  restoreArticleRevision: Article;
+  /** Restores an older revision of a page as a new draft. */
+  restorePageRevision: Page;
   /** This mutation revokes and deletes the active session. */
   revokeActiveSession: Scalars['Boolean'];
   /** This mutation sends a login link to the email if the user exists. Method will always return email address */
@@ -2318,6 +2349,7 @@ export type MutationCreateMemberPlanArgs = {
   amountPerMonthMax?: InputMaybe<Scalars['Int']>;
   amountPerMonthMin: Scalars['Int'];
   amountPerMonthTarget?: InputMaybe<Scalars['Int']>;
+  amountSelectionLayout: AmountSelectionLayout;
   availablePaymentMethods: Array<AvailablePaymentMethodInput>;
   confirmationPageId?: InputMaybe<Scalars['String']>;
   currency: Currency;
@@ -2329,6 +2361,7 @@ export type MutationCreateMemberPlanArgs = {
   maxCount?: InputMaybe<Scalars['Int']>;
   migrateToTargetPaymentMethodID?: InputMaybe<Scalars['String']>;
   name: Scalars['String'];
+  presetAmounts: Array<Scalars['Int']>;
   productType: ProductType;
   shortDescription?: InputMaybe<Scalars['RichText']>;
   slug: Scalars['String'];
@@ -2677,6 +2710,14 @@ export type MutationDeleteVoucherArgs = {
   id: Scalars['String'];
 };
 
+export type MutationDiscardArticleDraftArgs = {
+  id: Scalars['String'];
+};
+
+export type MutationDiscardPageDraftArgs = {
+  id: Scalars['String'];
+};
+
 export type MutationDislikeArticleArgs = {
   id: Scalars['String'];
 };
@@ -2800,6 +2841,16 @@ export type MutationResetPasswordWithTokenArgs = {
 
 export type MutationResetUserTotpArgs = {
   userId: Scalars['String'];
+};
+
+export type MutationRestoreArticleRevisionArgs = {
+  id: Scalars['String'];
+  revisionId: Scalars['String'];
+};
+
+export type MutationRestorePageRevisionArgs = {
+  id: Scalars['String'];
+  revisionId: Scalars['String'];
 };
 
 export type MutationSendJwtLoginArgs = {
@@ -3007,6 +3058,7 @@ export type MutationUpdateMemberPlanArgs = {
   amountPerMonthMax?: InputMaybe<Scalars['Int']>;
   amountPerMonthMin?: InputMaybe<Scalars['Int']>;
   amountPerMonthTarget?: InputMaybe<Scalars['Int']>;
+  amountSelectionLayout?: InputMaybe<AmountSelectionLayout>;
   availablePaymentMethods?: InputMaybe<Array<AvailablePaymentMethodInput>>;
   confirmationPageId?: InputMaybe<Scalars['String']>;
   currency?: InputMaybe<Currency>;
@@ -3019,6 +3071,7 @@ export type MutationUpdateMemberPlanArgs = {
   maxCount?: InputMaybe<Scalars['Int']>;
   migrateToTargetPaymentMethodID?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
+  presetAmounts?: InputMaybe<Array<Scalars['Int']>>;
   productType?: InputMaybe<ProductType>;
   shortDescription?: InputMaybe<Scalars['RichText']>;
   slug?: InputMaybe<Scalars['String']>;
@@ -3368,6 +3421,7 @@ export type Page = {
   previewUrl: Scalars['String'];
   published?: Maybe<PageRevision>;
   publishedAt?: Maybe<Scalars['DateTime']>;
+  revisions: Array<PageRevision>;
   slug?: Maybe<Scalars['String']>;
   tags: Array<Tag>;
   url: Scalars['String'];
@@ -3425,6 +3479,7 @@ export type PageNavigationLink = BaseNavigationLink &
 
 export type PageRevision = HasBlockContent & {
   __typename?: 'PageRevision';
+  archivedAt?: Maybe<Scalars['DateTime']>;
   blocks: Array<BlockContent>;
   createdAt: Scalars['DateTime'];
   description?: Maybe<Scalars['String']>;
@@ -4251,6 +4306,8 @@ export type Query = {
   mailProviderSetting: SettingMailProvider;
   /** Returns all mail provider settings. */
   mailProviderSettings: Array<SettingMailProvider>;
+  /** Return all available mail placeholders grouped by event */
+  mailTemplatePlaceholders: Array<MailPlaceholderGroupModel>;
   /** Return all mail templates */
   mailTemplates: Array<MailTemplateWithUrlAndStatusModel>;
   /** Fetches available interest groups for a Mailchimp list. */
@@ -4417,7 +4474,7 @@ export type Query = {
   voucher: Voucher;
   /** This query returns a list of vouchers */
   vouchers: PaginatedVouchers;
-  /** Returns the website settings, requires authentication to get sensitive settings. */
+  /** Returns the public website runtime settings. */
   websiteSettings: WebsiteSettings;
 };
 

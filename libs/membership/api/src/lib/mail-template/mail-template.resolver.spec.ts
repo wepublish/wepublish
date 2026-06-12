@@ -1,5 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { MailTemplate, PrismaClient } from '@prisma/client';
+import {
+  MailProviderType,
+  MailTemplate,
+  PrismaClient,
+  SubscriptionEvent,
+} from '@prisma/client';
 import {
   MailContext,
   MailProvider,
@@ -7,6 +12,7 @@ import {
 } from '@wepublish/mail/api';
 import { MailTemplateSyncService } from './mail-template-sync.service';
 import { MailTemplatesResolver } from './mail-template.resolver';
+import { MailTemplateWithUrlAndStatusModel } from './mail-template.model';
 import { INestApplication, Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
@@ -31,6 +37,18 @@ const providerQuery = `
   query Provider {
     provider {
       name
+      type
+    }
+  }
+`;
+const mailTemplatePlaceholdersQuery = `
+  query MailTemplatePlaceholders {
+    mailTemplatePlaceholders {
+      event
+      placeholders {
+        key
+        example
+      }
     }
   }
 `;
@@ -68,6 +86,7 @@ const prismaServiceMock = {
 
 const mailProviderServiceMock = {
   getName: jest.fn(async () => 'MockProvider'),
+  getConfig: jest.fn(async () => ({ type: MailProviderType.MAILERSEND })),
   getTemplateUrl: jest.fn((): string => 'https://example.com/template.html'),
 };
 
@@ -79,6 +98,27 @@ const mailContextMock = {
 const syncServiceMock = {
   synchronizeTemplates: jest.fn((): void => undefined),
 };
+
+interface GraphQLResponseBody {
+  errors?: Array<{ message: string }>;
+  data: unknown;
+}
+
+function expectForbiddenResource(
+  body: GraphQLResponseBody,
+  expectedData: unknown = null
+) {
+  expect(
+    body.errors?.some(error => error.message === 'Forbidden resource')
+  ).toEqual(true);
+  expect(body.data).toEqual(expectedData);
+}
+
+function asResolverTemplate(
+  template: MailTemplate
+): MailTemplateWithUrlAndStatusModel {
+  return template as unknown as MailTemplateWithUrlAndStatusModel;
+}
 
 @Module({
   imports: [
@@ -145,13 +185,30 @@ describe('MailTemplatesResolver', () => {
 
   it('computes the template url', async () => {
     const [template] = await resolver.mailTemplates();
-    const result = await resolver.url(template as any);
+    const result = await resolver.url(asResolverTemplate(template));
     expect(result).toEqual('https://example.com/template.html');
   });
 
   it('resolves the provider', async () => {
     const result = await resolver.provider();
-    expect(await (result as any).name).toBe('MockProvider');
+    expect(result).toEqual({
+      name: 'MockProvider',
+      type: MailProviderType.MAILERSEND,
+    });
+  });
+
+  it('returns placeholder groups derived from mail send payloads', async () => {
+    const result = await resolver.mailTemplatePlaceholders();
+    const renewalSuccess = result.find(
+      group => group.event === SubscriptionEvent.RENEWAL_SUCCESS
+    );
+
+    expect(renewalSuccess?.placeholders).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ key: 'optional_subscription_id' }),
+        expect.objectContaining({ key: 'optional_invoice_id' }),
+      ])
+    );
   });
 
   it('synchronizes the mail templates', async () => {
@@ -161,10 +218,10 @@ describe('MailTemplatesResolver', () => {
 
   it('computes the template status', async () => {
     const [template1, template2] = await resolver.mailTemplates();
-    expect(await resolver.status(template1 as any)).toEqual(
+    expect(await resolver.status(asResolverTemplate(template1))).toEqual(
       MailTemplateStatus.Unused
     );
-    expect(await resolver.status(template2 as any)).toEqual(
+    expect(await resolver.status(asResolverTemplate(template2))).toEqual(
       MailTemplateStatus.RemoteMissing
     );
   });
@@ -180,12 +237,7 @@ describe('MailTemplatesResolver', () => {
       })
       .expect(200)
       .expect(({ body }) => {
-        expect(
-          !!body.errors.find(
-            (error: any) => error.message === 'Forbidden resource'
-          )
-        ).toEqual(true);
-        expect(body.data).toBeNull();
+        expectForbiddenResource(body);
       });
   });
 
@@ -197,12 +249,19 @@ describe('MailTemplatesResolver', () => {
       })
       .expect(200)
       .expect(({ body }) => {
-        expect(
-          !!body.errors.find(
-            (error: any) => error.message === 'Forbidden resource'
-          )
-        ).toEqual(true);
-        expect(body.data).toBeNull();
+        expectForbiddenResource(body);
+      });
+  });
+
+  it('mailTemplatePlaceholders is not public', () => {
+    return request(app.getHttpServer())
+      .post('')
+      .send({
+        query: mailTemplatePlaceholdersQuery,
+      })
+      .expect(200)
+      .expect(({ body }) => {
+        expectForbiddenResource(body);
       });
   });
 
@@ -214,12 +273,7 @@ describe('MailTemplatesResolver', () => {
       })
       .expect(200)
       .expect(({ body }) => {
-        expect(
-          !!body.errors.find(
-            (error: any) => error.message === 'Forbidden resource'
-          )
-        ).toEqual(true);
-        expect(body.data).toEqual({ syncTemplates: null });
+        expectForbiddenResource(body, { syncTemplates: null });
       });
   });
 });

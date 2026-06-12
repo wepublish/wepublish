@@ -14,4 +14,9 @@ export default {
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
   coverageDirectory: '../../coverage/apps/api-example',
+  collectCoverageFrom: [
+    'src/**/*.{js,jsx,ts,tsx}',
+    '!src/main.ts',
+    '!**/*.stories.{js,jsx,ts,tsx}',
+  ],
 };

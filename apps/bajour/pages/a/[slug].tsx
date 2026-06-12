@@ -129,6 +129,7 @@ export default function ArticleBySlugOrId() {
                   </H5>
 
                   <ArticleListContainer
+                    withTotalCount={false}
                     variables={{
                       filter: { tags: data.article.tags.map(tag => tag.id) },
                       take: 4,

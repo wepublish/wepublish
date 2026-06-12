@@ -1,14 +1,13 @@
 import { PrismaClient } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
+import { getPrismaPgAdapterOptions } from '@wepublish/nest-modules';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { bootstrap } from '../../media/src/bootstrap';
 import { runExampleSeed } from './seed';
 
 async function seed() {
   const { app } = await bootstrap(['error']);
-  const adapter = new PrismaPg({
-    connectionString: process.env['DATABASE_URL']!,
-  });
+  const adapter = new PrismaPg(getPrismaPgAdapterOptions());
   const prisma = new PrismaClient({ adapter });
   await prisma.$connect();
 

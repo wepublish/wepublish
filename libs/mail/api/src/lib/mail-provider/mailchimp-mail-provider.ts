@@ -15,6 +15,7 @@ import {
   WithExternalId,
 } from './mail-provider.interface';
 import { BaseMailProvider, MailProviderProps } from './base-mail-provider';
+import { flattenObjForMandrill } from '../flatten';
 
 interface VerifyWebhookSignatureProps {
   signature: string;
@@ -36,43 +37,6 @@ function mapMandrillEventToMailLogState(event: string): MailLogState | null {
     default:
       return null;
   }
-}
-
-/*
- * Mandrill template engine does not support nested objects
- */
-function flattenObjForMandrill<T>(ob: T): Record<string, string> {
-  const nestedObject: Record<string, string> = {};
-
-  for (const i in ob) {
-    const nestedObj = ob[i];
-
-    if (Array.isArray(nestedObj)) {
-      for (const j in nestedObj) {
-        if (nestedObj[j] && typeof nestedObj[j] === 'object') {
-          const returnedNestedObject = flattenObjForMandrill(nestedObj[j]);
-
-          for (const k in returnedNestedObject) {
-            nestedObject[`${i}_${j}_${k}`] = returnedNestedObject[k];
-          }
-        } else {
-          nestedObject[`${i}_${j}`] = nestedObj[j];
-        }
-      }
-    } else if (nestedObj && typeof nestedObj === 'object') {
-      const returnedNestedObject = flattenObjForMandrill(nestedObj);
-
-      for (const j in returnedNestedObject) {
-        nestedObject[`${i}_${j}`] = returnedNestedObject[j];
-      }
-    } else {
-      // eventho it should be string according to Mandrill typings
-      // it accepts booleans, numbers etc.
-      nestedObject[i] = nestedObj as any;
-    }
-  }
-
-  return nestedObject;
 }
 
 export class MailchimpMailProvider extends BaseMailProvider {

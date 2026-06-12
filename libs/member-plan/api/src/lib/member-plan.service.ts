@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { Prisma, PrismaClient } from '@prisma/client';
+import { AmountSelectionLayout, Prisma, PrismaClient } from '@prisma/client';
 import {
   getMaxTake,
   graphQLSortOrderToPrisma,
@@ -104,6 +104,8 @@ export class MemberPlanService {
         amountPerMonthMin: true,
         amountPerMonthMax: true,
         amountPerMonthTarget: true,
+        amountSelectionLayout: true,
+        presetAmounts: true,
         availablePaymentMethods: true,
       },
     });
@@ -128,6 +130,14 @@ export class MemberPlanService {
           null
         : ((input.amountPerMonthTarget as number | undefined) ??
           existingMemberPlan.amountPerMonthTarget),
+
+      amountSelectionLayout:
+        (input.amountSelectionLayout as AmountSelectionLayout | undefined) ??
+        existingMemberPlan.amountSelectionLayout,
+
+      presetAmounts:
+        (input.presetAmounts as number[] | undefined) ??
+        existingMemberPlan.presetAmounts,
 
       availablePaymentMethods:
         availablePaymentMethods ?? existingMemberPlan.availablePaymentMethods,
@@ -169,6 +179,9 @@ export class MemberPlanService {
       amountPerMonthMin: input.amountPerMonthMin,
       amountPerMonthMax: input.amountPerMonthMax ?? null,
       amountPerMonthTarget: input.amountPerMonthTarget ?? null,
+      amountSelectionLayout:
+        input.amountSelectionLayout ?? AmountSelectionLayout.Slider,
+      presetAmounts: input.presetAmounts ?? [],
       availablePaymentMethods,
     });
 
@@ -286,6 +299,8 @@ type MemberPlanIntegrityInput = {
   amountPerMonthMin: number;
   amountPerMonthMax: number | null;
   amountPerMonthTarget: number | null;
+  amountSelectionLayout: AmountSelectionLayout;
+  presetAmounts: number[];
   availablePaymentMethods: Prisma.AvailablePaymentMethodUncheckedCreateWithoutMemberPlanInput[];
 };
 
@@ -295,6 +310,8 @@ function checkMemberPlanIntegrity(input: MemberPlanIntegrityInput): void {
     amountPerMonthMin,
     amountPerMonthMax,
     amountPerMonthTarget,
+    amountSelectionLayout,
+    presetAmounts,
     availablePaymentMethods,
   } = input;
   const hasForceAutoRenew = !!availablePaymentMethods.find(
@@ -330,5 +347,34 @@ function checkMemberPlanIntegrity(input: MemberPlanIntegrityInput): void {
     throw new BadRequestException(
       `Memberplan amountPerMonthTarget can not be higher than amountPerMonthMax`
     );
+  }
+
+  if (
+    amountSelectionLayout === AmountSelectionLayout.Picker &&
+    presetAmounts.length === 0
+  ) {
+    throw new BadRequestException(
+      `Memberplan presetAmounts must contain at least one amount for picker layouts`
+    );
+  }
+
+  for (const presetAmount of presetAmounts) {
+    if (!Number.isInteger(presetAmount) || presetAmount <= 0) {
+      throw new BadRequestException(
+        `Memberplan presetAmounts must contain positive integer amounts`
+      );
+    }
+
+    if (presetAmount < amountPerMonthMin) {
+      throw new BadRequestException(
+        `Memberplan presetAmounts can not be lower than amountPerMonthMin`
+      );
+    }
+
+    if (amountPerMonthMax != null && presetAmount > amountPerMonthMax) {
+      throw new BadRequestException(
+        `Memberplan presetAmounts can not be higher than amountPerMonthMax`
+      );
+    }
   }
 }

@@ -33,3 +33,20 @@ export const PaymentAmountPicker: StoryObj<typeof PaymentAmountPickerCmp> = {
     pickerItems: [1000, 1250, 1500, 1750, 2000],
   },
 };
+
+export const WithPresetAmounts: StoryObj<typeof PaymentAmountPickerCmp> = {
+  args: {
+    ...PaymentAmountPicker.args,
+    presetAmounts: [500, 2500, 5000],
+  },
+};
+
+export const EmptyPresetAmountsFallback: StoryObj<
+  typeof PaymentAmountPickerCmp
+> = {
+  args: {
+    ...PaymentAmountPicker.args,
+    pickerItems: undefined,
+    presetAmounts: [],
+  },
+};

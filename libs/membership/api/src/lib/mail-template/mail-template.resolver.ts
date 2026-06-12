@@ -5,13 +5,18 @@ import {
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
-import { MailContext, MailTemplateStatus } from '@wepublish/mail/api';
+import {
+  getMailPlaceholderGroups,
+  MailContext,
+  MailTemplateStatus,
+} from '@wepublish/mail/api';
 import {
   CanGetMailTemplates,
   CanSyncMailTemplates,
 } from '@wepublish/permissions';
 import { MailTemplateSyncService } from './mail-template-sync.service';
 import {
+  MailPlaceholderGroupModel,
   MailProviderModel,
   MailTemplateWithUrlAndStatusModel,
 } from './mail-template.model';
@@ -42,7 +47,17 @@ export class MailTemplatesResolver {
   @Query(() => MailProviderModel)
   async provider() {
     const provider = await this.mailContext.mailProvider;
-    return { name: provider.getName() };
+    const config = await provider.getConfig();
+
+    return { name: await provider.getName(), type: config?.type };
+  }
+
+  @Permissions(CanGetMailTemplates)
+  @Query(() => [MailPlaceholderGroupModel], {
+    description: `Return all available mail placeholders grouped by event`,
+  })
+  async mailTemplatePlaceholders() {
+    return getMailPlaceholderGroups();
   }
 
   @Permissions(CanSyncMailTemplates)

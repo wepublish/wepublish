@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Prisma, PrismaClient } from '@prisma/client';
 import {
   CreatePageInput,
@@ -361,6 +365,132 @@ export class PageService {
         },
       },
     });
+  }
+
+  /**
+   * Returns the complete editor-facing revision history, including archived
+   * drafts, so a past version can be inspected or restored without mutating it.
+   */
+  async getRevisions(pageId: string) {
+    return this.prisma.pageRevision.findMany({
+      where: {
+        pageId,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+  }
+
+  /**
+   * Restores a historical revision by cloning its content into a new draft.
+   * Existing open drafts are archived first to preserve the one-draft invariant.
+   */
+  @PrimeDataLoader(PageDataloaderService)
+  async restorePageRevision(
+    pageId: string,
+    revisionId: string,
+    userId: string | null | undefined
+  ) {
+    const revision = await this.prisma.pageRevision.findUnique({
+      where: { id: revisionId },
+    });
+
+    if (!revision || revision.pageId !== pageId) {
+      throw new NotFoundException(
+        `Revision with id ${revisionId} not found for page ${pageId}`
+      );
+    }
+
+    const restoredRevision: Prisma.PageRevisionUncheckedCreateWithoutPageInput =
+      {
+        title: revision.title,
+        description: revision.description,
+        properties: revision.properties as Prisma.InputJsonValue,
+        socialMediaTitle: revision.socialMediaTitle,
+        socialMediaDescription: revision.socialMediaDescription,
+        blocks: revision.blocks as Prisma.InputJsonValue,
+        imageID: revision.imageID,
+        socialMediaImageID: revision.socialMediaImageID,
+        userId,
+      };
+
+    return this.prisma.page.update({
+      where: { id: pageId },
+      data: {
+        modifiedAt: new Date(),
+        revisions: {
+          updateMany: {
+            where: {
+              archivedAt: null,
+              publishedAt: null,
+            },
+            data: {
+              archivedAt: new Date(),
+            },
+          },
+          create: restoredRevision,
+        },
+      },
+    });
+  }
+
+  /**
+   * Archives the current draft only when a non-draft revision remains available
+   * for preview/latest resolution. Historic content is never deleted.
+   */
+  @PrimeDataLoader(PageDataloaderService)
+  async discardPageDraft(id: string) {
+    const page = await this.prisma.page.findUnique({
+      where: { id },
+    });
+
+    if (!page) {
+      throw new NotFoundException(`Page with id ${id} not found`);
+    }
+
+    const draft = await this.prisma.pageRevision.findFirst({
+      where: {
+        pageId: id,
+        publishedAt: null,
+        archivedAt: null,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    if (!draft) {
+      throw new BadRequestException(
+        `Page with id ${id} has no draft to discard`
+      );
+    }
+
+    const fallback = await this.prisma.pageRevision.findFirst({
+      where: {
+        pageId: id,
+        archivedAt: null,
+        publishedAt: {
+          not: null,
+        },
+      },
+      orderBy: {
+        publishedAt: 'desc',
+      },
+    });
+
+    if (!fallback) {
+      throw new BadRequestException(
+        `Cannot discard draft: page ${id} has no published version to revert to`
+      );
+    }
+
+    await this.prisma.pageRevision.update({
+      where: { id: draft.id },
+      data: { archivedAt: new Date() },
+    });
+
+    return page;
   }
 
   async performPageFullTextSearch(searchQuery: string): Promise<string[]> {

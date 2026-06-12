@@ -9,6 +9,22 @@ import { Logger, NestApplicationOptions } from '@nestjs/common';
 sharp.cache({ memory: 50, items: 20 });
 sharp.concurrency(2);
 
+export function getMediaHelmetOptions() {
+  return {
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'none'"],
+        baseUri: ["'none'"],
+        formAction: ["'none'"],
+        frameAncestors: ["'none'"],
+        objectSrc: ["'none'"],
+        scriptSrc: ["'none'"],
+      },
+    },
+    crossOriginResourcePolicy: false,
+  };
+}
+
 export async function bootstrap(logger?: NestApplicationOptions['logger']) {
   const app = await NestFactory.create(AppModule, {
     logger,
@@ -18,12 +34,7 @@ export async function bootstrap(logger?: NestApplicationOptions['logger']) {
     origin: true,
     credentials: true,
   });
-  app.use(
-    helmet({
-      contentSecurityPolicy: false,
-      crossOriginResourcePolicy: false,
-    })
-  );
+  app.use(helmet(getMediaHelmetOptions()));
 
   const port = process.env.PORT || 4100;
   await app.listen(port);

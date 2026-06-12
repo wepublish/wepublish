@@ -11,6 +11,16 @@ mutation SynchronizeMailTemplates {
   syncTemplates
 }
 
+query MailTemplatePlaceholders {
+  mailTemplatePlaceholders {
+    event
+    placeholders {
+      key
+      example
+    }
+  }
+}
+
 fragment FullMailTemplate on MailTemplateWithUrlAndStatusModel {
   id
   name
@@ -23,4 +33,5 @@ fragment FullMailTemplate on MailTemplateWithUrlAndStatusModel {
 
 fragment FullMailProvider on MailProviderModel {
   name
+  type
 }

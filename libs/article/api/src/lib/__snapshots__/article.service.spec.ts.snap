@@ -265,7 +265,9 @@ exports[`ArticleService should query articles based on filter 2`] = `
       "AND": [
         {
           "id": {
-            "in": [],
+            "in": [
+              "12345",
+            ],
           },
         },
         {
@@ -293,7 +295,6 @@ exports[`ArticleService should query articles based on filter 2`] = `
               },
             },
           },
-          "revisions": undefined,
         },
         {
           "ArticleRevisionDraft": {
@@ -320,7 +321,6 @@ exports[`ArticleService should query articles based on filter 2`] = `
               },
             },
           },
-          "revisions": undefined,
         },
         {
           "publishedAt": {
@@ -357,13 +357,23 @@ exports[`ArticleService should query articles based on filter 2`] = `
               },
             },
           },
-          "revisions": undefined,
         },
         {
           "shared": true,
         },
-        {},
-        {},
+        {
+          "tags": {
+            "some": {
+              "tag": {
+                "id": {
+                  "in": [
+                    "1234",
+                  ],
+                },
+              },
+            },
+          },
+        },
         {
           "ArticleRevisionDraft": {
             "articleRevision": {
@@ -404,7 +414,6 @@ exports[`ArticleService should query articles based on filter 2`] = `
               },
             },
           },
-          "revisions": undefined,
         },
         {
           "hidden": false,
@@ -461,7 +470,9 @@ exports[`ArticleService should query articles based on filter 3`] = `
       "AND": [
         {
           "id": {
-            "in": [],
+            "in": [
+              "12345",
+            ],
           },
         },
         {
@@ -489,7 +500,6 @@ exports[`ArticleService should query articles based on filter 3`] = `
               },
             },
           },
-          "revisions": undefined,
         },
         {
           "ArticleRevisionDraft": {
@@ -516,7 +526,6 @@ exports[`ArticleService should query articles based on filter 3`] = `
               },
             },
           },
-          "revisions": undefined,
         },
         {
           "publishedAt": {
@@ -553,13 +562,23 @@ exports[`ArticleService should query articles based on filter 3`] = `
               },
             },
           },
-          "revisions": undefined,
         },
         {
           "shared": true,
         },
-        {},
-        {},
+        {
+          "tags": {
+            "some": {
+              "tag": {
+                "id": {
+                  "in": [
+                    "1234",
+                  ],
+                },
+              },
+            },
+          },
+        },
         {
           "ArticleRevisionDraft": {
             "articleRevision": {
@@ -600,7 +619,6 @@ exports[`ArticleService should query articles based on filter 3`] = `
               },
             },
           },
-          "revisions": undefined,
         },
         {
           "hidden": false,
@@ -687,6 +705,7 @@ exports[`ArticleService should query articles based on full text search 2`] = `
           "id": {
             "in": [
               "1234",
+              "1235",
             ],
           },
         },
@@ -715,7 +734,6 @@ exports[`ArticleService should query articles based on full text search 2`] = `
               },
             },
           },
-          "revisions": undefined,
         },
         {
           "ArticleRevisionDraft": {
@@ -742,7 +760,6 @@ exports[`ArticleService should query articles based on full text search 2`] = `
               },
             },
           },
-          "revisions": undefined,
         },
         {
           "publishedAt": {
@@ -779,13 +796,23 @@ exports[`ArticleService should query articles based on full text search 2`] = `
               },
             },
           },
-          "revisions": undefined,
         },
         {
           "shared": true,
         },
-        {},
-        {},
+        {
+          "tags": {
+            "some": {
+              "tag": {
+                "id": {
+                  "in": [
+                    "1234",
+                  ],
+                },
+              },
+            },
+          },
+        },
         {
           "ArticleRevisionDraft": {
             "articleRevision": {
@@ -826,7 +853,6 @@ exports[`ArticleService should query articles based on full text search 2`] = `
               },
             },
           },
-          "revisions": undefined,
         },
         {
           "hidden": false,
@@ -885,6 +911,7 @@ exports[`ArticleService should query articles based on full text search 3`] = `
           "id": {
             "in": [
               "1234",
+              "1235",
             ],
           },
         },
@@ -913,7 +940,6 @@ exports[`ArticleService should query articles based on full text search 3`] = `
               },
             },
           },
-          "revisions": undefined,
         },
         {
           "ArticleRevisionDraft": {
@@ -940,7 +966,6 @@ exports[`ArticleService should query articles based on full text search 3`] = `
               },
             },
           },
-          "revisions": undefined,
         },
         {
           "publishedAt": {
@@ -977,13 +1002,23 @@ exports[`ArticleService should query articles based on full text search 3`] = `
               },
             },
           },
-          "revisions": undefined,
         },
         {
           "shared": true,
         },
-        {},
-        {},
+        {
+          "tags": {
+            "some": {
+              "tag": {
+                "id": {
+                  "in": [
+                    "1234",
+                  ],
+                },
+              },
+            },
+          },
+        },
         {
           "ArticleRevisionDraft": {
             "articleRevision": {
@@ -1024,7 +1059,6 @@ exports[`ArticleService should query articles based on full text search 3`] = `
               },
             },
           },
-          "revisions": undefined,
         },
         {
           "hidden": false,
@@ -1113,9 +1147,6 @@ exports[`ArticleService should query articles on all revisions 2`] = `
           },
         },
         {
-          "ArticleRevisionDraft": undefined,
-          "ArticleRevisionPending": undefined,
-          "ArticleRevisionPublished": undefined,
           "revisions": {
             "some": {
               "title": {
@@ -1126,9 +1157,6 @@ exports[`ArticleService should query articles on all revisions 2`] = `
           },
         },
         {
-          "ArticleRevisionDraft": undefined,
-          "ArticleRevisionPending": undefined,
-          "ArticleRevisionPublished": undefined,
           "revisions": {
             "some": {
               "preTitle": {
@@ -1149,9 +1177,6 @@ exports[`ArticleService should query articles on all revisions 2`] = `
           },
         },
         {
-          "ArticleRevisionDraft": undefined,
-          "ArticleRevisionPending": undefined,
-          "ArticleRevisionPublished": undefined,
           "revisions": {
             "some": {
               "lead": {
@@ -1164,12 +1189,20 @@ exports[`ArticleService should query articles on all revisions 2`] = `
         {
           "shared": true,
         },
-        {},
-        {},
         {
-          "ArticleRevisionDraft": undefined,
-          "ArticleRevisionPending": undefined,
-          "ArticleRevisionPublished": undefined,
+          "tags": {
+            "some": {
+              "tag": {
+                "id": {
+                  "in": [
+                    "1234",
+                  ],
+                },
+              },
+            },
+          },
+        },
+        {
           "revisions": {
             "some": {
               "authors": {
@@ -1196,13 +1229,6 @@ exports[`ArticleService should query articles on all revisions 2`] = `
               "1234",
             ],
           },
-        },
-        {
-          "OR": [
-            {},
-            {},
-            {},
-          ],
         },
       ],
     },
@@ -1224,9 +1250,6 @@ exports[`ArticleService should query articles on all revisions 3`] = `
           },
         },
         {
-          "ArticleRevisionDraft": undefined,
-          "ArticleRevisionPending": undefined,
-          "ArticleRevisionPublished": undefined,
           "revisions": {
             "some": {
               "title": {
@@ -1237,9 +1260,6 @@ exports[`ArticleService should query articles on all revisions 3`] = `
           },
         },
         {
-          "ArticleRevisionDraft": undefined,
-          "ArticleRevisionPending": undefined,
-          "ArticleRevisionPublished": undefined,
           "revisions": {
             "some": {
               "preTitle": {
@@ -1260,9 +1280,6 @@ exports[`ArticleService should query articles on all revisions 3`] = `
           },
         },
         {
-          "ArticleRevisionDraft": undefined,
-          "ArticleRevisionPending": undefined,
-          "ArticleRevisionPublished": undefined,
           "revisions": {
             "some": {
               "lead": {
@@ -1275,12 +1292,20 @@ exports[`ArticleService should query articles on all revisions 3`] = `
         {
           "shared": true,
         },
-        {},
-        {},
         {
-          "ArticleRevisionDraft": undefined,
-          "ArticleRevisionPending": undefined,
-          "ArticleRevisionPublished": undefined,
+          "tags": {
+            "some": {
+              "tag": {
+                "id": {
+                  "in": [
+                    "1234",
+                  ],
+                },
+              },
+            },
+          },
+        },
+        {
           "revisions": {
             "some": {
               "authors": {
@@ -1308,13 +1333,6 @@ exports[`ArticleService should query articles on all revisions 3`] = `
             ],
           },
         },
-        {
-          "OR": [
-            {},
-            {},
-            {},
-          ],
-        },
       ],
     },
   },
@@ -1334,27 +1352,8 @@ exports[`ArticleService should query articles using cursor based pagination 1`] 
     "take": 11,
     "where": {
       "AND": [
-        {},
-        {},
-        {},
-        {},
-        {},
-        {},
-        {},
-        {},
-        {},
-        {},
         {
           "hidden": false,
-        },
-        {},
-        {},
-        {
-          "OR": [
-            {},
-            {},
-            {},
-          ],
         },
       ],
     },
@@ -1370,27 +1369,8 @@ exports[`ArticleService should query articles using cursor based pagination 2`] 
     },
     "where": {
       "AND": [
-        {},
-        {},
-        {},
-        {},
-        {},
-        {},
-        {},
-        {},
-        {},
-        {},
         {
           "hidden": false,
-        },
-        {},
-        {},
-        {
-          "OR": [
-            {},
-            {},
-            {},
-          ],
         },
       ],
     },

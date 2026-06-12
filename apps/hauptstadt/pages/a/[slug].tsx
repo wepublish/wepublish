@@ -101,6 +101,7 @@ export default function ArticleBySlugOrId() {
           <H4 component={'h2'}>Das könnte dich auch interessieren</H4>
 
           <ArticleListContainer
+            withTotalCount={false}
             variables={{
               filter: { tags: data.article.tags.map(tag => tag.id) },
               take: 4,

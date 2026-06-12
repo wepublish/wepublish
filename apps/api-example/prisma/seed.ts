@@ -19,6 +19,7 @@ import { faker } from '@faker-js/faker';
 import { createReadStream } from 'fs';
 import { seed as rootSeed } from '../../../libs/api/prisma/seed';
 import { NovaMediaAdapter } from '../../../libs/api/src/lib/media/novaMediaAdapter';
+import { resolveJwtKeyPair } from '../src/nestapp/dev-jwt-keypair';
 import { capitalize } from '@mui/material';
 import { NavigationLinkType } from 'libs/navigation/api/src/lib/navigation.model';
 import {
@@ -82,10 +83,9 @@ function getText(min = 1, max = 10) {
 async function seedImages(prisma: PrismaClient) {
   const internalUrl = process.env.MEDIA_SERVER_INTERNAL_URL;
 
-  const jwtPrivateKey = (process.env.JWT_PRIVATE_KEY ?? '').replace(
-    /\\n/g,
-    '\n'
-  );
+  const { privateKey: jwtPrivateKey } = resolveJwtKeyPair({
+    get: key => process.env[key],
+  });
 
   const mediaAdapter = new NovaMediaAdapter(
     new URL(process.env.MEDIA_SERVER_URL),

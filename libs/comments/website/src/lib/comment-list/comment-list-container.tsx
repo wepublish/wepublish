@@ -202,7 +202,7 @@ const useAddCommentMutationWithCacheUpdate = (
         );
 
         if (parentComment) {
-          parentComment.children.unshift(data.addUserComment as Comment);
+          parentComment.children.push(data.addUserComment as Comment);
         } else {
           comments.unshift(data.addUserComment);
         }

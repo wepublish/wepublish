@@ -1,10 +1,12 @@
 import styled from '@emotion/styled';
-import { Box } from '@mui/material';
+import { Box, CircularProgress, Collapse } from '@mui/material';
 import {
   alignmentForTeaserBlock,
+  Blocks,
   hasBlockStyle,
   isFilledTeaser,
   isTeaserListBlock,
+  isTitleBlock,
   selectTeaserLead,
   selectTeaserTitle,
   selectTeaserUrl,
@@ -12,6 +14,7 @@ import {
 import {
   BlockContent,
   FullTeaserListBlockFragment,
+  useArticleLazyQuery,
   useGetImagesByTagQuery,
 } from '@wepublish/website/api';
 import {
@@ -22,7 +25,8 @@ import {
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
-import { MdEast } from 'react-icons/md';
+import { useCallback, useId, useMemo, useState } from 'react';
+import { MdEast, MdKeyboardArrowDown, MdKeyboardArrowUp } from 'react-icons/md';
 
 export const isNewsTeasers = (
   block: Pick<BlockContent, '__typename'>
@@ -166,6 +170,52 @@ const NewsTeaserIcon = styled(MdEast)`
   color: ${({ theme }) => theme.palette.primary.main};
 `;
 
+const NewsTeaserExpandIcon = styled(MdKeyboardArrowDown)`
+  min-width: 24px;
+  font-size: 24px;
+  color: ${({ theme }) => theme.palette.primary.main};
+`;
+
+const NewsTeaserCollapseIcon = styled(MdKeyboardArrowUp)`
+  min-width: 24px;
+  font-size: 24px;
+  color: ${({ theme }) => theme.palette.primary.main};
+`;
+
+const NewsTeaserButton = styled('button')`
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid ${({ theme }) => theme.palette.primary.main};
+    outline-offset: ${({ theme }) => theme.spacing(0.5)};
+  }
+`;
+
+const NewsTeaserArticle = styled('div')`
+  display: grid;
+  gap: ${({ theme }) => theme.spacing(2)};
+  padding: ${({ theme }) => `${theme.spacing(2)} 0 ${theme.spacing(1)}`};
+`;
+
+const NewsTeaserLoading = styled('div')`
+  display: flex;
+  align-items: center;
+  min-height: ${({ theme }) => theme.spacing(5)};
+`;
+
+const NewsTeaserError = styled('p')`
+  margin: 0;
+  color: ${({ theme }) => theme.palette.error.main};
+`;
+
 const NewsTeaserUnstyled = ({
   teaser,
   alignment,
@@ -174,23 +224,95 @@ const NewsTeaserUnstyled = ({
   const title = teaser && selectTeaserTitle(teaser);
   const lead = teaser && selectTeaserLead(teaser);
   const href = (teaser && selectTeaserUrl(teaser)) ?? '';
+  const articleId =
+    teaser?.__typename === 'ArticleTeaser' ? teaser.article?.id : undefined;
+  const articleContentId = useId();
+  const [isOpen, setIsOpen] = useState(false);
+  const [fetchArticle, { called, data, loading, error }] =
+    useArticleLazyQuery();
+
+  const articleBlocks = useMemo(
+    () => data?.article.latest.blocks.filter(block => !isTitleBlock(block)),
+    [data?.article.latest.blocks]
+  );
+
+  const toggleArticle = useCallback(() => {
+    setIsOpen(open => !open);
+
+    if (articleId && !called && !isOpen) {
+      fetchArticle({ variables: { id: articleId } });
+    }
+  }, [articleId, called, fetchArticle, isOpen]);
 
   const {
     elements: { H4, Link },
   } = useWebsiteBuilder();
-  return (
-    <Link
-      href={href}
-      className={className}
-    >
+
+  const teaserContent = (
+    <>
       <NewsTeaserPreTitle>{title}</NewsTeaserPreTitle>
       <NewsTeaserContent>
         <NewsTeaserTitle>
           <H4 gutterBottom>{lead}</H4>
         </NewsTeaserTitle>
-        <NewsTeaserIcon />
+        {articleId ?
+          isOpen ?
+            <NewsTeaserCollapseIcon />
+          : <NewsTeaserExpandIcon />
+        : <NewsTeaserIcon />}
       </NewsTeaserContent>
-    </Link>
+    </>
+  );
+
+  if (!articleId) {
+    return (
+      <Link
+        href={href}
+        className={className}
+      >
+        {teaserContent}
+      </Link>
+    );
+  }
+
+  return (
+    <div className={className}>
+      <NewsTeaserButton
+        type="button"
+        aria-expanded={isOpen}
+        aria-controls={articleContentId}
+        onClick={toggleArticle}
+      >
+        {teaserContent}
+      </NewsTeaserButton>
+
+      <Collapse
+        in={isOpen}
+        timeout="auto"
+        unmountOnExit
+      >
+        <NewsTeaserArticle id={articleContentId}>
+          {loading && (
+            <NewsTeaserLoading>
+              <CircularProgress size={18} />
+            </NewsTeaserLoading>
+          )}
+
+          {error && (
+            <NewsTeaserError>
+              Der Artikel konnte nicht geladen werden.
+            </NewsTeaserError>
+          )}
+
+          {!loading && !error && !!articleBlocks?.length && (
+            <Blocks
+              blocks={articleBlocks}
+              type="Article"
+            />
+          )}
+        </NewsTeaserArticle>
+      </Collapse>
+    </div>
   );
 };
 

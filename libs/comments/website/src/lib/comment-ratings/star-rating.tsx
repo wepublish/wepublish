@@ -43,7 +43,7 @@ export const StarRating = ({
       <Rating
         value={rating}
         readOnly={readOnly}
-        onChange={(_, newValue) => newValue && onChange?.(newValue)}
+        onChange={(_, newValue) => onChange?.(newValue ?? rating)}
         showFilledIcon={hasRated}
       />
     </StarRatingWrapper>

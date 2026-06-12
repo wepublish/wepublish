@@ -1,0 +1,57 @@
+name: Chromatic Visual Testing
+
+on:
+  push:
+    branches:
+      - master
+      - development
+  pull_request:
+    types: [opened, synchronize, ready_for_review, reopened, labeled]
+    paths:
+      - 'apps/**'
+      - 'libs/**'
+      - '.storybook/**'
+      - 'package.json'
+      - 'package-lock.json'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: chromatic-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  chromatic:
+    name: Run Chromatic
+    runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'push' ||
+      github.event.action != 'labeled' ||
+      github.event.label.name == 'run-chromatic'
+    env:
+      CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - run: npm ci
+
+      - name: Skip Chromatic when the project token is not configured
+        if: env.CHROMATIC_PROJECT_TOKEN == ''
+        run: echo "CHROMATIC_PROJECT_TOKEN is not configured; skipping visual publish."
+
+      - name: Publish to Chromatic
+        if: env.CHROMATIC_PROJECT_TOKEN != ''
+        uses: chromaui/action@latest
+        with:
+          projectToken: ${{ env.CHROMATIC_PROJECT_TOKEN }}
+          buildScriptName: build-storybook
+          onlyChanged: true
+          autoAcceptChanges: 'master'

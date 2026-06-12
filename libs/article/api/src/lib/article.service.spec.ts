@@ -1,12 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ArticleService } from './article.service';
+import { ArticleService, createArticleFilter } from './article.service';
 import { Article, PrismaClient, TaggedArticles } from '@prisma/client';
 import { ArticleDataloaderService } from './article-dataloader.service';
 import { DateFilterComparison, SortOrder } from '@wepublish/utils/api';
 import { ArticleSort } from './article.model';
-import { NotFoundException } from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { TrackingPixelService } from '@wepublish/tracking-pixel/api';
 import { mapBlockUnionMap } from '@wepublish/block-content/api';
+import { createKvMock, KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 
 jest.mock('@wepublish/block-content/api');
 
@@ -51,6 +52,9 @@ describe('ArticleService', () => {
       articleRevision: {
         updateMany: jest.fn(),
         update: jest.fn(),
+        findUnique: jest.fn(),
+        findFirst: jest.fn(),
+        findMany: jest.fn(),
       },
       articleTrackingPixels: {
         createMany: jest.fn(),
@@ -71,6 +75,7 @@ describe('ArticleService', () => {
         ArticleService,
         { provide: PrismaClient, useValue: prismaMock },
         { provide: TrackingPixelService, useValue: trackingPixelMock },
+        { provide: KvTtlCacheService, useValue: createKvMock() },
         {
           provide: ArticleDataloaderService,
           useValue: {
@@ -238,6 +243,110 @@ describe('ArticleService', () => {
     });
 
     expect(result).toMatchSnapshot();
+  });
+
+  it('should keep tag filtering in the article query', async () => {
+    prismaMock.article.findMany?.mockResolvedValue([]);
+    prismaMock.article.count?.mockResolvedValue(0);
+
+    await service.getArticles({
+      filter: {
+        tags: ['tag-id'],
+        published: true,
+      },
+    });
+
+    expect(prismaMock.taggedArticles.findMany).not.toHaveBeenCalled();
+    expect(prismaMock.article.findMany?.mock.calls[0][0].where).toEqual(
+      expect.objectContaining({
+        AND: expect.arrayContaining([
+          {
+            tags: {
+              some: {
+                tag: {
+                  id: {
+                    in: ['tag-id'],
+                  },
+                },
+              },
+            },
+          },
+        ]),
+      })
+    );
+  });
+
+  it('should skip total count when the caller does not need it', async () => {
+    prismaMock.article.findMany?.mockResolvedValue([{ id: '123' }]);
+
+    const result = await service.getArticles(
+      {
+        take: 1,
+      },
+      {
+        skipTotalCount: true,
+      }
+    );
+
+    expect(prismaMock.article.count).not.toHaveBeenCalled();
+    expect(result.totalCount).toBe(0);
+  });
+
+  it('should cache article list queries only when the caller opts in', async () => {
+    prismaMock.article.findMany?.mockResolvedValue([{ id: '123' }]);
+    prismaMock.article.count?.mockResolvedValue(1);
+
+    const firstResult = await service.getArticles(
+      {
+        filter: {
+          published: true,
+        },
+      },
+      {
+        cacheTtlSeconds: 60,
+      }
+    );
+    const secondResult = await service.getArticles(
+      {
+        filter: {
+          published: true,
+        },
+      },
+      {
+        cacheTtlSeconds: 60,
+      }
+    );
+
+    expect(firstResult).toEqual(secondResult);
+    expect(prismaMock.article.findMany).toHaveBeenCalledTimes(1);
+    expect(prismaMock.article.count).toHaveBeenCalledTimes(1);
+  });
+
+  it('should create compact article filters without empty clauses', () => {
+    const hasEmptyObject = (value: unknown): boolean => {
+      if (Array.isArray(value)) {
+        return value.some(hasEmptyObject);
+      }
+
+      if (value && typeof value === 'object' && value.constructor === Object) {
+        const values = Object.values(value);
+
+        return values.length === 0 || values.some(hasEmptyObject);
+      }
+
+      return false;
+    };
+
+    expect(createArticleFilter({ includeHidden: true })).toEqual({});
+    expect(
+      hasEmptyObject(
+        createArticleFilter({
+          includeHidden: true,
+          tags: ['tag-id'],
+          published: true,
+        })
+      )
+    ).toBe(false);
   });
 
   it('should create an article', async () => {
@@ -472,6 +581,128 @@ describe('ArticleService', () => {
     await service.dislikeArticle('1234');
 
     expect(prismaMock.article.update).not.toHaveBeenCalled();
+  });
+
+  describe('version history', () => {
+    const buildRevision = (overrides = {}) => ({
+      id: 'rev-old',
+      articleId: '1234',
+      createdAt: new Date('2022-06-01'),
+      publishedAt: new Date('2022-06-02'),
+      archivedAt: new Date('2022-07-01'),
+      userId: 'old-user',
+      preTitle: 'Old preTitle',
+      title: 'Old title',
+      lead: 'Old lead',
+      seoTitle: 'Old seo',
+      canonicalUrl: 'https://example.com/old',
+      hideAuthor: false,
+      breaking: true,
+      socialMediaTitle: 'Old social title',
+      socialMediaDescription: 'Old social description',
+      imageID: 'image-1',
+      socialMediaImageID: 'image-2',
+      blocks: [{ title: { title: 'Old', lead: 'Old' } }],
+      properties: [{ key: 'key', value: 'value', public: true }],
+      authors: [
+        { authorId: 'author-1', revisionId: 'rev-old' },
+        { authorId: 'author-2', revisionId: 'rev-old' },
+      ],
+      socialMediaAuthors: [
+        { authorId: 'social-author-1', revisionId: 'rev-old' },
+      ],
+      ...overrides,
+    });
+
+    it('should return all revisions ordered from newest to oldest', async () => {
+      prismaMock.articleRevision.findMany?.mockResolvedValue([]);
+
+      await service.getRevisions('1234');
+
+      expect(prismaMock.articleRevision.findMany?.mock.calls[0][0]).toEqual({
+        where: { articleId: '1234' },
+        orderBy: { createdAt: 'desc' },
+      });
+    });
+
+    it('should restore a revision as a fresh draft owned by the restoring user', async () => {
+      prismaMock.articleRevision.findUnique?.mockResolvedValue(buildRevision());
+      prismaMock.article.update?.mockResolvedValue({ id: '1234' });
+
+      await service.restoreArticleRevision('1234', 'rev-old', 'new-user');
+
+      const updateArg = prismaMock.article.update?.mock.calls[0][0];
+      const created = updateArg.data.revisions.create;
+
+      expect(prismaMock.articleRevision.findUnique?.mock.calls[0][0]).toEqual({
+        where: { id: 'rev-old' },
+        include: { authors: true, socialMediaAuthors: true },
+      });
+      expect(updateArg.where).toEqual({ id: '1234' });
+      expect(updateArg.data.revisions.updateMany).toEqual({
+        where: { archivedAt: null, publishedAt: null },
+        data: { archivedAt: expect.any(Date) },
+      });
+      expect(created.id).toBeUndefined();
+      expect(created.createdAt).toBeUndefined();
+      expect(created.publishedAt).toBeUndefined();
+      expect(created.archivedAt).toBeUndefined();
+      expect(created.articleId).toBeUndefined();
+      expect(created.userId).toBe('new-user');
+      expect(created.title).toBe('Old title');
+      expect(created.lead).toBe('Old lead');
+      expect(created.blocks).toEqual([
+        { title: { title: 'Old', lead: 'Old' } },
+      ]);
+      expect(created.authors.createMany.data).toEqual([
+        { authorId: 'author-1' },
+        { authorId: 'author-2' },
+      ]);
+      expect(created.socialMediaAuthors.createMany.data).toEqual([
+        { authorId: 'social-author-1' },
+      ]);
+    });
+
+    it('should reject restoring a revision that does not belong to the article', async () => {
+      prismaMock.articleRevision.findUnique?.mockResolvedValue(
+        buildRevision({ articleId: 'another-article' })
+      );
+
+      await expect(
+        service.restoreArticleRevision('1234', 'rev-old', 'new-user')
+      ).rejects.toThrow(NotFoundException);
+
+      expect(prismaMock.article.update).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('discard draft', () => {
+    it('should archive the current draft when a published or pending fallback exists', async () => {
+      prismaMock.article.findUnique?.mockResolvedValue({ id: '1234' });
+      prismaMock.articleRevision.findFirst
+        ?.mockResolvedValueOnce({ id: 'draft-1', articleId: '1234' })
+        .mockResolvedValueOnce({ id: 'published-1', articleId: '1234' });
+
+      await service.discardArticleDraft('1234');
+
+      expect(prismaMock.articleRevision.update?.mock.calls[0][0]).toEqual({
+        where: { id: 'draft-1' },
+        data: { archivedAt: expect.any(Date) },
+      });
+    });
+
+    it('should reject discarding a draft when no fallback revision exists', async () => {
+      prismaMock.article.findUnique?.mockResolvedValue({ id: '1234' });
+      prismaMock.articleRevision.findFirst
+        ?.mockResolvedValueOnce({ id: 'draft-1', articleId: '1234' })
+        .mockResolvedValueOnce(null);
+
+      await expect(service.discardArticleDraft('1234')).rejects.toThrow(
+        BadRequestException
+      );
+
+      expect(prismaMock.articleRevision.update).not.toHaveBeenCalled();
+    });
   });
 
   describe('unhappy path', () => {

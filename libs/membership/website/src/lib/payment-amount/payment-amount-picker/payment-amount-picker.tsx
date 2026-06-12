@@ -124,6 +124,7 @@ export const PaymentAmountPicker = forwardRef<
       currency,
       amountPerMonthMin,
       amountPerMonthTarget,
+      presetAmounts,
       pickerItems = DEFAULT_PICKER_ITEMS,
       format,
       snap,
@@ -141,10 +142,12 @@ export const PaymentAmountPicker = forwardRef<
 
     const [hasInteracted, setHasInteracted] = useState(false);
     const showSelection = !noInitialSelection || hasInteracted;
+    const resolvedPickerItems =
+      presetAmounts?.length ? presetAmounts : pickerItems;
     const isCustomValue =
       snap ?
         !snap.values.some(v => v * 100 === value)
-      : !pickerItems.some(p => p === value);
+      : !resolvedPickerItems.some(p => p === value);
 
     return (
       <PaymentAmountPickerWrapper
@@ -158,7 +161,7 @@ export const PaymentAmountPicker = forwardRef<
         }}
         value={value}
       >
-        {pickerItems.map(itemAmount => (
+        {resolvedPickerItems.map(itemAmount => (
           <FormControlLabel
             key={itemAmount}
             value={itemAmount}

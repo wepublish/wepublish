@@ -78,6 +78,7 @@ export default function ArticleBySlugOrId() {
           <H2 component={'h2'}>Aktuelle Beiträge</H2>
 
           <ArticleListContainer
+            withTotalCount={false}
             variables={{
               sort: ArticleSort.PublishedAt,
               order: SortOrder.Descending,

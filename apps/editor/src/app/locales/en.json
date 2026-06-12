@@ -1,5 +1,43 @@
 {
   "translation": {
+    "versionHistory": {
+      "title": "Version history",
+      "subtitle": "{{count}} versions",
+      "close": "Close",
+      "empty": "No versions yet.",
+      "untitled": "Untitled",
+      "created": "Created {{date}}",
+      "published": "published {{date}}",
+      "currentVersion": "Current version",
+      "restore": "Restore",
+      "restored": "Version restored as a new draft",
+      "preview": "Preview",
+      "previewTitle": "Version preview",
+      "readOnly": "Read-only",
+      "state": {
+        "published": "Currently published",
+        "pending": "Scheduled",
+        "draft": "Draft",
+        "superseded": "Previously published",
+        "archived": "Archived"
+      },
+      "confirm": {
+        "title": "Restore this version?",
+        "message": "This creates a new draft from the version of {{date}}. Your current draft will be archived. Nothing is published until you publish it.",
+        "cancel": "Cancel",
+        "confirm": "Restore as draft"
+      }
+    },
+    "discardDraft": {
+      "button": "Discard draft",
+      "success": "Draft discarded - reverted to the published version",
+      "confirm": {
+        "title": "Discard the current draft?",
+        "message": "Your unpublished changes will be archived and the editor will revert to the currently published version. This cannot be undone, but the discarded draft stays available in the version history.",
+        "cancel": "Cancel",
+        "confirm": "Discard draft"
+      }
+    },
     "articleEditor": {
       "overview": {
         "articlePending": "Article Pending",
@@ -1681,6 +1719,13 @@
       "amountPerMonthTargetHelpText": "The monthly target amount defines the desired member plan price that users should pay. It must be higher than the minimum amount and typically defines the default setting in the payment form.",
       "yearlyAmount": "Exact yearly amount",
       "yearlyAmountHelpText": "Optional. When set, yearly subscriptions on this plan are charged exactly this amount instead of the monthly amount × 12 — so whole-franc yearly prices (e.g. CHF 200.00) are exact. Leave empty to use the monthly amount.",
+      "amountSelectionLayout": "Amount selector",
+      "amountSelectionLayoutHelpText": "Choose whether users select their monthly amount with a slider or from predefined amounts.",
+      "amountSelectionLayoutSlider": "Slider",
+      "amountSelectionLayoutPicker": "Preset amounts",
+      "presetAmounts": "Preset amounts",
+      "presetAmountsHelpText": "Amounts must be inside the minimum and maximum monthly amount range.",
+      "addPresetAmount": "Add amount",
       "amountPerMonthMinHelpText": "The minimum monthly amount is the actual member plan price that must be paid as a minimum. However, users can voluntarily pay more when subscribing.",
       "amountPerMonthMaxHelpText": "The maximum monthly amount is the highest amount users can pay when subscribing.",
       "confirmationPage": "Redirect to page for existing users (retargeting)",

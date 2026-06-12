@@ -1,5 +1,9 @@
 import { Meta } from '@storybook/react';
-import { Article, ArticleListDocument } from '@wepublish/website/api';
+import {
+  Article,
+  ArticleListDocument,
+  RelatedArticleListDocument,
+} from '@wepublish/website/api';
 import { ArticleListContainer } from './article-list-container';
 import { mockArticle } from '@wepublish/storybook/mocks';
 
@@ -45,5 +49,38 @@ export const WithFilter = {
   ...Default,
   args: {
     filter: (articles: Article[]) => articles.filter(a => a.id !== article.id),
+  },
+};
+
+export const WithoutTotalCount = {
+  ...Default,
+  args: {
+    withTotalCount: false,
+  },
+
+  parameters: {
+    apolloClient: {
+      mocks: [
+        {
+          request: {
+            query: RelatedArticleListDocument,
+            variables: {},
+          },
+          result: {
+            data: {
+              articles: {
+                nodes: [article, mockArticle(), mockArticle()],
+                pageInfo: {
+                  hasNextPage: false,
+                  hasPreviousPage: false,
+                  endCursor: null,
+                  startCursor: null,
+                },
+              },
+            },
+          },
+        },
+      ],
+    },
   },
 };

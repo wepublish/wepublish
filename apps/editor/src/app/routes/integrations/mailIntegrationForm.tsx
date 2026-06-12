@@ -83,7 +83,10 @@ export function MailIntegrationForm() {
           },
         ];
 
-        if (setting.type === MailProviderType.Mailchimp) {
+        if (
+          setting.type === MailProviderType.Mailchimp ||
+          setting.type === MailProviderType.Mailersend
+        ) {
           commonFields.push({
             name: 'apiKey',
             label: t('integrations.mailSettings.apiKey'),
@@ -96,6 +99,9 @@ export function MailIntegrationForm() {
             type: 'password',
             autoComplete: 'one-time-code',
           });
+        }
+
+        if (setting.type === MailProviderType.Mailchimp) {
           commonFields.push({
             type: 'text',
             name: 'mailchimp_baseURL',

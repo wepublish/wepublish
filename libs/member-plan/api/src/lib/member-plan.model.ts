@@ -14,7 +14,12 @@ import { HasImage } from '@wepublish/image/api';
 import { GraphQLRichText } from '@wepublish/richtext/api';
 import { Descendant } from 'slate';
 import { PaymentMethod } from '@wepublish/payment/api';
-import { Currency, PaymentPeriodicity, ProductType } from '@prisma/client';
+import {
+  AmountSelectionLayout,
+  Currency,
+  PaymentPeriodicity,
+  ProductType,
+} from '@prisma/client';
 import { Page } from '@wepublish/page/api';
 
 export enum MemberPlanSort {
@@ -36,6 +41,10 @@ registerEnumType(Currency, {
 
 registerEnumType(ProductType, {
   name: 'ProductType',
+});
+
+registerEnumType(AmountSelectionLayout, {
+  name: 'AmountSelectionLayout',
 });
 
 @ObjectType()
@@ -99,6 +108,12 @@ export class MemberPlan extends HasImage {
 
   @Field(() => Int, { nullable: true })
   yearlyAmount?: number;
+
+  @Field(() => AmountSelectionLayout)
+  amountSelectionLayout!: AmountSelectionLayout;
+
+  @Field(() => [Int])
+  presetAmounts!: number[];
 
   @Field(() => Int, { nullable: true })
   maxCount?: number;
@@ -169,6 +184,8 @@ export class CreateMemberPlanInput extends PickType(
     'amountPerMonthMax',
     'amountPerMonthTarget',
     'yearlyAmount',
+    'amountSelectionLayout',
+    'presetAmounts',
     'currency',
     'extendable',
     'productType',

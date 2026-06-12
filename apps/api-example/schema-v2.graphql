@@ -6,7 +6,15 @@ enum AIProviderType {
   V0
 }
 
-union Action = ArticleCreatedAction | AuthorCreatedAction | CommentCreatedAction | EventCreatedAction | PageCreatedAction | PollStartedAction | SubscriptionCreatedAction | UserCreatedAction
+union Action =
+  | ArticleCreatedAction
+  | AuthorCreatedAction
+  | CommentCreatedAction
+  | EventCreatedAction
+  | PageCreatedAction
+  | PollStartedAction
+  | SubscriptionCreatedAction
+  | UserCreatedAction
 
 enum ActionType {
   ArticleCreated
@@ -46,6 +54,7 @@ type Article implements HasOptionalPaywall & HasOptionalPeerLc {
   previewUrl: String!
   published: ArticleRevision
   publishedAt: DateTime
+  revisions: [ArticleRevision!]!
   shared: Boolean!
   slug: String
   tags: [Tag!]!
@@ -91,6 +100,7 @@ type ArticleNavigationLink implements BaseNavigationLink & HasArticle {
 }
 
 type ArticleRevision implements HasBlockContent {
+  archivedAt: DateTime
   authors: [Author!]!
   blocks: [BlockContent!]!
   breaking: Boolean!
@@ -181,7 +191,9 @@ input AuthorLinkInput {
   url: String!
 }
 
-"""Sorting options for authors"""
+"""
+Sorting options for authors
+"""
 enum AuthorSort {
   CreatedAt
   ModifiedAt
@@ -310,7 +322,38 @@ input BildwurfAdBlockInput {
   zoneID: String
 }
 
-union BlockContent = BildwurfAdBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | FlexBlock | HTMLBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | StreamableVideoBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock
+union BlockContent =
+  | BildwurfAdBlock
+  | BreakBlock
+  | CommentBlock
+  | CrowdfundingBlock
+  | EventBlock
+  | FacebookPostBlock
+  | FacebookVideoBlock
+  | FlexBlock
+  | HTMLBlock
+  | IFrameBlock
+  | ImageBlock
+  | ImageGalleryBlock
+  | InstagramPostBlock
+  | ListicleBlock
+  | PolisConversationBlock
+  | PollBlock
+  | QuoteBlock
+  | RichTextBlock
+  | SoundCloudTrackBlock
+  | StreamableVideoBlock
+  | SubscribeBlock
+  | TeaserGridBlock
+  | TeaserGridFlexBlock
+  | TeaserListBlock
+  | TeaserSlotsBlock
+  | TikTokVideoBlock
+  | TitleBlock
+  | TwitterTweetBlock
+  | UnknownBlock
+  | VimeoVideoBlock
+  | YouTubeVideoBlock
 
 input BlockContentInput {
   bildwurfAd: BildwurfAdBlockInput
@@ -458,7 +501,9 @@ type Chat {
   message: String!
 }
 
-"""A hexadecimal color value (#RRGGBB)"""
+"""
+A hexadecimal color value (#RRGGBB)
+"""
 scalar Color
 
 type Comment implements HasOptionalUser {
@@ -1141,7 +1186,9 @@ type FullPoll {
   question: String
 }
 
-"""Setting Value"""
+"""
+Setting Value
+"""
 scalar GraphQLSettingValueType
 
 type HTMLBlock implements BaseBlock {
@@ -1563,12 +1610,24 @@ enum LoginStatus {
 
 type MailProviderModel {
   name: String!
+  type: MailProviderType
 }
 
 enum MailProviderType {
   MAILCHIMP
+  MAILERSEND
   MAILGUN
   SLACK
+}
+
+type MailPlaceholderGroupModel {
+  event: String!
+  placeholders: [MailPlaceholderModel!]!
+}
+
+type MailPlaceholderModel {
+  example: String!
+  key: String!
 }
 
 type MailTemplateRef {
@@ -1648,6 +1707,7 @@ type MailchimpSyncProgressType {
 
 type MemberPlan implements HasImage {
   active: Boolean!
+  amountSelectionLayout: AmountSelectionLayout!
   amountPerMonthMax: Int
   amountPerMonthMin: Int!
   amountPerMonthTarget: Int
@@ -1668,12 +1728,18 @@ type MemberPlan implements HasImage {
   migrateToTargetPaymentMethodID: String
   name: String!
   productType: ProductType!
+  presetAmounts: [Int!]!
   shortDescription: RichText
   slug: String!
   successPage: Page
   successPageId: String
   tags: [String!]
   yearlyAmount: Int
+}
+
+enum AmountSelectionLayout {
+  Picker
+  Slider
 }
 
 input MemberPlanFilter {
@@ -1689,13 +1755,27 @@ enum MemberPlanSort {
 }
 
 type Mutation {
-  """Adds a new comment made by you."""
-  addUserComment(challenge: ChallengeInput, guestUsername: String, itemID: String!, itemType: CommentItemType!, parentID: String, text: RichText!, title: String): Comment!
+  """
+  Adds a new comment made by you.
+  """
+  addUserComment(
+    challenge: ChallengeInput
+    guestUsername: String
+    itemID: String!
+    itemType: CommentItemType!
+    parentID: String
+    text: RichText!
+    title: String
+  ): Comment!
 
-  """Approves a comment"""
+  """
+  Approves a comment
+  """
   approveComment(id: String!): Comment!
 
-  """Cancels a subscription."""
+  """
+  Cancels a subscription.
+  """
   cancelSubscription(
     id: String!
     reason: SubscriptionDeactivationReason!
@@ -1711,32 +1791,99 @@ type Mutation {
   """
   cancelUserSubscription(id: String!): PublicSubscription
 
-  """Confirms a pending email change for the logged-in user."""
+  """
+  Confirms a pending email change for the logged-in user.
+  """
   confirmEmailChange(newEmail: String!): SensitiveDataUser!
 
-  """Creates an article."""
-  createArticle(authorIds: [String!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, imageID: String, lead: String, likes: Int, paywallId: String, preTitle: String, properties: [PropertyInput!]!, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
+  """
+  Creates an article.
+  """
+  createArticle(
+    authorIds: [String!]!
+    blocks: [BlockContentInput!]!
+    breaking: Boolean!
+    canonicalUrl: String
+    disableComments: Boolean!
+    hidden: Boolean!
+    hideAuthor: Boolean!
+    imageID: String
+    lead: String
+    likes: Int
+    paywallId: String
+    preTitle: String
+    properties: [PropertyInput!]!
+    seoTitle: String
+    shared: Boolean!
+    slug: String
+    socialMediaAuthorIds: [String!]!
+    socialMediaDescription: String
+    socialMediaImageID: String
+    socialMediaTitle: String
+    tagIds: [String!]!
+    title: String
+  ): Article!
 
-  """Creates a new author."""
-  createAuthor(bio: RichText, hideOnArticle: Boolean!, hideOnTeam: Boolean!, hideOnTeaser: Boolean!, imageID: String, jobTitle: String, links: [AuthorLinkInput!]!, name: String!, slug: Slug!, tagIds: [String!]!): Author!
+  """
+  Creates a new author.
+  """
+  createAuthor(
+    bio: RichText
+    hideOnArticle: Boolean!
+    hideOnTeam: Boolean!
+    hideOnTeaser: Boolean!
+    imageID: String
+    jobTitle: String
+    links: [AuthorLinkInput!]!
+    name: String!
+    slug: Slug!
+    tagIds: [String!]!
+  ): Author!
   createBanner(input: CreateBannerInput!): Banner!
 
-  """Creates a new block style."""
+  """
+  Creates a new block style.
+  """
   createBlockStyle(blocks: [EditorBlockType!]!, name: String!): BlockStyle!
 
-  """Creates a comment for any user"""
-  createComment(itemID: String!, itemType: CommentItemType!, lead: String, parentID: String, tagIds: [String!], text: RichText): Comment!
+  """
+  Creates a comment for any user
+  """
+  createComment(
+    itemID: String!
+    itemType: CommentItemType!
+    lead: String
+    parentID: String
+    tagIds: [String!]
+    text: RichText
+  ): Comment!
 
   "\n      Create a new consent.\n    "
   createConsent(defaultValue: Boolean!, name: String!, slug: String!): Consent!
 
-  """Create a new crowdfunding"""
+  """
+  Create a new crowdfunding
+  """
   createCrowdfunding(input: CreateCrowdfundingInput!): Crowdfunding!
 
-  """Creates a new event."""
-  createEvent(description: RichText, endsAt: DateTime, imageId: String, lead: String, location: String, name: String!, startsAt: DateTime!, status: EventStatus! = Scheduled, tagIds: [String!]): Event!
+  """
+  Creates a new event.
+  """
+  createEvent(
+    description: RichText
+    endsAt: DateTime
+    imageId: String
+    lead: String
+    location: String
+    name: String!
+    startsAt: DateTime!
+    status: EventStatus! = Scheduled
+    tagIds: [String!]
+  ): Event!
 
-  """Creates a new external app."""
+  """
+  Creates a new external app.
+  """
   createExternalApp(input: CreateExternalAppInput!): ExternalApp!
 
   """
@@ -1744,71 +1891,236 @@ type Mutation {
   """
   createExternalAppToken(externalAppId: String!): ExternalAppToken!
 
-  """Creates a new invoice."""
-  createInvoice(currency: Currency!, description: String, dueAt: DateTime!, items: [InvoiceItemInput!]!, mail: String!, manuallySetAsPaidByUserId: String, scheduledDeactivationAt: DateTime!, subscriptionID: String): Invoice!
+  """
+  Creates a new invoice.
+  """
+  createInvoice(
+    currency: Currency!
+    description: String
+    dueAt: DateTime!
+    items: [InvoiceItemInput!]!
+    mail: String!
+    manuallySetAsPaidByUserId: String
+    scheduledDeactivationAt: DateTime!
+    subscriptionID: String
+  ): Invoice!
 
-  """Returns a JWT that can be used to login as another user."""
+  """
+  Returns a JWT that can be used to login as another user.
+  """
   createJWTForUser(expiresInMinutes: Float!, userId: String!): SessionWithToken!
 
-  """Returns a JWT that is valid for 1min for the current logged in user."""
+  """
+  Returns a JWT that is valid for 1min for the current logged in user.
+  """
   createJWTForWebsiteLogin: SessionWithToken!
 
-  """Creates a new memberplan."""
-  createMemberPlan(active: Boolean!, amountPerMonthMax: Int, amountPerMonthMin: Int!, amountPerMonthTarget: Int, availablePaymentMethods: [AvailablePaymentMethodInput!]!, confirmationPageId: String, currency: Currency!, description: RichText, extendable: Boolean!, externalReward: String, failPageId: String, imageID: String, maxCount: Int, migrateToTargetPaymentMethodID: String, name: String!, productType: ProductType!, shortDescription: RichText, slug: String!, successPageId: String, tags: [String!], yearlyAmount: Int): MemberPlan!
+  """
+  Creates a new memberplan.
+  """
+  createMemberPlan(
+    active: Boolean!
+    amountPerMonthMax: Int
+    amountPerMonthMin: Int!
+    amountPerMonthTarget: Int
+    amountSelectionLayout: AmountSelectionLayout!
+    availablePaymentMethods: [AvailablePaymentMethodInput!]!
+    confirmationPageId: String
+    currency: Currency!
+    description: RichText
+    extendable: Boolean!
+    externalReward: String
+    failPageId: String
+    imageID: String
+    maxCount: Int
+    migrateToTargetPaymentMethodID: String
+    name: String!
+    presetAmounts: [Int!]!
+    productType: ProductType!
+    shortDescription: RichText
+    slug: String!
+    successPageId: String
+    tags: [String!]
+    yearlyAmount: Int
+  ): MemberPlan!
 
-  """Creates a new navigation."""
-  createNavigation(key: String!, links: [NavigationLinkInput!]!, name: String!): Navigation!
+  """
+  Creates a new navigation.
+  """
+  createNavigation(
+    key: String!
+    links: [NavigationLinkInput!]!
+    name: String!
+  ): Navigation!
 
-  """Creates an page."""
-  createPage(blocks: [BlockContentInput!]!, description: String, hidden: Boolean!, imageID: String, properties: [PropertyInput!]!, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
+  """
+  Creates an page.
+  """
+  createPage(
+    blocks: [BlockContentInput!]!
+    description: String
+    hidden: Boolean!
+    imageID: String
+    properties: [PropertyInput!]!
+    slug: String
+    socialMediaDescription: String
+    socialMediaImageID: String
+    socialMediaTitle: String
+    tagIds: [String!]!
+    title: String
+  ): Page!
 
   """
   This mutation allows to create payment by taking an input of type PaymentFromInvoiceInput.
   """
   createPaymentFromInvoice(input: PaymentFromInvoiceInput!): Payment
 
-  """This mutation allows to create payment by referencing a subscription."""
-  createPaymentFromSubscription(failureURL: String, subscriptionId: String, successURL: String): Payment
+  """
+  This mutation allows to create payment by referencing a subscription.
+  """
+  createPaymentFromSubscription(
+    failureURL: String
+    subscriptionId: String
+    successURL: String
+  ): Payment
 
-  """Creates a new payment method."""
-  createPaymentMethod(active: Boolean!, description: String!, gracePeriod: Int!, imageId: String, name: String!, paymentProviderID: String!, slug: Slug!): PaymentMethod!
+  """
+  Creates a new payment method.
+  """
+  createPaymentMethod(
+    active: Boolean!
+    description: String!
+    gracePeriod: Int!
+    imageId: String
+    name: String!
+    paymentProviderID: String!
+    slug: Slug!
+  ): PaymentMethod!
 
-  """Creates a paywall."""
-  createPaywall(active: Boolean!, alternativeSubscribeUrl: String, anyMemberPlan: Boolean!, bypassTokens: [String!]!, circumventDescription: RichText, description: RichText, fadeout: Boolean!, hideContentAfter: Int!, memberPlanIds: [String!]!, name: String, upgradeCircumventDescription: RichText, upgradeDescription: RichText): Paywall!
+  """
+  Creates a paywall.
+  """
+  createPaywall(
+    active: Boolean!
+    alternativeSubscribeUrl: String
+    anyMemberPlan: Boolean!
+    bypassTokens: [String!]!
+    circumventDescription: RichText
+    description: RichText
+    fadeout: Boolean!
+    hideContentAfter: Int!
+    memberPlanIds: [String!]!
+    name: String
+    upgradeCircumventDescription: RichText
+    upgradeDescription: RichText
+  ): Paywall!
 
-  """Creates a new peer."""
-  createPeer(hostURL: String!, information: RichText, isDisabled: Boolean, name: String!, slug: String!, token: String!): Peer!
+  """
+  Creates a new peer.
+  """
+  createPeer(
+    hostURL: String!
+    information: RichText
+    isDisabled: Boolean
+    name: String!
+    slug: String!
+    token: String!
+  ): Peer!
 
-  """Creates a new poll."""
-  createPoll(closedAt: DateTime, infoText: RichText, opensAt: DateTime!, question: String): FullPoll!
+  """
+  Creates a new poll.
+  """
+  createPoll(
+    closedAt: DateTime
+    infoText: RichText
+    opensAt: DateTime!
+    question: String
+  ): FullPoll!
 
-  """Creates a new poll answer."""
+  """
+  Creates a new poll answer.
+  """
   createPollAnswer(answer: String, pollId: String!): PollAnswer!
 
-  """Creates a new external vote source."""
-  createPollExternalVoteSource(pollId: String!, source: String): PollExternalVoteSource!
+  """
+  Creates a new external vote source.
+  """
+  createPollExternalVoteSource(
+    pollId: String!
+    source: String
+  ): PollExternalVoteSource!
 
-  """Creates a rating system answer."""
-  createRatingSystemAnswer(answer: String, ratingSystemId: String!, type: RatingSystemType!): CommentRatingSystemAnswer!
-  createSession(email: String!, password: String!, totpToken: String): SessionWithToken!
+  """
+  Creates a rating system answer.
+  """
+  createRatingSystemAnswer(
+    answer: String
+    ratingSystemId: String!
+    type: RatingSystemType!
+  ): CommentRatingSystemAnswer!
+  createSession(
+    email: String!
+    password: String!
+    totpToken: String
+  ): SessionWithToken!
   createSessionWithJWT(jwt: String!, totpToken: String): SessionWithToken!
 
-  """Creates a new subscription."""
-  createSubscription(autoRenew: Boolean!, extendable: Boolean!, memberPlanID: String!, monthlyAmount: Int!, paidUntil: DateTime, paymentMethodID: String!, paymentPeriodicity: PaymentPeriodicity!, periodAmount: Int, properties: [PropertyInput!]!, startsAt: DateTime!, userID: String!): PublicSubscription!
+  """
+  Creates a new subscription.
+  """
+  createSubscription(
+    autoRenew: Boolean!
+    extendable: Boolean!
+    memberPlanID: String!
+    monthlyAmount: Int!
+    paidUntil: DateTime
+    paymentMethodID: String!
+    paymentPeriodicity: PaymentPeriodicity!
+    periodAmount: Int
+    properties: [PropertyInput!]!
+    startsAt: DateTime!
+    userID: String!
+  ): PublicSubscription!
 
-  """Create a new subscription flow"""
-  createSubscriptionFlow(autoRenewal: [Boolean!]!, memberPlanId: String!, paymentMethodIds: [String!]!, periodicities: [PaymentPeriodicity!]!): [SubscriptionFlowModel!]!
+  """
+  Create a new subscription flow
+  """
+  createSubscriptionFlow(
+    autoRenewal: [Boolean!]!
+    memberPlanId: String!
+    paymentMethodIds: [String!]!
+    periodicities: [PaymentPeriodicity!]!
+  ): [SubscriptionFlowModel!]!
 
-  """Create a subscription interval"""
-  createSubscriptionInterval(daysAwayFromEnding: Int, event: SubscriptionEvent!, mailTemplateId: String, subscriptionFlowId: String!): [SubscriptionFlowModel!]!
+  """
+  Create a subscription interval
+  """
+  createSubscriptionInterval(
+    daysAwayFromEnding: Int
+    event: SubscriptionEvent!
+    mailTemplateId: String
+    subscriptionFlowId: String!
+  ): [SubscriptionFlowModel!]!
 
-  """Creates a new tag."""
-  createTag(color: Color, description: RichText, main: Boolean! = false, tag: String, type: TagType!): Tag!
+  """
+  Creates a new tag.
+  """
+  createTag(
+    color: Color
+    description: RichText
+    main: Boolean! = false
+    tag: String
+    type: TagType!
+  ): Tag!
 
-  """Creates a token and returns it's secret once."""
+  """
+  Creates a token and returns it's secret once.
+  """
   createToken(name: String!): TokenWithSecret!
 
-  """Creates a new user."""
+  """
+  Creates a new user.
+  """
   createUser(
     active: Boolean!
     address: UserAddressInput
@@ -1832,121 +2144,237 @@ type Mutation {
   ): SensitiveDataUser!
 
   "\n      Creates a new userConsent based on input.\n      Returns created userConsent.\n    "
-  createUserConsent(consentId: String!, userId: String!, value: Boolean!): UserConsent!
+  createUserConsent(
+    consentId: String!
+    userId: String!
+    value: Boolean!
+  ): UserConsent!
 
-  """Creates a new userrole."""
-  createUserRole(description: String, name: String!, permissionIDs: [String!]!): UserRole!
+  """
+  Creates a new userrole.
+  """
+  createUserRole(
+    description: String
+    name: String!
+    permissionIDs: [String!]!
+  ): UserRole!
 
-  """Allows authenticated users to create additional subscriptions"""
-  createUserSubscription(autoRenew: Boolean!, deactivateSubscriptionId: String, failureURL: String, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Int!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], successURL: String, voucher: String): Payment!
+  """
+  Allows authenticated users to create additional subscriptions
+  """
+  createUserSubscription(
+    autoRenew: Boolean!
+    deactivateSubscriptionId: String
+    failureURL: String
+    memberPlanID: String
+    memberPlanSlug: Slug
+    monthlyAmount: Int!
+    paymentMethodID: String
+    paymentMethodSlug: Slug
+    paymentPeriodicity: PaymentPeriodicity!
+    subscriptionProperties: [PropertyInput!]
+    successURL: String
+    voucher: String
+  ): Payment!
 
   """
   Allows guests and authenticated users to create additional subscriptions
   """
-  createUserSubscriptionWithConfirmation(autoRenew: Boolean!, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Int!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], userId: String, voucher: String): Boolean!
+  createUserSubscriptionWithConfirmation(
+    autoRenew: Boolean!
+    memberPlanID: String
+    memberPlanSlug: Slug
+    monthlyAmount: Int!
+    paymentMethodID: String
+    paymentMethodSlug: Slug
+    paymentPeriodicity: PaymentPeriodicity!
+    subscriptionProperties: [PropertyInput!]
+    userId: String
+    voucher: String
+  ): Boolean!
 
-  """Creates a new voucher."""
-  createVoucher(code: String!, discountPercent: Int!, memberPlanId: String!, validFrom: DateTime!, validTo: DateTime!): Voucher!
+  """
+  Creates a new voucher.
+  """
+  createVoucher(
+    code: String!
+    discountPercent: Int!
+    memberPlanId: String!
+    validFrom: DateTime!
+    validTo: DateTime!
+  ): Voucher!
 
-  """Deletes all sync errors for a config so all contacts will be retried."""
+  """
+  Deletes all sync errors for a config so all contacts will be retried.
+  """
   deleteAllMailchimpSyncErrors(configId: String!): Boolean!
 
-  """Deletes an article."""
+  """
+  Deletes an article.
+  """
   deleteArticle(id: String!): String!
 
-  """Deletes an existing author."""
+  """
+  Deletes an existing author.
+  """
   deleteAuthor(id: String!): Author!
   deleteBanner(id: String!): Boolean
 
-  """Deletes an existing block style."""
+  """
+  Deletes an existing block style.
+  """
   deleteBlockStyle(id: String!): BlockStyle!
 
-  """Deletes a comment"""
+  """
+  Deletes a comment
+  """
   deleteComment(id: String!): Comment!
 
   "\n      Deletes an existing consent.\n    "
   deleteConsent(id: String!): Consent!
   deleteCrowdfunding(id: String!): Boolean
 
-  """Deletes an existing document."""
+  """
+  Deletes an existing document.
+  """
   deleteDocument(id: String!): String!
 
-  """Deletes an existing event."""
+  """
+  Deletes an existing event.
+  """
   deleteEvent(id: String!): Event!
 
-  """Deletes an external app."""
+  """
+  Deletes an external app.
+  """
   deleteExternalApp(id: String!): ExternalApp!
 
-  """Deletes an existing image."""
+  """
+  Deletes an existing image.
+  """
   deleteImage(id: String!): String!
 
-  """Deletes an existing invoice."""
+  """
+  Deletes an existing invoice.
+  """
   deleteInvoice(id: String!): Invoice!
 
-  """Deletes a single sync error so the contact will be retried."""
+  """
+  Deletes a single sync error so the contact will be retried.
+  """
   deleteMailchimpSyncError(id: String!): Boolean!
 
-  """Deletes an existing memberplan."""
+  """
+  Deletes an existing memberplan.
+  """
   deleteMemberPlan(id: String!): MemberPlan!
 
-  """Deletes an existing navigation."""
+  """
+  Deletes an existing navigation.
+  """
   deleteNavigation(id: String!): Navigation!
 
-  """Deletes an page."""
+  """
+  Deletes an page.
+  """
   deletePage(id: String!): String!
 
-  """Deletes an existing payment method."""
+  """
+  Deletes an existing payment method.
+  """
   deletePaymentMethod(id: String!): PaymentMethod!
 
-  """Deletes a paywall."""
+  """
+  Deletes a paywall.
+  """
   deletePaywall(id: String!): Paywall!
 
-  """Deletes an existing peer."""
+  """
+  Deletes an existing peer.
+  """
   deletePeer(id: String!): String!
 
-  """Deletes an existing poll."""
+  """
+  Deletes an existing poll.
+  """
   deletePoll(id: String!): FullPoll!
 
-  """Deletes an existing poll answer."""
+  """
+  Deletes an existing poll answer.
+  """
   deletePollAnswer(id: String!): PollAnswer!
 
-  """Deletes an existing external vote source."""
+  """
+  Deletes an existing external vote source.
+  """
   deletePollExternalVoteSource(id: String!): PollExternalVoteSource!
 
-  """Delete poll votes"""
+  """
+  Delete poll votes
+  """
   deletePollVotes(ids: [String!]!): DeletePollVotesResult!
 
-  """Deletes a rating system answer."""
+  """
+  Deletes a rating system answer.
+  """
   deleteRatingSystemAnswer(id: String!): CommentRatingSystemAnswer!
 
-  """Deletes an existing subscription."""
+  """
+  Deletes an existing subscription.
+  """
   deleteSubscription(id: String!): PublicSubscription!
 
-  """Delete an existing subscription flow"""
+  """
+  Delete an existing subscription flow
+  """
   deleteSubscriptionFlow(id: String!): [SubscriptionFlowModel!]!
 
-  """Delete an existing subscription interval"""
+  """
+  Delete an existing subscription interval
+  """
   deleteSubscriptionInterval(id: String!): [SubscriptionFlowModel!]!
 
-  """Deletes an existing tag."""
+  """
+  Deletes an existing tag.
+  """
   deleteTag(id: String!): Tag!
 
-  """Deletes a token."""
+  """
+  Deletes a token.
+  """
   deleteToken(id: String!): Token!
 
-  """Deletes an existing user."""
+  """
+  Deletes an existing user.
+  """
   deleteUser(id: String!): SensitiveDataUser!
 
   "\n      Delete an existing userConsent by id.\n      Returns deleted userConsent.\n    "
   deleteUserConsent(id: String!): UserConsent!
 
-  """Deletes an existing userrole."""
+  """
+  Deletes an existing userrole.
+  """
   deleteUserRole(id: String!): UserRole!
 
-  """Deletes an existing voucher."""
+  """
+  Deletes an existing voucher.
+  """
   deleteVoucher(id: String!): Voucher!
 
-  """Dislikes an article."""
+  """
+  Discards the current draft and reverts to the latest published revision.
+  """
+  discardArticleDraft(id: String!): Article!
+
+  """
+  Discards the current draft and reverts to the latest published revision.
+  """
+  discardPageDraft(id: String!): Page!
+
+  """
+  Dislikes an article.
+  """
   dislikeArticle(id: String!): Article!
 
   """
@@ -1954,10 +2382,14 @@ type Mutation {
   """
   dryRunMailchimpSync(id: String!, limit: Int): MailchimpSyncDryRunResult!
 
-  """Duplicates an article."""
+  """
+  Duplicates an article.
+  """
   duplicateArticle(id: String!): Article!
 
-  """Duplicates an page."""
+  """
+  Duplicates an page.
+  """
   duplicatePage(id: String!): Page!
 
   """
@@ -1965,8 +2397,14 @@ type Mutation {
   """
   enableTotp(totpToken: String!): Boolean!
 
-  """Allows authenticated users to extend existing subscriptions"""
-  extendUserSubscription(failureURL: String, subscriptionId: String!, successURL: String): Payment!
+  """
+  Allows authenticated users to extend existing subscriptions
+  """
+  extendUserSubscription(
+    failureURL: String
+    subscriptionId: String!
+    successURL: String
+  ): Payment!
 
   """
   Generates a TOTP setup for the current user. Returns a QR code and secret for authenticator app configuration.
@@ -1981,10 +2419,22 @@ type Mutation {
   "\n      Creates and event based on data from importable events list and an id and provider.\n      Also, uploads an image to WePublish Image library.\n    "
   importEvent(id: String!, source: String!): String!
 
-  """Imports an article from a peer as a draft."""
-  importPeerArticle(articleId: String!, options: ImportArticleOptions! = {importAuthors: true, importContentImages: true, importTags: true}, peerId: String!): Article!
+  """
+  Imports an article from a peer as a draft.
+  """
+  importPeerArticle(
+    articleId: String!
+    options: ImportArticleOptions! = {
+      importAuthors: true
+      importContentImages: true
+      importTags: true
+    }
+    peerId: String!
+  ): Article!
 
-  """Imports a subscription."""
+  """
+  Imports a subscription.
+  """
   importSubscription(
     autoRenew: Boolean!
     extendable: Boolean!
@@ -2009,17 +2459,35 @@ type Mutation {
     userID: String!
   ): PublicSubscription!
 
-  """Likes an article."""
+  """
+  Likes an article.
+  """
   likeArticle(id: String!): Article!
 
-  """Marks an invoice as paid."""
+  """
+  Marks an invoice as paid.
+  """
   markInvoiceAsPaid(id: String!): Invoice!
 
-  """Publishes an article at the given time."""
+  """
+  Publishes an article at the given time.
+  """
   publishArticle(id: String!, publishedAt: DateTime!): Article!
 
-  """Publishes an page at the given time."""
+  """
+  Publishes an page at the given time.
+  """
   publishPage(id: String!, publishedAt: DateTime!): Page!
+
+  """
+  Restores an older revision of an article as a new draft.
+  """
+  restoreArticleRevision(id: String!, revisionId: String!): Article!
+
+  """
+  Restores an older revision of a page as a new draft.
+  """
+  restorePageRevision(id: String!, revisionId: String!): Page!
 
   """
   This mutation allows to rate a comment. Supports logged in and anonymous
@@ -2029,23 +2497,43 @@ type Mutation {
   """
   This mutation registers a new member by providing name, email, and other required information.
   """
-  registerMember(address: UserAddressInput, birthday: DateTime, challengeAnswer: ChallengeInput!, email: String!, firstName: String, flair: String, name: String!, password: String): Registration!
+  registerMember(
+    address: UserAddressInput
+    birthday: DateTime
+    challengeAnswer: ChallengeInput!
+    email: String!
+    firstName: String
+    flair: String
+    name: String!
+    password: String
+  ): Registration!
 
-  """Rejects a comment"""
+  """
+  Rejects a comment
+  """
   rejectComment(id: String!, rejectionReason: CommentRejectionReason!): Comment!
 
-  """Renews a subscription."""
+  """
+  Renews a subscription.
+  """
   renewSubscription(id: String!): PublicSubscription!
 
-  """Requests the user to change the comment's content"""
-  requestChangesOnComment(id: String!, rejectionReason: CommentRejectionReason!): Comment!
+  """
+  Requests the user to change the comment's content
+  """
+  requestChangesOnComment(
+    id: String!
+    rejectionReason: CommentRejectionReason!
+  ): Comment!
 
   """
   Requests an email change. A confirmation link is sent to the current email address.
   """
   requestEmailChange(newEmail: String!): Boolean!
 
-  """Resets the password of a user."""
+  """
+  Resets the password of a user.
+  """
   resetPassword(id: String!, password: String): SensitiveDataUser!
 
   """
@@ -2058,7 +2546,9 @@ type Mutation {
   """
   resetUserTotp(userId: String!): Boolean!
 
-  """This mutation revokes and deletes the active session."""
+  """
+  This mutation revokes and deletes the active session.
+  """
   revokeActiveSession: Boolean!
 
   """
@@ -2077,160 +2567,632 @@ type Mutation {
   sendWebsiteLogin(email: String!): String!
   syncTemplates: Boolean
 
-  """Sends a test email for the given event"""
+  """
+  Sends a test email for the given event
+  """
   testSystemMail(event: UserEvent!): Boolean!
 
-  """Triggers a mailchimp sync in the background."""
+  """
+  Triggers a mailchimp sync in the background.
+  """
   triggerMailchimpSync(id: String!): Boolean!
 
-  """Unpublishes all revisions of an article."""
+  """
+  Unpublishes all revisions of an article.
+  """
   unpublishArticle(id: String!): Article!
 
-  """Unpublishes all revisions of an page."""
+  """
+  Unpublishes all revisions of an page.
+  """
   unpublishPage(id: String!): Page!
 
-  """Updates an existing AI provider setting."""
-  updateAISetting(apiKey: String, id: String, name: String, systemPrompt: String, webhookEndpointSecret: String): SettingAIProvider!
+  """
+  Updates an existing AI provider setting.
+  """
+  updateAISetting(
+    apiKey: String
+    id: String
+    name: String
+    systemPrompt: String
+    webhookEndpointSecret: String
+  ): SettingAIProvider!
 
-  """Updates an existing analytics provider setting."""
-  updateAnalyticsProviderSetting(articlePrefix: String, credentials: SettingAnalyticsCredentialsInput, id: String, name: String, property: String): SettingAnalyticsProvider!
+  """
+  Updates an existing analytics provider setting.
+  """
+  updateAnalyticsProviderSetting(
+    articlePrefix: String
+    credentials: SettingAnalyticsCredentialsInput
+    id: String
+    name: String
+    property: String
+  ): SettingAnalyticsProvider!
 
-  """Updates an article."""
-  updateArticle(authorIds: [String!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, id: String!, imageID: String, lead: String, likes: Int, paywallId: String, preTitle: String, properties: [PropertyInput!]!, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
+  """
+  Updates an article.
+  """
+  updateArticle(
+    authorIds: [String!]!
+    blocks: [BlockContentInput!]!
+    breaking: Boolean!
+    canonicalUrl: String
+    disableComments: Boolean!
+    hidden: Boolean!
+    hideAuthor: Boolean!
+    id: String!
+    imageID: String
+    lead: String
+    likes: Int
+    paywallId: String
+    preTitle: String
+    properties: [PropertyInput!]!
+    seoTitle: String
+    shared: Boolean!
+    slug: String
+    socialMediaAuthorIds: [String!]!
+    socialMediaDescription: String
+    socialMediaImageID: String
+    socialMediaTitle: String
+    tagIds: [String!]!
+    title: String
+  ): Article!
 
-  """Updates an existing author."""
-  updateAuthor(bio: RichText, hideOnArticle: Boolean, hideOnTeam: Boolean, hideOnTeaser: Boolean, id: String!, imageID: String, jobTitle: String, links: [AuthorLinkInput!], name: String, slug: Slug, tagIds: [String!]): Author!
+  """
+  Updates an existing author.
+  """
+  updateAuthor(
+    bio: RichText
+    hideOnArticle: Boolean
+    hideOnTeam: Boolean
+    hideOnTeaser: Boolean
+    id: String!
+    imageID: String
+    jobTitle: String
+    links: [AuthorLinkInput!]
+    name: String
+    slug: Slug
+    tagIds: [String!]
+  ): Author!
   updateBanner(input: UpdateBannerInput!): Banner!
 
-  """Updates an existing block style."""
-  updateBlockStyle(blocks: [EditorBlockType!], id: String!, name: String): BlockStyle!
+  """
+  Updates an existing block style.
+  """
+  updateBlockStyle(
+    blocks: [EditorBlockType!]
+    id: String!
+    name: String
+  ): BlockStyle!
 
-  """Updates an existing challenge provider setting."""
-  updateChallengeProviderSetting(id: String, name: String, secret: String, siteKey: String): SettingChallengeProvider!
+  """
+  Updates an existing challenge provider setting.
+  """
+  updateChallengeProviderSetting(
+    id: String
+    name: String
+    secret: String
+    siteKey: String
+  ): SettingChallengeProvider!
 
-  """Update any existing comment"""
-  updateComment(featured: Boolean, guestUserImageID: String, guestUsername: String, id: String!, ratingOverrides: [OverriddenRatingInput!], revision: CommentRevisionInput, source: String, tagIds: [String!], userID: String): Comment!
+  """
+  Update any existing comment
+  """
+  updateComment(
+    featured: Boolean
+    guestUserImageID: String
+    guestUsername: String
+    id: String!
+    ratingOverrides: [OverriddenRatingInput!]
+    revision: CommentRevisionInput
+    source: String
+    tagIds: [String!]
+    userID: String
+  ): Comment!
 
   "\n      Updates an existing consent.\n    "
-  updateConsent(defaultValue: Boolean, id: String!, name: String, slug: String): Consent!
+  updateConsent(
+    defaultValue: Boolean
+    id: String!
+    name: String
+    slug: String
+  ): Consent!
 
-  """Updates a single crowdfunding"""
+  """
+  Updates a single crowdfunding
+  """
   updateCrowdfunding(input: UpdateCrowdfundingInput!): Crowdfunding!
 
-  """Updates the current logged in user."""
-  updateCurrentUser(address: UserAddressInput, birthday: DateTime, challengeAnswer: ChallengeInput, firstName: String, flair: String, name: String, password: String): SensitiveDataUser!
+  """
+  Updates the current logged in user.
+  """
+  updateCurrentUser(
+    address: UserAddressInput
+    birthday: DateTime
+    challengeAnswer: ChallengeInput
+    firstName: String
+    flair: String
+    name: String
+    password: String
+  ): SensitiveDataUser!
 
-  """Updates an existing document."""
+  """
+  Updates an existing document.
+  """
   updateDocument(description: String, id: String!, title: String): Document!
 
-  """Updates an existing event."""
-  updateEvent(description: RichText, endsAt: DateTime, id: String!, imageId: String, lead: String, location: String, name: String, startsAt: DateTime, status: EventStatus = Scheduled, tagIds: [String!]): Event!
+  """
+  Updates an existing event.
+  """
+  updateEvent(
+    description: RichText
+    endsAt: DateTime
+    id: String!
+    imageId: String
+    lead: String
+    location: String
+    name: String
+    startsAt: DateTime
+    status: EventStatus = Scheduled
+    tagIds: [String!]
+  ): Event!
 
-  """Updates an existing external app."""
-  updateExternalApp(description: String, icon: String, id: String!, name: String, target: ExternalAppsTarget, url: String): ExternalApp!
+  """
+  Updates an existing external app.
+  """
+  updateExternalApp(
+    description: String
+    icon: String
+    id: String!
+    name: String
+    target: ExternalAppsTarget
+    url: String
+  ): ExternalApp!
 
-  """Updates an existing image."""
-  updateImage(description: String, filename: String, focalPointX: Float = 0.5, focalPointY: Float = 0.5, id: String!, license: String, link: String, source: String, tags: [String!], title: String): Image!
+  """
+  Updates an existing image.
+  """
+  updateImage(
+    description: String
+    filename: String
+    focalPointX: Float = 0.5
+    focalPointY: Float = 0.5
+    id: String!
+    license: String
+    link: String
+    source: String
+    tags: [String!]
+    title: String
+  ): Image!
 
-  """Updates an existing invoice."""
-  updateInvoice(currency: Currency, description: String, dueAt: DateTime, id: String!, items: [InvoiceItemInput!], mail: String, manuallySetAsPaidByUserId: String, scheduledDeactivationAt: DateTime, subscriptionID: String): Invoice!
+  """
+  Updates an existing invoice.
+  """
+  updateInvoice(
+    currency: Currency
+    description: String
+    dueAt: DateTime
+    id: String!
+    items: [InvoiceItemInput!]
+    mail: String
+    manuallySetAsPaidByUserId: String
+    scheduledDeactivationAt: DateTime
+    subscriptionID: String
+  ): Invoice!
 
-  """Updates an existing mail provider setting."""
-  updateMailProviderSetting(apiKey: String, fromAddress: String, id: String, mailchimp_baseURL: String, mailgun_baseDomain: String, mailgun_mailDomain: String, name: String, replyToAddress: String, slack_webhookURL: String, webhookEndpointSecret: String): SettingMailProvider!
+  """
+  Updates an existing mail provider setting.
+  """
+  updateMailProviderSetting(
+    apiKey: String
+    fromAddress: String
+    id: String
+    mailchimp_baseURL: String
+    mailgun_baseDomain: String
+    mailgun_mailDomain: String
+    name: String
+    replyToAddress: String
+    slack_webhookURL: String
+    webhookEndpointSecret: String
+  ): SettingMailProvider!
 
-  """Updates an existing memberplan."""
-  updateMemberPlan(active: Boolean, amountPerMonthMax: Int, amountPerMonthMin: Int, amountPerMonthTarget: Int, availablePaymentMethods: [AvailablePaymentMethodInput!], confirmationPageId: String, currency: Currency, description: RichText, extendable: Boolean, externalReward: String, failPageId: String, id: String!, imageID: String, maxCount: Int, migrateToTargetPaymentMethodID: String, name: String, productType: ProductType, shortDescription: RichText, slug: String, successPageId: String, tags: [String!], yearlyAmount: Int): MemberPlan!
+  """
+  Updates an existing memberplan.
+  """
+  updateMemberPlan(
+    active: Boolean
+    amountPerMonthMax: Int
+    amountPerMonthMin: Int
+    amountPerMonthTarget: Int
+    amountSelectionLayout: AmountSelectionLayout
+    availablePaymentMethods: [AvailablePaymentMethodInput!]
+    confirmationPageId: String
+    currency: Currency
+    description: RichText
+    extendable: Boolean
+    externalReward: String
+    failPageId: String
+    id: String!
+    imageID: String
+    maxCount: Int
+    migrateToTargetPaymentMethodID: String
+    name: String
+    presetAmounts: [Int!]
+    productType: ProductType
+    shortDescription: RichText
+    slug: String
+    successPageId: String
+    tags: [String!]
+    yearlyAmount: Int
+  ): MemberPlan!
 
-  """Updates an existing navigation."""
-  updateNavigation(id: String!, key: String!, links: [NavigationLinkInput!]!, name: String!): Navigation!
+  """
+  Updates an existing navigation.
+  """
+  updateNavigation(
+    id: String!
+    key: String!
+    links: [NavigationLinkInput!]!
+    name: String!
+  ): Navigation!
 
-  """Updates an page."""
-  updatePage(blocks: [BlockContentInput!]!, description: String, hidden: Boolean!, id: String!, imageID: String, properties: [PropertyInput!]!, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
+  """
+  Updates an page.
+  """
+  updatePage(
+    blocks: [BlockContentInput!]!
+    description: String
+    hidden: Boolean!
+    id: String!
+    imageID: String
+    properties: [PropertyInput!]!
+    slug: String
+    socialMediaDescription: String
+    socialMediaImageID: String
+    socialMediaTitle: String
+    tagIds: [String!]!
+    title: String
+  ): Page!
 
   """
   This mutation allows to update the user's password by entering the new password. The repeated new password gives an error if the passwords don't match or if the user is not authenticated.
   """
-  updatePassword(password: String!, passwordRepeated: String!): SensitiveDataUser!
+  updatePassword(
+    password: String!
+    passwordRepeated: String!
+  ): SensitiveDataUser!
 
-  """Updates an existing payment method."""
-  updatePaymentMethod(active: Boolean, description: String, gracePeriod: Int, id: String!, imageId: String, name: String, paymentProviderID: String, slug: Slug): PaymentMethod!
+  """
+  Updates an existing payment method.
+  """
+  updatePaymentMethod(
+    active: Boolean
+    description: String
+    gracePeriod: Int
+    id: String!
+    imageId: String
+    name: String
+    paymentProviderID: String
+    slug: Slug
+  ): PaymentMethod!
 
-  """Updates an existing payment provider setting."""
-  updatePaymentProviderSetting(apiKey: String, bexio_accountId: Float, bexio_countryId: Float, bexio_invoiceMailBodyNewMembership: String, bexio_invoiceMailBodyRenewalMembership: String, bexio_invoiceMailSubjectNewMembership: String, bexio_invoiceMailSubjectRenewalMembership: String, bexio_invoiceTemplateNewMembership: String, bexio_invoiceTemplateRenewalMembership: String, bexio_invoiceTitleNewMembership: String, bexio_invoiceTitleRenewalMembership: String, bexio_markInvoiceAsOpen: Boolean, bexio_taxId: Float, bexio_unitId: Float, bexio_userId: Float, id: String, mollie_apiBaseUrl: String, mollie_methods: [PaymentMethodMollie!], name: String, offSessionPayments: Boolean, payrexx_instancename: String, payrexx_pm: [PayrexxPM!], payrexx_psp: [PayrexxPSP!], payrexx_vatrate: String, stripe_methods: [StripePaymentMethod!], webhookEndpointSecret: String): SettingPaymentProvider!
+  """
+  Updates an existing payment provider setting.
+  """
+  updatePaymentProviderSetting(
+    apiKey: String
+    bexio_accountId: Float
+    bexio_countryId: Float
+    bexio_invoiceMailBodyNewMembership: String
+    bexio_invoiceMailBodyRenewalMembership: String
+    bexio_invoiceMailSubjectNewMembership: String
+    bexio_invoiceMailSubjectRenewalMembership: String
+    bexio_invoiceTemplateNewMembership: String
+    bexio_invoiceTemplateRenewalMembership: String
+    bexio_invoiceTitleNewMembership: String
+    bexio_invoiceTitleRenewalMembership: String
+    bexio_markInvoiceAsOpen: Boolean
+    bexio_taxId: Float
+    bexio_unitId: Float
+    bexio_userId: Float
+    id: String
+    mollie_apiBaseUrl: String
+    mollie_methods: [PaymentMethodMollie!]
+    name: String
+    offSessionPayments: Boolean
+    payrexx_instancename: String
+    payrexx_pm: [PayrexxPM!]
+    payrexx_psp: [PayrexxPSP!]
+    payrexx_vatrate: String
+    stripe_methods: [StripePaymentMethod!]
+    webhookEndpointSecret: String
+  ): SettingPaymentProvider!
 
-  """Updates a paywall."""
-  updatePaywall(active: Boolean, alternativeSubscribeUrl: String, anyMemberPlan: Boolean, bypassTokens: [String!], circumventDescription: RichText, description: RichText, fadeout: Boolean, hideContentAfter: Int, id: String!, memberPlanIds: [String!], name: String, upgradeCircumventDescription: RichText, upgradeDescription: RichText): Paywall!
+  """
+  Updates a paywall.
+  """
+  updatePaywall(
+    active: Boolean
+    alternativeSubscribeUrl: String
+    anyMemberPlan: Boolean
+    bypassTokens: [String!]
+    circumventDescription: RichText
+    description: RichText
+    fadeout: Boolean
+    hideContentAfter: Int
+    id: String!
+    memberPlanIds: [String!]
+    name: String
+    upgradeCircumventDescription: RichText
+    upgradeDescription: RichText
+  ): Paywall!
 
-  """Updates an existing peer."""
-  updatePeer(hostURL: String, id: String!, information: RichText, isDisabled: Boolean, name: String, slug: String, token: String): Peer!
+  """
+  Updates an existing peer.
+  """
+  updatePeer(
+    hostURL: String
+    id: String!
+    information: RichText
+    isDisabled: Boolean
+    name: String
+    slug: String
+    token: String
+  ): Peer!
 
-  """Updates the peer profile of the current media."""
-  updatePeerProfile(callToActionImageID: String!, callToActionImageURL: String, callToActionText: RichText!, callToActionURL: String!, logoID: String!, name: String!, squareLogoId: String!, themeColor: Color!, themeFontColor: Color!): PeerProfile!
+  """
+  Updates the peer profile of the current media.
+  """
+  updatePeerProfile(
+    callToActionImageID: String!
+    callToActionImageURL: String
+    callToActionText: RichText!
+    callToActionURL: String!
+    logoID: String!
+    name: String!
+    squareLogoId: String!
+    themeColor: Color!
+    themeFontColor: Color!
+  ): PeerProfile!
 
-  """Updates an existing poll."""
-  updatePoll(answers: [PollAnswerInput!]!, closedAt: DateTime, externalVoteSources: [PollExternalVoteSourceInput!]!, id: String!, infoText: RichText, opensAt: DateTime, question: String): FullPoll!
+  """
+  Updates an existing poll.
+  """
+  updatePoll(
+    answers: [PollAnswerInput!]!
+    closedAt: DateTime
+    externalVoteSources: [PollExternalVoteSourceInput!]!
+    id: String!
+    infoText: RichText
+    opensAt: DateTime
+    question: String
+  ): FullPoll!
 
-  """Update the comment rating system."""
-  updateRatingSystem(answers: [UpdateCommentRatingSystemAnswerInput!], id: String!, name: String): CommentRatingSystem!
+  """
+  Update the comment rating system.
+  """
+  updateRatingSystem(
+    answers: [UpdateCommentRatingSystemAnswerInput!]
+    id: String!
+    name: String
+  ): CommentRatingSystem!
 
-  """Updates an existing setting."""
+  """
+  Updates an existing setting.
+  """
   updateSetting(name: SettingName!, value: GraphQLSettingValueType): Setting!
 
-  """Updates an existing subscription."""
-  updateSubscription(autoRenew: Boolean, extendable: Boolean, id: String!, memberPlanID: String, monthlyAmount: Int, paidUntil: DateTime, paymentMethodID: String, paymentPeriodicity: PaymentPeriodicity, periodAmount: Int, properties: [PropertyInput!], startsAt: DateTime, userID: String): PublicSubscription!
+  """
+  Updates an existing subscription.
+  """
+  updateSubscription(
+    autoRenew: Boolean
+    extendable: Boolean
+    id: String!
+    memberPlanID: String
+    monthlyAmount: Int
+    paidUntil: DateTime
+    paymentMethodID: String
+    paymentPeriodicity: PaymentPeriodicity
+    periodAmount: Int
+    properties: [PropertyInput!]
+    startsAt: DateTime
+    userID: String
+  ): PublicSubscription!
 
-  """Update an existing subscription flow"""
-  updateSubscriptionFlow(autoRenewal: [Boolean!], id: String!, paymentMethodIds: [String!], periodicities: [PaymentPeriodicity!]): [SubscriptionFlowModel!]!
+  """
+  Update an existing subscription flow
+  """
+  updateSubscriptionFlow(
+    autoRenewal: [Boolean!]
+    id: String!
+    paymentMethodIds: [String!]
+    periodicities: [PaymentPeriodicity!]
+  ): [SubscriptionFlowModel!]!
 
-  """Update an existing subscription interval"""
-  updateSubscriptionInterval(daysAwayFromEnding: Int, id: String!, mailTemplateId: String): [SubscriptionFlowModel!]!
+  """
+  Update an existing subscription interval
+  """
+  updateSubscriptionInterval(
+    daysAwayFromEnding: Int
+    id: String!
+    mailTemplateId: String
+  ): [SubscriptionFlowModel!]!
 
-  """Updates an existing sync provider setting."""
-  updateSyncProviderSetting(enabled: Boolean, id: String!, mailchimp_apiKey: String, mailchimp_defaultInterestGroupIds: [String!], mailchimp_extensions: JSONObject, mailchimp_interestGroupMappings: [JSONObject!], mailchimp_listId: String, mailchimp_mergeFieldMappings: [JSONObject!], name: String): SettingSyncProvider!
+  """
+  Updates an existing sync provider setting.
+  """
+  updateSyncProviderSetting(
+    enabled: Boolean
+    id: String!
+    mailchimp_apiKey: String
+    mailchimp_defaultInterestGroupIds: [String!]
+    mailchimp_extensions: JSONObject
+    mailchimp_interestGroupMappings: [JSONObject!]
+    mailchimp_listId: String
+    mailchimp_mergeFieldMappings: [JSONObject!]
+    name: String
+  ): SettingSyncProvider!
 
-  """Updates an existing mail flow"""
-  updateSystemMail(event: UserEvent!, mailTemplateId: String!): [SystemMailModel!]!
+  """
+  Updates an existing mail flow
+  """
+  updateSystemMail(
+    event: UserEvent!
+    mailTemplateId: String!
+  ): [SystemMailModel!]!
 
-  """Updates an existing tag."""
-  updateTag(color: Color, description: RichText, id: String!, main: Boolean = false, tag: String, type: TagType): Tag!
+  """
+  Updates an existing tag.
+  """
+  updateTag(
+    color: Color
+    description: RichText
+    id: String!
+    main: Boolean = false
+    tag: String
+    type: TagType
+  ): Tag!
 
-  """Updates an existing tracking pixel setting."""
-  updateTrackingPixelSetting(id: String, name: String, prolitteris_memberNr: String, prolitteris_onlyPaidContentAccess: Boolean, prolitteris_password: String, prolitteris_publisherInternalKeyDomain: String, prolitteris_usePublisherInternalKey: Boolean, prolitteris_username: String): SettingTrackingPixelProvider!
+  """
+  Updates an existing tracking pixel setting.
+  """
+  updateTrackingPixelSetting(
+    id: String
+    name: String
+    prolitteris_memberNr: String
+    prolitteris_onlyPaidContentAccess: Boolean
+    prolitteris_password: String
+    prolitteris_publisherInternalKeyDomain: String
+    prolitteris_usePublisherInternalKey: Boolean
+    prolitteris_username: String
+  ): SettingTrackingPixelProvider!
 
-  """Updates an existing user."""
-  updateUser(active: Boolean, address: UserAddressInput, birthday: DateTime, email: String, emailVerifiedAt: DateTime, firstName: String, flair: String, id: String, name: String, note: String, properties: [PropertyInput!], roleIDs: [String!], totpExempt: Boolean, userImageID: String): SensitiveDataUser!
+  """
+  Updates an existing user.
+  """
+  updateUser(
+    active: Boolean
+    address: UserAddressInput
+    birthday: DateTime
+    email: String
+    emailVerifiedAt: DateTime
+    firstName: String
+    flair: String
+    id: String
+    name: String
+    note: String
+    properties: [PropertyInput!]
+    roleIDs: [String!]
+    totpExempt: Boolean
+    userImageID: String
+  ): SensitiveDataUser!
 
-  """Updates a comment you made."""
-  updateUserComment(id: String!, lead: String, text: RichText, title: String): Comment!
+  """
+  Updates a comment you made.
+  """
+  updateUserComment(
+    id: String!
+    lead: String
+    text: RichText
+    title: String
+  ): Comment!
 
   "\n      Updates an existing userConsent based on input.\n      Returns updated userConsent.\n    "
   updateUserConsent(id: String!, value: Boolean!): UserConsent!
 
-  """Updates an existing userrole."""
-  updateUserRole(description: String, id: String!, name: String, permissionIDs: [String!]): UserRole!
+  """
+  Updates an existing userrole.
+  """
+  updateUserRole(
+    description: String
+    id: String!
+    name: String
+    permissionIDs: [String!]
+  ): UserRole!
 
   """
   This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null
   """
-  updateUserSubscription(id: String!, input: UpdateUserSubscriptionInput!): PublicSubscription
+  updateUserSubscription(
+    id: String!
+    input: UpdateUserSubscriptionInput!
+  ): PublicSubscription
 
-  """Updates an existing voucher."""
-  updateVoucher(code: String, discountPercent: Int, id: String!, memberPlanId: String, validFrom: DateTime, validTo: DateTime): Voucher!
+  """
+  Updates an existing voucher.
+  """
+  updateVoucher(
+    code: String
+    discountPercent: Int
+    id: String!
+    memberPlanId: String
+    validFrom: DateTime
+    validTo: DateTime
+  ): Voucher!
 
-  """Updates the website settings."""
-  updateWebsiteSettings(ads: WebsiteAdsInput, analytics: WebsiteAnalyticsInput, fonts: [WebsiteRemoteFontInput!], theme: JSONObject): WebsiteSettings!
+  """
+  Updates the website settings.
+  """
+  updateWebsiteSettings(
+    ads: WebsiteAdsInput
+    analytics: WebsiteAnalyticsInput
+    fonts: [WebsiteRemoteFontInput!]
+    theme: JSONObject
+  ): WebsiteSettings!
 
-  """"""
-  upgradeUserSubscription(failureURL: String, memberPlanId: String!, monthlyAmount: Int!, paymentMethodId: String!, subscriptionId: String!, successURL: String): Payment!
+  """
+  """
+  upgradeUserSubscription(
+    failureURL: String
+    memberPlanId: String!
+    monthlyAmount: Int!
+    paymentMethodId: String!
+    subscriptionId: String!
+    successURL: String
+  ): Payment!
 
-  """Uploads a new document."""
-  uploadDocument(description: String, file: Upload!, filename: String, title: String): Document!
+  """
+  Uploads a new document.
+  """
+  uploadDocument(
+    description: String
+    file: Upload!
+    filename: String
+    title: String
+  ): Document!
 
-  """Uploads a new image."""
-  uploadImage(description: String, file: Upload!, filename: String, focalPointX: Float! = 0.5, focalPointY: Float! = 0.5, license: String, link: String, source: String, tags: [String!]!, title: String): Image!
+  """
+  Uploads a new image.
+  """
+  uploadImage(
+    description: String
+    file: Upload!
+    filename: String
+    focalPointX: Float! = 0.5
+    focalPointY: Float! = 0.5
+    license: String
+    link: String
+    source: String
+    tags: [String!]!
+    title: String
+  ): Image!
 
-  """This mutation allows to upload and update the user's profile image."""
-  uploadUserProfileImage(description: String, file: Upload!, filename: String, focalPointX: Float! = 0.5, focalPointY: Float! = 0.5, license: String, link: String, source: String, tags: [String!]!, title: String): SensitiveDataUser
+  """
+  This mutation allows to upload and update the user's profile image.
+  """
+  uploadUserProfileImage(
+    description: String
+    file: Upload!
+    filename: String
+    focalPointX: Float! = 0.5
+    focalPointY: Float! = 0.5
+    license: String
+    link: String
+    source: String
+    tags: [String!]!
+    title: String
+  ): SensitiveDataUser
 
   """
   This mutation allows to vote on a poll (or update one's decision). Supports logged in and anonymous
@@ -2282,6 +3244,7 @@ type Page {
   previewUrl: String!
   published: PageRevision
   publishedAt: DateTime
+  revisions: [PageRevision!]!
   slug: String
   tags: [Tag!]!
   url: String!
@@ -2332,6 +3295,7 @@ type PageNavigationLink implements BaseNavigationLink & HasPage {
 }
 
 type PageRevision implements HasBlockContent {
+  archivedAt: DateTime
   blocks: [BlockContent!]!
   createdAt: DateTime!
   description: String
@@ -2974,39 +3938,75 @@ type PublicSubscriptionConnection {
 }
 
 type Query {
-  """Returns latest actions"""
+  """
+  Returns latest actions
+  """
   actions: [Action!]!
 
   "\n      Returns all active subscribers.\n      Includes subscribers with a cancelled but not run out subscription.\n    "
   activeSubscribers: [DashboardSubscription!]!
 
-  """Returns a single AI provider setting by id."""
+  """
+  Returns a single AI provider setting by id.
+  """
   aiSetting(id: String!): SettingAIProvider!
 
-  """Returns all AI provider settings."""
+  """
+  Returns all AI provider settings.
+  """
   aiSettings(filter: SettingAIProviderFilter): [SettingAIProvider!]!
 
-  """Returns a single analytics provider setting by id."""
+  """
+  Returns a single analytics provider setting by id.
+  """
   analyticsProviderSetting(id: String!): SettingAnalyticsProvider!
 
-  """Returns all analytics provider settings."""
-  analyticsProviderSettings(filter: SettingAnalyticsProviderFilter): [SettingAnalyticsProvider!]!
+  """
+  Returns all analytics provider settings.
+  """
+  analyticsProviderSettings(
+    filter: SettingAnalyticsProviderFilter
+  ): [SettingAnalyticsProvider!]!
 
-  """Returns an article by id or slug."""
+  """
+  Returns an article by id or slug.
+  """
   article(id: String, slug: String): Article!
 
-  """Returns a paginated list of articles based on the filters given."""
-  articles(cursorId: String, filter: ArticleFilter, order: SortOrder = Descending, skip: Int = 0, sort: ArticleSort = PublishedAt, take: Int = 10): PaginatedArticles!
+  """
+  Returns a paginated list of articles based on the filters given.
+  """
+  articles(
+    cursorId: String
+    filter: ArticleFilter
+    order: SortOrder = Descending
+    skip: Int = 0
+    sort: ArticleSort = PublishedAt
+    take: Int = 10
+  ): PaginatedArticles!
 
-  """Get an author by ID or slug"""
+  """
+  Get an author by ID or slug
+  """
   author(id: String, slug: String): Author
 
-  """Get a paginated list of authors with optional filtering and sorting"""
-  authors(cursorId: String, filter: AuthorFilter, order: SortOrder = Descending, skip: Int, sort: AuthorSort = ModifiedAt, take: Int): PaginatedAuthors!
+  """
+  Get a paginated list of authors with optional filtering and sorting
+  """
+  authors(
+    cursorId: String
+    filter: AuthorFilter
+    order: SortOrder = Descending
+    skip: Int
+    sort: AuthorSort = ModifiedAt
+    take: Int
+  ): PaginatedAuthors!
   banner(id: String!): Banner!
   banners(skip: Int!, take: Int!): [Banner!]!
 
-  """Returns a list of block styles."""
+  """
+  Returns a list of block styles.
+  """
   blockStyles: [BlockStyle!]!
 
   """
@@ -3014,11 +4014,17 @@ type Query {
   """
   challenge: Challenge!
 
-  """Returns a single challenge provider setting by id."""
+  """
+  Returns a single challenge provider setting by id.
+  """
   challengeProviderSetting(id: String!): SettingChallengeProvider!
 
-  """Returns all challenge provider settings."""
-  challengeProviderSettings(filter: SettingChallengeProviderFilter): [SettingChallengeProvider!]!
+  """
+  Returns all challenge provider settings.
+  """
+  challengeProviderSettings(
+    filter: SettingChallengeProviderFilter
+  ): [SettingChallengeProvider!]!
 
   """
   Check the status of an invoice and update with information from the payment provider
@@ -3030,14 +4036,32 @@ type Query {
   """
   checkLoginOtp(email: String!): Boolean!
 
-  """Returns a comment by id."""
+  """
+  Returns a comment by id.
+  """
   comment(id: String!): Comment!
 
-  """Returns a paginated list of comments based on the filters given."""
-  comments(cursorId: String, filter: CommentFilter, order: SortOrder = Descending, skip: Int = 0, sort: CommentSort = ModifiedAt, take: Int = 10): PaginatedComments!
+  """
+  Returns a paginated list of comments based on the filters given.
+  """
+  comments(
+    cursorId: String
+    filter: CommentFilter
+    order: SortOrder = Descending
+    skip: Int = 0
+    sort: CommentSort = ModifiedAt
+    take: Int = 10
+  ): PaginatedComments!
 
-  """Returns a sorted and nested list of comments for an item."""
-  commentsForItem(itemId: String!, itemType: CommentItemType!, order: SortOrder = Descending, sort: CommentSort = Rating): [Comment!]!
+  """
+  Returns a sorted and nested list of comments for an item.
+  """
+  commentsForItem(
+    itemId: String!
+    itemType: CommentItemType!
+    order: SortOrder = Descending
+    sort: CommentSort = Rating
+  ): [Comment!]!
 
   "\n      Returns a consent by id.\n    "
   consent(id: String!): Consent!
@@ -3048,108 +4072,227 @@ type Query {
   """
   Gives the user some information about the subscription they are about to create
   """
-  createSubscriptionInfo(memberPlanId: String!, voucher: String): CreateSubscriptionInfo!
+  createSubscriptionInfo(
+    memberPlanId: String!
+    voucher: String
+  ): CreateSubscriptionInfo!
 
-  """Get a single crowdfunding by id"""
+  """
+  Get a single crowdfunding by id
+  """
   crowdfunding(id: String!): Crowdfunding!
 
-  """Returns a list of crowdfundings."""
+  """
+  Returns a list of crowdfundings.
+  """
   crowdfundings: [Crowdfunding!]!
 
   "\n      Returns daily stats in a given timeframe.\n    "
-  dailySubscriptionStats(end: DateTime, memberPlanIds: [String!], start: DateTime!): [DailySubscriptionStats!]!
+  dailySubscriptionStats(
+    end: DateTime
+    memberPlanIds: [String!]
+    start: DateTime!
+  ): [DailySubscriptionStats!]!
 
-  """Returns a document by id."""
+  """
+  Returns a document by id.
+  """
   document(id: String!): Document!
 
-  """Returns the current document storage usage and limit."""
+  """
+  Returns the current document storage usage and limit.
+  """
   documentStorageUsage: DocumentStorageUsage!
 
-  """Returns a paginated list of documents based on the filters given."""
-  documents(cursorId: String, filter: DocumentFilter, order: SortOrder = Descending, skip: Int = 0, sort: DocumentSort = ModifiedAt, take: Int = 10): PaginatedDocuments!
+  """
+  Returns a paginated list of documents based on the filters given.
+  """
+  documents(
+    cursorId: String
+    filter: DocumentFilter
+    order: SortOrder = Descending
+    skip: Int = 0
+    sort: DocumentSort = ModifiedAt
+    take: Int = 10
+  ): PaginatedDocuments!
 
-  """Returns an event by id."""
+  """
+  Returns an event by id.
+  """
   event(id: String!): Event!
 
   "\n      Returns a list of Importable Event Providers\n    "
   eventProviders: [String!]!
 
-  """Returns a paginated list of events based on the filters given."""
-  events(cursorId: String, filter: EventFilter, order: SortOrder = Ascending, skip: Int = 0, sort: EventSort = StartsAt, take: Int = 10): PaginatedEvents!
+  """
+  Returns a paginated list of events based on the filters given.
+  """
+  events(
+    cursorId: String
+    filter: EventFilter
+    order: SortOrder = Ascending
+    skip: Int = 0
+    sort: EventSort = StartsAt
+    take: Int = 10
+  ): PaginatedEvents!
 
   "\n      Returns the expected revenue for the time period given.\n      Excludes cancelled or manually set as paid invoices.\n    "
   expectedRevenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!
 
-  """Returns a single external app by id. Requires authentication."""
+  """
+  Returns a single external app by id. Requires authentication.
+  """
   externalApp(id: String!): ExternalApp!
 
-  """Returns all external apps. Requires authentication."""
+  """
+  Returns all external apps. Requires authentication.
+  """
   externalApps(filter: ExternalAppFilter): [ExternalApp!]!
 
-  """Returns images by tag."""
+  """
+  Returns images by tag.
+  """
   getImagesByTag(tag: String!): [Image!]!
 
   "\n      Returns the most viewed articles in descending order.\n    "
   hotAndTrending(start: DateTime, take: Int = 10): [Article!]!
 
-  """Returns a image by id."""
+  """
+  Returns a image by id.
+  """
   image(id: String!): Image!
 
-  """Returns a paginated list of images based on the filters given."""
-  images(cursorId: String, filter: ImageFilter, order: SortOrder = Descending, skip: Int = 0, sort: ImageSort = ModifiedAt, take: Int = 10): PaginatedImages!
+  """
+  Returns a paginated list of images based on the filters given.
+  """
+  images(
+    cursorId: String
+    filter: ImageFilter
+    order: SortOrder = Descending
+    skip: Int = 0
+    sort: ImageSort = ModifiedAt
+    take: Int = 10
+  ): PaginatedImages!
 
   "\n      Returns a more detailed version of a single importable event, by id and source.\n    "
   importedEvent(filter: SingleEventFilter!): EventFromSource!
 
   "\n      Returns a list of imported events from external sources, transformed to match our model.\n    "
-  importedEvents(filter: ImportedEventFilter, order: Int, skip: Int, sort: ImportedEventSort, take: Int): PaginatedEventsFromSources!
+  importedEvents(
+    filter: ImportedEventFilter
+    order: Int
+    skip: Int
+    sort: ImportedEventSort
+    take: Int
+  ): PaginatedEventsFromSources!
 
   "\n      Returns a list of external source ids of already imported events.\n    "
   importedEventsIds: [String!]!
 
-  """Returns a invoice by id."""
+  """
+  Returns a invoice by id.
+  """
   invoice(id: String!): Invoice!
 
-  """Returns a paginated list of invoices based on the filters given."""
-  invoices(cursorId: String, filter: InvoiceFilter, order: SortOrder = Ascending, skip: Int = 0, sort: InvoiceSort = ModifiedAt, take: Int = 10): InvoiceConnection!
+  """
+  Returns a paginated list of invoices based on the filters given.
+  """
+  invoices(
+    cursorId: String
+    filter: InvoiceFilter
+    order: SortOrder = Ascending
+    skip: Int = 0
+    sort: InvoiceSort = ModifiedAt
+    take: Int = 10
+  ): InvoiceConnection!
 
-  """Returns a single mail provider setting by id."""
+  """
+  Returns a single mail provider setting by id.
+  """
   mailProviderSetting(id: String!): SettingMailProvider!
 
-  """Returns all mail provider settings."""
-  mailProviderSettings(filter: SettingMailProviderFilter): [SettingMailProvider!]!
+  """
+  Returns all mail provider settings.
+  """
+  mailProviderSettings(
+    filter: SettingMailProviderFilter
+  ): [SettingMailProvider!]!
 
-  """Return all mail templates"""
+  """
+  Return all mail templates
+  """
   mailTemplates: [MailTemplateWithUrlAndStatusModel!]!
 
-  """Fetches available interest groups for a Mailchimp list."""
-  mailchimpInterestGroups(configId: String!, listId: String!): [MailchimpInterestGroup!]!
+  """
+  Return all available mail placeholders grouped by event
+  """
+  mailTemplatePlaceholders: [MailPlaceholderGroupModel!]!
 
-  """Fetches available Mailchimp lists/audiences for a sync config."""
+  """
+  Fetches available interest groups for a Mailchimp list.
+  """
+  mailchimpInterestGroups(
+    configId: String!
+    listId: String!
+  ): [MailchimpInterestGroup!]!
+
+  """
+  Fetches available Mailchimp lists/audiences for a sync config.
+  """
   mailchimpLists(configId: String!): [MailchimpList!]!
 
-  """Fetches available merge fields for a Mailchimp list."""
-  mailchimpMergeFields(configId: String!, listId: String!): [MailchimpMergeField!]!
+  """
+  Fetches available merge fields for a Mailchimp list.
+  """
+  mailchimpMergeFields(
+    configId: String!
+    listId: String!
+  ): [MailchimpMergeField!]!
 
-  """Returns sync errors for a given config."""
-  mailchimpSyncErrors(configId: String!, skip: Int, take: Int): MailchimpSyncErrorList!
+  """
+  Returns sync errors for a given config.
+  """
+  mailchimpSyncErrors(
+    configId: String!
+    skip: Int
+    take: Int
+  ): MailchimpSyncErrorList!
 
-  """Returns the current sync progress for a config."""
+  """
+  Returns the current sync progress for a config.
+  """
   mailchimpSyncProgress(configId: String!): MailchimpSyncProgressType
 
-  """This query returns the user."""
+  """
+  This query returns the user.
+  """
   me: SensitiveDataUser
 
-  """Returns a memberplan by id or slug."""
+  """
+  Returns a memberplan by id or slug.
+  """
   memberPlan(id: String, slug: Slug): MemberPlan!
 
-  """Returns a paginated list of memberplans based on the filters given."""
-  memberPlans(cursorId: String, filter: MemberPlanFilter, order: SortOrder = Ascending, skip: Int = 0, sort: MemberPlanSort = ModifiedAt, take: Int = 10): PaginatedMemberPlans!
+  """
+  Returns a paginated list of memberplans based on the filters given.
+  """
+  memberPlans(
+    cursorId: String
+    filter: MemberPlanFilter
+    order: SortOrder = Ascending
+    skip: Int = 0
+    sort: MemberPlanSort = ModifiedAt
+    take: Int = 10
+  ): PaginatedMemberPlans!
 
-  """Returns a navigation by id."""
+  """
+  Returns a navigation by id.
+  """
   navigation(id: String!): Navigation!
 
-  """Returns a list of navigations."""
+  """
+  Returns a list of navigations.
+  """
   navigations: [Navigation!]!
 
   "\n      Returns all new deactivations in a given timeframe.\n      This considers the time the deactivation was made, not when the subscription runs out.\n    "
@@ -3158,31 +4301,58 @@ type Query {
   "\n      Returns all new subscribers in a given timeframe.\n      Includes already deactivated ones.\n    "
   newSubscribers(end: DateTime, start: DateTime!): [DashboardSubscription!]!
 
-  """Returns an page by id or slug."""
+  """
+  Returns an page by id or slug.
+  """
   page(id: String, slug: String): Page!
 
-  """Returns a paginated list of pages based on the filters given."""
-  pages(cursorId: String, filter: PageFilter, order: SortOrder = Descending, skip: Int = 0, sort: PageSort = PublishedAt, take: Int = 10): PaginatedPages!
+  """
+  Returns a paginated list of pages based on the filters given.
+  """
+  pages(
+    cursorId: String
+    filter: PageFilter
+    order: SortOrder = Descending
+    skip: Int = 0
+    sort: PageSort = PublishedAt
+    take: Int = 10
+  ): PaginatedPages!
 
-  """Returns a payment method by id"""
+  """
+  Returns a payment method by id
+  """
   paymentMethod(id: String!): PaymentMethod!
 
-  """Returns all payment methods"""
+  """
+  Returns all payment methods
+  """
   paymentMethods: [PaymentMethod!]!
 
-  """Returns a single payment provider setting by id."""
+  """
+  Returns a single payment provider setting by id.
+  """
   paymentProviderSetting(id: String!): SettingPaymentProvider!
 
-  """Returns all payment provider settings."""
-  paymentProviderSettings(filter: SettingPaymentProviderFilter): [SettingPaymentProvider!]!
+  """
+  Returns all payment provider settings.
+  """
+  paymentProviderSettings(
+    filter: SettingPaymentProviderFilter
+  ): [SettingPaymentProvider!]!
 
-  """Returns all payment providers"""
+  """
+  Returns all payment providers
+  """
   paymentProviders: [PaymentProvider!]!
 
-  """Returns an paywall by id."""
+  """
+  Returns an paywall by id.
+  """
   paywall(id: String!): Paywall!
 
-  """Returns a list of paywalls based on the filters given."""
+  """
+  Returns a list of paywalls based on the filters given.
+  """
   paywalls: [Paywall!]!
 
   """
@@ -3190,42 +4360,94 @@ type Query {
   """
   peer(id: String, slug: String): Peer
 
-  """Returns a paginated list of peer articles based on the filters given."""
-  peerArticles(filter: PeerArticleFilter, order: SortOrder = Descending, skip: Int = 0, sort: ArticleSort = PublishedAt, take: Int = 10): PaginatedPeerArticles!
+  """
+  Returns a paginated list of peer articles based on the filters given.
+  """
+  peerArticles(
+    filter: PeerArticleFilter
+    order: SortOrder = Descending
+    skip: Int = 0
+    sort: ArticleSort = PublishedAt
+    take: Int = 10
+  ): PaginatedPeerArticles!
 
-  """This query returns the peer profile."""
+  """
+  This query returns the peer profile.
+  """
   peerProfile: PeerProfile!
 
-  """Returns a list of all peers."""
+  """
+  Returns a list of all peers.
+  """
   peers: [Peer!]!
   periodicJobLog(skip: Int, take: Int = 10): [PeriodicJob!]!
 
-  """Returns a list of all permissions."""
+  """
+  Returns a list of all permissions.
+  """
   permissions: [Permission!]!
 
   """
   This query performs a fulltext search on titles and blocks of articles/phrases and returns all matching ones.
   """
-  phrase(articleSort: ArticleSort! = PublishedAt, order: SortOrder! = Descending, pageSort: PageSort! = PublishedAt, query: String!, skip: Int! = 0, take: Int! = 10): Phrase!
+  phrase(
+    articleSort: ArticleSort! = PublishedAt
+    order: SortOrder! = Descending
+    pageSort: PageSort! = PublishedAt
+    query: String!
+    skip: Int! = 0
+    take: Int! = 10
+  ): Phrase!
   poll(id: String!): FullPoll!
 
-  """Returns a paginated list of poll votes"""
-  pollVotes(cursorId: String, filter: PollVoteFilter, order: SortOrder = Ascending, skip: Int = 0, sort: PollVoteSort = CreatedAt, take: Int = 10): PaginatedPollVotes!
+  """
+  Returns a paginated list of poll votes
+  """
+  pollVotes(
+    cursorId: String
+    filter: PollVoteFilter
+    order: SortOrder = Ascending
+    skip: Int = 0
+    sort: PollVoteSort = CreatedAt
+    take: Int = 10
+  ): PaginatedPollVotes!
 
-  """Returns a paginated list of polls based on the filters given."""
-  polls(cursorId: String, filter: PollFilter, order: SortOrder = Descending, skip: Int = 0, sort: PollSort = OpensAt, take: Int = 10): PaginatedPolls!
-  primaryBanner(documentId: String!, documentType: BannerDocumentType!, hasPaywallBypass: Boolean!, hasSubscription: Boolean!, loggedIn: Boolean!): Banner
+  """
+  Returns a paginated list of polls based on the filters given.
+  """
+  polls(
+    cursorId: String
+    filter: PollFilter
+    order: SortOrder = Descending
+    skip: Int = 0
+    sort: PollSort = OpensAt
+    take: Int = 10
+  ): PaginatedPolls!
+  primaryBanner(
+    documentId: String!
+    documentType: BannerDocumentType!
+    hasPaywallBypass: Boolean!
+    hasSubscription: Boolean!
+    loggedIn: Boolean!
+  ): Banner
   promptHTML(chatId: String, query: String!): Chat!
   provider: MailProviderModel!
 
-  """This query returns the comment rating system."""
+  """
+  This query returns the comment rating system.
+  """
   ratingSystem: CommentRatingSystem!
 
-  """Returns a remote peer profile based on hostURL and token supplied."""
+  """
+  Returns a remote peer profile based on hostURL and token supplied.
+  """
   remotePeerProfile(hostURL: String!, token: String!): RemotePeerProfile!
 
   "\n      Returns all renewing subscribers in a given timeframe.\n    "
-  renewingSubscribers(end: DateTime, start: DateTime!): [DashboardSubscription!]!
+  renewingSubscribers(
+    end: DateTime
+    start: DateTime!
+  ): [DashboardSubscription!]!
 
   "\n      Returns the revenue generated for the time period given.\n      Only includes paid invoices that have not been manually paid.\n    "
   revenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!
@@ -3240,64 +4462,139 @@ type Query {
   settings(filter: SettingFilter): [Setting!]!
   stats: Stats
 
-  """Returns a subscription by id."""
+  """
+  Returns a subscription by id.
+  """
   subscription(id: String!): PublicSubscription!
 
-  """Returns all subscription flows"""
-  subscriptionFlows(defaultFlowOnly: Boolean!, memberPlanId: String): [SubscriptionFlowModel!]!
+  """
+  Returns all subscription flows
+  """
+  subscriptionFlows(
+    defaultFlowOnly: Boolean!
+    memberPlanId: String
+  ): [SubscriptionFlowModel!]!
 
-  """Returns a paginated list of subscriptions based on the filters given."""
-  subscriptions(cursorId: String, filter: SubscriptionFilter, order: SortOrder = Ascending, skip: Int = 0, sort: SubscriptionSort = ModifiedAt, take: Int = 10): PublicSubscriptionConnection!
+  """
+  Returns a paginated list of subscriptions based on the filters given.
+  """
+  subscriptions(
+    cursorId: String
+    filter: SubscriptionFilter
+    order: SortOrder = Ascending
+    skip: Int = 0
+    sort: SubscriptionSort = ModifiedAt
+    take: Int = 10
+  ): PublicSubscriptionConnection!
 
-  """Returns a paginated list of subscriptions based on the filters given."""
-  subscriptionsAsCsv(autoRenew: Boolean, cancellationDateFrom: DateFilter, cancellationDateTo: DateFilter, deactivationDateFrom: DateFilter, deactivationDateTo: DateFilter, deactivationReason: String, extendable: Boolean, memberPlanID: String, paidUntilFrom: DateFilter, paidUntilTo: DateFilter, paymentMethodID: String, paymentPeriodicity: PaymentPeriodicity, startsAtFrom: DateFilter, startsAtTo: DateFilter, subscriptionIDs: [String!], userHasAddress: Boolean, userID: String, userIDs: [String!]): String!
+  """
+  Returns a paginated list of subscriptions based on the filters given.
+  """
+  subscriptionsAsCsv(
+    autoRenew: Boolean
+    cancellationDateFrom: DateFilter
+    cancellationDateTo: DateFilter
+    deactivationDateFrom: DateFilter
+    deactivationDateTo: DateFilter
+    deactivationReason: String
+    extendable: Boolean
+    memberPlanID: String
+    paidUntilFrom: DateFilter
+    paidUntilTo: DateFilter
+    paymentMethodID: String
+    paymentPeriodicity: PaymentPeriodicity
+    startsAtFrom: DateFilter
+    startsAtTo: DateFilter
+    subscriptionIDs: [String!]
+    userHasAddress: Boolean
+    userID: String
+    userIDs: [String!]
+  ): String!
 
-  """Returns a single sync provider setting by id."""
+  """
+  Returns a single sync provider setting by id.
+  """
   syncProviderSetting(id: String!): SettingSyncProvider!
 
-  """Returns all sync provider settings."""
-  syncProviderSettings(filter: SettingSyncProviderFilter): [SettingSyncProvider!]!
+  """
+  Returns all sync provider settings.
+  """
+  syncProviderSettings(
+    filter: SettingSyncProviderFilter
+  ): [SettingSyncProvider!]!
 
-  """Returns all mail flows"""
+  """
+  Returns all mail flows
+  """
   systemMails: [SystemMailModel!]!
 
-  """Returns an tag by id or tag."""
+  """
+  Returns an tag by id or tag.
+  """
   tag(id: String, tag: String, type: TagType): Tag!
 
-  """This query returns a list of tags"""
+  """
+  This query returns a list of tags
+  """
   tags(
-    """Cursor for pagination"""
+    """
+    Cursor for pagination
+    """
     cursorId: String
 
-    """Filter for tags"""
+    """
+    Filter for tags
+    """
     filter: TagFilter
 
-    """Sort order"""
+    """
+    Sort order
+    """
     order: SortOrder = Descending
 
-    """Number of items to skip"""
+    """
+    Number of items to skip
+    """
     skip: Int! = 0
 
-    """Field to sort by"""
+    """
+    Field to sort by
+    """
     sort: TagSort! = CreatedAt
 
-    """Number of items to fetch"""
+    """
+    Number of items to fetch
+    """
     take: Int! = 10
   ): PaginatedTags!
 
-  """Returns a list of all tokens."""
+  """
+  Returns a list of all tokens.
+  """
   tokens: [Token!]!
 
-  """Returns a single tracking pixel setting by id."""
+  """
+  Returns a single tracking pixel setting by id.
+  """
   trackingPixelSetting(id: String!): SettingTrackingPixelProvider!
 
-  """Returns all tracking pixel settings."""
-  trackingPixelSettings(filter: SettingTrackingPixelFilter): [SettingTrackingPixelProvider!]!
+  """
+  Returns all tracking pixel settings.
+  """
+  trackingPixelSettings(
+    filter: SettingTrackingPixelFilter
+  ): [SettingTrackingPixelProvider!]!
 
-  """"""
-  upgradeUserSubscriptionInfo(memberPlanId: String!, subscriptionId: String!): UpgradeSubscription!
+  """
+  """
+  upgradeUserSubscriptionInfo(
+    memberPlanId: String!
+    subscriptionId: String!
+  ): UpgradeSubscription!
 
-  """Returns a user by id."""
+  """
+  Returns a user by id.
+  """
   user(id: String!): SensitiveDataUser!
 
   "\n      Returns a single userConsent by id.\n    "
@@ -3306,67 +4603,112 @@ type Query {
   "\n      Returns a list of userConsents. Possible to filter.\n    "
   userConsents(name: String, slug: String, value: Boolean): [UserConsent!]!
 
-  """Get all invoices for the authenticated user"""
+  """
+  Get all invoices for the authenticated user
+  """
   userInvoices: [Invoice!]!
   userPollVote(pollId: String!): String
 
-  """Returns a userrole by id."""
+  """
+  Returns a userrole by id.
+  """
   userRole(id: String!): UserRole!
 
-  """Returns a paginated list of userroles based on the filters given."""
-  userRoles(cursorId: String, filter: UserRoleFilter, order: SortOrder = Ascending, skip: Int = 0, sort: UserRoleSort = CreatedAt, take: Int = 10): PaginatedUserRoles!
+  """
+  Returns a paginated list of userroles based on the filters given.
+  """
+  userRoles(
+    cursorId: String
+    filter: UserRoleFilter
+    order: SortOrder = Ascending
+    skip: Int = 0
+    sort: UserRoleSort = CreatedAt
+    take: Int = 10
+  ): PaginatedUserRoles!
 
-  """This query returns the subscriptions of the authenticated user."""
+  """
+  This query returns the subscriptions of the authenticated user.
+  """
   userSubscriptions: [PublicSubscription!]!
 
-  """Returns a paginated list of users based on the filters given."""
+  """
+  Returns a paginated list of users based on the filters given.
+  """
   users(
-    """Cursor for pagination"""
+    """
+    Cursor for pagination
+    """
     cursorId: String
 
-    """Filter for users"""
+    """
+    Filter for users
+    """
     filter: UserFilter
 
-    """Sort order"""
+    """
+    Sort order
+    """
     order: SortOrder = Descending
 
-    """Number of items to skip"""
+    """
+    Number of items to skip
+    """
     skip: Int! = 0
 
-    """Field to sort by"""
+    """
+    Field to sort by
+    """
     sort: UserSort! = CreatedAt
 
-    """Number of items to fetch"""
+    """
+    Number of items to fetch
+    """
     take: Int! = 10
   ): PaginatedSensitiveDataUsers!
   versionInformation: VersionInformation!
 
-  """Returns an voucher by id or voucher."""
+  """
+  Returns an voucher by id or voucher.
+  """
   voucher(id: String!): Voucher!
 
-  """This query returns a list of vouchers"""
+  """
+  This query returns a list of vouchers
+  """
   vouchers(
-    """Cursor for pagination"""
+    """
+    Cursor for pagination
+    """
     cursorId: String
 
-    """Filter for vouchers"""
+    """
+    Filter for vouchers
+    """
     filter: VoucherFilter
 
-    """Sort order"""
+    """
+    Sort order
+    """
     order: SortOrder = Descending
 
-    """Number of items to skip"""
+    """
+    Number of items to skip
+    """
     skip: Int! = 0
 
-    """Field to sort by"""
+    """
+    Field to sort by
+    """
     sort: VoucherSort! = CreatedAt
 
-    """Number of items to fetch"""
+    """
+    Number of items to fetch
+    """
     take: Int! = 10
   ): PaginatedVouchers!
 
   """
-  Returns the website settings, requires authentication to get sensitive settings.
+  Returns the public website runtime settings.
   """
   websiteSettings: WebsiteSettings!
 }
@@ -3457,7 +4799,9 @@ type SensitiveDataUser implements BaseUser {
   roles: [UserRole!]!
   subscriptionCount: Int!
 
-  """Whether two-factor authentication is enabled for this user."""
+  """
+  Whether two-factor authentication is enabled for this user.
+  """
   totpEnabled: Boolean!
 
   """
@@ -3787,7 +5131,12 @@ input SubscribeBlockInput {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
-  fields: [SubscribeBlockField!]! = [FirstName, Password, PasswordRepeated, Address]
+  fields: [SubscribeBlockField!]! = [
+    FirstName
+    Password
+    PasswordRepeated
+    Address
+  ]
   memberPlanIds: [String!]
 }
 
@@ -3908,7 +5257,9 @@ enum TagSort {
   Tag
 }
 
-"""Type of tag."""
+"""
+Type of tag.
+"""
 enum TagType {
   Article
   Author
@@ -4116,10 +5467,14 @@ type TokenWithSecret implements BaseToken {
 }
 
 type TotpSetup {
-  """Base32 encoded TOTP secret"""
+  """
+  Base32 encoded TOTP secret
+  """
   secret: String!
 
-  """OTPAuth URI for authenticator apps"""
+  """
+  OTPAuth URI for authenticator apps
+  """
   uri: String!
 }
 
@@ -4212,7 +5567,9 @@ type UpgradeSubscription {
   discountAmount: Float!
 }
 
-"""The `Upload` scalar type represents a file upload."""
+"""
+The `Upload` scalar type represents a file upload.
+"""
 scalar Upload
 
 type User implements BaseUser {
@@ -4326,7 +5683,9 @@ input VimeoVideoBlockInput {
   videoID: String
 }
 
-"""A valid vote value"""
+"""
+A valid vote value
+"""
 scalar VoteValue
 
 type Voucher implements HasMemberPlanLc {

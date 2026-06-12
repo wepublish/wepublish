@@ -29,9 +29,9 @@ const cache = new InMemoryCache({
 
 export const parameters = {
   initialGlobals: {
-    locale: 'en',
+    locale: 'de',
     locales: {
-      en: 'English',
+      de: 'Deutsch',
     },
   },
   apolloClient: {

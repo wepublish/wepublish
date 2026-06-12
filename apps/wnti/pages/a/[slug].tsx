@@ -82,6 +82,7 @@ export default function ArticleBySlugOrId() {
             </AfterArticleTitle>
 
             <ArticleListContainer
+              withTotalCount={false}
               variables={{
                 filter: { tags: data.article.tags.map(tag => tag.id) },
                 take: 4,

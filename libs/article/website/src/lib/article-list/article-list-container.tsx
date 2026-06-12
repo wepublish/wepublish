@@ -1,6 +1,9 @@
 import {
+  ArticleListQuery,
+  RelatedArticleListQuery,
   SlimArticleFragment,
   useArticleListQuery,
+  useRelatedArticleListQuery,
 } from '@wepublish/website/api';
 import {
   BuilderArticleListProps,
@@ -13,6 +16,7 @@ import { useMemo } from 'react';
 export type ArticleListContainerProps = BuilderContainerProps &
   Pick<BuilderArticleListProps, 'variables' | 'onVariablesChange'> & {
     filter?: (articles: SlimArticleFragment[]) => SlimArticleFragment[];
+    withTotalCount?: boolean;
   };
 
 export function ArticleListContainer({
@@ -20,11 +24,24 @@ export function ArticleListContainer({
   variables,
   onVariablesChange,
   filter,
+  withTotalCount = true,
 }: ArticleListContainerProps) {
   const { ArticleList } = useWebsiteBuilder();
-  const { data, loading, error } = useArticleListQuery({
+  const articleList = useArticleListQuery({
     variables,
+    skip: !withTotalCount,
   });
+  const relatedArticleList = useRelatedArticleListQuery({
+    variables,
+    skip: withTotalCount,
+  });
+  const data =
+    withTotalCount ?
+      articleList.data
+    : normalizeArticleListData(relatedArticleList.data);
+  const loading =
+    withTotalCount ? articleList.loading : relatedArticleList.loading;
+  const error = withTotalCount ? articleList.error : relatedArticleList.error;
 
   const filteredArticles = useMemo(
     () =>
@@ -47,3 +64,19 @@ export function ArticleListContainer({
     />
   );
 }
+
+const normalizeArticleListData = (
+  data: RelatedArticleListQuery | undefined
+): ArticleListQuery | undefined => {
+  if (!data?.articles) {
+    return data as ArticleListQuery | undefined;
+  }
+
+  return {
+    ...data,
+    articles: {
+      ...data.articles,
+      totalCount: data.articles.nodes.length,
+    },
+  };
+};

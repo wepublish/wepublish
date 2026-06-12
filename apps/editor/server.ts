@@ -1,8 +1,10 @@
 import cors from 'cors';
 import express from 'express';
+import { rateLimit } from 'express-rate-limit';
 import * as path from 'path';
 
 import { handleRequest } from './src/main.server';
+import { getEditorRateLimitOptions } from './server-rate-limit';
 
 if (!process.env.API_URL) {
   throw new Error('No API_URL specified in environment.');
@@ -10,6 +12,8 @@ if (!process.env.API_URL) {
 
 const port = process.env['PORT'] || 3000;
 const app = express();
+
+app.disable('x-powered-by');
 
 const browserDist = path.join(process.cwd(), 'dist/apps/editor/browser');
 const indexPath = path.join(browserDist, 'index.html');
@@ -30,7 +34,7 @@ app.get(
   })
 );
 
-app.use('*', handleRequest(indexPath));
+app.use('*', rateLimit(getEditorRateLimitOptions()), handleRequest(indexPath));
 
 const server = app.listen(port, () => {
   // Server has started

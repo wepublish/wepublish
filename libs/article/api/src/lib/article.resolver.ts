@@ -1,5 +1,6 @@
 import {
   Args,
+  Info,
   Mutation,
   Parent,
   Query,
@@ -38,6 +39,8 @@ import {
   TrackingPixelService,
 } from '@wepublish/tracking-pixel/api';
 import { SettingDataloaderService, SettingName } from '@wepublish/settings/api';
+import { GraphQLResolveInfo } from 'graphql';
+import { resolveInfoSelectsField } from './graphql-selection';
 
 @Resolver(() => Article)
 export class ArticleResolver {
@@ -97,7 +100,8 @@ export class ArticleResolver {
   })
   public articles(
     @Args() args: ArticleListArgs,
-    @PreviewMode() isPreview: boolean
+    @PreviewMode() isPreview: boolean,
+    @Info() info: GraphQLResolveInfo
   ) {
     if (!isPreview) {
       args.filter = {
@@ -108,7 +112,11 @@ export class ArticleResolver {
       };
     }
 
-    return this.articleService.getArticles(args);
+    return this.articleService.getArticles(args, {
+      cacheTtlSeconds: isPreview ? undefined : 60,
+      skipCache: isPreview,
+      skipTotalCount: !resolveInfoSelectsField(info, 'totalCount'),
+    });
   }
 
   @Permissions(CanCreateArticle)
@@ -169,6 +177,30 @@ export class ArticleResolver {
   })
   public unpublishArticle(@Args('id') id: string) {
     return this.articleService.unpublishArticle(id);
+  }
+
+  @Permissions(CanCreateArticle)
+  @Mutation(() => Article, {
+    description: `Discards the current draft and reverts to the latest published revision.`,
+  })
+  public discardArticleDraft(@Args('id') id: string) {
+    return this.articleService.discardArticleDraft(id);
+  }
+
+  @Permissions(CanCreateArticle)
+  @Mutation(() => Article, {
+    description: `Restores an older revision of an article as a new draft.`,
+  })
+  public restoreArticleRevision(
+    @Args('id') id: string,
+    @Args('revisionId') revisionId: string,
+    @CurrentUser() user: UserSession | undefined
+  ) {
+    return this.articleService.restoreArticleRevision(
+      id,
+      revisionId,
+      user?.user?.id
+    );
   }
 
   @Public()
@@ -232,6 +264,12 @@ export class ArticleResolver {
     const { published } = await this.articleRevisionsDataloader.load(articleId);
 
     return published;
+  }
+
+  @Permissions(CanGetArticle)
+  @ResolveField(() => [ArticleRevision])
+  async revisions(@Parent() parent: PArticle) {
+    return this.articleService.getRevisions(parent.id);
   }
 
   @ResolveField(() => String, { nullable: true })

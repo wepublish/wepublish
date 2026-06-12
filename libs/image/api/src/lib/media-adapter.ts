@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { FileUpload } from 'graphql-upload';
+import type { FileUpload } from '@wepublish/utils/api';
 import { ImageTransformation } from './image-transformation.model';
 import { UploadImage } from './image-upload.service';
 import { Image } from '@prisma/client';

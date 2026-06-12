@@ -16,10 +16,12 @@ import {
 import { BlockContentModule } from '@wepublish/block-content/api';
 import { SettingModule } from '@wepublish/settings/api';
 import { TagModule } from '@wepublish/tag/api';
+import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
 
 @Module({
   imports: [
     PrismaModule,
+    KvTtlCacheModule,
     ImageModule,
     AuthorModule,
     SettingModule,

@@ -5,6 +5,7 @@ import { AppModule } from './nestapp/app.module';
 import { PrismaClient } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { runExampleSeed } from '../prisma/seed';
+import { getPrismaPgAdapterOptions } from '@wepublish/nest-modules';
 
 import { MAIL_WEBHOOK_PATH_PREFIX } from '@wepublish/mail/api';
 import helmet from 'helmet';
@@ -13,7 +14,7 @@ import { MAX_PAYLOAD_SIZE } from '@wepublish/utils/api';
 import { json, urlencoded } from 'body-parser';
 import type { Request, Response, NextFunction, RequestHandler } from 'express';
 import { PAYMENT_WEBHOOK_PATH_PREFIX } from '@wepublish/payment/api';
-import { graphqlUploadExpress } from 'graphql-upload';
+import graphqlUploadExpress from 'graphql-upload/graphqlUploadExpress.mjs';
 
 async function bootstrap() {
   const port = process.env.PORT ?? 4000;
@@ -56,9 +57,7 @@ async function bootstrap() {
 
   if (process.env.RUN_SEED === 'true') {
     Logger.log('RUN_SEED=true detected, running example seed...');
-    const adapter = new PrismaPg({
-      connectionString: process.env['DATABASE_URL']!,
-    });
+    const adapter = new PrismaPg(getPrismaPgAdapterOptions());
     const prisma = new PrismaClient({ adapter });
     await prisma.$connect();
     try {

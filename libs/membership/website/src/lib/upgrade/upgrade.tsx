@@ -30,6 +30,7 @@ import {
   subscribeSchema,
   SubscribeSection,
   SubscribeWrapper,
+  getExactPeriodAmountForSelectedPlan,
   usePaymentText,
 } from '../subscribe/subscribe';
 import { getPaymentPeriodicyMonths } from '../formatters/format-payment-period';
@@ -212,10 +213,13 @@ export const Upgrade = ({
     productType: subscriptionToUpgrade.memberPlan.productType,
     paymentPeriodicity: subscriptionToUpgrade.paymentPeriodicity,
     monthlyAmount,
-    periodAmount:
-      subscriptionToUpgrade.paymentPeriodicity === PaymentPeriodicity.Yearly ?
-        selectedMemberPlan?.yearlyAmount
-      : undefined,
+    periodAmount: getExactPeriodAmountForSelectedPlan({
+      paymentPeriodicity: subscriptionToUpgrade.paymentPeriodicity,
+      monthlyAmount,
+      amountPerMonthMin: selectedMemberPlan?.amountPerMonthMin,
+      amountPerMonthTarget: selectedMemberPlan?.amountPerMonthTarget,
+      yearlyAmount: selectedMemberPlan?.yearlyAmount,
+    }),
     discount: upgradeInfo.data?.upgradeUserSubscriptionInfo.discountAmount ?? 0,
     currency: selectedMemberPlan?.currency ?? Currency.Chf,
     locale,
@@ -334,9 +338,16 @@ export const Upgrade = ({
                   slug={selectedMemberPlan?.slug}
                   donate={!!donate?.(selectedMemberPlan)}
                   amountPerMonthMin={amountPerMonthMin}
+                  amountPerMonthMax={
+                    selectedMemberPlan?.amountPerMonthMax ?? undefined
+                  }
                   amountPerMonthTarget={
                     selectedMemberPlan?.amountPerMonthTarget ?? undefined
                   }
+                  amountSelectionLayout={
+                    selectedMemberPlan?.amountSelectionLayout
+                  }
+                  presetAmounts={selectedMemberPlan?.presetAmounts}
                   currency={selectedMemberPlan?.currency ?? Currency.Chf}
                 />
               </SubscribeAmount>

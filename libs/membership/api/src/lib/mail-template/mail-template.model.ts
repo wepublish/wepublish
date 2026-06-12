@@ -1,5 +1,6 @@
 import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
-import { MailTemplateStatus } from '@wepublish/mail/api';
+import { MailProviderType } from '@prisma/client';
+import { MailPlaceholder, MailTemplateStatus } from '@wepublish/mail/api';
 
 registerEnumType(MailTemplateStatus, {
   name: 'MailTemplateStatus',
@@ -33,4 +34,25 @@ export class MailTemplateWithUrlAndStatusModel {
 export class MailProviderModel {
   @Field()
   name!: string;
+
+  @Field(() => MailProviderType, { nullable: true })
+  type?: MailProviderType;
+}
+
+@ObjectType()
+export class MailPlaceholderModel implements MailPlaceholder {
+  @Field()
+  key!: string;
+
+  @Field()
+  example!: string;
+}
+
+@ObjectType()
+export class MailPlaceholderGroupModel {
+  @Field()
+  event!: string;
+
+  @Field(() => [MailPlaceholderModel])
+  placeholders!: MailPlaceholderModel[];
 }

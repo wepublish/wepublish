@@ -24,7 +24,7 @@ export class WebsiteSettingsResolver {
 
   @Public()
   @Query(() => WebsiteSettings, {
-    description: `Returns the website settings, requires authentication to get sensitive settings.`,
+    description: `Returns the public website runtime settings.`,
   })
   public async websiteSettings() {
     return this.websiteSettingsService.getSettings();
@@ -62,7 +62,7 @@ export class WebsiteSettingsResolver {
     };
   }
 
-  @ResolveField(() => WebsiteAnalytics)
+  @ResolveField(() => WebsiteAds)
   ads(@Parent() parent: PWebsiteSettings): WebsiteAds {
     return {
       sparkLoop: {

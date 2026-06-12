@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+  Optional,
+} from '@nestjs/common';
 import { Prisma, PrismaClient } from '@prisma/client';
 import {
   ArticleFilter,
@@ -17,12 +22,21 @@ import {
 } from '@wepublish/utils/api';
 import { mapBlockUnionMap } from '@wepublish/block-content/api';
 import { TrackingPixelService } from '@wepublish/tracking-pixel/api';
+import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+
+export type ArticleListOptions = {
+  skipTotalCount?: boolean;
+  skipCache?: boolean;
+  cacheTtlSeconds?: number;
+};
 
 @Injectable()
 export class ArticleService {
   constructor(
     private prisma: PrismaClient,
-    private trackingPixelService: TrackingPixelService
+    private trackingPixelService: TrackingPixelService,
+    @Optional()
+    private kv?: KvTtlCacheService
   ) {}
 
   @PrimeDataLoader(ArticleDataloaderService)
@@ -41,55 +55,65 @@ export class ArticleService {
   }
 
   @PrimeDataLoader(ArticleDataloaderService)
-  async getArticles({
-    filter,
-    cursorId,
-    sort = ArticleSort.PublishedAt,
-    order = SortOrder.Descending,
-    take = 10,
-    skip,
-  }: ArticleListArgs) {
-    if (filter?.body) {
-      const articleIds = await this.performFullTextSearch(filter.body);
+  async getArticles(
+    {
+      filter,
+      cursorId,
+      sort = ArticleSort.PublishedAt,
+      order = SortOrder.Descending,
+      take = 10,
+      skip,
+    }: ArticleListArgs,
+    options: ArticleListOptions = {}
+  ) {
+    const effectiveFilter = { ...filter };
 
-      if (articleIds.length && !filter.ids?.length) {
-        filter.ids = articleIds;
+    if (effectiveFilter.body) {
+      const articleIds = await this.performFullTextSearch(effectiveFilter.body);
+
+      if (effectiveFilter.ids?.length) {
+        effectiveFilter.ids = effectiveFilter.ids.filter(id =>
+          articleIds.includes(id)
+        );
+      } else {
+        effectiveFilter.ids = articleIds;
       }
     }
 
-    if (filter?.tags?.length) {
-      const taggedArticles = await this.prisma.taggedArticles.findMany({
-        where: { tagId: { in: filter.tags } },
-        select: { articleId: true },
-        distinct: ['articleId'],
-      });
-
-      const tagArticleIds = taggedArticles.map(ta => ta.articleId);
-      filter.ids =
-        filter.ids?.length ?
-          filter.ids.filter(id => tagArticleIds.includes(id))
-        : tagArticleIds;
-      filter.tags = undefined;
-    }
-
     const orderBy = createArticleOrder(sort, order);
-    const where = createArticleFilter(filter ?? {});
+    const now = createFilterClock(options);
+    const where = createArticleFilter(effectiveFilter, now);
+    const maxTake = getMaxTake(take);
+    const articlesArgs = {
+      where,
+      skip,
+      take: maxTake + 1,
+      orderBy,
+      cursor: cursorId ? { id: cursorId } : undefined,
+    } satisfies Prisma.ArticleFindManyArgs;
+    const cacheKey = createArticleListCacheKey({
+      where,
+      skip,
+      take: maxTake,
+      orderBy,
+      cursorId,
+    });
 
     const [totalCount, articles] = await Promise.all([
-      this.prisma.article.count({
-        where,
-        orderBy,
-      }),
-      this.prisma.article.findMany({
-        where,
-        skip,
-        take: getMaxTake(take) + 1,
-        orderBy,
-        cursor: cursorId ? { id: cursorId } : undefined,
-      }),
+      options.skipTotalCount ?
+        Promise.resolve(0)
+      : this.getCachedOrLoad(`${cacheKey}:count`, options, () =>
+          this.prisma.article.count({
+            where,
+            orderBy,
+          })
+        ),
+      this.getCachedOrLoad(`${cacheKey}:nodes`, options, () =>
+        this.prisma.article.findMany(articlesArgs)
+      ),
     ]);
 
-    const nodes = articles.slice(0, getMaxTake(take));
+    const nodes = articles.slice(0, maxTake);
     const firstArticle = nodes[0];
     const lastArticle = nodes[nodes.length - 1];
 
@@ -106,6 +130,23 @@ export class ArticleService {
         endCursor: lastArticle?.id,
       },
     };
+  }
+
+  private getCachedOrLoad<T>(
+    key: string,
+    options: ArticleListOptions,
+    loader: () => Promise<T>
+  ) {
+    if (!options.cacheTtlSeconds || options.skipCache || !this.kv) {
+      return loader();
+    }
+
+    return this.kv.getOrLoadNs<T>(
+      'article-list',
+      key,
+      loader,
+      options.cacheTtlSeconds
+    );
   }
 
   @PrimeDataLoader(ArticleDataloaderService)
@@ -472,6 +513,153 @@ export class ArticleService {
     });
   }
 
+  /**
+   * Returns the complete editor-facing revision history, including archived
+   * drafts, so a past version can be inspected or restored without mutating it.
+   */
+  async getRevisions(articleId: string) {
+    return this.prisma.articleRevision.findMany({
+      where: {
+        articleId,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+  }
+
+  /**
+   * Restores a historical revision by cloning its content into a new draft.
+   * Existing open drafts are archived first to preserve the one-draft invariant.
+   */
+  @PrimeDataLoader(ArticleDataloaderService)
+  async restoreArticleRevision(
+    articleId: string,
+    revisionId: string,
+    userId: string | null | undefined
+  ) {
+    const revision = await this.prisma.articleRevision.findUnique({
+      where: { id: revisionId },
+      include: {
+        authors: true,
+        socialMediaAuthors: true,
+      },
+    });
+
+    if (!revision || revision.articleId !== articleId) {
+      throw new NotFoundException(
+        `Revision with id ${revisionId} not found for article ${articleId}`
+      );
+    }
+
+    const restoredRevision: Prisma.ArticleRevisionUncheckedCreateWithoutArticleInput =
+      {
+        preTitle: revision.preTitle,
+        title: revision.title,
+        lead: revision.lead,
+        seoTitle: revision.seoTitle,
+        canonicalUrl: revision.canonicalUrl,
+        properties: revision.properties as Prisma.InputJsonValue,
+        breaking: revision.breaking,
+        blocks: revision.blocks as Prisma.InputJsonValue,
+        hideAuthor: revision.hideAuthor,
+        socialMediaTitle: revision.socialMediaTitle,
+        socialMediaDescription: revision.socialMediaDescription,
+        imageID: revision.imageID,
+        socialMediaImageID: revision.socialMediaImageID,
+        userId,
+        authors: {
+          createMany: {
+            data: revision.authors.map(({ authorId }) => ({ authorId })),
+          },
+        },
+        socialMediaAuthors: {
+          createMany: {
+            data: revision.socialMediaAuthors.map(({ authorId }) => ({
+              authorId,
+            })),
+          },
+        },
+      };
+
+    return this.prisma.article.update({
+      where: { id: articleId },
+      data: {
+        modifiedAt: new Date(),
+        revisions: {
+          updateMany: {
+            where: {
+              archivedAt: null,
+              publishedAt: null,
+            },
+            data: {
+              archivedAt: new Date(),
+            },
+          },
+          create: restoredRevision,
+        },
+      },
+    });
+  }
+
+  /**
+   * Archives the current draft only when a non-draft revision remains available
+   * for preview/latest resolution. Historic content is never deleted.
+   */
+  @PrimeDataLoader(ArticleDataloaderService)
+  async discardArticleDraft(id: string) {
+    const article = await this.prisma.article.findUnique({
+      where: { id },
+    });
+
+    if (!article) {
+      throw new NotFoundException(`Article with id ${id} not found`);
+    }
+
+    const draft = await this.prisma.articleRevision.findFirst({
+      where: {
+        articleId: id,
+        publishedAt: null,
+        archivedAt: null,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    if (!draft) {
+      throw new BadRequestException(
+        `Article with id ${id} has no draft to discard`
+      );
+    }
+
+    const fallback = await this.prisma.articleRevision.findFirst({
+      where: {
+        articleId: id,
+        archivedAt: null,
+        publishedAt: {
+          not: null,
+        },
+      },
+      orderBy: {
+        publishedAt: 'desc',
+      },
+    });
+
+    if (!fallback) {
+      throw new BadRequestException(
+        `Cannot discard draft: article ${id} has no published version to revert to`
+      );
+    }
+
+    await this.prisma.articleRevision.update({
+      where: { id: draft.id },
+      data: { archivedAt: new Date() },
+    });
+
+    return article;
+  }
+
   @PrimeDataLoader(ArticleDataloaderService)
   async likeArticle(id: string) {
     return this.prisma.article.update({
@@ -560,6 +748,78 @@ export const createArticleOrder = (
       };
   }
 };
+
+const createArticleListCacheKey = (value: unknown) =>
+  JSON.stringify(value, (_, item) => {
+    if (item instanceof Date) {
+      return item.toISOString();
+    }
+
+    return item;
+  });
+
+const createFilterClock = (options: ArticleListOptions) => {
+  const now = new Date();
+
+  if (!options.cacheTtlSeconds || options.skipCache) {
+    return now;
+  }
+
+  const ttlMs = Math.max(1, options.cacheTtlSeconds) * 1000;
+
+  return new Date(Math.floor(now.getTime() / ttlMs) * ttlMs);
+};
+
+const isPlainObject = (value: unknown): value is Record<string, unknown> =>
+  value !== null && typeof value === 'object' && value.constructor === Object;
+
+const isEmptyPrismaFilter = (value: unknown): boolean =>
+  isPlainObject(value) && Object.keys(value).length === 0;
+
+const cleanPrismaFilter = (value: unknown, parentKey?: string): unknown => {
+  if (Array.isArray(value)) {
+    const cleanedItems = value
+      .map(item => cleanPrismaFilter(item, parentKey))
+      .filter(item => !isEmptyPrismaFilter(item));
+
+    return parentKey === 'AND' || parentKey === 'OR' || parentKey === 'NOT' ?
+        cleanedItems
+      : value;
+  }
+
+  if (!isPlainObject(value)) {
+    return value;
+  }
+
+  return Object.fromEntries(
+    Object.entries(value)
+      .map(([key, item]) => [key, cleanPrismaFilter(item, key)] as const)
+      .filter(([key, item]) => {
+        if (item === undefined) {
+          return false;
+        }
+
+        if (isEmptyPrismaFilter(item)) {
+          return false;
+        }
+
+        if (
+          Array.isArray(item) &&
+          item.length === 0 &&
+          (key === 'AND' || key === 'OR' || key === 'NOT')
+        ) {
+          return false;
+        }
+
+        return true;
+      })
+  );
+};
+
+const cleanArticleWhereInput = (
+  value: Prisma.ArticleWhereInput
+): Prisma.ArticleWhereInput =>
+  cleanPrismaFilter(value) as Prisma.ArticleWhereInput;
 
 const createIdsFilter = (
   filter: Partial<ArticleFilter>
@@ -735,12 +995,12 @@ const createPublicationDateToFilter = (
 };
 
 const createPublishedFilter = (
-  filter: Partial<ArticleFilter>
+  filter: Partial<ArticleFilter>,
+  now: Date
 ): Prisma.ArticleWhereInput => {
   if (filter?.published != null) {
     return {
-      publishedAt:
-        filter.published ? { lte: new Date() } : { not: { lte: new Date() } },
+      publishedAt: filter.published ? { lte: now } : { not: { lte: now } },
     };
   }
 
@@ -765,14 +1025,14 @@ const createDraftFilter = (
 };
 
 const createPendingFilter = (
-  filter: Partial<ArticleFilter>
+  filter: Partial<ArticleFilter>,
+  now: Date
 ): Prisma.ArticleWhereInput => {
   if (filter?.pending != null) {
     return {
       revisions: {
         some: {
-          publishedAt:
-            filter.pending ? { gt: new Date() } : { not: { gt: new Date() } },
+          publishedAt: filter.pending ? { gt: now } : { not: { gt: now } },
         },
       },
     };
@@ -921,9 +1181,18 @@ const createExcludeIdsFilter = (
 };
 
 export const createArticleFilter = (
-  filter: Partial<ArticleFilter>
-): Prisma.ArticleWhereInput => ({
-  AND: [
+  filter: Partial<ArticleFilter>,
+  now = new Date()
+): Prisma.ArticleWhereInput => {
+  const statusFilters = [
+    createPublishedFilter(filter, now),
+    createDraftFilter(filter),
+    createPendingFilter(filter, now),
+  ]
+    .map(cleanArticleWhereInput)
+    .filter(item => !isEmptyPrismaFilter(item));
+
+  const filters = [
     createIdsFilter(filter),
     createTitleFilter(filter),
     createPreTitleFilter(filter),
@@ -937,12 +1206,10 @@ export const createArticleFilter = (
     createHiddenFilter(filter),
     createPeerIdFilter(filter),
     createExcludeIdsFilter(filter),
-    {
-      OR: [
-        createPublishedFilter(filter),
-        createDraftFilter(filter),
-        createPendingFilter(filter),
-      ],
-    },
-  ],
-});
+    statusFilters.length ? { OR: statusFilters } : {},
+  ]
+    .map(cleanArticleWhereInput)
+    .filter(item => !isEmptyPrismaFilter(item));
+
+  return filters.length ? { AND: filters } : {};
+};

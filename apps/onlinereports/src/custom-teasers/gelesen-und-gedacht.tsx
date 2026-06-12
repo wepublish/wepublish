@@ -1,12 +1,13 @@
 import styled from '@emotion/styled';
 import { Box, Typography } from '@mui/material';
 import {
+  selectTeaserImage,
   selectTeaserLead,
   selectTeaserTitle,
   TeaserWrapper,
 } from '@wepublish/block-content/website';
 import { ArticleTeaser } from '@wepublish/website/api';
-import { BuilderTeaserProps } from '@wepublish/website/builder';
+import { BuilderTeaserProps, Image } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
 import { useMemo } from 'react';
 
@@ -43,6 +44,7 @@ const GelesenUndGedachtUnstyled = ({
 }: Pick<BuilderTeaserProps, 'className' | 'teaser'>) => {
   const title = teaser && selectTeaserTitle(teaser);
   const lead = teaser && selectTeaserLead(teaser);
+  const image = teaser && selectTeaserImage(teaser);
 
   const [gelesen, source, gedacht] = useMemo(() => {
     return [title, ...(lead?.split(/\n+/, 2) ?? [])];
@@ -51,8 +53,10 @@ const GelesenUndGedachtUnstyled = ({
   return (
     <Box className={className}>
       <Gelesen>
-        <Box>Gelesen ...</Box>
-        <GelesenQuote variant={'subtitle2'}>{gelesen}</GelesenQuote>
+        <Box>{image ? 'Gesehen ...' : 'Gelesen ...'}</Box>
+        {image ?
+          <GelesenImage image={image} />
+        : <GelesenQuote variant={'subtitle2'}>{gelesen}</GelesenQuote>}
         <GelesenSource>{source}</GelesenSource>
       </Gelesen>
 
@@ -83,6 +87,9 @@ const Gelesen = styled(Box)`
 const GelesenQuote = styled(Typography)`
   font-size: 28px;
   font-weight: 600;
+`;
+const GelesenImage = styled(Image)`
+  width: 100%;
 `;
 const GelesenSource = styled('div')`
   font-size: 14px;

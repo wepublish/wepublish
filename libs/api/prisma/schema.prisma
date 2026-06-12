@@ -561,6 +561,11 @@ enum ProductType {
   Donation     @map("Donation")
 }
 
+enum AmountSelectionLayout {
+  Slider @map("Slider")
+  Picker @map("Picker")
+}
+
 model MemberPlan {
   id         String   @id @default(cuid())
   createdAt  DateTime @default(now())
@@ -577,6 +582,8 @@ model MemberPlan {
   amountPerMonthMax              Float?
   amountPerMonthTarget           Float?
   yearlyAmount                   Int?
+  amountSelectionLayout          AmountSelectionLayout     @default(Slider)
+  presetAmounts                  Int[]                     @default([])
   availablePaymentMethods        AvailablePaymentMethod[]
   migrateToTargetPaymentMethod   PaymentMethod?           @relation("PaymentMethodMigration", fields: [migrateToTargetPaymentMethodID], references: [id])
   migrateToTargetPaymentMethodID String?
@@ -1513,9 +1520,10 @@ model PaywallBypass {
 }
 
 enum MailProviderType {
-  MAILGUN   @map("mailgun")
-  MAILCHIMP @map("mailchimp")
-  SLACK     @map("slack")
+  MAILGUN    @map("mailgun")
+  MAILCHIMP  @map("mailchimp")
+  MAILERSEND @map("mailersend")
+  SLACK      @map("slack")
 }
 
 model SettingMailProvider {

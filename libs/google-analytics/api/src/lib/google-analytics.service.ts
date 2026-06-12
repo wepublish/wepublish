@@ -1,7 +1,6 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { BetaAnalyticsDataClient } from '@google-analytics/data';
-import { JWTInput } from 'google-auth-library';
 import { format } from 'date-fns';
 import { HotAndTrendingDataSource } from '@wepublish/article/api';
 import { getMaxTake } from '@wepublish/utils/api';
@@ -10,8 +9,21 @@ import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 
 export const GA_CLIENT_OPTIONS = Symbol('GA_CLIENT_OPTIONS');
 
+export type GoogleAnalyticsCredentials = {
+  type?: string;
+  client_email?: string;
+  private_key?: string;
+  private_key_id?: string;
+  project_id?: string;
+  client_id?: string;
+  client_secret?: string;
+  refresh_token?: string;
+  quota_project_id?: string;
+  universe_domain?: string;
+};
+
 export type GoogleAnalyticsConfig = {
-  credentials?: JWTInput;
+  credentials?: GoogleAnalyticsCredentials;
   property?: string | null;
   articlePrefix: string;
 };
@@ -66,7 +78,9 @@ export class GoogleAnalyticsService implements HotAndTrendingDataSource {
     this.consecutiveFailures = 0;
   }
 
-  private getClient(credentials: JWTInput): BetaAnalyticsDataClient {
+  private getClient(
+    credentials: GoogleAnalyticsCredentials
+  ): BetaAnalyticsDataClient {
     if (
       this.cachedClient &&
       this.cachedClientEmail === credentials.client_email
@@ -83,7 +97,7 @@ export class GoogleAnalyticsService implements HotAndTrendingDataSource {
 
   private async loadArticleViewMap(
     config: GoogleAnalyticsConfig & {
-      credentials: JWTInput;
+      credentials: GoogleAnalyticsCredentials;
       property: string;
     },
     start?: Date | null
@@ -188,7 +202,7 @@ export class GoogleAnalyticsService implements HotAndTrendingDataSource {
         () =>
           this.loadArticleViewMap(
             config as GoogleAnalyticsConfig & {
-              credentials: JWTInput;
+              credentials: GoogleAnalyticsCredentials;
               property: string;
             },
             start

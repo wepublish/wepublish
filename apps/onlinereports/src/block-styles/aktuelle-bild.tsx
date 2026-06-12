@@ -175,6 +175,7 @@ const AktuelleBildWrapper = styled(Box)`
     ${TeaserMetadata} {
       opacity: 1;
       padding: 2px 10px 4px 10px;
+      height: 23px;
       background: rgba(0, 0, 0, 0.7);
       transition: opacity 500ms ease;
       position: absolute;

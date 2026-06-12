@@ -1,7 +1,7 @@
 import { URL } from 'url';
 import FormData from 'form-data';
 import fetch from 'node-fetch';
-import type { FileUpload } from 'graphql-upload';
+import type { FileUpload } from '@wepublish/utils/api';
 import {
   ArrayBufferUpload,
   ImageTransformation,

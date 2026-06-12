@@ -1,14 +1,25 @@
 import styled from '@emotion/styled';
 import {
+  Button as MuiButton,
+  Dialog as MuiDialog,
+  DialogActions as MuiDialogActions,
+  DialogContent as MuiDialogContent,
+  DialogContentText as MuiDialogContentText,
+  DialogTitle as MuiDialogTitle,
+} from '@mui/material';
+import {
   CreateArticleMutationVariables,
   EditorBlockType,
   FullAuthorFragment,
   FullImageFragment,
   SettingName,
   useArticleQuery,
+  useArticleRevisionsQuery,
   useCreateArticleMutation,
   useCreateJwtForWebsiteLoginMutation,
+  useDiscardArticleDraftMutation,
   usePublishArticleMutation,
+  useRestoreArticleRevisionMutation,
   useSettingsListQuery,
   useUpdateArticleMutation,
 } from '@wepublish/editor/api';
@@ -29,17 +40,22 @@ import {
   PermissionControl,
   PublishArticlePanel,
   QuoteBlockListValue,
+  RevisionContentPreview,
   RichTextBlockListValue,
   StateColor,
   TitleBlockListValue,
   TitleBlockValue,
   useAuthorisation,
   useUnsavedChangesDialog,
+  VersionHistory,
+  VersionHistoryRevision,
 } from '@wepublish/ui/editor';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   MdCloudUpload,
+  MdDeleteOutline,
+  MdHistory,
   MdIntegrationInstructions,
   MdKeyboardBackspace,
   MdRemoveRedEye,
@@ -130,9 +146,25 @@ function ArticleEditor() {
     useUpdateArticleMutation({});
   const [publishArticle, { loading: isPublishing, error: publishError }] =
     usePublishArticleMutation({});
+  const [
+    restoreArticleRevision,
+    { loading: isRestoring, error: restoreError },
+  ] = useRestoreArticleRevisionMutation({});
+  const [discardArticleDraft, { loading: isDiscarding, error: discardError }] =
+    useDiscardArticleDraftMutation({});
 
   const [isMetaDrawerOpen, setMetaDrawerOpen] = useState(false);
   const [isPublishDialogOpen, setPublishDialogOpen] = useState(false);
+  const [isVersionHistoryOpen, setVersionHistoryOpen] = useState(false);
+  const [isVersionHistoryRequested, setVersionHistoryRequested] =
+    useState(false);
+  const [isDiscardDialogOpen, setDiscardDialogOpen] = useState(false);
+  const [previewRevisionId, setPreviewRevisionId] = useState<string | null>(
+    null
+  );
+  const [restoringRevisionId, setRestoringRevisionId] = useState<string | null>(
+    null
+  );
 
   const [publishedAt, setPublishedAt] = useState<Date>();
 
@@ -202,9 +234,44 @@ function ArticleEditor() {
     fetchPolicy: 'no-cache',
   });
 
+  const {
+    data: revisionsData,
+    refetch: refetchRevisions,
+    loading: isRevisionsLoading,
+  } = useArticleRevisionsQuery({
+    errorPolicy: 'all',
+    fetchPolicy: 'cache-and-network',
+    variables: { id: articleID! },
+    skip: !articleID || !isVersionHistoryRequested,
+  });
+
+  const allRevisions = revisionsData?.article?.revisions ?? [];
+
+  const revisions: VersionHistoryRevision[] = allRevisions.map(revision => ({
+    id: revision.id,
+    createdAt: revision.createdAt,
+    publishedAt: revision.publishedAt,
+    archivedAt: revision.archivedAt,
+    title: revision.title,
+    subtitle: revision.preTitle || revision.lead,
+  }));
+
+  const reloadRevisions = () =>
+    isVersionHistoryRequested ? refetchRevisions() : Promise.resolve();
+
+  const previewRevision = allRevisions.find(
+    revision => revision.id === previewRevisionId
+  );
+
   const isNotFound = articleData && !articleData.article;
   const isDisabled =
-    isLoading || isCreating || isUpdating || isPublishing || isNotFound;
+    isLoading ||
+    isCreating ||
+    isUpdating ||
+    isPublishing ||
+    isRestoring ||
+    isDiscarding ||
+    isNotFound;
   const canPreview = Boolean(articleData?.article?.draft);
 
   const [hasChanged, setChanged] = useState(false);
@@ -318,7 +385,11 @@ function ArticleEditor() {
 
   useEffect(() => {
     const error =
-      createError?.message ?? updateError?.message ?? publishError?.message;
+      createError?.message ??
+      updateError?.message ??
+      publishError?.message ??
+      restoreError?.message ??
+      discardError?.message;
     if (error)
       toaster.push(
         <Message
@@ -330,7 +401,63 @@ function ArticleEditor() {
           {error}
         </Message>
       );
-  }, [createError, updateError, publishError]);
+  }, [createError, updateError, publishError, restoreError, discardError]);
+
+  async function handleDiscardDraft() {
+    if (!articleID) {
+      return;
+    }
+
+    const { data } = await discardArticleDraft({
+      variables: { id: articleID },
+    });
+
+    if (data) {
+      setChanged(false);
+      await Promise.all([refetch({ id: articleID }), reloadRevisions()]);
+
+      toaster.push(
+        <Notification
+          type="success"
+          header={t('discardDraft.success')}
+          duration={2000}
+        />,
+        { placement: 'topEnd' }
+      );
+    }
+  }
+
+  async function handleRestoreRevision(revisionId: string) {
+    if (!articleID) {
+      return;
+    }
+
+    setRestoringRevisionId(revisionId);
+
+    try {
+      const { data } = await restoreArticleRevision({
+        variables: { id: articleID, revisionId },
+      });
+
+      if (data) {
+        setChanged(false);
+        await Promise.all([refetch({ id: articleID }), reloadRevisions()]);
+
+        toaster.push(
+          <Notification
+            type="success"
+            header={t('versionHistory.restored')}
+            duration={2000}
+          />,
+          { placement: 'topEnd' }
+        );
+
+        setVersionHistoryOpen(false);
+      }
+    } finally {
+      setRestoringRevisionId(null);
+    }
+  }
 
   function countRichTextBlocksChars(block: RichTextBlockListValue) {
     return countRichtextChars(0, block.value.richText);
@@ -448,7 +575,7 @@ function ArticleEditor() {
         />,
         { placement: 'topEnd' }
       );
-      await refetch({ id: articleID });
+      await Promise.all([refetch({ id: articleID }), reloadRevisions()]);
     } else {
       const { data } = await createArticle({ variables: input });
       if (data) {
@@ -516,7 +643,7 @@ function ArticleEditor() {
         { placement: 'topEnd' }
       );
     }
-    await refetch({ id: articleID });
+    await Promise.all([refetch({ id: articleID }), reloadRevisions()]);
   }
 
   useEffect(() => {
@@ -581,6 +708,47 @@ function ArticleEditor() {
                   >
                     {t('articleEditor.overview.metadata')}
                   </RIconButton>
+
+                  {!isNew && (
+                    <>
+                      <PermissionControl
+                        qualifyingPermissions={['CAN_GET_ARTICLE']}
+                      >
+                        <IconButton
+                          className="actionButton"
+                          icon={<MdHistory />}
+                          size="lg"
+                          disabled={isDisabled}
+                          onClick={() => {
+                            if (isVersionHistoryRequested) {
+                              refetchRevisions();
+                            }
+                            setVersionHistoryRequested(true);
+                            setVersionHistoryOpen(true);
+                          }}
+                        >
+                          {t('versionHistory.title')}
+                        </IconButton>
+                      </PermissionControl>
+
+                      {articleData?.article?.draft &&
+                        articleData?.article?.published && (
+                          <PermissionControl
+                            qualifyingPermissions={['CAN_CREATE_ARTICLE']}
+                          >
+                            <IconButton
+                              className="actionButton"
+                              icon={<MdDeleteOutline />}
+                              size="lg"
+                              disabled={isDisabled}
+                              onClick={() => setDiscardDialogOpen(true)}
+                            >
+                              {t('discardDraft.button')}
+                            </IconButton>
+                          </PermissionControl>
+                        )}
+                    </>
+                  )}
 
                   {isNew && createData == null ?
                     <PermissionControl
@@ -734,6 +902,56 @@ function ArticleEditor() {
           }}
         />
       </Modal>
+
+      <VersionHistory
+        open={isVersionHistoryOpen}
+        onClose={() => setVersionHistoryOpen(false)}
+        loading={isRevisionsLoading && revisions.length === 0}
+        revisions={revisions}
+        draftId={articleData?.article?.draft?.id}
+        pendingId={articleData?.article?.pending?.id}
+        publishedId={articleData?.article?.published?.id}
+        restoringId={restoringRevisionId}
+        canRestore={isAuthorized}
+        onRestore={handleRestoreRevision}
+        onPreview={setPreviewRevisionId}
+      />
+
+      <RevisionContentPreview
+        open={!!previewRevision}
+        onClose={() => setPreviewRevisionId(null)}
+        title={previewRevision?.title}
+        subtitle={previewRevision?.preTitle || previewRevision?.lead}
+        blocks={(previewRevision?.blocks ?? []).map(blockForQueryBlock)}
+      />
+
+      <MuiDialog
+        open={isDiscardDialogOpen}
+        onClose={() => setDiscardDialogOpen(false)}
+      >
+        <MuiDialogTitle>{t('discardDraft.confirm.title')}</MuiDialogTitle>
+        <MuiDialogContent>
+          <MuiDialogContentText>
+            {t('discardDraft.confirm.message')}
+          </MuiDialogContentText>
+        </MuiDialogContent>
+        <MuiDialogActions>
+          <MuiButton onClick={() => setDiscardDialogOpen(false)}>
+            {t('discardDraft.confirm.cancel')}
+          </MuiButton>
+          <MuiButton
+            color="error"
+            variant="contained"
+            startIcon={<MdDeleteOutline />}
+            onClick={() => {
+              setDiscardDialogOpen(false);
+              handleDiscardDraft();
+            }}
+          >
+            {t('discardDraft.confirm.confirm')}
+          </MuiButton>
+        </MuiDialogActions>
+      </MuiDialog>
     </>
   );
 }

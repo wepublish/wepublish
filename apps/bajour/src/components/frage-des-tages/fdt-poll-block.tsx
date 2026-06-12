@@ -12,7 +12,7 @@ import {
 } from '@wepublish/website/api';
 import { BuilderPollBlockProps } from '@wepublish/website/builder';
 import { useRouter } from 'next/router';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 
 import { CommentListContainer } from '../website-builder-overwrites/blocks/comment-list-container/comment-list-container-fdt';
 import { PollBlock } from '../website-builder-overwrites/blocks/poll-block/poll-block';
@@ -54,6 +54,9 @@ export const PollWrapper = styled('div')`
   ${({ theme }) => css`
     ${theme.breakpoints.up('md')} {
       grid-column: 1/5;
+      position: sticky;
+      top: ${theme.spacing(14)};
+      align-self: start;
     }
   `}
 `;
@@ -93,9 +96,6 @@ const StyledInfoBox = styled(InfoBox)`
 `;
 
 const PollBlockStyled = styled(PollBlock)`
-  position: sticky;
-  top: ${({ theme }) => theme.spacing(14)};
-
   button {
     text-transform: uppercase;
     border-width: 1px;
@@ -118,8 +118,6 @@ export const FdtPollBlock = ({ poll }: BuilderPollBlockProps) => {
     query: { slug },
   } = useRouter();
 
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<Error>();
   const { vote } = usePollBlock();
 
   const { data: articleData } = useArticleQuery({

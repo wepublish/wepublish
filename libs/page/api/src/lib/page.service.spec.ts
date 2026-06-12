@@ -4,7 +4,7 @@ import { Page, PrismaClient, TaggedPages } from '@prisma/client';
 import { PageDataloaderService } from './page-dataloader.service';
 import { DateFilterComparison, SortOrder } from '@wepublish/utils/api';
 import { PageSort } from './page.model';
-import { NotFoundException } from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { mapBlockUnionMap } from '@wepublish/block-content/api';
 
 jest.mock('@wepublish/block-content/api');
@@ -43,6 +43,9 @@ describe('PageService', () => {
       pageRevision: {
         updateMany: jest.fn(),
         update: jest.fn(),
+        findUnique: jest.fn(),
+        findFirst: jest.fn(),
+        findMany: jest.fn(),
       },
     };
 
@@ -317,6 +320,108 @@ describe('PageService', () => {
 
     expect(prismaMock.page.update?.mock.calls[0]).toMatchSnapshot();
     expect(prismaMock.pageRevision.update?.mock.calls[0]).toMatchSnapshot();
+  });
+
+  describe('version history', () => {
+    const buildRevision = (overrides = {}) => ({
+      id: 'rev-old',
+      pageId: '1234',
+      createdAt: new Date('2022-06-01'),
+      publishedAt: new Date('2022-06-02'),
+      archivedAt: new Date('2022-07-01'),
+      userId: 'old-user',
+      title: 'Old title',
+      description: 'Old description',
+      socialMediaTitle: 'Old social title',
+      socialMediaDescription: 'Old social description',
+      imageID: 'image-1',
+      socialMediaImageID: 'image-2',
+      blocks: [{ title: { title: 'Old', lead: 'Old' } }],
+      properties: [{ key: 'key', value: 'value', public: true }],
+      ...overrides,
+    });
+
+    it('should return all revisions ordered from newest to oldest', async () => {
+      prismaMock.pageRevision.findMany?.mockResolvedValue([]);
+
+      await service.getRevisions('1234');
+
+      expect(prismaMock.pageRevision.findMany?.mock.calls[0][0]).toEqual({
+        where: { pageId: '1234' },
+        orderBy: { createdAt: 'desc' },
+      });
+    });
+
+    it('should restore a revision as a fresh draft owned by the restoring user', async () => {
+      prismaMock.pageRevision.findUnique?.mockResolvedValue(buildRevision());
+      prismaMock.page.update?.mockResolvedValue({ id: '1234' });
+
+      await service.restorePageRevision('1234', 'rev-old', 'new-user');
+
+      const updateArg = prismaMock.page.update?.mock.calls[0][0];
+      const created = updateArg.data.revisions.create;
+
+      expect(prismaMock.pageRevision.findUnique?.mock.calls[0][0]).toEqual({
+        where: { id: 'rev-old' },
+      });
+      expect(updateArg.where).toEqual({ id: '1234' });
+      expect(updateArg.data.revisions.updateMany).toEqual({
+        where: { archivedAt: null, publishedAt: null },
+        data: { archivedAt: expect.any(Date) },
+      });
+      expect(created.id).toBeUndefined();
+      expect(created.createdAt).toBeUndefined();
+      expect(created.publishedAt).toBeUndefined();
+      expect(created.archivedAt).toBeUndefined();
+      expect(created.pageId).toBeUndefined();
+      expect(created.userId).toBe('new-user');
+      expect(created.title).toBe('Old title');
+      expect(created.description).toBe('Old description');
+      expect(created.blocks).toEqual([
+        { title: { title: 'Old', lead: 'Old' } },
+      ]);
+    });
+
+    it('should reject restoring a revision that does not belong to the page', async () => {
+      prismaMock.pageRevision.findUnique?.mockResolvedValue(
+        buildRevision({ pageId: 'another-page' })
+      );
+
+      await expect(
+        service.restorePageRevision('1234', 'rev-old', 'new-user')
+      ).rejects.toThrow(NotFoundException);
+
+      expect(prismaMock.page.update).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('discard draft', () => {
+    it('should archive the current draft when a published or pending fallback exists', async () => {
+      prismaMock.page.findUnique?.mockResolvedValue({ id: '1234' });
+      prismaMock.pageRevision.findFirst
+        ?.mockResolvedValueOnce({ id: 'draft-1', pageId: '1234' })
+        .mockResolvedValueOnce({ id: 'published-1', pageId: '1234' });
+
+      await service.discardPageDraft('1234');
+
+      expect(prismaMock.pageRevision.update?.mock.calls[0][0]).toEqual({
+        where: { id: 'draft-1' },
+        data: { archivedAt: expect.any(Date) },
+      });
+    });
+
+    it('should reject discarding a draft when no fallback revision exists', async () => {
+      prismaMock.page.findUnique?.mockResolvedValue({ id: '1234' });
+      prismaMock.pageRevision.findFirst
+        ?.mockResolvedValueOnce({ id: 'draft-1', pageId: '1234' })
+        .mockResolvedValueOnce(null);
+
+      await expect(service.discardPageDraft('1234')).rejects.toThrow(
+        BadRequestException
+      );
+
+      expect(prismaMock.pageRevision.update).not.toHaveBeenCalled();
+    });
   });
 
   describe('unhappy path', () => {

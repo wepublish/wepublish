@@ -39,6 +39,7 @@ import { MediaAdapterModule } from '@wepublish/image/api';
 import {
   BaseMailProvider,
   MailchimpMailProvider,
+  MailersendMailProvider,
   MailgunMailProvider,
   MailsModule,
 } from '@wepublish/mail/api';
@@ -78,6 +79,7 @@ import { PermissionModule } from '@wepublish/permissions/api';
 import { PhraseModule } from '@wepublish/phrase/api';
 import { PollModule } from '@wepublish/poll/api';
 import { GraphQLRichText } from '@wepublish/richtext/api';
+import { resolveJwtKeyPair } from './dev-jwt-keypair';
 import {
   SettingModule,
   SettingName,
@@ -183,6 +185,16 @@ import {
           await mailProvider.initDatabaseConfiguration(
             MailProviderType.MAILCHIMP
           );
+        } else if (mailProviderRaw?.type === 'mailersend') {
+          mailProvider = new MailersendMailProvider({
+            id: mailProviderRaw.id,
+            kv,
+            prisma,
+          });
+
+          await mailProvider.initDatabaseConfiguration(
+            MailProviderType.MAILERSEND
+          );
         } else if (mailProviderRaw?.type === 'slackmail') {
           mailProvider = new SlackMailProvider({
             id: mailProviderRaw.id,
@@ -201,10 +213,7 @@ import {
           throw new Error('A MailProvider must be configured.');
         }
 
-        const jwtPrivateKey = (config.get('JWT_PRIVATE_KEY') || '').replace(
-          /\\n/g,
-          '\n'
-        );
+        const { privateKey: jwtPrivateKey } = resolveJwtKeyPair(config);
         const hostURL = config.get('HOST_URL') || 'http://localhost:4000';
         const websiteURL = config.get('WEBSITE_URL') || 'http://localhost:3000';
 
@@ -420,25 +429,10 @@ import {
             configFile.general.sessionTTLDays
           : 7;
         const sessionTTL = MS_PER_DAY * sessionTTLDays;
-        const jwtPrivateKey = (config.get('JWT_PRIVATE_KEY') || '').replace(
-          /\\n/g,
-          '\n'
-        );
-        const jwtPublicKey = (config.get('JWT_PUBLIC_KEY') || '').replace(
-          /\\n/g,
-          '\n'
-        );
+        const { privateKey: jwtPrivateKey, publicKey: jwtPublicKey } =
+          resolveJwtKeyPair(config);
         const hostURL = config.getOrThrow('HOST_URL');
         const websiteURL = config.getOrThrow('WEBSITE_URL');
-
-        if (
-          process.env.NODE_ENV === 'production' &&
-          (!jwtPrivateKey || !jwtPublicKey)
-        ) {
-          console.error(
-            'WARNING: JWT_PRIVATE_KEY or JWT_PUBLIC_KEY not set in production environment!'
-          );
-        }
 
         return {
           sessionTTL,
@@ -558,9 +552,7 @@ import {
           config.getOrThrow('CONFIG_FILE_PATH')
         );
         const internalUrl = config.get('MEDIA_SERVER_INTERNAL_URL');
-        const jwtPrivateKey = config
-          .getOrThrow<string>('JWT_PRIVATE_KEY')
-          .replace(/\\n/g, '\n');
+        const { privateKey: jwtPrivateKey } = resolveJwtKeyPair(config);
 
         return new NovaMediaAdapter(
           config.getOrThrow('MEDIA_SERVER_URL'),

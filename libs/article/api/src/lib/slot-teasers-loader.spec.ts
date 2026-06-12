@@ -353,6 +353,17 @@ describe('SlotTeasersLoader', () => {
       item => item === 'article_pool_67'
     );
 
+    expect(mockArticleService.getArticles).toHaveBeenCalledWith(
+      expect.objectContaining({
+        filter: expect.objectContaining({
+          published: true,
+        }),
+      }),
+      expect.objectContaining({
+        skipTotalCount: true,
+      })
+    );
+
     // teasers from grid-flex-block should not be repeated in autofilled teaser-slots-blocks
     expect(hasItem66).toBe(false);
     expect(hasItem67).toBe(false);

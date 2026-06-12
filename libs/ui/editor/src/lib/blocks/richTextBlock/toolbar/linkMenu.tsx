@@ -22,6 +22,7 @@ import {
 import { useSlate } from 'slate-react';
 
 import { SubMenuContext } from '../../../atoms/toolbar';
+import { validateURL as isValidLinkUrl } from '../../../utility';
 import { WepublishEditor } from '../editor/wepublishEditor';
 
 const { Group, Control, ControlLabel, HelpText } = Form;
@@ -206,19 +207,7 @@ async function validateMail(mail: string) {
 }
 
 async function validateURL(url: string) {
-  if (url) {
-    const pattern = new RegExp(
-      '^(https?:\\/\\/)?' + // protocol
-        '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
-        '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
-        '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
-        '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
-        '(\\#[-a-z\\d_]*)?$',
-      'i'
-    );
-    return pattern.test(url);
-  }
-  return false;
+  return isValidLinkUrl(url);
 }
 
 export function RemoveLinkFormatButton() {

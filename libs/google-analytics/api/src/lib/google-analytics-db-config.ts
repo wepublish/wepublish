@@ -1,8 +1,10 @@
 import { PrismaClient, AnalyticsProviderType } from '@prisma/client';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 import { SecretCrypto } from '@wepublish/settings/api';
-import { JWTInput } from 'google-auth-library';
-import { GoogleAnalyticsConfig } from './google-analytics.service';
+import {
+  GoogleAnalyticsConfig,
+  GoogleAnalyticsCredentials,
+} from './google-analytics.service';
 
 export class GoogleAnalyticsDbConfig {
   private readonly ttl = 21600; // 6h
@@ -47,12 +49,14 @@ export class GoogleAnalyticsDbConfig {
       select: { credentials: true, property: true, articlePrefix: true },
     });
 
-    let decryptedCredentials: JWTInput | undefined;
+    let decryptedCredentials: GoogleAnalyticsCredentials | undefined;
 
     if (config?.credentials) {
       try {
         const decrypted = this.crypto.decrypt(config.credentials);
-        decryptedCredentials = JSON.parse(decrypted) as JWTInput;
+        decryptedCredentials = JSON.parse(
+          decrypted
+        ) as GoogleAnalyticsCredentials;
       } catch (e) {
         console.error(e);
         throw new Error(

@@ -9,8 +9,12 @@ import {
   PickType,
   registerEnumType,
 } from '@nestjs/graphql';
-import { SortOrder, PaginatedType } from '@wepublish/utils/api';
-import { FileUpload, GraphQLUpload } from 'graphql-upload';
+import {
+  GraphQLUpload,
+  PaginatedType,
+  SortOrder,
+  type FileUpload,
+} from '@wepublish/utils/api';
 
 export enum DocumentSort {
   CreatedAt = 'CreatedAt',

@@ -54,19 +54,25 @@ export class TeaserListBlockResolver {
         }
       } else {
         articles = (
-          await this.articleService.getArticles({
-            filter: {
-              tags: filter.tags,
-              published: true,
+          await this.articleService.getArticles(
+            {
+              filter: {
+                tags: filter.tags,
+                published: true,
+              },
+              sort:
+                sort === TeaserListBlockSort.UpdatedAt ?
+                  ArticleSort.ModifiedAt
+                : ArticleSort.PublishedAt,
+              order: SortOrder.Descending,
+              skip,
+              take,
             },
-            sort:
-              sort === TeaserListBlockSort.UpdatedAt ?
-                ArticleSort.ModifiedAt
-              : ArticleSort.PublishedAt,
-            order: SortOrder.Descending,
-            skip,
-            take,
-          })
+            {
+              cacheTtlSeconds: 60,
+              skipTotalCount: true,
+            }
+          )
         )?.nodes;
       }
 

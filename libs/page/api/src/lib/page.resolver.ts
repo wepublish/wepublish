@@ -150,6 +150,26 @@ export class PageResolver {
     return this.pageService.unpublishPage(id);
   }
 
+  @Permissions(CanCreatePage)
+  @Mutation(() => Page, {
+    description: `Discards the current draft and reverts to the latest published revision.`,
+  })
+  public discardPageDraft(@Args('id') id: string) {
+    return this.pageService.discardPageDraft(id);
+  }
+
+  @Permissions(CanCreatePage)
+  @Mutation(() => Page, {
+    description: `Restores an older revision of a page as a new draft.`,
+  })
+  public restorePageRevision(
+    @Args('id') id: string,
+    @Args('revisionId') revisionId: string,
+    @CurrentUser() user: UserSession | undefined
+  ) {
+    return this.pageService.restorePageRevision(id, revisionId, user?.user?.id);
+  }
+
   @ResolveField(() => PageRevision)
   async latest(@Parent() parent: PPage, @PreviewMode() isPreview: boolean) {
     const { id: pageId } = parent;
@@ -187,6 +207,12 @@ export class PageResolver {
     const { published } = await this.pageRevisionsDataloader.load(pageId);
 
     return published;
+  }
+
+  @Permissions(CanGetPage)
+  @ResolveField(() => [PageRevision])
+  async revisions(@Parent() parent: PPage) {
+    return this.pageService.getRevisions(parent.id);
   }
 
   @ResolveField(() => String, { nullable: true })

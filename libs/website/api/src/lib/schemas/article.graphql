@@ -155,6 +155,35 @@ query ArticleList(
   }
 }
 
+query RelatedArticleList(
+  $filter: ArticleFilter
+  $cursor: String
+  $take: Int
+  $skip: Int
+  $order: SortOrder
+  $sort: ArticleSort
+) {
+  articles(
+    filter: $filter
+    cursorId: $cursor
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
+    nodes {
+      ...SlimArticle
+    }
+
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+  }
+}
+
 query FullArticleList(
   $filter: ArticleFilter
   $cursorId: String

@@ -11,8 +11,12 @@ import {
   registerEnumType,
 } from '@nestjs/graphql';
 import { HasOptionalPeerLc } from '@wepublish/peering/api';
-import { SortOrder, PaginatedType } from '@wepublish/utils/api';
-import { FileUpload, GraphQLUpload } from 'graphql-upload';
+import {
+  GraphQLUpload,
+  PaginatedType,
+  SortOrder,
+  type FileUpload,
+} from '@wepublish/utils/api';
 
 export enum ImageSort {
   CreatedAt = 'CreatedAt',

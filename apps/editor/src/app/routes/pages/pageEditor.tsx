@@ -1,10 +1,21 @@
 import styled from '@emotion/styled';
 import {
+  Button as MuiButton,
+  Dialog as MuiDialog,
+  DialogActions as MuiDialogActions,
+  DialogContent as MuiDialogContent,
+  DialogContentText as MuiDialogContentText,
+  DialogTitle as MuiDialogTitle,
+} from '@mui/material';
+import {
   CreatePageMutationVariables,
   useCreateJwtForWebsiteLoginMutation,
   useCreatePageMutation,
+  useDiscardPageDraftMutation,
   usePageQuery,
+  usePageRevisionsQuery,
   usePublishPageMutation,
+  useRestorePageRevisionMutation,
   useUpdatePageMutation,
 } from '@wepublish/editor/api';
 import { CanPreview } from '@wepublish/permissions';
@@ -23,15 +34,20 @@ import {
   PageMetadataPanel,
   PermissionControl,
   PublishPagePanel,
+  RevisionContentPreview,
   StateColor,
   TeaserOverviewPanel,
   useAuthorisation,
   useUnsavedChangesDialog,
+  VersionHistory,
+  VersionHistoryRevision,
 } from '@wepublish/ui/editor';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   MdCloudUpload,
+  MdDeleteOutline,
+  MdHistory,
   MdIntegrationInstructions,
   MdKeyboardBackspace,
   MdRemoveRedEye,
@@ -107,9 +123,23 @@ function PageEditor() {
     useUpdatePageMutation();
   const [publishPage, { loading: isPublishing, error: publishError }] =
     usePublishPageMutation({});
+  const [restorePageRevision, { loading: isRestoring, error: restoreError }] =
+    useRestorePageRevisionMutation({});
+  const [discardPageDraft, { loading: isDiscarding, error: discardError }] =
+    useDiscardPageDraftMutation({});
 
   const [isMetaDrawerOpen, setMetaDrawerOpen] = useState(false);
   const [isPublishDialogOpen, setPublishDialogOpen] = useState(false);
+  const [isVersionHistoryOpen, setVersionHistoryOpen] = useState(false);
+  const [isVersionHistoryRequested, setVersionHistoryRequested] =
+    useState(false);
+  const [isDiscardDialogOpen, setDiscardDialogOpen] = useState(false);
+  const [previewRevisionId, setPreviewRevisionId] = useState<string | null>(
+    null
+  );
+  const [restoringRevisionId, setRestoringRevisionId] = useState<string | null>(
+    null
+  );
 
   const [publishedAt, setPublishedAt] = useState<Date>();
   const [metadata, setMetadata] = useState<PageMetadata>({
@@ -146,11 +176,46 @@ function PageEditor() {
     fetchPolicy: 'no-cache',
   });
 
+  const {
+    data: revisionsData,
+    refetch: refetchRevisions,
+    loading: isRevisionsLoading,
+  } = usePageRevisionsQuery({
+    errorPolicy: 'all',
+    fetchPolicy: 'cache-and-network',
+    variables: { id: pageID! },
+    skip: !pageID || !isVersionHistoryRequested,
+  });
+
+  const allRevisions = revisionsData?.page?.revisions ?? [];
+
+  const revisions: VersionHistoryRevision[] = allRevisions.map(revision => ({
+    id: revision.id,
+    createdAt: revision.createdAt,
+    publishedAt: revision.publishedAt,
+    archivedAt: revision.archivedAt,
+    title: revision.title,
+    subtitle: revision.description,
+  }));
+
+  const reloadRevisions = () =>
+    isVersionHistoryRequested ? refetchRevisions() : Promise.resolve();
+
+  const previewRevision = allRevisions.find(
+    revision => revision.id === previewRevisionId
+  );
+
   const { t } = useTranslation();
 
   const isNotFound = pageData && !pageData.page;
   const isDisabled =
-    isLoading || isCreating || isUpdating || isPublishing || isNotFound;
+    isLoading ||
+    isCreating ||
+    isUpdating ||
+    isPublishing ||
+    isRestoring ||
+    isDiscarding ||
+    isNotFound;
   const canPreview = Boolean(pageData?.page?.draft);
 
   const [hasChanged, setChanged] = useState(false);
@@ -230,7 +295,11 @@ function PageEditor() {
 
   useEffect(() => {
     const error =
-      createError?.message ?? updateError?.message ?? publishError?.message;
+      createError?.message ??
+      updateError?.message ??
+      publishError?.message ??
+      restoreError?.message ??
+      discardError?.message;
     if (error)
       toaster.push(
         <Message
@@ -242,7 +311,63 @@ function PageEditor() {
           {error}
         </Message>
       );
-  }, [createError, updateError, publishError]);
+  }, [createError, updateError, publishError, restoreError, discardError]);
+
+  async function handleDiscardDraft() {
+    if (!pageID) {
+      return;
+    }
+
+    const { data } = await discardPageDraft({
+      variables: { id: pageID },
+    });
+
+    if (data) {
+      setChanged(false);
+      await Promise.all([refetch({ id: pageID }), reloadRevisions()]);
+
+      toaster.push(
+        <Notification
+          type="success"
+          header={t('discardDraft.success')}
+          duration={2000}
+        />,
+        { placement: 'topEnd' }
+      );
+    }
+  }
+
+  async function handleRestoreRevision(revisionId: string) {
+    if (!pageID) {
+      return;
+    }
+
+    setRestoringRevisionId(revisionId);
+
+    try {
+      const { data } = await restorePageRevision({
+        variables: { id: pageID, revisionId },
+      });
+
+      if (data) {
+        setChanged(false);
+        await Promise.all([refetch({ id: pageID }), reloadRevisions()]);
+
+        toaster.push(
+          <Notification
+            type="success"
+            header={t('versionHistory.restored')}
+            duration={2000}
+          />,
+          { placement: 'topEnd' }
+        );
+
+        setVersionHistoryOpen(false);
+      }
+    } finally {
+      setRestoringRevisionId(null);
+    }
+  }
 
   function createInput(): CreatePageMutationVariables {
     return {
@@ -311,7 +436,7 @@ function PageEditor() {
         />,
         { placement: 'topEnd' }
       );
-      await refetch({ id: pageID });
+      await Promise.all([refetch({ id: pageID }), reloadRevisions()]);
     } else {
       const { data } = await createPage({ variables: input });
 
@@ -353,7 +478,7 @@ function PageEditor() {
           );
         }
       }
-      await refetch({ id: pageID });
+      await Promise.all([refetch({ id: pageID }), reloadRevisions()]);
     }
 
     setChanged(false);
@@ -421,6 +546,46 @@ function PageEditor() {
                   >
                     {t('pageEditor.overview.metadata')}
                   </RIconButton>
+
+                  {!isNew && (
+                    <>
+                      <PermissionControl
+                        qualifyingPermissions={['CAN_GET_PAGE']}
+                      >
+                        <IconButton
+                          className="actionButton"
+                          icon={<MdHistory />}
+                          size="lg"
+                          disabled={isDisabled}
+                          onClick={() => {
+                            if (isVersionHistoryRequested) {
+                              refetchRevisions();
+                            }
+                            setVersionHistoryRequested(true);
+                            setVersionHistoryOpen(true);
+                          }}
+                        >
+                          {t('versionHistory.title')}
+                        </IconButton>
+                      </PermissionControl>
+
+                      {pageData?.page?.draft && pageData?.page?.published && (
+                        <PermissionControl
+                          qualifyingPermissions={['CAN_CREATE_PAGE']}
+                        >
+                          <IconButton
+                            className="actionButton"
+                            icon={<MdDeleteOutline />}
+                            size="lg"
+                            disabled={isDisabled}
+                            onClick={() => setDiscardDialogOpen(true)}
+                          >
+                            {t('discardDraft.button')}
+                          </IconButton>
+                        </PermissionControl>
+                      )}
+                    </>
+                  )}
 
                   {isNew && createData == null ?
                     <PermissionControl
@@ -579,6 +744,56 @@ function PageEditor() {
           }}
         />
       </Modal>
+
+      <VersionHistory
+        open={isVersionHistoryOpen}
+        onClose={() => setVersionHistoryOpen(false)}
+        loading={isRevisionsLoading && revisions.length === 0}
+        revisions={revisions}
+        draftId={pageData?.page?.draft?.id}
+        pendingId={pageData?.page?.pending?.id}
+        publishedId={pageData?.page?.published?.id}
+        restoringId={restoringRevisionId}
+        canRestore={isAuthorized}
+        onRestore={handleRestoreRevision}
+        onPreview={setPreviewRevisionId}
+      />
+
+      <RevisionContentPreview
+        open={!!previewRevision}
+        onClose={() => setPreviewRevisionId(null)}
+        title={previewRevision?.title}
+        subtitle={previewRevision?.description}
+        blocks={(previewRevision?.blocks ?? []).map(blockForQueryBlock)}
+      />
+
+      <MuiDialog
+        open={isDiscardDialogOpen}
+        onClose={() => setDiscardDialogOpen(false)}
+      >
+        <MuiDialogTitle>{t('discardDraft.confirm.title')}</MuiDialogTitle>
+        <MuiDialogContent>
+          <MuiDialogContentText>
+            {t('discardDraft.confirm.message')}
+          </MuiDialogContentText>
+        </MuiDialogContent>
+        <MuiDialogActions>
+          <MuiButton onClick={() => setDiscardDialogOpen(false)}>
+            {t('discardDraft.confirm.cancel')}
+          </MuiButton>
+          <MuiButton
+            color="error"
+            variant="contained"
+            startIcon={<MdDeleteOutline />}
+            onClick={() => {
+              setDiscardDialogOpen(false);
+              handleDiscardDraft();
+            }}
+          >
+            {t('discardDraft.confirm.confirm')}
+          </MuiButton>
+        </MuiDialogActions>
+      </MuiDialog>
     </>
   );
 }

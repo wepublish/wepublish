@@ -5,6 +5,7 @@ import {
   FullImageFragment,
   PaymentMethod,
   Currency,
+  AmountSelectionLayout,
   ProductType,
   FullAvailablePaymentMethodFragment,
 } from '@wepublish/editor/api';
@@ -39,7 +40,7 @@ import {
   RichTextBlockValue,
   SelectPage,
 } from '@wepublish/ui/editor';
-import { MdAutoFixHigh, MdCheck } from 'react-icons/md';
+import { MdAdd, MdAutoFixHigh, MdCheck, MdDelete } from 'react-icons/md';
 import { Alert } from '@mui/material';
 import styled from '@emotion/styled';
 
@@ -108,6 +109,42 @@ export function MemberPlanForm({
     () => !memberPlan?.extendable && !!memberPlan?.maxCount,
     [memberPlan]
   );
+  const amountSelectionLayout =
+    memberPlan?.amountSelectionLayout ?? AmountSelectionLayout.Slider;
+  const presetAmounts = memberPlan?.presetAmounts ?? [];
+  const defaultPresetAmount =
+    memberPlan?.amountPerMonthTarget || memberPlan?.amountPerMonthMin || 1000;
+
+  function setPresetAmounts(presetAmounts: number[]): void {
+    if (!memberPlan) {
+      return;
+    }
+
+    setMemberPlan({
+      ...memberPlan,
+      presetAmounts,
+    });
+  }
+
+  function addPresetAmount(): void {
+    setPresetAmounts([...presetAmounts, defaultPresetAmount]);
+  }
+
+  function updatePresetAmount(index: number, amount: number | null): void {
+    setPresetAmounts(
+      presetAmounts.map((presetAmount, presetAmountIndex) =>
+        presetAmountIndex === index ? amount || 0 : presetAmount
+      )
+    );
+  }
+
+  function removePresetAmount(index: number): void {
+    setPresetAmounts(
+      presetAmounts.filter(
+        (_presetAmount, presetAmountIndex) => presetAmountIndex !== index
+      )
+    );
+  }
 
   function setExtendable(
     extendable: boolean,
@@ -525,6 +562,101 @@ export function MemberPlanForm({
               />
               <HelpText>{t('memberplanForm.yearlyAmountHelpText')}</HelpText>
             </Col>
+
+            <Col xs={24}>
+              <Divider />
+            </Col>
+
+            <Col xs={24}>
+              <Form.ControlLabel>
+                {t('memberplanForm.amountSelectionLayout')}
+              </Form.ControlLabel>
+              <SelectPicker
+                cleanable={false}
+                searchable={false}
+                block
+                value={amountSelectionLayout}
+                data={[
+                  {
+                    value: AmountSelectionLayout.Slider,
+                    label: t('memberplanForm.amountSelectionLayoutSlider'),
+                  },
+                  {
+                    value: AmountSelectionLayout.Picker,
+                    label: t('memberplanForm.amountSelectionLayoutPicker'),
+                  },
+                ]}
+                disabled={loading}
+                onChange={(layout: AmountSelectionLayout | null) => {
+                  if (!memberPlan) {
+                    return;
+                  }
+
+                  const nextLayout = layout ?? AmountSelectionLayout.Slider;
+
+                  setMemberPlan({
+                    ...memberPlan,
+                    amountSelectionLayout: nextLayout,
+                    presetAmounts:
+                      (
+                        nextLayout === AmountSelectionLayout.Picker &&
+                        !presetAmounts.length
+                      ) ?
+                        [defaultPresetAmount]
+                      : presetAmounts,
+                  });
+                }}
+              />
+              <HelpText>
+                {t('memberplanForm.amountSelectionLayoutHelpText')}
+              </HelpText>
+            </Col>
+
+            {amountSelectionLayout === AmountSelectionLayout.Picker && (
+              <Col xs={24}>
+                <Form.ControlLabel>
+                  {t('memberplanForm.presetAmounts')}
+                </Form.ControlLabel>
+                <HelpText>{t('memberplanForm.presetAmountsHelpText')}</HelpText>
+
+                {presetAmounts.map((presetAmount, index) => (
+                  <RowPaddingTop key={index}>
+                    <Col xs={20}>
+                      <CurrencyInput
+                        name={`presetAmounts-${index}`}
+                        currency={memberPlan?.currency ?? 'CHF'}
+                        centAmount={presetAmount}
+                        disabled={loading}
+                        onChange={centAmount =>
+                          updatePresetAmount(index, centAmount ?? null)
+                        }
+                      />
+                    </Col>
+                    <ColTextAlignEnd xs={4}>
+                      <Button
+                        appearance="subtle"
+                        disabled={loading}
+                        onClick={() => removePresetAmount(index)}
+                      >
+                        <MdDelete />
+                      </Button>
+                    </ColTextAlignEnd>
+                  </RowPaddingTop>
+                ))}
+
+                <RowPaddingTop>
+                  <Col xs={24}>
+                    <Button
+                      appearance="ghost"
+                      disabled={loading}
+                      onClick={addPresetAmount}
+                    >
+                      <MdAdd /> {t('memberplanForm.addPresetAmount')}
+                    </Button>
+                  </Col>
+                </RowPaddingTop>
+              </Col>
+            )}
           </Row>
         </Panel>
       </Col>

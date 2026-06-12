@@ -60,6 +60,31 @@ export const subscribeSchema = z.object({
   voucher: z.string().nullish(),
 });
 
+export function getExactPeriodAmountForSelectedPlan({
+  paymentPeriodicity,
+  monthlyAmount,
+  amountPerMonthMin,
+  amountPerMonthTarget,
+  yearlyAmount,
+}: {
+  paymentPeriodicity: PaymentPeriodicity;
+  monthlyAmount: number;
+  amountPerMonthMin?: number | null;
+  amountPerMonthTarget?: number | null;
+  yearlyAmount?: number | null;
+}): number | undefined {
+  if (
+    paymentPeriodicity !== PaymentPeriodicity.Yearly ||
+    yearlyAmount == null
+  ) {
+    return;
+  }
+
+  const defaultMonthlyAmount = amountPerMonthTarget ?? amountPerMonthMin;
+
+  return monthlyAmount === defaultMonthlyAmount ? yearlyAmount : undefined;
+}
+
 export const SubscribeWrapper = styled('form')`
   display: grid;
   gap: ${({ theme }) => theme.spacing(5)};
@@ -424,10 +449,13 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     productType: selectedMemberPlan?.productType ?? ProductType.Subscription,
     paymentPeriodicity: selectedPaymentPeriodicity,
     monthlyAmount,
-    periodAmount:
-      selectedPaymentPeriodicity === PaymentPeriodicity.Yearly ?
-        selectedMemberPlan?.yearlyAmount
-      : undefined,
+    periodAmount: getExactPeriodAmountForSelectedPlan({
+      paymentPeriodicity: selectedPaymentPeriodicity,
+      monthlyAmount,
+      amountPerMonthMin: selectedMemberPlan?.amountPerMonthMin,
+      amountPerMonthTarget: selectedMemberPlan?.amountPerMonthTarget,
+      yearlyAmount: selectedMemberPlan?.yearlyAmount,
+    }),
     currency: selectedMemberPlan?.currency ?? Currency.Chf,
     siteTitle,
     locale,
@@ -685,6 +713,10 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
                   amountPerMonthTarget={
                     selectedMemberPlan?.amountPerMonthTarget ?? undefined
                   }
+                  amountSelectionLayout={
+                    selectedMemberPlan?.amountSelectionLayout
+                  }
+                  presetAmounts={selectedMemberPlan?.presetAmounts}
                   currency={selectedMemberPlan?.currency ?? Currency.Chf}
                 />
               </SubscribeAmount>

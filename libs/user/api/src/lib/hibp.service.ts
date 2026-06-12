@@ -18,10 +18,10 @@ export class HibpService {
    * Falls back to false (allow) if the API is unreachable.
    */
   async isPasswordPwned(password: string): Promise<boolean> {
-    const sha1 = createHash('sha1')
-      .update(password)
-      .digest('hex')
-      .toUpperCase();
+    const sha1Hash = createHash('sha1');
+
+    // codeql[js/insufficient-password-hash] HIBP range lookup requires SHA-1; this is not password storage or verification.
+    const sha1 = sha1Hash.update(password).digest('hex').toUpperCase();
     const prefix = sha1.substring(0, 5);
     const suffix = sha1.substring(5);
 
