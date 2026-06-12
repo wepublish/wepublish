@@ -36,6 +36,7 @@ import {
 } from '@wepublish/block-content/api';
 import { TrackingPixel } from '@wepublish/tracking-pixel/api';
 import { hash as argon2Hash } from '@node-rs/argon2';
+import { resolveJwtKeyPair } from '../src/nestapp/dev-jwt-keypair';
 
 async function hashPassword(password: string) {
   return await argon2Hash(password);
@@ -82,10 +83,9 @@ function getText(min = 1, max = 10) {
 async function seedImages(prisma: PrismaClient) {
   const internalUrl = process.env.MEDIA_SERVER_INTERNAL_URL;
 
-  const jwtPrivateKey = (process.env.JWT_PRIVATE_KEY ?? '').replace(
-    /\\n/g,
-    '\n'
-  );
+  const { privateKey: jwtPrivateKey } = resolveJwtKeyPair({
+    get: key => process.env[key],
+  });
 
   const mediaAdapter = new NovaMediaAdapter(
     new URL(process.env.MEDIA_SERVER_URL),
