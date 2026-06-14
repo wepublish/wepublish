@@ -1,7 +1,6 @@
 import { BlockFormat } from '@wepublish/richtext';
 import { FullAuthorFragment } from '@wepublish/website/api';
 import { useMemo } from 'react';
-import { Descendant } from 'slate';
 
 const SPONSOR_TAG = 'sponsor';
 const PROMO_TAG = 'promo';

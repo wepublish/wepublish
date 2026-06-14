@@ -1,6 +1,6 @@
 import { EventStatus } from '@prisma/client';
 import { isBefore, startOfDay } from 'date-fns';
-import { htmlToSlate } from 'slate-serializers';
+import { generateJSON } from '@tiptap/html';
 import xml2js from 'xml2js';
 import { EventFromSource } from './events-import.model';
 import { XMLEventType } from './xmlTypes';
@@ -106,8 +106,9 @@ export class KulturagendaParser {
       ''
     );
     const fallbackDescription = this.getFallbackDesc(source);
-    const parsedDescription = htmlToSlate(
-      longDescription || shortDescription || castInfo || fallbackDescription
+    const parsedDescription = generateJSON(
+      longDescription || shortDescription || castInfo || fallbackDescription,
+      []
     );
 
     // we need to add type: 'paragraph' because that's how it was done in WP in the past

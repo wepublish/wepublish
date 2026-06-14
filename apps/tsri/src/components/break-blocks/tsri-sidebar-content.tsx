@@ -11,7 +11,6 @@ import {
 } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
 import { useMemo } from 'react';
-import { Element } from 'slate';
 
 import { BlockSiblings } from '../tsri-block-renderer';
 import { TsriBreakBlockType } from './tsri-base-break-block';

@@ -1,13 +1,13 @@
 import styled from '@emotion/styled';
 import { css } from '@mui/material';
 import { RichTextBlock } from '@wepublish/block-content/website';
+import { RichtextJSONDocument } from '@wepublish/richtext';
 import { Button } from '@wepublish/ui';
 import { memo, useState } from 'react';
 import { MdInfoOutline } from 'react-icons/md';
-import { Descendant } from 'slate';
 
 interface InfoBoxProps {
-  richText: Descendant[];
+  richText: RichtextJSONDocument;
   className?: string;
 }
 

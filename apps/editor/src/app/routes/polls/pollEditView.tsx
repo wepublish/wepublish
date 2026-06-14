@@ -7,6 +7,7 @@ import {
   usePollQuery,
   useUpdatePollMutation,
 } from '@wepublish/editor/api';
+import { RichtextJSONDocument } from '@wepublish/richtext';
 import {
   createCheckedPermissionComponent,
   PollAnswers,
@@ -28,7 +29,6 @@ import {
   Schema,
   toaster,
 } from 'rsuite';
-import { Descendant } from 'slate';
 
 const DateLabel = styled(Form.ControlLabel)`
   margin-right: 8px;
@@ -300,16 +300,17 @@ function PollEditView() {
                 header={t('pollEditView.infoText')}
                 bordered
               >
-                <div className="richTextFrame">
-                  {poll && (
-                    <RichTextBlock
-                      value={poll?.infoText ? poll?.infoText : []}
-                      onChange={value => {
-                        setPoll({ ...poll, infoText: value as Descendant[] });
-                      }}
-                    />
-                  )}
-                </div>
+                <RichTextBlock
+                  value={poll?.infoText}
+                  onChange={value => {
+                    if (poll) {
+                      setPoll({
+                        ...poll,
+                        infoText: value as RichtextJSONDocument,
+                      });
+                    }
+                  }}
+                />
               </Panel>
             </Col>
           </Row>

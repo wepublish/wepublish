@@ -3,8 +3,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { EventStatus, PrismaClient } from '@prisma/client';
 import { MediaAdapter } from '@wepublish/image/api';
 import { SortOrder } from '@wepublish/utils/api';
-import { Descendant } from 'slate';
-import { htmlToSlate } from 'slate-serializers';
 import {
   EventFromSource,
   ImportedEventSort,
@@ -22,9 +20,8 @@ export const mockImportableEvents: EventFromSource[] = [
     createdAt: new Date(),
     modifiedAt: new Date(),
     name: 'some name',
-    description: htmlToSlate(
-      '<p>some description</p>'
-    ) as unknown as Descendant[],
+    // description: htmlToSlate('<p>some description</p>') as RichtextJSONDocument,
+    description: [],
     status: EventStatus.Scheduled,
     location: 'some location',
     imageUrl: 'some image url',

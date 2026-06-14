@@ -129,7 +129,6 @@ import {
   MdDashboard,
   MdDescription,
   MdEvent,
-  MdEventAvailable,
   MdExtension,
   MdFactCheck,
   MdFileCopy,
@@ -656,7 +655,8 @@ export function Base({ children }: BaseProps) {
                       </Nav.Item>
                     </PermissionControl>
 
-                    <PermissionControl
+                    {/* @TODO: Disabled until HTML to PM works */}
+                    {/* <PermissionControl
                       qualifyingPermissions={[
                         CanGetEvent.id,
                         CanUpdateEvent.id,
@@ -671,7 +671,7 @@ export function Base({ children }: BaseProps) {
                       >
                         {t('navbar.importableEvents')}
                       </Nav.Item>
-                    </PermissionControl>
+                    </PermissionControl> */}
 
                     <PermissionControl
                       qualifyingPermissions={[
