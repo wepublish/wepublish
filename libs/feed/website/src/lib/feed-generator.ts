@@ -6,7 +6,7 @@ import { generateHTML } from '@tiptap/html';
 import { RichtextElements, RichtextJSONDocument } from '@wepublish/richtext';
 
 export const toHtml = async (document: RichtextJSONDocument) => {
-  const { editorConfig } = await import('@wepublish/richtext/editor');
+  const { editorConfig } = await import('@wepublish/richtext/editor/config');
 
   return generateHTML(document, editorConfig.extensions ?? []);
 };

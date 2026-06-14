@@ -20,8 +20,19 @@ export const mockImportableEvents: EventFromSource[] = [
     createdAt: new Date(),
     modifiedAt: new Date(),
     name: 'some name',
-    // description: htmlToSlate('<p>some description</p>') as RichtextJSONDocument,
-    description: [],
+    description: {
+      type: 'doc',
+      attrs: undefined,
+      content: [
+        {
+          type: 'paragraph',
+          attrs: {},
+          content: [
+            { text: 'some description', attrs: undefined, type: 'text' },
+          ],
+        },
+      ],
+    },
     status: EventStatus.Scheduled,
     location: 'some location',
     imageUrl: 'some image url',

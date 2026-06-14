@@ -7,7 +7,7 @@ import { memo, useState } from 'react';
 import { MdInfoOutline } from 'react-icons/md';
 
 interface InfoBoxProps {
-  richText: RichtextJSONDocument;
+  richText: RichtextJSONDocument | null | undefined;
   className?: string;
 }
 
@@ -86,8 +86,7 @@ const InfoBoxContent = styled('div')`
 
 const ReadMore = styled(Button)`
   margin: ${({ theme }) => theme.spacing(1.5)} auto 0;
-  padding: ${({ theme }) => theme.spacing(0.5)}
-    ${({ theme }) => theme.spacing(1.5)};
+  padding: ${({ theme }) => theme.spacing(0.5, 1.5)};
   text-transform: uppercase;
   letter-spacing: 1px;
   font-weight: 300;
