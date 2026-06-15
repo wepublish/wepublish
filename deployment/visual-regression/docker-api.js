@@ -6,16 +6,20 @@ const { mkdir } = require("fs/promises");
 
 const docker = new Docker({ socketPath: "/var/run/docker.sock" });
 
-async function buildImage(tag, contextDir, dockerfile, logDirPath) {
+async function buildImage(tag, contextDir, dockerfile, logDirPath, buildArgs = {}) {
   await mkdir(logDirPath, { recursive: true });
   const logPath = `${logDirPath}/${tag}-img.log`;
   const log = createWriteStream(logPath);
+  const argFlags = Object.entries(buildArgs).flatMap(
+    ([k, v]) => ["--build-arg", `${k}=${v}`]
+  );
   console.log(`building image: '${tag}'. consult logs here: ${logPath}`);
+
   try {
     await new Promise((resolve, reject) => {
       const child = execFile(
         "docker",
-        ["build", "-t", tag, "-f", dockerfile, contextDir],
+        ["build", "-t", tag, ...argFlags, "-f", dockerfile, contextDir],
         (err) => (err ? reject(err) : resolve())
       );
       child.stdout.pipe(log);
@@ -111,7 +115,7 @@ function collectStream(execStream) {
   });
 }
 
-async function exec(idOrName, cmd) {
+async function execInContainer(idOrName, cmd) {
   const container = docker.getContainer(idOrName);
   const e = await container.exec({
     Cmd: cmd,
@@ -127,7 +131,6 @@ async function exec(idOrName, cmd) {
 }
 
 module.exports = {
-  docker,
   waitUntil,
   inspectContainer,
   createContainer,
@@ -137,6 +140,6 @@ module.exports = {
   stopContainer,
   removeContainer,
   waitContainer,
-  exec,
+  execInContainer,
   buildImage,
 };

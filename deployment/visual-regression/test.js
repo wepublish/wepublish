@@ -3,7 +3,7 @@ const fs = require("fs/promises");
 const { promisify } = require('util');
 const exec = promisify(require('child_process').exec);
 const { pullDbDump } = require("./pull-db-dump.js");
-const { startAndSeedDb } = require("./temporary-postgres.js");
+const { buildPostgresImg, createPostgresContainer, startPostgresContainer, getDbConnectionString, waitUntilPostgresIsReady } = require("./temporary-postgres.js");
 const { startProject, teardownProcesses, getFreePort } = require("./processes.js");
 const path = require('path');
 const { createContainer, startContainer, attachContainer, buildImage, removeContainer, waitContainer } = require("./docker-api.js");
@@ -56,8 +56,11 @@ async function createScreenshotContainer(medium, baselineCommit, currentCommit, 
     currentUiPort
   );
   await removeContainer(`${medium}-screenshots`);
-  return await createContainer(containerConfig);
+  const containerId = await createContainer(containerConfig);
+  console.log(`screenshot container created`);
+  return containerId;
 }
+
 
 async function deleteAndCreateFolder(folderPath) {
   await fs.rm(folderPath, { recursive: true, force: true });
@@ -69,11 +72,12 @@ async function deleteAndCreateFolders(paths) {
 }
 
 async function npmInstall(cwd) {
-  console.log(`run npm install in ${cwd}`);
+  console.log(`run npm install in ${cwd} `);
   await exec("npm install", { cwd });
 }
 
 async function migrateDatabase(dbConnectionString, cwd, logDir) {
+  console.log(`running migration on connection string: ${dbConnectionString}`);
   const { stdout, stderr } = await exec("npx prisma migrate deploy ", {
     env: {
       ...process.env, DATABASE_URL: dbConnectionString, DIRECT_DATABASE_URL: dbConnectionString
@@ -83,11 +87,11 @@ async function migrateDatabase(dbConnectionString, cwd, logDir) {
   await fs.writeFile(path.join(logDir, "prisma-migrate.err.log"), stderr);
 }
 
-async function main(medium, baselineCommitHash, currentCommitHash, apiPort, uiPort) {
-  if (!medium || !baselineCommitHash || !currentCommitHash || !apiPort || !uiPort) {
+async function main(medium, baselineCommitHash, currentCommitHash) {
+  if (!medium || !baselineCommitHash || !currentCommitHash) {
     console.error(
       "Missing required environment variables.\n" +
-      "Required: MEDIUM, BASELINE_COMMIT_HASH, CURRENT_COMMIT_HASH, API_PORT, UI_PORT"
+      "Required: MEDIUM, BASELINE_COMMIT_HASH, CURRENT_COMMIT_HASH"
     );
     process.exit(1);
   }
@@ -108,9 +112,18 @@ async function main(medium, baselineCommitHash, currentCommitHash, apiPort, uiPo
   await deleteAndCreateFolders([logPathCurrent, logPathBaseline, artifactsPath]);
   const screenshotContainerPromise = buildImage(`${medium}-screenshots`, ".", `${medium}-scripts/Dockerfile`, `${medium}/logs`).then(_ =>
     createScreenshotContainer(medium, baselineCommitHash, currentCommitHash, uiPortBaseline, uiPortCurrent));
-  const dumpPromise = pullDbDump(medium);
-  const baselineDbPromise = dumpPromise.then(dump => startAndSeedDb(dump, "baseline"));
-  const currentDbPromise = dumpPromise.then(dump => startAndSeedDb(dump, "current"));
+  const buildPostgresPromise = pullDbDump(medium)
+    .then(_ => buildPostgresImg(medium, `${medium}/logs`));
+  const baselineDbPromise = buildPostgresPromise
+    .then(_ => createPostgresContainer(medium, "baseline"))
+    .then(startPostgresContainer)
+    .then(waitUntilPostgresIsReady)
+    .then(getDbConnectionString);
+  const currentDbPromise = buildPostgresPromise
+    .then(_ => createPostgresContainer(medium, "current"))
+    .then(startPostgresContainer)
+    .then(waitUntilPostgresIsReady)
+    .then(getDbConnectionString);
   const baselineCodePromise = createWorkTree(baselineCommitHash, baselineDir)
     .then(() => npmInstall(baselineDir));
   const currentCodePromise = createWorkTree(currentCommitHash, currentDir)
@@ -146,4 +159,4 @@ async function main(medium, baselineCommitHash, currentCommitHash, apiPort, uiPo
   ]);
 }
 
-main(process.env.MEDIUM, process.env.BASELINE_COMMIT_HASH, process.env.CURRENT_COMMIT_HASH, Number(process.env.API_PORT), Number(process.env.UI_PORT));
+main(process.env.MEDIUM, process.env.BASELINE_COMMIT_HASH, process.env.CURRENT_COMMIT_HASH);

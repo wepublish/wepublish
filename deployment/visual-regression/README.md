@@ -1,6 +1,7 @@
 # Visual Regression Tool
 
-Compares two commits of a we.publish medium by spinning both up side by side, taking screenshots of a configured set of pages across several browsers/devices, and producing an HTML diff report.
+Compares two commits of a we.publish medium by spinning both up side by side,
+taking screenshots across several browsers/devices, and producing an HTML diff report.
 
 ## How it works
 
@@ -8,14 +9,15 @@ For a given medium, baseline commit, and current commit, the tool runs the follo
 
 1. **Worktrees** — checks out both commits into sibling worktrees (`../wp-baseline`, `../wp-current`) and runs `npm install` in each.
 2. **Databases** — downloads the latest medium dump from `files.wepublish.cloud` (cached via `ETag` / `Last-Modified`) and seeds two throwaway Postgres containers, one per commit. The containers are created from scratch on every run and torn down at the end, so each run starts from a clean, identical state.
-3. **Screenshot image** — builds the medium-specific Docker image containing Playwright and the page list.
+3. **Screenshot image** — builds the medium-specific Docker image containing the playwright scripts, which are executed on headless browsers.
 
 Once the worktrees and databases are ready, it runs Prisma migrations and starts the API + UI for each commit in parallel.
-When both stacks are up, the screenshot container visits each configured page on both stacks and compares the screenshots with [honeydiff](https://github.com/vizzly-testing/honeydiff). It always writes an HTML report to `<medium>/artifacts/`; the raw `baseline_*.png`, `current_*.png`, and `diff_*.png` files are only written for pages where a visual difference was detected.
+When both stacks are up, the screenshot container visits each configured page on both stacks and compares the screenshots with [honeydiff](https://github.com/vizzly-testing/honeydiff).
+It always writes an HTML report to `<medium>/artifacts/`; the raw `baseline_*.png`, `current_*.png`, and `diff_*.png` files are only written for pages where a visual difference was detected.
 
 ## Setup
 
-Requires Node.js 22+ and a running Docker daemon.
+Requires Node.js and a running Docker daemon.
 
 Copy `.env.example` to `.env` and fill in:
 
@@ -24,12 +26,11 @@ Copy `.env.example` to `.env` and fill in:
 
 ## Running
 
-Invoke `test.js` with the medium, the two commits, and the ports the medium normally runs on:
+Invoke `test.js` with the medium and the two commits you want to compare:
 
 - `MEDIUM` — the medium to test (must match a `<medium>-scripts/` folder, e.g. `hauptstadt`, `tsri`).
 - `BASELINE_COMMIT_HASH` — the reference commit assumed to be correct.
 - `CURRENT_COMMIT_HASH` — the commit under test.
-- `API_PORT` / `UI_PORT` — base ports for the medium. The tool derives `+1000` / `+1001` offsets for the baseline and current stacks so they don't collide.
 
 Example:
 
@@ -37,12 +38,10 @@ Example:
 MEDIUM="hauptstadt" \
   BASELINE_COMMIT_HASH="a8224dcb3ebf65eb91afc8bbe8d70318548b0553" \
   CURRENT_COMMIT_HASH="58ab932d839710406b5dc8b7978607f6eda91b1d" \
-  API_PORT=4000 \
-  UI_PORT=4200 \
   node test.js
 ```
 
-See `example-hauptstadt.sh` for a ready-to-run invocation. The report ends up at `<medium>/artifacts/report.html`.
+See `example-hauptstadt.sh` or `example-tsri.sh` for a ready-to-run invocation. The report ends up at `<medium>/artifacts/report.html`.
 
 ## Adding a new medium
 
@@ -52,7 +51,9 @@ A medium is defined by a `<medium>-scripts/` folder containing a `Dockerfile` an
 - `BASELINE_COMMIT` / `CURRENT_COMMIT` — the two commits being compared (used in the report).
 - `BASELINE_PORT` / `CURRENT_PORT` — the two stacks are reachable at `localhost:<port>`.
 
-Shared helpers for taking full-page screenshots (`take-screenshot.js`), comparing them (`compare-screenshot.js`), and rendering the HTML report (`report-results.js`) live in `shared-scripts/`. Use `hauptstadt-scripts/` or `tsri-scripts/` as templates — the medium-specific script only needs to declare the list of pages to visit (see `hauptstadt-scripts`) and wire the shared helpers together.
+Shared helpers for taking full-page screenshots (`take-screenshot.js`), comparing them (`compare-screenshot.js`), and rendering the HTML report (`report-results.js`) live in `shared-scripts/`. Use `hauptstadt-scripts/` or `tsri-scripts/` as templates.
+The medium-specific script only needs to declare the list of pages to visit (see `hauptstadt-scripts`) and wire the shared helpers together.
+More involved scripts are also possible.
 
 ## Tools used
 - [Playwright](https://playwright.dev/) for browser automation and screenshots. Devices come from Playwright's [built-in descriptors](https://github.com/microsoft/playwright/blob/main/packages/playwright-core/src/server/deviceDescriptorsSource.json) (defaults are Desktop Chrome/Firefox/Safari, Pixel 10, iPhone 16).
