@@ -36,7 +36,7 @@ jobs:
       - name: Build dashboard
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: node tools/build-deploy-dashboard.mjs
+        run: node deployment/dashboard/build-deploy-dashboard.mjs
 
       - uses: actions/configure-pages@v5
 
