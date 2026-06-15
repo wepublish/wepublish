@@ -163,9 +163,13 @@ export const RichtextEditor = forwardRef<HTMLDivElement, RichtextEditorProps>(
           });
         },
       },
-      [disabled, autofocus]
+      [autofocus]
     );
     const providerValue = useMemo(() => ({ editor }), [editor]);
+
+    useEffect(() => {
+      editor.setEditable(!disabled);
+    }, [editor, disabled]);
 
     useEffect(() => {
       if (defaultValue) {
