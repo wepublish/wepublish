@@ -48,7 +48,7 @@ export const PaymentAmountSlider = forwardRef<
           <Slider
             ref={ref}
             name={name}
-            value={value}
+            value={value ?? amountPerMonthMin}
             onChange={(_, val) => onChange(val as number)}
             min={amountPerMonthMin}
             max={amountPerMonthMax ?? amountPerMonthMin * 5}

@@ -1,0 +1,7 @@
+{
+  "subscribe": {
+    "memberplan": {
+      "price": "{amountPerMonthMin, select, 0 {Gratis} other {Ab {monthlyPrice} {extendable, select, true {pro Monat} other {}}}}"
+    }
+  }
+}

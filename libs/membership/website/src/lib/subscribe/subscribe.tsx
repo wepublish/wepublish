@@ -561,7 +561,21 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
           render={({ field }) => (
             <MemberPlanPicker
               {...field}
-              onChange={memberPlanId => field.onChange(memberPlanId)}
+              onChange={memberPlanId => {
+                field.onChange(memberPlanId);
+
+                const memberPlan = memberPlans.data?.memberPlans.nodes.find(
+                  ({ id }) => id === memberPlanId
+                );
+
+                if (memberPlan) {
+                  setValue<'monthlyAmount'>(
+                    'monthlyAmount',
+                    memberPlan.amountPerMonthTarget ||
+                      memberPlan.amountPerMonthMin
+                  );
+                }
+              }}
               memberPlans={memberPlans.data?.memberPlans.nodes ?? []}
             />
           )}

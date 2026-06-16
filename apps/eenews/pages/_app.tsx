@@ -47,11 +47,15 @@ import { useMemo } from 'react';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
+import deOverridden from '../locales/deOverridden.json';
+import { EeNewsMemberPlanPicker } from '../src/components/eenews-memberplan-picker';
+import { EeNewsMemberPlanItem } from '../src/components/eenews-memberplan-picker-item';
+
 setDefaultOptions({
   locale: de,
 });
 
-initWePublishTranslator();
+initWePublishTranslator(deOverridden);
 z.setErrorMap(zodI18nMap);
 
 const Spacer = styled('div')`
@@ -124,6 +128,8 @@ function CustomApp({
               Head={Head}
               Script={Script}
               elements={{ Link: NextWepublishLink }}
+              MemberPlanPicker={EeNewsMemberPlanPicker}
+              MemberPlanItem={EeNewsMemberPlanItem}
               date={{ format: dateFormatter }}
               meta={{ siteTitle }}
             >

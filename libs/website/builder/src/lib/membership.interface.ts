@@ -61,6 +61,7 @@ export type BuilderMemberPlanPickerProps = {
   onChange: (memberPlanId: string) => void;
   name?: string;
   value?: string;
+  sortBy?: 'priceAsc';
 };
 
 export type BuilderMemberPlanItemProps = Pick<
