@@ -20,7 +20,8 @@ async function visitPagesAndTakeScreenshots(context, baseUrl, pagesToVisit) {
   return Promise.all(pagesToVisit.map(async ({ key, url }) => {
     const playwrightPage = await context.newPage();
     try {
-      await visitPage(playwrightPage, `${baseUrl}/${url}`);
+      const urlToVisit = `${baseUrl}/${url}`;
+      await visitPage(playwrightPage, urlToVisit);
       try {
         const screenshotBuffer = await playwrightPage.screenshot({ fullPage: true });
         return { key, screenshotBuffer };

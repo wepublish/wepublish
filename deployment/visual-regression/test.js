@@ -77,7 +77,6 @@ async function npmInstall(cwd) {
 }
 
 async function migrateDatabase(dbConnectionString, cwd, logDir) {
-  console.log(`running migration on connection string: ${dbConnectionString}`);
   const { stdout, stderr } = await exec("npx prisma migrate deploy ", {
     env: {
       ...process.env, DATABASE_URL: dbConnectionString, DIRECT_DATABASE_URL: dbConnectionString
@@ -86,6 +85,25 @@ async function migrateDatabase(dbConnectionString, cwd, logDir) {
   await fs.writeFile(path.join(logDir, "prisma-migrate.out.log"), stdout);
   await fs.writeFile(path.join(logDir, "prisma-migrate.err.log"), stderr);
 }
+
+function setupSide(medium, label, commitHash, dir, apiPort, uiPort, postgresImgPromise, logPath) {
+  const dbPromise = postgresImgPromise
+    .then(() => createPostgresContainer(medium, label))
+    .then(startPostgresContainer)
+    .then(waitUntilPostgresIsReady)
+    .then(getDbConnectionString);
+  const codePromise = createWorkTree(commitHash, dir).then(() => {
+    console.log(`running npm install in '${label}' work tree`);
+    return npmInstall(dir);
+  });
+  const runningPromise = Promise.all([dbPromise, codePromise])
+    .then(([{ dbConnectionString }]) => {
+      console.log(`running database migration for ${label}`);
+      return migrateDatabase(dbConnectionString, dir, logPath)
+        .then(() => startProject(logPath, dir, dbConnectionString, medium, apiPort, uiPort));
+    });
+  return { dbPromise, runningPromise };
+};
 
 async function main(medium, baselineCommitHash, currentCommitHash) {
   if (!medium || !baselineCommitHash || !currentCommitHash) {
@@ -107,33 +125,15 @@ async function main(medium, baselineCommitHash, currentCommitHash) {
   const baselineDir = path.resolve(`${root}/../wp-baseline`);
   const currentDir = path.resolve(`${root}/../wp-current`);
   console.log(`starting visual regression tool for ${medium}. baseline is ${baselineCommitHash}, compare against ${currentCommitHash}`);
-
-  console.log("preparing...");
   await deleteAndCreateFolders([logPathCurrent, logPathBaseline, artifactsPath]);
-  const screenshotContainerPromise = buildImage(`${medium}-screenshots`, ".", `${medium}-scripts/Dockerfile`, `${medium}/logs`).then(_ =>
+  const screenshotContainerPromise = buildImage(`${medium}-screenshots`, ".", `${medium}-scripts/Dockerfile`, `${medium}/logs`).then(() =>
     createScreenshotContainer(medium, baselineCommitHash, currentCommitHash, uiPortBaseline, uiPortCurrent));
-  const buildPostgresPromise = pullDbDump(medium)
-    .then(_ => buildPostgresImg(medium, `${medium}/logs`));
-  const baselineDbPromise = buildPostgresPromise
-    .then(_ => createPostgresContainer(medium, "baseline"))
-    .then(startPostgresContainer)
-    .then(waitUntilPostgresIsReady)
-    .then(getDbConnectionString);
-  const currentDbPromise = buildPostgresPromise
-    .then(_ => createPostgresContainer(medium, "current"))
-    .then(startPostgresContainer)
-    .then(waitUntilPostgresIsReady)
-    .then(getDbConnectionString);
-  const baselineCodePromise = createWorkTree(baselineCommitHash, baselineDir)
-    .then(() => npmInstall(baselineDir));
-  const currentCodePromise = createWorkTree(currentCommitHash, currentDir)
-    .then(() => npmInstall(currentDir));
-  const baselineRunningPromise = Promise.all([baselineDbPromise, baselineCodePromise])
-    .then(([{ dbConnectionString }]) => migrateDatabase(dbConnectionString, baselineDir, logPathBaseline)
-      .then(() => startProject(logPathBaseline, baselineDir, dbConnectionString, medium, apiPortBaseline, uiPortBaseline)));
-  const currentRunningPromise = Promise.all([currentDbPromise, currentCodePromise])
-    .then(([{ dbConnectionString }]) => migrateDatabase(dbConnectionString, currentDir, logPathCurrent)
-      .then(() => startProject(logPathCurrent, currentDir, dbConnectionString, medium, apiPortCurrent, uiPortCurrent)));
+  const postgresImgPromise = pullDbDump(medium)
+    .then(() => buildPostgresImg(medium, `${medium}/logs`));
+  const { dbPromise: baselineDbPromise, runningPromise: baselineRunningPromise } =
+    setupSide(medium, "baseline", baselineCommitHash, baselineDir, apiPortBaseline, uiPortBaseline, postgresImgPromise, logPathBaseline);
+  const { dbPromise: currentDbPromise, runningPromise: currentRunningPromise } =
+    setupSide(medium, "current", currentCommitHash, currentDir, apiPortCurrent, uiPortCurrent, postgresImgPromise, logPathCurrent);
   const [
     containerIdScreenshots,
     { containerId: containerIdDbBaseline },
