@@ -27,7 +27,8 @@
       "postgres-bytea",
       "postgres-date",
       "postgres-interval",
-      "split2"
+      "split2",
+      "@tiptap/pm"
     ],
     "targets": ["node22-linux"]
   },
