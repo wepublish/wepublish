@@ -1,2 +1,2 @@
 export const IntendedRouteStorageKey = 'auth.intended';
-export const IntendedRouteExpiryInSeconds = 5 * 60;
+export const IntendedRouteExpiryInSeconds = 30 * 60;

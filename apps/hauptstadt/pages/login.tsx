@@ -1,7 +1,7 @@
 import {
-  IntendedRouteExpiryInSeconds,
   IntendedRouteStorageKey,
   LoginFormContainer,
+  usePersistIntendedRoute,
   useUser,
 } from '@wepublish/authentication/website';
 import { PageContainer } from '@wepublish/page/website';
@@ -12,8 +12,7 @@ import {
   SessionWithTokenWithoutUser,
 } from '@wepublish/website/api';
 import { getApiClient } from '@wepublish/website/api';
-import { deleteCookie, getCookie, setCookie } from 'cookies-next';
-import { add } from 'date-fns';
+import { deleteCookie, getCookie } from 'cookies-next';
 import { NextPageContext } from 'next';
 import { useRouter } from 'next/router';
 import { useEffect, useRef } from 'react';
@@ -33,16 +32,7 @@ export default function Login({ sessionToken }: LoginProps) {
     }
   }, [sessionToken, setToken]);
 
-  if (
-    router.query.intended &&
-    (router.query.intended as string).startsWith('/')
-  ) {
-    setCookie(IntendedRouteStorageKey, router.query.intended, {
-      expires: add(new Date(), {
-        seconds: IntendedRouteExpiryInSeconds,
-      }),
-    });
-  }
+  usePersistIntendedRoute(router.query.intended);
 
   if (hasUser && typeof window !== 'undefined') {
     const intendedRoute = getCookie(IntendedRouteStorageKey)?.toString();

@@ -8,6 +8,14 @@ enum ErrorMessage {
   EmailAlreadyInUse = 'Email already in use',
 }
 
+export const createLoginLink = (pathname: string, search: string) => {
+  const query = new URLSearchParams({
+    intended: `${pathname}${search}`,
+  });
+
+  return `/login?${query.toString()}`;
+};
+
 export function translateApolloErrorMessage(
   errorMessage: string
 ): string | undefined {
@@ -26,7 +34,7 @@ export function ApiAlert({ error, ...props }: BuilderApiAlertProps) {
 
   const loginLink =
     typeof window !== 'undefined' ?
-      `/login?inteded=${window.location.pathname}${window.location.search}`
+      createLoginLink(window.location.pathname, window.location.search)
     : `/login`;
 
   return (
