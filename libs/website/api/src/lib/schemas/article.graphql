@@ -51,6 +51,8 @@ fragment SlimArticleRevision on ArticleRevision {
 fragment FullArticleRevision on ArticleRevision {
   ...SlimArticleRevision
 
+  hideAuthor
+
   canonicalUrl
 
   image {
