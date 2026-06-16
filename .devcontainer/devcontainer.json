@@ -33,7 +33,8 @@
         "GraphQL.vscode-graphql",
         "nrwl.angular-console",
         "firsttris.vscode-jest-runner",
-        "esbenp.prettier-vscode"
+        "esbenp.prettier-vscode",
+        "Anthropic.claude-code"
       ],
       "settings": {
         "editor.formatOnSave": true,

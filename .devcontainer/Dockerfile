@@ -22,3 +22,5 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
 
 # [Optional] Uncomment if you want to install more global node modules
 RUN su node -c "npm install -g nx"
+
+RUN curl -fsSL https://claude.ai/install.sh | bash
