@@ -1785,6 +1785,32 @@
         "anyMemberPlan": "Tous les plans d’abonnement"
       }
     },
+    "voucher": {
+      "navbar": "Bon de réduction",
+      "form": {
+        "createTitle": "Créer un bon de réduction",
+        "editTitle": "Modifier le bon de réduction \"{{ voucher }}\"",
+        "code": "Code",
+        "discountPercent": "Réduction (%)",
+        "validFrom": "Valable dès le",
+        "validTo": "Valable jusqu'au",
+        "memberPlan": "Plan d'abonnement"
+      },
+      "overview": {
+        "title": "Bons de réduction",
+        "createVoucher": "Nouveau bon de réduction",
+        "active": "Actif",
+        "valid": "Valide",
+        "code": "Code",
+        "discountPercent": "Réduction",
+        "memberPlan": "Plan d'abonnement",
+        "validFrom": "Valable dès le",
+        "validTo": "Valable jusqu'au",
+        "areYouSure": "Êtes-vous sûr(e) ?",
+        "areYouSureBody": "Le bon de réduction \"{{ voucher }}\" sera définitivement supprimé et cette action est irréversible.",
+        "areYouSureConfirmation": "Supprimer le bon de réduction"
+      }
+    },
     "paymentMethodEditPanel": {
       "gracePeriod": "Délai de paiement",
       "gracePeriodHelpText": "Si votre site web utilise un paywall, les utilisateurs peuvent lire immédiatement ou continuer à lire tous les contenus, même s'ils n'ont pas souscrit d'abonnement payant, pendant le délai de paiement. Cela est utile, par exemple, en cas de virement bancaire.",

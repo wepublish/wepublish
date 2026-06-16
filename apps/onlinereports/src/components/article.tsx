@@ -4,7 +4,7 @@ import {
   ArticleTrackingPixels,
 } from '@wepublish/article/website';
 import { CommentListWrapper } from '@wepublish/comments/website';
-import { Article as ArticleType, BlockContent } from '@wepublish/website/api';
+import { Article as ArticleType } from '@wepublish/website/api';
 import {
   BuilderArticleProps,
   useWebsiteBuilder,
@@ -72,7 +72,7 @@ export function OnlineReportsArticle({
 
   const { setAdsDisabled } = useAdsContext();
 
-  const article = data?.article as ArticleType;
+  const article = data?.article;
 
   const scrollToComments = () => {
     const el = document.getElementById('comments');
@@ -96,11 +96,11 @@ export function OnlineReportsArticle({
 
   return (
     <ArticleWrapper className={className}>
-      {article && <ArticleSEO article={article} />}
+      {article && <ArticleSEO article={article as ArticleType} />}
 
       <Blocks
         key={article?.id}
-        blocks={(article?.latest.blocks as BlockContent[]) ?? []}
+        blocks={article?.latest.blocks ?? []}
         type="Article"
       />
       <ArticleTopMeta>

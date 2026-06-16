@@ -11,10 +11,7 @@ import {
   TitleBlockWrapper,
 } from '@wepublish/block-content/website';
 import { createWithTheme } from '@wepublish/ui';
-import {
-  Article as ArticleType,
-  useCommentListQuery,
-} from '@wepublish/website/api';
+import { useCommentListQuery } from '@wepublish/website/api';
 import { BuilderArticleProps, Button } from '@wepublish/website/builder';
 import {
   BuilderArticleAuthorsProps,
@@ -114,7 +111,7 @@ export const HauptstadtArticleAuthors = ({
         </>
       )}
 
-      <ArticleDate article={article as ArticleType} />
+      <ArticleDate article={article} />
     </Typography>
   );
 };

@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`UserSubscriptionService createSubscription unhappy path should throw if voucher has expired 1`] = `[BadRequestException: Voucher has expired.]`;
+
+exports[`UserSubscriptionService createSubscription unhappy path should throw if voucher is not found 1`] = `[BadRequestException: Voucher is invalid.]`;
+
+exports[`UserSubscriptionService createSubscription unhappy path should throw if voucher is not yet valid 1`] = `[BadRequestException: Voucher is invalid.]`;

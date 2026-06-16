@@ -15,6 +15,7 @@ const ALLOWED_DIMENSIONS: ImageDimension[] = [
   { width: 300 },
 
   // WEBSITE FORMATS NORMAL
+  { width: 2400 },
   { width: 1500 },
   { width: 1200 },
   { width: 1000 },
@@ -24,6 +25,7 @@ const ALLOWED_DIMENSIONS: ImageDimension[] = [
   { width: 200 },
 
   // WEBSITE FORMATS SQUARE
+  { width: 2400, height: 2400 },
   { width: 1500, height: 1500 },
   { width: 1200, height: 1200 },
   { width: 1000, height: 1000 },

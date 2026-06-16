@@ -87,6 +87,7 @@ export const WebsiteSettingsList = () => {
       { id: 'googleAnalytics', text: 'Google Analytics' },
       { id: 'googleTagManager', text: 'Google Tag Manager' },
       { id: 'plausible', text: 'Plausible Analytics' },
+      { id: 'piwik', text: 'Piwik PRO' },
     ] as Array<{
       id: Exclude<keyof WebsiteSettings['analytics'], '__typename'>;
       text: string;

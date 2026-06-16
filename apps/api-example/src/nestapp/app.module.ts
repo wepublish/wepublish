@@ -99,7 +99,7 @@ import { SlackMailProvider } from '../app/slack-mail-provider';
 import { readConfig } from '../readConfig';
 import { AuthorModule } from '@wepublish/author/api';
 import { MemberPlanModule } from '@wepublish/member-plan/api';
-import { InvoiceModule } from '@wepublish/membership/api';
+import { InvoiceModule, VoucherModule } from '@wepublish/membership/api';
 import { SessionModule } from '@wepublish/session/api';
 import { ChallengeModule } from '@wepublish/challenge/api';
 import { UserSubscriptionModule } from '@wepublish/user-subscription/api';
@@ -401,6 +401,7 @@ import {
     ApiModule,
     MembershipModule,
     InvoiceModule,
+    VoucherModule,
     DashboardModule,
     AuthenticationModule,
 

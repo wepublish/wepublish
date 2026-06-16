@@ -1,154 +1,197 @@
 import {
-  BildwurfAdBlock,
-  BlockContent,
-  BreakBlock,
-  CommentBlock,
-  CrowdfundingBlock,
-  EventBlock,
-  FacebookPostBlock,
-  FacebookVideoBlock,
-  HtmlBlock,
-  IFrameBlock,
-  ImageGalleryBlock,
-  InstagramPostBlock,
-  ListicleBlock,
-  PolisConversationBlock,
-  PollBlock,
-  QuoteBlock,
-  RichTextBlock,
-  SoundCloudTrackBlock,
-  SubscribeBlock,
-  TeaserGridBlock,
-  TeaserGridFlexBlock,
-  TeaserListBlock,
-  TeaserSlotsBlock,
-  TikTokVideoBlock,
-  TitleBlock,
-  TwitterTweetBlock,
-  VimeoVideoBlock,
-  StreamableVideoBlock,
-  YouTubeVideoBlock,
-  FlexBlock,
-  FullImageBlockFragmentFragment,
+  FullImageGalleryBlockFragment,
+  FullBreakBlockFragment,
+  FullTitleBlockFragment,
+  FullFlexBlockFragment,
+  FullBildwurfAdBlockFragment,
+  FullCrowdfundingBlockFragment,
+  FullEventBlockFragment,
+  FullFacebookPostBlockFragment,
+  FullFacebookVideoBlockFragment,
+  FullHtmlBlockFragment,
+  FullIFrameBlockFragment,
+  FullInstagramPostBlockFragment,
+  FullListicleBlockFragment,
+  FullPolisConversationBlockFragment,
+  FullPollBlockFragment,
+  FullQuoteBlockFragment,
+  FullRichTextBlockFragment,
+  FullSoundCloudTrackBlockFragment,
+  FullStreamableVideoBlockFragment,
+  FullSubscribeBlockFragment,
+  FullTeaserGridFlexBlockFragment,
+  FullTeaserListBlockFragment,
+  FullTeaserSlotsBlockFragment,
+  FullTikTokVideoBlockFragment,
+  FullTwitterTweetBlockFragment,
+  FullVimeoVideoBlockFragment,
+  FullYouTubeVideoBlockFragment,
+  FullCommentBlockFragment,
+  FullImageBlockFragment,
+  FullTeaserGridBlockFragment,
+  FullBlockFragment,
 } from '@wepublish/website/api';
 
 export type BuilderBlockRendererProps = {
   className?: string;
-  block: BlockContent;
+  block: FullBlockFragment;
   index: number;
   count: number;
   type: 'Page' | 'Article';
 };
 
 export type BuilderBlocksProps = {
-  blocks: BlockContent[];
+  blocks: FullBlockFragment[];
   type: BuilderBlockRendererProps['type'];
 };
 
-export type BuilderFlexBlockProps = FlexBlock & {
+export type BuilderFlexBlockProps = FullFlexBlockFragment & {
   className?: string;
 };
 
-export type BuilderTitleBlockProps = Omit<TitleBlock, 'type'> & {
+export type BuilderTitleBlockProps = Omit<FullTitleBlockFragment, 'type'> & {
   className?: string;
 };
-export type BuilderBreakBlockProps = Omit<BreakBlock, 'type'> & {
+export type BuilderBreakBlockProps = Omit<FullBreakBlockFragment, 'type'> & {
   className?: string;
 };
-export type BuilderImageBlockProps = Omit<
-  FullImageBlockFragmentFragment,
+export type BuilderImageBlockProps = Omit<FullImageBlockFragment, 'type'> & {
+  className?: string;
+};
+export type BuilderImageGalleryBlockProps = Omit<
+  FullImageGalleryBlockFragment,
   'type'
 > & {
   className?: string;
 };
-export type BuilderImageGalleryBlockProps = Omit<ImageGalleryBlock, 'type'> & {
+export type BuilderQuoteBlockProps = Omit<FullQuoteBlockFragment, 'type'> & {
   className?: string;
 };
-export type BuilderQuoteBlockProps = Omit<QuoteBlock, 'type'> & {
+export type BuilderEventBlockProps = Omit<FullEventBlockFragment, 'type'> & {
   className?: string;
 };
-export type BuilderEventBlockProps = Omit<EventBlock, 'type'> & {
+export type BuilderRichTextBlockProps = Omit<
+  FullRichTextBlockFragment,
+  'type'
+> & {
   className?: string;
 };
-export type BuilderRichTextBlockProps = Omit<RichTextBlock, 'type'> & {
+export type BuilderHTMLBlockProps = Omit<FullHtmlBlockFragment, 'type'> & {
   className?: string;
 };
-export type BuilderHTMLBlockProps = Omit<HtmlBlock, 'type'> & {
-  className?: string;
-};
-export type BuilderFacebookPostBlockProps = Omit<FacebookPostBlock, 'type'> & {
+export type BuilderFacebookPostBlockProps = Omit<
+  FullFacebookPostBlockFragment,
+  'type'
+> & {
   className?: string;
 };
 export type BuilderFacebookVideoBlockProps = Omit<
-  FacebookVideoBlock,
+  FullFacebookVideoBlockFragment,
   'type'
 > & { className?: string };
 export type BuilderInstagramPostBlockProps = Omit<
-  InstagramPostBlock,
+  FullInstagramPostBlockFragment,
   'type'
 > & { className?: string };
-export type BuilderTwitterTweetBlockProps = Omit<TwitterTweetBlock, 'type'> & {
-  className?: string;
-};
-export type BuilderVimeoVideoBlockProps = Omit<VimeoVideoBlock, 'type'> & {
-  className?: string;
-};
-export type BuilderStreamableVideoBlockProps = Omit<
-  StreamableVideoBlock,
+export type BuilderTwitterTweetBlockProps = Omit<
+  FullTwitterTweetBlockFragment,
   'type'
 > & {
   className?: string;
 };
-export type BuilderYouTubeVideoBlockProps = Omit<YouTubeVideoBlock, 'type'> & {
+export type BuilderVimeoVideoBlockProps = Omit<
+  FullVimeoVideoBlockFragment,
+  'type'
+> & {
+  className?: string;
+};
+export type BuilderStreamableVideoBlockProps = Omit<
+  FullStreamableVideoBlockFragment,
+  'type'
+> & {
+  className?: string;
+};
+export type BuilderYouTubeVideoBlockProps = Omit<
+  FullYouTubeVideoBlockFragment,
+  'type'
+> & {
   className?: string;
 };
 export type BuilderSoundCloudTrackBlockProps = Omit<
-  SoundCloudTrackBlock,
+  FullSoundCloudTrackBlockFragment,
   'type'
 > & {
   className?: string;
 };
 export type BuilderPolisConversationBlockProps = Omit<
-  PolisConversationBlock,
+  FullPolisConversationBlockFragment,
   'type'
 > & {
   className?: string;
 };
-export type BuilderTikTokVideoBlockProps = Omit<TikTokVideoBlock, 'type'> & {
+export type BuilderTikTokVideoBlockProps = Omit<
+  FullTikTokVideoBlockFragment,
+  'type'
+> & {
   className?: string;
 };
-export type BuilderBildwurfAdBlockProps = Omit<BildwurfAdBlock, 'type'> & {
+export type BuilderBildwurfAdBlockProps = Omit<
+  FullBildwurfAdBlockFragment,
+  'type'
+> & {
   className?: string;
 };
-export type BuilderIFrameBlockProps = Omit<IFrameBlock, 'type'> & {
+export type BuilderIFrameBlockProps = Omit<FullIFrameBlockFragment, 'type'> & {
   className?: string;
 };
-export type BuilderPollBlockProps = Omit<PollBlock, 'type'> & {
+export type BuilderPollBlockProps = Omit<FullPollBlockFragment, 'type'> & {
   className?: string;
 };
-export type BuilderCrowdfundingBlockProps = Omit<CrowdfundingBlock, 'type'> & {
+export type BuilderCrowdfundingBlockProps = Omit<
+  FullCrowdfundingBlockFragment,
+  'type'
+> & {
   className?: string;
 };
-export type BuilderListicleBlockProps = Omit<ListicleBlock, 'type'> & {
+export type BuilderListicleBlockProps = Omit<
+  FullListicleBlockFragment,
+  'type'
+> & {
   className?: string;
 };
-export type BuilderCommentBlockProps = Omit<CommentBlock, 'type'> & {
+export type BuilderCommentBlockProps = Omit<
+  FullCommentBlockFragment,
+  'type'
+> & {
   className?: string;
 };
-export type BuilderSubscribeBlockProps = Omit<SubscribeBlock, 'type'> & {
+export type BuilderSubscribeBlockProps = Omit<
+  FullSubscribeBlockFragment,
+  'type'
+> & {
   className?: string;
 };
-export type BuilderTeaserGridFlexBlockProps = TeaserGridFlexBlock & {
-  className?: string;
-};
-export type BuilderTeaserGridBlockProps = Omit<TeaserGridBlock, 'type'> & {
+export type BuilderTeaserGridFlexBlockProps =
+  FullTeaserGridFlexBlockFragment & {
+    className?: string;
+  };
+export type BuilderTeaserGridBlockProps = Omit<
+  FullTeaserGridBlockFragment,
+  'type'
+> & {
   className?: string;
 };
 
-export type BuilderTeaserListBlockProps = Omit<TeaserListBlock, 'type'> & {
+export type BuilderTeaserListBlockProps = Omit<
+  FullTeaserListBlockFragment,
+  'type'
+> & {
   className?: string;
 };
 
-export type BuilderTeaserSlotsBlockProps = Omit<TeaserSlotsBlock, 'type'> & {
+export type BuilderTeaserSlotsBlockProps = Omit<
+  FullTeaserSlotsBlockFragment,
+  'type'
+> & {
   className?: string;
 };

@@ -668,6 +668,11 @@ input CreateExternalAppInput {
   url: String!
 }
 
+type CreateSubscriptionInfo {
+  discountPercent: Float
+  voucherValid: Boolean
+}
+
 type Crowdfunding {
   activeGoal: CrowdfundingGoalWithProgress
   additionalRevenue: Float
@@ -1196,7 +1201,11 @@ interface HasImageLc {
 interface HasMemberPlan {
   memberPlan: MemberPlan!
   memberPlanID: String!
-  memberplan: MemberPlan
+}
+
+interface HasMemberPlanLc {
+  memberPlan: MemberPlan!
+  memberPlanId: String!
 }
 
 interface HasOneBlockContent {
@@ -1828,12 +1837,15 @@ type Mutation {
   createUserRole(description: String, name: String!, permissionIDs: [String!]!): UserRole!
 
   """Allows authenticated users to create additional subscriptions"""
-  createUserSubscription(autoRenew: Boolean!, deactivateSubscriptionId: String, failureURL: String, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Int!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], successURL: String): Payment!
+  createUserSubscription(autoRenew: Boolean!, deactivateSubscriptionId: String, failureURL: String, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Int!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], successURL: String, voucher: String): Payment!
 
   """
   Allows guests and authenticated users to create additional subscriptions
   """
-  createUserSubscriptionWithConfirmation(autoRenew: Boolean!, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Int!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], userId: String): Boolean!
+  createUserSubscriptionWithConfirmation(autoRenew: Boolean!, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Int!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], userId: String, voucher: String): Boolean!
+
+  """Creates a new voucher."""
+  createVoucher(code: String!, discountPercent: Int!, memberPlanId: String!, validFrom: DateTime!, validTo: DateTime!): Voucher!
 
   """Deletes all sync errors for a config so all contacts will be retried."""
   deleteAllMailchimpSyncErrors(configId: String!): Boolean!
@@ -1929,6 +1941,9 @@ type Mutation {
 
   """Deletes an existing userrole."""
   deleteUserRole(id: String!): UserRole!
+
+  """Deletes an existing voucher."""
+  deleteVoucher(id: String!): Voucher!
 
   """Dislikes an article."""
   dislikeArticle(id: String!): Article!
@@ -2192,6 +2207,9 @@ type Mutation {
   """
   updateUserSubscription(id: String!, input: UpdateUserSubscriptionInput!): PublicSubscription
 
+  """Updates an existing voucher."""
+  updateVoucher(code: String, discountPercent: Int, id: String!, memberPlanId: String, validFrom: DateTime, validTo: DateTime): Voucher!
+
   """Updates the website settings."""
   updateWebsiteSettings(ads: WebsiteAdsInput, analytics: WebsiteAnalyticsInput, fonts: [WebsiteRemoteFontInput!], mail: WebsiteMailInput, theme: JSONObject): WebsiteSettings!
 
@@ -2433,6 +2451,12 @@ type PaginatedTags {
 
 type PaginatedUserRoles {
   nodes: [UserRole!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type PaginatedVouchers {
+  nodes: [Voucher!]!
   pageInfo: PageInfo!
   totalCount: Int!
 }
@@ -2921,7 +2945,6 @@ type PublicSubscription implements HasMemberPlan & HasPaymentMethod & HasUser {
   isActive: Boolean!
   memberPlan: MemberPlan!
   memberPlanID: String!
-  memberplan: MemberPlan
   modifiedAt: DateTime!
   monthlyAmount: Int!
   paidUntil: DateTime
@@ -3013,6 +3036,11 @@ type Query {
 
   "\n      Returns all consents.\n    "
   consents(filter: ConsentFilter): [Consent!]!
+
+  """
+  Gives the user some information about the subscription they are about to create
+  """
+  createSubscriptionInfo(memberPlanId: String!, voucher: String): CreateSubscriptionInfo!
 
   """Get a single crowdfunding by id"""
   crowdfunding(id: String!): Crowdfunding!
@@ -3304,6 +3332,30 @@ type Query {
     take: Int! = 10
   ): PaginatedSensitiveDataUsers!
   versionInformation: VersionInformation!
+
+  """Returns an voucher by id or voucher."""
+  voucher(id: String!): Voucher!
+
+  """This query returns a list of vouchers"""
+  vouchers(
+    """Cursor for pagination"""
+    cursorId: String
+
+    """Filter for vouchers"""
+    filter: VoucherFilter
+
+    """Sort order"""
+    order: SortOrder = Descending
+
+    """Number of items to skip"""
+    skip: Int! = 0
+
+    """Field to sort by"""
+    sort: VoucherSort! = CreatedAt
+
+    """Number of items to fetch"""
+    take: Int! = 10
+  ): PaginatedVouchers!
 
   """
   Returns the website settings, requires authentication to get sensitive settings.
@@ -4268,6 +4320,30 @@ input VimeoVideoBlockInput {
 
 """A valid vote value"""
 scalar VoteValue
+
+type Voucher implements HasMemberPlanLc {
+  code: String!
+  createdAt: DateTime!
+  discountPercent: Int!
+  id: String!
+  memberPlan: MemberPlan!
+  memberPlanId: String!
+  modifiedAt: DateTime!
+  validFrom: DateTime!
+  validTo: DateTime!
+}
+
+input VoucherFilter {
+  from: DateTime
+  memberPlans: [String!]
+  to: DateTime
+}
+
+enum VoucherSort {
+  CreatedAt
+  Discount
+  ModifiedAt
+}
 
 type WebsiteAds {
   sparkLoop: KeyEnabled!

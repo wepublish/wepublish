@@ -2,7 +2,11 @@ import {
   ArticleListWrapper,
   articleToTeaser,
 } from '@wepublish/article/website';
-import { Article, Teaser, TeaserType } from '@wepublish/website/api';
+import {
+  FullArticleTeaserFragment,
+  FullTeaserFragment,
+  TeaserType,
+} from '@wepublish/website/api';
 import {
   BuilderArticleListProps,
   useWebsiteBuilder,
@@ -21,7 +25,7 @@ export function OnlineReportsArticleList({
     () =>
       enrichTeaserListWithOnlineReportsAds(
         data?.articles?.nodes.map(article =>
-          articleToTeaser(article as Article)
+          articleToTeaser(article as FullArticleTeaserFragment['article'])
         ) ?? []
       ),
     [data?.articles?.nodes]
@@ -37,16 +41,19 @@ export function OnlineReportsArticleList({
   );
 }
 
-function enrichTeaserListWithOnlineReportsAds(teasers: Teaser[]) {
-  return teasers.reduce((teasers: Teaser[], teaser: Teaser, index) => {
-    if ((index + 3) % 6 === 0) {
-      teasers.push({
-        __typename: 'CustomTeaser',
-        type: TeaserType.Custom,
-        title: 'ad-small',
-      });
-    }
-    teasers.push(teaser);
-    return teasers;
-  }, []);
+function enrichTeaserListWithOnlineReportsAds(teasers: FullTeaserFragment[]) {
+  return teasers.reduce(
+    (teasers: FullTeaserFragment[], teaser: FullTeaserFragment, index) => {
+      if ((index + 3) % 6 === 0) {
+        teasers.push({
+          __typename: 'CustomTeaser',
+          type: TeaserType.Custom,
+          title: 'ad-small',
+        });
+      }
+      teasers.push(teaser);
+      return teasers;
+    },
+    []
+  );
 }

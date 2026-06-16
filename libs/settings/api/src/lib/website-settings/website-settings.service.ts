@@ -33,6 +33,10 @@ export class WebsiteSettingsService {
           input.analytics?.plausible.enabled ?? settings.analyticsPAEnabled,
         analyticsPAId: input.analytics?.plausible.key,
 
+        analyticsPiwikEnabled:
+          input.analytics?.piwik.enabled ?? settings.analyticsPiwikEnabled,
+        analyticsPiwikId: input.analytics?.piwik.key,
+
         // Mail
         mailMailchimpEnabled:
           input.mail?.mailchimp.enabled ?? settings.mailMailchimpEnabled,
