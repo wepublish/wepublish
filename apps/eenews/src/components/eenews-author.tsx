@@ -9,67 +9,37 @@ import {
   useWebsiteBuilder,
   WebsiteBuilderProvider,
 } from '@wepublish/website/builder';
+import { useRouter } from 'next/router';
+import { useMemo } from 'react';
 
+import { EenewsPagination } from './eenews-pagination';
 import { EenewsTeaser } from './teasers/eenews-teaser';
 
+const AUTHOR_ARTICLES_PER_PAGE = 12;
+
 const Hero = styled('section')`
-  padding: 64px 56px 48px;
+  padding: 36px 56px 24px;
   background: ${({ theme }) => theme.palette.background.default};
-  border-bottom: 1px solid ${({ theme }) => theme.palette.divider};
   ${({ theme }) => theme.breakpoints.down('sm')} {
-    padding: 32px 20px 24px;
+    padding: 24px 20px 18px;
   }
 `;
 
 const HeroInner = styled('div')`
   max-width: var(--max-width);
   margin: 0 auto;
-  display: grid;
-  grid-template-columns: 160px 1fr;
-  gap: 40px;
-  align-items: start;
-  ${({ theme }) => theme.breakpoints.down('sm')} {
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
 `;
 
-const AvatarLarge = styled('div')`
-  width: 160px;
-  height: 160px;
-  border-radius: 50%;
-  background: ${({ theme }) => theme.palette.secondary.main};
-  display: grid;
-  place-items: center;
-  color: ${({ theme }) => theme.palette.primary.main};
-  ${({ theme }) => theme.breakpoints.down('sm')} {
-    width: 96px;
-    height: 96px;
-  }
-`;
-
-const AvatarInitials = styled(Typography)`
+const Eyebrow = styled(Typography)`
   display: block;
+  color: ${({ theme }) => theme.palette.primary.main};
+  margin-bottom: 4px;
 `;
 
 const Name = styled(Typography)`
   display: block;
-  margin: 0 0 8px;
-  color: ${({ theme }) => theme.palette.primary.main};
-`;
-
-const Role = styled(Typography)`
-  display: block;
-  color: ${({ theme }) => theme.palette.primary.main};
-  opacity: 0.7;
-  margin-bottom: 16px;
-`;
-
-const Bio = styled(Typography)`
-  display: block;
-  color: ${({ theme }) => theme.palette.text.primary};
-  max-width: 64ch;
   margin: 0;
+  color: ${({ theme }) => theme.palette.primary.main};
 `;
 
 const ArticlesSection = styled('section')`
@@ -95,45 +65,29 @@ const Grid = styled('div')`
   }
 `;
 
-const bioToText = (bio: unknown): string => {
-  if (!Array.isArray(bio)) {
-    return '';
-  }
-  return bio
-    .map(node => {
-      if (typeof node !== 'object' || node === null) {
-        return '';
-      }
-      const children = (node as { children?: Array<{ text?: string }> })
-        .children;
-      if (!Array.isArray(children)) {
-        return '';
-      }
-      return children.map(c => c.text ?? '').join('');
-    })
-    .join(' ')
-    .trim();
-};
-
-const initials = (name: string): string =>
-  name
-    .split(/\s+/)
-    .map(w => w[0]?.toUpperCase() ?? '')
-    .slice(0, 2)
-    .join('');
-
 export const EenewsAuthor = ({ data, className }: BuilderAuthorProps) => {
   const {
     blocks: { Teaser: BuilderTeaser },
   } = useWebsiteBuilder();
 
+  const router = useRouter();
   const author = data?.author;
+
+  const pageRaw = Number(router.query.page);
+  const currentPage = Number.isFinite(pageRaw) && pageRaw >= 1 ? pageRaw : 1;
+
+  const variables = useMemo(
+    () => ({
+      filter: { authors: author?.id ? [author.id] : undefined },
+      take: AUTHOR_ARTICLES_PER_PAGE,
+      skip: (currentPage - 1) * AUTHOR_ARTICLES_PER_PAGE,
+    }),
+    [author?.id, currentPage]
+  );
+
   const { data: articlesData } = useArticleListQuery({
     skip: !author?.id,
-    variables: {
-      filter: { authors: author?.id ? [author.id] : undefined },
-      take: 12,
-    },
+    variables,
   });
 
   if (!author) {
@@ -141,24 +95,28 @@ export const EenewsAuthor = ({ data, className }: BuilderAuthorProps) => {
   }
 
   const articles = articlesData?.articles?.nodes ?? [];
+  const totalCount = articlesData?.articles?.totalCount ?? 0;
+  const totalPages = Math.max(
+    1,
+    Math.ceil(totalCount / AUTHOR_ARTICLES_PER_PAGE)
+  );
+
+  const goToPage = (next: number) => {
+    router.replace({ query: { ...router.query, page: next } }, undefined, {
+      shallow: true,
+      scroll: true,
+    });
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
 
   return (
     <div className={className}>
       <Hero>
         <HeroInner>
-          <AvatarLarge>
-            <AvatarInitials variant="pageH1Standard">
-              {initials(author.name)}
-            </AvatarInitials>
-          </AvatarLarge>
-          <div>
-            <Typography variant="pageEyebrow">Autor:in</Typography>
-            <Name variant="pageH1Standard">{author.name}</Name>
-            {author.jobTitle && (
-              <Role variant="topbarLink">{author.jobTitle}</Role>
-            )}
-            <Bio variant="pageLead">{bioToText(author.bio)}</Bio>
-          </div>
+          <Eyebrow variant="pageEyebrow">Autor:in</Eyebrow>
+          <Name variant="pageH1Standard">{author.name}</Name>
         </HeroInner>
       </Hero>
 
@@ -194,6 +152,14 @@ export const EenewsAuthor = ({ data, className }: BuilderAuthorProps) => {
               ))}
             </WebsiteBuilderProvider>
           </Grid>
+
+          {totalPages > 1 && (
+            <EenewsPagination
+              page={currentPage}
+              totalPages={totalPages}
+              onChange={goToPage}
+            />
+          )}
         </ArticlesSection>
       )}
     </div>

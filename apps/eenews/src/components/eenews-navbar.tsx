@@ -57,7 +57,7 @@ const TopBar = styled('div', {
   padding: 0 56px 14px;
   border-bottom: 1.5px solid ${({ theme }) => theme.palette.primary.main};
   color: ${({ theme }) => theme.palette.primary.main};
-  max-height: 200px;
+  max-height: 500px;
   overflow: hidden;
   opacity: 1;
   transition:
@@ -65,23 +65,25 @@ const TopBar = styled('div', {
     opacity 0.3s ease,
     padding 0.35s cubic-bezier(0.22, 0.61, 0.36, 1);
 
-  ${({ isScrolled }) =>
-    isScrolled &&
-    css`
-      max-height: 0;
-      padding-top: 0;
-      padding-bottom: 0;
-      opacity: 0;
-      border-bottom-color: transparent;
-      pointer-events: none;
-    `}
-
   ${({ theme }) => theme.breakpoints.down('md')} {
     padding: 10px 20px;
     font-size: 13px;
     flex-wrap: wrap;
     gap: 10px;
   }
+
+  ${({ isScrolled }) =>
+    isScrolled &&
+    css`
+      && {
+        max-height: 0;
+        padding-top: 0;
+        padding-bottom: 0;
+        border-bottom-width: 0;
+        opacity: 0;
+        pointer-events: none;
+      }
+    `}
 `;
 
 const TopBarLeft = styled('span')``;
@@ -203,6 +205,7 @@ const HeroRow = styled('div', {
   ${({ theme }) => theme.breakpoints.down('md')} {
     grid-template-columns: auto 1fr auto;
     padding: 16px 0 12px;
+    gap: 12px;
   }
 `;
 
@@ -264,6 +267,8 @@ const SupportBtn = styled(Link)`
   color: ${({ theme }) => theme.palette.primary.main};
   display: inline-flex;
   align-items: center;
+  white-space: nowrap;
+  flex-shrink: 0;
   text-decoration: none;
   transition: all 120ms ease;
   &:hover {
@@ -272,6 +277,9 @@ const SupportBtn = styled(Link)`
   }
   ${({ theme }) => theme.breakpoints.down('md')} {
     padding: 0 14px;
+  }
+  ${({ theme }) => theme.breakpoints.down('sm')} {
+    display: none;
   }
 `;
 
@@ -374,7 +382,14 @@ const NavLink = styled(Link, {
   }
 `;
 
-const LeaderboardPlacer = styled('div')``;
+const LeaderboardPlacer = styled('div')`
+  margin: 16px auto;
+
+  ${({ theme }) => theme.breakpoints.down('md')} {
+    width: 100%;
+    margin: 20px auto;
+  }
+`;
 
 export const EenewsNavbar = ({
   className,

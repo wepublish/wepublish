@@ -28,7 +28,7 @@ const Desc = styled(Typography)`
   color: ${({ theme }) => theme.palette.text.primary};
 `;
 
-const Date = styled(Typography)`
+const DueDate = styled(Typography)`
   display: block;
   color: ${({ theme }) => theme.palette.text.secondary};
 `;
@@ -46,7 +46,7 @@ const formatDateDE = (raw: string | null | undefined): string => {
   if (!raw) {
     return '';
   }
-  const d = new window.Date(raw);
+  const d = new Date(raw);
   if (Number.isNaN(d.getTime())) {
     return '';
   }
@@ -71,7 +71,7 @@ export const EenewsInvoiceListItem = ({
     <Row className={className}>
       <Nr variant="teaserMeta">{id.slice(0, 8)}</Nr>
       <Desc variant="teaserMeta">{description ?? 'Mitgliedschaft'}</Desc>
-      <Date variant="teaserMeta">Fällig: {formatDateDE(dueAt)}</Date>
+      <DueDate variant="teaserMeta">Fällig: {formatDateDE(dueAt)}</DueDate>
       <Amount variant="articleH2">CHF {chf}</Amount>
       {canPay && pay && (
         <Button

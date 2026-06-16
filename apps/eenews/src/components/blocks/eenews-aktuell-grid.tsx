@@ -43,6 +43,13 @@ const Toggle = styled('div')`
   gap: 18px;
   align-items: center;
   color: ${({ theme }) => theme.palette.primary.main};
+  ${({ theme }) => theme.breakpoints.down('sm')} {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+    width: 100%;
+  }
 `;
 
 const ToggleSep = styled('span')`
@@ -52,6 +59,11 @@ const ToggleSep = styled('span')`
   background: ${({ theme }) => theme.palette.primary.main};
   opacity: 0.6;
   margin: 0 2px;
+  ${({ theme }) => theme.breakpoints.down('sm')} {
+    width: 56px;
+    height: 1px;
+    margin: 8px 0;
+  }
 `;
 
 const ToggleLink = styled('a', {
@@ -68,6 +80,28 @@ const ToggleLink = styled('a', {
   &:hover {
     opacity: 1;
   }
+  ${({ theme }) => theme.breakpoints.down('sm')} {
+    width: 100%;
+    padding: 3px 0;
+  }
+  ${({ theme, isActive }) =>
+    isActive &&
+    `&:not(:last-child)::after {
+      content: '';
+      display: inline-block;
+      width: 1px;
+      height: 22px;
+      margin-left: 18px;
+      vertical-align: middle;
+      background: currentColor;
+      opacity: 0.6;
+      ${theme.breakpoints.down('sm')} {
+        display: block;
+        width: 56px;
+        height: 1px;
+        margin: 8px 0 0;
+      }
+    }`}
 `;
 
 const Grid = styled('div')`

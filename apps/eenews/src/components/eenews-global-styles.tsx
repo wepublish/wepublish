@@ -10,6 +10,10 @@ const globalCSS = (theme: Theme) => css`
       --max-width: 1150px;
     }
   }
+
+  html {
+    overflow-anchor: none;
+  }
 `;
 
 export const EenewsGlobalStyles = () => <GlobalStyles styles={globalCSS} />;
