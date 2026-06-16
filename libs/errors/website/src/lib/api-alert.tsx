@@ -26,7 +26,7 @@ export function ApiAlert({ error, ...props }: BuilderApiAlertProps) {
 
   const loginLink =
     typeof window !== 'undefined' ?
-      `/login?inteded=${window.location.pathname}${window.location.search}`
+      `/login?intended=${window.location.pathname}${window.location.search}`
     : `/login`;
 
   return (
