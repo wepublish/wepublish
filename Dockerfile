@@ -103,6 +103,12 @@ RUN npx prisma generate && \
     npx nx build api-example --ignore-nx-cache && \
     npx @sentry/cli sourcemaps inject ./dist/apps/api-example && \
     npx @sentry/cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist/apps/api-example && \
+    for sub in node_modules/@tiptap/pm/dist/*/; do \
+      name=$(basename "$sub"); \
+      [ -f "$sub/index.cjs" ] || continue; \
+      mkdir -p "node_modules/@tiptap/pm/$name"; \
+      echo "module.exports = require('../dist/$name/index.cjs')" > "node_modules/@tiptap/pm/$name/index.js"; \
+    done && \
     cp docker/api_build_package.json package.json && \
     npx @yao-pkg/pkg package.json
 
