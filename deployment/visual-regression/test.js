@@ -148,15 +148,17 @@ async function main(medium, baselineCommitHash, currentCommitHash) {
     currentRunningPromise
   ]);
 
-  console.log("running regression tests now...");
-  await attachContainer(containerIdScreenshots);
-  await startContainer(containerIdScreenshots);
-  await waitContainer(containerIdScreenshots);
-
-  await Promise.all([
-    teardownProcesses([apiProcessBaseline, uiProcessBaseline, apiProcessCurrent, uiProcessCurrent]),
-    removeContainer(containerIdDbBaseline), removeContainer(containerIdDbCurrent), removeContainer(containerIdScreenshots)
-  ]);
+  try {
+    console.log("running regression tests now...");
+    await attachContainer(containerIdScreenshots);
+    await startContainer(containerIdScreenshots);
+    await waitContainer(containerIdScreenshots);
+  } finally {
+    await Promise.all([
+      teardownProcesses([apiProcessBaseline, uiProcessBaseline, apiProcessCurrent, uiProcessCurrent]),
+      removeContainer(containerIdDbBaseline), removeContainer(containerIdDbCurrent), removeContainer(containerIdScreenshots)
+    ]);
+  }
 }
 
 main(process.env.MEDIUM, process.env.BASELINE_COMMIT_HASH, process.env.CURRENT_COMMIT_HASH);

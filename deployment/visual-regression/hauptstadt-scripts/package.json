@@ -1,10 +1,10 @@
 {
-  "name": "tsri-screenshot-tests",
+  "name": "hauptstadt-screenshot-tests",
   "version": "1.0.0",
   "private": true,
   "description": "Cross-browser screenshot regression tests using Playwright",
   "scripts": {
-    "test": "node tsri-scenario.js"
+    "test": "node hauptstadt-screenshots.js"
   },
   "dependencies": {
     "@vizzly-testing/honeydiff": "0.10.1",

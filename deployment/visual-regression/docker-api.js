@@ -88,10 +88,10 @@ async function stopContainer(idOrName) {
   }
 }
 
-async function removeContainer(idOrName, { force = true } = {}) {
+async function removeContainer(idOrName, { force = true, v = true } = {}) {
   const info = await inspectContainer(idOrName);
   if (!info) return;
-  await docker.getContainer(idOrName).remove({ force });
+  await docker.getContainer(idOrName).remove({ force, v });
 }
 
 function collectStream(execStream) {

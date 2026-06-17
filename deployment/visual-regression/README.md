@@ -56,5 +56,5 @@ The medium-specific script only needs to declare the list of pages to visit (see
 More involved scripts are also possible.
 
 ## Tools used
-- [Playwright](https://playwright.dev/) for browser automation and screenshots. Devices come from Playwright's [built-in descriptors](https://github.com/microsoft/playwright/blob/main/packages/playwright-core/src/server/deviceDescriptorsSource.json) (defaults are Desktop Chrome/Firefox/Safari, Pixel 10, iPhone 16).
+- [Playwright](https://playwright.dev/) for browser automation and screenshots. Devices come from Playwright's [built-in descriptors](https://github.com/microsoft/playwright/blob/main/packages/playwright-core/src/server/deviceDescriptorsSource.json) (defaults are Desktop Chrome/Firefox/Safari, Pixel 7, iPhone 15).
 - [honeydiff](https://github.com/vizzly-testing/honeydiff) for image comparison — chosen for its speed and customizability; see the [benchmark](https://vizzly.dev/blog/honeydiff-vs-odiff-pixelmatch-benchmarks/).

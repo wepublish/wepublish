@@ -46,10 +46,7 @@ async function createPostgresContainer(
     Image: `postgres-temp-${medium}`,
     HostConfig: {
       // Bind it to a free, random port (makes getDatabasePort necessary)
-      PortBindings: { [POSTGRESQL_PORT]: [{ HostPort: "" }] },
-      // Mount the data directory as tmpfs (in-memory) so it's never persisted to disk
-      // each container run starts with a fresh, empty database.
-      Tmpfs: { "/var/lib/postgresql/data": "" },
+      PortBindings: { [POSTGRESQL_PORT]: [{ HostPort: "" }] }
     }
   };
   await removeContainer(containerName);
