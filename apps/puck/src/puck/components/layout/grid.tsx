@@ -25,7 +25,7 @@ export const Grid: ComponentConfig<{
     columns: columnsPresets[1],
     content: [],
   },
-  render: ({ columns, content: Content }) => (
+  render: ({ columns, content: Content, ...props }) => (
     <Content
       style={{
         display: 'grid',
