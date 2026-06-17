@@ -1,4 +1,5 @@
 import { BreakConfig } from './components/break.config';
+import { ButtonConfig } from './components/content/button.config';
 import { ListicleConfig } from './components/content/listicle.config';
 import { QuoteConfig } from './components/content/quote.config';
 import { RichTextConfig } from './components/content/richtext.config';
@@ -13,6 +14,7 @@ import { IFrameConfig } from './components/embed/iframe.config';
 import { TikTokConfig } from './components/embed/tiktok.config';
 import { VimeoConfig } from './components/embed/vimeo.config';
 import { YouTubeConfig } from './components/embed/youtube.config';
+import { ContainerConfig } from './components/layout/container';
 import { Flex } from './components/layout/flex';
 import { Grid } from './components/layout/grid';
 import { Space } from './components/layout/space';
@@ -76,6 +78,11 @@ export const config: UserConfig = {
         types: ['autofill', 'list', 'items'],
       })
     ),
+    Container: withColumnSpan(
+      withDataSource(ContainerConfig, undefined, {
+        types: ['autofill', 'list', 'items'],
+      })
+    ),
     RichText: withColumnSpan(RichTextConfig),
     Listicle: withColumnSpan(ListicleConfig),
     IFrame: withColumnSpan(IFrameConfig),
@@ -86,6 +93,7 @@ export const config: UserConfig = {
     Facebook: withColumnSpan(FacebookConfig),
     Instagram: withColumnSpan(InstagramConfig),
     Subscribe: withColumnSpan(SubscribeConfig),
+    Button: withColumnSpan(ButtonConfig),
   },
   categories: {
     recommended: {
@@ -96,7 +104,7 @@ export const config: UserConfig = {
       defaultExpanded: false,
     },
     layout: {
-      components: ['Space', 'Grid', 'Flex'],
+      components: ['Space', 'Grid', 'Flex', 'Container'],
       defaultExpanded: false,
     },
     embed: {
