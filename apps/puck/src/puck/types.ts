@@ -15,17 +15,20 @@ import {
   BuilderYouTubeVideoBlockProps,
 } from '@wepublish/website/builder';
 
+import { ContainerProps } from './components/layout/container';
 import { FlexProps } from './components/layout/flex';
 import { GridProps } from './components/layout/grid';
 import { SpaceProps } from './components/layout/space';
 import { WithColumnSpan } from './components/layout/with-column-span';
 import { SubscribeConfigProps } from './components/subscribe.config';
+import { WithDataSource } from './components/with-datasource';
+import { AlignmentField, AlignmentValue } from './plugins/alignment';
 import { BorderField } from './plugins/border';
 import { ColumnsField } from './plugins/columns';
 import { DatasourceField } from './plugins/datasource';
 import { PaddingField } from './plugins/padding';
+import { PaletteField } from './plugins/palette';
 import { SEOField, SEOValue } from './plugins/seo';
-import { WithDataSource } from './components/with-datasource';
 
 export type RootProps = {
   showNavigation: boolean;
@@ -42,6 +45,7 @@ type BaseComponents = {
   Space: SpaceProps;
   Grid: WithDataSource<GridProps>;
   Flex: WithDataSource<FlexProps>;
+  Container: WithDataSource<ContainerProps>;
   RichText: BuilderRichTextBlockProps;
   Listicle: BuilderListicleBlockProps;
   IFrame: BuilderIFrameBlockProps;
@@ -52,6 +56,7 @@ type BaseComponents = {
   Facebook: BuilderFacebookPostBlockProps;
   Instagram: BuilderInstagramPostBlockProps;
   Subscribe: SubscribeConfigProps;
+  Button: { text: string; alignment?: AlignmentValue };
 };
 
 export type Components = {
@@ -64,6 +69,8 @@ export type UserFields = {
   padding: PaddingField;
   border: BorderField;
   columns: ColumnsField;
+  alignment: AlignmentField;
+  palette: PaletteField;
 };
 
 export type UserConfig = Config<{

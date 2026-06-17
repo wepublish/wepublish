@@ -74,16 +74,24 @@ export function withColumnSpan<Props extends DefaultComponentProps>(
 
       return { ...resolved, props };
     },
-    render: ({ columnSpan, rowSpan, ...props }) => (
-      <div
-        ref={props.puck.dragRef}
-        style={{
-          gridColumn: columnSpan ? `span ${columnSpan}` : undefined,
-          gridRow: rowSpan ? `span ${rowSpan}` : undefined,
-        }}
-      >
-        <Render {...(props as Parameters<typeof Render>[0])} />
-      </div>
-    ),
+    render: ({ columnSpan, rowSpan, className, ...props }) => {
+      return (
+        <div
+          ref={props.puck.dragRef}
+          css={{
+            gridColumn: columnSpan ? `span ${columnSpan}` : undefined,
+            gridRow: rowSpan ? `span ${rowSpan}` : undefined,
+            // TBD...
+            display: 'grid',
+            alignItems: 'start',
+            gap: 0,
+            gridTemplateRows: 'auto',
+            placeContent: props.alignment,
+          }}
+        >
+          <Render {...(props as Parameters<typeof Render>[0])} />
+        </div>
+      );
+    },
   } as ComponentConfig<{ props: WithColumnSpan<Props>; fields: UserFields }>;
 }

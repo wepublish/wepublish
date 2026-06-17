@@ -8,6 +8,7 @@ export const Space: ComponentConfig<{
   props: SpaceProps;
   fields: UserFields;
 }> = {
+  inline: true,
   fields: {
     size: {
       type: 'select',
@@ -23,5 +24,10 @@ export const Space: ComponentConfig<{
   defaultProps: {
     size: 24,
   },
-  render: ({ size }) => <div style={{ height: size }} />,
+  render: ({ size, ...props }) => (
+    <div
+      style={{ height: size }}
+      ref={props.puck.dragRef}
+    />
+  ),
 };
