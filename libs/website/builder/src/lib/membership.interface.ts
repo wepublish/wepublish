@@ -162,6 +162,7 @@ export type BuilderSubscribeProps<
   transactionFee?: (monthlyAmount: number) => number;
   transactionFeeText?: string;
   returningUserId?: string;
+  supportPeriodicity?: PaymentPeriodicity;
 } & Pick<BuilderRegistrationFormProps<T>, 'schema' | 'fields'>;
 
 export type BuilderUpgradeProps = {

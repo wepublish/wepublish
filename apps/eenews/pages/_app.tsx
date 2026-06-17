@@ -49,6 +49,7 @@ import { zodI18nMap } from 'zod-i18n-map';
 
 import { EeNewsMemberPlanPicker } from '../src/components/eenews-memberplan-picker';
 import { EeNewsMemberPlanItem } from '../src/components/eenews-memberplan-picker-item';
+import { EeNewsSubscribe } from '../src/components/eenews-subscribe';
 
 setDefaultOptions({
   locale: de,
@@ -129,6 +130,7 @@ function CustomApp({
               elements={{ Link: NextWepublishLink }}
               MemberPlanPicker={EeNewsMemberPlanPicker}
               MemberPlanItem={EeNewsMemberPlanItem}
+              Subscribe={EeNewsSubscribe}
               date={{ format: dateFormatter }}
               meta={{ siteTitle }}
             >
