@@ -106,16 +106,24 @@ RUN npx prisma generate && \
     cp docker/api_build_package.json package.json && \
     npx @yao-pkg/pkg package.json
 
-# Collect only Prisma + pg runtime deps for the API binary
+# Collect only Prisma + pg + @tiptap/pm runtime deps for the API binary.
+# @tiptap/pm is a pkg publicPackage (loaded from disk, not bundled into the
+# snapshot), so it and its prosemirror dependencies must exist in node_modules.
 FROM ${PLAIN_BUILD_IMAGE} AS api-prisma-deps
 WORKDIR /deps
 RUN --mount=from=build-api,source=/wepublish/node_modules,target=/src \
-    mkdir -p node_modules && \
+    mkdir -p node_modules/@tiptap && \
     cp -a /src/.prisma /src/@prisma node_modules/ && \
+    cp -a /src/@tiptap/pm node_modules/@tiptap/ && \
     cd /src && cp -a \
     pg pg-pool pg-protocol pg-types pg-connection-string \
     pgpass pg-int8 postgres-array postgres-bytea postgres-date \
     postgres-interval split2 \
+    prosemirror-changeset prosemirror-commands prosemirror-dropcursor \
+    prosemirror-gapcursor prosemirror-history prosemirror-inputrules \
+    prosemirror-keymap prosemirror-model prosemirror-schema-list \
+    prosemirror-state prosemirror-tables prosemirror-transform prosemirror-view \
+    rope-sequence w3c-keyname orderedmap \
     /deps/node_modules/
 
 FROM ${PLAIN_BUILD_IMAGE} AS api-setup
