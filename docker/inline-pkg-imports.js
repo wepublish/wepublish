@@ -42,18 +42,24 @@ function escapeRegExp(value) {
 
 function patchImports(pkgName) {
   const base = path.resolve('node_modules', pkgName);
+
   let imports;
   try {
     imports = require(path.join(base, 'package.json')).imports || {};
   } catch (err) {
+    console.log(`  package not found at node_modules/${pkgName}`);
     return 0;
   }
 
-  const specifiers = Object.keys(imports)
-    .map(key => ({ key, target: resolveImport(imports[key]) }))
-    .filter(specifier => specifier.target);
-  if (specifiers.length === 0) {
-    return 0;
+  const specifiers = [];
+  for (const key of Object.keys(imports)) {
+    const target = resolveImport(imports[key]);
+    if (!target) {
+      console.log(`  skip    ${key} (no resolvable require/node target)`);
+      continue;
+    }
+    console.log(`  resolve ${key} -> ${target}`);
+    specifiers.push({ key, target, hits: 0 });
   }
 
   let count = 0;
@@ -61,21 +67,25 @@ function patchImports(pkgName) {
     let code = fs.readFileSync(file, 'utf8');
     let changed = false;
 
-    for (const { key, target } of specifiers) {
+    for (const specifier of specifiers) {
       const rel = path
-        .relative(path.dirname(file), path.join(base, target))
+        .relative(path.dirname(file), path.join(base, specifier.target))
         .split(path.sep)
         .join('/');
       const spec = rel.startsWith('.') ? rel : `./${rel}`;
       const pattern = new RegExp(
-        `(require\\(\\s*['"])${escapeRegExp(key)}(['"]\\s*\\))`,
+        `(require\\(\\s*['"])${escapeRegExp(specifier.key)}(['"]\\s*\\))`,
         'g'
       );
-      const next = code.replace(pattern, `$1${spec}$2`);
-      if (next !== code) {
-        code = next;
+      const matches = code.match(pattern);
+      if (matches) {
+        code = code.replace(pattern, `$1${spec}$2`);
+        specifier.hits += matches.length;
+        count += matches.length;
         changed = true;
-        count++;
+        console.log(
+          `  rewrite ${pkgName}/${path.relative(base, file)}: require('${specifier.key}') -> require('${spec}') (${matches.length}x)`
+        );
       }
     }
 
@@ -84,10 +94,19 @@ function patchImports(pkgName) {
     }
   }
 
+  for (const specifier of specifiers) {
+    if (specifier.hits === 0) {
+      console.log(
+        `  unused  ${specifier.key} (in imports map but no require() found in any file)`
+      );
+    }
+  }
+
   return count;
 }
 
 for (const pkgName of PACKAGES) {
+  console.log(`Inlining #imports for ${pkgName}`);
   const count = patchImports(pkgName);
   if (count === 0) {
     console.error(

@@ -8,18 +8,23 @@ const path = require('path');
 // Add any future package with the same limitation to this array.
 const PACKAGES = ['@tiptap/pm'];
 
-function readExports(base) {
-  try {
-    return require(path.join(base, 'package.json')).exports || {};
-  } catch (err) {
-    return null;
+// Pick the CommonJS/Node target from a (possibly conditional) exports entry.
+function resolveExport(entry) {
+  let target = typeof entry === 'string' ? entry : entry && (entry.require || entry.import || entry.default);
+  if (target && typeof target === 'object') {
+    target = target.require || target.default || target.import;
   }
+  return typeof target === 'string' ? target : null;
 }
 
 function generateShims(pkgName) {
   const base = path.resolve('node_modules', pkgName);
-  const exp = readExports(base);
-  if (!exp) {
+
+  let exp;
+  try {
+    exp = require(path.join(base, 'package.json')).exports || {};
+  } catch (err) {
+    console.log(`  package not found at node_modules/${pkgName}`);
     return 0;
   }
 
@@ -29,23 +34,21 @@ function generateShims(pkgName) {
       continue;
     }
 
-    const entry = exp[key];
-    let target =
-      typeof entry === 'string' ? entry : entry.require || entry.import || entry.default;
-    if (target && typeof target === 'object') {
-      target = target.require || target.default || target.import;
-    }
+    const subpath = key.slice(2);
+    const target = resolveExport(exp[key]);
     if (!target) {
+      console.log(`  skip    ${pkgName}/${subpath} (no resolvable require/import target)`);
       continue;
     }
 
-    const dir = path.join(base, key.slice(2));
+    const dir = path.join(base, subpath);
     fs.mkdirSync(dir, { recursive: true });
     const rel = path.relative(dir, path.join(base, target)).split(path.sep).join('/');
     fs.writeFileSync(
       path.join(dir, 'index.js'),
       `module.exports = require(${JSON.stringify(rel)})\n`
     );
+    console.log(`  shim    ${pkgName}/${subpath}/index.js -> ${rel}`);
     count++;
   }
 
@@ -53,6 +56,7 @@ function generateShims(pkgName) {
 }
 
 for (const pkgName of PACKAGES) {
+  console.log(`Generating exports shims for ${pkgName}`);
   const count = generateShims(pkgName);
   if (count === 0) {
     console.error(
