@@ -57,10 +57,14 @@ const MetaSep = styled('span')`
 `;
 
 const PreTitle = styled(Typography)`
-  display: block;
-  margin: 0 0 6px;
-  font-weight: 700;
-  color: ${({ theme }) => theme.palette.primary.main};
+  display: inline-block;
+  margin: 0 0 12px;
+  color: ${({ theme }) => theme.palette.common.white};
+  padding: 0.3rem 0.4rem 0.2rem;
+  background-color: ${({ theme }) => theme.palette.primary.main};
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    font-size: 16px;
+  }
 `;
 
 const TitleLine = styled(Typography)`
@@ -68,6 +72,9 @@ const TitleLine = styled(Typography)`
   margin: 0 0 28px;
   color: ${({ theme }) => theme.palette.primary.main};
   text-wrap: balance;
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    font-size: clamp(38px, 4vw, 44px);
+  }
 `;
 
 const LeadTop = styled(Typography)`

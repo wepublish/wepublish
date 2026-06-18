@@ -91,17 +91,17 @@ const ToggleLink = styled('a', {
   color: ${({ theme }) => theme.palette.primary.main};
   opacity: ${({ isActive }) => (isActive ? 1 : 0.45)};
   font-weight: ${({ isActive }) => (isActive ? 800 : 400)};
-  text-decoration: ${({ isActive }) => (isActive ? 'underline' : 'none')};
-  text-decoration-thickness: 3px;
-  text-underline-offset: 6px;
+  text-decoration: none;
   cursor: pointer;
+  & span {
+    font-weight: inherit;
+  }
   &:hover {
     opacity: 1;
   }
   ${({ theme }) => theme.breakpoints.down('sm')} {
     width: 100%;
     padding: 3px 0;
-    text-decoration: none;
   }
 `;
 

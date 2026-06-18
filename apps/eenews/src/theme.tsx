@@ -1,16 +1,8 @@
 import { createTheme, CSSObject, Theme, ThemeOptions } from '@mui/material';
 import { theme as WePTheme } from '@wepublish/ui';
-import { Manrope, Source_Serif_4 } from 'next/font/google';
+import { Cactus_Classical_Serif } from 'next/font/google';
 import localFont from 'next/font/local';
 import { PartialDeep } from 'type-fest';
-
-const manrope = Manrope({
-  weight: ['300', '400', '500', '600', '700', '800'],
-  style: ['normal'],
-  subsets: ['latin', 'latin-ext'],
-  display: 'swap',
-  preload: true,
-});
 
 export const gilroy = localFont({
   src: [
@@ -42,27 +34,17 @@ export const gilroy = localFont({
   ],
 });
 
-const sourceSerif = Source_Serif_4({
-  weight: ['400', '600', '700'],
-  style: ['normal', 'italic'],
+const cactus = Cactus_Classical_Serif({
+  weight: ['400'],
+  style: ['normal'],
   subsets: ['latin', 'latin-ext'],
   display: 'swap',
   preload: true,
 });
 
-const sans = [
-  gilroy.style.fontFamily,
-  manrope.style.fontFamily,
-  'system-ui',
-  'sans-serif',
-].join(',');
+const sans = [gilroy.style.fontFamily, 'system-ui', 'sans-serif'].join(',');
 
-const serif = [
-  sourceSerif.style.fontFamily,
-  '"Source Serif Pro"',
-  'Georgia',
-  'serif',
-].join(',');
+const serif = [cactus.style.fontFamily, 'Georgia', 'serif'].join(',');
 
 export const eenewsColors = {
   accent: '#195a7d',

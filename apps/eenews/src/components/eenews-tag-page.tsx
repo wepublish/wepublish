@@ -19,6 +19,7 @@ import { MdClose } from 'react-icons/md';
 import { ActiveBadgeTagContext } from '../context/active-badge-tag-context';
 import { EenewsPagination } from './eenews-pagination';
 import { EenewsTeaser } from './teasers/eenews-teaser';
+import { enrichTeasersWithAds } from './teasers/eenews-teaser-ads';
 import { isAllowedTagName } from './teasers/eenews-teaser-selectors';
 import { EenewsTeaserSkeleton } from './teasers/eenews-teaser-skeleton';
 
@@ -315,17 +316,19 @@ export const EenewsTagPage = ({
   const articlesLoading =
     isIntersection ? filteredArticles.loading : articlesResult.loading;
   const articles = articlesData?.articles?.nodes ?? [];
-  const teasers = articles.map(
-    article =>
-      ({
-        __typename: 'ArticleTeaser',
-        style: 'DEFAULT',
-        image: null,
-        preTitle: null,
-        title: null,
-        lead: null,
-        article,
-      }) as unknown as FullTeaserFragment
+  const teasers = enrichTeasersWithAds(
+    articles.map(
+      article =>
+        ({
+          __typename: 'ArticleTeaser',
+          style: 'DEFAULT',
+          image: null,
+          preTitle: null,
+          title: null,
+          lead: null,
+          article,
+        }) as unknown as FullTeaserFragment
+    )
   );
   const totalCount = articlesData?.articles?.totalCount ?? 0;
   const currentPage = Math.floor(skip / take) + 1;

@@ -3,43 +3,44 @@ import { Button, Typography } from '@mui/material';
 import { BuilderInvoiceListItemProps } from '@wepublish/website/builder';
 
 const Row = styled('div')`
-  display: grid;
-  grid-template-columns: 110px 1fr 130px 100px auto;
-  gap: 16px;
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  padding: 14px 0;
-  border-bottom: 1px solid ${({ theme }) => theme.palette.divider};
+  gap: 6px 20px;
+  padding: 16px 0;
+  border-bottom: 1px solid rgba(193, 54, 27, 0.18);
   &:last-child {
     border-bottom: 0;
-  }
-  ${({ theme }) => theme.breakpoints.down('md')} {
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
   }
 `;
 
 const Nr = styled(Typography)`
-  display: block;
+  flex: 0 0 auto;
   color: ${({ theme }) => theme.palette.primary.main};
+  font-variant-numeric: tabular-nums;
+  opacity: 0.7;
 `;
 
 const Desc = styled(Typography)`
-  display: block;
+  flex: 1 1 200px;
+  min-width: 0;
   color: ${({ theme }) => theme.palette.text.primary};
 `;
 
 const DueDate = styled(Typography)`
-  display: block;
+  flex: 0 0 auto;
   color: ${({ theme }) => theme.palette.text.secondary};
 `;
 
 const Amount = styled(Typography)`
-  display: block;
+  flex: 0 0 auto;
+  font-size: 18px;
+  font-weight: 800;
   color: ${({ theme }) => theme.palette.primary.main};
-  text-align: right;
-  ${({ theme }) => theme.breakpoints.down('md')} {
-    text-align: left;
-  }
+`;
+
+const PayButton = styled(Button)`
+  flex: 0 0 auto;
 `;
 
 const formatDateDE = (raw: string | null | undefined): string => {
@@ -72,15 +73,15 @@ export const EenewsInvoiceListItem = ({
       <Nr variant="teaserMeta">{id.slice(0, 8)}</Nr>
       <Desc variant="teaserMeta">{description ?? 'Mitgliedschaft'}</Desc>
       <DueDate variant="teaserMeta">Fällig: {formatDateDE(dueAt)}</DueDate>
-      <Amount variant="articleH2">CHF {chf}</Amount>
+      <Amount variant="teaserMeta">CHF {chf}</Amount>
       {canPay && pay && (
-        <Button
+        <PayButton
           variant={'ee-alert' as any}
           size="small"
           onClick={() => pay()}
         >
           Bezahlen →
-        </Button>
+        </PayButton>
       )}
     </Row>
   );

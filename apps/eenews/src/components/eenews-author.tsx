@@ -14,6 +14,7 @@ import { useMemo } from 'react';
 
 import { EenewsPagination } from './eenews-pagination';
 import { EenewsTeaser } from './teasers/eenews-teaser';
+import { enrichTeasersWithAds } from './teasers/eenews-teaser-ads';
 
 const AUTHOR_ARTICLES_PER_PAGE = 12;
 
@@ -107,6 +108,20 @@ export const EenewsAuthor = ({ data, className }: BuilderAuthorProps) => {
   }
 
   const articles = articlesData?.articles?.nodes ?? [];
+  const teasers = enrichTeasersWithAds(
+    articles.map(
+      article =>
+        ({
+          __typename: 'ArticleTeaser',
+          style: 'DEFAULT',
+          image: null,
+          preTitle: null,
+          title: null,
+          lead: null,
+          article,
+        }) as unknown as FullTeaserFragment
+    )
+  );
   const totalCount = articlesData?.articles?.totalCount ?? 0;
   const totalPages = Math.max(
     1,
@@ -141,20 +156,10 @@ export const EenewsAuthor = ({ data, className }: BuilderAuthorProps) => {
           </ArticlesHead>
           <Grid>
             <WebsiteBuilderProvider blocks={{ Teaser: EenewsTeaser }}>
-              {articles.map((relatedArticle, idx) => (
+              {teasers.map((teaser, idx) => (
                 <BuilderTeaser
-                  key={relatedArticle.id}
-                  teaser={
-                    {
-                      __typename: 'ArticleTeaser',
-                      style: 'DEFAULT',
-                      image: null,
-                      preTitle: null,
-                      title: null,
-                      lead: null,
-                      article: relatedArticle,
-                    } as unknown as FullTeaserFragment
-                  }
+                  key={idx}
+                  teaser={teaser}
                   index={idx}
                   blockStyle="DossierGrid"
                   numColumns={3}

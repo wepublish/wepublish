@@ -1,13 +1,17 @@
-import { ProfilePage } from '@wepublish/utils/website';
+import { ProfilePage, withAuthGuard } from '@wepublish/utils/website';
 
 import { EenewsPageShell } from '../../src/components/eenews-page-shell';
+import { EenewsProfile } from '../../src/components/eenews-profile';
 
-export default function Profile() {
+function Profile() {
   return (
     <EenewsPageShell>
-      <ProfilePage />
+      <EenewsProfile />
     </EenewsPageShell>
   );
 }
 
-Profile.getInitialProps = ProfilePage.getInitialProps;
+const GuardedProfile = withAuthGuard(Profile);
+GuardedProfile.getInitialProps = ProfilePage.getInitialProps;
+
+export default GuardedProfile;

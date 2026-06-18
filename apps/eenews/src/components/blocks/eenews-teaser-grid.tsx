@@ -8,6 +8,7 @@ import {
 
 import { EeNewsBlockType } from '../block-styles/eenews-block-styles';
 import { EenewsTeaser } from '../teasers/eenews-teaser';
+import { enrichTeasersWithAds } from '../teasers/eenews-teaser-ads';
 import { EenewsTeaserSkeleton } from '../teasers/eenews-teaser-skeleton';
 
 type EenewsTeaserGridProps = BuilderTeaserGridBlockProps & {
@@ -46,7 +47,7 @@ export const EenewsTeaserGrid = ({
     blocks: { Teaser },
   } = useWebsiteBuilder();
   const columns = numColumns || 3;
-  const filled = (teasers ?? []).filter(isFilledTeaser);
+  const filled = enrichTeasersWithAds((teasers ?? []).filter(isFilledTeaser));
 
   if (!filled.length && loading) {
     return (

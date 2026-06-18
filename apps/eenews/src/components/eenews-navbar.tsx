@@ -526,7 +526,7 @@ export const EenewsNavbar = ({
         <TopBarRight>
           {hasUnpaidInvoices && (
             <InvoicePill
-              href="/profile#offene-rechnungen"
+              href="/profile/rechnungen"
               title="Offene Rechnung"
             >
               <InvoiceDot />

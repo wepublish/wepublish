@@ -42,6 +42,7 @@ import { zodI18nMap } from 'zod-i18n-map';
 
 import { Advertisement } from '../src/components/advertisement';
 import { EenewsBlockRenderer } from '../src/components/block-renderer/eenews-block-renderer';
+import { EenewsBreakBlock } from '../src/components/blocks/eenews-break-block';
 import { EenewsTeaserGrid } from '../src/components/blocks/eenews-teaser-grid';
 import { EenewsArticle } from '../src/components/eenews-article';
 import { EenewsAuthor } from '../src/components/eenews-author';
@@ -172,6 +173,7 @@ function CustomApp({
                 Renderer: EenewsBlockRenderer,
                 Teaser: EenewsTeaser,
                 TeaserGrid: EenewsTeaserGrid,
+                Break: EenewsBreakBlock,
               }}
               elements={{
                 Link: NextWepublishLink,

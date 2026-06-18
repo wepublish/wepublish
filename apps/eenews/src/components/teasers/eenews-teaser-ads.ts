@@ -17,7 +17,7 @@ export const enrichTeasersWithAds = (
   teasers: FullTeaserFragment[]
 ): FullTeaserFragment[] =>
   teasers.reduce<FullTeaserFragment[]>((acc, teaser, index) => {
-    if ((index + 4) % 6 === 0) {
+    if ((index + 3) % 6 === 0) {
       acc.push(createAdTeaser());
     }
     acc.push(teaser);

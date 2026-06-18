@@ -15,10 +15,6 @@ const Row = styled(Link)`
   text-decoration: none;
   color: inherit;
   cursor: pointer;
-  transition: background 0.15s;
-  &:hover {
-    background: rgba(25, 90, 125, 0.04);
-  }
   &:last-child {
     border-bottom: 0;
   }
