@@ -16,6 +16,7 @@ import { EeNewsBlockType } from '../block-styles/eenews-block-styles';
 import { isAdTeaser } from './eenews-teaser-ads';
 import {
   selectTeaserBreaking,
+  selectTeaserPreTitle,
   selectTeaserTag,
   selectTeaserTopic,
 } from './eenews-teaser-selectors';
@@ -23,7 +24,7 @@ import {
 const Card = styled(Link)`
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
   cursor: pointer;
   text-decoration: none;
   color: inherit;
@@ -99,6 +100,14 @@ const MetaTopic = styled('span')`
   text-transform: capitalize;
 `;
 
+const PreTitle = styled(Typography)`
+  align-self: flex-start;
+  color: ${({ theme }) => theme.palette.common.white};
+  margin: 0 0 -2px;
+  padding: 0.3rem 0.4rem 0.2rem;
+  background-color: ${({ theme }) => theme.palette.primary.main};
+`;
+
 const Title = styled(Typography)`
   display: block;
   color: ${({ theme }) => theme.palette.primary.main};
@@ -109,7 +118,7 @@ const Title = styled(Typography)`
 const Excerpt = styled(Typography)`
   display: block;
   color: ${({ theme }) => theme.palette.text.primary};
-  margin: 4px 0 0;
+  margin: 0 0 0;
   text-wrap: pretty;
 `;
 
@@ -152,6 +161,7 @@ export const EenewsTeaser = ({
   const tag = selectTeaserTag(teaser, priorityBadgeTag);
   const topic = selectTeaserTopic(teaser);
   const breaking = selectTeaserBreaking(teaser);
+  const preTitle = selectTeaserPreTitle(teaser);
 
   if (!url) {
     return null;
@@ -219,6 +229,8 @@ export const EenewsTeaser = ({
         {topic && date && <MetaSep>|</MetaSep>}
         {date && formatDateDE(date)}
       </Meta>
+
+      {preTitle && <PreTitle variant="articleEyebrow">{preTitle}</PreTitle>}
 
       <Title variant="teaserTitle">{displayTitle}</Title>
 

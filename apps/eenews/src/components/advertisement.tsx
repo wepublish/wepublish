@@ -108,9 +108,24 @@ const Skyscraper = styled(AdBox)`
 
 const MediumRectangle = styled(AdBox)`
   & {
+    position: relative;
     height: auto;
     max-width: 300px;
     width: 100%;
     aspect-ratio: 300/250;
+    overflow: hidden;
+  }
+
+  & > div,
+  & ins,
+  & iframe {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  & ins {
+    position: absolute;
+    inset: 0;
   }
 `;

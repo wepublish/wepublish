@@ -1,7 +1,7 @@
 import 'keen-slider/keen-slider.min.css';
 
 import styled from '@emotion/styled';
-import { Typography } from '@mui/material';
+import { Typography, useMediaQuery, useTheme } from '@mui/material';
 import { isFilledTeaser } from '@wepublish/block-content/website';
 import {
   BuilderTeaserSlotsBlockProps,
@@ -45,17 +45,7 @@ const Viewport = styled('div')`
 `;
 
 const Slide = styled('div')`
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 36px 32px;
-
-  ${({ theme }) => theme.breakpoints.down('lg')} {
-    grid-template-columns: 1fr 1fr;
-    gap: 24px;
-  }
-  ${({ theme }) => theme.breakpoints.down('sm')} {
-    grid-template-columns: 1fr;
-  }
+  height: 100%;
 `;
 
 const CarouselBtn = styled('button')<{ side: 'left' | 'right' }>`
@@ -112,7 +102,23 @@ const Dot = styled('button')<{ active: boolean }>`
   }
 `;
 
-const PER_PAGE = 3;
+const useSliderConfig = () => {
+  const theme = useTheme();
+  const lg = useMediaQuery(theme.breakpoints.up('lg'), {
+    ssrMatchMedia: () => ({ matches: false }),
+  });
+  const sm = useMediaQuery(theme.breakpoints.up('sm'), {
+    ssrMatchMedia: () => ({ matches: false }),
+  });
+
+  if (lg) {
+    return { perView: 3, spacing: 32 };
+  }
+  if (sm) {
+    return { perView: 2, spacing: 24 };
+  }
+  return { perView: 1, spacing: 16 };
+};
 
 export const EenewsTopNewsCarousel = ({
   title,
@@ -124,32 +130,32 @@ export const EenewsTopNewsCarousel = ({
   const {
     blocks: { Teaser },
   } = useWebsiteBuilder();
+  const { perView, spacing } = useSliderConfig();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [sliderRef, instanceRef] = useKeenSlider<HTMLDivElement>({
     loop: true,
-    slides: { perView: 1 },
+    slides: { perView, spacing },
     slideChanged(s) {
       setCurrentSlide(s.track.details.rel);
     },
   });
 
-  const pages = useMemo(() => {
-    const filled = (teasers ?? []).filter(isFilledTeaser);
-    const out: (typeof filled)[] = [];
-    for (let i = 0; i < filled.length; i += PER_PAGE) {
-      out.push(filled.slice(i, i + PER_PAGE));
-    }
-    return out;
-  }, [teasers]);
+  const filled = useMemo(
+    () => (teasers ?? []).filter(isFilledTeaser),
+    [teasers]
+  );
 
   useEffect(() => {
     const frame = requestAnimationFrame(() => instanceRef.current?.update());
     return () => cancelAnimationFrame(frame);
-  }, [instanceRef, pages.length]);
+  }, [instanceRef, perView, spacing, filled.length]);
 
-  if (!pages.length) {
+  if (!filled.length) {
     return null;
   }
+
+  const pageCount = Math.ceil(filled.length / perView);
+  const currentPage = Math.floor(currentSlide / perView);
 
   return (
     <Section className={className}>
@@ -160,7 +166,9 @@ export const EenewsTopNewsCarousel = ({
         <CarouselBtn
           side="left"
           aria-label="Zurück"
-          onClick={() => instanceRef.current?.prev()}
+          onClick={() =>
+            instanceRef.current?.moveToIdx((currentPage - 1) * perView)
+          }
           type="button"
         >
           <MdChevronLeft size={22} />
@@ -168,7 +176,9 @@ export const EenewsTopNewsCarousel = ({
         <CarouselBtn
           side="right"
           aria-label="Weiter"
-          onClick={() => instanceRef.current?.next()}
+          onClick={() =>
+            instanceRef.current?.moveToIdx((currentPage + 1) * perView)
+          }
           type="button"
         >
           <MdChevronRight size={22} />
@@ -179,39 +189,36 @@ export const EenewsTopNewsCarousel = ({
           className="keen-slider"
         >
           <WebsiteBuilderProvider blocks={{ Teaser: EenewsTeaser }}>
-            {pages.map((page, pageIdx) => (
+            {filled.map((teaser, idx) => (
               <Slide
-                key={pageIdx}
+                key={idx}
                 className="keen-slider__slide"
               >
-                {page.map((teaser, slotIdx) => (
-                  <Teaser
-                    key={`${pageIdx}-${slotIdx}`}
-                    teaser={teaser}
-                    index={pageIdx * PER_PAGE + slotIdx}
-                    blockStyle={blockStyle}
-                    numColumns={3}
-                    alignment={{
-                      i: `${pageIdx}-${slotIdx}`,
-                      x: 0,
-                      y: 0,
-                      w: 4,
-                      h: 1,
-                    }}
-                  />
-                ))}
+                <Teaser
+                  teaser={teaser}
+                  index={idx}
+                  blockStyle={blockStyle}
+                  numColumns={3}
+                  alignment={{
+                    i: String(idx),
+                    x: 0,
+                    y: 0,
+                    w: 4,
+                    h: 1,
+                  }}
+                />
               </Slide>
             ))}
           </WebsiteBuilderProvider>
         </Viewport>
 
         <Dots>
-          {pages.map((_, idx) => (
+          {Array.from({ length: pageCount }).map((_, idx) => (
             <Dot
               key={idx}
-              active={idx === currentSlide}
+              active={idx === currentPage}
               aria-label={`Seite ${idx + 1}`}
-              onClick={() => instanceRef.current?.moveToIdx(idx)}
+              onClick={() => instanceRef.current?.moveToIdx(idx * perView)}
               type="button"
             />
           ))}

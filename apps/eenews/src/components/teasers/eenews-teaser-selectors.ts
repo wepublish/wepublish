@@ -80,3 +80,17 @@ export const selectTeaserBreaking = (
   }
   return teaser.article?.latest?.breaking ?? false;
 };
+
+export const selectTeaserPreTitle = (
+  teaser: FullTeaserFragment | null | undefined
+): string | undefined => {
+  if (!teaser) {
+    return undefined;
+  }
+  const raw =
+    teaser.__typename === 'ArticleTeaser' ?
+      teaser.preTitle || teaser.article?.latest.preTitle
+    : teaser.preTitle;
+  const text = raw?.trim();
+  return text ? text : undefined;
+};

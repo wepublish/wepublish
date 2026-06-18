@@ -183,6 +183,7 @@ const HeroInner = styled('div', {
 
   ${({ theme }) => theme.breakpoints.down('md')} {
     padding: 0 20px;
+    min-height: auto;
   }
 `;
 

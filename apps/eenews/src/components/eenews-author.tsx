@@ -50,6 +50,17 @@ const ArticlesSection = styled('section')`
   }
 `;
 
+const ArticlesHead = styled('div')`
+  max-width: var(--max-width);
+  margin: 0 auto 28px;
+`;
+
+const ArticlesTitle = styled(Typography)`
+  display: block;
+  margin: 0;
+  color: ${({ theme }) => theme.palette.primary.main};
+`;
+
 const Grid = styled('div')`
   max-width: var(--max-width);
   margin: 0 auto;
@@ -62,6 +73,7 @@ const Grid = styled('div')`
   }
   ${({ theme }) => theme.breakpoints.down('sm')} {
     grid-template-columns: 1fr;
+    gap: 50px;
   }
 `;
 
@@ -122,6 +134,11 @@ export const EenewsAuthor = ({ data, className }: BuilderAuthorProps) => {
 
       {articles.length > 0 && (
         <ArticlesSection>
+          <ArticlesHead>
+            <ArticlesTitle variant="sectionTitle">
+              Alle Artikel von {author.name}
+            </ArticlesTitle>
+          </ArticlesHead>
           <Grid>
             <WebsiteBuilderProvider blocks={{ Teaser: EenewsTeaser }}>
               {articles.map((relatedArticle, idx) => (

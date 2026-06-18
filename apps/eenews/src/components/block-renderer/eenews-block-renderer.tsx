@@ -1,4 +1,7 @@
-import { BlockRenderer } from '@wepublish/block-content/website';
+import {
+  BlockRenderer,
+  isRichTextBlock,
+} from '@wepublish/block-content/website';
 import { FullBlockFragment } from '@wepublish/website/api';
 import { BuilderBlockRendererProps } from '@wepublish/website/builder';
 import { cond } from 'ramda';
@@ -16,6 +19,7 @@ import { EenewsArticleSupportCallout } from '../blocks/eenews-article-support';
 import { EenewsDossierGrid } from '../blocks/eenews-dossier-grid';
 import { EenewsSectionBand } from '../blocks/eenews-section-band';
 import { EenewsTopNewsCarousel } from '../blocks/eenews-top-news-carousel';
+import { EenewsArticleRichText } from '../eenews-article-richtext';
 
 export const EenewsBlockRenderer = (props: BuilderBlockRendererProps) => {
   const extraBlockMap = useMemo(
@@ -33,5 +37,23 @@ export const EenewsBlockRenderer = (props: BuilderBlockRendererProps) => {
     []
   );
 
-  return extraBlockMap(props.block) ?? <BlockRenderer {...props} />;
+  const custom = extraBlockMap(props.block);
+  if (custom) {
+    return custom;
+  }
+
+  if (
+    props.type === 'Article' &&
+    props.index === 0 &&
+    isRichTextBlock(props.block)
+  ) {
+    return (
+      <EenewsArticleRichText
+        className={props.className}
+        richText={props.block.richText}
+      />
+    );
+  }
+
+  return <BlockRenderer {...props} />;
 };

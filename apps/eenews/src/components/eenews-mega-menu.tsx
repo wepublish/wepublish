@@ -66,10 +66,11 @@ const MegaOverlay = styled('div', {
     `}
 
   ${({ theme }) => theme.breakpoints.down('md')} {
+    top: 85px;
     ${({ isOpen }) =>
       isOpen &&
       css`
-        padding: 24px 0 32px;
+        padding: 24px 0 56px;
       `}
   }
 `;
@@ -92,7 +93,18 @@ const MegaGrid = styled('div')`
     padding: 0 20px;
   }
   ${({ theme }) => theme.breakpoints.down('sm')} {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 20px;
+    row-gap: 16px;
+    align-items: start;
+
+    & > * {
+      grid-column: 1;
+    }
+    & > *:nth-of-type(2) {
+      grid-column: 2;
+      grid-row: 1 / span 3;
+    }
   }
 `;
 
@@ -110,6 +122,12 @@ const ColList = styled('ul')`
 const ColItem = styled('li')`
   line-height: 42px;
   white-space: nowrap;
+  ${({ theme }) => theme.breakpoints.down('md')} {
+    line-height: 1.2;
+    margin-bottom: 6px;
+    white-space: normal;
+    hyphens: none;
+  }
 `;
 
 const ColLink = styled(Link)`
@@ -121,6 +139,12 @@ const ColLink = styled(Link)`
     text-decoration: underline;
     text-underline-offset: 4px;
     text-decoration-thickness: 1px;
+  }
+  ${({ theme }) => theme.breakpoints.down('md')} {
+    & span {
+      font-size: 17px;
+      line-height: 1.2;
+    }
   }
 `;
 

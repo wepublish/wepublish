@@ -56,6 +56,13 @@ const MetaSep = styled('span')`
   opacity: 0.7;
 `;
 
+const PreTitle = styled(Typography)`
+  display: block;
+  margin: 0 0 6px;
+  font-weight: 700;
+  color: ${({ theme }) => theme.palette.primary.main};
+`;
+
 const TitleLine = styled(Typography)`
   display: block;
   margin: 0 0 28px;
@@ -94,6 +101,9 @@ const BylineRole = styled(Typography)`
 
 const HeroFigure = styled('figure')`
   margin: 0 0 28px;
+`;
+
+const HeroFrame = styled('div')`
   overflow: hidden;
   background: #e6ece9;
 `;
@@ -103,6 +113,16 @@ const HeroImage = styled(Image)`
   height: auto;
   max-height: 480px;
   object-fit: cover;
+`;
+
+const HeroCaption = styled(Typography)`
+  display: block;
+  margin-top: 10px;
+  color: ${({ theme }) => theme.palette.text.secondary};
+`;
+
+const HeroCredit = styled('span')`
+  opacity: 0.8;
 `;
 
 const BreakingFlag = styled('div')`
@@ -138,14 +158,6 @@ const ShareLabel = styled(Typography)`
   color: ${({ theme }) => theme.palette.primary.main};
 `;
 
-const Likes = styled('div')`
-  margin-left: auto;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  color: ${({ theme }) => theme.palette.text.secondary};
-`;
-
 const Related = styled('section')`
   max-width: var(--max-width);
   margin: 0 auto;
@@ -172,6 +184,7 @@ const RelatedGrid = styled('div')`
   }
   ${({ theme }) => theme.breakpoints.down('sm')} {
     grid-template-columns: 1fr;
+    gap: 50px;
   }
 `;
 
@@ -225,6 +238,11 @@ export const EenewsArticle = ({
   const topicLabel = article.tags?.find(t => t.main)?.tag ?? undefined;
   const authors = (latest.authors ?? []).filter(a => !a.hideOnArticle);
   const hero = latest.image ?? undefined;
+  const heroCaption = (hero?.description ?? '')
+    .trim()
+    .replace(/©\s*$/, '')
+    .trim();
+  const heroCredit = hero?.source?.trim() ?? '';
   const url = article.url ?? '';
   const title = latest.title ?? '';
   const properties = (latest.properties ?? []).map(p => ({
@@ -233,6 +251,12 @@ export const EenewsArticle = ({
     public: true,
   }));
   const relatedTeasers = (relatedData?.articles?.nodes ?? []).slice(0, 3);
+  // The importer emits a TitleBlock mirroring the article title + lead. Those
+  // are already rendered in the header above (from metadata), so drop the
+  // TitleBlock from the body to avoid rendering title/lead twice.
+  const bodyBlocks = (latest.blocks ?? []).filter(
+    (b: { __typename?: string }) => b?.__typename !== 'TitleBlock'
+  );
 
   return (
     <ArticlePropertiesContext.Provider value={properties}>
@@ -258,13 +282,17 @@ export const EenewsArticle = ({
           )}
         </Eyebrow>
 
+        {latest.preTitle && (
+          <PreTitle variant="articleEyebrow">{latest.preTitle}</PreTitle>
+        )}
+
         <TitleLine variant="articleTitle">{title}</TitleLine>
 
         {latest.lead && (
           <LeadTop variant="articleLeadTop">{latest.lead}</LeadTop>
         )}
 
-        {authors.length > 0 && (
+        {authors.length > 0 && false && (
           <Byline>
             {authors.map(author => (
               <BylineItem key={author.id}>
@@ -281,17 +309,29 @@ export const EenewsArticle = ({
 
         {hero && (
           <HeroFigure>
-            <HeroImage
-              image={hero}
-              maxWidth={1200}
-            />
+            <HeroFrame>
+              <HeroImage
+                image={hero}
+                maxWidth={1200}
+              />
+            </HeroFrame>
+            {(heroCaption || heroCredit) && (
+              <HeroCaption variant="articleCaption">
+                {heroCaption}
+                {heroCredit && (
+                  <HeroCredit>
+                    {heroCaption ? ' ' : ''}© {heroCredit}
+                  </HeroCredit>
+                )}
+              </HeroCaption>
+            )}
           </HeroFigure>
         )}
 
         {!hideContent && (
           <Body>
             <Blocks
-              blocks={latest.blocks as unknown as FullBlockFragment[]}
+              blocks={bodyBlocks as unknown as FullBlockFragment[]}
               type="Article"
             />
           </Body>
@@ -305,9 +345,6 @@ export const EenewsArticle = ({
             url={url}
             title={title}
           />
-          <Likes title="Likes">
-            <Typography variant="articleCaption">♥ {article.likes}</Typography>
-          </Likes>
         </ShareRow>
       </Wrapper>
 

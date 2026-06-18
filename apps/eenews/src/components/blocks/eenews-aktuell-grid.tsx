@@ -2,14 +2,30 @@ import styled from '@emotion/styled';
 import { Typography } from '@mui/material';
 import { isFilledTeaser } from '@wepublish/block-content/website';
 import {
+  ArticleSort,
+  FullTeaserFragment,
+  SortOrder,
+  useArticleListQuery,
+  useTagListQuery,
+} from '@wepublish/website/api';
+import {
   BuilderTeaserSlotsBlockProps,
   useWebsiteBuilder,
   WebsiteBuilderProvider,
 } from '@wepublish/website/builder';
-import { useRouter } from 'next/router';
+import { useMemo, useState } from 'react';
 
 import { EenewsTeaser } from '../teasers/eenews-teaser';
 import { enrichTeasersWithAds } from '../teasers/eenews-teaser-ads';
+import { EenewsTeaserSkeleton } from '../teasers/eenews-teaser-skeleton';
+
+type Region = 'ch' | 'welt' | 'fr';
+
+const REGION_TAG_NAME: Record<Region, string | null> = {
+  ch: null,
+  welt: 'international',
+  fr: 'articles en français',
+};
 
 const Section = styled('section')`
   background: ${({ theme }) => theme.palette.background.default};
@@ -73,9 +89,11 @@ const ToggleLink = styled('a', {
   border: 0;
   padding: 4px 2px;
   color: ${({ theme }) => theme.palette.primary.main};
-  opacity: ${({ isActive }) => (isActive ? 1 : 0.55)};
-  font-weight: ${({ isActive }) => (isActive ? 700 : 400)};
-  text-decoration: none;
+  opacity: ${({ isActive }) => (isActive ? 1 : 0.45)};
+  font-weight: ${({ isActive }) => (isActive ? 800 : 400)};
+  text-decoration: ${({ isActive }) => (isActive ? 'underline' : 'none')};
+  text-decoration-thickness: 3px;
+  text-underline-offset: 6px;
   cursor: pointer;
   &:hover {
     opacity: 1;
@@ -83,25 +101,8 @@ const ToggleLink = styled('a', {
   ${({ theme }) => theme.breakpoints.down('sm')} {
     width: 100%;
     padding: 3px 0;
+    text-decoration: none;
   }
-  ${({ theme, isActive }) =>
-    isActive &&
-    `&:not(:last-child)::after {
-      content: '';
-      display: inline-block;
-      width: 1px;
-      height: 22px;
-      margin-left: 18px;
-      vertical-align: middle;
-      background: currentColor;
-      opacity: 0.6;
-      ${theme.breakpoints.down('sm')} {
-        display: block;
-        width: 56px;
-        height: 1px;
-        margin: 8px 0 0;
-      }
-    }`}
 `;
 
 const Grid = styled('div')`
@@ -117,6 +118,7 @@ const Grid = styled('div')`
   }
   ${({ theme }) => theme.breakpoints.down('sm')} {
     grid-template-columns: 1fr;
+    gap: 50px;
   }
 `;
 
@@ -126,15 +128,70 @@ export const EenewsAktuellGrid = ({
   blockStyle,
   className,
 }: BuilderTeaserSlotsBlockProps) => {
-  const router = useRouter();
   const {
     blocks: { Teaser },
   } = useWebsiteBuilder();
-  const filled = enrichTeasersWithAds((teasers ?? []).filter(isFilledTeaser));
 
-  const isCH = router.asPath === '/';
-  const isIntl = router.asPath.startsWith('/a/tag/international');
-  const isFR = router.asPath.startsWith('/a/tag/articles');
+  const [region, setRegion] = useState<Region>('ch');
+
+  const cmsTeasers = useMemo(
+    () => (teasers ?? []).filter(isFilledTeaser),
+    [teasers]
+  );
+  const articleCount = cmsTeasers.length || 6;
+
+  const { data: tagListData } = useTagListQuery({
+    fetchPolicy: 'cache-first',
+    variables: { take: 100 },
+  });
+  const tagIdByName = useMemo(() => {
+    const map = new Map<string, string>();
+    for (const tag of tagListData?.tags?.nodes ?? []) {
+      if (tag.tag) {
+        map.set(tag.tag.toLowerCase(), tag.id);
+      }
+    }
+    return map;
+  }, [tagListData]);
+
+  const activeTagName = REGION_TAG_NAME[region];
+  const activeTagId =
+    activeTagName ? tagIdByName.get(activeTagName) : undefined;
+
+  const { data: articlesData, loading } = useArticleListQuery({
+    skip: !activeTagId,
+    fetchPolicy: 'cache-first',
+    variables: {
+      filter: { tagsInclude: activeTagId ? [activeTagId] : [] },
+      take: articleCount,
+      skip: 0,
+      sort: ArticleSort.PublishedAt,
+      order: SortOrder.Descending,
+    },
+  });
+
+  const articleTeasers = useMemo(
+    () =>
+      (articlesData?.articles?.nodes ?? []).map(
+        article =>
+          ({
+            __typename: 'ArticleTeaser',
+            style: 'DEFAULT',
+            image: null,
+            preTitle: null,
+            title: null,
+            lead: null,
+            article,
+          }) as unknown as FullTeaserFragment
+      ),
+    [articlesData]
+  );
+
+  const displayTeasers = enrichTeasersWithAds(
+    region === 'ch' ? cmsTeasers : articleTeasers
+  );
+  const pending = region !== 'ch' && (!activeTagId || loading);
+  const showSkeleton = pending && articleTeasers.length === 0;
 
   return (
     <Section className={className}>
@@ -146,7 +203,11 @@ export const EenewsAktuellGrid = ({
         >
           <ToggleLink
             href="/"
-            isActive={isCH}
+            isActive={region === 'ch'}
+            onClick={event => {
+              event.preventDefault();
+              setRegion('ch');
+            }}
           >
             <Typography
               variant="sectionToggle"
@@ -155,9 +216,14 @@ export const EenewsAktuellGrid = ({
               Schweiz
             </Typography>
           </ToggleLink>
+          <ToggleSep aria-hidden />
           <ToggleLink
             href="/a/tag/international"
-            isActive={isIntl}
+            isActive={region === 'welt'}
+            onClick={event => {
+              event.preventDefault();
+              setRegion('welt');
+            }}
           >
             <Typography
               variant="sectionToggle"
@@ -169,7 +235,11 @@ export const EenewsAktuellGrid = ({
           <ToggleSep aria-hidden />
           <ToggleLink
             href="/a/tag/articles%20en%20fran%C3%A7ais"
-            isActive={isFR}
+            isActive={region === 'fr'}
+            onClick={event => {
+              event.preventDefault();
+              setRegion('fr');
+            }}
           >
             <Typography
               variant="sectionToggle"
@@ -181,24 +251,29 @@ export const EenewsAktuellGrid = ({
         </Toggle>
       </Head>
       <Grid>
-        <WebsiteBuilderProvider blocks={{ Teaser: EenewsTeaser }}>
-          {filled.map((teaser, idx) => (
-            <Teaser
-              key={idx}
-              teaser={teaser}
-              index={idx}
-              blockStyle={blockStyle}
-              numColumns={3}
-              alignment={{
-                i: String(idx),
-                x: 0,
-                y: 0,
-                w: 4,
-                h: 1,
-              }}
-            />
-          ))}
-        </WebsiteBuilderProvider>
+        {showSkeleton ?
+          Array.from({ length: articleCount }).map((_, idx) => (
+            <EenewsTeaserSkeleton key={idx} />
+          ))
+        : <WebsiteBuilderProvider blocks={{ Teaser: EenewsTeaser }}>
+            {displayTeasers.map((teaser, idx) => (
+              <Teaser
+                key={idx}
+                teaser={teaser}
+                index={idx}
+                blockStyle={blockStyle}
+                numColumns={3}
+                alignment={{
+                  i: String(idx),
+                  x: 0,
+                  y: 0,
+                  w: 4,
+                  h: 1,
+                }}
+              />
+            ))}
+          </WebsiteBuilderProvider>
+        }
       </Grid>
     </Section>
   );

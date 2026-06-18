@@ -180,6 +180,7 @@ const Grid = styled('div')`
   }
   ${({ theme }) => theme.breakpoints.down('sm')} {
     grid-template-columns: 1fr;
+    gap: 50px;
   }
 `;
 

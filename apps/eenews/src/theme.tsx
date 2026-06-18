@@ -50,7 +50,12 @@ const sourceSerif = Source_Serif_4({
   preload: true,
 });
 
-const sans = [manrope.style.fontFamily, 'system-ui', 'sans-serif'].join(',');
+const sans = [
+  gilroy.style.fontFamily,
+  manrope.style.fontFamily,
+  'system-ui',
+  'sans-serif',
+].join(',');
 
 const serif = [
   sourceSerif.style.fontFamily,
