@@ -205,12 +205,7 @@ export const EenewsSubscriptionDetail = () => {
 
       <ProfileCard>
         <ProfileCardHead>
-          <ProfileCardTitle
-            variant="articleH2"
-            component="h2"
-          >
-            Details
-          </ProfileCardTitle>
+          <ProfileCardTitle variant="articleH2">Details</ProfileCardTitle>
         </ProfileCardHead>
         <ProfileCardBody>
           <MetaGrid>
@@ -264,10 +259,7 @@ export const EenewsSubscriptionDetail = () => {
 
       <ProfileCard>
         <ProfileCardHead>
-          <ProfileCardTitle
-            variant="articleH2"
-            component="h2"
-          >
+          <ProfileCardTitle variant="articleH2">
             Rechnungsverlauf
           </ProfileCardTitle>
         </ProfileCardHead>

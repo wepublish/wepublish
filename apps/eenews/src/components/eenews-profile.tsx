@@ -102,10 +102,7 @@ export const EenewsProfile = () => {
 
       <ProfileCard>
         <ProfileCardHead>
-          <ProfileCardTitle
-            variant="articleH2"
-            component="h1"
-          >
+          <ProfileCardTitle variant="articleH2">
             Aktive Abos &amp; Spenden
           </ProfileCardTitle>
           {hasActiveSubscriptions && (
@@ -137,10 +134,7 @@ export const EenewsProfile = () => {
 
       <ProfileCard>
         <ProfileCardHead>
-          <ProfileCardTitle
-            variant="articleH2"
-            component="h2"
-          >
+          <ProfileCardTitle variant="articleH2">
             Persönliche Daten &amp; Konto
           </ProfileCardTitle>
         </ProfileCardHead>

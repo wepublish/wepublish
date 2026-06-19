@@ -1,4 +1,5 @@
 import { SubscriptionPage, withAuthGuard } from '@wepublish/utils/website';
+import { NextPage } from 'next';
 
 import { EenewsPageShell } from '../../../src/components/eenews-page-shell';
 import { EenewsSubscriptionDetail } from '../../../src/components/eenews-subscription-detail';
@@ -11,11 +12,9 @@ function Subscription() {
   );
 }
 
-const GuardedSubscription = withAuthGuard(Subscription);
+const GuardedSubscription = withAuthGuard(Subscription) as NextPage;
 GuardedSubscription.getInitialProps = (
-  SubscriptionPage as unknown as {
-    getInitialProps: (ctx: unknown) => Promise<Record<string, unknown>>;
-  }
+  SubscriptionPage as unknown as NextPage
 ).getInitialProps;
 
 export default GuardedSubscription;

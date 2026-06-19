@@ -56,7 +56,6 @@ export const OpenInvoicesCard = () => {
         <ProfileCardTitle
           alert
           variant="articleH2"
-          component="h2"
         >
           Offene Rechnungen
           {unpaid.length > 0 && (
@@ -129,10 +128,7 @@ export const EenewsOpenInvoices = () => {
       {allClear ?
         <ProfileCard>
           <ProfileCardHead>
-            <ProfileCardTitle
-              variant="articleH2"
-              component="h1"
-            >
+            <ProfileCardTitle variant="articleH2">
               Offene Rechnungen
             </ProfileCardTitle>
           </ProfileCardHead>

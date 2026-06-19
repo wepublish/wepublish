@@ -110,10 +110,13 @@ const TopBarRight = styled('span')`
 `;
 
 const TopBarSep = styled('span')`
+  flex-shrink: 0;
   opacity: 0.5;
 `;
 
 const TopBarLink = styled(Link)`
+  flex-shrink: 0;
+  white-space: nowrap;
   color: ${({ theme }) => theme.palette.primary.main};
   text-decoration: none;
   &:hover {
@@ -122,6 +125,8 @@ const TopBarLink = styled(Link)`
 `;
 
 const TopBarButton = styled('button')`
+  flex-shrink: 0;
+  white-space: nowrap;
   background: none;
   border: 0;
   padding: 0;
@@ -135,6 +140,8 @@ const TopBarButton = styled('button')`
 
 const InvoicePill = styled(Link)`
   display: inline-flex;
+  flex-shrink: 0;
+  white-space: nowrap;
   align-items: center;
   gap: 8px;
   padding: 5px 12px 5px 10px;
