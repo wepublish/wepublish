@@ -2,6 +2,14 @@ import type { FullTeaserFragment } from '@wepublish/website/api';
 
 export type EeNewsTag = { id: string; tag: string; color?: string | null };
 
+export const capitalizeTag = (label: string | null | undefined): string => {
+  const text = (label ?? '').trim();
+  if (!text) {
+    return '';
+  }
+  return text.charAt(0).toUpperCase() + text.slice(1);
+};
+
 type RawTag = { id: string; tag?: string | null; color?: string | null };
 
 const toEeNewsTag = (tag: RawTag | undefined): EeNewsTag | undefined => {

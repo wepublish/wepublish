@@ -20,7 +20,10 @@ import { ActiveBadgeTagContext } from '../context/active-badge-tag-context';
 import { EenewsPagination } from './eenews-pagination';
 import { EenewsTeaser } from './teasers/eenews-teaser';
 import { enrichTeasersWithAds } from './teasers/eenews-teaser-ads';
-import { isAllowedTagName } from './teasers/eenews-teaser-selectors';
+import {
+  capitalizeTag,
+  isAllowedTagName,
+} from './teasers/eenews-teaser-selectors';
 import { EenewsTeaserSkeleton } from './teasers/eenews-teaser-skeleton';
 
 const navigationLinkToUrl = (
@@ -61,7 +64,6 @@ const PageTitle = styled(Typography)`
   font-weight: 800;
   letter-spacing: -0.02em;
   color: ${({ theme }) => theme.palette.primary.main};
-  text-transform: capitalize;
 `;
 
 const TopicCount = styled('span')`
@@ -335,7 +337,7 @@ export const EenewsTagPage = ({
   const totalPages = Math.max(1, Math.ceil(totalCount / take));
 
   const tagColor = tag?.color ?? theme.palette.secondary.main;
-  const tagLabel = tag?.tag ?? '';
+  const tagLabel = capitalizeTag(tag?.tag);
 
   return (
     <div className={className}>

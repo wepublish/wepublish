@@ -15,6 +15,7 @@ import { Advertisement } from '../advertisement';
 import { EeNewsBlockType } from '../block-styles/eenews-block-styles';
 import { isAdTeaser } from './eenews-teaser-ads';
 import {
+  capitalizeTag,
   selectTeaserBreaking,
   selectTeaserPreTitle,
   selectTeaserTag,
@@ -58,7 +59,6 @@ const TagChip = styled('span')`
   left: 0;
   color: ${({ theme }) => theme.palette.primary.main};
   padding: 8px 14px 7px;
-  text-transform: capitalize;
 `;
 
 const Badges = styled('div')`
@@ -96,9 +96,7 @@ const MetaSep = styled('span')`
   opacity: 0.7;
 `;
 
-const MetaTopic = styled('span')`
-  text-transform: capitalize;
-`;
+const MetaTopic = styled('span')``;
 
 const PreTitle = styled(Typography)`
   align-self: flex-start;
@@ -213,7 +211,7 @@ export const EenewsTeaser = ({
               variant="teaserTagChip"
               component="span"
             >
-              {tag.tag}
+              {capitalizeTag(tag.tag)}
             </Typography>
           </TagChip>
         )}
@@ -225,7 +223,7 @@ export const EenewsTeaser = ({
       </ImageFrame>
 
       <Meta variant="teaserMeta">
-        {topic && <MetaTopic>{topic.tag}</MetaTopic>}
+        {topic && <MetaTopic>{capitalizeTag(topic.tag)}</MetaTopic>}
         {topic && date && <MetaSep>|</MetaSep>}
         {date && formatDateDE(date)}
       </Meta>
