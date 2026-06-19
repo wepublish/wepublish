@@ -90,18 +90,19 @@ const TopBar = styled('div', {
 `;
 
 const TopBarLeft = styled('span')`
+  flex: 1 1 0;
   white-space: nowrap;
 `;
 
 const TopBarRight = styled('span')`
   display: inline-flex;
+  flex: 1 1 0;
   gap: 10px;
   align-items: center;
+  justify-content: flex-end;
   white-space: nowrap;
-  margin-left: auto;
   ${({ theme }) => theme.breakpoints.down('sm')} {
     flex-basis: 100%;
-    margin-left: 0;
     justify-content: center;
     flex-wrap: wrap;
     row-gap: 8px;
