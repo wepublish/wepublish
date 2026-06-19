@@ -320,8 +320,10 @@ export class MailchimpSyncService {
         userWithSub.user.email.toLowerCase()
       );
 
-      // Skip users whose Mailchimp contact is not subscribed
-      if (existingContact?.status !== 'subscribed') {
+      // Skip existing contacts that aren't subscribed (unsubscribed, cleaned,
+      // pending, transactional) — we don't resurrect those. Users with no
+      // contact yet fall through to be created as subscribed.
+      if (existingContact && existingContact.status !== 'subscribed') {
         skippedCount++;
         continue;
       }
