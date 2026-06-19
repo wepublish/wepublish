@@ -13,7 +13,11 @@ const mockedEvent: EventFromSource = {
   name: 'Foobar',
   startsAt: new Date('2023-01-01'),
   status: EventStatus.Scheduled,
-  description: [],
+  description: {
+    type: 'doc',
+    attrs: undefined,
+    content: [],
+  },
   externalSourceId: '123',
   externalSourceName: 'KulturZueri',
 };

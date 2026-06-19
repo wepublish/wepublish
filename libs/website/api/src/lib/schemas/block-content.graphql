@@ -357,7 +357,7 @@ fragment BlockWithoutTeaser on BlockContent {
   }
 
   ... on IFrameBlock {
-    blockStyle: blockStyleName
+    ...FullIFrameBlock
   }
 
   ... on TeaserSlotsBlock {

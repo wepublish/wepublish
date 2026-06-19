@@ -407,25 +407,7 @@
         "quote": "Citation"
       },
       "richText": {
-        "charCount": "Nombre de caractères {{charCount}}",
-        "insert": "Insérer",
-        "invalidLink": "Le lien saisi n'est pas valide. Veuillez vérifier l'URL et réessayer.",
-        "invalidMail": "Cette adresse e-mail n'est pas valide. Vérifier le mail et réessayer.",
-        "label": "Texte enrichi",
-        "link": "Lien",
-        "remove": "Supprimer",
-        "startWriting": "Commencez à écrire...",
-        "text": "Texte",
-        "id": "ID"
-      },
-      "richTextTable": {
-        "addBorders": "Ajouter des bordures",
-        "border": "Bordure",
-        "cancel": "Annuler",
-        "columns": "Colonnes",
-        "deleteTable": "Supprimer la tableau",
-        "insertTable": "Insérer un tableau",
-        "rows": "Lignes"
+        "label": "Texte enrichi"
       },
       "teaserFlexGrid": {
         "label": "Grille de teasers flexible"
@@ -1248,6 +1230,37 @@
     },
     "resetUserPasswordForm": {
       "sendMail": "Envoyer un mail à l'utilisateur (Registration System Mail)"
+    },
+    "richtext": {
+      "menuBar": {
+        "paragraph": "Paragraphe",
+        "heading": "Titre {{level}}"
+      },
+      "link": {
+        "title": "Lier le texte avec",
+        "type": "Type",
+        "url": "URL",
+        "web": "Web",
+        "email": "E-mail",
+        "anchor": "Ancre",
+        "selectAnchor": "Sélectionner une ancre",
+        "openInNewTab": "Ouvrir le lien dans un nouvel onglet",
+        "openLink": "Ouvrir le lien dans une nouvelle fenêtre",
+        "remove": "Supprimer le lien"
+      },
+      "colorPicker": {
+        "clear": "Réinitialiser la couleur"
+      },
+      "commands": {
+        "table": "Tableau",
+        "quote": "Citation",
+        "code": "Code",
+        "noResult": "Aucun résultat"
+      },
+      "placeholder": {
+        "heading": "Sans titre",
+        "paragraph": "Écrivez ou tapez '/' pour les commandes ..."
+      }
     },
     "save": "Sauvegarder",
     "saveAndClose": "Sauvegarder & fermer",

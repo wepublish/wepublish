@@ -13,7 +13,6 @@ import {
 } from '@wepublish/ui/editor';
 import QRCodeStyling from 'qr-code-styling';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import markUrl from '../../ui/wepublish-mark.png';
 import { useTranslation } from 'react-i18next';
 import { MdDownload, MdQrCode } from 'react-icons/md';
 import {
@@ -26,6 +25,8 @@ import {
   Modal,
   Panel,
 } from 'rsuite';
+
+import markUrl from '../../ui/wepublish-mark.png';
 
 type PaywallBypass = {
   id?: string;
