@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { css, Typography } from '@mui/material';
+import { useUser } from '@wepublish/authentication/website';
 import {
   FullNavigationFragment,
   NavigationListQuery,
@@ -54,6 +55,8 @@ const TopBar = styled('div', {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 16px;
   padding: 0 56px 14px;
   border-bottom: 1.5px solid ${({ theme }) => theme.palette.primary.main};
   color: ${({ theme }) => theme.palette.primary.main};
@@ -86,12 +89,23 @@ const TopBar = styled('div', {
     `}
 `;
 
-const TopBarLeft = styled('span')``;
+const TopBarLeft = styled('span')`
+  white-space: nowrap;
+`;
 
 const TopBarRight = styled('span')`
   display: inline-flex;
   gap: 10px;
   align-items: center;
+  white-space: nowrap;
+  margin-left: auto;
+  ${({ theme }) => theme.breakpoints.down('sm')} {
+    flex-basis: 100%;
+    margin-left: 0;
+    justify-content: center;
+    flex-wrap: wrap;
+    row-gap: 8px;
+  }
 `;
 
 const TopBarSep = styled('span')`
@@ -101,6 +115,18 @@ const TopBarSep = styled('span')`
 const TopBarLink = styled(Link)`
   color: ${({ theme }) => theme.palette.primary.main};
   text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
+const TopBarButton = styled('button')`
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  font: inherit;
+  color: ${({ theme }) => theme.palette.primary.main};
   &:hover {
     text-decoration: underline;
   }
@@ -119,6 +145,17 @@ const InvoicePill = styled(Link)`
   &:hover {
     background: ${({ theme }) => theme.palette.error.dark};
     text-decoration: none;
+  }
+  ${({ theme }) => theme.breakpoints.down('sm')} {
+    display: none;
+  }
+`;
+
+const MobileInvoicePill = styled(InvoicePill)`
+  display: none;
+  ${({ theme }) => theme.breakpoints.down('sm')} {
+    display: inline-flex;
+    margin-left: auto;
   }
 `;
 
@@ -322,8 +359,8 @@ const BottomNav = styled('nav', {
   gap: 44px;
   justify-content: space-between;
   align-items: center;
-  width: 1023px;
-  max-width: 100%;
+  width: 100%;
+  max-width: 1023px;
   margin: 0 auto;
   padding: 0 0 12px;
   max-height: 50px;
@@ -386,9 +423,16 @@ const NavLink = styled(Link, {
 const LeaderboardPlacer = styled('div')`
   margin: 16px auto;
 
+  ${({ theme }) => theme.breakpoints.down('lg')} {
+    flex-basis: 100%;
+    display: flex;
+    justify-content: center;
+    margin: 4px auto 0;
+  }
+
   ${({ theme }) => theme.breakpoints.down('md')} {
     width: 100%;
-    margin: 20px auto;
+    margin: 8px auto 0;
   }
 `;
 
@@ -402,6 +446,7 @@ export const EenewsNavbar = ({
   children,
 }: BuilderNavbarProps) => {
   const router = useRouter();
+  const { hasUser, logout } = useUser();
   const navbarRef = useRef<HTMLElement>(null);
   const [isOpen, setOpen] = useState(false);
   const [animating, setAnimating] = useState(false);
@@ -520,6 +565,20 @@ export const EenewsNavbar = ({
             {today}
           </Typography>
         </TopBarLeft>
+        {hasUnpaidInvoices && (
+          <MobileInvoicePill
+            href="/profile/rechnungen"
+            title="Offene Rechnung"
+          >
+            <InvoiceDot />
+            <Typography
+              variant="topbarInvoicePill"
+              component="span"
+            >
+              Offene Rechnung
+            </Typography>
+          </MobileInvoicePill>
+        )}
         <LeaderboardPlacer>
           <Advertisement type={'leaderboard'} />
         </LeaderboardPlacer>
@@ -559,6 +618,25 @@ export const EenewsNavbar = ({
                   {profileLink.label}
                 </Typography>
               </TopBarLink>
+            </>
+          )}
+          {hasUser && (
+            <>
+              <TopBarSep>·</TopBarSep>
+              <TopBarButton
+                type="button"
+                onClick={async () => {
+                  await logout();
+                  router.push('/');
+                }}
+              >
+                <Typography
+                  variant="topbarLink"
+                  component="span"
+                >
+                  Abmelden
+                </Typography>
+              </TopBarButton>
             </>
           )}
         </TopBarRight>

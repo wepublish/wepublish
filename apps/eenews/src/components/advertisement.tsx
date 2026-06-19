@@ -17,7 +17,7 @@ export const Advertisement = ({ type }: AdvertisementProps) => {
 
 const AdvertisementComponent = ({ type }: AdvertisementProps) => {
   const theme = useTheme();
-  const notLg = useMediaQuery(theme.breakpoints.down('sm'), {
+  const belowMd = useMediaQuery(theme.breakpoints.down('md'), {
     ssrMatchMedia: () => ({ matches: false }),
   });
   const [version, setVersion] = useState(0);
@@ -36,7 +36,7 @@ const AdvertisementComponent = ({ type }: AdvertisementProps) => {
     };
   }, [router]);
 
-  if (type === 'leaderboard' && notLg) {
+  if (type === 'leaderboard' && belowMd) {
     type = 'medium-rectangle';
   }
 

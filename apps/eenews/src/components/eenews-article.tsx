@@ -185,7 +185,7 @@ const RelatedGrid = styled('div')`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 36px 32px;
-  ${({ theme }) => theme.breakpoints.down('lg')} {
+  ${({ theme }) => theme.breakpoints.down('md')} {
     grid-template-columns: repeat(2, 1fr);
     gap: 24px;
   }

@@ -45,6 +45,15 @@ const Inner = styled('div')`
   border-bottom: 1px solid rgba(255, 255, 255, 0.18);
 
   ${({ theme }) => theme.breakpoints.down('md')} {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+
+    & > *:first-of-type {
+      grid-column: 1 / -1;
+    }
+  }
+
+  ${({ theme }) => theme.breakpoints.down('sm')} {
     grid-template-columns: 1fr;
     gap: 28px;
   }
