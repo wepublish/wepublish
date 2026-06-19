@@ -131,7 +131,9 @@ export const Comment = ({
             <CommentFlair>{flair}</CommentFlair>
           )}
           {!flair && createdAt && (
-            <CommentFlair>{date.format(new Date(createdAt))}</CommentFlair>
+            <CommentFlair suppressHydrationWarning>
+              {date.format(new Date(createdAt))}
+            </CommentFlair>
           )}
         </CommentHeaderContent>
       </CommentHeader>
