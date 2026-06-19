@@ -2,10 +2,24 @@ import type { FullTeaserFragment } from '@wepublish/website/api';
 
 export type EeNewsTag = { id: string; tag: string; color?: string | null };
 
+// Tags are stored lowercase; sentence-case is the default display transform.
+// These keep the editorial casing that sentence-case can't infer (acronyms,
+// brand names, German nouns). Keyed by the lowercase stored tag.
+const TAG_LABEL_OVERRIDES: Record<string, string> = {
+  'akw-debatte': 'AKW-Debatte',
+  'the smarter e': 'The Smarter E',
+  'fossile energien': 'Fossile Energien',
+  aeesuisse: 'aeesuisse',
+};
+
 export const capitalizeTag = (label: string | null | undefined): string => {
   const text = (label ?? '').trim();
   if (!text) {
     return '';
+  }
+  const override = TAG_LABEL_OVERRIDES[text.toLowerCase()];
+  if (override) {
+    return override;
   }
   return text.charAt(0).toUpperCase() + text.slice(1);
 };
