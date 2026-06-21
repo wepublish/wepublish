@@ -321,8 +321,7 @@ export class MailchimpSyncService {
       );
 
       // Skip existing contacts that aren't subscribed (unsubscribed, cleaned,
-      // pending, transactional) — we don't resurrect those. Users with no
-      // contact yet fall through to be created as subscribed.
+      // pending, transactional). New users are created as 'subscribed'.
       if (existingContact && existingContact.status !== 'subscribed') {
         skippedCount++;
         continue;

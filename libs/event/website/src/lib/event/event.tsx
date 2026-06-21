@@ -74,12 +74,23 @@ export const Event = ({
           <MetaWrapper>
             <EventStart>
               <MdDateRange />
-              {date.format(new Date(data.event.startsAt))}
+              <time
+                suppressHydrationWarning
+                dateTime={data.event.startsAt}
+              >
+                {date.format(new Date(data.event.startsAt))}
+              </time>
             </EventStart>
 
             {data.event.endsAt && (
               <>
-                <span>&ndash;</span> {date.format(new Date(data.event.endsAt))}
+                <span>&ndash;</span>{' '}
+                <time
+                  suppressHydrationWarning
+                  dateTime={data.event.endsAt}
+                >
+                  {date.format(new Date(data.event.endsAt))}
+                </time>
               </>
             )}
           </MetaWrapper>
