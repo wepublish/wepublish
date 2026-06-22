@@ -52,11 +52,10 @@ import { EenewsContentWrapper } from '../src/components/eenews-content-wrapper';
 import { EenewsFooter } from '../src/components/eenews-footer';
 import { EenewsGlobalStyles } from '../src/components/eenews-global-styles';
 import { EenewsInvoiceListItem } from '../src/components/eenews-invoice-list-item';
-import { EenewsMemberPlanItem } from '../src/components/eenews-member-plan-item';
-import { EenewsMemberPlanPicker } from '../src/components/eenews-member-plan-picker';
+import { EeNewsMemberPlanPicker } from '../src/components/eenews-memberplan-picker';
+import { EeNewsMemberPlanItem } from '../src/components/eenews-memberplan-picker-item';
 import { EenewsNavbar } from '../src/components/eenews-navbar';
-import { EenewsPaymentMethodPicker } from '../src/components/eenews-payment-method-picker';
-import { EenewsPeriodicityPicker } from '../src/components/eenews-periodicity-picker';
+import { EeNewsSubscribe } from '../src/components/eenews-subscribe';
 import { EenewsSubscriptionListItem } from '../src/components/eenews-subscription-list-item';
 import { EenewsTagPage } from '../src/components/eenews-tag-page';
 import { EenewsTeaser } from '../src/components/teasers/eenews-teaser';
@@ -163,10 +162,9 @@ function CustomApp({
               Tag={EenewsTagPage}
               Author={EenewsAuthor}
               AuthorListItem={EenewsAuthorListItem}
-              MemberPlanItem={EenewsMemberPlanItem}
-              MemberPlanPicker={EenewsMemberPlanPicker}
-              PeriodicityPicker={EenewsPeriodicityPicker}
-              PaymentMethodPicker={EenewsPaymentMethodPicker}
+              MemberPlanItem={EeNewsMemberPlanItem}
+              MemberPlanPicker={EeNewsMemberPlanPicker}
+              Subscribe={EeNewsSubscribe}
               SubscriptionListItem={EenewsSubscriptionListItem}
               InvoiceListItem={EenewsInvoiceListItem}
               blocks={{
