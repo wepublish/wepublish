@@ -1,31 +1,37 @@
-import { TextFormat } from '@wepublish/richtext';
-import { BuilderRenderLeafProps } from '@wepublish/website/builder';
-import { ReactNode } from 'react';
+import { BuilderRenderLeafProps, Link } from '@wepublish/website/builder';
 
-export function RenderLeaf({ element }: BuilderRenderLeafProps): ReactNode {
-  if (element[TextFormat.Bold]) {
-    return <strong>{element.text}</strong>;
+export const RenderLeaf = ({ mark, children }: BuilderRenderLeafProps) => {
+  if (mark.type === 'bold') {
+    return <strong>{children}</strong>;
   }
 
-  if (element[TextFormat.Italic]) {
-    return <em>{element.text}</em>;
+  if (mark.type === 'italic') {
+    return <em>{children}</em>;
   }
 
-  if (element[TextFormat.Underline]) {
-    return <u>{element.text}</u>;
+  if (mark.type === 'underline') {
+    return <u>{children}</u>;
   }
 
-  if (element[TextFormat.Strikethrough]) {
-    return <del>{element.text}</del>;
+  if (mark.type === 'strike') {
+    return <del>{children}</del>;
   }
 
-  if (element[TextFormat.Superscript]) {
-    return <sup>{element.text}</sup>;
+  if (mark.type === 'superscript') {
+    return <sup>{children}</sup>;
   }
 
-  if (element[TextFormat.Subscript]) {
-    return <sub>{element.text}</sub>;
+  if (mark.type === 'subscript') {
+    return <sub>{children}</sub>;
   }
 
-  return element.text;
-}
+  if (mark.type === 'link') {
+    return <Link {...mark.attrs}>{children}</Link>;
+  }
+
+  if (mark.type === 'textStyle') {
+    return <span style={mark.attrs}>{children}</span>;
+  }
+
+  return children;
+};

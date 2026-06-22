@@ -1,19 +1,10 @@
-import { useWebsiteBuilder } from '@wepublish/website/builder';
-import { BuilderRenderElementProps } from '@wepublish/website/builder';
-import { Link, Theme, useTheme } from '@mui/material';
-import { BlockFormat, InlineFormat } from '@wepublish/richtext';
 import { css } from '@emotion/react';
-import { ReactNode } from 'react';
-
-const tableStyles = css`
-  border-collapse: collapse;
-`;
-
-const tableCellStyles = (theme: Theme, borderColor?: string) => css`
-  border-collapse: collapse;
-  border: 1px solid ${borderColor ?? 'transparent'};
-  padding: ${theme.spacing(1)};
-`;
+import { RichtextElements } from '@wepublish/richtext';
+import {
+  BuilderRenderElementProps,
+  useWebsiteBuilder,
+} from '@wepublish/website/builder';
+import { ReactNode, useMemo } from 'react';
 
 const lastChildNoGutter = css`
   &&:first-child {
@@ -24,128 +15,201 @@ const lastChildNoGutter = css`
     margin-bottom: 0;
   }
 `;
-
-export function RenderElement({
-  element,
-}: BuilderRenderElementProps): ReactNode {
+export const RenderElement = ({ element }: BuilderRenderElementProps) => {
   const {
-    elements: { H3, H4, H5, Paragraph, UnorderedList, OrderedList, ListItem },
-    richtext: { RenderRichtext },
+    richtext: { RenderLeaf, RenderElement },
+    elements: {
+      Paragraph,
+      H1,
+      H2,
+      H3,
+      H4,
+      H5,
+      H6,
+      ListItem,
+      OrderedList,
+      UnorderedList,
+    },
   } = useWebsiteBuilder();
-  const theme = useTheme();
+
+  const children = useMemo(
+    () =>
+      (element.content as RichtextElements[])?.map((el, key) => (
+        <RenderElement
+          key={key}
+          element={el}
+        />
+      )),
+    [RenderElement, element.content]
+  );
 
   switch (element.type) {
-    case BlockFormat.H1:
-      return (
-        <H3
-          component="h2"
-          gutterBottom
-          css={lastChildNoGutter}
-        >
-          <RenderRichtext elements={element.children} />
-        </H3>
-      );
+    case 'image': {
+      return <img {...element.attrs} />;
+    }
 
-    case BlockFormat.H2:
-      return (
-        <H4
-          component="h3"
-          gutterBottom
-          css={lastChildNoGutter}
-        >
-          <RenderRichtext elements={element.children} />
-        </H4>
-      );
-
-    case BlockFormat.H3:
-      return (
-        <H5
-          component="h4"
-          gutterBottom
-          css={lastChildNoGutter}
-        >
-          <RenderRichtext elements={element.children} />
-        </H5>
-      );
-
-    case BlockFormat.UnorderedList:
-      return (
-        <UnorderedList css={lastChildNoGutter}>
-          <RenderRichtext elements={element.children} />
-        </UnorderedList>
-      );
-
-    case BlockFormat.OrderedList:
-      return (
-        <OrderedList css={lastChildNoGutter}>
-          <RenderRichtext elements={element.children} />
-        </OrderedList>
-      );
-
-    case BlockFormat.ListItem:
-      return (
-        <ListItem css={lastChildNoGutter}>
-          <RenderRichtext elements={element.children} />
-        </ListItem>
-      );
-
-    case BlockFormat.Table:
-      return (
-        <table css={tableStyles}>
-          <tbody>
-            <RenderRichtext elements={element.children} />
-          </tbody>
-        </table>
-      );
-
-    case BlockFormat.TableRow:
-      return (
-        <tr>
-          <RenderRichtext elements={element.children} />
-        </tr>
-      );
-
-    case BlockFormat.TableCell:
-      return (
-        <td css={tableCellStyles(theme, element.borderColor as string)}>
-          <RenderRichtext elements={element.children} />
-        </td>
-      );
-
-    case InlineFormat.Link:
-      return (
-        <Link
-          target={
-            (
-              (element.url as string).startsWith('#') ||
-              (element.url as string).startsWith('/')
-            ) ?
-              ''
-            : '_blank'
-          }
-          rel="noreferrer"
-          id={element.id as string}
-          href={element.url as string}
-          title={element.title as string}
-        >
-          <RenderRichtext elements={element.children} />
-        </Link>
-      );
-
-    default: {
-      if (
-        element.children.length === 1 &&
-        'text' in element.children[0] &&
-        !element.children[0].text
-      ) {
-        return undefined;
+    case 'heading': {
+      if (element.attrs.level === 1) {
+        return (
+          <H1
+            gutterBottom
+            css={lastChildNoGutter}
+          >
+            {children}
+          </H1>
+        );
       }
 
+      if (element.attrs.level === 2) {
+        return (
+          <H2
+            gutterBottom
+            css={lastChildNoGutter}
+          >
+            {children}
+          </H2>
+        );
+      }
+
+      if (element.attrs.level === 3) {
+        return (
+          <H3
+            gutterBottom
+            css={lastChildNoGutter}
+          >
+            {children}
+          </H3>
+        );
+      }
+
+      if (element.attrs.level === 4) {
+        return (
+          <H4
+            gutterBottom
+            css={lastChildNoGutter}
+          >
+            {children}
+          </H4>
+        );
+      }
+
+      if (element.attrs.level === 5) {
+        return (
+          <H5
+            gutterBottom
+            css={lastChildNoGutter}
+          >
+            {children}
+          </H5>
+        );
+      }
+
+      if (element.attrs.level === 6) {
+        return (
+          <H6
+            gutterBottom
+            css={lastChildNoGutter}
+          >
+            {children}
+          </H6>
+        );
+      }
+
+      break;
+    }
+
+    case 'paragraph': {
+      return <Paragraph css={lastChildNoGutter}>{children}</Paragraph>;
+    }
+
+    case 'text': {
+      const marks = element.marks ?? [];
+
+      const render = marks.reduce(
+        (prev, curr): ReactNode => (
+          <RenderLeaf
+            mark={curr}
+            children={prev}
+          />
+        ),
+        element.text
+      );
+
+      return render;
+    }
+
+    case 'listItem': {
+      return <ListItem css={lastChildNoGutter}>{children}</ListItem>;
+    }
+    case 'orderedList': {
+      return <OrderedList css={lastChildNoGutter}>{children}</OrderedList>;
+    }
+    case 'bulletList': {
+      return <UnorderedList css={lastChildNoGutter}>{children}</UnorderedList>;
+    }
+
+    case 'table': {
       return (
-        <Paragraph css={lastChildNoGutter}>
-          <RenderRichtext elements={element.children} />
-        </Paragraph>
+        <table>
+          <colgroup>
+            {element.content
+              ?.at(0)
+              ?.content?.flatMap(item => [...(item.attrs.colwidth ?? [0])])
+              .map((colwidth, index) => (
+                <col
+                  key={index}
+                  style={{
+                    minWidth: '25px',
+                    width: colwidth ? `${colwidth}px` : undefined,
+                  }}
+                />
+              ))}
+          </colgroup>
+          <tbody>{children}</tbody>
+        </table>
       );
     }
+    case 'tableRow': {
+      return <tr>{children}</tr>;
+    }
+    case 'tableHeader': {
+      return (
+        <th
+          colSpan={element.attrs.colspan}
+          rowSpan={element.attrs.rowspan}
+          style={{ borderColor: element.attrs.borderColor ?? undefined }}
+        >
+          {children}
+        </th>
+      );
+    }
+    case 'tableCell': {
+      return (
+        <td
+          colSpan={element.attrs.colspan}
+          rowSpan={element.attrs.rowspan}
+          style={{ borderColor: element.attrs.borderColor ?? undefined }}
+        >
+          {children}
+        </td>
+      );
+    }
+
+    case 'codeBlock': {
+      return (
+        <pre>
+          <code>{children}</code>
+        </pre>
+      );
+    }
+    case 'blockquote': {
+      return <blockquote>{children}</blockquote>;
+    }
+
+    case 'hardBreak': {
+      return <br />;
+    }
   }
-}
+
+  return null;
+};

@@ -401,25 +401,7 @@
         "quote": "Quote"
       },
       "richText": {
-        "charCount": "Characters count {{charCount}}",
-        "insert": "Insert",
-        "invalidLink": "Link input is invalid. Please check URL and try again.",
-        "invalidMail": "This mail address is invalid. Check mail and try again.",
-        "label": "Rich text",
-        "link": "Link",
-        "remove": "Remove",
-        "startWriting": "Start writing ...",
-        "text": "Text",
-        "id": "ID"
-      },
-      "richTextTable": {
-        "addBorders": "Add Borders",
-        "border": "Border",
-        "cancel": "Cancel",
-        "columns": "Columns",
-        "deleteTable": "Delete Table",
-        "insertTable": "Insert Table",
-        "rows": "Rows"
+        "label": "Rich text"
       },
       "teaserFlexGrid": {
         "label": "Flex Grid Teasers"
@@ -1297,6 +1279,37 @@
     },
     "resetUserPasswordForm": {
       "sendMail": "Send mail to user (Registration System Mail)"
+    },
+    "richtext": {
+      "menuBar": {
+        "paragraph": "Paragraph",
+        "heading": "Heading {{level}}"
+      },
+      "link": {
+        "title": "Link text with",
+        "type": "Type",
+        "url": "URL",
+        "web": "Web",
+        "email": "E-Mail",
+        "anchor": "Anchor",
+        "selectAnchor": "Select anchor",
+        "openInNewTab": "Open link in new tab",
+        "openLink": "Open link in a new window",
+        "remove": "Remove link"
+      },
+      "colorPicker": {
+        "clear": "Clear color"
+      },
+      "commands": {
+        "table": "Table",
+        "quote": "Quote",
+        "code": "Code",
+        "noResult": "No result"
+      },
+      "placeholder": {
+        "heading": "Untitled",
+        "paragraph": "Write, type '/' for commands..."
+      }
     },
     "save": "Save",
     "saveAndClose": "Save & Close",

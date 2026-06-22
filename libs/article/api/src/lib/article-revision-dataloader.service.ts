@@ -19,8 +19,6 @@ export class ArticleRevisionDataloaderService
 
   private dataloader = new DataLoader<string, RevisionMap>(
     async (articleIds: readonly string[]) => {
-      const start = new Date();
-
       const articles = await this.prisma.article.findMany({
         where: {
           id: {
@@ -45,9 +43,6 @@ export class ArticleRevisionDataloaderService
           },
         },
       });
-
-      const afterFetch = new Date();
-      this.logger.debug(`Loading took ${+afterFetch - +start}ms`, articleIds);
 
       return articleIds.map((articleId): RevisionMap => {
         const rev = articles.find(rev => rev.id === articleId);

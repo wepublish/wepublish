@@ -102,6 +102,7 @@ export class ClickTrackingExtension {
               [config.mergeFieldTag]: id,
             },
           };
+
           try {
             await (mailchimp as any).lists.updateListMember(
               listId,

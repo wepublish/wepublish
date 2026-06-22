@@ -1,5 +1,5 @@
 import { css } from '@mui/material';
-import { BlockFormat } from '@wepublish/richtext';
+import { RichtextElements } from '@wepublish/richtext';
 import { RenderElement } from '@wepublish/richtext/website';
 import {
   BuilderRenderElementProps,
@@ -16,45 +16,55 @@ export function OnlineReportsRenderElement(
 ): JSX.Element {
   const {
     elements: { H2, H3, H4 },
-    richtext: { RenderRichtext },
+    richtext: { RenderElement: RenderElementInner },
   } = useWebsiteBuilder();
 
   const { element } = props;
 
-  switch (element.type) {
-    case BlockFormat.H1:
+  if (element.type === 'heading') {
+    const children = (element.content as RichtextElements[])?.map((el, key) => (
+      <RenderElementInner
+        key={key}
+        element={el}
+      />
+    ));
+
+    if (element.attrs.level === 3) {
       return (
         <H2
           component="h2"
           gutterBottom
           css={lastChildNoGutter}
         >
-          <RenderRichtext elements={element.children} />
+          {children}
         </H2>
       );
+    }
 
-    case BlockFormat.H2:
+    if (element.attrs.level === 4) {
       return (
         <H3
           component="h3"
           gutterBottom
           css={lastChildNoGutter}
         >
-          <RenderRichtext elements={element.children} />
+          {children}
         </H3>
       );
+    }
 
-    case BlockFormat.H3:
+    if (element.attrs.level === 5) {
       return (
         <H4
           component="h4"
           gutterBottom
           css={lastChildNoGutter}
         >
-          <RenderRichtext elements={element.children} />
+          {children}
         </H4>
       );
-    default:
-      return <RenderElement {...props} />;
+    }
   }
+
+  return <RenderElement {...props} />;
 }
