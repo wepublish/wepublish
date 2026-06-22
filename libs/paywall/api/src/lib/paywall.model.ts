@@ -7,7 +7,7 @@ import {
   Int,
 } from '@nestjs/graphql';
 import { MemberPlan } from '@wepublish/member-plan/api';
-import { RichtextJSONDocument } from '@wepublish/richtext';
+import type { RichtextJSONDocument } from '@wepublish/richtext';
 import { GraphQLRichText } from '@wepublish/richtext/api';
 
 @ObjectType()

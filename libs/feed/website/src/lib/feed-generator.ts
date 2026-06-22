@@ -3,7 +3,10 @@ import type { Feed, Item } from 'feed';
 import { getArticleSEO } from '@wepublish/article/website';
 import { isRichTextBlock } from '@wepublish/block-content/website';
 import { generateHTML } from '@tiptap/html';
-import { RichtextElements, RichtextJSONDocument } from '@wepublish/richtext';
+import type {
+  RichtextElements,
+  RichtextJSONDocument,
+} from '@wepublish/richtext';
 
 export const toHtml = async (document: RichtextJSONDocument) => {
   const { editorConfig } = await import('@wepublish/richtext/editor/config');

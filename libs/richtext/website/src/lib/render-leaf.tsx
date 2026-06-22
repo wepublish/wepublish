@@ -26,7 +26,18 @@ export const RenderLeaf = ({ mark, children }: BuilderRenderLeafProps) => {
   }
 
   if (mark.type === 'link') {
-    return <Link {...mark.attrs}>{children}</Link>;
+    const { class: className, ...attrs } = mark.attrs as typeof mark.attrs & {
+      class?: string | null;
+    };
+
+    return (
+      <Link
+        {...attrs}
+        className={className ?? undefined}
+      >
+        {children}
+      </Link>
+    );
   }
 
   if (mark.type === 'textStyle') {

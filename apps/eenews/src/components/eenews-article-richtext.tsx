@@ -29,9 +29,9 @@ const getRichTextNodes = (richText: RichTextValue): RichTextNode[] => {
   if (
     richText &&
     typeof richText === 'object' &&
-    Array.isArray((richText as { children?: unknown }).children)
+    Array.isArray((richText as { content?: unknown }).content)
   ) {
-    return (richText as { children: RichTextNode[] }).children;
+    return (richText as { content: RichTextNode[] }).content;
   }
 
   return [];
@@ -45,11 +45,11 @@ const withRichTextNodes = (
     richText &&
     typeof richText === 'object' &&
     !Array.isArray(richText) &&
-    Array.isArray((richText as { children?: unknown }).children)
+    Array.isArray((richText as { content?: unknown }).content)
   ) {
     return {
       ...(richText as Record<string, unknown>),
-      children: nodes,
+      content: nodes,
     } as unknown as RichTextValue;
   }
 

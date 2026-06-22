@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { RichtextJSONDocument } from '@wepublish/richtext';
+import type { RichtextJSONDocument } from '@wepublish/richtext';
 
 export const mockRichText = () =>
   ({

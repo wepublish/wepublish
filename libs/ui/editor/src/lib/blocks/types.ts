@@ -19,7 +19,7 @@ import {
   TeaserSlotType,
   TeaserType,
 } from '@wepublish/editor/api';
-import { RichtextJSONDocument } from '@wepublish/richtext';
+import type { RichtextJSONDocument } from '@wepublish/richtext';
 import nanoid from 'nanoid';
 
 import { BlockListValue } from '../atoms/blockList';
