@@ -1,5 +1,4 @@
 import styled from '@emotion/styled';
-import { BlockFormat } from '@wepublish/richtext';
 import {
   BuilderRichTextBlockProps,
   useWebsiteBuilder,
@@ -19,24 +18,23 @@ const AdSlot = styled('div')`
   justify-content: center;
 `;
 
-const isParagraph = (node: unknown): boolean =>
-  (node as { type?: string })?.type === BlockFormat.Paragraph;
+type RichTextValue = BuilderRichTextBlockProps['richText'];
 
 export const EenewsArticleRichText = ({
   className,
   richText,
 }: BuilderRichTextBlockProps) => {
   const {
-    richtext: { RenderRichtext },
+    blocks: { RichText },
   } = useWebsiteBuilder();
 
-  const nodes = richText ?? [];
-  const firstParagraph = nodes.findIndex(isParagraph);
+  const nodes = (richText ?? []) as unknown as Array<{ type?: string }>;
+  const firstParagraph = nodes.findIndex(node => node?.type === 'paragraph');
 
   if (firstParagraph === -1) {
     return (
       <Wrapper className={className}>
-        <RenderRichtext elements={nodes} />
+        <RichText richText={richText} />
       </Wrapper>
     );
   }
@@ -46,11 +44,13 @@ export const EenewsArticleRichText = ({
 
   return (
     <Wrapper className={className}>
-      <RenderRichtext elements={head} />
+      <RichText richText={head as unknown as RichTextValue} />
       <AdSlot>
         <Advertisement type="medium-rectangle" />
       </AdSlot>
-      {tail.length > 0 && <RenderRichtext elements={tail} />}
+      {tail.length > 0 && (
+        <RichText richText={tail as unknown as RichTextValue} />
+      )}
     </Wrapper>
   );
 };
