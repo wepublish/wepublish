@@ -11,7 +11,6 @@ import {
 } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
 import { useMemo } from 'react';
-import { Element } from 'slate';
 
 import { BlockSiblings } from '../tsri-block-renderer';
 import { TsriBreakBlockType } from './tsri-base-break-block';
@@ -184,6 +183,11 @@ export const TsriSidebarContent = ({
     return undefined;
   }, [index, count, siblings]);
 
+  const nodes = richText?.content ?? [];
+  const firstNode = nodes[0];
+  const startsWithHeadingTwo =
+    firstNode?.type === 'heading' && firstNode.attrs.level === 4;
+
   return (
     <SidebarContentWrapper
       css={sidebarContentWrapperStyles(
@@ -200,17 +204,17 @@ export const TsriSidebarContent = ({
           <Typography component={SidebarContentHeading}>{text}</Typography>
         )}
         <SidebarContentBody>
-          {(richText?.[0] as Element)?.type === 'heading-two' && (
+          {startsWithHeadingTwo && richText && firstNode && (
             <RichText
-              richText={[richText[0]]}
+              richText={{ ...richText, content: [firstNode] }}
               css={[richTextStyles(theme), subTitleStyles]}
             />
           )}
           {image && <SidebarContentImage image={image} />}
 
-          {(richText?.[0] as Element)?.type === 'heading-two' ?
+          {startsWithHeadingTwo && richText ?
             <RichText
-              richText={[...richText].splice(1, richText.length - 1)}
+              richText={{ ...richText, content: nodes.slice(1) }}
               css={richTextStyles(theme)}
             />
           : richText && (

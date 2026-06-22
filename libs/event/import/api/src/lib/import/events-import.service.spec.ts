@@ -53,7 +53,11 @@ describe('EventsImportService', () => {
     createdAt: new Date(),
     modifiedAt: new Date(),
     name: 'Event 1',
-    description: [],
+    description: {
+      type: 'doc',
+      attrs: undefined,
+      content: [],
+    },
     status: EventStatus.Scheduled,
     location: '',
     externalSourceId: '',

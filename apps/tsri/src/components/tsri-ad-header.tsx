@@ -87,7 +87,7 @@ export default function TsriAdHeader({
               <strong>Rubrik Kultur wird präsentiert von: </strong>
             : <strong>Präsentiert von:</strong>}
 
-            <RichText richText={advertiser.bio || []} />
+            <RichText richText={advertiser.bio} />
           </TsriAdvertiserContent>
         </TsriAdvertiserContainer>
       ))}

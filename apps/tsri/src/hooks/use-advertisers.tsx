@@ -1,7 +1,6 @@
-import { BlockFormat } from '@wepublish/richtext';
+import { RichtextJSONDocument } from '@wepublish/richtext';
 import { FullAuthorFragment } from '@wepublish/website/api';
 import { useMemo } from 'react';
-import { Descendant } from 'slate';
 
 const SPONSOR_TAG = 'sponsor';
 const PROMO_TAG = 'promo';
@@ -19,15 +18,22 @@ export function isSponsor(author: FullAuthorFragment): boolean {
   return !!author.tags?.find(tag => tag.tag === SPONSOR_TAG);
 }
 
-export function getAdvertiserBio(author: FullAuthorFragment): Descendant[] {
+export function getAdvertiserBio(
+  author: FullAuthorFragment
+): RichtextJSONDocument {
   const bioText = isPromo(author) ? PROMO_BIO_TEXT : SPONSOR_BIO_TEXT;
 
-  return [
-    {
-      type: BlockFormat.Paragraph,
-      children: [{ text: bioText }],
-    },
-  ];
+  return {
+    type: 'doc',
+    attrs: undefined,
+    content: [
+      {
+        type: 'paragraph',
+        attrs: {},
+        content: [{ type: 'text', attrs: undefined, text: bioText }],
+      },
+    ],
+  };
 }
 
 export const useAdvertisers = (
