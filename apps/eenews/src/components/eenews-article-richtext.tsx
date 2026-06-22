@@ -19,6 +19,42 @@ const AdSlot = styled('div')`
 `;
 
 type RichTextValue = BuilderRichTextBlockProps['richText'];
+type RichTextNode = { type?: string };
+
+const getRichTextNodes = (richText: RichTextValue): RichTextNode[] => {
+  if (Array.isArray(richText)) {
+    return richText as unknown as RichTextNode[];
+  }
+
+  if (
+    richText &&
+    typeof richText === 'object' &&
+    Array.isArray((richText as { children?: unknown }).children)
+  ) {
+    return (richText as { children: RichTextNode[] }).children;
+  }
+
+  return [];
+};
+
+const withRichTextNodes = (
+  richText: RichTextValue,
+  nodes: RichTextNode[]
+): RichTextValue => {
+  if (
+    richText &&
+    typeof richText === 'object' &&
+    !Array.isArray(richText) &&
+    Array.isArray((richText as { children?: unknown }).children)
+  ) {
+    return {
+      ...(richText as Record<string, unknown>),
+      children: nodes,
+    } as unknown as RichTextValue;
+  }
+
+  return nodes as unknown as RichTextValue;
+};
 
 export const EenewsArticleRichText = ({
   className,
@@ -28,7 +64,7 @@ export const EenewsArticleRichText = ({
     blocks: { RichText },
   } = useWebsiteBuilder();
 
-  const nodes = (richText ?? []) as unknown as Array<{ type?: string }>;
+  const nodes = getRichTextNodes(richText);
   const firstParagraph = nodes.findIndex(node => node?.type === 'paragraph');
 
   if (firstParagraph === -1) {
@@ -44,12 +80,12 @@ export const EenewsArticleRichText = ({
 
   return (
     <Wrapper className={className}>
-      <RichText richText={head as unknown as RichTextValue} />
+      <RichText richText={withRichTextNodes(richText, head)} />
       <AdSlot>
         <Advertisement type="medium-rectangle" />
       </AdSlot>
       {tail.length > 0 && (
-        <RichText richText={tail as unknown as RichTextValue} />
+        <RichText richText={withRichTextNodes(richText, tail)} />
       )}
     </Wrapper>
   );
