@@ -19,11 +19,13 @@ const SortedMemberPlanPicker = forwardRef<
 
 export const EeNewsMemberPlanPicker = styled(SortedMemberPlanPicker)`
   > ${RichTextBlockWrapper} {
+    font-family: ${({ theme }) => theme.typography.fontFamily};
     font-size: 1.5rem;
     font-weight: bold;
     min-height: 140px;
 
     * {
+      font-family: inherit;
       font-size: inherit;
       font-weight: inherit;
     }
