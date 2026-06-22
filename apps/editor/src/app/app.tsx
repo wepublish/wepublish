@@ -92,7 +92,6 @@ import { TokenList } from './routes/tokens/tokenList';
 import { UserRoleList } from './routes/userRoles/userRoleList';
 import { UserEditView } from './routes/users/userEditView';
 import { UserList } from './routes/users/userList';
-import { Seed } from './routes/seed/seed';
 import { VoucherCreateView } from './routes/voucher/voucherCreateView';
 import { VoucherEditView } from './routes/voucher/voucherEditView';
 import { VoucherList } from './routes/voucher/voucherList';
@@ -1083,12 +1082,6 @@ export function App() {
                 </Base>
               }
             />
-            {/* Seed (dev-only — fills the CMS with ee-news v3 content per
-                ee-news-redesign-v3-system-design.md §11 + MP-8) */}
-            <Route
-              path="seed"
-              element={<Seed />}
-            />
             <Route
               path="settings/website"
               element={
@@ -1104,12 +1097,6 @@ export function App() {
                   <WebsiteSettingsItem />
                 </Base>
               }
-            />
-            {/* Seed (dev-only - fills the CMS with ee-news v3 content per
-                ee-news-redesign-v3-system-design.md section 11 + MP-8) */}
-            <Route
-              path="seed"
-              element={<Seed />}
             />
             {/* Logout */}
             <Route
