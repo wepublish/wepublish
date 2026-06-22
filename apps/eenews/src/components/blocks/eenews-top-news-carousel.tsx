@@ -46,6 +46,13 @@ const Viewport = styled('div')`
 
 const Slide = styled('div')`
   height: 100%;
+  min-width: 100%;
+  ${({ theme }) => theme.breakpoints.up('sm')} {
+    min-width: calc(50% - 12px);
+  }
+  ${({ theme }) => theme.breakpoints.up('lg')} {
+    min-width: calc((100% - 64px) / 3);
+  }
 `;
 
 const CarouselBtn = styled('button')<{ side: 'left' | 'right' }>`

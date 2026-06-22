@@ -94,6 +94,10 @@ function legacyRedirects() {
   /** @type {Array<{source:string,destination:string,permanent:boolean}>} */
   const out = [];
 
+  // ── Language root → home ────────────────────────────────────────────────
+  out.push({ source: '/de', destination: '/', permanent });
+  out.push({ source: '/fr', destination: '/', permanent });
+
   // ── Taxonomy listing pages → tag pages ──────────────────────────────────
   for (const [oldSlug, tag] of Object.entries(TAXONOMY_TAG_BY_OLD_SLUG)) {
     const destination = `/a/tag/${encodeURIComponent(tag)}`;
