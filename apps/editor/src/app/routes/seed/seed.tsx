@@ -591,12 +591,12 @@ async function seedNavigations(createNavigation: any) {
           ext('The Smarter E', '/a/tag/the%20smarter%20e'),
           ext('Energiestrategie 2050', '/a/tag/energiestrategie%202050'),
           ext('Bauen', '/a/tag/bauen'),
-          ext('Bücher', '/a/tag/b%C3%BCcher'),
           ext('Batterien', '/a/tag/batterien'),
           ext('AKW-Debatte', '/a/tag/akw-debatte'),
           ext('Mobilität', '/a/tag/mobilit%C3%A4t'),
           ext('Fossile Energien', '/a/tag/fossile%20energien'),
           ext('Klima', '/a/tag/klima'),
+          ext('Bücher', '/a/tag/b%C3%BCcher'),
         ],
       },
     }),
@@ -621,6 +621,7 @@ async function seedNavigations(createNavigation: any) {
         name: 'ee-news',
         links: [
           ext('Über ee-news', '/about'),
+          ext('Autor·innen', '/author'),
           ext('Newsletter bestellen', '/mitmachen'),
         ],
       },
@@ -634,7 +635,7 @@ async function seedNavigations(createNavigation: any) {
         links: [
           ext('Impressum', '/impressum'),
           ext('AGB', '/agb'),
-          ext('Datenschutzerklärung', '/impressum#datenschutz'),
+          ext('Datenschutzerklärung', '/datenschutz'),
         ],
       },
     }),
@@ -659,10 +660,8 @@ async function seedNavigations(createNavigation: any) {
     createNavigation({
       variables: {
         key: 'footer-magazin',
-        name: 'Footer · Magazin',
+        name: 'Magazin',
         links: [
-          ext('Archiv', '/a'),
-          ext('Autor·innen', '/author'),
           ext('Über ee-news', '/about'),
           ext('Mitmachen', '/mitmachen'),
           ext('Suche', '/search'),
@@ -674,12 +673,12 @@ async function seedNavigations(createNavigation: any) {
     createNavigation({
       variables: {
         key: 'footer-konto',
-        name: 'Footer · Konto',
+        name: 'Konto',
         links: [
           ext('Mein Konto', '/profile'),
           ext('Impressum', '/impressum'),
           ext('AGB', '/agb'),
-          ext('Datenschutz', '/impressum#datenschutz'),
+          ext('Datenschutz', '/datenschutz'),
         ],
       },
     }),
@@ -1500,7 +1499,33 @@ async function handleDelete(
   client: any,
   params?: URLSearchParams
 ) {
-  const excludeImages = params?.get('type') === 'exclude-images';
+  const skipModes = new Set(
+    (params?.get('type') ?? '').split(/[+,\s]+/).filter(Boolean)
+  );
+  const coreOnly = skipModes.has('core-only');
+  const excludeImages = skipModes.has('exclude-images');
+
+  // Core-only: delete only the structural config this mode manages (block
+  // styles + navigation), leaving all other CMS content untouched. Mirrors the
+  // core-only create path so a reset re-run stays scoped to the core.
+  if (coreOnly) {
+    const [navigations, blockStyles] = await Promise.all([
+      fetchAllNavigations(client),
+      fetchAllBlockStyles(client),
+    ]);
+    await Promise.all(
+      navigations.map(n =>
+        deletes.deleteNavigation({ variables: { id: n.id } })
+      )
+    );
+    await Promise.all(
+      blockStyles.map(b =>
+        deletes.deleteBlockStyle({ variables: { id: b.id } })
+      )
+    );
+    return;
+  }
+
   const [
     tags,
     authors,
@@ -1822,6 +1847,18 @@ async function handleSeed(
   const excludeImages = skipModes.has('exclude-images');
   const excludeTags = skipModes.has('exclude-tags');
   const excludeArticles = skipModes.has('exclude-articles');
+  const excludePages = skipModes.has('exclude-pages');
+  const coreOnly = skipModes.has('core-only');
+
+  // Core-only (`?type=core-only`): seed just the structural config the app
+  // needs — block styles + navigation (nav mirrors staging). Skips ALL CMS
+  // content (images, tags, authors, articles, pages, member plans, comments,
+  // subscriptions, events); real content comes from the importer.
+  if (coreOnly) {
+    await seedBlockStyles(hooks.createBlockStyle);
+    await seedNavigations(hooks.createNavigation);
+    return;
+  }
 
   const images =
     excludeImages ?
@@ -1916,7 +1953,8 @@ async function handleSeed(
     adminEmail
   );
 
-  const pages = await seedPages(hooks.createPage, blockStyles, tags);
+  const pages =
+    excludePages ? [] : await seedPages(hooks.createPage, blockStyles, tags);
   for (const page of pages) {
     await hooks.publishPage({
       variables: {
@@ -2060,6 +2098,8 @@ export const Seed = () => {
     'exclude-images',
     'exclude-tags',
     'exclude-articles',
+    'exclude-pages',
+    'core-only',
   ] as const;
   type SkipModeKey = (typeof SKIP_MODE_KEYS)[number];
 
@@ -2164,6 +2204,7 @@ export const Seed = () => {
               gap: 12,
               alignItems: 'flex-start',
               cursor: 'pointer',
+              marginBottom: 8,
             }}
           >
             <input
@@ -2178,7 +2219,51 @@ export const Seed = () => {
               articles are not re-published.
             </span>
           </label>
+
+          <label
+            htmlFor="exclude-pages"
+            style={{
+              display: 'flex',
+              gap: 12,
+              alignItems: 'flex-start',
+              cursor: 'pointer',
+            }}
+          >
+            <input
+              type="checkbox"
+              id="exclude-pages"
+              checked={currentSkipModes.has('exclude-pages')}
+              onChange={e => toggleSkipMode('exclude-pages', e)}
+            />
+            <span>
+              <strong>Exclude pages</strong> — skip the content pages (home,
+              about, impressum, agb, mitmachen). Payment-result pages still seed
+              (member plans reference them).
+            </span>
+          </label>
         </fieldset>
+
+        <label
+          htmlFor="core-only"
+          style={{
+            display: 'flex',
+            gap: 12,
+            alignItems: 'flex-start',
+            cursor: 'pointer',
+            marginBottom: 16,
+          }}
+        >
+          <input
+            type="checkbox"
+            id="core-only"
+            checked={currentSkipModes.has('core-only')}
+            onChange={e => toggleSkipMode('core-only', e)}
+          />
+          <span>
+            <strong>Core only</strong> — overrides the above: seeds ONLY block
+            styles + navigation (mirrors staging). Skips all other content.
+          </span>
+        </label>
 
         <label
           htmlFor="admin-email"
