@@ -260,6 +260,20 @@ export const BannerForm = (props: BannerFormProps) => {
             onChange={value => props.onChange({ ...props.banner, html: value })}
           />
         </Form.Group>
+
+        <Form.Group controlId="formUrl">
+          <Form.ControlLabel>{t('banner.form.formUrl')}</Form.ControlLabel>
+
+          <Form.Control
+            name="formUrl"
+            value={props.banner.formUrl ?? ''}
+            onChange={value =>
+              props.onChange({ ...props.banner, formUrl: value || undefined })
+            }
+          />
+
+          <Form.HelpText>{t('banner.form.formUrlHelp')}</Form.HelpText>
+        </Form.Group>
       </Panel>
 
       <Panel

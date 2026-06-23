@@ -218,6 +218,8 @@
         "showOnPages": "Display on those pages",
         "showForLoginStatus": "Display for",
         "html": "HTML-Code",
+        "formUrl": "Form URL (embedded)",
+        "formUrlHelp": "URL of an embeddable form (e.g. newsletter signup). Shown as an auto-resizing iframe next to the title/text/cta (two columns) and takes precedence over the HTML code.",
         "loginStatus": {
           "ALL": "all visitors",
           "LOGGED_IN": "logged in visitors",

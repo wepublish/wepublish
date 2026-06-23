@@ -5,6 +5,7 @@ fragment FullBanner on Banner {
   cta
   collapsible
   html
+  formUrl
   delay
   hideForMinutes
 

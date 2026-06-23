@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import IframeResizer from '@iframe-resizer/react';
 import { css, GlobalStyles, Typography } from '@mui/material';
 import { useSetIntendedRoute } from '@wepublish/authentication/website';
 import { Button } from '@wepublish/ui';
@@ -68,6 +69,11 @@ export const BannerTitle = styled('div')`
 `;
 export const BannerText = styled('div')``;
 
+export const BannerFormIframe = styled(IframeResizer)`
+  width: 100%;
+  border: 0;
+`;
+
 export const BannerActions = styled('div')`
   display: flex;
   gap: ${({ theme }) => theme.spacing(3)};
@@ -136,6 +142,41 @@ export const Banner = ({
     setCollapsed(isClosedRecently);
   }, [data]);
 
+  useEffect(() => {
+    const formUrl = data?.primaryBanner?.formUrl;
+
+    if (!formUrl) {
+      return;
+    }
+
+    let expectedOrigin = '';
+
+    try {
+      expectedOrigin = new URL(formUrl).origin;
+    } catch {
+      // Invalid formUrl — ignore, the iframe simply won't render either.
+    }
+
+    // The embedded form asks the parent (CMS) page to navigate to the final
+    // destination instead of loading it inside the iframe.
+    const onMessage = (event: MessageEvent) => {
+      if (expectedOrigin && event.origin !== expectedOrigin) {
+        return;
+      }
+
+      if (
+        event.data?.type === 'iframe:redirect' &&
+        typeof event.data.url === 'string'
+      ) {
+        window.location.href = event.data.url;
+      }
+    };
+
+    window.addEventListener('message', onMessage);
+
+    return () => window.removeEventListener('message', onMessage);
+  }, [data?.primaryBanner?.formUrl]);
+
   const handleClose = () => {
     setCollapsed(true);
     collapseBanner();
@@ -161,6 +202,7 @@ export const Banner = ({
   }
 
   const htmlContent = data.primaryBanner.html;
+  const formUrl = data.primaryBanner.formUrl;
 
   return (
     <BannerWrapper
@@ -177,13 +219,48 @@ export const Banner = ({
         ></BannerImage>
       )}
 
-      {htmlContent && (
+      {formUrl && (
+        <BannerContentWrapper>
+          <BannerContent>
+            <Typography
+              variant="bannerTitle"
+              component={BannerTitle}
+            >
+              {data.primaryBanner.title}
+            </Typography>
+
+            <Typography
+              variant="bannerText"
+              component={BannerText}
+            >
+              {data.primaryBanner.text}
+            </Typography>
+
+            {data.primaryBanner.cta && (
+              <Typography
+                variant="bannerCta"
+                component={BannerCtaText}
+              >
+                {data.primaryBanner.cta}
+              </Typography>
+            )}
+          </BannerContent>
+
+          <BannerFormIframe
+            license="GPLv3"
+            src={formUrl}
+            title={data.primaryBanner.title}
+          />
+        </BannerContentWrapper>
+      )}
+
+      {!formUrl && htmlContent && (
         <BannerContentWrapper
           dangerouslySetInnerHTML={{ __html: htmlContent }}
         />
       )}
 
-      {!htmlContent && (
+      {!formUrl && !htmlContent && (
         <BannerContentWrapper>
           <BannerContent>
             <Typography

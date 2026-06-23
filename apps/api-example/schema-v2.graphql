@@ -207,6 +207,7 @@ type Banner {
   collapsible: Boolean!
   cta: String
   delay: Int!
+  formUrl: String
   hideForMinutes: Int!
   html: String
   id: String!
@@ -630,6 +631,7 @@ input CreateBannerInput {
   collapsible: Boolean!
   cta: String
   delay: Int!
+  formUrl: String
   hideForMinutes: Int!
   html: String
   imageId: String
@@ -4163,6 +4165,7 @@ input UpdateBannerInput {
   collapsible: Boolean!
   cta: String
   delay: Int!
+  formUrl: String
   hideForMinutes: Int!
   html: String
   id: String!

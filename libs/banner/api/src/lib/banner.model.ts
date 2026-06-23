@@ -48,6 +48,9 @@ export class Banner {
   @Field({ nullable: true })
   html?: string;
 
+  @Field({ nullable: true })
+  formUrl?: string;
+
   @Field()
   active!: boolean;
 

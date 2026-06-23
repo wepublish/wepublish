@@ -220,6 +220,8 @@
         "showOnPages": "Auf Seiten anzeigen",
         "showForLoginStatus": "Anzeigen für",
         "html": "HTML-Code",
+        "formUrl": "Formular-URL (eingebettet)",
+        "formUrlHelp": "URL eines einbettbaren Formulars (z.B. Newsletter-Anmeldung). Wird als automatisch grössenangepasstes iframe neben Titel/Text/CTA angezeigt (zwei Spalten) und hat Vorrang vor dem HTML-Code.",
         "loginStatus": {
           "ALL": "alle",
           "LOGGED_IN": "nur eingeloggt",

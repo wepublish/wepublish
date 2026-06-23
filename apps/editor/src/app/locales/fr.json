@@ -225,6 +225,8 @@
         "showOnPages": "Afficher sur ces pages",
         "showForLoginStatus": "Afficher pour",
         "html": "Code HTML",
+        "formUrl": "URL du formulaire (intégré)",
+        "formUrlHelp": "URL d'un formulaire intégrable (par ex. inscription à la newsletter). Affiché dans un iframe redimensionné automatiquement à côté du titre/texte/cta (deux colonnes) et prioritaire sur le code HTML.",
         "loginStatus": {
           "ALL": "tous les visiteurs",
           "LOGGED_IN": "visiteurs connectés",
