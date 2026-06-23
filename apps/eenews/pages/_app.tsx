@@ -40,6 +40,7 @@ import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
 import { Advertisement } from '../src/components/advertisement';
+import { AdblockOverlay } from '../src/components/adblock-detector';
 import { EenewsBlockRenderer } from '../src/components/block-renderer/eenews-block-renderer';
 import { EenewsBreakBlock } from '../src/components/blocks/eenews-break-block';
 import { EenewsTeaserGrid } from '../src/components/blocks/eenews-teaser-grid';
@@ -261,6 +262,8 @@ function CustomApp({
                   src="//servedby.revive-adserver.net/asyncjs.php"
                   async
                 />
+
+                <AdblockOverlay />
 
                 <Spacer>
                   <NavBar
