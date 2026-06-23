@@ -22,19 +22,21 @@ export const EeNewsMemberPlanPicker = styled(SortedMemberPlanPicker)`
     font-family: ${({ theme }) => theme.typography.fontFamily};
     font-size: 1.5rem;
     font-weight: bold;
-    min-height: 140px;
+    min-height: auto;
+    line-height: 1.3;
 
     * {
       font-family: inherit;
       font-size: inherit;
       font-weight: inherit;
+      line-height: inherit;
     }
 
     ${({ theme }) => theme.breakpoints.up('md')} {
       font-size: 2rem;
       width: 50%;
       margin: 0 auto;
-      min-height: 140px;
+      min-height: 220px;
     }
   }
 `;

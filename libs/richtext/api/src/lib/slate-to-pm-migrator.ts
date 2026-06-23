@@ -797,19 +797,14 @@ export class SlateToPmMigrator {
   // their stale `slateRichText`. After the DB is clean it is inert (one 0-row scan
   // per boot, then self-deletes); remove the code at leisure in a follow-up.
   //
-  //   remigrateBuggy*          GENERAL — any app that ran the original migration
-  //                            has this bug; safe to keep / upstream.
-  //   remigrateEenewsRawSlate  EENEWS-ONLY · TEMPORARY — delete after the eenews
-  //                            import cleanup (see below).
+  //   remigrateBuggy*  GENERAL — any app that ran the original migration has this
+  //                    bug; safe to keep / upstream.
   // ───────────────────────────────────────────────────────────────────────────
 
   // A text node whose `text` is missing or empty — the signature of the buggy
   // migration. Recursive; key-order/whitespace independent (jsonb re-serializes).
   private static readonly BUGGY_TEXT_NODE =
     '$.** ? (@.type == "text" && (!exists(@.text) || @.text == ""))';
-
-  private static readonly RAW_SLATE_RICHTEXT =
-    '$.** ? (@.richText.type() == "array")';
 
   private stopCron(name: string, reason: string): void {
     try {
@@ -855,30 +850,6 @@ export class SlateToPmMigrator {
       }
       if (block.type === 'listicle' && Array.isArray(block.items)) {
         return { ...block, items: block.items.map(fix) };
-      }
-      return block;
-    });
-  }
-
-  // EENEWS-ONLY · TEMPORARY: the importer kept emitting RAW SLATE in `richText`
-  // after the mid-import tiptap deploy (no `slateRichText`), so the cron above
-  // can't help them. Convert in place + backfill `slateRichText` so a re-run is a
-  // no-op. Other apps don't have this shape — the predicate just self-empties to 0.
-  private convertRawSlateBlocks(blocks: any[]): any[] {
-    const conv = (node: any) =>
-      Array.isArray(node.richText) ?
-        {
-          ...node,
-          richText: this.migrate(node.richText),
-          slateRichText: node.richText,
-        }
-      : node;
-    return blocks.map((block: any) => {
-      if (['richText', 'linkPageBreak'].includes(block.type)) {
-        return conv(block);
-      }
-      if (block.type === 'listicle' && Array.isArray(block.items)) {
-        return { ...block, items: block.items.map(conv) };
       }
       return block;
     });
@@ -952,20 +923,6 @@ export class SlateToPmMigrator {
       'pages.revisions',
       SlateToPmMigrator.BUGGY_TEXT_NODE,
       blocks => this.migrateBlocksFromSlate(blocks)
-    );
-  }
-
-  // EENEWS-ONLY · TEMPORARY — delete after the eenews import cleanup.
-  @Cron(CronExpression.EVERY_5_SECONDS, {
-    name: 'slate.remigrateEenewsRawSlate',
-    waitForCompletion: true,
-  })
-  async remigrateEenewsRawSlate() {
-    await this.remigrateRevisionTable(
-      'slate.remigrateEenewsRawSlate',
-      'articles.revisions',
-      SlateToPmMigrator.RAW_SLATE_RICHTEXT,
-      blocks => this.convertRawSlateBlocks(blocks)
     );
   }
 
