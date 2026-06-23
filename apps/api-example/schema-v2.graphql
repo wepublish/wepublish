@@ -91,7 +91,8 @@ type ArticleNavigationLink implements BaseNavigationLink & HasArticle {
   type: NavigationLinkType!
 }
 
-type ArticleRevision implements HasBlockContent {
+type ArticleRevision implements HasBlockContent & HasOptionalUserLc {
+  archivedAt: DateTime
   authors: [Author!]!
   blocks: [BlockContent!]!
   breaking: Boolean!
@@ -112,6 +113,12 @@ type ArticleRevision implements HasBlockContent {
   socialMediaImageID: String
   socialMediaTitle: String
   title: String
+  user: User
+  userId: String
+}
+
+input ArticleRevisionFilter {
+  userId: String
 }
 
 enum ArticleSort {
@@ -1258,6 +1265,11 @@ interface HasOptionalUser {
   userID: String
 }
 
+interface HasOptionalUserLc {
+  user: User
+  userId: String
+}
+
 interface HasPage {
   page: Page!
   pageID: String!
@@ -1946,6 +1958,16 @@ type Mutation {
   """Deletes an existing voucher."""
   deleteVoucher(id: String!): Voucher!
 
+  """
+  Discards the current draft and reverts to the latest published revision.
+  """
+  discardArticleDraft(id: String!): Article!
+
+  """
+  Discards the current draft and reverts to the latest published revision.
+  """
+  discardPageDraft(id: String!): Page!
+
   """Dislikes an article."""
   dislikeArticle(id: String!): Article!
 
@@ -2051,6 +2073,12 @@ type Mutation {
   Resets the two-factor authentication configuration for a user. The user will need to set up 2FA again on next login.
   """
   resetUserTotp(userId: String!): Boolean!
+
+  """Restores an older revision of an article as a new draft."""
+  restoreArticleRevision(id: String!, revisionId: String!): Article!
+
+  """Restores an older revision of a page as a new draft."""
+  restorePageRevision(id: String!, revisionId: String!): Page!
 
   """This mutation revokes and deletes the active session."""
   revokeActiveSession: Boolean!
@@ -2325,7 +2353,8 @@ type PageNavigationLink implements BaseNavigationLink & HasPage {
   type: NavigationLinkType!
 }
 
-type PageRevision implements HasBlockContent {
+type PageRevision implements HasBlockContent & HasOptionalUserLc {
+  archivedAt: DateTime
   blocks: [BlockContent!]!
   createdAt: DateTime!
   description: String
@@ -2339,6 +2368,12 @@ type PageRevision implements HasBlockContent {
   socialMediaImageID: String
   socialMediaTitle: String
   title: String
+  user: User
+  userId: String
+}
+
+input PageRevisionFilter {
+  userId: String
 }
 
 enum PageSort {
@@ -2364,6 +2399,12 @@ input PageTeaserInput {
   pageID: String
   preTitle: String
   title: String
+}
+
+type PaginatedArticleRevisions {
+  nodes: [ArticleRevision!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
 }
 
 type PaginatedArticles {
@@ -2410,6 +2451,12 @@ type PaginatedImages {
 
 type PaginatedMemberPlans {
   nodes: [MemberPlan!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type PaginatedPageRevisions {
+  nodes: [PageRevision!]!
   pageInfo: PageInfo!
   totalCount: Int!
 }
@@ -2989,6 +3036,14 @@ type Query {
   """Returns an article by id or slug."""
   article(id: String, slug: String): Article!
 
+  """Returns a single article revision including its full content."""
+  articleRevision(id: String!): ArticleRevision
+
+  """
+  Returns a paginated list of revisions (version history) for an article.
+  """
+  articleRevisions(articleId: String!, cursorId: String, filter: ArticleRevisionFilter, order: SortOrder = Descending, skip: Int = 0, take: Int = 10): PaginatedArticleRevisions!
+
   """Returns a paginated list of articles based on the filters given."""
   articles(cursorId: String, filter: ArticleFilter, order: SortOrder = Descending, skip: Int = 0, sort: ArticleSort = PublishedAt, take: Int = 10): PaginatedArticles!
 
@@ -3154,6 +3209,12 @@ type Query {
 
   """Returns an page by id or slug."""
   page(id: String, slug: String): Page!
+
+  """Returns a single page revision including its full content."""
+  pageRevision(id: String!): PageRevision
+
+  """Returns a paginated list of revisions (version history) for a page."""
+  pageRevisions(cursorId: String, filter: PageRevisionFilter, order: SortOrder = Descending, pageId: String!, skip: Int = 0, take: Int = 10): PaginatedPageRevisions!
 
   """Returns a paginated list of pages based on the filters given."""
   pages(cursorId: String, filter: PageFilter, order: SortOrder = Descending, skip: Int = 0, sort: PageSort = PublishedAt, take: Int = 10): PaginatedPages!

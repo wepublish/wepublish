@@ -140,28 +140,36 @@ export type ArticleNavigationLink = BaseNavigationLink &
     type: NavigationLinkType;
   };
 
-export type ArticleRevision = HasBlockContent & {
-  __typename?: 'ArticleRevision';
-  authors: Array<Author>;
-  blocks: Array<BlockContent>;
-  breaking: Scalars['Boolean'];
-  canonicalUrl?: Maybe<Scalars['String']>;
-  createdAt: Scalars['DateTime'];
-  hideAuthor: Scalars['Boolean'];
-  id: Scalars['String'];
-  image?: Maybe<Image>;
-  imageID?: Maybe<Scalars['String']>;
-  lead?: Maybe<Scalars['String']>;
-  preTitle?: Maybe<Scalars['String']>;
-  properties: Array<Property>;
-  publishedAt?: Maybe<Scalars['DateTime']>;
-  seoTitle?: Maybe<Scalars['String']>;
-  socialMediaAuthors: Array<Author>;
-  socialMediaDescription?: Maybe<Scalars['String']>;
-  socialMediaImage?: Maybe<Image>;
-  socialMediaImageID?: Maybe<Scalars['String']>;
-  socialMediaTitle?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
+export type ArticleRevision = HasBlockContent &
+  HasOptionalUserLc & {
+    __typename?: 'ArticleRevision';
+    archivedAt?: Maybe<Scalars['DateTime']>;
+    authors: Array<Author>;
+    blocks: Array<BlockContent>;
+    breaking: Scalars['Boolean'];
+    canonicalUrl?: Maybe<Scalars['String']>;
+    createdAt: Scalars['DateTime'];
+    hideAuthor: Scalars['Boolean'];
+    id: Scalars['String'];
+    image?: Maybe<Image>;
+    imageID?: Maybe<Scalars['String']>;
+    lead?: Maybe<Scalars['String']>;
+    preTitle?: Maybe<Scalars['String']>;
+    properties: Array<Property>;
+    publishedAt?: Maybe<Scalars['DateTime']>;
+    seoTitle?: Maybe<Scalars['String']>;
+    socialMediaAuthors: Array<Author>;
+    socialMediaDescription?: Maybe<Scalars['String']>;
+    socialMediaImage?: Maybe<Image>;
+    socialMediaImageID?: Maybe<Scalars['String']>;
+    socialMediaTitle?: Maybe<Scalars['String']>;
+    title?: Maybe<Scalars['String']>;
+    user?: Maybe<User>;
+    userId?: Maybe<Scalars['String']>;
+  };
+
+export type ArticleRevisionFilter = {
+  userId?: InputMaybe<Scalars['String']>;
 };
 
 export enum ArticleSort {
@@ -1387,6 +1395,11 @@ export type HasOptionalUser = {
   userID?: Maybe<Scalars['String']>;
 };
 
+export type HasOptionalUserLc = {
+  user?: Maybe<User>;
+  userId?: Maybe<Scalars['String']>;
+};
+
 export type HasPage = {
   page: Page;
   pageID: Scalars['String'];
@@ -2010,6 +2023,10 @@ export type Mutation = {
   deleteUserRole: UserRole;
   /** Deletes an existing voucher. */
   deleteVoucher: Voucher;
+  /** Discards the current draft and reverts to the latest published revision. */
+  discardArticleDraft: Article;
+  /** Discards the current draft and reverts to the latest published revision. */
+  discardPageDraft: Page;
   /** Dislikes an article. */
   dislikeArticle: Article;
   /** Simulates a mailchimp sync without making changes. Returns what would be updated. */
@@ -2061,6 +2078,10 @@ export type Mutation = {
   resetPasswordWithToken: Scalars['Boolean'];
   /** Resets the two-factor authentication configuration for a user. The user will need to set up 2FA again on next login. */
   resetUserTotp: Scalars['Boolean'];
+  /** Restores an older revision of an article as a new draft. */
+  restoreArticleRevision: Article;
+  /** Restores an older revision of a page as a new draft. */
+  restorePageRevision: Page;
   /** This mutation revokes and deletes the active session. */
   revokeActiveSession: Scalars['Boolean'];
   /** This mutation sends a login link to the email if the user exists. Method will always return email address */
@@ -2675,6 +2696,14 @@ export type MutationDeleteVoucherArgs = {
   id: Scalars['String'];
 };
 
+export type MutationDiscardArticleDraftArgs = {
+  id: Scalars['String'];
+};
+
+export type MutationDiscardPageDraftArgs = {
+  id: Scalars['String'];
+};
+
 export type MutationDislikeArticleArgs = {
   id: Scalars['String'];
 };
@@ -2796,6 +2825,16 @@ export type MutationResetPasswordWithTokenArgs = {
 
 export type MutationResetUserTotpArgs = {
   userId: Scalars['String'];
+};
+
+export type MutationRestoreArticleRevisionArgs = {
+  id: Scalars['String'];
+  revisionId: Scalars['String'];
+};
+
+export type MutationRestorePageRevisionArgs = {
+  id: Scalars['String'];
+  revisionId: Scalars['String'];
 };
 
 export type MutationSendJwtLoginArgs = {
@@ -3418,21 +3457,29 @@ export type PageNavigationLink = BaseNavigationLink &
     type: NavigationLinkType;
   };
 
-export type PageRevision = HasBlockContent & {
-  __typename?: 'PageRevision';
-  blocks: Array<BlockContent>;
-  createdAt: Scalars['DateTime'];
-  description?: Maybe<Scalars['String']>;
-  id: Scalars['String'];
-  image?: Maybe<Image>;
-  imageID?: Maybe<Scalars['String']>;
-  properties: Array<Property>;
-  publishedAt?: Maybe<Scalars['DateTime']>;
-  socialMediaDescription?: Maybe<Scalars['String']>;
-  socialMediaImage?: Maybe<Image>;
-  socialMediaImageID?: Maybe<Scalars['String']>;
-  socialMediaTitle?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
+export type PageRevision = HasBlockContent &
+  HasOptionalUserLc & {
+    __typename?: 'PageRevision';
+    archivedAt?: Maybe<Scalars['DateTime']>;
+    blocks: Array<BlockContent>;
+    createdAt: Scalars['DateTime'];
+    description?: Maybe<Scalars['String']>;
+    id: Scalars['String'];
+    image?: Maybe<Image>;
+    imageID?: Maybe<Scalars['String']>;
+    properties: Array<Property>;
+    publishedAt?: Maybe<Scalars['DateTime']>;
+    socialMediaDescription?: Maybe<Scalars['String']>;
+    socialMediaImage?: Maybe<Image>;
+    socialMediaImageID?: Maybe<Scalars['String']>;
+    socialMediaTitle?: Maybe<Scalars['String']>;
+    title?: Maybe<Scalars['String']>;
+    user?: Maybe<User>;
+    userId?: Maybe<Scalars['String']>;
+  };
+
+export type PageRevisionFilter = {
+  userId?: InputMaybe<Scalars['String']>;
 };
 
 export enum PageSort {
@@ -3461,6 +3508,13 @@ export type PageTeaserInput = {
   pageID?: InputMaybe<Scalars['String']>;
   preTitle?: InputMaybe<Scalars['String']>;
   title?: InputMaybe<Scalars['String']>;
+};
+
+export type PaginatedArticleRevisions = {
+  __typename?: 'PaginatedArticleRevisions';
+  nodes: Array<ArticleRevision>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
 };
 
 export type PaginatedArticles = {
@@ -3515,6 +3569,13 @@ export type PaginatedImages = {
 export type PaginatedMemberPlans = {
   __typename?: 'PaginatedMemberPlans';
   nodes: Array<MemberPlan>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type PaginatedPageRevisions = {
+  __typename?: 'PaginatedPageRevisions';
+  nodes: Array<PageRevision>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
 };
@@ -4131,6 +4192,10 @@ export type Query = {
   analyticsProviderSettings: Array<SettingAnalyticsProvider>;
   /** Returns an article by id or slug. */
   article: Article;
+  /** Returns a single article revision including its full content. */
+  articleRevision?: Maybe<ArticleRevision>;
+  /** Returns a paginated list of revisions (version history) for an article. */
+  articleRevisions: PaginatedArticleRevisions;
   /** Returns a paginated list of articles based on the filters given. */
   articles: PaginatedArticles;
   /** Get an author by ID or slug */
@@ -4284,6 +4349,10 @@ export type Query = {
   newSubscribers: Array<DashboardSubscription>;
   /** Returns an page by id or slug. */
   page: Page;
+  /** Returns a single page revision including its full content. */
+  pageRevision?: Maybe<PageRevision>;
+  /** Returns a paginated list of revisions (version history) for a page. */
+  pageRevisions: PaginatedPageRevisions;
   /** Returns a paginated list of pages based on the filters given. */
   pages: PaginatedPages;
   /** Returns a payment method by id */
@@ -4435,6 +4504,19 @@ export type QueryAnalyticsProviderSettingsArgs = {
 export type QueryArticleArgs = {
   id?: InputMaybe<Scalars['String']>;
   slug?: InputMaybe<Scalars['String']>;
+};
+
+export type QueryArticleRevisionArgs = {
+  id: Scalars['String'];
+};
+
+export type QueryArticleRevisionsArgs = {
+  articleId: Scalars['String'];
+  cursorId?: InputMaybe<Scalars['String']>;
+  filter?: InputMaybe<ArticleRevisionFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
 };
 
 export type QueryArticlesArgs = {
@@ -4677,6 +4759,19 @@ export type QueryNewSubscribersArgs = {
 export type QueryPageArgs = {
   id?: InputMaybe<Scalars['String']>;
   slug?: InputMaybe<Scalars['String']>;
+};
+
+export type QueryPageRevisionArgs = {
+  id: Scalars['String'];
+};
+
+export type QueryPageRevisionsArgs = {
+  cursorId?: InputMaybe<Scalars['String']>;
+  filter?: InputMaybe<PageRevisionFilter>;
+  order?: InputMaybe<SortOrder>;
+  pageId: Scalars['String'];
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
 };
 
 export type QueryPagesArgs = {
