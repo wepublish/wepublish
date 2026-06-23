@@ -20,6 +20,7 @@
     "TZ": "Europe/Zurich",
     "GIT_EDITOR": "nano",
     "DATABASE_URL": "postgresql://postgres@database:5432/wepublish?schema=public",
+    "DIRECT_DATABASE_URL": "postgresql://postgres@database:5432/wepublish?schema=public",
     "S3_ENDPOINT": "storage",
     "S3_PORT": "9000"
   },

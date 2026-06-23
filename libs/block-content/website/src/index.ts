@@ -12,6 +12,7 @@ export * from './lib/sound-cloud/sound-cloud-block';
 export * from './lib/vimeo/vimeo-video-block';
 export * from './lib/streamable/streamable-video-block';
 export * from './lib/iframe/iframe-block';
+export * from './lib/iframe/iframe-block.context';
 export * from './lib/instagram/instagram-post-block';
 export * from './lib/youtube/youtube-video-block';
 export * from './lib/html/html-block';

@@ -7,6 +7,7 @@ import { BuilderIFrameBlockProps } from '@wepublish/website/builder';
 import { css } from '@emotion/react';
 import { useMemo } from 'react';
 import IframeResizer from '@iframe-resizer/react';
+import { useIFrameBlockContext } from './iframe-block.context';
 
 export const isIFrameBlock = (
   block: Pick<BlockContent, '__typename'>
@@ -28,6 +29,8 @@ export function IFrameBlock({
   sandbox,
   className,
 }: BuilderIFrameBlockProps) {
+  const { tags } = useIFrameBlockContext();
+
   const styleCustomCss = useMemo(
     () => css`
       ${styleCustom}
@@ -35,12 +38,20 @@ export function IFrameBlock({
     [styleCustom]
   );
 
-  return url ?
+  const resolvedUrl = useMemo(() => {
+    if (!url) {
+      return url;
+    }
+
+    return url.replace('{tags}', encodeURIComponent(tags.join(',')));
+  }, [url, tags]);
+
+  return resolvedUrl ?
       <IFrameBlockWrapper className={className}>
         <IFrameBlockIframe
           license="GPLv3"
           css={styleCustomCss}
-          src={url}
+          src={resolvedUrl}
           title={title ?? undefined}
           allowFullScreen
           width={width?.toString()}
