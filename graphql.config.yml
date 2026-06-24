@@ -1,10 +1,6 @@
 projects:
   editor-api:
     schema:
-      - 'apps/api-example/schema-v1-admin.graphql'
-    documents: 'libs/editor/api/**/*.graphql'
-  editor-api:
-    schema:
       - 'apps/api-example/schema-v2.graphql'
     documents: 'libs/editor/api/**/*.graphql'
   website-api:

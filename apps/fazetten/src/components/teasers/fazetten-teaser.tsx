@@ -14,7 +14,7 @@ import {} from '@wepublish/block-content/website';
 import {
   FlexAlignment,
   FullImageFragment,
-  Teaser as TeaserType,
+  FullTeaserFragment,
 } from '@wepublish/website/api';
 import {
   BuilderTeaserProps,
@@ -24,7 +24,7 @@ import {
 import { PropsWithChildren } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
-export const selectTeaserAuthors = (teaser: TeaserType) => {
+export const selectTeaserAuthors = (teaser: FullTeaserFragment) => {
   switch (teaser.__typename) {
     case 'PageTeaser': {
       return null;

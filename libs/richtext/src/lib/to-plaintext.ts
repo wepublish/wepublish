@@ -1,11 +1,11 @@
 import { compose } from 'ramda';
-import { Node } from 'slate';
 import { findFirstParagraph } from './truncate';
+import { RichtextElements } from './json-format.interface';
 
 export const toPlaintext = (
-  nodes: Node[] | undefined | null
+  nodes: RichtextElements[] | null | undefined
 ): string | undefined => {
-  return nodes?.map(n => Node.string(n)).join('');
+  return nodes?.flatMap(n => (n.type === 'text' ? n.text : [])).join('');
 };
 
 export const firstParagraphToPlaintext = compose(

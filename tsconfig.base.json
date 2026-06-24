@@ -18,12 +18,11 @@
     "baseUrl": ".",
     "paths": {
       "@wepublish/action/api": ["libs/action/api/src/index.ts"],
+      "@wepublish/ai/api": ["libs/ai/api/src/index.ts"],
+      "@wepublish/ai/editor": ["libs/ai/editor/src/index.ts"],
+      "@wepublish/ai/website": ["libs/ai/website/src/index.ts"],
       "@wepublish/api": ["libs/api/src/index.ts"],
       "@wepublish/api/seed": ["libs/api/prisma/seed.ts"],
-      "@wepublish/property/api": ["libs/property/api/src/index.ts"],
-      "@wepublish/ai/api": ["libs/ai/api/src/index.ts"],
-      "@wepublish/ai/website": ["libs/ai/website/src/index.ts"],
-      "@wepublish/ai/editor": ["libs/ai/editor/src/index.ts"],
       "@wepublish/article/api": ["libs/article/api/src/index.ts"],
       "@wepublish/article/website": ["libs/article/website/src/index.ts"],
       "@wepublish/authentication/api": ["libs/authentication/api/src/index.ts"],
@@ -45,21 +44,21 @@
       "@wepublish/consent/api": ["libs/consent/api/src/index.ts"],
       "@wepublish/consent/editor": ["libs/consent/editor/src/index.ts"],
       "@wepublish/content/website": ["libs/content/website/src/index.ts"],
-      "@wepublish/document/api": ["libs/document/api/src/index.ts"],
       "@wepublish/crowdfunding/api": ["libs/crowdfunding/api/src/index.ts"],
       "@wepublish/crowdfunding/editor": [
         "libs/crowdfunding/editor/src/index.ts"
       ],
+      "@wepublish/document/api": ["libs/document/api/src/index.ts"],
       "@wepublish/editor/api": ["libs/editor/api/src/index.ts"],
       "@wepublish/errors": ["libs/errors/src/index.ts"],
       "@wepublish/errors/website": ["libs/errors/website/src/index.ts"],
       "@wepublish/event/api": ["libs/event/api/src/index.ts"],
-      "@wepublish/external-apps/api": ["libs/external-apps/api/src/index.ts"],
       "@wepublish/event/import/api": ["libs/event/import/api/src/index.ts"],
       "@wepublish/event/import/editor": [
         "libs/event/import/editor/src/index.ts"
       ],
       "@wepublish/event/website": ["libs/event/website/src/index.ts"],
+      "@wepublish/external-apps/api": ["libs/external-apps/api/src/index.ts"],
       "@wepublish/feed/website": ["libs/feed/website/src/index.ts"],
       "@wepublish/google-analytics/api": [
         "libs/google-analytics/api/src/index.ts"
@@ -68,6 +67,7 @@
       "@wepublish/image/api": ["libs/image/api/src/index.ts"],
       "@wepublish/image/website": ["libs/image/website/src/index.ts"],
       "@wepublish/jobs": ["libs/jobs/src/index.ts"],
+      "@wepublish/kv-ttl-cache/api": ["libs/kv-ttl-cache/api/src/index.ts"],
       "@wepublish/mail/api": ["libs/mail/api/src/index.ts"],
       "@wepublish/media-transform-guard": [
         "libs/media-transform-guard/api/src/index.ts"
@@ -93,8 +93,13 @@
       "@wepublish/permissions/api": ["libs/permissions/api/src/index.ts"],
       "@wepublish/phrase/api": ["libs/phrase/api/src/index.ts"],
       "@wepublish/poll/api": ["libs/poll/api/src/index.ts"],
+      "@wepublish/property/api": ["libs/property/api/src/index.ts"],
       "@wepublish/richtext": ["libs/richtext/src/index.ts"],
       "@wepublish/richtext/api": ["libs/richtext/api/src/index.ts"],
+      "@wepublish/richtext/editor": ["libs/richtext/editor/src/index.ts"],
+      "@wepublish/richtext/editor/config": [
+        "libs/richtext/editor/src/lib/richtext-editor.config.ts"
+      ],
       "@wepublish/richtext/website": ["libs/richtext/website/src/index.ts"],
       "@wepublish/session/api": ["libs/session/api/src/index.ts"],
       "@wepublish/settings/api": ["libs/settings/api/src/index.ts"],
@@ -119,14 +124,14 @@
       "@wepublish/utils": ["libs/utils/src/index.ts"],
       "@wepublish/utils/api": ["libs/utils/api/src/index.ts"],
       "@wepublish/utils/sentry": ["libs/utils/sentry/instrumentation.ts"],
-      "@wepublish/utils/sentry/nextjs": [
-        "libs/utils/sentry/instrumentation.nextjs.ts"
-      ],
       "@wepublish/utils/sentry/client": [
         "libs/utils/sentry/instrumentation.client.ts"
       ],
       "@wepublish/utils/sentry/nestjs": [
         "libs/utils/sentry/instrumentation.nestjs.ts"
+      ],
+      "@wepublish/utils/sentry/nextjs": [
+        "libs/utils/sentry/instrumentation.nextjs.ts"
       ],
       "@wepublish/utils/website": ["libs/utils/website/src/index.ts"],
       "@wepublish/versionInformation/api": [
@@ -139,8 +144,7 @@
       "@wepublish/website/server": ["libs/website/src/server.ts"],
       "@wepublish/website/translations/*": [
         "libs/website/translations/src/lib/*"
-      ],
-      "@wepublish/kv-ttl-cache/api": ["libs/kv-ttl-cache/api/src/index.ts"]
+      ]
     }
   },
   "exclude": ["node_modules", "tmp"]

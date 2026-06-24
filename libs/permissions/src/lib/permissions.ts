@@ -1102,6 +1102,21 @@ export const CanRunMailchimpSync: Permission = {
   deprecated: false,
 };
 
+/**
+ * Website Settings
+ */
+export const CanGetWebsiteSettings: Permission = {
+  id: 'CAN_GET_WEBSITE_SETTINGS',
+  description: 'Allows to get the full website settings',
+  deprecated: false,
+};
+
+export const CanUpdateWebsiteSettings: Permission = {
+  id: 'CAN_UPDATE_WEBSITE_SETTINGS',
+  description: 'Allows to update the website settings',
+  deprecated: false,
+};
+
 export const AllPermissions: Permission[] = [
   CanGetCrowdfunding,
   CanGetCrowdfundings,
@@ -1270,6 +1285,8 @@ export const AllPermissions: Permission[] = [
   CanUpdateMailchimpSyncSettings,
   CanDeleteMailchimpSyncSettings,
   CanRunMailchimpSync,
+  CanGetWebsiteSettings,
+  CanUpdateWebsiteSettings,
 ];
 
 export const EditorPermissions: Permission[] = [
@@ -1335,6 +1352,8 @@ export const EditorPermissions: Permission[] = [
   CanGetPeriodicJobLog,
   CanCreateApprovedComment,
   CanPreview,
+  CanGetWebsiteSettings,
+  CanUpdateWebsiteSettings,
 ];
 
 export const PeerPermissions: Permission[] = [

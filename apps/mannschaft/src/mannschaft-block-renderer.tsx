@@ -9,7 +9,7 @@ import {
   SliderWrapper,
   TeaserTitle,
 } from '@wepublish/block-content/website';
-import { TeaserListBlock } from '@wepublish/website/api';
+import { FullTeaserListBlockFragment } from '@wepublish/website/api';
 import { BuilderBlockRendererProps } from '@wepublish/website/builder';
 import { anyPass, cond } from 'ramda';
 import { useMemo } from 'react';
@@ -70,7 +70,9 @@ export const MannschaftBlockRenderer = (props: BuilderBlockRendererProps) => {
         ],
         [
           anyPass([isFirstAdTeaser, isSecondAdTeaser, isThirdAdTeaser]),
-          (block: TeaserListBlock) => <AdTeaserBlockStyle {...block} />,
+          (block: FullTeaserListBlockFragment) => (
+            <AdTeaserBlockStyle {...block} />
+          ),
         ],
         [isHighlightTeasers, block => <HighlightBlockStyle {...block} />],
         [isContentBoxBlock, block => <MannschaftContentBox {...block} />],

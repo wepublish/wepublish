@@ -90,6 +90,7 @@ import {
   CanGetUserRole,
   CanGetUserRoles,
   CanGetUsers,
+  CanGetWebsiteSettings,
   CanPreview,
   CanPublishArticle,
   CanPublishPage,
@@ -107,6 +108,7 @@ import {
   CanUpdateSystemMails,
   CanUpdateTag,
   CanUpdateVoucher,
+  CanUpdateWebsiteSettings,
 } from '@wepublish/permissions';
 import { PermissionControl, Version } from '@wepublish/ui/editor';
 import { de, enUS, fr } from 'date-fns/locale';
@@ -115,6 +117,7 @@ import { useTranslation } from 'react-i18next';
 import {
   MdAccountCircle,
   MdApproval,
+  MdAutoFixHigh,
   MdAutorenew,
   MdBadge,
   MdBookOnline,
@@ -126,7 +129,6 @@ import {
   MdDashboard,
   MdDescription,
   MdEvent,
-  MdEventAvailable,
   MdExtension,
   MdFactCheck,
   MdFileCopy,
@@ -653,7 +655,8 @@ export function Base({ children }: BaseProps) {
                       </Nav.Item>
                     </PermissionControl>
 
-                    <PermissionControl
+                    {/* @TODO: Disabled until HTML to PM works */}
+                    {/* <PermissionControl
                       qualifyingPermissions={[
                         CanGetEvent.id,
                         CanUpdateEvent.id,
@@ -668,7 +671,7 @@ export function Base({ children }: BaseProps) {
                       >
                         {t('navbar.importableEvents')}
                       </Nav.Item>
-                    </PermissionControl>
+                    </PermissionControl> */}
 
                     <PermissionControl
                       qualifyingPermissions={[
@@ -1150,6 +1153,22 @@ export function Base({ children }: BaseProps) {
                         icon={<MdPower />}
                       >
                         {t('navbar.integrations')}
+                      </Nav.Item>
+                    </PermissionControl>
+
+                    <PermissionControl
+                      qualifyingPermissions={[
+                        CanGetWebsiteSettings.id,
+                        CanUpdateWebsiteSettings.id,
+                      ]}
+                    >
+                      <Nav.Item
+                        as={NavLink}
+                        href="/settings/website"
+                        active={path.startsWith('settings/website')}
+                        icon={<MdAutoFixHigh />}
+                      >
+                        {t('websiteSettings.navbar')}
                       </Nav.Item>
                     </PermissionControl>
                   </Nav.Menu>

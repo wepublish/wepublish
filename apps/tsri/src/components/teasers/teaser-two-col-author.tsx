@@ -24,12 +24,17 @@ export const isTeaserTwoColAuthor = allPass([
 export const TeaserTwoColAuthor = styled(TsriTeaser)`
   aspect-ratio: 2.06 !important;
   width: 100%;
+  container-type: normal;
+
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    --tw: 32.5cqw;
+  }
 
   ${TeaserContentWrapper} {
     grid-template-columns: 50% 50%;
     grid-template-rows: auto 7.8% fit-content(1px) 14.25%;
     background-color: ${({ theme }) => theme.palette.primary.main};
-    border-top-left-radius: 25cqw;
+    border-top-left-radius: calc(var(--tw, 100cqw) * 0.25);
 
     &:hover {
       ${TeaserAuthors} {
@@ -51,12 +56,12 @@ export const TeaserTwoColAuthor = styled(TsriTeaser)`
     border-radius: 50%;
     grid-column: 1 / 2;
     grid-row: -1 / 1;
-    width: 41.74cqw;
+    width: calc(var(--tw, 100cqw) * 0.4174);
     margin: auto;
 
     & img {
-      width: 41.74cqw;
-      height: 41.74cqw;
+      width: calc(var(--tw, 100cqw) * 0.4174);
+      height: calc(var(--tw, 100cqw) * 0.4174);
       object-fit: cover !important;
       max-height: unset;
     }
@@ -77,13 +82,13 @@ export const TeaserTwoColAuthor = styled(TsriTeaser)`
     padding: 0;
 
     & ${TeaserAuthors} {
-      padding: 0.65cqw 1.5cqw;
+      padding: calc(var(--tw, 100cqw) * 0.0065) calc(var(--tw, 100cqw) * 0.015);
       color: ${({ theme }) => theme.palette.common.white};
       background-color: ${({ theme }) => theme.palette.common.black};
-      font-size: calc((9 * 100cqw / 16) * 0.045) !important;
-      line-height: calc((9 * 100cqw / 16) * 0.045) !important;
+      font-size: calc(var(--tw, 100cqw) * 0.0253125) !important;
+      line-height: calc(var(--tw, 100cqw) * 0.0253125) !important;
       font-weight: 700 !important;
-      height: 3.8cqw;
+      height: calc(var(--tw, 100cqw) * 0.038);
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;

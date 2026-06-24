@@ -413,7 +413,7 @@ type BreakBlock implements BaseBlock & HasImage {
   linkTarget: String
   linkText: String
   linkURL: String
-  richText: RichText!
+  richText: RichText
   text: String
   type: BlockType!
 }
@@ -427,7 +427,7 @@ input BreakBlockInput {
   linkTarget: String
   linkText: String
   linkURL: String
-  richText: RichText!
+  richText: RichText
   text: String
 }
 
@@ -1120,6 +1120,24 @@ input FlexTeaserInput {
   teaser: TeaserInput
 }
 
+enum FontStyle {
+  italic
+  normal
+}
+
+enum FontWeight {
+  Black
+  Bold
+  ExtraBold
+  ExtraLight
+  Light
+  Medium
+  Regular
+  SemiBold
+  Thin
+  Variable
+}
+
 type FullPoll {
   answers: [PollAnswer!]!
   closedAt: DateTime
@@ -1508,6 +1526,16 @@ The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](
 """
 scalar JSONObject
 
+type KeyEnabled {
+  enabled: Boolean!
+  key: String
+}
+
+input KeyEnabledInput {
+  enabled: Boolean!
+  key: String
+}
+
 type ListicleBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
@@ -1526,13 +1554,13 @@ input ListicleBlockInput {
 type ListicleItem implements HasImage {
   image: Image
   imageID: String
-  richText: RichText!
+  richText: RichText
   title: String
 }
 
 input ListicleItemInput {
   imageID: String
-  richText: RichText!
+  richText: RichText
   title: String
 }
 
@@ -2119,7 +2147,7 @@ type Mutation {
   unpublishPage(id: String!): Page!
 
   """Updates an existing AI provider setting."""
-  updateAISetting(apiKey: String, id: String, name: String, systemPrompt: String): SettingAIProvider!
+  updateAISetting(apiKey: String, id: String, name: String, systemPrompt: String, webhookEndpointSecret: String): SettingAIProvider!
 
   """Updates an existing analytics provider setting."""
   updateAnalyticsProviderSetting(articlePrefix: String, credentials: SettingAnalyticsCredentialsInput, id: String, name: String, property: String): SettingAnalyticsProvider!
@@ -2195,7 +2223,7 @@ type Mutation {
   updatePeer(hostURL: String, id: String!, information: RichText, isDisabled: Boolean, name: String, slug: String, token: String): Peer!
 
   """Updates the peer profile of the current media."""
-  updatePeerProfile(callToActionImageID: String!, callToActionImageURL: String, callToActionText: RichText!, callToActionURL: String!, logoID: String!, name: String!, squareLogoId: String!, themeColor: Color!, themeFontColor: Color!): PeerProfile!
+  updatePeerProfile(callToActionImageID: String!, callToActionImageURL: String, callToActionText: RichText, callToActionURL: String!, logoID: String!, name: String!, squareLogoId: String!, themeColor: Color!, themeFontColor: Color!): PeerProfile!
 
   """Updates an existing poll."""
   updatePoll(answers: [PollAnswerInput!]!, closedAt: DateTime, externalVoteSources: [PollExternalVoteSourceInput!]!, id: String!, infoText: RichText, opensAt: DateTime, question: String): FullPoll!
@@ -2246,6 +2274,9 @@ type Mutation {
 
   """Updates an existing voucher."""
   updateVoucher(code: String, discountPercent: Int, id: String!, memberPlanId: String, validFrom: DateTime, validTo: DateTime): Voucher!
+
+  """Updates the website settings."""
+  updateWebsiteSettings(ads: WebsiteAdsInput, analytics: WebsiteAnalyticsInput, fonts: [WebsiteRemoteFontInput!], mail: WebsiteMailInput, theme: JSONObject): WebsiteSettings!
 
   """"""
   upgradeUserSubscription(failureURL: String, memberPlanId: String!, monthlyAmount: Int!, paymentMethodId: String!, subscriptionId: String!, successURL: String): Payment!
@@ -2811,7 +2842,7 @@ type PeerProfile {
   callToActionImage: Image
   callToActionImageID: String
   callToActionImageURL: String
-  callToActionText: RichText!
+  callToActionText: RichText
   callToActionURL: String!
   hostURL: String!
   logo: Image
@@ -3429,6 +3460,11 @@ type Query {
     """Number of items to fetch"""
     take: Int! = 10
   ): PaginatedVouchers!
+
+  """
+  Returns the website settings, requires authentication to get sensitive settings.
+  """
+  websiteSettings: WebsiteSettings!
 }
 
 type QuoteBlock implements BaseBlock & HasImage {
@@ -3464,7 +3500,7 @@ type RemotePeerProfile {
   callToActionImage: PeerImage
   callToActionImageID: String
   callToActionImageURL: String
-  callToActionText: RichText!
+  callToActionText: RichText
   callToActionURL: String!
   hostURL: String!
   logo: PeerImage
@@ -3483,7 +3519,7 @@ type RichTextBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
-  richText: RichText!
+  richText: RichText
   type: BlockType!
 }
 
@@ -3491,7 +3527,7 @@ input RichTextBlockInput {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
-  richText: RichText!
+  richText: RichText
 }
 
 type SensitiveDataUser implements BaseUser {
@@ -4411,6 +4447,56 @@ enum VoucherSort {
   CreatedAt
   Discount
   ModifiedAt
+}
+
+type WebsiteAds {
+  sparkLoop: KeyEnabled!
+}
+
+input WebsiteAdsInput {
+  sparkLoop: KeyEnabledInput!
+}
+
+type WebsiteAnalytics {
+  googleAnalytics: KeyEnabled!
+  googleTagManager: KeyEnabled!
+  piwik: KeyEnabled!
+  plausible: KeyEnabled!
+}
+
+input WebsiteAnalyticsInput {
+  googleAnalytics: KeyEnabledInput!
+  googleTagManager: KeyEnabledInput!
+  piwik: KeyEnabledInput!
+  plausible: KeyEnabledInput!
+}
+
+type WebsiteMail {
+  mailchimp: KeyEnabled
+}
+
+input WebsiteMailInput {
+  mailchimp: KeyEnabledInput!
+}
+
+type WebsiteRemoteFont {
+  name: String!
+  style: [FontStyle!]!
+  weight: [FontWeight!]!
+}
+
+input WebsiteRemoteFontInput {
+  name: String!
+  style: [FontStyle!]!
+  weight: [FontWeight!]!
+}
+
+type WebsiteSettings {
+  ads: WebsiteAds!
+  analytics: WebsiteAnalytics!
+  fonts: [WebsiteRemoteFont!]!
+  mail: WebsiteMail!
+  theme: JSONObject!
 }
 
 type YouTubeVideoBlock implements BaseBlock {

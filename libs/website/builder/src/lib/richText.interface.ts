@@ -1,13 +1,18 @@
-import { Descendant, Element, Text } from 'slate';
+import { PropsWithChildren } from 'react';
+import {
+  RichtextJSONDocument,
+  RichtextElements,
+  RichtextMarks,
+} from '@wepublish/richtext';
 
 export type BuilderRenderRichtextProps = {
-  elements: Descendant[];
+  document: RichtextJSONDocument | null | undefined;
 };
 
 export type BuilderRenderElementProps = {
-  element: Element;
+  element: RichtextElements;
 };
 
-export type BuilderRenderLeafProps = {
-  element: Text;
-};
+export type BuilderRenderLeafProps = PropsWithChildren<{
+  mark: RichtextMarks;
+}>;

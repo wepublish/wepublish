@@ -166,7 +166,9 @@ export const FrageDesTages = ({
     },
   });
 
-  const pollToPass = article?.latest.blocks.find(isPollBlock)?.poll;
+  const pollToPass = article?.latest.blocks.find(block =>
+    isPollBlock(block)
+  )?.poll;
 
   const numberOfComments = useMemo(() => {
     return countComments(
@@ -191,8 +193,9 @@ export const FrageDesTages = ({
                 <AuthorBox author={article?.latest.authors[0]} />
               : null}
             </div>
+
             <div>
-              <InfoBox richText={pollToPass?.infoText || []} />
+              <InfoBox richText={pollToPass?.infoText} />
             </div>
           </AuthorAndContext>
 

@@ -5,16 +5,13 @@ import {
   hasBlockStyle,
   isBreakBlock,
 } from '@wepublish/block-content/website';
-import {
-  BlockContent,
-  BreakBlock as BreakBlockType,
-} from '@wepublish/website/api';
+import { BlockContent, FullBreakBlockFragment } from '@wepublish/website/api';
 import { allPass, anyPass } from 'ramda';
 
 // Main
 export const isPrimaryBreakBlock = (
   block: Pick<BlockContent, '__typename'>
-): block is BreakBlockType =>
+): block is FullBreakBlockFragment =>
   allPass([
     anyPass([hasBlockStyle('Primary Bg'), hasBlockStyle('Schwarz Bg')]),
     isBreakBlock,
@@ -22,7 +19,7 @@ export const isPrimaryBreakBlock = (
 
 export const isSecondaryBreakBlock = (
   block: Pick<BlockContent, '__typename'>
-): block is BreakBlockType =>
+): block is FullBreakBlockFragment =>
   allPass([
     anyPass([hasBlockStyle('Secondary Bg'), hasBlockStyle('Pink Bg')]),
     isBreakBlock,
@@ -30,7 +27,7 @@ export const isSecondaryBreakBlock = (
 
 export const isAccentBreakBlock = (
   block: Pick<BlockContent, '__typename'>
-): block is BreakBlockType =>
+): block is FullBreakBlockFragment =>
   allPass([
     anyPass([hasBlockStyle('Accent Bg'), hasBlockStyle('Türkis Bg')]),
     isBreakBlock,
@@ -38,7 +35,7 @@ export const isAccentBreakBlock = (
 
 export const isLightAccentBreakBlock = (
   block: Pick<BlockContent, '__typename'>
-): block is BreakBlockType =>
+): block is FullBreakBlockFragment =>
   allPass([
     anyPass([hasBlockStyle('Light Accent Bg'), hasBlockStyle('Gelb Bg')]),
     isBreakBlock,
@@ -47,17 +44,17 @@ export const isLightAccentBreakBlock = (
 // Sub
 export const isVioletBreakBlock = (
   block: Pick<BlockContent, '__typename'>
-): block is BreakBlockType =>
+): block is FullBreakBlockFragment =>
   allPass([hasBlockStyle('Violett Bg'), isBreakBlock])(block);
 
 export const isPurpleBreakBlock = (
   block: Pick<BlockContent, '__typename'>
-): block is BreakBlockType =>
+): block is FullBreakBlockFragment =>
   allPass([hasBlockStyle('Lila Bg'), isBreakBlock])(block);
 
 export const isWarningBreakBlock = (
   block: Pick<BlockContent, '__typename'>
-): block is BreakBlockType =>
+): block is FullBreakBlockFragment =>
   allPass([
     anyPass([hasBlockStyle('Warning Bg'), hasBlockStyle('Orange Bg')]),
     isBreakBlock,
@@ -65,7 +62,7 @@ export const isWarningBreakBlock = (
 
 export const isErrorBreakBlock = (
   block: Pick<BlockContent, '__typename'>
-): block is BreakBlockType =>
+): block is FullBreakBlockFragment =>
   allPass([
     anyPass([hasBlockStyle('Error Bg'), hasBlockStyle('Rot Bg')]),
     isBreakBlock,
@@ -73,7 +70,7 @@ export const isErrorBreakBlock = (
 
 export const isSuccessBreakBlock = (
   block: Pick<BlockContent, '__typename'>
-): block is BreakBlockType =>
+): block is FullBreakBlockFragment =>
   allPass([
     anyPass([hasBlockStyle('Success Bg'), hasBlockStyle('Grün Bg')]),
     isBreakBlock,
@@ -81,7 +78,7 @@ export const isSuccessBreakBlock = (
 
 export const isInfoBreakBlock = (
   block: Pick<BlockContent, '__typename'>
-): block is BreakBlockType =>
+): block is FullBreakBlockFragment =>
   allPass([
     anyPass([hasBlockStyle('Info Bg'), hasBlockStyle('Blau Bg')]),
     isBreakBlock,

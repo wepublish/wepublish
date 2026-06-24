@@ -46,6 +46,11 @@ export const getSitemap = async (req: NextApiRequest): Promise<string> => {
   return generate(
     articleData.articles.nodes ?? [],
     pageData.pages.nodes ?? [],
-    [`${siteUrl}/author`, `${siteUrl}/event`]
+    [
+      `${siteUrl}/author`,
+      `${siteUrl}/event`,
+      `${siteUrl}/login`,
+      `${siteUrl}/mitmachen`,
+    ]
   );
 };
