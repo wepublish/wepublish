@@ -1,5 +1,7 @@
+import styled from '@emotion/styled';
 import {
   BlockRenderer,
+  isCrowdfundingBlock,
   isRichTextBlock,
 } from '@wepublish/block-content/website';
 import { FullBlockFragment } from '@wepublish/website/api';
@@ -20,6 +22,19 @@ import { EenewsDossierGrid } from '../blocks/eenews-dossier-grid';
 import { EenewsSectionBand } from '../blocks/eenews-section-band';
 import { EenewsTopNewsCarousel } from '../blocks/eenews-top-news-carousel';
 import { EenewsArticleRichText } from '../eenews-article-richtext';
+
+const CrowdfundingSection = styled('section')`
+  padding: 56px 56px 36px;
+
+  ${({ theme }) => theme.breakpoints.down('lg')} {
+    padding: 36px 20px 24px;
+  }
+`;
+
+const CrowdfundingInner = styled('div')`
+  max-width: var(--max-width);
+  margin: 0 auto;
+`;
 
 export const EenewsBlockRenderer = (props: BuilderBlockRendererProps) => {
   const extraBlockMap = useMemo(
@@ -52,6 +67,19 @@ export const EenewsBlockRenderer = (props: BuilderBlockRendererProps) => {
         className={props.className}
         richText={props.block.richText}
       />
+    );
+  }
+
+  if (isCrowdfundingBlock(props.block)) {
+    return (
+      <CrowdfundingSection className={props.className}>
+        <CrowdfundingInner>
+          <BlockRenderer
+            {...props}
+            className=""
+          />
+        </CrowdfundingInner>
+      </CrowdfundingSection>
     );
   }
 
