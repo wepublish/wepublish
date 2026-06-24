@@ -1,8 +1,8 @@
 import { readFileSync } from 'fs';
 
-const ARTICLES_01_PATH = new URL('../01-articles.json', import.meta.url)
-  .pathname;
 const ARTICLES_06_PATH = new URL('../06-articles.json', import.meta.url)
+  .pathname;
+const ARTICLES_07_PATH = new URL('../07-articles.json', import.meta.url)
   .pathname;
 
 const args = parseArgs(process.argv.slice(2));
@@ -312,14 +312,14 @@ async function main() {
   console.log();
 
   console.log('Reading article files...');
-  const data01 = JSON.parse(readFileSync(ARTICLES_01_PATH, 'utf8'));
   const data06 = JSON.parse(readFileSync(ARTICLES_06_PATH, 'utf8'));
+  const data07 = JSON.parse(readFileSync(ARTICLES_07_PATH, 'utf8'));
 
-  const map01 = Object.fromEntries(data01.articles.map(a => [a.id, a]));
+  const map06 = Object.fromEntries(data06.articles.map(a => [a.id, a]));
 
-  const changed = data06.articles.filter(a06 => {
-    const a01 = map01[a06.id];
-    return !a01 || JSON.stringify(a01) !== JSON.stringify(a06);
+  const changed = data07.articles.filter(a07 => {
+    const a06 = map06[a07.id];
+    return !a06 || JSON.stringify(a06) !== JSON.stringify(a07);
   });
 
   console.log(`Total articles: ${data06.articles.length}`);
