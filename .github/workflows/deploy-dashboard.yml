@@ -1,26 +1,30 @@
 name: Deploy overview dashboard
 
 on:
-  # Refresh the moment a production deploy is tagged. This is also when the
+  # Rebuild the moment a production deploy is tagged. This is also when the
   # deploy commit is still the tip of its source branch, so the branch label
   # gets captured and persisted before later work moves the branch on.
+  #
+  # NOTE: for a tag push, GitHub runs this workflow as it exists in the *tagged
+  # commit*, so a deploy only self-triggers once its commit contains this file
+  # (immediately for deploys off `development`; for `master`/feature branches
+  # once they pick up the merge). The dashboard always reads the latest run per
+  # project, so a missed trigger is corrected by the next deploy that fires.
   push:
     tags:
       - 'deploy_*'
-  # Fallback so the page never goes more than 30 min out of date.
-  schedule:
-    - cron: '*/30 * * * *'
-  # Manual trigger.
+  # Manual trigger (runs from the default branch).
   workflow_dispatch:
 
+# The page is generated into docs/deploy/ and committed to `development`, where
+# the repo's legacy GitHub Pages site serves it at <pages-url>/deploy/.
 permissions:
-  contents: read
-  deployments: read
-  pages: write
-  id-token: write
+  contents: write
+  actions: read
 
+# Serialize runs so two near-simultaneous deploys don't race on the push.
 concurrency:
-  group: pages
+  group: deploy-dashboard
   cancel-in-progress: false
 
 jobs:
@@ -28,6 +32,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Always commit to the default branch (Pages source), regardless of
+          # the tag that triggered the run. Full history keeps the rebase below
+          # reliable.
+          ref: development
+          fetch-depth: 0
 
       - uses: actions/setup-node@v4
         with:
@@ -38,18 +48,27 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: node deployment/dashboard/build-deploy-dashboard.mjs
 
-      - uses: actions/configure-pages@v5
-
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: dist
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Commit dashboard if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/deploy
+          # --cached so a brand-new (untracked) docs/deploy/index.html counts as
+          # a change too; plain `git diff` would ignore it.
+          if git diff --cached --quiet; then
+            echo "No dashboard changes — nothing to commit."
+            exit 0
+          fi
+          git commit -m "chore(dashboard): update production deploy overview [skip ci]"
+          # Rebase + retry in case development advanced since checkout; the
+          # branch ruleset rejects non-fast-forward pushes.
+          for attempt in 1 2 3; do
+            if git pull --rebase origin development && git push origin HEAD:development; then
+              echo "Pushed dashboard update."
+              exit 0
+            fi
+            echo "Push attempt $attempt failed; retrying…"
+            sleep 5
+          done
+          echo "Failed to push dashboard update after 3 attempts." >&2
+          exit 1
