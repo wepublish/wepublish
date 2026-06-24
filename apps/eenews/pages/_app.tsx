@@ -61,11 +61,12 @@ import { EenewsTagPage } from '../src/components/eenews-tag-page';
 import { EenewsTeaser } from '../src/components/teasers/eenews-teaser';
 import { AdsProvider } from '../src/context/ads-context';
 import eenewsTheme from '../src/theme';
+import deOverridden from '../locales/deOverridden.json';
 setDefaultOptions({
   locale: de,
 });
 
-initWePublishTranslator();
+initWePublishTranslator(deOverridden);
 z.setErrorMap(zodI18nMap);
 
 const Spacer = styled('div')`

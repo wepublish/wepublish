@@ -38,6 +38,7 @@ export type BuilderBlockRendererProps = {
   index: number;
   count: number;
   type: 'Page' | 'Article';
+  level?: number;
 };
 
 export type BuilderBlocksProps = {

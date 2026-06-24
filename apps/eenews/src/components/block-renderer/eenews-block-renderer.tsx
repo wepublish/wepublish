@@ -2,8 +2,10 @@ import styled from '@emotion/styled';
 import {
   BlockRenderer,
   isCrowdfundingBlock,
+  isFlexBlock,
   isRichTextBlock,
 } from '@wepublish/block-content/website';
+import { useFullWidthContent } from '@wepublish/content/website';
 import { FullBlockFragment } from '@wepublish/website/api';
 import { BuilderBlockRendererProps } from '@wepublish/website/builder';
 import { cond } from 'ramda';
@@ -23,7 +25,11 @@ import { EenewsSectionBand } from '../blocks/eenews-section-band';
 import { EenewsTopNewsCarousel } from '../blocks/eenews-top-news-carousel';
 import { EenewsArticleRichText } from '../eenews-article-richtext';
 
+// The homepage renders blocks full-width (ContentWidthProvider fullWidth), so —
+// like Top-News and Aktuell — the crowdfunding block constrains itself to the
+// centre column instead of spanning the whole window.
 const CrowdfundingSection = styled('section')`
+  background-color: #eaffdd;
   padding: 56px 56px 36px;
 
   ${({ theme }) => theme.breakpoints.down('lg')} {
@@ -36,7 +42,15 @@ const CrowdfundingInner = styled('div')`
   margin: 0 auto;
 `;
 
+const flexBlockHostsCrowdfunding = (block: FullBlockFragment): boolean =>
+  isFlexBlock(block) &&
+  (block.blocks ?? []).some(
+    nested => !!nested.block && isCrowdfundingBlock(nested.block)
+  );
+
 export const EenewsBlockRenderer = (props: BuilderBlockRendererProps) => {
+  const fullWidth = useFullWidthContent();
+
   const extraBlockMap = useMemo(
     () =>
       cond([
@@ -70,7 +84,24 @@ export const EenewsBlockRenderer = (props: BuilderBlockRendererProps) => {
     );
   }
 
+  if (fullWidth && flexBlockHostsCrowdfunding(props.block)) {
+    return (
+      <CrowdfundingSection className={props.className}>
+        <CrowdfundingInner>
+          <BlockRenderer
+            {...props}
+            className=""
+          />
+        </CrowdfundingInner>
+      </CrowdfundingSection>
+    );
+  }
+
   if (isCrowdfundingBlock(props.block)) {
+    if ((props.level ?? 0) > 0 || !fullWidth) {
+      return <BlockRenderer {...props} />;
+    }
+
     return (
       <CrowdfundingSection className={props.className}>
         <CrowdfundingInner>

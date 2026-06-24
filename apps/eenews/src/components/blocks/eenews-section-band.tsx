@@ -4,8 +4,7 @@ import { FullBlockFragment } from '@wepublish/website/api';
 import { BuilderFlexBlockProps } from '@wepublish/website/builder';
 
 const Band = styled('section')`
-  background: ${({ theme }) => theme.palette.secondary.main};
-  border-bottom: 1.5px solid ${({ theme }) => theme.palette.primary.main};
+  background-color: #eaffdd;
   padding: 48px 56px 40px;
 
   ${({ theme }) => theme.breakpoints.down('md')} {

@@ -6,6 +6,6 @@ import {
 
 export const EeNewsMemberPlanItem = styled(MemberPlanItem)`
   ${MemberPlanItemPrice} {
-    visibility: hidden;
+    visibility: visible;
   }
 `;
