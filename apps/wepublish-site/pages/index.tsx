@@ -13,13 +13,15 @@ import { GetStaticProps } from 'next';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 
+import { localizeSlug } from '../src/localize-slug';
+
 export default function Index() {
   const { locale } = useRouter();
 
   return (
     <LinkContext.Provider value={{ prefetch: true }}>
       <ContentWidthProvider fullWidth>
-        <PageContainer slug={`-${locale}`} />
+        <PageContainer slug={localizeSlug('', locale)} />
       </ContentWidthProvider>
     </LinkContext.Provider>
   );
@@ -37,7 +39,7 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
     client.query({
       query: PageDocument,
       variables: {
-        slug: `-${locale}`,
+        slug: localizeSlug('', locale),
       },
     }),
     client.query({

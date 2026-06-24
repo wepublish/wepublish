@@ -34,15 +34,18 @@ import {
 } from '@wepublish/utils/website';
 import { WebsiteProvider } from '@wepublish/website';
 import { previewLink } from '@wepublish/website/admin';
-import { SessionWithTokenWithoutUser } from '@wepublish/website/api';
+import {
+  SessionWithTokenWithoutUser,
+  WebsiteSettingsFragment,
+} from '@wepublish/website/api';
 import { createWithApiClient } from '@wepublish/website/api';
 import { WebsiteBuilderProvider } from '@wepublish/website/builder';
 import { setDefaultOptions } from 'date-fns';
 import { de } from 'date-fns/locale';
 import { AppProps } from 'next/app';
-import getConfig from 'next/config';
 import Head from 'next/head';
 import Script from 'next/script';
+import PlausibleProvider from 'next-plausible';
 import { PartialDeep } from 'type-fest';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
@@ -105,13 +108,16 @@ const NavBar = styled(NavbarContainer)`
   }
 `;
 
-const { publicRuntimeConfig } = getConfig();
-
-type CustomAppProps = AppProps<{
+export type CustomAppProps = AppProps<{
   sessionToken?: SessionWithTokenWithoutUser;
-}> & { emotionCache?: EmotionCache };
+}> & { emotionCache?: EmotionCache; websiteSettings?: WebsiteSettingsFragment };
 
-function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
+function CustomApp({
+  Component,
+  pageProps,
+  emotionCache,
+  websiteSettings,
+}: CustomAppProps) {
   const siteTitle = 'Gruppetto - Das neue Schweizer Radsportmagazin';
 
   // Emotion cache from _document is not supplied when client side rendering
@@ -119,87 +125,92 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
   const cache = emotionCache ?? createEmotionCache();
   cache.compat = true;
 
+  const settings =
+    websiteSettings ??
+    (typeof window !== 'undefined' ? window.WEBSITE_SETTINGS : undefined);
+
   return (
-    <AppCacheProvider emotionCache={cache}>
-      <WebsiteProvider>
-        <WebsiteBuilderProvider
-          meta={{ siteTitle }}
-          Head={Head}
-          Script={Script}
-          Footer={Footer}
-          elements={{ Link: NextWepublishLink }}
-          blocks={{ Break: GruppettoBreakBlock }}
-        >
-          <ThemeProvider theme={gruppettoTheme}>
-            <CssBaseline />
+    <PlausibleProvider
+      enabled={
+        settings?.analytics.plausible.enabled &&
+        !!settings?.analytics.plausible.key
+      }
+      src={`https://plausible.io/js/${settings?.analytics.plausible.key}.js`}
+    >
+      <AppCacheProvider emotionCache={cache}>
+        <WebsiteProvider>
+          <WebsiteBuilderProvider
+            meta={{ siteTitle }}
+            Head={Head}
+            Script={Script}
+            Footer={Footer}
+            elements={{ Link: NextWepublishLink }}
+            blocks={{ Break: GruppettoBreakBlock }}
+          >
+            <ThemeProvider theme={gruppettoTheme}>
+              <CssBaseline />
 
-            <Head>
-              <title key="title">{siteTitle}</title>
-              <meta
-                name="viewport"
-                content="width=device-width, initial-scale=1.0"
-              />
+              <Head>
+                <title key="title">{siteTitle}</title>
+              </Head>
 
-              {/* Feeds */}
-              <link
-                rel="alternate"
-                type="application/rss+xml"
-                href="/api/rss-feed"
-              />
-              <link
-                rel="alternate"
-                type="application/atom+xml"
-                href="/api/atom-feed"
-              />
-              <link
-                rel="alternate"
-                type="application/feed+json"
-                href="/api/json-feed"
-              />
+              <Spacer>
+                <NavBar
+                  categorySlugs={[['account', 'issues', 'about-us']]}
+                  slug="main"
+                  headerSlug="header"
+                  iconSlug="icons"
+                />
 
-              {/* Sitemap */}
-              <link
-                rel="sitemap"
-                type="application/xml"
-                title="Sitemap"
-                href="/api/sitemap"
-              />
-            </Head>
+                <main>
+                  <MainSpacer maxWidth="lg">
+                    <Component {...pageProps} />
+                  </MainSpacer>
+                </main>
 
-            <Spacer>
-              <NavBar
-                categorySlugs={[['account', 'issues', 'about-us']]}
-                slug="main"
-                headerSlug="header"
-                iconSlug="icons"
-              />
+                <FooterContainer
+                  slug="footer"
+                  categorySlugs={[[]]}
+                  iconSlug="icons"
+                />
+              </Spacer>
 
-              <main>
-                <MainSpacer maxWidth="lg">
-                  <Component {...pageProps} />
-                </MainSpacer>
-              </main>
+              <RoutedAdminBar />
 
-              <FooterContainer
-                slug="footer"
-                categorySlugs={[[]]}
-                iconSlug="icons"
-              />
-            </Spacer>
+              {settings?.analytics.googleAnalytics.enabled &&
+                settings?.analytics.googleAnalytics.key && (
+                  <GoogleAnalytics
+                    gaId={settings.analytics.googleAnalytics.key}
+                  />
+                )}
 
-            <RoutedAdminBar />
+              {settings?.analytics.googleTagManager.enabled &&
+                settings?.analytics.googleTagManager.key && (
+                  <GoogleTagManager
+                    gtmId={settings.analytics.googleTagManager.key}
+                  />
+                )}
 
-            {publicRuntimeConfig.env.GA_ID && (
-              <GoogleAnalytics gaId={publicRuntimeConfig.env.GA_ID} />
-            )}
+              {settings?.analytics.piwik.enabled &&
+                settings?.analytics.piwik.key && (
+                  <Script id="piwik-pro">
+                    {`(function(window, document, dataLayerName, id) { window[dataLayerName]=window[dataLayerName]||[],window[dataLayerName].push({start:(new Date).getTime(),event:"stg.start"});var scripts=document.getElementsByTagName('script')[0],tags=document.createElement('script'); var qP=[];dataLayerName!=="dataLayer"&&qP.push("data_layer_name="+dataLayerName);var qPString=qP.length>0?("?"+qP.join("&")):""; tags.async=!0,tags.src="https://flimmer.containers.piwik.pro/"+id+".js"+qPString,scripts.parentNode.insertBefore(tags,scripts); !function(a,n,i){a[n]=a[n]||{};for(var c=0;c<i.length;c++)!function(i){a[n][i]=a[n][i]||{},a[n][i].api=a[n][i].api||function(){var a=[].slice.call(arguments,0);"string"==typeof a[0]&&window[dataLayerName].push({event:n+"."+i+":"+a[0],parameters:[].slice.call(arguments,1)})}}(i[c])}(window,"ppms",["tm","cm"]); })(window, document, 'dataLayer', '${settings.analytics.piwik.key}');`}
+                  </Script>
+                )}
 
-            {publicRuntimeConfig.env.GTM_ID && (
-              <GoogleTagManager gtmId={publicRuntimeConfig.env.GTM_ID} />
-            )}
-          </ThemeProvider>
-        </WebsiteBuilderProvider>
-      </WebsiteProvider>
-    </AppCacheProvider>
+              {settings?.ads.sparkLoop.enabled &&
+                settings?.ads.sparkLoop.key && (
+                  <Script
+                    src={`https://script.sparkloop.app/embed.js?publication_id=${settings.ads.sparkLoop.key}.js`}
+                    strategy="lazyOnload"
+                    data-sparkloop
+                  />
+                )}
+            </ThemeProvider>
+          </WebsiteBuilderProvider>
+        </WebsiteProvider>
+      </AppCacheProvider>
+    </PlausibleProvider>
   );
 }
 

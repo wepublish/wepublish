@@ -25,6 +25,7 @@ import {
   useUpdateArticleMutation,
 } from '@wepublish/editor/api';
 import { CanPreview } from '@wepublish/permissions';
+import { RichtextElements, RichtextJSONDocument } from '@wepublish/richtext';
 import {
   ArticleMetadata,
   ArticleMetadataPanel,
@@ -73,7 +74,6 @@ import {
   Tag as RTag,
   toaster,
 } from 'rsuite';
-import { type Node, Descendant, Element, Text } from 'slate';
 
 const IconButtonMarginTop = styled(RIconButton)`
   margin-top: 4px;
@@ -120,18 +120,19 @@ const InitialArticleBlocks: BlockValue[] = [
 
 const REVISIONS_PAGE_SIZE = 20;
 
-function countRichtextChars(blocksCharLength: number, nodes: Node[]): number {
-  return nodes.reduce((charLength: number, node) => {
-    if (!Element.isElement(node) && !Text.isText(node)) {
-      return charLength;
-    }
+function countRichtextChars(
+  blocksCharLength: number,
+  richtext?: RichtextJSONDocument | RichtextElements | null
+): number {
+  return (
+    richtext?.content?.reduce((charLength: number, node: RichtextElements) => {
+      if (node.type === 'text') {
+        return charLength + node.text.length;
+      }
 
-    if (Text.isText(node)) {
-      return charLength + (node.text as string).length;
-    }
-
-    return countRichtextChars(charLength, node.children as Descendant[]);
-  }, blocksCharLength);
+      return countRichtextChars(charLength, node);
+    }, blocksCharLength) ?? blocksCharLength
+  );
 }
 
 function ArticleEditor() {

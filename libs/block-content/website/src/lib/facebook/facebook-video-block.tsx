@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import {
   BlockContent,
-  FacebookVideoBlock as FacebookVideoBlockType,
+  FullFacebookVideoBlockFragment,
 } from '@wepublish/website/api';
 import { BuilderFacebookVideoBlockProps } from '@wepublish/website/builder';
 import ReactPlayer from 'react-player';
@@ -9,7 +9,8 @@ import { useId } from 'react';
 
 export const isFacebookVideoBlock = (
   block: Pick<BlockContent, '__typename'>
-): block is FacebookVideoBlockType => block.__typename === 'FacebookVideoBlock';
+): block is FullFacebookVideoBlockFragment =>
+  block.__typename === 'FacebookVideoBlock';
 
 export const FacebookVideoBlockWrapper = styled('div')`
   display: grid;

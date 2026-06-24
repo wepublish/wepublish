@@ -120,44 +120,54 @@ const {
   breakpoints: originalBreakpoints,
 } = baseTheme;
 
-export const theme = createTheme({
+export const minimalTheme = createTheme({
   typography: {
     allVariants: {
       lineHeight: 1.4,
+      fontFamily: undefined,
     },
-    fontFamily: ['Merriweather', 'Roboto', 'sans-serif'].join(','),
     h1: {
-      fontFamily: ['Hanken Grotesk', 'Roboto', 'sans-serif'].join(','),
+      fontFamily: undefined,
+      letterSpacing: undefined,
       fontWeight: 600,
       lineHeight: 1.15,
     },
     h2: {
-      ...baseTheme.typography.h3,
-      fontFamily: ['Hanken Grotesk', 'Roboto', 'sans-serif'].join(','),
+      fontFamily: undefined,
+      letterSpacing: undefined,
+      fontSize: baseTheme.typography.h3.fontSize,
       fontWeight: 600,
       lineHeight: 1.15,
     },
     h3: {
-      fontFamily: ['Hanken Grotesk', 'Roboto', 'sans-serif'].join(','),
+      fontFamily: undefined,
+      letterSpacing: undefined,
       fontWeight: 600,
       lineHeight: 1.15,
     },
     h4: {
-      fontFamily: ['Hanken Grotesk', 'Roboto', 'sans-serif'].join(','),
+      fontFamily: undefined,
+      letterSpacing: undefined,
       fontWeight: 600,
       lineHeight: 1.15,
       fontSize: '1.625rem',
     },
     h5: {
-      fontFamily: ['Hanken Grotesk', 'Roboto', 'sans-serif'].join(','),
+      fontFamily: undefined,
+      letterSpacing: undefined,
       fontWeight: 600,
+      lineHeight: 1.15,
     },
     h6: {
-      fontFamily: ['Hanken Grotesk', 'Roboto', 'sans-serif'].join(','),
+      fontFamily: undefined,
+      letterSpacing: undefined,
       fontWeight: 300,
+      lineHeight: 1.15,
     },
     body1: {
-      lineHeight: 1.7,
+      fontFamily: undefined,
+      lineHeight: undefined,
+      letterSpacing: undefined,
       '&.MuiTypography-gutterBottom': {
         marginBottom: baseTheme.spacing(3),
       },
@@ -165,66 +175,67 @@ export const theme = createTheme({
         marginBottom: baseTheme.spacing(1),
       },
     },
+    body2: {
+      fontFamily: undefined,
+      lineHeight: undefined,
+      letterSpacing: undefined,
+    },
+    button: {
+      fontFamily: undefined,
+      lineHeight: undefined,
+      letterSpacing: undefined,
+    },
     caption: {
-      ...baseTheme.typography.body1,
-      lineHeight: 1.7,
+      fontFamily: undefined,
+      lineHeight: undefined,
+      letterSpacing: undefined,
     },
     subtitle1: {
-      ...baseTheme.typography.h6,
-      fontFamily: ['Hanken Grotesk', 'Roboto', 'sans-serif'].join(','),
+      fontFamily: undefined,
+      letterSpacing: undefined,
+      fontSize: baseTheme.typography.h6.fontSize,
       fontWeight: 300,
       lineHeight: 1.4,
     },
+    subtitle2: {
+      fontFamily: undefined,
+      lineHeight: undefined,
+      letterSpacing: undefined,
+    },
+    overline: {
+      fontFamily: undefined,
+      lineHeight: undefined,
+      letterSpacing: undefined,
+    },
     // Article
-    articleAuthors: {
-      lineHeight: 1.7,
-    },
-    peerInformation: {
-      lineHeight: 1.7,
-    },
+    articleAuthors: {},
+    peerInformation: {},
     // Blocks
-    blockTitlePreTitle: {
-      ...baseTheme.typography.body1,
-      fontFamily: ['Hanken Grotesk', 'Roboto', 'sans-serif'].join(','),
-    },
+    blockTitlePreTitle: {},
     blockBreakTitle: {
-      fontFamily: ['Hanken Grotesk', 'Roboto', 'sans-serif'].join(','),
       fontSize: '40px',
       lineHeight: 1.15,
       fontWeight: 600,
-      textTransform: 'uppercase',
-      [baseTheme.breakpoints.up('md')]: {
-        fontStyle: 'italic',
-        fontSize: '84px',
-      },
     },
-    blockBreakBody: {
-      ...baseTheme.typography.body1,
-      fontFamily: ['Hanken Grotesk', 'Roboto', 'sans-serif'].join(','),
-    },
+    blockBreakBody: {},
     blockQuote: {
-      ...baseTheme.typography.h4,
-      fontFamily: ['Hanken Grotesk', 'Roboto', 'sans-serif'].join(','),
       fontWeight: 600,
       lineHeight: 1.15,
       fontSize: '1.625rem',
     },
     // Teaser
     teaserTitle: {
-      fontFamily: ['Hanken Grotesk', 'Roboto', 'sans-serif'].join(','),
       fontWeight: 600,
       lineHeight: 1.15,
       fontSize: '1.625rem',
       marginBottom: `0.35em`,
-      [baseTheme.breakpoints.up('md')]: {
-        fontSize: '2rem',
-      },
     },
     teaserPretitle: {
       fontSize: '0.875rem',
       fontWeight: 300,
     },
     teaserLead: {
+      fontWeight: 300,
       lineHeight: 1.7,
       marginBottom: baseTheme.spacing(3),
       fontSize: '1rem',
@@ -234,13 +245,13 @@ export const theme = createTheme({
     },
     // Banner
     bannerTitle: {
-      ...baseTheme.typography.h5,
+      fontSize: baseTheme.typography.h5.fontSize,
+      lineHeight: 1.15,
     },
-    bannerText: {
-      ...baseTheme.typography.body1,
-    },
+    bannerText: {},
     bannerCta: {
-      ...baseTheme.typography.h6,
+      fontSize: baseTheme.typography.h6.fontSize,
+      lineHeight: 1.15,
     },
   },
   palette: {
@@ -319,6 +330,23 @@ export const theme = createTheme({
   }),
 });
 
+export const theme = createTheme(minimalTheme, {
+  typography: {
+    blockBreakTitle: {
+      textTransform: 'uppercase',
+      [baseTheme.breakpoints.up('md')]: {
+        fontStyle: 'italic',
+        fontSize: '84px',
+      },
+    },
+    teaserTitle: {
+      [baseTheme.breakpoints.up('md')]: {
+        fontSize: '2rem',
+      },
+    },
+  },
+});
+
 export const createWithTheme = <
   // eslint-disable-next-line @typescript-eslint/ban-types
   P extends object,
@@ -331,51 +359,6 @@ export const createWithTheme = <
       <ControlledComponent {...(props as P)} />
     </ThemeProvider>
   ));
-
-export function autoResponsiveProperty({
-  cssProperty,
-  min,
-  max,
-  unit = 'rem',
-  breakpoints,
-  transform,
-}: {
-  cssProperty: keyof TypographyStyleOptions;
-  min: number;
-  max: number;
-  unit: 'rem' | 'em' | 'px';
-  breakpoints: number[];
-  transform?: (number: number) => number;
-}): TypographyStyleOptions {
-  if (unit === 'rem') {
-    min = min / 16;
-    max = max / 16;
-  }
-
-  const output: TypographyStyleOptions = {
-    [cssProperty]: `${min}${unit}`,
-  };
-
-  const factor = (max - min) / breakpoints[breakpoints.length - 1];
-
-  breakpoints.forEach(breakpoint => {
-    if (!breakpoint) {
-      return;
-    }
-
-    let value = min !== max ? min + factor * breakpoint : min;
-
-    if (transform) {
-      value = transform(value);
-    }
-
-    output[`@media (min-width:${breakpoint}px)`] = {
-      [cssProperty]: `${Math.round(value * 10000) / 10000}${unit}`,
-    };
-  });
-
-  return output;
-}
 
 export function responsiveProperty({
   cssProperty,

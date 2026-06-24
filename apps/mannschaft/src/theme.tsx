@@ -75,7 +75,6 @@ const theme = createTheme(WePTheme, {
     subtitle2: {
       fontFamily: [plainFont.style.fontFamily, 'sans-serif'].join(','),
     },
-    fontFamily: [plainFont.style.fontFamily, 'sans-serif'].join(','),
     allVariants: {
       fontFamily: [plainFont.style.fontFamily, 'sans-serif'].join(','),
     },

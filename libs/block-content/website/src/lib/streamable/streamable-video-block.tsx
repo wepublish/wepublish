@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import {
   BlockContent,
-  StreamableVideoBlock as StreamableVideoBlockType,
+  FullStreamableVideoBlockFragment,
 } from '@wepublish/website/api';
 import { BuilderStreamableVideoBlockProps } from '@wepublish/website/builder';
 import React, { useEffect, useState } from 'react';
@@ -9,7 +9,7 @@ import ReactPlayer from 'react-player';
 
 export const isStreamableVideoBlock = (
   block: Pick<BlockContent, '__typename'>
-): block is StreamableVideoBlockType =>
+): block is FullStreamableVideoBlockFragment =>
   block.__typename === 'StreamableVideoBlock';
 
 export const StreamableVideoBlockWrapper = styled('div')``;

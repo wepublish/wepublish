@@ -2,12 +2,13 @@ import styled from '@emotion/styled';
 import { BuilderTikTokVideoBlockProps } from '@wepublish/website/builder';
 import {
   BlockContent,
-  TikTokVideoBlock as TikTokVideoBlockType,
+  FullTikTokVideoBlockFragment,
 } from '@wepublish/website/api';
 
 export const isTikTokVideoBlock = (
   block: Pick<BlockContent, '__typename'>
-): block is TikTokVideoBlockType => block.__typename === 'TikTokVideoBlock';
+): block is FullTikTokVideoBlockFragment =>
+  block.__typename === 'TikTokVideoBlock';
 
 export const TikTokVideoBlockWrapper = styled('div')`
   display: grid;
