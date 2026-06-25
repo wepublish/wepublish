@@ -7,6 +7,7 @@ import { NavigationResolver } from './navigation.resolver';
 import { PrismaClient } from '@prisma/client';
 import request from 'supertest';
 import { NavigationDataloaderService } from './navigation-dataloader.service';
+import { NavigationLinksDataloaderService } from './navigation-links.dataloader';
 import { BaseNavigationLink, NavigationLinkType } from './navigation.model';
 
 const navigationQueryById = `
@@ -91,6 +92,9 @@ describe('NavigationResolver', () => {
   let navigationDataloaderService: {
     [method in keyof NavigationDataloaderService]?: jest.Mock;
   };
+  let navigationLinksDataloaderService: {
+    [method in keyof NavigationLinksDataloaderService]?: jest.Mock;
+  };
 
   beforeEach(async () => {
     navigationServiceMock = {
@@ -98,10 +102,13 @@ describe('NavigationResolver', () => {
       createNavigation: jest.fn(),
       deleteNavigationById: jest.fn(),
       updateNavigation: jest.fn(),
-      getNavigationLinks: jest.fn(),
     };
 
     navigationDataloaderService = {
+      load: jest.fn(),
+    };
+
+    navigationLinksDataloaderService = {
       load: jest.fn(),
     };
 
@@ -118,6 +125,10 @@ describe('NavigationResolver', () => {
         {
           provide: NavigationDataloaderService,
           useValue: navigationDataloaderService,
+        },
+        {
+          provide: NavigationLinksDataloaderService,
+          useValue: navigationLinksDataloaderService,
         },
         { provide: NavigationService, useValue: navigationServiceMock },
         { provide: PrismaClient, useValue: jest.fn() },
@@ -140,7 +151,7 @@ describe('NavigationResolver', () => {
       links: [],
     };
     navigationDataloaderService.load?.mockResolvedValue(mockResponse);
-    navigationServiceMock.getNavigationLinks?.mockResolvedValue([]);
+    navigationLinksDataloaderService.load?.mockResolvedValue([]);
 
     await request(app.getHttpServer())
       .post('/')
@@ -169,7 +180,7 @@ describe('NavigationResolver', () => {
       } as BaseNavigationLink,
     ];
     navigationServiceMock.getNavigations?.mockResolvedValue(mockResponse);
-    navigationServiceMock.getNavigationLinks?.mockResolvedValue(
+    navigationLinksDataloaderService.load?.mockResolvedValue(
       mockNavigationLinksResponse
     );
 
