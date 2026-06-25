@@ -369,6 +369,8 @@ model Comment {
   overriddenRatings CommentRatingOverride[]
   featured          Boolean                 @default(false)
 
+  @@index([itemID, itemType])
+  @@index([parentID])
   @@index([createdAt])
   @@map("comments")
 }
