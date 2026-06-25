@@ -1,6 +1,8 @@
-import { compose } from 'ramda';
 import { findFirstParagraph } from './truncate';
-import { RichtextElements } from './json-format.interface';
+import {
+  RichtextElements,
+  RichtextJSONDocument,
+} from './json-format.interface';
 
 const nodeToPlaintext = (node: unknown): string => {
   if (!node || typeof node !== 'object') {
@@ -25,16 +27,20 @@ const nodeToPlaintext = (node: unknown): string => {
 };
 
 export const toPlaintext = (
-  nodes: RichtextElements[] | null | undefined
+  nodes: RichtextElements[] | RichtextJSONDocument | null | undefined
 ): string | undefined => {
   if (!nodes) {
     return undefined;
   }
-  return nodes.map(nodeToPlaintext).join('');
+  if (Array.isArray(nodes)) {
+    return nodes.map(nodeToPlaintext).join('');
+  }
+  return nodeToPlaintext(nodes);
 };
 
-export const firstParagraphToPlaintext = compose(
-  toPlaintext,
-  node => (node ? [node] : node),
-  findFirstParagraph
-);
+export const firstParagraphToPlaintext = (
+  nodes: RichtextElements[]
+): string | undefined => {
+  const paragraph = findFirstParagraph(nodes);
+  return paragraph ? toPlaintext([paragraph]) : undefined;
+};
