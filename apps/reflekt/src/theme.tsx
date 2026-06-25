@@ -106,7 +106,10 @@ export const buttonLinkSecondaryStyles = {
   transform: 'translateY(0)',
   transition:
     'box-shadow 200ms cubic-bezier(0.34, 1.56, 0.64, 1), transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1)',
-  '&.is-pressing': {
+  '&:focus, &:focus-visible, &:visited': {
+    textDecoration: 'none',
+  },
+  '&.is-pressing, &:active': {
     backgroundColor: colors.common.black,
     color: colors.common.white,
     textDecoration: 'none',
@@ -667,7 +670,10 @@ const theme = createTheme(WePTheme, {
             transform: 'translateY(0)',
             transition:
               'box-shadow 200ms cubic-bezier(0.34, 1.56, 0.64, 1), transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1)',
-            '&.is-pressing': {
+            '&:focus, &:focus-visible, &:visited': {
+              textDecoration: 'none',
+            },
+            '&.is-pressing, &:active': {
               backgroundColor: colors.secondary.light,
               color: colors.common.black,
               textDecoration: 'none',
