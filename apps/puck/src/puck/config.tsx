@@ -19,6 +19,7 @@ import { Flex } from './components/layout/flex';
 import { Grid } from './components/layout/grid';
 import { Space } from './components/layout/space';
 import { withColumnSpan } from './components/layout/with-column-span';
+import { withCSS } from './components/layout/with-css';
 import { SubscribeConfig } from './components/subscribe.config';
 import { withDataSource } from './components/with-datasource';
 import { RootRender } from './root.component';
@@ -69,17 +70,17 @@ export const config: UserConfig = {
     Break: withColumnSpan(BreakConfig),
     Space: withColumnSpan(Space),
     Grid: withColumnSpan(
-      withDataSource(Grid, undefined, {
+      withDataSource(withCSS(Grid), undefined, {
         types: ['autofill', 'list', 'items'],
       })
     ),
     Flex: withColumnSpan(
-      withDataSource(Flex, undefined, {
+      withDataSource(withCSS(Flex), undefined, {
         types: ['autofill', 'list', 'items'],
       })
     ),
     Container: withColumnSpan(
-      withDataSource(ContainerConfig, undefined, {
+      withDataSource(withCSS(ContainerConfig), undefined, {
         types: ['autofill', 'list', 'items'],
       })
     ),
