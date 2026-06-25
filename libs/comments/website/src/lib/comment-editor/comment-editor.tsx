@@ -8,7 +8,7 @@ import {
   LoginFormContainer,
   useUser,
 } from '@wepublish/authentication/website';
-import { BlockFormat, toPlaintext } from '@wepublish/richtext';
+import { toPlaintext } from '@wepublish/richtext';
 import {
   BuilderCommentEditorProps,
   Link,
@@ -287,7 +287,7 @@ export const CommentEditor = ({
   const { handleSubmit, control, reset } = useForm<FormInput>({
     resolver: zodResolver(schema),
     defaultValues: {
-      comment: toPlaintext(text) ?? '',
+      comment: toPlaintext(text?.content) ?? '',
       title: title ?? '',
       guestUsername: '',
       challenge: {
@@ -301,16 +301,23 @@ export const CommentEditor = ({
   const submit = handleSubmit(({ comment, ...data }) => {
     onSubmit({
       ...data,
-      text: [
-        {
-          type: BlockFormat.Paragraph,
-          children: [
-            {
-              text: comment,
-            },
-          ],
-        },
-      ],
+      text: {
+        attrs: undefined,
+        type: 'doc',
+        content: [
+          {
+            type: 'paragraph',
+            attrs: {},
+            content: [
+              {
+                type: 'text',
+                text: comment,
+                attrs: undefined,
+              },
+            ],
+          },
+        ],
+      },
     });
   });
 

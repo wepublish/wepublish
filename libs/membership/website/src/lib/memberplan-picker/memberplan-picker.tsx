@@ -54,7 +54,7 @@ export const MemberPlanPicker = forwardRef<
   const selectedMemberPlan = sortedMemberPlans.find(({ id }) => id === value);
   const showPicker =
     showRadioButtons ||
-    toPlaintext(selectedMemberPlan?.description) ||
+    toPlaintext(selectedMemberPlan?.description?.content) ||
     selectedMemberPlan?.image;
 
   useEffect(() => {
@@ -101,7 +101,7 @@ export const MemberPlanPicker = forwardRef<
           <Image image={selectedMemberPlan.image} />
         )}
 
-        {!!selectedMemberPlan?.description?.length && (
+        {!!selectedMemberPlan?.description?.content?.length && (
           <RichText richText={selectedMemberPlan.description} />
         )}
       </MemberPlanPickerWrapper>

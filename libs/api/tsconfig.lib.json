@@ -5,7 +5,8 @@
     "outDir": "../../dist/out-tsc",
     "declaration": true,
     "types": ["node"],
-    "strict": true
+    "strict": true,
+    "jsx": "react"
   },
   "exclude": [
     "jest.config.ts",
