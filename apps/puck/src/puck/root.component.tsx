@@ -41,6 +41,7 @@ const Render = ({
 
     <DropZone
       zone="default-zone"
+      collisionAxis="y"
       style={{ flexGrow: 1 }}
     />
 

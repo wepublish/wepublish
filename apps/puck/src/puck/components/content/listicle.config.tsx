@@ -1,5 +1,6 @@
 import { ComponentConfig } from '@puckeditor/core';
 import { ListicleBlock } from '@wepublish/block-content/website';
+import { mockRichText } from '@wepublish/storybook/mocks';
 import { BuilderListicleBlockProps } from '@wepublish/website/builder';
 
 import { UserFields } from '../../types';
@@ -16,6 +17,7 @@ export const ListicleConfig: ComponentConfig<{
       arrayFields: {
         title: {
           type: 'text',
+          contentEditable: true,
         },
         richText: {
           type: 'richtext',
@@ -23,15 +25,15 @@ export const ListicleConfig: ComponentConfig<{
       },
       defaultItemProps: {
         title: 'Title',
-        richText: [],
+        richText: mockRichText(),
       },
     },
   },
   defaultProps: {
     items: [
       {
-        richText: [],
         title: 'Title',
+        richText: mockRichText(),
       },
     ],
   },

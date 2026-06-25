@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { Plugin, usePuck } from '@puckeditor/core';
+import { createUsePuck, Plugin } from '@puckeditor/core';
 
 import { UserConfig } from '../types';
 
@@ -17,8 +17,12 @@ const RawDataPre = styled.pre`
   word-break: break-word;
 `;
 
+const usePuck = createUsePuck<UserConfig>();
+
 const RawDataView = () => {
-  const { selectedItem, appState } = usePuck<UserConfig>();
+  const selectedItem = usePuck(state => state.selectedItem);
+  const appState = usePuck(state => state.appState);
+
   const data = selectedItem ?? appState.data;
 
   return <RawDataPre>{JSON.stringify(data, null, 2)}</RawDataPre>;

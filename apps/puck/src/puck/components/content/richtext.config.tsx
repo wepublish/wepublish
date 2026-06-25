@@ -1,5 +1,6 @@
 import { ComponentConfig } from '@puckeditor/core';
 import { RichTextBlock } from '@wepublish/block-content/website';
+import { mockRichText } from '@wepublish/storybook/mocks';
 import { BuilderRichTextBlockProps } from '@wepublish/website/builder';
 
 import { UserFields } from '../../types';
@@ -10,11 +11,11 @@ export const RichTextConfig: ComponentConfig<{
 }> = {
   fields: {
     richText: {
-      type: 'text',
+      type: 'richtext',
     },
   },
   defaultProps: {
-    richText: [],
+    richText: mockRichText(),
   },
 
   render: RichTextBlock,
