@@ -15,7 +15,7 @@ import { GraphQLRichText } from '@wepublish/richtext/api';
 import { PaymentMethod } from '@wepublish/payment/api';
 import { Currency, PaymentPeriodicity, ProductType } from '@prisma/client';
 import { Page } from '@wepublish/page/api';
-import { RichtextJSONDocument } from '@wepublish/richtext';
+import type { RichtextJSONDocument } from '@wepublish/richtext';
 
 export enum MemberPlanSort {
   CreatedAt = 'CreatedAt',

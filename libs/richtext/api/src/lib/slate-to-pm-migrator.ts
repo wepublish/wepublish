@@ -3,6 +3,15 @@ import { RichtextElements, RichtextJSONDocument } from '@wepublish/richtext';
 import { Cron, CronExpression, SchedulerRegistry } from '@nestjs/schedule';
 import { Prisma, PrismaClient } from '@prisma/client';
 
+// Slate keeps a node's visible text in `text`, or nested in `children`.
+const slateText = (node: any): string => {
+  if (typeof node?.text === 'string') {
+    return node.text;
+  }
+
+  return (node?.children ?? []).map(slateText).join('');
+};
+
 const slateToPm = (content: any): RichtextElements | [] => {
   const children = (content.children ?? []).flatMap(
     (child: any): RichtextElements | [] => {
@@ -13,11 +22,23 @@ const slateToPm = (content: any): RichtextElements | [] => {
 
       const isLink = 'type' in child && child.type === 'link';
 
+      // Links carry their label in `children`, not `title`; fall back to the url.
+      const text =
+        isLink ?
+          slateText(child) || child.title || child.url || ''
+        : child.text;
+
+      // ProseMirror rejects text nodes whose `text` is not a non-empty string
+      // (RangeError: Invalid text node in JSON / empty text nodes not allowed).
+      if (typeof text !== 'string' || text.length === 0) {
+        return [];
+      }
+
       // No type (or link type) = text node
       return {
         type: 'text',
         attrs: undefined,
-        text: isLink ? child.title : child.text,
+        text,
         marks: [
           isLink ?
             {
@@ -755,5 +776,251 @@ export class SlateToPmMigrator {
     this.logger.debug(`Next: ${JSON.stringify(result)}`);
 
     return result;
+  }
+
+  // ───────────────────────────────────────────────────────────────────────────
+  // TEMPORARY richtext RE-MIGRATION — runs AUTOMATICALLY on deploy (no env flag).
+  //
+  // The original slate→tiptap migration ran with a buggy `slateToPm` (links lost
+  // their label → text nodes with no `text` ⇒ invalid ProseMirror documents: the
+  // website tolerates them, the editor throws `Invalid text node in JSON`). The
+  // normal migrate* crons above only touch `richText: null`, so they never re-fix
+  // already-migrated content. These passes do, by re-running the now-fixed
+  // transform from the preserved slate.
+  //
+  // Safe to leave running unattended: each pass uses a self-emptying jsonpath
+  // predicate, then `deleteCronJob`s itself once nothing matches (or if a pass
+  // makes no progress — the loop guard, since there is no env kill-switch). It is
+  // idempotent, only ever rewrites `richText`/`slateRichText` (never `properties`,
+  // so importer archive-id resume stays intact), and only touches BUGGY blocks —
+  // clean blocks may have been edited in the editor and must NOT be reverted to
+  // their stale `slateRichText`. After the DB is clean it is inert (one 0-row scan
+  // per boot, then self-deletes); remove the code at leisure in a follow-up.
+  //
+  //   remigrateBuggy*  GENERAL — any app that ran the original migration has this
+  //                    bug; safe to keep / upstream.
+  // ───────────────────────────────────────────────────────────────────────────
+
+  // A text node whose `text` is missing or empty — the signature of the buggy
+  // migration. Recursive; key-order/whitespace independent (jsonb re-serializes).
+  private static readonly BUGGY_TEXT_NODE =
+    '$.** ? (@.type == "text" && (!exists(@.text) || @.text == ""))';
+
+  private stopCron(name: string, reason: string): void {
+    try {
+      this.schedulerRegistry.deleteCronJob(name);
+    } catch {
+      // not registered / already removed
+    }
+    this.logger.warn(`Stopped \`${name}\` — ${reason}`);
+  }
+
+  // True when `doc` contains a text node the editor would reject (no/empty text).
+  private hasBuggyTextNode(doc: any): boolean {
+    if (!doc || typeof doc !== 'object') {
+      return false;
+    }
+    if (
+      doc.type === 'text' &&
+      (typeof doc.text !== 'string' || doc.text.length === 0)
+    ) {
+      return true;
+    }
+    return Array.isArray(doc.content) ?
+        doc.content.some((child: any) => this.hasBuggyTextNode(child))
+      : false;
+  }
+
+  // GENERAL: re-migrate ONLY buggy blocks that still have a real slate source.
+  // Clean blocks are left untouched (they may carry post-migration editor edits);
+  // a buggy block with no usable `slateRichText` is left as-is too (never emptied —
+  // the no-progress guard then stops the cron rather than destroying content).
+  private migrateBlocksFromSlate(blocks: any[]): any[] {
+    const fix = (node: any) =>
+      (
+        this.hasBuggyTextNode(node.richText) &&
+        Array.isArray(node.slateRichText) &&
+        node.slateRichText.length > 0
+      ) ?
+        { ...node, richText: this.migrate(node.slateRichText) }
+      : node;
+    return blocks.map((block: any) => {
+      if (['richText', 'linkPageBreak'].includes(block.type)) {
+        return fix(block);
+      }
+      if (block.type === 'listicle' && Array.isArray(block.items)) {
+        return { ...block, items: block.items.map(fix) };
+      }
+      return block;
+    });
+  }
+
+  // Shared revision-table pass: select rows matching `predicate`, apply
+  // `transform`, write back only changed rows, stop when none match or no progress.
+  private async remigrateRevisionTable(
+    cronName: string,
+    table: string,
+    predicate: string,
+    transform: (blocks: any[]) => any[]
+  ): Promise<void> {
+    const rows = await this.prisma.$queryRawUnsafe<
+      { id: string; blocks: unknown }[]
+    >(
+      `SELECT id, blocks FROM "${table}" WHERE blocks @? $1::jsonpath LIMIT 300`,
+      predicate
+    );
+    if (!rows.length) {
+      this.stopCron(cronName, 'none left');
+      return;
+    }
+    let changed = 0;
+    for (const row of rows) {
+      const blocks =
+        typeof row.blocks === 'string' ? JSON.parse(row.blocks) : row.blocks;
+      if (!Array.isArray(blocks)) {
+        continue;
+      }
+      const next = transform(blocks);
+      if (JSON.stringify(next) === JSON.stringify(blocks)) {
+        continue;
+      }
+      changed++;
+      await this.prisma.$executeRawUnsafe(
+        `UPDATE "${table}" SET blocks = $1::jsonb WHERE id = $2`,
+        JSON.stringify(next),
+        row.id
+      );
+      this.logger.log(`Re-migrated ${table} ${row.id}`);
+    }
+    if (changed === 0) {
+      this.stopCron(
+        cronName,
+        `no progress (${rows.length} matched, 0 changed)`
+      );
+    }
+  }
+
+  @Cron(CronExpression.EVERY_5_SECONDS, {
+    name: 'slate.remigrateBuggyArticles',
+    waitForCompletion: true,
+  })
+  async remigrateBuggyArticles() {
+    await this.remigrateRevisionTable(
+      'slate.remigrateBuggyArticles',
+      'articles.revisions',
+      SlateToPmMigrator.BUGGY_TEXT_NODE,
+      blocks => this.migrateBlocksFromSlate(blocks)
+    );
+  }
+
+  @Cron(CronExpression.EVERY_5_SECONDS, {
+    name: 'slate.remigrateBuggyPages',
+    waitForCompletion: true,
+  })
+  async remigrateBuggyPages() {
+    await this.remigrateRevisionTable(
+      'slate.remigrateBuggyPages',
+      'pages.revisions',
+      SlateToPmMigrator.BUGGY_TEXT_NODE,
+      blocks => this.migrateBlocksFromSlate(blocks)
+    );
+  }
+
+  // GENERAL: entity richtext columns re-migrated from their `slate*` source.
+  private static readonly BUGGY_ENTITY_COLUMNS: ReadonlyArray<{
+    table: string;
+    source: string;
+    target: string;
+  }> = [
+    { table: 'authors', source: 'slateBio', target: 'bio' },
+    { table: 'comments.revisions', source: 'slateText', target: 'text' },
+    { table: 'events', source: 'slateDescription', target: 'description' },
+    {
+      table: 'peerProfiles',
+      source: 'slateCallToActionText',
+      target: 'callToActionText',
+    },
+    { table: 'peers', source: 'slateInformation', target: 'information' },
+    { table: 'polls', source: 'slateInfoText', target: 'infoText' },
+    { table: 'tags', source: 'slateDescription', target: 'description' },
+    {
+      table: 'member.plans',
+      source: 'slateDescription',
+      target: 'description',
+    },
+    {
+      table: 'member.plans',
+      source: 'slateShortDescription',
+      target: 'shortDescription',
+    },
+    { table: 'paywalls', source: 'slateDescription', target: 'description' },
+    {
+      table: 'paywalls',
+      source: 'slateUpgradeDescription',
+      target: 'upgradeDescription',
+    },
+    {
+      table: 'paywalls',
+      source: 'slateCircumventDescription',
+      target: 'circumventDescription',
+    },
+    {
+      table: 'paywalls',
+      source: 'slateUpgradeCircumventDescription',
+      target: 'upgradeCircumventDescription',
+    },
+  ];
+
+  @Cron(CronExpression.EVERY_5_SECONDS, {
+    name: 'slate.remigrateBuggyEntities',
+    waitForCompletion: true,
+  })
+  async remigrateBuggyEntities() {
+    let matched = 0;
+    let changed = 0;
+    for (const {
+      table,
+      source,
+      target,
+    } of SlateToPmMigrator.BUGGY_ENTITY_COLUMNS) {
+      const rows = await this.prisma.$queryRawUnsafe<
+        { id: string; src: unknown; tgt: unknown }[]
+      >(
+        `SELECT id, "${source}" AS src, "${target}" AS tgt FROM "${table}"
+         WHERE "${target}" @? $1::jsonpath AND "${source}" IS NOT NULL
+         LIMIT 100`,
+        SlateToPmMigrator.BUGGY_TEXT_NODE
+      );
+      matched += rows.length;
+      for (const row of rows) {
+        const src =
+          typeof row.src === 'string' ?
+            JSON.parse(row.src)
+          : (row.src as unknown);
+        const tgt = typeof row.tgt === 'string' ? JSON.parse(row.tgt) : row.tgt;
+        if (!Array.isArray(src) || src.length === 0) {
+          continue;
+        }
+        const next = this.migrate(src);
+        if (JSON.stringify(next) === JSON.stringify(tgt)) {
+          continue;
+        }
+        changed++;
+        await this.prisma.$executeRawUnsafe(
+          `UPDATE "${table}" SET "${target}" = $1::jsonb WHERE id = $2`,
+          JSON.stringify(next),
+          row.id
+        );
+        this.logger.log(`Re-migrated ${table}.${target} ${row.id}`);
+      }
+    }
+    if (matched === 0) {
+      this.stopCron('slate.remigrateBuggyEntities', 'none left');
+    } else if (changed === 0) {
+      this.stopCron(
+        'slate.remigrateBuggyEntities',
+        `no progress (${matched} matched, 0 changed)`
+      );
+    }
   }
 }

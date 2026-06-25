@@ -10,7 +10,7 @@ import {
 } from '@nestjs/graphql';
 import { EventStatus } from '@prisma/client';
 import { Image } from '@wepublish/image/api';
-import { RichtextJSONDocument } from '@wepublish/richtext';
+import type { RichtextJSONDocument } from '@wepublish/richtext';
 import { GraphQLRichText } from '@wepublish/richtext/api';
 import { PaginatedType, SortOrder } from '@wepublish/utils/api';
 
