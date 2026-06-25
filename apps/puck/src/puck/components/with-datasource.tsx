@@ -8,7 +8,10 @@ export type WithDataSource<Props> = Props & {
 };
 
 export function withDataSource<Props extends DefaultComponentProps>(
-  config: ComponentConfig<{ props: Props; fields: UserFields }>,
+  config: ComponentConfig<{
+    props: Omit<Props, 'datasource'>;
+    fields: UserFields;
+  }>,
   defaultProps?: DatasourceValue,
   settings?: Omit<DatasourceField, 'type' | 'ai'>
 ): ComponentConfig<{ props: WithDataSource<Props>; fields: UserFields }> {
@@ -17,7 +20,6 @@ export function withDataSource<Props extends DefaultComponentProps>(
 
   return {
     ...config,
-    inline: true,
     resolveFields: async (data, params) => {
       let fields =
         baseResolveFields ?

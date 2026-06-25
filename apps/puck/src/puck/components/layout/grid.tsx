@@ -4,6 +4,7 @@ import { columnsPresets, ColumnsValue } from '../../plugins/columns';
 import { UserFields } from '../../types';
 
 export type GridProps = {
+  className?: string;
   columns: ColumnsValue;
   content: Slot;
 };
@@ -26,13 +27,18 @@ export const Grid: ComponentConfig<{
     content: [],
   },
   render: ({ columns, content: Content, ...props }) => (
-    <Content
-      style={{
+    <div
+      {...props}
+      css={{
         display: 'grid',
         gridTemplateColumns: columns.map(column => `${column}fr`).join(' '),
         gap: 16,
       }}
-      minEmptyHeight={300}
-    />
+    >
+      <Content
+        minEmptyHeight={300}
+        collisionAxis="dynamic"
+      />
+    </div>
   ),
 };

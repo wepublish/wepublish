@@ -4,6 +4,7 @@ import { ComponentConfig, Slot } from '@puckeditor/core';
 import { UserFields } from '../../types';
 
 export type FlexProps = {
+  className?: string;
   content: Slot;
   rows: number;
 };
@@ -35,13 +36,16 @@ export const Flex: ComponentConfig<{
     content: [],
     rows: 1,
   },
-  render: ({ content: Content, puck, rows }) => (
-    <Content
-      as={GridContent}
-      style={{
-        gridTemplateRows: `repeat(${rows || 1}, auto)`,
-      }}
-      minEmptyHeight={300}
-    />
+  render: ({ content: Content, rows, ...props }) => (
+    <div {...props}>
+      <Content
+        as={GridContent}
+        minEmptyHeight={300}
+        collisionAxis="x"
+        style={{
+          gridTemplateRows: `repeat(${rows || 1}, auto)`,
+        }}
+      />
+    </div>
   ),
 };
