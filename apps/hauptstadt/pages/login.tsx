@@ -48,7 +48,7 @@ export default function Login({ sessionToken }: LoginProps) {
         <LoginFormContainer
           defaults={{
             email: router.query?.mail as string | undefined,
-            requirePassword: !!router.query?.requirePassword,
+            requirePassword: !!(router.query?.requirePassword ?? true),
           }}
         />
       </HauptstadtContentFullWidth>
