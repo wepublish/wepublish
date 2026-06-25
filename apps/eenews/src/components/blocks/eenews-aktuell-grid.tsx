@@ -188,7 +188,8 @@ export const EenewsAktuellGrid = ({
   );
 
   const displayTeasers = enrichTeasersWithAds(
-    region === 'ch' ? cmsTeasers : articleTeasers
+    region === 'ch' ? cmsTeasers : articleTeasers,
+    { limit: 1 }
   );
   const pending = region !== 'ch' && (!activeTagId || loading);
   const showSkeleton = pending && articleTeasers.length === 0;

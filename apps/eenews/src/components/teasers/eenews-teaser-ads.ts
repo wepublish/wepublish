@@ -14,12 +14,16 @@ const createAdTeaser = (): FullTeaserFragment => ({
 });
 
 export const enrichTeasersWithAds = (
-  teasers: FullTeaserFragment[]
-): FullTeaserFragment[] =>
-  teasers.reduce<FullTeaserFragment[]>((acc, teaser, index) => {
-    if ((index + 3) % 6 === 0) {
+  teasers: FullTeaserFragment[],
+  { limit = Infinity }: { limit?: number } = {}
+): FullTeaserFragment[] => {
+  let inserted = 0;
+  return teasers.reduce<FullTeaserFragment[]>((acc, teaser, index) => {
+    if ((index + 3) % 6 === 0 && inserted < limit) {
       acc.push(createAdTeaser());
+      inserted++;
     }
     acc.push(teaser);
     return acc;
   }, []);
+};
