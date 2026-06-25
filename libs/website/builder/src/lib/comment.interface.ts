@@ -1,5 +1,5 @@
 import { ApolloError, MutationResult, QueryResult } from '@apollo/client';
-import { RichtextJSONDocument } from '@wepublish/richtext';
+import type { RichtextJSONDocument } from '@wepublish/richtext';
 import {
   AddCommentMutation,
   AddCommentMutationVariables,
