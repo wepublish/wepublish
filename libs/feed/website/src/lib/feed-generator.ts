@@ -42,6 +42,10 @@ export const generateFeed =
           }, [] as RichtextElements[]) ?? [],
       });
 
+      const authors = article.latest.authors
+        .filter(Boolean)
+        .map(author => ({ name: author.name, link: author.url }));
+
       return {
         title: seo.schema.headline ?? '',
         image:
@@ -53,10 +57,7 @@ export const generateFeed =
           : undefined,
         description: seo.schema.description,
         content: content ? content : (article.latest.lead ?? undefined),
-        author: article.latest.authors.filter(Boolean).map(author => ({
-          name: author.name,
-          link: author.url,
-        })),
+        author: authors.length ? authors : undefined,
         guid: article.id,
         link: article.url,
         date: new Date(article.publishedAt!),
