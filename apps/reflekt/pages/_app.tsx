@@ -65,6 +65,7 @@ import { ReflektPage } from '../src/components/reflekt-page';
 import { ReflektQuoteBlock } from '../src/components/reflekt-quote-block';
 import { ReflektRegistrationForm } from '../src/components/reflekt-registration-form';
 import { ReflektRenderElement } from '../src/components/reflekt-render-element';
+import { ReflektRenderLeaf } from '../src/components/reflekt-render-leaf';
 import { ReflektRenderRichtext } from '../src/components/reflekt-render-richtext';
 import { ReflektRichTextBlock } from '../src/components/reflekt-richtext-block';
 import {
@@ -165,6 +166,7 @@ function CustomApp({
             richtext={{
               RenderElement: ReflektRenderElement,
               RenderRichtext: ReflektRenderRichtext,
+              RenderLeaf: ReflektRenderLeaf,
             }}
             blocks={{
               TeaserSlots: ReflektBaseTeaserSlots,

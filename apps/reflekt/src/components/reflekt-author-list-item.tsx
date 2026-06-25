@@ -85,7 +85,7 @@ export function AuthorListItem({
         {bio && (
           <ReflektRenderRichtext
             variant="authorListItemBio"
-            elements={bio}
+            document={bio}
           />
         )}
       </ReflektAuthorListItemContent>

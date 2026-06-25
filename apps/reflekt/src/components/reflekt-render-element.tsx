@@ -1,16 +1,34 @@
 import { css } from '@emotion/react';
-import { capitalize, Link, Typography, useTheme } from '@mui/material';
-import { BlockFormat, InlineFormat } from '@wepublish/richtext';
+import { Typography } from '@mui/material';
+import { RichtextElements } from '@wepublish/richtext';
 import { RenderElement } from '@wepublish/richtext/website';
 import { ListItemProps, UnorderedListProps } from '@wepublish/ui';
+import { slugify } from '@wepublish/utils';
 import {
   BuilderRenderElementProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { ComponentType, ReactNode } from 'react';
-import { Descendant } from 'slate';
+import { ComponentType, ReactNode, useContext } from 'react';
 
-import { ReflektRenderRichtextType } from './reflekt-render-richtext';
+import { RichtextVariantContext } from './reflekt-richtext-variant-context';
+
+const nodeText = (node: RichtextElements): string => {
+  if (node.type === 'text') {
+    return node.text ?? '';
+  }
+  return (
+    (node.content as RichtextElements[] | undefined)?.map(nodeText).join('') ??
+    ''
+  );
+};
+
+const headingId = (element: RichtextElements & { type: 'heading' }) => {
+  if (element.attrs.id) {
+    return element.attrs.id;
+  }
+  const text = nodeText(element);
+  return text ? slugify(text) : undefined;
+};
 
 type ReflektUnorderedListType = ComponentType<
   UnorderedListProps & { variant?: string }
@@ -27,142 +45,108 @@ const lastChildNoGutter = css`
   }
 `;
 
-export const createIdFromText = (descendants: Descendant[]) =>
-  descendants
-    .filter(child => 'text' in child)
-    .map(child => child.text)
-    .join(' ')
-    .toLowerCase()
-    .replace(/^/, 'id-')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
-
 export function ReflektRenderElement({
   element,
-  variant,
-}: BuilderRenderElementProps & { variant?: string }): ReactNode {
+}: BuilderRenderElementProps): ReactNode {
   const {
-    elements: { H3, H4, H5, UnorderedList, ListItem },
-    richtext: { RenderRichtext },
+    elements: { H3, H4, H5, H6, UnorderedList, ListItem },
+    richtext: { RenderElement: RenderElementOverride },
   } = useWebsiteBuilder();
 
-  const ReflektRenderRichtext = RenderRichtext as ReflektRenderRichtextType;
+  const variant = useContext(RichtextVariantContext);
   const ReflektUnorderedList = UnorderedList as ReflektUnorderedListType;
   const ReflektListItem = ListItem as ReflektListItemType;
-  const theme = useTheme();
+
+  const children = (element.content as RichtextElements[] | undefined)?.map(
+    (child, index) => (
+      <RenderElementOverride
+        key={index}
+        element={child}
+      />
+    )
+  );
 
   switch (element.type) {
-    case BlockFormat.H1:
-      return (
-        <H3
-          component="h2"
-          gutterBottom={false}
-          css={lastChildNoGutter}
-          id={createIdFromText(element.children)}
-        >
-          <RenderRichtext elements={element.children} />
-        </H3>
-      );
+    case 'heading': {
+      const id = headingId(element);
 
-    case BlockFormat.H2:
-      return (
-        <H4
-          component="h3"
-          gutterBottom={false}
-          css={lastChildNoGutter}
-          id={createIdFromText(element.children)}
-        >
-          <RenderRichtext elements={element.children} />
-        </H4>
-      );
+      if (element.attrs.level === 1) {
+        return (
+          <H3
+            component="h2"
+            gutterBottom={false}
+            css={lastChildNoGutter}
+            id={id}
+          >
+            {children}
+          </H3>
+        );
+      }
 
-    case BlockFormat.H3:
+      if (element.attrs.level === 2) {
+        return (
+          <H4
+            component="h3"
+            gutterBottom={false}
+            css={lastChildNoGutter}
+            id={id}
+          >
+            {children}
+          </H4>
+        );
+      }
+
+      if (element.attrs.level === 3) {
+        return (
+          <H5
+            component="h4"
+            gutterBottom={false}
+            css={lastChildNoGutter}
+            id={id}
+          >
+            {children}
+          </H5>
+        );
+      }
+
       return (
-        <H5
-          component="h4"
+        <H6
           gutterBottom={false}
           css={lastChildNoGutter}
-          id={createIdFromText(element.children)}
+          id={id}
         >
-          <RenderRichtext elements={element.children} />
-        </H5>
+          {children}
+        </H6>
       );
-    case BlockFormat.UnorderedList:
+    }
+
+    case 'bulletList':
       return (
         <ReflektUnorderedList
           css={lastChildNoGutter}
           variant={variant}
         >
-          <ReflektRenderRichtext
-            elements={element.children}
-            variant={variant}
-          />
+          {children}
         </ReflektUnorderedList>
       );
 
-    case BlockFormat.ListItem:
+    case 'listItem':
       return (
         <ReflektListItem
           css={lastChildNoGutter}
           variant={variant}
         >
-          <ReflektRenderRichtext
-            elements={element.children}
-            variant={variant}
-          />
+          {children}
         </ReflektListItem>
       );
 
-    case InlineFormat.Link: {
-      const id = typeof element.id === 'string' ? element.id : '';
-      const isButtonLink = id.startsWith('button-link-');
-      const buttonLinkVariant =
-        isButtonLink ?
-          id.replace(/-([a-z])/g, (_, c: string) => c.toUpperCase())
-        : undefined;
-      const linkVariant: string | undefined =
-        buttonLinkVariant ? buttonLinkVariant
-        : variant ? `link${capitalize(variant)}`
-        : undefined;
-      const url = element.url as string;
-      const href =
-        !isButtonLink && element.id ?
-          `${url}${url.endsWith('#') ? '' : '#'}${createIdFromText([{ text: element.id as string }])}`
-        : url;
-
-      return (
-        <Link
-          target={url.startsWith('#') || url.startsWith('/') ? '' : '_blank'}
-          rel="noreferrer"
-          id={undefined}
-          href={href}
-          title={element.title as string}
-          data-test="link"
-          variant={linkVariant as any}
-        >
-          <ReflektRenderRichtext
-            elements={element.children}
-            variant={variant}
-          />
-        </Link>
-      );
-    }
-
-    case BlockFormat.Paragraph:
+    case 'paragraph':
       if (variant) {
-        return (
-          <Typography variant={variant as any}>
-            <ReflektRenderRichtext
-              elements={element.children}
-              variant={variant}
-            />
-          </Typography>
-        );
+        return <Typography variant={variant as any}>{children}</Typography>;
       }
       return <RenderElement element={element} />;
 
-    default: {
+    default:
       return <RenderElement element={element} />;
-    }
   }
 }

@@ -20,7 +20,7 @@ export const ReflektRichTextBlock = ({
   return (
     <RichTextBlockWrapper className={className}>
       <ReflektRenderRichtext
-        elements={richText ?? []}
+        document={richText}
         variant={variant}
       />
     </RichTextBlockWrapper>
