@@ -24,10 +24,13 @@ import { SubscribeConfigProps } from './components/subscribe.config';
 import { WithDataSource } from './components/with-datasource';
 import { AlignmentField, AlignmentValue } from './plugins/alignment';
 import { BorderField } from './plugins/border';
+import { ColorField } from './plugins/color/color';
 import { ColumnsField } from './plugins/columns';
 import { DatasourceField } from './plugins/datasource';
 import { PaddingField } from './plugins/padding';
 import { PaletteField } from './plugins/palette';
+import { ResolvedField } from './plugins/resolved';
+import { RichtextField } from './plugins/richtext';
 import { SEOField, SEOValue } from './plugins/seo';
 
 export type RootProps = {
@@ -71,6 +74,9 @@ export type UserFields = {
   columns: ColumnsField;
   alignment: AlignmentField;
   palette: PaletteField;
+  richtext: RichtextField;
+  color: ColorField;
+  resolved: ResolvedField;
 };
 
 export type UserConfig = Config<{
