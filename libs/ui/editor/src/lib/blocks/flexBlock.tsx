@@ -251,7 +251,7 @@ const getContentHintForFlexBlockNestedBlock = (block: BlockValue): string => {
   }
 
   if (block.type === 'RichText') {
-    const text = toPlaintext(block.value?.richText?.content);
+    const text = toPlaintext(block.value?.richText?.content)?.trim();
     if (!text) {
       return 'Rich Text';
     }
