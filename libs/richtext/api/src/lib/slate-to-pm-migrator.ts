@@ -927,11 +927,7 @@ export class SlateToPmMigrator {
   }
 
   // GENERAL: entity richtext columns re-migrated from their `slate*` source.
-  private static readonly BUGGY_ENTITY_COLUMNS: ReadonlyArray<{
-    table: string;
-    source: string;
-    target: string;
-  }> = [
+  private static readonly BUGGY_ENTITY_COLUMNS = [
     { table: 'authors', source: 'slateBio', target: 'bio' },
     { table: 'comments.revisions', source: 'slateText', target: 'text' },
     { table: 'events', source: 'slateDescription', target: 'description' },
@@ -969,7 +965,7 @@ export class SlateToPmMigrator {
       source: 'slateUpgradeCircumventDescription',
       target: 'upgradeCircumventDescription',
     },
-  ];
+  ] as const;
 
   @Cron(CronExpression.EVERY_5_SECONDS, {
     name: 'slate.remigrateBuggyEntities',

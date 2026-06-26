@@ -1,4 +1,7 @@
-import { RichtextElements } from './json-format.interface';
+import {
+  RichtextElements,
+  RichtextJSONDocument,
+} from './json-format.interface';
 import { firstParagraphToPlaintext, toPlaintext } from './to-plaintext';
 
 describe('toPlaintext', () => {
@@ -25,6 +28,23 @@ describe('toPlaintext', () => {
     ] as unknown as RichtextElements[];
 
     expect(toPlaintext(nodes)).toBe('Hello tiptap item');
+  });
+
+  it('extracts text from a full tiptap document object (not just its content array)', () => {
+    const document = {
+      type: 'doc',
+      content: [
+        {
+          type: 'paragraph',
+          content: [
+            { type: 'text', text: 'Hello ' },
+            { type: 'text', text: 'document' },
+          ],
+        },
+      ],
+    } as unknown as RichtextJSONDocument;
+
+    expect(toPlaintext(document)).toBe('Hello document');
   });
 
   it('extracts nested text from a legacy slate node array', () => {

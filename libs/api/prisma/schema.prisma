@@ -43,6 +43,7 @@ model ArticleRevision {
   ArticleRevisionDraft     ArticleRevisionDraft[]
 
   @@index([publishedAt])
+  @@index([articleId])
   @@map("articles.revisions")
 }
 
@@ -368,6 +369,8 @@ model Comment {
   overriddenRatings CommentRatingOverride[]
   featured          Boolean                 @default(false)
 
+  @@index([itemID, itemType])
+  @@index([parentID])
   @@index([createdAt])
   @@map("comments")
 }
@@ -629,6 +632,9 @@ model NavigationLink {
   navigation   Navigation? @relation(fields: [navigationId], references: [id], onDelete: Cascade)
   navigationId String?
 
+  @@index([navigationId])
+  @@index([articleID])
+  @@index([pageID])
   @@map("navigations.links")
 }
 
@@ -676,6 +682,7 @@ model PageRevision {
   PagesRevisionDraft     PagesRevisionDraft[]
 
   @@index([publishedAt])
+  @@index([pageId])
   @@map("pages.revisions")
 }
 
