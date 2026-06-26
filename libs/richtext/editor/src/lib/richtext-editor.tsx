@@ -166,20 +166,25 @@ export const RichtextEditor = forwardRef<HTMLDivElement, RichtextEditorProps>(
       [autofocus]
     );
     const providerValue = useMemo(() => ({ editor }), [editor]);
+    const editorReady = !!editor && !editor.isDestroyed;
 
     useEffect(() => {
+      if (!editor) {
+        return;
+      }
+
       editor.setEditable(!disabled);
     }, [editor, disabled]);
 
     useEffect(() => {
-      if (defaultValue) {
+      if (editor && defaultValue) {
         editor.commands.setContent(defaultValue);
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
-      if (!equals(value, editor.getJSON()) && value) {
+      if (editor && value && !equals(value, editor.getJSON())) {
         editor.commands.setContent(value);
       }
     }, [value, editor]);
@@ -190,52 +195,56 @@ export const RichtextEditor = forwardRef<HTMLDivElement, RichtextEditorProps>(
           variant="outlined"
           square={false}
         >
-          <Box
-            sx={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              alignItems: 'center',
-              gap: 0.5,
-              p: 1,
-              borderBottom: 1,
-              borderColor: 'divider',
-            }}
-          >
-            <MenuBar />
-          </Box>
+          {editorReady && (
+            <Box
+              sx={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                alignItems: 'center',
+                gap: 0.5,
+                p: 1,
+                borderBottom: 1,
+                borderColor: 'divider',
+              }}
+            >
+              <MenuBar />
+            </Box>
+          )}
 
-          <BubbleMenu />
-          <DragHandle />
+          {editorReady && <BubbleMenu />}
+          {editorReady && <DragHandle />}
 
           <Editor
             editor={editor}
             ref={ref}
           />
 
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              height: 46,
-              gap: 2,
-              p: 1,
-              m: 2,
-              mt: 0,
-              borderRadius: 2,
-              border: 1,
-              borderColor: 'divider',
-              flexWrap: 'wrap',
-              bgcolor: 'background.default',
-              position: 'sticky',
-              bottom: 16,
-              '&:empty': {
-                opacity: 0,
-                pointerEvents: 'none',
-              },
-            }}
-          >
-            <FooterActions />
-          </Box>
+          {editorReady && (
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                height: 46,
+                gap: 2,
+                p: 1,
+                m: 2,
+                mt: 0,
+                borderRadius: 2,
+                border: 1,
+                borderColor: 'divider',
+                flexWrap: 'wrap',
+                bgcolor: 'background.default',
+                position: 'sticky',
+                bottom: 16,
+                '&:empty': {
+                  opacity: 0,
+                  pointerEvents: 'none',
+                },
+              }}
+            >
+              <FooterActions />
+            </Box>
+          )}
         </RichtextEditorWrapper>
       </EditorContext.Provider>
     );
