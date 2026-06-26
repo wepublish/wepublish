@@ -13,7 +13,7 @@ import { GraphQLRichText } from '@wepublish/richtext/api';
 import { VoteValue } from './poll.scalar';
 import { PaginatedType, SortOrder } from '@wepublish/utils/api';
 import { PollAnswer, PollAnswerInput } from './poll-answer.model';
-import { RichtextJSONDocument } from '@wepublish/richtext';
+import type { RichtextJSONDocument } from '@wepublish/richtext';
 
 export enum PollSort {
   CreatedAt = 'CreatedAt',

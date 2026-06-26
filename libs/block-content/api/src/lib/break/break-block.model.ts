@@ -4,7 +4,7 @@ import { BaseBlock } from '../base-block.model';
 import { BlockType } from '../block-type.model';
 import { GraphQLRichText } from '@wepublish/richtext/api';
 import { HasImage } from '@wepublish/image/api';
-import { RichtextJSONDocument } from '@wepublish/richtext';
+import type { RichtextJSONDocument } from '@wepublish/richtext';
 
 @ObjectType({
   implements: () => [BaseBlock, HasImage],

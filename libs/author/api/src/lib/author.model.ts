@@ -13,7 +13,7 @@ import { GraphQLRichText } from '@wepublish/richtext/api';
 import { HasImage, Image } from '@wepublish/image/api';
 import { HasOptionalPeerLc, Peer } from '@wepublish/peering/api';
 import { GraphQLSlug, PaginatedType, SortOrder } from '@wepublish/utils/api';
-import { RichtextJSONDocument } from '@wepublish/richtext';
+import type { RichtextJSONDocument } from '@wepublish/richtext';
 
 @ObjectType()
 export class AuthorLink {

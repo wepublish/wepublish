@@ -1,5 +1,5 @@
 import { PropsWithChildren } from 'react';
-import {
+import type {
   RichtextJSONDocument,
   RichtextElements,
   RichtextMarks,

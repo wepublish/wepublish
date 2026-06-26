@@ -9,7 +9,7 @@ import {
   registerEnumType,
 } from '@nestjs/graphql';
 import { TagType } from '@prisma/client';
-import { RichtextJSONDocument } from '@wepublish/richtext';
+import type { RichtextJSONDocument } from '@wepublish/richtext';
 import { GraphQLRichText } from '@wepublish/richtext/api';
 import { PaginatedType, SortOrder } from '@wepublish/utils/api';
 import { ColorScalar } from '@wepublish/utils/api';

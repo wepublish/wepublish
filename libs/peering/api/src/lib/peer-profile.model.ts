@@ -6,7 +6,7 @@ import {
   PickType,
 } from '@nestjs/graphql';
 import { Image, PeerImage } from '@wepublish/image/api';
-import { RichtextJSONDocument } from '@wepublish/richtext';
+import type { RichtextJSONDocument } from '@wepublish/richtext';
 import { GraphQLRichText } from '@wepublish/richtext/api';
 import { ColorScalar } from '@wepublish/utils/api';
 

@@ -7,7 +7,7 @@ import {
 } from '@nestjs/graphql';
 import { GraphQLRichText } from '@wepublish/richtext/api';
 import { RemotePeerProfile } from './peer-profile.model';
-import { RichtextJSONDocument } from '@wepublish/richtext';
+import type { RichtextJSONDocument } from '@wepublish/richtext';
 
 @ObjectType()
 export class Peer {

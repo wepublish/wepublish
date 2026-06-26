@@ -26,7 +26,7 @@ import {
   OverriddenRating,
   OverriddenRatingInput,
 } from './rating-system/rating-system.model';
-import { RichtextJSONDocument } from '@wepublish/richtext';
+import type { RichtextJSONDocument } from '@wepublish/richtext';
 
 registerEnumType(CommentAuthorType, {
   name: 'CommentAuthorType',
