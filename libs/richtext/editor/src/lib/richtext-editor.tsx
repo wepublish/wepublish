@@ -185,25 +185,25 @@ export const RichtextEditor = forwardRef<HTMLDivElement, RichtextEditorProps>(
     const editorReady = !!editor && !editor.isDestroyed;
 
     useEffect(() => {
-      if (!editor) {
+      if (!editorReady) {
         return;
       }
 
       editor.setEditable(!disabled);
-    }, [editor, disabled]);
+    }, [editorReady, disabled]);
 
     useEffect(() => {
-      if (editor && defaultValue) {
+      if (editorReady && defaultValue) {
         editor.commands.setContent(defaultValue);
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
-      if (editor && value && !equals(value, editor.getJSON())) {
+      if (editorReady && value && !equals(value, editor.getJSON())) {
         editor.commands.setContent(value);
       }
-    }, [value, editor]);
+    }, [value, editorReady]);
 
     return (
       <EditorContext.Provider value={providerValue}>
