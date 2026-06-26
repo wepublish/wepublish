@@ -8,6 +8,7 @@ const nodeToPlaintext = (node: unknown): string => {
   if (!node || typeof node !== 'object') {
     return '';
   }
+
   const { text, content, children } = node as {
     text?: unknown;
     content?: unknown;

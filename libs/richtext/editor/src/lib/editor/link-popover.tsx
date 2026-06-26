@@ -92,7 +92,11 @@ type LinkPopoverProps = {
 const linkSchema = z.union([
   z.object({
     type: z.literal('web'),
-    url: z.string().url().or(z.string().startsWith('#')),
+    url: z
+      .string()
+      .url()
+      .or(z.string().startsWith('#'))
+      .or(z.string().startsWith('/')),
     newTab: z.boolean(),
   }),
   z.object({
