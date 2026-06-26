@@ -166,6 +166,7 @@ export const TeaserSlotsTopic = ({
               )}
               blockStyle={blockStyle}
               numColumns={numColumns}
+              origin={isDesktop ? 'auto' : 'center'}
               slidesPerViewConfig={{
                 xs: 'auto',
                 sm: 'auto',

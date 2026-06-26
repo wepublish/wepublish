@@ -1287,6 +1287,8 @@
       },
       "link": {
         "title": "Link text with",
+        "style": "Link style",
+        "noStyle": "None",
         "type": "Type",
         "url": "URL",
         "web": "Web",

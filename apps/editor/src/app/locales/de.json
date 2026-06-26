@@ -1281,6 +1281,8 @@
       },
       "link": {
         "title": "Text verlinken mit",
+        "style": "Link-Stil",
+        "noStyle": "Keiner",
         "type": "Typ",
         "url": "URL",
         "web": "Web",

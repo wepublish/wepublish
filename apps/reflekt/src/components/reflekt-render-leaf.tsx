@@ -49,19 +49,17 @@ export const ReflektRenderLeaf = ({
       target,
       id,
       title,
-      variant: buttonVariant,
+      variant: markVariant,
     } = mark.attrs as typeof mark.attrs & {
       variant?: string | null;
       title?: string | null;
     };
 
     const url = href ?? '';
-    const buttonLinkVariant =
-      buttonVariant ?
-        `buttonLink${capitalize(buttonVariant)}`
-      : buttonVariantFromLegacyId(id);
+    const legacyVariant = buttonVariantFromLegacyId(id);
     const linkVariant =
-      buttonLinkVariant ? buttonLinkVariant
+      markVariant ? markVariant
+      : legacyVariant ? legacyVariant
       : variant ? `link${capitalize(variant)}`
       : undefined;
     const linkTarget =
