@@ -5,6 +5,7 @@ import {
   BreakBlockButton,
   hasBlockStyle,
   isBreakBlock,
+  RichTextBlockWrapper,
 } from '@wepublish/block-content/website';
 import { BlockContent } from '@wepublish/website/api';
 import {
@@ -14,6 +15,7 @@ import {
 import { allPass } from 'ramda';
 
 import { buttonLinkSecondaryStyles } from '../../theme';
+import theme, { euclidCircularB } from '../../theme';
 import { ReflektBlockStyles } from '../block-styles/reflekt-block-styles';
 import { ReflektBreakBlockButton } from './reflekt-break-block-button';
 
@@ -27,6 +29,26 @@ export const isImageWithTextBreakBlock = (
 const StyledImageWithTextBreakBlock = styled(BreakBlock)`
   background-color: ${({ theme }) => theme.palette.secondary.light};
   color: ${({ theme }) => theme.palette.common.black};
+
+  ${RichTextBlockWrapper} {
+    max-width: unset;
+  }
+
+  ul {
+    padding-left: ${theme.spacing(3)};
+
+    li,
+    li p {
+      font-family: ${[euclidCircularB.style.fontFamily, 'sans-serif'].join(
+        ','
+      )};
+      font-size: 1.125rem;
+
+      ${theme.breakpoints.up('md')} {
+        font-size: 1.5rem;
+      }
+    }
+  }
 
   ${BreakBlockButton} {
     ${css(buttonLinkSecondaryStyles)}

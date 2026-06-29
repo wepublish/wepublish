@@ -72,6 +72,7 @@ import {
   ReflektSubscribe,
   ReflektSubscribeForm,
 } from '../src/components/reflekt-subscribe';
+import { ReflektSubscriptionListItem } from '../src/components/reflekt-subscription-list-item';
 import { ReflektTag } from '../src/components/reflekt-tag';
 import { ReflektTitleBlock } from '../src/components/reflekt-title-block';
 import { ReflektUserForm } from '../src/components/reflekt-user-form';
@@ -156,6 +157,7 @@ function CustomApp({
             UserForm={ReflektUserForm}
             LoginForm={ReflektLoginForm}
             RegistrationForm={ReflektRegistrationForm}
+            SubscriptionListItem={ReflektSubscriptionListItem}
             elements={{
               Link: ReflektLink,
               UnorderedList: ReflektUnorderedList,

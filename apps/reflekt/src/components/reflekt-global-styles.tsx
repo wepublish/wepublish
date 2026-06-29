@@ -1,5 +1,4 @@
 import { css, GlobalStyles, Theme } from '@mui/material';
-import { SubscriptionListItemActions } from '@wepublish/membership/website';
 
 const globalCSS = (theme: Theme) => css`
   :root {
@@ -23,10 +22,6 @@ const globalCSS = (theme: Theme) => css`
     .MuiTypography-buttonLinkMain
   ) {
     text-align: center;
-  }
-
-  ${SubscriptionListItemActions} .MuiButton-textSecondary {
-    color: ${theme.palette.text.primary};
   }
 `;
 

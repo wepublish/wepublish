@@ -299,6 +299,9 @@ const theme = createTheme(WePTheme, {
           textTransform: 'uppercase',
           fontStyle: 'normal',
         },
+        [breakpoints.up('md')]: {
+          fontSize: '2.25rem',
+        },
       },
       blockBreakBody: {
         fontFamily: [recife.style.fontFamily, 'serif'].join(','),
@@ -520,6 +523,15 @@ const theme = createTheme(WePTheme, {
           fontWeight: 700,
           padding: '0 1.5rem',
         },
+      },
+    },
+    ...{
+      bannerTitle: {
+        fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(','),
+        textTransform: 'uppercase',
+        fontWeight: 500,
+        fontSize: '3rem',
+        lineHeight: 1.2,
       },
     },
   },

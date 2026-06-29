@@ -39,13 +39,7 @@ const MailchimpFormSchema = z.object({
 type MailchimpFormInput = z.infer<typeof MailchimpFormSchema>;
 
 const SubmitBtn = styled(Link)`
-  padding-top: 12px;
-  padding-bottom: 12px;
   margin: ${({ theme }) => theme.spacing(2)} auto 0;
-
-  &:hover {
-    transform: unset;
-  }
 
   ${({ theme }) => theme.breakpoints.up('md')} {
     margin: ${({ theme }) => theme.spacing(0, 0, 0, 2.5)};
@@ -59,7 +53,7 @@ const formStyles = (theme: Theme) => css`
 
   ${theme.breakpoints.up('md')} {
     flex-direction: row;
-    align-items: stretch;
+    align-items: flex-start;
   }
 `;
 
@@ -197,7 +191,7 @@ export const BannerBase = ({
                         error={!!error}
                         helperText={error?.message}
                         size="small"
-                        sx={{
+                        sx={theme => ({
                           width: '300px',
                           '& .MuiOutlinedInput-root': {
                             backgroundColor: 'white',
@@ -213,7 +207,10 @@ export const BannerBase = ({
                           '& .MuiFormHelperText-root': {
                             backgroundColor: 'transparent',
                           },
-                        }}
+                          [theme.breakpoints.up('md')]: {
+                            marginTop: theme.spacing(1),
+                          },
+                        })}
                       />
                     )}
                   />
