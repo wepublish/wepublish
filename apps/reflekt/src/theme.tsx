@@ -377,6 +377,7 @@ const theme = createTheme(WePTheme, {
         fontWeight: 500,
         lineHeight: 1.2,
         fontSize: '3rem',
+        textTransform: 'uppercase',
         '& + cite': {
           fontFamily: [robotoMono.style.fontFamily, 'sans-serif'].join(','),
           fontStyle: 'normal',
@@ -413,34 +414,41 @@ const theme = createTheme(WePTheme, {
         listStyle: 'none',
         margin: 0,
         padding: 0,
-        lineHeight: 0,
+        lineHeight: '3rem',
+      },
+      categoryLink: {
+        [breakpoints.up('xs')]: {
+          fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(
+            ','
+          ),
+          color: 'inherit',
+          lineHeight: '1.2 !important',
+        },
       },
       categoryAddress: {
+        fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(','),
         display: 'block',
-        margin: '3rem 0 0 0',
+        margin: '0',
         padding: 0,
+        lineHeight: '1.5 !important',
+        fontWeight: 400,
         [breakpoints.up('md')]: {
           margin: 0,
+          lineHeight: '1.5 !important',
         },
       },
       categoryAddressText: {
-        fontFamily: ['Euclid', 'sans-serif'].join(','),
+        fontFamily: 'inherit',
         color: colors.common.white,
         fontSize: '1.5rem',
-        lineHeight: '1.8rem',
-        fontWeight: 500,
+        fontWeight: 400,
         fontStyle: 'normal',
-        marginBottom: '0.5rem',
         '&:last-child': {
-          marginTop: '2.5rem',
           fontSize: '1.1rem',
         },
         [breakpoints.up('md')]: {
           fontSize: '1.5rem',
-          lineHeight: 1.5,
-          marginBottom: '1rem',
           '&:last-child': {
-            paddingTop: '0.1rem',
             fontSize: '1.5rem',
           },
         },
@@ -449,7 +457,6 @@ const theme = createTheme(WePTheme, {
         fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(','),
         color: colors.common.white,
         fontSize: '0.875rem',
-        lineHeight: 1.2,
         fontWeight: 400,
         fontStyle: 'normal',
       },
@@ -700,6 +707,56 @@ const theme = createTheme(WePTheme, {
           },
         },
         {
+          props: { variant: 'buttonLinkAlert' },
+          style: {
+            fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(
+              ','
+            ),
+            textTransform: 'uppercase',
+            borderRadius: '9999px',
+            color: colors.common.white,
+            backgroundColor: '#d32f2f',
+            padding: '20px 36px',
+            display: 'inline-block',
+            position: 'relative',
+            textDecoration: 'none',
+            fontSize: '1rem',
+            fontWeight: 400,
+            lineHeight: 1,
+            boxShadow: `0 0 0 0 ${colors.common.black}`,
+            transform: 'translateY(0)',
+            transition:
+              'box-shadow 200ms cubic-bezier(0.34, 1.56, 0.64, 1), transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1)',
+            '&:focus, &:focus-visible, &:visited': {
+              textDecoration: 'none',
+            },
+            '&.is-pressing, &:active': {
+              backgroundColor: '#d32f2f',
+              color: colors.common.white,
+              textDecoration: 'none',
+              boxShadow: `0 -12px 0 0 ${colors.common.black}`,
+              transform: 'translateY(12px)',
+            },
+            '@media (hover: hover)': {
+              '&::before': {
+                content: '""',
+                position: 'absolute',
+                top: '-18px',
+                left: '-18px',
+                right: '-18px',
+                bottom: 0,
+              },
+              '&:hover': {
+                backgroundColor: '#d32f2f',
+                color: colors.common.white,
+                textDecoration: 'none',
+                boxShadow: `0 -12px 0 0 ${colors.common.black}`,
+                transform: 'translateY(12px)',
+              },
+            },
+          },
+        },
+        {
           props: { variant: 'buttonLinkSecondary' },
           style: buttonLinkSecondaryStyles,
         },
@@ -736,9 +793,12 @@ const theme = createTheme(WePTheme, {
             fontSize: '1.5rem',
             '.MuiAccordionSummary-content': {
               gridColumn: '3 / 11',
+              gridRow: '1 / 2',
               margin: '0',
+              paddingRight: '1.5rem',
               [breakpoints.up('md')]: {
-                margin: '0 2rem',
+                margin: '0 0 0 2rem',
+                paddingRight: '3.5rem',
               },
             },
             '.MuiTypography-root': {
@@ -770,18 +830,24 @@ const theme = createTheme(WePTheme, {
             fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(
               ','
             ),
-            position: 'absolute',
-            top: '50%',
-            right: '1rem',
-            transform: 'translateY(-50%)',
+            position: 'static',
+            gridColumn: '3 / 11',
+            alignSelf: 'center',
+            justifySelf: 'end',
+            marginRight: '0',
+            gridRow: '1 / 2',
             color: colors.common.black,
             fontWeight: 700,
             transition:
               'transform 500ms cubic-bezier(0.4, 0, 0.2, 1) 0ms !important',
+
+            [breakpoints.up('md')]: {
+              marginRight: '2rem',
+            },
             '&.Mui-expanded': {
               transition:
                 'transform 500ms cubic-bezier(0.4, 0, 0.2, 1) 0ms !important',
-              transform: 'translateY(-50%) rotate(0deg)',
+              transform: 'rotate(0deg)',
             },
           },
           '&.Mui-expanded': {

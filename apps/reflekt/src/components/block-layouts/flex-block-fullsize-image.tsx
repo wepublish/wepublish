@@ -35,7 +35,6 @@ export const isFlexBlockFullsizeImage = (
 const PARALLAX_HOLD_DISTANCE = 800;
 const PARALLAX_TEXT_DELAY = 200;
 const PARALLAX_TEXT_START_OFFSET = 0.9;
-const PARALLAX_MOBILE_TEXT_SPEED = 0.5;
 const PARALLAX_DESKTOP_TEXT_SPEED = 1;
 const MD_BREAKPOINT = 900;
 const RICH_TEXT_SCALE_MOBILE = 1;
@@ -328,9 +327,7 @@ export const FlexBlockFullsizeImage = ({
         const travel = startY - endY;
         return PARALLAX_TEXT_DELAY + travel / PARALLAX_DESKTOP_TEXT_SPEED;
       }
-      const delay = vhNow * 0.5;
-      const travel = textHeight + imageHeight / 2;
-      return delay + travel / PARALLAX_MOBILE_TEXT_SPEED;
+      return textHeight + imageHeight / 2;
     };
 
     const applyLayout = () => {
@@ -400,7 +397,7 @@ export const FlexBlockFullsizeImage = ({
         isDesktop ? Math.max(navbarHeight, (vh - imageHeight) / 2) : 0;
       const holdStart = wrapperTop;
 
-      const textDelay = isDesktop ? PARALLAX_TEXT_DELAY : vh * 0.5;
+      const textDelay = isDesktop ? PARALLAX_TEXT_DELAY : 0;
       const holdDistance = getHoldDistance();
       const textHeight = textHeightRef.current;
       const progress = Math.max(

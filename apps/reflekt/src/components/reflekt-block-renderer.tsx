@@ -16,6 +16,7 @@ import {
   BuilderBreakBlockProps,
   BuilderFlexBlockProps,
   BuilderTeaserSlotsBlockProps,
+  BuilderTitleBlockProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { allPass, anyPass, cond } from 'ramda';
@@ -50,6 +51,7 @@ import {
   TextWithImageAltColorBreakBlock,
 } from './break-blocks/text-with-image-alt-color';
 import { MainSpacer } from './main-spacer';
+import { ReflektTitleBlock } from './reflekt-title-block';
 import { isTeaserSlotsTopic } from './teaser-layouts/teaser-slots-topic';
 
 const ClientOnly = ({ children }: PropsWithChildren) => {
@@ -159,7 +161,16 @@ export const ReflektBlockRenderer = (
 
   const fallbackRenderer = <BlockRenderer {...props} />;
 
+  const titleBlock =
+    isTitleBlock(props.block) ?
+      <ReflektTitleBlock
+        {...(props.block as BuilderTitleBlockProps)}
+        siblings={props.siblings}
+      />
+    : undefined;
+
   const defaultBlock =
+    titleBlock ??
     extraBlockMap(props.block) ??
     (isEmbed ? <ClientOnly>{fallbackRenderer}</ClientOnly> : fallbackRenderer);
 

@@ -18,6 +18,7 @@ declare module '@mui/material/styles' {
     footerLink: CSSProperties;
     buttonLinkMain: CSSProperties;
     buttonLinkSecondary: CSSProperties;
+    buttonLinkAlert: CSSProperties;
     bannerTitle: CSSProperties;
     bannerText: CSSProperties;
     bannerCta: CSSProperties;
@@ -56,6 +57,7 @@ declare module '@mui/material/styles' {
     footerLink?: CSSProperties;
     buttonLinkMain?: CSSProperties;
     buttonLinkSecondary?: CSSProperties;
+    buttonLinkAlert?: CSSProperties;
     bannerTitle?: CSSProperties;
     bannerText?: CSSProperties;
     bannerCta?: CSSProperties;
@@ -95,6 +97,7 @@ declare module '@mui/material/Typography' {
     footerLink: true;
     buttonLinkMain: true;
     buttonLinkSecondary: true;
+    buttonLinkAlert: true;
     bannerTitle: true;
     bannerText: true;
     bannerCta: true;
@@ -125,6 +128,7 @@ declare module '@mui/material/Link' {
     teaserPretitleLink: true;
     buttonLinkMain: true;
     buttonLinkSecondary: true;
+    buttonLinkAlert: true;
     linkToc: true;
     linkDownloads: true;
     authorListItemLink: true;

@@ -90,6 +90,7 @@
     "cancelledSubscriptions": "Gekündigte Abos & Inaktive Spenden",
     "subscriptionsDetail": "{type, select, Donation {Spende} other {Abo}}",
     "viewCancelledSubscriptions": "Gekündigte Abos & Inaktive Spenden anzeigen",
+    "subscribeAnother": "Anderes Abo lösen",
     "totp": {
       "title": "Zwei-Faktor-Authentifizierung",
       "enabled": "Zwei-Faktor-Authentifizierung ist aktiviert.",

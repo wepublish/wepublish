@@ -6,7 +6,6 @@ import {
   css,
   GlobalStyles,
   Link as MuiLink,
-  SxProps,
   Theme,
   Toolbar,
   Typography,
@@ -658,17 +657,6 @@ export const NavbarInnerWrapper = styled(Toolbar, {
     `}
 `;
 
-const buttonStyles: SxProps<Theme> = theme => ({
-  [theme.breakpoints.up('xs')]: {
-    fontSize: `calc(${theme.typography.button.fontSize} * 1.1)`,
-    padding: `${theme.spacing(1)} ${theme.spacing(1.5)}`,
-    textWrap: 'nowrap',
-    '&:hover': {
-      boxShadow: '5px 5px 7px rgba(0, 0, 0, 0.6);',
-    },
-  },
-});
-
 const SubscribeBtn = styled(Link)`
   margin-left: auto;
 `;
@@ -752,10 +740,6 @@ export const ReflektNavbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
 
       onMenuToggle?.(newState);
     }, [isMenuOpen, controlledIsMenuOpen, onMenuToggle]);
-
-    const {
-      elements: { Link, Button },
-    } = useWebsiteBuilder();
 
     const router = useRouter();
 
@@ -861,11 +845,6 @@ export const ReflektNavbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
                 <span></span>
                 <span></span>
                 <span></span>
-                {hasUnpaidInvoices && profileBtn && (
-                  <OpenInvoicesAlert>
-                    <MdWarningOIA />
-                  </OpenInvoicesAlert>
-                )}
               </NavbarHamburgerButton>
             </NavbarMain>
 
@@ -883,8 +862,14 @@ export const ReflektNavbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
 
             <NavbarActions isMenuOpen={isMenuOpen}>
               <SubscribeBtn
-                {...(subscribeBtn as Omit<typeof subscribeBtn, 'variant'>)}
-                variant="buttonLinkMain"
+                {...((hasUnpaidInvoices && profileBtn ? profileBtn : (
+                  subscribeBtn
+                )) as Omit<typeof subscribeBtn, 'variant'>)}
+                variant={
+                  hasUnpaidInvoices && profileBtn ? 'buttonLinkAlert' : (
+                    'buttonLinkMain'
+                  )
+                }
                 onClick={() => {
                   if (controlledIsMenuOpen === undefined) {
                     setInternalMenuOpen(false);
@@ -892,29 +877,28 @@ export const ReflektNavbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
                   onMenuToggle?.(false);
                 }}
               >
-                Unterstützen
-              </SubscribeBtn>
-              {hasUnpaidInvoices && profileBtn && (
-                <Button
-                  LinkComponent={Link}
-                  color="error"
-                  startIcon={<MdWarning />}
-                  sx={buttonStyles}
-                  size="medium"
-                  {...profileBtn}
-                  onClick={() => {
-                    if (controlledIsMenuOpen === undefined) {
-                      setInternalMenuOpen(false);
-                    }
-                    onMenuToggle?.(false);
-                  }}
-                >
-                  <Box sx={{ display: { xs: 'none', md: 'unset' } }}>
-                    Offene
+                {hasUnpaidInvoices && profileBtn ?
+                  <Box
+                    component="span"
+                    sx={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: 0.75,
+                    }}
+                  >
+                    <MdWarning />
+                    <span>
+                      <Box
+                        component="span"
+                        sx={{ display: { xs: 'none', md: 'inline' } }}
+                      >
+                        Offene{' '}
+                      </Box>
+                      Rechnung
+                    </span>
                   </Box>
-                  &nbsp;Rechnung
-                </Button>
-              )}
+                : 'Unterstützen'}
+              </SubscribeBtn>
             </NavbarActions>
           </NavbarInnerWrapper>
 

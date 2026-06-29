@@ -51,6 +51,10 @@ export const ReflektTitleBlock = ({
     siblings[0].blockStyle === ReflektBlockStyles.FlexBlockHero
   );
 
+  if (hasHeroSibling && !lead) {
+    return null;
+  }
+
   return (
     <TitleBlockWrapper
       className={className}
