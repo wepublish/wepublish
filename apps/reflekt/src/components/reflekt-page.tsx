@@ -15,6 +15,10 @@ const fullWidthMainSpacer = (theme: Theme) => css`
 `;
 
 const StyledReflektPage = styled(Page)`
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    --reflekt-collapsible-start: 2;
+  }
+
   & > .MuiContainer-root {
     max-width: initial;
     grid-template-columns: minmax(

@@ -202,6 +202,7 @@ const theme = createTheme(WePTheme, {
       h1: {
         fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(','),
       },
+
       // heading 1 (part of the hero block, or standalone if no hero block is used)
       h2: {
         fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(','),
@@ -210,6 +211,7 @@ const theme = createTheme(WePTheme, {
         fontSize: '3rem',
         lineHeight: 1.2,
       },
+
       // same as heading 1 / h2
       h3: {
         fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(','),
@@ -218,6 +220,7 @@ const theme = createTheme(WePTheme, {
         fontSize: '3rem',
         lineHeight: 1.2,
       },
+
       // heading 2 with number
       h4: {
         fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(','),
@@ -246,6 +249,7 @@ const theme = createTheme(WePTheme, {
       h6: {
         fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(','),
       },
+
       subtitle1: {
         fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(','),
         fontWeight: 400,
@@ -787,6 +791,9 @@ const theme = createTheme(WePTheme, {
             display: 'grid',
             gridTemplateColumns: 'subgrid',
             gridTemplateRows: 'repeat(2, auto)',
+            [breakpoints.up('md')]: {
+              gridTemplateColumns: 'repeat(12, 1fr)',
+            },
             '&:before': {
               display: 'none',
             },
@@ -804,7 +811,7 @@ const theme = createTheme(WePTheme, {
             textTransform: 'uppercase',
             fontSize: '1.5rem',
             '.MuiAccordionSummary-content': {
-              gridColumn: '3 / 11',
+              gridColumn: 'var(--reflekt-collapsible-start, 3) / 11',
               gridRow: '1 / 2',
               margin: '0',
               paddingRight: '1.5rem',
@@ -822,7 +829,7 @@ const theme = createTheme(WePTheme, {
           },
           '.MuiCollapse-root': {
             padding: '0',
-            gridColumn: '3 / 11',
+            gridColumn: 'var(--reflekt-collapsible-start, 3) / 11',
             gridRow: '2 / 3',
             [breakpoints.up('md')]: {
               marginLeft: '2rem',
