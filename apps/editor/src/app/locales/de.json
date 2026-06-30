@@ -936,10 +936,10 @@
       "placeholderContexts": {
         "account": "Konto & Login (Registrierung, Login-Link, Passwort-Reset)",
         "emailChange": "E-Mail-Änderung",
-        "subscription": "Abo (neu, bestätigt, Deaktivierung, Custom)",
+        "subscription": "Abo (neu, bestätigt, Deaktivierung)",
         "renewal": "Verlängerung – automatisch (Erfolg / Fehlschlag)",
         "invoiceCreation": "Rechnung erstellt",
-        "custom": "Custom"
+        "custom": "Custom-Mail an Abonnent:in (Abo + Rechnungen)"
       },
       "placeholderNames": {
         "user_firstName": "Vorname",

@@ -258,7 +258,7 @@ export const MAIL_PLACEHOLDER_CONTEXTS: MailPlaceholderContext[] = [
   {
     id: 'subscription',
     titleKey: 'mailTemplates.placeholderContexts.subscription',
-    title: 'Subscription (new, confirmed, deactivation, custom)',
+    title: 'Subscription (new, confirmed, deactivation)',
     note: 'Abo-Stammdaten. Plan- und Zahlungsmethoden-Namen sind hier NICHT verfügbar – nur in Verlängerungs-Mails.',
     placeholders: [
       ...SUBSCRIPTION_SCALARS,
@@ -361,7 +361,7 @@ export const MAIL_PLACEHOLDER_CONTEXTS: MailPlaceholderContext[] = [
   {
     id: 'custom',
     titleKey: 'mailTemplates.placeholderContexts.custom',
-    title: 'Custom',
+    title: 'Custom mail to a subscriber (subscription + invoices)',
     note: 'Rechnungen kommen als Array: optional_invoices_0_* (neueste zuerst).',
     placeholders: [
       ...SUBSCRIPTION_SCALARS,

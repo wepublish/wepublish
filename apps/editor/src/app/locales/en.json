@@ -922,10 +922,10 @@
       "placeholderContexts": {
         "account": "Account & login (creation, login link, password reset)",
         "emailChange": "Email change",
-        "subscription": "Subscription (new, confirmed, deactivation, custom)",
+        "subscription": "Subscription (new, confirmed, deactivation)",
         "renewal": "Renewal — automated (success / failed)",
         "invoiceCreation": "Invoice created",
-        "custom": "Custom"
+        "custom": "Custom mail to a subscriber (subscription + invoices)"
       },
       "rawHtml": "HTML",
       "save": "Save",
