@@ -2223,7 +2223,12 @@ type Mutation {
   updateSyncProviderSetting(enabled: Boolean, id: String!, mailchimp_apiKey: String, mailchimp_defaultInterestGroupIds: [String!], mailchimp_extensions: JSONObject, mailchimp_interestGroupMappings: [JSONObject!], mailchimp_listId: String, mailchimp_mergeFieldMappings: [JSONObject!], name: String): SettingSyncProvider!
 
   """Updates an existing mail flow"""
-  updateSystemMail(event: UserEvent!, mailTemplateId: String!): [SystemMailModel!]!
+  updateSystemMail(
+    event: UserEvent!
+
+    """Mail template to assign, or null to unassign."""
+    mailTemplateId: String
+  ): [SystemMailModel!]!
 
   """Updates an existing tag."""
   updateTag(color: Color, description: RichText, id: String!, main: Boolean = false, tag: String, type: TagType): Tag!

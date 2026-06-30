@@ -3331,7 +3331,7 @@ export type MutationUpdateSyncProviderSettingArgs = {
 
 export type MutationUpdateSystemMailArgs = {
   event: UserEvent;
-  mailTemplateId: Scalars['String'];
+  mailTemplateId?: InputMaybe<Scalars['String']>;
 };
 
 

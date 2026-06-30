@@ -114,13 +114,25 @@ function SystemMailList() {
                         label: mailTemplate.name,
                         value: mailTemplate.id,
                       }))}
-                      cleanable={false}
+                      cleanable
+                      placeholder={t(
+                        'systemMails.noTemplate',
+                        'No template (do not send)'
+                      )}
                       defaultValue={systemMail.mailTemplate?.id}
                       onSelect={(value: string) =>
                         updateSystemMail({
                           variables: {
                             event: systemMail.event,
                             mailTemplateId: value,
+                          },
+                        })
+                      }
+                      onClean={() =>
+                        updateSystemMail({
+                          variables: {
+                            event: systemMail.event,
+                            mailTemplateId: null,
                           },
                         })
                       }

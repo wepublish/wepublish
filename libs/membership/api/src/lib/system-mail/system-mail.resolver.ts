@@ -46,7 +46,10 @@ export class SystemMailResolver {
         id: userMail.id,
       },
       data: {
-        mailTemplate: { connect: { id: systemMail.mailTemplateId } },
+        mailTemplate:
+          systemMail.mailTemplateId ?
+            { connect: { id: systemMail.mailTemplateId } }
+          : { disconnect: true },
       },
     });
 

@@ -20,6 +20,9 @@ export class SystemMailUpdateInput {
   @Field(() => UserEvent)
   event!: UserEvent;
 
-  @Field()
-  mailTemplateId!: string;
+  @Field({
+    nullable: true,
+    description: 'Mail template to assign, or null to unassign.',
+  })
+  mailTemplateId?: string;
 }
