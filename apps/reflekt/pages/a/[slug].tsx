@@ -33,8 +33,22 @@ export const getStaticPaths = () => ({
   fallback: 'blocking',
 });
 
+const externalArticleRedirects: Record<string, string> = {
+  wikipolitik: 'https://wiki.reflekt.ch/',
+};
+
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const { id, slug } = params || {};
+
+  if (typeof slug === 'string' && externalArticleRedirects[slug]) {
+    return {
+      redirect: {
+        destination: externalArticleRedirects[slug],
+        permanent: true,
+      },
+    };
+  }
+
   const client = getApiClient(getApiUrl(), []);
 
   const [article] = await Promise.all([

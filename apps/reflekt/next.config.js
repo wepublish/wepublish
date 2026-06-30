@@ -85,11 +85,6 @@ const nextConfig = {
     return [
       ...((await wepNextConfig.redirects?.()) ?? []),
       {
-        source: '/a/wikipolitik',
-        destination: 'https://wiki.reflekt.ch/',
-        permanent: true,
-      },
-      {
         source: '/recherchen/wikipolitik',
         destination: 'https://wiki.reflekt.ch/',
         permanent: true,
