@@ -116,10 +116,6 @@ const HeroVimeoPlayer = styled('iframe')`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  min-width: 100%;
-  min-height: 100%;
-  width: max(100%, calc(100vh * 21 / 9)) !important;
-  height: max(100%, calc(100vw * 21 / 9)) !important;
   border: 0;
   pointer-events: none;
 `;
@@ -132,7 +128,7 @@ const HeroYouTubePlayer = styled(ReactPlayer)`
   min-width: 100%;
   min-height: 100%;
   width: max(100%, calc(100vh * 16 / 9)) !important;
-  height: max(100%, calc(100vw * 16 / 9)) !important;
+  height: max(100%, calc(100vw * 9 / 16)) !important;
   pointer-events: none;
 
   * {
@@ -153,13 +149,42 @@ type HeroVimeoVideoProps = {
   noLoop: boolean;
 };
 
-const HeroVimeoVideo = ({ videoId, noLoop }: HeroVimeoVideoProps) => (
-  <HeroVimeoPlayer
-    src={`https://player.vimeo.com/video/${videoId}?background=1&autoplay=1&muted=1&loop=${noLoop ? 0 : 1}&controls=0&title=0&byline=0&portrait=0`}
-    allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
-    title="hero video"
-  />
-);
+const HeroVimeoVideo = ({ videoId, noLoop }: HeroVimeoVideoProps) => {
+  const [aspectRatio, setAspectRatio] = useState(16 / 9);
+
+  useEffect(() => {
+    let active = true;
+
+    fetch(
+      `https://vimeo.com/api/oembed.json?width=1920&url=${encodeURIComponent(
+        `https://vimeo.com/${videoId}`
+      )}`
+    )
+      .then(response => (response.ok ? response.json() : null))
+      .then(data => {
+        if (active && data?.width > 0 && data?.height > 0) {
+          setAspectRatio(data.width / data.height);
+        }
+      })
+      .catch(() => undefined);
+
+    return () => {
+      active = false;
+    };
+  }, [videoId]);
+
+  return (
+    <HeroVimeoPlayer
+      src={`https://player.vimeo.com/video/${videoId}?background=1&autoplay=1&muted=1&loop=${noLoop ? 0 : 1}&controls=0&title=0&byline=0&portrait=0`}
+      allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
+      title="hero video"
+      style={{
+        width: `max(calc(100% + 4px), calc(100vh * ${aspectRatio}))`,
+        height: `max(calc(100% + 4px), calc(100vw / ${aspectRatio}))`,
+      }}
+    />
+  );
+};
 
 type HeroYouTubeVideoProps = {
   videoUrl: string;
