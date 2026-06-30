@@ -1,4 +1,10 @@
-import { composeMail, flattenMailData, renderTemplate } from './mail-renderer';
+import {
+  composeMail,
+  deriveComputedFields,
+  deriveDateFormats,
+  flattenMailData,
+  renderTemplate,
+} from './mail-renderer';
 
 describe('flattenMailData', () => {
   it('flattens nested objects with underscore-separated keys', () => {
@@ -31,6 +37,42 @@ describe('flattenMailData', () => {
     expect(result.count).toBe(3);
     expect(result.flag).toBe(true);
   });
+
+  it('serializes Date values to ISO strings instead of dropping them', () => {
+    const result = flattenMailData({
+      optional: {
+        subscription: { startsAt: new Date('2026-06-30T10:15:30Z') },
+      },
+    });
+
+    expect(result.optional_subscription_startsAt).toBe(
+      '2026-06-30T10:15:30.000Z'
+    );
+  });
+
+  it('serializes Date values inside arrays', () => {
+    const result = flattenMailData({
+      dates: [new Date('2026-01-01T00:00:00Z')],
+    });
+
+    expect(result.dates_0).toBe('2026-01-01T00:00:00.000Z');
+  });
+
+  it('strips sensitive fields wherever they appear', () => {
+    const result = flattenMailData({
+      optional: {
+        subscription: {
+          id: 'sub_1',
+          user: { email: 'a@b.ch', password: 'hash', totpSecret: 's' },
+        },
+      },
+    });
+
+    expect(result.optional_subscription_id).toBe('sub_1');
+    expect(result.optional_subscription_user_email).toBe('a@b.ch');
+    expect(result.optional_subscription_user_password).toBeUndefined();
+    expect(result.optional_subscription_user_totpSecret).toBeUndefined();
+  });
 });
 
 describe('renderTemplate', () => {
@@ -55,6 +97,105 @@ describe('renderTemplate', () => {
   it('returns an empty string for empty input', () => {
     expect(renderTemplate('', { a: 'x' })).toBe('');
     expect(renderTemplate(undefined, { a: 'x' })).toBe('');
+  });
+});
+
+describe('deriveDateFormats', () => {
+  it('adds localized format variants for ISO date values', () => {
+    const result = deriveDateFormats({
+      user_lastLogin: '2026-06-30T08:22:10.000Z',
+      user_name: 'Doe',
+    });
+
+    expect(result.user_lastLogin_date).toBe('30.06.2026');
+    expect(result.user_lastLogin_isoDate).toBe('2026-06-30');
+    expect(result.user_lastLogin_dateLong).toContain('2026');
+    expect(result.user_lastLogin_weekday).toBeTruthy();
+    expect(result.user_lastLogin_time).toMatch(/^\d{2}:\d{2}$/);
+    expect(result.user_lastLogin_dateTime).toContain('30.06.2026');
+    // non-date values get no variants
+    expect(result.user_name_date).toBeUndefined();
+  });
+
+  describe('timezone via TZ env', () => {
+    const originalTz = process.env.TZ;
+    afterEach(() => {
+      if (originalTz === undefined) {
+        delete process.env.TZ;
+      } else {
+        process.env.TZ = originalTz;
+      }
+    });
+
+    it('uses the TZ env var (shifting the day across the date line)', () => {
+      process.env.TZ = 'Asia/Tokyo'; // UTC+9
+      const result = deriveDateFormats({
+        at: '2026-06-30T23:00:00.000Z',
+      });
+      // 23:00Z on the 30th is 08:00 on July 1st in Tokyo.
+      expect(result.at_isoDate).toBe('2026-07-01');
+    });
+
+    it('falls back to Europe/Zurich on an invalid TZ', () => {
+      process.env.TZ = 'Not/AZone';
+      const result = deriveDateFormats({
+        at: '2026-06-30T08:22:10.000Z',
+      });
+      expect(result.at_date).toBe('30.06.2026');
+    });
+  });
+});
+
+describe('deriveComputedFields', () => {
+  it('converts Rappen to CHF and computes the period total', () => {
+    const result = deriveComputedFields({
+      optional: {
+        subscription: {
+          monthlyAmount: 1000,
+          currency: 'CHF',
+          paymentPeriodicity: 'yearly',
+        },
+      },
+    });
+
+    expect(result.optional_subscription_monthlyAmount_chf).toBe('10.00');
+    expect(result.optional_subscription_monthlyAmount_display).toBe(
+      'CHF 10.00'
+    );
+    expect(result.optional_subscription_periodMonths).toBe('12');
+    expect(result.optional_subscription_periodAmount).toBe('12000');
+    expect(result.optional_subscription_periodAmount_chf).toBe('120.00');
+    expect(result.optional_subscription_periodAmount_display).toBe(
+      'CHF 120.00'
+    );
+    expect(result.optional_subscription_paymentPeriodicity_display).toBe(
+      'jährlich'
+    );
+  });
+
+  it('builds the user full name', () => {
+    expect(
+      deriveComputedFields({ user: { firstName: 'Jane', name: 'Doe' } })
+        .user_fullName
+    ).toBe('Jane Doe');
+    expect(deriveComputedFields({ user: { name: 'Doe' } }).user_fullName).toBe(
+      'Doe'
+    );
+  });
+
+  it('sums invoice line items into a total', () => {
+    const result = deriveComputedFields({
+      optional: {
+        invoice: {
+          currency: 'CHF',
+          items: [{ amount: 1200 }, { amount: 300 }],
+        },
+      },
+    });
+
+    expect(result.optional_invoice_total).toBe('1500');
+    expect(result.optional_invoice_total_chf).toBe('15.00');
+    expect(result.optional_invoice_total_display).toBe('CHF 15.00');
   });
 });
 

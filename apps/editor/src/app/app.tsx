@@ -29,7 +29,6 @@ import { ImportableEventListView } from '@wepublish/event/import/editor';
 import {
   MailTemplateList,
   MemberPlanEdit,
-  PlaceholderList,
   SubscriptionFlowList,
   SystemMailList,
 } from '@wepublish/membership/editor';
@@ -970,14 +969,6 @@ export function App() {
               element={
                 <Base>
                   <MailTemplateList />
-                </Base>
-              }
-            />
-            <Route
-              path="mailtemplates/placeholders"
-              element={
-                <Base>
-                  <PlaceholderList />
                 </Base>
               }
             />

@@ -862,6 +862,19 @@
       "goToPlaceholders": "Available Placeholders",
       "htmlContent": "HTML content",
       "name": "Name",
+      "placeholders": "Placeholders",
+      "placeholdersHint": "Click to insert into the selected field",
+      "placeholderAlways": "Always available",
+      "placeholderContextLabel": "Show fields for",
+      "placeholderContexts": {
+        "account": "Account & login (creation, login link, password reset)",
+        "emailChange": "Email change",
+        "subscription": "Subscription (new, confirmed, deactivation, custom)",
+        "renewal": "Renewal — automated (success / failed)",
+        "invoiceCreation": "Invoice created",
+        "custom": "Custom"
+      },
+      "rawHtml": "HTML",
       "save": "Save",
       "showPlaceholders": "Placeholder Documentation",
       "status": "Status",
@@ -871,7 +884,9 @@
         "unused": "Unused"
       },
       "subject": "Subject",
-      "textContent": "Plain text content (fallback)"
+      "switchToWysiwygWarning": "Switching to the visual editor may remove HTML it cannot represent (tables, inline styles, custom attributes). Continue?",
+      "textContent": "Plain text content (fallback)",
+      "wysiwyg": "Visual"
     },
     "mailTemplateSelect": {
       "noMailSentSelectNow": "No mailing"

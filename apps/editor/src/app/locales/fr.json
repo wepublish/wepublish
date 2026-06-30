@@ -862,6 +862,9 @@
       "goToPlaceholders": "Espaces réservés disponibles",
       "htmlContent": "Contenu HTML",
       "name": "Nom",
+      "placeholders": "Espaces réservés",
+      "placeholdersHint": "Cliquer pour insérer dans le champ sélectionné",
+      "rawHtml": "HTML",
       "save": "Enregistrer",
       "showPlaceholders": "Documentation des espaces réservés",
       "status": "Statut",
@@ -871,7 +874,9 @@
         "unused": "Inutilisé"
       },
       "subject": "Objet",
-      "textContent": "Contenu en texte brut (repli)"
+      "switchToWysiwygWarning": "Le passage à l'éditeur visuel peut supprimer le HTML qu'il ne peut pas représenter (tableaux, styles en ligne, attributs personnalisés). Continuer ?",
+      "textContent": "Contenu en texte brut (repli)",
+      "wysiwyg": "Visuel"
     },
     "mailTemplateSelect": {
       "noMailSentSelectNow": "pas d'envoi mail"
