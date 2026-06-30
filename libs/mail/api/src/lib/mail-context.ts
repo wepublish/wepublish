@@ -5,10 +5,17 @@ import { Injectable } from '@nestjs/common';
 import { MailController, MailControllerConfig } from './mail.controller';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 import { SecretCrypto } from '@wepublish/settings/api';
-import { composeMail } from './mail-renderer';
+import { composeMail, MailTemplateContent } from './mail-renderer';
 
 export interface SendComposedMailProps {
   readonly mailTemplateId: string;
+  readonly recipient: string;
+  readonly mailLogID: string;
+  readonly data: Record<string, any>;
+}
+
+export interface SendComposedContentProps {
+  readonly content: MailTemplateContent;
   readonly recipient: string;
   readonly mailLogID: string;
   readonly data: Record<string, any>;
@@ -160,6 +167,38 @@ export class MailContext implements MailContextInterface {
     ).getConfig();
 
     const composed = composeMail(template, data);
+
+    await this.mailProvider.sendMail({
+      mailLogID,
+      recipient,
+      replyToAddress: config?.replyToAddress ?? config?.fromAddress ?? '',
+      subject: composed.subject,
+      message: composed.message,
+      messageHtml: composed.messageHtml,
+    });
+  }
+
+  /**
+   * Compose ad-hoc content (not a stored template) locally and send it. Used
+   * for test mails from the editor, where the draft isn't saved yet.
+   */
+  async sendComposedContent({
+    content,
+    recipient,
+    data,
+    mailLogID,
+  }: SendComposedContentProps): Promise<void> {
+    if (!this.mailProvider) {
+      throw new Error('MailProvider is not set!');
+    }
+
+    const config = await new MailContextConfig(
+      this.prisma,
+      this.kv,
+      this.mailProvider.id
+    ).getConfig();
+
+    const composed = composeMail(content, data);
 
     await this.mailProvider.sendMail({
       mailLogID,

@@ -1732,10 +1732,33 @@ export type MailTemplateModel = {
   textContent?: Maybe<Scalars['String']>;
 };
 
+export type MailTemplatePreviewInput = {
+  /** Mail type / context id, e.g. "renewal". */
+  contextId: Scalars['String'];
+  htmlContent: Scalars['String'];
+  subject: Scalars['String'];
+  /** Subscription to take sample data from. */
+  subscriptionId?: InputMaybe<Scalars['String']>;
+  textContent?: InputMaybe<Scalars['String']>;
+};
+
+export type MailTemplatePreviewModel = {
+  __typename?: 'MailTemplatePreviewModel';
+  html: Scalars['String'];
+  subject: Scalars['String'];
+  text?: Maybe<Scalars['String']>;
+};
+
 export type MailTemplateRef = {
   __typename?: 'MailTemplateRef';
   id: Scalars['String'];
   name: Scalars['String'];
+};
+
+export type MailTemplateSubscriptionOption = {
+  __typename?: 'MailTemplateSubscriptionOption';
+  id: Scalars['String'];
+  label: Scalars['String'];
 };
 
 export type MailchimpInterestGroup = {
@@ -2078,6 +2101,8 @@ export type Mutation = {
   sendJWTLogin: Scalars['String'];
   /** Sends a password reset email with a scoped JWT token. Always returns the email to prevent enumeration. */
   sendPasswordResetEmail: Scalars['String'];
+  /** Send a test mail for a draft template */
+  sendTestMailTemplate?: Maybe<Scalars['Boolean']>;
   /** This mutation sends a login link to the email if the user exists. Method will always return email address */
   sendWebsiteLogin: Scalars['String'];
   /** Sends a test email for the given event */
@@ -2824,6 +2849,10 @@ export type MutationSendJwtLoginArgs = {
 
 export type MutationSendPasswordResetEmailArgs = {
   email: Scalars['String'];
+};
+
+export type MutationSendTestMailTemplateArgs = {
+  input: SendTestMailTemplateInput;
 };
 
 export type MutationSendWebsiteLoginArgs = {
@@ -4270,6 +4299,10 @@ export type Query = {
   mailProviderSetting: SettingMailProvider;
   /** Returns all mail provider settings. */
   mailProviderSettings: Array<SettingMailProvider>;
+  /** Render a draft mail template with a mail type's sample data */
+  mailTemplatePreview: MailTemplatePreviewModel;
+  /** Search subscriptions to use as sample data for previews/tests */
+  mailTemplateSubscriptions: Array<MailTemplateSubscriptionOption>;
   /** Return all mail templates */
   mailTemplates: Array<MailTemplateModel>;
   /** Fetches available interest groups for a Mailchimp list. */
@@ -4646,6 +4679,14 @@ export type QueryMailProviderSettingsArgs = {
   filter?: InputMaybe<SettingMailProviderFilter>;
 };
 
+export type QueryMailTemplatePreviewArgs = {
+  input: MailTemplatePreviewInput;
+};
+
+export type QueryMailTemplateSubscriptionsArgs = {
+  query?: InputMaybe<Scalars['String']>;
+};
+
 export type QueryMailchimpInterestGroupsArgs = {
   configId: Scalars['String'];
   listId: Scalars['String'];
@@ -5009,6 +5050,14 @@ export type RichTextBlockInput = {
   blockStyleName?: InputMaybe<Scalars['String']>;
   disabled?: InputMaybe<Scalars['Boolean']>;
   richText?: InputMaybe<Scalars['RichText']>;
+};
+
+export type SendTestMailTemplateInput = {
+  contextId: Scalars['String'];
+  htmlContent: Scalars['String'];
+  subject: Scalars['String'];
+  subscriptionId?: InputMaybe<Scalars['String']>;
+  textContent?: InputMaybe<Scalars['String']>;
 };
 
 export type SensitiveDataUser = BaseUser & {

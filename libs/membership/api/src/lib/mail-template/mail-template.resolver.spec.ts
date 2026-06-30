@@ -6,6 +6,7 @@ import {
   MailTemplateStatus,
 } from '@wepublish/mail/api';
 import { MailTemplatesResolver } from './mail-template.resolver';
+import { MailTemplateService } from './mail-template.service';
 import { INestApplication, Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
@@ -81,6 +82,12 @@ const mailContextMock = {
   getUsedTemplateIdentifiers: jest.fn((): string[] => [mockTemplate2.id]),
 };
 
+const mailTemplateServiceMock = {
+  deleteMailTemplate: jest.fn(async () => undefined),
+  preview: jest.fn(async () => ({ subject: 's', html: 'h', text: undefined })),
+  sendTest: jest.fn(async () => undefined),
+};
+
 @Module({
   imports: [
     GraphQLModule.forRoot<ApolloDriverConfig>({
@@ -95,6 +102,7 @@ const mailContextMock = {
   ],
   providers: [
     MailTemplatesResolver,
+    { provide: MailTemplateService, useValue: mailTemplateServiceMock },
     {
       provide: APP_GUARD,
       useClass: PermissionsGuard,
@@ -121,6 +129,7 @@ describe('MailTemplatesResolver', () => {
         MailTemplatesResolver,
         { provide: PrismaClient, useValue: prismaServiceMock },
         { provide: MailContext, useValue: mailContextMock },
+        { provide: MailTemplateService, useValue: mailTemplateServiceMock },
       ],
     }).compile();
 
@@ -172,11 +181,11 @@ describe('MailTemplatesResolver', () => {
     });
   });
 
-  it('deletes a mail template', async () => {
+  it('deletes a mail template via the service', async () => {
     await resolver.deleteMailTemplate(mockTemplate1.id);
-    expect(prismaServiceMock.mailTemplate.delete).toHaveBeenCalledWith({
-      where: { id: mockTemplate1.id },
-    });
+    expect(mailTemplateServiceMock.deleteMailTemplate).toHaveBeenCalledWith(
+      mockTemplate1.id
+    );
   });
 
   it('computes the template status', async () => {

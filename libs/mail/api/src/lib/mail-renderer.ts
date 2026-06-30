@@ -270,26 +270,28 @@ function deriveSubscriptionMoney(
 export function deriveComputedFields(
   data: Record<string, any>
 ): Record<string, string> {
-  const optional = data?.optional ?? {};
+  const optional = data?.['optional'] ?? {};
+  const user = data?.['user'] ?? {};
   const derived: Record<string, string> = {
-    ...deriveSubscriptionMoney('optional_subscription', optional.subscription),
+    ...deriveSubscriptionMoney(
+      'optional_subscription',
+      optional['subscription']
+    ),
     ...deriveSubscriptionMoney(
       'optional_subscriptionToCreateInvoice',
-      optional.subscriptionToCreateInvoice
+      optional['subscriptionToCreateInvoice']
     ),
   };
 
   // Full name (greeting), e.g. "Jane Doe".
-  const fullName = [data?.user?.firstName, data?.user?.name]
-    .filter(Boolean)
-    .join(' ');
+  const fullName = [user['firstName'], user['name']].filter(Boolean).join(' ');
   if (fullName) {
     derived['user_fullName'] = fullName;
   }
 
   // Invoice total from line items (Rappen), wherever the items live.
   const items: any[] | undefined =
-    optional.invoice?.items ?? optional.items ?? undefined;
+    optional['invoice']?.items ?? optional['items'] ?? undefined;
 
   if (Array.isArray(items) && items.length) {
     const totalRappen = items.reduce(
@@ -297,7 +299,9 @@ export function deriveComputedFields(
       0
     );
     const currency =
-      optional.invoice?.currency ?? optional.subscription?.currency ?? 'CHF';
+      optional['invoice']?.currency ??
+      optional['subscription']?.currency ??
+      'CHF';
 
     derived['optional_invoice_total'] = String(totalRappen);
     derived['optional_invoice_total_chf'] = formatRappenAsDecimal(totalRappen);

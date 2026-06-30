@@ -858,7 +858,24 @@
       "content": "Content",
       "create": "Create template",
       "description": "Description",
-      "edit": "Edit template",
+      "edit": {
+        "createHeader": "Create mail template",
+        "editHeader": "Edit mail template",
+        "saveAndClose": "Save & close",
+        "nameRequired": "Name is required.",
+        "testSent": "Test mail sent.",
+        "previewAndTest": "Preview & test",
+        "mailType": "Mail type",
+        "sampleSubscription": "Sample data from subscription",
+        "sampleDataFallback": "Sample data (none selected)",
+        "testRecipient": "Test recipient",
+        "testRecipientPlaceholder": "Your account email",
+        "preview": "Preview",
+        "sendTest": "Send test",
+        "selectMailType": "Please select a mail type first.",
+        "selectMailTypePlaceholder": "Select a mail type…",
+        "testRecipientHint": "Test mails are always sent to your own account."
+      },
       "goToPlaceholders": "Available Placeholders",
       "htmlContent": "HTML content",
       "name": "Name",
@@ -886,7 +903,9 @@
       "subject": "Subject",
       "switchToWysiwygWarning": "Switching to the visual editor may remove HTML it cannot represent (tables, inline styles, custom attributes). Continue?",
       "textContent": "Plain text content (fallback)",
-      "wysiwyg": "Visual"
+      "wysiwyg": "Visual",
+      "delete": "Delete",
+      "deleteConfirm": "Delete this mail template?"
     },
     "mailTemplateSelect": {
       "noMailSentSelectNow": "No mailing"
@@ -1544,7 +1563,7 @@
       "totpDisabled": "Two-factor authentication is not yet configured. The user will be prompted to set it up on their next editor login.",
       "totpExemptInfo": "This user is exempt from the two-factor authentication requirement.",
       "totpExemptLabel": "Exempt from 2FA requirement",
-      "totpExemptWarning": "\u26a0\ufe0f SECURITY WARNING \u26a0\ufe0f\n\nYou are about to DISABLE the two-factor authentication requirement for this user!\n\nThis significantly reduces the security of this account. The user will be able to log into the editor with only a password, without any second factor.\n\nThis should only be used in exceptional circumstances.\n\nAre you sure you want to proceed?",
+      "totpExemptWarning": "⚠️ SECURITY WARNING ⚠️\n\nYou are about to DISABLE the two-factor authentication requirement for this user!\n\nThis significantly reduces the security of this account. The user will be able to log into the editor with only a password, without any second factor.\n\nThis should only be used in exceptional circumstances.\n\nAre you sure you want to proceed?",
       "properties": "Properties",
       "resetPassword": "Reset Password",
       "resetPasswordFor": "Reset the password for {{userName}}",

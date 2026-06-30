@@ -1589,9 +1589,31 @@ type MailTemplateModel {
   textContent: String
 }
 
+input MailTemplatePreviewInput {
+  """Mail type / context id, e.g. "renewal"."""
+  contextId: String!
+  htmlContent: String!
+  subject: String!
+
+  """Subscription to take sample data from."""
+  subscriptionId: String
+  textContent: String
+}
+
+type MailTemplatePreviewModel {
+  html: String!
+  subject: String!
+  text: String
+}
+
 type MailTemplateRef {
   id: String!
   name: String!
+}
+
+type MailTemplateSubscriptionOption {
+  id: String!
+  label: String!
 }
 
 type MailchimpInterestGroup {
@@ -2077,6 +2099,9 @@ type Mutation {
   Sends a password reset email with a scoped JWT token. Always returns the email to prevent enumeration.
   """
   sendPasswordResetEmail(email: String!): String!
+
+  """Send a test mail for a draft template"""
+  sendTestMailTemplate(input: SendTestMailTemplateInput!): Boolean
 
   """
   This mutation sends a login link to the email if the user exists. Method will always return email address
@@ -3127,6 +3152,12 @@ type Query {
   """Returns all mail provider settings."""
   mailProviderSettings(filter: SettingMailProviderFilter): [SettingMailProvider!]!
 
+  """Render a draft mail template with a mail type's sample data"""
+  mailTemplatePreview(input: MailTemplatePreviewInput!): MailTemplatePreviewModel!
+
+  """Search subscriptions to use as sample data for previews/tests"""
+  mailTemplateSubscriptions(query: String): [MailTemplateSubscriptionOption!]!
+
   """Return all mail templates"""
   mailTemplates: [MailTemplateModel!]!
 
@@ -3440,6 +3471,14 @@ input RichTextBlockInput {
   blockStyleName: String
   disabled: Boolean
   richText: RichText
+}
+
+input SendTestMailTemplateInput {
+  contextId: String!
+  htmlContent: String!
+  subject: String!
+  subscriptionId: String
+  textContent: String
 }
 
 type SensitiveDataUser implements BaseUser {

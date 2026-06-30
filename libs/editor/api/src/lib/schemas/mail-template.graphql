@@ -23,6 +23,25 @@ mutation DeleteMailTemplate($id: String!) {
   deleteMailTemplate(id: $id)
 }
 
+query MailTemplateSubscriptions($query: String) {
+  mailTemplateSubscriptions(query: $query) {
+    id
+    label
+  }
+}
+
+query MailTemplatePreview($input: MailTemplatePreviewInput!) {
+  mailTemplatePreview(input: $input) {
+    subject
+    html
+    text
+  }
+}
+
+mutation SendTestMailTemplate($input: SendTestMailTemplateInput!) {
+  sendTestMailTemplate(input: $input)
+}
+
 fragment FullMailTemplate on MailTemplateModel {
   id
   name

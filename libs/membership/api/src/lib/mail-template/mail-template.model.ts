@@ -57,3 +57,63 @@ export class MailTemplateInput {
   @Field({ nullable: true })
   textContent?: string;
 }
+
+@ObjectType()
+export class MailTemplatePreviewModel {
+  @Field()
+  subject!: string;
+
+  @Field()
+  html!: string;
+
+  @Field({ nullable: true })
+  text?: string;
+}
+
+@ObjectType()
+export class MailTemplateSubscriptionOption {
+  @Field()
+  id!: string;
+
+  @Field()
+  label!: string;
+}
+
+@InputType()
+export class MailTemplatePreviewInput {
+  @Field({ description: 'Mail type / context id, e.g. "renewal".' })
+  contextId!: string;
+
+  @Field({
+    nullable: true,
+    description: 'Subscription to take sample data from.',
+  })
+  subscriptionId?: string;
+
+  @Field()
+  subject!: string;
+
+  @Field()
+  htmlContent!: string;
+
+  @Field({ nullable: true })
+  textContent?: string;
+}
+
+@InputType()
+export class SendTestMailTemplateInput {
+  @Field()
+  contextId!: string;
+
+  @Field({ nullable: true })
+  subscriptionId?: string;
+
+  @Field()
+  subject!: string;
+
+  @Field()
+  htmlContent!: string;
+
+  @Field({ nullable: true })
+  textContent?: string;
+}

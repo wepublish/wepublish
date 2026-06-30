@@ -172,7 +172,6 @@
         "updatedAtDate": "{{updatedAtDate, ccc PP pp}}"
       }
     },
-
     "authors": {
       "overview": {
         "action": "Action",
@@ -858,7 +857,24 @@
       "content": "Contenu",
       "create": "Créer un modèle",
       "description": "Description",
-      "edit": "Modifier le modèle",
+      "edit": {
+        "createHeader": "Créer un modèle",
+        "editHeader": "Modifier le modèle",
+        "saveAndClose": "Enregistrer et fermer",
+        "nameRequired": "Le nom est requis.",
+        "testSent": "E-mail de test envoyé.",
+        "previewAndTest": "Aperçu & test",
+        "mailType": "Type de courriel",
+        "sampleSubscription": "Données d’exemple depuis un abonnement",
+        "sampleDataFallback": "Données d’exemple (aucun sélectionné)",
+        "testRecipient": "Destinataire du test",
+        "testRecipientPlaceholder": "Votre e-mail de compte",
+        "preview": "Aperçu",
+        "sendTest": "Envoyer un test",
+        "selectMailType": "Veuillez d’abord choisir un type de courriel.",
+        "selectMailTypePlaceholder": "Choisir un type de courriel…",
+        "testRecipientHint": "Les e-mails de test sont toujours envoyés à votre propre compte."
+      },
       "goToPlaceholders": "Espaces réservés disponibles",
       "htmlContent": "Contenu HTML",
       "name": "Nom",
@@ -876,7 +892,9 @@
       "subject": "Objet",
       "switchToWysiwygWarning": "Le passage à l'éditeur visuel peut supprimer le HTML qu'il ne peut pas représenter (tableaux, styles en ligne, attributs personnalisés). Continuer ?",
       "textContent": "Contenu en texte brut (repli)",
-      "wysiwyg": "Visuel"
+      "wysiwyg": "Visuel",
+      "delete": "Supprimer",
+      "deleteConfirm": "Supprimer ce modèle de courriel ?"
     },
     "mailTemplateSelect": {
       "noMailSentSelectNow": "pas d'envoi mail"
@@ -1446,7 +1464,7 @@
       "totpDisabled": "L'authentification à deux facteurs n'est pas encore configurée. L'utilisateur sera invité à la configurer lors de sa prochaine connexion à l'éditeur.",
       "totpExemptInfo": "Cet utilisateur est exempté de l'exigence d'authentification à deux facteurs.",
       "totpExemptLabel": "Exempter de l'exigence 2FA",
-      "totpExemptWarning": "\u26a0\ufe0f AVERTISSEMENT DE SÉCURITÉ \u26a0\ufe0f\n\nVous êtes sur le point de DÉSACTIVER l'exigence d'authentification à deux facteurs pour cet utilisateur !\n\nCela réduit considérablement la sécurité de ce compte. L'utilisateur pourra se connecter à l'éditeur avec un simple mot de passe, sans second facteur.\n\nCela ne devrait être utilisé que dans des circonstances exceptionnelles.\n\nÊtes-vous sûr de vouloir continuer ?",
+      "totpExemptWarning": "⚠️ AVERTISSEMENT DE SÉCURITÉ ⚠️\n\nVous êtes sur le point de DÉSACTIVER l'exigence d'authentification à deux facteurs pour cet utilisateur !\n\nCela réduit considérablement la sécurité de ce compte. L'utilisateur pourra se connecter à l'éditeur avec un simple mot de passe, sans second facteur.\n\nCela ne devrait être utilisé que dans des circonstances exceptionnelles.\n\nÊtes-vous sûr de vouloir continuer ?",
       "resetPassword": "Réinitialiser le mot de passe",
       "resetPasswordFor": "Réinitialiser le mot de passe de {{userName}}",
       "selectUserImage": "Choisir une photo de profil",
