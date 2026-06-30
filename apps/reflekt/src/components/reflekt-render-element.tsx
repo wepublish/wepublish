@@ -8,7 +8,7 @@ import {
   BuilderRenderElementProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { ComponentType, ReactNode, useContext } from 'react';
+import { ComponentType, ReactNode, useContext, useMemo } from 'react';
 
 import { RichtextVariantContext } from './reflekt-richtext-variant-context';
 
@@ -57,20 +57,25 @@ export function ReflektRenderElement({
   const ReflektUnorderedList = UnorderedList as ReflektUnorderedListType;
   const ReflektListItem = ListItem as ReflektListItemType;
 
-  const children = (element.content as RichtextElements[] | undefined)?.map(
-    (child, index) => (
-      <RenderElementOverride
-        key={index}
-        element={child}
-      />
-    )
+  const children = useMemo(
+    () =>
+      (element.content as RichtextElements[] | undefined)?.map(
+        (child, index) => (
+          <RenderElementOverride
+            key={index}
+            element={child}
+          />
+        )
+      ),
+    [RenderElementOverride, element.content]
   );
 
   switch (element.type) {
     case 'heading': {
       const id = headingId(element);
+      const level = element.attrs.level ?? 1;
 
-      if (element.attrs.level === 1) {
+      if (level <= 3) {
         return (
           <H3
             component="h2"
@@ -83,7 +88,7 @@ export function ReflektRenderElement({
         );
       }
 
-      if (element.attrs.level === 2) {
+      if (level === 4) {
         return (
           <H4
             component="h3"
@@ -96,7 +101,7 @@ export function ReflektRenderElement({
         );
       }
 
-      if (element.attrs.level === 3) {
+      if (level === 5) {
         return (
           <H5
             component="h4"
@@ -111,6 +116,7 @@ export function ReflektRenderElement({
 
       return (
         <H6
+          component="h5"
           gutterBottom={false}
           css={lastChildNoGutter}
           id={id}
