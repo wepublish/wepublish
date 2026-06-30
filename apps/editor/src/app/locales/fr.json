@@ -2293,6 +2293,9 @@
         "Event": "Événement",
         "Custom": "Personnalisé"
       }
+    },
+    "systemMails": {
+      "noTemplate": "Aucun modèle (ne pas envoyer)"
     }
   }
 }

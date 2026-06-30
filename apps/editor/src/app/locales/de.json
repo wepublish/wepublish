@@ -2425,6 +2425,9 @@
         "Event": "Event",
         "Custom": "Custom"
       }
+    },
+    "systemMails": {
+      "noTemplate": "Keine Vorlage (nicht senden)"
     }
   }
 }

@@ -1486,7 +1486,8 @@
       "explanation": "You can view the available templates in the 'Mail templates' settings entry.",
       "template": "Mail template",
       "test": "Send test mail",
-      "title": "System Mails"
+      "title": "System Mails",
+      "noTemplate": "No template (do not send)"
     },
     "tags": {
       "overview": {
