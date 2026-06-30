@@ -189,19 +189,19 @@ export const RichtextEditor = forwardRef<HTMLDivElement, RichtextEditorProps>(
         return;
       }
 
-      editor.setEditable(!disabled);
+      editor.setEditable(!disabled, false);
     }, [editorReady, disabled]);
 
     useEffect(() => {
       if (editorReady && defaultValue) {
-        editor.commands.setContent(defaultValue);
+        editor.commands.setContent(defaultValue, { emitUpdate: false });
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
       if (editorReady && value && !equals(value, editor.getJSON())) {
-        editor.commands.setContent(value);
+        editor.commands.setContent(value, { emitUpdate: false });
       }
     }, [value, editorReady]);
 
