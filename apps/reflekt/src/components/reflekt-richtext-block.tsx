@@ -1,4 +1,4 @@
-import styled from '@emotion/styled';
+import { css, Theme } from '@emotion/react';
 import { RichTextBlockWrapper } from '@wepublish/block-content/website';
 import {
   BuilderRichTextBlockProps,
@@ -7,9 +7,9 @@ import {
 
 import { ReflektRenderRichtextType } from './reflekt-render-richtext';
 
-const ReflektRichTextBlockWrapper = styled(RichTextBlockWrapper)`
+const headingListGap = (theme: Theme) => css`
   & > .MuiTypography-h4 + :is(ul, ol) {
-    margin-top: ${({ theme }) => theme.spacing(3)};
+    margin-top: ${theme.spacing(3)};
   }
 `;
 
@@ -25,11 +25,14 @@ export const ReflektRichTextBlock = ({
   const ReflektRenderRichtext = RenderRichtext as ReflektRenderRichtextType;
 
   return (
-    <ReflektRichTextBlockWrapper className={className}>
+    <RichTextBlockWrapper
+      className={className}
+      css={headingListGap}
+    >
       <ReflektRenderRichtext
         document={richText}
         variant={variant}
       />
-    </ReflektRichTextBlockWrapper>
+    </RichTextBlockWrapper>
   );
 };
