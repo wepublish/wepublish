@@ -23,6 +23,7 @@ import {
 import { Maybe } from 'graphql/jsutils/Maybe';
 import { allPass, anyPass } from 'ramda';
 
+import { anchorId } from '../anchor-id';
 import { ReflektBlockStyles } from '../block-styles/reflekt-block-styles';
 import { TeaserWrapper } from '../teasers/reflekt-teaser';
 
@@ -154,7 +155,12 @@ export const TeaserSlotsTopic = ({
         className={className}
         blockStyle={blockStyle ?? undefined}
       >
-        <Typography variant={'teaserSlotsTitle'}>{title}</Typography>
+        <Typography
+          variant={'teaserSlotsTitle'}
+          id={anchorId(title)}
+        >
+          {title}
+        </Typography>
         {blockStyle && endsWithAny(['Recherchen', 'News'], blockStyle) && (
           <>
             <TeaserSlider

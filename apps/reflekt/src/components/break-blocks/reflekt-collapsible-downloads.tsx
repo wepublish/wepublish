@@ -15,6 +15,7 @@ type ReflektRichTextBlockType = ComponentType<
   BuilderRichTextBlockProps & { variant?: string }
 >;
 
+import { anchorId } from '../anchor-id';
 import { ReflektBlockStyles } from '../block-styles/reflekt-block-styles';
 import {
   CollapsibleContentWrapper,
@@ -46,13 +47,14 @@ export const CollapsibleDownloads = ({
 
   const ReflektRichText = RichText as ReflektRichTextBlockType;
   const thisId = `AC-${React.useId()}`;
+  const titleId = anchorId(text);
 
   return (
     <CollapsibleDownloadsWrapper className={className}>
       <AccordionSummary
         expandIcon={<ExpandIcon />}
         aria-controls={`${thisId}-panel-content`}
-        id={`${thisId}-panel-header`}
+        id={titleId ?? `${thisId}-panel-header`}
       >
         {text}
       </AccordionSummary>

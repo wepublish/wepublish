@@ -14,6 +14,7 @@ import {
 } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
 
+import { anchorId } from '../anchor-id';
 import { ReflektBlockStyles } from '../block-styles/reflekt-block-styles';
 
 export const isTeaserSlotsCredits = (
@@ -64,7 +65,14 @@ export const TeaserSlotsCredits = ({
 
   return (
     <TeaserSlotsCreditsWrapper className={className}>
-      {title && <Typography variant={'teaserSlotsTitle'}>{title}</Typography>}
+      {title && (
+        <Typography
+          variant={'teaserSlotsTitle'}
+          id={anchorId(title)}
+        >
+          {title}
+        </Typography>
+      )}
       <TeaserSlotsCreditsTeasers>
         {filledTeasers.map((teaser, index) => (
           <Teaser

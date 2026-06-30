@@ -12,6 +12,7 @@ import { allPass } from 'ramda';
 import React from 'react';
 import { MdArrowDownward } from 'react-icons/md';
 
+import { anchorId } from '../anchor-id';
 import { ReflektBlockStyles } from '../block-styles/reflekt-block-styles';
 
 export const CollapsibleContentWrapper = styled(Accordion)`
@@ -54,13 +55,14 @@ export const CollapsibleContent = ({
     blocks: { RichText },
   } = useWebsiteBuilder();
   const thisId = `AC-${React.useId().replace(/:/g, '')}`;
+  const titleId = anchorId(text);
 
   return (
     <CollapsibleContentWrapper className={className}>
       <AccordionSummary
         expandIcon={<ExpandIcon />}
         aria-controls={`${thisId}-panel-content`}
-        id={`${thisId}-panel-header`}
+        id={titleId ?? `${thisId}-panel-header`}
       >
         {text}
       </AccordionSummary>
