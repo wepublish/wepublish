@@ -1,5 +1,6 @@
 import {
   Args,
+  Int,
   Mutation,
   Parent,
   Query,
@@ -138,6 +139,14 @@ export class MailTemplatesResolver {
   })
   async deleteMailTemplate(@Args('id') id: string) {
     await this.mailTemplateService.deleteMailTemplate(id);
+  }
+
+  @Permissions(CanUpdateMailTemplates)
+  @Mutation(() => Int, {
+    description: `Import HTML/subject from the mail provider, overwriting local content`,
+  })
+  async importMailTemplatesFromProvider(): Promise<number> {
+    return this.mailTemplateService.importFromProvider();
   }
 
   @Permissions(CanSendTestMailTemplates)

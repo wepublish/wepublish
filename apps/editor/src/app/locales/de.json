@@ -869,7 +869,43 @@
         "sendTest": "Test senden",
         "selectMailType": "Bitte zuerst einen Mail-Typ wählen.",
         "selectMailTypePlaceholder": "Mail-Typ wählen…",
-        "testRecipientHint": "Testmails werden immer an dein eigenes Konto gesendet."
+        "testRecipientHint": "Testmails werden immer an dein eigenes Konto gesendet.",
+        "generateTextFromHtml": "Aus HTML erzeugen",
+        "background": "Hintergrund",
+        "contentWidth": "Breite (px)"
+      },
+      "editor": {
+        "undo": "Rückgängig",
+        "redo": "Wiederholen",
+        "bold": "Fett",
+        "italic": "Kursiv",
+        "underline": "Unterstrichen",
+        "strikethrough": "Durchgestrichen",
+        "bulletedList": "Aufzählung",
+        "numberedList": "Nummerierte Liste",
+        "horizontalRule": "Trennlinie",
+        "alignLeft": "Linksbündig",
+        "alignCenter": "Zentriert",
+        "alignRight": "Rechtsbündig",
+        "fontSize": "Grösse",
+        "textColor": "Textfarbe",
+        "link": "Link",
+        "image": "Bild",
+        "desktop": "Desktop",
+        "tablet": "Tablet",
+        "mobile": "Mobil",
+        "linkTitle": "Link",
+        "linkUrl": "URL",
+        "linkText": "Linktext",
+        "linkNewTab": "In neuem Tab öffnen",
+        "imageTitle": "Bild einfügen",
+        "imageUrl": "Bild-URL",
+        "imageAlt": "Alternativtext",
+        "imageWidth": "Breite (px, optional)",
+        "chooseFromLibrary": "Aus Bibliothek wählen",
+        "cancel": "Abbrechen",
+        "apply": "Übernehmen",
+        "insert": "Einfügen"
       },
       "goToPlaceholders": "Verfügbare Placeholders",
       "htmlContent": "HTML-Inhalt",
@@ -967,7 +1003,11 @@
         "desktop": "Desktop",
         "tablet": "Tablet",
         "mobile": "Mobil"
-      }
+      },
+      "importFromProvider": "Vom Provider importieren",
+      "importConfirm": "Importieren & überschreiben",
+      "importWarning": "Dies überschreibt HTML und Betreff aller Vorlagen mit dem Inhalt des Mail-Providers. Lokale Änderungen gehen verloren.",
+      "importDone": "{{count}} Vorlage(n) vom Provider importiert."
     },
     "mailTemplateSelect": {
       "noMailSentSelectNow": "Kein Mailversand"

@@ -25,6 +25,7 @@ import {
   Form,
   IconButton,
   Input,
+  InputNumber,
   Message,
   Modal,
   Panel,
@@ -36,14 +37,20 @@ import { MdLaptopMac, MdPhoneIphone, MdTabletMac } from 'react-icons/md';
 import { DEFAULT_MUTATION_OPTIONS } from '../common';
 import { HtmlSourceEditor, HtmlSourceEditorHandle } from './html-source-editor';
 import { HtmlVisualEditor, HtmlVisualEditorHandle } from './html-visual-editor';
-import { createEmptyEmailHtml } from './mail-html';
+import {
+  applyShellSettings,
+  createEmptyEmailHtml,
+  DEFAULT_BACKGROUND_COLOR,
+  DEFAULT_CONTENT_WIDTH,
+  readShellSettings,
+} from './mail-html';
 import { MAIL_PLACEHOLDER_CONTEXTS } from './mail-placeholders';
 import { PlaceholderPicker } from './placeholder-picker';
 
 const DEVICE_WIDTH: Record<'desktop' | 'tablet' | 'mobile', number | string> = {
   desktop: '100%',
-  tablet: 768,
-  mobile: 375,
+  tablet: 820,
+  mobile: 390,
 };
 
 // Preview-only styling so a narrow (mobile/tablet) preview wraps like a real
@@ -68,6 +75,10 @@ function MailTemplateEdit() {
   const [subject, setSubject] = useState('');
   const [textContent, setTextContent] = useState('');
   const [bodyMode, setBodyMode] = useState<'visual' | 'html'>('visual');
+  const [backgroundColor, setBackgroundColor] = useState(
+    DEFAULT_BACKGROUND_COLOR
+  );
+  const [contentWidth, setContentWidth] = useState(DEFAULT_CONTENT_WIDTH);
   const [editorKey, setEditorKey] = useState(0);
   const [activeField, setActiveField] = useState<'subject' | 'body'>('body');
 
@@ -121,6 +132,9 @@ function MailTemplateEdit() {
       setSubject(template.subject);
       setTextContent(template.textContent ?? '');
       htmlRef.current = template.htmlContent || createEmptyEmailHtml();
+      const shell = readShellSettings(htmlRef.current);
+      setBackgroundColor(shell.backgroundColor);
+      setContentWidth(shell.contentWidth);
       setEditorKey(k => k + 1);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -128,6 +142,18 @@ function MailTemplateEdit() {
 
   const handleHtmlChange = (html: string) => {
     htmlRef.current = html;
+  };
+
+  // Rewrite the gray frame color / content width on the current shell and
+  // remount the editor so the change is visible immediately.
+  const applyShell = (
+    next: Partial<{ backgroundColor: string; contentWidth: number }>
+  ) => {
+    const settings = { backgroundColor, contentWidth, ...next };
+    setBackgroundColor(settings.backgroundColor);
+    setContentWidth(settings.contentWidth);
+    htmlRef.current = applyShellSettings(htmlRef.current, settings);
+    setEditorKey(k => k + 1);
   };
 
   const switchMode = (mode: 'visual' | 'html') => {
@@ -150,6 +176,29 @@ function MailTemplateEdit() {
     } else {
       sourceRef.current?.insertText(token);
     }
+  };
+
+  // Derive a plain-text fallback from the current HTML body (block elements
+  // become line breaks; tags/styles are stripped).
+  const generateTextFromHtml = () => {
+    const doc = new DOMParser().parseFromString(htmlRef.current, 'text/html');
+    const root = doc.querySelector('.mail-body') ?? doc.body;
+    // Keep links as "label (url)" (or just the url if there's no distinct label).
+    root.querySelectorAll('a[href]').forEach(anchor => {
+      const href = anchor.getAttribute('href') ?? '';
+      const label = (anchor.textContent ?? '').trim();
+      anchor.replaceWith(label && label !== href ? `${label} (${href})` : href);
+    });
+    root.querySelectorAll('br').forEach(br => br.replaceWith('\n'));
+    root
+      .querySelectorAll('p,div,h1,h2,h3,li,tr')
+      .forEach(el => el.append('\n'));
+    const text = (root.textContent ?? '')
+      .replace(/[ \t]+/g, ' ')
+      .replace(/ *\n */g, '\n')
+      .replace(/\n{3,}/g, '\n\n')
+      .trim();
+    setTextContent(text);
   };
 
   const buildInput = () => ({
@@ -434,6 +483,8 @@ function MailTemplateEdit() {
         <div style={{ flex: 1, minWidth: 0 }}>
           <Stack
             spacing={8}
+            justifyContent="space-between"
+            alignItems="center"
             style={{ marginBottom: 8 }}
           >
             <ButtonGroup size="sm">
@@ -450,6 +501,60 @@ function MailTemplateEdit() {
                 {t('mailTemplates.rawHtml')}
               </Button>
             </ButtonGroup>
+
+            <Stack
+              spacing={16}
+              alignItems="center"
+            >
+              <Stack
+                spacing={6}
+                alignItems="center"
+              >
+                <Form.ControlLabel style={{ margin: 0 }}>
+                  {t('mailTemplates.edit.background', 'Background')}
+                </Form.ControlLabel>
+                <input
+                  type="color"
+                  value={backgroundColor}
+                  onChange={event =>
+                    applyShell({ backgroundColor: event.target.value })
+                  }
+                  style={{
+                    width: 32,
+                    height: 28,
+                    padding: 0,
+                    border: '1px solid #e5e5ea',
+                    borderRadius: 4,
+                    cursor: 'pointer',
+                  }}
+                />
+              </Stack>
+              <Stack
+                spacing={6}
+                alignItems="center"
+              >
+                <Form.ControlLabel style={{ margin: 0 }}>
+                  {t('mailTemplates.edit.contentWidth', 'Width (px)')}
+                </Form.ControlLabel>
+                <InputNumber
+                  size="sm"
+                  min={320}
+                  max={1200}
+                  step={20}
+                  value={contentWidth}
+                  onChange={value => {
+                    const parsed =
+                      typeof value === 'number' ? value : (
+                        parseInt(`${value}`, 10)
+                      );
+                    if (Number.isFinite(parsed)) {
+                      applyShell({ contentWidth: parsed });
+                    }
+                  }}
+                  style={{ width: 96 }}
+                />
+              </Stack>
+            </Stack>
           </Stack>
 
           <div onFocus={() => setActiveField('body')}>
@@ -474,9 +579,25 @@ function MailTemplateEdit() {
             style={{ marginTop: 16 }}
           >
             <Form.Group>
-              <Form.ControlLabel>
-                {t('mailTemplates.textContent')}
-              </Form.ControlLabel>
+              <Stack
+                justifyContent="space-between"
+                alignItems="center"
+                style={{ marginBottom: 6 }}
+              >
+                <Form.ControlLabel style={{ margin: 0 }}>
+                  {t('mailTemplates.textContent')}
+                </Form.ControlLabel>
+                <Button
+                  size="xs"
+                  appearance="ghost"
+                  onClick={generateTextFromHtml}
+                >
+                  {t(
+                    'mailTemplates.edit.generateTextFromHtml',
+                    'Generate from HTML'
+                  )}
+                </Button>
+              </Stack>
               <Input
                 as="textarea"
                 rows={4}

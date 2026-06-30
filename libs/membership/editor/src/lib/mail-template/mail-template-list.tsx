@@ -8,6 +8,7 @@ import {
 } from '@mui/material';
 import {
   useDeleteMailTemplateMutation,
+  useImportMailTemplatesFromProviderMutation,
   useMailTemplateQuery,
 } from '@wepublish/editor/api';
 import {
@@ -18,7 +19,14 @@ import {
 } from '@wepublish/ui/editor';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdAdd, MdCheck, MdDelete, MdEdit, MdWarning } from 'react-icons/md';
+import {
+  MdAdd,
+  MdCheck,
+  MdCloudDownload,
+  MdDelete,
+  MdEdit,
+  MdWarning,
+} from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
 import {
   Button,
@@ -40,8 +48,14 @@ function MailTemplateList() {
     ...DEFAULT_MUTATION_OPTIONS(t),
     refetchQueries: ['MailTemplate'],
   });
+  const [importFromProvider, { loading: importing }] =
+    useImportMailTemplatesFromProviderMutation({
+      ...DEFAULT_MUTATION_OPTIONS(t),
+      refetchQueries: ['MailTemplate'],
+    });
 
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [importOpen, setImportOpen] = useState(false);
 
   const confirmDelete = async () => {
     if (!deleteId) {
@@ -54,6 +68,20 @@ function MailTemplateList() {
     }
   };
 
+  const confirmImport = async () => {
+    try {
+      const result = await importFromProvider();
+      const count = result.data?.importMailTemplatesFromProvider ?? 0;
+      toaster.push(
+        <Message type="success">
+          {t('mailTemplates.importDone', { count })}
+        </Message>
+      );
+    } finally {
+      setImportOpen(false);
+    }
+  };
+
   return (
     <>
       <Stack justifyContent={'space-between'}>
@@ -63,18 +91,33 @@ function MailTemplateList() {
           </ListViewHeader>
         </ListViewContainer>
 
-        <PermissionControl
-          showRejectionMessage={false}
-          qualifyingPermissions={['CAN_CREATE_MAIL-TEMPLATES']}
-        >
-          <Button
-            appearance="primary"
-            onClick={() => navigate('/mailtemplates/create')}
+        <Stack spacing={8}>
+          <PermissionControl
+            showRejectionMessage={false}
+            qualifyingPermissions={['CAN_UPDATE_MAIL-TEMPLATES']}
           >
-            <MdAdd />
-            {t('mailTemplates.create')}
-          </Button>
-        </PermissionControl>
+            <Button
+              appearance="ghost"
+              loading={importing}
+              onClick={() => setImportOpen(true)}
+            >
+              <MdCloudDownload /> {t('mailTemplates.importFromProvider')}
+            </Button>
+          </PermissionControl>
+
+          <PermissionControl
+            showRejectionMessage={false}
+            qualifyingPermissions={['CAN_CREATE_MAIL-TEMPLATES']}
+          >
+            <Button
+              appearance="primary"
+              onClick={() => navigate('/mailtemplates/create')}
+            >
+              <MdAdd />
+              {t('mailTemplates.create')}
+            </Button>
+          </PermissionControl>
+        </Stack>
       </Stack>
 
       <TableContainer style={{ marginTop: '16px' }}>
@@ -164,6 +207,40 @@ function MailTemplateList() {
           <Button
             appearance="subtle"
             onClick={() => setDeleteId(null)}
+          >
+            {t('mailTemplates.cancel')}
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      <Modal
+        open={importOpen}
+        onClose={() => setImportOpen(false)}
+        size="sm"
+      >
+        <Modal.Header>
+          <Modal.Title>{t('mailTemplates.importFromProvider')}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Message
+            type="warning"
+            showIcon
+          >
+            {t('mailTemplates.importWarning')}
+          </Message>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            appearance="primary"
+            color="red"
+            loading={importing}
+            onClick={confirmImport}
+          >
+            {t('mailTemplates.importConfirm')}
+          </Button>
+          <Button
+            appearance="subtle"
+            onClick={() => setImportOpen(false)}
           >
             {t('mailTemplates.cancel')}
           </Button>

@@ -3,6 +3,7 @@ import { PrismaClient } from '@prisma/client';
 import { randomUUID } from 'crypto';
 import {
   composeMail,
+  convertMandrillPlaceholders,
   deriveComputedFields,
   deriveDateFormats,
   flattenMailData,
@@ -71,6 +72,47 @@ export class MailTemplateService {
     }
 
     await this.prisma.mailTemplate.delete({ where: { id } });
+  }
+
+  /**
+   * Import HTML + subject for every template that still has a remote provider
+   * id, overwriting the local content. Used to migrate installs from the
+   * remote-template model. Templates whose remote fetch fails are skipped.
+   */
+  async importFromProvider(): Promise<number> {
+    const templates = await this.prisma.mailTemplate.findMany({
+      where: { externalMailTemplateId: { not: null } },
+    });
+
+    let imported = 0;
+    for (const template of templates) {
+      if (!template.externalMailTemplateId) {
+        continue;
+      }
+      try {
+        const content = await this.mailContext.mailProvider.getTemplateContent(
+          template.externalMailTemplateId
+        );
+        await this.prisma.mailTemplate.update({
+          where: { id: template.id },
+          data: {
+            // Provider templates (e.g. Mandrill) use `*|NAME|*` merge tags;
+            // convert them to our `{{ name }}` syntax so the local engine
+            // renders them.
+            htmlContent: convertMandrillPlaceholders(content.html),
+            subject:
+              content.subject ?
+                convertMandrillPlaceholders(content.subject)
+              : template.subject,
+          },
+        });
+        imported++;
+      } catch {
+        // Skip templates that no longer exist remotely or fail to load.
+      }
+    }
+
+    return imported;
   }
 
   /**

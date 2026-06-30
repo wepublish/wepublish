@@ -1,5 +1,6 @@
 import {
   composeMail,
+  convertMandrillPlaceholders,
   deriveComputedFields,
   deriveDateFormats,
   flattenMailData,
@@ -97,6 +98,40 @@ describe('renderTemplate', () => {
   it('returns an empty string for empty input', () => {
     expect(renderTemplate('', { a: 'x' })).toBe('');
     expect(renderTemplate(undefined, { a: 'x' })).toBe('');
+  });
+
+  it('resolves placeholders case-insensitively', () => {
+    expect(
+      renderTemplate('Hi {{USER_FIRSTNAME}}!', { user_firstName: 'Jane' })
+    ).toBe('Hi Jane!');
+  });
+});
+
+describe('convertMandrillPlaceholders', () => {
+  it('rewrites Mandrill merge tags to local syntax', () => {
+    expect(convertMandrillPlaceholders('Hi *|USER_FIRSTNAME|*, welcome!')).toBe(
+      'Hi {{USER_FIRSTNAME}}, welcome!'
+    );
+  });
+
+  it('tolerates whitespace inside the merge tag', () => {
+    expect(convertMandrillPlaceholders('*| user_id |*')).toBe('{{user_id}}');
+  });
+
+  it('leaves Mandrill block/special tags untouched', () => {
+    expect(convertMandrillPlaceholders('*|MC:EDIT|*')).toBe('*|MC:EDIT|*');
+  });
+
+  it('converted uppercase tags then render against camelCase data', () => {
+    const converted = convertMandrillPlaceholders('Hi *|USER_FIRSTNAME|*!');
+    expect(renderTemplate(converted, { user_firstName: 'Jane' })).toBe(
+      'Hi Jane!'
+    );
+  });
+
+  it('returns an empty string for empty input', () => {
+    expect(convertMandrillPlaceholders('')).toBe('');
+    expect(convertMandrillPlaceholders(undefined)).toBe('');
   });
 });
 

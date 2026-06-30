@@ -40,6 +40,10 @@ export class SlackMailProvider extends BaseMailProvider {
     });
   }
 
+  async getTemplateContent() {
+    return { html: '', subject: '' };
+  }
+
   async getName(): Promise<string> {
     return (await this.getConfig())?.name ?? 'unknown';
   }

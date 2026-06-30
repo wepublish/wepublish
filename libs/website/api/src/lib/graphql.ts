@@ -2009,6 +2009,7 @@ export type Mutation = {
    *
    */
   importEvent: Scalars['String'];
+  importMailTemplatesFromProvider: Scalars['Int'];
   /** Imports an article from a peer as a draft. */
   importPeerArticle: Article;
   /** Imports a subscription. */

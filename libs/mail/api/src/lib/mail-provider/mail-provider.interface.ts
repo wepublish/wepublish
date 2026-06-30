@@ -27,6 +27,11 @@ export enum MailTemplateStatus {
   Error = 'error',
 }
 
+export interface MailProviderTemplateContent {
+  html: string;
+  subject?: string;
+}
+
 export class MailProviderError extends Error {}
 
 export interface MailProvider {
@@ -37,6 +42,11 @@ export interface MailProvider {
   webhookForSendMail(props: WebhookForSendMailProps): Promise<MailLogStatus[]>;
 
   sendMail(props: SendMailProps): Promise<void>;
+
+  /** Fetch a template's content from the remote provider (for import/migration). */
+  getTemplateContent(
+    externalMailTemplateId: string
+  ): Promise<MailProviderTemplateContent>;
 
   getName(): Promise<string>;
 

@@ -7,6 +7,7 @@ import { MailLogState } from '@prisma/client';
 import {
   MailLogStatus,
   MailProviderError,
+  MailProviderTemplateContent,
   SendMailProps,
   WebhookForSendMailProps,
 } from './mail-provider.interface';
@@ -133,6 +134,34 @@ export class MailchimpMailProvider extends BaseMailProvider {
 
   private responseIsError<T>(response: T | AxiosError): response is AxiosError {
     return 'isAxiosError' in (response as object);
+  }
+
+  async getTemplateContent(
+    externalMailTemplateId: string
+  ): Promise<MailProviderTemplateContent> {
+    const mailchimpClient = await this.getMailchimpClient();
+    const response = await mailchimpClient.templates.info({
+      name: externalMailTemplateId,
+    });
+
+    if (this.responseIsError(response)) {
+      throw new MailProviderError(
+        (response.response?.data as Error | undefined)?.message ??
+          `Failed to load template ${externalMailTemplateId}`
+      );
+    }
+
+    const template = response as {
+      code?: string;
+      publish_code?: string;
+      subject?: string;
+      publish_subject?: string;
+    };
+
+    return {
+      html: template.publish_code ?? template.code ?? '',
+      subject: template.publish_subject ?? template.subject,
+    };
   }
 
   async getName(): Promise<string> {

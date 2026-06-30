@@ -1,22 +1,42 @@
 import { forwardRef, memo, useImperativeHandle, useRef, useState } from 'react';
 import {
   Box,
+  Button,
+  Checkbox,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   Divider,
+  FormControlLabel,
+  Menu,
+  MenuItem,
+  Stack,
+  TextField,
   ToggleButton,
   ToggleButtonGroup,
   Tooltip,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { FullImageFragment } from '@wepublish/editor/api';
+import { ImageSelectPanel } from '@wepublish/ui/editor';
+import { Drawer } from 'rsuite';
 import {
+  MdFormatAlignCenter,
+  MdFormatAlignLeft,
+  MdFormatAlignRight,
   MdFormatBold,
   MdFormatItalic,
   MdFormatListBulleted,
   MdFormatListNumbered,
+  MdFormatSize,
   MdFormatUnderlined,
   MdHorizontalRule,
+  MdImage,
   MdLaptopMac,
   MdLink,
   MdPhoneIphone,
+  MdPhotoLibrary,
   MdRedo,
   MdStrikethroughS,
   MdTabletMac,
@@ -27,12 +47,12 @@ import { useTranslation } from 'react-i18next';
 type Device = 'desktop' | 'tablet' | 'mobile';
 
 // Desktop fills the available width (a 600px email then centers within it, as a
-// desktop mail client renders it); tablet/mobile use standard device CSS widths
-// (iPad portrait = 768px, iPhone = 375px).
+// desktop mail client renders it); tablet/mobile use representative modern
+// device CSS widths (iPad portrait = 820px, iPhone 14/15 = 390px).
 const DEVICE_WIDTH: Record<Device, number | string> = {
   desktop: '100%',
-  tablet: 768,
-  mobile: 375,
+  tablet: 820,
+  mobile: 390,
 };
 
 const EditorWrapper = styled(Box)`
@@ -87,6 +107,65 @@ const Frame = styled('iframe')`
   border: 0;
   display: block;
 `;
+
+// Shared height/width for every toolbar control so they line up uniformly.
+const CONTROL_SIZE = 32;
+
+// Square icon buttons and auto-width label buttons, both at the shared height,
+// so the whole toolbar reads as one consistent row.
+const SQUARE_BUTTON_SX = {
+  width: CONTROL_SIZE,
+  height: CONTROL_SIZE,
+  p: 0,
+} as const;
+
+const LABEL_BUTTON_SX = {
+  minWidth: CONTROL_SIZE,
+  height: CONTROL_SIZE,
+  px: 1,
+} as const;
+
+// Native color input styled as a compact toolbar swatch.
+const ColorSwatch = styled('input')`
+  width: ${CONTROL_SIZE}px;
+  height: ${CONTROL_SIZE}px;
+  padding: 0;
+  border: 1px solid ${({ theme }) => theme.palette.divider};
+  border-radius: 4px;
+  background: none;
+  cursor: pointer;
+`;
+
+// execCommand('fontSize') uses the legacy 1-7 scale; map to readable labels.
+const FONT_SIZES: ReadonlyArray<{ value: string; label: string }> = [
+  { value: '1', label: 'XS' },
+  { value: '2', label: 'S' },
+  { value: '3', label: 'M' },
+  { value: '4', label: 'L' },
+  { value: '5', label: 'XL' },
+  { value: '6', label: 'XXL' },
+  { value: '7', label: 'XXXL' },
+];
+
+interface LinkDialogState {
+  open: boolean;
+  url: string;
+  text: string;
+  newTab: boolean;
+}
+
+interface ImageDialogState {
+  open: boolean;
+  url: string;
+  alt: string;
+  width: string;
+}
+
+const escapeHtml = (value: string): string =>
+  value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+const escapeAttr = (value: string): string =>
+  value.replace(/&/g, '&amp;').replace(/"/g, '&quot;');
 
 export interface HtmlVisualEditorHandle {
   insertToken: (text: string) => void;
@@ -143,6 +222,22 @@ const HtmlVisualEditorComponent = forwardRef<
 >(function HtmlVisualEditor({ value, onChange }, ref) {
   const { t } = useTranslation();
   const [device, setDevice] = useState<Device>('desktop');
+  const [linkDialog, setLinkDialog] = useState<LinkDialogState>({
+    open: false,
+    url: '',
+    text: '',
+    newTab: true,
+  });
+  const [imageDialog, setImageDialog] = useState<ImageDialogState>({
+    open: false,
+    url: '',
+    alt: '',
+    width: '',
+  });
+  const [libraryOpen, setLibraryOpen] = useState(false);
+  const [fontSizeAnchor, setFontSizeAnchor] = useState<HTMLElement | null>(
+    null
+  );
   const frameRef = useRef<HTMLIFrameElement>(null);
 
   const getDoc = (): Document | null =>
@@ -180,7 +275,9 @@ const HtmlVisualEditorComponent = forwardRef<
     if (!doc.getElementById(EDITOR_STYLE_ID)) {
       const style = doc.createElement('style');
       style.id = EDITOR_STYLE_ID;
-      style.textContent = '[contenteditable]{outline:none;}';
+      // Give the editable cell a comfortable minimum writing area (editor-only;
+      // stripped before saving so it never affects the sent mail).
+      style.textContent = '[contenteditable]{outline:none;min-height:360px;}';
       doc.head.appendChild(style);
     }
     try {
@@ -198,6 +295,181 @@ const HtmlVisualEditorComponent = forwardRef<
       return;
     }
     getEditable()?.focus();
+    doc.execCommand(command, false, argument);
+    emit();
+  };
+
+  // Walks up from the current selection to find the enclosing <a>, so an
+  // existing link can be edited (and not just created).
+  const getSelectedAnchor = (doc: Document): HTMLAnchorElement | null => {
+    const editable = getEditable();
+    let node: Node | null = doc.getSelection()?.anchorNode ?? null;
+    while (node && node !== editable) {
+      if (node.nodeName === 'A') {
+        return node as HTMLAnchorElement;
+      }
+      node = node.parentNode;
+    }
+    return null;
+  };
+
+  // Opening a dialog moves focus out of the iframe and drops its selection, so
+  // we snapshot the range first and restore it before running a command.
+  const savedRange = useRef<Range | null>(null);
+  const editedAnchor = useRef<HTMLAnchorElement | null>(null);
+
+  const saveSelection = () => {
+    const selection = getDoc()?.getSelection();
+    savedRange.current =
+      selection && selection.rangeCount ?
+        selection.getRangeAt(0).cloneRange()
+      : null;
+  };
+
+  const restoreSelection = () => {
+    const doc = getDoc();
+    const selection = doc?.getSelection();
+    if (selection && savedRange.current) {
+      selection.removeAllRanges();
+      selection.addRange(savedRange.current);
+    }
+  };
+
+  // new tab + rel guards against reverse-tabnabbing.
+  const applyAnchorAttributes = (
+    anchor: HTMLAnchorElement,
+    href: string,
+    newTab: boolean
+  ) => {
+    anchor.setAttribute('href', href);
+    if (newTab) {
+      anchor.setAttribute('target', '_blank');
+      anchor.setAttribute('rel', 'noopener noreferrer');
+    } else {
+      anchor.removeAttribute('target');
+      anchor.removeAttribute('rel');
+    }
+  };
+
+  const openLinkDialog = () => {
+    const doc = getDoc();
+    if (!doc) {
+      return;
+    }
+    getEditable()?.focus();
+    saveSelection();
+    const anchor = getSelectedAnchor(doc);
+    editedAnchor.current = anchor;
+    setLinkDialog({
+      open: true,
+      url: anchor?.getAttribute('href') ?? '',
+      text: anchor?.textContent ?? doc.getSelection()?.toString() ?? '',
+      // Default new links to open in a new tab.
+      newTab: anchor ? anchor.getAttribute('target') === '_blank' : true,
+    });
+  };
+
+  const closeLinkDialog = () =>
+    setLinkDialog(state => ({ ...state, open: false }));
+
+  const applyLink = () => {
+    const doc = getDoc();
+    if (!doc) {
+      closeLinkDialog();
+      return;
+    }
+    const url = linkDialog.url.trim();
+    const { text, newTab } = linkDialog;
+    const anchor = editedAnchor.current;
+    getEditable()?.focus();
+    restoreSelection();
+
+    // Empty URL removes an existing link (and is a no-op otherwise).
+    if (!url) {
+      if (anchor) {
+        doc.execCommand('unlink');
+        emit();
+      }
+      closeLinkDialog();
+      return;
+    }
+
+    if (anchor) {
+      applyAnchorAttributes(anchor, url, newTab);
+      if (text && text !== anchor.textContent) {
+        anchor.textContent = text;
+      }
+      emit();
+      closeLinkDialog();
+      return;
+    }
+
+    const selection = doc.getSelection();
+    if (selection && !selection.isCollapsed) {
+      doc.execCommand('createLink', false, url);
+      const created = getSelectedAnchor(doc);
+      if (created) {
+        applyAnchorAttributes(created, url, newTab);
+        if (text && text !== created.textContent) {
+          created.textContent = text;
+        }
+      }
+    } else {
+      // No selection: insert a fresh anchor labelled with the text (or URL).
+      const rel = newTab ? ' target="_blank" rel="noopener noreferrer"' : '';
+      doc.execCommand(
+        'insertHTML',
+        false,
+        `<a href="${escapeAttr(url)}"${rel}>${escapeHtml(text || url)}</a>`
+      );
+    }
+    emit();
+    closeLinkDialog();
+  };
+
+  const openImageDialog = () => {
+    if (!getDoc()) {
+      return;
+    }
+    getEditable()?.focus();
+    saveSelection();
+    setImageDialog({ open: true, url: '', alt: '', width: '' });
+  };
+
+  const closeImageDialog = () =>
+    setImageDialog(state => ({ ...state, open: false }));
+
+  const applyImage = () => {
+    const doc = getDoc();
+    const url = imageDialog.url.trim();
+    if (!doc || !url) {
+      closeImageDialog();
+      return;
+    }
+    getEditable()?.focus();
+    restoreSelection();
+    const width = imageDialog.width.replace(/[^0-9]/g, '');
+    const widthAttr = width ? ` width="${width}"` : '';
+    doc.execCommand(
+      'insertHTML',
+      false,
+      `<img src="${escapeAttr(url)}" alt="${escapeAttr(
+        imageDialog.alt
+      )}"${widthAttr} style="max-width:100%;height:auto;" />`
+    );
+    emit();
+    closeImageDialog();
+  };
+
+  // Native form controls (color/size) steal focus, so save the range on
+  // mousedown and restore it before applying the command.
+  const applyWithSavedSelection = (command: string, argument: string) => {
+    const doc = getDoc();
+    if (!doc) {
+      return;
+    }
+    getEditable()?.focus();
+    restoreSelection();
     doc.execCommand(command, false, argument);
     emit();
   };
@@ -228,6 +500,7 @@ const HtmlVisualEditorComponent = forwardRef<
       <ToggleButton
         size="small"
         value={command + (argument ?? '')}
+        sx={SQUARE_BUTTON_SX}
         onMouseDown={event => {
           event.preventDefault();
           exec(command, argument);
@@ -242,6 +515,7 @@ const HtmlVisualEditorComponent = forwardRef<
     <ToggleButton
       size="small"
       value={block}
+      sx={LABEL_BUTTON_SX}
       onMouseDown={event => {
         event.preventDefault();
         exec('formatBlock', block);
@@ -314,21 +588,114 @@ const HtmlVisualEditorComponent = forwardRef<
           'insertHorizontalRule'
         )}
 
+        <Divider
+          orientation="vertical"
+          flexItem
+        />
+
+        {toolButton(
+          t('mailTemplates.editor.alignLeft', 'Align left'),
+          <MdFormatAlignLeft />,
+          'justifyLeft'
+        )}
+        {toolButton(
+          t('mailTemplates.editor.alignCenter', 'Align center'),
+          <MdFormatAlignCenter />,
+          'justifyCenter'
+        )}
+        {toolButton(
+          t('mailTemplates.editor.alignRight', 'Align right'),
+          <MdFormatAlignRight />,
+          'justifyRight'
+        )}
+
+        <Divider
+          orientation="vertical"
+          flexItem
+        />
+
+        <Tooltip title={t('mailTemplates.editor.fontSize', 'Size')}>
+          <ToggleButton
+            size="small"
+            value="fontSize"
+            sx={SQUARE_BUTTON_SX}
+            onMouseDown={event => {
+              event.preventDefault();
+              saveSelection();
+              setFontSizeAnchor(event.currentTarget);
+            }}
+          >
+            <MdFormatSize />
+          </ToggleButton>
+        </Tooltip>
+        <Menu
+          anchorEl={fontSizeAnchor}
+          open={Boolean(fontSizeAnchor)}
+          onClose={() => setFontSizeAnchor(null)}
+        >
+          {FONT_SIZES.map(size => (
+            <MenuItem
+              key={size.value}
+              onClick={() => {
+                applyWithSavedSelection('fontSize', size.value);
+                setFontSizeAnchor(null);
+              }}
+            >
+              {size.label}
+            </MenuItem>
+          ))}
+        </Menu>
+
+        <Tooltip title={t('mailTemplates.editor.textColor', 'Text color')}>
+          <Box
+            component="label"
+            sx={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              height: CONTROL_SIZE,
+            }}
+          >
+            <ColorSwatch
+              type="color"
+              defaultValue="#000000"
+              onMouseDown={() => saveSelection()}
+              onChange={event =>
+                applyWithSavedSelection('foreColor', event.target.value)
+              }
+            />
+          </Box>
+        </Tooltip>
+
+        <Divider
+          orientation="vertical"
+          flexItem
+        />
+
         <Tooltip title={t('mailTemplates.editor.link', 'Link')}>
           <ToggleButton
             size="small"
             value="link"
+            sx={SQUARE_BUTTON_SX}
             onMouseDown={event => {
               event.preventDefault();
-              const url = window.prompt(
-                t('mailTemplates.editor.linkPrompt', 'Enter the link URL') ?? ''
-              );
-              if (url) {
-                exec('createLink', url);
-              }
+              openLinkDialog();
             }}
           >
             <MdLink />
+          </ToggleButton>
+        </Tooltip>
+
+        <Tooltip title={t('mailTemplates.editor.image', 'Image')}>
+          <ToggleButton
+            size="small"
+            value="image"
+            sx={SQUARE_BUTTON_SX}
+            onMouseDown={event => {
+              event.preventDefault();
+              openImageDialog();
+            }}
+          >
+            <MdImage />
           </ToggleButton>
         </Tooltip>
 
@@ -341,17 +708,26 @@ const HtmlVisualEditorComponent = forwardRef<
           onChange={(_event, next: Device | null) => next && setDevice(next)}
         >
           <Tooltip title={t('mailTemplates.editor.desktop', 'Desktop')}>
-            <ToggleButton value="desktop">
+            <ToggleButton
+              value="desktop"
+              sx={SQUARE_BUTTON_SX}
+            >
               <MdLaptopMac />
             </ToggleButton>
           </Tooltip>
           <Tooltip title={t('mailTemplates.editor.tablet', 'Tablet')}>
-            <ToggleButton value="tablet">
+            <ToggleButton
+              value="tablet"
+              sx={SQUARE_BUTTON_SX}
+            >
               <MdTabletMac />
             </ToggleButton>
           </Tooltip>
           <Tooltip title={t('mailTemplates.editor.mobile', 'Mobile')}>
-            <ToggleButton value="mobile">
+            <ToggleButton
+              value="mobile"
+              sx={SQUARE_BUTTON_SX}
+            >
               <MdPhoneIphone />
             </ToggleButton>
           </Tooltip>
@@ -369,6 +745,158 @@ const HtmlVisualEditorComponent = forwardRef<
           />
         </DeviceFrame>
       </Canvas>
+
+      <Dialog
+        open={linkDialog.open}
+        onClose={closeLinkDialog}
+        fullWidth
+        maxWidth="sm"
+      >
+        <DialogTitle>{t('mailTemplates.editor.linkTitle', 'Link')}</DialogTitle>
+        <DialogContent>
+          <Stack
+            spacing={2}
+            sx={{ mt: 1 }}
+          >
+            <TextField
+              autoFocus
+              fullWidth
+              size="small"
+              label={t('mailTemplates.editor.linkUrl', 'URL')}
+              placeholder="https://"
+              value={linkDialog.url}
+              onChange={event =>
+                setLinkDialog(state => ({ ...state, url: event.target.value }))
+              }
+            />
+            <TextField
+              fullWidth
+              size="small"
+              label={t('mailTemplates.editor.linkText', 'Link text')}
+              value={linkDialog.text}
+              onChange={event =>
+                setLinkDialog(state => ({ ...state, text: event.target.value }))
+              }
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={linkDialog.newTab}
+                  onChange={event =>
+                    setLinkDialog(state => ({
+                      ...state,
+                      newTab: event.target.checked,
+                    }))
+                  }
+                />
+              }
+              label={t('mailTemplates.editor.linkNewTab', 'Open in a new tab')}
+            />
+          </Stack>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeLinkDialog}>
+            {t('mailTemplates.editor.cancel', 'Cancel')}
+          </Button>
+          <Button
+            variant="contained"
+            onClick={applyLink}
+          >
+            {t('mailTemplates.editor.apply', 'Apply')}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        open={imageDialog.open && !libraryOpen}
+        onClose={closeImageDialog}
+        fullWidth
+        maxWidth="sm"
+      >
+        <DialogTitle>
+          {t('mailTemplates.editor.imageTitle', 'Insert image')}
+        </DialogTitle>
+        <DialogContent>
+          <Stack
+            spacing={2}
+            sx={{ mt: 1 }}
+          >
+            <Button
+              variant="outlined"
+              startIcon={<MdPhotoLibrary />}
+              onClick={() => setLibraryOpen(true)}
+            >
+              {t(
+                'mailTemplates.editor.chooseFromLibrary',
+                'Choose from library'
+              )}
+            </Button>
+            <TextField
+              autoFocus
+              fullWidth
+              size="small"
+              label={t('mailTemplates.editor.imageUrl', 'Image URL')}
+              placeholder="https://"
+              value={imageDialog.url}
+              onChange={event =>
+                setImageDialog(state => ({ ...state, url: event.target.value }))
+              }
+            />
+            <TextField
+              fullWidth
+              size="small"
+              label={t('mailTemplates.editor.imageAlt', 'Alternative text')}
+              value={imageDialog.alt}
+              onChange={event =>
+                setImageDialog(state => ({ ...state, alt: event.target.value }))
+              }
+            />
+            <TextField
+              fullWidth
+              size="small"
+              label={t(
+                'mailTemplates.editor.imageWidth',
+                'Width (px, optional)'
+              )}
+              value={imageDialog.width}
+              onChange={event =>
+                setImageDialog(state => ({
+                  ...state,
+                  width: event.target.value,
+                }))
+              }
+            />
+          </Stack>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeImageDialog}>
+            {t('mailTemplates.editor.cancel', 'Cancel')}
+          </Button>
+          <Button
+            variant="contained"
+            onClick={applyImage}
+          >
+            {t('mailTemplates.editor.insert', 'Insert')}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Drawer
+        open={libraryOpen}
+        size="sm"
+        onClose={() => setLibraryOpen(false)}
+      >
+        <ImageSelectPanel
+          onClose={() => setLibraryOpen(false)}
+          onSelect={(image: FullImageFragment) => {
+            setImageDialog(state => ({
+              ...state,
+              url: image.largeURL ?? image.url,
+            }));
+            setLibraryOpen(false);
+          }}
+        />
+      </Drawer>
     </EditorWrapper>
   );
 });

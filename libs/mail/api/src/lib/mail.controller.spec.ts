@@ -28,6 +28,7 @@ describe('MailController', () => {
     subject: 'Hello {{user_firstName}}',
     htmlContent: '<p>Hi {{user_firstName}}</p>',
     textContent: null,
+    externalMailTemplateId: null,
     createdAt: new Date(),
     modifiedAt: new Date(),
   };
@@ -39,6 +40,7 @@ describe('MailController', () => {
     subject: 'Welcome {{user_name}}',
     htmlContent: '<p>Welcome {{user_name}}</p>',
     textContent: null,
+    externalMailTemplateId: null,
     createdAt: new Date(),
     modifiedAt: new Date(),
   };

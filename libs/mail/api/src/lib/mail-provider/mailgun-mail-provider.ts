@@ -1,8 +1,10 @@
 import { MailLogState } from '@prisma/client';
 import crypto from 'crypto';
 import FormData from 'form-data';
+import Mailgun from 'mailgun.js';
 import {
   MailLogStatus,
+  MailProviderTemplateContent,
   SendMailProps,
   WebhookForSendMailProps,
 } from './mail-provider.interface';
@@ -121,6 +123,26 @@ export class MailgunMailProvider extends BaseMailProvider {
         }
       );
     });
+  }
+
+  async getTemplateContent(
+    externalMailTemplateId: string
+  ): Promise<MailProviderTemplateContent> {
+    const config = await this.getConfig();
+    if (!config?.apiKey || !config?.mailgun_baseDomain) {
+      throw new Error('Missing mailgun base domain or api key');
+    }
+    const client = new Mailgun(FormData).client({
+      username: 'api',
+      key: config.apiKey,
+      url: `https://${config.mailgun_baseDomain}`,
+    });
+    const response = await client.domains.domainTemplates.get(
+      config.mailgun_mailDomain ?? '',
+      externalMailTemplateId,
+      { active: 'yes' } as never
+    );
+    return { html: response.version?.template ?? '' };
   }
 
   async getName(): Promise<string> {

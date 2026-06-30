@@ -88,8 +88,37 @@ export function flattenMailData<T>(ob: T): Record<string, any> {
 const PLACEHOLDER_REGEX = /{{\s*([\w.]+)\s*}}/g;
 
 /**
+ * Mandrill (Mailchimp Transactional) merge tags use the `*|NAME|*` syntax, not
+ * our `{{ name }}` syntax. The historically pushed merge-var names already match
+ * our flattened keys (underscore separated, e.g. `user_firstName`).
+ */
+const MANDRILL_PLACEHOLDER_REGEX = /\*\|\s*([\w.]+)\s*\|\*/g;
+
+/**
+ * Rewrite Mandrill `*|NAME|*` merge tags to our `{{ name }}` syntax so imported
+ * provider templates render with the local engine. Mandrill block/special tags
+ * (e.g. `*|MC:EDIT|*`, `*|IF:...|*`) contain characters outside `[\w.]` and are
+ * intentionally left untouched. Case is preserved; resolution is
+ * case-insensitive so uppercase author tags still match camelCase keys.
+ */
+export function convertMandrillPlaceholders(
+  content: string | null | undefined
+): string {
+  if (!content) {
+    return '';
+  }
+
+  return content.replace(
+    MANDRILL_PLACEHOLDER_REGEX,
+    (_match, key: string) => `{{${key}}}`
+  );
+}
+
+/**
  * Replace every `{{ key }}` placeholder in the template with its value from the
  * flattened data. Unknown placeholders are replaced with an empty string.
+ * Lookups are case-insensitive so uppercase tags from imported Mandrill
+ * templates (e.g. `{{USER_FIRSTNAME}}`) still resolve to camelCase keys.
  */
 export function renderTemplate(
   template: string | null | undefined,
@@ -99,8 +128,13 @@ export function renderTemplate(
     return '';
   }
 
+  const lowerLookup: Record<string, any> = {};
+  for (const dataKey of Object.keys(data)) {
+    lowerLookup[dataKey.toLowerCase()] = data[dataKey];
+  }
+
   return template.replace(PLACEHOLDER_REGEX, (_match, key: string) => {
-    const value = data[key];
+    const value = key in data ? data[key] : lowerLookup[key.toLowerCase()];
 
     if (value === undefined || value === null) {
       return '';

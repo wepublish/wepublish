@@ -1321,6 +1321,10 @@ model MailTemplate {
   htmlContent String  @default("")
   textContent String?
 
+  // Kept (nullable) so content can be imported from the remote provider for
+  // installs migrating from the remote-template model. Not used for sending.
+  externalMailTemplateId String? @unique
+
   subscriptionIntervals SubscriptionInterval[]
 
   userFlowMails UserFlowMail[]

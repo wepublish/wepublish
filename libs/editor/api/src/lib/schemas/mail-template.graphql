@@ -23,6 +23,10 @@ mutation DeleteMailTemplate($id: String!) {
   deleteMailTemplate(id: $id)
 }
 
+mutation ImportMailTemplatesFromProvider {
+  importMailTemplatesFromProvider
+}
+
 query MailTemplateSubscriptions($query: String) {
   mailTemplateSubscriptions(query: $query) {
     id

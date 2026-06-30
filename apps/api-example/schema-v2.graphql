@@ -2016,6 +2016,9 @@ type Mutation {
   "\n      Creates and event based on data from importable events list and an id and provider.\n      Also, uploads an image to WePublish Image library.\n    "
   importEvent(id: String!, source: String!): String!
 
+  """Import HTML/subject from the mail provider, overwriting local content"""
+  importMailTemplatesFromProvider: Int!
+
   """Imports an article from a peer as a draft."""
   importPeerArticle(articleId: String!, options: ImportArticleOptions! = {importAuthors: true, importContentImages: true, importTags: true}, peerId: String!): Article!
 
