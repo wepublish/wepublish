@@ -1,13 +1,5 @@
-import {
-  BuilderBlockRendererProps,
-  BuilderFlexBlockProps,
-} from '@wepublish/website/builder';
+import { BuilderFlexBlockProps } from '@wepublish/website/builder';
 import { cond, T } from 'ramda';
-
-type TsriTabbedContentProps = BuilderFlexBlockProps & {
-  type?: BuilderBlockRendererProps['type'];
-  level?: number;
-};
 
 import {
   isTabbedContentBlockStyle,
@@ -53,7 +45,7 @@ export const TsriTabbedContent = cond([
   [isTabbedContentBlockStyle, props => <TabbedContent {...props} />],
   [
     T,
-    (props: TsriTabbedContentProps) => (
+    (props: BuilderFlexBlockProps) => (
       <div>
         TsriTabbedContent fallback - unknown TabbedContent type. blockStyle:
         {props.blockStyle}
