@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { RichtextElements, RichtextJSONDocument } from '@wepublish/richtext';
 import { Cron, CronExpression, SchedulerRegistry } from '@nestjs/schedule';
 import { Prisma, PrismaClient } from '@prisma/client';
+import { slugify } from '@wepublish/utils';
 
 // Slate keeps a node's visible text in `text`, or nested in `children`.
 const slateText = (node: any): string => {
@@ -10,6 +11,32 @@ const slateText = (node: any): string => {
   }
 
   return (node?.children ?? []).map(slateText).join('');
+};
+
+// reflekt-only — legacy slate link `id`s (buttons + in-page anchors). Remove
+// after the reflekt slate→tiptap migration, before merging upstream.
+const reflektLinkAttrs = (child: any): any => {
+  const legacyId = typeof child.id === 'string' ? child.id : '';
+
+  const variant =
+    legacyId.startsWith('button-link-') ?
+      legacyId.replace(/-([a-z])/g, (_m: string, c: string) => c.toUpperCase())
+    : undefined;
+
+  let href = typeof child.url === 'string' ? child.url : '';
+  if (/^\/mitmachen\/?$/i.test(href)) {
+    href = '/mitmachen';
+  }
+  if (!variant && legacyId && (href === '#' || href === '')) {
+    href = `#${slugify(legacyId)}`;
+  }
+
+  return {
+    href,
+    rel: 'noopener noreferrer nofollow',
+    class: null,
+    ...(variant ? { variant } : {}),
+  };
 };
 
 const slateToPm = (content: any): RichtextElements | [] => {
@@ -43,12 +70,7 @@ const slateToPm = (content: any): RichtextElements | [] => {
           isLink ?
             {
               type: 'link',
-              attrs: {
-                href: child.url,
-                // @TODO: target?
-                rel: 'noopener noreferrer nofollow',
-                class: null,
-              },
+              attrs: reflektLinkAttrs(child),
             }
           : [],
           child.italic ? { type: 'italic' } : [],
@@ -619,6 +641,51 @@ export class SlateToPmMigrator {
     }
   }
 
+  // reflekt-only — flag in-page anchors whose `id` has no heading with a matching
+  // slug in the same document, so they can be fixed by hand. Remove together with
+  // `reflektLinkAttrs` after the reflekt slate→tiptap migration.
+  private reflektAuditSlateAnchors(label: string, blocks: unknown): void {
+    const headingSlugs = new Set<string>();
+    const anchors: { id: string; text: string }[] = [];
+
+    const visit = (node: any): void => {
+      if (!node || typeof node !== 'object') {
+        return;
+      }
+      if (Array.isArray(node)) {
+        node.forEach(visit);
+        return;
+      }
+      if (['heading-one', 'heading-two', 'heading-three'].includes(node.type)) {
+        const slug = slugify(slateText(node));
+        if (slug) {
+          headingSlugs.add(slug);
+        }
+      }
+      if (
+        node.type === 'link' &&
+        typeof node.id === 'string' &&
+        node.id &&
+        !node.id.startsWith('button-link-') &&
+        (node.url === '#' || !node.url)
+      ) {
+        anchors.push({ id: node.id, text: slateText(node) });
+      }
+      Object.values(node).forEach(visit);
+    };
+
+    visit(blocks);
+
+    for (const anchor of anchors) {
+      const slug = slugify(anchor.id);
+      if (!headingSlugs.has(slug)) {
+        this.logger.warn(
+          `REFLEKT_ANCHOR_UNRESOLVED ${label} id="${anchor.id}" -> "#${slug}" text="${anchor.text}" (no matching heading)`
+        );
+      }
+    }
+  }
+
   @Cron(CronExpression.EVERY_5_SECONDS, {
     name: 'slate.migrateArticles',
     waitForCompletion: true,
@@ -676,6 +743,11 @@ export class SlateToPmMigrator {
 
           return block;
         });
+
+        this.reflektAuditSlateAnchors(
+          `articleRevision ${revision.id}`,
+          revision.blocks
+        );
 
         await this.prisma.articleRevision.update({
           where: { id: revision.id },
@@ -749,6 +821,11 @@ export class SlateToPmMigrator {
 
           return block;
         });
+
+        this.reflektAuditSlateAnchors(
+          `pageRevision ${revision.id}`,
+          revision.blocks
+        );
 
         await this.prisma.pageRevision.update({
           where: { id: revision.id },
