@@ -1,14 +1,14 @@
 import { PrismaClient, SettingMailProvider, UserEvent } from '@prisma/client';
 import { BaseMailProvider } from './mail-provider/base-mail-provider';
-import { MailProviderTemplate } from './mail-provider/mail-provider.interface';
 
 import { Injectable } from '@nestjs/common';
 import { MailController, MailControllerConfig } from './mail.controller';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 import { SecretCrypto } from '@wepublish/settings/api';
+import { composeMail } from './mail-renderer';
 
-export interface SendRemoteEMailProps {
-  readonly remoteTemplate: string;
+export interface SendComposedMailProps {
+  readonly mailTemplateId: string;
   readonly recipient: string;
   readonly mailLogID: string;
   readonly data: Record<string, any>;
@@ -117,11 +117,11 @@ export class MailContext implements MailContextInterface {
   }
 
   async sendMail(
-    opts: Omit<MailControllerConfig, 'externalMailTemplateId'> & {
-      externalMailTemplateId: string | null;
+    opts: Omit<MailControllerConfig, 'mailTemplateId'> & {
+      mailTemplateId: string | null;
     }
   ) {
-    if (opts.externalMailTemplateId) {
+    if (opts.mailTemplateId) {
       await new MailController(
         this.prisma as PrismaClient,
         this,
@@ -130,40 +130,56 @@ export class MailContext implements MailContextInterface {
     }
   }
 
-  async sendRemoteTemplateDirect({
-    remoteTemplate,
+  /**
+   * Compose the mail locally from the stored template (subject, html, text)
+   * and send the fully-composed message to the mail provider. The provider's
+   * own template engine is not used.
+   */
+  async sendComposedMail({
+    mailTemplateId,
     recipient,
     data,
     mailLogID,
-  }: SendRemoteEMailProps): Promise<void> {
+  }: SendComposedMailProps): Promise<void> {
     if (!this.mailProvider) {
       throw new Error('MailProvider is not set!');
     }
+
+    const template = await this.prisma.mailTemplate.findUnique({
+      where: { id: mailTemplateId },
+    });
+
+    if (!template) {
+      throw new Error(`MailTemplate <${mailTemplateId}> not found!`);
+    }
+
     const config = await new MailContextConfig(
       this.prisma,
       this.kv,
       this.mailProvider.id
     ).getConfig();
 
+    const composed = composeMail(template, data);
+
     await this.mailProvider.sendMail({
       mailLogID,
       recipient,
       replyToAddress: config?.replyToAddress ?? config?.fromAddress ?? '',
-      subject: '',
-      template: remoteTemplate,
-      templateData: data,
+      subject: composed.subject,
+      message: composed.message,
+      messageHtml: composed.messageHtml,
     });
   }
 
-  async getUserTemplateName(
+  async getUserTemplateId(
     event: UserEvent,
     throwOnMissing: true
   ): Promise<string>;
-  async getUserTemplateName(
+  async getUserTemplateId(
     event: UserEvent,
     throwOnMissing?: false
   ): Promise<string | null>;
-  async getUserTemplateName(
+  async getUserTemplateId(
     event: UserEvent,
     throwOnMissing = true
   ): Promise<string | null> {
@@ -176,9 +192,9 @@ export class MailContext implements MailContextInterface {
       },
     });
 
-    // Return null if no mailtemplete is defined and function is not called "throwOnMissing"
+    // Return null if no mailtemplate is defined and function is not called "throwOnMissing"
     if (!throwOnMissing) {
-      return userFlowMail?.mailTemplate?.externalMailTemplateId || null;
+      return userFlowMail?.mailTemplate?.id || null;
     }
 
     if (!userFlowMail) {
@@ -189,11 +205,7 @@ export class MailContext implements MailContextInterface {
       throw new Error(`No email template defined for event ${event}`);
     }
 
-    return userFlowMail.mailTemplate.externalMailTemplateId;
-  }
-
-  async getTemplates(): Promise<MailProviderTemplate[]> {
-    return this.mailProvider.getTemplates();
+    return userFlowMail.mailTemplate.id;
   }
 
   async getUsedTemplateIdentifiers(): Promise<string[]> {
@@ -211,11 +223,9 @@ export class MailContext implements MailContextInterface {
     ]);
 
     return [
-      ...intervals.flatMap(
-        interval => interval.mailTemplate?.externalMailTemplateId ?? []
-      ),
+      ...intervals.flatMap(interval => interval.mailTemplate?.id ?? []),
       ...userFlowMails.flatMap(
-        userFlowMail => userFlowMail.mailTemplate?.externalMailTemplateId ?? []
+        userFlowMail => userFlowMail.mailTemplate?.id ?? []
       ),
     ];
   }

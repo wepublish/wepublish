@@ -1315,10 +1315,11 @@ model MailTemplate {
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
-  name                   String
-  description            String?
-  externalMailTemplateId String  @unique
-  remoteMissing          Boolean @default(false)
+  name        String
+  description String?
+  subject     String  @default("")
+  htmlContent String  @default("")
+  textContent String?
 
   subscriptionIntervals SubscriptionInterval[]
 

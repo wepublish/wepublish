@@ -849,15 +849,24 @@
     },
     "mailTemplates": {
       "availableTemplates": "Verfügbare E-Mail-Templates",
+      "cancel": "Abbrechen",
       "content": "Inhalt",
+      "create": "Template erstellen",
       "description": "Beschreibung",
-      "explanation": "Diese Templates von {{provider}} kannst du für den Versand von Benachrichtigungen verwenden.",
+      "edit": "Template bearbeiten",
       "goToPlaceholders": "Verfügbare Placeholders",
+      "htmlContent": "HTML-Inhalt",
       "name": "Name",
+      "save": "Speichern",
       "showPlaceholders": "Placeholder Dokumentation",
       "status": "Status",
-      "synchronize": "Templates synchronisieren",
-      "view": "Auf {{provider}} ansehen"
+      "statuses": {
+        "error": "Unbekannter Fehler",
+        "ok": "🗸",
+        "unused": "Nicht verwendet"
+      },
+      "subject": "Betreff",
+      "textContent": "Text-Inhalt (Fallback)"
     },
     "mailTemplateSelect": {
       "noMailSentSelectNow": "Kein Mailversand"

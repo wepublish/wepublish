@@ -1,4 +1,5 @@
 import {
+  Args,
   Mutation,
   Parent,
   Query,
@@ -8,34 +9,31 @@ import {
 import { MailContext, MailTemplateStatus } from '@wepublish/mail/api';
 import {
   CanGetMailTemplates,
-  CanSyncMailTemplates,
+  CanUpdateMailTemplates,
 } from '@wepublish/permissions';
-import { MailTemplateSyncService } from './mail-template-sync.service';
 import {
   MailProviderModel,
-  MailTemplateWithUrlAndStatusModel,
+  MailTemplateInput,
+  MailTemplateModel,
 } from './mail-template.model';
 import { PrismaClient } from '@prisma/client';
 import { Permissions } from '@wepublish/permissions/api';
 
-@Resolver(() => MailTemplateWithUrlAndStatusModel)
+@Resolver(() => MailTemplateModel)
 export class MailTemplatesResolver {
   constructor(
     private prismaService: PrismaClient,
-    private syncService: MailTemplateSyncService,
     private mailContext: MailContext
   ) {}
 
   @Permissions(CanGetMailTemplates)
-  @Query(() => [MailTemplateWithUrlAndStatusModel], {
+  @Query(() => [MailTemplateModel], {
     description: `Return all mail templates`,
   })
   async mailTemplates() {
-    const templates = await this.prismaService.mailTemplate.findMany({
-      orderBy: [{ remoteMissing: 'asc' }, { id: 'asc' }],
+    return this.prismaService.mailTemplate.findMany({
+      orderBy: [{ name: 'asc' }],
     });
-
-    return templates;
   }
 
   @Permissions(CanGetMailTemplates)
@@ -45,39 +43,53 @@ export class MailTemplatesResolver {
     return { name: provider.getName() };
   }
 
-  @Permissions(CanSyncMailTemplates)
-  @Mutation(() => Boolean, { nullable: true })
-  async syncTemplates() {
-    await this.syncService.synchronizeTemplates();
+  @Permissions(CanUpdateMailTemplates)
+  @Mutation(() => MailTemplateModel, {
+    description: `Create a new mail template`,
+  })
+  async createMailTemplate(@Args('input') input: MailTemplateInput) {
+    return this.prismaService.mailTemplate.create({
+      data: input,
+    });
+  }
+
+  @Permissions(CanUpdateMailTemplates)
+  @Mutation(() => MailTemplateModel, {
+    description: `Update an existing mail template`,
+  })
+  async updateMailTemplate(
+    @Args('id') id: string,
+    @Args('input') input: MailTemplateInput
+  ) {
+    return this.prismaService.mailTemplate.update({
+      where: { id },
+      data: input,
+    });
+  }
+
+  @Permissions(CanUpdateMailTemplates)
+  @Mutation(() => Boolean, {
+    nullable: true,
+    description: `Delete an existing mail template`,
+  })
+  async deleteMailTemplate(@Args('id') id: string) {
+    await this.prismaService.mailTemplate.delete({
+      where: { id },
+    });
   }
 
   @ResolveField('status', () => MailTemplateStatus, {
     description: 'Status of the template',
   })
   async status(
-    @Parent() template: MailTemplateWithUrlAndStatusModel
+    @Parent() template: MailTemplateModel
   ): Promise<MailTemplateStatus> {
     const usedTemplates = await this.mailContext.getUsedTemplateIdentifiers();
 
-    if (!usedTemplates.includes(template.externalMailTemplateId)) {
+    if (!usedTemplates.includes(template.id)) {
       return MailTemplateStatus.Unused;
     }
 
-    if (template.remoteMissing) {
-      return MailTemplateStatus.RemoteMissing;
-    }
-
     return MailTemplateStatus.Ok;
-  }
-
-  @ResolveField('url', () => MailTemplateStatus, {
-    description: 'External URL of the template',
-  })
-  async url(
-    @Parent() template: MailTemplateWithUrlAndStatusModel
-  ): Promise<string> {
-    const provider = await this.mailContext.mailProvider;
-
-    return provider.getTemplateUrl(template);
   }
 }

@@ -1,4 +1,9 @@
-import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
+import {
+  Field,
+  InputType,
+  ObjectType,
+  registerEnumType,
+} from '@nestjs/graphql';
 import { MailTemplateStatus } from '@wepublish/mail/api';
 
 registerEnumType(MailTemplateStatus, {
@@ -6,7 +11,7 @@ registerEnumType(MailTemplateStatus, {
 });
 
 @ObjectType()
-export class MailTemplateWithUrlAndStatusModel {
+export class MailTemplateModel {
   @Field()
   id!: string;
 
@@ -17,13 +22,13 @@ export class MailTemplateWithUrlAndStatusModel {
   description?: string;
 
   @Field()
-  externalMailTemplateId!: string;
+  subject!: string;
 
   @Field()
-  remoteMissing!: boolean;
+  htmlContent!: string;
 
-  @Field()
-  url!: string;
+  @Field({ nullable: true })
+  textContent?: string;
 
   @Field()
   status!: string;
@@ -33,4 +38,22 @@ export class MailTemplateWithUrlAndStatusModel {
 export class MailProviderModel {
   @Field()
   name!: string;
+}
+
+@InputType()
+export class MailTemplateInput {
+  @Field()
+  name!: string;
+
+  @Field({ nullable: true })
+  description?: string;
+
+  @Field()
+  subject!: string;
+
+  @Field()
+  htmlContent!: string;
+
+  @Field({ nullable: true })
+  textContent?: string;
 }

@@ -1655,21 +1655,29 @@ export enum MailProviderType {
   Slack = 'SLACK'
 }
 
+export type MailTemplateInput = {
+  description?: InputMaybe<Scalars['String']>;
+  htmlContent: Scalars['String'];
+  name: Scalars['String'];
+  subject: Scalars['String'];
+  textContent?: InputMaybe<Scalars['String']>;
+};
+
+export type MailTemplateModel = {
+  __typename?: 'MailTemplateModel';
+  description?: Maybe<Scalars['String']>;
+  htmlContent: Scalars['String'];
+  id: Scalars['String'];
+  name: Scalars['String'];
+  status: Scalars['String'];
+  subject: Scalars['String'];
+  textContent?: Maybe<Scalars['String']>;
+};
+
 export type MailTemplateRef = {
   __typename?: 'MailTemplateRef';
   id: Scalars['String'];
   name: Scalars['String'];
-};
-
-export type MailTemplateWithUrlAndStatusModel = {
-  __typename?: 'MailTemplateWithUrlAndStatusModel';
-  description?: Maybe<Scalars['String']>;
-  externalMailTemplateId: Scalars['String'];
-  id: Scalars['String'];
-  name: Scalars['String'];
-  remoteMissing: Scalars['Boolean'];
-  status: Scalars['String'];
-  url: Scalars['String'];
 };
 
 export type MailchimpInterestGroup = {
@@ -1823,6 +1831,8 @@ export type Mutation = {
   createJWTForUser: SessionWithToken;
   /** Returns a JWT that is valid for 1min for the current logged in user. */
   createJWTForWebsiteLogin: SessionWithToken;
+  /** Create a new mail template */
+  createMailTemplate: MailTemplateModel;
   /** Creates a new memberplan. */
   createMemberPlan: MemberPlan;
   /** Creates a new navigation. */
@@ -1904,6 +1914,8 @@ export type Mutation = {
   deleteImage: Scalars['String'];
   /** Deletes an existing invoice. */
   deleteInvoice: Invoice;
+  /** Delete an existing mail template */
+  deleteMailTemplate?: Maybe<Scalars['Boolean']>;
   /** Deletes a single sync error so the contact will be retried. */
   deleteMailchimpSyncError: Scalars['Boolean'];
   /** Deletes an existing memberplan. */
@@ -2010,7 +2022,6 @@ export type Mutation = {
   sendPasswordResetEmail: Scalars['String'];
   /** This mutation sends a login link to the email if the user exists. Method will always return email address */
   sendWebsiteLogin: Scalars['String'];
-  syncTemplates?: Maybe<Scalars['Boolean']>;
   /** Sends a test email for the given event */
   testSystemMail: Scalars['Boolean'];
   /** Triggers a mailchimp sync in the background. */
@@ -2056,6 +2067,8 @@ export type Mutation = {
   updateInvoice: Invoice;
   /** Updates an existing mail provider setting. */
   updateMailProviderSetting: SettingMailProvider;
+  /** Update an existing mail template */
+  updateMailTemplate: MailTemplateModel;
   /** Updates an existing memberplan. */
   updateMemberPlan: MemberPlan;
   /** Updates an existing navigation. */
@@ -2269,6 +2282,11 @@ export type MutationCreateInvoiceArgs = {
 export type MutationCreateJwtForUserArgs = {
   expiresInMinutes: Scalars['Float'];
   userId: Scalars['String'];
+};
+
+
+export type MutationCreateMailTemplateArgs = {
+  input: MailTemplateInput;
 };
 
 
@@ -2584,6 +2602,11 @@ export type MutationDeleteImageArgs = {
 
 
 export type MutationDeleteInvoiceArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationDeleteMailTemplateArgs = {
   id: Scalars['String'];
 };
 
@@ -3060,6 +3083,12 @@ export type MutationUpdateMailProviderSettingArgs = {
   replyToAddress?: InputMaybe<Scalars['String']>;
   slack_webhookURL?: InputMaybe<Scalars['String']>;
   webhookEndpointSecret?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationUpdateMailTemplateArgs = {
+  id: Scalars['String'];
+  input: MailTemplateInput;
 };
 
 
@@ -4333,7 +4362,7 @@ export type Query = {
   /** Returns all mail provider settings. */
   mailProviderSettings: Array<SettingMailProvider>;
   /** Return all mail templates */
-  mailTemplates: Array<MailTemplateWithUrlAndStatusModel>;
+  mailTemplates: Array<MailTemplateModel>;
   /** Fetches available interest groups for a Mailchimp list. */
   mailchimpInterestGroups: Array<MailchimpInterestGroup>;
   /** Fetches available Mailchimp lists/audiences for a sync config. */

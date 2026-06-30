@@ -1,4 +1,4 @@
-import { useContext, useMemo } from 'react';
+import { useContext } from 'react';
 import {
   FullMailTemplateFragment,
   SubscriptionEvent,
@@ -36,10 +36,6 @@ export function MailTemplateSelect({
   const { t } = useTranslation();
   const canUpdateSubscriptionFlow = useAuthorisation(
     'CAN_UPDATE_SUBSCRIPTION_FLOW'
-  );
-  const inactiveMailTemplates = useMemo(
-    () => mailTemplates.filter(mailTemplate => mailTemplate.remoteMissing),
-    [mailTemplates]
   );
 
   const client = useContext(SubscriptionClientContext);
@@ -83,13 +79,10 @@ export function MailTemplateSelect({
     <SelectPicker
       style={{ width: '100%' }}
       data={mailTemplates.map(mailTemplate => ({
-        label: `${mailTemplate.remoteMissing ? '⚠' : ''} ${mailTemplate.name}`,
+        label: mailTemplate.name,
         value: mailTemplate.id,
       }))}
       disabled={!canUpdateSubscriptionFlow}
-      disabledItemValues={inactiveMailTemplates.map(
-        mailTemplate => mailTemplate.id
-      )}
       defaultValue={subscriptionInterval?.object.mailTemplate?.id}
       onSelect={createOrUpdateInterval}
       onClean={deleteInterval}

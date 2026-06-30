@@ -854,13 +854,24 @@
     },
     "mailTemplates": {
       "availableTemplates": "Modèles de courriels disponibles",
+      "cancel": "Annuler",
       "content": "Contenu",
+      "create": "Créer un modèle",
       "description": "Description",
-      "explanation": "Tu peux utiliser ces modèles de {{provider}} pour envoyer des notifications..",
+      "edit": "Modifier le modèle",
+      "goToPlaceholders": "Espaces réservés disponibles",
+      "htmlContent": "Contenu HTML",
       "name": "Nom",
+      "save": "Enregistrer",
+      "showPlaceholders": "Documentation des espaces réservés",
       "status": "Statut",
-      "synchronize": "Synchroniser les modèles",
-      "view": "Voir sur {{provider}}"
+      "statuses": {
+        "error": "Erreur inconnue",
+        "ok": "🗸",
+        "unused": "Inutilisé"
+      },
+      "subject": "Objet",
+      "textContent": "Contenu en texte brut (repli)"
     },
     "mailTemplateSelect": {
       "noMailSentSelectNow": "pas d'envoi mail"

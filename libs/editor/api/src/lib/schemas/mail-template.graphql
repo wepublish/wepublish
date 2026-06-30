@@ -7,17 +7,29 @@ query MailTemplate {
   }
 }
 
-mutation SynchronizeMailTemplates {
-  syncTemplates
+mutation CreateMailTemplate($input: MailTemplateInput!) {
+  createMailTemplate(input: $input) {
+    ...FullMailTemplate
+  }
 }
 
-fragment FullMailTemplate on MailTemplateWithUrlAndStatusModel {
+mutation UpdateMailTemplate($id: String!, $input: MailTemplateInput!) {
+  updateMailTemplate(id: $id, input: $input) {
+    ...FullMailTemplate
+  }
+}
+
+mutation DeleteMailTemplate($id: String!) {
+  deleteMailTemplate(id: $id)
+}
+
+fragment FullMailTemplate on MailTemplateModel {
   id
   name
   description
-  externalMailTemplateId
-  remoteMissing
-  url
+  subject
+  htmlContent
+  textContent
   status
 }
 

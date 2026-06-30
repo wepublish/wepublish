@@ -61,14 +61,13 @@ export class SystemMailResolver {
     @CurrentUser() user: UserSession,
     @Args('event', { type: () => UserEvent }) event: UserEvent
   ) {
-    const externalMailTemplateId =
-      await this.mailContext.getUserTemplateName(event);
+    const mailTemplateId = await this.mailContext.getUserTemplateId(event);
 
     await this.mailContext.sendMail({
       mailType: mailLogType.SystemMail,
       recipient: user.user,
       optionalData: {},
-      externalMailTemplateId: externalMailTemplateId || '',
+      mailTemplateId: mailTemplateId || '',
     });
 
     return true;

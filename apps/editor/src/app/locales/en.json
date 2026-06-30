@@ -854,21 +854,24 @@
     "name": "Name",
     "mailTemplates": {
       "availableTemplates": "Available templates",
+      "cancel": "Cancel",
       "content": "Content",
+      "create": "Create template",
       "description": "Description",
-      "explanation": "You can use these templates from {{provider}} to deliver notifications to your users.",
+      "edit": "Edit template",
       "goToPlaceholders": "Available Placeholders",
+      "htmlContent": "HTML content",
       "name": "Name",
+      "save": "Save",
       "showPlaceholders": "Placeholder Documentation",
       "status": "Status",
       "statuses": {
         "error": "Unknown error",
         "ok": "🗸",
-        "remoteMissing": "Template '{{internalName}}' removed at {{provider}}",
-        "unused": "Template '{{internalName}}' is unused"
+        "unused": "Unused"
       },
-      "synchronize": "Synchronize templates",
-      "view": "View at {{provider}}"
+      "subject": "Subject",
+      "textContent": "Plain text content (fallback)"
     },
     "mailTemplateSelect": {
       "noMailSentSelectNow": "No mailing"

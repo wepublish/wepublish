@@ -161,13 +161,13 @@ export class UserService {
     });
 
     if (!skipMail) {
-      const externalMailTemplateId = await this.mailContext.getUserTemplateName(
+      const mailTemplateId = await this.mailContext.getUserTemplateId(
         UserEvent.ACCOUNT_CREATION,
         false
       );
 
       await this.mailContext.sendMail({
-        externalMailTemplateId,
+        mailTemplateId,
         recipient,
         optionalData: {},
         mailType: mailLogType.SystemMail,
@@ -257,13 +257,13 @@ export class UserService {
       select: unselectPassword,
     });
 
-    const externalMailTemplateId = await this.mailContext.getUserTemplateName(
+    const mailTemplateId = await this.mailContext.getUserTemplateId(
       UserEvent.EMAIL_CHANGE,
       false
     );
 
     await this.mailContext.sendMail({
-      externalMailTemplateId,
+      mailTemplateId,
       recipient: user,
       optionalData: { newEmail },
       mailType: mailLogType.UserFlow,

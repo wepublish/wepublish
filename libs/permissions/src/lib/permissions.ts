@@ -781,9 +781,9 @@ export const CanGetMailTemplates: Permission = {
   deprecated: false,
 };
 
-export const CanSyncMailTemplates: Permission = {
-  id: 'CAN_SYNC_MAIL-TEMPLATES',
-  description: 'Allowed to synchronize mail templates from mail provider.',
+export const CanUpdateMailTemplates: Permission = {
+  id: 'CAN_UPDATE_MAIL-TEMPLATES',
+  description: 'Allows to create, update and delete mail templates.',
   deprecated: false,
 };
 
@@ -1220,7 +1220,7 @@ export const AllPermissions: Permission[] = [
   CanDeleteSubscriptionFlow,
   CanGetMailTemplates,
   CanGetPeriodicJobLog,
-  CanSyncMailTemplates,
+  CanUpdateMailTemplates,
   CanGetSystemMails,
   CanUpdateSystemMails,
   CanTestSystemMails,

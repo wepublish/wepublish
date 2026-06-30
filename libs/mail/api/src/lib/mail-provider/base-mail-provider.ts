@@ -1,10 +1,8 @@
 import {
   MailLogStatus,
   MailProvider,
-  MailProviderTemplate,
   SendMailProps,
   WebhookForSendMailProps,
-  WithExternalId,
 } from './mail-provider.interface';
 import bodyParser from 'body-parser';
 import { NextHandleFunction } from 'connect';
@@ -46,8 +44,6 @@ export abstract class BaseMailProvider implements MailProvider {
     props: WebhookForSendMailProps
   ): Promise<MailLogStatus[]>;
   abstract sendMail(props: SendMailProps): Promise<void>;
-  abstract getTemplates(): Promise<MailProviderTemplate[]>;
-  abstract getTemplateUrl(template: WithExternalId): Promise<string>;
   abstract getName(): Promise<string>;
   async getConfig(): Promise<SettingMailProvider | null> {
     return await new MailProviderConfig(

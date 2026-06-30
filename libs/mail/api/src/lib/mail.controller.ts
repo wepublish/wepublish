@@ -11,7 +11,7 @@ export enum mailLogType {
 
 export type MailControllerConfig = {
   daysAwayFromEnding?: number | null;
-  externalMailTemplateId: string;
+  mailTemplateId: string;
   recipient: User;
   isRetry?: boolean;
   periodicJobRunDate?: Date | null;
@@ -39,7 +39,7 @@ export class MailController {
       this.config.periodicJobRunDate ?
         this.config.periodicJobRunDate.toISOString()
       : 'null'
-    }-${this.config.daysAwayFromEnding}-${this.config.externalMailTemplateId}-${
+    }-${this.config.daysAwayFromEnding}-${this.config.mailTemplateId}-${
       this.config.recipient.id
     }`;
   }
@@ -98,9 +98,9 @@ export class MailController {
 
     const mailLogId = randomUUID();
 
-    await this.mailContext.sendRemoteTemplateDirect({
+    await this.mailContext.sendComposedMail({
       mailLogID: mailLogId,
-      remoteTemplate: this.config.externalMailTemplateId,
+      mailTemplateId: this.config.mailTemplateId,
       recipient: this.config.recipient.email,
       data: await this.buildData(),
     });
@@ -119,7 +119,7 @@ export class MailController {
         mailIdentifier: this.generateMailIdentifier(),
         mailTemplate: {
           connect: {
-            externalMailTemplateId: this.config.externalMailTemplateId,
+            id: this.config.mailTemplateId,
           },
         },
       },

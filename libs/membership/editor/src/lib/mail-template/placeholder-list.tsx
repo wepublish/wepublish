@@ -8,7 +8,6 @@ import {
 import { DEFAULT_QUERY_OPTIONS } from '../common';
 import {
   SubscriptionEvent,
-  useMailTemplateQuery,
   UserEvent,
   useSystemMailsQuery,
 } from '@wepublish/editor/api';
@@ -47,41 +46,14 @@ interface Placeholder {
   exampleOverride?: string;
 }
 
-type PlaceholderSyntax = { open: string; close: string };
-
-const getPlaceHolderSyntax = (
-  providerName: string
-): PlaceholderSyntax | undefined => {
-  switch (providerName) {
-    case 'mailchimp':
-      return {
-        open: '*|',
-        close: '|*',
-      };
-    case 'mailgun':
-      return {
-        open: '{{',
-        close: '}}',
-      };
-    default:
-      return undefined;
-  }
-};
-
-function getPlaceholderExample(
-  providerName: string,
-  placeholder: string
-): string {
-  const syntax = getPlaceHolderSyntax(providerName);
-
-  return `${syntax?.open || ''}${placeholder}${syntax?.close || ''}`;
+function getPlaceholderExample(placeholder: string): string {
+  return `{{${placeholder}}}`;
 }
 
 export function PlaceholderList() {
   const { t } = useTranslation();
 
   const { data: systemMails } = useSystemMailsQuery(DEFAULT_QUERY_OPTIONS());
-  const { data: mailTemplate } = useMailTemplateQuery(DEFAULT_QUERY_OPTIONS());
 
   const defaultPlaceholders = useMemo(
     () =>
@@ -106,12 +78,11 @@ export function PlaceholderList() {
           key: 'jwt',
           description: t('placeholderList.description.jwt'),
           exampleOverride: `Per Klick auf folgenden Link kannst du dich bequem in deinen Account einloggen: <a href="https://www.hauptstadt.be/login?jwt=${getPlaceholderExample(
-            mailTemplate?.provider.name.toLowerCase() ?? '',
             'jwt'
           )}">Jetzt einloggen.</a>`,
         },
       ] as Placeholder[],
-    [t, mailTemplate?.provider.name]
+    [t]
   );
 
   const decoratedEvents: DecoratedEvent[] = useMemo(() => {
@@ -182,14 +153,8 @@ export function PlaceholderList() {
           const placeholders: Placeholder[] = [];
 
           if (event.event === UserEvent.EmailChange) {
-            const jwtExample = getPlaceholderExample(
-              mailTemplate?.provider.name.toLowerCase() ?? '',
-              'jwt'
-            );
-            const newEmailExample = getPlaceholderExample(
-              mailTemplate?.provider.name.toLowerCase() ?? '',
-              'optional_newEmail'
-            );
+            const jwtExample = getPlaceholderExample('jwt');
+            const newEmailExample = getPlaceholderExample('optional_newEmail');
 
             placeholders.push({
               key: 'optional_newEmail',
@@ -269,13 +234,7 @@ export function PlaceholderList() {
                             <>
                               Lorem ipsum{' '}
                               <strong>
-                                <i>
-                                  {getPlaceholderExample(
-                                    mailTemplate?.provider.name.toLowerCase() ??
-                                      '',
-                                    placeholder.key
-                                  )}
-                                </i>
+                                <i>{getPlaceholderExample(placeholder.key)}</i>
                               </strong>{' '}
                               lorem ipsum lorem ipsum.
                             </>
