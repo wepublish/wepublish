@@ -14,6 +14,7 @@ const reflektArticleRedirectSlugs = [
   'antepay',
   'antepay-prozess',
   'antepay_kamp',
+  'asylatlas',
   'ausbeutung-mit-aussicht',
   'aussageverweigerung',
   'berater',
@@ -61,6 +62,8 @@ const reflektArticleRedirectSlugs = [
   'zuerichaufdecken',
 ];
 
+const reflektArticleRedirectAliases = [{ from: 'asy', to: 'asylatlas' }];
+
 /**
  * @type {import('@nx/next/plugins/with-nx').WithNxOptions}
  **/
@@ -103,6 +106,14 @@ const nextConfig = {
           permanent: true,
         },
         { source: `/${slug}`, destination: `/a/${slug}`, permanent: true },
+      ]),
+      ...reflektArticleRedirectAliases.flatMap(({ from, to }) => [
+        {
+          source: `/recherchen/${from}`,
+          destination: `/a/${to}`,
+          permanent: true,
+        },
+        { source: `/${from}`, destination: `/a/${to}`, permanent: true },
       ]),
       {
         source: '/recherchen',
