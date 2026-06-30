@@ -280,7 +280,7 @@ function CustomApp({
 
                 <FooterContainer
                   slug="footer"
-                  categorySlugs={[['main']]}
+                  categorySlugs={[['footer']]}
                   iconSlug="icons"
                 />
               </Spacer>
