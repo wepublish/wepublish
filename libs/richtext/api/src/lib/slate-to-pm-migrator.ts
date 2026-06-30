@@ -22,15 +22,20 @@ const slateToPm = (content: any): RichtextElements | [] => {
 
       const isLink = 'type' in child && child.type === 'link';
 
-      // Links carry their label in `children`, not `title`; fall back to the url.
-      const text =
-        isLink ?
-          slateText(child) || child.title || child.url || ''
-        : child.text;
+      // A link's visible label is its `children` text. `title` is only a tooltip
+      // and `url` the target — neither is visible in slate, so a link with empty
+      // or whitespace-only children was an invisible anchor. Drop it below instead
+      // of promoting title/url to text and fabricating ghost links.
+      const text = isLink ? slateText(child) : child.text;
 
       // ProseMirror rejects text nodes whose `text` is not a non-empty string
       // (RangeError: Invalid text node in JSON / empty text nodes not allowed).
-      if (typeof text !== 'string' || text.length === 0) {
+      // Links additionally drop on an all-whitespace label (an invisible anchor);
+      // plain text keeps its whitespace, which is meaningful between inline nodes.
+      if (
+        typeof text !== 'string' ||
+        (isLink ? text.trim().length === 0 : text.length === 0)
+      ) {
         return [];
       }
 
@@ -151,8 +156,31 @@ const slateToPm = (content: any): RichtextElements | [] => {
   }
 
   if (content.type === 'list-item') {
+    // tiptap's listItem content is `paragraph block*`: inline content must sit
+    // inside a paragraph, not directly in the listItem. Slate keeps it inline,
+    // so wrap the inline run in a leading paragraph and keep any block children
+    // (e.g. nested lists) as following siblings.
+    const inline = children.filter((child: any) => child.type === 'text');
+    const blocks = children.filter((child: any) => child.type !== 'text');
     return {
       type: 'listItem',
+      attrs: undefined,
+      content: [
+        {
+          type: 'paragraph',
+          attrs: {
+            textAlign: 'left',
+          },
+          content: inline,
+        },
+        ...blocks,
+      ],
+    };
+  }
+
+  if (content.type === 'quote') {
+    return {
+      type: 'blockquote',
       attrs: undefined,
       content: children,
     };
