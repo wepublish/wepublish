@@ -1,5 +1,8 @@
 {
   "translation": {
+    "columnConfigurator": {
+      "title": "Spalten ein-/ausblenden"
+    },
     "articleEditor": {
       "overview": {
         "articlePending": "Artikel geplant",
@@ -145,6 +148,7 @@
         "pending": "Geplant",
         "publicationDate": "Publikationsdatum",
         "published": "Publiziert",
+        "preTitle": "Oberzeile",
         "states": "Status",
         "title": "Titel",
         "untitled": "Ohne Titel",

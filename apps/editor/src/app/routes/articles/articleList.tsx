@@ -14,6 +14,7 @@ import {
 } from '@wepublish/editor/api';
 import { CanPreview } from '@wepublish/permissions';
 import {
+  ColumnConfigurator,
   createCheckedPermissionComponent,
   DEFAULT_MAX_TABLE_PAGES,
   DEFAULT_TABLE_PAGE_SIZES,
@@ -32,8 +33,9 @@ import {
   StatusBadge,
   Table,
   TableWrapper,
+  useColumnConfig,
 } from '@wepublish/ui/editor';
-import { useEffect, useMemo, useState } from 'react';
+import { ReactNode, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   MdAdd,
@@ -73,6 +75,17 @@ function mapColumFieldToGraphQLField(columnField: string): ArticleSort | null {
 
 type ArticleListProps = {
   initialFilter?: ArticleFilter;
+};
+
+type ArticleColumn = {
+  id: string;
+  label: string;
+  width: number;
+  align?: 'left' | 'center' | 'right';
+  sortable?: boolean;
+  dataKey?: string;
+  alwaysVisible?: boolean;
+  render: (article: FullArticleFragment) => ReactNode;
 };
 
 function ArticleList({ initialFilter = {} }: ArticleListProps) {
@@ -127,11 +140,122 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
     return () => clearTimeout(timerID);
   }, [highlightedRowId]);
 
+  const dataColumns = useMemo<ArticleColumn[]>(
+    () => [
+      {
+        id: 'states',
+        label: t('articles.overview.states'),
+        width: 125,
+        alwaysVisible: true,
+        render: article => {
+          const states: State[] = [];
+
+          if (article.draft) {
+            states.push({ state: 'draft', text: t('articles.overview.draft') });
+          }
+          if (article.pending) {
+            states.push({
+              state: 'pending',
+              text: t('articles.overview.pending'),
+            });
+          }
+          if (article.published) {
+            states.push({
+              state: 'published',
+              text: t('articles.overview.published'),
+            });
+          }
+
+          return (
+            <StatusBadge states={states.map(st => st.state)}>
+              {states.map(st => st.text).join(' / ')}
+            </StatusBadge>
+          );
+        },
+      },
+      {
+        id: 'title',
+        label: t('articles.overview.title'),
+        width: 400,
+        alwaysVisible: true,
+        render: article => (
+          <PeerAvatar peer={article.peer}>
+            <Link to={`/articles/edit/${article.id}`}>
+              {article.latest.title || t('articles.overview.untitled')}
+            </Link>
+          </PeerAvatar>
+        ),
+      },
+      {
+        id: 'preTitle',
+        label: t('articles.overview.preTitle'),
+        width: 250,
+        render: article => article.latest.preTitle,
+      },
+      {
+        id: 'authors',
+        label: t('articles.overview.authors'),
+        width: 200,
+        render: article =>
+          article.latest.authors.reduce(
+            (allAuthors, author, index) =>
+              `${allAuthors}${index !== 0 ? ', ' : ''}${author?.name}`,
+            ''
+          ),
+      },
+      {
+        id: 'publicationDate',
+        label: t('articles.overview.publicationDate'),
+        width: 210,
+        sortable: true,
+        dataKey: 'publishedAt',
+        render: article =>
+          article.published?.publishedAt ?
+            t('articleEditor.overview.publishedAt', {
+              publicationDate: new Date(article.published.publishedAt),
+            })
+          : article.pending?.publishedAt ?
+            t('articleEditor.overview.publishedAtIfPending', {
+              publishedAtIfPending: new Date(article.pending.publishedAt),
+            })
+          : t('articles.overview.notPublished'),
+      },
+      {
+        id: 'updated',
+        label: t('articles.overview.updated'),
+        width: 210,
+        sortable: true,
+        dataKey: 'modifiedAt',
+        render: article =>
+          t('articleEditor.overview.modifiedAt', {
+            modificationDate: new Date(article.modifiedAt),
+          }),
+      },
+    ],
+    [t]
+  );
+
+  const { isVisible, toggle } = useColumnConfig('articles', dataColumns);
+
+  const configurableColumns = useMemo(
+    () =>
+      dataColumns
+        .filter(column => !column.alwaysVisible)
+        .map(({ id, label }) => ({ id, label })),
+    [dataColumns]
+  );
+
   return (
     <>
       <ListViewContainer>
         <ListViewHeader>
           <h2>{t('articles.overview.articles')}</h2>
+
+          <ColumnConfigurator
+            columns={configurableColumns}
+            isVisible={isVisible}
+            onToggle={toggle}
+          />
         </ListViewHeader>
 
         <PermissionControl qualifyingPermissions={['CAN_CREATE_ARTICLE']}>
@@ -187,115 +311,22 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
             setSortField(sortColumn);
           }}
         >
-          <Column
-            width={125}
-            align="left"
-            resizable
-          >
-            <HeaderCell>{t('articles.overview.states')}</HeaderCell>
-            <Cell>
-              {(rowData: FullArticleFragment) => {
-                const states: State[] = [];
-
-                if (rowData.draft)
-                  states.push({
-                    state: 'draft',
-                    text: t('articles.overview.draft'),
-                  });
-                if (rowData.pending)
-                  states.push({
-                    state: 'pending',
-                    text: t('articles.overview.pending'),
-                  });
-                if (rowData.published)
-                  states.push({
-                    state: 'published',
-                    text: t('articles.overview.published'),
-                  });
-
-                return (
-                  <StatusBadge states={states.map(st => st.state)}>
-                    {states.map(st => st.text).join(' / ')}
-                  </StatusBadge>
-                );
-              }}
-            </Cell>
-          </Column>
-
-          <Column
-            width={400}
-            align="left"
-            resizable
-          >
-            <HeaderCell>{t('articles.overview.title')}</HeaderCell>
-            <Cell>
-              {(rowData: FullArticleFragment) => (
-                <PeerAvatar peer={rowData.peer}>
-                  <Link to={`/articles/edit/${rowData.id}`}>
-                    {rowData.latest.title || t('articles.overview.untitled')}
-                  </Link>
-                </PeerAvatar>
-              )}
-            </Cell>
-          </Column>
-
-          <Column
-            width={200}
-            align="left"
-            resizable
-          >
-            <HeaderCell>{t('articles.overview.authors')}</HeaderCell>
-            <Cell>
-              {(rowData: FullArticleFragment) => {
-                return (rowData as FullArticleFragment).latest.authors.reduce(
-                  (allAuthors, author, index) => {
-                    return `${allAuthors}${index !== 0 ? ', ' : ''}${author?.name}`;
-                  },
-                  ''
-                );
-              }}
-            </Cell>
-          </Column>
-
-          <Column
-            width={210}
-            align="left"
-            resizable
-            sortable
-          >
-            <HeaderCell>{t('articles.overview.publicationDate')}</HeaderCell>
-            <Cell dataKey="publishedAt">
-              {(articleRef: FullArticleFragment) =>
-                articleRef.published?.publishedAt ?
-                  t('articleEditor.overview.publishedAt', {
-                    publicationDate: new Date(articleRef.published.publishedAt),
-                  })
-                : articleRef.pending?.publishedAt ?
-                  t('articleEditor.overview.publishedAtIfPending', {
-                    publishedAtIfPending: new Date(
-                      articleRef.pending?.publishedAt
-                    ),
-                  })
-                : t('articles.overview.notPublished')
-              }
-            </Cell>
-          </Column>
-
-          <Column
-            width={210}
-            align="left"
-            resizable
-            sortable
-          >
-            <HeaderCell>{t('articles.overview.updated')}</HeaderCell>
-            <Cell dataKey="modifiedAt">
-              {({ modifiedAt }: FullArticleFragment) =>
-                t('articleEditor.overview.modifiedAt', {
-                  modificationDate: new Date(modifiedAt),
-                })
-              }
-            </Cell>
-          </Column>
+          {dataColumns
+            .filter(column => column.alwaysVisible || isVisible(column.id))
+            .map(column => (
+              <Column
+                key={column.id}
+                width={column.width}
+                align={column.align ?? 'left'}
+                resizable
+                sortable={column.sortable}
+              >
+                <HeaderCell>{column.label}</HeaderCell>
+                <Cell dataKey={column.dataKey}>
+                  {(rowData: FullArticleFragment) => column.render(rowData)}
+                </Cell>
+              </Column>
+            ))}
 
           <Column
             width={220}
