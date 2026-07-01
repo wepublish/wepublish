@@ -265,7 +265,9 @@ exports[`ArticleService should query articles based on filter 2`] = `
       "AND": [
         {
           "id": {
-            "in": [],
+            "in": [
+              "12345",
+            ],
           },
         },
         {
@@ -362,9 +364,19 @@ exports[`ArticleService should query articles based on filter 2`] = `
         {
           "shared": true,
         },
-        {},
-        {},
-        {},
+        {
+          "tags": {
+            "some": {
+              "tag": {
+                "id": {
+                  "in": [
+                    "1234",
+                  ],
+                },
+              },
+            },
+          },
+        },
         {
           "ArticleRevisionDraft": {
             "articleRevision": {
@@ -462,7 +474,9 @@ exports[`ArticleService should query articles based on filter 3`] = `
       "AND": [
         {
           "id": {
-            "in": [],
+            "in": [
+              "12345",
+            ],
           },
         },
         {
@@ -559,9 +573,19 @@ exports[`ArticleService should query articles based on filter 3`] = `
         {
           "shared": true,
         },
-        {},
-        {},
-        {},
+        {
+          "tags": {
+            "some": {
+              "tag": {
+                "id": {
+                  "in": [
+                    "1234",
+                  ],
+                },
+              },
+            },
+          },
+        },
         {
           "ArticleRevisionDraft": {
             "articleRevision": {
@@ -689,6 +713,7 @@ exports[`ArticleService should query articles based on full text search 2`] = `
           "id": {
             "in": [
               "1234",
+              "1235",
             ],
           },
         },
@@ -786,9 +811,19 @@ exports[`ArticleService should query articles based on full text search 2`] = `
         {
           "shared": true,
         },
-        {},
-        {},
-        {},
+        {
+          "tags": {
+            "some": {
+              "tag": {
+                "id": {
+                  "in": [
+                    "1234",
+                  ],
+                },
+              },
+            },
+          },
+        },
         {
           "ArticleRevisionDraft": {
             "articleRevision": {
@@ -888,6 +923,7 @@ exports[`ArticleService should query articles based on full text search 3`] = `
           "id": {
             "in": [
               "1234",
+              "1235",
             ],
           },
         },
@@ -985,9 +1021,19 @@ exports[`ArticleService should query articles based on full text search 3`] = `
         {
           "shared": true,
         },
-        {},
-        {},
-        {},
+        {
+          "tags": {
+            "some": {
+              "tag": {
+                "id": {
+                  "in": [
+                    "1234",
+                  ],
+                },
+              },
+            },
+          },
+        },
         {
           "ArticleRevisionDraft": {
             "articleRevision": {
@@ -1113,7 +1159,9 @@ exports[`ArticleService should query articles on all revisions 2`] = `
       "AND": [
         {
           "id": {
-            "in": [],
+            "in": [
+              "12345",
+            ],
           },
         },
         {
@@ -1168,9 +1216,19 @@ exports[`ArticleService should query articles on all revisions 2`] = `
         {
           "shared": true,
         },
-        {},
-        {},
-        {},
+        {
+          "tags": {
+            "some": {
+              "tag": {
+                "id": {
+                  "in": [
+                    "1234",
+                  ],
+                },
+              },
+            },
+          },
+        },
         {
           "ArticleRevisionDraft": undefined,
           "ArticleRevisionPending": undefined,
@@ -1201,13 +1259,6 @@ exports[`ArticleService should query articles on all revisions 2`] = `
               "1234",
             ],
           },
-        },
-        {
-          "OR": [
-            {},
-            {},
-            {},
-          ],
         },
       ],
     },
@@ -1225,7 +1276,9 @@ exports[`ArticleService should query articles on all revisions 3`] = `
       "AND": [
         {
           "id": {
-            "in": [],
+            "in": [
+              "12345",
+            ],
           },
         },
         {
@@ -1280,9 +1333,19 @@ exports[`ArticleService should query articles on all revisions 3`] = `
         {
           "shared": true,
         },
-        {},
-        {},
-        {},
+        {
+          "tags": {
+            "some": {
+              "tag": {
+                "id": {
+                  "in": [
+                    "1234",
+                  ],
+                },
+              },
+            },
+          },
+        },
         {
           "ArticleRevisionDraft": undefined,
           "ArticleRevisionPending": undefined,
@@ -1313,13 +1376,6 @@ exports[`ArticleService should query articles on all revisions 3`] = `
               "1234",
             ],
           },
-        },
-        {
-          "OR": [
-            {},
-            {},
-            {},
-          ],
         },
       ],
     },
@@ -1340,28 +1396,8 @@ exports[`ArticleService should query articles using cursor based pagination 1`] 
     "take": 11,
     "where": {
       "AND": [
-        {},
-        {},
-        {},
-        {},
-        {},
-        {},
-        {},
-        {},
-        {},
-        {},
-        {},
         {
           "hidden": false,
-        },
-        {},
-        {},
-        {
-          "OR": [
-            {},
-            {},
-            {},
-          ],
         },
       ],
     },
@@ -1377,28 +1413,8 @@ exports[`ArticleService should query articles using cursor based pagination 2`] 
     },
     "where": {
       "AND": [
-        {},
-        {},
-        {},
-        {},
-        {},
-        {},
-        {},
-        {},
-        {},
-        {},
-        {},
         {
           "hidden": false,
-        },
-        {},
-        {},
-        {
-          "OR": [
-            {},
-            {},
-            {},
-          ],
         },
       ],
     },
