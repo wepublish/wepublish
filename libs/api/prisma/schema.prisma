@@ -177,6 +177,7 @@ model TaggedArticles {
 
   @@id([articleId, tagId])
   @@index([tagId])
+  @@index([tagId, articleId])
   @@map("articles.tagged-articles")
 }
 
