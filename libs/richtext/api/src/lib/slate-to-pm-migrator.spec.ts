@@ -98,4 +98,30 @@ describe('SlateToPmMigrator.migrate', () => {
       text: 'plain item',
     });
   });
+
+  it('migrates flex-nested richtext in the same pass (null → populated doc)', () => {
+    const blocks = [
+      {
+        type: 'flexBlock',
+        blocks: [
+          {
+            block: {
+              type: 'richText',
+              richText: null,
+              slateRichText: [
+                { type: 'paragraph', children: [{ text: 'Hero copy' }] },
+              ],
+            },
+          },
+        ],
+      },
+    ];
+
+    const out = (makeMigrator() as any).migrateBlocksFromSlate(blocks);
+    const nested = out[0].blocks[0].block.richText;
+
+    expect(nested).not.toBeNull();
+    expect(nested.type).toBe('doc');
+    expect(JSON.stringify(nested)).toContain('Hero copy');
+  });
 });

@@ -684,26 +684,7 @@ export class SlateToPmMigrator {
           );
         }
 
-        const updatedBlocks = revision.blocks.map((block: any) => {
-          if (['richText', 'linkPageBreak'].includes(block.type)) {
-            return {
-              ...block,
-              richText: this.migrate(block.slateRichText ?? []),
-            };
-          }
-
-          if (['listicle'].includes(block.type)) {
-            return {
-              ...block,
-              items: block.items.map((item: any) => ({
-                ...item,
-                richText: this.migrate(item.slateRichText ?? []),
-              })),
-            };
-          }
-
-          return block;
-        });
+        const updatedBlocks = this.migrateBlocksFromSlate(revision.blocks);
 
         await this.prisma.articleRevision.update({
           where: { id: revision.id },
@@ -757,26 +738,7 @@ export class SlateToPmMigrator {
           );
         }
 
-        const updatedBlocks = revision.blocks.map((block: any) => {
-          if (['richText', 'linkPageBreak'].includes(block.type)) {
-            return {
-              ...block,
-              richText: this.migrate(block.slateRichText ?? []),
-            };
-          }
-
-          if (['listicle'].includes(block.type)) {
-            return {
-              ...block,
-              items: block.items.map((item: any) => ({
-                ...item,
-                richText: this.migrate(item.slateRichText ?? []),
-              })),
-            };
-          }
-
-          return block;
-        });
+        const updatedBlocks = this.migrateBlocksFromSlate(revision.blocks);
 
         await this.prisma.pageRevision.update({
           where: { id: revision.id },
