@@ -362,8 +362,6 @@ exports[`ArticleService should query articles based on filter 2`] = `
         {
           "shared": true,
         },
-        {},
-        {},
         {
           "ArticleRevisionDraft": {
             "articleRevision": {
@@ -558,8 +556,6 @@ exports[`ArticleService should query articles based on filter 3`] = `
         {
           "shared": true,
         },
-        {},
-        {},
         {
           "ArticleRevisionDraft": {
             "articleRevision": {
@@ -784,8 +780,6 @@ exports[`ArticleService should query articles based on full text search 2`] = `
         {
           "shared": true,
         },
-        {},
-        {},
         {
           "ArticleRevisionDraft": {
             "articleRevision": {
@@ -982,8 +976,6 @@ exports[`ArticleService should query articles based on full text search 3`] = `
         {
           "shared": true,
         },
-        {},
-        {},
         {
           "ArticleRevisionDraft": {
             "articleRevision": {
@@ -1164,8 +1156,6 @@ exports[`ArticleService should query articles on all revisions 2`] = `
         {
           "shared": true,
         },
-        {},
-        {},
         {
           "ArticleRevisionDraft": undefined,
           "ArticleRevisionPending": undefined,
@@ -1196,13 +1186,6 @@ exports[`ArticleService should query articles on all revisions 2`] = `
               "1234",
             ],
           },
-        },
-        {
-          "OR": [
-            {},
-            {},
-            {},
-          ],
         },
       ],
     },
@@ -1275,8 +1258,6 @@ exports[`ArticleService should query articles on all revisions 3`] = `
         {
           "shared": true,
         },
-        {},
-        {},
         {
           "ArticleRevisionDraft": undefined,
           "ArticleRevisionPending": undefined,
@@ -1308,13 +1289,6 @@ exports[`ArticleService should query articles on all revisions 3`] = `
             ],
           },
         },
-        {
-          "OR": [
-            {},
-            {},
-            {},
-          ],
-        },
       ],
     },
   },
@@ -1334,27 +1308,8 @@ exports[`ArticleService should query articles using cursor based pagination 1`] 
     "take": 11,
     "where": {
       "AND": [
-        {},
-        {},
-        {},
-        {},
-        {},
-        {},
-        {},
-        {},
-        {},
-        {},
         {
           "hidden": false,
-        },
-        {},
-        {},
-        {
-          "OR": [
-            {},
-            {},
-            {},
-          ],
         },
       ],
     },
@@ -1370,27 +1325,8 @@ exports[`ArticleService should query articles using cursor based pagination 2`] 
     },
     "where": {
       "AND": [
-        {},
-        {},
-        {},
-        {},
-        {},
-        {},
-        {},
-        {},
-        {},
-        {},
         {
           "hidden": false,
-        },
-        {},
-        {},
-        {
-          "OR": [
-            {},
-            {},
-            {},
-          ],
         },
       ],
     },
