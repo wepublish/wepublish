@@ -3,6 +3,7 @@ import 'react-resizable/css/styles.css';
 
 import styled from '@emotion/styled';
 import { BlockType } from '@wepublish/editor/api';
+import { toPlaintext } from '@wepublish/richtext';
 import i18next from 'i18next';
 import nanoid from 'nanoid';
 import React, {
@@ -240,11 +241,41 @@ const ContentForFlexBlockWrapper = styled('div')`
   color: white;
 `;
 
+const getContentHintForFlexBlockNestedBlock = (block: BlockValue): string => {
+  if (!block) {
+    return '';
+  }
+
+  if (block.type === 'TeaserSlots') {
+    return block.value?.title || 'Teaser Slots';
+  }
+
+  if (block.type === 'RichText') {
+    const text = toPlaintext(block.value?.richText?.content)?.trim();
+    if (!text) {
+      return 'Rich Text';
+    }
+    if (text.length > 25) {
+      return text.slice(0, 25) + '...';
+    }
+    return text;
+  }
+
+  if (block.type === 'Crowdfunding') {
+    return block.value?.crowdfunding?.name || 'Crowdfunding';
+  }
+
+  if (block.type === 'LinkPageBreak') {
+    return block.value?.text || 'Break';
+  }
+
+  return 'unknown block value';
+};
+
 export const ContentForFlexBlock = ({ block }: { block: BlockValue }) => {
-  const { value } = block;
   return (
     <ContentForFlexBlockWrapper>
-      {(value && (value as { title: string }).title) ?? ''}
+      {getContentHintForFlexBlockNestedBlock(block)}
     </ContentForFlexBlockWrapper>
   );
 };

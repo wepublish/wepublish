@@ -1,5 +1,8 @@
 {
   "translation": {
+    "columnConfigurator": {
+      "title": "Show/hide columns"
+    },
     "articleEditor": {
       "overview": {
         "articlePending": "Article Pending",
@@ -141,6 +144,7 @@
         "newArticle": "New Article",
         "notPublished": "Not yet published",
         "pending": "Pending",
+        "preTitle": "Pre-title",
         "publicationDate": "Publication date",
         "published": "Published",
         "states": "States",

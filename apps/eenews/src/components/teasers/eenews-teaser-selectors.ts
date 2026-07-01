@@ -1,0 +1,118 @@
+import type { FullTeaserFragment } from '@wepublish/website/api';
+
+export type EeNewsTag = { id: string; tag: string; color?: string | null };
+
+// Tags are stored lowercase; sentence-case is the default display transform.
+// These keep the editorial casing that sentence-case can't infer (acronyms,
+// brand names, German nouns). Keyed by the lowercase stored tag.
+const TAG_LABEL_OVERRIDES: Record<string, string> = {
+  'akw-debatte': 'AKW-Debatte',
+  'the smarter e': 'The Smarter E',
+  'fossile energien': 'Fossile Energien',
+  aeesuisse: 'aeesuisse',
+};
+
+export const capitalizeTag = (label: string | null | undefined): string => {
+  const text = (label ?? '').trim();
+  if (!text) {
+    return '';
+  }
+  const override = TAG_LABEL_OVERRIDES[text.toLowerCase()];
+  if (override) {
+    return override;
+  }
+  return text.charAt(0).toUpperCase() + text.slice(1);
+};
+
+type RawTag = { id: string; tag?: string | null; color?: string | null };
+
+const toEeNewsTag = (tag: RawTag | undefined): EeNewsTag | undefined => {
+  if (!tag?.tag) {
+    return undefined;
+  }
+  return { id: tag.id, tag: tag.tag, color: tag.color ?? undefined };
+};
+
+const FRENCH_ARTICLES_TAGS = ['articles en français'];
+
+export const ALLOWED_TAG_NAMES = [
+  'articles en français',
+  'aeesuisse',
+  'the smarter e',
+  'energiestrategie 2050',
+  'bauen',
+  'bücher',
+  'batterien',
+  'akw-debatte',
+  'mobilität',
+  'fossile energien',
+  'klima',
+];
+
+const ALLOWED_TAGS = new Set(ALLOWED_TAG_NAMES);
+
+export const isAllowedTagName = (name: string | null | undefined): boolean =>
+  ALLOWED_TAGS.has(name?.toLowerCase().trim() ?? '');
+
+export const resolveWhitelistTagIds = (
+  nodes: ReadonlyArray<{ id: string; tag?: string | null }>
+): string[] =>
+  nodes.filter(node => isAllowedTagName(node.tag)).map(node => node.id);
+
+const isFrenchArticlesTag = (tag: { tag?: string | null }): boolean =>
+  FRENCH_ARTICLES_TAGS.includes(tag.tag?.toLowerCase().trim() ?? '');
+
+export const selectTeaserTag = (
+  teaser: FullTeaserFragment | null | undefined,
+  priorityTagName?: string
+): EeNewsTag | undefined => {
+  if (teaser?.__typename !== 'ArticleTeaser') {
+    return undefined;
+  }
+  const tags = teaser.article?.tags ?? [];
+  const french = tags.find(isFrenchArticlesTag);
+  if (french) {
+    return toEeNewsTag(french);
+  }
+  if (priorityTagName) {
+    const priority = tags.find(
+      t => t.tag?.toLowerCase().trim() === priorityTagName.toLowerCase().trim()
+    );
+    if (priority) {
+      return toEeNewsTag(priority);
+    }
+  }
+  return toEeNewsTag(tags.find(t => isAllowedTagName(t.tag)));
+};
+
+export const selectTeaserTopic = (
+  teaser: FullTeaserFragment | null | undefined
+): EeNewsTag | undefined => {
+  if (teaser?.__typename !== 'ArticleTeaser') {
+    return undefined;
+  }
+  return toEeNewsTag(teaser.article?.tags?.find(t => t.main));
+};
+
+export const selectTeaserBreaking = (
+  teaser: FullTeaserFragment | null | undefined
+): boolean => {
+  if (teaser?.__typename !== 'ArticleTeaser') {
+    return false;
+  }
+  return teaser.article?.latest?.breaking ?? false;
+};
+
+export const selectTeaserPreTitle = (
+  teaser: FullTeaserFragment | null | undefined
+): string | undefined => {
+  if (!teaser) {
+    return undefined;
+  }
+  const raw =
+    teaser.__typename === 'ArticleTeaser' ?
+      teaser.preTitle || teaser.article?.latest.preTitle
+    : teaser.preTitle;
+  const text = raw?.trim();
+  return text ? text : undefined;
+};

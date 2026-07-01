@@ -123,6 +123,7 @@ export type ArticleFilter = {
   published?: InputMaybe<Scalars['Boolean']>;
   shared?: InputMaybe<Scalars['Boolean']>;
   tags?: InputMaybe<Array<Scalars['String']>>;
+  tagsInclude?: InputMaybe<Array<Scalars['String']>>;
   tagsNotIn?: InputMaybe<Array<Scalars['String']>>;
   title?: InputMaybe<Scalars['String']>;
 };
@@ -3825,6 +3826,7 @@ export type PeerArticleFilter = {
   publicationDateFrom?: InputMaybe<DateFilter>;
   publicationDateTo?: InputMaybe<DateFilter>;
   tags?: InputMaybe<Array<Scalars['String']>>;
+  tagsInclude?: InputMaybe<Array<Scalars['String']>>;
   title?: InputMaybe<Scalars['String']>;
 };
 

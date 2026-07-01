@@ -800,6 +800,26 @@ const createTagsFilter = (
   return {};
 };
 
+const createTagsIncludeFilter = (
+  filter: Partial<ArticleFilter>
+): Prisma.ArticleWhereInput => {
+  if (filter?.tagsInclude?.length) {
+    return {
+      AND: filter.tagsInclude.map(id => ({
+        tags: {
+          some: {
+            tag: {
+              id,
+            },
+          },
+        },
+      })),
+    };
+  }
+
+  return {};
+};
+
 const createTagsNotInFilter = (
   filter: Partial<ArticleFilter>
 ): Prisma.ArticleWhereInput => {
@@ -920,6 +940,7 @@ export const createArticleFilter = (
     createLeadFilter(filter),
     createSharedFilter(filter),
     createTagsFilter(filter),
+    createTagsIncludeFilter(filter),
     createTagsNotInFilter(filter),
     createAuthorFilter(filter),
     createHiddenFilter(filter),

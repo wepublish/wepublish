@@ -76,6 +76,7 @@ input ArticleFilter {
   published: Boolean
   shared: Boolean
   tags: [String!]
+  tagsInclude: [String!]
   tagsNotIn: [String!]
   title: String
 }
@@ -2704,6 +2705,7 @@ input PeerArticleFilter {
   publicationDateFrom: DateFilter
   publicationDateTo: DateFilter
   tags: [String!]
+  tagsInclude: [String!]
   title: String
 }
 
