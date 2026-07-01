@@ -4,7 +4,7 @@ import { PrismaPg } from '@prisma/adapter-pg';
 export const createPrismaClient = () => {
   const adapter = new PrismaPg({
     connectionString: process.env.DATABASE_URL || 'postgresql://',
-    max: parseInt(process.env['DATABASE_POOL_SIZE'] ?? '2'),
+    max: parseInt(process.env['DATABASE_POOL_SIZE'] ?? '20'),
     connectionTimeoutMillis: 5_000,
     idleTimeoutMillis: 10_000,
   });
