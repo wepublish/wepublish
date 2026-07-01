@@ -265,7 +265,9 @@ exports[`ArticleService should query articles based on filter 2`] = `
       "AND": [
         {
           "id": {
-            "in": [],
+            "in": [
+              "12345",
+            ],
           },
         },
         {
@@ -361,6 +363,19 @@ exports[`ArticleService should query articles based on filter 2`] = `
         },
         {
           "shared": true,
+        },
+        {
+          "tags": {
+            "some": {
+              "tag": {
+                "id": {
+                  "in": [
+                    "1234",
+                  ],
+                },
+              },
+            },
+          },
         },
         {
           "ArticleRevisionDraft": {
@@ -459,7 +474,9 @@ exports[`ArticleService should query articles based on filter 3`] = `
       "AND": [
         {
           "id": {
-            "in": [],
+            "in": [
+              "12345",
+            ],
           },
         },
         {
@@ -555,6 +572,19 @@ exports[`ArticleService should query articles based on filter 3`] = `
         },
         {
           "shared": true,
+        },
+        {
+          "tags": {
+            "some": {
+              "tag": {
+                "id": {
+                  "in": [
+                    "1234",
+                  ],
+                },
+              },
+            },
+          },
         },
         {
           "ArticleRevisionDraft": {
@@ -683,6 +713,7 @@ exports[`ArticleService should query articles based on full text search 2`] = `
           "id": {
             "in": [
               "1234",
+              "1235",
             ],
           },
         },
@@ -779,6 +810,19 @@ exports[`ArticleService should query articles based on full text search 2`] = `
         },
         {
           "shared": true,
+        },
+        {
+          "tags": {
+            "some": {
+              "tag": {
+                "id": {
+                  "in": [
+                    "1234",
+                  ],
+                },
+              },
+            },
+          },
         },
         {
           "ArticleRevisionDraft": {
@@ -879,6 +923,7 @@ exports[`ArticleService should query articles based on full text search 3`] = `
           "id": {
             "in": [
               "1234",
+              "1235",
             ],
           },
         },
@@ -975,6 +1020,19 @@ exports[`ArticleService should query articles based on full text search 3`] = `
         },
         {
           "shared": true,
+        },
+        {
+          "tags": {
+            "some": {
+              "tag": {
+                "id": {
+                  "in": [
+                    "1234",
+                  ],
+                },
+              },
+            },
+          },
         },
         {
           "ArticleRevisionDraft": {
@@ -1101,7 +1159,9 @@ exports[`ArticleService should query articles on all revisions 2`] = `
       "AND": [
         {
           "id": {
-            "in": [],
+            "in": [
+              "12345",
+            ],
           },
         },
         {
@@ -1155,6 +1215,19 @@ exports[`ArticleService should query articles on all revisions 2`] = `
         },
         {
           "shared": true,
+        },
+        {
+          "tags": {
+            "some": {
+              "tag": {
+                "id": {
+                  "in": [
+                    "1234",
+                  ],
+                },
+              },
+            },
+          },
         },
         {
           "ArticleRevisionDraft": undefined,
@@ -1203,7 +1276,9 @@ exports[`ArticleService should query articles on all revisions 3`] = `
       "AND": [
         {
           "id": {
-            "in": [],
+            "in": [
+              "12345",
+            ],
           },
         },
         {
@@ -1257,6 +1332,19 @@ exports[`ArticleService should query articles on all revisions 3`] = `
         },
         {
           "shared": true,
+        },
+        {
+          "tags": {
+            "some": {
+              "tag": {
+                "id": {
+                  "in": [
+                    "1234",
+                  ],
+                },
+              },
+            },
+          },
         },
         {
           "ArticleRevisionDraft": undefined,
