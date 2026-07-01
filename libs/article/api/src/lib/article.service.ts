@@ -63,7 +63,6 @@ export class ArticleService {
     const [totalCount, articles] = await Promise.all([
       this.prisma.article.count({
         where,
-        orderBy,
       }),
       this.prisma.article.findMany({
         where,
