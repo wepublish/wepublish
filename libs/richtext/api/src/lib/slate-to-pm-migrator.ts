@@ -743,26 +743,7 @@ export class SlateToPmMigrator {
           );
         }
 
-        const updatedBlocks = revision.blocks.map((block: any) => {
-          if (['richText', 'linkPageBreak'].includes(block.type)) {
-            return {
-              ...block,
-              richText: this.migrate(block.slateRichText ?? []),
-            };
-          }
-
-          if (['listicle'].includes(block.type)) {
-            return {
-              ...block,
-              items: block.items.map((item: any) => ({
-                ...item,
-                richText: this.migrate(item.slateRichText ?? []),
-              })),
-            };
-          }
-
-          return block;
-        });
+        const updatedBlocks = this.migrateBlocksFromSlate(revision.blocks);
 
         this.reflektAuditSlateAnchors(
           `articleRevision ${revision.id}`,
@@ -821,26 +802,7 @@ export class SlateToPmMigrator {
           );
         }
 
-        const updatedBlocks = revision.blocks.map((block: any) => {
-          if (['richText', 'linkPageBreak'].includes(block.type)) {
-            return {
-              ...block,
-              richText: this.migrate(block.slateRichText ?? []),
-            };
-          }
-
-          if (['listicle'].includes(block.type)) {
-            return {
-              ...block,
-              items: block.items.map((item: any) => ({
-                ...item,
-                richText: this.migrate(item.slateRichText ?? []),
-              })),
-            };
-          }
-
-          return block;
-        });
+        const updatedBlocks = this.migrateBlocksFromSlate(revision.blocks);
 
         this.reflektAuditSlateAnchors(
           `pageRevision ${revision.id}`,
