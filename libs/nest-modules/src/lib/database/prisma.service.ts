@@ -9,9 +9,12 @@ export class PrismaService
 {
   constructor() {
     const connectionString = process.env['DATABASE_URL'];
+    const max = process.env['DATABASE_CLIENT_CONNECTION_LIMIT']
+      ? Number(process.env['DATABASE_CLIENT_CONNECTION_LIMIT'])
+      : 20;
 
     if (connectionString) {
-      const adapter = new PrismaPg({ connectionString });
+      const adapter = new PrismaPg({ connectionString, max });
       super({ adapter });
     } else {
       // Allow instantiation without a DB connection (e.g. unit tests)
