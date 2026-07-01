@@ -320,7 +320,7 @@ export class PaymentsService {
         paymentID: updatedPayment.id,
       });
 
-      if (paymentProvider) {
+      if (intentState) {
         await paymentProvider.updatePaymentWithIntentState({
           intentState,
         });

@@ -784,6 +784,7 @@ enum PaymentState {
   paid               @map("paid")
   canceled           @map("canceled")
   declined           @map("declined")
+  chargeback         @map("chargeback")
 }
 
 model Payment {
@@ -896,6 +897,7 @@ enum SubscriptionDeactivationReason {
   userSelfDeactivated      @map("userSelfDeactivated")
   invoiceNotPaid           @map("invoiceNotPaid")
   userReplacedSubscription @map("userReplacedSubscription")
+  chargeback               @map("chargeback")
 }
 
 model SubscriptionDeactivation {
