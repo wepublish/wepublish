@@ -784,10 +784,8 @@ const createTagsFilter = (
   if (filter?.tags?.length) {
     const hasTags = {
       some: {
-        tag: {
-          id: {
-            in: filter.tags,
-          },
+        tagId: {
+          in: filter.tags,
         },
       },
     } satisfies Prisma.TaggedArticlesListRelationFilter;
@@ -826,10 +824,8 @@ const createTagsNotInFilter = (
   if (filter?.tagsNotIn?.length) {
     const hasNotTags = {
       some: {
-        tag: {
-          id: {
-            notIn: filter.tagsNotIn,
-          },
+        tagId: {
+          notIn: filter.tagsNotIn,
         },
       },
     } satisfies Prisma.TaggedArticlesListRelationFilter;
