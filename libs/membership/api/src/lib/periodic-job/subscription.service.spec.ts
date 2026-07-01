@@ -466,7 +466,7 @@ describe('SubscriptionPaymentsService', () => {
       const event: Action = {
         type: SubscriptionEvent.RENEWAL_SUCCESS,
         daysAwayFromEnding: 1,
-        externalMailTemplate: null,
+        mailTemplateId: null,
       };
       await subscriptionService['offSessionPayment'](
         { canceledAt: null, paidAt: null } as any,

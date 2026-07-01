@@ -1,18 +1,15 @@
 import crypto from 'crypto';
 
-import mailchimp, {
-  TemplateResponse,
-} from '@mailchimp/mailchimp_transactional';
+import mailchimp from '@mailchimp/mailchimp_transactional';
 import { AxiosError } from 'axios';
 
 import { MailLogState } from '@prisma/client';
 import {
   MailLogStatus,
   MailProviderError,
-  MailProviderTemplate,
+  MailProviderTemplateContent,
   SendMailProps,
   WebhookForSendMailProps,
-  WithExternalId,
 } from './mail-provider.interface';
 import { BaseMailProvider, MailProviderProps } from './base-mail-provider';
 
@@ -36,43 +33,6 @@ function mapMandrillEventToMailLogState(event: string): MailLogState | null {
     default:
       return null;
   }
-}
-
-/*
- * Mandrill template engine does not support nested objects
- */
-function flattenObjForMandrill<T>(ob: T): Record<string, string> {
-  const nestedObject: Record<string, string> = {};
-
-  for (const i in ob) {
-    const nestedObj = ob[i];
-
-    if (Array.isArray(nestedObj)) {
-      for (const j in nestedObj) {
-        if (nestedObj[j] && typeof nestedObj[j] === 'object') {
-          const returnedNestedObject = flattenObjForMandrill(nestedObj[j]);
-
-          for (const k in returnedNestedObject) {
-            nestedObject[`${i}_${j}_${k}`] = returnedNestedObject[k];
-          }
-        } else {
-          nestedObject[`${i}_${j}`] = nestedObj[j];
-        }
-      }
-    } else if (nestedObj && typeof nestedObj === 'object') {
-      const returnedNestedObject = flattenObjForMandrill(nestedObj);
-
-      for (const j in returnedNestedObject) {
-        nestedObject[`${i}_${j}`] = returnedNestedObject[j];
-      }
-    } else {
-      // eventho it should be string according to Mandrill typings
-      // it accepts booleans, numbers etc.
-      nestedObject[i] = nestedObj as any;
-    }
-  }
-
-  return nestedObject;
 }
 
 export class MailchimpMailProvider extends BaseMailProvider {
@@ -151,48 +111,6 @@ export class MailchimpMailProvider extends BaseMailProvider {
   async sendMail(props: SendMailProps): Promise<void> {
     const config = await this.getConfig();
     const mailchimpClient = await this.getMailchimpClient();
-    if (props.template) {
-      const templateContent: mailchimp.MergeVar[] = [];
-      const flattenedObject = flattenObjForMandrill(props.templateData ?? {});
-
-      for (const [key, value] of Object.entries(flattenedObject)) {
-        templateContent.push({
-          name: key,
-          content: value,
-        });
-      }
-
-      const response = await mailchimpClient.messages.sendTemplate({
-        template_name: props.template,
-        template_content: [],
-        message: {
-          text: props.message,
-          subject: props.subject,
-          from_email: config?.fromAddress ?? '',
-          to: [
-            {
-              email: props.recipient,
-              type: 'to',
-            },
-          ],
-          merge_vars: [
-            {
-              rcpt: props.recipient,
-              vars: templateContent,
-            },
-          ],
-        },
-      });
-
-      if (this.responseIsError(response)) {
-        throw new MailProviderError(
-          (response.response?.data as Error | undefined)?.message ??
-            'Unknown Mailchimp error'
-        );
-      }
-
-      return;
-    }
 
     const response = await mailchimpClient.messages.send({
       message: {
@@ -214,32 +132,36 @@ export class MailchimpMailProvider extends BaseMailProvider {
     }
   }
 
-  // beware: Mailchimp templates are still created and stored in Mandrill: https://mandrillapp.com/templates
-  async getTemplates(): Promise<MailProviderTemplate[]> {
-    const mailchimpClient = await this.getMailchimpClient();
-    const response = await mailchimpClient.templates.list();
-    if (this.responseIsError(response)) {
-      throw new MailProviderError((response.response?.data as Error).message);
-    }
-    const templates: MailProviderTemplate[] = (
-      response as TemplateResponse[]
-    ).map(mailTemplateResponse => {
-      return {
-        name: mailTemplateResponse.name,
-        uniqueIdentifier: mailTemplateResponse.slug,
-        createdAt: new Date(mailTemplateResponse.created_at),
-        updatedAt: new Date(mailTemplateResponse.updated_at),
-      };
-    });
-    return templates;
-  }
-
-  async getTemplateUrl(template: WithExternalId): Promise<string> {
-    return `https://mandrillapp.com/templates/code?id=${template.externalMailTemplateId}`;
-  }
-
   private responseIsError<T>(response: T | AxiosError): response is AxiosError {
     return 'isAxiosError' in (response as object);
+  }
+
+  async getTemplateContent(
+    externalMailTemplateId: string
+  ): Promise<MailProviderTemplateContent> {
+    const mailchimpClient = await this.getMailchimpClient();
+    const response = await mailchimpClient.templates.info({
+      name: externalMailTemplateId,
+    });
+
+    if (this.responseIsError(response)) {
+      throw new MailProviderError(
+        (response.response?.data as Error | undefined)?.message ??
+          `Failed to load template ${externalMailTemplateId}`
+      );
+    }
+
+    const template = response as {
+      code?: string;
+      publish_code?: string;
+      subject?: string;
+      publish_subject?: string;
+    };
+
+    return {
+      html: template.publish_code ?? template.code ?? '',
+      subject: template.publish_subject ?? template.subject,
+    };
   }
 
   async getName(): Promise<string> {

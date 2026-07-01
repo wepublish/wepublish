@@ -4,7 +4,7 @@ query SystemMails {
   }
 }
 
-mutation UpdateSystemMail($event: UserEvent!, $mailTemplateId: String!) {
+mutation UpdateSystemMail($event: UserEvent!, $mailTemplateId: String) {
   updateSystemMail(event: $event, mailTemplateId: $mailTemplateId) {
     ...SystemMail
   }

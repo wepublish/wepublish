@@ -1569,6 +1569,54 @@ enum MailProviderType {
   MAILCHIMP
   MAILGUN
   SLACK
+  SMTP
+}
+
+"""The mail type / context a template is written for."""
+enum MailTemplateContext {
+  account
+  custom
+  emailChange
+  invoiceCreation
+  renewal
+  subscription
+}
+
+input MailTemplateInput {
+  context: MailTemplateContext
+  description: String
+  htmlContent: String!
+  name: String!
+  subject: String!
+  textContent: String
+}
+
+type MailTemplateModel {
+  context: MailTemplateContext
+  description: String
+  htmlContent: String!
+  id: String!
+  name: String!
+  status: String!
+  subject: String!
+  textContent: String
+}
+
+input MailTemplatePreviewInput {
+  """Mail type / context id, e.g. "renewal"."""
+  contextId: String!
+  htmlContent: String!
+  subject: String!
+
+  """Subscription to take sample data from."""
+  subscriptionId: String
+  textContent: String
+}
+
+type MailTemplatePreviewModel {
+  html: String!
+  subject: String!
+  text: String
 }
 
 type MailTemplateRef {
@@ -1576,14 +1624,9 @@ type MailTemplateRef {
   name: String!
 }
 
-type MailTemplateWithUrlAndStatusModel {
-  description: String
-  externalMailTemplateId: String!
+type MailTemplateSubscriptionOption {
   id: String!
-  name: String!
-  remoteMissing: Boolean!
-  status: String!
-  url: String!
+  label: String!
 }
 
 type MailchimpInterestGroup {
@@ -1752,6 +1795,9 @@ type Mutation {
   """Returns a JWT that is valid for 1min for the current logged in user."""
   createJWTForWebsiteLogin: SessionWithToken!
 
+  """Create a new mail template"""
+  createMailTemplate(input: MailTemplateInput!): MailTemplateModel!
+
   """Creates a new memberplan."""
   createMemberPlan(active: Boolean!, amountPerMonthMax: Int, amountPerMonthMin: Int!, amountPerMonthTarget: Int, availablePaymentMethods: [AvailablePaymentMethodInput!]!, confirmationPageId: String, currency: Currency!, description: RichText, extendable: Boolean!, externalReward: String, failPageId: String, imageID: String, maxCount: Int, migrateToTargetPaymentMethodID: String, name: String!, productType: ProductType!, shortDescription: RichText, slug: String!, successPageId: String, tags: [String!]): MemberPlan!
 
@@ -1882,6 +1928,9 @@ type Mutation {
   """Deletes an existing invoice."""
   deleteInvoice(id: String!): Invoice!
 
+  """Delete an existing mail template"""
+  deleteMailTemplate(id: String!): Boolean
+
   """Deletes a single sync error so the contact will be retried."""
   deleteMailchimpSyncError(id: String!): Boolean!
 
@@ -1980,6 +2029,9 @@ type Mutation {
   "\n      Creates and event based on data from importable events list and an id and provider.\n      Also, uploads an image to WePublish Image library.\n    "
   importEvent(id: String!, source: String!): String!
 
+  """Import HTML/subject from the mail provider, overwriting local content"""
+  importMailTemplatesFromProvider: Int!
+
   """Imports an article from a peer as a draft."""
   importPeerArticle(articleId: String!, options: ImportArticleOptions! = {importAuthors: true, importContentImages: true, importTags: true}, peerId: String!): Article!
 
@@ -2064,11 +2116,13 @@ type Mutation {
   """
   sendPasswordResetEmail(email: String!): String!
 
+  """Send a test mail for a draft template"""
+  sendTestMailTemplate(input: SendTestMailTemplateInput!): Boolean
+
   """
   This mutation sends a login link to the email if the user exists. Method will always return email address
   """
   sendWebsiteLogin(email: String!): String!
-  syncTemplates: Boolean
 
   """Sends a test email for the given event"""
   testSystemMail(event: UserEvent!): Boolean!
@@ -2129,7 +2183,10 @@ type Mutation {
   updateInvoice(currency: Currency, description: String, dueAt: DateTime, id: String!, items: [InvoiceItemInput!], mail: String, manuallySetAsPaidByUserId: String, scheduledDeactivationAt: DateTime, subscriptionID: String): Invoice!
 
   """Updates an existing mail provider setting."""
-  updateMailProviderSetting(apiKey: String, fromAddress: String, id: String, mailchimp_baseURL: String, mailgun_baseDomain: String, mailgun_mailDomain: String, name: String, replyToAddress: String, slack_webhookURL: String, webhookEndpointSecret: String): SettingMailProvider!
+  updateMailProviderSetting(apiKey: String, fromAddress: String, id: String, mailchimp_baseURL: String, mailgun_baseDomain: String, mailgun_mailDomain: String, name: String, replyToAddress: String, slack_webhookURL: String, smtp_host: String, smtp_port: Int, smtp_secure: Boolean, smtp_user: String, webhookEndpointSecret: String): SettingMailProvider!
+
+  """Update an existing mail template"""
+  updateMailTemplate(id: String!, input: MailTemplateInput!): MailTemplateModel!
 
   """Updates an existing memberplan."""
   updateMemberPlan(active: Boolean, amountPerMonthMax: Int, amountPerMonthMin: Int, amountPerMonthTarget: Int, availablePaymentMethods: [AvailablePaymentMethodInput!], confirmationPageId: String, currency: Currency, description: RichText, extendable: Boolean, externalReward: String, failPageId: String, id: String!, imageID: String, maxCount: Int, migrateToTargetPaymentMethodID: String, name: String, productType: ProductType, shortDescription: RichText, slug: String, successPageId: String, tags: [String!]): MemberPlan!
@@ -2182,7 +2239,12 @@ type Mutation {
   updateSyncProviderSetting(enabled: Boolean, id: String!, mailchimp_apiKey: String, mailchimp_defaultInterestGroupIds: [String!], mailchimp_extensions: JSONObject, mailchimp_interestGroupMappings: [JSONObject!], mailchimp_listId: String, mailchimp_mergeFieldMappings: [JSONObject!], name: String): SettingSyncProvider!
 
   """Updates an existing mail flow"""
-  updateSystemMail(event: UserEvent!, mailTemplateId: String!): [SystemMailModel!]!
+  updateSystemMail(
+    event: UserEvent!
+
+    """Mail template to assign, or null to unassign."""
+    mailTemplateId: String
+  ): [SystemMailModel!]!
 
   """Updates an existing tag."""
   updateTag(color: Color, description: RichText, id: String!, main: Boolean = false, tag: String, type: TagType): Tag!
@@ -3111,8 +3173,14 @@ type Query {
   """Returns all mail provider settings."""
   mailProviderSettings(filter: SettingMailProviderFilter): [SettingMailProvider!]!
 
+  """Render a draft mail template with a mail type's sample data"""
+  mailTemplatePreview(input: MailTemplatePreviewInput!): MailTemplatePreviewModel!
+
+  """Search subscriptions to use as sample data for previews/tests"""
+  mailTemplateSubscriptions(query: String): [MailTemplateSubscriptionOption!]!
+
   """Return all mail templates"""
-  mailTemplates: [MailTemplateWithUrlAndStatusModel!]!
+  mailTemplates: [MailTemplateModel!]!
 
   """Fetches available interest groups for a Mailchimp list."""
   mailchimpInterestGroups(configId: String!, listId: String!): [MailchimpInterestGroup!]!
@@ -3426,6 +3494,14 @@ input RichTextBlockInput {
   richText: RichText
 }
 
+input SendTestMailTemplateInput {
+  contextId: String!
+  htmlContent: String!
+  subject: String!
+  subscriptionId: String
+  textContent: String
+}
+
 type SensitiveDataUser implements BaseUser {
   active: Boolean!
   address: UserAddress
@@ -3557,6 +3633,10 @@ type SettingMailProvider implements SettingProvider {
   name: String
   replyToAddress: String
   slack_webhookURL: String
+  smtp_host: String
+  smtp_port: Int
+  smtp_secure: Boolean
+  smtp_user: String
   type: MailProviderType!
 }
 

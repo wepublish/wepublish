@@ -1654,8 +1654,57 @@ export type MailProviderModel = {
 export enum MailProviderType {
   Mailchimp = 'MAILCHIMP',
   Mailgun = 'MAILGUN',
-  Slack = 'SLACK'
+  Slack = 'SLACK',
+  Smtp = 'SMTP'
 }
+
+/** The mail type / context a template is written for. */
+export enum MailTemplateContext {
+  Account = 'account',
+  Custom = 'custom',
+  EmailChange = 'emailChange',
+  InvoiceCreation = 'invoiceCreation',
+  Renewal = 'renewal',
+  Subscription = 'subscription'
+}
+
+export type MailTemplateInput = {
+  context?: InputMaybe<MailTemplateContext>;
+  description?: InputMaybe<Scalars['String']>;
+  htmlContent: Scalars['String'];
+  name: Scalars['String'];
+  subject: Scalars['String'];
+  textContent?: InputMaybe<Scalars['String']>;
+};
+
+export type MailTemplateModel = {
+  __typename?: 'MailTemplateModel';
+  context?: Maybe<MailTemplateContext>;
+  description?: Maybe<Scalars['String']>;
+  htmlContent: Scalars['String'];
+  id: Scalars['String'];
+  name: Scalars['String'];
+  status: Scalars['String'];
+  subject: Scalars['String'];
+  textContent?: Maybe<Scalars['String']>;
+};
+
+export type MailTemplatePreviewInput = {
+  /** Mail type / context id, e.g. "renewal". */
+  contextId: Scalars['String'];
+  htmlContent: Scalars['String'];
+  subject: Scalars['String'];
+  /** Subscription to take sample data from. */
+  subscriptionId?: InputMaybe<Scalars['String']>;
+  textContent?: InputMaybe<Scalars['String']>;
+};
+
+export type MailTemplatePreviewModel = {
+  __typename?: 'MailTemplatePreviewModel';
+  html: Scalars['String'];
+  subject: Scalars['String'];
+  text?: Maybe<Scalars['String']>;
+};
 
 export type MailTemplateRef = {
   __typename?: 'MailTemplateRef';
@@ -1663,15 +1712,10 @@ export type MailTemplateRef = {
   name: Scalars['String'];
 };
 
-export type MailTemplateWithUrlAndStatusModel = {
-  __typename?: 'MailTemplateWithUrlAndStatusModel';
-  description?: Maybe<Scalars['String']>;
-  externalMailTemplateId: Scalars['String'];
+export type MailTemplateSubscriptionOption = {
+  __typename?: 'MailTemplateSubscriptionOption';
   id: Scalars['String'];
-  name: Scalars['String'];
-  remoteMissing: Scalars['Boolean'];
-  status: Scalars['String'];
-  url: Scalars['String'];
+  label: Scalars['String'];
 };
 
 export type MailchimpInterestGroup = {
@@ -1825,6 +1869,8 @@ export type Mutation = {
   createJWTForUser: SessionWithToken;
   /** Returns a JWT that is valid for 1min for the current logged in user. */
   createJWTForWebsiteLogin: SessionWithToken;
+  /** Create a new mail template */
+  createMailTemplate: MailTemplateModel;
   /** Creates a new memberplan. */
   createMemberPlan: MemberPlan;
   /** Creates a new navigation. */
@@ -1906,6 +1952,8 @@ export type Mutation = {
   deleteImage: Scalars['String'];
   /** Deletes an existing invoice. */
   deleteInvoice: Invoice;
+  /** Delete an existing mail template */
+  deleteMailTemplate?: Maybe<Scalars['Boolean']>;
   /** Deletes a single sync error so the contact will be retried. */
   deleteMailchimpSyncError: Scalars['Boolean'];
   /** Deletes an existing memberplan. */
@@ -1974,6 +2022,8 @@ export type Mutation = {
    *
    */
   importEvent: Scalars['String'];
+  /** Import HTML/subject from the mail provider, overwriting local content */
+  importMailTemplatesFromProvider: Scalars['Int'];
   /** Imports an article from a peer as a draft. */
   importPeerArticle: Article;
   /** Imports a subscription. */
@@ -2010,9 +2060,10 @@ export type Mutation = {
   sendJWTLogin: Scalars['String'];
   /** Sends a password reset email with a scoped JWT token. Always returns the email to prevent enumeration. */
   sendPasswordResetEmail: Scalars['String'];
+  /** Send a test mail for a draft template */
+  sendTestMailTemplate?: Maybe<Scalars['Boolean']>;
   /** This mutation sends a login link to the email if the user exists. Method will always return email address */
   sendWebsiteLogin: Scalars['String'];
-  syncTemplates?: Maybe<Scalars['Boolean']>;
   /** Sends a test email for the given event */
   testSystemMail: Scalars['Boolean'];
   /** Triggers a mailchimp sync in the background. */
@@ -2058,6 +2109,8 @@ export type Mutation = {
   updateInvoice: Invoice;
   /** Updates an existing mail provider setting. */
   updateMailProviderSetting: SettingMailProvider;
+  /** Update an existing mail template */
+  updateMailTemplate: MailTemplateModel;
   /** Updates an existing memberplan. */
   updateMemberPlan: MemberPlan;
   /** Updates an existing navigation. */
@@ -2271,6 +2324,11 @@ export type MutationCreateInvoiceArgs = {
 export type MutationCreateJwtForUserArgs = {
   expiresInMinutes: Scalars['Float'];
   userId: Scalars['String'];
+};
+
+
+export type MutationCreateMailTemplateArgs = {
+  input: MailTemplateInput;
 };
 
 
@@ -2590,6 +2648,11 @@ export type MutationDeleteInvoiceArgs = {
 };
 
 
+export type MutationDeleteMailTemplateArgs = {
+  id: Scalars['String'];
+};
+
+
 export type MutationDeleteMailchimpSyncErrorArgs = {
   id: Scalars['String'];
 };
@@ -2851,6 +2914,11 @@ export type MutationSendPasswordResetEmailArgs = {
 };
 
 
+export type MutationSendTestMailTemplateArgs = {
+  input: SendTestMailTemplateInput;
+};
+
+
 export type MutationSendWebsiteLoginArgs = {
   email: Scalars['String'];
 };
@@ -3061,7 +3129,17 @@ export type MutationUpdateMailProviderSettingArgs = {
   name?: InputMaybe<Scalars['String']>;
   replyToAddress?: InputMaybe<Scalars['String']>;
   slack_webhookURL?: InputMaybe<Scalars['String']>;
+  smtp_host?: InputMaybe<Scalars['String']>;
+  smtp_port?: InputMaybe<Scalars['Int']>;
+  smtp_secure?: InputMaybe<Scalars['Boolean']>;
+  smtp_user?: InputMaybe<Scalars['String']>;
   webhookEndpointSecret?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationUpdateMailTemplateArgs = {
+  id: Scalars['String'];
+  input: MailTemplateInput;
 };
 
 
@@ -3272,7 +3350,7 @@ export type MutationUpdateSyncProviderSettingArgs = {
 
 export type MutationUpdateSystemMailArgs = {
   event: UserEvent;
-  mailTemplateId: Scalars['String'];
+  mailTemplateId?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -4334,8 +4412,12 @@ export type Query = {
   mailProviderSetting: SettingMailProvider;
   /** Returns all mail provider settings. */
   mailProviderSettings: Array<SettingMailProvider>;
+  /** Render a draft mail template with a mail type's sample data */
+  mailTemplatePreview: MailTemplatePreviewModel;
+  /** Search subscriptions to use as sample data for previews/tests */
+  mailTemplateSubscriptions: Array<MailTemplateSubscriptionOption>;
   /** Return all mail templates */
-  mailTemplates: Array<MailTemplateWithUrlAndStatusModel>;
+  mailTemplates: Array<MailTemplateModel>;
   /** Fetches available interest groups for a Mailchimp list. */
   mailchimpInterestGroups: Array<MailchimpInterestGroup>;
   /** Fetches available Mailchimp lists/audiences for a sync config. */
@@ -4747,6 +4829,16 @@ export type QueryMailProviderSettingArgs = {
 
 export type QueryMailProviderSettingsArgs = {
   filter?: InputMaybe<SettingMailProviderFilter>;
+};
+
+
+export type QueryMailTemplatePreviewArgs = {
+  input: MailTemplatePreviewInput;
+};
+
+
+export type QueryMailTemplateSubscriptionsArgs = {
+  query?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -5164,6 +5256,14 @@ export type RichTextBlockInput = {
   richText?: InputMaybe<Scalars['RichText']>;
 };
 
+export type SendTestMailTemplateInput = {
+  contextId: Scalars['String'];
+  htmlContent: Scalars['String'];
+  subject: Scalars['String'];
+  subscriptionId?: InputMaybe<Scalars['String']>;
+  textContent?: InputMaybe<Scalars['String']>;
+};
+
 export type SensitiveDataUser = BaseUser & {
   __typename?: 'SensitiveDataUser';
   active: Scalars['Boolean'];
@@ -5296,6 +5396,10 @@ export type SettingMailProvider = SettingProvider & {
   name?: Maybe<Scalars['String']>;
   replyToAddress?: Maybe<Scalars['String']>;
   slack_webhookURL?: Maybe<Scalars['String']>;
+  smtp_host?: Maybe<Scalars['String']>;
+  smtp_port?: Maybe<Scalars['Int']>;
+  smtp_secure?: Maybe<Scalars['Boolean']>;
+  smtp_user?: Maybe<Scalars['String']>;
   type: MailProviderType;
 };
 

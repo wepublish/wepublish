@@ -1,28 +1,19 @@
 import { MailLogState } from '@prisma/client';
 import crypto from 'crypto';
 import FormData from 'form-data';
-import Client from 'mailgun.js/client';
+import Mailgun from 'mailgun.js';
 import {
   MailLogStatus,
-  MailProviderError,
-  MailProviderTemplate,
+  MailProviderTemplateContent,
   SendMailProps,
   WebhookForSendMailProps,
-  WithExternalId,
 } from './mail-provider.interface';
 import { BaseMailProvider, MailProviderProps } from './base-mail-provider';
-import Mailgun from 'mailgun.js';
 
 interface VerifyWebhookSignatureProps {
   timestamp: string;
   token: string;
   signature: string;
-}
-
-interface MailgunApiError {
-  status: number;
-  details: string;
-  type: string;
 }
 
 function mapMailgunEventToMailLogState(event: string): MailLogState | null {
@@ -43,18 +34,6 @@ function mapMailgunEventToMailLogState(event: string): MailLogState | null {
 export class MailgunMailProvider extends BaseMailProvider {
   constructor(props: MailProviderProps) {
     super(props);
-  }
-
-  async getMailgunClient(): Promise<Client> {
-    const config = await this.getConfig();
-    if (!config?.apiKey || !config?.mailgun_baseDomain) {
-      throw new Error('Missing mailgun base domain or api key');
-    }
-    return new Mailgun(FormData).client({
-      username: 'api',
-      key: config.apiKey,
-      url: `https://${config.mailgun_baseDomain}`,
-    });
   }
 
   async verifyWebhookSignature(
@@ -125,22 +104,6 @@ export class MailgunMailProvider extends BaseMailProvider {
       form.append('html', props.messageHtml);
     }
 
-    if (props.template) {
-      form.append('template', props.template);
-
-      for (const [key, value] of Object.entries(props.templateData || {})) {
-        // Enforce max length of 16kb per key => https://documentation.mailgun.com/en/latest/api-sending.html
-        let serializedValue: string | number = '';
-        if (typeof value === 'number') {
-          serializedValue = value;
-        } else if (typeof value === 'string') {
-          serializedValue = value.substring(0, 15000);
-        } else {
-          serializedValue = JSON.stringify(value).substring(0, 15000);
-        }
-        form.append(`v:${key}`, serializedValue);
-      }
-    }
     const auth = Buffer.from(`api:${config?.apiKey}`).toString('base64');
     form.append('v:mail_log_id', props.mailLogID);
     return new Promise((resolve, reject) => {
@@ -162,41 +125,24 @@ export class MailgunMailProvider extends BaseMailProvider {
     });
   }
 
-  async getTemplates(): Promise<MailProviderTemplate[]> {
+  async getTemplateContent(
+    externalMailTemplateId: string
+  ): Promise<MailProviderTemplateContent> {
     const config = await this.getConfig();
-    const mailgunClient = await this.getMailgunClient();
-    try {
-      const response = await mailgunClient.domains.domainTemplates.list(
-        config?.mailgun_mailDomain ?? ''
-      );
-      const templates: MailProviderTemplate[] = response.items.map(
-        mailTemplateResponse => {
-          return {
-            name: mailTemplateResponse.name,
-            uniqueIdentifier: mailTemplateResponse.name,
-            createdAt: new Date(mailTemplateResponse.createdAt),
-            updatedAt: new Date(mailTemplateResponse.createdAt),
-          };
-        }
-      );
-
-      return templates;
-    } catch (e: unknown) {
-      if (this.isMailgunApiError(e)) {
-        throw new MailProviderError(e.details);
-      }
-
-      throw new MailProviderError(String(e));
+    if (!config?.apiKey || !config?.mailgun_baseDomain) {
+      throw new Error('Missing mailgun base domain or api key');
     }
-  }
-
-  isMailgunApiError(error: unknown): error is MailgunApiError {
-    return (error as MailgunApiError).type === 'MailgunAPIError';
-  }
-
-  async getTemplateUrl(template: WithExternalId): Promise<string> {
-    const config = await this.getConfig();
-    return `https://app.mailgun.com/app/sending/domains/${config?.mailgun_mailDomain}/templates/details/${template.externalMailTemplateId}`;
+    const client = new Mailgun(FormData).client({
+      username: 'api',
+      key: config.apiKey,
+      url: `https://${config.mailgun_baseDomain}`,
+    });
+    const response = await client.domains.domainTemplates.get(
+      config.mailgun_mailDomain ?? '',
+      externalMailTemplateId,
+      { active: 'yes' } as never
+    );
+    return { html: response.version?.template ?? '' };
   }
 
   async getName(): Promise<string> {

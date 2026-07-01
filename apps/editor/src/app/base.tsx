@@ -94,7 +94,7 @@ import {
   CanPreview,
   CanPublishArticle,
   CanPublishPage,
-  CanSyncMailTemplates,
+  CanUpdateMailTemplates,
   CanTakeActionOnComment,
   CanUpdateBlockStyle,
   CanUpdateCommentRatingSystem,
@@ -1055,7 +1055,7 @@ export function Base({ children }: BaseProps) {
                     CanGetSettings.id,
                     CanUpdateSettings.id,
                     CanGetMailTemplates.id,
-                    CanSyncMailTemplates.id,
+                    CanUpdateMailTemplates.id,
                     CanGetUserRoles.id,
                     CanGetUserRole.id,
                     CanCreateUserRole.id,
@@ -1087,7 +1087,7 @@ export function Base({ children }: BaseProps) {
                     <PermissionControl
                       qualifyingPermissions={[
                         CanGetMailTemplates.id,
-                        CanSyncMailTemplates.id,
+                        CanUpdateMailTemplates.id,
                       ]}
                     >
                       <Nav.Item

@@ -2,6 +2,7 @@ import {
   Field,
   ObjectType,
   ArgsType,
+  Int,
   registerEnumType,
   PartialType,
   PickType,
@@ -47,6 +48,18 @@ export class SettingMailProvider extends SettingProvider {
 
   @Field({ nullable: true })
   slack_webhookURL?: string;
+
+  @Field({ nullable: true })
+  smtp_host?: string;
+
+  @Field(() => Int, { nullable: true })
+  smtp_port?: number;
+
+  @Field({ nullable: true })
+  smtp_secure?: boolean;
+
+  @Field({ nullable: true })
+  smtp_user?: string;
 }
 
 @InputType()

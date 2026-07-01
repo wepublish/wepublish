@@ -30,7 +30,6 @@ const createMockPrisma = () => ({
             daysAwayFromEnding: null,
             mailTemplate: {
               id: 'mt-1',
-              externalMailTemplateId: 'default-SUBSCRIBE',
             },
           },
           {
@@ -39,7 +38,6 @@ const createMockPrisma = () => ({
             daysAwayFromEnding: null,
             mailTemplate: {
               id: 'mt-2',
-              externalMailTemplateId: 'default-RENEWAL_SUCCESS',
             },
           },
           {
@@ -48,7 +46,6 @@ const createMockPrisma = () => ({
             daysAwayFromEnding: null,
             mailTemplate: {
               id: 'mt-3',
-              externalMailTemplateId: 'default-RENEWAL_FAILED',
             },
           },
           {
@@ -57,7 +54,6 @@ const createMockPrisma = () => ({
             daysAwayFromEnding: -14,
             mailTemplate: {
               id: 'mt-4',
-              externalMailTemplateId: 'default-INVOICE_CREATION',
             },
           },
           {
@@ -66,7 +62,6 @@ const createMockPrisma = () => ({
             daysAwayFromEnding: 5,
             mailTemplate: {
               id: 'mt-5',
-              externalMailTemplateId: 'default-DEACTIVATION_UNPAID',
             },
           },
           {
@@ -75,7 +70,6 @@ const createMockPrisma = () => ({
             daysAwayFromEnding: null,
             mailTemplate: {
               id: 'mt-6',
-              externalMailTemplateId: 'default-DEACTIVATION_BY_USER',
             },
           },
           {
@@ -84,7 +78,6 @@ const createMockPrisma = () => ({
             daysAwayFromEnding: -15,
             mailTemplate: {
               id: 'mt-7',
-              externalMailTemplateId: 'default-CUSTOM1',
             },
           },
         ],
@@ -169,7 +162,7 @@ const createMockMailContext = () => ({
   prisma: null,
   kv: null,
   jwtGenerator: jest.fn().mockResolvedValue('test-jwt-token'),
-  sendRemoteTemplateDirect: jest.fn().mockResolvedValue(undefined),
+  sendComposedMail: jest.fn().mockResolvedValue(undefined),
 });
 
 const createMockPaymentsService = () => ({
@@ -328,7 +321,7 @@ describe('PeriodicJobService', () => {
       action: {
         type: SubscriptionEvent.RENEWAL_SUCCESS,
         daysAwayFromEnding: null,
-        externalMailTemplate: 'default-RENEWAL_SUCCESS',
+        mailTemplateId: 'default-RENEWAL_SUCCESS',
       },
     });
 
@@ -581,7 +574,6 @@ describe('PeriodicJobService', () => {
             daysAwayFromEnding: -14,
             mailTemplate: {
               id: 'mt-4',
-              externalMailTemplateId: 'default-INVOICE_CREATION',
             },
           },
           {
@@ -590,7 +582,6 @@ describe('PeriodicJobService', () => {
             daysAwayFromEnding: 5,
             mailTemplate: {
               id: 'mt-5',
-              externalMailTemplateId: 'default-DEACTIVATION_UNPAID',
             },
           },
         ],
@@ -625,13 +616,13 @@ describe('PeriodicJobService', () => {
     const action: Action = {
       type: SubscriptionEvent.INVOICE_CREATION,
       daysAwayFromEnding: 10,
-      externalMailTemplate: 'template',
+      mailTemplateId: 'template',
     };
     await service['sendTemplateMail'](action, user, true, {}, new Date());
-    expect(mockMailContext.sendRemoteTemplateDirect).toHaveBeenCalledWith(
+    expect(mockMailContext.sendComposedMail).toHaveBeenCalledWith(
       expect.objectContaining({
         recipient: undefined,
-        remoteTemplate: 'template',
+        mailTemplateId: 'template',
       })
     );
   });
@@ -643,7 +634,7 @@ describe('PeriodicJobService', () => {
     const action: Action = {
       type: SubscriptionEvent.INVOICE_CREATION,
       daysAwayFromEnding: 10,
-      externalMailTemplate: null,
+      mailTemplateId: null,
     };
 
     await service['sendTemplateMail'](action, user, true, {}, new Date());
@@ -656,7 +647,7 @@ describe('PeriodicJobService', () => {
     const action: Action = {
       type: SubscriptionEvent.INVOICE_CREATION,
       daysAwayFromEnding: 10,
-      externalMailTemplate: 'template',
+      mailTemplateId: 'template',
     };
     await service['sendTemplateMail'](action, user, true, {}, new Date());
   });
@@ -952,7 +943,7 @@ describe('PeriodicJobService', () => {
     await service['createInvoice'](pjo, invoice);
     expect(mockSubscriptionController.createInvoice).toHaveBeenCalledTimes(1);
     // No mail sent because mailTemplate is null in the flow
-    expect(mockMailContext.sendRemoteTemplateDirect).not.toHaveBeenCalled();
+    expect(mockMailContext.sendComposedMail).not.toHaveBeenCalled();
 
     invoice.paidUntil = add(runDate, { days: 9 });
     await service['createInvoice'](pjo, invoice);
