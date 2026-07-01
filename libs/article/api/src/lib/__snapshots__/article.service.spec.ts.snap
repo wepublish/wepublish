@@ -367,12 +367,10 @@ exports[`ArticleService should query articles based on filter 2`] = `
         {
           "tags": {
             "some": {
-              "tag": {
-                "id": {
-                  "in": [
-                    "1234",
-                  ],
-                },
+              "tagId": {
+                "in": [
+                  "1234",
+                ],
               },
             },
           },
@@ -467,9 +465,6 @@ exports[`ArticleService should query articles based on filter 2`] = `
 exports[`ArticleService should query articles based on filter 3`] = `
 [
   {
-    "orderBy": {
-      "publishedAt": "asc",
-    },
     "where": {
       "AND": [
         {
@@ -576,12 +571,10 @@ exports[`ArticleService should query articles based on filter 3`] = `
         {
           "tags": {
             "some": {
-              "tag": {
-                "id": {
-                  "in": [
-                    "1234",
-                  ],
-                },
+              "tagId": {
+                "in": [
+                  "1234",
+                ],
               },
             },
           },
@@ -814,12 +807,10 @@ exports[`ArticleService should query articles based on full text search 2`] = `
         {
           "tags": {
             "some": {
-              "tag": {
-                "id": {
-                  "in": [
-                    "1234",
-                  ],
-                },
+              "tagId": {
+                "in": [
+                  "1234",
+                ],
               },
             },
           },
@@ -914,9 +905,6 @@ exports[`ArticleService should query articles based on full text search 2`] = `
 exports[`ArticleService should query articles based on full text search 3`] = `
 [
   {
-    "orderBy": {
-      "publishedAt": "asc",
-    },
     "where": {
       "AND": [
         {
@@ -1024,12 +1012,10 @@ exports[`ArticleService should query articles based on full text search 3`] = `
         {
           "tags": {
             "some": {
-              "tag": {
-                "id": {
-                  "in": [
-                    "1234",
-                  ],
-                },
+              "tagId": {
+                "in": [
+                  "1234",
+                ],
               },
             },
           },
@@ -1219,12 +1205,10 @@ exports[`ArticleService should query articles on all revisions 2`] = `
         {
           "tags": {
             "some": {
-              "tag": {
-                "id": {
-                  "in": [
-                    "1234",
-                  ],
-                },
+              "tagId": {
+                "in": [
+                  "1234",
+                ],
               },
             },
           },
@@ -1269,9 +1253,6 @@ exports[`ArticleService should query articles on all revisions 2`] = `
 exports[`ArticleService should query articles on all revisions 3`] = `
 [
   {
-    "orderBy": {
-      "publishedAt": "asc",
-    },
     "where": {
       "AND": [
         {
@@ -1336,12 +1317,10 @@ exports[`ArticleService should query articles on all revisions 3`] = `
         {
           "tags": {
             "some": {
-              "tag": {
-                "id": {
-                  "in": [
-                    "1234",
-                  ],
-                },
+              "tagId": {
+                "in": [
+                  "1234",
+                ],
               },
             },
           },
@@ -1408,9 +1387,6 @@ exports[`ArticleService should query articles using cursor based pagination 1`] 
 exports[`ArticleService should query articles using cursor based pagination 2`] = `
 [
   {
-    "orderBy": {
-      "publishedAt": "desc",
-    },
     "where": {
       "AND": [
         {
