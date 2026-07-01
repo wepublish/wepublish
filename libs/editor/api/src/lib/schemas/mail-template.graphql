@@ -53,6 +53,7 @@ fragment FullMailTemplate on MailTemplateModel {
   subject
   htmlContent
   textContent
+  context
   status
 }
 

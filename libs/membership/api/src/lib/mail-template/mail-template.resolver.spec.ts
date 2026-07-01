@@ -50,6 +50,7 @@ const mockTemplate1: MailTemplate = {
   htmlContent: '<p>Content 1</p>',
   textContent: null,
   externalMailTemplateId: null,
+  context: null,
   createdAt: new Date(),
   modifiedAt: new Date(),
 };
@@ -62,6 +63,7 @@ const mockTemplate2: MailTemplate = {
   htmlContent: '<p>Content 2</p>',
   textContent: null,
   externalMailTemplateId: null,
+  context: null,
   createdAt: new Date(),
   modifiedAt: new Date(),
 };

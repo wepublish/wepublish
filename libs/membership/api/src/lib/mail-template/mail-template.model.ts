@@ -4,10 +4,16 @@ import {
   ObjectType,
   registerEnumType,
 } from '@nestjs/graphql';
+import { MailTemplateContext } from '@prisma/client';
 import { MailTemplateStatus } from '@wepublish/mail/api';
 
 registerEnumType(MailTemplateStatus, {
   name: 'MailTemplateStatus',
+});
+
+registerEnumType(MailTemplateContext, {
+  name: 'MailTemplateContext',
+  description: 'The mail type / context a template is written for.',
 });
 
 @ObjectType()
@@ -29,6 +35,9 @@ export class MailTemplateModel {
 
   @Field({ nullable: true })
   textContent?: string;
+
+  @Field(() => MailTemplateContext, { nullable: true })
+  context?: MailTemplateContext;
 
   @Field()
   status!: string;
@@ -56,6 +65,9 @@ export class MailTemplateInput {
 
   @Field({ nullable: true })
   textContent?: string;
+
+  @Field(() => MailTemplateContext, { nullable: true })
+  context?: MailTemplateContext;
 }
 
 @ObjectType()

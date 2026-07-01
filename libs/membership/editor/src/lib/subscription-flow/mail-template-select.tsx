@@ -15,6 +15,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { MdUnsubscribe } from 'react-icons/md';
 import { useAuthorisation } from '@wepublish/ui/editor';
+import { formatTemplateLabel } from '../mail-template/mail-placeholders';
 
 interface MailTemplateSelectProps {
   mailTemplates: FullMailTemplateFragment[];
@@ -79,7 +80,11 @@ export function MailTemplateSelect({
     <SelectPicker
       style={{ width: '100%' }}
       data={mailTemplates.map(mailTemplate => ({
-        label: mailTemplate.name,
+        label: formatTemplateLabel(
+          mailTemplate.name,
+          mailTemplate.context,
+          (k, f) => t(k, f)
+        ),
         value: mailTemplate.id,
       }))}
       disabled={!canUpdateSubscriptionFlow}

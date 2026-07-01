@@ -38,6 +38,7 @@ import {
   toaster,
 } from 'rsuite';
 import { DEFAULT_MUTATION_OPTIONS, DEFAULT_QUERY_OPTIONS } from '../common';
+import { mailTypeLabel } from './mail-placeholders';
 
 function MailTemplateList() {
   const { t } = useTranslation();
@@ -128,6 +129,9 @@ function MailTemplateList() {
                 <strong>{t('mailTemplates.name')}</strong>
               </TableCell>
               <TableCell>
+                <strong>{t('mailTemplates.edit.mailType')}</strong>
+              </TableCell>
+              <TableCell>
                 <strong>{t('mailTemplates.description')}</strong>
               </TableCell>
               <TableCell>
@@ -144,6 +148,9 @@ function MailTemplateList() {
             {queryData?.mailTemplates.map(template => (
               <TableRow key={template.id}>
                 <TableCell>{template.name}</TableCell>
+                <TableCell>
+                  {mailTypeLabel(template.context, (k, f) => t(k, f)) ?? '—'}
+                </TableCell>
                 <TableCell>{template.description}</TableCell>
                 <TableCell>{template.subject}</TableCell>
                 <TableCell>

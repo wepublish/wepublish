@@ -1310,6 +1310,15 @@ model SubscriptionInterval {
   @@map("subscriptions.intervals")
 }
 
+enum MailTemplateContext {
+  account
+  emailChange
+  subscription
+  renewal
+  invoiceCreation
+  custom
+}
+
 model MailTemplate {
   id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now())
@@ -1320,6 +1329,10 @@ model MailTemplate {
   subject     String  @default("")
   htmlContent String  @default("")
   textContent String?
+
+  // Mail type this template is written for. Nullable for templates created
+  // before the field existed; the editor enforces a value on the next save.
+  context MailTemplateContext?
 
   // Kept (nullable) so content can be imported from the remote provider for
   // installs migrating from the remote-template model. Not used for sending.
@@ -1540,6 +1553,7 @@ enum MailProviderType {
   MAILGUN   @map("mailgun")
   MAILCHIMP @map("mailchimp")
   SLACK     @map("slack")
+  SMTP      @map("smtp")
 }
 
 model SettingMailProvider {
@@ -1558,6 +1572,10 @@ model SettingMailProvider {
   mailgun_baseDomain    String?
   mailchimp_baseURL     String?
   slack_webhookURL      String?
+  smtp_host             String?
+  smtp_port             Int?
+  smtp_secure           Boolean?
+  smtp_user             String?
 
   @@map("settings.mailprovider")
 }

@@ -908,6 +908,16 @@
         "imageAlt": "Alternative text",
         "imageWidth": "Width (px, optional)",
         "chooseFromLibrary": "Choose from library",
+        "imageLink": "Link (optional)",
+        "button": "Button",
+        "buttonTitle": "Insert button",
+        "buttonText": "Button text",
+        "buttonUrl": "Link URL",
+        "buttonSize": "Size",
+        "buttonColor": "Button color",
+        "buttonSizeSmall": "Small",
+        "buttonSizeMedium": "Medium",
+        "buttonSizeLarge": "Large",
         "cancel": "Cancel",
         "apply": "Apply",
         "insert": "Insert"
@@ -917,6 +927,15 @@
       "name": "Name",
       "placeholders": "Placeholders",
       "placeholdersHint": "Click to insert into the selected field",
+      "placeholderSelectType": "Select a mail type above to see its placeholders.",
+      "mailTypes": {
+        "account": "Account",
+        "emailChange": "Email change",
+        "subscription": "Subscription",
+        "renewal": "Renewal",
+        "invoiceCreation": "Invoice",
+        "custom": "Custom"
+      },
       "placeholderAlways": "Always available",
       "placeholderContextLabel": "Show fields for",
       "placeholderContexts": {
@@ -2091,6 +2110,11 @@
         "mailgunBaseDomain": "Base Domain",
         "mailgunMailDomain": "Mail Domain",
         "slackWebhookUrl": "Webhook URL",
+        "smtpHost": "SMTP Host",
+        "smtpPort": "SMTP Port",
+        "smtpSecure": "Use TLS (SSL)",
+        "smtpUser": "SMTP Username",
+        "smtpPassword": "SMTP Password",
         "webhookEndpointSecret": "Webhook Endpoint Secret"
       },
       "trackingPixelSettings": {

@@ -380,3 +380,30 @@ export const MAIL_PLACEHOLDER_CONTEXTS: MailPlaceholderContext[] = [
     ],
   },
 ];
+
+/** Short, human-readable label per mail type (for lists and inline names). */
+export const MAIL_TYPE_LABEL_KEYS: Record<string, string> = {
+  account: 'mailTemplates.mailTypes.account',
+  emailChange: 'mailTemplates.mailTypes.emailChange',
+  subscription: 'mailTemplates.mailTypes.subscription',
+  renewal: 'mailTemplates.mailTypes.renewal',
+  invoiceCreation: 'mailTemplates.mailTypes.invoiceCreation',
+  custom: 'mailTemplates.mailTypes.custom',
+};
+
+/** Resolve a mail type to its short label, or `null` when no type is set. */
+export const mailTypeLabel = (
+  context: string | null | undefined,
+  translate: (key: string, fallback: string) => string
+): string | null =>
+  context ? translate(MAIL_TYPE_LABEL_KEYS[context] ?? context, context) : null;
+
+/** `Name (Type)` for use wherever a template is referenced; bare name if unset. */
+export const formatTemplateLabel = (
+  name: string,
+  context: string | null | undefined,
+  translate: (key: string, fallback: string) => string
+): string => {
+  const label = mailTypeLabel(context, translate);
+  return label ? `${name} (${label})` : name;
+};

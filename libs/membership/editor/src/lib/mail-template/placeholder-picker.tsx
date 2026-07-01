@@ -1,7 +1,8 @@
 import { Typography } from '@mui/material';
+import { MailTemplateContext } from '@wepublish/editor/api';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, Input, SelectPicker, Tooltip, Whisper } from 'rsuite';
+import { Button, Input, Tooltip, Whisper } from 'rsuite';
 import {
   ALWAYS_PLACEHOLDERS,
   MAIL_PLACEHOLDER_CONTEXTS,
@@ -11,6 +12,8 @@ import {
 interface PlaceholderPickerProps {
   /** Inserts the given `{{token}}` into the active editor/field. */
   onInsert: (token: string) => void;
+  /** The selected mail type; scopes which placeholders are shown/searched. */
+  context: MailTemplateContext | null;
 }
 
 const DATE_FORMATS = [
@@ -61,19 +64,21 @@ const AMOUNT_FORMATS = [
   },
 ];
 
-export function PlaceholderPicker({ onInsert }: PlaceholderPickerProps) {
+export function PlaceholderPicker({
+  onInsert,
+  context,
+}: PlaceholderPickerProps) {
   const { t } = useTranslation();
-  const [context, setContext] = useState('account');
   const [search, setSearch] = useState('');
 
-  const selectedContext = MAIL_PLACEHOLDER_CONTEXTS.find(c => c.id === context);
+  const selectedContext =
+    context ? MAIL_PLACEHOLDER_CONTEXTS.find(c => c.id === context) : undefined;
 
-  const allPlaceholders = useMemo(
-    () => [
-      ...ALWAYS_PLACEHOLDERS,
-      ...MAIL_PLACEHOLDER_CONTEXTS.flatMap(c => c.placeholders),
-    ],
-    []
+  // Search is scoped to the placeholders that actually resolve for the chosen
+  // mail type (the always-available recipient fields + that type's fields).
+  const scopedPlaceholders = useMemo(
+    () => [...ALWAYS_PLACEHOLDERS, ...(selectedContext?.placeholders ?? [])],
+    [selectedContext]
   );
 
   const searchResults = useMemo(() => {
@@ -82,7 +87,7 @@ export function PlaceholderPicker({ onInsert }: PlaceholderPickerProps) {
       return null;
     }
     const seen = new Set<string>();
-    return allPlaceholders.filter(p => {
+    return scopedPlaceholders.filter(p => {
       if (seen.has(p.key)) {
         return false;
       }
@@ -97,7 +102,7 @@ export function PlaceholderPicker({ onInsert }: PlaceholderPickerProps) {
         p.description.toLowerCase().includes(term)
       );
     });
-  }, [search, allPlaceholders, t]);
+  }, [search, scopedPlaceholders, t]);
 
   const tooltip = (description: string, token: string, example: string) => (
     <Tooltip>
@@ -253,22 +258,24 @@ export function PlaceholderPicker({ onInsert }: PlaceholderPickerProps) {
               borderTop: '1px solid #e5e5ea',
             }}
           >
-            <SelectPicker
-              size="sm"
-              cleanable={false}
-              searchable={false}
-              block
-              style={{ marginBottom: 12 }}
-              value={context}
-              onChange={value => setContext(value ?? 'account')}
-              data={MAIL_PLACEHOLDER_CONTEXTS.map(c => ({
-                label: t(c.titleKey, c.title),
-                value: c.id,
-              }))}
-            />
-
-            {selectedContext && selectedContext.placeholders.length > 0 ?
-              <>
+            {!selectedContext ?
+              <Typography
+                variant="caption"
+                display="block"
+                style={{ color: '#8e8e93' }}
+              >
+                {t(
+                  'mailTemplates.placeholderSelectType',
+                  'Select a mail type above to see its placeholders.'
+                )}
+              </Typography>
+            : <>
+                <Typography
+                  variant="subtitle2"
+                  style={{ marginBottom: 2 }}
+                >
+                  {t(selectedContext.titleKey, selectedContext.title)}
+                </Typography>
                 {selectedContext.note && (
                   <Typography
                     variant="caption"
@@ -278,18 +285,20 @@ export function PlaceholderPicker({ onInsert }: PlaceholderPickerProps) {
                     {selectedContext.note}
                   </Typography>
                 )}
-                {selectedContext.placeholders.map(renderPlaceholder)}
+                {selectedContext.placeholders.length > 0 ?
+                  selectedContext.placeholders.map(renderPlaceholder)
+                : <Typography
+                    variant="caption"
+                    display="block"
+                    style={{ color: '#8e8e93' }}
+                  >
+                    {t(
+                      'mailTemplates.placeholderContextNone',
+                      'This mail only uses the recipient fields above.'
+                    )}
+                  </Typography>
+                }
               </>
-            : <Typography
-                variant="caption"
-                display="block"
-                style={{ color: '#8e8e93' }}
-              >
-                {t(
-                  'mailTemplates.placeholderContextNone',
-                  'This mail only uses the recipient fields above.'
-                )}
-              </Typography>
             }
           </div>
         </>

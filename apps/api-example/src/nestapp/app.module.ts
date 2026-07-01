@@ -49,6 +49,7 @@ import {
   MailchimpMailProvider,
   MailgunMailProvider,
   MailsModule,
+  SmtpMailProvider,
 } from '@wepublish/mail/api';
 import { MemberPlanModule } from '@wepublish/member-plan/api';
 import {
@@ -192,6 +193,32 @@ import { readConfig } from '../readConfig';
           });
 
           await mailProvider.initDatabaseConfiguration(MailProviderType.SLACK);
+        } else if (mailProviderRaw?.type === 'smtp') {
+          mailProvider = new SmtpMailProvider({
+            id: mailProviderRaw.id,
+            kv,
+            prisma,
+          });
+
+          // Seed sane defaults on first run so local dev works with Mailpit
+          // out of the box (host overridable via MAIL_SMTP_HOST in docker).
+          await mailProvider.initDatabaseConfiguration(MailProviderType.SMTP, {
+            name: mailProviderRaw.id,
+            fromAddress:
+              mailProviderRaw.fromAddress ||
+              process.env['MAIL_SMTP_FROM'] ||
+              'no-reply@wepublish.local',
+            replyToAddress: mailProviderRaw.replyToAddress || null,
+            smtp_host:
+              mailProviderRaw.baseDomain ||
+              process.env['MAIL_SMTP_HOST'] ||
+              'localhost',
+            smtp_port:
+              process.env['MAIL_SMTP_PORT'] ?
+                Number(process.env['MAIL_SMTP_PORT'])
+              : 1025,
+            smtp_secure: false,
+          });
         } else {
           throw new Error(
             `Unknown mail provider type defined: ${mailProviderRaw.id}`

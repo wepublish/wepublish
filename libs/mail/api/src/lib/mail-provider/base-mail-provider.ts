@@ -57,8 +57,16 @@ export abstract class BaseMailProvider implements MailProvider {
     ).getConfig();
   }
   public async initDatabaseConfiguration(
-    type: MailProviderType
+    type: MailProviderType,
+    defaults?: Partial<
+      Omit<
+        SettingMailProvider,
+        'id' | 'type' | 'createdAt' | 'modifiedAt' | 'lastLoadedAt'
+      >
+    >
   ): Promise<void> {
+    // `defaults` seed a fresh row (e.g. local dev SMTP → Mailpit). Existing
+    // rows are left untouched (`update: {}`) so editor edits persist.
     await this.prisma.settingMailProvider.upsert({
       where: {
         id: this.id,
@@ -66,6 +74,7 @@ export abstract class BaseMailProvider implements MailProvider {
       create: {
         id: this.id,
         type,
+        ...defaults,
       },
       update: {},
     });

@@ -1569,9 +1569,21 @@ enum MailProviderType {
   MAILCHIMP
   MAILGUN
   SLACK
+  SMTP
+}
+
+"""The mail type / context a template is written for."""
+enum MailTemplateContext {
+  account
+  custom
+  emailChange
+  invoiceCreation
+  renewal
+  subscription
 }
 
 input MailTemplateInput {
+  context: MailTemplateContext
   description: String
   htmlContent: String!
   name: String!
@@ -1580,6 +1592,7 @@ input MailTemplateInput {
 }
 
 type MailTemplateModel {
+  context: MailTemplateContext
   description: String
   htmlContent: String!
   id: String!
@@ -2170,7 +2183,7 @@ type Mutation {
   updateInvoice(currency: Currency, description: String, dueAt: DateTime, id: String!, items: [InvoiceItemInput!], mail: String, manuallySetAsPaidByUserId: String, scheduledDeactivationAt: DateTime, subscriptionID: String): Invoice!
 
   """Updates an existing mail provider setting."""
-  updateMailProviderSetting(apiKey: String, fromAddress: String, id: String, mailchimp_baseURL: String, mailgun_baseDomain: String, mailgun_mailDomain: String, name: String, replyToAddress: String, slack_webhookURL: String, webhookEndpointSecret: String): SettingMailProvider!
+  updateMailProviderSetting(apiKey: String, fromAddress: String, id: String, mailchimp_baseURL: String, mailgun_baseDomain: String, mailgun_mailDomain: String, name: String, replyToAddress: String, slack_webhookURL: String, smtp_host: String, smtp_port: Int, smtp_secure: Boolean, smtp_user: String, webhookEndpointSecret: String): SettingMailProvider!
 
   """Update an existing mail template"""
   updateMailTemplate(id: String!, input: MailTemplateInput!): MailTemplateModel!
@@ -3620,6 +3633,10 @@ type SettingMailProvider implements SettingProvider {
   name: String
   replyToAddress: String
   slack_webhookURL: String
+  smtp_host: String
+  smtp_port: Int
+  smtp_secure: Boolean
+  smtp_user: String
   type: MailProviderType!
 }
 

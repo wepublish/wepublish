@@ -1,6 +1,7 @@
 import { Typography } from '@mui/material';
 import { useApolloClient } from '@apollo/client';
 import {
+  MailTemplateContext,
   MailTemplatePreviewDocument,
   MailTemplatePreviewInput,
   MailTemplatePreviewQuery,
@@ -91,7 +92,7 @@ function MailTemplateEdit() {
   // Preview / test state
   // The mail type must be chosen explicitly so preview/test use the data a real
   // mail of that type would carry (more realistic than a generic dump).
-  const [contextId, setContextId] = useState<string | null>(null);
+  const [contextId, setContextId] = useState<MailTemplateContext | null>(null);
   const [subscriptionId, setSubscriptionId] = useState<string | null>(null);
   const [previewHtml, setPreviewHtml] = useState<string | null>(null);
   const [previewSubject, setPreviewSubject] = useState('');
@@ -131,6 +132,7 @@ function MailTemplateEdit() {
       setDescription(template.description ?? '');
       setSubject(template.subject);
       setTextContent(template.textContent ?? '');
+      setContextId(template.context ?? null);
       htmlRef.current = template.htmlContent || createEmptyEmailHtml();
       const shell = readShellSettings(htmlRef.current);
       setBackgroundColor(shell.backgroundColor);
@@ -207,12 +209,26 @@ function MailTemplateEdit() {
     subject,
     htmlContent: htmlRef.current,
     textContent,
+    context: contextId,
   });
 
   const save = async (close: boolean) => {
     if (!name) {
       toaster.push(
         <Message type="error">{t('mailTemplates.edit.nameRequired')}</Message>
+      );
+      return;
+    }
+    // The mail type is enforced on save (existing null-type templates still
+    // load, but can't be saved again without choosing one).
+    if (!contextId) {
+      toaster.push(
+        <Message type="error">
+          {t(
+            'mailTemplates.edit.selectMailType',
+            'Please select a mail type first.'
+          )}
+        </Message>
       );
       return;
     }
@@ -241,7 +257,7 @@ function MailTemplateEdit() {
     textContent,
   });
 
-  const requireContext = (): string | null => {
+  const requireContext = (): MailTemplateContext | null => {
     if (!contextId) {
       toaster.push(
         <Message type="error">
@@ -352,6 +368,29 @@ function MailTemplateEdit() {
       >
         <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
           <Form.Group style={{ flex: 1, minWidth: 200 }}>
+            <Form.ControlLabel>
+              {t('mailTemplates.edit.mailType')} *
+            </Form.ControlLabel>
+            <SelectPicker
+              block
+              cleanable={false}
+              searchable={false}
+              data={contextOptions}
+              value={contextId}
+              onChange={value =>
+                setContextId((value as MailTemplateContext) ?? null)
+              }
+              // rsuite's popup defaults to z-index 7; lift it above the sticky
+              // Preview & Test panel (z-index 10) so the menu isn't covered when
+              // it opens down over the panel at full width.
+              menuStyle={{ zIndex: 100 }}
+              placeholder={t(
+                'mailTemplates.edit.selectMailTypePlaceholder',
+                'Select a mail type…'
+              )}
+            />
+          </Form.Group>
+          <Form.Group style={{ flex: 1, minWidth: 200 }}>
             <Form.ControlLabel>{t('mailTemplates.name')}</Form.ControlLabel>
             <Input
               value={name}
@@ -399,23 +438,6 @@ function MailTemplateEdit() {
         >
           <div style={{ flex: 1, minWidth: 200 }}>
             <Form.ControlLabel>
-              {t('mailTemplates.edit.mailType')} *
-            </Form.ControlLabel>
-            <SelectPicker
-              block
-              cleanable={false}
-              searchable={false}
-              data={contextOptions}
-              value={contextId}
-              onChange={value => setContextId(value)}
-              placeholder={t(
-                'mailTemplates.edit.selectMailTypePlaceholder',
-                'Select a mail type…'
-              )}
-            />
-          </div>
-          <div style={{ flex: 1, minWidth: 200 }}>
-            <Form.ControlLabel>
               {t('mailTemplates.edit.sampleSubscription')}
             </Form.ControlLabel>
             <SelectPicker
@@ -427,6 +449,9 @@ function MailTemplateEdit() {
               onChange={value => setSubscriptionId(value)}
               onSearch={query => searchSubscriptions({ variables: { query } })}
               onOpen={() => searchSubscriptions({ variables: {} })}
+              // Same as the mail-type picker: lift the popup above the sticky
+              // Preview & Test panel (z-index 10) so it isn't clipped/covered.
+              menuStyle={{ zIndex: 100 }}
               placeholder={t('mailTemplates.edit.sampleDataFallback')}
             />
           </div>
@@ -619,7 +644,10 @@ function MailTemplateEdit() {
               overflowY: 'auto',
             }}
           >
-            <PlaceholderPicker onInsert={insertToken} />
+            <PlaceholderPicker
+              onInsert={insertToken}
+              context={contextId}
+            />
           </div>
         </div>
       </div>

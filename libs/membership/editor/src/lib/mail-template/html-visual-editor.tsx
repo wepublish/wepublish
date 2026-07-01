@@ -37,6 +37,7 @@ import {
   MdLink,
   MdPhoneIphone,
   MdPhotoLibrary,
+  MdSmartButton,
   MdRedo,
   MdStrikethroughS,
   MdTabletMac,
@@ -159,7 +160,49 @@ interface ImageDialogState {
   url: string;
   alt: string;
   width: string;
+  link: string;
 }
+
+interface ButtonDialogState {
+  open: boolean;
+  text: string;
+  url: string;
+  color: string;
+  size: string;
+}
+
+// Email-safe padding/font per button size (inline styles only).
+const BUTTON_SIZES: ReadonlyArray<{
+  value: string;
+  labelKey: string;
+  label: string;
+  padding: string;
+  fontSize: string;
+}> = [
+  {
+    value: 'small',
+    labelKey: 'mailTemplates.editor.buttonSizeSmall',
+    label: 'Small',
+    padding: '8px 16px',
+    fontSize: '14px',
+  },
+  {
+    value: 'medium',
+    labelKey: 'mailTemplates.editor.buttonSizeMedium',
+    label: 'Medium',
+    padding: '12px 24px',
+    fontSize: '16px',
+  },
+  {
+    value: 'large',
+    labelKey: 'mailTemplates.editor.buttonSizeLarge',
+    label: 'Large',
+    padding: '16px 32px',
+    fontSize: '18px',
+  },
+];
+
+const DEFAULT_BUTTON_COLOR = '#1675e0';
 
 const escapeHtml = (value: string): string =>
   value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -233,6 +276,14 @@ const HtmlVisualEditorComponent = forwardRef<
     url: '',
     alt: '',
     width: '',
+    link: '',
+  });
+  const [buttonDialog, setButtonDialog] = useState<ButtonDialogState>({
+    open: false,
+    text: '',
+    url: '',
+    color: DEFAULT_BUTTON_COLOR,
+    size: 'medium',
   });
   const [libraryOpen, setLibraryOpen] = useState(false);
   const [fontSizeAnchor, setFontSizeAnchor] = useState<HTMLElement | null>(
@@ -433,7 +484,7 @@ const HtmlVisualEditorComponent = forwardRef<
     }
     getEditable()?.focus();
     saveSelection();
-    setImageDialog({ open: true, url: '', alt: '', width: '' });
+    setImageDialog({ open: true, url: '', alt: '', width: '', link: '' });
   };
 
   const closeImageDialog = () =>
@@ -450,15 +501,76 @@ const HtmlVisualEditorComponent = forwardRef<
     restoreSelection();
     const width = imageDialog.width.replace(/[^0-9]/g, '');
     const widthAttr = width ? ` width="${width}"` : '';
+    const img = `<img src="${escapeAttr(url)}" alt="${escapeAttr(
+      imageDialog.alt
+    )}"${widthAttr} style="max-width:100%;height:auto;border:0;" />`;
+    // Optionally wrap the image in a link so it's clickable in the mail.
+    const link = imageDialog.link.trim();
+    const html =
+      link ?
+        `<a href="${escapeAttr(
+          link
+        )}" target="_blank" rel="noopener noreferrer">${img}</a>`
+      : img;
+    doc.execCommand('insertHTML', false, html);
+    emit();
+    closeImageDialog();
+  };
+
+  const openButtonDialog = () => {
+    if (!getDoc()) {
+      return;
+    }
+    getEditable()?.focus();
+    saveSelection();
+    setButtonDialog({
+      open: true,
+      text: getDoc()?.getSelection()?.toString() ?? '',
+      url: '',
+      color: DEFAULT_BUTTON_COLOR,
+      size: 'medium',
+    });
+  };
+
+  const closeButtonDialog = () =>
+    setButtonDialog(state => ({ ...state, open: false }));
+
+  const applyButton = () => {
+    const doc = getDoc();
+    const url = buttonDialog.url.trim();
+    const text = buttonDialog.text.trim();
+    if (!doc || !url || !text) {
+      closeButtonDialog();
+      return;
+    }
+    getEditable()?.focus();
+    restoreSelection();
+    const size =
+      BUTTON_SIZES.find(s => s.value === buttonDialog.size) ?? BUTTON_SIZES[1];
+    // Inline-styled anchor (email clients ignore <style>/classes) rendered as a
+    // rounded button. Colour comes from a native color input, so it's safe.
+    const style = [
+      'display:inline-block',
+      `background-color:${buttonDialog.color}`,
+      'color:#ffffff',
+      `padding:${size.padding}`,
+      'border-radius:6px',
+      'font-family:Arial,Helvetica,sans-serif',
+      `font-size:${size.fontSize}`,
+      'font-weight:bold',
+      'text-decoration:none',
+    ].join(';');
     doc.execCommand(
       'insertHTML',
       false,
-      `<img src="${escapeAttr(url)}" alt="${escapeAttr(
-        imageDialog.alt
-      )}"${widthAttr} style="max-width:100%;height:auto;" />`
+      `<a href="${escapeAttr(
+        url
+      )}" target="_blank" rel="noopener noreferrer" style="${style}">${escapeHtml(
+        text
+      )}</a>`
     );
     emit();
-    closeImageDialog();
+    closeButtonDialog();
   };
 
   // Native form controls (color/size) steal focus, so save the range on
@@ -699,6 +811,20 @@ const HtmlVisualEditorComponent = forwardRef<
           </ToggleButton>
         </Tooltip>
 
+        <Tooltip title={t('mailTemplates.editor.button', 'Button')}>
+          <ToggleButton
+            size="small"
+            value="button"
+            sx={SQUARE_BUTTON_SX}
+            onMouseDown={event => {
+              event.preventDefault();
+              openButtonDialog();
+            }}
+          >
+            <MdSmartButton />
+          </ToggleButton>
+        </Tooltip>
+
         <ToolbarSpacer />
 
         <ToggleButtonGroup
@@ -866,6 +992,19 @@ const HtmlVisualEditorComponent = forwardRef<
                 }))
               }
             />
+            <TextField
+              fullWidth
+              size="small"
+              label={t('mailTemplates.editor.imageLink', 'Link (optional)')}
+              placeholder="https://"
+              value={imageDialog.link}
+              onChange={event =>
+                setImageDialog(state => ({
+                  ...state,
+                  link: event.target.value,
+                }))
+              }
+            />
           </Stack>
         </DialogContent>
         <DialogActions>
@@ -875,6 +1014,105 @@ const HtmlVisualEditorComponent = forwardRef<
           <Button
             variant="contained"
             onClick={applyImage}
+          >
+            {t('mailTemplates.editor.insert', 'Insert')}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        open={buttonDialog.open}
+        onClose={closeButtonDialog}
+        fullWidth
+        maxWidth="sm"
+      >
+        <DialogTitle>
+          {t('mailTemplates.editor.buttonTitle', 'Insert button')}
+        </DialogTitle>
+        <DialogContent>
+          <Stack
+            spacing={2}
+            sx={{ mt: 1 }}
+          >
+            <TextField
+              autoFocus
+              fullWidth
+              size="small"
+              label={t('mailTemplates.editor.buttonText', 'Button text')}
+              value={buttonDialog.text}
+              onChange={event =>
+                setButtonDialog(state => ({
+                  ...state,
+                  text: event.target.value,
+                }))
+              }
+            />
+            <TextField
+              fullWidth
+              size="small"
+              label={t('mailTemplates.editor.buttonUrl', 'Link URL')}
+              placeholder="https://"
+              value={buttonDialog.url}
+              onChange={event =>
+                setButtonDialog(state => ({
+                  ...state,
+                  url: event.target.value,
+                }))
+              }
+            />
+            <Stack
+              spacing={2}
+              alignItems="center"
+            >
+              <TextField
+                select
+                size="small"
+                label={t('mailTemplates.editor.buttonSize', 'Size')}
+                value={buttonDialog.size}
+                onChange={event =>
+                  setButtonDialog(state => ({
+                    ...state,
+                    size: event.target.value,
+                  }))
+                }
+                sx={{ minWidth: 140 }}
+              >
+                {BUTTON_SIZES.map(size => (
+                  <MenuItem
+                    key={size.value}
+                    value={size.value}
+                  >
+                    {t(size.labelKey, size.label)}
+                  </MenuItem>
+                ))}
+              </TextField>
+              <FormControlLabel
+                label={t('mailTemplates.editor.buttonColor', 'Button color')}
+                labelPlacement="start"
+                control={
+                  <ColorSwatch
+                    type="color"
+                    value={buttonDialog.color}
+                    onChange={event =>
+                      setButtonDialog(state => ({
+                        ...state,
+                        color: event.target.value,
+                      }))
+                    }
+                    style={{ marginLeft: 8 }}
+                  />
+                }
+              />
+            </Stack>
+          </Stack>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeButtonDialog}>
+            {t('mailTemplates.editor.cancel', 'Cancel')}
+          </Button>
+          <Button
+            variant="contained"
+            onClick={applyButton}
           >
             {t('mailTemplates.editor.insert', 'Insert')}
           </Button>

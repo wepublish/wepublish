@@ -1654,10 +1654,22 @@ export type MailProviderModel = {
 export enum MailProviderType {
   Mailchimp = 'MAILCHIMP',
   Mailgun = 'MAILGUN',
-  Slack = 'SLACK'
+  Slack = 'SLACK',
+  Smtp = 'SMTP'
+}
+
+/** The mail type / context a template is written for. */
+export enum MailTemplateContext {
+  Account = 'account',
+  Custom = 'custom',
+  EmailChange = 'emailChange',
+  InvoiceCreation = 'invoiceCreation',
+  Renewal = 'renewal',
+  Subscription = 'subscription'
 }
 
 export type MailTemplateInput = {
+  context?: InputMaybe<MailTemplateContext>;
   description?: InputMaybe<Scalars['String']>;
   htmlContent: Scalars['String'];
   name: Scalars['String'];
@@ -1667,6 +1679,7 @@ export type MailTemplateInput = {
 
 export type MailTemplateModel = {
   __typename?: 'MailTemplateModel';
+  context?: Maybe<MailTemplateContext>;
   description?: Maybe<Scalars['String']>;
   htmlContent: Scalars['String'];
   id: Scalars['String'];
@@ -2009,6 +2022,7 @@ export type Mutation = {
    *
    */
   importEvent: Scalars['String'];
+  /** Import HTML/subject from the mail provider, overwriting local content */
   importMailTemplatesFromProvider: Scalars['Int'];
   /** Imports an article from a peer as a draft. */
   importPeerArticle: Article;
@@ -3115,6 +3129,10 @@ export type MutationUpdateMailProviderSettingArgs = {
   name?: InputMaybe<Scalars['String']>;
   replyToAddress?: InputMaybe<Scalars['String']>;
   slack_webhookURL?: InputMaybe<Scalars['String']>;
+  smtp_host?: InputMaybe<Scalars['String']>;
+  smtp_port?: InputMaybe<Scalars['Int']>;
+  smtp_secure?: InputMaybe<Scalars['Boolean']>;
+  smtp_user?: InputMaybe<Scalars['String']>;
   webhookEndpointSecret?: InputMaybe<Scalars['String']>;
 };
 
@@ -5378,6 +5396,10 @@ export type SettingMailProvider = SettingProvider & {
   name?: Maybe<Scalars['String']>;
   replyToAddress?: Maybe<Scalars['String']>;
   slack_webhookURL?: Maybe<Scalars['String']>;
+  smtp_host?: Maybe<Scalars['String']>;
+  smtp_port?: Maybe<Scalars['Int']>;
+  smtp_secure?: Maybe<Scalars['Boolean']>;
+  smtp_user?: Maybe<Scalars['String']>;
   type: MailProviderType;
 };
 
