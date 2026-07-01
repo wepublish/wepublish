@@ -2,7 +2,7 @@
   "website": {
     "production": {
       "deployment": true,
-      "custom_domain": "https://reflekt.wepublish.cloud",
+      "custom_domain": "https://reflekt.ch",
       "env": {
         "PA_ID": "pa-_BtFLOtU8U6XVPta25rUh",
         "GTM_ID": "GTM-NLK6XXSD"
