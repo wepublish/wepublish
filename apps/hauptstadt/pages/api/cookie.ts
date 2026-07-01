@@ -9,6 +9,7 @@ async function writeCookie(req: NextApiRequest, res: NextApiResponse) {
     res,
     expires: new Date((req.body as SessionWithTokenWithoutUser).expiresAt),
     sameSite: 'strict',
+    secure: process.env.NODE_ENV === 'production',
     httpOnly: true,
   });
 
