@@ -60,6 +60,7 @@ import {
 import { ReflektLoginForm } from '../src/components/reflekt-login-form';
 import { ReflektMemberPlanPicker } from '../src/components/reflekt-memberplan-picker';
 import { ReflektMemberPlanItem } from '../src/components/reflekt-memberplan-picker-item';
+import { ReflektModal } from '../src/components/reflekt-modal';
 import { ReflektNavbar } from '../src/components/reflekt-navbar';
 import { ReflektPage } from '../src/components/reflekt-page';
 import { ReflektQuoteBlock } from '../src/components/reflekt-quote-block';
@@ -162,6 +163,7 @@ function CustomApp({
               Link: ReflektLink,
               UnorderedList: ReflektUnorderedList,
               ListItem: ReflektListItem,
+              Modal: ReflektModal,
             }}
             date={{ format: dateFormatter }}
             meta={{ siteTitle }}

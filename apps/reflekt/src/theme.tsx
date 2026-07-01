@@ -155,6 +155,7 @@ export const categoryLinkStyles = {
   fontStyle: 'normal' as const,
   color: colors.common.white,
   display: 'inline-block' as const,
+  verticalAlign: 'baseline' as const,
   whiteSpace: 'nowrap' as const,
   padding: '0',
   textDecoration: 'none',
@@ -451,11 +452,13 @@ const theme = createTheme(WePTheme, {
         fontWeight: 400,
         fontStyle: 'normal',
         '&:last-child': {
+          paddingTop: '0.4rem',
           fontSize: '1.1rem',
         },
         [breakpoints.up('md')]: {
           fontSize: '1.5rem',
           '&:last-child': {
+            paddingTop: '0.3rem',
             fontSize: '1.5rem',
           },
         },

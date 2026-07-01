@@ -233,6 +233,7 @@ export const FooterRightColumn = styled('div')`
   gap: ${({ theme }) => theme.spacing(4)};
   grid-column: 1 / 2;
   grid-row: 3 / 4;
+  padding-top: ${({ theme }) => theme.spacing(8)};
 
   ${({ theme }) => theme.breakpoints.down('md')} {
     ${FooterCategory} {
@@ -242,6 +243,7 @@ export const FooterRightColumn = styled('div')`
   }
 
   ${({ theme }) => theme.breakpoints.up('md')} {
+    padding-top: 0;
     grid-column: unset;
     grid-row: unset;
   }
