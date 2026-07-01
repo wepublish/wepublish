@@ -65,6 +65,25 @@ const withPreviewStyles = (html: string): string =>
     html.replace('</head>', `${PREVIEW_STYLE}</head>`)
   : `${PREVIEW_STYLE}${html}`;
 
+// Derive a plain-text fallback from the HTML body: links become "label (url)",
+// block elements become line breaks, remaining tags/styles are stripped.
+const deriveTextFromHtml = (html: string): string => {
+  const doc = new DOMParser().parseFromString(html, 'text/html');
+  const root = doc.querySelector('.mail-body') ?? doc.body;
+  root.querySelectorAll('a[href]').forEach(anchor => {
+    const href = anchor.getAttribute('href') ?? '';
+    const label = (anchor.textContent ?? '').trim();
+    anchor.replaceWith(label && label !== href ? `${label} (${href})` : href);
+  });
+  root.querySelectorAll('br').forEach(br => br.replaceWith('\n'));
+  root.querySelectorAll('p,div,h1,h2,h3,li,tr').forEach(el => el.append('\n'));
+  return (root.textContent ?? '')
+    .replace(/[ \t]+/g, ' ')
+    .replace(/ *\n */g, '\n')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+};
+
 function MailTemplateEdit() {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -75,7 +94,9 @@ function MailTemplateEdit() {
   const [description, setDescription] = useState('');
   const [subject, setSubject] = useState('');
   const [textContent, setTextContent] = useState('');
-  const [bodyMode, setBodyMode] = useState<'visual' | 'html'>('visual');
+  const [bodyMode, setBodyMode] = useState<'visual' | 'html' | 'text'>(
+    'visual'
+  );
   const [backgroundColor, setBackgroundColor] = useState(
     DEFAULT_BACKGROUND_COLOR
   );
@@ -158,9 +179,14 @@ function MailTemplateEdit() {
     setEditorKey(k => k + 1);
   };
 
-  const switchMode = (mode: 'visual' | 'html') => {
+  const switchMode = (mode: 'visual' | 'html' | 'text') => {
     if (mode === bodyMode) {
       return;
+    }
+    // The plain-text tab is read-only and auto-generated: refresh it from the
+    // current HTML every time it's opened.
+    if (mode === 'text') {
+      setTextContent(deriveTextFromHtml(htmlRef.current));
     }
     // Both editors bind the same canonical string; remounting the target with
     // the latest HTML keeps the switch lossless.
@@ -175,32 +201,10 @@ function MailTemplateEdit() {
     }
     if (bodyMode === 'visual') {
       visualRef.current?.insertToken(token);
-    } else {
+    } else if (bodyMode === 'html') {
       sourceRef.current?.insertText(token);
     }
-  };
-
-  // Derive a plain-text fallback from the current HTML body (block elements
-  // become line breaks; tags/styles are stripped).
-  const generateTextFromHtml = () => {
-    const doc = new DOMParser().parseFromString(htmlRef.current, 'text/html');
-    const root = doc.querySelector('.mail-body') ?? doc.body;
-    // Keep links as "label (url)" (or just the url if there's no distinct label).
-    root.querySelectorAll('a[href]').forEach(anchor => {
-      const href = anchor.getAttribute('href') ?? '';
-      const label = (anchor.textContent ?? '').trim();
-      anchor.replaceWith(label && label !== href ? `${label} (${href})` : href);
-    });
-    root.querySelectorAll('br').forEach(br => br.replaceWith('\n'));
-    root
-      .querySelectorAll('p,div,h1,h2,h3,li,tr')
-      .forEach(el => el.append('\n'));
-    const text = (root.textContent ?? '')
-      .replace(/[ \t]+/g, ' ')
-      .replace(/ *\n */g, '\n')
-      .replace(/\n{3,}/g, '\n\n')
-      .trim();
-    setTextContent(text);
+    // The text tab is read-only — nothing to insert into.
   };
 
   const buildInput = () => ({
@@ -208,7 +212,8 @@ function MailTemplateEdit() {
     description,
     subject,
     htmlContent: htmlRef.current,
-    textContent,
+    // The text fallback is always regenerated from the HTML on save.
+    textContent: deriveTextFromHtml(htmlRef.current),
     context: contextId,
   });
 
@@ -525,6 +530,12 @@ function MailTemplateEdit() {
               >
                 {t('mailTemplates.rawHtml')}
               </Button>
+              <Button
+                appearance={bodyMode === 'text' ? 'primary' : 'default'}
+                onClick={() => switchMode('text')}
+              >
+                {t('mailTemplates.textContent')}
+              </Button>
             </ButtonGroup>
 
             <Stack
@@ -582,7 +593,10 @@ function MailTemplateEdit() {
             </Stack>
           </Stack>
 
-          <div onFocus={() => setActiveField('body')}>
+          <div
+            onFocus={() => setActiveField('body')}
+            style={{ height: 'calc(100vh - 320px)', minHeight: 480 }}
+          >
             {bodyMode === 'visual' ?
               <HtmlVisualEditor
                 key={`visual-${editorKey}`}
@@ -590,48 +604,43 @@ function MailTemplateEdit() {
                 value={htmlRef.current}
                 onChange={handleHtmlChange}
               />
-            : <HtmlSourceEditor
+            : bodyMode === 'html' ?
+              <HtmlSourceEditor
                 key={`html-${editorKey}`}
                 ref={sourceRef}
                 value={htmlRef.current}
                 onChange={handleHtmlChange}
               />
-            }
-          </div>
-
-          <Form
-            fluid
-            style={{ marginTop: 16 }}
-          >
-            <Form.Group>
-              <Stack
-                justifyContent="space-between"
-                alignItems="center"
-                style={{ marginBottom: 6 }}
+            : <div
+                style={{
+                  height: '100%',
+                  display: 'flex',
+                  flexDirection: 'column',
+                }}
               >
-                <Form.ControlLabel style={{ margin: 0 }}>
-                  {t('mailTemplates.textContent')}
-                </Form.ControlLabel>
-                <Button
-                  size="xs"
-                  appearance="ghost"
-                  onClick={generateTextFromHtml}
+                <Typography
+                  variant="caption"
+                  display="block"
+                  style={{ marginBottom: 6, color: '#8e8e93' }}
                 >
                   {t(
-                    'mailTemplates.edit.generateTextFromHtml',
-                    'Generate from HTML'
+                    'mailTemplates.edit.textContentReadonlyHint',
+                    'Automatically generated from the content. Edit the visual or HTML tab to change it.'
                   )}
-                </Button>
-              </Stack>
-              <Input
-                as="textarea"
-                rows={4}
-                value={textContent}
-                onChange={setTextContent}
-                style={{ fontFamily: 'monospace' }}
-              />
-            </Form.Group>
-          </Form>
+                </Typography>
+                <Input
+                  as="textarea"
+                  readOnly
+                  value={textContent}
+                  style={{
+                    flex: 1,
+                    fontFamily: 'monospace',
+                    resize: 'none',
+                  }}
+                />
+              </div>
+            }
+          </div>
         </div>
 
         {/* Bounded to the editor column's height: the picker is absolutely

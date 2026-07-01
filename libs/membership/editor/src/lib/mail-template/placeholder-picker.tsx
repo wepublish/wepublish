@@ -282,7 +282,10 @@ export function PlaceholderPicker({
                     display="block"
                     style={{ marginBottom: 8, color: '#8e8e93' }}
                   >
-                    {selectedContext.note}
+                    {t(
+                      `mailTemplates.placeholderContextNotes.${selectedContext.id}`,
+                      selectedContext.note
+                    )}
                   </Typography>
                 )}
                 {selectedContext.placeholders.length > 0 ?
