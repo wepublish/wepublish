@@ -1906,10 +1906,6 @@ model WebsiteSettings {
   adsSparkLoopEnabled Boolean @default(false)
   adsSparkLoopId      String?
 
-  // Mails
-  mailMailchimpEnabled Boolean @default(false)
-  mailMailchimpKey     String?
-
   // Theme
   theme Json @default("{}")
   fonts Json @default("[]")
