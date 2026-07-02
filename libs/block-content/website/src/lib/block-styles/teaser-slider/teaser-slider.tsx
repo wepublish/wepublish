@@ -170,6 +170,7 @@ export const TeaserSlider = ({
   dragDisabled = false,
   detailsChanged,
   slideGap,
+  origin = 'center',
   ...props
 }: BuilderBlockStyleProps['TeaserSlider']) => {
   const {
@@ -192,7 +193,7 @@ export const TeaserSlider = ({
     drag: dragDisabled ? false : true,
     detailsChanged: detailsChanged ? detailsChanged : void 0,
     slides: {
-      origin: 'center',
+      origin,
       perView: slidesPerView,
       spacing: slidePadding,
     },

@@ -1,4 +1,6 @@
+import styled from '@emotion/styled';
 import { AuthorListContainer } from '@wepublish/author/website';
+import { PageContainer } from '@wepublish/page/website';
 import { getApiUrl } from '@wepublish/utils/website';
 import { AuthorSort, SortOrder } from '@wepublish/website/api';
 import {
@@ -16,11 +18,15 @@ import { useRouter } from 'next/router';
 import { useMemo } from 'react';
 import { z } from 'zod';
 
+import { MainSpacer } from '../../src/components/main-spacer';
+
 const take = 25;
 
 const pageSchema = z.object({
   page: z.coerce.number().gte(1).optional(),
 });
+
+const TeamPageContent = styled(PageContainer)``;
 
 export default function AuthorList() {
   const {
@@ -58,23 +64,27 @@ export default function AuthorList() {
 
   return (
     <>
-      <AuthorListContainer variables={variables} />
+      <TeamPageContent slug="team">
+        <MainSpacer maxWidth="lg">
+          <AuthorListContainer variables={variables} />
 
-      {pageCount > 1 && (
-        <Pagination
-          page={page ?? 1}
-          count={pageCount}
-          onChange={(_, value) =>
-            replace(
-              {
-                query: { ...query, page: value },
-              },
-              undefined,
-              { shallow: true, scroll: true }
-            )
-          }
-        />
-      )}
+          {pageCount > 1 && (
+            <Pagination
+              page={page ?? 1}
+              count={pageCount}
+              onChange={(_, value) =>
+                replace(
+                  {
+                    query: { ...query, page: value },
+                  },
+                  undefined,
+                  { shallow: true, scroll: true }
+                )
+              }
+            />
+          )}
+        </MainSpacer>
+      </TeamPageContent>
     </>
   );
 }
@@ -112,6 +122,6 @@ export const getStaticProps: GetStaticProps = async () => {
 
   return {
     props,
-    revalidate: 60, // every 60 seconds
+    revalidate: 60,
   };
 };

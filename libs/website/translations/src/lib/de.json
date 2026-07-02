@@ -34,7 +34,14 @@
     "button": {
       "subscribeForPeriod": "{monthlyAmount, select, 0 {Gratis} other {{renewalPeriod} für {formattedAmount}}}",
       "payForPeriod": "{monthlyAmount, select, 0 {Gratis} other {{paymentPeriod} für {formattedAmount}}}",
-      "pay": "{monthlyAmount, select, 0 {Gratis} other {Für {formattedAmount}}}"
+      "pay": "{monthlyAmount, select, 0 {Gratis} other {Für {formattedAmount}}}",
+      "label": "{paymentText} {type, select, donation {spenden} other {abonnieren}}"
+    },
+    "modal": {
+      "confirmLabel": "{paymentText} {type, select, donation {Spenden} other {Abonnieren}}"
+    },
+    "transactionFee": {
+      "label": "Ja, ich will die Bearbeitungsgebühren von 2% übernehmen und damit {siteTitle} zusätzlich unterstützen."
     },
     "voucher": {
       "discountApplied": "{discountPercent}% Rabatt angewendet",
@@ -83,6 +90,7 @@
     "cancelledSubscriptions": "Gekündigte Abos & Inaktive Spenden",
     "subscriptionsDetail": "{type, select, Donation {Spende} other {Abo}}",
     "viewCancelledSubscriptions": "Gekündigte Abos & Inaktive Spenden anzeigen",
+    "subscribeAnother": "Anderes Abo lösen",
     "totp": {
       "title": "Zwei-Faktor-Authentifizierung",
       "enabled": "Zwei-Faktor-Authentifizierung ist aktiviert.",

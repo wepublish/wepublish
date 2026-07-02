@@ -44,6 +44,22 @@ const Editor = styled(EditorContent)`
       theme.palette.getContrastText(theme.palette.grey[800])};
   }
 
+  a[data-variant] {
+    display: inline-flex;
+    align-items: center;
+    padding: ${({ theme }) => theme.spacing(0.75, 2.5)};
+    border-radius: ${({ theme }) => theme.shape.borderRadius}px;
+    background-color: ${({ theme }) => theme.palette.primary.main};
+    color: ${({ theme }) => theme.palette.primary.contrastText};
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  a[data-variant='buttonLinkSecondary'] {
+    background-color: ${({ theme }) => theme.palette.secondary.main};
+    color: ${({ theme }) => theme.palette.secondary.contrastText};
+  }
+
   // MUI theme
   p,
   li {

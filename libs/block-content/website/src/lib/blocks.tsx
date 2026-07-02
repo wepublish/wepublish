@@ -59,6 +59,7 @@ import {
 } from './block-styles/alternating/is-alternating';
 import { isTeaserSlotsBlock } from './teaser/teaser-slots-block';
 import { css } from '@emotion/react';
+
 export const BlockRenderer = memo(
   ({ block, className }: BuilderBlockRendererProps) => {
     const { blocks, blockStyles } = useWebsiteBuilder();

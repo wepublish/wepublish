@@ -7,7 +7,11 @@ import {
   ArticleSEO,
   ArticleTags,
 } from '@wepublish/article/website';
-import { LoginForm, RegistrationForm } from '@wepublish/authentication/website';
+import {
+  LoginForm,
+  RegistrationForm,
+  UserForm,
+} from '@wepublish/authentication/website';
 import {
   ArticleAuthor,
   Author,
@@ -227,6 +231,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({ children }) => (
         LoginForm={LoginForm}
         RegistrationForm={RegistrationForm}
         PersonalDataForm={PersonalDataForm}
+        UserForm={UserForm}
         SubscriptionList={SubscriptionList}
         SubscriptionListItem={SubscriptionListItem}
         InvoiceList={InvoiceList}

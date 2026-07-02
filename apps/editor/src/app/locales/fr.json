@@ -1279,6 +1279,8 @@
       },
       "link": {
         "title": "Lier le texte avec",
+        "style": "Style du lien",
+        "noStyle": "Aucun",
         "type": "Type",
         "url": "URL",
         "web": "Web",

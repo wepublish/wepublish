@@ -17,7 +17,9 @@ export type BuilderUserFormFields =
   | 'emailRepeated'
   | 'flair';
 
-export type BuilderUserFormProps<T extends BuilderUserFormFields> = {
+export type BuilderUserFormProps<
+  T extends BuilderUserFormFields = BuilderUserFormFields,
+> = {
   fields: T[];
   className?: string;
   control: Control<any>;

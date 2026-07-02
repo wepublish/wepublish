@@ -1,0 +1,33 @@
+{
+  "subscribe": {
+    "cancellable": "Jederzeit kündbar\n * Versand innerhalb der Schweiz",
+    "button": {
+      "label": "Jetzt unterstützen"
+    },
+    "modal": {
+      "confirmLabel": "Jetzt unterstützen"
+    },
+    "transactionFee": {
+      "label": "Ja, ich übernehme die Bearbeitungsgebühren von 2%"
+    },
+    "memberplan": {
+      "price": "{yearlyAmount}"
+    }
+  },
+  "subscription": {
+    "noActiveSubscriptions": "Du hast noch keine aktive Mitgliedschaft.",
+    "subscribeNow": "Jetzt REFLEKT unterstützen!",
+    "unpaid": "{type, select, Donation {Spende} other {Mitgliedschaft}} ist unbezahlt",
+    "cancel": "{type, select, Donation {Spende} other {Mitgliedschaft}} kündigen",
+    "cancelConfirmation": "{type, select, Donation {Alle offenen Rechnungen zur Spende werden storniert.} other {Die Mitgliedschaft wird nicht mehr verlängert, bleibt aber gültig bis zum Ablaufsdatum. Alle offene Rechnungen der Mitgliedschaft werden storniert.}}",
+    "extendEarly": "{type, select, Donation {Spende} other {Mitgliedschaft}} frühzeitig verlängern?",
+    "extendEarlyConfirmation": "Wir freuen uns, dass du deine {type, select, Donation {Spende} other {Mitgliedschaft}} frühzeitig um ein {subscriptionDuration} verlängern willst. Weiterfahren?"
+  },
+  "user": {
+    "activeSubscriptions": "Aktive {type, select, Donation {Spenden} other {Mitgliedschaften}}",
+    "cancelledSubscriptions": "Gekündigte Mitgliedschaften & Inaktive Spenden",
+    "viewCancelledSubscriptions": "Gekündigte Mitgliedschaften & Inaktive Spenden anzeigen",
+    "subscriptionsDetail": "{type, select, Donation {Spende} other {Mitgliedschaft}}",
+    "subscribeAnother": "Andere Mitgliedschaft lösen"
+  }
+}

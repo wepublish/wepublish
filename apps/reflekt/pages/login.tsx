@@ -63,7 +63,7 @@ export default function Login({ sessionToken }: LoginProps) {
 
   return (
     <LoginWrapper>
-      <H3 component="h1">Login für Abonnent*innen</H3>
+      <H3 component="h1">Login für Unterstützer:innen</H3>
 
       <Typography
         variant="body1"

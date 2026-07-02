@@ -92,6 +92,7 @@ export const MemberPlanItem = forwardRef<
                   currency,
                   locale
                 ),
+                yearlyAmount: Math.round((amountPerMonthMin * 12) / 100),
                 monthlyPrice: formatCurrency(
                   amountPerMonthMin / 100,
                   currency,
