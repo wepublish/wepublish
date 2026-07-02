@@ -3,11 +3,11 @@
 // every app, sourced from the "deploy production" GitHub Actions workflow.
 //
 // Production deploys are triggered by git tags of the form
-// `deploy_<project>_<YYYYMMDDHHMM>`, which run the workflow defined in
-// WORKFLOW_FILE. Each workflow run carries the project (via the tag in
-// head_branch), the commit, the actor, the timestamp and the run status, so
-// the workflow-runs API is the source of truth — not the (long-abandoned)
-// GitHub Deployments API.
+// `deploy_<project>_<YYYYMMDDHHMM>`. The complete roster of apps is derived
+// from those tags (one `matching-refs` call — no deep pagination), and the
+// live status/commit/branch for each is taken from the `WORKFLOW_FILE` runs
+// within the last WINDOW_DAYS. Apps with no deploy in that window are still
+// listed, as muted "stale" placeholders showing when they last shipped.
 //
 // Environment variables:
 //   GITHUB_TOKEN      Token with `actions: read` / `repo` scope (provided
@@ -17,6 +17,9 @@
 //   WORKFLOW_FILE     Optional. Workflow file name. Defaults to
 //                     "on-tag-deploy-production.yml".
 //   TAG_PREFIX        Optional. Deploy-tag prefix. Defaults to "deploy_".
+//   WINDOW_DAYS       Optional. Days back to scan runs for live data. Default 90.
+//   EXCLUDE           Optional. Comma-separated project names to hide entirely
+//                     (e.g. defunct/test apps). Default empty.
 //   OUT_DIR           Optional. Output directory for index.html. Defaults to
 //                     "docs/deploy" so it is served as a sub-path of the repo's
 //                     legacy (branch-based) GitHub Pages site.
@@ -31,6 +34,11 @@ const REPO = process.env.GITHUB_REPOSITORY ?? 'wepublish/wepublish';
 const [OWNER, REPO_NAME] = REPO.split('/');
 const WORKFLOW_FILE = process.env.WORKFLOW_FILE ?? 'on-tag-deploy-production.yml';
 const TAG_PREFIX = process.env.TAG_PREFIX ?? 'deploy_';
+const WINDOW_DAYS = Number(process.env.WINDOW_DAYS) || 90;
+const EXCLUDE = (process.env.EXCLUDE ?? '')
+  .split(',')
+  .map(s => s.trim())
+  .filter(Boolean);
 const OUT_DIR = process.env.OUT_DIR ?? 'docs/deploy';
 const OUT_FILE = resolve(OUT_DIR, 'index.html');
 // <script> id under which the tag→branch store is embedded in the page.
@@ -41,15 +49,48 @@ if (!GITHUB_TOKEN) {
   process.exit(1);
 }
 
-const api = async path => {
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+// Wrap GitHub API calls with retries. The Actions runs API intermittently
+// returns 5xx (especially on deeper pages), and rate limits surface as 429 or
+// 403 with a Retry-After header — a single transient error must not fail the
+// build. Genuine errors (4xx that aren't rate limits) still throw immediately.
+const api = async (path, attempt = 1) => {
+  const maxAttempts = 5;
   const url = path.startsWith('http') ? path : `https://api.github.com${path}`;
-  const res = await fetch(url, {
-    headers: {
-      Authorization: `Bearer ${GITHUB_TOKEN}`,
-      Accept: 'application/vnd.github+json',
-      'X-GitHub-Api-Version': '2022-11-28',
-    },
-  });
+  let res;
+  try {
+    res = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${GITHUB_TOKEN}`,
+        Accept: 'application/vnd.github+json',
+        'X-GitHub-Api-Version': '2022-11-28',
+      },
+    });
+  } catch (err) {
+    if (attempt < maxAttempts) {
+      await sleep(Math.min(60000, 1000 * 2 ** (attempt - 1)));
+      return api(path, attempt + 1);
+    }
+    throw err;
+  }
+  const rateLimited =
+    res.status === 429 ||
+    (res.status === 403 &&
+      (res.headers.get('retry-after') !== null ||
+        res.headers.get('x-ratelimit-remaining') === '0'));
+  if ((res.status >= 500 || rateLimited) && attempt < maxAttempts) {
+    const retryAfter = Number(res.headers.get('retry-after'));
+    const wait =
+      Number.isFinite(retryAfter) && retryAfter > 0
+        ? Math.min(60000, retryAfter * 1000)
+        : Math.min(60000, 1000 * 2 ** (attempt - 1));
+    console.warn(
+      `GitHub API ${path} → ${res.status} ${res.statusText}; retrying in ${wait}ms (attempt ${attempt}/${maxAttempts - 1})`
+    );
+    await sleep(wait);
+    return api(path, attempt + 1);
+  }
   if (!res.ok) {
     throw new Error(`GitHub API ${path} → ${res.status} ${res.statusText}`);
   }
@@ -71,32 +112,68 @@ const parseTag = tag => {
   return { project: m[1], stamp: m[2] };
 };
 
-// Fetch production workflow runs (newest first) and keep the latest run per
-// project. The first run seen for a project is the newest, since the API
-// returns runs in descending creation order.
-const listLatestRunsByProject = async () => {
+// Convert a tag's `YYYYMMDDHHMM` stamp to an ISO instant. The stamp is wall
+// time (not UTC), but it is only used for day-grained "last deployed" display
+// on stale apps, where a couple of hours' offset is immaterial.
+const stampToISO = stamp => {
+  const m = stamp.match(/^(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})$/);
+  return m ? `${m[1]}-${m[2]}-${m[3]}T${m[4]}:${m[5]}:00Z` : null;
+};
+
+// The full app roster comes from the deploy tags themselves: one
+// `matching-refs` call returns every `deploy_*` tag (no pagination), and the
+// latest stamp per project is its last-deployed time. Cheap and complete —
+// independent of how deep the runs API would need to be paged.
+const listRoster = async () => {
+  const refs = await api(
+    `/repos/${OWNER}/${REPO_NAME}/git/matching-refs/tags/${encodeURIComponent(TAG_PREFIX)}`
+  );
+  const latest = new Map();
+  for (const ref of refs ?? []) {
+    const tag = ref.ref.replace('refs/tags/', '');
+    const parsed = parseTag(tag);
+    if (!parsed) {
+      continue;
+    }
+    const prev = latest.get(parsed.project);
+    if (!prev || parsed.stamp > prev.stamp) {
+      latest.set(parsed.project, { ...parsed, tag });
+    }
+  }
+  return latest;
+};
+
+// Scan production runs newest-first and keep the latest run per project, but
+// stop as soon as a run is older than the cutoff — so the deep, flaky pages of
+// the runs API are never requested. Returns a Map of project → run.
+const listRecentRuns = async cutoffMs => {
   const perPage = 100;
-  const maxPages = 6;
+  const maxPages = 10; // safety cap; the time-stop normally ends it far sooner
   const latest = new Map();
   for (let page = 1; page <= maxPages; page++) {
     const data = await api(
       `/repos/${OWNER}/${REPO_NAME}/actions/workflows/${encodeURIComponent(WORKFLOW_FILE)}/runs?per_page=${perPage}&page=${page}`
     );
     const runs = data.workflow_runs ?? [];
+    let reachedCutoff = false;
     for (const run of runs) {
+      if (new Date(run.created_at).getTime() < cutoffMs) {
+        reachedCutoff = true;
+        break;
+      }
       const parsed = parseTag(run.head_branch);
       if (!parsed) {
         continue;
       }
       if (!latest.has(parsed.project)) {
-        latest.set(parsed.project, { ...parsed, run });
+        latest.set(parsed.project, run);
       }
     }
-    if (runs.length < perPage) {
+    if (reachedCutoff || runs.length < perPage) {
       break;
     }
   }
-  return [...latest.values()];
+  return latest;
 };
 
 // Recover the branch a deploy was cut from. A git tag points to a commit, not
@@ -220,8 +297,27 @@ const renderCard = ({ project, run, branch }) => {
         <a class="sha" href="${commitUrl}"><code>${escapeHtml(sha)}</code></a>
         <div class="msg">${escapeHtml(msg)}</div>
         <footer>
-          <time datetime="${escapeHtml(time)}">${escapeHtml(ago(time))}</time>
+          <time datetime="${escapeHtml(time)}" data-rel>${escapeHtml(ago(time))}</time>
           <span class="by">· ${escapeHtml(actor)}</span>
+        </footer>
+      </article>`;
+};
+
+// A project in the roster with no deploy inside the window: listed for
+// completeness, muted, showing when it last shipped (age computed client-side).
+const renderStaleCard = ({ project, tag, iso }) => {
+  const tagUrl = `https://github.com/${OWNER}/${REPO_NAME}/tree/${encodeURIComponent(tag)}`;
+  const fallback = iso ? ago(iso) : 'unknown';
+  return `      <article class="card stale">
+        <header>
+          <h2>${escapeHtml(project)}</h2>
+          <span class="state" aria-label="no recent deployment">∅</span>
+        </header>
+        <a class="ref" href="${escapeHtml(tagUrl)}">${escapeHtml(tag)}</a>
+        <div class="msg muted">No deploy in the last ${WINDOW_DAYS} days.</div>
+        <footer>
+          <span>last deploy </span>
+          <time datetime="${escapeHtml(iso ?? '')}" data-rel>${escapeHtml(fallback)}</time>
         </footer>
       </article>`;
 };
@@ -246,6 +342,9 @@ const renderPage = (cards, store) => `<!doctype html>
       .ok .state { color: #16a34a; }
       .fail .state { color: #dc2626; }
       .pending .state { color: #d97706; }
+      .card.stale { opacity: 0.55; }
+      .stale .state { color: color-mix(in oklab, CanvasText 45%, transparent); }
+      .muted { font-style: italic; }
       .ref { font-size: 0.85rem; opacity: 0.8; text-decoration: none; }
       .branch { font-size: 0.8rem; opacity: 0.7; text-decoration: none; font-family: ui-monospace, monospace; }
       .sha { font-family: ui-monospace, monospace; font-size: 0.85rem; text-decoration: none; opacity: 0.9; }
@@ -264,38 +363,102 @@ ${cards.length ? cards.join('\n') : renderEmpty()}
     </section>
     <p class="meta">Last refreshed <time datetime="${new Date().toISOString()}">${new Date().toUTCString()}</time> · <a href="https://github.com/${OWNER}/${REPO_NAME}/actions/workflows/${encodeURIComponent(WORKFLOW_FILE)}">All production deploys on GitHub</a></p>
 ${renderBranchStore(store)}
+    <script>
+      (function () {
+        function rel(iso) {
+          if (!iso) return '—';
+          var ms = Date.now() - new Date(iso).getTime();
+          if (ms < 0) ms = 0;
+          var min = Math.floor(ms / 60000);
+          if (min < 1) return 'just now';
+          if (min < 60) return min + 'm ago';
+          var hr = Math.floor(min / 60);
+          if (hr < 24) return hr + 'h ago';
+          var d = Math.floor(hr / 24);
+          return d + 'd ago';
+        }
+        function update() {
+          var els = document.querySelectorAll('time[data-rel]');
+          for (var i = 0; i < els.length; i++) {
+            var iso = els[i].getAttribute('datetime');
+            if (iso) { els[i].textContent = rel(iso); }
+          }
+        }
+        update();
+        setInterval(update, 60000);
+      })();
+    </script>
   </body>
 </html>
 `;
 
 const main = async () => {
-  const entries = await listLatestRunsByProject();
-  console.log(`Found ${entries.length} project(s) with production deploys`);
-  // Most recently deployed first.
-  entries.sort((a, b) => new Date(b.run.created_at) - new Date(a.run.created_at));
+  const cutoffMs = Date.now() - WINDOW_DAYS * 86400000;
+  const [roster, recentRuns] = await Promise.all([
+    listRoster(),
+    listRecentRuns(cutoffMs),
+  ]);
+
+  // Roster (all apps ever deployed) ∪ anything seen in the window, minus the
+  // explicit exclude list. A project with a run in the window is "active"; one
+  // that only appears in the roster is "stale" (placeholder).
+  const projects = [...new Set([...roster.keys(), ...recentRuns.keys()])]
+    .filter(p => !EXCLUDE.includes(p))
+    .sort();
+
+  const entries = projects.map(project => {
+    const run = recentRuns.get(project);
+    if (run) {
+      return { type: 'active', project, run };
+    }
+    const meta = roster.get(project);
+    return {
+      type: 'stale',
+      project,
+      tag: meta.tag,
+      iso: stampToISO(meta.stamp),
+    };
+  });
+
   // The source branch is only resolvable while the deploy commit is still a
   // branch head. Capture it once per deploy tag and persist it, so the label
   // survives later work on that branch and only changes on the next deploy.
   const prev = loadBranchStore();
   const store = new Map();
   await Promise.all(
-    entries.map(async entry => {
-      const tag = entry.run.head_branch;
-      if (prev.has(tag)) {
-        entry.branch = prev.get(tag);
-      } else {
-        entry.branch = await getBranchForCommit(entry.run.head_sha);
-      }
-      // Rebuild the store from current tags only, so it never grows unbounded.
-      store.set(tag, entry.branch ?? null);
-    })
+    entries
+      .filter(e => e.type === 'active')
+      .map(async entry => {
+        const tag = entry.run.head_branch;
+        if (prev.has(tag)) {
+          entry.branch = prev.get(tag);
+        } else {
+          entry.branch = await getBranchForCommit(entry.run.head_sha);
+        }
+        // Rebuild the store from current tags only, so it never grows unbounded.
+        store.set(tag, entry.branch ?? null);
+      })
   );
-  const cards = entries.map(renderCard);
+
+  // Active first (newest deploy first), then stale (most recently shipped first).
+  const when = e =>
+    new Date(e.type === 'active' ? e.run.created_at : e.iso).getTime();
+  entries.sort((a, b) => {
+    if (a.type !== b.type) {
+      return a.type === 'active' ? -1 : 1;
+    }
+    return when(b) - when(a);
+  });
+
+  const cards = entries.map(e =>
+    e.type === 'active' ? renderCard(e) : renderStaleCard(e)
+  );
   mkdirSync(OUT_DIR, { recursive: true });
   writeFileSync(OUT_FILE, renderPage(cards, store));
-  const carried = entries.filter(e => prev.has(e.run.head_branch)).length;
+
+  const active = entries.filter(e => e.type === 'active').length;
   console.log(
-    `Wrote ${OUT_FILE} with ${cards.length} card(s); ${carried} branch(es) carried from store, ${cards.length - carried} freshly resolved`
+    `Wrote ${OUT_FILE}: ${active} active + ${entries.length - active} stale of ${entries.length} project(s) (window ${WINDOW_DAYS}d, excluded ${EXCLUDE.length})`
   );
 };
 
