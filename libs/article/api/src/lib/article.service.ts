@@ -1,8 +1,13 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Prisma, PrismaClient } from '@prisma/client';
 import {
   ArticleFilter,
   ArticleListArgs,
+  ArticleRevisionListArgs,
   ArticleSort,
   CreateArticleInput,
   UpdateArticleInput,
@@ -55,21 +60,6 @@ export class ArticleService {
       if (articleIds.length && !filter.ids?.length) {
         filter.ids = articleIds;
       }
-    }
-
-    if (filter?.tags?.length) {
-      const taggedArticles = await this.prisma.taggedArticles.findMany({
-        where: { tagId: { in: filter.tags } },
-        select: { articleId: true },
-        distinct: ['articleId'],
-      });
-
-      const tagArticleIds = taggedArticles.map(ta => ta.articleId);
-      filter.ids =
-        filter.ids?.length ?
-          filter.ids.filter(id => tagArticleIds.includes(id))
-        : tagArticleIds;
-      filter.tags = undefined;
     }
 
     const orderBy = createArticleOrder(sort, order);
@@ -470,6 +460,199 @@ export class ArticleService {
         },
       },
     });
+  }
+
+  /**
+   * Returns a paginated, lightweight slice of an article's revisions for the
+   * version history. Loading happens directly against the revisions table (not
+   * through the article) so that articles with a long history (e.g. a start
+   * page) can be paged through without fetching everything at once.
+   */
+  async getArticleRevisions({
+    articleId,
+    filter,
+    order = SortOrder.Descending,
+    take = 10,
+    skip,
+    cursorId,
+  }: ArticleRevisionListArgs) {
+    const where: Prisma.ArticleRevisionWhereInput = {
+      articleId,
+      ...(filter?.userId ? { userId: filter.userId } : {}),
+    };
+
+    const orderBy = {
+      createdAt: graphQLSortOrderToPrisma(order),
+    } satisfies Prisma.ArticleRevisionOrderByWithRelationInput;
+
+    const [totalCount, revisions] = await Promise.all([
+      this.prisma.articleRevision.count({ where }),
+      this.prisma.articleRevision.findMany({
+        where,
+        skip,
+        take: getMaxTake(take) + 1,
+        orderBy,
+        cursor: cursorId ? { id: cursorId } : undefined,
+      }),
+    ]);
+
+    const nodes = revisions.slice(0, getMaxTake(take));
+    const firstRevision = nodes[0];
+    const lastRevision = nodes[nodes.length - 1];
+
+    return {
+      nodes,
+      totalCount,
+      pageInfo: {
+        hasPreviousPage: Boolean(skip),
+        hasNextPage: revisions.length > nodes.length,
+        startCursor: firstRevision?.id,
+        endCursor: lastRevision?.id,
+      },
+    };
+  }
+
+  /**
+   * Returns a single revision with all of its content. Used to lazily load the
+   * full data of a past version (e.g. for the read-only preview), so the
+   * version history list itself can stay lightweight.
+   */
+  async getRevisionById(id: string) {
+    return this.prisma.articleRevision.findUnique({
+      where: { id },
+    });
+  }
+
+  /**
+   * Restores an older revision by cloning its content into a brand new draft.
+   *
+   * This is non-destructive: no historic revision is mutated or deleted. Any
+   * currently open (unpublished, non-archived) draft is archived first, exactly
+   * like `updateArticle` does, so there is at most one draft at a time.
+   */
+  @PrimeDataLoader(ArticleDataloaderService)
+  async restoreArticleRevision(
+    articleId: string,
+    revisionId: string,
+    userId: string | null | undefined
+  ) {
+    const revision = await this.prisma.articleRevision.findUnique({
+      where: { id: revisionId },
+      include: {
+        authors: true,
+        socialMediaAuthors: true,
+      },
+    });
+
+    if (!revision || revision.articleId !== articleId) {
+      throw new NotFoundException(
+        `Revision with id ${revisionId} not found for article ${articleId}`
+      );
+    }
+
+    const {
+      id: _id,
+      createdAt: _createdAt,
+      publishedAt: _publishedAt,
+      archivedAt: _archivedAt,
+      userId: _userId,
+      articleId: _articleId,
+      properties,
+      authors,
+      socialMediaAuthors,
+      ...content
+    } = revision;
+
+    return this.prisma.article.update({
+      where: { id: articleId },
+      data: {
+        modifiedAt: new Date(),
+        revisions: {
+          updateMany: {
+            where: {
+              archivedAt: null,
+              publishedAt: null,
+            },
+            data: {
+              archivedAt: new Date(),
+            },
+          },
+          create: {
+            ...content,
+            userId,
+            blocks: (content.blocks ?? []) as any[],
+            properties: properties as any,
+            authors: {
+              createMany: {
+                data: authors.map(({ authorId }) => ({ authorId })),
+              },
+            },
+            socialMediaAuthors: {
+              createMany: {
+                data: socialMediaAuthors.map(({ authorId }) => ({ authorId })),
+              },
+            },
+          },
+        },
+      },
+    });
+  }
+
+  /**
+   * Discards the current draft and reverts the article to its latest published
+   * (or pending) revision. The draft is archived rather than deleted, so it
+   * stays available in the version history. Requires a non-draft revision to
+   * fall back to, otherwise the article would be left without a `latest`.
+   */
+  @PrimeDataLoader(ArticleDataloaderService)
+  async discardArticleDraft(id: string) {
+    const article = await this.prisma.article.findUnique({
+      where: { id },
+    });
+
+    if (!article) {
+      throw new NotFoundException(`Article with id ${id} not found`);
+    }
+
+    const draft = await this.prisma.articleRevision.findFirst({
+      where: {
+        articleId: id,
+        publishedAt: null,
+        archivedAt: null,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    if (!draft) {
+      throw new BadRequestException(
+        `Article with id ${id} has no draft to discard`
+      );
+    }
+
+    const fallback = await this.prisma.articleRevision.findFirst({
+      where: {
+        articleId: id,
+        archivedAt: null,
+        publishedAt: {
+          not: null,
+        },
+      },
+    });
+
+    if (!fallback) {
+      throw new BadRequestException(
+        `Cannot discard draft: article ${id} has no published version to revert to`
+      );
+    }
+
+    await this.prisma.articleRevision.update({
+      where: { id: draft.id },
+      data: { archivedAt: new Date() },
+    });
+
+    return article;
   }
 
   @PrimeDataLoader(ArticleDataloaderService)
@@ -920,10 +1103,13 @@ const createExcludeIdsFilter = (
   return {};
 };
 
+const isEmptyWhere = (where: Prisma.ArticleWhereInput) =>
+  Object.keys(where).length === 0;
+
 export const createArticleFilter = (
   filter: Partial<ArticleFilter>
-): Prisma.ArticleWhereInput => ({
-  AND: [
+): Prisma.ArticleWhereInput => {
+  const andClauses = [
     createIdsFilter(filter),
     createTitleFilter(filter),
     createPreTitleFilter(filter),
@@ -937,12 +1123,17 @@ export const createArticleFilter = (
     createHiddenFilter(filter),
     createPeerIdFilter(filter),
     createExcludeIdsFilter(filter),
-    {
-      OR: [
-        createPublishedFilter(filter),
-        createDraftFilter(filter),
-        createPendingFilter(filter),
-      ],
-    },
-  ],
-});
+  ].filter(c => !isEmptyWhere(c));
+
+  const orClauses = [
+    createPublishedFilter(filter),
+    createDraftFilter(filter),
+    createPendingFilter(filter),
+  ].filter(c => !isEmptyWhere(c));
+
+  if (orClauses.length > 0) {
+    andClauses.push({ OR: orClauses });
+  }
+
+  return andClauses.length > 0 ? { AND: andClauses } : {};
+};

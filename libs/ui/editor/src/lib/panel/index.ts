@@ -31,3 +31,5 @@ export * from './tokenGeneratePanel';
 export * from './userCheckPicker';
 export * from './userRoleEditPanel';
 export * from './userSubscriptionDeactivatePanel';
+export * from './revisionContentPreview';
+export * from './versionHistoryPanel';
