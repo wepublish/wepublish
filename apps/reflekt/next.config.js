@@ -126,7 +126,6 @@ const nextConfig = {
       { source: '/kasse/:path*', destination: '/login', permanent: true },
       { source: '/spenden-3', destination: '/mitmachen', permanent: true },
       { source: '/spenden', destination: '/mitmachen', permanent: true },
-      { source: '/spende', destination: '/mitmachen', permanent: true },
       {
         source: '/jetzt-mitmachen',
         destination: '/mitmachen',
