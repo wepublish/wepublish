@@ -20,6 +20,7 @@ export class ArticleRevisionDataloaderService
   private dataloader = new DataLoader<string, RevisionMap>(
     async (articleIds: readonly string[]) => {
       const articles = await this.prisma.article.findMany({
+        relationLoadStrategy: 'join',
         where: {
           id: {
             in: articleIds as string[],
