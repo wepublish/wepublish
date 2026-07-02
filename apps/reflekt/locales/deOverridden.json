@@ -8,7 +8,7 @@
       "confirmLabel": "Jetzt unterstützen"
     },
     "transactionFee": {
-      "label": "Ja, ich übernehme die Bearbeitungsgebühren von 2%"
+      "label": "Ja, ich übernehme die Transaktionsgebühren von 2%"
     },
     "memberplan": {
       "price": "{yearlyAmount}"
