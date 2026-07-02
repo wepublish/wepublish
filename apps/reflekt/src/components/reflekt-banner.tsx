@@ -11,7 +11,6 @@ import {
   Typography,
 } from '@mui/material';
 import {
-  BANNER_STORAGE_KEY,
   BannerActions,
   BannerCloseButton,
   BannerContent,
@@ -25,7 +24,6 @@ import {
   collapseBanner,
 } from '@wepublish/banner/website';
 import { BuilderBannerProps } from '@wepublish/website/builder';
-import { differenceInHours } from 'date-fns';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -64,7 +62,7 @@ export const BannerBase = ({
   className,
   onRegister,
 }: BuilderBannerProps & { onRegister?: () => void }) => {
-  const [collapsed, setCollapsed] = useState(true);
+  const [collapsed, setCollapsed] = useState(false);
   const { isPressing: isSubmitPressing, onClick: onSubmitPress } =
     usePressAnimation();
 
@@ -74,17 +72,6 @@ export const BannerBase = ({
     mode: 'onSubmit',
     reValidateMode: 'onSubmit',
   });
-
-  useEffect(() => {
-    const lastClosedTime =
-      Number(localStorage.getItem(BANNER_STORAGE_KEY)) ?? 0;
-    const currentTime = new Date().getTime();
-
-    const isClosedRecently =
-      differenceInHours(currentTime, lastClosedTime) < 24;
-
-    setCollapsed(isClosedRecently);
-  }, [data]);
 
   const handleClose = () => {
     setCollapsed(true);
