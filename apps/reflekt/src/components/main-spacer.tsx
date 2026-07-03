@@ -18,6 +18,7 @@ export const MainSpacer = styled(Container)`
   }
 
   ${({ theme }) => theme.breakpoints.up('md')} {
-    gap: ${({ theme }) => theme.spacing(10)};
+    gap: 0;
+    row-gap: ${({ theme }) => theme.spacing(10)};
   }
 `;

@@ -814,7 +814,7 @@ const theme = createTheme(WePTheme, {
             textTransform: 'uppercase',
             fontSize: '1.5rem',
             '.MuiAccordionSummary-content': {
-              gridColumn: 'var(--reflekt-collapsible-start, 3) / 11',
+              gridColumn: '3 / 11',
               gridRow: '1 / 2',
               margin: '0',
               paddingRight: '1.5rem',
@@ -832,7 +832,7 @@ const theme = createTheme(WePTheme, {
           },
           '.MuiCollapse-root': {
             padding: '0',
-            gridColumn: 'var(--reflekt-collapsible-start, 3) / 11',
+            gridColumn: '3 / 11',
             gridRow: '2 / 3',
             [breakpoints.up('md')]: {
               marginLeft: '2rem',

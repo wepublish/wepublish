@@ -5,6 +5,8 @@ import { Page } from '@wepublish/page/website';
 import { BuilderPageProps } from '@wepublish/website/builder';
 
 import { FlexBlockHeroWrapper } from './block-layouts/flex-block-hero';
+import { CollapsibleContentWrapper } from './break-blocks/reflekt-collapsible-content';
+import { CollapsibleDownloadsWrapper } from './break-blocks/reflekt-collapsible-downloads';
 
 const fullWidthMainSpacer = (theme: Theme) => css`
   main > .MuiContainer-root {
@@ -15,10 +17,6 @@ const fullWidthMainSpacer = (theme: Theme) => css`
 `;
 
 const StyledReflektPage = styled(Page)`
-  ${({ theme }) => theme.breakpoints.up('md')} {
-    --reflekt-collapsible-start: 2;
-  }
-
   & > .MuiContainer-root {
     max-width: initial;
     grid-template-columns: minmax(
@@ -31,6 +29,40 @@ const StyledReflektPage = styled(Page)`
   & > .MuiContainer-root:has(${FlexBlockHeroWrapper}) {
     grid-template-columns: 1fr;
     justify-content: stretch;
+  }
+
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    ${CollapsibleContentWrapper} .MuiCollapse-root,
+    ${CollapsibleDownloadsWrapper} .MuiCollapse-root,
+    ${CollapsibleContentWrapper}
+      .MuiAccordionSummary-root
+      .MuiAccordionSummary-content,
+    ${CollapsibleDownloadsWrapper}
+      .MuiAccordionSummary-root
+      .MuiAccordionSummary-content {
+      grid-column: 2 / 12;
+
+      ${({ theme }) => theme.breakpoints.up('xs')} {
+        margin-left: 0;
+      }
+
+      ${({ theme }) => theme.breakpoints.up('lg')} {
+        margin-left: 2rem;
+      }
+    }
+
+    ${CollapsibleContentWrapper} .MuiAccordionSummary-expandIconWrapper,
+    ${CollapsibleDownloadsWrapper} .MuiAccordionSummary-expandIconWrapper {
+      grid-column: 2 / 12;
+
+      ${({ theme }) => theme.breakpoints.up('xs')} {
+        margin-right: 0;
+      }
+
+      ${({ theme }) => theme.breakpoints.up('lg')} {
+        margin-right: 2rem;
+      }
+    }
   }
 
   &.hide-amount-slider [data-area='monthlyAmount'] {

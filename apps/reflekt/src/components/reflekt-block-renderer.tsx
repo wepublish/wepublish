@@ -7,7 +7,6 @@ import {
   isSubscribeBlock,
   isTitleBlock,
 } from '@wepublish/block-content/website';
-import { BlockSibling, collectSiblings } from './block-siblings';
 import { ImageContext } from '@wepublish/image/website';
 import { FullBlockFragment } from '@wepublish/website/api';
 import {
@@ -33,6 +32,7 @@ import {
   isFlexBlockFullsizeImage,
 } from './block-layouts/flex-block-fullsize-image';
 import { isFlexBlockHero } from './block-layouts/flex-block-hero';
+import { BlockSibling, collectSiblings } from './block-siblings';
 import {
   CollapsibleContent,
   isCollapsibleContent,
@@ -138,12 +138,10 @@ export const ReflektBlockRenderer = (
           () => css`
             grid-template-columns:
               max(calc(100vw - var(--breakpoint-width)) / 2, 0px)
-              repeat(12, 1fr) max(
-                calc(100vw - var(--breakpoint-width)) / 2,
-                0px
-              ) !important;
+              repeat(12, 1fr)
+              max(calc(100vw - var(--breakpoint-width)) / 2, 0px) !important;
             & > * {
-              grid-column: 2/13;
+              grid-column: 3/13;
               margin-left: 0;
               margin-right: 0;
             }
