@@ -29,61 +29,26 @@ import {
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
-import { startTransition, useEffect, useRef, useState } from 'react';
+import {
+  type ReactNode,
+  startTransition,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import ReactPlayer from 'react-player';
 
 import { useArticleProperty } from '../article-properties-context';
 import { ReflektBlockStyles } from '../block-styles/reflekt-block-styles';
 import { heroOffScreen } from '../reflekt-navbar';
-
-const isTrustedYouTubeUrl = (value?: string | null): boolean => {
-  if (!value) {
-    return false;
-  }
-  try {
-    const hostname = new URL(value).hostname.toLowerCase();
-    return (
-      hostname === 'youtube.com' ||
-      hostname === 'www.youtube.com' ||
-      hostname === 'm.youtube.com' ||
-      hostname === 'youtu.be'
-    );
-  } catch {
-    return false;
-  }
-};
-
-const getYouTubeVideoId = (value?: string | null): string | null => {
-  if (!value) {
-    return null;
-  }
-  try {
-    const url = new URL(value);
-    if (url.hostname === 'youtu.be') {
-      return url.pathname.slice(1) || null;
-    }
-    const v = url.searchParams.get('v');
-    if (v) {
-      return v;
-    }
-    const embedMatch = url.pathname.match(/^\/embed\/([^/?]+)/);
-    return embedMatch ? embedMatch[1] : null;
-  } catch {
-    return null;
-  }
-};
-
-const getNativeVideoUrl = (value?: string | null): string | null => {
-  if (!value) {
-    return null;
-  }
-  try {
-    const url = new URL(value);
-    return /\.(mp4|webm)$/i.test(url.pathname) ? value : null;
-  } catch {
-    return null;
-  }
-};
+import {
+  type HeroNestedBlock,
+  type HeroVideoInfo,
+  detectHeroPosterVideoLayout,
+  getNativeVideoUrl,
+  getYouTubeVideoId,
+  isTrustedYouTubeUrl,
+} from './flex-block-hero-poster';
 
 const HeroNativeVideoPlayer = styled('video')`
   position: absolute;
@@ -97,9 +62,10 @@ const HeroNativeVideoPlayer = styled('video')`
 type HeroNativeVideoProps = {
   src: string;
   noLoop: boolean;
+  onStarted?: () => void;
 };
 
-const HeroNativeVideo = ({ src, noLoop }: HeroNativeVideoProps) => (
+const HeroNativeVideo = ({ src, noLoop, onStarted }: HeroNativeVideoProps) => (
   <HeroNativeVideoPlayer
     src={src}
     autoPlay
@@ -108,6 +74,7 @@ const HeroNativeVideo = ({ src, noLoop }: HeroNativeVideoProps) => (
     playsInline
     disablePictureInPicture
     preload="auto"
+    onPlaying={onStarted}
   />
 );
 
@@ -147,10 +114,16 @@ const EndMask = styled('div')`
 type HeroVimeoVideoProps = {
   videoId: string;
   noLoop: boolean;
+  onStarted?: () => void;
 };
 
-const HeroVimeoVideo = ({ videoId, noLoop }: HeroVimeoVideoProps) => {
+const HeroVimeoVideo = ({
+  videoId,
+  noLoop,
+  onStarted,
+}: HeroVimeoVideoProps) => {
   const [aspectRatio, setAspectRatio] = useState(16 / 9);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
 
   useEffect(() => {
     let active = true;
@@ -173,8 +146,50 @@ const HeroVimeoVideo = ({ videoId, noLoop }: HeroVimeoVideoProps) => {
     };
   }, [videoId]);
 
+  useEffect(() => {
+    const iframe = iframeRef.current;
+    if (!iframe || !onStarted) {
+      return undefined;
+    }
+
+    const subscribe = () => {
+      iframe.contentWindow?.postMessage(
+        JSON.stringify({ method: 'addEventListener', value: 'play' }),
+        'https://player.vimeo.com'
+      );
+    };
+
+    const handleMessage = (event: MessageEvent) => {
+      if (event.origin !== 'https://player.vimeo.com') {
+        return;
+      }
+      let data: { event?: string } | null = null;
+      try {
+        data =
+          typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
+      } catch {
+        return;
+      }
+      if (data?.event === 'ready') {
+        subscribe();
+      }
+      if (data?.event === 'play' || data?.event === 'playing') {
+        onStarted();
+      }
+    };
+
+    window.addEventListener('message', handleMessage);
+    const subscribeTimer = setTimeout(subscribe, 500);
+
+    return () => {
+      window.removeEventListener('message', handleMessage);
+      clearTimeout(subscribeTimer);
+    };
+  }, [videoId, onStarted]);
+
   return (
     <HeroVimeoPlayer
+      ref={iframeRef}
       src={`https://player.vimeo.com/video/${videoId}?background=1&autoplay=1&muted=1&loop=${noLoop ? 0 : 1}&controls=0&title=0&byline=0&portrait=0`}
       allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
       title="hero video"
@@ -191,6 +206,7 @@ type HeroYouTubeVideoProps = {
   isActiveBlock: boolean;
   muted: boolean;
   noLoop: boolean;
+  onStarted?: () => void;
 };
 
 const HeroYouTubeVideo = ({
@@ -198,6 +214,7 @@ const HeroYouTubeVideo = ({
   isActiveBlock,
   muted,
   noLoop,
+  onStarted,
 }: HeroYouTubeVideoProps) => {
   const [ended, setEnded] = useState(false);
   const playerRef = useRef<ReactPlayer>(null);
@@ -214,7 +231,11 @@ const HeroYouTubeVideo = ({
         width="100%"
         height="100%"
         onEnded={() => setEnded(true)}
-        onPlay={() => setEnded(false)}
+        onStart={onStarted}
+        onPlay={() => {
+          setEnded(false);
+          onStarted?.();
+        }}
         onReady={() => {
           const internalPlayer = playerRef.current?.getInternalPlayer();
           internalPlayer?.playVideo?.();
@@ -240,6 +261,117 @@ const HeroYouTubeVideo = ({
       />
       {ended && <EndMask />}
     </>
+  );
+};
+
+const HERO_POSTER_FADE_FALLBACK_MS = 4000;
+
+const HeroStack = styled('div')`
+  position: relative;
+  width: 100vw;
+  overflow: hidden;
+`;
+
+const HeroVideoLayer = styled('div')`
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+`;
+
+const HeroPosterLayer = styled('div')`
+  position: relative;
+  z-index: 1;
+  opacity: 1;
+  transition: opacity 700ms ease;
+  pointer-events: none;
+
+  &[data-started='true'] {
+    opacity: 0;
+  }
+`;
+
+type HeroVideoProps = {
+  video: HeroVideoInfo;
+  muted: boolean;
+  noLoop: boolean;
+  onStarted: () => void;
+};
+
+const HeroVideo = ({ video, muted, noLoop, onStarted }: HeroVideoProps) => {
+  switch (video.kind) {
+    case 'native':
+      return (
+        <HeroNativeVideo
+          src={video.src}
+          noLoop={noLoop}
+          onStarted={onStarted}
+        />
+      );
+    case 'vimeo':
+      return (
+        <HeroVimeoVideo
+          videoId={video.vimeoId}
+          noLoop={noLoop}
+          onStarted={onStarted}
+        />
+      );
+    case 'youtube':
+      return (
+        <HeroYouTubeVideo
+          videoUrl={video.videoUrl}
+          isActiveBlock
+          muted={muted}
+          noLoop={noLoop}
+          onStarted={onStarted}
+        />
+      );
+  }
+};
+
+type HeroPosterVideoCellProps = {
+  poster: ReactNode;
+  video: HeroVideoInfo;
+  active: boolean;
+  muted: boolean;
+  noLoop: boolean;
+};
+
+const HeroPosterVideoCell = ({
+  poster,
+  video,
+  active,
+  muted,
+  noLoop,
+}: HeroPosterVideoCellProps) => {
+  const [started, setStarted] = useState(false);
+
+  useEffect(() => {
+    if (!active) {
+      return undefined;
+    }
+    const timer = setTimeout(
+      () => setStarted(true),
+      HERO_POSTER_FADE_FALLBACK_MS
+    );
+    return () => clearTimeout(timer);
+  }, [active]);
+
+  return (
+    <HeroStack>
+      {active && (
+        <HeroVideoLayer>
+          <HeroVideo
+            video={video}
+            muted={muted}
+            noLoop={noLoop}
+            onStarted={() => setStarted(true)}
+          />
+        </HeroVideoLayer>
+      )}
+      <HeroPosterLayer data-started={started ? 'true' : 'false'}>
+        {poster}
+      </HeroPosterLayer>
+    </HeroStack>
   );
 };
 
@@ -451,6 +583,65 @@ export const FlexBlockHero = ({
   const sortedBlocks = [...blocks].sort(
     (a, b) => a.alignment.y - b.alignment.y || a.alignment.x - b.alignment.x
   );
+
+  const posterVideoLayout = detectHeroPosterVideoLayout(sortedBlocks);
+
+  if (posterVideoLayout) {
+    const renderNested = (nestedBlock: HeroNestedBlock, index: number) => (
+      <Renderer
+        block={nestedBlock.block as FullBlockFragment}
+        type={type ?? 'Page'}
+        level={(level ?? 0) + 1}
+        index={index}
+        count={sortedBlocks.length}
+      />
+    );
+
+    return (
+      <ImageContext.Provider
+        value={{ maxWidth: 2400, fetchPriority: 'high', loading: 'eager' }}
+      >
+        <FlexBlockHeroWrapper
+          className={className}
+          ref={ref}
+        >
+          <BlockWithAlignment
+            {...(posterVideoLayout.mobileImage.alignment as FlexAlignment)}
+          >
+            <HeroPosterVideoCell
+              poster={renderNested(posterVideoLayout.mobileImage, 0)}
+              video={posterVideoLayout.mobileVideo}
+              active={mounted && !isDesktop}
+              muted={muted}
+              noLoop={!!noLoop}
+            />
+          </BlockWithAlignment>
+
+          <BlockWithAlignment
+            {...(posterVideoLayout.desktopImage.alignment as FlexAlignment)}
+          >
+            <HeroPosterVideoCell
+              poster={renderNested(posterVideoLayout.desktopImage, 1)}
+              video={posterVideoLayout.desktopVideo}
+              active={mounted && isDesktop}
+              muted={muted}
+              noLoop={!!noLoop}
+            />
+          </BlockWithAlignment>
+
+          {posterVideoLayout.richText && (
+            <BlockWithAlignment
+              {...(posterVideoLayout.richText.alignment as FlexAlignment)}
+            >
+              {renderNested(posterVideoLayout.richText, 2)}
+            </BlockWithAlignment>
+          )}
+
+          {heroOffScreen(isIntersecting)}
+        </FlexBlockHeroWrapper>
+      </ImageContext.Provider>
+    );
+  }
 
   return (
     <ImageContext.Provider
