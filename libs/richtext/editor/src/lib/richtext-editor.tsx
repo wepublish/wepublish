@@ -166,23 +166,30 @@ export const RichtextEditor = forwardRef<HTMLDivElement, RichtextEditorProps>(
       [autofocus]
     );
     const providerValue = useMemo(() => ({ editor }), [editor]);
+    const editorReady = !!editor && !editor.isDestroyed;
 
     useEffect(() => {
-      editor.setEditable(!disabled);
-    }, [editor, disabled]);
+      if (editorReady) {
+        editor.setEditable(!disabled, false);
+      }
+    }, [editorReady, disabled, editor]);
 
     useEffect(() => {
-      if (defaultValue) {
-        editor.commands.setContent(defaultValue);
+      if (editorReady && defaultValue) {
+        editor.commands.setContent(defaultValue, { emitUpdate: false });
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
-      if (!equals(value, editor.getJSON()) && value) {
-        editor.commands.setContent(value);
+      if (editorReady && value && !equals(value, editor.getJSON())) {
+        editor.commands.setContent(value, { emitUpdate: false });
       }
-    }, [value, editor]);
+    }, [value, editorReady, editor]);
+
+    if (!editorReady) {
+      return;
+    }
 
     return (
       <EditorContext.Provider value={providerValue}>

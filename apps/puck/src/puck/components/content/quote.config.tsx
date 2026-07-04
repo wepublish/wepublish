@@ -11,9 +11,11 @@ export const QuoteConfig: ComponentConfig<{
   fields: {
     quote: {
       type: 'text',
+      contentEditable: true,
     },
     author: {
       type: 'text',
+      contentEditable: true,
     },
   },
   defaultProps: {

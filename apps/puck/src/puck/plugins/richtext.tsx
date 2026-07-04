@@ -41,4 +41,7 @@ export const richtextPlugin: Plugin<UserConfig> = {
       richtext: RichtextFieldRender,
     },
   },
+  fieldTransforms: {
+    richtext: ({ value }) => value,
+  },
 };

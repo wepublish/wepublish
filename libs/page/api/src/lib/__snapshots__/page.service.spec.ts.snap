@@ -810,3 +810,51 @@ exports[`PageService should update an page 3`] = `
   ],
 ]
 `;
+
+exports[`PageService version history should restore a revision as a new draft 1`] = `
+[
+  {
+    "data": {
+      "modifiedAt": 2023-01-01T00:00:00.000Z,
+      "revisions": {
+        "create": {
+          "blocks": [
+            {
+              "title": {
+                "lead": "Old",
+                "title": "Old",
+              },
+            },
+          ],
+          "description": "Old description",
+          "imageID": "image-1",
+          "properties": [
+            {
+              "key": "key",
+              "public": true,
+              "value": "value",
+            },
+          ],
+          "socialMediaDescription": "Old sm description",
+          "socialMediaImageID": "image-2",
+          "socialMediaTitle": "Old sm title",
+          "title": "Old title",
+          "userId": "new-user",
+        },
+        "updateMany": {
+          "data": {
+            "archivedAt": 2023-01-01T00:00:00.000Z,
+          },
+          "where": {
+            "archivedAt": null,
+            "publishedAt": null,
+          },
+        },
+      },
+    },
+    "where": {
+      "id": "1234",
+    },
+  },
+]
+`;

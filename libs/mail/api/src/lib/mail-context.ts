@@ -197,14 +197,26 @@ export class MailContext implements MailContextInterface {
   }
 
   async getUsedTemplateIdentifiers(): Promise<string[]> {
-    const intervals = await this.prisma.subscriptionInterval.findMany({
-      include: {
-        mailTemplate: true,
-      },
-    });
+    const [intervals, userFlowMails] = await Promise.all([
+      this.prisma.subscriptionInterval.findMany({
+        include: {
+          mailTemplate: true,
+        },
+      }),
+      this.prisma.userFlowMail.findMany({
+        include: {
+          mailTemplate: true,
+        },
+      }),
+    ]);
 
-    return intervals.flatMap(
-      interval => interval.mailTemplate?.externalMailTemplateId ?? []
-    );
+    return [
+      ...intervals.flatMap(
+        interval => interval.mailTemplate?.externalMailTemplateId ?? []
+      ),
+      ...userFlowMails.flatMap(
+        userFlowMail => userFlowMail.mailTemplate?.externalMailTemplateId ?? []
+      ),
+    ];
   }
 }

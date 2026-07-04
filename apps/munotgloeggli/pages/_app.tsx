@@ -40,6 +40,7 @@ import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
 import deOverriden from '../locales/deOverriden.json';
+import { MunotgloeggliBaseTeaser } from '../src/components/website-builder-overwrites/blocks/teaser';
 import theme from '../src/theme';
 
 setDefaultOptions({
@@ -115,6 +116,7 @@ function CustomApp({
             elements={{ Link: NextWepublishLink }}
             date={{ format: dateFormatter }}
             meta={{ siteTitle }}
+            blocks={{ BaseTeaser: MunotgloeggliBaseTeaser }}
           >
             <ThemeProvider theme={theme}>
               <CssBaseline />

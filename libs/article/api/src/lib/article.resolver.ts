@@ -11,7 +11,9 @@ import {
   Article,
   ArticleListArgs,
   ArticleRevision,
+  ArticleRevisionListArgs,
   CreateArticleInput,
+  PaginatedArticleRevisions,
   PaginatedArticles,
   UpdateArticleInput,
 } from './article.model';
@@ -89,6 +91,23 @@ export class ArticleResolver {
     }
 
     throw new BadRequestException('Article id or slug required.');
+  }
+
+  @Permissions(CanGetArticle)
+  @Query(() => PaginatedArticleRevisions, {
+    description: `Returns a paginated list of revisions (version history) for an article.`,
+  })
+  public articleRevisions(@Args() args: ArticleRevisionListArgs) {
+    return this.articleService.getArticleRevisions(args);
+  }
+
+  @Permissions(CanGetArticle)
+  @Query(() => ArticleRevision, {
+    nullable: true,
+    description: `Returns a single article revision including its full content.`,
+  })
+  public articleRevision(@Args('id') id: string) {
+    return this.articleService.getRevisionById(id);
   }
 
   @Public()
@@ -169,6 +188,30 @@ export class ArticleResolver {
   })
   public unpublishArticle(@Args('id') id: string) {
     return this.articleService.unpublishArticle(id);
+  }
+
+  @Permissions(CanCreateArticle)
+  @Mutation(() => Article, {
+    description: `Discards the current draft and reverts to the latest published revision.`,
+  })
+  public discardArticleDraft(@Args('id') id: string) {
+    return this.articleService.discardArticleDraft(id);
+  }
+
+  @Permissions(CanCreateArticle)
+  @Mutation(() => Article, {
+    description: `Restores an older revision of an article as a new draft.`,
+  })
+  public restoreArticleRevision(
+    @Args('id') id: string,
+    @Args('revisionId') revisionId: string,
+    @CurrentUser() user: UserSession | undefined
+  ) {
+    return this.articleService.restoreArticleRevision(
+      id,
+      revisionId,
+      user?.user?.id
+    );
   }
 
   @Public()

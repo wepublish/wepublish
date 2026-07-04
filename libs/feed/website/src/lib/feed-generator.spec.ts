@@ -55,6 +55,33 @@ it('should generate the json feed', async () => {
   expect((await generate(articles)).json1()).toMatchSnapshot();
 });
 
+it('should generate the json feed for articles with no authors', async () => {
+  const articles = [
+    mockArticle({
+      id: '1',
+      latest: {
+        __typename: 'ArticleRevision',
+        id: '1',
+        publishedAt: new Date('2023-01-01').toISOString(),
+        createdAt: new Date('2023-01-01').toISOString(),
+        blocks: [],
+        authors: [],
+        properties: [],
+        image: undefined,
+        lead: 'Test lead',
+        title: 'Test title',
+        preTitle: null,
+        socialMediaDescription: null,
+        socialMediaImage: null,
+        socialMediaTitle: null,
+        canonicalUrl: null,
+      },
+    }),
+  ] as Article[];
+
+  expect(() => generate(articles).then(f => f.json1())).not.toThrow();
+});
+
 it('should escape ampersands in image URLs for RSS feed', async () => {
   const imageWithSignature = mockImage();
   imageWithSignature.url =

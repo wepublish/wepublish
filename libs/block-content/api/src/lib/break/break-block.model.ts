@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { Field, InputType, ObjectType, OmitType } from '@nestjs/graphql';
 import { Image } from '@wepublish/image/api';
 import { BaseBlock } from '../base-block.model';
