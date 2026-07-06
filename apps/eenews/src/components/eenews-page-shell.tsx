@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { TitleBlockPreTitleWrapper } from '@wepublish/block-content/website';
 import { PropsWithChildren } from 'react';
 
 const Shell = styled('div')`
@@ -14,6 +15,12 @@ const Shell = styled('div')`
   ${({ theme }) => theme.breakpoints.down('md')} {
     padding: 36px 20px;
     row-gap: 20px;
+  }
+
+  ${TitleBlockPreTitleWrapper} {
+    background-color: ${({ theme }) => theme.palette.primary.main};
+    color: ${({ theme }) => theme.palette.common.white};
+    font-weight: 700;
   }
 `;
 
