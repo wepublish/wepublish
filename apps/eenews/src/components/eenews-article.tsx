@@ -149,10 +149,9 @@ const BreakingBadge = styled(Typography)`
 
 const Body = styled('div')`
   color: ${({ theme }) => theme.palette.text.primary};
-
-  figure + figure {
-    margin-top: ${({ theme }) => theme.spacing(3)};
-  }
+  display: flex;
+  flex-direction: column;
+  gap: ${({ theme }) => theme.spacing(3)};
 `;
 
 const ShareRow = styled('div')`
