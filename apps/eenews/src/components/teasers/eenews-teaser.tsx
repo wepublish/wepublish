@@ -168,8 +168,8 @@ export const EenewsTeaser = ({
   const showTagChip =
     blockStyle !== EeNewsBlockType.AktuellGrid && tag !== undefined;
 
-  const TITLE_SPLIT_LENGTH = 50;
-  const LEAD_MAX_LENGTH = 120;
+  const TITLE_SPLIT_LENGTH = 75;
+  const LEAD_MAX_LENGTH = 170;
 
   const truncatedTitle =
     title && title.length > TITLE_SPLIT_LENGTH ?
