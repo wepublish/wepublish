@@ -22,15 +22,20 @@ const slateToPm = (content: any): RichtextElements | [] => {
 
       const isLink = 'type' in child && child.type === 'link';
 
-      // Links carry their label in `children`, not `title`; fall back to the url.
-      const text =
-        isLink ?
-          slateText(child) || child.title || child.url || ''
-        : child.text;
+      // A link's visible label is its `children` text. `title` is only a tooltip
+      // and `url` the target — neither is visible in slate, so a link with empty
+      // or whitespace-only children was an invisible anchor. Drop it below instead
+      // of promoting title/url to text and fabricating ghost links.
+      const text = isLink ? slateText(child) : child.text;
 
       // ProseMirror rejects text nodes whose `text` is not a non-empty string
       // (RangeError: Invalid text node in JSON / empty text nodes not allowed).
-      if (typeof text !== 'string' || text.length === 0) {
+      // Links additionally drop on an all-whitespace label (an invisible anchor);
+      // plain text keeps its whitespace, which is meaningful between inline nodes.
+      if (
+        typeof text !== 'string' ||
+        (isLink ? text.trim().length === 0 : text.length === 0)
+      ) {
         return [];
       }
 
@@ -151,8 +156,31 @@ const slateToPm = (content: any): RichtextElements | [] => {
   }
 
   if (content.type === 'list-item') {
+    // tiptap's listItem content is `paragraph block*`: inline content must sit
+    // inside a paragraph, not directly in the listItem. Slate keeps it inline,
+    // so wrap the inline run in a leading paragraph and keep any block children
+    // (e.g. nested lists) as following siblings.
+    const inline = children.filter((child: any) => child.type === 'text');
+    const blocks = children.filter((child: any) => child.type !== 'text');
     return {
       type: 'listItem',
+      attrs: undefined,
+      content: [
+        {
+          type: 'paragraph',
+          attrs: {
+            textAlign: 'left',
+          },
+          content: inline,
+        },
+        ...blocks,
+      ],
+    };
+  }
+
+  if (content.type === 'quote') {
+    return {
+      type: 'blockquote',
       attrs: undefined,
       content: children,
     };
@@ -656,26 +684,7 @@ export class SlateToPmMigrator {
           );
         }
 
-        const updatedBlocks = revision.blocks.map((block: any) => {
-          if (['richText', 'linkPageBreak'].includes(block.type)) {
-            return {
-              ...block,
-              richText: this.migrate(block.slateRichText ?? []),
-            };
-          }
-
-          if (['listicle'].includes(block.type)) {
-            return {
-              ...block,
-              items: block.items.map((item: any) => ({
-                ...item,
-                richText: this.migrate(item.slateRichText ?? []),
-              })),
-            };
-          }
-
-          return block;
-        });
+        const updatedBlocks = this.migrateBlocksFromSlate(revision.blocks);
 
         await this.prisma.articleRevision.update({
           where: { id: revision.id },
@@ -729,26 +738,7 @@ export class SlateToPmMigrator {
           );
         }
 
-        const updatedBlocks = revision.blocks.map((block: any) => {
-          if (['richText', 'linkPageBreak'].includes(block.type)) {
-            return {
-              ...block,
-              richText: this.migrate(block.slateRichText ?? []),
-            };
-          }
-
-          if (['listicle'].includes(block.type)) {
-            return {
-              ...block,
-              items: block.items.map((item: any) => ({
-                ...item,
-                richText: this.migrate(item.slateRichText ?? []),
-              })),
-            };
-          }
-
-          return block;
-        });
+        const updatedBlocks = this.migrateBlocksFromSlate(revision.blocks);
 
         await this.prisma.pageRevision.update({
           where: { id: revision.id },
@@ -806,6 +796,12 @@ export class SlateToPmMigrator {
   private static readonly BUGGY_TEXT_NODE =
     '$.** ? (@.type == "text" && (!exists(@.text) || @.text == ""))';
 
+  // A richtext node never filled (`richText: null`) that still has a slate
+  // source — the signature of flex-nested blocks the initial migration skipped.
+  // `BUGGY_TEXT_NODE` can't catch these (null has no text node). Recursive.
+  private static readonly UNMIGRATED_RICHTEXT =
+    '$.** ? (@.richText.type() == "null" && exists(@.slateRichText[0]))';
+
   private stopCron(name: string, reason: string): void {
     try {
       this.schedulerRegistry.deleteCronJob(name);
@@ -836,23 +832,39 @@ export class SlateToPmMigrator {
   // a buggy block with no usable `slateRichText` is left as-is too (never emptied —
   // the no-progress guard then stops the cron rather than destroying content).
   private migrateBlocksFromSlate(blocks: any[]): any[] {
+    // Re-migrate a richtext-bearing node when its `richText` was never filled
+    // (`null` — e.g. flex-nested blocks the initial migration skipped) or is
+    // buggy, and a real slate source survives. Clean blocks are left untouched.
     const fix = (node: any) =>
       (
-        this.hasBuggyTextNode(node.richText) &&
         Array.isArray(node.slateRichText) &&
-        node.slateRichText.length > 0
+        node.slateRichText.length > 0 &&
+        (node.richText == null || this.hasBuggyTextNode(node.richText))
       ) ?
         { ...node, richText: this.migrate(node.slateRichText) }
       : node;
-    return blocks.map((block: any) => {
-      if (['richText', 'linkPageBreak'].includes(block.type)) {
+    // Recurse into flex blocks: richtext nested in `flexBlock.blocks[].block`
+    // is otherwise never visited (the original cause of null flex-nested richtext).
+    const migrateBlock = (block: any): any => {
+      if (['richText', 'linkPageBreak'].includes(block?.type)) {
         return fix(block);
       }
-      if (block.type === 'listicle' && Array.isArray(block.items)) {
+      if (block?.type === 'listicle' && Array.isArray(block.items)) {
         return { ...block, items: block.items.map(fix) };
       }
+      if (block?.type === 'flexBlock' && Array.isArray(block.blocks)) {
+        return {
+          ...block,
+          blocks: block.blocks.map((entry: any) =>
+            entry && entry.block ?
+              { ...entry, block: migrateBlock(entry.block) }
+            : entry
+          ),
+        };
+      }
       return block;
-    });
+    };
+    return blocks.map(migrateBlock);
   }
 
   // Shared revision-table pass: select rows matching `predicate`, apply
@@ -922,6 +934,32 @@ export class SlateToPmMigrator {
       'slate.remigrateBuggyPages',
       'pages.revisions',
       SlateToPmMigrator.BUGGY_TEXT_NODE,
+      blocks => this.migrateBlocksFromSlate(blocks)
+    );
+  }
+
+  @Cron(CronExpression.EVERY_5_SECONDS, {
+    name: 'slate.remigrateUnmigratedArticles',
+    waitForCompletion: true,
+  })
+  async remigrateUnmigratedArticles() {
+    await this.remigrateRevisionTable(
+      'slate.remigrateUnmigratedArticles',
+      'articles.revisions',
+      SlateToPmMigrator.UNMIGRATED_RICHTEXT,
+      blocks => this.migrateBlocksFromSlate(blocks)
+    );
+  }
+
+  @Cron(CronExpression.EVERY_5_SECONDS, {
+    name: 'slate.remigrateUnmigratedPages',
+    waitForCompletion: true,
+  })
+  async remigrateUnmigratedPages() {
+    await this.remigrateRevisionTable(
+      'slate.remigrateUnmigratedPages',
+      'pages.revisions',
+      SlateToPmMigrator.UNMIGRATED_RICHTEXT,
       blocks => this.migrateBlocksFromSlate(blocks)
     );
   }
