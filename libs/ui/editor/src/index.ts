@@ -12,6 +12,7 @@ export * from './lib/listView/paginated-query-container';
 export * from './lib/listView/pagination';
 export * from './lib/listView/selected-items-actions';
 export * from './lib/listView/use-column-config';
+export * from './lib/listView/use-list-view-state';
 export * from './lib/listView/use-selectable-list';
 export * from './lib/panel';
 export * from './lib/singleView/singleView';

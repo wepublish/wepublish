@@ -34,6 +34,7 @@ import {
   Table,
   TableWrapper,
   useColumnConfig,
+  useListViewState,
 } from '@wepublish/ui/editor';
 import { ReactNode, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -92,16 +93,16 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  const [filter, setFilter] = useState(initialFilter);
+  const { filter, setFilter, sortField, sortOrder, setSort, limit, setLimit } =
+    useListViewState<ArticleFilter>('articles', {
+      defaultFilter: initialFilter,
+    });
 
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
   const [currentArticle, setCurrentArticle] = useState<FullArticleFragment>();
   const [confirmAction, setConfirmAction] = useState<ConfirmAction>();
 
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
-  const [sortField, setSortField] = useState('modifiedAt');
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
   const [deleteArticle, { loading: isDeleting }] = useDeleteArticleMutation({});
   const [unpublishArticle, { loading: isUnpublishing }] =
@@ -174,6 +175,12 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
         },
       },
       {
+        id: 'preTitle',
+        label: t('articles.overview.preTitle'),
+        width: 250,
+        render: article => article.latest.preTitle,
+      },
+      {
         id: 'title',
         label: t('articles.overview.title'),
         width: 400,
@@ -185,12 +192,6 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
             </Link>
           </PeerAvatar>
         ),
-      },
-      {
-        id: 'preTitle',
-        label: t('articles.overview.preTitle'),
-        width: 250,
-        render: article => article.latest.preTitle,
       },
       {
         id: 'authors',
@@ -307,8 +308,8 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
             rowData?.id === highlightedRowId ? 'highlighted-row' : ''
           }
           onSortColumn={(sortColumn, sortType) => {
-            setSortOrder(sortType ?? 'asc');
-            setSortField(sortColumn);
+            setSort(sortColumn, sortType ?? 'asc');
+            setPage(1);
           }}
         >
           {dataColumns
@@ -441,7 +442,10 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
           total={data?.articles.totalCount ?? 0}
           activePage={page}
           onChangePage={page => setPage(page)}
-          onChangeLimit={limit => setLimit(limit)}
+          onChangeLimit={limit => {
+            setLimit(limit);
+            setPage(1);
+          }}
         />
       </TableWrapper>
 
