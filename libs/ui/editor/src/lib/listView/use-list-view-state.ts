@@ -52,7 +52,7 @@ export const useListViewState = <TFilter = Record<string, unknown>>(
 
       return {
         filter:
-          parsed.filter && typeof parsed.filter === 'object' ?
+          parsed.filter !== undefined && parsed.filter !== null ?
             (parsed.filter as TFilter)
           : defaultValue.filter,
         sortField:
@@ -80,8 +80,13 @@ export const useListViewState = <TFilter = Record<string, unknown>>(
   const value = state ?? defaultValue;
 
   const setFilter = useCallback(
-    (filter: TFilter) => {
-      setState({ ...value, filter });
+    (filter: TFilter | ((previous: TFilter) => TFilter)) => {
+      const nextFilter =
+        typeof filter === 'function' ?
+          (filter as (previous: TFilter) => TFilter)(value.filter)
+        : filter;
+
+      setState({ ...value, filter: nextFilter });
     },
     [setState, value]
   );
