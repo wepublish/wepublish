@@ -5,10 +5,10 @@ import { getSettings } from '@wepublish/editor/api';
 import { act, renderHook, waitFor } from '@testing-library/react';
 
 import {
-  dismiss,
   fetchOneMessages,
-  getDismissed,
-  isHidden,
+  getMinimized,
+  isMinimized,
+  setMinimized,
   useOneMessages,
 } from './oneMessages.hooks';
 import type { OneMessage } from './oneMessages.types';
@@ -43,6 +43,7 @@ const okResponse = (data: unknown) => ({
 
 beforeEach(() => {
   delete process.env.WEP_ONE_URL;
+  delete process.env.APP_NAME;
   mockedGetSettings.mockReturnValue({
     wepOneURL: 'https://one.test/',
     medium: 'BAJOUR',
@@ -105,33 +106,40 @@ describe('fetchOneMessages', () => {
   });
 });
 
-describe('dismissal helpers', () => {
-  it('persists dismissed ids and reads them back', () => {
-    dismiss(3);
-    dismiss(9);
+describe('minimize helpers', () => {
+  it('persists minimized ids and reads them back', () => {
+    setMinimized(3, true);
+    setMinimized(9, true);
 
-    expect(getDismissed()).toEqual([3, 9]);
+    expect(getMinimized()).toEqual([3, 9]);
   });
 
   it('does not store the same id twice', () => {
-    dismiss(3);
-    dismiss(3);
+    setMinimized(3, true);
+    setMinimized(3, true);
 
-    expect(getDismissed()).toEqual([3]);
+    expect(getMinimized()).toEqual([3]);
   });
 
-  it('hides only dismissible messages that have been dismissed', () => {
-    dismiss(3);
+  it('removes an id again when expanded', () => {
+    setMinimized(3, true);
+    setMinimized(3, false);
 
-    expect(isHidden(message({ id: 3, dismissible: true }))).toBe(true);
-    expect(isHidden(message({ id: 3, dismissible: false }))).toBe(false);
-    expect(isHidden(message({ id: 4, dismissible: true }))).toBe(false);
+    expect(getMinimized()).toEqual([]);
   });
 
-  it('treats corrupt storage as no dismissals', () => {
-    localStorage.setItem('wep-one-dismissed-messages', 'not json');
+  it('reports minimized only for dismissible messages that were minimized', () => {
+    setMinimized(3, true);
 
-    expect(getDismissed()).toEqual([]);
+    expect(isMinimized(message({ id: 3, dismissible: true }))).toBe(true);
+    expect(isMinimized(message({ id: 3, dismissible: false }))).toBe(false);
+    expect(isMinimized(message({ id: 4, dismissible: true }))).toBe(false);
+  });
+
+  it('treats corrupt storage as nothing minimized', () => {
+    localStorage.setItem('wep-one-minimized-messages', 'not json');
+
+    expect(getMinimized()).toEqual([]);
   });
 });
 

@@ -1,6 +1,8 @@
 {
   "translation": {
     "oneMessages": {
+      "header": "Nachrichten vom We.Publish Team",
+      "expand": "Ausklappen",
       "linkFallback": "Mehr erfahren"
     },
     "versionHistory": {

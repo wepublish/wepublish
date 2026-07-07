@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import type { OneMessage, OneMessagesResponse } from './oneMessages.types';
 
 const POLL_INTERVAL_MS = 5 * 60 * 1000;
-const DISMISSED_STORAGE_KEY = 'wep-one-dismissed-messages';
+const MINIMIZED_STORAGE_KEY = 'wep-one-minimized-messages';
 
 function getBaseUrl(): string {
   return (process.env.WEP_ONE_URL || getSettings().wepOneURL).replace(
@@ -14,7 +14,7 @@ function getBaseUrl(): string {
 }
 
 function getMedium(): string {
-  return (getSettings().medium ?? '').toLowerCase();
+  return (process.env.APP_NAME || getSettings().medium || '').toLowerCase();
 }
 
 /**
@@ -50,9 +50,9 @@ export async function fetchOneMessages(locale: string): Promise<OneMessage[]> {
   }
 }
 
-export function getDismissed(): number[] {
+export function getMinimized(): number[] {
   try {
-    const raw = localStorage.getItem(DISMISSED_STORAGE_KEY);
+    const raw = localStorage.getItem(MINIMIZED_STORAGE_KEY);
     const parsed = raw ? JSON.parse(raw) : [];
 
     return Array.isArray(parsed) ? parsed : [];
@@ -61,14 +61,20 @@ export function getDismissed(): number[] {
   }
 }
 
-export function dismiss(id: number): void {
-  const next = new Set(getDismissed());
-  next.add(id);
-  localStorage.setItem(DISMISSED_STORAGE_KEY, JSON.stringify([...next]));
+export function setMinimized(id: number, minimized: boolean): void {
+  const next = new Set(getMinimized());
+
+  if (minimized) {
+    next.add(id);
+  } else {
+    next.delete(id);
+  }
+
+  localStorage.setItem(MINIMIZED_STORAGE_KEY, JSON.stringify([...next]));
 }
 
-export function isHidden(message: OneMessage): boolean {
-  return message.dismissible && getDismissed().includes(message.id);
+export function isMinimized(message: OneMessage): boolean {
+  return message.dismissible && getMinimized().includes(message.id);
 }
 
 /**
