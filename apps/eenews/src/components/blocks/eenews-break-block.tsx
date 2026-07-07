@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { css } from '@mui/material';
 import {
   BuilderBreakBlockProps,
   Button,
@@ -30,7 +31,7 @@ const Heading = styled('div')`
   margin: 0;
   font-family: ${({ theme }) => theme.typography.fontFamily};
   font-weight: 800;
-  font-size: 30px;
+  font-size: 24px;
   line-height: 1.1;
   letter-spacing: -0.02em;
   color: ${({ theme }) => theme.palette.primary.main};
@@ -49,7 +50,7 @@ const RichTextWrapper = styled('div')`
   p,
   li {
     font-family: ${({ theme }) => theme.typography.fontFamily};
-    font-size: 28px;
+    font-size: 20px;
     line-height: 1.3;
     font-weight: 700;
     letter-spacing: -0.015em;
@@ -63,9 +64,20 @@ const RichTextWrapper = styled('div')`
   ${({ theme }) => theme.breakpoints.down('sm')} {
     p,
     li {
-      font-size: 22px;
+      font-size: 18px;
     }
   }
+`;
+
+const HeadingNormal = styled('div')`
+  margin: 0;
+  ${({ theme }) => css(theme.typography.h4)};
+  color: ${({ theme }) => theme.palette.primary.main};
+`;
+
+const RichTextWrapperNormal = styled('div')`
+  font-family: ${({ theme }) => theme.typography.fontFamily};
+  color: ${({ theme }) => theme.palette.primary.main};
 `;
 
 const Actions = styled('div')`
@@ -86,21 +98,27 @@ export const EenewsBreakBlock = ({
   linkTarget,
   linkText,
   linkURL,
+  blockStyle,
 }: BuilderBreakBlockProps) => {
   const {
     blocks: { RichText },
   } = useWebsiteBuilder();
+
+  const textSizeNormal = blockStyle === 'BreakBlockTextSizeNormal';
+  const HeadingComponent = textSizeNormal ? HeadingNormal : Heading;
+  const RichTextContainer =
+    textSizeNormal ? RichTextWrapperNormal : RichTextWrapper;
 
   return (
     <Wrapper className={className}>
       <Segment>
         {image && <BreakImage image={image} />}
 
-        {text && <Heading>{text}</Heading>}
+        {text && <HeadingComponent>{text}</HeadingComponent>}
 
-        <RichTextWrapper>
+        <RichTextContainer>
           <RichText richText={richText} />
-        </RichTextWrapper>
+        </RichTextContainer>
 
         {!hideButton && linkURL && linkText && (
           <Actions>
