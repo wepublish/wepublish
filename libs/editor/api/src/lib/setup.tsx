@@ -21,6 +21,7 @@ export enum ElementID {
 export interface ClientSettings {
   readonly apiURL: string;
   readonly wepOneURL: string;
+  readonly medium?: string;
   readonly peerByDefault: boolean;
   readonly imgMinSizeToCompress: number;
 }
@@ -54,6 +55,7 @@ export function getSettings(): ClientSettings {
     const defaultSettings = {
       apiURL: 'http://localhost:4000',
       wepOneURL: 'https://one-admin.wepublish.cloud',
+      medium: '',
       imgMinSizeToCompress: 10,
     };
 

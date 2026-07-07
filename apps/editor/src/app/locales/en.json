@@ -1,5 +1,8 @@
 {
   "translation": {
+    "oneMessages": {
+      "linkFallback": "Learn more"
+    },
     "versionHistory": {
       "title": "Version history",
       "subtitle": "{{count}} versions",
