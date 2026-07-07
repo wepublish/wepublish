@@ -1,7 +1,9 @@
 import styled from '@emotion/styled';
 import { Typography } from '@mui/material';
 import { Blocks } from '@wepublish/block-content/website';
+import { CommentListContainer } from '@wepublish/comments/website';
 import {
+  CommentItemType,
   FullBlockFragment,
   FullTeaserFragment,
   useArticleListQuery,
@@ -10,13 +12,17 @@ import {
   BuilderArticleProps,
   Image,
   Link,
+  Paywall,
   useWebsiteBuilder,
   WebsiteBuilderProvider,
 } from '@wepublish/website/builder';
 import { MdChevronLeft } from 'react-icons/md';
 
+import { ArticleAdsSuppressedContext } from './article-ads-context';
 import { ArticlePropertiesContext } from './article-properties-context';
 import { EenewsTeaser } from './teasers/eenews-teaser';
+
+const PUBLIREPORTAGE_TAG = 'publireportage';
 
 const Wrapper = styled('article')`
   max-width: 760px;
@@ -168,6 +174,18 @@ const ShareLabel = styled(Typography)`
   color: ${({ theme }) => theme.palette.primary.main};
 `;
 
+const CommentsSection = styled('section')`
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 1px solid ${({ theme }) => theme.palette.divider};
+`;
+
+const CommentsTitle = styled(Typography)`
+  display: block;
+  margin: 0 0 24px;
+  color: ${({ theme }) => theme.palette.primary.main};
+`;
+
 const Related = styled('section')`
   max-width: var(--max-width);
   margin: 0 auto;
@@ -246,6 +264,9 @@ export const EenewsArticle = ({
   const latest = article.latest;
   const dateStr = formatDateDE(article.publishedAt);
   const topicLabel = article.tags?.find(t => t.main)?.tag ?? undefined;
+  const adsSuppressed = (article.tags ?? []).some(
+    t => t.tag?.trim().toLowerCase() === PUBLIREPORTAGE_TAG
+  );
   const authors = (latest.authors ?? []).filter(a => !a.hideOnArticle);
   const hero = latest.image ?? undefined;
   const heroCaption = (hero?.description ?? '')
@@ -339,15 +360,24 @@ export const EenewsArticle = ({
         )}
 
         {!hideContent && (
-          <Body>
-            <Blocks
-              blocks={bodyBlocks as unknown as FullBlockFragment[]}
-              type="Article"
-            />
-          </Body>
+          <ArticleAdsSuppressedContext.Provider value={adsSuppressed}>
+            <Body>
+              <Blocks
+                blocks={bodyBlocks as unknown as FullBlockFragment[]}
+                type="Article"
+              />
+            </Body>
+          </ArticleAdsSuppressedContext.Provider>
         )}
 
-        {showPaywall && children}
+        {showPaywall && article.paywall && (
+          <Paywall
+            {...article.paywall}
+            hideContent={hideContent}
+          />
+        )}
+
+        {children}
 
         <ShareRow>
           <ShareLabel variant="pageEyebrow">Teilen</ShareLabel>
@@ -356,6 +386,16 @@ export const EenewsArticle = ({
             title={title}
           />
         </ShareRow>
+
+        {!article.disableComments && (
+          <CommentsSection>
+            <CommentsTitle variant="sectionTitle">Kommentare</CommentsTitle>
+            <CommentListContainer
+              id={article.id}
+              type={CommentItemType.Article}
+            />
+          </CommentsSection>
+        )}
       </Wrapper>
 
       {relatedTeasers.length > 0 && (

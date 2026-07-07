@@ -5,6 +5,7 @@ import {
 } from '@wepublish/website/builder';
 
 import { Advertisement } from './advertisement';
+import { useArticleAdsSuppressed } from './article-ads-context';
 
 const Wrapper = styled('div')`
   position: relative;
@@ -63,11 +64,12 @@ export const EenewsArticleRichText = ({
   const {
     blocks: { RichText },
   } = useWebsiteBuilder();
+  const adsSuppressed = useArticleAdsSuppressed();
 
   const nodes = getRichTextNodes(richText);
   const firstParagraph = nodes.findIndex(node => node?.type === 'paragraph');
 
-  if (firstParagraph === -1) {
+  if (adsSuppressed || firstParagraph === -1) {
     return (
       <Wrapper className={className}>
         <RichText richText={richText} />
