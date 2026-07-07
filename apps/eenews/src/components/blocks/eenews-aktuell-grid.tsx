@@ -214,7 +214,7 @@ export const EenewsAktuellGrid = ({
               variant="sectionToggle"
               component="span"
             >
-              Schweiz
+              Alle
             </Typography>
           </ToggleLink>
           <ToggleSep aria-hidden />
