@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { Typography } from '@mui/material';
-import { Blocks } from '@wepublish/block-content/website';
+import { Blocks, QuoteBlockWrapper } from '@wepublish/block-content/website';
 import { CommentListContainer } from '@wepublish/comments/website';
 import {
   CommentItemType,
@@ -158,6 +158,19 @@ const Body = styled('div')`
   display: flex;
   flex-direction: column;
   gap: ${({ theme }) => theme.spacing(3)};
+
+  ${QuoteBlockWrapper} {
+    margin-left: 0;
+    color: ${({ theme }) => theme.palette.primary.main};
+    border-color: ${({ theme }) => theme.palette.primary.main};
+
+    p::before {
+      content: '«';
+    }
+    p::after {
+      content: '»';
+    }
+  }
 `;
 
 const ShareRow = styled('div')`
