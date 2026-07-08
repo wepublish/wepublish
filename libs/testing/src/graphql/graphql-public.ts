@@ -275,6 +275,7 @@ export type Banner = {
   collapsible: Scalars['Boolean'];
   cta?: Maybe<Scalars['String']>;
   delay: Scalars['Int'];
+  embedUrl?: Maybe<Scalars['String']>;
   hideForMinutes: Scalars['Int'];
   html?: Maybe<Scalars['String']>;
   id: Scalars['String'];
@@ -745,6 +746,7 @@ export type CreateBannerInput = {
   collapsible: Scalars['Boolean'];
   cta?: InputMaybe<Scalars['String']>;
   delay: Scalars['Int'];
+  embedUrl?: InputMaybe<Scalars['String']>;
   hideForMinutes: Scalars['Int'];
   html?: InputMaybe<Scalars['String']>;
   imageId?: InputMaybe<Scalars['String']>;
@@ -5847,6 +5849,7 @@ export type UpdateBannerInput = {
   collapsible: Scalars['Boolean'];
   cta?: InputMaybe<Scalars['String']>;
   delay: Scalars['Int'];
+  embedUrl?: InputMaybe<Scalars['String']>;
   hideForMinutes: Scalars['Int'];
   html?: InputMaybe<Scalars['String']>;
   id: Scalars['String'];

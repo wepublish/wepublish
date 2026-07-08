@@ -266,6 +266,8 @@
         "showOnPages": "Afficher sur ces pages",
         "showForLoginStatus": "Afficher pour",
         "html": "Code HTML",
+        "embedUrl": "URL d'intégration (iframe)",
+        "embedUrlHelp": "URL d'une page intégrée en iframe avec ajustement automatique de la hauteur. Les tags de l'article sont ajoutés comme paramètre ?tags=...",
         "loginStatus": {
           "ALL": "tous les visiteurs",
           "LOGGED_IN": "visiteurs connectés",

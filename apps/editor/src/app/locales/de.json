@@ -261,6 +261,8 @@
         "showOnPages": "Auf Seiten anzeigen",
         "showForLoginStatus": "Anzeigen für",
         "html": "HTML-Code",
+        "embedUrl": "Embed-URL (iframe)",
+        "embedUrlHelp": "URL einer Seite, die als iframe mit automatischer Höhenanpassung eingebettet wird. Die Tags des Artikels werden als ?tags=... Query-Parameter angehängt.",
         "loginStatus": {
           "ALL": "alle",
           "LOGGED_IN": "nur eingeloggt",
