@@ -10,6 +10,11 @@ export const TsriPaymentAmountPicker = forwardRef<
     {...props}
     ref={ref}
     pickerItems={[1000, 1500, 2000]}
+    arrows={'stacked'}
+    snap={{
+      values: [10, 15, 20],
+      threshold: 0.6,
+    }}
   />
 ));
 

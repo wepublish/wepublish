@@ -186,12 +186,87 @@ const SpinnerWrapper = styled('div')`
 `;
 
 export const HelperText = styled('p')`
-  margin: 4px 14px 0;
+  margin: 4px 0 0;
   font-size: 0.75rem;
   line-height: 1.66;
   letter-spacing: 0.03333em;
   color: ${({ theme }) => theme.palette.text.secondary};
   text-align: center;
+  white-space: nowrap;
+`;
+
+const ChevronUpIcon = () => (
+  <svg
+    viewBox="0 0 24 24"
+    width="16"
+    height="16"
+    fill="currentColor"
+  >
+    <path d="M7 14l5-5 5 5z" />
+  </svg>
+);
+
+const ChevronDownIcon = () => (
+  <svg
+    viewBox="0 0 24 24"
+    width="16"
+    height="16"
+    fill="currentColor"
+  >
+    <path d="M7 10l5 5 5-5z" />
+  </svg>
+);
+
+const stackedGroupStyles = (theme: Theme) => css`
+  ${groupStyles(theme)}
+  padding-left: 6px;
+  padding-right: 0;
+`;
+
+const stackedInputStyles = css`
+  ${inputStyles()}
+  padding: 5px 0;
+  text-align: center;
+  font-weight: 700;
+`;
+
+const arrowStackStyles = css`
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
+  flex-shrink: 0;
+  width: 22px;
+`;
+
+const arrowButtonStyles = (theme: Theme) => css`
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  border-left: 1px solid ${theme.palette.divider};
+  background: transparent;
+  cursor: pointer;
+  color: rgba(0, 0, 0, 0.54);
+  overflow: hidden;
+
+  &:first-of-type {
+    border-bottom: 1px solid ${theme.palette.divider};
+  }
+
+  &[disabled] {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  @media (hover: hover) {
+    &:hover:not([disabled]) {
+      background-color: rgba(0, 0, 0, 0.04);
+      color: rgba(0, 0, 0, 0.87);
+    }
+  }
 `;
 
 type CurrencyNumberSpinnerProps = ComponentProps<typeof NumberField.Root>;
@@ -221,6 +296,7 @@ export const CurrencyNumberSpinner = (
     className?: string;
     snap?: CurrencyNumberSpinnerSnap;
     helperText?: ReactNode;
+    arrows?: 'split' | 'stacked';
   }
 ) => {
   const id = useId();
@@ -234,6 +310,7 @@ export const CurrencyNumberSpinner = (
     className,
     snap,
     helperText,
+    arrows = 'split',
   } = props;
 
   const isParentControlled = valueProp !== undefined;
@@ -295,17 +372,32 @@ export const CurrencyNumberSpinner = (
           onValueCommitted?.(committed, eventDetails);
         }}
       >
-        <NumberField.Group css={groupStyles}>
-          <NumberField.Decrement css={buttonStyles}>
-            <MinusIcon css={iconStyles} />
-          </NumberField.Decrement>
+        {arrows === 'stacked' ?
+          <NumberField.Group css={stackedGroupStyles}>
+            <NumberField.Input css={stackedInputStyles} />
 
-          <NumberField.Input css={inputStyles} />
+            <div css={arrowStackStyles}>
+              <NumberField.Increment css={arrowButtonStyles}>
+                <ChevronUpIcon />
+              </NumberField.Increment>
 
-          <NumberField.Increment css={buttonStyles}>
-            <PlusIcon css={iconStyles} />
-          </NumberField.Increment>
-        </NumberField.Group>
+              <NumberField.Decrement css={arrowButtonStyles}>
+                <ChevronDownIcon />
+              </NumberField.Decrement>
+            </div>
+          </NumberField.Group>
+        : <NumberField.Group css={groupStyles}>
+            <NumberField.Decrement css={buttonStyles}>
+              <MinusIcon css={iconStyles} />
+            </NumberField.Decrement>
+
+            <NumberField.Input css={inputStyles} />
+
+            <NumberField.Increment css={buttonStyles}>
+              <PlusIcon css={iconStyles} />
+            </NumberField.Increment>
+          </NumberField.Group>
+        }
 
         <FieldSet />
       </NumberField.Root>
