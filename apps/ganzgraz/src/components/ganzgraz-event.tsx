@@ -272,7 +272,7 @@ export const GanzGrazEvent = ({
       </EventHeader>
 
       <EventBody>
-        <RichText richText={data?.event.description ?? []} />
+        <RichText richText={data?.event.description} />
       </EventBody>
     </EventWrapper>
   );
