@@ -12,7 +12,6 @@ import {
   TitleBlockTitle,
 } from '@wepublish/block-content/website';
 import { withErrorSnackbar } from '@wepublish/errors/website';
-import { PaymentAmountPicker } from '@wepublish/membership/website';
 import {
   FooterContainer,
   NavbarContainer,
@@ -50,6 +49,7 @@ import { zodI18nMap } from 'zod-i18n-map';
 import deOverriden from '../locales/deOverriden.json';
 import { FlimmerBreakBlock } from '../src/components/flimmer-break-block';
 import { FlimmerNavbar } from '../src/components/flimmer-navbar';
+import { FlimmerPaymentAmountPicker } from '../src/components/flimmer-payment-amount-picker';
 import { FlimmerRichText } from '../src/components/flimmer-richtext';
 import { FlimmerTeaser } from '../src/components/flimmer-teaser';
 import theme from '../src/theme';
@@ -146,7 +146,7 @@ function CustomApp({
             Head={Head}
             Script={Script}
             Navbar={FlimmerNavbar}
-            PaymentAmount={PaymentAmountPicker}
+            PaymentAmount={FlimmerPaymentAmountPicker}
             elements={{ Link: NextWepublishLink }}
             blocks={{
               BaseTeaser: FlimmerTeaser,
