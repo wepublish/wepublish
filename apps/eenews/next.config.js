@@ -29,6 +29,8 @@ const nextConfig = {
     return [
       ...((await wepNextConfig.redirects?.()) ?? []),
       ...legacyRedirects(),
+      { source: '/event', destination: '/', permanent: false },
+      { source: '/events', destination: '/', permanent: false },
     ];
   },
 };
