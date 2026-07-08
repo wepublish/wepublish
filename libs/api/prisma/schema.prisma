@@ -1367,10 +1367,11 @@ model Banner {
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
-  title String
-  text  String
-  cta   String?
-  html  String?
+  title    String
+  text     String
+  cta      String?
+  html     String?
+  embedUrl String?
 
   imageId String?
   image   Image?  @relation(fields: [imageId], references: [id])

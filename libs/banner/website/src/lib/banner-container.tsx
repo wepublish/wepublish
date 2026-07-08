@@ -13,11 +13,13 @@ import { hasPaywallBypass } from '@wepublish/paywall/website';
 export type BannerContainerProps = {
   documentType: BannerDocumentType;
   documentId?: string;
+  tags?: string[];
 } & BuilderContainerProps;
 
 export function BannerContainer({
   documentType,
   documentId,
+  tags,
   className,
 }: BannerContainerProps) {
   const { Banner } = useWebsiteBuilder();
@@ -40,6 +42,7 @@ export function BannerContainer({
       data={data}
       loading={loading}
       error={error}
+      tags={tags}
       className={className}
     />
   );
