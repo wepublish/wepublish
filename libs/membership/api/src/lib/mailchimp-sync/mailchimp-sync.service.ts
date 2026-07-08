@@ -815,6 +815,25 @@ export class MailchimpSyncService {
     const parts = expression.split(':');
     const type = parts[0];
 
+    // Temporary: exclude donation slugs from active_abo and retarget
+    if (type === 'active_abo' || type === 'retarget') {
+      const excludedSlugs = ['spende-gastro-brief', 'spende-stadtratbrief'];
+      const subscriptions = data.subscriptions.filter(
+        s => !excludedSlugs.includes(s.memberPlan.slug)
+      );
+      const byPaidUntilDesc = [...subscriptions].sort(
+        (a, b) => (b.paidUntil?.getTime() ?? 0) - (a.paidUntil?.getTime() ?? 0)
+      );
+      data = {
+        ...data,
+        subscriptions,
+        currentSubscription: byPaidUntilDesc.find(
+          s => !s.deactivation || (s.paidUntil && s.paidUntil > new Date())
+        ),
+        lastSubscription: byPaidUntilDesc[0],
+      };
+    }
+
     switch (type) {
       case 'user.firstName':
         return (data.user.firstName || 'Unbekannt').trim();
