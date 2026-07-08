@@ -193,8 +193,9 @@ export const FrageDesTages = ({
                 <AuthorBox author={article?.latest.authors[0]} />
               : null}
             </div>
+
             <div>
-              <InfoBox richText={pollToPass?.infoText || []} />
+              <InfoBox richText={pollToPass?.infoText} />
             </div>
           </AuthorAndContext>
 

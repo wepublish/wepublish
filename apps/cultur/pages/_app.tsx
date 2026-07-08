@@ -141,8 +141,6 @@ function CustomApp({
                   slug="main"
                   headerSlug="header"
                   iconSlug="icons"
-                  loginBtn={null}
-                  subscribeBtn={null}
                 />
 
                 <main>

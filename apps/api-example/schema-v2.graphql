@@ -90,7 +90,8 @@ type ArticleNavigationLink implements BaseNavigationLink & HasArticle {
   type: NavigationLinkType!
 }
 
-type ArticleRevision implements HasBlockContent {
+type ArticleRevision implements HasBlockContent & HasOptionalUserLc {
+  archivedAt: DateTime
   authors: [Author!]!
   blocks: [BlockContent!]!
   breaking: Boolean!
@@ -111,6 +112,12 @@ type ArticleRevision implements HasBlockContent {
   socialMediaImageID: String
   socialMediaTitle: String
   title: String
+  user: User
+  userId: String
+}
+
+input ArticleRevisionFilter {
+  userId: String
 }
 
 enum ArticleSort {
@@ -406,7 +413,7 @@ type BreakBlock implements BaseBlock & HasImage {
   linkTarget: String
   linkText: String
   linkURL: String
-  richText: RichText!
+  richText: RichText
   text: String
   type: BlockType!
 }
@@ -420,7 +427,7 @@ input BreakBlockInput {
   linkTarget: String
   linkText: String
   linkURL: String
-  richText: RichText!
+  richText: RichText
   text: String
 }
 
@@ -1257,6 +1264,11 @@ interface HasOptionalUser {
   userID: String
 }
 
+interface HasOptionalUserLc {
+  user: User
+  userId: String
+}
+
 interface HasPage {
   page: Page!
   pageID: String!
@@ -1542,13 +1554,13 @@ input ListicleBlockInput {
 type ListicleItem implements HasImage {
   image: Image
   imageID: String
-  richText: RichText!
+  richText: RichText
   title: String
 }
 
 input ListicleItemInput {
   imageID: String
-  richText: RichText!
+  richText: RichText
   title: String
 }
 
@@ -1945,6 +1957,16 @@ type Mutation {
   """Deletes an existing voucher."""
   deleteVoucher(id: String!): Voucher!
 
+  """
+  Discards the current draft and reverts to the latest published revision.
+  """
+  discardArticleDraft(id: String!): Article!
+
+  """
+  Discards the current draft and reverts to the latest published revision.
+  """
+  discardPageDraft(id: String!): Page!
+
   """Dislikes an article."""
   dislikeArticle(id: String!): Article!
 
@@ -2050,6 +2072,12 @@ type Mutation {
   Resets the two-factor authentication configuration for a user. The user will need to set up 2FA again on next login.
   """
   resetUserTotp(userId: String!): Boolean!
+
+  """Restores an older revision of an article as a new draft."""
+  restoreArticleRevision(id: String!, revisionId: String!): Article!
+
+  """Restores an older revision of a page as a new draft."""
+  restorePageRevision(id: String!, revisionId: String!): Page!
 
   """This mutation revokes and deletes the active session."""
   revokeActiveSession: Boolean!
@@ -2158,7 +2186,7 @@ type Mutation {
   updatePeer(hostURL: String, id: String!, information: RichText, isDisabled: Boolean, name: String, slug: String, token: String): Peer!
 
   """Updates the peer profile of the current media."""
-  updatePeerProfile(callToActionImageID: String!, callToActionImageURL: String, callToActionText: RichText!, callToActionURL: String!, logoID: String!, name: String!, squareLogoId: String!, themeColor: Color!, themeFontColor: Color!): PeerProfile!
+  updatePeerProfile(callToActionImageID: String!, callToActionImageURL: String, callToActionText: RichText, callToActionURL: String!, logoID: String!, name: String!, squareLogoId: String!, themeColor: Color!, themeFontColor: Color!): PeerProfile!
 
   """Updates an existing poll."""
   updatePoll(answers: [PollAnswerInput!]!, closedAt: DateTime, externalVoteSources: [PollExternalVoteSourceInput!]!, id: String!, infoText: RichText, opensAt: DateTime, question: String): FullPoll!
@@ -2324,7 +2352,8 @@ type PageNavigationLink implements BaseNavigationLink & HasPage {
   type: NavigationLinkType!
 }
 
-type PageRevision implements HasBlockContent {
+type PageRevision implements HasBlockContent & HasOptionalUserLc {
+  archivedAt: DateTime
   blocks: [BlockContent!]!
   createdAt: DateTime!
   description: String
@@ -2338,6 +2367,12 @@ type PageRevision implements HasBlockContent {
   socialMediaImageID: String
   socialMediaTitle: String
   title: String
+  user: User
+  userId: String
+}
+
+input PageRevisionFilter {
+  userId: String
 }
 
 enum PageSort {
@@ -2363,6 +2398,12 @@ input PageTeaserInput {
   pageID: String
   preTitle: String
   title: String
+}
+
+type PaginatedArticleRevisions {
+  nodes: [ArticleRevision!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
 }
 
 type PaginatedArticles {
@@ -2409,6 +2450,12 @@ type PaginatedImages {
 
 type PaginatedMemberPlans {
   nodes: [MemberPlan!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type PaginatedPageRevisions {
+  nodes: [PageRevision!]!
   pageInfo: PageInfo!
   totalCount: Int!
 }
@@ -2758,7 +2805,7 @@ type PeerProfile {
   callToActionImage: Image
   callToActionImageID: String
   callToActionImageURL: String
-  callToActionText: RichText!
+  callToActionText: RichText
   callToActionURL: String!
   hostURL: String!
   logo: Image
@@ -2987,6 +3034,14 @@ type Query {
   """Returns an article by id or slug."""
   article(id: String, slug: String): Article!
 
+  """Returns a single article revision including its full content."""
+  articleRevision(id: String!): ArticleRevision
+
+  """
+  Returns a paginated list of revisions (version history) for an article.
+  """
+  articleRevisions(articleId: String!, cursorId: String, filter: ArticleRevisionFilter, order: SortOrder = Descending, skip: Int = 0, take: Int = 10): PaginatedArticleRevisions!
+
   """Returns a paginated list of articles based on the filters given."""
   articles(cursorId: String, filter: ArticleFilter, order: SortOrder = Descending, skip: Int = 0, sort: ArticleSort = PublishedAt, take: Int = 10): PaginatedArticles!
 
@@ -3152,6 +3207,12 @@ type Query {
 
   """Returns an page by id or slug."""
   page(id: String, slug: String): Page!
+
+  """Returns a single page revision including its full content."""
+  pageRevision(id: String!): PageRevision
+
+  """Returns a paginated list of revisions (version history) for a page."""
+  pageRevisions(cursorId: String, filter: PageRevisionFilter, order: SortOrder = Descending, pageId: String!, skip: Int = 0, take: Int = 10): PaginatedPageRevisions!
 
   """Returns a paginated list of pages based on the filters given."""
   pages(cursorId: String, filter: PageFilter, order: SortOrder = Descending, skip: Int = 0, sort: PageSort = PublishedAt, take: Int = 10): PaginatedPages!
@@ -3396,7 +3457,7 @@ type RemotePeerProfile {
   callToActionImage: PeerImage
   callToActionImageID: String
   callToActionImageURL: String
-  callToActionText: RichText!
+  callToActionText: RichText
   callToActionURL: String!
   hostURL: String!
   logo: PeerImage
@@ -3415,7 +3476,7 @@ type RichTextBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
-  richText: RichText!
+  richText: RichText
   type: BlockType!
 }
 
@@ -3423,7 +3484,7 @@ input RichTextBlockInput {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
-  richText: RichText!
+  richText: RichText
 }
 
 type SensitiveDataUser implements BaseUser {

@@ -320,8 +320,9 @@ export class MailchimpSyncService {
         userWithSub.user.email.toLowerCase()
       );
 
-      // Skip users whose Mailchimp contact is not subscribed
-      if (existingContact?.status !== 'subscribed') {
+      // Skip existing contacts that aren't subscribed (unsubscribed, cleaned,
+      // pending, transactional). New users are created as 'subscribed'.
+      if (existingContact && existingContact.status !== 'subscribed') {
         skippedCount++;
         continue;
       }
@@ -839,8 +840,14 @@ export class MailchimpSyncService {
           return false;
         };
 
-        if (matches(data.currentSubscription?.memberPlan.slug)) return '1';
-        if (data.subscriptions.some(s => matches(s.memberPlan.slug))) {
+        const now = new Date();
+        const matchingSubs = data.subscriptions.filter(s =>
+          matches(s.memberPlan.slug)
+        );
+        if (matchingSubs.some(s => this.isSubscriptionActive(s, now))) {
+          return '1';
+        }
+        if (matchingSubs.length > 0) {
           return '-1';
         }
         return '';

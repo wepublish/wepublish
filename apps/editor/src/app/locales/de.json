@@ -1,5 +1,46 @@
 {
   "translation": {
+    "versionHistory": {
+      "title": "Versionsverlauf",
+      "subtitle": "{{count}} Versionen",
+      "close": "Schliessen",
+      "empty": "Noch keine Versionen.",
+      "untitled": "Ohne Titel",
+      "created": "Erstellt {{date}}",
+      "published": "veröffentlicht {{date}}",
+      "currentVersion": "Aktuelle Version",
+      "restore": "Wiederherstellen",
+      "restored": "Version als neuer Entwurf wiederhergestellt",
+      "preview": "Vorschau",
+      "previewTitle": "Versionsvorschau",
+      "readOnly": "Schreibgeschützt",
+      "loadMore": "Mehr laden",
+      "showing": "{{count}} von {{total}} werden angezeigt",
+      "unknownAuthor": "Unbekannt",
+      "state": {
+        "published": "Aktuell veröffentlicht",
+        "pending": "Geplant",
+        "draft": "Entwurf",
+        "superseded": "Früher veröffentlicht",
+        "archived": "Archiviert"
+      },
+      "confirm": {
+        "title": "Diese Version wiederherstellen?",
+        "message": "Es wird ein neuer Entwurf aus der Version vom {{date}} erstellt. Ihr aktueller Entwurf wird archiviert. Es wird nichts veröffentlicht, bis Sie es veröffentlichen.",
+        "cancel": "Abbrechen",
+        "confirm": "Als Entwurf wiederherstellen"
+      }
+    },
+    "discardDraft": {
+      "button": "Entwurf verwerfen",
+      "success": "Entwurf verworfen — zur veröffentlichten Version zurückgekehrt",
+      "confirm": {
+        "title": "Aktuellen Entwurf verwerfen?",
+        "message": "Ihre unveröffentlichten Änderungen werden archiviert und der Editor kehrt zur aktuell veröffentlichten Version zurück. Dies kann nicht rückgängig gemacht werden, der verworfene Entwurf bleibt jedoch im Versionsverlauf verfügbar.",
+        "cancel": "Abbrechen",
+        "confirm": "Entwurf verwerfen"
+      }
+    },
     "articleEditor": {
       "overview": {
         "articlePending": "Artikel geplant",
@@ -402,25 +443,7 @@
         "quote": "Zitat"
       },
       "richText": {
-        "charCount": "Anzahl Zeichen {{charCount}}",
-        "insert": "Einfügen",
-        "invalidLink": "Dieser Link ist ungültig. URL überprüfen und nochmals versuchen.",
-        "invalidMail": "Diese Mailadresse ist ungültig. Mail überprüfen und nochmals versuchen.",
-        "label": "Rich text",
-        "link": "Link",
-        "remove": "Entfernen",
-        "startWriting": "Beginne zu schreiben ...",
-        "text": "Text",
-        "id": "ID"
-      },
-      "richTextTable": {
-        "addBorders": "Rahmen hinzufügen",
-        "border": "Rand",
-        "cancel": "Abbrechen",
-        "columns": "Spalten",
-        "deleteTable": "Tabelle löschen",
-        "insertTable": "Tabelle einfügen",
-        "rows": "Zeilen"
+        "label": "Rich text"
       },
       "teaserFlexGrid": {
         "label": "Flexible Teaser Grids"
@@ -1291,6 +1314,37 @@
     },
     "resetUserPasswordForm": {
       "sendMail": "Mail an User:in senden (Registration System Mail)"
+    },
+    "richtext": {
+      "menuBar": {
+        "paragraph": "Absatz",
+        "heading": "Überschrift {{level}}"
+      },
+      "link": {
+        "title": "Text verlinken mit",
+        "type": "Typ",
+        "url": "URL",
+        "web": "Web",
+        "email": "E-Mail",
+        "anchor": "Anker",
+        "selectAnchor": "Anker auswählen",
+        "openInNewTab": "Link in neuem Tab öffnen",
+        "openLink": "Link in neuem Fenster öffnen",
+        "remove": "Link entfernen"
+      },
+      "colorPicker": {
+        "clear": "Farbe zurücksetzen"
+      },
+      "commands": {
+        "table": "Tabelle",
+        "quote": "Zitat",
+        "code": "Code",
+        "noResult": "Kein Ergebnis"
+      },
+      "placeholder": {
+        "heading": "Ohne Titel",
+        "paragraph": "Schreibe oder tippe '/' für Befehle ..."
+      }
     },
     "save": "Speichern",
     "saveAndClose": "Speichern & Schliessen",

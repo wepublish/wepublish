@@ -10,10 +10,10 @@ import {
   registerEnumType,
 } from '@nestjs/graphql';
 import { GraphQLRichText } from '@wepublish/richtext/api';
-import { Descendant } from 'slate';
 import { VoteValue } from './poll.scalar';
 import { PaginatedType, SortOrder } from '@wepublish/utils/api';
 import { PollAnswer, PollAnswerInput } from './poll-answer.model';
+import type { RichtextJSONDocument } from '@wepublish/richtext';
 
 export enum PollSort {
   CreatedAt = 'CreatedAt',
@@ -44,7 +44,7 @@ export class Poll {
   closedAt?: Date;
 
   @Field(() => GraphQLRichText, { nullable: true })
-  infoText?: Descendant[];
+  infoText?: RichtextJSONDocument;
 }
 
 @ObjectType()

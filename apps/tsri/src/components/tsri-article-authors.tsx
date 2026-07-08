@@ -27,16 +27,18 @@ export const TsriArticleAuthors = ({
   const AuthorChip = AuthorChipBase as ComponentType<
     ComponentProps<typeof AuthorChipBase> & {
       isOneOfMultipleAuthors?: boolean;
+      hideInfo?: boolean;
     }
   >;
+  const hideAuthor = !!article?.latest.hideAuthor;
   const authors =
     article?.latest.authors.filter(author => !author.hideOnArticle) || [];
 
-  if (!authors.length) {
+  if (!authors.length && !article?.publishedAt) {
     return;
   }
 
-  const hasMultipleAuthors = authors.length > 1;
+  const hasMultipleAuthors = !hideAuthor && authors.length > 1;
 
   return (
     <Typography
@@ -45,7 +47,16 @@ export const TsriArticleAuthors = ({
       hasMultipleAuthors={hasMultipleAuthors}
       className={className}
     >
-      {!hasMultipleAuthors && <AuthorChip author={authors[0]} />}
+      {hideAuthor && !!authors.length && (
+        <AuthorChip
+          author={authors[0]}
+          hideInfo
+        />
+      )}
+
+      {!hideAuthor && authors.length === 1 && (
+        <AuthorChip author={authors[0]} />
+      )}
 
       {hasMultipleAuthors && (
         <AuthorChipNameJobWrapper>

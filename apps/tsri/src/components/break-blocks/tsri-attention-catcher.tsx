@@ -70,6 +70,7 @@ export const BreakBlockHeading = styled('div')`
 
 export const BreakBlockImage = styled(Image)`
   object-fit: cover;
+  object-position: left center;
   margin: 0 auto;
   aspect-ratio: 1;
   border-radius: 0.8cqw;
