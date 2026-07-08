@@ -30,6 +30,7 @@ export const EeNewsMemberPlanPicker = styled(SortedMemberPlanPicker)`
       font-size: inherit;
       font-weight: inherit;
       line-height: inherit;
+      color: #096b5f;
     }
 
     ${({ theme }) => theme.breakpoints.up('md')} {
