@@ -80,7 +80,7 @@ const isFile = (value: unknown): boolean =>
   );
 
 export function getApiClientV2() {
-  const apiURL = process.env.API_URL || getSettings().apiURL;
+  const { apiURL } = getSettings();
 
   if (!client) {
     // If operation is uploading a file, use the upload link, else use the normal http link

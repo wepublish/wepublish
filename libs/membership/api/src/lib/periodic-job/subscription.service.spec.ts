@@ -85,7 +85,7 @@ describe('SubscriptionPaymentsService', () => {
         create: jest.fn(),
       },
       payment: {
-        findMany: jest.fn(),
+        findMany: jest.fn().mockResolvedValue([]),
         create: jest.fn(),
       },
       subscriptionDeactivation: {
@@ -183,6 +183,35 @@ describe('SubscriptionPaymentsService', () => {
     expect(prismaMock.invoice.findMany).toHaveBeenCalled();
   });
 
+  it('does not re-charge an invoice whose in-flight payment is still within the grace period, but does once it goes stale', async () => {
+    const runDate = new Date('2026-06-15');
+    prismaMock.invoice.findMany!.mockResolvedValue([
+      {
+        id: 'fresh-in-flight',
+        subscription: { confirmed: true, paymentMethod: { gracePeriod: 14 } },
+      },
+      {
+        id: 'stale-in-flight',
+        subscription: { confirmed: true, paymentMethod: { gracePeriod: 14 } },
+      },
+      {
+        id: 'no-in-flight',
+        subscription: { confirmed: true, paymentMethod: { gracePeriod: 14 } },
+      },
+    ]);
+    prismaMock.payment.findMany!.mockResolvedValue([
+      { invoiceID: 'fresh-in-flight', createdAt: new Date('2026-06-14') },
+      { invoiceID: 'stale-in-flight', createdAt: new Date('2026-05-01') },
+    ]);
+
+    const result = await subscriptionService.findUnpaidDueInvoices(runDate);
+
+    expect(result.map(invoice => invoice.id)).toEqual([
+      'stale-in-flight',
+      'no-in-flight',
+    ]);
+  });
+
   it('skips unconfirmed invoices', async () => {
     const mockInvoices = [
       {
@@ -258,6 +287,31 @@ describe('SubscriptionPaymentsService', () => {
       );
     expect(invoicesToDeactivate.length).toEqual(1);
     expect(prismaMock.invoice.findMany).toHaveBeenCalled();
+  });
+
+  it('does not deactivate an invoice whose in-flight payment is still within the grace period, but does once it goes stale', async () => {
+    const runDate = new Date('2026-06-15');
+    prismaMock.invoice.findMany!.mockResolvedValue([
+      {
+        id: 'fresh-in-flight',
+        subscription: { paymentMethod: { gracePeriod: 14 } },
+      },
+      {
+        id: 'stale-in-flight',
+        subscription: { paymentMethod: { gracePeriod: 14 } },
+      },
+    ]);
+    prismaMock.payment.findMany!.mockResolvedValue([
+      { invoiceID: 'fresh-in-flight', createdAt: new Date('2026-06-10') },
+      { invoiceID: 'stale-in-flight', createdAt: new Date('2026-05-01') },
+    ]);
+
+    const result =
+      await subscriptionService.findUnpaidScheduledForDeactivationInvoices(
+        runDate
+      );
+
+    expect(result.map(invoice => invoice.id)).toEqual(['stale-in-flight']);
   });
 
   it('invoice creation yearly', async () => {
@@ -597,6 +651,43 @@ describe('SubscriptionPaymentsService', () => {
     await subscriptionService.checkInvoiceState(mockInvoice as any);
 
     expect(checkIntentStatus).not.toHaveBeenCalled();
+    expect(updatePaymentWithIntentState).not.toHaveBeenCalled();
+  });
+
+  it('checkInvoiceState skips updating the payment when checkIntentStatus returns null', async () => {
+    const mockInvoice = {
+      id: 'invoice-1',
+      subscription: {
+        paymentMethod: {
+          paymentProviderID: 'provider-1',
+        },
+        memberPlan: {},
+        user: { paymentProviderCustomers: [] },
+      },
+      items: [],
+      subscriptionPeriods: [],
+    };
+
+    const checkIntentStatus = jest.fn().mockResolvedValue(null);
+    const updatePaymentWithIntentState = jest.fn();
+    const paymentProvider = {
+      checkIntentStatus,
+      updatePaymentWithIntentState,
+    };
+    const paymentsService = {
+      findById: jest.fn().mockReturnValue(paymentProvider),
+      findByInvoiceId: jest
+        .fn()
+        .mockResolvedValue([{ id: 'pay-1', intentID: 'intent-1' }]),
+    };
+    const subscriptionService = new SubscriptionService(
+      prismaMock as any,
+      paymentsService as any
+    );
+
+    await subscriptionService.checkInvoiceState(mockInvoice as any);
+
+    expect(checkIntentStatus).toHaveBeenCalledTimes(1);
     expect(updatePaymentWithIntentState).not.toHaveBeenCalled();
   });
 });

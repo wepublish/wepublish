@@ -261,6 +261,10 @@ export class InvoiceService {
         paymentID: payment.id,
       });
 
+      if (!intentState) {
+        continue;
+      }
+
       await paymentProvider.updatePaymentWithIntentState({
         intentState,
       });
