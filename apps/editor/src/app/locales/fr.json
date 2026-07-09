@@ -1,5 +1,10 @@
 {
   "translation": {
+    "oneMessages": {
+      "header": "Messages de l'équipe We.Publish",
+      "expand": "Développer",
+      "linkFallback": "En savoir plus"
+    },
     "versionHistory": {
       "title": "Historique des versions",
       "subtitle": "{{count}} versions",

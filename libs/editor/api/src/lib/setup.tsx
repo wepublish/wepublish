@@ -21,6 +21,7 @@ export enum ElementID {
 export interface ClientSettings {
   readonly apiURL: string;
   readonly wepOneURL: string;
+  readonly medium?: string;
   readonly peerByDefault: boolean;
   readonly imgMinSizeToCompress: number;
 }
@@ -54,6 +55,7 @@ export function getSettings(): ClientSettings {
     const defaultSettings = {
       apiURL: 'http://localhost:4000',
       wepOneURL: 'https://one-admin.wepublish.cloud',
+      medium: '',
       imgMinSizeToCompress: 10,
     };
 
@@ -78,7 +80,7 @@ const isFile = (value: unknown): boolean =>
   );
 
 export function getApiClientV2() {
-  const { apiURL } = getSettings();
+  const apiURL = process.env.API_URL || getSettings().apiURL;
 
   if (!client) {
     // If operation is uploading a file, use the upload link, else use the normal http link
