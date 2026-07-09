@@ -172,6 +172,14 @@ function UserSubscriptionsList({
         return t('userSubscriptionList.deactivationReason.InvoiceNotPaid');
       case SubscriptionDeactivationReason.UserSelfDeactivated:
         return t('userSubscriptionList.deactivationReason.UserSelfDeactivated');
+      case SubscriptionDeactivationReason.UserReplacedSubscription:
+        return t(
+          'userSubscriptionList.deactivationReason.UserReplacedSubscription'
+        );
+      case SubscriptionDeactivationReason.Chargeback:
+        return t('userSubscriptionList.deactivationReason.Chargeback');
+      default:
+        return deactivationReason;
     }
   }
 

@@ -1460,6 +1460,7 @@
         "reasonUserReplacedSubscription": "Replaced by other subscription",
         "reasonNone": "None",
         "reasonUserSelfDeactivated": "By user",
+        "reasonChargeback": "Chargeback",
         "reset": "Reset Filter",
         "searchPlaceholder": "Search by first name, last name, email, address, zip, city"
       },
@@ -1660,6 +1661,7 @@
         "reason": "Deactivation Reason",
         "reasonInvoiceNotPaid": "User did not pay invoices",
         "reasonUserReplacedSubscription": "Replaced by other subscription",
+        "reasonChargeback": "Chargeback",
         "cancellation": "Cancellation Date",
         "reasonNone": "None",
         "reasonUserSelfDeactivated": "User wants to deactivate",
@@ -1685,7 +1687,9 @@
       "deactivationReason": {
         "InvoiceNotPaid": "Invoice not paid",
         "None": "None",
-        "UserSelfDeactivated": "User wanted to cancel the subscription"
+        "UserSelfDeactivated": "User wanted to cancel the subscription",
+        "UserReplacedSubscription": "Replaced by other subscription",
+        "Chargeback": "Chargeback"
       },
       "deactivationString": "Deactivated at {{date}}. Reason: {{reason}}",
       "editSubscription": "Edit Subscription",
