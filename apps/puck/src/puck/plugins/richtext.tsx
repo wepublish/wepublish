@@ -21,6 +21,8 @@ const RichtextFieldRender = ({
   readOnly,
   name,
 }: RichtextFieldRenderProps) => {
+  console.log(field, value);
+
   return (
     <FieldLabel
       label={field.label ?? 'Richtext'}

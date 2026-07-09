@@ -27,18 +27,15 @@ export const Grid: ComponentConfig<{
     content: [],
   },
   render: ({ columns, content: Content, ...props }) => (
-    <div
+    <Content
+      minEmptyHeight={300}
+      collisionAxis="dynamic"
       {...props}
-      css={{
+      style={{
         display: 'grid',
         gridTemplateColumns: columns.map(column => `${column}fr`).join(' '),
         gap: 16,
       }}
-    >
-      <Content
-        minEmptyHeight={300}
-        collisionAxis="dynamic"
-      />
-    </div>
+    />
   ),
 };
