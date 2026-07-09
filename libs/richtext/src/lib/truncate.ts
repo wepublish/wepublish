@@ -1,5 +1,5 @@
 import { compose } from 'ramda';
-import { RichtextElements } from './json-format.interface';
+import { RichtextElements, Text } from './json-format.interface';
 
 export const truncateParagraph =
   (maxLength: number) =>
@@ -11,7 +11,7 @@ export const truncateParagraph =
     }
 
     const truncated = paragraph.content?.reduce(
-      (acc: RichtextElements, curr: RichtextElements) => {
+      (acc, curr) => {
         if (curr.type !== 'text') {
           return acc;
         }
@@ -30,7 +30,7 @@ export const truncateParagraph =
 
         return acc;
       },
-      { ...paragraph, content: [] } as RichtextElements
+      { ...paragraph, content: [] as Text[] }
     );
 
     return truncated;
