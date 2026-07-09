@@ -204,7 +204,7 @@ export class PeriodicJobService {
     }
   }
 
-  private async checkStateOfOpenInvoices() {
+  public async checkStateOfOpenInvoices() {
     const invoices = await this.subscriptionController.findAllOpenInvoices();
     for (const invoice of invoices) {
       await this.checkInvoiceState(invoice);
