@@ -183,7 +183,7 @@ export const RichtextEditor = forwardRef<HTMLDivElement, RichtextEditorProps>(
 
     useEffect(() => {
       if (editorReady && value && !equals(value, editor.getJSON())) {
-        editor.commands.setContent(value, { emitUpdate: false });
+        // editor.commands.setContent(value, { emitUpdate: false });
       }
     }, [value, editorReady, editor]);
 

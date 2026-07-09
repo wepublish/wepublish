@@ -1,5 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { RichtextElements, RichtextJSONDocument } from '@wepublish/richtext';
+import {
+  RichtextElements,
+  RichtextJSONDocument,
+  RichtextMarks,
+} from '@wepublish/richtext';
 import { Cron, CronExpression, SchedulerRegistry } from '@nestjs/schedule';
 import { Prisma, PrismaClient } from '@prisma/client';
 
@@ -44,24 +48,26 @@ const slateToPm = (content: any): RichtextElements | [] => {
         type: 'text',
         attrs: undefined,
         text,
-        marks: [
-          isLink ?
-            {
-              type: 'link',
-              attrs: {
-                href: child.url,
-                // @TODO: target?
-                rel: 'noopener noreferrer nofollow',
-              },
-            }
-          : [],
-          child.italic ? { type: 'italic' } : [],
-          child.bold ? { type: 'bold' } : [],
-          child.underline ? { type: 'underline' } : [],
-          child.strikethrough ? { type: 'strike' } : [],
-          child.subscript ? { type: 'subscript' } : [],
-          child.superscript ? { type: 'superscript' } : [],
-        ].flat(),
+        marks: (
+          [
+            isLink ?
+              {
+                type: 'link',
+                attrs: {
+                  href: child.url,
+                  // @TODO: target?
+                  rel: 'noopener noreferrer nofollow',
+                },
+              }
+            : [],
+            child.italic ? { type: 'italic', attrs: undefined } : [],
+            child.bold ? { type: 'bold', attrs: undefined } : [],
+            child.underline ? { type: 'underline', attrs: undefined } : [],
+            child.strikethrough ? { type: 'strike', attrs: undefined } : [],
+            child.subscript ? { type: 'subscript', attrs: undefined } : [],
+            child.superscript ? { type: 'superscript', attrs: undefined } : [],
+          ] satisfies Array<RichtextMarks | RichtextMarks[]>
+        ).flat(),
       };
     }
   );
