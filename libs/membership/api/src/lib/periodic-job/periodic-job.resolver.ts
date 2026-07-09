@@ -32,13 +32,32 @@ export class PeriodicJobResolver {
   async syncOpenInvoiceStates(
     @Args('password') password: string
   ): Promise<boolean> {
+    this.assertPassword(password);
+
+    await this.periodicJobService.checkStateOfOpenInvoices();
+    return true;
+  }
+
+  @Permissions(CanGetPeriodicJobLog)
+  @Mutation(() => Boolean, {
+    name: 'createAndChargeInvoices',
+    description:
+      'Runs the invoice creation and charging steps of the daily periodic job on demand, without affecting the job run log. Requires an editor session and is additionally password protected.',
+  })
+  async createAndChargeInvoices(
+    @Args('password') password: string
+  ): Promise<boolean> {
+    this.assertPassword(password);
+
+    await this.periodicJobService.forceCreateAndChargeInvoices();
+    return true;
+  }
+
+  private assertPassword(password: string) {
     const hash = createHash('sha256').update(password).digest('hex');
 
     if (hash !== INVOICE_SYNC_PASSWORD_SHA256) {
       throw new UnauthorizedException('Invalid password');
     }
-
-    await this.periodicJobService.checkStateOfOpenInvoices();
-    return true;
   }
 }
