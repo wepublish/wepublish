@@ -57,7 +57,10 @@ async function bootstrap() {
   if (process.env.RUN_SEED === 'true') {
     Logger.log('RUN_SEED=true detected, running example seed...');
     const adapter = new PrismaPg({
-      connectionString: process.env['DATABASE_URL']!,
+      connectionString: process.env.DATABASE_URL || 'postgresql://',
+      max: parseInt(process.env['DATABASE_POOL_SIZE'] ?? '20'),
+      connectionTimeoutMillis: 5_000,
+      idleTimeoutMillis: 10_000,
     });
     const prisma = new PrismaClient({ adapter });
     await prisma.$connect();

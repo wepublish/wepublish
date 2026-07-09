@@ -20,6 +20,7 @@
     "TZ": "Europe/Zurich",
     "GIT_EDITOR": "nano",
     "DATABASE_URL": "postgresql://postgres@database:5432/wepublish?schema=public",
+    "DIRECT_DATABASE_URL": "postgresql://postgres@database:5432/wepublish?schema=public",
     "S3_ENDPOINT": "storage",
     "S3_PORT": "9000",
     "MAIL_SMTP_HOST": "mailpit",
@@ -39,7 +40,8 @@
         "GraphQL.vscode-graphql",
         "nrwl.angular-console",
         "firsttris.vscode-jest-runner",
-        "esbenp.prettier-vscode"
+        "esbenp.prettier-vscode",
+        "Anthropic.claude-code"
       ],
       "settings": {
         "editor.formatOnSave": true,

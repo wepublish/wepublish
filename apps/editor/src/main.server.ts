@@ -10,6 +10,7 @@ export function handleRequest(indexPath: string) {
     const clientSettings = {
       apiURL: process.env.API_URL,
       wepOneURL: process.env.WEP_ONE_URL || 'https://one-admin.wepublish.cloud',
+      medium: (process.env.APP_NAME || '').toLowerCase(),
       imgMinSizeToCompress:
         process.env.IMG_MIN_SIZE_TO_COMPRESS ?
           parseInt(process.env.IMG_MIN_SIZE_TO_COMPRESS)
