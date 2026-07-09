@@ -1,7 +1,6 @@
 import {
   Currency,
   PaymentPeriodicity,
-  PaymentState,
   PrismaClient,
   SubscriptionDeactivationReason,
   SubscriptionEvent,
