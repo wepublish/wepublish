@@ -4,7 +4,9 @@ const webpack = require('webpack');
 
 // Nx plugins for webpack.
 module.exports = composePlugins(
-  withNx(),
+  withNx({
+    memoryLimit: 5000000,
+  }),
   withReact(),
   (config, { options, context }) => {
     // Update the webpack config as needed here.
@@ -21,6 +23,8 @@ module.exports = composePlugins(
         'process.env.WEP_ONE_URL': JSON.stringify(
           process.env.WEP_ONE_URL || ''
         ),
+        'process.env.API_URL': JSON.stringify(process.env.API_URL || ''),
+        'process.env.APP_NAME': JSON.stringify(process.env.APP_NAME || ''),
       })
     );
     // Add webp support

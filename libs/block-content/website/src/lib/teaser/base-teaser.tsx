@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { Chip, css, SxProps, Typography } from '@mui/material';
 import { firstParagraphToPlaintext } from '@wepublish/richtext';
-import { FlexAlignment, Teaser as TeaserType } from '@wepublish/website/api';
+import { FlexAlignment, FullTeaserFragment } from '@wepublish/website/api';
 import {
   BuilderTeaserProps,
   Image,
@@ -9,20 +9,18 @@ import {
 } from '@wepublish/website/builder';
 import { ComponentType, PropsWithChildren } from 'react';
 import { useTranslation } from 'react-i18next';
-import { isImageBlock } from '../image/image-block';
 import { isTitleBlock } from '../title/title-block';
 import { differenceInDays } from 'date-fns';
 
-export const selectTeaserTitle = (teaser: TeaserType) => {
+export const selectTeaserTitle = (teaser: FullTeaserFragment) => {
   switch (teaser.__typename) {
     case 'PageTeaser': {
-      const titleBlock = teaser.page?.latest.blocks?.find(isTitleBlock);
-      return teaser.title || teaser.page?.latest.title || titleBlock?.title;
+      return teaser.title || teaser.page?.latest.title;
     }
 
     case 'ArticleTeaser': {
       const titleBlock = teaser.article?.latest.blocks?.find(isTitleBlock);
-      return teaser.title || teaser.article?.latest.title || titleBlock?.title;
+      return teaser.title || teaser.article?.latest.title;
     }
 
     case 'EventTeaser':
@@ -33,7 +31,7 @@ export const selectTeaserTitle = (teaser: TeaserType) => {
   }
 };
 
-export const selectTeaserPreTitle = (teaser: TeaserType) => {
+export const selectTeaserPreTitle = (teaser: FullTeaserFragment) => {
   switch (teaser.__typename) {
     case 'ArticleTeaser':
       return (
@@ -51,23 +49,23 @@ export const selectTeaserPreTitle = (teaser: TeaserType) => {
   }
 };
 
-export const selectTeaserLead = (teaser: TeaserType) => {
+export const selectTeaserLead = (teaser: FullTeaserFragment) => {
   switch (teaser.__typename) {
     case 'PageTeaser': {
-      const titleBlock = teaser.page?.latest.blocks?.find(isTitleBlock);
-      return teaser.lead || teaser.page?.latest.description || titleBlock?.lead;
+      return teaser.lead || teaser.page?.latest.description;
     }
 
     case 'ArticleTeaser': {
-      const titleBlock = teaser.article?.latest.blocks?.find(isTitleBlock);
-      return teaser.lead || teaser.article?.latest.lead || titleBlock?.lead;
+      return teaser.lead || teaser.article?.latest.lead;
     }
 
     case 'EventTeaser':
       return (
         teaser.lead ||
         teaser.event?.lead ||
-        firstParagraphToPlaintext(teaser.event?.description)?.substring(0, 225)
+        firstParagraphToPlaintext(
+          teaser.event?.description?.content ?? []
+        )?.substring(0, 225)
       );
 
     case 'CustomTeaser':
@@ -75,7 +73,7 @@ export const selectTeaserLead = (teaser: TeaserType) => {
   }
 };
 
-export const selectTeaserUrl = (teaser: TeaserType) => {
+export const selectTeaserUrl = (teaser: FullTeaserFragment) => {
   switch (teaser.__typename) {
     case 'PageTeaser': {
       return teaser.page?.url;
@@ -92,7 +90,9 @@ export const selectTeaserUrl = (teaser: TeaserType) => {
   }
 };
 
-export const selectTeaserTarget = (teaser: TeaserType): string | undefined => {
+export const selectTeaserTarget = (
+  teaser: FullTeaserFragment
+): string | undefined => {
   if (teaser.__typename === 'CustomTeaser') {
     return teaser.openInNewTab ? '_blank' : undefined;
   }
@@ -100,16 +100,14 @@ export const selectTeaserTarget = (teaser: TeaserType): string | undefined => {
   return undefined;
 };
 
-export const selectTeaserImage = (teaser: TeaserType) => {
+export const selectTeaserImage = (teaser: FullTeaserFragment) => {
   switch (teaser.__typename) {
     case 'PageTeaser': {
-      const imageBlock = teaser.page?.latest.blocks?.find(isImageBlock);
-      return teaser.image ?? teaser?.page?.latest.image ?? imageBlock?.image;
+      return teaser.image ?? teaser?.page?.latest.image;
     }
 
     case 'ArticleTeaser': {
-      const imageBlock = teaser.article?.latest.blocks?.find(isImageBlock);
-      return teaser.image ?? teaser?.article?.latest.image ?? imageBlock?.image;
+      return teaser.image ?? teaser?.article?.latest.image;
     }
 
     case 'EventTeaser':
@@ -120,7 +118,7 @@ export const selectTeaserImage = (teaser: TeaserType) => {
   }
 };
 
-export const selectTeaserPeerImage = (teaser: TeaserType) => {
+export const selectTeaserPeerImage = (teaser: FullTeaserFragment) => {
   switch (teaser.__typename) {
     case 'ArticleTeaser': {
       return (
@@ -131,7 +129,7 @@ export const selectTeaserPeerImage = (teaser: TeaserType) => {
   }
 };
 
-export const selectTeaserDate = (teaser: TeaserType) => {
+export const selectTeaserDate = (teaser: FullTeaserFragment) => {
   switch (teaser.__typename) {
     case 'PageTeaser': {
       return teaser.page?.publishedAt;
@@ -150,7 +148,7 @@ export const selectTeaserDate = (teaser: TeaserType) => {
   }
 };
 
-export const selectTeaserLastPublishDate = (teaser: TeaserType) => {
+export const selectTeaserLastPublishDate = (teaser: FullTeaserFragment) => {
   switch (teaser.__typename) {
     case 'PageTeaser': {
       return teaser.page?.latest.publishedAt;
@@ -166,7 +164,7 @@ export const selectTeaserLastPublishDate = (teaser: TeaserType) => {
   }
 };
 
-export const selectTeaserAuthors = (teaser: TeaserType) => {
+export const selectTeaserAuthors = (teaser: FullTeaserFragment) => {
   switch (teaser.__typename) {
     case 'PageTeaser': {
       return null;
@@ -184,7 +182,7 @@ export const selectTeaserAuthors = (teaser: TeaserType) => {
   }
 };
 
-export const selectTeaserTags = (teaser: TeaserType) => {
+export const selectTeaserTags = (teaser: FullTeaserFragment) => {
   switch (teaser.__typename) {
     case 'PageTeaser': {
       return teaser.page?.tags?.filter(({ tag, main }) => !!tag && main) ?? [];
@@ -307,7 +305,6 @@ export const TeaserTitle = styled('h1')`
 `;
 
 export const TeaserLead = styled('p')`
-  font-weight: 300;
   grid-area: lead;
 `;
 

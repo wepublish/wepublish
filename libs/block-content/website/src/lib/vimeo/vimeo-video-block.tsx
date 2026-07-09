@@ -1,14 +1,15 @@
 import styled from '@emotion/styled';
 import {
   BlockContent,
-  VimeoVideoBlock as VimeoVideoBlockType,
+  FullVimeoVideoBlockFragment,
 } from '@wepublish/website/api';
 import { BuilderVimeoVideoBlockProps } from '@wepublish/website/builder';
 import ReactPlayer from 'react-player';
 
 export const isVimeoVideoBlock = (
   block: Pick<BlockContent, '__typename'>
-): block is VimeoVideoBlockType => block.__typename === 'VimeoVideoBlock';
+): block is FullVimeoVideoBlockFragment =>
+  block.__typename === 'VimeoVideoBlock';
 
 export const VimeoVideoBlockWrapper = styled('div')``;
 

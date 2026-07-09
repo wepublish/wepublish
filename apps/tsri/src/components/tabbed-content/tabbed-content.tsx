@@ -7,7 +7,11 @@ import {
   useTheme,
 } from '@mui/material';
 import { isFlexBlock } from '@wepublish/block-content/website';
-import { BlockContent, FlexBlock } from '@wepublish/website/api';
+import {
+  BlockContent,
+  FullBlockFragment,
+  FullFlexBlockFragment,
+} from '@wepublish/website/api';
 import {
   BuilderFlexBlockProps,
   useWebsiteBuilder,
@@ -18,7 +22,6 @@ import { ReactNode, SyntheticEvent, useId, useState } from 'react';
 export const TabbedContentWrapper = styled('div')`
   width: 100%;
   grid-column: -1/1;
-  container: tabbed-content/inline-size;
 `;
 
 interface TabPanelBaseProps {
@@ -248,7 +251,7 @@ export const TabbedContent = ({
                   nestedBlock.block?.blockStyle ||
                   (blockStyleByIndex && blockStyleByIndex(index)) ||
                   blockStyle,
-              } as BlockContent
+              } as FullBlockFragment
             }
             type="Article"
             index={index}
@@ -262,7 +265,7 @@ export const TabbedContent = ({
 
 export const isTabbedContentBlockStyle = (
   block: Pick<BlockContent, '__typename' | 'blockStyle'>
-): block is FlexBlock =>
+): block is FullFlexBlockFragment =>
   allPass([
     isFlexBlock,
     <T extends { blockStyle?: string | null }>(block: T) =>

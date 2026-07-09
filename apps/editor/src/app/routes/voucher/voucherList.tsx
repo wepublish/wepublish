@@ -131,7 +131,9 @@ function VoucherList() {
 
             <RCell>
               {(rowData: RowDataType<Voucher>) => (
-                <Link to={`edit/${rowData.id}`}>{rowData.code}</Link>
+                <Link to={`edit/${rowData.id}`}>
+                  {rowData.code.toUpperCase()}
+                </Link>
               )}
             </RCell>
           </Column>

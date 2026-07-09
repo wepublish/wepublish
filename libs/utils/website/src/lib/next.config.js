@@ -30,6 +30,10 @@ const nextConfig = {
       })
     );
 
+    if (process.env.ANALYZE_BUNDLE_CONCAT === 'false') {
+      config.optimization.concatenateModules = false;
+    }
+
     return config;
   },
   async redirects() {
@@ -49,8 +53,7 @@ const nextConfig = {
           headers: [
             {
               key: 'cache-control',
-              value:
-                'public, max-age=59, s-maxage=59, stale-while-revalidate=604800, stale-if-error=86400',
+              value: 'public, max-age=59, s-maxage=59, stale-if-error=86400',
             },
           ],
         },
@@ -59,8 +62,7 @@ const nextConfig = {
           headers: [
             {
               key: 'cache-control',
-              value:
-                's-maxage=59, stale-while-revalidate=59, max-age=59, stale-while-revalidate=604800, stale-if-error=86400, public',
+              value: 's-maxage=59, max-age=59, stale-if-error=86400, public',
             },
           ],
         },
@@ -108,15 +110,7 @@ const nextConfig = {
       '**/node_modules/uglify-js',
     ],
   },
-  // Not needed for the monorepository but for demo purposes.
-  // @wepublish/ui and @wepublish/website are ES Modules which Next does not support yet.
-  // This will transpile the ES Modules to CommonJS
-  transpilePackages: [
-    '@wepublish/ui',
-    '@wepublish/website',
-    'react-tweet',
-    '@faker-js/faker',
-  ],
+  transpilePackages: ['react-tweet', '@faker-js/faker'],
 };
 
 module.exports = nextConfig;

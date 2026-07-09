@@ -98,6 +98,22 @@ export const VoucherForm = ({
           bordered
           css={{ overflow: 'initial' }}
         >
+          <Form.Group>
+            <Form.ControlLabel>
+              {t('voucher.form.memberPlan')}
+            </Form.ControlLabel>
+
+            <Form.Control
+              name="memberPlan"
+              defaultMemberPlan={voucher.memberPlan}
+              selectedMemberPlan={voucher.memberPlanId}
+              setSelectedMemberPlan={(memberPlanId: string) =>
+                onChange({ memberPlanId })
+              }
+              accepter={SelectMemberPlan}
+            />
+          </Form.Group>
+
           <DateRangeGrid>
             <Form.Group controlId="validFrom">
               <Form.Control
@@ -127,22 +143,6 @@ export const VoucherForm = ({
               />
             </Form.Group>
           </DateRangeGrid>
-
-          <Form.Group>
-            <Form.ControlLabel>
-              {t('voucher.form.memberPlan')}
-            </Form.ControlLabel>
-
-            <Form.Control
-              name="memberPlan"
-              defaultMemberPlan={voucher.memberPlan}
-              selectedMemberPlan={voucher.memberPlanId}
-              setSelectedMemberPlan={(memberPlanId: string) =>
-                onChange({ memberPlanId })
-              }
-              accepter={SelectMemberPlan}
-            />
-          </Form.Group>
         </Panel>
       </VoucherFormSection>
     </VoucherFormWrapper>

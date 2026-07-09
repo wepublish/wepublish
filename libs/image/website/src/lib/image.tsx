@@ -19,6 +19,7 @@ type ImageItem<Size extends BuilderImageWidths> = {
 };
 
 type ImageItems = [
+  xxxl: ImageItem<2400>,
   xxl: ImageItem<1500>,
   xl: ImageItem<1200>,
   l: ImageItem<1000>,
@@ -31,6 +32,7 @@ type ImageItems = [
 export const imageToImageItems = (
   image: BuilderImageProps['image']
 ): ImageItems => [
+  { url: 'xxxl' in image ? image.xxxl : undefined, size: 2400 },
   { url: image.xxl, size: 1500 },
   { url: image.xl, size: 1200 },
   { url: image.l, size: 1000 },
@@ -44,11 +46,14 @@ export const imageToSquareImageItems = (
   image: BuilderImageProps['image']
 ): ImageItems => {
   if (!('xxlSquare' in image)) {
-    // fall back to non square images
     return imageToImageItems(image);
   }
 
   return [
+    {
+      url: 'xxxlSquare' in image ? image.xxxlSquare : undefined,
+      size: 2400,
+    },
     { url: image.xxlSquare, size: 1500 },
     { url: image.xlSquare, size: 1200 },
     { url: image.lSquare, size: 1000 },

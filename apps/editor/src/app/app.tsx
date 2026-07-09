@@ -95,6 +95,8 @@ import { UserList } from './routes/users/userList';
 import { VoucherCreateView } from './routes/voucher/voucherCreateView';
 import { VoucherEditView } from './routes/voucher/voucherEditView';
 import { VoucherList } from './routes/voucher/voucherList';
+import { WebsiteSettingsItem } from './routes/website-settings/website-settings-item';
+import { WebsiteSettingsList } from './routes/website-settings/website-settings-list';
 import { SetNewPassword } from './setNewPassword';
 
 const LogoutMutation = gql`
@@ -222,15 +224,6 @@ export function App() {
             -webkit-box-orient: vertical;
             text-overflow: ellipsis;
             word-wrap: break-word;
-          }
-
-          .richTextFrame {
-            padding: 0px 20px 20px;
-            border: 1px solid #e5e5ea;
-            border-radius: 7px;
-            &:hover {
-              border-color: #1675e0;
-            }
           }
 
           .authorLinks div {
@@ -1077,6 +1070,22 @@ export function App() {
               element={
                 <Base>
                   <SettingList />
+                </Base>
+              }
+            />
+            <Route
+              path="settings/website"
+              element={
+                <Base>
+                  <WebsiteSettingsList />
+                </Base>
+              }
+            />
+            <Route
+              path="settings/website/:category"
+              element={
+                <Base>
+                  <WebsiteSettingsItem />
                 </Base>
               }
             />

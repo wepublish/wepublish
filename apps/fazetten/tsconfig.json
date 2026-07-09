@@ -1,6 +1,7 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
+    "moduleResolution": "bundler",
     "jsx": "preserve",
     "jsxImportSource": "@emotion/react",
     "allowJs": true,
