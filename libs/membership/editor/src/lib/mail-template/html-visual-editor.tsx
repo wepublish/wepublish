@@ -387,12 +387,39 @@ const HtmlVisualEditorComponent = forwardRef<
   };
 
   // new tab + rel guards against reverse-tabnabbing.
+  const sanitizeHref = (value: string): string => {
+    const trimmed = value.trim();
+    if (!trimmed) {
+      return '';
+    }
+
+    try {
+      const parsed = new URL(trimmed, 'https://example.com');
+      const protocol = parsed.protocol.toLowerCase();
+      if (
+        protocol === 'http:' ||
+        protocol === 'https:' ||
+        protocol === 'mailto:' ||
+        protocol === 'tel:'
+      ) {
+        return trimmed;
+      }
+      return '';
+    } catch {
+      return '';
+    }
+  };
+
   const applyAnchorAttributes = (
     anchor: HTMLAnchorElement,
     href: string,
     newTab: boolean
   ) => {
-    anchor.setAttribute('href', href);
+    const safeHref = sanitizeHref(href);
+    if (!safeHref) {
+      return;
+    }
+    anchor.setAttribute('href', safeHref);
     if (newTab) {
       anchor.setAttribute('target', '_blank');
       anchor.setAttribute('rel', 'noopener noreferrer');
@@ -430,6 +457,7 @@ const HtmlVisualEditorComponent = forwardRef<
       return;
     }
     const url = linkDialog.url.trim();
+    const safeUrl = sanitizeHref(url);
     const { text, newTab } = linkDialog;
     const anchor = editedAnchor.current;
     getEditable()?.focus();
@@ -445,8 +473,14 @@ const HtmlVisualEditorComponent = forwardRef<
       return;
     }
 
+    // Invalid or unsafe URLs are ignored.
+    if (!safeUrl) {
+      closeLinkDialog();
+      return;
+    }
+
     if (anchor) {
-      applyAnchorAttributes(anchor, url, newTab);
+      applyAnchorAttributes(anchor, safeUrl, newTab);
       if (text && text !== anchor.textContent) {
         anchor.textContent = text;
       }
