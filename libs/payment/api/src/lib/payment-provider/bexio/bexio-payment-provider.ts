@@ -36,6 +36,7 @@ import {
   searchForContact,
 } from './bexio-utils';
 import fetch from 'node-fetch';
+import { inspect } from 'util';
 
 export class BexioPaymentProvider extends BasePaymentProvider {
   constructor(props: PaymentProviderProps) {
@@ -299,7 +300,7 @@ export class BexioPaymentProvider extends BasePaymentProvider {
         'Failed to create Bexio invoice for invoiceId %s (renewal: %s): %s',
         invoiceId,
         isRenewal,
-        e instanceof Error ? e.message : String(e)
+        e instanceof Error ? e.message : inspect(e, { depth: 5 })
       );
       throw e;
     }
