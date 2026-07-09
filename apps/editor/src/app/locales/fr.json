@@ -1,5 +1,10 @@
 {
   "translation": {
+    "oneMessages": {
+      "header": "Messages de l'équipe We.Publish",
+      "expand": "Développer",
+      "linkFallback": "En savoir plus"
+    },
     "versionHistory": {
       "title": "Historique des versions",
       "subtitle": "{{count}} versions",
@@ -1381,6 +1386,7 @@
         "reasonUserReplacedSubscription": "Remplacé par un autre abonnement",
         "reasonNone": "Aucun motif",
         "reasonUserSelfDeactivated": "Par l'utilisateur·trice",
+        "reasonChargeback": "Rétrofacturation",
         "reset": "Réinitialiser le filtre",
         "searchPlaceholder": "Recherche par prénom, nom, e-mail, adresse, code postal, lieu"
       },
@@ -1563,6 +1569,7 @@
         "reasonUserReplacedSubscription": "Remplacé par un autre abonnement",
         "reasonNone": "Aucun motif",
         "reasonUserSelfDeactivated": "Désactivation par l'utilisateur·trice",
+        "reasonChargeback": "Rétrofacturation",
         "title": {
           "activated": "Désactiver l'abonnement"
         },
@@ -1585,7 +1592,9 @@
       "deactivationReason": {
         "InvoiceNotPaid": "Facture non payée",
         "None": "Aucune",
-        "UserSelfDeactivated": "L'utilisateur voulait désactiver l'abonnement"
+        "UserSelfDeactivated": "L'utilisateur voulait désactiver l'abonnement",
+        "UserReplacedSubscription": "Remplacé par un autre abonnement",
+        "Chargeback": "Rétrofacturation"
       },
       "deactivationString": "Désactivé le {{date}}. Raison: {{reason}}",
       "editSubscription": "Modifier l'abonnement",

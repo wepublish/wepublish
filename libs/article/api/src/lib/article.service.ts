@@ -68,7 +68,6 @@ export class ArticleService {
     const [totalCount, articles] = await Promise.all([
       this.prisma.article.count({
         where,
-        orderBy,
       }),
       this.prisma.article.findMany({
         where,
@@ -982,10 +981,8 @@ const createTagsFilter = (
   if (filter?.tags?.length) {
     const hasTags = {
       some: {
-        tag: {
-          id: {
-            in: filter.tags,
-          },
+        tagId: {
+          in: filter.tags,
         },
       },
     } satisfies Prisma.TaggedArticlesListRelationFilter;
@@ -1004,10 +1001,8 @@ const createTagsNotInFilter = (
   if (filter?.tagsNotIn?.length) {
     const hasNotTags = {
       some: {
-        tag: {
-          id: {
-            notIn: filter.tagsNotIn,
-          },
+        tagId: {
+          notIn: filter.tagsNotIn,
         },
       },
     } satisfies Prisma.TaggedArticlesListRelationFilter;

@@ -1,5 +1,10 @@
 {
   "translation": {
+    "oneMessages": {
+      "header": "Nachrichten vom We.Publish Team",
+      "expand": "Ausklappen",
+      "linkFallback": "Mehr erfahren"
+    },
     "versionHistory": {
       "title": "Versionsverlauf",
       "subtitle": "{{count}} Versionen",
@@ -1428,6 +1433,7 @@
         "reasonNone": "Kein Grund",
         "reasonUserSelfDeactivated": "Durch Benutzer:in",
         "reasonUserReplacedSubscription": "Ersetzt durch anderes Abo",
+        "reasonChargeback": "Rückbuchung",
         "reset": "Filter zurücksetzen",
         "searchPlaceholder": "Suche nach Vorname, Name, E-Mail, Adresse, PLZ, Ort"
       },
@@ -1609,6 +1615,7 @@
         "reason": "Deaktivierungs Grund",
         "reasonInvoiceNotPaid": "User hat Rechnung nicht bezahlt",
         "reasonUserReplacedSubscription": "Ersetzt durch anderes Abo",
+        "reasonChargeback": "Rückbuchung",
         "reasonNone": "Keiner",
         "reasonUserSelfDeactivated": "User will deaktivieren",
         "title": {
@@ -1633,7 +1640,9 @@
       "deactivationReason": {
         "InvoiceNotPaid": "Rechnung nicht bezahlt",
         "None": "Keiner",
-        "UserSelfDeactivated": "Benutzer wollte das Abonnement deaktivieren"
+        "UserSelfDeactivated": "Benutzer wollte das Abonnement deaktivieren",
+        "UserReplacedSubscription": "Ersetzt durch anderes Abo",
+        "Chargeback": "Rückbuchung"
       },
       "deactivationString": "Deaktiviert am {{date}}. Grund: {{reason}}",
       "editSubscription": "Abo bearbeiten",
