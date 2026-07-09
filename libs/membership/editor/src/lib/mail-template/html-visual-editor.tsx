@@ -396,13 +396,11 @@ const HtmlVisualEditorComponent = forwardRef<
     try {
       const parsed = new URL(trimmed, 'https://example.com');
       const protocol = parsed.protocol.toLowerCase();
-      if (
-        protocol === 'http:' ||
-        protocol === 'https:' ||
-        protocol === 'mailto:' ||
-        protocol === 'tel:'
-      ) {
-        return trimmed;
+      if (protocol === 'http:' || protocol === 'https:') {
+        return parsed.toString();
+      }
+      if (protocol === 'mailto:' || protocol === 'tel:') {
+        return parsed.href;
       }
       return '';
     } catch {
@@ -491,10 +489,10 @@ const HtmlVisualEditorComponent = forwardRef<
 
     const selection = doc.getSelection();
     if (selection && !selection.isCollapsed) {
-      doc.execCommand('createLink', false, url);
+      doc.execCommand('createLink', false, safeUrl);
       const created = getSelectedAnchor(doc);
       if (created) {
-        applyAnchorAttributes(created, url, newTab);
+        applyAnchorAttributes(created, safeUrl, newTab);
         if (text && text !== created.textContent) {
           created.textContent = text;
         }
