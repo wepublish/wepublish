@@ -86,6 +86,8 @@ export type BuilderMemberPlanItemProps = Pick<
   | 'slug'
   | 'amountPerMonthMin'
   | 'amountPerMonthMax'
+  | 'amountPerMonthTarget'
+  | 'periodicityPricing'
   | 'currency'
   | 'extendable'
   | 'shortDescription'

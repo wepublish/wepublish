@@ -7,6 +7,7 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { formatCurrency } from '../formatters/format-currency';
 import {
+  calculatePeriodAmount,
   formatAfterFirstPaymentPeriod,
   formatPaymentPeriod,
   getPaymentPeriodicyMonths,
@@ -135,7 +136,7 @@ export const useUpgradeText = ({
 
   return useMemo(() => {
     const fullAmount =
-      (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity);
+      calculatePeriodAmount(monthlyAmount, paymentPeriodicity) / 100;
 
     const amountAfterDiscount = Math.max(fullAmount - discount / 100, 0);
 
