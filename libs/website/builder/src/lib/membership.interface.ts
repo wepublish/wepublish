@@ -69,6 +69,8 @@ export type BuilderMemberPlanItemProps = Pick<
   FullMemberPlanFragment,
   | 'amountPerMonthMin'
   | 'amountPerMonthMax'
+  | 'amountPerMonthTarget'
+  | 'periodicityPricing'
   | 'currency'
   | 'extendable'
   | 'shortDescription'

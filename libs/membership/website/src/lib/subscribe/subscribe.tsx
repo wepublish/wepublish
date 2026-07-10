@@ -32,9 +32,11 @@ import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { formatCurrency, roundUpTo5Cents } from '../formatters/format-currency';
 import {
+  calculatePeriodAmount,
   formatFirstPaymentPeriod,
   formatPaymentPeriod,
-  getPaymentPeriodicyMonths,
+  getPeriodPriceRange,
+  monthlyAmountFromPeriodAmount,
 } from '../formatters/format-payment-period';
 import { formatRenewalPeriod } from '../formatters/format-renewal-period';
 import { ApolloError } from '@apollo/client';
@@ -166,7 +168,7 @@ export const usePaymentText = ({
       paymentPeriod: formatPaymentPeriod(paymentPeriodicity),
       paymentPeriodL: formatPaymentPeriod(paymentPeriodicity).toLowerCase(),
       formattedAmount: formatCurrency(
-        (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity),
+        calculatePeriodAmount(monthlyAmount, paymentPeriodicity) / 100,
         currency,
         locale
       ),
@@ -218,7 +220,7 @@ export const useDiscountText = ({
     const variables = {
       paymentPeriod: formatFirstPaymentPeriod(paymentPeriodicity),
       formattedAmount: formatCurrency(
-        (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity),
+        calculatePeriodAmount(monthlyAmount, paymentPeriodicity) / 100,
         currency,
         locale
       ),
@@ -319,7 +321,12 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
           );
 
           return (
-            !memberPlan || data.monthlyAmount >= memberPlan.amountPerMonthMin
+            !memberPlan ||
+            calculatePeriodAmount(
+              data.monthlyAmount,
+              data.paymentPeriodicity
+            ) >=
+              getPeriodPriceRange(memberPlan, data.paymentPeriodicity).amountMin
           );
         },
         {
@@ -403,9 +410,19 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
 
   const isDonation = selectedMemberPlan?.productType === ProductType.Donation;
 
+  const periodPriceRange = useMemo(
+    () =>
+      selectedMemberPlan ?
+        getPeriodPriceRange(selectedMemberPlan, selectedPaymentPeriodicity)
+      : null,
+    [selectedMemberPlan, selectedPaymentPeriodicity]
+  );
+
   const shouldHidePaymentAmount =
-    selectedMemberPlan?.amountPerMonthMin ===
-    selectedMemberPlan?.amountPerMonthMax;
+    periodPriceRange ?
+      periodPriceRange.amountMin === periodPriceRange.amountMax
+    : selectedMemberPlan?.amountPerMonthMin ===
+      selectedMemberPlan?.amountPerMonthMax;
 
   const discountPercent =
     subscribeInfo.data?.createSubscriptionInfo.discountPercent ?? 0;
@@ -498,13 +515,20 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
 
   useEffect(() => {
     if (selectedMemberPlan) {
+      const { amountMin, amountTarget } = getPeriodPriceRange(
+        selectedMemberPlan,
+        selectedPaymentPeriodicity
+      );
+
       setValue<'monthlyAmount'>(
         'monthlyAmount',
-        selectedMemberPlan.amountPerMonthTarget ||
-          selectedMemberPlan.amountPerMonthMin
+        monthlyAmountFromPeriodAmount(
+          amountTarget || amountMin,
+          selectedPaymentPeriodicity
+        )
       );
     }
-  }, [selectedMemberPlan, setValue]);
+  }, [selectedMemberPlan, selectedPaymentPeriodicity, setValue]);
 
   useEffect(() => {
     if (challenge.data?.challenge.challengeID) {
@@ -591,7 +615,27 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     );
   }, [deactivateSubscriptionId, userInvoices.data?.userInvoices]);
 
-  const amountPerMonthMin = selectedMemberPlan?.amountPerMonthMin || 500;
+  const amountPerMonthMin =
+    periodPriceRange ?
+      monthlyAmountFromPeriodAmount(
+        periodPriceRange.amountMin,
+        selectedPaymentPeriodicity
+      )
+    : selectedMemberPlan?.amountPerMonthMin || 500;
+  const amountPerMonthMax =
+    periodPriceRange?.amountMax != null ?
+      monthlyAmountFromPeriodAmount(
+        periodPriceRange.amountMax,
+        selectedPaymentPeriodicity
+      )
+    : (selectedMemberPlan?.amountPerMonthMax ?? undefined);
+  const amountPerMonthTarget =
+    periodPriceRange?.amountTarget != null ?
+      monthlyAmountFromPeriodAmount(
+        periodPriceRange.amountTarget,
+        selectedPaymentPeriodicity
+      )
+    : (selectedMemberPlan?.amountPerMonthTarget ?? undefined);
 
   return (
     <SubscribeWrapper
@@ -668,12 +712,8 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
                   slug={selectedMemberPlan?.slug}
                   donate={isDonation}
                   amountPerMonthMin={amountPerMonthMin}
-                  amountPerMonthMax={
-                    selectedMemberPlan?.amountPerMonthMax ?? undefined
-                  }
-                  amountPerMonthTarget={
-                    selectedMemberPlan?.amountPerMonthTarget ?? undefined
-                  }
+                  amountPerMonthMax={amountPerMonthMax}
+                  amountPerMonthTarget={amountPerMonthTarget}
                   currency={selectedMemberPlan?.currency ?? Currency.Chf}
                 />
               </SubscribeAmount>

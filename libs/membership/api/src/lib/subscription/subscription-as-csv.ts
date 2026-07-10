@@ -88,7 +88,9 @@ export function mapSubscriptionsAsCsv(subscriptions: CSVSubscription[]) {
         sanitizeCsvContent(memberPlan?.name),
         subscription?.memberPlanID ?? '',
         subscription?.paymentPeriodicity ?? '',
-        subscription?.monthlyAmount ?? '',
+        subscription?.monthlyAmount != null ?
+          Math.round(subscription.monthlyAmount)
+        : '',
         subscription?.autoRenew ?? '',
         subscription?.extendable ?? '',
         subscription?.startsAt ?

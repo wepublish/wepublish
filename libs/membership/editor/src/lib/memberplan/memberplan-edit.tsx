@@ -96,6 +96,7 @@ function MemberPlanEdit() {
       amountPerMonthMin: 0,
       amountPerMonthMax: null,
       amountPerMonthTarget: null,
+      periodicityPricing: null,
       image: undefined,
       active: true,
       tags: [],
@@ -196,6 +197,19 @@ function MemberPlanEdit() {
       amountPerMonthMin: memberPlan.amountPerMonthMin,
       amountPerMonthMax: memberPlan.amountPerMonthMax,
       amountPerMonthTarget: memberPlan.amountPerMonthTarget,
+      periodicityPricing:
+        memberPlan.periodicityPricing
+          ?.filter(price =>
+            availablePaymentMethods.some(({ value }) =>
+              value.paymentPeriodicities.includes(price.periodicity)
+            )
+          )
+          .map(({ periodicity, amountMin, amountTarget, amountMax }) => ({
+            periodicity,
+            amountMin,
+            amountTarget,
+            amountMax,
+          })) ?? null,
       extendable: memberPlan.extendable,
       externalReward: memberPlan.externalReward,
       maxCount: memberPlan.maxCount,
