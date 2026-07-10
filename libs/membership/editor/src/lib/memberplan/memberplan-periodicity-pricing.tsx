@@ -1,0 +1,267 @@
+import styled from '@emotion/styled';
+import {
+  FullAvailablePaymentMethodFragment,
+  FullMemberPlanFragment,
+  PaymentPeriodicity,
+} from '@wepublish/editor/api';
+import { Dispatch, SetStateAction, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Col, Form, Panel, Row, Toggle } from 'rsuite';
+import {
+  CurrencyInput,
+  ListValue,
+  PAYMENT_PERIODICITY_MONTHS,
+} from '@wepublish/ui/editor';
+
+const { HelpText } = Form;
+
+const PERIODICITY_ORDER = [
+  PaymentPeriodicity.Quarterly,
+  PaymentPeriodicity.Biannual,
+  PaymentPeriodicity.Yearly,
+  PaymentPeriodicity.Biennial,
+  PaymentPeriodicity.Lifetime,
+];
+
+type PeriodicityPriceValue = NonNullable<
+  FullMemberPlanFragment['periodicityPricing']
+>[number];
+
+const PanelWidth100 = styled(Panel)`
+  width: 100%;
+`;
+
+const ToggleCol = styled(Col)`
+  text-align: end;
+`;
+
+function derivePeriodAmount(
+  monthlyAmount: number | null | undefined,
+  periodicity: PaymentPeriodicity
+): number | null {
+  if (monthlyAmount == null) {
+    return null;
+  }
+
+  return Math.round(monthlyAmount * PAYMENT_PERIODICITY_MONTHS[periodicity]);
+}
+
+function formatDelta(delta: number, derived: number, currency: string): string {
+  const percent = derived > 0 ? ((delta / derived) * 100).toFixed(1) : '0';
+
+  return `${delta >= 0 ? '−' : '+'} ${currency} ${(Math.abs(delta) / 100).toFixed(2)} (${percent}%)`;
+}
+
+interface MemberPlanPeriodicityPricingProps {
+  memberPlan?: FullMemberPlanFragment | null;
+  availablePaymentMethods: ListValue<FullAvailablePaymentMethodFragment>[];
+  loading: boolean;
+  setMemberPlan: Dispatch<
+    SetStateAction<FullMemberPlanFragment | null | undefined>
+  >;
+}
+
+export function MemberPlanPeriodicityPricing({
+  memberPlan,
+  availablePaymentMethods,
+  loading,
+  setMemberPlan,
+}: MemberPlanPeriodicityPricingProps) {
+  const { t } = useTranslation();
+  const currency = memberPlan?.currency ?? 'CHF';
+
+  const enabledPeriodicities = useMemo(() => {
+    const enabled = new Set(
+      availablePaymentMethods.flatMap(({ value }) => value.paymentPeriodicities)
+    );
+
+    return PERIODICITY_ORDER.filter(periodicity => enabled.has(periodicity));
+  }, [availablePaymentMethods]);
+
+  const pricing = useMemo(
+    () => memberPlan?.periodicityPricing ?? [],
+    [memberPlan?.periodicityPricing]
+  );
+
+  function setPeriodicityPrice(
+    periodicity: PaymentPeriodicity,
+    price: Omit<PeriodicityPriceValue, 'periodicity'> | null
+  ) {
+    if (!memberPlan) {
+      return;
+    }
+
+    const withoutPeriodicity = pricing.filter(
+      p => p.periodicity !== periodicity
+    );
+
+    setMemberPlan({
+      ...memberPlan,
+      periodicityPricing:
+        price ? [...withoutPeriodicity, { periodicity, ...price }]
+        : withoutPeriodicity.length ? withoutPeriodicity
+        : null,
+    });
+  }
+
+  if (!enabledPeriodicities.length) {
+    return (
+      <PanelWidth100
+        header={t('memberplanForm.periodicityPricing')}
+        bordered
+      >
+        <HelpText>
+          {t('memberplanForm.periodicityPricingNoPeriodicities')}
+        </HelpText>
+      </PanelWidth100>
+    );
+  }
+
+  return (
+    <PanelWidth100
+      header={t('memberplanForm.periodicityPricing')}
+      bordered
+    >
+      <HelpText>{t('memberplanForm.periodicityPricingHelpText')}</HelpText>
+
+      {enabledPeriodicities.map(periodicity => {
+        const override = pricing.find(p => p.periodicity === periodicity);
+        const derivedMin = derivePeriodAmount(
+          memberPlan?.amountPerMonthMin ?? 0,
+          periodicity
+        );
+        const derivedTarget = derivePeriodAmount(
+          memberPlan?.amountPerMonthTarget,
+          periodicity
+        );
+        const derivedMax = derivePeriodAmount(
+          memberPlan?.amountPerMonthMax,
+          periodicity
+        );
+        const hasOverride = !!override;
+
+        const referenceDerived = derivedTarget ?? derivedMin;
+        const referenceOverride =
+          override ? (override.amountTarget ?? override.amountMin) : null;
+        const delta =
+          referenceDerived != null && referenceOverride != null ?
+            referenceDerived - referenceOverride
+          : null;
+
+        return (
+          <Panel
+            key={periodicity}
+            bordered
+            header={t(`memberPlanList.paymentPeriodicity.${periodicity}`)}
+          >
+            <Row>
+              <Col xs={18}>
+                {delta != null && delta !== 0 && referenceDerived != null && (
+                  <HelpText>
+                    {t('memberplanForm.periodicityPricingDelta', {
+                      delta: formatDelta(delta, referenceDerived, currency),
+                    })}
+                  </HelpText>
+                )}
+              </Col>
+
+              <ToggleCol xs={6}>
+                <Toggle
+                  checked={hasOverride}
+                  disabled={loading}
+                  checkedChildren={t('memberplanForm.periodicityPricingCustom')}
+                  unCheckedChildren={t(
+                    'memberplanForm.periodicityPricingDerived'
+                  )}
+                  onChange={enabled =>
+                    setPeriodicityPrice(
+                      periodicity,
+                      enabled ?
+                        {
+                          amountMin: derivedMin ?? 0,
+                          amountTarget: derivedTarget,
+                          amountMax: derivedMax,
+                        }
+                      : null
+                    )
+                  }
+                />
+              </ToggleCol>
+            </Row>
+
+            <Row>
+              <Col xs={8}>
+                <Form.ControlLabel>
+                  {t('memberplanForm.periodicityPricingMin')}
+                </Form.ControlLabel>
+                <CurrencyInput
+                  name={`periodicityPricing.${periodicity}.amountMin`}
+                  currency={currency}
+                  centAmount={override ? override.amountMin : (derivedMin ?? 0)}
+                  disabled={loading || !hasOverride}
+                  onChange={centAmount => {
+                    if (!override) {
+                      return;
+                    }
+                    setPeriodicityPrice(periodicity, {
+                      ...override,
+                      amountMin: Math.round(centAmount || 0),
+                    });
+                  }}
+                />
+              </Col>
+
+              <Col xs={8}>
+                <Form.ControlLabel>
+                  {t('memberplanForm.periodicityPricingTarget')}
+                </Form.ControlLabel>
+                <CurrencyInput
+                  name={`periodicityPricing.${periodicity}.amountTarget`}
+                  currency={currency}
+                  centAmount={
+                    override ? (override.amountTarget ?? null) : derivedTarget
+                  }
+                  disabled={loading || !hasOverride}
+                  onChange={centAmount => {
+                    if (!override) {
+                      return;
+                    }
+                    setPeriodicityPrice(periodicity, {
+                      ...override,
+                      amountTarget:
+                        centAmount != null ? Math.round(centAmount) : null,
+                    });
+                  }}
+                />
+              </Col>
+
+              <Col xs={8}>
+                <Form.ControlLabel>
+                  {t('memberplanForm.periodicityPricingMax')}
+                </Form.ControlLabel>
+                <CurrencyInput
+                  name={`periodicityPricing.${periodicity}.amountMax`}
+                  currency={currency}
+                  centAmount={
+                    override ? (override.amountMax ?? null) : derivedMax
+                  }
+                  disabled={loading || !hasOverride}
+                  onChange={centAmount => {
+                    if (!override) {
+                      return;
+                    }
+                    setPeriodicityPrice(periodicity, {
+                      ...override,
+                      amountMax:
+                        centAmount != null ? Math.round(centAmount) : null,
+                    });
+                  }}
+                />
+              </Col>
+            </Row>
+          </Panel>
+        );
+      })}
+    </PanelWidth100>
+  );
+}

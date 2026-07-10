@@ -40,6 +40,7 @@ import {
   SelectPage,
 } from '@wepublish/ui/editor';
 import { MdAutoFixHigh, MdCheck } from 'react-icons/md';
+import { MemberPlanPeriodicityPricing } from './memberplan-periodicity-pricing';
 import { Alert } from '@mui/material';
 import styled from '@emotion/styled';
 
@@ -494,6 +495,16 @@ export function MemberPlanForm({
             </Col>
           </Row>
         </Panel>
+      </Col>
+
+      {/* per-periodicity pricing */}
+      <Col xs={12}>
+        <MemberPlanPeriodicityPricing
+          memberPlan={memberPlan}
+          availablePaymentMethods={availablePaymentMethods}
+          loading={loading}
+          setMemberPlan={setMemberPlan}
+        />
       </Col>
 
       {/* payment method settings */}

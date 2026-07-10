@@ -63,8 +63,8 @@ export const PaymentAmountSlider = forwardRef<
         {donate && (
           <TextField
             name={name}
-            value={value / 100}
-            onChange={event => onChange(+event.target.value * 100)}
+            value={Math.round(value) / 100}
+            onChange={event => onChange(Math.round(+event.target.value * 100))}
             type={'number'}
             fullWidth
             inputProps={{
