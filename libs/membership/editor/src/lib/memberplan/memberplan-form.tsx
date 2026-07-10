@@ -497,16 +497,6 @@ export function MemberPlanForm({
         </Panel>
       </Col>
 
-      {/* per-periodicity pricing */}
-      <Col xs={12}>
-        <MemberPlanPeriodicityPricing
-          memberPlan={memberPlan}
-          availablePaymentMethods={availablePaymentMethods}
-          loading={loading}
-          setMemberPlan={setMemberPlan}
-        />
-      </Col>
-
       {/* payment method settings */}
       <Col xs={12}>
         <Panel
@@ -764,6 +754,16 @@ export function MemberPlanForm({
             </Col>
           </RowPaddingTop>
         </Panel>
+      </Col>
+
+      {/* per-periodicity pricing */}
+      <Col xs={24}>
+        <MemberPlanPeriodicityPricing
+          memberPlan={memberPlan}
+          availablePaymentMethods={availablePaymentMethods}
+          loading={loading}
+          setMemberPlan={setMemberPlan}
+        />
       </Col>
 
       {/* image upload and selection */}
