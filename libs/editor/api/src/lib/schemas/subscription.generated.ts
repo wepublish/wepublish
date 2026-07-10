@@ -82,7 +82,7 @@ export type SubscriptionsAsCsvQuery = { __typename?: 'Query', subscriptionsAsCsv
 export type CreateSubscriptionMutationVariables = Types.Exact<{
   autoRenew: Types.Scalars['Boolean'];
   extendable: Types.Scalars['Boolean'];
-  monthlyAmount: Types.Scalars['Int'];
+  monthlyAmount: Types.Scalars['Float'];
   paidUntil?: Types.InputMaybe<Types.Scalars['DateTime']>;
   startsAt: Types.Scalars['DateTime'];
   paymentPeriodicity: Types.PaymentPeriodicity;
@@ -102,7 +102,7 @@ export type UpdateSubscriptionMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
   autoRenew?: Types.InputMaybe<Types.Scalars['Boolean']>;
   extendable?: Types.InputMaybe<Types.Scalars['Boolean']>;
-  monthlyAmount?: Types.InputMaybe<Types.Scalars['Int']>;
+  monthlyAmount?: Types.InputMaybe<Types.Scalars['Float']>;
   paidUntil?: Types.InputMaybe<Types.Scalars['DateTime']>;
   startsAt?: Types.InputMaybe<Types.Scalars['DateTime']>;
   paymentPeriodicity?: Types.InputMaybe<Types.PaymentPeriodicity>;
@@ -412,7 +412,7 @@ export type SubscriptionsAsCsvQueryHookResult = ReturnType<typeof useSubscriptio
 export type SubscriptionsAsCsvLazyQueryHookResult = ReturnType<typeof useSubscriptionsAsCsvLazyQuery>;
 export type SubscriptionsAsCsvQueryResult = Apollo.QueryResult<SubscriptionsAsCsvQuery, SubscriptionsAsCsvQueryVariables>;
 export const CreateSubscriptionDocument = gql`
-    mutation CreateSubscription($autoRenew: Boolean!, $extendable: Boolean!, $monthlyAmount: Int!, $paidUntil: DateTime, $startsAt: DateTime!, $paymentPeriodicity: PaymentPeriodicity!, $properties: [PropertyInput!]!, $userID: String!, $paymentMethodID: String!, $memberPlanID: String!) {
+    mutation CreateSubscription($autoRenew: Boolean!, $extendable: Boolean!, $monthlyAmount: Float!, $paidUntil: DateTime, $startsAt: DateTime!, $paymentPeriodicity: PaymentPeriodicity!, $properties: [PropertyInput!]!, $userID: String!, $paymentMethodID: String!, $memberPlanID: String!) {
   createSubscription(
     autoRenew: $autoRenew
     extendable: $extendable
@@ -472,7 +472,7 @@ export type CreateSubscriptionMutationHookResult = ReturnType<typeof useCreateSu
 export type CreateSubscriptionMutationResult = Apollo.MutationResult<CreateSubscriptionMutation>;
 export type CreateSubscriptionMutationOptions = Apollo.BaseMutationOptions<CreateSubscriptionMutation, CreateSubscriptionMutationVariables>;
 export const UpdateSubscriptionDocument = gql`
-    mutation UpdateSubscription($id: String!, $autoRenew: Boolean, $extendable: Boolean, $monthlyAmount: Int, $paidUntil: DateTime, $startsAt: DateTime, $paymentPeriodicity: PaymentPeriodicity, $properties: [PropertyInput!], $userID: String, $paymentMethodID: String, $memberPlanID: String) {
+    mutation UpdateSubscription($id: String!, $autoRenew: Boolean, $extendable: Boolean, $monthlyAmount: Float, $paidUntil: DateTime, $startsAt: DateTime, $paymentPeriodicity: PaymentPeriodicity, $properties: [PropertyInput!], $userID: String, $paymentMethodID: String, $memberPlanID: String) {
   updateSubscription(
     id: $id
     autoRenew: $autoRenew

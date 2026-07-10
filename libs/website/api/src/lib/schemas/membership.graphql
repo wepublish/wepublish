@@ -43,6 +43,12 @@ fragment FullMemberPlan on MemberPlan {
   amountPerMonthMin
   amountPerMonthMax
   amountPerMonthTarget
+  periodicityPricing {
+    periodicity
+    amountMin
+    amountTarget
+    amountMax
+  }
   currency
   availablePaymentMethods {
     ...FullAvailablePaymentMethod
@@ -170,7 +176,7 @@ mutation Subscribe(
   $memberPlanSlug: Slug
   $autoRenew: Boolean!
   $paymentPeriodicity: PaymentPeriodicity!
-  $monthlyAmount: Int!
+  $monthlyAmount: Float!
   $paymentMethodId: String
   $paymentMethodSlug: Slug
   $subscriptionProperties: [PropertyInput!]
@@ -205,7 +211,7 @@ mutation Resubscribe(
   $memberPlanSlug: Slug
   $autoRenew: Boolean!
   $paymentPeriodicity: PaymentPeriodicity!
-  $monthlyAmount: Int!
+  $monthlyAmount: Float!
   $paymentMethodId: String
   $paymentMethodSlug: Slug
   $subscriptionProperties: [PropertyInput!]
@@ -231,7 +237,7 @@ mutation Upgrade(
   $subscriptionId: String!
   $memberPlanId: String!
   $paymentMethodId: String!
-  $monthlyAmount: Int!
+  $monthlyAmount: Float!
   $goodieId: String
   $successURL: String
   $failureURL: String
