@@ -28,7 +28,11 @@ export function monthlyAmountFromPeriodAmount(
 
 export const periodicityPriceSchema = z
   .object({
-    periodicity: z.nativeEnum(PaymentPeriodicity),
+    periodicity: z
+      .nativeEnum(PaymentPeriodicity)
+      .refine(periodicity => periodicity !== PaymentPeriodicity.monthly, {
+        message: 'monthly prices always derive from the amountPerMonth fields',
+      }),
     amountMin: z.number().int().min(0),
     amountTarget: z.number().int().min(0).nullish(),
     amountMax: z.number().int().min(0).nullish(),

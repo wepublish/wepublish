@@ -6,6 +6,7 @@ import {
   FullMemberPlanFragment,
   FullPaymentMethodFragment,
   PaymentMethod,
+  PaymentPeriodicity,
   ProductType,
   useCreateMemberPlanMutation,
   useMemberPlanLazyQuery,
@@ -199,10 +200,12 @@ function MemberPlanEdit() {
       amountPerMonthTarget: memberPlan.amountPerMonthTarget,
       periodicityPricing:
         memberPlan.periodicityPricing
-          ?.filter(price =>
-            availablePaymentMethods.some(({ value }) =>
-              value.paymentPeriodicities.includes(price.periodicity)
-            )
+          ?.filter(
+            price =>
+              price.periodicity !== PaymentPeriodicity.Monthly &&
+              availablePaymentMethods.some(({ value }) =>
+                value.paymentPeriodicities.includes(price.periodicity)
+              )
           )
           .map(({ periodicity, amountMin, amountTarget, amountMax }) => ({
             periodicity,

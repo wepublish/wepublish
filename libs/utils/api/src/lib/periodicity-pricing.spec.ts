@@ -72,6 +72,14 @@ describe('periodicityPricingSchema', () => {
     expect(result.success).toBe(true);
   });
 
+  it('rejects a monthly price entry', () => {
+    const result = periodicityPricingSchema.safeParse([
+      { periodicity: PaymentPeriodicity.monthly, amountMin: 4500 },
+    ]);
+
+    expect(result.success).toBe(false);
+  });
+
   it('rejects duplicate periodicities', () => {
     const result = periodicityPricingSchema.safeParse([
       { periodicity: PaymentPeriodicity.yearly, amountMin: 45000 },
@@ -162,6 +170,24 @@ describe('getPeriodPriceRange', () => {
       )
     ).toEqual({
       amountMin: 48000,
+      amountTarget: null,
+      amountMax: null,
+    });
+  });
+
+  it('never lets a monthly entry override the monthly amounts', () => {
+    expect(
+      getPeriodPriceRange(
+        {
+          amountPerMonthMin: 4000,
+          periodicityPricing: [
+            { periodicity: PaymentPeriodicity.monthly, amountMin: 9900 },
+          ],
+        },
+        PaymentPeriodicity.monthly
+      )
+    ).toEqual({
+      amountMin: 4000,
       amountTarget: null,
       amountMax: null,
     });
