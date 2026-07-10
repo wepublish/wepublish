@@ -3,7 +3,6 @@ import {
   Field,
   Float,
   InputType,
-  Int,
   ObjectType,
   OmitType,
   registerEnumType,
