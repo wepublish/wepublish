@@ -1,10 +1,10 @@
 import React, { Dispatch, SetStateAction, useMemo, useState } from 'react';
 import {
+  Currency,
   FullMemberPlanFragment,
   FullPaymentMethodFragment,
   FullImageFragment,
   PaymentMethod,
-  Currency,
   ProductType,
   FullAvailablePaymentMethodFragment,
 } from '@wepublish/editor/api';
@@ -30,7 +30,6 @@ import { slugify } from '@wepublish/utils';
 import {
   ALL_PAYMENT_PERIODICITIES,
   ChooseEditImage,
-  CurrencyInput,
   ImageEditPanel,
   ImageSelectPanel,
   ListInput,
@@ -40,7 +39,7 @@ import {
   SelectPage,
 } from '@wepublish/ui/editor';
 import { MdAutoFixHigh, MdCheck } from 'react-icons/md';
-import { MemberPlanPeriodicityPricing } from './memberplan-periodicity-pricing';
+import { MemberPlanPricing } from './memberplan-pricing';
 import { Alert } from '@mui/material';
 import styled from '@emotion/styled';
 
@@ -63,6 +62,21 @@ const PanelWidth100 = styled(Panel)`
 
 const RowPaddingTop = styled(Row)`
   padding-top: 12px;
+`;
+
+const DividerTextAlignLeft = styled(Divider)`
+  &&& {
+    margin-left: -5px;
+    margin-right: -5px;
+  }
+
+  &&&::before {
+    content: none;
+  }
+
+  &&& > .rs-divider-inner-text {
+    padding-left: 0;
+  }
 `;
 
 interface MemberPlanFormProps {
@@ -355,9 +369,12 @@ export function MemberPlanForm({
       </Col>
 
       <Col xs={12}>
-        <Panel bordered>
+        <Panel
+          header={t('memberplanForm.trialSubscription')}
+          bordered
+        >
+          {/* tags */}
           <Row>
-            {/* tags */}
             <Col xs={24}>
               <Form.Label>{t('memberPlanEdit.tags')}</Form.Label>
               <TagPicker
@@ -379,9 +396,155 @@ export function MemberPlanForm({
                 }}
               />
             </Col>
+          </Row>
 
-            {/* Currency */}
+          {/* automatically configure trial subscription */}
+          <RowPaddingTop>
             <Col xs={24}>
+              {isTrialSubscription ?
+                <Alert
+                  icon={<MdCheck />}
+                  severity="success"
+                >
+                  {t('memberplanForm.trialMemberplanAlert')}
+                </Alert>
+              : <Button
+                  startIcon={<MdAutoFixHigh />}
+                  onClick={() =>
+                    setExtendable(
+                      false,
+                      memberPlan ? { ...memberPlan, maxCount: 1 } : undefined
+                    )
+                  }
+                  disabled={isTrialSubscription}
+                  color={'green'}
+                >
+                  {t('memberplanForm.configureTrialBtn')}
+                </Button>
+              }
+            </Col>
+          </RowPaddingTop>
+          <RowPaddingTop>
+            {/* extendable */}
+            <Col xs={12}>
+              <Toggle
+                checked={memberPlan?.extendable}
+                onChange={extendable => setExtendable(extendable)}
+              />
+              <FormLabelMarginLeft>
+                {t('memberplanForm.extendableToggle')}
+              </FormLabelMarginLeft>
+              <Text>{t('memberplanForm.extendableHelpText')}</Text>
+            </Col>
+            {/* max count */}
+            <Col xs={12}>
+              <Label>{maxCountLabel}</Label>
+              <Input
+                placeholder={maxCountLabel}
+                type={'number'}
+                min={0}
+                value={memberPlan?.maxCount || undefined}
+                onChange={maxCount => {
+                  if (!memberPlan) {
+                    return;
+                  }
+                  setMemberPlan({
+                    ...memberPlan,
+                    maxCount: Number(maxCount) || null,
+                  });
+                }}
+              />
+              <Text>{maxCountHelpText}</Text>
+            </Col>
+          </RowPaddingTop>
+          <RowPaddingTop>
+            <Col xs={12}>
+              <Label>{t('memberplanForm.migratePMTitle')}</Label>
+              <Control
+                name="migrateToTargetPaymentMethodID"
+                block
+                virtualized
+                disabled={loading}
+                data={paymentMethods.map(pm => ({
+                  value: pm.id,
+                  label: pm.name,
+                }))}
+                value={memberPlan?.migrateToTargetPaymentMethodID}
+                accepter={SelectPicker}
+                placement="auto"
+                onChange={migrateToTargetPaymentMethodID =>
+                  setMemberPlan({
+                    ...(memberPlan as FullMemberPlanFragment),
+                    migrateToTargetPaymentMethodID:
+                      migrateToTargetPaymentMethodID || null,
+                  })
+                }
+              />
+              <Text>{t('memberplanForm.migratePMHelptext')}</Text>
+            </Col>
+          </RowPaddingTop>
+
+          {/* redirections */}
+          <DividerTextAlignLeft>
+            {t('memberplanForm.redirectionsTitle')}
+          </DividerTextAlignLeft>
+          <Row>
+            <Form.Label>{t('memberPlanEdit.successPage')}</Form.Label>
+            <SelectPage
+              setSelectedPage={successPageId => {
+                if (!memberPlan) {
+                  return;
+                }
+
+                setMemberPlan({ ...memberPlan, successPageId });
+              }}
+              selectedPage={memberPlan?.successPageId}
+              name="successPageId"
+            />
+          </Row>
+
+          <RowPaddingTop>
+            <Form.Label>{t('memberPlanEdit.failPage')}</Form.Label>
+            <SelectPage
+              setSelectedPage={failPageId => {
+                if (!memberPlan) {
+                  return;
+                }
+
+                setMemberPlan({ ...memberPlan, failPageId });
+              }}
+              selectedPage={memberPlan?.failPageId}
+              name="failPageId"
+            />
+          </RowPaddingTop>
+
+          <RowPaddingTop>
+            <Form.Label>{t('memberplanForm.confirmationPage')}</Form.Label>
+            <SelectPage
+              setSelectedPage={confirmationPageId => {
+                if (!memberPlan) {
+                  return;
+                }
+
+                setMemberPlan({ ...memberPlan, confirmationPageId });
+              }}
+              selectedPage={memberPlan?.confirmationPageId}
+              name="failPageId"
+            />
+          </RowPaddingTop>
+          <Text>{t('memberplanForm.confirmationPageHelptext')}</Text>
+        </Panel>
+      </Col>
+
+      {/* payment method settings */}
+      <Col xs={24}>
+        <PanelWidth100
+          header={t('memberPlanEdit.paymentConfigs')}
+          bordered
+        >
+          <Row>
+            {/* currency */}
+            <Col xs={12}>
               <Form.Label>{t('memberPlanEdit.currency')}</Form.Label>
               <SelectPicker
                 name="currency"
@@ -403,82 +566,7 @@ export function MemberPlanForm({
               />
             </Col>
 
-            {/* minimal monthly amount */}
             <Col xs={12}>
-              <Form.Label>{t('memberPlanEdit.amountPerMonthMin')}</Form.Label>
-              <CurrencyInput
-                name="amountPerMonthMin"
-                currency={memberPlan?.currency ?? 'CHF'}
-                centAmount={memberPlan?.amountPerMonthMin || 0}
-                disabled={loading}
-                onChange={centAmount => {
-                  if (!memberPlan) {
-                    return;
-                  }
-                  setMemberPlan({
-                    ...memberPlan,
-                    amountPerMonthMin: centAmount || 0,
-                  });
-                }}
-              />
-              <Text>{t('memberplanForm.amountPerMonthMinHelpText')}</Text>
-            </Col>
-
-            {/* maximal monthly amount */}
-            <Col xs={12}>
-              <Form.Label>{t('memberPlanEdit.amountPerMonthMax')}</Form.Label>
-              <CurrencyInput
-                name="amountPerMonthMax"
-                currency={memberPlan?.currency ?? 'CHF'}
-                centAmount={memberPlan?.amountPerMonthMax ?? null}
-                disabled={loading}
-                onChange={centAmount => {
-                  if (!memberPlan) {
-                    return;
-                  }
-                  setMemberPlan({
-                    ...memberPlan,
-                    amountPerMonthMax: centAmount ?? null,
-                  });
-                }}
-              />
-              <Text>{t('memberplanForm.amountPerMonthMaxHelpText')}</Text>
-            </Col>
-
-            {/* target monthly amount */}
-            <Col xs={12}>
-              <Form.Label>
-                {t('memberplanForm.amountPerMonthTarget')}
-              </Form.Label>
-              <CurrencyInput
-                name="amountPerMonthTarget"
-                currency={memberPlan?.currency ?? 'CHF'}
-                centAmount={memberPlan?.amountPerMonthTarget || 0}
-                disabled={loading}
-                onChange={centAmount => {
-                  if (!memberPlan) {
-                    return;
-                  }
-                  setMemberPlan({
-                    ...memberPlan,
-                    amountPerMonthTarget: centAmount || null,
-                  });
-                }}
-              />
-              <Text>{t('memberplanForm.amountPerMonthTargetHelpText')}</Text>
-            </Col>
-          </Row>
-        </Panel>
-      </Col>
-
-      {/* payment method settings */}
-      <Col xs={12}>
-        <Panel
-          header={t('memberPlanEdit.paymentConfigs')}
-          bordered
-        >
-          <Row>
-            <Col xs={24}>
               <ListInput
                 value={availablePaymentMethods}
                 disabled={loading}
@@ -577,154 +665,13 @@ export function MemberPlanForm({
                 )}
               </ListInput>
             </Col>
-
-            <Col xs={24}>
-              <Row>
-                <Form.Label>{t('memberPlanEdit.successPage')}</Form.Label>
-                <SelectPage
-                  setSelectedPage={successPageId => {
-                    if (!memberPlan) {
-                      return;
-                    }
-
-                    setMemberPlan({ ...memberPlan, successPageId });
-                  }}
-                  selectedPage={memberPlan?.successPageId}
-                  name="successPageId"
-                />
-              </Row>
-
-              <RowPaddingTop>
-                <Form.Label>{t('memberPlanEdit.failPage')}</Form.Label>
-                <SelectPage
-                  setSelectedPage={failPageId => {
-                    if (!memberPlan) {
-                      return;
-                    }
-
-                    setMemberPlan({ ...memberPlan, failPageId });
-                  }}
-                  selectedPage={memberPlan?.failPageId}
-                  name="failPageId"
-                />
-              </RowPaddingTop>
-
-              <RowPaddingTop>
-                <Form.Label>{t('memberplanForm.confirmationPage')}</Form.Label>
-                <SelectPage
-                  setSelectedPage={confirmationPageId => {
-                    if (!memberPlan) {
-                      return;
-                    }
-
-                    setMemberPlan({ ...memberPlan, confirmationPageId });
-                  }}
-                  selectedPage={memberPlan?.confirmationPageId}
-                  name="failPageId"
-                />
-              </RowPaddingTop>
-              <Text>{t('memberplanForm.confirmationPageHelptext')}</Text>
-            </Col>
           </Row>
-        </Panel>
+        </PanelWidth100>
       </Col>
 
-      <Col xs={12}>
-        <Panel
-          header={t('memberplanForm.trialSubscription')}
-          bordered
-        >
-          {/* automatically configure trial subscription */}
-          <Row>
-            <Col xs={24}>
-              {isTrialSubscription ?
-                <Alert
-                  icon={<MdCheck />}
-                  severity="success"
-                >
-                  {t('memberplanForm.trialMemberplanAlert')}
-                </Alert>
-              : <Button
-                  startIcon={<MdAutoFixHigh />}
-                  onClick={() =>
-                    setExtendable(
-                      false,
-                      memberPlan ? { ...memberPlan, maxCount: 1 } : undefined
-                    )
-                  }
-                  disabled={isTrialSubscription}
-                  color={'green'}
-                >
-                  {t('memberplanForm.configureTrialBtn')}
-                </Button>
-              }
-            </Col>
-          </Row>
-          <RowPaddingTop>
-            {/* extendable */}
-            <Col xs={12}>
-              <Toggle
-                checked={memberPlan?.extendable}
-                onChange={extendable => setExtendable(extendable)}
-              />
-              <FormLabelMarginLeft>
-                {t('memberplanForm.extendableToggle')}
-              </FormLabelMarginLeft>
-              <Text>{t('memberplanForm.extendableHelpText')}</Text>
-            </Col>
-            {/* max count */}
-            <Col xs={12}>
-              <Label>{maxCountLabel}</Label>
-              <Input
-                placeholder={maxCountLabel}
-                type={'number'}
-                min={0}
-                value={memberPlan?.maxCount || undefined}
-                onChange={maxCount => {
-                  if (!memberPlan) {
-                    return;
-                  }
-                  setMemberPlan({
-                    ...memberPlan,
-                    maxCount: Number(maxCount) || null,
-                  });
-                }}
-              />
-              <Text>{maxCountHelpText}</Text>
-            </Col>
-          </RowPaddingTop>
-          <RowPaddingTop>
-            <Col xs={12}>
-              <Label>{t('memberplanForm.migratePMTitle')}</Label>
-              <Control
-                name="migrateToTargetPaymentMethodID"
-                block
-                virtualized
-                disabled={loading}
-                data={paymentMethods.map(pm => ({
-                  value: pm.id,
-                  label: pm.name,
-                }))}
-                value={memberPlan?.migrateToTargetPaymentMethodID}
-                accepter={SelectPicker}
-                placement="auto"
-                onChange={migrateToTargetPaymentMethodID =>
-                  setMemberPlan({
-                    ...(memberPlan as FullMemberPlanFragment),
-                    migrateToTargetPaymentMethodID:
-                      migrateToTargetPaymentMethodID || null,
-                  })
-                }
-              />
-              <Text>{t('memberplanForm.migratePMHelptext')}</Text>
-            </Col>
-          </RowPaddingTop>
-        </Panel>
-      </Col>
-
-      {/* per-periodicity pricing */}
+      {/* pricing */}
       <Col xs={24}>
-        <MemberPlanPeriodicityPricing
+        <MemberPlanPricing
           memberPlan={memberPlan}
           availablePaymentMethods={availablePaymentMethods}
           loading={loading}
