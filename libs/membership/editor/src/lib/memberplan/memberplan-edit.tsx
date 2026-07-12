@@ -98,6 +98,7 @@ function MemberPlanEdit() {
       amountPerMonthMax: null,
       amountPerMonthTarget: null,
       periodicityPricing: null,
+      defaultPaymentPeriodicity: null,
       image: undefined,
       active: true,
       tags: [],
@@ -202,17 +203,41 @@ function MemberPlanEdit() {
         memberPlan.periodicityPricing
           ?.filter(
             price =>
-              price.periodicity !== PaymentPeriodicity.Monthly &&
               availablePaymentMethods.some(({ value }) =>
                 value.paymentPeriodicities.includes(price.periodicity)
-              )
+              ) &&
+              (price.periodicity === PaymentPeriodicity.Monthly ?
+                price.label != null
+              : price.label != null || price.amountMin != null)
           )
-          .map(({ periodicity, amountMin, amountTarget, amountMax }) => ({
-            periodicity,
-            amountMin,
-            amountTarget,
-            amountMax,
-          })) ?? null,
+          .map(({ periodicity, label, amountMin, amountTarget, amountMax }) =>
+            periodicity === PaymentPeriodicity.Monthly ?
+              {
+                periodicity,
+                label,
+                amountMin: null,
+                amountTarget: null,
+                amountMax: null,
+              }
+            : {
+                periodicity,
+                label,
+                amountMin,
+                amountTarget,
+                amountMax,
+              }
+          ) ?? null,
+      defaultPaymentPeriodicity:
+        (
+          memberPlan.defaultPaymentPeriodicity &&
+          availablePaymentMethods.some(({ value }) =>
+            value.paymentPeriodicities.includes(
+              memberPlan.defaultPaymentPeriodicity as PaymentPeriodicity
+            )
+          )
+        ) ?
+          memberPlan.defaultPaymentPeriodicity
+        : null,
       extendable: memberPlan.extendable,
       externalReward: memberPlan.externalReward,
       maxCount: memberPlan.maxCount,

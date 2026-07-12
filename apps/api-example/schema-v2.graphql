@@ -2328,6 +2328,7 @@ type MemberPlan implements HasImage {
   confirmationPage: Page
   confirmationPageId: String
   currency: Currency!
+  defaultPaymentPeriodicity: PaymentPeriodicity
   description: RichText
   extendable: Boolean!
   externalReward: String
@@ -2450,7 +2451,7 @@ type Mutation {
   createMailTemplate(input: MailTemplateInput!): MailTemplateModel!
 
   """Creates a new memberplan."""
-  createMemberPlan(active: Boolean!, amountPerMonthMax: Int, amountPerMonthMin: Int!, amountPerMonthTarget: Int, availablePaymentMethods: [AvailablePaymentMethodInput!]!, confirmationPageId: String, currency: Currency!, description: RichText, extendable: Boolean!, externalReward: String, failPageId: String, imageID: String, maxCount: Int, migrateToTargetPaymentMethodID: String, name: String!, periodicityPricing: [PeriodicityPriceInput!], productType: ProductType!, shortDescription: RichText, slug: String!, successPageId: String, tags: [String!]): MemberPlan!
+  createMemberPlan(active: Boolean!, amountPerMonthMax: Int, amountPerMonthMin: Int!, amountPerMonthTarget: Int, availablePaymentMethods: [AvailablePaymentMethodInput!]!, confirmationPageId: String, currency: Currency!, defaultPaymentPeriodicity: PaymentPeriodicity, description: RichText, extendable: Boolean!, externalReward: String, failPageId: String, imageID: String, maxCount: Int, migrateToTargetPaymentMethodID: String, name: String!, periodicityPricing: [PeriodicityPriceInput!], productType: ProductType!, shortDescription: RichText, slug: String!, successPageId: String, tags: [String!]): MemberPlan!
 
   """Creates a new navigation."""
   createNavigation(key: String!, links: [NavigationLinkInput!]!, name: String!): Navigation!
@@ -2876,7 +2877,7 @@ type Mutation {
   updateMailTemplate(id: String!, input: MailTemplateInput!): MailTemplateModel!
 
   """Updates an existing memberplan."""
-  updateMemberPlan(active: Boolean, amountPerMonthMax: Int, amountPerMonthMin: Int, amountPerMonthTarget: Int, availablePaymentMethods: [AvailablePaymentMethodInput!], confirmationPageId: String, currency: Currency, description: RichText, extendable: Boolean, externalReward: String, failPageId: String, id: String!, imageID: String, maxCount: Int, migrateToTargetPaymentMethodID: String, name: String, periodicityPricing: [PeriodicityPriceInput!], productType: ProductType, shortDescription: RichText, slug: String, successPageId: String, tags: [String!]): MemberPlan!
+  updateMemberPlan(active: Boolean, amountPerMonthMax: Int, amountPerMonthMin: Int, amountPerMonthTarget: Int, availablePaymentMethods: [AvailablePaymentMethodInput!], confirmationPageId: String, currency: Currency, defaultPaymentPeriodicity: PaymentPeriodicity, description: RichText, extendable: Boolean, externalReward: String, failPageId: String, id: String!, imageID: String, maxCount: Int, migrateToTargetPaymentMethodID: String, name: String, periodicityPricing: [PeriodicityPriceInput!], productType: ProductType, shortDescription: RichText, slug: String, successPageId: String, tags: [String!]): MemberPlan!
 
   """Updates an existing navigation."""
   updateNavigation(id: String!, key: String!, links: [NavigationLinkInput!]!, name: String!): Navigation!
@@ -3600,15 +3601,17 @@ type PeriodicJob {
 
 type PeriodicityPrice {
   amountMax: Int
-  amountMin: Int!
+  amountMin: Int
   amountTarget: Int
+  label: String
   periodicity: PaymentPeriodicity!
 }
 
 input PeriodicityPriceInput {
   amountMax: Int
-  amountMin: Int!
+  amountMin: Int
   amountTarget: Int
+  label: String
   periodicity: PaymentPeriodicity!
 }
 
@@ -4694,6 +4697,7 @@ type SubscribeBlock implements BaseBlock {
   memberPlanIds: [String!]!
   memberPlanRenderSettings: [SubscribeBlockMemberPlanRenderSetting!]!
   memberPlans: [MemberPlan!]!
+  periodicityDisplay: SubscribePeriodicityDisplay
   showDiscountCodes: Boolean!
   showGoodies: Boolean!
   type: BlockType!
@@ -4717,6 +4721,7 @@ input SubscribeBlockInput {
   hideRepeatGoodieOnUpgrade: Boolean! = false
   memberPlanIds: [String!]! = []
   memberPlanRenderSettings: [SubscribeBlockMemberPlanRenderSettingInput!]!
+  periodicityDisplay: SubscribePeriodicityDisplay
   showDiscountCodes: Boolean! = false
   showGoodies: Boolean! = false
 }
@@ -4762,6 +4767,11 @@ enum SubscribeBlockRenderLayout {
   None
   Picker
   Slider
+}
+
+enum SubscribePeriodicityDisplay {
+  Dropdown
+  OfferCards
 }
 
 type SubscriptionCreatedAction implements BaseAction & HasSubscriptionLc {

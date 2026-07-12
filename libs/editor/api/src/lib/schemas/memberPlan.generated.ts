@@ -14,7 +14,7 @@ export type FullAvailablePaymentMethodFragment = { __typename?: 'AvailablePaymen
     & FullPaymentMethodFragment
   )> };
 
-export type FullMemberPlanFragment = { __typename?: 'MemberPlan', id: string, name: string, description?: RichtextJSONDocument | null, shortDescription?: RichtextJSONDocument | null, slug: string, active: boolean, productType: Types.ProductType, tags?: Array<string> | null, externalReward?: string | null, currency: Types.Currency, extendable: boolean, maxCount?: number | null, migrateToTargetPaymentMethodID?: string | null, amountPerMonthMin: number, amountPerMonthMax?: number | null, amountPerMonthTarget?: number | null, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, periodicityPricing?: Array<{ __typename?: 'PeriodicityPrice', periodicity: Types.PaymentPeriodicity, amountMin: number, amountTarget?: number | null, amountMax?: number | null }> | null, image?: (
+export type FullMemberPlanFragment = { __typename?: 'MemberPlan', id: string, name: string, description?: RichtextJSONDocument | null, shortDescription?: RichtextJSONDocument | null, slug: string, active: boolean, productType: Types.ProductType, tags?: Array<string> | null, externalReward?: string | null, currency: Types.Currency, extendable: boolean, maxCount?: number | null, migrateToTargetPaymentMethodID?: string | null, amountPerMonthMin: number, amountPerMonthMax?: number | null, amountPerMonthTarget?: number | null, defaultPaymentPeriodicity?: Types.PaymentPeriodicity | null, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, periodicityPricing?: Array<{ __typename?: 'PeriodicityPrice', periodicity: Types.PaymentPeriodicity, label?: string | null, amountMin?: number | null, amountTarget?: number | null, amountMax?: number | null }> | null, image?: (
     { __typename?: 'Image' }
     & FullImageFragment
   ) | null, availablePaymentMethods: Array<(
@@ -58,6 +58,7 @@ export type CreateMemberPlanMutationVariables = Types.Exact<{
   amountPerMonthMin: Types.Scalars['Int'];
   amountPerMonthTarget?: Types.InputMaybe<Types.Scalars['Int']>;
   periodicityPricing?: Types.InputMaybe<Array<Types.PeriodicityPriceInput> | Types.PeriodicityPriceInput>;
+  defaultPaymentPeriodicity?: Types.InputMaybe<Types.PaymentPeriodicity>;
   confirmationPageId?: Types.InputMaybe<Types.Scalars['String']>;
   failPageId?: Types.InputMaybe<Types.Scalars['String']>;
   successPageId?: Types.InputMaybe<Types.Scalars['String']>;
@@ -89,6 +90,7 @@ export type UpdateMemberPlanMutationVariables = Types.Exact<{
   amountPerMonthMin?: Types.InputMaybe<Types.Scalars['Int']>;
   amountPerMonthTarget?: Types.InputMaybe<Types.Scalars['Int']>;
   periodicityPricing?: Types.InputMaybe<Array<Types.PeriodicityPriceInput> | Types.PeriodicityPriceInput>;
+  defaultPaymentPeriodicity?: Types.InputMaybe<Types.PaymentPeriodicity>;
   confirmationPageId?: Types.InputMaybe<Types.Scalars['String']>;
   failPageId?: Types.InputMaybe<Types.Scalars['String']>;
   successPageId?: Types.InputMaybe<Types.Scalars['String']>;
@@ -148,10 +150,12 @@ export const FullMemberPlanFragmentDoc = gql`
   amountPerMonthTarget
   periodicityPricing {
     periodicity
+    label
     amountMin
     amountTarget
     amountMax
   }
+  defaultPaymentPeriodicity
   successPageId
   failPageId
   confirmationPageId
@@ -265,7 +269,7 @@ export type MemberPlanQueryHookResult = ReturnType<typeof useMemberPlanQuery>;
 export type MemberPlanLazyQueryHookResult = ReturnType<typeof useMemberPlanLazyQuery>;
 export type MemberPlanQueryResult = Apollo.QueryResult<MemberPlanQuery, MemberPlanQueryVariables>;
 export const CreateMemberPlanDocument = gql`
-    mutation CreateMemberPlan($name: String!, $slug: String!, $active: Boolean!, $shortDescription: RichText, $description: RichText, $imageID: String, $amountPerMonthMax: Int, $amountPerMonthMin: Int!, $amountPerMonthTarget: Int, $periodicityPricing: [PeriodicityPriceInput!], $confirmationPageId: String, $failPageId: String, $successPageId: String, $productType: ProductType!, $currency: Currency!, $extendable: Boolean!, $externalReward: String, $maxCount: Int, $availablePaymentMethods: [AvailablePaymentMethodInput!]!, $migrateToTargetPaymentMethodID: String, $tags: [String!]!) {
+    mutation CreateMemberPlan($name: String!, $slug: String!, $active: Boolean!, $shortDescription: RichText, $description: RichText, $imageID: String, $amountPerMonthMax: Int, $amountPerMonthMin: Int!, $amountPerMonthTarget: Int, $periodicityPricing: [PeriodicityPriceInput!], $defaultPaymentPeriodicity: PaymentPeriodicity, $confirmationPageId: String, $failPageId: String, $successPageId: String, $productType: ProductType!, $currency: Currency!, $extendable: Boolean!, $externalReward: String, $maxCount: Int, $availablePaymentMethods: [AvailablePaymentMethodInput!]!, $migrateToTargetPaymentMethodID: String, $tags: [String!]!) {
   createMemberPlan(
     name: $name
     slug: $slug
@@ -277,6 +281,7 @@ export const CreateMemberPlanDocument = gql`
     amountPerMonthMin: $amountPerMonthMin
     amountPerMonthTarget: $amountPerMonthTarget
     periodicityPricing: $periodicityPricing
+    defaultPaymentPeriodicity: $defaultPaymentPeriodicity
     confirmationPageId: $confirmationPageId
     failPageId: $failPageId
     successPageId: $successPageId
@@ -323,6 +328,7 @@ export type CreateMemberPlanMutationFn = Apollo.MutationFunction<CreateMemberPla
  *      amountPerMonthMin: // value for 'amountPerMonthMin'
  *      amountPerMonthTarget: // value for 'amountPerMonthTarget'
  *      periodicityPricing: // value for 'periodicityPricing'
+ *      defaultPaymentPeriodicity: // value for 'defaultPaymentPeriodicity'
  *      confirmationPageId: // value for 'confirmationPageId'
  *      failPageId: // value for 'failPageId'
  *      successPageId: // value for 'successPageId'
@@ -345,7 +351,7 @@ export type CreateMemberPlanMutationHookResult = ReturnType<typeof useCreateMemb
 export type CreateMemberPlanMutationResult = Apollo.MutationResult<CreateMemberPlanMutation>;
 export type CreateMemberPlanMutationOptions = Apollo.BaseMutationOptions<CreateMemberPlanMutation, CreateMemberPlanMutationVariables>;
 export const UpdateMemberPlanDocument = gql`
-    mutation UpdateMemberPlan($id: String!, $name: String, $slug: String, $active: Boolean, $shortDescription: RichText, $description: RichText, $imageID: String, $amountPerMonthMax: Int, $amountPerMonthMin: Int, $amountPerMonthTarget: Int, $periodicityPricing: [PeriodicityPriceInput!], $confirmationPageId: String, $failPageId: String, $successPageId: String, $productType: ProductType!, $currency: Currency!, $extendable: Boolean!, $externalReward: String, $maxCount: Int, $availablePaymentMethods: [AvailablePaymentMethodInput!], $migrateToTargetPaymentMethodID: String, $tags: [String!]) {
+    mutation UpdateMemberPlan($id: String!, $name: String, $slug: String, $active: Boolean, $shortDescription: RichText, $description: RichText, $imageID: String, $amountPerMonthMax: Int, $amountPerMonthMin: Int, $amountPerMonthTarget: Int, $periodicityPricing: [PeriodicityPriceInput!], $defaultPaymentPeriodicity: PaymentPeriodicity, $confirmationPageId: String, $failPageId: String, $successPageId: String, $productType: ProductType!, $currency: Currency!, $extendable: Boolean!, $externalReward: String, $maxCount: Int, $availablePaymentMethods: [AvailablePaymentMethodInput!], $migrateToTargetPaymentMethodID: String, $tags: [String!]) {
   updateMemberPlan(
     id: $id
     name: $name
@@ -358,6 +364,7 @@ export const UpdateMemberPlanDocument = gql`
     amountPerMonthMin: $amountPerMonthMin
     amountPerMonthTarget: $amountPerMonthTarget
     periodicityPricing: $periodicityPricing
+    defaultPaymentPeriodicity: $defaultPaymentPeriodicity
     confirmationPageId: $confirmationPageId
     failPageId: $failPageId
     successPageId: $successPageId
@@ -405,6 +412,7 @@ export type UpdateMemberPlanMutationFn = Apollo.MutationFunction<UpdateMemberPla
  *      amountPerMonthMin: // value for 'amountPerMonthMin'
  *      amountPerMonthTarget: // value for 'amountPerMonthTarget'
  *      periodicityPricing: // value for 'periodicityPricing'
+ *      defaultPaymentPeriodicity: // value for 'defaultPaymentPeriodicity'
  *      confirmationPageId: // value for 'confirmationPageId'
  *      failPageId: // value for 'failPageId'
  *      successPageId: // value for 'successPageId'

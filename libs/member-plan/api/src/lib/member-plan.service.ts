@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { Prisma, PrismaClient } from '@prisma/client';
+import { PaymentPeriodicity, Prisma, PrismaClient } from '@prisma/client';
 import {
   getMaxTake,
   graphQLSortOrderToPrisma,
@@ -109,6 +109,7 @@ export class MemberPlanService {
         amountPerMonthMin: true,
         amountPerMonthMax: true,
         amountPerMonthTarget: true,
+        defaultPaymentPeriodicity: true,
         availablePaymentMethods: true,
       },
     });
@@ -133,6 +134,13 @@ export class MemberPlanService {
           null
         : ((input.amountPerMonthTarget as number | undefined) ??
           existingMemberPlan.amountPerMonthTarget),
+
+      defaultPaymentPeriodicity:
+        input.defaultPaymentPeriodicity === null ?
+          null
+        : ((input.defaultPaymentPeriodicity as
+            | PaymentPeriodicity
+            | undefined) ?? existingMemberPlan.defaultPaymentPeriodicity),
 
       availablePaymentMethods:
         availablePaymentMethods ?? existingMemberPlan.availablePaymentMethods,
@@ -180,6 +188,7 @@ export class MemberPlanService {
       amountPerMonthMin: input.amountPerMonthMin,
       amountPerMonthMax: input.amountPerMonthMax ?? null,
       amountPerMonthTarget: input.amountPerMonthTarget ?? null,
+      defaultPaymentPeriodicity: input.defaultPaymentPeriodicity ?? null,
       availablePaymentMethods,
     });
 
@@ -298,16 +307,32 @@ type MemberPlanIntegrityInput = {
   amountPerMonthMin: number;
   amountPerMonthMax: number | null;
   amountPerMonthTarget: number | null;
+  defaultPaymentPeriodicity: PaymentPeriodicity | null;
   availablePaymentMethods: Prisma.AvailablePaymentMethodUncheckedCreateWithoutMemberPlanInput[];
 };
+
+function toPeriodicityArray(
+  paymentPeriodicities: Prisma.AvailablePaymentMethodUncheckedCreateWithoutMemberPlanInput['paymentPeriodicities']
+): PaymentPeriodicity[] {
+  if (Array.isArray(paymentPeriodicities)) {
+    return paymentPeriodicities;
+  }
+
+  if (paymentPeriodicities?.set) {
+    return paymentPeriodicities.set;
+  }
+
+  return [];
+}
 
 function periodicityPricingToJson(
   periodicityPricing: PeriodicityPriceInput[] | undefined | null
 ): Prisma.InputJsonValue[] | undefined {
   return periodicityPricing?.map(
-    ({ periodicity, amountMin, amountTarget, amountMax }) => ({
+    ({ periodicity, label, amountMin, amountTarget, amountMax }) => ({
       periodicity,
-      amountMin,
+      label: label ?? null,
+      amountMin: amountMin ?? null,
       amountTarget: amountTarget ?? null,
       amountMax: amountMax ?? null,
     })
@@ -336,6 +361,7 @@ function checkMemberPlanIntegrity(input: MemberPlanIntegrityInput): void {
     amountPerMonthMin,
     amountPerMonthMax,
     amountPerMonthTarget,
+    defaultPaymentPeriodicity,
     availablePaymentMethods,
   } = input;
   const hasForceAutoRenew = !!availablePaymentMethods.find(
@@ -370,6 +396,19 @@ function checkMemberPlanIntegrity(input: MemberPlanIntegrityInput): void {
   ) {
     throw new BadRequestException(
       `Memberplan amountPerMonthTarget can not be higher than amountPerMonthMax`
+    );
+  }
+
+  if (
+    defaultPaymentPeriodicity != null &&
+    !availablePaymentMethods.some(apm =>
+      toPeriodicityArray(apm.paymentPeriodicities).includes(
+        defaultPaymentPeriodicity
+      )
+    )
+  ) {
+    throw new BadRequestException(
+      `Memberplan defaultPaymentPeriodicity has to be offered by at least one payment method`
     );
   }
 }

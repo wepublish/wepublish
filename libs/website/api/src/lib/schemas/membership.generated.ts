@@ -24,10 +24,10 @@ export type FullGoodieFragment = { __typename?: 'Goodie', id: string, name: stri
     & FullImageFragment
   ) | null };
 
-export type FullMemberPlanFragment = { __typename?: 'MemberPlan', id: string, slug: string, name: string, tags?: Array<string> | null, description?: RichtextJSONDocument | null, shortDescription?: RichtextJSONDocument | null, amountPerMonthMin: number, amountPerMonthMax?: number | null, amountPerMonthTarget?: number | null, currency: Types.Currency, extendable: boolean, productType: Types.ProductType, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: (
+export type FullMemberPlanFragment = { __typename?: 'MemberPlan', id: string, slug: string, name: string, tags?: Array<string> | null, description?: RichtextJSONDocument | null, shortDescription?: RichtextJSONDocument | null, amountPerMonthMin: number, amountPerMonthMax?: number | null, amountPerMonthTarget?: number | null, defaultPaymentPeriodicity?: Types.PaymentPeriodicity | null, currency: Types.Currency, extendable: boolean, productType: Types.ProductType, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: (
     { __typename?: 'Image' }
     & FullImageFragment
-  ) | null, periodicityPricing?: Array<{ __typename?: 'PeriodicityPrice', periodicity: Types.PaymentPeriodicity, amountMin: number, amountTarget?: number | null, amountMax?: number | null }> | null, availablePaymentMethods: Array<(
+  ) | null, periodicityPricing?: Array<{ __typename?: 'PeriodicityPrice', periodicity: Types.PaymentPeriodicity, label?: string | null, amountMin?: number | null, amountTarget?: number | null, amountMax?: number | null }> | null, availablePaymentMethods: Array<(
     { __typename?: 'AvailablePaymentMethod' }
     & FullAvailablePaymentMethodFragment
   )>, successPage?: { __typename?: 'Page', url: string } | null, failPage?: { __typename?: 'Page', url: string } | null, confirmationPage?: { __typename?: 'Page', url: string } | null, goodies: Array<(
@@ -329,10 +329,12 @@ export const FullMemberPlanFragmentDoc = gql`
   amountPerMonthTarget
   periodicityPricing {
     periodicity
+    label
     amountMin
     amountTarget
     amountMax
   }
+  defaultPaymentPeriodicity
   currency
   availablePaymentMethods {
     ...FullAvailablePaymentMethod
