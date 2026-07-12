@@ -3,11 +3,15 @@ import {
   BuilderPaymentAmountPickerProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { Currency } from '@wepublish/website/api';
+import { Currency, PaymentPeriodicity } from '@wepublish/website/api';
 import { forwardRef, PropsWithChildren, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { formatCurrency } from '../../formatters/format-currency';
+import {
+  calculatePeriodAmount,
+  monthlyAmountFromPeriodAmount,
+} from '../../formatters/format-payment-period';
 import {
   CurrencyNumberSpinner,
   CurrencyNumberSpinnerSnap,
@@ -155,6 +159,7 @@ export const PaymentAmountPicker = forwardRef<
       snap,
       arrows,
       noInitialSelection,
+      paymentPeriodicity = PaymentPeriodicity.Monthly,
       name,
       error,
       value,
@@ -170,10 +175,22 @@ export const PaymentAmountPicker = forwardRef<
     const [hasInteracted, setHasInteracted] = useState(false);
     const showSelection = !noInitialSelection || hasInteracted;
     const items = presetAmounts ?? [];
+    const periodValue = calculatePeriodAmount(value, paymentPeriodicity);
+    const periodMin = calculatePeriodAmount(
+      amountPerMonthMin,
+      paymentPeriodicity
+    );
+    const handlePeriodAmountChange = (periodAmount: number) =>
+      onChange(
+        monthlyAmountFromPeriodAmount(
+          Math.round(periodAmount),
+          paymentPeriodicity
+        )
+      );
     const isCustomValue =
       snap ?
-        !snap.values.some(v => v * 100 === value)
-      : !items.some(p => p === value);
+        !snap.values.some(v => v * 100 === periodValue)
+      : !items.some(p => p === periodValue);
 
     return (
       <PaymentAmountPickerWrapper
@@ -182,10 +199,10 @@ export const PaymentAmountPicker = forwardRef<
         onChange={event => {
           if (+event.target.value) {
             setHasInteracted(true);
-            onChange(+event.target.value);
+            handlePeriodAmountChange(+event.target.value);
           }
         }}
-        value={value}
+        value={periodValue}
       >
         {items.map(itemAmount => (
           <FormControlLabel
@@ -194,7 +211,7 @@ export const PaymentAmountPicker = forwardRef<
             control={
               <PaymentAmountPickerItem
                 currency={currency}
-                checked={showSelection && itemAmount === value}
+                checked={showSelection && itemAmount === periodValue}
               >
                 <PaymentAmountPickerItemAmount>
                   {format ?
@@ -215,17 +232,17 @@ export const PaymentAmountPicker = forwardRef<
               checked={showSelection && isCustomValue}
             >
               <StyledCurrencyNumberSpinner
-                value={showSelection ? value / 100 : undefined}
-                min={amountPerMonthMin / 100}
+                value={showSelection ? periodValue / 100 : undefined}
+                min={periodMin / 100}
                 snap={snap}
                 arrows={arrows}
-                helperText={`Min ${formatCurrency(amountPerMonthMin / 100, currency, locale)}`}
+                helperText={`Min ${formatCurrency(periodMin / 100, currency, locale)}`}
                 onValueChange={v => {
                   setHasInteracted(true);
                   if (typeof v === 'number' && v >= 0) {
-                    onChange(v ? v * 100 : 0);
+                    handlePeriodAmountChange(v ? v * 100 : 0);
                   } else {
-                    onChange(0);
+                    handlePeriodAmountChange(0);
                   }
                 }}
               />
