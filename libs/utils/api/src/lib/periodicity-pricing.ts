@@ -28,23 +28,42 @@ export function monthlyAmountFromPeriodAmount(
 
 export const periodicityPriceSchema = z
   .object({
-    periodicity: z
-      .nativeEnum(PaymentPeriodicity)
-      .refine(periodicity => periodicity !== PaymentPeriodicity.monthly, {
-        message: 'monthly prices always derive from the amountPerMonth fields',
-      }),
-    amountMin: z.number().int().min(0),
+    periodicity: z.nativeEnum(PaymentPeriodicity),
+    label: z.string().trim().min(1).max(60).nullish(),
+    amountMin: z.number().int().min(0).nullish(),
     amountTarget: z.number().int().min(0).nullish(),
     amountMax: z.number().int().min(0).nullish(),
   })
   .refine(
-    price => price.amountMax == null || price.amountMax >= price.amountMin,
+    price =>
+      price.periodicity !== PaymentPeriodicity.monthly ||
+      (price.amountMin == null &&
+        price.amountTarget == null &&
+        price.amountMax == null),
+    {
+      message: 'monthly prices always derive from the amountPerMonth fields',
+    }
+  )
+  .refine(
+    price =>
+      price.amountMin != null ||
+      (price.amountTarget == null && price.amountMax == null),
+    {
+      message: 'amountTarget and amountMax require amountMin',
+    }
+  )
+  .refine(
+    price =>
+      price.amountMin == null ||
+      price.amountMax == null ||
+      price.amountMax >= price.amountMin,
     {
       message: 'amountMax has to be greater or equal amountMin',
     }
   )
   .refine(
     price =>
+      price.amountMin == null ||
       price.amountTarget == null ||
       (price.amountTarget >= price.amountMin &&
         (price.amountMax == null || price.amountTarget <= price.amountMax)),

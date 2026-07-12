@@ -4,8 +4,12 @@ import {
   BuilderPaymentAmountProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { Currency } from '@wepublish/website/api';
+import { Currency, PaymentPeriodicity } from '@wepublish/website/api';
 import { formatCurrency } from '../../formatters/format-currency';
+import {
+  calculatePeriodAmount,
+  monthlyAmountFromPeriodAmount,
+} from '../../formatters/format-payment-period';
 import { forwardRef } from 'react';
 
 export const PaymentAmountSliderWrapper = styled('div')`
@@ -30,6 +34,7 @@ export const PaymentAmountSlider = forwardRef<
       currency,
       amountPerMonthMin,
       amountPerMonthMax,
+      paymentPeriodicity = PaymentPeriodicity.Monthly,
       donate,
       name,
       value,
@@ -42,16 +47,34 @@ export const PaymentAmountSlider = forwardRef<
       meta: { locale },
     } = useWebsiteBuilder();
 
+    const periodValue = calculatePeriodAmount(value, paymentPeriodicity);
+    const periodMin = calculatePeriodAmount(
+      amountPerMonthMin,
+      paymentPeriodicity
+    );
+    const periodMax =
+      amountPerMonthMax != null ?
+        calculatePeriodAmount(amountPerMonthMax, paymentPeriodicity)
+      : periodMin * 5;
+
+    const handlePeriodAmountChange = (periodAmount: number) =>
+      onChange(
+        monthlyAmountFromPeriodAmount(
+          Math.round(periodAmount),
+          paymentPeriodicity
+        )
+      );
+
     return (
       <PaymentAmountSliderWrapper className={className}>
         {!donate && (
           <Slider
             ref={ref}
             name={name}
-            value={value}
-            onChange={(_, val) => onChange(val as number)}
-            min={amountPerMonthMin}
-            max={amountPerMonthMax ?? amountPerMonthMin * 5}
+            value={periodValue}
+            onChange={(_, val) => handlePeriodAmountChange(val as number)}
+            min={periodMin}
+            max={periodMax}
             valueLabelFormat={val =>
               formatCurrency(val / 100, currency ?? Currency.Chf, locale)
             }
@@ -63,13 +86,15 @@ export const PaymentAmountSlider = forwardRef<
         {donate && (
           <TextField
             name={name}
-            value={Math.round(value) / 100}
-            onChange={event => onChange(Math.round(+event.target.value * 100))}
+            value={Math.round(periodValue) / 100}
+            onChange={event =>
+              handlePeriodAmountChange(Math.round(+event.target.value * 100))
+            }
             type={'number'}
             fullWidth
             inputProps={{
               step: 'any',
-              min: amountPerMonthMin / 100,
+              min: periodMin / 100,
             }}
             InputProps={{
               startAdornment: (

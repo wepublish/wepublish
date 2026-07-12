@@ -263,6 +263,7 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
     defaultValue: {
       blockStyle: undefined,
       memberPlanIds: [],
+      periodicityDisplay: null,
       fields: [
         SubscribeBlockField.FirstName,
         SubscribeBlockField.Password,

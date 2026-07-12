@@ -1667,6 +1667,7 @@ type MemberPlan implements HasImage {
   confirmationPage: Page
   confirmationPageId: String
   currency: Currency!
+  defaultPaymentPeriodicity: PaymentPeriodicity
   description: RichText
   extendable: Boolean!
   externalReward: String
@@ -1766,7 +1767,7 @@ type Mutation {
   createJWTForWebsiteLogin: SessionWithToken!
 
   """Creates a new memberplan."""
-  createMemberPlan(active: Boolean!, amountPerMonthMax: Int, amountPerMonthMin: Int!, amountPerMonthTarget: Int, availablePaymentMethods: [AvailablePaymentMethodInput!]!, confirmationPageId: String, currency: Currency!, description: RichText, extendable: Boolean!, externalReward: String, failPageId: String, imageID: String, maxCount: Int, migrateToTargetPaymentMethodID: String, name: String!, periodicityPricing: [PeriodicityPriceInput!], productType: ProductType!, shortDescription: RichText, slug: String!, successPageId: String, tags: [String!]): MemberPlan!
+  createMemberPlan(active: Boolean!, amountPerMonthMax: Int, amountPerMonthMin: Int!, amountPerMonthTarget: Int, availablePaymentMethods: [AvailablePaymentMethodInput!]!, confirmationPageId: String, currency: Currency!, defaultPaymentPeriodicity: PaymentPeriodicity, description: RichText, extendable: Boolean!, externalReward: String, failPageId: String, imageID: String, maxCount: Int, migrateToTargetPaymentMethodID: String, name: String!, periodicityPricing: [PeriodicityPriceInput!], productType: ProductType!, shortDescription: RichText, slug: String!, successPageId: String, tags: [String!]): MemberPlan!
 
   """Creates a new navigation."""
   createNavigation(key: String!, links: [NavigationLinkInput!]!, name: String!): Navigation!
@@ -2161,7 +2162,7 @@ type Mutation {
   updateMailProviderSetting(apiKey: String, fromAddress: String, id: String, mailchimp_baseURL: String, mailgun_baseDomain: String, mailgun_mailDomain: String, name: String, replyToAddress: String, slack_webhookURL: String, webhookEndpointSecret: String): SettingMailProvider!
 
   """Updates an existing memberplan."""
-  updateMemberPlan(active: Boolean, amountPerMonthMax: Int, amountPerMonthMin: Int, amountPerMonthTarget: Int, availablePaymentMethods: [AvailablePaymentMethodInput!], confirmationPageId: String, currency: Currency, description: RichText, extendable: Boolean, externalReward: String, failPageId: String, id: String!, imageID: String, maxCount: Int, migrateToTargetPaymentMethodID: String, name: String, periodicityPricing: [PeriodicityPriceInput!], productType: ProductType, shortDescription: RichText, slug: String, successPageId: String, tags: [String!]): MemberPlan!
+  updateMemberPlan(active: Boolean, amountPerMonthMax: Int, amountPerMonthMin: Int, amountPerMonthTarget: Int, availablePaymentMethods: [AvailablePaymentMethodInput!], confirmationPageId: String, currency: Currency, defaultPaymentPeriodicity: PaymentPeriodicity, description: RichText, extendable: Boolean, externalReward: String, failPageId: String, id: String!, imageID: String, maxCount: Int, migrateToTargetPaymentMethodID: String, name: String, periodicityPricing: [PeriodicityPriceInput!], productType: ProductType, shortDescription: RichText, slug: String, successPageId: String, tags: [String!]): MemberPlan!
 
   """Updates an existing navigation."""
   updateNavigation(id: String!, key: String!, links: [NavigationLinkInput!]!, name: String!): Navigation!
@@ -2834,15 +2835,17 @@ type PeriodicJob {
 
 type PeriodicityPrice {
   amountMax: Int
-  amountMin: Int!
+  amountMin: Int
   amountTarget: Int
+  label: String
   periodicity: PaymentPeriodicity!
 }
 
 input PeriodicityPriceInput {
   amountMax: Int
-  amountMin: Int!
+  amountMin: Int
   amountTarget: Int
+  label: String
   periodicity: PaymentPeriodicity!
 }
 
@@ -3840,6 +3843,7 @@ type SubscribeBlock implements BaseBlock {
   fields: [SubscribeBlockField!]!
   memberPlanIds: [String!]
   memberPlans: [MemberPlan!]!
+  periodicityDisplay: SubscribePeriodicityDisplay
   type: BlockType!
 }
 
@@ -3858,6 +3862,12 @@ input SubscribeBlockInput {
   disabled: Boolean
   fields: [SubscribeBlockField!]! = [FirstName, Password, PasswordRepeated, Address]
   memberPlanIds: [String!]
+  periodicityDisplay: SubscribePeriodicityDisplay
+}
+
+enum SubscribePeriodicityDisplay {
+  Dropdown
+  OfferCards
 }
 
 type SubscriptionCreatedAction implements BaseAction & HasSubscriptionLc {

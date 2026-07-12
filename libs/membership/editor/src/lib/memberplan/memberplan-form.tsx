@@ -5,6 +5,7 @@ import {
   FullPaymentMethodFragment,
   FullImageFragment,
   PaymentMethod,
+  PaymentPeriodicity,
   ProductType,
   FullAvailablePaymentMethodFragment,
 } from '@wepublish/editor/api';
@@ -123,6 +124,16 @@ export function MemberPlanForm({
     () => !memberPlan?.extendable && !!memberPlan?.maxCount,
     [memberPlan]
   );
+
+  const enabledPeriodicities = useMemo(() => {
+    const enabled = new Set(
+      availablePaymentMethods.flatMap(({ value }) => value.paymentPeriodicities)
+    );
+
+    return ALL_PAYMENT_PERIODICITIES.filter(periodicity =>
+      enabled.has(periodicity)
+    );
+  }, [availablePaymentMethods]);
 
   function setExtendable(
     extendable: boolean,
@@ -586,6 +597,44 @@ export function MemberPlanForm({
                   setMemberPlan({ ...memberPlan, currency });
                 }}
               />
+
+              {/* default payment periodicity */}
+              <RowPaddingTop>
+                <Col xs={24}>
+                  <Form.ControlLabel>
+                    {t('memberplanForm.defaultPaymentPeriodicity')}
+                  </Form.ControlLabel>
+                  <SelectPicker
+                    cleanable
+                    searchable={false}
+                    block
+                    placement="auto"
+                    value={memberPlan?.defaultPaymentPeriodicity ?? null}
+                    data={enabledPeriodicities.map(periodicity => ({
+                      value: periodicity,
+                      label: t(
+                        `memberPlanList.paymentPeriodicity.${periodicity}`
+                      ),
+                    }))}
+                    disabled={loading}
+                    onChange={(
+                      defaultPaymentPeriodicity: PaymentPeriodicity | null
+                    ) => {
+                      if (!memberPlan) {
+                        return;
+                      }
+
+                      setMemberPlan({
+                        ...memberPlan,
+                        defaultPaymentPeriodicity,
+                      });
+                    }}
+                  />
+                  <HelpText>
+                    {t('memberplanForm.defaultPaymentPeriodicityHelpText')}
+                  </HelpText>
+                </Col>
+              </RowPaddingTop>
             </Col>
 
             <Col xs={12}>
