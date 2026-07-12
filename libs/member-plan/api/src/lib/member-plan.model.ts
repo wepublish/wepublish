@@ -65,8 +65,11 @@ export class PeriodicityPrice {
   @Field(() => PaymentPeriodicity)
   periodicity!: PaymentPeriodicity;
 
-  @Field(() => Int)
-  amountMin!: number;
+  @Field({ nullable: true })
+  label?: string;
+
+  @Field(() => Int, { nullable: true })
+  amountMin?: number;
 
   @Field(() => Int, { nullable: true })
   amountTarget?: number;
@@ -121,6 +124,9 @@ export class MemberPlan extends HasImage {
 
   @Field(() => [PeriodicityPrice], { nullable: true })
   periodicityPricing?: PeriodicityPrice[];
+
+  @Field(() => PaymentPeriodicity, { nullable: true })
+  defaultPaymentPeriodicity?: PaymentPeriodicity;
 
   @Field(() => Int, { nullable: true })
   maxCount?: number;
@@ -190,6 +196,7 @@ export class CreateMemberPlanInput extends PickType(
     'amountPerMonthMin',
     'amountPerMonthMax',
     'amountPerMonthTarget',
+    'defaultPaymentPeriodicity',
     'currency',
     'extendable',
     'productType',

@@ -2267,6 +2267,7 @@ export type MemberPlan = HasImage & {
   confirmationPage?: Maybe<Page>;
   confirmationPageId?: Maybe<Scalars['String']>;
   currency: Currency;
+  defaultPaymentPeriodicity?: Maybe<PaymentPeriodicity>;
   description?: Maybe<Scalars['RichText']>;
   extendable: Scalars['Boolean'];
   externalReward?: Maybe<Scalars['String']>;
@@ -2851,6 +2852,7 @@ export type MutationCreateMemberPlanArgs = {
   availablePaymentMethods: Array<AvailablePaymentMethodInput>;
   confirmationPageId?: InputMaybe<Scalars['String']>;
   currency: Currency;
+  defaultPaymentPeriodicity?: InputMaybe<PaymentPeriodicity>;
   description?: InputMaybe<Scalars['RichText']>;
   extendable: Scalars['Boolean'];
   externalReward?: InputMaybe<Scalars['String']>;
@@ -3606,6 +3608,7 @@ export type MutationUpdateMemberPlanArgs = {
   availablePaymentMethods?: InputMaybe<Array<AvailablePaymentMethodInput>>;
   confirmationPageId?: InputMaybe<Scalars['String']>;
   currency?: InputMaybe<Currency>;
+  defaultPaymentPeriodicity?: InputMaybe<PaymentPeriodicity>;
   description?: InputMaybe<Scalars['RichText']>;
   extendable?: InputMaybe<Scalars['Boolean']>;
   externalReward?: InputMaybe<Scalars['String']>;
@@ -4570,15 +4573,17 @@ export type PeriodicJob = {
 export type PeriodicityPrice = {
   __typename?: 'PeriodicityPrice';
   amountMax?: Maybe<Scalars['Int']>;
-  amountMin: Scalars['Int'];
+  amountMin?: Maybe<Scalars['Int']>;
   amountTarget?: Maybe<Scalars['Int']>;
+  label?: Maybe<Scalars['String']>;
   periodicity: PaymentPeriodicity;
 };
 
 export type PeriodicityPriceInput = {
   amountMax?: InputMaybe<Scalars['Int']>;
-  amountMin: Scalars['Int'];
+  amountMin?: InputMaybe<Scalars['Int']>;
   amountTarget?: InputMaybe<Scalars['Int']>;
+  label?: InputMaybe<Scalars['String']>;
   periodicity: PaymentPeriodicity;
 };
 
@@ -6147,6 +6152,7 @@ export type SubscribeBlock = BaseBlock & {
   memberPlanIds: Array<Scalars['String']>;
   memberPlanRenderSettings: Array<SubscribeBlockMemberPlanRenderSetting>;
   memberPlans: Array<MemberPlan>;
+  periodicityDisplay?: Maybe<SubscribePeriodicityDisplay>;
   showDiscountCodes: Scalars['Boolean'];
   showGoodies: Scalars['Boolean'];
   type: BlockType;
@@ -6170,6 +6176,7 @@ export type SubscribeBlockInput = {
   hideRepeatGoodieOnUpgrade?: Scalars['Boolean'];
   memberPlanIds?: Array<Scalars['String']>;
   memberPlanRenderSettings: Array<SubscribeBlockMemberPlanRenderSettingInput>;
+  periodicityDisplay?: InputMaybe<SubscribePeriodicityDisplay>;
   showDiscountCodes?: Scalars['Boolean'];
   showGoodies?: Scalars['Boolean'];
 };
@@ -6219,6 +6226,11 @@ export enum SubscribeBlockRenderLayout {
   None = 'None',
   Picker = 'Picker',
   Slider = 'Slider',
+}
+
+export enum SubscribePeriodicityDisplay {
+  Dropdown = 'Dropdown',
+  OfferCards = 'OfferCards',
 }
 
 export type SubscriptionCreatedAction = BaseAction &

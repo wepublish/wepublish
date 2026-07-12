@@ -45,10 +45,12 @@ fragment FullMemberPlan on MemberPlan {
   amountPerMonthTarget
   periodicityPricing {
     periodicity
+    label
     amountMin
     amountTarget
     amountMax
   }
+  defaultPaymentPeriodicity
   currency
   availablePaymentMethods {
     ...FullAvailablePaymentMethod
