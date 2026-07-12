@@ -264,6 +264,7 @@ fragment BlockWithoutTeaser on BlockContent {
     blockStyle
     blockStyleName
     memberPlanIds
+    periodicityDisplay
     fields
     type
   }

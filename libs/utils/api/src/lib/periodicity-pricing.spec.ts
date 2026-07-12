@@ -80,6 +80,57 @@ describe('periodicityPricingSchema', () => {
     expect(result.success).toBe(false);
   });
 
+  it('accepts a label-only monthly entry', () => {
+    const result = periodicityPricingSchema.safeParse([
+      { periodicity: PaymentPeriodicity.monthly, label: 'Beliebteste Wahl' },
+    ]);
+
+    expect(result.success).toBe(true);
+  });
+
+  it('accepts labels on price entries and label-only non-monthly entries', () => {
+    const result = periodicityPricingSchema.safeParse([
+      {
+        periodicity: PaymentPeriodicity.yearly,
+        label: '2 Monate geschenkt',
+        amountMin: 45000,
+      },
+      { periodicity: PaymentPeriodicity.quarterly, label: 'Flexibel' },
+    ]);
+
+    expect(result.success).toBe(true);
+  });
+
+  it('rejects amountTarget/amountMax without amountMin', () => {
+    const result = periodicityPricingSchema.safeParse([
+      { periodicity: PaymentPeriodicity.yearly, amountTarget: 50000 },
+    ]);
+
+    expect(result.success).toBe(false);
+  });
+
+  it('rejects empty and overlong labels', () => {
+    expect(
+      periodicityPricingSchema.safeParse([
+        {
+          periodicity: PaymentPeriodicity.yearly,
+          amountMin: 45000,
+          label: ' ',
+        },
+      ]).success
+    ).toBe(false);
+
+    expect(
+      periodicityPricingSchema.safeParse([
+        {
+          periodicity: PaymentPeriodicity.yearly,
+          amountMin: 45000,
+          label: 'x'.repeat(61),
+        },
+      ]).success
+    ).toBe(false);
+  });
+
   it('rejects duplicate periodicities', () => {
     const result = periodicityPricingSchema.safeParse([
       { periodicity: PaymentPeriodicity.yearly, amountMin: 45000 },
@@ -188,6 +239,24 @@ describe('getPeriodPriceRange', () => {
       )
     ).toEqual({
       amountMin: 4000,
+      amountTarget: null,
+      amountMax: null,
+    });
+  });
+
+  it('derives amounts for label-only entries', () => {
+    expect(
+      getPeriodPriceRange(
+        {
+          amountPerMonthMin: 4000,
+          periodicityPricing: [
+            { periodicity: PaymentPeriodicity.yearly, label: 'Jahresabo' },
+          ],
+        },
+        PaymentPeriodicity.yearly
+      )
+    ).toEqual({
+      amountMin: 48000,
       amountTarget: null,
       amountMax: null,
     });
