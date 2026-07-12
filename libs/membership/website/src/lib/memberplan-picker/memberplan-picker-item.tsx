@@ -7,7 +7,10 @@ import {
 import { forwardRef } from 'react';
 import { PaymentPeriodicity } from '@wepublish/website/api';
 import { formatCurrency } from '../formatters/format-currency';
-import { getPeriodPriceRange } from '../formatters/format-payment-period';
+import {
+  getCheapestOffer,
+  getPeriodPriceRange,
+} from '../formatters/format-payment-period';
 import { useTranslation } from 'react-i18next';
 
 export const MemberPlanItemWrapper = styled('div')`
@@ -65,6 +68,8 @@ export const MemberPlanItem = forwardRef<
       amountPerMonthMin,
       amountPerMonthTarget,
       periodicityPricing,
+      availablePaymentMethods,
+      defaultPaymentPeriodicity,
       currency,
       extendable,
       ...props
@@ -79,25 +84,36 @@ export const MemberPlanItem = forwardRef<
     const isChecked = props.checked ?? radioGroup?.value === id;
     const { t } = useTranslation();
 
+    const memberPlan = {
+      amountPerMonthMin,
+      amountPerMonthTarget,
+      amountPerMonthMax,
+      periodicityPricing,
+      availablePaymentMethods,
+      defaultPaymentPeriodicity,
+    };
+
     const hasFixedAmount =
       amountPerMonthMax != null && amountPerMonthMax === amountPerMonthMin;
 
     const yearlyPriceRange = getPeriodPriceRange(
-      {
-        amountPerMonthMin,
-        amountPerMonthTarget,
-        amountPerMonthMax,
-        periodicityPricing,
-      },
+      memberPlan,
       PaymentPeriodicity.Yearly
     );
     const hasYearlyPricing = !!periodicityPricing?.some(
-      price => price.periodicity === PaymentPeriodicity.Yearly
+      price =>
+        price.periodicity === PaymentPeriodicity.Yearly &&
+        price.amountMin != null
     );
     const yearlyAmount =
       hasYearlyPricing ?
         yearlyPriceRange.amountMin / 100
       : Math.ceil((amountPerMonthMin / 100) * 12);
+
+    const cheapestOffer = getCheapestOffer(memberPlan);
+    const cheapestOfferFixed =
+      cheapestOffer.amountMax != null &&
+      cheapestOffer.amountMax === cheapestOffer.amountMin;
 
     return (
       <MemberPlanItemWrapper className={className}>
@@ -117,6 +133,14 @@ export const MemberPlanItem = forwardRef<
                 ),
                 extendable,
                 exactAmount: hasFixedAmount,
+                offerAmountMin: cheapestOffer.amountMin,
+                offerPrice: formatCurrency(
+                  cheapestOffer.amountMin / 100,
+                  currency,
+                  locale
+                ),
+                offerPeriodicity: cheapestOffer.periodicity,
+                offerExactAmount: cheapestOfferFixed,
               })}
             </MemberPlanItemPrice>
           </MemberPlanItemContent>
