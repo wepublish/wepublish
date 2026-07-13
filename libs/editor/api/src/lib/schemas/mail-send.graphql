@@ -1,0 +1,67 @@
+fragment FullMailSendJob on MailSendJobModel {
+  id
+  createdAt
+  modifiedAt
+  status
+  audience
+  totalCount
+  sentCount
+  failedCount
+  startedAt
+  finishedAt
+  error
+  mailTemplate {
+    id
+    name
+  }
+}
+
+query MailSendRecipientPreview($audience: MailAudienceInput!) {
+  mailSendRecipientPreview(audience: $audience) {
+    count
+    allowsSubscriptionTemplates
+  }
+}
+
+query MailTemplateMissingPlaceholders(
+  $templateId: String!
+  $withSubscriptionData: Boolean!
+) {
+  mailTemplateMissingPlaceholders(
+    templateId: $templateId
+    withSubscriptionData: $withSubscriptionData
+  )
+}
+
+query MailSendJob($id: String!) {
+  mailSendJob(id: $id) {
+    ...FullMailSendJob
+  }
+}
+
+query MailSendJobs($skip: Int, $take: Int) {
+  mailSendJobs(skip: $skip, take: $take) {
+    nodes {
+      ...FullMailSendJob
+    }
+    totalCount
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+      startCursor
+      endCursor
+    }
+  }
+}
+
+mutation SendMailTemplateToUser($templateId: String!, $userId: String!) {
+  sendMailTemplateToUser(templateId: $templateId, userId: $userId) {
+    ...FullMailSendJob
+  }
+}
+
+mutation CreateMailSendJob($input: MailSendJobInput!) {
+  createMailSendJob(input: $input) {
+    ...FullMailSendJob
+  }
+}
