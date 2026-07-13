@@ -88,6 +88,26 @@ export function flattenMailData<T>(ob: T): Record<string, any> {
 const PLACEHOLDER_REGEX = /{{\s*([\w.]+)\s*}}/g;
 
 /**
+ * Collect the distinct `{{ key }}` placeholder names used in a piece of content.
+ * Used to warn when a template references data that won't be available for a
+ * given send.
+ */
+export function extractPlaceholders(
+  content: string | null | undefined
+): string[] {
+  if (!content) {
+    return [];
+  }
+
+  const keys = new Set<string>();
+  for (const match of content.matchAll(PLACEHOLDER_REGEX)) {
+    keys.add(match[1]);
+  }
+
+  return [...keys];
+}
+
+/**
  * Mandrill (Mailchimp Transactional) merge tags use the `*|NAME|*` syntax, not
  * our `{{ name }}` syntax. The historically pushed merge-var names already match
  * our flattened keys (underscore separated, e.g. `user_firstName`).
@@ -355,12 +375,7 @@ export function composeMail(
   template: MailTemplateContent,
   data: Record<string, any>
 ): ComposedMail {
-  const flattened = flattenMailData(data);
-  const enriched = {
-    ...flattened,
-    ...deriveDateFormats(flattened),
-    ...deriveComputedFields(data),
-  };
+  const enriched = enrichMailData(data);
 
   return {
     subject: renderTemplate(template.subject, enriched),
@@ -370,4 +385,29 @@ export function composeMail(
         renderTemplate(template.textContent, enriched)
       : undefined,
   };
+}
+
+/**
+ * The full placeholder map a template is rendered against: raw flattened
+ * fields plus derived date-format and computed (money/total) variants. This is
+ * the single source of truth for both {@link composeMail} and
+ * {@link resolvableKeys}, so a "missing placeholder" check can never drift from
+ * what actually renders.
+ */
+function enrichMailData(data: Record<string, any>): Record<string, any> {
+  const flattened = flattenMailData(data);
+
+  return {
+    ...flattened,
+    ...deriveDateFormats(flattened),
+    ...deriveComputedFields(data),
+  };
+}
+
+/**
+ * The set of `{{ key }}` placeholders that resolve to a value for the given
+ * mail data. Used to warn about template placeholders that would render empty.
+ */
+export function resolvableKeys(data: Record<string, any>): string[] {
+  return Object.keys(enrichMailData(data));
 }

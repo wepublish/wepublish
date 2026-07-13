@@ -32,7 +32,7 @@ const prismaServiceMock = {
 
 const mailContestMock = {
   getUserTemplateId: jest.fn((): string => 'test-template'),
-  sendComposedMail: jest.fn((): void => undefined),
+  sendComposedMail: jest.fn(() => ({ subject: '' })),
   sendMail: jest.fn((): void => undefined),
 };
 

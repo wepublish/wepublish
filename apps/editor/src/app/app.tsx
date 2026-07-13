@@ -27,6 +27,8 @@ import {
 } from '@wepublish/editor/api';
 import { ImportableEventListView } from '@wepublish/event/import/editor';
 import {
+  MailLogList,
+  MailSendPage,
   MailTemplateEdit,
   MailTemplateList,
   MemberPlanEdit,
@@ -994,6 +996,22 @@ export function App() {
               element={
                 <Base>
                   <SystemMailList />
+                </Base>
+              }
+            />
+            <Route
+              path="mailsend"
+              element={
+                <Base>
+                  <MailSendPage />
+                </Base>
+              }
+            />
+            <Route
+              path="maillog"
+              element={
+                <Base>
+                  <MailLogList />
                 </Base>
               }
             />

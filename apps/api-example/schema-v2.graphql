@@ -1573,6 +1573,67 @@ enum LoginStatus {
   UNSUBSCRIBED
 }
 
+input MailAudienceInput {
+  autoRenew: Boolean
+  base: MailRecipientBase!
+
+  """Restrict to subscriptions of these member plans."""
+  memberPlanIDs: [String!]
+  paymentMethodID: String
+  paymentPeriodicity: PaymentPeriodicity
+  subscriptionState: MailSubscriptionState
+}
+
+input MailLogFilter {
+  mailSendJobId: String
+  mailTemplateId: String
+  recipientId: String
+  state: MailLogState
+  type: MailLogType
+}
+
+type MailLogModel {
+  createdAt: DateTime!
+  id: String!
+  mailProviderID: String!
+  mailSendJobId: String
+  mailTemplate: MailLogTemplate!
+  recipient: MailLogRecipient!
+  sentDate: DateTime!
+  state: MailLogState!
+  subject: String
+  type: MailLogType
+}
+
+type MailLogRecipient {
+  email: String!
+  firstName: String
+  id: String!
+  name: String!
+}
+
+enum MailLogState {
+  accepted
+  bounced
+  deferred
+  delivered
+  rejected
+  submitted
+}
+
+type MailLogTemplate {
+  id: String!
+  name: String!
+}
+
+"""Origin of a sent mail."""
+enum MailLogType {
+  manual
+  subscriptionFlow
+  systemMail
+  userFlow
+}
+
 type MailProviderModel {
   name: String!
 }
@@ -1582,6 +1643,65 @@ enum MailProviderType {
   MAILGUN
   SLACK
   SMTP
+}
+
+"""Base set of users a manual-send audience is drawn from."""
+enum MailRecipientBase {
+  allUsers
+  hasSubscription
+  noActiveSubscription
+}
+
+enum MailSendAudience {
+  allUsers
+  filteredSubscriptions
+  singleUser
+}
+
+input MailSendJobInput {
+  audience: MailAudienceInput!
+  mailTemplateId: String!
+}
+
+type MailSendJobModel {
+  audience: MailSendAudience!
+  createdAt: DateTime!
+  createdByUserId: String!
+  error: String
+  failedCount: Int!
+  finishedAt: DateTime
+  id: String!
+  mailTemplate: MailLogTemplate
+  mailTemplateId: String!
+  modifiedAt: DateTime!
+  sentCount: Int!
+  startedAt: DateTime
+  status: MailSendJobState!
+  totalCount: Int!
+}
+
+enum MailSendJobState {
+  cancelled
+  done
+  failed
+  queued
+  running
+}
+
+type MailSendRecipientPreview {
+  """
+  Whether recipients carry subscription data (subscription-context templates allowed).
+  """
+  allowsSubscriptionTemplates: Boolean!
+
+  """Number of mails that would be sent."""
+  count: Int!
+}
+
+enum MailSubscriptionState {
+  active
+  deactivated
+  pending
 }
 
 """The mail type / context a template is written for."""
@@ -1806,6 +1926,9 @@ type Mutation {
 
   """Returns a JWT that is valid for 1min for the current logged in user."""
   createJWTForWebsiteLogin: SessionWithToken!
+
+  """Start a background job sending a template to a filtered audience"""
+  createMailSendJob(input: MailSendJobInput!): MailSendJobModel!
 
   """Create a new mail template"""
   createMailTemplate(input: MailTemplateInput!): MailTemplateModel!
@@ -2138,6 +2261,9 @@ type Mutation {
   This mutation sends a login link to the email if the user exists. Method will always return email address
   """
   sendJWTLogin(email: String!): String!
+
+  """Manually send a mail template to a single user"""
+  sendMailTemplateToUser(templateId: String!, userId: String!): MailSendJobModel!
 
   """
   Sends a password reset email with a scoped JWT token. Always returns the email to prevent enumeration.
@@ -2506,6 +2632,18 @@ type PaginatedEventsFromSources {
 
 type PaginatedImages {
   nodes: [Image!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type PaginatedMailLog {
+  nodes: [MailLogModel!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type PaginatedMailSendJob {
+  nodes: [MailSendJobModel!]!
   pageInfo: PageInfo!
   totalCount: Int!
 }
@@ -3222,11 +3360,28 @@ type Query {
   """Returns a paginated list of invoices based on the filters given."""
   invoices(cursorId: String, filter: InvoiceFilter, order: SortOrder = Ascending, skip: Int = 0, sort: InvoiceSort = ModifiedAt, take: Int = 10): InvoiceConnection!
 
+  """Paginated list of sent mails"""
+  mailLogs(filter: MailLogFilter, skip: Int, take: Int): PaginatedMailLog!
+
   """Returns a single mail provider setting by id."""
   mailProviderSetting(id: String!): SettingMailProvider!
 
   """Returns all mail provider settings."""
   mailProviderSettings(filter: SettingMailProviderFilter): [SettingMailProvider!]!
+
+  """A single mail send job (for progress polling)"""
+  mailSendJob(id: String!): MailSendJobModel
+
+  """Paginated list of mail send jobs"""
+  mailSendJobs(skip: Int, take: Int): PaginatedMailSendJob!
+
+  """Preview how many recipients an audience resolves to"""
+  mailSendRecipientPreview(audience: MailAudienceInput!): MailSendRecipientPreview!
+
+  """
+  Placeholders a template uses that would render empty for the given send (empty = none missing)
+  """
+  mailTemplateMissingPlaceholders(templateId: String!, withSubscriptionData: Boolean!): [String!]!
 
   """Render a draft mail template with a mail type's sample data"""
   mailTemplatePreview(input: MailTemplatePreviewInput!): MailTemplatePreviewModel!

@@ -162,7 +162,7 @@ const createMockMailContext = () => ({
   prisma: null,
   kv: null,
   jwtGenerator: jest.fn().mockResolvedValue('test-jwt-token'),
-  sendComposedMail: jest.fn().mockResolvedValue(undefined),
+  sendComposedMail: jest.fn().mockResolvedValue({ subject: 'Test subject' }),
 });
 
 const createMockPaymentsService = () => ({

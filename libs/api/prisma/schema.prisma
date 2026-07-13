@@ -513,6 +513,13 @@ enum MailLogState {
   rejected  @map("rejected")
 }
 
+enum MailLogType {
+  subscriptionFlow @map("subscriptionFlow")
+  userFlow         @map("userFlow")
+  systemMail       @map("systemMail")
+  manual           @map("manual")
+}
+
 model MailLog {
   id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now())
@@ -529,8 +536,63 @@ model MailLog {
   mailData       String?
   subject        String?
 
+  // Origin of the mail. Nullable so pre-existing rows keep working; new sends
+  // always set it.
+  type MailLogType?
+
+  // Set only for mails produced by a manual bulk send job.
+  mailSendJob   MailSendJob? @relation(fields: [mailSendJobId], references: [id], onDelete: SetNull)
+  mailSendJobId String?
+
   @@index([mailIdentifier])
+  @@index([mailSendJobId])
   @@map("mail.log")
+}
+
+enum MailSendJobState {
+  queued    @map("queued")
+  running   @map("running")
+  done      @map("done")
+  failed    @map("failed")
+  cancelled @map("cancelled")
+}
+
+enum MailSendAudience {
+  singleUser            @map("singleUser")
+  filteredSubscriptions @map("filteredSubscriptions")
+  allUsers              @map("allUsers")
+}
+
+model MailSendJob {
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  mailTemplate   MailTemplate @relation(fields: [mailTemplateId], references: [id])
+  mailTemplateId String
+
+  createdBy       User   @relation(fields: [createdByUserId], references: [id])
+  createdByUserId String
+
+  status   MailSendJobState @default(queued)
+  audience MailSendAudience
+
+  // Frozen audit snapshot of the resolved filter criteria. Opaque record, not
+  // queried per-element; the actual recipients are MailLog rows.
+  recipientFilter Json?
+
+  totalCount  Int @default(0)
+  sentCount   Int @default(0)
+  failedCount Int @default(0)
+
+  startedAt  DateTime?
+  finishedAt DateTime?
+  error      String?
+
+  mailLogs MailLog[]
+
+  @@index([status])
+  @@map("mail.send_jobs")
 }
 
 enum PaymentPeriodicity {
@@ -1014,6 +1076,7 @@ model User {
   commentRatings      CommentRating[]
   pollVotes           PollVote[]
   mailSent            MailLog[]
+  mailSendJobs        MailSendJob[]
   consents            UserConsent[]
   articleRevisions    ArticleRevision[]
   pageRevisions       PageRevision[]
@@ -1344,6 +1407,8 @@ model MailTemplate {
   userFlowMails UserFlowMail[]
 
   mailLog MailLog[]
+
+  mailSendJobs MailSendJob[]
 
   @@map("mail_templates")
 }

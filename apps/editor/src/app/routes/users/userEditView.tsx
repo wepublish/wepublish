@@ -25,6 +25,10 @@ import {
   useAuthorisation,
   UserSubscriptionsList,
 } from '@wepublish/ui/editor';
+import {
+  SendMailToUserPanel,
+  UserMailLogPanel,
+} from '@wepublish/membership/editor';
 import { userCountryNames } from '@wepublish/user';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -998,6 +1002,26 @@ function UserEditView() {
                       subscriptions={subscriptionData.subscriptions.nodes}
                       userId={user?.id}
                     />
+                  </RPanel>
+                </Grid>
+              </Col>
+            )}
+            {/* manual mail sending + sent-mail history (edit mode only) */}
+            {isEditRoute && userId && (
+              <Col xs={12}>
+                <Grid fluid>
+                  <RPanel
+                    bordered
+                    header={t('userMail.sendTitle')}
+                  >
+                    <SendMailToUserPanel userId={userId} />
+                  </RPanel>
+                  <RPanel
+                    bordered
+                    header={t('userMail.logTitle')}
+                    style={{ marginTop: 16 }}
+                  >
+                    <UserMailLogPanel userId={userId} />
                   </RPanel>
                 </Grid>
               </Col>

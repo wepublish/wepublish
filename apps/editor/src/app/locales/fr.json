@@ -1172,7 +1172,10 @@
       "authorTags": "Tags",
       "audienceDashboard": "Dashboard",
       "integrations": "Intégrations",
-      "apps": "Apps"
+      "apps": "Apps",
+      "mailSend": "Envoyer un e-mail",
+      "mailLog": "E-mails envoyés",
+      "communication": "Communication"
     },
     "navigation": {
       "overview": {
@@ -2488,6 +2491,88 @@
     },
     "systemMails": {
       "noTemplate": "Aucun modèle (ne pas envoyer)"
+    },
+    "mailSend": {
+      "title": "Envoyer un e-mail",
+      "description": "Envoyez un modèle d'e-mail à un public choisi. L'envoi s'exécute en arrière-plan.",
+      "template": "Modèle d'e-mail",
+      "selectTemplate": "Choisir un modèle",
+      "audience": {
+        "title": "Destinataires"
+      },
+      "base": {
+        "label": "Public",
+        "allUsers": "Tous les utilisateurs",
+        "hasSubscription": "Abonnés (avec abonnement)",
+        "noActiveSubscription": "Sans abonnement actif"
+      },
+      "memberPlans": "Plans d'abonnement",
+      "memberPlansAll": "Tous les plans d'abonnement",
+      "state": {
+        "label": "État de l'abonnement",
+        "any": "Tous",
+        "active": "Actif",
+        "pending": "En attente",
+        "deactivated": "Désactivé"
+      },
+      "autoRenew": "Renouvellement automatique",
+      "paymentMethod": "Moyen de paiement",
+      "periodicity": "Intervalle de paiement",
+      "any": "Tous",
+      "yes": "Oui",
+      "no": "Non",
+      "counting": "Comptage des destinataires …",
+      "recipientsCount": "{{count}} destinataires",
+      "send": "Envoyer",
+      "templateNeedsSubscription": "Ce modèle nécessite un public basé sur les abonnements afin de remplir ses variables d'abonnement.",
+      "confirmTitle": "Envoyer un e-mail",
+      "confirmText": "Envoyer cet e-mail à {{count}} destinataires ?",
+      "confirm": "Envoyer",
+      "cancel": "Annuler",
+      "started": "Envoi démarré",
+      "progress": {
+        "title": "Progression de l'envoi",
+        "status": "Statut",
+        "sent": "Envoyés",
+        "failed": "Échoués"
+      },
+      "status": {
+        "queued": "En file d'attente",
+        "running": "En cours",
+        "done": "Terminé",
+        "failed": "Échoué",
+        "cancelled": "Annulé"
+      },
+      "missingPlaceholders": "Attention : ces variables ne seront pas remplies pour ces destinataires : {{placeholders}}"
+    },
+    "mailLog": {
+      "title": "E-mails envoyés",
+      "empty": "Aucun e-mail trouvé.",
+      "sentDate": "Date",
+      "template": "Modèle",
+      "subject": "Objet",
+      "state": "État",
+      "type": "Type",
+      "recipient": "Destinataire",
+      "filter": {
+        "template": "Modèle",
+        "state": "État",
+        "type": "Type"
+      },
+      "types": {
+        "subscriptionFlow": "Flux d'abonnement",
+        "userFlow": "Flux utilisateur",
+        "systemMail": "E-mail système",
+        "manual": "Manuel"
+      }
+    },
+    "userMail": {
+      "sendTitle": "Envoyer un e-mail",
+      "logTitle": "E-mails envoyés",
+      "customOnlyHint": "Seuls les modèles personnalisés peuvent être envoyés à un utilisateur.",
+      "selectTemplate": "Choisir un modèle",
+      "send": "Envoyer",
+      "sent": "E-mail envoyé"
     }
   }
 }

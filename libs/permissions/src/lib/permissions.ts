@@ -805,6 +805,19 @@ export const CanSendTestMailTemplates: Permission = {
   deprecated: false,
 };
 
+export const CanSendMailTemplates: Permission = {
+  id: 'CAN_SEND_MAIL-TEMPLATES',
+  description:
+    'Allows to manually send a mail template to a user or an audience of subscribers.',
+  deprecated: false,
+};
+
+export const CanGetMailLogs: Permission = {
+  id: 'CAN_GET_MAIL-LOGS',
+  description: 'Allows to view sent mails and mail send jobs.',
+  deprecated: false,
+};
+
 /**
  * System mails
  */
@@ -1242,6 +1255,8 @@ export const AllPermissions: Permission[] = [
   CanUpdateMailTemplates,
   CanDeleteMailTemplates,
   CanSendTestMailTemplates,
+  CanSendMailTemplates,
+  CanGetMailLogs,
   CanGetSystemMails,
   CanUpdateSystemMails,
   CanTestSystemMails,
@@ -1349,6 +1364,7 @@ export const EditorPermissions: Permission[] = [
   CanCreateEvent,
   CanGetSubscriptionFlows,
   CanGetMailTemplates,
+  CanGetMailLogs,
   CanGetPeriodicJobLog,
   CanCreateApprovedComment,
   CanPreview,

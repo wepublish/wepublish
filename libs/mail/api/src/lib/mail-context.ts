@@ -147,7 +147,7 @@ export class MailContext implements MailContextInterface {
     recipient,
     data,
     mailLogID,
-  }: SendComposedMailProps): Promise<void> {
+  }: SendComposedMailProps): Promise<{ subject: string }> {
     if (!this.mailProvider) {
       throw new Error('MailProvider is not set!');
     }
@@ -176,6 +176,8 @@ export class MailContext implements MailContextInterface {
       message: composed.message,
       messageHtml: composed.messageHtml,
     });
+
+    return { subject: composed.subject };
   }
 
   /**

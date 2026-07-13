@@ -1180,7 +1180,10 @@
       "authorTags": "Tags",
       "audienceDashboard": "Dashboard",
       "integrations": "Integrationen",
-      "apps": "Apps"
+      "apps": "Apps",
+      "mailSend": "E-Mail senden",
+      "mailLog": "Gesendete E-Mails",
+      "communication": "Kommunikation"
     },
     "navigation": {
       "overview": {
@@ -2543,6 +2546,88 @@
     },
     "systemMails": {
       "noTemplate": "Keine Vorlage (nicht senden)"
+    },
+    "mailSend": {
+      "title": "E-Mail senden",
+      "description": "Sende eine E-Mail-Vorlage an eine ausgewählte Empfängergruppe. Der Versand läuft im Hintergrund.",
+      "template": "E-Mail-Vorlage",
+      "selectTemplate": "Vorlage auswählen",
+      "audience": {
+        "title": "Empfänger"
+      },
+      "base": {
+        "label": "Empfängergruppe",
+        "allUsers": "Alle Benutzer",
+        "hasSubscription": "Abonnenten (mit Abo)",
+        "noActiveSubscription": "Ohne aktives Abo"
+      },
+      "memberPlans": "Abo-Pläne",
+      "memberPlansAll": "Alle Abo-Pläne",
+      "state": {
+        "label": "Abo-Status",
+        "any": "Beliebig",
+        "active": "Aktiv",
+        "pending": "Ausstehend",
+        "deactivated": "Deaktiviert"
+      },
+      "autoRenew": "Automatische Verlängerung",
+      "paymentMethod": "Zahlungsmethode",
+      "periodicity": "Zahlungsintervall",
+      "any": "Beliebig",
+      "yes": "Ja",
+      "no": "Nein",
+      "counting": "Empfänger werden gezählt …",
+      "recipientsCount": "{{count}} Empfänger",
+      "send": "Senden",
+      "templateNeedsSubscription": "Diese Vorlage benötigt eine Abo-basierte Empfängergruppe, damit die Abo-Platzhalter gefüllt werden können.",
+      "confirmTitle": "E-Mail senden",
+      "confirmText": "Diese E-Mail an {{count}} Empfänger senden?",
+      "confirm": "Senden",
+      "cancel": "Abbrechen",
+      "started": "Versand gestartet",
+      "progress": {
+        "title": "Versandfortschritt",
+        "status": "Status",
+        "sent": "Gesendet",
+        "failed": "Fehlgeschlagen"
+      },
+      "status": {
+        "queued": "In Warteschlange",
+        "running": "Läuft",
+        "done": "Abgeschlossen",
+        "failed": "Fehlgeschlagen",
+        "cancelled": "Abgebrochen"
+      },
+      "missingPlaceholders": "Achtung: Diese Platzhalter werden für diese Empfänger nicht gefüllt: {{placeholders}}"
+    },
+    "mailLog": {
+      "title": "Gesendete E-Mails",
+      "empty": "Keine E-Mails gefunden.",
+      "sentDate": "Datum",
+      "template": "Vorlage",
+      "subject": "Betreff",
+      "state": "Status",
+      "type": "Typ",
+      "recipient": "Empfänger",
+      "filter": {
+        "template": "Vorlage",
+        "state": "Status",
+        "type": "Typ"
+      },
+      "types": {
+        "subscriptionFlow": "Abo-Flow",
+        "userFlow": "Benutzer-Flow",
+        "systemMail": "System-Mail",
+        "manual": "Manuell"
+      }
+    },
+    "userMail": {
+      "sendTitle": "E-Mail senden",
+      "logTitle": "Gesendete E-Mails",
+      "customOnlyHint": "An einen einzelnen Benutzer können nur benutzerdefinierte Vorlagen gesendet werden.",
+      "selectTemplate": "Vorlage auswählen",
+      "send": "Senden",
+      "sent": "E-Mail gesendet"
     }
   }
 }

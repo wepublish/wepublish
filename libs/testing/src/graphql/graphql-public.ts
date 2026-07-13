@@ -1715,6 +1715,69 @@ export enum LoginStatus {
   Unsubscribed = 'UNSUBSCRIBED',
 }
 
+export type MailAudienceInput = {
+  autoRenew?: InputMaybe<Scalars['Boolean']>;
+  base: MailRecipientBase;
+  /** Restrict to subscriptions of these member plans. */
+  memberPlanIDs?: InputMaybe<Array<Scalars['String']>>;
+  paymentMethodID?: InputMaybe<Scalars['String']>;
+  paymentPeriodicity?: InputMaybe<PaymentPeriodicity>;
+  subscriptionState?: InputMaybe<MailSubscriptionState>;
+};
+
+export type MailLogFilter = {
+  mailSendJobId?: InputMaybe<Scalars['String']>;
+  mailTemplateId?: InputMaybe<Scalars['String']>;
+  recipientId?: InputMaybe<Scalars['String']>;
+  state?: InputMaybe<MailLogState>;
+  type?: InputMaybe<MailLogType>;
+};
+
+export type MailLogModel = {
+  __typename?: 'MailLogModel';
+  createdAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  mailProviderID: Scalars['String'];
+  mailSendJobId?: Maybe<Scalars['String']>;
+  mailTemplate: MailLogTemplate;
+  recipient: MailLogRecipient;
+  sentDate: Scalars['DateTime'];
+  state: MailLogState;
+  subject?: Maybe<Scalars['String']>;
+  type?: Maybe<MailLogType>;
+};
+
+export type MailLogRecipient = {
+  __typename?: 'MailLogRecipient';
+  email: Scalars['String'];
+  firstName?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  name: Scalars['String'];
+};
+
+export enum MailLogState {
+  Accepted = 'accepted',
+  Bounced = 'bounced',
+  Deferred = 'deferred',
+  Delivered = 'delivered',
+  Rejected = 'rejected',
+  Submitted = 'submitted',
+}
+
+export type MailLogTemplate = {
+  __typename?: 'MailLogTemplate';
+  id: Scalars['String'];
+  name: Scalars['String'];
+};
+
+/** Origin of a sent mail. */
+export enum MailLogType {
+  Manual = 'manual',
+  SubscriptionFlow = 'subscriptionFlow',
+  SystemMail = 'systemMail',
+  UserFlow = 'userFlow',
+}
+
 export type MailProviderModel = {
   __typename?: 'MailProviderModel';
   name: Scalars['String'];
@@ -1725,6 +1788,64 @@ export enum MailProviderType {
   Mailgun = 'MAILGUN',
   Slack = 'SLACK',
   Smtp = 'SMTP',
+}
+
+/** Base set of users a manual-send audience is drawn from. */
+export enum MailRecipientBase {
+  AllUsers = 'allUsers',
+  HasSubscription = 'hasSubscription',
+  NoActiveSubscription = 'noActiveSubscription',
+}
+
+export enum MailSendAudience {
+  AllUsers = 'allUsers',
+  FilteredSubscriptions = 'filteredSubscriptions',
+  SingleUser = 'singleUser',
+}
+
+export type MailSendJobInput = {
+  audience: MailAudienceInput;
+  mailTemplateId: Scalars['String'];
+};
+
+export type MailSendJobModel = {
+  __typename?: 'MailSendJobModel';
+  audience: MailSendAudience;
+  createdAt: Scalars['DateTime'];
+  createdByUserId: Scalars['String'];
+  error?: Maybe<Scalars['String']>;
+  failedCount: Scalars['Int'];
+  finishedAt?: Maybe<Scalars['DateTime']>;
+  id: Scalars['String'];
+  mailTemplate?: Maybe<MailLogTemplate>;
+  mailTemplateId: Scalars['String'];
+  modifiedAt: Scalars['DateTime'];
+  sentCount: Scalars['Int'];
+  startedAt?: Maybe<Scalars['DateTime']>;
+  status: MailSendJobState;
+  totalCount: Scalars['Int'];
+};
+
+export enum MailSendJobState {
+  Cancelled = 'cancelled',
+  Done = 'done',
+  Failed = 'failed',
+  Queued = 'queued',
+  Running = 'running',
+}
+
+export type MailSendRecipientPreview = {
+  __typename?: 'MailSendRecipientPreview';
+  /** Whether recipients carry subscription data (subscription-context templates allowed). */
+  allowsSubscriptionTemplates: Scalars['Boolean'];
+  /** Number of mails that would be sent. */
+  count: Scalars['Int'];
+};
+
+export enum MailSubscriptionState {
+  Active = 'active',
+  Deactivated = 'deactivated',
+  Pending = 'pending',
 }
 
 /** The mail type / context a template is written for. */
@@ -1938,6 +2059,8 @@ export type Mutation = {
   createJWTForUser: SessionWithToken;
   /** Returns a JWT that is valid for 1min for the current logged in user. */
   createJWTForWebsiteLogin: SessionWithToken;
+  /** Start a background job sending a template to a filtered audience */
+  createMailSendJob: MailSendJobModel;
   /** Create a new mail template */
   createMailTemplate: MailTemplateModel;
   /** Creates a new memberplan. */
@@ -2135,6 +2258,8 @@ export type Mutation = {
   revokeActiveSession: Scalars['Boolean'];
   /** This mutation sends a login link to the email if the user exists. Method will always return email address */
   sendJWTLogin: Scalars['String'];
+  /** Manually send a mail template to a single user */
+  sendMailTemplateToUser: MailSendJobModel;
   /** Sends a password reset email with a scoped JWT token. Always returns the email to prevent enumeration. */
   sendPasswordResetEmail: Scalars['String'];
   /** Send a test mail for a draft template */
@@ -2384,6 +2509,10 @@ export type MutationCreateInvoiceArgs = {
 export type MutationCreateJwtForUserArgs = {
   expiresInMinutes: Scalars['Float'];
   userId: Scalars['String'];
+};
+
+export type MutationCreateMailSendJobArgs = {
+  input: MailSendJobInput;
 };
 
 export type MutationCreateMailTemplateArgs = {
@@ -2899,6 +3028,11 @@ export type MutationRestorePageRevisionArgs = {
 
 export type MutationSendJwtLoginArgs = {
   email: Scalars['String'];
+};
+
+export type MutationSendMailTemplateToUserArgs = {
+  templateId: Scalars['String'];
+  userId: Scalars['String'];
 };
 
 export type MutationSendPasswordResetEmailArgs = {
@@ -3635,6 +3769,20 @@ export type PaginatedEventsFromSources = {
 export type PaginatedImages = {
   __typename?: 'PaginatedImages';
   nodes: Array<Image>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type PaginatedMailLog = {
+  __typename?: 'PaginatedMailLog';
+  nodes: Array<MailLogModel>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type PaginatedMailSendJob = {
+  __typename?: 'PaginatedMailSendJob';
+  nodes: Array<MailSendJobModel>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
 };
@@ -4379,10 +4527,20 @@ export type Query = {
   invoice: Invoice;
   /** Returns a paginated list of invoices based on the filters given. */
   invoices: InvoiceConnection;
+  /** Paginated list of sent mails */
+  mailLogs: PaginatedMailLog;
   /** Returns a single mail provider setting by id. */
   mailProviderSetting: SettingMailProvider;
   /** Returns all mail provider settings. */
   mailProviderSettings: Array<SettingMailProvider>;
+  /** A single mail send job (for progress polling) */
+  mailSendJob?: Maybe<MailSendJobModel>;
+  /** Paginated list of mail send jobs */
+  mailSendJobs: PaginatedMailSendJob;
+  /** Preview how many recipients an audience resolves to */
+  mailSendRecipientPreview: MailSendRecipientPreview;
+  /** Placeholders a template uses that would render empty for the given send (empty = none missing) */
+  mailTemplateMissingPlaceholders: Array<Scalars['String']>;
   /** Render a draft mail template with a mail type's sample data */
   mailTemplatePreview: MailTemplatePreviewModel;
   /** Search subscriptions to use as sample data for previews/tests */
@@ -4772,12 +4930,36 @@ export type QueryInvoicesArgs = {
   take?: InputMaybe<Scalars['Int']>;
 };
 
+export type QueryMailLogsArgs = {
+  filter?: InputMaybe<MailLogFilter>;
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
 export type QueryMailProviderSettingArgs = {
   id: Scalars['String'];
 };
 
 export type QueryMailProviderSettingsArgs = {
   filter?: InputMaybe<SettingMailProviderFilter>;
+};
+
+export type QueryMailSendJobArgs = {
+  id: Scalars['String'];
+};
+
+export type QueryMailSendJobsArgs = {
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
+export type QueryMailSendRecipientPreviewArgs = {
+  audience: MailAudienceInput;
+};
+
+export type QueryMailTemplateMissingPlaceholdersArgs = {
+  templateId: Scalars['String'];
+  withSubscriptionData: Scalars['Boolean'];
 };
 
 export type QueryMailTemplatePreviewArgs = {

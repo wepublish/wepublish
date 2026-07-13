@@ -1183,7 +1183,10 @@
       "authorTags": "Tags",
       "audienceDashboard": "Dashboard",
       "integrations": "Integrations",
-      "apps": "Apps"
+      "apps": "Apps",
+      "mailSend": "Send email",
+      "mailLog": "Sent emails",
+      "communication": "Communication"
     },
     "navigation": {
       "overview": {
@@ -2597,6 +2600,88 @@
         "Event": "Event",
         "Custom": "Custom"
       }
+    },
+    "mailSend": {
+      "title": "Send email",
+      "description": "Send a mail template to a chosen audience. Sending runs in the background.",
+      "template": "Mail template",
+      "selectTemplate": "Select template",
+      "audience": {
+        "title": "Audience"
+      },
+      "base": {
+        "label": "Audience",
+        "allUsers": "All users",
+        "hasSubscription": "Subscribers (with subscription)",
+        "noActiveSubscription": "Without active subscription"
+      },
+      "memberPlans": "Member plans",
+      "memberPlansAll": "All member plans",
+      "state": {
+        "label": "Subscription state",
+        "any": "Any",
+        "active": "Active",
+        "pending": "Pending",
+        "deactivated": "Deactivated"
+      },
+      "autoRenew": "Auto renewal",
+      "paymentMethod": "Payment method",
+      "periodicity": "Payment interval",
+      "any": "Any",
+      "yes": "Yes",
+      "no": "No",
+      "counting": "Counting recipients …",
+      "recipientsCount": "{{count}} recipients",
+      "send": "Send",
+      "templateNeedsSubscription": "This template needs a subscription-based audience so its subscription placeholders can be filled.",
+      "confirmTitle": "Send email",
+      "confirmText": "Send this email to {{count}} recipients?",
+      "confirm": "Send",
+      "cancel": "Cancel",
+      "started": "Sending started",
+      "progress": {
+        "title": "Sending progress",
+        "status": "Status",
+        "sent": "Sent",
+        "failed": "Failed"
+      },
+      "status": {
+        "queued": "Queued",
+        "running": "Running",
+        "done": "Done",
+        "failed": "Failed",
+        "cancelled": "Cancelled"
+      },
+      "missingPlaceholders": "Heads up: these placeholders won't be filled for these recipients: {{placeholders}}"
+    },
+    "mailLog": {
+      "title": "Sent emails",
+      "empty": "No emails found.",
+      "sentDate": "Date",
+      "template": "Template",
+      "subject": "Subject",
+      "state": "State",
+      "type": "Type",
+      "recipient": "Recipient",
+      "filter": {
+        "template": "Template",
+        "state": "State",
+        "type": "Type"
+      },
+      "types": {
+        "subscriptionFlow": "Subscription flow",
+        "userFlow": "User flow",
+        "systemMail": "System mail",
+        "manual": "Manual"
+      }
+    },
+    "userMail": {
+      "sendTitle": "Send email",
+      "logTitle": "Sent emails",
+      "customOnlyHint": "Only custom templates can be sent to a single user.",
+      "selectTemplate": "Select template",
+      "send": "Send",
+      "sent": "Email sent"
     }
   }
 }

@@ -262,26 +262,14 @@ function MailTemplateEdit() {
     textContent,
   });
 
-  const requireContext = (): MailTemplateContext | null => {
-    if (!contextId) {
-      toaster.push(
-        <Message type="error">
-          {t(
-            'mailTemplates.edit.selectMailType',
-            'Please select a mail type first.'
-          )}
-        </Message>
-      );
-      return null;
-    }
-    return contextId;
-  };
+  // Preview/test never block on a missing mail type: fall back to `custom`
+  // (user data only) so any template can be checked. Picking a mail type gives
+  // a more accurate preview with that context's sample data.
+  const effectiveContext = (): MailTemplateContext =>
+    contextId ?? MailTemplateContext.Custom;
 
   const doPreview = async () => {
-    const ctx = requireContext();
-    if (!ctx) {
-      return;
-    }
+    const ctx = effectiveContext();
     setPreviewLoading(true);
     setPreviewError(null);
     try {
@@ -311,10 +299,7 @@ function MailTemplateEdit() {
   };
 
   const doSendTest = async () => {
-    const ctx = requireContext();
-    if (!ctx) {
-      return;
-    }
+    const ctx = effectiveContext();
     await sendTest({
       variables: {
         input: previewInput(ctx),
@@ -331,7 +316,7 @@ function MailTemplateEdit() {
   }));
 
   return (
-    <>
+    <div style={{ flexShrink: 0 }}>
       <Stack
         justifyContent="space-between"
         alignItems="center"
@@ -464,7 +449,6 @@ function MailTemplateEdit() {
             <Button
               appearance="primary"
               loading={previewLoading}
-              disabled={!contextId}
               onClick={doPreview}
             >
               {t('mailTemplates.edit.preview')}
@@ -472,7 +456,6 @@ function MailTemplateEdit() {
             <Button
               appearance="default"
               loading={testLoading}
-              disabled={!contextId}
               onClick={doSendTest}
             >
               {t('mailTemplates.edit.sendTest')}
@@ -722,7 +705,7 @@ function MailTemplateEdit() {
           </div>
         </Modal.Body>
       </Modal>
-    </>
+    </div>
   );
 }
 
