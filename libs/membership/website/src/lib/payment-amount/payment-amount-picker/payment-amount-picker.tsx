@@ -3,9 +3,13 @@ import {
   BuilderPaymentAmountProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { Currency } from '@wepublish/website/api';
+import { Currency, PaymentPeriodicity } from '@wepublish/website/api';
 import { forwardRef, PropsWithChildren, useMemo } from 'react';
 import { formatCurrency } from '../../formatters/format-currency';
+import {
+  calculatePeriodAmount,
+  monthlyAmountFromPeriodAmount,
+} from '../../formatters/format-payment-period';
 import styled from '@emotion/styled';
 
 export const PaymentAmountPickerWrapper = styled(RadioGroup)`
@@ -105,6 +109,7 @@ export const PaymentAmountPicker = forwardRef<
       currency,
       amountPerMonthMin,
       amountPerMonthTarget,
+      paymentPeriodicity = PaymentPeriodicity.Monthly,
       name,
       error,
       value,
@@ -116,6 +121,19 @@ export const PaymentAmountPicker = forwardRef<
       elements: { TextField },
       meta: { locale, siteTitle },
     } = useWebsiteBuilder();
+
+    const periodValue = calculatePeriodAmount(value, paymentPeriodicity);
+    const periodMin = calculatePeriodAmount(
+      amountPerMonthMin,
+      paymentPeriodicity
+    );
+    const handlePeriodAmountChange = (periodAmount: number) =>
+      onChange(
+        monthlyAmountFromPeriodAmount(
+          Math.round(periodAmount),
+          paymentPeriodicity
+        )
+      );
 
     const pickerItems = useMemo(() => {
       switch (siteTitle) {
@@ -134,10 +152,10 @@ export const PaymentAmountPicker = forwardRef<
         name={name}
         onChange={event => {
           if (+event.target.value) {
-            onChange(+event.target.value);
+            handlePeriodAmountChange(+event.target.value);
           }
         }}
-        value={value}
+        value={periodValue}
       >
         {pickerItems.map(itemAmount => (
           <FormControlLabel
@@ -146,7 +164,7 @@ export const PaymentAmountPicker = forwardRef<
             control={
               <PaymentAmountPickerItem
                 currency={currency}
-                checked={itemAmount === value}
+                checked={itemAmount === periodValue}
               >
                 <PaymentAmountPickerItemAmount>
                   {formatCurrency(itemAmount / 100, currency, locale, false)}
@@ -167,15 +185,17 @@ export const PaymentAmountPicker = forwardRef<
               <TextField
                 ref={ref}
                 name={name}
-                value={value / 100}
-                onChange={event => onChange(+event.target.value * 100)}
+                value={Math.round(periodValue) / 100}
+                onChange={event =>
+                  handlePeriodAmountChange(+event.target.value * 100)
+                }
                 type={'number'}
                 fullWidth
                 error={!!error}
-                helperText={`Min ${formatCurrency(amountPerMonthMin / 100, currency, locale)}`}
+                helperText={`Min ${formatCurrency(periodMin / 100, currency, locale)}`}
                 inputProps={{
                   step: 'any',
-                  min: amountPerMonthMin / 100,
+                  min: periodMin / 100,
                 }}
               />
             </PaymentAmountPickerItem>

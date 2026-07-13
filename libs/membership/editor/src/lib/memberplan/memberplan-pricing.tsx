@@ -143,9 +143,17 @@ export function MemberPlanPricing({
     );
     const referenceMonths = PAYMENT_PERIODICITY_MONTHS[reference.periodicity];
     const amountPerMonthMin = Math.round(reference.amountMin / referenceMonths);
-    const amountPerMonthTarget =
+    const derivedTargetPerMonth =
       reference.amountTarget != null ?
         Math.round(reference.amountTarget / referenceMonths)
+      : null;
+    // member.plans has CHECK ("amountPerMonthTarget" > "amountPerMonthMin")
+    const amountPerMonthTarget =
+      (
+        derivedTargetPerMonth != null &&
+        derivedTargetPerMonth > amountPerMonthMin
+      ) ?
+        derivedTargetPerMonth
       : null;
     const amountPerMonthMax =
       reference.amountMax != null ?
