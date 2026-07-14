@@ -1,4 +1,5 @@
 import {
+  Goodie,
   MemberPlan,
   PaymentMethod,
   PaymentProviderCustomer,
@@ -19,6 +20,7 @@ type CSVSubscription = SubscriptionWithRelations & {
   user: UserWithRelations;
   paymentMethod: PaymentMethod;
   memberPlan: MemberPlan;
+  goodie: Goodie | null;
 };
 
 export function mapSubscriptionsAsCsv(subscriptions: CSVSubscription[]) {
@@ -55,6 +57,8 @@ export function mapSubscriptionsAsCsv(subscriptions: CSVSubscription[]) {
       'paymentMethodID',
       'deactivationDate',
       'deactivationReason',
+      'goodie',
+      'goodieID',
     ].join(',') + '\n';
 
   for (const subscription of subscriptions) {
@@ -103,6 +107,8 @@ export function mapSubscriptionsAsCsv(subscriptions: CSVSubscription[]) {
           formatISO(subscription.deactivation.date, { representation: 'date' })
         : '',
         subscription?.deactivation?.reason ?? '',
+        sanitizeCsvContent(subscription?.goodie?.name),
+        subscription?.goodieID ?? '',
       ].join(',') + '\r\n';
   }
 

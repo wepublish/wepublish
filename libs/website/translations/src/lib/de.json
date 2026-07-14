@@ -46,6 +46,11 @@
     "voucher": {
       "discountApplied": "{discountPercent}% Rabatt angewendet",
       "invalid": "Gutscheincode ungültig"
+    },
+    "goodie": {
+      "title": "Goodie wählen",
+      "none": "Kein Goodie",
+      "soldOut": "Dieses Goodie ist leider ausverkauft. Bitte wähle ein anderes."
     }
   },
   "login": {
