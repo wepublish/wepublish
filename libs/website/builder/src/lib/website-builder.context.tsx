@@ -67,7 +67,6 @@ import {
 import {
   BuilderCommentEditorProps,
   BuilderCommentListItemProps,
-  BuilderCommentListItemShareProps,
   BuilderCommentListProps,
   BuilderCommentProps,
   BuilderCommentRatingsProps,
@@ -132,6 +131,7 @@ import { BuilderBlockStyleProps } from './block-styles.interface';
 import { BuilderContentWrapperProps } from './content-wrapper.interface';
 import { BuilderTeaserProps } from './teaser.interface';
 import { BuilderPaywallProps } from './paywall.interface';
+import { BuilderShareProps } from './share.interface';
 import { BuilderTagProps, BuilderTagSEOProps } from './tag.interface';
 import { BuilderTextToIconProps } from './text-to-icon.interface';
 
@@ -169,7 +169,6 @@ export type WebsiteBuilderProps = {
   Comment: ComponentType<BuilderCommentProps>;
   CommentList: ComponentType<BuilderCommentListProps>;
   CommentListItem: ComponentType<BuilderCommentListItemProps>;
-  CommentListItemShare: ComponentType<BuilderCommentListItemShareProps>;
   CommentListItemChild: ComponentType<BuilderCommentListItemProps>;
   CommentEditor: ComponentType<BuilderCommentEditorProps>;
   CommentRatings: ComponentType<BuilderCommentRatingsProps>;
@@ -194,6 +193,7 @@ export type WebsiteBuilderProps = {
   ContentWrapper: ComponentType<BuilderContentWrapperProps>;
   Paywall: ComponentType<BuilderPaywallProps>;
   TextToIcon: ComponentType<BuilderTextToIconProps>;
+  Share: ComponentType<BuilderShareProps>;
 
   elements: {
     Rating: ComponentType<BuilderRatingProps>;
@@ -324,7 +324,6 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   ArticleList: NoComponent,
   CommentList: NoComponent,
   CommentListItem: NoComponent,
-  CommentListItemShare: NoComponent,
   CommentListItemChild: NoComponent,
   Comment: NoComponent,
   CommentEditor: NoComponent,
@@ -336,6 +335,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   ContentWrapper: NoComponent,
   Paywall: NoComponent,
   TextToIcon: NoComponent,
+  Share: NoComponent,
 
   elements: {
     Rating: NoComponent,

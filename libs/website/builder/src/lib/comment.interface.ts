@@ -78,13 +78,6 @@ export type BuilderCommentListProps = Pick<
   maxCommentDepth?: number;
 };
 
-export type BuilderCommentListItemShareProps = {
-  className?: string;
-  url: string;
-  title: string;
-  forceNonSystemShare?: boolean;
-};
-
 export type BuilderCommentListItemProps = (CommentWithoutNestingFragment & {
   children?: CommentWithoutNestingFragment[] | null;
 }) & {

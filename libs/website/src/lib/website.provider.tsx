@@ -71,7 +71,6 @@ import {
   CommentList,
   CommentListItem,
   CommentListItemChild,
-  CommentListItemShare,
   CommentRatings,
 } from '@wepublish/comments/website';
 import {
@@ -123,6 +122,7 @@ import {
   Pagination,
   Paragraph,
   Rating,
+  Share,
   TextToIcon,
   UnorderedList,
 } from '@wepublish/ui';
@@ -223,7 +223,6 @@ export const WebsiteProvider = memo<WebsiteProps>(({ children }) => (
         EventListItem={EventListItem}
         CommentList={CommentList}
         CommentListItem={CommentListItem}
-        CommentListItemShare={CommentListItemShare}
         CommentListItemChild={CommentListItemChild}
         Comment={Comment}
         CommentEditor={CommentEditor}
@@ -253,6 +252,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({ children }) => (
         Tag={Tag}
         TagSEO={TagSEO}
         TextToIcon={TextToIcon}
+        Share={Share}
         elements={{
           TextField,
           Rating,
