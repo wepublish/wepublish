@@ -51,6 +51,7 @@ import {
 } from '../src/components/reflekt-block-renderer';
 import { RefFooter } from '../src/components/reflekt-footer';
 import { ReflektGlobalStyles } from '../src/components/reflekt-global-styles';
+import { ReflektGoodiePicker } from '../src/components/reflekt-goodie-picker';
 import { ReflektImageBlock } from '../src/components/reflekt-image-block';
 import { ReflektLink } from '../src/components/reflekt-link';
 import {
@@ -153,6 +154,7 @@ function CustomApp({
             AuthorListItem={ReflektAuthorListItem}
             Banner={ReflektBanner}
             Subscribe={ReflektSubscribeForm}
+            GoodiePicker={ReflektGoodiePicker}
             MemberPlanPicker={ReflektMemberPlanPicker}
             MemberPlanItem={ReflektMemberPlanItem}
             UserForm={ReflektUserForm}

@@ -2,6 +2,7 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { SubscribeBlock } from '@wepublish/block-content/website';
 import {
+  GoodieSection,
   PaymentRadioWrapper,
   Subscribe,
   SubscribeButton,
@@ -25,13 +26,15 @@ export const ReflektSubscribe = styled(SubscribeBlock)`
     'memberPlans'
     'monthlyAmount'
     'userForm'
+    'goodie'
     'transactionFee'
     'submit'
     'paymentPeriodicity'
     'challenge';
 
   ${SubscribeSection},
-  ${SubscribeNarrowSection} {
+  ${SubscribeNarrowSection},
+  ${GoodieSection} {
     grid-area: var(--grid-area);
 
     > h2 {
@@ -42,6 +45,10 @@ export const ReflektSubscribe = styled(SubscribeBlock)`
   ${SubscribeSection}[data-area='returning'],
   ${SubscribeNarrowSection}[data-area='voucher'] {
     display: none;
+  }
+
+  ${GoodieSection} {
+    display: grid;
   }
 
   ${SubscribeSection}[data-area='paymentPeriodicity'] ${PaymentRadioWrapper} {
