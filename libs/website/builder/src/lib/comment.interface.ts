@@ -78,6 +78,9 @@ export type BuilderCommentListProps = Pick<
   maxCommentDepth?: number;
 };
 
+/**
+ * @deprecated Use `BuilderShareProps` and the `Share` builder component instead.
+ */
 export type BuilderCommentListItemShareProps = {
   className?: string;
   url: string;

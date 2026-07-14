@@ -8,6 +8,7 @@ export * from './lib/lists/lists';
 export * from './lib/modal/modal';
 export * from './lib/pagination/pagination';
 export * from './lib/rating/rating';
+export * from './lib/share/share';
 export * from './lib/text-field/text-field';
 export * from './lib/theme';
 export * from './lib/typography/typography';

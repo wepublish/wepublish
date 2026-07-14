@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { css, NoSsr, Typography } from '@mui/material';
+import { css, Typography } from '@mui/material';
 import { Article, ArticleInfoWrapper } from '@wepublish/article/website';
 import {
   ImageBlockWrapper,
@@ -10,7 +10,7 @@ import {
   TitleBlockLead,
   TitleBlockWrapper,
 } from '@wepublish/block-content/website';
-import { createWithTheme } from '@wepublish/ui';
+import { createWithTheme, useShare } from '@wepublish/ui';
 import { useCommentListQuery } from '@wepublish/website/api';
 import { BuilderArticleProps, Button } from '@wepublish/website/builder';
 import {
@@ -150,7 +150,11 @@ export const HauptstadtArticleMeta = ({
   });
 
   const commentCount = data?.commentsForItem.length;
-  const canShare = typeof window !== 'undefined' && 'share' in navigator;
+  const { share, shareMenu } = useShare({
+    url: article.url,
+    title: article.latest.title ?? undefined,
+    text: article.latest.lead ?? undefined,
+  });
 
   return (
     <>
@@ -174,27 +178,19 @@ export const HauptstadtArticleMeta = ({
           </MetaWrapperTypography>
         </MetaWrapperButton>
 
-        {canShare && (
-          <NoSsr>
-            <MetaWrapperButton
-              color="primary"
-              variant="text"
-              size="medium"
-              startIcon={<FaShare size={16} />}
-              onClick={async () => {
-                navigator.share({
-                  url: window.location.href,
-                  title: article.latest.title ?? undefined,
-                  text: article.latest.lead ?? undefined,
-                });
-              }}
-            >
-              <MetaWrapperTypography variant="caption">
-                Teilen
-              </MetaWrapperTypography>
-            </MetaWrapperButton>
-          </NoSsr>
-        )}
+        <MetaWrapperButton
+          color="primary"
+          variant="text"
+          size="medium"
+          startIcon={<FaShare size={16} />}
+          onClick={share}
+        >
+          <MetaWrapperTypography variant="caption">
+            Teilen
+          </MetaWrapperTypography>
+        </MetaWrapperButton>
+
+        {shareMenu}
 
         <MetaWrapperButton
           color="primary"

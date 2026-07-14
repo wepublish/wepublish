@@ -117,6 +117,7 @@ import {
   Pagination,
   Paragraph,
   Rating,
+  Share,
   TextToIcon,
   UnorderedList,
 } from '@wepublish/ui';
@@ -244,6 +245,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({ children }) => (
         Tag={Tag}
         TagSEO={TagSEO}
         TextToIcon={TextToIcon}
+        Share={Share}
         elements={{
           TextField,
           Rating,
