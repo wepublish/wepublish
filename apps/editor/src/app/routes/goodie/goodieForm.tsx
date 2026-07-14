@@ -85,6 +85,7 @@ export const GoodieForm = ({ goodie, onChange, create }: GoodieFormProps) => {
                   name="stock"
                   value={goodie.stock ?? ''}
                   min={0}
+                  placeholder={t('goodie.overview.unlimited')}
                   onChange={(stock: string | number) =>
                     onChange({ stock: stock === '' ? null : +stock })
                   }
