@@ -1109,14 +1109,23 @@ export class MemberContext implements MemberContextInterface {
       return;
     }
 
-    await this.mailContext.sendMail({
-      externalMailTemplateId: remoteTemplate,
-      recipient: user,
-      optionalData: {
-        subscription,
-        ...optionalData,
-      },
-      mailType: mailLogType.UserFlow,
-    });
+    try {
+      await this.mailContext.sendMail({
+        externalMailTemplateId: remoteTemplate,
+        recipient: user,
+        optionalData: {
+          subscription,
+          ...optionalData,
+        },
+        mailType: mailLogType.UserFlow,
+      });
+    } catch (error) {
+      logger('MemberContext').error(
+        error as Error,
+        'Failed to send mail for subscription event <%s> of subscription <%s>',
+        subscriptionEvent,
+        subscription.id
+      );
+    }
   }
 }
