@@ -1,5 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Checkbox, FormControlLabel, FormHelperText } from '@mui/material';
+import {
+  Checkbox,
+  FormControlLabel,
+  FormHelperText,
+  Radio,
+  RadioGroup,
+} from '@mui/material';
 import styled from '@emotion/styled';
 import {
   Challenge,
@@ -58,6 +64,7 @@ export const subscribeSchema = z.object({
   ]),
   payTransactionFee: z.boolean(),
   voucher: z.string().nullish(),
+  goodieId: z.string().nullish(),
 });
 
 export const SubscribeWrapper = styled('form')`
@@ -131,6 +138,43 @@ export const SubscribeNarrowSection = styled(SubscribeSection)`
 
 export const VoucherSection = styled(SubscribeNarrowSection)`
   display: none;
+`;
+
+export const GoodieSection = styled(SubscribeNarrowSection)`
+  display: none;
+`;
+
+export const GoodieOptions = styled(RadioGroup)`
+  gap: ${({ theme }) => theme.spacing(1)};
+`;
+
+export const GoodieOption = styled(FormControlLabel)`
+  margin: 0;
+  align-items: center;
+  padding: ${({ theme }) => theme.spacing(1.5)};
+  border: 1px solid ${({ theme }) => theme.palette.divider};
+  border-radius: ${({ theme }) => theme.shape.borderRadius}px;
+`;
+
+export const GoodieOptionContent = styled('div')`
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: ${({ theme }) => theme.spacing(2)};
+  align-items: center;
+`;
+
+export const GoodieOptionImage = styled('div')`
+  width: ${({ theme }) => theme.spacing(8)};
+
+  img {
+    width: 100%;
+    height: auto;
+    border-radius: ${({ theme }) => theme.shape.borderRadius}px;
+  }
+`;
+
+export const GoodieOptionName = styled('strong')`
+  display: block;
 `;
 
 export const usePaymentText = ({
@@ -252,7 +296,8 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
 }: BuilderSubscribeProps<T>) => {
   const {
     meta: { locale, siteTitle },
-    elements: { Alert, H5, Paragraph, TextField },
+    elements: { Alert, H5, Image, Paragraph, TextField },
+    richtext: { RenderRichtext },
     MemberPlanPicker,
     PaymentMethodPicker,
     PeriodicityPicker,
@@ -335,34 +380,43 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     ]
   );
 
-  const { control, handleSubmit, watch, setValue, resetField } = useForm<
-    z.infer<typeof loggedInSchema> | z.infer<typeof loggedOutSchema>
-  >({
-    resolver: zodResolver(schem),
-    defaultValues: {
-      ...defaults,
-      voucher: '',
-      monthlyAmount: 0,
-      autoRenew: true,
-      payTransactionFee: false,
-      memberPlanId:
-        defaults?.memberPlanSlug ?
-          memberPlans.data?.memberPlans.nodes.find(
-            memberPlan => memberPlan.slug === defaults?.memberPlanSlug
-          )?.id
-        : memberPlans.data?.memberPlans.nodes[0]?.id,
-      paymentMethodId:
-        memberPlans.data?.memberPlans.nodes[0]?.availablePaymentMethods[0]
-          ?.paymentMethods[0]?.id,
-      paymentPeriodicity:
-        memberPlans.data?.memberPlans.nodes[0]?.availablePaymentMethods[0]
-          ?.paymentPeriodicities[0],
-    },
-    mode: 'onTouched',
-    reValidateMode: 'onChange',
-  });
+  const {
+    control,
+    handleSubmit,
+    watch,
+    setValue,
+    resetField,
+    setError: setFieldError,
+  } = useForm<z.infer<typeof loggedInSchema> | z.infer<typeof loggedOutSchema>>(
+    {
+      resolver: zodResolver(schem),
+      defaultValues: {
+        ...defaults,
+        voucher: '',
+        goodieId: null,
+        monthlyAmount: 0,
+        autoRenew: true,
+        payTransactionFee: false,
+        memberPlanId:
+          defaults?.memberPlanSlug ?
+            memberPlans.data?.memberPlans.nodes.find(
+              memberPlan => memberPlan.slug === defaults?.memberPlanSlug
+            )?.id
+          : memberPlans.data?.memberPlans.nodes[0]?.id,
+        paymentMethodId:
+          memberPlans.data?.memberPlans.nodes[0]?.availablePaymentMethods[0]
+            ?.paymentMethods[0]?.id,
+        paymentPeriodicity:
+          memberPlans.data?.memberPlans.nodes[0]?.availablePaymentMethods[0]
+            ?.paymentPeriodicities[0],
+      },
+      mode: 'onTouched',
+      reValidateMode: 'onChange',
+    }
+  );
 
   const voucher = watch<'voucher'>('voucher');
+  const goodieId = watch<'goodieId'>('goodieId');
   const selectedPaymentMethodId = watch<'paymentMethodId'>('paymentMethodId');
   const selectedPaymentPeriodicity =
     watch<'paymentPeriodicity'>('paymentPeriodicity');
@@ -381,6 +435,16 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
         memberPlan => memberPlan.id === selectedMemberPlanId
       ),
     [memberPlans.data?.memberPlans.nodes, selectedMemberPlanId]
+  );
+
+  const [soldOutGoodieIds, setSoldOutGoodieIds] = useState<string[]>([]);
+
+  const availableGoodies = useMemo(
+    () =>
+      selectedMemberPlan?.goodies?.filter(
+        ({ id }) => !soldOutGoodieIds.includes(id)
+      ) ?? [],
+    [selectedMemberPlan?.goodies, soldOutGoodieIds]
   );
 
   const selectedAvailablePaymentMethod = useMemo(
@@ -455,6 +519,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       paymentPeriodicity: data.paymentPeriodicity,
       autoRenew: data.autoRenew,
       voucher: data.voucher,
+      goodieId: data.goodieId,
     };
 
     if (hasUser) {
@@ -559,6 +624,35 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       },
     });
   }, [fetchSubscribeInfo, selectedMemberPlanId, voucher]);
+
+  useEffect(() => {
+    if (goodieId && !availableGoodies.some(({ id }) => id === goodieId)) {
+      setValue<'goodieId'>('goodieId', null);
+    }
+  }, [availableGoodies, goodieId, setValue]);
+
+  useEffect(() => {
+    if (!error || !goodieId) {
+      return;
+    }
+
+    const graphQLErrors =
+      Array.isArray(error) ? error : (
+        ((error as ApolloError).graphQLErrors ?? [])
+      );
+
+    const isSoldOut = graphQLErrors.some(
+      graphQLError => graphQLError?.extensions?.code === 'GOODIE_SOLD_OUT'
+    );
+
+    if (isSoldOut) {
+      setSoldOutGoodieIds(ids => [...ids, goodieId]);
+      setValue<'goodieId'>('goodieId', null);
+      setFieldError('goodieId', {
+        message: t('subscribe.goodie.soldOut'),
+      });
+    }
+  }, [error, goodieId, setFieldError, setValue, t]);
 
   const alreadyHasSubscription = useMemo(() => {
     if (deactivateSubscriptionId) {
@@ -746,6 +840,62 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
             )}
         </SubscribePayment>
       </SubscribeSection>
+
+      {!!availableGoodies.length && (
+        <GoodieSection area="goodie">
+          <H5 component="h2">{t('subscribe.goodie.title')}</H5>
+
+          <Controller
+            name={'goodieId'}
+            control={control}
+            render={({ field, fieldState: { error: fieldError } }) => (
+              <div>
+                <GoodieOptions
+                  value={field.value ?? ''}
+                  onChange={event => field.onChange(event.target.value || null)}
+                >
+                  <GoodieOption
+                    value=""
+                    control={<Radio />}
+                    label={t('subscribe.goodie.none')}
+                  />
+
+                  {availableGoodies.map(goodie => (
+                    <GoodieOption
+                      key={goodie.id}
+                      value={goodie.id}
+                      control={<Radio />}
+                      label={
+                        <GoodieOptionContent>
+                          {goodie.image && (
+                            <GoodieOptionImage>
+                              <Image image={goodie.image} />
+                            </GoodieOptionImage>
+                          )}
+
+                          <div>
+                            <GoodieOptionName>{goodie.name}</GoodieOptionName>
+
+                            {goodie.description && (
+                              <RenderRichtext document={goodie.description} />
+                            )}
+                          </div>
+                        </GoodieOptionContent>
+                      }
+                    />
+                  ))}
+                </GoodieOptions>
+
+                {!!fieldError && (
+                  <FormHelperText error={!!fieldError}>
+                    {fieldError?.message}
+                  </FormHelperText>
+                )}
+              </div>
+            )}
+          />
+        </GoodieSection>
+      )}
 
       <VoucherSection area="voucher">
         <Controller

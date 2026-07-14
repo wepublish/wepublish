@@ -1648,7 +1648,8 @@
       "subscriptionTrialNotPossible": "L'abonnement ne peut pas être configuré comme abonnement d'essai. Pour ce faire, modifie les paramètres du plan d'abonnement.",
       "extendableWasChanged": "L'option «Extensible» a été adaptée en fonction du plan d'abonnement.",
       "extendModalTitle": "Renouveler l'abonnement plus tôt?",
-      "extendModalBody": "L'abonnement est prolongé en temps utile pour la prochaine période possible. Une facture est établie."
+      "extendModalBody": "L'abonnement est prolongé en temps utile pour la prochaine période possible. Une facture est établie.",
+      "goodie": "Goodie"
     },
     "subscriptionListFilter": {
       "extendable": "Extensible"
@@ -1872,6 +1873,33 @@
         "areYouSure": "Êtes-vous sûr(e) ?",
         "areYouSureBody": "Le bon de réduction \"{{ voucher }}\" sera définitivement supprimé et cette action est irréversible.",
         "areYouSureConfirmation": "Supprimer le bon de réduction"
+      }
+    },
+    "goodie": {
+      "navbar": "Goodies",
+      "form": {
+        "createTitle": "Créer un goodie",
+        "editTitle": "Modifier le goodie \"{{ goodie }}\"",
+        "name": "Nom",
+        "description": "Description",
+        "stock": "Stock",
+        "active": "Actif",
+        "image": "Image",
+        "memberPlans": "Plans d'abonnement"
+      },
+      "overview": {
+        "title": "Goodies",
+        "createGoodie": "Nouveau goodie",
+        "name": "Nom",
+        "memberPlans": "Plans d'abonnement",
+        "stock": "Stock",
+        "availableStock": "Disponible",
+        "active": "Actif",
+        "createdAt": "Créé le",
+        "unlimited": "∞",
+        "areYouSure": "Êtes-vous sûr(e) ?",
+        "areYouSureBody": "Le goodie \"{{ goodie }}\" sera définitivement supprimé et cette action est irréversible.",
+        "areYouSureConfirmation": "Supprimer le goodie"
       }
     },
     "paymentMethodEditPanel": {

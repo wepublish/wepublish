@@ -760,6 +760,7 @@ export class MemberContext implements MemberContextInterface {
     needsConfirmation,
     discount,
     voucherId,
+    goodieID,
   }: {
     userID: string;
     paymentMethodID: string;
@@ -774,6 +775,7 @@ export class MemberContext implements MemberContextInterface {
     needsConfirmation?: boolean;
     discount?: number;
     voucherId?: string;
+    goodieID?: string;
   }): Promise<{
     subscription: SubscriptionWithRelations;
     invoice: InvoiceWithItems;
@@ -825,6 +827,7 @@ export class MemberContext implements MemberContextInterface {
         extendable,
         currency: memberPlan.currency,
         confirmed: !needsConfirmation,
+        goodieID,
       },
       include: {
         deactivation: true,

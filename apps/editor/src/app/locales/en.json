@@ -1757,7 +1757,8 @@
       "subscriptionTrialNotPossible": "The subscription cannot be configured as a trial subscription. To do so, change the settings of the subscription plan.",
       "extendableWasChanged": "The «Extendable» option has been adjusted according to the subscription plan.",
       "extendModalTitle": "Extend your subscription early?",
-      "extendModalBody": "The subscription will be extended prematurely for the next possible period. An invoice will be issued."
+      "extendModalBody": "The subscription will be extended prematurely for the next possible period. An invoice will be issued.",
+      "goodie": "Goodie"
     },
     "subscriptionListFilter": {
       "extendable": "Extendable"
@@ -1989,6 +1990,33 @@
         "areYouSure": "Are you sure?",
         "areYouSureBody": "The voucher \"{{ voucher }}\" will be deleted permanently and can not be reversed.",
         "areYouSureConfirmation": "Delete voucher"
+      }
+    },
+    "goodie": {
+      "navbar": "Goodies",
+      "form": {
+        "createTitle": "Create Goodie",
+        "editTitle": "Edit Goodie \"{{ goodie }}\"",
+        "name": "Name",
+        "description": "Description",
+        "stock": "Stock",
+        "active": "Active",
+        "image": "Image",
+        "memberPlans": "Memberplans"
+      },
+      "overview": {
+        "title": "Goodies",
+        "createGoodie": "New Goodie",
+        "name": "Name",
+        "memberPlans": "Memberplans",
+        "stock": "Stock",
+        "availableStock": "Available",
+        "active": "Active",
+        "createdAt": "Created At",
+        "unlimited": "∞",
+        "areYouSure": "Are you sure?",
+        "areYouSureBody": "The goodie \"{{ goodie }}\" will be deleted permanently and can not be reversed.",
+        "areYouSureConfirmation": "Delete goodie"
       }
     },
     "paymentMethodEditPanel": {

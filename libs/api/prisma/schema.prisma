@@ -281,6 +281,7 @@ model Image {
   banners               Banner[]
   peerProfileLogo       PeerProfile[] @relation("logo")
   peerProfileSquareLogo PeerProfile[] @relation("squareLogo")
+  goodies               Goodie[]
 
   @@index([createdAt])
   @@index([modifiedAt])
@@ -610,6 +611,7 @@ model MemberPlan {
   crowdfundings Crowdfunding[]
   paywalls      PaywallMemberplan[]
   vouchers      Voucher[]
+  goodies       Goodie[]
 
   @@index([name])
   @@map("member.plans")
@@ -945,6 +947,9 @@ model Subscription {
   replacedBy             Subscription[] @relation("ReplacementHistory")
 
   invoices Invoice[]
+
+  goodieID String?
+  goodie   Goodie? @relation(fields: [goodieID], references: [id], onDelete: SetNull)
 
   @@index([userID])
   @@map("subscriptions")
@@ -1938,4 +1943,23 @@ model Voucher {
 
   @@unique([code, memberPlanId])
   @@map("vouchers")
+}
+
+model Goodie {
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  name        String
+  description Json?
+  stock       Int?
+  active      Boolean @default(true)
+
+  imageID String?
+  image   Image?  @relation(fields: [imageID], references: [id], onDelete: SetNull)
+
+  memberPlans   MemberPlan[]
+  subscriptions Subscription[]
+
+  @@map("goodies")
 }

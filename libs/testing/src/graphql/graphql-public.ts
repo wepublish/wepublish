@@ -1280,6 +1280,33 @@ export type FullPoll = {
   question?: Maybe<Scalars['String']>;
 };
 
+export type Goodie = HasImage & {
+  __typename?: 'Goodie';
+  active: Scalars['Boolean'];
+  availableStock?: Maybe<Scalars['Int']>;
+  createdAt: Scalars['DateTime'];
+  description?: Maybe<Scalars['RichText']>;
+  id: Scalars['String'];
+  image?: Maybe<Image>;
+  imageID?: Maybe<Scalars['String']>;
+  memberPlans: Array<MemberPlan>;
+  modifiedAt: Scalars['DateTime'];
+  name: Scalars['String'];
+  stock?: Maybe<Scalars['Int']>;
+};
+
+export type GoodieFilter = {
+  active?: InputMaybe<Scalars['Boolean']>;
+  memberPlans?: InputMaybe<Array<Scalars['String']>>;
+  name?: InputMaybe<Scalars['String']>;
+};
+
+export enum GoodieSort {
+  CreatedAt = 'CreatedAt',
+  ModifiedAt = 'ModifiedAt',
+  Name = 'Name',
+}
+
 export type HtmlBlock = BaseBlock & {
   __typename?: 'HTMLBlock';
   blockStyle?: Maybe<Scalars['String']>;
@@ -1826,6 +1853,8 @@ export type MemberPlan = HasImage & {
   externalReward?: Maybe<Scalars['String']>;
   failPage?: Maybe<Page>;
   failPageId?: Maybe<Scalars['String']>;
+  /** Active goodies with remaining stock that can be chosen with this member plan. */
+  goodies: Array<Goodie>;
   id: Scalars['String'];
   image?: Maybe<Image>;
   imageID?: Maybe<Scalars['String']>;
@@ -1888,6 +1917,8 @@ export type Mutation = {
   createExternalApp: ExternalApp;
   /** Generates a short-lived JWT token for authenticating with an external app. */
   createExternalAppToken: ExternalAppToken;
+  /** Creates a new goodie. */
+  createGoodie: Goodie;
   /** Creates a new invoice. */
   createInvoice: Invoice;
   /** Returns a JWT that can be used to login as another user. */
@@ -1971,6 +2002,8 @@ export type Mutation = {
   deleteEvent: Event;
   /** Deletes an external app. */
   deleteExternalApp: ExternalApp;
+  /** Deletes an existing goodie. */
+  deleteGoodie: Goodie;
   /** Deletes an existing image. */
   deleteImage: Scalars['String'];
   /** Deletes an existing invoice. */
@@ -2129,6 +2162,8 @@ export type Mutation = {
   updateEvent: Event;
   /** Updates an existing external app. */
   updateExternalApp: ExternalApp;
+  /** Updates an existing goodie. */
+  updateGoodie: Goodie;
   /** Updates an existing image. */
   updateImage: Image;
   /** Updates an existing invoice. */
@@ -2315,6 +2350,15 @@ export type MutationCreateExternalAppArgs = {
 
 export type MutationCreateExternalAppTokenArgs = {
   externalAppId: Scalars['String'];
+};
+
+export type MutationCreateGoodieArgs = {
+  active: Scalars['Boolean'];
+  description?: InputMaybe<Scalars['RichText']>;
+  imageID?: InputMaybe<Scalars['String']>;
+  memberPlanIDs: Array<Scalars['String']>;
+  name: Scalars['String'];
+  stock?: InputMaybe<Scalars['Int']>;
 };
 
 export type MutationCreateInvoiceArgs = {
@@ -2527,6 +2571,7 @@ export type MutationCreateUserSubscriptionArgs = {
   autoRenew: Scalars['Boolean'];
   deactivateSubscriptionId?: InputMaybe<Scalars['String']>;
   failureURL?: InputMaybe<Scalars['String']>;
+  goodieID?: InputMaybe<Scalars['String']>;
   memberPlanID?: InputMaybe<Scalars['String']>;
   memberPlanSlug?: InputMaybe<Scalars['Slug']>;
   monthlyAmount: Scalars['Int'];
@@ -2540,6 +2585,7 @@ export type MutationCreateUserSubscriptionArgs = {
 
 export type MutationCreateUserSubscriptionWithConfirmationArgs = {
   autoRenew: Scalars['Boolean'];
+  goodieID?: InputMaybe<Scalars['String']>;
   memberPlanID?: InputMaybe<Scalars['String']>;
   memberPlanSlug?: InputMaybe<Scalars['Slug']>;
   monthlyAmount: Scalars['Int'];
@@ -2600,6 +2646,10 @@ export type MutationDeleteEventArgs = {
 };
 
 export type MutationDeleteExternalAppArgs = {
+  id: Scalars['String'];
+};
+
+export type MutationDeleteGoodieArgs = {
   id: Scalars['String'];
 };
 
@@ -2996,6 +3046,16 @@ export type MutationUpdateExternalAppArgs = {
   name?: InputMaybe<Scalars['String']>;
   target?: InputMaybe<ExternalAppsTarget>;
   url?: InputMaybe<Scalars['String']>;
+};
+
+export type MutationUpdateGoodieArgs = {
+  active?: InputMaybe<Scalars['Boolean']>;
+  description?: InputMaybe<Scalars['RichText']>;
+  id: Scalars['String'];
+  imageID?: InputMaybe<Scalars['String']>;
+  memberPlanIDs?: InputMaybe<Array<Scalars['String']>>;
+  name?: InputMaybe<Scalars['String']>;
+  stock?: InputMaybe<Scalars['Int']>;
 };
 
 export type MutationUpdateImageArgs = {
@@ -3554,6 +3614,13 @@ export type PaginatedEvents = {
 export type PaginatedEventsFromSources = {
   __typename?: 'PaginatedEventsFromSources';
   nodes: Array<EventFromSource>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type PaginatedGoodies = {
+  __typename?: 'PaginatedGoodies';
+  nodes: Array<Goodie>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
 };
@@ -4145,6 +4212,7 @@ export type PublicSubscription = HasMemberPlan &
     deactivation?: Maybe<SubscriptionDeactivation>;
     extendable: Scalars['Boolean'];
     externalReward?: Maybe<Scalars['String']>;
+    goodie?: Maybe<Goodie>;
     id: Scalars['String'];
     isActive: Scalars['Boolean'];
     memberPlan: MemberPlan;
@@ -4274,6 +4342,10 @@ export type Query = {
   externalApps: Array<ExternalApp>;
   /** Returns images by tag. */
   getImagesByTag: Array<Image>;
+  /** Returns a goodie by id. */
+  goodie: Goodie;
+  /** This query returns a list of goodies */
+  goodies: PaginatedGoodies;
   /**
    *
    *       Returns the most viewed articles in descending order.
@@ -4650,6 +4722,19 @@ export type QueryExternalAppsArgs = {
 
 export type QueryGetImagesByTagArgs = {
   tag: Scalars['String'];
+};
+
+export type QueryGoodieArgs = {
+  id: Scalars['String'];
+};
+
+export type QueryGoodiesArgs = {
+  cursorId?: InputMaybe<Scalars['String']>;
+  filter?: InputMaybe<GoodieFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: Scalars['Int'];
+  sort?: GoodieSort;
+  take?: Scalars['Int'];
 };
 
 export type QueryHotAndTrendingArgs = {

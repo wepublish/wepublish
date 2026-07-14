@@ -1699,7 +1699,8 @@
       "subscriptionTrialNotPossible": "Das Abo kann nicht als Probeabo konfiguriert werden. Ändere hierzu die Einstellungen des Abo-Plans.",
       "extendableWasChanged": "Die Option «Verlängerbar» wurde entsprechend dem Abo-Plan angepasst.",
       "extendModalTitle": "Abo frühzeitig verlängern?",
-      "extendModalBody": "Das Abo wird frühzeitig um die nächst mögliche Periode verlängert. Es wird eine Rechnung erstellt."
+      "extendModalBody": "Das Abo wird frühzeitig um die nächst mögliche Periode verlängert. Es wird eine Rechnung erstellt.",
+      "goodie": "Goodie"
     },
     "subscriptionListFilter": {
       "extendable": "Verlängerbar"
@@ -1928,6 +1929,33 @@
         "areYouSure": "Bist du sicher?",
         "areYouSureBody": "Der Gutschein \"{{ voucher }}\" wird unwiderruflich gelöscht.",
         "areYouSureConfirmation": "Gutschein löschen"
+      }
+    },
+    "goodie": {
+      "navbar": "Goodies",
+      "form": {
+        "createTitle": "Goodie erstellen",
+        "editTitle": "Goodie \"{{ goodie }}\" bearbeiten",
+        "name": "Name",
+        "description": "Beschreibung",
+        "stock": "Lagerbestand",
+        "active": "Aktiv",
+        "image": "Bild",
+        "memberPlans": "Abo-Pläne"
+      },
+      "overview": {
+        "title": "Goodies",
+        "createGoodie": "Neues Goodie",
+        "name": "Name",
+        "memberPlans": "Abo-Pläne",
+        "stock": "Lagerbestand",
+        "availableStock": "Verfügbar",
+        "active": "Aktiv",
+        "createdAt": "Erstellt am",
+        "unlimited": "∞",
+        "areYouSure": "Bist du sicher?",
+        "areYouSureBody": "Das Goodie \"{{ goodie }}\" wird unwiderruflich gelöscht.",
+        "areYouSureConfirmation": "Goodie löschen"
       }
     },
     "paymentMethodEditPanel": {
