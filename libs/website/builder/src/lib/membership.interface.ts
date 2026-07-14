@@ -2,6 +2,7 @@ import { LazyQueryExecFunction, QueryResult } from '@apollo/client';
 import { RadioProps } from '@mui/material';
 import {
   ChallengeQuery,
+  FullGoodieFragment,
   FullInvoiceFragment,
   FullMemberPlanFragment,
   FullSubscriptionFragment,
@@ -55,6 +56,15 @@ export type BuilderInvoiceListProps = Pick<
 > & {
   className?: string;
   onPay?: (invoiceId: string, paymentMethodId: string) => Promise<void>;
+};
+
+export type BuilderGoodiePickerProps = {
+  goodies: FullGoodieFragment[];
+  className?: string;
+  name?: string;
+  value?: string | null;
+  disabled?: boolean;
+  onChange: (goodieId: string | null) => void;
 };
 
 export type BuilderMemberPlanPickerProps = {

@@ -1,11 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  Checkbox,
-  FormControlLabel,
-  FormHelperText,
-  Radio,
-  RadioGroup,
-} from '@mui/material';
+import { Checkbox, FormControlLabel, FormHelperText } from '@mui/material';
 import styled from '@emotion/styled';
 import {
   Challenge,
@@ -155,39 +149,6 @@ export const GoodieSection = styled(SubscribeNarrowSection)`
   display: none;
 `;
 
-export const GoodieOptions = styled(RadioGroup)`
-  gap: ${({ theme }) => theme.spacing(1)};
-`;
-
-export const GoodieOption = styled(FormControlLabel)`
-  margin: 0;
-  align-items: center;
-  padding: ${({ theme }) => theme.spacing(1.5)};
-  border: 1px solid ${({ theme }) => theme.palette.divider};
-  border-radius: ${({ theme }) => theme.shape.borderRadius}px;
-`;
-
-export const GoodieOptionContent = styled('div')`
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: ${({ theme }) => theme.spacing(2)};
-  align-items: center;
-`;
-
-export const GoodieOptionImage = styled('div')`
-  width: ${({ theme }) => theme.spacing(8)};
-
-  img {
-    width: 100%;
-    height: auto;
-    border-radius: ${({ theme }) => theme.shape.borderRadius}px;
-  }
-`;
-
-export const GoodieOptionName = styled('strong')`
-  display: block;
-`;
-
 export const usePaymentText = ({
   type = 'button',
   autoRenew,
@@ -307,8 +268,8 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
 }: BuilderSubscribeProps<T>) => {
   const {
     meta: { locale, siteTitle },
-    elements: { Alert, H5, Image, Paragraph, TextField },
-    richtext: { RenderRichtext },
+    elements: { Alert, H5, Paragraph, TextField },
+    GoodiePicker,
     MemberPlanPicker,
     PaymentMethodPicker,
     PeriodicityPicker,
@@ -853,61 +814,31 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
         </SubscribePayment>
       </SubscribeSection>
 
-      {!!availableGoodies.length && (
-        <GoodieSection area="goodie">
-          <H5 component="h2">{t('subscribe.goodie.title')}</H5>
+      <GoodieSection area="goodie">
+        <H5 component="h2">{t('subscribe.goodie.title')}</H5>
 
-          <Controller
-            name={'goodieId'}
-            control={control}
-            render={({ field, fieldState: { error: fieldError } }) => (
-              <div>
-                <GoodieOptions
-                  value={field.value ?? ''}
-                  onChange={event => field.onChange(event.target.value || null)}
-                >
-                  <GoodieOption
-                    value=""
-                    control={<Radio />}
-                    label={t('subscribe.goodie.none')}
-                  />
+        <Controller
+          name={'goodieId'}
+          control={control}
+          render={({ field, fieldState: { error: fieldError } }) => (
+            <div>
+              <GoodiePicker
+                {...field}
+                value={field.value}
+                onChange={goodieId => field.onChange(goodieId)}
+                goodies={availableGoodies}
+                disabled={!availableGoodies.length}
+              />
 
-                  {availableGoodies.map(goodie => (
-                    <GoodieOption
-                      key={goodie.id}
-                      value={goodie.id}
-                      control={<Radio />}
-                      label={
-                        <GoodieOptionContent>
-                          {goodie.image && (
-                            <GoodieOptionImage>
-                              <Image image={goodie.image} />
-                            </GoodieOptionImage>
-                          )}
-
-                          <div>
-                            <GoodieOptionName>{goodie.name}</GoodieOptionName>
-
-                            {goodie.description && (
-                              <RenderRichtext document={goodie.description} />
-                            )}
-                          </div>
-                        </GoodieOptionContent>
-                      }
-                    />
-                  ))}
-                </GoodieOptions>
-
-                {!!fieldError && (
-                  <FormHelperText error={!!fieldError}>
-                    {fieldError?.message}
-                  </FormHelperText>
-                )}
-              </div>
-            )}
-          />
-        </GoodieSection>
-      )}
+              {!!fieldError && (
+                <FormHelperText error={!!fieldError}>
+                  {fieldError?.message}
+                </FormHelperText>
+              )}
+            </div>
+          )}
+        />
+      </GoodieSection>
 
       <VoucherSection area="voucher">
         <Controller
