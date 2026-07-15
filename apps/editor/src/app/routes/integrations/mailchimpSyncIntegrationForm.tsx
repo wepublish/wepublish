@@ -988,44 +988,37 @@ function SyncProviderSettingCard({
               name="mailchimp_listId"
               control={control}
               render={({ field: { value, onChange } }) => (
-                <Autocomplete
-                  freeSolo
-                  options={availableLists.map(l => l.id)}
-                  getOptionLabel={id => {
-                    const list = availableLists.find(l => l.id === id);
+                <Select
+                  size="small"
+                  displayEmpty
+                  disabled={listsLoading}
+                  value={value ?? ''}
+                  onChange={e => onChange(e.target.value)}
+                  renderValue={selected => {
+                    if (!selected) {
+                      return t('integrations.mailchimpSyncSettings.listId');
+                    }
+                    const list = availableLists.find(l => l.id === selected);
                     return list ?
                         `${list.name} (${list.memberCount} members)`
-                      : id;
+                      : selected;
                   }}
-                  filterOptions={(options, { inputValue }) =>
-                    inputValue ?
-                      options.filter(id => {
-                        const list = availableLists.find(l => l.id === id);
-                        const label = list ? `${list.name} ${list.id}` : id;
-                        return label
-                          .toLowerCase()
-                          .includes(inputValue.toLowerCase());
-                      })
-                    : options
-                  }
-                  value={value ?? ''}
-                  onChange={(_, newValue) => {
-                    onChange(newValue ?? '');
-                  }}
-                  onInputChange={(_, inputValue, reason) => {
-                    if (reason === 'input') onChange(inputValue);
-                  }}
-                  loading={listsLoading}
-                  renderInput={params => (
-                    <TextField
-                      {...params}
-                      size="small"
-                      placeholder={t(
-                        'integrations.mailchimpSyncSettings.listId'
-                      )}
-                    />
+                >
+                  <MenuItem value="">
+                    <em>{t('integrations.mailchimpSyncSettings.listId')}</em>
+                  </MenuItem>
+                  {availableLists.map(list => (
+                    <MenuItem
+                      key={list.id}
+                      value={list.id}
+                    >
+                      {`${list.name} (${list.memberCount} members)`}
+                    </MenuItem>
+                  ))}
+                  {value && !availableLists.some(l => l.id === value) && (
+                    <MenuItem value={value}>{value}</MenuItem>
                   )}
-                />
+                </Select>
               )}
             />
           </Form.Group>
