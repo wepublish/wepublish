@@ -1,14 +1,14 @@
 import styled from '@emotion/styled';
 import {
   BlockContent,
-  SoundCloudTrackBlock as SoundCloudTrackBlockType,
+  FullSoundCloudTrackBlockFragment,
 } from '@wepublish/website/api';
 import { BuilderSoundCloudTrackBlockProps } from '@wepublish/website/builder';
 import ReactPlayer from 'react-player';
 
 export const isSoundCloudTrackBlock = (
   block: Pick<BlockContent, '__typename'>
-): block is SoundCloudTrackBlockType =>
+): block is FullSoundCloudTrackBlockFragment =>
   block.__typename === 'SoundCloudTrackBlock';
 
 export const SoundCloudTrackBlockWrapper = styled('div')``;

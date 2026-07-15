@@ -1,8 +1,114 @@
 import styled from '@emotion/styled';
 import {
+  CanCreateArticle,
+  CanCreateAuthor,
+  CanCreateBanner,
+  CanCreateBlockStyle,
+  CanCreateCommentRatingSystem,
+  CanCreateConsent,
+  CanCreateCrowdfunding,
+  CanCreateDocument,
+  CanCreateExternalApp,
+  CanCreateImage,
+  CanCreateMemberPlan,
+  CanCreateNavigation,
+  CanCreatePage,
+  CanCreatePaymentMethod,
   CanCreatePaywall,
+  CanCreatePeer,
+  CanCreatePoll,
+  CanCreateSubscription,
+  CanCreateTag,
+  CanCreateToken,
+  CanCreateUser,
+  CanCreateUserRole,
+  CanCreateVoucher,
+  CanDeleteArticle,
+  CanDeleteAuthor,
+  CanDeleteBanner,
+  CanDeleteBlockStyle,
+  CanDeleteCommentRatingSystem,
+  CanDeleteConsent,
+  CanDeleteDocument,
+  CanDeleteEvent,
+  CanDeleteExternalApp,
+  CanDeleteImage,
+  CanDeleteMemberPlan,
+  CanDeleteNavigation,
+  CanDeletePage,
+  CanDeletePaymentMethod,
+  CanDeletePeer,
+  CanDeletePoll,
+  CanDeleteSubscription,
+  CanDeleteTag,
+  CanDeleteToken,
+  CanDeleteUser,
+  CanDeleteUserRole,
+  CanGetAISettings,
+  CanGetArticle,
+  CanGetArticles,
+  CanGetAudienceStats,
+  CanGetAuthor,
+  CanGetAuthors,
+  CanGetBanner,
+  CanGetBanners,
+  CanGetChallengeProviderSettings,
+  CanGetCommentRatingSystem,
+  CanGetComments,
+  CanGetCrowdfunding,
+  CanGetCrowdfundings,
+  CanGetDocument,
+  CanGetDocuments,
+  CanGetEvent,
+  CanGetImage,
+  CanGetImages,
+  CanGetMailProviderSettings,
+  CanGetMailTemplates,
+  CanGetMemberPlan,
+  CanGetMemberPlans,
+  CanGetNavigation,
+  CanGetNavigations,
+  CanGetPage,
+  CanGetPages,
+  CanGetPaymentMethod,
+  CanGetPaymentMethods,
+  CanGetPaymentProviderSettings,
+  CanGetPeer,
+  CanGetPeerArticle,
+  CanGetPeerArticles,
+  CanGetPeers,
+  CanGetPoll,
+  CanGetSettings,
+  CanGetSubscription,
+  CanGetSubscriptionFlows,
+  CanGetSubscriptions,
+  CanGetSystemMails,
+  CanGetTags,
+  CanGetTokens,
+  CanGetTrackingPixelSettings,
+  CanGetUser,
+  CanGetUserRole,
+  CanGetUserRoles,
+  CanGetUsers,
+  CanGetWebsiteSettings,
   CanPreview,
+  CanPublishArticle,
+  CanPublishPage,
+  CanSyncMailTemplates,
+  CanTakeActionOnComment,
+  CanUpdateBlockStyle,
+  CanUpdateCommentRatingSystem,
+  CanUpdateComments,
+  CanUpdateConsent,
+  CanUpdateCrowdfunding,
+  CanUpdateEvent,
+  CanUpdateExternalApp,
   CanUpdatePaywall,
+  CanUpdateSettings,
+  CanUpdateSystemMails,
+  CanUpdateTag,
+  CanUpdateVoucher,
+  CanUpdateWebsiteSettings,
 } from '@wepublish/permissions';
 import { PermissionControl, Version } from '@wepublish/ui/editor';
 import { de, enUS, fr } from 'date-fns/locale';
@@ -11,17 +117,18 @@ import { useTranslation } from 'react-i18next';
 import {
   MdAccountCircle,
   MdApproval,
+  MdAutoFixHigh,
   MdAutorenew,
   MdBadge,
   MdBookOnline,
   MdChat,
   MdChevronLeft,
   MdChevronRight,
+  MdCountertops,
   MdCreditCard,
   MdDashboard,
   MdDescription,
   MdEvent,
-  MdEventAvailable,
   MdExtension,
   MdFactCheck,
   MdFileCopy,
@@ -59,6 +166,8 @@ import {
   Sidebar as RSidebar,
   Sidenav as RSidenav,
 } from 'rsuite';
+
+import { OneMessages } from './oneMessages/oneMessages';
 
 export interface BaseProps {
   children?: ReactNode;
@@ -211,9 +320,9 @@ export function Base({ children }: BaseProps) {
 
                   <PermissionControl
                     qualifyingPermissions={[
-                      'CAN_CREATE_EXTERNAL_APP',
-                      'CAN_UPDATE_EXTERNAL_APP',
-                      'CAN_DELETE_EXTERNAL_APP',
+                      CanCreateExternalApp.id,
+                      CanUpdateExternalApp.id,
+                      CanDeleteExternalApp.id,
                     ]}
                   >
                     <Nav.Item
@@ -229,15 +338,15 @@ export function Base({ children }: BaseProps) {
 
                 <PermissionControl
                   qualifyingPermissions={[
-                    'CAN_GET_ARTICLES',
-                    'CAN_GET_ARTICLE',
-                    'CAN_CREATE_ARTICLE',
-                    'CAN_DELETE_ARTICLE',
-                    'CAN_PUBLISH_ARTICLE',
+                    CanGetArticles.id,
+                    CanGetArticle.id,
+                    CanCreateArticle.id,
+                    CanDeleteArticle.id,
+                    CanPublishArticle.id,
                     CanPreview.id,
-                    'CAN_GET_PEER_ARTICLES',
-                    'CAN_GET_PEER_ARTICLE',
-                    'CAN_GET_TAGS',
+                    CanGetPeerArticles.id,
+                    CanGetPeerArticle.id,
+                    CanGetTags.id,
                     CanCreatePaywall.id,
                     CanUpdatePaywall.id,
                   ]}
@@ -249,11 +358,11 @@ export function Base({ children }: BaseProps) {
                   >
                     <PermissionControl
                       qualifyingPermissions={[
-                        'CAN_GET_ARTICLES',
-                        'CAN_GET_ARTICLE',
-                        'CAN_CREATE_ARTICLE',
-                        'CAN_DELETE_ARTICLE',
-                        'CAN_PUBLISH_ARTICLE',
+                        CanGetArticles.id,
+                        CanGetArticle.id,
+                        CanCreateArticle.id,
+                        CanDeleteArticle.id,
+                        CanPublishArticle.id,
                         CanPreview.id,
                       ]}
                     >
@@ -269,8 +378,8 @@ export function Base({ children }: BaseProps) {
 
                     <PermissionControl
                       qualifyingPermissions={[
-                        'CAN_GET_PEER_ARTICLES',
-                        'CAN_GET_PEER_ARTICLE',
+                        CanGetPeerArticles.id,
+                        CanGetPeerArticle.id,
                       ]}
                     >
                       <Nav.Item
@@ -294,10 +403,10 @@ export function Base({ children }: BaseProps) {
 
                     <PermissionControl
                       qualifyingPermissions={[
-                        'CAN_GET_TAGS',
-                        'CAN_CREATE_TAG',
-                        'CAN_UPDATE_TAG',
-                        'CAN_DELETE_TAG',
+                        CanGetTags.id,
+                        CanCreateTag.id,
+                        CanUpdateTag.id,
+                        CanDeleteTag.id,
                       ]}
                     >
                       <Nav.Item
@@ -330,13 +439,13 @@ export function Base({ children }: BaseProps) {
 
                 <PermissionControl
                   qualifyingPermissions={[
-                    'CAN_GET_PAGES',
-                    'CAN_GET_PAGE',
-                    'CAN_CREATE_PAGE',
-                    'CAN_DELETE_PAGE',
-                    'CAN_PUBLISH_PAGE',
+                    CanGetPages.id,
+                    CanGetPage.id,
+                    CanCreatePage.id,
+                    CanDeletePage.id,
+                    CanPublishPage.id,
                     CanPreview.id,
-                    'CAN_GET_TAGS',
+                    CanGetTags.id,
                   ]}
                 >
                   <Nav.Menu
@@ -346,11 +455,11 @@ export function Base({ children }: BaseProps) {
                   >
                     <PermissionControl
                       qualifyingPermissions={[
-                        'CAN_GET_PAGES',
-                        'CAN_GET_PAGE',
-                        'CAN_CREATE_PAGE',
-                        'CAN_DELETE_PAGE',
-                        'CAN_PUBLISH_PAGE',
+                        CanGetPages.id,
+                        CanGetPage.id,
+                        CanCreatePage.id,
+                        CanDeletePage.id,
+                        CanPublishPage.id,
                         CanPreview.id,
                       ]}
                     >
@@ -366,10 +475,10 @@ export function Base({ children }: BaseProps) {
 
                     <PermissionControl
                       qualifyingPermissions={[
-                        'CAN_GET_TAGS',
-                        'CAN_CREATE_TAG',
-                        'CAN_UPDATE_TAG',
-                        'CAN_DELETE_TAG',
+                        CanGetTags.id,
+                        CanCreateTag.id,
+                        CanUpdateTag.id,
+                        CanDeleteTag.id,
                       ]}
                     >
                       <Nav.Item
@@ -386,12 +495,12 @@ export function Base({ children }: BaseProps) {
 
                 <PermissionControl
                   qualifyingPermissions={[
-                    'CAN_GET_POLL',
-                    'CAN_CREATE_POLL',
-                    'CAN_DELETE_POLL',
-                    'CAN_CREATE_BLOCK_STYLE',
-                    'CAN_UPDATE_BLOCK_STYLE',
-                    'CAN_DELETE_BLOCK_STYLE',
+                    CanGetPoll.id,
+                    CanCreatePoll.id,
+                    CanDeletePoll.id,
+                    CanCreateBlockStyle.id,
+                    CanUpdateBlockStyle.id,
+                    CanDeleteBlockStyle.id,
                   ]}
                 >
                   <Nav.Menu
@@ -401,9 +510,9 @@ export function Base({ children }: BaseProps) {
                   >
                     <PermissionControl
                       qualifyingPermissions={[
-                        'CAN_GET_POLL',
-                        'CAN_CREATE_POLL',
-                        'CAN_DELETE_POLL',
+                        CanGetPoll.id,
+                        CanCreatePoll.id,
+                        CanDeletePoll.id,
                       ]}
                     >
                       <Nav.Item
@@ -418,10 +527,10 @@ export function Base({ children }: BaseProps) {
 
                     <PermissionControl
                       qualifyingPermissions={[
-                        'CAN_GET_CROWDFUNDINGS',
-                        'CAN_GET_CROWDFUNDING',
-                        'CAN_CREATE_CROWDFUNDING',
-                        'CAN_UPDATE_CROWDFUNDING',
+                        CanGetCrowdfundings.id,
+                        CanGetCrowdfunding.id,
+                        CanCreateCrowdfunding.id,
+                        CanUpdateCrowdfunding.id,
                       ]}
                     >
                       <Nav.Item
@@ -436,9 +545,9 @@ export function Base({ children }: BaseProps) {
 
                     <PermissionControl
                       qualifyingPermissions={[
-                        'CAN_CREATE_BLOCK_STYLE',
-                        'CAN_UPDATE_BLOCK_STYLE',
-                        'CAN_DELETE_BLOCK_STYLE',
+                        CanCreateBlockStyle.id,
+                        CanUpdateBlockStyle.id,
+                        CanDeleteBlockStyle.id,
                       ]}
                     >
                       <Nav.Item
@@ -455,9 +564,9 @@ export function Base({ children }: BaseProps) {
 
                 <PermissionControl
                   qualifyingPermissions={[
-                    'CAN_GET_COMMENTS',
-                    'CAN_GET_TAGS',
-                    'CAN_GET_COMMENT_RATING_SYSTEM',
+                    CanGetComments.id,
+                    CanGetTags.id,
+                    CanGetCommentRatingSystem.id,
                   ]}
                 >
                   <Nav.Menu
@@ -467,9 +576,9 @@ export function Base({ children }: BaseProps) {
                   >
                     <PermissionControl
                       qualifyingPermissions={[
-                        'CAN_GET_COMMENTS',
-                        'CAN_UPDATE_COMMENTS',
-                        'CAN_TAKE_COMMENT_ACTION',
+                        CanGetComments.id,
+                        CanUpdateComments.id,
+                        CanTakeActionOnComment.id,
                       ]}
                     >
                       <Nav.Item
@@ -484,10 +593,10 @@ export function Base({ children }: BaseProps) {
 
                     <PermissionControl
                       qualifyingPermissions={[
-                        'CAN_GET_TAGS',
-                        'CAN_CREATE_TAG',
-                        'CAN_UPDATE_TAG',
-                        'CAN_DELETE_TAG',
+                        CanGetTags.id,
+                        CanCreateTag.id,
+                        CanUpdateTag.id,
+                        CanDeleteTag.id,
                       ]}
                     >
                       <Nav.Item
@@ -502,10 +611,10 @@ export function Base({ children }: BaseProps) {
 
                     <PermissionControl
                       qualifyingPermissions={[
-                        'CAN_GET_COMMENT_RATING_SYSTEM',
-                        'CAN_CREATE_COMMENT_RATING_SYSTEM',
-                        'CAN_UPDATE_COMMENT_RATING_SYSTEM',
-                        'CAN_DELETE_COMMENT_RATING_SYSTEM',
+                        CanGetCommentRatingSystem.id,
+                        CanCreateCommentRatingSystem.id,
+                        CanUpdateCommentRatingSystem.id,
+                        CanDeleteCommentRatingSystem.id,
                       ]}
                     >
                       <Nav.Item
@@ -522,8 +631,8 @@ export function Base({ children }: BaseProps) {
 
                 <PermissionControl
                   qualifyingPermissions={[
-                    'CAN_GET_EVENT',
-                    'CAN_GET_COMMENT_RATING_SYSTEM',
+                    CanGetEvent.id,
+                    CanGetCommentRatingSystem.id,
                   ]}
                 >
                   <Nav.Menu
@@ -533,9 +642,9 @@ export function Base({ children }: BaseProps) {
                   >
                     <PermissionControl
                       qualifyingPermissions={[
-                        'CAN_GET_EVENT',
-                        'CAN_UPDATE_EVENT',
-                        'CAN_DELETE_EVENT',
+                        CanGetEvent.id,
+                        CanUpdateEvent.id,
+                        CanDeleteEvent.id,
                       ]}
                     >
                       <Nav.Item
@@ -548,11 +657,12 @@ export function Base({ children }: BaseProps) {
                       </Nav.Item>
                     </PermissionControl>
 
-                    <PermissionControl
+                    {/* @TODO: Disabled until HTML to PM works */}
+                    {/* <PermissionControl
                       qualifyingPermissions={[
-                        'CAN_GET_EVENT',
-                        'CAN_UPDATE_EVENT',
-                        'CAN_DELETE_EVENT',
+                        CanGetEvent.id,
+                        CanUpdateEvent.id,
+                        CanDeleteEvent.id,
                       ]}
                     >
                       <Nav.Item
@@ -563,14 +673,14 @@ export function Base({ children }: BaseProps) {
                       >
                         {t('navbar.importableEvents')}
                       </Nav.Item>
-                    </PermissionControl>
+                    </PermissionControl> */}
 
                     <PermissionControl
                       qualifyingPermissions={[
-                        'CAN_GET_TAGS',
-                        'CAN_CREATE_TAG',
-                        'CAN_UPDATE_TAG',
-                        'CAN_DELETE_TAG',
+                        CanGetTags.id,
+                        CanCreateTag.id,
+                        CanUpdateTag.id,
+                        CanDeleteTag.id,
                       ]}
                     >
                       <Nav.Item
@@ -587,14 +697,14 @@ export function Base({ children }: BaseProps) {
 
                 <PermissionControl
                   qualifyingPermissions={[
-                    'CAN_GET_IMAGES',
-                    'CAN_GET_IMAGE',
-                    'CAN_CREATE_IMAGE',
-                    'CAN_DELETE_IMAGE',
-                    'CAN_GET_DOCUMENTS',
-                    'CAN_GET_DOCUMENT',
-                    'CAN_CREATE_DOCUMENT',
-                    'CAN_DELETE_DOCUMENT',
+                    CanGetImages.id,
+                    CanGetImage.id,
+                    CanCreateImage.id,
+                    CanDeleteImage.id,
+                    CanGetDocuments.id,
+                    CanGetDocument.id,
+                    CanCreateDocument.id,
+                    CanDeleteDocument.id,
                   ]}
                 >
                   <Nav.Menu
@@ -604,10 +714,10 @@ export function Base({ children }: BaseProps) {
                   >
                     <PermissionControl
                       qualifyingPermissions={[
-                        'CAN_GET_IMAGES',
-                        'CAN_GET_IMAGE',
-                        'CAN_CREATE_IMAGE',
-                        'CAN_DELETE_IMAGE',
+                        CanGetImages.id,
+                        CanGetImage.id,
+                        CanCreateImage.id,
+                        CanDeleteImage.id,
                       ]}
                     >
                       <Nav.Item
@@ -622,10 +732,10 @@ export function Base({ children }: BaseProps) {
 
                     <PermissionControl
                       qualifyingPermissions={[
-                        'CAN_GET_DOCUMENTS',
-                        'CAN_GET_DOCUMENT',
-                        'CAN_CREATE_DOCUMENT',
-                        'CAN_DELETE_DOCUMENT',
+                        CanGetDocuments.id,
+                        CanGetDocument.id,
+                        CanCreateDocument.id,
+                        CanDeleteDocument.id,
                       ]}
                     >
                       <Nav.Item
@@ -642,10 +752,10 @@ export function Base({ children }: BaseProps) {
 
                 <PermissionControl
                   qualifyingPermissions={[
-                    'CAN_GET_NAVIGATIONS',
-                    'CAN_GET_NAVIGATION',
-                    'CAN_CREATE_NAVIGATION',
-                    'CAN_DELETE_NAVIGATION',
+                    CanGetNavigations.id,
+                    CanGetNavigation.id,
+                    CanCreateNavigation.id,
+                    CanDeleteNavigation.id,
                   ]}
                 >
                   <Nav.Item
@@ -660,10 +770,10 @@ export function Base({ children }: BaseProps) {
 
                 <PermissionControl
                   qualifyingPermissions={[
-                    'CAN_GET_BANNERS',
-                    'CAN_GET_BANNER',
-                    'CAN_CREATE_BANNER',
-                    'CAN_DELETE_BANNER',
+                    CanGetBanners.id,
+                    CanGetBanner.id,
+                    CanCreateBanner.id,
+                    CanDeleteBanner.id,
                   ]}
                 >
                   <Nav.Item
@@ -677,7 +787,7 @@ export function Base({ children }: BaseProps) {
                 </PermissionControl>
 
                 <PermissionControl
-                  qualifyingPermissions={['CAN_GET_AUTHORS', 'CAN_GET_TAGS']}
+                  qualifyingPermissions={[CanGetAuthors.id, CanGetTags.id]}
                 >
                   <Nav.Menu
                     eventKey={'authors'}
@@ -686,10 +796,10 @@ export function Base({ children }: BaseProps) {
                   >
                     <PermissionControl
                       qualifyingPermissions={[
-                        'CAN_GET_AUTHORS',
-                        'CAN_GET_AUTHOR',
-                        'CAN_CREATE_AUTHOR',
-                        'CAN_DELETE_AUTHOR',
+                        CanGetAuthors.id,
+                        CanGetAuthor.id,
+                        CanCreateAuthor.id,
+                        CanDeleteAuthor.id,
                       ]}
                     >
                       <Nav.Item
@@ -704,10 +814,10 @@ export function Base({ children }: BaseProps) {
 
                     <PermissionControl
                       qualifyingPermissions={[
-                        'CAN_GET_TAGS',
-                        'CAN_CREATE_TAG',
-                        'CAN_UPDATE_TAG',
-                        'CAN_DELETE_TAG',
+                        CanGetTags.id,
+                        CanCreateTag.id,
+                        CanUpdateTag.id,
+                        CanDeleteTag.id,
                       ]}
                     >
                       <Nav.Item
@@ -724,19 +834,19 @@ export function Base({ children }: BaseProps) {
 
                 <PermissionControl
                   qualifyingPermissions={[
-                    'CAN_GET_USERS',
-                    'CAN_GET_USER',
-                    'CAN_CREATE_USER',
-                    'CAN_DELETE_USER',
-                    'CAN_CREATE_USER_ROLE',
-                    'CAN_GET_USER_ROLE',
-                    'CAN_GET_USER_ROLES',
-                    'CAN_DELETE_USER_ROLE',
-                    'CAN_CREATE_SUBSCRIPTION',
-                    'CAN_GET_SUBSCRIPTIONS',
-                    'CAN_GET_SUBSCRIPTION',
-                    'CAN_DELETE_SUBSCRIPTION',
-                    'CAN_GET_AUDIENCE_STATS',
+                    CanGetUsers.id,
+                    CanGetUser.id,
+                    CanCreateUser.id,
+                    CanDeleteUser.id,
+                    CanCreateUserRole.id,
+                    CanGetUserRole.id,
+                    CanGetUserRoles.id,
+                    CanDeleteUserRole.id,
+                    CanCreateSubscription.id,
+                    CanGetSubscriptions.id,
+                    CanGetSubscription.id,
+                    CanDeleteSubscription.id,
+                    CanGetAudienceStats.id,
                   ]}
                 >
                   <Nav.Menu
@@ -745,7 +855,7 @@ export function Base({ children }: BaseProps) {
                     icon={<MdGroups />}
                   >
                     <PermissionControl
-                      qualifyingPermissions={['CAN_GET_AUDIENCE_STATS']}
+                      qualifyingPermissions={[CanGetAudienceStats.id]}
                     >
                       <Nav.Item
                         as={NavLink}
@@ -768,10 +878,10 @@ export function Base({ children }: BaseProps) {
 
                     <PermissionControl
                       qualifyingPermissions={[
-                        'CAN_GET_SUBSCRIPTIONS',
-                        'CAN_GET_SUBSCRIPTION',
-                        'CAN_CREATE_SUBSCRIPTION',
-                        'CAN_DELETE_SUBSCRIPTION',
+                        CanGetSubscriptions.id,
+                        CanGetSubscription.id,
+                        CanCreateSubscription.id,
+                        CanDeleteSubscription.id,
                       ]}
                     >
                       <Nav.Item
@@ -786,9 +896,9 @@ export function Base({ children }: BaseProps) {
 
                     <PermissionControl
                       qualifyingPermissions={[
-                        'CAN_CREATE_CONSENT',
-                        'CAN_UPDATE_CONSENT',
-                        'CAN_DELETE_CONSENT',
+                        CanCreateConsent.id,
+                        CanUpdateConsent.id,
+                        CanDeleteConsent.id,
                       ]}
                     >
                       <Nav.Item
@@ -813,15 +923,17 @@ export function Base({ children }: BaseProps) {
 
                 <PermissionControl
                   qualifyingPermissions={[
-                    'CAN_GET_MEMBER_PLANS',
-                    'CAN_GET_MEMBER_PLAN',
-                    'CAN_CREATE_MEMBER_PLAN',
-                    'CAN_DELETE_MEMBER_PLAN',
-                    'CAN_GET_PAYMENT_METHODS',
-                    'CAN_GET_PAYMENT_METHOD',
-                    'CAN_CREATE_PAYMENT_METHOD',
-                    'CAN_DELETE_PAYMENT_METHOD',
-                    'CAN_GET_SUBSCRIPTION_FLOWS',
+                    CanGetMemberPlans.id,
+                    CanGetMemberPlan.id,
+                    CanCreateMemberPlan.id,
+                    CanDeleteMemberPlan.id,
+                    CanGetPaymentMethods.id,
+                    CanGetPaymentMethod.id,
+                    CanCreatePaymentMethod.id,
+                    CanDeletePaymentMethod.id,
+                    CanGetSubscriptionFlows.id,
+                    CanCreateVoucher.id,
+                    CanUpdateVoucher.id,
                   ]}
                 >
                   <Nav.Menu
@@ -832,10 +944,10 @@ export function Base({ children }: BaseProps) {
                     {/* SUBSCRIPTION PLANS */}
                     <PermissionControl
                       qualifyingPermissions={[
-                        'CAN_GET_MEMBER_PLANS',
-                        'CAN_GET_MEMBER_PLAN',
-                        'CAN_CREATE_MEMBER_PLAN',
-                        'CAN_DELETE_MEMBER_PLAN',
+                        CanGetMemberPlans.id,
+                        CanGetMemberPlan.id,
+                        CanCreateMemberPlan.id,
+                        CanDeleteMemberPlan.id,
                       ]}
                     >
                       <Nav.Item
@@ -851,10 +963,10 @@ export function Base({ children }: BaseProps) {
                     {/* PAYMENT METHODS */}
                     <PermissionControl
                       qualifyingPermissions={[
-                        'CAN_GET_PAYMENT_METHODS',
-                        'CAN_GET_PAYMENT_METHOD',
-                        'CAN_CREATE_PAYMENT_METHOD',
-                        'CAN_DELETE_PAYMENT_METHOD',
+                        CanGetPaymentMethods.id,
+                        CanGetPaymentMethod.id,
+                        CanCreatePaymentMethod.id,
+                        CanDeletePaymentMethod.id,
                       ]}
                     >
                       <Nav.Item
@@ -869,7 +981,7 @@ export function Base({ children }: BaseProps) {
 
                     {/* SUBSCRIPTION MAILING */}
                     <PermissionControl
-                      qualifyingPermissions={['CAN_GET_SUBSCRIPTION_FLOWS']}
+                      qualifyingPermissions={[CanGetSubscriptionFlows.id]}
                     >
                       <Nav.Item
                         as={NavLink}
@@ -880,15 +992,32 @@ export function Base({ children }: BaseProps) {
                         {t('navbar.subscriptionSettings')}
                       </Nav.Item>
                     </PermissionControl>
+
+                    {/* VOUCHERS */}
+                    <PermissionControl
+                      qualifyingPermissions={[
+                        CanCreateVoucher.id,
+                        CanUpdateVoucher.id,
+                      ]}
+                    >
+                      <Nav.Item
+                        as={NavLink}
+                        href="/vouchers"
+                        icon={<MdCountertops />}
+                        active={path === 'vouchers'}
+                      >
+                        {t('voucher.navbar')}
+                      </Nav.Item>
+                    </PermissionControl>
                   </Nav.Menu>
                 </PermissionControl>
 
                 <PermissionControl
                   qualifyingPermissions={[
-                    'CAN_GET_PEERS',
-                    'CAN_GET_PEER',
-                    'CAN_CREATE_PEER',
-                    'CAN_DELETE_PEER',
+                    CanGetPeers.id,
+                    CanGetPeer.id,
+                    CanCreatePeer.id,
+                    CanDeletePeer.id,
                   ]}
                 >
                   <Nav.Menu
@@ -905,9 +1034,9 @@ export function Base({ children }: BaseProps) {
                     </Nav.Item>
                     <PermissionControl
                       qualifyingPermissions={[
-                        'CAN_GET_TOKENS',
-                        'CAN_CREATE_TOKEN',
-                        'CAN_DELETE_TOKEN',
+                        CanGetTokens.id,
+                        CanCreateToken.id,
+                        CanDeleteToken.id,
                       ]}
                     >
                       <Nav.Item
@@ -925,15 +1054,14 @@ export function Base({ children }: BaseProps) {
                 {/* SETTINGS */}
                 <PermissionControl
                   qualifyingPermissions={[
-                    'CAN_GET_SETTINGS',
-                    'CAN_UPDATE_SETTINGS',
-                    'CAN_GET_MAIL-TEMPLATES',
-                    'CAN_SYNC_MAIL-TEMPLATES',
-                    'CAN_GET_USER_ROLES',
-                    'CAN_GET_USER_ROLE',
-                    'CAN_CREATE_USER_ROLE',
-                    'CAN_DELETE_USER_ROLE',
-                    'CAN_GET_INTEGRATIONS',
+                    CanGetSettings.id,
+                    CanUpdateSettings.id,
+                    CanGetMailTemplates.id,
+                    CanSyncMailTemplates.id,
+                    CanGetUserRoles.id,
+                    CanGetUserRole.id,
+                    CanCreateUserRole.id,
+                    CanDeleteUserRole.id,
                   ]}
                 >
                   <Nav.Menu
@@ -943,8 +1071,8 @@ export function Base({ children }: BaseProps) {
                     {/* DIVERSE SETTINGS */}
                     <PermissionControl
                       qualifyingPermissions={[
-                        'CAN_GET_SETTINGS',
-                        'CAN_UPDATE_SETTINGS',
+                        CanGetSettings.id,
+                        CanUpdateSettings.id,
                       ]}
                     >
                       <Nav.Item
@@ -960,8 +1088,8 @@ export function Base({ children }: BaseProps) {
                     {/* MAIL TEMPLATE SYNC */}
                     <PermissionControl
                       qualifyingPermissions={[
-                        'CAN_GET_MAIL-TEMPLATES',
-                        'CAN_SYNC_MAIL-TEMPLATES',
+                        CanGetMailTemplates.id,
+                        CanSyncMailTemplates.id,
                       ]}
                     >
                       <Nav.Item
@@ -977,8 +1105,8 @@ export function Base({ children }: BaseProps) {
                     {/* SYSTEM MAILS */}
                     <PermissionControl
                       qualifyingPermissions={[
-                        'CAN_GET_SYSTEM_MAILS',
-                        'CAN_UPDATE_SYSTEM_MAILS',
+                        CanGetSystemMails.id,
+                        CanUpdateSystemMails.id,
                       ]}
                     >
                       <Nav.Item
@@ -994,10 +1122,10 @@ export function Base({ children }: BaseProps) {
                     {/* USER ROLES */}
                     <PermissionControl
                       qualifyingPermissions={[
-                        'CAN_GET_USER_ROLES',
-                        'CAN_GET_USER_ROLE',
-                        'CAN_CREATE_USER_ROLE',
-                        'CAN_DELETE_USER_ROLE',
+                        CanGetUserRoles.id,
+                        CanGetUserRole.id,
+                        CanCreateUserRole.id,
+                        CanDeleteUserRole.id,
                       ]}
                     >
                       <Nav.Item
@@ -1013,11 +1141,11 @@ export function Base({ children }: BaseProps) {
                     {/* INTEGRATIONS */}
                     <PermissionControl
                       qualifyingPermissions={[
-                        'CAN_GET_AI_SETTINGS',
-                        'CAN_GET_CHALLENGE_PROVIDER_SETTINGS',
-                        'CAN_GET_PAYMENT_PROVIDER_SETTINGS',
-                        'CAN_GET_TRACKING_PIXEL_SETTINGS',
-                        'CAN_GET_MAIL_PROVIDER_SETTINGS',
+                        CanGetAISettings.id,
+                        CanGetChallengeProviderSettings.id,
+                        CanGetPaymentProviderSettings.id,
+                        CanGetTrackingPixelSettings.id,
+                        CanGetMailProviderSettings.id,
                       ]}
                     >
                       <Nav.Item
@@ -1029,12 +1157,29 @@ export function Base({ children }: BaseProps) {
                         {t('navbar.integrations')}
                       </Nav.Item>
                     </PermissionControl>
+
+                    <PermissionControl
+                      qualifyingPermissions={[
+                        CanGetWebsiteSettings.id,
+                        CanUpdateWebsiteSettings.id,
+                      ]}
+                    >
+                      <Nav.Item
+                        as={NavLink}
+                        href="/settings/website"
+                        active={path.startsWith('settings/website')}
+                        icon={<MdAutoFixHigh />}
+                      >
+                        {t('websiteSettings.navbar')}
+                      </Nav.Item>
+                    </PermissionControl>
                   </Nav.Menu>
                 </PermissionControl>
                 <Version />
               </Navigation>
             </RSidenav.Body>
           </Sidenav>
+
           <Navbar appearance="default">
             <Nav>
               <Nav.Menu
@@ -1060,6 +1205,7 @@ export function Base({ children }: BaseProps) {
                 </Nav.Item>
               </Nav.Menu>
             </Nav>
+
             <Nav>
               <Nav.Menu
                 placement="topStart"
@@ -1089,7 +1235,10 @@ export function Base({ children }: BaseProps) {
             </Nav>
           </Navbar>
         </Sidebar>
-        <ChildrenContainer>{children}</ChildrenContainer>
+        <ChildrenContainer>
+          <OneMessages />
+          {children}
+        </ChildrenContainer>
       </Container>
     </Wrapper>
   );

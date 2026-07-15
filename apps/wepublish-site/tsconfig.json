@@ -1,6 +1,7 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
+    "moduleResolution": "bundler",
     "jsx": "preserve",
     "jsxImportSource": "@emotion/react",
     "allowJs": true,
@@ -19,7 +20,14 @@
     ],
     "types": ["jest", "node"]
   },
-  "include": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx", "next-env.d.ts"],
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.js",
+    "**/*.jsx",
+    "mui-augmentation.d.ts",
+    "next-env.d.ts"
+  ],
   "exclude": [
     "node_modules",
     "jest.config.ts",

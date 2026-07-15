@@ -3,8 +3,8 @@ import { PageContainer } from '@wepublish/page/website';
 import { getApiUrl } from '@wepublish/utils/website';
 import { LinkContext } from '@wepublish/website/builder';
 import {
-  addClientCacheToV1Props,
-  getV1ApiClient,
+  addClientCacheToProps,
+  getApiClient,
   NavigationListDocument,
   PageDocument,
   PeerProfileDocument,
@@ -13,13 +13,15 @@ import { GetStaticProps } from 'next';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 
+import { localizeSlug } from '../src/localize-slug';
+
 export default function Index() {
   const { locale } = useRouter();
 
   return (
     <LinkContext.Provider value={{ prefetch: true }}>
       <ContentWidthProvider fullWidth>
-        <PageContainer slug={`-${locale}`} />
+        <PageContainer slug={localizeSlug('', locale)} />
       </ContentWidthProvider>
     </LinkContext.Provider>
   );
@@ -32,12 +34,12 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
     return { props: {}, revalidate: 1 };
   }
 
-  const client = getV1ApiClient(getApiUrl(), []);
+  const client = getApiClient(getApiUrl(), []);
   await Promise.all([
     client.query({
       query: PageDocument,
       variables: {
-        slug: `-${locale}`,
+        slug: localizeSlug('', locale),
       },
     }),
     client.query({
@@ -48,7 +50,7 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
     }),
   ]);
 
-  const props = addClientCacheToV1Props(client, {});
+  const props = addClientCacheToProps(client, {});
 
   return {
     props,

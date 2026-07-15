@@ -4,7 +4,13 @@ import {
   isTitleBlock,
 } from '@wepublish/block-content/website';
 import { firstParagraphToPlaintext } from '@wepublish/richtext';
-import { FullImageFragment, Page } from '@wepublish/website/api';
+import {
+  FullImageFragment,
+  ImageBlock,
+  Page,
+  RichTextBlock,
+  TitleBlock,
+} from '@wepublish/website/api';
 import {
   BuilderPageSEOProps,
   useWebsiteBuilder,
@@ -12,18 +18,24 @@ import {
 import { useMemo } from 'react';
 
 export const getPageSEO = (page: Page) => {
-  const firstTitle = page.latest.blocks?.find(isTitleBlock);
-  const firstRichText = page.latest.blocks?.find(isRichTextBlock);
-  const firstImageBlock = page.latest.blocks?.find(isImageBlock);
+  const firstTitle = page.latest.blocks?.find((block): block is TitleBlock =>
+    isTitleBlock(block)
+  );
+  const firstRichText = page.latest.blocks?.find(
+    (block): block is RichTextBlock => isRichTextBlock(block)
+  );
+  const firstImageBlock = page.latest.blocks?.find(
+    (block): block is ImageBlock => isImageBlock(block)
+  );
 
   const socialMediaDescription =
     page.latest.socialMediaDescription ||
     page.latest.description ||
-    firstParagraphToPlaintext(firstRichText?.richText);
+    firstParagraphToPlaintext(firstRichText?.richText?.content ?? []);
   const description =
     page.latest.socialMediaDescription ||
     page.latest.description ||
-    firstParagraphToPlaintext(firstRichText?.richText);
+    firstParagraphToPlaintext(firstRichText?.richText?.content ?? []);
   const image = (page.latest.socialMediaImage ??
     page.latest.image ??
     firstImageBlock?.image) as FullImageFragment | undefined;
@@ -59,7 +71,7 @@ export const getPageSEO = (page: Page) => {
             contentUrl: image.url,
             thumbnailUrl: image.m,
             url: image.url,
-            encodingFormat: image.mimeType,
+            encodingFormat: 'image/webp',
           }
         : undefined,
       description,

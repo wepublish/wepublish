@@ -14,7 +14,7 @@ RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg m
 
 # [Optional] Uncomment this section to install additional OS packages.
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-    && apt-get -y install --no-install-recommends postgresql-client-14
+    && apt-get -y install --no-install-recommends postgresql-client-18
 
 # [Optional] Uncomment if you want to install an additional version of node using nvm
 # ARG EXTRA_NODE_VERSION=10
@@ -22,3 +22,9 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
 
 # [Optional] Uncomment if you want to install more global node modules
 RUN su node -c "npm install -g nx"
+
+USER node
+RUN curl -fsSL https://claude.ai/install.sh | bash \
+    && export PATH="$HOME/.local/bin:$PATH" \
+    && claude mcp add --scope user --transport http sentry https://mcp.sentry.dev/mcp
+USER root

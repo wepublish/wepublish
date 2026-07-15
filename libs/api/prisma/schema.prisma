@@ -1,6 +1,6 @@
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["views"]
+  previewFeatures = ["views", "relationJoins"]
 }
 
 datasource db {
@@ -43,6 +43,7 @@ model ArticleRevision {
   ArticleRevisionDraft     ArticleRevisionDraft[]
 
   @@index([publishedAt])
+  @@index([articleId])
   @@map("articles.revisions")
 }
 
@@ -176,6 +177,7 @@ model TaggedArticles {
 
   @@id([articleId, tagId])
   @@index([tagId])
+  @@index([tagId, articleId])
   @@map("articles.tagged-articles")
 }
 
@@ -202,6 +204,7 @@ model Author {
   jobTitle   String?
   links      AuthorsLinks[]
   bio        Json?
+  slateBio   Json?
 
   imageID                     String?
   image                       Image?                             @relation(fields: [imageID], references: [id])
@@ -317,6 +320,7 @@ model CommentsRevisions {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   text      Json?
+  slateText Json?
   title     String?
   lead      String?
 
@@ -366,6 +370,8 @@ model Comment {
   overriddenRatings CommentRatingOverride[]
   featured          Boolean                 @default(false)
 
+  @@index([itemID, itemType])
+  @@index([parentID])
   @@index([createdAt])
   @@map("comments")
 }
@@ -467,6 +473,9 @@ model InvoiceItem {
   invoices  Invoice? @relation(fields: [invoiceId], references: [id], onDelete: SetNull)
   invoiceId String?
 
+  voucher   Voucher? @relation(fields: [voucherId], references: [id], onDelete: SetNull)
+  voucherId String?
+
   @@map("invoices.items")
 }
 
@@ -567,7 +576,9 @@ model MemberPlan {
   slug                           String                   @unique
   tags                           String[]
   shortDescription               Json?
-  description                    Json
+  slateShortDescription          Json?
+  description                    Json?
+  slateDescription               Json?
   active                         Boolean
   currency                       Currency
   amountPerMonthMin              Float
@@ -598,6 +609,7 @@ model MemberPlan {
 
   crowdfundings Crowdfunding[]
   paywalls      PaywallMemberplan[]
+  vouchers      Voucher[]
 
   @@index([name])
   @@map("member.plans")
@@ -621,6 +633,9 @@ model NavigationLink {
   navigation   Navigation? @relation(fields: [navigationId], references: [id], onDelete: Cascade)
   navigationId String?
 
+  @@index([navigationId])
+  @@index([articleID])
+  @@index([pageID])
   @@map("navigations.links")
 }
 
@@ -668,6 +683,7 @@ model PageRevision {
   PagesRevisionDraft     PagesRevisionDraft[]
 
   @@index([publishedAt])
+  @@index([pageId])
   @@map("pages.revisions")
 }
 
@@ -769,6 +785,7 @@ enum PaymentState {
   paid               @map("paid")
   canceled           @map("canceled")
   declined           @map("declined")
+  chargeback         @map("chargeback")
 }
 
 model Payment {
@@ -790,14 +807,15 @@ model Payment {
 }
 
 model PeerProfile {
-  id                   String  @id @default(cuid())
-  name                 String
-  themeColor           String
-  themeFontColor       String
-  callToActionURL      String
-  callToActionText     Json
-  callToActionImageURL String?
-  callToActionImageID  String?
+  id                    String  @id @default(cuid())
+  name                  String
+  themeColor            String
+  themeFontColor        String
+  callToActionURL       String
+  callToActionText      Json?
+  slateCallToActionText Json?
+  callToActionImageURL  String?
+  callToActionImageID   String?
 
   logoID String?
   logo   Image?  @relation("logo", fields: [logoID], references: [id])
@@ -813,12 +831,13 @@ model Peer {
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
-  name        String
-  slug        String  @unique
-  hostURL     String
-  token       String
-  isDisabled  Boolean @default(false)
-  information Json?
+  name             String
+  slug             String  @unique
+  hostURL          String
+  token            String
+  isDisabled       Boolean @default(false)
+  information      Json?
+  slateInformation Json?
 
   articles Article[]
   images   Image[]
@@ -879,6 +898,7 @@ enum SubscriptionDeactivationReason {
   userSelfDeactivated      @map("userSelfDeactivated")
   invoiceNotPaid           @map("invoiceNotPaid")
   userReplacedSubscription @map("userReplacedSubscription")
+  chargeback               @map("chargeback")
 }
 
 model SubscriptionDeactivation {
@@ -1041,11 +1061,12 @@ model Tag {
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
-  type        TagType
-  tag         String?
-  description Json?
-  main        Boolean @default(false)
-  color       String?
+  type             TagType
+  tag              String?
+  description      Json?
+  slateDescription Json?
+  main             Boolean @default(false)
+  color            String?
 
   peer   Peer?   @relation(fields: [peerId], references: [id], onDelete: Restrict)
   peerId String?
@@ -1068,8 +1089,9 @@ model Poll {
   opensAt  DateTime  @default(now())
   closedAt DateTime?
 
-  question String?
-  infoText Json?
+  question      String?
+  infoText      Json?
+  slateInfoText Json?
 
   answers             PollAnswer[]
   votes               PollVote[]
@@ -1162,10 +1184,11 @@ model Event {
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
-  name        String
-  lead        String?
-  description Json[]
-  status      EventStatus @default(Scheduled)
+  name             String
+  lead             String?
+  description      Json?
+  slateDescription Json?
+  status           EventStatus @default(Scheduled)
 
   imageId String?
   image   Image?  @relation(fields: [imageId], references: [id])
@@ -1239,7 +1262,7 @@ model UserFlowMail {
 
   event UserEvent @unique
 
-  mailTemplate   MailTemplate? @relation(fields: [mailTemplateId], references: [id]) // user creates a new account
+  mailTemplate   MailTemplate? @relation(fields: [mailTemplateId], references: [id])
   mailTemplateId String?
 
   @@map("user_communication_flows")
@@ -1270,7 +1293,7 @@ model SubscriptionFlow {
   periodicities  PaymentPeriodicity[]
   autoRenewal    Boolean[]
 
-  intervals SubscriptionInterval[] // send some more e-mails such as reminders
+  intervals SubscriptionInterval[]
 
   @@map("subscription_communication_flows")
 }
@@ -1459,10 +1482,15 @@ model Paywall {
 
   name String? @unique
 
-  description                  Json?
-  upgradeDescription           Json?
-  circumventDescription        Json?
-  upgradeCircumventDescription Json?
+  description             Json?
+  slateDescription        Json?
+  upgradeDescription      Json?
+  slateUpgradeDescription Json?
+
+  circumventDescription             Json?
+  slateCircumventDescription        Json?
+  upgradeCircumventDescription      Json?
+  slateUpgradeCircumventDescription Json?
 
   anyMemberPlan           Boolean @default(false)
   active                  Boolean @default(true)
@@ -1857,4 +1885,57 @@ model MailchimpSyncError {
 
   @@unique([userId, syncProviderId])
   @@map("mailchimp_sync_errors")
+}
+
+model WebsiteSettings {
+  id         String   @id @default(cuid())
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  // Analytics
+  analyticsGAEnabled Boolean @default(false)
+  analyticsGAId      String?
+
+  analyticsGTMEnabled Boolean @default(false)
+  analyticsGTMId      String?
+
+  analyticsPAEnabled Boolean @default(false)
+  analyticsPAId      String?
+
+  analyticsPiwikEnabled Boolean @default(false)
+  analyticsPiwikId      String?
+
+  // Ads
+  adsSparkLoopEnabled Boolean @default(false)
+  adsSparkLoopId      String?
+
+  // Mails
+  mailMailchimpEnabled Boolean @default(false)
+  mailMailchimpKey     String?
+
+  // Theme
+  theme Json @default("{}")
+  fonts Json @default("[]")
+
+  @@map("settings.website")
+}
+
+model Voucher {
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  code            String @unique
+  discountPercent Int
+
+  validFrom DateTime
+  validTo   DateTime
+
+  memberPlan   MemberPlan @relation(fields: [memberPlanId], references: [id], onDelete: Cascade)
+  memberPlanId String
+
+  invoiceItems InvoiceItem[]
+
+  @@unique([code, memberPlanId])
+  @@map("vouchers")
 }

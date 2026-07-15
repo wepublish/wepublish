@@ -134,7 +134,7 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
 
   async checkIntentStatus({
     intentID,
-  }: CheckIntentProps): Promise<IntentState> {
+  }: CheckIntentProps): Promise<IntentState | null> {
     const payrexx = await this.getPayrexxGateway();
     const transaction =
       await payrexx.transactionClient.retrieveTransaction(intentID);
@@ -266,18 +266,20 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
     };
   }
 
-  private checkTransactionIntentStatus(transaction: Transaction): IntentState {
+  private checkTransactionIntentStatus(
+    transaction: Transaction
+  ): IntentState | null {
     const state = this.mapPayrexxEventToPaymentStatus(transaction.status);
 
     if (!state) {
-      logger('payrexxPaymentProvider').error(
-        'Payrexx gateway with ID: %s for paymentProvider %s returned with an unmappable status %s',
+      logger('payrexxPaymentProvider').warn(
+        'Payrexx transaction with ID: %s for paymentProvider %s returned with an unhandled status %s, skipping',
         transaction.id,
         this.id,
         transaction.status
       );
 
-      throw new Error('Unmappable Payrexx transaction status');
+      return null;
     }
 
     if (!transaction.referenceId) {
@@ -297,16 +299,16 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
     };
   }
 
-  private checkGatewayIntentStatus(gateway: Gateway): IntentState {
+  private checkGatewayIntentStatus(gateway: Gateway): IntentState | null {
     const state = this.mapPayrexxEventToPaymentStatus(gateway.status);
     if (!state) {
-      logger('payrexxPaymentProvider').error(
-        'Payrexx gateway with ID: %s for paymentProvider %s returned with an unmappable status %s',
+      logger('payrexxPaymentProvider').warn(
+        'Payrexx gateway with ID: %s for paymentProvider %s returned with an unhandled status %s, skipping',
         gateway.id,
         this.id,
         gateway.status
       );
-      throw new Error('Unmappable Payrexx gateway status');
+      return null;
     }
 
     const transaction = gateway.invoices[0]?.transactions[0];
@@ -350,6 +352,8 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
         return PaymentState.canceled;
       case 'declined':
         return PaymentState.declined;
+      case 'chargeback':
+        return PaymentState.chargeback;
       default:
         return null;
     }

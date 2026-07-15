@@ -37,6 +37,7 @@ export const TeaserSlotsXLFullsizeImage = styled(TeaserSlots)`
       grid-row-start: unset;
       grid-row-end: unset;
       height: 100%;
+      container-type: normal;
     }
   }
 
@@ -44,5 +45,9 @@ export const TeaserSlotsXLFullsizeImage = styled(TeaserSlots)`
     row-gap: 1.25cqw;
     column-gap: 1.25cqw;
     grid-template-columns: repeat(2, calc(50% - 1.25cqw / 2));
+
+    & > ${TeaserWrapper} {
+      --tw: 47.5cqw;
+    }
   }
 `;

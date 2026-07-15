@@ -4,7 +4,7 @@ import {
   ArticleListDocument,
   ArticleListQueryVariables,
   ArticleSort,
-  getV1ApiClient,
+  getApiClient,
   PageListDocument,
   PageListQueryVariables,
   PageSort,
@@ -20,7 +20,7 @@ export const getSitemap = async (req: NextApiRequest): Promise<string> => {
     siteUrl,
     title: 'Cültür',
   });
-  const client = getV1ApiClient(getApiUrl(), [], {
+  const client = getApiClient(getApiUrl(), [], {
     typePolicies: {},
   });
 
@@ -46,6 +46,11 @@ export const getSitemap = async (req: NextApiRequest): Promise<string> => {
   return generate(
     articleData.articles.nodes ?? [],
     pageData.pages.nodes ?? [],
-    [`${siteUrl}/author`, `${siteUrl}/event`]
+    [
+      `${siteUrl}/author`,
+      `${siteUrl}/event`,
+      `${siteUrl}/login`,
+      `${siteUrl}/mitmachen`,
+    ]
   );
 };

@@ -12,14 +12,18 @@ import {
 import { Fragment, useMemo } from 'react';
 
 export const getArticleSEO = (article: Article) => {
-  const firstTitle = article.latest.blocks?.find(isTitleBlock);
-  const firstRichText = article.latest.blocks?.find(isRichTextBlock);
-  const firstImageBlock = article.latest.blocks?.find(isImageBlock);
+  const firstTitle = article.latest.blocks?.find(block => isTitleBlock(block));
+  const firstRichText = article.latest.blocks?.find(block =>
+    isRichTextBlock(block)
+  );
+  const firstImageBlock = article.latest.blocks?.find(block =>
+    isImageBlock(block)
+  );
 
   const articleBody = article.latest.blocks
-    ?.filter(isRichTextBlock)
+    ?.filter(block => isRichTextBlock(block))
     .reduce((body, richText) => {
-      const text = toPlaintext(richText.richText);
+      const text = toPlaintext(richText.richText?.content);
 
       if (text) {
         body.push(text);
@@ -32,9 +36,10 @@ export const getArticleSEO = (article: Article) => {
   const socialMediaDescription =
     article.latest.socialMediaDescription ||
     article.latest.lead ||
-    firstParagraphToPlaintext(firstRichText?.richText);
+    firstParagraphToPlaintext(firstRichText?.richText?.content ?? []);
   const description =
-    article.latest.lead || firstParagraphToPlaintext(firstRichText?.richText);
+    article.latest.lead ||
+    firstParagraphToPlaintext(firstRichText?.richText?.content ?? []);
 
   const image = (article.latest.socialMediaImage ??
     article.latest.image ??
@@ -80,7 +85,7 @@ export const getArticleSEO = (article: Article) => {
             contentUrl: image.url,
             thumbnailUrl: image.m,
             url: image.url,
-            encodingFormat: image.mimeType,
+            encodingFormat: 'image/webp',
           }
         : undefined,
       description,

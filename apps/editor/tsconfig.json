@@ -6,9 +6,17 @@
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "jsxImportSource": "@emotion/react",
-    "types": ["node"]
+    "moduleResolution": "bundler"
   },
-  "files": ["src/emotion.d.ts"],
+  "files": [],
   "include": [],
-  "extends": "../../tsconfig.base.json"
+  "extends": "../../tsconfig.base.json",
+  "references": [
+    {
+      "path": "./tsconfig.app.json"
+    },
+    {
+      "path": "./tsconfig.spec.json"
+    }
+  ]
 }

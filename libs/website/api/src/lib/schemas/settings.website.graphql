@@ -1,0 +1,58 @@
+fragment WebsiteSettings on WebsiteSettings {
+  analytics {
+    googleAnalytics {
+      enabled
+      key
+    }
+
+    googleTagManager {
+      enabled
+      key
+    }
+
+    plausible {
+      enabled
+      key
+    }
+
+    piwik {
+      enabled
+      key
+    }
+  }
+
+  ads {
+    sparkLoop {
+      enabled
+      key
+    }
+  }
+
+  theme
+  fonts {
+    weight
+    style
+    name
+  }
+}
+
+fragment SensitiveWebsiteSettings on WebsiteSettings {
+  mail {
+    mailchimp {
+      enabled
+      key
+    }
+  }
+}
+
+query WebsiteSettings {
+  websiteSettings {
+    ...WebsiteSettings
+  }
+}
+
+query SensitiveWebsiteSettings {
+  websiteSettings {
+    ...SensitiveWebsiteSettings
+  }
+}

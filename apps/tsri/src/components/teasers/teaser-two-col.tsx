@@ -19,6 +19,12 @@ export const isTeaserTwoCol = allPass([
 
 export const TeaserTwoCol = styled(TsriTeaser)`
   aspect-ratio: 2.06 !important;
+  width: 100%;
+  container-type: normal;
+
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    --tw: 32.5cqw;
+  }
 
   ${TeaserContentWrapper} {
     grid-template-columns: 50% 50%;
@@ -31,10 +37,10 @@ export const TeaserTwoCol = styled(TsriTeaser)`
     z-index: 1;
 
     aspect-ratio: 1;
-    border-radius: 1.3cqw;
+    border-radius: calc(var(--tw, 100cqw) * 0.013);
     grid-column: 1 / 2;
     grid-row: -1 / 1;
-    width: 41.74cqw;
+    width: calc(var(--tw, 100cqw) * 0.4174);
     margin: auto;
 
     & picture {
@@ -52,6 +58,7 @@ export const TeaserTwoCol = styled(TsriTeaser)`
       width: 100%;
       height: 100%;
       object-fit: cover;
+      object-position: left center;
       aspect-ratio: unset;
     }
   }
@@ -63,6 +70,6 @@ export const TeaserTwoCol = styled(TsriTeaser)`
   }
 
   ${TeaserPreTitle} {
-    padding: 0.65cqw 1.5cqw;
+    padding: calc(var(--tw, 100cqw) * 0.0065) calc(var(--tw, 100cqw) * 0.015);
   }
 `;

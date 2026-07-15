@@ -413,7 +413,6 @@ const theme = createTheme(variablesTheme, {
     },
   },
   typography: {
-    fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(','),
     allVariants: {
       lineHeight: 1.25,
       fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(','),
@@ -667,7 +666,6 @@ const theme = createTheme(variablesTheme, {
 
 export const contentTheme = createTheme(theme, {
   typography: {
-    fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(','),
     allVariants: {
       fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(','),
     },
@@ -805,7 +803,6 @@ export const alternatingTeaserTheme = createTheme(contentTheme, {
 
 export const breakBlockTheme = createTheme(theme, {
   typography: {
-    fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(','),
     allVariants: {
       fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(','),
     },

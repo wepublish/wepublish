@@ -1,9 +1,18 @@
 import { Article } from '@wepublish/website/api';
 import type { Feed, Item } from 'feed';
 import { getArticleSEO } from '@wepublish/article/website';
-import { Descendant } from 'slate';
 import { isRichTextBlock } from '@wepublish/block-content/website';
-import { toHtml } from '@wepublish/richtext';
+import { generateHTML } from '@tiptap/html';
+import type {
+  RichtextElements,
+  RichtextJSONDocument,
+} from '@wepublish/richtext';
+
+export const toHtml = async (document: RichtextJSONDocument) => {
+  const { editorConfig } = await import('@wepublish/richtext/editor/config');
+
+  return generateHTML(document, editorConfig.extensions ?? []);
+};
 
 const escapeXml = (str: string): string => {
   return str.replace(/&/g, '&amp;');
@@ -23,26 +32,35 @@ export const generateFeed =
     const items = articles.map(async (article): Promise<Item> => {
       const seo = getArticleSEO(article);
 
-      const content = await toHtml(
-        article.published?.blocks?.reduce((acc, curr) => {
-          if (isRichTextBlock(curr)) {
-            acc.push(...curr.richText);
-          }
+      const content = await toHtml({
+        attrs: undefined,
+        type: 'doc',
+        content:
+          article.published?.blocks?.reduce((acc, curr) => {
+            if (isRichTextBlock(curr)) {
+              acc.push(...(curr.richText?.content ?? []));
+            }
 
-          return acc;
-        }, [] as Descendant[]) ?? []
-      );
+            return acc;
+          }, [] as RichtextElements[]) ?? [],
+      });
+
+      const authors = article.latest.authors
+        .filter(Boolean)
+        .map(author => ({ name: author.name, link: author.url }));
 
       return {
         title: seo.schema.headline ?? '',
         image:
-          seo.schema.image?.url ? escapeXml(seo.schema.image.url) : undefined,
+          seo.schema.image ?
+            {
+              url: escapeXml(seo.schema.image.url),
+              type: 'image/webp',
+            }
+          : undefined,
         description: seo.schema.description,
         content: content ? content : (article.latest.lead ?? undefined),
-        author: article.latest.authors.filter(Boolean).map(author => ({
-          name: author.name,
-          link: author.url,
-        })),
+        author: authors.length ? authors : undefined,
         guid: article.id,
         link: article.url,
         date: new Date(article.publishedAt!),

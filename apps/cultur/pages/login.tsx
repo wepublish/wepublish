@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { Typography } from '@mui/material';
 import {
   IntendedRouteStorageKey,
   LoginFormContainer,
@@ -6,7 +7,7 @@ import {
 } from '@wepublish/authentication/website';
 import { getApiUrl, handleJwtLogin } from '@wepublish/utils/website';
 import { SessionWithTokenWithoutUser } from '@wepublish/website/api';
-import { getV1ApiClient } from '@wepublish/website/api';
+import { getApiClient } from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { deleteCookie, getCookie } from 'cookies-next';
 import { NextPageContext } from 'next';
@@ -23,7 +24,7 @@ type LoginProps = { sessionToken?: SessionWithTokenWithoutUser };
 export default function Login({ sessionToken }: LoginProps) {
   const { hasUser, setToken } = useUser();
   const {
-    elements: { H3 },
+    elements: { H3, Link },
   } = useWebsiteBuilder();
   const router = useRouter();
 
@@ -36,7 +37,7 @@ export default function Login({ sessionToken }: LoginProps) {
   if (hasUser && typeof window !== 'undefined') {
     const intendedRoute = getCookie(IntendedRouteStorageKey)?.toString();
     deleteCookie(IntendedRouteStorageKey);
-    const route = intendedRoute ?? '/';
+    const route = intendedRoute ?? '/profile';
 
     router.replace(route);
   }
@@ -44,6 +45,14 @@ export default function Login({ sessionToken }: LoginProps) {
   return (
     <LoginWrapper>
       <H3 component="h1">Login für Member</H3>
+
+      <Typography
+        variant="body1"
+        paragraph
+      >
+        (Falls du noch keinen Account hast,{' '}
+        <Link href={'/mitmachen'}>klicke hier.</Link>)
+      </Typography>
 
       <LoginFormContainer
         defaults={{
@@ -59,7 +68,7 @@ Login.getInitialProps = async (ctx: NextPageContext) => {
   if (typeof window !== 'undefined') {
     return {};
   }
-  const client = getV1ApiClient(getApiUrl(), []);
+  const client = getApiClient(getApiUrl(), []);
 
   await handleJwtLogin(ctx, client, undefined);
 

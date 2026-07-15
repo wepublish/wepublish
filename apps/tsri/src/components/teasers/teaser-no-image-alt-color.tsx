@@ -23,6 +23,12 @@ export const isTeaserNoImageAltColor = allPass([
 
 export const TeaserNoImageAltColor = styled(TsriTeaser)`
   aspect-ratio: 2.06 !important;
+  width: 100%;
+  container-type: normal;
+
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    --tw: 31.3cqw;
+  }
 
   ${TeaserImageWrapper} {
     display: none;
@@ -49,15 +55,18 @@ export const TeaserNoImageAltColor = styled(TsriTeaser)`
   }
 
   ${TeaserPreTitle} {
-    padding: 0.65cqw 1.5cqw;
+    padding: calc(var(--tw, 100cqw) * 0.0065) calc(var(--tw, 100cqw) * 0.015)
+      calc(var(--tw, 100cqw) * 0.1);
   }
 
   ${TeaserTitle} {
-    padding: 2.2cqw 1.5cqw 4cqw;
+    padding: calc(var(--tw, 100cqw) * 0.022) calc(var(--tw, 100cqw) * 0.015)
+      calc(var(--tw, 100cqw) * 0.04);
   }
 
   ${TeaserMetadata} {
-    padding: 0 1.5cqw 1.5cqw 1.5cqw;
+    padding: 0 calc(var(--tw, 100cqw) * 0.015) calc(var(--tw, 100cqw) * 0.015)
+      calc(var(--tw, 100cqw) * 0.015);
     color: transparent;
   }
 

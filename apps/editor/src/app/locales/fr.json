@@ -1,5 +1,51 @@
 {
   "translation": {
+    "oneMessages": {
+      "header": "Messages de l'équipe We.Publish",
+      "expand": "Développer",
+      "linkFallback": "En savoir plus"
+    },
+    "versionHistory": {
+      "title": "Historique des versions",
+      "subtitle": "{{count}} versions",
+      "close": "Fermer",
+      "empty": "Aucune version pour l'instant.",
+      "untitled": "Sans titre",
+      "created": "Créé le {{date}}",
+      "published": "publié le {{date}}",
+      "currentVersion": "Version actuelle",
+      "restore": "Restaurer",
+      "restored": "Version restaurée en tant que nouveau brouillon",
+      "preview": "Aperçu",
+      "previewTitle": "Aperçu de la version",
+      "readOnly": "Lecture seule",
+      "loadMore": "Charger plus",
+      "showing": "{{count}} sur {{total}} affichés",
+      "unknownAuthor": "Inconnu",
+      "state": {
+        "published": "Actuellement publié",
+        "pending": "Planifié",
+        "draft": "Brouillon",
+        "superseded": "Précédemment publié",
+        "archived": "Archivé"
+      },
+      "confirm": {
+        "title": "Restaurer cette version ?",
+        "message": "Cela crée un nouveau brouillon à partir de la version du {{date}}. Votre brouillon actuel sera archivé. Rien n'est publié tant que vous ne le publiez pas.",
+        "cancel": "Annuler",
+        "confirm": "Restaurer comme brouillon"
+      }
+    },
+    "discardDraft": {
+      "button": "Abandonner le brouillon",
+      "success": "Brouillon abandonné — retour à la version publiée",
+      "confirm": {
+        "title": "Abandonner le brouillon actuel ?",
+        "message": "Vos modifications non publiées seront archivées et l'éditeur reviendra à la version actuellement publiée. Cette action est irréversible, mais le brouillon abandonné reste disponible dans l'historique des versions.",
+        "cancel": "Annuler",
+        "confirm": "Abandonner le brouillon"
+      }
+    },
     "articleEditor": {
       "overview": {
         "articlePending": "Article en attente",
@@ -407,25 +453,7 @@
         "quote": "Citation"
       },
       "richText": {
-        "charCount": "Nombre de caractères {{charCount}}",
-        "insert": "Insérer",
-        "invalidLink": "Le lien saisi n'est pas valide. Veuillez vérifier l'URL et réessayer.",
-        "invalidMail": "Cette adresse e-mail n'est pas valide. Vérifier le mail et réessayer.",
-        "label": "Texte enrichi",
-        "link": "Lien",
-        "remove": "Supprimer",
-        "startWriting": "Commencez à écrire...",
-        "text": "Texte",
-        "id": "ID"
-      },
-      "richTextTable": {
-        "addBorders": "Ajouter des bordures",
-        "border": "Bordure",
-        "cancel": "Annuler",
-        "columns": "Colonnes",
-        "deleteTable": "Supprimer la tableau",
-        "insertTable": "Insérer un tableau",
-        "rows": "Lignes"
+        "label": "Texte enrichi"
       },
       "teaserFlexGrid": {
         "label": "Grille de teasers flexible"
@@ -957,6 +985,7 @@
       "peering": "Peering",
       "peers": "Peers",
       "settings": "Paramètres",
+      "websiteSettings": "Paramètres du site web",
       "subscriptionPlans": "Plans d'abonnement",
       "subscriptions": "Abonnements",
       "subscriptionSettings": "Default Mailing",
@@ -1248,6 +1277,37 @@
     "resetUserPasswordForm": {
       "sendMail": "Envoyer un mail à l'utilisateur (Registration System Mail)"
     },
+    "richtext": {
+      "menuBar": {
+        "paragraph": "Paragraphe",
+        "heading": "Titre {{level}}"
+      },
+      "link": {
+        "title": "Lier le texte avec",
+        "type": "Type",
+        "url": "URL",
+        "web": "Web",
+        "email": "E-mail",
+        "anchor": "Ancre",
+        "selectAnchor": "Sélectionner une ancre",
+        "openInNewTab": "Ouvrir le lien dans un nouvel onglet",
+        "openLink": "Ouvrir le lien dans une nouvelle fenêtre",
+        "remove": "Supprimer le lien"
+      },
+      "colorPicker": {
+        "clear": "Réinitialiser la couleur"
+      },
+      "commands": {
+        "table": "Tableau",
+        "quote": "Citation",
+        "code": "Code",
+        "noResult": "Aucun résultat"
+      },
+      "placeholder": {
+        "heading": "Sans titre",
+        "paragraph": "Écrivez ou tapez '/' pour les commandes ..."
+      }
+    },
     "save": "Sauvegarder",
     "saveAndClose": "Sauvegarder & fermer",
     "settingList": {
@@ -1324,6 +1384,7 @@
         "reasonUserReplacedSubscription": "Remplacé par un autre abonnement",
         "reasonNone": "Aucun motif",
         "reasonUserSelfDeactivated": "Par l'utilisateur·trice",
+        "reasonChargeback": "Rétrofacturation",
         "reset": "Réinitialiser le filtre",
         "searchPlaceholder": "Recherche par prénom, nom, e-mail, adresse, code postal, lieu"
       },
@@ -1506,6 +1567,7 @@
         "reasonUserReplacedSubscription": "Remplacé par un autre abonnement",
         "reasonNone": "Aucun motif",
         "reasonUserSelfDeactivated": "Désactivation par l'utilisateur·trice",
+        "reasonChargeback": "Rétrofacturation",
         "title": {
           "activated": "Désactiver l'abonnement"
         },
@@ -1528,7 +1590,9 @@
       "deactivationReason": {
         "InvoiceNotPaid": "Facture non payée",
         "None": "Aucune",
-        "UserSelfDeactivated": "L'utilisateur voulait désactiver l'abonnement"
+        "UserSelfDeactivated": "L'utilisateur voulait désactiver l'abonnement",
+        "UserReplacedSubscription": "Remplacé par un autre abonnement",
+        "Chargeback": "Rétrofacturation"
       },
       "deactivationString": "Désactivé le {{date}}. Raison: {{reason}}",
       "editSubscription": "Modifier l'abonnement",
@@ -1636,6 +1700,7 @@
         "memberPlans": "Plans d'abonnement",
         "filter": "Filtrer les revenus",
         "additionalRevenue": "Revenus externes (par ex. via virement bancaire direct)",
+        "additionalSubscriptions": "Abonnements externes (par ex. via virement bancaire direct)",
         "selectMemberPlans": "Choisir des plans d'abonnement",
         "countSubscriptionsFrom": "Inclure uniquement les abonnements payés à partir de la date",
         "countSubscriptionsUntil": "Inclure uniquement les abonnements payés jusqu'à la date",
@@ -1651,6 +1716,7 @@
         "title": "Titre",
         "description": "Description",
         "amount": "Montant cible",
+        "amountSubscriptions": "Nombre d'abonnements cible",
         "remove": "Supprimer",
         "add": "Ajouter un objectif"
       }
@@ -1780,6 +1846,32 @@
         "active": "Actif",
         "memberPlans": "Plans d’abonnement",
         "anyMemberPlan": "Tous les plans d’abonnement"
+      }
+    },
+    "voucher": {
+      "navbar": "Bon de réduction",
+      "form": {
+        "createTitle": "Créer un bon de réduction",
+        "editTitle": "Modifier le bon de réduction \"{{ voucher }}\"",
+        "code": "Code",
+        "discountPercent": "Réduction (%)",
+        "validFrom": "Valable dès le",
+        "validTo": "Valable jusqu'au",
+        "memberPlan": "Plan d'abonnement"
+      },
+      "overview": {
+        "title": "Bons de réduction",
+        "createVoucher": "Nouveau bon de réduction",
+        "active": "Actif",
+        "valid": "Valide",
+        "code": "Code",
+        "discountPercent": "Réduction",
+        "memberPlan": "Plan d'abonnement",
+        "validFrom": "Valable dès le",
+        "validTo": "Valable jusqu'au",
+        "areYouSure": "Êtes-vous sûr(e) ?",
+        "areYouSureBody": "Le bon de réduction \"{{ voucher }}\" sera définitivement supprimé et cette action est irréversible.",
+        "areYouSureConfirmation": "Supprimer le bon de réduction"
       }
     },
     "paymentMethodEditPanel": {
@@ -1954,6 +2046,148 @@
           "lookbackHoursHelp": "Jusqu'où analyser les campagnes (par défaut : 30)."
         }
       }
+    },
+    "websiteSettings": {
+      "backToOverview": "Retour à la vue d’ensemble",
+      "navbar": "Paramètres du site",
+      "list": {
+        "title": "Paramètres du site"
+      },
+      "analytics": {
+        "title": "Analytics",
+        "google": {
+          "title": "Google",
+          "gaEnable": "Activer Google Analytics",
+          "ga": "<url>Google Analytics</url> est un outil d’analyse web de Google qui suit comment les utilisateurs utilisent ton site.",
+          "gaLocator": "Tu le trouves dans le <url>tableau de bord admin</url> sous Flux de données",
+          "gtmEnable": "Activer Google Tag Manager",
+          "gtm": "<url>Google Tag Manager</url> est un outil de Google qui te permet de gérer les scripts de suivi et de marketing sur ton site sans modifier le code à chaque fois.",
+          "gtmLocator": "Tu le trouves dans le <url>tableau de bord admin</url> sous Balise Google"
+        },
+        "plausible": {
+          "title": "Plausible",
+          "enable": "Activer Plausible",
+          "pa": "<url>Plausible Analytics</url> est une alternative respectueuse de la vie privée à Google Analytics.",
+          "paLocator": "Tu le trouves dans les <url>paramètres du site</url> dans le tableau de bord admin"
+        },
+        "piwik": {
+          "title": "Piwik PRO",
+          "enable": "Activer Piwik PRO",
+          "pro": "<url>Piwik PRO</url> est une plateforme d'analyse respectueuse de la vie privée et une alternative à Google Analytics.",
+          "proLocator": "Tu le trouves dans le Menu > Administration > Site > ID de ton panneau d'administration"
+        }
+      },
+      "mail": {
+        "title": "E-mail",
+        "mailchimp": {
+          "title": "Mailchimp",
+          "enable": "Activer Mailchimp",
+          "mailchimp": "<url>Mailchimp</url> est une plateforme de marketing par e-mail qui te permet de gérer des newsletters et des listes d'abonnés. Cela permet au site web d'accéder à tes newsletters et de les afficher.",
+          "apiKeyLocator": "Tu le trouves dans la <url>section des clés API</url> de ton compte Mailchimp. Assure-toi que c'est une clé Mailchimp et non Mandrill."
+        }
+      },
+      "ads": {
+        "title": "Publicités",
+        "sparkLoop": {
+          "title": "SparkLoop",
+          "enable": "Activer SparkLoop",
+          "sparkLoop": "<url>SparkLoop</url> est une plateforme de recommandation et de parrainage de newsletters qui t'aide à développer ton audience.",
+          "idLocator": "Tu trouves ton ID dans la <url>section script</url> de ton tableau de bord SparkLoop."
+        }
+      },
+      "theme": {
+        "title": "Thème",
+        "palette": {
+          "primary": "Primaire",
+          "primaryMain": "Couleur principale du site. Utilisée pour les liens, la navigation, les boutons, etc.",
+          "primaryDark": "Utilisée lorsque la couleur primaire est affichée légèrement plus foncée",
+          "primaryLight": "Utilisée lorsque la couleur primaire est affichée légèrement plus claire",
+          "primaryContrastText": "Couleur facilement lisible lorsque la couleur primaire est utilisée comme couleur de fond",
+          "secondary": "Secondaire",
+          "secondaryMain": "Couleur utilisée avec parcimonie sur le site. Souvent visible sur les bannières, les teasers en vedette, etc.",
+          "secondaryDark": "Utilisée lorsque la couleur secondaire est affichée légèrement plus foncée",
+          "secondaryLight": "Utilisée lorsque la couleur secondaire est affichée légèrement plus claire",
+          "secondaryContrastText": "Couleur facilement lisible lorsque la couleur secondaire est utilisée comme couleur de fond",
+          "accent": "Accent",
+          "accentMain": "Couleur utilisée pour se démarquer du reste de la page. Souvent visible sur les pré-titres, les blocs de rupture, les paywalls, les boutons, etc.",
+          "accentDark": "Utilisée lorsque la couleur d'accent est affichée légèrement plus foncée",
+          "accentLight": "Utilisée lorsque la couleur d'accent est affichée légèrement plus claire",
+          "accentContrastText": "Couleur facilement lisible lorsque la couleur d'accent est utilisée comme couleur de fond",
+          "info": "Info",
+          "infoMain": "Couleur utilisée pour afficher des informations utiles à l'utilisateur",
+          "infoDark": "Utilisée lorsque la couleur info est affichée légèrement plus foncée",
+          "infoLight": "Utilisée lorsque la couleur info est affichée légèrement plus claire",
+          "infoContrastText": "Couleur facilement lisible lorsque la couleur info est utilisée comme couleur de fond",
+          "success": "Succès",
+          "successMain": "Couleur utilisée pour représenter des états réussis à l'utilisateur, comme les popups de confirmation de sauvegarde",
+          "successDark": "Utilisée lorsque la couleur succès est affichée légèrement plus foncée",
+          "successLight": "Utilisée lorsque la couleur succès est affichée légèrement plus claire",
+          "successContrastText": "Couleur facilement lisible lorsque la couleur succès est utilisée comme couleur de fond",
+          "error": "Erreur",
+          "errorMain": "Couleur utilisée pour représenter des états d'erreur à l'utilisateur, comme les erreurs de validation de formulaire",
+          "errorDark": "Utilisée lorsque la couleur d'erreur est affichée légèrement plus foncée",
+          "errorLight": "Utilisée lorsque la couleur d'erreur est affichée légèrement plus claire",
+          "errorContrastText": "Couleur facilement lisible lorsque la couleur d'erreur est utilisée comme couleur de fond",
+          "warning": "Avertissement",
+          "warningMain": "Couleur utilisée pour afficher des informations importantes à l'utilisateur",
+          "warningDark": "Utilisée lorsque la couleur d'avertissement est affichée légèrement plus foncée",
+          "warningLight": "Utilisée lorsque la couleur d'avertissement est affichée légèrement plus claire",
+          "warningContrastText": "Couleur facilement lisible lorsque la couleur d'avertissement est utilisée comme couleur de fond",
+          "divider": "Séparateur",
+          "dividerHelperText": "Utilisé pour les lignes fines qui séparent les éléments sur différentes couleurs de fond. Idéalement gardé semi-transparent pour cette raison.",
+          "main": "Principal",
+          "light": "Clair",
+          "dark": "Foncé",
+          "contrastText": "Couleur du texte",
+          "background": "Arrière-plan",
+          "backgroundDefault": "La couleur de fond du site",
+          "backgroundPaper": "Couleur de fond des panneaux en relief comme les dialogues et les modals",
+          "text": "Texte",
+          "textPrimary": "La couleur du texte du site"
+        },
+        "typography": {
+          "fontFamily": "Famille de polices",
+          "fontWeight": "Graisse de la police",
+          "fontSize": "Taille de la police",
+          "lineHeight": "Hauteur de ligne",
+          "letterSpacing": "Espacement des lettres",
+          "textTransform": "Transformation du texte",
+          "textTransformDefault": "Par défaut",
+          "textTransformCapitalize": "Première lettre en majuscule",
+          "textTransformUppercase": "Majuscules",
+          "textTransformLowercase": "Minuscules",
+          "italic": "Italique",
+          "h1": "Titre 1",
+          "h2": "Titre 2",
+          "h3": "Titre 3",
+          "h4": "Titre 4",
+          "h5": "Titre 5",
+          "h6": "Titre 6",
+          "body1": "Corps 1",
+          "body2": "Corps 2",
+          "caption": "Légende",
+          "teaserPretitle": "Pré-titre du teaser",
+          "teaserTitle": "Titre du teaser",
+          "teaserLead": "Accroche du teaser",
+          "teaserMeta": "Méta du teaser",
+          "articleAuthors": "Auteurs de l'article",
+          "peerInformation": "Informations sur le pair",
+          "bannerTitle": "Titre de la bannière",
+          "bannerText": "Texte de la bannière",
+          "bannerCta": "CTA de la bannière",
+          "blockBreakTitle": "Titre de rupture de bloc",
+          "blockBreakBody": "Corps de rupture de bloc",
+          "blockTitlePreTitle": "Pré-titre du titre de bloc",
+          "blockQuote": "Citation de bloc"
+        }
+      },
+      "fonts": {
+        "title": "Polices",
+        "addFont": "Ajouter une police",
+        "default": "Par défaut",
+        "description": "Utilise <Link>Google Fonts</Link>. La recherche d'une police idéale se fait mieux directement là-bas."
+      },
+      "saveSuccess": "Les paramètres du site ont été enregistrés avec succès"
     },
     "externalApps": {
       "apps": "Apps"

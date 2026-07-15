@@ -21,9 +21,9 @@ exports[`should generate the RSS feed 1`] = `
             <pubDate>Sun, 01 Jan 2023 00:00:00 GMT</pubDate>
             <description><![CDATA[This is an article lead]]></description>
             <content:encoded><![CDATA[This is an article lead]]></content:encoded>
-            <category>boulevard</category>
-            <category>abacus</category>
-            <enclosure url="https://unsplash.it/500/281" length="0" type="image//500/281"/>
+            <category>schedule</category>
+            <category>stall</category>
+            <enclosure length="0" type="image/webp" url="https://unsplash.it/500/281"/>
         </item>
         <item>
             <title><![CDATA[Title Block]]></title>
@@ -32,9 +32,9 @@ exports[`should generate the RSS feed 1`] = `
             <pubDate>Sun, 01 Jan 2023 00:00:00 GMT</pubDate>
             <description><![CDATA[This is an article lead]]></description>
             <content:encoded><![CDATA[This is an article lead]]></content:encoded>
-            <category>comparison</category>
-            <category>duster</category>
-            <enclosure url="https://unsplash.it/500/281" length="0" type="image//500/281"/>
+            <category>quart</category>
+            <category>lava</category>
+            <enclosure length="0" type="image/webp" url="https://unsplash.it/500/281"/>
         </item>
     </channel>
 </rss>"
@@ -69,7 +69,7 @@ exports[`should generate the atom feed 1`] = `
             <name>Foobar</name>
             <uri>https://example.com</uri>
         </author>
-        <category label="schnitzel" term="schnitzel"/>
+        <category label="newsletter" term="newsletter"/>
         <category label="papa" term="papa"/>
     </entry>
     <entry>
@@ -87,8 +87,8 @@ exports[`should generate the atom feed 1`] = `
             <name>Foobar</name>
             <uri>https://example.com</uri>
         </author>
-        <category label="coliseum" term="coliseum"/>
-        <category label="roundabout" term="roundabout"/>
+        <category label="whale" term="whale"/>
+        <category label="shoulder" term="shoulder"/>
     </entry>
 </feed>"
 `;
@@ -107,15 +107,18 @@ exports[`should generate the json feed 1`] = `
             "url": "https://example.com",
             "title": "Title Block",
             "summary": "This is an article lead",
-            "image": "https://unsplash.it/500/281",
+            "image": {
+                "url": "https://unsplash.it/500/281",
+                "type": "image/webp"
+            },
             "date_modified": "2023-01-01T00:00:00.000Z",
             "author": {
                 "name": "Foobar",
                 "url": "https://example.com"
             },
             "tags": [
-                "summary",
-                "coin"
+                "godparent",
+                "hovercraft"
             ]
         },
         {
@@ -123,15 +126,18 @@ exports[`should generate the json feed 1`] = `
             "url": "https://example.com",
             "title": "Title Block",
             "summary": "This is an article lead",
-            "image": "https://unsplash.it/500/281",
+            "image": {
+                "url": "https://unsplash.it/500/281",
+                "type": "image/webp"
+            },
             "date_modified": "2023-01-01T00:00:00.000Z",
             "author": {
                 "name": "Foobar",
                 "url": "https://example.com"
             },
             "tags": [
-                "thyme",
-                "toaster"
+                "printer",
+                "spirit"
             ]
         }
     ]
@@ -169,15 +175,18 @@ Feed {
           "term": "e-mail",
         },
         {
-          "name": "omelet",
-          "term": "omelet",
+          "name": "swath",
+          "term": "swath",
         },
       ],
       "content": "This is an article lead",
       "date": 2023-01-01T00:00:00.000Z,
       "description": "This is an article lead",
       "guid": "1",
-      "image": "https://unsplash.it/500/281",
+      "image": {
+        "type": "image/webp",
+        "url": "https://unsplash.it/500/281",
+      },
       "link": "https://example.com",
       "title": "Title Block",
     },
@@ -194,19 +203,22 @@ Feed {
       ],
       "category": [
         {
-          "name": "eyebrow",
-          "term": "eyebrow",
+          "name": "valuable",
+          "term": "valuable",
         },
         {
-          "name": "aftermath",
-          "term": "aftermath",
+          "name": "taxicab",
+          "term": "taxicab",
         },
       ],
       "content": "This is an article lead",
       "date": 2023-01-01T00:00:00.000Z,
       "description": "This is an article lead",
       "guid": "2",
-      "image": "https://unsplash.it/500/281",
+      "image": {
+        "type": "image/webp",
+        "url": "https://unsplash.it/500/281",
+      },
       "link": "https://example.com",
       "title": "Title Block",
     },

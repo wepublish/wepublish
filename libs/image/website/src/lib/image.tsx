@@ -17,7 +17,9 @@ type ImageItem<Size extends BuilderImageWidths> = {
   size: Size;
   url: string | null | undefined;
 };
+
 type ImageItems = [
+  xxxl: ImageItem<2400>,
   xxl: ImageItem<1500>,
   xl: ImageItem<1200>,
   l: ImageItem<1000>,
@@ -30,6 +32,7 @@ type ImageItems = [
 export const imageToImageItems = (
   image: BuilderImageProps['image']
 ): ImageItems => [
+  { url: 'xxxl' in image ? image.xxxl : undefined, size: 2400 },
   { url: image.xxl, size: 1500 },
   { url: image.xl, size: 1200 },
   { url: image.l, size: 1000 },
@@ -41,15 +44,25 @@ export const imageToImageItems = (
 
 export const imageToSquareImageItems = (
   image: BuilderImageProps['image']
-): ImageItems => [
-  { url: image.xxlSquare, size: 1500 },
-  { url: image.xlSquare, size: 1200 },
-  { url: image.lSquare, size: 1000 },
-  { url: image.mSquare, size: 800 },
-  { url: image.sSquare, size: 500 },
-  { url: image.xsSquare, size: 300 },
-  { url: image.xxsSquare, size: 200 },
-];
+): ImageItems => {
+  if (!('xxlSquare' in image)) {
+    return imageToImageItems(image);
+  }
+
+  return [
+    {
+      url: 'xxxlSquare' in image ? image.xxxlSquare : undefined,
+      size: 2400,
+    },
+    { url: image.xxlSquare, size: 1500 },
+    { url: image.xlSquare, size: 1200 },
+    { url: image.lSquare, size: 1000 },
+    { url: image.mSquare, size: 800 },
+    { url: image.sSquare, size: 500 },
+    { url: image.xsSquare, size: 300 },
+    { url: image.xxsSquare, size: 200 },
+  ];
+};
 
 export const ImageWrapper = styled('img')<{
   aspectRatio: number;
@@ -117,7 +130,7 @@ export const Image = forwardRef<HTMLImageElement, BuilderImageProps>(
       <ImageWrapper
         {...props}
         ref={ref}
-        alt={image.description ?? image.title ?? image.filename ?? ''}
+        alt={image.description ?? image.title ?? ''}
         title={image.title ?? ''}
         aspectRatio={image.width / image.height}
         objectPosition={objectPosition}

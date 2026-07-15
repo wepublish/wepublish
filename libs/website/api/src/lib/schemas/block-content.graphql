@@ -9,7 +9,7 @@ fragment FullPageTeaser on PageTeaser {
   lead
 
   page {
-    ...PageWithoutBlocks
+    ...SlimPage
   }
 }
 
@@ -24,7 +24,7 @@ fragment FullArticleTeaser on ArticleTeaser {
   lead
 
   article {
-    ...ArticleWithoutBlocks
+    ...SlimArticle
 
     latest {
       blocks {
@@ -57,200 +57,340 @@ fragment FullEventTeaser on EventTeaser {
   }
 }
 
+fragment FullImageBlock on ImageBlock {
+  disabled
+  blockStyle: blockStyleName
+  caption
+  linkUrl
+  image {
+    ...FullImage
+  }
+}
+
+fragment FullImageGalleryBlock on ImageGalleryBlock {
+  disabled
+  blockStyle: blockStyleName
+  images {
+    caption
+    image {
+      ...FullImage
+    }
+  }
+}
+
+fragment FullTitleBlock on TitleBlock {
+  disabled
+  blockStyle: blockStyleName
+  preTitle
+  title
+  lead
+}
+
+fragment FullQuoteBlock on QuoteBlock {
+  disabled
+  blockStyle: blockStyleName
+  quote
+  author
+  image {
+    ...FullImage
+  }
+}
+
+fragment FullRichTextBlock on RichTextBlock {
+  disabled
+  blockStyle: blockStyleName
+  richText
+}
+
+fragment FullHTMLBlock on HTMLBlock {
+  disabled
+  blockStyle: blockStyleName
+  html
+}
+
+fragment FullSubscribeBlock on SubscribeBlock {
+  disabled
+  blockStyle: blockStyleName
+  memberPlanIds
+  memberPlans {
+    ...FullMemberPlan
+  }
+  fields
+}
+
+fragment FullEventBlock on EventBlock {
+  disabled
+  blockStyle: blockStyleName
+  events {
+    ...FullEvent
+  }
+}
+
+fragment FullCommentBlock on CommentBlock {
+  disabled
+  blockStyle: blockStyleName
+  comments {
+    ...FullComment
+  }
+}
+
+fragment FullPollBlock on PollBlock {
+  disabled
+  blockStyle: blockStyleName
+  poll {
+    ...FullPoll
+  }
+}
+
+fragment FullCrowdfundingBlock on CrowdfundingBlock {
+  disabled
+  blockStyle: blockStyleName
+  crowdfunding {
+    ...FullCrowdfunding
+  }
+}
+
+fragment FullListicleBlock on ListicleBlock {
+  disabled
+  blockStyle: blockStyleName
+  items {
+    title
+    richText
+    image {
+      ...FullImage
+    }
+  }
+}
+
+fragment FullBreakBlock on BreakBlock {
+  disabled
+  blockStyle: blockStyleName
+  text
+  richText
+  hideButton
+  linkTarget
+  linkText
+  linkURL
+  image {
+    ...FullImage
+  }
+}
+
+fragment FullFacebookPostBlock on FacebookPostBlock {
+  disabled
+  blockStyle: blockStyleName
+  userID
+  postID
+}
+
+fragment FullFacebookVideoBlock on FacebookVideoBlock {
+  disabled
+  blockStyle: blockStyleName
+  userID
+  videoID
+}
+
+fragment FullInstagramPostBlock on InstagramPostBlock {
+  disabled
+  blockStyle: blockStyleName
+  postID
+}
+
+fragment FullTwitterTweetBlock on TwitterTweetBlock {
+  disabled
+  blockStyle: blockStyleName
+  userID
+  tweetID
+}
+
+fragment FullVimeoVideoBlock on VimeoVideoBlock {
+  disabled
+  blockStyle: blockStyleName
+  videoID
+}
+
+fragment FullYouTubeVideoBlock on YouTubeVideoBlock {
+  disabled
+  blockStyle: blockStyleName
+  videoID
+}
+
+fragment FullStreamableVideoBlock on StreamableVideoBlock {
+  disabled
+  blockStyle: blockStyleName
+  videoID
+}
+
+fragment FullSoundCloudTrackBlock on SoundCloudTrackBlock {
+  disabled
+  blockStyle: blockStyleName
+  trackID
+}
+
+fragment FullPolisConversationBlock on PolisConversationBlock {
+  disabled
+  blockStyle: blockStyleName
+  conversationID
+}
+
+fragment FullTikTokVideoBlock on TikTokVideoBlock {
+  disabled
+  blockStyle: blockStyleName
+  userID
+  videoID
+}
+
+fragment FullBildwurfAdBlock on BildwurfAdBlock {
+  disabled
+  blockStyle: blockStyleName
+  zoneID
+}
+
+fragment FullIFrameBlock on IFrameBlock {
+  disabled
+  blockStyle: blockStyleName
+  url
+  title
+  width
+  height
+  styleCustom
+  sandbox
+}
+
 fragment BlockWithoutTeaser on BlockContent {
   __typename
 
   ... on TitleBlock {
-    disabled
-    blockStyle: blockStyleName
-    preTitle
-    title
-    lead
+    ...FullTitleBlock
   }
 
   ... on ImageBlock {
-    disabled
-    blockStyle: blockStyleName
-    caption
-    linkUrl
-    image {
-      ...FullImage
-    }
+    ...FullImageBlock
   }
 
   ... on ImageGalleryBlock {
-    disabled
-    blockStyle: blockStyleName
-    images {
-      caption
-      image {
-        ...FullImage
-      }
-    }
+    ...FullImageGalleryBlock
   }
 
   ... on QuoteBlock {
-    disabled
-    blockStyle: blockStyleName
-    quote
-    author
-    image {
-      ...FullImage
-    }
+    ...FullQuoteBlock
   }
 
   ... on RichTextBlock {
-    disabled
-    blockStyle: blockStyleName
-    richText
+    ...FullRichTextBlock
   }
 
   ... on HTMLBlock {
-    disabled
-    blockStyle: blockStyleName
-    html
+    ...FullHTMLBlock
   }
 
   ... on SubscribeBlock {
-    disabled
-    blockStyle: blockStyleName
-    memberPlanIds
-    memberPlans {
-      ...FullMemberPlan
-    }
-    fields
+    ...FullSubscribeBlock
   }
 
   ... on EventBlock {
-    disabled
-    blockStyle: blockStyleName
-    events {
-      ...FullEvent
-    }
+    ...FullEventBlock
+  }
+
+  ... on CommentBlock {
+    ...FullCommentBlock
   }
 
   ... on PollBlock {
-    disabled
-    blockStyle: blockStyleName
-    poll {
-      ...FullPoll
-    }
+    ...FullPollBlock
   }
 
   ... on CrowdfundingBlock {
-    disabled
-    blockStyle: blockStyleName
-    crowdfunding {
-      ...FullCrowdfunding
-    }
+    ...FullCrowdfundingBlock
   }
 
   ... on ListicleBlock {
-    disabled
-    blockStyle: blockStyleName
-    items {
-      title
-      richText
-      image {
-        ...FullImage
-      }
-    }
+    ...FullListicleBlock
   }
 
   ... on BreakBlock {
-    disabled
-    blockStyle: blockStyleName
-    text
-    richText
-    hideButton
-    linkTarget
-    linkText
-    linkURL
-    image {
-      ...FullImage
-    }
+    ...FullBreakBlock
   }
 
   ... on FacebookPostBlock {
-    disabled
-    blockStyle: blockStyleName
-    userID
-    postID
+    ...FullFacebookPostBlock
   }
 
   ... on FacebookVideoBlock {
-    disabled
-    blockStyle: blockStyleName
-    userID
-    videoID
+    ...FullFacebookVideoBlock
   }
 
   ... on InstagramPostBlock {
-    disabled
-    blockStyle: blockStyleName
-    postID
+    ...FullInstagramPostBlock
   }
 
   ... on TwitterTweetBlock {
-    disabled
-    blockStyle: blockStyleName
-    userID
-    tweetID
+    ...FullTwitterTweetBlock
   }
 
   ... on VimeoVideoBlock {
-    disabled
-    blockStyle: blockStyleName
-    videoID
+    ...FullVimeoVideoBlock
   }
 
   ... on YouTubeVideoBlock {
-    disabled
-    blockStyle: blockStyleName
-    videoID
+    ...FullYouTubeVideoBlock
   }
 
   ... on StreamableVideoBlock {
-    disabled
-    blockStyle: blockStyleName
-    videoID
+    ...FullStreamableVideoBlock
   }
 
   ... on SoundCloudTrackBlock {
-    disabled
-    blockStyle: blockStyleName
-    trackID
+    ...FullSoundCloudTrackBlock
   }
 
   ... on PolisConversationBlock {
-    disabled
-    blockStyle: blockStyleName
-    conversationID
+    ...FullPolisConversationBlock
   }
 
   ... on TikTokVideoBlock {
-    disabled
-    blockStyle: blockStyleName
-    userID
-    videoID
+    ...FullTikTokVideoBlock
   }
 
   ... on BildwurfAdBlock {
-    disabled
-    blockStyle: blockStyleName
-    zoneID
+    ...FullBildwurfAdBlock
   }
 
   ... on IFrameBlock {
-    disabled
-    blockStyle: blockStyleName
-    url
-    title
-    width
-    height
-    styleCustom
-    sandbox
+    ...FullIFrameBlock
   }
+
+  ... on TeaserSlotsBlock {
+    blockStyle: blockStyleName
+  }
+
+  ... on TeaserListBlock {
+    blockStyle: blockStyleName
+  }
+
+  ... on TeaserGridBlock {
+    blockStyle: blockStyleName
+  }
+
+  ... on TeaserGridFlexBlock {
+    blockStyle: blockStyleName
+  }
+
+  ... on FlexBlock {
+    blockStyle: blockStyleName
+  }
+
+  ... on UnknownBlock {
+    blockStyle: blockStyleName
+  }
+}
+
+fragment FullFlexAlignment on FlexAlignment {
+  i
+  x
+  y
+  w
+  h
 }
 
 fragment FullTeaser on Teaser {
@@ -290,12 +430,7 @@ fragment FullFlexBlock on FlexBlock {
   type
   blocks {
     alignment {
-      i
-      x
-      y
-      w
-      h
-      static
+      ...FullFlexAlignment
     }
 
     block {
@@ -313,22 +448,23 @@ fragment FullFlexBlock on FlexBlock {
   }
 }
 
+fragment FullFlexTeaser on FlexTeaser {
+  alignment {
+    ...FullFlexAlignment
+  }
+
+  teaser {
+    ...FullTeaser
+  }
+}
+
 fragment FullTeaserGridFlexBlock on TeaserGridFlexBlock {
   title
   type
   disabled
   blockStyle: blockStyleName
   flexTeasers {
-    alignment {
-      x
-      y
-      w
-      h
-    }
-
-    teaser {
-      ...FullTeaser
-    }
+    ...FullFlexTeaser
   }
 }
 
