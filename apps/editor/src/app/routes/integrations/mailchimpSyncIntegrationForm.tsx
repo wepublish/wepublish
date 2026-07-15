@@ -1,22 +1,4 @@
 import styled from '@emotion/styled';
-import {
-  DryRunMailchimpSyncMutation,
-  SyncProviderSettingsDocument,
-  SyncProviderSettingsQuery,
-  useDeleteAllMailchimpSyncErrorsMutation,
-  useDeleteMailchimpSyncErrorMutation,
-  useDryRunMailchimpSyncMutation,
-  useMailchimpInterestGroupsLazyQuery,
-  useMailchimpSyncErrorsQuery,
-  useMailchimpSyncProgressQuery,
-  useMailchimpListsLazyQuery,
-  useMailchimpMergeFieldsLazyQuery,
-  useMemberPlanListQuery,
-  usePaymentMethodListQuery,
-  useSyncProviderSettingsQuery,
-  useTriggerMailchimpSyncMutation,
-  useUpdateSyncProviderSettingMutation,
-} from '@wepublish/editor/api';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Accordion,
@@ -39,7 +21,25 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { useCallback, useEffect, useState } from 'react';
+import {
+  DryRunMailchimpSyncMutation,
+  SyncProviderSettingsDocument,
+  SyncProviderSettingsQuery,
+  useDeleteAllMailchimpSyncErrorsMutation,
+  useDeleteMailchimpSyncErrorMutation,
+  useDryRunMailchimpSyncMutation,
+  useMailchimpInterestGroupsLazyQuery,
+  useMailchimpListsLazyQuery,
+  useMailchimpMergeFieldsLazyQuery,
+  useMailchimpSyncErrorsQuery,
+  useMailchimpSyncProgressQuery,
+  useMemberPlanListQuery,
+  usePaymentMethodListQuery,
+  useSyncProviderSettingsQuery,
+  useTriggerMailchimpSyncMutation,
+  useUpdateSyncProviderSettingMutation,
+} from '@wepublish/editor/api';
+import { Fragment, useCallback, useEffect, useState } from 'react';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdDelete, MdExpandMore, MdSync } from 'react-icons/md';
@@ -131,6 +131,20 @@ const MappingRow = styled.div`
   margin-bottom: 8px;
 `;
 
+const InterestGroupGrid = styled.div`
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 8px;
+`;
+
+const InterestGroupCell = styled.div`
+  display: flex;
+  gap: 8px;
+  align-items: center;
+`;
+
 const MappingInput = styled(Input)`
   flex: 1;
 `;
@@ -156,8 +170,6 @@ const ExpressionRow = styled.div`
 
 type SlugOp = 'contains' | 'contains_any' | 'equals';
 
-const INTEREST_OPS: SlugOp[] = ['contains', 'equals', 'contains_any'];
-
 function parseSlugExpression(expr: string): {
   op: SlugOp;
   value: string;
@@ -171,88 +183,22 @@ function buildSlugExpression(op: SlugOp, value: string): string {
   return `slug:${op}:${value}`;
 }
 
-function InterestExpressionEditor({
-  value,
-  onChange,
-  memberPlanSlugs,
-}: {
-  value: string;
-  onChange: (v: string) => void;
-  memberPlanSlugs: { slug: string; name: string }[];
-}) {
-  const { t } = useTranslation();
-  const parsed = parseSlugExpression(value);
-  const op = parsed?.op ?? 'contains';
-  const exprValue = parsed?.value ?? (parsed ? '' : value);
-
-  return (
-    <ExpressionRow>
-      <Select
-        size="small"
-        value={op}
-        onChange={e => {
-          onChange(buildSlugExpression(e.target.value as SlugOp, exprValue));
-        }}
-        sx={{ minWidth: 140 }}
-      >
-        {INTEREST_OPS.map(o => (
-          <MenuItem
-            key={o}
-            value={o}
-          >
-            {t(`integrations.mailchimpSyncSettings.op_${o}`)}
-          </MenuItem>
-        ))}
-      </Select>
-
-      {op === 'equals' ?
-        <Autocomplete
-          freeSolo
-          options={memberPlanSlugs.map(p => p.slug)}
-          getOptionLabel={slug => {
-            const plan = memberPlanSlugs.find(p => p.slug === slug);
-            return plan ? `${plan.name} (${plan.slug})` : slug;
-          }}
-          filterOptions={(options, { inputValue }) =>
-            inputValue ?
-              options.filter(slug => {
-                const plan = memberPlanSlugs.find(p => p.slug === slug);
-                const label = plan ? `${plan.name} ${plan.slug}` : slug;
-                return label.toLowerCase().includes(inputValue.toLowerCase());
-              })
-            : options
-          }
-          value={exprValue}
-          onChange={(_, newValue) => {
-            onChange(buildSlugExpression(op, newValue ?? ''));
-          }}
-          onInputChange={(_, inputValue, reason) => {
-            if (reason === 'input')
-              onChange(buildSlugExpression(op, inputValue));
-          }}
-          sx={{ flex: 1 }}
-          renderInput={params => (
-            <TextField
-              {...params}
-              size="small"
-              placeholder="Slug"
-            />
-          )}
-        />
-      : <TextField
-          size="small"
-          value={exprValue}
-          onChange={e => onChange(buildSlugExpression(op, e.target.value))}
-          placeholder={
-            op === 'contains_any' ?
-              t('integrations.mailchimpSyncSettings.containsAnyPlaceholder')
-            : 'Slug'
-          }
-          sx={{ flex: 1 }}
-        />
-      }
-    </ExpressionRow>
-  );
+function getMappedSlugsForGroup(
+  mappings: { groupId?: string; expression?: string }[] | undefined,
+  groupId: string
+): string[] {
+  const mapping = mappings?.find(m => m.groupId === groupId);
+  if (!mapping?.expression) {
+    return [];
+  }
+  const parsed = parseSlugExpression(mapping.expression);
+  if (!parsed) {
+    return [];
+  }
+  return parsed.value
+    .split(',')
+    .map(v => v.trim())
+    .filter(Boolean);
 }
 
 type MergeFieldType =
@@ -632,6 +578,15 @@ function SyncProviderSettingCard({
     name: p.name,
   }));
 
+  const activeMemberPlans = (memberPlanData?.memberPlans?.nodes ?? [])
+    .filter(p => p.active)
+    .map(p => ({ slug: p.slug, name: p.name, productType: p.productType }))
+    .sort(
+      (a, b) =>
+        a.productType.localeCompare(b.productType) ||
+        a.name.localeCompare(b.name)
+    );
+
   const { data: paymentMethodData } = usePaymentMethodListQuery();
   const paymentMethodSlugs = (paymentMethodData?.paymentMethods ?? []).map(
     p => ({ slug: p.slug, name: p.name })
@@ -672,6 +627,7 @@ function SyncProviderSettingCard({
     handleSubmit,
     formState: { isDirty },
     watch,
+    setValue,
   } = useForm<SyncProviderFormValues>({
     resolver: zodResolver(syncProviderSchema),
     defaultValues: {
@@ -737,14 +693,24 @@ function SyncProviderSettingCard({
     name: 'mailchimp_mergeFieldMappings',
   });
 
-  const {
-    fields: interestFields,
-    append: appendInterestGroup,
-    remove: removeInterestGroup,
-  } = useFieldArray({
-    control,
-    name: 'mailchimp_interestGroupMappings',
-  });
+  const setGroupSlugs = useCallback(
+    (groupId: string, slugs: string[]) => {
+      const current = watchedInterestGroupMappings ?? [];
+      const others = current.filter(m => m.groupId !== groupId);
+      const next =
+        slugs.length ?
+          [
+            ...others,
+            {
+              groupId,
+              expression: buildSlugExpression('contains_any', slugs.join(',')),
+            },
+          ]
+        : others;
+      setValue('mailchimp_interestGroupMappings', next, { shouldDirty: true });
+    },
+    [watchedInterestGroupMappings, setValue]
+  );
 
   const saveSettings = useCallback(
     async (formData: SyncProviderFormValues) => {
@@ -1125,88 +1091,74 @@ function SyncProviderSettingCard({
             {t('integrations.mailchimpSyncSettings.interestGroupHelp')}
           </Typography>
 
-          {interestFields.map((field, index) => (
-            <MappingRow key={field.id}>
-              <Controller
-                name={`mailchimp_interestGroupMappings.${index}.groupId`}
-                control={control}
-                render={({ field: { value, onChange } }) => (
-                  <Autocomplete
-                    freeSolo
-                    options={availableInterestGroups.map(g => g.id)}
-                    getOptionLabel={id => {
-                      const group = availableInterestGroups.find(
-                        g => g.id === id
-                      );
-                      return group ? `${group.name} (${group.id})` : id;
-                    }}
-                    filterOptions={(options, { inputValue }) =>
-                      inputValue ?
-                        options.filter(id => {
-                          const group = availableInterestGroups.find(
-                            g => g.id === id
-                          );
-                          const label =
-                            group ? `${group.name} ${group.id}` : id;
-                          return label
-                            .toLowerCase()
-                            .includes(inputValue.toLowerCase());
-                        })
-                      : options
-                    }
-                    value={value ?? ''}
-                    onChange={(_, newValue) => {
-                      onChange(newValue ?? '');
-                    }}
-                    onInputChange={(_, inputValue, reason) => {
-                      if (reason === 'input') onChange(inputValue);
-                    }}
-                    sx={{ flex: 1 }}
-                    renderInput={params => (
-                      <TextField
-                        {...params}
-                        size="small"
-                        placeholder={t(
-                          'integrations.mailchimpSyncSettings.interestGroupId'
-                        )}
-                      />
-                    )}
-                  />
-                )}
-              />
-              <Controller
-                name={`mailchimp_interestGroupMappings.${index}.expression`}
-                control={control}
-                render={({ field: { value, onChange } }) => (
-                  <InterestExpressionEditor
-                    value={value}
-                    onChange={onChange}
-                    memberPlanSlugs={memberPlanSlugs}
-                  />
-                )}
-              />
-              <IconButton
-                size="small"
-                onClick={() => removeInterestGroup(index)}
-                color="error"
-              >
-                <MdDelete />
-              </IconButton>
-            </MappingRow>
-          ))}
+          <InterestGroupGrid>
+            {availableInterestGroups.map(group => (
+              <Fragment key={group.id}>
+                <Typography variant="body2">{group.name}</Typography>
+                <Autocomplete
+                  multiple
+                  options={activeMemberPlans.map(p => p.slug)}
+                  getOptionLabel={slug => {
+                    const plan = memberPlanSlugs.find(p => p.slug === slug);
+                    return plan ? plan.name : slug;
+                  }}
+                  groupBy={slug => {
+                    const plan = activeMemberPlans.find(p => p.slug === slug);
+                    return plan?.productType === 'Donation' ?
+                        t('memberplanForm.productTypeDonation')
+                      : t('memberplanForm.productTypeSubscription');
+                  }}
+                  value={getMappedSlugsForGroup(
+                    watchedInterestGroupMappings,
+                    group.id
+                  )}
+                  onChange={(_, newValue) => setGroupSlugs(group.id, newValue)}
+                  renderInput={params => (
+                    <TextField
+                      {...params}
+                      size="small"
+                      placeholder={t(
+                        'integrations.mailchimpSyncSettings.selectMemberPlans'
+                      )}
+                    />
+                  )}
+                />
+              </Fragment>
+            ))}
 
-          <Button
-            size="small"
-            startIcon={<MdAdd />}
-            onClick={() =>
-              appendInterestGroup({
-                groupId: '',
-                expression: 'slug:contains:',
-              })
-            }
-          >
-            {t('integrations.mailchimpSyncSettings.addInterestGroup')}
-          </Button>
+            {(watchedInterestGroupMappings ?? [])
+              .filter(
+                m =>
+                  m.groupId &&
+                  !availableInterestGroups.some(g => g.id === m.groupId)
+              )
+              .map(m => (
+                <Fragment key={m.groupId}>
+                  <Typography
+                    variant="body2"
+                    color="textSecondary"
+                  >
+                    {m.groupId}
+                  </Typography>
+                  <InterestGroupCell>
+                    <Typography
+                      variant="body2"
+                      color="textSecondary"
+                      sx={{ flex: 1 }}
+                    >
+                      {m.expression}
+                    </Typography>
+                    <IconButton
+                      size="small"
+                      onClick={() => setGroupSlugs(m.groupId, [])}
+                      color="error"
+                    >
+                      <MdDelete />
+                    </IconButton>
+                  </InterestGroupCell>
+                </Fragment>
+              ))}
+          </InterestGroupGrid>
 
           {/* Default Interest Groups */}
           <SectionTitle variant="h6">
@@ -1227,9 +1179,7 @@ function SyncProviderSettingCard({
                 multiple
                 options={availableInterestGroups}
                 getOptionLabel={option =>
-                  typeof option === 'string' ? option : (
-                    `${option.name} (${option.id})`
-                  )
+                  typeof option === 'string' ? option : option.name
                 }
                 value={(value ?? []).map(
                   id =>
