@@ -1672,6 +1672,8 @@ export type InvoiceItem = {
   amount: Scalars['Int'];
   createdAt: Scalars['DateTime'];
   description?: Maybe<Scalars['String']>;
+  goodie?: Maybe<Goodie>;
+  goodieId?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];

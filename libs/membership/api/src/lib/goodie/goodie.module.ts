@@ -5,6 +5,7 @@ import { PrismaModule } from '@wepublish/nest-modules';
 import { GoodieDataloader } from './goodie.dataloader';
 import { GoodieResolver } from './goodie.resolver';
 import { GoodieService } from './goodie.service';
+import { InvoiceItemGoodieResolver } from './invoice-item-goodie.resolver';
 import { MemberPlanGoodiesResolver } from './member-plan-goodies.resolver';
 import { SubscriptionGoodieResolver } from './subscription-goodie.resolver';
 
@@ -14,6 +15,7 @@ import { SubscriptionGoodieResolver } from './subscription-goodie.resolver';
     GoodieDataloader,
     GoodieService,
     GoodieResolver,
+    InvoiceItemGoodieResolver,
     MemberPlanGoodiesResolver,
     SubscriptionGoodieResolver,
   ],

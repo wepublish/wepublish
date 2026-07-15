@@ -838,7 +838,14 @@
       "payManually": "Manuell bezahlen",
       "total": "Rechnungsbetrag",
       "unpaid": "(unbezahlt)",
-      "userNotLoaded": "Unerwarteter Fehler: Deine Benutzerdaten konnten nicht geladen werden."
+      "userNotLoaded": "Unerwarteter Fehler: Deine Benutzerdaten konnten nicht geladen werden.",
+      "table": {
+        "date": "Datum",
+        "description": "Beschreibung",
+        "goodie": "Goodie",
+        "status": "Status",
+        "action": "Aktion"
+      }
     },
     "linkPageBreakEditPanel": {
       "close": "Schliessen",
@@ -1526,7 +1533,7 @@
       "totpDisabled": "Zwei-Faktor-Authentifizierung ist noch nicht eingerichtet. Der Benutzer wird beim nächsten Editor-Login aufgefordert, diese einzurichten.",
       "totpExemptInfo": "Dieser Benutzer ist von der Zwei-Faktor-Authentifizierungspflicht befreit.",
       "totpExemptLabel": "Von 2FA-Pflicht befreien",
-      "totpExemptWarning": "\u26a0\ufe0f SICHERHEITSWARNUNG \u26a0\ufe0f\n\nSie sind dabei, die Zwei-Faktor-Authentifizierungspflicht für diesen Benutzer zu DEAKTIVIEREN!\n\nDies reduziert die Sicherheit dieses Kontos erheblich. Der Benutzer kann sich nur mit einem Passwort im Editor anmelden, ohne einen zweiten Faktor.\n\nDies sollte nur in Ausnahmefällen verwendet werden.\n\nSind Sie sicher, dass Sie fortfahren möchten?",
+      "totpExemptWarning": "⚠️ SICHERHEITSWARNUNG ⚠️\n\nSie sind dabei, die Zwei-Faktor-Authentifizierungspflicht für diesen Benutzer zu DEAKTIVIEREN!\n\nDies reduziert die Sicherheit dieses Kontos erheblich. Der Benutzer kann sich nur mit einem Passwort im Editor anmelden, ohne einen zweiten Faktor.\n\nDies sollte nur in Ausnahmefällen verwendet werden.\n\nSind Sie sicher, dass Sie fortfahren möchten?",
       "properties": "Eigenschaften",
       "resetPassword": "Passwort zurücksetzen",
       "resetPasswordFor": "Passwort für {{userName}} zurücksetzen",
@@ -1701,8 +1708,7 @@
       "subscriptionTrialNotPossible": "Das Abo kann nicht als Probeabo konfiguriert werden. Ändere hierzu die Einstellungen des Abo-Plans.",
       "extendableWasChanged": "Die Option «Verlängerbar» wurde entsprechend dem Abo-Plan angepasst.",
       "extendModalTitle": "Abo frühzeitig verlängern?",
-      "extendModalBody": "Das Abo wird frühzeitig um die nächst mögliche Periode verlängert. Es wird eine Rechnung erstellt.",
-      "goodie": "Goodie"
+      "extendModalBody": "Das Abo wird frühzeitig um die nächst mögliche Periode verlängert. Es wird eine Rechnung erstellt."
     },
     "subscriptionListFilter": {
       "extendable": "Verlängerbar"

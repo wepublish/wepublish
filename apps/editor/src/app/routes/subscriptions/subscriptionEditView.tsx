@@ -56,7 +56,6 @@ import {
   Form as RForm,
   Grid as RGrid,
   IconButton,
-  Input,
   Message,
   Modal,
   Panel as RPanel,
@@ -907,19 +906,6 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                           />
                         </Col>
                       </RowPaddingTop>
-                      {data?.subscription?.goodie && (
-                        <RowPaddingTop>
-                          <Col xs={12}>
-                            <ControlLabel>
-                              {t('subscriptionEditView.goodie')}
-                            </ControlLabel>
-                            <Input
-                              value={data.subscription.goodie.name}
-                              disabled
-                            />
-                          </Col>
-                        </RowPaddingTop>
-                      )}
                     </Grid>
                   </Group>
                 </RPanel>
