@@ -5,7 +5,77 @@ updates:
     schedule:
       interval: "daily"
     groups:
-      dev-deps:
-        dependency-type: "development"
-      prod-deps:
-        dependency-type: "production"
+      important:
+        patterns:
+          - "nx"
+          - "@nx/*"
+          - "@nestjs/*"
+          - "nestjs-*"
+          - "next"
+          - "@next/*"
+          - "eslint-config-next"
+          - "prisma"
+          - "@prisma/*"
+          - "react"
+          - "react-dom"
+          - "@types/react"
+          - "@types/react-dom"
+          - "@apollo/*"
+          - "apollo-*"
+      unimportant:
+        patterns:
+          - "*"
+        exclude-patterns:
+          - "nx"
+          - "@nx/*"
+          - "@nestjs/*"
+          - "nestjs-*"
+          - "next"
+          - "@next/*"
+          - "eslint-config-next"
+          - "prisma"
+          - "@prisma/*"
+          - "react"
+          - "react-dom"
+          - "@types/react"
+          - "@types/react-dom"
+          - "@apollo/*"
+          - "apollo-*"
+      important-security:
+        applies-to: security-updates
+        patterns:
+          - "nx"
+          - "@nx/*"
+          - "@nestjs/*"
+          - "nestjs-*"
+          - "next"
+          - "@next/*"
+          - "eslint-config-next"
+          - "prisma"
+          - "@prisma/*"
+          - "react"
+          - "react-dom"
+          - "@types/react"
+          - "@types/react-dom"
+          - "@apollo/*"
+          - "apollo-*"
+      unimportant-security:
+        applies-to: security-updates
+        patterns:
+          - "*"
+        exclude-patterns:
+          - "nx"
+          - "@nx/*"
+          - "@nestjs/*"
+          - "nestjs-*"
+          - "next"
+          - "@next/*"
+          - "eslint-config-next"
+          - "prisma"
+          - "@prisma/*"
+          - "react"
+          - "react-dom"
+          - "@types/react"
+          - "@types/react-dom"
+          - "@apollo/*"
+          - "apollo-*"
