@@ -45,7 +45,7 @@
     "@babel/preset-react": "^7.22.5",
     "@babel/preset-typescript": "^7.22.5",
     "@chromatic-com/storybook": "^3.2.6",
-    "@emotion/babel-plugin": "11.11.0",
+    "@emotion/babel-plugin": "11.13.5",
     "@emotion/jest": "^11.11.0",
     "@faker-js/faker": "^10.1.0",
     "@graphql-codegen/add": "^2.0.1",
