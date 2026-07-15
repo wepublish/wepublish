@@ -4,6 +4,29 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
+    # Grouped PRs count toward this limit; keep it above the number of groups
+    open-pull-requests-limit: 15
+    # Only consider versions that have been out for a week, except for the
+    # core framework packages. Shrinks the candidate set per run so the
+    # updater stays well under Dependabot's fixed 55-minute job limit.
+    cooldown:
+      default-days: 7
+      exclude:
+        - "nx"
+        - "@nx/*"
+        - "@nestjs/*"
+        - "nestjs-*"
+        - "next"
+        - "@next/*"
+        - "eslint-config-next"
+        - "prisma"
+        - "@prisma/*"
+        - "react"
+        - "react-dom"
+        - "@types/react"
+        - "@types/react-dom"
+        - "@apollo/*"
+        - "apollo-*"
     groups:
       important:
         patterns:
@@ -22,7 +45,123 @@ updates:
           - "@types/react-dom"
           - "@apollo/*"
           - "apollo-*"
+      graphql-tooling:
+        update-types:
+          - "minor"
+          - "patch"
+        patterns:
+          - "graphql"
+          - "graphql-*"
+          - "@graphql-codegen/*"
+          - "@graphql-tools/*"
+          - "@types/graphql"
+          - "@types/graphql-upload"
+      storybook:
+        update-types:
+          - "minor"
+          - "patch"
+        patterns:
+          - "storybook"
+          - "storybook-*"
+          - "@storybook/*"
+          - "@chromatic-com/storybook"
+          - "eslint-plugin-storybook"
+      testing:
+        update-types:
+          - "minor"
+          - "patch"
+        patterns:
+          - "jest"
+          - "jest-*"
+          - "*-jest"
+          - "@types/jest"
+          - "@testing-library/*"
+          - "@faker-js/*"
+          - "cypress"
+          - "eslint-plugin-cypress"
+          - "supertest"
+          - "@types/supertest"
+          - "nock"
+          - "jsdom"
+          - "happy-dom"
+          - "snapshot-diff"
+          - "@types/react-test-renderer"
+      lint-and-format:
+        update-types:
+          - "minor"
+          - "patch"
+        patterns:
+          - "eslint"
+          - "eslint-*"
+          - "@typescript-eslint/*"
+          - "prettier"
+          - "pretty-quick"
+          - "husky"
+        exclude-patterns:
+          - "eslint-config-next"
+          - "eslint-plugin-storybook"
+          - "eslint-plugin-cypress"
+      mui-and-emotion:
+        update-types:
+          - "minor"
+          - "patch"
+        patterns:
+          - "@mui/*"
+          - "@emotion/*"
+      tiptap-editor:
+        update-types:
+          - "minor"
+          - "patch"
+        patterns:
+          - "@tiptap/*"
+          - "yjs"
+          - "y-protocols"
+      sentry:
+        update-types:
+          - "minor"
+          - "patch"
+        patterns:
+          - "@sentry/*"
+      build-tooling:
+        update-types:
+          - "minor"
+          - "patch"
+        patterns:
+          - "@babel/*"
+          - "babel-*"
+          - "@swc/*"
+          - "@swc-node/*"
+          - "swc-loader"
+          - "webpack"
+          - "*-webpack-plugin"
+          - "@types/webpack*"
+          - "@svgr/webpack"
+          - "@pmmmwh/*"
+          - "react-refresh"
+          - "url-loader"
+          - "typescript"
+          - "ts-node"
+          - "tsx"
+          - "tslib"
+      types:
+        update-types:
+          - "minor"
+          - "patch"
+        patterns:
+          - "@types/*"
+        exclude-patterns:
+          - "@types/react"
+          - "@types/react-dom"
+          - "@types/react-test-renderer"
+          - "@types/jest"
+          - "@types/supertest"
+          - "@types/graphql"
+          - "@types/graphql-upload"
+          - "@types/webpack*"
       unimportant:
+        update-types:
+          - "minor"
+          - "patch"
         patterns:
           - "*"
         exclude-patterns:
@@ -32,15 +171,59 @@ updates:
           - "nestjs-*"
           - "next"
           - "@next/*"
-          - "eslint-config-next"
           - "prisma"
           - "@prisma/*"
           - "react"
           - "react-dom"
-          - "@types/react"
-          - "@types/react-dom"
           - "@apollo/*"
           - "apollo-*"
+          - "graphql"
+          - "graphql-*"
+          - "@graphql-codegen/*"
+          - "@graphql-tools/*"
+          - "storybook"
+          - "storybook-*"
+          - "@storybook/*"
+          - "@chromatic-com/storybook"
+          - "jest"
+          - "jest-*"
+          - "*-jest"
+          - "@testing-library/*"
+          - "@faker-js/*"
+          - "cypress"
+          - "supertest"
+          - "nock"
+          - "jsdom"
+          - "happy-dom"
+          - "snapshot-diff"
+          - "eslint"
+          - "eslint-*"
+          - "@typescript-eslint/*"
+          - "prettier"
+          - "pretty-quick"
+          - "husky"
+          - "@mui/*"
+          - "@emotion/*"
+          - "@tiptap/*"
+          - "yjs"
+          - "y-protocols"
+          - "@sentry/*"
+          - "@babel/*"
+          - "babel-*"
+          - "@swc/*"
+          - "@swc-node/*"
+          - "swc-loader"
+          - "webpack"
+          - "*-webpack-plugin"
+          - "@svgr/webpack"
+          - "@pmmmwh/*"
+          - "react-refresh"
+          - "url-loader"
+          - "typescript"
+          - "ts-node"
+          - "tsx"
+          - "tslib"
+          - "@types/*"
       important-security:
         applies-to: security-updates
         patterns:
