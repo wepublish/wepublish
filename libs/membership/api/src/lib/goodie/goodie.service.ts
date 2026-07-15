@@ -121,10 +121,10 @@ export class GoodieService {
       return {};
     }
 
-    const counts = await this.prisma.subscription.groupBy({
-      by: ['goodieID'],
+    const counts = await this.prisma.invoiceItem.groupBy({
+      by: ['goodieId'],
       where: {
-        goodieID: {
+        goodieId: {
           in: goodieIds,
         },
       },
@@ -134,7 +134,7 @@ export class GoodieService {
     });
 
     return Object.fromEntries(
-      counts.map(({ goodieID, _count }) => [goodieID, _count._all])
+      counts.map(({ goodieId, _count }) => [goodieId, _count._all])
     );
   }
 

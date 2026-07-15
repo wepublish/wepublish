@@ -13,7 +13,7 @@ CREATE TABLE "goodies" (
 );
 
 -- AlterTable
-ALTER TABLE "subscriptions" ADD COLUMN     "goodieID" TEXT;
+ALTER TABLE "invoices.items" ADD COLUMN     "goodieId" TEXT;
 
 -- CreateTable
 CREATE TABLE "_GoodieToMemberPlan" (
@@ -31,7 +31,7 @@ CREATE INDEX "_GoodieToMemberPlan_B_index" ON "_GoodieToMemberPlan"("B");
 ALTER TABLE "goodies" ADD CONSTRAINT "goodies_imageID_fkey" FOREIGN KEY ("imageID") REFERENCES "images"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "subscriptions" ADD CONSTRAINT "subscriptions_goodieID_fkey" FOREIGN KEY ("goodieID") REFERENCES "goodies"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "invoices.items" ADD CONSTRAINT "invoices.items_goodieId_fkey" FOREIGN KEY ("goodieId") REFERENCES "goodies"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_GoodieToMemberPlan" ADD CONSTRAINT "_GoodieToMemberPlan_A_fkey" FOREIGN KEY ("A") REFERENCES "goodies"("id") ON DELETE CASCADE ON UPDATE CASCADE;
