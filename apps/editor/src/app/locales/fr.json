@@ -218,7 +218,6 @@
         "updatedAtDate": "{{updatedAtDate, ccc PP pp}}"
       }
     },
-
     "authors": {
       "overview": {
         "action": "Action",
@@ -843,7 +842,14 @@
       "payManually": "Payer manuellement",
       "total": "Montant facturé",
       "unpaid": "(non payé)",
-      "userNotLoaded": "Erreur inattendue : vos données d'utilisateur trice n'ont pas pu être chargées."
+      "userNotLoaded": "Erreur inattendue : vos données d'utilisateur trice n'ont pas pu être chargées.",
+      "table": {
+        "date": "Date",
+        "description": "Description",
+        "goodie": "Goodie",
+        "status": "Statut",
+        "action": "Action"
+      }
     },
     "linkPageBreakEditPanel": {
       "close": "Fermer",
@@ -1477,7 +1483,7 @@
       "totpDisabled": "L'authentification à deux facteurs n'est pas encore configurée. L'utilisateur sera invité à la configurer lors de sa prochaine connexion à l'éditeur.",
       "totpExemptInfo": "Cet utilisateur est exempté de l'exigence d'authentification à deux facteurs.",
       "totpExemptLabel": "Exempter de l'exigence 2FA",
-      "totpExemptWarning": "\u26a0\ufe0f AVERTISSEMENT DE SÉCURITÉ \u26a0\ufe0f\n\nVous êtes sur le point de DÉSACTIVER l'exigence d'authentification à deux facteurs pour cet utilisateur !\n\nCela réduit considérablement la sécurité de ce compte. L'utilisateur pourra se connecter à l'éditeur avec un simple mot de passe, sans second facteur.\n\nCela ne devrait être utilisé que dans des circonstances exceptionnelles.\n\nÊtes-vous sûr de vouloir continuer ?",
+      "totpExemptWarning": "⚠️ AVERTISSEMENT DE SÉCURITÉ ⚠️\n\nVous êtes sur le point de DÉSACTIVER l'exigence d'authentification à deux facteurs pour cet utilisateur !\n\nCela réduit considérablement la sécurité de ce compte. L'utilisateur pourra se connecter à l'éditeur avec un simple mot de passe, sans second facteur.\n\nCela ne devrait être utilisé que dans des circonstances exceptionnelles.\n\nÊtes-vous sûr de vouloir continuer ?",
       "resetPassword": "Réinitialiser le mot de passe",
       "resetPasswordFor": "Réinitialiser le mot de passe de {{userName}}",
       "selectUserImage": "Choisir une photo de profil",
@@ -1648,8 +1654,7 @@
       "subscriptionTrialNotPossible": "L'abonnement ne peut pas être configuré comme abonnement d'essai. Pour ce faire, modifie les paramètres du plan d'abonnement.",
       "extendableWasChanged": "L'option «Extensible» a été adaptée en fonction du plan d'abonnement.",
       "extendModalTitle": "Renouveler l'abonnement plus tôt?",
-      "extendModalBody": "L'abonnement est prolongé en temps utile pour la prochaine période possible. Une facture est établie.",
-      "goodie": "Goodie"
+      "extendModalBody": "L'abonnement est prolongé en temps utile pour la prochaine période possible. Une facture est établie."
     },
     "subscriptionListFilter": {
       "extendable": "Extensible"

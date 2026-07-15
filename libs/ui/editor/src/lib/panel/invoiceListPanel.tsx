@@ -1,13 +1,44 @@
 import styled from '@emotion/styled';
-import { InvoiceFragment, useMeQuery } from '@wepublish/editor/api';
+import {
+  InvoiceFragment,
+  useMarkInvoiceAsPaidMutation,
+  useMeQuery,
+} from '@wepublish/editor/api';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Drawer, Message } from 'rsuite';
+import { MdClose, MdDone, MdMail } from 'react-icons/md';
+import { Button, Message, Modal, Table as RTable, toaster } from 'rsuite';
+import { RowDataType } from 'rsuite/esm/Table';
 
-import { createCheckedPermissionComponent, Invoice } from '../atoms';
+import { createCheckedPermissionComponent } from '../atoms';
 
-const InvoiceWrapper = styled.div`
-  margin-bottom: 10px;
+const { Column, HeaderCell, Cell: RCell } = RTable;
+
+const MailIcon = styled(MdMail)`
+  color: red;
+  font-size: 1.5em;
+  vertical-align: middle;
 `;
+
+const CloseIcon = styled(MdClose)`
+  color: red;
+  font-size: 1.5em;
+  vertical-align: middle;
+`;
+
+const DoneIcon = styled(MdDone)`
+  color: green;
+  font-size: 1.5em;
+  vertical-align: middle;
+`;
+
+const formatDate = (date: string | Date) =>
+  new Date(date).toLocaleDateString('de-CH', {
+    timeZone: 'europe/zurich',
+  });
+
+const findGoodieItem = (invoice: InvoiceFragment) =>
+  invoice.items?.find(({ goodieId }) => goodieId);
 
 export interface InvoiceListPanelProps {
   subscriptionId?: string;
@@ -22,49 +53,187 @@ function InvoiceListPanel({
   subscriptionId,
   invoices,
   disabled,
-  onClose,
   onInvoicePaid,
 }: InvoiceListPanelProps) {
   const { data: me } = useMeQuery({});
   const { t } = useTranslation();
+  const [invoiceToPay, setInvoiceToPay] = useState<InvoiceFragment>();
 
-  /**
-   * UI helper functions
-   */
-  function invoiceHistoryView() {
-    // missing subscription
-    if (!subscriptionId) {
-      return (
-        <Drawer.Body>
-          <Message type="error">
-            {t('invoice.panel.missingSubscriptionId')}
-          </Message>
-        </Drawer.Body>
+  const [markInvoiceAsPaid] = useMarkInvoiceAsPaidMutation();
+
+  async function payManually() {
+    const invoiceId = invoiceToPay?.id;
+    setInvoiceToPay(undefined);
+
+    if (!me?.me?.id) {
+      toaster.push(
+        <Message type="error">{t('invoice.userNotLoaded')}</Message>
       );
+
+      return;
     }
-    // missing invoices
-    if (!invoices?.length) {
-      return (
-        <Drawer.Body>
-          <Message type="info">{t('invoice.panel.noInvoices')}</Message>
-        </Drawer.Body>
-      );
+
+    if (!invoiceId) {
+      return;
     }
-    // iterate invoices
-    return invoices?.map((invoice, invoiceId) => (
-      <InvoiceWrapper key={invoiceId}>
-        <Invoice
-          subscriptionId={subscriptionId}
-          invoice={invoice}
-          me={me?.me}
-          disabled={disabled}
-          onInvoicePaid={() => onInvoicePaid()}
-        />
-      </InvoiceWrapper>
-    ));
+
+    await markInvoiceAsPaid({
+      variables: {
+        id: invoiceId,
+      },
+    });
+    onInvoicePaid();
   }
 
-  return <>{invoiceHistoryView()}</>;
+  if (!subscriptionId) {
+    return (
+      <Message type="error">{t('invoice.panel.missingSubscriptionId')}</Message>
+    );
+  }
+
+  if (!invoices?.length) {
+    return <Message type="info">{t('invoice.panel.noInvoices')}</Message>;
+  }
+
+  return (
+    <>
+      <RTable
+        autoHeight
+        wordWrap="break-word"
+        data={invoices}
+      >
+        <Column
+          width={110}
+          resizable
+        >
+          <HeaderCell>{t('invoice.invoiceNo')}</HeaderCell>
+          <RCell dataKey="id" />
+        </Column>
+
+        <Column
+          width={100}
+          resizable
+        >
+          <HeaderCell>{t('invoice.table.date')}</HeaderCell>
+          <RCell>
+            {(rowData: RowDataType<InvoiceFragment>) =>
+              formatDate(rowData.createdAt)
+            }
+          </RCell>
+        </Column>
+
+        <Column
+          flexGrow={1}
+          minWidth={160}
+        >
+          <HeaderCell>{t('invoice.table.description')}</HeaderCell>
+          <RCell dataKey="description" />
+        </Column>
+
+        <Column
+          width={110}
+          resizable
+        >
+          <HeaderCell>{t('invoice.total')}</HeaderCell>
+          <RCell>
+            {(rowData: RowDataType<InvoiceFragment>) =>
+              `${(rowData.total / 100).toFixed(2)} ${rowData.currency}`
+            }
+          </RCell>
+        </Column>
+
+        <Column
+          width={140}
+          resizable
+        >
+          <HeaderCell>{t('invoice.table.goodie')}</HeaderCell>
+          <RCell>
+            {(rowData: RowDataType<InvoiceFragment>) => {
+              const goodieItem = findGoodieItem(rowData as InvoiceFragment);
+
+              return goodieItem?.goodie?.name ?? goodieItem?.name ?? '—';
+            }}
+          </RCell>
+        </Column>
+
+        <Column
+          width={190}
+          resizable
+        >
+          <HeaderCell>{t('invoice.table.status')}</HeaderCell>
+          <RCell>
+            {(rowData: RowDataType<InvoiceFragment>) => {
+              if (rowData.paidAt) {
+                return (
+                  <>
+                    <DoneIcon /> {t('invoice.paidAt')}{' '}
+                    {formatDate(rowData.paidAt)}
+                  </>
+                );
+              }
+
+              if (rowData.canceledAt) {
+                return (
+                  <>
+                    <CloseIcon /> {t('invoice.canceledAt')}{' '}
+                    {formatDate(rowData.canceledAt)}
+                  </>
+                );
+              }
+
+              return (
+                <>
+                  <MailIcon /> {t('invoice.unpaid')}
+                </>
+              );
+            }}
+          </RCell>
+        </Column>
+
+        <Column width={160}>
+          <HeaderCell>{t('invoice.table.action')}</HeaderCell>
+          <RCell>
+            {(rowData: RowDataType<InvoiceFragment>) =>
+              !rowData.paidAt && !rowData.canceledAt ?
+                <Button
+                  size="xs"
+                  appearance="primary"
+                  disabled={!me?.me?.id || disabled}
+                  onClick={() => setInvoiceToPay(rowData as InvoiceFragment)}
+                >
+                  {t('invoice.payManually')}
+                </Button>
+              : null
+            }
+          </RCell>
+        </Column>
+      </RTable>
+
+      <Modal
+        open={!!invoiceToPay}
+        backdrop="static"
+        size="xs"
+        onClose={() => setInvoiceToPay(undefined)}
+      >
+        <Modal.Title>{t('invoice.areYouSure')}</Modal.Title>
+        <Modal.Body>{t('invoice.manuallyPaidModalBody')}</Modal.Body>
+        <Modal.Footer>
+          <Button
+            appearance="primary"
+            onClick={payManually}
+          >
+            {t('confirm')}
+          </Button>
+          <Button
+            appearance="subtle"
+            onClick={() => setInvoiceToPay(undefined)}
+          >
+            {t('cancel')}
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
+  );
 }
 const CheckedPermissionComponent = createCheckedPermissionComponent([
   'CAN_GET_INVOICES',
