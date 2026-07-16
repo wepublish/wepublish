@@ -25,8 +25,10 @@ export const ReflektSubscribe = styled(SubscribeBlock)`
   grid-template-areas:
     'memberPlans'
     'monthlyAmount'
+    'goodieSlider'
     'userForm'
     'goodie'
+    'goodieError'
     'transactionFee'
     'submit'
     'paymentPeriodicity'
@@ -48,7 +50,15 @@ export const ReflektSubscribe = styled(SubscribeBlock)`
   }
 
   ${GoodieSection} {
-    display: grid;
+    display: contents;
+
+    > div {
+      display: contents;
+    }
+
+    > div > .MuiFormHelperText-root {
+      grid-area: goodieError;
+    }
   }
 
   ${SubscribeSection}[data-area='paymentPeriodicity'] ${PaymentRadioWrapper} {

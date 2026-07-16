@@ -9,6 +9,7 @@ export enum ReflektBlockStyles {
   TeaserNewsGrid = 'TeaserNewsGrid',
   TeaserLogoWall = 'TeaserLogoWall',
   SliderSlim = 'SliderSlim',
+  CrowdFunding = 'CrowdFunding',
   CollapsibleContent = 'CollapsibleContent',
   CollapsibleDownloads = 'CollapsibleDownloads',
   TableOfContents = 'TableOfContents',

@@ -24,7 +24,7 @@ export const isImageSliderSlimBlockStyle = (
     block
   );
 
-const StyledImageSlider = styled(ImageSlider)`
+export const ReflektImageSliderBase = styled(ImageSlider)`
   ${SliderInnerContainer} {
     gap: 0;
     position: relative;
@@ -81,7 +81,7 @@ const slidesPerViewConfig = {
 export const ReflektImageSlider = (
   props: BuilderBlockStyleProps['ImageSlider']
 ) => (
-  <StyledImageSlider
+  <ReflektImageSliderBase
     {...props}
     slidesPerViewConfig={slidesPerViewConfig}
   />
@@ -90,7 +90,7 @@ export const ReflektImageSlider = (
 export const ReflektImageSliderSlim = (
   props: BuilderBlockStyleProps['ImageSlider']
 ) => (
-  <StyledImageSlider
+  <ReflektImageSliderBase
     {...props}
     slidesPerViewConfig={slidesPerViewConfig}
     slideGap={16}

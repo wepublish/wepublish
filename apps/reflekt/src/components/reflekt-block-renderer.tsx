@@ -15,6 +15,7 @@ import {
   BuilderBlocksProps,
   BuilderBreakBlockProps,
   BuilderFlexBlockProps,
+  BuilderSubscribeBlockProps,
   BuilderTeaserSlotsBlockProps,
   BuilderTitleBlockProps,
   useWebsiteBuilder,
@@ -56,6 +57,10 @@ import {
   isImageSliderSlimBlockStyle,
   ReflektImageSliderSlim,
 } from './reflekt-image-slider';
+import {
+  isCrowdFundingSubscribe,
+  ReflektSubscribeCrowdfunding,
+} from './reflekt-subscribe-crowdfunding';
 import { ReflektTitleBlock } from './reflekt-title-block';
 import { isTeaserSlotsTopic } from './teaser-layouts/teaser-slots-topic';
 
@@ -101,6 +106,15 @@ export const ReflektBlockRenderer = (
         [
           isImageSliderSlimBlockStyle,
           block => <ReflektImageSliderSlim {...block} />,
+        ],
+        [
+          isCrowdFundingSubscribe,
+          block => (
+            <ReflektSubscribeCrowdfunding
+              {...(block as BuilderTeaserSlotsBlockProps &
+                BuilderSubscribeBlockProps)}
+            />
+          ),
         ],
         [
           isFlexBlockFullsizeImage,

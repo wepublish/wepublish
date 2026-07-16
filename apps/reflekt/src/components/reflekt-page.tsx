@@ -1,10 +1,15 @@
 import styled from '@emotion/styled';
 import { css, GlobalStyles, Theme } from '@mui/material';
 import { ContentWidthProvider } from '@wepublish/content/website';
+import {
+  TransactionFeeIcon,
+  TransactionFeeWrapper,
+} from '@wepublish/membership/website';
 import { Page } from '@wepublish/page/website';
 import { BuilderPageProps } from '@wepublish/website/builder';
 
 import { FlexBlockHeroWrapper } from './block-layouts/flex-block-hero';
+import { ReflektLogo } from './reflekt-navbar';
 import { CollapsibleContentWrapper } from './break-blocks/reflekt-collapsible-content';
 import { CollapsibleDownloadsWrapper } from './break-blocks/reflekt-collapsible-downloads';
 
@@ -68,22 +73,64 @@ const StyledReflektPage = styled(Page)`
   &.hide-amount-slider [data-area='monthlyAmount'] {
     display: none;
   }
+
+  &.secondary-background {
+    background-color: ${({ theme }) => theme.palette.secondary.main};
+    padding-bottom: ${({ theme }) => theme.spacing(10)};
+  }
+`;
+
+const secondaryBackgroundStyles = (theme: Theme) => css`
+  :root {
+    ${theme.breakpoints.up('md')} {
+      --navbar-bg-color-hero-off-screen: ${theme.palette.secondary.main};
+    }
+  }
+
+  body {
+    background-color: ${theme.palette.secondary.main};
+
+    ${ReflektLogo} {
+      mix-blend-mode: normal;
+      filter: invert(1);
+    }
+
+    ${TransactionFeeWrapper} {
+      border: 1px solid #d32f2f;
+    }
+
+    ${TransactionFeeIcon} {
+      border-top: 1px solid #d32f2f;
+    }
+  }
 `;
 
 const pageGlobalStyles = <GlobalStyles styles={fullWidthMainSpacer} />;
+const secondaryBackgroundGlobalStyles = (
+  <GlobalStyles styles={secondaryBackgroundStyles} />
+);
 export const ReflektPage = (props: BuilderPageProps) => {
   const hideAmountSlider =
     props.data?.page?.latest?.properties?.find(
       p => p.key === 'hideAmountSlider'
     )?.value === 'true';
+  const secondaryBackground =
+    props.data?.page?.latest?.properties?.find(
+      p => p.key === 'secondaryBackground'
+    )?.value === 'true';
 
   return (
     <ContentWidthProvider fullWidth>
       {pageGlobalStyles}
+      {secondaryBackground && secondaryBackgroundGlobalStyles}
 
       <StyledReflektPage
         {...props}
-        className={[props.className, hideAmountSlider && 'hide-amount-slider']
+        className={[
+          props.className,
+          hideAmountSlider && 'hide-amount-slider',
+          secondaryBackground && 'secondary-background',
+        ]
           .filter(Boolean)
           .join(' ')}
       />
