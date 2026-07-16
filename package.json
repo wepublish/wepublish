@@ -231,7 +231,7 @@
     "@mailchimp/mailchimp_transactional": "^1.0.50",
     "@mollie/api-client": "^4.1.0",
     "@mui/material": "^5.16.7",
-    "@mui/material-nextjs": "^7.2.0",
+    "@mui/material-nextjs": "^9.1.1",
     "@nestjs/apollo": "^13.2.0",
     "@nestjs/axios": "^4.0.1",
     "@nestjs/cache-manager": "^3.0.1",
