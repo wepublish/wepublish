@@ -30,7 +30,7 @@ import {
   DescriptionListItem,
   InvoiceListPanel,
   ListViewActions,
-  ListViewContainer,
+  ListViewContainer as ListViewContainerDefault,
   ListViewHeader,
   PermissionControl,
   TableWrapper,
@@ -88,12 +88,17 @@ const RowPaddingTop = styled(Row)`
   padding-top: 12px;
 `;
 
+const ListViewContainer = styled(ListViewContainerDefault)`
+  grid-template-columns: 1fr 1fr;
+`;
+
 const UserFormGrid = styled(RGrid)`
   width: 100%;
   padding-left: 0px;
-  height: calc(100vh - 160px);
+  height: auto;
   overflow-y: auto;
   margin-top: 2rem;
+  padding-bottom: 2rem;
 `;
 
 const ButtonMarginRight = styled(Button)`
@@ -103,10 +108,6 @@ const ButtonMarginRight = styled(Button)`
 const IconButtonMarginRight = styled(IconButton)`
   margin-right: 10px;
   margin-top: 10px;
-`;
-
-const Actions = styled(ListViewActions)`
-  grid-column: 3;
 `;
 
 export interface SubscriptionEditViewProps {
@@ -587,7 +588,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
               : t('userSubscriptionEdit.createTitle')}
             </h2>
           </ListViewHeader>
-          <Actions>
+          <ListViewActions>
             <PermissionControl
               qualifyingPermissions={['CAN_CREATE_SUBSCRIPTION']}
             >
@@ -619,7 +620,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                 {user ? t('saveAndClose') : t('createAndClose')}
               </Button>
             </PermissionControl>
-          </Actions>
+          </ListViewActions>
         </ListViewContainer>
         <UserFormGrid>
           <Row gutter={10}>
