@@ -986,19 +986,14 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
 
             <Col xs={24}>
               <Grid fluid>
-                <RPanel
-                  bordered
-                  header={t('invoice.panel.invoiceHistory')}
-                >
-                  {id && (
-                    <InvoiceListPanel
-                      subscriptionId={id}
-                      invoices={invoices}
-                      disabled={!!deactivation}
-                      onInvoicePaid={() => reloadSubscription()}
-                    />
-                  )}
-                </RPanel>
+                {id && (
+                  <InvoiceListPanel
+                    subscriptionId={id}
+                    invoices={invoices}
+                    disabled={!!deactivation}
+                    onInvoicePaid={() => reloadSubscription()}
+                  />
+                )}
               </Grid>
             </Col>
           </Row>
