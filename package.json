@@ -119,7 +119,7 @@
     "@types/pino-http": "^5.0.6",
     "@types/pino-multi-stream": "^5.1.0",
     "@types/qs": "^6.9.1",
-    "@types/ramda": "^0.28.17",
+    "@types/ramda": "^0.32.0",
     "@types/react": "18.3.1",
     "@types/react-datepicker": "^4.1.3",
     "@types/react-dom": "18.3.0",
@@ -197,7 +197,7 @@
     "url": "^0.11.0",
     "url-loader": "^4.1.1",
     "xml-fetch": "^1.1.91",
-    "xml2js": "^0.4.23",
+    "xml2js": "^0.6.2",
     "y-protocols": "^1.0.6",
     "yjs": "^13.6.27"
   },
@@ -288,7 +288,7 @@
     "buffer": "^6.0.3",
     "cache-manager": "^7.2.4",
     "cookies-next": "^5.1.0",
-    "core-js": "3.36.1",
+    "core-js": "3.49.0",
     "cors": "~2.8.5",
     "cron": "^2.3.0",
     "cross-fetch": "^3.0.4",
@@ -339,7 +339,7 @@
     "pretty-bytes": "5.3.0",
     "qr-code-styling": "^1.9.2",
     "qs": "^6.9.1",
-    "ramda": "^0.28.0",
+    "ramda": "^0.32.0",
     "react": "18.3.1",
     "react-ad-manager": "^1.1.9",
     "react-aria": "^3.28.0",
@@ -358,20 +358,20 @@
     "react-turnstile": "^1.1.4",
     "react-tweet": "^3.2.1",
     "recharts": "^2.5.0",
-    "reflect-metadata": "^0.1.13",
-    "regenerator-runtime": "0.13.7",
+    "reflect-metadata": "^0.2.2",
+    "regenerator-runtime": "0.14.1",
     "rsuite": "^5.40.0",
     "rxjs": "^7.8.0",
-    "sharp": "^0.33.5",
+    "sharp": "^0.35.3",
     "stripe": "^8.126.0",
     "tslib": "^2.3.0",
     "usehooks-ts": "^3.1.1",
-    "v0-sdk": "^0.15.1",
+    "v0-sdk": "^0.16.4",
     "zod": "^3.23.8",
     "zod-i18n-map": "^2.27.0"
   },
   "optionalDependencies": {
-    "@img/sharp-darwin-arm64": "^0.33.5",
-    "@img/sharp-linux-x64": "^0.33.5"
+    "@img/sharp-darwin-arm64": "^0.35.3",
+    "@img/sharp-linux-x64": "^0.35.3"
   }
 }
