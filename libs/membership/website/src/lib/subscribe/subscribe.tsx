@@ -420,6 +420,16 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     [selectedMemberPlan?.goodies, soldOutGoodieIds]
   );
 
+  const allGoodies = useMemo(() => {
+    const goodiesById = new Map(
+      memberPlans.data?.memberPlans.nodes
+        .flatMap(memberPlan => memberPlan.goodies ?? [])
+        .map(goodie => [goodie.id, goodie])
+    );
+
+    return [...goodiesById.values()];
+  }, [memberPlans.data?.memberPlans.nodes]);
+
   const selectedAvailablePaymentMethod = useMemo(
     () =>
       selectedMemberPlan?.availablePaymentMethods.find(memberPlan =>
@@ -703,6 +713,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
               {...field}
               onChange={memberPlanId => field.onChange(memberPlanId)}
               memberPlans={memberPlans.data?.memberPlans.nodes ?? []}
+              monthlyAmount={watch<'monthlyAmount'>('monthlyAmount')}
             />
           )}
         />
@@ -827,6 +838,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
                 value={field.value}
                 onChange={goodieId => field.onChange(goodieId)}
                 goodies={availableGoodies}
+                allGoodies={allGoodies}
                 disabled={!availableGoodies.length}
               />
 

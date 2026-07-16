@@ -249,6 +249,7 @@ export const TeaserSlider = ({
                 ).keys(),
               ].map(idx => (
                 <SliderBall
+                  type="button"
                   key={idx}
                   onClick={() => sliderRef.current?.moveToIdx(idx)}
                   aria-label={`Slide ${idx + 1}`}
@@ -258,6 +259,7 @@ export const TeaserSlider = ({
               ))}
 
               <SliderArrow
+                type="button"
                 onClick={() => sliderRef.current?.prev()}
                 aria-label="Previous slide"
               >
@@ -265,6 +267,7 @@ export const TeaserSlider = ({
               </SliderArrow>
 
               <SliderArrow
+                type="button"
                 onClick={() => sliderRef.current?.next()}
                 aria-label="Next slide"
               >

@@ -4,6 +4,7 @@ import {
   BuilderGoodiePickerProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
+import { forwardRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
 export const GoodieOptions = styled(RadioGroup)`
@@ -39,14 +40,13 @@ export const GoodieOptionName = styled('strong')`
   display: block;
 `;
 
-export const GoodiePicker = ({
-  goodies,
-  className,
-  name,
-  value,
-  disabled,
-  onChange,
-}: BuilderGoodiePickerProps) => {
+export const GoodiePicker = forwardRef<
+  HTMLDivElement,
+  BuilderGoodiePickerProps
+>(function GoodiePicker(
+  { goodies, className, name, value, disabled, onChange },
+  ref
+) {
   const {
     elements: { Image },
     richtext: { RenderRichtext },
@@ -55,6 +55,7 @@ export const GoodiePicker = ({
 
   return (
     <GoodieOptions
+      ref={ref}
       className={className}
       name={name}
       value={value ?? ''}
@@ -94,4 +95,4 @@ export const GoodiePicker = ({
       ))}
     </GoodieOptions>
   );
-};
+});

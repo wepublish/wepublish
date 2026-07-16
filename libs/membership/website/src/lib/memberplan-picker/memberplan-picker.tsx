@@ -37,7 +37,16 @@ export const MemberPlanPicker = forwardRef<
   HTMLButtonElement,
   BuilderMemberPlanPickerProps & { alwaysShow?: boolean }
 >(function MemberPlanPicker(
-  { memberPlans, onChange, value, className, name, alwaysShow, sortBy },
+  {
+    memberPlans,
+    onChange,
+    value,
+    className,
+    name,
+    alwaysShow,
+    sortBy,
+    monthlyAmount,
+  },
   ref
 ) {
   const {
@@ -89,6 +98,8 @@ export const MemberPlanPicker = forwardRef<
                     extendable={memberPlan.extendable}
                     shortDescription={memberPlan.shortDescription}
                     tags={memberPlan.tags}
+                    goodies={memberPlan.goodies}
+                    monthlyAmount={monthlyAmount}
                   />
                 }
                 label={memberPlan.name}
