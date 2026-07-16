@@ -48,7 +48,7 @@ const ItemCard = styled('div')`
   display: grid;
   grid-template-rows: 40% 60%;
   width: 100%;
-  padding: ${({ theme }) => theme.spacing(2)};
+  padding: ${({ theme }) => theme.spacing(1)};
   background-color: ${({ theme }) => theme.palette.common.black};
   color: ${({ theme }) => theme.palette.common.white};
   position: relative;
@@ -85,8 +85,9 @@ const ItemAmount = styled('div')`
   justify-content: center;
   font-family: ${[euclidCircularB.style.fontFamily, 'sans-serif'].join(',')};
   font-weight: 500;
-  font-size: clamp(3.5rem, 46cqi, 10rem);
+  font-size: clamp(3rem, 43cqi, 10rem);
   line-height: 1;
+  white-space: nowrap;
 `;
 
 const ItemFreeAmount = styled('div')`

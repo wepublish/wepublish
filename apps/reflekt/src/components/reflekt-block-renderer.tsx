@@ -52,6 +52,10 @@ import {
   isTextWithImageAltColorBreakBlock,
   TextWithImageAltColorBreakBlock,
 } from './break-blocks/text-with-image-alt-color';
+import {
+  isTextWithVideoAltColorBreakBlock,
+  TextWithVideoAltColorBreakBlock,
+} from './break-blocks/text-with-video-alt-color';
 import { MainSpacer } from './main-spacer';
 import {
   isImageSliderSlimBlockStyle,
@@ -100,6 +104,12 @@ export const ReflektBlockRenderer = (
           isTextWithImageAltColorBreakBlock,
           (block: BuilderBreakBlockProps) => (
             <TextWithImageAltColorBreakBlock {...block} />
+          ),
+        ],
+        [
+          isTextWithVideoAltColorBreakBlock,
+          (block: BuilderBreakBlockProps) => (
+            <TextWithVideoAltColorBreakBlock {...block} />
           ),
         ],
         [isToc, (block: BuilderBreakBlockProps) => <Toc {...block} />],

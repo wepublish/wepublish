@@ -40,7 +40,17 @@ export const ReflektRenderLeaf = ({
   }
 
   if (mark.type === 'textStyle') {
-    return <span style={mark.attrs}>{children}</span>;
+    const style = Object.fromEntries(
+      Object.entries(mark.attrs ?? {}).filter(
+        ([, value]) => value != null && value !== ''
+      )
+    );
+
+    if (!Object.keys(style).length) {
+      return children;
+    }
+
+    return <span style={style}>{children}</span>;
   }
 
   if (mark.type === 'link') {

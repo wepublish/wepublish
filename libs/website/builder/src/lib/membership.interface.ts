@@ -71,6 +71,7 @@ export type BuilderGoodiePickerProps = {
 export type BuilderMemberPlanPickerProps = {
   memberPlans: FullMemberPlanFragment[];
   className?: string;
+  id?: string;
   onChange: (memberPlanId: string) => void;
   name?: string;
   value?: string;

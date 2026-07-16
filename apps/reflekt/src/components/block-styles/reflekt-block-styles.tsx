@@ -15,6 +15,7 @@ export enum ReflektBlockStyles {
   TableOfContents = 'TableOfContents',
   TextWithImage = 'TextWithImage',
   TextWithImageAltColor = 'TextWithImageAltColor',
+  TextWithVideoAltColor = 'TextWithVideoAltColor',
   ImageWithText = 'ImageWithText',
   ImageWithTextAltColor = 'ImageWithTextAltColor',
   Team = 'Team',

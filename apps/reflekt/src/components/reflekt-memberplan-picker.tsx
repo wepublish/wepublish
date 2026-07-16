@@ -15,6 +15,7 @@ const SortedMemberPlanPicker = forwardRef<
     <MemberPlanPicker
       {...props}
       ref={ref}
+      id="MemberPlans"
       sortBy="priceAsc"
     />
   );

@@ -36,7 +36,7 @@ export const getYouTubeVideoId = (value?: string | null): string | null => {
     if (v) {
       return v;
     }
-    const embedMatch = url.pathname.match(/^\/embed\/([^/?]+)/);
+    const embedMatch = url.pathname.match(/^\/(?:embed|shorts|live)\/([^/?]+)/);
     return embedMatch ? embedMatch[1] : null;
   } catch {
     return null;

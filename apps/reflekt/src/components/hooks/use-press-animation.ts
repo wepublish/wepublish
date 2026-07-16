@@ -25,6 +25,14 @@ export function usePressAnimation(href?: string) {
         setIsPressing(true);
         window.setTimeout(() => {
           setIsPressing(false);
+
+          if (href!.startsWith('#')) {
+            window.location.hash = href!;
+            navigationLockRef.current = false;
+
+            return;
+          }
+
           router.push(href!).finally(() => {
             navigationLockRef.current = false;
           });

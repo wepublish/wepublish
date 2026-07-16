@@ -42,6 +42,7 @@ export const MemberPlanPicker = forwardRef<
     onChange,
     value,
     className,
+    id,
     name,
     alwaysShow,
     sortBy,
@@ -74,7 +75,10 @@ export const MemberPlanPicker = forwardRef<
 
   return (
     showPicker && (
-      <MemberPlanPickerWrapper className={className}>
+      <MemberPlanPickerWrapper
+        className={className}
+        id={id}
+      >
         {showRadioButtons && (
           <MemberPlanPickerRadios
             name={name}
