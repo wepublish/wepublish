@@ -60,6 +60,7 @@ export type BuilderInvoiceListProps = Pick<
 
 export type BuilderGoodiePickerProps = {
   goodies: FullGoodieFragment[];
+  allGoodies?: FullGoodieFragment[];
   className?: string;
   name?: string;
   value?: string | null;
@@ -73,6 +74,7 @@ export type BuilderMemberPlanPickerProps = {
   onChange: (memberPlanId: string) => void;
   name?: string;
   value?: string;
+  monthlyAmount?: number;
 };
 
 export type BuilderMemberPlanItemProps = Pick<
@@ -83,8 +85,12 @@ export type BuilderMemberPlanItemProps = Pick<
   | 'extendable'
   | 'shortDescription'
   | 'tags'
+  | 'goodies'
 > &
-  Omit<RadioProps, 'ref'> & { className?: string } & { slug: string };
+  Omit<RadioProps, 'ref'> & { className?: string } & {
+    slug: string;
+    monthlyAmount?: number;
+  };
 
 export type BuilderPeriodicityPickerProps = {
   periodicities: PaymentPeriodicity[] | undefined;
