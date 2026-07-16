@@ -13,6 +13,7 @@ import {
   Message,
   Modal,
   Notification,
+  Panel as RPanel,
   Table as RTable,
   toaster,
   Tooltip,
@@ -72,10 +73,10 @@ const formatDate = (date: string | Date) =>
 const findGoodieItem = (invoice: InvoiceFragment) =>
   invoice.items?.find(({ goodieId }) => goodieId);
 
-const ConfiguratorRow = styled('div')`
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: 4px;
+const PanelHeader = styled('div')`
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 `;
 
 const CONFIG_COLUMNS = [
@@ -137,29 +138,50 @@ function InvoiceListPanel({
     onInvoicePaid();
   }
 
+  const panelHeader = (
+    <PanelHeader>
+      {t('invoice.panel.invoiceHistory')}
+
+      <ColumnConfigurator
+        columns={[
+          { id: 'id', label: t('invoice.invoiceNo') },
+          { id: 'goodie', label: t('invoice.table.goodie') },
+        ]}
+        isVisible={isVisible}
+        onToggle={toggle}
+      />
+    </PanelHeader>
+  );
+
   if (!subscriptionId) {
     return (
-      <Message type="error">{t('invoice.panel.missingSubscriptionId')}</Message>
+      <RPanel
+        bordered
+        header={panelHeader}
+      >
+        <Message type="error">
+          {t('invoice.panel.missingSubscriptionId')}
+        </Message>
+      </RPanel>
     );
   }
 
   if (!invoices?.length) {
-    return <Message type="info">{t('invoice.panel.noInvoices')}</Message>;
+    return (
+      <RPanel
+        bordered
+        header={panelHeader}
+      >
+        <Message type="info">{t('invoice.panel.noInvoices')}</Message>
+      </RPanel>
+    );
   }
 
   return (
-    <>
-      <ConfiguratorRow>
-        <ColumnConfigurator
-          columns={[
-            { id: 'id', label: t('invoice.invoiceNo') },
-            { id: 'goodie', label: t('invoice.table.goodie') },
-          ]}
-          isVisible={isVisible}
-          onToggle={toggle}
-        />
-      </ConfiguratorRow>
-
+    <RPanel
+      bordered
+      header={panelHeader}
+    >
       <RTable
         autoHeight
         wordWrap="break-word"
@@ -336,7 +358,7 @@ function InvoiceListPanel({
           </Button>
         </Modal.Footer>
       </Modal>
-    </>
+    </RPanel>
   );
 }
 const CheckedPermissionComponent = createCheckedPermissionComponent([
