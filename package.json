@@ -283,7 +283,7 @@
     "async": "^3.2.6",
     "axios": "^1.0.0",
     "bexio": "^3.6.1",
-    "body-parser": "^1.19.0",
+    "body-parser": "^2.3.0",
     "browser-image-compression": "^1.0.16",
     "buffer": "^6.0.3",
     "cache-manager": "^7.2.4",
