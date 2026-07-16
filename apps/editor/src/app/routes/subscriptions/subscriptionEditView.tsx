@@ -838,43 +838,6 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                             placement="auto"
                           />
                         </Col>
-                        {/* auto renew */}
-                        <Col xs={12}>
-                          <ControlLabel>
-                            {t('userSubscriptionEdit.autoRenew')}
-                          </ControlLabel>
-                          <Toggle
-                            checked={autoRenew}
-                            disabled={
-                              isDisabled ||
-                              hasNoMemberPlanSelected ||
-                              isDeactivated
-                            }
-                            onChange={value =>
-                              setAutoRenew(() =>
-                                checkTrialSubscription(extendable, value) ?
-                                  value
-                                : autoRenew
-                              )
-                            }
-                          />
-                          <HelpText>
-                            {t('userSubscriptionEdit.autoRenewDescription')}
-                          </HelpText>
-                        </Col>
-                      </RowPaddingTop>
-                      <RowPaddingTop>
-                        <Col xs={12}></Col>
-                        <Col xs={12}>
-                          <Button
-                            appearance="ghost"
-                            color="red"
-                            loading={isDisabled}
-                            onClick={() => setExtendModal(true)}
-                          >
-                            {t('userSubscriptionEdit.renewNow')}
-                          </Button>
-                        </Col>
                       </RowPaddingTop>
                       <RowPaddingTop>
                         {/* subscription start */}
@@ -979,12 +942,49 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                         </HelpText>
                       </Col>
                     </RowPaddingTop>
+                    <RowPaddingTop>
+                      {/* auto renew */}
+                      <Col xs={12}>
+                        <Toggle
+                          checked={autoRenew}
+                          disabled={
+                            isDisabled ||
+                            hasNoMemberPlanSelected ||
+                            isDeactivated
+                          }
+                          onChange={value =>
+                            setAutoRenew(() =>
+                              checkTrialSubscription(extendable, value) ? value
+                              : autoRenew
+                            )
+                          }
+                        />
+                        <FormControlLabelMarginLeft>
+                          {t('userSubscriptionEdit.autoRenew')}
+                        </FormControlLabelMarginLeft>
+                        <HelpText>
+                          {t('userSubscriptionEdit.autoRenewDescription')}
+                        </HelpText>
+                      </Col>
+                    </RowPaddingTop>
+                    <RowPaddingTop>
+                      <Col xs={24}>
+                        <Button
+                          appearance="ghost"
+                          color="red"
+                          loading={isDisabled}
+                          onClick={() => setExtendModal(true)}
+                        >
+                          {t('userSubscriptionEdit.renewNow')}
+                        </Button>
+                      </Col>
+                    </RowPaddingTop>
                   </Grid>
                 </RPanel>
               </Grid>
             </Col>
 
-            <Col xs={12}>
+            <Col xs={24}>
               <Grid fluid>
                 <RPanel
                   bordered

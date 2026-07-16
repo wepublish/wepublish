@@ -6,30 +6,60 @@ import {
 } from '@wepublish/editor/api';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdClose, MdDone, MdMail } from 'react-icons/md';
-import { Button, Message, Modal, Table as RTable, toaster } from 'rsuite';
+import { LiaFileInvoiceSolid } from 'react-icons/lia';
+import { MdAccessTime, MdClose, MdContentCopy, MdDone } from 'react-icons/md';
+import {
+  Button,
+  Message,
+  Modal,
+  Notification,
+  Table as RTable,
+  toaster,
+  Tooltip,
+  Whisper,
+} from 'rsuite';
 import { RowDataType } from 'rsuite/esm/Table';
 
 import { createCheckedPermissionComponent } from '../atoms';
 
 const { Column, HeaderCell, Cell: RCell } = RTable;
 
-const MailIcon = styled(MdMail)`
-  color: red;
-  font-size: 1.5em;
+const InvoiceIconWrapper = styled('span')`
+  position: relative;
+  display: inline-flex;
   vertical-align: middle;
 `;
 
-const CloseIcon = styled(MdClose)`
-  color: red;
-  font-size: 1.5em;
-  vertical-align: middle;
+const InvoiceIcon = styled(LiaFileInvoiceSolid)`
+  color: grey;
+  font-size: 26px;
 `;
 
-const DoneIcon = styled(MdDone)`
-  color: green;
-  font-size: 1.5em;
-  vertical-align: middle;
+const StatusPill = styled('span')<{ pillColor: string }>`
+  position: absolute;
+  right: -5px;
+  top: 55%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background-color: ${({ pillColor }) => pillColor};
+  color: white;
+  font-size: 10px;
+  box-shadow: 0 0 0 2px white;
+`;
+
+const IdButton = styled('button')`
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  font: inherit;
 `;
 
 const formatDate = (date: string | Date) =>
@@ -107,7 +137,33 @@ function InvoiceListPanel({
           resizable
         >
           <HeaderCell>{t('invoice.invoiceNo')}</HeaderCell>
-          <RCell dataKey="id" />
+          <RCell>
+            {(rowData: RowDataType<InvoiceFragment>) => (
+              <Whisper
+                placement="top"
+                trigger="hover"
+                speaker={<Tooltip>{rowData.id}</Tooltip>}
+              >
+                <IdButton
+                  type="button"
+                  onClick={() => {
+                    navigator.clipboard.writeText(rowData.id);
+                    toaster.push(
+                      <Notification
+                        type="success"
+                        header={t('invoice.table.idCopied')}
+                        duration={2000}
+                      />,
+                      { placement: 'topEnd' }
+                    );
+                  }}
+                >
+                  {rowData.id.slice(0, 4)}…
+                  <MdContentCopy />
+                </IdButton>
+              </Whisper>
+            )}
+          </RCell>
         </Column>
 
         <Column
@@ -157,34 +213,45 @@ function InvoiceListPanel({
         </Column>
 
         <Column
-          width={190}
+          width={80}
           resizable
         >
           <HeaderCell>{t('invoice.table.status')}</HeaderCell>
           <RCell>
             {(rowData: RowDataType<InvoiceFragment>) => {
-              if (rowData.paidAt) {
-                return (
-                  <>
-                    <DoneIcon /> {t('invoice.paidAt')}{' '}
-                    {formatDate(rowData.paidAt)}
-                  </>
-                );
-              }
-
-              if (rowData.canceledAt) {
-                return (
-                  <>
-                    <CloseIcon /> {t('invoice.canceledAt')}{' '}
-                    {formatDate(rowData.canceledAt)}
-                  </>
-                );
-              }
+              const status =
+                rowData.paidAt ?
+                  {
+                    title: `${t('invoice.paidAt')} ${formatDate(rowData.paidAt)}`,
+                    color: '#22c55e',
+                    icon: <MdDone />,
+                  }
+                : rowData.canceledAt ?
+                  {
+                    title: `${t('invoice.canceledAt')} ${formatDate(rowData.canceledAt)}`,
+                    color: '#ef4444',
+                    icon: <MdClose />,
+                  }
+                : {
+                    title: t('invoice.unpaid'),
+                    color: '#eab308',
+                    icon: <MdAccessTime />,
+                  };
 
               return (
-                <>
-                  <MailIcon /> {t('invoice.unpaid')}
-                </>
+                <Whisper
+                  placement="top"
+                  trigger="hover"
+                  speaker={<Tooltip>{status.title}</Tooltip>}
+                >
+                  <InvoiceIconWrapper>
+                    <InvoiceIcon />
+
+                    <StatusPill pillColor={status.color}>
+                      {status.icon}
+                    </StatusPill>
+                  </InvoiceIconWrapper>
+                </Whisper>
               );
             }}
           </RCell>

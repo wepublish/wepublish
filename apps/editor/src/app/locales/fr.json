@@ -840,15 +840,16 @@
         "noInvoices": "Pas de factures."
       },
       "payManually": "Payer manuellement",
-      "total": "Montant facturé",
-      "unpaid": "(non payé)",
+      "total": "Montant",
+      "unpaid": "non payé",
       "userNotLoaded": "Erreur inattendue : vos données d'utilisateur trice n'ont pas pu être chargées.",
       "table": {
         "date": "Date",
         "description": "Description",
         "goodie": "Goodie",
         "status": "Statut",
-        "action": "Action"
+        "action": "Action",
+        "idCopied": "ID de facture copié"
       }
     },
     "linkPageBreakEditPanel": {

@@ -840,15 +840,16 @@
         "noInvoices": "No invoices."
       },
       "payManually": "Pay manually",
-      "total": "Invoice amount",
-      "unpaid": "(unpaid)",
+      "total": "Amount",
+      "unpaid": "unpaid",
       "userNotLoaded": "Unexpected error: Your user data could not be loaded.",
       "table": {
         "date": "Date",
         "description": "Description",
         "goodie": "Goodie",
         "status": "Status",
-        "action": "Action"
+        "action": "Action",
+        "idCopied": "Invoice ID copied"
       }
     },
     "linkPageBreakEditPanel": {

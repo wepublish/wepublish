@@ -836,15 +836,16 @@
         "noInvoices": "Keine Rechnungen vorhanden."
       },
       "payManually": "Manuell bezahlen",
-      "total": "Rechnungsbetrag",
-      "unpaid": "(unbezahlt)",
+      "total": "Betrag",
+      "unpaid": "unbezahlt",
       "userNotLoaded": "Unerwarteter Fehler: Deine Benutzerdaten konnten nicht geladen werden.",
       "table": {
         "date": "Datum",
         "description": "Beschreibung",
         "goodie": "Goodie",
         "status": "Status",
-        "action": "Aktion"
+        "action": "Aktion",
+        "idCopied": "Rechnungs-ID kopiert"
       }
     },
     "linkPageBreakEditPanel": {
