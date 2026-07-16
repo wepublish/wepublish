@@ -21,6 +21,8 @@ import {
 import { RowDataType } from 'rsuite/esm/Table';
 
 import { createCheckedPermissionComponent } from '../atoms';
+import { ColumnConfigurator } from '../listView/column-configurator';
+import { useColumnConfig } from '../listView/use-column-config';
 
 const { Column, HeaderCell, Cell: RCell } = RTable;
 
@@ -70,6 +72,22 @@ const formatDate = (date: string | Date) =>
 const findGoodieItem = (invoice: InvoiceFragment) =>
   invoice.items?.find(({ goodieId }) => goodieId);
 
+const ConfiguratorRow = styled('div')`
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 4px;
+`;
+
+const CONFIG_COLUMNS = [
+  { id: 'id' },
+  { id: 'date', alwaysVisible: true },
+  { id: 'description', alwaysVisible: true },
+  { id: 'total', alwaysVisible: true },
+  { id: 'goodie' },
+  { id: 'status', alwaysVisible: true },
+  { id: 'action', alwaysVisible: true },
+] as const;
+
 export interface InvoiceListPanelProps {
   subscriptionId?: string;
   invoices?: InvoiceFragment[];
@@ -88,6 +106,10 @@ function InvoiceListPanel({
   const { data: me } = useMeQuery({});
   const { t } = useTranslation();
   const [invoiceToPay, setInvoiceToPay] = useState<InvoiceFragment>();
+  const { isVisible, toggle } = useColumnConfig(
+    'subscription-invoices',
+    CONFIG_COLUMNS
+  );
 
   const [markInvoiceAsPaid] = useMarkInvoiceAsPaidMutation();
 
@@ -127,44 +149,57 @@ function InvoiceListPanel({
 
   return (
     <>
+      <ConfiguratorRow>
+        <ColumnConfigurator
+          columns={[
+            { id: 'id', label: t('invoice.invoiceNo') },
+            { id: 'goodie', label: t('invoice.table.goodie') },
+          ]}
+          isVisible={isVisible}
+          onToggle={toggle}
+        />
+      </ConfiguratorRow>
+
       <RTable
         autoHeight
         wordWrap="break-word"
         data={invoices}
       >
-        <Column
-          width={110}
-          resizable
-        >
-          <HeaderCell>{t('invoice.invoiceNo')}</HeaderCell>
-          <RCell>
-            {(rowData: RowDataType<InvoiceFragment>) => (
-              <Whisper
-                placement="top"
-                trigger="hover"
-                speaker={<Tooltip>{rowData.id}</Tooltip>}
-              >
-                <IdButton
-                  type="button"
-                  onClick={() => {
-                    navigator.clipboard.writeText(rowData.id);
-                    toaster.push(
-                      <Notification
-                        type="success"
-                        header={t('invoice.table.idCopied')}
-                        duration={2000}
-                      />,
-                      { placement: 'topEnd' }
-                    );
-                  }}
+        {isVisible('id') && (
+          <Column
+            width={110}
+            resizable
+          >
+            <HeaderCell>{t('invoice.invoiceNo')}</HeaderCell>
+            <RCell>
+              {(rowData: RowDataType<InvoiceFragment>) => (
+                <Whisper
+                  placement="top"
+                  trigger="hover"
+                  speaker={<Tooltip>{rowData.id}</Tooltip>}
                 >
-                  {rowData.id.slice(0, 4)}…
-                  <MdContentCopy />
-                </IdButton>
-              </Whisper>
-            )}
-          </RCell>
-        </Column>
+                  <IdButton
+                    type="button"
+                    onClick={() => {
+                      navigator.clipboard.writeText(rowData.id);
+                      toaster.push(
+                        <Notification
+                          type="success"
+                          header={t('invoice.table.idCopied')}
+                          duration={2000}
+                        />,
+                        { placement: 'topEnd' }
+                      );
+                    }}
+                  >
+                    {rowData.id.slice(0, 4)}…
+                    <MdContentCopy />
+                  </IdButton>
+                </Whisper>
+              )}
+            </RCell>
+          </Column>
+        )}
 
         <Column
           width={100}
@@ -198,19 +233,21 @@ function InvoiceListPanel({
           </RCell>
         </Column>
 
-        <Column
-          width={140}
-          resizable
-        >
-          <HeaderCell>{t('invoice.table.goodie')}</HeaderCell>
-          <RCell>
-            {(rowData: RowDataType<InvoiceFragment>) => {
-              const goodieItem = findGoodieItem(rowData as InvoiceFragment);
+        {isVisible('goodie') && (
+          <Column
+            width={140}
+            resizable
+          >
+            <HeaderCell>{t('invoice.table.goodie')}</HeaderCell>
+            <RCell>
+              {(rowData: RowDataType<InvoiceFragment>) => {
+                const goodieItem = findGoodieItem(rowData as InvoiceFragment);
 
-              return goodieItem?.goodie?.name ?? goodieItem?.name ?? '—';
-            }}
-          </RCell>
-        </Column>
+                return goodieItem?.goodie?.name ?? goodieItem?.name ?? '—';
+              }}
+            </RCell>
+          </Column>
+        )}
 
         <Column
           width={80}
