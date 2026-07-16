@@ -2463,6 +2463,9 @@
         "Event": "Event",
         "Custom": "Custom"
       }
+    },
+    "columnConfigurator": {
+      "title": "Show/hide columns"
     }
   }
 }

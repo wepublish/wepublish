@@ -2344,6 +2344,9 @@
         "Event": "Événement",
         "Custom": "Personnalisé"
       }
+    },
+    "columnConfigurator": {
+      "title": "Afficher/masquer les colonnes"
     }
   }
 }
