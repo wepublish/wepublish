@@ -351,7 +351,7 @@
     "react-i18next": "^13.0.0",
     "react-icons": "^5.5.0",
     "react-onesignal": "^3.0.1",
-    "react-page-visibility": "^6.4.0",
+    "react-page-visibility": "^7.0.0",
     "react-player": "3.0.0-canary.4",
     "react-router-dom": "^6.3.0",
     "react-sortable-hoc": "^1.11.0",
