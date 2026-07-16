@@ -3,6 +3,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import {
   BlockRenderer,
   isImageBlock,
+  isImageSliderBlockStyle,
   isRichTextBlock,
   isSubscribeBlock,
   isTitleBlock,
@@ -51,6 +52,10 @@ import {
   TextWithImageAltColorBreakBlock,
 } from './break-blocks/text-with-image-alt-color';
 import { MainSpacer } from './main-spacer';
+import {
+  isImageSliderSlimBlockStyle,
+  ReflektImageSliderSlim,
+} from './reflekt-image-slider';
 import { ReflektTitleBlock } from './reflekt-title-block';
 import { isTeaserSlotsTopic } from './teaser-layouts/teaser-slots-topic';
 
@@ -94,6 +99,10 @@ export const ReflektBlockRenderer = (
         ],
         [isToc, (block: BuilderBreakBlockProps) => <Toc {...block} />],
         [
+          isImageSliderSlimBlockStyle,
+          block => <ReflektImageSliderSlim {...block} />,
+        ],
+        [
           isFlexBlockFullsizeImage,
           (block: BuilderFlexBlockProps) => (
             <FlexBlockFullsizeImage {...block} />
@@ -116,7 +125,14 @@ export const ReflektBlockRenderer = (
         [
           allPass([
             (block: FullBlockFragment) =>
-              isTeaserSlotsTopic(block as BuilderTeaserSlotsBlockProps),
+              anyPass([
+                (topicBlock: FullBlockFragment) =>
+                  isTeaserSlotsTopic(
+                    topicBlock as BuilderTeaserSlotsBlockProps
+                  ),
+                isImageSliderBlockStyle,
+                isImageSliderSlimBlockStyle,
+              ])(block),
             () => isMobile,
           ]),
           () => css`
@@ -129,6 +145,7 @@ export const ReflektBlockRenderer = (
             (block: FullBlockFragment) =>
               anyPass([
                 isImageBlock,
+                isImageSliderSlimBlockStyle,
                 isRichTextBlock,
                 isTitleBlock,
                 isSubscribeBlock,

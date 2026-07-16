@@ -52,6 +52,7 @@ import {
 import { RefFooter } from '../src/components/reflekt-footer';
 import { ReflektGlobalStyles } from '../src/components/reflekt-global-styles';
 import { ReflektGoodiePicker } from '../src/components/reflekt-goodie-picker';
+import { ReflektImageSlider } from '../src/components/reflekt-image-slider';
 import { ReflektImageBlock } from '../src/components/reflekt-image-block';
 import { ReflektLink } from '../src/components/reflekt-link';
 import {
@@ -173,6 +174,9 @@ function CustomApp({
               RenderElement: ReflektRenderElement,
               RenderRichtext: ReflektRenderRichtext,
               RenderLeaf: ReflektRenderLeaf,
+            }}
+            blockStyles={{
+              ImageSlider: ReflektImageSlider,
             }}
             blocks={{
               TeaserSlots: ReflektBaseTeaserSlots,
