@@ -1,5 +1,6 @@
 {
   "name": "challenge-api",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/challenge/api/src",
   "projectType": "library",
   "tags": [],
