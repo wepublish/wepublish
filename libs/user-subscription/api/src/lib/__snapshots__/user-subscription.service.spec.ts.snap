@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`UserSubscriptionService createSubscription unhappy path should throw if voucher has expired 1`] = `[BadRequestException: Voucher has expired.]`;
 
