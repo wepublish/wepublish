@@ -2,6 +2,7 @@ import { LazyQueryExecFunction, QueryResult } from '@apollo/client';
 import { RadioProps } from '@mui/material';
 import {
   ChallengeQuery,
+  SubscribeBlockAmountTileLayout,
   SubscribeBlockPlanRenderStyle,
   SubscribeBlockPlanSetting,
   FullInvoiceFragment,
@@ -66,6 +67,8 @@ export type BuilderMemberPlanPickerProps = {
   name?: string;
   value?: string;
   monthlyAmount?: number;
+  onMonthlyAmountChange?: (monthlyAmount: number, touched?: boolean) => void;
+  monthlyAmountError?: string;
   planSettings?: SubscribeBlockPlanSetting[];
 };
 
@@ -81,6 +84,8 @@ export type BuilderMemberPlanItemProps = Pick<
   Omit<RadioProps, 'ref'> & { className?: string } & {
     slug: string;
     monthlyAmount?: number;
+    onMonthlyAmountChange?: (monthlyAmount: number, touched?: boolean) => void;
+    monthlyAmountError?: string;
     renderStyle?: SubscribeBlockPlanRenderStyle;
   };
 
@@ -121,6 +126,7 @@ export type BuilderPaymentAmountProps = {
   className?: string;
   slug?: string;
   presetAmounts?: number[];
+  tileLayout?: SubscribeBlockAmountTileLayout;
 };
 
 export type BuilderSubscribeProps<

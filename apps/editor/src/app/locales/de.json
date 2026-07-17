@@ -415,14 +415,21 @@
           "CardFreeInput": "Abo-Kachel mit freier Betragseingabe",
           "AmountTiles": "Betrags-Kacheln (nur bei einem Abo-Plan)"
         },
-        "renderStylesHeading": "Darstellung pro Abo-Plan",
+        "renderStylesHeading": "Abo-Plan Reihenfolge und Darstellung",
         "renderStyleRules": {
           "amountTilesSingle": "Betrags-Kacheln sind nur verfügbar, wenn genau ein Abo-Plan ausgewählt ist."
         },
         "amountTileValues": {
           "hint": "Beträge der Kacheln (in Franken). Leer lassen für Standard: 10, 15, 20.",
           "placeholder": "z.B. 10 15 20"
-        }
+        },
+        "amountTileLayout": {
+          "hint": "Kachel-Layout auf Mobilgeräten",
+          "Narrow": "Schmal (2 Kacheln pro Zeile)",
+          "Wide": "Breit (1 Kachel pro Zeile, grosse Kacheln)"
+        },
+        "planAmountsTitle": "Minimal- / Ziel- / Maximalbetrag pro Monat (in Franken)",
+        "defaultPlanTitle": "Standardmässig ausgewählt — dieser Abo-Plan ist nach dem Laden der Seite vorausgewählt."
       },
       "image": {
         "label": "Bild",

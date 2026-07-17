@@ -419,14 +419,21 @@
           "CardFreeInput": "Tuile de plan avec saisie libre du montant",
           "AmountTiles": "Tuiles de montant (un seul plan)"
         },
-        "renderStylesHeading": "Affichage par plan",
+        "renderStylesHeading": "Ordre et affichage des plans",
         "renderStyleRules": {
           "amountTilesSingle": "Les tuiles de montant ne sont disponibles que si un seul plan est sélectionné."
         },
         "amountTileValues": {
           "hint": "Montants des tuiles (en francs). Laisser vide pour les valeurs par défaut : 10, 15, 20.",
           "placeholder": "p.ex. 10 15 20"
-        }
+        },
+        "amountTileLayout": {
+          "hint": "Disposition des tuiles sur mobile",
+          "Narrow": "Étroit (2 tuiles par ligne)",
+          "Wide": "Large (1 tuile par ligne, grandes tuiles)"
+        },
+        "planAmountsTitle": "Montant minimum / cible / maximum par mois (en francs)",
+        "defaultPlanTitle": "Sélectionné par défaut — ce plan est présélectionné après le chargement de la page."
       },
       "image": {
         "label": "Image",
