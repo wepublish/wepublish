@@ -35,7 +35,7 @@ const GoodieSliderTitle = styled(Typography)`
   ${({ theme }) => theme.breakpoints.down('md')} {
     padding: 0 32px;
   }
-`;
+` as typeof Typography;
 
 const GoodieSelectArea = styled('div')`
   grid-area: goodie;
