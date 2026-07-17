@@ -95,5 +95,9 @@
   },
   "defaultProject": "api",
   "nxCloudAccessToken": "YmQxYTg2ZDgtNDBlNS00MmM1LWI4MjAtZmJkMWUxM2Y1ZTJkfHJlYWQtd3JpdGU=",
-  "useInferencePlugins": false
+  "useInferencePlugins": false,
+  "analytics": false,
+  "migrate": {
+    "agentic": true
+  }
 }
