@@ -29,7 +29,7 @@ import {
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, useForm, useWatch } from 'react-hook-form';
 import { z } from 'zod';
 import { PaymentAmountPicker } from '../payment-amount/payment-amount-picker/payment-amount-picker';
 import { formatCurrency, roundUpTo5Cents } from '../formatters/format-currency';
@@ -408,11 +408,13 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     watch<'paymentPeriodicity'>('paymentPeriodicity');
   const selectedMemberPlanId = watch<'memberPlanId'>('memberPlanId');
   const payTransactionFee = watch<'payTransactionFee'>('payTransactionFee');
+  const rawMonthlyAmount = useWatch({
+    control,
+    name: 'monthlyAmount',
+  }) as number;
   const monthlyAmount =
-    watch<'monthlyAmount'>('monthlyAmount') +
-    (payTransactionFee ?
-      transactionFee(watch<'monthlyAmount'>('monthlyAmount'))
-    : 0);
+    rawMonthlyAmount +
+    (payTransactionFee ? transactionFee(rawMonthlyAmount) : 0);
   const autoRenew = watch<'autoRenew'>('autoRenew');
 
   const selectedMemberPlan = useMemo(
@@ -501,7 +503,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     extendable: selectedMemberPlan?.extendable ?? true,
     productType: selectedMemberPlan?.productType ?? ProductType.Subscription,
     paymentPeriodicity: PaymentPeriodicity.Monthly,
-    monthlyAmount: watch<'monthlyAmount'>('monthlyAmount'),
+    monthlyAmount: rawMonthlyAmount,
     currency: selectedMemberPlan?.currency ?? Currency.Chf,
     siteTitle,
     locale,
@@ -560,8 +562,19 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     });
   }, console.warn);
 
+  const lastAmountResetPlanIdRef = useRef<string | null>(null);
+
   useEffect(() => {
-    if (selectedMemberPlan && !isFreeInput) {
+    if (
+      !selectedMemberPlan ||
+      lastAmountResetPlanIdRef.current === selectedMemberPlan.id
+    ) {
+      return;
+    }
+
+    lastAmountResetPlanIdRef.current = selectedMemberPlan.id;
+
+    if (!isFreeInput) {
       setValue<'monthlyAmount'>(
         'monthlyAmount',
         selectedMemberPlan.amountPerMonthTarget ||
@@ -700,7 +713,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
               {...field}
               onChange={memberPlanId => field.onChange(memberPlanId)}
               memberPlans={memberPlans.data?.memberPlans.nodes ?? []}
-              monthlyAmount={watch<'monthlyAmount'>('monthlyAmount')}
+              monthlyAmount={rawMonthlyAmount}
               onMonthlyAmountChange={handleMonthlyAmountChange}
               monthlyAmountError={errors.monthlyAmount?.message?.toString()}
               planSettings={planSettings}
@@ -926,7 +939,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
         />
       )}
 
-      {!!watch<'monthlyAmount'>('monthlyAmount') && (
+      {!!rawMonthlyAmount && (
         <SubscribeSection area="transactionFee">
           <Controller
             name={'payTransactionFee'}
