@@ -9,9 +9,9 @@ import { Page } from '@wepublish/page/website';
 import { BuilderPageProps } from '@wepublish/website/builder';
 
 import { FlexBlockHeroWrapper } from './block-layouts/flex-block-hero';
-import { ReflektLogo } from './reflekt-navbar';
 import { CollapsibleContentWrapper } from './break-blocks/reflekt-collapsible-content';
 import { CollapsibleDownloadsWrapper } from './break-blocks/reflekt-collapsible-downloads';
+import { ReflektLogo } from './reflekt-navbar';
 
 const fullWidthMainSpacer = (theme: Theme) => css`
   main > .MuiContainer-root {
