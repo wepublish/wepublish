@@ -267,6 +267,7 @@ fragment BlockWithoutTeaser on BlockContent {
     plans {
       memberPlanId
       renderStyle
+      amountTileValues
     }
     fields
     type

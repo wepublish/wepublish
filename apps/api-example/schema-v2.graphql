@@ -3929,11 +3929,13 @@ enum SubscribeBlockPlanRenderStyle {
 }
 
 type SubscribeBlockPlanSetting {
+  amountTileValues: [Int!]
   memberPlanId: String!
   renderStyle: SubscribeBlockPlanRenderStyle!
 }
 
 input SubscribeBlockPlanSettingInput {
+  amountTileValues: [Int!]
   memberPlanId: String!
   renderStyle: SubscribeBlockPlanRenderStyle!
 }

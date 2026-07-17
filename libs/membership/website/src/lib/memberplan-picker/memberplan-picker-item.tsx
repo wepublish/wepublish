@@ -1,5 +1,6 @@
 import { Radio, css, lighten, useRadioGroup } from '@mui/material';
 import styled from '@emotion/styled';
+import { SubscribeBlockPlanRenderStyle } from '@wepublish/website/api';
 import {
   BuilderMemberPlanItemProps,
   useWebsiteBuilder,
@@ -81,6 +82,15 @@ export const MemberPlanItem = forwardRef<
     const hasFixedAmount =
       amountPerMonthMax != null && amountPerMonthMax === amountPerMonthMin;
 
+    const displayedAmountPerMonth =
+      (
+        renderStyle === SubscribeBlockPlanRenderStyle.CardAndSlider &&
+        isChecked &&
+        monthlyAmount != null
+      ) ?
+        monthlyAmount
+      : amountPerMonthMin;
+
     return (
       <MemberPlanItemWrapper className={className}>
         <MemberPlanItemPicker isChecked={isChecked}>
@@ -91,13 +101,13 @@ export const MemberPlanItem = forwardRef<
               {t('subscribe.memberplan.price', {
                 amountPerMonthMin,
                 yearlyPrice: formatCurrency(
-                  Math.ceil((amountPerMonthMin / 100) * 12),
+                  Math.ceil((displayedAmountPerMonth / 100) * 12),
                   currency,
                   locale
                 ),
-                yearlyAmount: Math.round((amountPerMonthMin * 12) / 100),
+                yearlyAmount: Math.round((displayedAmountPerMonth * 12) / 100),
                 monthlyPrice: formatCurrency(
-                  amountPerMonthMin / 100,
+                  displayedAmountPerMonth / 100,
                   currency,
                   locale
                 ),

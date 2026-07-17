@@ -101,7 +101,6 @@ export const PaymentAmountPicker = forwardRef<
   (
     {
       className,
-      slug,
       currency,
       amountPerMonthMin,
       amountPerMonthTarget,
@@ -109,24 +108,19 @@ export const PaymentAmountPicker = forwardRef<
       error,
       value,
       onChange,
+      presetAmounts,
     },
     ref
   ) => {
     const {
       elements: { TextField },
-      meta: { locale, siteTitle },
+      meta: { locale },
     } = useWebsiteBuilder();
 
-    const pickerItems = useMemo(() => {
-      switch (siteTitle) {
-        case 'WNTI':
-          return slug?.includes('donate') ?
-              [10000, 15000, 20000]
-            : [1000, 1500, 2000];
-        default:
-          return [1000, 1500, 2000];
-      }
-    }, [siteTitle, slug]);
+    const pickerItems = useMemo(
+      () => (presetAmounts?.length ? presetAmounts : [1000, 1500, 2000]),
+      [presetAmounts]
+    );
 
     return (
       <PaymentAmountPickerWrapper

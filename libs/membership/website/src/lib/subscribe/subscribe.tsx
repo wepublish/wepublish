@@ -456,9 +456,10 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
 
   const isDonation = selectedMemberPlan?.productType === ProductType.Donation;
 
-  const selectedPlanRenderStyle = planSettings?.find(
+  const selectedPlanSetting = planSettings?.find(
     ({ memberPlanId }) => memberPlanId === selectedMemberPlan?.id
-  )?.renderStyle;
+  );
+  const selectedPlanRenderStyle = selectedPlanSetting?.renderStyle;
 
   const shouldHidePaymentAmount =
     selectedPlanRenderStyle ?
@@ -781,6 +782,9 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
                     selectedMemberPlan?.amountPerMonthTarget ?? undefined
                   }
                   currency={selectedMemberPlan?.currency ?? Currency.Chf}
+                  presetAmounts={
+                    selectedPlanSetting?.amountTileValues ?? undefined
+                  }
                 />
               </SubscribeAmount>
             )}

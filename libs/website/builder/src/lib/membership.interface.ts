@@ -134,6 +134,7 @@ export type BuilderPaymentAmountProps = {
   error: FieldError | undefined;
   className?: string;
   slug?: string;
+  presetAmounts?: number[];
 };
 
 export type BuilderSubscribeProps<
