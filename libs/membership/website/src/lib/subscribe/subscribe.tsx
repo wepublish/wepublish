@@ -276,6 +276,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   transactionFee = amount => roundUpTo5Cents((amount * 0.02) / 100) * 100,
   transactionFeeText,
   returningUserId,
+  filterGoodies,
   fetchSubscribeInfo,
   subscribeInfo,
 }: BuilderSubscribeProps<T>) => {
@@ -453,13 +454,23 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
 
   const [soldOutGoodieIds, setSoldOutGoodieIds] = useState<string[]>([]);
 
-  const availableGoodies = useMemo(
-    () =>
+  const rawMonthlyAmount = watch<'monthlyAmount'>('monthlyAmount');
+
+  const availableGoodies = useMemo(() => {
+    const inStockGoodies =
       selectedMemberPlan?.goodies?.filter(
         ({ id }) => !soldOutGoodieIds.includes(id)
-      ) ?? [],
-    [selectedMemberPlan?.goodies, soldOutGoodieIds]
-  );
+      ) ?? [];
+
+    return filterGoodies ?
+        filterGoodies(inStockGoodies, { monthlyAmount: rawMonthlyAmount })
+      : inStockGoodies;
+  }, [
+    selectedMemberPlan?.goodies,
+    soldOutGoodieIds,
+    filterGoodies,
+    rawMonthlyAmount,
+  ]);
 
   const allGoodies = useMemo(() => {
     const goodiesById = new Map(
