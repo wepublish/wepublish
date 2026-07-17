@@ -5516,6 +5516,11 @@ export type SubscribeBlock = BaseBlock & {
   type: BlockType;
 };
 
+export enum SubscribeBlockAmountTileLayout {
+  Narrow = 'Narrow',
+  Wide = 'Wide',
+}
+
 export enum SubscribeBlockField {
   Address = 'Address',
   Birthday = 'Birthday',
@@ -5544,13 +5549,17 @@ export enum SubscribeBlockPlanRenderStyle {
 
 export type SubscribeBlockPlanSetting = {
   __typename?: 'SubscribeBlockPlanSetting';
+  amountTileLayout?: Maybe<SubscribeBlockAmountTileLayout>;
   amountTileValues?: Maybe<Array<Scalars['Int']>>;
+  isDefault?: Maybe<Scalars['Boolean']>;
   memberPlanId: Scalars['String'];
   renderStyle: SubscribeBlockPlanRenderStyle;
 };
 
 export type SubscribeBlockPlanSettingInput = {
+  amountTileLayout?: InputMaybe<SubscribeBlockAmountTileLayout>;
   amountTileValues?: InputMaybe<Array<Scalars['Int']>>;
+  isDefault?: InputMaybe<Scalars['Boolean']>;
   memberPlanId: Scalars['String'];
   renderStyle: SubscribeBlockPlanRenderStyle;
 };

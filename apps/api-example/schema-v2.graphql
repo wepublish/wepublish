@@ -3902,6 +3902,11 @@ type SubscribeBlock implements BaseBlock {
   type: BlockType!
 }
 
+enum SubscribeBlockAmountTileLayout {
+  Narrow
+  Wide
+}
+
 enum SubscribeBlockField {
   Address
   Birthday
@@ -3929,13 +3934,17 @@ enum SubscribeBlockPlanRenderStyle {
 }
 
 type SubscribeBlockPlanSetting {
+  amountTileLayout: SubscribeBlockAmountTileLayout
   amountTileValues: [Int!]
+  isDefault: Boolean
   memberPlanId: String!
   renderStyle: SubscribeBlockPlanRenderStyle!
 }
 
 input SubscribeBlockPlanSettingInput {
+  amountTileLayout: SubscribeBlockAmountTileLayout
   amountTileValues: [Int!]
+  isDefault: Boolean
   memberPlanId: String!
   renderStyle: SubscribeBlockPlanRenderStyle!
 }

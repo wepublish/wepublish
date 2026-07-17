@@ -27,7 +27,14 @@ import {
   useAsyncAction,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { ComponentProps, useEffect, useMemo, useState } from 'react';
+import {
+  ComponentProps,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { PaymentAmountPicker } from '../payment-amount/payment-amount-picker/payment-amount-picker';
@@ -333,21 +340,43 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     return result;
   }, [fieldsToDisplay, schema]);
 
+  const freeAmountTouchedRef = useRef(false);
+
   const loggedInSchema = subscribeSchema;
   const schem = useMemo(
     () =>
-      zodAlwaysRefine(hasUserContext ? loggedInSchema : loggedOutSchema).refine(
+      zodAlwaysRefine(
+        zodAlwaysRefine(
+          hasUserContext ? loggedInSchema : loggedOutSchema
+        ).refine(
+          data => {
+            const memberPlan = memberPlans.data?.memberPlans.nodes.find(
+              mb => mb.id === data.memberPlanId
+            );
+
+            return (
+              !memberPlan || data.monthlyAmount >= memberPlan.amountPerMonthMin
+            );
+          },
+          {
+            message: `Betrag kleiner wie der Mindestbetrag.`,
+            path: ['monthlyAmount'],
+          }
+        )
+      ).refine(
         data => {
-          const memberPlan = memberPlans.data?.memberPlans.nodes.find(
-            mb => mb.id === data.memberPlanId
+          const planSetting = planSettings?.find(
+            ({ memberPlanId }) => memberPlanId === data.memberPlanId
           );
 
           return (
-            !memberPlan || data.monthlyAmount >= memberPlan.amountPerMonthMin
+            planSetting?.renderStyle !==
+              SubscribeBlockPlanRenderStyle.CardFreeInput ||
+            freeAmountTouchedRef.current
           );
         },
         {
-          message: `Betrag kleiner wie der Mindestbetrag.`,
+          message: `Bitte Betrag eingeben.`,
           path: ['monthlyAmount'],
         }
       ),
@@ -356,6 +385,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       loggedInSchema,
       loggedOutSchema,
       memberPlans.data?.memberPlans.nodes,
+      planSettings,
     ]
   );
 
@@ -366,6 +396,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     setValue,
     resetField,
     setError: setFieldError,
+    formState: { errors },
   } = useForm<z.infer<typeof loggedInSchema> | z.infer<typeof loggedOutSchema>>(
     {
       resolver: zodResolver(schem),
@@ -381,7 +412,11 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
             memberPlans.data?.memberPlans.nodes.find(
               memberPlan => memberPlan.slug === defaults?.memberPlanSlug
             )?.id
-          : memberPlans.data?.memberPlans.nodes[0]?.id,
+          : (memberPlans.data?.memberPlans.nodes.find(
+              memberPlan =>
+                memberPlan.id ===
+                planSettings?.find(({ isDefault }) => isDefault)?.memberPlanId
+            )?.id ?? memberPlans.data?.memberPlans.nodes[0]?.id),
         paymentMethodId:
           memberPlans.data?.memberPlans.nodes[0]?.availablePaymentMethods[0]
             ?.paymentMethods[0]?.id,
@@ -461,17 +496,28 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   );
   const selectedPlanRenderStyle = selectedPlanSetting?.renderStyle;
 
-  const shouldHidePaymentAmount =
-    selectedPlanRenderStyle ?
-      selectedPlanRenderStyle === SubscribeBlockPlanRenderStyle.Card
-    : selectedMemberPlan?.amountPerMonthMin ===
-      selectedMemberPlan?.amountPerMonthMax;
-
   const isFreeInput =
     selectedPlanRenderStyle === SubscribeBlockPlanRenderStyle.CardFreeInput;
+
+  const shouldHidePaymentAmount =
+    selectedPlanRenderStyle ?
+      selectedPlanRenderStyle === SubscribeBlockPlanRenderStyle.Card ||
+      isFreeInput
+    : selectedMemberPlan?.amountPerMonthMin ===
+      selectedMemberPlan?.amountPerMonthMax;
   const useAmountTiles =
     selectedPlanRenderStyle === SubscribeBlockPlanRenderStyle.AmountTiles;
   const AmountComponent = useAmountTiles ? PaymentAmountPicker : PaymentAmount;
+
+  const handleMonthlyAmountChange = useCallback(
+    (monthlyAmount: number, touched = true) => {
+      freeAmountTouchedRef.current = touched;
+      setValue<'monthlyAmount'>('monthlyAmount', monthlyAmount, {
+        shouldValidate: true,
+      });
+    },
+    [setValue]
+  );
 
   const discountPercent =
     subscribeInfo.data?.createSubscriptionInfo.discountPercent ?? 0;
@@ -564,14 +610,14 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   }, console.warn);
 
   useEffect(() => {
-    if (selectedMemberPlan) {
+    if (selectedMemberPlan && !isFreeInput) {
       setValue<'monthlyAmount'>(
         'monthlyAmount',
         selectedMemberPlan.amountPerMonthTarget ||
           selectedMemberPlan.amountPerMonthMin
       );
     }
-  }, [selectedMemberPlan, setValue]);
+  }, [selectedMemberPlan, isFreeInput, setValue]);
 
   useEffect(() => {
     if (challenge.data?.challenge.challengeID) {
@@ -733,6 +779,8 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
               onChange={memberPlanId => field.onChange(memberPlanId)}
               memberPlans={memberPlans.data?.memberPlans.nodes ?? []}
               monthlyAmount={watch<'monthlyAmount'>('monthlyAmount')}
+              onMonthlyAmountChange={handleMonthlyAmountChange}
+              monthlyAmountError={errors.monthlyAmount?.message?.toString()}
               planSettings={planSettings}
             />
           )}
@@ -784,6 +832,9 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
                   currency={selectedMemberPlan?.currency ?? Currency.Chf}
                   presetAmounts={
                     selectedPlanSetting?.amountTileValues ?? undefined
+                  }
+                  tileLayout={
+                    selectedPlanSetting?.amountTileLayout ?? undefined
                   }
                 />
               </SubscribeAmount>

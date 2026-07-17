@@ -7,6 +7,7 @@ import {
 } from '@wepublish/website/builder';
 import { forwardRef } from 'react';
 import { formatCurrency } from '../formatters/format-currency';
+import { CurrencyNumberSpinner } from '../payment-amount/payment-amount-picker/currency-number-spinner';
 import { useTranslation } from 'react-i18next';
 
 export const MemberPlanItemWrapper = styled('div')`
@@ -49,6 +50,18 @@ export const MemberPlanItemPrice = styled('small')`
 
 export const MemberPlanItemDescription = styled('div')``;
 
+export const MemberPlanItemFreeInputSpinner = styled(CurrencyNumberSpinner)`
+  grid-column: 1 / -1;
+  justify-self: start;
+  margin-top: ${({ theme }) => theme.spacing(1)};
+`;
+
+export const MemberPlanItemAmountError = styled('small')`
+  grid-column: 1 / -1;
+  font-size: 0.75em;
+  color: ${({ theme }) => theme.palette.error.main};
+`;
+
 export const MemberPlanItem = forwardRef<
   HTMLButtonElement,
   BuilderMemberPlanItemProps
@@ -66,6 +79,8 @@ export const MemberPlanItem = forwardRef<
       extendable,
       goodies,
       monthlyAmount,
+      onMonthlyAmountChange,
+      monthlyAmountError,
       renderStyle,
       ...props
     },
@@ -82,9 +97,13 @@ export const MemberPlanItem = forwardRef<
     const hasFixedAmount =
       amountPerMonthMax != null && amountPerMonthMax === amountPerMonthMin;
 
+    const hasInCardFreeInput =
+      renderStyle === SubscribeBlockPlanRenderStyle.CardFreeInput;
+
     const displayedAmountPerMonth =
       (
-        renderStyle === SubscribeBlockPlanRenderStyle.CardAndSlider &&
+        (renderStyle === SubscribeBlockPlanRenderStyle.CardAndSlider ||
+          hasInCardFreeInput) &&
         isChecked &&
         monthlyAmount != null
       ) ?
@@ -123,6 +142,27 @@ export const MemberPlanItem = forwardRef<
             disableRipple={true}
             {...props}
           />
+
+          {hasInCardFreeInput && isChecked && (
+            <MemberPlanItemFreeInputSpinner
+              arrows="stacked"
+              min={amountPerMonthMin / 100}
+              step={1}
+              value={(monthlyAmount ?? amountPerMonthMin) / 100}
+              onValueChange={spinnerValue => {
+                if (spinnerValue != null) {
+                  onMonthlyAmountChange?.(Math.round(spinnerValue * 100));
+                }
+              }}
+              helperText={`Min ${formatCurrency(amountPerMonthMin / 100, currency, locale)}`}
+            />
+          )}
+
+          {hasInCardFreeInput && isChecked && monthlyAmountError && (
+            <MemberPlanItemAmountError>
+              {monthlyAmountError}
+            </MemberPlanItemAmountError>
+          )}
         </MemberPlanItemPicker>
 
         {shortDescription && (

@@ -47,6 +47,8 @@ export const MemberPlanPicker = forwardRef<
     alwaysShow,
     sortBy,
     monthlyAmount,
+    onMonthlyAmountChange,
+    monthlyAmountError,
     planSettings,
   },
   ref
@@ -70,9 +72,16 @@ export const MemberPlanPicker = forwardRef<
 
   useEffect(() => {
     if (sortedMemberPlans.length && !selectedMemberPlan) {
-      onChange(sortedMemberPlans[0].id);
+      const defaultPlanId = planSettings?.find(
+        ({ isDefault }) => isDefault
+      )?.memberPlanId;
+
+      onChange(
+        sortedMemberPlans.find(({ id }) => id === defaultPlanId)?.id ??
+          sortedMemberPlans[0].id
+      );
     }
-  }, [sortedMemberPlans, onChange, selectedMemberPlan]);
+  }, [sortedMemberPlans, onChange, selectedMemberPlan, planSettings]);
 
   return (
     showPicker && (
@@ -105,6 +114,8 @@ export const MemberPlanPicker = forwardRef<
                     tags={memberPlan.tags}
                     goodies={memberPlan.goodies}
                     monthlyAmount={monthlyAmount}
+                    onMonthlyAmountChange={onMonthlyAmountChange}
+                    monthlyAmountError={monthlyAmountError}
                     renderStyle={
                       planSettings?.find(
                         ({ memberPlanId }) => memberPlanId === memberPlan.id

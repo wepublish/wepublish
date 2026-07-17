@@ -35,6 +35,15 @@ registerEnumType(SubscribeBlockPlanRenderStyle, {
   name: 'SubscribeBlockPlanRenderStyle',
 });
 
+export enum SubscribeBlockAmountTileLayout {
+  Narrow = 'narrow',
+  Wide = 'wide',
+}
+
+registerEnumType(SubscribeBlockAmountTileLayout, {
+  name: 'SubscribeBlockAmountTileLayout',
+});
+
 @ObjectType()
 export class SubscribeBlockPlanSetting {
   @Field()
@@ -45,6 +54,12 @@ export class SubscribeBlockPlanSetting {
 
   @Field(() => [Int], { nullable: true })
   amountTileValues?: number[];
+
+  @Field(() => SubscribeBlockAmountTileLayout, { nullable: true })
+  amountTileLayout?: SubscribeBlockAmountTileLayout;
+
+  @Field(() => Boolean, { nullable: true })
+  isDefault?: boolean;
 }
 
 @InputType()

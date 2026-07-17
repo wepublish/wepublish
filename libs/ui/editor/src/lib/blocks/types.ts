@@ -11,6 +11,7 @@ import {
   FullPoll,
   FullTeaserFragment,
   PageWithoutBlocksFragment,
+  SubscribeBlockAmountTileLayout,
   SubscribeBlockField,
   SubscribeBlockPlanRenderStyle,
   Tag,
@@ -75,6 +76,8 @@ export interface SubscribeBlockPlanSettingValue {
   memberPlanId: string;
   renderStyle: SubscribeBlockPlanRenderStyle;
   amountTileValues?: number[] | null;
+  amountTileLayout?: SubscribeBlockAmountTileLayout | null;
+  isDefault?: boolean | null;
 }
 
 export interface SubscribeBlockValue extends BaseBlockValue {
@@ -1140,10 +1143,18 @@ export function blockForQueryBlock(
           memberPlanIds: block.memberPlanIds ?? [],
           plans:
             block.plans?.map(
-              ({ memberPlanId, renderStyle, amountTileValues }) => ({
+              ({
                 memberPlanId,
                 renderStyle,
                 amountTileValues,
+                amountTileLayout,
+                isDefault,
+              }) => ({
+                memberPlanId,
+                renderStyle,
+                amountTileValues,
+                amountTileLayout,
+                isDefault,
               })
             ) ?? [],
         },
