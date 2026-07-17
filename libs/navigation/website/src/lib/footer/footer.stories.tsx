@@ -1,5 +1,5 @@
 import { ApolloError } from '@apollo/client';
-import { Meta } from '@storybook/react';
+import { Meta } from '@storybook/nextjs';
 import { FullNavigationFragment, Navigation } from '@wepublish/website/api';
 import { Footer } from './footer';
 

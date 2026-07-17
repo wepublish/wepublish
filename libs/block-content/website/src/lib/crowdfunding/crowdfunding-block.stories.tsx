@@ -1,4 +1,4 @@
-import { Meta, StoryObj } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/nextjs';
 import { CrowdfundingBlock } from './crowdfunding-block';
 import { mockCrowdfundingBlock } from '@wepublish/storybook/mocks';
 

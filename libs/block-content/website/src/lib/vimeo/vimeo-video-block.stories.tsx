@@ -1,4 +1,4 @@
-import { Meta } from '@storybook/react';
+import { Meta } from '@storybook/nextjs';
 import { VimeoVideoBlock } from './vimeo-video-block';
 import { mockVimeoVideoBlock } from '@wepublish/storybook/mocks';
 

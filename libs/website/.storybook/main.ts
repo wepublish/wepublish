@@ -1,3 +1,5 @@
+import { fileURLToPath } from "node:url";
+import { dirname } from "node:path";
 import { configureSort } from 'storybook-multilevel-sort';
 import { StorybookConfig } from 'storybook/internal/types';
 
@@ -12,7 +14,7 @@ configureSort({
 
 export default {
   framework: {
-    name: '@storybook/nextjs',
+    name: getAbsolutePath("@storybook/nextjs-vite"),
   },
 
   docs: {},
@@ -24,31 +26,14 @@ export default {
   ],
 
   addons: [
-    '@nx/react/plugins/storybook',
-    '@storybook/addon-essentials',
-    'storybook-addon-apollo-client',
-    '@storybook/addon-interactions',
-    {
-      name: '@storybook/addon-storysource',
-      options: {
-        loaderOptions: {
-          prettierConfig: {
-            printWidth: 100,
-            semi: false,
-            singleQuote: true,
-            bracketSpacing: false,
-            jsxBracketSameLine: true,
-            trailingComma: 'none',
-            arrowParens: 'avoid',
-          },
-        },
-      },
-    },
-    '@storybook/addon-a11y',
-    '@storybook/addon-links',
-    '@storybook/addon-themes',
-    'storybook-react-i18next',
-    '@chromatic-com/storybook',
+    getAbsolutePath("@nx/react/plugins/storybook"),
+    getAbsolutePath("storybook-addon-apollo-client"),
+    getAbsolutePath("@storybook/addon-a11y"),
+    getAbsolutePath("@storybook/addon-links"),
+    getAbsolutePath("@storybook/addon-themes"),
+    getAbsolutePath("storybook-react-i18next"),
+    getAbsolutePath("@chromatic-com/storybook"),
+    getAbsolutePath("@storybook/addon-docs")
   ],
 
   webpackFinal: async (config: any) => {
@@ -80,3 +65,7 @@ export default {
     reactDocgen: 'react-docgen-typescript',
   },
 } as StorybookConfig;
+
+function getAbsolutePath(value: string): any {
+  return dirname(fileURLToPath(import.meta.resolve(`${value}/package.json`)));
+}

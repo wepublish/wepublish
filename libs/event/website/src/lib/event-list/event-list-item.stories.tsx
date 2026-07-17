@@ -1,4 +1,4 @@
-import { Meta } from '@storybook/react';
+import { Meta } from '@storybook/nextjs';
 import { EventListItem } from './event-list-item';
 import { mockEvent } from '@wepublish/storybook/mocks';
 

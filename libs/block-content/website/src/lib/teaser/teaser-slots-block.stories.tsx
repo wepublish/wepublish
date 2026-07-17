@@ -1,4 +1,4 @@
-import { Meta } from '@storybook/react';
+import { Meta } from '@storybook/nextjs';
 import { TeaserSlotsBlock } from './teaser-slots-block';
 import { mockArticleTeaser } from '@wepublish/storybook/mocks';
 

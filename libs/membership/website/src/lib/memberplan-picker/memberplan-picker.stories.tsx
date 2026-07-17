@@ -1,5 +1,5 @@
-import { action } from '@storybook/addon-actions';
-import { Meta, StoryObj } from '@storybook/react';
+import { action } from 'storybook/actions';
+import { Meta, StoryObj } from '@storybook/nextjs';
 import { Currency, FullMemberPlanFragment } from '@wepublish/website/api';
 import { useState } from 'react';
 import { MemberPlanPicker } from './memberplan-picker';

@@ -1,5 +1,5 @@
 import { Link, Stack } from '@mui/material';
-import { Meta, StoryObj } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/nextjs';
 
 import { TextField as TextFieldCmp } from './text-field';
 

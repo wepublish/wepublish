@@ -1,4 +1,4 @@
-import { Meta } from '@storybook/react';
+import { Meta } from '@storybook/nextjs';
 import { IFrameBlock } from './iframe-block';
 import { mockIFrameBlock } from '@wepublish/storybook/mocks';
 

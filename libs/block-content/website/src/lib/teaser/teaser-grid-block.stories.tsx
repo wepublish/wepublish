@@ -1,4 +1,4 @@
-import { Meta } from '@storybook/react';
+import { Meta } from '@storybook/nextjs';
 import { TeaserGridBlock } from './teaser-grid-block';
 import {
   mockArticleTeaser,

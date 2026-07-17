@@ -1,4 +1,4 @@
-import { Meta } from '@storybook/react';
+import { Meta } from '@storybook/nextjs';
 import { TitleBlock } from './title-block';
 import { mockTitleBlock } from '@wepublish/storybook/mocks';
 

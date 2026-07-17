@@ -1,4 +1,4 @@
-import { Meta } from '@storybook/react';
+import { Meta } from '@storybook/nextjs';
 import { ArticleDocument } from '@wepublish/website/api';
 import { ArticleContainer } from './article-container';
 import { mockArticle, mockPeer } from '@wepublish/storybook/mocks';

@@ -1,12 +1,12 @@
 import { ApolloError } from '@apollo/client';
-import { Meta, StoryObj } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/nextjs';
 import { Tag } from './tag';
 import {
   mockArticle,
   mockArticleRevision,
   mockTag,
 } from '@wepublish/storybook/mocks';
-import { action } from '@storybook/addon-actions';
+import { action } from 'storybook/actions';
 
 const tag = mockTag();
 

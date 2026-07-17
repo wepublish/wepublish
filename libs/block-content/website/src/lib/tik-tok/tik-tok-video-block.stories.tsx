@@ -1,4 +1,4 @@
-import { Meta } from '@storybook/react';
+import { Meta } from '@storybook/nextjs';
 import { TikTokVideoBlock } from './tik-tok-video-block';
 import { mockTikTokVideoBlock } from '@wepublish/storybook/mocks';
 

@@ -1,4 +1,4 @@
-import { Meta } from '@storybook/react';
+import { Meta } from '@storybook/nextjs';
 import { ArticleList } from './article-list';
 import { ApolloError } from '@apollo/client';
 import { mockArticle, mockArticleRevision } from '@wepublish/storybook/mocks';

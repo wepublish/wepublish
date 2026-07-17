@@ -1,5 +1,5 @@
 import { Link, Stack } from '@mui/material';
-import { Meta, StoryObj } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/nextjs';
 import { MdFavorite, MdHeartBroken } from 'react-icons/md';
 
 import { Rating as RatingCmp } from './rating';

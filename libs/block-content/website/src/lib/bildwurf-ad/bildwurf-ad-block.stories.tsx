@@ -1,4 +1,4 @@
-import { Meta } from '@storybook/react';
+import { Meta } from '@storybook/nextjs';
 import { BildwurfAdBlock } from './bildwurf-ad-block';
 import { mockBildwurfBlock } from '@wepublish/storybook/mocks';
 

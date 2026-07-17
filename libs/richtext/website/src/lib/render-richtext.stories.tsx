@@ -1,4 +1,4 @@
-import { Meta, StoryObj } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/nextjs';
 import { mockRichText } from '@wepublish/storybook/mocks';
 import { RenderRichtext } from './render-richtext';
 

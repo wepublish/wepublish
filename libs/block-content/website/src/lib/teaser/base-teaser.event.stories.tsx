@@ -1,4 +1,4 @@
-import { Meta } from '@storybook/react';
+import { Meta } from '@storybook/nextjs';
 import { BaseTeaser } from './base-teaser';
 import { mockEventTeaser } from '@wepublish/storybook/mocks';
 

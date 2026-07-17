@@ -1,6 +1,6 @@
 import { ApolloError } from '@apollo/client';
-import { action } from '@storybook/addon-actions';
-import { Meta } from '@storybook/react';
+import { action } from 'storybook/actions';
+import { Meta } from '@storybook/nextjs';
 import { SubscriptionList } from './subscription-list';
 import {
   Exact,

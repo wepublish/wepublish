@@ -1,7 +1,11 @@
-import { Preview } from '@storybook/react';
+import { Preview } from '@storybook/nextjs';
 import { decorators, parameters } from '@wepublish/storybook';
 
 export default {
   decorators,
-  parameters,
+  {
+    docs: {
+      codePanel: true
+    }
+  },
 } as Preview;

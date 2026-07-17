@@ -1,4 +1,4 @@
-import { Meta } from '@storybook/react';
+import { Meta } from '@storybook/nextjs';
 import { ImageSlider } from './image-slider';
 import { mockImage } from '@wepublish/storybook/mocks';
 

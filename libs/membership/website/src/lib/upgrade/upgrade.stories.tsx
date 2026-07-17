@@ -1,7 +1,7 @@
 import { ApolloError } from '@apollo/client';
-import { action } from '@storybook/addon-actions';
-import { Meta, StoryObj } from '@storybook/react';
-import { userEvent, within } from '@storybook/test';
+import { action } from 'storybook/actions';
+import { Meta, StoryObj } from '@storybook/nextjs';
+import { userEvent, within } from 'storybook/test';
 import {
   mockAvailablePaymentMethod,
   mockMemberPlan,

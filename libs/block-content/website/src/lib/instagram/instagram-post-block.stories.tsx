@@ -1,4 +1,4 @@
-import { Meta } from '@storybook/react';
+import { Meta } from '@storybook/nextjs';
 import { InstagramPostBlock } from './instagram-post-block';
 import { mockInstagramPostBlock } from '@wepublish/storybook/mocks';
 

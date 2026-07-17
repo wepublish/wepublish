@@ -1,4 +1,4 @@
-import { Meta } from '@storybook/react';
+import { Meta } from '@storybook/nextjs';
 import { FacebookPostBlock } from './facebook-post-block';
 import { mockFacebookPostBlock } from '@wepublish/storybook/mocks';
 
