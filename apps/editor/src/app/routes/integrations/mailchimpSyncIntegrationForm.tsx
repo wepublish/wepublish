@@ -1234,37 +1234,59 @@ function SyncProviderSettingCard({
             name="mailchimp_defaultInterestGroupIds"
             control={control}
             render={({ field: { value, onChange } }) => (
-              <Autocomplete
+              <Select
+                fullWidth
                 multiple
-                options={availableInterestGroups}
-                getOptionLabel={option =>
-                  typeof option === 'string' ? option : (
-                    `${option.name} (${option.id})`
+                size="small"
+                displayEmpty
+                value={value ?? []}
+                onChange={e =>
+                  onChange(
+                    typeof e.target.value === 'string' ?
+                      e.target.value.split(',')
+                    : e.target.value
                   )
                 }
-                value={(value ?? []).map(
-                  id =>
-                    availableInterestGroups.find(g => g.id === id) ?? {
-                      id,
-                      name: id,
-                    }
-                )}
-                onChange={(_, newValue) => {
-                  onChange(
-                    newValue.map(v => (typeof v === 'string' ? v : v.id))
+                renderValue={selected => {
+                  if (!selected.length) {
+                    return (
+                      <Typography
+                        component="span"
+                        color="textSecondary"
+                      >
+                        {t(
+                          'integrations.mailchimpSyncSettings.defaultInterestGroups'
+                        )}
+                      </Typography>
+                    );
+                  }
+                  return (
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+                      {selected.map(id => {
+                        const group = availableInterestGroups.find(
+                          g => g.id === id
+                        );
+                        return (
+                          <Chip
+                            key={id}
+                            size="small"
+                            label={group ? group.name : id}
+                          />
+                        );
+                      })}
+                    </div>
                   );
                 }}
-                isOptionEqualToValue={(option, val) => option.id === val.id}
-                renderInput={params => (
-                  <TextField
-                    {...params}
-                    size="small"
-                    placeholder={t(
-                      'integrations.mailchimpSyncSettings.defaultInterestGroups'
-                    )}
-                  />
-                )}
-              />
+              >
+                {availableInterestGroups.map(group => (
+                  <MenuItem
+                    key={group.id}
+                    value={group.id}
+                  >
+                    {group.name}
+                  </MenuItem>
+                ))}
+              </Select>
             )}
           />
 
