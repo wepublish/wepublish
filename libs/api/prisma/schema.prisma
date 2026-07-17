@@ -130,6 +130,7 @@ model Article {
   @@index([modifiedAt])
   @@index([publishedAt])
   @@index([slug])
+  @@index([slug(ops: raw("gin_trgm_ops"))], type: Gin, map: "articles_slug_trgm_idx")
   @@index([hidden, publishedAt(sort: Desc)])
   @@map("articles")
 }
@@ -715,6 +716,7 @@ model Page {
   @@index([createdAt])
   @@index([modifiedAt])
   @@index([publishedAt])
+  @@index([slug(ops: raw("gin_trgm_ops"))], type: Gin, map: "pages_slug_trgm_idx")
   @@map("pages")
 }
 
@@ -1893,7 +1895,7 @@ model MailchimpSyncError {
 }
 
 model WebsiteSettings {
-  id         String   @id @default(cuid())
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
