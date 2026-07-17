@@ -1,5 +1,5 @@
 /* eslint-disable */
-export default {
+module.exports = {
   displayName: 'ganzgraz',
   preset: '../../jest.preset.js',
   transform: {

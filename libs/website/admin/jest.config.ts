@@ -1,5 +1,5 @@
 /* eslint-disable */
-export default {
+module.exports = {
   displayName: 'website-admin',
   preset: '../../../jest.preset.js',
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],

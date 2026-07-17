@@ -1,5 +1,5 @@
 /* eslint-disable */
-export default {
+module.exports = {
   displayName: 'ai-editor',
   preset: '../../../jest.preset.js',
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],

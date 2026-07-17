@@ -1,5 +1,5 @@
 /* eslint-disable */
-export default {
+module.exports = {
   displayName: 'comments-api',
   preset: '../../../jest.preset.js',
   testEnvironment: 'node',

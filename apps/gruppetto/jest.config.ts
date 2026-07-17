@@ -1,5 +1,5 @@
 /* eslint-disable */
-export default {
+module.exports = {
   displayName: 'gruppetto',
   preset: '../../jest.preset.js',
   transform: {

@@ -1,5 +1,5 @@
 /* eslint-disable */
-export default {
+module.exports = {
   displayName: 'google-analytics-api',
   preset: '../../../jest.preset.js',
   testEnvironment: 'node',

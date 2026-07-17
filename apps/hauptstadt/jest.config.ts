@@ -1,5 +1,5 @@
 /* eslint-disable */
-export default {
+module.exports = {
   displayName: 'hauptstadt',
   preset: '../../jest.preset.js',
   transform: {

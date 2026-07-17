@@ -1,5 +1,5 @@
 /* eslint-disable */
-export default {
+module.exports = {
   displayName: 'poll-api',
   preset: '../../../jest.preset.js',
   testEnvironment: 'node',

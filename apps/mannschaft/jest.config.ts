@@ -1,5 +1,5 @@
 /* eslint-disable */
-export default {
+module.exports = {
   displayName: 'mannschaft',
   preset: '../../jest.preset.js',
   transform: {

@@ -1,5 +1,5 @@
 /* eslint-disable */
-export default {
+module.exports = {
   displayName: 'babanews',
   preset: '../../jest.preset.js',
   transform: {
