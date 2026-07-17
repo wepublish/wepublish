@@ -74,6 +74,7 @@ export interface HTMLBlockValue extends BaseBlockValue {
 export interface SubscribeBlockPlanSettingValue {
   memberPlanId: string;
   renderStyle: SubscribeBlockPlanRenderStyle;
+  amountTileValues?: number[] | null;
 }
 
 export interface SubscribeBlockValue extends BaseBlockValue {
@@ -1138,10 +1139,13 @@ export function blockForQueryBlock(
           fields: block.fields ?? [],
           memberPlanIds: block.memberPlanIds ?? [],
           plans:
-            block.plans?.map(({ memberPlanId, renderStyle }) => ({
-              memberPlanId,
-              renderStyle,
-            })) ?? [],
+            block.plans?.map(
+              ({ memberPlanId, renderStyle, amountTileValues }) => ({
+                memberPlanId,
+                renderStyle,
+                amountTileValues,
+              })
+            ) ?? [],
         },
       };
 

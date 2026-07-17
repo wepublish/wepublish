@@ -413,13 +413,20 @@
         "Password": "Mot de passe",
         "PasswordRepeated": "Répéter le mot de passe",
         "renderStyles": {
-          "card": "Carte (montant fixe)",
-          "slider": "Carte + curseur",
-          "cardAndSlider": "Carte & curseur",
-          "cardFreeInput": "Carte avec saisie libre",
-          "amountTiles": "Tuiles de montant"
+          "Card": "Tuile de plan (montant fixe)",
+          "Slider": "Tuile de plan + curseur de montant",
+          "CardAndSlider": "Tuile de plan avec montant affiché + curseur",
+          "CardFreeInput": "Tuile de plan avec saisie libre du montant",
+          "AmountTiles": "Tuiles de montant (un seul plan)"
         },
-        "renderStylesHeading": "Affichage par plan"
+        "renderStylesHeading": "Affichage par plan",
+        "renderStyleRules": {
+          "amountTilesSingle": "Les tuiles de montant ne sont disponibles que si un seul plan est sélectionné."
+        },
+        "amountTileValues": {
+          "hint": "Montants des tuiles (en francs). Laisser vide pour les valeurs par défaut : 10, 15, 20.",
+          "placeholder": "p.ex. 10 15 20"
+        }
       },
       "image": {
         "label": "Image",

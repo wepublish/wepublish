@@ -1,6 +1,7 @@
 import {
   Field,
   InputType,
+  Int,
   ObjectType,
   OmitType,
   registerEnumType,
@@ -41,6 +42,9 @@ export class SubscribeBlockPlanSetting {
 
   @Field(() => SubscribeBlockPlanRenderStyle)
   renderStyle!: SubscribeBlockPlanRenderStyle;
+
+  @Field(() => [Int], { nullable: true })
+  amountTileValues?: number[];
 }
 
 @InputType()

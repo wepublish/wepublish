@@ -65,6 +65,7 @@ export type BuilderMemberPlanPickerProps = {
   onChange: (memberPlanId: string) => void;
   name?: string;
   value?: string;
+  monthlyAmount?: number;
   planSettings?: SubscribeBlockPlanSetting[];
 };
 
@@ -79,6 +80,7 @@ export type BuilderMemberPlanItemProps = Pick<
 > &
   Omit<RadioProps, 'ref'> & { className?: string } & {
     slug: string;
+    monthlyAmount?: number;
     renderStyle?: SubscribeBlockPlanRenderStyle;
   };
 
@@ -118,6 +120,7 @@ export type BuilderPaymentAmountProps = {
   error: FieldError | undefined;
   className?: string;
   slug?: string;
+  presetAmounts?: number[];
 };
 
 export type BuilderSubscribeProps<

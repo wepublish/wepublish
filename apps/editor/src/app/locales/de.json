@@ -409,13 +409,20 @@
         "Password": "Passwort",
         "PasswordRepeated": "Passwort wiederholen",
         "renderStyles": {
-          "card": "Karte (fixer Betrag)",
-          "slider": "Karte + Slider",
-          "cardAndSlider": "Karte & Slider",
-          "cardFreeInput": "Karte mit freier Eingabe",
-          "amountTiles": "Betrags-Kacheln"
+          "Card": "Abo-Kachel (fixer Betrag)",
+          "Slider": "Abo-Kachel + Betrags-Slider",
+          "CardAndSlider": "Abo-Kachel mit Betragsanzeige + Slider",
+          "CardFreeInput": "Abo-Kachel mit freier Betragseingabe",
+          "AmountTiles": "Betrags-Kacheln (nur bei einem Abo-Plan)"
         },
-        "renderStylesHeading": "Darstellung pro Abo-Plan"
+        "renderStylesHeading": "Darstellung pro Abo-Plan",
+        "renderStyleRules": {
+          "amountTilesSingle": "Betrags-Kacheln sind nur verfügbar, wenn genau ein Abo-Plan ausgewählt ist."
+        },
+        "amountTileValues": {
+          "hint": "Beträge der Kacheln (in Franken). Leer lassen für Standard: 10, 15, 20.",
+          "placeholder": "z.B. 10 15 20"
+        }
       },
       "image": {
         "label": "Bild",

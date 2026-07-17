@@ -115,6 +115,7 @@ fragment FullSubscribeBlock on SubscribeBlock {
   plans {
     memberPlanId
     renderStyle
+    amountTileValues
   }
   memberPlans {
     ...FullMemberPlan

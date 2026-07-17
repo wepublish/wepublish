@@ -5640,11 +5640,13 @@ export enum SubscribeBlockPlanRenderStyle {
 
 export type SubscribeBlockPlanSetting = {
   __typename?: 'SubscribeBlockPlanSetting';
+  amountTileValues?: Maybe<Array<Scalars['Int']>>;
   memberPlanId: Scalars['String'];
   renderStyle: SubscribeBlockPlanRenderStyle;
 };
 
 export type SubscribeBlockPlanSettingInput = {
+  amountTileValues?: InputMaybe<Array<Scalars['Int']>>;
   memberPlanId: Scalars['String'];
   renderStyle: SubscribeBlockPlanRenderStyle;
 };
