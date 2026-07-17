@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 import {
   BreakBlock,
   BreakBlockButton,
+  BreakBlockImage,
   hasBlockStyle,
   isBreakBlock,
   RichTextBlockWrapper,
@@ -79,6 +80,16 @@ const StyledImageWithTextBreakBlock = styled(BreakBlock)`
   ${({ theme }) => theme.breakpoints.down('md')} {
     ${BreakBlockButton} {
       justify-self: center;
+    }
+  }
+
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    ${BreakBlockButton} {
+      justify-self: end;
+    }
+
+    ${BreakBlockImage} {
+      width: 100%;
     }
   }
 

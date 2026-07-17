@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import { Typography } from '@mui/material';
 import {
+  BreakBlockButton,
   BreakBlockHeading,
   BreakBlockSegment,
   BreakBlockWrapper,
@@ -360,6 +361,12 @@ export const TextWithVideoAltColorBreakBlock = styled(
 
   ${BreakBlockSegment} + ${BreakBlockSegment} {
     order: -1;
+  }
+
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    ${BreakBlockButton} {
+      justify-self: end;
+    }
   }
 
   ${({ theme }) => theme.breakpoints.up('md')} {
