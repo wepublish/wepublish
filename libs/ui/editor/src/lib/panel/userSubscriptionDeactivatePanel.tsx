@@ -107,6 +107,12 @@ function UserSubscriptionDeactivatePanel({
                     'userSubscriptionEdit.deactivation.reasonUserReplacedSubscription'
                   ),
                 },
+                {
+                  value: SubscriptionDeactivationReason.Chargeback,
+                  label: t(
+                    'userSubscriptionEdit.deactivation.reasonChargeback'
+                  ),
+                },
               ]}
               value={deactivationReason}
               block

@@ -3,6 +3,7 @@ import {
   RecentActionsQuery,
   useRecentActionsQuery,
 } from '@wepublish/editor/api';
+import { toPlaintext } from '@wepublish/richtext';
 import { formatDistanceToNow } from 'date-fns';
 import { ReactNode, useEffect } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
@@ -19,7 +20,6 @@ import {
 import { Link } from 'react-router-dom';
 import { Avatar, Message, Timeline as RTimeline, toaster } from 'rsuite';
 
-import { RichTextBlock } from '../../blocks/richTextBlock/rich-text-block';
 import { AVAILABLE_LANG } from '../../utility';
 
 const Timeline = styled(RTimeline)`
@@ -172,15 +172,7 @@ function TimelineItemContainer(props: TimelineItemContainerProps) {
             <>
               {userName + commentTitle}
               <TimelineRichTextWrapper>
-                <RichTextBlock
-                  displayOnly
-                  displayOneLine
-                  disabled
-                  onChange={() => {
-                    return undefined;
-                  }}
-                  value={action.comment.text || []}
-                />
+                {toPlaintext(action.comment.text?.content)}
               </TimelineRichTextWrapper>
             </>
           }

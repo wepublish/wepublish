@@ -21,8 +21,8 @@ exports[`should generate the RSS feed 1`] = `
             <pubDate>Sun, 01 Jan 2023 00:00:00 GMT</pubDate>
             <description><![CDATA[This is an article lead]]></description>
             <content:encoded><![CDATA[This is an article lead]]></content:encoded>
-            <category>boulevard</category>
-            <category>abacus</category>
+            <category>schedule</category>
+            <category>stall</category>
             <enclosure length="0" type="image/webp" url="https://unsplash.it/500/281"/>
         </item>
         <item>
@@ -32,8 +32,8 @@ exports[`should generate the RSS feed 1`] = `
             <pubDate>Sun, 01 Jan 2023 00:00:00 GMT</pubDate>
             <description><![CDATA[This is an article lead]]></description>
             <content:encoded><![CDATA[This is an article lead]]></content:encoded>
-            <category>comparison</category>
-            <category>duster</category>
+            <category>quart</category>
+            <category>lava</category>
             <enclosure length="0" type="image/webp" url="https://unsplash.it/500/281"/>
         </item>
     </channel>
@@ -69,7 +69,7 @@ exports[`should generate the atom feed 1`] = `
             <name>Foobar</name>
             <uri>https://example.com</uri>
         </author>
-        <category label="schnitzel" term="schnitzel"/>
+        <category label="newsletter" term="newsletter"/>
         <category label="papa" term="papa"/>
     </entry>
     <entry>
@@ -87,8 +87,8 @@ exports[`should generate the atom feed 1`] = `
             <name>Foobar</name>
             <uri>https://example.com</uri>
         </author>
-        <category label="coliseum" term="coliseum"/>
-        <category label="roundabout" term="roundabout"/>
+        <category label="whale" term="whale"/>
+        <category label="shoulder" term="shoulder"/>
     </entry>
 </feed>"
 `;
@@ -117,8 +117,8 @@ exports[`should generate the json feed 1`] = `
                 "url": "https://example.com"
             },
             "tags": [
-                "summary",
-                "coin"
+                "godparent",
+                "hovercraft"
             ]
         },
         {
@@ -136,8 +136,8 @@ exports[`should generate the json feed 1`] = `
                 "url": "https://example.com"
             },
             "tags": [
-                "thyme",
-                "toaster"
+                "printer",
+                "spirit"
             ]
         }
     ]
@@ -175,8 +175,8 @@ Feed {
           "term": "e-mail",
         },
         {
-          "name": "omelet",
-          "term": "omelet",
+          "name": "swath",
+          "term": "swath",
         },
       ],
       "content": "This is an article lead",
@@ -203,12 +203,12 @@ Feed {
       ],
       "category": [
         {
-          "name": "eyebrow",
-          "term": "eyebrow",
+          "name": "valuable",
+          "term": "valuable",
         },
         {
-          "name": "aftermath",
-          "term": "aftermath",
+          "name": "taxicab",
+          "term": "taxicab",
         },
       ],
       "content": "This is an article lead",

@@ -34,7 +34,7 @@ export class WebsiteSettingsService {
         analyticsPAId: input.analytics?.plausible.key,
 
         analyticsPiwikEnabled:
-          input.analytics?.plausible.enabled ?? settings.analyticsPiwikEnabled,
+          input.analytics?.piwik.enabled ?? settings.analyticsPiwikEnabled,
         analyticsPiwikId: input.analytics?.piwik.key,
 
         // Ads

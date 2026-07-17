@@ -97,12 +97,11 @@ ARG SENTRY_RELEASE
 ARG APP_RELEASE_ID
 COPY . .
 RUN npx prisma generate && \
-    grep -q "require('#main-entry-point')" node_modules/.prisma/client/default.js || \
-    (echo "ERROR: Prisma client no longer uses #main-entry-point — update the pkg workaround" && exit 1) && \
-    sed -i "s|require('#main-entry-point')|require('./index.js')|" node_modules/.prisma/client/default.js && \
+    node docker/inline-pkg-imports.js && \
     npx nx build api-example --ignore-nx-cache && \
     npx @sentry/cli sourcemaps inject ./dist/apps/api-example && \
     npx @sentry/cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist/apps/api-example && \
+    node docker/generate-pkg-shims.js && \
     cp docker/api_build_package.json package.json && \
     npx @yao-pkg/pkg package.json
 

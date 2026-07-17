@@ -1,5 +1,51 @@
 {
   "translation": {
+    "oneMessages": {
+      "header": "Messages de l'équipe We.Publish",
+      "expand": "Développer",
+      "linkFallback": "En savoir plus"
+    },
+    "versionHistory": {
+      "title": "Historique des versions",
+      "subtitle": "{{count}} versions",
+      "close": "Fermer",
+      "empty": "Aucune version pour l'instant.",
+      "untitled": "Sans titre",
+      "created": "Créé le {{date}}",
+      "published": "publié le {{date}}",
+      "currentVersion": "Version actuelle",
+      "restore": "Restaurer",
+      "restored": "Version restaurée en tant que nouveau brouillon",
+      "preview": "Aperçu",
+      "previewTitle": "Aperçu de la version",
+      "readOnly": "Lecture seule",
+      "loadMore": "Charger plus",
+      "showing": "{{count}} sur {{total}} affichés",
+      "unknownAuthor": "Inconnu",
+      "state": {
+        "published": "Actuellement publié",
+        "pending": "Planifié",
+        "draft": "Brouillon",
+        "superseded": "Précédemment publié",
+        "archived": "Archivé"
+      },
+      "confirm": {
+        "title": "Restaurer cette version ?",
+        "message": "Cela crée un nouveau brouillon à partir de la version du {{date}}. Votre brouillon actuel sera archivé. Rien n'est publié tant que vous ne le publiez pas.",
+        "cancel": "Annuler",
+        "confirm": "Restaurer comme brouillon"
+      }
+    },
+    "discardDraft": {
+      "button": "Abandonner le brouillon",
+      "success": "Brouillon abandonné — retour à la version publiée",
+      "confirm": {
+        "title": "Abandonner le brouillon actuel ?",
+        "message": "Vos modifications non publiées seront archivées et l'éditeur reviendra à la version actuellement publiée. Cette action est irréversible, mais le brouillon abandonné reste disponible dans l'historique des versions.",
+        "cancel": "Annuler",
+        "confirm": "Abandonner le brouillon"
+      }
+    },
     "articleEditor": {
       "overview": {
         "articlePending": "Article en attente",
@@ -407,25 +453,7 @@
         "quote": "Citation"
       },
       "richText": {
-        "charCount": "Nombre de caractères {{charCount}}",
-        "insert": "Insérer",
-        "invalidLink": "Le lien saisi n'est pas valide. Veuillez vérifier l'URL et réessayer.",
-        "invalidMail": "Cette adresse e-mail n'est pas valide. Vérifier le mail et réessayer.",
-        "label": "Texte enrichi",
-        "link": "Lien",
-        "remove": "Supprimer",
-        "startWriting": "Commencez à écrire...",
-        "text": "Texte",
-        "id": "ID"
-      },
-      "richTextTable": {
-        "addBorders": "Ajouter des bordures",
-        "border": "Bordure",
-        "cancel": "Annuler",
-        "columns": "Colonnes",
-        "deleteTable": "Supprimer la tableau",
-        "insertTable": "Insérer un tableau",
-        "rows": "Lignes"
+        "label": "Texte enrichi"
       },
       "teaserFlexGrid": {
         "label": "Grille de teasers flexible"
@@ -1249,6 +1277,37 @@
     "resetUserPasswordForm": {
       "sendMail": "Envoyer un mail à l'utilisateur (Registration System Mail)"
     },
+    "richtext": {
+      "menuBar": {
+        "paragraph": "Paragraphe",
+        "heading": "Titre {{level}}"
+      },
+      "link": {
+        "title": "Lier le texte avec",
+        "type": "Type",
+        "url": "URL",
+        "web": "Web",
+        "email": "E-mail",
+        "anchor": "Ancre",
+        "selectAnchor": "Sélectionner une ancre",
+        "openInNewTab": "Ouvrir le lien dans un nouvel onglet",
+        "openLink": "Ouvrir le lien dans une nouvelle fenêtre",
+        "remove": "Supprimer le lien"
+      },
+      "colorPicker": {
+        "clear": "Réinitialiser la couleur"
+      },
+      "commands": {
+        "table": "Tableau",
+        "quote": "Citation",
+        "code": "Code",
+        "noResult": "Aucun résultat"
+      },
+      "placeholder": {
+        "heading": "Sans titre",
+        "paragraph": "Écrivez ou tapez '/' pour les commandes ..."
+      }
+    },
     "save": "Sauvegarder",
     "saveAndClose": "Sauvegarder & fermer",
     "settingList": {
@@ -1325,6 +1384,7 @@
         "reasonUserReplacedSubscription": "Remplacé par un autre abonnement",
         "reasonNone": "Aucun motif",
         "reasonUserSelfDeactivated": "Par l'utilisateur·trice",
+        "reasonChargeback": "Rétrofacturation",
         "reset": "Réinitialiser le filtre",
         "searchPlaceholder": "Recherche par prénom, nom, e-mail, adresse, code postal, lieu"
       },
@@ -1507,6 +1567,7 @@
         "reasonUserReplacedSubscription": "Remplacé par un autre abonnement",
         "reasonNone": "Aucun motif",
         "reasonUserSelfDeactivated": "Désactivation par l'utilisateur·trice",
+        "reasonChargeback": "Rétrofacturation",
         "title": {
           "activated": "Désactiver l'abonnement"
         },
@@ -1529,7 +1590,9 @@
       "deactivationReason": {
         "InvoiceNotPaid": "Facture non payée",
         "None": "Aucune",
-        "UserSelfDeactivated": "L'utilisateur voulait désactiver l'abonnement"
+        "UserSelfDeactivated": "L'utilisateur voulait désactiver l'abonnement",
+        "UserReplacedSubscription": "Remplacé par un autre abonnement",
+        "Chargeback": "Rétrofacturation"
       },
       "deactivationString": "Désactivé le {{date}}. Raison: {{reason}}",
       "editSubscription": "Modifier l'abonnement",

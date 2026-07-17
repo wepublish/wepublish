@@ -3,7 +3,7 @@
   "website": {
     "production": {
       "deployment": true,
-      "custom_domain": "https://wepublish-site.wepublish.cloud",
+      "custom_domain": "https://wepublish.ch",
       "env": {},
       "secret_env": []
     },

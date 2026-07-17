@@ -275,6 +275,10 @@ export function SubscriptionListFilter({
                   'subscriptionList.filter.reasonUserReplacedSubscription'
                 ),
               },
+              {
+                value: SubscriptionDeactivationReason.Chargeback,
+                label: t('subscriptionList.filter.reasonChargeback'),
+              },
             ]}
             block
             placement="auto"

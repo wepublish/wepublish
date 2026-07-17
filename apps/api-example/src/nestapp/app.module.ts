@@ -1,24 +1,27 @@
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Global, Module } from '@nestjs/common';
-import { APP_FILTER } from '@nestjs/core';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { APP_FILTER } from '@nestjs/core';
 import { GqlModuleOptions, GraphQLModule } from '@nestjs/graphql';
 import { ScheduleModule } from '@nestjs/schedule';
 
 import { HttpModule, HttpService } from '@nestjs/axios';
 import {
-  PrismaClient,
   MailProviderType,
   PaymentProviderType,
+  PrismaClient,
   SyncProviderType,
 } from '@prisma/client';
-import { SentryModule, SentryGlobalFilter } from '@sentry/nestjs/setup';
+import { SentryGlobalFilter, SentryModule } from '@sentry/nestjs/setup';
 import { ActionModule } from '@wepublish/action/api';
+import { V0Module } from '@wepublish/ai/api';
 import { NovaMediaAdapter } from '@wepublish/api';
 import { ArticleModule, HotAndTrendingModule } from '@wepublish/article/api';
 import { AuthenticationModule } from '@wepublish/authentication/api';
+import { AuthorModule } from '@wepublish/author/api';
 import { BannerApiModule } from '@wepublish/banner/api';
 import { BlockContentModule } from '@wepublish/block-content/api';
+import { ChallengeModule } from '@wepublish/challenge/api';
 import { CommentModule } from '@wepublish/comments/api';
 import { ConsentModule } from '@wepublish/consent/api';
 import { CrowdfundingModule } from '@wepublish/crowdfunding/api';
@@ -29,25 +32,32 @@ import {
   EventsImportModule,
   KulturZueriService,
 } from '@wepublish/event/import/api';
+import { ExternalAppsModule } from '@wepublish/external-apps/api';
 import {
+  GoogleAnalyticsDbConfig,
   GoogleAnalyticsModule,
   GoogleAnalyticsService,
-  GoogleAnalyticsDbConfig,
 } from '@wepublish/google-analytics/api';
 import { HealthModule } from '@wepublish/health';
 import { MediaAdapterModule } from '@wepublish/image/api';
+import {
+  KvTtlCacheModule,
+  KvTtlCacheService,
+} from '@wepublish/kv-ttl-cache/api';
 import {
   BaseMailProvider,
   MailchimpMailProvider,
   MailgunMailProvider,
   MailsModule,
 } from '@wepublish/mail/api';
-import { generateJWT } from '@wepublish/utils/api';
+import { MemberPlanModule } from '@wepublish/member-plan/api';
 import {
   DashboardModule,
+  InvoiceModule,
   MembershipModule,
   SubscriptionModule,
   UpgradeSubscriptionModule,
+  VoucherModule,
 } from '@wepublish/membership/api';
 import { NavigationModule } from '@wepublish/navigation/api';
 import {
@@ -63,9 +73,9 @@ import {
   BexioPaymentProvider,
   MolliePaymentProvider,
   NeverChargePaymentProvider,
+  PaymentMethodModule,
   PaymentProvider,
   PaymentsModule,
-  PaymentMethodModule,
   PayrexxPaymentProvider,
   PayrexxSubscriptionPaymentProvider,
   StripeCheckoutPaymentProvider,
@@ -77,14 +87,14 @@ import { ImportPeerArticleModule } from '@wepublish/peering/api/import';
 import { PermissionModule } from '@wepublish/permissions/api';
 import { PhraseModule } from '@wepublish/phrase/api';
 import { PollModule } from '@wepublish/poll/api';
-import { GraphQLRichText } from '@wepublish/richtext/api';
+import { GraphQLRichText, SlateToPmMigrator } from '@wepublish/richtext/api';
+import { SessionModule } from '@wepublish/session/api';
 import {
   SettingModule,
   SettingName,
   WebsiteSettingsModule,
 } from '@wepublish/settings/api';
 import { StatsModule } from '@wepublish/stats/api';
-import { ExternalAppsModule } from '@wepublish/external-apps/api';
 import { SystemInfoModule } from '@wepublish/system-info';
 import { TagModule } from '@wepublish/tag/api';
 import {
@@ -92,22 +102,13 @@ import {
   TrackingPixelProvider,
   TrackingPixelsModule,
 } from '@wepublish/tracking-pixel/api';
+import { UserSubscriptionModule } from '@wepublish/user-subscription/api';
 import { UserModule } from '@wepublish/user/api';
+import { generateJWT } from '@wepublish/utils/api';
 import { VersionInformationModule } from '@wepublish/versionInformation/api';
 import bodyParser from 'body-parser';
 import { SlackMailProvider } from '../app/slack-mail-provider';
 import { readConfig } from '../readConfig';
-import { AuthorModule } from '@wepublish/author/api';
-import { MemberPlanModule } from '@wepublish/member-plan/api';
-import { InvoiceModule, VoucherModule } from '@wepublish/membership/api';
-import { SessionModule } from '@wepublish/session/api';
-import { ChallengeModule } from '@wepublish/challenge/api';
-import { UserSubscriptionModule } from '@wepublish/user-subscription/api';
-import { V0Module } from '@wepublish/ai/api';
-import {
-  KvTtlCacheModule,
-  KvTtlCacheService,
-} from '@wepublish/kv-ttl-cache/api';
 
 @Global()
 @Module({
@@ -588,6 +589,7 @@ import {
       },
       inject: [ConfigService],
     },
+    SlateToPmMigrator,
     // System info key provider
     {
       provide: 'SYNC_PROVIDER_INIT',

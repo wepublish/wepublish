@@ -1,5 +1,4 @@
 import {
-  PaymentPeriodicity,
   PrismaClient,
   CommentAuthorType,
   CommentItemType,
@@ -76,7 +75,7 @@ function getText(min = 1, max = 10) {
     ],
   }));
 
-  return text as unknown as Prisma.InputJsonValue;
+  return text as any[];
 }
 
 async function seedImages(prisma: PrismaClient) {
@@ -230,7 +229,7 @@ async function seedPoll(prisma: PrismaClient) {
     prisma.poll.create({
       data: {
         closedAt: faker.date.future(),
-        infoText: getText(1, 3),
+        slateInfoText: getText(1, 3),
         question: capitalize(faker.lorem.words({ min: 3, max: 10 })),
         answers: {
           createMany: {
@@ -251,7 +250,7 @@ async function seedPoll(prisma: PrismaClient) {
       data: {
         opensAt: faker.date.past({ refDate: pastDate }),
         closedAt: pastDate,
-        infoText: getText(1, 3) as Prisma.InputJsonValue,
+        slateInfoText: getText(1, 3) as Prisma.InputJsonValue,
         question: faker.lorem.words({ min: 3, max: 10 }),
         answers: {
           createMany: {
@@ -441,7 +440,7 @@ async function seedAuthors(prisma: PrismaClient, imageIds: string[] = []) {
       prisma.author.create({
         data: {
           ...nameAndSlug(),
-          bio: getText(4, 9),
+          slateBio: getText(4, 9),
           jobTitle: faker.person.jobTitle(),
           imageID: shuffle(imageIds).at(0),
         },
@@ -458,7 +457,7 @@ async function seedEvents(prisma: PrismaClient, imageIds: string[] = []) {
       prisma.event.create({
         data: {
           name: capitalize(faker.lorem.words({ min: 3, max: 8 })),
-          description: getText(4, 12) as any,
+          slateDescription: getText(4, 12) as any,
           startsAt: future,
           endsAt: faker.date.future({ refDate: future }),
           imageId: shuffle(imageIds).at(0),
@@ -575,7 +574,8 @@ async function seedPages(
                 linkTarget: '',
                 linkText: capitalize(faker.lorem.words({ min: 2, max: 4 })),
                 linkURL: faker.internet.url(),
-                richText: getText(1, 2) as any,
+                slateRichText: getText(1, 2) as any,
+                richText: null,
                 text: capitalize(faker.lorem.words({ min: 8, max: 12 })),
                 layoutOption: 'image-left',
               } as BreakBlock,
@@ -700,7 +700,8 @@ async function seedArticles(
                   ...pickRandom(
                     {
                       type: BlockType.RichText,
-                      richText: getText(3, 10) as any,
+                      slateRichText: getText(3, 10) as any,
+                      richText: null,
                     } as RichTextBlock,
                     0.7
                   ),
@@ -715,7 +716,8 @@ async function seedArticles(
                   ...pickRandom(
                     {
                       type: BlockType.RichText,
-                      richText: getText(3, 10) as any,
+                      slateRichText: getText(3, 10) as any,
+                      richText: null,
                     } as RichTextBlock,
                     0.5
                   ),
@@ -732,7 +734,8 @@ async function seedArticles(
                   ...pickRandom(
                     {
                       type: BlockType.RichText,
-                      richText: getText(3, 10) as any,
+                      slateRichText: getText(3, 10) as any,
+                      richText: null,
                     } as RichTextBlock,
                     0.3
                   ),
@@ -769,7 +772,8 @@ async function seedArticles(
                         faker.lorem.words({ min: 2, max: 4 })
                       ),
                       linkURL: faker.internet.url(),
-                      richText: getText(1, 1) as any,
+                      slateRichText: getText(1, 1) as any,
+                      richText: null,
                       text: capitalize(faker.lorem.words({ min: 8, max: 12 })),
                       layoutOption: 'image-left',
                     } as BreakBlock,
@@ -828,7 +832,7 @@ async function seedComments(
             revisions: {
               create: {
                 title: capitalize(faker.lorem.words({ min: 3, max: 8 })),
-                text: getText(),
+                slateText: getText(),
               },
             },
           },
@@ -868,7 +872,8 @@ async function seedMemberPlans(prisma: PrismaClient) {
     data: {
       active: true,
       name: 'Test-Abo CHF',
-      description: [],
+      slateDescription: getText(),
+      slateShortDescription: getText(),
       slug: 'test-abo-chf',
       amountPerMonthMin: 1000,
       extendable: true,
@@ -887,7 +892,8 @@ async function seedMemberPlans(prisma: PrismaClient) {
     data: {
       active: true,
       name: 'Test-Abo EUR',
-      description: [],
+      slateDescription: getText(),
+      slateShortDescription: getText(),
       slug: 'test-abo-eur',
       amountPerMonthMin: 2000,
       extendable: true,

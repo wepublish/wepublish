@@ -1,12 +1,6 @@
 import { EmotionCache } from '@emotion/cache';
 import styled from '@emotion/styled';
-import {
-  Container,
-  createTheme,
-  css,
-  CssBaseline,
-  ThemeProvider,
-} from '@mui/material';
+import { Container, css, CssBaseline, ThemeProvider } from '@mui/material';
 import {
   AppCacheProvider,
   createEmotionCache,
@@ -18,12 +12,10 @@ import {
   NavbarContainer,
 } from '@wepublish/navigation/website';
 import { withPaywallBypassToken } from '@wepublish/paywall/website';
-import { minimalTheme } from '@wepublish/ui';
 import {
   authLink,
   getApiUrl,
   initWePublishTranslator,
-  NextWepublishLink,
   RoutedAdminBar,
   withBuilderRouter,
   withJwtHandler,
@@ -41,17 +33,33 @@ import { format, setDefaultOptions } from 'date-fns';
 import { de } from 'date-fns/locale';
 import { AppProps } from 'next/app';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import Script from 'next/script';
 import PlausibleProvider from 'next-plausible';
-import { useMemo } from 'react';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
+
+import deOverriden from '../locales/deOverriden.json';
+import { WepBreakBlock } from '../src/components/break-blocks/wep-break-block';
+import { WepBaseTeaserSlots } from '../src/components/teaser-layouts/wep-base-teaser-slots';
+import { WepBaseTeaser } from '../src/components/teasers/wep-base-teaser';
+import { WepArticle } from '../src/components/wep-article';
+import { WepBlockRenderer } from '../src/components/wep-block-renderer';
+import { WepContentWrapper } from '../src/components/wep-content-wrapper';
+import { WepFooter } from '../src/components/wep-footer';
+import { WepGlobalStyles } from '../src/components/wep-global-styles';
+import { WepNavbar } from '../src/components/wep-navbar';
+import { WepPage } from '../src/components/wep-page';
+import { WepQuoteBlock } from '../src/components/wep-quote-block';
+import { localizeSlug } from '../src/localize-slug';
+import theme from '../src/theme';
+import { WepLink } from '../src/wep-link';
 
 setDefaultOptions({
   locale: de,
 });
 
-initWePublishTranslator();
+initWePublishTranslator(deOverriden);
 z.setErrorMap(zodI18nMap);
 
 const Spacer = styled('div')`
@@ -94,20 +102,15 @@ function CustomApp({
   websiteSettings,
 }: CustomAppProps) {
   const siteTitle = 'We.Publish';
+  const router = useRouter();
+  const { locale } = router;
 
-  // Emotion cache from _document is not supplied when client side rendering
-  // Compat removes certain warnings that are irrelevant to us
   const cache = emotionCache ?? createEmotionCache();
   cache.compat = true;
 
   const settings =
     websiteSettings ??
     (typeof window !== 'undefined' ? window.WEBSITE_SETTINGS : undefined);
-
-  const theme = useMemo(
-    () => createTheme(minimalTheme, settings?.theme ?? {}),
-    [settings]
-  );
 
   return (
     <PlausibleProvider
@@ -123,11 +126,24 @@ function CustomApp({
             <WebsiteBuilderProvider
               Head={Head}
               Script={Script}
-              elements={{ Link: NextWepublishLink }}
+              Footer={WepFooter}
+              Navbar={WepNavbar}
+              ContentWrapper={WepContentWrapper}
+              Article={WepArticle}
+              Page={WepPage}
+              blocks={{
+                Renderer: WepBlockRenderer,
+                BaseTeaser: WepBaseTeaser,
+                TeaserSlots: WepBaseTeaserSlots,
+                Quote: WepQuoteBlock,
+                Break: WepBreakBlock,
+              }}
+              elements={{ Link: WepLink }}
               date={{ format: dateFormatter }}
               meta={{ siteTitle }}
             >
               <CssBaseline />
+              <WepGlobalStyles isHomePage={router.asPath === '/'} />
 
               <Head>
                 <title key="title">{siteTitle}</title>
@@ -135,10 +151,13 @@ function CustomApp({
 
               <Spacer>
                 <NavBar
-                  categorySlugs={[['categories', 'about-us']]}
-                  slug="main"
-                  headerSlug="header"
-                  iconSlug="icons"
+                  categorySlugs={[[localizeSlug('main-header', locale)]]}
+                  slug={localizeSlug('main', locale)}
+                  headerSlug={localizeSlug('header', locale)}
+                  iconSlug={localizeSlug('icons', locale)}
+                  profileBtn={null}
+                  subscribeBtn={null}
+                  loginBtn={null}
                 />
 
                 <main>
@@ -148,9 +167,16 @@ function CustomApp({
                 </main>
 
                 <FooterContainer
-                  slug="footer"
-                  categorySlugs={[['categories', 'about-us']]}
-                  iconSlug="icons"
+                  slug={localizeSlug('footer', locale)}
+                  categorySlugs={[
+                    [
+                      localizeSlug('main-footer', locale),
+                      localizeSlug('categories', locale),
+                      localizeSlug('ueber-uns', locale),
+                      `sprachwahl`,
+                    ],
+                  ]}
+                  iconSlug={localizeSlug('icons', locale)}
                 />
               </Spacer>
 

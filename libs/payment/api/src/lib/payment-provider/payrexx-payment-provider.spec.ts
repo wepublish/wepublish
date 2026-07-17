@@ -182,7 +182,7 @@ describe('PayrexxPaymentProvider', () => {
       const transaction = {
         id: 12345,
         amount: 200,
-        status: 'chargeback',
+        status: 'refunded',
         referenceId: 'subscription-1',
         subscription: null,
       } as Transaction;
@@ -198,6 +198,34 @@ describe('PayrexxPaymentProvider', () => {
       });
       expect(response.status).toEqual(200);
       expect(response.paymentStates).toEqual([]);
+    });
+
+    it('should report a chargeback transaction as a chargeback payment state', async () => {
+      const transaction = {
+        id: 12345,
+        amount: 200,
+        status: 'chargeback',
+        referenceId: 'subscription-1',
+        subscription: null,
+      } as Transaction;
+
+      const response = await payrexx.webhookForPaymentIntent({
+        req: {
+          headers: {
+            'content-type': 'application/json',
+          },
+          query: { apiKey: 'secret' },
+          body: { transaction },
+        } as unknown as express.Request,
+      });
+      expect(response.status).toEqual(200);
+      expect(response.paymentStates).toEqual([
+        {
+          paymentID: transaction.referenceId,
+          paymentData: JSON.stringify(transaction),
+          state: 'chargeback',
+        } as IntentState,
+      ]);
     });
   });
 
@@ -299,9 +327,10 @@ describe('PayrexxPaymentProvider', () => {
   });
 
   describe('checkIntentStatus', () => {
-    it('should throw on unmappable transaction status', async () => {
+    it('should return null on an unmappable transaction status instead of throwing', async () => {
       const transaction = {
-        status: 'chargeback',
+        status: 'refunded',
+        referenceId: 'subscription-1',
       } as Transaction;
       transactionClient.retrieveTransaction = jest
         .fn()
@@ -309,7 +338,7 @@ describe('PayrexxPaymentProvider', () => {
 
       await expect(
         payrexx.checkIntentStatus({ intentID: '5', paymentID: '123' })
-      ).rejects.toThrow('Unmappable Payrexx transaction status');
+      ).resolves.toBeNull();
     });
 
     it('should throw on empty transaction referenceId', async () => {
@@ -345,7 +374,7 @@ describe('PayrexxPaymentProvider', () => {
       expect(gatewayClient.getGateway).not.toBeCalled();
     });
 
-    it('should throw on unmappable gateway status', async () => {
+    it('should return null on an unmappable gateway status instead of throwing', async () => {
       const gateway = {
         status: 'unknown status' as any,
       } as Gateway;
@@ -354,7 +383,7 @@ describe('PayrexxPaymentProvider', () => {
 
       await expect(
         payrexx.checkIntentStatus({ intentID: '6', paymentID: '123' })
-      ).rejects.toThrow('Unmappable Payrexx gateway status');
+      ).resolves.toBeNull();
     });
 
     it('should throw on empty gateway referenceId', async () => {

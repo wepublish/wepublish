@@ -63,7 +63,7 @@ export function AuthorCheckPicker({
         hideOnTeaser: false,
         links: [],
         tagIds: [],
-        bio: [],
+        bio: undefined,
       },
     });
   }

@@ -54,6 +54,7 @@ export async function handleJwtLogin(
         res: ctx.res,
         expires: new Date(data.createSessionWithJWT.expiresAt),
         sameSite: 'strict',
+        secure: process.env.NODE_ENV === 'production',
         httpOnly: !!httpOnlyCookie,
       }
     );
