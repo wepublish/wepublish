@@ -12,6 +12,7 @@ import {
   FullTeaserFragment,
   PageWithoutBlocksFragment,
   SubscribeBlockField,
+  SubscribeBlockPlanRenderStyle,
   Tag,
   TeaserInput,
   TeaserListBlockSort,
@@ -70,8 +71,14 @@ export interface HTMLBlockValue extends BaseBlockValue {
   html: string;
 }
 
+export interface SubscribeBlockPlanSettingValue {
+  memberPlanId: string;
+  renderStyle: SubscribeBlockPlanRenderStyle;
+}
+
 export interface SubscribeBlockValue extends BaseBlockValue {
   memberPlanIds: string[];
+  plans: SubscribeBlockPlanSettingValue[];
   fields: SubscribeBlockField[];
 }
 
@@ -500,6 +507,7 @@ export function mapBlockValueToBlockInput(
           blockStyle: block.value.blockStyle,
           disabled: block.value.disabled,
           memberPlanIds: block.value.memberPlanIds ?? [],
+          plans: block.value.plans ?? [],
           fields: block.value.fields,
         },
       };
@@ -1129,6 +1137,11 @@ export function blockForQueryBlock(
           blockStyle: block.blockStyle,
           fields: block.fields ?? [],
           memberPlanIds: block.memberPlanIds ?? [],
+          plans:
+            block.plans?.map(({ memberPlanId, renderStyle }) => ({
+              memberPlanId,
+              renderStyle,
+            })) ?? [],
         },
       };
 

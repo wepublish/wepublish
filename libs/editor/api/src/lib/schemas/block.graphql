@@ -264,6 +264,10 @@ fragment BlockWithoutTeaser on BlockContent {
     blockStyle
     blockStyleName
     memberPlanIds
+    plans {
+      memberPlanId
+      renderStyle
+    }
     fields
     type
   }

@@ -407,7 +407,15 @@
         "Address": "Adresse",
         "EmailRepeated": "Email wiederholen",
         "Password": "Passwort",
-        "PasswordRepeated": "Passwort wiederholen"
+        "PasswordRepeated": "Passwort wiederholen",
+        "renderStyles": {
+          "card": "Karte (fixer Betrag)",
+          "slider": "Karte + Slider",
+          "cardAndSlider": "Karte & Slider",
+          "cardFreeInput": "Karte mit freier Eingabe",
+          "amountTiles": "Betrags-Kacheln"
+        },
+        "renderStylesHeading": "Darstellung pro Abo-Plan"
       },
       "image": {
         "label": "Bild",

@@ -411,7 +411,15 @@
         "Address": "Adresse",
         "EmailRepeated": "Répéter l’email",
         "Password": "Mot de passe",
-        "PasswordRepeated": "Répéter le mot de passe"
+        "PasswordRepeated": "Répéter le mot de passe",
+        "renderStyles": {
+          "card": "Carte (montant fixe)",
+          "slider": "Carte + curseur",
+          "cardAndSlider": "Carte & curseur",
+          "cardFreeInput": "Carte avec saisie libre",
+          "amountTiles": "Tuiles de montant"
+        },
+        "renderStylesHeading": "Affichage par plan"
       },
       "image": {
         "label": "Image",

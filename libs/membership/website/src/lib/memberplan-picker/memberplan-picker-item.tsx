@@ -65,6 +65,7 @@ export const MemberPlanItem = forwardRef<
       extendable,
       goodies,
       monthlyAmount,
+      renderStyle,
       ...props
     },
     ref

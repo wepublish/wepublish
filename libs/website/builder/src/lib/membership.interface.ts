@@ -3,6 +3,8 @@ import { RadioProps } from '@mui/material';
 import {
   ChallengeQuery,
   FullGoodieFragment,
+  SubscribeBlockPlanRenderStyle,
+  SubscribeBlockPlanSetting,
   FullInvoiceFragment,
   FullMemberPlanFragment,
   FullSubscriptionFragment,
@@ -77,6 +79,7 @@ export type BuilderMemberPlanPickerProps = {
   value?: string;
   sortBy?: 'priceAsc';
   monthlyAmount?: number;
+  planSettings?: SubscribeBlockPlanSetting[];
 };
 
 export type BuilderMemberPlanItemProps = Pick<
@@ -92,6 +95,7 @@ export type BuilderMemberPlanItemProps = Pick<
   Omit<RadioProps, 'ref'> & { className?: string } & {
     slug: string;
     monthlyAmount?: number;
+    renderStyle?: SubscribeBlockPlanRenderStyle;
   };
 
 export type BuilderPeriodicityPickerProps = {
@@ -148,6 +152,7 @@ export type BuilderSubscribeProps<
     QueryResult<MemberPlanListQuery>,
     'data' | 'loading' | 'error'
   >;
+  planSettings?: SubscribeBlockPlanSetting[];
   subscribeInfo: Pick<
     QueryResult<CreateSubscriptionInfoQuery>,
     'data' | 'loading' | 'error'

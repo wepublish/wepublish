@@ -47,6 +47,7 @@ export const MemberPlanPicker = forwardRef<
     alwaysShow,
     sortBy,
     monthlyAmount,
+    planSettings,
   },
   ref
 ) {
@@ -104,6 +105,11 @@ export const MemberPlanPicker = forwardRef<
                     tags={memberPlan.tags}
                     goodies={memberPlan.goodies}
                     monthlyAmount={monthlyAmount}
+                    renderStyle={
+                      planSettings?.find(
+                        ({ memberPlanId }) => memberPlanId === memberPlan.id
+                      )?.renderStyle
+                    }
                   />
                 }
                 label={memberPlan.name}

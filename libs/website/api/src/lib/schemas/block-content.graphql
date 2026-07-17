@@ -112,6 +112,10 @@ fragment FullSubscribeBlock on SubscribeBlock {
   disabled
   blockStyle: blockStyleName
   memberPlanIds
+  plans {
+    memberPlanId
+    renderStyle
+  }
   memberPlans {
     ...FullMemberPlan
   }

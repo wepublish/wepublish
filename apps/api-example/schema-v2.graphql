@@ -3898,6 +3898,7 @@ type SubscribeBlock implements BaseBlock {
   fields: [SubscribeBlockField!]!
   memberPlanIds: [String!]
   memberPlans: [MemberPlan!]!
+  plans: [SubscribeBlockPlanSetting!]
   type: BlockType!
 }
 
@@ -3916,6 +3917,25 @@ input SubscribeBlockInput {
   disabled: Boolean
   fields: [SubscribeBlockField!]! = [FirstName, Password, PasswordRepeated, Address]
   memberPlanIds: [String!]
+  plans: [SubscribeBlockPlanSettingInput!]
+}
+
+enum SubscribeBlockPlanRenderStyle {
+  AmountTiles
+  Card
+  CardAndSlider
+  CardFreeInput
+  Slider
+}
+
+type SubscribeBlockPlanSetting {
+  memberPlanId: String!
+  renderStyle: SubscribeBlockPlanRenderStyle!
+}
+
+input SubscribeBlockPlanSettingInput {
+  memberPlanId: String!
+  renderStyle: SubscribeBlockPlanRenderStyle!
 }
 
 type SubscriptionCreatedAction implements BaseAction & HasSubscriptionLc {

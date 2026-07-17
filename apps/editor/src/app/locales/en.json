@@ -406,7 +406,15 @@
         "Address": "Address",
         "EmailRepeated": "Repeat email",
         "Password": "Password",
-        "PasswordRepeated": "Repeat password"
+        "PasswordRepeated": "Repeat password",
+        "renderStyles": {
+          "card": "Card (fixed amount)",
+          "slider": "Card + slider",
+          "cardAndSlider": "Card & slider",
+          "cardFreeInput": "Card with free input",
+          "amountTiles": "Amount tiles"
+        },
+        "renderStylesHeading": "Rendering per member plan"
       },
       "image": {
         "label": "Image",
