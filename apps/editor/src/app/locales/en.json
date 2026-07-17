@@ -2089,6 +2089,7 @@
         "enabled": "Enabled",
         "apiKey": "Mailchimp API Key",
         "listId": "Mailchimp List/Audience ID",
+        "listOption": "{{name}} ({{count}} members)",
         "mergeFieldMappings": "Merge Field Mappings",
         "mergeFieldHelp": "Determines which value is written to a Mailchimp merge field. Combine multiple expressions with | (OR) – the first match wins.\n\nAvailable expressions:\n• user.firstName / user.name – first or last name\n• slug:contains:value – \"1\" if the subscription slug contains \"value\"\n• slug:contains_any:v1,v2 – \"1\" if any of the values is contained\n• slug:equals:value – \"1\" on exact match\n• active_abo – \"1\" active, \"-1\" expired, empty if no subscription\n• active_abo_with_payment:slug:days – like active_abo, but also \"1\" if the last payment method is \"slug\" and the subscription expired within the last \"days\" days\n• retarget:days – \"1\" if the subscription expired within the last \"days\" days\n• static:value – always returns \"value\"",
         "mergeFieldTag": "Merge Field Tag (e.g. FNAME)",

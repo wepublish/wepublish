@@ -1971,6 +1971,7 @@
         "enabled": "Activé",
         "apiKey": "Clé API Mailchimp",
         "listId": "ID de liste/audience Mailchimp",
+        "listOption": "{{name}} ({{count}} membres)",
         "mergeFieldMappings": "Correspondances des champs de fusion",
         "mergeFieldHelp": "Détermine quelle valeur est écrite dans un champ de fusion Mailchimp. Combinez plusieurs expressions avec | (OU) – le premier résultat gagne.\n\nExpressions disponibles :\n• user.firstName / user.name – prénom ou nom\n• slug:contains:valeur – \"1\" si le slug d'abonnement contient \"valeur\"\n• slug:contains_any:v1,v2 – \"1\" si l'une des valeurs est contenue\n• slug:equals:valeur – \"1\" en cas de correspondance exacte\n• active_abo – \"1\" actif, \"-1\" expiré, vide si aucun abonnement\n• active_abo_with_payment:slug:jours – comme active_abo, mais aussi \"1\" si la dernière méthode de paiement est \"slug\" et l'abonnement a expiré dans les derniers \"jours\" jours\n• retarget:jours – \"1\" si l'abonnement a expiré dans les derniers \"jours\" jours\n• static:valeur – retourne toujours \"valeur\"",
         "mergeFieldTag": "Tag du champ de fusion (ex. FNAME)",

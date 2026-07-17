@@ -2027,6 +2027,7 @@
         "enabled": "Aktiviert",
         "apiKey": "Mailchimp API Key",
         "listId": "Mailchimp Listen-/Zielgruppen-ID",
+        "listOption": "{{name}} ({{count}} Mitglieder)",
         "mergeFieldMappings": "Merge-Feld-Zuordnungen",
         "mergeFieldHelp": "Bestimmt, welcher Wert in ein Mailchimp Merge-Feld geschrieben wird. Mehrere Ausdrücke mit | (ODER) kombinierbar – der erste Treffer gewinnt.\n\nVerfügbare Ausdrücke:\n• user.firstName / user.name – Vorname bzw. Nachname\n• slug:contains:wert – \"1\" wenn der Abo-Slug \"wert\" enthält\n• slug:contains_any:w1,w2 – \"1\" wenn einer der Werte enthalten ist\n• slug:equals:wert – \"1\" bei exakter Übereinstimmung\n• active_abo – \"1\" aktiv, \"-1\" abgelaufen, leer wenn kein Abo\n• active_abo_with_payment:slug:tage – wie active_abo, aber auch \"1\" wenn die letzte Zahlungsmethode \"slug\" ist und das Abo innerhalb der letzten \"tage\" Tage ablief\n• retarget:tage – \"1\" wenn das Abo innerhalb der letzten \"tage\" Tage ablief\n• static:wert – gibt immer \"wert\" zurück",
         "mergeFieldTag": "Merge-Feld-Tag (z.B. FNAME)",
