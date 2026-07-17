@@ -63,6 +63,7 @@ export const MemberPlanItem = forwardRef<
       amountPerMonthMin,
       currency,
       extendable,
+      renderStyle,
       ...props
     },
     ref

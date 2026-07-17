@@ -5608,6 +5608,7 @@ export type SubscribeBlock = BaseBlock & {
   fields: Array<SubscribeBlockField>;
   memberPlanIds?: Maybe<Array<Scalars['String']>>;
   memberPlans: Array<MemberPlan>;
+  plans?: Maybe<Array<SubscribeBlockPlanSetting>>;
   type: BlockType;
 };
 
@@ -5626,6 +5627,26 @@ export type SubscribeBlockInput = {
   disabled?: InputMaybe<Scalars['Boolean']>;
   fields?: Array<SubscribeBlockField>;
   memberPlanIds?: InputMaybe<Array<Scalars['String']>>;
+  plans?: InputMaybe<Array<SubscribeBlockPlanSettingInput>>;
+};
+
+export enum SubscribeBlockPlanRenderStyle {
+  AmountTiles = 'AmountTiles',
+  Card = 'Card',
+  CardAndSlider = 'CardAndSlider',
+  CardFreeInput = 'CardFreeInput',
+  Slider = 'Slider'
+}
+
+export type SubscribeBlockPlanSetting = {
+  __typename?: 'SubscribeBlockPlanSetting';
+  memberPlanId: Scalars['String'];
+  renderStyle: SubscribeBlockPlanRenderStyle;
+};
+
+export type SubscribeBlockPlanSettingInput = {
+  memberPlanId: Scalars['String'];
+  renderStyle: SubscribeBlockPlanRenderStyle;
 };
 
 export type SubscriptionCreatedAction = BaseAction & HasSubscriptionLc & {

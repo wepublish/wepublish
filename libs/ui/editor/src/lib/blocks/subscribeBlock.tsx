@@ -2,12 +2,13 @@ import styled from '@emotion/styled';
 import {
   ProductType,
   SubscribeBlockField,
+  SubscribeBlockPlanRenderStyle,
   useMemberPlanListQuery,
 } from '@wepublish/editor/api';
 import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { CheckPickerProps } from 'rsuite';
-import { CheckPicker, Panel as RPanel } from 'rsuite';
+import { CheckPicker, Panel as RPanel, SelectPicker } from 'rsuite';
 
 import { BlockProps } from '../atoms/blockList';
 import { SubscribeBlockValue } from '.';
@@ -46,6 +47,25 @@ const Hint = styled('p')`
   color: #6c757d;
 `;
 
+const PlanStyleRow = styled('div')`
+  display: grid;
+  grid-template-columns: 1fr 240px;
+  gap: 12px;
+  align-items: center;
+`;
+
+const PlanStyleName = styled('span')`
+  font-size: 14px;
+`;
+
+export const PLAN_RENDER_STYLES = [
+  SubscribeBlockPlanRenderStyle.Card,
+  SubscribeBlockPlanRenderStyle.Slider,
+  SubscribeBlockPlanRenderStyle.CardAndSlider,
+  SubscribeBlockPlanRenderStyle.CardFreeInput,
+  SubscribeBlockPlanRenderStyle.AmountTiles,
+] as const;
+
 export const SubscribeBlock = ({
   value,
   onChange,
@@ -80,6 +100,22 @@ export const SubscribeBlock = ({
     [data?.memberPlans?.nodes, productTypeLabels]
   );
 
+  const defaultStyleForPlan = useCallback(
+    (memberPlanId: string) => {
+      const memberPlan = data?.memberPlans?.nodes.find(
+        ({ id }) => id === memberPlanId
+      );
+
+      return (
+          memberPlan &&
+            memberPlan.amountPerMonthMin === memberPlan.amountPerMonthMax
+        ) ?
+          SubscribeBlockPlanRenderStyle.Card
+        : SubscribeBlockPlanRenderStyle.Slider;
+    },
+    [data?.memberPlans?.nodes]
+  );
+
   const handleMemberPlansChange = useCallback<
     NonNullable<CheckPickerProps<string>['onChange']>
   >(
@@ -87,9 +123,37 @@ export const SubscribeBlock = ({
       onChange(current => ({
         ...current,
         memberPlanIds: memberPlanIds ?? [],
+        plans: (memberPlanIds ?? []).map(
+          memberPlanId =>
+            current.plans.find(plan => plan.memberPlanId === memberPlanId) ?? {
+              memberPlanId,
+              renderStyle: defaultStyleForPlan(memberPlanId),
+            }
+        ),
+      }));
+    },
+    [onChange, defaultStyleForPlan]
+  );
+
+  const handlePlanStyleChange = useCallback(
+    (memberPlanId: string, renderStyle: SubscribeBlockPlanRenderStyle) => {
+      onChange(current => ({
+        ...current,
+        plans: current.plans.map(plan =>
+          plan.memberPlanId === memberPlanId ? { ...plan, renderStyle } : plan
+        ),
       }));
     },
     [onChange]
+  );
+
+  const renderStyleOptions = useMemo(
+    () =>
+      PLAN_RENDER_STYLES.map(style => ({
+        value: style,
+        label: t(`blocks.subscribe.renderStyles.${style}`),
+      })),
+    [t]
   );
 
   const handleFieldsChange = useCallback<
@@ -128,6 +192,28 @@ export const SubscribeBlock = ({
           {!value.memberPlanIds.length &&
             t('blocks.subscribe.selectMemberPlansSelectionHintAll')}
         </Hint>
+
+        {value.plans.map(plan => (
+          <PlanStyleRow key={plan.memberPlanId}>
+            <PlanStyleName>
+              {memberPlanOptions.find(
+                ({ value: id }) => id === plan.memberPlanId
+              )?.label ?? plan.memberPlanId}
+            </PlanStyleName>
+
+            <SelectPicker
+              cleanable={false}
+              searchable={false}
+              disabled={disabled}
+              data={renderStyleOptions}
+              value={plan.renderStyle}
+              onChange={renderStyle =>
+                renderStyle &&
+                handlePlanStyleChange(plan.memberPlanId, renderStyle)
+              }
+            />
+          </PlanStyleRow>
+        ))}
       </Content>
 
       <Content>

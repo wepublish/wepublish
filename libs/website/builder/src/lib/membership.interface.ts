@@ -2,6 +2,8 @@ import { LazyQueryExecFunction, QueryResult } from '@apollo/client';
 import { RadioProps } from '@mui/material';
 import {
   ChallengeQuery,
+  SubscribeBlockPlanRenderStyle,
+  SubscribeBlockPlanSetting,
   FullInvoiceFragment,
   FullMemberPlanFragment,
   FullSubscriptionFragment,
@@ -63,6 +65,7 @@ export type BuilderMemberPlanPickerProps = {
   onChange: (memberPlanId: string) => void;
   name?: string;
   value?: string;
+  planSettings?: SubscribeBlockPlanSetting[];
 };
 
 export type BuilderMemberPlanItemProps = Pick<
@@ -74,7 +77,10 @@ export type BuilderMemberPlanItemProps = Pick<
   | 'shortDescription'
   | 'tags'
 > &
-  Omit<RadioProps, 'ref'> & { className?: string } & { slug: string };
+  Omit<RadioProps, 'ref'> & { className?: string } & {
+    slug: string;
+    renderStyle?: SubscribeBlockPlanRenderStyle;
+  };
 
 export type BuilderPeriodicityPickerProps = {
   periodicities: PaymentPeriodicity[] | undefined;
@@ -130,6 +136,7 @@ export type BuilderSubscribeProps<
     QueryResult<MemberPlanListQuery>,
     'data' | 'loading' | 'error'
   >;
+  planSettings?: SubscribeBlockPlanSetting[];
   subscribeInfo: Pick<
     QueryResult<CreateSubscriptionInfoQuery>,
     'data' | 'loading' | 'error'

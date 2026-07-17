@@ -14,6 +14,7 @@ import {
   PaymentMethod,
   PaymentPeriodicity,
   ProductType,
+  SubscribeBlockPlanRenderStyle,
   RegisterMutationVariables,
   ResubscribeMutationVariables,
   SubscribeMutationVariables,
@@ -30,6 +31,7 @@ import {
 import { useEffect, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { PaymentAmountPicker } from '../payment-amount/payment-amount-picker/payment-amount-picker';
 import { formatCurrency, roundUpTo5Cents } from '../formatters/format-currency';
 import {
   formatFirstPaymentPeriod,
@@ -230,9 +232,13 @@ export const useDiscountText = ({
   }, [currency, locale, monthlyAmount, paymentPeriodicity, memberPlan, t]);
 };
 
+export const clampMonthlyAmount = (amount: number, min: number, max?: number) =>
+  Math.min(Math.max(amount, min), max ?? Number.MAX_SAFE_INTEGER);
+
 export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   defaults,
   memberPlans,
+  planSettings,
   challenge,
   userSubscriptions,
   userInvoices,
@@ -403,9 +409,21 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
 
   const isDonation = selectedMemberPlan?.productType === ProductType.Donation;
 
+  const selectedPlanRenderStyle = planSettings?.find(
+    ({ memberPlanId }) => memberPlanId === selectedMemberPlan?.id
+  )?.renderStyle;
+
   const shouldHidePaymentAmount =
-    selectedMemberPlan?.amountPerMonthMin ===
-    selectedMemberPlan?.amountPerMonthMax;
+    selectedPlanRenderStyle ?
+      selectedPlanRenderStyle === SubscribeBlockPlanRenderStyle.Card
+    : selectedMemberPlan?.amountPerMonthMin ===
+      selectedMemberPlan?.amountPerMonthMax;
+
+  const isFreeInput =
+    selectedPlanRenderStyle === SubscribeBlockPlanRenderStyle.CardFreeInput;
+  const useAmountTiles =
+    selectedPlanRenderStyle === SubscribeBlockPlanRenderStyle.AmountTiles;
+  const AmountComponent = useAmountTiles ? PaymentAmountPicker : PaymentAmount;
 
   const discountPercent =
     subscribeInfo.data?.createSubscriptionInfo.discountPercent ?? 0;
@@ -636,6 +654,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
               {...field}
               onChange={memberPlanId => field.onChange(memberPlanId)}
               memberPlans={memberPlans.data?.memberPlans.nodes ?? []}
+              planSettings={planSettings}
             />
           )}
         />
@@ -662,11 +681,20 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
                   {supportText}
                 </Paragraph>
 
-                <PaymentAmount
+                <AmountComponent
                   {...field}
+                  onChange={amount =>
+                    field.onChange(
+                      clampMonthlyAmount(
+                        +amount,
+                        amountPerMonthMin,
+                        selectedMemberPlan?.amountPerMonthMax ?? undefined
+                      )
+                    )
+                  }
                   error={error}
                   slug={selectedMemberPlan?.slug}
-                  donate={isDonation}
+                  donate={isDonation || isFreeInput}
                   amountPerMonthMin={amountPerMonthMin}
                   amountPerMonthMax={
                     selectedMemberPlan?.amountPerMonthMax ?? undefined

@@ -37,7 +37,7 @@ export const MemberPlanPicker = forwardRef<
   HTMLButtonElement,
   BuilderMemberPlanPickerProps & { alwaysShow?: boolean }
 >(function MemberPlanPicker(
-  { memberPlans, onChange, value, className, name, alwaysShow },
+  { memberPlans, onChange, value, className, name, alwaysShow, planSettings },
   ref
 ) {
   const {
@@ -85,6 +85,11 @@ export const MemberPlanPicker = forwardRef<
                     extendable={memberPlan.extendable}
                     shortDescription={memberPlan.shortDescription}
                     tags={memberPlan.tags}
+                    renderStyle={
+                      planSettings?.find(
+                        ({ memberPlanId }) => memberPlanId === memberPlan.id
+                      )?.renderStyle
+                    }
                   />
                 }
                 label={memberPlan.name}
