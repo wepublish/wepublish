@@ -14,20 +14,12 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
  **/
 const nextConfig = {
   ...wepNextConfig,
-  publicRuntimeConfig: {
-    env: {
-      API_URL: process.env.API_URL || '',
-      GA_ID: process.env.GA_ID || '',
-      SPARKLOOP_ID: process.env.SPARKLOOP_ID || '',
-      STRIPE_PUBLIC_KEY: process.env.STRIPE_PUBLIC_KEY || '',
-    },
-  },
-  serverRuntimeConfig: {
-    env: {
-      API_URL_INTERNAL: process.env.API_URL_INTERNAL || '',
-      MAILCHIMP_API_KEY: process.env.MAILCHIMP_API_KEY || '',
-      MAILCHIMP_SERVER_PREFIX: process.env.MAILCHIMP_SERVER_PREFIX || '',
-    },
+  env: {
+    ...wepNextConfig.env,
+    API_URL: process.env.API_URL || '',
+    GA_ID: process.env.GA_ID || '',
+    SPARKLOOP_ID: process.env.SPARKLOOP_ID || '',
+    STRIPE_PUBLIC_KEY: process.env.STRIPE_PUBLIC_KEY || '',
   },
   async redirects() {
     return [

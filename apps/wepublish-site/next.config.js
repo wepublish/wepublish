@@ -13,15 +13,9 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
  **/
 const nextConfig = {
   ...wepNextConfig,
-  serverRuntimeConfig: {
-    env: {
-      API_URL_INTERNAL: process.env.API_URL_INTERNAL || '',
-    },
-  },
-  publicRuntimeConfig: {
-    env: {
-      API_URL: process.env.API_URL || '',
-    },
+  env: {
+    ...wepNextConfig.env,
+    API_URL: process.env.API_URL || '',
   },
   i18n: {
     defaultLocale: 'default',

@@ -14,7 +14,7 @@ import { BatchHttpLink } from '@apollo/client/link/batch-http';
 import { mergeDeepRight } from 'ramda';
 import possibleTypes from './graphql';
 
-import { ComponentType, memo, useMemo } from 'react';
+import { ComponentType, createElement, memo, useMemo } from 'react';
 import { createUploadLink } from 'apollo-upload-client';
 import { absoluteUrlToRelative } from './absolute-url-to-relative';
 import { omitDisabledBlocks } from './omit-disabled-blocks';
@@ -181,7 +181,7 @@ export const createWithApiClient =
 
       return (
         <ApolloProvider client={client}>
-          <ControlledComponent {...(props as P)} />
+          {createElement(ControlledComponent, props as P)}
         </ApolloProvider>
       );
     });

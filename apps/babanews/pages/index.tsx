@@ -11,7 +11,6 @@ import {
 } from '@wepublish/website/api';
 import { LinkContext } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';
-import getConfig from 'next/config';
 
 const Frontpage = styled(PageContainer)`
   padding-bottom: ${({ theme }) => theme.spacing(6)};
@@ -28,9 +27,7 @@ export default function Index() {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const { publicRuntimeConfig } = getConfig();
-
-  if (!publicRuntimeConfig.env.API_URL) {
+  if (!process.env.API_URL) {
     return { props: {}, revalidate: 1 };
   }
 

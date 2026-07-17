@@ -1,5 +1,5 @@
 import { SessionWithTokenWithoutUser } from '@wepublish/website/api';
-import { ComponentType, memo } from 'react';
+import { ComponentType, createElement, memo } from 'react';
 import { SessionProvider } from './session.provider';
 
 export const withSessionProvider = <
@@ -10,6 +10,6 @@ export const withSessionProvider = <
 ) =>
   memo<P>(props => (
     <Provider sessionToken={props.pageProps.sessionToken ?? null}>
-      <ControlledComponent {...(props as P)} />
+      {createElement(ControlledComponent, props as P)}
     </Provider>
   ));

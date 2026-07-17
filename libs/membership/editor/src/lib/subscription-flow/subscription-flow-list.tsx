@@ -30,7 +30,7 @@ import {
   ListViewHeader,
   PermissionControl,
 } from '@wepublish/ui/editor';
-import { createContext, useMemo, useState } from 'react';
+import { createContext, JSX, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdOutlineClose, MdOutlineNoteAdd, MdTune } from 'react-icons/md';
 import { useParams } from 'react-router-dom';

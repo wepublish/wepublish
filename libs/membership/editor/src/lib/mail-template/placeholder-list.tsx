@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import React, { useMemo } from 'react';
 import { ListViewContainer, ListViewHeader } from '@wepublish/ui/editor';
 import { useTranslation } from 'react-i18next';

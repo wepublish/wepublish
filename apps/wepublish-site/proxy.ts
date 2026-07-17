@@ -6,7 +6,7 @@ const isDocumentRequest = (request: NextRequest): boolean =>
   request.headers.get('sec-fetch-dest') === 'document' ||
   (request.headers.get('accept') ?? '').includes('text/html');
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname, locale } = request.nextUrl;
 
   if (isDocumentRequest(request) && !locales.includes(locale ?? '')) {

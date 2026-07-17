@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import styled from '@emotion/styled';
 import arrayMove from 'array-move';
 import nanoid from 'nanoid';

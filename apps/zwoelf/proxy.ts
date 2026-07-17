@@ -10,14 +10,14 @@ type Redirect = {
   permanent?: boolean;
 };
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   const redirect = redirects.get(pathname) as Redirect;
 
   if (redirect) {
-    const statusCode = 301;
+    const statusCode = 307;
     const destination = request.nextUrl.clone();
-    destination.href = destination.origin + redirect.destination;
+    destination.href = redirect.destination;
 
     return NextResponse.redirect(destination, statusCode);
   }

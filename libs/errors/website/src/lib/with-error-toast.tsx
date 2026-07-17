@@ -1,5 +1,5 @@
 import { Alert, Snackbar } from '@mui/material';
-import { ComponentType, memo, useEffect, useState } from 'react';
+import { ComponentType, createElement, memo, useEffect, useState } from 'react';
 
 export const withErrorSnackbar = <
   // eslint-disable-next-line @typescript-eslint/ban-types
@@ -23,7 +23,7 @@ export const withErrorSnackbar = <
 
     return (
       <>
-        <ControlledComponent {...(props as P)} />
+        {createElement(ControlledComponent, props as P)}
 
         <Snackbar
           anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}

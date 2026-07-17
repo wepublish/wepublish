@@ -1,4 +1,4 @@
-import { ComponentType, memo } from 'react';
+import { ComponentType, createElement, memo } from 'react';
 import { storePaywallBypassToken } from './paywall-bypass';
 
 export const withPaywallBypassToken = <
@@ -19,5 +19,5 @@ export const withPaywallBypassToken = <
       }
     }
 
-    return <ControlledComponent {...(props as P)} />;
+    return createElement(ControlledComponent, props as P);
   });

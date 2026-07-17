@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import { BuilderTeaserProps } from '@wepublish/website/builder';
 import { cond, T } from 'ramda';
 

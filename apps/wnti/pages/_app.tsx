@@ -35,7 +35,6 @@ import { WebsiteBuilderProvider } from '@wepublish/website/builder';
 import { format, setDefaultOptions } from 'date-fns';
 import { de } from 'date-fns/locale';
 import { AppProps } from 'next/app';
-import getConfig from 'next/config';
 import Head from 'next/head';
 import Script from 'next/script';
 import PlausibleProvider from 'next-plausible';
@@ -97,8 +96,6 @@ export type CustomAppProps = AppProps<{
   sessionToken?: SessionWithTokenWithoutUser;
 }> & { emotionCache?: EmotionCache; websiteSettings?: WebsiteSettingsFragment };
 
-const { publicRuntimeConfig } = getConfig();
-
 function CustomApp({
   Component,
   pageProps,
@@ -147,7 +144,7 @@ function CustomApp({
             date={{ format: dateFormatter }}
             meta={{ siteTitle }}
             thirdParty={{
-              stripe: publicRuntimeConfig.env.STRIPE_PUBLIC_KEY,
+              stripe: process.env.STRIPE_PUBLIC_KEY,
             }}
           >
             <ThemeProvider theme={theme}>

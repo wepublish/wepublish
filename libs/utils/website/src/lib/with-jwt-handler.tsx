@@ -8,7 +8,14 @@ import {
   SessionWithTokenWithoutUser,
 } from '@wepublish/website/api';
 import styled from '@emotion/styled';
-import { ComponentType, memo, useCallback, useEffect, useState } from 'react';
+import {
+  ComponentType,
+  createElement,
+  memo,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 
 export const EXPIRED_JWT_MESSAGE =
   'Dieser Link ist nicht mehr gültig. Bitte hier einen neuen Link anfordern oder mit Benutzernamen und Passwort anmelden.';
@@ -196,7 +203,7 @@ export const withJwtHandler = <
 
     return (
       <>
-        <ControlledComponent {...(props as P)} />
+        {createElement(ControlledComponent, props as P)}
 
         {showTotpPrompt && (
           <TotpOverlay onClick={handleCancel}>

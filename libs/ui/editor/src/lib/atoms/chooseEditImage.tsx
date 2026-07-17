@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import styled from '@emotion/styled';
 import { FullImageFragment } from '@wepublish/editor/api';
 import React from 'react';

@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import { css, lighten, Theme } from '@mui/material';
 import styled from '@emotion/styled';
 import { useUser } from '@wepublish/authentication/website';

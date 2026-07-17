@@ -1,4 +1,4 @@
-import { ComponentType, memo, useMemo } from 'react';
+import { ComponentType, createElement, memo, useMemo } from 'react';
 import { BuilderRouterContext } from '@wepublish/website/builder';
 import { useRouter } from 'next/router';
 
@@ -12,7 +12,7 @@ export const withBuilderRouter = <P extends object>(
 
     return (
       <BuilderRouterContext.Provider value={contextValue}>
-        <ControlledComponent {...(props as P)} />
+        {createElement(ControlledComponent, props as P)}
       </BuilderRouterContext.Provider>
     );
   });

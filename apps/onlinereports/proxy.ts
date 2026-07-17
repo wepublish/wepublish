@@ -18,7 +18,7 @@ function normalizePath(pathname: string): string {
   return '/' + stack.join('/');
 }
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Normalize path to prevent traversal attacks like "/../" or "//"

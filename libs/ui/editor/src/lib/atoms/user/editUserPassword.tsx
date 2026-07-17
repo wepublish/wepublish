@@ -3,7 +3,7 @@ import {
   FullUserFragment,
   useSendWebsiteLoginMutation,
 } from '@wepublish/editor/api';
-import { useState } from 'react';
+import { JSX, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdReplay, MdSend } from 'react-icons/md';
 import { Button as RButton, Form, Message, Modal, toaster } from 'rsuite';

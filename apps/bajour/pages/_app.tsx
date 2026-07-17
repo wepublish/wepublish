@@ -34,7 +34,6 @@ import { WebsiteBuilderProvider } from '@wepublish/website/builder';
 import { format, setDefaultOptions } from 'date-fns';
 import { de } from 'date-fns/locale';
 import { AppProps } from 'next/app';
-import getConfig from 'next/config';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import Script from 'next/script';
@@ -86,8 +85,6 @@ const Footer = styled(FooterContainer)`
     color: ${({ theme }) => theme.palette.common.white};
   }
 `;
-
-const { publicRuntimeConfig } = getConfig();
 
 function CustomApp({
   Component,
@@ -142,7 +139,7 @@ function CustomApp({
               TeaserSlider: BajourTeaserSlider,
             }}
             thirdParty={{
-              stripe: publicRuntimeConfig.env.STRIPE_PUBLIC_KEY,
+              stripe: process.env.STRIPE_PUBLIC_KEY,
             }}
             ArticleDate={BajourArticleDateWithShare}
             Banner={BajourBanner}
@@ -202,7 +199,7 @@ function CustomApp({
 
               {popup && (
                 <Script
-                  src={publicRuntimeConfig.env.MAILCHIMP_POPUP_SCRIPT_URL!}
+                  src={process.env.MAILCHIMP_POPUP_SCRIPT_URL!}
                   strategy="afterInteractive"
                 />
               )}

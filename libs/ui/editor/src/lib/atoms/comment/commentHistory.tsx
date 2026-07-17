@@ -5,7 +5,7 @@ import {
   FullCommentFragment,
   useCommentListLazyQuery,
 } from '@wepublish/editor/api';
-import { useEffect, useState } from 'react';
+import { JSX, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd } from 'react-icons/md';
 import { FlexboxGrid } from 'rsuite';

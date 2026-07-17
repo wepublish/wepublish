@@ -14,7 +14,6 @@ import {
 } from '@wepublish/website/api';
 import { deleteCookie, getCookie } from 'cookies-next';
 import { GetStaticProps } from 'next';
-import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 
 import { HauptstadtContentFullWidth } from '../src/components/hauptstadt-content-wrapper';
@@ -42,9 +41,7 @@ export default function SignUp() {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const { publicRuntimeConfig } = getConfig();
-
-  if (!publicRuntimeConfig.env.API_URL) {
+  if (!process.env.API_URL) {
     return { props: {}, revalidate: 1 };
   }
 

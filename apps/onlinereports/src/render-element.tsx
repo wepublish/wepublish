@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import { css } from '@mui/material';
 import { RichtextElements } from '@wepublish/richtext';
 import { RenderElement } from '@wepublish/richtext/website';
