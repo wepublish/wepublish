@@ -70,10 +70,6 @@ const StyledReflektPage = styled(Page)`
     }
   }
 
-  &.hide-amount-slider [data-area='monthlyAmount'] {
-    display: none;
-  }
-
   &.secondary-background {
     background-color: ${({ theme }) => theme.palette.secondary.main};
     padding-bottom: ${({ theme }) => theme.spacing(10)};
@@ -110,10 +106,6 @@ const secondaryBackgroundGlobalStyles = (
   <GlobalStyles styles={secondaryBackgroundStyles} />
 );
 export const ReflektPage = (props: BuilderPageProps) => {
-  const hideAmountSlider =
-    props.data?.page?.latest?.properties?.find(
-      p => p.key === 'hideAmountSlider'
-    )?.value === 'true';
   const secondaryBackground =
     props.data?.page?.latest?.properties?.find(
       p => p.key === 'secondaryBackground'
@@ -128,7 +120,6 @@ export const ReflektPage = (props: BuilderPageProps) => {
         {...props}
         className={[
           props.className,
-          hideAmountSlider && 'hide-amount-slider',
           secondaryBackground && 'secondary-background',
         ]
           .filter(Boolean)

@@ -5,7 +5,10 @@ import {
   isSubscribeBlock,
 } from '@wepublish/block-content/website';
 import { MemberPlanPickerRadios } from '@wepublish/membership/website';
-import { BlockContent } from '@wepublish/website/api';
+import {
+  BlockContent,
+  SubscribeBlockPlanRenderStyle,
+} from '@wepublish/website/api';
 import {
   BuilderMemberPlanItemProps,
   BuilderSubscribeBlockProps,
@@ -143,6 +146,7 @@ export const ReflektCrowdfundingMemberPlanItem = forwardRef<
     extendable,
     goodies,
     monthlyAmount,
+    renderStyle,
     tags,
     ...props
   },
@@ -151,7 +155,8 @@ export const ReflektCrowdfundingMemberPlanItem = forwardRef<
   const radioGroup = useRadioGroup();
   const isChecked = props.checked ?? radioGroup?.value === id;
 
-  const hasFreePricing = false;
+  const hasFreePricing =
+    renderStyle === SubscribeBlockPlanRenderStyle.CardFreeInput;
   const relevantMonthlyAmount =
     hasFreePricing && isChecked && monthlyAmount != null ?
       monthlyAmount
