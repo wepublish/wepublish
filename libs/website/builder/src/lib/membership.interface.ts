@@ -177,6 +177,10 @@ export type BuilderSubscribeProps<
   transactionFee?: (monthlyAmount: number) => number;
   transactionFeeText?: string;
   returningUserId?: string;
+  filterGoodies?: (
+    goodies: FullGoodieFragment[],
+    context: { monthlyAmount: number }
+  ) => FullGoodieFragment[];
 } & Pick<BuilderRegistrationFormProps<T>, 'schema' | 'fields'>;
 
 export type BuilderUpgradeProps = {
