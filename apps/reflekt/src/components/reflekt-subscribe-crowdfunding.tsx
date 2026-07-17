@@ -4,7 +4,11 @@ import {
   hasBlockStyle,
   isSubscribeBlock,
 } from '@wepublish/block-content/website';
-import { MemberPlanPickerRadios } from '@wepublish/membership/website';
+import {
+  CurrencyNumberSpinner,
+  MemberPlanPickerRadios,
+  Subscribe,
+} from '@wepublish/membership/website';
 import {
   BlockContent,
   SubscribeBlockPlanRenderStyle,
@@ -15,7 +19,7 @@ import {
   WebsiteBuilderProvider,
 } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
-import { forwardRef } from 'react';
+import { ComponentProps, forwardRef, useEffect, useRef, useState } from 'react';
 
 import { ReflektBlockStyles } from './block-styles/reflekt-block-styles';
 import { ReflektSubscribe } from './reflekt-subscribe';
@@ -93,30 +97,122 @@ const ItemAmount = styled('div')`
   white-space: nowrap;
 `;
 
-const ItemFreeAmount = styled('div')`
+const freeAmountBoxHeight = 'calc(clamp(1.25rem, 10cqi, 2.25rem) + 24px)';
+
+const ItemFreeAmountSlot = styled('div')`
+  width: 100%;
+  height: clamp(3rem, 43cqi, 10rem);
   display: grid;
   align-content: center;
   justify-items: center;
-  width: 90%;
-  padding: ${({ theme }) => theme.spacing(2, 1)};
-  background-color: ${({ theme }) => theme.palette.common.white};
-  color: ${({ theme }) => theme.palette.common.black};
+`;
+
+const ItemFreeAmountLabel = styled('span')`
   font-family: ${[robotoMono.style.fontFamily, 'sans-serif'].join(',')};
+  font-weight: 400;
   font-size: clamp(0.8rem, 6.5cqi, 1.4rem);
+  line-height: 1.3;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  white-space: nowrap;
+  text-align: center;
+  white-space: normal;
+  hyphens: manual;
+  word-break: normal;
+  overflow-wrap: normal;
+  max-width: min(60%, 9ch);
+`;
 
-  &::after {
-    content: '';
+const ItemFreeAmountBox = styled('div')`
+  position: relative;
+  z-index: 1;
+  width: 90%;
+  min-height: ${freeAmountBoxHeight};
+  justify-self: center;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  background-color: ${({ theme }) => theme.palette.common.white};
+  color: ${({ theme }) => theme.palette.common.black};
+  font-family: ${[euclidCircularB.style.fontFamily, 'sans-serif'].join(',')};
+  font-weight: 500;
+  font-size: clamp(1.25rem, 10cqi, 2.25rem);
+  line-height: 1;
+`;
+
+const ItemFreeAmountSpinnerWrapper = styled('div')`
+  position: relative;
+  z-index: 3;
+  width: 90%;
+  justify-self: center;
+`;
+
+const ItemFreeAmountError = styled('span')`
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: 4px;
+  font-family: ${[robotoMono.style.fontFamily, 'sans-serif'].join(',')};
+  font-size: clamp(0.65rem, 4.5cqi, 1rem);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  text-align: center;
+  color: ${({ theme }) => theme.palette.error.main};
+  pointer-events: none;
+`;
+
+const ItemFreeAmountSpinnerPlaceholder = styled(ItemFreeAmountLabel)`
+  position: absolute;
+  inset: 0 48px;
+  max-width: none;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  pointer-events: none;
+  color: ${({ theme }) => theme.palette.common.white};
+`;
+
+const ItemFreeAmountSpinner = styled(CurrencyNumberSpinner)`
+  margin-top: 0;
+  width: 100%;
+
+  > div {
     width: 100%;
-    border-bottom: 1px solid currentColor;
-    margin-top: ${({ theme }) => theme.spacing(1)};
-  }
-
-  ${ItemCard}:has(.Mui-checked) & {
+    min-height: ${freeAmountBoxHeight};
+    border-radius: 0;
+    justify-content: center;
     background-color: ${({ theme }) => theme.palette.common.black};
     color: ${({ theme }) => theme.palette.common.white};
+  }
+
+  > div > div {
+    color: ${({ theme }) => theme.palette.common.white};
+  }
+
+  fieldset {
+    border: none;
+  }
+
+  input {
+    font-family: ${[euclidCircularB.style.fontFamily, 'sans-serif'].join(',')};
+    font-weight: 500;
+    font-size: clamp(1.25rem, 10cqi, 2.25rem);
+    line-height: 1;
+    height: auto;
+    padding: ${({ theme }) => theme.spacing(1.5)} 0;
+    text-align: center;
+    color: inherit;
+  }
+
+  button {
+    color: inherit;
+
+    @media (hover: hover) {
+      &:hover:not([disabled]) {
+        color: inherit;
+        background-color: rgba(127, 127, 127, 0.25);
+      }
+    }
   }
 `;
 
@@ -146,6 +242,8 @@ export const ReflektCrowdfundingMemberPlanItem = forwardRef<
     extendable,
     goodies,
     monthlyAmount,
+    onMonthlyAmountChange,
+    monthlyAmountError,
     renderStyle,
     tags,
     ...props
@@ -157,14 +255,37 @@ export const ReflektCrowdfundingMemberPlanItem = forwardRef<
 
   const hasFreePricing =
     renderStyle === SubscribeBlockPlanRenderStyle.CardFreeInput;
-  const relevantMonthlyAmount =
-    hasFreePricing && isChecked && monthlyAmount != null ?
-      monthlyAmount
-    : amountPerMonthMin;
-  const yearlyChf = Math.round((relevantMonthlyAmount * 12) / 100);
+
+  const [freeAmountYearly, setFreeAmountYearly] = useState<number | null>(null);
+
+  const yearlyMinChf = Math.round((amountPerMonthMin * 12) / 100);
+  const yearlyChf =
+    hasFreePricing ? (freeAmountYearly ?? yearlyMinChf) : yearlyMinChf;
   const hasGoodie =
-    !!goodies?.length ||
-    (hasFreePricing && yearlyChf >= GOODIE_THRESHOLD_CHF_PER_YEAR);
+    hasFreePricing ?
+      (freeAmountYearly ?? 0) >= GOODIE_THRESHOLD_CHF_PER_YEAR
+    : !!goodies?.length;
+
+  const lastPushed = useRef<{ amount: number; touched: boolean } | null>(null);
+
+  useEffect(() => {
+    if (!hasFreePricing || !isChecked) {
+      lastPushed.current = null;
+      return;
+    }
+
+    const touched = freeAmountYearly != null;
+    const monthlyAmount =
+      touched ? Math.round((freeAmountYearly * 100) / 12) : 0;
+
+    if (
+      lastPushed.current?.amount !== monthlyAmount ||
+      lastPushed.current?.touched !== touched
+    ) {
+      lastPushed.current = { amount: monthlyAmount, touched };
+      onMonthlyAmountChange?.(monthlyAmount, touched);
+    }
+  }, [hasFreePricing, isChecked, freeAmountYearly, onMonthlyAmountChange]);
 
   return (
     <ItemWrapper className={className}>
@@ -175,9 +296,44 @@ export const ReflektCrowdfundingMemberPlanItem = forwardRef<
 
       <ItemCard>
         <ItemAmountArea>
-          {hasFreePricing ?
-            <ItemFreeAmount>Freier Betrag</ItemFreeAmount>
-          : <ItemAmount>{yearlyChf}</ItemAmount>}
+          {hasFreePricing && (
+            <ItemFreeAmountSlot>
+              {isChecked ?
+                <ItemFreeAmountSpinnerWrapper>
+                  <ItemFreeAmountSpinner
+                    arrows="split"
+                    min={yearlyMinChf}
+                    step={10}
+                    value={freeAmountYearly}
+                    onValueChange={yearlyValue => {
+                      if (yearlyValue != null) {
+                        setFreeAmountYearly(yearlyValue);
+                      }
+                    }}
+                  />
+
+                  {freeAmountYearly == null && (
+                    <ItemFreeAmountSpinnerPlaceholder>
+                      Freier Betrag
+                    </ItemFreeAmountSpinnerPlaceholder>
+                  )}
+
+                  {monthlyAmountError && (
+                    <ItemFreeAmountError>
+                      {monthlyAmountError}
+                    </ItemFreeAmountError>
+                  )}
+                </ItemFreeAmountSpinnerWrapper>
+              : <ItemFreeAmountBox>
+                  {freeAmountYearly ?? (
+                    <ItemFreeAmountLabel>Freier Betrag</ItemFreeAmountLabel>
+                  )}
+                </ItemFreeAmountBox>
+              }
+            </ItemFreeAmountSlot>
+          )}
+
+          {!hasFreePricing && <ItemAmount>{yearlyChf}</ItemAmount>}
 
           <ItemPerYear>{currency} pro Jahr</ItemPerYear>
         </ItemAmountArea>
@@ -205,10 +361,25 @@ const CrowdfundingSubscribeBlock = styled(ReflektSubscribe)`
   }
 `;
 
+const filterGoodiesByAmount: NonNullable<
+  ComponentProps<typeof Subscribe>['filterGoodies']
+> = (goodies, { monthlyAmount }) =>
+  (monthlyAmount * 12) / 100 >= GOODIE_THRESHOLD_CHF_PER_YEAR ? goodies : [];
+
+const CrowdfundingSubscribe = (props: ComponentProps<typeof Subscribe>) => (
+  <Subscribe
+    {...props}
+    filterGoodies={filterGoodiesByAmount}
+  />
+);
+
 export const ReflektSubscribeCrowdfunding = (
   props: BuilderSubscribeBlockProps
 ) => (
-  <WebsiteBuilderProvider MemberPlanItem={ReflektCrowdfundingMemberPlanItem}>
+  <WebsiteBuilderProvider
+    MemberPlanItem={ReflektCrowdfundingMemberPlanItem}
+    Subscribe={CrowdfundingSubscribe}
+  >
     <CrowdfundingSubscribeBlock {...props} />
   </WebsiteBuilderProvider>
 );

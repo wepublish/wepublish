@@ -3,6 +3,7 @@ import {
   MemberPlanItem,
   MemberPlanItemContent,
   MemberPlanItemDescription,
+  MemberPlanItemFreeInputSpinner,
   MemberPlanItemName,
   MemberPlanItemPicker,
   MemberPlanItemPrice,
@@ -65,6 +66,12 @@ export const ReflektMemberPlanItem = styled(MemberPlanItem)`
     font-weight: 500;
     font-size: clamp(3.25rem, 42cqi, 8.5rem);
     line-height: 1;
+  }
+
+  ${MemberPlanItemFreeInputSpinner} {
+    position: relative;
+    z-index: 1;
+    justify-self: center;
   }
 
   ${MemberPlanItemName} {
