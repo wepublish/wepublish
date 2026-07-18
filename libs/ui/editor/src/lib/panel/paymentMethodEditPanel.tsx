@@ -330,9 +330,9 @@ function PaymentMethodEditPanel({
                   value={gracePeriod}
                   disabled={isDisabled}
                   postfix={t('paymentMethodEditPanel.days')}
-                  onChange={(value: string | number) => {
+                  onChange={(value: string | number | null) => {
                     setGracePeriod(
-                      typeof value === 'string' ? Number(value) : value
+                      typeof value === 'string' ? Number(value) : (value ?? 0)
                     );
                   }}
                 />

@@ -35,7 +35,7 @@ import { useTranslation } from 'react-i18next';
 import { MdOutlineClose, MdOutlineNoteAdd, MdTune } from 'react-icons/md';
 import { useParams } from 'react-router-dom';
 import { Loader } from 'rsuite';
-import { TypeAttributes } from 'rsuite/esm/@types/common';
+import type { Color } from 'rsuite/esm/internals/types';
 import { DEFAULT_MUTATION_OPTIONS, DEFAULT_QUERY_OPTIONS } from '../common';
 import { DeleteSubscriptionFlow } from './delete-subscription-flow';
 import { EventsBody } from './events/events-body';
@@ -91,8 +91,8 @@ export function isNonUserEvent(
 }
 
 export interface IntervalColoring {
-  bg: TypeAttributes.Color;
-  fg: TypeAttributes.Color | string;
+  bg: Color;
+  fg: Color | string;
 }
 
 const eventIcons: Record<string, JSX.Element> = {

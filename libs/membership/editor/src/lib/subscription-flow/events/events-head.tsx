@@ -39,7 +39,7 @@ export function EventsHead({ setNewDay }: EventsHeadProps) {
                 <FlexContainer style={{ marginTop: '5px' }}>
                   <InputNumber
                     defaultValue={createDayFrom}
-                    onChange={value => setCreateDayFrom(+value)}
+                    onChange={value => setCreateDayFrom(+(value ?? 0))}
                     step={1}
                   />
 

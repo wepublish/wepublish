@@ -44,6 +44,7 @@ import {
 } from 'react-icons/md';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button, Message, Modal, Pagination, Table as RTable } from 'rsuite';
+import type { RowDataType } from 'rsuite-table';
 
 const { Column, HeaderCell, Cell } = RTable;
 
@@ -304,7 +305,7 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
           >
             <HeaderCell>{t('articles.overview.action')}</HeaderCell>
             <IconButtonCell>
-              {(rowData: FullArticleFragment) => (
+              {(rowData: RowDataType<FullArticleFragment>) => (
                 <>
                   <PermissionControl
                     qualifyingPermissions={['CAN_PUBLISH_ARTICLE']}

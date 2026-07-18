@@ -1,4 +1,4 @@
-import 'rsuite/styles/index.less';
+import 'rsuite/dist/rsuite.css';
 
 import { gql, useMutation } from '@apollo/client';
 import { css, Global } from '@emotion/react';

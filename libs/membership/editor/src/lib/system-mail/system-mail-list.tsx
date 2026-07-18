@@ -17,7 +17,7 @@ import {
 } from '@wepublish/editor/api';
 import { useTranslation } from 'react-i18next';
 import { Button, SelectPicker, Stack, Tag } from 'rsuite';
-import { TypeAttributes } from 'rsuite/esm/@types/common';
+import type { Color } from 'rsuite/esm/internals/types';
 import { MdEmail, MdLink, MdLogin, MdPassword } from 'react-icons/md';
 import { RiTestTubeLine } from 'react-icons/ri';
 import { DEFAULT_MUTATION_OPTIONS, DEFAULT_QUERY_OPTIONS } from '../common';
@@ -29,7 +29,7 @@ import {
 
 type UserEventColorMap = Record<
   (typeof UserEvent)[keyof typeof UserEvent],
-  TypeAttributes.Color
+  Color
 >;
 const userEventColors: UserEventColorMap = {
   [UserEvent.AccountCreation]: 'green',

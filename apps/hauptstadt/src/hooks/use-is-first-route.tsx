@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { ComponentType, memo, useEffect } from 'react';
+import { ComponentType, createElement, memo, useEffect } from 'react';
 
 const storageKey = 'is-first-route';
 
@@ -26,7 +26,7 @@ export const withTrackFirstRoute = <P extends object>(
       };
     }, [router]);
 
-    return <ControlledComponent {...(props as P)} />;
+    return createElement(ControlledComponent, props as P);
   });
 
 export const useIsFirstRoute = () => {

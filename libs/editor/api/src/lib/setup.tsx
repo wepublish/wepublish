@@ -10,7 +10,7 @@ import {
 import { removeTypenameFromVariables } from '@apollo/client/link/remove-typename';
 import { createUploadLink } from 'apollo-upload-client';
 
-import { ComponentType, memo } from 'react';
+import { ComponentType, createElement, memo } from 'react';
 import possibleTypes from './graphql';
 
 export enum ElementID {
@@ -117,7 +117,7 @@ export const createWithV2ApiClient = <P extends object>(
   memo<P>(props => {
     return (
       <ApolloProvider client={client}>
-        <ControlledComponent {...(props as P)} />
+        {createElement(ControlledComponent, props as P)}
       </ApolloProvider>
     );
   });

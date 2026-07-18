@@ -36,7 +36,7 @@ export function ResetUserPasswordForm({
       fluid
       model={validationModel}
       onSubmit={async (validationPassed, e) => {
-        e.preventDefault();
+        e?.preventDefault();
         if (!userID || !password) {
           return;
         }

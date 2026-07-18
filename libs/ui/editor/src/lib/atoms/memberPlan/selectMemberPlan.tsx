@@ -106,7 +106,7 @@ export function SelectMemberPlan({
       onChange={(value, event) => {
         setSelectedMemberPlan(value);
       }}
-      renderMenu={menu => {
+      renderListbox={menu => {
         return (
           <>
             {menu}

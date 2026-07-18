@@ -38,7 +38,7 @@ export function TeaserListConfigPanel({
   onClose,
   onSelect,
 }: TeaserListConfigPanelProps) {
-  const previousType = useRef<TeaserType>();
+  const previousType = useRef<TeaserType>(undefined);
   const [tagFilter, setTagFilter] = useState(value.filter.tags ?? []);
   const [take, setTake] = useState(value.take);
   const [skip, setSkip] = useState(value.skip);

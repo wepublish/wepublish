@@ -262,7 +262,7 @@ function PeerArticleList() {
             width={120}
             align="right"
           >
-            <HeaderCell></HeaderCell>
+            <HeaderCell>{null}</HeaderCell>
             <Cell>
               {(rowData: PeerArticle) => (
                 <Button

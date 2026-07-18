@@ -1,4 +1,10 @@
-import { ComponentType, PropsWithChildren, useContext, useMemo } from 'react';
+import {
+  ComponentType,
+  createElement,
+  PropsWithChildren,
+  useContext,
+  useMemo,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import { Message } from 'rsuite';
 
@@ -69,7 +75,7 @@ export const createCheckedPermissionComponent =
         qualifyingPermissions={permissions}
         showRejectionMessage={showRejectionMessage ?? true}
       >
-        <ControlledComponent {...props} />
+        {createElement(ControlledComponent, props)}
       </PermissionControl>
     );
   };

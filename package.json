@@ -368,7 +368,7 @@
     "recharts": "^2.5.0",
     "reflect-metadata": "^0.1.13",
     "regenerator-runtime": "0.13.7",
-    "rsuite": "^5.40.0",
+    "rsuite": "^6.2.2",
     "rxjs": "^7.8.0",
     "sharp": "^0.33.5",
     "stripe": "^8.126.0",

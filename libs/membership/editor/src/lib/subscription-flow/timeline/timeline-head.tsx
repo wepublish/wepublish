@@ -81,7 +81,7 @@ export function TimelineHead({ days, intervals }: FlowHeadProps) {
                 <Popover>
                   <PopoverBody>
                     <InputNumber
-                      onChange={value => (editDay.current = +value)}
+                      onChange={value => (editDay.current = +(value ?? 0))}
                       size="sm"
                       defaultValue={day ?? 0}
                       step={1}

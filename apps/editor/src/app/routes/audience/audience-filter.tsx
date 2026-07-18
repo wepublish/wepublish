@@ -13,7 +13,7 @@ import {
   TagPicker,
   Toggle,
 } from 'rsuite';
-import { RangeType } from 'rsuite/esm/DateRangePicker';
+import type { DateRangePickerProps } from 'rsuite';
 
 import { AudienceFilterToggle, ToggleLable } from './audience-filter-toggle';
 import {
@@ -23,6 +23,8 @@ import {
   preDefinedDates,
   TimeResolution,
 } from './useAudienceFilter';
+
+type RangeType = NonNullable<DateRangePickerProps['ranges']>[number];
 
 const TagPickerStyled = styled(TagPicker)`
   margin-top: ${({ theme }) => theme.spacing(2)};
