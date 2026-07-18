@@ -163,7 +163,6 @@ export const createWithApiClient =
     cacheConfig?: InMemoryCacheConfig
   ) =>
   <
-    // eslint-disable-next-line @typescript-eslint/ban-types
     P extends object,
     NextPage extends {
       pageProps?: { [V1_CLIENT_STATE_PROP_NAME]?: NormalizedCacheObject };

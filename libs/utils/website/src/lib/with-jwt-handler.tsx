@@ -76,10 +76,7 @@ const ButtonRow = styled('div')`
   justify-content: flex-end;
 `;
 
-export const withJwtHandler = <
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  P extends object,
->(
+export const withJwtHandler = <P extends object>(
   ControlledComponent: ComponentType<P>
 ) =>
   memo<P>(props => {

@@ -347,10 +347,7 @@ export const theme = createTheme(minimalTheme, {
   },
 });
 
-export const createWithTheme = <
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  P extends object,
->(
+export const createWithTheme = <P extends object>(
   ControlledComponent: ComponentType<P>,
   theme: Theme
 ) =>

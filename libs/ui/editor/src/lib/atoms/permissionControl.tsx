@@ -62,12 +62,7 @@ export function PermissionControl({
 
 export const createCheckedPermissionComponent =
   (permissions: string[], showRejectionMessage?: boolean) =>
-  <
-    // eslint-disable-next-line @typescript-eslint/ban-types
-    P extends object,
-  >(
-    ControlledComponent: ComponentType<P>
-  ) =>
+  <P extends object>(ControlledComponent: ComponentType<P>) =>
   (props: P) => {
     return (
       <PermissionControl

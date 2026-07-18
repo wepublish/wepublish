@@ -1,7 +1,6 @@
 import { useAsyncAction } from './use-async-action';
 
 jest.mock('react', () => ({
-  // eslint-disable-next-line @typescript-eslint/ban-types
   useCallback: (a: Function) => a,
 }));
 

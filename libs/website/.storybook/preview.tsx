@@ -3,9 +3,10 @@ import { decorators, parameters } from '@wepublish/storybook';
 
 export default {
   decorators,
-  {
+  parameters: {
+    ...parameters,
     docs: {
-      codePanel: true
-    }
+      codePanel: true,
+    },
   },
 } as Preview;

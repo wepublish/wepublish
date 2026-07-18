@@ -1,10 +1,7 @@
 import { Alert, Snackbar } from '@mui/material';
 import { ComponentType, createElement, memo, useEffect, useState } from 'react';
 
-export const withErrorSnackbar = <
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  P extends object,
->(
+export const withErrorSnackbar = <P extends object>(
   ControlledComponent: ComponentType<P>
 ) =>
   memo<P>(props => {
