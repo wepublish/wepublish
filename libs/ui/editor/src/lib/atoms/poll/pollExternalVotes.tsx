@@ -15,7 +15,7 @@ import {
   Button,
   Col,
   IconButton,
-  InputNumber,
+  NumberInput,
   Message,
   Modal,
   Row as RRow,
@@ -94,7 +94,7 @@ export function ExternalVoteTable({
         <Table.HeaderCell>{answer.answer}</Table.HeaderCell>
         <Table.Cell>
           {(externalVoteSource: RowDataType<PollExternalVoteSource>) => (
-            <InputNumber
+            <NumberInput
               value={
                 externalVoteSource.voteAmounts?.find(
                   (externalVote: PollExternalVote) =>

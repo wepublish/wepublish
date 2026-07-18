@@ -121,9 +121,7 @@ export function SelectEventPanel({
       <Drawer.Body style={{ padding: '24px' }}>
         <div style={{ width: '250px' }}>
           <Form.Group controlId="tags">
-            <Form.ControlLabel>
-              {t('blocks.event.filterByTag')}
-            </Form.ControlLabel>
+            <Form.Label>{t('blocks.event.filterByTag')}</Form.Label>
 
             <SelectTags
               defaultTags={[]}

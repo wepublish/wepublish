@@ -6,7 +6,7 @@ import {
 } from '@wepublish/editor/api';
 import { DateTimePicker, SelectMemberPlan } from '@wepublish/ui/editor';
 import { useTranslation } from 'react-i18next';
-import { Form, InputNumber, Panel } from 'rsuite';
+import { Form, NumberInput, Panel } from 'rsuite';
 
 type VoucherFormData = (
   | MutationCreateVoucherArgs
@@ -66,7 +66,7 @@ export const VoucherForm = ({
         >
           <CodeDiscountGrid>
             <Form.Group controlId="code">
-              <Form.ControlLabel>{t('voucher.form.code')}</Form.ControlLabel>
+              <Form.Label>{t('voucher.form.code')}</Form.Label>
 
               <Form.Control
                 name="code"
@@ -76,9 +76,7 @@ export const VoucherForm = ({
             </Form.Group>
 
             <Form.Group controlId="discountPercent">
-              <Form.ControlLabel>
-                {t('voucher.form.discountPercent')}
-              </Form.ControlLabel>
+              <Form.Label>{t('voucher.form.discountPercent')}</Form.Label>
 
               <Form.Control
                 name="discountPercent"
@@ -86,7 +84,7 @@ export const VoucherForm = ({
                 onChange={(discountPercent: string) =>
                   onChange({ discountPercent: +discountPercent })
                 }
-                accepter={InputNumber}
+                accepter={NumberInput}
               />
             </Form.Group>
           </CodeDiscountGrid>
@@ -99,9 +97,7 @@ export const VoucherForm = ({
           css={{ overflow: 'initial' }}
         >
           <Form.Group>
-            <Form.ControlLabel>
-              {t('voucher.form.memberPlan')}
-            </Form.ControlLabel>
+            <Form.Label>{t('voucher.form.memberPlan')}</Form.Label>
 
             <Form.Control
               name="memberPlan"

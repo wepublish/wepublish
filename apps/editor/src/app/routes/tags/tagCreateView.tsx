@@ -73,7 +73,6 @@ const TagCreateView = ({ type }: TagCreateViewProps) => {
 
   return (
     <Form
-      fluid
       formValue={tag || {}}
       model={validationModel}
       disabled={loading}

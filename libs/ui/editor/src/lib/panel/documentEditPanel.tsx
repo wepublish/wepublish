@@ -29,7 +29,7 @@ import {
 } from '../atoms/permissionControl';
 import { getOperationNameFromDocument } from '../utility';
 
-const { ControlLabel, Control, Group } = RForm;
+const { Label, Control, Group } = RForm;
 
 const Form = styled(RForm)`
   height: 100%;
@@ -193,10 +193,7 @@ function DocumentEditPanel({
   }
 
   return (
-    <Form
-      fluid
-      onSubmit={validationPassed => validationPassed && handleSave()}
-    >
+    <Form onSubmit={validationPassed => validationPassed && handleSave()}>
       <Drawer.Header>
         <Drawer.Title>
           {isUpload ?
@@ -214,6 +211,7 @@ function DocumentEditPanel({
               {isUpload ? t('documents.panels.upload') : t('save')}
             </Button>
           </PermissionControl>
+
           <Button
             appearance={'subtle'}
             onClick={() => onClose?.()}
@@ -242,12 +240,14 @@ function DocumentEditPanel({
                 />
               </RPanel>
             )}
+
             <RPanel header={t('documents.panels.description')}>
               <DescriptionList>
                 <DescriptionListItem label={t('documents.panels.filename')}>
                   {filename || t('documents.panels.untitled')}
                   {extension}
                 </DescriptionListItem>
+
                 {createdAt && (
                   <DescriptionListItem label={t('documents.panels.created')}>
                     {t('documents.panels.createdAt', {
@@ -255,6 +255,7 @@ function DocumentEditPanel({
                     })}
                   </DescriptionListItem>
                 )}
+
                 {updatedAt && (
                   <DescriptionListItem label={t('documents.panels.updated')}>
                     {t('documents.panels.updatedAt', {
@@ -262,9 +263,11 @@ function DocumentEditPanel({
                     })}
                   </DescriptionListItem>
                 )}
+
                 <DescriptionListItem label={t('documents.panels.fileSize')}>
                   {prettyBytes(fileSize)}
                 </DescriptionListItem>
+
                 {documentURL && (
                   <DescriptionListItem label={t('documents.panels.publicLink')}>
                     <a
@@ -274,6 +277,7 @@ function DocumentEditPanel({
                     >
                       {documentURL}
                     </a>
+
                     <IconButton
                       icon={<MdContentCopy />}
                       size="xs"
@@ -295,25 +299,29 @@ function DocumentEditPanel({
                 )}
               </DescriptionList>
             </RPanel>
+
             <RPanel header={t('documents.panels.information')}>
-              <Group controlId="documentTitle">
-                <ControlLabel>{t('documents.panels.title')}</ControlLabel>
-                <Control
-                  name="title"
-                  value={title}
-                  disabled={isDisabled}
-                  onChange={(value: string) => setTitle(value)}
-                />
-              </Group>
-              <Group controlId="documentDescription">
-                <ControlLabel>{t('documents.panels.description')}</ControlLabel>
-                <Control
-                  name="description"
-                  value={description}
-                  disabled={isDisabled}
-                  onChange={(value: string) => setDescription(value)}
-                />
-              </Group>
+              <RForm.Stack fluid>
+                <Group controlId="documentTitle">
+                  <Label>{t('documents.panels.title')}</Label>
+                  <Control
+                    name="title"
+                    value={title}
+                    disabled={isDisabled}
+                    onChange={(value: string) => setTitle(value)}
+                  />
+                </Group>
+
+                <Group controlId="documentDescription">
+                  <Label>{t('documents.panels.description')}</Label>
+                  <Control
+                    name="description"
+                    value={description}
+                    disabled={isDisabled}
+                    onChange={(value: string) => setDescription(value)}
+                  />
+                </Group>
+              </RForm.Stack>
             </RPanel>
           </>
         )}

@@ -40,7 +40,7 @@ export const ConsentForm = ({
         style={{ overflow: 'initial' }}
       >
         <Form.Group controlId="name">
-          <Form.ControlLabel>{t('consents.name')}</Form.ControlLabel>
+          <Form.Label>{t('consents.name')}</Form.Label>
           <Form.Control
             name="name"
             value={consent.name ?? ''}
@@ -49,7 +49,7 @@ export const ConsentForm = ({
         </Form.Group>
 
         <Form.Group controlId="slug">
-          <Form.ControlLabel>{t('consents.slug')}</Form.ControlLabel>
+          <Form.Label>{t('consents.slug')}</Form.Label>
           <Form.Control
             name="slug"
             value={consent.slug ?? ''}
@@ -58,9 +58,7 @@ export const ConsentForm = ({
         </Form.Group>
 
         <Form.Group controlId="defaultValue">
-          <Form.ControlLabel>
-            {t('consents.defaultValueTitle')}
-          </Form.ControlLabel>
+          <Form.Label>{t('consents.defaultValueTitle')}</Form.Label>
           <Checkbox
             checked={!!consent.defaultValue}
             onChange={(_, checked) => {

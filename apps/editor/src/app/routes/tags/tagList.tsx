@@ -130,6 +130,7 @@ function TagList({ type }: TagListProps) {
 
           <Column
             resizable
+            width={75}
             fixed="right"
           >
             <HeaderCell align={'center'}>{t('delete')}</HeaderCell>

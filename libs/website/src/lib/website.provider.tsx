@@ -125,7 +125,7 @@ import { WebsiteBuilderProvider } from '@wepublish/website/builder';
 import { format, getDefaultOptions } from 'date-fns';
 import { memo, PropsWithChildren } from 'react';
 import { IconContext } from 'react-icons';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { ContentWrapperStyled } from '@wepublish/content/website';
 import { Paywall } from '@wepublish/paywall/website';

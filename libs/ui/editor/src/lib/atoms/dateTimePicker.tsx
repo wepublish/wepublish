@@ -207,7 +207,7 @@ export function DateTimePicker({
         `}
       />
       <Header>
-        <Form.ControlLabel>{label}</Form.ControlLabel>
+        <Form.Label>{label}</Form.Label>
         {helpInfo ?
           <Whisper
             placement="right"
@@ -233,7 +233,7 @@ export function DateTimePicker({
         showPopperArrow
         shouldCloseOnSelect={false}
         selected={dateSelection}
-        onChange={value => {
+        onChange={(value: unknown) => {
           setDateSelection(value instanceof Date ? value : null);
           changeDate(value instanceof Date ? value : undefined);
         }}

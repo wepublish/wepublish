@@ -118,9 +118,9 @@ export function EditUserPassword({
     // create new password form
     return (
       <Form.Group controlId="password">
-        <Form.ControlLabel>
+        <Form.Label>
           {toggleRequiredLabel(t('userCreateOrEditView.password'))}
-        </Form.ControlLabel>
+        </Form.Label>
 
         <Form.Control
           type="password"

@@ -14,7 +14,7 @@ import {
   MdTag,
 } from 'react-icons/md';
 import { Link } from 'react-router-dom';
-import { Col, FlexboxGrid, Form, Grid, IconButton, Panel, Row } from 'rsuite';
+import { Col, Form, Grid, IconButton, Panel, Row, Stack } from 'rsuite';
 
 import { RichTextBlock } from '../../blocks/richTextBlock/rich-text-block';
 import { RichTextBlockValue } from '../../blocks/types';
@@ -173,13 +173,13 @@ export function CommentPreview({
       bordered
       collapsible
       header={
-        <FlexboxGrid justify="space-between">
-          <FlexboxGrid.Item>{getPanelHeader()}</FlexboxGrid.Item>
-          <FlexboxGrid.Item>
+        <Stack justifyContent="space-between">
+          <Stack.Item>{getPanelHeader()}</Stack.Item>
+          <Stack.Item>
             {panelExpanded && <MdExpandMore />}
             {!panelExpanded && <MdExpandLess />}
-          </FlexboxGrid.Item>
-        </FlexboxGrid>
+          </Stack.Item>
+        </Stack>
       }
       defaultExpanded={!!expanded}
       onSelect={() => setPanelExpanded(!panelExpanded)}
@@ -213,9 +213,7 @@ export function CommentPreview({
           <Row>
             {/* comment title */}
             <Col xs={24}>
-              <Form.ControlLabel>
-                {t('commentEditView.title')}
-              </Form.ControlLabel>
+              <Form.Label>{t('commentEditView.title')}</Form.Label>
               <Form.Control
                 name="commentTitle"
                 value={revision?.title || ''}
@@ -229,7 +227,7 @@ export function CommentPreview({
             </Col>
             {/* comment lead */}
             <Col xs={24}>
-              <Form.ControlLabel>{t('commentEditView.lead')}</Form.ControlLabel>
+              <Form.Label>{t('commentEditView.lead')}</Form.Label>
               <Form.Control
                 name="commentLead"
                 value={revision?.lead || ''}
@@ -246,9 +244,7 @@ export function CommentPreview({
               xs={24}
               style={{ marginTop: '20px' }}
             >
-              <Form.ControlLabel>
-                {t('commentEditView.comment')}
-              </Form.ControlLabel>
+              <Form.Label>{t('commentEditView.comment')}</Form.Label>
 
               <RichTextBlock
                 value={revision?.text}

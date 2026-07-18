@@ -24,22 +24,23 @@ import { MdAdd, MdDelete, MdSave } from 'react-icons/md';
 import {
   Button,
   CheckPicker,
-  FlexboxGrid,
   Form,
   IconButton as RIconButton,
   Loader as RLoader,
   Message,
   Modal,
+  Stack,
   toaster,
 } from 'rsuite';
 
-const FlexGridSmallerMargin = styled(FlexboxGrid)`
+const FlexGridSmallerMargin = styled(Stack)`
   margin-bottom: 12px;
+  width: 100%;
   gap: 12px;
+  flex-wrap: wrap;
 `;
 
 const Content = styled.div`
-  margin-top: 2rem;
   height: 100%;
 `;
 
@@ -263,9 +264,9 @@ const BlockStyleList = memo(() => {
       </ListViewContainer>
 
       {loading && (
-        <FlexboxGrid justify="center">
+        <Stack justifyContent="center">
           <Loader size="lg" />
-        </FlexboxGrid>
+        </Stack>
       )}
 
       <TableWrapper>

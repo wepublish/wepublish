@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import { useMemberPlanListQuery } from '@wepublish/editor/api';
 import { Dispatch, SetStateAction, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import type { DateRangePickerProps } from 'rsuite';
 import {
   Col,
   DateRangePicker,
@@ -13,7 +14,6 @@ import {
   TagPicker,
   Toggle,
 } from 'rsuite';
-import type { DateRangePickerProps } from 'rsuite';
 
 import { AudienceFilterToggle, ToggleLable } from './audience-filter-toggle';
 import {
@@ -206,7 +206,7 @@ export function AudienceFilter({
                 <Col
                   xs={24}
                   xl={12}
-                  key={`client-filter-${filterIndex}`}
+                  key={filterIndex}
                 >
                   <AudienceFilterToggle
                     filterKey={filterKey as keyof AudienceClientFilter}

@@ -136,6 +136,7 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
     if (!poll) {
       return;
     }
+
     if (!newAnswer) {
       toaster.push(
         <Message
@@ -149,26 +150,32 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
       );
       return;
     }
+
     const answer = await createAnswerMutation({
       variables: {
         pollId: poll.id,
         answer: newAnswer,
       },
     });
+
     const savedAnswer = answer?.data?.createPollAnswer;
+
     if (savedAnswer) {
       const updatedPoll = { ...poll };
       updatedPoll.answers?.push(savedAnswer as PollAnswer);
       onPollChange(updatedPoll);
     }
+
     setNewAnswer('');
   }
 
   async function deleteAnswer(): Promise<void> {
     setModalOpen(false);
+
     if (!answerToDelete) {
       return;
     }
+
     const answer = await deleteAnswerMutation({
       variables: {
         deletePollAnswerId: answerToDelete.id,
@@ -180,11 +187,13 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
       ...poll,
       answers: poll?.answers ? [...poll.answers] : [],
     } as FullPoll | undefined;
+
     // delete answer
     const deletedAnswer = answer?.data?.deletePollAnswer;
     if (!deletedAnswer || !updatedPoll?.answers) {
       return;
     }
+
     const deleteIndex = updatedPoll?.answers?.findIndex(
       tmpAnswer => tmpAnswer.id === deletedAnswer.id
     );
@@ -202,6 +211,7 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
           tmpVoteAmount.answerId !== deletedAnswer.id
       );
     });
+
     onPollChange(updatedPoll);
   }
 
@@ -209,13 +219,16 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
     if (!poll) {
       return;
     }
+
     const updatedAnswers = poll.answers ? [...poll.answers] : [];
     const answerIndex = updatedAnswers.findIndex(
       tempAnswer => tempAnswer.id === updatedAnswer.id
     );
+
     if (answerIndex < 0) {
       return;
     }
+
     updatedAnswers[answerIndex] = updatedAnswer;
 
     onPollChange({
@@ -262,8 +275,8 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
     <>
       <Row>
         {poll?.answers?.map(answer => (
-          <div key={`answer-${answer.id}`}>
-            <Col xs={16}>
+          <div key={answer.id}>
+            <Col span={{ xs: 16 }}>
               <Badge
                 content={`${getTotalVotesByAnswerId(poll, answer.id)} ${t('pollAnswer.votes')}`}
               >
@@ -280,8 +293,7 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
               </Badge>
             </Col>
 
-            {/* copy link btn */}
-            <RCol xs={8}>
+            <RCol span={{ xs: 8 }}>
               <IconButton
                 icon={<MdDelete />}
                 circle
@@ -293,6 +305,7 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
                   setModalOpen(true);
                 }}
               />
+
               <Whisper
                 speaker={<Tooltip>{t('pollAnswer.copyVoteUrl')}</Tooltip>}
               >
@@ -309,9 +322,8 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
         ))}
       </Row>
 
-      {/* adding new poll answer */}
       <RRow>
-        <RCol xs={16}>
+        <RCol span={{ xs: 16 }}>
           <Form.Control
             name="createNewFormAnswer"
             placeholder={t('pollAnswer.insertYourNewAnswer')}
@@ -322,7 +334,7 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
           />
         </RCol>
 
-        <RCol xs={8}>
+        <RCol span={{ xs: 8 }}>
           <RIconButton
             icon={<MdAdd />}
             loading={loading}
@@ -334,7 +346,6 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
         </RCol>
       </RRow>
 
-      {/* delete modal */}
       <Modal
         open={modalOpen}
         size="xs"
@@ -343,9 +354,11 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
         }}
       >
         <Modal.Title>{t('pollAnswer.deleteModalTitle')}</Modal.Title>
+
         <Modal.Body>
           {t('pollAnswer.deleteModalBody', { answer: answerToDelete?.answer })}
         </Modal.Body>
+
         <Modal.Footer>
           <Button
             appearance="primary"
@@ -353,6 +366,7 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
           >
             {t('pollAnswer.deleteBtn')}
           </Button>
+
           <Button
             appearance="subtle"
             onClick={() => setModalOpen(false)}

@@ -21,7 +21,7 @@ type TagFormProps = {
 
 const TagFormWrapper = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   align-items: start;
   gap: 12px;
 `;
@@ -32,29 +32,29 @@ export const TagForm = ({ tag, onChange }: TagFormProps) => {
   return (
     <TagFormWrapper>
       <Panel bordered>
-        <Form.Group controlId="name">
-          <Form.ControlLabel>{t('tags.overview.name')}</Form.ControlLabel>
-          <Form.Control
-            name="name"
-            value={tag.tag ?? ''}
-            onChange={(tag: string) => onChange({ tag })}
-          />
-        </Form.Group>
-        <Form.Group controlId="color">
-          <Form.ControlLabel>{t('tags.overview.color')}</Form.ControlLabel>
-          <ColorPicker
-            setColor={color => {
-              onChange({ color });
-            }}
-            currentColor={tag.color || '#000000'}
-          />
-        </Form.Group>
+        <Form.Stack fluid>
+          <Form.Group controlId="name">
+            <Form.Label>{t('tags.overview.name')}</Form.Label>
+            <Form.Control
+              name="name"
+              value={tag.tag ?? ''}
+              onChange={(tag: string) => onChange({ tag })}
+            />
+          </Form.Group>
 
-        <Form.Group controlId="description">
-          <Form.ControlLabel>
-            {t('tags.overview.description')}
-          </Form.ControlLabel>
-          <Panel bordered>
+          <Form.Group controlId="color">
+            <Form.Label>{t('tags.overview.color')}</Form.Label>
+            <ColorPicker
+              setColor={color => {
+                onChange({ color });
+              }}
+              currentColor={tag.color || '#000000'}
+            />
+          </Form.Group>
+
+          <Form.Group controlId="description">
+            <Form.Label>{t('tags.overview.description')}</Form.Label>
+
             <Form.Control
               name="description"
               value={tag.description}
@@ -63,19 +63,19 @@ export const TagForm = ({ tag, onChange }: TagFormProps) => {
               }
               accepter={RichTextBlock}
             />
-          </Panel>
-        </Form.Group>
+          </Form.Group>
 
-        <Form.Group controlId="main">
-          <Form.Control
-            name="main"
-            checked={!!tag.main}
-            onChange={() => onChange({ main: !tag.main })}
-            accepter={Checkbox}
-          >
-            {t('tags.overview.markAsMain')}
-          </Form.Control>
-        </Form.Group>
+          <Form.Group controlId="main">
+            <Form.Control
+              name="main"
+              checked={!!tag.main}
+              onChange={() => onChange({ main: !tag.main })}
+              accepter={Checkbox}
+            >
+              {t('tags.overview.markAsMain')}
+            </Form.Control>
+          </Form.Group>
+        </Form.Stack>
       </Panel>
     </TagFormWrapper>
   );

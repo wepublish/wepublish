@@ -175,151 +175,150 @@ export function SingleGenericIntegrationForm<
   const logo = getLogo?.(setting);
 
   return (
-    <Form
-      fluid
-      onSubmit={() => onSubmit()}
-    >
-      <Card
-        variant="outlined"
-        sx={{ alignSelf: 'start' }}
-      >
-        <CardContent>
-          <Typography
-            variant="h5"
-            component={HeaderWrapper}
-            marginBottom={2}
-          >
-            {setting.name || setting.type}
-
-            {logo && (
-              <HeaderLogo
-                src={logo}
-                alt=""
-              />
-            )}
-          </Typography>
-
-          {resolvedFields.map(field => (
-            <Form.Group
-              controlId={`${String(field.name)}-${setting.id}`}
-              key={String(field.name)}
+    <Form onSubmit={() => onSubmit()}>
+      <Form.Stack fluid>
+        <Card
+          variant="outlined"
+          sx={{ alignSelf: 'start' }}
+        >
+          <CardContent>
+            <Typography
+              variant="h5"
+              component={HeaderWrapper}
+              marginBottom={2}
             >
-              <Form.ControlLabel>
-                {field.type === 'checkbox' ? ' ' : field.label}
-              </Form.ControlLabel>
+              {setting.name || setting.type}
 
-              <Controller
-                name={field.name}
-                control={control}
-                defaultValue={
-                  (setting as Record<typeof field.name, unknown>)[
-                    field.name
-                  ] as any
-                }
-                render={({
-                  field: { value, onChange, ...restField },
-                  fieldState,
-                }) => {
-                  if (field.type === 'select') {
+              {logo && (
+                <HeaderLogo
+                  src={logo}
+                  alt=""
+                />
+              )}
+            </Typography>
+
+            {resolvedFields.map(field => (
+              <Form.Group
+                controlId={`${String(field.name)}-${setting.id}`}
+                key={String(field.name)}
+              >
+                <Form.Label>
+                  {field.type === 'checkbox' ? ' ' : field.label}
+                </Form.Label>
+
+                <Controller
+                  name={field.name}
+                  control={control}
+                  defaultValue={
+                    (setting as Record<typeof field.name, unknown>)[
+                      field.name
+                    ] as any
+                  }
+                  render={({
+                    field: { value, onChange, ...restField },
+                    fieldState,
+                  }) => {
+                    if (field.type === 'select') {
+                      return (
+                        <SelectPicker
+                          data={field.options || []}
+                          value={value}
+                          onChange={onChange}
+                          disabled={field.disabled}
+                          cleanable={false}
+                          searchable={field.searchable ?? false}
+                          {...restField}
+                        />
+                      );
+                    }
+
+                    if (field.type === 'checkPicker') {
+                      return (
+                        <CheckPicker
+                          data={field.options || []}
+                          value={value || []}
+                          onChange={val => onChange(val)}
+                          disabled={field.disabled}
+                          cleanable={false}
+                          searchable={field.searchable ?? false}
+                          {...restField}
+                        />
+                      );
+                    }
+
+                    if (field.type === 'checkbox') {
+                      return (
+                        <Checkbox
+                          checked={!!value}
+                          onChange={(_, c) => onChange(c)}
+                          disabled={field.disabled}
+                          {...restField}
+                        >
+                          {field.label}
+                        </Checkbox>
+                      );
+                    }
+
+                    if (field.type === 'custom') {
+                      return (
+                        <field.render
+                          value={value}
+                          onChange={val => onChange(val)}
+                          disabled={field.disabled}
+                          {...restField}
+                        />
+                      );
+                    }
+
                     return (
-                      <SelectPicker
-                        data={field.options || []}
+                      <Form.Control
                         value={value}
                         onChange={onChange}
-                        disabled={field.disabled}
-                        cleanable={false}
-                        searchable={field.searchable ?? false}
+                        errorMessage={fieldState.error?.message}
+                        accepter={
+                          field.type === 'textarea' ? Textarea : undefined
+                        }
+                        {...field}
                         {...restField}
                       />
                     );
-                  }
+                  }}
+                />
+              </Form.Group>
+            ))}
 
-                  if (field.type === 'checkPicker') {
-                    return (
-                      <CheckPicker
-                        data={field.options || []}
-                        value={value || []}
-                        onChange={val => onChange(val)}
-                        disabled={field.disabled}
-                        cleanable={false}
-                        searchable={field.searchable ?? false}
-                        {...restField}
-                      />
-                    );
-                  }
-
-                  if (field.type === 'checkbox') {
-                    return (
-                      <Checkbox
-                        checked={!!value}
-                        onChange={(_, c) => onChange(c)}
-                        disabled={field.disabled}
-                        {...restField}
-                      >
-                        {field.label}
-                      </Checkbox>
-                    );
-                  }
-
-                  if (field.type === 'custom') {
-                    return (
-                      <field.render
-                        value={value}
-                        onChange={val => onChange(val)}
-                        disabled={field.disabled}
-                        {...restField}
-                      />
-                    );
-                  }
-
-                  return (
-                    <Form.Control
-                      value={value}
-                      onChange={onChange}
-                      errorMessage={fieldState.error?.message}
-                      accepter={
-                        field.type === 'textarea' ? Textarea : undefined
-                      }
-                      {...field}
-                      {...restField}
-                    />
-                  );
-                }}
-              />
-            </Form.Group>
-          ))}
-
-          {setting.lastLoadedAt && (
-            <Typography
-              align="right"
-              color="gray"
-            >
-              <small>
-                {t('integrations.lastLoaded')}:{' '}
-                {formatLastLoaded(setting.lastLoadedAt)}
-              </small>
-            </Typography>
-          )}
-        </CardContent>
-
-        <CardActions>
-          <Button
-            variant="contained"
-            type="submit"
-            disabled={updating}
-          >
-            {updating && (
-              <CircularProgress
-                size={14}
-                color="inherit"
-                sx={{ mr: 1 }}
-              />
+            {setting.lastLoadedAt && (
+              <Typography
+                align="right"
+                color="gray"
+              >
+                <small>
+                  {t('integrations.lastLoaded')}:{' '}
+                  {formatLastLoaded(setting.lastLoadedAt)}
+                </small>
+              </Typography>
             )}
+          </CardContent>
 
-            {t('save')}
-          </Button>
-        </CardActions>
-      </Card>
+          <CardActions>
+            <Button
+              variant="contained"
+              type="submit"
+              disabled={updating}
+            >
+              {updating && (
+                <CircularProgress
+                  size={14}
+                  color="inherit"
+                  sx={{ mr: 1 }}
+                />
+              )}
+
+              {t('save')}
+            </Button>
+          </CardActions>
+        </Card>
+      </Form.Stack>
     </Form>
   );
 }
