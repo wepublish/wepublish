@@ -6,7 +6,8 @@
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "jsxImportSource": "@emotion/react",
-    "types": []
+    "types": [],
+    "ignoreDeprecations": "6.0"
   },
   "files": [],
   "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.d.ts"],
