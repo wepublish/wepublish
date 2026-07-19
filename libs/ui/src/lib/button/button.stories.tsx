@@ -1,5 +1,5 @@
 import { Link, Stack } from '@mui/material';
-import { Meta } from '@storybook/nextjs';
+import { Meta } from '@storybook/nextjs-vite';
 import { MdAdd, MdDelete } from 'react-icons/md';
 
 import { Button as ButtonCmp } from './button';

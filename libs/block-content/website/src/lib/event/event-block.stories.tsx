@@ -1,4 +1,4 @@
-import { Meta } from '@storybook/nextjs';
+import { Meta } from '@storybook/nextjs-vite';
 import { EventBlock } from './event-block';
 import { mockEventBlock } from '@wepublish/storybook/mocks';
 

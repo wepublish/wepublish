@@ -1,4 +1,5 @@
-import { Preview } from '@storybook/nextjs';
+import './polyfills';
+import { Preview } from '@storybook/nextjs-vite';
 import { decorators, parameters } from '@wepublish/storybook';
 
 export default {

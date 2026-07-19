@@ -1,4 +1,4 @@
-import { Meta } from '@storybook/nextjs';
+import { Meta } from '@storybook/nextjs-vite';
 import { action } from 'storybook/actions';
 import { AuthorList } from './author-list';
 import { ApolloError } from '@apollo/client';

@@ -1,5 +1,5 @@
 import { action } from 'storybook/actions';
-import { StoryObj } from '@storybook/nextjs';
+import { StoryObj } from '@storybook/nextjs-vite';
 import { WithUserDecorator } from '@wepublish/storybook';
 import {
   SensitiveDataUser,

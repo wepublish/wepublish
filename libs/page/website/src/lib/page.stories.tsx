@@ -1,5 +1,5 @@
 import { ApolloError } from '@apollo/client';
-import { Meta } from '@storybook/nextjs';
+import { Meta } from '@storybook/nextjs-vite';
 import { Page } from './page';
 import { mockPage, mockPageRevision } from '@wepublish/storybook/mocks';
 import {

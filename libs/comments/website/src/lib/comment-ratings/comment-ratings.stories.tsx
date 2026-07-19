@@ -1,4 +1,4 @@
-import { Meta, StoryObj } from '@storybook/nextjs';
+import { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { CommentRatings } from './comment-ratings';
 import { CommentRatingSystemAnswer } from '@wepublish/website/api';
 import { mockCommentRatingAnswer } from '@wepublish/storybook/mocks';

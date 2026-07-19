@@ -1,4 +1,4 @@
-import { Meta, StoryObj } from '@storybook/nextjs';
+import { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { ArticleListDocument, TagDocument } from '@wepublish/website/api';
 import { TagContainer } from './tag-container';
 import {

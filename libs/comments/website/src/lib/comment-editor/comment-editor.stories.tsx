@@ -1,6 +1,6 @@
 import { ApolloError } from '@apollo/client';
 import { action } from 'storybook/actions';
-import { Meta, StoryObj } from '@storybook/nextjs';
+import { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { userEvent, within } from 'storybook/test';
 import { WithUserDecorator } from '@wepublish/storybook';
 import { Challenge } from '@wepublish/website/api';

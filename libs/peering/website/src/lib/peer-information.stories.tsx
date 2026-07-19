@@ -1,4 +1,4 @@
-import { Meta } from '@storybook/nextjs';
+import { Meta } from '@storybook/nextjs-vite';
 import { PeerInformation } from './peer-information';
 import { mockPeer, mockRemotePeerProfile } from '@wepublish/storybook/mocks';
 

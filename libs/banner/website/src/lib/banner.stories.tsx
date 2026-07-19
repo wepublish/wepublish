@@ -1,4 +1,4 @@
-import { Meta } from '@storybook/nextjs';
+import { Meta } from '@storybook/nextjs-vite';
 import { Banner } from './banner';
 import { ApolloError } from '@apollo/client';
 import { mockImage } from '@wepublish/storybook/mocks';

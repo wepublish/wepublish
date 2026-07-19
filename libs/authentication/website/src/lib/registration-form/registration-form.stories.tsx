@@ -1,5 +1,5 @@
 import { action } from 'storybook/actions';
-import { Meta, StoryObj } from '@storybook/nextjs';
+import { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { RegistrationForm } from './registration-form';
 import { ApolloError } from '@apollo/client';
 import { CaptchaType, Challenge } from '@wepublish/website/api';

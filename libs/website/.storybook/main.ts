@@ -1,7 +1,8 @@
-import { fileURLToPath } from "node:url";
-import { dirname } from "node:path";
+import { fileURLToPath } from 'node:url';
+import { dirname, join } from 'node:path';
 import { configureSort } from 'storybook-multilevel-sort';
-import { StorybookConfig } from 'storybook/internal/types';
+import { StorybookConfig } from '@storybook/nextjs-vite';
+import tsconfigPaths from 'vite-tsconfig-paths';
 
 configureSort({
   storyOrder: {
@@ -14,7 +15,13 @@ configureSort({
 
 export default {
   framework: {
-    name: getAbsolutePath("@storybook/nextjs-vite"),
+    name: getAbsolutePath('@storybook/nextjs-vite'),
+    options: {
+      nextConfigPath: join(
+        dirname(fileURLToPath(import.meta.url)),
+        '../../utils/website/src/lib/next.config.js'
+      ),
+    },
   },
 
   docs: {},
@@ -26,43 +33,55 @@ export default {
   ],
 
   addons: [
-    getAbsolutePath("@nx/react/plugins/storybook"),
-    getAbsolutePath("storybook-addon-apollo-client"),
-    getAbsolutePath("@storybook/addon-a11y"),
-    getAbsolutePath("@storybook/addon-links"),
-    getAbsolutePath("@storybook/addon-themes"),
-    getAbsolutePath("storybook-react-i18next"),
-    getAbsolutePath("@chromatic-com/storybook"),
-    getAbsolutePath("@storybook/addon-docs")
+    'storybook-addon-apollo-client',
+    getAbsolutePath('@storybook/addon-a11y'),
+    getAbsolutePath('@storybook/addon-links'),
+    getAbsolutePath('@storybook/addon-themes'),
+    getAbsolutePath('storybook-react-i18next'),
+    getAbsolutePath('@chromatic-com/storybook'),
+    getAbsolutePath('@storybook/addon-docs'),
   ],
 
-  webpackFinal: async (config: any) => {
-    config.module.rules.push({
-      test: /\.[jt]sx?$/,
-      exclude: /node_modules/,
-      use: {
-        loader: 'babel-loader',
-        options: {
-          presets: [
-            [
-              '@babel/preset-react',
-              {
-                runtime: 'automatic',
-                importSource: '@emotion/react',
-              },
-            ],
-            '@babel/preset-typescript',
-          ],
-          plugins: ['@emotion/babel-plugin'],
-        },
-      },
-    });
+  viteFinal: async config => {
+    const configDir = dirname(fileURLToPath(import.meta.url));
+
+    config.plugins ??= [];
+    config.plugins.push(
+      tsconfigPaths({
+        root: join(configDir, '../../..'),
+        skip: dir => dir === 'dist',
+      })
+    );
+
+    config.resolve ??= {};
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@mui/material-nextjs/v15-pagesRouter': join(
+        configDir,
+        'mui-material-nextjs-stub.tsx'
+      ),
+    };
 
     return config;
   },
 
   typescript: {
     reactDocgen: 'react-docgen-typescript',
+    reactDocgenTypescriptOptions: {
+      tsconfigPath: join(
+        dirname(fileURLToPath(import.meta.url)),
+        'tsconfig.docgen.json'
+      ),
+      include: [
+        join(dirname(fileURLToPath(import.meta.url)), '../../**/src/**/*.tsx'),
+      ],
+      exclude: [
+        join(
+          dirname(fileURLToPath(import.meta.url)),
+          '../../**/*.{spec,test,stories}.tsx'
+        ),
+      ],
+    },
   },
 } as StorybookConfig;
 

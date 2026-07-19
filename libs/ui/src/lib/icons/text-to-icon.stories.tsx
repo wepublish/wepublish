@@ -1,5 +1,5 @@
 import { Stack } from '@mui/material';
-import { Meta, StoryObj } from '@storybook/nextjs';
+import { Meta, StoryObj } from '@storybook/nextjs-vite';
 
 import { TextToIcon } from './text-to-icon';
 

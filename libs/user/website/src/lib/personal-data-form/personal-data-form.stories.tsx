@@ -1,7 +1,7 @@
 import { ApolloError } from '@apollo/client';
 import { action } from 'storybook/actions';
 import { useArgs } from 'storybook/preview-api';
-import { Meta, StoryObj } from '@storybook/nextjs';
+import { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { userEvent, within } from 'storybook/test';
 import { User } from '@wepublish/website/api';
 import { ComponentProps } from 'react';

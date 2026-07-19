@@ -1,5 +1,5 @@
 import { AuthorListDocument } from '@wepublish/website/api';
-import { Meta } from '@storybook/nextjs';
+import { Meta } from '@storybook/nextjs-vite';
 import { AuthorListContainer } from './author-list-container';
 import { mockAuthor } from '@wepublish/storybook/mocks';
 

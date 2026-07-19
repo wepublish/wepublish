@@ -1,6 +1,6 @@
 import { ApolloError } from '@apollo/client';
 import { action } from 'storybook/actions';
-import { Meta, StoryObj } from '@storybook/nextjs';
+import { Meta, StoryObj } from '@storybook/nextjs-vite';
 import {
   Exact,
   FullPaymentMethodFragment,

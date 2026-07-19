@@ -1,4 +1,4 @@
-import { Meta } from '@storybook/nextjs';
+import { Meta } from '@storybook/nextjs-vite';
 import { ArticleAuthor as ArticleAuthorCmp } from './article-author';
 import { mockAuthor } from '@wepublish/storybook/mocks';
 

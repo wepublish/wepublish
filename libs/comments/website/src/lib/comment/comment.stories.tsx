@@ -1,4 +1,4 @@
-import { Meta, StoryObj } from '@storybook/nextjs';
+import { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { mockComment, mockUser } from '@wepublish/storybook/mocks';
 import { WithUserDecorator } from '@wepublish/storybook';
 import { CommentState, SensitiveDataUser } from '@wepublish/website/api';

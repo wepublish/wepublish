@@ -1,6 +1,6 @@
 import { ApolloError } from '@apollo/client';
 import { action } from 'storybook/actions';
-import { Meta } from '@storybook/nextjs';
+import { Meta } from '@storybook/nextjs-vite';
 import { InvoiceList } from './invoice-list';
 import {
   Exact,

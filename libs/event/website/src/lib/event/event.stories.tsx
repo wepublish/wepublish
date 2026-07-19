@@ -1,4 +1,4 @@
-import { Meta } from '@storybook/nextjs';
+import { Meta } from '@storybook/nextjs-vite';
 import { Event } from './event';
 import { ApolloError } from '@apollo/client';
 import { mockEvent } from '@wepublish/storybook/mocks';

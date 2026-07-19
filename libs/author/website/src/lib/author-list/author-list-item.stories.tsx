@@ -1,4 +1,4 @@
-import { Meta } from '@storybook/nextjs';
+import { Meta } from '@storybook/nextjs-vite';
 import { AuthorListItem } from './author-list-item';
 import { mockAuthor } from '@wepublish/storybook/mocks';
 

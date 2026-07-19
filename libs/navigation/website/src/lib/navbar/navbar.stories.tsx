@@ -1,5 +1,5 @@
 import { ApolloError } from '@apollo/client';
-import { Meta, StoryObj } from '@storybook/nextjs';
+import { Meta, StoryObj } from '@storybook/nextjs-vite';
 import {
   BaseNavigationLink,
   Navigation,

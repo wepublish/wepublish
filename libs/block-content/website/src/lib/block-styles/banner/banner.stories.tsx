@@ -1,4 +1,4 @@
-import { Meta } from '@storybook/nextjs';
+import { Meta } from '@storybook/nextjs-vite';
 import { Banner } from './banner';
 import { mockBreakBlock } from '@wepublish/storybook/mocks';
 

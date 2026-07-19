@@ -4,7 +4,7 @@ import {
   UserPollVoteQueryResult,
 } from '@wepublish/website/api';
 import { ComponentType } from 'react';
-import { action } from '@storybook/addon-actions';
+import { action } from 'storybook/actions';
 
 type PollDecoratorProps = Partial<{
   fetchUserVoteResult: Pick<UserPollVoteQueryResult, 'data' | 'error'>;

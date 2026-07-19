@@ -1,4 +1,4 @@
-import { Meta, StoryObj } from '@storybook/nextjs';
+import { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { LoginForm } from './login-form';
 import { action } from 'storybook/actions';
 import { userEvent, within } from 'storybook/test';

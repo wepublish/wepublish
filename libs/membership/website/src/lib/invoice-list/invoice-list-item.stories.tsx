@@ -6,7 +6,7 @@ import {
   Currency,
 } from '@wepublish/website/api';
 import { InvoiceListItem } from './invoice-list-item';
-import { Meta, StoryObj } from '@storybook/nextjs';
+import { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { action } from 'storybook/actions';
 import { userEvent, within } from 'storybook/test';
 import { ApolloError } from '@apollo/client';
