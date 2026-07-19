@@ -42,7 +42,7 @@ export default {
     getAbsolutePath('@storybook/addon-docs'),
   ],
 
-  viteFinal: async config => {
+  viteFinal: async (config: any) => {
     const configDir = dirname(fileURLToPath(import.meta.url));
 
     config.plugins ??= [];
@@ -60,6 +60,21 @@ export default {
         configDir,
         'mui-material-nextjs-stub.tsx'
       ),
+    };
+
+    config.build ??= {};
+    config.build.rollupOptions ??= {};
+    const previousOnwarn = config.build.rollupOptions.onwarn;
+    config.build.rollupOptions.onwarn = (warning: any, warn: any) => {
+      if (warning.code === 'MODULE_LEVEL_DIRECTIVE') {
+        return;
+      }
+
+      if (previousOnwarn) {
+        previousOnwarn(warning, warn);
+      } else {
+        warn(warning);
+      }
     };
 
     return config;
