@@ -92,6 +92,7 @@
     "@swc/helpers": "0.5.23",
     "@swc/jest": "0.2.39",
     "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "16.1.0",
     "@tiptap/extension-collaboration": "^3.13.0",
     "@tiptap/y-tiptap": "^3.0.1",
