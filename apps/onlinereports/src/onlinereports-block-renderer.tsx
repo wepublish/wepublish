@@ -46,6 +46,7 @@ export const OnlineReportsBlockRenderer = (
   if (props.type === 'Page') {
     return block;
   }
+
   const position = props.index + 1;
 
   return (

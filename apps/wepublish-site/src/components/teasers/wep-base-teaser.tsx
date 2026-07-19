@@ -1,4 +1,3 @@
-import { JSX } from 'react';
 import { BuilderTeaserProps } from '@wepublish/website/builder';
 import { cond, T } from 'ramda';
 
@@ -31,4 +30,4 @@ export const WepBaseTeaser = cond([
       </div>
     ),
   ],
-]) as (props: BuilderTeaserProps) => JSX.Element;
+]);

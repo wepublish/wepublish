@@ -1,4 +1,3 @@
-import { JSX } from 'react';
 import styled from '@emotion/styled';
 import {
   BlockStyle,
@@ -8,6 +7,7 @@ import {
 import nanoid from 'nanoid';
 import React, {
   Fragment,
+  JSX,
   memo,
   ReactElement,
   ReactNode,

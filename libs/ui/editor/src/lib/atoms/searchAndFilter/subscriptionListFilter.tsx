@@ -9,7 +9,7 @@ import {
   useMemberPlanListQuery,
   usePaymentMethodListQuery,
 } from '@wepublish/editor/api';
-import React, { JSX, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdClose } from 'react-icons/md';
 import { Button, DateRangePicker, Form as RForm, SelectPicker } from 'rsuite';
@@ -125,11 +125,11 @@ export function SubscriptionListFilter({
   /**
    * UI helper functions
    */
-  function resetFilterView(): JSX.Element {
+  function resetFilterView() {
     if (!isAnyFilterSet()) {
-      // eslint-disable-next-line react/jsx-no-useless-fragment
-      return <></>;
+      return null;
     }
+
     return (
       <FormGroup>
         <Button

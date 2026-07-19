@@ -3,7 +3,7 @@ import {
   FullCommentFragment,
   useDeleteCommentMutation,
 } from '@wepublish/editor/api';
-import { JSX, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdDelete } from 'react-icons/md';
 import { Button, IconButton, Message, Modal, toaster } from 'rsuite';
@@ -31,7 +31,7 @@ interface CommentDeleteBtnProps {
 export function CommentDeleteBtn({
   comment,
   onCommentDeleted,
-}: CommentDeleteBtnProps): JSX.Element {
+}: CommentDeleteBtnProps) {
   const { t } = useTranslation();
   const [modalOpen, setModalOpen] = useState<boolean>(false);
 

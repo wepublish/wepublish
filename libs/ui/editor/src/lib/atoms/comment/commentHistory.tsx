@@ -5,7 +5,7 @@ import {
   FullCommentFragment,
   useCommentListLazyQuery,
 } from '@wepublish/editor/api';
-import { JSX, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd } from 'react-icons/md';
 import { Col, Row } from 'rsuite';
@@ -25,14 +25,15 @@ function ChildComments({
   originComment,
   revision,
   setRevision,
-}: ChildCommentsProps): JSX.Element {
+}: ChildCommentsProps) {
   if (!comments) {
-    // eslint-disable-next-line react/jsx-no-useless-fragment
-    return <></>;
+    return null;
   }
+
   const childComments = comments.filter(
     tmpComment => tmpComment.parentComment?.id === comment.id
   );
+
   return (
     <div
       style={{

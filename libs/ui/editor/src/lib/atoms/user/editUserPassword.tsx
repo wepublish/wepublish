@@ -3,7 +3,7 @@ import {
   FullUserFragment,
   useSendWebsiteLoginMutation,
 } from '@wepublish/editor/api';
-import { JSX, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdReplay, MdSend } from 'react-icons/md';
 import { Button as RButton, Form, Message, Modal, toaster } from 'rsuite';
@@ -135,14 +135,16 @@ export function EditUserPassword({
     );
   }
 
-  function resetPasswordModal(): JSX.Element {
+  function resetPasswordModal() {
     const userId = user?.id;
+
     if (!userId) {
-      // eslint-disable-next-line react/jsx-no-useless-fragment
-      return <></>;
+      return null;
     }
+
     const userName =
       user?.firstName ? `${user.firstName} ${user.name}` : user.name;
+
     return (
       <Modal
         open={isResetUserPasswordOpen}

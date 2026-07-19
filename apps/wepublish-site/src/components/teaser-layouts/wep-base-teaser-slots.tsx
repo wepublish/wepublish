@@ -1,4 +1,3 @@
-import { JSX } from 'react';
 import { TeaserSlotsBlock } from '@wepublish/block-content/website';
 import { BuilderTeaserSlotsBlockProps } from '@wepublish/website/builder';
 import { cond, T } from 'ramda';
@@ -47,4 +46,4 @@ export const WepBaseTeaserSlots = cond([
       </div>
     ),
   ],
-]) as (props: BuilderTeaserSlotsBlockProps) => JSX.Element;
+]);

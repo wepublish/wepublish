@@ -1,4 +1,3 @@
-import { JSX } from 'react';
 import { css } from '@mui/material';
 import { RichtextElements } from '@wepublish/richtext';
 import { RenderElement } from '@wepublish/richtext/website';
@@ -12,9 +11,7 @@ const lastChildNoGutter = css`
     margin-bottom: 0;
   }
 `;
-export function OnlineReportsRenderElement(
-  props: BuilderRenderElementProps
-): JSX.Element {
+export function OnlineReportsRenderElement(props: BuilderRenderElementProps) {
   const {
     elements: { H2, H3, H4 },
     richtext: { RenderElement: RenderElementInner },
