@@ -10,14 +10,6 @@ const storiesCmp = composeStories(stories);
 describe('SubscriptionList Container', () => {
   addDateMock();
 
-  beforeAll(() => {
-    Object.defineProperty(global.window, 'location', {
-      value: {
-        href: 'http://localhost',
-      },
-    });
-  });
-
   Object.entries(storiesCmp).forEach(([story, Component]) => {
     it(`should render ${story}`, async () => {
       const { container } = render(
