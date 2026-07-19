@@ -20,11 +20,11 @@
     "cache-manager": "^7.2.4",
     "express": "4.21.2",
     "helmet": "^7.1.0",
+    "jose": "^5.10.0",
     "minio": "^8.0.1",
     "multer": "^2.0.2",
     "nestjs-zod": "^3.0.0",
     "nx": "23.1.0",
-    "jose": "^5.10.0",
     "reflect-metadata": "^0.1.13",
     "sharp": "^0.33.5",
     "typescript": "6.0.3",
@@ -32,6 +32,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@types/multer": "^1.4.11"
+    "@types/multer": "^2.2.0",
+    "webpack": "^5.108.4"
   }
 }
