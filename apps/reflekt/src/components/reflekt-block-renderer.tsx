@@ -2,6 +2,7 @@ import { css, Theme } from '@emotion/react';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import {
   BlockRenderer,
+  isCrowdfundingBlock,
   isImageBlock,
   isImageSliderBlockStyle,
   isRichTextBlock,
@@ -173,6 +174,7 @@ export const ReflektBlockRenderer = (
                 isRichTextBlock,
                 isTitleBlock,
                 isSubscribeBlock,
+                isCrowdfundingBlock,
               ])(block),
             () => !isMobile,
           ]),
