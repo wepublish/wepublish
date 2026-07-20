@@ -89,6 +89,12 @@ export class SubscribeBlock extends BaseBlock<typeof BlockType.Subscribe> {
   @Field(() => [SubscribeBlockPlanSetting], { nullable: true })
   plans?: SubscribeBlockPlanSetting[];
 
+  @Field(() => Boolean, { defaultValue: false })
+  showGoodies!: boolean;
+
+  @Field(() => Boolean, { defaultValue: false })
+  showVouchers!: boolean;
+
   @Field(() => [MemberPlan])
   memberPlans!: MemberPlan[];
 }

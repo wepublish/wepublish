@@ -262,6 +262,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   defaults,
   memberPlans,
   planSettings,
+  showVouchers = false,
   challenge,
   userSubscriptions,
   userInvoices,
@@ -957,63 +958,65 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
         />
       </GoodieSection>
 
-      <VoucherSection area="voucher">
-        <Controller
-          name={'voucher'}
-          control={control}
-          render={({ field, fieldState: { error } }) => (
-            <div>
-              <div
-                css={{
-                  display: 'flex',
-                  flexFlow: 'row',
-                  alignItems: 'center',
-                  gap: 8,
-                }}
-              >
-                <TextField
-                  {...field}
-                  value={field.value ?? ''}
-                  label={'Gutscheincode'}
-                  error={!!error}
-                  autoComplete="voucher"
-                  sx={{ maxWidth: 200 }}
-                />
+      {showVouchers && (
+        <VoucherSection area="voucher">
+          <Controller
+            name={'voucher'}
+            control={control}
+            render={({ field, fieldState: { error } }) => (
+              <div>
+                <div
+                  css={{
+                    display: 'flex',
+                    flexFlow: 'row',
+                    alignItems: 'center',
+                    gap: 8,
+                  }}
+                >
+                  <TextField
+                    {...field}
+                    value={field.value ?? ''}
+                    label={'Gutscheincode'}
+                    error={!!error}
+                    autoComplete="voucher"
+                    sx={{ maxWidth: 200 }}
+                  />
 
-                {!!subscribeInfo.data?.createSubscriptionInfo
-                  .discountPercent && (
-                  <Alert
-                    severity="success"
-                    icon={<MdCheck />}
-                  >
-                    {t('subscribe.voucher.discountApplied', {
-                      discountPercent:
-                        subscribeInfo.data?.createSubscriptionInfo
-                          .discountPercent * 100,
-                    })}
-                  </Alert>
-                )}
+                  {!!subscribeInfo.data?.createSubscriptionInfo
+                    .discountPercent && (
+                    <Alert
+                      severity="success"
+                      icon={<MdCheck />}
+                    >
+                      {t('subscribe.voucher.discountApplied', {
+                        discountPercent:
+                          subscribeInfo.data?.createSubscriptionInfo
+                            .discountPercent * 100,
+                      })}
+                    </Alert>
+                  )}
 
-                {subscribeInfo.data?.createSubscriptionInfo.voucherValid ===
-                  false && (
-                  <Alert
-                    severity="error"
-                    icon={<MdError />}
-                  >
-                    {t('subscribe.voucher.invalid')}
-                  </Alert>
+                  {subscribeInfo.data?.createSubscriptionInfo.voucherValid ===
+                    false && (
+                    <Alert
+                      severity="error"
+                      icon={<MdError />}
+                    >
+                      {t('subscribe.voucher.invalid')}
+                    </Alert>
+                  )}
+                </div>
+
+                {!!error && (
+                  <FormHelperText error={!!error}>
+                    {error?.message}
+                  </FormHelperText>
                 )}
               </div>
-
-              {!!error && (
-                <FormHelperText error={!!error}>
-                  {error?.message}
-                </FormHelperText>
-              )}
-            </div>
-          )}
-        />
-      </VoucherSection>
+            )}
+          />
+        </VoucherSection>
+      )}
 
       {!hasUserContext && (
         <SubscribeSection area="challenge">

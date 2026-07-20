@@ -123,6 +123,8 @@ fragment FullSubscribeBlock on SubscribeBlock {
     ...FullMemberPlan
   }
   fields
+  showGoodies
+  showVouchers
 }
 
 fragment FullEventBlock on EventBlock {

@@ -5513,6 +5513,8 @@ export type SubscribeBlock = BaseBlock & {
   memberPlanIds?: Maybe<Array<Scalars['String']>>;
   memberPlans: Array<MemberPlan>;
   plans?: Maybe<Array<SubscribeBlockPlanSetting>>;
+  showGoodies: Scalars['Boolean'];
+  showVouchers: Scalars['Boolean'];
   type: BlockType;
 };
 
@@ -5537,6 +5539,8 @@ export type SubscribeBlockInput = {
   fields?: Array<SubscribeBlockField>;
   memberPlanIds?: InputMaybe<Array<Scalars['String']>>;
   plans?: InputMaybe<Array<SubscribeBlockPlanSettingInput>>;
+  showGoodies?: Scalars['Boolean'];
+  showVouchers?: Scalars['Boolean'];
 };
 
 export enum SubscribeBlockPlanRenderStyle {

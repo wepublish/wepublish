@@ -3899,6 +3899,8 @@ type SubscribeBlock implements BaseBlock {
   memberPlanIds: [String!]
   memberPlans: [MemberPlan!]!
   plans: [SubscribeBlockPlanSetting!]
+  showGoodies: Boolean!
+  showVouchers: Boolean!
   type: BlockType!
 }
 
@@ -3923,6 +3925,8 @@ input SubscribeBlockInput {
   fields: [SubscribeBlockField!]! = [FirstName, Password, PasswordRepeated, Address]
   memberPlanIds: [String!]
   plans: [SubscribeBlockPlanSettingInput!]
+  showGoodies: Boolean! = false
+  showVouchers: Boolean! = false
 }
 
 enum SubscribeBlockPlanRenderStyle {
