@@ -7,21 +7,21 @@
         "MAILCHIMP_SERVER_PREFIX": "us17",
         "STRIPE_PUBLIC_KEY": ""
       },
-      "secret_env": ["MAILCHIMP_API_KEY"]
+      "secret_env": []
     },
     "staging": {
       "deployment": true,
       "env": {
         "MAILCHIMP_SERVER_PREFIX": "us17"
       },
-      "secret_env": ["MAILCHIMP_API_KEY"]
+      "secret_env": []
     },
     "review": {
       "deployment": true,
       "env": {
         "MAILCHIMP_SERVER_PREFIX": "us17"
       },
-      "secret_env": ["MAILCHIMP_API_KEY"]
+      "secret_env": []
     }
   }
 }

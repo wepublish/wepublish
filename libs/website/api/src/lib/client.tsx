@@ -157,14 +157,11 @@ export const useApiClient = (
 };
 
 export const createWithApiClient =
-  (
-    apiUrl: string,
-    links: ApolloLink[] = [],
-    cacheConfig?: InMemoryCacheConfig
-  ) =>
+  (links: ApolloLink[] = [], cacheConfig?: InMemoryCacheConfig) =>
   <
     P extends object,
     NextPage extends {
+      API_URL: string;
       pageProps?: { [V1_CLIENT_STATE_PROP_NAME]?: NormalizedCacheObject };
     },
   >(
@@ -172,7 +169,7 @@ export const createWithApiClient =
   ) =>
     memo<P | NextPage>(props => {
       const client = useApiClient(
-        apiUrl,
+        props.API_URL,
         links,
         cacheConfig,
         (props as NextPage).pageProps?.[V1_CLIENT_STATE_PROP_NAME]

@@ -16,6 +16,8 @@ const nextConfig = {
     APP_ENVIRONMENT: process.env.APP_ENVIRONMENT,
     SSR_FETCH_TIMEOUT_MS: process.env.SSR_FETCH_TIMEOUT_MS,
     API_URL_INTERNAL: process.env.API_URL_INTERNAL || '',
+    API_URL: process.env.API_URL || '',
+    WEBSITE_URL: process.env.WEBSITE_URL || '',
   },
   async redirects() {
     return [
