@@ -1460,6 +1460,7 @@ model Crowdfunding {
   name                    String
   countSubscriptionsFrom  DateTime?
   countSubscriptionsUntil DateTime?
+  endsAt                  DateTime?
   additionalRevenue       Int?
   memberPlans             MemberPlan[]
   goals                   CrowdfundingGoal[]

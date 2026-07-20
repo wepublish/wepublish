@@ -4,6 +4,8 @@ fragment FullCrowdfunding on Crowdfunding {
   revenue
   subscriptions
   goalType
+  endsAt
+  daysRemaining
 
   activeGoal {
     id

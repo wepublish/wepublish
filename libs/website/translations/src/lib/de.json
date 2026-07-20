@@ -65,7 +65,12 @@
     }
   },
   "crowdfunding": {
-    "goal": "{type, select, Revenue {Bereits <bold>{revenue}</bold> finanziert} other {Bereits <bold>{subscriptions, number}</bold> {subscriptions, plural, =1 {Person} other {Personen}} abonniert}}"
+    "goal": "{type, select, Revenue {Bereits <bold>{revenue}</bold> finanziert} other {Bereits <bold>{subscriptions, number}</bold> {subscriptions, plural, =1 {Person} other {Personen}} abonniert}}",
+    "stats": {
+      "progressOfGoal": "{type, select, Revenue {<bold>{current}</bold> von {goal} finanziert} other {<bold>{current}</bold> von {goal} Personen}}",
+      "percentReached": "<bold>{percent}%</bold> des Ziels erreicht",
+      "daysRemaining": "{days, plural, =0 {Kampagne beendet} =1 {noch <bold>1</bold> Tag} other {noch <bold>{days}</bold> Tage}}"
+    }
   },
   "image": {
     "caption": "{caption} {source, select, EMPTY {} other {<ImageSource>(Bild: {source})</ImageSource>}}"

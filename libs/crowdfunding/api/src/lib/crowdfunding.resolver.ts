@@ -117,4 +117,18 @@ export class CrowdfundingResolver {
       subscriptions: await this.subscriptions(parent),
     });
   }
+
+  @ResolveField(() => Number, { nullable: true })
+  daysRemaining(@Parent() parent: PCrowdfunding) {
+    if (!parent.endsAt) {
+      return null;
+    }
+
+    const millisecondsPerDay = 1000 * 60 * 60 * 24;
+    const remaining = Math.ceil(
+      (parent.endsAt.getTime() - Date.now()) / millisecondsPerDay
+    );
+
+    return Math.max(0, remaining);
+  }
 }

@@ -1738,6 +1738,7 @@
         "selectMemberPlans": "Choisir des plans d'abonnement",
         "countSubscriptionsFrom": "Inclure uniquement les abonnements payés à partir de la date",
         "countSubscriptionsUntil": "Inclure uniquement les abonnements payés jusqu'à la date",
+        "endsAt": "Date de fin de la campagne",
         "revenue": "Déjà CHF {{revenue}} financé",
         "goals": "Objectifs",
         "subscriptions": "Déjà {{subscriptions}} abonnés",
