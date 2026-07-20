@@ -464,6 +464,20 @@ export const SubscribeBlock = ({
     [onChange]
   );
 
+  const handleShowGoodiesChange = useCallback(
+    (_value: unknown, checked: boolean) => {
+      onChange(current => ({ ...current, showGoodies: checked }));
+    },
+    [onChange]
+  );
+
+  const handleShowVouchersChange = useCallback(
+    (_value: unknown, checked: boolean) => {
+      onChange(current => ({ ...current, showVouchers: checked }));
+    },
+    [onChange]
+  );
+
   return (
     <Panel bordered>
       <Content>
@@ -613,6 +627,26 @@ export const SubscribeBlock = ({
             {t('blocks.subscribe.renderStyleRules.amountTilesSingle')}
           </Hint>
         )}
+      </Content>
+
+      <Content>
+        <Heading>{t('blocks.subscribe.selectSections')}</Heading>
+
+        <Checkbox
+          checked={value.showGoodies}
+          disabled={disabled}
+          onChange={handleShowGoodiesChange}
+        >
+          {t('blocks.subscribe.showGoodies')}
+        </Checkbox>
+
+        <Checkbox
+          checked={value.showVouchers}
+          disabled={disabled}
+          onChange={handleShowVouchersChange}
+        >
+          {t('blocks.subscribe.showVouchers')}
+        </Checkbox>
       </Content>
 
       <Content>

@@ -146,6 +146,8 @@ export type BuilderSubscribeProps<
     'data' | 'loading' | 'error'
   >;
   planSettings?: SubscribeBlockPlanSetting[];
+  showGoodies?: boolean;
+  showVouchers?: boolean;
   subscribeInfo: Pick<
     QueryResult<CreateSubscriptionInfoQuery>,
     'data' | 'loading' | 'error'

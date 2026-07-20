@@ -272,6 +272,8 @@ fragment BlockWithoutTeaser on BlockContent {
       isDefault
     }
     fields
+    showGoodies
+    showVouchers
     type
   }
 }

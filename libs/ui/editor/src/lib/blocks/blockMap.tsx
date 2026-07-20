@@ -270,6 +270,8 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
         SubscribeBlockField.PasswordRepeated,
         SubscribeBlockField.Address,
       ],
+      showGoodies: false,
+      showVouchers: false,
     },
     label: 'blocks.subscribe.label',
     icon: <MdAccountBox />,

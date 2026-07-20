@@ -25,6 +25,8 @@ export const SubscribeBlock = ({
   memberPlans,
   plans,
   fields,
+  showGoodies,
+  showVouchers,
 }: BuilderSubscribeBlockProps) => {
   const {
     register: [register],
@@ -105,6 +107,8 @@ export const SubscribeBlock = ({
           memberPlans={memberPlansObj}
           fields={fields.map(lowercase) as BuilderSubscribeProps['fields']}
           planSettings={plans ?? undefined}
+          showGoodies={showGoodies}
+          showVouchers={showVouchers}
           defaults={{
             email: mail as string | undefined,
             firstName: firstName as string | undefined,

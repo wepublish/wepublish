@@ -84,6 +84,8 @@ export interface SubscribeBlockValue extends BaseBlockValue {
   memberPlanIds: string[];
   plans: SubscribeBlockPlanSettingValue[];
   fields: SubscribeBlockField[];
+  showGoodies: boolean;
+  showVouchers: boolean;
 }
 
 export interface PollBlockValue extends BaseBlockValue {
@@ -513,6 +515,8 @@ export function mapBlockValueToBlockInput(
           memberPlanIds: block.value.memberPlanIds ?? [],
           plans: block.value.plans ?? [],
           fields: block.value.fields,
+          showGoodies: block.value.showGoodies,
+          showVouchers: block.value.showVouchers,
         },
       };
 
@@ -1140,6 +1144,8 @@ export function blockForQueryBlock(
           disabled: block.disabled,
           blockStyle: block.blockStyle,
           fields: block.fields ?? [],
+          showGoodies: block.showGoodies ?? false,
+          showVouchers: block.showVouchers ?? false,
           memberPlanIds: block.memberPlanIds ?? [],
           plans:
             block.plans?.map(
