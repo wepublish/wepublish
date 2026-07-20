@@ -1756,6 +1756,23 @@ export type MailchimpList = {
   name: Scalars['String'];
 };
 
+export type MailchimpMapping = {
+  __typename?: 'MailchimpMapping';
+  activeFieldIds: Array<Scalars['String']>;
+  interestGroupIds: Array<Scalars['String']>;
+  memberPlanId: Scalars['String'];
+  retargetDelayDays: Scalars['Int'];
+  retargetFieldIds: Array<Scalars['String']>;
+};
+
+export type MailchimpMappingInput = {
+  activeFieldIds?: InputMaybe<Array<Scalars['String']>>;
+  interestGroupIds?: InputMaybe<Array<Scalars['String']>>;
+  memberPlanId: Scalars['String'];
+  retargetDelayDays?: InputMaybe<Scalars['Int']>;
+  retargetFieldIds?: InputMaybe<Array<Scalars['String']>>;
+};
+
 export type MailchimpMergeField = {
   __typename?: 'MailchimpMergeField';
   name: Scalars['String'];
@@ -3215,13 +3232,14 @@ export type MutationUpdateSubscriptionIntervalArgs = {
 
 export type MutationUpdateSyncProviderSettingArgs = {
   enabled?: InputMaybe<Scalars['Boolean']>;
+  firstnameFields?: InputMaybe<Array<Scalars['String']>>;
   id: Scalars['String'];
+  lastnameFields?: InputMaybe<Array<Scalars['String']>>;
+  mailchimpMappings?: InputMaybe<Array<MailchimpMappingInput>>;
   mailchimp_apiKey?: InputMaybe<Scalars['String']>;
   mailchimp_defaultInterestGroupIds?: InputMaybe<Array<Scalars['String']>>;
   mailchimp_extensions?: InputMaybe<Scalars['JSONObject']>;
-  mailchimp_interestGroupMappings?: InputMaybe<Array<Scalars['JSONObject']>>;
   mailchimp_listId?: InputMaybe<Scalars['String']>;
-  mailchimp_mergeFieldMappings?: InputMaybe<Array<Scalars['JSONObject']>>;
   name?: InputMaybe<Scalars['String']>;
 };
 
@@ -5301,15 +5319,17 @@ export type SettingSyncProvider = SettingProvider & {
   __typename?: 'SettingSyncProvider';
   createdAt: Scalars['DateTime'];
   enabled?: Maybe<Scalars['Boolean']>;
+  firstnameFields?: Maybe<Array<Scalars['String']>>;
   id: Scalars['String'];
   lastLoadedAt: Scalars['DateTime'];
   lastSyncAt?: Maybe<Scalars['DateTime']>;
   lastSyncError?: Maybe<Scalars['String']>;
+  lastnameFields?: Maybe<Array<Scalars['String']>>;
+  /** Returns the per-member-plan Mailchimp mappings. */
+  mailchimpMappings: Array<MailchimpMapping>;
   mailchimp_defaultInterestGroupIds?: Maybe<Array<Scalars['String']>>;
   mailchimp_extensions?: Maybe<Scalars['JSONObject']>;
-  mailchimp_interestGroupMappings?: Maybe<Array<Scalars['JSONObject']>>;
   mailchimp_listId?: Maybe<Scalars['String']>;
-  mailchimp_mergeFieldMappings?: Maybe<Array<Scalars['JSONObject']>>;
   modifiedAt: Scalars['DateTime'];
   name?: Maybe<Scalars['String']>;
   type: SyncProviderType;

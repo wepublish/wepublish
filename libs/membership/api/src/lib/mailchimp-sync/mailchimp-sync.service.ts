@@ -15,12 +15,7 @@ interface SubscriptionLite {
   paidUntil: Date | null;
   startsAt: Date;
   autoRenew: boolean;
-  memberPlan: {
-    slug: string;
-  };
-  paymentMethod: {
-    slug: string;
-  };
+  memberPlanId: string;
   deactivation: { id: string } | null;
   replacesSubscriptionID: string | null;
 }
@@ -33,8 +28,15 @@ interface UserAndSubscriptions {
     name: string;
   };
   subscriptions: SubscriptionLite[];
-  currentSubscription?: SubscriptionLite;
-  lastSubscription?: SubscriptionLite;
+}
+
+// Per-member-plan Mailchimp mapping, loaded from the MailchimpMapping table.
+interface PlanMapping {
+  memberPlanId: string;
+  activeFieldIds: string[];
+  retargetFieldIds: string[];
+  retargetDelayDays: number;
+  interestGroupIds: string[];
 }
 
 // Window in which a new subscription still counts as "genuinely new" for
@@ -54,15 +56,8 @@ const RENEWAL_PROXIMITY_MS = 30 * 24 * 60 * 60 * 1000;
 // ended even if autoRenew is still true and no deactivation exists.
 const GRACE_PERIOD_MS = 45 * 24 * 60 * 60 * 1000;
 
-interface MergeFieldMapping {
-  tag: string;
-  expression: string;
-}
-
-interface InterestGroupMapping {
-  groupId: string;
-  expression: string;
-}
+// Fallback written to a first/last name merge field when the user has no value.
+const UNKNOWN_NAME = 'Unbekannt';
 
 export interface DryRunChange {
   email: string;
@@ -207,12 +202,26 @@ export class MailchimpSyncService {
 
     this.configureMailchimpClient(config);
 
-    const mergeFieldMappings = (config.mailchimp_mergeFieldMappings ??
-      []) as unknown as MergeFieldMapping[];
-    const interestGroupMappings = (config.mailchimp_interestGroupMappings ??
-      []) as unknown as InterestGroupMapping[];
+    const planMappings = await this.getPlanMappings(config.id);
+    const firstnameFields = (config.firstnameFields ??
+      []) as unknown as string[];
+    const lastnameFields = (config.lastnameFields ?? []) as unknown as string[];
     const defaultInterestGroupIds = (config.mailchimp_defaultInterestGroupIds ??
       []) as unknown as string[];
+
+    // Interest group -> the member plans that map to it, so a group targeted by
+    // several plans is evaluated once against all matching subscriptions.
+    const interestGroupToPlanIds = new Map<string, Set<string>>();
+    for (const mapping of planMappings) {
+      for (const groupId of mapping.interestGroupIds) {
+        let planIds = interestGroupToPlanIds.get(groupId);
+        if (!planIds) {
+          planIds = new Set<string>();
+          interestGroupToPlanIds.set(groupId, planIds);
+        }
+        planIds.add(mapping.memberPlanId);
+      }
+    }
 
     // Fetch all users with subscriptions via Prisma
     const usersWithSubscriptions = await this.getUsersWithSubscriptions();
@@ -327,15 +336,47 @@ export class MailchimpSyncService {
         continue;
       }
 
-      const mergeFields: Record<string, string> = {};
-      for (const mapping of mergeFieldMappings) {
-        const value = this.evaluateMergeFieldExpression(
-          mapping.expression,
-          userWithSub
+      const now = new Date();
+
+      // Active / retarget merge fields, aggregated per tag. A tag may be
+      // targeted by several plans (and as both active and retarget); the
+      // highest-precedence value wins ("1" > "-1" > empty).
+      const fieldValues = new Map<string, string>();
+      for (const mapping of planMappings) {
+        const matchingSubs = userWithSub.subscriptions.filter(
+          sub => sub.memberPlanId === mapping.memberPlanId
         );
-        if (value !== '') {
-          mergeFields[mapping.tag] = value;
+        if (matchingSubs.length === 0) continue;
+
+        const activeValue = this.computePlanActiveValue(matchingSubs, now);
+        for (const tag of mapping.activeFieldIds) {
+          this.applyFieldValue(fieldValues, tag, activeValue);
         }
+
+        const retargetValue = this.computePlanRetargetValue(
+          matchingSubs,
+          mapping.retargetDelayDays,
+          now
+        );
+        for (const tag of mapping.retargetFieldIds) {
+          this.applyFieldValue(fieldValues, tag, retargetValue);
+        }
+      }
+
+      const mergeFields: Record<string, string> = {};
+      for (const [tag, value] of fieldValues) {
+        mergeFields[tag] = value;
+      }
+
+      // Name merge fields are written last so they always win over any
+      // accidental overlap with active/retarget tags.
+      const firstName = (userWithSub.user.firstName || UNKNOWN_NAME).trim();
+      const lastName = (userWithSub.user.name || UNKNOWN_NAME).trim();
+      for (const tag of firstnameFields) {
+        mergeFields[tag] = firstName;
+      }
+      for (const tag of lastnameFields) {
+        mergeFields[tag] = lastName;
       }
 
       const interests: Record<string, boolean> = {};
@@ -363,12 +404,14 @@ export class MailchimpSyncService {
       // new matching subscription starts, and only flip to false when all
       // matching subs are definitively ended. Otherwise preserve the
       // existing value (from Mailchimp or false for new contacts).
-      for (const mapping of interestGroupMappings) {
-        if (defaultInterestGroupIds.includes(mapping.groupId)) continue;
-        const currentValue = interests[mapping.groupId] ?? false;
-        interests[mapping.groupId] = this.determineInterestValue(
-          mapping,
-          userWithSub.subscriptions,
+      for (const [groupId, planIds] of interestGroupToPlanIds) {
+        if (defaultInterestGroupIds.includes(groupId)) continue;
+        const matchingSubs = userWithSub.subscriptions.filter(sub =>
+          planIds.has(sub.memberPlanId)
+        );
+        const currentValue = interests[groupId] ?? false;
+        interests[groupId] = this.determineInterestValue(
+          matchingSubs,
           currentValue
         );
       }
@@ -586,6 +629,22 @@ export class MailchimpSyncService {
     }
   }
 
+  private async getPlanMappings(
+    syncProviderId: string
+  ): Promise<PlanMapping[]> {
+    const mappings = await this.prisma.mailchimpMapping.findMany({
+      where: { syncProviderId },
+    });
+
+    return mappings.map(mapping => ({
+      memberPlanId: mapping.memberPlanId,
+      activeFieldIds: (mapping.activeFieldIds as string[]) ?? [],
+      retargetFieldIds: (mapping.retargetFieldIds as string[]) ?? [],
+      retargetDelayDays: mapping.retargetDelayDays,
+      interestGroupIds: (mapping.interestGroupIds as string[]) ?? [],
+    }));
+  }
+
   private async getUsersWithSubscriptions(): Promise<UserAndSubscriptions[]> {
     const users = await this.prisma.user.findMany({
       where: { active: true },
@@ -607,12 +666,7 @@ export class MailchimpSyncService {
         paidUntil: true,
         startsAt: true,
         autoRenew: true,
-        memberPlan: {
-          select: { slug: true },
-        },
-        paymentMethod: {
-          select: { slug: true },
-        },
+        memberPlanID: true,
         deactivation: {
           select: { id: true },
         },
@@ -620,42 +674,26 @@ export class MailchimpSyncService {
       },
     });
 
-    const subsByUser = new Map<string, typeof subscriptions>();
+    const subsByUser = new Map<string, SubscriptionLite[]>();
     for (const sub of subscriptions) {
+      const lite: SubscriptionLite = {
+        id: sub.id,
+        paidUntil: sub.paidUntil,
+        startsAt: sub.startsAt,
+        autoRenew: sub.autoRenew,
+        memberPlanId: sub.memberPlanID,
+        deactivation: sub.deactivation,
+        replacesSubscriptionID: sub.replacesSubscriptionID,
+      };
       const existing = subsByUser.get(sub.userID) ?? [];
-      existing.push(sub);
+      existing.push(lite);
       subsByUser.set(sub.userID, existing);
     }
 
-    return users.map(user => {
-      const userSubs = subsByUser.get(user.id) ?? [];
-
-      // currentSubscription = any subscription without a deactivation record.
-      // paidUntil in the past is fine (grace period / pending renewal) — the
-      // subscription is considered active until it's formally deactivated.
-      const currentSubscription = userSubs
-        .filter(
-          s => !s.deactivation || (s.paidUntil && s.paidUntil > new Date())
-        )
-        .sort(
-          (a, b) =>
-            (b.paidUntil?.getTime() ?? 0) - (a.paidUntil?.getTime() ?? 0)
-        )[0];
-
-      // lastSubscription and subscriptions include deactivated subs so
-      // expressions like active_abo (-1) and retarget:days flag churned
-      // users, not just those in a silent grace period.
-      const lastSubscription = [...userSubs].sort(
-        (a, b) => (b.paidUntil?.getTime() ?? 0) - (a.paidUntil?.getTime() ?? 0)
-      )[0];
-
-      return {
-        user,
-        subscriptions: userSubs,
-        currentSubscription,
-        lastSubscription,
-      };
-    });
+    return users.map(user => ({
+      user,
+      subscriptions: subsByUser.get(user.id) ?? [],
+    }));
   }
 
   private async getMailchimpContacts(listId: string): Promise<any[]> {
@@ -777,168 +815,86 @@ export class MailchimpSyncService {
   }
 
   /**
-   * Evaluate a merge field expression against user/subscription data.
-   *
-   * Supports pipe `|` as OR: first non-empty result wins.
-   * E.g. "slug:contains:firmen-abo|slug:contains:gonner"
-   *
-   * Single expression formats:
-   * - "user.firstName" / "user.name" / "user.id" - direct user field access
-   * - "slug:contains:value" / "slug:contains_any:v1,v2" / "slug:equals:value"
-   *     "1" if current subscription plan slug matches, "-1" if only past
-   *     subscriptions match, "" if no matching sub ever.
-   * - "active_abo" - "1" if active, "-1" if past subscriptions, "" if none
-   * - "active_abo_with_payment:method_slug:days" - like active_abo but also returns "1"
-   *     if last subscription has given payment method and paidUntil within N days
-   * - "retarget:days" - "1" if last subscription paidUntil within N days, "-1" if currently subscribed but was previously retargetable, else ""
-   * - "static:value" - always returns the given value
+   * Value written to a plan's "active" merge fields:
+   * - "1" if a matching subscription is currently active
+   * - "-1" if only past matching subscriptions exist
+   * - "" if there is no matching subscription
    */
-  private evaluateMergeFieldExpression(
-    expression: string,
-    data: UserAndSubscriptions
+  private computePlanActiveValue(
+    matchingSubs: SubscriptionLite[],
+    now: Date
   ): string {
-    // Support OR via pipe separator
-    if (expression.includes('|')) {
-      for (const subExpr of expression.split('|')) {
-        const result = this.evaluateSingleMergeField(subExpr.trim(), data);
-        if (result !== '') return result;
-      }
+    if (matchingSubs.some(sub => this.isSubscriptionActive(sub, now))) {
+      return '1';
+    }
+    if (matchingSubs.length > 0) {
+      return '-1';
+    }
+    return '';
+  }
+
+  /**
+   * Value written to a plan's "retarget" merge fields: "1" when the most
+   * recent matching subscription expired within the last `days` days and no
+   * matching subscription is currently active, otherwise "" (cleared).
+   */
+  private computePlanRetargetValue(
+    matchingSubs: SubscriptionLite[],
+    days: number,
+    now: Date
+  ): string {
+    if (matchingSubs.length === 0) {
+      return '';
+    }
+    if (matchingSubs.some(sub => this.isSubscriptionActive(sub, now))) {
       return '';
     }
 
-    return this.evaluateSingleMergeField(expression, data);
+    const lastPaidUntil = matchingSubs
+      .map(sub => sub.paidUntil)
+      .filter((date): date is Date => !!date)
+      .sort((a, b) => b.getTime() - a.getTime())[0];
+
+    if (lastPaidUntil && this.isWithinLastXDays(lastPaidUntil, days)) {
+      return '1';
+    }
+    return '';
   }
 
-  private evaluateSingleMergeField(
-    expression: string,
-    data: UserAndSubscriptions
-  ): string {
-    const parts = expression.split(':');
-    const type = parts[0];
-
-    switch (type) {
-      case 'user.firstName':
-        return (data.user.firstName || 'Unbekannt').trim();
-
-      case 'user.name':
-        return (data.user.name || 'Unbekannt').trim();
-
-      case 'user.id':
-        return data.user.id;
-
-      case 'slug': {
-        const op = parts[1];
-        const value = parts.slice(2).join(':');
-
-        const matches = (slug: string | undefined): boolean => {
-          if (!slug) return false;
-          if (op === 'equals') return slug === value;
-          if (op === 'contains') return slug.includes(value);
-          if (op === 'contains_any') {
-            return value.split(',').some(v => slug.includes(v.trim()));
-          }
-          return false;
-        };
-
-        const now = new Date();
-        const matchingSubs = data.subscriptions.filter(s =>
-          matches(s.memberPlan.slug)
-        );
-        if (matchingSubs.some(s => this.isSubscriptionActive(s, now))) {
-          return '1';
-        }
-        if (matchingSubs.length > 0) {
-          return '-1';
-        }
-        return '';
-      }
-
-      case 'active_abo': {
-        if (data.currentSubscription) return '1';
-        if (data.subscriptions.length > 0) return '-1';
-        return '';
-      }
-
-      case 'active_abo_with_payment': {
-        // active_abo_with_payment:bexio:30
-        // Returns "1" if active, or if last sub has matching payment method
-        // and paidUntil is within N days. Otherwise "-1" if any subs, "" if none.
-        const paymentSlug = parts[1];
-        const days = parseInt(parts[2] ?? '30', 10);
-
-        if (data.currentSubscription) return '1';
-        if (
-          paymentSlug &&
-          data.lastSubscription?.paymentMethod.slug === paymentSlug &&
-          data.lastSubscription?.paidUntil &&
-          this.isWithinLastXDays(data.lastSubscription.paidUntil, days)
-        ) {
-          return '1';
-        }
-        if (data.subscriptions.length > 0) return '-1';
-        return '';
-      }
-
-      case 'retarget': {
-        const days = parseInt(parts[1] ?? '45', 10);
-        if (data.currentSubscription) {
-          const hasPastSubscriptions = data.subscriptions.some(
-            s => s !== data.currentSubscription
-          );
-          return hasPastSubscriptions ? '-1' : '';
-        }
-        if (
-          data.lastSubscription?.paidUntil &&
-          this.isWithinLastXDays(data.lastSubscription.paidUntil, days)
-        ) {
-          return '1';
-        }
-        return '';
-      }
-
-      case 'static':
-        return parts.slice(1).join(':');
-
-      default:
-        return '';
+  /**
+   * Aggregate a candidate value for a merge field tag, keeping the highest
+   * precedence across the plans that target the tag: "1" > "-1" > "" (empty).
+   *
+   * This is only ever called for plans the user actually holds, so an empty
+   * value is still registered (rather than skipped): it clears an expired
+   * retarget flag in Mailchimp unless another plan supplies a "1"/"-1".
+   */
+  private applyFieldValue(
+    fieldValues: Map<string, string>,
+    tag: string,
+    value: string
+  ): void {
+    const rank = (candidate: string | undefined): number =>
+      candidate === '1' ? 2
+      : candidate === '-1' ? 1
+      : 0;
+    const existing = fieldValues.get(tag);
+    if (existing === undefined || rank(value) > rank(existing)) {
+      fieldValues.set(tag, value);
     }
   }
 
   /**
-   * Check whether a single subscription matches an interest group expression.
-   * Supported formats:
-   * - "slug:equals:value"
-   * - "slug:contains:value"
-   * - "slug:contains_any:val1,val2"
+   * Decide the boolean value of an interest group given the subscriptions
+   * matching the plans mapped to it: only flip to true when a genuinely new
+   * matching subscription starts, and only flip to false when all matching
+   * subs are definitively ended. Otherwise preserve the current value.
    */
-  private subscriptionMatchesInterestExpression(
-    expression: string,
-    subscription: SubscriptionLite
-  ): boolean {
-    const parts = expression.split(':');
-    if (parts[0] !== 'slug') return false;
-
-    const op = parts[1];
-    const value = parts.slice(2).join(':');
-    const slug = subscription.memberPlan.slug;
-
-    if (op === 'equals') return slug === value;
-    if (op === 'contains') return slug.includes(value);
-    if (op === 'contains_any') {
-      return value.split(',').some(v => slug.includes(v.trim()));
-    }
-    return false;
-  }
-
   private determineInterestValue(
-    mapping: InterestGroupMapping,
-    subscriptions: SubscriptionLite[],
+    matchingSubs: SubscriptionLite[],
     currentValue: boolean
   ): boolean {
     const now = new Date();
-    const matchingSubs = subscriptions.filter(sub =>
-      this.subscriptionMatchesInterestExpression(mapping.expression, sub)
-    );
 
     if (matchingSubs.length === 0) return currentValue;
 

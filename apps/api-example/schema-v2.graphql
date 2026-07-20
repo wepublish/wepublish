@@ -1609,6 +1609,22 @@ type MailchimpList {
   name: String!
 }
 
+type MailchimpMapping {
+  activeFieldIds: [String!]!
+  interestGroupIds: [String!]!
+  memberPlanId: String!
+  retargetDelayDays: Int!
+  retargetFieldIds: [String!]!
+}
+
+input MailchimpMappingInput {
+  activeFieldIds: [String!]
+  interestGroupIds: [String!]
+  memberPlanId: String!
+  retargetDelayDays: Int
+  retargetFieldIds: [String!]
+}
+
 type MailchimpMergeField {
   name: String!
   tag: String!
@@ -2207,7 +2223,7 @@ type Mutation {
   updateSubscriptionInterval(daysAwayFromEnding: Int, id: String!, mailTemplateId: String): [SubscriptionFlowModel!]!
 
   """Updates an existing sync provider setting."""
-  updateSyncProviderSetting(enabled: Boolean, id: String!, mailchimp_apiKey: String, mailchimp_defaultInterestGroupIds: [String!], mailchimp_extensions: JSONObject, mailchimp_interestGroupMappings: [JSONObject!], mailchimp_listId: String, mailchimp_mergeFieldMappings: [JSONObject!], name: String): SettingSyncProvider!
+  updateSyncProviderSetting(enabled: Boolean, firstnameFields: [String!], id: String!, lastnameFields: [String!], mailchimpMappings: [MailchimpMappingInput!], mailchimp_apiKey: String, mailchimp_defaultInterestGroupIds: [String!], mailchimp_extensions: JSONObject, mailchimp_listId: String, name: String): SettingSyncProvider!
 
   """Updates an existing mail flow"""
   updateSystemMail(event: UserEvent!, mailTemplateId: String!): [SystemMailModel!]!
@@ -3704,15 +3720,18 @@ type SettingRestriction {
 type SettingSyncProvider implements SettingProvider {
   createdAt: DateTime!
   enabled: Boolean
+  firstnameFields: [String!]
   id: String!
   lastLoadedAt: DateTime!
   lastSyncAt: DateTime
   lastSyncError: String
+  lastnameFields: [String!]
+
+  """Returns the per-member-plan Mailchimp mappings."""
+  mailchimpMappings: [MailchimpMapping!]!
   mailchimp_defaultInterestGroupIds: [String!]
   mailchimp_extensions: JSONObject
-  mailchimp_interestGroupMappings: [JSONObject!]
   mailchimp_listId: String
-  mailchimp_mergeFieldMappings: [JSONObject!]
   modifiedAt: DateTime!
   name: String
   type: SyncProviderType!

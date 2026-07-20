@@ -8,6 +8,8 @@ import {
   CreateSettingSyncProviderInput,
   UpdateSettingSyncProviderInput,
   SettingSyncProviderFilter,
+  MailchimpMapping,
+  MailchimpMappingInput,
 } from './sync-provider-settings.model';
 import { PrimeDataLoader } from '@wepublish/utils/api';
 import { SyncProviderSettingsDataloaderService } from './sync-provider-settings-dataloader.service';
@@ -81,7 +83,7 @@ export class SyncProviderSettingsService {
     input: UpdateSettingSyncProviderInput
   ): Promise<SettingSyncProvider> {
     const output = this.encryptSecretsIfPresent(input);
-    const { id, ...updateData } = output;
+    const { id, mailchimpMappings, ...updateData } = output;
     const existingSetting = await this.prisma.settingSyncProvider.findUnique({
       where: { id },
     });
@@ -102,8 +104,72 @@ export class SyncProviderSettingsService {
       where: { id },
       data: filteredUpdateData,
     });
+
+    if (mailchimpMappings !== undefined) {
+      await this.saveMailchimpMappings(id, mailchimpMappings);
+    }
+
     await this.kv.resetNamespace('settings:syncprovider');
     return returnValue;
+  }
+
+  /**
+   * Return the per-member-plan Mailchimp mappings for a sync provider.
+   */
+  async getMailchimpMappings(
+    syncProviderId: string
+  ): Promise<MailchimpMapping[]> {
+    const mappings = await this.prisma.mailchimpMapping.findMany({
+      where: { syncProviderId },
+    });
+
+    return mappings.map(mapping => ({
+      memberPlanId: mapping.memberPlanId,
+      activeFieldIds: (mapping.activeFieldIds as string[]) ?? [],
+      retargetFieldIds: (mapping.retargetFieldIds as string[]) ?? [],
+      retargetDelayDays: mapping.retargetDelayDays,
+      interestGroupIds: (mapping.interestGroupIds as string[]) ?? [],
+    }));
+  }
+
+  /**
+   * Replace the per-member-plan Mailchimp mappings for a sync provider with the
+   * provided set. Mappings for member plans not included are removed.
+   */
+  private async saveMailchimpMappings(
+    syncProviderId: string,
+    mappings: MailchimpMappingInput[]
+  ): Promise<void> {
+    const memberPlanIds = mappings.map(mapping => mapping.memberPlanId);
+
+    await this.prisma.$transaction([
+      this.prisma.mailchimpMapping.deleteMany({
+        where: { syncProviderId, memberPlanId: { notIn: memberPlanIds } },
+      }),
+      ...mappings.map(mapping => {
+        const data = {
+          activeFieldIds: mapping.activeFieldIds ?? [],
+          retargetFieldIds: mapping.retargetFieldIds ?? [],
+          retargetDelayDays: mapping.retargetDelayDays ?? 30,
+          interestGroupIds: mapping.interestGroupIds ?? [],
+        };
+
+        return this.prisma.mailchimpMapping.upsert({
+          where: {
+            syncProviderId_memberPlanId: {
+              syncProviderId,
+              memberPlanId: mapping.memberPlanId,
+            },
+          },
+          create: {
+            syncProviderId,
+            memberPlanId: mapping.memberPlanId,
+            ...data,
+          },
+          update: data,
+        });
+      }),
+    ]);
   }
 
   @PrimeDataLoader(SyncProviderSettingsDataloaderService, 'id')

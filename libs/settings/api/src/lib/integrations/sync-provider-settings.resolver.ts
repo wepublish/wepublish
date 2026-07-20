@@ -1,10 +1,18 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import {
   CanGetMailchimpSyncSettings,
   CanUpdateMailchimpSyncSettings,
 } from '@wepublish/permissions';
 import { Permissions } from '@wepublish/permissions/api';
 import {
+  MailchimpMapping,
   SettingSyncProvider,
   UpdateSettingSyncProviderInput,
   SettingSyncProviderFilter,
@@ -12,7 +20,7 @@ import {
 import { SyncProviderSettingsService } from './sync-provider-settings.service';
 import { SyncProviderSettingsDataloaderService } from './sync-provider-settings-dataloader.service';
 
-@Resolver()
+@Resolver(() => SettingSyncProvider)
 export class SyncProviderSettingsResolver {
   constructor(
     private syncProviderSettingsService: SyncProviderSettingsService,
@@ -46,5 +54,13 @@ export class SyncProviderSettingsResolver {
   })
   updateSyncProviderSetting(@Args() input: UpdateSettingSyncProviderInput) {
     return this.syncProviderSettingsService.updateSyncProviderSetting(input);
+  }
+
+  @Permissions(CanGetMailchimpSyncSettings)
+  @ResolveField(() => [MailchimpMapping], {
+    description: 'Returns the per-member-plan Mailchimp mappings.',
+  })
+  mailchimpMappings(@Parent() provider: SettingSyncProvider) {
+    return this.syncProviderSettingsService.getMailchimpMappings(provider.id);
   }
 }

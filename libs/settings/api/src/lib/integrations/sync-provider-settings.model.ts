@@ -1,5 +1,6 @@
 import {
   Field,
+  Int,
   ObjectType,
   ArgsType,
   PartialType,
@@ -16,6 +17,42 @@ registerEnumType(SyncProviderType, {
   name: 'SyncProviderType',
 });
 
+@ObjectType()
+export class MailchimpMapping {
+  @Field()
+  memberPlanId!: string;
+
+  @Field(() => [String])
+  activeFieldIds!: string[];
+
+  @Field(() => [String])
+  retargetFieldIds!: string[];
+
+  @Field(() => Int)
+  retargetDelayDays!: number;
+
+  @Field(() => [String])
+  interestGroupIds!: string[];
+}
+
+@InputType()
+export class MailchimpMappingInput {
+  @Field()
+  memberPlanId!: string;
+
+  @Field(() => [String], { nullable: true })
+  activeFieldIds?: string[];
+
+  @Field(() => [String], { nullable: true })
+  retargetFieldIds?: string[];
+
+  @Field(() => Int, { nullable: true })
+  retargetDelayDays?: number;
+
+  @Field(() => [String], { nullable: true })
+  interestGroupIds?: string[];
+}
+
 @ObjectType({
   implements: () => [SettingProvider],
 })
@@ -30,17 +67,17 @@ export class SettingSyncProvider extends SettingProvider {
   @Field({ nullable: true })
   mailchimp_listId?: string;
 
-  @Field(() => [GraphQLJSONObject], { nullable: true })
-  mailchimp_mergeFieldMappings?: Record<string, string>[];
-
-  @Field(() => [GraphQLJSONObject], { nullable: true })
-  mailchimp_interestGroupMappings?: Record<string, string>[];
-
   @Field(() => [String], { nullable: true })
   mailchimp_defaultInterestGroupIds?: string[];
 
   @Field(() => GraphQLJSONObject, { nullable: true })
   mailchimp_extensions?: Record<string, any>;
+
+  @Field(() => [String], { nullable: true })
+  firstnameFields?: string[];
+
+  @Field(() => [String], { nullable: true })
+  lastnameFields?: string[];
 
   @Field({ nullable: true })
   lastSyncAt?: Date;
@@ -81,6 +118,9 @@ export class CreateSettingSyncProviderInput extends OmitType(
 
   @Field({ nullable: true })
   mailchimp_apiKey?: string;
+
+  @Field(() => [MailchimpMappingInput], { nullable: true })
+  mailchimpMappings?: MailchimpMappingInput[];
 }
 
 @ArgsType()

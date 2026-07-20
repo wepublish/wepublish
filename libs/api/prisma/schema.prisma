@@ -608,9 +608,10 @@ model MemberPlan {
   subscription      Subscription[]
   subscriptionFlows SubscriptionFlow[]
 
-  crowdfundings Crowdfunding[]
-  paywalls      PaywallMemberplan[]
-  vouchers      Voucher[]
+  crowdfundings     Crowdfunding[]
+  paywalls          PaywallMemberplan[]
+  vouchers          Voucher[]
+  mailchimpMappings MailchimpMapping[]
 
   @@index([name])
   @@map("member.plans")
@@ -1862,13 +1863,37 @@ model SettingSyncProvider {
   mailchimp_defaultInterestGroupIds Json    @default("[]")
   mailchimp_extensions              Json    @default("{}")
 
+  firstnameFields Json @default("[]")
+  lastnameFields  Json @default("[]")
+
   // Last sync execution info
   lastSyncAt    DateTime?
   lastSyncError String?
 
   mailchimpSyncErrors MailchimpSyncError[]
+  mailchimpMappings   MailchimpMapping[]
 
   @@map("settings.syncprovider")
+}
+
+model MailchimpMapping {
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  syncProvider   SettingSyncProvider @relation(fields: [syncProviderId], references: [id], onDelete: Cascade)
+  syncProviderId String
+
+  memberPlan   MemberPlan @relation(fields: [memberPlanId], references: [id], onDelete: Cascade)
+  memberPlanId String
+
+  activeFieldIds    Json @default("[]")
+  retargetFieldIds  Json @default("[]")
+  retargetDelayDays Int  @default(30)
+  interestGroupIds  Json @default("[]")
+
+  @@unique([syncProviderId, memberPlanId])
+  @@map("mailchimp_mappings")
 }
 
 model MailchimpSyncError {

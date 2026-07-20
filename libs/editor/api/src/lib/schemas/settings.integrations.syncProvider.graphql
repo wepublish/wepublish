@@ -1,19 +1,30 @@
+fragment SyncProviderSettingFields on SettingSyncProvider {
+  id
+  createdAt
+  modifiedAt
+  lastLoadedAt
+  type
+  name
+  enabled
+  mailchimp_listId
+  mailchimp_defaultInterestGroupIds
+  mailchimp_extensions
+  firstnameFields
+  lastnameFields
+  mailchimpMappings {
+    memberPlanId
+    activeFieldIds
+    retargetFieldIds
+    retargetDelayDays
+    interestGroupIds
+  }
+  lastSyncAt
+  lastSyncError
+}
+
 query SyncProviderSettings {
   syncProviderSettings {
-    id
-    createdAt
-    modifiedAt
-    lastLoadedAt
-    type
-    name
-    enabled
-    mailchimp_listId
-    mailchimp_mergeFieldMappings
-    mailchimp_interestGroupMappings
-    mailchimp_defaultInterestGroupIds
-    mailchimp_extensions
-    lastSyncAt
-    lastSyncError
+    ...SyncProviderSettingFields
   }
 }
 
@@ -23,10 +34,11 @@ mutation UpdateSyncProviderSetting(
   $enabled: Boolean
   $mailchimp_apiKey: String
   $mailchimp_listId: String
-  $mailchimp_mergeFieldMappings: [JSONObject!]
-  $mailchimp_interestGroupMappings: [JSONObject!]
   $mailchimp_defaultInterestGroupIds: [String!]
   $mailchimp_extensions: JSONObject
+  $firstnameFields: [String!]
+  $lastnameFields: [String!]
+  $mailchimpMappings: [MailchimpMappingInput!]
 ) {
   updateSyncProviderSetting(
     id: $id
@@ -34,25 +46,13 @@ mutation UpdateSyncProviderSetting(
     enabled: $enabled
     mailchimp_apiKey: $mailchimp_apiKey
     mailchimp_listId: $mailchimp_listId
-    mailchimp_mergeFieldMappings: $mailchimp_mergeFieldMappings
-    mailchimp_interestGroupMappings: $mailchimp_interestGroupMappings
     mailchimp_defaultInterestGroupIds: $mailchimp_defaultInterestGroupIds
     mailchimp_extensions: $mailchimp_extensions
+    firstnameFields: $firstnameFields
+    lastnameFields: $lastnameFields
+    mailchimpMappings: $mailchimpMappings
   ) {
-    id
-    createdAt
-    modifiedAt
-    lastLoadedAt
-    type
-    name
-    enabled
-    mailchimp_listId
-    mailchimp_mergeFieldMappings
-    mailchimp_interestGroupMappings
-    mailchimp_defaultInterestGroupIds
-    mailchimp_extensions
-    lastSyncAt
-    lastSyncError
+    ...SyncProviderSettingFields
   }
 }
 

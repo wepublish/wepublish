@@ -12,7 +12,6 @@ import {
   useMailchimpListsLazyQuery,
   useMailchimpMergeFieldsLazyQuery,
   useMemberPlanListQuery,
-  usePaymentMethodListQuery,
   useSyncProviderSettingsQuery,
   useTriggerMailchimpSyncMutation,
   useUpdateSyncProviderSettingMutation,
@@ -33,29 +32,27 @@ import {
   FormControlLabel,
   IconButton,
   LinearProgress,
+  Link,
   MenuItem,
   Select,
   Switch,
   TextField,
   Typography,
 } from '@mui/material';
-import { useCallback, useEffect, useState } from 'react';
-import { Controller, useFieldArray, useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
-import { MdAdd, MdDelete, MdExpandMore, MdSync } from 'react-icons/md';
-import { Checkbox, Form, Input, Loader, Message, toaster } from 'rsuite';
+import { Fragment, useCallback, useEffect, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { Trans, useTranslation } from 'react-i18next';
+import { MdDelete, MdExpandMore, MdSync } from 'react-icons/md';
+import { Checkbox, Form, Loader, Message, toaster } from 'rsuite';
 import { z } from 'zod';
 
 import mailChimpLogo from './assets/mailchimp.webp';
 
-const mergeFieldMappingSchema = z.object({
-  tag: z.string().min(1),
-  expression: z.string().min(1),
-});
-
-const interestGroupMappingSchema = z.object({
-  groupId: z.string().min(1),
-  expression: z.string().min(1),
+const memberPlanMappingSchema = z.object({
+  activeFieldIds: z.array(z.string()).optional(),
+  retargetFieldIds: z.array(z.string()).optional(),
+  retargetDelayDays: z.number().optional(),
+  interestGroupIds: z.array(z.string()).optional(),
 });
 
 const clickTrackingExtensionSchema = z.object({
@@ -92,10 +89,6 @@ const syncProviderSchema = z.object({
   enabled: z.boolean().optional(),
   mailchimp_apiKey: z.string().nullish().or(z.literal('')),
   mailchimp_listId: z.string().nullish().or(z.literal('')),
-  mailchimp_mergeFieldMappings: z.array(mergeFieldMappingSchema).optional(),
-  mailchimp_interestGroupMappings: z
-    .array(interestGroupMappingSchema)
-    .optional(),
   mailchimp_defaultInterestGroupIds: z.array(z.string()).optional(),
   mailchimp_extensions: z
     .object({
@@ -103,6 +96,9 @@ const syncProviderSchema = z.object({
     })
     .optional()
     .default({}),
+  firstnameFields: z.array(z.string()).optional(),
+  lastnameFields: z.array(z.string()).optional(),
+  mailchimpMappings: z.record(z.string(), memberPlanMappingSchema).optional(),
 });
 
 type SyncProviderFormValues = z.infer<typeof syncProviderSchema>;
@@ -124,17 +120,6 @@ const HeaderLogo = styled.img`
   max-width: 150px;
 `;
 
-const MappingRow = styled.div`
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  margin-bottom: 8px;
-`;
-
-const MappingInput = styled(Input)`
-  flex: 1;
-`;
-
 const SectionTitle = styled(Typography)`
   margin-top: 16px;
   margin-bottom: 8px;
@@ -144,371 +129,27 @@ const SyncStatusWrapper = styled.div`
   margin-top: 12px;
 `;
 
+const MemberPlanGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 2fr 2fr 1fr 2fr;
+  gap: 8px;
+  align-items: center;
+`;
+
+const MemberPlanInput = styled.div``;
+
+const NameFieldGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 8px;
+  align-items: center;
+`;
+
 type SyncProviderSetting =
   SyncProviderSettingsQuery['syncProviderSettings'][number];
 
-const ExpressionRow = styled.div`
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  flex: 1;
-`;
-
-type SlugOp = 'contains' | 'contains_any' | 'equals';
-
-const INTEREST_OPS: SlugOp[] = ['contains', 'equals', 'contains_any'];
-
-function parseSlugExpression(expr: string): {
-  op: SlugOp;
-  value: string;
-} | null {
-  const match = /^slug:(contains_any|contains|equals):(.*)$/.exec(expr);
-  if (!match) return null;
-  return { op: match[1] as SlugOp, value: match[2] };
-}
-
-function buildSlugExpression(op: SlugOp, value: string): string {
-  return `slug:${op}:${value}`;
-}
-
-function InterestExpressionEditor({
-  value,
-  onChange,
-  memberPlanSlugs,
-}: {
-  value: string;
-  onChange: (v: string) => void;
-  memberPlanSlugs: { slug: string; name: string }[];
-}) {
-  const { t } = useTranslation();
-  const parsed = parseSlugExpression(value);
-  const op = parsed?.op ?? 'contains';
-  const exprValue = parsed?.value ?? (parsed ? '' : value);
-
-  return (
-    <ExpressionRow>
-      <Select
-        size="small"
-        value={op}
-        onChange={e => {
-          onChange(buildSlugExpression(e.target.value as SlugOp, exprValue));
-        }}
-        sx={{ minWidth: 140 }}
-      >
-        {INTEREST_OPS.map(o => (
-          <MenuItem
-            key={o}
-            value={o}
-          >
-            {t(`integrations.mailchimpSyncSettings.op_${o}`)}
-          </MenuItem>
-        ))}
-      </Select>
-
-      {op === 'equals' ?
-        <Autocomplete
-          freeSolo
-          options={memberPlanSlugs.map(p => p.slug)}
-          getOptionLabel={slug => {
-            const plan = memberPlanSlugs.find(p => p.slug === slug);
-            return plan ? `${plan.name} (${plan.slug})` : slug;
-          }}
-          filterOptions={(options, { inputValue }) =>
-            inputValue ?
-              options.filter(slug => {
-                const plan = memberPlanSlugs.find(p => p.slug === slug);
-                const label = plan ? `${plan.name} ${plan.slug}` : slug;
-                return label.toLowerCase().includes(inputValue.toLowerCase());
-              })
-            : options
-          }
-          value={exprValue}
-          onChange={(_, newValue) => {
-            onChange(buildSlugExpression(op, newValue ?? ''));
-          }}
-          onInputChange={(_, inputValue, reason) => {
-            if (reason === 'input')
-              onChange(buildSlugExpression(op, inputValue));
-          }}
-          sx={{ flex: 1 }}
-          renderInput={params => (
-            <TextField
-              {...params}
-              size="small"
-              placeholder="Slug"
-            />
-          )}
-        />
-      : <TextField
-          size="small"
-          value={exprValue}
-          onChange={e => onChange(buildSlugExpression(op, e.target.value))}
-          placeholder={
-            op === 'contains_any' ?
-              t('integrations.mailchimpSyncSettings.containsAnyPlaceholder')
-            : 'Slug'
-          }
-          sx={{ flex: 1 }}
-        />
-      }
-    </ExpressionRow>
-  );
-}
-
-type MergeFieldType =
-  | 'user.firstName'
-  | 'user.name'
-  | 'user.id'
-  | 'slug:contains'
-  | 'slug:contains_any'
-  | 'slug:equals'
-  | 'active_abo'
-  | 'active_abo_with_payment'
-  | 'retarget'
-  | 'static'
-  | 'custom';
-
-const MERGE_FIELD_TYPES: MergeFieldType[] = [
-  'user.firstName',
-  'user.name',
-  'user.id',
-  'slug:contains',
-  'slug:contains_any',
-  'slug:equals',
-  'active_abo',
-  'active_abo_with_payment',
-  'retarget',
-  'static',
-  'custom',
-];
-
-function parseMergeFieldExpression(expr: string): {
-  type: MergeFieldType;
-  args: string[];
-} {
-  if (expr === 'user.firstName') return { type: 'user.firstName', args: [] };
-  if (expr === 'user.name') return { type: 'user.name', args: [] };
-  if (expr === 'user.id') return { type: 'user.id', args: [] };
-  if (expr === 'active_abo') return { type: 'active_abo', args: [] };
-
-  const slugMatch = /^slug:(contains_any|contains|equals):(.*)$/.exec(expr);
-  if (slugMatch)
-    return {
-      type: `slug:${slugMatch[1]}` as MergeFieldType,
-      args: [slugMatch[2]],
-    };
-
-  const aboPayMatch = /^active_abo_with_payment:([^:]*):(.*)$/.exec(expr);
-  if (aboPayMatch)
-    return {
-      type: 'active_abo_with_payment',
-      args: [aboPayMatch[1], aboPayMatch[2]],
-    };
-
-  const retargetMatch = /^retarget:(.*)$/.exec(expr);
-  if (retargetMatch) return { type: 'retarget', args: [retargetMatch[1]] };
-
-  const staticMatch = /^static:(.*)$/.exec(expr);
-  if (staticMatch) return { type: 'static', args: [staticMatch[1]] };
-
-  return { type: 'custom', args: [expr] };
-}
-
-function buildMergeFieldExpression(
-  type: MergeFieldType,
-  args: string[]
-): string {
-  switch (type) {
-    case 'user.firstName':
-    case 'user.name':
-    case 'user.id':
-    case 'active_abo':
-      return type;
-    case 'slug:contains':
-    case 'slug:contains_any':
-    case 'slug:equals':
-      return `${type}:${args[0] ?? ''}`;
-    case 'active_abo_with_payment':
-      return `active_abo_with_payment:${args[0] ?? ''}:${args[1] ?? '30'}`;
-    case 'retarget':
-      return `retarget:${args[0] ?? '45'}`;
-    case 'static':
-      return `static:${args[0] ?? ''}`;
-    case 'custom':
-      return args[0] ?? '';
-  }
-}
-
-function MergeFieldExpressionEditor({
-  value,
-  onChange,
-  memberPlanSlugs,
-  paymentMethodSlugs,
-}: {
-  value: string;
-  onChange: (v: string) => void;
-  memberPlanSlugs: { slug: string; name: string }[];
-  paymentMethodSlugs: { slug: string; name: string }[];
-}) {
-  const { t } = useTranslation();
-  const parsed = parseMergeFieldExpression(value);
-
-  const handleTypeChange = (newType: MergeFieldType) => {
-    if (newType === parsed.type) return;
-    onChange(buildMergeFieldExpression(newType, parsed.args));
-  };
-
-  const handleArgChange = (index: number, newValue: string) => {
-    const newArgs = [...parsed.args];
-    newArgs[index] = newValue;
-    onChange(buildMergeFieldExpression(parsed.type, newArgs));
-  };
-
-  return (
-    <ExpressionRow>
-      <Select
-        size="small"
-        value={parsed.type}
-        onChange={e => handleTypeChange(e.target.value as MergeFieldType)}
-        sx={{ minWidth: 180 }}
-      >
-        {MERGE_FIELD_TYPES.map(type => (
-          <MenuItem
-            key={type}
-            value={type}
-          >
-            {t(`integrations.mailchimpSyncSettings.mf_${type}`)}
-          </MenuItem>
-        ))}
-      </Select>
-
-      {parsed.type === 'slug:equals' && (
-        <Autocomplete
-          freeSolo
-          options={memberPlanSlugs.map(p => p.slug)}
-          getOptionLabel={slug => {
-            const plan = memberPlanSlugs.find(p => p.slug === slug);
-            return plan ? `${plan.name} (${plan.slug})` : slug;
-          }}
-          filterOptions={(options, { inputValue }) =>
-            inputValue ?
-              options.filter(slug => {
-                const plan = memberPlanSlugs.find(p => p.slug === slug);
-                const label = plan ? `${plan.name} ${plan.slug}` : slug;
-                return label.toLowerCase().includes(inputValue.toLowerCase());
-              })
-            : options
-          }
-          value={parsed.args[0] ?? ''}
-          onChange={(_, newValue) => handleArgChange(0, newValue ?? '')}
-          onInputChange={(_, inputValue, reason) => {
-            if (reason === 'input') handleArgChange(0, inputValue);
-          }}
-          sx={{ flex: 1 }}
-          renderInput={params => (
-            <TextField
-              {...params}
-              size="small"
-              placeholder="Slug"
-            />
-          )}
-        />
-      )}
-
-      {(parsed.type === 'slug:contains' ||
-        parsed.type === 'slug:contains_any') && (
-        <TextField
-          size="small"
-          value={parsed.args[0] ?? ''}
-          onChange={e => handleArgChange(0, e.target.value)}
-          placeholder={
-            parsed.type === 'slug:contains_any' ?
-              t('integrations.mailchimpSyncSettings.containsAnyPlaceholder')
-            : 'Slug'
-          }
-          sx={{ flex: 1 }}
-        />
-      )}
-
-      {parsed.type === 'active_abo_with_payment' && (
-        <>
-          <Autocomplete
-            freeSolo
-            options={paymentMethodSlugs.map(p => p.slug)}
-            getOptionLabel={slug => {
-              const pm = paymentMethodSlugs.find(p => p.slug === slug);
-              return pm ? `${pm.name} (${pm.slug})` : slug;
-            }}
-            filterOptions={(options, { inputValue }) =>
-              inputValue ?
-                options.filter(slug => {
-                  const pm = paymentMethodSlugs.find(p => p.slug === slug);
-                  const label = pm ? `${pm.name} ${pm.slug}` : slug;
-                  return label.toLowerCase().includes(inputValue.toLowerCase());
-                })
-              : options
-            }
-            value={parsed.args[0] ?? ''}
-            onChange={(_, newValue) => handleArgChange(0, newValue ?? '')}
-            onInputChange={(_, inputValue, reason) => {
-              if (reason === 'input') handleArgChange(0, inputValue);
-            }}
-            sx={{ flex: 1 }}
-            renderInput={params => (
-              <TextField
-                {...params}
-                size="small"
-                placeholder={t(
-                  'integrations.mailchimpSyncSettings.paymentMethodSlug'
-                )}
-              />
-            )}
-          />
-          <TextField
-            size="small"
-            type="number"
-            value={parsed.args[1] ?? '30'}
-            onChange={e => handleArgChange(1, e.target.value)}
-            placeholder={t('integrations.mailchimpSyncSettings.days')}
-            sx={{ width: 80 }}
-          />
-        </>
-      )}
-
-      {parsed.type === 'retarget' && (
-        <TextField
-          size="small"
-          type="number"
-          value={parsed.args[0] ?? '45'}
-          onChange={e => handleArgChange(0, e.target.value)}
-          placeholder={t('integrations.mailchimpSyncSettings.days')}
-          sx={{ width: 100 }}
-        />
-      )}
-
-      {parsed.type === 'static' && (
-        <TextField
-          size="small"
-          value={parsed.args[0] ?? ''}
-          onChange={e => handleArgChange(0, e.target.value)}
-          placeholder={t('integrations.mailchimpSyncSettings.staticValue')}
-          sx={{ flex: 1 }}
-        />
-      )}
-
-      {parsed.type === 'custom' && (
-        <TextField
-          size="small"
-          value={parsed.args[0] ?? ''}
-          onChange={e => handleArgChange(0, e.target.value)}
-          placeholder={t(
-            'integrations.mailchimpSyncSettings.mergeFieldExpression'
-          )}
-          sx={{ flex: 1 }}
-        />
-      )}
-    </ExpressionRow>
-  );
+function truncate(value: string, maxLength = 35): string {
+  return value.length > maxLength ? `${value.slice(0, maxLength)}…` : value;
 }
 
 export function MailchimpSyncIntegrationForm() {
@@ -627,15 +268,13 @@ function SyncProviderSettingCard({
   const { data: memberPlanData } = useMemberPlanListQuery({
     variables: { take: 200 },
   });
-  const memberPlanSlugs = (memberPlanData?.memberPlans?.nodes ?? []).map(p => ({
-    slug: p.slug,
-    name: p.name,
-  }));
-
-  const { data: paymentMethodData } = usePaymentMethodListQuery();
-  const paymentMethodSlugs = (paymentMethodData?.paymentMethods ?? []).map(
-    p => ({ slug: p.slug, name: p.name })
-  );
+  const memberPlanSlugs = [...(memberPlanData?.memberPlans?.nodes ?? [])]
+    .sort((a, b) => a.amountPerMonthMin - b.amountPerMonthMin)
+    .map(p => ({
+      id: p.id,
+      slug: p.slug,
+      name: p.name,
+    }));
 
   const [fetchLists, { data: listsData, loading: listsLoading }] =
     useMailchimpListsLazyQuery();
@@ -679,11 +318,21 @@ function SyncProviderSettingCard({
       enabled: setting.enabled ?? false,
       mailchimp_apiKey: '',
       mailchimp_listId: setting.mailchimp_listId ?? '',
-      mailchimp_mergeFieldMappings: setting.mailchimp_mergeFieldMappings ?? [],
-      mailchimp_interestGroupMappings:
-        setting.mailchimp_interestGroupMappings ?? [],
       mailchimp_defaultInterestGroupIds:
         setting.mailchimp_defaultInterestGroupIds ?? [],
+      firstnameFields: setting.firstnameFields ?? [],
+      lastnameFields: setting.lastnameFields ?? [],
+      mailchimpMappings: Object.fromEntries(
+        (setting.mailchimpMappings ?? []).map(mapping => [
+          mapping.memberPlanId,
+          {
+            activeFieldIds: mapping.activeFieldIds ?? [],
+            retargetFieldIds: mapping.retargetFieldIds ?? [],
+            retargetDelayDays: mapping.retargetDelayDays ?? 30,
+            interestGroupIds: mapping.interestGroupIds ?? [],
+          },
+        ])
+      ),
       mailchimp_extensions: {
         'click-tracking': {
           enabled:
@@ -712,7 +361,7 @@ function SyncProviderSettingCard({
   });
 
   const watchedListId = watch('mailchimp_listId');
-  const watchedInterestGroupMappings = watch('mailchimp_interestGroupMappings');
+  const watchedMailchimpMappings = watch('mailchimpMappings');
   const watchedDefaultInterestGroupIds = watch(
     'mailchimp_defaultInterestGroupIds'
   );
@@ -728,24 +377,6 @@ function SyncProviderSettingCard({
     }
   }, [watchedListId, setting.id, fetchMergeFields, fetchInterestGroups]);
 
-  const {
-    fields: mergeFields,
-    append: appendMergeField,
-    remove: removeMergeField,
-  } = useFieldArray({
-    control,
-    name: 'mailchimp_mergeFieldMappings',
-  });
-
-  const {
-    fields: interestFields,
-    append: appendInterestGroup,
-    remove: removeInterestGroup,
-  } = useFieldArray({
-    control,
-    name: 'mailchimp_interestGroupMappings',
-  });
-
   const saveSettings = useCallback(
     async (formData: SyncProviderFormValues) => {
       const variables: any = {
@@ -753,12 +384,25 @@ function SyncProviderSettingCard({
         name: formData.name,
         enabled: formData.enabled,
         mailchimp_listId: formData.mailchimp_listId,
-        mailchimp_mergeFieldMappings: formData.mailchimp_mergeFieldMappings,
-        mailchimp_interestGroupMappings:
-          formData.mailchimp_interestGroupMappings,
         mailchimp_defaultInterestGroupIds:
           formData.mailchimp_defaultInterestGroupIds,
         mailchimp_extensions: formData.mailchimp_extensions ?? {},
+        firstnameFields: formData.firstnameFields ?? [],
+        lastnameFields: formData.lastnameFields ?? [],
+        mailchimpMappings: Object.entries(formData.mailchimpMappings ?? {})
+          .map(([memberPlanId, mapping]) => ({
+            memberPlanId,
+            activeFieldIds: mapping?.activeFieldIds ?? [],
+            retargetFieldIds: mapping?.retargetFieldIds ?? [],
+            retargetDelayDays: mapping?.retargetDelayDays ?? 30,
+            interestGroupIds: mapping?.interestGroupIds ?? [],
+          }))
+          .filter(
+            mapping =>
+              mapping.activeFieldIds.length > 0 ||
+              mapping.retargetFieldIds.length > 0 ||
+              mapping.interestGroupIds.length > 0
+          ),
       };
 
       if (formData.mailchimp_apiKey && formData.mailchimp_apiKey.length > 0) {
@@ -977,6 +621,25 @@ function SyncProviderSettingCard({
                 />
               )}
             />
+            <Typography
+              variant="body2"
+              color="textSecondary"
+              sx={{ mt: 0.5 }}
+            >
+              <Trans
+                t={t}
+                i18nKey="integrations.mailchimpSyncSettings.apiKeyHelp"
+                components={{
+                  mailchimpLink: (
+                    <Link
+                      href="https://us3.admin.mailchimp.com/account/api/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    />
+                  ),
+                }}
+              />
+            </Typography>
           </Form.Group>
 
           {/* List ID */}
@@ -1032,193 +695,274 @@ function SyncProviderSettingCard({
                 </Select>
               )}
             />
+            <Typography
+              variant="body2"
+              color="textSecondary"
+              sx={{ mt: 0.5 }}
+            >
+              <Trans
+                t={t}
+                i18nKey="integrations.mailchimpSyncSettings.listIdHelp"
+                components={{
+                  mailchimpLink: (
+                    <Link
+                      href="https://us3.admin.mailchimp.com/audience/settings/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    />
+                  ),
+                }}
+              />
+            </Typography>
           </Form.Group>
 
-          {/* Merge Field Mappings */}
-          <SectionTitle variant="h6">
-            {t('integrations.mailchimpSyncSettings.mergeFieldMappings')}
-          </SectionTitle>
-          <Typography
-            variant="body2"
-            color="textSecondary"
-            gutterBottom
-            sx={{ whiteSpace: 'pre-line' }}
-          >
-            {t('integrations.mailchimpSyncSettings.mergeFieldHelp')}
-          </Typography>
+          <Form.Group controlId={`name-fields-${setting.id}`}>
+            <NameFieldGrid>
+              <MemberPlanInput>
+                <Typography variant="body1">
+                  {t('integrations.mailchimpSyncSettings.firstName')}
+                </Typography>
+                <Typography variant="body2">
+                  {t('integrations.mailchimpSyncSettings.firstNameHelp')}
+                </Typography>
+              </MemberPlanInput>
+              <MemberPlanInput>
+                <Controller
+                  name="firstnameFields"
+                  control={control}
+                  render={({ field: { value, onChange } }) => (
+                    <Autocomplete
+                      multiple
+                      size="small"
+                      sx={{ flex: 1 }}
+                      options={availableMergeFields.map(f => f.tag)}
+                      getOptionLabel={tag => {
+                        const mf = availableMergeFields.find(
+                          f => f.tag === tag
+                        );
+                        return mf ? mf.name : tag;
+                      }}
+                      value={value ?? []}
+                      onChange={(_, newValue) => onChange(newValue)}
+                      renderInput={params => (
+                        <TextField
+                          {...params}
+                          size="small"
+                          label={t(
+                            'integrations.mailchimpSyncSettings.firstName'
+                          )}
+                        />
+                      )}
+                    />
+                  )}
+                />
+              </MemberPlanInput>
+              <MemberPlanInput>
+                <Typography variant="body1">
+                  {t('integrations.mailchimpSyncSettings.lastName')}
+                </Typography>
+                <Typography variant="body2">
+                  {t('integrations.mailchimpSyncSettings.lastNameHelp')}
+                </Typography>
+              </MemberPlanInput>
+              <MemberPlanInput>
+                <Controller
+                  name="lastnameFields"
+                  control={control}
+                  render={({ field: { value, onChange } }) => (
+                    <Autocomplete
+                      multiple
+                      size="small"
+                      sx={{ flex: 1 }}
+                      options={availableMergeFields.map(f => f.tag)}
+                      getOptionLabel={tag => {
+                        const mf = availableMergeFields.find(
+                          f => f.tag === tag
+                        );
+                        return mf ? mf.name : tag;
+                      }}
+                      value={value ?? []}
+                      onChange={(_, newValue) => onChange(newValue)}
+                      renderInput={params => (
+                        <TextField
+                          {...params}
+                          size="small"
+                          label={t(
+                            'integrations.mailchimpSyncSettings.lastName'
+                          )}
+                        />
+                      )}
+                    />
+                  )}
+                />
+              </MemberPlanInput>
+            </NameFieldGrid>
+          </Form.Group>
 
-          {mergeFields.map((field, index) => (
-            <MappingRow key={field.id}>
-              <Controller
-                name={`mailchimp_mergeFieldMappings.${index}.tag`}
-                control={control}
-                render={({ field: { value, onChange } }) => (
-                  <Autocomplete
-                    freeSolo
-                    options={availableMergeFields.map(f => f.tag)}
-                    getOptionLabel={tag => {
-                      const mf = availableMergeFields.find(f => f.tag === tag);
-                      return mf ? `${mf.tag} (${mf.name})` : tag;
-                    }}
-                    filterOptions={(options, { inputValue }) =>
-                      inputValue ?
-                        options.filter(tag => {
-                          const mf = availableMergeFields.find(
-                            f => f.tag === tag
-                          );
-                          const label = mf ? `${mf.tag} ${mf.name}` : tag;
-                          return label
-                            .toLowerCase()
-                            .includes(inputValue.toLowerCase());
-                        })
-                      : options
-                    }
-                    value={value ?? ''}
-                    onChange={(_, newValue) => {
-                      onChange(newValue ?? '');
-                    }}
-                    onInputChange={(_, inputValue, reason) => {
-                      if (reason === 'input') onChange(inputValue);
-                    }}
-                    sx={{ flex: 1 }}
-                    renderInput={params => (
-                      <TextField
-                        {...params}
-                        size="small"
-                        placeholder={t(
-                          'integrations.mailchimpSyncSettings.mergeFieldTag'
-                        )}
-                      />
-                    )}
-                  />
-                )}
-              />
-              <Controller
-                name={`mailchimp_mergeFieldMappings.${index}.expression`}
-                control={control}
-                render={({ field: { value, onChange } }) => (
-                  <MergeFieldExpressionEditor
-                    value={value}
-                    onChange={onChange}
-                    memberPlanSlugs={memberPlanSlugs}
-                    paymentMethodSlugs={paymentMethodSlugs}
-                  />
-                )}
-              />
-              <IconButton
-                size="small"
-                onClick={() => removeMergeField(index)}
-                color="error"
-              >
-                <MdDelete />
-              </IconButton>
-            </MappingRow>
-          ))}
-
-          <Button
-            size="small"
-            startIcon={<MdAdd />}
-            onClick={() => appendMergeField({ tag: '', expression: '' })}
-          >
-            {t('integrations.mailchimpSyncSettings.addMergeField')}
-          </Button>
-
-          {/* Interest Group Mappings */}
-          <SectionTitle variant="h6">
-            {t('integrations.mailchimpSyncSettings.interestGroupMappings')}
-          </SectionTitle>
-          <Typography
-            variant="body2"
-            color="textSecondary"
-            gutterBottom
-            sx={{ whiteSpace: 'pre-line' }}
-          >
-            {t('integrations.mailchimpSyncSettings.interestGroupHelp')}
-          </Typography>
-
-          {interestFields.map((field, index) => (
-            <MappingRow key={field.id}>
-              <Controller
-                name={`mailchimp_interestGroupMappings.${index}.groupId`}
-                control={control}
-                render={({ field: { value, onChange } }) => (
-                  <Autocomplete
-                    freeSolo
-                    options={availableInterestGroups.map(g => g.id)}
-                    getOptionLabel={id => {
-                      const group = availableInterestGroups.find(
-                        g => g.id === id
-                      );
-                      return group ? `${group.name} (${group.id})` : id;
-                    }}
-                    filterOptions={(options, { inputValue }) =>
-                      inputValue ?
-                        options.filter(id => {
-                          const group = availableInterestGroups.find(
-                            g => g.id === id
-                          );
-                          const label =
-                            group ? `${group.name} ${group.id}` : id;
-                          return label
-                            .toLowerCase()
-                            .includes(inputValue.toLowerCase());
-                        })
-                      : options
-                    }
-                    value={value ?? ''}
-                    onChange={(_, newValue) => {
-                      onChange(newValue ?? '');
-                    }}
-                    onInputChange={(_, inputValue, reason) => {
-                      if (reason === 'input') onChange(inputValue);
-                    }}
-                    sx={{ flex: 1 }}
-                    renderInput={params => (
-                      <TextField
-                        {...params}
-                        size="small"
-                        placeholder={t(
-                          'integrations.mailchimpSyncSettings.interestGroupId'
-                        )}
-                      />
-                    )}
-                  />
-                )}
-              />
-              <Controller
-                name={`mailchimp_interestGroupMappings.${index}.expression`}
-                control={control}
-                render={({ field: { value, onChange } }) => (
-                  <InterestExpressionEditor
-                    value={value}
-                    onChange={onChange}
-                    memberPlanSlugs={memberPlanSlugs}
-                  />
-                )}
-              />
-              <IconButton
-                size="small"
-                onClick={() => removeInterestGroup(index)}
-                color="error"
-              >
-                <MdDelete />
-              </IconButton>
-            </MappingRow>
-          ))}
-
-          <Button
-            size="small"
-            startIcon={<MdAdd />}
-            onClick={() =>
-              appendInterestGroup({
-                groupId: '',
-                expression: 'slug:contains:',
-              })
-            }
-          >
-            {t('integrations.mailchimpSyncSettings.addInterestGroup')}
-          </Button>
-
+          <Form.Group controlId={`mailchimp-mappings-${setting.id}`}>
+            <MemberPlanGrid>
+              <MemberPlanInput>
+                <Typography variant="body1">
+                  {t('integrations.mailchimpSyncSettings.subscription')}
+                </Typography>
+              </MemberPlanInput>
+              <MemberPlanInput>
+                <Typography variant="body1">
+                  {t('integrations.mailchimpSyncSettings.activeFields')}
+                </Typography>
+                <Typography variant="body2">
+                  {t('integrations.mailchimpSyncSettings.activeFieldsHelp')}
+                </Typography>
+              </MemberPlanInput>
+              <MemberPlanInput>
+                <Typography variant="body1">
+                  {t('integrations.mailchimpSyncSettings.retargetFields')}
+                </Typography>
+                <Typography variant="body2">
+                  {t('integrations.mailchimpSyncSettings.retargetFieldsHelp')}
+                </Typography>
+              </MemberPlanInput>
+              <MemberPlanInput>
+                <Typography variant="body1">
+                  {t('integrations.mailchimpSyncSettings.retargetDelay')}
+                </Typography>
+                <Typography variant="body2">
+                  {t('integrations.mailchimpSyncSettings.retargetDelayHelp')}
+                </Typography>
+              </MemberPlanInput>
+              <MemberPlanInput>
+                <Typography variant="body1">
+                  {t('integrations.mailchimpSyncSettings.interestGroups')}
+                </Typography>
+                <Typography variant="body2">
+                  {t('integrations.mailchimpSyncSettings.interestGroupsHelp')}
+                </Typography>
+              </MemberPlanInput>
+              {memberPlanSlugs.map(plan => (
+                <Fragment key={plan.slug}>
+                  <Typography variant="body1">{plan.name}</Typography>
+                  <MemberPlanInput>
+                    <Controller
+                      name={`mailchimpMappings.${plan.id}.activeFieldIds`}
+                      control={control}
+                      render={({ field: { value, onChange } }) => (
+                        <Autocomplete
+                          multiple
+                          size="small"
+                          sx={{ flex: 1 }}
+                          options={availableMergeFields.map(f => f.tag)}
+                          getOptionLabel={tag => {
+                            const mf = availableMergeFields.find(
+                              f => f.tag === tag
+                            );
+                            return mf ? mf.name : tag;
+                          }}
+                          value={value ?? []}
+                          onChange={(_, newValue) => onChange(newValue)}
+                          renderInput={params => (
+                            <TextField
+                              {...params}
+                              size="small"
+                              label={t(
+                                'integrations.mailchimpSyncSettings.activeFields'
+                              )}
+                            />
+                          )}
+                        />
+                      )}
+                    />
+                  </MemberPlanInput>
+                  <MemberPlanInput>
+                    <Controller
+                      name={`mailchimpMappings.${plan.id}.retargetFieldIds`}
+                      control={control}
+                      render={({ field: { value, onChange } }) => (
+                        <Autocomplete
+                          multiple
+                          size="small"
+                          sx={{ flex: 1 }}
+                          options={availableMergeFields.map(f => f.tag)}
+                          getOptionLabel={tag => {
+                            const mf = availableMergeFields.find(
+                              f => f.tag === tag
+                            );
+                            return mf ? mf.name : tag;
+                          }}
+                          value={value ?? []}
+                          onChange={(_, newValue) => onChange(newValue)}
+                          renderInput={params => (
+                            <TextField
+                              {...params}
+                              size="small"
+                              label={t(
+                                'integrations.mailchimpSyncSettings.retargetFields'
+                              )}
+                            />
+                          )}
+                        />
+                      )}
+                    />
+                  </MemberPlanInput>
+                  <MemberPlanInput>
+                    <Controller
+                      name={`mailchimpMappings.${plan.id}.retargetDelayDays`}
+                      control={control}
+                      render={({ field: { value, onChange } }) => (
+                        <TextField
+                          size="small"
+                          type="number"
+                          label={t(
+                            'integrations.mailchimpSyncSettings.retargetDelayLabel'
+                          )}
+                          sx={{ width: 160 }}
+                          InputProps={{ inputProps: { min: 0 } }}
+                          value={value ?? ''}
+                          onChange={e =>
+                            onChange(
+                              e.target.value === '' ?
+                                undefined
+                              : parseInt(e.target.value, 10)
+                            )
+                          }
+                        />
+                      )}
+                    />
+                  </MemberPlanInput>
+                  <MemberPlanInput>
+                    <Controller
+                      name={`mailchimpMappings.${plan.id}.interestGroupIds`}
+                      control={control}
+                      render={({ field: { value, onChange } }) => (
+                        <Autocomplete
+                          multiple
+                          size="small"
+                          sx={{ flex: 1 }}
+                          options={availableInterestGroups.map(g => g.id)}
+                          getOptionLabel={id => {
+                            const group = availableInterestGroups.find(
+                              g => g.id === id
+                            );
+                            return group ? truncate(group.name) : id;
+                          }}
+                          value={value ?? []}
+                          onChange={(_, newValue) => onChange(newValue)}
+                          renderInput={params => (
+                            <TextField
+                              {...params}
+                              size="small"
+                              label={t(
+                                'integrations.mailchimpSyncSettings.interestGroups'
+                              )}
+                            />
+                          )}
+                        />
+                      )}
+                    />
+                  </MemberPlanInput>
+                </Fragment>
+              ))}
+            </MemberPlanGrid>
+          </Form.Group>
           {/* Default Interest Groups */}
           <SectionTitle variant="h6">
             {t('integrations.mailchimpSyncSettings.defaultInterestGroups')}
@@ -1640,8 +1384,8 @@ function SyncProviderSettingCard({
                   <tbody>
                     {dryRunResult.changes.map(change => {
                       const mappedInterestIds = new Set<string>([
-                        ...(watchedInterestGroupMappings ?? [])
-                          .map((m: { groupId: string }) => m.groupId)
+                        ...Object.values(watchedMailchimpMappings ?? {})
+                          .flatMap(m => m?.interestGroupIds ?? [])
                           .filter(Boolean),
                         ...(watchedDefaultInterestGroupIds ?? []).filter(
                           Boolean
