@@ -39,6 +39,7 @@ import { WebsiteBuilderProvider } from '@wepublish/website/builder';
 import { format, setDefaultOptions } from 'date-fns';
 import { de } from 'date-fns/locale';
 import { AppProps } from 'next/app';
+import getConfig from 'next/config';
 import Head from 'next/head';
 import Script from 'next/script';
 import PlausibleProvider from 'next-plausible';
@@ -156,7 +157,7 @@ function CustomApp({
             date={{ format: dateFormatter }}
             meta={{ siteTitle }}
             thirdParty={{
-              stripe: process.env.STRIPE_PUBLIC_KEY,
+              stripe: publicRuntimeConfig.env.STRIPE_PUBLIC_KEY,
             }}
           >
             <ThemeProvider theme={theme}>
@@ -227,6 +228,7 @@ function CustomApp({
   );
 }
 
+const { publicRuntimeConfig } = getConfig();
 const withApollo = createWithApiClient(getApiUrl(), [authLink, previewLink]);
 const ConnectedApp = withApollo(
   withBuilderRouter(

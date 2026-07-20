@@ -10,8 +10,7 @@
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
-        "outputPath": "dist/apps/mannschaft",
-        "webpack": true
+        "outputPath": "dist/apps/mannschaft"
       },
       "configurations": {
         "development": {
@@ -26,8 +25,7 @@
       "options": {
         "buildTarget": "mannschaft:build",
         "dev": true,
-        "port": 4205,
-        "webpack": true
+        "port": 4205
       },
       "configurations": {
         "development": {

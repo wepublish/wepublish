@@ -61,7 +61,7 @@ export default function SignUp() {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  if (!process.env.API_URL) {
+  if (!getApiUrl()) {
     return { props: {}, revalidate: 1 };
   }
 

@@ -14,9 +14,10 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
  **/
 const nextConfig = {
   ...wepNextConfig,
-  env: {
-    ...wepNextConfig.env,
-    API_URL: process.env.API_URL || '',
+  publicRuntimeConfig: {
+    env: {
+      API_URL: process.env.API_URL || '',
+    },
   },
 };
 

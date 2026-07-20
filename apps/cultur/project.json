@@ -10,8 +10,7 @@
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
-        "outputPath": "dist/apps/cultur",
-        "webpack": true
+        "outputPath": "dist/apps/cultur"
       },
       "configurations": {
         "development": {
@@ -26,8 +25,7 @@
       "options": {
         "buildTarget": "cultur:build",
         "dev": true,
-        "port": 4206,
-        "webpack": true
+        "port": 4206
       },
       "configurations": {
         "development": {

@@ -10,8 +10,7 @@
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
-        "outputPath": "dist/apps/hauptstadt",
-        "webpack": true
+        "outputPath": "dist/apps/hauptstadt"
       },
       "configurations": {
         "development": {
@@ -25,8 +24,7 @@
       "defaultConfiguration": "development",
       "options": {
         "buildTarget": "hauptstadt:build",
-        "dev": true,
-        "webpack": true
+        "dev": true
       },
       "configurations": {
         "development": {

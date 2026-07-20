@@ -10,8 +10,7 @@
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
-        "outputPath": "dist/apps/fazetten",
-        "webpack": true
+        "outputPath": "dist/apps/fazetten"
       },
       "configurations": {
         "development": {
@@ -25,8 +24,7 @@
       "defaultConfiguration": "development",
       "options": {
         "buildTarget": "fazetten:build",
-        "dev": true,
-        "webpack": true
+        "dev": true
       },
       "configurations": {
         "development": {

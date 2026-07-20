@@ -10,8 +10,7 @@
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
-        "outputPath": "dist/apps/wepublish-site",
-        "webpack": true
+        "outputPath": "dist/apps/wepublish-site"
       },
       "configurations": {
         "development": {
@@ -25,8 +24,7 @@
       "defaultConfiguration": "development",
       "options": {
         "buildTarget": "wepublish-site:build",
-        "dev": true,
-        "webpack": true
+        "dev": true
       },
       "configurations": {
         "development": {

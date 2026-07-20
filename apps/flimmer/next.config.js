@@ -14,12 +14,11 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
  **/
 const nextConfig = {
   ...wepNextConfig,
-  env: {
-    ...wepNextConfig.env,
-    API_URL: process.env.API_URL || '',
-    GA_ID: process.env.GA_ID || '',
-    SPARKLOOP_ID: process.env.SPARKLOOP_ID || '',
-    STRIPE_PUBLIC_KEY: process.env.STRIPE_PUBLIC_KEY || '',
+  publicRuntimeConfig: {
+    env: {
+      API_URL: process.env.API_URL || '',
+      STRIPE_PUBLIC_KEY: process.env.STRIPE_PUBLIC_KEY || '',
+    },
   },
   async redirects() {
     return [

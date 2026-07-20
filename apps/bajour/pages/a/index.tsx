@@ -88,7 +88,7 @@ export default function ArticleList() {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  if (!process.env.API_URL) {
+  if (!getApiUrl()) {
     return { props: {}, revalidate: 1 };
   }
 

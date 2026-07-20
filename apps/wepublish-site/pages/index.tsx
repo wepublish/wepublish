@@ -27,7 +27,7 @@ export default function Index() {
 }
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  if (!process.env.API_URL) {
+  if (!getApiUrl()) {
     return { props: {}, revalidate: 1 };
   }
 
