@@ -1760,6 +1760,7 @@
         "selectMemberPlans": "Abo Pläne wählen",
         "countSubscriptionsFrom": "Nur Abos einrechnen, die bezahlt wurden ab Datum",
         "countSubscriptionsUntil": "Nur Abos einrechnen, die bezahlt wurden bis Datum",
+        "endsAt": "Enddatum der Kampagne",
         "revenue": "Bereits CHF {{revenue}} finanziert",
         "subscriptions": "Bereits {{subscriptions}} abonnieren",
         "goals": "Ziele",

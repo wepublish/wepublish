@@ -183,6 +183,25 @@ export const CrowdfundingForm = (props: CrowdfundingFormProps) => {
         <Form.Group controlId="goals">
           <h3>{t('crowdfunding.form.goals')}</h3>
 
+          <Form.Group controlId="endsAt">
+            <Form.Control
+              name="endsAt"
+              label={t('crowdfunding.form.endsAt')}
+              dateTime={
+                props.crowdfunding?.endsAt ?
+                  new Date(props.crowdfunding?.endsAt)
+                : undefined
+              }
+              changeDate={(date: Date) =>
+                props.onChange({
+                  ...props.crowdfunding,
+                  endsAt: date?.toISOString() || null,
+                })
+              }
+              accepter={DateTimePicker}
+            />
+          </Form.Group>
+
           <Form.Group controlId="goalType">
             <Form.ControlLabel>
               {t('crowdfunding.form.goalType')}
