@@ -8,7 +8,7 @@ datasource db {
 }
 
 model ArticleRevision {
-  id        String   @id @default(cuid())
+  id        String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt DateTime @default(now())
 
   preTitle               String?
@@ -100,7 +100,7 @@ model ArticleRevisionSocialMediaAuthor {
 }
 
 model Article {
-  id          String    @id @default(cuid())
+  id          String    @id @default(dbgenerated("gen_random_uuid()"))
   createdAt   DateTime  @default(now())
   modifiedAt  DateTime  @updatedAt
   publishedAt DateTime?
@@ -140,7 +140,7 @@ enum TrackingPixelProviderType {
 }
 
 model ArticleTrackingPixels {
-  id                   String              @id @default(cuid())
+  id                   String              @id @default(dbgenerated("gen_random_uuid()"))
   article              Article             @relation(fields: [articleId], references: [id], onDelete: Cascade)
   articleId            String
   createdAt            DateTime            @default(now())
@@ -157,7 +157,7 @@ model ArticleTrackingPixels {
 }
 
 model TrackingPixelMethod {
-  id                        String                    @id @default(cuid())
+  id                        String                    @id @default(dbgenerated("gen_random_uuid()"))
   createdAt                 DateTime                  @default(now())
   modifiedAt                DateTime                  @updatedAt
   trackingPixelProviderID   String                    @unique
@@ -183,7 +183,7 @@ model TaggedArticles {
 }
 
 model AuthorsLinks {
-  id         String   @id @default(cuid())
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
@@ -197,7 +197,7 @@ model AuthorsLinks {
 }
 
 model Author {
-  id         String         @id @default(cuid())
+  id         String         @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime       @default(now())
   modifiedAt DateTime       @updatedAt
   name       String
@@ -318,7 +318,7 @@ enum CommentRejectionReason {
 }
 
 model CommentsRevisions {
-  id        String   @id @default(cuid())
+  id        String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt DateTime @default(now())
   text      Json?
   slateText Json?
@@ -347,7 +347,7 @@ enum CommentAuthorType {
 }
 
 model Comment {
-  id         String   @id @default(cuid())
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
@@ -390,7 +390,7 @@ model TaggedComments {
 }
 
 model CommentRatingSystem {
-  id         String   @id @default(cuid())
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
@@ -406,7 +406,7 @@ enum RatingSystemType {
 }
 
 model CommentRatingSystemAnswer {
-  id         String   @id @default(cuid())
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
@@ -424,7 +424,7 @@ model CommentRatingSystemAnswer {
 }
 
 model CommentRating {
-  id         String   @id @default(cuid())
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
@@ -462,7 +462,7 @@ model CommentRatingOverride {
 }
 
 model InvoiceItem {
-  id         String   @id @default(cuid())
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
@@ -481,7 +481,7 @@ model InvoiceItem {
 }
 
 model Invoice {
-  id         String   @id @default(cuid())
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
@@ -544,7 +544,7 @@ enum PaymentPeriodicity {
 }
 
 model AvailablePaymentMethod {
-  id         String   @id @default(cuid())
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
@@ -569,7 +569,7 @@ enum ProductType {
 }
 
 model MemberPlan {
-  id         String   @id @default(cuid())
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
@@ -617,7 +617,7 @@ model MemberPlan {
 }
 
 model NavigationLink {
-  id         String   @id @default(cuid())
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
@@ -641,7 +641,7 @@ model NavigationLink {
 }
 
 model Navigation {
-  id         String   @id @default(cuid())
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
@@ -656,7 +656,7 @@ model Navigation {
 }
 
 model PageRevision {
-  id        String   @id @default(cuid())
+  id        String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt DateTime @default(now())
 
   publishedAt            DateTime?
@@ -689,7 +689,7 @@ model PageRevision {
 }
 
 model Page {
-  id          String    @id @default(cuid())
+  id          String    @id @default(dbgenerated("gen_random_uuid()"))
   createdAt   DateTime  @default(now())
   modifiedAt  DateTime  @updatedAt
   publishedAt DateTime?
@@ -758,7 +758,7 @@ view PagesRevisionDraft {
 }
 
 model PaymentMethod {
-  id                String   @id @default(cuid())
+  id                String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt         DateTime @default(now())
   modifiedAt        DateTime @updatedAt
   name              String
@@ -791,7 +791,7 @@ enum PaymentState {
 }
 
 model Payment {
-  id           String       @id @default(cuid())
+  id           String       @id @default(dbgenerated("gen_random_uuid()"))
   createdAt    DateTime     @default(now())
   modifiedAt   DateTime     @updatedAt
   invoiceID    String
@@ -809,7 +809,7 @@ model Payment {
 }
 
 model PeerProfile {
-  id                    String  @id @default(cuid())
+  id                    String  @id @default(dbgenerated("gen_random_uuid()"))
   name                  String
   themeColor            String
   themeFontColor        String
@@ -829,7 +829,7 @@ model PeerProfile {
 }
 
 model Peer {
-  id         String   @id @default(cuid())
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
@@ -850,7 +850,7 @@ model Peer {
 }
 
 model Token {
-  id         String   @id @default(cuid())
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
@@ -862,7 +862,7 @@ model Token {
 }
 
 model Session {
-  id        String   @id @default(cuid())
+  id        String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt DateTime @default(now())
   expiresAt DateTime
   token     String   @unique
@@ -877,7 +877,7 @@ model Session {
 }
 
 model SubscriptionPeriod {
-  id         String   @id @default(cuid())
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
@@ -904,7 +904,7 @@ enum SubscriptionDeactivationReason {
 }
 
 model SubscriptionDeactivation {
-  id         String   @id @default(cuid())
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
@@ -918,7 +918,7 @@ model SubscriptionDeactivation {
 }
 
 model Subscription {
-  id                 String                    @id @default(cuid())
+  id                 String                    @id @default(dbgenerated("gen_random_uuid()"))
   createdAt          DateTime                  @default(now())
   modifiedAt         DateTime                  @updatedAt
   paymentPeriodicity PaymentPeriodicity
@@ -972,7 +972,7 @@ model UserAddress {
 }
 
 model PaymentProviderCustomer {
-  id         String   @id @default(cuid())
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
@@ -986,7 +986,7 @@ model PaymentProviderCustomer {
 }
 
 model User {
-  id              String    @id @default(cuid())
+  id              String    @id @default(dbgenerated("gen_random_uuid()"))
   createdAt       DateTime  @default(now())
   modifiedAt      DateTime  @updatedAt
   birthday        DateTime? @db.Date
@@ -1027,7 +1027,7 @@ model User {
 }
 
 model UserRole {
-  id         String   @id @default(cuid())
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
@@ -1040,7 +1040,7 @@ model UserRole {
 }
 
 model Setting {
-  id                 String   @id @default(cuid())
+  id                 String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt          DateTime @default(now())
   modifiedAt         DateTime @updatedAt
   name               String   @unique
@@ -1059,7 +1059,7 @@ enum TagType {
 }
 
 model Tag {
-  id         String   @id @default(cuid())
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
@@ -1084,7 +1084,7 @@ model Tag {
 }
 
 model Poll {
-  id         String   @id @default(cuid())
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
@@ -1103,7 +1103,7 @@ model Poll {
 }
 
 model PollAnswer {
-  id         String   @id @default(cuid())
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
@@ -1120,7 +1120,7 @@ model PollAnswer {
 }
 
 model PollVote {
-  id         String   @id @default(cuid())
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
@@ -1144,7 +1144,7 @@ model PollVote {
 }
 
 model PollExternalVoteSource {
-  id         String   @id @default(cuid())
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
@@ -1158,7 +1158,7 @@ model PollExternalVoteSource {
 }
 
 model PollExternalVote {
-  id         String   @id @default(cuid())
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
