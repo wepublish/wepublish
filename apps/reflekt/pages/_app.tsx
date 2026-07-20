@@ -54,6 +54,7 @@ import { ReflektGlobalStyles } from '../src/components/reflekt-global-styles';
 import { ReflektGoodiePicker } from '../src/components/reflekt-goodie-picker';
 import { ReflektImageSlider } from '../src/components/reflekt-image-slider';
 import { ReflektImageBlock } from '../src/components/reflekt-image-block';
+import { ReflektCrowdfundingBlock } from '../src/components/reflekt-crowdfunding-block';
 import { ReflektLink } from '../src/components/reflekt-link';
 import {
   ReflektListItem,
@@ -191,6 +192,7 @@ function CustomApp({
               Blocks: ReflektBlocks,
               Subscribe: ReflektSubscribe,
               Image: ReflektImageBlock,
+              Crowdfunding: ReflektCrowdfundingBlock,
             }}
           >
             <ThemeProvider theme={theme}>
