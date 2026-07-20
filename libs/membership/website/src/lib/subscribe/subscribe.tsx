@@ -238,6 +238,7 @@ export const useDiscountText = ({
 export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   defaults,
   memberPlans,
+  showGoodies = false,
   challenge,
   userSubscriptions,
   userInvoices,
@@ -824,32 +825,34 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
         </SubscribePayment>
       </SubscribeSection>
 
-      <GoodieSection area="goodie">
-        <H5 component="h2">{t('subscribe.goodie.title')}</H5>
+      {showGoodies && (
+        <GoodieSection area="goodie">
+          <H5 component="h2">{t('subscribe.goodie.title')}</H5>
 
-        <Controller
-          name={'goodieId'}
-          control={control}
-          render={({ field, fieldState: { error: fieldError } }) => (
-            <div>
-              <GoodiePicker
-                {...field}
-                value={field.value}
-                onChange={goodieId => field.onChange(goodieId)}
-                goodies={availableGoodies}
-                allGoodies={allGoodies}
-                disabled={!availableGoodies.length}
-              />
+          <Controller
+            name={'goodieId'}
+            control={control}
+            render={({ field, fieldState: { error: fieldError } }) => (
+              <div>
+                <GoodiePicker
+                  {...field}
+                  value={field.value}
+                  onChange={goodieId => field.onChange(goodieId)}
+                  goodies={availableGoodies}
+                  allGoodies={allGoodies}
+                  disabled={!availableGoodies.length}
+                />
 
-              {!!fieldError && (
-                <FormHelperText error={!!fieldError}>
-                  {fieldError?.message}
-                </FormHelperText>
-              )}
-            </div>
-          )}
-        />
-      </GoodieSection>
+                {!!fieldError && (
+                  <FormHelperText error={!!fieldError}>
+                    {fieldError?.message}
+                  </FormHelperText>
+                )}
+              </div>
+            )}
+          />
+        </GoodieSection>
+      )}
 
       <VoucherSection area="voucher">
         <Controller

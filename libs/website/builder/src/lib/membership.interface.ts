@@ -146,6 +146,7 @@ export type BuilderSubscribeProps<
     QueryResult<MemberPlanListQuery>,
     'data' | 'loading' | 'error'
   >;
+  showGoodies?: boolean;
   subscribeInfo: Pick<
     QueryResult<CreateSubscriptionInfoQuery>,
     'data' | 'loading' | 'error'
