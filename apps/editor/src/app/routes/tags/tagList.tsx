@@ -40,7 +40,10 @@ import {
 import { RowDataType } from 'rsuite/esm/Table';
 
 const IconButton = styled(RIconButton)`
-  margin-left: 12px;
+  && {
+    width: 36px;
+    height: 36px;
+  }
 `;
 
 export type TagListProps = {

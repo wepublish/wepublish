@@ -10,6 +10,7 @@ import {
 } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
+  IconButton,
   IconButtonTooltip,
   ListViewActions,
   ListViewContainer,
@@ -42,10 +43,6 @@ const FlexGridSmallerMargin = styled(Stack)`
 
 const Content = styled.div`
   height: 100%;
-`;
-
-const IconButton = styled(RIconButton)`
-  margin-left: 12px;
 `;
 
 const Flex = styled.div`

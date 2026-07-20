@@ -49,8 +49,7 @@ export function CommentDeleteBtn({
   });
 
   if (!comment) {
-    // eslint-disable-next-line react/jsx-no-useless-fragment
-    return <></>;
+    return;
   }
 
   return (

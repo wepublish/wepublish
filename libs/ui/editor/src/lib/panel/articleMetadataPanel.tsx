@@ -26,10 +26,9 @@ import {
   IconButton,
   Input,
   InputGroup as RInputGroup,
-  NumberInput,
   Message,
   Nav as RNav,
-  Panel,
+  NumberInput,
   Schema,
   Toggle as RToggle,
   Tooltip,
@@ -655,7 +654,7 @@ function ArticleMetadataPanel({
         );
       case MetaDataType.Properties:
         return (
-          <Panel>
+          <RForm.Stack fluid>
             <Group>
               <Message
                 showIcon
@@ -704,7 +703,7 @@ function ArticleMetadataPanel({
                 )}
               </ListInput>
             </Group>
-          </Panel>
+          </RForm.Stack>
         );
       case MetaDataType.Comments:
         return (
@@ -723,9 +722,6 @@ function ArticleMetadataPanel({
             <TrackingPixels trackingPixels={trackingPixels} />
           </RForm.Stack>
         );
-      default:
-        // eslint-disable-next-line react/jsx-no-useless-fragment
-        return <></>;
     }
   }
 

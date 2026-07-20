@@ -26,7 +26,7 @@ export const ListViewFilterArea = styled.div`
   width: 100%;
   gap: 8px;
   display: flex;
-  margin-top: 1rem;
+  margin-bottom: 1rem;
 `;
 
 export const TableWrapper = styled.div`
@@ -69,11 +69,13 @@ export const IconButtonCell = styled(RTable.Cell)`
 `;
 
 export const IconButton = styled(RIconButton)`
-  min-width: 36px;
-  height: 36px;
+  && {
+    width: 36px;
+    height: 36px;
+  }
 
   &:not(:first-of-type) {
-    margin-left: 5px;
+    margin-left: 4px;
   }
 `;
 

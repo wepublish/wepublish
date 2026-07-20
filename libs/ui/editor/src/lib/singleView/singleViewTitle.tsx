@@ -1,18 +1,18 @@
 import styled from '@emotion/styled';
 import { MdChevronLeft } from 'react-icons/md';
 import { Link } from 'react-router-dom';
-import { Button, Loader as RLoader, Row } from 'rsuite';
+import { Button, Loader as RLoader } from 'rsuite';
 
 const ChevronLeft = styled(MdChevronLeft)`
   font-size: 48px;
 `;
 
-const FlexGrid = styled.div`
+const Grid = styled.div`
   width: 100%;
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr max-content;
   align-items: center;
+  justify-items: start;
   gap: 40px;
   margin-bottom: 20px;
 `;
@@ -32,11 +32,6 @@ const PaddedCol = styled.div`
   justify-content: center;
   padding-top: 3px;
   margin-right: 1rem;
-`;
-
-const FlexRow = styled(Row)`
-  display: flex;
-  align-items: center;
 `;
 
 const FlexLink = styled(Link)`
@@ -81,7 +76,7 @@ export function SingleViewTitle({
   }
 
   return (
-    <FlexGrid>
+    <Grid>
       <PaddedCol>
         <FlexLink to={closePath}>
           <ChevronLeft />
@@ -110,6 +105,6 @@ export function SingleViewTitle({
           {saveAndCloseBtnTitle}
         </Button>
       </div>
-    </FlexGrid>
+    </Grid>
   );
 }
