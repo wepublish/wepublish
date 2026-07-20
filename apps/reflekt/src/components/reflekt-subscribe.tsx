@@ -25,11 +25,11 @@ export const ReflektSubscribe = styled(SubscribeBlock)`
   grid-template-areas:
     'memberPlans'
     'monthlyAmount'
-    'goodieSlider'
+    ${({ showGoodies }) => (showGoodies ? "'goodieSlider'" : '')}
     'userForm'
-    'goodie'
-    'goodieError'
+    ${({ showGoodies }) => (showGoodies ? "'goodie' 'goodieError'" : '')}
     'transactionFee'
+    ${({ showVouchers }) => (showVouchers ? "'voucher'" : '')}
     'submit'
     'paymentPeriodicity'
     'challenge';
@@ -44,8 +44,7 @@ export const ReflektSubscribe = styled(SubscribeBlock)`
     }
   }
 
-  ${SubscribeSection}[data-area='returning'],
-  ${SubscribeNarrowSection}[data-area='voucher'] {
+  ${SubscribeSection}[data-area='returning'] {
     display: none;
   }
 
