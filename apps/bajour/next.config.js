@@ -16,7 +16,6 @@ const nextConfig = {
   ...wepNextConfig,
   publicRuntimeConfig: {
     env: {
-      API_URL: process.env.API_URL || '',
       STRIPE_PUBLIC_KEY: process.env.STRIPE_PUBLIC_KEY || '',
       MAILCHIMP_POPUP_SCRIPT_URL: process.env.MAILCHIMP_POPUP_SCRIPT_URL || '',
     },

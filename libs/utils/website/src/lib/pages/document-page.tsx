@@ -114,7 +114,7 @@ export const documentGetInitialProps = async (ctx: DocumentContext) => {
             <Enhanced
               {...(props as any)}
               websiteSettings={websiteSettings}
-              API_URL={process.env.API_URL}
+              apiUrl={process.env.API_URL}
             />
           );
         } as typeof App;
@@ -129,7 +129,7 @@ export const documentGetInitialProps = async (ctx: DocumentContext) => {
     props: {
       ...finalProps,
       websiteSettings,
-      API_URL: process.env.API_URL,
+      apiUrl: process.env.API_URL,
     },
   };
 };

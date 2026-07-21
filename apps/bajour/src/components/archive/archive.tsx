@@ -14,7 +14,7 @@ import {
 import { differenceInYears } from 'date-fns';
 import { useState } from 'react';
 
-import { Logo } from '../../logo';
+import { ReactComponent as Logo } from '../../logo.svg';
 import { ArchiveSlider } from './archive-slider';
 
 export const ArchiveWrapper = styled('div')``;

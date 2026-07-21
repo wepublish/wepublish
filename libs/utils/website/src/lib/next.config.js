@@ -19,6 +19,52 @@ const nextConfig = {
     API_URL: process.env.API_URL || '',
     WEBSITE_URL: process.env.WEBSITE_URL || '',
   },
+  webpack(config, { webpack }) {
+    /**
+     * SVGR support, previously provided by the removed `nx.svgr` option
+     * @see https://nx.dev/technologies/react/next/recipes/next-config-setup
+     */
+    config.module.rules.push({
+      test: /\.svg$/,
+      issuer: { not: /\.(css|scss|sass)$/ },
+      resourceQuery: {
+        not: [/url/],
+      },
+      use: [
+        {
+          loader: require.resolve('@svgr/webpack'),
+          options: {
+            svgo: false,
+            titleProp: true,
+            ref: true,
+          },
+        },
+        {
+          loader: require.resolve('url-loader'),
+          options: {
+            limit: 10000,
+            name: '[name].[hash:7].[ext]',
+          },
+        },
+      ],
+    });
+
+    /**
+     * Tells Apollo turn run in production mode
+     * @see https://www.apollographql.com/docs/react/development-testing/reducing-bundle-size
+     */
+    config.plugins.push(
+      new webpack.DefinePlugin({
+        'globalThis.__DEV__': false,
+      })
+    );
+
+    if (process.env.ANALYZE_BUNDLE_CONCAT === 'false') {
+      config.optimization.concatenateModules = false;
+    }
+
+    return config;
+  },
   async redirects() {
     return [
       {

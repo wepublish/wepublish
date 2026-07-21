@@ -161,7 +161,7 @@ export const createWithApiClient =
   <
     P extends object,
     NextPage extends {
-      API_URL: string;
+      apiUrl: string;
       pageProps?: { [V1_CLIENT_STATE_PROP_NAME]?: NormalizedCacheObject };
     },
   >(
@@ -169,7 +169,7 @@ export const createWithApiClient =
   ) =>
     memo<P | NextPage>(props => {
       const client = useApiClient(
-        props.API_URL,
+        props.apiUrl,
         links,
         cacheConfig,
         (props as NextPage).pageProps?.[V1_CLIENT_STATE_PROP_NAME]

@@ -10,7 +10,8 @@
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
-        "outputPath": "dist/apps/babanews"
+        "outputPath": "dist/apps/babanews",
+        "webpack": true
       },
       "configurations": {
         "development": {
@@ -25,7 +26,8 @@
       "options": {
         "buildTarget": "babanews:build",
         "port": 4203,
-        "dev": true
+        "dev": true,
+        "webpack": true
       },
       "configurations": {
         "development": {

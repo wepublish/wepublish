@@ -10,7 +10,8 @@
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
-        "outputPath": "dist/apps/mediamakerscamp"
+        "outputPath": "dist/apps/mediamakerscamp",
+        "webpack": true
       },
       "configurations": {
         "development": {
@@ -24,7 +25,8 @@
       "defaultConfiguration": "development",
       "options": {
         "buildTarget": "mediamakerscamp:build",
-        "dev": true
+        "dev": true,
+        "webpack": true
       },
       "configurations": {
         "development": {

@@ -10,7 +10,8 @@
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
-        "outputPath": "dist/apps/factuel"
+        "outputPath": "dist/apps/factuel",
+        "webpack": true
       },
       "configurations": {
         "development": {
@@ -24,7 +25,8 @@
       "defaultConfiguration": "development",
       "options": {
         "buildTarget": "factuel:build",
-        "dev": true
+        "dev": true,
+        "webpack": true
       },
       "configurations": {
         "development": {

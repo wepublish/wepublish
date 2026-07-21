@@ -16,7 +16,6 @@ const nextConfig = {
   ...wepNextConfig,
   publicRuntimeConfig: {
     env: {
-      API_URL: process.env.API_URL || '',
       HTTP_ONLY_COOKIE: true,
     },
   },

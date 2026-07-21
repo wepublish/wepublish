@@ -10,7 +10,8 @@
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
-        "outputPath": "dist/apps/reflekt"
+        "outputPath": "dist/apps/reflekt",
+        "webpack": true
       },
       "configurations": {
         "development": {
@@ -24,7 +25,8 @@
       "defaultConfiguration": "development",
       "options": {
         "buildTarget": "reflekt:build",
-        "dev": true
+        "dev": true,
+        "webpack": true
       },
       "configurations": {
         "development": {
