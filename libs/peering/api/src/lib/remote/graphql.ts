@@ -5701,6 +5701,8 @@ export type SubscribeBlock = BaseBlock & {
   blockStyleName?: Maybe<Scalars['String']>;
   disabled?: Maybe<Scalars['Boolean']>;
   fields: Array<SubscribeBlockField>;
+  goodieMinValue?: Maybe<Scalars['Int']>;
+  hideRepeatGoodieOnUpgrade: Scalars['Boolean'];
   memberPlanIds?: Maybe<Array<Scalars['String']>>;
   memberPlans: Array<MemberPlan>;
   plans?: Maybe<Array<SubscribeBlockPlanSetting>>;
@@ -5728,6 +5730,8 @@ export type SubscribeBlockInput = {
   blockStyleName?: InputMaybe<Scalars['String']>;
   disabled?: InputMaybe<Scalars['Boolean']>;
   fields?: Array<SubscribeBlockField>;
+  goodieMinValue?: InputMaybe<Scalars['Int']>;
+  hideRepeatGoodieOnUpgrade?: Scalars['Boolean'];
   memberPlanIds?: InputMaybe<Array<Scalars['String']>>;
   plans?: InputMaybe<Array<SubscribeBlockPlanSettingInput>>;
   showGoodies?: Scalars['Boolean'];

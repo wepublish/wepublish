@@ -86,6 +86,8 @@ export interface SubscribeBlockValue extends BaseBlockValue {
   fields: SubscribeBlockField[];
   showGoodies: boolean;
   showVouchers: boolean;
+  goodieMinValue?: number | null;
+  hideRepeatGoodieOnUpgrade: boolean;
 }
 
 export interface PollBlockValue extends BaseBlockValue {
@@ -517,6 +519,8 @@ export function mapBlockValueToBlockInput(
           fields: block.value.fields,
           showGoodies: block.value.showGoodies,
           showVouchers: block.value.showVouchers,
+          goodieMinValue: block.value.goodieMinValue ?? null,
+          hideRepeatGoodieOnUpgrade: block.value.hideRepeatGoodieOnUpgrade,
         },
       };
 
@@ -1146,6 +1150,8 @@ export function blockForQueryBlock(
           fields: block.fields ?? [],
           showGoodies: block.showGoodies ?? false,
           showVouchers: block.showVouchers ?? false,
+          goodieMinValue: block.goodieMinValue ?? null,
+          hideRepeatGoodieOnUpgrade: block.hideRepeatGoodieOnUpgrade ?? false,
           memberPlanIds: block.memberPlanIds ?? [],
           plans:
             block.plans?.map(

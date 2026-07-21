@@ -20,6 +20,7 @@ import {
   Checkbox,
   CheckPicker,
   IconButton,
+  InputNumber,
   Panel as RPanel,
   SelectPicker,
   TagInput,
@@ -62,6 +63,25 @@ const Hint = styled('p')`
   margin: 0;
   font-size: 12px;
   color: #6c757d;
+`;
+
+const GoodieRow = styled('div')`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+`;
+
+const GoodieMinValueLabel = styled('span', {
+  shouldForwardProp: prop => prop !== 'deactivated',
+})<{ deactivated?: boolean }>`
+  font-size: 14px;
+  ${({ deactivated }) =>
+    deactivated && `color: var(--rs-text-disabled, #c5c6c7);`}
+`;
+
+const GoodieMinValueInput = styled(InputNumber)`
+  max-width: 80px;
 `;
 
 const PlanStyleRow = styled('div')`
@@ -478,6 +498,31 @@ export const SubscribeBlock = ({
     [onChange]
   );
 
+  const handleGoodieMinValueChange = useCallback(
+    (nextValue: string | number) => {
+      const francs =
+        typeof nextValue === 'number' ? nextValue : (
+          Number.parseFloat(nextValue.replace(',', '.'))
+        );
+
+      onChange(current => ({
+        ...current,
+        goodieMinValue:
+          Number.isFinite(francs) && francs > 0 ?
+            Math.round(francs * 100)
+          : null,
+      }));
+    },
+    [onChange]
+  );
+
+  const handleHideRepeatGoodieOnUpgradeChange = useCallback(
+    (_value: unknown, checked: boolean) => {
+      onChange(current => ({ ...current, hideRepeatGoodieOnUpgrade: checked }));
+    },
+    [onChange]
+  );
+
   return (
     <Panel bordered>
       <Content>
@@ -632,13 +677,36 @@ export const SubscribeBlock = ({
       <Content>
         <Heading>{t('blocks.subscribe.selectSections')}</Heading>
 
-        <Checkbox
-          checked={value.showGoodies}
-          disabled={disabled}
-          onChange={handleShowGoodiesChange}
-        >
-          {t('blocks.subscribe.showGoodies')}
-        </Checkbox>
+        <GoodieRow>
+          <Checkbox
+            checked={value.showGoodies}
+            disabled={disabled}
+            onChange={handleShowGoodiesChange}
+          >
+            {t('blocks.subscribe.showGoodies')}
+          </Checkbox>
+          |
+          <GoodieMinValueLabel deactivated={disabled || !value.showGoodies}>
+            {t('blocks.subscribe.goodieMinValue.label')}
+          </GoodieMinValueLabel>
+          <GoodieMinValueInput
+            disabled={disabled || !value.showGoodies}
+            min={0}
+            step={1}
+            value={
+              value.goodieMinValue != null ? value.goodieMinValue / 100 : ''
+            }
+            onChange={handleGoodieMinValueChange}
+          />
+          |
+          <Checkbox
+            checked={value.hideRepeatGoodieOnUpgrade}
+            disabled={disabled || !value.showGoodies}
+            onChange={handleHideRepeatGoodieOnUpgradeChange}
+          >
+            {t('blocks.subscribe.hideRepeatGoodieOnUpgrade')}
+          </Checkbox>
+        </GoodieRow>
 
         <Checkbox
           checked={value.showVouchers}

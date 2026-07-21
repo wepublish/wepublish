@@ -409,6 +409,10 @@
         "selectSections": "Fonctions avancées",
         "showGoodies": "Afficher la sélection de goodies",
         "showVouchers": "Afficher le champ de bon",
+        "goodieMinValue": {
+          "label": "Montant minimum du goodie :"
+        },
+        "hideRepeatGoodieOnUpgrade": "Lors de l’upgrade : pas de nouveau goodie",
         "FirstName": "Prénom",
         "Birthday": "Date de naissance",
         "Address": "Adresse",

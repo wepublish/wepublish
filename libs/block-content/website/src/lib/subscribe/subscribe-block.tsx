@@ -27,6 +27,8 @@ export const SubscribeBlock = ({
   fields,
   showGoodies,
   showVouchers,
+  goodieMinValue,
+  hideRepeatGoodieOnUpgrade,
 }: BuilderSubscribeBlockProps) => {
   const {
     register: [register],
@@ -109,6 +111,7 @@ export const SubscribeBlock = ({
           planSettings={plans ?? undefined}
           showGoodies={showGoodies}
           showVouchers={showVouchers}
+          goodieMinValue={goodieMinValue}
           defaults={{
             email: mail as string | undefined,
             firstName: firstName as string | undefined,
@@ -179,6 +182,10 @@ export const SubscribeBlock = ({
           {...subscribeProps}
           className={className}
           memberPlans={memberPlansObj}
+          planSettings={plans ?? undefined}
+          showGoodies={showGoodies}
+          goodieMinValue={goodieMinValue}
+          hideRepeatGoodieOnUpgrade={hideRepeatGoodieOnUpgrade}
           subscriptionToUpgrade={subscriptionToUpgrade}
           upgradeInfo={upgradeInfo}
           onSelect={handleOnSelect}
