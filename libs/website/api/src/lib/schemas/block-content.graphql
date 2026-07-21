@@ -125,6 +125,8 @@ fragment FullSubscribeBlock on SubscribeBlock {
   fields
   showGoodies
   showVouchers
+  goodieMinValue
+  hideRepeatGoodieOnUpgrade
 }
 
 fragment FullEventBlock on EventBlock {

@@ -272,6 +272,8 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
       ],
       showGoodies: false,
       showVouchers: false,
+      goodieMinValue: null,
+      hideRepeatGoodieOnUpgrade: false,
     },
     label: 'blocks.subscribe.label',
     icon: <MdAccountBox />,

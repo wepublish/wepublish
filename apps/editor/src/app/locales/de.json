@@ -405,6 +405,10 @@
         "selectSections": "Erweiterte Funktionen",
         "showGoodies": "Goodie-Auswahl anzeigen",
         "showVouchers": "Gutschein-Eingabe anzeigen",
+        "goodieMinValue": {
+          "label": "Goodie-Mindestbetrag:"
+        },
+        "hideRepeatGoodieOnUpgrade": "Bei Upgrade: kein erneutes Goodie",
         "FirstName": "Vorname",
         "Birthday": "Geburtstag",
         "Address": "Adresse",

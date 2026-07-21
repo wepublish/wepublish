@@ -95,6 +95,12 @@ export class SubscribeBlock extends BaseBlock<typeof BlockType.Subscribe> {
   @Field(() => Boolean, { defaultValue: false })
   showVouchers!: boolean;
 
+  @Field(() => Int, { nullable: true })
+  goodieMinValue?: number;
+
+  @Field(() => Boolean, { defaultValue: false })
+  hideRepeatGoodieOnUpgrade!: boolean;
+
   @Field(() => [MemberPlan])
   memberPlans!: MemberPlan[];
 }

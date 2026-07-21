@@ -404,6 +404,10 @@
         "selectSections": "Advanced features",
         "showGoodies": "Show goodie selection",
         "showVouchers": "Show voucher input",
+        "goodieMinValue": {
+          "label": "Minimum goodie amount:"
+        },
+        "hideRepeatGoodieOnUpgrade": "On upgrade: no repeat goodie",
         "FirstName": "First name",
         "Birthday": "Birthday",
         "Address": "Address",

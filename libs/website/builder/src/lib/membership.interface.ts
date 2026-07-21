@@ -148,6 +148,7 @@ export type BuilderSubscribeProps<
   planSettings?: SubscribeBlockPlanSetting[];
   showGoodies?: boolean;
   showVouchers?: boolean;
+  goodieMinValue?: number | null;
   subscribeInfo: Pick<
     QueryResult<CreateSubscriptionInfoQuery>,
     'data' | 'loading' | 'error'
@@ -191,6 +192,10 @@ export type BuilderUpgradeProps = {
     'data' | 'loading' | 'error'
   >;
   subscriptionToUpgrade: FullSubscriptionFragment;
+  planSettings?: SubscribeBlockPlanSetting[];
+  showGoodies?: boolean;
+  goodieMinValue?: number | null;
+  hideRepeatGoodieOnUpgrade?: boolean;
   className?: string;
   onUpgrade?: (
     data: Omit<UpgradeMutationVariables, 'failureURL' | 'successURL'>

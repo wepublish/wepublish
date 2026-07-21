@@ -3823,6 +3823,8 @@ type SubscribeBlock implements BaseBlock {
   blockStyleName: String
   disabled: Boolean
   fields: [SubscribeBlockField!]!
+  goodieMinValue: Int
+  hideRepeatGoodieOnUpgrade: Boolean!
   memberPlanIds: [String!]
   memberPlans: [MemberPlan!]!
   plans: [SubscribeBlockPlanSetting!]
@@ -3850,6 +3852,8 @@ input SubscribeBlockInput {
   blockStyleName: String
   disabled: Boolean
   fields: [SubscribeBlockField!]! = [FirstName, Password, PasswordRepeated, Address]
+  goodieMinValue: Int
+  hideRepeatGoodieOnUpgrade: Boolean! = false
   memberPlanIds: [String!]
   plans: [SubscribeBlockPlanSettingInput!]
   showGoodies: Boolean! = false
