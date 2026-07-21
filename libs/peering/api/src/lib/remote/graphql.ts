@@ -3470,6 +3470,7 @@ export type MutationUpdateWebsiteSettingsArgs = {
 
 export type MutationUpgradeUserSubscriptionArgs = {
   failureURL?: InputMaybe<Scalars['String']>;
+  goodieId?: InputMaybe<Scalars['String']>;
   memberPlanId: Scalars['String'];
   monthlyAmount: Scalars['Int'];
   paymentMethodId: Scalars['String'];

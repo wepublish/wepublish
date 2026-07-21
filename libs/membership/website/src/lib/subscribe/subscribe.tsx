@@ -254,6 +254,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   transactionFeeText,
   returningUserId,
   filterGoodies,
+  goodieMinValue,
   fetchSubscribeInfo,
   subscribeInfo,
 }: BuilderSubscribeProps<T>) => {
@@ -410,13 +411,21 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
         ({ id }) => !soldOutGoodieIds.includes(id)
       ) ?? [];
 
-    return filterGoodies ?
+    const filteredGoodies =
+      filterGoodies ?
         filterGoodies(inStockGoodies, { monthlyAmount: rawMonthlyAmount })
       : inStockGoodies;
+
+    if (goodieMinValue != null && rawMonthlyAmount * 12 < goodieMinValue) {
+      return [];
+    }
+
+    return filteredGoodies;
   }, [
     selectedMemberPlan?.goodies,
     soldOutGoodieIds,
     filterGoodies,
+    goodieMinValue,
     rawMonthlyAmount,
   ]);
 
