@@ -3475,6 +3475,7 @@ export type MutationUpdateWebsiteSettingsArgs = {
 
 export type MutationUpgradeUserSubscriptionArgs = {
   failureURL?: InputMaybe<Scalars['String']>;
+  goodieId?: InputMaybe<Scalars['String']>;
   memberPlanId: Scalars['String'];
   monthlyAmount: Scalars['Int'];
   paymentMethodId: Scalars['String'];
@@ -6925,6 +6926,7 @@ export type UpgradeMutationVariables = Exact<{
   memberPlanId: Scalars['String'];
   paymentMethodId: Scalars['String'];
   monthlyAmount: Scalars['Int'];
+  goodieId?: InputMaybe<Scalars['String']>;
   successURL?: InputMaybe<Scalars['String']>;
   failureURL?: InputMaybe<Scalars['String']>;
 }>;
@@ -9686,12 +9688,13 @@ export type ResubscribeMutationHookResult = ReturnType<typeof useResubscribeMuta
 export type ResubscribeMutationResult = Apollo.MutationResult<ResubscribeMutation>;
 export type ResubscribeMutationOptions = Apollo.BaseMutationOptions<ResubscribeMutation, ResubscribeMutationVariables>;
 export const UpgradeDocument = gql`
-    mutation Upgrade($subscriptionId: String!, $memberPlanId: String!, $paymentMethodId: String!, $monthlyAmount: Int!, $successURL: String, $failureURL: String) {
+    mutation Upgrade($subscriptionId: String!, $memberPlanId: String!, $paymentMethodId: String!, $monthlyAmount: Int!, $goodieId: String, $successURL: String, $failureURL: String) {
   upgradeUserSubscription(
     subscriptionId: $subscriptionId
     memberPlanId: $memberPlanId
     paymentMethodId: $paymentMethodId
     monthlyAmount: $monthlyAmount
+    goodieId: $goodieId
     successURL: $successURL
     failureURL: $failureURL
   ) {
@@ -9718,6 +9721,7 @@ export type UpgradeMutationFn = Apollo.MutationFunction<UpgradeMutation, Upgrade
  *      memberPlanId: // value for 'memberPlanId'
  *      paymentMethodId: // value for 'paymentMethodId'
  *      monthlyAmount: // value for 'monthlyAmount'
+ *      goodieId: // value for 'goodieId'
  *      successURL: // value for 'successURL'
  *      failureURL: // value for 'failureURL'
  *   },

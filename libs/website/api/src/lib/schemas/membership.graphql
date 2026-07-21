@@ -228,6 +228,7 @@ mutation Upgrade(
   $memberPlanId: String!
   $paymentMethodId: String!
   $monthlyAmount: Int!
+  $goodieId: String
   $successURL: String
   $failureURL: String
 ) {
@@ -236,6 +237,7 @@ mutation Upgrade(
     memberPlanId: $memberPlanId
     paymentMethodId: $paymentMethodId
     monthlyAmount: $monthlyAmount
+    goodieId: $goodieId
     successURL: $successURL
     failureURL: $failureURL
   ) {

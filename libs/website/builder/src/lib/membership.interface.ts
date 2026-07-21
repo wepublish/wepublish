@@ -198,6 +198,7 @@ export type BuilderSubscribeProps<
     goodies: FullGoodieFragment[],
     context: { monthlyAmount: number }
   ) => FullGoodieFragment[];
+  goodieMinValue?: number | null;
 } & Pick<BuilderRegistrationFormProps<T>, 'schema' | 'fields'>;
 
 export type BuilderUpgradeProps = {

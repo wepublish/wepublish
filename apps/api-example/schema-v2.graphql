@@ -2287,7 +2287,7 @@ type Mutation {
   updateWebsiteSettings(ads: WebsiteAdsInput, analytics: WebsiteAnalyticsInput, fonts: [WebsiteRemoteFontInput!], mail: WebsiteMailInput, theme: JSONObject): WebsiteSettings!
 
   """"""
-  upgradeUserSubscription(failureURL: String, memberPlanId: String!, monthlyAmount: Int!, paymentMethodId: String!, subscriptionId: String!, successURL: String): Payment!
+  upgradeUserSubscription(failureURL: String, goodieId: String, memberPlanId: String!, monthlyAmount: Int!, paymentMethodId: String!, subscriptionId: String!, successURL: String): Payment!
 
   """Uploads a new document."""
   uploadDocument(description: String, file: Upload!, filename: String, title: String): Document!
