@@ -11,6 +11,10 @@ import { BuilderPageProps } from '@wepublish/website/builder';
 import { FlexBlockHeroWrapper } from './block-layouts/flex-block-hero';
 import { CollapsibleContentWrapper } from './break-blocks/reflekt-collapsible-content';
 import { CollapsibleDownloadsWrapper } from './break-blocks/reflekt-collapsible-downloads';
+import {
+  FORCE_UPGRADE_PAGE_TAG,
+  ForceUpgradeContext,
+} from './reflekt-force-upgrade-context';
 import { ReflektLogo } from './reflekt-navbar';
 
 const fullWidthMainSpacer = (theme: Theme) => css`
@@ -111,20 +115,26 @@ export const ReflektPage = (props: BuilderPageProps) => {
       p => p.key === 'secondaryBackground'
     )?.value === 'true';
 
-  return (
-    <ContentWidthProvider fullWidth>
-      {pageGlobalStyles}
-      {secondaryBackground && secondaryBackgroundGlobalStyles}
+  const forceUpgrade = !!props.data?.page?.tags?.find(
+    tag => tag.tag === FORCE_UPGRADE_PAGE_TAG
+  );
 
-      <StyledReflektPage
-        {...props}
-        className={[
-          props.className,
-          secondaryBackground && 'secondary-background',
-        ]
-          .filter(Boolean)
-          .join(' ')}
-      />
-    </ContentWidthProvider>
+  return (
+    <ForceUpgradeContext.Provider value={forceUpgrade}>
+      <ContentWidthProvider fullWidth>
+        {pageGlobalStyles}
+        {secondaryBackground && secondaryBackgroundGlobalStyles}
+
+        <StyledReflektPage
+          {...props}
+          className={[
+            props.className,
+            secondaryBackground && 'secondary-background',
+          ]
+            .filter(Boolean)
+            .join(' ')}
+        />
+      </ContentWidthProvider>
+    </ForceUpgradeContext.Provider>
   );
 };

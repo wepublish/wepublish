@@ -17,6 +17,7 @@ import {
   getApiUrl,
   initWePublishTranslator,
   RoutedAdminBar,
+  withBuilderRouter,
   withJwtHandler,
   withSessionProvider,
 } from '@wepublish/utils/website';
@@ -73,7 +74,7 @@ import { ReflektRenderLeaf } from '../src/components/reflekt-render-leaf';
 import { ReflektRenderRichtext } from '../src/components/reflekt-render-richtext';
 import { ReflektRichTextBlock } from '../src/components/reflekt-richtext-block';
 import {
-  ReflektSubscribe,
+  ReflektSubscribeBlock,
   ReflektSubscribeForm,
 } from '../src/components/reflekt-subscribe';
 import { ReflektSubscriptionListItem } from '../src/components/reflekt-subscription-list-item';
@@ -190,7 +191,7 @@ function CustomApp({
               RichText: ReflektRichTextBlock,
               Renderer: ReflektBlockRenderer,
               Blocks: ReflektBlocks,
-              Subscribe: ReflektSubscribe,
+              Subscribe: ReflektSubscribeBlock,
               Image: ReflektImageBlock,
               Crowdfunding: ReflektCrowdfundingBlock,
             }}
@@ -336,8 +337,10 @@ function CustomApp({
 
 const withApollo = createWithApiClient(getApiUrl(), [authLink, previewLink]);
 const ConnectedApp = withApollo(
-  withErrorSnackbar(
-    withPaywallBypassToken(withSessionProvider(withJwtHandler(CustomApp)))
+  withBuilderRouter(
+    withErrorSnackbar(
+      withPaywallBypassToken(withSessionProvider(withJwtHandler(CustomApp)))
+    )
   )
 );
 

@@ -7,25 +7,42 @@ import {
 import {
   CurrencyNumberSpinner,
   MemberPlanPickerRadios,
-  Subscribe,
 } from '@wepublish/membership/website';
 import {
   BlockContent,
   SubscribeBlockPlanRenderStyle,
+  useSubscriptionsQuery,
 } from '@wepublish/website/api';
 import {
   BuilderMemberPlanItemProps,
+  BuilderRouterContext,
   BuilderSubscribeBlockProps,
   WebsiteBuilderProvider,
 } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
-import { ComponentProps, forwardRef, useEffect, useRef, useState } from 'react';
+import {
+  createContext,
+  forwardRef,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
 import { ReflektBlockStyles } from './block-styles/reflekt-block-styles';
 import { ReflektSubscribe } from './reflekt-subscribe';
 import { euclidCircularB, robotoMono } from '../theme';
 
-const GOODIE_THRESHOLD_CHF_PER_YEAR = 120;
+type CrowdfundingGoodieConfig = {
+  goodieMinValue: number | null | undefined;
+  baselineMonthlyAmount: number;
+};
+
+const CrowdfundingGoodieContext = createContext<CrowdfundingGoodieConfig>({
+  goodieMinValue: undefined,
+  baselineMonthlyAmount: 0,
+});
 
 export const isCrowdFundingSubscribe = (
   block: Pick<BlockContent, '__typename'>
@@ -252,6 +269,9 @@ export const ReflektCrowdfundingMemberPlanItem = forwardRef<
 ) {
   const radioGroup = useRadioGroup();
   const isChecked = props.checked ?? radioGroup?.value === id;
+  const { goodieMinValue, baselineMonthlyAmount } = useContext(
+    CrowdfundingGoodieContext
+  );
 
   const hasFreePricing =
     renderStyle === SubscribeBlockPlanRenderStyle.CardFreeInput;
@@ -261,9 +281,12 @@ export const ReflektCrowdfundingMemberPlanItem = forwardRef<
   const yearlyMinChf = Math.round((amountPerMonthMin * 12) / 100);
   const yearlyChf =
     hasFreePricing ? (freeAmountYearly ?? yearlyMinChf) : yearlyMinChf;
+  const tileYearlyValue =
+    (hasFreePricing ? (freeAmountYearly ?? 0) * 100 : amountPerMonthMin * 12) -
+    baselineMonthlyAmount * 12;
   const hasGoodie =
-    hasFreePricing ?
-      (freeAmountYearly ?? 0) >= GOODIE_THRESHOLD_CHF_PER_YEAR
+    goodieMinValue != null ?
+      tileYearlyValue >= goodieMinValue
     : !!goodies?.length;
 
   const lastPushed = useRef<{ amount: number; touched: boolean } | null>(null);
@@ -361,25 +384,38 @@ const CrowdfundingSubscribeBlock = styled(ReflektSubscribe)`
   }
 `;
 
-const filterGoodiesByAmount: NonNullable<
-  ComponentProps<typeof Subscribe>['filterGoodies']
-> = (goodies, { monthlyAmount }) =>
-  (monthlyAmount * 12) / 100 >= GOODIE_THRESHOLD_CHF_PER_YEAR ? goodies : [];
-
-const CrowdfundingSubscribe = (props: ComponentProps<typeof Subscribe>) => (
-  <Subscribe
-    {...props}
-    filterGoodies={filterGoodiesByAmount}
-  />
-);
-
 export const ReflektSubscribeCrowdfunding = (
   props: BuilderSubscribeBlockProps
-) => (
-  <WebsiteBuilderProvider
-    MemberPlanItem={ReflektCrowdfundingMemberPlanItem}
-    Subscribe={CrowdfundingSubscribe}
-  >
-    <CrowdfundingSubscribeBlock {...props} />
-  </WebsiteBuilderProvider>
-);
+) => {
+  const {
+    query: { upgradeSubscriptionId },
+  } = useContext(BuilderRouterContext);
+
+  const { data } = useSubscriptionsQuery({
+    fetchPolicy: 'cache-only',
+    skip: !upgradeSubscriptionId,
+  });
+
+  // On the upgrade flow the goodie threshold applies to the on-top delta
+  // (new amount − current subscription amount), matching the core Upgrade.
+  // In the plain subscribe flow there is no baseline, so it stays 0.
+  const baselineMonthlyAmount = useMemo(() => {
+    const subscription = data?.userSubscriptions.find(
+      sub => sub.isActive && sub.id === upgradeSubscriptionId
+    );
+
+    return subscription?.monthlyAmount ?? 0;
+  }, [data?.userSubscriptions, upgradeSubscriptionId]);
+
+  return (
+    <CrowdfundingGoodieContext.Provider
+      value={{ goodieMinValue: props.goodieMinValue, baselineMonthlyAmount }}
+    >
+      <WebsiteBuilderProvider
+        MemberPlanItem={ReflektCrowdfundingMemberPlanItem}
+      >
+        <CrowdfundingSubscribeBlock {...props} />
+      </WebsiteBuilderProvider>
+    </CrowdfundingGoodieContext.Provider>
+  );
+};
