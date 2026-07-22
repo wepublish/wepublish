@@ -363,6 +363,50 @@ describe('SubscriptionPaymentsService', () => {
     );
   });
 
+  it('invoice creation yearly with fractional monthly amount charges the exact period total', async () => {
+    const paidUntil = add(new Date(), { days: 14 });
+    const deactivationDate = add(paidUntil, { days: 10 });
+
+    const mockSubscription = {
+      id: 'sub-1',
+      monthlyAmount: 50000 / 12,
+      paymentPeriodicity: PaymentPeriodicity.yearly,
+      paidUntil,
+      startsAt: sub(paidUntil, { years: 3, days: -1 }),
+      periods: [],
+      memberPlan: mockMemberPlan,
+      user: mockUser,
+    };
+
+    prismaMock.invoice.create!.mockResolvedValue({
+      id: 'invoice-1',
+      dueAt: paidUntil,
+      scheduledDeactivationAt: deactivationDate,
+    });
+
+    await subscriptionService.createInvoice(
+      mockSubscription as any,
+      deactivationDate
+    );
+
+    expect(prismaMock.invoice.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          items: expect.objectContaining({
+            create: expect.objectContaining({
+              amount: 50000,
+            }),
+          }),
+          subscriptionPeriods: expect.objectContaining({
+            create: expect.objectContaining({
+              amount: 50000,
+            }),
+          }),
+        }),
+      })
+    );
+  });
+
   it('mark Invoice as paid (renewal)', async () => {
     const paidUntil = add(new Date(), { days: 5 });
     const mockSubscription = {

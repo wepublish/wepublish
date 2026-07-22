@@ -6,6 +6,7 @@ import {
   FullMemberPlanFragment,
   FullPaymentMethodFragment,
   PaymentMethod,
+  PaymentPeriodicity,
   ProductType,
   useCreateMemberPlanMutation,
   useMemberPlanLazyQuery,
@@ -96,6 +97,8 @@ function MemberPlanEdit() {
       amountPerMonthMin: 0,
       amountPerMonthMax: null,
       amountPerMonthTarget: null,
+      periodicityPricing: null,
+      defaultPaymentPeriodicity: null,
       image: undefined,
       active: true,
       tags: [],
@@ -196,6 +199,45 @@ function MemberPlanEdit() {
       amountPerMonthMin: memberPlan.amountPerMonthMin,
       amountPerMonthMax: memberPlan.amountPerMonthMax,
       amountPerMonthTarget: memberPlan.amountPerMonthTarget,
+      periodicityPricing:
+        memberPlan.periodicityPricing
+          ?.filter(
+            price =>
+              availablePaymentMethods.some(({ value }) =>
+                value.paymentPeriodicities.includes(price.periodicity)
+              ) &&
+              (price.periodicity === PaymentPeriodicity.Monthly ?
+                price.label != null
+              : price.label != null || price.amountMin != null)
+          )
+          .map(({ periodicity, label, amountMin, amountTarget, amountMax }) =>
+            periodicity === PaymentPeriodicity.Monthly ?
+              {
+                periodicity,
+                label,
+                amountMin: null,
+                amountTarget: null,
+                amountMax: null,
+              }
+            : {
+                periodicity,
+                label,
+                amountMin,
+                amountTarget,
+                amountMax,
+              }
+          ) ?? null,
+      defaultPaymentPeriodicity:
+        (
+          memberPlan.defaultPaymentPeriodicity &&
+          availablePaymentMethods.some(({ value }) =>
+            value.paymentPeriodicities.includes(
+              memberPlan.defaultPaymentPeriodicity as PaymentPeriodicity
+            )
+          )
+        ) ?
+          memberPlan.defaultPaymentPeriodicity
+        : null,
       extendable: memberPlan.extendable,
       externalReward: memberPlan.externalReward,
       maxCount: memberPlan.maxCount,

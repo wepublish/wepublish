@@ -12,6 +12,7 @@ import {
   FullTeaserFragment,
   PageWithoutBlocksFragment,
   SubscribeBlockField,
+  SubscribePeriodicityDisplay,
   Tag,
   TeaserInput,
   TeaserListBlockSort,
@@ -73,6 +74,7 @@ export interface HTMLBlockValue extends BaseBlockValue {
 export interface SubscribeBlockValue extends BaseBlockValue {
   memberPlanIds: string[];
   fields: SubscribeBlockField[];
+  periodicityDisplay?: SubscribePeriodicityDisplay | null;
 }
 
 export interface PollBlockValue extends BaseBlockValue {
@@ -501,6 +503,7 @@ export function mapBlockValueToBlockInput(
           disabled: block.value.disabled,
           memberPlanIds: block.value.memberPlanIds ?? [],
           fields: block.value.fields,
+          periodicityDisplay: block.value.periodicityDisplay,
         },
       };
 
@@ -1129,6 +1132,7 @@ export function blockForQueryBlock(
           blockStyle: block.blockStyle,
           fields: block.fields ?? [],
           memberPlanIds: block.memberPlanIds ?? [],
+          periodicityDisplay: block.periodicityDisplay,
         },
       };
 

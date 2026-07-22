@@ -308,6 +308,19 @@ const changePaymentMethod =
     });
   };
 
+const changePeriodicity =
+  (periodicity: PaymentPeriodicity): NonNullable<StoryObj['play']> =>
+  async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    const select = canvas.getByLabelText('Zahlungsintervall');
+
+    await step('Change Periodicity', async () => {
+      await userEvent.selectOptions(select, periodicity);
+      await wait(10); // wait for reset to happen
+    });
+  };
+
 const waitForInitialDataIsSet =
   (
     playFunction: NonNullable<StoryObj['play']>
@@ -635,11 +648,12 @@ export const ResetPaymentOptionsOnMemberPlanChange: StoryObj<typeof Subscribe> =
     }),
   };
 
-export const ResetPaymentOptionsOnPaymentMethodChange: StoryObj<
+export const ResetPaymentOptionsOnPeriodicityChange: StoryObj<
   typeof Subscribe
 > = {
   ...LoggedIn,
   play: waitForInitialDataIsSet(async ctx => {
+    await changePeriodicity(PaymentPeriodicity.Lifetime)(ctx);
     await changePaymentMethod(
       memberPlan.availablePaymentMethods[2].paymentMethods[0]
     )(ctx);
