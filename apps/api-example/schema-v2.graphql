@@ -3823,9 +3823,19 @@ type SubscribeBlock implements BaseBlock {
   blockStyleName: String
   disabled: Boolean
   fields: [SubscribeBlockField!]!
+  goodieMinValue: Int
+  hideRepeatGoodieOnUpgrade: Boolean!
   memberPlanIds: [String!]
   memberPlans: [MemberPlan!]!
+  plans: [SubscribeBlockPlanSetting!]
+  showGoodies: Boolean!
+  showVouchers: Boolean!
   type: BlockType!
+}
+
+enum SubscribeBlockAmountTileLayout {
+  Narrow
+  Wide
 }
 
 enum SubscribeBlockField {
@@ -3842,7 +3852,36 @@ input SubscribeBlockInput {
   blockStyleName: String
   disabled: Boolean
   fields: [SubscribeBlockField!]! = [FirstName, Password, PasswordRepeated, Address]
+  goodieMinValue: Int
+  hideRepeatGoodieOnUpgrade: Boolean! = false
   memberPlanIds: [String!]
+  plans: [SubscribeBlockPlanSettingInput!]
+  showGoodies: Boolean! = false
+  showVouchers: Boolean! = false
+}
+
+enum SubscribeBlockPlanRenderStyle {
+  AmountTiles
+  Card
+  CardAndSlider
+  CardFreeInput
+  Slider
+}
+
+type SubscribeBlockPlanSetting {
+  amountTileLayout: SubscribeBlockAmountTileLayout
+  amountTileValues: [Int!]
+  isDefault: Boolean
+  memberPlanId: String!
+  renderStyle: SubscribeBlockPlanRenderStyle!
+}
+
+input SubscribeBlockPlanSettingInput {
+  amountTileLayout: SubscribeBlockAmountTileLayout
+  amountTileValues: [Int!]
+  isDefault: Boolean
+  memberPlanId: String!
+  renderStyle: SubscribeBlockPlanRenderStyle!
 }
 
 type SubscriptionCreatedAction implements BaseAction & HasSubscriptionLc {

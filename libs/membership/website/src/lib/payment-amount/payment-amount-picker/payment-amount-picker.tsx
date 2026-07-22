@@ -3,18 +3,34 @@ import {
   BuilderPaymentAmountProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { Currency } from '@wepublish/website/api';
+import {
+  Currency,
+  SubscribeBlockAmountTileLayout,
+} from '@wepublish/website/api';
 import { forwardRef, PropsWithChildren, useMemo } from 'react';
 import { formatCurrency } from '../../formatters/format-currency';
 import styled from '@emotion/styled';
+import { CurrencyNumberSpinner, HelperText } from './currency-number-spinner';
 
-export const PaymentAmountPickerWrapper = styled(RadioGroup)`
+export const PaymentAmountPickerWrapper = styled(RadioGroup, {
+  shouldForwardProp: prop => prop !== 'tileLayout',
+})<{ tileLayout?: SubscribeBlockAmountTileLayout }>`
   display: grid;
-  grid-template-columns: repeat(auto-fit, 125px);
+  grid-template-columns: ${({ tileLayout }) =>
+    tileLayout === SubscribeBlockAmountTileLayout.Wide ?
+      '1fr'
+    : 'repeat(2, 1fr)'};
   align-items: top;
   justify-content: center;
   gap: ${({ theme }) => theme.spacing(2)};
   align-items: start;
+
+  ${({ theme }) => theme.breakpoints.up('sm')} {
+    grid-template-columns: ${({ tileLayout }) =>
+      tileLayout === SubscribeBlockAmountTileLayout.Wide ?
+        'repeat(auto-fit, 200px)'
+      : 'repeat(auto-fit, 125px)'};
+  }
 
   // hide unwanted label
   label {
@@ -32,10 +48,11 @@ type PaymentAmountPickerItemProps = PropsWithChildren<{
   name?: string;
   currency: Currency;
   checked: boolean;
+  tileLayout?: SubscribeBlockAmountTileLayout;
 }>;
 
 export const PaymentAmountPickerItemWrapper = styled('div')<
-  Pick<PaymentAmountPickerItemProps, 'checked'>
+  Pick<PaymentAmountPickerItemProps, 'checked' | 'tileLayout'>
 >`
   position: relative;
   padding: ${({ theme }) => theme.spacing(2)};
@@ -46,11 +63,24 @@ export const PaymentAmountPickerItemWrapper = styled('div')<
   align-items: center;
   justify-content: center;
 
+  ${({ tileLayout, theme }) =>
+    tileLayout === SubscribeBlockAmountTileLayout.Wide &&
+    css`
+      aspect-ratio: auto;
+      min-height: 96px;
+      padding: ${theme.spacing(3)};
+      font-size: 1.25em;
+    `}
+
   ${({ checked, theme }) =>
     checked &&
     css`
       color: ${theme.palette.primary.contrastText};
       background: ${theme.palette.primary.light};
+
+      ${HelperText} {
+        color: ${theme.palette.primary.contrastText};
+      }
     `}
 `;
 
@@ -74,11 +104,18 @@ export const PaymentAmountPickerItemAmount = styled('div')`
   font-weight: 600;
 `;
 
+const TileSpinner = styled(CurrencyNumberSpinner)`
+  margin-top: 0;
+`;
+
 export const PaymentAmountPickerItem = forwardRef<
   HTMLButtonElement,
   PaymentAmountPickerItemProps
->(({ children, checked, currency, ...props }, ref) => (
-  <PaymentAmountPickerItemWrapper checked={checked}>
+>(({ children, checked, currency, tileLayout, ...props }, ref) => (
+  <PaymentAmountPickerItemWrapper
+    checked={checked}
+    tileLayout={tileLayout}
+  >
     <PaymentAmountPickerItemCurrency checked={checked}>
       {currency}
     </PaymentAmountPickerItemCurrency>
@@ -101,7 +138,6 @@ export const PaymentAmountPicker = forwardRef<
   (
     {
       className,
-      slug,
       currency,
       amountPerMonthMin,
       amountPerMonthTarget,
@@ -109,29 +145,27 @@ export const PaymentAmountPicker = forwardRef<
       error,
       value,
       onChange,
+      presetAmounts,
+      tileLayout,
     },
     ref
   ) => {
     const {
-      elements: { TextField },
-      meta: { locale, siteTitle },
+      meta: { locale },
     } = useWebsiteBuilder();
 
-    const pickerItems = useMemo(() => {
-      switch (siteTitle) {
-        case 'WNTI':
-          return slug?.includes('donate') ?
-              [10000, 15000, 20000]
-            : [1000, 1500, 2000];
-        default:
-          return [1000, 1500, 2000];
-      }
-    }, [siteTitle, slug]);
+    const pickerItems = useMemo(
+      () => (presetAmounts?.length ? presetAmounts : [1000, 1500, 2000]),
+      [presetAmounts]
+    );
+
+    const isWide = tileLayout === SubscribeBlockAmountTileLayout.Wide;
 
     return (
       <PaymentAmountPickerWrapper
         className={className}
         name={name}
+        tileLayout={tileLayout}
         onChange={event => {
           if (+event.target.value) {
             onChange(+event.target.value);
@@ -146,6 +180,7 @@ export const PaymentAmountPicker = forwardRef<
             control={
               <PaymentAmountPickerItem
                 currency={currency}
+                tileLayout={tileLayout}
                 checked={itemAmount === value}
               >
                 <PaymentAmountPickerItemAmount>
@@ -162,21 +197,20 @@ export const PaymentAmountPicker = forwardRef<
           control={
             <PaymentAmountPickerItem
               currency={currency}
-              checked={false}
+              tileLayout={tileLayout}
+              checked={!pickerItems.includes(value)}
             >
-              <TextField
-                ref={ref}
-                name={name}
+              <TileSpinner
+                arrows={isWide ? 'split' : 'stacked'}
+                min={amountPerMonthMin / 100}
+                step={1}
                 value={value / 100}
-                onChange={event => onChange(+event.target.value * 100)}
-                type={'number'}
-                fullWidth
-                error={!!error}
-                helperText={`Min ${formatCurrency(amountPerMonthMin / 100, currency, locale)}`}
-                inputProps={{
-                  step: 'any',
-                  min: amountPerMonthMin / 100,
+                onValueChange={spinnerValue => {
+                  if (spinnerValue != null) {
+                    onChange(Math.round(spinnerValue * 100));
+                  }
                 }}
+                helperText={`Min ${formatCurrency(amountPerMonthMin / 100, currency, locale)}`}
               />
             </PaymentAmountPickerItem>
           }

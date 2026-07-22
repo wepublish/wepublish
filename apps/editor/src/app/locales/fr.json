@@ -218,7 +218,6 @@
         "updatedAtDate": "{{updatedAtDate, ccc PP pp}}"
       }
     },
-
     "authors": {
       "overview": {
         "action": "Action",
@@ -407,12 +406,41 @@
         "selectMemberPlansSelectionHintAll": "Sans sélection, tous les plans actifs sont affichés.",
         "selectFields": "Champs de saisie",
         "selectFieldsSelectionHint": "L’email et le nom de famille sont toujours demandés. L’ordre n’a pas d’importance",
+        "selectSections": "Fonctions avancées",
+        "showGoodies": "Afficher la sélection de goodies",
+        "showVouchers": "Afficher le champ de bon",
+        "goodieMinValue": {
+          "label": "Montant minimum du goodie :"
+        },
+        "hideRepeatGoodieOnUpgrade": "Lors de l’upgrade : pas de nouveau goodie",
         "FirstName": "Prénom",
         "Birthday": "Date de naissance",
         "Address": "Adresse",
         "EmailRepeated": "Répéter l’email",
         "Password": "Mot de passe",
-        "PasswordRepeated": "Répéter le mot de passe"
+        "PasswordRepeated": "Répéter le mot de passe",
+        "renderStyles": {
+          "Card": "Tuile de plan (montant fixe)",
+          "Slider": "Tuile de plan + curseur de montant",
+          "CardAndSlider": "Tuile de plan avec montant affiché + curseur",
+          "CardFreeInput": "Tuile de plan avec saisie libre du montant",
+          "AmountTiles": "Tuiles de montant (un seul plan)"
+        },
+        "renderStylesHeading": "Ordre et affichage des plans",
+        "renderStyleRules": {
+          "amountTilesSingle": "Les tuiles de montant ne sont disponibles que si un seul plan est sélectionné."
+        },
+        "amountTileValues": {
+          "hint": "Montants des tuiles (en francs). Laisser vide pour les valeurs par défaut : 10, 15, 20.",
+          "placeholder": "p.ex. 10 15 20"
+        },
+        "amountTileLayout": {
+          "hint": "Disposition des tuiles sur mobile",
+          "Narrow": "Étroit (2 tuiles par ligne)",
+          "Wide": "Large (1 tuile par ligne, grandes tuiles)"
+        },
+        "planAmountsTitle": "Montant minimum / cible / maximum par mois (en francs)",
+        "defaultPlanTitle": "Sélectionné par défaut — ce plan est présélectionné après le chargement de la page."
       },
       "image": {
         "label": "Image",
@@ -1477,7 +1505,7 @@
       "totpDisabled": "L'authentification à deux facteurs n'est pas encore configurée. L'utilisateur sera invité à la configurer lors de sa prochaine connexion à l'éditeur.",
       "totpExemptInfo": "Cet utilisateur est exempté de l'exigence d'authentification à deux facteurs.",
       "totpExemptLabel": "Exempter de l'exigence 2FA",
-      "totpExemptWarning": "\u26a0\ufe0f AVERTISSEMENT DE SÉCURITÉ \u26a0\ufe0f\n\nVous êtes sur le point de DÉSACTIVER l'exigence d'authentification à deux facteurs pour cet utilisateur !\n\nCela réduit considérablement la sécurité de ce compte. L'utilisateur pourra se connecter à l'éditeur avec un simple mot de passe, sans second facteur.\n\nCela ne devrait être utilisé que dans des circonstances exceptionnelles.\n\nÊtes-vous sûr de vouloir continuer ?",
+      "totpExemptWarning": "⚠️ AVERTISSEMENT DE SÉCURITÉ ⚠️\n\nVous êtes sur le point de DÉSACTIVER l'exigence d'authentification à deux facteurs pour cet utilisateur !\n\nCela réduit considérablement la sécurité de ce compte. L'utilisateur pourra se connecter à l'éditeur avec un simple mot de passe, sans second facteur.\n\nCela ne devrait être utilisé que dans des circonstances exceptionnelles.\n\nÊtes-vous sûr de vouloir continuer ?",
       "resetPassword": "Réinitialiser le mot de passe",
       "resetPasswordFor": "Réinitialiser le mot de passe de {{userName}}",
       "selectUserImage": "Choisir une photo de profil",

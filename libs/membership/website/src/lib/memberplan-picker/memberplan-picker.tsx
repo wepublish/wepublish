@@ -37,7 +37,18 @@ export const MemberPlanPicker = forwardRef<
   HTMLButtonElement,
   BuilderMemberPlanPickerProps & { alwaysShow?: boolean }
 >(function MemberPlanPicker(
-  { memberPlans, onChange, value, className, name, alwaysShow },
+  {
+    memberPlans,
+    onChange,
+    value,
+    className,
+    name,
+    alwaysShow,
+    monthlyAmount,
+    onMonthlyAmountChange,
+    monthlyAmountError,
+    planSettings,
+  },
   ref
 ) {
   const {
@@ -55,9 +66,16 @@ export const MemberPlanPicker = forwardRef<
 
   useEffect(() => {
     if (memberPlans.length && !selectedMemberPlan) {
-      onChange(memberPlans[0].id);
+      const defaultPlanId = planSettings?.find(
+        ({ isDefault }) => isDefault
+      )?.memberPlanId;
+
+      onChange(
+        memberPlans.find(({ id }) => id === defaultPlanId)?.id ??
+          memberPlans[0].id
+      );
     }
-  }, [memberPlans, onChange, selectedMemberPlan]);
+  }, [memberPlans, onChange, selectedMemberPlan, planSettings]);
 
   return (
     showPicker && (
@@ -85,6 +103,14 @@ export const MemberPlanPicker = forwardRef<
                     extendable={memberPlan.extendable}
                     shortDescription={memberPlan.shortDescription}
                     tags={memberPlan.tags}
+                    monthlyAmount={monthlyAmount}
+                    onMonthlyAmountChange={onMonthlyAmountChange}
+                    monthlyAmountError={monthlyAmountError}
+                    renderStyle={
+                      planSettings?.find(
+                        ({ memberPlanId }) => memberPlanId === memberPlan.id
+                      )?.renderStyle
+                    }
                   />
                 }
                 label={memberPlan.name}
