@@ -109,10 +109,12 @@ import { VersionInformationModule } from '@wepublish/versionInformation/api';
 import bodyParser from 'body-parser';
 import { SlackMailProvider } from '../app/slack-mail-provider';
 import { readConfig } from '../readConfig';
+import { CollaborationModule } from '@wepublish/collaboration/api';
 
 @Global()
 @Module({
   imports: [
+    CollaborationModule,
     SentryModule.forRoot(),
     GraphQLModule.forRootAsync<ApolloDriverConfig>({
       driver: ApolloDriver,
