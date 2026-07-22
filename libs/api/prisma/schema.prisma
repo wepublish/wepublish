@@ -1927,7 +1927,7 @@ model Voucher {
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
-  code            String @unique
+  code            String
   discountPercent Int
 
   validFrom DateTime
