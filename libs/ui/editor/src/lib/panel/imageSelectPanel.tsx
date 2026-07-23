@@ -5,8 +5,8 @@ import { useTranslation } from 'react-i18next';
 import { MdFileUpload, MdSearch } from 'react-icons/md';
 import {
   Button,
+  Col,
   Drawer,
-  FlexboxGrid,
   Form,
   Input,
   InputGroup,
@@ -14,6 +14,7 @@ import {
   Message,
   Notification,
   Panel as RPanel,
+  Row,
   toaster,
 } from 'rsuite';
 
@@ -44,7 +45,7 @@ const FileDropWrapper = styled(RPanel)`
   height: 150px;
 `;
 
-const FlexItem = styled(FlexboxGrid.Item)`
+const FlexItem = styled(Col)`
   margin-bottom: 20px;
 `;
 
@@ -159,12 +160,12 @@ function ImageSelectPanel({ onClose, onSelect }: ImageSelectPanelProps) {
             onDrop={handleDrop}
           />
         </FileDropWrapper>
-        <Form.ControlLabel>
+        <Form.Label>
           <br />
           {t('images.panels.resizedImage', {
             sizeMB: getImgMinSizeToCompress(),
           })}
-        </Form.ControlLabel>
+        </Form.Label>
 
         <RPanel header={t('articleEditor.panels.images')}>
           <InputGroup>
@@ -179,13 +180,13 @@ function ImageSelectPanel({ onClose, onSelect }: ImageSelectPanelProps) {
         </RPanel>
         {images.length ?
           <>
-            <FlexboxGrid justify="space-around">
+            <Row justify="space-around">
               {images.map(image => {
                 const { id, mediumURL, title, filename, extension } = image;
                 return (
                   <FlexItem
                     key={id}
-                    colspan={10}
+                    span={10}
                   >
                     <Panel
                       onClick={() => onSelect(image)}
@@ -211,7 +212,7 @@ function ImageSelectPanel({ onClose, onSelect }: ImageSelectPanelProps) {
                   </FlexItem>
                 );
               })}
-            </FlexboxGrid>
+            </Row>
             {data?.images.pageInfo.hasNextPage && (
               <Button onClick={loadMore}>
                 {t('articleEditor.panels.loadMore')}

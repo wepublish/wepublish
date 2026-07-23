@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`ImportableEventListView renders the event list view with events 1`] = `
 <DocumentFragment>
@@ -13,7 +13,8 @@ exports[`ImportableEventListView renders the event list view with events 1`] = `
       </h2>
     </div>
     <form
-      class="emotion-2 rs-form rs-form-vertical rs-form-fixed-width"
+      class="emotion-2"
+      data-rs="form"
     >
       <div
         class="rs-form-group"
@@ -22,6 +23,8 @@ exports[`ImportableEventListView renders the event list view with events 1`] = `
       >
         <input
           class="rs-input"
+          data-size="md"
+          id="rs-_r_1_"
           placeholder="filterableList.filter.name"
           type="text"
           value=""
@@ -34,6 +37,8 @@ exports[`ImportableEventListView renders the event list view with events 1`] = `
       >
         <input
           class="rs-input"
+          data-size="md"
+          id="rs-_r_5_"
           placeholder="filterableList.filter.location"
           type="text"
           value=""
@@ -45,55 +50,73 @@ exports[`ImportableEventListView renders the event list view with events 1`] = `
         style="margin-right: 15px; margin-top: 0px; margin-bottom: 10px;"
       >
         <div
-          class="emotion-3 rs-picker rs-picker-check rs-picker-default rs-picker-toggle-wrapper rs-picker-cleanable rs-picker-block rs-picker-countable"
+          class="emotion-3 rs-picker"
+          data-appearance="default"
+          data-block="true"
+          data-picker="check"
+          data-testid="picker"
         >
           <div
+            aria-controls="rs-_r_b_-listbox"
+            aria-describedby="rs-_r_b_-describe"
             aria-disabled="false"
             aria-expanded="false"
             aria-haspopup="listbox"
-            class="rs-picker-toggle rs-btn rs-btn-default"
+            class="rs-picker-toggle rs-btn"
+            data-active="false"
+            data-appearance="default"
+            data-cleanable="true"
+            data-countable="true"
+            data-disabled="false"
+            data-has-value="false"
+            id="rs-_r_b_"
             role="combobox"
             tabindex="0"
           >
             <div
-              class="rs-stack"
-              style="align-items: center;"
+              class="rs-picker-toggle-stack rs-stack"
             >
               <div
-                class="rs-stack-item"
-                style="flex-grow: 1; overflow: hidden;"
+                class="rs-stack-item rs-box-_r_f_"
+                data-rs="box"
+                overflow="hidden"
               >
                 <input
                   aria-hidden="true"
-                  class="rs-picker-toggle-textbox rs-picker-toggle-read-only"
+                  class="rs-picker-toggle-textbox"
+                  data-testid="picker-toggle-input"
                   readonly=""
                   style="pointer-events: none;"
                   tabindex="-1"
                   value=""
                 />
                 <span
-                  aria-placeholder="filterableList.filter.providers"
                   class="rs-picker-toggle-placeholder"
+                  data-testid="picker-describe"
+                  id="rs-_r_b_-describe"
                 >
                   filterableList.filter.providers
                 </span>
               </div>
               <div
-                class="rs-stack-item"
+                class="rs-picker-toggle-indicator rs-stack-item rs-box-_r_g_"
+                data-rs="box"
               >
                 <svg
                   aria-hidden="true"
-                  aria-label="angle down"
-                  class="rs-picker-toggle-caret rs-icon"
-                  data-category="legacy"
+                  aria-label="arrow down line"
+                  class="rs-picker-caret-icon rs-icon rs-icon"
+                  data-category="direction"
+                  data-testid="caret"
                   fill="currentColor"
                   focusable="false"
                   height="1em"
-                  viewBox="0 0 21 32"
+                  viewBox="0 0 16 16"
                   width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
-                    d="M19.196 13.143a.612.612 0 01-.179.411l-8.321 8.321c-.107.107-.268.179-.411.179s-.304-.071-.411-.179l-8.321-8.321c-.107-.107-.179-.268-.179-.411s.071-.304.179-.411l.893-.893a.582.582 0 01.411-.179c.143 0 .304.071.411.179l7.018 7.018 7.018-7.018c.107-.107.268-.179.411-.179s.304.071.411.179l.893.893a.617.617 0 01.179.411z"
+                    d="M3.166 5.128a.5.5 0 0 1 .706.037L8 9.752l4.128-4.587a.5.5 0 1 1 .743.669l-4.5 5a.5.5 0 0 1-.744 0l-4.5-5a.5.5 0 0 1 .037-.706z"
                   />
                 </svg>
               </div>
@@ -107,58 +130,64 @@ exports[`ImportableEventListView renders the event list view with events 1`] = `
         style="margin-right: 15px; margin-top: 0px; margin-bottom: 10px;"
       >
         <div
-          class="rs-picker rs-picker-daterange rs-picker-default rs-picker-toggle-wrapper rs-picker-placement-auto rs-picker-cleanable rs-picker-block"
+          class="rs-picker"
+          data-appearance="default"
+          data-block="true"
+          data-cleanable="true"
+          data-picker="date-range"
+          data-testid="picker"
         >
           <div
-            aria-expanded="false"
-            aria-haspopup="listbox"
-            class="rs-picker-toggle rs-btn rs-btn-default"
-            role="combobox"
-            tabindex="-1"
+            class="rs-picker-input-group rs-input-group"
+            data-focus="false"
+            data-inside="true"
+            data-size="md"
           >
-            <div
-              class="rs-stack"
-              style="align-items: center;"
+            <input
+              aria-haspopup="dialog"
+              autocomplete="off"
+              autocorrect="off"
+              class="rs-date-range-input rs-input rs-box-_r_o_"
+              data-rs="box"
+              data-size="md"
+              id="rs-_r_j_"
+              inputmode="text"
+              placeholder="filterableList.filter.dates"
+              size="27"
+              spellcheck="false"
+              type="text"
+              value=""
+            />
+            <span
+              class="rs-picker-toggle-indicator rs-input-group-addon"
             >
-              <div
-                class="rs-stack-item"
-                style="flex-grow: 1; overflow: hidden;"
+              <svg
+                aria-hidden="true"
+                aria-label="calendar"
+                class="rs-picker-caret-icon rs-icon rs-icon"
+                data-category="time"
+                data-testid="caret"
+                fill="currentColor"
+                focusable="false"
+                height="1em"
+                viewBox="0 0 16 16"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <input
-                  aria-hidden="true"
-                  class="rs-picker-toggle-textbox rs-picker-toggle-read-only"
-                  placeholder="filterableList.filter.dates"
-                  readonly=""
-                  tabindex="0"
-                  value=""
+                <path
+                  d="M4.5 7a.5.5 0 0 1 .5.5v5a.5.5 0 0 1-1 0v-5a.5.5 0 0 1 .5-.5M7.5 7a.5.5 0 0 1 .5.5v5a.5.5 0 0 1-1 0v-5a.5.5 0 0 1 .5-.5M10.5 7a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-1 0v-1a.5.5 0 0 1 .5-.5"
                 />
-                <span
-                  aria-placeholder="filterableList.filter.dates"
-                  class="rs-picker-toggle-placeholder"
-                >
-                  filterableList.filter.dates
-                </span>
-              </div>
-              <div
-                class="rs-stack-item"
-              >
-                <svg
-                  aria-hidden="true"
-                  aria-label="calendar"
-                  class="rs-picker-toggle-caret rs-icon"
-                  data-category="legacy"
-                  fill="currentColor"
-                  focusable="false"
-                  height="1em"
-                  viewBox="0 0 14 14"
-                  width="1em"
-                >
-                  <path
-                    d="M1 4v8.5a.5.5 0 00.5.5H8c0-.128.049-.256.146-.354.555-.555.854-1.6.854-3.146a.5.5 0 01.621-.485l.119.03A2.623 2.623 0 0012.999 6.5V4h-12zm3-2h6V0h1v2h1.5A1.5 1.5 0 0114 3.5v3a3.623 3.623 0 01-4.015 3.603c-.064 1.245-.335 2.212-.831 2.898H12.5a.5.5 0 00.5-.5v-2a.5.5 0 011 0v2a1.5 1.5 0 01-1.5 1.5h-11a1.5 1.5 0 01-1.5-1.5v-9a1.5 1.5 0 011.5-1.5H3v-2h1v2zm5 4V5h1v1h2v1h-2v1H9V7H7v2h1v1H7v2H6v-2H4v2H3v-2H1V9h2V7H1V6h2V5h1v1h2V5h1v1h2zM6 9V7H4v2h2z"
-                  />
-                </svg>
-              </div>
-            </div>
+                <path
+                  d="M1 8h10.5a.5.5 0 0 1 0 1H1zm0 3h7.5a.5.5 0 0 1 0 1H1zM1 5h14v1H1z"
+                />
+                <path
+                  d="M4.5 1a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0v-3a.5.5 0 0 1 .5-.5M11.5 1a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0v-3a.5.5 0 0 1 .5-.5M14.5 11a.5.5 0 0 1 .492.41l.008.09v1a2.5 2.5 0 0 1-2.336 2.495L12.5 15h-3a.5.5 0 0 1-.09-.992L9.5 14h3a1.5 1.5 0 0 0 1.493-1.356L14 12.5v-1a.5.5 0 0 1 .5-.5"
+                />
+                <path
+                  d="M13 3a2 2 0 0 1 2 2v3c0 2-2 3-4 3q1 2-1 4H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zm.117 1.007L13 4H3a1 1 0 0 0-.993.883L2 5v8a1 1 0 0 0 .883.993L3 14h6.566l.031-.033c.738-.856.9-1.608.575-2.375l-.067-.144a1 1 0 0 1 .894-1.447c1.692 0 2.9-.76 2.994-1.861l.006-.139v-3a1 1 0 0 0-.883-.993z"
+                />
+              </svg>
+            </span>
           </div>
         </div>
       </div>
@@ -185,11 +214,11 @@ exports[`ImportableEventListView renders the event list view with events 1`] = `
           aria-rowindex="1"
           class="rs-table-row rs-table-row-header"
           role="row"
-          style="min-width: 940px; height: 40px; transform: translate(0px,0px);"
+          style="min-width: 940px; height: 40px; transform: translate3d(0px,0px,0); backface-visibility: hidden;"
         >
           <div
             class="rs-table-cell-group rs-table-cell-group-scroll"
-            style="transform: translate(0px,0px);"
+            style="transform: translate3d(0px,0px,0); backface-visibility: hidden;"
           >
             <div
               class="rs-table-cell-header"
@@ -317,21 +346,21 @@ exports[`ImportableEventListView renders the event list view with events 1`] = `
       <div
         class="rs-table-body-row-wrapper"
         role="rowgroup"
-        style="top: 40px; height: -40px;"
+        style="top: 40px; height: 160px;"
       >
         <div
           class="rs-table-body-wheel-area"
-          style="position: absolute; height: 120px; min-height: 0;"
+          style="position: absolute; height: 120px; min-height: 0; transition-timing-function: linear; transform: translate(0px,0px);"
         >
           <div
             aria-rowindex="2"
             class="rs-table-row"
             role="row"
-            style="min-width: 940px; height: 60px; transform: translate(0px,0px);"
+            style="min-width: 940px; height: 60px; transform: translate3d(0px,0px,0); backface-visibility: hidden;"
           >
             <div
               class="rs-table-cell-group rs-table-cell-group-scroll"
-              style="transform: translate(0px,0px);"
+              style="transform: translate3d(0px,0px,0); backface-visibility: hidden;"
             >
               <div
                 aria-colindex="1"
@@ -404,8 +433,10 @@ exports[`ImportableEventListView renders the event list view with events 1`] = `
                   style="width: 150px; height: 60px;"
                 >
                   <button
-                    aria-disabled="true"
-                    class="rs-btn rs-btn-ghost rs-btn-disabled"
+                    class="rs-btn"
+                    data-appearance="ghost"
+                    data-disabled="true"
+                    data-size="md"
                     disabled=""
                     type="button"
                   >
@@ -419,11 +450,11 @@ exports[`ImportableEventListView renders the event list view with events 1`] = `
             aria-rowindex="3"
             class="rs-table-row"
             role="row"
-            style="min-width: 940px; height: 60px; transform: translate(0px,60px);"
+            style="min-width: 940px; height: 60px; transform: translate3d(0px,60px,0); backface-visibility: hidden;"
           >
             <div
               class="rs-table-cell-group rs-table-cell-group-scroll"
-              style="transform: translate(0px,0px);"
+              style="transform: translate3d(0px,0px,0); backface-visibility: hidden;"
             >
               <div
                 aria-colindex="1"
@@ -496,7 +527,9 @@ exports[`ImportableEventListView renders the event list view with events 1`] = `
                   style="width: 150px; height: 60px;"
                 >
                   <button
-                    class="rs-btn rs-btn-primary"
+                    class="rs-btn"
+                    data-appearance="primary"
+                    data-size="md"
                     type="button"
                   >
                     importableEvent.import
@@ -524,7 +557,7 @@ exports[`ImportableEventListView renders the event list view with events 1`] = `
           <div
             class="rs-table-scrollbar-handle"
             role="button"
-            style="height: -28.57142857142857%; min-height: 14px;"
+            style="min-height: 14px; backface-visibility: hidden;"
             tabindex="-1"
           />
         </div>
@@ -575,27 +608,39 @@ exports[`ImportableEventListView renders the event list view with events 1`] = `
         class="rs-pagination-group-limit"
       >
         <div
-          class="rs-picker rs-picker-select rs-picker-default rs-picker-toggle-wrapper rs-picker-placement-top-start rs-picker-has-value"
+          class="rs-picker"
+          data-appearance="default"
+          data-picker="select"
+          data-testid="picker"
         >
           <div
+            aria-controls="rs-_r_r_-listbox"
+            aria-describedby="rs-_r_r_-describe"
             aria-disabled="false"
             aria-expanded="false"
             aria-haspopup="listbox"
-            class="rs-picker-toggle rs-btn rs-btn-default"
+            class="rs-picker-toggle rs-btn"
+            data-active="false"
+            data-appearance="default"
+            data-cleanable="false"
+            data-disabled="false"
+            data-has-value="true"
+            id="rs-_r_r_"
             role="combobox"
             tabindex="0"
           >
             <div
-              class="rs-stack"
-              style="align-items: center;"
+              class="rs-picker-toggle-stack rs-stack"
             >
               <div
-                class="rs-stack-item"
-                style="flex-grow: 1; overflow: hidden;"
+                class="rs-stack-item rs-box-_r_v_"
+                data-rs="box"
+                overflow="hidden"
               >
                 <input
                   aria-hidden="true"
-                  class="rs-picker-toggle-textbox rs-picker-toggle-read-only"
+                  class="rs-picker-toggle-textbox"
+                  data-testid="picker-toggle-input"
                   readonly=""
                   style="pointer-events: none;"
                   tabindex="-1"
@@ -603,6 +648,8 @@ exports[`ImportableEventListView renders the event list view with events 1`] = `
                 />
                 <span
                   class="rs-picker-toggle-value"
+                  data-testid="picker-describe"
+                  id="rs-_r_r_-describe"
                 >
                   <span />
                   <span>
@@ -614,21 +661,24 @@ exports[`ImportableEventListView renders the event list view with events 1`] = `
                 </span>
               </div>
               <div
-                class="rs-stack-item"
+                class="rs-picker-toggle-indicator rs-stack-item rs-box-_r_10_"
+                data-rs="box"
               >
                 <svg
                   aria-hidden="true"
-                  aria-label="angle up"
-                  class="rs-picker-toggle-caret rs-icon"
-                  data-category="legacy"
+                  aria-label="arrow up line"
+                  class="rs-picker-caret-icon rs-icon rs-icon"
+                  data-category="direction"
+                  data-testid="caret"
                   fill="currentColor"
                   focusable="false"
                   height="1em"
-                  viewBox="0 0 21 32"
+                  viewBox="0 0 16 16"
                   width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
-                    d="M19.196 21.143a.612.612 0 01-.179.411l-.893.893a.582.582 0 01-.411.179.612.612 0 01-.411-.179l-7.018-7.018-7.018 7.018c-.107.107-.268.179-.411.179s-.304-.071-.411-.179l-.893-.893c-.107-.107-.179-.268-.179-.411s.071-.304.179-.411l8.321-8.321c.107-.107.268-.179.411-.179s.304.071.411.179l8.321 8.321a.617.617 0 01.179.411z"
+                    d="M3.166 10.872a.5.5 0 0 0 .706-.037L8 6.248l4.128 4.587a.5.5 0 1 0 .743-.669l-4.5-5a.5.5 0 0 0-.744 0l-4.5 5a.5.5 0 0 0 .037.706z"
                   />
                 </svg>
               </div>
@@ -637,18 +687,25 @@ exports[`ImportableEventListView renders the event list view with events 1`] = `
         </div>
       </div>
       <div
-        aria-orientation="vertical"
-        class="rs-divider rs-divider-vertical"
+        class="rs-divider"
+        data-orientation="vertical"
         role="separator"
       />
       <div
-        class="rs-pagination rs-pagination-xs"
+        class="rs-pagination"
+        data-size="sm"
       >
         <button
+          aria-disabled="true"
           aria-label="First"
-          class="rs-pagination-btn rs-pagination-btn-disabled"
+          class="rs-pagination-btn rs-btn"
+          data-appearance="subtle"
+          data-disabled="true"
+          data-event-key="1"
+          data-size="sm"
           disabled=""
           title="First"
+          type="button"
         >
           <span
             class="rs-pagination-symbol"
@@ -657,24 +714,41 @@ exports[`ImportableEventListView renders the event list view with events 1`] = `
               aria-hidden="true"
               aria-label="page top"
               class="rs-icon"
-              data-category="legacy"
+              data-category="direction"
               fill="currentColor"
               focusable="false"
               height="1em"
-              viewBox="0 0 9 14"
+              viewBox="0 0 16 16"
               width="1em"
+              xmlns="http://www.w3.org/2000/svg"
             >
               <path
-                d="M4.5 7L8 11l-.583.667L3.334 7l4.083-4.667L8 3 4.5 7zM2.167 7l3.5 4-.583.667L1.001 7l4.083-4.667.583.667-3.5 4z"
+                d="M8.872 3.166a.5.5 0 0 0-.634-.091l-.072.054-5 4.5a.5.5 0 0 0-.065.672l.065.071 5 4.5a.5.5 0 0 0 .73-.677l-.061-.066L4.249 8l4.586-4.127a.5.5 0 0 0 .091-.634z"
+              />
+              <path
+                d="M12.872 3.166a.5.5 0 0 0-.634-.091l-.072.054-5 4.5a.5.5 0 0 0-.065.672l.065.071 5 4.5a.5.5 0 0 0 .73-.677l-.061-.066L8.249 8l4.586-4.127a.5.5 0 0 0 .091-.634z"
               />
             </svg>
           </span>
+          <span
+            class="rs-ripple-pond"
+          >
+            <span
+              class="rs-ripple"
+            />
+          </span>
         </button>
         <button
+          aria-disabled="true"
           aria-label="Previous"
-          class="rs-pagination-btn rs-pagination-btn-disabled"
+          class="rs-pagination-btn rs-btn"
+          data-appearance="subtle"
+          data-disabled="true"
+          data-event-key="0"
+          data-size="sm"
           disabled=""
           title="Previous"
+          type="button"
         >
           <span
             class="rs-pagination-symbol"
@@ -683,23 +757,37 @@ exports[`ImportableEventListView renders the event list view with events 1`] = `
               aria-hidden="true"
               aria-label="page previous"
               class="rs-icon"
-              data-category="legacy"
+              data-category="direction"
               fill="currentColor"
               focusable="false"
               height="1em"
-              viewBox="0 0 7 14"
+              viewBox="0 0 16 16"
               width="1em"
+              xmlns="http://www.w3.org/2000/svg"
             >
               <path
-                d="M2.333 7l3.5-4-.583-.667L1.167 7l4.083 4.667.583-.667z"
+                d="M10.872 3.166a.5.5 0 0 0-.634-.091l-.072.054-5 4.5a.5.5 0 0 0-.065.672l.065.071 5 4.5a.5.5 0 0 0 .73-.677l-.061-.066L6.249 8l4.586-4.127a.5.5 0 0 0 .091-.634z"
               />
             </svg>
           </span>
+          <span
+            class="rs-ripple-pond"
+          >
+            <span
+              class="rs-ripple"
+            />
+          </span>
         </button>
         <button
+          aria-current="page"
           aria-label="1"
-          class="rs-pagination-btn rs-pagination-btn-active"
+          class="rs-pagination-btn rs-btn"
+          data-active="true"
+          data-appearance="subtle"
+          data-event-key="1"
+          data-size="sm"
           title="1"
+          type="button"
         >
           1
           <span
@@ -711,10 +799,16 @@ exports[`ImportableEventListView renders the event list view with events 1`] = `
           </span>
         </button>
         <button
+          aria-disabled="true"
           aria-label="Next"
-          class="rs-pagination-btn rs-pagination-btn-disabled"
+          class="rs-pagination-btn rs-btn"
+          data-appearance="subtle"
+          data-disabled="true"
+          data-event-key="2"
+          data-size="sm"
           disabled=""
           title="Next"
+          type="button"
         >
           <span
             class="rs-pagination-symbol"
@@ -723,24 +817,38 @@ exports[`ImportableEventListView renders the event list view with events 1`] = `
               aria-hidden="true"
               aria-label="page next"
               class="rs-icon"
-              data-category="legacy"
+              data-category="direction"
               fill="currentColor"
               focusable="false"
               height="1em"
-              viewBox="0 0 7 14"
+              viewBox="0 0 16 16"
               width="1em"
+              xmlns="http://www.w3.org/2000/svg"
             >
               <path
-                d="M4.667 7l-3.5 4 .583.667L5.833 7 1.75 2.333 1.167 3z"
+                d="M5.128 3.166a.5.5 0 0 1 .634-.091l.072.054 5 4.5a.5.5 0 0 1 .065.672l-.065.071-5 4.5a.5.5 0 0 1-.73-.677l.061-.066L9.751 8 5.165 3.873a.5.5 0 0 1-.091-.634z"
               />
             </svg>
           </span>
+          <span
+            class="rs-ripple-pond"
+          >
+            <span
+              class="rs-ripple"
+            />
+          </span>
         </button>
         <button
+          aria-disabled="true"
           aria-label="Last"
-          class="rs-pagination-btn rs-pagination-btn-disabled"
+          class="rs-pagination-btn rs-btn"
+          data-appearance="subtle"
+          data-disabled="true"
+          data-event-key="1"
+          data-size="sm"
           disabled=""
           title="Last"
+          type="button"
         >
           <span
             class="rs-pagination-symbol"
@@ -749,17 +857,28 @@ exports[`ImportableEventListView renders the event list view with events 1`] = `
               aria-hidden="true"
               aria-label="page end"
               class="rs-icon"
-              data-category="legacy"
+              data-category="direction"
               fill="currentColor"
               focusable="false"
               height="1em"
-              viewBox="0 0 9 14"
+              viewBox="0 0 16 16"
               width="1em"
+              xmlns="http://www.w3.org/2000/svg"
             >
               <path
-                d="M4.5 7L1 3l.583-.667L5.666 7l-4.083 4.667L1 11l3.5-4zm2.333 0l-3.5-4 .583-.667L7.999 7l-4.083 4.667L3.333 11l3.5-4z"
+                d="M7.128 3.166a.5.5 0 0 1 .634-.091l.072.054 5 4.5a.5.5 0 0 1 .065.672l-.065.071-5 4.5a.5.5 0 0 1-.73-.677l.061-.066L11.751 8 7.165 3.873a.5.5 0 0 1-.091-.634z"
+              />
+              <path
+                d="M3.128 3.166a.5.5 0 0 1 .634-.091l.072.054 5 4.5a.5.5 0 0 1 .065.672l-.065.071-5 4.5a.5.5 0 0 1-.73-.677l.061-.066L7.751 8 3.165 3.873a.5.5 0 0 1-.091-.634z"
               />
             </svg>
+          </span>
+          <span
+            class="rs-ripple-pond"
+          >
+            <span
+              class="rs-ripple"
+            />
           </span>
         </button>
       </div>
@@ -772,8 +891,9 @@ exports[`ImportableEventListView renders the event list view with events 1`] = `
         <span>
           <input
             class="rs-input"
+            data-size="md"
+            id="rs-_r_17_"
             type="text"
-            value=""
           />
         </span>
         <span />

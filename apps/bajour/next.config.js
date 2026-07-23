@@ -14,16 +14,9 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
  **/
 const nextConfig = {
   ...wepNextConfig,
-  serverRuntimeConfig: {
-    env: {
-      API_URL_INTERNAL: process.env.API_URL_INTERNAL || '',
-    },
-  },
   publicRuntimeConfig: {
     env: {
-      API_URL: process.env.API_URL || '',
       STRIPE_PUBLIC_KEY: process.env.STRIPE_PUBLIC_KEY || '',
-      GA_ID: process.env.GA_ID || '',
       MAILCHIMP_POPUP_SCRIPT_URL: process.env.MAILCHIMP_POPUP_SCRIPT_URL || '',
     },
   },

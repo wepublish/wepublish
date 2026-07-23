@@ -25,7 +25,7 @@ import { Button, Form as RForm, Message, toaster } from 'rsuite';
 import { Background } from './ui/loginBackground';
 import { TotpQrCode } from './ui/totpQrCode';
 
-const { Group, ControlLabel, Control } = RForm;
+const { Group, Label, Control } = RForm;
 
 const Form = styled(RForm)`
   display: flex;
@@ -211,57 +211,59 @@ export function LoginJwt() {
 
   return (
     <LoginTemplate backgroundChildren={<Background />}>
-      <Form fluid>
-        <TotpDescription>{t('login.totp.setupDescription')}</TotpDescription>
+      <Form>
+        <RForm.Stack fluid>
+          <TotpDescription>{t('login.totp.setupDescription')}</TotpDescription>
 
-        <AppLinks>
-          {t('login.totp.downloadApp')}{' '}
-          <a
-            href="https://play.google.com/store/apps/details?id=proton.android.authenticator"
-            target="_blank"
-            rel="noopener noreferrer"
+          <AppLinks>
+            {t('login.totp.downloadApp')}{' '}
+            <a
+              href="https://play.google.com/store/apps/details?id=proton.android.authenticator"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {t('login.totp.android')}
+            </a>
+            {' | '}
+            <a
+              href="https://apps.apple.com/app/proton-authenticator/id6741758667"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {t('login.totp.ios')}
+            </a>
+          </AppLinks>
+
+          <TotpDescription>{t('login.totp.backupHint')}</TotpDescription>
+
+          {totpUri && <TotpQrCode uri={totpUri} />}
+
+          {totpSecret && (
+            <>
+              <TotpDescription>{t('login.totp.manualEntry')}</TotpDescription>
+              <SecretCode>{totpSecret}</SecretCode>
+            </>
+          )}
+
+          <Group controlId="totpCode">
+            <Label>{t('login.totp.code')}</Label>
+            <Control
+              inputRef={totpInputRef}
+              name="totpCode"
+              value={totpToken}
+              autoComplete="one-time-code"
+              onChange={(value: string) => setTotpToken(value)}
+            />
+          </Group>
+          <Button
+            appearance="primary"
+            type="submit"
+            disabled={loadingEnable || loadingSetup || !totpToken}
+            onClick={handleTotpSetup}
           >
-            {t('login.totp.android')}
-          </a>
-          {' | '}
-          <a
-            href="https://apps.apple.com/app/proton-authenticator/id6741758667"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {t('login.totp.ios')}
-          </a>
-        </AppLinks>
-
-        <TotpDescription>{t('login.totp.backupHint')}</TotpDescription>
-
-        {totpUri && <TotpQrCode uri={totpUri} />}
-
-        {totpSecret && (
-          <>
-            <TotpDescription>{t('login.totp.manualEntry')}</TotpDescription>
-            <SecretCode>{totpSecret}</SecretCode>
-          </>
-        )}
-
-        <Group controlId="totpCode">
-          <ControlLabel>{t('login.totp.code')}</ControlLabel>
-          <Control
-            inputRef={totpInputRef}
-            name="totpCode"
-            value={totpToken}
-            autoComplete="one-time-code"
-            onChange={(value: string) => setTotpToken(value)}
-          />
-        </Group>
-        <Button
-          appearance="primary"
-          type="submit"
-          disabled={loadingEnable || loadingSetup || !totpToken}
-          onClick={handleTotpSetup}
-        >
-          {t('login.totp.activate')}
-        </Button>
+            {t('login.totp.activate')}
+          </Button>
+        </RForm.Stack>
       </Form>
     </LoginTemplate>
   );

@@ -7,14 +7,6 @@ import * as stories from './invoice-list-container.stories';
 const storiesCmp = composeStories(stories);
 
 describe('InvoiceList Container', () => {
-  beforeAll(() => {
-    Object.defineProperty(global.window, 'location', {
-      value: {
-        href: 'http://localhost',
-      },
-    });
-  });
-
   Object.entries(storiesCmp).forEach(([story, Component]) => {
     it(`should render ${story}`, async () => {
       const { container } = render(

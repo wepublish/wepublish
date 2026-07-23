@@ -76,7 +76,7 @@ export function AudienceChart({
               tick={({ x, y, payload }) => (
                 <text
                   x={x}
-                  y={y + 15}
+                  y={+y + 15}
                   textAnchor="middle"
                 >
                   {new Date(payload.value).toLocaleDateString(language, {

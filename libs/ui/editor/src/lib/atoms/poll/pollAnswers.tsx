@@ -13,31 +13,40 @@ import { MdAdd, MdContentCopy, MdDelete } from 'react-icons/md';
 import {
   Badge as RBadge,
   Button,
-  Col as RCol,
   Form,
   IconButton as RIconButton,
   Message,
   Modal,
-  Row as RRow,
   toaster,
   Tooltip,
   Whisper,
 } from 'rsuite';
 
 const IconButton = styled(RIconButton)`
-  margin-right: 10px;
+  && {
+    width: 36px;
+    height: 36px;
+  }
 `;
 
 const Badge = styled(RBadge)`
   width: 100%;
+  display: grid;
 `;
 
-const Col = styled(RCol)`
-  padding-right: 30px;
-`;
-
-const Row = styled(RRow)`
+const Grid = styled.div`
   align-items: center;
+  display: grid;
+  grid-template-columns: 1fr max-content;
+  gap: 12px;
+  margin-bottom: 8px;
+`;
+
+const Actions = styled.div`
+  align-items: center;
+  display: grid;
+  grid-template-columns: max-content max-content;
+  gap: 4px;
 `;
 
 function getTotalUserVotesByAnswerId(poll: FullPoll, answerId: string): number {
@@ -136,6 +145,7 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
     if (!poll) {
       return;
     }
+
     if (!newAnswer) {
       toaster.push(
         <Message
@@ -149,26 +159,32 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
       );
       return;
     }
+
     const answer = await createAnswerMutation({
       variables: {
         pollId: poll.id,
         answer: newAnswer,
       },
     });
+
     const savedAnswer = answer?.data?.createPollAnswer;
+
     if (savedAnswer) {
       const updatedPoll = { ...poll };
       updatedPoll.answers?.push(savedAnswer as PollAnswer);
       onPollChange(updatedPoll);
     }
+
     setNewAnswer('');
   }
 
   async function deleteAnswer(): Promise<void> {
     setModalOpen(false);
+
     if (!answerToDelete) {
       return;
     }
+
     const answer = await deleteAnswerMutation({
       variables: {
         deletePollAnswerId: answerToDelete.id,
@@ -180,11 +196,13 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
       ...poll,
       answers: poll?.answers ? [...poll.answers] : [],
     } as FullPoll | undefined;
+
     // delete answer
     const deletedAnswer = answer?.data?.deletePollAnswer;
     if (!deletedAnswer || !updatedPoll?.answers) {
       return;
     }
+
     const deleteIndex = updatedPoll?.answers?.findIndex(
       tmpAnswer => tmpAnswer.id === deletedAnswer.id
     );
@@ -202,6 +220,7 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
           tmpVoteAmount.answerId !== deletedAnswer.id
       );
     });
+
     onPollChange(updatedPoll);
   }
 
@@ -209,13 +228,16 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
     if (!poll) {
       return;
     }
+
     const updatedAnswers = poll.answers ? [...poll.answers] : [];
     const answerIndex = updatedAnswers.findIndex(
       tempAnswer => tempAnswer.id === updatedAnswer.id
     );
+
     if (answerIndex < 0) {
       return;
     }
+
     updatedAnswers[answerIndex] = updatedAnswer;
 
     onPollChange({
@@ -260,81 +282,69 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
 
   return (
     <>
-      <Row>
-        {poll?.answers?.map(answer => (
-          <div key={`answer-${answer.id}`}>
-            <Col xs={16}>
-              <Badge
-                content={`${getTotalVotesByAnswerId(poll, answer.id)} ${t('pollAnswer.votes')}`}
-              >
-                <Form.Control
-                  name={`answer-${answer.id}`}
-                  value={answer.answer}
-                  onChange={(value: string) => {
-                    updateAnswer({
-                      ...answer,
-                      answer: value,
-                    });
-                  }}
-                />
-              </Badge>
-            </Col>
+      {poll?.answers?.map(answer => (
+        <Grid key={answer.id}>
+          <Badge
+            content={`${getTotalVotesByAnswerId(poll, answer.id)} ${t('pollAnswer.votes')}`}
+          >
+            <Form.Control
+              name={`answer-${answer.id}`}
+              value={answer.answer}
+              onChange={(value: string) => {
+                updateAnswer({
+                  ...answer,
+                  answer: value,
+                });
+              }}
+            />
+          </Badge>
 
-            {/* copy link btn */}
-            <RCol xs={8}>
+          <Actions>
+            <IconButton
+              icon={<MdDelete />}
+              circle
+              size="sm"
+              appearance="ghost"
+              color="red"
+              onClick={() => {
+                setAnswerToDelete(answer);
+                setModalOpen(true);
+              }}
+            />
+
+            <Whisper speaker={<Tooltip>{t('pollAnswer.copyVoteUrl')}</Tooltip>}>
               <IconButton
-                icon={<MdDelete />}
+                icon={<MdContentCopy />}
                 circle
                 size="sm"
                 appearance="ghost"
-                color="red"
-                onClick={() => {
-                  setAnswerToDelete(answer);
-                  setModalOpen(true);
-                }}
+                onClick={() => copyUrlParamsIntoClipboard(answer)}
               />
-              <Whisper
-                speaker={<Tooltip>{t('pollAnswer.copyVoteUrl')}</Tooltip>}
-              >
-                <RIconButton
-                  icon={<MdContentCopy />}
-                  circle
-                  size="sm"
-                  appearance="ghost"
-                  onClick={() => copyUrlParamsIntoClipboard(answer)}
-                />
-              </Whisper>
-            </RCol>
-          </div>
-        ))}
-      </Row>
+            </Whisper>
+          </Actions>
+        </Grid>
+      ))}
 
-      {/* adding new poll answer */}
-      <RRow>
-        <RCol xs={16}>
-          <Form.Control
-            name="createNewFormAnswer"
-            placeholder={t('pollAnswer.insertYourNewAnswer')}
-            value={newAnswer}
-            onChange={(value: string) => {
-              setNewAnswer(value);
-            }}
-          />
-        </RCol>
+      <Grid css={{ marginTop: 24, marginBottom: 0 }}>
+        <Form.Control
+          name="createNewFormAnswer"
+          placeholder={t('pollAnswer.insertYourNewAnswer')}
+          value={newAnswer}
+          onChange={(value: string) => {
+            setNewAnswer(value);
+          }}
+        />
 
-        <RCol xs={8}>
-          <RIconButton
-            icon={<MdAdd />}
-            loading={loading}
-            appearance="primary"
-            onClick={createAnswer}
-          >
-            {t('pollEditView.addAndSaveNewAnswer')}
-          </RIconButton>
-        </RCol>
-      </RRow>
+        <RIconButton
+          icon={<MdAdd />}
+          loading={loading}
+          appearance="primary"
+          onClick={createAnswer}
+        >
+          {t('pollEditView.addAndSaveNewAnswer')}
+        </RIconButton>
+      </Grid>
 
-      {/* delete modal */}
       <Modal
         open={modalOpen}
         size="xs"
@@ -343,9 +353,11 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
         }}
       >
         <Modal.Title>{t('pollAnswer.deleteModalTitle')}</Modal.Title>
+
         <Modal.Body>
           {t('pollAnswer.deleteModalBody', { answer: answerToDelete?.answer })}
         </Modal.Body>
+
         <Modal.Footer>
           <Button
             appearance="primary"
@@ -353,6 +365,7 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
           >
             {t('pollAnswer.deleteBtn')}
           </Button>
+
           <Button
             appearance="subtle"
             onClick={() => setModalOpen(false)}

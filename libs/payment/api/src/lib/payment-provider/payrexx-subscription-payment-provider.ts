@@ -1,11 +1,8 @@
 import { Currency, Invoice, PaymentState, Subscription } from '@prisma/client';
 import { logger, mapPaymentPeriodToMonths } from '@wepublish/utils/api';
 import * as crypto from 'crypto';
-import add from 'date-fns/add';
-import parseISO from 'date-fns/parseISO';
-import startOfDay from 'date-fns/startOfDay';
-import sub from 'date-fns/sub';
-import fetch from 'node-fetch';
+import { add, parseISO, startOfDay, sub } from 'date-fns';
+import fetch, { RequestInit } from 'node-fetch';
 import qs from 'qs';
 import {
   BasePaymentProvider,
@@ -284,7 +281,7 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
       {
         method: 'PUT',
         body: qs.stringify({ ...data, ApiSignature: signature }),
-        signal: AbortSignal.timeout(30_000),
+        signal: AbortSignal.timeout(30_000) as unknown as RequestInit['signal'],
       }
     );
 
@@ -323,7 +320,7 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
       {
         method: 'DELETE',
         body: qs.stringify({ ApiSignature: signature }),
-        signal: AbortSignal.timeout(30_000),
+        signal: AbortSignal.timeout(30_000) as unknown as RequestInit['signal'],
       }
     );
 

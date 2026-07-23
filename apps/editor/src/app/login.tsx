@@ -23,13 +23,7 @@ import React, {
 } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
-import {
-  Button,
-  Form as RForm,
-  IconButton as RIconButton,
-  Message,
-  toaster,
-} from 'rsuite';
+import { Button, Form as RForm, Message, toaster } from 'rsuite';
 
 import { Background } from './ui/loginBackground';
 import { TotpQrCode } from './ui/totpQrCode';
@@ -39,16 +33,12 @@ function useQuery() {
   return useMemo(() => new URLSearchParams(search), [search]);
 }
 
-const { Group, ControlLabel, Control } = RForm;
+const { Group, Label, Control } = RForm;
 
 const Form = styled(RForm)`
   display: flex;
   flex-direction: column;
   margin: 0;
-`;
-
-const IconButton = styled(RIconButton)`
-  margin-bottom: 10px;
 `;
 
 const SecretCode = styled.code`
@@ -315,57 +305,62 @@ export function Login() {
   if (loginStep === 'totp-setup') {
     return (
       <LoginTemplate backgroundChildren={<Background />}>
-        <Form fluid>
-          <TotpDescription>{t('login.totp.setupDescription')}</TotpDescription>
+        <Form>
+          <RForm.Stack fluid>
+            <TotpDescription>
+              {t('login.totp.setupDescription')}
+            </TotpDescription>
 
-          <AppLinks>
-            {t('login.totp.downloadApp')}{' '}
-            <a
-              href="https://play.google.com/store/apps/details?id=proton.android.authenticator"
-              target="_blank"
-              rel="noopener noreferrer"
+            <AppLinks>
+              {t('login.totp.downloadApp')}{' '}
+              <a
+                href="https://play.google.com/store/apps/details?id=proton.android.authenticator"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {t('login.totp.android')}
+              </a>
+              {' | '}
+              <a
+                href="https://apps.apple.com/app/proton-authenticator/id6741758667"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {t('login.totp.ios')}
+              </a>
+            </AppLinks>
+
+            <TotpDescription>{t('login.totp.backupHint')}</TotpDescription>
+
+            {totpUri && <TotpQrCode uri={totpUri} />}
+
+            {totpSecret && (
+              <>
+                <TotpDescription>{t('login.totp.manualEntry')}</TotpDescription>
+                <SecretCode>{totpSecret}</SecretCode>
+              </>
+            )}
+
+            <Group controlId="totpCode">
+              <Label>{t('login.totp.code')}</Label>
+              <Control
+                inputRef={totpInputRef}
+                name="totpCode"
+                value={totpToken}
+                autoComplete="one-time-code"
+                onChange={(value: string) => setTotpToken(value)}
+              />
+            </Group>
+
+            <Button
+              appearance="primary"
+              type="submit"
+              disabled={loadingEnable || loadingSetup || !totpToken}
+              onClick={handleTotpSetup}
             >
-              {t('login.totp.android')}
-            </a>
-            {' | '}
-            <a
-              href="https://apps.apple.com/app/proton-authenticator/id6741758667"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {t('login.totp.ios')}
-            </a>
-          </AppLinks>
-
-          <TotpDescription>{t('login.totp.backupHint')}</TotpDescription>
-
-          {totpUri && <TotpQrCode uri={totpUri} />}
-
-          {totpSecret && (
-            <>
-              <TotpDescription>{t('login.totp.manualEntry')}</TotpDescription>
-              <SecretCode>{totpSecret}</SecretCode>
-            </>
-          )}
-
-          <Group controlId="totpCode">
-            <ControlLabel>{t('login.totp.code')}</ControlLabel>
-            <Control
-              inputRef={totpInputRef}
-              name="totpCode"
-              value={totpToken}
-              autoComplete="one-time-code"
-              onChange={(value: string) => setTotpToken(value)}
-            />
-          </Group>
-          <Button
-            appearance="primary"
-            type="submit"
-            disabled={loadingEnable || loadingSetup || !totpToken}
-            onClick={handleTotpSetup}
-          >
-            {t('login.totp.activate')}
-          </Button>
+              {t('login.totp.activate')}
+            </Button>
+          </RForm.Stack>
         </Form>
       </LoginTemplate>
     );
@@ -374,53 +369,55 @@ export function Login() {
   // --- Login Screen ---
   return (
     <LoginTemplate backgroundChildren={<Background />}>
-      <Form fluid>
-        <Group controlId="loginEmail">
-          <ControlLabel>{t('login.email')}</ControlLabel>
-          <Control
-            inputRef={emailInputRef}
-            name="username"
-            className="username"
-            value={email}
-            autoComplete="username"
-            onChange={(email: string) => setEmail(email)}
-          />
-        </Group>
-        <Group controlId="loginPassword">
-          <ControlLabel>{t('login.password')}</ControlLabel>
-          <Control
-            name="password"
-            className="password"
-            type="password"
-            value={password}
-            autoComplete="current-password"
-            onChange={(password: string) => setPassword(password)}
-          />
-        </Group>
-        {otpRequired && (
-          <Group controlId="loginTotp">
-            <ControlLabel>{t('login.totp.code')}</ControlLabel>
+      <Form>
+        <RForm.Stack fluid>
+          <Group controlId="loginEmail">
+            <Label>{t('login.email')}</Label>
             <Control
-              name="totpCode"
-              value={totpToken}
-              autoComplete="one-time-code"
-              onChange={(value: string) => setTotpToken(value)}
+              inputRef={emailInputRef}
+              name="username"
+              className="username"
+              value={email}
+              autoComplete="username"
+              onChange={(email: string) => setEmail(email)}
             />
           </Group>
-        )}
-        <Button
-          appearance="primary"
-          type="submit"
-          disabled={loading}
-          onClick={handleLogin}
-        >
-          {t('login.login')}
-        </Button>
-        <ForgotPasswordLink
-          href={`/login/reset-password${email ? `?email=${encodeURIComponent(email)}` : ''}`}
-        >
-          {t('login.forgotPassword')}
-        </ForgotPasswordLink>
+          <Group controlId="loginPassword">
+            <Label>{t('login.password')}</Label>
+            <Control
+              name="password"
+              className="password"
+              type="password"
+              value={password}
+              autoComplete="current-password"
+              onChange={(password: string) => setPassword(password)}
+            />
+          </Group>
+          {otpRequired && (
+            <Group controlId="loginTotp">
+              <Label>{t('login.totp.code')}</Label>
+              <Control
+                name="totpCode"
+                value={totpToken}
+                autoComplete="one-time-code"
+                onChange={(value: string) => setTotpToken(value)}
+              />
+            </Group>
+          )}
+          <Button
+            appearance="primary"
+            type="submit"
+            disabled={loading}
+            onClick={handleLogin}
+          >
+            {t('login.login')}
+          </Button>
+          <ForgotPasswordLink
+            href={`/login/reset-password${email ? `?email=${encodeURIComponent(email)}` : ''}`}
+          >
+            {t('login.forgotPassword')}
+          </ForgotPasswordLink>
+        </RForm.Stack>
       </Form>
     </LoginTemplate>
   );

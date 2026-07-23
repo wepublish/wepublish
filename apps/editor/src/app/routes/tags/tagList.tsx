@@ -40,7 +40,10 @@ import {
 import { RowDataType } from 'rsuite/esm/Table';
 
 const IconButton = styled(RIconButton)`
-  margin-left: 12px;
+  && {
+    width: 36px;
+    height: 36px;
+  }
 `;
 
 export type TagListProps = {
@@ -130,6 +133,7 @@ function TagList({ type }: TagListProps) {
 
           <Column
             resizable
+            width={75}
             fixed="right"
           >
             <HeaderCell align={'center'}>{t('delete')}</HeaderCell>

@@ -26,7 +26,7 @@ export const SoundCloudTrackBlock = ({
     <SoundCloudTrackBlockPlayer
       width={'auto'}
       height={'auto'}
-      url={`https://api.soundcloud.com/tracks/${trackID}`}
+      src={`https://api.soundcloud.com/tracks/${trackID}`}
       controls={true}
     />
   </SoundCloudTrackBlockWrapper>

@@ -201,7 +201,7 @@ function CustomApp({
   );
 }
 
-const withApollo = createWithApiClient(getApiUrl(), [authLink, previewLink]);
+const withApollo = createWithApiClient([authLink, previewLink]);
 const ConnectedApp = withApollo(
   withBuilderRouter(
     withErrorSnackbar(

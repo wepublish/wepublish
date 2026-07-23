@@ -1,17 +1,23 @@
+import {
+  DndContext,
+  DragEndEvent,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  rectSortingStrategy,
+  SortableContext,
+} from '@dnd-kit/sortable';
 import styled from '@emotion/styled';
 import {
   TeaserSlotsAutofillConfigInput,
   TeaserSlotType,
 } from '@wepublish/editor/api';
-import arrayMove from 'array-move';
-import { ChangeEvent, ReactNode, useMemo, useState } from 'react';
+import { ChangeEvent, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdArticle, MdDelete, MdEdit } from 'react-icons/md';
-import {
-  SortableContainer,
-  SortableElement,
-  SortEnd,
-} from 'react-sortable-hoc';
 import {
   Button,
   Drawer,
@@ -28,7 +34,7 @@ import {
 import { BlockProps } from '../atoms/blockList';
 import { TeaserEditPanel } from '../panel/teaserEditPanel';
 import { TeaserSelectAndEditPanel } from '../panel/teaserSelectAndEditPanel';
-import { ContentForTeaser } from './teaserGridBlock';
+import { ContentForTeaser, SortableTeaser } from './teaserGridBlock';
 import { TeaserSlotsAutofillControls } from './teaserSlots/teaser-slots-autofill-controls';
 import { Teaser as TeaserTypeMixed, TeaserSlotsBlockValue } from './types';
 // import {AdTeaser, AdTeaserWrapper} from '@wepublish/ui/editor'
@@ -101,30 +107,11 @@ export const SlotToolbar = styled.div`
   font-size: 0.875rem;
 `;
 
-const GridItem = SortableElement<TeaserSlotProps>((props: TeaserSlotProps) => {
-  return <TeaserSlot {...props} />;
-});
-
 const TeaserSlotsControls = styled.div`
   margin-top: 20px;
 `;
 
-interface GridProps {
-  numColumns: number;
-  children?: ReactNode;
-}
-
 export const TeaserSlotsBlockWrapper = styled.div``;
-
-const Grid = SortableContainer<GridProps>(
-  ({ children, numColumns }: GridProps) => {
-    return (
-      <SortableContainerComponent numColumns={numColumns}>
-        {children}
-      </SortableContainerComponent>
-    );
-  }
-);
 
 export function TeaserSlotsBlock({
   value,
@@ -140,6 +127,12 @@ export function TeaserSlotsBlock({
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [isChooseModalOpen, setChooseModalOpen] = useState(false);
   const { autofillConfig, slots, autofillTeasers } = value;
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 10 } })
+  );
+
+  const slotIds = slots.map((_, index) => `slot-${index}`);
 
   function handleTeaserLinkChange(
     index: number,
@@ -187,14 +180,17 @@ export function TeaserSlotsBlock({
     });
   }
 
-  function handleSortStart() {
-    document.documentElement.style.cursor = 'grabbing';
-    document.body.style.pointerEvents = 'none';
-  }
+  function handleDragEnd({ active, over }: DragEndEvent) {
+    if (!over || active.id === over.id) {
+      return;
+    }
 
-  function handleSortEnd({ oldIndex, newIndex }: SortEnd) {
-    document.documentElement.style.cursor = '';
-    document.body.style.pointerEvents = '';
+    const oldIndex = slotIds.indexOf(active.id as string);
+    const newIndex = slotIds.indexOf(over.id as string);
+
+    if (oldIndex < 0 || newIndex < 0) {
+      return;
+    }
 
     onChange({
       ...value,
@@ -261,52 +257,59 @@ export function TeaserSlotsBlock({
         loadedTeasers={autofillTeasers?.length ?? 0}
         autofillSlots={autofillSlotsCount}
       />
-      <Grid
-        numColumns={numColumns}
-        axis="xy"
-        distance={10}
-        onSortStart={handleSortStart}
-        onSortEnd={handleSortEnd}
+      <DndContext
+        sensors={sensors}
+        onDragEnd={handleDragEnd}
       >
-        {slots.map(({ type, teaser: manualTeaser }, index) => {
-          const autofillIndex = slots
-            .slice(0, index)
-            .filter(slot => slot.type === TeaserSlotType.Autofill).length;
-          const teaser = (
-            type === TeaserSlotType.Manual ?
-              manualTeaser
-            : (autofillTeasers[autofillIndex] ??
-              null)) as TeaserTypeMixed | null;
+        <SortableContext
+          items={slotIds}
+          strategy={rectSortingStrategy}
+        >
+          <SortableContainerComponent numColumns={numColumns}>
+            {slots.map(({ type, teaser: manualTeaser }, index) => {
+              const autofillIndex = slots
+                .slice(0, index)
+                .filter(slot => slot.type === TeaserSlotType.Autofill).length;
+              const teaser = (
+                type === TeaserSlotType.Manual ?
+                  manualTeaser
+                : (autofillTeasers[autofillIndex] ??
+                  null)) as TeaserTypeMixed | null;
 
-          return (
-            <GridItem
-              key={index}
-              index={index}
-              teaser={teaser}
-              numColumns={numColumns}
-              showGrabCursor={slots.length !== 1}
-              disabled={slots.length === 1}
-              onEdit={() => {
-                setEditIndex(index);
-                setEditModalOpen(true);
-              }}
-              onDelete={() => {
-                handleSlotDelete(index);
-              }}
-              onChoose={() => {
-                setEditIndex(index);
-                setChooseModalOpen(true);
-              }}
-              onRemove={() => {
-                handleTeaserLinkChange(index, null);
-              }}
-              slotType={type}
-              onSlotTypeChange={type => handleSlotTypeChange(index, type)}
-              autofillEnabled={autofillConfig.enabled}
-            />
-          );
-        })}
-      </Grid>
+              return (
+                <SortableTeaser
+                  key={slotIds[index]}
+                  id={slotIds[index]}
+                  disabled={slots.length === 1}
+                >
+                  <TeaserSlot
+                    teaser={teaser}
+                    numColumns={numColumns}
+                    showGrabCursor={slots.length !== 1}
+                    onEdit={() => {
+                      setEditIndex(index);
+                      setEditModalOpen(true);
+                    }}
+                    onDelete={() => {
+                      handleSlotDelete(index);
+                    }}
+                    onChoose={() => {
+                      setEditIndex(index);
+                      setChooseModalOpen(true);
+                    }}
+                    onRemove={() => {
+                      handleTeaserLinkChange(index, null);
+                    }}
+                    slotType={type}
+                    onSlotTypeChange={type => handleSlotTypeChange(index, type)}
+                    autofillEnabled={autofillConfig.enabled}
+                  />
+                </SortableTeaser>
+              );
+            })}
+          </SortableContainerComponent>
+        </SortableContext>
+      </DndContext>
       <TeaserSlotsControls>
         <Button onClick={handleAddSlot}>
           {t('blocks.teaserSlots.addSlot')}

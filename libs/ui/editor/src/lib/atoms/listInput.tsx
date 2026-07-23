@@ -1,13 +1,22 @@
+import { JSX } from 'react';
+import {
+  DndContext,
+  DragEndEvent,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  useSortable,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import styled from '@emotion/styled';
-import arrayMove from 'array-move';
 import nanoid from 'nanoid';
 import React from 'react';
 import { MdAddCircle, MdDelete, MdDragIndicator } from 'react-icons/md';
-import {
-  SortableContainer,
-  SortableElement,
-  SortableHandle,
-} from 'react-sortable-hoc';
 import { IconButton, Panel as RPanel } from 'rsuite';
 
 import { isFunctionalUpdate } from '../utility';
@@ -64,107 +73,71 @@ export interface ListItemProps<T = any> {
   readonly children: (props: FieldProps<T>) => JSX.Element;
 }
 
-const DragHandle = SortableHandle<{ disabled?: boolean }>(
-  ({ disabled }: { disabled?: boolean }) => (
-    <IconButton
-      icon={<MdDragIndicator />}
-      disabled={disabled}
-    />
-  )
-);
+function ListItem({
+  value,
+  itemIndex,
+  itemDisabled,
+  onChange,
+  onRemove,
+  children,
+}: ListItemProps) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    setActivatorNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: value.id, disabled: itemDisabled });
 
-const ListItem = SortableElement<ListItemProps>(
-  ({
-    value,
-    itemIndex,
-    itemDisabled,
-    onChange,
-    onRemove,
-    children,
-  }: ListItemProps) => {
-    function handleValueChange(fieldValue: React.SetStateAction<any>) {
-      onChange(itemIndex, value => ({
-        ...value,
-        value:
-          isFunctionalUpdate(fieldValue) ? fieldValue(value.value) : fieldValue,
-      }));
-    }
-
-    function handleRemove() {
-      onRemove(itemIndex);
-    }
-
-    return (
-      <ListItemWrapper>
-        <DragHandleWrapper>
-          <DragHandle disabled={itemDisabled} />
-        </DragHandleWrapper>
-        <Panel bodyFill>
-          <ChildrenWrapper>
-            {children({ value: value.value, onChange: handleValueChange })}
-          </ChildrenWrapper>
-        </Panel>
-        <IconButtonWrapper>
-          <IconButton
-            icon={<MdDelete />}
-            onClick={handleRemove}
-            disabled={itemDisabled}
-          />
-        </IconButtonWrapper>
-      </ListItemWrapper>
-    );
+  function handleValueChange(fieldValue: React.SetStateAction<any>) {
+    onChange(itemIndex, value => ({
+      ...value,
+      value:
+        isFunctionalUpdate(fieldValue) ? fieldValue(value.value) : fieldValue,
+    }));
   }
-);
 
-const SortableList = SortableContainer<ListFieldProps>(
-  ({ value, defaultValue, disabled, children, onChange }: ListFieldProps) => {
-    function handleItemChange(
-      itemIndex: number,
-      itemValue: React.SetStateAction<ListValue>
-    ) {
-      onChange(value =>
-        Object.assign([], value, {
-          [itemIndex]:
-            isFunctionalUpdate(itemValue) ?
-              itemValue(value[itemIndex])
-            : itemValue,
-        })
-      );
-    }
+  function handleRemove() {
+    onRemove(itemIndex);
+  }
 
-    function handleAdd() {
-      onChange(value => [...value, { id: nanoid(), value: defaultValue }]);
-    }
-
-    function handleRemove(itemIndex: number) {
-      onChange(value => value.filter((_, index) => index !== itemIndex));
-    }
-
-    return (
-      <div>
-        {value.map((value: any, index: number) => (
-          <ListItem
-            key={value.id}
-            itemIndex={index}
-            index={index}
-            value={value}
-            itemDisabled={disabled}
-            onChange={handleItemChange}
-            onRemove={handleRemove}
-          >
-            {children}
-          </ListItem>
-        ))}
+  return (
+    <ListItemWrapper
+      ref={setNodeRef}
+      style={{
+        transform: CSS.Transform.toString(transform),
+        transition,
+        zIndex: isDragging ? 1 : undefined,
+        position: 'relative',
+      }}
+    >
+      <DragHandleWrapper
+        ref={setActivatorNodeRef}
+        {...attributes}
+        {...listeners}
+      >
         <IconButton
-          icon={<MdAddCircle />}
-          onClick={handleAdd}
-          disabled={disabled}
-          data-testid="addProperty"
+          icon={<MdDragIndicator />}
+          disabled={itemDisabled}
         />
-      </div>
-    );
-  }
-);
+      </DragHandleWrapper>
+      <Panel bodyFill>
+        <ChildrenWrapper>
+          {children({ value: value.value, onChange: handleValueChange })}
+        </ChildrenWrapper>
+      </Panel>
+      <IconButtonWrapper>
+        <IconButton
+          icon={<MdDelete />}
+          onClick={handleRemove}
+          disabled={itemDisabled}
+        />
+      </IconButtonWrapper>
+    </ListItemWrapper>
+  );
+}
 
 export function ListInput<T>({
   value,
@@ -174,27 +147,77 @@ export function ListInput<T>({
   children,
   onChange,
 }: ListFieldProps<T>) {
-  const onSortEnd = ({
-    oldIndex,
-    newIndex,
-  }: {
-    oldIndex: number;
-    newIndex: number;
-  }) => {
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 4 } })
+  );
+
+  function handleItemChange(
+    itemIndex: number,
+    itemValue: React.SetStateAction<ListValue>
+  ) {
+    onChange(value =>
+      Object.assign([], value, {
+        [itemIndex]:
+          isFunctionalUpdate(itemValue) ?
+            itemValue(value[itemIndex])
+          : itemValue,
+      })
+    );
+  }
+
+  function handleAdd() {
+    onChange(value => [...value, { id: nanoid(), value: defaultValue as T }]);
+  }
+
+  function handleRemove(itemIndex: number) {
+    onChange(value => value.filter((_, index) => index !== itemIndex));
+  }
+
+  function handleDragEnd({ active, over }: DragEndEvent) {
+    if (!over || active.id === over.id) {
+      return;
+    }
+
+    const oldIndex = value.findIndex(item => item.id === active.id);
+    const newIndex = value.findIndex(item => item.id === over.id);
+
+    if (oldIndex < 0 || newIndex < 0) {
+      return;
+    }
+
     onChange(arrayMove(value, oldIndex, newIndex));
-  };
+  }
 
   return (
     <div>
       {label && <label>{label}</label>}
-      <SortableList
-        value={value}
-        defaultValue={defaultValue}
+      <DndContext
+        sensors={sensors}
+        onDragEnd={handleDragEnd}
+      >
+        <SortableContext
+          items={value.map(item => item.id)}
+          strategy={verticalListSortingStrategy}
+        >
+          {value.map((itemValue, index) => (
+            <ListItem
+              key={itemValue.id}
+              itemIndex={index}
+              value={itemValue}
+              itemDisabled={disabled}
+              onChange={handleItemChange}
+              onRemove={handleRemove}
+            >
+              {children}
+            </ListItem>
+          ))}
+        </SortableContext>
+      </DndContext>
+      <IconButton
+        icon={<MdAddCircle />}
+        onClick={handleAdd}
         disabled={disabled}
-        children={children} // eslint-disable-line react/no-children-prop
-        onChange={onChange}
-        onSortEnd={onSortEnd}
-        useDragHandle
+        data-testid="addProperty"
       />
     </div>
   );

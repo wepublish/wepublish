@@ -1,5 +1,5 @@
-import { Meta, StoryObj } from '@storybook/react';
-import { action } from '@storybook/addon-actions';
+import { Meta, StoryObj } from '@storybook/nextjs-vite';
+import { action } from 'storybook/actions';
 import { RichtextEditor } from './richtext-editor';
 import { mockRichText } from '@wepublish/storybook/mocks';
 

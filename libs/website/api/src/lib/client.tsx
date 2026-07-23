@@ -14,7 +14,7 @@ import { BatchHttpLink } from '@apollo/client/link/batch-http';
 import { mergeDeepRight } from 'ramda';
 import possibleTypes from './graphql';
 
-import { ComponentType, memo, useMemo } from 'react';
+import { ComponentType, createElement, memo, useMemo } from 'react';
 import { createUploadLink } from 'apollo-upload-client';
 import { absoluteUrlToRelative } from './absolute-url-to-relative';
 import { omitDisabledBlocks } from './omit-disabled-blocks';
@@ -157,15 +157,11 @@ export const useApiClient = (
 };
 
 export const createWithApiClient =
-  (
-    apiUrl: string,
-    links: ApolloLink[] = [],
-    cacheConfig?: InMemoryCacheConfig
-  ) =>
+  (links: ApolloLink[] = [], cacheConfig?: InMemoryCacheConfig) =>
   <
-    // eslint-disable-next-line @typescript-eslint/ban-types
     P extends object,
     NextPage extends {
+      apiUrl: string;
       pageProps?: { [V1_CLIENT_STATE_PROP_NAME]?: NormalizedCacheObject };
     },
   >(
@@ -173,7 +169,7 @@ export const createWithApiClient =
   ) =>
     memo<P | NextPage>(props => {
       const client = useApiClient(
-        apiUrl,
+        props.apiUrl,
         links,
         cacheConfig,
         (props as NextPage).pageProps?.[V1_CLIENT_STATE_PROP_NAME]
@@ -181,7 +177,7 @@ export const createWithApiClient =
 
       return (
         <ApolloProvider client={client}>
-          <ControlledComponent {...(props as P)} />
+          {createElement(ControlledComponent, props as P)}
         </ApolloProvider>
       );
     });

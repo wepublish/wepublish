@@ -1,4 +1,4 @@
-import { Meta } from '@storybook/react';
+import { Meta } from '@storybook/nextjs-vite';
 import { SoundCloudTrackBlock } from './sound-cloud-block';
 import { mockSoundCloudTrackBlock } from '@wepublish/storybook/mocks';
 

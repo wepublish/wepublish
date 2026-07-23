@@ -10,7 +10,8 @@
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
-        "outputPath": "dist/apps/bajour"
+        "outputPath": "dist/apps/bajour",
+        "webpack": true
       },
       "configurations": {
         "development": {
@@ -25,7 +26,8 @@
       "options": {
         "buildTarget": "bajour:build",
         "port": 4201,
-        "dev": true
+        "dev": true,
+        "webpack": true
       },
       "configurations": {
         "development": {

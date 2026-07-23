@@ -10,7 +10,6 @@ import {
   PeerProfileDocument,
 } from '@wepublish/website/api';
 import { GetStaticProps } from 'next';
-import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 
 import { localizeSlug } from '../src/localize-slug';
@@ -28,9 +27,7 @@ export default function Index() {
 }
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const { publicRuntimeConfig } = getConfig();
-
-  if (!publicRuntimeConfig.env.API_URL) {
+  if (!getApiUrl()) {
     return { props: {}, revalidate: 1 };
   }
 

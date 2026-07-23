@@ -908,10 +908,7 @@ function SyncProviderSettingCard({
 
   return (
     <SyncCard variant="outlined">
-      <Form
-        fluid
-        onSubmit={() => onSubmit()}
-      >
+      <Form onSubmit={() => onSubmit()}>
         <CardContent>
           <Typography
             variant="h5"

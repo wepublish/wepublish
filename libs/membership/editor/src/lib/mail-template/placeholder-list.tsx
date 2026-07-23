@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import React, { useMemo } from 'react';
 import { ListViewContainer, ListViewHeader } from '@wepublish/ui/editor';
 import { useTranslation } from 'react-i18next';
@@ -22,7 +23,7 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
-import { TypeAttributes } from 'rsuite/esm/@types/common';
+import type { Color } from 'rsuite/esm/internals/types';
 
 interface DecoratedEvent {
   event:
@@ -37,7 +38,7 @@ interface DecoratedEvent {
     | UserEvent;
   title: string;
   icon?: JSX.Element;
-  color?: TypeAttributes.Color;
+  color?: Color;
   placeholders: Placeholder[];
 }
 

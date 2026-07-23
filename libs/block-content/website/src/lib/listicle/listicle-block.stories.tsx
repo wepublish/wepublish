@@ -1,4 +1,4 @@
-import { Meta } from '@storybook/react';
+import { Meta } from '@storybook/nextjs-vite';
 import { ListicleBlock } from './listicle-block';
 import {
   mockImage,

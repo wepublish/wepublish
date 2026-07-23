@@ -1,4 +1,4 @@
-import { Meta } from '@storybook/react';
+import { Meta } from '@storybook/nextjs-vite';
 import { Image } from './image';
 import { mockImage } from '@wepublish/storybook/mocks';
 

@@ -106,7 +106,7 @@ export function HtmlEditPanel({
       <StyledDrawer>
         <StyledForm onSubmit={() => onGenerateHTML(prompt)}>
           <div>
-            <Form.ControlLabel>{t('blocks.html.generate')}</Form.ControlLabel>
+            <Form.Label>{t('blocks.html.generate')}</Form.Label>
 
             <InputGroup inside>
               <Form.Control

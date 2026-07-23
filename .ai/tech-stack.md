@@ -4,29 +4,29 @@ Align all code suggestions, architecture recommendations, and technical solution
 
 ## Frontend
 
-- **Next.js 15** with TypeScript (Pages Router, not App Router)
-- **React 18**
+- **Next.js 16** with TypeScript (Pages Router, not App Router)
+- **React 19**
 - **Material UI (MUI)** as UI component library — styling via `styled()` with tagged template literals (`@emotion/styled`)
 - **Apollo Client** for GraphQL communication (with generated hooks via GraphQL Code Generator)
 - **React Hook Form** for forms
 - **Zod** for schema validation
 - **React Icons** for icons
 - **react-i18next** for internationalization
-- **Storybook** for component development and documentation
+- **Storybook 10** for component development and documentation
 - **React Router v6** for client-side routing in the editor app
 
 ## Backend
 
 - **NestJS 11** as the server framework
 - **PostgreSQL 17** as the database
-- **Prisma 5** as ORM — schema at `libs/api/prisma/schema.prisma`
+- **Prisma 7** as ORM — schema at `libs/api/prisma/schema.prisma`
 - **Apollo Server** for GraphQL API (code-first approach with NestJS decorators)
 - **Pino** for structured logging
 - **Sentry** for error tracking
 
 ## Monorepo & Build
 
-- **Nx 20** as the monorepo build system
+- **Nx 23** as the monorepo build system
 - **Webpack** for bundling
 - **Babel / SWC** for transpilation
 - **Node.js 22** runtime
@@ -40,7 +40,7 @@ Align all code suggestions, architecture recommendations, and technical solution
 
 ## Testing
 
-- **Jest 29** as the test runner
+- **Jest 30** as the test runner
 - **@nestjs/testing** for backend service/resolver unit tests
 - **Testing Library** for frontend component tests
 - Test commands: `npm run test`, `npm run test-backend`, `npm run test-website`

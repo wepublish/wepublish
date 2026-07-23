@@ -269,37 +269,39 @@ function NavigationEditPanel({
       </Drawer.Header>
       <Drawer.Body>
         <Panel>
-          <Form fluid>
-            <Form.Group controlId="navigationName">
-              <Form.ControlLabel>
-                {t('navigation.panels.name')}
-              </Form.ControlLabel>
-              <Form.Control
-                name="name"
-                placeholder={t('navigation.panels.name')}
-                value={name}
-                disabled={isDisabled}
-                onChange={(value: string) => {
-                  setName(value);
-                }}
-              />
-            </Form.Group>
-            <Form.Group controlId="navigationKey">
-              <Form.ControlLabel>
-                {t('navigation.panels.key')}
-              </Form.ControlLabel>
-              <Form.Control
-                name="key"
-                placeholder={t('navigation.panels.key')}
-                value={key}
-                disabled={isDisabled}
-                onChange={(value: string) => {
-                  setKey(value);
-                }}
-              />
-            </Form.Group>
+          <Form>
+            <Form.Stack fluid>
+              <Form.Group controlId="navigationName">
+                <Form.Label>{t('navigation.panels.name')}</Form.Label>
+
+                <Form.Control
+                  name="name"
+                  placeholder={t('navigation.panels.name')}
+                  value={name}
+                  disabled={isDisabled}
+                  onChange={(value: string) => {
+                    setName(value);
+                  }}
+                />
+              </Form.Group>
+
+              <Form.Group controlId="navigationKey">
+                <Form.Label>{t('navigation.panels.key')}</Form.Label>
+
+                <Form.Control
+                  name="key"
+                  placeholder={t('navigation.panels.key')}
+                  value={key}
+                  disabled={isDisabled}
+                  onChange={(value: string) => {
+                    setKey(value);
+                  }}
+                />
+              </Form.Group>
+            </Form.Stack>
           </Form>
         </Panel>
+
         <Panel header={t('authors.panels.links')}>
           <ListInput
             disabled={isDisabled}
@@ -322,6 +324,7 @@ function NavigationEditPanel({
                     onChange({ ...value, label });
                   }}
                 />
+
                 <SelectPicker
                   block
                   virtualized
@@ -333,6 +336,7 @@ function NavigationEditPanel({
                     }
                   }}
                 />
+
                 {(
                   value.type === 'PageNavigationLink' ||
                   value.type === 'ArticleNavigationLink'

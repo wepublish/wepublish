@@ -1,15 +1,23 @@
+import {
+  DndContext,
+  DragEndEvent,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  rectSortingStrategy,
+  SortableContext,
+  useSortable,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import styled from '@emotion/styled';
 import { FullImageFragment, TeaserType } from '@wepublish/editor/api';
-import arrayMove from 'array-move';
 import nanoid from 'nanoid';
 import { ChangeEvent, ReactNode, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdArticle, MdDelete, MdEdit } from 'react-icons/md';
-import {
-  SortableContainer,
-  SortableElement,
-  SortEnd,
-} from 'react-sortable-hoc';
 import { Drawer, IconButton as RIconButton, Panel as RPanel } from 'rsuite';
 
 import { BlockProps } from '../atoms/blockList';
@@ -98,26 +106,43 @@ const Status = styled.div`
   flex-shrink: 0;
 `;
 
-const GridItem = SortableElement<TeaserBlockProps>(
-  (props: TeaserBlockProps) => {
-    return <TeaserBlock {...props} />;
-  }
-);
-
-interface GridProps {
-  numColumns: number;
+export interface SortableTeaserProps {
+  id: string;
+  disabled?: boolean;
   children?: ReactNode;
 }
 
-const Grid = SortableContainer<GridProps>(
-  ({ children, numColumns }: GridProps) => {
-    return (
-      <SortableContainerComponent numColumns={numColumns}>
-        {children}
-      </SortableContainerComponent>
-    );
-  }
-);
+export function SortableTeaser({
+  id,
+  disabled,
+  children,
+}: SortableTeaserProps) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id, disabled });
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={{
+        transform: CSS.Transform.toString(transform),
+        transition,
+        zIndex: isDragging ? 1 : undefined,
+        cursor: isDragging ? 'grabbing' : undefined,
+        position: 'relative',
+      }}
+      {...attributes}
+      {...listeners}
+    >
+      {children}
+    </div>
+  );
+}
 
 export function TeaserGridBlock({
   value,
@@ -130,6 +155,10 @@ export function TeaserGridBlock({
   const [isChooseModalOpen, setChooseModalOpen] = useState(false);
 
   const { teasers, numColumns } = value;
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 10 } })
+  );
 
   function handleTeaserLinkChange(
     index: number,
@@ -144,14 +173,17 @@ export function TeaserGridBlock({
     });
   }
 
-  function handleSortStart() {
-    document.documentElement.style.cursor = 'grabbing';
-    document.body.style.pointerEvents = 'none';
-  }
+  function handleDragEnd({ active, over }: DragEndEvent) {
+    if (!over || active.id === over.id) {
+      return;
+    }
 
-  function handleSortEnd({ oldIndex, newIndex }: SortEnd) {
-    document.documentElement.style.cursor = '';
-    document.body.style.pointerEvents = '';
+    const oldIndex = teasers.findIndex(([key]) => key === active.id);
+    const newIndex = teasers.findIndex(([key]) => key === over.id);
+
+    if (oldIndex < 0 || newIndex < 0) {
+      return;
+    }
 
     onChange({
       ...value,
@@ -176,35 +208,42 @@ export function TeaserGridBlock({
         value={value.title ?? ''}
         onChange={handleTitleChange}
       />
-      <Grid
-        numColumns={numColumns}
-        axis="xy"
-        distance={10}
-        onSortStart={handleSortStart}
-        onSortEnd={handleSortEnd}
+      <DndContext
+        sensors={sensors}
+        onDragEnd={handleDragEnd}
       >
-        {teasers.map(([key, teaser], index) => (
-          <GridItem
-            key={key}
-            index={index}
-            teaser={teaser}
-            numColumns={numColumns}
-            showGrabCursor={teasers.length !== 1}
-            disabled={teasers.length === 1}
-            onEdit={() => {
-              setEditIndex(index);
-              setEditModalOpen(true);
-            }}
-            onChoose={() => {
-              setEditIndex(index);
-              setChooseModalOpen(true);
-            }}
-            onRemove={() => {
-              handleTeaserLinkChange(index, null);
-            }}
-          />
-        ))}
-      </Grid>
+        <SortableContext
+          items={teasers.map(([key]) => key)}
+          strategy={rectSortingStrategy}
+        >
+          <SortableContainerComponent numColumns={numColumns}>
+            {teasers.map(([key, teaser], index) => (
+              <SortableTeaser
+                key={key}
+                id={key}
+                disabled={teasers.length === 1}
+              >
+                <TeaserBlock
+                  teaser={teaser}
+                  numColumns={numColumns}
+                  showGrabCursor={teasers.length !== 1}
+                  onEdit={() => {
+                    setEditIndex(index);
+                    setEditModalOpen(true);
+                  }}
+                  onChoose={() => {
+                    setEditIndex(index);
+                    setChooseModalOpen(true);
+                  }}
+                  onRemove={() => {
+                    handleTeaserLinkChange(index, null);
+                  }}
+                />
+              </SortableTeaser>
+            ))}
+          </SortableContainerComponent>
+        </SortableContext>
+      </DndContext>
       <Drawer
         open={isEditModalOpen}
         size="sm"

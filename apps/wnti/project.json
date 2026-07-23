@@ -10,7 +10,8 @@
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
-        "outputPath": "dist/apps/wnti"
+        "outputPath": "dist/apps/wnti",
+        "webpack": true
       },
       "configurations": {
         "development": {
@@ -25,7 +26,8 @@
       "options": {
         "buildTarget": "wnti:build",
         "dev": true,
-        "port": 4204
+        "port": 4204,
+        "webpack": true
       },
       "configurations": {
         "development": {

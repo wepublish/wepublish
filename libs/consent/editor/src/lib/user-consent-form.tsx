@@ -92,7 +92,7 @@ export const UserConsentForm = ({
         style={{ overflow: 'initial' }}
       >
         <Form.Group controlId="name">
-          <Form.ControlLabel>{t('dashboard.user')}</Form.ControlLabel>
+          <Form.Label>{t('dashboard.user')}</Form.Label>
           <SelectPicker
             key="userId"
             placeholder={t('dashboard.user')}
@@ -111,7 +111,7 @@ export const UserConsentForm = ({
         </Form.Group>
 
         <Form.Group controlId="slug">
-          <Form.ControlLabel>{t('consents.consent')}</Form.ControlLabel>
+          <Form.Label>{t('consents.consent')}</Form.Label>
           <SelectPicker
             key="consentId"
             placeholder={t('consents.consent')}
@@ -130,7 +130,7 @@ export const UserConsentForm = ({
         </Form.Group>
 
         <Form.Group controlId="value">
-          <Form.ControlLabel>{t('userConsents.value')}</Form.ControlLabel>
+          <Form.Label>{t('userConsents.value')}</Form.Label>
           <Checkbox
             checked={userConsent.value}
             onChange={(_, checked) => {

@@ -1,4 +1,4 @@
-import { Meta } from '@storybook/react';
+import { Meta } from '@storybook/nextjs-vite';
 import { QuoteBlock } from './quote-block';
 import { mockQuoteBlock } from '@wepublish/storybook/mocks';
 

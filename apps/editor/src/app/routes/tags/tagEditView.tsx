@@ -79,7 +79,6 @@ const TagEditView = () => {
 
   return (
     <Form
-      fluid
       formValue={tag || {}}
       model={validationModel}
       disabled={loading}

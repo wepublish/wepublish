@@ -1,5 +1,5 @@
 /* eslint-disable */
-export default {
+module.exports = {
   displayName: 'kv-ttl-cache-api',
   preset: '../../../jest.preset.js',
   testEnvironment: 'node',

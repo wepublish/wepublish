@@ -1,4 +1,4 @@
-import { Meta } from '@storybook/react';
+import { Meta } from '@storybook/nextjs-vite';
 import { FlexBlock } from './flex-block';
 import { mockArticleTeaser } from '@wepublish/storybook/mocks';
 export default {

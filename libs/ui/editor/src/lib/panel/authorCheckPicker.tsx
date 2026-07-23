@@ -93,7 +93,7 @@ export function AuthorCheckPicker({
         setAuthorsFilter('');
       }}
       block
-      renderMenuItem={(label, item) => {
+      renderOption={(label, item) => {
         const peer = foundAuthors.find(
           author => author.id === item.value
         )?.peer;

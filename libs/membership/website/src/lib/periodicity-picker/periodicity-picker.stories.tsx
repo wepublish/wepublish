@@ -1,6 +1,6 @@
 import { ApolloError } from '@apollo/client';
-import { action } from '@storybook/addon-actions';
-import { Meta, StoryObj } from '@storybook/react';
+import { action } from 'storybook/actions';
+import { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { PaymentPeriodicity } from '@wepublish/website/api';
 import { useState } from 'react';
 import { PeriodicityPicker } from './periodicity-picker';

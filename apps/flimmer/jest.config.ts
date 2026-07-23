@@ -1,5 +1,5 @@
 /* eslint-disable */
-export default {
+module.exports = {
   displayName: 'flimmer',
   preset: '../../jest.preset.js',
   transform: {

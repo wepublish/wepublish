@@ -1,4 +1,10 @@
-import { ComponentType, PropsWithChildren, useContext, useMemo } from 'react';
+import {
+  ComponentType,
+  createElement,
+  PropsWithChildren,
+  useContext,
+  useMemo,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import { Message } from 'rsuite';
 
@@ -62,19 +68,14 @@ export function PermissionControl({
 
 export const createCheckedPermissionComponent =
   (permissions: string[], showRejectionMessage?: boolean) =>
-  <
-    // eslint-disable-next-line @typescript-eslint/ban-types
-    P extends object,
-  >(
-    ControlledComponent: ComponentType<P>
-  ) =>
+  <P extends object>(ControlledComponent: ComponentType<P>) =>
   (props: P) => {
     return (
       <PermissionControl
         qualifyingPermissions={permissions}
         showRejectionMessage={showRejectionMessage ?? true}
       >
-        <ControlledComponent {...props} />
+        {createElement(ControlledComponent, props)}
       </PermissionControl>
     );
   };

@@ -27,7 +27,7 @@ import {
   Grid,
   IconButton,
   InputGroup,
-  InputNumber,
+  NumberInput,
   Modal,
   Notification,
   Panel as RPanel,
@@ -84,9 +84,11 @@ const SettingInfo = ({ text }: SettingInfoProps) => (
     </Info>
   </Whisper>
 );
+
 interface Label {
   label: string;
 }
+
 type SettingWithLabel = Label & Setting;
 
 function settingsReducer(
@@ -428,105 +430,119 @@ function SettingList() {
                       bordered
                       header={t('settingList.comments')}
                     >
-                      <Form.Group controlId={SettingName.AllowGuestCommenting}>
-                        <Form.ControlLabel>
-                          <>
+                      <Form.Stack fluid>
+                        <Form.Group
+                          controlId={SettingName.AllowGuestCommenting}
+                        >
+                          <Form.Label>
+                            <>
+                              {t(
+                                settings[SettingName.AllowGuestCommenting].label
+                              )}
+                              <SettingInfo
+                                text={t('settingList.warnings.guestCommenting')}
+                              />
+                            </>
+                          </Form.Label>
+
+                          <Toggle
+                            disabled={isDisabled}
+                            checked={
+                              settings[SettingName.AllowGuestCommenting].value
+                            }
+                            onChange={checked =>
+                              setSetting({
+                                ...settings[SettingName.AllowGuestCommenting],
+                                value: checked,
+                              })
+                            }
+                          />
+                        </Form.Group>
+
+                        {/* Allow guest rating of a comment */}
+                        <Form.Group
+                          controlId={SettingName.AllowGuestCommentRating}
+                        >
+                          <Form.Label>
                             {t(
-                              settings[SettingName.AllowGuestCommenting].label
+                              settings[SettingName.AllowGuestCommentRating]
+                                .label
                             )}
                             <SettingInfo
-                              text={t('settingList.warnings.guestCommenting')}
+                              text={t(
+                                'settingList.warnings.guestCommentRating'
+                              )}
                             />
-                          </>
-                        </Form.ControlLabel>
+                          </Form.Label>
 
-                        <Toggle
-                          disabled={isDisabled}
-                          checked={
-                            settings[SettingName.AllowGuestCommenting].value
-                          }
-                          onChange={checked =>
-                            setSetting({
-                              ...settings[SettingName.AllowGuestCommenting],
-                              value: checked,
-                            })
-                          }
-                        />
-                      </Form.Group>
-
-                      {/* Allow guest rating of a comment */}
-                      <Form.Group
-                        controlId={SettingName.AllowGuestCommentRating}
-                      >
-                        <Form.ControlLabel>
-                          {t(
-                            settings[SettingName.AllowGuestCommentRating].label
-                          )}
-                          <SettingInfo
-                            text={t('settingList.warnings.guestCommentRating')}
-                          />
-                        </Form.ControlLabel>
-
-                        <Toggle
-                          disabled={isDisabled}
-                          checked={
-                            settings[SettingName.AllowGuestCommentRating].value
-                          }
-                          onChange={checked =>
-                            setSetting({
-                              ...settings[SettingName.AllowGuestCommentRating],
-                              value: checked,
-                            })
-                          }
-                        />
-                      </Form.Group>
-
-                      {/* Allow editing of a comment */}
-                      <Form.Group controlId={SettingName.AllowCommentEditing}>
-                        <Form.ControlLabel>
-                          {t(settings[SettingName.AllowCommentEditing].label)}
-                          <SettingInfo
-                            text={t('settingList.warnings.allowCommentEditing')}
-                          />
-                        </Form.ControlLabel>
-
-                        <Toggle
-                          disabled={isDisabled}
-                          checked={
-                            settings[SettingName.AllowCommentEditing].value
-                          }
-                          onChange={checked =>
-                            setSetting({
-                              ...settings[SettingName.AllowCommentEditing],
-                              value: checked,
-                            })
-                          }
-                        />
-                      </Form.Group>
-
-                      {/* Comment char limit */}
-                      <Form.Group controlId={SettingName.CommentCharLimit}>
-                        <Form.ControlLabel>
-                          {t(settings[SettingName.CommentCharLimit].label)}
-                          <SettingInfo
-                            text={t('settingList.warnings.commentCharLimit')}
-                          />
-                        </Form.ControlLabel>
-
-                        <InputGroup>
-                          <FormControl
-                            name={SettingName.CommentCharLimit}
-                            accepter={InputNumber}
-                            value={settings[SettingName.CommentCharLimit].value}
-                            onChange={(value: string) => {
+                          <Toggle
+                            disabled={isDisabled}
+                            checked={
+                              settings[SettingName.AllowGuestCommentRating]
+                                .value
+                            }
+                            onChange={checked =>
                               setSetting({
-                                ...settings[SettingName.CommentCharLimit],
-                                value: +value,
-                              });
-                            }}
+                                ...settings[
+                                  SettingName.AllowGuestCommentRating
+                                ],
+                                value: checked,
+                              })
+                            }
                           />
-                        </InputGroup>
-                      </Form.Group>
+                        </Form.Group>
+
+                        {/* Allow editing of a comment */}
+                        <Form.Group controlId={SettingName.AllowCommentEditing}>
+                          <Form.Label>
+                            {t(settings[SettingName.AllowCommentEditing].label)}
+                            <SettingInfo
+                              text={t(
+                                'settingList.warnings.allowCommentEditing'
+                              )}
+                            />
+                          </Form.Label>
+
+                          <Toggle
+                            disabled={isDisabled}
+                            checked={
+                              settings[SettingName.AllowCommentEditing].value
+                            }
+                            onChange={checked =>
+                              setSetting({
+                                ...settings[SettingName.AllowCommentEditing],
+                                value: checked,
+                              })
+                            }
+                          />
+                        </Form.Group>
+
+                        {/* Comment char limit */}
+                        <Form.Group controlId={SettingName.CommentCharLimit}>
+                          <Form.Label>
+                            {t(settings[SettingName.CommentCharLimit].label)}
+                            <SettingInfo
+                              text={t('settingList.warnings.commentCharLimit')}
+                            />
+                          </Form.Label>
+
+                          <InputGroup>
+                            <FormControl
+                              name={SettingName.CommentCharLimit}
+                              accepter={NumberInput}
+                              value={
+                                settings[SettingName.CommentCharLimit].value
+                              }
+                              onChange={(value: string) => {
+                                setSetting({
+                                  ...settings[SettingName.CommentCharLimit],
+                                  value: +value,
+                                });
+                              }}
+                            />
+                          </InputGroup>
+                        </Form.Group>
+                      </Form.Stack>
                     </Panel>
                   </Col>
 
@@ -543,23 +559,27 @@ function SettingList() {
                         </>
                       }
                     >
-                      <Form.Group controlId="guestPollVote">
-                        <Form.ControlLabel>
-                          {t(settings[SettingName.AllowGuestPollVoting].label)}
-                        </Form.ControlLabel>
-                        <Toggle
-                          disabled={isDisabled}
-                          checked={
-                            settings[SettingName.AllowGuestPollVoting].value
-                          }
-                          onChange={checked =>
-                            setSetting({
-                              ...settings[SettingName.AllowGuestPollVoting],
-                              value: checked,
-                            })
-                          }
-                        />
-                      </Form.Group>
+                      <Form.Stack fluid>
+                        <Form.Group controlId="guestPollVote">
+                          <Form.Label>
+                            {t(
+                              settings[SettingName.AllowGuestPollVoting].label
+                            )}
+                          </Form.Label>
+                          <Toggle
+                            disabled={isDisabled}
+                            checked={
+                              settings[SettingName.AllowGuestPollVoting].value
+                            }
+                            onChange={checked =>
+                              setSetting({
+                                ...settings[SettingName.AllowGuestPollVoting],
+                                value: checked,
+                              })
+                            }
+                          />
+                        </Form.Group>
+                      </Form.Stack>
                     </Panel>
                   </Col>
 
@@ -569,189 +589,201 @@ function SettingList() {
                       bordered
                       header={t('settingList.memberships')}
                     >
-                      <Form.Group
-                        controlId={SettingName.MakeNewSubscribersApiPublic}
-                      >
-                        <Form.ControlLabel>
-                          {t(
-                            settings[SettingName.MakeNewSubscribersApiPublic]
-                              .label
-                          )}
-                          <SettingInfo
-                            text={t(
-                              'settingList.warnings.newSubscriptionsApiPublic'
+                      <Form.Stack fluid>
+                        <Form.Group
+                          controlId={SettingName.MakeNewSubscribersApiPublic}
+                        >
+                          <Form.Label>
+                            {t(
+                              settings[SettingName.MakeNewSubscribersApiPublic]
+                                .label
                             )}
+                            <SettingInfo
+                              text={t(
+                                'settingList.warnings.newSubscriptionsApiPublic'
+                              )}
+                            />
+                          </Form.Label>
+
+                          <Toggle
+                            disabled={isDisabled}
+                            checked={
+                              settings[SettingName.MakeNewSubscribersApiPublic]
+                                .value
+                            }
+                            onChange={checked => {
+                              setSetting({
+                                ...settings[
+                                  SettingName.MakeNewSubscribersApiPublic
+                                ],
+                                value: checked,
+                              });
+                            }}
                           />
-                        </Form.ControlLabel>
+                        </Form.Group>
 
-                        <Toggle
-                          disabled={isDisabled}
-                          checked={
-                            settings[SettingName.MakeNewSubscribersApiPublic]
-                              .value
-                          }
-                          onChange={checked => {
-                            setSetting({
-                              ...settings[
-                                SettingName.MakeNewSubscribersApiPublic
-                              ],
-                              value: checked,
-                            });
-                          }}
-                        />
-                      </Form.Group>
-
-                      <Form.Group
-                        controlId={SettingName.MakeActiveSubscribersApiPublic}
-                      >
-                        <Form.ControlLabel>
-                          {t(
-                            settings[SettingName.MakeActiveSubscribersApiPublic]
-                              .label
-                          )}
-                          <SettingInfo
-                            text={t(
-                              'settingList.warnings.activeSubscriptionsApiPublic'
-                            )}
-                          />
-                        </Form.ControlLabel>
-
-                        <Toggle
-                          disabled={isDisabled}
-                          checked={
-                            settings[SettingName.MakeActiveSubscribersApiPublic]
-                              .value
-                          }
-                          onChange={checked => {
-                            setSetting({
-                              ...settings[
+                        <Form.Group
+                          controlId={SettingName.MakeActiveSubscribersApiPublic}
+                        >
+                          <Form.Label>
+                            {t(
+                              settings[
                                 SettingName.MakeActiveSubscribersApiPublic
-                              ],
-                              value: checked,
-                            });
-                          }}
-                        />
-                      </Form.Group>
-
-                      <Form.Group
-                        controlId={SettingName.MakeRenewingSubscribersApiPublic}
-                      >
-                        <Form.ControlLabel>
-                          {t(
-                            settings[
-                              SettingName.MakeRenewingSubscribersApiPublic
-                            ].label
-                          )}
-                          <SettingInfo
-                            text={t(
-                              'settingList.warnings.renewingSubscriptionsApiPublic'
+                              ].label
                             )}
-                          />
-                        </Form.ControlLabel>
+                            <SettingInfo
+                              text={t(
+                                'settingList.warnings.activeSubscriptionsApiPublic'
+                              )}
+                            />
+                          </Form.Label>
 
-                        <Toggle
-                          disabled={isDisabled}
-                          checked={
-                            settings[
-                              SettingName.MakeRenewingSubscribersApiPublic
-                            ].value
+                          <Toggle
+                            disabled={isDisabled}
+                            checked={
+                              settings[
+                                SettingName.MakeActiveSubscribersApiPublic
+                              ].value
+                            }
+                            onChange={checked => {
+                              setSetting({
+                                ...settings[
+                                  SettingName.MakeActiveSubscribersApiPublic
+                                ],
+                                value: checked,
+                              });
+                            }}
+                          />
+                        </Form.Group>
+
+                        <Form.Group
+                          controlId={
+                            SettingName.MakeRenewingSubscribersApiPublic
                           }
-                          onChange={checked => {
-                            setSetting({
-                              ...settings[
+                        >
+                          <Form.Label>
+                            {t(
+                              settings[
                                 SettingName.MakeRenewingSubscribersApiPublic
-                              ],
-                              value: checked,
-                            });
-                          }}
-                        />
-                      </Form.Group>
-
-                      <Form.Group
-                        controlId={SettingName.MakeNewDeactivationsApiPublic}
-                      >
-                        <Form.ControlLabel>
-                          {t(
-                            settings[SettingName.MakeNewDeactivationsApiPublic]
-                              .label
-                          )}
-                          <SettingInfo
-                            text={t(
-                              'settingList.warnings.newDeactivationsApiPublic'
+                              ].label
                             )}
-                          />
-                        </Form.ControlLabel>
+                            <SettingInfo
+                              text={t(
+                                'settingList.warnings.renewingSubscriptionsApiPublic'
+                              )}
+                            />
+                          </Form.Label>
 
-                        <Toggle
-                          disabled={isDisabled}
-                          checked={
-                            settings[SettingName.MakeNewDeactivationsApiPublic]
-                              .value
-                          }
-                          onChange={checked =>
-                            setSetting({
-                              ...settings[
+                          <Toggle
+                            disabled={isDisabled}
+                            checked={
+                              settings[
+                                SettingName.MakeRenewingSubscribersApiPublic
+                              ].value
+                            }
+                            onChange={checked => {
+                              setSetting({
+                                ...settings[
+                                  SettingName.MakeRenewingSubscribersApiPublic
+                                ],
+                                value: checked,
+                              });
+                            }}
+                          />
+                        </Form.Group>
+
+                        <Form.Group
+                          controlId={SettingName.MakeNewDeactivationsApiPublic}
+                        >
+                          <Form.Label>
+                            {t(
+                              settings[
                                 SettingName.MakeNewDeactivationsApiPublic
-                              ],
-                              value: checked,
-                            })
-                          }
-                        />
-                      </Form.Group>
-
-                      <Form.Group
-                        controlId={SettingName.MakeExpectedRevenueApiPublic}
-                      >
-                        <Form.ControlLabel>
-                          {t(
-                            settings[SettingName.MakeExpectedRevenueApiPublic]
-                              .label
-                          )}
-                          <SettingInfo
-                            text={t(
-                              'settingList.warnings.expectedRevenueApiPublic'
+                              ].label
                             )}
+                            <SettingInfo
+                              text={t(
+                                'settingList.warnings.newDeactivationsApiPublic'
+                              )}
+                            />
+                          </Form.Label>
+
+                          <Toggle
+                            disabled={isDisabled}
+                            checked={
+                              settings[
+                                SettingName.MakeNewDeactivationsApiPublic
+                              ].value
+                            }
+                            onChange={checked =>
+                              setSetting({
+                                ...settings[
+                                  SettingName.MakeNewDeactivationsApiPublic
+                                ],
+                                value: checked,
+                              })
+                            }
                           />
-                        </Form.ControlLabel>
+                        </Form.Group>
 
-                        <Toggle
-                          disabled={isDisabled}
-                          checked={
-                            settings[SettingName.MakeExpectedRevenueApiPublic]
-                              .value
-                          }
-                          onChange={checked =>
-                            setSetting({
-                              ...settings[
-                                SettingName.MakeExpectedRevenueApiPublic
-                              ],
-                              value: checked,
-                            })
-                          }
-                        />
-                      </Form.Group>
+                        <Form.Group
+                          controlId={SettingName.MakeExpectedRevenueApiPublic}
+                        >
+                          <Form.Label>
+                            {t(
+                              settings[SettingName.MakeExpectedRevenueApiPublic]
+                                .label
+                            )}
+                            <SettingInfo
+                              text={t(
+                                'settingList.warnings.expectedRevenueApiPublic'
+                              )}
+                            />
+                          </Form.Label>
 
-                      <Form.Group controlId={SettingName.MakeRevenueApiPublic}>
-                        <Form.ControlLabel>
-                          {t(settings[SettingName.MakeRevenueApiPublic].label)}
-                          <SettingInfo
-                            text={t('settingList.warnings.revenueApiPublic')}
+                          <Toggle
+                            disabled={isDisabled}
+                            checked={
+                              settings[SettingName.MakeExpectedRevenueApiPublic]
+                                .value
+                            }
+                            onChange={checked =>
+                              setSetting({
+                                ...settings[
+                                  SettingName.MakeExpectedRevenueApiPublic
+                                ],
+                                value: checked,
+                              })
+                            }
                           />
-                        </Form.ControlLabel>
+                        </Form.Group>
 
-                        <Toggle
-                          disabled={isDisabled}
-                          checked={
-                            settings[SettingName.MakeRevenueApiPublic].value
-                          }
-                          onChange={checked =>
-                            setSetting({
-                              ...settings[SettingName.MakeRevenueApiPublic],
-                              value: checked,
-                            })
-                          }
-                        />
-                      </Form.Group>
+                        <Form.Group
+                          controlId={SettingName.MakeRevenueApiPublic}
+                        >
+                          <Form.Label>
+                            {t(
+                              settings[SettingName.MakeRevenueApiPublic].label
+                            )}
+                            <SettingInfo
+                              text={t('settingList.warnings.revenueApiPublic')}
+                            />
+                          </Form.Label>
+
+                          <Toggle
+                            disabled={isDisabled}
+                            checked={
+                              settings[SettingName.MakeRevenueApiPublic].value
+                            }
+                            onChange={checked =>
+                              setSetting({
+                                ...settings[SettingName.MakeRevenueApiPublic],
+                                value: checked,
+                              })
+                            }
+                          />
+                        </Form.Group>
+                      </Form.Stack>
                     </Panel>
                   </Col>
                 </Row>
@@ -766,74 +798,79 @@ function SettingList() {
                       bordered
                       header={t('settingList.login')}
                     >
-                      <Form.Group
-                        controlId={SettingName.SendLoginJwtExpiresMin}
-                      >
-                        <Form.ControlLabel>
-                          {t(
-                            settings[SettingName.SendLoginJwtExpiresMin].label
-                          )}
-                          <SettingInfo
-                            text={t('settingList.warnings.loginMinutes')}
-                          />
-                        </Form.ControlLabel>
+                      <Form.Stack fluid>
+                        <Form.Group
+                          controlId={SettingName.SendLoginJwtExpiresMin}
+                        >
+                          <Form.Label>
+                            {t(
+                              settings[SettingName.SendLoginJwtExpiresMin].label
+                            )}
+                            <SettingInfo
+                              text={t('settingList.warnings.loginMinutes')}
+                            />
+                          </Form.Label>
 
-                        <InputGroup>
-                          <FormControl
-                            name={SettingName.SendLoginJwtExpiresMin}
-                            accepter={InputNumber}
-                            value={
-                              settings[SettingName.SendLoginJwtExpiresMin].value
-                            }
-                            onChange={(value: string) => {
-                              setSetting({
-                                ...settings[SettingName.SendLoginJwtExpiresMin],
-                                value: +value,
-                              });
-                            }}
-                          />
-                          <InputGroupAddon>
-                            {t('settingList.minutes')}
-                          </InputGroupAddon>
-                        </InputGroup>
-                      </Form.Group>
+                          <InputGroup>
+                            <FormControl
+                              name={SettingName.SendLoginJwtExpiresMin}
+                              accepter={NumberInput}
+                              value={
+                                settings[SettingName.SendLoginJwtExpiresMin]
+                                  .value
+                              }
+                              onChange={(value: string) => {
+                                setSetting({
+                                  ...settings[
+                                    SettingName.SendLoginJwtExpiresMin
+                                  ],
+                                  value: +value,
+                                });
+                              }}
+                            />
+                            <InputGroupAddon>
+                              {t('settingList.minutes')}
+                            </InputGroupAddon>
+                          </InputGroup>
+                        </Form.Group>
 
-                      <Form.Group
-                        controlId={SettingName.ResetPasswordJwtExpiresMin}
-                      >
-                        <Form.ControlLabel>
-                          {t(
-                            settings[SettingName.ResetPasswordJwtExpiresMin]
-                              .label
-                          )}
-                          <SettingInfo
-                            text={t('settingList.warnings.passwordToken')}
-                          />
-                        </Form.ControlLabel>
-
-                        <InputGroup>
-                          <Form.Control
-                            name={SettingName.ResetPasswordJwtExpiresMin}
-                            accepter={InputNumber}
-                            value={
+                        <Form.Group
+                          controlId={SettingName.ResetPasswordJwtExpiresMin}
+                        >
+                          <Form.Label>
+                            {t(
                               settings[SettingName.ResetPasswordJwtExpiresMin]
-                                .value
-                            }
-                            onChange={(value: string) => {
-                              setSetting({
-                                ...settings[
-                                  SettingName.ResetPasswordJwtExpiresMin
-                                ],
-                                value: +value,
-                              });
-                            }}
-                          />
+                                .label
+                            )}
+                            <SettingInfo
+                              text={t('settingList.warnings.passwordToken')}
+                            />
+                          </Form.Label>
 
-                          <InputGroupAddon>
-                            {t('settingList.minutes')}
-                          </InputGroupAddon>
-                        </InputGroup>
-                      </Form.Group>
+                          <InputGroup>
+                            <Form.Control
+                              name={SettingName.ResetPasswordJwtExpiresMin}
+                              accepter={NumberInput}
+                              value={
+                                settings[SettingName.ResetPasswordJwtExpiresMin]
+                                  .value
+                              }
+                              onChange={(value: string) => {
+                                setSetting({
+                                  ...settings[
+                                    SettingName.ResetPasswordJwtExpiresMin
+                                  ],
+                                  value: +value,
+                                });
+                              }}
+                            />
+
+                            <InputGroupAddon>
+                              {t('settingList.minutes')}
+                            </InputGroupAddon>
+                          </InputGroup>
+                        </Form.Group>
+                      </Form.Stack>
                     </Panel>
                   </Col>
 
@@ -850,27 +887,31 @@ function SettingList() {
                         </>
                       }
                     >
-                      <Form.Group controlId={SettingName.PeeringTimeoutMs}>
-                        <Form.ControlLabel>
-                          {t(settings[SettingName.PeeringTimeoutMs].label)}
-                        </Form.ControlLabel>
-                        <InputGroup>
-                          <Form.Control
-                            name={SettingName.PeeringTimeoutMs}
-                            accepter={InputNumber}
-                            value={settings[SettingName.PeeringTimeoutMs].value}
-                            onChange={(value: string) => {
-                              setSetting({
-                                ...settings[SettingName.PeeringTimeoutMs],
-                                value: +value,
-                              });
-                            }}
-                          />
-                          <InputGroupAddon>
-                            {t('settingList.ms')}
-                          </InputGroupAddon>
-                        </InputGroup>
-                      </Form.Group>
+                      <Form.Stack fluid>
+                        <Form.Group controlId={SettingName.PeeringTimeoutMs}>
+                          <Form.Label>
+                            {t(settings[SettingName.PeeringTimeoutMs].label)}
+                          </Form.Label>
+                          <InputGroup>
+                            <Form.Control
+                              name={SettingName.PeeringTimeoutMs}
+                              accepter={NumberInput}
+                              value={
+                                settings[SettingName.PeeringTimeoutMs].value
+                              }
+                              onChange={(value: string) => {
+                                setSetting({
+                                  ...settings[SettingName.PeeringTimeoutMs],
+                                  value: +value,
+                                });
+                              }}
+                            />
+                            <InputGroupAddon>
+                              {t('settingList.ms')}
+                            </InputGroupAddon>
+                          </InputGroup>
+                        </Form.Group>
+                      </Form.Stack>
                     </Panel>
                   </Col>
                 </Row>
@@ -881,85 +922,89 @@ function SettingList() {
                     bordered
                     header={t('settingList.articlePage')}
                   >
-                    <Form.Group controlId={SettingName.NewArticlePeering}>
-                      <Form.ControlLabel>
-                        <>
-                          {t(settings[SettingName.NewArticlePeering].label)}
-                          <SettingInfo
-                            text={t('settingList.warnings.newArticlePeering')}
-                          />
-                        </>
-                      </Form.ControlLabel>
+                    <Form.Stack fluid>
+                      <Form.Group controlId={SettingName.NewArticlePeering}>
+                        <Form.Label>
+                          <>
+                            {t(settings[SettingName.NewArticlePeering].label)}
+                            <SettingInfo
+                              text={t('settingList.warnings.newArticlePeering')}
+                            />
+                          </>
+                        </Form.Label>
 
-                      <Toggle
-                        disabled={isDisabled}
-                        checked={settings[SettingName.NewArticlePeering].value}
-                        onChange={checked =>
-                          setSetting({
-                            ...settings[SettingName.NewArticlePeering],
-                            value: checked,
-                          })
-                        }
-                      />
-                    </Form.Group>
+                        <Toggle
+                          disabled={isDisabled}
+                          checked={
+                            settings[SettingName.NewArticlePeering].value
+                          }
+                          onChange={checked =>
+                            setSetting({
+                              ...settings[SettingName.NewArticlePeering],
+                              value: checked,
+                            })
+                          }
+                        />
+                      </Form.Group>
 
-                    <Form.Group controlId={SettingName.NewArticlePaywall}>
-                      <Form.ControlLabel>
-                        <>
-                          {t(settings[SettingName.NewArticlePaywall].label)}
-                          <SettingInfo
-                            text={t('settingList.warnings.newArticlePaywall')}
-                          />
-                        </>
-                      </Form.ControlLabel>
+                      <Form.Group controlId={SettingName.NewArticlePaywall}>
+                        <Form.Label>
+                          <>
+                            {t(settings[SettingName.NewArticlePaywall].label)}
+                            <SettingInfo
+                              text={t('settingList.warnings.newArticlePaywall')}
+                            />
+                          </>
+                        </Form.Label>
 
-                      <SelectPaywall
-                        disabled={isDisabled}
-                        selectedPaywall={
-                          settings[SettingName.NewArticlePaywall].value
-                        }
-                        setSelectedPaywall={paywall =>
-                          setSetting({
-                            ...settings[SettingName.NewArticlePaywall],
-                            value: paywall,
-                          })
-                        }
-                      />
-                    </Form.Group>
+                        <SelectPaywall
+                          disabled={isDisabled}
+                          selectedPaywall={
+                            settings[SettingName.NewArticlePaywall].value
+                          }
+                          setSelectedPaywall={paywall =>
+                            setSetting({
+                              ...settings[SettingName.NewArticlePaywall],
+                              value: paywall,
+                            })
+                          }
+                        />
+                      </Form.Group>
 
-                    <Form.Group
-                      controlId={SettingName.ShowPendingWhenNotPublished}
-                    >
-                      <Form.ControlLabel>
-                        <>
-                          {t(
-                            settings[SettingName.ShowPendingWhenNotPublished]
-                              .label
-                          )}
-                          <SettingInfo
-                            text={t(
-                              'settingList.warnings.showPendingWhenNotPublished'
+                      <Form.Group
+                        controlId={SettingName.ShowPendingWhenNotPublished}
+                      >
+                        <Form.Label>
+                          <>
+                            {t(
+                              settings[SettingName.ShowPendingWhenNotPublished]
+                                .label
                             )}
-                          />
-                        </>
-                      </Form.ControlLabel>
+                            <SettingInfo
+                              text={t(
+                                'settingList.warnings.showPendingWhenNotPublished'
+                              )}
+                            />
+                          </>
+                        </Form.Label>
 
-                      <Toggle
-                        disabled={isDisabled}
-                        checked={
-                          settings[SettingName.ShowPendingWhenNotPublished]
-                            .value
-                        }
-                        onChange={checked =>
-                          setSetting({
-                            ...settings[
-                              SettingName.ShowPendingWhenNotPublished
-                            ],
-                            value: checked,
-                          })
-                        }
-                      />
-                    </Form.Group>
+                        <Toggle
+                          disabled={isDisabled}
+                          checked={
+                            settings[SettingName.ShowPendingWhenNotPublished]
+                              .value
+                          }
+                          onChange={checked =>
+                            setSetting({
+                              ...settings[
+                                SettingName.ShowPendingWhenNotPublished
+                              ],
+                              value: checked,
+                            })
+                          }
+                        />
+                      </Form.Group>
+                    </Form.Stack>
                   </Panel>
                 </Col>
               </Col>

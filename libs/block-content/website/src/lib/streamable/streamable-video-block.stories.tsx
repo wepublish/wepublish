@@ -1,4 +1,4 @@
-import { Meta } from '@storybook/react';
+import { Meta } from '@storybook/nextjs-vite';
 import { StreamableVideoBlock } from './streamable-video-block';
 import { mockStreamableVideoBlock } from '@wepublish/storybook/mocks';
 

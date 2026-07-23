@@ -19,7 +19,6 @@ import {
   TeaserListBlock,
 } from '@wepublish/website/api';
 import { GetStaticProps } from 'next';
-import getConfig from 'next/config';
 
 import { BestOfWePublishWrapper } from '../src/components/best-of-wepublish/best-of-wepublish';
 import { isFrageDesTages } from '../src/components/frage-des-tages/is-frage-des-tages';
@@ -70,9 +69,7 @@ export default function Index() {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const { publicRuntimeConfig } = getConfig();
-
-  if (!publicRuntimeConfig.env.API_URL) {
+  if (!getApiUrl()) {
     return { props: {}, revalidate: 1 };
   }
 

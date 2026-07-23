@@ -10,7 +10,7 @@ import {
 } from '@wepublish/website/builder';
 import { useRouter } from 'next/router';
 import { anyPass, cond } from 'ramda';
-import { memo, useMemo } from 'react';
+import { JSX, memo, useMemo } from 'react';
 
 import {
   AttentionCatcher,

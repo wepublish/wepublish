@@ -19,4 +19,4 @@ export const FazettenBaseTeaser = cond([
       </div>
     ),
   ],
-]) as (props: BuilderTeaserProps) => JSX.Element;
+]);
