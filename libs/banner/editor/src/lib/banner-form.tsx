@@ -260,6 +260,19 @@ export const BannerForm = (props: BannerFormProps) => {
             onChange={value => props.onChange({ ...props.banner, html: value })}
           />
         </Form.Group>
+
+        <Form.Group controlId="embedUrl">
+          <Form.ControlLabel>{t('banner.form.embedUrl')}</Form.ControlLabel>
+
+          <Input
+            name="embedUrl"
+            value={props.banner.embedUrl ?? undefined}
+            onChange={value =>
+              props.onChange({ ...props.banner, embedUrl: value })
+            }
+          />
+          <Form.HelpText>{t('banner.form.embedUrlHelp')}</Form.HelpText>
+        </Form.Group>
       </Panel>
 
       <Panel
