@@ -3,7 +3,6 @@ import {
   Field,
   Float,
   InputType,
-  Int,
   ObjectType,
   OmitType,
   registerEnumType,
@@ -28,7 +27,7 @@ export class UpdateUserSubscriptionInput {
   @Field(() => PaymentPeriodicity)
   paymentPeriodicity: PaymentPeriodicityType;
 
-  @Field(() => Int)
+  @Field(() => Float)
   monthlyAmount: number;
 
   @Field()
@@ -64,7 +63,7 @@ export class CreateSubscriptionArgs {
   @Field(() => PaymentPeriodicity)
   paymentPeriodicity!: PaymentPeriodicity;
 
-  @Field(() => Int)
+  @Field(() => Float)
   monthlyAmount!: number;
 
   @Field({ nullable: true })
