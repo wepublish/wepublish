@@ -69,7 +69,7 @@ export default function ArticleBySlugOrId() {
         <ArticleWrapper>
           <H3 component={'h2'}>Kommentare</H3>
           <CommentListContainer
-            id={data!.article!.id}
+            id={data.article.id}
             type={CommentItemType.Article}
           />
         </ArticleWrapper>
