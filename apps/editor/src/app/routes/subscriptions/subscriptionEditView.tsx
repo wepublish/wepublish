@@ -30,7 +30,7 @@ import {
   DescriptionListItem,
   InvoiceListPanel,
   ListViewActions,
-  ListViewContainer,
+  ListViewContainer as ListViewContainerDefault,
   ListViewHeader,
   PermissionControl,
   TableWrapper,
@@ -88,12 +88,17 @@ const RowPaddingTop = styled(Row)`
   padding-top: 12px;
 `;
 
+const ListViewContainer = styled(ListViewContainerDefault)`
+  grid-template-columns: 1fr 1fr;
+`;
+
 const UserFormGrid = styled(RGrid)`
   width: 100%;
   padding-left: 0px;
-  height: calc(100vh - 160px);
+  height: auto;
   overflow-y: auto;
   margin-top: 2rem;
+  padding-bottom: 2rem;
 `;
 
 const ButtonMarginRight = styled(Button)`
@@ -103,10 +108,6 @@ const ButtonMarginRight = styled(Button)`
 const IconButtonMarginRight = styled(IconButton)`
   margin-right: 10px;
   margin-top: 10px;
-`;
-
-const Actions = styled(ListViewActions)`
-  grid-column: 3;
 `;
 
 export interface SubscriptionEditViewProps {
@@ -587,7 +588,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
               : t('userSubscriptionEdit.createTitle')}
             </h2>
           </ListViewHeader>
-          <Actions>
+          <ListViewActions>
             <PermissionControl
               qualifyingPermissions={['CAN_CREATE_SUBSCRIPTION']}
             >
@@ -619,7 +620,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                 {user ? t('saveAndClose') : t('createAndClose')}
               </Button>
             </PermissionControl>
-          </Actions>
+          </ListViewActions>
         </ListViewContainer>
         <UserFormGrid>
           <Row gutter={10}>
@@ -838,43 +839,6 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                             placement="auto"
                           />
                         </Col>
-                        {/* auto renew */}
-                        <Col xs={12}>
-                          <ControlLabel>
-                            {t('userSubscriptionEdit.autoRenew')}
-                          </ControlLabel>
-                          <Toggle
-                            checked={autoRenew}
-                            disabled={
-                              isDisabled ||
-                              hasNoMemberPlanSelected ||
-                              isDeactivated
-                            }
-                            onChange={value =>
-                              setAutoRenew(() =>
-                                checkTrialSubscription(extendable, value) ?
-                                  value
-                                : autoRenew
-                              )
-                            }
-                          />
-                          <HelpText>
-                            {t('userSubscriptionEdit.autoRenewDescription')}
-                          </HelpText>
-                        </Col>
-                      </RowPaddingTop>
-                      <RowPaddingTop>
-                        <Col xs={12}></Col>
-                        <Col xs={12}>
-                          <Button
-                            appearance="ghost"
-                            color="red"
-                            loading={isDisabled}
-                            onClick={() => setExtendModal(true)}
-                          >
-                            {t('userSubscriptionEdit.renewNow')}
-                          </Button>
-                        </Col>
                       </RowPaddingTop>
                       <RowPaddingTop>
                         {/* subscription start */}
@@ -979,26 +943,58 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                         </HelpText>
                       </Col>
                     </RowPaddingTop>
+                    <RowPaddingTop>
+                      {/* auto renew */}
+                      <Col xs={12}>
+                        <Toggle
+                          checked={autoRenew}
+                          disabled={
+                            isDisabled ||
+                            hasNoMemberPlanSelected ||
+                            isDeactivated
+                          }
+                          onChange={value =>
+                            setAutoRenew(() =>
+                              checkTrialSubscription(extendable, value) ? value
+                              : autoRenew
+                            )
+                          }
+                        />
+                        <FormControlLabelMarginLeft>
+                          {t('userSubscriptionEdit.autoRenew')}
+                        </FormControlLabelMarginLeft>
+                        <HelpText>
+                          {t('userSubscriptionEdit.autoRenewDescription')}
+                        </HelpText>
+                      </Col>
+                    </RowPaddingTop>
+                    <RowPaddingTop>
+                      <Col xs={24}>
+                        <Button
+                          appearance="ghost"
+                          color="red"
+                          loading={isDisabled}
+                          onClick={() => setExtendModal(true)}
+                        >
+                          {t('userSubscriptionEdit.renewNow')}
+                        </Button>
+                      </Col>
+                    </RowPaddingTop>
                   </Grid>
                 </RPanel>
               </Grid>
             </Col>
 
-            <Col xs={12}>
+            <Col xs={24}>
               <Grid fluid>
-                <RPanel
-                  bordered
-                  header={t('invoice.panel.invoiceHistory')}
-                >
-                  {id && (
-                    <InvoiceListPanel
-                      subscriptionId={id}
-                      invoices={invoices}
-                      disabled={!!deactivation}
-                      onInvoicePaid={() => reloadSubscription()}
-                    />
-                  )}
-                </RPanel>
+                {id && (
+                  <InvoiceListPanel
+                    subscriptionId={id}
+                    invoices={invoices}
+                    disabled={!!deactivation}
+                    onInvoicePaid={() => reloadSubscription()}
+                  />
+                )}
               </Grid>
             </Col>
           </Row>

@@ -13,6 +13,7 @@ type Link = MarkType<
     target?: string;
     rel?: string;
     id?: string;
+    variant?: string | null;
   }
 >;
 type TextStyle = MarkType<

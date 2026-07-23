@@ -37,7 +37,20 @@ export const MemberPlanPicker = forwardRef<
   HTMLButtonElement,
   BuilderMemberPlanPickerProps & { alwaysShow?: boolean }
 >(function MemberPlanPicker(
-  { memberPlans, onChange, value, className, name, alwaysShow },
+  {
+    memberPlans,
+    onChange,
+    value,
+    className,
+    id,
+    name,
+    alwaysShow,
+    sortBy,
+    monthlyAmount,
+    onMonthlyAmountChange,
+    monthlyAmountError,
+    planSettings,
+  },
   ref
 ) {
   const {
@@ -46,22 +59,36 @@ export const MemberPlanPicker = forwardRef<
     blocks: { RichText },
   } = useWebsiteBuilder();
 
-  const showRadioButtons = memberPlans.length > 1 || alwaysShow;
-  const selectedMemberPlan = memberPlans.find(({ id }) => id === value);
+  const sortedMemberPlans =
+    sortBy === 'priceAsc' ?
+      [...memberPlans].sort((a, b) => a.amountPerMonthMin - b.amountPerMonthMin)
+    : memberPlans;
+  const showRadioButtons = sortedMemberPlans.length > 1 || alwaysShow;
+  const selectedMemberPlan = sortedMemberPlans.find(({ id }) => id === value);
   const showPicker =
     showRadioButtons ||
     toPlaintext(selectedMemberPlan?.description?.content) ||
     selectedMemberPlan?.image;
 
   useEffect(() => {
-    if (memberPlans.length && !selectedMemberPlan) {
-      onChange(memberPlans[0].id);
+    if (sortedMemberPlans.length && !selectedMemberPlan) {
+      const defaultPlanId = planSettings?.find(
+        ({ isDefault }) => isDefault
+      )?.memberPlanId;
+
+      onChange(
+        sortedMemberPlans.find(({ id }) => id === defaultPlanId)?.id ??
+          sortedMemberPlans[0].id
+      );
     }
-  }, [memberPlans, onChange, selectedMemberPlan]);
+  }, [sortedMemberPlans, onChange, selectedMemberPlan, planSettings]);
 
   return (
     showPicker && (
-      <MemberPlanPickerWrapper className={className}>
+      <MemberPlanPickerWrapper
+        className={className}
+        id={id}
+      >
         {showRadioButtons && (
           <MemberPlanPickerRadios
             name={name}
@@ -69,7 +96,7 @@ export const MemberPlanPicker = forwardRef<
             value={value ? value : ''}
             ref={ref}
           >
-            {memberPlans.map(memberPlan => (
+            {sortedMemberPlans.map(memberPlan => (
               <FormControlLabel
                 key={memberPlan.id}
                 value={memberPlan.id}
@@ -85,6 +112,15 @@ export const MemberPlanPicker = forwardRef<
                     extendable={memberPlan.extendable}
                     shortDescription={memberPlan.shortDescription}
                     tags={memberPlan.tags}
+                    goodies={memberPlan.goodies}
+                    monthlyAmount={monthlyAmount}
+                    onMonthlyAmountChange={onMonthlyAmountChange}
+                    monthlyAmountError={monthlyAmountError}
+                    renderStyle={
+                      planSettings?.find(
+                        ({ memberPlanId }) => memberPlanId === memberPlan.id
+                      )?.renderStyle
+                    }
                   />
                 }
                 label={memberPlan.name}

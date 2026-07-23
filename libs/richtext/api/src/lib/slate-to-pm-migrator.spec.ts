@@ -10,11 +10,9 @@ const linkMarks = (doc: any): { text: string; href: string }[] => {
       node.forEach(walk);
       return;
     }
-
     if (!node || typeof node !== 'object') {
       return;
     }
-
     if (node.type === 'text') {
       for (const mark of node.marks ?? []) {
         if (mark.type === 'link') {
@@ -25,7 +23,6 @@ const linkMarks = (doc: any): { text: string; href: string }[] => {
 
     (node.content ?? []).forEach(walk);
   };
-
   walk(doc);
 
   return out;

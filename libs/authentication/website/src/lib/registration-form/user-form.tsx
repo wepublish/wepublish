@@ -168,6 +168,8 @@ export function UserForm<T extends BuilderUserFormFields>({
           render={({ field, fieldState: { error } }) => (
             <MobileDatePicker
               {...field}
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-ignore MobileDatePicker types require a LocalizationProvider adapter to accept Date values.
               value={field.value ? new Date(field.value) : null}
               onClose={field.onBlur}
               label={'Geburtstag'}

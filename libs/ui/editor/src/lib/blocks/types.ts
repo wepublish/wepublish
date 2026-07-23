@@ -11,7 +11,9 @@ import {
   FullPoll,
   FullTeaserFragment,
   PageWithoutBlocksFragment,
+  SubscribeBlockAmountTileLayout,
   SubscribeBlockField,
+  SubscribeBlockPlanRenderStyle,
   Tag,
   TeaserInput,
   TeaserListBlockSort,
@@ -70,9 +72,22 @@ export interface HTMLBlockValue extends BaseBlockValue {
   html: string;
 }
 
+export interface SubscribeBlockPlanSettingValue {
+  memberPlanId: string;
+  renderStyle: SubscribeBlockPlanRenderStyle;
+  amountTileValues?: number[] | null;
+  amountTileLayout?: SubscribeBlockAmountTileLayout | null;
+  isDefault?: boolean | null;
+}
+
 export interface SubscribeBlockValue extends BaseBlockValue {
   memberPlanIds: string[];
+  plans: SubscribeBlockPlanSettingValue[];
   fields: SubscribeBlockField[];
+  showGoodies: boolean;
+  showVouchers: boolean;
+  goodieMinValue?: number | null;
+  hideRepeatGoodieOnUpgrade: boolean;
 }
 
 export interface PollBlockValue extends BaseBlockValue {
@@ -500,7 +515,12 @@ export function mapBlockValueToBlockInput(
           blockStyle: block.value.blockStyle,
           disabled: block.value.disabled,
           memberPlanIds: block.value.memberPlanIds ?? [],
+          plans: block.value.plans ?? [],
           fields: block.value.fields,
+          showGoodies: block.value.showGoodies,
+          showVouchers: block.value.showVouchers,
+          goodieMinValue: block.value.goodieMinValue ?? null,
+          hideRepeatGoodieOnUpgrade: block.value.hideRepeatGoodieOnUpgrade,
         },
       };
 
@@ -1128,7 +1148,27 @@ export function blockForQueryBlock(
           disabled: block.disabled,
           blockStyle: block.blockStyle,
           fields: block.fields ?? [],
+          showGoodies: block.showGoodies ?? false,
+          showVouchers: block.showVouchers ?? false,
+          goodieMinValue: block.goodieMinValue ?? null,
+          hideRepeatGoodieOnUpgrade: block.hideRepeatGoodieOnUpgrade ?? false,
           memberPlanIds: block.memberPlanIds ?? [],
+          plans:
+            block.plans?.map(
+              ({
+                memberPlanId,
+                renderStyle,
+                amountTileValues,
+                amountTileLayout,
+                isDefault,
+              }) => ({
+                memberPlanId,
+                renderStyle,
+                amountTileValues,
+                amountTileLayout,
+                isDefault,
+              })
+            ) ?? [],
         },
       };
 

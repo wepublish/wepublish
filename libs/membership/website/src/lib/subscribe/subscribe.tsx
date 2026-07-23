@@ -5,7 +5,6 @@ import {
   Challenge,
   defaultRegisterSchema,
   requiredRegisterSchema,
-  UserForm,
   useUser,
   zodAlwaysRefine,
 } from '@wepublish/authentication/website';
@@ -14,6 +13,7 @@ import {
   PaymentMethod,
   PaymentPeriodicity,
   ProductType,
+  SubscribeBlockPlanRenderStyle,
   RegisterMutationVariables,
   ResubscribeMutationVariables,
   SubscribeMutationVariables,
@@ -27,9 +27,17 @@ import {
   useAsyncAction,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { useEffect, useMemo, useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import {
+  ComponentProps,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+import { Controller, useForm, useWatch } from 'react-hook-form';
 import { z } from 'zod';
+import { PaymentAmountPicker } from '../payment-amount/payment-amount-picker/payment-amount-picker';
 import { formatCurrency, roundUpTo5Cents } from '../formatters/format-currency';
 import {
   formatFirstPaymentPeriod,
@@ -58,6 +66,7 @@ export const subscribeSchema = z.object({
   ]),
   payTransactionFee: z.boolean(),
   voucher: z.string().nullish(),
+  goodieId: z.string().nullish(),
 });
 
 export const SubscribeWrapper = styled('form')`
@@ -70,7 +79,19 @@ export type SubscribeSectionProps = {
   area?: string;
 };
 
-export const SubscribeSection = styled('div')<SubscribeSectionProps>`
+const SubscribeSectionBase = ({
+  area,
+  ...rest
+}: SubscribeSectionProps & ComponentProps<'div'>) => (
+  <div
+    data-area={area}
+    {...rest}
+  />
+);
+
+export const SubscribeSection = styled(
+  SubscribeSectionBase
+)<SubscribeSectionProps>`
   --grid-area: ${({ area = 'auto' }) => area};
   display: grid;
   gap: ${({ theme }) => theme.spacing(3)};
@@ -130,6 +151,10 @@ export const SubscribeNarrowSection = styled(SubscribeSection)`
 `;
 
 export const VoucherSection = styled(SubscribeNarrowSection)`
+  display: none;
+`;
+
+export const GoodieSection = styled(SubscribeNarrowSection)`
   display: none;
 `;
 
@@ -230,9 +255,15 @@ export const useDiscountText = ({
   }, [currency, locale, monthlyAmount, paymentPeriodicity, memberPlan, t]);
 };
 
+export const clampMonthlyAmount = (amount: number, min: number, max?: number) =>
+  Math.min(Math.max(amount, min), max ?? Number.MAX_SAFE_INTEGER);
+
 export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   defaults,
   memberPlans,
+  planSettings,
+  showGoodies = false,
+  showVouchers = false,
   challenge,
   userSubscriptions,
   userInvoices,
@@ -247,17 +278,21 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   transactionFee = amount => roundUpTo5Cents((amount * 0.02) / 100) * 100,
   transactionFeeText,
   returningUserId,
+  filterGoodies,
+  goodieMinValue,
   fetchSubscribeInfo,
   subscribeInfo,
 }: BuilderSubscribeProps<T>) => {
   const {
     meta: { locale, siteTitle },
     elements: { Alert, H5, Paragraph, TextField },
+    GoodiePicker,
     MemberPlanPicker,
     PaymentMethodPicker,
     PeriodicityPicker,
     PaymentAmount,
     TransactionFee,
+    UserForm,
   } = useWebsiteBuilder();
   const { t } = useTranslation();
   const { hasUser } = useUser();
@@ -309,21 +344,43 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     return result;
   }, [fieldsToDisplay, schema]);
 
+  const freeAmountTouchedRef = useRef(false);
+
   const loggedInSchema = subscribeSchema;
   const schem = useMemo(
     () =>
-      zodAlwaysRefine(hasUserContext ? loggedInSchema : loggedOutSchema).refine(
+      zodAlwaysRefine(
+        zodAlwaysRefine(
+          hasUserContext ? loggedInSchema : loggedOutSchema
+        ).refine(
+          data => {
+            const memberPlan = memberPlans.data?.memberPlans.nodes.find(
+              mb => mb.id === data.memberPlanId
+            );
+
+            return (
+              !memberPlan || data.monthlyAmount >= memberPlan.amountPerMonthMin
+            );
+          },
+          {
+            message: `Betrag kleiner wie der Mindestbetrag.`,
+            path: ['monthlyAmount'],
+          }
+        )
+      ).refine(
         data => {
-          const memberPlan = memberPlans.data?.memberPlans.nodes.find(
-            mb => mb.id === data.memberPlanId
+          const planSetting = planSettings?.find(
+            ({ memberPlanId }) => memberPlanId === data.memberPlanId
           );
 
           return (
-            !memberPlan || data.monthlyAmount >= memberPlan.amountPerMonthMin
+            planSetting?.renderStyle !==
+              SubscribeBlockPlanRenderStyle.CardFreeInput ||
+            freeAmountTouchedRef.current
           );
         },
         {
-          message: `Betrag kleiner wie der Mindestbetrag.`,
+          message: `Bitte Betrag eingeben.`,
           path: ['monthlyAmount'],
         }
       ),
@@ -332,47 +389,64 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       loggedInSchema,
       loggedOutSchema,
       memberPlans.data?.memberPlans.nodes,
+      planSettings,
     ]
   );
 
-  const { control, handleSubmit, watch, setValue, resetField } = useForm<
-    z.infer<typeof loggedInSchema> | z.infer<typeof loggedOutSchema>
-  >({
-    resolver: zodResolver(schem),
-    defaultValues: {
-      ...defaults,
-      voucher: '',
-      monthlyAmount: 0,
-      autoRenew: true,
-      payTransactionFee: false,
-      memberPlanId:
-        defaults?.memberPlanSlug ?
-          memberPlans.data?.memberPlans.nodes.find(
-            memberPlan => memberPlan.slug === defaults?.memberPlanSlug
-          )?.id
-        : memberPlans.data?.memberPlans.nodes[0]?.id,
-      paymentMethodId:
-        memberPlans.data?.memberPlans.nodes[0]?.availablePaymentMethods[0]
-          ?.paymentMethods[0]?.id,
-      paymentPeriodicity:
-        memberPlans.data?.memberPlans.nodes[0]?.availablePaymentMethods[0]
-          ?.paymentPeriodicities[0],
-    },
-    mode: 'onTouched',
-    reValidateMode: 'onChange',
-  });
+  const {
+    control,
+    handleSubmit,
+    watch,
+    setValue,
+    resetField,
+    setError: setFieldError,
+    formState: { errors },
+  } = useForm<z.infer<typeof loggedInSchema> | z.infer<typeof loggedOutSchema>>(
+    {
+      resolver: zodResolver(schem),
+      defaultValues: {
+        ...defaults,
+        voucher: '',
+        goodieId: null,
+        monthlyAmount: 0,
+        autoRenew: true,
+        payTransactionFee: false,
+        memberPlanId:
+          defaults?.memberPlanSlug ?
+            memberPlans.data?.memberPlans.nodes.find(
+              memberPlan => memberPlan.slug === defaults?.memberPlanSlug
+            )?.id
+          : (memberPlans.data?.memberPlans.nodes.find(
+              memberPlan =>
+                memberPlan.id ===
+                planSettings?.find(({ isDefault }) => isDefault)?.memberPlanId
+            )?.id ?? memberPlans.data?.memberPlans.nodes[0]?.id),
+        paymentMethodId:
+          memberPlans.data?.memberPlans.nodes[0]?.availablePaymentMethods[0]
+            ?.paymentMethods[0]?.id,
+        paymentPeriodicity:
+          memberPlans.data?.memberPlans.nodes[0]?.availablePaymentMethods[0]
+            ?.paymentPeriodicities[0],
+      },
+      mode: 'onTouched',
+      reValidateMode: 'onChange',
+    }
+  );
 
   const voucher = watch<'voucher'>('voucher');
+  const goodieId = watch<'goodieId'>('goodieId');
   const selectedPaymentMethodId = watch<'paymentMethodId'>('paymentMethodId');
   const selectedPaymentPeriodicity =
     watch<'paymentPeriodicity'>('paymentPeriodicity');
   const selectedMemberPlanId = watch<'memberPlanId'>('memberPlanId');
   const payTransactionFee = watch<'payTransactionFee'>('payTransactionFee');
+  const rawMonthlyAmount = useWatch({
+    control,
+    name: 'monthlyAmount',
+  }) as number;
   const monthlyAmount =
-    watch<'monthlyAmount'>('monthlyAmount') +
-    (payTransactionFee ?
-      transactionFee(watch<'monthlyAmount'>('monthlyAmount'))
-    : 0);
+    rawMonthlyAmount +
+    (payTransactionFee ? transactionFee(rawMonthlyAmount) : 0);
   const autoRenew = watch<'autoRenew'>('autoRenew');
 
   const selectedMemberPlan = useMemo(
@@ -382,6 +456,42 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       ),
     [memberPlans.data?.memberPlans.nodes, selectedMemberPlanId]
   );
+
+  const [soldOutGoodieIds, setSoldOutGoodieIds] = useState<string[]>([]);
+
+  const availableGoodies = useMemo(() => {
+    const inStockGoodies =
+      selectedMemberPlan?.goodies?.filter(
+        ({ id }) => !soldOutGoodieIds.includes(id)
+      ) ?? [];
+
+    const filteredGoodies =
+      filterGoodies ?
+        filterGoodies(inStockGoodies, { monthlyAmount: rawMonthlyAmount })
+      : inStockGoodies;
+
+    if (goodieMinValue != null && rawMonthlyAmount * 12 < goodieMinValue) {
+      return [];
+    }
+
+    return filteredGoodies;
+  }, [
+    selectedMemberPlan?.goodies,
+    soldOutGoodieIds,
+    filterGoodies,
+    goodieMinValue,
+    rawMonthlyAmount,
+  ]);
+
+  const allGoodies = useMemo(() => {
+    const goodiesById = new Map(
+      memberPlans.data?.memberPlans.nodes
+        .flatMap(memberPlan => memberPlan.goodies ?? [])
+        .map(goodie => [goodie.id, goodie])
+    );
+
+    return [...goodiesById.values()];
+  }, [memberPlans.data?.memberPlans.nodes]);
 
   const selectedAvailablePaymentMethod = useMemo(
     () =>
@@ -403,9 +513,33 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
 
   const isDonation = selectedMemberPlan?.productType === ProductType.Donation;
 
+  const selectedPlanSetting = planSettings?.find(
+    ({ memberPlanId }) => memberPlanId === selectedMemberPlan?.id
+  );
+  const selectedPlanRenderStyle = selectedPlanSetting?.renderStyle;
+
+  const isFreeInput =
+    selectedPlanRenderStyle === SubscribeBlockPlanRenderStyle.CardFreeInput;
+
   const shouldHidePaymentAmount =
-    selectedMemberPlan?.amountPerMonthMin ===
-    selectedMemberPlan?.amountPerMonthMax;
+    selectedPlanRenderStyle ?
+      selectedPlanRenderStyle === SubscribeBlockPlanRenderStyle.Card ||
+      isFreeInput
+    : selectedMemberPlan?.amountPerMonthMin ===
+      selectedMemberPlan?.amountPerMonthMax;
+  const useAmountTiles =
+    selectedPlanRenderStyle === SubscribeBlockPlanRenderStyle.AmountTiles;
+  const AmountComponent = useAmountTiles ? PaymentAmountPicker : PaymentAmount;
+
+  const handleMonthlyAmountChange = useCallback(
+    (monthlyAmount: number, touched = true) => {
+      freeAmountTouchedRef.current = touched;
+      setValue<'monthlyAmount'>('monthlyAmount', monthlyAmount, {
+        shouldValidate: true,
+      });
+    },
+    [setValue]
+  );
 
   const discountPercent =
     subscribeInfo.data?.createSubscriptionInfo.discountPercent ?? 0;
@@ -437,7 +571,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     extendable: selectedMemberPlan?.extendable ?? true,
     productType: selectedMemberPlan?.productType ?? ProductType.Subscription,
     paymentPeriodicity: PaymentPeriodicity.Monthly,
-    monthlyAmount: watch<'monthlyAmount'>('monthlyAmount'),
+    monthlyAmount: rawMonthlyAmount,
     currency: selectedMemberPlan?.currency ?? Currency.Chf,
     siteTitle,
     locale,
@@ -455,6 +589,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       paymentPeriodicity: data.paymentPeriodicity,
       autoRenew: data.autoRenew,
       voucher: data.voucher,
+      goodieId: data.goodieId,
     };
 
     if (hasUser) {
@@ -496,15 +631,26 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     });
   }, console.warn);
 
+  const lastAmountResetPlanIdRef = useRef<string | null>(null);
+
   useEffect(() => {
-    if (selectedMemberPlan) {
+    if (
+      !selectedMemberPlan ||
+      lastAmountResetPlanIdRef.current === selectedMemberPlan.id
+    ) {
+      return;
+    }
+
+    lastAmountResetPlanIdRef.current = selectedMemberPlan.id;
+
+    if (!isFreeInput) {
       setValue<'monthlyAmount'>(
         'monthlyAmount',
         selectedMemberPlan.amountPerMonthTarget ||
           selectedMemberPlan.amountPerMonthMin
       );
     }
-  }, [selectedMemberPlan, setValue]);
+  }, [selectedMemberPlan, isFreeInput, setValue]);
 
   useEffect(() => {
     if (challenge.data?.challenge.challengeID) {
@@ -559,6 +705,35 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       },
     });
   }, [fetchSubscribeInfo, selectedMemberPlanId, voucher]);
+
+  useEffect(() => {
+    if (goodieId && !availableGoodies.some(({ id }) => id === goodieId)) {
+      setValue<'goodieId'>('goodieId', null);
+    }
+  }, [availableGoodies, goodieId, setValue]);
+
+  useEffect(() => {
+    if (!error || !goodieId) {
+      return;
+    }
+
+    const graphQLErrors =
+      Array.isArray(error) ? error : (
+        ((error as ApolloError).graphQLErrors ?? [])
+      );
+
+    const isSoldOut = graphQLErrors.some(
+      graphQLError => graphQLError?.extensions?.code === 'GOODIE_SOLD_OUT'
+    );
+
+    if (isSoldOut) {
+      setSoldOutGoodieIds(ids => [...ids, goodieId]);
+      setValue<'goodieId'>('goodieId', null);
+      setFieldError('goodieId', {
+        message: t('subscribe.goodie.soldOut'),
+      });
+    }
+  }, [error, goodieId, setFieldError, setValue, t]);
 
   const alreadyHasSubscription = useMemo(() => {
     if (deactivateSubscriptionId) {
@@ -636,6 +811,10 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
               {...field}
               onChange={memberPlanId => field.onChange(memberPlanId)}
               memberPlans={memberPlans.data?.memberPlans.nodes ?? []}
+              monthlyAmount={rawMonthlyAmount}
+              onMonthlyAmountChange={handleMonthlyAmountChange}
+              monthlyAmountError={errors.monthlyAmount?.message?.toString()}
+              planSettings={planSettings}
             />
           )}
         />
@@ -662,11 +841,20 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
                   {supportText}
                 </Paragraph>
 
-                <PaymentAmount
+                <AmountComponent
                   {...field}
+                  onChange={amount =>
+                    field.onChange(
+                      clampMonthlyAmount(
+                        +amount,
+                        amountPerMonthMin,
+                        selectedMemberPlan?.amountPerMonthMax ?? undefined
+                      )
+                    )
+                  }
                   error={error}
                   slug={selectedMemberPlan?.slug}
-                  donate={isDonation}
+                  donate={isDonation || isFreeInput}
                   amountPerMonthMin={amountPerMonthMin}
                   amountPerMonthMax={
                     selectedMemberPlan?.amountPerMonthMax ?? undefined
@@ -675,6 +863,12 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
                     selectedMemberPlan?.amountPerMonthTarget ?? undefined
                   }
                   currency={selectedMemberPlan?.currency ?? Currency.Chf}
+                  presetAmounts={
+                    selectedPlanSetting?.amountTileValues ?? undefined
+                  }
+                  tileLayout={
+                    selectedPlanSetting?.amountTileLayout ?? undefined
+                  }
                 />
               </SubscribeAmount>
             )}
@@ -747,63 +941,94 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
         </SubscribePayment>
       </SubscribeSection>
 
-      <VoucherSection area="voucher">
-        <Controller
-          name={'voucher'}
-          control={control}
-          render={({ field, fieldState: { error } }) => (
-            <div>
-              <div
-                css={{
-                  display: 'flex',
-                  flexFlow: 'row',
-                  alignItems: 'center',
-                  gap: 8,
-                }}
-              >
-                <TextField
+      {showGoodies && (
+        <GoodieSection area="goodie">
+          <H5 component="h2">{t('subscribe.goodie.title')}</H5>
+
+          <Controller
+            name={'goodieId'}
+            control={control}
+            render={({ field, fieldState: { error: fieldError } }) => (
+              <div>
+                <GoodiePicker
                   {...field}
-                  value={field.value ?? ''}
-                  label={'Gutscheincode'}
-                  error={!!error}
-                  autoComplete="voucher"
-                  sx={{ maxWidth: 200 }}
+                  value={field.value}
+                  onChange={goodieId => field.onChange(goodieId)}
+                  goodies={availableGoodies}
+                  allGoodies={allGoodies}
+                  disabled={!availableGoodies.length}
                 />
 
-                {!!subscribeInfo.data?.createSubscriptionInfo
-                  .discountPercent && (
-                  <Alert
-                    severity="success"
-                    icon={<MdCheck />}
-                  >
-                    {t('subscribe.voucher.discountApplied', {
-                      discountPercent:
-                        subscribeInfo.data?.createSubscriptionInfo
-                          .discountPercent * 100,
-                    })}
-                  </Alert>
-                )}
-
-                {subscribeInfo.data?.createSubscriptionInfo.voucherValid ===
-                  false && (
-                  <Alert
-                    severity="error"
-                    icon={<MdError />}
-                  >
-                    {t('subscribe.voucher.invalid')}
-                  </Alert>
+                {!!fieldError && (
+                  <FormHelperText error={!!fieldError}>
+                    {fieldError?.message}
+                  </FormHelperText>
                 )}
               </div>
+            )}
+          />
+        </GoodieSection>
+      )}
 
-              {!!error && (
-                <FormHelperText error={!!error}>
-                  {error?.message}
-                </FormHelperText>
-              )}
-            </div>
-          )}
-        />
-      </VoucherSection>
+      {showVouchers && (
+        <VoucherSection area="voucher">
+          <Controller
+            name={'voucher'}
+            control={control}
+            render={({ field, fieldState: { error } }) => (
+              <div>
+                <div
+                  css={{
+                    display: 'flex',
+                    flexFlow: 'row',
+                    alignItems: 'center',
+                    gap: 8,
+                  }}
+                >
+                  <TextField
+                    {...field}
+                    value={field.value ?? ''}
+                    label={'Gutscheincode'}
+                    error={!!error}
+                    autoComplete="voucher"
+                    sx={{ maxWidth: 200 }}
+                  />
+
+                  {!!subscribeInfo.data?.createSubscriptionInfo
+                    .discountPercent && (
+                    <Alert
+                      severity="success"
+                      icon={<MdCheck />}
+                    >
+                      {t('subscribe.voucher.discountApplied', {
+                        discountPercent:
+                          subscribeInfo.data?.createSubscriptionInfo
+                            .discountPercent * 100,
+                      })}
+                    </Alert>
+                  )}
+
+                  {subscribeInfo.data?.createSubscriptionInfo.voucherValid ===
+                    false && (
+                    <Alert
+                      severity="error"
+                      icon={<MdError />}
+                    >
+                      {t('subscribe.voucher.invalid')}
+                    </Alert>
+                  )}
+                </div>
+
+                {!!error && (
+                  <FormHelperText error={!!error}>
+                    {error?.message}
+                  </FormHelperText>
+                )}
+              </div>
+            )}
+          />
+        </VoucherSection>
+      )}
 
       {!hasUserContext && (
         <SubscribeSection area="challenge">
@@ -843,7 +1068,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
         />
       )}
 
-      {!!watch<'monthlyAmount'>('monthlyAmount') && (
+      {!!rawMonthlyAmount && (
         <SubscribeSection area="transactionFee">
           <Controller
             name={'payTransactionFee'}
@@ -879,7 +1104,10 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
             }
           }}
         >
-          {paymentText} {isDonation ? 'spenden' : 'abonnieren'}
+          {t('subscribe.button.label', {
+            paymentText,
+            type: isDonation ? 'donation' : 'subscription',
+          })}
         </SubscribeButton>
 
         {autoRenew && termsOfServiceUrl ?
@@ -906,7 +1134,10 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
           setOpenConfirm(false);
         }}
         onCancel={() => setOpenConfirm(false)}
-        submitText={`${paymentText} ${isDonation ? 'Spenden' : 'Abonnieren'}`}
+        submitText={t('subscribe.modal.confirmLabel', {
+          paymentText,
+          type: isDonation ? 'donation' : 'subscription',
+        })}
       >
         <H5
           id="modal-modal-title"

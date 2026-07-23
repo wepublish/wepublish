@@ -1,3 +1,4 @@
+import { QueryOptions } from '@apollo/client';
 import { NextPageContext } from 'next';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';
@@ -128,7 +129,10 @@ export function SubscribePage(props: SubscribePageProps) {
   );
 }
 
-SubscribePage.getInitialProps = async (ctx: NextPageContext) => {
+SubscribePage.getInitialProps = async (
+  ctx: NextPageContext,
+  extraQueries: QueryOptions<any, any>[] = []
+) => {
   const { publicRuntimeConfig } = getConfig();
   const client = getApiClient(getApiUrl(), [
     ssrAuthLink(
@@ -156,6 +160,7 @@ SubscribePage.getInitialProps = async (ctx: NextPageContext) => {
     client.query({
       query: PeerProfileDocument,
     }),
+    ...extraQueries.map(options => client.query(options)),
   ];
 
   if (sessionProps.sessionToken) {

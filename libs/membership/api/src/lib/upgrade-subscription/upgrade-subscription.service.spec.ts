@@ -3,6 +3,7 @@ import { Currency, PaymentPeriodicity, PrismaClient } from '@prisma/client';
 import { UpgradeSubscriptionService } from './upgrade-subscription.service';
 
 import { MemberContextService } from '../legacy/member-context.service';
+import { GoodieService } from '../goodie/goodie.service';
 import { PaymentsService } from '@wepublish/payment/api';
 
 jest.mock('../legacy/member-context.service');
@@ -27,6 +28,10 @@ describe('UpgradeSubscriptionService', () => {
 
   let paymentServiceMock: {
     createPaymentWithProvider: jest.Mock;
+  };
+
+  let goodieServiceMock: {
+    getValidGoodie: jest.Mock;
   };
 
   beforeAll(() => {
@@ -56,6 +61,9 @@ describe('UpgradeSubscriptionService', () => {
     paymentServiceMock = {
       createPaymentWithProvider: jest.fn(),
     };
+    goodieServiceMock = {
+      getValidGoodie: jest.fn(),
+    };
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -71,6 +79,10 @@ describe('UpgradeSubscriptionService', () => {
         {
           provide: PrismaClient,
           useValue: prismaMock,
+        },
+        {
+          provide: GoodieService,
+          useValue: goodieServiceMock,
         },
       ],
     }).compile();

@@ -15,7 +15,7 @@ export const ListViewContainer = styled.div`
 `;
 
 export const ListViewHeader = styled.div`
-  grid-column: 1 2;
+  grid-column: 1 / 2;
 `;
 
 export const ListViewActions = styled.div`

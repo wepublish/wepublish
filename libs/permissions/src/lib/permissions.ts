@@ -532,6 +532,30 @@ export const CanCancelSubscription: Permission = {
   deprecated: false,
 };
 
+export const CanGetGoodie: Permission = {
+  id: 'CAN_GET_GOODIE',
+  description: 'Allows to get a goodie',
+  deprecated: false,
+};
+
+export const CanCreateGoodie: Permission = {
+  id: 'CAN_CREATE_GOODIE',
+  description: 'Allows to create a goodie',
+  deprecated: false,
+};
+
+export const CanUpdateGoodie: Permission = {
+  id: 'CAN_UPDATE_GOODIE',
+  description: 'Allows to update a goodie',
+  deprecated: false,
+};
+
+export const CanDeleteGoodie: Permission = {
+  id: 'CAN_DELETE_GOODIE',
+  description: 'Allows to delete a goodie',
+  deprecated: false,
+};
+
 export const CanGetVoucher: Permission = {
   id: 'CAN_GET_VOUCHER',
   description: 'Allows to get a voucher',
@@ -1185,6 +1209,10 @@ export const AllPermissions: Permission[] = [
   CanGetSubscription,
   CanGetSubscriptions,
   CanDeleteSubscription,
+  CanGetGoodie,
+  CanCreateGoodie,
+  CanUpdateGoodie,
+  CanDeleteGoodie,
   CanGetVoucher,
   CanCreateVoucher,
   CanUpdateVoucher,

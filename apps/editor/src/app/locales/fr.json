@@ -218,7 +218,6 @@
         "updatedAtDate": "{{updatedAtDate, ccc PP pp}}"
       }
     },
-
     "authors": {
       "overview": {
         "action": "Action",
@@ -407,12 +406,41 @@
         "selectMemberPlansSelectionHintAll": "Sans sélection, tous les plans actifs sont affichés.",
         "selectFields": "Champs de saisie",
         "selectFieldsSelectionHint": "L’email et le nom de famille sont toujours demandés. L’ordre n’a pas d’importance",
+        "selectSections": "Fonctions avancées",
+        "showGoodies": "Afficher la sélection de goodies",
+        "showVouchers": "Afficher le champ de bon",
+        "goodieMinValue": {
+          "label": "Montant minimum du goodie :"
+        },
+        "hideRepeatGoodieOnUpgrade": "Lors de l’upgrade : pas de nouveau goodie",
         "FirstName": "Prénom",
         "Birthday": "Date de naissance",
         "Address": "Adresse",
         "EmailRepeated": "Répéter l’email",
         "Password": "Mot de passe",
-        "PasswordRepeated": "Répéter le mot de passe"
+        "PasswordRepeated": "Répéter le mot de passe",
+        "renderStyles": {
+          "Card": "Tuile de plan (montant fixe)",
+          "Slider": "Tuile de plan + curseur de montant",
+          "CardAndSlider": "Tuile de plan avec montant affiché + curseur",
+          "CardFreeInput": "Tuile de plan avec saisie libre du montant",
+          "AmountTiles": "Tuiles de montant (un seul plan)"
+        },
+        "renderStylesHeading": "Ordre et affichage des plans",
+        "renderStyleRules": {
+          "amountTilesSingle": "Les tuiles de montant ne sont disponibles que si un seul plan est sélectionné."
+        },
+        "amountTileValues": {
+          "hint": "Montants des tuiles (en francs). Laisser vide pour les valeurs par défaut : 10, 15, 20.",
+          "placeholder": "p.ex. 10 15 20"
+        },
+        "amountTileLayout": {
+          "hint": "Disposition des tuiles sur mobile",
+          "Narrow": "Étroit (2 tuiles par ligne)",
+          "Wide": "Large (1 tuile par ligne, grandes tuiles)"
+        },
+        "planAmountsTitle": "Montant minimum / cible / maximum par mois (en francs)",
+        "defaultPlanTitle": "Sélectionné par défaut — ce plan est présélectionné après le chargement de la page."
       },
       "image": {
         "label": "Image",
@@ -841,9 +869,17 @@
         "noInvoices": "Pas de factures."
       },
       "payManually": "Payer manuellement",
-      "total": "Montant facturé",
-      "unpaid": "(non payé)",
-      "userNotLoaded": "Erreur inattendue : vos données d'utilisateur trice n'ont pas pu être chargées."
+      "total": "Montant",
+      "unpaid": "non payé",
+      "userNotLoaded": "Erreur inattendue : vos données d'utilisateur trice n'ont pas pu être chargées.",
+      "table": {
+        "date": "Date",
+        "description": "Description",
+        "goodie": "Goodie",
+        "status": "Statut",
+        "action": "Action",
+        "idCopied": "ID de facture copié"
+      }
     },
     "linkPageBreakEditPanel": {
       "close": "Fermer",
@@ -1284,6 +1320,8 @@
       },
       "link": {
         "title": "Lier le texte avec",
+        "style": "Style du lien",
+        "noStyle": "Aucun",
         "type": "Type",
         "url": "URL",
         "web": "Web",
@@ -1477,7 +1515,7 @@
       "totpDisabled": "L'authentification à deux facteurs n'est pas encore configurée. L'utilisateur sera invité à la configurer lors de sa prochaine connexion à l'éditeur.",
       "totpExemptInfo": "Cet utilisateur est exempté de l'exigence d'authentification à deux facteurs.",
       "totpExemptLabel": "Exempter de l'exigence 2FA",
-      "totpExemptWarning": "\u26a0\ufe0f AVERTISSEMENT DE SÉCURITÉ \u26a0\ufe0f\n\nVous êtes sur le point de DÉSACTIVER l'exigence d'authentification à deux facteurs pour cet utilisateur !\n\nCela réduit considérablement la sécurité de ce compte. L'utilisateur pourra se connecter à l'éditeur avec un simple mot de passe, sans second facteur.\n\nCela ne devrait être utilisé que dans des circonstances exceptionnelles.\n\nÊtes-vous sûr de vouloir continuer ?",
+      "totpExemptWarning": "⚠️ AVERTISSEMENT DE SÉCURITÉ ⚠️\n\nVous êtes sur le point de DÉSACTIVER l'exigence d'authentification à deux facteurs pour cet utilisateur !\n\nCela réduit considérablement la sécurité de ce compte. L'utilisateur pourra se connecter à l'éditeur avec un simple mot de passe, sans second facteur.\n\nCela ne devrait être utilisé que dans des circonstances exceptionnelles.\n\nÊtes-vous sûr de vouloir continuer ?",
       "resetPassword": "Réinitialiser le mot de passe",
       "resetPasswordFor": "Réinitialiser le mot de passe de {{userName}}",
       "selectUserImage": "Choisir une photo de profil",
@@ -1704,6 +1742,7 @@
         "selectMemberPlans": "Choisir des plans d'abonnement",
         "countSubscriptionsFrom": "Inclure uniquement les abonnements payés à partir de la date",
         "countSubscriptionsUntil": "Inclure uniquement les abonnements payés jusqu'à la date",
+        "endsAt": "Date de fin de la campagne",
         "revenue": "Déjà CHF {{revenue}} financé",
         "goals": "Objectifs",
         "subscriptions": "Déjà {{subscriptions}} abonnés",
@@ -1872,6 +1911,33 @@
         "areYouSure": "Êtes-vous sûr(e) ?",
         "areYouSureBody": "Le bon de réduction \"{{ voucher }}\" sera définitivement supprimé et cette action est irréversible.",
         "areYouSureConfirmation": "Supprimer le bon de réduction"
+      }
+    },
+    "goodie": {
+      "navbar": "Goodies",
+      "form": {
+        "createTitle": "Créer un goodie",
+        "editTitle": "Modifier le goodie \"{{ goodie }}\"",
+        "name": "Nom",
+        "description": "Description",
+        "stock": "Stock",
+        "active": "Actif",
+        "image": "Image",
+        "memberPlans": "Plans d'abonnement"
+      },
+      "overview": {
+        "title": "Goodies",
+        "createGoodie": "Nouveau goodie",
+        "name": "Nom",
+        "memberPlans": "Plans d'abonnement",
+        "stock": "Stock",
+        "availableStock": "Disponible",
+        "active": "Actif",
+        "createdAt": "Créé le",
+        "unlimited": "∞",
+        "areYouSure": "Êtes-vous sûr(e) ?",
+        "areYouSureBody": "Le goodie \"{{ goodie }}\" sera définitivement supprimé et cette action est irréversible.",
+        "areYouSureConfirmation": "Supprimer le goodie"
       }
     },
     "paymentMethodEditPanel": {
@@ -2309,6 +2375,9 @@
         "Event": "Événement",
         "Custom": "Personnalisé"
       }
+    },
+    "columnConfigurator": {
+      "title": "Afficher/masquer les colonnes"
     }
   }
 }

@@ -89,6 +89,7 @@ import {
   BuilderInvoiceListItemProps,
   BuilderInvoiceListProps,
   BuilderMemberPlanItemProps,
+  BuilderGoodiePickerProps,
   BuilderMemberPlanPickerProps,
   BuilderPaymentAmountProps,
   BuilderPaymentMethodPickerProps,
@@ -124,6 +125,7 @@ import {
 import {
   BuilderImageUploadProps,
   BuilderPersonalDataFormProps,
+  BuilderUserFormProps,
 } from './user.interface';
 import { BuilderBlockStyleProps } from './block-styles.interface';
 import { BuilderContentWrapperProps } from './content-wrapper.interface';
@@ -173,10 +175,12 @@ export type WebsiteBuilderProps = {
   LoginForm: ComponentType<BuilderLoginFormProps>;
   RegistrationForm: ComponentType<BuilderRegistrationFormProps>;
   PersonalDataForm: ComponentType<BuilderPersonalDataFormProps>;
+  UserForm: ComponentType<BuilderUserFormProps>;
   SubscriptionList: ComponentType<BuilderSubscriptionListProps>;
   SubscriptionListItem: ComponentType<BuilderSubscriptionListItemProps>;
   InvoiceList: ComponentType<BuilderInvoiceListProps>;
   InvoiceListItem: ComponentType<BuilderInvoiceListItemProps>;
+  GoodiePicker: ComponentType<BuilderGoodiePickerProps>;
   MemberPlanPicker: ComponentType<BuilderMemberPlanPickerProps>;
   MemberPlanItem: ComponentType<BuilderMemberPlanItemProps>;
   PaymentAmount: ComponentType<BuilderPaymentAmountProps>;
@@ -287,6 +291,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   Subscribe: NoComponent,
   Upgrade: NoComponent,
   TransactionFee: NoComponent,
+  GoodiePicker: NoComponent,
   MemberPlanPicker: NoComponent,
   MemberPlanItem: NoComponent,
   PaymentAmount: NoComponent,
@@ -324,6 +329,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   LoginForm: NoComponent,
   RegistrationForm: NoComponent,
   PersonalDataForm: NoComponent,
+  UserForm: NoComponent,
   ContentWrapper: NoComponent,
   Paywall: NoComponent,
   TextToIcon: NoComponent,
