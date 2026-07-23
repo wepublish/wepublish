@@ -20,7 +20,6 @@ import { SettingModule } from '@wepublish/settings/api';
 import { JwksController } from './jwks.controller';
 import { TotpService } from './totp.service';
 import { TotpResolver } from './totp.resolver';
-import { WebsiteTokenController } from './website-token.controller';
 import {
   SCOPED_JWT_VERIFIER,
   ScopedJwtGuard,
@@ -53,7 +52,7 @@ export class SessionModule {
       module: SessionModule,
       imports: options.imports || [],
       exports: [SessionService, JwtService, ScopedJwtGuard],
-      controllers: [JwksController, WebsiteTokenController],
+      controllers: [JwksController],
       providers: [
         ...this.createAsyncProviders(options),
         {

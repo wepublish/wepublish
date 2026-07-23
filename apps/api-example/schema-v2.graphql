@@ -2239,7 +2239,7 @@ type Mutation {
   updateVoucher(code: String, discountPercent: Int, id: String!, memberPlanId: String, validFrom: DateTime, validTo: DateTime): Voucher!
 
   """Updates the website settings."""
-  updateWebsiteSettings(ads: WebsiteAdsInput, analytics: WebsiteAnalyticsInput, fonts: [WebsiteRemoteFontInput!], mail: WebsiteMailInput, theme: JSONObject): WebsiteSettings!
+  updateWebsiteSettings(ads: WebsiteAdsInput, analytics: WebsiteAnalyticsInput, fonts: [WebsiteRemoteFontInput!], theme: JSONObject): WebsiteSettings!
 
   """"""
   upgradeUserSubscription(failureURL: String, memberPlanId: String!, monthlyAmount: Int!, paymentMethodId: String!, subscriptionId: String!, successURL: String): Payment!
@@ -4430,14 +4430,6 @@ input WebsiteAnalyticsInput {
   plausible: KeyEnabledInput!
 }
 
-type WebsiteMail {
-  mailchimp: KeyEnabled
-}
-
-input WebsiteMailInput {
-  mailchimp: KeyEnabledInput!
-}
-
 type WebsiteRemoteFont {
   name: String!
   style: [FontStyle!]!
@@ -4454,7 +4446,6 @@ type WebsiteSettings {
   ads: WebsiteAds!
   analytics: WebsiteAnalytics!
   fonts: [WebsiteRemoteFont!]!
-  mail: WebsiteMail!
   theme: JSONObject!
 }
 

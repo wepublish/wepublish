@@ -147,6 +147,8 @@ export const typographySchema = z.object({
   body1: typographyItem,
   body2: typographyItem,
   caption: typographyItem,
+  subtitle1: typographyItem,
+  subtitle2: typographyItem,
 
   teaserPretitle: typographyItem,
   teaserTitle: typographyItem,
@@ -218,7 +220,7 @@ export const normalizeValues = (
     ) {
       const val = parseToRgb(value) as RgbaColor;
 
-      return `#${decimalToHex(val.red)}${decimalToHex(val.green)}${decimalToHex(val.blue)}${decimalToHex((val.alpha ?? 1) * 100)}`;
+      return `#${decimalToHex(val.red)}${decimalToHex(val.green)}${decimalToHex(val.blue)}${decimalToHex(Math.round((val.alpha ?? 1) * 255))}`;
     }
 
     if (value.startsWith('#')) {

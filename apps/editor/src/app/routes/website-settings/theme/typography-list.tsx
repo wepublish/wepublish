@@ -184,6 +184,20 @@ export const TypographyList = memo(({ name }: TypographyListProps) => {
 
       <TypographyListItem
         parentName={name}
+        name={`${name}.subtitle1`}
+        onOpen={handleOpenTypography('subtitle1')}
+        isOpen={openTypography === 'subtitle1'}
+      />
+
+      <TypographyListItem
+        parentName={name}
+        name={`${name}.subtitle2`}
+        onOpen={handleOpenTypography('subtitle2')}
+        isOpen={openTypography === 'subtitle2'}
+      />
+
+      <TypographyListItem
+        parentName={name}
         name={`${name}.teaserPretitle`}
         onOpen={handleOpenTypography('teaserPretitle')}
         isOpen={openTypography === 'teaserPretitle'}

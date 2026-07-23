@@ -2195,15 +2195,6 @@
           "proLocator": "You can find it in the Menu > Administration > Site > ID of your administration panel"
         }
       },
-      "mail": {
-        "title": "Mail",
-        "mailchimp": {
-          "title": "Mailchimp",
-          "enable": "Enable Mailchimp",
-          "mailchimp": "<url>Mailchimp</url> is an email marketing platform that lets you manage newsletters and subscriber lists. This allows the website access to your Newsletters and being able to display them.",
-          "apiKeyLocator": "You can find it in the <url>API keys section</url> of your Mailchimp account. Make sure that it is a Mailchimp and not Mandrill key."
-        }
-      },
       "ads": {
         "title": "Ads",
         "sparkLoop": {
@@ -2258,6 +2249,8 @@
           "dark": "Dark",
           "contrastText": "Text color",
           "background": "Background",
+          "default": "Default",
+          "paper": "Paper",
           "backgroundDefault": "The background color of the website",
           "backgroundPaper": "Background color of raised panels like dialogs and modals",
           "text": "Text",
@@ -2284,6 +2277,8 @@
           "body1": "Body 1",
           "body2": "Body 2",
           "caption": "Caption",
+          "subtitle1": "Subtitle 1",
+          "subtitle2": "Subtitle 2",
           "teaserPretitle": "Teaser Pre-title",
           "teaserTitle": "Teaser Title",
           "teaserLead": "Teaser Lead",

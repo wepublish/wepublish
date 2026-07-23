@@ -3304,7 +3304,6 @@ export type MutationUpdateWebsiteSettingsArgs = {
   ads?: InputMaybe<WebsiteAdsInput>;
   analytics?: InputMaybe<WebsiteAnalyticsInput>;
   fonts?: InputMaybe<Array<WebsiteRemoteFontInput>>;
-  mail?: InputMaybe<WebsiteMailInput>;
   theme?: InputMaybe<Scalars['JSONObject']>;
 };
 
@@ -6059,15 +6058,6 @@ export type WebsiteAnalyticsInput = {
   plausible: KeyEnabledInput;
 };
 
-export type WebsiteMail = {
-  __typename?: 'WebsiteMail';
-  mailchimp?: Maybe<KeyEnabled>;
-};
-
-export type WebsiteMailInput = {
-  mailchimp: KeyEnabledInput;
-};
-
 export type WebsiteRemoteFont = {
   __typename?: 'WebsiteRemoteFont';
   name: Scalars['String'];
@@ -6086,7 +6076,6 @@ export type WebsiteSettings = {
   ads: WebsiteAds;
   analytics: WebsiteAnalytics;
   fonts: Array<WebsiteRemoteFont>;
-  mail: WebsiteMail;
   theme: Scalars['JSONObject'];
 };
 
