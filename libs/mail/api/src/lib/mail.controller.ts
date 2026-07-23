@@ -1,5 +1,5 @@
 import { Logger } from '@nestjs/common';
-import { MailLogState, PrismaClient, User } from '@prisma/client';
+import { MailLogState, MailLogType, PrismaClient, User } from '@prisma/client';
 import { randomUUID } from 'crypto';
 import { MailContext } from './mail-context';
 
@@ -7,11 +7,20 @@ export enum mailLogType {
   SubscriptionFlow,
   UserFlow,
   SystemMail,
+  Manual,
 }
+
+/** Map the internal send-type enum to the persisted MailLog origin. */
+const MAIL_LOG_TYPE_MAP: Record<mailLogType, MailLogType> = {
+  [mailLogType.SubscriptionFlow]: MailLogType.subscriptionFlow,
+  [mailLogType.UserFlow]: MailLogType.userFlow,
+  [mailLogType.SystemMail]: MailLogType.systemMail,
+  [mailLogType.Manual]: MailLogType.manual,
+};
 
 export type MailControllerConfig = {
   daysAwayFromEnding?: number | null;
-  externalMailTemplateId: string;
+  mailTemplateId: string;
   recipient: User;
   isRetry?: boolean;
   periodicJobRunDate?: Date | null;
@@ -19,6 +28,8 @@ export type MailControllerConfig = {
   mailType: mailLogType;
   /** Override the auto-generated login JWT with a custom token (e.g. password reset). */
   jwtOverride?: string;
+  /** Set for mails produced by a manual bulk send job. */
+  mailSendJobId?: string | null;
 };
 
 export class MailController {
@@ -39,7 +50,7 @@ export class MailController {
       this.config.periodicJobRunDate ?
         this.config.periodicJobRunDate.toISOString()
       : 'null'
-    }-${this.config.daysAwayFromEnding}-${this.config.externalMailTemplateId}-${
+    }-${this.config.daysAwayFromEnding}-${this.config.mailTemplateId}-${
       this.config.recipient.id
     }`;
   }
@@ -98,9 +109,9 @@ export class MailController {
 
     const mailLogId = randomUUID();
 
-    await this.mailContext.sendRemoteTemplateDirect({
+    const { subject } = await this.mailContext.sendComposedMail({
       mailLogID: mailLogId,
-      remoteTemplate: this.config.externalMailTemplateId,
+      mailTemplateId: this.config.mailTemplateId,
       recipient: this.config.recipient.email,
       data: await this.buildData(),
     });
@@ -117,11 +128,16 @@ export class MailController {
         sentDate: new Date(),
         mailProviderID: this.mailContext.mailProvider!.id || '',
         mailIdentifier: this.generateMailIdentifier(),
+        type: MAIL_LOG_TYPE_MAP[this.config.mailType],
+        subject,
         mailTemplate: {
           connect: {
-            externalMailTemplateId: this.config.externalMailTemplateId,
+            id: this.config.mailTemplateId,
           },
         },
+        ...(this.config.mailSendJobId ?
+          { mailSendJob: { connect: { id: this.config.mailSendJobId } } }
+        : {}),
       },
     });
   }

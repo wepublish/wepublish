@@ -1,4 +1,4 @@
-import { MailLogState, MailProviderType, PrismaClient } from '@prisma/client';
+import { MailLogState, MailProviderType } from '@prisma/client';
 import { NextHandleFunction } from 'connect';
 import express from 'express';
 
@@ -13,8 +13,6 @@ export interface SendMailProps {
   subject: string;
   message?: string;
   messageHtml?: string;
-  template?: string;
-  templateData?: Record<string, any>;
 }
 
 export interface MailLogStatus {
@@ -23,28 +21,16 @@ export interface MailLogStatus {
   mailData?: string;
 }
 
-export interface MailProviderTemplate {
-  name: string;
-  uniqueIdentifier: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-export type WithExternalId = {
-  externalMailTemplateId: string;
-};
-
 export enum MailTemplateStatus {
   Ok = 'ok',
-  RemoteMissing = 'remoteMissing',
   Unused = 'unused',
   Error = 'error',
 }
 
-export type WithUrlAndStatus<T> = T & {
-  url: string;
-  status: MailTemplateStatus;
-};
+export interface MailProviderTemplateContent {
+  html: string;
+  subject?: string;
+}
 
 export class MailProviderError extends Error {}
 
@@ -57,15 +43,12 @@ export interface MailProvider {
 
   sendMail(props: SendMailProps): Promise<void>;
 
-  getTemplates(): Promise<MailProviderTemplate[]>;
-
-  getTemplateUrl(template: WithExternalId): Promise<string>;
+  /** Fetch a template's content from the remote provider (for import/migration). */
+  getTemplateContent(
+    externalMailTemplateId: string
+  ): Promise<MailProviderTemplateContent>;
 
   getName(): Promise<string>;
 
-  initDatabaseConfiguration(
-    id: string,
-    type: MailProviderType,
-    prisma: PrismaClient
-  ): Promise<void>;
+  initDatabaseConfiguration(type: MailProviderType): Promise<void>;
 }

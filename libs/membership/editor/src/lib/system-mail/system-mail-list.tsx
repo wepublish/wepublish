@@ -20,6 +20,7 @@ import { TypeAttributes } from 'rsuite/esm/@types/common';
 import { MdEmail, MdLink, MdLogin, MdPassword } from 'react-icons/md';
 import { RiTestTubeLine } from 'react-icons/ri';
 import { DEFAULT_MUTATION_OPTIONS, DEFAULT_QUERY_OPTIONS } from '../common';
+import { formatTemplateLabel } from '../mail-template/mail-placeholders';
 import {
   createCheckedPermissionComponent,
   ListViewContainer,
@@ -111,16 +112,32 @@ function SystemMailList() {
                     <SelectPicker
                       style={{ width: '100%' }}
                       data={mailTemplates.mailTemplates.map(mailTemplate => ({
-                        label: `${mailTemplate.remoteMissing ? '⚠' : ''} ${mailTemplate.name}`,
+                        label: formatTemplateLabel(
+                          mailTemplate.name,
+                          mailTemplate.context,
+                          (k, f) => t(k, f)
+                        ),
                         value: mailTemplate.id,
                       }))}
-                      cleanable={false}
+                      cleanable
+                      placeholder={t(
+                        'systemMails.noTemplate',
+                        'No template (do not send)'
+                      )}
                       defaultValue={systemMail.mailTemplate?.id}
                       onSelect={(value: string) =>
                         updateSystemMail({
                           variables: {
                             event: systemMail.event,
                             mailTemplateId: value,
+                          },
+                        })
+                      }
+                      onClean={() =>
+                        updateSystemMail({
+                          variables: {
+                            event: systemMail.event,
+                            mailTemplateId: null,
                           },
                         })
                       }

@@ -54,6 +54,16 @@ services:
     volumes:
       - storage_data:/data
 
+  mailpit:
+    image: axllent/mailpit:latest
+    # SMTP endpoint on 1025 (the app connects via MAIL_SMTP_HOST=mailpit),
+    # web UI on 8025 to read caught mails.
+    ports:
+      - 1025:1025
+      - 8025:8025
+    networks:
+      - default
+
 volumes:
   database_data:
   storage_data:

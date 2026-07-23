@@ -493,7 +493,7 @@ export class MemberContext implements MemberContextInterface {
 
       if (remoteTemplate) {
         await this.mailContext.sendMail({
-          externalMailTemplateId: remoteTemplate,
+          mailTemplateId: remoteTemplate,
           recipient: user,
           optionalData: {
             invoice,
@@ -1107,7 +1107,7 @@ export class MemberContext implements MemberContextInterface {
     }
 
     await this.mailContext.sendMail({
-      externalMailTemplateId: remoteTemplate,
+      mailTemplateId: remoteTemplate,
       recipient: user,
       optionalData: {
         subscription,

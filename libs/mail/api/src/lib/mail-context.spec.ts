@@ -15,13 +15,13 @@ describe('MailContext', () => {
       const prismaMock = {
         subscriptionInterval: {
           findMany: jest.fn(() => [
-            { mailTemplate: { externalMailTemplateId: 'renewal-success' } },
+            { mailTemplate: { id: 'renewal-success' } },
             { mailTemplate: null },
           ]),
         },
         userFlowMail: {
           findMany: jest.fn(() => [
-            { mailTemplate: { externalMailTemplateId: 'login-link' } },
+            { mailTemplate: { id: 'login-link' } },
             { mailTemplate: null },
           ]),
         },

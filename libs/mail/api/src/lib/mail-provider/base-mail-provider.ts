@@ -1,10 +1,9 @@
 import {
   MailLogStatus,
   MailProvider,
-  MailProviderTemplate,
+  MailProviderTemplateContent,
   SendMailProps,
   WebhookForSendMailProps,
-  WithExternalId,
 } from './mail-provider.interface';
 import bodyParser from 'body-parser';
 import { NextHandleFunction } from 'connect';
@@ -46,8 +45,9 @@ export abstract class BaseMailProvider implements MailProvider {
     props: WebhookForSendMailProps
   ): Promise<MailLogStatus[]>;
   abstract sendMail(props: SendMailProps): Promise<void>;
-  abstract getTemplates(): Promise<MailProviderTemplate[]>;
-  abstract getTemplateUrl(template: WithExternalId): Promise<string>;
+  abstract getTemplateContent(
+    externalMailTemplateId: string
+  ): Promise<MailProviderTemplateContent>;
   abstract getName(): Promise<string>;
   async getConfig(): Promise<SettingMailProvider | null> {
     return await new MailProviderConfig(
@@ -57,8 +57,16 @@ export abstract class BaseMailProvider implements MailProvider {
     ).getConfig();
   }
   public async initDatabaseConfiguration(
-    type: MailProviderType
+    type: MailProviderType,
+    defaults?: Partial<
+      Omit<
+        SettingMailProvider,
+        'id' | 'type' | 'createdAt' | 'modifiedAt' | 'lastLoadedAt'
+      >
+    >
   ): Promise<void> {
+    // `defaults` seed a fresh row (e.g. local dev SMTP → Mailpit). Existing
+    // rows are left untouched (`update: {}`) so editor edits persist.
     await this.prisma.settingMailProvider.upsert({
       where: {
         id: this.id,
@@ -66,6 +74,7 @@ export abstract class BaseMailProvider implements MailProvider {
       create: {
         id: this.id,
         type,
+        ...defaults,
       },
       update: {},
     });

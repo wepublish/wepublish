@@ -27,9 +27,11 @@ import {
 } from '@wepublish/editor/api';
 import { ImportableEventListView } from '@wepublish/event/import/editor';
 import {
+  MailLogList,
+  MailSendPage,
+  MailTemplateEdit,
   MailTemplateList,
   MemberPlanEdit,
-  PlaceholderList,
   SubscriptionFlowList,
   SystemMailList,
 } from '@wepublish/membership/editor';
@@ -974,10 +976,18 @@ export function App() {
               }
             />
             <Route
-              path="mailtemplates/placeholders"
+              path="mailtemplates/create"
               element={
                 <Base>
-                  <PlaceholderList />
+                  <MailTemplateEdit />
+                </Base>
+              }
+            />
+            <Route
+              path="mailtemplates/edit/:id"
+              element={
+                <Base>
+                  <MailTemplateEdit />
                 </Base>
               }
             />
@@ -986,6 +996,22 @@ export function App() {
               element={
                 <Base>
                   <SystemMailList />
+                </Base>
+              }
+            />
+            <Route
+              path="mailsend"
+              element={
+                <Base>
+                  <MailSendPage />
+                </Base>
+              }
+            />
+            <Route
+              path="maillog"
+              element={
+                <Base>
+                  <MailLogList />
                 </Base>
               }
             />

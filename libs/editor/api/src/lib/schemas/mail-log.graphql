@@ -1,0 +1,35 @@
+fragment FullMailLog on MailLogModel {
+  id
+  createdAt
+  sentDate
+  state
+  type
+  subject
+  mailProviderID
+  mailSendJobId
+  recipient {
+    id
+    email
+    name
+    firstName
+  }
+  mailTemplate {
+    id
+    name
+  }
+}
+
+query MailLogs($filter: MailLogFilter, $skip: Int, $take: Int) {
+  mailLogs(filter: $filter, skip: $skip, take: $take) {
+    nodes {
+      ...FullMailLog
+    }
+    totalCount
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+      startCursor
+      endCursor
+    }
+  }
+}

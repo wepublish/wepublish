@@ -51,8 +51,9 @@ describe('SubscriptionFlowService', () => {
     id: 'mail-1',
     name: 'Test Mail',
     description: 'Test Mail Description',
-    remoteMissing: false,
-    externalMailTemplateId: 'ext-1',
+    subject: 'Test Subject',
+    htmlContent: '<p>Test</p>',
+    textContent: null,
     createdAt: new Date(),
     modifiedAt: new Date(),
   };

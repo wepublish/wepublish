@@ -4,8 +4,11 @@ general:
   bcryptHashCostFactor: 12
   urlAdapter: default
 mailProvider:
-  id: slackmail # allowed is mailchimp/mailgun/slackmail
-  type: slackmail # allowed mailchimp/slackmail
+  id: smtp # allowed is mailchimp/mailgun/slackmail/smtp
+  type: smtp # allowed mailchimp/mailgun/slackmail/smtp
+  fromAddress: no-reply@wepublish.local
+  # SMTP defaults to localhost:1025 (Mailpit). docker-compose overrides the
+  # host to `mailpit` via the MAIL_SMTP_HOST env var on the api service.
 paymentProviders:
   - type: payrexx # Allowed are stripe-checkout / stripe / payrexx / bexio
     id: payrexx # Required for stripe-checkout / stripe / payrexx /bexio
