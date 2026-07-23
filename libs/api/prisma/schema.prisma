@@ -282,6 +282,7 @@ model Image {
   banners               Banner[]
   peerProfileLogo       PeerProfile[] @relation("logo")
   peerProfileSquareLogo PeerProfile[] @relation("squareLogo")
+  goodies               Goodie[]
 
   @@index([createdAt])
   @@index([modifiedAt])
@@ -477,6 +478,9 @@ model InvoiceItem {
   voucher   Voucher? @relation(fields: [voucherId], references: [id], onDelete: SetNull)
   voucherId String?
 
+  goodie   Goodie? @relation(fields: [goodieId], references: [id], onDelete: SetNull)
+  goodieId String?
+
   @@map("invoices.items")
 }
 
@@ -611,6 +615,7 @@ model MemberPlan {
   crowdfundings Crowdfunding[]
   paywalls      PaywallMemberplan[]
   vouchers      Voucher[]
+  goodies       Goodie[]
 
   @@index([name])
   @@map("member.plans")
@@ -1940,4 +1945,23 @@ model Voucher {
 
   @@unique([code, memberPlanId])
   @@map("vouchers")
+}
+
+model Goodie {
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  name        String
+  description Json?
+  stock       Int?
+  active      Boolean @default(true)
+
+  imageID String?
+  image   Image?  @relation(fields: [imageID], references: [id], onDelete: SetNull)
+
+  memberPlans  MemberPlan[]
+  invoiceItems InvoiceItem[]
+
+  @@map("goodies")
 }

@@ -181,6 +181,15 @@ export class SubscriptionService {
           select: unselectPassword,
         },
         paymentMethod: true,
+        invoices: {
+          include: {
+            items: {
+              include: {
+                goodie: true,
+              },
+            },
+          },
+        },
       },
     });
 

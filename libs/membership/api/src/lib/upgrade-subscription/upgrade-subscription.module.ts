@@ -5,6 +5,7 @@ import { UpgradeSubscriptionResolver } from './upgrade-subscription.resolver';
 import { MemberPlanModule } from '@wepublish/member-plan/api';
 import { UpgradeSubscriptionService } from './upgrade-subscription.service';
 import { MemberContextModule } from '../legacy/member-context.module';
+import { GoodieModule } from '../goodie/goodie.module';
 import { PaymentMethodModule, PaymentsModule } from '@wepublish/payment/api';
 
 @Module({
@@ -13,6 +14,7 @@ import { PaymentMethodModule, PaymentsModule } from '@wepublish/payment/api';
     MemberPlanModule,
     PaymentMethodModule,
     MemberContextModule,
+    GoodieModule,
     PaymentsModule,
   ],
   providers: [UpgradeSubscriptionResolver, UpgradeSubscriptionService],

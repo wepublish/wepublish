@@ -57,6 +57,7 @@ import {
   MembershipModule,
   SubscriptionModule,
   UpgradeSubscriptionModule,
+  GoodieModule,
   VoucherModule,
 } from '@wepublish/membership/api';
 import { NavigationModule } from '@wepublish/navigation/api';
@@ -402,6 +403,7 @@ import { readConfig } from '../readConfig';
     ApiModule,
     MembershipModule,
     InvoiceModule,
+    GoodieModule,
     VoucherModule,
     DashboardModule,
     AuthenticationModule,

@@ -58,6 +58,7 @@ export const subscribeSchema = z.object({
   ]),
   payTransactionFee: z.boolean(),
   voucher: z.string().nullish(),
+  goodieId: z.string().nullish(),
 });
 
 export const SubscribeWrapper = styled('form')`
@@ -130,6 +131,10 @@ export const SubscribeNarrowSection = styled(SubscribeSection)`
 `;
 
 export const VoucherSection = styled(SubscribeNarrowSection)`
+  display: none;
+`;
+
+export const GoodieSection = styled(SubscribeNarrowSection)`
   display: none;
 `;
 
@@ -233,6 +238,7 @@ export const useDiscountText = ({
 export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   defaults,
   memberPlans,
+  showGoodies = false,
   challenge,
   userSubscriptions,
   userInvoices,
@@ -247,12 +253,15 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   transactionFee = amount => roundUpTo5Cents((amount * 0.02) / 100) * 100,
   transactionFeeText,
   returningUserId,
+  filterGoodies,
+  goodieMinValue,
   fetchSubscribeInfo,
   subscribeInfo,
 }: BuilderSubscribeProps<T>) => {
   const {
     meta: { locale, siteTitle },
     elements: { Alert, H5, Paragraph, TextField },
+    GoodiePicker,
     MemberPlanPicker,
     PaymentMethodPicker,
     PeriodicityPicker,
@@ -335,34 +344,43 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     ]
   );
 
-  const { control, handleSubmit, watch, setValue, resetField } = useForm<
-    z.infer<typeof loggedInSchema> | z.infer<typeof loggedOutSchema>
-  >({
-    resolver: zodResolver(schem),
-    defaultValues: {
-      ...defaults,
-      voucher: '',
-      monthlyAmount: 0,
-      autoRenew: true,
-      payTransactionFee: false,
-      memberPlanId:
-        defaults?.memberPlanSlug ?
-          memberPlans.data?.memberPlans.nodes.find(
-            memberPlan => memberPlan.slug === defaults?.memberPlanSlug
-          )?.id
-        : memberPlans.data?.memberPlans.nodes[0]?.id,
-      paymentMethodId:
-        memberPlans.data?.memberPlans.nodes[0]?.availablePaymentMethods[0]
-          ?.paymentMethods[0]?.id,
-      paymentPeriodicity:
-        memberPlans.data?.memberPlans.nodes[0]?.availablePaymentMethods[0]
-          ?.paymentPeriodicities[0],
-    },
-    mode: 'onTouched',
-    reValidateMode: 'onChange',
-  });
+  const {
+    control,
+    handleSubmit,
+    watch,
+    setValue,
+    resetField,
+    setError: setFieldError,
+  } = useForm<z.infer<typeof loggedInSchema> | z.infer<typeof loggedOutSchema>>(
+    {
+      resolver: zodResolver(schem),
+      defaultValues: {
+        ...defaults,
+        voucher: '',
+        goodieId: null,
+        monthlyAmount: 0,
+        autoRenew: true,
+        payTransactionFee: false,
+        memberPlanId:
+          defaults?.memberPlanSlug ?
+            memberPlans.data?.memberPlans.nodes.find(
+              memberPlan => memberPlan.slug === defaults?.memberPlanSlug
+            )?.id
+          : memberPlans.data?.memberPlans.nodes[0]?.id,
+        paymentMethodId:
+          memberPlans.data?.memberPlans.nodes[0]?.availablePaymentMethods[0]
+            ?.paymentMethods[0]?.id,
+        paymentPeriodicity:
+          memberPlans.data?.memberPlans.nodes[0]?.availablePaymentMethods[0]
+            ?.paymentPeriodicities[0],
+      },
+      mode: 'onTouched',
+      reValidateMode: 'onChange',
+    }
+  );
 
   const voucher = watch<'voucher'>('voucher');
+  const goodieId = watch<'goodieId'>('goodieId');
   const selectedPaymentMethodId = watch<'paymentMethodId'>('paymentMethodId');
   const selectedPaymentPeriodicity =
     watch<'paymentPeriodicity'>('paymentPeriodicity');
@@ -382,6 +400,44 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       ),
     [memberPlans.data?.memberPlans.nodes, selectedMemberPlanId]
   );
+
+  const [soldOutGoodieIds, setSoldOutGoodieIds] = useState<string[]>([]);
+
+  const rawMonthlyAmount = watch<'monthlyAmount'>('monthlyAmount');
+
+  const availableGoodies = useMemo(() => {
+    const inStockGoodies =
+      selectedMemberPlan?.goodies?.filter(
+        ({ id }) => !soldOutGoodieIds.includes(id)
+      ) ?? [];
+
+    const filteredGoodies =
+      filterGoodies ?
+        filterGoodies(inStockGoodies, { monthlyAmount: rawMonthlyAmount })
+      : inStockGoodies;
+
+    if (goodieMinValue != null && rawMonthlyAmount * 12 < goodieMinValue) {
+      return [];
+    }
+
+    return filteredGoodies;
+  }, [
+    selectedMemberPlan?.goodies,
+    soldOutGoodieIds,
+    filterGoodies,
+    goodieMinValue,
+    rawMonthlyAmount,
+  ]);
+
+  const allGoodies = useMemo(() => {
+    const goodiesById = new Map(
+      memberPlans.data?.memberPlans.nodes
+        .flatMap(memberPlan => memberPlan.goodies ?? [])
+        .map(goodie => [goodie.id, goodie])
+    );
+
+    return [...goodiesById.values()];
+  }, [memberPlans.data?.memberPlans.nodes]);
 
   const selectedAvailablePaymentMethod = useMemo(
     () =>
@@ -455,6 +511,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       paymentPeriodicity: data.paymentPeriodicity,
       autoRenew: data.autoRenew,
       voucher: data.voucher,
+      goodieId: data.goodieId,
     };
 
     if (hasUser) {
@@ -560,6 +617,35 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     });
   }, [fetchSubscribeInfo, selectedMemberPlanId, voucher]);
 
+  useEffect(() => {
+    if (goodieId && !availableGoodies.some(({ id }) => id === goodieId)) {
+      setValue<'goodieId'>('goodieId', null);
+    }
+  }, [availableGoodies, goodieId, setValue]);
+
+  useEffect(() => {
+    if (!error || !goodieId) {
+      return;
+    }
+
+    const graphQLErrors =
+      Array.isArray(error) ? error : (
+        ((error as ApolloError).graphQLErrors ?? [])
+      );
+
+    const isSoldOut = graphQLErrors.some(
+      graphQLError => graphQLError?.extensions?.code === 'GOODIE_SOLD_OUT'
+    );
+
+    if (isSoldOut) {
+      setSoldOutGoodieIds(ids => [...ids, goodieId]);
+      setValue<'goodieId'>('goodieId', null);
+      setFieldError('goodieId', {
+        message: t('subscribe.goodie.soldOut'),
+      });
+    }
+  }, [error, goodieId, setFieldError, setValue, t]);
+
   const alreadyHasSubscription = useMemo(() => {
     if (deactivateSubscriptionId) {
       return;
@@ -636,6 +722,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
               {...field}
               onChange={memberPlanId => field.onChange(memberPlanId)}
               memberPlans={memberPlans.data?.memberPlans.nodes ?? []}
+              monthlyAmount={watch<'monthlyAmount'>('monthlyAmount')}
             />
           )}
         />
@@ -746,6 +833,35 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
             )}
         </SubscribePayment>
       </SubscribeSection>
+
+      {showGoodies && (
+        <GoodieSection area="goodie">
+          <H5 component="h2">{t('subscribe.goodie.title')}</H5>
+
+          <Controller
+            name={'goodieId'}
+            control={control}
+            render={({ field, fieldState: { error: fieldError } }) => (
+              <div>
+                <GoodiePicker
+                  {...field}
+                  value={field.value}
+                  onChange={goodieId => field.onChange(goodieId)}
+                  goodies={availableGoodies}
+                  allGoodies={allGoodies}
+                  disabled={!availableGoodies.length}
+                />
+
+                {!!fieldError && (
+                  <FormHelperText error={!!fieldError}>
+                    {fieldError?.message}
+                  </FormHelperText>
+                )}
+              </div>
+            )}
+          />
+        </GoodieSection>
+      )}
 
       <VoucherSection area="voucher">
         <Controller

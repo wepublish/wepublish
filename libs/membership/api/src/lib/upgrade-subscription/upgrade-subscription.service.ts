@@ -11,6 +11,7 @@ import {
 } from '@nestjs/common';
 import { differenceInDays, endOfDay, startOfDay } from 'date-fns';
 import { MemberContextService } from '../legacy/member-context.service';
+import { GoodieService } from '../goodie/goodie.service';
 import { PaymentsService } from '@wepublish/payment/api';
 
 const roundUpTo5Cents = (amount: number) =>
@@ -41,6 +42,7 @@ export class UpgradeSubscriptionService {
   constructor(
     private prisma: PrismaClient,
     private memberContext: MemberContextService,
+    private goodieService: GoodieService,
     private payments: PaymentsService
   ) {}
 
@@ -155,6 +157,7 @@ export class UpgradeSubscriptionService {
     successURL,
     failureURL,
     monthlyAmount,
+    goodieId,
   }: {
     userId: string;
     subscriptionId: string;
@@ -163,6 +166,7 @@ export class UpgradeSubscriptionService {
     successURL?: string;
     failureURL?: string;
     monthlyAmount: number;
+    goodieId?: string;
   }) {
     const { oldSubscription, oldSubscriptionPeriods } =
       await this.validateForUpgrade({
@@ -171,6 +175,10 @@ export class UpgradeSubscriptionService {
         paymentMethodId,
         userId,
       });
+
+    if (goodieId) {
+      await this.goodieService.getValidGoodie(goodieId, memberPlanId);
+    }
 
     const { invoice } = await this.memberContext.createSubscription({
       userID: userId,
@@ -183,6 +191,7 @@ export class UpgradeSubscriptionService {
       extendable: oldSubscription.extendable,
       replacedSubscriptionId: oldSubscription.id,
       startsAt: new Date(),
+      goodieID: goodieId,
       discount:
         oldSubscriptionPeriods.length ?
           leftoverSubscriptionPeriodAmount(oldSubscriptionPeriods)
