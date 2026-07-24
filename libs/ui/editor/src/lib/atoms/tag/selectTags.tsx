@@ -1,13 +1,16 @@
-import { ApolloError } from '@apollo/client';
+import { ApolloError, useApolloClient } from '@apollo/client';
 import styled from '@emotion/styled';
 import {
   SortOrder,
   Tag,
+  TagDocument,
+  TagQuery,
+  TagQueryVariables,
   TagSort,
   TagType,
   useTagListQuery,
 } from '@wepublish/editor/api';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Divider as RDivider,
@@ -50,6 +53,7 @@ export function SelectTags({
   placeholder,
 }: SelectTagsProps) {
   const { t } = useTranslation();
+  const client = useApolloClient();
   const [page, setPage] = useState(1);
   const [cacheData, setCacheData] = useState(
     defaultTags.map(tag => ({
@@ -57,6 +61,66 @@ export function SelectTags({
       value: tag.id,
     })) as ItemDataType<string | number>[]
   );
+  const resolvedTagIdsRef = useRef<Set<string>>(new Set());
+
+  /**
+   * Resolve labels for pre-selected tags (e.g. restored from a persisted
+   * filter) that are not part of the currently loaded page, so they render
+   * with their name instead of a bare id.
+   */
+  useEffect(() => {
+    const knownIds = new Set(cacheData.map(item => item.value));
+    const idsToResolve = (selectedTags ?? []).filter(
+      id => !knownIds.has(id) && !resolvedTagIdsRef.current.has(id)
+    );
+
+    if (!idsToResolve.length) {
+      return;
+    }
+
+    idsToResolve.forEach(id => resolvedTagIdsRef.current.add(id));
+
+    let cancelled = false;
+
+    Promise.all(
+      idsToResolve.map(id =>
+        client
+          .query<TagQuery, TagQueryVariables>({
+            query: TagDocument,
+            variables: { id },
+            fetchPolicy: 'cache-first',
+          })
+          .then(result => result.data?.tag)
+          .catch(() => null)
+      )
+    ).then(tags => {
+      if (cancelled) {
+        return;
+      }
+
+      const resolved = tags
+        .filter((tag): tag is NonNullable<typeof tag> => !!tag)
+        .map(tag => ({
+          label: tag.tag || t('comments.edit.unnamedTag'),
+          value: tag.id,
+        }));
+
+      if (!resolved.length) {
+        return;
+      }
+
+      setCacheData(previous => {
+        const known = new Set(previous.map(item => item.value));
+        const additions = resolved.filter(item => !known.has(item.value));
+
+        return additions.length ? [...previous, ...additions] : previous;
+      });
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [selectedTags, cacheData, client, t]);
 
   /**
    * Error handling
