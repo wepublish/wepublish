@@ -3,7 +3,7 @@ import { Typography } from '@mui/material';
 import { formatCurrency } from '@wepublish/membership/website';
 import { CrowdfundingGoalType, Currency } from '@wepublish/website/api';
 import { BuilderCrowdfundingBlockProps } from '@wepublish/website/builder';
-import { ElementType } from 'react';
+import { ElementType, useEffect, useState } from 'react';
 import { Trans } from 'react-i18next';
 
 import { euclidCircularB } from '../theme';
@@ -64,6 +64,23 @@ const BarLabel = styled('span')`
 export const ReflektCrowdfundingBlock = ({
   crowdfunding,
 }: BuilderCrowdfundingBlockProps) => {
+  const countSubscriptionsUntil = crowdfunding?.countSubscriptionsUntil;
+  const [daysRemaining, setDaysRemaining] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (!countSubscriptionsUntil) {
+      setDaysRemaining(null);
+      return;
+    }
+
+    const millisecondsPerDay = 1000 * 60 * 60 * 24;
+    const remaining = Math.ceil(
+      (new Date(countSubscriptionsUntil).getTime() - Date.now()) /
+        millisecondsPerDay
+    );
+    setDaysRemaining(Math.max(0, remaining));
+  }, [countSubscriptionsUntil]);
+
   if (!crowdfunding) {
     return null;
   }
@@ -73,7 +90,6 @@ export const ReflektCrowdfundingBlock = ({
   const revenue = crowdfunding.revenue ?? 0;
   const subscriptions = crowdfunding.subscriptions ?? 0;
   const goalAmount = activeGoal?.amount ?? 0;
-  const daysRemaining = crowdfunding.daysRemaining;
   const isRevenueGoal = crowdfunding.goalType === CrowdfundingGoalType.Revenue;
 
   if (!goalAmount) {

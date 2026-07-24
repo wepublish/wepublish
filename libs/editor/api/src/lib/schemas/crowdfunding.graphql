@@ -30,7 +30,6 @@ input CreateCrowdfundingInput {
   name: String!
   countSubscriptionsFrom: DateTime
   countSubscriptionsUntil: DateTime
-  endsAt: DateTime
   additionalRevenue: Int
   goals: [CreateCrowdfundingGoalInput]!
 }
@@ -46,7 +45,6 @@ input UpdateCrowdfundingInput {
   name: String!
   countSubscriptionsFrom: DateTime
   countSubscriptionsUntil: DateTime
-  endsAt: DateTime
   additionalRevenue: Int
   goals: [CreateCrowdfundingGoalInput!]
 }
@@ -56,7 +54,6 @@ fragment FullCrowdfunding on Crowdfunding {
   name
   countSubscriptionsFrom
   countSubscriptionsUntil
-  endsAt
   additionalRevenue
   revenue
   goalType

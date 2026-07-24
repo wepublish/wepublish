@@ -46,9 +46,6 @@ export class Crowdfunding {
   @Field(() => Date, { nullable: true })
   countSubscriptionsUntil!: Date | null;
 
-  @Field(() => Date, { nullable: true })
-  endsAt!: Date | null;
-
   @Field(() => Number, { nullable: true })
   additionalRevenue!: number | null;
 
@@ -84,7 +81,6 @@ export class CreateCrowdfundingInput extends PickType(
     'name',
     'countSubscriptionsFrom',
     'countSubscriptionsUntil',
-    'endsAt',
     'additionalRevenue',
     'goalType',
   ],

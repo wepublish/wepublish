@@ -30,9 +30,9 @@ import {
   useState,
 } from 'react';
 
+import { euclidCircularB, robotoMono } from '../theme';
 import { ReflektBlockStyles } from './block-styles/reflekt-block-styles';
 import { ReflektSubscribe } from './reflekt-subscribe';
-import { euclidCircularB, robotoMono } from '../theme';
 
 type CrowdfundingGoodieConfig = {
   goodieMinValue: number | null | undefined;
@@ -189,7 +189,9 @@ const ItemFreeAmountSpinnerPlaceholder = styled(ItemFreeAmountLabel)`
   color: ${({ theme }) => theme.palette.common.white};
 `;
 
-const ItemFreeAmountSpinner = styled(CurrencyNumberSpinner)`
+const ItemFreeAmountSpinner = styled(CurrencyNumberSpinner, {
+  shouldForwardProp: prop => prop !== 'active',
+})<{ active: boolean }>`
   margin-top: 0;
   width: 100%;
 
@@ -198,12 +200,15 @@ const ItemFreeAmountSpinner = styled(CurrencyNumberSpinner)`
     min-height: ${freeAmountBoxHeight};
     border-radius: 0;
     justify-content: center;
-    background-color: ${({ theme }) => theme.palette.common.black};
-    color: ${({ theme }) => theme.palette.common.white};
+    background-color: ${({ theme, active }) =>
+      active ? theme.palette.common.black : theme.palette.common.white};
+    color: ${({ theme, active }) =>
+      active ? theme.palette.common.white : theme.palette.common.black};
   }
 
   > div > div {
-    color: ${({ theme }) => theme.palette.common.white};
+    color: ${({ theme, active }) =>
+      active ? theme.palette.common.white : theme.palette.common.black};
   }
 
   fieldset {
@@ -223,6 +228,10 @@ const ItemFreeAmountSpinner = styled(CurrencyNumberSpinner)`
 
   button {
     color: inherit;
+
+    &[disabled] {
+      pointer-events: none;
+    }
 
     @media (hover: hover) {
       &:hover:not([disabled]) {
@@ -269,16 +278,21 @@ export const ReflektCrowdfundingMemberPlanItem = forwardRef<
 ) {
   const radioGroup = useRadioGroup();
   const isChecked = props.checked ?? radioGroup?.value === id;
+  const radioInputRef = useRef<HTMLInputElement>(null);
   const { goodieMinValue, baselineMonthlyAmount } = useContext(
     CrowdfundingGoodieContext
   );
 
   const hasFreePricing =
     renderStyle === SubscribeBlockPlanRenderStyle.CardFreeInput;
-
-  const [freeAmountYearly, setFreeAmountYearly] = useState<number | null>(null);
+  const hasMinValue = amountPerMonthMin > 0;
 
   const yearlyMinChf = Math.round((amountPerMonthMin * 12) / 100);
+
+  const [freeAmountYearly, setFreeAmountYearly] = useState<number | null>(
+    hasMinValue ? yearlyMinChf : null
+  );
+
   const yearlyChf =
     hasFreePricing ? (freeAmountYearly ?? yearlyMinChf) : yearlyMinChf;
   const tileYearlyValue =
@@ -321,9 +335,16 @@ export const ReflektCrowdfundingMemberPlanItem = forwardRef<
         <ItemAmountArea>
           {hasFreePricing && (
             <ItemFreeAmountSlot>
-              {isChecked ?
-                <ItemFreeAmountSpinnerWrapper>
+              {isChecked || hasMinValue ?
+                <ItemFreeAmountSpinnerWrapper
+                  onPointerDown={() => {
+                    if (!isChecked) {
+                      radioInputRef.current?.click();
+                    }
+                  }}
+                >
                   <ItemFreeAmountSpinner
+                    active={isChecked}
                     arrows="split"
                     min={yearlyMinChf}
                     step={10}
@@ -366,6 +387,7 @@ export const ReflektCrowdfundingMemberPlanItem = forwardRef<
           name={name}
           disableRipple={true}
           {...props}
+          inputRef={radioInputRef}
         />
       </ItemCard>
     </ItemWrapper>
@@ -374,13 +396,9 @@ export const ReflektCrowdfundingMemberPlanItem = forwardRef<
 
 const CrowdfundingSubscribeBlock = styled(ReflektSubscribe)`
   ${MemberPlanPickerRadios} {
-    row-gap: ${({ theme }) => theme.spacing(12)};
+    row-gap: ${({ theme }) => theme.spacing(8)};
     margin-top: ${({ theme }) => theme.spacing(10)};
     overflow: visible;
-
-    ${({ theme }) => theme.breakpoints.up('sm')} {
-      grid-template-columns: repeat(3, 1fr) !important;
-    }
   }
 `;
 

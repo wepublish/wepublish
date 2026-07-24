@@ -657,7 +657,6 @@ input CreateCrowdfundingInput {
   additionalRevenue: Float
   countSubscriptionsFrom: DateTime
   countSubscriptionsUntil: DateTime
-  endsAt: DateTime
   goalType: CrowdfundingGoalType!
   goals: [CreateCrowdfundingGoalInput!]
   memberPlans: [CreateCrowdfundingMemberPlan!]
@@ -687,8 +686,6 @@ type Crowdfunding {
   countSubscriptionsFrom: DateTime
   countSubscriptionsUntil: DateTime
   createdAt: DateTime!
-  daysRemaining: Float
-  endsAt: DateTime
   goalType: CrowdfundingGoalType!
   goals: [CrowdfundingGoal!]!
   id: String!
@@ -4362,7 +4359,6 @@ input UpdateCrowdfundingInput {
   additionalRevenue: Float
   countSubscriptionsFrom: DateTime
   countSubscriptionsUntil: DateTime
-  endsAt: DateTime
   goalType: CrowdfundingGoalType
   goals: [CreateCrowdfundingGoalInput!]
   id: String!

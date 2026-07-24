@@ -713,7 +713,6 @@ export type CreateCrowdfundingInput = {
   additionalRevenue?: InputMaybe<Scalars['Float']>;
   countSubscriptionsFrom?: InputMaybe<Scalars['DateTime']>;
   countSubscriptionsUntil?: InputMaybe<Scalars['DateTime']>;
-  endsAt?: InputMaybe<Scalars['DateTime']>;
   goalType: CrowdfundingGoalType;
   goals?: InputMaybe<Array<CreateCrowdfundingGoalInput>>;
   memberPlans?: InputMaybe<Array<CreateCrowdfundingMemberPlan>>;
@@ -745,8 +744,6 @@ export type Crowdfunding = {
   countSubscriptionsFrom?: Maybe<Scalars['DateTime']>;
   countSubscriptionsUntil?: Maybe<Scalars['DateTime']>;
   createdAt: Scalars['DateTime'];
-  daysRemaining?: Maybe<Scalars['Float']>;
-  endsAt?: Maybe<Scalars['DateTime']>;
   goalType: CrowdfundingGoalType;
   goals: Array<CrowdfundingGoal>;
   id: Scalars['String'];
@@ -6190,7 +6187,6 @@ export type UpdateCrowdfundingInput = {
   additionalRevenue?: InputMaybe<Scalars['Float']>;
   countSubscriptionsFrom?: InputMaybe<Scalars['DateTime']>;
   countSubscriptionsUntil?: InputMaybe<Scalars['DateTime']>;
-  endsAt?: InputMaybe<Scalars['DateTime']>;
   goalType?: InputMaybe<CrowdfundingGoalType>;
   goals?: InputMaybe<Array<CreateCrowdfundingGoalInput>>;
   id: Scalars['String'];
@@ -7141,28 +7137,28 @@ export type DeleteUserConsentMutation = { __typename?: 'Mutation', deleteUserCon
 export type CrowdfundingsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type CrowdfundingsQuery = { __typename?: 'Query', crowdfundings: Array<{ __typename?: 'Crowdfunding', id: string, name: string, countSubscriptionsFrom?: string | null, countSubscriptionsUntil?: string | null, endsAt?: string | null, additionalRevenue?: number | null, revenue?: number | null, goalType: CrowdfundingGoalType, subscriptions?: number | null, goals: Array<{ __typename?: 'CrowdfundingGoal', id: string, title: string, description?: string | null, amount: number }>, activeGoal?: { __typename?: 'CrowdfundingGoalWithProgress', id: string, title: string, description?: string | null, amount: number, progress?: number | null } | null, memberPlans: Array<{ __typename?: 'MemberPlan', id: string }> }> };
+export type CrowdfundingsQuery = { __typename?: 'Query', crowdfundings: Array<{ __typename?: 'Crowdfunding', id: string, name: string, countSubscriptionsFrom?: string | null, countSubscriptionsUntil?: string | null, additionalRevenue?: number | null, revenue?: number | null, goalType: CrowdfundingGoalType, subscriptions?: number | null, goals: Array<{ __typename?: 'CrowdfundingGoal', id: string, title: string, description?: string | null, amount: number }>, activeGoal?: { __typename?: 'CrowdfundingGoalWithProgress', id: string, title: string, description?: string | null, amount: number, progress?: number | null } | null, memberPlans: Array<{ __typename?: 'MemberPlan', id: string }> }> };
 
 export type CrowdfundingQueryVariables = Exact<{
   id: Scalars['String'];
 }>;
 
 
-export type CrowdfundingQuery = { __typename?: 'Query', crowdfunding: { __typename?: 'Crowdfunding', id: string, name: string, countSubscriptionsFrom?: string | null, countSubscriptionsUntil?: string | null, endsAt?: string | null, additionalRevenue?: number | null, revenue?: number | null, goalType: CrowdfundingGoalType, subscriptions?: number | null, goals: Array<{ __typename?: 'CrowdfundingGoal', id: string, title: string, description?: string | null, amount: number }>, activeGoal?: { __typename?: 'CrowdfundingGoalWithProgress', id: string, title: string, description?: string | null, amount: number, progress?: number | null } | null, memberPlans: Array<{ __typename?: 'MemberPlan', id: string }> } };
+export type CrowdfundingQuery = { __typename?: 'Query', crowdfunding: { __typename?: 'Crowdfunding', id: string, name: string, countSubscriptionsFrom?: string | null, countSubscriptionsUntil?: string | null, additionalRevenue?: number | null, revenue?: number | null, goalType: CrowdfundingGoalType, subscriptions?: number | null, goals: Array<{ __typename?: 'CrowdfundingGoal', id: string, title: string, description?: string | null, amount: number }>, activeGoal?: { __typename?: 'CrowdfundingGoalWithProgress', id: string, title: string, description?: string | null, amount: number, progress?: number | null } | null, memberPlans: Array<{ __typename?: 'MemberPlan', id: string }> } };
 
 export type CreateCrowdfundingMutationVariables = Exact<{
   input: CreateCrowdfundingInput;
 }>;
 
 
-export type CreateCrowdfundingMutation = { __typename?: 'Mutation', createCrowdfunding: { __typename?: 'Crowdfunding', id: string, name: string, countSubscriptionsFrom?: string | null, countSubscriptionsUntil?: string | null, endsAt?: string | null, additionalRevenue?: number | null, revenue?: number | null, goalType: CrowdfundingGoalType, subscriptions?: number | null, goals: Array<{ __typename?: 'CrowdfundingGoal', id: string, title: string, description?: string | null, amount: number }>, activeGoal?: { __typename?: 'CrowdfundingGoalWithProgress', id: string, title: string, description?: string | null, amount: number, progress?: number | null } | null, memberPlans: Array<{ __typename?: 'MemberPlan', id: string }> } };
+export type CreateCrowdfundingMutation = { __typename?: 'Mutation', createCrowdfunding: { __typename?: 'Crowdfunding', id: string, name: string, countSubscriptionsFrom?: string | null, countSubscriptionsUntil?: string | null, additionalRevenue?: number | null, revenue?: number | null, goalType: CrowdfundingGoalType, subscriptions?: number | null, goals: Array<{ __typename?: 'CrowdfundingGoal', id: string, title: string, description?: string | null, amount: number }>, activeGoal?: { __typename?: 'CrowdfundingGoalWithProgress', id: string, title: string, description?: string | null, amount: number, progress?: number | null } | null, memberPlans: Array<{ __typename?: 'MemberPlan', id: string }> } };
 
 export type UpdateCrowdfundingMutationVariables = Exact<{
   input: UpdateCrowdfundingInput;
 }>;
 
 
-export type UpdateCrowdfundingMutation = { __typename?: 'Mutation', updateCrowdfunding: { __typename?: 'Crowdfunding', id: string, name: string, countSubscriptionsFrom?: string | null, countSubscriptionsUntil?: string | null, endsAt?: string | null, additionalRevenue?: number | null, revenue?: number | null, goalType: CrowdfundingGoalType, subscriptions?: number | null, goals: Array<{ __typename?: 'CrowdfundingGoal', id: string, title: string, description?: string | null, amount: number }>, activeGoal?: { __typename?: 'CrowdfundingGoalWithProgress', id: string, title: string, description?: string | null, amount: number, progress?: number | null } | null, memberPlans: Array<{ __typename?: 'MemberPlan', id: string }> } };
+export type UpdateCrowdfundingMutation = { __typename?: 'Mutation', updateCrowdfunding: { __typename?: 'Crowdfunding', id: string, name: string, countSubscriptionsFrom?: string | null, countSubscriptionsUntil?: string | null, additionalRevenue?: number | null, revenue?: number | null, goalType: CrowdfundingGoalType, subscriptions?: number | null, goals: Array<{ __typename?: 'CrowdfundingGoal', id: string, title: string, description?: string | null, amount: number }>, activeGoal?: { __typename?: 'CrowdfundingGoalWithProgress', id: string, title: string, description?: string | null, amount: number, progress?: number | null } | null, memberPlans: Array<{ __typename?: 'MemberPlan', id: string }> } };
 
 export type DeleteCrowdfundingMutationVariables = Exact<{
   id: Scalars['String'];
@@ -7171,7 +7167,7 @@ export type DeleteCrowdfundingMutationVariables = Exact<{
 
 export type DeleteCrowdfundingMutation = { __typename?: 'Mutation', deleteCrowdfunding?: boolean | null };
 
-export type FullCrowdfundingFragment = { __typename?: 'Crowdfunding', id: string, name: string, countSubscriptionsFrom?: string | null, countSubscriptionsUntil?: string | null, endsAt?: string | null, additionalRevenue?: number | null, revenue?: number | null, goalType: CrowdfundingGoalType, subscriptions?: number | null, goals: Array<{ __typename?: 'CrowdfundingGoal', id: string, title: string, description?: string | null, amount: number }>, activeGoal?: { __typename?: 'CrowdfundingGoalWithProgress', id: string, title: string, description?: string | null, amount: number, progress?: number | null } | null, memberPlans: Array<{ __typename?: 'MemberPlan', id: string }> };
+export type FullCrowdfundingFragment = { __typename?: 'Crowdfunding', id: string, name: string, countSubscriptionsFrom?: string | null, countSubscriptionsUntil?: string | null, additionalRevenue?: number | null, revenue?: number | null, goalType: CrowdfundingGoalType, subscriptions?: number | null, goals: Array<{ __typename?: 'CrowdfundingGoal', id: string, title: string, description?: string | null, amount: number }>, activeGoal?: { __typename?: 'CrowdfundingGoalWithProgress', id: string, title: string, description?: string | null, amount: number, progress?: number | null } | null, memberPlans: Array<{ __typename?: 'MemberPlan', id: string }> };
 
 export type FullCrowdfundingGoalFragment = { __typename?: 'CrowdfundingGoal', id: string, title: string, description?: string | null, amount: number };
 
@@ -10019,7 +10015,6 @@ export const FullCrowdfundingFragmentDoc = gql`
   name
   countSubscriptionsFrom
   countSubscriptionsUntil
-  endsAt
   additionalRevenue
   revenue
   goalType
