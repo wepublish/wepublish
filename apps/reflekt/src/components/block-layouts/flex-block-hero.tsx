@@ -65,18 +65,40 @@ type HeroNativeVideoProps = {
   onStarted?: () => void;
 };
 
-const HeroNativeVideo = ({ src, noLoop, onStarted }: HeroNativeVideoProps) => (
-  <HeroNativeVideoPlayer
-    src={src}
-    autoPlay
-    muted
-    loop={!noLoop}
-    playsInline
-    disablePictureInPicture
-    preload="auto"
-    onPlaying={onStarted}
-  />
-);
+const HeroNativeVideo = ({ src, noLoop, onStarted }: HeroNativeVideoProps) => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const video = videoRef.current as
+      | (HTMLVideoElement & {
+          requestVideoFrameCallback?: (cb: () => void) => number;
+          cancelVideoFrameCallback?: (handle: number) => void;
+        })
+      | null;
+
+    if (!video || !onStarted || !video.requestVideoFrameCallback) {
+      return undefined;
+    }
+
+    const handle = video.requestVideoFrameCallback(() => onStarted());
+
+    return () => video.cancelVideoFrameCallback?.(handle);
+  }, [src, onStarted]);
+
+  return (
+    <HeroNativeVideoPlayer
+      ref={videoRef}
+      src={src}
+      autoPlay
+      muted
+      loop={!noLoop}
+      playsInline
+      disablePictureInPicture
+      preload="auto"
+      onPlaying={onStarted}
+    />
+  );
+};
 
 const HeroVimeoPlayer = styled('iframe')`
   position: absolute;
@@ -266,10 +288,13 @@ const HeroYouTubeVideo = ({
 
 const HERO_POSTER_FADE_FALLBACK_MS = 4000;
 
+const HERO_VIDEO_PAINT_DELAY_MS = 600;
+
 const HeroStack = styled('div')`
   position: relative;
   width: 100vw;
   overflow: hidden;
+  background-color: ${({ theme }) => theme.palette.common.black};
 `;
 
 const HeroVideoLayer = styled('div')`
@@ -343,6 +368,7 @@ const HeroPosterVideoCell = ({
   muted,
   noLoop,
 }: HeroPosterVideoCellProps) => {
+  const [playing, setPlaying] = useState(false);
   const [started, setStarted] = useState(false);
 
   useEffect(() => {
@@ -356,6 +382,15 @@ const HeroPosterVideoCell = ({
     return () => clearTimeout(timer);
   }, [active]);
 
+  useEffect(() => {
+    if (!playing) {
+      return undefined;
+    }
+    const delay = video.kind === 'native' ? 0 : HERO_VIDEO_PAINT_DELAY_MS;
+    const timer = setTimeout(() => setStarted(true), delay);
+    return () => clearTimeout(timer);
+  }, [playing, video.kind]);
+
   return (
     <HeroStack>
       {active && (
@@ -364,7 +399,7 @@ const HeroPosterVideoCell = ({
             video={video}
             muted={muted}
             noLoop={noLoop}
-            onStarted={() => setStarted(true)}
+            onStarted={() => setPlaying(true)}
           />
         </HeroVideoLayer>
       )}

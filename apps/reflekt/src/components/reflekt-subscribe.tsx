@@ -13,6 +13,7 @@ import {
   SubscribeSection,
   TransactionFeeIcon,
   TransactionFeeWrapper,
+  VoucherSection,
 } from '@wepublish/membership/website';
 import {
   FullMemberPlanFragment,
@@ -37,14 +38,14 @@ export const ReflektSubscribe = styled(SubscribeBlock)`
   grid-template-areas:
     'memberPlans'
     'monthlyAmount'
-    ${({ showGoodies }) => (showGoodies ? "'goodieSlider'" : '')}
     'userForm'
     ${({ showGoodies }) => (showGoodies ? "'goodie' 'goodieError'" : '')}
     'transactionFee'
     ${({ showVouchers }) => (showVouchers ? "'voucher'" : '')}
     'submit'
     'paymentPeriodicity'
-    'challenge';
+    'challenge'
+    ${({ showGoodies }) => (showGoodies ? "'goodieSlider'" : '')};
 
   ${SubscribeSection},
   ${SubscribeNarrowSection},
@@ -70,6 +71,11 @@ export const ReflektSubscribe = styled(SubscribeBlock)`
     > div > .MuiFormHelperText-root {
       grid-area: goodieError;
     }
+  }
+
+  ${VoucherSection} {
+    display: grid;
+    grid-area: voucher;
   }
 
   ${SubscribeSection}[data-area='paymentPeriodicity'] ${PaymentRadioWrapper} {

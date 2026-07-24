@@ -15,7 +15,6 @@ const mockCrowdfunding = (
   name: 'Test',
   countSubscriptionsFrom: null,
   countSubscriptionsUntil: null,
-  endsAt: null,
   additionalRevenue: null,
   goalType: CrowdfundingGoalType.Subscription,
   ...override,

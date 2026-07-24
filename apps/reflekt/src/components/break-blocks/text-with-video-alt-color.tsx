@@ -96,16 +96,42 @@ export const classifyBreakVideo = (
   return null;
 };
 
-const BreakVideoFrame = styled('div')<{ aspect: number }>`
-  aspect-ratio: ${({ aspect }) => aspect};
-  width: min(100%, calc(min(60vh, 34rem) * ${({ aspect }) => aspect}));
-  margin: 0 auto;
+const FRAME_ASPECT = 4 / 5;
 
-  ${({ theme }) => theme.breakpoints.down('md')} {
-    max-width: ${({ aspect }) => (aspect < 1 ? '185px' : 'none')};
+const BreakVideoFrame = styled('div')`
+  aspect-ratio: ${FRAME_ASPECT};
+  width: min(100%, 15rem);
+  margin: 0 auto;
+  position: relative;
+  overflow: hidden;
+  background-color: ${({ theme }) => theme.palette.common.black};
+
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    width: min(100%, 20rem);
   }
 
-  video,
+  > video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    border: 0;
+    display: block;
+  }
+`;
+
+const BreakVideoCover = styled('div')<{ aspect: number }>`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: ${({ aspect }) =>
+    aspect >= FRAME_ASPECT ? `${(aspect / FRAME_ASPECT) * 100}%` : '100%'};
+  height: ${({ aspect }) =>
+    aspect >= FRAME_ASPECT ? '100%' : `${(FRAME_ASPECT / aspect) * 100}%`};
+
   iframe {
     width: 100%;
     height: 100%;
@@ -120,6 +146,8 @@ const BreakYouTubePlayer = styled(ReactPlayer)`
 `;
 
 const VideoFacade = styled('button')`
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   display: grid;
@@ -219,7 +247,7 @@ const BreakBlockVideo = ({ video }: { video: BreakVideo }) => {
     : vimeoThumbnail;
 
   return (
-    <BreakVideoFrame aspect={aspect}>
+    <BreakVideoFrame>
       {video.kind === 'native' && (
         <video
           src={video.src}
@@ -252,22 +280,26 @@ const BreakBlockVideo = ({ video }: { video: BreakVideo }) => {
       )}
 
       {video.kind === 'vimeo' && started && (
-        <iframe
-          src={`https://player.vimeo.com/video/${video.vimeoId}?autoplay=1`}
-          allow="autoplay; fullscreen"
-          allowFullScreen
-          title="Video"
-        />
+        <BreakVideoCover aspect={aspect}>
+          <iframe
+            src={`https://player.vimeo.com/video/${video.vimeoId}?autoplay=1`}
+            allow="autoplay; fullscreen"
+            allowFullScreen
+            title="Video"
+          />
+        </BreakVideoCover>
       )}
 
       {video.kind === 'youtube' && started && (
-        <BreakYouTubePlayer
-          url={video.videoUrl}
-          playing
-          controls
-          width="100%"
-          height="100%"
-        />
+        <BreakVideoCover aspect={aspect}>
+          <BreakYouTubePlayer
+            url={video.videoUrl}
+            playing
+            controls
+            width="100%"
+            height="100%"
+          />
+        </BreakVideoCover>
       )}
     </BreakVideoFrame>
   );
