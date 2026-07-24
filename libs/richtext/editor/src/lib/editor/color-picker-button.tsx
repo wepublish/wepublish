@@ -14,20 +14,6 @@ const ElevatedPopper = styled(Popper)`
   z-index: 100;
 `;
 
-const IconWithSwatch = styled('span')`
-  display: inline-flex;
-  flex-direction: column;
-  align-items: center;
-  line-height: 0;
-`;
-
-const Swatch = styled('span')`
-  width: 18px;
-  height: 3px;
-  margin-top: 2px;
-  border-radius: 1px;
-`;
-
 type ColorPickerButtonProps = {
   value: string | null | undefined;
   onChange: (color: string | null) => void;
@@ -51,11 +37,13 @@ export function ColorPickerButton({
         size="small"
         ref={anchorRef}
         onClick={() => setOpen(true)}
+        sx={{
+          border: 1,
+          borderColor: value ? 'divider' : 'transparent',
+          backgroundColor: value ? 'action.selected' : undefined,
+        }}
       >
-        <IconWithSwatch>
-          {children}
-          <Swatch style={{ backgroundColor: value ?? 'transparent' }} />
-        </IconWithSwatch>
+        {children}
       </IconButton>
 
       <ElevatedPopper
