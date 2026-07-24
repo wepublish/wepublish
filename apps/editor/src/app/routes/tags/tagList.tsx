@@ -23,6 +23,7 @@ import {
   PaddedCell,
   Table,
   TableWrapper,
+  useListViewState,
 } from '@wepublish/ui/editor';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -53,14 +54,18 @@ function TagList({ type }: TagListProps) {
   const { t } = useTranslation();
   const [tagToDelete, setTagToDelete] = useState<Tag | undefined>(undefined);
   const [page, setPage] = useState<number>(1);
-  const [limit, setLimit] = useState<number>(10);
 
-  const [tagSearch, setTagSearch] = useState<string>();
+  const {
+    filter: tagSearch,
+    setFilter: setTagSearch,
+    limit,
+    setLimit,
+  } = useListViewState<string>(`tags:${type}`, { defaultFilter: '' });
 
   const tagListVariables = {
     filter: {
       type,
-      tag: tagSearch,
+      tag: tagSearch || undefined,
     },
     take: limit,
     skip: (page - 1) * limit,
@@ -98,7 +103,10 @@ function TagList({ type }: TagListProps) {
           <InputGroup>
             <Input
               value={tagSearch}
-              onChange={value => setTagSearch(value)}
+              onChange={value => {
+                setTagSearch(value);
+                setPage(1);
+              }}
             />
             <InputGroup.Addon>
               <MdSearch />
@@ -162,7 +170,10 @@ function TagList({ type }: TagListProps) {
           total={data?.tags?.totalCount ?? 0}
           activePage={page}
           onChangePage={page => setPage(page)}
-          onChangeLimit={limit => setLimit(limit)}
+          onChangeLimit={limit => {
+            setLimit(limit);
+            setPage(1);
+          }}
         />
       </TableWrapper>
 

@@ -288,6 +288,8 @@ export class ArticleFilter {
   @Field(() => [String], { nullable: true })
   tags?: string[];
   @Field(() => [String], { nullable: true })
+  tagsInclude?: string[];
+  @Field(() => [String], { nullable: true })
   tagsNotIn?: string[];
 
   @Field({ nullable: true })

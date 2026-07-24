@@ -37,6 +37,11 @@ export function ColorPickerButton({
         size="small"
         ref={anchorRef}
         onClick={() => setOpen(true)}
+        sx={{
+          border: 1,
+          borderColor: value ? 'divider' : 'transparent',
+          backgroundColor: value ? 'action.selected' : undefined,
+        }}
       >
         {children}
       </IconButton>

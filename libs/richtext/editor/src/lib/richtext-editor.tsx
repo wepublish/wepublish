@@ -150,21 +150,18 @@ type RichtextEditorProps = {
 
 export const RichtextEditor = forwardRef<HTMLDivElement, RichtextEditorProps>(
   ({ defaultValue, value, onChange, disabled, autofocus }, ref) => {
-    const editor = useEditor(
-      {
-        ...editorConfig,
-        content: null,
-        autofocus,
-        editable: !disabled,
-        onUpdate: arg => {
-          onChange?.({
-            html: arg.editor.getHTML(),
-            json: arg.editor.getJSON() as RichtextJSONDocument,
-          });
-        },
+    const editor = useEditor({
+      ...editorConfig,
+      content: null,
+      autofocus,
+      editable: !disabled,
+      onUpdate: arg => {
+        onChange?.({
+          html: arg.editor.getHTML(),
+          json: arg.editor.getJSON() as RichtextJSONDocument,
+        });
       },
-      [autofocus]
-    );
+    });
     const providerValue = useMemo(() => ({ editor }), [editor]);
     const editorReady = !!editor && !editor.isDestroyed;
 
@@ -175,6 +172,12 @@ export const RichtextEditor = forwardRef<HTMLDivElement, RichtextEditorProps>(
 
       editor.setEditable(!disabled, false);
     }, [editorReady, disabled]);
+
+    useEffect(() => {
+      if (editorReady && autofocus) {
+        editor.commands.focus();
+      }
+    }, [autofocus, editorReady, editor]);
 
     useEffect(() => {
       if (editorReady && defaultValue) {
