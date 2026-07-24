@@ -13,8 +13,6 @@ import {
   MdFormatAlignLeft,
   MdFormatAlignRight,
   MdFormatBold,
-  MdFormatColorFill,
-  MdFormatColorText,
   MdFormatItalic,
   MdFormatListBulleted,
   MdFormatListNumbered,
@@ -33,6 +31,7 @@ import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDebounceCallback } from 'usehooks-ts';
 import { ColorPickerButton } from './color-picker-button';
+import { ColorFillSwatchIcon, ColorTextSwatchIcon } from './color-swatch-icons';
 import { LinkPopoverButton } from './link-popover';
 import { useWebsiteThemeColors } from './use-website-theme-colors';
 
@@ -107,20 +106,16 @@ export function MenuBar() {
   const updateColor = useDebounceCallback(
     useCallback(
       (color: string | null) => {
+        const chain = editor.chain().focus();
+
+        if (editor.state.selection.empty) {
+          chain.extendMarkRange('textStyle');
+        }
+
         if (color) {
-          editor
-            .chain()
-            .focus()
-            .extendMarkRange('textStyle')
-            .setColor(color)
-            .run();
+          chain.setColor(color).run();
         } else {
-          editor
-            .chain()
-            .focus()
-            .extendMarkRange('textStyle')
-            .unsetColor()
-            .run();
+          chain.unsetColor().run();
         }
       },
       [editor]
@@ -131,20 +126,16 @@ export function MenuBar() {
   const updateBackgroundColor = useDebounceCallback(
     useCallback(
       (color: string | null) => {
+        const chain = editor.chain().focus();
+
+        if (editor.state.selection.empty) {
+          chain.extendMarkRange('textStyle');
+        }
+
         if (color) {
-          editor
-            .chain()
-            .focus()
-            .extendMarkRange('textStyle')
-            .setBackgroundColor(color)
-            .run();
+          chain.setBackgroundColor(color).run();
         } else {
-          editor
-            .chain()
-            .focus()
-            .extendMarkRange('textStyle')
-            .unsetBackgroundColor()
-            .run();
+          chain.unsetBackgroundColor().run();
         }
       },
       [editor]
@@ -296,7 +287,10 @@ export function MenuBar() {
         onChange={updateColor}
         presetColors={themeColors}
       >
-        <MdFormatColorText size={18} />
+        <ColorTextSwatchIcon
+          size={18}
+          swatchColor={editorState.color}
+        />
       </ColorPickerButton>
 
       <ColorPickerButton
@@ -304,7 +298,10 @@ export function MenuBar() {
         onChange={updateBackgroundColor}
         presetColors={themeColors}
       >
-        <MdFormatColorFill size={18} />
+        <ColorFillSwatchIcon
+          size={18}
+          swatchColor={editorState.background}
+        />
       </ColorPickerButton>
 
       <Divider
