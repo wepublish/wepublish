@@ -124,7 +124,7 @@ const HeroFrame = styled('div')`
 const HeroImage = styled(Image)`
   width: 100%;
   height: auto;
-  max-height: 480px;
+  max-height: unset;
   object-fit: cover;
 `;
 
