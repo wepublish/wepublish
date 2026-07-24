@@ -32,8 +32,6 @@ export const ImageSlider = ({
   detailsChanged,
   slideGap,
   className,
-  blockStyle,
-  ...props
 }: BuilderBlockStyleProps['ImageSlider']) => {
   const {
     blocks: { Image },
