@@ -296,10 +296,7 @@ export function MenuBar() {
         onChange={updateColor}
         presetColors={themeColors}
       >
-        <MdFormatColorText
-          size={18}
-          style={{ color: editorState.color }}
-        />
+        <MdFormatColorText size={18} />
       </ColorPickerButton>
 
       <ColorPickerButton
@@ -307,10 +304,7 @@ export function MenuBar() {
         onChange={updateBackgroundColor}
         presetColors={themeColors}
       >
-        <MdFormatColorFill
-          size={18}
-          style={{ color: editorState.background }}
-        />
+        <MdFormatColorFill size={18} />
       </ColorPickerButton>
 
       <Divider
