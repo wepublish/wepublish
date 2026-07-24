@@ -139,6 +139,9 @@ function CustomApp({
                   slug="main"
                   headerSlug="header"
                   iconSlug="icons"
+                  loginBtn={null}
+                  profileBtn={null}
+                  subscribeBtn={null}
                 />
 
                 <main>

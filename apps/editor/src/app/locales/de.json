@@ -2366,6 +2366,9 @@
         "Event": "Event",
         "Custom": "Custom"
       }
+    },
+    "columnConfigurator": {
+      "title": "Spalten ein-/ausblenden"
     }
   }
 }
