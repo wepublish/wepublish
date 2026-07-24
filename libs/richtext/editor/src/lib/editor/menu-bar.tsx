@@ -112,10 +112,13 @@ export function MenuBar() {
           chain.extendMarkRange('textStyle');
         }
 
+        // Scoped clear: unsetColor() strips textStyle across containers
         if (color) {
           chain.setColor(color).run();
+        } else if (editor.getAttributes('textStyle').backgroundColor) {
+          chain.setMark('textStyle', { color: null }).run();
         } else {
-          chain.unsetColor().run();
+          chain.unsetMark('textStyle').run();
         }
       },
       [editor]
@@ -132,10 +135,13 @@ export function MenuBar() {
           chain.extendMarkRange('textStyle');
         }
 
+        // Scoped clear: unsetBackgroundColor() strips textStyle across containers
         if (color) {
           chain.setBackgroundColor(color).run();
+        } else if (editor.getAttributes('textStyle').color) {
+          chain.setMark('textStyle', { backgroundColor: null }).run();
         } else {
-          chain.unsetBackgroundColor().run();
+          chain.unsetMark('textStyle').run();
         }
       },
       [editor]
