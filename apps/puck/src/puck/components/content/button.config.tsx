@@ -14,6 +14,10 @@ export const ButtonConfig: ComponentConfig<{
   };
   fields: UserFields;
 }> = {
+  ai: {
+    instructions:
+      'A call-to-action button. Use it to prompt the reader to take an action. The text field is the button label; variant chooses the visual style (contained, outlined or text), color picks a palette colour, and alignment positions the button (start, center or end).',
+  },
   inline: true,
   fields: {
     text: {

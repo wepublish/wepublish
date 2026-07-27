@@ -2,6 +2,8 @@ import '@puckeditor/core/puck.css';
 
 import { useTheme } from '@emotion/react';
 import { Data, Puck } from '@puckeditor/core';
+import { withDynamicConfig } from '@puckeditor/plugin-ai';
+// import { withDynamicConfig } from '@puckeditor/plugin-ai';
 import {
   Md2K,
   Md4K,
@@ -11,6 +13,7 @@ import {
 } from 'react-icons/md';
 
 import { config } from '../src/puck/config';
+import { AIPlugin } from '../src/puck/plugins/ai';
 import { alignmentPlugin } from '../src/puck/plugins/alignment';
 import { borderPlugin } from '../src/puck/plugins/border';
 import { colorPlugin } from '../src/puck/plugins/color/color';
@@ -40,10 +43,14 @@ const initialData: Partial<Data<UserConfig['components']>> = {};
 
 export default function Index() {
   const theme = useTheme();
+  const dynamicConfig = withDynamicConfig(
+    config,
+    initialData as Data
+  ) as typeof config;
 
   return (
     <Puck
-      config={config}
+      config={dynamicConfig}
       data={initialData}
       plugins={[
         BlocksPlugin,
@@ -55,6 +62,7 @@ export default function Index() {
         HeadingAnalyzerPlugin,
         RawDataPlugin,
         EmotionPlugin,
+        AIPlugin,
         //
         themePlugin,
         //
