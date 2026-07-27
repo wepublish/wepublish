@@ -15,6 +15,10 @@ export const ContainerConfig: ComponentConfig<{
   props: ContainerProps;
   fields: UserFields;
 }> = {
+  ai: {
+    instructions:
+      'A layout wrapper that horizontally centres its nested content and constrains it to a maximum width. Place other components inside its content slot. Use maxWidth (Auto, sm, md, lg or xl) to control how wide the content may grow. Containers cannot be nested inside one another.',
+  },
   inline: true,
   fields: {
     content: {

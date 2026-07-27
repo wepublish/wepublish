@@ -9,6 +9,10 @@ export const ListicleConfig: ComponentConfig<{
   props: BuilderListicleBlockProps;
   fields: UserFields;
 }> = {
+  ai: {
+    instructions:
+      'An ordered list of titled entries, each with its own title and rich text body. Use it for listicles, step-by-step breakdowns, rankings or any "top N" style content. Add one item per entry; every item needs a title and can hold formatted rich text.',
+  },
   fields: {
     items: {
       type: 'array',

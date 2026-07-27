@@ -8,6 +8,10 @@ export const BreakConfig: ComponentConfig<{
   props: BuilderBreakBlockProps;
   fields: UserFields;
 }> = {
+  ai: {
+    instructions:
+      'A visually distinct call-to-action break that interrupts the article flow, typically to promote something. It shows a headline (text), a rich text body and, unless hidden, a button. Set hideButton to false and provide linkText (button label) and linkURL (button target) to show the button, or set hideButton to true to omit it.',
+  },
   fields: {
     text: {
       type: 'text',
