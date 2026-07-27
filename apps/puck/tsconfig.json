@@ -19,7 +19,15 @@
     ],
     "types": ["jest", "node"]
   },
-  "include": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx", "next-env.d.ts"],
+  "include": [
+    "**/*.js",
+    "**/*.jsx",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "next-env.d.ts",
+    "../../apps/puck/.next/types/**/*.ts"
+  ],
   "exclude": [
     "node_modules",
     "jest.config.ts",

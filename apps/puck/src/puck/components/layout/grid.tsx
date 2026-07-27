@@ -13,6 +13,10 @@ export const Grid: ComponentConfig<{
   props: GridProps;
   fields: UserFields;
 }> = {
+  ai: {
+    instructions:
+      'A column-based layout that places its nested components side by side in equal or proportionally sized columns. Choose a column preset via the columns (Layout) field and add components to the content slot. Use it to arrange content in a fixed set of columns.',
+  },
   fields: {
     columns: {
       type: 'columns',

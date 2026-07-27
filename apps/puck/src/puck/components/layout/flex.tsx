@@ -23,6 +23,10 @@ export const Flex: ComponentConfig<{
   props: FlexProps;
   fields: UserFields;
 }> = {
+  ai: {
+    instructions:
+      'A flexible 12-column grid layout that arranges its nested components across one or more rows. Place components inside its content slot; set rows to the number of rows to lay them out in. Child components placed here can additionally set a column span and row span. Use it for multi-column arrangements of mixed content.',
+  },
   fields: {
     content: {
       type: 'slot',

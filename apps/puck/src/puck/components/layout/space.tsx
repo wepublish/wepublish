@@ -8,6 +8,10 @@ export const Space: ComponentConfig<{
   props: SpaceProps;
   fields: UserFields;
 }> = {
+  ai: {
+    instructions:
+      'Adds empty vertical spacing between other components. Set size to Small, Medium, Large or XL to control the gap height. Use it to separate blocks; it renders no visible content of its own.',
+  },
   inline: true,
   fields: {
     size: {
