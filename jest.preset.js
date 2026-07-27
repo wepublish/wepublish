@@ -13,7 +13,7 @@ module.exports = {
     'jest-watch-typeahead/testname',
   ],
   transformIgnorePatterns: [
-    `/node_modules/(?!(react-tweet|react-player|@faker-js/faker|colors-named|happy-dom))`,
+    `/node_modules/(?!(react-tweet|react-player|@faker-js/faker|colors-named|happy-dom|@marsidev/react-turnstile))`,
   ],
   transform: {
     '^(?!.*\\.(js|jsx|ts|tsx|css|json)$)': '@nx/react/plugins/jest',

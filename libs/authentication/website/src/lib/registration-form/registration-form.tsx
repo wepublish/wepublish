@@ -6,13 +6,13 @@ import {
   BuilderUserFormFields,
   Button,
 } from '@wepublish/website/builder';
-import { PropsWithChildren, useEffect, useMemo } from 'react';
+import { PropsWithChildren, useEffect, useMemo, useRef } from 'react';
 import { Controller, DeepPartial, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { UserForm } from './user-form';
 import { ApiAlert } from '@wepublish/errors/website';
 import { userCountryNames } from '@wepublish/user';
-import { Challenge } from '../challenge/challenge';
+import { BuilderChallengeRef, Challenge } from '../challenge/challenge';
 
 export const RegistrationFormWrapper = styled('form')`
   display: grid;
@@ -82,6 +82,7 @@ export function RegistrationForm<
     onChange?: (values: DeepPartial<RegisterMutationVariables>) => void;
   }
 >) {
+  const challengeRef = useRef<BuilderChallengeRef>();
   const fieldsToDisplay = fields.reduce(
     (obj, field) => ({ ...obj, [field]: true }),
     {} as Record<Exclude<BuilderUserFormFields, 'flair'>, true>
@@ -139,7 +140,11 @@ export function RegistrationForm<
     return () => subscription.unsubscribe();
   }, [onChange, watch]);
 
-  const onSubmit = handleSubmit(data => onRegister?.(data));
+  const onSubmit = handleSubmit(data => {
+    challengeRef.current?.reset();
+
+    return onRegister?.(data);
+  });
 
   useEffect(() => {
     setValue(
@@ -165,6 +170,7 @@ export function RegistrationForm<
           render={({ field, fieldState: { error } }) => (
             <Challenge
               {...field}
+              challengeRef={challengeRef}
               value={field.value || ''}
               onChange={field.onChange}
               challenge={challenge.data!.challenge}

@@ -2,6 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { css, IconButton, Modal, Theme, useTheme } from '@mui/material';
 import styled from '@emotion/styled';
 import {
+  BuilderChallengeRef,
   Challenge,
   IntendedRouteExpiryInSeconds,
   IntendedRouteStorageKey,
@@ -16,7 +17,7 @@ import {
 } from '@wepublish/website/builder';
 import { setCookie } from 'cookies-next';
 import { add } from 'date-fns';
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { MdClose, MdLogin, MdSend } from 'react-icons/md';
 import { z } from 'zod';
@@ -233,6 +234,7 @@ export const CommentEditor = ({
   const { hasUser } = useUser();
   const [modalOpen, setModalOpen] = useState(!hasUser);
   const [showInitialModal, setShowInitialModal] = useState(anonymousCanComment);
+  const challengeRef = useRef<BuilderChallengeRef>();
 
   const handleClose = () => {
     setModalOpen(false);
@@ -299,6 +301,7 @@ export const CommentEditor = ({
   });
 
   const submit = handleSubmit(({ comment, ...data }) => {
+    challengeRef.current?.reset();
     onSubmit({
       ...data,
       text: {
@@ -403,6 +406,7 @@ export const CommentEditor = ({
             render={({ field, fieldState: { error } }) => (
               <Challenge
                 {...field}
+                challengeRef={challengeRef}
                 onChange={field.onChange}
                 challenge={challenge.data!.challenge}
                 label={'Captcha'}
