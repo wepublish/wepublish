@@ -8,6 +8,10 @@ export const QuoteConfig: ComponentConfig<{
   props: BuilderQuoteBlockProps;
   fields: UserFields;
 }> = {
+  ai: {
+    instructions:
+      'A highlighted pull quote with an attribution. Use it to emphasise a notable statement or citation. The quote field holds the quoted text and the author field holds the person or source it is attributed to.',
+  },
   fields: {
     quote: {
       type: 'text',
