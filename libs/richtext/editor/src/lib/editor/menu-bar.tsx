@@ -7,7 +7,11 @@ import {
   ToggleButton,
   ToggleButtonGroup,
 } from '@mui/material';
-import { useCurrentEditor, useEditorState } from '@tiptap/react';
+import {
+  EditorStateSnapshot,
+  useCurrentEditor,
+  useEditorState,
+} from '@tiptap/react';
 import {
   MdFormatAlignCenter,
   MdFormatAlignLeft,
@@ -35,70 +39,75 @@ import { ColorFillSwatchIcon, ColorTextSwatchIcon } from './color-swatch-icons';
 import { LinkPopoverButton } from './link-popover';
 import { useWebsiteThemeColors } from './use-website-theme-colors';
 
+const selectMenuBarState = ({ editor }: EditorStateSnapshot) => {
+  if (!editor || editor.isDestroyed) {
+    return null;
+  }
+
+  const headingMap = [
+    editor.isActive('paragraph'),
+    editor.isActive('heading', { level: 1 }),
+    editor.isActive('heading', { level: 2 }),
+    editor.isActive('heading', { level: 3 }),
+    editor.isActive('heading', { level: 4 }),
+    editor.isActive('heading', { level: 5 }),
+    editor.isActive('heading', { level: 6 }),
+  ];
+
+  const alignmentMap = {
+    left: editor.isActive({ textAlign: 'left' }),
+    center: editor.isActive({ textAlign: 'center' }),
+    right: editor.isActive({ textAlign: 'right' }),
+  };
+
+  return {
+    isBold: editor.isActive('bold') ?? false,
+    canBold: editor.can().chain().toggleBold().run() ?? false,
+    isItalic: editor.isActive('italic') ?? false,
+    canItalic: editor.can().chain().toggleItalic().run() ?? false,
+    isStrike: editor.isActive('strike') ?? false,
+    canStrike: editor.can().chain().toggleStrike().run() ?? false,
+    isUnderline: editor.isActive('underline') ?? false,
+    canUnderline: editor.can().chain().toggleUnderline().run() ?? false,
+    isSub: editor.isActive('subscript') ?? false,
+    canSub: editor.can().chain().toggleSubscript().run() ?? false,
+    isSup: editor.isActive('superscript') ?? false,
+    canSup: editor.can().chain().toggleSuperscript().run() ?? false,
+
+    alignment: Object.entries(alignmentMap).reduce(
+      (curr, [key, value]) => (value ? [key] : curr),
+      ['left']
+    ),
+    canAlign: editor.can().chain().setTextAlign('left').run() ?? false,
+
+    headingLevel: headingMap.includes(true) ? headingMap.indexOf(true) : 0,
+
+    color: editor.getAttributes('textStyle').color,
+    background: editor.getAttributes('textStyle').backgroundColor,
+
+    list: Object.entries({
+      bullet: editor.isActive('bulletList'),
+      ordered: editor.isActive('orderedList'),
+      task: editor.isActive('taskList'),
+    }).flatMap(([key, value]) => (value ? key : [])),
+
+    canUndo: editor.can().chain().undo().run() ?? false,
+    canRedo: editor.can().chain().redo().run() ?? false,
+
+    isCodeBlock: editor.isActive('codeBlock') ?? false,
+    isBlockquote: editor.isActive('blockquote') ?? false,
+    isLink: editor.isActive('link') ?? false,
+
+    invisibleCharactersVisible: editor.storage.invisibleCharacters.visibility(),
+  };
+};
+
 export function MenuBar() {
   const { t } = useTranslation();
   const editor = useCurrentEditor().editor!;
   const editorState = useEditorState({
     editor,
-    selector: ctx => {
-      const headingMap = [
-        ctx.editor.isActive('paragraph'),
-        ctx.editor.isActive('heading', { level: 1 }),
-        ctx.editor.isActive('heading', { level: 2 }),
-        ctx.editor.isActive('heading', { level: 3 }),
-        ctx.editor.isActive('heading', { level: 4 }),
-        ctx.editor.isActive('heading', { level: 5 }),
-        ctx.editor.isActive('heading', { level: 6 }),
-      ];
-
-      const alignmentMap = {
-        left: ctx.editor.isActive({ textAlign: 'left' }),
-        center: ctx.editor.isActive({ textAlign: 'center' }),
-        right: ctx.editor.isActive({ textAlign: 'right' }),
-      };
-
-      return {
-        isBold: ctx.editor.isActive('bold') ?? false,
-        canBold: ctx.editor.can().chain().toggleBold().run() ?? false,
-        isItalic: ctx.editor.isActive('italic') ?? false,
-        canItalic: ctx.editor.can().chain().toggleItalic().run() ?? false,
-        isStrike: ctx.editor.isActive('strike') ?? false,
-        canStrike: ctx.editor.can().chain().toggleStrike().run() ?? false,
-        isUnderline: ctx.editor.isActive('underline') ?? false,
-        canUnderline: ctx.editor.can().chain().toggleUnderline().run() ?? false,
-        isSub: ctx.editor.isActive('subscript') ?? false,
-        canSub: ctx.editor.can().chain().toggleSubscript().run() ?? false,
-        isSup: ctx.editor.isActive('superscript') ?? false,
-        canSup: ctx.editor.can().chain().toggleSuperscript().run() ?? false,
-
-        alignment: Object.entries(alignmentMap).reduce(
-          (curr, [key, value]) => (value ? [key] : curr),
-          ['left']
-        ),
-        canAlign: ctx.editor.can().chain().setTextAlign('left').run() ?? false,
-
-        headingLevel: headingMap.includes(true) ? headingMap.indexOf(true) : 0,
-
-        color: ctx.editor.getAttributes('textStyle').color,
-        background: ctx.editor.getAttributes('textStyle').backgroundColor,
-
-        list: Object.entries({
-          bullet: ctx.editor.isActive('bulletList'),
-          ordered: ctx.editor.isActive('orderedList'),
-          task: ctx.editor.isActive('taskList'),
-        }).flatMap(([key, value]) => (value ? key : [])),
-
-        canUndo: ctx.editor.can().chain().undo().run() ?? false,
-        canRedo: ctx.editor.can().chain().redo().run() ?? false,
-
-        isCodeBlock: ctx.editor.isActive('codeBlock') ?? false,
-        isBlockquote: ctx.editor.isActive('blockquote') ?? false,
-        isLink: ctx.editor.isActive('link') ?? false,
-
-        invisibleCharactersVisible:
-          ctx.editor.storage.invisibleCharacters.visibility(),
-      };
-    },
+    selector: selectMenuBarState,
     equalityFn: equals,
   });
   const themeColors = useWebsiteThemeColors();
@@ -148,6 +157,10 @@ export function MenuBar() {
     ),
     1
   );
+
+  if (!editorState) {
+    return null;
+  }
 
   return (
     <>
