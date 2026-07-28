@@ -18,10 +18,13 @@ import { MailContext, mailLogType } from '@wepublish/mail/api';
 import { unselectPassword } from '@wepublish/authentication/api';
 import { InvoiceWithItems, PaymentProvider } from '@wepublish/payment/api';
 import {
+  calculateAmountForPeriodicity,
   logger,
   ONE_DAY_IN_MILLISECONDS,
   ONE_MONTH_IN_MILLISECONDS,
 } from '@wepublish/utils/api';
+
+export { calculateAmountForPeriodicity } from '@wepublish/utils/api';
 import {
   Action,
   LookupActionInput,
@@ -115,26 +118,6 @@ export function getNextDateForPeriodicity(
       return new Date(start.setMonth(start.getMonth() + 24));
     case PaymentPeriodicity.lifetime:
       return new Date(start.setMonth(start.getMonth() + 1200));
-  }
-}
-
-export function calculateAmountForPeriodicity(
-  monthlyAmount: number,
-  periodicity: PaymentPeriodicity
-): number {
-  switch (periodicity) {
-    case PaymentPeriodicity.monthly:
-      return monthlyAmount;
-    case PaymentPeriodicity.quarterly:
-      return monthlyAmount * 3;
-    case PaymentPeriodicity.biannual:
-      return monthlyAmount * 6;
-    case PaymentPeriodicity.yearly:
-      return monthlyAmount * 12;
-    case PaymentPeriodicity.biennial:
-      return monthlyAmount * 24;
-    case PaymentPeriodicity.lifetime:
-      return monthlyAmount * 1200;
   }
 }
 

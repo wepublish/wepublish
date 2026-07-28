@@ -15,6 +15,10 @@ export * from './lib/html/html-block.model';
 export * from './lib/event/event-block.model';
 export * from './lib/richtext/richtext-block.model';
 export * from './lib/subscribe/subscribe-block.model';
+export * from './lib/mailchimp-form/mailchimp-form-block.model';
+export * from './lib/mailchimp-form/mailchimp-subscribe.model';
+export * from './lib/mailchimp-form/mailchimp-subscribe.service';
+export * from './lib/mailchimp-form/mailchimp-subscribe.resolver';
 export * from './lib/embed/iframe-block.model';
 export * from './lib/base-block.model';
 

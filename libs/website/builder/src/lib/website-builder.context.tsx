@@ -40,6 +40,7 @@ import {
   BuilderFacebookPostBlockProps,
   BuilderFacebookVideoBlockProps,
   BuilderHTMLBlockProps,
+  BuilderMailchimpFormBlockProps,
   BuilderIFrameBlockProps,
   BuilderImageBlockProps,
   BuilderImageGalleryBlockProps,
@@ -229,6 +230,7 @@ export type WebsiteBuilderProps = {
     RichText: ComponentType<BuilderRichTextBlockProps>;
     HTML: ComponentType<BuilderHTMLBlockProps>;
     Subscribe: ComponentType<BuilderSubscribeBlockProps>;
+    MailchimpForm: ComponentType<BuilderMailchimpFormBlockProps>;
     FacebookPost: ComponentType<BuilderFacebookPostBlockProps>;
     FacebookVideo: ComponentType<BuilderFacebookVideoBlockProps>;
     InstagramPost: ComponentType<BuilderInstagramPostBlockProps>;
@@ -368,6 +370,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
     RichText: NoComponent,
     HTML: NoComponent,
     Subscribe: NoComponent,
+    MailchimpForm: NoComponent,
     FacebookPost: NoComponent,
     FacebookVideo: NoComponent,
     InstagramPost: NoComponent,

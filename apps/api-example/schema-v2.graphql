@@ -317,7 +317,7 @@ input BildwurfAdBlockInput {
   zoneID: String
 }
 
-union BlockContent = BildwurfAdBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | FlexBlock | HTMLBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | StreamableVideoBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock
+union BlockContent = BildwurfAdBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | FlexBlock | HTMLBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | MailchimpFormBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | StreamableVideoBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock
 
 input BlockContentInput {
   bildwurfAd: BildwurfAdBlockInput
@@ -334,6 +334,7 @@ input BlockContentInput {
   instagramPost: InstagramPostBlockInput
   linkPageBreak: BreakBlockInput
   listicle: ListicleBlockInput
+  mailchimpForm: MailchimpFormBlockInput
   polisConversation: PolisConversationBlockInput
   poll: PollBlockInput
   quote: QuoteBlockInput
@@ -375,6 +376,7 @@ enum BlockType {
   InstagramPost
   LinkPageBreak
   Listicle
+  MailchimpForm
   PolisConversation
   Poll
   Quote
@@ -884,6 +886,7 @@ enum EditorBlockType {
   ImageGallery
   LinkPageBreak
   Listicle
+  MailchimpForm
   Poll
   Quote
   RichText
@@ -1598,6 +1601,131 @@ type MailTemplateWithUrlAndStatusModel {
   url: String!
 }
 
+input MailchimpContactInput {
+  email: String!
+  interests: JSONObject
+  listId: String!
+  mergeFields: JSONObject
+  status: MailchimpContactStatus!
+  syncProviderId: String!
+}
+
+enum MailchimpContactStatus {
+  Pending
+  Subscribed
+}
+
+type MailchimpFormBlock implements BaseBlock {
+  autoFocus: Boolean!
+  blockStyle: String
+  blockStyleName: String
+  buttonColor: String
+  buttonFontColor: String
+  disabled: Boolean
+  doubleOptIn: Boolean
+  interests: [String!]!
+  listId: String
+  steps: [MailchimpFormStep!]!
+  submitButtonLabel: String
+  successPage: MailchimpFormSuccessPage
+  successUrl: String
+  syncProviderId: String
+  type: BlockType!
+}
+
+input MailchimpFormBlockInput {
+  autoFocus: Boolean! = true
+  blockStyle: String
+  blockStyleName: String
+  buttonColor: String
+  buttonFontColor: String
+  disabled: Boolean
+  doubleOptIn: Boolean
+  interests: [String!]! = []
+  listId: String
+  steps: [MailchimpFormStepInput!]! = []
+  submitButtonLabel: String
+  successPage: MailchimpFormSuccessPageInput
+  successUrl: String
+  syncProviderId: String
+}
+
+type MailchimpFormFieldConfig {
+  defaultValue: String
+  description: String
+  inputType: String
+  label: String
+  name: String
+  options: [MailchimpFormInterestOption!]!
+  required: Boolean
+  urlParam: String
+  value: String
+}
+
+input MailchimpFormFieldConfigInput {
+  defaultValue: String
+  description: String
+  inputType: String
+  label: String
+  name: String
+  options: [MailchimpFormInterestOptionInput!]! = []
+  required: Boolean
+  urlParam: String
+  value: String
+}
+
+type MailchimpFormInterestOption {
+  description: String
+  id: String!
+  name: String!
+}
+
+input MailchimpFormInterestOptionInput {
+  description: String
+  id: String!
+  name: String!
+}
+
+type MailchimpFormStep {
+  inputs: [MailchimpFormFieldConfig!]!
+  showIfInterestsFilled: [String!]!
+  skipIfFieldsFilled: [String!]!
+  skipIfInterestsFilled: [String!]!
+}
+
+input MailchimpFormStepInput {
+  inputs: [MailchimpFormFieldConfigInput!]! = []
+  showIfInterestsFilled: [String!]! = []
+  skipIfFieldsFilled: [String!]! = []
+  skipIfInterestsFilled: [String!]! = []
+}
+
+type MailchimpFormSuccessOption {
+  background: String!
+  label: String!
+  mergeFieldName: String
+  mergeFieldValue: String
+  url: String!
+}
+
+input MailchimpFormSuccessOptionInput {
+  background: String!
+  label: String!
+  mergeFieldName: String
+  mergeFieldValue: String
+  url: String!
+}
+
+type MailchimpFormSuccessPage {
+  description: String
+  options: [MailchimpFormSuccessOption!]!
+}
+
+input MailchimpFormSuccessPageInput {
+  description: String
+  options: [MailchimpFormSuccessOptionInput!]! = []
+}
+
 type MailchimpInterestGroup {
   id: String!
   name: String!
@@ -1613,6 +1741,11 @@ type MailchimpMergeField {
   name: String!
   tag: String!
   type: String!
+}
+
+type MailchimpSubscribeResult {
+  error: String
+  success: Boolean!
 }
 
 type MailchimpSyncDryRunChange {
@@ -1700,6 +1833,9 @@ enum MemberPlanSort {
 }
 
 type Mutation {
+  """Subscribes a contact to a Mailchimp list."""
+  addMailchimpContact(input: MailchimpContactInput!): MailchimpSubscribeResult!
+
   """Adds a new comment made by you."""
   addUserComment(challenge: ChallengeInput, guestUsername: String, itemID: String!, itemType: CommentItemType!, parentID: String, text: RichText!, title: String): Comment!
 

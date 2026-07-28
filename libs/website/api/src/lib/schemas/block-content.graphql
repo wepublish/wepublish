@@ -118,6 +118,50 @@ fragment FullSubscribeBlock on SubscribeBlock {
   fields
 }
 
+fragment FullMailchimpFormBlock on MailchimpFormBlock {
+  disabled
+  blockStyle: blockStyleName
+  syncProviderId
+  listId
+  interests
+  autoFocus
+  doubleOptIn
+  buttonColor
+  buttonFontColor
+  submitButtonLabel
+  successUrl
+  steps {
+    skipIfFieldsFilled
+    skipIfInterestsFilled
+    showIfInterestsFilled
+    inputs {
+      inputType
+      name
+      label
+      description
+      required
+      urlParam
+      defaultValue
+      value
+      options {
+        id
+        name
+        description
+      }
+    }
+  }
+  successPage {
+    description
+    options {
+      label
+      background
+      url
+      mergeFieldName
+      mergeFieldValue
+    }
+  }
+}
+
 fragment FullEventBlock on EventBlock {
   disabled
   blockStyle: blockStyleName
@@ -286,6 +330,10 @@ fragment BlockWithoutTeaser on BlockContent {
 
   ... on SubscribeBlock {
     ...FullSubscribeBlock
+  }
+
+  ... on MailchimpFormBlock {
+    ...FullMailchimpFormBlock
   }
 
   ... on EventBlock {
@@ -523,5 +571,12 @@ fragment FullBlock on BlockContent {
 
   ... on FlexBlock {
     ...FullFlexBlock
+  }
+}
+
+mutation AddMailchimpContact($input: MailchimpContactInput!) {
+  addMailchimpContact(input: $input) {
+    success
+    error
   }
 }

@@ -7,6 +7,7 @@ import {
   BuilderEventBlockProps,
   BuilderFlexBlockProps,
   BuilderHTMLBlockProps,
+  BuilderMailchimpFormBlockProps,
   BuilderListicleBlockProps,
   BuilderPollBlockProps,
   BuilderQuoteBlockProps,
@@ -18,6 +19,7 @@ import {
 import { isFlexBlock } from './nested-blocks/flex-block';
 import { isHtmlBlock } from './html/html-block';
 import { isSubscribeBlock } from './subscribe/subscribe-block';
+import { isMailchimpFormBlock } from './mailchimp-form/mailchimp-form-block';
 import { isImageBlock } from './image/image-block';
 import { isQuoteBlock } from './quote/quote-block';
 import { isRichTextBlock } from './richtext/richtext-block';
@@ -398,6 +400,15 @@ export const BlockRenderer = memo(
           block => (
             <blocks.Subscribe
               {...(block as BuilderSubscribeBlockProps)}
+              className={className}
+            />
+          ),
+        ],
+        [
+          isMailchimpFormBlock,
+          block => (
+            <blocks.MailchimpForm
+              {...(block as BuilderMailchimpFormBlockProps)}
               className={className}
             />
           ),

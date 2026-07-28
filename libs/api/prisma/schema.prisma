@@ -1365,6 +1365,7 @@ enum BlockType {
   TeaserSlots    @map("teaserSlots")
   HTML           @map("html")
   Subscribe      @map("subscribe")
+  MailchimpForm  @map("mailchimpForm")
   Crowdfunding   @map("crowdfunding")
   Poll           @map("poll")
   Comment        @map("comment")

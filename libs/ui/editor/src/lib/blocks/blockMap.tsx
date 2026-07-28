@@ -20,6 +20,7 @@ import {
   MdFormatQuote,
   MdIntegrationInstructions,
   MdInterests,
+  MdMarkEmailRead,
   MdMoney,
   MdPhoto,
   MdPhotoLibrary,
@@ -41,6 +42,7 @@ import { ImageBlock } from './imageBlock';
 import { ImageGalleryBlock } from './imageGalleryBlock';
 import { LinkPageBreakBlock } from './linkPageBreakBlock';
 import { ListicleBlock } from './listicleBlock';
+import { MailchimpFormBlock } from './mailchimpFormBlock';
 import { PollBlock } from './pollBlock';
 import { QuoteBlock } from './quoteBlock';
 import { RichTextBlock } from './richTextBlock/rich-text-block';
@@ -272,6 +274,45 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
     },
     label: 'blocks.subscribe.label',
     icon: <MdAccountBox />,
+  },
+
+  [EditorBlockType.MailchimpForm]: {
+    field: props => <MailchimpFormBlock {...props} />,
+    defaultValue: {
+      blockStyle: undefined,
+      syncProviderId: null,
+      listId: null,
+      interests: [],
+      autoFocus: true,
+      doubleOptIn: true,
+      buttonColor: '#ffd60a',
+      buttonFontColor: '#000000',
+      submitButtonLabel: '',
+      steps: [
+        {
+          skipIfFieldsFilled: [],
+          skipIfInterestsFilled: [],
+          showIfInterestsFilled: [],
+          inputs: [
+            {
+              inputType: 'email',
+              name: 'EMAIL',
+              label: 'E-Mail',
+              description: null,
+              required: true,
+              urlParam: 'email',
+              defaultValue: null,
+              value: null,
+              options: [],
+            },
+          ],
+        },
+      ],
+      successUrl: '',
+      successPage: null,
+    },
+    label: 'blocks.mailchimpForm.label',
+    icon: <MdMarkEmailRead />,
   },
 
   [EditorBlockType.Poll]: {
