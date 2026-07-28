@@ -71,7 +71,7 @@ export const ReflektGoodiePicker = forwardRef<
             variant="h2"
             component="h2"
           >
-            Goodies
+            Crowdfunding-Geschenk
           </GoodieSliderTitle>
 
           <ReflektImageSliderSlim images={images} />

@@ -142,13 +142,6 @@ const isSubscriptionUpgradeable = (subscription: FullSubscriptionFragment) =>
     new Date(subscription.deactivation.date) > new Date()) &&
   isMemberplanUpgradeable(subscription.memberPlan);
 
-/**
- * Subscribe block used for regular subscribe pages. On a page tagged for
- * force-upgrade (ForceUpgradeContext), it rewrites the URL to
- * `?upgradeSubscriptionId=<cheapest upgradeable subscription>` so the core
- * SubscribeBlock renders the Upgrade flow. Otherwise it behaves like the plain
- * ReflektSubscribe block.
- */
 export const ReflektSubscribeBlock = (props: BuilderSubscribeBlockProps) => {
   const { hasUser } = useUser();
   const router = useRouter();
