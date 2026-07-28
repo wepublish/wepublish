@@ -245,6 +245,7 @@ export const Banner = ({
       hasImage={!!data.primaryBanner.image}
       className={className}
       data-collapsed={collapsed}
+      data-embed={!!embedSrc}
       data-banner
     >
       <BannerCloseButton onClick={handleClose}>&#x2715;</BannerCloseButton>
