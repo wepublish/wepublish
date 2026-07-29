@@ -14,6 +14,10 @@ const Wrapper = styled.div`
   }
 
   ${({ theme }) => theme.breakpoints.up('lg')} {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  ${({ theme }) => theme.breakpoints.up('xl')} {
     grid-template-columns: repeat(4, 1fr);
   }
 `;

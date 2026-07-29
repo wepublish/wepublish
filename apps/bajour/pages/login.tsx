@@ -109,8 +109,8 @@ Login.getInitialProps = async (ctx: NextPageContext) => {
   if (typeof window !== 'undefined') {
     return {};
   }
-  const client = getApiClient(getApiUrl(), []);
 
+  const client = getApiClient(getApiUrl(), []);
   const jwtSuccess = await handleJwtLogin(ctx, client);
 
   if (jwtSuccess) {

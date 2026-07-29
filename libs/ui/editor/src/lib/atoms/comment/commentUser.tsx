@@ -45,9 +45,7 @@ export function CommentUser({ comment, setComment }: CommentUserProps) {
     <>
       <Row>
         <Col xs={24}>
-          <Form.ControlLabel>
-            {t('commentUser.selectExistingUser')}
-          </Form.ControlLabel>
+          <Form.Label>{t('commentUser.selectExistingUser')}</Form.Label>
 
           <UserSearch
             key={`user-${comment?.user}`}
@@ -61,7 +59,7 @@ export function CommentUser({ comment, setComment }: CommentUserProps) {
         </Col>
 
         <Col xs={24}>
-          <Form.ControlLabel>{t('commentUser.guestUser')}</Form.ControlLabel>
+          <Form.Label>{t('commentUser.guestUser')}</Form.Label>
           <Form.Control
             name="guestUser"
             placeholder={t('commentUser.guestUser')}

@@ -270,7 +270,7 @@ export class PaymentsService {
 
     const payment = await this.prisma.payment.create({
       data: {
-        paymentMethodID,
+        paymentMethodID: paymentMethod.id,
         invoiceID: invoice.id,
         state: PaymentState.created,
       },

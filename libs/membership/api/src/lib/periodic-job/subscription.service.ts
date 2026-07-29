@@ -491,15 +491,6 @@ export class SubscriptionService {
       subscriptionPeriods: SubscriptionPeriod[];
     }
   ): Promise<undefined> {
-    const paymentProvider = this.payments.findById(
-      invoice.subscription!.paymentMethod.paymentProviderID
-    );
-
-    if (!paymentProvider) {
-      throw new NotFoundException(
-        `Payment Provider ${invoice.subscription?.paymentMethod.paymentProviderID} not found!`
-      );
-    }
     const payments = await this.payments.findByInvoiceId(invoice.id);
     for (const payment of payments) {
       if (!payment || !payment.intentID) {
@@ -507,6 +498,25 @@ export class SubscriptionService {
       }
 
       try {
+        // Resolve the provider from the payment's own payment method. An
+        // invoice can carry payments made with a different provider than the
+        // subscription's current one (e.g. the member switched payment method
+        // mid-invoice). Checking a payment against the subscription's provider
+        // is meaningless and, for some providers, throws.
+        const paymentProvider =
+          await this.payments.findPaymentProviderByPaymentMethodeId(
+            payment.paymentMethodID
+          );
+
+        if (!paymentProvider) {
+          logger('checkInvoiceState').warn(
+            'No payment provider found for payment <%s> with payment method %s, skipping intent check',
+            payment.id,
+            payment.paymentMethodID
+          );
+          continue;
+        }
+
         const intentState = await paymentProvider.checkIntentStatus({
           intentID: payment.intentID,
           paymentID: payment.id,
@@ -520,15 +530,15 @@ export class SubscriptionService {
           intentState,
         });
       } catch (e) {
+        // A single payment's status check must never abort the whole periodic
+        // job. Log and continue with the remaining payments.
         logger('checkInvoiceState').error(
-          'Checking payment <%s> with intent %s on payment provider %s hard failed with error: %s',
+          'Checking payment <%s> with intent %s on payment method %s failed with error: %s',
           payment.id,
           payment.intentID,
-          paymentProvider.getName(),
+          payment.paymentMethodID,
           e
         );
-
-        throw e;
       }
     }
   }

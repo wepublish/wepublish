@@ -95,9 +95,8 @@ export function GalleryListItem({
         />
         <Form fluid>
           <Form.Group controlId="caption">
-            <Form.ControlLabel>
-              {t('blocks.imageGallery.panels.caption')}
-            </Form.ControlLabel>
+            <Form.Label>{t('blocks.imageGallery.panels.caption')}</Form.Label>
+
             <Form.Control
               name="caption"
               rows={1}
