@@ -2,6 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Checkbox, FormControlLabel, FormHelperText } from '@mui/material';
 import styled from '@emotion/styled';
 import {
+  BuilderChallengeRef,
   Challenge,
   defaultRegisterSchema,
   requiredRegisterSchema,
@@ -27,8 +28,8 @@ import {
   useAsyncAction,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { useEffect, useMemo, useState } from 'react';
-import { Controller, useForm, useWatch } from 'react-hook-form';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { formatCurrency, roundUpTo5Cents } from '../formatters/format-currency';
 import {
@@ -269,6 +270,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error>();
   const callAction = useAsyncAction(setLoading, setError);
+  const challengeRef = useRef<BuilderChallengeRef>();
 
   const fieldsToDisplay = useMemo(
     () =>
@@ -447,6 +449,8 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   });
 
   const onSubmit = handleSubmit(data => {
+    challengeRef.current?.reset();
+
     if (subscribeInfo.data?.createSubscriptionInfo.voucherValid === false) {
       return;
     }
@@ -819,6 +823,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
               render={({ field, fieldState: { error } }) => (
                 <Challenge
                   {...field}
+                  challengeRef={challengeRef}
                   value={field.value || ''}
                   onChange={field.onChange}
                   challenge={challenge.data!.challenge}
