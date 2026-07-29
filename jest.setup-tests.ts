@@ -52,3 +52,9 @@ if (typeof window !== 'undefined' && window.matchMedia === undefined) {
     }),
   });
 }
+
+global.ResizeObserver = class {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+};
