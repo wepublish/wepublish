@@ -21,13 +21,6 @@ fragment FullWebsiteSettings on WebsiteSettings {
     }
   }
 
-  mail {
-    mailchimp {
-      enabled
-      key
-    }
-  }
-
   ads {
     sparkLoop {
       enabled
@@ -51,14 +44,12 @@ query WebsiteSettings {
 
 mutation UpdateWebsiteSettings(
   $analytics: WebsiteAnalyticsInput
-  $mail: WebsiteMailInput
   $ads: WebsiteAdsInput
   $theme: JSONObject
   $fonts: [WebsiteRemoteFontInput!]
 ) {
   updateWebsiteSettings(
     analytics: $analytics
-    mail: $mail
     ads: $ads
     theme: $theme
     fonts: $fonts

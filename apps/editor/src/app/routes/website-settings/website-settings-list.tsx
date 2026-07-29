@@ -22,7 +22,6 @@ import {
   MdCheck,
   MdClose,
   MdColorLens,
-  MdMail,
   MdOutlineFontDownload,
   MdWarning,
 } from 'react-icons/md';
@@ -93,11 +92,6 @@ export const WebsiteSettingsList = () => {
       text: string;
     }>;
 
-    const mailIntegrations = [{ id: 'mailchimp', text: 'Mailchimp' }] as Array<{
-      id: Exclude<keyof WebsiteSettings['mail'], '__typename'>;
-      text: string;
-    }>;
-
     const adsIntegrations = [{ id: 'sparkLoop', text: 'SparkLoop' }] as Array<{
       id: Exclude<keyof WebsiteSettings['ads'], '__typename'>;
       text: string;
@@ -126,26 +120,6 @@ export const WebsiteSettingsList = () => {
         disabledIntegrations: analyticsIntegrations.filter(
           integration =>
             !data.websiteSettings.analytics[integration.id]?.enabled
-        ),
-        colors: [],
-      },
-      {
-        title: t('websiteSettings.mail.title'),
-        permission: CanGetAISettings.id,
-        path: '/settings/website/mail',
-        icon: <MdMail size={24} />,
-        enabledIntegrations: mailIntegrations.filter(
-          integration =>
-            data.websiteSettings.mail[integration.id]?.enabled &&
-            data.websiteSettings.mail[integration.id]?.key
-        ),
-        faulyIntegrations: mailIntegrations.filter(
-          integration =>
-            data.websiteSettings.mail[integration.id]?.enabled &&
-            !data.websiteSettings.mail[integration.id]?.key
-        ),
-        disabledIntegrations: mailIntegrations.filter(
-          integration => !data.websiteSettings.mail[integration.id]?.enabled
         ),
         colors: [],
       },

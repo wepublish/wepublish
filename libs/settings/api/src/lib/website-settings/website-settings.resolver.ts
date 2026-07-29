@@ -6,29 +6,17 @@ import {
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
-import {
-  AuthToken,
-  CurrentUser,
-  Public,
-  SCOPED_JWT_VERIFIER,
-  ScopedJwtVerifier,
-  UserSession,
-} from '@wepublish/authentication/api';
+import { Public } from '@wepublish/authentication/api';
 import { WebsiteSettingsService } from './website-settings.service';
 import { WebsiteSettings as PWebsiteSettings } from '@prisma/client';
 import {
   WebsiteSettings,
   UpdateWebsiteSettingsInput,
   WebsiteAnalytics,
-  WebsiteMail,
   WebsiteAds,
 } from './website-settings.model';
-import { hasPermission, Permissions } from '@wepublish/permissions/api';
-import {
-  CanGetWebsiteSettings,
-  CanUpdateWebsiteSettings,
-} from '@wepublish/permissions';
-import { Inject } from '@nestjs/common';
+import { Permissions } from '@wepublish/permissions/api';
+import { CanUpdateWebsiteSettings } from '@wepublish/permissions';
 
 @Resolver(() => WebsiteSettings)
 export class WebsiteSettingsResolver {
@@ -75,16 +63,6 @@ export class WebsiteSettingsResolver {
   }
 
   @ResolveField(() => WebsiteAnalytics)
-  mail(@Parent() parent: PWebsiteSettings): WebsiteMail {
-    return {
-      mailchimp: {
-        enabled: parent.mailMailchimpEnabled,
-        key: parent.mailMailchimpKey ?? undefined,
-      },
-    };
-  }
-
-  @ResolveField(() => WebsiteAnalytics)
   ads(@Parent() parent: PWebsiteSettings): WebsiteAds {
     return {
       sparkLoop: {
@@ -92,30 +70,5 @@ export class WebsiteSettingsResolver {
         key: parent.adsSparkLoopId ?? undefined,
       },
     };
-  }
-}
-
-@Resolver(() => WebsiteMail)
-export class WebsiteMailResolver {
-  constructor(
-    @Inject(SCOPED_JWT_VERIFIER)
-    private jwt: ScopedJwtVerifier
-  ) {}
-
-  @ResolveField(() => WebsiteAnalytics, { nullable: true })
-  mailchimp(
-    @Parent() parent: WebsiteMail,
-    @CurrentUser() session: UserSession | null,
-    @AuthToken() authToken: string | null
-  ) {
-    const hasPerms =
-      hasPermission(CanGetWebsiteSettings, session?.roles ?? []) ||
-      this.jwt.verifyScopedJWT(authToken ?? '', 'read:website-settings');
-
-    if (!hasPerms) {
-      return null;
-    }
-
-    return parent.mailchimp;
   }
 }

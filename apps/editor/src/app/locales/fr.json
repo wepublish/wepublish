@@ -2077,15 +2077,6 @@
           "proLocator": "Tu le trouves dans le Menu > Administration > Site > ID de ton panneau d'administration"
         }
       },
-      "mail": {
-        "title": "E-mail",
-        "mailchimp": {
-          "title": "Mailchimp",
-          "enable": "Activer Mailchimp",
-          "mailchimp": "<url>Mailchimp</url> est une plateforme de marketing par e-mail qui te permet de gérer des newsletters et des listes d'abonnés. Cela permet au site web d'accéder à tes newsletters et de les afficher.",
-          "apiKeyLocator": "Tu le trouves dans la <url>section des clés API</url> de ton compte Mailchimp. Assure-toi que c'est une clé Mailchimp et non Mandrill."
-        }
-      },
       "ads": {
         "title": "Publicités",
         "sparkLoop": {
@@ -2140,6 +2131,8 @@
           "dark": "Foncé",
           "contrastText": "Couleur du texte",
           "background": "Arrière-plan",
+          "default": "Par défaut",
+          "paper": "Papier",
           "backgroundDefault": "La couleur de fond du site",
           "backgroundPaper": "Couleur de fond des panneaux en relief comme les dialogues et les modals",
           "text": "Texte",
@@ -2166,6 +2159,8 @@
           "body1": "Corps 1",
           "body2": "Corps 2",
           "caption": "Légende",
+          "subtitle1": "Sous-titre 1",
+          "subtitle2": "Sous-titre 2",
           "teaserPretitle": "Pré-titre du teaser",
           "teaserTitle": "Titre du teaser",
           "teaserLead": "Accroche du teaser",

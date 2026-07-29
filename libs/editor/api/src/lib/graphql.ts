@@ -3400,7 +3400,6 @@ export type MutationUpdateWebsiteSettingsArgs = {
   ads?: InputMaybe<WebsiteAdsInput>;
   analytics?: InputMaybe<WebsiteAnalyticsInput>;
   fonts?: InputMaybe<Array<WebsiteRemoteFontInput>>;
-  mail?: InputMaybe<WebsiteMailInput>;
   theme?: InputMaybe<Scalars['JSONObject']>;
 };
 
@@ -6242,15 +6241,6 @@ export type WebsiteAnalyticsInput = {
   plausible: KeyEnabledInput;
 };
 
-export type WebsiteMail = {
-  __typename?: 'WebsiteMail';
-  mailchimp?: Maybe<KeyEnabled>;
-};
-
-export type WebsiteMailInput = {
-  mailchimp: KeyEnabledInput;
-};
-
 export type WebsiteRemoteFont = {
   __typename?: 'WebsiteRemoteFont';
   name: Scalars['String'];
@@ -6269,7 +6259,6 @@ export type WebsiteSettings = {
   ads: WebsiteAds;
   analytics: WebsiteAnalytics;
   fonts: Array<WebsiteRemoteFont>;
-  mail: WebsiteMail;
   theme: Scalars['JSONObject'];
 };
 
@@ -8146,23 +8135,22 @@ export type UpdateTrackingPixelSettingMutationVariables = Exact<{
 
 export type UpdateTrackingPixelSettingMutation = { __typename?: 'Mutation', updateTrackingPixelSetting: { __typename?: 'SettingTrackingPixelProvider', createdAt: string, id: string, lastLoadedAt: string, modifiedAt: string, name?: string | null, prolitteris_memberNr?: string | null, prolitteris_onlyPaidContentAccess?: boolean | null, prolitteris_publisherInternalKeyDomain?: string | null, prolitteris_usePublisherInternalKey?: boolean | null, prolitteris_username?: string | null, type: TrackingPixelProviderType } };
 
-export type FullWebsiteSettingsFragment = { __typename?: 'WebsiteSettings', theme: any, analytics: { __typename?: 'WebsiteAnalytics', googleAnalytics: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null }, googleTagManager: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null }, plausible: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null }, piwik: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null } }, mail: { __typename?: 'WebsiteMail', mailchimp?: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null } | null }, ads: { __typename?: 'WebsiteAds', sparkLoop: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null } }, fonts: Array<{ __typename?: 'WebsiteRemoteFont', weight: Array<FontWeight>, style: Array<FontStyle>, name: string }> };
+export type FullWebsiteSettingsFragment = { __typename?: 'WebsiteSettings', theme: any, analytics: { __typename?: 'WebsiteAnalytics', googleAnalytics: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null }, googleTagManager: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null }, plausible: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null }, piwik: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null } }, ads: { __typename?: 'WebsiteAds', sparkLoop: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null } }, fonts: Array<{ __typename?: 'WebsiteRemoteFont', weight: Array<FontWeight>, style: Array<FontStyle>, name: string }> };
 
 export type WebsiteSettingsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type WebsiteSettingsQuery = { __typename?: 'Query', websiteSettings: { __typename?: 'WebsiteSettings', theme: any, analytics: { __typename?: 'WebsiteAnalytics', googleAnalytics: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null }, googleTagManager: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null }, plausible: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null }, piwik: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null } }, mail: { __typename?: 'WebsiteMail', mailchimp?: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null } | null }, ads: { __typename?: 'WebsiteAds', sparkLoop: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null } }, fonts: Array<{ __typename?: 'WebsiteRemoteFont', weight: Array<FontWeight>, style: Array<FontStyle>, name: string }> } };
+export type WebsiteSettingsQuery = { __typename?: 'Query', websiteSettings: { __typename?: 'WebsiteSettings', theme: any, analytics: { __typename?: 'WebsiteAnalytics', googleAnalytics: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null }, googleTagManager: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null }, plausible: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null }, piwik: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null } }, ads: { __typename?: 'WebsiteAds', sparkLoop: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null } }, fonts: Array<{ __typename?: 'WebsiteRemoteFont', weight: Array<FontWeight>, style: Array<FontStyle>, name: string }> } };
 
 export type UpdateWebsiteSettingsMutationVariables = Exact<{
   analytics?: InputMaybe<WebsiteAnalyticsInput>;
-  mail?: InputMaybe<WebsiteMailInput>;
   ads?: InputMaybe<WebsiteAdsInput>;
   theme?: InputMaybe<Scalars['JSONObject']>;
   fonts?: InputMaybe<Array<WebsiteRemoteFontInput> | WebsiteRemoteFontInput>;
 }>;
 
 
-export type UpdateWebsiteSettingsMutation = { __typename?: 'Mutation', updateWebsiteSettings: { __typename?: 'WebsiteSettings', theme: any, analytics: { __typename?: 'WebsiteAnalytics', googleAnalytics: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null }, googleTagManager: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null }, plausible: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null }, piwik: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null } }, mail: { __typename?: 'WebsiteMail', mailchimp?: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null } | null }, ads: { __typename?: 'WebsiteAds', sparkLoop: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null } }, fonts: Array<{ __typename?: 'WebsiteRemoteFont', weight: Array<FontWeight>, style: Array<FontStyle>, name: string }> } };
+export type UpdateWebsiteSettingsMutation = { __typename?: 'Mutation', updateWebsiteSettings: { __typename?: 'WebsiteSettings', theme: any, analytics: { __typename?: 'WebsiteAnalytics', googleAnalytics: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null }, googleTagManager: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null }, plausible: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null }, piwik: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null } }, ads: { __typename?: 'WebsiteAds', sparkLoop: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null } }, fonts: Array<{ __typename?: 'WebsiteRemoteFont', weight: Array<FontWeight>, style: Array<FontStyle>, name: string }> } };
 
 export type SubscriptionFlowsQueryVariables = Exact<{
   defaultFlowOnly: Scalars['Boolean'];
@@ -10110,12 +10098,6 @@ export const FullWebsiteSettingsFragmentDoc = gql`
       key
     }
     piwik {
-      enabled
-      key
-    }
-  }
-  mail {
-    mailchimp {
       enabled
       key
     }
@@ -17682,10 +17664,9 @@ export type WebsiteSettingsQueryHookResult = ReturnType<typeof useWebsiteSetting
 export type WebsiteSettingsLazyQueryHookResult = ReturnType<typeof useWebsiteSettingsLazyQuery>;
 export type WebsiteSettingsQueryResult = Apollo.QueryResult<WebsiteSettingsQuery, WebsiteSettingsQueryVariables>;
 export const UpdateWebsiteSettingsDocument = gql`
-    mutation UpdateWebsiteSettings($analytics: WebsiteAnalyticsInput, $mail: WebsiteMailInput, $ads: WebsiteAdsInput, $theme: JSONObject, $fonts: [WebsiteRemoteFontInput!]) {
+    mutation UpdateWebsiteSettings($analytics: WebsiteAnalyticsInput, $ads: WebsiteAdsInput, $theme: JSONObject, $fonts: [WebsiteRemoteFontInput!]) {
   updateWebsiteSettings(
     analytics: $analytics
-    mail: $mail
     ads: $ads
     theme: $theme
     fonts: $fonts
@@ -17710,7 +17691,6 @@ export type UpdateWebsiteSettingsMutationFn = Apollo.MutationFunction<UpdateWebs
  * const [updateWebsiteSettingsMutation, { data, loading, error }] = useUpdateWebsiteSettingsMutation({
  *   variables: {
  *      analytics: // value for 'analytics'
- *      mail: // value for 'mail'
  *      ads: // value for 'ads'
  *      theme: // value for 'theme'
  *      fonts: // value for 'fonts'

@@ -25,7 +25,13 @@ import { PaletteList } from './theme/palette-list';
 import { normalizeTheme, themeSchema } from './theme/schema';
 import { TypographyList } from './theme/typography-list';
 
-const WebsiteThemeWrapper = styled.form`
+const WebsiteThemeWrapper = styled.div`
+  display: grid;
+  gap: 24px;
+  grid-template-columns: minmax(250px, 500px) 1fr;
+`;
+
+const WebsiteThemeForm = styled.form`
   display: grid;
   gap: 24px;
   grid-auto-columns: auto;
@@ -63,7 +69,7 @@ function a11yProps(index: number) {
 export const WebsiteTheme = memo(() => {
   const { t } = useTranslation();
 
-  const [loadSettings, { loading }] = useWebsiteSettingsLazyQuery();
+  const [loadSettings, { data, loading }] = useWebsiteSettingsLazyQuery();
   const [updateWebsiteSettings, { loading: saving }] =
     useUpdateWebsiteSettingsMutation({
       onCompleted: () => {
@@ -109,7 +115,7 @@ export const WebsiteTheme = memo(() => {
       );
     },
   });
-  const { handleSubmit } = form;
+  const { handleSubmit, watch, getValues } = form;
 
   const onSubmit = handleSubmit(data => {
     updateWebsiteSettings({
@@ -129,9 +135,16 @@ export const WebsiteTheme = memo(() => {
     );
   }
 
+  const theme = themeSchema.safeParse(watch()).data ?? {};
+
+  const previewQuery = JSON.stringify(theme);
+
   return (
     <WebsiteThemeWrapper onSubmit={onSubmit}>
-      <Link to={'/settings/website'}>
+      <Link
+        to={'/settings/website'}
+        css={{ gridColumn: '-1/1' }}
+      >
         <Button
           size="small"
           variant="text"
@@ -141,55 +154,68 @@ export const WebsiteTheme = memo(() => {
         </Button>
       </Link>
 
-      <FormProvider {...form}>
-        <Tabs
-          value={activeTab}
-          onChange={handleChange}
-          aria-label="Theme tabs"
-        >
-          <Tab
-            label="Palette"
-            {...a11yProps(0)}
-          />
-          <Tab
-            label="Typography"
-            {...a11yProps(1)}
-          />
-        </Tabs>
-
-        <CustomTabPanel
-          value={activeTab}
-          activeValue={0}
-        >
-          <PaletteList name={'palette'} />
-        </CustomTabPanel>
-
-        <CustomTabPanel
-          value={activeTab}
-          activeValue={1}
-        >
-          <TypographyList name={'typography'} />
-        </CustomTabPanel>
-
-        <Box>
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            disabled={saving}
+      <WebsiteThemeForm onSubmit={onSubmit}>
+        <FormProvider {...form}>
+          <Tabs
+            value={activeTab}
+            onChange={handleChange}
+            aria-label="Theme tabs"
           >
-            {saving && (
-              <CircularProgress
-                size={14}
-                color="inherit"
-                sx={{ mr: 1 }}
-              />
-            )}
+            <Tab
+              label="Palette"
+              {...a11yProps(0)}
+            />
+            <Tab
+              label="Typography"
+              {...a11yProps(1)}
+            />
+          </Tabs>
 
-            {t('save')}
-          </Button>
-        </Box>
-      </FormProvider>
+          <CustomTabPanel
+            value={activeTab}
+            activeValue={0}
+          >
+            <PaletteList name={'palette'} />
+          </CustomTabPanel>
+
+          <CustomTabPanel
+            value={activeTab}
+            activeValue={1}
+          >
+            <TypographyList name={'typography'} />
+          </CustomTabPanel>
+
+          <Box>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              disabled={saving}
+            >
+              {saving && (
+                <CircularProgress
+                  size={14}
+                  color="inherit"
+                  sx={{ mr: 1 }}
+                />
+              )}
+
+              {t('save')}
+            </Button>
+          </Box>
+        </FormProvider>
+      </WebsiteThemeForm>
+
+      <iframe
+        css={{
+          width: '100%',
+          border: 0,
+          height: '70vh',
+          position: 'sticky',
+          top: '0',
+        }}
+        src={`http://localhost:4200?PREVIEW_THEME=${encodeURIComponent(previewQuery)}`}
+      />
     </WebsiteThemeWrapper>
   );
 });
