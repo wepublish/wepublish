@@ -16,7 +16,13 @@ import {
   Link,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { PropsWithChildren, useCallback, useMemo, useState } from 'react';
+import {
+  PropsWithChildren,
+  ReactNode,
+  useCallback,
+  useMemo,
+  useState,
+} from 'react';
 import { MdClose, MdMenu, MdWarning } from 'react-icons/md';
 import { navigationLinkToUrl } from '../link-to-url';
 import { useTranslation } from 'react-i18next';
@@ -190,12 +196,13 @@ export const NavbarLoginLink = styled(Link, {
     `}
 `;
 
-const buttonStyles: SxProps<Theme> = theme => ({
-  [theme.breakpoints.up('sm')]: {
-    fontSize: `calc(${theme.typography.button.fontSize} * 1.1)`,
-    padding: `${theme.spacing(1)} ${theme.spacing(1.5)}`,
-  },
-});
+export const navbarButtonStyles = (theme: Theme) =>
+  ({
+    [theme.breakpoints.up('sm')]: {
+      fontSize: `calc(${theme.typography.button.fontSize} * 1.1)`,
+      padding: `${theme.spacing(1)} ${theme.spacing(1.5)}`,
+    },
+  }) satisfies SxProps<Theme>;
 
 export const NavbarLogoWrapper = styled('div')`
   fill: currentColor;
@@ -242,6 +249,8 @@ export function Navbar({
   isMenuOpen: controlledIsMenuOpen,
   onMenuToggle,
   navPaperClassName,
+  navbarActions,
+  paperActions,
 }: ExtendedNavbarProps) {
   const [internalIsMenuOpen, setInternalMenuOpen] = useState(false);
 
@@ -342,12 +351,14 @@ export function Navbar({
           </NavbarLoginLink>
 
           <NavbarActions isMenuOpen={isMenuOpen}>
+            {navbarActions}
+
             {hasUnpaidInvoices && profileBtn && (
               <Button
                 LinkComponent={Link}
                 color="warning"
                 startIcon={<MdWarning />}
-                sx={buttonStyles}
+                sx={navbarButtonStyles}
                 size="medium"
                 {...profileBtn}
               >
@@ -359,7 +370,7 @@ export function Navbar({
             {!hasRunningSubscription && !hasUnpaidInvoices && subscribeBtn && (
               <Button
                 LinkComponent={Link}
-                sx={buttonStyles}
+                sx={navbarButtonStyles}
                 size="medium"
                 {...subscribeBtn}
               >
@@ -370,7 +381,7 @@ export function Navbar({
             {hasRunningSubscription && !hasUnpaidInvoices && profileBtn && (
               <Button
                 LinkComponent={Link}
-                sx={buttonStyles}
+                sx={navbarButtonStyles}
                 size="medium"
                 {...profileBtn}
               >
@@ -388,6 +399,7 @@ export function Navbar({
           subscribeBtn={subscribeBtn}
           profileBtn={profileBtn}
           loginBtn={loginBtn}
+          paperActions={paperActions}
           main={mainItems}
           categories={categories}
           closeMenu={toggleMenu}
@@ -538,6 +550,7 @@ const NavPaper = ({
   isMenuOpen,
   className,
   children,
+  paperActions,
 }: PropsWithChildren<{
   loginBtn?: ButtonProps | null;
   profileBtn?: ButtonProps | null;
@@ -549,6 +562,7 @@ const NavPaper = ({
   hasUnpaidInvoices: boolean;
   isMenuOpen: boolean;
   className?: string;
+  paperActions?: ReactNode;
 }>) => {
   const {
     elements: { Link, Button, H4, H6 },
@@ -594,6 +608,8 @@ const NavPaper = ({
         })}
 
         <NavPaperActions>
+          {paperActions}
+
           {hasUnpaidInvoices && profileBtn && (
             <Button
               LinkComponent={Link}

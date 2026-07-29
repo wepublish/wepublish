@@ -1,5 +1,9 @@
 import { ButtonGroup, IconButton } from '@mui/material';
-import { useCurrentEditor, useEditorState } from '@tiptap/react';
+import {
+  EditorStateSnapshot,
+  useCurrentEditor,
+  useEditorState,
+} from '@tiptap/react';
 import { equals } from 'ramda';
 import {
   TbColumnInsertLeft,
@@ -16,17 +20,23 @@ import {
   LuTableCellsSplit,
 } from 'react-icons/lu';
 
+const selectTableState = ({ editor }: EditorStateSnapshot) => {
+  if (!editor || editor.isDestroyed) {
+    return { isActive: false, isHeader: false };
+  }
+
+  return {
+    isActive: editor.isActive('table'),
+    isHeader: editor.isActive('tableHeader'),
+  };
+};
+
 export function TableActions() {
   const editor = useCurrentEditor().editor!;
 
   const editorState = useEditorState({
     editor,
-    selector: ({ editor }) => {
-      return {
-        isActive: editor.isActive('table'),
-        isHeader: editor.isActive('tableHeader'),
-      };
-    },
+    selector: selectTableState,
     equalityFn: equals,
   });
 

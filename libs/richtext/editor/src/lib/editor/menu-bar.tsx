@@ -7,14 +7,16 @@ import {
   ToggleButton,
   ToggleButtonGroup,
 } from '@mui/material';
-import { useCurrentEditor, useEditorState } from '@tiptap/react';
+import {
+  EditorStateSnapshot,
+  useCurrentEditor,
+  useEditorState,
+} from '@tiptap/react';
 import {
   MdFormatAlignCenter,
   MdFormatAlignLeft,
   MdFormatAlignRight,
   MdFormatBold,
-  MdFormatColorFill,
-  MdFormatColorText,
   MdFormatItalic,
   MdFormatListBulleted,
   MdFormatListNumbered,
@@ -33,73 +35,79 @@ import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDebounceCallback } from 'usehooks-ts';
 import { ColorPickerButton } from './color-picker-button';
+import { ColorFillSwatchIcon, ColorTextSwatchIcon } from './color-swatch-icons';
 import { LinkPopoverButton } from './link-popover';
 import { useWebsiteThemeColors } from './use-website-theme-colors';
+
+const selectMenuBarState = ({ editor }: EditorStateSnapshot) => {
+  if (!editor || editor.isDestroyed) {
+    return null;
+  }
+
+  const headingMap = [
+    editor.isActive('paragraph'),
+    editor.isActive('heading', { level: 1 }),
+    editor.isActive('heading', { level: 2 }),
+    editor.isActive('heading', { level: 3 }),
+    editor.isActive('heading', { level: 4 }),
+    editor.isActive('heading', { level: 5 }),
+    editor.isActive('heading', { level: 6 }),
+  ];
+
+  const alignmentMap = {
+    left: editor.isActive({ textAlign: 'left' }),
+    center: editor.isActive({ textAlign: 'center' }),
+    right: editor.isActive({ textAlign: 'right' }),
+  };
+
+  return {
+    isBold: editor.isActive('bold') ?? false,
+    canBold: editor.can().chain().toggleBold().run() ?? false,
+    isItalic: editor.isActive('italic') ?? false,
+    canItalic: editor.can().chain().toggleItalic().run() ?? false,
+    isStrike: editor.isActive('strike') ?? false,
+    canStrike: editor.can().chain().toggleStrike().run() ?? false,
+    isUnderline: editor.isActive('underline') ?? false,
+    canUnderline: editor.can().chain().toggleUnderline().run() ?? false,
+    isSub: editor.isActive('subscript') ?? false,
+    canSub: editor.can().chain().toggleSubscript().run() ?? false,
+    isSup: editor.isActive('superscript') ?? false,
+    canSup: editor.can().chain().toggleSuperscript().run() ?? false,
+
+    alignment: Object.entries(alignmentMap).reduce(
+      (curr, [key, value]) => (value ? [key] : curr),
+      ['left']
+    ),
+    canAlign: editor.can().chain().setTextAlign('left').run() ?? false,
+
+    headingLevel: headingMap.includes(true) ? headingMap.indexOf(true) : 0,
+
+    color: editor.getAttributes('textStyle').color,
+    background: editor.getAttributes('textStyle').backgroundColor,
+
+    list: Object.entries({
+      bullet: editor.isActive('bulletList'),
+      ordered: editor.isActive('orderedList'),
+      task: editor.isActive('taskList'),
+    }).flatMap(([key, value]) => (value ? key : [])),
+
+    canUndo: editor.can().chain().undo().run() ?? false,
+    canRedo: editor.can().chain().redo().run() ?? false,
+
+    isCodeBlock: editor.isActive('codeBlock') ?? false,
+    isBlockquote: editor.isActive('blockquote') ?? false,
+    isLink: editor.isActive('link') ?? false,
+
+    invisibleCharactersVisible: editor.storage.invisibleCharacters.visibility(),
+  };
+};
 
 export function MenuBar() {
   const { t } = useTranslation();
   const editor = useCurrentEditor().editor!;
   const editorState = useEditorState({
     editor,
-    selector: ctx => {
-      const headingMap = [
-        ctx.editor.isActive('paragraph'),
-        ctx.editor.isActive('heading', { level: 1 }),
-        ctx.editor.isActive('heading', { level: 2 }),
-        ctx.editor.isActive('heading', { level: 3 }),
-        ctx.editor.isActive('heading', { level: 4 }),
-        ctx.editor.isActive('heading', { level: 5 }),
-        ctx.editor.isActive('heading', { level: 6 }),
-      ];
-
-      const alignmentMap = {
-        left: ctx.editor.isActive({ textAlign: 'left' }),
-        center: ctx.editor.isActive({ textAlign: 'center' }),
-        right: ctx.editor.isActive({ textAlign: 'right' }),
-      };
-
-      return {
-        isBold: ctx.editor.isActive('bold') ?? false,
-        canBold: ctx.editor.can().chain().toggleBold().run() ?? false,
-        isItalic: ctx.editor.isActive('italic') ?? false,
-        canItalic: ctx.editor.can().chain().toggleItalic().run() ?? false,
-        isStrike: ctx.editor.isActive('strike') ?? false,
-        canStrike: ctx.editor.can().chain().toggleStrike().run() ?? false,
-        isUnderline: ctx.editor.isActive('underline') ?? false,
-        canUnderline: ctx.editor.can().chain().toggleUnderline().run() ?? false,
-        isSub: ctx.editor.isActive('subscript') ?? false,
-        canSub: ctx.editor.can().chain().toggleSubscript().run() ?? false,
-        isSup: ctx.editor.isActive('superscript') ?? false,
-        canSup: ctx.editor.can().chain().toggleSuperscript().run() ?? false,
-
-        alignment: Object.entries(alignmentMap).reduce(
-          (curr, [key, value]) => (value ? [key] : curr),
-          ['left']
-        ),
-        canAlign: ctx.editor.can().chain().setTextAlign('left').run() ?? false,
-
-        headingLevel: headingMap.includes(true) ? headingMap.indexOf(true) : 0,
-
-        color: ctx.editor.getAttributes('textStyle').color,
-        background: ctx.editor.getAttributes('textStyle').backgroundColor,
-
-        list: Object.entries({
-          bullet: ctx.editor.isActive('bulletList'),
-          ordered: ctx.editor.isActive('orderedList'),
-          task: ctx.editor.isActive('taskList'),
-        }).flatMap(([key, value]) => (value ? key : [])),
-
-        canUndo: ctx.editor.can().chain().undo().run() ?? false,
-        canRedo: ctx.editor.can().chain().redo().run() ?? false,
-
-        isCodeBlock: ctx.editor.isActive('codeBlock') ?? false,
-        isBlockquote: ctx.editor.isActive('blockquote') ?? false,
-        isLink: ctx.editor.isActive('link') ?? false,
-
-        invisibleCharactersVisible:
-          ctx.editor.storage.invisibleCharacters.visibility(),
-      };
-    },
+    selector: selectMenuBarState,
     equalityFn: equals,
   });
   const themeColors = useWebsiteThemeColors();
@@ -107,20 +115,19 @@ export function MenuBar() {
   const updateColor = useDebounceCallback(
     useCallback(
       (color: string | null) => {
+        const chain = editor.chain().focus();
+
+        if (editor.state.selection.empty) {
+          chain.extendMarkRange('textStyle');
+        }
+
+        // Scoped clear: unsetColor() strips textStyle across containers
         if (color) {
-          editor
-            .chain()
-            .focus()
-            .extendMarkRange('textStyle')
-            .setColor(color)
-            .run();
+          chain.setColor(color).run();
+        } else if (editor.getAttributes('textStyle').backgroundColor) {
+          chain.setMark('textStyle', { color: null }).run();
         } else {
-          editor
-            .chain()
-            .focus()
-            .extendMarkRange('textStyle')
-            .unsetColor()
-            .run();
+          chain.unsetMark('textStyle').run();
         }
       },
       [editor]
@@ -131,26 +138,29 @@ export function MenuBar() {
   const updateBackgroundColor = useDebounceCallback(
     useCallback(
       (color: string | null) => {
+        const chain = editor.chain().focus();
+
+        if (editor.state.selection.empty) {
+          chain.extendMarkRange('textStyle');
+        }
+
+        // Scoped clear: unsetBackgroundColor() strips textStyle across containers
         if (color) {
-          editor
-            .chain()
-            .focus()
-            .extendMarkRange('textStyle')
-            .setBackgroundColor(color)
-            .run();
+          chain.setBackgroundColor(color).run();
+        } else if (editor.getAttributes('textStyle').color) {
+          chain.setMark('textStyle', { backgroundColor: null }).run();
         } else {
-          editor
-            .chain()
-            .focus()
-            .extendMarkRange('textStyle')
-            .unsetBackgroundColor()
-            .run();
+          chain.unsetMark('textStyle').run();
         }
       },
       [editor]
     ),
     1
   );
+
+  if (!editorState) {
+    return null;
+  }
 
   return (
     <>
@@ -296,9 +306,9 @@ export function MenuBar() {
         onChange={updateColor}
         presetColors={themeColors}
       >
-        <MdFormatColorText
+        <ColorTextSwatchIcon
           size={18}
-          style={{ color: editorState.color }}
+          swatchColor={editorState.color}
         />
       </ColorPickerButton>
 
@@ -307,9 +317,9 @@ export function MenuBar() {
         onChange={updateBackgroundColor}
         presetColors={themeColors}
       >
-        <MdFormatColorFill
+        <ColorFillSwatchIcon
           size={18}
-          style={{ color: editorState.background }}
+          swatchColor={editorState.background}
         />
       </ColorPickerButton>
 

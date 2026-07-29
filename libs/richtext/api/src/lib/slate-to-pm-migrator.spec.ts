@@ -22,12 +22,12 @@ const linkMarks = (doc: any): { text: string; href: string }[] => {
         }
       }
     }
-    
+
     (node.content ?? []).forEach(walk);
   };
 
   walk(doc);
-  
+
   return out;
 };
 

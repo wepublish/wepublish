@@ -1,9 +1,11 @@
 import '@testing-library/jest-dom';
+
 import { render, screen } from '@testing-library/react';
 import {
   CrowdfundingGoalType,
   FullCrowdfundingFragment,
 } from '@wepublish/editor/api';
+
 import { CrowdfundingProgressBar } from './crowdfundingProgressBar';
 
 describe('CrowdfundingProgressBar', () => {

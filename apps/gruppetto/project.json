@@ -10,7 +10,8 @@
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
-        "outputPath": "dist/apps/gruppetto"
+        "outputPath": "dist/apps/gruppetto",
+        "webpack": true
       },
       "configurations": {
         "development": {
@@ -25,7 +26,8 @@
       "options": {
         "buildTarget": "gruppetto:build",
         "port": 4202,
-        "dev": true
+        "dev": true,
+        "webpack": true
       },
       "configurations": {
         "development": {

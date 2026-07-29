@@ -17,6 +17,7 @@ export const BannerImage = styled('div')(
   background-position: center;
   height: ${theme.spacing(18)};
   order: 1;
+
   ${theme.breakpoints.up('md')} {
     order: 0;
     height: unset;
@@ -25,6 +26,8 @@ export const BannerImage = styled('div')(
 );
 
 export const BannerContentWrapper = styled('div')`
+  display: grid;
+  row-gap: ${({ theme }) => theme.spacing(2)};
   padding: ${({ theme }) => theme.spacing(4)};
   padding-top: ${({ theme }) => theme.spacing(5)};
 
