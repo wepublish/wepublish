@@ -82,6 +82,10 @@
       "@wepublish/nest-modules": ["libs/nest-modules/src/index.ts"],
       "@wepublish/page/api": ["libs/page/api/src/index.ts"],
       "@wepublish/page/website": ["libs/page/website/src/index.ts"],
+      "@wepublish/collaboration/api": ["libs/collaboration/api/src/index.ts"],
+      "@wepublish/collaboration/editor": [
+        "libs/collaboration/editor/src/index.ts"
+      ],
       "@wepublish/payment/api": ["libs/payment/api/src/index.ts"],
       "@wepublish/payment/website": ["libs/payment/website/src/index.ts"],
       "@wepublish/paywall/api": ["libs/paywall/api/src/index.ts"],

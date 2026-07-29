@@ -7,6 +7,7 @@ import {
   DialogContentText as MuiDialogContentText,
   DialogTitle as MuiDialogTitle,
 } from '@mui/material';
+import { PresentUsers } from '@wepublish/collaboration/editor';
 import {
   CreateArticleMutationVariables,
   EditorBlockType,
@@ -725,10 +726,13 @@ function ArticleEditor() {
 
   return (
     <>
+      {articleID && <PresentUsers id={articleID} />}
+
       <FieldSet stateColor={stateColor}>
         <Legend>
           <Tag stateColor={stateColor}>{tagTitle}</Tag>
         </Legend>
+
         <EditorTemplate
           navigationChildren={
             <NavigationBar

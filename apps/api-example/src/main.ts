@@ -14,6 +14,7 @@ import { json, urlencoded } from 'body-parser';
 import type { Request, Response, NextFunction, RequestHandler } from 'express';
 import { PAYMENT_WEBHOOK_PATH_PREFIX } from '@wepublish/payment/api';
 import { graphqlUploadExpress } from 'graphql-upload';
+import { WsAdapter } from '@nestjs/platform-ws';
 
 async function bootstrap() {
   const port = process.env.PORT ?? 4000;
@@ -26,6 +27,7 @@ async function bootstrap() {
     credentials: true,
   });
   nestApp.use(helmet());
+  nestApp.useWebSocketAdapter(new WsAdapter(nestApp));
 
   const skipPrefixes = [
     `/${MAIL_WEBHOOK_PATH_PREFIX}`,
