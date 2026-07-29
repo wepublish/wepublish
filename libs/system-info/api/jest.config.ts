@@ -1,5 +1,4 @@
-/* eslint-disable */
-export default {
+module.exports = {
   displayName: 'system-info-api',
   preset: '../../../jest.preset.js',
   globals: {},

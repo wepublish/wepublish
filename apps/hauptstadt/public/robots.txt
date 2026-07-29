@@ -2,9 +2,6 @@
 User-agent: *
 Allow: /
 
-# Disallow GPT-4 from crawling the pages
-User-agent: GPTBot
-Disallow: /
 
 # Duplicate Content durch Weiterleitungen und Parameter verhindern
 User-agent: *

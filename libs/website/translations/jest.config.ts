@@ -1,5 +1,4 @@
-/* eslint-disable */
-export default {
+module.exports = {
   displayName: 'website-translations',
   preset: '../../../jest.preset.js',
   testEnvironment: 'node',

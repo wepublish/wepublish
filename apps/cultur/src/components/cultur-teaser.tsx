@@ -6,12 +6,11 @@ import {
   TeaserPreTitleWrapper,
 } from '@wepublish/block-content/website';
 import { ImageWrapper } from '@wepublish/image/website';
-import { cond, T } from 'ramda';
-
 import {
   DailyBriefingTeaser,
   isDailyBriefingTeaser,
-} from './daily-briefing/daily-briefing-teaser';
+} from '@wepublish/utils/website';
+import { cond, T } from 'ramda';
 
 const OverridenTeaser = styled(BaseTeaser)`
   &,

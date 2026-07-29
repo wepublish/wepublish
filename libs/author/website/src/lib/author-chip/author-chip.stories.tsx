@@ -1,4 +1,4 @@
-import { Meta } from '@storybook/react';
+import { Meta } from '@storybook/nextjs-vite';
 import { AuthorChip } from './author-chip';
 import { mockAuthor } from '@wepublish/storybook/mocks';
 

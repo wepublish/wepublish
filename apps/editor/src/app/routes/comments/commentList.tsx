@@ -224,7 +224,7 @@ function CommentList() {
             setSortField(sortColumn);
           }}
         >
-          {/* eslint-disable-next-line i18next/no-literal-string */}
+          {}
           <Column
             width={350}
             align="left"
@@ -243,7 +243,7 @@ function CommentList() {
               }
             </Cell>
           </Column>
-          {/* eslint-disable-next-line i18next/no-literal-string */}
+          {}
           <Column
             width={150}
             align="left"
@@ -257,7 +257,7 @@ function CommentList() {
               }
             </Cell>
           </Column>
-          {/* eslint-disable-next-line i18next/no-literal-string */}
+          {}
           <Column
             width={150}
             align="left"
@@ -275,7 +275,7 @@ function CommentList() {
             </Cell>
           </Column>
 
-          {/* eslint-disable-next-line i18next/no-literal-string */}
+          {}
           <Column
             width={200}
             align="right"
@@ -300,7 +300,7 @@ function CommentList() {
             </Cell>
           </Column>
 
-          {/* eslint-disable-next-line i18next/no-literal-string */}
+          {}
           <Column
             width={150}
             align="center"
