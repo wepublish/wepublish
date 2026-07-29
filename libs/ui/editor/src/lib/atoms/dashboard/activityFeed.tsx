@@ -5,7 +5,7 @@ import {
 } from '@wepublish/editor/api';
 import { toPlaintext } from '@wepublish/richtext';
 import { formatDistanceToNow } from 'date-fns';
-import { ReactNode, useEffect } from 'react';
+import { JSX, ReactNode, useEffect } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import {
   MdAccountCircle,

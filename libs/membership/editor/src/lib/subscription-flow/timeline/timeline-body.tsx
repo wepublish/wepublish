@@ -4,7 +4,7 @@ import {
   SubscriptionEvent,
   SubscriptionFlowFragment,
 } from '@wepublish/editor/api';
-import { useContext } from 'react';
+import { JSX, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DraggableSubscriptionInterval } from '../draggable-subscription-interval';
 import { DroppableSubscriptionInterval } from '../droppable-subscription-interval';

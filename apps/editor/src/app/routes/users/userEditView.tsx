@@ -466,9 +466,9 @@ function UserEditView() {
                     {/* active / inactive */}
                     <ColTextAlign xs={12}>
                       <Form.Group controlId="active">
-                        <Form.ControlLabel>
+                        <Form.Label>
                           {t('userCreateOrEditView.active')}
-                        </Form.ControlLabel>
+                        </Form.Label>
                         <RToggle
                           checked={active}
                           disabled={isDisabled}
@@ -482,9 +482,9 @@ function UserEditView() {
                     {/* first name */}
                     <Col xs={12}>
                       <Form.Group controlId="firstName">
-                        <Form.ControlLabel>
+                        <Form.Label>
                           {t('userCreateOrEditView.firstName')}
-                        </Form.ControlLabel>
+                        </Form.Label>
                         <Form.Control
                           name="firstName"
                           value={firstName || undefined}
@@ -498,9 +498,9 @@ function UserEditView() {
                     {/* name */}
                     <Col xs={12}>
                       <Form.Group controlId="name">
-                        <Form.ControlLabel>
+                        <Form.Label>
                           {toggleRequiredLabel(t('userCreateOrEditView.name'))}
-                        </Form.ControlLabel>
+                        </Form.Label>
 
                         <Form.Control
                           name="name"
@@ -515,9 +515,9 @@ function UserEditView() {
                     {/* email */}
                     <Col xs={12}>
                       <Form.Group controlId="email">
-                        <Form.ControlLabel>
+                        <Form.Label>
                           {toggleRequiredLabel(t('userCreateOrEditView.email'))}
-                        </Form.ControlLabel>
+                        </Form.Label>
 
                         <Form.Control
                           name="email"
@@ -532,9 +532,9 @@ function UserEditView() {
                     {/* birthday */}
                     <Col xs={12}>
                       <Form.Group controlId="birthday">
-                        <Form.ControlLabel>
+                        <Form.Label>
                           {t('userCreateOrEditView.birthday')}
-                        </Form.ControlLabel>
+                        </Form.Label>
                         <Form.Control
                           name="birthday"
                           autoComplete="birthday"
@@ -555,9 +555,9 @@ function UserEditView() {
                     {/* flair */}
                     <Col xs={12}>
                       <Form.Group controlId="flair">
-                        <Form.ControlLabel>
+                        <Form.Label>
                           {t('userCreateOrEditView.flair')}
-                        </Form.ControlLabel>
+                        </Form.Label>
                         <Form.Control
                           name="flair"
                           value={flair}
@@ -570,9 +570,9 @@ function UserEditView() {
                     {/* company */}
                     <Col xs={12}>
                       <Form.Group controlId="company">
-                        <Form.ControlLabel>
+                        <Form.Label>
                           {t('userCreateOrEditView.company')}
-                        </Form.ControlLabel>
+                        </Form.Label>
                         <Form.Control
                           name="company"
                           value={address?.company || ''}
@@ -591,9 +591,9 @@ function UserEditView() {
                     {/* street */}
                     <Col xs={18}>
                       <Form.Group controlId="streetAddress">
-                        <Form.ControlLabel>
+                        <Form.Label>
                           {t('userCreateOrEditView.streetAddress')}
-                        </Form.ControlLabel>
+                        </Form.Label>
                         <Form.Control
                           name="streetAddress"
                           value={address?.streetAddress || ''}
@@ -611,9 +611,9 @@ function UserEditView() {
                     </Col>
                     <Col xs={6}>
                       <Form.Group controlId="streetAddressNumber">
-                        <Form.ControlLabel>
+                        <Form.Label>
                           {t('userCreateOrEditView.streetAddressNumber')}
-                        </Form.ControlLabel>
+                        </Form.Label>
                         <Form.Control
                           name="streetAddressNumber"
                           value={address?.streetAddressNumber || ''}
@@ -632,9 +632,9 @@ function UserEditView() {
                     {/* street 2 */}
                     <Col xs={18}>
                       <Form.Group controlId="streetAddress2">
-                        <Form.ControlLabel>
+                        <Form.Label>
                           {t('userCreateOrEditView.streetAddress2')}
-                        </Form.ControlLabel>
+                        </Form.Label>
                         <Form.Control
                           name="streetAddress2"
                           value={address?.streetAddress2 || ''}
@@ -653,9 +653,9 @@ function UserEditView() {
 
                     <Col xs={6}>
                       <Form.Group controlId="streetAddress2Number">
-                        <Form.ControlLabel>
+                        <Form.Label>
                           {t('userCreateOrEditView.streetAddress2Number')}
-                        </Form.ControlLabel>
+                        </Form.Label>
                         <Form.Control
                           name="streetAddress2Number"
                           value={address?.streetAddress2Number || ''}
@@ -674,9 +674,9 @@ function UserEditView() {
                     {/* zip */}
                     <Col xs={8}>
                       <Form.Group controlId="zipCode">
-                        <Form.ControlLabel>
+                        <Form.Label>
                           {t('userCreateOrEditView.zipCode')}
-                        </Form.ControlLabel>
+                        </Form.Label>
                         <Form.Control
                           name="zipCode"
                           value={address?.zipCode || ''}
@@ -695,9 +695,9 @@ function UserEditView() {
                     {/* city */}
                     <Col xs={16}>
                       <Form.Group controlId="city">
-                        <Form.ControlLabel>
+                        <Form.Label>
                           {t('userCreateOrEditView.city')}
-                        </Form.ControlLabel>
+                        </Form.Label>
                         <Form.Control
                           name="city"
                           value={address?.city || ''}
@@ -716,9 +716,9 @@ function UserEditView() {
                     {/* country */}
                     <Col xs={24}>
                       <Form.Group controlId="country">
-                        <Form.ControlLabel>
+                        <Form.Label>
                           {t('userCreateOrEditView.country')}
-                        </Form.ControlLabel>
+                        </Form.Label>
 
                         <Form.Control
                           name="country"
@@ -747,9 +747,9 @@ function UserEditView() {
 
                     <Col xs={24}>
                       <Form.Group controlId="note">
-                        <Form.ControlLabel>
+                        <Form.Label>
                           {t('userCreateOrEditView.note')}
-                        </Form.ControlLabel>
+                        </Form.Label>
 
                         <Form.Control
                           name="note"
@@ -760,9 +760,9 @@ function UserEditView() {
                           onChange={setNote}
                         />
 
-                        <Form.HelpText>
+                        <Form.Text>
                           {t('userCreateOrEditView.noteHelpText')}
-                        </Form.HelpText>
+                        </Form.Text>
                       </Form.Group>
                     </Col>
                   </Row>
@@ -775,9 +775,9 @@ function UserEditView() {
                   <Row gutter={10}>
                     <Col xs={24}>
                       <Form.Group controlId="userRoles">
-                        <Form.ControlLabel>
+                        <Form.Label>
                           {t('userCreateOrEditView.userRoles')}
-                        </Form.ControlLabel>
+                        </Form.Label>
                         <CheckPicker
                           name="userRoles"
                           block
@@ -807,9 +807,9 @@ function UserEditView() {
                   <Row gutter={10}>
                     <Col xs={24}>
                       <Form.Group controlId="userProperties">
-                        <Form.ControlLabel>
+                        <Form.Label>
                           {t('articleEditor.panels.properties')}
-                        </Form.ControlLabel>
+                        </Form.Label>
                         <ListInput
                           value={metaDataProperties}
                           onChange={propertiesItemInput =>
@@ -927,9 +927,9 @@ function UserEditView() {
                       </Col>
                       <Col xs={24}>
                         <Form.Group controlId="totpExempt">
-                          <Form.ControlLabel>
+                          <Form.Label>
                             {t('userCreateOrEditView.totpExemptLabel')}
-                          </Form.ControlLabel>
+                          </Form.Label>
                           <RToggle
                             checked={user.totpExempt}
                             onChange={async value => {

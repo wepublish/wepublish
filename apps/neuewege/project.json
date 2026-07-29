@@ -10,7 +10,8 @@
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
-        "outputPath": "dist/apps/neuewege"
+        "outputPath": "dist/apps/neuewege",
+        "webpack": true
       },
       "configurations": {
         "development": {
@@ -24,7 +25,8 @@
       "defaultConfiguration": "development",
       "options": {
         "buildTarget": "neuewege:build",
-        "dev": true
+        "dev": true,
+        "webpack": true
       },
       "configurations": {
         "development": {

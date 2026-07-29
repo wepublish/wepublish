@@ -8,7 +8,7 @@ import { Button, Form as RForm, Message, toaster } from 'rsuite';
 
 import { Background } from './ui/loginBackground';
 
-const { Group, ControlLabel, Control } = RForm;
+const { Group, Label, Control } = RForm;
 
 const Form = styled(RForm)`
   display: flex;
@@ -79,35 +79,38 @@ export function ResetPassword() {
 
   return (
     <LoginTemplate backgroundChildren={<Background />}>
-      <Form fluid>
-        <Description>
-          {sent ? t('resetPassword.sent') : t('resetPassword.description')}
-        </Description>
+      <Form>
+        <RForm.Stack fluid>
+          <Description>
+            {sent ? t('resetPassword.sent') : t('resetPassword.description')}
+          </Description>
 
-        {!sent && (
-          <>
-            <Group controlId="resetEmail">
-              <ControlLabel>{t('login.email')}</ControlLabel>
-              <Control
-                inputRef={emailInputRef}
-                name="email"
-                value={email}
-                autoComplete="email"
-                onChange={(value: string) => setEmail(value)}
-              />
-            </Group>
-            <Button
-              appearance="primary"
-              type="submit"
-              disabled={loading || !email}
-              onClick={handleSubmit}
-            >
-              {t('resetPassword.submit')}
-            </Button>
-          </>
-        )}
+          {!sent && (
+            <>
+              <Group controlId="resetEmail">
+                <Label>{t('login.email')}</Label>
+                <Control
+                  inputRef={emailInputRef}
+                  name="email"
+                  value={email}
+                  autoComplete="email"
+                  onChange={(value: string) => setEmail(value)}
+                />
+              </Group>
 
-        <BackLink href="/login">{t('resetPassword.backToLogin')}</BackLink>
+              <Button
+                appearance="primary"
+                type="submit"
+                disabled={loading || !email}
+                onClick={handleSubmit}
+              >
+                {t('resetPassword.submit')}
+              </Button>
+            </>
+          )}
+
+          <BackLink href="/login">{t('resetPassword.backToLogin')}</BackLink>
+        </RForm.Stack>
       </Form>
     </LoginTemplate>
   );

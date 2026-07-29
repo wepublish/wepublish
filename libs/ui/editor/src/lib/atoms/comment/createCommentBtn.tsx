@@ -9,15 +9,19 @@ import { IconType } from 'react-icons';
 import { MdReply } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
 import { IconButton, Message, toaster } from 'rsuite';
-import { TypeAttributes } from 'rsuite/cjs/@types/common';
+import type {
+  AppearanceType,
+  BasicSize,
+  Color,
+} from 'rsuite/esm/internals/types';
 
 import { IconButtonTooltip } from '../iconButtonTooltip';
 
 interface ReplyCommentBtnProps {
   circle?: boolean;
-  size?: TypeAttributes.Size;
-  color?: TypeAttributes.Color;
-  appearance?: TypeAttributes.Appearance;
+  size?: BasicSize;
+  color?: Color;
+  appearance?: AppearanceType;
   text?: string;
   itemID: string;
   itemType: CommentItemType;

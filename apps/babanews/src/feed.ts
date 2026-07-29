@@ -27,6 +27,7 @@ export const getFeed = async (req: NextApiRequest) => {
       rss: `${siteUrl + req.url}/api/rss-feed`,
     },
   });
+
   const client = getApiClient(getApiUrl(), [], {
     typePolicies: {},
   });
