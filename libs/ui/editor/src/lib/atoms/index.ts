@@ -27,7 +27,6 @@ export * from './helpers';
 export * from './iconButtonTooltip';
 export * from './imageMetaData';
 export * from './infoMessage';
-export * from './invoice';
 export * from './listInput';
 export * from './loginTemplate';
 export * from './navigationBar';

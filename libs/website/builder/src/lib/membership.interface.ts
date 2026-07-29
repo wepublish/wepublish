@@ -2,6 +2,7 @@ import { LazyQueryExecFunction, QueryResult } from '@apollo/client';
 import { RadioProps } from '@mui/material';
 import {
   ChallengeQuery,
+  FullGoodieFragment,
   FullInvoiceFragment,
   FullMemberPlanFragment,
   FullSubscriptionFragment,
@@ -57,12 +58,23 @@ export type BuilderInvoiceListProps = Pick<
   onPay?: (invoiceId: string, paymentMethodId: string) => Promise<void>;
 };
 
+export type BuilderGoodiePickerProps = {
+  goodies: FullGoodieFragment[];
+  allGoodies?: FullGoodieFragment[];
+  className?: string;
+  name?: string;
+  value?: string | null;
+  disabled?: boolean;
+  onChange: (goodieId: string | null) => void;
+};
+
 export type BuilderMemberPlanPickerProps = {
   memberPlans: FullMemberPlanFragment[];
   className?: string;
   onChange: (memberPlanId: string) => void;
   name?: string;
   value?: string;
+  monthlyAmount?: number;
 };
 
 export type BuilderMemberPlanItemProps = Pick<
@@ -73,8 +85,12 @@ export type BuilderMemberPlanItemProps = Pick<
   | 'extendable'
   | 'shortDescription'
   | 'tags'
+  | 'goodies'
 > &
-  Omit<RadioProps, 'ref'> & { className?: string } & { slug: string };
+  Omit<RadioProps, 'ref'> & { className?: string } & {
+    slug: string;
+    monthlyAmount?: number;
+  };
 
 export type BuilderPeriodicityPickerProps = {
   periodicities: PaymentPeriodicity[] | undefined;
@@ -130,6 +146,7 @@ export type BuilderSubscribeProps<
     QueryResult<MemberPlanListQuery>,
     'data' | 'loading' | 'error'
   >;
+  showGoodies?: boolean;
   subscribeInfo: Pick<
     QueryResult<CreateSubscriptionInfoQuery>,
     'data' | 'loading' | 'error'
@@ -161,6 +178,11 @@ export type BuilderSubscribeProps<
   transactionFee?: (monthlyAmount: number) => number;
   transactionFeeText?: string;
   returningUserId?: string;
+  filterGoodies?: (
+    goodies: FullGoodieFragment[],
+    context: { monthlyAmount: number }
+  ) => FullGoodieFragment[];
+  goodieMinValue?: number | null;
 } & Pick<BuilderRegistrationFormProps<T>, 'schema' | 'fields'>;
 
 export type BuilderUpgradeProps = {

@@ -1,4 +1,7 @@
 import {
+  Goodie,
+  Invoice,
+  InvoiceItem,
   MemberPlan,
   PaymentMethod,
   PaymentProviderCustomer,
@@ -15,10 +18,27 @@ type UserWithRelations = User & {
   paymentProviderCustomers: PaymentProviderCustomer[];
 };
 
+type InvoiceWithGoodieItems = Invoice & {
+  items: (InvoiceItem & { goodie: Goodie | null })[];
+};
+
 type CSVSubscription = SubscriptionWithRelations & {
   user: UserWithRelations;
   paymentMethod: PaymentMethod;
   memberPlan: MemberPlan;
+  invoices: InvoiceWithGoodieItems[];
+};
+
+const findGoodieItem = (invoices: InvoiceWithGoodieItems[]) => {
+  for (const invoice of invoices) {
+    const item = invoice.items.find(({ goodieId }) => goodieId);
+
+    if (item) {
+      return { item, invoice };
+    }
+  }
+
+  return null;
 };
 
 export function mapSubscriptionsAsCsv(subscriptions: CSVSubscription[]) {
@@ -55,12 +75,16 @@ export function mapSubscriptionsAsCsv(subscriptions: CSVSubscription[]) {
       'paymentMethodID',
       'deactivationDate',
       'deactivationReason',
+      'goodie',
+      'goodieID',
+      'goodiePaid',
     ].join(',') + '\n';
 
   for (const subscription of subscriptions) {
     const user = subscription?.user;
     const memberPlan = subscription?.memberPlan;
     const paymentMethod = subscription?.paymentMethod;
+    const goodieItem = findGoodieItem(subscription?.invoices ?? []);
     // if (!user) continue
     csvStr +=
       [
@@ -103,6 +127,11 @@ export function mapSubscriptionsAsCsv(subscriptions: CSVSubscription[]) {
           formatISO(subscription.deactivation.date, { representation: 'date' })
         : '',
         subscription?.deactivation?.reason ?? '',
+        sanitizeCsvContent(
+          goodieItem?.item.goodie?.name ?? goodieItem?.item.name
+        ),
+        goodieItem?.item.goodieId ?? '',
+        goodieItem ? Boolean(goodieItem.invoice.paidAt) : '',
       ].join(',') + '\r\n';
   }
 

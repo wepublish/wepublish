@@ -89,6 +89,7 @@ import {
   BuilderInvoiceListItemProps,
   BuilderInvoiceListProps,
   BuilderMemberPlanItemProps,
+  BuilderGoodiePickerProps,
   BuilderMemberPlanPickerProps,
   BuilderPaymentAmountProps,
   BuilderPaymentMethodPickerProps,
@@ -177,6 +178,7 @@ export type WebsiteBuilderProps = {
   SubscriptionListItem: ComponentType<BuilderSubscriptionListItemProps>;
   InvoiceList: ComponentType<BuilderInvoiceListProps>;
   InvoiceListItem: ComponentType<BuilderInvoiceListItemProps>;
+  GoodiePicker: ComponentType<BuilderGoodiePickerProps>;
   MemberPlanPicker: ComponentType<BuilderMemberPlanPickerProps>;
   MemberPlanItem: ComponentType<BuilderMemberPlanItemProps>;
   PaymentAmount: ComponentType<BuilderPaymentAmountProps>;
@@ -287,6 +289,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   Subscribe: NoComponent,
   Upgrade: NoComponent,
   TransactionFee: NoComponent,
+  GoodiePicker: NoComponent,
   MemberPlanPicker: NoComponent,
   MemberPlanItem: NoComponent,
   PaymentAmount: NoComponent,

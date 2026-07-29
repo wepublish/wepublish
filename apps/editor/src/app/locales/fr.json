@@ -218,7 +218,6 @@
         "updatedAtDate": "{{updatedAtDate, ccc PP pp}}"
       }
     },
-
     "authors": {
       "overview": {
         "action": "Action",
@@ -841,9 +840,17 @@
         "noInvoices": "Pas de factures."
       },
       "payManually": "Payer manuellement",
-      "total": "Montant facturé",
-      "unpaid": "(non payé)",
-      "userNotLoaded": "Erreur inattendue : vos données d'utilisateur trice n'ont pas pu être chargées."
+      "total": "Montant",
+      "unpaid": "non payé",
+      "userNotLoaded": "Erreur inattendue : vos données d'utilisateur trice n'ont pas pu être chargées.",
+      "table": {
+        "date": "Date",
+        "description": "Description",
+        "goodie": "Goodie",
+        "status": "Statut",
+        "action": "Action",
+        "idCopied": "ID de facture copié"
+      }
     },
     "linkPageBreakEditPanel": {
       "close": "Fermer",
@@ -1477,7 +1484,7 @@
       "totpDisabled": "L'authentification à deux facteurs n'est pas encore configurée. L'utilisateur sera invité à la configurer lors de sa prochaine connexion à l'éditeur.",
       "totpExemptInfo": "Cet utilisateur est exempté de l'exigence d'authentification à deux facteurs.",
       "totpExemptLabel": "Exempter de l'exigence 2FA",
-      "totpExemptWarning": "\u26a0\ufe0f AVERTISSEMENT DE SÉCURITÉ \u26a0\ufe0f\n\nVous êtes sur le point de DÉSACTIVER l'exigence d'authentification à deux facteurs pour cet utilisateur !\n\nCela réduit considérablement la sécurité de ce compte. L'utilisateur pourra se connecter à l'éditeur avec un simple mot de passe, sans second facteur.\n\nCela ne devrait être utilisé que dans des circonstances exceptionnelles.\n\nÊtes-vous sûr de vouloir continuer ?",
+      "totpExemptWarning": "⚠️ AVERTISSEMENT DE SÉCURITÉ ⚠️\n\nVous êtes sur le point de DÉSACTIVER l'exigence d'authentification à deux facteurs pour cet utilisateur !\n\nCela réduit considérablement la sécurité de ce compte. L'utilisateur pourra se connecter à l'éditeur avec un simple mot de passe, sans second facteur.\n\nCela ne devrait être utilisé que dans des circonstances exceptionnelles.\n\nÊtes-vous sûr de vouloir continuer ?",
       "resetPassword": "Réinitialiser le mot de passe",
       "resetPasswordFor": "Réinitialiser le mot de passe de {{userName}}",
       "selectUserImage": "Choisir une photo de profil",
@@ -1872,6 +1879,33 @@
         "areYouSure": "Êtes-vous sûr(e) ?",
         "areYouSureBody": "Le bon de réduction \"{{ voucher }}\" sera définitivement supprimé et cette action est irréversible.",
         "areYouSureConfirmation": "Supprimer le bon de réduction"
+      }
+    },
+    "goodie": {
+      "navbar": "Goodies",
+      "form": {
+        "createTitle": "Créer un goodie",
+        "editTitle": "Modifier le goodie \"{{ goodie }}\"",
+        "name": "Nom",
+        "description": "Description",
+        "stock": "Stock",
+        "active": "Actif",
+        "image": "Image",
+        "memberPlans": "Plans d'abonnement"
+      },
+      "overview": {
+        "title": "Goodies",
+        "createGoodie": "Nouveau goodie",
+        "name": "Nom",
+        "memberPlans": "Plans d'abonnement",
+        "stock": "Stock",
+        "availableStock": "Disponible",
+        "active": "Actif",
+        "createdAt": "Créé le",
+        "unlimited": "∞",
+        "areYouSure": "Êtes-vous sûr(e) ?",
+        "areYouSureBody": "Le goodie \"{{ goodie }}\" sera définitivement supprimé et cette action est irréversible.",
+        "areYouSureConfirmation": "Supprimer le goodie"
       }
     },
     "paymentMethodEditPanel": {
@@ -2309,6 +2343,9 @@
         "Event": "Événement",
         "Custom": "Personnalisé"
       }
+    },
+    "columnConfigurator": {
+      "title": "Afficher/masquer les colonnes"
     }
   }
 }

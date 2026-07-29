@@ -9,6 +9,7 @@ import {
   CanCreateCrowdfunding,
   CanCreateDocument,
   CanCreateExternalApp,
+  CanCreateGoodie,
   CanCreateImage,
   CanCreateMemberPlan,
   CanCreateNavigation,
@@ -103,6 +104,7 @@ import {
   CanUpdateCrowdfunding,
   CanUpdateEvent,
   CanUpdateExternalApp,
+  CanUpdateGoodie,
   CanUpdatePaywall,
   CanUpdateSettings,
   CanUpdateSystemMails,
@@ -121,6 +123,7 @@ import {
   MdAutorenew,
   MdBadge,
   MdBookOnline,
+  MdCardGiftcard,
   MdChat,
   MdChevronLeft,
   MdChevronRight,
@@ -934,6 +937,8 @@ export function Base({ children }: BaseProps) {
                     CanGetSubscriptionFlows.id,
                     CanCreateVoucher.id,
                     CanUpdateVoucher.id,
+                    CanCreateGoodie.id,
+                    CanUpdateGoodie.id,
                   ]}
                 >
                   <Nav.Menu
@@ -1007,6 +1012,22 @@ export function Base({ children }: BaseProps) {
                         active={path === 'vouchers'}
                       >
                         {t('voucher.navbar')}
+                      </Nav.Item>
+                    </PermissionControl>
+
+                    <PermissionControl
+                      qualifyingPermissions={[
+                        CanCreateGoodie.id,
+                        CanUpdateGoodie.id,
+                      ]}
+                    >
+                      <Nav.Item
+                        as={NavLink}
+                        href="/goodies"
+                        icon={<MdCardGiftcard />}
+                        active={path === 'goodies'}
+                      >
+                        {t('goodie.navbar')}
                       </Nav.Item>
                     </PermissionControl>
                   </Nav.Menu>

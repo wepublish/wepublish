@@ -840,9 +840,17 @@
         "noInvoices": "No invoices."
       },
       "payManually": "Pay manually",
-      "total": "Invoice amount",
-      "unpaid": "(unpaid)",
-      "userNotLoaded": "Unexpected error: Your user data could not be loaded."
+      "total": "Amount",
+      "unpaid": "unpaid",
+      "userNotLoaded": "Unexpected error: Your user data could not be loaded.",
+      "table": {
+        "date": "Date",
+        "description": "Description",
+        "goodie": "Goodie",
+        "status": "Status",
+        "action": "Action",
+        "idCopied": "Invoice ID copied"
+      }
     },
     "linkPageBreakEditPanel": {
       "close": "Close",
@@ -1573,7 +1581,7 @@
       "totpDisabled": "Two-factor authentication is not yet configured. The user will be prompted to set it up on their next editor login.",
       "totpExemptInfo": "This user is exempt from the two-factor authentication requirement.",
       "totpExemptLabel": "Exempt from 2FA requirement",
-      "totpExemptWarning": "\u26a0\ufe0f SECURITY WARNING \u26a0\ufe0f\n\nYou are about to DISABLE the two-factor authentication requirement for this user!\n\nThis significantly reduces the security of this account. The user will be able to log into the editor with only a password, without any second factor.\n\nThis should only be used in exceptional circumstances.\n\nAre you sure you want to proceed?",
+      "totpExemptWarning": "⚠️ SECURITY WARNING ⚠️\n\nYou are about to DISABLE the two-factor authentication requirement for this user!\n\nThis significantly reduces the security of this account. The user will be able to log into the editor with only a password, without any second factor.\n\nThis should only be used in exceptional circumstances.\n\nAre you sure you want to proceed?",
       "properties": "Properties",
       "resetPassword": "Reset Password",
       "resetPasswordFor": "Reset the password for {{userName}}",
@@ -1989,6 +1997,33 @@
         "areYouSure": "Are you sure?",
         "areYouSureBody": "The voucher \"{{ voucher }}\" will be deleted permanently and can not be reversed.",
         "areYouSureConfirmation": "Delete voucher"
+      }
+    },
+    "goodie": {
+      "navbar": "Goodies",
+      "form": {
+        "createTitle": "Create Goodie",
+        "editTitle": "Edit Goodie \"{{ goodie }}\"",
+        "name": "Name",
+        "description": "Description",
+        "stock": "Stock",
+        "active": "Active",
+        "image": "Image",
+        "memberPlans": "Memberplans"
+      },
+      "overview": {
+        "title": "Goodies",
+        "createGoodie": "New Goodie",
+        "name": "Name",
+        "memberPlans": "Memberplans",
+        "stock": "Stock",
+        "availableStock": "Available",
+        "active": "Active",
+        "createdAt": "Created At",
+        "unlimited": "∞",
+        "areYouSure": "Are you sure?",
+        "areYouSureBody": "The goodie \"{{ goodie }}\" will be deleted permanently and can not be reversed.",
+        "areYouSureConfirmation": "Delete goodie"
       }
     },
     "paymentMethodEditPanel": {
@@ -2427,6 +2462,9 @@
         "Event": "Event",
         "Custom": "Custom"
       }
+    },
+    "columnConfigurator": {
+      "title": "Show/hide columns"
     }
   }
 }
