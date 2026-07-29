@@ -290,7 +290,21 @@ export const Upgrade = ({
           render={({ field }) => (
             <MemberPlanPicker
               {...field}
-              onChange={memberPlanId => field.onChange(memberPlanId)}
+              onChange={memberPlanId => {
+                field.onChange(memberPlanId);
+
+                const memberPlan = availableMemberplans.find(
+                  ({ id }) => id === memberPlanId
+                );
+
+                if (memberPlan) {
+                  setValue(
+                    'monthlyAmount',
+                    memberPlan.amountPerMonthTarget ||
+                      memberPlan.amountPerMonthMin
+                  );
+                }
+              }}
               memberPlans={availableMemberplans}
             />
           )}

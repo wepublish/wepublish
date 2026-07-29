@@ -16,6 +16,9 @@ export const ListViewContainer = styled.div`
 
 export const ListViewHeader = styled.div`
   grid-column: 1 2;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 `;
 
 export const ListViewActions = styled.div`

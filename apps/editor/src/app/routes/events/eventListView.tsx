@@ -17,6 +17,7 @@ import {
   PermissionControl,
   Table,
   TableWrapper,
+  useListViewState,
 } from '@wepublish/ui/editor';
 import { format as formatDate } from 'date-fns';
 import { useEffect, useState } from 'react';
@@ -73,11 +74,11 @@ const onErrorToast = (error: ApolloError) => {
 };
 
 function EventListView() {
-  const [filter, setFilter] = useState({} as EventFilter);
+  const { filter, setFilter, limit, setLimit } =
+    useListViewState<EventFilter>('events');
   const { t } = useTranslation();
   const [eventDelete, setEventDelete] = useState<Event | undefined>(undefined);
   const [page, setPage] = useState<number>(1);
-  const [limit, setLimit] = useState<number>(10);
 
   const eventListVariables = {
     filter: filter || undefined,
@@ -121,7 +122,10 @@ function EventListView() {
           fields={['dates', 'name', 'location']}
           filter={filter}
           isLoading={isLoading}
-          onSetFilter={filter => setFilter(filter)}
+          onSetFilter={filter => {
+            setFilter(filter);
+            setPage(1);
+          }}
           tagType={TagType.Event}
         />
       </ListViewContainer>
@@ -212,7 +216,10 @@ function EventListView() {
           total={data?.events?.totalCount ?? 0}
           activePage={page}
           onChangePage={page => setPage(page)}
-          onChangeLimit={limit => setLimit(limit)}
+          onChangeLimit={limit => {
+            setLimit(limit);
+            setPage(1);
+          }}
         />
       </TableWrapper>
 

@@ -63,12 +63,14 @@ export type BuilderMemberPlanPickerProps = {
   onChange: (memberPlanId: string) => void;
   name?: string;
   value?: string;
+  sortBy?: 'priceAsc';
 };
 
 export type BuilderMemberPlanItemProps = Pick<
   FullMemberPlanFragment,
   | 'amountPerMonthMin'
   | 'amountPerMonthMax'
+  | 'amountPerMonthTarget'
   | 'currency'
   | 'extendable'
   | 'shortDescription'
@@ -161,6 +163,7 @@ export type BuilderSubscribeProps<
   transactionFee?: (monthlyAmount: number) => number;
   transactionFeeText?: string;
   returningUserId?: string;
+  supportPeriodicity?: PaymentPeriodicity;
 } & Pick<BuilderRegistrationFormProps<T>, 'schema' | 'fields'>;
 
 export type BuilderUpgradeProps = {

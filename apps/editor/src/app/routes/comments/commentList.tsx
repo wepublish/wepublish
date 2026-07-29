@@ -22,6 +22,7 @@ import {
   PermissionControl,
   Table,
   TableWrapper,
+  useListViewState,
 } from '@wepublish/ui/editor';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -50,18 +51,17 @@ function mapColumFieldToGraphQLField(columnField: string): CommentSort | null {
 function CommentList() {
   const { t } = useTranslation();
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
-  const [sortField, setSortField] = useState('modifiedAt');
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
-
-  const [filter, setFilter] = useState<CommentFilter>({
-    states: [
-      CommentState.Approved,
-      CommentState.PendingApproval,
-      CommentState.PendingUserChanges,
-      CommentState.Rejected,
-    ],
-  });
+  const { filter, setFilter, sortField, sortOrder, setSort, limit, setLimit } =
+    useListViewState<CommentFilter>('comments', {
+      defaultFilter: {
+        states: [
+          CommentState.Approved,
+          CommentState.PendingApproval,
+          CommentState.PendingUserChanges,
+          CommentState.Rejected,
+        ],
+      },
+    });
 
   const [comments, setComments] = useState<FullCommentFragment[]>([]);
 
@@ -220,8 +220,8 @@ function CommentList() {
           sortColumn={sortField}
           sortType={sortOrder}
           onSortColumn={(sortColumn, sortType) => {
-            setSortOrder(sortType ?? 'asc');
-            setSortField(sortColumn);
+            setSort(sortColumn, sortType ?? 'asc');
+            setPage(1);
           }}
         >
           {/* eslint-disable-next-line i18next/no-literal-string */}
@@ -354,7 +354,10 @@ function CommentList() {
           total={data?.comments.totalCount ?? 0}
           activePage={page}
           onChangePage={page => setPage(page)}
-          onChangeLimit={limit => setLimit(limit)}
+          onChangeLimit={limit => {
+            setLimit(limit);
+            setPage(1);
+          }}
         />
       </TableWrapper>
     </>

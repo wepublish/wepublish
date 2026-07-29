@@ -7,10 +7,15 @@ import {
 } from '@wepublish/utils/website';
 import { getApiClient, PageDocument } from '@wepublish/website/api';
 import { NextPageContext } from 'next';
-import { ComponentProps } from 'react';
 
-export default function Mitmachen(props: ComponentProps<typeof SubscribePage>) {
-  return <PageContainer slug="mitmachen" />;
+import { EenewsPageShell } from '../src/components/eenews-page-shell';
+
+export default function Mitmachen() {
+  return (
+    <EenewsPageShell>
+      <PageContainer slug="mitmachen" />
+    </EenewsPageShell>
+  );
 }
 
 Mitmachen.getInitialProps = async (ctx: NextPageContext) => {
@@ -23,9 +28,7 @@ Mitmachen.getInitialProps = async (ctx: NextPageContext) => {
   await Promise.all([
     client.query({
       query: PageDocument,
-      variables: {
-        slug: 'mitmachen',
-      },
+      variables: { slug: 'mitmachen' },
     }),
   ]);
 
