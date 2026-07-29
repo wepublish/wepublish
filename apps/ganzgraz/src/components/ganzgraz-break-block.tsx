@@ -1,8 +1,5 @@
 import styled from '@emotion/styled';
-import {
-  BreakBlock,
-  BreakBlockHeading,
-} from '@wepublish/block-content/website';
+import { BreakBlock } from '@wepublish/block-content/website';
 
 export const GanzgrazBreakBlock = styled(BreakBlock)`
   &:first-child {

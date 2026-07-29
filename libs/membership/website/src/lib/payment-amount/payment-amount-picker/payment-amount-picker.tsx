@@ -113,6 +113,7 @@ export const PaymentAmountPicker = forwardRef<
     format?: string;
     step?: number;
     snap?: CurrencyNumberSpinnerSnap;
+    arrows?: 'split' | 'stacked';
     noInitialSelection?: boolean;
   }
 >(
@@ -125,6 +126,7 @@ export const PaymentAmountPicker = forwardRef<
       pickerItems,
       format,
       snap,
+      arrows,
       noInitialSelection,
       name,
       error,
@@ -185,8 +187,9 @@ export const PaymentAmountPicker = forwardRef<
             >
               <StyledCurrencyNumberSpinner
                 value={showSelection ? value / 100 : undefined}
-                min={0}
+                min={amountPerMonthMin / 100}
                 snap={snap}
+                arrows={arrows}
                 helperText={`Min ${formatCurrency(amountPerMonthMin / 100, currency, locale)}`}
                 onValueChange={v => {
                   setHasInteracted(true);

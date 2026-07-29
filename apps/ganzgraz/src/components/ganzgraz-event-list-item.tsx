@@ -183,7 +183,7 @@ export const GanzGrazEventListItem = ({
           <H4 component="h1">{name}</H4>
           {lead ?
             <Paragraph>{lead}</Paragraph>
-          : <RichText richText={description ?? []} />}
+          : <RichText richText={description} />}
         </EventListItemContent>
       </EventListItemWrapper>
     </Link>

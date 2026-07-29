@@ -2,7 +2,7 @@ import { PaymentAmountPicker } from '@wepublish/membership/website';
 import { BuilderPaymentAmountProps } from '@wepublish/website/builder';
 import { forwardRef } from 'react';
 
-export const TsriPaymentAmountPicker = forwardRef<
+export const FlimmerPaymentAmountPicker = forwardRef<
   HTMLInputElement,
   BuilderPaymentAmountProps
 >((props, ref) => (
@@ -10,12 +10,7 @@ export const TsriPaymentAmountPicker = forwardRef<
     {...props}
     ref={ref}
     pickerItems={[1000, 1500, 2000]}
-    arrows={'stacked'}
-    snap={{
-      values: [10, 15, 20],
-      threshold: 0.6,
-    }}
   />
 ));
 
-TsriPaymentAmountPicker.displayName = 'TsriPaymentAmountPicker';
+FlimmerPaymentAmountPicker.displayName = 'FlimmerPaymentAmountPicker';
