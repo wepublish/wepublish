@@ -1,4 +1,3 @@
-/* eslint-disable */
 module.exports = {
   displayName: 'authentication-website',
   preset: '../../../jest.preset.js',

@@ -1,4 +1,3 @@
-/* eslint-disable */
 module.exports = {
   displayName: 'neuewege',
   preset: '../../jest.preset.js',

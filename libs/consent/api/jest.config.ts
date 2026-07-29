@@ -1,4 +1,3 @@
-/* eslint-disable */
 module.exports = {
   displayName: 'consent-api',
   preset: '../../../jest.preset.js',

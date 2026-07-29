@@ -1,4 +1,3 @@
-/* eslint-disable */
 module.exports = {
   displayName: 'peering-api',
   preset: '../../../jest.preset.js',

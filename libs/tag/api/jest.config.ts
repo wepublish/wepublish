@@ -1,4 +1,3 @@
-/* eslint-disable */
 module.exports = {
   displayName: 'tag-api',
   preset: '../../../jest.preset.js',

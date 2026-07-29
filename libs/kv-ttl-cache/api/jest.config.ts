@@ -1,4 +1,3 @@
-/* eslint-disable */
 module.exports = {
   displayName: 'kv-ttl-cache-api',
   preset: '../../../jest.preset.js',

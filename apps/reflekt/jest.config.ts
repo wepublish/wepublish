@@ -1,4 +1,3 @@
-/* eslint-disable */
 module.exports = {
   displayName: 'reflekt',
   preset: '../../jest.preset.js',

@@ -1,4 +1,3 @@
-/* eslint-disable */
 module.exports = {
   displayName: 'consent-editor',
   preset: '../../../jest.preset.js',

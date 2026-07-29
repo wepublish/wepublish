@@ -1,4 +1,3 @@
-/* eslint-disable */
 module.exports = {
   displayName: 'media-api',
   preset: '../../../jest.preset.js',

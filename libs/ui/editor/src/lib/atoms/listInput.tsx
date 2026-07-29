@@ -1,4 +1,3 @@
-import { JSX } from 'react';
 import {
   DndContext,
   DragEndEvent,
@@ -15,7 +14,7 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 import styled from '@emotion/styled';
 import nanoid from 'nanoid';
-import React from 'react';
+import React, { JSX } from 'react';
 import { MdAddCircle, MdDelete, MdDragIndicator } from 'react-icons/md';
 import { IconButton, Panel as RPanel } from 'rsuite';
 

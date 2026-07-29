@@ -1,4 +1,3 @@
-/* eslint-disable */
 module.exports = {
   displayName: 'google-analytics-api',
   preset: '../../../jest.preset.js',

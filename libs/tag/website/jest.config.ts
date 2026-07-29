@@ -1,4 +1,3 @@
-/* eslint-disable */
 module.exports = {
   displayName: 'tag-website',
   preset: '../../../jest.preset.js',

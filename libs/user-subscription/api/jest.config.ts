@@ -1,4 +1,3 @@
-/* eslint-disable */
 module.exports = {
   displayName: 'user-subscription-api',
   preset: '../../../jest.preset.js',

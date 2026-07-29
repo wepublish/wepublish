@@ -1,4 +1,3 @@
-/* eslint-disable */
 module.exports = {
   displayName: 'external-apps-api',
   preset: '../../../jest.preset.js',

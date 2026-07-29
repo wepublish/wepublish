@@ -1,4 +1,3 @@
-/* eslint-disable */
 module.exports = {
   displayName: 'stats-api',
   preset: '../../../jest.preset.js',

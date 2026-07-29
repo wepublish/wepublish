@@ -6,11 +6,7 @@ import {
   createEmotionCache,
 } from '@mui/material-nextjs/v15-pagesRouter';
 import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google';
-import {
-  RichTextBlockWrapper,
-  TitleBlock,
-  TitleBlockTitle,
-} from '@wepublish/block-content/website';
+import { TitleBlock, TitleBlockTitle } from '@wepublish/block-content/website';
 import { withErrorSnackbar } from '@wepublish/errors/website';
 import { PaymentAmountPicker } from '@wepublish/membership/website';
 import {
@@ -20,10 +16,8 @@ import {
 import { withPaywallBypassToken } from '@wepublish/paywall/website';
 import {
   authLink,
-  getApiUrl,
   initWePublishTranslator,
   NextWepublishLink,
-  SubscribePage,
   withBuilderRouter,
   withJwtHandler,
   withSessionProvider,
@@ -42,7 +36,6 @@ import { AppProps } from 'next/app';
 import Head from 'next/head';
 import Script from 'next/script';
 import PlausibleProvider from 'next-plausible';
-import { ComponentProps } from 'react';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 

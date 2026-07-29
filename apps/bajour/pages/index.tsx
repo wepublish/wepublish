@@ -3,7 +3,6 @@ import { SliderWrapper } from '@wepublish/block-content/website';
 import { ContentWidthProvider } from '@wepublish/content/website';
 import { PageContainer } from '@wepublish/page/website';
 import { getApiUrl } from '@wepublish/utils/website';
-import { LinkContext } from '@wepublish/website/builder';
 import {
   addClientCacheToProps,
   CommentListDocument,
@@ -18,6 +17,7 @@ import {
   SortOrder,
   TeaserListBlock,
 } from '@wepublish/website/api';
+import { LinkContext } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';
 
 import { BestOfWePublishWrapper } from '../src/components/best-of-wepublish/best-of-wepublish';

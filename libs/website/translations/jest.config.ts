@@ -1,4 +1,3 @@
-/* eslint-disable */
 module.exports = {
   displayName: 'website-translations',
   preset: '../../../jest.preset.js',

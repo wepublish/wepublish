@@ -1,4 +1,3 @@
-/* eslint-disable */
 module.exports = {
   displayName: 'cultur',
   preset: '../../jest.preset.js',

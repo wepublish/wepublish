@@ -1,4 +1,3 @@
-/* eslint-disable */
 module.exports = {
   displayName: 'tsri',
   preset: '../../jest.preset.js',

@@ -1,4 +1,3 @@
-/* eslint-disable */
 module.exports = {
   displayName: 'gruppetto',
   preset: '../../jest.preset.js',

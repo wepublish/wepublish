@@ -1,4 +1,3 @@
-/* eslint-disable */
 module.exports = {
   displayName: 'hauptstadt',
   preset: '../../jest.preset.js',

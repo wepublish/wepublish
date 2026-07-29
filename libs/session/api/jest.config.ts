@@ -1,4 +1,3 @@
-/* eslint-disable */
 module.exports = {
   displayName: 'session-api',
   preset: '../../../jest.preset.js',

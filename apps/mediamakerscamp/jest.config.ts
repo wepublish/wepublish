@@ -1,4 +1,3 @@
-/* eslint-disable */
 module.exports = {
   displayName: 'mediamakerscamp',
   preset: '../../jest.preset.js',

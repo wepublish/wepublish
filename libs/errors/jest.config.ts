@@ -1,4 +1,3 @@
-/* eslint-disable */
 module.exports = {
   displayName: 'errors',
   preset: '../../jest.preset.js',

@@ -1,4 +1,3 @@
-/* eslint-disable */
 module.exports = {
   displayName: 'poll-api',
   preset: '../../../jest.preset.js',

@@ -1,4 +1,3 @@
-/* eslint-disable */
 module.exports = {
   displayName: 'challenge-api',
   preset: '../../../jest.preset.js',

@@ -1,4 +1,3 @@
-/* eslint-disable */
 module.exports = {
   displayName: 'phrase-api',
   preset: '../../../jest.preset.js',

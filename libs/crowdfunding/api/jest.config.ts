@@ -1,4 +1,3 @@
-/* eslint-disable */
 module.exports = {
   displayName: 'crowdfunding-api',
   preset: '../../../jest.preset.js',

@@ -1,4 +1,3 @@
-/* eslint-disable */
 module.exports = {
   displayName: 'wepublish-site',
   preset: '../../jest.preset.js',

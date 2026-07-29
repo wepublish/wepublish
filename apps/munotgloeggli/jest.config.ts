@@ -1,4 +1,3 @@
-/* eslint-disable */
 module.exports = {
   displayName: 'munotgloeggli',
   preset: '../../jest.preset.js',

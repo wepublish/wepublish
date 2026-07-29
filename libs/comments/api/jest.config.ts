@@ -1,4 +1,3 @@
-/* eslint-disable */
 module.exports = {
   displayName: 'comments-api',
   preset: '../../../jest.preset.js',

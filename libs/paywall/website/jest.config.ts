@@ -1,4 +1,3 @@
-/* eslint-disable */
 module.exports = {
   displayName: 'paywall-website',
   preset: '../../../jest.preset.js',

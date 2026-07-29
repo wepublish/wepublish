@@ -24,7 +24,6 @@ import { withPaywallBypassToken } from '@wepublish/paywall/website';
 import { theme } from '@wepublish/ui';
 import {
   authLink,
-  getApiUrl,
   initWePublishTranslator,
   NextWepublishLink,
   RoutedAdminBar,

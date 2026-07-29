@@ -1,4 +1,3 @@
-/* eslint-disable */
 module.exports = {
   displayName: 'fazetten',
   preset: '../../jest.preset.js',

@@ -1,4 +1,3 @@
-/* eslint-disable */
 module.exports = {
   displayName: 'peering-website',
   preset: '../../../jest.preset.js',

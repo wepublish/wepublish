@@ -1,4 +1,3 @@
-/* eslint-disable */
 module.exports = {
   displayName: 'property-api',
   preset: '../../../jest.preset.js',

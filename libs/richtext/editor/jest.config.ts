@@ -1,4 +1,3 @@
-/* eslint-disable */
 module.exports = {
   displayName: 'richtext-editor',
   preset: '../../../jest.preset.js',

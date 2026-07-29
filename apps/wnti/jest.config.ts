@@ -1,4 +1,3 @@
-/* eslint-disable */
 module.exports = {
   displayName: 'wnti',
   preset: '../../jest.preset.js',

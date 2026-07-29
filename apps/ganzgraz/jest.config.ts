@@ -1,4 +1,3 @@
-/* eslint-disable */
 module.exports = {
   displayName: 'ganzgraz',
   preset: '../../jest.preset.js',

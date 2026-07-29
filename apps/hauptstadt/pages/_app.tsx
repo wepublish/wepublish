@@ -15,7 +15,6 @@ import { withPaywallBypassToken } from '@wepublish/paywall/website';
 import {
   AsyncSessionProvider,
   authLink,
-  getApiUrl,
   initWePublishTranslator,
   NextWepublishLink,
   RoutedAdminBar,

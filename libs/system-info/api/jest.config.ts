@@ -1,4 +1,3 @@
-/* eslint-disable */
 module.exports = {
   displayName: 'system-info-api',
   preset: '../../../jest.preset.js',

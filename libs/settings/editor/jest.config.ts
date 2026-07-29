@@ -1,4 +1,3 @@
-/* eslint-disable */
 module.exports = {
   displayName: 'settings-editor',
   preset: '../../../jest.preset.js',

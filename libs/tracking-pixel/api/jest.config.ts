@@ -1,4 +1,3 @@
-/* eslint-disable */
 module.exports = {
   displayName: 'tacking-pixel-api',
   preset: '../../../jest.preset.js',

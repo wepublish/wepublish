@@ -1,4 +1,3 @@
-/* eslint-disable */
 module.exports = {
   displayName: 'crowdfunding-editor',
   preset: '../../../jest.preset.js',

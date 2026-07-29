@@ -1,4 +1,3 @@
-/* eslint-disable */
 module.exports = {
   displayName: 'zwoelf',
   preset: '../../jest.preset.js',
