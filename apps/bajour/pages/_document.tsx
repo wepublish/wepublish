@@ -87,7 +87,10 @@ export default function Document(props: DocumentProps) {
 }
 
 Document.getInitialProps = async (ctx: DocumentContext) => {
-  const { props } = await documentGetInitialProps(ctx);
+  const { props } = await documentGetInitialProps(ctx, () => ({
+    stripeKey: process.env.STRIPE_PUBLIC_KEY,
+    mailchimpPopupScriptUrl: process.env.MAILCHIMP_POPUP_SCRIPT_URL,
+  }));
 
   return props;
 };

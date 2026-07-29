@@ -103,14 +103,13 @@ GuardedSubscription.getInitialProps = async (ctx: NextPageContext) => {
     return {};
   }
 
-  const { publicRuntimeConfig } = getConfig();
   const client = getApiClient(getApiUrl(), [
     ssrAuthLink(
       async () => (await getSessionTokenProps(ctx)).sessionToken?.token
     ),
   ]);
 
-  await handleJwtLogin(ctx, client, !!publicRuntimeConfig.env.HTTP_ONLY_COOKIE);
+  await handleJwtLogin(ctx, client, !!process.env.HTTP_ONLY_COOKIE);
 
   const sessionProps = await getSessionTokenProps(ctx);
 

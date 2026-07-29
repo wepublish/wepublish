@@ -89,7 +89,11 @@ const dateFormatter = (date: Date, includeTime = true) =>
 
 export type CustomAppProps = AppProps<{
   sessionToken?: SessionWithTokenWithoutUser;
-}> & { emotionCache?: EmotionCache; websiteSettings?: WebsiteSettingsFragment };
+}> & {
+  emotionCache?: EmotionCache;
+  websiteSettings?: WebsiteSettingsFragment;
+  publicEnv: { apiUrl: string };
+};
 
 const siteTitle = 'Fazetten';
 const providerProps: PartialDeep<WebsiteBuilderProps> = {

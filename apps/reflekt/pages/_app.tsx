@@ -78,7 +78,11 @@ const dateFormatter = (date: Date, includeTime = true) =>
 
 export type CustomAppProps = AppProps<{
   sessionToken?: SessionWithTokenWithoutUser;
-}> & { emotionCache?: EmotionCache; websiteSettings?: WebsiteSettingsFragment };
+}> & {
+  emotionCache?: EmotionCache;
+  websiteSettings?: WebsiteSettingsFragment;
+  publicEnv: { apiUrl: string };
+};
 
 function CustomApp({
   Component,

@@ -115,15 +115,21 @@ const dateFormatter = (date: Date, includeTime = true) =>
 
 export type CustomAppProps = AppProps<{
   sessionToken?: SessionWithTokenWithoutUser;
-}> & { emotionCache?: EmotionCache; websiteSettings?: WebsiteSettingsFragment };
-
-const { publicRuntimeConfig } = getConfig();
+}> & {
+  emotionCache?: EmotionCache;
+  websiteSettings?: WebsiteSettingsFragment;
+  publicEnv: {
+    apiUrl: string;
+    stripeKey: string;
+  };
+};
 
 function CustomApp({
   Component,
   pageProps,
   emotionCache,
   websiteSettings,
+  publicEnv,
 }: CustomAppProps) {
   const siteTitle = 'Tsri';
 
@@ -187,7 +193,7 @@ function CustomApp({
             date={{ format: dateFormatter }}
             meta={{ siteTitle }}
             thirdParty={{
-              stripe: publicRuntimeConfig.env.STRIPE_PUBLIC_KEY,
+              stripe: publicEnv.stripeKey,
             }}
             Banner={TsriBanner}
           >

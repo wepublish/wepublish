@@ -161,15 +161,17 @@ export const createWithApiClient =
   <
     P extends object,
     NextPage extends {
-      apiUrl: string;
+      publicEnv: {
+        apiUrl: string;
+      };
       pageProps?: { [V1_CLIENT_STATE_PROP_NAME]?: NormalizedCacheObject };
     },
   >(
     ControlledComponent: ComponentType<P>
   ) =>
-    memo<P | NextPage>(props => {
+    memo<P & NextPage>(props => {
       const client = useApiClient(
-        props.apiUrl,
+        props.publicEnv.apiUrl,
         links,
         cacheConfig,
         (props as NextPage).pageProps?.[V1_CLIENT_STATE_PROP_NAME]

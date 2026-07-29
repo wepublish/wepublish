@@ -94,32 +94,23 @@ const dateFormatter = (date: Date, includeTime = true) =>
     `${format(date, 'dd. MMMM yyyy')} um ${format(date, 'HH:mm')}`
   : format(date, 'dd. MMMM yyyy');
 
-const MitmachenInner = (props: ComponentProps<typeof SubscribePage>) => (
-  <SubscribePage
-    fields={['firstName']}
-    {...props}
-  />
-);
-
-const MitmachenInnerStyled = styled(MitmachenInner)`
-  border: 1px solid ${({ theme }) => theme.palette.accent.main};
-  border-radius: ${({ theme }) => theme.shape.borderRadius}px;
-  padding: ${({ theme }) => theme.spacing(4)};
-
-  ${RichTextBlockWrapper} {
-    max-width: ${({ theme }) => theme.breakpoints.values.sm}px;
-  }
-`;
-
 export type CustomAppProps = AppProps<{
   sessionToken?: SessionWithTokenWithoutUser;
-}> & { emotionCache?: EmotionCache; websiteSettings?: WebsiteSettingsFragment };
+}> & {
+  emotionCache?: EmotionCache;
+  websiteSettings?: WebsiteSettingsFragment;
+  publicEnv: {
+    apiUrl: string;
+    stripeKey: string;
+  };
+};
 
 function CustomApp({
   Component,
   pageProps,
   emotionCache,
   websiteSettings,
+  publicEnv,
 }: CustomAppProps) {
   const siteTitle = 'Flimmer';
 
@@ -157,7 +148,7 @@ function CustomApp({
             date={{ format: dateFormatter }}
             meta={{ siteTitle }}
             thirdParty={{
-              stripe: publicRuntimeConfig.env.STRIPE_PUBLIC_KEY,
+              stripe: publicEnv.stripeKey,
             }}
           >
             <ThemeProvider theme={theme}>
@@ -228,7 +219,6 @@ function CustomApp({
   );
 }
 
-const { publicRuntimeConfig } = getConfig();
 const withApollo = createWithApiClient([authLink, previewLink]);
 const ConnectedApp = withApollo(
   withBuilderRouter(

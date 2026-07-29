@@ -110,7 +110,11 @@ const NavBar = styled(NavbarContainer)`
 
 export type CustomAppProps = AppProps<{
   sessionToken?: SessionWithTokenWithoutUser;
-}> & { emotionCache?: EmotionCache; websiteSettings?: WebsiteSettingsFragment };
+}> & {
+  emotionCache?: EmotionCache;
+  websiteSettings?: WebsiteSettingsFragment;
+  publicEnv: { apiUrl: string };
+};
 
 function CustomApp({
   Component,

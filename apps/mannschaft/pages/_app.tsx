@@ -90,7 +90,11 @@ const ButtonLink = styled('a')`
 
 export type CustomAppProps = AppProps<{
   sessionToken?: SessionWithTokenWithoutUser;
-}> & { emotionCache?: EmotionCache; websiteSettings?: WebsiteSettingsFragment };
+}> & {
+  emotionCache?: EmotionCache;
+  websiteSettings?: WebsiteSettingsFragment;
+  publicEnv: { apiUrl: string };
+};
 
 let oneSignalInitialized = false;
 

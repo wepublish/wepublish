@@ -71,7 +71,15 @@ const dateFormatter = (date: Date, includeTime = true) =>
 
 export type CustomAppProps = AppProps<{
   sessionToken?: SessionWithTokenWithoutUser;
-}> & { emotionCache?: EmotionCache; websiteSettings?: WebsiteSettingsFragment };
+}> & {
+  emotionCache?: EmotionCache;
+  websiteSettings?: WebsiteSettingsFragment;
+  publicEnv: {
+    apiUrl: string;
+    mailchimpPopupScriptUrl: string;
+    stripeKey: string;
+  };
+};
 
 const NavBar = styled(NavbarContainer)`
   grid-column: -1/1;
@@ -86,13 +94,12 @@ const Footer = styled(FooterContainer)`
   }
 `;
 
-const { publicRuntimeConfig } = getConfig();
-
 function CustomApp({
   Component,
   pageProps,
   emotionCache,
   websiteSettings,
+  publicEnv,
 }: CustomAppProps) {
   const siteTitle = 'Bajour';
   const router = useRouter();
@@ -141,7 +148,7 @@ function CustomApp({
               TeaserSlider: BajourTeaserSlider,
             }}
             thirdParty={{
-              stripe: publicRuntimeConfig.env.STRIPE_PUBLIC_KEY,
+              stripe: publicEnv.stripeKey,
             }}
             ArticleDate={BajourArticleDateWithShare}
             Banner={BajourBanner}
@@ -201,7 +208,7 @@ function CustomApp({
 
               {popup && (
                 <Script
-                  src={publicRuntimeConfig.env.MAILCHIMP_POPUP_SCRIPT_URL!}
+                  src={publicEnv.mailchimpPopupScriptUrl}
                   strategy="afterInteractive"
                 />
               )}

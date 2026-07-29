@@ -14,10 +14,9 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
  **/
 const nextConfig = {
   ...wepNextConfig,
-  publicRuntimeConfig: {
-    env: {
-      STRIPE_PUBLIC_KEY: process.env.STRIPE_PUBLIC_KEY || '',
-    },
+  env: {
+    ...wepNextConfig.env,
+    STRIPE_PUBLIC_KEY: process.env.STRIPE_PUBLIC_KEY || '',
   },
 };
 

@@ -16,13 +16,9 @@ const nextConfig = {
   ...wepNextConfig,
   env: {
     ...wepNextConfig.env,
+    STRIPE_PUBLIC_KEY: process.env.STRIPE_PUBLIC_KEY || '',
     MAILCHIMP_API_KEY: process.env.MAILCHIMP_API_KEY,
     MAILCHIMP_SERVER_PREFIX: process.env.MAILCHIMP_SERVER_PREFIX,
-  },
-  publicRuntimeConfig: {
-    env: {
-      STRIPE_PUBLIC_KEY: process.env.STRIPE_PUBLIC_KEY || '',
-    },
   },
   async redirects() {
     return [

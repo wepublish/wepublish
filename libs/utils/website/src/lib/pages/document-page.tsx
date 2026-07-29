@@ -91,9 +91,16 @@ export const DocumentHeadTags = (props: DocumentProps) => {
   );
 };
 
-export const documentGetInitialProps = async (ctx: DocumentContext) => {
+export const documentGetInitialProps = async (
+  ctx: DocumentContext,
+  getPublicEnv?: () => object
+) => {
   const client = getApiClient(getApiUrl(), []);
   await client.query({ query: WebsiteSettingsDocument });
+  const publicEnv = {
+    apiUrl: process.env.API_URL,
+    ...(getPublicEnv?.() ?? {}),
+  };
 
   const websiteSettings = client.cache.extract()['ROOT_QUERY']?.[
     'websiteSettings'
@@ -114,7 +121,7 @@ export const documentGetInitialProps = async (ctx: DocumentContext) => {
             <Enhanced
               {...(props as any)}
               websiteSettings={websiteSettings}
-              apiUrl={process.env.API_URL}
+              publicEnv={publicEnv}
             />
           );
         } as typeof App;
@@ -129,7 +136,7 @@ export const documentGetInitialProps = async (ctx: DocumentContext) => {
     props: {
       ...finalProps,
       websiteSettings,
-      apiUrl: process.env.API_URL,
+      publicEnv,
     },
   };
 };

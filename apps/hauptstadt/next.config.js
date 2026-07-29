@@ -14,10 +14,10 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
  **/
 const nextConfig = {
   ...wepNextConfig,
-  publicRuntimeConfig: {
-    env: {
-      HTTP_ONLY_COOKIE: true,
-    },
+  env: {
+    ...wepNextConfig.env,
+    HTTP_ONLY_COOKIE: 'true',
+    STRIPE_PUBLIC_KEY: process.env.STRIPE_PUBLIC_KEY || '',
   },
   async redirects() {
     return [

@@ -14,11 +14,10 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
  **/
 const nextConfig = {
   ...wepNextConfig,
-  publicRuntimeConfig: {
-    env: {
-      STRIPE_PUBLIC_KEY: process.env.STRIPE_PUBLIC_KEY || '',
-      MAILCHIMP_POPUP_SCRIPT_URL: process.env.MAILCHIMP_POPUP_SCRIPT_URL || '',
-    },
+  env: {
+    ...wepNextConfig.env,
+    STRIPE_PUBLIC_KEY: process.env.STRIPE_PUBLIC_KEY || '',
+    MAILCHIMP_POPUP_SCRIPT_URL: process.env.MAILCHIMP_POPUP_SCRIPT_URL || '',
   },
   async redirects() {
     return [
