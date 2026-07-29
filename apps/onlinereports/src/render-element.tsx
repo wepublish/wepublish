@@ -11,9 +11,7 @@ const lastChildNoGutter = css`
     margin-bottom: 0;
   }
 `;
-export function OnlineReportsRenderElement(
-  props: BuilderRenderElementProps
-): JSX.Element {
+export function OnlineReportsRenderElement(props: BuilderRenderElementProps) {
   const {
     elements: { H2, H3, H4 },
     richtext: { RenderElement: RenderElementInner },

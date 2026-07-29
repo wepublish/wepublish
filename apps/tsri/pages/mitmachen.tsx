@@ -20,6 +20,7 @@ import {
   PeerProfileDocument,
 } from '@wepublish/website/api';
 import { NextPageContext } from 'next';
+
 const MitmachenPage = styled(PageContainer)`
   ${SubscribeWrapper} {
     padding-top: ${({ theme }) => theme.spacing(1.5)};
@@ -55,6 +56,10 @@ export default function Mitmachen() {
 }
 
 Mitmachen.getInitialProps = async (ctx: NextPageContext) => {
+  if (typeof window !== 'undefined') {
+    return {};
+  }
+
   const client = getApiClient(getApiUrl(), [
     ssrAuthLink(
       async () => (await getSessionTokenProps(ctx)).sessionToken?.token

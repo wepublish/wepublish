@@ -8,7 +8,14 @@ import {
   SessionWithTokenWithoutUser,
 } from '@wepublish/website/api';
 import styled from '@emotion/styled';
-import { ComponentType, memo, useCallback, useEffect, useState } from 'react';
+import {
+  ComponentType,
+  createElement,
+  memo,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 
 export const EXPIRED_JWT_MESSAGE =
   'Dieser Link ist nicht mehr gültig. Bitte hier einen neuen Link anfordern oder mit Benutzernamen und Passwort anmelden.';
@@ -69,10 +76,7 @@ const ButtonRow = styled('div')`
   justify-content: flex-end;
 `;
 
-export const withJwtHandler = <
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  P extends object,
->(
+export const withJwtHandler = <P extends object>(
   ControlledComponent: ComponentType<P>
 ) =>
   memo<P>(props => {
@@ -196,7 +200,7 @@ export const withJwtHandler = <
 
     return (
       <>
-        <ControlledComponent {...(props as P)} />
+        {createElement(ControlledComponent, props as P)}
 
         {showTotpPrompt && (
           <TotpOverlay onClick={handleCancel}>

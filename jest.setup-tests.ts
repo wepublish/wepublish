@@ -36,6 +36,23 @@ if (global.fetch === undefined) {
   global.fetch = fetch;
 }
 
+// JSDOM does not implement window.matchMedia, which rsuite v6 relies on
+if (typeof window !== 'undefined' && window.matchMedia === undefined) {
+  Object.defineProperty(window, 'matchMedia', {
+    writable: true,
+    value: (query: string) => ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addListener: () => undefined,
+      removeListener: () => undefined,
+      addEventListener: () => undefined,
+      removeEventListener: () => undefined,
+      dispatchEvent: () => false,
+    }),
+  });
+}
+
 global.ResizeObserver = class {
   observe() {}
   unobserve() {}

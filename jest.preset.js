@@ -1,6 +1,19 @@
 const { resolve } = require('path');
 const nxPreset = require('@nx/jest/preset').default;
 
+// ESM-only node_modules that Jest needs to transform instead of ignoring.
+const esModules = [
+  'react-tweet',
+  'react-player',
+  '@faker-js/faker',
+  'colors-named',
+  'colors-named-hex',
+  'happy-dom',
+  '@storybook',
+  'storybook',
+  'storybook-addon-apollo-client',
+];
+
 module.exports = {
   ...nxPreset,
   roots: ['<rootDir>', resolve(__dirname, './__mocks__')],
@@ -12,9 +25,7 @@ module.exports = {
     'jest-watch-typeahead/filename',
     'jest-watch-typeahead/testname',
   ],
-  transformIgnorePatterns: [
-    `/node_modules/(?!(react-tweet|react-player|@faker-js/faker|colors-named|happy-dom))`,
-  ],
+  transformIgnorePatterns: [`/node_modules/(?!(${esModules.join('|')})/)`],
   transform: {
     '^(?!.*\\.(js|jsx|ts|tsx|css|json)$)': '@nx/react/plugins/jest',
     '^.+\\.[tj]sx?$': [
