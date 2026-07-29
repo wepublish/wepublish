@@ -190,7 +190,7 @@ export const RichtextEditor = forwardRef<HTMLDivElement, RichtextEditorProps>(
       }
 
       editor.setEditable(!disabled, false);
-    }, [editorReady, disabled]);
+    }, [editorReady, disabled, editor]);
 
     useEffect(() => {
       if (editorReady && defaultValue) {
@@ -203,7 +203,7 @@ export const RichtextEditor = forwardRef<HTMLDivElement, RichtextEditorProps>(
       if (editorReady && value && !equals(value, editor.getJSON())) {
         editor.commands.setContent(value, { emitUpdate: false });
       }
-    }, [value, editorReady]);
+    }, [value, editorReady, editor]);
 
     return (
       <EditorContext.Provider value={providerValue}>

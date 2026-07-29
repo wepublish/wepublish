@@ -25,7 +25,11 @@ import * as z from 'zod';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslation } from 'react-i18next';
-import { useCurrentEditor, useEditorState } from '@tiptap/react';
+import {
+  EditorStateSnapshot,
+  useCurrentEditor,
+  useEditorState,
+} from '@tiptap/react';
 import { equals } from 'ramda';
 
 const ElevatedPopper = styled(Popper)`
@@ -118,6 +122,24 @@ const linkSchema = z.union([
   }),
 ]);
 
+const selectLinkState = ({ editor }: EditorStateSnapshot) => {
+  if (!editor || editor.isDestroyed) {
+    return {
+      isLink: false,
+      href: undefined as string | undefined,
+      target: undefined as string | undefined,
+      variant: undefined as string | undefined,
+    };
+  }
+
+  return {
+    isLink: editor.isActive('link') ?? false,
+    href: editor.getAttributes('link').href,
+    target: editor.getAttributes('link').target,
+    variant: editor.getAttributes('link').variant,
+  };
+};
+
 export function LinkPopover({ open, anchorEl, onClose }: LinkPopoverProps) {
   const { t } = useTranslation();
   const headings = useHeadings();
@@ -132,14 +154,7 @@ export function LinkPopover({ open, anchorEl, onClose }: LinkPopoverProps) {
 
   const editorState = useEditorState({
     editor,
-    selector: ({ editor }) => {
-      return {
-        isLink: editor.isActive('link') ?? false,
-        href: editor.getAttributes('link').href,
-        target: editor.getAttributes('link').target,
-        variant: editor.getAttributes('link').variant,
-      };
-    },
+    selector: selectLinkState,
     equalityFn: equals,
   });
 
