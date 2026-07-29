@@ -36,3 +36,54 @@ export const getPaymentPeriodicyMonths = cond([
   [period => period === PaymentPeriodicity.Lifetime, () => 1200],
   [(period: PaymentPeriodicity) => true, () => 12],
 ]);
+
+export const calculatePeriodAmount = (
+  monthlyAmount: number,
+  periodicity: PaymentPeriodicity
+): number => Math.round(monthlyAmount * getPaymentPeriodicyMonths(periodicity));
+
+export const monthlyAmountFromPeriodAmount = (
+  periodAmount: number,
+  periodicity: PaymentPeriodicity
+): number => periodAmount / getPaymentPeriodicyMonths(periodicity);
+
+type MemberPlanPeriodicityPricing = {
+  amountPerMonthMin: number;
+  amountPerMonthTarget?: number | null;
+  amountPerMonthMax?: number | null;
+  periodicityPricing?: Array<{
+    periodicity: PaymentPeriodicity;
+    amountMin: number;
+    amountTarget?: number | null;
+    amountMax?: number | null;
+  }> | null;
+};
+
+export const getPeriodPriceRange = (
+  memberPlan: MemberPlanPeriodicityPricing,
+  periodicity: PaymentPeriodicity
+): {
+  amountMin: number;
+  amountTarget: number | null;
+  amountMax: number | null;
+} => {
+  const override = memberPlan.periodicityPricing?.find(
+    price => price.periodicity === periodicity
+  );
+
+  const amountMin =
+    override?.amountMin ??
+    calculatePeriodAmount(memberPlan.amountPerMonthMin, periodicity);
+  const amountTarget =
+    override?.amountTarget ??
+    (memberPlan.amountPerMonthTarget != null ?
+      calculatePeriodAmount(memberPlan.amountPerMonthTarget, periodicity)
+    : null);
+  const amountMax =
+    override?.amountMax ??
+    (memberPlan.amountPerMonthMax != null ?
+      calculatePeriodAmount(memberPlan.amountPerMonthMax, periodicity)
+    : null);
+
+  return { amountMin, amountTarget, amountMax };
+};
