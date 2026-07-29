@@ -6,13 +6,32 @@ import {
 import { Currency } from '@wepublish/website/api';
 import { forwardRef, PropsWithChildren, useState } from 'react';
 import { formatCurrency } from '../../formatters/format-currency';
-import { formatNumber } from '../../formatters/format-number';
 import {
   CurrencyNumberSpinner,
   CurrencyNumberSpinnerSnap,
   HelperText,
 } from './currency-number-spinner';
 import styled from '@emotion/styled';
+
+const formatNumber = (value: number, format: string, locale = 'de-CH') => {
+  const [intPart = '', fracPart = ''] = format.split('.');
+  const useGrouping = intPart.includes(',');
+
+  const minimumIntegerDigits = Math.max(1, (intPart.match(/0/g) || []).length);
+  const minimumFractionDigits = (fracPart.match(/0/g) || []).length;
+  const maximumFractionDigits = Math.max(
+    minimumFractionDigits,
+    (fracPart.match(/[0#]/g) || []).length
+  );
+
+  return new Intl.NumberFormat(locale, {
+    style: 'decimal',
+    minimumIntegerDigits,
+    minimumFractionDigits,
+    maximumFractionDigits,
+    useGrouping,
+  }).format(value);
+};
 
 export const PaymentAmountPickerWrapper = styled(RadioGroup)`
   display: grid;
