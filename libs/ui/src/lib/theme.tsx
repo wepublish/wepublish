@@ -360,10 +360,7 @@ export const createWithTheme = <P extends object>(
     </ThemeProvider>
   ));
 
-export const createWithInheritedTheme = <
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  P extends object,
->(
+export const createWithInheritedTheme = <P extends object>(
   ControlledComponent: ComponentType<P>,
   theme: PartialDeep<Theme> | ThemeOptions
 ) =>
