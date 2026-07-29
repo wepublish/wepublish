@@ -44,7 +44,7 @@ import { generateID, getOperationNameFromDocument } from '../utility';
 import { ImageEditPanel } from './imageEditPanel';
 import { ImageSelectPanel } from './imageSelectPanel';
 
-const { ControlLabel: RControlLabel, Group, Control } = RForm;
+const { Label: RLabel, Group, Control } = RForm;
 
 const InputGroup = styled(RInputGroup)`
   width: 230px;
@@ -60,7 +60,7 @@ const Form = styled(RForm)`
   height: 100%;
 `;
 
-const ControlLabel = styled(RControlLabel)`
+const Label = styled(RLabel)`
   padding-top: 16px;
 `;
 
@@ -252,9 +252,7 @@ function AuthorEditPanel({ id, onClose, onSave }: AuthorEditPanelProps) {
           <PanelGroup>
             <Panel>
               <Group controlId="name">
-                <ControlLabel>
-                  {toggleRequiredLabel(t('authors.panels.name'))}
-                </ControlLabel>
+                <Label>{toggleRequiredLabel(t('authors.panels.name'))}</Label>
 
                 <Control
                   name="name"
@@ -267,7 +265,7 @@ function AuthorEditPanel({ id, onClose, onSave }: AuthorEditPanelProps) {
                 />
               </Group>
               <Group controlId="jobTitle">
-                <ControlLabel>{t('authors.panels.jobTitle')}</ControlLabel>
+                <Label>{t('authors.panels.jobTitle')}</Label>
                 <Control
                   name={t('authors.panels.jobTitle')}
                   value={jobTitle}
@@ -357,21 +355,19 @@ function AuthorEditPanel({ id, onClose, onSave }: AuthorEditPanelProps) {
             {/* hide author in different places */}
             <Panel header={t('authorEditPanel.hideAuthor')}>
               <Group controlId="hideAuthorToggles">
-                <RControlLabel>
-                  {t('authorEditPanel.hideOnArticle')}
-                </RControlLabel>
+                <RLabel>{t('authorEditPanel.hideOnArticle')}</RLabel>
                 <Toggle
                   checked={!!hideOnArticle}
                   onChange={value => setHideOnArticle(value)}
                 />
 
-                <ControlLabel>{t('authorEditPanel.hideOnTeaser')}</ControlLabel>
+                <Label>{t('authorEditPanel.hideOnTeaser')}</Label>
                 <Toggle
                   checked={!!hideOnTeaser}
                   onChange={value => setHideOnTeaser(value)}
                 />
 
-                <ControlLabel>{t('authorEditPanel.hideOnTeam')}</ControlLabel>
+                <Label>{t('authorEditPanel.hideOnTeam')}</Label>
                 <Toggle
                   checked={!!hideOnTeam}
                   onChange={value => setHideOnTeam(value)}

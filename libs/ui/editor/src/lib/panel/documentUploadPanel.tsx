@@ -97,10 +97,10 @@ export function DocumentUploadPanel({
             onDrop={handleDrop}
           />
         </InputWrapper>
-        <Form.ControlLabel>
+        <Form.Label>
           <br />
           {t('documents.panels.maxFileSize', { maxSize: MAX_FILE_SIZE_MB })}
-        </Form.ControlLabel>
+        </Form.Label>
       </Drawer.Body>
     </>
   );

@@ -15,8 +15,8 @@ import {
   Button,
   Drawer,
   Form as RForm,
-  InputNumber,
   Message,
+  NumberInput,
   Panel,
   Schema,
   SelectPicker,
@@ -190,7 +190,6 @@ function PaymentMethodEditPanel({
     <>
       <Form
         onSubmit={validationPassed => validationPassed && handleSave()}
-        fluid
         model={validationModel}
         formValue={{ name, paymentProvider }}
       >
@@ -226,122 +225,118 @@ function PaymentMethodEditPanel({
 
         <Drawer.Body>
           <Panel>
-            <RForm.Group controlId="imageId">
-              <ChooseEditImage
-                image={image}
-                disabled={false}
-                openChooseModalOpen={() => setImageSelectionOpen(true)}
-                removeImage={() => setImage(undefined)}
-                header={t('paymentMethodList.selectImage')}
-                maxHeight={200}
-              />
-            </RForm.Group>
+            <RForm.Stack fluid>
+              <RForm.Group controlId="imageId">
+                <ChooseEditImage
+                  image={image}
+                  disabled={false}
+                  openChooseModalOpen={() => setImageSelectionOpen(true)}
+                  removeImage={() => setImage(undefined)}
+                  header={t('paymentMethodList.selectImage')}
+                  maxHeight={200}
+                />
+              </RForm.Group>
 
-            <RForm.Group controlId="paymentMethodName">
-              <RForm.ControlLabel>
-                {toggleRequiredLabel(t('paymentMethodList.name'))}
-              </RForm.ControlLabel>
+              <RForm.Group controlId="paymentMethodName">
+                <RForm.Label>
+                  {toggleRequiredLabel(t('paymentMethodList.name'))}
+                </RForm.Label>
 
-              <RForm.Control
-                name="name"
-                value={name}
-                disabled={isDisabled}
-                onChange={(value: string) => {
-                  setName(value);
-                  setSlug(slugify(value));
-                }}
-              />
-            </RForm.Group>
-
-            <RForm.Group controlId="paymentMethodSlug">
-              <RForm.ControlLabel>
-                {t('paymentMethodList.slug')}
-              </RForm.ControlLabel>
-
-              <RForm.Control
-                name={t('paymentMethodList.slug')}
-                value={slug}
-                plaintext
-              />
-            </RForm.Group>
-
-            <RForm.Group controlId="paymentMethodIsActive">
-              <RForm.ControlLabel>
-                {t('paymentMethodList.active')}
-              </RForm.ControlLabel>
-
-              <Toggle
-                checked={active}
-                disabled={isDisabled}
-                onChange={value => setActive(value)}
-              />
-
-              <RForm.HelpText>
-                {t('paymentMethodList.activeDescription')}
-              </RForm.HelpText>
-            </RForm.Group>
-
-            <RForm.Group controlId="paymentMethodAdapter">
-              <RForm.ControlLabel>
-                {toggleRequiredLabel(t('paymentMethodList.adapter'))}
-              </RForm.ControlLabel>
-
-              <RForm.Control
-                name="paymentProvider"
-                virtualized
-                disabled={isDisabled}
-                value={paymentProvider?.id}
-                data={paymentProviders.map(pp => ({
-                  value: pp.id,
-                  label: pp.name,
-                }))}
-                searchable={false}
-                block
-                accepter={SelectPicker}
-                onChange={(value: any) =>
-                  setPaymentProvider(
-                    paymentProviders.find(pp => pp.id === value)
-                  )
-                }
-              />
-            </RForm.Group>
-
-            <RForm.Group controlId="paymentMethodDescription">
-              <RForm.ControlLabel>
-                {t('paymentMethodList.description')}
-              </RForm.ControlLabel>
-
-              <RForm.Control
-                name="description"
-                value={description}
-                disabled={isDisabled}
-                onChange={(value: string) => {
-                  setDescription(value);
-                }}
-              />
-
-              <FormGroupWithPadding controlId="paymentMethodGracePeriod">
-                <RForm.ControlLabel>
-                  {t('paymentMethodEditPanel.gracePeriod')}
-                </RForm.ControlLabel>
-
-                <InputNumber
-                  name="gracePeriod"
-                  value={gracePeriod}
+                <RForm.Control
+                  name="name"
+                  value={name}
                   disabled={isDisabled}
-                  postfix={t('paymentMethodEditPanel.days')}
-                  onChange={(value: string | number) => {
-                    setGracePeriod(
-                      typeof value === 'string' ? Number(value) : value
-                    );
+                  onChange={(value: string) => {
+                    setName(value);
+                    setSlug(slugify(value));
+                  }}
+                />
+              </RForm.Group>
+
+              <RForm.Group controlId="paymentMethodSlug">
+                <RForm.Label>{t('paymentMethodList.slug')}</RForm.Label>
+
+                <RForm.Control
+                  name={t('paymentMethodList.slug')}
+                  value={slug}
+                  plaintext
+                />
+              </RForm.Group>
+
+              <RForm.Group controlId="paymentMethodIsActive">
+                <RForm.Label>{t('paymentMethodList.active')}</RForm.Label>
+
+                <Toggle
+                  checked={active}
+                  disabled={isDisabled}
+                  onChange={value => setActive(value)}
+                />
+
+                <RForm.Text>
+                  {t('paymentMethodList.activeDescription')}
+                </RForm.Text>
+              </RForm.Group>
+
+              <RForm.Group controlId="paymentMethodAdapter">
+                <RForm.Label>
+                  {toggleRequiredLabel(t('paymentMethodList.adapter'))}
+                </RForm.Label>
+
+                <RForm.Control
+                  name="paymentProvider"
+                  virtualized
+                  disabled={isDisabled}
+                  value={paymentProvider?.id}
+                  data={paymentProviders.map(pp => ({
+                    value: pp.id,
+                    label: pp.name,
+                  }))}
+                  searchable={false}
+                  block
+                  accepter={SelectPicker}
+                  onChange={(value: any) =>
+                    setPaymentProvider(
+                      paymentProviders.find(pp => pp.id === value)
+                    )
+                  }
+                />
+              </RForm.Group>
+
+              <RForm.Group controlId="paymentMethodDescription">
+                <RForm.Label>{t('paymentMethodList.description')}</RForm.Label>
+
+                <RForm.Control
+                  name="description"
+                  value={description}
+                  disabled={isDisabled}
+                  onChange={(value: string) => {
+                    setDescription(value);
                   }}
                 />
 
-                <RForm.HelpText>
-                  {t('paymentMethodEditPanel.gracePeriodHelpText')}
-                </RForm.HelpText>
-              </FormGroupWithPadding>
-            </RForm.Group>
+                <FormGroupWithPadding controlId="paymentMethodGracePeriod">
+                  <RForm.Label>
+                    {t('paymentMethodEditPanel.gracePeriod')}
+                  </RForm.Label>
+
+                  <NumberInput
+                    name="gracePeriod"
+                    value={gracePeriod}
+                    disabled={isDisabled}
+                    postfix={t('paymentMethodEditPanel.days')}
+                    onChange={(value: string | number | null) => {
+                      setGracePeriod(
+                        typeof value === 'string' ? Number(value) : (value ?? 0)
+                      );
+                    }}
+                  />
+
+                  <RForm.Text>
+                    {t('paymentMethodEditPanel.gracePeriodHelpText')}
+                  </RForm.Text>
+                </FormGroupWithPadding>
+              </RForm.Group>
+            </RForm.Stack>
           </Panel>
         </Drawer.Body>
       </Form>

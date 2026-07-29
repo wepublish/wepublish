@@ -252,8 +252,10 @@ describe('PayrexxPaymentProvider', () => {
         saveCustomer: false,
       });
 
-      expect(gatewayClient.createGateway).toBeCalled();
-      expect(transactionClient.chargePreAuthorizedTransaction).not.toBeCalled();
+      expect(gatewayClient.createGateway).toHaveBeenCalled();
+      expect(
+        transactionClient.chargePreAuthorizedTransaction
+      ).not.toHaveBeenCalled();
       expect(result.intentID).toBe('1');
       expect(result.intentSecret).toBe('https://payrexx/gateway-link');
     });
@@ -283,8 +285,10 @@ describe('PayrexxPaymentProvider', () => {
         currency: Currency.CHF,
       });
 
-      expect(gatewayClient.createGateway).not.toBeCalled();
-      expect(transactionClient.chargePreAuthorizedTransaction).toBeCalled();
+      expect(gatewayClient.createGateway).not.toHaveBeenCalled();
+      expect(
+        transactionClient.chargePreAuthorizedTransaction
+      ).toHaveBeenCalled();
       expect(result.intentID).toBe('2');
       expect(result.intentSecret).toBe('https://success');
     });
@@ -319,8 +323,10 @@ describe('PayrexxPaymentProvider', () => {
         currency: Currency.EUR,
       });
 
-      expect(gatewayClient.createGateway).toBeCalled();
-      expect(transactionClient.chargePreAuthorizedTransaction).toBeCalled();
+      expect(gatewayClient.createGateway).toHaveBeenCalled();
+      expect(
+        transactionClient.chargePreAuthorizedTransaction
+      ).toHaveBeenCalled();
       expect(result.intentID).toBe('4');
       expect(result.intentSecret).toBe('https://payrexx/gateway-link');
     });
@@ -370,8 +376,8 @@ describe('PayrexxPaymentProvider', () => {
       expect(result.paymentID).toBe('135');
       expect(result.state).toBe('paid');
       expect(result.paymentData).toBe(JSON.stringify(transaction));
-      expect(transactionClient.retrieveTransaction).toBeCalled();
-      expect(gatewayClient.getGateway).not.toBeCalled();
+      expect(transactionClient.retrieveTransaction).toHaveBeenCalled();
+      expect(gatewayClient.getGateway).not.toHaveBeenCalled();
     });
 
     it('should return null on an unmappable gateway status instead of throwing', async () => {
@@ -418,8 +424,8 @@ describe('PayrexxPaymentProvider', () => {
       expect(result.paymentID).toBe('246');
       expect(result.state).toBe('processing');
       expect(result.paymentData).toBe(JSON.stringify(gateway));
-      expect(transactionClient.retrieveTransaction).toBeCalled();
-      expect(gatewayClient.getGateway).toBeCalled();
+      expect(transactionClient.retrieveTransaction).toHaveBeenCalled();
+      expect(gatewayClient.getGateway).toHaveBeenCalled();
     });
 
     it('should throw if intent is not related to transaction or gateway', async () => {

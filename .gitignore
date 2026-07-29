@@ -27,3 +27,5 @@ tools/removed_keys.json
 
 # typescript
 tsconfig.tsbuildinfo
+
+.claude/worktrees

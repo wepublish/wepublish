@@ -1,8 +1,8 @@
 /**
  * @jest-environment jsdom
  */
-import { getSettings } from '@wepublish/editor/api';
 import { act, renderHook, waitFor } from '@testing-library/react';
+import { getSettings } from '@wepublish/editor/api';
 
 import {
   fetchOneMessages,
