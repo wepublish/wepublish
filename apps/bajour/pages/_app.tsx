@@ -33,7 +33,6 @@ import { WebsiteBuilderProvider } from '@wepublish/website/builder';
 import { format, setDefaultOptions } from 'date-fns';
 import { de } from 'date-fns/locale';
 import { AppProps } from 'next/app';
-import getConfig from 'next/config';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import Script from 'next/script';
@@ -74,7 +73,7 @@ export type CustomAppProps = AppProps<{
 }> & {
   emotionCache?: EmotionCache;
   websiteSettings?: WebsiteSettingsFragment;
-  publicEnv: {
+  publicEnv?: {
     apiUrl: string;
     mailchimpPopupScriptUrl: string;
     stripeKey: string;
@@ -114,6 +113,12 @@ function CustomApp({
     websiteSettings ??
     (typeof window !== 'undefined' ? window.WEBSITE_SETTINGS : undefined);
 
+  const env =
+    publicEnv ??
+    (typeof window !== 'undefined' ?
+      (window.PUBLIC_ENV as typeof publicEnv)
+    : undefined);
+
   return (
     <PlausibleProvider
       enabled={
@@ -148,7 +153,7 @@ function CustomApp({
               TeaserSlider: BajourTeaserSlider,
             }}
             thirdParty={{
-              stripe: publicEnv.stripeKey,
+              stripe: env?.stripeKey,
             }}
             ArticleDate={BajourArticleDateWithShare}
             Banner={BajourBanner}
@@ -208,7 +213,7 @@ function CustomApp({
 
               {popup && (
                 <Script
-                  src={publicEnv.mailchimpPopupScriptUrl}
+                  src={env?.mailchimpPopupScriptUrl}
                   strategy="afterInteractive"
                 />
               )}

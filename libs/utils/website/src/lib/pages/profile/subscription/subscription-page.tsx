@@ -1,7 +1,6 @@
 import styled from '@emotion/styled';
 
 import { NextPage, NextPageContext } from 'next';
-import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { withAuthGuard } from '../../../auth-guard';
 import { ssrAuthLink } from '../../../auth-link';

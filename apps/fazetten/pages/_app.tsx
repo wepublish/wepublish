@@ -92,7 +92,7 @@ export type CustomAppProps = AppProps<{
 }> & {
   emotionCache?: EmotionCache;
   websiteSettings?: WebsiteSettingsFragment;
-  publicEnv: { apiUrl: string };
+  publicEnv?: { apiUrl: string };
 };
 
 const siteTitle = 'Fazetten';

@@ -4,7 +4,6 @@ import { ssrAuthLink } from '../../../auth-link';
 import { getSessionTokenProps } from '../../../get-session-token-props';
 import { handleJwtLogin } from '../../../handle-jwt-login';
 import { NextPage, NextPageContext } from 'next';
-import getConfig from 'next/config';
 import { ComponentProps } from 'react';
 import { SubscriptionListContainer } from '@wepublish/membership/website';
 import { ContentWrapper } from '@wepublish/content/website';

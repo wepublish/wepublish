@@ -39,7 +39,6 @@ import { WebsiteBuilderProvider } from '@wepublish/website/builder';
 import { format, setDefaultOptions } from 'date-fns';
 import { de } from 'date-fns/locale';
 import { AppProps } from 'next/app';
-import getConfig from 'next/config';
 import Head from 'next/head';
 import Script from 'next/script';
 import PlausibleProvider from 'next-plausible';
@@ -99,7 +98,7 @@ export type CustomAppProps = AppProps<{
 }> & {
   emotionCache?: EmotionCache;
   websiteSettings?: WebsiteSettingsFragment;
-  publicEnv: {
+  publicEnv?: {
     apiUrl: string;
     stripeKey: string;
   };
@@ -122,6 +121,12 @@ function CustomApp({
   const settings =
     websiteSettings ??
     (typeof window !== 'undefined' ? window.WEBSITE_SETTINGS : undefined);
+
+  const env =
+    publicEnv ??
+    (typeof window !== 'undefined' ?
+      (window.PUBLIC_ENV as typeof publicEnv)
+    : undefined);
 
   return (
     <PlausibleProvider
@@ -148,7 +153,7 @@ function CustomApp({
             date={{ format: dateFormatter }}
             meta={{ siteTitle }}
             thirdParty={{
-              stripe: publicEnv.stripeKey,
+              stripe: env?.stripeKey,
             }}
           >
             <ThemeProvider theme={theme}>

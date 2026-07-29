@@ -22,6 +22,16 @@ import { omitSensitiveData } from './omit-sensitive-data';
 
 export const V1_CLIENT_STATE_PROP_NAME = '__APOLLO_STATE_V1__';
 
+export type PublicEnv = {
+  apiUrl: string;
+} & Record<string, unknown>;
+
+declare global {
+  interface Window {
+    PUBLIC_ENV: PublicEnv | undefined;
+  }
+}
+
 let CACHED_CLIENT: ApolloClient<NormalizedCacheObject>;
 
 const isFile = (value: unknown): boolean =>
@@ -161,17 +171,19 @@ export const createWithApiClient =
   <
     P extends object,
     NextPage extends {
-      publicEnv: {
-        apiUrl: string;
-      };
+      publicEnv: PublicEnv;
       pageProps?: { [V1_CLIENT_STATE_PROP_NAME]?: NormalizedCacheObject };
     },
   >(
     ControlledComponent: ComponentType<P>
   ) =>
     memo<P & NextPage>(props => {
+      const publicEnv =
+        props.publicEnv ??
+        (typeof window !== 'undefined' ? window.PUBLIC_ENV : undefined);
+
       const client = useApiClient(
-        props.publicEnv.apiUrl,
+        publicEnv?.apiUrl ?? '',
         links,
         cacheConfig,
         (props as NextPage).pageProps?.[V1_CLIENT_STATE_PROP_NAME]
@@ -179,7 +191,7 @@ export const createWithApiClient =
 
       return (
         <ApolloProvider client={client}>
-          {createElement(ControlledComponent, props as P)}
+          {createElement(ControlledComponent, { ...props, publicEnv } as P)}
         </ApolloProvider>
       );
     });

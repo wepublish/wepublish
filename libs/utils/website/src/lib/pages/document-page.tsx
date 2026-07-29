@@ -2,6 +2,7 @@ import { DocumentContext } from 'next/document';
 import {
   FontStyle,
   FontWeight,
+  PublicEnv,
   WebsiteSettingsDocument,
   WebsiteSettingsFragment,
 } from '@wepublish/website/api';
@@ -16,11 +17,13 @@ import { getApiUrl } from '../api-url';
 declare global {
   interface Window {
     WEBSITE_SETTINGS: WebsiteSettingsFragment | undefined;
+    PUBLIC_ENV: PublicEnv | undefined;
   }
 }
 
 export type DocumentProps = DocumentHeadTagsProps & {
   websiteSettings: WebsiteSettingsFragment | undefined;
+  publicEnv: PublicEnv;
 };
 
 const fontWeightToNumber: Record<FontWeight, number> = {
@@ -87,6 +90,12 @@ export const DocumentHeadTags = (props: DocumentProps) => {
           __html: `window.WEBSITE_SETTINGS = ${JSON.stringify(props.websiteSettings)}`,
         }}
       />
+
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `window.PUBLIC_ENV = ${JSON.stringify(props.publicEnv)}`,
+        }}
+      />
     </>
   );
 };
@@ -97,8 +106,8 @@ export const documentGetInitialProps = async (
 ) => {
   const client = getApiClient(getApiUrl(), []);
   await client.query({ query: WebsiteSettingsDocument });
-  const publicEnv = {
-    apiUrl: process.env.API_URL,
+  const publicEnv: PublicEnv = {
+    apiUrl: process.env.API_URL ?? '',
     ...(getPublicEnv?.() ?? {}),
   };
 

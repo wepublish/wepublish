@@ -27,7 +27,6 @@ import {
 } from '@wepublish/website/api';
 import { Button, Link, useWebsiteBuilder } from '@wepublish/website/builder';
 import { NextPage, NextPageContext } from 'next';
-import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { ComponentProps, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
