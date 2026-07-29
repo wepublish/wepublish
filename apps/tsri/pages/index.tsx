@@ -67,6 +67,8 @@ export const getStaticProps: GetStaticProps = async () => {
   } catch (e) {
     if (e && typeof e === 'object' && 'response' in e) {
       console.error((e as ResponseError).response?.body);
+    } else {
+      console.error(e);
     }
 
     captureException(e);

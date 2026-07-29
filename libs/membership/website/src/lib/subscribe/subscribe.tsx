@@ -94,6 +94,10 @@ export const SubscribeAmount = styled('div')`
 
 export const SubscribeAmountText = styled('p')`
   text-align: center;
+
+  ${({ theme }) => theme.breakpoints.up('xs')} {
+    margin: ${({ theme }) => theme.spacing(0, 0, 2, 0)};
+  }
 `;
 
 export const SubscribePayment = styled('div')`
@@ -370,11 +374,10 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     watch<'paymentPeriodicity'>('paymentPeriodicity');
   const selectedMemberPlanId = watch<'memberPlanId'>('memberPlanId');
   const payTransactionFee = watch<'payTransactionFee'>('payTransactionFee');
+  const watchedMonthlyAmount = useWatch({ control, name: 'monthlyAmount' });
   const monthlyAmount =
-    watch<'monthlyAmount'>('monthlyAmount') +
-    (payTransactionFee ?
-      transactionFee(watch<'monthlyAmount'>('monthlyAmount'))
-    : 0);
+    watchedMonthlyAmount +
+    (payTransactionFee ? transactionFee(watchedMonthlyAmount) : 0);
   const autoRenew = watch<'autoRenew'>('autoRenew');
 
   const selectedMemberPlan = useMemo(
@@ -439,7 +442,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     extendable: selectedMemberPlan?.extendable ?? true,
     productType: selectedMemberPlan?.productType ?? ProductType.Subscription,
     paymentPeriodicity: PaymentPeriodicity.Monthly,
-    monthlyAmount: watch<'monthlyAmount'>('monthlyAmount'),
+    monthlyAmount: watchedMonthlyAmount,
     currency: selectedMemberPlan?.currency ?? Currency.Chf,
     siteTitle,
     locale,

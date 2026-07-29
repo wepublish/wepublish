@@ -5,7 +5,7 @@ import mailchimp, {
 import { captureException } from '@sentry/react';
 import { ContentWidthProvider } from '@wepublish/content/website';
 import { PageContainer } from '@wepublish/page/website';
-import { getApiUrl } from '@wepublish/utils/website';
+import { DailyBriefingContext, getApiUrl } from '@wepublish/utils/website';
 import {
   addClientCacheToProps,
   getApiClient,
@@ -16,8 +16,6 @@ import {
 import { LinkContext } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';
 import { ResponseError } from 'superagent';
-
-import { DailyBriefingContext } from '../src/components/daily-briefing/daily-briefing-teaser';
 
 type IndexProps = {
   campaigns: campaigns.Campaigns[];

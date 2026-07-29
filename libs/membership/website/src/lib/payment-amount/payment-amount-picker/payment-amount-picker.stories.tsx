@@ -30,5 +30,6 @@ export const PaymentAmountPicker: StoryObj<typeof PaymentAmountPickerCmp> = {
     currency: Currency.Eur,
     value: 1500,
     onChange: action('onChange'),
+    pickerItems: [1000, 1250, 1500, 1750, 2000],
   },
 };

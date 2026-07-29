@@ -14,6 +14,11 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
  **/
 const nextConfig = {
   ...wepNextConfig,
+  env: {
+    ...wepNextConfig.env,
+    MAILCHIMP_API_KEY: process.env.MAILCHIMP_API_KEY || '',
+    MAILCHIMP_SERVER_PREFIX: process.env.MAILCHIMP_SERVER_PREFIX || '',
+  },
 };
 
 const plugins = [
