@@ -15,7 +15,6 @@ import {
 } from '@wepublish/website/api';
 import { LinkContext } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';
-import getConfig from 'next/config';
 import { ResponseError } from 'superagent';
 
 type IndexProps = {
@@ -42,10 +41,8 @@ export default function Index({ campaigns }: IndexProps) {
   );
 }
 
-export const getStaticProps = (async () => {
-  const { publicRuntimeConfig, serverRuntimeConfig } = getConfig();
-
-  if (!publicRuntimeConfig.env.API_URL) {
+export const getStaticProps: GetStaticProps = (async () => {
+  if (!getApiUrl()) {
     return { props: {}, revalidate: 1 };
   }
 
@@ -55,8 +52,8 @@ export const getStaticProps = (async () => {
     | null = null;
   try {
     mailchimp.setConfig({
-      apiKey: serverRuntimeConfig.env.MAILCHIMP_API_KEY,
-      server: serverRuntimeConfig.env.MAILCHIMP_SERVER_PREFIX,
+      apiKey: process.env.MAILCHIMP_API_KEY,
+      server: process.env.MAILCHIMP_SERVER_PREFIX,
     });
 
     mailchimpResponse = await mailchimp.campaigns.list({

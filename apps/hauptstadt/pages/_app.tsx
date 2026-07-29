@@ -15,7 +15,6 @@ import { withPaywallBypassToken } from '@wepublish/paywall/website';
 import {
   AsyncSessionProvider,
   authLink,
-  getApiUrl,
   initWePublishTranslator,
   NextWepublishLink,
   RoutedAdminBar,
@@ -59,6 +58,7 @@ import {
   HauptstadtImageBlock,
   HauptstadtImageGalleryBlock,
 } from '../src/components/hauptstadt-image-block';
+import { HauptstadtImageSlider } from '../src/components/hauptstadt-image-slider';
 import { HauptstadtListicle } from '../src/components/hauptstadt-listicle';
 import {
   HauptstadtMemberPlanItem,
@@ -124,7 +124,11 @@ const dateFormatter = (date: Date, includeTime = true) =>
 
 export type CustomAppProps = AppProps<{
   sessionToken?: SessionWithTokenWithoutUser;
-}> & { emotionCache?: EmotionCache; websiteSettings?: WebsiteSettingsFragment };
+}> & {
+  emotionCache?: EmotionCache;
+  websiteSettings?: WebsiteSettingsFragment;
+  publicEnv?: { apiUrl: string };
+};
 
 function CustomApp({
   Component,
@@ -192,6 +196,7 @@ function CustomApp({
               FocusTeaser: HauptstadtFocusTeaser,
               AlternatingTeaser: HauptstadtAlternatingTeaser,
               TeaserSlider: HauptstadtTeaserSlider,
+              ImageSlider: HauptstadtImageSlider,
             }}
             date={{ format: dateFormatter }}
             meta={{ siteTitle }}
@@ -203,6 +208,10 @@ function CustomApp({
 
                 <Head>
                   <title key="title">{siteTitle}</title>
+                  <meta
+                    name="viewport"
+                    content="width=device-width, initial-scale=1.0"
+                  />
                 </Head>
 
                 <Spacer>
@@ -268,7 +277,7 @@ function CustomApp({
   );
 }
 
-const withApollo = createWithApiClient(getApiUrl(), [authLink, previewLink]);
+const withApollo = createWithApiClient([authLink, previewLink]);
 const ConnectedApp = withApollo(
   withBuilderRouter(
     withErrorSnackbar(

@@ -91,8 +91,7 @@ function PollList() {
           loading={loading}
           data={data?.polls?.nodes || []}
         >
-          {/* state */}
-          <Column resizable>
+          <Column width={50}>
             <HeaderCell>{t('pollList.state')}</HeaderCell>
             <RCell>
               {(rowData: RowDataType<Poll>) => (
@@ -103,7 +102,7 @@ function PollList() {
               )}
             </RCell>
           </Column>
-          {/* question */}
+
           <Column
             width={200}
             resizable
@@ -117,7 +116,7 @@ function PollList() {
               )}
             </RCell>
           </Column>
-          {/* opens at */}
+
           <Column
             width={300}
             resizable

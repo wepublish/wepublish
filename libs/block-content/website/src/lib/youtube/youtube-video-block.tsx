@@ -27,7 +27,7 @@ export function YouTubeVideoBlock({
       <YouTubeVideoBlockPlayer
         width={'auto'}
         height={'auto'}
-        url={`https://www.youtube.com/watch?v=${videoID}`}
+        src={`https://www.youtube.com/watch?v=${videoID}`}
         controls={true}
       />
     </YouTubeVideoBlockWrapper>

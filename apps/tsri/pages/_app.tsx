@@ -14,7 +14,6 @@ import {
 import { withPaywallBypassToken } from '@wepublish/paywall/website';
 import {
   authLink,
-  getApiUrl,
   initWePublishTranslator,
   RoutedAdminBar,
   withBuilderRouter,
@@ -35,7 +34,6 @@ import {
 import { format, setDefaultOptions } from 'date-fns';
 import { de } from 'date-fns/locale';
 import { AppProps } from 'next/app';
-import getConfig from 'next/config';
 import Head from 'next/head';
 import Script from 'next/script';
 import PlausibleProvider from 'next-plausible';
@@ -115,15 +113,21 @@ const dateFormatter = (date: Date, includeTime = true) =>
 
 export type CustomAppProps = AppProps<{
   sessionToken?: SessionWithTokenWithoutUser;
-}> & { emotionCache?: EmotionCache; websiteSettings?: WebsiteSettingsFragment };
-
-const { publicRuntimeConfig } = getConfig();
+}> & {
+  emotionCache?: EmotionCache;
+  websiteSettings?: WebsiteSettingsFragment;
+  publicEnv?: {
+    apiUrl: string;
+    stripeKey: string;
+  };
+};
 
 function CustomApp({
   Component,
   pageProps,
   emotionCache,
   websiteSettings,
+  publicEnv,
 }: CustomAppProps) {
   const siteTitle = 'Tsri';
 
@@ -135,6 +139,12 @@ function CustomApp({
   const settings =
     websiteSettings ??
     (typeof window !== 'undefined' ? window.WEBSITE_SETTINGS : undefined);
+
+  const env =
+    publicEnv ??
+    (typeof window !== 'undefined' ?
+      (window.PUBLIC_ENV as typeof publicEnv)
+    : undefined);
 
   return (
     <PlausibleProvider
@@ -187,7 +197,7 @@ function CustomApp({
             date={{ format: dateFormatter }}
             meta={{ siteTitle }}
             thirdParty={{
-              stripe: publicRuntimeConfig.env.STRIPE_PUBLIC_KEY,
+              stripe: env?.stripeKey,
             }}
             Banner={TsriBanner}
           >
@@ -197,6 +207,10 @@ function CustomApp({
 
               <Head>
                 <title key="title">{siteTitle}</title>
+                <meta
+                  name="viewport"
+                  content="width=device-width, initial-scale=1.0"
+                />
               </Head>
 
               <Spacer>
@@ -259,7 +273,7 @@ function CustomApp({
   );
 }
 
-const withApollo = createWithApiClient(getApiUrl(), [authLink, previewLink]);
+const withApollo = createWithApiClient([authLink, previewLink]);
 const ConnectedApp = withApollo(
   withBuilderRouter(
     withErrorSnackbar(

@@ -7,9 +7,6 @@ const { join } = require('path');
  **/
 const nextConfig = {
   output: 'standalone',
-  nx: {
-    svgr: true,
-  },
   poweredByHeader: false,
   reactStrictMode: true,
   compiler: {
@@ -18,8 +15,40 @@ const nextConfig = {
   env: {
     APP_ENVIRONMENT: process.env.APP_ENVIRONMENT,
     SSR_FETCH_TIMEOUT_MS: process.env.SSR_FETCH_TIMEOUT_MS,
+    API_URL_INTERNAL: process.env.API_URL_INTERNAL || '',
+    API_URL: process.env.API_URL || '',
+    WEBSITE_URL: process.env.WEBSITE_URL || '',
   },
   webpack(config, { webpack }) {
+    /**
+     * SVGR support, previously provided by the removed `nx.svgr` option
+     * @see https://nx.dev/technologies/react/next/recipes/next-config-setup
+     */
+    config.module.rules.push({
+      test: /\.svg$/,
+      issuer: { not: /\.(css|scss|sass)$/ },
+      resourceQuery: {
+        not: [/url/],
+      },
+      use: [
+        {
+          loader: require.resolve('@svgr/webpack'),
+          options: {
+            svgo: false,
+            titleProp: true,
+            ref: true,
+          },
+        },
+        {
+          loader: require.resolve('url-loader'),
+          options: {
+            limit: 10000,
+            name: '[name].[hash:7].[ext]',
+          },
+        },
+      ],
+    });
+
     /**
      * Tells Apollo turn run in production mode
      * @see https://www.apollographql.com/docs/react/development-testing/reducing-bundle-size
@@ -29,6 +58,10 @@ const nextConfig = {
         'globalThis.__DEV__': false,
       })
     );
+
+    if (process.env.ANALYZE_BUNDLE_CONCAT === 'false') {
+      config.optimization.concatenateModules = false;
+    }
 
     return config;
   },
@@ -106,15 +139,7 @@ const nextConfig = {
       '**/node_modules/uglify-js',
     ],
   },
-  // Not needed for the monorepository but for demo purposes.
-  // @wepublish/ui and @wepublish/website are ES Modules which Next does not support yet.
-  // This will transpile the ES Modules to CommonJS
-  transpilePackages: [
-    '@wepublish/ui',
-    '@wepublish/website',
-    'react-tweet',
-    '@faker-js/faker',
-  ],
+  transpilePackages: ['react-tweet', '@faker-js/faker'],
 };
 
 module.exports = nextConfig;

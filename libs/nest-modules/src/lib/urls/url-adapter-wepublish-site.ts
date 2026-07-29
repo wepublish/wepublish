@@ -11,7 +11,7 @@ export class WepublishSiteURLAdapter extends URLAdapter {
   }
 
   override async getArticleUrl(article: Article) {
-    for (const locale in locales) {
+    for (const locale of locales) {
       if (article.slug?.endsWith(`-${locale}`)) {
         const regex = new RegExp(`-${locale}$`);
 
@@ -23,11 +23,11 @@ export class WepublishSiteURLAdapter extends URLAdapter {
   }
 
   override async getPageUrl(page: Page) {
-    for (const locale in locales) {
+    for (const locale of locales) {
       if (page.slug?.endsWith(`-${locale}`)) {
         const regex = new RegExp(`-${locale}$`);
 
-        return `/a/${page.slug.replace(regex, '')}`;
+        return `/${page.slug.replace(regex, '')}`;
       }
     }
 

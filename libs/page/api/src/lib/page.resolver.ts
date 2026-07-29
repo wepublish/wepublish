@@ -12,6 +12,8 @@ import {
   Page,
   PageListArgs,
   PageRevision,
+  PageRevisionListArgs,
+  PaginatedPageRevisions,
   PaginatedPages,
   UpdatePageInput,
 } from './page.model';
@@ -71,6 +73,23 @@ export class PageResolver {
     }
 
     throw new BadRequestException('Page id or slug required.');
+  }
+
+  @Permissions(CanGetPage)
+  @Query(() => PaginatedPageRevisions, {
+    description: `Returns a paginated list of revisions (version history) for a page.`,
+  })
+  public pageRevisions(@Args() args: PageRevisionListArgs) {
+    return this.pageService.getPageRevisions(args);
+  }
+
+  @Permissions(CanGetPage)
+  @Query(() => PageRevision, {
+    nullable: true,
+    description: `Returns a single page revision including its full content.`,
+  })
+  public pageRevision(@Args('id') id: string) {
+    return this.pageService.getRevisionById(id);
   }
 
   @Public()
@@ -148,6 +167,26 @@ export class PageResolver {
   })
   public unpublishPage(@Args('id') id: string) {
     return this.pageService.unpublishPage(id);
+  }
+
+  @Permissions(CanCreatePage)
+  @Mutation(() => Page, {
+    description: `Discards the current draft and reverts to the latest published revision.`,
+  })
+  public discardPageDraft(@Args('id') id: string) {
+    return this.pageService.discardPageDraft(id);
+  }
+
+  @Permissions(CanCreatePage)
+  @Mutation(() => Page, {
+    description: `Restores an older revision of a page as a new draft.`,
+  })
+  public restorePageRevision(
+    @Args('id') id: string,
+    @Args('revisionId') revisionId: string,
+    @CurrentUser() user: UserSession | undefined
+  ) {
+    return this.pageService.restorePageRevision(id, revisionId, user?.user?.id);
   }
 
   @ResolveField(() => PageRevision)

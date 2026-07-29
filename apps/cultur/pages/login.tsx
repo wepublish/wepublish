@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { Typography } from '@mui/material';
 import {
   IntendedRouteStorageKey,
   LoginFormContainer,
@@ -23,7 +24,7 @@ type LoginProps = { sessionToken?: SessionWithTokenWithoutUser };
 export default function Login({ sessionToken }: LoginProps) {
   const { hasUser, setToken } = useUser();
   const {
-    elements: { H3 },
+    elements: { H3, Link },
   } = useWebsiteBuilder();
   const router = useRouter();
 
@@ -36,7 +37,7 @@ export default function Login({ sessionToken }: LoginProps) {
   if (hasUser && typeof window !== 'undefined') {
     const intendedRoute = getCookie(IntendedRouteStorageKey)?.toString();
     deleteCookie(IntendedRouteStorageKey);
-    const route = intendedRoute ?? '/';
+    const route = intendedRoute ?? '/profile';
 
     router.replace(route);
   }
@@ -44,6 +45,14 @@ export default function Login({ sessionToken }: LoginProps) {
   return (
     <LoginWrapper>
       <H3 component="h1">Login für Member</H3>
+
+      <Typography
+        variant="body1"
+        paragraph
+      >
+        (Falls du noch keinen Account hast,{' '}
+        <Link href={'/mitmachen'}>klicke hier.</Link>)
+      </Typography>
 
       <LoginFormContainer
         defaults={{

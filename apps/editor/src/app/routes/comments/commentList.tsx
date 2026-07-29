@@ -6,6 +6,7 @@ import {
   FullCommentFragment,
   useCommentListQuery,
 } from '@wepublish/editor/api';
+import { toPlaintext } from '@wepublish/richtext';
 import {
   CommentStateDropdown,
   createCheckedPermissionComponent,
@@ -19,7 +20,6 @@ import {
   ListViewHeader,
   mapTableSortTypeToGraphQLSortOrder,
   PermissionControl,
-  RichTextBlock,
   Table,
   TableWrapper,
 } from '@wepublish/ui/editor';
@@ -224,7 +224,7 @@ function CommentList() {
             setSortField(sortColumn);
           }}
         >
-          {/* eslint-disable-next-line i18next/no-literal-string */}
+          {}
           <Column
             width={350}
             align="left"
@@ -235,23 +235,15 @@ function CommentList() {
             <Cell dataKey="revisions">
               {(rowData: RowDataType<FullCommentFragment>) =>
                 rowData.revisions?.length ?
-                  <RichTextBlock
-                    displayOnly
-                    displayOneLine
-                    disabled
-                    onChange={() => {
-                      return undefined;
-                    }}
-                    value={
-                      rowData.revisions[rowData.revisions?.length - 1]?.text ||
-                      []
-                    }
-                  />
+                  toPlaintext(
+                    rowData.revisions[rowData.revisions.length - 1]?.text
+                      .content
+                  )
                 : null
               }
             </Cell>
           </Column>
-          {/* eslint-disable-next-line i18next/no-literal-string */}
+          {}
           <Column
             width={150}
             align="left"
@@ -265,7 +257,7 @@ function CommentList() {
               }
             </Cell>
           </Column>
-          {/* eslint-disable-next-line i18next/no-literal-string */}
+          {}
           <Column
             width={150}
             align="left"
@@ -283,7 +275,7 @@ function CommentList() {
             </Cell>
           </Column>
 
-          {/* eslint-disable-next-line i18next/no-literal-string */}
+          {}
           <Column
             width={200}
             align="right"
@@ -308,7 +300,7 @@ function CommentList() {
             </Cell>
           </Column>
 
-          {/* eslint-disable-next-line i18next/no-literal-string */}
+          {}
           <Column
             width={150}
             align="center"

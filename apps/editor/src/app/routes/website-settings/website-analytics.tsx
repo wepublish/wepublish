@@ -47,8 +47,8 @@ const analyticsSchema = z.object({
     key: z
       .string()
       .regex(
-        /^PA-[A-Za-z0-9]+$/,
-        'Must be a valid PA ID (e.g., pa-XXXXXXXXXXXXXXXXXXXXX)'
+        /^PA-[A-Za-z0-9_]+$/i,
+        'Must be a valid PA ID (e.g., pa-XXXXXXXXXXXXXXXXXXXX)'
       )
       .or(z.literal(''))
       .nullish(),

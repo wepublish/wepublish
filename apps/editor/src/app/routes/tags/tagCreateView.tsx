@@ -37,7 +37,7 @@ const TagCreateView = ({ type }: TagCreateViewProps) => {
   const { t } = useTranslation();
   const [tag, setTag] = useState<MutationCreateTagArgs>({
     type,
-    description: [],
+    description: undefined,
     main: false,
     tag: '',
   });
@@ -73,7 +73,6 @@ const TagCreateView = ({ type }: TagCreateViewProps) => {
 
   return (
     <Form
-      fluid
       formValue={tag || {}}
       model={validationModel}
       disabled={loading}

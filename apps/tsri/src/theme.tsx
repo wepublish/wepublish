@@ -138,10 +138,11 @@ const theme = createTheme(WePTheme, {
         fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
         backgroundColor: colors.common.white,
         margin: 0,
-        fontSize: 'calc((9 * 100cqw / 16) * 0.08)',
+        fontSize: 'calc(var(--tw, 100cqw) * 0.045)',
         lineHeight: '1.05',
         fontWeight: 700,
-        padding: '1.5cqw 1.5cqw 2.2cqw',
+        padding:
+          'calc(var(--tw, 100cqw) * 0.015) calc(var(--tw, 100cqw) * 0.015) calc(var(--tw, 100cqw) * 0.022)',
       },
     },
     teaserTitleLink: {
@@ -165,10 +166,11 @@ const theme = createTheme(WePTheme, {
         fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
         color: colors.common.white,
         backgroundColor: colors.common.black,
-        fontSize: 'calc((9 * 100cqw / 16) * 0.045)',
-        lineHeight: 'calc((9 * 100cqw / 16) * 0.045)',
+        fontSize: 'calc(var(--tw, 100cqw) * 0.0253125)',
+        lineHeight: 'calc(var(--tw, 100cqw) * 0.0253125)',
         fontWeight: 700,
-        padding: '0.5cqw 1.5cqw',
+        padding:
+          'calc(var(--tw, 100cqw) * 0.005) calc(var(--tw, 100cqw) * 0.015)',
       },
     },
     teaserLead: {
@@ -180,10 +182,10 @@ const theme = createTheme(WePTheme, {
         fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
         backgroundColor: colors.common.white,
         margin: 0,
-        fontSize: 'calc((9 * 100cqw / 16) * 0.04)',
-        lineHeight: 'calc((9 * 100cqw / 16) * 0.07)',
+        fontSize: 'calc(var(--tw, 100cqw) * 0.0225)',
+        lineHeight: 'calc(var(--tw, 100cqw) * 0.039375)',
         fontWeight: 700,
-        padding: '0 1.5cqw',
+        padding: '0 calc(var(--tw, 100cqw) * 0.015)',
       },
     },
     // Header
@@ -517,17 +519,17 @@ export const teaserHeroTheme = createTheme(theme, {
   typography: {
     teaserTitle: {
       [breakpoints.down('md')]: {
-        marginRight: '2cqw',
+        marginRight: 'calc(var(--tw, 100cqw) * 0.02)',
       },
     },
     teaserPretitle: {
       [breakpoints.down('md')]: {
-        marginRight: '2cqw',
+        marginRight: 'calc(var(--tw, 100cqw) * 0.02)',
       },
     },
     teaserMeta: {
       [breakpoints.down('md')]: {
-        marginRight: '2cqw',
+        marginRight: 'calc(var(--tw, 100cqw) * 0.02)',
       },
     },
   },

@@ -1,4 +1,4 @@
-import { Alert } from '@mui/material';
+import { Alert, NoSsr } from '@mui/material';
 import {
   BuilderApiAlertProps,
   useWebsiteBuilder,
@@ -24,16 +24,23 @@ export function ApiAlert({ error, ...props }: BuilderApiAlertProps) {
     elements: { Link },
   } = useWebsiteBuilder();
 
-  return (
-    <Alert {...props}>
-      {translateApolloErrorMessage(error.message)}
+  const loginLink =
+    typeof window !== 'undefined' ?
+      `/login?intended=${window.location.pathname}${window.location.search}`
+    : `/login`;
 
-      {error.message === ErrorMessage.EmailAlreadyInUse && (
-        <>
-          {' '}
-          <Link href={'/login'}>{'Bitte einloggen'}</Link>
-        </>
-      )}
-    </Alert>
+  return (
+    <NoSsr>
+      <Alert {...props}>
+        {translateApolloErrorMessage(error.message)}
+
+        {error.message === ErrorMessage.EmailAlreadyInUse && (
+          <>
+            {' '}
+            <Link href={loginLink}>{'Bitte einloggen'}</Link>
+          </>
+        )}
+      </Alert>
+    </NoSsr>
   );
 }

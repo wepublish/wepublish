@@ -350,16 +350,13 @@ export const theme = createTheme(minimalTheme, {
   },
 });
 
-export const createWithTheme = <
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  P extends object,
->(
+export const createWithTheme = <P extends object>(
   ControlledComponent: ComponentType<P>,
   theme: Theme
 ) =>
   memo<P>(props => (
     <ThemeProvider theme={theme}>
-      <ControlledComponent {...(props as P)} />
+      {createElement(ControlledComponent, props as P)}
     </ThemeProvider>
   ));
 

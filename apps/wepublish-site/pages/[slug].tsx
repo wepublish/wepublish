@@ -12,6 +12,8 @@ import { GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
 import { ComponentProps } from 'react';
 
+import { localizeSlug } from '../src/localize-slug';
+
 export default function PageBySlugOrId() {
   const {
     locale,
@@ -19,7 +21,7 @@ export default function PageBySlugOrId() {
   } = useRouter();
 
   const containerProps = {
-    slug: `${slug}-${locale}`,
+    slug: localizeSlug(slug, locale),
     id,
   } as ComponentProps<typeof PageContainer>;
 
@@ -37,7 +39,7 @@ export const getStaticProps: GetStaticProps = async ({ params, locale }) => {
     client.query<PageQuery>({
       query: PageDocument,
       variables: {
-        slug: `${slug}-${locale}`,
+        slug: localizeSlug(slug, locale),
         id,
       },
     }),

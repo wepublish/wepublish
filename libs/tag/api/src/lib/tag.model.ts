@@ -9,9 +9,9 @@ import {
   registerEnumType,
 } from '@nestjs/graphql';
 import { TagType } from '@prisma/client';
+import type { RichtextJSONDocument } from '@wepublish/richtext';
 import { GraphQLRichText } from '@wepublish/richtext/api';
 import { PaginatedType, SortOrder } from '@wepublish/utils/api';
-import { Descendant } from 'slate';
 import { ColorScalar } from '@wepublish/utils/api';
 
 @ObjectType()
@@ -29,7 +29,7 @@ export class Tag {
   main!: boolean;
 
   @Field(() => GraphQLRichText, { nullable: true })
-  description?: Descendant[];
+  description?: RichtextJSONDocument;
 
   @Field()
   url!: string;

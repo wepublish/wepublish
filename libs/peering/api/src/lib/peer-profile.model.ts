@@ -6,9 +6,9 @@ import {
   PickType,
 } from '@nestjs/graphql';
 import { Image, PeerImage } from '@wepublish/image/api';
+import type { RichtextJSONDocument } from '@wepublish/richtext';
 import { GraphQLRichText } from '@wepublish/richtext/api';
 import { ColorScalar } from '@wepublish/utils/api';
-import { Descendant } from 'slate';
 
 @ObjectType()
 export class PeerProfile {
@@ -39,8 +39,8 @@ export class PeerProfile {
   @Field()
   websiteURL!: string;
 
-  @Field(() => GraphQLRichText)
-  callToActionText!: Descendant[];
+  @Field(() => GraphQLRichText, { nullable: true })
+  callToActionText?: RichtextJSONDocument;
 
   @Field()
   callToActionURL!: string;

@@ -36,7 +36,7 @@ export function ResetUserPasswordForm({
       fluid
       model={validationModel}
       onSubmit={async (validationPassed, e) => {
-        e.preventDefault();
+        e?.preventDefault();
         if (!userID || !password) {
           return;
         }
@@ -60,9 +60,9 @@ export function ResetUserPasswordForm({
       }}
     >
       <Form.Group controlId="password">
-        <Form.ControlLabel>
+        <Form.Label>
           {t('userCreateOrEditView.resetPasswordFor', { userName })}
-        </Form.ControlLabel>
+        </Form.Label>
         <Form.Control
           name="password"
           disabled={isDisabled}
