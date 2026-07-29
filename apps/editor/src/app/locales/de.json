@@ -402,12 +402,41 @@
         "selectMemberPlansSelectionHintAll": "Ohne Auswahl werden alle aktiven Pläne angezeigt.",
         "selectFields": "Eingabefelder",
         "selectFieldsSelectionHint": "Email & Nachname wird immer abgefragt. Reihenfolge spielt keine Rolle",
+        "selectSections": "Erweiterte Funktionen",
+        "showGoodies": "Goodie-Auswahl anzeigen",
+        "showVouchers": "Gutschein-Eingabe anzeigen",
+        "goodieMinValue": {
+          "label": "Goodie-Mindestbetrag:"
+        },
+        "hideRepeatGoodieOnUpgrade": "Bei Upgrade: kein erneutes Goodie",
         "FirstName": "Vorname",
         "Birthday": "Geburtstag",
         "Address": "Adresse",
         "EmailRepeated": "Email wiederholen",
         "Password": "Passwort",
-        "PasswordRepeated": "Passwort wiederholen"
+        "PasswordRepeated": "Passwort wiederholen",
+        "renderStyles": {
+          "Card": "Abo-Kachel (fixer Betrag)",
+          "Slider": "Abo-Kachel + Betrags-Slider",
+          "CardAndSlider": "Abo-Kachel mit Betragsanzeige + Slider",
+          "CardFreeInput": "Abo-Kachel mit freier Betragseingabe",
+          "AmountTiles": "Betrags-Kacheln (nur bei einem Abo-Plan)"
+        },
+        "renderStylesHeading": "Abo-Plan Reihenfolge und Darstellung",
+        "renderStyleRules": {
+          "amountTilesSingle": "Betrags-Kacheln sind nur verfügbar, wenn genau ein Abo-Plan ausgewählt ist."
+        },
+        "amountTileValues": {
+          "hint": "Beträge der Kacheln (in Franken). Leer lassen für Standard: 10, 15, 20.",
+          "placeholder": "z.B. 10 15 20"
+        },
+        "amountTileLayout": {
+          "hint": "Kachel-Layout auf Mobilgeräten",
+          "Narrow": "Schmal (2 Kacheln pro Zeile)",
+          "Wide": "Breit (1 Kachel pro Zeile, grosse Kacheln)"
+        },
+        "planAmountsTitle": "Minimal- / Ziel- / Maximalbetrag pro Monat (in Franken)",
+        "defaultPlanTitle": "Standardmässig ausgewählt — dieser Abo-Plan ist nach dem Laden der Seite vorausgewählt."
       },
       "image": {
         "label": "Bild",
@@ -1524,7 +1553,7 @@
       "totpDisabled": "Zwei-Faktor-Authentifizierung ist noch nicht eingerichtet. Der Benutzer wird beim nächsten Editor-Login aufgefordert, diese einzurichten.",
       "totpExemptInfo": "Dieser Benutzer ist von der Zwei-Faktor-Authentifizierungspflicht befreit.",
       "totpExemptLabel": "Von 2FA-Pflicht befreien",
-      "totpExemptWarning": "\u26a0\ufe0f SICHERHEITSWARNUNG \u26a0\ufe0f\n\nSie sind dabei, die Zwei-Faktor-Authentifizierungspflicht für diesen Benutzer zu DEAKTIVIEREN!\n\nDies reduziert die Sicherheit dieses Kontos erheblich. Der Benutzer kann sich nur mit einem Passwort im Editor anmelden, ohne einen zweiten Faktor.\n\nDies sollte nur in Ausnahmefällen verwendet werden.\n\nSind Sie sicher, dass Sie fortfahren möchten?",
+      "totpExemptWarning": "⚠️ SICHERHEITSWARNUNG ⚠️\n\nSie sind dabei, die Zwei-Faktor-Authentifizierungspflicht für diesen Benutzer zu DEAKTIVIEREN!\n\nDies reduziert die Sicherheit dieses Kontos erheblich. Der Benutzer kann sich nur mit einem Passwort im Editor anmelden, ohne einen zweiten Faktor.\n\nDies sollte nur in Ausnahmefällen verwendet werden.\n\nSind Sie sicher, dass Sie fortfahren möchten?",
       "properties": "Eigenschaften",
       "resetPassword": "Passwort zurücksetzen",
       "resetPasswordFor": "Passwort für {{userName}} zurücksetzen",

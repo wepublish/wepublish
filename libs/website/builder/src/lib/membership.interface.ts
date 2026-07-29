@@ -2,6 +2,9 @@ import { LazyQueryExecFunction, QueryResult } from '@apollo/client';
 import { RadioProps } from '@mui/material';
 import {
   ChallengeQuery,
+  SubscribeBlockAmountTileLayout,
+  SubscribeBlockPlanRenderStyle,
+  SubscribeBlockPlanSetting,
   FullInvoiceFragment,
   FullMemberPlanFragment,
   FullSubscriptionFragment,
@@ -63,6 +66,10 @@ export type BuilderMemberPlanPickerProps = {
   onChange: (memberPlanId: string) => void;
   name?: string;
   value?: string;
+  monthlyAmount?: number;
+  onMonthlyAmountChange?: (monthlyAmount: number, touched?: boolean) => void;
+  monthlyAmountError?: string;
+  planSettings?: SubscribeBlockPlanSetting[];
 };
 
 export type BuilderMemberPlanItemProps = Pick<
@@ -74,7 +81,13 @@ export type BuilderMemberPlanItemProps = Pick<
   | 'shortDescription'
   | 'tags'
 > &
-  Omit<RadioProps, 'ref'> & { className?: string } & { slug: string };
+  Omit<RadioProps, 'ref'> & { className?: string } & {
+    slug: string;
+    monthlyAmount?: number;
+    onMonthlyAmountChange?: (monthlyAmount: number, touched?: boolean) => void;
+    monthlyAmountError?: string;
+    renderStyle?: SubscribeBlockPlanRenderStyle;
+  };
 
 export type BuilderPeriodicityPickerProps = {
   periodicities: PaymentPeriodicity[] | undefined;
@@ -112,6 +125,8 @@ export type BuilderPaymentAmountProps = {
   error: FieldError | undefined;
   className?: string;
   slug?: string;
+  presetAmounts?: number[];
+  tileLayout?: SubscribeBlockAmountTileLayout;
 };
 
 export type BuilderSubscribeProps<
@@ -130,6 +145,10 @@ export type BuilderSubscribeProps<
     QueryResult<MemberPlanListQuery>,
     'data' | 'loading' | 'error'
   >;
+  planSettings?: SubscribeBlockPlanSetting[];
+  showGoodies?: boolean;
+  showVouchers?: boolean;
+  goodieMinValue?: number | null;
   subscribeInfo: Pick<
     QueryResult<CreateSubscriptionInfoQuery>,
     'data' | 'loading' | 'error'
@@ -173,6 +192,10 @@ export type BuilderUpgradeProps = {
     'data' | 'loading' | 'error'
   >;
   subscriptionToUpgrade: FullSubscriptionFragment;
+  planSettings?: SubscribeBlockPlanSetting[];
+  showGoodies?: boolean;
+  goodieMinValue?: number | null;
+  hideRepeatGoodieOnUpgrade?: boolean;
   className?: string;
   onUpgrade?: (
     data: Omit<UpgradeMutationVariables, 'failureURL' | 'successURL'>

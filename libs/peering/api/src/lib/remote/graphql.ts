@@ -5606,10 +5606,20 @@ export type SubscribeBlock = BaseBlock & {
   blockStyleName?: Maybe<Scalars['String']>;
   disabled?: Maybe<Scalars['Boolean']>;
   fields: Array<SubscribeBlockField>;
+  goodieMinValue?: Maybe<Scalars['Int']>;
+  hideRepeatGoodieOnUpgrade: Scalars['Boolean'];
   memberPlanIds?: Maybe<Array<Scalars['String']>>;
   memberPlans: Array<MemberPlan>;
+  plans?: Maybe<Array<SubscribeBlockPlanSetting>>;
+  showGoodies: Scalars['Boolean'];
+  showVouchers: Scalars['Boolean'];
   type: BlockType;
 };
+
+export enum SubscribeBlockAmountTileLayout {
+  Narrow = 'Narrow',
+  Wide = 'Wide'
+}
 
 export enum SubscribeBlockField {
   Address = 'Address',
@@ -5625,7 +5635,37 @@ export type SubscribeBlockInput = {
   blockStyleName?: InputMaybe<Scalars['String']>;
   disabled?: InputMaybe<Scalars['Boolean']>;
   fields?: Array<SubscribeBlockField>;
+  goodieMinValue?: InputMaybe<Scalars['Int']>;
+  hideRepeatGoodieOnUpgrade?: Scalars['Boolean'];
   memberPlanIds?: InputMaybe<Array<Scalars['String']>>;
+  plans?: InputMaybe<Array<SubscribeBlockPlanSettingInput>>;
+  showGoodies?: Scalars['Boolean'];
+  showVouchers?: Scalars['Boolean'];
+};
+
+export enum SubscribeBlockPlanRenderStyle {
+  AmountTiles = 'AmountTiles',
+  Card = 'Card',
+  CardAndSlider = 'CardAndSlider',
+  CardFreeInput = 'CardFreeInput',
+  Slider = 'Slider'
+}
+
+export type SubscribeBlockPlanSetting = {
+  __typename?: 'SubscribeBlockPlanSetting';
+  amountTileLayout?: Maybe<SubscribeBlockAmountTileLayout>;
+  amountTileValues?: Maybe<Array<Scalars['Int']>>;
+  isDefault?: Maybe<Scalars['Boolean']>;
+  memberPlanId: Scalars['String'];
+  renderStyle: SubscribeBlockPlanRenderStyle;
+};
+
+export type SubscribeBlockPlanSettingInput = {
+  amountTileLayout?: InputMaybe<SubscribeBlockAmountTileLayout>;
+  amountTileValues?: InputMaybe<Array<Scalars['Int']>>;
+  isDefault?: InputMaybe<Scalars['Boolean']>;
+  memberPlanId: Scalars['String'];
+  renderStyle: SubscribeBlockPlanRenderStyle;
 };
 
 export type SubscriptionCreatedAction = BaseAction & HasSubscriptionLc & {

@@ -401,12 +401,41 @@
         "selectMemberPlansSelectionHintAll": "Leave empty to display every active plan.",
         "selectFields": "Input fields",
         "selectFieldsSelectionHint": "Email & last name are always requested. Order does not matter",
+        "selectSections": "Advanced features",
+        "showGoodies": "Show goodie selection",
+        "showVouchers": "Show voucher input",
+        "goodieMinValue": {
+          "label": "Minimum goodie amount:"
+        },
+        "hideRepeatGoodieOnUpgrade": "On upgrade: no repeat goodie",
         "FirstName": "First name",
         "Birthday": "Birthday",
         "Address": "Address",
         "EmailRepeated": "Repeat email",
         "Password": "Password",
-        "PasswordRepeated": "Repeat password"
+        "PasswordRepeated": "Repeat password",
+        "renderStyles": {
+          "Card": "Plan tile (fixed amount)",
+          "Slider": "Plan tile + amount slider",
+          "CardAndSlider": "Plan tile showing chosen amount + slider",
+          "CardFreeInput": "Plan tile with free amount input",
+          "AmountTiles": "Amount tiles (single plan only)"
+        },
+        "renderStylesHeading": "Member plan order and rendering",
+        "renderStyleRules": {
+          "amountTilesSingle": "Amount tiles are only available when exactly one member plan is selected."
+        },
+        "amountTileValues": {
+          "hint": "Tile amounts (in francs). Leave empty for defaults: 10, 15, 20.",
+          "placeholder": "e.g. 10 15 20"
+        },
+        "amountTileLayout": {
+          "hint": "Tile layout on mobile",
+          "Narrow": "Narrow (2 tiles per row)",
+          "Wide": "Wide (1 tile per row, large tiles)"
+        },
+        "planAmountsTitle": "Minimum / target / maximum amount per month (in francs)",
+        "defaultPlanTitle": "Selected by default — this member plan is preselected after the page loads."
       },
       "image": {
         "label": "Image",
@@ -1573,7 +1602,7 @@
       "totpDisabled": "Two-factor authentication is not yet configured. The user will be prompted to set it up on their next editor login.",
       "totpExemptInfo": "This user is exempt from the two-factor authentication requirement.",
       "totpExemptLabel": "Exempt from 2FA requirement",
-      "totpExemptWarning": "\u26a0\ufe0f SECURITY WARNING \u26a0\ufe0f\n\nYou are about to DISABLE the two-factor authentication requirement for this user!\n\nThis significantly reduces the security of this account. The user will be able to log into the editor with only a password, without any second factor.\n\nThis should only be used in exceptional circumstances.\n\nAre you sure you want to proceed?",
+      "totpExemptWarning": "⚠️ SECURITY WARNING ⚠️\n\nYou are about to DISABLE the two-factor authentication requirement for this user!\n\nThis significantly reduces the security of this account. The user will be able to log into the editor with only a password, without any second factor.\n\nThis should only be used in exceptional circumstances.\n\nAre you sure you want to proceed?",
       "properties": "Properties",
       "resetPassword": "Reset Password",
       "resetPasswordFor": "Reset the password for {{userName}}",

@@ -264,7 +264,18 @@ fragment BlockWithoutTeaser on BlockContent {
     blockStyle
     blockStyleName
     memberPlanIds
+    plans {
+      memberPlanId
+      renderStyle
+      amountTileValues
+      amountTileLayout
+      isDefault
+    }
     fields
+    showGoodies
+    showVouchers
+    goodieMinValue
+    hideRepeatGoodieOnUpgrade
     type
   }
 }

@@ -112,10 +112,21 @@ fragment FullSubscribeBlock on SubscribeBlock {
   disabled
   blockStyle: blockStyleName
   memberPlanIds
+  plans {
+    memberPlanId
+    renderStyle
+    amountTileValues
+    amountTileLayout
+    isDefault
+  }
   memberPlans {
     ...FullMemberPlan
   }
   fields
+  showGoodies
+  showVouchers
+  goodieMinValue
+  hideRepeatGoodieOnUpgrade
 }
 
 fragment FullEventBlock on EventBlock {
