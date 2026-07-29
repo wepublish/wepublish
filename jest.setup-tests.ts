@@ -35,3 +35,9 @@ global.console.error = (message, ...optionalParams) => {
 if (global.fetch === undefined) {
   global.fetch = fetch;
 }
+
+global.ResizeObserver = class {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+};
