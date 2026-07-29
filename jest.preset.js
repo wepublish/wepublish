@@ -12,6 +12,7 @@ const esModules = [
   '@storybook',
   'storybook',
   'storybook-addon-apollo-client',
+  '@marsidev/react-turnstile',
 ];
 
 module.exports = {
