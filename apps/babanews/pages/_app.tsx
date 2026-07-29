@@ -125,6 +125,10 @@ function CustomApp({
               <CssBaseline />
               <Head>
                 <title key="title">{siteTitle}</title>
+                <meta
+                  name="viewport"
+                  content="width=device-width, initial-scale=1.0"
+                />
               </Head>
 
               <NavBar
