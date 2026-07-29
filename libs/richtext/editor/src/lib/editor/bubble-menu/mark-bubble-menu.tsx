@@ -1,5 +1,6 @@
 import { ToggleButtonGroup, ToggleButton } from '@mui/material';
 import {
+  EditorStateSnapshot,
   isTextSelection,
   useCurrentEditor,
   useEditorState,
@@ -18,6 +19,28 @@ import {
 } from 'react-icons/md';
 import { LinkPopover } from '../link-popover';
 
+const selectMarkState = ({ editor }: EditorStateSnapshot) => {
+  if (!editor || editor.isDestroyed) {
+    return null;
+  }
+
+  return {
+    isBold: editor.isActive('bold') ?? false,
+    canBold: editor.can().chain().toggleBold().run() ?? false,
+    isItalic: editor.isActive('italic') ?? false,
+    canItalic: editor.can().chain().toggleItalic().run() ?? false,
+    isStrike: editor.isActive('strike') ?? false,
+    canStrike: editor.can().chain().toggleStrike().run() ?? false,
+    isUnderline: editor.isActive('underline') ?? false,
+    canUnderline: editor.can().chain().toggleUnderline().run() ?? false,
+    isSub: editor.isActive('subscript') ?? false,
+    canSub: editor.can().chain().toggleSubscript().run() ?? false,
+    isSup: editor.isActive('superscript') ?? false,
+    canSup: editor.can().chain().toggleSuperscript().run() ?? false,
+    isLink: editor.isActive('link') ?? false,
+  };
+};
+
 export function MarkBubbleMenu() {
   const editor = useCurrentEditor().editor!;
   const linkButtonRef = useRef<HTMLButtonElement>(null);
@@ -25,25 +48,13 @@ export function MarkBubbleMenu() {
 
   const editorState = useEditorState({
     editor,
-    selector: ({ editor }) => {
-      return {
-        isBold: editor.isActive('bold') ?? false,
-        canBold: editor.can().chain().toggleBold().run() ?? false,
-        isItalic: editor.isActive('italic') ?? false,
-        canItalic: editor.can().chain().toggleItalic().run() ?? false,
-        isStrike: editor.isActive('strike') ?? false,
-        canStrike: editor.can().chain().toggleStrike().run() ?? false,
-        isUnderline: editor.isActive('underline') ?? false,
-        canUnderline: editor.can().chain().toggleUnderline().run() ?? false,
-        isSub: editor.isActive('subscript') ?? false,
-        canSub: editor.can().chain().toggleSubscript().run() ?? false,
-        isSup: editor.isActive('superscript') ?? false,
-        canSup: editor.can().chain().toggleSuperscript().run() ?? false,
-        isLink: editor.isActive('link') ?? false,
-      };
-    },
+    selector: selectMarkState,
     equalityFn: equals,
   });
+
+  if (!editorState) {
+    return null;
+  }
 
   return (
     <BubbleMenu
@@ -56,6 +67,10 @@ export function MarkBubbleMenu() {
         onHide: () => setLinkOpen(false),
       }}
       shouldShow={({ state, from, to, editor, element, view }) => {
+        if (editor.isDestroyed) {
+          return false;
+        }
+
         const { doc, selection } = state;
         const { empty } = selection;
 
