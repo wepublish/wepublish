@@ -45,7 +45,6 @@ export const SubscribeBlock = ({
   const {
     query: {
       memberPlanBySlug,
-      additionalMemberPlans,
       firstName,
       mail,
       lastName,
@@ -180,6 +179,9 @@ export const SubscribeBlock = ({
       {subscriptionToUpgrade && (
         <Upgrade
           {...subscribeProps}
+          defaults={{
+            memberPlanSlug: memberPlanBySlug as string | undefined,
+          }}
           className={className}
           memberPlans={memberPlansObj}
           planSettings={plans ?? undefined}
@@ -189,9 +191,6 @@ export const SubscribeBlock = ({
           subscriptionToUpgrade={subscriptionToUpgrade}
           upgradeInfo={upgradeInfo}
           onSelect={handleOnSelect}
-          defaults={{
-            memberPlanSlug: memberPlanBySlug as string | undefined,
-          }}
           onUpgrade={async formData => {
             const selectedMemberplan = memberPlans.find(
               mb => mb.id === formData.memberPlanId

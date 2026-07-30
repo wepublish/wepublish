@@ -66,13 +66,13 @@ import {
   Toggle,
 } from 'rsuite';
 
-const { Group, ControlLabel, Control, HelpText } = RForm;
+const { Group, Label, Control, Text } = RForm;
 
 const Form = styled(RForm)`
   height: 100%;
 `;
 
-const FormControlLabelMarginLeft = styled(ControlLabel)`
+const FormLabelMarginLeft = styled(Label)`
   margin-left: 10px;
 `;
 
@@ -568,7 +568,6 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
       <Form
         onSubmit={validationPassed => validationPassed && handleSave()}
         model={validationModel}
-        fluid
         formValue={{
           memberPlan: memberPlan?.name,
           user: user?.name,
@@ -588,6 +587,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
               : t('userSubscriptionEdit.createTitle')}
             </h2>
           </ListViewHeader>
+
           <ListViewActions>
             <PermissionControl
               qualifyingPermissions={['CAN_CREATE_SUBSCRIPTION']}
@@ -622,6 +622,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
             </PermissionControl>
           </ListViewActions>
         </ListViewContainer>
+
         <UserFormGrid>
           <Row gutter={10}>
             <Col xs={12}>
@@ -661,7 +662,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                       <Row gutter={24}>
                         {/* user */}
                         <Col xs={12}>
-                          <ControlLabel>
+                          <Label>
                             {user?.id ?
                               <Link
                                 to={`/users/edit/${user.id}`}
@@ -678,7 +679,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                                 )}
                               </p>
                             }
-                          </ControlLabel>
+                          </Label>
 
                           <UserSearch
                             name="user"
@@ -690,7 +691,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                         </Col>
                         {/* member plan */}
                         <Col xs={12}>
-                          <ControlLabel>
+                          <Label>
                             {memberPlan?.id ?
                               <Link
                                 to={`/memberplans/edit/${memberPlan?.id}`}
@@ -707,7 +708,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                                 )}
                               </p>
                             }
-                          </ControlLabel>
+                          </Label>
                           <Control
                             block
                             name="memberPlan"
@@ -734,7 +735,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                           />
 
                           {memberPlan && (
-                            <HelpText>
+                            <Text>
                               <DescriptionList>
                                 <DescriptionListItem
                                   label={t(
@@ -749,18 +750,18 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                                   )}
                                 </DescriptionListItem>
                               </DescriptionList>
-                            </HelpText>
+                            </Text>
                           )}
                         </Col>
                       </Row>
                       <RowPaddingTop>
                         {/* payment periodicity */}
                         <Col xs={12}>
-                          <ControlLabel>
+                          <Label>
                             {toggleRequiredLabel(
                               t('memberPlanList.paymentPeriodicities')
                             )}
-                          </ControlLabel>
+                          </Label>
 
                           <Control
                             virtualized
@@ -786,11 +787,11 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                         </Col>
                         {/* monthly amount */}
                         <Col xs={12}>
-                          <ControlLabel>
+                          <Label>
                             {toggleRequiredLabel(
                               t('userSubscriptionEdit.monthlyAmount')
                             )}
-                          </ControlLabel>
+                          </Label>
 
                           <CurrencyInput
                             name="monthlyAmount"
@@ -810,11 +811,11 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                       <RowPaddingTop>
                         {/* payment method */}
                         <Col xs={12}>
-                          <ControlLabel>
+                          <Label>
                             {toggleRequiredLabel(
                               t('userSubscriptionEdit.paymentMethod')
                             )}
-                          </ControlLabel>
+                          </Label>
 
                           <Control
                             name="paymentMethod"
@@ -843,9 +844,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                       <RowPaddingTop>
                         {/* subscription start */}
                         <Col xs={12}>
-                          <ControlLabel>
-                            {t('userSubscriptionEdit.startsAt')}
-                          </ControlLabel>
+                          <Label>{t('userSubscriptionEdit.startsAt')}</Label>
                           <DatePicker
                             block
                             cleanable={false}
@@ -860,9 +859,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                         </Col>
                         {/* subscription paid until */}
                         <Col xs={12}>
-                          <ControlLabel>
-                            {t('userSubscriptionEdit.paidUntil')}
-                          </ControlLabel>
+                          <Label>{t('userSubscriptionEdit.paidUntil')}</Label>
                           <DatePicker
                             block
                             value={paidUntil ?? undefined}
@@ -935,12 +932,10 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                             )
                           }
                         />
-                        <FormControlLabelMarginLeft>
+                        <FormLabelMarginLeft>
                           {t('memberplanForm.extendableToggle')}
-                        </FormControlLabelMarginLeft>
-                        <HelpText>
-                          {t('memberplanForm.extendableHelpText')}
-                        </HelpText>
+                        </FormLabelMarginLeft>
+                        <Text>{t('memberplanForm.extendableHelpText')}</Text>
                       </Col>
                     </RowPaddingTop>
                     <RowPaddingTop>
@@ -960,12 +955,12 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                             )
                           }
                         />
-                        <FormControlLabelMarginLeft>
+                        <FormLabelMarginLeft>
                           {t('userSubscriptionEdit.autoRenew')}
-                        </FormControlLabelMarginLeft>
-                        <HelpText>
+                        </FormLabelMarginLeft>
+                        <Text>
                           {t('userSubscriptionEdit.autoRenewDescription')}
-                        </HelpText>
+                        </Text>
                       </Col>
                     </RowPaddingTop>
                     <RowPaddingTop>

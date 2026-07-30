@@ -2,6 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Checkbox, FormControlLabel, FormHelperText } from '@mui/material';
 import styled from '@emotion/styled';
 import {
+  BuilderChallengeRef,
   Challenge,
   defaultRegisterSchema,
   requiredRegisterSchema,
@@ -27,15 +28,8 @@ import {
   useAsyncAction,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import {
-  ComponentProps,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
-import { Controller, useForm, useWatch } from 'react-hook-form';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { PaymentAmountPicker } from '../payment-amount/payment-amount-picker/payment-amount-picker';
 import { formatCurrency, roundUpTo5Cents } from '../formatters/format-currency';
@@ -114,6 +108,10 @@ export const SubscribeAmount = styled('div')`
 
 export const SubscribeAmountText = styled('p')`
   text-align: center;
+
+  ${({ theme }) => theme.breakpoints.up('xs')} {
+    margin: ${({ theme }) => theme.spacing(0, 0, 2, 0)};
+  }
 `;
 
 export const SubscribePayment = styled('div')`
@@ -300,6 +298,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error>();
   const callAction = useAsyncAction(setLoading, setError);
+  const challengeRef = useRef<BuilderChallengeRef>(null);
 
   const fieldsToDisplay = useMemo(
     () =>
@@ -440,13 +439,10 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     watch<'paymentPeriodicity'>('paymentPeriodicity');
   const selectedMemberPlanId = watch<'memberPlanId'>('memberPlanId');
   const payTransactionFee = watch<'payTransactionFee'>('payTransactionFee');
-  const rawMonthlyAmount = useWatch({
-    control,
-    name: 'monthlyAmount',
-  }) as number;
+  const watchedMonthlyAmount = watch<'monthlyAmount'>('monthlyAmount');
   const monthlyAmount =
-    rawMonthlyAmount +
-    (payTransactionFee ? transactionFee(rawMonthlyAmount) : 0);
+    watchedMonthlyAmount +
+    (payTransactionFee ? transactionFee(watchedMonthlyAmount) : 0);
   const autoRenew = watch<'autoRenew'>('autoRenew');
 
   const selectedMemberPlan = useMemo(
@@ -467,10 +463,10 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
 
     const filteredGoodies =
       filterGoodies ?
-        filterGoodies(inStockGoodies, { monthlyAmount: rawMonthlyAmount })
+        filterGoodies(inStockGoodies, { monthlyAmount: watchedMonthlyAmount })
       : inStockGoodies;
 
-    if (goodieMinValue != null && rawMonthlyAmount * 12 < goodieMinValue) {
+    if (goodieMinValue != null && watchedMonthlyAmount * 12 < goodieMinValue) {
       return [];
     }
 
@@ -480,7 +476,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     soldOutGoodieIds,
     filterGoodies,
     goodieMinValue,
-    rawMonthlyAmount,
+    watchedMonthlyAmount,
   ]);
 
   const allGoodies = useMemo(() => {
@@ -571,13 +567,15 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     extendable: selectedMemberPlan?.extendable ?? true,
     productType: selectedMemberPlan?.productType ?? ProductType.Subscription,
     paymentPeriodicity: PaymentPeriodicity.Monthly,
-    monthlyAmount: rawMonthlyAmount,
+    monthlyAmount: watchedMonthlyAmount,
     currency: selectedMemberPlan?.currency ?? Currency.Chf,
     siteTitle,
     locale,
   });
 
   const onSubmit = handleSubmit(data => {
+    challengeRef.current?.reset();
+
     if (subscribeInfo.data?.createSubscriptionInfo.voucherValid === false) {
       return;
     }
@@ -811,7 +809,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
               {...field}
               onChange={memberPlanId => field.onChange(memberPlanId)}
               memberPlans={memberPlans.data?.memberPlans.nodes ?? []}
-              monthlyAmount={rawMonthlyAmount}
+              monthlyAmount={watchedMonthlyAmount}
               onMonthlyAmountChange={handleMonthlyAmountChange}
               monthlyAmountError={errors.monthlyAmount?.message?.toString()}
               planSettings={planSettings}
@@ -1041,6 +1039,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
               render={({ field, fieldState: { error } }) => (
                 <Challenge
                   {...field}
+                  challengeRef={challengeRef}
                   value={field.value || ''}
                   onChange={field.onChange}
                   challenge={challenge.data!.challenge}
@@ -1068,7 +1067,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
         />
       )}
 
-      {!!rawMonthlyAmount && (
+      {!!watchedMonthlyAmount && (
         <SubscribeSection area="transactionFee">
           <Controller
             name={'payTransactionFee'}

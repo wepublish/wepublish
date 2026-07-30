@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import { useMemberPlanListQuery } from '@wepublish/editor/api';
 import { Dispatch, SetStateAction, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import type { DateRangePickerProps } from 'rsuite';
 import {
   Col,
   DateRangePicker,
@@ -13,7 +14,6 @@ import {
   TagPicker,
   Toggle,
 } from 'rsuite';
-import { RangeType } from 'rsuite/esm/DateRangePicker';
 
 import { AudienceFilterToggle, ToggleLable } from './audience-filter-toggle';
 import {
@@ -23,6 +23,8 @@ import {
   preDefinedDates,
   TimeResolution,
 } from './useAudienceFilter';
+
+type RangeType = NonNullable<DateRangePickerProps['ranges']>[number];
 
 const TagPickerStyled = styled(TagPicker)`
   margin-top: ${({ theme }) => theme.spacing(2)};
@@ -204,7 +206,7 @@ export function AudienceFilter({
                 <Col
                   xs={24}
                   xl={12}
-                  key={`client-filter-${filterIndex}`}
+                  key={filterIndex}
                 >
                   <AudienceFilterToggle
                     filterKey={filterKey as keyof AudienceClientFilter}

@@ -40,6 +40,7 @@ import {
   Pagination,
   Table as RTable,
 } from 'rsuite';
+import type { RowDataType } from 'rsuite-table';
 
 const { Column, HeaderCell, Cell } = RTable;
 
@@ -192,9 +193,9 @@ function AuthorList() {
             align="left"
             resizable
           >
-            <HeaderCell>{}</HeaderCell>
+            <HeaderCell>{null}</HeaderCell>
             <CellSmallPadding>
-              {(rowData: FullAuthorFragment) => (
+              {(rowData: RowDataType<FullAuthorFragment>) => (
                 <Avatar
                   circle
                   src={rowData.image?.squareURL || undefined}
@@ -244,7 +245,7 @@ function AuthorList() {
           >
             <HeaderCell>{t('authors.overview.action')}</HeaderCell>
             <PaddedCell>
-              {(rowData: FullAuthorFragment) => (
+              {(rowData: RowDataType<FullAuthorFragment>) => (
                 <PermissionControl
                   qualifyingPermissions={['CAN_DELETE_AUTHOR']}
                 >

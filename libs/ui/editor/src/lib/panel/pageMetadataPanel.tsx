@@ -171,11 +171,11 @@ function PageMetadataPanel({
     }
   }
 
-  function currentContent(): JSX.Element {
+  function currentContent() {
     switch (activeKey) {
       case MetaDataType.SocialMedia:
         return (
-          <>
+          <Form.Stack fluid>
             <Form.Group>
               <Message
                 showIcon
@@ -184,10 +184,9 @@ function PageMetadataPanel({
                 {t('pageEditor.panels.metadataInfo')}
               </Message>
             </Form.Group>
+
             <Form.Group controlId="socialMediaTitle">
-              <Form.ControlLabel>
-                {t('pageEditor.panels.socialMediaTitle')}
-              </Form.ControlLabel>
+              <Form.Label>{t('pageEditor.panels.socialMediaTitle')}</Form.Label>
               <Form.Control
                 name="social-media-title"
                 value={socialMediaTitle}
@@ -196,10 +195,11 @@ function PageMetadataPanel({
                 }}
               />
             </Form.Group>
+
             <Form.Group controlId="socialMediaDescription">
-              <Form.ControlLabel>
+              <Form.Label>
                 {t('pageEditor.panels.socialMediaDescription')}
-              </Form.ControlLabel>
+              </Form.Label>
               <Form.Control
                 name="social-media-description"
                 rows={5}
@@ -210,10 +210,9 @@ function PageMetadataPanel({
                 }}
               />
             </Form.Group>
+
             <Form.Group controlId="socialMediaImage">
-              <Form.ControlLabel>
-                {t('pageEditor.panels.socialMediaImage')}
-              </Form.ControlLabel>
+              <Form.Label>{t('pageEditor.panels.socialMediaImage')}</Form.Label>
               <ChooseEditImage
                 header={''}
                 image={socialMediaImage}
@@ -229,38 +228,32 @@ function PageMetadataPanel({
                 }
               />
             </Form.Group>
-          </>
+          </Form.Stack>
         );
       case MetaDataType.General:
         return (
-          <>
+          <Form.Stack fluid>
             <Form.Group controlId="pageSlug">
-              <Form.ControlLabel>
-                {t('pageEditor.panels.slug')}
-              </Form.ControlLabel>
+              <Form.Label>{t('pageEditor.panels.slug')}</Form.Label>
               <Form.Control
                 name="slug"
                 value={slug}
                 onChange={(slug: string) => onChange?.({ ...value, slug })}
               />
             </Form.Group>
+
             <Form.Group controlId="pageTitle">
-              <Form.ControlLabel>
-                {t('pageEditor.panels.title')}
-              </Form.ControlLabel>
+              <Form.Label>{t('pageEditor.panels.title')}</Form.Label>
               <Form.Control
                 name="title"
                 value={title}
                 onChange={(title: string) => onChange?.({ ...value, title })}
               />
-              <Form.HelpText>
-                {t('pageEditor.panels.titleHelpBlock')}
-              </Form.HelpText>
+              <Form.Text>{t('pageEditor.panels.titleHelpBlock')}</Form.Text>
             </Form.Group>
+
             <Form.Group controlId="pageDescription">
-              <Form.ControlLabel>
-                {t('pageEditor.panels.description')}
-              </Form.ControlLabel>
+              <Form.Label>{t('pageEditor.panels.description')}</Form.Label>
               <Form.Control
                 name="description"
                 accepter={Textarea}
@@ -269,14 +262,13 @@ function PageMetadataPanel({
                   onChange?.({ ...value, description })
                 }
               />
-              <Form.HelpText>
+              <Form.Text>
                 {t('pageEditor.panels.descriptionHelpBlock')}
-              </Form.HelpText>
+              </Form.Text>
             </Form.Group>
+
             <Form.Group controlId="pageTags">
-              <Form.ControlLabel>
-                {t('pageEditor.panels.tags')}
-              </Form.ControlLabel>
+              <Form.Label>{t('pageEditor.panels.tags')}</Form.Label>
               <SelectTags
                 defaultTags={defaultTags}
                 disabled={!isAuthorized}
@@ -287,23 +279,20 @@ function PageMetadataPanel({
                 tagType={TagType.Page}
               />
             </Form.Group>
+
             <Form.Group controlId="hidden">
-              <Form.ControlLabel>
-                {t('pageEditor.panels.hidden')}
-              </Form.ControlLabel>
+              <Form.Label>{t('pageEditor.panels.hidden')}</Form.Label>
               <Toggle
                 checked={hidden ? true : false}
                 disabled={!isAuthorized}
                 onChange={hidden => onChange?.({ ...value, hidden })}
               />
-              <Form.HelpText>
-                {t('pageEditor.panels.setAsHidden')}
-              </Form.HelpText>
+              <Form.Text>{t('pageEditor.panels.setAsHidden')}</Form.Text>
             </Form.Group>
+
             <Form.Group>
-              <Form.ControlLabel>
-                {t('pageEditor.panels.postImage')}
-              </Form.ControlLabel>
+              <Form.Label>{t('pageEditor.panels.postImage')}</Form.Label>
+
               <ChooseEditImage
                 header={''}
                 image={image}
@@ -317,11 +306,11 @@ function PageMetadataPanel({
                 removeImage={() => onChange?.({ ...value, image: undefined })}
               />
             </Form.Group>
-          </>
+          </Form.Stack>
         );
       case MetaDataType.Properties:
         return (
-          <>
+          <Form.Stack fluid>
             <Form.Group>
               <Message
                 showIcon
@@ -330,10 +319,9 @@ function PageMetadataPanel({
                 {t('pageEditor.panels.propertiesInfo')}
               </Message>
             </Form.Group>
+
             <Form.Group controlId="pageProperties">
-              <Form.ControlLabel>
-                {t('pageEditor.panels.properties')}
-              </Form.ControlLabel>
+              <Form.Label>{t('pageEditor.panels.properties')}</Form.Label>
               <ListInput
                 disabled={!isAuthorized}
                 value={metaDataProperties}
@@ -372,11 +360,8 @@ function PageMetadataPanel({
                 )}
               </ListInput>
             </Form.Group>
-          </>
+          </Form.Stack>
         );
-      default:
-        // eslint-disable-next-line react/jsx-no-useless-fragment
-        return <></>;
     }
   }
 
@@ -424,12 +409,7 @@ function PageMetadataPanel({
         </Nav>
 
         <Panel>
-          <Form
-            fluid
-            disabled={!isAuthorized}
-          >
-            {currentContent()}
-          </Form>
+          <Form disabled={!isAuthorized}>{currentContent()}</Form>
         </Panel>
       </Drawer.Body>
 

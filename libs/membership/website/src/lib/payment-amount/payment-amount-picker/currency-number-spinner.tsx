@@ -152,7 +152,7 @@ const FieldSet = styled('fieldset')`
   pointer-events: none;
   border-style: solid;
   border-width: 1px;
-  border-color: ${({ theme }) => theme.palette.divider}
+  border-color: ${({ theme }) => theme.palette.divider};
   border-width: 1px;
   border-radius: ${({ theme }) => theme.shape.borderRadius}px;
   overflow: hidden;

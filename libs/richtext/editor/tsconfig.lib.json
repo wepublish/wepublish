@@ -15,13 +15,10 @@
     "src/**/*.test.ts",
     "src/**/*.spec.tsx",
     "src/**/*.test.tsx",
-    "src/**/*.stories.tsx",
     "src/**/*.spec.js",
     "src/**/*.test.js",
-    "src/**/*.stories.js",
     "src/**/*.spec.jsx",
-    "src/**/*.test.jsx",
-    "src/**/*.stories.jsx"
+    "src/**/*.test.jsx"
   ],
   "include": [
     "src/**/*.js",

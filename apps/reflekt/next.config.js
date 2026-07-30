@@ -69,17 +69,10 @@ const reflektArticleRedirectAliases = [{ from: 'asy', to: 'asylatlas' }];
  **/
 const nextConfig = {
   ...wepNextConfig,
-  serverRuntimeConfig: {
-    env: {
-      API_URL_INTERNAL: process.env.API_URL_INTERNAL || '',
-    },
-  },
-  publicRuntimeConfig: {
-    env: {
-      API_URL: process.env.API_URL || '',
-      PA_ID: process.env.PA_ID || '',
-      GTM_ID: process.env.GTM_ID || '',
-    },
+  env: {
+    ...wepNextConfig.env,
+    PA_ID: process.env.PA_ID || '',
+    GTM_ID: process.env.GTM_ID || '',
   },
   async redirects() {
     return [

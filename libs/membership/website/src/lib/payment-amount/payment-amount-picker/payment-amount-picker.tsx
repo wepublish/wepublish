@@ -7,10 +7,34 @@ import {
   Currency,
   SubscribeBlockAmountTileLayout,
 } from '@wepublish/website/api';
-import { forwardRef, PropsWithChildren, useMemo } from 'react';
+import { forwardRef, PropsWithChildren, useMemo, useState } from 'react';
 import { formatCurrency } from '../../formatters/format-currency';
+import {
+  CurrencyNumberSpinner,
+  CurrencyNumberSpinnerSnap,
+  HelperText,
+} from './currency-number-spinner';
 import styled from '@emotion/styled';
-import { CurrencyNumberSpinner, HelperText } from './currency-number-spinner';
+
+const formatNumber = (value: number, format: string, locale = 'de-CH') => {
+  const [intPart = '', fracPart = ''] = format.split('.');
+  const useGrouping = intPart.includes(',');
+
+  const minimumIntegerDigits = Math.max(1, (intPart.match(/0/g) || []).length);
+  const minimumFractionDigits = (fracPart.match(/0/g) || []).length;
+  const maximumFractionDigits = Math.max(
+    minimumFractionDigits,
+    (fracPart.match(/[0#]/g) || []).length
+  );
+
+  return new Intl.NumberFormat(locale, {
+    style: 'decimal',
+    minimumIntegerDigits,
+    minimumFractionDigits,
+    maximumFractionDigits,
+    useGrouping,
+  }).format(value);
+};
 
 export const PaymentAmountPickerWrapper = styled(RadioGroup, {
   shouldForwardProp: prop => prop !== 'tileLayout',
@@ -104,8 +128,14 @@ export const PaymentAmountPickerItemAmount = styled('div')`
   font-weight: 600;
 `;
 
-const TileSpinner = styled(CurrencyNumberSpinner)`
-  margin-top: 0;
+export const StyledCurrencyNumberSpinner = styled(CurrencyNumberSpinner, {
+  shouldForwardProp: prop => prop !== 'tileLayout',
+})<{ tileLayout?: SubscribeBlockAmountTileLayout }>`
+  ${({ tileLayout }) =>
+    tileLayout === SubscribeBlockAmountTileLayout.Wide &&
+    css`
+      margin-top: 0;
+    `}
 `;
 
 export const PaymentAmountPickerItem = forwardRef<
@@ -133,7 +163,14 @@ export const PaymentAmountPickerItem = forwardRef<
 
 export const PaymentAmountPicker = forwardRef<
   HTMLInputElement,
-  BuilderPaymentAmountProps
+  BuilderPaymentAmountProps & {
+    pickerItems?: number[];
+    format?: string;
+    step?: number;
+    snap?: CurrencyNumberSpinnerSnap;
+    arrows?: 'split' | 'stacked';
+    noInitialSelection?: boolean;
+  }
 >(
   (
     {
@@ -141,6 +178,12 @@ export const PaymentAmountPicker = forwardRef<
       currency,
       amountPerMonthMin,
       amountPerMonthTarget,
+      pickerItems,
+      format,
+      step,
+      snap,
+      arrows,
+      noInitialSelection,
       name,
       error,
       value,
@@ -154,12 +197,22 @@ export const PaymentAmountPicker = forwardRef<
       meta: { locale },
     } = useWebsiteBuilder();
 
-    const pickerItems = useMemo(
-      () => (presetAmounts?.length ? presetAmounts : [1000, 1500, 2000]),
-      [presetAmounts]
+    const amounts = useMemo(
+      () =>
+        pickerItems?.length ? pickerItems
+        : presetAmounts?.length ? presetAmounts
+        : [1000, 1500, 2000],
+      [pickerItems, presetAmounts]
     );
 
     const isWide = tileLayout === SubscribeBlockAmountTileLayout.Wide;
+
+    const [hasInteracted, setHasInteracted] = useState(false);
+    const showSelection = !noInitialSelection || hasInteracted;
+    const isCustomValue =
+      snap ?
+        !snap.values.some(v => v * 100 === value)
+      : !amounts.some(p => p === value);
 
     return (
       <PaymentAmountPickerWrapper
@@ -168,12 +221,13 @@ export const PaymentAmountPicker = forwardRef<
         tileLayout={tileLayout}
         onChange={event => {
           if (+event.target.value) {
+            setHasInteracted(true);
             onChange(+event.target.value);
           }
         }}
         value={value}
       >
-        {pickerItems.map(itemAmount => (
+        {amounts.map(itemAmount => (
           <FormControlLabel
             key={itemAmount}
             value={itemAmount}
@@ -181,10 +235,12 @@ export const PaymentAmountPicker = forwardRef<
               <PaymentAmountPickerItem
                 currency={currency}
                 tileLayout={tileLayout}
-                checked={itemAmount === value}
+                checked={showSelection && itemAmount === value}
               >
                 <PaymentAmountPickerItemAmount>
-                  {formatCurrency(itemAmount / 100, currency, locale, false)}
+                  {format ?
+                    formatNumber(itemAmount / 100, format, locale)
+                  : formatCurrency(itemAmount / 100, currency, locale, false)}
                 </PaymentAmountPickerItemAmount>
               </PaymentAmountPickerItem>
             }
@@ -198,19 +254,25 @@ export const PaymentAmountPicker = forwardRef<
             <PaymentAmountPickerItem
               currency={currency}
               tileLayout={tileLayout}
-              checked={!pickerItems.includes(value)}
+              checked={showSelection && isCustomValue}
             >
-              <TileSpinner
-                arrows={isWide ? 'split' : 'stacked'}
+              <StyledCurrencyNumberSpinner
+                tileLayout={tileLayout}
+                value={showSelection ? value / 100 : undefined}
                 min={amountPerMonthMin / 100}
-                step={1}
-                value={value / 100}
-                onValueChange={spinnerValue => {
-                  if (spinnerValue != null) {
-                    onChange(Math.round(spinnerValue * 100));
+                step={step}
+                snap={snap}
+                arrows={arrows ?? (isWide ? 'split' : 'stacked')}
+                helperText={`Min ${formatCurrency(amountPerMonthMin / 100, currency, locale)}`}
+                onValueChange={v => {
+                  setHasInteracted(true);
+
+                  if (typeof v === 'number' && v >= 0) {
+                    onChange(v ? Math.round(v * 100) : 0);
+                  } else {
+                    onChange(0);
                   }
                 }}
-                helperText={`Min ${formatCurrency(amountPerMonthMin / 100, currency, locale)}`}
               />
             </PaymentAmountPickerItem>
           }

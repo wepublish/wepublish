@@ -87,7 +87,6 @@ export const CreateCrowdfundingForm = () => {
 
   return (
     <Form
-      fluid
       formValue={crowdfunding}
       model={validationModel}
       disabled={loading}

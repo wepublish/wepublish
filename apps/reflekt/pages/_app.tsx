@@ -14,7 +14,6 @@ import {
 import { withPaywallBypassToken } from '@wepublish/paywall/website';
 import {
   authLink,
-  getApiUrl,
   initWePublishTranslator,
   RoutedAdminBar,
   withBuilderRouter,
@@ -115,7 +114,11 @@ const dateFormatter = (date: Date, includeTime = true) =>
 
 export type CustomAppProps = AppProps<{
   sessionToken?: SessionWithTokenWithoutUser;
-}> & { emotionCache?: EmotionCache; websiteSettings?: WebsiteSettingsFragment };
+}> & {
+  emotionCache?: EmotionCache;
+  websiteSettings?: WebsiteSettingsFragment;
+  publicEnv?: { apiUrl: string };
+};
 
 function CustomApp({
   Component,
@@ -206,73 +209,6 @@ function CustomApp({
                   name="viewport"
                   content="width=device-width, initial-scale=1.0"
                 />
-                <meta
-                  name="format-detection"
-                  content="telephone=no"
-                />
-                {/* Feeds */}
-                <link
-                  rel="alternate"
-                  type="application/rss+xml"
-                  href="/api/rss-feed"
-                />
-                <link
-                  rel="alternate"
-                  type="application/atom+xml"
-                  href="/api/atom-feed"
-                />
-                <link
-                  rel="alternate"
-                  type="application/feed+json"
-                  href="/api/json-feed"
-                />
-
-                {/* Sitemap */}
-                <link
-                  rel="sitemap"
-                  type="application/xml"
-                  title="Sitemap"
-                  href="/api/sitemap"
-                />
-
-                {/* Favicon definitions, generated with https://realfavicongenerator.net/ */}
-                <link
-                  rel="icon"
-                  type="image/png"
-                  href="/favicon-96x96.png?v=20260529"
-                  sizes="96x96"
-                />
-                <link
-                  rel="icon"
-                  type="image/svg+xml"
-                  href="/favicon.svg?v=20260529"
-                />
-                <link
-                  rel="shortcut icon"
-                  href="/favicon.ico?v=20260529"
-                />
-                <link
-                  rel="apple-touch-icon"
-                  sizes="180x180"
-                  href="/apple-touch-icon.png?v=20260529"
-                />
-                <meta
-                  name="apple-mobile-web-app-title"
-                  content="REFLEKT"
-                />
-                <link
-                  rel="manifest"
-                  href="/site.webmanifest?v=20260529"
-                />
-                <link
-                  rel="mask-icon"
-                  href="/safari-pinned-tab.svg?v=20260529"
-                  color="#000000"
-                />
-                <meta
-                  name="theme-color"
-                  content="#ffffff"
-                />
               </Head>
 
               <Spacer>
@@ -335,7 +271,7 @@ function CustomApp({
   );
 }
 
-const withApollo = createWithApiClient(getApiUrl(), [authLink, previewLink]);
+const withApollo = createWithApiClient([authLink, previewLink]);
 const ConnectedApp = withApollo(
   withBuilderRouter(
     withErrorSnackbar(
