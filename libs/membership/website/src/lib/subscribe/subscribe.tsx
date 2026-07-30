@@ -29,7 +29,7 @@ import {
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, useForm, useWatch } from 'react-hook-form';
 import { z } from 'zod';
 import { formatCurrency, roundUpTo5Cents } from '../formatters/format-currency';
 import {
@@ -270,7 +270,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error>();
   const callAction = useAsyncAction(setLoading, setError);
-  const challengeRef = useRef<BuilderChallengeRef>();
+  const challengeRef = useRef<BuilderChallengeRef>(null);
 
   const fieldsToDisplay = useMemo(
     () =>
@@ -374,7 +374,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     watch<'paymentPeriodicity'>('paymentPeriodicity');
   const selectedMemberPlanId = watch<'memberPlanId'>('memberPlanId');
   const payTransactionFee = watch<'payTransactionFee'>('payTransactionFee');
-  const watchedMonthlyAmount = useWatch({ control, name: 'monthlyAmount' });
+  const watchedMonthlyAmount = watch<'monthlyAmount'>('monthlyAmount');
   const monthlyAmount =
     watchedMonthlyAmount +
     (payTransactionFee ? transactionFee(watchedMonthlyAmount) : 0);

@@ -82,7 +82,7 @@ export function RegistrationForm<
     onChange?: (values: DeepPartial<RegisterMutationVariables>) => void;
   }
 >) {
-  const challengeRef = useRef<BuilderChallengeRef>();
+  const challengeRef = useRef<BuilderChallengeRef>(null);
   const fieldsToDisplay = fields.reduce(
     (obj, field) => ({ ...obj, [field]: true }),
     {} as Record<Exclude<BuilderUserFormFields, 'flair'>, true>

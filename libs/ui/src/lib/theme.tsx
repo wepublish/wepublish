@@ -15,7 +15,7 @@ import {
   Theme,
   ThemeProvider,
 } from '@mui/system';
-import { ComponentType, memo, useMemo } from 'react';
+import { ComponentType, createElement, memo, useMemo } from 'react';
 import { PartialDeep } from 'type-fest';
 
 declare module '@emotion/react' {
@@ -374,7 +374,7 @@ export const createWithInheritedTheme = <P extends object>(
 
     return (
       <ThemeProvider theme={newTheme}>
-        <ControlledComponent {...(props as P)} />
+        {createElement(ControlledComponent, props as P)}
       </ThemeProvider>
     );
   });
