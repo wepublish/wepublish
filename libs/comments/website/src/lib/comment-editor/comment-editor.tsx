@@ -234,7 +234,7 @@ export const CommentEditor = ({
   const { hasUser } = useUser();
   const [modalOpen, setModalOpen] = useState(!hasUser);
   const [showInitialModal, setShowInitialModal] = useState(anonymousCanComment);
-  const challengeRef = useRef<BuilderChallengeRef>();
+  const challengeRef = useRef<BuilderChallengeRef>(null);
 
   const handleClose = () => {
     setModalOpen(false);
