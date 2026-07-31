@@ -1366,7 +1366,7 @@
       "link": {
         "title": "Text verlinken mit",
         "style": "Link-Stil",
-        "noStyle": "Keiner",
+        "defaultStyle": "Link",
         "type": "Typ",
         "url": "URL",
         "web": "Web",

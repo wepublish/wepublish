@@ -1372,7 +1372,7 @@
       "link": {
         "title": "Link text with",
         "style": "Link style",
-        "noStyle": "None",
+        "defaultStyle": "Link",
         "type": "Type",
         "url": "URL",
         "web": "Web",
