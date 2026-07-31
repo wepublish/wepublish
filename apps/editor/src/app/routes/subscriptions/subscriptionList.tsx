@@ -27,7 +27,6 @@ import {
   TableWrapper,
   useAuthorisation,
 } from '@wepublish/ui/editor';
-import { TFunction } from 'i18next';
 import { ReactNode, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdDelete, MdInfo } from 'react-icons/md';
@@ -83,15 +82,16 @@ function mapColumFieldToGraphQLField(
 
 export const NewSubscriptionButton = ({
   isLoading,
-  t,
   userId,
 }: {
   isLoading?: boolean;
-  t: TFunction<'translation'>;
   userId?: string;
 }) => {
+  const { t } = useTranslation();
+
   const canCreate = useAuthorisation('CAN_CREATE_SUBSCRIPTION');
   const urlToRedirect = `/subscriptions/create${userId ? `${`?userId=${userId}`}` : ''}`;
+
   return (
     <Link to={urlToRedirect}>
       <IconButton
@@ -183,12 +183,14 @@ function SubscriptionList() {
         <ListViewHeader>
           <h2>{t('subscriptionList.overview.subscription')}</h2>
         </ListViewHeader>
+
         <PermissionControl qualifyingPermissions={['CAN_CREATE_SUBSCRIPTION']}>
           <Actions>
             <ExportSubscriptionsAsCsv filter={filter} />
-            {NewSubscriptionButton({ isLoading, t })}
+            <NewSubscriptionButton isLoading={isLoading} />
           </Actions>
         </PermissionControl>
+
         <ListViewFilterArea>
           <SubscriptionListFilter
             filter={filter}
