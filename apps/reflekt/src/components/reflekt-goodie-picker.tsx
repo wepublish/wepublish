@@ -50,7 +50,7 @@ export const ReflektGoodiePicker = forwardRef<
 ) {
   const { t } = useTranslation();
 
-  const goodieImages = goodies
+  const goodieImages = allGoodies
     .filter(goodie => goodie.image)
     .map(goodie => ({
       caption: null,
