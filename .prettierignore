@@ -11,3 +11,5 @@ libs/peering/api/src/lib/remote/graphql.ts
 /.nx/cache
 /.nx/workspace-data
 .nx/self-healing
+
+apps/**/*/next-env.d.ts
