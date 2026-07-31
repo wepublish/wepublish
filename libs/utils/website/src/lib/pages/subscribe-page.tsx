@@ -158,7 +158,6 @@ SubscribePage.getInitialProps = async (ctx: NextPageContext) => {
     client.query({
       query: PeerProfileDocument,
     }),
-    ...extraQueries.map(options => client.query(options)),
   ];
 
   if (sessionProps.sessionToken) {
