@@ -141,7 +141,7 @@ function CustomApp({
             Script={Script}
             Navbar={TsriNavbar}
             ArticleMeta={TsriArticleMeta}
-            PaymentAmount={WntiPaymentAmountPicker}
+            PaymentAmountPicker={WntiPaymentAmountPicker}
             elements={{ Link: NextWepublishLink }}
             blocks={{
               BaseTeaser: TsriTeaser,

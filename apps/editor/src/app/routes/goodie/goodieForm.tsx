@@ -15,7 +15,7 @@ import {
 } from '@wepublish/ui/editor';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Drawer, Form, InputNumber, Panel, Toggle } from 'rsuite';
+import { Drawer, Form, NumberInput, Panel, Toggle } from 'rsuite';
 
 export type GoodieFormData = (
   | MutationCreateGoodieArgs
@@ -63,60 +63,60 @@ export const GoodieForm = ({ goodie, onChange, create }: GoodieFormProps) => {
     <>
       <GoodieFormWrapper>
         <GoodieFormSection>
-          <Panel
-            bordered
-            css={{ overflow: 'initial' }}
-          >
-            <NameStockGrid>
-              <Form.Group controlId="name">
-                <Form.ControlLabel>{t('goodie.form.name')}</Form.ControlLabel>
+          <Panel bordered>
+            <Form.Stack>
+              <Form.Group controlId="active">
+                <Form.Label>{t('goodie.form.active')}</Form.Label>
 
-                <Form.Control
-                  name="name"
-                  value={goodie.name ?? ''}
-                  onChange={(name: string) => onChange({ name })}
+                <Toggle
+                  checked={!!goodie.active}
+                  onChange={active => onChange({ active })}
                 />
               </Form.Group>
 
-              <Form.Group controlId="stock">
-                <Form.ControlLabel>{t('goodie.form.stock')}</Form.ControlLabel>
+              <NameStockGrid>
+                <Form.Group controlId="name">
+                  <Form.Label>{t('goodie.form.name')}</Form.Label>
 
-                <Form.Control
-                  name="stock"
-                  value={goodie.stock ?? ''}
-                  min={0}
-                  placeholder={t('goodie.overview.unlimited')}
-                  onChange={(stock: string | number) =>
-                    onChange({ stock: stock === '' ? null : +stock })
+                  <Form.Control
+                    name="name"
+                    value={goodie.name ?? ''}
+                    onChange={(name: string) => onChange({ name })}
+                  />
+                </Form.Group>
+
+                <Form.Group controlId="stock">
+                  <Form.Label>{t('goodie.form.stock')}</Form.Label>
+
+                  <Form.Control
+                    name="stock"
+                    value={goodie.stock ?? ''}
+                    min={0}
+                    placeholder={t('goodie.overview.unlimited')}
+                    onChange={(stock: string | number | null) =>
+                      onChange({
+                        stock: stock === '' || stock === null ? null : +stock,
+                      })
+                    }
+                    accepter={NumberInput}
+                  />
+                </Form.Group>
+              </NameStockGrid>
+
+              <Form.Group controlId="description">
+                <Form.Label>{t('goodie.form.description')}</Form.Label>
+
+                <RichTextBlock
+                  value={goodie.description}
+                  onChange={description =>
+                    onChange({
+                      description:
+                        description as RichTextBlockValue['richText'],
+                    })
                   }
-                  accepter={InputNumber}
                 />
               </Form.Group>
-            </NameStockGrid>
-
-            <Form.Group controlId="active">
-              <Form.ControlLabel>{t('goodie.form.active')}</Form.ControlLabel>
-
-              <Toggle
-                checked={goodie.active ?? false}
-                onChange={active => onChange({ active })}
-              />
-            </Form.Group>
-
-            <Form.Group controlId="description">
-              <Form.ControlLabel>
-                {t('goodie.form.description')}
-              </Form.ControlLabel>
-
-              <RichTextBlock
-                value={goodie.description}
-                onChange={description =>
-                  onChange({
-                    description: description as RichTextBlockValue['richText'],
-                  })
-                }
-              />
-            </Form.Group>
+            </Form.Stack>
           </Panel>
         </GoodieFormSection>
 
@@ -125,32 +125,32 @@ export const GoodieForm = ({ goodie, onChange, create }: GoodieFormProps) => {
             bordered
             css={{ overflow: 'initial' }}
           >
-            <Form.Group controlId="memberPlanIDs">
-              <Form.ControlLabel>
-                {t('goodie.form.memberPlans')}
-              </Form.ControlLabel>
+            <Form.Stack>
+              <Form.Group controlId="memberPlanIDs">
+                <Form.Label>{t('goodie.form.memberPlans')}</Form.Label>
 
-              <Form.Control
-                name="memberPlanIDs"
-                defaultMemberPlans={goodie.memberPlans ?? []}
-                selectedMemberPlans={goodie.memberPlanIDs ?? []}
-                setSelectedMemberPlans={(memberPlanIDs: string[]) =>
-                  onChange({ memberPlanIDs })
-                }
-                accepter={SelectMemberPlans}
-              />
-            </Form.Group>
+                <Form.Control
+                  name="memberPlanIDs"
+                  defaultMemberPlans={goodie.memberPlans ?? []}
+                  selectedMemberPlans={goodie.memberPlanIDs ?? []}
+                  setSelectedMemberPlans={(memberPlanIDs: string[]) =>
+                    onChange({ memberPlanIDs })
+                  }
+                  accepter={SelectMemberPlans}
+                />
+              </Form.Group>
 
-            <Form.Group controlId="image">
-              <ChooseEditImage
-                image={goodie.image}
-                header={t('goodie.form.image')}
-                disabled={false}
-                openChooseModalOpen={() => setChooseModalOpen(true)}
-                openEditModalOpen={() => setEditModalOpen(true)}
-                removeImage={() => onChange({ imageID: null, image: null })}
-              />
-            </Form.Group>
+              <Form.Group controlId="image">
+                <ChooseEditImage
+                  image={goodie.image}
+                  header={t('goodie.form.image')}
+                  disabled={false}
+                  openChooseModalOpen={() => setChooseModalOpen(true)}
+                  openEditModalOpen={() => setEditModalOpen(true)}
+                  removeImage={() => onChange({ imageID: null, image: null })}
+                />
+              </Form.Group>
+            </Form.Stack>
           </Panel>
         </GoodieFormSection>
       </GoodieFormWrapper>

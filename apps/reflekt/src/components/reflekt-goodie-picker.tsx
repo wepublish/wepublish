@@ -45,12 +45,12 @@ export const ReflektGoodiePicker = forwardRef<
   HTMLInputElement,
   BuilderGoodiePickerProps
 >(function ReflektGoodiePicker(
-  { goodies, allGoodies, className, name, value, disabled, onChange },
+  { goodies, className, name, value, disabled, onChange },
   ref
 ) {
   const { t } = useTranslation();
 
-  const goodieImages = (allGoodies ?? goodies)
+  const goodieImages = goodies
     .filter(goodie => goodie.image)
     .map(goodie => ({
       caption: null,

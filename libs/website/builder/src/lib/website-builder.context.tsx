@@ -91,7 +91,7 @@ import {
   BuilderMemberPlanItemProps,
   BuilderGoodiePickerProps,
   BuilderMemberPlanPickerProps,
-  BuilderPaymentAmountProps,
+  BuilderPaymentAmountSliderProps,
   BuilderPaymentMethodPickerProps,
   BuilderPeriodicityPickerProps,
   BuilderSubscribeProps,
@@ -99,6 +99,7 @@ import {
   BuilderSubscriptionListProps,
   BuilderTransactionFeeProps,
   BuilderUpgradeProps,
+  BuilderPaymentAmountPickerProps,
 } from './membership.interface';
 import { BuilderNavbarProps } from './navbar.interface';
 import { BuilderPageProps, BuilderPageSEOProps } from './page.interface';
@@ -183,7 +184,8 @@ export type WebsiteBuilderProps = {
   GoodiePicker: ComponentType<BuilderGoodiePickerProps>;
   MemberPlanPicker: ComponentType<BuilderMemberPlanPickerProps>;
   MemberPlanItem: ComponentType<BuilderMemberPlanItemProps>;
-  PaymentAmount: ComponentType<BuilderPaymentAmountProps>;
+  PaymentAmountSlider: ComponentType<BuilderPaymentAmountSliderProps>;
+  PaymentAmountPicker: ComponentType<BuilderPaymentAmountPickerProps>;
   PaymentMethodPicker: ComponentType<BuilderPaymentMethodPickerProps>;
   PeriodicityPicker: ComponentType<BuilderPeriodicityPickerProps>;
   TransactionFee: ComponentType<BuilderTransactionFeeProps>;
@@ -294,7 +296,8 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   GoodiePicker: NoComponent,
   MemberPlanPicker: NoComponent,
   MemberPlanItem: NoComponent,
-  PaymentAmount: NoComponent,
+  PaymentAmountSlider: NoComponent,
+  PaymentAmountPicker: NoComponent,
   PaymentMethodPicker: NoComponent,
   PeriodicityPicker: NoComponent,
   Page: NoComponent,

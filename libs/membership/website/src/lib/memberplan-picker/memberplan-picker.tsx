@@ -37,20 +37,7 @@ export const MemberPlanPicker = forwardRef<
   HTMLButtonElement,
   BuilderMemberPlanPickerProps & { alwaysShow?: boolean }
 >(function MemberPlanPicker(
-  {
-    memberPlans,
-    onChange,
-    value,
-    className,
-    id,
-    name,
-    alwaysShow,
-    sortBy,
-    monthlyAmount,
-    onMonthlyAmountChange,
-    monthlyAmountError,
-    planSettings,
-  },
+  { memberPlans, onChange, value, className, name, alwaysShow },
   ref
 ) {
   const {
@@ -59,84 +46,61 @@ export const MemberPlanPicker = forwardRef<
     blocks: { RichText },
   } = useWebsiteBuilder();
 
-  const sortedMemberPlans =
-    sortBy === 'priceAsc' ?
-      [...memberPlans].sort((a, b) => a.amountPerMonthMin - b.amountPerMonthMin)
-    : memberPlans;
-  const showRadioButtons = sortedMemberPlans.length > 1 || alwaysShow;
-  const selectedMemberPlan = sortedMemberPlans.find(({ id }) => id === value);
+  const showRadioButtons = memberPlans.length > 1 || alwaysShow;
+  const selectedMemberPlan = memberPlans.find(({ id }) => id === value);
   const showPicker =
     showRadioButtons ||
     toPlaintext(selectedMemberPlan?.description?.content) ||
     selectedMemberPlan?.image;
 
   useEffect(() => {
-    if (sortedMemberPlans.length && !selectedMemberPlan) {
-      const defaultPlanId = planSettings?.find(
-        ({ isDefault }) => isDefault
-      )?.memberPlanId;
-
-      onChange(
-        sortedMemberPlans.find(({ id }) => id === defaultPlanId)?.id ??
-          sortedMemberPlans[0].id
-      );
+    if (memberPlans.length && !selectedMemberPlan) {
+      onChange(memberPlans[0].id);
     }
-  }, [sortedMemberPlans, onChange, selectedMemberPlan, planSettings]);
+  }, [memberPlans, onChange, selectedMemberPlan]);
+
+  if (!showPicker) {
+    return;
+  }
 
   return (
-    showPicker && (
-      <MemberPlanPickerWrapper
-        className={className}
-        id={id}
-      >
-        {showRadioButtons && (
-          <MemberPlanPickerRadios
-            name={name}
-            onChange={event => onChange(event.target.value)}
-            value={value ? value : ''}
-            ref={ref}
-          >
-            {sortedMemberPlans.map(memberPlan => (
-              <FormControlLabel
-                key={memberPlan.id}
-                value={memberPlan.id}
-                control={
-                  <MemberPlanItem
-                    slug={memberPlan.slug}
-                    key={memberPlan.id}
-                    checked={memberPlan.id === value}
-                    name={memberPlan.name}
-                    currency={memberPlan.currency}
-                    amountPerMonthMin={memberPlan.amountPerMonthMin}
-                    amountPerMonthMax={memberPlan.amountPerMonthMax}
-                    extendable={memberPlan.extendable}
-                    shortDescription={memberPlan.shortDescription}
-                    tags={memberPlan.tags}
-                    goodies={memberPlan.goodies}
-                    monthlyAmount={monthlyAmount}
-                    onMonthlyAmountChange={onMonthlyAmountChange}
-                    monthlyAmountError={monthlyAmountError}
-                    renderStyle={
-                      planSettings?.find(
-                        ({ memberPlanId }) => memberPlanId === memberPlan.id
-                      )?.renderStyle
-                    }
-                  />
-                }
-                label={memberPlan.name}
-              />
-            ))}
-          </MemberPlanPickerRadios>
-        )}
+    <MemberPlanPickerWrapper className={className}>
+      {showRadioButtons && (
+        <MemberPlanPickerRadios
+          name={name}
+          onChange={event => onChange(event.target.value)}
+          value={value ? value : ''}
+          ref={ref}
+        >
+          {memberPlans.map(memberPlan => (
+            <FormControlLabel
+              key={memberPlan.id}
+              value={memberPlan.id}
+              control={
+                <MemberPlanItem
+                  slug={memberPlan.slug}
+                  key={memberPlan.id}
+                  checked={memberPlan.id === value}
+                  name={memberPlan.name}
+                  currency={memberPlan.currency}
+                  amountPerMonthMin={memberPlan.amountPerMonthMin}
+                  amountPerMonthMax={memberPlan.amountPerMonthMax}
+                  extendable={memberPlan.extendable}
+                  shortDescription={memberPlan.shortDescription}
+                  tags={memberPlan.tags}
+                />
+              }
+              label={memberPlan.name}
+            />
+          ))}
+        </MemberPlanPickerRadios>
+      )}
 
-        {selectedMemberPlan?.image && (
-          <Image image={selectedMemberPlan.image} />
-        )}
+      {selectedMemberPlan?.image && <Image image={selectedMemberPlan.image} />}
 
-        {!!selectedMemberPlan?.description?.content?.length && (
-          <RichText richText={selectedMemberPlan.description} />
-        )}
-      </MemberPlanPickerWrapper>
-    )
+      {!!selectedMemberPlan?.description?.content?.length && (
+        <RichText richText={selectedMemberPlan.description} />
+      )}
+    </MemberPlanPickerWrapper>
   );
 });

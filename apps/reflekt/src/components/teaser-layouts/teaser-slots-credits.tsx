@@ -73,6 +73,7 @@ export const TeaserSlotsCredits = ({
           {title}
         </Typography>
       )}
+
       <TeaserSlotsCreditsTeasers>
         {filledTeasers.map((teaser, index) => (
           <Teaser

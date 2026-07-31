@@ -2,12 +2,15 @@ import styled from '@emotion/styled';
 import { FormControlLabel, Radio, RadioGroup } from '@mui/material';
 import {
   BuilderGoodiePickerProps,
-  useWebsiteBuilder,
+  Image,
+  RenderRichtext,
 } from '@wepublish/website/builder';
 import { forwardRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
 export const GoodieOptions = styled(RadioGroup)`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: ${({ theme }) => theme.spacing(1)};
 `;
 
@@ -26,18 +29,14 @@ export const GoodieOptionContent = styled('div')`
   align-items: center;
 `;
 
-export const GoodieOptionImage = styled('div')`
+export const GoodieOptionImage = styled(Image)`
   width: ${({ theme }) => theme.spacing(8)};
-
-  img {
-    width: 100%;
-    height: auto;
-    border-radius: ${({ theme }) => theme.shape.borderRadius}px;
-  }
+  height: auto;
+  border-radius: ${({ theme }) => theme.shape.borderRadius}px;
 `;
 
-export const GoodieOptionName = styled('strong')`
-  display: block;
+export const GoodieOptionName = styled('div')`
+  font-weight: 600;
 `;
 
 export const GoodiePicker = forwardRef<
@@ -47,10 +46,6 @@ export const GoodiePicker = forwardRef<
   { goodies, className, name, value, disabled, onChange },
   ref
 ) {
-  const {
-    elements: { Image },
-    richtext: { RenderRichtext },
-  } = useWebsiteBuilder();
   const { t } = useTranslation();
 
   return (
@@ -65,7 +60,9 @@ export const GoodiePicker = forwardRef<
         value=""
         control={<Radio />}
         disabled={disabled}
-        label={t('subscribe.goodie.none')}
+        label={
+          <GoodieOptionName>{t('subscribe.goodie.none')}</GoodieOptionName>
+        }
       />
 
       {goodies.map(goodie => (
@@ -73,21 +70,14 @@ export const GoodiePicker = forwardRef<
           key={goodie.id}
           value={goodie.id}
           control={<Radio />}
-          disabled={disabled}
+          disabled={goodie.stock === 0}
           label={
             <GoodieOptionContent>
-              {goodie.image && (
-                <GoodieOptionImage>
-                  <Image image={goodie.image} />
-                </GoodieOptionImage>
-              )}
+              {goodie.image && <GoodieOptionImage image={goodie.image} />}
 
               <div>
                 <GoodieOptionName>{goodie.name}</GoodieOptionName>
-
-                {goodie.description && (
-                  <RenderRichtext document={goodie.description} />
-                )}
+                <RenderRichtext document={goodie.description} />
               </div>
             </GoodieOptionContent>
           }

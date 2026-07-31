@@ -16,7 +16,7 @@ const SortedMemberPlanPicker = forwardRef<
       {...props}
       ref={ref}
       id="MemberPlans"
-      sortBy={props.planSettings?.length ? undefined : 'priceAsc'}
+      sortBy={props.memberPlanRenderSettings?.length ? undefined : 'priceAsc'}
     />
   );
 });

@@ -6,13 +6,10 @@ import {
 } from '@wepublish/block-content/website';
 import {
   CurrencyNumberSpinner,
+  isFreeAmountInputLayout,
   MemberPlanPickerRadios,
 } from '@wepublish/membership/website';
-import {
-  BlockContent,
-  SubscribeBlockPlanRenderStyle,
-  useSubscriptionsQuery,
-} from '@wepublish/website/api';
+import { BlockContent, useSubscriptionsQuery } from '@wepublish/website/api';
 import {
   BuilderMemberPlanItemProps,
   BuilderRouterContext,
@@ -270,7 +267,7 @@ export const ReflektCrowdfundingMemberPlanItem = forwardRef<
     monthlyAmount,
     onMonthlyAmountChange,
     monthlyAmountError,
-    renderStyle,
+    layout,
     tags,
     ...props
   },
@@ -283,8 +280,7 @@ export const ReflektCrowdfundingMemberPlanItem = forwardRef<
     CrowdfundingGoodieContext
   );
 
-  const hasFreePricing =
-    renderStyle === SubscribeBlockPlanRenderStyle.CardFreeInput;
+  const hasFreePricing = isFreeAmountInputLayout(layout);
   const hasMinValue = amountPerMonthMin > 0;
 
   const yearlyMinChf = Math.round((amountPerMonthMin * 12) / 100);

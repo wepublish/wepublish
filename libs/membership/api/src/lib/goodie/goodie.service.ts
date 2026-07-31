@@ -1,7 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { Goodie, Prisma, PrismaClient } from '@prisma/client';
 import { getMaxTake, PrimeDataLoader, SortOrder } from '@wepublish/utils/api';
-import { GraphQLError } from 'graphql';
 import { GoodieDataloader } from './goodie.dataloader';
 import {
   CreateGoodieInput,
@@ -194,11 +193,7 @@ export class GoodieService {
     const availableStock = await this.getAvailableStock(goodie);
 
     if (availableStock != null && availableStock <= 0) {
-      throw new GraphQLError('Goodie is sold out.', {
-        extensions: {
-          code: 'GOODIE_SOLD_OUT',
-        },
-      });
+      throw new BadRequestException('Goodie is sold out.');
     }
 
     return goodie;

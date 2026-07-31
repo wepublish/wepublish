@@ -401,12 +401,13 @@
       },
       "subscribe": {
         "label": "S'abonner",
-        "selectMemberPlans": "Plans affichés",
+        "selectMemberPlans": "Plans d’abonnement affichés",
         "selectMemberPlansPlaceholder": "Afficher tous les plans",
         "selectMemberPlansSelectionHintAll": "Sans sélection, tous les plans actifs sont affichés.",
-        "selectFields": "Champs de saisie",
+        "selectFields": "Champs de saisie utilisateur",
         "selectFieldsSelectionHint": "L’email et le nom de famille sont toujours demandés. L’ordre n’a pas d’importance",
-        "selectSections": "Fonctions avancées",
+        "goodiesHeading": "Goodies",
+        "vouchersHeading": "Bons",
         "showGoodies": "Afficher la sélection de goodies",
         "showVouchers": "Afficher le champ de bon",
         "goodieMinValue": {
@@ -419,20 +420,20 @@
         "EmailRepeated": "Répéter l’email",
         "Password": "Mot de passe",
         "PasswordRepeated": "Répéter le mot de passe",
-        "renderStyles": {
-          "Card": "Tuile de plan (montant fixe)",
-          "Slider": "Tuile de plan + curseur de montant",
-          "CardAndSlider": "Tuile de plan avec montant affiché + curseur",
-          "CardFreeInput": "Tuile de plan avec saisie libre du montant",
-          "AmountTiles": "Tuiles de montant (un seul plan)"
+        "renderLayouts": {
+          "None": "Montant fixe",
+          "Input": "Saisie du montant",
+          "Slider": "Curseur de montant",
+          "Picker": "Montants prédéfinis"
         },
-        "renderStylesHeading": "Ordre et affichage des plans",
-        "renderStyleRules": {
-          "amountTilesSingle": "Les tuiles de montant ne sont disponibles que si un seul plan est sélectionné."
-        },
+        "renderStylesHeading": "Ordre et affichage des plans d’abonnement",
         "amountTileValues": {
           "hint": "Montants des tuiles (en francs). Laisser vide pour les valeurs par défaut : 10, 15, 20.",
           "placeholder": "p.ex. 10 15 20"
+        },
+        "showAmountInput": {
+          "label": "Saisie libre du montant",
+          "title": "En plus des tuiles, un montant libre peut être saisi."
         },
         "amountTileLayout": {
           "hint": "Disposition des tuiles sur mobile",
@@ -440,7 +441,8 @@
           "Wide": "Large (1 tuile par ligne, grandes tuiles)"
         },
         "planAmountsTitle": "Montant minimum / cible / maximum par mois (en francs)",
-        "defaultPlanTitle": "Sélectionné par défaut — ce plan est présélectionné après le chargement de la page."
+        "defaultPlanTitle": "Sélectionné par défaut — ce plan est présélectionné après le chargement de la page.",
+        "defaultPlanLabel": "Par défaut"
       },
       "image": {
         "label": "Image",

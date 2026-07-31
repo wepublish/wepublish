@@ -1,18 +1,26 @@
+import styled from '@emotion/styled';
 import { PaymentAmountPicker } from '@wepublish/membership/website';
-import { BuilderPaymentAmountProps } from '@wepublish/website/builder';
+import { BuilderPaymentAmountPickerProps } from '@wepublish/website/builder';
 import { forwardRef } from 'react';
+
+const PaymentAmountPickerStyled = styled(PaymentAmountPicker)`
+  grid-template-columns: repeat(auto-fit, 125px);
+`;
 
 export const WntiPaymentAmountPicker = forwardRef<
   HTMLInputElement,
-  BuilderPaymentAmountProps
+  BuilderPaymentAmountPickerProps
 >((props, ref) => {
   const isDonate = props.slug?.includes('donate');
 
   return (
-    <PaymentAmountPicker
+    <PaymentAmountPickerStyled
       {...props}
       ref={ref}
-      pickerItems={isDonate ? [10000, 15000, 20000] : [1000, 1500, 2000]}
+      presetAmounts={
+        props.presetAmounts ??
+        (isDonate ? [10000, 15000, 20000] : [1000, 1500, 2000])
+      }
       arrows={'stacked'}
       snap={{
         values: isDonate ? [100, 150, 200] : [10, 15, 20],

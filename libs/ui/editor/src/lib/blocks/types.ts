@@ -11,9 +11,8 @@ import {
   FullPoll,
   FullTeaserFragment,
   PageWithoutBlocksFragment,
-  SubscribeBlockAmountTileLayout,
+  SubscribeBlock,
   SubscribeBlockField,
-  SubscribeBlockPlanRenderStyle,
   Tag,
   TeaserInput,
   TeaserListBlockSort,
@@ -72,17 +71,9 @@ export interface HTMLBlockValue extends BaseBlockValue {
   html: string;
 }
 
-export interface SubscribeBlockPlanSettingValue {
-  memberPlanId: string;
-  renderStyle: SubscribeBlockPlanRenderStyle;
-  amountTileValues?: number[] | null;
-  amountTileLayout?: SubscribeBlockAmountTileLayout | null;
-  isDefault?: boolean | null;
-}
-
 export interface SubscribeBlockValue extends BaseBlockValue {
   memberPlanIds: string[];
-  plans: SubscribeBlockPlanSettingValue[];
+  memberPlanRenderSettings: SubscribeBlock['memberPlanRenderSettings'];
   fields: SubscribeBlockField[];
   showGoodies: boolean;
   showVouchers: boolean;
@@ -515,7 +506,7 @@ export function mapBlockValueToBlockInput(
           blockStyle: block.value.blockStyle,
           disabled: block.value.disabled,
           memberPlanIds: block.value.memberPlanIds ?? [],
-          plans: block.value.plans ?? [],
+          memberPlanRenderSettings: block.value.memberPlanRenderSettings ?? [],
           fields: block.value.fields,
           showGoodies: block.value.showGoodies,
           showVouchers: block.value.showVouchers,
@@ -1153,22 +1144,7 @@ export function blockForQueryBlock(
           goodieMinValue: block.goodieMinValue ?? null,
           hideRepeatGoodieOnUpgrade: block.hideRepeatGoodieOnUpgrade ?? false,
           memberPlanIds: block.memberPlanIds ?? [],
-          plans:
-            block.plans?.map(
-              ({
-                memberPlanId,
-                renderStyle,
-                amountTileValues,
-                amountTileLayout,
-                isDefault,
-              }) => ({
-                memberPlanId,
-                renderStyle,
-                amountTileValues,
-                amountTileLayout,
-                isDefault,
-              })
-            ) ?? [],
+          memberPlanRenderSettings: block.memberPlanRenderSettings,
         },
       };
 

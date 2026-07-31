@@ -1,13 +1,10 @@
 import { css, FormControlLabel, Radio, RadioGroup } from '@mui/material';
 import {
-  BuilderPaymentAmountProps,
+  BuilderPaymentAmountPickerProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import {
-  Currency,
-  SubscribeBlockAmountTileLayout,
-} from '@wepublish/website/api';
-import { forwardRef, PropsWithChildren, useMemo, useState } from 'react';
+import { Currency } from '@wepublish/website/api';
+import { forwardRef, PropsWithChildren, useState } from 'react';
 import { formatCurrency } from '../../formatters/format-currency';
 import {
   CurrencyNumberSpinner,
@@ -36,25 +33,13 @@ const formatNumber = (value: number, format: string, locale = 'de-CH') => {
   }).format(value);
 };
 
-export const PaymentAmountPickerWrapper = styled(RadioGroup, {
-  shouldForwardProp: prop => prop !== 'tileLayout',
-})<{ tileLayout?: SubscribeBlockAmountTileLayout }>`
+export const PaymentAmountPickerWrapper = styled(RadioGroup)`
   display: grid;
-  grid-template-columns: ${({ tileLayout }) =>
-    tileLayout === SubscribeBlockAmountTileLayout.Wide ?
-      '1fr'
-    : 'repeat(2, 1fr)'};
+  grid-template-columns: repeat(auto-fit, 185px);
   align-items: top;
   justify-content: center;
   gap: ${({ theme }) => theme.spacing(2)};
   align-items: start;
-
-  ${({ theme }) => theme.breakpoints.up('sm')} {
-    grid-template-columns: ${({ tileLayout }) =>
-      tileLayout === SubscribeBlockAmountTileLayout.Wide ?
-        'repeat(auto-fit, 200px)'
-      : 'repeat(auto-fit, 125px)'};
-  }
 
   // hide unwanted label
   label {
@@ -72,11 +57,10 @@ type PaymentAmountPickerItemProps = PropsWithChildren<{
   name?: string;
   currency: Currency;
   checked: boolean;
-  tileLayout?: SubscribeBlockAmountTileLayout;
 }>;
 
 export const PaymentAmountPickerItemWrapper = styled('div')<
-  Pick<PaymentAmountPickerItemProps, 'checked' | 'tileLayout'>
+  Pick<PaymentAmountPickerItemProps, 'checked'>
 >`
   position: relative;
   padding: ${({ theme }) => theme.spacing(2)};
@@ -86,15 +70,6 @@ export const PaymentAmountPickerItemWrapper = styled('div')<
   display: flex;
   align-items: center;
   justify-content: center;
-
-  ${({ tileLayout, theme }) =>
-    tileLayout === SubscribeBlockAmountTileLayout.Wide &&
-    css`
-      aspect-ratio: auto;
-      min-height: 96px;
-      padding: ${theme.spacing(3)};
-      font-size: 1.25em;
-    `}
 
   ${({ checked, theme }) =>
     checked &&
@@ -128,24 +103,13 @@ export const PaymentAmountPickerItemAmount = styled('div')`
   font-weight: 600;
 `;
 
-export const StyledCurrencyNumberSpinner = styled(CurrencyNumberSpinner, {
-  shouldForwardProp: prop => prop !== 'tileLayout',
-})<{ tileLayout?: SubscribeBlockAmountTileLayout }>`
-  ${({ tileLayout }) =>
-    tileLayout === SubscribeBlockAmountTileLayout.Wide &&
-    css`
-      margin-top: 0;
-    `}
-`;
+export const StyledCurrencyNumberSpinner = styled(CurrencyNumberSpinner)``;
 
 export const PaymentAmountPickerItem = forwardRef<
   HTMLButtonElement,
   PaymentAmountPickerItemProps
->(({ children, checked, currency, tileLayout, ...props }, ref) => (
-  <PaymentAmountPickerItemWrapper
-    checked={checked}
-    tileLayout={tileLayout}
-  >
+>(({ children, checked, currency, ...props }, ref) => (
+  <PaymentAmountPickerItemWrapper checked={checked}>
     <PaymentAmountPickerItemCurrency checked={checked}>
       {currency}
     </PaymentAmountPickerItemCurrency>
@@ -163,8 +127,7 @@ export const PaymentAmountPickerItem = forwardRef<
 
 export const PaymentAmountPicker = forwardRef<
   HTMLInputElement,
-  BuilderPaymentAmountProps & {
-    pickerItems?: number[];
+  BuilderPaymentAmountPickerProps & {
     format?: string;
     step?: number;
     snap?: CurrencyNumberSpinnerSnap;
@@ -178,9 +141,8 @@ export const PaymentAmountPicker = forwardRef<
       currency,
       amountPerMonthMin,
       amountPerMonthTarget,
-      pickerItems,
+      presetAmounts,
       format,
-      step,
       snap,
       arrows,
       noInitialSelection,
@@ -188,8 +150,6 @@ export const PaymentAmountPicker = forwardRef<
       error,
       value,
       onChange,
-      presetAmounts,
-      tileLayout,
     },
     ref
   ) => {
@@ -197,28 +157,18 @@ export const PaymentAmountPicker = forwardRef<
       meta: { locale },
     } = useWebsiteBuilder();
 
-    const amounts = useMemo(
-      () =>
-        pickerItems?.length ? pickerItems
-        : presetAmounts?.length ? presetAmounts
-        : [1000, 1500, 2000],
-      [pickerItems, presetAmounts]
-    );
-
-    const isWide = tileLayout === SubscribeBlockAmountTileLayout.Wide;
-
     const [hasInteracted, setHasInteracted] = useState(false);
     const showSelection = !noInitialSelection || hasInteracted;
+    const items = presetAmounts ?? [];
     const isCustomValue =
       snap ?
         !snap.values.some(v => v * 100 === value)
-      : !amounts.some(p => p === value);
+      : !items.some(p => p === value);
 
     return (
       <PaymentAmountPickerWrapper
         className={className}
         name={name}
-        tileLayout={tileLayout}
         onChange={event => {
           if (+event.target.value) {
             setHasInteracted(true);
@@ -227,14 +177,13 @@ export const PaymentAmountPicker = forwardRef<
         }}
         value={value}
       >
-        {amounts.map(itemAmount => (
+        {items.map(itemAmount => (
           <FormControlLabel
             key={itemAmount}
             value={itemAmount}
             control={
               <PaymentAmountPickerItem
                 currency={currency}
-                tileLayout={tileLayout}
                 checked={showSelection && itemAmount === value}
               >
                 <PaymentAmountPickerItemAmount>
@@ -253,22 +202,18 @@ export const PaymentAmountPicker = forwardRef<
           control={
             <PaymentAmountPickerItem
               currency={currency}
-              tileLayout={tileLayout}
               checked={showSelection && isCustomValue}
             >
               <StyledCurrencyNumberSpinner
-                tileLayout={tileLayout}
                 value={showSelection ? value / 100 : undefined}
                 min={amountPerMonthMin / 100}
-                step={step}
                 snap={snap}
-                arrows={arrows ?? (isWide ? 'split' : 'stacked')}
+                arrows={arrows}
                 helperText={`Min ${formatCurrency(amountPerMonthMin / 100, currency, locale)}`}
                 onValueChange={v => {
                   setHasInteracted(true);
-
                   if (typeof v === 'number' && v >= 0) {
-                    onChange(v ? Math.round(v * 100) : 0);
+                    onChange(v ? v * 100 : 0);
                   } else {
                     onChange(0);
                   }

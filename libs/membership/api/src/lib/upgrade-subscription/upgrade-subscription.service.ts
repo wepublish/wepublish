@@ -191,7 +191,7 @@ export class UpgradeSubscriptionService {
       extendable: oldSubscription.extendable,
       replacedSubscriptionId: oldSubscription.id,
       startsAt: new Date(),
-      goodieID: goodieId,
+      goodieId,
       discount:
         oldSubscriptionPeriods.length ?
           leftoverSubscriptionPeriodAmount(oldSubscriptionPeriods)

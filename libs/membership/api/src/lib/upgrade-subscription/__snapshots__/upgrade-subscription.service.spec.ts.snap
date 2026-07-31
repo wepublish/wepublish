@@ -28,7 +28,7 @@ exports[`UpgradeSubscriptionService happy path should upgrade a subscription 1`]
       "autoRenew": true,
       "discount": 600,
       "extendable": true,
-      "goodieID": undefined,
+      "goodieId": undefined,
       "memberPlanID": "memberPlanId",
       "monthlyAmount": 80,
       "paymentMethodID": "paymentMethodId",

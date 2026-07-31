@@ -96,6 +96,7 @@ import {
   SubscriptionListItem,
   TransactionFee,
   Upgrade,
+  PaymentAmountPicker,
 } from '@wepublish/membership/website';
 import { Footer, Navbar } from '@wepublish/navigation/website';
 import { Page, PageSEO } from '@wepublish/page/website';
@@ -241,7 +242,8 @@ export const WebsiteProvider = memo<WebsiteProps>(({ children }) => (
         MemberPlanPicker={MemberPlanPicker}
         MemberPlanItem={MemberPlanItem}
         PeriodicityPicker={PeriodicityPicker}
-        PaymentAmount={PaymentAmountSlider}
+        PaymentAmountSlider={PaymentAmountSlider}
+        PaymentAmountPicker={PaymentAmountPicker}
         PaymentMethodPicker={PaymentMethodPicker}
         TransactionFee={TransactionFee}
         Subscribe={Subscribe}

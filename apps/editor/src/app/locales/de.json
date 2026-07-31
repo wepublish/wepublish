@@ -397,12 +397,13 @@
       },
       "subscribe": {
         "label": "Abonnieren",
-        "selectMemberPlans": "Anzuzeigende Pläne",
+        "selectMemberPlans": "Anzuzeigende Abo-Pläne",
         "selectMemberPlansPlaceholder": "Alle Pläne anzeigen",
         "selectMemberPlansSelectionHintAll": "Ohne Auswahl werden alle aktiven Pläne angezeigt.",
-        "selectFields": "Eingabefelder",
+        "selectFields": "Benutzer-Eingabefelder",
         "selectFieldsSelectionHint": "Email & Nachname wird immer abgefragt. Reihenfolge spielt keine Rolle",
-        "selectSections": "Erweiterte Funktionen",
+        "goodiesHeading": "Goodies",
+        "vouchersHeading": "Gutscheine",
         "showGoodies": "Goodie-Auswahl anzeigen",
         "showVouchers": "Gutschein-Eingabe anzeigen",
         "goodieMinValue": {
@@ -415,20 +416,20 @@
         "EmailRepeated": "Email wiederholen",
         "Password": "Passwort",
         "PasswordRepeated": "Passwort wiederholen",
-        "renderStyles": {
-          "Card": "Abo-Kachel (fixer Betrag)",
-          "Slider": "Abo-Kachel + Betrags-Slider",
-          "CardAndSlider": "Abo-Kachel mit Betragsanzeige + Slider",
-          "CardFreeInput": "Abo-Kachel mit freier Betragseingabe",
-          "AmountTiles": "Betrags-Kacheln (nur bei einem Abo-Plan)"
+        "renderLayouts": {
+          "None": "Fixer Betrag",
+          "Input": "Betragseingabe",
+          "Slider": "Betrags-Slider",
+          "Picker": "Vordefinierte Beträge"
         },
         "renderStylesHeading": "Abo-Plan Reihenfolge und Darstellung",
-        "renderStyleRules": {
-          "amountTilesSingle": "Betrags-Kacheln sind nur verfügbar, wenn genau ein Abo-Plan ausgewählt ist."
-        },
         "amountTileValues": {
           "hint": "Beträge der Kacheln (in Franken). Leer lassen für Standard: 10, 15, 20.",
           "placeholder": "z.B. 10 15 20"
+        },
+        "showAmountInput": {
+          "label": "Freie Betragseingabe",
+          "title": "Zusätzlich zu den Kacheln kann ein beliebiger Betrag eingegeben werden."
         },
         "amountTileLayout": {
           "hint": "Kachel-Layout auf Mobilgeräten",
@@ -436,7 +437,8 @@
           "Wide": "Breit (1 Kachel pro Zeile, grosse Kacheln)"
         },
         "planAmountsTitle": "Minimal- / Ziel- / Maximalbetrag pro Monat (in Franken)",
-        "defaultPlanTitle": "Standardmässig ausgewählt — dieser Abo-Plan ist nach dem Laden der Seite vorausgewählt."
+        "defaultPlanTitle": "Standardmässig ausgewählt — dieser Abo-Plan ist nach dem Laden der Seite vorausgewählt.",
+        "defaultPlanLabel": "Standard"
       },
       "image": {
         "label": "Bild",

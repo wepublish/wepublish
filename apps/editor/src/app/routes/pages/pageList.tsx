@@ -42,7 +42,14 @@ import {
   MdUnpublished,
 } from 'react-icons/md';
 import { Link, useNavigate } from 'react-router-dom';
-import { Button, Message, Modal, Pagination, Table as RTable } from 'rsuite';
+import {
+  Button,
+  IconButton as RIconButton,
+  Message,
+  Modal,
+  Pagination,
+  Table as RTable,
+} from 'rsuite';
 import type { RowDataType } from 'rsuite-table';
 
 interface State {
@@ -138,13 +145,13 @@ function PageList() {
         <PermissionControl qualifyingPermissions={['CAN_CREATE_PAGE']}>
           <ListViewActions>
             <Link to="/pages/create">
-              <IconButton
+              <RIconButton
                 appearance="primary"
                 disabled={isLoading}
                 icon={<MdAdd />}
               >
                 {t('pages.overview.newPage')}
-              </IconButton>
+              </RIconButton>
             </Link>
           </ListViewActions>
         </PermissionControl>

@@ -13,7 +13,6 @@ import {
   SubscribeSection,
   TransactionFeeIcon,
   TransactionFeeWrapper,
-  VoucherSection,
 } from '@wepublish/membership/website';
 import {
   FullMemberPlanFragment,
@@ -48,8 +47,7 @@ export const ReflektSubscribe = styled(SubscribeBlock)`
     ${({ showGoodies }) => (showGoodies ? "'goodieSlider'" : '')};
 
   ${SubscribeSection},
-  ${SubscribeNarrowSection},
-  ${GoodieSection} {
+  ${SubscribeNarrowSection} {
     grid-area: var(--grid-area);
 
     > h2 {
@@ -71,11 +69,6 @@ export const ReflektSubscribe = styled(SubscribeBlock)`
     > div > .MuiFormHelperText-root {
       grid-area: goodieError;
     }
-  }
-
-  ${VoucherSection} {
-    display: grid;
-    grid-area: voucher;
   }
 
   ${SubscribeSection}[data-area='paymentPeriodicity'] ${PaymentRadioWrapper} {

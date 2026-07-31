@@ -1,32 +1,14 @@
 import { NumberField } from '@base-ui-components/react/number-field';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import { SvgIcon, Theme } from '@mui/material';
+import { Theme } from '@mui/material';
 import { ComponentProps, ReactNode, useId, useRef, useState } from 'react';
-
-const MinusIcon = (props: ComponentProps<'svg'>) => {
-  return (
-    <SvgIcon>
-      <path
-        d="M0 0h24v24H0z"
-        fill="none"
-      />
-      <path d="M19 13H5v-2h14v2z" />
-    </SvgIcon>
-  );
-};
-
-const PlusIcon = (props: ComponentProps<'svg'>) => {
-  return (
-    <SvgIcon>
-      <path
-        d="M0 0h24v24H0z"
-        fill="none"
-      />
-      <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
-    </SvgIcon>
-  );
-};
+import {
+  MdAdd,
+  MdArrowDropDown,
+  MdArrowDropUp,
+  MdRemove,
+} from 'react-icons/md';
 
 const rootStyles = (theme: Theme) => css`
   display: inline-flex;
@@ -111,10 +93,6 @@ const iconStyles = () => css`
   cursor: pointer;
   color: inherit;
   white-space: nowrap;
-
-  & * {
-    fill: currentcolor;
-  }
 `;
 
 const inputStyles = () => css`
@@ -195,28 +173,6 @@ export const HelperText = styled('p')`
   white-space: nowrap;
 `;
 
-const ChevronUpIcon = () => (
-  <svg
-    viewBox="0 0 24 24"
-    width="16"
-    height="16"
-    fill="currentColor"
-  >
-    <path d="M7 14l5-5 5 5z" />
-  </svg>
-);
-
-const ChevronDownIcon = () => (
-  <svg
-    viewBox="0 0 24 24"
-    width="16"
-    height="16"
-    fill="currentColor"
-  >
-    <path d="M7 10l5 5 5-5z" />
-  </svg>
-);
-
 const stackedGroupStyles = (theme: Theme) => css`
   ${groupStyles(theme)}
   padding-left: 6px;
@@ -286,6 +242,7 @@ const findSnapTarget = (
       .filter(v => v > value && v - value < snap.threshold)
       .sort((a, b) => a - b)[0];
   }
+
   return snap.values
     .filter(v => v < value && value - v < snap.threshold)
     .sort((a, b) => b - a)[0];
@@ -383,17 +340,17 @@ export const CurrencyNumberSpinner = (
 
             <div css={arrowStackStyles}>
               <NumberField.Increment css={arrowButtonStyles}>
-                <ChevronUpIcon />
+                <MdArrowDropUp size={16} />
               </NumberField.Increment>
 
               <NumberField.Decrement css={arrowButtonStyles}>
-                <ChevronDownIcon />
+                <MdArrowDropDown size={16} />
               </NumberField.Decrement>
             </div>
           </NumberField.Group>
         : <NumberField.Group css={groupStyles}>
             <NumberField.Decrement css={buttonStyles}>
-              <MinusIcon css={iconStyles} />
+              <MdRemove css={iconStyles} />
             </NumberField.Decrement>
 
             <NumberField.Input
@@ -402,7 +359,7 @@ export const CurrencyNumberSpinner = (
             />
 
             <NumberField.Increment css={buttonStyles}>
-              <PlusIcon css={iconStyles} />
+              <MdAdd css={iconStyles} />
             </NumberField.Increment>
           </NumberField.Group>
         }
