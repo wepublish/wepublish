@@ -1,5 +1,8 @@
 dist/
 static/
+.nx/
+.next/
+
 libs/editor/api/src/lib/graphql.ts
 libs/editor/api/src/lib/graphql.ts
 libs/api/__tests__/api/private/index.ts
@@ -7,9 +10,5 @@ libs/api/__tests__/api/public/index.ts
 libs/website/api/src/lib/graphql.ts
 libs/website/api/src/lib/graphql.ts
 libs/peering/api/src/lib/remote/graphql.ts
-
-/.nx/cache
-/.nx/workspace-data
-.nx/self-healing
 
 apps/**/*/next-env.d.ts
