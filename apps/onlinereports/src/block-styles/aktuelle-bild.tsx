@@ -180,6 +180,7 @@ const AktuelleBildWrapper = styled(Box)`
       position: absolute;
       bottom: 2px;
       width: 100%;
+      height: 23px;
 
       &::before {
         content: ' ';
