@@ -239,16 +239,17 @@ const HeroYouTubeVideo = ({
   onStarted,
 }: HeroYouTubeVideoProps) => {
   const [ended, setEnded] = useState(false);
-  const playerRef = useRef<ReactPlayer>(null);
+  const playerRef = useRef<HTMLVideoElement>(null);
+
   return (
     <>
       <HeroYouTubePlayer
         ref={playerRef}
-        url={videoUrl}
+        src={videoUrl}
         playing={isActiveBlock}
         loop={!noLoop}
         muted={muted || !isActiveBlock}
-        playsinline
+        playsInline
         controls={false}
         width="100%"
         height="100%"
@@ -259,25 +260,17 @@ const HeroYouTubeVideo = ({
           onStarted?.();
         }}
         onReady={() => {
-          const internalPlayer = playerRef.current?.getInternalPlayer();
-          internalPlayer?.playVideo?.();
+          playerRef.current?.play();
         }}
         config={{
           youtube: {
-            playerVars: {
-              origin: window.location.origin,
-              widget_referrer: window.location.origin,
-              autoplay: 0,
-              controls: 0,
-              modestbranding: 1,
-              playsinline: 1,
-              rel: 0,
-              showinfo: 0,
-              disablekb: 1,
-              fs: 0,
-              iv_load_policy: 3,
-              cc_load_policy: 0,
-            },
+            origin: window.location.origin,
+            widget_referrer: window.location.origin,
+            rel: 0,
+            disablekb: 1,
+            fs: 0,
+            iv_load_policy: 3,
+            cc_load_policy: 0,
           },
         }}
       />

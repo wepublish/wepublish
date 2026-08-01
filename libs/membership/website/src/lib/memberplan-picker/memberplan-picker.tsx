@@ -88,6 +88,7 @@ export const MemberPlanPicker = forwardRef<
                   extendable={memberPlan.extendable}
                   shortDescription={memberPlan.shortDescription}
                   tags={memberPlan.tags}
+                  goodies={memberPlan.goodies}
                 />
               }
               label={memberPlan.name}

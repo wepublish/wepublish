@@ -6,7 +6,6 @@ import {
 } from '@wepublish/block-content/website';
 import {
   CurrencyNumberSpinner,
-  isFreeAmountInputLayout,
   MemberPlanPickerRadios,
 } from '@wepublish/membership/website';
 import { BlockContent, useSubscriptionsQuery } from '@wepublish/website/api';
@@ -26,10 +25,11 @@ import {
   useRef,
   useState,
 } from 'react';
+import { useFormContext } from 'react-hook-form';
 
 import { euclidCircularB, robotoMono } from '../theme';
 import { ReflektBlockStyles } from './block-styles/reflekt-block-styles';
-import { ReflektSubscribe } from './reflekt-subscribe';
+import { StyledReflektSubscribeBlock } from './reflekt-subscribe';
 
 type CrowdfundingGoodieConfig = {
   goodieMinValue: number | null | undefined;
@@ -264,10 +264,6 @@ export const ReflektCrowdfundingMemberPlanItem = forwardRef<
     currency,
     extendable,
     goodies,
-    monthlyAmount,
-    onMonthlyAmountChange,
-    monthlyAmountError,
-    layout,
     tags,
     ...props
   },
@@ -276,11 +272,16 @@ export const ReflektCrowdfundingMemberPlanItem = forwardRef<
   const radioGroup = useRadioGroup();
   const isChecked = props.checked ?? radioGroup?.value === id;
   const radioInputRef = useRef<HTMLInputElement>(null);
+  const {
+    formState: { errors },
+    setValue,
+  } = useFormContext();
+
   const { goodieMinValue, baselineMonthlyAmount } = useContext(
     CrowdfundingGoodieContext
   );
 
-  const hasFreePricing = isFreeAmountInputLayout(layout);
+  const hasFreePricing = tags?.includes('inline-slider');
   const hasMinValue = amountPerMonthMin > 0;
 
   const yearlyMinChf = Math.round((amountPerMonthMin * 12) / 100);
@@ -299,11 +300,8 @@ export const ReflektCrowdfundingMemberPlanItem = forwardRef<
       tileYearlyValue >= goodieMinValue
     : !!goodies?.length;
 
-  const lastPushed = useRef<{ amount: number; touched: boolean } | null>(null);
-
   useEffect(() => {
     if (!hasFreePricing || !isChecked) {
-      lastPushed.current = null;
       return;
     }
 
@@ -311,14 +309,8 @@ export const ReflektCrowdfundingMemberPlanItem = forwardRef<
     const monthlyAmount =
       touched ? Math.round((freeAmountYearly * 100) / 12) : 0;
 
-    if (
-      lastPushed.current?.amount !== monthlyAmount ||
-      lastPushed.current?.touched !== touched
-    ) {
-      lastPushed.current = { amount: monthlyAmount, touched };
-      onMonthlyAmountChange?.(monthlyAmount, touched);
-    }
-  }, [hasFreePricing, isChecked, freeAmountYearly, onMonthlyAmountChange]);
+    setValue('monthlyAmount', monthlyAmount);
+  }, [hasFreePricing, isChecked, freeAmountYearly, setValue]);
 
   return (
     <ItemWrapper className={className}>
@@ -358,9 +350,9 @@ export const ReflektCrowdfundingMemberPlanItem = forwardRef<
                     </ItemFreeAmountSpinnerPlaceholder>
                   )}
 
-                  {monthlyAmountError && (
+                  {errors.monthlyAmount && (
                     <ItemFreeAmountError>
-                      {monthlyAmountError}
+                      {errors.monthlyAmount.message?.toString()}
                     </ItemFreeAmountError>
                   )}
                 </ItemFreeAmountSpinnerWrapper>
@@ -390,7 +382,7 @@ export const ReflektCrowdfundingMemberPlanItem = forwardRef<
   );
 });
 
-const CrowdfundingSubscribeBlock = styled(ReflektSubscribe)`
+const CrowdfundingSubscribeBlock = styled(StyledReflektSubscribeBlock)`
   ${MemberPlanPickerRadios} {
     row-gap: ${({ theme }) => theme.spacing(8)};
     margin-top: ${({ theme }) => theme.spacing(10)};
@@ -421,10 +413,13 @@ export const ReflektSubscribeCrowdfunding = (
     return subscription?.monthlyAmount ?? 0;
   }, [data?.userSubscriptions, upgradeSubscriptionId]);
 
+  const value = useMemo(
+    () => ({ goodieMinValue: props.goodieMinValue, baselineMonthlyAmount }),
+    [baselineMonthlyAmount, props.goodieMinValue]
+  );
+
   return (
-    <CrowdfundingGoodieContext.Provider
-      value={{ goodieMinValue: props.goodieMinValue, baselineMonthlyAmount }}
-    >
+    <CrowdfundingGoodieContext.Provider value={value}>
       <WebsiteBuilderProvider
         MemberPlanItem={ReflektCrowdfundingMemberPlanItem}
       >

@@ -7,25 +7,12 @@ import {
 import { BuilderMemberPlanPickerProps } from '@wepublish/website/builder';
 import { forwardRef } from 'react';
 
-const SortedMemberPlanPicker = forwardRef<
-  HTMLButtonElement,
-  BuilderMemberPlanPickerProps
->(function SortedMemberPlanPicker(props, ref) {
-  return (
-    <MemberPlanPicker
-      {...props}
-      ref={ref}
-      id="MemberPlans"
-      sortBy={props.memberPlanRenderSettings?.length ? undefined : 'priceAsc'}
-    />
-  );
-});
-
-export const ReflektMemberPlanPicker = styled(SortedMemberPlanPicker)`
+export const StyledMemberPlanPicker = styled(MemberPlanPicker)`
   display: grid;
 
   ${MemberPlanPickerRadios} {
     grid-template-columns: repeat(2, 1fr);
+
     label {
       display: contents;
     }
@@ -39,3 +26,17 @@ export const ReflektMemberPlanPicker = styled(SortedMemberPlanPicker)`
     display: none;
   }
 `;
+
+export const ReflektMemberPlanPicker = forwardRef<
+  HTMLButtonElement,
+  BuilderMemberPlanPickerProps
+>(function SortedMemberPlanPicker(props, ref) {
+  return (
+    <div id="MemberPlans">
+      <StyledMemberPlanPicker
+        {...props}
+        ref={ref}
+      />
+    </div>
+  );
+});

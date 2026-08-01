@@ -3,7 +3,6 @@ import styled from '@emotion/styled';
 import { useUser } from '@wepublish/authentication/website';
 import { SubscribeBlock } from '@wepublish/block-content/website';
 import {
-  GoodieSection,
   PaymentRadioWrapper,
   Subscribe,
   SubscribeButton,
@@ -23,15 +22,35 @@ import {
 import { BuilderSubscribeBlockProps } from '@wepublish/website/builder';
 import { useRouter } from 'next/router';
 import { ascend, descend, prop, sortWith } from 'ramda';
-import { useContext, useMemo } from 'react';
+import { ComponentProps, useContext, useMemo } from 'react';
 
 import { buttonLinkSecondaryStyles } from '../theme';
 import { ForceUpgradeContext } from './reflekt-force-upgrade-context';
+import { AllGoodiesContext } from './reflekt-goodie-picker';
 
-export const ReflektSubscribeForm = styled(Subscribe)`
+export const ReflektSubscribeForm = styled(
+  (props: ComponentProps<typeof Subscribe>) => {
+    const allGoodies = useMemo(() => {
+      const goodiesById = new Map(
+        props.memberPlans.data?.memberPlans.nodes
+          .flatMap(memberPlan => memberPlan.goodies ?? [])
+          .map(goodie => [goodie.id, goodie])
+      );
+
+      return [...goodiesById.values()];
+    }, [props.memberPlans.data?.memberPlans.nodes]);
+
+    return (
+      <AllGoodiesContext value={allGoodies}>
+        <Subscribe {...props} />
+      </AllGoodiesContext>
+    );
+  }
+)`
   background-color: orange;
 `;
-export const ReflektSubscribe = styled(SubscribeBlock)`
+
+export const StyledReflektSubscribeBlock = styled(SubscribeBlock)`
   background-color: transparent;
   grid-template-columns: 1fr;
   grid-template-areas:
@@ -55,11 +74,11 @@ export const ReflektSubscribe = styled(SubscribeBlock)`
     }
   }
 
-  ${SubscribeSection}[data-area='returning'] {
+  [data-area='returning'] {
     display: none;
   }
 
-  ${GoodieSection} {
+  [data-area='goodie'] {
     display: contents;
 
     > div {
@@ -71,12 +90,12 @@ export const ReflektSubscribe = styled(SubscribeBlock)`
     }
   }
 
-  ${SubscribeSection}[data-area='paymentPeriodicity'] ${PaymentRadioWrapper} {
+  [data-area='paymentPeriodicity'] ${PaymentRadioWrapper} {
     outline: none;
     border: none;
   }
 
-  ${SubscribeSection}[data-area='paymentPeriodicity'] ${SubscribePayment} {
+  [data-area='paymentPeriodicity'] ${SubscribePayment} {
     justify-content: center;
   }
 
@@ -103,7 +122,7 @@ export const ReflektSubscribe = styled(SubscribeBlock)`
     }
   }
 
-  ${SubscribeSection}[data-area='challenge'] > div > div {
+  [data-area='challenge'] > div > div {
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -193,5 +212,5 @@ export const ReflektSubscribeBlock = (props: BuilderSubscribeBlockProps) => {
     });
   }
 
-  return <ReflektSubscribe {...props} />;
+  return <StyledReflektSubscribeBlock {...props} />;
 };

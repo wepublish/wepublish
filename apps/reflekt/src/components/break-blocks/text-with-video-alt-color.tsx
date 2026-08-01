@@ -293,7 +293,7 @@ const BreakBlockVideo = ({ video }: { video: BreakVideo }) => {
       {video.kind === 'youtube' && started && (
         <BreakVideoCover aspect={aspect}>
           <BreakYouTubePlayer
-            url={video.videoUrl}
+            src={video.videoUrl}
             playing
             controls
             width="100%"

@@ -17,7 +17,7 @@
       "label": "Ja, ich übernehme die Transaktionsgebühren von 2%"
     },
     "memberplan": {
-      "price": "{yearlyPrice}"
+      "price": "{yearlyAmount}"
     }
   },
   "subscription": {

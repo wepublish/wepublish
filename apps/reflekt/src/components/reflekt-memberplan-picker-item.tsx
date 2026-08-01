@@ -1,22 +1,136 @@
 import styled from '@emotion/styled';
+import { Radio, useRadioGroup } from '@mui/material';
 import {
-  MemberPlanItem,
+  CurrencyNumberSpinner,
+  formatCurrency,
   MemberPlanItemContent,
-  MemberPlanItemDescription,
-  MemberPlanItemFreeInputSpinner,
   MemberPlanItemName,
   MemberPlanItemPicker,
   MemberPlanItemPrice,
+  MemberPlanItemWrapper,
 } from '@wepublish/membership/website';
+import {
+  BuilderMemberPlanItemProps,
+  useWebsiteBuilder,
+} from '@wepublish/website/builder';
+import { useFormContext, useWatch } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
 import { euclidCircularB, robotoMono } from '../theme';
 
+export const MemberPlanItemFreeInputSpinner = styled(CurrencyNumberSpinner)`
+  grid-column: 1 / -1;
+  justify-self: start;
+  margin-top: ${({ theme }) => theme.spacing(1)};
+`;
+
+export const MemberPlanItemAmountError = styled('small')`
+  grid-column: 1 / -1;
+  font-size: 0.75em;
+  color: ${({ theme }) => theme.palette.error.main};
+`;
+
+export const MemberPlanItem = ({
+  className,
+  id,
+  name,
+  slug,
+  shortDescription,
+  amountPerMonthMax,
+  amountPerMonthMin,
+  currency,
+  extendable,
+  goodies,
+  tags,
+  ref,
+  ...props
+}: BuilderMemberPlanItemProps) => {
+  const {
+    meta: { locale },
+  } = useWebsiteBuilder();
+  const radioGroup = useRadioGroup();
+  const isChecked = props.checked ?? radioGroup?.value === id;
+  const { t } = useTranslation();
+  const {
+    control,
+    formState: { errors },
+    setValue,
+  } = useFormContext();
+
+  const monthlyAmount = useWatch({
+    control,
+    name: 'monthlyAmount',
+    disabled: !isChecked,
+  }) as number;
+
+  const hasFixedAmount =
+    amountPerMonthMax != null && amountPerMonthMax === amountPerMonthMin;
+
+  const hasInCardFreeInput = tags?.includes('inline-slider');
+
+  const displayedAmountPerMonth =
+    isChecked && monthlyAmount != null ? monthlyAmount : amountPerMonthMin;
+
+  return (
+    <MemberPlanItemWrapper className={className}>
+      <MemberPlanItemPicker isChecked={isChecked}>
+        <MemberPlanItemContent>
+          <MemberPlanItemName>{name}</MemberPlanItemName>
+
+          <MemberPlanItemPrice>
+            {t('subscribe.memberplan.price', {
+              yearlyAmount: Math.round((displayedAmountPerMonth * 12) / 100),
+              amountPerMonthMin,
+              yearlyPrice: formatCurrency(
+                Math.ceil((amountPerMonthMin / 100) * 12),
+                currency,
+                locale
+              ),
+              monthlyPrice: formatCurrency(
+                amountPerMonthMin / 100,
+                currency,
+                locale
+              ),
+              extendable,
+              exactAmount: hasFixedAmount,
+            })}
+          </MemberPlanItemPrice>
+        </MemberPlanItemContent>
+
+        <Radio
+          ref={ref}
+          name={name}
+          disableRipple={true}
+          {...props}
+        />
+
+        {hasInCardFreeInput && isChecked && (
+          <MemberPlanItemFreeInputSpinner
+            arrows="stacked"
+            min={amountPerMonthMin / 100}
+            step={1}
+            value={(monthlyAmount ?? amountPerMonthMin) / 100}
+            onValueChange={spinnerValue => {
+              if (spinnerValue != null) {
+                setValue('monthlyAmount', Math.round(spinnerValue * 100));
+              }
+            }}
+            helperText={`Min ${formatCurrency(amountPerMonthMin / 100, currency, locale)}`}
+          />
+        )}
+
+        {hasInCardFreeInput && isChecked && errors.monthlyAmount && (
+          <MemberPlanItemAmountError>
+            {errors.monthlyAmount.message?.toString()}
+          </MemberPlanItemAmountError>
+        )}
+      </MemberPlanItemPicker>
+    </MemberPlanItemWrapper>
+  );
+};
+
 export const ReflektMemberPlanItem = styled(MemberPlanItem)`
   container-type: inline-size;
-
-  ${MemberPlanItemDescription} {
-    display: none;
-  }
 
   ${MemberPlanItemPicker} {
     aspect-ratio: 1 / 1;
@@ -79,8 +193,7 @@ export const ReflektMemberPlanItem = styled(MemberPlanItem)`
     display: grid;
     align-content: space-between;
     justify-items: center;
-    padding-block: ${({ theme }) => theme.spacing(1)}
-      ${({ theme }) => theme.spacing(2)};
+    padding-block: ${({ theme }) => theme.spacing(1, 2)};
     font-family: ${[euclidCircularB.style.fontFamily, 'sans-serif'].join(',')};
     font-weight: 500;
     font-size: clamp(0.875rem, 8cqi, 1.75rem);

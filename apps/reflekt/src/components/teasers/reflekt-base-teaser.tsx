@@ -35,4 +35,4 @@ export const ReflektBaseTeaser = cond([
       </div>
     ),
   ],
-]) as (props: BuilderTeaserProps) => JSX.Element;
+]);
