@@ -269,21 +269,39 @@ export const SubscribeBlock = ({
   >(
     (memberPlanIds, _event) => {
       onChange(current => {
+        const hasDefault = current.memberPlanRenderSettings.some(
+          ({ isDefault, memberPlanId }) =>
+            memberPlanIds.includes(memberPlanId) && isDefault
+        );
+
         return {
           ...current,
           memberPlanIds: memberPlanIds ?? [],
           memberPlanRenderSettings: (memberPlanIds ?? []).map(
-            memberPlanId =>
-              current.memberPlanRenderSettings.find(
+            (memberPlanId, index) => {
+              const existingSetting = current.memberPlanRenderSettings.find(
                 plan => plan.memberPlanId === memberPlanId
-              ) ?? {
-                memberPlanId,
-                isDefault: false,
-                layout: {
-                  type: SubscribeBlockRenderLayout.Slider,
-                  showInput: false,
-                },
+              );
+
+              // When default gets removed
+              if (existingSetting && !hasDefault && index === 0) {
+                return {
+                  ...existingSetting,
+                  isDefault: true,
+                };
               }
+
+              return (
+                existingSetting ?? {
+                  memberPlanId,
+                  isDefault: !hasDefault,
+                  layout: {
+                    type: SubscribeBlockRenderLayout.Slider,
+                    showInput: false,
+                  },
+                }
+              );
+            }
           ),
         };
       });
