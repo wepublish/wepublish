@@ -133,7 +133,7 @@ export const ReflektBlockRenderer = (
             <FlexBlockFullsizeImage {...block} />
           ),
         ],
-      ]) as (block: FullBlockFragment) => JSX.Element | undefined,
+      ]),
     []
   );
 

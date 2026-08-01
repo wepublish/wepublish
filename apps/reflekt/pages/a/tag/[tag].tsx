@@ -13,6 +13,8 @@ import { GetStaticProps, InferGetStaticPropsType } from 'next';
 import { useRouter } from 'next/router';
 import { z } from 'zod';
 
+import { TagAwareArticleListContext } from '../../../src/components/teaser-layouts/reflekt-article-list';
+
 const take = 50;
 
 const pageSchema = z.object({
@@ -29,24 +31,26 @@ export default function TagPage({
   const { page } = pageSchema.parse(query);
 
   return (
-    <TagContainer
-      className={className}
-      tag={tag}
-      type={TagType.Article}
-      variables={{ take, skip: (page - 1) * take }}
-      onVariablesChange={variables => {
-        replace(
-          {
-            query: {
-              ...query,
-              page: variables?.skip ? variables.skip / take + 1 : 1,
+    <TagAwareArticleListContext value={tag}>
+      <TagContainer
+        className={className}
+        tag={tag}
+        type={TagType.Article}
+        variables={{ take, skip: (page - 1) * take }}
+        onVariablesChange={variables => {
+          replace(
+            {
+              query: {
+                ...query,
+                page: variables?.skip ? variables.skip / take + 1 : 1,
+              },
             },
-          },
-          undefined,
-          { shallow: true, scroll: true }
-        );
-      }}
-    />
+            undefined,
+            { shallow: true, scroll: true }
+          );
+        }}
+      />
+    </TagAwareArticleListContext>
   );
 }
 

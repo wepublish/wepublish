@@ -106,14 +106,14 @@ export class UserSubscriptionService {
       paymentPeriodicity,
       monthlyAmount,
       subscriptionProperties,
-      goodieID,
+      goodieId,
       successURL,
       failureURL,
       deactivateSubscriptionId,
     } = args;
 
-    if (goodieID) {
-      await this.goodieService.getValidGoodie(goodieID, memberPlan.id);
+    if (goodieId) {
+      await this.goodieService.getValidGoodie(goodieId, memberPlan.id);
     }
 
     // Check if subscription which should be deactivated exists
@@ -155,7 +155,7 @@ export class UserSubscriptionService {
         replacedSubscriptionId: subscriptionToDeactivate?.id,
         discount,
         voucherId,
-        goodieID,
+        goodieId,
       });
 
     if (!invoice) {
@@ -197,11 +197,11 @@ export class UserSubscriptionService {
         paymentPeriodicity,
         monthlyAmount,
         subscriptionProperties,
-        goodieID,
+        goodieId,
       } = args;
 
-      if (goodieID) {
-        await this.goodieService.getValidGoodie(goodieID, memberPlan.id);
+      if (goodieId) {
+        await this.goodieService.getValidGoodie(goodieId, memberPlan.id);
       }
 
       const properties = await this.memberContext.processSubscriptionProperties(
@@ -221,7 +221,7 @@ export class UserSubscriptionService {
           replacedSubscriptionId: undefined,
           startsAt: undefined,
           needsConfirmation: true,
-          goodieID,
+          goodieId,
         });
 
       if (!invoice) {

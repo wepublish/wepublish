@@ -77,7 +77,7 @@ export class CreateSubscriptionArgs {
   subscriptionProperties?: PropertyInput[];
 
   @Field({ nullable: true })
-  goodieID?: string;
+  goodieId?: string;
 
   @Field({ nullable: true })
   successURL?: string;

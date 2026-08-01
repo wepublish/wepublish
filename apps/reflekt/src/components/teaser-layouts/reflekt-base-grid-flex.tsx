@@ -24,4 +24,4 @@ export const ReflektBaseGridFlex = cond([
       </div>
     ),
   ],
-]) as (props: BuilderTeaserGridFlexBlockProps) => JSX.Element;
+]);

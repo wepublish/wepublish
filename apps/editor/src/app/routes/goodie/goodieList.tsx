@@ -1,4 +1,3 @@
-import styled from '@emotion/styled';
 import {
   Goodie,
   GoodieSort,
@@ -14,6 +13,7 @@ import {
   createCheckedPermissionComponent,
   DEFAULT_MAX_TABLE_PAGES,
   DEFAULT_TABLE_PAGE_SIZES,
+  IconButton,
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
@@ -34,10 +34,6 @@ import {
   Table as RTable,
 } from 'rsuite';
 import { RowDataType } from 'rsuite/esm/Table';
-
-const IconButton = styled(RIconButton)`
-  margin-left: 12px;
-`;
 
 const { Column, HeaderCell, Cell: RCell } = RTable;
 
@@ -82,13 +78,13 @@ function GoodieList() {
 
         <ListViewActions>
           <Link to="create">
-            <IconButton
+            <RIconButton
               appearance="primary"
               loading={false}
             >
               <MdAdd />
               {t('goodie.overview.createGoodie')}
-            </IconButton>
+            </RIconButton>
           </Link>
         </ListViewActions>
       </ListViewContainer>
@@ -186,8 +182,8 @@ function GoodieList() {
           </Column>
 
           <Column
-            resizable
             fixed="right"
+            width={50}
           >
             <HeaderCell align={'center'}>{t('delete')}</HeaderCell>
             <PaddedCell align={'center'}>

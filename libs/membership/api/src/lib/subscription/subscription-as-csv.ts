@@ -74,7 +74,7 @@ export function mapSubscriptionsAsCsv(subscriptions: CSVSubscription[]) {
       'deactivationDate',
       'deactivationReason',
       'goodie',
-      'goodieID',
+      'goodieId',
       'goodiePaid',
     ].join(',') + '\n';
 

@@ -7,18 +7,21 @@ import {
   BuilderArticleListProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { useMemo } from 'react';
+import { createContext, use, useMemo } from 'react';
 
 import { ReflektBlockStyles } from '../block-styles/reflekt-block-styles';
+
+export const TagAwareArticleListContext = createContext('');
 
 export const ReflektArticleList = ({
   data,
   className,
-  tag,
 }: BuilderArticleListProps) => {
   const {
     blocks: { TeaserGrid },
   } = useWebsiteBuilder();
+
+  const tag = use(TagAwareArticleListContext);
 
   const teasers = useMemo(
     () =>

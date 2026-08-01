@@ -11,7 +11,9 @@ export * from './lib/formatters/format-payment-period';
 export * from './lib/formatters/format-renewal-period';
 
 export * from './lib/subscribe/subscribe';
-export * from './lib/subscribe/goodie-picker';
+export * from './lib/subscribe/subscribe-texts';
+export * from './lib/subscribe/member-plan-render-settings';
+export * from './lib/goodie-picker/goodie-picker';
 export * from './lib/subscribe/subscribe-container';
 
 export * from './lib/upgrade/upgrade';
@@ -22,6 +24,8 @@ export * from './lib/memberplan-picker/memberplan-picker-item';
 export * from './lib/periodicity-picker/periodicity-picker';
 export * from './lib/payment-method-picker/payment-method-picker';
 export * from './lib/transaction-fee/transaction-fee';
+
+export * from './lib/goodie-picker/goodie-picker';
 
 export * from './lib/payment-amount/payment-amount-slider/payment-amount-slider';
 export * from './lib/payment-amount/payment-amount-picker/payment-amount-picker';

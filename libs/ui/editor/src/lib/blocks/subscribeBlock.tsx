@@ -1,33 +1,44 @@
+import {
+  DndContext,
+  DragEndEvent,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  useSortable,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import {
   ProductType,
-  SubscribeBlockAmountTileLayout,
   SubscribeBlockField,
-  SubscribeBlockPlanRenderStyle,
+  SubscribeBlockLayoutPickerConfig,
+  SubscribeBlockLayoutSliderConfig,
+  SubscribeBlockRenderLayout,
   useMemberPlanListQuery,
 } from '@wepublish/editor/api';
-import arrayMove from 'array-move';
-import { ComponentProps, ReactNode, useCallback, useMemo } from 'react';
+import { ReactNode, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdDragIndicator } from 'react-icons/md';
-import {
-  SortableContainer,
-  SortableElement,
-  SortableHandle,
-} from 'react-sortable-hoc';
 import type { CheckPickerProps } from 'rsuite';
 import {
   Checkbox,
   CheckPicker,
   IconButton,
-  InputNumber,
+  NumberInput,
   Panel as RPanel,
   SelectPicker,
   TagInput,
+  Toggle,
 } from 'rsuite';
 
 import { BlockProps } from '../atoms/blockList';
-import { SubscribeBlockPlanSettingValue, SubscribeBlockValue } from '.';
+import { SubscribeBlockValue } from './types';
 
 const Panel = styled(RPanel)`
   display: grid;
@@ -51,47 +62,59 @@ const Heading = styled('p')`
   font-weight: 600;
 `;
 
-const MemberPlanCheckPicker = CheckPicker<string>;
-const RenderStyleSelectPicker = SelectPicker<SubscribeBlockPlanRenderStyle>;
-const TileLayoutSelectPicker = SelectPicker<SubscribeBlockAmountTileLayout>;
-
-const StyledCheckPicker = styled(MemberPlanCheckPicker)`
-  width: 100%;
-`;
-
 const Hint = styled('p')`
   margin: 0;
   font-size: 12px;
   color: #6c757d;
 `;
 
-const GoodieRow = styled('div')`
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 12px;
-`;
-
-const GoodieMinValueLabel = styled('span', {
+const SettingLabel = styled('span', {
   shouldForwardProp: prop => prop !== 'deactivated',
 })<{ deactivated?: boolean }>`
   font-size: 14px;
+
   ${({ deactivated }) =>
-    deactivated && `color: var(--rs-text-disabled, #c5c6c7);`}
+    deactivated &&
+    css`
+      color: var(--rs-text-disabled, #c5c6c7);
+    `}
 `;
 
-const GoodieMinValueInput = styled(InputNumber)`
-  max-width: 80px;
+const GoodieMinValueInput = styled(NumberInput)`
+  max-width: 150px;
+`;
+
+const GoodiesToggleRow = styled('div')`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+`;
+
+const SmallCheckbox = styled(Checkbox)`
+  .rs-checkbox-checker {
+    min-height: auto;
+    padding: 0 0 0 24px;
+    font-size: 12px;
+    line-height: 1.4;
+  }
+
+  .rs-checkbox-wrapper {
+    top: 0;
+    left: 0;
+    transform: scale(0.85);
+    transform-origin: left center;
+  }
 `;
 
 const PlanStyleRow = styled('div')`
   display: grid;
-  grid-template-columns: 1fr auto auto 240px;
+  grid-template-columns: max-content 1fr max-content max-content;
   gap: 12px;
   align-items: center;
 `;
 
-const PlanDefaultCheckbox = styled(Checkbox)`
+const PlanDefaultToggle = styled(Toggle)`
   white-space: nowrap;
 `;
 
@@ -104,108 +127,90 @@ const PlanAmounts = styled('span')`
   font-size: 12px;
   color: #6c757d;
   white-space: nowrap;
-  text-align: right;
 `;
 
-const PlanTileValuesRow = styled('div')`
+const PickerSettings = styled('div')`
   display: grid;
-  grid-template-columns: 1fr 240px;
   gap: 12px;
   align-items: center;
 `;
 
-const StyledTagInput = styled(TagInput)`
-  width: 100%;
-`;
-
-const PlanRowWrapper = styled('div')<{ sortable: boolean }>`
+const PlanRowWrapper = styled('div')`
   display: grid;
-  grid-template-columns: ${({ sortable }) => (sortable ? 'auto 1fr' : '1fr')};
+  grid-template-columns: auto 1fr;
   gap: 12px;
   align-items: start;
 `;
 
-const PlanRowContent = styled('div')`
+const SettingRowContent = styled('div')`
+  display: grid;
+  gap: 12px;
+  background: #fff;
+  border-radius: 3px;
+  padding: 12px;
+`;
+
+const SettingRow = styled('div')`
   display: grid;
   gap: 12px;
 `;
 
-const PlanRowList = styled('div')`
-  display: grid;
-  gap: 12px;
-`;
-
-const PlanDragHandle = SortableHandle<{ disabled?: boolean }>(
-  ({ disabled }: { disabled?: boolean }) => (
-    <IconButton
-      icon={<MdDragIndicator />}
-      appearance="subtle"
-      disabled={disabled}
-    />
-  )
-);
-
-const SortablePlanRow = SortableElement<{ children: ReactNode }>(
-  ({ children }: { children: ReactNode }) => <div>{children}</div>
-);
-
-const SortablePlanRowList = SortableContainer<{ children: ReactNode }>(
-  ({ children }: { children: ReactNode }) => (
-    <PlanRowList>{children}</PlanRowList>
-  )
-);
-
-export const AMOUNT_TILE_LAYOUTS = [
-  SubscribeBlockAmountTileLayout.Narrow,
-  SubscribeBlockAmountTileLayout.Wide,
-] as const;
-
-export const PLAN_RENDER_STYLES = [
-  SubscribeBlockPlanRenderStyle.Card,
-  SubscribeBlockPlanRenderStyle.Slider,
-  SubscribeBlockPlanRenderStyle.CardAndSlider,
-  SubscribeBlockPlanRenderStyle.CardFreeInput,
-  SubscribeBlockPlanRenderStyle.AmountTiles,
-] as const;
-
-type RenderStyleRuleContext = {
-  memberPlanIds: string[];
-};
-
-type RenderStyleRule = {
+type SortablePlanRowProps = {
   id: string;
-  isStyleAllowed: (
-    style: SubscribeBlockPlanRenderStyle,
-    context: RenderStyleRuleContext
-  ) => boolean;
+  disabled?: boolean;
+  children: ReactNode;
 };
 
-export const RENDER_STYLE_RULES: RenderStyleRule[] = [
-  {
-    id: 'amountTilesSingle',
-    isStyleAllowed: (style, { memberPlanIds }) =>
-      style !== SubscribeBlockPlanRenderStyle.AmountTiles ||
-      memberPlanIds.length <= 1,
-  },
+const SortablePlanRow = ({ id, disabled, children }: SortablePlanRowProps) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    setActivatorNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id, disabled });
+
+  return (
+    <PlanRowWrapper
+      ref={setNodeRef}
+      style={{
+        transform: CSS.Translate.toString(transform),
+        transition,
+        zIndex: isDragging ? 1 : undefined,
+        position: 'relative',
+      }}
+    >
+      <div
+        ref={setActivatorNodeRef}
+        {...attributes}
+        {...listeners}
+      >
+        <IconButton
+          icon={<MdDragIndicator />}
+          appearance="subtle"
+          disabled={disabled}
+        />
+      </div>
+
+      {children}
+    </PlanRowWrapper>
+  );
+};
+
+export const renderLayouts: SubscribeBlockRenderLayout[] = [
+  SubscribeBlockRenderLayout.None,
+  SubscribeBlockRenderLayout.Slider,
+  SubscribeBlockRenderLayout.Picker,
 ];
 
-const violatedRule = (
-  style: SubscribeBlockPlanRenderStyle,
-  context: RenderStyleRuleContext
-) => RENDER_STYLE_RULES.find(rule => !rule.isStyleAllowed(style, context));
-
-const parseTileValues = (values: readonly string[]) => [
-  ...new Set(
-    values
-      .map(tileValue =>
-        Math.round(Number.parseFloat(tileValue.replace(',', '.')) * 100)
-      )
-      .filter(tileValue => Number.isFinite(tileValue) && tileValue > 0)
-  ),
-];
-
-const formatTileValues = (amountTileValues: number[] | null | undefined) =>
-  (amountTileValues ?? []).map(tileValue => (tileValue / 100).toFixed(2));
+const formatValues = (value: number[] | null | undefined) =>
+  (value ?? []).map(tileValue =>
+    tileValue % 100 === 0 ?
+      String(tileValue / 100)
+    : (tileValue / 100).toFixed(2)
+  );
 
 const formatPlanAmount = (amount: number | null | undefined) =>
   amount != null ? (amount / 100).toFixed(2) : '–';
@@ -216,6 +221,10 @@ export const SubscribeBlock = ({
   disabled,
 }: BlockProps<SubscribeBlockValue>) => {
   const { t } = useTranslation();
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 4 } })
+  );
 
   const { data, loading } = useMemberPlanListQuery({
     variables: {
@@ -255,221 +264,211 @@ export const SubscribeBlock = ({
     [data?.memberPlans?.nodes]
   );
 
-  const defaultStyleForPlan = useCallback(
-    (memberPlanId: string): SubscribeBlockPlanRenderStyle => {
-      const memberPlan = data?.memberPlans?.nodes.find(
-        ({ id }) => id === memberPlanId
-      );
-
-      return (
-          memberPlan &&
-            memberPlan.amountPerMonthMin === memberPlan.amountPerMonthMax
-        ) ?
-          SubscribeBlockPlanRenderStyle.Card
-        : SubscribeBlockPlanRenderStyle.Slider;
-    },
-    [data?.memberPlans?.nodes]
-  );
-
   const handleMemberPlansChange = useCallback<
     NonNullable<CheckPickerProps<string>['onChange']>
   >(
     (memberPlanIds, _event) => {
       onChange(current => {
-        const context = { memberPlanIds: memberPlanIds ?? [] };
+        const hasDefault = current.memberPlanRenderSettings.some(
+          ({ isDefault, memberPlanId }) =>
+            memberPlanIds.includes(memberPlanId) && isDefault
+        );
 
         return {
           ...current,
           memberPlanIds: memberPlanIds ?? [],
-          plans: (memberPlanIds ?? [])
-            .map(
-              memberPlanId =>
-                current.plans.find(
-                  plan => plan.memberPlanId === memberPlanId
-                ) ?? {
-                  memberPlanId,
-                  renderStyle: defaultStyleForPlan(memberPlanId),
-                }
-            )
-            .map(plan =>
-              violatedRule(plan.renderStyle, context) ?
-                { ...plan, renderStyle: defaultStyleForPlan(plan.memberPlanId) }
-              : plan
-            ),
-        };
-      });
-    },
-    [onChange, defaultStyleForPlan]
-  );
+          memberPlanRenderSettings: (memberPlanIds ?? []).map(
+            (memberPlanId, index) => {
+              const existingSetting = current.memberPlanRenderSettings.find(
+                plan => plan.memberPlanId === memberPlanId
+              );
 
-  const handlePlanStyleChange = useCallback(
-    (memberPlanId: string, renderStyle: SubscribeBlockPlanRenderStyle) => {
-      onChange(current => {
-        const currentPlans =
-          current.plans.length ?
-            current.plans
-          : current.memberPlanIds.map(id => ({
-              memberPlanId: id,
-              renderStyle: defaultStyleForPlan(id),
-            }));
-
-        return {
-          ...current,
-          plans: currentPlans.map(plan =>
-            plan.memberPlanId === memberPlanId ? { ...plan, renderStyle } : plan
-          ),
-        };
-      });
-    },
-    [onChange, defaultStyleForPlan]
-  );
-
-  const handlePlanTileValuesChange = useCallback(
-    (memberPlanId: string, amountTileValues: number[]) => {
-      onChange(current => {
-        const currentPlans =
-          current.plans.length ?
-            current.plans
-          : current.memberPlanIds.map(id => ({
-              memberPlanId: id,
-              renderStyle: defaultStyleForPlan(id),
-            }));
-
-        return {
-          ...current,
-          plans: currentPlans.map(plan =>
-            plan.memberPlanId === memberPlanId ?
-              {
-                ...plan,
-                amountTileValues:
-                  amountTileValues.length ? amountTileValues : null,
+              // When default gets removed
+              if (existingSetting && !hasDefault && index === 0) {
+                return {
+                  ...existingSetting,
+                  isDefault: true,
+                };
               }
-            : plan
+
+              return (
+                existingSetting ?? {
+                  memberPlanId,
+                  isDefault: !hasDefault,
+                  layout: {
+                    type: SubscribeBlockRenderLayout.Slider,
+                    showInput: false,
+                  },
+                }
+              );
+            }
           ),
         };
       });
     },
-    [onChange, defaultStyleForPlan]
+    [onChange]
   );
 
-  const handlePlanSortEnd = useCallback(
-    ({ oldIndex, newIndex }: { oldIndex: number; newIndex: number }) => {
+  const handlePlanDragEnd = useCallback(
+    ({ active, over }: DragEndEvent) => {
+      if (!over || active.id === over.id) {
+        return;
+      }
+
       onChange(current => {
-        const currentPlans =
-          current.plans.length ?
-            current.plans
-          : current.memberPlanIds.map(id => ({
-              memberPlanId: id,
-              renderStyle: defaultStyleForPlan(id),
-            }));
-        const plans = arrayMove(currentPlans, oldIndex, newIndex);
+        const currentPlans = current.memberPlanRenderSettings;
+
+        const oldIndex = currentPlans.findIndex(
+          ({ memberPlanId }) => memberPlanId === active.id
+        );
+        const newIndex = currentPlans.findIndex(
+          ({ memberPlanId }) => memberPlanId === over.id
+        );
+
+        if (oldIndex < 0 || newIndex < 0) {
+          return current;
+        }
+
+        const memberPlanRenderSettings = arrayMove(
+          currentPlans,
+          oldIndex,
+          newIndex
+        );
 
         return {
           ...current,
-          plans,
-          memberPlanIds: plans.map(({ memberPlanId }) => memberPlanId),
+          memberPlanRenderSettings,
+          memberPlanIds: memberPlanRenderSettings.map(
+            ({ memberPlanId }) => memberPlanId
+          ),
         };
       });
     },
-    [onChange, defaultStyleForPlan]
+    [onChange]
+  );
+
+  const handlePlanLayoutChange = useCallback(
+    (memberPlanId: string, layoutType: SubscribeBlockRenderLayout | null) => {
+      if (!layoutType) {
+        return;
+      }
+
+      onChange(current => ({
+        ...current,
+        memberPlanRenderSettings: current.memberPlanRenderSettings.map(
+          setting => {
+            if (setting.memberPlanId !== memberPlanId) {
+              return setting;
+            }
+
+            switch (layoutType) {
+              case SubscribeBlockRenderLayout.Picker: {
+                return {
+                  ...setting,
+                  layout: {
+                    type: layoutType,
+                    showInput: true,
+                    values: [],
+                  },
+                };
+              }
+
+              default: {
+                return {
+                  ...setting,
+                  layout: {
+                    type: layoutType,
+                  },
+                };
+              }
+            }
+          }
+        ),
+      }));
+    },
+    [onChange]
+  );
+
+  const handleFixedAmountsChange = useCallback(
+    (memberPlanId: string, tileValues: readonly string[]) => {
+      onChange(current => ({
+        ...current,
+        memberPlanRenderSettings: current.memberPlanRenderSettings.map(
+          setting => {
+            if (setting.memberPlanId !== memberPlanId) {
+              return setting;
+            }
+
+            return {
+              ...setting,
+              layout: {
+                ...setting.layout,
+                values: Array.from(
+                  new Set(
+                    tileValues
+                      .map(value => parseFloat(value) * 100)
+                      .sort((a, b) => a - b)
+                  ).values()
+                ),
+              },
+            };
+          }
+        ),
+      }));
+    },
+    [onChange]
+  );
+
+  const handleShowAmountInputChange = useCallback(
+    (memberPlanId: string, showInput: boolean) => {
+      onChange(current => ({
+        ...current,
+        memberPlanRenderSettings: current.memberPlanRenderSettings.map(
+          setting => {
+            if (setting.memberPlanId !== memberPlanId) {
+              return setting;
+            }
+
+            return {
+              ...setting,
+              layout: {
+                ...setting.layout,
+                showInput,
+              },
+            };
+          }
+        ),
+      }));
+    },
+    [onChange]
   );
 
   const handlePlanDefaultChange = useCallback(
     (memberPlanId: string, isDefault: boolean) => {
-      onChange(current => {
-        const currentPlans =
-          current.plans.length ?
-            current.plans
-          : current.memberPlanIds.map(id => ({
-              memberPlanId: id,
-              renderStyle: defaultStyleForPlan(id),
-            }));
+      if (!isDefault) {
+        return;
+      }
 
-        return {
-          ...current,
-          plans: currentPlans.map(plan => ({
-            ...plan,
-            isDefault: plan.memberPlanId === memberPlanId ? isDefault : false,
-          })),
-        };
-      });
+      onChange(current => ({
+        ...current,
+        memberPlanRenderSettings: current.memberPlanRenderSettings.map(
+          setting => ({
+            ...setting,
+            isDefault: setting.memberPlanId === memberPlanId,
+          })
+        ),
+      }));
     },
-    [onChange, defaultStyleForPlan]
+    [onChange]
   );
 
-  const handlePlanTileLayoutChange = useCallback(
-    (
-      memberPlanId: string,
-      amountTileLayout: SubscribeBlockAmountTileLayout
-    ) => {
-      onChange(current => {
-        const currentPlans =
-          current.plans.length ?
-            current.plans
-          : current.memberPlanIds.map(id => ({
-              memberPlanId: id,
-              renderStyle: defaultStyleForPlan(id),
-            }));
-
-        return {
-          ...current,
-          plans: currentPlans.map(plan =>
-            plan.memberPlanId === memberPlanId ?
-              { ...plan, amountTileLayout }
-            : plan
-          ),
-        };
-      });
-    },
-    [onChange, defaultStyleForPlan]
-  );
-
-  const tileLayoutOptions = useMemo<
-    { value: SubscribeBlockAmountTileLayout; label: string }[]
-  >(
+  const renderLayoutOptions = useMemo(
     () =>
-      AMOUNT_TILE_LAYOUTS.map(layout => ({
+      renderLayouts.map(layout => ({
         value: layout,
-        label: t(`blocks.subscribe.amountTileLayout.${layout}`),
+        label: t(`blocks.subscribe.renderLayouts.${layout}`),
       })),
     [t]
-  );
-
-  const planRows = useMemo<SubscribeBlockPlanSettingValue[]>(
-    () =>
-      value.plans.length ?
-        value.plans
-      : value.memberPlanIds.map(memberPlanId => ({
-          memberPlanId,
-          renderStyle: defaultStyleForPlan(memberPlanId),
-        })),
-    [value.plans, value.memberPlanIds, defaultStyleForPlan]
-  );
-
-  const hasExplicitDefault = planRows.some(({ isDefault }) => isDefault);
-
-  const renderStyleOptions = useMemo<
-    { value: SubscribeBlockPlanRenderStyle; label: string }[]
-  >(
-    () =>
-      PLAN_RENDER_STYLES.map(style => ({
-        value: style,
-        label: t(`blocks.subscribe.renderStyles.${style}`),
-      })),
-    [t]
-  );
-
-  const ruleContext = useMemo(
-    () => ({ memberPlanIds: value.memberPlanIds }),
-    [value.memberPlanIds]
-  );
-
-  const disabledStyles = useMemo(
-    () =>
-      PLAN_RENDER_STYLES.filter(style =>
-        violatedRule(style, ruleContext)
-      ) as ComponentProps<typeof RenderStyleSelectPicker>['disabledItemValues'],
-    [ruleContext]
   );
 
   const handleFieldsChange = useCallback<
@@ -499,11 +498,11 @@ export const SubscribeBlock = ({
   );
 
   const handleGoodieMinValueChange = useCallback(
-    (nextValue: string | number) => {
+    (nextValue: string | number | null) => {
       const francs =
-        typeof nextValue === 'number' ? nextValue : (
-          Number.parseFloat(nextValue.replace(',', '.'))
-        );
+        typeof nextValue === 'number' ? nextValue
+        : nextValue != null ? Number.parseFloat(nextValue.replace(',', '.'))
+        : Number.NaN;
 
       onChange(current => ({
         ...current,
@@ -528,7 +527,7 @@ export const SubscribeBlock = ({
       <Content>
         <Heading>{t('blocks.subscribe.selectMemberPlans')}</Heading>
 
-        <StyledCheckPicker
+        <CheckPicker
           cleanable
           block
           disabled={disabled}
@@ -540,155 +539,211 @@ export const SubscribeBlock = ({
           placeholder={t('blocks.subscribe.selectMemberPlansPlaceholder')}
         />
 
-        <Hint>
-          {!value.memberPlanIds.length &&
-            t('blocks.subscribe.selectMemberPlansSelectionHintAll')}
-        </Hint>
-
-        {!!planRows.length && (
-          <Heading>{t('blocks.subscribe.renderStylesHeading')}</Heading>
+        {!!value.memberPlanIds.length && (
+          <Hint>{t('blocks.subscribe.selectMemberPlansSelectionHintAll')}</Hint>
         )}
 
-        <SortablePlanRowList
-          onSortEnd={handlePlanSortEnd}
-          useDragHandle
-        >
-          {planRows.map((plan, index) => (
-            <SortablePlanRow
-              key={plan.memberPlanId}
-              index={index}
+        {!!value.memberPlanRenderSettings.length && (
+          <>
+            <Heading>{t('blocks.subscribe.renderStylesHeading')}</Heading>
+
+            <DndContext
+              sensors={sensors}
+              onDragEnd={handlePlanDragEnd}
             >
-              <PlanRowWrapper sortable={planRows.length > 1}>
-                {planRows.length > 1 && <PlanDragHandle disabled={disabled} />}
-
-                <PlanRowContent>
-                  <PlanStyleRow>
-                    <PlanStyleName>
-                      {memberPlanOptions.find(
-                        ({ value: id }) => id === plan.memberPlanId
-                      )?.label ?? plan.memberPlanId}
-                    </PlanStyleName>
-
-                    <PlanDefaultCheckbox
-                      checked={
-                        !!plan.isDefault || (!hasExplicitDefault && index === 0)
-                      }
+              <SortableContext
+                items={value.memberPlanRenderSettings.map(
+                  ({ memberPlanId }) => memberPlanId
+                )}
+                strategy={verticalListSortingStrategy}
+              >
+                <SettingRow>
+                  {value.memberPlanRenderSettings.map(plan => (
+                    <SortablePlanRow
+                      key={plan.memberPlanId}
+                      id={plan.memberPlanId}
                       disabled={disabled}
-                      title={t('blocks.subscribe.defaultPlanTitle')}
-                      onChange={(_value, checked) =>
-                        handlePlanDefaultChange(plan.memberPlanId, checked)
-                      }
-                    />
+                    >
+                      <SettingRowContent>
+                        <PlanStyleRow>
+                          <PlanStyleName>
+                            {memberPlanOptions.find(
+                              ({ value: id }) => id === plan.memberPlanId
+                            )?.label ?? plan.memberPlanId}
+                          </PlanStyleName>
 
-                    <PlanAmounts title={t('blocks.subscribe.planAmountsTitle')}>
-                      {[
-                        memberPlanById.get(plan.memberPlanId)?.currency,
-                        [
-                          memberPlanById.get(plan.memberPlanId)
-                            ?.amountPerMonthMin,
-                          memberPlanById.get(plan.memberPlanId)
-                            ?.amountPerMonthTarget,
-                          memberPlanById.get(plan.memberPlanId)
-                            ?.amountPerMonthMax,
-                        ]
-                          .map(formatPlanAmount)
-                          .join(' / '),
-                      ]
-                        .filter(Boolean)
-                        .join(' ')}
-                    </PlanAmounts>
+                          <PlanAmounts
+                            title={t('blocks.subscribe.planAmountsTitle')}
+                          >
+                            {[
+                              memberPlanById.get(plan.memberPlanId)?.currency,
+                              [
+                                memberPlanById.get(plan.memberPlanId)
+                                  ?.amountPerMonthMin,
+                                memberPlanById.get(plan.memberPlanId)
+                                  ?.amountPerMonthTarget,
+                                memberPlanById.get(plan.memberPlanId)
+                                  ?.amountPerMonthMax,
+                              ]
+                                .map(formatPlanAmount)
+                                .join(' / '),
+                            ]
+                              .filter(Boolean)
+                              .join(' ')}
+                          </PlanAmounts>
 
-                    <RenderStyleSelectPicker
-                      cleanable={false}
-                      searchable={false}
-                      disabled={disabled}
-                      data={renderStyleOptions}
-                      disabledItemValues={disabledStyles}
-                      value={plan.renderStyle}
-                      onChange={renderStyle =>
-                        renderStyle &&
-                        handlePlanStyleChange(plan.memberPlanId, renderStyle)
-                      }
-                    />
-                  </PlanStyleRow>
+                          <SelectPicker
+                            cleanable={false}
+                            searchable={false}
+                            disabled={disabled}
+                            data={renderLayoutOptions}
+                            value={plan.layout.type}
+                            onChange={renderLayout =>
+                              handlePlanLayoutChange(
+                                plan.memberPlanId,
+                                renderLayout
+                              )
+                            }
+                          />
 
-                  {plan.renderStyle ===
-                    SubscribeBlockPlanRenderStyle.AmountTiles && (
-                    <>
-                      <PlanTileValuesRow>
-                        <Hint>
-                          {t('blocks.subscribe.amountTileValues.hint')}
-                        </Hint>
+                          <PlanDefaultToggle
+                            checked={!!plan.isDefault}
+                            disabled={disabled}
+                            size="sm"
+                            title={t('blocks.subscribe.defaultPlanTitle')}
+                            checkedChildren={t(
+                              'blocks.subscribe.defaultPlanLabel'
+                            )}
+                            unCheckedChildren={t(
+                              'blocks.subscribe.defaultPlanLabel'
+                            )}
+                            onChange={checked =>
+                              handlePlanDefaultChange(
+                                plan.memberPlanId,
+                                checked
+                              )
+                            }
+                          />
+                        </PlanStyleRow>
 
-                        <StyledTagInput
-                          disabled={disabled}
-                          trigger={['Enter', 'Space']}
-                          placeholder={t(
-                            'blocks.subscribe.amountTileValues.placeholder'
-                          )}
-                          value={formatTileValues(plan.amountTileValues)}
-                          onChange={tileValues =>
-                            handlePlanTileValuesChange(
-                              plan.memberPlanId,
-                              parseTileValues(tileValues ?? [])
-                            )
-                          }
-                        />
-                      </PlanTileValuesRow>
+                        {plan.layout.type ===
+                          SubscribeBlockRenderLayout.Slider && (
+                          <PickerSettings>
+                            <div>
+                              <Checkbox
+                                checked={
+                                  (
+                                    plan.layout as SubscribeBlockLayoutSliderConfig
+                                  ).showInput
+                                }
+                                disabled={disabled}
+                                title={t(
+                                  'blocks.subscribe.showAmountInput.title'
+                                )}
+                                onChange={(_value, checked) =>
+                                  handleShowAmountInputChange(
+                                    plan.memberPlanId,
+                                    checked
+                                  )
+                                }
+                              >
+                                <Hint>
+                                  {t('blocks.subscribe.showAmountInput.label')}
+                                </Hint>
+                              </Checkbox>
+                            </div>
+                          </PickerSettings>
+                        )}
 
-                      <PlanTileValuesRow>
-                        <Hint>
-                          {t('blocks.subscribe.amountTileLayout.hint')}
-                        </Hint>
+                        {plan.layout.type ===
+                          SubscribeBlockRenderLayout.Picker && (
+                          <PickerSettings>
+                            <div>
+                              <Checkbox
+                                checked={
+                                  (
+                                    plan.layout as SubscribeBlockLayoutPickerConfig
+                                  ).showInput
+                                }
+                                disabled={disabled}
+                                title={t(
+                                  'blocks.subscribe.showAmountInput.title'
+                                )}
+                                onChange={(_value, checked) =>
+                                  handleShowAmountInputChange(
+                                    plan.memberPlanId,
+                                    checked
+                                  )
+                                }
+                              >
+                                <Hint>
+                                  {t('blocks.subscribe.showAmountInput.label')}
+                                </Hint>
+                              </Checkbox>
+                            </div>
 
-                        <TileLayoutSelectPicker
-                          cleanable={false}
-                          searchable={false}
-                          disabled={disabled}
-                          data={tileLayoutOptions}
-                          value={
-                            plan.amountTileLayout ??
-                            SubscribeBlockAmountTileLayout.Narrow
-                          }
-                          onChange={amountTileLayout =>
-                            amountTileLayout &&
-                            handlePlanTileLayoutChange(
-                              plan.memberPlanId,
-                              amountTileLayout
-                            )
-                          }
-                        />
-                      </PlanTileValuesRow>
-                    </>
-                  )}
-                </PlanRowContent>
-              </PlanRowWrapper>
-            </SortablePlanRow>
-          ))}
-        </SortablePlanRowList>
+                            <div>
+                              <Hint>
+                                {t('blocks.subscribe.amountTileValues.hint')}
+                              </Hint>
 
-        {!!disabledStyles?.length && (
-          <Hint>
-            {t('blocks.subscribe.renderStyleRules.amountTilesSingle')}
-          </Hint>
+                              <TagInput
+                                disabled={disabled}
+                                trigger={['Enter', 'Space', 'Comma']}
+                                placeholder={t(
+                                  'blocks.subscribe.amountTileValues.placeholder'
+                                )}
+                                value={formatValues(
+                                  (
+                                    plan.layout as SubscribeBlockLayoutPickerConfig
+                                  ).values
+                                )}
+                                onChange={tileValues =>
+                                  handleFixedAmountsChange(
+                                    plan.memberPlanId,
+                                    tileValues
+                                  )
+                                }
+                              />
+                            </div>
+                          </PickerSettings>
+                        )}
+                      </SettingRowContent>
+                    </SortablePlanRow>
+                  ))}
+                </SettingRow>
+              </SortableContext>
+            </DndContext>
+          </>
         )}
       </Content>
 
       <Content>
-        <Heading>{t('blocks.subscribe.selectSections')}</Heading>
+        <Heading>{t('blocks.subscribe.goodiesHeading')}</Heading>
 
-        <GoodieRow>
-          <Checkbox
+        <GoodiesToggleRow>
+          <Toggle
             checked={value.showGoodies}
             disabled={disabled}
-            onChange={handleShowGoodiesChange}
+            onChange={checked => handleShowGoodiesChange(undefined, checked)}
           >
             {t('blocks.subscribe.showGoodies')}
-          </Checkbox>
-          |
-          <GoodieMinValueLabel deactivated={disabled || !value.showGoodies}>
+          </Toggle>
+
+          <SmallCheckbox
+            checked={value.hideRepeatGoodieOnUpgrade}
+            disabled={disabled || !value.showGoodies}
+            onChange={handleHideRepeatGoodieOnUpgradeChange}
+          >
+            {t('blocks.subscribe.hideRepeatGoodieOnUpgrade')}
+          </SmallCheckbox>
+        </GoodiesToggleRow>
+
+        <div>
+          <SettingLabel deactivated={disabled || !value.showGoodies}>
             {t('blocks.subscribe.goodieMinValue.label')}
-          </GoodieMinValueLabel>
+          </SettingLabel>
+
           <GoodieMinValueInput
             disabled={disabled || !value.showGoodies}
             min={0}
@@ -698,29 +753,25 @@ export const SubscribeBlock = ({
             }
             onChange={handleGoodieMinValueChange}
           />
-          |
-          <Checkbox
-            checked={value.hideRepeatGoodieOnUpgrade}
-            disabled={disabled || !value.showGoodies}
-            onChange={handleHideRepeatGoodieOnUpgradeChange}
-          >
-            {t('blocks.subscribe.hideRepeatGoodieOnUpgrade')}
-          </Checkbox>
-        </GoodieRow>
+        </div>
+      </Content>
 
-        <Checkbox
+      <Content>
+        <Heading>{t('blocks.subscribe.vouchersHeading')}</Heading>
+
+        <Toggle
           checked={value.showVouchers}
           disabled={disabled}
-          onChange={handleShowVouchersChange}
+          onChange={checked => handleShowVouchersChange(undefined, checked)}
         >
           {t('blocks.subscribe.showVouchers')}
-        </Checkbox>
+        </Toggle>
       </Content>
 
       <Content>
         <Heading>{t('blocks.subscribe.selectFields')}</Heading>
 
-        <StyledCheckPicker
+        <CheckPicker
           block
           disabled={disabled}
           data={[

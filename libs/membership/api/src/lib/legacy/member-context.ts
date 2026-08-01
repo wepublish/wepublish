@@ -51,7 +51,7 @@ export interface RenewSubscriptionForUserProps {
   subscription: SubscriptionWithRelations;
   discount?: number;
   voucherId?: string;
-  goodieID?: string;
+  goodieId?: string;
 }
 
 export interface ChargeInvoiceProps {
@@ -223,7 +223,7 @@ export class MemberContext implements MemberContextInterface {
     subscription,
     discount,
     voucherId,
-    goodieID,
+    goodieId,
   }: RenewSubscriptionForUserProps): Promise<InvoiceWithItems | null> {
     try {
       const { periods = [], paidUntil, deactivation } = subscription;
@@ -331,9 +331,9 @@ export class MemberContext implements MemberContextInterface {
       }
 
       const goodie =
-        goodieID ?
+        goodieId ?
           await this.prisma.goodie.findUnique({
-            where: { id: goodieID },
+            where: { id: goodieId },
           })
         : null;
 
@@ -781,7 +781,7 @@ export class MemberContext implements MemberContextInterface {
     needsConfirmation,
     discount,
     voucherId,
-    goodieID,
+    goodieId,
   }: {
     userID: string;
     paymentMethodID: string;
@@ -796,7 +796,7 @@ export class MemberContext implements MemberContextInterface {
     needsConfirmation?: boolean;
     discount?: number;
     voucherId?: string;
-    goodieID?: string;
+    goodieId?: string;
   }): Promise<{
     subscription: SubscriptionWithRelations;
     invoice: InvoiceWithItems;
@@ -868,7 +868,7 @@ export class MemberContext implements MemberContextInterface {
       subscription,
       discount,
       voucherId,
-      goodieID,
+      goodieId,
     });
 
     if (!invoice) {

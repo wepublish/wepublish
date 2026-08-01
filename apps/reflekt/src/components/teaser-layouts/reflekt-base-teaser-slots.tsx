@@ -27,4 +27,4 @@ export const ReflektBaseTeaserSlots = cond([
       </div>
     ),
   ],
-]) as (props: BuilderTeaserSlotsBlockProps) => JSX.Element;
+]);

@@ -23,7 +23,7 @@ const lowercase = replace(/^./, toLower);
 export const SubscribeBlock = ({
   className,
   memberPlans,
-  plans,
+  memberPlanRenderSettings,
   fields,
   showGoodies,
   showVouchers,
@@ -107,7 +107,7 @@ export const SubscribeBlock = ({
           className={className}
           memberPlans={memberPlansObj}
           fields={fields.map(lowercase) as BuilderSubscribeProps['fields']}
-          planSettings={plans ?? undefined}
+          memberPlanRenderSettings={memberPlanRenderSettings}
           showGoodies={showGoodies}
           showVouchers={showVouchers}
           goodieMinValue={goodieMinValue}
@@ -184,7 +184,7 @@ export const SubscribeBlock = ({
           }}
           className={className}
           memberPlans={memberPlansObj}
-          planSettings={plans ?? undefined}
+          memberPlanRenderSettings={memberPlanRenderSettings}
           showGoodies={showGoodies}
           goodieMinValue={goodieMinValue}
           hideRepeatGoodieOnUpgrade={hideRepeatGoodieOnUpgrade}

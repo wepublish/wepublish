@@ -55,4 +55,4 @@ export const ReflektBaseBreakBlock = cond([
       </div>
     ),
   ],
-]) as (props: BuilderBreakBlockProps) => JSX.Element;
+]);

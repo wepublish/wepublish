@@ -112,12 +112,21 @@ fragment FullSubscribeBlock on SubscribeBlock {
   disabled
   blockStyle: blockStyleName
   memberPlanIds
-  plans {
-    memberPlanId
-    renderStyle
-    amountTileValues
-    amountTileLayout
+  memberPlanRenderSettings {
     isDefault
+    memberPlanId
+    layout {
+      type
+
+      ... on SubscribeBlockLayoutSliderConfig {
+        showInput
+      }
+
+      ... on SubscribeBlockLayoutPickerConfig {
+        showInput
+        values
+      }
+    }
   }
   memberPlans {
     ...FullMemberPlan

@@ -1885,12 +1885,12 @@ type Mutation {
   createUserRole(description: String, name: String!, permissionIDs: [String!]!): UserRole!
 
   """Allows authenticated users to create additional subscriptions"""
-  createUserSubscription(autoRenew: Boolean!, deactivateSubscriptionId: String, failureURL: String, goodieID: String, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Int!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], successURL: String, voucher: String): Payment!
+  createUserSubscription(autoRenew: Boolean!, deactivateSubscriptionId: String, failureURL: String, goodieId: String, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Int!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], successURL: String, voucher: String): Payment!
 
   """
   Allows guests and authenticated users to create additional subscriptions
   """
-  createUserSubscriptionWithConfirmation(autoRenew: Boolean!, goodieID: String, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Int!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], userId: String, voucher: String): Boolean!
+  createUserSubscriptionWithConfirmation(autoRenew: Boolean!, goodieId: String, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Int!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], userId: String, voucher: String): Boolean!
 
   """Creates a new voucher."""
   createVoucher(code: String!, discountPercent: Int!, memberPlanId: String!, validFrom: DateTime!, validTo: DateTime!): Voucher!
@@ -3898,17 +3898,12 @@ type SubscribeBlock implements BaseBlock {
   fields: [SubscribeBlockField!]!
   goodieMinValue: Int
   hideRepeatGoodieOnUpgrade: Boolean!
-  memberPlanIds: [String!]
+  memberPlanIds: [String!]!
+  memberPlanRenderSettings: [SubscribeBlockMemberPlanRenderSetting!]!
   memberPlans: [MemberPlan!]!
-  plans: [SubscribeBlockPlanSetting!]
   showGoodies: Boolean!
   showVouchers: Boolean!
   type: BlockType!
-}
-
-enum SubscribeBlockAmountTileLayout {
-  Narrow
-  Wide
 }
 
 enum SubscribeBlockField {
@@ -3927,34 +3922,53 @@ input SubscribeBlockInput {
   fields: [SubscribeBlockField!]! = [FirstName, Password, PasswordRepeated, Address]
   goodieMinValue: Int
   hideRepeatGoodieOnUpgrade: Boolean! = false
-  memberPlanIds: [String!]
-  plans: [SubscribeBlockPlanSettingInput!]
+  memberPlanIds: [String!]! = []
+  memberPlanRenderSettings: [SubscribeBlockMemberPlanRenderSettingInput!]!
   showGoodies: Boolean! = false
   showVouchers: Boolean! = false
 }
 
-enum SubscribeBlockPlanRenderStyle {
-  AmountTiles
-  Card
-  CardAndSlider
-  CardFreeInput
+interface SubscribeBlockLayoutConfig {
+  type: SubscribeBlockRenderLayout!
+}
+
+input SubscribeBlockLayoutConfigInput {
+  showInput: Boolean! = false
+  type: SubscribeBlockRenderLayout!
+  values: [Int!]
+}
+
+type SubscribeBlockLayoutNoneConfig implements SubscribeBlockLayoutConfig {
+  type: SubscribeBlockRenderLayout!
+}
+
+type SubscribeBlockLayoutPickerConfig implements SubscribeBlockLayoutConfig {
+  showInput: Boolean!
+  type: SubscribeBlockRenderLayout!
+  values: [Int!]!
+}
+
+type SubscribeBlockLayoutSliderConfig implements SubscribeBlockLayoutConfig {
+  showInput: Boolean!
+  type: SubscribeBlockRenderLayout!
+}
+
+type SubscribeBlockMemberPlanRenderSetting {
+  isDefault: Boolean!
+  layout: SubscribeBlockLayoutConfig!
+  memberPlanId: String!
+}
+
+input SubscribeBlockMemberPlanRenderSettingInput {
+  isDefault: Boolean! = false
+  layout: SubscribeBlockLayoutConfigInput!
+  memberPlanId: String!
+}
+
+enum SubscribeBlockRenderLayout {
+  None
+  Picker
   Slider
-}
-
-type SubscribeBlockPlanSetting {
-  amountTileLayout: SubscribeBlockAmountTileLayout
-  amountTileValues: [Int!]
-  isDefault: Boolean
-  memberPlanId: String!
-  renderStyle: SubscribeBlockPlanRenderStyle!
-}
-
-input SubscribeBlockPlanSettingInput {
-  amountTileLayout: SubscribeBlockAmountTileLayout
-  amountTileValues: [Int!]
-  isDefault: Boolean
-  memberPlanId: String!
-  renderStyle: SubscribeBlockPlanRenderStyle!
 }
 
 type SubscriptionCreatedAction implements BaseAction & HasSubscriptionLc {

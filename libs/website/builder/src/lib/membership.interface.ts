@@ -3,9 +3,7 @@ import { RadioProps } from '@mui/material';
 import {
   ChallengeQuery,
   FullGoodieFragment,
-  SubscribeBlockAmountTileLayout,
-  SubscribeBlockPlanRenderStyle,
-  SubscribeBlockPlanSetting,
+  FullSubscribeBlockFragment,
   FullInvoiceFragment,
   FullMemberPlanFragment,
   FullSubscriptionFragment,
@@ -25,6 +23,11 @@ import {
 import { BuilderRegistrationFormProps } from './authentication.interface';
 import { BuilderUserFormFields } from './user.interface';
 import { FieldError } from 'react-hook-form';
+
+export type BuilderMemberPlanRenderSetting =
+  FullSubscribeBlockFragment['memberPlanRenderSettings'][number];
+
+export type BuilderMemberPlanLayout = BuilderMemberPlanRenderSetting['layout'];
 
 export type BuilderSubscriptionListItemProps = FullSubscriptionFragment & {
   className?: string;
@@ -63,7 +66,6 @@ export type BuilderInvoiceListProps = Pick<
 
 export type BuilderGoodiePickerProps = {
   goodies: FullGoodieFragment[];
-  allGoodies?: FullGoodieFragment[];
   className?: string;
   name?: string;
   value?: string | null;
@@ -74,19 +76,14 @@ export type BuilderGoodiePickerProps = {
 export type BuilderMemberPlanPickerProps = {
   memberPlans: FullMemberPlanFragment[];
   className?: string;
-  id?: string;
   onChange: (memberPlanId: string) => void;
   name?: string;
   value?: string;
-  sortBy?: 'priceAsc';
-  monthlyAmount?: number;
-  onMonthlyAmountChange?: (monthlyAmount: number, touched?: boolean) => void;
-  monthlyAmountError?: string;
-  planSettings?: SubscribeBlockPlanSetting[];
 };
 
 export type BuilderMemberPlanItemProps = Pick<
   FullMemberPlanFragment,
+  | 'slug'
   | 'amountPerMonthMin'
   | 'amountPerMonthMax'
   | 'currency'
@@ -95,13 +92,7 @@ export type BuilderMemberPlanItemProps = Pick<
   | 'tags'
   | 'goodies'
 > &
-  Omit<RadioProps, 'ref'> & { className?: string } & {
-    slug: string;
-    monthlyAmount?: number;
-    onMonthlyAmountChange?: (monthlyAmount: number, touched?: boolean) => void;
-    monthlyAmountError?: string;
-    renderStyle?: SubscribeBlockPlanRenderStyle;
-  };
+  RadioProps & { className?: string };
 
 export type BuilderPeriodicityPickerProps = {
   periodicities: PaymentPeriodicity[] | undefined;
@@ -127,7 +118,7 @@ export type BuilderTransactionFeeProps = {
   value?: boolean;
 };
 
-export type BuilderPaymentAmountProps = {
+export type BuilderPaymentAmountSliderProps = {
   amountPerMonthMin: number;
   amountPerMonthMax?: number;
   amountPerMonthTarget: number | undefined;
@@ -138,9 +129,22 @@ export type BuilderPaymentAmountProps = {
   value: number;
   error: FieldError | undefined;
   className?: string;
-  slug?: string;
+  showInput?: boolean;
+};
+
+export type BuilderPaymentAmountPickerProps = {
+  amountPerMonthMin: number;
+  amountPerMonthMax?: number;
+  amountPerMonthTarget: number | undefined;
+  currency: Currency;
+  donate: boolean;
+  onChange: (amount: number) => void;
+  name?: string;
+  value: number;
+  error: FieldError | undefined;
+  className?: string;
   presetAmounts?: number[];
-  tileLayout?: SubscribeBlockAmountTileLayout;
+  showInput?: boolean;
 };
 
 export type BuilderSubscribeProps<
@@ -159,7 +163,7 @@ export type BuilderSubscribeProps<
     QueryResult<MemberPlanListQuery>,
     'data' | 'loading' | 'error'
   >;
-  planSettings?: SubscribeBlockPlanSetting[];
+  memberPlanRenderSettings?: BuilderMemberPlanRenderSetting[];
   showGoodies?: boolean;
   showVouchers?: boolean;
   goodieMinValue?: number | null;
@@ -210,7 +214,7 @@ export type BuilderUpgradeProps = {
     'data' | 'loading' | 'error'
   >;
   subscriptionToUpgrade: FullSubscriptionFragment;
-  planSettings?: SubscribeBlockPlanSetting[];
+  memberPlanRenderSettings?: BuilderMemberPlanRenderSetting[];
   showGoodies?: boolean;
   goodieMinValue?: number | null;
   hideRepeatGoodieOnUpgrade?: boolean;

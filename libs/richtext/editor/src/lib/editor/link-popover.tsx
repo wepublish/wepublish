@@ -386,14 +386,17 @@ export function LinkPopover({ open, anchorEl, onClose }: LinkPopoverProps) {
                 size="small"
                 fullWidth
               >
-                <InputLabel>{t('richtext.link.style')}</InputLabel>
+                <InputLabel shrink>{t('richtext.link.style')}</InputLabel>
                 <Select
                   {...field}
+                  displayEmpty
                   value={field.value ?? ''}
                   label={t('richtext.link.style')}
                   onChange={event => field.onChange(event.target.value || null)}
                 >
-                  <MenuItem value="">{t('richtext.link.noStyle')}</MenuItem>
+                  <MenuItem value="">
+                    {t('richtext.link.defaultStyle')}
+                  </MenuItem>
                   {variants.map((option: LinkVariantOption) => (
                     <MenuItem
                       key={option.value}

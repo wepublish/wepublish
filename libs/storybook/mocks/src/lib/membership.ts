@@ -3,6 +3,7 @@ import {
   CaptchaType,
   Challenge,
   Currency,
+  FullGoodieFragment,
   Invoice,
   InvoiceItem,
   MemberPlan,
@@ -67,6 +68,21 @@ export const mockAvailablePaymentMethod = ({
   paymentMethods,
   paymentPeriodicities,
   paymentMethodIDs,
+});
+
+export const mockGoodie = ({
+  id = faker.string.nanoid(),
+  name = faker.commerce.productName(),
+  description = mockShortRichText(),
+  image = mockImage(),
+  stock = 10,
+}: Partial<FullGoodieFragment> = {}): FullGoodieFragment => ({
+  __typename: 'Goodie',
+  id,
+  name,
+  description,
+  image,
+  stock,
 });
 
 export const mockMemberPlan = ({

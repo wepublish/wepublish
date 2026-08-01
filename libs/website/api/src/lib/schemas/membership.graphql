@@ -22,6 +22,7 @@ fragment FullGoodie on Goodie {
   id
   name
   description
+  stock
   image {
     ...FullImage
   }
@@ -189,7 +190,7 @@ mutation Subscribe(
     failureURL: $failureURL
     deactivateSubscriptionId: $deactivateSubscriptionId
     voucher: $voucher
-    goodieID: $goodieId
+    goodieId: $goodieId
   ) {
     ...FullPayment
   }
@@ -219,7 +220,7 @@ mutation Resubscribe(
     paymentMethodSlug: $paymentMethodSlug
     subscriptionProperties: $subscriptionProperties
     voucher: $voucher
-    goodieID: $goodieId
+    goodieId: $goodieId
   )
 }
 

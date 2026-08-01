@@ -2573,7 +2573,7 @@ export type MutationCreateUserSubscriptionArgs = {
   autoRenew: Scalars['Boolean'];
   deactivateSubscriptionId?: InputMaybe<Scalars['String']>;
   failureURL?: InputMaybe<Scalars['String']>;
-  goodieID?: InputMaybe<Scalars['String']>;
+  goodieId?: InputMaybe<Scalars['String']>;
   memberPlanID?: InputMaybe<Scalars['String']>;
   memberPlanSlug?: InputMaybe<Scalars['Slug']>;
   monthlyAmount: Scalars['Int'];
@@ -2587,7 +2587,7 @@ export type MutationCreateUserSubscriptionArgs = {
 
 export type MutationCreateUserSubscriptionWithConfirmationArgs = {
   autoRenew: Scalars['Boolean'];
-  goodieID?: InputMaybe<Scalars['String']>;
+  goodieId?: InputMaybe<Scalars['String']>;
   memberPlanID?: InputMaybe<Scalars['String']>;
   memberPlanSlug?: InputMaybe<Scalars['Slug']>;
   monthlyAmount: Scalars['Int'];
@@ -5513,18 +5513,13 @@ export type SubscribeBlock = BaseBlock & {
   fields: Array<SubscribeBlockField>;
   goodieMinValue?: Maybe<Scalars['Int']>;
   hideRepeatGoodieOnUpgrade: Scalars['Boolean'];
-  memberPlanIds?: Maybe<Array<Scalars['String']>>;
+  memberPlanIds: Array<Scalars['String']>;
+  memberPlanRenderSettings: Array<SubscribeBlockMemberPlanRenderSetting>;
   memberPlans: Array<MemberPlan>;
-  plans?: Maybe<Array<SubscribeBlockPlanSetting>>;
   showGoodies: Scalars['Boolean'];
   showVouchers: Scalars['Boolean'];
   type: BlockType;
 };
-
-export enum SubscribeBlockAmountTileLayout {
-  Narrow = 'Narrow',
-  Wide = 'Wide',
-}
 
 export enum SubscribeBlockField {
   Address = 'Address',
@@ -5542,36 +5537,58 @@ export type SubscribeBlockInput = {
   fields?: Array<SubscribeBlockField>;
   goodieMinValue?: InputMaybe<Scalars['Int']>;
   hideRepeatGoodieOnUpgrade?: Scalars['Boolean'];
-  memberPlanIds?: InputMaybe<Array<Scalars['String']>>;
-  plans?: InputMaybe<Array<SubscribeBlockPlanSettingInput>>;
+  memberPlanIds?: Array<Scalars['String']>;
+  memberPlanRenderSettings: Array<SubscribeBlockMemberPlanRenderSettingInput>;
   showGoodies?: Scalars['Boolean'];
   showVouchers?: Scalars['Boolean'];
 };
 
-export enum SubscribeBlockPlanRenderStyle {
-  AmountTiles = 'AmountTiles',
-  Card = 'Card',
-  CardAndSlider = 'CardAndSlider',
-  CardFreeInput = 'CardFreeInput',
+export type SubscribeBlockLayoutConfig = {
+  type: SubscribeBlockRenderLayout;
+};
+
+export type SubscribeBlockLayoutConfigInput = {
+  showInput?: Scalars['Boolean'];
+  type: SubscribeBlockRenderLayout;
+  values?: InputMaybe<Array<Scalars['Int']>>;
+};
+
+export type SubscribeBlockLayoutNoneConfig = SubscribeBlockLayoutConfig & {
+  __typename?: 'SubscribeBlockLayoutNoneConfig';
+  type: SubscribeBlockRenderLayout;
+};
+
+export type SubscribeBlockLayoutPickerConfig = SubscribeBlockLayoutConfig & {
+  __typename?: 'SubscribeBlockLayoutPickerConfig';
+  showInput: Scalars['Boolean'];
+  type: SubscribeBlockRenderLayout;
+  values: Array<Scalars['Int']>;
+};
+
+export type SubscribeBlockLayoutSliderConfig = SubscribeBlockLayoutConfig & {
+  __typename?: 'SubscribeBlockLayoutSliderConfig';
+  showInput: Scalars['Boolean'];
+  type: SubscribeBlockRenderLayout;
+};
+
+export type SubscribeBlockMemberPlanRenderSetting = {
+  __typename?: 'SubscribeBlockMemberPlanRenderSetting';
+  isDefault: Scalars['Boolean'];
+  layout: SubscribeBlockLayoutConfig;
+  memberPlanId: Scalars['String'];
+};
+
+export type SubscribeBlockMemberPlanRenderSettingInput = {
+  isDefault?: Scalars['Boolean'];
+  layout: SubscribeBlockLayoutConfigInput;
+  memberPlanId: Scalars['String'];
+};
+
+export enum SubscribeBlockRenderLayout {
+  None = 'None',
+  Picker = 'Picker',
   Slider = 'Slider',
 }
-
-export type SubscribeBlockPlanSetting = {
-  __typename?: 'SubscribeBlockPlanSetting';
-  amountTileLayout?: Maybe<SubscribeBlockAmountTileLayout>;
-  amountTileValues?: Maybe<Array<Scalars['Int']>>;
-  isDefault?: Maybe<Scalars['Boolean']>;
-  memberPlanId: Scalars['String'];
-  renderStyle: SubscribeBlockPlanRenderStyle;
-};
-
-export type SubscribeBlockPlanSettingInput = {
-  amountTileLayout?: InputMaybe<SubscribeBlockAmountTileLayout>;
-  amountTileValues?: InputMaybe<Array<Scalars['Int']>>;
-  isDefault?: InputMaybe<Scalars['Boolean']>;
-  memberPlanId: Scalars['String'];
-  renderStyle: SubscribeBlockPlanRenderStyle;
-};
 
 export type SubscriptionCreatedAction = BaseAction &
   HasSubscriptionLc & {

@@ -1,15 +1,20 @@
+import styled from '@emotion/styled';
 import { PaymentAmountPicker } from '@wepublish/membership/website';
-import { BuilderPaymentAmountProps } from '@wepublish/website/builder';
+import { BuilderPaymentAmountPickerProps } from '@wepublish/website/builder';
 import { forwardRef } from 'react';
+
+const PaymentAmountPickerStyled = styled(PaymentAmountPicker)`
+  grid-template-columns: repeat(auto-fit, 125px);
+`;
 
 export const TsriPaymentAmountPicker = forwardRef<
   HTMLInputElement,
-  BuilderPaymentAmountProps
+  BuilderPaymentAmountPickerProps
 >((props, ref) => (
-  <PaymentAmountPicker
+  <PaymentAmountPickerStyled
     {...props}
     ref={ref}
-    pickerItems={[1000, 1500, 2000]}
+    presetAmounts={props.presetAmounts ?? [1000, 1500, 2000]}
     arrows={'stacked'}
     snap={{
       values: [10, 15, 20],

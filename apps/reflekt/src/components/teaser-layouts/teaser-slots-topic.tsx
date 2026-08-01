@@ -123,6 +123,7 @@ export const TeaserSlotsTopic = ({
         >
           {title}
         </Typography>
+
         {blockStyle && endsWithAny(['Recherchen', 'News'], blockStyle) && (
           <>
             <TeaserSlider
@@ -152,6 +153,7 @@ export const TeaserSlotsTopic = ({
                 });
               }}
             />
+
             <Teaser
               key={filledTeasers.length - 1}
               index={filledTeasers.length - 1}
@@ -165,6 +167,7 @@ export const TeaserSlotsTopic = ({
             />
           </>
         )}
+
         {blockStyle && endsWithAny(['Grid'], blockStyle) && (
           <TeaserSlotsBlockTeasers>
             {filledTeasers.map((teaser, index) => (

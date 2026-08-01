@@ -1,11 +1,16 @@
 import styled from '@emotion/styled';
 import { MenuItem, TextField, Typography } from '@mui/material';
-import { FullImageGalleryBlockFragment } from '@wepublish/website/api';
+import {
+  FullGoodieFragment,
+  FullImageGalleryBlockFragment,
+} from '@wepublish/website/api';
 import { BuilderGoodiePickerProps } from '@wepublish/website/builder';
-import { forwardRef } from 'react';
+import { createContext, forwardRef, memo, use, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { ReflektImageSliderSlim } from './reflekt-image-slider';
+
+export const AllGoodiesContext = createContext([] as FullGoodieFragment[]);
 
 const GoodieSelect = styled(TextField)`
   .MuiOutlinedInput-root {
@@ -41,42 +46,62 @@ const GoodieSelectArea = styled('div')`
   grid-area: goodie;
 `;
 
+/**
+ * Kept separate and memoized: the slider only depends on the (stable) list of
+ * all goodies, while the picker itself re-renders on every subscribe form
+ * change. Without this the whole slider — and every image in it — is
+ * reconciled again on each keystroke and member plan switch.
+ */
+const GoodieSlider = memo(function GoodieSlider({
+  goodies,
+}: {
+  goodies: FullGoodieFragment[];
+}) {
+  const images = useMemo(() => {
+    const goodieImages = goodies
+      .filter(goodie => goodie.image)
+      .map(goodie => ({
+        caption: null,
+        image: goodie.image,
+      })) as FullImageGalleryBlockFragment['images'];
+
+    const repeatCount =
+      goodieImages.length ? Math.ceil(4 / goodieImages.length) : 0;
+
+    return Array.from({ length: repeatCount }).flatMap(() => goodieImages);
+  }, [goodies]);
+
+  if (!images.length) {
+    return null;
+  }
+
+  return (
+    <GoodieSliderArea>
+      <GoodieSliderTitle
+        variant="h2"
+        component="h2"
+      >
+        Crowdfunding-Geschenk
+      </GoodieSliderTitle>
+
+      <ReflektImageSliderSlim images={images} />
+    </GoodieSliderArea>
+  );
+});
+
 export const ReflektGoodiePicker = forwardRef<
   HTMLInputElement,
   BuilderGoodiePickerProps
 >(function ReflektGoodiePicker(
-  { goodies, allGoodies, className, name, value, disabled, onChange },
+  { goodies, className, name, value, disabled, onChange },
   ref
 ) {
   const { t } = useTranslation();
-
-  const goodieImages = (allGoodies ?? goodies)
-    .filter(goodie => goodie.image)
-    .map(goodie => ({
-      caption: null,
-      image: goodie.image,
-    })) as FullImageGalleryBlockFragment['images'];
-
-  const repeatCount =
-    goodieImages.length ? Math.ceil(4 / goodieImages.length) : 0;
-  const images = Array.from({ length: repeatCount }).flatMap(
-    () => goodieImages
-  );
+  const allGoodies = use(AllGoodiesContext) ?? goodies;
 
   return (
     <>
-      {!!images.length && (
-        <GoodieSliderArea>
-          <GoodieSliderTitle
-            variant="h2"
-            component="h2"
-          >
-            Crowdfunding-Geschenk
-          </GoodieSliderTitle>
-
-          <ReflektImageSliderSlim images={images} />
-        </GoodieSliderArea>
-      )}
+      <GoodieSlider goodies={allGoodies} />
 
       <GoodieSelectArea>
         <GoodieSelect
