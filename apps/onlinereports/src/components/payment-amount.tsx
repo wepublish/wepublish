@@ -50,7 +50,6 @@ export const OnlineReportsPaymentAmount = forwardRef<
   (
     {
       className,
-      slug,
       currency,
       amountPerMonthMin,
       amountPerMonthTarget,
