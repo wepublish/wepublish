@@ -2,6 +2,10 @@ import { LazyQueryExecFunction, QueryResult } from '@apollo/client';
 import { RadioProps } from '@mui/material';
 import {
   ChallengeQuery,
+  FullGoodieFragment,
+  SubscribeBlockAmountTileLayout,
+  SubscribeBlockPlanRenderStyle,
+  SubscribeBlockPlanSetting,
   FullInvoiceFragment,
   FullMemberPlanFragment,
   FullSubscriptionFragment,
@@ -57,12 +61,28 @@ export type BuilderInvoiceListProps = Pick<
   onPay?: (invoiceId: string, paymentMethodId: string) => Promise<void>;
 };
 
+export type BuilderGoodiePickerProps = {
+  goodies: FullGoodieFragment[];
+  allGoodies?: FullGoodieFragment[];
+  className?: string;
+  name?: string;
+  value?: string | null;
+  disabled?: boolean;
+  onChange: (goodieId: string | null) => void;
+};
+
 export type BuilderMemberPlanPickerProps = {
   memberPlans: FullMemberPlanFragment[];
   className?: string;
+  id?: string;
   onChange: (memberPlanId: string) => void;
   name?: string;
   value?: string;
+  sortBy?: 'priceAsc';
+  monthlyAmount?: number;
+  onMonthlyAmountChange?: (monthlyAmount: number, touched?: boolean) => void;
+  monthlyAmountError?: string;
+  planSettings?: SubscribeBlockPlanSetting[];
 };
 
 export type BuilderMemberPlanItemProps = Pick<
@@ -73,8 +93,15 @@ export type BuilderMemberPlanItemProps = Pick<
   | 'extendable'
   | 'shortDescription'
   | 'tags'
+  | 'goodies'
 > &
-  Omit<RadioProps, 'ref'> & { className?: string } & { slug: string };
+  Omit<RadioProps, 'ref'> & { className?: string } & {
+    slug: string;
+    monthlyAmount?: number;
+    onMonthlyAmountChange?: (monthlyAmount: number, touched?: boolean) => void;
+    monthlyAmountError?: string;
+    renderStyle?: SubscribeBlockPlanRenderStyle;
+  };
 
 export type BuilderPeriodicityPickerProps = {
   periodicities: PaymentPeriodicity[] | undefined;
@@ -112,6 +139,8 @@ export type BuilderPaymentAmountProps = {
   error: FieldError | undefined;
   className?: string;
   slug?: string;
+  presetAmounts?: number[];
+  tileLayout?: SubscribeBlockAmountTileLayout;
 };
 
 export type BuilderSubscribeProps<
@@ -130,6 +159,10 @@ export type BuilderSubscribeProps<
     QueryResult<MemberPlanListQuery>,
     'data' | 'loading' | 'error'
   >;
+  planSettings?: SubscribeBlockPlanSetting[];
+  showGoodies?: boolean;
+  showVouchers?: boolean;
+  goodieMinValue?: number | null;
   subscribeInfo: Pick<
     QueryResult<CreateSubscriptionInfoQuery>,
     'data' | 'loading' | 'error'
@@ -161,6 +194,10 @@ export type BuilderSubscribeProps<
   transactionFee?: (monthlyAmount: number) => number;
   transactionFeeText?: string;
   returningUserId?: string;
+  filterGoodies?: (
+    goodies: FullGoodieFragment[],
+    context: { monthlyAmount: number }
+  ) => FullGoodieFragment[];
 } & Pick<BuilderRegistrationFormProps<T>, 'schema' | 'fields'>;
 
 export type BuilderUpgradeProps = {
@@ -173,6 +210,10 @@ export type BuilderUpgradeProps = {
     'data' | 'loading' | 'error'
   >;
   subscriptionToUpgrade: FullSubscriptionFragment;
+  planSettings?: SubscribeBlockPlanSetting[];
+  showGoodies?: boolean;
+  goodieMinValue?: number | null;
+  hideRepeatGoodieOnUpgrade?: boolean;
   className?: string;
   onUpgrade?: (
     data: Omit<UpgradeMutationVariables, 'failureURL' | 'successURL'>

@@ -263,12 +263,17 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
     defaultValue: {
       blockStyle: undefined,
       memberPlanIds: [],
+      plans: [],
       fields: [
         SubscribeBlockField.FirstName,
         SubscribeBlockField.Password,
         SubscribeBlockField.PasswordRepeated,
         SubscribeBlockField.Address,
       ],
+      showGoodies: false,
+      showVouchers: false,
+      goodieMinValue: null,
+      hideRepeatGoodieOnUpgrade: false,
     },
     label: 'blocks.subscribe.label',
     icon: <MdAccountBox />,

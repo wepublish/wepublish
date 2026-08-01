@@ -152,7 +152,7 @@ const FieldSet = styled('fieldset')`
   pointer-events: none;
   border-style: solid;
   border-width: 1px;
-  border-color: ${({ theme }) => theme.palette.divider}
+  border-color: ${({ theme }) => theme.palette.divider};
   border-width: 1px;
   border-radius: ${({ theme }) => theme.shape.borderRadius}px;
   overflow: hidden;
@@ -297,6 +297,7 @@ export const CurrencyNumberSpinner = (
     snap?: CurrencyNumberSpinnerSnap;
     helperText?: ReactNode;
     arrows?: 'split' | 'stacked';
+    placeholder?: string;
   }
 ) => {
   const id = useId();
@@ -311,6 +312,7 @@ export const CurrencyNumberSpinner = (
     snap,
     helperText,
     arrows = 'split',
+    placeholder,
   } = props;
 
   const isParentControlled = valueProp !== undefined;
@@ -374,7 +376,10 @@ export const CurrencyNumberSpinner = (
       >
         {arrows === 'stacked' ?
           <NumberField.Group css={stackedGroupStyles}>
-            <NumberField.Input css={stackedInputStyles} />
+            <NumberField.Input
+              css={stackedInputStyles}
+              placeholder={placeholder}
+            />
 
             <div css={arrowStackStyles}>
               <NumberField.Increment css={arrowButtonStyles}>
@@ -391,7 +396,10 @@ export const CurrencyNumberSpinner = (
               <MinusIcon css={iconStyles} />
             </NumberField.Decrement>
 
-            <NumberField.Input css={inputStyles} />
+            <NumberField.Input
+              css={inputStyles}
+              placeholder={placeholder}
+            />
 
             <NumberField.Increment css={buttonStyles}>
               <PlusIcon css={iconStyles} />

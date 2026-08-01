@@ -13,6 +13,7 @@ import {
   FullFlexBlockFragment,
 } from '@wepublish/website/api';
 import {
+  BuilderBlockRendererProps,
   BuilderFlexBlockProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
@@ -180,6 +181,8 @@ export const TabbedContent = ({
   blockStyle,
   blockStyleByIndex,
   cssByBlockStyle,
+  type,
+  level,
 }: BuilderFlexBlockProps & {
   blockStyleByIndex?: (index: number) => string;
   cssByBlockStyle?: (
@@ -187,6 +190,8 @@ export const TabbedContent = ({
     theme: Theme,
     blockStyleOverride?: string | undefined | null
   ) => string;
+  type?: BuilderBlockRendererProps['type'];
+  level?: number;
 }) => {
   const [value, setValue] = useState(0);
   const thisId = `TC-${useId()}`;
@@ -253,7 +258,8 @@ export const TabbedContent = ({
                   blockStyle,
               } as FullBlockFragment
             }
-            type="Article"
+            type={type ?? 'Article'}
+            level={(level ?? 0) + 1}
             index={index}
             count={sortedBlocks.length}
           />

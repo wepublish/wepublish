@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { FullImageFragment, Tag, TagType } from '@wepublish/editor/api';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdListAlt, MdSettings, MdShare } from 'react-icons/md';
 import {
@@ -130,14 +130,27 @@ function PageMetadataPanel({
 
   const { t } = useTranslation();
 
+  // Keep the latest value/onChange in refs so the properties-sync effect can
+  // depend ONLY on metaDataProperties. Depending on `value`/`onChange` here
+  // caused an infinite update loop (onChange updates value → effect re-fires).
+  const onChangeRef = useRef(onChange);
+  onChangeRef.current = onChange;
+  const valueRef = useRef(value);
+  valueRef.current = value;
+  const didMountRef = useRef(false);
+
   useEffect(() => {
-    if (metaDataProperties) {
-      onChange?.({
-        ...value,
-        properties: metaDataProperties.map(({ value }) => value),
-      });
+    // Skip the initial mount — the parent already holds the loaded properties.
+    if (!didMountRef.current) {
+      didMountRef.current = true;
+      return;
     }
-  }, [metaDataProperties, onChange, value]);
+
+    onChangeRef.current?.({
+      ...valueRef.current,
+      properties: metaDataProperties.map(({ value }) => value),
+    });
+  }, [metaDataProperties]);
 
   function handleImageChange(currentImage: FullImageFragment) {
     switch (activeKey) {

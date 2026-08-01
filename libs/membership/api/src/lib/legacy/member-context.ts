@@ -51,6 +51,7 @@ export interface RenewSubscriptionForUserProps {
   subscription: SubscriptionWithRelations;
   discount?: number;
   voucherId?: string;
+  goodieID?: string;
 }
 
 export interface ChargeInvoiceProps {
@@ -222,6 +223,7 @@ export class MemberContext implements MemberContextInterface {
     subscription,
     discount,
     voucherId,
+    goodieID,
   }: RenewSubscriptionForUserProps): Promise<InvoiceWithItems | null> {
     try {
       const { periods = [], paidUntil, deactivation } = subscription;
@@ -328,6 +330,13 @@ export class MemberContext implements MemberContextInterface {
         throw new Error('Memberplan not found');
       }
 
+      const goodie =
+        goodieID ?
+          await this.prisma.goodie.findUnique({
+            where: { id: goodieID },
+          })
+        : null;
+
       const newInvoice = await this.prisma.invoice.create({
         data: {
           subscriptionID: subscription.id,
@@ -337,13 +346,25 @@ export class MemberContext implements MemberContextInterface {
           scheduledDeactivationAt: deactivationDate,
           currency: subscription.currency,
           items: {
-            create: {
-              name: 'Membership',
-              description: `From ${startDate.toISOString()} to ${nextDate.toISOString()}`,
-              amount,
-              quantity: 1,
-              voucherId,
-            },
+            create: [
+              {
+                name: 'Membership',
+                description: `From ${startDate.toISOString()} to ${nextDate.toISOString()}`,
+                amount,
+                quantity: 1,
+                voucherId,
+              },
+              ...(goodie ?
+                [
+                  {
+                    name: goodie.name,
+                    amount: 0,
+                    quantity: 1,
+                    goodieId: goodie.id,
+                  },
+                ]
+              : []),
+            ],
           },
         },
         include: {
@@ -760,6 +781,7 @@ export class MemberContext implements MemberContextInterface {
     needsConfirmation,
     discount,
     voucherId,
+    goodieID,
   }: {
     userID: string;
     paymentMethodID: string;
@@ -774,6 +796,7 @@ export class MemberContext implements MemberContextInterface {
     needsConfirmation?: boolean;
     discount?: number;
     voucherId?: string;
+    goodieID?: string;
   }): Promise<{
     subscription: SubscriptionWithRelations;
     invoice: InvoiceWithItems;
@@ -844,6 +867,8 @@ export class MemberContext implements MemberContextInterface {
     const invoice = await this.renewSubscriptionForUser({
       subscription,
       discount,
+      voucherId,
+      goodieID,
     });
 
     if (!invoice) {
@@ -1106,14 +1131,23 @@ export class MemberContext implements MemberContextInterface {
       return;
     }
 
-    await this.mailContext.sendMail({
-      externalMailTemplateId: remoteTemplate,
-      recipient: user,
-      optionalData: {
-        subscription,
-        ...optionalData,
-      },
-      mailType: mailLogType.UserFlow,
-    });
+    try {
+      await this.mailContext.sendMail({
+        externalMailTemplateId: remoteTemplate,
+        recipient: user,
+        optionalData: {
+          subscription,
+          ...optionalData,
+        },
+        mailType: mailLogType.UserFlow,
+      });
+    } catch (error) {
+      logger('MemberContext').error(
+        error as Error,
+        'Failed to send mail for subscription event <%s> of subscription <%s>',
+        subscriptionEvent,
+        subscription.id
+      );
+    }
   }
 }

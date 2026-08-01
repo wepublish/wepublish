@@ -5,6 +5,7 @@ import {
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { forwardRef, useId } from 'react';
+import { useTranslation } from 'react-i18next';
 import { MdFavorite } from 'react-icons/md';
 
 const iconSize = 32;
@@ -45,6 +46,7 @@ export const TransactionFee = forwardRef<
   const {
     meta: { siteTitle },
   } = useWebsiteBuilder();
+  const { t } = useTranslation();
 
   return (
     <TransactionFeeWrapper
@@ -65,10 +67,7 @@ export const TransactionFee = forwardRef<
           />
         </>
       }
-      label={
-        text ??
-        `Ja, ich will die Bearbeitungsgebühren von 2% übernehmen und damit ${siteTitle} zusätzlich unterstützen.`
-      }
+      label={text ?? t('subscribe.transactionFee.label', { siteTitle })}
     />
   );
 });

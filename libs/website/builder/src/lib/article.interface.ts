@@ -32,6 +32,7 @@ export type BuilderArticleListProps = Pick<
 > & {
   className?: string;
   variables?: Partial<ArticleListQueryVariables>;
+  tag?: string | null | undefined;
   onVariablesChange?: (variables: Partial<ArticleListQueryVariables>) => void;
 };
 

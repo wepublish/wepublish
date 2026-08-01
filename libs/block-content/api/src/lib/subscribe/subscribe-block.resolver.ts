@@ -18,14 +18,16 @@ export class SubscribeBlockResolver {
 
   @ResolveField(() => [MemberPlan])
   async memberPlans(@Parent() parent: SubscribeBlock) {
-    const { memberPlanIds } = parent;
+    const { memberPlanIds, plans } = parent;
+    const planIds =
+      plans?.length ?
+        plans.map(({ memberPlanId }) => memberPlanId)
+      : memberPlanIds;
 
-    if (!memberPlanIds?.length) {
+    if (!planIds?.length) {
       return await this.memberPlanService.getActiveMemberPlans();
     }
 
-    return (await this.memberPlanDataloader.loadMany(memberPlanIds)).filter(
-      Boolean
-    );
+    return (await this.memberPlanDataloader.loadMany(planIds)).filter(Boolean);
   }
 }
