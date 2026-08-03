@@ -1,14 +1,17 @@
-import {
-  useUser,
-  AuthTokenStorageKey,
-} from '@wepublish/authentication/website';
-import { getCookie } from 'cookies-next';
+import { useUser } from '@wepublish/authentication/website';
 import {
   useLoginWithJwtMutation,
   SessionWithTokenWithoutUser,
 } from '@wepublish/website/api';
 import styled from '@emotion/styled';
-import { ComponentType, memo, useCallback, useEffect, useState } from 'react';
+import {
+  ComponentType,
+  createElement,
+  memo,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 
 export const EXPIRED_JWT_MESSAGE =
   'Dieser Link ist nicht mehr gültig. Bitte hier einen neuen Link anfordern oder mit Benutzernamen und Passwort anmelden.';
@@ -69,15 +72,12 @@ const ButtonRow = styled('div')`
   justify-content: flex-end;
 `;
 
-export const withJwtHandler = <
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  P extends object,
->(
+export const withJwtHandler = <P extends object>(
   ControlledComponent: ComponentType<P>
 ) =>
   memo<P>(props => {
     const [loginWithJwt] = useLoginWithJwtMutation();
-    const { setToken } = useUser();
+    const { setToken, hasUser } = useUser();
 
     const [showTotpPrompt, setShowTotpPrompt] = useState(false);
     const [pendingJwt, setPendingJwt] = useState<string | null>(null);
@@ -87,8 +87,9 @@ export const withJwtHandler = <
 
     const handleJwt = useCallback(
       (jwt: string, options?: { fromPreview?: boolean }) => {
-        // Skip if already signed in (check cookie synchronously)
-        if (getCookie(AuthTokenStorageKey)) return;
+        if (hasUser) {
+          return;
+        }
 
         loginWithJwt({ variables: { jwt } })
           .then(result => {
@@ -102,6 +103,7 @@ export const withJwtHandler = <
             if (err?.message?.includes('TOTP_REQUIRED')) {
               setPendingJwt(jwt);
               setShowTotpPrompt(true);
+
               return;
             }
 
@@ -196,7 +198,7 @@ export const withJwtHandler = <
 
     return (
       <>
-        <ControlledComponent {...(props as P)} />
+        {createElement(ControlledComponent, props as P)}
 
         {showTotpPrompt && (
           <TotpOverlay onClick={handleCancel}>

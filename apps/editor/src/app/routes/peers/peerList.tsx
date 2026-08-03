@@ -33,13 +33,14 @@ import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import {
   Avatar as RAvatar,
   Button,
+  Col,
   Drawer,
-  FlexboxGrid,
   Form,
   IconButton,
   List,
   Message,
   Modal,
+  Row,
   toaster,
 } from 'rsuite';
 
@@ -66,7 +67,7 @@ const ListItem = styled(List.Item)<{ isDisabled?: boolean | null }>`
   cursor: ${({ isDisabled }) => (isDisabled ? 'default' : 'pointer')};
 `;
 
-const FlexItem = styled(FlexboxGrid.Item)`
+const FlexItem = styled(Col)`
   text-align: center;
 `;
 
@@ -153,8 +154,8 @@ function PeerList() {
         key={name}
       >
         <ListItem isDisabled={isDisabled}>
-          <FlexboxGrid>
-            <FlexItem colspan={2}>
+          <Row>
+            <FlexItem span={2}>
               <Avatar
                 circle
                 src={
@@ -165,15 +166,15 @@ function PeerList() {
                 alt={profile?.name?.substr(0, 2)}
               />
             </FlexItem>
-            <FlexboxGrid.Item colspan={17}>
+            <Col span={17}>
               <h5>{name}</h5>
               <p>
                 {profile && `${profile.name} - `}
                 {hostURL}
               </p>
-            </FlexboxGrid.Item>
+            </Col>
 
-            <FlexboxGrid.Item colspan={3}>
+            <Col span={3}>
               <PermissionControl qualifyingPermissions={['CAN_CREATE_PEER']}>
                 <IconButton
                   appearance="primary"
@@ -191,9 +192,9 @@ function PeerList() {
                   : t('peerList.overview.disable')}
                 </IconButton>
               </PermissionControl>
-            </FlexboxGrid.Item>
+            </Col>
 
-            <FlexItem colspan={2}>
+            <FlexItem span={2}>
               <PermissionControl qualifyingPermissions={['CAN_DELETE_PEER']}>
                 <IconButtonTooltip caption={t('delete')}>
                   <IconButton
@@ -212,7 +213,7 @@ function PeerList() {
                 </IconButtonTooltip>
               </PermissionControl>
             </FlexItem>
-          </FlexboxGrid>
+          </Row>
         </ListItem>
       </Link>
     );
@@ -241,7 +242,7 @@ function PeerList() {
                     t('peerList.panels.unnamed')}
                 </h5>
                 <p>{peerInfoData?.peerProfile.hostURL}</p>
-                <Form.HelpText>
+                <Form.Text>
                   {t('peerList.panels.checkOwnPeerProfileHelpBlock')}{' '}
                   <a
                     href="https://wepublish.ch/peering-infos-preview/"
@@ -250,7 +251,7 @@ function PeerList() {
                   >
                     {t('peerList.panels.peeringPreviewGuide')}
                   </a>
-                </Form.HelpText>
+                </Form.Text>
               </AvatarWrapper>
             }
             rightChildren={

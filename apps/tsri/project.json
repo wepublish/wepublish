@@ -10,7 +10,8 @@
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
-        "outputPath": "dist/apps/tsri"
+        "outputPath": "dist/apps/tsri",
+        "webpack": true
       },
       "configurations": {
         "development": {
@@ -25,7 +26,8 @@
       "options": {
         "buildTarget": "tsri:build",
         "dev": true,
-        "port": 4204
+        "port": 4204,
+        "webpack": true
       },
       "configurations": {
         "development": {

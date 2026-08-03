@@ -7,36 +7,30 @@ import { ListViewFilters } from './list-view-filters';
 const { Cell } = RTable;
 
 export const ListViewContainer = styled.div`
-  display: grid;
-  grid-gap: 10px;
-  grid-template-columns: 2fr 1fr;
-  justify-content: start;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
   align-items: center;
 `;
 
-export const ListViewHeader = styled.div`
-  grid-column: 1 2;
-`;
-
+export const ListViewHeader = styled.div``;
 export const ListViewActions = styled.div`
-  grid-column: 2;
-  text-align: right;
+  display: flex;
+  gap: 8px;
+  justify-content: end;
 `;
 
-export const ListFilters = styled(ListViewFilters)`
-  grid-column: 1/3;
-`;
+export const ListFilters = styled(ListViewFilters)``;
 
 export const ListViewFilterArea = styled.div`
+  width: 100%;
   gap: 8px;
   display: flex;
-  margin-top: 1rem;
-  grid-column: 1/4;
+  margin-bottom: 1rem;
 `;
 
 export const TableWrapper = styled.div`
   height: 100%;
-  margin-top: 20px;
 `;
 
 export const PaddedCell = styled(Cell)`
@@ -75,11 +69,13 @@ export const IconButtonCell = styled(RTable.Cell)`
 `;
 
 export const IconButton = styled(RIconButton)`
-  min-width: 36px;
-  height: 36px;
+  && {
+    width: 36px;
+    height: 36px;
+  }
 
   &:not(:first-of-type) {
-    margin-left: 5px;
+    margin-left: 4px;
   }
 `;
 

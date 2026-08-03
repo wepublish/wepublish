@@ -9,10 +9,10 @@ import { useTranslation } from 'react-i18next';
 import { MdClose, MdDone, MdMail } from 'react-icons/md';
 import {
   Button as RButton,
-  FlexboxGrid,
   Message,
   Modal,
   Panel,
+  Stack,
   toaster,
 } from 'rsuite';
 
@@ -35,7 +35,7 @@ const DoneIcon = styled(MdDone)`
   font-size: 2em;
 `;
 
-const FlexboxItem = styled(FlexboxGrid.Item)`
+const FlexboxItem = styled(Stack.Item)`
   text-align: right;
 `;
 
@@ -121,16 +121,16 @@ export function Invoice({
 
   function invoiceHeaderView() {
     return (
-      <FlexboxGrid
-        justify="space-between"
-        align="middle"
+      <Stack
+        justifyContent="space-between"
+        alignItems="center"
       >
-        <FlexboxGrid.Item>
+        <Stack.Item>
           {`${t('invoice.invoiceNo')} ${invoice.id}`}{' '}
           {!invoice.paidAt && <span>{t('invoice.unpaid')}</span>}
-        </FlexboxGrid.Item>
+        </Stack.Item>
         <FlexboxItem>{invoiceIconView()}</FlexboxItem>
-      </FlexboxGrid>
+      </Stack>
     );
   }
 

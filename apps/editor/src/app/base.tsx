@@ -122,8 +122,6 @@ import {
   MdBadge,
   MdBookOnline,
   MdChat,
-  MdChevronLeft,
-  MdChevronRight,
   MdCountertops,
   MdCreditCard,
   MdDashboard,
@@ -221,31 +219,18 @@ const Sidenav = styled(RSidenav)`
 `;
 
 const IconButton = styled(RIconButton)`
-  width: 56px;
-  height: 56px;
   line-height: 56px;
   text-align: center;
+
+  && {
+    width: 56px;
+    height: 56px;
+  }
 
   svg {
     position: absolute;
     top: 20px;
     left: 20px;
-  }
-`;
-
-const FloatingButton = styled(RIconButton)`
-  display: block;
-  padding: 6px;
-  position: absolute;
-  top: 5vh;
-  transition:
-    transform 0.2s ease-in,
-    opacity 0.15s ease-in-out;
-  z-index: 100;
-  transform: translateX(${props => (props.isExpanded ? '241px' : '37px')});
-
-  .rs-sidebar:hover & {
-    opacity: 1;
   }
 `;
 
@@ -265,8 +250,6 @@ export function Base({ children }: BaseProps) {
 
   const { t, i18n } = useTranslation();
 
-  const [isExpanded, setIsExpanded] = useState(true);
-
   const [uiLanguage, setUILanguage] = useStickyState(
     AVAILABLE_LANG[0].id,
     'wepublish/language'
@@ -279,30 +262,12 @@ export function Base({ children }: BaseProps) {
   return (
     <Wrapper>
       <Container>
-        <Sidebar
-          isExpanded={isExpanded}
-          collapsible
-          width={isExpanded ? 260 : 56}
-        >
+        <Sidebar>
           <Sidenav
-            expanded={isExpanded}
             defaultOpenKeys={['1']}
             appearance="default"
           >
             <RSidenav.Body>
-              <FloatingButton
-                isExpanded={isExpanded}
-                appearance="primary"
-                circle
-                size="sm"
-                onClick={() => setIsExpanded(!isExpanded)}
-                icon={
-                  isExpanded ?
-                    <MdChevronLeft size="22px" />
-                  : <MdChevronRight size="22px" />
-                }
-              />
-
               <Navigation>
                 <Nav.Menu
                   eventKey={'dashboard'}
@@ -1180,7 +1145,10 @@ export function Base({ children }: BaseProps) {
             </RSidenav.Body>
           </Sidenav>
 
-          <Navbar appearance="default">
+          <Navbar
+            appearance="default"
+            justifyContent="start"
+          >
             <Nav>
               <Nav.Menu
                 placement="topStart"
