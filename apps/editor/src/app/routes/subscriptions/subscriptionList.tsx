@@ -13,6 +13,7 @@ import {
   DescriptionList,
   DescriptionListItem,
   ExportSubscriptionsAsCsv,
+  IconButton,
   IconButtonTooltip,
   ListViewActions,
   ListViewContainer,
@@ -43,14 +44,6 @@ import {
 import { RowDataType } from 'rsuite-table';
 
 const { Column, HeaderCell, Cell: RCell } = RTable;
-
-const IconButtonSmallMargin = styled(RIconButton)`
-  margin-left: 5px;
-`;
-
-const IconButton = styled(RIconButton)`
-  margin-left: 20px;
-`;
 
 const Info = styled.div`
   position: relative;
@@ -94,13 +87,13 @@ export const NewSubscriptionButton = ({
 
   return (
     <Link to={urlToRedirect}>
-      <IconButton
+      <RIconButton
         appearance="primary"
         disabled={isLoading || !canCreate}
       >
         <MdAdd />
         {t('subscriptionList.overview.newSubscription')}
-      </IconButton>
+      </RIconButton>
     </Link>
   );
 };
@@ -278,7 +271,7 @@ function SubscriptionList() {
               {(rowData: RowDataType<TinySubscriptionFragment>) => (
                 <>
                   <IconButtonTooltip caption={t('delete')}>
-                    <IconButtonSmallMargin
+                    <IconButton
                       circle
                       size="sm"
                       appearance="ghost"
