@@ -12,7 +12,7 @@ import {
 interface PlaceholderPickerProps {
   /** Inserts the given `{{token}}` into the active editor/field. */
   onInsert: (token: string) => void;
-  /** The selected mail type; scopes which placeholders are shown/searched. */
+  /** The selected purpose; scopes which placeholders are shown/searched. */
   context: MailTemplateContext | null;
 }
 
@@ -75,7 +75,7 @@ export function PlaceholderPicker({
     context ? MAIL_PLACEHOLDER_CONTEXTS.find(c => c.id === context) : undefined;
 
   // Search is scoped to the placeholders that actually resolve for the chosen
-  // mail type (the always-available recipient fields + that type's fields).
+  // purpose (the always-available recipient fields + that purpose's fields).
   const scopedPlaceholders = useMemo(
     () => [...ALWAYS_PLACEHOLDERS, ...(selectedContext?.placeholders ?? [])],
     [selectedContext]
@@ -163,6 +163,9 @@ export function PlaceholderPicker({
                   appearance="ghost"
                   size="xs"
                   style={{ padding: '1px 6px' }}
+                  // Keep the caret where it is — the button must not become
+                  // the focused element before the token is inserted.
+                  onMouseDown={event => event.preventDefault()}
                   onClick={() =>
                     onInsert(`{{${placeholder.key}${format.suffix}}}`)
                   }
@@ -191,6 +194,9 @@ export function PlaceholderPicker({
           appearance="ghost"
           size="xs"
           block
+          // Keep the caret where it is — the button must not become the
+          // focused element before the token is inserted.
+          onMouseDown={event => event.preventDefault()}
           onClick={() => onInsert(`{{${placeholder.key}}}`)}
           style={{ textAlign: 'left', padding: '1px 8px', marginBottom: 2 }}
         >
@@ -246,7 +252,7 @@ export function PlaceholderPicker({
           >
             {t(
               'mailTemplates.placeholderAlwaysHint',
-              'These recipient fields work in every template, no matter which mail is selected below.'
+              'These recipient fields work in every template, no matter which purpose is selected.'
             )}
           </Typography>
           {ALWAYS_PLACEHOLDERS.map(renderPlaceholder)}
@@ -266,7 +272,7 @@ export function PlaceholderPicker({
               >
                 {t(
                   'mailTemplates.placeholderSelectType',
-                  'Select a mail type above to see its placeholders.'
+                  'Choose a purpose above to see its placeholders.'
                 )}
               </Typography>
             : <>
@@ -297,7 +303,7 @@ export function PlaceholderPicker({
                   >
                     {t(
                       'mailTemplates.placeholderContextNone',
-                      'This mail only uses the recipient fields above.'
+                      'This purpose only uses the recipient fields above.'
                     )}
                   </Typography>
                 }

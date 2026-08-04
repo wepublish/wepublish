@@ -1,11 +1,13 @@
 import {
   MailAudienceInput,
+  MailLogState,
   MailRecipientBase,
   MailSubscriptionState,
   PaymentPeriodicity,
   useCreateMailSendJobMutation,
   useMailSendJobQuery,
   useMailSendRecipientPreviewQuery,
+  useMailSendRecipientsQuery,
   useMailTemplateMissingPlaceholdersQuery,
   useMailTemplateQuery,
   useMemberPlanListQuery,
@@ -16,16 +18,26 @@ import {
   ListViewContainer,
   ListViewHeader,
 } from '@wepublish/ui/editor';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+} from '@mui/material';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdSend } from 'react-icons/md';
+import { MdAdd, MdSend } from 'react-icons/md';
+import { Link } from 'react-router-dom';
 import {
   Button,
   CheckPicker,
   Divider,
   Form,
+  IconButton,
   Message,
   Modal,
+  Pagination,
   Panel,
   Radio,
   RadioGroup,
@@ -34,6 +46,7 @@ import {
   toaster,
 } from 'rsuite';
 import { DEFAULT_QUERY_OPTIONS } from '../common';
+import { mailErrorHelpKey } from './mail-log-common';
 
 function MailSendPage() {
   const { t } = useTranslation();
@@ -52,6 +65,7 @@ function MailSendPage() {
   );
 
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const [recipientsOpen, setRecipientsOpen] = useState(false);
   const [jobId, setJobId] = useState<string | null>(null);
 
   const { data: templateData } = useMailTemplateQuery(DEFAULT_QUERY_OPTIONS());
@@ -137,7 +151,9 @@ function MailSendPage() {
   });
   const missing = missingData?.mailTemplateMissingPlaceholders ?? [];
 
-  const canSend = !!templateId && count > 0 && !creating;
+  // A job is created per click, so the button stays disabled afterwards —
+  // re-sending is a deliberate act (reload the page), never a double click.
+  const canSend = !!templateId && count > 0 && !creating && !jobId;
 
   const onConfirm = async () => {
     if (!templateId) {
@@ -163,23 +179,6 @@ function MailSendPage() {
       >
         {t('mailSend.description')}
       </Message>
-
-      <Panel
-        bordered
-        header={t('mailSend.template')}
-        style={{ marginTop: 16 }}
-      >
-        <SelectPicker
-          block
-          data={(templateData?.mailTemplates ?? []).map(template => ({
-            label: template.name,
-            value: template.id,
-          }))}
-          value={templateId}
-          onChange={setTemplateId}
-          placeholder={t('mailSend.selectTemplate')}
-        />
-      </Panel>
 
       <Panel
         bordered
@@ -293,17 +292,59 @@ function MailSendPage() {
 
       <Panel
         bordered
+        header={t('mailSend.template')}
+        style={{ marginTop: 16 }}
+      >
+        <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+          <SelectPicker
+            block
+            data={(templateData?.mailTemplates ?? []).map(template => ({
+              label: template.name,
+              value: template.id,
+            }))}
+            value={templateId}
+            onChange={setTemplateId}
+            placeholder={t('mailSend.selectTemplate')}
+            style={{ flex: 1, minWidth: 0 }}
+          />
+          <IconButton
+            as={Link}
+            to="/mailtemplates/create"
+            target="_blank"
+            appearance="ghost"
+            icon={<MdAdd />}
+          >
+            {t('mailSend.createTemplate')}
+          </IconButton>
+        </div>
+      </Panel>
+
+      <Panel
+        bordered
         style={{ marginTop: 16 }}
       >
         <Stack
           justifyContent="space-between"
           alignItems="center"
         >
-          <span>
-            {previewLoading ?
-              t('mailSend.counting')
-            : t('mailSend.recipientsCount', { count })}
-          </span>
+          <Stack
+            spacing={12}
+            alignItems="center"
+          >
+            <span>
+              {previewLoading ?
+                t('mailSend.counting')
+              : t('mailSend.recipientsCount', { count })}
+            </span>
+            <Button
+              size="sm"
+              appearance="link"
+              disabled={count === 0}
+              onClick={() => setRecipientsOpen(true)}
+            >
+              {t('mailSend.showRecipients')}
+            </Button>
+          </Stack>
 
           <Button
             appearance="primary"
@@ -327,6 +368,13 @@ function MailSendPage() {
       </Panel>
 
       {jobId && <JobProgress jobId={jobId} />}
+
+      <RecipientListModal
+        open={recipientsOpen}
+        onClose={() => setRecipientsOpen(false)}
+        audience={audience}
+        totalCount={count}
+      />
 
       <Modal
         open={confirmOpen}
@@ -354,6 +402,115 @@ function MailSendPage() {
         </Modal.Footer>
       </Modal>
     </div>
+  );
+}
+
+const RECIPIENTS_PAGE_SIZE = 50;
+
+/**
+ * The concrete recipients the current audience resolves to. Paginated, because
+ * an audience can be the entire user base.
+ */
+function RecipientListModal({
+  open,
+  onClose,
+  audience,
+  totalCount,
+}: {
+  open: boolean;
+  onClose: () => void;
+  audience: MailAudienceInput;
+  totalCount: number;
+}) {
+  const { t } = useTranslation();
+  const [page, setPage] = useState(1);
+
+  // Changing the audience while the modal is closed must not leave the user on
+  // a page that no longer exists.
+  useEffect(() => {
+    setPage(1);
+  }, [audience]);
+
+  const { data, loading } = useMailSendRecipientsQuery({
+    ...DEFAULT_QUERY_OPTIONS(),
+    skip: !open,
+    variables: {
+      audience,
+      skip: (page - 1) * RECIPIENTS_PAGE_SIZE,
+      take: RECIPIENTS_PAGE_SIZE,
+    },
+  });
+
+  const recipients = data?.mailSendRecipients.nodes ?? [];
+
+  return (
+    <Modal
+      open={open}
+      onClose={onClose}
+      size="md"
+    >
+      <Modal.Header>
+        <Modal.Title>
+          {t('mailSend.recipientList.title', { count: totalCount })}
+        </Modal.Title>
+      </Modal.Header>
+      <Modal.Body style={{ maxHeight: '65vh' }}>
+        {loading && !recipients.length ?
+          <span>{t('mailSend.recipientList.loading')}</span>
+        : <Table size="small">
+            <TableHead>
+              <TableRow>
+                <TableCell>
+                  <strong>{t('mailSend.recipientList.email')}</strong>
+                </TableCell>
+                <TableCell>
+                  <strong>{t('mailSend.recipientList.name')}</strong>
+                </TableCell>
+                <TableCell>
+                  <strong>{t('mailSend.recipientList.memberPlan')}</strong>
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {recipients.map(recipient => (
+                <TableRow key={recipient.id}>
+                  <TableCell>{recipient.email}</TableCell>
+                  <TableCell>
+                    {[recipient.firstName, recipient.name]
+                      .filter(Boolean)
+                      .join(' ') || '—'}
+                  </TableCell>
+                  <TableCell>{recipient.memberPlanName ?? '—'}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        }
+      </Modal.Body>
+      <Modal.Footer>
+        <Stack
+          justifyContent="space-between"
+          alignItems="center"
+        >
+          <Pagination
+            prev
+            next
+            maxButtons={5}
+            size="sm"
+            total={data?.mailSendRecipients.totalCount ?? totalCount}
+            limit={RECIPIENTS_PAGE_SIZE}
+            activePage={page}
+            onChangePage={setPage}
+          />
+          <Button
+            appearance="subtle"
+            onClick={onClose}
+          >
+            {t('mailSend.cancel')}
+          </Button>
+        </Stack>
+      </Modal.Footer>
+    </Modal>
   );
 }
 
@@ -403,12 +560,45 @@ function JobProgress({ jobId }: { jobId: string }) {
           {t('mailSend.progress.failed')}: {job.failedCount}
         </span>
       </Stack>
-      {job.error && (
+
+      {(job.failedCount > 0 || job.error) && (
         <Message
           type="error"
+          showIcon
           style={{ marginTop: 12 }}
         >
-          {job.error}
+          <Stack
+            spacing={8}
+            direction="column"
+            alignItems="flex-start"
+          >
+            {job.error && (
+              <>
+                <span>
+                  {t('mailSend.progress.reason')}: {job.error}
+                </span>
+                <span>
+                  <strong>{t('mailLog.errorHelp.fixTitle')}:</strong>{' '}
+                  <span style={{ whiteSpace: 'pre-line' }}>
+                    {t(`mailLog.errorHelp.${mailErrorHelpKey(job.error)}.fix`)}
+                  </span>
+                </span>
+              </>
+            )}
+            {job.failedCount > 0 && (
+              <Button
+                size="sm"
+                appearance="ghost"
+                color="red"
+                as={Link}
+                to={`/maillog?job=${job.id}&state=${MailLogState.Rejected}`}
+              >
+                {t('mailSend.progress.showFailures', {
+                  count: job.failedCount,
+                })}
+              </Button>
+            )}
+          </Stack>
         </Message>
       )}
     </Panel>

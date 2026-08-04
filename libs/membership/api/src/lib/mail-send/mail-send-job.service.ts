@@ -71,14 +71,14 @@ export class MailSendJobService {
 
     let sentCount = 0;
     let failedCount = 0;
+    let error: string | null = null;
     try {
       await this.sendOne(job.id, template, { user });
       sentCount = 1;
-    } catch (error) {
+    } catch (sendError) {
       failedCount = 1;
-      this.logger.error(
-        `Manual mail to user ${userId} failed: ${(error as Error).message}`
-      );
+      error = (sendError as Error).message;
+      this.logger.error(`Manual mail to user ${userId} failed: ${error}`);
     }
 
     return this.prisma.mailSendJob.update({
@@ -88,7 +88,7 @@ export class MailSendJobService {
         failedCount,
         status: failedCount ? MailSendJobState.failed : MailSendJobState.done,
         finishedAt: new Date(),
-        error: failedCount ? 'Delivery to the recipient failed.' : null,
+        error,
       },
     });
   }
@@ -209,6 +209,9 @@ export class MailSendJobService {
     let sentCount = 0;
     let failedCount = 0;
     let skip = 0;
+    // Kept as a summary for the editor; the per-recipient reasons live on the
+    // MailLog rows of this job.
+    let firstError: string | null = null;
 
     for (;;) {
       const recipients = await this.recipientService.resolvePage(
@@ -227,10 +230,10 @@ export class MailSendJobService {
           sentCount++;
         } catch (error) {
           failedCount++;
+          const message = (error as Error).message;
+          firstError ??= message;
           this.logger.warn(
-            `Job ${jobId}: failed to mail ${recipient.user.email}: ${
-              (error as Error).message
-            }`
+            `Job ${jobId}: failed to mail ${recipient.user.email}: ${message}`
           );
         }
       }
@@ -248,8 +251,13 @@ export class MailSendJobService {
       data: {
         sentCount,
         failedCount,
-        status: MailSendJobState.done,
+        // Nothing got through: the job itself failed, not just some recipients.
+        status:
+          failedCount && !sentCount ?
+            MailSendJobState.failed
+          : MailSendJobState.done,
         finishedAt: new Date(),
+        error: firstError,
       },
     });
   }

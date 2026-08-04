@@ -905,21 +905,23 @@
         "saveAndClose": "Speichern & schließen",
         "nameRequired": "Name ist erforderlich.",
         "testSent": "Testmail gesendet.",
+        "details": "Details",
         "previewAndTest": "Vorschau & Test",
-        "mailType": "Mail-Typ",
+        "mailType": "Verwendungszweck",
         "sampleSubscription": "Beispieldaten aus Abo",
         "sampleDataFallback": "Beispieldaten (nichts gewählt)",
         "testRecipient": "Test-Empfänger",
         "testRecipientPlaceholder": "Deine Konto-E-Mail",
         "preview": "Vorschau",
         "sendTest": "Test senden",
-        "selectMailType": "Bitte zuerst einen Mail-Typ wählen.",
-        "selectMailTypePlaceholder": "Mail-Typ wählen…",
+        "selectMailType": "Bitte zuerst einen Verwendungszweck wählen.",
+        "selectMailTypePlaceholder": "Verwendungszweck wählen …",
         "testRecipientHint": "Testmails werden immer an dein eigenes Konto gesendet.",
         "generateTextFromHtml": "Aus HTML erzeugen",
         "textContentReadonlyHint": "Wird automatisch aus dem Inhalt erzeugt. Bearbeite den Visuell- oder HTML-Tab, um ihn zu ändern.",
         "background": "Hintergrund",
-        "contentWidth": "Breite (px)"
+        "contentWidth": "Breite (px)",
+        "purposeHint": "Bestimmt, in welcher Situation die Vorlage eingesetzt wird – und damit, welche Platzhalter zur Verfügung stehen."
       },
       "editor": {
         "undo": "Rückgängig",
@@ -969,22 +971,22 @@
       "name": "Name",
       "placeholders": "Platzhalter",
       "placeholdersHint": "Zum Einfügen ins gewählte Feld klicken",
-      "placeholderSelectType": "Wähle oben einen Mail-Typ, um dessen Platzhalter zu sehen.",
+      "placeholderSelectType": "Wähle oben einen Verwendungszweck, um dessen Platzhalter zu sehen.",
       "mailTypes": {
-        "account": "Konto",
+        "account": "Konto & Login",
         "emailChange": "E-Mail-Änderung",
         "subscription": "Abo",
         "renewal": "Verlängerung",
         "invoiceCreation": "Rechnung",
-        "custom": "Custom"
+        "custom": "Eigene Mail"
       },
       "placeholderAlways": "Immer verfügbar – in jeder Mail",
-      "placeholderAlwaysHint": "Diese Empfänger-Felder funktionieren in jeder Vorlage, unabhängig von der unten gewählten Mail.",
+      "placeholderAlwaysHint": "Diese Empfänger-Felder funktionieren in jeder Vorlage, unabhängig vom gewählten Verwendungszweck.",
       "searchPlaceholders": "Platzhalter suchen…",
       "noPlaceholders": "Keine passenden Platzhalter.",
       "placeholderExample": "Beispiel",
-      "placeholderContextLabel": "Zusätzliche Felder für eine bestimmte Mail",
-      "placeholderContextNone": "Diese Mail nutzt nur die Empfänger-Felder oben.",
+      "placeholderContextLabel": "Zusätzliche Felder für diesen Verwendungszweck",
+      "placeholderContextNone": "Dieser Verwendungszweck nutzt nur die Empfänger-Felder oben.",
       "dateFormat": {
         "iso": "ISO",
         "isoDate": "ISO-Datum",
@@ -1005,7 +1007,7 @@
         "subscription": "Abo (neu, bestätigt, Deaktivierung)",
         "renewal": "Verlängerung – automatisch (Erfolg / Fehlschlag)",
         "invoiceCreation": "Rechnung erstellt",
-        "custom": "Custom-Mail an Abonnent:in (Abo + Rechnungen)"
+        "custom": "Eigene Mail an Abonnent:in (Abo + Rechnungen)"
       },
       "placeholderNames": {
         "user_fullName": "Vollständiger Name",
@@ -2592,7 +2594,9 @@
         "title": "Versandfortschritt",
         "status": "Status",
         "sent": "Gesendet",
-        "failed": "Fehlgeschlagen"
+        "failed": "Fehlgeschlagen",
+        "reason": "Grund",
+        "showFailures": "{{count}} fehlgeschlagene Mails im Versandprotokoll ansehen"
       },
       "status": {
         "queued": "In Warteschlange",
@@ -2601,7 +2605,16 @@
         "failed": "Fehlgeschlagen",
         "cancelled": "Abgebrochen"
       },
-      "missingPlaceholders": "Achtung: Diese Platzhalter werden für diese Empfänger nicht gefüllt: {{placeholders}}"
+      "missingPlaceholders": "Achtung: Diese Platzhalter werden für diese Empfänger nicht gefüllt: {{placeholders}}",
+      "createTemplate": "Neue Vorlage",
+      "showRecipients": "Empfänger anzeigen",
+      "recipientList": {
+        "title": "Empfänger ({{count}})",
+        "loading": "Empfänger werden geladen …",
+        "email": "E-Mail",
+        "name": "Name",
+        "memberPlan": "Abo-Plan"
+      }
     },
     "mailLog": {
       "title": "Gesendete E-Mails",
@@ -2610,18 +2623,76 @@
       "template": "Vorlage",
       "subject": "Betreff",
       "state": "Status",
-      "type": "Typ",
+      "type": "Ausgelöst durch",
       "recipient": "Empfänger",
       "filter": {
         "template": "Vorlage",
         "state": "Status",
-        "type": "Typ"
+        "type": "Ausgelöst durch",
+        "job": "Versand",
+        "jobAll": "Alle Versände",
+        "all": "Alle",
+        "title": "Filter",
+        "reset": "Filter zurücksetzen",
+        "typeHint": "Wodurch der Versand angestossen wurde."
       },
       "types": {
-        "subscriptionFlow": "Abo-Flow",
-        "userFlow": "Benutzer-Flow",
+        "subscriptionFlow": "Abo-Mailing",
+        "userFlow": "Ereignis-Mail",
         "systemMail": "System-Mail",
         "manual": "Manuell"
+      },
+      "error": "Fehler",
+      "typeDescriptions": {
+        "manual": "Von Hand über «E-Mail senden» oder «Test senden» verschickt. Beispiel: Newsletter an alle Abonnent:innen.",
+        "subscriptionFlow": "Zeitgesteuert aus «Default Mailing», berechnet ab dem Abo-Datum. Beispiele: Erinnerung 14 Tage vor Ablauf, Mahnung nach unbezahlter Rechnung.",
+        "userFlow": "Sofort ausgelöst durch eine konkrete Aktion oder ein Ereignis. Beispiele: Login-Link angefordert, E-Mail-Adresse geändert, Verlängerung der Zahlung fehlgeschlagen.",
+        "systemMail": "Fest im System hinterlegte Konto-Mails, konfiguriert unter «System Mails». Beispiele: Willkommensmail nach Registrierung, Passwort zurücksetzen."
+      },
+      "errorHelp": {
+        "causeTitle": "Was ist passiert?",
+        "fixTitle": "So behebst du es",
+        "raw": "Originalmeldung des Mailservers:",
+        "tls": {
+          "cause": "Der Mailserver hat die Verbindung per TLS verschlüsselt, sein Zertifikat ist aber nicht vertrauenswürdig (selbst signiert, abgelaufen oder auf einen anderen Hostnamen ausgestellt). Die Mail wurde deshalb nicht übermittelt.",
+          "fix": "1. Prüfe unter Einstellungen › Integrationen › Mail, welcher SMTP-Host und Port eingetragen sind.\n2. Stelle sicher, dass dort wirklich dein Mailserver antwortet – häufig belegt ein anderes Programm den Port (lokal z. B. die Proton Mail Bridge auf Port 1025).\n3. Verwende einen Mailserver mit gültigem Zertifikat, oder lokal einen SMTP-Server ohne TLS (z. B. Mailpit auf einem freien Port)."
+        },
+        "connectionRefused": {
+          "cause": "Unter dem eingetragenen SMTP-Host und Port nimmt niemand Verbindungen an.",
+          "fix": "1. Prüfe Host und Port unter Einstellungen › Integrationen › Mail.\n2. Starte den Mailserver (lokal z. B. «docker compose up mailpit»).\n3. Prüfe, ob eine Firewall den Port blockiert."
+        },
+        "hostNotFound": {
+          "cause": "Der Hostname des Mailservers lässt sich nicht auflösen – er existiert nicht oder DNS ist nicht erreichbar.",
+          "fix": "1. Kontrolliere den SMTP-Host auf Tippfehler (Einstellungen › Integrationen › Mail).\n2. In Docker muss der Servicename verwendet werden (z. B. «mailpit» statt «localhost»)."
+        },
+        "timeout": {
+          "cause": "Der Mailserver hat nicht rechtzeitig geantwortet. Meist blockiert eine Firewall den Port oder der Server ist überlastet.",
+          "fix": "1. Prüfe, ob der Port von diesem Server aus erreichbar ist.\n2. Viele Hoster sperren Port 25 – nutze 587 oder 465.\n3. Versuche den Versand später erneut."
+        },
+        "auth": {
+          "cause": "Der Mailanbieter hat die Zugangsdaten abgelehnt.",
+          "fix": "1. Erneuere API-Key bzw. Benutzer und Passwort unter Einstellungen › Integrationen › Mail.\n2. Prüfe, ob der Key zum richtigen Konto und zur richtigen Region gehört."
+        },
+        "recipientRejected": {
+          "cause": "Der Mailserver hat die Empfängeradresse abgelehnt – sie existiert nicht, oder die Absenderdomain darf nicht an diese Adresse senden.",
+          "fix": "1. Prüfe die Empfängeradresse.\n2. Verifiziere die Absenderdomain beim Anbieter (SPF/DKIM).\n3. Im Sandbox-Modus (z. B. Mailgun) müssen Empfänger vorab freigegeben werden."
+        },
+        "rateLimit": {
+          "cause": "Der Anbieter hat das Sendelimit erreicht und weitere Mails vorerst abgewiesen.",
+          "fix": "1. Warte ab und sende den Versand später erneut.\n2. Prüfe das Kontingent deines Tarifs beim Mailanbieter."
+        },
+        "noProvider": {
+          "cause": "Es ist kein Mailanbieter konfiguriert, deshalb kann nichts verschickt werden.",
+          "fix": "Richte unter Einstellungen › Integrationen › Mail einen Anbieter ein (SMTP, Mailgun, Mailchimp oder Slack)."
+        },
+        "templateMissing": {
+          "cause": "Die verwendete E-Mail-Vorlage existiert nicht mehr.",
+          "fix": "Wähle unter «E-Mail-Vorlagen» eine vorhandene Vorlage aus bzw. lege sie neu an und starte den Versand erneut."
+        },
+        "generic": {
+          "cause": "Der Mailserver hat den Versand mit der unten stehenden Meldung abgelehnt.",
+          "fix": "1. Prüfe die Einstellungen unter Einstellungen › Integrationen › Mail.\n2. Sieh im Server-Log nach der vollständigen Fehlermeldung.\n3. Sende eine Testmail aus der Vorlage, um die Verbindung zu prüfen."
+        }
       }
     },
     "userMail": {

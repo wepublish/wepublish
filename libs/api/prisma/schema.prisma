@@ -537,6 +537,9 @@ model MailLog {
   mailData       String?
   subject        String?
 
+  // Why a `rejected` mail could not be delivered. Null for every other state.
+  error String?
+
   // Origin of the mail. Nullable so pre-existing rows keep working; new sends
   // always set it.
   type MailLogType?

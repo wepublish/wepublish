@@ -23,6 +23,25 @@ query MailSendRecipientPreview($audience: MailAudienceInput!) {
   }
 }
 
+query MailSendRecipients($audience: MailAudienceInput!, $skip: Int, $take: Int) {
+  mailSendRecipients(audience: $audience, skip: $skip, take: $take) {
+    nodes {
+      id
+      userId
+      email
+      name
+      firstName
+      subscriptionId
+      memberPlanName
+    }
+    totalCount
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+    }
+  }
+}
+
 query MailTemplateMissingPlaceholders(
   $templateId: String!
   $withSubscriptionData: Boolean!

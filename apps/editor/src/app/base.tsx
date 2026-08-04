@@ -906,20 +906,31 @@ export function Base({ children }: BaseProps) {
                     title={t('navbar.communication')}
                     icon={<MdMail />}
                   >
-                    {/* MAIL TEMPLATES */}
+                    {/* SEND MAIL */}
                     <PermissionControl
-                      qualifyingPermissions={[
-                        CanGetMailTemplates.id,
-                        CanUpdateMailTemplates.id,
-                      ]}
+                      qualifyingPermissions={[CanSendMailTemplates.id]}
                     >
                       <Nav.Item
                         as={NavLink}
-                        href="/mailtemplates"
-                        active={path === 'mailtemplates'}
-                        icon={<MdMail />}
+                        href="/mailsend"
+                        active={path === 'mailsend'}
+                        icon={<MdSend />}
                       >
-                        {t('navbar.mailTemplates')}
+                        {t('navbar.mailSend')}
+                      </Nav.Item>
+                    </PermissionControl>
+
+                    {/* SUBSCRIPTION MAILING */}
+                    <PermissionControl
+                      qualifyingPermissions={[CanGetSubscriptionFlows.id]}
+                    >
+                      <Nav.Item
+                        as={NavLink}
+                        href="/communicationflows/edit/default"
+                        active={path === 'communicationflows/edit/default'}
+                        icon={<MdOutgoingMail />}
+                      >
+                        {t('navbar.subscriptionSettings')}
                       </Nav.Item>
                     </PermissionControl>
 
@@ -940,31 +951,20 @@ export function Base({ children }: BaseProps) {
                       </Nav.Item>
                     </PermissionControl>
 
-                    {/* SUBSCRIPTION MAILING */}
+                    {/* MAIL TEMPLATES */}
                     <PermissionControl
-                      qualifyingPermissions={[CanGetSubscriptionFlows.id]}
+                      qualifyingPermissions={[
+                        CanGetMailTemplates.id,
+                        CanUpdateMailTemplates.id,
+                      ]}
                     >
                       <Nav.Item
                         as={NavLink}
-                        href="/communicationflows/edit/default"
-                        active={path === 'communicationflows/edit/default'}
-                        icon={<MdOutgoingMail />}
+                        href="/mailtemplates"
+                        active={path === 'mailtemplates'}
+                        icon={<MdMail />}
                       >
-                        {t('navbar.subscriptionSettings')}
-                      </Nav.Item>
-                    </PermissionControl>
-
-                    {/* SEND MAIL */}
-                    <PermissionControl
-                      qualifyingPermissions={[CanSendMailTemplates.id]}
-                    >
-                      <Nav.Item
-                        as={NavLink}
-                        href="/mailsend"
-                        active={path === 'mailsend'}
-                        icon={<MdSend />}
-                      >
-                        {t('navbar.mailSend')}
+                        {t('navbar.mailTemplates')}
                       </Nav.Item>
                     </PermissionControl>
 

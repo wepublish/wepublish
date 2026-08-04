@@ -1594,6 +1594,9 @@ input MailLogFilter {
 
 type MailLogModel {
   createdAt: DateTime!
+
+  """Why a rejected mail could not be delivered."""
+  error: String
   id: String!
   mailProviderID: String!
   mailSendJobId: String
@@ -1686,6 +1689,20 @@ enum MailSendJobState {
   failed
   queued
   running
+}
+
+type MailSendRecipientModel {
+  email: String!
+  firstName: String
+
+  """
+  Row identity. A user appears once per matching subscription, so this combines both.
+  """
+  id: String!
+  memberPlanName: String
+  name: String!
+  subscriptionId: String
+  userId: String!
 }
 
 type MailSendRecipientPreview {
@@ -2648,6 +2665,12 @@ type PaginatedMailSendJob {
   totalCount: Int!
 }
 
+type PaginatedMailSendRecipient {
+  nodes: [MailSendRecipientModel!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
 type PaginatedMemberPlans {
   nodes: [MemberPlan!]!
   pageInfo: PageInfo!
@@ -3378,6 +3401,9 @@ type Query {
 
   """Preview how many recipients an audience resolves to"""
   mailSendRecipientPreview(audience: MailAudienceInput!): MailSendRecipientPreview!
+
+  """The concrete recipients an audience resolves to"""
+  mailSendRecipients(audience: MailAudienceInput!, skip: Int, take: Int): PaginatedMailSendRecipient!
 
   """
   Placeholders a template uses that would render empty for the given send (empty = none missing)

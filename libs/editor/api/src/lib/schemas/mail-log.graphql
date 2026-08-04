@@ -5,6 +5,7 @@ fragment FullMailLog on MailLogModel {
   state
   type
   subject
+  error
   mailProviderID
   mailSendJobId
   recipient {

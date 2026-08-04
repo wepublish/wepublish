@@ -109,36 +109,73 @@ export class MailController {
 
     const mailLogId = randomUUID();
 
-    const { subject } = await this.mailContext.sendComposedMail({
-      mailLogID: mailLogId,
-      mailTemplateId: this.config.mailTemplateId,
-      recipient: this.config.recipient.email,
-      data: await this.buildData(),
-    });
-
-    await this.prismaService.mailLog.create({
-      data: {
-        id: mailLogId,
-        recipient: {
-          connect: {
-            id: this.config.recipient.id,
-          },
-        },
-        state: MailLogState.submitted,
-        sentDate: new Date(),
-        mailProviderID: this.mailContext.mailProvider!.id || '',
-        mailIdentifier: this.generateMailIdentifier(),
-        type: MAIL_LOG_TYPE_MAP[this.config.mailType],
+    let subject: string | null = null;
+    try {
+      ({ subject } = await this.mailContext.sendComposedMail({
+        mailLogID: mailLogId,
+        mailTemplateId: this.config.mailTemplateId,
+        recipient: this.config.recipient.email,
+        data: await this.buildData(),
+      }));
+    } catch (error) {
+      // A failed delivery must leave a trace too — otherwise the send job only
+      // reports a count and the reason is lost outside the server log.
+      await this.writeLog(
+        mailLogId,
+        MailLogState.rejected,
         subject,
-        mailTemplate: {
-          connect: {
-            id: this.config.mailTemplateId,
+        (error as Error).message
+      );
+
+      throw error;
+    }
+
+    await this.writeLog(mailLogId, MailLogState.submitted, subject, null);
+  }
+
+  private async writeLog(
+    mailLogId: string,
+    state: MailLogState,
+    subject: string | null,
+    error: string | null
+  ): Promise<void> {
+    try {
+      await this.prismaService.mailLog.create({
+        data: {
+          id: mailLogId,
+          recipient: {
+            connect: {
+              id: this.config.recipient.id,
+            },
           },
+          state,
+          sentDate: new Date(),
+          mailProviderID: this.mailContext.mailProvider?.id || '',
+          mailIdentifier: this.generateMailIdentifier(),
+          type: MAIL_LOG_TYPE_MAP[this.config.mailType],
+          subject,
+          error,
+          mailTemplate: {
+            connect: {
+              id: this.config.mailTemplateId,
+            },
+          },
+          ...(this.config.mailSendJobId ?
+            { mailSendJob: { connect: { id: this.config.mailSendJobId } } }
+          : {}),
         },
-        ...(this.config.mailSendJobId ?
-          { mailSendJob: { connect: { id: this.config.mailSendJobId } } }
-        : {}),
-      },
-    });
+      });
+    } catch (logError) {
+      // Never let bookkeeping mask the delivery outcome.
+      this.logger.error(
+        `Could not write mail log <${mailLogId}>: ${
+          (logError as Error).message
+        }`
+      );
+
+      if (state !== MailLogState.rejected) {
+        throw logError;
+      }
+    }
   }
 }

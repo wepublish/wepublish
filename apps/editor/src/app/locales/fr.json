@@ -909,21 +909,23 @@
         "saveAndClose": "Enregistrer et fermer",
         "nameRequired": "Le nom est requis.",
         "testSent": "E-mail de test envoyé.",
+        "details": "Détails",
         "previewAndTest": "Aperçu & test",
-        "mailType": "Type de courriel",
+        "mailType": "Utilisation",
         "sampleSubscription": "Données d’exemple depuis un abonnement",
         "sampleDataFallback": "Données d’exemple (aucun sélectionné)",
         "testRecipient": "Destinataire du test",
         "testRecipientPlaceholder": "Votre e-mail de compte",
         "preview": "Aperçu",
         "sendTest": "Envoyer un test",
-        "selectMailType": "Veuillez d’abord choisir un type de courriel.",
-        "selectMailTypePlaceholder": "Choisir un type de courriel…",
+        "selectMailType": "Veuillez d’abord choisir une utilisation.",
+        "selectMailTypePlaceholder": "Choisir une utilisation …",
         "testRecipientHint": "Les e-mails de test sont toujours envoyés à votre propre compte.",
         "generateTextFromHtml": "Générer depuis le HTML",
         "textContentReadonlyHint": "Généré automatiquement à partir du contenu. Modifiez l'onglet visuel ou HTML pour le changer.",
         "background": "Arrière-plan",
-        "contentWidth": "Largeur (px)"
+        "contentWidth": "Largeur (px)",
+        "purposeHint": "Définit la situation dans laquelle le modèle est utilisé — et donc les champs disponibles."
       },
       "editor": {
         "undo": "Annuler",
@@ -973,14 +975,14 @@
       "name": "Nom",
       "placeholders": "Espaces réservés",
       "placeholdersHint": "Cliquer pour insérer dans le champ sélectionné",
-      "placeholderSelectType": "Sélectionnez un type de mail ci-dessus pour voir ses espaces réservés.",
+      "placeholderSelectType": "Choisissez une utilisation ci-dessus pour voir ses champs.",
       "mailTypes": {
-        "account": "Compte",
+        "account": "Compte & connexion",
         "emailChange": "Changement d'e-mail",
         "subscription": "Abonnement",
         "renewal": "Renouvellement",
         "invoiceCreation": "Facture",
-        "custom": "Custom"
+        "custom": "Mail personnalisé"
       },
       "rawHtml": "HTML",
       "save": "Enregistrer",
@@ -1002,7 +1004,7 @@
       "importWarning": "Cela écrase le HTML et l’objet de tous les modèles avec le contenu du fournisseur de messagerie. Les modifications locales seront perdues.",
       "importDone": "{{count}} modèle(s) importé(s) depuis le fournisseur.",
       "placeholderAlways": "Toujours disponible — dans chaque mail",
-      "placeholderContextLabel": "Afficher les champs pour",
+      "placeholderContextLabel": "Champs supplémentaires pour cette utilisation",
       "placeholderContexts": {
         "account": "Compte & connexion (création, lien de connexion, réinitialisation du mot de passe)",
         "emailChange": "Changement d'e-mail",
@@ -1070,8 +1072,8 @@
         "chf": "CHF",
         "rappen": "Centimes"
       },
-      "placeholderAlwaysHint": "Ces champs du destinataire fonctionnent dans chaque modèle, quel que soit le type de mail sélectionné.",
-      "placeholderContextNone": "Ce mail n'utilise que les champs du destinataire ci-dessus.",
+      "placeholderAlwaysHint": "Ces champs du destinataire fonctionnent dans chaque modèle, quelle que soit l’utilisation sélectionnée.",
+      "placeholderContextNone": "Cette utilisation n’utilise que les champs du destinataire ci-dessus.",
       "placeholderContextNotes": {
         "account": "Seuls les champs du destinataire sont disponibles.",
         "subscription": "Données de base de l'abonnement. Les noms du plan et du moyen de paiement ne sont PAS disponibles ici — uniquement dans les mails de renouvellement.",
@@ -2537,7 +2539,9 @@
         "title": "Progression de l'envoi",
         "status": "Statut",
         "sent": "Envoyés",
-        "failed": "Échoués"
+        "failed": "Échoués",
+        "reason": "Motif",
+        "showFailures": "Voir les {{count}} e-mails échoués dans le journal d'envoi"
       },
       "status": {
         "queued": "En file d'attente",
@@ -2546,7 +2550,16 @@
         "failed": "Échoué",
         "cancelled": "Annulé"
       },
-      "missingPlaceholders": "Attention : ces variables ne seront pas remplies pour ces destinataires : {{placeholders}}"
+      "missingPlaceholders": "Attention : ces variables ne seront pas remplies pour ces destinataires : {{placeholders}}",
+      "createTemplate": "Nouveau modèle",
+      "showRecipients": "Afficher les destinataires",
+      "recipientList": {
+        "title": "Destinataires ({{count}})",
+        "loading": "Chargement des destinataires …",
+        "email": "E-mail",
+        "name": "Nom",
+        "memberPlan": "Plan d’abonnement"
+      }
     },
     "mailLog": {
       "title": "E-mails envoyés",
@@ -2555,18 +2568,76 @@
       "template": "Modèle",
       "subject": "Objet",
       "state": "État",
-      "type": "Type",
+      "type": "Déclenché par",
       "recipient": "Destinataire",
       "filter": {
         "template": "Modèle",
         "state": "État",
-        "type": "Type"
+        "type": "Déclenché par",
+        "job": "Envoi",
+        "jobAll": "Tous les envois",
+        "all": "Tous",
+        "title": "Filtres",
+        "reset": "Réinitialiser les filtres",
+        "typeHint": "Ce qui a déclenché l’envoi."
       },
       "types": {
-        "subscriptionFlow": "Flux d'abonnement",
-        "userFlow": "Flux utilisateur",
+        "subscriptionFlow": "Mailing d’abonnement",
+        "userFlow": "E-mail d’événement",
         "systemMail": "E-mail système",
         "manual": "Manuel"
+      },
+      "error": "Erreur",
+      "typeDescriptions": {
+        "manual": "Envoyé à la main via « Envoyer un e-mail » ou « Envoyer un test ». Exemple : newsletter à tou·te·s les abonné·e·s.",
+        "subscriptionFlow": "Programmé depuis « Default Mailing », calculé à partir de la date d’abonnement. Exemples : rappel 14 jours avant la fin, relance après une facture impayée.",
+        "userFlow": "Déclenché immédiatement par une action ou un événement précis. Exemples : lien de connexion demandé, adresse e-mail modifiée, échec du paiement de renouvellement.",
+        "systemMail": "E-mails de compte intégrés, configurés sous « System Mails ». Exemples : e-mail de bienvenue après l’inscription, réinitialisation du mot de passe."
+      },
+      "errorHelp": {
+        "causeTitle": "Que s’est-il passé ?",
+        "fixTitle": "Comment le résoudre",
+        "raw": "Message d’origine du serveur de messagerie :",
+        "tls": {
+          "cause": "Le serveur a chiffré la connexion en TLS, mais son certificat n’est pas fiable (auto-signé, expiré ou émis pour un autre nom d’hôte). L’e-mail n’a pas été remis.",
+          "fix": "1. Vérifiez l’hôte et le port SMTP sous Réglages › Intégrations › Mail.\n2. Assurez-vous que c’est bien votre serveur qui répond — un autre programme occupe souvent le port (en local, p. ex. Proton Mail Bridge sur le port 1025).\n3. Utilisez un serveur avec un certificat valide, ou en local un serveur SMTP sans TLS (p. ex. Mailpit sur un port libre)."
+        },
+        "connectionRefused": {
+          "cause": "Personne n’accepte de connexion sur l’hôte et le port SMTP configurés.",
+          "fix": "1. Vérifiez l’hôte et le port sous Réglages › Intégrations › Mail.\n2. Démarrez le serveur de messagerie (en local p. ex. « docker compose up mailpit »).\n3. Vérifiez qu’aucun pare-feu ne bloque le port."
+        },
+        "hostNotFound": {
+          "cause": "Le nom d’hôte du serveur ne peut pas être résolu — il n’existe pas ou le DNS est injoignable.",
+          "fix": "1. Vérifiez l’orthographe de l’hôte SMTP (Réglages › Intégrations › Mail).\n2. Dans Docker, utilisez le nom du service (p. ex. « mailpit » au lieu de « localhost »)."
+        },
+        "timeout": {
+          "cause": "Le serveur n’a pas répondu à temps. Généralement un pare-feu bloque le port ou le serveur est surchargé.",
+          "fix": "1. Vérifiez que le port est joignable depuis ce serveur.\n2. Beaucoup d’hébergeurs bloquent le port 25 — utilisez 587 ou 465.\n3. Relancez l’envoi plus tard."
+        },
+        "auth": {
+          "cause": "Le fournisseur a refusé les identifiants.",
+          "fix": "1. Renouvelez la clé API ou l’utilisateur et le mot de passe sous Réglages › Intégrations › Mail.\n2. Vérifiez que la clé correspond au bon compte et à la bonne région."
+        },
+        "recipientRejected": {
+          "cause": "Le serveur a refusé l’adresse du destinataire — elle n’existe pas, ou le domaine d’expédition n’est pas autorisé.",
+          "fix": "1. Vérifiez l’adresse du destinataire.\n2. Vérifiez le domaine d’expédition chez le fournisseur (SPF/DKIM).\n3. En mode bac à sable (p. ex. Mailgun), les destinataires doivent être autorisés au préalable."
+        },
+        "rateLimit": {
+          "cause": "Le fournisseur a atteint sa limite d’envoi et refuse d’autres e-mails pour l’instant.",
+          "fix": "1. Patientez et relancez l’envoi plus tard.\n2. Vérifiez le quota de votre offre chez le fournisseur."
+        },
+        "noProvider": {
+          "cause": "Aucun fournisseur de messagerie n’est configuré, rien ne peut donc être envoyé.",
+          "fix": "Configurez un fournisseur sous Réglages › Intégrations › Mail (SMTP, Mailgun, Mailchimp ou Slack)."
+        },
+        "templateMissing": {
+          "cause": "Le modèle d’e-mail utilisé n’existe plus.",
+          "fix": "Choisissez un modèle existant sous « Modèles d’e-mail » ou recréez-le, puis relancez l’envoi."
+        },
+        "generic": {
+          "cause": "Le serveur a refusé l’envoi avec le message ci-dessous.",
+          "fix": "1. Vérifiez la configuration sous Réglages › Intégrations › Mail.\n2. Consultez le journal du serveur pour l’erreur complète.\n3. Envoyez un e-mail de test depuis le modèle pour vérifier la connexion."
+        }
       }
     },
     "userMail": {

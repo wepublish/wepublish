@@ -910,21 +910,23 @@
         "saveAndClose": "Save & close",
         "nameRequired": "Name is required.",
         "testSent": "Test mail sent.",
+        "details": "Details",
         "previewAndTest": "Preview & test",
-        "mailType": "Mail type",
+        "mailType": "Purpose",
         "sampleSubscription": "Sample data from subscription",
         "sampleDataFallback": "Sample data (none selected)",
         "testRecipient": "Test recipient",
         "testRecipientPlaceholder": "Your account email",
         "preview": "Preview",
         "sendTest": "Send test",
-        "selectMailType": "Please select a mail type first.",
-        "selectMailTypePlaceholder": "Select a mail type…",
+        "selectMailType": "Please choose a purpose first.",
+        "selectMailTypePlaceholder": "Choose a purpose …",
         "testRecipientHint": "Test mails are always sent to your own account.",
         "generateTextFromHtml": "Generate from HTML",
         "textContentReadonlyHint": "Automatically generated from the content. Edit the visual or HTML tab to change it.",
         "background": "Background",
-        "contentWidth": "Width (px)"
+        "contentWidth": "Width (px)",
+        "purposeHint": "Defines the situation this template is used in — and with it, which placeholders are available."
       },
       "editor": {
         "undo": "Undo",
@@ -974,17 +976,17 @@
       "name": "Name",
       "placeholders": "Placeholders",
       "placeholdersHint": "Click to insert into the selected field",
-      "placeholderSelectType": "Select a mail type above to see its placeholders.",
+      "placeholderSelectType": "Choose a purpose above to see its placeholders.",
       "mailTypes": {
-        "account": "Account",
+        "account": "Account & login",
         "emailChange": "Email change",
         "subscription": "Subscription",
         "renewal": "Renewal",
         "invoiceCreation": "Invoice",
-        "custom": "Custom"
+        "custom": "Custom mail"
       },
       "placeholderAlways": "Always available — every mail",
-      "placeholderContextLabel": "Show fields for",
+      "placeholderContextLabel": "Additional fields for this purpose",
       "placeholderContexts": {
         "account": "Account & login (creation, login link, password reset)",
         "emailChange": "Email change",
@@ -1071,8 +1073,8 @@
         "chf": "CHF",
         "rappen": "Rappen"
       },
-      "placeholderAlwaysHint": "These recipient fields work in every template, no matter which mail type is selected below.",
-      "placeholderContextNone": "This mail only uses the recipient fields above.",
+      "placeholderAlwaysHint": "These recipient fields work in every template, no matter which purpose is selected.",
+      "placeholderContextNone": "This purpose only uses the recipient fields above.",
       "placeholderContextNotes": {
         "account": "Only recipient fields are available.",
         "subscription": "Subscription master data. Plan and payment-method names are NOT available here — only in renewal mails.",
@@ -2646,7 +2648,9 @@
         "title": "Sending progress",
         "status": "Status",
         "sent": "Sent",
-        "failed": "Failed"
+        "failed": "Failed",
+        "reason": "Reason",
+        "showFailures": "Show {{count}} failed mails in the sending log"
       },
       "status": {
         "queued": "Queued",
@@ -2655,7 +2659,16 @@
         "failed": "Failed",
         "cancelled": "Cancelled"
       },
-      "missingPlaceholders": "Heads up: these placeholders won't be filled for these recipients: {{placeholders}}"
+      "missingPlaceholders": "Heads up: these placeholders won't be filled for these recipients: {{placeholders}}",
+      "createTemplate": "New template",
+      "showRecipients": "Show recipients",
+      "recipientList": {
+        "title": "Recipients ({{count}})",
+        "loading": "Loading recipients …",
+        "email": "Email",
+        "name": "Name",
+        "memberPlan": "Member plan"
+      }
     },
     "mailLog": {
       "title": "Sent emails",
@@ -2664,18 +2677,76 @@
       "template": "Template",
       "subject": "Subject",
       "state": "State",
-      "type": "Type",
+      "type": "Triggered by",
       "recipient": "Recipient",
       "filter": {
         "template": "Template",
         "state": "State",
-        "type": "Type"
+        "type": "Triggered by",
+        "job": "Send job",
+        "jobAll": "All send jobs",
+        "all": "All",
+        "title": "Filter",
+        "reset": "Reset filters",
+        "typeHint": "What set this send off."
       },
       "types": {
-        "subscriptionFlow": "Subscription flow",
-        "userFlow": "User flow",
+        "subscriptionFlow": "Subscription mailing",
+        "userFlow": "Event mail",
         "systemMail": "System mail",
         "manual": "Manual"
+      },
+      "error": "Error",
+      "typeDescriptions": {
+        "manual": "Sent by hand via «Send email» or «Send test». Example: a newsletter to all subscribers.",
+        "subscriptionFlow": "Time-based, from «Default mailing», scheduled off the subscription date. Examples: reminder 14 days before it ends, dunning after an unpaid invoice.",
+        "userFlow": "Triggered immediately by a concrete action or event. Examples: login link requested, email address changed, renewal payment failed.",
+        "systemMail": "Built-in account mails, configured under «System mails». Examples: welcome mail after registration, password reset."
+      },
+      "errorHelp": {
+        "causeTitle": "What happened?",
+        "fixTitle": "How to fix it",
+        "raw": "Original message from the mail server:",
+        "tls": {
+          "cause": "The mail server encrypted the connection with TLS, but its certificate is not trusted (self-signed, expired, or issued for a different hostname). The mail was not delivered.",
+          "fix": "1. Check the SMTP host and port under Settings › Integrations › Mail.\n2. Make sure your mail server is really the one answering there — another program often occupies the port (locally e.g. Proton Mail Bridge on port 1025).\n3. Use a mail server with a valid certificate, or locally an SMTP server without TLS (e.g. Mailpit on a free port)."
+        },
+        "connectionRefused": {
+          "cause": "Nothing accepts connections on the configured SMTP host and port.",
+          "fix": "1. Check host and port under Settings › Integrations › Mail.\n2. Start the mail server (locally e.g. «docker compose up mailpit»).\n3. Check whether a firewall blocks the port."
+        },
+        "hostNotFound": {
+          "cause": "The mail server hostname cannot be resolved — it does not exist or DNS is unreachable.",
+          "fix": "1. Check the SMTP host for typos (Settings › Integrations › Mail).\n2. Inside Docker use the service name (e.g. «mailpit» instead of «localhost»)."
+        },
+        "timeout": {
+          "cause": "The mail server did not answer in time. Usually a firewall blocks the port or the server is overloaded.",
+          "fix": "1. Check whether the port is reachable from this server.\n2. Many hosts block port 25 — use 587 or 465.\n3. Try the send again later."
+        },
+        "auth": {
+          "cause": "The mail provider rejected the credentials.",
+          "fix": "1. Renew the API key or user and password under Settings › Integrations › Mail.\n2. Check that the key belongs to the right account and region."
+        },
+        "recipientRejected": {
+          "cause": "The mail server rejected the recipient address — it does not exist, or the sender domain is not allowed to send to it.",
+          "fix": "1. Check the recipient address.\n2. Verify the sender domain with your provider (SPF/DKIM).\n3. In sandbox mode (e.g. Mailgun) recipients must be authorised first."
+        },
+        "rateLimit": {
+          "cause": "The provider hit its sending limit and rejected further mails for now.",
+          "fix": "1. Wait and run the send again later.\n2. Check the quota of your plan with the mail provider."
+        },
+        "noProvider": {
+          "cause": "No mail provider is configured, so nothing can be sent.",
+          "fix": "Set up a provider under Settings › Integrations › Mail (SMTP, Mailgun, Mailchimp or Slack)."
+        },
+        "templateMissing": {
+          "cause": "The mail template used here no longer exists.",
+          "fix": "Pick an existing template under «Mail templates» or create it again, then start the send once more."
+        },
+        "generic": {
+          "cause": "The mail server rejected the send with the message below.",
+          "fix": "1. Check the configuration under Settings › Integrations › Mail.\n2. Look into the server log for the full error.\n3. Send a test mail from the template to check the connection."
+        }
       }
     },
     "userMail": {

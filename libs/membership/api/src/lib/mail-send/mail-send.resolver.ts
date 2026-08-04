@@ -11,6 +11,7 @@ import {
   MailSendRecipientPreview,
   PaginatedMailLog,
   PaginatedMailSendJob,
+  PaginatedMailSendRecipient,
 } from './mail-send.model';
 import { MailSendJobService } from './mail-send-job.service';
 import { MailSendRecipientService } from './mail-send-recipient.service';
@@ -38,6 +39,38 @@ export class MailSendResolver {
     ]);
 
     return { count, allowsSubscriptionTemplates };
+  }
+
+  @Permissions(CanSendMailTemplates)
+  @Query(() => PaginatedMailSendRecipient, {
+    description: `The concrete recipients an audience resolves to`,
+  })
+  async mailSendRecipients(
+    @Args('audience') audience: MailAudienceInput,
+    @Args('skip', { type: () => Int, nullable: true }) skip = 0,
+    @Args('take', { type: () => Int, nullable: true }) take = 50
+  ): Promise<PaginatedMailSendRecipient> {
+    const boundedTake = Math.min(take, 100);
+
+    const [totalCount, recipients] = await Promise.all([
+      this.recipientService.count(audience),
+      this.recipientService.resolvePage(audience, skip, boundedTake + 1),
+    ]);
+
+    const rows = recipients.map(({ user, subscription }) => ({
+      // A user can match more than once (one row per subscription).
+      id: `${user.id}:${subscription?.id ?? ''}`,
+      userId: user.id,
+      email: user.email,
+      name: user.name,
+      firstName: user.firstName,
+      subscriptionId: subscription?.id ?? null,
+      memberPlanName:
+        (subscription?.memberPlan as { name?: string } | undefined)?.name ??
+        null,
+    }));
+
+    return this.paginate(rows, totalCount, skip, boundedTake);
   }
 
   @Permissions(CanSendMailTemplates)

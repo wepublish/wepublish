@@ -218,6 +218,11 @@ export interface HtmlVisualEditorHandle {
 export interface HtmlVisualEditorProps {
   value: string;
   onChange: (html: string) => void;
+  /**
+   * Fired when the user starts working inside the editor. Interactions happen
+   * in an iframe, so they never surface as focus events on the host page.
+   */
+  onActivate?: () => void;
 }
 
 const EDITABLE_SELECTOR = '.mail-body';
@@ -263,7 +268,7 @@ const serializeDocument = (doc: Document): string => {
 const HtmlVisualEditorComponent = forwardRef<
   HtmlVisualEditorHandle,
   HtmlVisualEditorProps
->(function HtmlVisualEditor({ value, onChange }, ref) {
+>(function HtmlVisualEditor({ value, onChange, onActivate }, ref) {
   const { t } = useTranslation();
   const [device, setDevice] = useState<Device>('desktop');
   const [linkDialog, setLinkDialog] = useState<LinkDialogState>({
@@ -291,6 +296,11 @@ const HtmlVisualEditorComponent = forwardRef<
     null
   );
   const frameRef = useRef<HTMLIFrameElement>(null);
+
+  // The iframe listeners are registered once per load, so read the callback
+  // through a ref to avoid calling a stale one.
+  const onActivateRef = useRef(onActivate);
+  onActivateRef.current = onActivate;
 
   const getDoc = (): Document | null =>
     frameRef.current?.contentDocument ?? null;
@@ -339,6 +349,14 @@ const HtmlVisualEditorComponent = forwardRef<
       // ignore — not supported everywhere
     }
     doc.addEventListener('input', emit);
+    // Keep the last caret position inside the body cell: clicking anything
+    // outside the iframe (toolbar dialogs, the placeholder picker) drops the
+    // iframe's selection, and we need it back to insert at the right spot.
+    doc.addEventListener('selectionchange', saveSelection);
+    const activate = () => onActivateRef.current?.();
+    doc.addEventListener('mousedown', activate);
+    doc.addEventListener('keydown', activate);
+    doc.addEventListener('focusin', activate);
   };
 
   const exec = (command: string, argument?: string) => {
@@ -370,12 +388,22 @@ const HtmlVisualEditorComponent = forwardRef<
   const savedRange = useRef<Range | null>(null);
   const editedAnchor = useRef<HTMLAnchorElement | null>(null);
 
+  const isInEditable = (range: Range | null): range is Range => {
+    const editable = getEditable();
+    return (
+      !!editable && !!range && editable.contains(range.commonAncestorContainer)
+    );
+  };
+
+  // Only ranges inside the editable body cell are worth remembering; a
+  // selection elsewhere in the shell keeps the previous one.
   const saveSelection = () => {
     const selection = getDoc()?.getSelection();
-    savedRange.current =
-      selection && selection.rangeCount ?
-        selection.getRangeAt(0).cloneRange()
-      : null;
+    const range =
+      selection && selection.rangeCount ? selection.getRangeAt(0) : null;
+    if (isInEditable(range)) {
+      savedRange.current = range.cloneRange();
+    }
   };
 
   const restoreSelection = () => {
@@ -624,11 +652,39 @@ const HtmlVisualEditorComponent = forwardRef<
     () => ({
       insertToken: (text: string) => {
         const doc = getDoc();
-        if (!doc) {
+        const editable = getEditable();
+        if (!doc || !editable) {
           return;
         }
-        getEditable()?.focus();
-        doc.execCommand('insertText', false, text);
+        // The picker lives outside the iframe, so by the time we get here the
+        // browser's focus is in the parent document. execCommand would then
+        // insert into whatever element is focused there (e.g. the description
+        // field), so write into the range directly instead.
+        const selection = doc.getSelection();
+        const live =
+          selection && selection.rangeCount ? selection.getRangeAt(0) : null;
+        let range: Range;
+        if (isInEditable(live)) {
+          range = live.cloneRange();
+        } else if (isInEditable(savedRange.current)) {
+          range = savedRange.current.cloneRange();
+        } else {
+          // Never used the editor yet: append at the end of the body cell.
+          range = doc.createRange();
+          range.selectNodeContents(editable);
+          range.collapse(false);
+        }
+
+        range.deleteContents();
+        const node = doc.createTextNode(text);
+        range.insertNode(node);
+        range.setStartAfter(node);
+        range.collapse(true);
+        savedRange.current = range.cloneRange();
+
+        editable.focus();
+        selection?.removeAllRanges();
+        selection?.addRange(range);
         emit();
       },
     }),

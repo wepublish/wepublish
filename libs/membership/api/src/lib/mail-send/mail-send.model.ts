@@ -153,6 +153,12 @@ export class MailLogModel {
   @Field(() => String, { nullable: true })
   subject?: string | null;
 
+  @Field(() => String, {
+    nullable: true,
+    description: 'Why a rejected mail could not be delivered.',
+  })
+  error?: string | null;
+
   @Field()
   mailProviderID!: string;
 
@@ -216,6 +222,38 @@ export class MailSendJobModel {
 
 @ObjectType()
 export class PaginatedMailSendJob extends PaginatedType(MailSendJobModel) {}
+
+@ObjectType()
+export class MailSendRecipientModel {
+  @Field({
+    description:
+      'Row identity. A user appears once per matching subscription, so this combines both.',
+  })
+  id!: string;
+
+  @Field()
+  userId!: string;
+
+  @Field()
+  email!: string;
+
+  @Field()
+  name!: string;
+
+  @Field(() => String, { nullable: true })
+  firstName?: string | null;
+
+  @Field(() => String, { nullable: true })
+  subscriptionId?: string | null;
+
+  @Field(() => String, { nullable: true })
+  memberPlanName?: string | null;
+}
+
+@ObjectType()
+export class PaginatedMailSendRecipient extends PaginatedType(
+  MailSendRecipientModel
+) {}
 
 @ObjectType()
 export class MailSendRecipientPreview {

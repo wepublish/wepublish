@@ -1677,6 +1677,8 @@ export type MailLogFilter = {
 export type MailLogModel = {
   __typename?: 'MailLogModel';
   createdAt: Scalars['DateTime'];
+  /** Why a rejected mail could not be delivered. */
+  error?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   mailProviderID: Scalars['String'];
   mailSendJobId?: Maybe<Scalars['String']>;
@@ -1774,6 +1776,18 @@ export enum MailSendJobState {
   Queued = 'queued',
   Running = 'running'
 }
+
+export type MailSendRecipientModel = {
+  __typename?: 'MailSendRecipientModel';
+  email: Scalars['String'];
+  firstName?: Maybe<Scalars['String']>;
+  /** Row identity. A user appears once per matching subscription, so this combines both. */
+  id: Scalars['String'];
+  memberPlanName?: Maybe<Scalars['String']>;
+  name: Scalars['String'];
+  subscriptionId?: Maybe<Scalars['String']>;
+  userId: Scalars['String'];
+};
 
 export type MailSendRecipientPreview = {
   __typename?: 'MailSendRecipientPreview';
@@ -3887,6 +3901,13 @@ export type PaginatedMailSendJob = {
   totalCount: Scalars['Int'];
 };
 
+export type PaginatedMailSendRecipient = {
+  __typename?: 'PaginatedMailSendRecipient';
+  nodes: Array<MailSendRecipientModel>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
 export type PaginatedMemberPlans = {
   __typename?: 'PaginatedMemberPlans';
   nodes: Array<MemberPlan>;
@@ -4636,6 +4657,8 @@ export type Query = {
   mailSendJobs: PaginatedMailSendJob;
   /** Preview how many recipients an audience resolves to */
   mailSendRecipientPreview: MailSendRecipientPreview;
+  /** The concrete recipients an audience resolves to */
+  mailSendRecipients: PaginatedMailSendRecipient;
   /** Placeholders a template uses that would render empty for the given send (empty = none missing) */
   mailTemplateMissingPlaceholders: Array<Scalars['String']>;
   /** Render a draft mail template with a mail type's sample data */
@@ -5097,6 +5120,13 @@ export type QueryMailSendJobsArgs = {
 
 export type QueryMailSendRecipientPreviewArgs = {
   audience: MailAudienceInput;
+};
+
+
+export type QueryMailSendRecipientsArgs = {
+  audience: MailAudienceInput;
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
 };
 
 

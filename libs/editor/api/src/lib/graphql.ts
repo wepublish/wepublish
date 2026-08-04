@@ -1679,6 +1679,8 @@ export type MailLogFilter = {
 export type MailLogModel = {
   __typename?: 'MailLogModel';
   createdAt: Scalars['DateTime'];
+  /** Why a rejected mail could not be delivered. */
+  error?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   mailProviderID: Scalars['String'];
   mailSendJobId?: Maybe<Scalars['String']>;
@@ -1776,6 +1778,18 @@ export enum MailSendJobState {
   Queued = 'queued',
   Running = 'running'
 }
+
+export type MailSendRecipientModel = {
+  __typename?: 'MailSendRecipientModel';
+  email: Scalars['String'];
+  firstName?: Maybe<Scalars['String']>;
+  /** Row identity. A user appears once per matching subscription, so this combines both. */
+  id: Scalars['String'];
+  memberPlanName?: Maybe<Scalars['String']>;
+  name: Scalars['String'];
+  subscriptionId?: Maybe<Scalars['String']>;
+  userId: Scalars['String'];
+};
 
 export type MailSendRecipientPreview = {
   __typename?: 'MailSendRecipientPreview';
@@ -3889,6 +3903,13 @@ export type PaginatedMailSendJob = {
   totalCount: Scalars['Int'];
 };
 
+export type PaginatedMailSendRecipient = {
+  __typename?: 'PaginatedMailSendRecipient';
+  nodes: Array<MailSendRecipientModel>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
 export type PaginatedMemberPlans = {
   __typename?: 'PaginatedMemberPlans';
   nodes: Array<MemberPlan>;
@@ -4638,6 +4659,8 @@ export type Query = {
   mailSendJobs: PaginatedMailSendJob;
   /** Preview how many recipients an audience resolves to */
   mailSendRecipientPreview: MailSendRecipientPreview;
+  /** The concrete recipients an audience resolves to */
+  mailSendRecipients: PaginatedMailSendRecipient;
   /** Placeholders a template uses that would render empty for the given send (empty = none missing) */
   mailTemplateMissingPlaceholders: Array<Scalars['String']>;
   /** Render a draft mail template with a mail type's sample data */
@@ -5099,6 +5122,13 @@ export type QueryMailSendJobsArgs = {
 
 export type QueryMailSendRecipientPreviewArgs = {
   audience: MailAudienceInput;
+};
+
+
+export type QueryMailSendRecipientsArgs = {
+  audience: MailAudienceInput;
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -7613,7 +7643,7 @@ export type MarkInvoiceAsPaidMutationVariables = Exact<{
 
 export type MarkInvoiceAsPaidMutation = { __typename?: 'Mutation', markInvoiceAsPaid: { __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> } };
 
-export type FullMailLogFragment = { __typename?: 'MailLogModel', id: string, createdAt: string, sentDate: string, state: MailLogState, type?: MailLogType | null, subject?: string | null, mailProviderID: string, mailSendJobId?: string | null, recipient: { __typename?: 'MailLogRecipient', id: string, email: string, name: string, firstName?: string | null }, mailTemplate: { __typename?: 'MailLogTemplate', id: string, name: string } };
+export type FullMailLogFragment = { __typename?: 'MailLogModel', id: string, createdAt: string, sentDate: string, state: MailLogState, type?: MailLogType | null, subject?: string | null, error?: string | null, mailProviderID: string, mailSendJobId?: string | null, recipient: { __typename?: 'MailLogRecipient', id: string, email: string, name: string, firstName?: string | null }, mailTemplate: { __typename?: 'MailLogTemplate', id: string, name: string } };
 
 export type MailLogsQueryVariables = Exact<{
   filter?: InputMaybe<MailLogFilter>;
@@ -7622,7 +7652,7 @@ export type MailLogsQueryVariables = Exact<{
 }>;
 
 
-export type MailLogsQuery = { __typename?: 'Query', mailLogs: { __typename?: 'PaginatedMailLog', totalCount: number, nodes: Array<{ __typename?: 'MailLogModel', id: string, createdAt: string, sentDate: string, state: MailLogState, type?: MailLogType | null, subject?: string | null, mailProviderID: string, mailSendJobId?: string | null, recipient: { __typename?: 'MailLogRecipient', id: string, email: string, name: string, firstName?: string | null }, mailTemplate: { __typename?: 'MailLogTemplate', id: string, name: string } }>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } };
+export type MailLogsQuery = { __typename?: 'Query', mailLogs: { __typename?: 'PaginatedMailLog', totalCount: number, nodes: Array<{ __typename?: 'MailLogModel', id: string, createdAt: string, sentDate: string, state: MailLogState, type?: MailLogType | null, subject?: string | null, error?: string | null, mailProviderID: string, mailSendJobId?: string | null, recipient: { __typename?: 'MailLogRecipient', id: string, email: string, name: string, firstName?: string | null }, mailTemplate: { __typename?: 'MailLogTemplate', id: string, name: string } }>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } };
 
 export type FullMailSendJobFragment = { __typename?: 'MailSendJobModel', id: string, createdAt: string, modifiedAt: string, status: MailSendJobState, audience: MailSendAudience, totalCount: number, sentCount: number, failedCount: number, startedAt?: string | null, finishedAt?: string | null, error?: string | null, mailTemplate?: { __typename?: 'MailLogTemplate', id: string, name: string } | null };
 
@@ -7632,6 +7662,15 @@ export type MailSendRecipientPreviewQueryVariables = Exact<{
 
 
 export type MailSendRecipientPreviewQuery = { __typename?: 'Query', mailSendRecipientPreview: { __typename?: 'MailSendRecipientPreview', count: number, allowsSubscriptionTemplates: boolean } };
+
+export type MailSendRecipientsQueryVariables = Exact<{
+  audience: MailAudienceInput;
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type MailSendRecipientsQuery = { __typename?: 'Query', mailSendRecipients: { __typename?: 'PaginatedMailSendRecipient', totalCount: number, nodes: Array<{ __typename?: 'MailSendRecipientModel', id: string, userId: string, email: string, name: string, firstName?: string | null, subscriptionId?: string | null, memberPlanName?: string | null }>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type MailTemplateMissingPlaceholdersQueryVariables = Exact<{
   templateId: Scalars['String'];
@@ -10304,6 +10343,7 @@ export const FullMailLogFragmentDoc = gql`
   state
   type
   subject
+  error
   mailProviderID
   mailSendJobId
   recipient {
@@ -14625,6 +14665,56 @@ export function useMailSendRecipientPreviewLazyQuery(baseOptions?: Apollo.LazyQu
 export type MailSendRecipientPreviewQueryHookResult = ReturnType<typeof useMailSendRecipientPreviewQuery>;
 export type MailSendRecipientPreviewLazyQueryHookResult = ReturnType<typeof useMailSendRecipientPreviewLazyQuery>;
 export type MailSendRecipientPreviewQueryResult = Apollo.QueryResult<MailSendRecipientPreviewQuery, MailSendRecipientPreviewQueryVariables>;
+export const MailSendRecipientsDocument = gql`
+    query MailSendRecipients($audience: MailAudienceInput!, $skip: Int, $take: Int) {
+  mailSendRecipients(audience: $audience, skip: $skip, take: $take) {
+    nodes {
+      id
+      userId
+      email
+      name
+      firstName
+      subscriptionId
+      memberPlanName
+    }
+    totalCount
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+    }
+  }
+}
+    `;
+
+/**
+ * __useMailSendRecipientsQuery__
+ *
+ * To run a query within a React component, call `useMailSendRecipientsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMailSendRecipientsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMailSendRecipientsQuery({
+ *   variables: {
+ *      audience: // value for 'audience'
+ *      skip: // value for 'skip'
+ *      take: // value for 'take'
+ *   },
+ * });
+ */
+export function useMailSendRecipientsQuery(baseOptions: Apollo.QueryHookOptions<MailSendRecipientsQuery, MailSendRecipientsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MailSendRecipientsQuery, MailSendRecipientsQueryVariables>(MailSendRecipientsDocument, options);
+      }
+export function useMailSendRecipientsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MailSendRecipientsQuery, MailSendRecipientsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MailSendRecipientsQuery, MailSendRecipientsQueryVariables>(MailSendRecipientsDocument, options);
+        }
+export type MailSendRecipientsQueryHookResult = ReturnType<typeof useMailSendRecipientsQuery>;
+export type MailSendRecipientsLazyQueryHookResult = ReturnType<typeof useMailSendRecipientsLazyQuery>;
+export type MailSendRecipientsQueryResult = Apollo.QueryResult<MailSendRecipientsQuery, MailSendRecipientsQueryVariables>;
 export const MailTemplateMissingPlaceholdersDocument = gql`
     query MailTemplateMissingPlaceholders($templateId: String!, $withSubscriptionData: Boolean!) {
   mailTemplateMissingPlaceholders(
