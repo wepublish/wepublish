@@ -1,7 +1,7 @@
 import { PrimeDataLoader } from './prime-dataloaders.decorator';
 
 class MockDataloader {
-  prime = jest.fn();
+  prime = vi.fn();
 }
 
 it('should prime an object with an id', async () => {

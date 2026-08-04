@@ -1,37 +1,37 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`formatPaymentPeriod should format payment period for biannual 1`] = `"6 Monate"`;
+exports[`formatPaymentPeriod > should format payment period for biannual 1`] = `"6 Monate"`;
 
-exports[`formatPaymentPeriod should format payment period for biennial 1`] = `"2 Jahre"`;
+exports[`formatPaymentPeriod > should format payment period for biennial 1`] = `"2 Jahre"`;
 
-exports[`formatPaymentPeriod should format payment period for lifetime 1`] = `"Lebenslang"`;
+exports[`formatPaymentPeriod > should format payment period for lifetime 1`] = `"Lebenslang"`;
 
-exports[`formatPaymentPeriod should format payment period for monthly 1`] = `"1 Monat"`;
+exports[`formatPaymentPeriod > should format payment period for monthly 1`] = `"1 Monat"`;
 
-exports[`formatPaymentPeriod should format payment period for quarterly 1`] = `"3 Monate"`;
+exports[`formatPaymentPeriod > should format payment period for quarterly 1`] = `"3 Monate"`;
 
-exports[`formatPaymentPeriod should format payment period for yearly 1`] = `"1 Jahr"`;
+exports[`formatPaymentPeriod > should format payment period for yearly 1`] = `"1 Jahr"`;
 
-exports[`formatPaymentTimeline should format payment timeline for biannual 1`] = `"halbjährlich"`;
+exports[`formatPaymentTimeline > should format payment timeline for biannual 1`] = `"halbjährlich"`;
 
-exports[`formatPaymentTimeline should format payment timeline for biennial 1`] = `"zweijährlich"`;
+exports[`formatPaymentTimeline > should format payment timeline for biennial 1`] = `"zweijährlich"`;
 
-exports[`formatPaymentTimeline should format payment timeline for lifetime 1`] = `"Lebenslang"`;
+exports[`formatPaymentTimeline > should format payment timeline for lifetime 1`] = `"Lebenslang"`;
 
-exports[`formatPaymentTimeline should format payment timeline for monthly 1`] = `"monatlich"`;
+exports[`formatPaymentTimeline > should format payment timeline for monthly 1`] = `"monatlich"`;
 
-exports[`formatPaymentTimeline should format payment timeline for quarterly 1`] = `"vierteljährlich"`;
+exports[`formatPaymentTimeline > should format payment timeline for quarterly 1`] = `"vierteljährlich"`;
 
-exports[`formatPaymentTimeline should format payment timeline for yearly 1`] = `"jährlich"`;
+exports[`formatPaymentTimeline > should format payment timeline for yearly 1`] = `"jährlich"`;
 
-exports[`getPaymentPeriodicyMonths should get the payment periodicty month for biannual 1`] = `6`;
+exports[`getPaymentPeriodicyMonths > should get the payment periodicty month for biannual 1`] = `6`;
 
-exports[`getPaymentPeriodicyMonths should get the payment periodicty month for biennial 1`] = `24`;
+exports[`getPaymentPeriodicyMonths > should get the payment periodicty month for biennial 1`] = `24`;
 
-exports[`getPaymentPeriodicyMonths should get the payment periodicty month for lifetime 1`] = `1200`;
+exports[`getPaymentPeriodicyMonths > should get the payment periodicty month for lifetime 1`] = `1200`;
 
-exports[`getPaymentPeriodicyMonths should get the payment periodicty month for monthly 1`] = `1`;
+exports[`getPaymentPeriodicyMonths > should get the payment periodicty month for monthly 1`] = `1`;
 
-exports[`getPaymentPeriodicyMonths should get the payment periodicty month for quarterly 1`] = `3`;
+exports[`getPaymentPeriodicyMonths > should get the payment periodicty month for quarterly 1`] = `3`;
 
-exports[`getPaymentPeriodicyMonths should get the payment periodicty month for yearly 1`] = `12`;
+exports[`getPaymentPeriodicyMonths > should get the payment periodicty month for yearly 1`] = `12`;
