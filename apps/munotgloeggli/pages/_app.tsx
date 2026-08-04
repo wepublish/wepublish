@@ -112,16 +112,16 @@ function CustomApp({
       src={`https://plausible.io/js/${settings?.analytics.plausible.key}.js`}
     >
       <AppCacheProvider emotionCache={cache}>
-        <WebsiteProvider>
-          <WebsiteBuilderProvider
-            Head={Head}
-            Script={Script}
-            elements={{ Link: NextWepublishLink }}
-            date={{ format: dateFormatter }}
-            meta={{ siteTitle }}
-            blocks={{ BaseTeaser: MunotgloeggliBaseTeaser }}
-          >
-            <ThemeProvider theme={theme}>
+        <ThemeProvider theme={theme}>
+          <WebsiteProvider>
+            <WebsiteBuilderProvider
+              Head={Head}
+              Script={Script}
+              elements={{ Link: NextWepublishLink }}
+              date={{ format: dateFormatter }}
+              meta={{ siteTitle }}
+              blocks={{ BaseTeaser: MunotgloeggliBaseTeaser }}
+            >
               <CssBaseline />
 
               <Head>
@@ -184,9 +184,9 @@ function CustomApp({
                     data-sparkloop
                   />
                 )}
-            </ThemeProvider>
-          </WebsiteBuilderProvider>
-        </WebsiteProvider>
+            </WebsiteBuilderProvider>
+          </WebsiteProvider>
+        </ThemeProvider>
       </AppCacheProvider>
     </PlausibleProvider>
   );
