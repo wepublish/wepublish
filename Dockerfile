@@ -165,6 +165,7 @@ RUN npx prisma generate && \
     npx nx build editor --ignore-nx-cache && \
     npx @sentry/cli sourcemaps inject ./dist/apps/editor && \
     npx @sentry/cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist/apps/editor && \
+    find ./dist/apps/editor/browser -name '*.map' -delete && \
     cp docker/editor_build_package.json package.json && \
     npx @yao-pkg/pkg package.json
 
