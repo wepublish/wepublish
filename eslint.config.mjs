@@ -84,7 +84,9 @@ export default [
     files: ['**/*.spec.ts', '**/*.spec.tsx', '**/*.spec.js', '**/*.spec.jsx'],
     languageOptions: {
       globals: {
+        // The backend (NestJS) projects run on jest, everything else on vitest.
         ...globals.jest,
+        vi: 'readonly',
       },
     },
   },

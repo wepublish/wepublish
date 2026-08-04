@@ -1,7 +1,7 @@
 import { Article } from '@wepublish/website/api';
 import { generateFeed } from './feed-generator';
 import { mockArticle, mockAuthor, mockImage } from '@wepublish/storybook/mocks';
-import { faker } from '@faker-js/faker/.';
+import { faker } from '@faker-js/faker';
 
 const author = mockAuthor();
 

@@ -1,6 +1,4 @@
-/**
- * @jest-environment jsdom
- */
+import type { Mock } from 'vitest';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { getSettings } from '@wepublish/editor/api';
 
@@ -13,11 +11,11 @@ import {
 } from './oneMessages.hooks';
 import type { OneMessage } from './oneMessages.types';
 
-jest.mock('@wepublish/editor/api', () => ({
-  getSettings: jest.fn(),
+vi.mock('@wepublish/editor/api', () => ({
+  getSettings: vi.fn(),
 }));
 
-const mockedGetSettings = getSettings as jest.Mock;
+const mockedGetSettings = getSettings as Mock;
 
 const message = (overrides: Partial<OneMessage> = {}): OneMessage => ({
   id: 1,
@@ -33,7 +31,7 @@ const message = (overrides: Partial<OneMessage> = {}): OneMessage => ({
 });
 
 const mockFetch = (impl: () => unknown) => {
-  global.fetch = jest.fn(impl) as unknown as typeof fetch;
+  global.fetch = vi.fn(impl) as unknown as typeof fetch;
 };
 
 const okResponse = (data: unknown) => ({
@@ -64,7 +62,7 @@ describe('fetchOneMessages', () => {
 
     await fetchOneMessages('fr');
 
-    const url = (global.fetch as jest.Mock).mock.calls[0][0] as string;
+    const url = (global.fetch as Mock).mock.calls[0][0] as string;
     expect(url).toBe('https://one.test/messages?medium=bajour&locale=fr');
   });
 
@@ -74,7 +72,7 @@ describe('fetchOneMessages', () => {
 
     await fetchOneMessages('de');
 
-    const url = (global.fetch as jest.Mock).mock.calls[0][0] as string;
+    const url = (global.fetch as Mock).mock.calls[0][0] as string;
     expect(url).toBe('https://one.test/messages?locale=de');
   });
 
@@ -83,7 +81,7 @@ describe('fetchOneMessages', () => {
 
     await fetchOneMessages('');
 
-    const url = (global.fetch as jest.Mock).mock.calls[0][0] as string;
+    const url = (global.fetch as Mock).mock.calls[0][0] as string;
     expect(url).toBe('https://one.test/messages?medium=bajour');
   });
 
@@ -155,7 +153,7 @@ describe('useOneMessages', () => {
 
   it('removes the focus listener on unmount', async () => {
     mockFetch(() => Promise.resolve(okResponse({ data: [] })));
-    const removeSpy = jest.spyOn(window, 'removeEventListener');
+    const removeSpy = vi.spyOn(window, 'removeEventListener');
 
     const { unmount } = renderHook(() => useOneMessages('de'));
     await act(async () => {
