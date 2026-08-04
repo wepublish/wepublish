@@ -16,7 +16,7 @@ import {
   TagPicker,
   toaster,
 } from 'rsuite';
-import { ItemDataType } from 'rsuite/esm/@types/common';
+import type { Option } from 'rsuite/esm/internals/types';
 
 import { DEFAULT_MAX_TABLE_PAGES } from '../../utility';
 
@@ -55,7 +55,7 @@ export function SelectTags({
     defaultTags.map(tag => ({
       label: tag.tag || t('comments.edit.unnamedTag'),
       value: tag.id,
-    })) as ItemDataType<string | number>[]
+    })) as Option<string | number>[]
   );
 
   /**
@@ -134,7 +134,7 @@ export function SelectTags({
       onChange={(value, item) => {
         setSelectedTags(value);
       }}
-      renderMenu={menu => {
+      renderListbox={menu => {
         return (
           <>
             {menu}

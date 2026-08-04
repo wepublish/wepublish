@@ -18,7 +18,7 @@ export class ImageFetcherService {
           timeout: 30000,
         })
       );
-      const mimetype = headers['content-type'];
+      const mimetype = String(headers['content-type']);
 
       const arrayBufferUpload = {
         filename,

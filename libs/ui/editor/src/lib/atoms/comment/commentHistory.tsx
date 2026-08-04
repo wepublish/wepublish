@@ -8,7 +8,7 @@ import {
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd } from 'react-icons/md';
-import { FlexboxGrid } from 'rsuite';
+import { Col, Row } from 'rsuite';
 
 import { CommentPreview, RevisionProps } from './commentPreview';
 import { CreateCommentBtn } from './createCommentBtn';
@@ -25,14 +25,15 @@ function ChildComments({
   originComment,
   revision,
   setRevision,
-}: ChildCommentsProps): JSX.Element {
+}: ChildCommentsProps) {
   if (!comments) {
-    // eslint-disable-next-line react/jsx-no-useless-fragment
-    return <></>;
+    return null;
   }
+
   const childComments = comments.filter(
     tmpComment => tmpComment.parentComment?.id === comment.id
   );
+
   return (
     <div
       style={{
@@ -116,13 +117,13 @@ export function CommentHistory({
 
   return (
     <>
-      <FlexboxGrid
+      <Row
         align="bottom"
         justify="end"
       >
-        <FlexboxGrid.Item
+        <Col
           style={{ textAlign: 'end', paddingBottom: '20px' }}
-          colspan={24}
+          span={24}
         >
           <CreateCommentBtn
             itemID={commentItemID}
@@ -135,8 +136,8 @@ export function CommentHistory({
               await fetchCommentList();
             }}
           />
-        </FlexboxGrid.Item>
-      </FlexboxGrid>
+        </Col>
+      </Row>
 
       {comments &&
         comments.map(tmpComment => (

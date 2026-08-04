@@ -10,7 +10,7 @@ import {
 import { removeTypenameFromVariables } from '@apollo/client/link/remove-typename';
 import { createUploadLink } from 'apollo-upload-client';
 
-import { ComponentType, memo } from 'react';
+import { ComponentType, createElement, memo } from 'react';
 import possibleTypes from './graphql';
 
 export enum ElementID {
@@ -80,7 +80,7 @@ const isFile = (value: unknown): boolean =>
   );
 
 export function getApiClientV2() {
-  const apiURL = process.env.API_URL || getSettings().apiURL;
+  const { apiURL } = getSettings();
 
   if (!client) {
     // If operation is uploading a file, use the upload link, else use the normal http link
@@ -111,16 +111,13 @@ export function getApiClientV2() {
   return client;
 }
 
-export const createWithV2ApiClient = <
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  P extends object,
->(
+export const createWithV2ApiClient = <P extends object>(
   ControlledComponent: ComponentType<P>
 ) =>
   memo<P>(props => {
     return (
       <ApolloProvider client={client}>
-        <ControlledComponent {...(props as P)} />
+        {createElement(ControlledComponent, props as P)}
       </ApolloProvider>
     );
   });

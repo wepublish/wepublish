@@ -85,7 +85,7 @@ describe('SubscriptionPaymentsService', () => {
         create: jest.fn(),
       },
       payment: {
-        findMany: jest.fn(),
+        findMany: jest.fn().mockResolvedValue([]),
         create: jest.fn(),
       },
       subscriptionDeactivation: {
@@ -183,6 +183,35 @@ describe('SubscriptionPaymentsService', () => {
     expect(prismaMock.invoice.findMany).toHaveBeenCalled();
   });
 
+  it('does not re-charge an invoice whose in-flight payment is still within the grace period, but does once it goes stale', async () => {
+    const runDate = new Date('2026-06-15');
+    prismaMock.invoice.findMany!.mockResolvedValue([
+      {
+        id: 'fresh-in-flight',
+        subscription: { confirmed: true, paymentMethod: { gracePeriod: 14 } },
+      },
+      {
+        id: 'stale-in-flight',
+        subscription: { confirmed: true, paymentMethod: { gracePeriod: 14 } },
+      },
+      {
+        id: 'no-in-flight',
+        subscription: { confirmed: true, paymentMethod: { gracePeriod: 14 } },
+      },
+    ]);
+    prismaMock.payment.findMany!.mockResolvedValue([
+      { invoiceID: 'fresh-in-flight', createdAt: new Date('2026-06-14') },
+      { invoiceID: 'stale-in-flight', createdAt: new Date('2026-05-01') },
+    ]);
+
+    const result = await subscriptionService.findUnpaidDueInvoices(runDate);
+
+    expect(result.map(invoice => invoice.id)).toEqual([
+      'stale-in-flight',
+      'no-in-flight',
+    ]);
+  });
+
   it('skips unconfirmed invoices', async () => {
     const mockInvoices = [
       {
@@ -258,6 +287,31 @@ describe('SubscriptionPaymentsService', () => {
       );
     expect(invoicesToDeactivate.length).toEqual(1);
     expect(prismaMock.invoice.findMany).toHaveBeenCalled();
+  });
+
+  it('does not deactivate an invoice whose in-flight payment is still within the grace period, but does once it goes stale', async () => {
+    const runDate = new Date('2026-06-15');
+    prismaMock.invoice.findMany!.mockResolvedValue([
+      {
+        id: 'fresh-in-flight',
+        subscription: { paymentMethod: { gracePeriod: 14 } },
+      },
+      {
+        id: 'stale-in-flight',
+        subscription: { paymentMethod: { gracePeriod: 14 } },
+      },
+    ]);
+    prismaMock.payment.findMany!.mockResolvedValue([
+      { invoiceID: 'fresh-in-flight', createdAt: new Date('2026-06-10') },
+      { invoiceID: 'stale-in-flight', createdAt: new Date('2026-05-01') },
+    ]);
+
+    const result =
+      await subscriptionService.findUnpaidScheduledForDeactivationInvoices(
+        runDate
+      );
+
+    expect(result.map(invoice => invoice.id)).toEqual(['stale-in-flight']);
   });
 
   it('invoice creation yearly', async () => {
@@ -481,13 +535,11 @@ describe('SubscriptionPaymentsService', () => {
     }
   });
 
-  it('checkInvoiceState should throw NotFoundException if payment provider is not found', async () => {
+  it('checkInvoiceState skips a payment without throwing when its payment provider cannot be resolved', async () => {
     const mockInvoice = {
       id: 'invoice-1',
       subscription: {
-        paymentMethod: {
-          paymentProviderID: 'invalid',
-        },
+        paymentMethod: { paymentProviderID: 'payrexx' },
         memberPlan: {},
         user: { paymentProviderCustomers: [] },
       },
@@ -495,18 +547,36 @@ describe('SubscriptionPaymentsService', () => {
       subscriptionPeriods: [],
     };
 
+    const findPaymentProviderByPaymentMethodeId = jest
+      .fn()
+      .mockResolvedValue(undefined);
+    const paymentsService = {
+      findByInvoiceId: jest
+        .fn()
+        .mockResolvedValue([
+          { id: 'pay-1', intentID: 'intent-1', paymentMethodID: 'unknown' },
+        ]),
+      findPaymentProviderByPaymentMethodeId,
+    };
+    const subscriptionService = new SubscriptionService(
+      prismaMock as any,
+      paymentsService as any
+    );
+
     await expect(
-      subscriptionService['checkInvoiceState'](mockInvoice as any)
-    ).rejects.toThrow('Payment Provider invalid not found!');
+      subscriptionService.checkInvoiceState(mockInvoice as any)
+    ).resolves.toBeUndefined();
+
+    expect(findPaymentProviderByPaymentMethodeId).toHaveBeenCalledWith(
+      'unknown'
+    );
   });
 
-  it('checkInvoiceState should call checkIntentStatus and updatePaymentWithIntentState for each payment with intentID', async () => {
+  it("checkInvoiceState resolves the payment provider from each payment's own payment method", async () => {
     const mockInvoice = {
       id: 'invoice-1',
       subscription: {
-        paymentMethod: {
-          paymentProviderID: 'provider-1',
-        },
+        paymentMethod: { paymentProviderID: 'payrexx' },
         memberPlan: {},
         user: { paymentProviderCustomers: [] },
       },
@@ -515,23 +585,28 @@ describe('SubscriptionPaymentsService', () => {
     };
 
     const mockPayments = [
-      { id: 'pay-1', intentID: 'intent-1' },
-      { id: 'pay-2', intentID: null },
-      { id: 'pay-3', intentID: 'intent-3' },
+      { id: 'pay-1', intentID: 'pi_stripe', paymentMethodID: 'stripe-method' },
+      { id: 'pay-2', intentID: null, paymentMethodID: 'payrexx-method' },
+      { id: 'pay-3', intentID: '35123953', paymentMethodID: 'payrexx-method' },
     ];
 
-    const checkIntentStatus = jest
-      .fn()
-      .mockResolvedValueOnce('intent-state-1')
-      .mockResolvedValueOnce('intent-state-3');
-    const updatePaymentWithIntentState = jest.fn();
-    const paymentProvider = {
-      checkIntentStatus,
-      updatePaymentWithIntentState,
+    const stripeProvider = {
+      checkIntentStatus: jest.fn().mockResolvedValue('stripe-state'),
+      updatePaymentWithIntentState: jest.fn(),
+      getName: () => 'stripe',
     };
+    const payrexxProvider = {
+      checkIntentStatus: jest.fn().mockResolvedValue('payrexx-state'),
+      updatePaymentWithIntentState: jest.fn(),
+      getName: () => 'payrexx',
+    };
+    const findPaymentProviderByPaymentMethodeId = jest.fn(
+      async (paymentMethodID: string) =>
+        paymentMethodID === 'stripe-method' ? stripeProvider : payrexxProvider
+    );
     const paymentsService = {
-      findById: jest.fn().mockReturnValue(paymentProvider),
       findByInvoiceId: jest.fn().mockResolvedValue(mockPayments),
+      findPaymentProviderByPaymentMethodeId,
     };
     const subscriptionService = new SubscriptionService(
       prismaMock as any,
@@ -540,23 +615,25 @@ describe('SubscriptionPaymentsService', () => {
 
     await subscriptionService.checkInvoiceState(mockInvoice as any);
 
-    expect(paymentsService.findById).toHaveBeenCalledWith('provider-1');
-    expect(paymentsService.findByInvoiceId).toHaveBeenCalledWith('invoice-1');
-    expect(checkIntentStatus).toHaveBeenCalledTimes(2);
-    expect(checkIntentStatus).toHaveBeenCalledWith({
-      intentID: 'intent-1',
+    expect(findPaymentProviderByPaymentMethodeId).toHaveBeenCalledWith(
+      'stripe-method'
+    );
+    expect(findPaymentProviderByPaymentMethodeId).toHaveBeenCalledWith(
+      'payrexx-method'
+    );
+    expect(stripeProvider.checkIntentStatus).toHaveBeenCalledWith({
+      intentID: 'pi_stripe',
       paymentID: 'pay-1',
     });
-    expect(checkIntentStatus).toHaveBeenCalledWith({
-      intentID: 'intent-3',
+    expect(payrexxProvider.checkIntentStatus).toHaveBeenCalledWith({
+      intentID: '35123953',
       paymentID: 'pay-3',
     });
-    expect(updatePaymentWithIntentState).toHaveBeenCalledTimes(2);
-    expect(updatePaymentWithIntentState).toHaveBeenCalledWith({
-      intentState: 'intent-state-1',
+    expect(stripeProvider.updatePaymentWithIntentState).toHaveBeenCalledWith({
+      intentState: 'stripe-state',
     });
-    expect(updatePaymentWithIntentState).toHaveBeenCalledWith({
-      intentState: 'intent-state-3',
+    expect(payrexxProvider.updatePaymentWithIntentState).toHaveBeenCalledWith({
+      intentState: 'payrexx-state',
     });
   });
 
@@ -564,9 +641,7 @@ describe('SubscriptionPaymentsService', () => {
     const mockInvoice = {
       id: 'invoice-1',
       subscription: {
-        paymentMethod: {
-          paymentProviderID: 'provider-1',
-        },
+        paymentMethod: { paymentProviderID: 'payrexx' },
         memberPlan: {},
         user: { paymentProviderCustomers: [] },
       },
@@ -575,19 +650,14 @@ describe('SubscriptionPaymentsService', () => {
     };
 
     const mockPayments = [
-      { id: 'pay-1', intentID: null },
-      { id: 'pay-2', intentID: undefined },
+      { id: 'pay-1', intentID: null, paymentMethodID: 'payrexx-method' },
+      { id: 'pay-2', intentID: undefined, paymentMethodID: 'payrexx-method' },
     ];
 
-    const checkIntentStatus = jest.fn();
-    const updatePaymentWithIntentState = jest.fn();
-    const paymentProvider = {
-      checkIntentStatus,
-      updatePaymentWithIntentState,
-    };
+    const findPaymentProviderByPaymentMethodeId = jest.fn();
     const paymentsService = {
-      findById: jest.fn().mockReturnValue(paymentProvider),
       findByInvoiceId: jest.fn().mockResolvedValue(mockPayments),
+      findPaymentProviderByPaymentMethodeId,
     };
     const subscriptionService = new SubscriptionService(
       prismaMock as any,
@@ -596,7 +666,101 @@ describe('SubscriptionPaymentsService', () => {
 
     await subscriptionService.checkInvoiceState(mockInvoice as any);
 
-    expect(checkIntentStatus).not.toHaveBeenCalled();
+    expect(findPaymentProviderByPaymentMethodeId).not.toHaveBeenCalled();
+  });
+
+  it('checkInvoiceState skips updating the payment when checkIntentStatus returns null', async () => {
+    const mockInvoice = {
+      id: 'invoice-1',
+      subscription: {
+        paymentMethod: { paymentProviderID: 'payrexx' },
+        memberPlan: {},
+        user: { paymentProviderCustomers: [] },
+      },
+      items: [],
+      subscriptionPeriods: [],
+    };
+
+    const checkIntentStatus = jest.fn().mockResolvedValue(null);
+    const updatePaymentWithIntentState = jest.fn();
+    const paymentProvider = {
+      checkIntentStatus,
+      updatePaymentWithIntentState,
+      getName: () => 'payrexx',
+    };
+    const paymentsService = {
+      findByInvoiceId: jest.fn().mockResolvedValue([
+        {
+          id: 'pay-1',
+          intentID: 'intent-1',
+          paymentMethodID: 'payrexx-method',
+        },
+      ]),
+      findPaymentProviderByPaymentMethodeId: jest
+        .fn()
+        .mockResolvedValue(paymentProvider),
+    };
+    const subscriptionService = new SubscriptionService(
+      prismaMock as any,
+      paymentsService as any
+    );
+
+    await subscriptionService.checkInvoiceState(mockInvoice as any);
+
+    expect(checkIntentStatus).toHaveBeenCalledTimes(1);
     expect(updatePaymentWithIntentState).not.toHaveBeenCalled();
+  });
+
+  it('checkInvoiceState continues with the remaining payments when one payment check throws', async () => {
+    const mockInvoice = {
+      id: 'invoice-1',
+      subscription: {
+        paymentMethod: { paymentProviderID: 'payrexx' },
+        memberPlan: {},
+        user: { paymentProviderCustomers: [] },
+      },
+      items: [],
+      subscriptionPeriods: [],
+    };
+
+    const mockPayments = [
+      { id: 'pay-1', intentID: 'pi_bad', paymentMethodID: 'payrexx-method' },
+      { id: 'pay-2', intentID: '35123953', paymentMethodID: 'payrexx-method' },
+    ];
+
+    const checkIntentStatus = jest
+      .fn()
+      .mockRejectedValueOnce(
+        new Error(
+          'Payrexx request has error status with message: An error occurred: No Gateway found with id 0'
+        )
+      )
+      .mockResolvedValueOnce('payrexx-state');
+    const updatePaymentWithIntentState = jest.fn();
+    const paymentProvider = {
+      checkIntentStatus,
+      updatePaymentWithIntentState,
+      getName: () => 'payrexx',
+    };
+    const paymentsService = {
+      findByInvoiceId: jest.fn().mockResolvedValue(mockPayments),
+      findPaymentProviderByPaymentMethodeId: jest
+        .fn()
+        .mockResolvedValue(paymentProvider),
+    };
+    const subscriptionService = new SubscriptionService(
+      prismaMock as any,
+      paymentsService as any
+    );
+
+    await expect(
+      subscriptionService.checkInvoiceState(mockInvoice as any)
+    ).resolves.toBeUndefined();
+
+    expect(checkIntentStatus).toHaveBeenCalledTimes(2);
+    expect(updatePaymentWithIntentState).toHaveBeenCalledTimes(1);
+    expect(updatePaymentWithIntentState).toHaveBeenCalledWith({
+      intentState: 'payrexx-state',
+    });
   });
 });

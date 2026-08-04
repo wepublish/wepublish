@@ -32,15 +32,6 @@ const statsQuery = `
   }
 `;
 
-const statsQueryWithoutFirstArticleDate = `
-  query Stats {
-    stats {
-      articlesCount
-      authorsCount
-    }
-  }
-`;
-
 describe('StatsResolver', () => {
   let app: INestApplication;
   let statsServiceMock: { [method in keyof StatsService]?: jest.Mock };

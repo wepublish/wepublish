@@ -182,7 +182,7 @@ describe('PayrexxPaymentProvider', () => {
       const transaction = {
         id: 12345,
         amount: 200,
-        status: 'chargeback',
+        status: 'refunded',
         referenceId: 'subscription-1',
         subscription: null,
       } as Transaction;
@@ -198,6 +198,34 @@ describe('PayrexxPaymentProvider', () => {
       });
       expect(response.status).toEqual(200);
       expect(response.paymentStates).toEqual([]);
+    });
+
+    it('should report a chargeback transaction as a chargeback payment state', async () => {
+      const transaction = {
+        id: 12345,
+        amount: 200,
+        status: 'chargeback',
+        referenceId: 'subscription-1',
+        subscription: null,
+      } as Transaction;
+
+      const response = await payrexx.webhookForPaymentIntent({
+        req: {
+          headers: {
+            'content-type': 'application/json',
+          },
+          query: { apiKey: 'secret' },
+          body: { transaction },
+        } as unknown as express.Request,
+      });
+      expect(response.status).toEqual(200);
+      expect(response.paymentStates).toEqual([
+        {
+          paymentID: transaction.referenceId,
+          paymentData: JSON.stringify(transaction),
+          state: 'chargeback',
+        } as IntentState,
+      ]);
     });
   });
 
@@ -224,8 +252,10 @@ describe('PayrexxPaymentProvider', () => {
         saveCustomer: false,
       });
 
-      expect(gatewayClient.createGateway).toBeCalled();
-      expect(transactionClient.chargePreAuthorizedTransaction).not.toBeCalled();
+      expect(gatewayClient.createGateway).toHaveBeenCalled();
+      expect(
+        transactionClient.chargePreAuthorizedTransaction
+      ).not.toHaveBeenCalled();
       expect(result.intentID).toBe('1');
       expect(result.intentSecret).toBe('https://payrexx/gateway-link');
     });
@@ -255,8 +285,10 @@ describe('PayrexxPaymentProvider', () => {
         currency: Currency.CHF,
       });
 
-      expect(gatewayClient.createGateway).not.toBeCalled();
-      expect(transactionClient.chargePreAuthorizedTransaction).toBeCalled();
+      expect(gatewayClient.createGateway).not.toHaveBeenCalled();
+      expect(
+        transactionClient.chargePreAuthorizedTransaction
+      ).toHaveBeenCalled();
       expect(result.intentID).toBe('2');
       expect(result.intentSecret).toBe('https://success');
     });
@@ -291,17 +323,20 @@ describe('PayrexxPaymentProvider', () => {
         currency: Currency.EUR,
       });
 
-      expect(gatewayClient.createGateway).toBeCalled();
-      expect(transactionClient.chargePreAuthorizedTransaction).toBeCalled();
+      expect(gatewayClient.createGateway).toHaveBeenCalled();
+      expect(
+        transactionClient.chargePreAuthorizedTransaction
+      ).toHaveBeenCalled();
       expect(result.intentID).toBe('4');
       expect(result.intentSecret).toBe('https://payrexx/gateway-link');
     });
   });
 
   describe('checkIntentStatus', () => {
-    it('should throw on unmappable transaction status', async () => {
+    it('should return null on an unmappable transaction status instead of throwing', async () => {
       const transaction = {
-        status: 'chargeback',
+        status: 'refunded',
+        referenceId: 'subscription-1',
       } as Transaction;
       transactionClient.retrieveTransaction = jest
         .fn()
@@ -309,7 +344,7 @@ describe('PayrexxPaymentProvider', () => {
 
       await expect(
         payrexx.checkIntentStatus({ intentID: '5', paymentID: '123' })
-      ).rejects.toThrow('Unmappable Payrexx transaction status');
+      ).resolves.toBeNull();
     });
 
     it('should throw on empty transaction referenceId', async () => {
@@ -341,11 +376,11 @@ describe('PayrexxPaymentProvider', () => {
       expect(result.paymentID).toBe('135');
       expect(result.state).toBe('paid');
       expect(result.paymentData).toBe(JSON.stringify(transaction));
-      expect(transactionClient.retrieveTransaction).toBeCalled();
-      expect(gatewayClient.getGateway).not.toBeCalled();
+      expect(transactionClient.retrieveTransaction).toHaveBeenCalled();
+      expect(gatewayClient.getGateway).not.toHaveBeenCalled();
     });
 
-    it('should throw on unmappable gateway status', async () => {
+    it('should return null on an unmappable gateway status instead of throwing', async () => {
       const gateway = {
         status: 'unknown status' as any,
       } as Gateway;
@@ -354,7 +389,7 @@ describe('PayrexxPaymentProvider', () => {
 
       await expect(
         payrexx.checkIntentStatus({ intentID: '6', paymentID: '123' })
-      ).rejects.toThrow('Unmappable Payrexx gateway status');
+      ).resolves.toBeNull();
     });
 
     it('should throw on empty gateway referenceId', async () => {
@@ -389,8 +424,8 @@ describe('PayrexxPaymentProvider', () => {
       expect(result.paymentID).toBe('246');
       expect(result.state).toBe('processing');
       expect(result.paymentData).toBe(JSON.stringify(gateway));
-      expect(transactionClient.retrieveTransaction).toBeCalled();
-      expect(gatewayClient.getGateway).toBeCalled();
+      expect(transactionClient.retrieveTransaction).toHaveBeenCalled();
+      expect(gatewayClient.getGateway).toHaveBeenCalled();
     });
 
     it('should throw if intent is not related to transaction or gateway', async () => {

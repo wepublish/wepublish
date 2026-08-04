@@ -1,7 +1,6 @@
 import {
   MailAudienceInput,
   MailRecipientBase,
-  MailSendJobState,
   MailSubscriptionState,
   PaymentPeriodicity,
   useCreateMailSendJobMutation,

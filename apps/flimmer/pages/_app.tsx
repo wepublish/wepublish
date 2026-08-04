@@ -6,13 +6,8 @@ import {
   createEmotionCache,
 } from '@mui/material-nextjs/v15-pagesRouter';
 import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google';
-import {
-  RichTextBlockWrapper,
-  TitleBlock,
-  TitleBlockTitle,
-} from '@wepublish/block-content/website';
+import { TitleBlock, TitleBlockTitle } from '@wepublish/block-content/website';
 import { withErrorSnackbar } from '@wepublish/errors/website';
-import { PaymentAmountPicker } from '@wepublish/membership/website';
 import {
   FooterContainer,
   NavbarContainer,
@@ -20,10 +15,8 @@ import {
 import { withPaywallBypassToken } from '@wepublish/paywall/website';
 import {
   authLink,
-  getApiUrl,
   initWePublishTranslator,
   NextWepublishLink,
-  SubscribePage,
   withBuilderRouter,
   withJwtHandler,
   withSessionProvider,
@@ -39,17 +32,16 @@ import { WebsiteBuilderProvider } from '@wepublish/website/builder';
 import { format, setDefaultOptions } from 'date-fns';
 import { de } from 'date-fns/locale';
 import { AppProps } from 'next/app';
-import getConfig from 'next/config';
 import Head from 'next/head';
 import Script from 'next/script';
 import PlausibleProvider from 'next-plausible';
-import { ComponentProps } from 'react';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
 import deOverriden from '../locales/deOverriden.json';
 import { FlimmerBreakBlock } from '../src/components/flimmer-break-block';
 import { FlimmerNavbar } from '../src/components/flimmer-navbar';
+import { FlimmerPaymentAmountPicker } from '../src/components/flimmer-payment-amount-picker';
 import { FlimmerRichText } from '../src/components/flimmer-richtext';
 import { FlimmerTeaser } from '../src/components/flimmer-teaser';
 import theme from '../src/theme';
@@ -94,32 +86,23 @@ const dateFormatter = (date: Date, includeTime = true) =>
     `${format(date, 'dd. MMMM yyyy')} um ${format(date, 'HH:mm')}`
   : format(date, 'dd. MMMM yyyy');
 
-const MitmachenInner = (props: ComponentProps<typeof SubscribePage>) => (
-  <SubscribePage
-    fields={['firstName']}
-    {...props}
-  />
-);
-
-const MitmachenInnerStyled = styled(MitmachenInner)`
-  border: 1px solid ${({ theme }) => theme.palette.accent.main};
-  border-radius: ${({ theme }) => theme.shape.borderRadius}px;
-  padding: ${({ theme }) => theme.spacing(4)};
-
-  ${RichTextBlockWrapper} {
-    max-width: ${({ theme }) => theme.breakpoints.values.sm}px;
-  }
-`;
-
 export type CustomAppProps = AppProps<{
   sessionToken?: SessionWithTokenWithoutUser;
-}> & { emotionCache?: EmotionCache; websiteSettings?: WebsiteSettingsFragment };
+}> & {
+  emotionCache?: EmotionCache;
+  websiteSettings?: WebsiteSettingsFragment;
+  publicEnv?: {
+    apiUrl: string;
+    stripeKey: string;
+  };
+};
 
 function CustomApp({
   Component,
   pageProps,
   emotionCache,
   websiteSettings,
+  publicEnv,
 }: CustomAppProps) {
   const siteTitle = 'Flimmer';
 
@@ -132,6 +115,12 @@ function CustomApp({
     websiteSettings ??
     (typeof window !== 'undefined' ? window.WEBSITE_SETTINGS : undefined);
 
+  const env =
+    publicEnv ??
+    (typeof window !== 'undefined' ?
+      (window.PUBLIC_ENV as typeof publicEnv)
+    : undefined);
+
   return (
     <PlausibleProvider
       enabled={
@@ -141,30 +130,34 @@ function CustomApp({
       src={`https://plausible.io/js/${settings?.analytics.plausible.key}.js`}
     >
       <AppCacheProvider emotionCache={cache}>
-        <WebsiteProvider>
-          <WebsiteBuilderProvider
-            Head={Head}
-            Script={Script}
-            Navbar={FlimmerNavbar}
-            PaymentAmount={PaymentAmountPicker}
-            elements={{ Link: NextWepublishLink }}
-            blocks={{
-              BaseTeaser: FlimmerTeaser,
-              Break: FlimmerBreakBlock,
-              RichText: FlimmerRichText,
-              Title: FlimmerTitle,
-            }}
-            date={{ format: dateFormatter }}
-            meta={{ siteTitle }}
-            thirdParty={{
-              stripe: publicRuntimeConfig.env.STRIPE_PUBLIC_KEY,
-            }}
-          >
-            <ThemeProvider theme={theme}>
+        <ThemeProvider theme={theme}>
+          <WebsiteProvider>
+            <WebsiteBuilderProvider
+              Head={Head}
+              Script={Script}
+              Navbar={FlimmerNavbar}
+              PaymentAmount={FlimmerPaymentAmountPicker}
+              elements={{ Link: NextWepublishLink }}
+              blocks={{
+                BaseTeaser: FlimmerTeaser,
+                Break: FlimmerBreakBlock,
+                RichText: FlimmerRichText,
+                Title: FlimmerTitle,
+              }}
+              date={{ format: dateFormatter }}
+              meta={{ siteTitle }}
+              thirdParty={{
+                stripe: env?.stripeKey,
+              }}
+            >
               <CssBaseline />
 
               <Head>
                 <title key="title">{siteTitle}</title>
+                <meta
+                  name="viewport"
+                  content="width=device-width, initial-scale=1.0"
+                />
               </Head>
 
               <Spacer>
@@ -220,16 +213,15 @@ function CustomApp({
                     data-sparkloop
                   />
                 )}
-            </ThemeProvider>
-          </WebsiteBuilderProvider>
-        </WebsiteProvider>
+            </WebsiteBuilderProvider>
+          </WebsiteProvider>
+        </ThemeProvider>
       </AppCacheProvider>
     </PlausibleProvider>
   );
 }
 
-const { publicRuntimeConfig } = getConfig();
-const withApollo = createWithApiClient(getApiUrl(), [authLink, previewLink]);
+const withApollo = createWithApiClient([authLink, previewLink]);
 const ConnectedApp = withApollo(
   withBuilderRouter(
     withErrorSnackbar(

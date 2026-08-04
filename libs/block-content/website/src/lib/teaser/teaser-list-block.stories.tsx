@@ -1,4 +1,4 @@
-import { Meta } from '@storybook/react';
+import { Meta } from '@storybook/nextjs-vite';
 import { TeaserListBlock } from './teaser-list-block';
 import {
   mockEventTeaser,

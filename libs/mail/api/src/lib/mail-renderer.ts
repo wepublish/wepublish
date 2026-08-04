@@ -176,7 +176,7 @@ const FALLBACK_TIME_ZONE = 'Europe/Zurich';
  * falling back to Europe/Zurich. Invalid values fall back too.
  */
 function resolveTimeZone(): string {
-  const tz = process.env.TZ?.trim();
+  const tz = process.env['TZ']?.trim();
 
   if (!tz) {
     return FALLBACK_TIME_ZONE;

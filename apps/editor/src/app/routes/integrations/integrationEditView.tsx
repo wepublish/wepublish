@@ -3,8 +3,8 @@ import {
   CanGetAISettings,
   CanGetAnalyticsProviderSettings,
   CanGetChallengeProviderSettings,
-  CanGetMailProviderSettings,
   CanGetMailchimpSyncSettings,
+  CanGetMailProviderSettings,
   CanGetPaymentProviderSettings,
   CanGetTrackingPixelSettings,
   Permission,
@@ -17,10 +17,10 @@ import { Link, useParams } from 'react-router-dom';
 import { AIIntegrationForm } from './aiIntegrationForm';
 import { AnalyticsIntegrationForm } from './analyticsIntegrationForm';
 import { ChallengeIntegrationForm } from './challengeIntegrationForm';
+import { MailchimpSyncIntegrationForm } from './mailchimpSyncIntegrationForm';
 import { MailIntegrationForm } from './mailIntegrationForm';
 import { PaymentIntegrationForm } from './paymentIntegrationForm';
 import { TrackingPixelIntegrationForm } from './trackingPixelIntegrationForm';
-import { MailchimpSyncIntegrationForm } from './mailchimpSyncIntegrationForm';
 
 const useIntegrationTitle = (type: string | undefined) => {
   const { t } = useTranslation();

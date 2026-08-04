@@ -1,3 +1,4 @@
+import type { ChangeEvent, JSX } from 'react';
 import { forwardRef, memo, useImperativeHandle, useRef, useState } from 'react';
 import {
   Box,
@@ -803,7 +804,7 @@ const HtmlVisualEditorComponent = forwardRef<
               type="color"
               defaultValue="#000000"
               onMouseDown={() => saveSelection()}
-              onChange={event =>
+              onChange={(event: ChangeEvent<HTMLInputElement>) =>
                 applyWithSavedSelection('foreColor', event.target.value)
               }
             />
@@ -1125,7 +1126,7 @@ const HtmlVisualEditorComponent = forwardRef<
                   <ColorSwatch
                     type="color"
                     value={buttonDialog.color}
-                    onChange={event =>
+                    onChange={(event: ChangeEvent<HTMLInputElement>) =>
                       setButtonDialog(state => ({
                         ...state,
                         color: event.target.value,
