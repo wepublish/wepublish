@@ -1,0 +1,23 @@
+{
+  "tdl": {
+    "production": "wepublish.cloud",
+    "staging": "wepublish.works"
+  },
+  "website": {
+    "production": {
+      "deployment": true,
+      "env": {},
+      "secret_env": []
+    },
+    "staging": {
+      "deployment": true,
+      "env": {},
+      "secret_env": []
+    },
+    "review": {
+      "deployment": true,
+      "env": {},
+      "secret_env": []
+    }
+  }
+}

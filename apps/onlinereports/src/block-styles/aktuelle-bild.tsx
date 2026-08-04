@@ -20,8 +20,8 @@ import {
 } from '@wepublish/block-content/website';
 import {
   BlockContent,
-  TeaserGridBlock,
-  TeaserListBlock,
+  FullTeaserGridBlockFragment,
+  FullTeaserListBlockFragment,
 } from '@wepublish/website/api';
 import {
   BuilderTeaserListBlockProps,
@@ -37,8 +37,8 @@ import {
 } from '../onlinereports-base-teaser';
 
 export const IsAktuelleBildTeasers = (
-  block: BlockContent
-): block is TeaserGridBlock | TeaserListBlock =>
+  block: Pick<BlockContent, '__typename'>
+): block is FullTeaserGridBlockFragment | FullTeaserListBlockFragment =>
   allPass([hasBlockStyle('Aktuelle Bild'), isTeaserListBlock])(block);
 
 export const AktuelleBild = ({

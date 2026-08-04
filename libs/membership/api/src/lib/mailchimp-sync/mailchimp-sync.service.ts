@@ -320,8 +320,9 @@ export class MailchimpSyncService {
         userWithSub.user.email.toLowerCase()
       );
 
-      // Skip users whose Mailchimp contact is not subscribed
-      if (existingContact?.status !== 'subscribed') {
+      // Skip existing contacts that aren't subscribed (unsubscribed, cleaned,
+      // pending, transactional). New users are created as 'subscribed'.
+      if (existingContact && existingContact.status !== 'subscribed') {
         skippedCount++;
         continue;
       }
@@ -815,6 +816,25 @@ export class MailchimpSyncService {
     const parts = expression.split(':');
     const type = parts[0];
 
+    // Temporary: exclude donation slugs from active_abo and retarget
+    if (type === 'active_abo' || type === 'retarget') {
+      const excludedSlugs = ['spende-gastro-brief', 'spende-stadtratbrief'];
+      const subscriptions = data.subscriptions.filter(
+        s => !excludedSlugs.includes(s.memberPlan.slug)
+      );
+      const byPaidUntilDesc = [...subscriptions].sort(
+        (a, b) => (b.paidUntil?.getTime() ?? 0) - (a.paidUntil?.getTime() ?? 0)
+      );
+      data = {
+        ...data,
+        subscriptions,
+        currentSubscription: byPaidUntilDesc.find(
+          s => !s.deactivation || (s.paidUntil && s.paidUntil > new Date())
+        ),
+        lastSubscription: byPaidUntilDesc[0],
+      };
+    }
+
     switch (type) {
       case 'user.firstName':
         return (data.user.firstName || 'Unbekannt').trim();
@@ -839,8 +859,14 @@ export class MailchimpSyncService {
           return false;
         };
 
-        if (matches(data.currentSubscription?.memberPlan.slug)) return '1';
-        if (data.subscriptions.some(s => matches(s.memberPlan.slug))) {
+        const now = new Date();
+        const matchingSubs = data.subscriptions.filter(s =>
+          matches(s.memberPlan.slug)
+        );
+        if (matchingSubs.some(s => this.isSubscriptionActive(s, now))) {
+          return '1';
+        }
+        if (matchingSubs.length > 0) {
           return '-1';
         }
         return '';

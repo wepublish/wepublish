@@ -60,6 +60,7 @@ export function TeaserOverwrite({
       underline="none"
       href={href ?? ''}
       className={className}
+      aria-label={title ?? ''}
     >
       {image && <TeaserImgStyled image={image} />}
 

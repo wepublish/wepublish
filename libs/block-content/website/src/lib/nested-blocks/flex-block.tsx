@@ -1,7 +1,8 @@
 import styled from '@emotion/styled';
 import {
   BlockContent,
-  FlexBlock as FlexBlockType,
+  FullBlockFragment,
+  FullFlexBlockFragment,
 } from '@wepublish/website/api';
 import {
   BuilderFlexBlockProps,
@@ -39,7 +40,7 @@ export const BlockWithAlignment = styled('div')<FlexAlignment>`
 
 export const isFlexBlock = (
   block: Pick<BlockContent, '__typename'>
-): block is FlexBlockType => {
+): block is FullFlexBlockFragment => {
   return block.__typename === 'FlexBlock';
 };
 
@@ -61,7 +62,7 @@ export const FlexBlock = ({ className, blocks }: BuilderFlexBlockProps) => {
             {...(nestedBlock.alignment as FlexAlignment)}
           >
             <Renderer
-              block={nestedBlock.block as BlockContent}
+              block={nestedBlock.block as FullBlockFragment}
               type="Article"
               index={index}
               count={sortedBlocks.length}

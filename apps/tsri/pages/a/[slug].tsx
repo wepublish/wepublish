@@ -11,11 +11,11 @@ import { H2 } from '@wepublish/ui';
 import { getApiUrl } from '@wepublish/utils/website';
 import { CommentItemType, Tag } from '@wepublish/website/api';
 import {
-  addClientCacheToV1Props,
+  addClientCacheToProps,
   ArticleDocument,
   ArticleListDocument,
   CommentListDocument,
-  getV1ApiClient,
+  getApiClient,
   NavigationListDocument,
   PeerProfileDocument,
   useArticleQuery,
@@ -95,14 +95,15 @@ export default function ArticleBySlugOrId() {
       <TsriAdHeader authors={data?.article?.latest.authors} />
 
       <ArticleContainer {...containerProps}>
-        {data?.article?.latest.authors.map(author => (
-          <AfterArticleAuthorWrapper
-            key={author.id}
-            fullWidth
-          >
-            <ArticleAuthor author={author} />
-          </AfterArticleAuthorWrapper>
-        ))}
+        {!data?.article?.latest.hideAuthor &&
+          data?.article?.latest.authors.map(author => (
+            <AfterArticleAuthorWrapper
+              key={author.id}
+              fullWidth
+            >
+              <ArticleAuthor author={author} />
+            </AfterArticleAuthorWrapper>
+          ))}
 
         {data?.article && !data.article.disableComments && (
           <AfterArticleWrapper>
@@ -154,7 +155,7 @@ export const getStaticPaths = () => ({
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const { id, slug } = params || {};
-  const client = getV1ApiClient(getApiUrl(), []);
+  const client = getApiClient(getApiUrl(), []);
 
   const [article] = await Promise.all([
     client.query({
@@ -203,7 +204,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     ]);
   }
 
-  const props = addClientCacheToV1Props(client, {});
+  const props = addClientCacheToProps(client, {});
 
   return {
     props,

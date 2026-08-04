@@ -7,12 +7,12 @@ import {
 } from '@wepublish/website/builder';
 import {
   BlockContent,
-  ListicleBlock as ListicleBlockType,
+  FullListicleBlockFragment,
 } from '@wepublish/website/api';
 
 export const isListicleBlock = (
   block: Pick<BlockContent, '__typename'>
-): block is ListicleBlockType => block.__typename === 'ListicleBlock';
+): block is FullListicleBlockFragment => block.__typename === 'ListicleBlock';
 
 export const ListicleBlockWrapper = styled('div')`
   display: grid;

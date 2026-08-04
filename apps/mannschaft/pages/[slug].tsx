@@ -1,8 +1,8 @@
 import { PageContainer } from '@wepublish/page/website';
 import { getApiUrl } from '@wepublish/utils/website';
 import {
-  addClientCacheToV1Props,
-  getV1ApiClient,
+  addClientCacheToProps,
+  getApiClient,
   NavigationListDocument,
   PageDocument,
   PageQuery,
@@ -32,7 +32,7 @@ export const getStaticPaths = () => ({
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const { slug, id } = params || {};
-  const client = getV1ApiClient(getApiUrl(), []);
+  const client = getApiClient(getApiUrl(), []);
   const [page] = await Promise.all([
     client.query<PageQuery>({
       query: PageDocument,
@@ -59,7 +59,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     };
   }
 
-  const props = addClientCacheToV1Props(client, {});
+  const props = addClientCacheToProps(client, {});
 
   return {
     props,

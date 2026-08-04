@@ -2,6 +2,7 @@ import { useRegister, useUser } from '@wepublish/authentication/website';
 import { PaymentForm, useSubscribe } from '@wepublish/payment/website';
 import {
   FullMemberPlanFragment,
+  useCreateSubscriptionInfoLazyQuery,
   useInvoicesQuery,
   useMemberPlanListQuery,
   useResubscribeMutation,
@@ -76,6 +77,10 @@ export const SubscribeContainer = <
   const [resubscribe] = useResubscribeMutation({});
 
   const [subscribe, redirectPages, stripeClientSecret] = useSubscribe();
+  const [fetchSubscribeInfo, subscribeInfo] =
+    useCreateSubscriptionInfoLazyQuery({
+      fetchPolicy: 'cache-first',
+    });
   const {
     register: [register],
     challenge,
@@ -103,6 +108,8 @@ export const SubscribeContainer = <
         userSubscriptions={userSubscriptions}
         userInvoices={userInvoices}
         memberPlans={filteredMemberPlans}
+        fetchSubscribeInfo={fetchSubscribeInfo}
+        subscribeInfo={subscribeInfo}
         {...props}
         onSubscribe={async formData => {
           const selectedMemberplan =

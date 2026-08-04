@@ -7,9 +7,8 @@ import {
 } from '@wepublish/block-content/website';
 import {
   BlockContent,
-  CustomTeaser,
-  Teaser,
-  TeaserListBlock as TeaserListBlockType,
+  FullTeaserFragment,
+  FullTeaserListBlockFragment,
   TeaserType,
 } from '@wepublish/website/api';
 import { BuilderTeaserListBlockProps } from '@wepublish/website/builder';
@@ -21,15 +20,18 @@ const third = hasBlockStyle('3rd Teaser Ad');
 
 export const isFirstAdTeaser = (
   block: Pick<BlockContent, '__typename'>
-): block is TeaserListBlockType => allPass([first, isTeaserListBlock])(block);
+): block is FullTeaserListBlockFragment =>
+  allPass([first, isTeaserListBlock])(block);
 
 export const isSecondAdTeaser = (
   block: Pick<BlockContent, '__typename'>
-): block is TeaserListBlockType => allPass([second, isTeaserListBlock])(block);
+): block is FullTeaserListBlockFragment =>
+  allPass([second, isTeaserListBlock])(block);
 
 export const isThirdAdTeaser = (
   block: Pick<BlockContent, '__typename'>
-): block is TeaserListBlockType => allPass([third, isTeaserListBlock])(block);
+): block is FullTeaserListBlockFragment =>
+  allPass([third, isTeaserListBlock])(block);
 
 // This allows the ad slot to not create an empty space when not displayed
 const AdTeaserList = styled(TeaserListBlock)`
@@ -58,7 +60,7 @@ export const AdTeaserBlockStyle = (props: BuilderTeaserListBlockProps) => {
       : 2
 
   const teasers = compose(
-    insert<Teaser>(position, {
+    insert<FullTeaserFragment>(position, {
       __typename: 'CustomTeaser',
       type: TeaserType.Custom,
       properties: [],
@@ -68,8 +70,8 @@ export const AdTeaserBlockStyle = (props: BuilderTeaserListBlockProps) => {
       title: null,
       lead: null,
       image: null,
-    } as CustomTeaser)
-  )(props.teasers as Teaser[]);
+    })
+  )(props.teasers as FullTeaserFragment[]);
 
   return (
     <AdTeaserList

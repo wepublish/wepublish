@@ -85,7 +85,7 @@ export class AgendaBaselService implements EventsProvider {
     const createdEvent = await this.prisma.event.create({
       data: {
         name: event.name,
-        description: event.description as any[],
+        description: event.description as any,
         location: event.location,
         startsAt: event.startsAt,
         imageId: createdImageId || null,

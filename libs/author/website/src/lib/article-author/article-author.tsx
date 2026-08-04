@@ -1,7 +1,7 @@
-import { css } from '@mui/material';
 import styled from '@emotion/styled';
 import {
   BuilderAuthorChipProps,
+  Image,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 
@@ -28,6 +28,10 @@ export const ArticleAuthorMetaWrapper = styled('div')`
   }
 `;
 
+export const ArticleAuthorImage = styled(Image)`
+  border-radius: 50%;
+`;
+
 export const ArticleAuthorImageWrapper = styled('div')`
   display: grid;
   width: ${({ theme }) => theme.spacing(10)};
@@ -44,14 +48,10 @@ export const ArticleAuthorName = styled('div')`
   font-size: ${({ theme }) => theme.typography.h4.fontSize};
 `;
 
-const imageStyles = css`
-  border-radius: 50%;
-`;
-
 export function ArticleAuthor({ className, author }: BuilderAuthorChipProps) {
   const {
     AuthorLinks,
-    elements: { Image, Link },
+    elements: { Link },
     blocks: { RichText },
   } = useWebsiteBuilder();
 
@@ -59,10 +59,9 @@ export function ArticleAuthor({ className, author }: BuilderAuthorChipProps) {
     <ArticleAuthorWrapper className={className}>
       {author.image && (
         <ArticleAuthorImageWrapper>
-          <Image
+          <ArticleAuthorImage
             image={author.image}
             square
-            css={imageStyles}
             maxWidth={200}
           />
         </ArticleAuthorImageWrapper>

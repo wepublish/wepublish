@@ -2,7 +2,8 @@ import { Blocks, isRichTextBlock } from '@wepublish/block-content/website';
 import {
   BlockType,
   CustomTeaser,
-  TeaserGridBlock,
+  FullBlockFragment,
+  FullTeaserGridBlockFragment,
   TeaserType,
 } from '@wepublish/website/api';
 import { BuilderBlocksProps } from '@wepublish/website/builder';
@@ -11,24 +12,25 @@ import { useMemo } from 'react';
 
 import { isContentBoxBlock } from './mannschaft-content-box';
 
-export const createNewAdTeaser = (): TeaserGridBlock => ({
-  __typename: 'TeaserGridBlock',
-  type: BlockType.TeaserGrid,
-  numColumns: 1,
-  teasers: [
-    {
-      __typename: 'CustomTeaser',
-      type: TeaserType.Custom,
-      properties: [],
-      contentUrl: null,
-      openInNewTab: false,
-      preTitle: 'ad-300x250',
-      title: null,
-      lead: null,
-      image: null,
-    } as CustomTeaser,
-  ],
-});
+export const createNewAdTeaser = (): FullBlockFragment =>
+  ({
+    __typename: 'TeaserGridBlock',
+    type: BlockType.TeaserGrid,
+    numColumns: 1,
+    teasers: [
+      {
+        __typename: 'CustomTeaser',
+        type: TeaserType.Custom,
+        properties: [],
+        contentUrl: null,
+        openInNewTab: false,
+        preTitle: 'ad-300x250',
+        title: null,
+        lead: null,
+        image: null,
+      } as CustomTeaser,
+    ],
+  }) satisfies FullTeaserGridBlockFragment;
 
 export const MannschaftBlocks = ({ blocks, type }: BuilderBlocksProps) => {
   const newBlocks = useMemo(() => {

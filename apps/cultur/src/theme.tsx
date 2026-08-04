@@ -61,7 +61,9 @@ const theme = createTheme(WePTheme, {
     subtitle2: {
       fontFamily: [openSans.style.fontFamily, 'sans-serif'].join(','),
     },
-    fontFamily: [openSans.style.fontFamily, 'sans-serif'].join(','),
+    allVariants: {
+      fontFamily: [openSans.style.fontFamily, 'sans-serif'].join(','),
+    },
   },
   components: {
     MuiInputBase: {

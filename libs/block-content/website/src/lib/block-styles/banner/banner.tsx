@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { BlockContent, BreakBlock } from '@wepublish/website/api';
+import { BlockContent, FullBreakBlockFragment } from '@wepublish/website/api';
 import { BuilderBlockStyleProps, Image } from '@wepublish/website/builder';
 import { isBreakBlock } from '../../break/break-block';
 import { hasBlockStyle } from '../../has-blockstyle';
@@ -35,5 +35,5 @@ export const Banner = ({
 
 export const isBannerBlockStyle = (
   block: Pick<BlockContent, '__typename'>
-): block is BreakBlock =>
+): block is FullBreakBlockFragment =>
   allPass([hasBlockStyle('Banner'), isBreakBlock])(block);

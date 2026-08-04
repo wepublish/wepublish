@@ -59,7 +59,6 @@ import {
 } from './block-styles/alternating/is-alternating';
 import { isTeaserSlotsBlock } from './teaser/teaser-slots-block';
 import { css } from '@emotion/react';
-
 export const BlockRenderer = memo(
   ({ block, className }: BuilderBlockRendererProps) => {
     const { blocks, blockStyles } = useWebsiteBuilder();
@@ -441,7 +440,12 @@ export const BlockRenderer = memo(
         ],
         [
           isFlexBlock,
-          block => <blocks.FlexBlock {...(block as BuilderFlexBlockProps)} />,
+          block => (
+            <blocks.FlexBlock
+              {...(block as BuilderFlexBlockProps)}
+              className={className}
+            />
+          ),
         ],
       ])(block)
     );

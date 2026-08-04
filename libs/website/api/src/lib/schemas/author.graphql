@@ -6,6 +6,10 @@ fragment SlimAuthor on Author {
   hideOnArticle
   hideOnTeaser
   hideOnTeam
+
+  image {
+    ...SlimImage
+  }
 }
 
 fragment FullAuthor on Author {

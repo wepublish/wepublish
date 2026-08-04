@@ -7,9 +7,9 @@ import {
 } from '@wepublish/block-content/website';
 import {
   BlockContent,
-  IFrameBlock,
-  ImageBlock,
-  RichTextBlock,
+  FullIFrameBlockFragment,
+  FullImageBlockFragment,
+  FullRichTextBlockFragment,
 } from '@wepublish/website/api';
 import {
   BuilderIFrameBlockProps,
@@ -48,8 +48,11 @@ const MannschaftContentBoxWrapper = styled('div')`
 `;
 
 export const isContentBoxBlock = (
-  block: BlockContent
-): block is ImageBlock | RichTextBlock | IFrameBlock =>
+  block: Pick<BlockContent, '__typename'>
+): block is
+  | FullImageBlockFragment
+  | FullRichTextBlockFragment
+  | FullIFrameBlockFragment =>
   allPass([
     anyPass([isImageBlock, isRichTextBlock, isIFrameBlock]),
     hasBlockStyle('ContentBox'),

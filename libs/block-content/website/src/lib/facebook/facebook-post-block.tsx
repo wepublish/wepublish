@@ -1,13 +1,14 @@
 import styled from '@emotion/styled';
 import {
   BlockContent,
-  FacebookPostBlock as FacebookPostBlockType,
+  FullFacebookPostBlockFragment,
 } from '@wepublish/website/api';
 import { BuilderFacebookPostBlockProps } from '@wepublish/website/builder';
 
 export const isFacebookPostBlock = (
   block: Pick<BlockContent, '__typename'>
-): block is FacebookPostBlockType => block.__typename === 'FacebookPostBlock';
+): block is FullFacebookPostBlockFragment =>
+  block.__typename === 'FacebookPostBlock';
 
 export const FacebookPostBlockWrapper = styled('div')``;
 

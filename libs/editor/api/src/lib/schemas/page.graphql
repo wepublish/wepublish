@@ -2,6 +2,7 @@ fragment FullPageRevisionWithoutBlocks on PageRevision {
   id
   createdAt
   publishedAt
+  archivedAt
   title
   description
   socialMediaTitle
@@ -171,6 +172,70 @@ mutation UnpublishPage($id: String!) {
 
 mutation DeletePage($id: String!) {
   deletePage(id: $id)
+}
+
+fragment PageRevisionMeta on PageRevision {
+  id
+  createdAt
+  publishedAt
+  archivedAt
+  title
+  description
+
+  user {
+    id
+    name
+    firstName
+  }
+}
+
+query PageRevisionList(
+  $id: String!
+  $take: Int
+  $skip: Int
+  $cursor: String
+  $filter: PageRevisionFilter
+  $order: SortOrder
+) {
+  pageRevisions(
+    pageId: $id
+    take: $take
+    skip: $skip
+    cursorId: $cursor
+    filter: $filter
+    order: $order
+  ) {
+    nodes {
+      ...PageRevisionMeta
+    }
+
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+
+    totalCount
+  }
+}
+
+query PageRevisionPreview($id: String!) {
+  pageRevision(id: $id) {
+    ...FullPageRevision
+  }
+}
+
+mutation RestorePageRevision($id: String!, $revisionId: String!) {
+  restorePageRevision(id: $id, revisionId: $revisionId) {
+    ...FullPage
+  }
+}
+
+mutation DiscardPageDraft($id: String!) {
+  discardPageDraft(id: $id) {
+    ...FullPage
+  }
 }
 
 mutation DuplicatePage($id: String!) {

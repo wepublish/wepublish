@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import {
   BlockContent,
-  StreamableVideoBlock as StreamableVideoBlockType,
+  FullStreamableVideoBlockFragment,
 } from '@wepublish/website/api';
 import { BuilderStreamableVideoBlockProps } from '@wepublish/website/builder';
 import React, { useEffect, useState } from 'react';
@@ -9,7 +9,7 @@ import ReactPlayer from 'react-player';
 
 export const isStreamableVideoBlock = (
   block: Pick<BlockContent, '__typename'>
-): block is StreamableVideoBlockType =>
+): block is FullStreamableVideoBlockFragment =>
   block.__typename === 'StreamableVideoBlock';
 
 export const StreamableVideoBlockWrapper = styled('div')``;
@@ -74,9 +74,9 @@ export function StreamableVideoBlock({
     <StreamableVideoBlockWrapper className={className}>
       <AspectBox $aspectRatio={aspectRatio}>
         <StreamableVideoBlockPlayer
-          url={streamableUrl}
+          src={streamableUrl}
           controls
-          playsinline
+          playsInline
           width="100%"
           height="100%"
           // wenn Streamable mal spinnt, bleiben wir einfach beim aktuellen Ratio

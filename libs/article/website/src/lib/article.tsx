@@ -4,7 +4,7 @@ import {
   PeerInformation,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { Article as ArticleType, BlockContent } from '@wepublish/website/api';
+import { Article as ArticleType } from '@wepublish/website/api';
 import { ArticleListWrapper } from './article-list/article-list';
 import { CommentListWrapper } from '@wepublish/comments/website';
 import { ContentWrapper } from '@wepublish/content/website';
@@ -82,7 +82,7 @@ export function Article({
     blocks: { Blocks },
   } = useWebsiteBuilder();
 
-  const article = data?.article as ArticleType | undefined;
+  const article = data?.article;
 
   return (
     <ArticleWrapper
@@ -91,12 +91,12 @@ export function Article({
       hideContentAfter={article?.paywall?.hideContentAfter}
       fadeout={article?.paywall?.fadeout}
     >
-      {article && <ArticleSEO article={article} />}
+      {article && <ArticleSEO article={article as ArticleType} />}
 
       {article && (
         <Blocks
           key={article.id}
-          blocks={(article.latest.blocks as BlockContent[]) ?? []}
+          blocks={article.latest.blocks ?? []}
           type="Article"
         />
       )}

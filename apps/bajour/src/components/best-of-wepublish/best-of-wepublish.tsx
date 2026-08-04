@@ -3,7 +3,7 @@ import {
   alignmentForTeaserBlock,
   TeaserGridBlockWrapper,
 } from '@wepublish/block-content/website';
-import { ArticleTeaser } from '@wepublish/website/api';
+import { FullArticleTeaserFragment } from '@wepublish/website/api';
 import { BuilderTeaserGridBlockProps } from '@wepublish/website/builder';
 
 import { BestOfWePublishTeaser } from './best-of-wepublish-teaser';
@@ -87,8 +87,7 @@ const MoreButton = styled('a')`
 
   ${({ theme }) => theme.breakpoints.up('md')} {
     border-radius: ${({ theme }) => theme.spacing(2)};
-    padding: ${({ theme }) => theme.spacing(2)}
-      ${({ theme }) => theme.spacing(5)};
+    padding: ${({ theme }) => theme.spacing(2, 5)};
     font-size: 27px;
   }
 `;
@@ -99,7 +98,7 @@ export const BestOfWePublish = ({
   blockStyle,
 }: BuilderTeaserGridBlockProps) => {
   const filteredTeasers = teasers.filter(
-    (teaser): teaser is ArticleTeaser =>
+    (teaser): teaser is FullArticleTeaserFragment =>
       teaser?.__typename === 'ArticleTeaser' && Boolean(teaser.article?.peerId)
   );
 

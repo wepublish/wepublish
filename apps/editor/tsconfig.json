@@ -5,10 +5,13 @@
     "esModuleInterop": false,
     "allowSyntheticDefaultImports": true,
     "strict": true,
-    "jsxImportSource": "@emotion/react"
+    "jsxImportSource": "@emotion/react",
+    "moduleResolution": "bundler",
+    "ignoreDeprecations": "6.0"
   },
   "files": [],
   "include": [],
+  "extends": "../../tsconfig.base.json",
   "references": [
     {
       "path": "./tsconfig.app.json"
@@ -16,6 +19,5 @@
     {
       "path": "./tsconfig.spec.json"
     }
-  ],
-  "extends": "../../tsconfig.base.json"
+  ]
 }

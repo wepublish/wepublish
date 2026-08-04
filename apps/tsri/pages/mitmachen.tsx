@@ -10,8 +10,8 @@ import {
 } from '@wepublish/utils/website';
 import { SubscribePage } from '@wepublish/utils/website';
 import {
-  addClientCacheToV1Props,
-  getV1ApiClient,
+  addClientCacheToProps,
+  getApiClient,
   InvoicesDocument,
   MeDocument,
   MemberPlanListDocument,
@@ -20,6 +20,7 @@ import {
   PeerProfileDocument,
 } from '@wepublish/website/api';
 import { NextPageContext } from 'next';
+
 const MitmachenPage = styled(PageContainer)`
   ${SubscribeWrapper} {
     padding-top: ${({ theme }) => theme.spacing(1.5)};
@@ -55,7 +56,11 @@ export default function Mitmachen() {
 }
 
 Mitmachen.getInitialProps = async (ctx: NextPageContext) => {
-  const client = getV1ApiClient(getApiUrl(), [
+  if (typeof window !== 'undefined') {
+    return {};
+  }
+
+  const client = getApiClient(getApiUrl(), [
     ssrAuthLink(
       async () => (await getSessionTokenProps(ctx)).sessionToken?.token
     ),
@@ -103,7 +108,7 @@ Mitmachen.getInitialProps = async (ctx: NextPageContext) => {
   }
 
   await Promise.all(dataPromises);
-  const props = addClientCacheToV1Props(client, sessionProps);
+  const props = addClientCacheToProps(client, sessionProps);
 
   return props;
 };

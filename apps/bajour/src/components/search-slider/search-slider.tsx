@@ -12,7 +12,6 @@ import { H1, H4 } from '@wepublish/ui';
 import {
   Article,
   ArticleSort,
-  BlockContent,
   FullArticleFragment,
   SortOrder,
   useFullArticleListQuery,
@@ -492,11 +491,11 @@ export function SearchSlider({
     };
   }, [tag]);
 
-  const textBlock = (mainArticle?.latest.blocks as BlockContent[])?.find(
-    isRichTextBlock
+  const textBlock = mainArticle?.latest.blocks?.find(block =>
+    isRichTextBlock(block)
   );
-  const videoBlock = (mainArticle?.latest.blocks as BlockContent[])?.find(
-    isIFrameBlock
+  const videoBlock = mainArticle?.latest.blocks?.find(block =>
+    isIFrameBlock(block)
   );
   const publicationDate =
     mainArticle?.publishedAt ?
@@ -509,8 +508,8 @@ export function SearchSlider({
 
   const articlesWithVideos = sliderArticles
     .map((article, index) => {
-      const hasVideo = (article?.latest.blocks as BlockContent[])?.find(
-        isIFrameBlock
+      const hasVideo = article?.latest.blocks?.find(block =>
+        isIFrameBlock(block)
       )?.url;
       return hasVideo ? { article, index, videoUrl: hasVideo } : null;
     })

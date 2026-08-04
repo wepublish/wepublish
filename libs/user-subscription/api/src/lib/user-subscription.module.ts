@@ -5,7 +5,7 @@ import { UserSubscriptionResolver } from './user-subscription.resolver';
 import { MemberPlanModule } from '@wepublish/member-plan/api';
 import { PaymentMethodModule, PaymentsModule } from '@wepublish/payment/api';
 import { UserModule } from '@wepublish/user/api';
-import { MemberContextModule } from '@wepublish/membership/api';
+import { MemberContextModule, VoucherModule } from '@wepublish/membership/api';
 
 @Module({
   imports: [
@@ -15,6 +15,7 @@ import { MemberContextModule } from '@wepublish/membership/api';
     PaymentMethodModule,
     UserModule,
     MemberContextModule,
+    VoucherModule,
   ],
   providers: [UserSubscriptionService, UserSubscriptionResolver],
 })

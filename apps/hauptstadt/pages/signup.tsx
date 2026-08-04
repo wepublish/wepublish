@@ -6,15 +6,14 @@ import {
 import { PageContainer } from '@wepublish/page/website';
 import { getApiUrl } from '@wepublish/utils/website';
 import {
-  addClientCacheToV1Props,
-  getV1ApiClient,
+  addClientCacheToProps,
+  getApiClient,
   NavigationListDocument,
   PageDocument,
   PeerProfileDocument,
 } from '@wepublish/website/api';
 import { deleteCookie, getCookie } from 'cookies-next';
 import { GetStaticProps } from 'next';
-import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 
 import { HauptstadtContentFullWidth } from '../src/components/hauptstadt-content-wrapper';
@@ -42,13 +41,11 @@ export default function SignUp() {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const { publicRuntimeConfig } = getConfig();
-
-  if (!publicRuntimeConfig.env.API_URL) {
+  if (!getApiUrl()) {
     return { props: {}, revalidate: 1 };
   }
 
-  const client = getV1ApiClient(getApiUrl(), []);
+  const client = getApiClient(getApiUrl(), []);
   await Promise.all([
     client.query({
       query: PageDocument,
@@ -64,7 +61,7 @@ export const getStaticProps: GetStaticProps = async () => {
     }),
   ]);
 
-  const props = addClientCacheToV1Props(client, {});
+  const props = addClientCacheToProps(client, {});
 
   return {
     props,

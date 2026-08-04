@@ -761,7 +761,7 @@ export const NavPaperWrapper = styled('div', {
   transition: transform 300ms ease-in-out;
   overflow-y: scroll;
   max-height: 100vh;
-  padding-bottom: ${({ theme }) => theme.spacing(10)};
+  padding-bottom: ${({ theme }) => theme.spacing(14)};
 
   ${({ theme }) => css`
     ${theme.breakpoints.up('md')} {

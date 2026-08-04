@@ -3,7 +3,7 @@ import {
   ArticleListDocument,
   ArticleListQueryVariables,
   ArticleSort,
-  getV1ApiClient,
+  getApiClient,
   PageListDocument,
   PageListQueryVariables,
   PageSort,
@@ -20,7 +20,7 @@ export const getSitemap = async (req: NextApiRequest): Promise<string> => {
     siteUrl,
     title: 'Flimmer',
   });
-  const client = getV1ApiClient(getApiUrl(), [], {
+  const client = getApiClient(getApiUrl(), [], {
     typePolicies: {},
   });
 

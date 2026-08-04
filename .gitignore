@@ -24,3 +24,8 @@ tools/removed_keys.json
 .vercel
 # Sentry Config File
 .env.sentry-build-plugin
+
+# typescript
+tsconfig.tsbuildinfo
+
+.claude/worktrees

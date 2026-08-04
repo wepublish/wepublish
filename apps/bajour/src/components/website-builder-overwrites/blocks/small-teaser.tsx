@@ -6,8 +6,8 @@ import {
 } from '@wepublish/block-content/website';
 import {
   BlockContent,
-  TeaserGridBlock,
-  TeaserListBlock,
+  FullTeaserGridBlockFragment,
+  FullTeaserListBlockFragment,
 } from '@wepublish/website/api';
 import { allPass, anyPass } from 'ramda';
 
@@ -23,7 +23,7 @@ import {
 
 export const isSmallTeaser = (
   block: Pick<BlockContent, '__typename'>
-): block is TeaserGridBlock | TeaserListBlock =>
+): block is FullTeaserGridBlockFragment | FullTeaserListBlockFragment =>
   allPass([
     hasBlockStyle('Kleine Teaser'),
     anyPass([isTeaserGridBlock, isTeaserListBlock]),

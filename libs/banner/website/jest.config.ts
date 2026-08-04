@@ -1,5 +1,4 @@
-/* eslint-disable */
-export default {
+module.exports = {
   displayName: 'banner-website',
   preset: '../../../jest.preset.js',
   testEnvironment: 'node',

@@ -7,6 +7,7 @@ import {
   usePollQuery,
   useUpdatePollMutation,
 } from '@wepublish/editor/api';
+import { RichtextJSONDocument } from '@wepublish/richtext';
 import {
   createCheckedPermissionComponent,
   PollAnswers,
@@ -17,28 +18,18 @@ import {
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
-import {
-  Col,
-  DatePicker,
-  FlexboxGrid,
-  Form,
-  Message,
-  Panel,
-  Row,
-  Schema,
-  toaster,
-} from 'rsuite';
-import { Descendant } from 'slate';
+import { DatePicker, Form, Message, Panel, Schema, toaster } from 'rsuite';
 
-const DateLabel = styled(Form.ControlLabel)`
+const DateLabel = styled(Form.Label)`
   margin-right: 8px;
 `;
 
-const PollEditor = styled(FlexboxGrid.Item)`
-  @media (max-width: 1200px) {
-    width: 100%;
-  }
-  width: 70%;
+const PollEditor = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-auto-rows: auto;
+  align-items: start;
+  gap: 12px;
 `;
 
 const DatesWrapper = styled.div`
@@ -46,11 +37,10 @@ const DatesWrapper = styled.div`
   flex-wrap: wrap;
   justify-content: flex-start;
   align-items: center;
+  gap: 12px;
 `;
 
-const DateItem = styled.div`
-  padding: 5px;
-`;
+const DateItem = styled.div``;
 
 function PollEditView() {
   const params = useParams();
@@ -177,144 +167,126 @@ function PollEditView() {
     <Form
       onSubmit={validationPassed => validationPassed && saveOrUpdate()}
       model={validationModel}
-      fluid
       disabled={loading}
       formValue={{ question: poll?.question }}
     >
-      <FlexboxGrid>
-        {/* model title */}
-        <FlexboxGrid.Item colspan={24}>
-          <SingleViewTitle
-            loading={loading}
-            title={poll?.question || t('pollList.noQuestion')}
-            loadingTitle={t('pollEditView.loadingTitle')}
-            saveBtnTitle={t('pollEditView.saveTitle')}
-            saveAndCloseBtnTitle={t('pollEditView.saveAndCloseTitle')}
-            closePath={closePath}
-            setCloseFn={setClose}
+      <SingleViewTitle
+        loading={loading}
+        title={poll?.question || t('pollList.noQuestion')}
+        loadingTitle={t('pollEditView.loadingTitle')}
+        saveBtnTitle={t('pollEditView.saveTitle')}
+        saveAndCloseBtnTitle={t('pollEditView.saveAndCloseTitle')}
+        closePath={closePath}
+        setCloseFn={setClose}
+      />
+
+      <PollEditor>
+        <Panel
+          bordered
+          css={{ gridColumn: '-1/1' }}
+        >
+          <Form.Stack fluid>
+            <Form.Group controlId="question">
+              <Form.Label>{t('pollEditView.questionPanelHeader')}</Form.Label>
+
+              <Form.Control
+                name="question"
+                placeholder={t('pollEditView.toBeOrNotToBe')}
+                value={poll?.question || ''}
+                onChange={(value: string) => {
+                  if (!poll) {
+                    return;
+                  }
+                  setPoll(p => (p ? { ...p, question: value } : undefined));
+                }}
+              />
+            </Form.Group>
+
+            <DatesWrapper>
+              <DateItem>
+                <DateLabel>{t('pollEditView.opensAtLabel')}</DateLabel>
+
+                <DatePicker
+                  value={poll?.opensAt ? new Date(poll.opensAt) : undefined}
+                  format="yyyy-MM-dd HH:mm"
+                  onChange={(opensAt: Date | null) => {
+                    if (!poll) {
+                      return;
+                    }
+
+                    setPoll({
+                      ...poll,
+                      opensAt:
+                        opensAt?.toISOString() || new Date().toISOString(),
+                    });
+                  }}
+                />
+              </DateItem>
+
+              <DateItem>
+                <DateLabel>{t('pollEditView.closesAtLabel')}</DateLabel>
+
+                <DatePicker
+                  value={poll?.closedAt ? new Date(poll.closedAt) : undefined}
+                  format="yyyy-MM-dd HH:mm"
+                  onChange={(closedAt: Date | null) => {
+                    if (!poll) {
+                      return;
+                    }
+
+                    setPoll({
+                      ...poll,
+                      closedAt: closedAt?.toISOString(),
+                    });
+                  }}
+                />
+              </DateItem>
+            </DatesWrapper>
+          </Form.Stack>
+        </Panel>
+
+        <Panel
+          header={t('pollEditView.answerPanelHeader')}
+          bordered
+        >
+          <PollAnswers
+            poll={poll}
+            onPollChange={(poll: FullPoll) => {
+              setPoll(poll);
+            }}
           />
-        </FlexboxGrid.Item>
+        </Panel>
 
-        {/* content */}
-        <PollEditor>
-          <Row>
-            {/* question */}
-            <Col xs={24}>
-              <Panel
-                header={t('pollEditView.questionPanelHeader')}
-                bordered
-              >
-                <Form.Group controlId="question">
-                  <Form.Control
-                    name="question"
-                    placeholder={t('pollEditView.toBeOrNotToBe')}
-                    value={poll?.question || ''}
-                    onChange={(value: string) => {
-                      if (!poll) {
-                        return;
-                      }
-                      setPoll(p => (p ? { ...p, question: value } : undefined));
-                    }}
-                  />
-                </Form.Group>
-              </Panel>
-            </Col>
+        <Panel
+          header={t('pollEditView.infoText')}
+          bordered
+        >
+          <RichTextBlock
+            value={poll?.infoText}
+            onChange={value => {
+              if (poll) {
+                setPoll({
+                  ...poll,
+                  infoText: value as RichtextJSONDocument,
+                });
+              }
+            }}
+          />
+        </Panel>
 
-            {/* answers */}
-            <Col xs={24}>
-              <Panel
-                header={t('pollEditView.answerPanelHeader')}
-                bordered
-              >
-                <PollAnswers
-                  poll={poll}
-                  onPollChange={(poll: FullPoll) => {
-                    setPoll(poll);
-                  }}
-                />
-              </Panel>
-            </Col>
-
-            {/* settings */}
-            <Col xs={24}>
-              <Panel
-                header={t('pollEditView.settingsPanelHeader')}
-                bordered
-              >
-                {/* opens at */}
-                <DatesWrapper>
-                  <DateItem>
-                    <DateLabel>{t('pollEditView.opensAtLabel')}</DateLabel>
-                    <DatePicker
-                      value={poll?.opensAt ? new Date(poll.opensAt) : undefined}
-                      format="yyyy-MM-dd HH:mm"
-                      onChange={(opensAt: Date | null) => {
-                        if (!poll) {
-                          return;
-                        }
-                        setPoll({
-                          ...poll,
-                          opensAt:
-                            opensAt?.toISOString() || new Date().toISOString(),
-                        });
-                      }}
-                    />
-                  </DateItem>
-                  <DateItem>
-                    {/* closes at */}
-                    <DateLabel>{t('pollEditView.closesAtLabel')}</DateLabel>
-                    <DatePicker
-                      value={
-                        poll?.closedAt ? new Date(poll.closedAt) : undefined
-                      }
-                      format="yyyy-MM-dd HH:mm"
-                      onChange={(closedAt: Date | null) => {
-                        if (!poll) {
-                          return;
-                        }
-                        setPoll({ ...poll, closedAt: closedAt?.toISOString() });
-                      }}
-                    />
-                  </DateItem>
-                </DatesWrapper>
-              </Panel>
-            </Col>
-
-            {/* poll external votes */}
-            <Col xs={24}>
-              <Panel
-                header={t('pollEditView.pollExternalVotesPanelHeader')}
-                bordered
-              >
-                <PollExternalVotes
-                  poll={poll}
-                  onPollChange={(poll: FullPoll) => {
-                    setPoll(poll);
-                  }}
-                />
-              </Panel>
-            </Col>
-
-            <Col xs={24}>
-              <Panel
-                header={t('pollEditView.infoText')}
-                bordered
-              >
-                <div className="richTextFrame">
-                  {poll && (
-                    <RichTextBlock
-                      value={poll?.infoText ? poll?.infoText : []}
-                      onChange={value => {
-                        setPoll({ ...poll, infoText: value as Descendant[] });
-                      }}
-                    />
-                  )}
-                </div>
-              </Panel>
-            </Col>
-          </Row>
-        </PollEditor>
-      </FlexboxGrid>
+        <Panel
+          header={t('pollEditView.pollExternalVotesPanelHeader')}
+          bordered
+          css={{ gridColumn: '-1/1' }}
+        >
+          <PollExternalVotes
+            poll={poll}
+            onPollChange={(poll: FullPoll) => {
+              setPoll(poll);
+            }}
+          />
+        </Panel>
+      </PollEditor>
     </Form>
   );
 }

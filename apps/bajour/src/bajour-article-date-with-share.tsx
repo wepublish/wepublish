@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { css, NoSsr } from '@mui/material';
 import { ArticleDate, ArticleDateWrapper } from '@wepublish/article/website';
-import { Article } from '@wepublish/website/api';
+import { FullArticleFragment } from '@wepublish/website/api';
 import {
   BuilderArticleDateProps,
   useWebsiteBuilder,
@@ -49,7 +49,7 @@ export const BajourArticleDateWithShare = ({
 
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
-  const share = async (article: Article) => {
+  const share = async (article: FullArticleFragment) => {
     // Native sharing dialog if supported, otherwise copy to clipboard
     if (typeof window !== 'undefined' && 'share' in navigator) {
       await navigator.share({

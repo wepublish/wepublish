@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   displayName: 'paywall-api',
   preset: '../../../jest.preset.js',
   testEnvironment: 'node',

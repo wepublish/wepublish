@@ -33,6 +33,7 @@ export default function BriefingPage(props: BriefingPageProps) {
           name="viewport"
           content="width=device-width, initial-scale=1.0"
         />
+        {/* eslint-disable-next-line @next/next/no-css-tags -- page-specific static stylesheet for this standalone newsletter landing page */}
         <link
           rel="stylesheet"
           href="/newsletter/styles.css"

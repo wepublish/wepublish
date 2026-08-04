@@ -13,7 +13,7 @@ export class HasMemberPlanResolver {
   constructor(private dataloader: MemberPlanDataloader) {}
 
   @ResolveField(() => MemberPlan, { nullable: true })
-  public memberplan(
+  public memberPlan(
     @Parent()
     block:
       | HasOptionalMemberPlan

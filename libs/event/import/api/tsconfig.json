@@ -2,7 +2,9 @@
   "extends": "../../../../tsconfig.base.json",
   "compilerOptions": {
     "module": "commonjs",
-    "strict": true
+    "moduleResolution": "bundler",
+    "strict": true,
+    "ignoreDeprecations": "6.0"
   },
   "files": [],
   "include": [],

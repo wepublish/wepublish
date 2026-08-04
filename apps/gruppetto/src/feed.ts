@@ -5,7 +5,7 @@ import {
   ArticleListDocument,
   ArticleListQueryVariables,
   ArticleSort,
-  getV1ApiClient,
+  getApiClient,
 } from '@wepublish/website/api';
 import { NextApiRequest } from 'next';
 import process from 'node:process';
@@ -27,7 +27,7 @@ export const getFeed = async (req: NextApiRequest) => {
       rss: `${siteUrl + req.url}/api/rss-feed`,
     },
   });
-  const client = getV1ApiClient(getApiUrl(), []);
+  const client = getApiClient(getApiUrl(), []);
 
   const { data } = await client.query({
     query: ArticleListDocument,

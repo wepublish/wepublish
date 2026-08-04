@@ -8,15 +8,14 @@ import {
 import { ContentWrapper } from '@wepublish/content/website';
 import { getApiUrl } from '@wepublish/utils/website';
 import {
-  addClientCacheToV1Props,
-  getV1ApiClient,
+  addClientCacheToProps,
+  getApiClient,
   NavigationListDocument,
   PeerProfileDocument,
 } from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { deleteCookie, getCookie } from 'cookies-next';
 import { GetStaticProps } from 'next';
-import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 
 import { Container } from '../src/components/layout/container';
@@ -62,13 +61,11 @@ export default function SignUp() {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const { publicRuntimeConfig } = getConfig();
-
-  if (!publicRuntimeConfig.env.API_URL) {
+  if (!getApiUrl()) {
     return { props: {}, revalidate: 1 };
   }
 
-  const client = getV1ApiClient(getApiUrl(), []);
+  const client = getApiClient(getApiUrl(), []);
   await Promise.all([
     client.query({
       query: NavigationListDocument,
@@ -78,7 +75,7 @@ export const getStaticProps: GetStaticProps = async () => {
     }),
   ]);
 
-  const props = addClientCacheToV1Props(client, {});
+  const props = addClientCacheToProps(client, {});
 
   return {
     props,

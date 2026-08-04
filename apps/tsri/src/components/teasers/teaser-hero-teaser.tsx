@@ -21,6 +21,12 @@ export const isTeaserHeroTeaser = allPass([
 ]);
 
 export const StyledTeaserHeroTeaser = styled(TsriTeaser)`
+  container-type: normal;
+
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    --tw: 63.7cqw;
+  }
+
   ${({ theme }) => theme.breakpoints.down('md')} {
     aspect-ratio: unset;
 
@@ -31,7 +37,7 @@ export const StyledTeaserHeroTeaser = styled(TsriTeaser)`
       grid-column: -1 / 1;
       border-top-left-radius: 0;
       border-top-right-radius: 0;
-      padding-bottom: 8cqw;
+      padding-bottom: calc(var(--tw, 100cqw) * 0.08);
       background: linear-gradient(
         to bottom,
         ${({ theme }) => theme.palette.primary.main},
@@ -46,15 +52,17 @@ export const StyledTeaserHeroTeaser = styled(TsriTeaser)`
     ${TeaserImageWrapper} {
       aspect-ratio: 3 / 2;
       grid-row: 1 / 3;
-      padding: 2cqw 2cqw 0 2cqw;
+      padding: calc(var(--tw, 100cqw) * 0.02) calc(var(--tw, 100cqw) * 0.02) 0
+        calc(var(--tw, 100cqw) * 0.02);
       z-index: 1;
 
       & img {
         aspect-ratio: 3 / 2;
         object-fit: cover;
+        object-position: left center;
         width: 100%;
         height: 100%;
-        border-radius: 1.75cqw;
+        border-radius: calc(var(--tw, 100cqw) * 0.0175);
       }
     }
 

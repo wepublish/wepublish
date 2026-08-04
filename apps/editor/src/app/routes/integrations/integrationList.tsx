@@ -10,8 +10,8 @@ import {
   CanGetAISettings,
   CanGetAnalyticsProviderSettings,
   CanGetChallengeProviderSettings,
-  CanGetMailProviderSettings,
   CanGetMailchimpSyncSettings,
+  CanGetMailProviderSettings,
   CanGetPaymentProviderSettings,
   CanGetTrackingPixelSettings,
 } from '@wepublish/permissions';

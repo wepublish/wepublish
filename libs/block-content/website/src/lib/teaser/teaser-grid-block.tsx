@@ -3,8 +3,8 @@ import styled from '@emotion/styled';
 import {
   BlockContent,
   FlexAlignment,
-  Teaser,
-  TeaserGridBlock as TeaserGridBlockType,
+  FullTeaserFragment,
+  FullTeaserGridBlockFragment,
 } from '@wepublish/website/api';
 import {
   BuilderTeaserGridBlockProps,
@@ -13,11 +13,12 @@ import {
 
 export const isTeaserGridBlock = (
   block: Pick<BlockContent, '__typename'>
-): block is TeaserGridBlockType => block.__typename === 'TeaserGridBlock';
+): block is FullTeaserGridBlockFragment =>
+  block.__typename === 'TeaserGridBlock';
 
 export const TeaserGridBlockWrapper = styled('div', {
   shouldForwardProp: propName => propName !== 'numColumns',
-})<Pick<TeaserGridBlockType, 'numColumns'>>`
+})<Pick<FullTeaserGridBlockFragment, 'numColumns'>>`
   display: grid;
   column-gap: ${({ theme }) => theme.spacing(2)};
   row-gap: ${({ theme }) => theme.spacing(5)};
@@ -39,8 +40,8 @@ export const TeaserGridBlockWrapper = styled('div', {
 
 // @TODO: Have API filter these out by default
 export const isFilledTeaser = (
-  teaser: Teaser | null | undefined
-): teaser is Teaser => {
+  teaser: FullTeaserFragment | null | undefined
+): teaser is FullTeaserFragment => {
   switch (teaser?.__typename) {
     case 'ArticleTeaser': {
       return Boolean(teaser.article);

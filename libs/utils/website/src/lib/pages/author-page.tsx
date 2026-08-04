@@ -4,12 +4,12 @@ import {
 } from '@wepublish/article/website';
 import { AuthorContainer } from '@wepublish/author/website';
 import {
-  addClientCacheToV1Props,
+  addClientCacheToProps,
   ArticleListDocument,
   ArticleListQuery,
   AuthorDocument,
   AuthorQuery,
-  getV1ApiClient,
+  getApiClient,
   NavigationListDocument,
   PeerProfileDocument,
   useArticleListQuery,
@@ -127,7 +127,7 @@ export const getAuthorStaticPaths = async () => ({
 
 export const getAuthorStaticProps: GetStaticProps = async ({ params }) => {
   const { slug } = params || {};
-  const client = getV1ApiClient(getApiUrl(), []);
+  const client = getApiClient(getApiUrl(), []);
 
   const [author] = await Promise.all([
     client.query<AuthorQuery>({
@@ -166,7 +166,7 @@ export const getAuthorStaticProps: GetStaticProps = async ({ params }) => {
     },
   });
 
-  const props = addClientCacheToV1Props(client, {});
+  const props = addClientCacheToProps(client, {});
 
   return {
     props,

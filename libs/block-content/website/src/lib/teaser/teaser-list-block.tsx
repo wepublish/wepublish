@@ -1,6 +1,6 @@
 import {
   BlockContent,
-  TeaserListBlock as TeaserListBlockType,
+  FullTeaserListBlockFragment,
 } from '@wepublish/website/api';
 import {
   BuilderTeaserListBlockProps,
@@ -12,7 +12,8 @@ import styled from '@emotion/styled';
 
 export const isTeaserListBlock = (
   block: Pick<BlockContent, '__typename'>
-): block is TeaserListBlockType => block.__typename === 'TeaserListBlock';
+): block is FullTeaserListBlockFragment =>
+  block.__typename === 'TeaserListBlock';
 
 export const TeaserListBlockWrapper = styled('section')`
   display: grid;

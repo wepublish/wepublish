@@ -3,7 +3,6 @@ import {
   BuilderArticleAuthorsProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { Article as ArticleType } from '@wepublish/website/api';
 import { Typography } from '@mui/material';
 
 export const ArticleAuthorsWrapper = styled('div')`
@@ -36,7 +35,7 @@ export const ArticleAuthors = ({
         />
       ))}
 
-      <ArticleDate article={article as ArticleType} />
+      <ArticleDate article={article} />
     </Typography>
   );
 };

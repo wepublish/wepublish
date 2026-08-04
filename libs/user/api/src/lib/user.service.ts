@@ -131,12 +131,21 @@ export class UserService {
     if (password) {
       await this.validatePassword(password);
     }
+
     const hashedPassword = await this.hashPassword(
       password ?? crypto.randomBytes(48).toString('base64')
     );
     input.email = input.email.toLowerCase();
     await Validator.createUser.parse(input);
     await Validator.createAddress.parse(address);
+
+    if (
+      await this.prisma.user.findUnique({
+        where: { email: input.email },
+      })
+    ) {
+      throw new BadRequestException('Email already in use');
+    }
 
     const recipient = await this.prisma.user.create({
       data: {

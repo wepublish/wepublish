@@ -4,7 +4,7 @@ import {
   ArticleListDocument,
   ArticleListQueryVariables,
   ArticleSort,
-  getV1ApiClient,
+  getApiClient,
   SortOrder,
 } from '@wepublish/website/api';
 import { NextApiRequest } from 'next';
@@ -27,7 +27,7 @@ export const getFeed = async (req: NextApiRequest) => {
       rss: `${siteUrl + req.url}/api/rss-feed`,
     },
   });
-  const client = getV1ApiClient(getApiUrl(), [], {
+  const client = getApiClient(getApiUrl(), [], {
     typePolicies: {},
   });
 

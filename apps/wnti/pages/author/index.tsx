@@ -2,17 +2,16 @@ import { AuthorListContainer } from '@wepublish/author/website';
 import { getApiUrl } from '@wepublish/utils/website';
 import { AuthorSort, SortOrder } from '@wepublish/website/api';
 import {
-  addClientCacheToV1Props,
+  addClientCacheToProps,
   AuthorListDocument,
   AuthorListQueryVariables,
-  getV1ApiClient,
+  getApiClient,
   NavigationListDocument,
   PeerProfileDocument,
   useAuthorListQuery,
 } from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';
-import getConfig from 'next/config';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useMemo } from 'react';
@@ -95,13 +94,11 @@ export default function AuthorList() {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const { publicRuntimeConfig } = getConfig();
-
-  if (!publicRuntimeConfig.env.API_URL) {
+  if (!getApiUrl()) {
     return { props: {}, revalidate: 1 };
   }
 
-  const client = getV1ApiClient(getApiUrl(), []);
+  const client = getApiClient(getApiUrl(), []);
 
   await Promise.all([
     client.query({
@@ -124,7 +121,7 @@ export const getStaticProps: GetStaticProps = async () => {
     }),
   ]);
 
-  const props = addClientCacheToV1Props(client, {});
+  const props = addClientCacheToProps(client, {});
 
   return {
     props,

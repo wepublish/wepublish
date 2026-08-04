@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import {
   BlockContent,
-  InstagramPostBlock as InstagramPostBlockType,
+  FullInstagramPostBlockFragment,
 } from '@wepublish/website/api';
 import {
   BuilderInstagramPostBlockProps,
@@ -21,7 +21,8 @@ declare global {
 
 export const isInstagramBlock = (
   block: Pick<BlockContent, '__typename'>
-): block is InstagramPostBlockType => block.__typename === 'InstagramPostBlock';
+): block is FullInstagramPostBlockFragment =>
+  block.__typename === 'InstagramPostBlock';
 
 export const InstagramBlockWrapper = styled('div')`
   display: grid;

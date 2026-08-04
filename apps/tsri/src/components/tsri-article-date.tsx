@@ -1,11 +1,14 @@
 import styled from '@emotion/styled';
+import { css } from '@mui/material';
 import { ArticleDateWrapper } from '@wepublish/article/website';
 import {
   BuilderArticleDateProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 
-const TsriArticleDateWrapper = styled(ArticleDateWrapper)`
+const TsriArticleDateWrapper = styled(ArticleDateWrapper, {
+  shouldForwardProp: prop => prop !== 'hideAuthor',
+})<{ hideAuthor?: boolean }>`
   font-size: 0.666rem;
   display: grid;
   grid-column: 2 / 4;
@@ -18,6 +21,12 @@ const TsriArticleDateWrapper = styled(ArticleDateWrapper)`
     grid-row: 2 / 4;
     font-size: 0.625rem;
     font-weight: 700;
+
+    ${({ hideAuthor }) =>
+      hideAuthor &&
+      css`
+        grid-column: 1 / 3;
+      `}
   }
 `;
 
@@ -50,6 +59,7 @@ export const TsriArticleDate = ({
       as={'div'}
       suppressHydrationWarning
       className={className}
+      hideAuthor={article.latest.hideAuthor}
     >
       <TsriArticleTime
         suppressHydrationWarning

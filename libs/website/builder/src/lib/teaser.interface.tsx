@@ -1,17 +1,20 @@
-import { Teaser, FlexAlignment } from '@wepublish/website/api';
+import {
+  FullFlexAlignmentFragment,
+  FullTeaserFragment,
+} from '@wepublish/website/api';
 
 type TeaserTypeProps =
   | {
       blockStyle: string | null | undefined;
-      teaser?: Teaser | null | undefined;
-      alignment: FlexAlignment;
+      teaser?: FullTeaserFragment | null | undefined;
+      alignment: FullFlexAlignmentFragment;
       numColumns?: never;
       index: number;
     }
   | {
       blockStyle: string | null | undefined;
-      teaser: Teaser | null | undefined;
-      alignment: FlexAlignment;
+      teaser: FullTeaserFragment | null | undefined;
+      alignment: FullFlexAlignmentFragment;
       numColumns: number;
       index: number;
     };

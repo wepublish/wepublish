@@ -3,9 +3,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { CircularProgress } from '@mui/material';
 import { articleToTeaser } from '@wepublish/article/website';
 import {
-  addClientCacheToV1Props,
-  Article,
-  getV1ApiClient,
+  addClientCacheToProps,
+  FullArticleTeaserFragment,
+  getApiClient,
   NavigationListDocument,
   Page,
   PageTeaser,
@@ -103,7 +103,7 @@ export const SearchPage = ({
     }
 
     const articleTeasers = phraseData.phrase.articles.nodes.map(node =>
-      articleToTeaser(node as Article)
+      articleToTeaser(node as FullArticleTeaserFragment['article'])
     );
     const pageTeasers = phraseData.phrase.pages.nodes.map(node =>
       pageToTeaser(node as Page)
@@ -185,7 +185,7 @@ export const SearchPage = ({
 };
 
 export const SearchPageGetServerSideProps = (async ({ query }) => {
-  const client = getV1ApiClient(getApiUrl(), []);
+  const client = getApiClient(getApiUrl(), []);
   const { page, q: phraseQuery } = searchPageSchema.parse(query);
 
   await Promise.all([
@@ -207,7 +207,7 @@ export const SearchPageGetServerSideProps = (async ({ query }) => {
     }),
   ]);
 
-  const props = addClientCacheToV1Props(client, {
+  const props = addClientCacheToProps(client, {
     query,
   });
 

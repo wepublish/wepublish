@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { css } from '@mui/material';
 import {
   AuthorChipContent as AuthorChipContentDefault,
   AuthorChipImageWrapper as AuthorChipImageWrapperDefault,
@@ -16,7 +17,9 @@ export const AuthorChipWrapper = styled(AuthorChipWrapperDefault)`
   display: contents;
 `;
 
-export const AuthorChipNameJobWrapper = styled('div')`
+export const AuthorChipNameJobWrapper = styled('div', {
+  shouldForwardProp: prop => prop !== 'hideAuthor',
+})<{ hideAuthor?: boolean }>`
   padding: 0.2rem 0 0 0;
   grid-column: 2 / 4;
   grid-row: 1 / 2;
@@ -30,6 +33,12 @@ export const AuthorChipNameJobWrapper = styled('div')`
     padding: 1.25rem 0 0 0;
     gap: 0.5rem;
     font-size: 0.875rem;
+
+    ${({ hideAuthor }) =>
+      hideAuthor &&
+      css`
+        grid-column: 1 / 3;
+      `}
   }
 
   ${AuthorChipName} {
@@ -82,11 +91,27 @@ export function TsriAuthorChip({
   className,
   author,
   isOneOfMultipleAuthors,
-}: BuilderAuthorChipProps & { isOneOfMultipleAuthors?: boolean }) {
+  hideInfo,
+}: BuilderAuthorChipProps & {
+  isOneOfMultipleAuthors?: boolean;
+  hideInfo?: boolean;
+}) {
   const {
     AuthorLinks,
     elements: { Image, Link },
   } = useWebsiteBuilder();
+
+  if (hideInfo) {
+    return (
+      <AuthorChipWrapper className={className}>
+        <AuthorChipContent>
+          <AuthorChipNameJobWrapper hideAuthor>
+            <AuthorChipName>Publiziert</AuthorChipName>
+          </AuthorChipNameJobWrapper>
+        </AuthorChipContent>
+      </AuthorChipWrapper>
+    );
+  }
 
   return (
     <AuthorChipWrapper className={className}>

@@ -1,10 +1,12 @@
 import { generateSitemap } from '@wepublish/feed/website';
 import { getApiUrl } from '@wepublish/utils/website';
 import {
+  Article,
   ArticleListDocument,
   ArticleListQueryVariables,
   ArticleSort,
-  getV1ApiClient,
+  getApiClient,
+  Page,
   PageListDocument,
   PageListQueryVariables,
   PageSort,
@@ -13,6 +15,8 @@ import {
 import { NextApiRequest } from 'next';
 import process from 'node:process';
 
+import { locales, localizeUrl } from './localize-url';
+
 export const getSitemap = async (req: NextApiRequest): Promise<string> => {
   const siteUrl = process.env.WEBSITE_URL || '';
 
@@ -20,7 +24,7 @@ export const getSitemap = async (req: NextApiRequest): Promise<string> => {
     siteUrl,
     title: 'We.Publish',
   });
-  const client = getV1ApiClient(getApiUrl(), [], {
+  const client = getApiClient(getApiUrl(), [], {
     typePolicies: {},
   });
 
@@ -43,15 +47,23 @@ export const getSitemap = async (req: NextApiRequest): Promise<string> => {
     }),
   ]);
 
+  const articles = (articleData.articles.nodes ?? []).map(
+    (article: Article) => ({
+      ...article,
+      url: localizeUrl(siteUrl, article.slug, 'article'),
+    })
+  );
+  const pages = (pageData.pages.nodes ?? []).map((page: Page) => ({
+    ...page,
+    url: localizeUrl(siteUrl, page.slug, 'page'),
+  }));
+  const staticPaths = ['/author', '/event', '/login', '/signup', '/mitmachen'];
+
   return generate(
-    articleData.articles.nodes ?? [],
-    pageData.pages.nodes ?? [],
-    [
-      `${siteUrl}/author`,
-      `${siteUrl}/event`,
-      `${siteUrl}/login`,
-      `${siteUrl}/signup`,
-      `${siteUrl}/mitmachen`,
-    ]
+    articles,
+    pages,
+    locales.flatMap(locale =>
+      staticPaths.map(path => `${siteUrl}/${locale}${path}`)
+    )
   );
 };

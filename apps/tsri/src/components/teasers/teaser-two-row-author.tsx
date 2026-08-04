@@ -71,6 +71,7 @@ export const TeaserTwoRowAuthor = styled(TsriTeaser)`
 
     ${TeaserImage} {
       object-fit: cover;
+      object-position: left center;
       width: 100%;
       height: 100%;
       max-height: 100%;

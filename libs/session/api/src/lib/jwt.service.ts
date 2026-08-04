@@ -3,10 +3,10 @@ import { SignJWT, jwtVerify, importPKCS8, importSPKI } from 'jose';
 import { createPublicKey } from 'crypto';
 import { computeKid } from './jwk-utils';
 
-export const JWT_PRIVATE_KEY_TOKEN = 'JWT_PRIVATE_KEY_TOKEN';
-export const JWT_PUBLIC_KEY_TOKEN = 'JWT_PUBLIC_KEY_TOKEN';
-export const HOST_URL_TOKEN = 'HOST_URL_TOKEN';
-export const WEBSITE_URL_TOKEN = 'WEBSITE_URL_TOKEN';
+export const JWT_PRIVATE_KEY_TOKEN = Symbol('JWT_PRIVATE_KEY_TOKEN');
+export const JWT_PUBLIC_KEY_TOKEN = Symbol('JWT_PUBLIC_KEY_TOKEN');
+export const HOST_URL_TOKEN = Symbol('HOST_URL_TOKEN');
+export const WEBSITE_URL_TOKEN = Symbol('WEBSITE_URL_TOKEN');
 
 @Injectable()
 export class JwtService {
@@ -75,6 +75,42 @@ export class JwtService {
       return payload.sub ?? '';
     } catch (error) {
       throw new Error('Invalid JWT token');
+    }
+  }
+
+  async generateScopedJWT({
+    scope,
+    expiresInMinutes = 5,
+  }: {
+    scope: string;
+    expiresInMinutes?: number;
+  }): Promise<string> {
+    const key = await this.privateKey;
+
+    return new SignJWT({ scope })
+      .setProtectedHeader({ alg: 'EdDSA', kid: this.kid })
+      .setSubject('website-service')
+      .setIssuer(this.hostURL)
+      .setAudience(this.websiteURL)
+      .setExpirationTime(`${expiresInMinutes}m`)
+      .sign(key);
+  }
+
+  async verifyScopedJWT(
+    token: string,
+    expectedScope: string
+  ): Promise<boolean> {
+    try {
+      const key = await this.publicKey;
+      const { payload } = await jwtVerify(token, key, {
+        algorithms: ['EdDSA'],
+        issuer: this.hostURL,
+        audience: this.websiteURL,
+      });
+
+      return payload['scope'] === expectedScope;
+    } catch {
+      return false;
     }
   }
 }

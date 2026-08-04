@@ -24,9 +24,13 @@ import {
   ExtendSubscriptionArgs,
 } from './subscription.model';
 import { PaymentsService } from '@wepublish/payment/api';
-import { logger } from '@wepublish/utils/api';
+import { logger, PrimeDataLoader } from '@wepublish/utils/api';
 import { unselectPassword } from '@wepublish/authentication/api';
-import { MemberContextService } from '@wepublish/membership/api';
+import {
+  calculateAmountForPeriodicity,
+  MemberContextService,
+  VoucherDataloader,
+} from '@wepublish/membership/api';
 
 export type SubscriptionWithRelations = Subscription & {
   periods: SubscriptionPeriod[];
@@ -51,9 +55,49 @@ export class UserSubscriptionService {
     });
   }
 
-  async createSubscription(userId: string, args: CreateSubscriptionArgs) {
+  @PrimeDataLoader(VoucherDataloader)
+  async getValidVoucher(voucher: string, memberPlanId: string) {
+    const voucherObj = await this.prisma.voucher.findUnique({
+      where: {
+        code_memberPlanId: {
+          code: voucher.toLowerCase(),
+          memberPlanId,
+        },
+      },
+    });
+
+    if (!voucherObj || voucherObj.validFrom > new Date()) {
+      throw new BadRequestException('Voucher is invalid.');
+    }
+
+    if (new Date() > voucherObj.validTo) {
+      throw new BadRequestException('Voucher has expired.');
+    }
+
+    return voucherObj;
+  }
+
+  async createSubscription(
+    userId: string,
+    { voucher, ...args }: CreateSubscriptionArgs
+  ) {
     const { memberPlan, paymentMethod } =
       await this.validateSubscriptionInput(args);
+
+    let discount: number | undefined = undefined;
+    let voucherId: string | undefined = undefined;
+
+    if (voucher) {
+      const voucherObj = await this.getValidVoucher(voucher, memberPlan.id);
+
+      discount =
+        calculateAmountForPeriodicity(
+          args.monthlyAmount,
+          args.paymentPeriodicity
+        ) *
+        (voucherObj.discountPercent / 100);
+      voucherId = voucherObj.id;
+    }
 
     const {
       autoRenew,
@@ -102,6 +146,8 @@ export class UserSubscriptionService {
         autoRenew,
         extendable: memberPlan.extendable,
         replacedSubscriptionId: subscriptionToDeactivate?.id,
+        discount,
+        voucherId,
       });
 
     if (!invoice) {

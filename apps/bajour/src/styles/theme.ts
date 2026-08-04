@@ -54,7 +54,9 @@ const theme = createTheme({}, WepTheme, {
     subtitle1: {
       fontFamily: [roboto.style.fontFamily, 'sans-serif'].join(','),
     },
-    fontFamily: [roboto.style.fontFamily, 'sans-serif'].join(','),
+    allVariants: {
+      fontFamily: [roboto.style.fontFamily, 'sans-serif'].join(','),
+    },
   },
   breakpoints: createBreakpoints({
     values: {

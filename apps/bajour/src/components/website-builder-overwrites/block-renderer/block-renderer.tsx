@@ -3,7 +3,10 @@ import {
   isTeaserGridBlock,
   isTeaserListBlock,
 } from '@wepublish/block-content/website';
-import { BlockContent, TeaserGridBlock } from '@wepublish/website/api';
+import {
+  BlockContent,
+  FullTeaserGridBlockFragment,
+} from '@wepublish/website/api';
 import {
   BuilderBlockRendererProps,
   useWebsiteBuilder,
@@ -44,7 +47,9 @@ export const BajourBlockRenderer = (props: BuilderBlockRendererProps) => {
   // They are hidden for now instead of removed from the API as we will migrate these to article metadata at some point.
   // This allows us to show predefined related articles & enhance it with automatic generated once.
   const isOldRelatedArticles = useCallback(
-    (block: Pick<BlockContent, '__typename'>): block is TeaserGridBlock =>
+    (
+      block: Pick<BlockContent, '__typename'>
+    ): block is FullTeaserGridBlockFragment =>
       allPass([
         isTeaserGridBlock,
         () => props.type === 'Article' && props.index === props.count - 1,

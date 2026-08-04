@@ -14,12 +14,23 @@ import { BatchHttpLink } from '@apollo/client/link/batch-http';
 import { mergeDeepRight } from 'ramda';
 import possibleTypes from './graphql';
 
-import { ComponentType, memo, useMemo } from 'react';
+import { ComponentType, createElement, memo, useMemo } from 'react';
 import { createUploadLink } from 'apollo-upload-client';
 import { absoluteUrlToRelative } from './absolute-url-to-relative';
 import { omitDisabledBlocks } from './omit-disabled-blocks';
+import { omitSensitiveData } from './omit-sensitive-data';
 
 export const V1_CLIENT_STATE_PROP_NAME = '__APOLLO_STATE_V1__';
+
+export type PublicEnv = {
+  apiUrl: string;
+} & Record<string, unknown>;
+
+declare global {
+  interface Window {
+    PUBLIC_ENV: PublicEnv | undefined;
+  }
+}
 
 let CACHED_CLIENT: ApolloClient<NormalizedCacheObject>;
 
@@ -44,7 +55,7 @@ const createSsrTimeoutFetch =
     );
   };
 
-const createV1ApiClient = (
+const createApiClient = (
   apiUrl: string,
   links: ApolloLink[],
   cacheConfig?: InMemoryCacheConfig,
@@ -108,7 +119,7 @@ const createV1ApiClient = (
           absoluteUrlToRelative
         : ({} as TypePolicies),
         mergeDeepRight(
-          omitDisabledBlocks,
+          mergeDeepRight(omitDisabledBlocks, omitSensitiveData),
           cacheConfig?.typePolicies ?? ({} as TypePolicies)
         )
       ) as TypePolicies,
@@ -120,7 +131,7 @@ const createV1ApiClient = (
   });
 };
 
-export const getV1ApiClient = (
+export const getApiClient = (
   apiUrl: string,
   links: ApolloLink[],
   cacheConfig?: InMemoryCacheConfig,
@@ -128,7 +139,7 @@ export const getV1ApiClient = (
 ) => {
   const client =
     !CACHED_CLIENT || typeof window === 'undefined' ?
-      (CACHED_CLIENT = createV1ApiClient(apiUrl, links, cacheConfig, cache))
+      (CACHED_CLIENT = createApiClient(apiUrl, links, cacheConfig, cache))
     : CACHED_CLIENT;
 
   if (cache) {
@@ -141,38 +152,38 @@ export const getV1ApiClient = (
   return client;
 };
 
-export const useV1ApiClient = (
+export const useApiClient = (
   apiUrl: string,
   links: ApolloLink[] = [],
   cacheConfig?: InMemoryCacheConfig,
   cache?: NormalizedCacheObject
 ) => {
   const client = useMemo(
-    () => getV1ApiClient(apiUrl, links, cacheConfig, cache),
+    () => getApiClient(apiUrl, links, cacheConfig, cache),
     [apiUrl, links, cache, cacheConfig]
   );
 
   return client;
 };
 
-export const createWithV1ApiClient =
-  (
-    apiUrl: string,
-    links: ApolloLink[] = [],
-    cacheConfig?: InMemoryCacheConfig
-  ) =>
+export const createWithApiClient =
+  (links: ApolloLink[] = [], cacheConfig?: InMemoryCacheConfig) =>
   <
-    // eslint-disable-next-line @typescript-eslint/ban-types
     P extends object,
     NextPage extends {
+      publicEnv: PublicEnv;
       pageProps?: { [V1_CLIENT_STATE_PROP_NAME]?: NormalizedCacheObject };
     },
   >(
     ControlledComponent: ComponentType<P>
   ) =>
-    memo<P | NextPage>(props => {
-      const client = useV1ApiClient(
-        apiUrl,
+    memo<P & NextPage>(props => {
+      const publicEnv =
+        props.publicEnv ??
+        (typeof window !== 'undefined' ? window.PUBLIC_ENV : undefined);
+
+      const client = useApiClient(
+        publicEnv?.apiUrl ?? '',
         links,
         cacheConfig,
         (props as NextPage).pageProps?.[V1_CLIENT_STATE_PROP_NAME]
@@ -180,12 +191,12 @@ export const createWithV1ApiClient =
 
       return (
         <ApolloProvider client={client}>
-          <ControlledComponent {...(props as P)} />
+          {createElement(ControlledComponent, { ...props, publicEnv } as P)}
         </ApolloProvider>
       );
     });
 
-export function addClientCacheToV1Props<P extends object>(
+export function addClientCacheToProps<P extends object>(
   client: ApolloClient<NormalizedCacheObject>,
   pageProps: P
 ) {

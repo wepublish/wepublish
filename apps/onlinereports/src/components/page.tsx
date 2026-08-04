@@ -1,4 +1,4 @@
-import { BlockContent, Page as PageType } from '@wepublish/website/api';
+import { Page as PageType } from '@wepublish/website/api';
 import {
   BuilderPageProps,
   useWebsiteBuilder,
@@ -25,7 +25,7 @@ export function OnlineReportsPage({
       {data?.page && (
         <Blocks
           key={data.page.id}
-          blocks={(data.page.latest.blocks as BlockContent[]) ?? []}
+          blocks={data.page.latest.blocks ?? []}
           type="Page"
         />
       )}

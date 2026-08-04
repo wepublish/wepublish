@@ -8,12 +8,14 @@ import {
   PrismaClient,
   SettingPaymentProvider,
   Subscription,
+  SubscriptionDeactivationReason,
 } from '@prisma/client';
 import bodyParser from 'body-parser';
 import { NextHandleFunction } from 'connect';
 import express from 'express';
 import DataLoader from 'dataloader';
 import { timingSafeEqual } from 'crypto';
+import { sub } from 'date-fns';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 import { SecretCrypto } from '@wepublish/settings/api';
 
@@ -109,7 +111,7 @@ export interface PaymentProvider {
 
   createIntent(props: CreatePaymentIntentProps): Promise<Intent>;
 
-  checkIntentStatus(props: CheckIntentProps): Promise<IntentState>;
+  checkIntentStatus(props: CheckIntentProps): Promise<IntentState | null>;
 
   updatePaymentWithIntentState(
     props: UpdatePaymentWithIntentStateProps
@@ -159,7 +161,9 @@ export abstract class BasePaymentProvider implements PaymentProvider {
 
   abstract createIntent(props: CreatePaymentIntentProps): Promise<Intent>;
 
-  abstract checkIntentStatus(props: CheckIntentProps): Promise<IntentState>;
+  abstract checkIntentStatus(
+    props: CheckIntentProps
+  ): Promise<IntentState | null>;
 
   async updateRemoteSubscriptionAmount(
     props: UpdateRemoteSubscriptionAmountProps
@@ -276,6 +280,7 @@ export abstract class BasePaymentProvider implements PaymentProvider {
       },
       include: {
         periods: true,
+        deactivation: true,
       },
     });
 
@@ -299,6 +304,7 @@ export abstract class BasePaymentProvider implements PaymentProvider {
         where: { id: invoice.id },
         data: {
           paidAt: new Date(),
+          canceledAt: null,
         },
       });
 
@@ -306,6 +312,45 @@ export abstract class BasePaymentProvider implements PaymentProvider {
         where: { id: invoice.subscriptionID },
         data: {
           paidUntil: invoicePeriod.endsAt,
+        },
+      });
+
+      if (
+        subscription.deactivation?.reason ===
+        SubscriptionDeactivationReason.invoiceNotPaid
+      ) {
+        await this.prisma.subscriptionDeactivation.deleteMany({
+          where: { subscriptionID: invoice.subscriptionID },
+        });
+      }
+    }
+
+    if (intentState.state === PaymentState.chargeback) {
+      await this.prisma.invoice.update({
+        where: { id: invoice.id },
+        data: {
+          paidAt: null,
+          canceledAt: new Date(),
+        },
+      });
+
+      await this.prisma.subscription.update({
+        where: { id: invoice.subscriptionID },
+        data: {
+          paidUntil: sub(invoicePeriod.startsAt, { days: 1 }),
+        },
+      });
+
+      await this.prisma.subscriptionDeactivation.upsert({
+        where: { subscriptionID: invoice.subscriptionID },
+        create: {
+          subscriptionID: invoice.subscriptionID,
+          reason: SubscriptionDeactivationReason.chargeback,
+          date: new Date(),
+        },
+        update: {
+          reason: SubscriptionDeactivationReason.chargeback,
+          date: new Date(),
         },
       });
     }

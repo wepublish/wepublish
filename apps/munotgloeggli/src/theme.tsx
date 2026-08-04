@@ -157,7 +157,9 @@ const theme = createTheme(WePTheme, {
     bannerCta: {
       fontFamily: [ttNorms.style.fontFamily, 'sans-serif'].join(','),
     },
-    fontFamily: [ttNorms.style.fontFamily, 'sans-serif'].join(','),
+    allVariants: {
+      fontFamily: [ttNorms.style.fontFamily, 'sans-serif'].join(','),
+    },
   },
 } as PartialDeep<Theme> | ThemeOptions);
 

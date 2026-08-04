@@ -3,12 +3,11 @@ import { SliderWrapper } from '@wepublish/block-content/website';
 import { ContentWidthProvider } from '@wepublish/content/website';
 import { PageContainer } from '@wepublish/page/website';
 import { getApiUrl } from '@wepublish/utils/website';
-import { LinkContext } from '@wepublish/website/builder';
 import {
-  addClientCacheToV1Props,
+  addClientCacheToProps,
   CommentListDocument,
   CommentSort,
-  getV1ApiClient,
+  getApiClient,
   HotAndTrendingDocument,
   NavigationListDocument,
   PageDocument,
@@ -18,8 +17,8 @@ import {
   SortOrder,
   TeaserListBlock,
 } from '@wepublish/website/api';
+import { LinkContext } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';
-import getConfig from 'next/config';
 
 import { BestOfWePublishWrapper } from '../src/components/best-of-wepublish/best-of-wepublish';
 import { isFrageDesTages } from '../src/components/frage-des-tages/is-frage-des-tages';
@@ -70,13 +69,11 @@ export default function Index() {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const { publicRuntimeConfig } = getConfig();
-
-  if (!publicRuntimeConfig.env.API_URL) {
+  if (!getApiUrl()) {
     return { props: {}, revalidate: 1 };
   }
 
-  const client = getV1ApiClient(getApiUrl(), []);
+  const client = getApiClient(getApiUrl(), []);
 
   const [page] = await Promise.all([
     client.query<PageQuery>({
@@ -132,7 +129,7 @@ export const getStaticProps: GetStaticProps = async () => {
     }
   }
 
-  const props = addClientCacheToV1Props(client, {});
+  const props = addClientCacheToProps(client, {});
 
   return {
     props,

@@ -22,7 +22,12 @@ import { URLAdapter } from '@wepublish/nest-modules';
 const mockEvent = {
   id: '1234',
   createdAt: new Date('2023-01-01'),
-  description: [],
+  description: {
+    attrs: undefined,
+    type: 'doc',
+    content: [],
+  },
+  slateDescription: [],
   lead: '',
   startsAt: new Date('2023-01-01'),
   endsAt: new Date('2023-01-01'),
@@ -320,7 +325,11 @@ describe('EventResolver', () => {
       .send({
         query: createEventQuery,
         variables: {
-          description: [],
+          description: {
+            attrs: undefined,
+            type: 'doc',
+            content: [],
+          },
           startsAt: new Date('2023-01-01'),
           endsAt: new Date('2023-01-01'),
           imageId: '123',

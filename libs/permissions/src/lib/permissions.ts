@@ -532,6 +532,30 @@ export const CanCancelSubscription: Permission = {
   deprecated: false,
 };
 
+export const CanGetVoucher: Permission = {
+  id: 'CAN_GET_VOUCHER',
+  description: 'Allows to get a voucher',
+  deprecated: false,
+};
+
+export const CanCreateVoucher: Permission = {
+  id: 'CAN_CREATE_VOUCHER',
+  description: 'Allows to create a voucher',
+  deprecated: false,
+};
+
+export const CanUpdateVoucher: Permission = {
+  id: 'CAN_UPDATE_VOUCHER',
+  description: 'Allows to update a voucher',
+  deprecated: false,
+};
+
+export const CanDeleteVoucher: Permission = {
+  id: 'CAN_DELETE_VOUCHER',
+  description: 'Allows to delete a voucher',
+  deprecated: false,
+};
+
 export const CanLoginAsOtherUser: Permission = {
   id: 'CAN_LOGIN_AS_OTHER_USER',
   description: 'Allows to login as other user',
@@ -1078,6 +1102,21 @@ export const CanRunMailchimpSync: Permission = {
   deprecated: false,
 };
 
+/**
+ * Website Settings
+ */
+export const CanGetWebsiteSettings: Permission = {
+  id: 'CAN_GET_WEBSITE_SETTINGS',
+  description: 'Allows to get the full website settings',
+  deprecated: false,
+};
+
+export const CanUpdateWebsiteSettings: Permission = {
+  id: 'CAN_UPDATE_WEBSITE_SETTINGS',
+  description: 'Allows to update the website settings',
+  deprecated: false,
+};
+
 export const AllPermissions: Permission[] = [
   CanGetCrowdfunding,
   CanGetCrowdfundings,
@@ -1164,6 +1203,10 @@ export const AllPermissions: Permission[] = [
   CanGetSubscription,
   CanGetSubscriptions,
   CanDeleteSubscription,
+  CanGetVoucher,
+  CanCreateVoucher,
+  CanUpdateVoucher,
+  CanDeleteVoucher,
   CanLoginAsOtherUser,
   CanGetSettings,
   CanUpdateSettings,
@@ -1242,6 +1285,8 @@ export const AllPermissions: Permission[] = [
   CanUpdateMailchimpSyncSettings,
   CanDeleteMailchimpSyncSettings,
   CanRunMailchimpSync,
+  CanGetWebsiteSettings,
+  CanUpdateWebsiteSettings,
 ];
 
 export const EditorPermissions: Permission[] = [
@@ -1307,6 +1352,8 @@ export const EditorPermissions: Permission[] = [
   CanGetPeriodicJobLog,
   CanCreateApprovedComment,
   CanPreview,
+  CanGetWebsiteSettings,
+  CanUpdateWebsiteSettings,
 ];
 
 export const PeerPermissions: Permission[] = [

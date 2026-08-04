@@ -1,8 +1,8 @@
 import { PageContainer } from '@wepublish/page/website';
 import { getApiUrl } from '@wepublish/utils/website';
 import {
-  addClientCacheToV1Props,
-  getV1ApiClient,
+  addClientCacheToProps,
+  getApiClient,
   NavigationListDocument,
   PageDocument,
   PageQuery,
@@ -12,6 +12,8 @@ import { GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
 import { ComponentProps } from 'react';
 
+import { localizeSlug } from '../src/localize-slug';
+
 export default function PageBySlugOrId() {
   const {
     locale,
@@ -19,7 +21,7 @@ export default function PageBySlugOrId() {
   } = useRouter();
 
   const containerProps = {
-    slug: `${slug}-${locale}`,
+    slug: localizeSlug(slug, locale),
     id,
   } as ComponentProps<typeof PageContainer>;
 
@@ -32,12 +34,12 @@ export const getStaticPaths = () => ({
 });
 export const getStaticProps: GetStaticProps = async ({ params, locale }) => {
   const { slug, id } = params || {};
-  const client = getV1ApiClient(getApiUrl(), []);
+  const client = getApiClient(getApiUrl(), []);
   const [page] = await Promise.all([
     client.query<PageQuery>({
       query: PageDocument,
       variables: {
-        slug: `${slug}-${locale}`,
+        slug: localizeSlug(slug, locale),
         id,
       },
     }),
@@ -59,7 +61,7 @@ export const getStaticProps: GetStaticProps = async ({ params, locale }) => {
     };
   }
 
-  const props = addClientCacheToV1Props(client, {});
+  const props = addClientCacheToProps(client, {});
 
   return {
     props,

@@ -4,6 +4,7 @@ import { Paywall, useShowPaywall } from '@wepublish/paywall/website';
 import { createWithTheme } from '@wepublish/ui';
 import {
   FullPaywallFragment,
+  SlimPaywallFragment,
   useSubscriptionsQuery,
 } from '@wepublish/website/api';
 import {
@@ -107,5 +108,5 @@ export const DuplicatedPaywall = ({
 };
 
 export const CurrentPaywallContext = createContext<
-  FullPaywallFragment | null | undefined
+  FullPaywallFragment | SlimPaywallFragment | null | undefined
 >(undefined);

@@ -2,7 +2,7 @@ import { ImageList, ImageListItem, Typography } from '@mui/material';
 import styled from '@emotion/styled';
 import {
   BlockContent,
-  ImageGalleryBlock as ImageGalleryBlockType,
+  FullImageGalleryBlockFragment,
 } from '@wepublish/website/api';
 import {
   BuilderImageGalleryBlockProps,
@@ -13,7 +13,8 @@ import { Trans } from 'react-i18next';
 
 export const isImageGalleryBlock = (
   block: Pick<BlockContent, '__typename'>
-): block is ImageGalleryBlockType => block.__typename === 'ImageGalleryBlock';
+): block is FullImageGalleryBlockFragment =>
+  block.__typename === 'ImageGalleryBlock';
 
 export const ImageGalleryBlockWrapper = styled('figure')`
   margin: 0;

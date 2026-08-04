@@ -4,13 +4,12 @@ import { ssrAuthLink } from '../../../auth-link';
 import { getSessionTokenProps } from '../../../get-session-token-props';
 import { handleJwtLogin } from '../../../handle-jwt-login';
 import { NextPage, NextPageContext } from 'next';
-import getConfig from 'next/config';
 import { ComponentProps } from 'react';
 import { SubscriptionListContainer } from '@wepublish/membership/website';
 import { ContentWrapper } from '@wepublish/content/website';
 import {
-  addClientCacheToV1Props,
-  getV1ApiClient,
+  addClientCacheToProps,
+  getApiClient,
   MeDocument,
   NavigationListDocument,
   SubscriptionsDocument,
@@ -55,14 +54,13 @@ GuardedDeactivatedSubscriptions.getInitialProps = async (
     return {};
   }
 
-  const { publicRuntimeConfig } = getConfig();
-  const client = getV1ApiClient(getApiUrl(), [
+  const client = getApiClient(getApiUrl(), [
     ssrAuthLink(
       async () => (await getSessionTokenProps(ctx)).sessionToken?.token
     ),
   ]);
 
-  await handleJwtLogin(ctx, client, !!publicRuntimeConfig.env.HTTP_ONLY_COOKIE);
+  await handleJwtLogin(ctx, client, !!process.env.HTTP_ONLY_COOKIE);
 
   const sessionProps = await getSessionTokenProps(ctx);
 
@@ -80,7 +78,7 @@ GuardedDeactivatedSubscriptions.getInitialProps = async (
     ]);
   }
 
-  const props = addClientCacheToV1Props(client, sessionProps);
+  const props = addClientCacheToProps(client, sessionProps);
 
   return props;
 };

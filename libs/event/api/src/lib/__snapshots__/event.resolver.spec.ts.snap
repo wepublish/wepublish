@@ -1,10 +1,13 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`EventResolver create 1`] = `
 [
   [
     {
-      "description": [],
+      "description": {
+        "content": [],
+        "type": "doc",
+      },
       "endsAt": 2023-01-01T00:00:00.000Z,
       "imageId": "123",
       "location": "Foobar",

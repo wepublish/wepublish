@@ -1,0 +1,11 @@
+{
+  "teaser": {
+    "author": {
+      "text": "{authors}",
+      "seperator": ", "
+    },
+    "meta": {
+      "seperator": ", "
+    }
+  }
+}

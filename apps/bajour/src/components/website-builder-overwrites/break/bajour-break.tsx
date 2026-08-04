@@ -4,10 +4,7 @@ import {
   hasBlockStyle,
   isBreakBlock,
 } from '@wepublish/block-content/website';
-import {
-  BlockContent,
-  BreakBlock as BreakBlockType,
-} from '@wepublish/website/api';
+import { BlockContent, FullBreakBlockFragment } from '@wepublish/website/api';
 import { allPass } from 'ramda';
 
 export const BajourBreakBlock = styled(BreakBlock)`
@@ -33,7 +30,7 @@ export const BajourBreakBlock = styled(BreakBlock)`
 
 export const isLightBreak = (
   block: Pick<BlockContent, '__typename'>
-): block is BreakBlockType =>
+): block is FullBreakBlockFragment =>
   allPass([hasBlockStyle('Light'), isBreakBlock])(block);
 
 export const BajourLightBreakBlock = styled(BajourBreakBlock)`
@@ -43,7 +40,7 @@ export const BajourLightBreakBlock = styled(BajourBreakBlock)`
 
 export const isSponsoredBreak = (
   block: Pick<BlockContent, '__typename'>
-): block is BreakBlockType =>
+): block is FullBreakBlockFragment =>
   allPass([hasBlockStyle('Sponsored'), isBreakBlock])(block);
 
 export const BajourSponsoredBreakBlock = styled(BajourBreakBlock)`

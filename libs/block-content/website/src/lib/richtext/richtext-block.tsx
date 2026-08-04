@@ -5,12 +5,12 @@ import {
 } from '@wepublish/website/builder';
 import {
   BlockContent,
-  RichTextBlock as RichTextBlockType,
+  FullRichTextBlockFragment,
 } from '@wepublish/website/api';
 
 export const isRichTextBlock = (
   block: Pick<BlockContent, '__typename'>
-): block is RichTextBlockType => block.__typename === 'RichTextBlock';
+): block is FullRichTextBlockFragment => block.__typename === 'RichTextBlock';
 
 export const RichTextBlockWrapper = styled('div')`
   position: relative;
@@ -28,7 +28,7 @@ export const RichTextBlock = ({
 
   return (
     <RichTextBlockWrapper className={className}>
-      <RenderRichtext elements={richText ?? []} />
+      <RenderRichtext document={richText} />
     </RichTextBlockWrapper>
   );
 };

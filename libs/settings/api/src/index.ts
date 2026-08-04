@@ -32,3 +32,8 @@ export * from './lib/integrations/sync-provider-settings.model';
 export * from './lib/integrations/sync-provider-settings.service';
 export * from './lib/integrations/sync-provider-settings.resolver';
 export * from './lib/integrations/sync-provider-settings-dataloader.service';
+
+export * from './lib/website-settings/website-settings.module';
+export * from './lib/website-settings/website-settings.model';
+export * from './lib/website-settings/website-settings.service';
+export * from './lib/website-settings/website-settings.resolver';

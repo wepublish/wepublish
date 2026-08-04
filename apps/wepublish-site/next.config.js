@@ -13,19 +13,17 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
  **/
 const nextConfig = {
   ...wepNextConfig,
-  serverRuntimeConfig: {
-    env: {
-      API_URL_INTERNAL: process.env.API_URL_INTERNAL || '',
-    },
-  },
-  publicRuntimeConfig: {
-    env: {
-      API_URL: process.env.API_URL || '',
-    },
-  },
   i18n: {
-    defaultLocale: 'de',
-    locales: ['de', 'fr'],
+    defaultLocale: 'default',
+    locales: ['default', 'de', 'fr'],
+    localeDetection: false,
+  },
+  async redirects() {
+    return [
+      ...((await wepNextConfig.redirects?.()) ?? []),
+      { source: '/home', destination: '/', permanent: true },
+      { source: '/das-projekt', destination: '/', permanent: true },
+    ];
   },
 };
 

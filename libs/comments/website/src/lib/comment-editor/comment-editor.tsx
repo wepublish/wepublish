@@ -2,13 +2,14 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { css, IconButton, Modal, Theme, useTheme } from '@mui/material';
 import styled from '@emotion/styled';
 import {
+  BuilderChallengeRef,
   Challenge,
   IntendedRouteExpiryInSeconds,
   IntendedRouteStorageKey,
   LoginFormContainer,
   useUser,
 } from '@wepublish/authentication/website';
-import { BlockFormat, toPlaintext } from '@wepublish/richtext';
+import { toPlaintext } from '@wepublish/richtext';
 import {
   BuilderCommentEditorProps,
   Link,
@@ -16,7 +17,7 @@ import {
 } from '@wepublish/website/builder';
 import { setCookie } from 'cookies-next';
 import { add } from 'date-fns';
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { MdClose, MdLogin, MdSend } from 'react-icons/md';
 import { z } from 'zod';
@@ -233,6 +234,7 @@ export const CommentEditor = ({
   const { hasUser } = useUser();
   const [modalOpen, setModalOpen] = useState(!hasUser);
   const [showInitialModal, setShowInitialModal] = useState(anonymousCanComment);
+  const challengeRef = useRef<BuilderChallengeRef>(null);
 
   const handleClose = () => {
     setModalOpen(false);
@@ -287,7 +289,7 @@ export const CommentEditor = ({
   const { handleSubmit, control, reset } = useForm<FormInput>({
     resolver: zodResolver(schema),
     defaultValues: {
-      comment: toPlaintext(text) ?? '',
+      comment: toPlaintext(text?.content) ?? '',
       title: title ?? '',
       guestUsername: '',
       challenge: {
@@ -299,18 +301,26 @@ export const CommentEditor = ({
   });
 
   const submit = handleSubmit(({ comment, ...data }) => {
+    challengeRef.current?.reset();
     onSubmit({
       ...data,
-      text: [
-        {
-          type: BlockFormat.Paragraph,
-          children: [
-            {
-              text: comment,
-            },
-          ],
-        },
-      ],
+      text: {
+        attrs: undefined,
+        type: 'doc',
+        content: [
+          {
+            type: 'paragraph',
+            attrs: {},
+            content: [
+              {
+                type: 'text',
+                text: comment,
+                attrs: undefined,
+              },
+            ],
+          },
+        ],
+      },
     });
   });
 
@@ -396,6 +406,7 @@ export const CommentEditor = ({
             render={({ field, fieldState: { error } }) => (
               <Challenge
                 {...field}
+                challengeRef={challengeRef}
                 onChange={field.onChange}
                 challenge={challenge.data!.challenge}
                 label={'Captcha'}

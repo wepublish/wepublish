@@ -16,6 +16,7 @@ import {
   BlockContentInput,
   HasBlockContent,
 } from '@wepublish/block-content/api';
+import { HasOptionalUserLc, User } from '@wepublish/user/api';
 
 export enum PageSort {
   CreatedAt = 'CreatedAt',
@@ -32,10 +33,15 @@ registerEnumType(PageSort, {
 });
 
 @ObjectType({
-  implements: () => [HasBlockContent],
+  implements: () => [HasBlockContent, HasOptionalUserLc],
 })
-export class PageRevision implements HasBlockContent {
+export class PageRevision implements HasBlockContent, HasOptionalUserLc {
   blocks!: Array<typeof BlockContent>;
+
+  // The user who created this revision. `userId` is populated from the DB row;
+  // `user` is resolved by the global HasOptionalUserLc resolver.
+  userId?: string;
+  user?: User;
 
   @Field()
   id!: string;
@@ -45,6 +51,9 @@ export class PageRevision implements HasBlockContent {
 
   @Field({ nullable: true })
   publishedAt?: Date;
+
+  @Field({ nullable: true })
+  archivedAt?: Date;
 
   @Field({ nullable: true })
   title?: string;
@@ -119,6 +128,39 @@ export class Page {
 @ObjectType()
 export class PaginatedPages extends PaginatedType(Page) {}
 
+@ObjectType()
+export class PaginatedPageRevisions extends PaginatedType(PageRevision) {}
+
+@InputType()
+export class PageRevisionFilter {
+  @Field({ nullable: true })
+  userId?: string;
+}
+
+@ArgsType()
+export class PageRevisionListArgs {
+  @Field()
+  pageId!: string;
+
+  @Field(() => PageRevisionFilter, { nullable: true })
+  filter?: PageRevisionFilter;
+
+  @Field(() => SortOrder, {
+    nullable: true,
+    defaultValue: SortOrder.Descending,
+  })
+  order?: SortOrder;
+
+  @Field(() => Int, { nullable: true, defaultValue: 10 })
+  take?: number;
+
+  @Field(() => Int, { nullable: true, defaultValue: 0 })
+  skip?: number;
+
+  @Field({ nullable: true })
+  cursorId?: string;
+}
+
 @ArgsType()
 export class CreatePageInput extends OmitType(
   PageRevision,
@@ -126,6 +168,9 @@ export class CreatePageInput extends OmitType(
     'id',
     'createdAt',
     'publishedAt',
+    'archivedAt',
+    'userId',
+    'user',
     'image',
     'socialMediaImage',
     'blocks',

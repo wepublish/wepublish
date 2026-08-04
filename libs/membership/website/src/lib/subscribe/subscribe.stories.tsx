@@ -1,7 +1,7 @@
 import { ApolloError } from '@apollo/client';
-import { action } from '@storybook/addon-actions';
-import { Meta, StoryObj } from '@storybook/react';
-import { userEvent, within } from '@storybook/test';
+import { action } from 'storybook/actions';
+import { Meta, StoryObj } from '@storybook/nextjs-vite';
+import { userEvent, within } from 'storybook/test';
 import {
   mockAvailablePaymentMethod,
   mockChallenge,
@@ -346,6 +346,21 @@ export const LoggedOut: StoryObj<typeof Subscribe> = {
     userInvoices: {
       data: undefined,
       loading: false,
+    },
+    subscribeInfo: {
+      data: {
+        createSubscriptionInfo: {},
+      },
+      loading: false,
+    },
+    fetchSubscribeInfo: async (...data) => {
+      action('fetchSubscribeInfo')(...data);
+
+      return {
+        data: {
+          createSubscriptionInfo: {},
+        },
+      } as any;
     },
     onSubscribeWithRegister: async (...data) =>
       action('onSubscribeWithRegister')(...data),

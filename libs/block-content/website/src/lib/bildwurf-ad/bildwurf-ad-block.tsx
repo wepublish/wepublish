@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from 'react';
 import {
-  BildwurfAdBlock as BildwurfAdBlockType,
+  FullBildwurfAdBlockFragment,
   BlockContent,
 } from '@wepublish/website/api';
 
@@ -12,7 +12,8 @@ import {
 
 export const isBildwurfAdBlock = (
   block: Pick<BlockContent, '__typename'>
-): block is BildwurfAdBlockType => block.__typename === 'BildwurfAdBlock';
+): block is FullBildwurfAdBlockFragment =>
+  block.__typename === 'BildwurfAdBlock';
 
 export const BildwurfBlockWrapper = styled('div')`
   #bildwurf-ad-in-content {

@@ -195,7 +195,7 @@ export class SubscriptionService {
   }
 
   @PrimeDataLoader(SubscriptionDataloader)
-  async importSubscription({ ...input }: ImportPublicSubscriptionInput) {
+  async importSubscription(input: ImportPublicSubscriptionInput) {
     const { subscription } = await this.memberContext.importSubscription(input);
 
     return subscription;

@@ -1,8 +1,5 @@
 import styled from '@emotion/styled';
-import {
-  BlockContent,
-  TitleBlock as TitleBlockType,
-} from '@wepublish/website/api';
+import { BlockContent, FullTitleBlockFragment } from '@wepublish/website/api';
 import {
   BuilderTitleBlockProps,
   useWebsiteBuilder,
@@ -12,7 +9,7 @@ import { ComponentType } from 'react';
 
 export const isTitleBlock = (
   block: Pick<BlockContent, '__typename'>
-): block is TitleBlockType => block.__typename === 'TitleBlock';
+): block is FullTitleBlockFragment => block.__typename === 'TitleBlock';
 
 export const TitleBlockWrapper = styled('div')`
   display: grid;

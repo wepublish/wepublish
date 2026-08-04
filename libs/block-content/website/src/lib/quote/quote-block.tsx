@@ -4,15 +4,12 @@ import {
   BuilderQuoteBlockProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import {
-  BlockContent,
-  QuoteBlock as QuoteBlockType,
-} from '@wepublish/website/api';
+import { BlockContent, FullQuoteBlockFragment } from '@wepublish/website/api';
 import { Image } from '@wepublish/image/website';
 
 export const isQuoteBlock = (
   block: Pick<BlockContent, '__typename'>
-): block is QuoteBlockType => block.__typename === 'QuoteBlock';
+): block is FullQuoteBlockFragment => block.__typename === 'QuoteBlock';
 
 const imageStyles = css`
   max-width: 80px;

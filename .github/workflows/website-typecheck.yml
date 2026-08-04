@@ -1,0 +1,20 @@
+name: Website Typecheck
+
+on:
+  push:
+    branches:
+      - master
+      - development
+  pull_request:
+
+jobs:
+  Typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+      - run: npm ci
+      - run: bash ./tools/typecheck-websites.sh

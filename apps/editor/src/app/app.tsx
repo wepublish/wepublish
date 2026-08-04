@@ -1,4 +1,4 @@
-import 'rsuite/styles/index.less';
+import 'rsuite/dist/rsuite.css';
 
 import { gql, useMutation } from '@apollo/client';
 import { css, Global } from '@emotion/react';
@@ -44,11 +44,11 @@ import { useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { CustomProvider } from 'rsuite';
+import de from 'rsuite/locales/de_DE';
 import enGB from 'rsuite/locales/en_GB';
+import fr from 'rsuite/locales/fr_FR';
 
 import { Base } from './base';
-import de from './locales/rsuiteDe';
-import fr from './locales/rsuiteFr';
 import { Login } from './login';
 import { LoginJwt } from './loginJwt';
 import { ResetPassword } from './resetPassword';
@@ -93,6 +93,11 @@ import { TokenList } from './routes/tokens/tokenList';
 import { UserRoleList } from './routes/userRoles/userRoleList';
 import { UserEditView } from './routes/users/userEditView';
 import { UserList } from './routes/users/userList';
+import { VoucherCreateView } from './routes/voucher/voucherCreateView';
+import { VoucherEditView } from './routes/voucher/voucherEditView';
+import { VoucherList } from './routes/voucher/voucherList';
+import { WebsiteSettingsItem } from './routes/website-settings/website-settings-item';
+import { WebsiteSettingsList } from './routes/website-settings/website-settings-list';
 import { SetNewPassword } from './setNewPassword';
 
 const LogoutMutation = gql`
@@ -222,15 +227,6 @@ export function App() {
             word-wrap: break-word;
           }
 
-          .richTextFrame {
-            padding: 0px 20px 20px;
-            border: 1px solid #e5e5ea;
-            border-radius: 7px;
-            &:hover {
-              border-color: #1675e0;
-            }
-          }
-
           .authorLinks div {
             overflow: visible;
           }
@@ -254,6 +250,24 @@ export function App() {
               top: 0;
               background-color: #1675e0;
             }
+          }
+
+          // Styles missing from v6 of rsuite
+          :root {
+            --rs-form-control-width: 100%;
+          }
+
+          .rs-grid-container-fluid,
+          .rs-form-group {
+            width: 100%;
+          }
+
+          .rs-drawer-header {
+            width: 100%;
+          }
+
+          .rs-drawer-dialog {
+            overflow: scroll;
           }
         `}
       />
@@ -887,6 +901,31 @@ export function App() {
                 </Base>
               }
             />
+            {/* Voucher routes */}
+            <Route
+              path="vouchers"
+              element={
+                <Base>
+                  <VoucherList />
+                </Base>
+              }
+            />
+            <Route
+              path="vouchers/edit/:id"
+              element={
+                <Base>
+                  <VoucherEditView />
+                </Base>
+              }
+            />
+            <Route
+              path="vouchers/create"
+              element={
+                <Base>
+                  <VoucherCreateView />
+                </Base>
+              }
+            />
             {/* Consents Routes */}
             <Route
               path="consents"
@@ -1066,6 +1105,22 @@ export function App() {
               element={
                 <Base>
                   <SettingList />
+                </Base>
+              }
+            />
+            <Route
+              path="settings/website"
+              element={
+                <Base>
+                  <WebsiteSettingsList />
+                </Base>
+              }
+            />
+            <Route
+              path="settings/website/:category"
+              element={
+                <Base>
+                  <WebsiteSettingsItem />
                 </Base>
               }
             />

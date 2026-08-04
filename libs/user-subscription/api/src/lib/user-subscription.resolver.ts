@@ -1,6 +1,7 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import {
   CreateSubscriptionArgs,
+  CreateSubscriptionInfo,
   CreateSubscriptionWithConfirmationArgs,
   ExtendSubscriptionArgs,
   UpdateUserSubscriptionInput,
@@ -16,6 +17,7 @@ import { PublicSubscription } from '@wepublish/membership/api';
 import { Payment } from '@wepublish/payment/api';
 import { UserDataloaderService } from '@wepublish/user/api';
 import { BadRequestException } from '@nestjs/common';
+import { Voucher } from '@prisma/client';
 
 @Resolver()
 export class UserSubscriptionResolver {
@@ -30,6 +32,36 @@ export class UserSubscriptionResolver {
   })
   async userSubscriptions(@CurrentUser() session: UserSession) {
     return this.userSubscriptionService.getUserSubscriptions(session.user.id);
+  }
+
+  @Public()
+  @Query(() => CreateSubscriptionInfo, {
+    description: `Gives the user some information about the subscription they are about to create`,
+  })
+  async createSubscriptionInfo(
+    @Args('memberPlanId') memberPlanId: string,
+    @Args('voucher', { nullable: true }) voucher: string
+  ): Promise<CreateSubscriptionInfo> {
+    let validVoucher: Voucher | null = null;
+
+    try {
+      validVoucher = await this.userSubscriptionService.getValidVoucher(
+        voucher,
+        memberPlanId
+      );
+    } catch (e) {
+      //
+    }
+
+    return {
+      ...(voucher ?
+        {
+          voucherValid: !!validVoucher,
+          discountPercent:
+            validVoucher ? validVoucher.discountPercent / 100 : 0,
+        }
+      : {}),
+    };
   }
 
   @Authenticated()

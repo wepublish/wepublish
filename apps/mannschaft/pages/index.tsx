@@ -1,16 +1,15 @@
 import { PageContainer } from '@wepublish/page/website';
 import { getApiUrl } from '@wepublish/utils/website';
-import { LinkContext } from '@wepublish/website/builder';
 import {
-  addClientCacheToV1Props,
-  getV1ApiClient,
+  addClientCacheToProps,
+  getApiClient,
   HotAndTrendingDocument,
   NavigationListDocument,
   PageDocument,
   PeerProfileDocument,
 } from '@wepublish/website/api';
+import { LinkContext } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';
-import getConfig from 'next/config';
 
 export default function Index() {
   return (
@@ -21,16 +20,14 @@ export default function Index() {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const { publicRuntimeConfig } = getConfig();
-
-  if (!publicRuntimeConfig.env.API_URL) {
+  if (!getApiUrl()) {
     return { props: {}, revalidate: 1 };
   }
 
   const now = new Date();
   now.setUTCHours(0, 0, 0, 0);
 
-  const client = getV1ApiClient(getApiUrl(), []);
+  const client = getApiClient(getApiUrl(), []);
   await Promise.all([
     client.query({
       query: PageDocument,
@@ -53,7 +50,7 @@ export const getStaticProps: GetStaticProps = async () => {
     }),
   ]);
 
-  const props = addClientCacheToV1Props(client, {});
+  const props = addClientCacheToProps(client, {});
 
   return {
     props,

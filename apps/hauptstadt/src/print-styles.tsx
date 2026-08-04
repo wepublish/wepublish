@@ -3,8 +3,6 @@ import { ArticleWrapper } from '@wepublish/article/website';
 import { BannerWrapper } from '@wepublish/banner/website';
 import {
   ImageBlockCaption,
-  ImageBlockWrapper,
-  QuoteBlockWrapper,
   RichTextBlockWrapper,
   TeaserGridBlockWrapper,
 } from '@wepublish/block-content/website';
@@ -38,13 +36,6 @@ export const printStyles = (
         ${ArticleWrapper} {
           padding-left: 15%;
           padding-right: 15%;
-        }
-
-        ${ImageBlockWrapper},
-        ${QuoteBlockWrapper},
-        ul,
-        ol {
-          page-break-inside: avoid;
         }
 
         ${ImageBlockCaption} {

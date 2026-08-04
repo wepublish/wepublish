@@ -1,0 +1,98 @@
+fragment FullVoucher on Voucher {
+  id
+  createdAt
+  modifiedAt
+
+  code
+  discountPercent
+
+  validFrom
+  validTo
+
+  memberPlanId
+  memberPlan {
+    id
+    name
+  }
+}
+
+query VoucherList(
+  $filter: VoucherFilter
+  $cursor: String
+  $take: Int
+  $skip: Int
+  $order: SortOrder
+  $sort: VoucherSort
+) {
+  vouchers(
+    filter: $filter
+    cursorId: $cursor
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
+    nodes {
+      ...FullVoucher
+    }
+
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+
+    totalCount
+  }
+}
+
+query Voucher($id: String!) {
+  voucher(id: $id) {
+    ...FullVoucher
+  }
+}
+
+mutation CreateVoucher(
+  $code: String!
+  $discountPercent: Int!
+  $memberPlanId: String!
+  $validFrom: DateTime!
+  $validTo: DateTime!
+) {
+  createVoucher(
+    code: $code
+    discountPercent: $discountPercent
+    memberPlanId: $memberPlanId
+    validFrom: $validFrom
+    validTo: $validTo
+  ) {
+    ...FullVoucher
+  }
+}
+
+mutation UpdateVoucher(
+  $id: String!
+  $code: String
+  $discountPercent: Int
+  $memberPlanId: String
+  $validFrom: DateTime
+  $validTo: DateTime
+) {
+  updateVoucher(
+    id: $id
+    code: $code
+    discountPercent: $discountPercent
+    memberPlanId: $memberPlanId
+    validFrom: $validFrom
+    validTo: $validTo
+  ) {
+    ...FullVoucher
+  }
+}
+
+mutation DeleteVoucher($id: String!) {
+  deleteVoucher(id: $id) {
+    ...FullVoucher
+  }
+}

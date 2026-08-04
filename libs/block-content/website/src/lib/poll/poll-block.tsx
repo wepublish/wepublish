@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import { useUser } from '@wepublish/authentication/website';
 import {
   BlockContent,
-  PollBlock as PollBlockType,
+  FullPollBlockFragment,
   PollVoteMutationResult,
   UserPollVoteQueryResult,
 } from '@wepublish/website/api';
@@ -17,7 +17,7 @@ import { H4 } from '@wepublish/ui';
 
 export const isPollBlock = (
   block: Pick<BlockContent, '__typename'>
-): block is PollBlockType => block.__typename === 'PollBlock';
+): block is FullPollBlockFragment => block.__typename === 'PollBlock';
 
 export const PollBlockWrapper = styled('article')`
   display: grid;

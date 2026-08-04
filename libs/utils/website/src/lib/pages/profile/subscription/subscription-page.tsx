@@ -1,7 +1,6 @@
 import styled from '@emotion/styled';
 
 import { NextPage, NextPageContext } from 'next';
-import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { withAuthGuard } from '../../../auth-guard';
 import { ssrAuthLink } from '../../../auth-link';
@@ -18,11 +17,11 @@ import {
   InvoiceListContainer,
 } from '@wepublish/membership/website';
 import {
-  getV1ApiClient,
+  getApiClient,
   MeDocument,
   SubscriptionsDocument,
   InvoicesDocument,
-  addClientCacheToV1Props,
+  addClientCacheToProps,
 } from '@wepublish/website/api';
 import { Link, useWebsiteBuilder } from '@wepublish/website/builder';
 import { fetch404 } from '../../../fetch-404';
@@ -103,14 +102,13 @@ GuardedSubscription.getInitialProps = async (ctx: NextPageContext) => {
     return {};
   }
 
-  const { publicRuntimeConfig } = getConfig();
-  const client = getV1ApiClient(getApiUrl(), [
+  const client = getApiClient(getApiUrl(), [
     ssrAuthLink(
       async () => (await getSessionTokenProps(ctx)).sessionToken?.token
     ),
   ]);
 
-  await handleJwtLogin(ctx, client, !!publicRuntimeConfig.env.HTTP_ONLY_COOKIE);
+  await handleJwtLogin(ctx, client, !!process.env.HTTP_ONLY_COOKIE);
 
   const sessionProps = await getSessionTokenProps(ctx);
 
@@ -139,7 +137,7 @@ GuardedSubscription.getInitialProps = async (ctx: NextPageContext) => {
     }
   }
 
-  const props = addClientCacheToV1Props(client, sessionProps);
+  const props = addClientCacheToProps(client, sessionProps);
 
   return props;
 };
