@@ -361,7 +361,7 @@ export const MAIL_PLACEHOLDER_CONTEXTS: MailPlaceholderContext[] = [
   {
     id: 'custom',
     titleKey: 'mailTemplates.placeholderContexts.custom',
-    title: 'Custom mail to a subscriber (subscription + invoices)',
+    title: 'Free mail to a subscriber (subscription + invoices)',
     note: 'Rechnungen kommen als Array: optional_invoices_0_* (neueste zuerst).',
     placeholders: [
       ...SUBSCRIPTION_SCALARS,
@@ -379,6 +379,13 @@ export const MAIL_PLACEHOLDER_CONTEXTS: MailPlaceholderContext[] = [
       },
     ],
   },
+  {
+    id: 'customNoSubscription',
+    titleKey: 'mailTemplates.placeholderContexts.customNoSubscription',
+    title: 'Free mail to a non-subscriber',
+    note: 'Nur Empfänger-Felder verfügbar — diese Mail geht an Personen ohne Abo.',
+    placeholders: [],
+  },
 ];
 
 /** Short, human-readable label per mail type (for lists and inline names). */
@@ -389,6 +396,7 @@ export const MAIL_TYPE_LABEL_KEYS: Record<string, string> = {
   renewal: 'mailTemplates.mailTypes.renewal',
   invoiceCreation: 'mailTemplates.mailTypes.invoiceCreation',
   custom: 'mailTemplates.mailTypes.custom',
+  customNoSubscription: 'mailTemplates.mailTypes.customNoSubscription',
 };
 
 /** Resolve a mail type to its short label, or `null` when no type is set. */

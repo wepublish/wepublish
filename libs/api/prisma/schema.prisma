@@ -1387,7 +1387,10 @@ enum MailTemplateContext {
   subscription
   renewal
   invoiceCreation
+  // Free mail to a subscriber: subscription and invoices are available.
   custom
+  // Free mail to someone without a subscription: recipient fields only.
+  customNoSubscription
 }
 
 model MailTemplate {

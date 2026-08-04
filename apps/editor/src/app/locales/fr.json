@@ -968,7 +968,10 @@
         "buttonSizeLarge": "Grand",
         "cancel": "Annuler",
         "apply": "Appliquer",
-        "insert": "Insérer"
+        "insert": "Insérer",
+        "appendJwt": "Ajouter le jeton de connexion",
+        "appendJwtHint": "Ajoute {{param}} — le destinataire est alors connecté au clic.",
+        "appendJwtDone": "Jeton de connexion déjà présent — le destinataire est connecté au clic."
       },
       "goToPlaceholders": "Espaces réservés disponibles",
       "htmlContent": "Contenu HTML",
@@ -982,7 +985,8 @@
         "subscription": "Abonnement",
         "renewal": "Renouvellement",
         "invoiceCreation": "Facture",
-        "custom": "Mail personnalisé"
+        "custom": "Mail libre (abonné·e)",
+        "customNoSubscription": "Mail libre (sans abonnement)"
       },
       "rawHtml": "HTML",
       "save": "Enregistrer",
@@ -1011,7 +1015,8 @@
         "subscription": "Abonnement (nouveau, confirmé, désactivation)",
         "renewal": "Renouvellement — automatique (succès / échec)",
         "invoiceCreation": "Facture créée",
-        "custom": "Mail personnalisé à un·e abonné·e (abonnement + factures)"
+        "custom": "Mail libre à un·e abonné·e",
+        "customNoSubscription": "Mail libre à un·e non-abonné·e"
       },
       "placeholderNames": {
         "user_fullName": "Nom complet",
@@ -1079,7 +1084,8 @@
         "subscription": "Données de base de l'abonnement. Les noms du plan et du moyen de paiement ne sont PAS disponibles ici — uniquement dans les mails de renouvellement.",
         "renewal": "Inclut en plus les noms du plan / moyen de paiement et les données de facture.",
         "invoiceCreation": "Attention : ici, les champs d'abonnement utilisent le préfixe optional_subscriptionToCreateInvoice_*.",
-        "custom": "Les factures arrivent sous forme de tableau : optional_invoices_0_* (la plus récente en premier)."
+        "custom": "Les factures arrivent sous forme de tableau : optional_invoices_0_* (la plus récente en premier).",
+        "customNoSubscription": "Seuls les champs du destinataire sont disponibles — ce mail s’adresse à des personnes sans abonnement."
       },
       "searchPlaceholders": "Rechercher…",
       "noPlaceholders": "Aucun espace réservé correspondant.",
@@ -1090,7 +1096,8 @@
         "subscription": "Autour de l’abonnement lui-même : nouvellement souscrit, confirmé ou désactivé. En plus : les données de l’abonnement comme le montant et la durée.",
         "renewal": "Renouvellement automatique — réussi ou échoué. En plus : le nom du plan et du moyen de paiement ainsi que les données de facturation.",
         "invoiceCreation": "Dès qu’une nouvelle facture a été créée. En plus : la facture et l’abonnement correspondant.",
-        "custom": "Un e-mail libre aux abonné·e·s, p. ex. une newsletter via « Envoyer un e-mail ». En plus : l’abonnement et les dernières factures."
+        "custom": "Un e-mail libre aux abonné·e·s, p. ex. une newsletter via « Envoyer un e-mail ». En plus : l’abonnement et les dernières factures.",
+        "customNoSubscription": "Un e-mail libre aux personnes sans abonnement, p. ex. une invitation ou une relance. Seuls les champs du destinataire sont disponibles — les champs d’abonnement restent vides."
       }
     },
     "mailTemplateSelect": {
@@ -2517,7 +2524,12 @@
         "label": "Public",
         "allUsers": "Tous les utilisateurs",
         "hasSubscription": "Abonnés (avec abonnement)",
-        "noActiveSubscription": "Sans abonnement actif"
+        "noActiveSubscription": "Sans abonnement actif",
+        "endedSubscription": "Reconquête — abonnement désactivé récemment",
+        "allUsersHint": "Toutes les personnes inscrites, avec ou sans abonnement.",
+        "hasSubscriptionHint": "Personnes avec un abonnement. Les champs d’abonnement sont disponibles.",
+        "noActiveSubscriptionHint": "Personnes sans abonnement actif. Les champs d’abonnement restent vides.",
+        "endedSubscriptionHint": "Personnes dont l’abonnement a été désactivé récemment et qui n’ont pas repris d’abonnement depuis. L’abonnement désactivé est joint au mail, ses champs sont donc disponibles."
       },
       "memberPlans": "Plans d'abonnement",
       "memberPlansAll": "Tous les plans d'abonnement",
@@ -2567,6 +2579,16 @@
         "email": "E-mail",
         "name": "Nom",
         "memberPlan": "Plan d’abonnement"
+      },
+      "endedWithinDays": "Désactivé au cours des … derniers jours",
+      "endedWithinDaysHint": "Uniquement les abonnements désactivés dans cette période.",
+      "endedWindow": {
+        "label": "Période de désactivation de l’abonnement",
+        "relative": "Derniers … jours",
+        "period": "Période fixe",
+        "days": "jours",
+        "periodPlaceholder": "Choisir du – au",
+        "periodHint": "Uniquement les abonnements désactivés entre ces deux dates."
       }
     },
     "mailLog": {

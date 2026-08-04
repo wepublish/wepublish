@@ -4,14 +4,14 @@
  * send. The shapes here mirror what the real send paths pass as `optionalData`
  * per event (see member-context / periodic-job), so previews match production.
  */
-
 export type MailTemplateContextId =
   | 'account'
   | 'emailChange'
   | 'subscription'
   | 'renewal'
   | 'invoiceCreation'
-  | 'custom';
+  | 'custom'
+  | 'customNoSubscription';
 
 export const MAIL_TEMPLATE_CONTEXT_IDS: MailTemplateContextId[] = [
   'account',
@@ -20,6 +20,7 @@ export const MAIL_TEMPLATE_CONTEXT_IDS: MailTemplateContextId[] = [
   'renewal',
   'invoiceCreation',
   'custom',
+  'customNoSubscription',
 ];
 
 /** Whether a context's data is built from a subscription (vs. user-only). */
@@ -67,6 +68,10 @@ export function assembleMailData(
       break;
     case 'custom':
       optional = { subscription, invoices: invoice ? [invoice] : [] };
+      break;
+    // Free mail to a non-subscriber — there is no subscription to bind.
+    case 'customNoSubscription':
+      optional = {};
       break;
   }
 

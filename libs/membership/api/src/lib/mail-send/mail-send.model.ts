@@ -23,7 +23,12 @@ export enum MailRecipientBase {
   allUsers = 'allUsers',
   hasSubscription = 'hasSubscription',
   noActiveSubscription = 'noActiveSubscription',
+  /** Win-back: subscriptions that ended recently, owner not subscribed again. */
+  endedSubscription = 'endedSubscription',
 }
+
+/** Default look-back window for the win-back audience. */
+export const DEFAULT_ENDED_WITHIN_DAYS = 90;
 
 /** Which subscriptions to include when narrowing a subscription-based audience. */
 export enum MailSubscriptionState {
@@ -80,6 +85,27 @@ export class MailAudienceInput {
 
   @Field(() => PaymentPeriodicity, { nullable: true })
   paymentPeriodicity?: PaymentPeriodicity;
+
+  @Field(() => Int, {
+    nullable: true,
+    description:
+      'Win-back audience only: how far back an ended subscription may lie, in days. Ignored when an explicit period is given.',
+  })
+  endedWithinDays?: number;
+
+  @Field(() => Date, {
+    nullable: true,
+    description:
+      'Win-back audience only: start of an explicit period the subscription ended in.',
+  })
+  endedFrom?: Date;
+
+  @Field(() => Date, {
+    nullable: true,
+    description:
+      'Win-back audience only: end of an explicit period the subscription ended in.',
+  })
+  endedTo?: Date;
 }
 
 @InputType()

@@ -45,6 +45,8 @@ import {
   MdUndo,
 } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
+import { MailColorPicker } from './color-picker';
+import { appendJwtParam, hasJwtParam, JWT_QUERY_PARAM } from './mail-html';
 
 type Device = 'desktop' | 'tablet' | 'mobile';
 
@@ -127,17 +129,6 @@ const LABEL_BUTTON_SX = {
   px: 1,
 } as const;
 
-// Native color input styled as a compact toolbar swatch.
-const ColorSwatch = styled('input')`
-  width: ${CONTROL_SIZE}px;
-  height: ${CONTROL_SIZE}px;
-  padding: 0;
-  border: 1px solid ${({ theme }) => theme.palette.divider};
-  border-radius: 4px;
-  background: none;
-  cursor: pointer;
-`;
-
 // execCommand('fontSize') uses the legacy 1-7 scale; map to readable labels.
 const FONT_SIZES: ReadonlyArray<{ value: string; label: string }> = [
   { value: '1', label: 'XS' },
@@ -213,6 +204,14 @@ const escapeAttr = (value: string): string =>
 
 export interface HtmlVisualEditorHandle {
   insertToken: (text: string) => void;
+  /** Text right before the caret, used to detect a URL context. */
+  textBeforeCaret: () => string;
+  /**
+   * Appends the login token to the link the caret sits in, exactly like the
+   * "add login token" button in the link dialog. Returns false when the caret
+   * is not inside a link, so the caller can fall back to inserting text.
+   */
+  appendJwtToCurrentLink: () => boolean;
 }
 
 export interface HtmlVisualEditorProps {
@@ -265,6 +264,47 @@ const serializeDocument = (doc: Document): string => {
   return `<!DOCTYPE html>\n${clone.outerHTML}`;
 };
 
+/**
+ * One click to turn a link into a login link. Writing `?jwt={{jwt}}` by hand is
+ * easy to get wrong — the separator depends on whether the URL already has a
+ * query string — so the whole parameter is appended for the author.
+ */
+function JwtParamButton({
+  url,
+  onAppend,
+}: {
+  url: string;
+  onAppend: (url: string) => void;
+}) {
+  const { t } = useTranslation();
+  const alreadyAdded = hasJwtParam(url);
+  const separator = url.includes('?') ? '&' : '?';
+
+  return (
+    <Box>
+      <Button
+        size="small"
+        variant="outlined"
+        disabled={!url.trim() || alreadyAdded}
+        onClick={() => onAppend(appendJwtParam(url))}
+      >
+        {t('mailTemplates.editor.appendJwt', 'Add login token')}
+      </Button>
+      <Box
+        component="p"
+        sx={{ mt: 0.5, mb: 0, fontSize: '0.75rem', color: 'text.secondary' }}
+      >
+        {alreadyAdded ?
+          t('mailTemplates.editor.appendJwtDone')
+        : t('mailTemplates.editor.appendJwtHint', {
+            param: `${separator}${JWT_QUERY_PARAM}`,
+          })
+        }
+      </Box>
+    </Box>
+  );
+}
+
 const HtmlVisualEditorComponent = forwardRef<
   HtmlVisualEditorHandle,
   HtmlVisualEditorProps
@@ -292,6 +332,7 @@ const HtmlVisualEditorComponent = forwardRef<
     size: 'medium',
   });
   const [libraryOpen, setLibraryOpen] = useState(false);
+  const [textColor, setTextColor] = useState('#000000');
   const [fontSizeAnchor, setFontSizeAnchor] = useState<HTMLElement | null>(
     null
   );
@@ -687,6 +728,46 @@ const HtmlVisualEditorComponent = forwardRef<
         selection?.addRange(range);
         emit();
       },
+      appendJwtToCurrentLink: () => {
+        const doc = getDoc();
+
+        if (!doc) {
+          return false;
+        }
+
+        // Restore the caret first: clicking the placeholder list moves focus
+        // out of the iframe, and the anchor lookup walks up from the selection.
+        restoreSelection();
+        const anchor = getSelectedAnchor(doc);
+        const href = anchor?.getAttribute('href');
+
+        if (!anchor || !href) {
+          return false;
+        }
+
+        if (!hasJwtParam(href)) {
+          anchor.setAttribute('href', appendJwtParam(href));
+          emit();
+        }
+
+        return true;
+      },
+      textBeforeCaret: () => {
+        const doc = getDoc();
+        const selection = doc?.getSelection();
+        const live =
+          selection && selection.rangeCount ? selection.getRangeAt(0) : null;
+        const range = isInEditable(live) ? live : savedRange.current;
+
+        if (!range || range.startContainer.nodeType !== Node.TEXT_NODE) {
+          return '';
+        }
+
+        return (range.startContainer.textContent ?? '').slice(
+          0,
+          range.startOffset
+        );
+      },
     }),
     []
   );
@@ -847,25 +928,15 @@ const HtmlVisualEditorComponent = forwardRef<
           ))}
         </Menu>
 
-        <Tooltip title={t('mailTemplates.editor.textColor', 'Text color')}>
-          <Box
-            component="label"
-            sx={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              height: CONTROL_SIZE,
-            }}
-          >
-            <ColorSwatch
-              type="color"
-              defaultValue="#000000"
-              onMouseDown={() => saveSelection()}
-              onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                applyWithSavedSelection('foreColor', event.target.value)
-              }
-            />
-          </Box>
-        </Tooltip>
+        <MailColorPicker
+          value={textColor}
+          title={t('mailTemplates.editor.textColor', 'Text color')}
+          onOpen={saveSelection}
+          onChange={color => {
+            setTextColor(color);
+            applyWithSavedSelection('foreColor', color);
+          }}
+        />
 
         <Divider
           orientation="vertical"
@@ -984,6 +1055,10 @@ const HtmlVisualEditorComponent = forwardRef<
                 setLinkDialog(state => ({ ...state, url: event.target.value }))
               }
             />
+            <JwtParamButton
+              url={linkDialog.url}
+              onAppend={url => setLinkDialog(state => ({ ...state, url }))}
+            />
             <TextField
               fullWidth
               size="small"
@@ -1094,6 +1169,10 @@ const HtmlVisualEditorComponent = forwardRef<
                 }))
               }
             />
+            <JwtParamButton
+              url={imageDialog.link}
+              onAppend={link => setImageDialog(state => ({ ...state, link }))}
+            />
           </Stack>
         </DialogContent>
         <DialogActions>
@@ -1149,6 +1228,10 @@ const HtmlVisualEditorComponent = forwardRef<
                 }))
               }
             />
+            <JwtParamButton
+              url={buttonDialog.url}
+              onAppend={url => setButtonDialog(state => ({ ...state, url }))}
+            />
             <Stack
               spacing={2}
               alignItems="center"
@@ -1179,17 +1262,14 @@ const HtmlVisualEditorComponent = forwardRef<
                 label={t('mailTemplates.editor.buttonColor', 'Button color')}
                 labelPlacement="start"
                 control={
-                  <ColorSwatch
-                    type="color"
-                    value={buttonDialog.color}
-                    onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                      setButtonDialog(state => ({
-                        ...state,
-                        color: event.target.value,
-                      }))
-                    }
-                    style={{ marginLeft: 8 }}
-                  />
+                  <Box sx={{ ml: 1 }}>
+                    <MailColorPicker
+                      value={buttonDialog.color}
+                      onChange={color =>
+                        setButtonDialog(state => ({ ...state, color }))
+                      }
+                    />
+                  </Box>
                 }
               />
             </Stack>

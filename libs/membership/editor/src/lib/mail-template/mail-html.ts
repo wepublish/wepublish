@@ -139,3 +139,59 @@ ${body}
  */
 export const createEmptyEmailHtml = (): string =>
   wrapInEmailShell('<p style="margin:0 0 16px 0;"><br /></p>');
+
+/** The login-token placeholder, resolved per recipient when the mail is sent. */
+export const JWT_QUERY_PARAM = 'jwt={{jwt}}';
+
+/**
+ * Appends the login token to a link so the recipient arrives logged in.
+ *
+ * Picks `?` or `&` depending on what the URL already carries, keeps any
+ * fragment at the end where it belongs, and leaves a URL that already has a
+ * `jwt` param untouched.
+ */
+export const appendJwtParam = (url: string): string => {
+  const trimmed = url.trim();
+
+  if (!trimmed || /[?&]jwt=/.test(trimmed)) {
+    return trimmed;
+  }
+
+  const hashIndex = trimmed.indexOf('#');
+  const base = hashIndex === -1 ? trimmed : trimmed.slice(0, hashIndex);
+  const fragment = hashIndex === -1 ? '' : trimmed.slice(hashIndex);
+  const separator = base.includes('?') ? '&' : '?';
+
+  return `${base}${separator}${JWT_QUERY_PARAM}${fragment}`;
+};
+
+/** Whether the login token is already part of this URL. */
+export const hasJwtParam = (url: string): boolean => /[?&]jwt=/.test(url);
+
+/**
+ * A URL that the caret sits directly at the end of. Excludes quotes and angle
+ * brackets so an HTML tag (`</p>`) or a closed attribute never counts as one.
+ */
+const URL_AT_CARET = /(?:https?:\/\/|www\.|\/)[^\s"'<>]*$/i;
+
+/**
+ * What inserting the login-token placeholder should actually write at the
+ * caret. Directly after a URL the whole query parameter is inserted with the
+ * right separator; anywhere else (prose, a subject line) the bare placeholder
+ * is, because a query parameter would be meaningless there.
+ *
+ * Returns an empty string when the URL already carries the token.
+ */
+export const jwtInsertionFor = (textBeforeCaret: string): string => {
+  const url = textBeforeCaret.match(URL_AT_CARET)?.[0];
+
+  if (!url) {
+    return `{{jwt}}`;
+  }
+
+  if (hasJwtParam(url)) {
+    return '';
+  }
+
+  return `${url.includes('?') ? '&' : '?'}${JWT_QUERY_PARAM}`;
+};

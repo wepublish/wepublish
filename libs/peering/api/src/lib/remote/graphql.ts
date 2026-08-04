@@ -1659,6 +1659,12 @@ export enum LoginStatus {
 export type MailAudienceInput = {
   autoRenew?: InputMaybe<Scalars['Boolean']>;
   base: MailRecipientBase;
+  /** Win-back audience only: start of an explicit period the subscription ended in. */
+  endedFrom?: InputMaybe<Scalars['DateTime']>;
+  /** Win-back audience only: end of an explicit period the subscription ended in. */
+  endedTo?: InputMaybe<Scalars['DateTime']>;
+  /** Win-back audience only: how far back an ended subscription may lie, in days. Ignored when an explicit period is given. */
+  endedWithinDays?: InputMaybe<Scalars['Int']>;
   /** Restrict to subscriptions of these member plans. */
   memberPlanIDs?: InputMaybe<Array<Scalars['String']>>;
   paymentMethodID?: InputMaybe<Scalars['String']>;
@@ -1736,6 +1742,7 @@ export enum MailProviderType {
 /** Base set of users a manual-send audience is drawn from. */
 export enum MailRecipientBase {
   AllUsers = 'allUsers',
+  EndedSubscription = 'endedSubscription',
   HasSubscription = 'hasSubscription',
   NoActiveSubscription = 'noActiveSubscription'
 }
@@ -1807,6 +1814,7 @@ export enum MailSubscriptionState {
 export enum MailTemplateContext {
   Account = 'account',
   Custom = 'custom',
+  CustomNoSubscription = 'customNoSubscription',
   EmailChange = 'emailChange',
   InvoiceCreation = 'invoiceCreation',
   Renewal = 'renewal',

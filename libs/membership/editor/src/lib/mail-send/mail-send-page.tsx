@@ -24,6 +24,7 @@ import {
   TableCell,
   TableHead,
   TableRow,
+  Typography,
 } from '@mui/material';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -32,10 +33,12 @@ import { Link } from 'react-router-dom';
 import {
   Button,
   CheckPicker,
+  DateRangePicker,
   Divider,
   Form,
   IconButton,
   Message,
+  InputNumber,
   Modal,
   Pagination,
   Panel,
@@ -47,6 +50,24 @@ import {
 } from 'rsuite';
 import { DEFAULT_QUERY_OPTIONS } from '../common';
 import { mailErrorHelpKey } from './mail-log-common';
+
+/** Mirrors the API default for the win-back look-back window. */
+const DEFAULT_ENDED_WITHIN_DAYS = 90;
+
+/** How the author expresses "recently ended": rolling days or a fixed period. */
+type EndedMode = 'days' | 'period';
+type DateRange = [Date, Date];
+
+const endOfDay = (date?: Date): string | undefined => {
+  if (!date) {
+    return undefined;
+  }
+
+  const end = new Date(date);
+  end.setHours(23, 59, 59, 999);
+
+  return end.toISOString();
+};
 
 function MailSendPage() {
   const { t } = useTranslation();
@@ -63,6 +84,11 @@ function MailSendPage() {
   const [periodicity, setPeriodicity] = useState<PaymentPeriodicity | null>(
     null
   );
+  const [endedWithinDays, setEndedWithinDays] = useState(
+    DEFAULT_ENDED_WITHIN_DAYS
+  );
+  const [endedMode, setEndedMode] = useState<EndedMode>('days');
+  const [endedPeriod, setEndedPeriod] = useState<DateRange | null>(null);
 
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [recipientsOpen, setRecipientsOpen] = useState(false);
@@ -78,8 +104,24 @@ function MailSendPage() {
   );
 
   const isSubscriptionBase = base === MailRecipientBase.HasSubscription;
+  const isWinBackBase = base === MailRecipientBase.EndedSubscription;
 
   const audience = useMemo<MailAudienceInput>(() => {
+    if (isWinBackBase) {
+      const usePeriod = endedMode === 'period' && endedPeriod?.length === 2;
+
+      return {
+        base,
+        // Either an explicit period or the rolling window — never both, so the
+        // backend does not have to guess which one the author meant.
+        endedWithinDays: usePeriod ? undefined : endedWithinDays,
+        endedFrom: usePeriod ? endedPeriod?.[0].toISOString() : undefined,
+        // The picker returns midnight, so stretch the end over the whole day.
+        endedTo: usePeriod ? endOfDay(endedPeriod?.[1]) : undefined,
+        memberPlanIDs: memberPlanIDs.length ? memberPlanIDs : undefined,
+      };
+    }
+
     if (!isSubscriptionBase) {
       return { base };
     }
@@ -95,6 +137,10 @@ function MailSendPage() {
   }, [
     base,
     isSubscriptionBase,
+    isWinBackBase,
+    endedWithinDays,
+    endedMode,
+    endedPeriod,
     memberPlanIDs,
     subscriptionState,
     autoRenew,
@@ -192,17 +238,111 @@ function MailSendPage() {
               value={base}
               onChange={value => setBase(value as MailRecipientBase)}
             >
-              <Radio value={MailRecipientBase.AllUsers}>
-                {t('mailSend.base.allUsers')}
-              </Radio>
-              <Radio value={MailRecipientBase.HasSubscription}>
-                {t('mailSend.base.hasSubscription')}
-              </Radio>
-              <Radio value={MailRecipientBase.NoActiveSubscription}>
-                {t('mailSend.base.noActiveSubscription')}
-              </Radio>
+              {[
+                MailRecipientBase.AllUsers,
+                MailRecipientBase.HasSubscription,
+                MailRecipientBase.NoActiveSubscription,
+                MailRecipientBase.EndedSubscription,
+              ].map(option => (
+                <Radio
+                  key={option}
+                  value={option}
+                >
+                  <div>{t(`mailSend.base.${option}`)}</div>
+                  <Typography
+                    variant="caption"
+                    display="block"
+                    style={{
+                      color: '#8e8e93',
+                      whiteSpace: 'normal',
+                      lineHeight: 1.35,
+                    }}
+                  >
+                    {t(`mailSend.base.${option}Hint`)}
+                  </Typography>
+                </Radio>
+              ))}
             </RadioGroup>
           </Form.Group>
+
+          {isWinBackBase && (
+            <>
+              <Divider />
+              <Form.Group>
+                <Form.ControlLabel>
+                  {t('mailSend.endedWindow.label')}
+                </Form.ControlLabel>
+                <RadioGroup
+                  inline
+                  value={endedMode}
+                  onChange={value => setEndedMode(value as EndedMode)}
+                >
+                  <Radio value="days">
+                    {t('mailSend.endedWindow.relative')}
+                  </Radio>
+                  <Radio value="period">
+                    {t('mailSend.endedWindow.period')}
+                  </Radio>
+                </RadioGroup>
+
+                {endedMode === 'days' ?
+                  <>
+                    <InputNumber
+                      min={1}
+                      max={3650}
+                      value={endedWithinDays}
+                      onChange={value => {
+                        const parsed =
+                          typeof value === 'number' ? value : (
+                            parseInt(`${value}`, 10)
+                          );
+
+                        if (Number.isFinite(parsed) && parsed > 0) {
+                          setEndedWithinDays(parsed);
+                        }
+                      }}
+                      postfix={t('mailSend.endedWindow.days')}
+                      style={{ width: 180 }}
+                    />
+                    <Form.HelpText>
+                      {t('mailSend.endedWithinDaysHint')}
+                    </Form.HelpText>
+                  </>
+                : <>
+                    <DateRangePicker
+                      value={endedPeriod}
+                      onChange={value => setEndedPeriod(value)}
+                      format="dd.MM.yyyy"
+                      cleanable
+                      // Ended subscriptions can only lie in the past.
+                      shouldDisableDate={date => date > new Date()}
+                      placeholder={t('mailSend.endedWindow.periodPlaceholder')}
+                      style={{ width: 280 }}
+                    />
+                    <Form.HelpText>
+                      {t('mailSend.endedWindow.periodHint')}
+                    </Form.HelpText>
+                  </>
+                }
+              </Form.Group>
+
+              <Form.Group>
+                <Form.ControlLabel>
+                  {t('mailSend.memberPlans')}
+                </Form.ControlLabel>
+                <CheckPicker
+                  block
+                  data={(memberPlanData?.memberPlans.nodes ?? []).map(plan => ({
+                    label: plan.name,
+                    value: plan.id,
+                  }))}
+                  value={memberPlanIDs}
+                  onChange={value => setMemberPlanIDs(value as string[])}
+                  placeholder={t('mailSend.memberPlansAll')}
+                />
+              </Form.Group>
+            </>
+          )}
 
           {isSubscriptionBase && (
             <>

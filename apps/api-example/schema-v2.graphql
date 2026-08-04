@@ -1577,6 +1577,21 @@ input MailAudienceInput {
   autoRenew: Boolean
   base: MailRecipientBase!
 
+  """
+  Win-back audience only: start of an explicit period the subscription ended in.
+  """
+  endedFrom: DateTime
+
+  """
+  Win-back audience only: end of an explicit period the subscription ended in.
+  """
+  endedTo: DateTime
+
+  """
+  Win-back audience only: how far back an ended subscription may lie, in days. Ignored when an explicit period is given.
+  """
+  endedWithinDays: Int
+
   """Restrict to subscriptions of these member plans."""
   memberPlanIDs: [String!]
   paymentMethodID: String
@@ -1651,6 +1666,7 @@ enum MailProviderType {
 """Base set of users a manual-send audience is drawn from."""
 enum MailRecipientBase {
   allUsers
+  endedSubscription
   hasSubscription
   noActiveSubscription
 }
@@ -1725,6 +1741,7 @@ enum MailSubscriptionState {
 enum MailTemplateContext {
   account
   custom
+  customNoSubscription
   emailChange
   invoiceCreation
   renewal

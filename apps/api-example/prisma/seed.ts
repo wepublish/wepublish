@@ -1168,6 +1168,32 @@ const SEED_SUBSCRIBERS: SeedSubscriber[] = [
     ],
   },
   {
+    email: 'abo.ausgelaufen@wepublish.ch',
+    firstName: 'Lena',
+    name: 'Ausgelaufen',
+    purpose:
+      'Ran out without auto-renewal; the periodic job deactivated it at paidUntil. A win-back target.',
+    subscriptions: [
+      {
+        planSlug: MEMBER_PLAN_SLUGS.chfYearly,
+        paymentMethodID: 'payrexx',
+        periodicity: 'yearly',
+        currency: 'CHF',
+        monthlyAmount: 1000,
+        autoRenew: false,
+        startsAtMonths: -14,
+        paidUntilDays: -20,
+        invoice: 'paid',
+        // Mirrors `deactivateExpiredNotAutoRenewSubscriptions`: reason
+        // `userSelfDeactivated`, dated at the day the subscription ran out.
+        deactivation: {
+          reason: SubscriptionDeactivationReason.userSelfDeactivated,
+          daysAgo: 20,
+        },
+      },
+    ],
+  },
+  {
     email: 'abo.laeuft.ab@wepublish.ch',
     firstName: 'Gina',
     name: 'Ablauf',

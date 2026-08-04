@@ -43,8 +43,10 @@ import {
   createEmptyEmailHtml,
   DEFAULT_BACKGROUND_COLOR,
   DEFAULT_CONTENT_WIDTH,
+  jwtInsertionFor,
   readShellSettings,
 } from './mail-html';
+import { MailColorPicker } from './color-picker';
 import { MAIL_PLACEHOLDER_CONTEXTS } from './mail-placeholders';
 import { PlaceholderPicker } from './placeholder-picker';
 
@@ -83,6 +85,16 @@ const deriveTextFromHtml = (html: string): string => {
     .replace(/\n{3,}/g, '\n\n')
     .trim();
 };
+
+const JWT_TOKEN = '{{jwt}}';
+
+/**
+ * The login token is only useful as a query parameter, so inserting it right
+ * after a URL writes the whole `?jwt={{jwt}}` / `&jwt={{jwt}}` for the author.
+ * Every other placeholder is inserted verbatim.
+ */
+const resolveToken = (token: string, textBeforeCaret: string): string =>
+  token === JWT_TOKEN ? jwtInsertionFor(textBeforeCaret) : token;
 
 function MailTemplateEdit() {
   const { t } = useTranslation();
@@ -196,13 +208,36 @@ function MailTemplateEdit() {
 
   const insertToken = (token: string) => {
     if (activeField === 'subject') {
-      setSubject(prev => prev + token);
+      // The caret is always at the end here, so the subject itself is the
+      // context the login token is judged against.
+      setSubject(prev => prev + resolveToken(token, prev));
       return;
     }
     if (bodyMode === 'visual') {
-      visualRef.current?.insertToken(token);
+      // A link's href is not text the caret can sit in, so for the login token
+      // try the link under the caret first — same behaviour as the button in
+      // the link dialog. Only plain text falls through to an insertion.
+      if (token === JWT_TOKEN && visualRef.current?.appendJwtToCurrentLink()) {
+        return;
+      }
+
+      const text = resolveToken(
+        token,
+        visualRef.current?.textBeforeCaret() ?? ''
+      );
+
+      if (text) {
+        visualRef.current?.insertToken(text);
+      }
     } else if (bodyMode === 'html') {
-      sourceRef.current?.insertText(token);
+      const text = resolveToken(
+        token,
+        sourceRef.current?.textBeforeCaret() ?? ''
+      );
+
+      if (text) {
+        sourceRef.current?.insertText(text);
+      }
     }
     // The text tab is read-only — nothing to insert into.
   };
@@ -592,20 +627,10 @@ function MailTemplateEdit() {
                 <Form.ControlLabel style={{ margin: 0 }}>
                   {t('mailTemplates.edit.background', 'Background')}
                 </Form.ControlLabel>
-                <input
-                  type="color"
+                <MailColorPicker
                   value={backgroundColor}
-                  onChange={event =>
-                    applyShell({ backgroundColor: event.target.value })
-                  }
-                  style={{
-                    width: 32,
-                    height: 28,
-                    padding: 0,
-                    border: '1px solid #e5e5ea',
-                    borderRadius: 4,
-                    cursor: 'pointer',
-                  }}
+                  size={28}
+                  onChange={color => applyShell({ backgroundColor: color })}
                 />
               </Stack>
               <Stack

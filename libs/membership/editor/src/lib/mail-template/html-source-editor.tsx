@@ -50,6 +50,8 @@ export interface HtmlSourceEditorProps {
 
 export interface HtmlSourceEditorHandle {
   insertText: (text: string) => void;
+  /** Source text right before the caret, used to detect a URL context. */
+  textBeforeCaret: () => string;
 }
 
 const HtmlSourceEditorComponent = forwardRef<
@@ -72,6 +74,17 @@ const HtmlSourceEditorComponent = forwardRef<
         // Replace the current selection (or insert at the caret) and place the
         // caret right after the inserted text.
         view.dispatch(view.state.replaceSelection(text));
+      },
+      textBeforeCaret: () => {
+        const view = editorRef.current?.view;
+
+        if (!view) {
+          return '';
+        }
+
+        const { from } = view.state.selection.main;
+
+        return view.state.sliceDoc(Math.max(0, from - 400), from);
       },
     }),
     []

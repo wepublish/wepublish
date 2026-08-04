@@ -969,7 +969,10 @@
         "buttonSizeLarge": "Large",
         "cancel": "Cancel",
         "apply": "Apply",
-        "insert": "Insert"
+        "insert": "Insert",
+        "appendJwt": "Add login token",
+        "appendJwtHint": "Appends {{param}} — the recipient is then logged in on click.",
+        "appendJwtDone": "Login token already included — the recipient is logged in on click."
       },
       "goToPlaceholders": "Available Placeholders",
       "htmlContent": "HTML content",
@@ -983,7 +986,8 @@
         "subscription": "Subscription",
         "renewal": "Renewal",
         "invoiceCreation": "Invoice",
-        "custom": "Custom mail"
+        "custom": "Free mail (subscriber)",
+        "customNoSubscription": "Free mail (no subscription)"
       },
       "placeholderAlways": "Always available — every mail",
       "placeholderContextLabel": "Additional fields for this purpose",
@@ -993,7 +997,8 @@
         "subscription": "Subscription (new, confirmed, deactivation)",
         "renewal": "Renewal — automated (success / failed)",
         "invoiceCreation": "Invoice created",
-        "custom": "Custom mail to a subscriber (subscription + invoices)"
+        "custom": "Free mail to a subscriber",
+        "customNoSubscription": "Free mail to a non-subscriber"
       },
       "rawHtml": "HTML",
       "save": "Save",
@@ -1080,7 +1085,8 @@
         "subscription": "Subscription master data. Plan and payment-method names are NOT available here — only in renewal mails.",
         "renewal": "Additionally includes plan/payment-method names and invoice data.",
         "invoiceCreation": "Note: subscription fields here use the prefix optional_subscriptionToCreateInvoice_*.",
-        "custom": "Invoices come as an array: optional_invoices_0_* (newest first)."
+        "custom": "Invoices come as an array: optional_invoices_0_* (newest first).",
+        "customNoSubscription": "Only recipient fields are available — this mail goes to people without a subscription."
       },
       "searchPlaceholders": "Search…",
       "noPlaceholders": "No matching placeholders.",
@@ -1091,7 +1097,8 @@
         "subscription": "Around the subscription itself: newly taken out, confirmed or deactivated. Additionally available: subscription data such as amount and term.",
         "renewal": "Automatic renewal — successful or failed. Additionally available: plan and payment method names plus the invoice data.",
         "invoiceCreation": "As soon as a new invoice has been created. Additionally available: the invoice and its subscription.",
-        "custom": "A mail you send freely to subscribers, e.g. a newsletter via «Send email». Additionally available: the subscription and the latest invoices."
+        "custom": "A mail you send freely to subscribers, e.g. a newsletter via «Send email». Additionally available: the subscription and the latest invoices.",
+        "customNoSubscription": "A mail you send freely to people without a subscription, e.g. an invitation or win-back. Only the recipient fields are available — subscription placeholders stay empty."
       }
     },
     "mailTemplateSelect": {
@@ -2626,7 +2633,12 @@
         "label": "Audience",
         "allUsers": "All users",
         "hasSubscription": "Subscribers (with subscription)",
-        "noActiveSubscription": "Without active subscription"
+        "noActiveSubscription": "Without active subscription",
+        "endedSubscription": "Win-back — subscription deactivated recently",
+        "allUsersHint": "Everyone registered, with or without a subscription.",
+        "hasSubscriptionHint": "People with a subscription. Subscription placeholders are available.",
+        "noActiveSubscriptionHint": "People without an active subscription. Subscription placeholders stay empty.",
+        "endedSubscriptionHint": "People whose subscription was deactivated recently and who have not subscribed again since. The deactivated subscription is bound to the mail, so its placeholders are available."
       },
       "memberPlans": "Member plans",
       "memberPlansAll": "All member plans",
@@ -2676,6 +2688,16 @@
         "email": "Email",
         "name": "Name",
         "memberPlan": "Member plan"
+      },
+      "endedWithinDays": "Deactivated within the last … days",
+      "endedWithinDaysHint": "Only subscriptions deactivated in this window.",
+      "endedWindow": {
+        "label": "When the subscription was deactivated",
+        "relative": "Last … days",
+        "period": "Fixed period",
+        "days": "days",
+        "periodPlaceholder": "Pick from – to",
+        "periodHint": "Only subscriptions deactivated between these two dates."
       }
     },
     "mailLog": {

@@ -964,7 +964,10 @@
         "buttonSizeLarge": "Gross",
         "cancel": "Abbrechen",
         "apply": "Übernehmen",
-        "insert": "Einfügen"
+        "insert": "Einfügen",
+        "appendJwt": "Login-Token anhängen",
+        "appendJwtHint": "Hängt {{param}} an – damit ist der Empfänger beim Klick automatisch eingeloggt.",
+        "appendJwtDone": "Login-Token ist bereits enthalten – der Empfänger ist beim Klick eingeloggt."
       },
       "goToPlaceholders": "Verfügbare Placeholders",
       "htmlContent": "HTML-Inhalt",
@@ -978,7 +981,8 @@
         "subscription": "Abo",
         "renewal": "Verlängerung",
         "invoiceCreation": "Rechnung",
-        "custom": "Eigene Mail"
+        "custom": "Freie Mail (Abo)",
+        "customNoSubscription": "Freie Mail (ohne Abo)"
       },
       "placeholderAlways": "Immer verfügbar – in jeder Mail",
       "placeholderAlwaysHint": "Diese Empfänger-Felder funktionieren in jeder Vorlage, unabhängig vom gewählten Verwendungszweck.",
@@ -1007,7 +1011,8 @@
         "subscription": "Abo (neu, bestätigt, Deaktivierung)",
         "renewal": "Verlängerung – automatisch (Erfolg / Fehlschlag)",
         "invoiceCreation": "Rechnung erstellt",
-        "custom": "Eigene Mail an Abonnent:in (Abo + Rechnungen)"
+        "custom": "Freie Mail an Abonnent:in",
+        "customNoSubscription": "Freie Mail an Nicht-Abonnent:in"
       },
       "placeholderNames": {
         "user_fullName": "Vollständiger Name",
@@ -1078,7 +1083,8 @@
         "subscription": "Abo-Stammdaten. Plan- und Zahlungsmethoden-Namen sind hier NICHT verfügbar – nur in Verlängerungs-Mails.",
         "renewal": "Enthält zusätzlich Plan-/Zahlungsmethoden-Namen und Rechnungsdaten.",
         "invoiceCreation": "Achtung: Abo-Felder hier unter dem Präfix optional_subscriptionToCreateInvoice_*.",
-        "custom": "Rechnungen kommen als Array: optional_invoices_0_* (neueste zuerst)."
+        "custom": "Rechnungen kommen als Array: optional_invoices_0_* (neueste zuerst).",
+        "customNoSubscription": "Nur Empfänger-Felder verfügbar — diese Mail geht an Personen ohne Abo."
       },
       "purposeDescriptions": {
         "account": "Rund um das Benutzerkonto: Registrierung bestätigen, Login-Link senden, Passwort zurücksetzen. Verfügbar sind nur die Empfänger-Felder.",
@@ -1086,7 +1092,8 @@
         "subscription": "Rund um das Abo selbst: neu abgeschlossen, bestätigt oder deaktiviert. Zusätzlich verfügbar: Abo-Stammdaten wie Betrag und Laufzeit.",
         "renewal": "Automatische Verlängerung – erfolgreich oder fehlgeschlagen. Zusätzlich verfügbar: Plan- und Zahlungsmethoden-Name sowie die Rechnungsdaten.",
         "invoiceCreation": "Sobald eine neue Rechnung erstellt wurde. Zusätzlich verfügbar: die Rechnung und das zugehörige Abo.",
-        "custom": "Frei verschickbare Mail an Abonnent:innen, z. B. ein Newsletter über «E-Mail senden». Zusätzlich verfügbar: das Abo und die letzten Rechnungen."
+        "custom": "Frei verschickbare Mail an Abonnent:innen, z. B. ein Newsletter über «E-Mail senden». Zusätzlich verfügbar: das Abo und die letzten Rechnungen.",
+        "customNoSubscription": "Frei verschickbare Mail an Personen ohne Abo, z. B. eine Einladung oder Reaktivierung. Verfügbar sind nur die Empfänger-Felder – Abo-Platzhalter bleiben leer."
       }
     },
     "mailTemplateSelect": {
@@ -2572,7 +2579,12 @@
         "label": "Empfängergruppe",
         "allUsers": "Alle Benutzer",
         "hasSubscription": "Abonnenten (mit Abo)",
-        "noActiveSubscription": "Ohne aktives Abo"
+        "noActiveSubscription": "Ohne aktives Abo",
+        "endedSubscription": "Rückgewinnung – Abo kürzlich deaktiviert",
+        "allUsersHint": "Alle registrierten Personen, unabhängig von einem Abo.",
+        "hasSubscriptionHint": "Personen mit einem Abo. Abo-Platzhalter sind verfügbar.",
+        "noActiveSubscriptionHint": "Personen ohne aktives Abo. Abo-Platzhalter bleiben leer.",
+        "endedSubscriptionHint": "Personen, deren Abo kürzlich deaktiviert wurde und die seither kein neues Abo haben. Das deaktivierte Abo wird mitgeschickt – die Abo-Platzhalter stehen also zur Verfügung."
       },
       "memberPlans": "Abo-Pläne",
       "memberPlansAll": "Alle Abo-Pläne",
@@ -2622,6 +2634,16 @@
         "email": "E-Mail",
         "name": "Name",
         "memberPlan": "Abo-Plan"
+      },
+      "endedWithinDays": "Deaktiviert innerhalb der letzten … Tage",
+      "endedWithinDaysHint": "Nur Abos, die in diesem Zeitraum deaktiviert wurden.",
+      "endedWindow": {
+        "label": "Zeitraum der Abo-Deaktivierung",
+        "relative": "Letzte … Tage",
+        "period": "Fester Zeitraum",
+        "days": "Tage",
+        "periodPlaceholder": "Von – bis wählen",
+        "periodHint": "Nur Abos, die zwischen diesen beiden Daten deaktiviert wurden."
       }
     },
     "mailLog": {
