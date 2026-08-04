@@ -921,7 +921,7 @@
         "textContentReadonlyHint": "Wird automatisch aus dem Inhalt erzeugt. Bearbeite den Visuell- oder HTML-Tab, um ihn zu ändern.",
         "background": "Hintergrund",
         "contentWidth": "Breite (px)",
-        "purposeHint": "Bestimmt, in welcher Situation die Vorlage eingesetzt wird – und damit, welche Platzhalter zur Verfügung stehen."
+        "purposeHint": "Der Verwendungszweck legt fest, in welcher Situation diese Vorlage verschickt wird. Davon hängt ab, welche Daten – und damit welche Platzhalter – zur Verfügung stehen: Nur eine Rechnungs-Vorlage kennt z. B. den Rechnungsbetrag."
       },
       "editor": {
         "undo": "Rückgängig",
@@ -1079,6 +1079,14 @@
         "renewal": "Enthält zusätzlich Plan-/Zahlungsmethoden-Namen und Rechnungsdaten.",
         "invoiceCreation": "Achtung: Abo-Felder hier unter dem Präfix optional_subscriptionToCreateInvoice_*.",
         "custom": "Rechnungen kommen als Array: optional_invoices_0_* (neueste zuerst)."
+      },
+      "purposeDescriptions": {
+        "account": "Rund um das Benutzerkonto: Registrierung bestätigen, Login-Link senden, Passwort zurücksetzen. Verfügbar sind nur die Empfänger-Felder.",
+        "emailChange": "Bestätigung, wenn jemand seine E-Mail-Adresse ändert. Zusätzlich verfügbar: die neu gewünschte Adresse.",
+        "subscription": "Rund um das Abo selbst: neu abgeschlossen, bestätigt oder deaktiviert. Zusätzlich verfügbar: Abo-Stammdaten wie Betrag und Laufzeit.",
+        "renewal": "Automatische Verlängerung – erfolgreich oder fehlgeschlagen. Zusätzlich verfügbar: Plan- und Zahlungsmethoden-Name sowie die Rechnungsdaten.",
+        "invoiceCreation": "Sobald eine neue Rechnung erstellt wurde. Zusätzlich verfügbar: die Rechnung und das zugehörige Abo.",
+        "custom": "Frei verschickbare Mail an Abonnent:innen, z. B. ein Newsletter über «E-Mail senden». Zusätzlich verfügbar: das Abo und die letzten Rechnungen."
       }
     },
     "mailTemplateSelect": {

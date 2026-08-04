@@ -925,7 +925,7 @@
         "textContentReadonlyHint": "Généré automatiquement à partir du contenu. Modifiez l'onglet visuel ou HTML pour le changer.",
         "background": "Arrière-plan",
         "contentWidth": "Largeur (px)",
-        "purposeHint": "Définit la situation dans laquelle le modèle est utilisé — et donc les champs disponibles."
+        "purposeHint": "L’utilisation définit dans quelle situation ce modèle est envoyé. Elle détermine les données — et donc les champs — disponibles : seul un modèle de facture connaît le montant de la facture, par exemple."
       },
       "editor": {
         "undo": "Annuler",
@@ -1083,7 +1083,15 @@
       },
       "searchPlaceholders": "Rechercher…",
       "noPlaceholders": "Aucun espace réservé correspondant.",
-      "placeholderExample": "Exemple"
+      "placeholderExample": "Exemple",
+      "purposeDescriptions": {
+        "account": "Autour du compte utilisateur : confirmer l’inscription, envoyer un lien de connexion, réinitialiser le mot de passe. Seuls les champs du destinataire sont disponibles.",
+        "emailChange": "Confirmation lorsqu’une personne change son adresse e-mail. En plus : la nouvelle adresse demandée.",
+        "subscription": "Autour de l’abonnement lui-même : nouvellement souscrit, confirmé ou désactivé. En plus : les données de l’abonnement comme le montant et la durée.",
+        "renewal": "Renouvellement automatique — réussi ou échoué. En plus : le nom du plan et du moyen de paiement ainsi que les données de facturation.",
+        "invoiceCreation": "Dès qu’une nouvelle facture a été créée. En plus : la facture et l’abonnement correspondant.",
+        "custom": "Un e-mail libre aux abonné·e·s, p. ex. une newsletter via « Envoyer un e-mail ». En plus : l’abonnement et les dernières factures."
+      }
     },
     "mailTemplateSelect": {
       "noMailSentSelectNow": "pas d'envoi mail"

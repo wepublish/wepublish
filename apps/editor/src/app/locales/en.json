@@ -926,7 +926,7 @@
         "textContentReadonlyHint": "Automatically generated from the content. Edit the visual or HTML tab to change it.",
         "background": "Background",
         "contentWidth": "Width (px)",
-        "purposeHint": "Defines the situation this template is used in — and with it, which placeholders are available."
+        "purposeHint": "The purpose defines in which situation this template is sent. It determines which data — and therefore which placeholders — are available: only an invoice template knows the invoice amount, for example."
       },
       "editor": {
         "undo": "Undo",
@@ -1084,7 +1084,15 @@
       },
       "searchPlaceholders": "Search…",
       "noPlaceholders": "No matching placeholders.",
-      "placeholderExample": "Example"
+      "placeholderExample": "Example",
+      "purposeDescriptions": {
+        "account": "Around the user account: confirm registration, send a login link, reset a password. Only the recipient fields are available.",
+        "emailChange": "Confirmation when someone changes their email address. Additionally available: the newly requested address.",
+        "subscription": "Around the subscription itself: newly taken out, confirmed or deactivated. Additionally available: subscription data such as amount and term.",
+        "renewal": "Automatic renewal — successful or failed. Additionally available: plan and payment method names plus the invoice data.",
+        "invoiceCreation": "As soon as a new invoice has been created. Additionally available: the invoice and its subscription.",
+        "custom": "A mail you send freely to subscribers, e.g. a newsletter via «Send email». Additionally available: the subscription and the latest invoices."
+      }
     },
     "mailTemplateSelect": {
       "noMailSentSelectNow": "No mailing"

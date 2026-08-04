@@ -312,6 +312,7 @@ function MailTemplateEdit() {
 
   const contextOptions = MAIL_PLACEHOLDER_CONTEXTS.map(c => ({
     label: t(c.titleKey, c.title),
+    description: t(`mailTemplates.purposeDescriptions.${c.id}`),
     value: c.id,
   }));
 
@@ -390,10 +391,28 @@ function MailTemplateEdit() {
                   // rsuite's popup defaults to z-index 7; lift it above the
                   // sticky header row (z-index 10) so the menu isn't covered
                   // when it opens down over the content below.
-                  popupStyle={{ zIndex: 100 }}
+                  popupStyle={{ zIndex: 100, maxWidth: 520 }}
                   placeholder={t(
                     'mailTemplates.edit.selectMailTypePlaceholder',
                     'Choose a purpose …'
+                  )}
+                  // The purposes differ in which data they carry, which the
+                  // bare title doesn't convey — describe each one in the menu.
+                  renderOption={(label, item) => (
+                    <div style={{ paddingBlock: 2 }}>
+                      <div>{label}</div>
+                      <Typography
+                        variant="caption"
+                        display="block"
+                        style={{
+                          color: '#8e8e93',
+                          whiteSpace: 'normal',
+                          lineHeight: 1.35,
+                        }}
+                      >
+                        {(item as { description?: string }).description}
+                      </Typography>
+                    </div>
                   )}
                 />
                 <Typography
