@@ -3,10 +3,13 @@ import crypto from 'crypto';
 import FormData from 'form-data';
 import Client from 'mailgun.js/client';
 import {
+  CreateMailProviderTemplateProps,
   MailLogStatus,
   MailProviderError,
   MailProviderTemplate,
+  MailProviderTemplateContent,
   SendMailProps,
+  UpdateMailProviderTemplateProps,
   WebhookForSendMailProps,
   WithExternalId,
 } from './mail-provider.interface';
@@ -197,6 +200,116 @@ export class MailgunMailProvider extends BaseMailProvider {
   async getTemplateUrl(template: WithExternalId): Promise<string> {
     const config = await this.getConfig();
     return `https://app.mailgun.com/app/sending/domains/${config?.mailgun_mailDomain}/templates/details/${template.externalMailTemplateId}`;
+  }
+
+  async getTemplateContent(
+    template: WithExternalId
+  ): Promise<MailProviderTemplateContent> {
+    const config = await this.getConfig();
+    const mailgunClient = await this.getMailgunClient();
+    try {
+      const response = await mailgunClient.domains.domainTemplates.get(
+        config?.mailgun_mailDomain ?? '',
+        template.externalMailTemplateId,
+        { active: 'yes' } as never
+      );
+
+      return {
+        html: response.version?.template ?? '',
+      };
+    } catch (e: unknown) {
+      if (this.isMailgunApiError(e)) {
+        throw new MailProviderError(e.details);
+      }
+      throw new MailProviderError(String(e));
+    }
+  }
+
+  async createTemplate(
+    props: CreateMailProviderTemplateProps
+  ): Promise<MailProviderTemplate> {
+    const config = await this.getConfig();
+    const mailgunClient = await this.getMailgunClient();
+    try {
+      const response = await mailgunClient.domains.domainTemplates.create(
+        config?.mailgun_mailDomain ?? '',
+        {
+          name: props.name,
+          description: props.description ?? '',
+          template: props.html,
+          tag: 'v1',
+          engine: 'handlebars',
+          active: 'yes',
+        } as never
+      );
+
+      const template = (response as { template?: { name: string } }).template;
+      const name = template?.name ?? props.name;
+
+      return {
+        name,
+        uniqueIdentifier: name,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+    } catch (e: unknown) {
+      if (this.isMailgunApiError(e)) {
+        throw new MailProviderError(e.details);
+      }
+      throw new MailProviderError(String(e));
+    }
+  }
+
+  async updateTemplate(
+    template: WithExternalId,
+    props: UpdateMailProviderTemplateProps
+  ): Promise<void> {
+    const config = await this.getConfig();
+    const domain = config?.mailgun_mailDomain ?? '';
+    const mailgunClient = await this.getMailgunClient();
+    try {
+      // Mailgun stores template bodies as versions; pushing a new active
+      // version is how content edits are persisted.
+      await mailgunClient.domains.domainTemplates.createVersion(
+        domain,
+        template.externalMailTemplateId,
+        {
+          template: props.html,
+          tag: `v-${new Date().getTime()}`,
+          engine: 'handlebars',
+          active: 'yes',
+        } as never
+      );
+
+      if (props.description !== undefined) {
+        await mailgunClient.domains.domainTemplates.update(
+          domain,
+          template.externalMailTemplateId,
+          { description: props.description }
+        );
+      }
+    } catch (e: unknown) {
+      if (this.isMailgunApiError(e)) {
+        throw new MailProviderError(e.details);
+      }
+      throw new MailProviderError(String(e));
+    }
+  }
+
+  async deleteTemplate(template: WithExternalId): Promise<void> {
+    const config = await this.getConfig();
+    const mailgunClient = await this.getMailgunClient();
+    try {
+      await mailgunClient.domains.domainTemplates.destroy(
+        config?.mailgun_mailDomain ?? '',
+        template.externalMailTemplateId
+      );
+    } catch (e: unknown) {
+      if (this.isMailgunApiError(e)) {
+        throw new MailProviderError(e.details);
+      }
+      throw new MailProviderError(String(e));
+    }
   }
 
   async getName(): Promise<string> {
