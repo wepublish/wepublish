@@ -135,32 +135,32 @@ function CustomApp({
       src={`https://plausible.io/js/${settings?.analytics.plausible.key}.js`}
     >
       <AppCacheProvider emotionCache={cache}>
-        <WebsiteProvider>
-          <WebsiteBuilderProvider
-            Head={Head}
-            Script={Script}
-            Navbar={TsriNavbar}
-            ArticleMeta={TsriArticleMeta}
-            PaymentAmount={WntiPaymentAmountPicker}
-            elements={{ Link: NextWepublishLink }}
-            blocks={{
-              BaseTeaser: TsriTeaser,
-              Break: TsriBreakBlock,
-              Quote: TsriQuoteBlock,
-              RichText: TsriRichText,
-              Title: TsriTitle,
-              Subscribe: MitmachenInner,
-            }}
-            blockStyles={{
-              ContextBox: TsriContextBox,
-            }}
-            date={{ format: dateFormatter }}
-            meta={{ siteTitle }}
-            thirdParty={{
-              stripe: env?.stripeKey,
-            }}
-          >
-            <ThemeProvider theme={theme}>
+        <ThemeProvider theme={theme}>
+          <WebsiteProvider>
+            <WebsiteBuilderProvider
+              Head={Head}
+              Script={Script}
+              Navbar={TsriNavbar}
+              ArticleMeta={TsriArticleMeta}
+              PaymentAmount={WntiPaymentAmountPicker}
+              elements={{ Link: NextWepublishLink }}
+              blocks={{
+                BaseTeaser: TsriTeaser,
+                Break: TsriBreakBlock,
+                Quote: TsriQuoteBlock,
+                RichText: TsriRichText,
+                Title: TsriTitle,
+                Subscribe: MitmachenInner,
+              }}
+              blockStyles={{
+                ContextBox: TsriContextBox,
+              }}
+              date={{ format: dateFormatter }}
+              meta={{ siteTitle }}
+              thirdParty={{
+                stripe: env?.stripeKey,
+              }}
+            >
               <CssBaseline />
 
               <Head>
@@ -223,9 +223,9 @@ function CustomApp({
                     data-sparkloop
                   />
                 )}
-            </ThemeProvider>
-          </WebsiteBuilderProvider>
-        </WebsiteProvider>
+            </WebsiteBuilderProvider>
+          </WebsiteProvider>
+        </ThemeProvider>
       </AppCacheProvider>
     </PlausibleProvider>
   );

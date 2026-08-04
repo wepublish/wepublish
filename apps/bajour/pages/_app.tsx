@@ -136,33 +136,33 @@ function CustomApp({
           />
         </Head>
 
-        <WebsiteProvider>
-          <WebsiteBuilderProvider
-            meta={{ siteTitle }}
-            Head={Head}
-            Script={Script}
-            elements={{ Link: NextWepublishLink }}
-            date={{ format: dateFormatter }}
-            blocks={{
-              Renderer: BajourBlockRenderer,
-              BaseTeaser: BajourTeaser,
-              TeaserGrid: BajourTeaserGrid,
-              TeaserList: BajourTeaserList,
-              Break: BajourBreakBlock,
-              Quote: BajourQuoteBlock,
-              Title: BajourTitleBlock,
-            }}
-            blockStyles={{
-              ContextBox: BajourContextBox,
-              TeaserSlider: BajourTeaserSlider,
-            }}
-            thirdParty={{
-              stripe: env?.stripeKey,
-            }}
-            ArticleDate={BajourArticleDateWithShare}
-            Banner={BajourBanner}
-          >
-            <ThemeProvider theme={theme}>
+        <ThemeProvider theme={theme}>
+          <WebsiteProvider>
+            <WebsiteBuilderProvider
+              meta={{ siteTitle }}
+              Head={Head}
+              Script={Script}
+              elements={{ Link: NextWepublishLink }}
+              date={{ format: dateFormatter }}
+              blocks={{
+                Renderer: BajourBlockRenderer,
+                BaseTeaser: BajourTeaser,
+                TeaserGrid: BajourTeaserGrid,
+                TeaserList: BajourTeaserList,
+                Break: BajourBreakBlock,
+                Quote: BajourQuoteBlock,
+                Title: BajourTitleBlock,
+              }}
+              blockStyles={{
+                ContextBox: BajourContextBox,
+                TeaserSlider: BajourTeaserSlider,
+              }}
+              thirdParty={{
+                stripe: env?.stripeKey,
+              }}
+              ArticleDate={BajourArticleDateWithShare}
+              Banner={BajourBanner}
+            >
               <CssBaseline />
 
               <MainGrid>
@@ -221,9 +221,9 @@ function CustomApp({
                   strategy="afterInteractive"
                 />
               )}
-            </ThemeProvider>
-          </WebsiteBuilderProvider>
-        </WebsiteProvider>
+            </WebsiteBuilderProvider>
+          </WebsiteProvider>
+        </ThemeProvider>
       </AppCacheProvider>
     </PlausibleProvider>
   );
