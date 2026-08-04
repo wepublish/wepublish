@@ -1,5 +1,4 @@
-/* eslint-disable */
-export default {
+module.exports = {
   displayName: 'ai-api',
   preset: '../../../jest.preset.js',
   testEnvironment: 'node',

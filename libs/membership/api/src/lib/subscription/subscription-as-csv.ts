@@ -5,9 +5,7 @@ import {
   User,
   UserAddress,
 } from '@prisma/client';
-import formatISO from 'date-fns/formatISO';
-
-import { format } from 'date-fns';
+import { format, formatISO } from 'date-fns';
 import { SubscriptionWithRelations } from '../legacy/member-context';
 
 type UserWithRelations = User & {

@@ -1,4 +1,4 @@
-import { Meta } from '@storybook/react';
+import { Meta } from '@storybook/nextjs-vite';
 import { ImageGalleryBlock } from './image-gallery-block';
 import { mockImage } from '@wepublish/storybook/mocks';
 

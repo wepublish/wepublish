@@ -1,4 +1,4 @@
-import 'rsuite/styles/index.less';
+import 'rsuite/dist/rsuite.css';
 
 import { gql, useMutation } from '@apollo/client';
 import { css, Global } from '@emotion/react';
@@ -27,6 +27,7 @@ import {
 } from '@wepublish/editor/api';
 import { ImportableEventListView } from '@wepublish/event/import/editor';
 import {
+  MailTemplateEdit,
   MailTemplateList,
   MemberPlanEdit,
   PlaceholderList,
@@ -43,11 +44,11 @@ import { useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { CustomProvider } from 'rsuite';
+import de from 'rsuite/locales/de_DE';
 import enGB from 'rsuite/locales/en_GB';
+import fr from 'rsuite/locales/fr_FR';
 
 import { Base } from './base';
-import de from './locales/rsuiteDe';
-import fr from './locales/rsuiteFr';
 import { Login } from './login';
 import { LoginJwt } from './loginJwt';
 import { ResetPassword } from './resetPassword';
@@ -249,6 +250,24 @@ export function App() {
               top: 0;
               background-color: #1675e0;
             }
+          }
+
+          // Styles missing from v6 of rsuite
+          :root {
+            --rs-form-control-width: 100%;
+          }
+
+          .rs-grid-container-fluid,
+          .rs-form-group {
+            width: 100%;
+          }
+
+          .rs-drawer-header {
+            width: 100%;
+          }
+
+          .rs-drawer-dialog {
+            overflow: scroll;
           }
         `}
       />
@@ -970,6 +989,22 @@ export function App() {
               element={
                 <Base>
                   <MailTemplateList />
+                </Base>
+              }
+            />
+            <Route
+              path="mailtemplates/create"
+              element={
+                <Base>
+                  <MailTemplateEdit />
+                </Base>
+              }
+            />
+            <Route
+              path="mailtemplates/edit/:id"
+              element={
+                <Base>
+                  <MailTemplateEdit />
                 </Base>
               }
             />

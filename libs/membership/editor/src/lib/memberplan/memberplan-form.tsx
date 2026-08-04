@@ -44,16 +44,16 @@ import { MemberPlanPricing } from './memberplan-pricing';
 import { Alert } from '@mui/material';
 import styled from '@emotion/styled';
 
-const { ControlLabel, HelpText, Control } = RForm;
+const { Label, Text, Control } = RForm;
 
 const ColTextAlignEnd = styled(Col)`
   text-align: end;
 `;
 
-const FormControlLabelMarginRight = styled(ControlLabel)`
+const FormLabelMarginRight = styled(Label)`
   margin-right: 10px;
 `;
-const FormControlLabelMarginLeft = styled(ControlLabel)`
+const FormLabelMarginLeft = styled(Label)`
   margin-left: 10px;
 `;
 
@@ -220,9 +220,7 @@ export function MemberPlanForm({
           <Row>
             {/* product type */}
             <Col xs={24}>
-              <Form.ControlLabel>
-                {t('memberplanForm.productType')}
-              </Form.ControlLabel>
+              <Form.Label>{t('memberplanForm.productType')}</Form.Label>
               <SelectPicker
                 cleanable={false}
                 searchable={false}
@@ -250,7 +248,7 @@ export function MemberPlanForm({
                   });
                 }}
               />
-              <HelpText>{t('memberplanForm.productTypeHelpText')}</HelpText>
+              <Text>{t('memberplanForm.productTypeHelpText')}</Text>
             </Col>
 
             {/* image */}
@@ -271,9 +269,9 @@ export function MemberPlanForm({
 
             {/* active / inactive */}
             <ColTextAlignEnd xs={12}>
-              <FormControlLabelMarginRight>
+              <FormLabelMarginRight>
                 {t('memberPlanEdit.active')}
-              </FormControlLabelMarginRight>
+              </FormLabelMarginRight>
               <Toggle
                 checked={!!memberPlan?.active}
                 disabled={loading}
@@ -284,18 +282,14 @@ export function MemberPlanForm({
                   setMemberPlan({ ...memberPlan, active });
                 }}
               />
-              <Form.HelpText>
-                {t('memberPlanEdit.activeDescription')}
-              </Form.HelpText>
+              <Form.Text>{t('memberPlanEdit.activeDescription')}</Form.Text>
             </ColTextAlignEnd>
 
             <Col xs={24}>
               <Row>
                 {/* name */}
                 <Col xs={12}>
-                  <Form.ControlLabel>
-                    {t('memberPlanEdit.name')}
-                  </Form.ControlLabel>
+                  <Form.Label>{t('memberPlanEdit.name')}</Form.Label>
                   <Form.Control
                     name="name"
                     value={memberPlan?.name || ''}
@@ -307,9 +301,7 @@ export function MemberPlanForm({
 
                 {/* slug */}
                 <Col xs={12}>
-                  <Form.ControlLabel>
-                    {t('memberPlanEdit.slug')}
-                  </Form.ControlLabel>
+                  <Form.Label>{t('memberPlanEdit.slug')}</Form.Label>
                   <Form.Control
                     name="slug"
                     value={memberPlan?.slug || ''}
@@ -329,9 +321,7 @@ export function MemberPlanForm({
 
             {/* description */}
             <Col xs={24}>
-              <Form.ControlLabel>
-                {t('memberPlanEdit.description')}
-              </Form.ControlLabel>
+              <Form.Label>{t('memberPlanEdit.description')}</Form.Label>
 
               <RichTextBlock
                 value={memberPlan?.description}
@@ -350,9 +340,7 @@ export function MemberPlanForm({
 
             {/* short description */}
             <Col xs={24}>
-              <Form.ControlLabel>
-                {t('memberPlanEdit.shortDescription')}
-              </Form.ControlLabel>
+              <Form.Label>{t('memberPlanEdit.shortDescription')}</Form.Label>
 
               <RichTextBlock
                 value={memberPlan?.shortDescription}
@@ -370,9 +358,7 @@ export function MemberPlanForm({
             </Col>
 
             <Col xs={24}>
-              <Form.ControlLabel>
-                {t('memberPlanEdit.externalReward')}
-              </Form.ControlLabel>
+              <Form.Label>{t('memberPlanEdit.externalReward')}</Form.Label>
 
               <Form.Control
                 name="externalReward"
@@ -401,7 +387,7 @@ export function MemberPlanForm({
           {/* tags */}
           <Row>
             <Col xs={24}>
-              <Form.ControlLabel>{t('memberPlanEdit.tags')}</Form.ControlLabel>
+              <Form.Label>{t('memberPlanEdit.tags')}</Form.Label>
               <TagPicker
                 disabled={loading}
                 block
@@ -456,14 +442,14 @@ export function MemberPlanForm({
                 checked={memberPlan?.extendable}
                 onChange={extendable => setExtendable(extendable)}
               />
-              <FormControlLabelMarginLeft>
+              <FormLabelMarginLeft>
                 {t('memberplanForm.extendableToggle')}
-              </FormControlLabelMarginLeft>
-              <HelpText>{t('memberplanForm.extendableHelpText')}</HelpText>
+              </FormLabelMarginLeft>
+              <Text>{t('memberplanForm.extendableHelpText')}</Text>
             </Col>
             {/* max count */}
             <Col xs={12}>
-              <ControlLabel>{maxCountLabel}</ControlLabel>
+              <Label>{maxCountLabel}</Label>
               <Input
                 placeholder={maxCountLabel}
                 type={'number'}
@@ -479,12 +465,12 @@ export function MemberPlanForm({
                   });
                 }}
               />
-              <HelpText>{maxCountHelpText}</HelpText>
+              <Text>{maxCountHelpText}</Text>
             </Col>
           </RowPaddingTop>
           <RowPaddingTop>
             <Col xs={12}>
-              <ControlLabel>{t('memberplanForm.migratePMTitle')}</ControlLabel>
+              <Label>{t('memberplanForm.migratePMTitle')}</Label>
               <Control
                 name="migrateToTargetPaymentMethodID"
                 block
@@ -505,7 +491,7 @@ export function MemberPlanForm({
                   })
                 }
               />
-              <HelpText>{t('memberplanForm.migratePMHelptext')}</HelpText>
+              <Text>{t('memberplanForm.migratePMHelptext')}</Text>
             </Col>
           </RowPaddingTop>
 
@@ -514,9 +500,7 @@ export function MemberPlanForm({
             {t('memberplanForm.redirectionsTitle')}
           </DividerTextAlignLeft>
           <Row>
-            <Form.ControlLabel>
-              {t('memberPlanEdit.successPage')}
-            </Form.ControlLabel>
+            <Form.Label>{t('memberPlanEdit.successPage')}</Form.Label>
             <SelectPage
               setSelectedPage={successPageId => {
                 if (!memberPlan) {
@@ -531,9 +515,7 @@ export function MemberPlanForm({
           </Row>
 
           <RowPaddingTop>
-            <Form.ControlLabel>
-              {t('memberPlanEdit.failPage')}
-            </Form.ControlLabel>
+            <Form.Label>{t('memberPlanEdit.failPage')}</Form.Label>
             <SelectPage
               setSelectedPage={failPageId => {
                 if (!memberPlan) {
@@ -548,9 +530,7 @@ export function MemberPlanForm({
           </RowPaddingTop>
 
           <RowPaddingTop>
-            <Form.ControlLabel>
-              {t('memberplanForm.confirmationPage')}
-            </Form.ControlLabel>
+            <Form.Label>{t('memberplanForm.confirmationPage')}</Form.Label>
             <SelectPage
               setSelectedPage={confirmationPageId => {
                 if (!memberPlan) {
@@ -563,7 +543,7 @@ export function MemberPlanForm({
               name="failPageId"
             />
           </RowPaddingTop>
-          <HelpText>{t('memberplanForm.confirmationPageHelptext')}</HelpText>
+          <Text>{t('memberplanForm.confirmationPageHelptext')}</Text>
         </Panel>
       </Col>
 
@@ -576,9 +556,7 @@ export function MemberPlanForm({
           <Row>
             {/* currency */}
             <Col xs={12}>
-              <Form.ControlLabel>
-                {t('memberPlanEdit.currency')}
-              </Form.ControlLabel>
+              <Form.Label>{t('memberPlanEdit.currency')}</Form.Label>
               <SelectPicker
                 name="currency"
                 cleanable={false}
@@ -601,9 +579,9 @@ export function MemberPlanForm({
               {/* default payment periodicity */}
               <RowPaddingTop>
                 <Col xs={24}>
-                  <Form.ControlLabel>
+                  <Form.Label>
                     {t('memberplanForm.defaultPaymentPeriodicity')}
-                  </Form.ControlLabel>
+                  </Form.Label>
                   <SelectPicker
                     cleanable
                     searchable={false}
@@ -630,9 +608,9 @@ export function MemberPlanForm({
                       });
                     }}
                   />
-                  <HelpText>
+                  <Text>
                     {t('memberplanForm.defaultPaymentPeriodicityHelpText')}
-                  </HelpText>
+                  </Text>
                 </Col>
               </RowPaddingTop>
             </Col>
@@ -658,9 +636,9 @@ export function MemberPlanForm({
                     <Row>
                       {/* force auto-renew */}
                       <Col xs={24}>
-                        <FormControlLabelMarginRight>
+                        <FormLabelMarginRight>
                           {t('memberPlanEdit.forceAutoRenewal')}
-                        </FormControlLabelMarginRight>
+                        </FormLabelMarginRight>
                         <Toggle
                           checked={value.forceAutoRenewal}
                           disabled={loading}
@@ -672,16 +650,16 @@ export function MemberPlanForm({
                             )
                           }
                         />
-                        <Form.HelpText>
+                        <Form.Text>
                           {t('memberPlanEdit.autoRenewalDescription')}
-                        </Form.HelpText>
+                        </Form.Text>
                       </Col>
 
                       {/* payment periodicity */}
                       <Col xs={24}>
-                        <Form.ControlLabel>
+                        <Form.Label>
                           {t('memberPlanList.paymentPeriodicities')}
-                        </Form.ControlLabel>
+                        </Form.Label>
                         <CheckPicker
                           virtualized
                           value={value.paymentPeriodicities}
@@ -700,9 +678,9 @@ export function MemberPlanForm({
 
                       {/* payment method selection */}
                       <Col xs={24}>
-                        <Form.ControlLabel>
+                        <Form.Label>
                           {t('memberPlanList.paymentMethods')}
-                        </Form.ControlLabel>
+                        </Form.Label>
                         <CheckPicker
                           virtualized
                           value={value.paymentMethods.map(pm => pm.id)}

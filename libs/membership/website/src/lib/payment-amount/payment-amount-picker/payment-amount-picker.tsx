@@ -4,13 +4,38 @@ import {
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { Currency, PaymentPeriodicity } from '@wepublish/website/api';
-import { forwardRef, PropsWithChildren, useMemo } from 'react';
+import { forwardRef, PropsWithChildren, useState } from 'react';
 import { formatCurrency } from '../../formatters/format-currency';
 import {
   calculatePeriodAmount,
   monthlyAmountFromPeriodAmount,
 } from '../../formatters/format-payment-period';
+import {
+  CurrencyNumberSpinner,
+  CurrencyNumberSpinnerSnap,
+  HelperText,
+} from './currency-number-spinner';
 import styled from '@emotion/styled';
+
+const formatNumber = (value: number, format: string, locale = 'de-CH') => {
+  const [intPart = '', fracPart = ''] = format.split('.');
+  const useGrouping = intPart.includes(',');
+
+  const minimumIntegerDigits = Math.max(1, (intPart.match(/0/g) || []).length);
+  const minimumFractionDigits = (fracPart.match(/0/g) || []).length;
+  const maximumFractionDigits = Math.max(
+    minimumFractionDigits,
+    (fracPart.match(/[0#]/g) || []).length
+  );
+
+  return new Intl.NumberFormat(locale, {
+    style: 'decimal',
+    minimumIntegerDigits,
+    minimumFractionDigits,
+    maximumFractionDigits,
+    useGrouping,
+  }).format(value);
+};
 
 export const PaymentAmountPickerWrapper = styled(RadioGroup)`
   display: grid;
@@ -55,6 +80,10 @@ export const PaymentAmountPickerItemWrapper = styled('div')<
     css`
       color: ${theme.palette.primary.contrastText};
       background: ${theme.palette.primary.light};
+
+      ${HelperText} {
+        color: ${theme.palette.primary.contrastText};
+      }
     `}
 `;
 
@@ -78,6 +107,8 @@ export const PaymentAmountPickerItemAmount = styled('div')`
   font-weight: 600;
 `;
 
+export const StyledCurrencyNumberSpinner = styled(CurrencyNumberSpinner)``;
+
 export const PaymentAmountPickerItem = forwardRef<
   HTMLButtonElement,
   PaymentAmountPickerItemProps
@@ -100,16 +131,27 @@ export const PaymentAmountPickerItem = forwardRef<
 
 export const PaymentAmountPicker = forwardRef<
   HTMLInputElement,
-  BuilderPaymentAmountProps
+  BuilderPaymentAmountProps & {
+    pickerItems: number[];
+    format?: string;
+    step?: number;
+    snap?: CurrencyNumberSpinnerSnap;
+    arrows?: 'split' | 'stacked';
+    noInitialSelection?: boolean;
+  }
 >(
   (
     {
       className,
-      slug,
       currency,
       amountPerMonthMin,
       amountPerMonthTarget,
       paymentPeriodicity = PaymentPeriodicity.Monthly,
+      pickerItems,
+      format,
+      snap,
+      arrows,
+      noInitialSelection,
       name,
       error,
       value,
@@ -118,8 +160,7 @@ export const PaymentAmountPicker = forwardRef<
     ref
   ) => {
     const {
-      elements: { TextField },
-      meta: { locale, siteTitle },
+      meta: { locale },
     } = useWebsiteBuilder();
 
     const periodValue = calculatePeriodAmount(value, paymentPeriodicity);
@@ -135,16 +176,12 @@ export const PaymentAmountPicker = forwardRef<
         )
       );
 
-    const pickerItems = useMemo(() => {
-      switch (siteTitle) {
-        case 'WNTI':
-          return slug?.includes('donate') ?
-              [10000, 15000, 20000]
-            : [1000, 1500, 2000];
-        default:
-          return [1000, 1500, 2000];
-      }
-    }, [siteTitle, slug]);
+    const [hasInteracted, setHasInteracted] = useState(false);
+    const showSelection = !noInitialSelection || hasInteracted;
+    const isCustomValue =
+      snap ?
+        !snap.values.some(v => v * 100 === periodValue)
+      : !pickerItems.some(p => p === periodValue);
 
     return (
       <PaymentAmountPickerWrapper
@@ -152,6 +189,7 @@ export const PaymentAmountPicker = forwardRef<
         name={name}
         onChange={event => {
           if (+event.target.value) {
+            setHasInteracted(true);
             handlePeriodAmountChange(+event.target.value);
           }
         }}
@@ -164,10 +202,12 @@ export const PaymentAmountPicker = forwardRef<
             control={
               <PaymentAmountPickerItem
                 currency={currency}
-                checked={itemAmount === periodValue}
+                checked={showSelection && itemAmount === periodValue}
               >
                 <PaymentAmountPickerItemAmount>
-                  {formatCurrency(itemAmount / 100, currency, locale, false)}
+                  {format ?
+                    formatNumber(itemAmount / 100, format, locale)
+                  : formatCurrency(itemAmount / 100, currency, locale, false)}
                 </PaymentAmountPickerItemAmount>
               </PaymentAmountPickerItem>
             }
@@ -180,22 +220,23 @@ export const PaymentAmountPicker = forwardRef<
           control={
             <PaymentAmountPickerItem
               currency={currency}
-              checked={false}
+              checked={showSelection && isCustomValue}
             >
-              <TextField
-                ref={ref}
-                name={name}
-                value={Math.round(periodValue) / 100}
-                onChange={event =>
-                  handlePeriodAmountChange(+event.target.value * 100)
+              <StyledCurrencyNumberSpinner
+                value={
+                  showSelection ? Math.round(periodValue) / 100 : undefined
                 }
-                type={'number'}
-                fullWidth
-                error={!!error}
+                min={periodMin / 100}
+                snap={snap}
+                arrows={arrows}
                 helperText={`Min ${formatCurrency(periodMin / 100, currency, locale)}`}
-                inputProps={{
-                  step: 'any',
-                  min: periodMin / 100,
+                onValueChange={v => {
+                  setHasInteracted(true);
+                  if (typeof v === 'number' && v >= 0) {
+                    handlePeriodAmountChange(v ? v * 100 : 0);
+                  } else {
+                    onChange(0);
+                  }
                 }}
               />
             </PaymentAmountPickerItem>

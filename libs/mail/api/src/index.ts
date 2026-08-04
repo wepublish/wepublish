@@ -4,6 +4,9 @@ export * from './lib/mail-provider/mailgun-mail-provider';
 export * from './lib/mail-provider/mailchimp-mail-provider';
 export * from './lib/mail-provider/fake-mail-provider';
 
+export * from './lib/flatten';
+export * from './lib/placeholders/mail-placeholders';
+
 export * from './lib/mail.webhook';
 export * from './lib/mail.controller';
 export * from './lib/mail-context';

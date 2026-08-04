@@ -35,7 +35,7 @@ import {
   mapBexioStatusToPaymentStatus,
   searchForContact,
 } from './bexio-utils';
-import fetch from 'node-fetch';
+import fetch, { RequestInit } from 'node-fetch';
 import { inspect } from 'util';
 
 export class BexioPaymentProvider extends BasePaymentProvider {
@@ -188,7 +188,7 @@ export class BexioPaymentProvider extends BasePaymentProvider {
 
     const response = await fetch(`${bexioBaseUrl}/kb_invoice/${intentID}`, {
       headers,
-      signal: AbortSignal.timeout(30_000),
+      signal: AbortSignal.timeout(30_000) as unknown as RequestInit['signal'],
     });
 
     if (response.status !== 200) {

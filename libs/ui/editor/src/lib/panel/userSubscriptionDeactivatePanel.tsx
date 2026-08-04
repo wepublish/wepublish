@@ -13,7 +13,7 @@ import {
 
 import { createCheckedPermissionComponent } from '../atoms';
 
-const { Group, ControlLabel } = RForm;
+const { Group, Label } = RForm;
 
 const Form = styled(RForm)`
   margin-top: 20px;
@@ -63,69 +63,67 @@ function UserSubscriptionDeactivatePanel({
             userEmail,
           })}
         </p>
-        <Form fluid>
-          <Group controlId="deactivationDate">
-            <ControlLabel>
-              {t('userSubscriptionEdit.deactivation.date')}
-            </ControlLabel>
-            <DatePicker
-              block
-              placement="auto"
-              value={deactivationDate}
-              onChange={value => setDeactivationDate(value)}
-            />
-          </Group>
+        <Form>
+          <RForm.Stack fluid>
+            <Group controlId="deactivationDate">
+              <Label>{t('userSubscriptionEdit.deactivation.date')}</Label>
+              <DatePicker
+                block
+                placement="auto"
+                value={deactivationDate}
+                onChange={value => setDeactivationDate(value)}
+              />
+            </Group>
 
-          <Group controlId="deactivationReason">
-            <ControlLabel>
-              {t('userSubscriptionEdit.deactivation.reason')}
-            </ControlLabel>
-            <SelectPicker
-              virtualized
-              searchable={false}
-              data={[
-                {
-                  value: SubscriptionDeactivationReason.None,
-                  label: t('userSubscriptionEdit.deactivation.reasonNone'),
-                },
-                {
-                  value: SubscriptionDeactivationReason.UserSelfDeactivated,
-                  label: t(
-                    'userSubscriptionEdit.deactivation.reasonUserSelfDeactivated'
-                  ),
-                },
-                {
-                  value: SubscriptionDeactivationReason.InvoiceNotPaid,
-                  label: t(
-                    'userSubscriptionEdit.deactivation.reasonInvoiceNotPaid'
-                  ),
-                },
-                {
-                  value:
-                    SubscriptionDeactivationReason.UserReplacedSubscription,
-                  label: t(
-                    'userSubscriptionEdit.deactivation.reasonUserReplacedSubscription'
-                  ),
-                },
-                {
-                  value: SubscriptionDeactivationReason.Chargeback,
-                  label: t(
-                    'userSubscriptionEdit.deactivation.reasonChargeback'
-                  ),
-                },
-              ]}
-              value={deactivationReason}
-              block
-              placement="auto"
-              onChange={value => setDeactivationReason(value)}
-            />
-          </Group>
-          <Message
-            showIcon
-            type="info"
-          >
-            {t('userSubscriptionEdit.deactivation.help')}
-          </Message>
+            <Group controlId="deactivationReason">
+              <Label>{t('userSubscriptionEdit.deactivation.reason')}</Label>
+              <SelectPicker
+                virtualized
+                searchable={false}
+                data={[
+                  {
+                    value: SubscriptionDeactivationReason.None,
+                    label: t('userSubscriptionEdit.deactivation.reasonNone'),
+                  },
+                  {
+                    value: SubscriptionDeactivationReason.UserSelfDeactivated,
+                    label: t(
+                      'userSubscriptionEdit.deactivation.reasonUserSelfDeactivated'
+                    ),
+                  },
+                  {
+                    value: SubscriptionDeactivationReason.InvoiceNotPaid,
+                    label: t(
+                      'userSubscriptionEdit.deactivation.reasonInvoiceNotPaid'
+                    ),
+                  },
+                  {
+                    value:
+                      SubscriptionDeactivationReason.UserReplacedSubscription,
+                    label: t(
+                      'userSubscriptionEdit.deactivation.reasonUserReplacedSubscription'
+                    ),
+                  },
+                  {
+                    value: SubscriptionDeactivationReason.Chargeback,
+                    label: t(
+                      'userSubscriptionEdit.deactivation.reasonChargeback'
+                    ),
+                  },
+                ]}
+                value={deactivationReason}
+                block
+                placement="auto"
+                onChange={value => setDeactivationReason(value)}
+              />
+            </Group>
+            <Message
+              showIcon
+              type="info"
+            >
+              {t('userSubscriptionEdit.deactivation.help')}
+            </Message>
+          </RForm.Stack>
         </Form>
       </Modal.Body>
 

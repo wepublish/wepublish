@@ -30,6 +30,25 @@ export interface MailProviderTemplate {
   updatedAt: Date;
 }
 
+export interface MailProviderTemplateContent {
+  html: string;
+  subject?: string;
+}
+
+export interface CreateMailProviderTemplateProps {
+  name: string;
+  description?: string;
+  html: string;
+  subject?: string;
+}
+
+export interface UpdateMailProviderTemplateProps {
+  name?: string;
+  description?: string;
+  html: string;
+  subject?: string;
+}
+
 export type WithExternalId = {
   externalMailTemplateId: string;
 };
@@ -60,6 +79,21 @@ export interface MailProvider {
   getTemplates(): Promise<MailProviderTemplate[]>;
 
   getTemplateUrl(template: WithExternalId): Promise<string>;
+
+  getTemplateContent(
+    template: WithExternalId
+  ): Promise<MailProviderTemplateContent>;
+
+  createTemplate(
+    props: CreateMailProviderTemplateProps
+  ): Promise<MailProviderTemplate>;
+
+  updateTemplate(
+    template: WithExternalId,
+    props: UpdateMailProviderTemplateProps
+  ): Promise<void>;
+
+  deleteTemplate(template: WithExternalId): Promise<void>;
 
   getName(): Promise<string>;
 

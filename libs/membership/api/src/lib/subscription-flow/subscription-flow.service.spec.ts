@@ -262,7 +262,7 @@ describe('SubscriptionFlowService', () => {
         periodicities: [],
         autoRenewal: [],
       })
-    ).rejects.toThrowError();
+    ).rejects.toThrow();
   });
 
   it('creates intervals for an existing flow', async () => {

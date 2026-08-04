@@ -173,9 +173,7 @@ export function SelectCommentPanel({
       <DrawerBody>
         <FormGroupWrapper>
           <Form.Group controlId="tags">
-            <Form.ControlLabel>
-              {t('blocks.comment.filterByTag')}
-            </Form.ControlLabel>
+            <Form.Label>{t('blocks.comment.filterByTag')}</Form.Label>
 
             <SelectTags
               defaultTags={[]}

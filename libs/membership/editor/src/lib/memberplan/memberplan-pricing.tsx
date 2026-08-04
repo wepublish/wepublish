@@ -14,7 +14,7 @@ import {
   PAYMENT_PERIODICITY_MONTHS,
 } from '@wepublish/ui/editor';
 
-const { HelpText } = Form;
+const { Text } = Form;
 
 const TAB_PERIODICITY_ORDER = [
   PaymentPeriodicity.Monthly,
@@ -232,9 +232,7 @@ export function MemberPlanPricing({
         header={t('memberplanForm.periodicityPricing')}
         bordered
       >
-        <HelpText>
-          {t('memberplanForm.periodicityPricingNoPeriodicities')}
-        </HelpText>
+        <Text>{t('memberplanForm.periodicityPricingNoPeriodicities')}</Text>
       </PanelWidth100>
     );
   }
@@ -286,13 +284,13 @@ export function MemberPlanPricing({
       header={t('memberplanForm.periodicityPricing')}
       bordered
     >
-      <HelpText>
+      <Text>
         {t(
           monthlyEnabled ?
             'memberplanForm.periodicityPricingHelpText'
           : 'memberplanForm.periodicityPricingHelpTextNoMonthly'
         )}
-      </HelpText>
+      </Text>
 
       <Nav
         appearance="tabs"
@@ -324,9 +322,7 @@ export function MemberPlanPricing({
         {isMonthlyTab ?
           <Row>
             <Col xs={8}>
-              <Form.ControlLabel>
-                {t('memberPlanEdit.amountPerMonthMin')}
-              </Form.ControlLabel>
+              <Form.Label>{t('memberPlanEdit.amountPerMonthMin')}</Form.Label>
               <CurrencyInput
                 name="amountPerMonthMin"
                 currency={currency}
@@ -342,15 +338,13 @@ export function MemberPlanPricing({
                   });
                 }}
               />
-              <HelpText>
-                {t('memberplanForm.amountPerMonthMinHelpText')}
-              </HelpText>
+              <Text>{t('memberplanForm.amountPerMonthMinHelpText')}</Text>
             </Col>
 
             <Col xs={8}>
-              <Form.ControlLabel>
+              <Form.Label>
                 {t('memberplanForm.amountPerMonthTarget')}
-              </Form.ControlLabel>
+              </Form.Label>
               <CurrencyInput
                 name="amountPerMonthTarget"
                 currency={currency}
@@ -366,15 +360,11 @@ export function MemberPlanPricing({
                   });
                 }}
               />
-              <HelpText>
-                {t('memberplanForm.amountPerMonthTargetHelpText')}
-              </HelpText>
+              <Text>{t('memberplanForm.amountPerMonthTargetHelpText')}</Text>
             </Col>
 
             <Col xs={8}>
-              <Form.ControlLabel>
-                {t('memberPlanEdit.amountPerMonthMax')}
-              </Form.ControlLabel>
+              <Form.Label>{t('memberPlanEdit.amountPerMonthMax')}</Form.Label>
               <CurrencyInput
                 name="amountPerMonthMax"
                 currency={currency}
@@ -390,9 +380,7 @@ export function MemberPlanPricing({
                   });
                 }}
               />
-              <HelpText>
-                {t('memberplanForm.amountPerMonthMaxHelpText')}
-              </HelpText>
+              <Text>{t('memberplanForm.amountPerMonthMaxHelpText')}</Text>
             </Col>
           </Row>
         : <>
@@ -400,11 +388,11 @@ export function MemberPlanPricing({
               <Row>
                 <Col xs={18}>
                   {delta != null && delta !== 0 && referenceDerived != null && (
-                    <HelpText>
+                    <Text>
                       {t('memberplanForm.periodicityPricingDelta', {
                         delta: formatDelta(delta, referenceDerived, currency),
                       })}
-                    </HelpText>
+                    </Text>
                   )}
                 </Col>
 
@@ -442,9 +430,9 @@ export function MemberPlanPricing({
 
             <Row>
               <Col xs={8}>
-                <Form.ControlLabel>
+                <Form.Label>
                   {t('memberplanForm.periodicityPricingMin')}
-                </Form.ControlLabel>
+                </Form.Label>
                 <CurrencyInput
                   name={`periodicityPricing.${periodicity}.amountMin`}
                   currency={currency}
@@ -460,9 +448,9 @@ export function MemberPlanPricing({
               </Col>
 
               <Col xs={8}>
-                <Form.ControlLabel>
+                <Form.Label>
                   {t('memberplanForm.periodicityPricingTarget')}
-                </Form.ControlLabel>
+                </Form.Label>
                 <CurrencyInput
                   name={`periodicityPricing.${periodicity}.amountTarget`}
                   currency={currency}
@@ -483,9 +471,9 @@ export function MemberPlanPricing({
               </Col>
 
               <Col xs={8}>
-                <Form.ControlLabel>
+                <Form.Label>
                   {t('memberplanForm.periodicityPricingMax')}
-                </Form.ControlLabel>
+                </Form.Label>
                 <CurrencyInput
                   name={`periodicityPricing.${periodicity}.amountMax`}
                   currency={currency}
@@ -508,9 +496,9 @@ export function MemberPlanPricing({
 
         <RowPaddingTop>
           <Col xs={12}>
-            <Form.ControlLabel>
+            <Form.Label>
               {t('memberplanForm.periodicityPricingLabel')}
-            </Form.ControlLabel>
+            </Form.Label>
             <Input
               value={override?.label ?? ''}
               disabled={loading}
@@ -519,9 +507,7 @@ export function MemberPlanPricing({
                 setPeriodicityLabel(value?.trim() ? value : null)
               }
             />
-            <HelpText>
-              {t('memberplanForm.periodicityPricingLabelHelpText')}
-            </HelpText>
+            <Text>{t('memberplanForm.periodicityPricingLabelHelpText')}</Text>
           </Col>
         </RowPaddingTop>
       </TabContent>

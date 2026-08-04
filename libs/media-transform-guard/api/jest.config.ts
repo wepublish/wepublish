@@ -1,5 +1,4 @@
-/* eslint-disable */
-export default {
+module.exports = {
   displayName: 'media-transform-guard-api',
   preset: '../../../jest.preset.js',
   globals: {},
