@@ -91,6 +91,15 @@ export default [
     },
   },
   {
+    // The per-project vitest configs share their setup through the root-level
+    // `vitest.shared.ts`, which is not part of any project and therefore has to
+    // be imported by a relative path.
+    files: ['**/vitest.config.ts'],
+    rules: {
+      '@nx/enforce-module-boundaries': 'off',
+    },
+  },
+  {
     ignores: ['**/__generated__/**', '**/*/seed.ts'],
   },
 ];
