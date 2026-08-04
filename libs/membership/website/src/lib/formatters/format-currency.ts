@@ -10,7 +10,10 @@ export const formatCurrency = (
     style: includeCurrency ? 'currency' : 'decimal',
     currency,
   });
-  let result = formatter.format(value);
+
+  // Different CLDR versions format numbers differently.
+  // Currently the browser CLDR and node v22 CLDR are different
+  let result = formatter.format(value).replace(/[’ʼ]/g, "'");
 
   if (currency === Currency.Chf && result.endsWith('.00')) {
     result = result.replace('.00', '.-');

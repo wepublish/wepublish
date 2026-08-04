@@ -2,6 +2,7 @@ import {
   PrismaClient,
   SubscriptionDeactivationReason,
   SubscriptionPeriod,
+  Voucher,
 } from '@prisma/client';
 import {
   BadRequestException,
@@ -12,6 +13,8 @@ import {
 import { differenceInDays, endOfDay, startOfDay } from 'date-fns';
 import { MemberContextService } from '../legacy/member-context.service';
 import { PaymentsService } from '@wepublish/payment/api';
+import { VoucherService } from '../voucher/voucher.service';
+import { calculateAmountForPeriodicity } from '../legacy/member-context';
 
 const roundUpTo5Cents = (amount: number) =>
   (Math.ceil((amount / 100) * 20) / 20) * 100;
@@ -41,7 +44,8 @@ export class UpgradeSubscriptionService {
   constructor(
     private prisma: PrismaClient,
     private memberContext: MemberContextService,
-    private payments: PaymentsService
+    private payments: PaymentsService,
+    private voucherService: VoucherService
   ) {}
 
   private async validateForUpgrade({
@@ -155,6 +159,7 @@ export class UpgradeSubscriptionService {
     successURL,
     failureURL,
     monthlyAmount,
+    voucher,
   }: {
     userId: string;
     subscriptionId: string;
@@ -163,6 +168,7 @@ export class UpgradeSubscriptionService {
     successURL?: string;
     failureURL?: string;
     monthlyAmount: number;
+    voucher?: string;
   }) {
     const { oldSubscription, oldSubscriptionPeriods } =
       await this.validateForUpgrade({
@@ -171,6 +177,33 @@ export class UpgradeSubscriptionService {
         paymentMethodId,
         userId,
       });
+
+    const leftoverDiscount =
+      oldSubscriptionPeriods.length ?
+        leftoverSubscriptionPeriodAmount(oldSubscriptionPeriods)
+      : 0;
+
+    let voucherId: string | undefined = undefined;
+    let voucherDiscount = 0;
+
+    if (voucher) {
+      const voucherObj = await this.voucherService.getValidVoucher(
+        voucher,
+        memberPlanId
+      );
+
+      const amountAfterLeftoverDiscount = Math.max(
+        calculateAmountForPeriodicity(
+          monthlyAmount,
+          oldSubscription.paymentPeriodicity
+        ) - leftoverDiscount,
+        0
+      );
+
+      voucherId = voucherObj.id;
+      voucherDiscount =
+        amountAfterLeftoverDiscount * (voucherObj.discountPercent / 100);
+    }
 
     const { invoice } = await this.memberContext.createSubscription({
       userID: userId,
@@ -183,10 +216,8 @@ export class UpgradeSubscriptionService {
       extendable: oldSubscription.extendable,
       replacedSubscriptionId: oldSubscription.id,
       startsAt: new Date(),
-      discount:
-        oldSubscriptionPeriods.length ?
-          leftoverSubscriptionPeriodAmount(oldSubscriptionPeriods)
-        : undefined,
+      discount: leftoverDiscount + voucherDiscount || undefined,
+      voucherId,
     });
 
     await Promise.all([
@@ -238,10 +269,12 @@ export class UpgradeSubscriptionService {
     userId,
     subscriptionId,
     memberPlanId,
+    voucher,
   }: {
     userId: string;
     subscriptionId: string;
     memberPlanId: string;
+    voucher?: string;
   }) {
     const { oldSubscriptionPeriods } = await this.validateForUpgrade({
       memberPlanId,
@@ -250,8 +283,30 @@ export class UpgradeSubscriptionService {
       userId,
     });
 
-    return oldSubscriptionPeriods.length ?
+    const discountAmount =
+      oldSubscriptionPeriods.length ?
         leftoverSubscriptionPeriodAmount(oldSubscriptionPeriods)
       : 0;
+
+    if (!voucher) {
+      return { discountAmount };
+    }
+
+    let validVoucher: Voucher | null = null;
+
+    try {
+      validVoucher = await this.voucherService.getValidVoucher(
+        voucher,
+        memberPlanId
+      );
+    } catch (e) {
+      validVoucher = null;
+    }
+
+    return {
+      discountAmount,
+      voucherValid: !!validVoucher,
+      discountPercent: validVoucher ? validVoucher.discountPercent / 100 : 0,
+    };
   }
 }

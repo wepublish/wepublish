@@ -33,7 +33,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { formatCurrency, roundUpTo5Cents } from '../formatters/format-currency';
 import {
-  formatFirstPaymentPeriod,
+  formatAfterFirstPaymentPeriod,
   formatPaymentPeriod,
   getPaymentPeriodicyMonths,
 } from '../formatters/format-payment-period';
@@ -124,10 +124,8 @@ export const SubscribeCancelable = styled('div')`
   justify-self: center;
 `;
 
-export const SubscribeWithDiscount = styled('div')`
-  text-align: center;
-  justify-self: center;
-  font-weight: 600;
+export const SubscribeContinuation = styled(SubscribeCancelable)`
+  margin-bottom: ${({ theme }) => theme.spacing(1)};
 `;
 
 export const SubscribeNarrowSection = styled(SubscribeSection)`
@@ -204,7 +202,7 @@ export const usePaymentText = ({
   ]);
 };
 
-export const useDiscountText = ({
+export const useContinuationText = ({
   memberPlan,
   paymentPeriodicity,
   monthlyAmount,
@@ -221,7 +219,9 @@ export const useDiscountText = ({
 
   return useMemo(() => {
     const variables = {
-      paymentPeriod: formatFirstPaymentPeriod(paymentPeriodicity),
+      afterFirstPaymentPeriod:
+        formatAfterFirstPaymentPeriod(paymentPeriodicity),
+      renewalPeriodL: formatRenewalPeriod(paymentPeriodicity).toLowerCase(),
       formattedAmount: formatCurrency(
         (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity),
         currency,
@@ -231,7 +231,7 @@ export const useDiscountText = ({
       memberPlan,
     };
 
-    return t(`subscribe.discount`, variables);
+    return t(`subscribe.continuation`, variables);
   }, [currency, locale, monthlyAmount, paymentPeriodicity, memberPlan, t]);
 };
 
@@ -347,7 +347,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     resolver: zodResolver(schem),
     defaultValues: {
       ...defaults,
-      voucher: '',
+      voucher: defaults?.voucher ?? '',
       monthlyAmount: 0,
       autoRenew: true,
       payTransactionFee: false,
@@ -421,16 +421,16 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     extendable: selectedMemberPlan?.extendable ?? true,
     productType: selectedMemberPlan?.productType ?? ProductType.Subscription,
     paymentPeriodicity: selectedPaymentPeriodicity,
-    monthlyAmount,
+    monthlyAmount: monthlyAmount * (1 - discountPercent),
     currency: selectedMemberPlan?.currency ?? Currency.Chf,
     siteTitle,
     locale,
   });
 
-  const discountText = useDiscountText({
+  const continuationText = useContinuationText({
     memberPlan: selectedMemberPlan?.name ?? '',
     paymentPeriodicity: selectedPaymentPeriodicity,
-    monthlyAmount: monthlyAmount * (1 - discountPercent),
+    monthlyAmount,
     currency: selectedMemberPlan?.currency ?? Currency.Chf,
     locale,
   });
@@ -867,10 +867,6 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       )}
 
       <SubscribeNarrowSection area="submit">
-        {!!subscribeInfo.data?.createSubscriptionInfo.discountPercent && (
-          <SubscribeWithDiscount>{discountText}</SubscribeWithDiscount>
-        )}
-
         <SubscribeButton
           size={'large'}
           disabled={
@@ -887,8 +883,14 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
             }
           }}
         >
-          {paymentText} {isDonation ? 'spenden' : 'abonnieren'}
+          {paymentText}
         </SubscribeButton>
+
+        {!!discountPercent &&
+          autoRenew &&
+          (selectedMemberPlan?.extendable ?? true) && (
+            <SubscribeContinuation>{continuationText}</SubscribeContinuation>
+          )}
 
         {autoRenew && termsOfServiceUrl ?
           <Link
@@ -914,7 +916,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
           setOpenConfirm(false);
         }}
         onCancel={() => setOpenConfirm(false)}
-        submitText={`${paymentText} ${isDonation ? 'Spenden' : 'Abonnieren'}`}
+        submitText={paymentText}
       >
         <H5
           id="modal-modal-title"

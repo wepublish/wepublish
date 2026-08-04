@@ -76,12 +76,13 @@ export const SubscribeBlock = ({
   );
 
   const handleOnSelect = useCallback(
-    (memberPlanId: string | undefined) => {
+    (memberPlanId: string | undefined, voucher?: string) => {
       if (memberPlanId) {
         fetchUpgradeInfo({
           variables: {
             memberPlanId,
             subscriptionId: upgradeSubscriptionId as string,
+            voucher,
           },
         });
       }
@@ -172,6 +173,7 @@ export const SubscribeBlock = ({
           {...subscribeProps}
           defaults={{
             memberPlanSlug: memberPlanBySlug as string | undefined,
+            voucher: voucher as string | undefined,
           }}
           className={className}
           memberPlans={memberPlansObj}

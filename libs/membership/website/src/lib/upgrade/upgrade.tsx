@@ -18,19 +18,24 @@ import { z } from 'zod';
 import { formatCurrency, roundUpTo5Cents } from '../formatters/format-currency';
 
 import { ApolloError } from '@apollo/client';
+import { FormHelperText } from '@mui/material';
 import { ApiAlert } from '@wepublish/errors/website';
+import { MdCheck, MdError } from 'react-icons/md';
 import { Trans, useTranslation } from 'react-i18next';
 import {
   SubscribeAmount,
   SubscribeAmountText,
   SubscribeButton,
   SubscribeCancelable,
+  SubscribeContinuation,
   SubscribeNarrowSection,
   SubscribePayment,
   subscribeSchema,
   SubscribeSection,
   SubscribeWrapper,
+  useContinuationText,
   usePaymentText,
+  VoucherSection,
 } from '../subscribe/subscribe';
 import { getPaymentPeriodicyMonths } from '../formatters/format-payment-period';
 import styled from '@emotion/styled';
@@ -40,11 +45,13 @@ const upgradeSchema = subscribeSchema.pick({
   monthlyAmount: true,
   paymentMethodId: true,
   payTransactionFee: true,
+  voucher: true,
 });
 
 export const useUpgradeText = ({
   productType,
   discount,
+  discountPercent = 0,
   paymentPeriodicity,
   monthlyAmount,
   memberPlan,
@@ -52,6 +59,7 @@ export const useUpgradeText = ({
   locale,
 }: {
   discount: number;
+  discountPercent?: number;
   productType: ProductType;
   paymentPeriodicity: PaymentPeriodicity;
   monthlyAmount: number;
@@ -62,11 +70,15 @@ export const useUpgradeText = ({
   const { t } = useTranslation();
 
   return useMemo(() => {
+    const fullAmount =
+      (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity);
+
+    const amountAfterDiscount = Math.max(fullAmount - discount / 100, 0);
+
     const variables = {
       productType,
       formattedAmount: formatCurrency(
-        (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity) -
-          discount / 100,
+        amountAfterDiscount - amountAfterDiscount * discountPercent,
         currency,
         locale
       ),
@@ -80,16 +92,13 @@ export const useUpgradeText = ({
     monthlyAmount,
     paymentPeriodicity,
     discount,
+    discountPercent,
     currency,
     locale,
     memberPlan,
     t,
   ]);
 };
-
-export const UpgradeContinuation = styled(SubscribeCancelable)`
-  margin-bottom: ${({ theme }) => theme.spacing(1)};
-`;
 
 export const UpgradeInformation = styled('div')`
   padding: ${({ theme }) => theme.spacing(2)};
@@ -114,7 +123,7 @@ export const Upgrade = ({
 }: BuilderUpgradeProps) => {
   const {
     meta: { locale, siteTitle },
-    elements: { H5, Paragraph },
+    elements: { Alert, H5, Paragraph, TextField },
     MemberPlanPicker,
     PaymentMethodPicker,
     PaymentAmount,
@@ -145,6 +154,7 @@ export const Upgrade = ({
     mode: 'onTouched',
     reValidateMode: 'onChange',
     defaultValues: {
+      voucher: defaults?.voucher ?? '',
       memberPlanId:
         defaults?.memberPlanSlug ?
           availableMemberplans.find(
@@ -156,6 +166,7 @@ export const Upgrade = ({
 
   const selectedPaymentMethodId = watch('paymentMethodId');
   const selectedMemberPlanId = watch('memberPlanId');
+  const voucher = watch('voucher');
   const payTransactionFee = watch('payTransactionFee');
   const monthlyAmount =
     watch('monthlyAmount') +
@@ -177,14 +188,10 @@ export const Upgrade = ({
     [selectedMemberPlan?.availablePaymentMethods]
   );
 
-  const paymentText = usePaymentText({
-    autoRenew: true,
+  const continuationText = useContinuationText({
     currency: selectedMemberPlan?.currency ?? Currency.Chf,
-    extendable: selectedMemberPlan?.extendable ?? true,
     paymentPeriodicity: subscriptionToUpgrade.paymentPeriodicity,
-    productType: subscriptionToUpgrade.memberPlan.productType,
     memberPlan: selectedMemberPlan?.name ?? '',
-    siteTitle,
     monthlyAmount,
     locale,
   });
@@ -208,16 +215,23 @@ export const Upgrade = ({
     paymentPeriodicity: subscriptionToUpgrade.paymentPeriodicity,
     monthlyAmount,
     discount: upgradeInfo.data?.upgradeUserSubscriptionInfo.discountAmount ?? 0,
+    discountPercent:
+      upgradeInfo.data?.upgradeUserSubscriptionInfo.discountPercent ?? 0,
     currency: selectedMemberPlan?.currency ?? Currency.Chf,
     locale,
   });
 
   const onSubmit = handleSubmit(data => {
+    if (upgradeInfo.data?.upgradeUserSubscriptionInfo.voucherValid === false) {
+      return;
+    }
+
     const upgradeData: UpgradeMutationVariables = {
       monthlyAmount,
       memberPlanId: data.memberPlanId,
       paymentMethodId: data.paymentMethodId,
       subscriptionId: subscriptionToUpgrade.id,
+      voucher: data.voucher,
     };
 
     return callAction(onUpgrade)(upgradeData);
@@ -243,8 +257,8 @@ export const Upgrade = ({
   }, [resetField, allPaymentMethods, selectedPaymentMethodId]);
 
   useEffect(() => {
-    onSelect(selectedMemberPlan?.id);
-  }, [selectedMemberPlan?.id, onSelect]);
+    onSelect(selectedMemberPlan?.id, voucher ?? undefined);
+  }, [selectedMemberPlan?.id, voucher, onSelect]);
 
   const shouldHidePaymentAmount =
     selectedMemberPlan?.amountPerMonthMin ===
@@ -360,6 +374,64 @@ export const Upgrade = ({
         </SubscribePayment>
       </SubscribeSection>
 
+      <VoucherSection area="voucher">
+        <Controller
+          name={'voucher'}
+          control={control}
+          render={({ field, fieldState: { error } }) => (
+            <div>
+              <div
+                css={{
+                  display: 'flex',
+                  flexFlow: 'row',
+                  alignItems: 'center',
+                  gap: 8,
+                }}
+              >
+                <TextField
+                  {...field}
+                  value={field.value ?? ''}
+                  label={'Gutscheincode'}
+                  error={!!error}
+                  autoComplete="voucher"
+                  sx={{ maxWidth: 200 }}
+                />
+
+                {!!upgradeInfo.data?.upgradeUserSubscriptionInfo
+                  .discountPercent && (
+                  <Alert
+                    severity="success"
+                    icon={<MdCheck />}
+                  >
+                    {t('subscribe.voucher.discountApplied', {
+                      discountPercent:
+                        upgradeInfo.data.upgradeUserSubscriptionInfo
+                          .discountPercent * 100,
+                    })}
+                  </Alert>
+                )}
+
+                {upgradeInfo.data?.upgradeUserSubscriptionInfo.voucherValid ===
+                  false && (
+                  <Alert
+                    severity="error"
+                    icon={<MdError />}
+                  >
+                    {t('subscribe.voucher.invalid')}
+                  </Alert>
+                )}
+              </div>
+
+              {!!error && (
+                <FormHelperText error={!!error}>
+                  {error?.message}
+                </FormHelperText>
+              )}
+            </div>
+          )}
+        />
+      </VoucherSection>
+
       {error && (
         <ApiAlert
           error={error as ApolloError}
@@ -392,7 +464,7 @@ export const Upgrade = ({
           {upgradeText}
         </SubscribeButton>
 
-        <UpgradeContinuation>Danach {paymentText}</UpgradeContinuation>
+        <SubscribeContinuation>{continuationText}</SubscribeContinuation>
 
         {termsOfServiceUrl ?
           <Link

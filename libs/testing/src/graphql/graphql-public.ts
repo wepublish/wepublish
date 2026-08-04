@@ -3315,6 +3315,7 @@ export type MutationUpgradeUserSubscriptionArgs = {
   paymentMethodId: Scalars['String'];
   subscriptionId: Scalars['String'];
   successURL?: InputMaybe<Scalars['String']>;
+  voucher?: InputMaybe<Scalars['String']>;
 };
 
 export type MutationUploadDocumentArgs = {
@@ -4960,6 +4961,7 @@ export type QueryTrackingPixelSettingsArgs = {
 export type QueryUpgradeUserSubscriptionInfoArgs = {
   memberPlanId: Scalars['String'];
   subscriptionId: Scalars['String'];
+  voucher?: InputMaybe<Scalars['String']>;
 };
 
 export type QueryUserArgs = {
@@ -5889,6 +5891,8 @@ export type UpdateUserSubscriptionInput = {
 export type UpgradeSubscription = {
   __typename?: 'UpgradeSubscription';
   discountAmount: Scalars['Float'];
+  discountPercent?: Maybe<Scalars['Float']>;
+  voucherValid?: Maybe<Scalars['Boolean']>;
 };
 
 export type User = BaseUser & {

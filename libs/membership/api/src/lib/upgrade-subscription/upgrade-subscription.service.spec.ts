@@ -4,6 +4,7 @@ import { UpgradeSubscriptionService } from './upgrade-subscription.service';
 
 import { MemberContextService } from '../legacy/member-context.service';
 import { PaymentsService } from '@wepublish/payment/api';
+import { VoucherService } from '../voucher/voucher.service';
 
 jest.mock('../legacy/member-context.service');
 jest.mock('@wepublish/payment/api');
@@ -27,6 +28,10 @@ describe('UpgradeSubscriptionService', () => {
 
   let paymentServiceMock: {
     createPaymentWithProvider: jest.Mock;
+  };
+
+  let voucherServiceMock: {
+    getValidVoucher: jest.Mock;
   };
 
   beforeAll(() => {
@@ -56,6 +61,9 @@ describe('UpgradeSubscriptionService', () => {
     paymentServiceMock = {
       createPaymentWithProvider: jest.fn(),
     };
+    voucherServiceMock = {
+      getValidVoucher: jest.fn(),
+    };
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -71,6 +79,10 @@ describe('UpgradeSubscriptionService', () => {
         {
           provide: PrismaClient,
           useValue: prismaMock,
+        },
+        {
+          provide: VoucherService,
+          useValue: voucherServiceMock,
         },
       ],
     }).compile();
@@ -280,7 +292,7 @@ describe('UpgradeSubscriptionService', () => {
       // Should not be 700 as the period with 700 is unpaid
       // Should not be 500 as the period has ended
       // Should not be 600 because 2 periods are still active and 5 comes from the nearly ended one
-      expect(result).toBe(605);
+      expect(result.discountAmount).toBe(605);
     });
   });
 

@@ -6,6 +6,7 @@ import { MemberPlanModule } from '@wepublish/member-plan/api';
 import { UpgradeSubscriptionService } from './upgrade-subscription.service';
 import { MemberContextModule } from '../legacy/member-context.module';
 import { PaymentMethodModule, PaymentsModule } from '@wepublish/payment/api';
+import { VoucherModule } from '../voucher/voucher.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { PaymentMethodModule, PaymentsModule } from '@wepublish/payment/api';
     PaymentMethodModule,
     MemberContextModule,
     PaymentsModule,
+    VoucherModule,
   ],
   providers: [UpgradeSubscriptionResolver, UpgradeSubscriptionService],
 })

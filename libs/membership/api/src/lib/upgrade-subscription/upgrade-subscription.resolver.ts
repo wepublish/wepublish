@@ -25,6 +25,7 @@ export class UpgradeSubscriptionResolver {
     })
     monthlyAmount: number,
     @Args('paymentMethodId') paymentMethodId: string,
+    @Args('voucher', { nullable: true }) voucher?: string,
     @Args('successURL', { nullable: true }) successURL?: string,
     @Args('failureURL', { nullable: true }) failureURL?: string
   ) {
@@ -36,6 +37,7 @@ export class UpgradeSubscriptionResolver {
       monthlyAmount,
       failureURL,
       successURL,
+      voucher,
     });
   }
 
@@ -46,14 +48,14 @@ export class UpgradeSubscriptionResolver {
   async upgradeUserSubscriptionInfo(
     @CurrentUser() session: UserSession,
     @Args('subscriptionId') subscriptionId: string,
-    @Args('memberPlanId') memberPlanId: string
+    @Args('memberPlanId') memberPlanId: string,
+    @Args('voucher', { nullable: true }) voucher?: string
   ): Promise<UpgradeSubscription> {
-    return {
-      discountAmount: await this.upgradeSubscriptionService.getInfo({
-        userId: session.user.id,
-        memberPlanId,
-        subscriptionId,
-      }),
-    };
+    return this.upgradeSubscriptionService.getInfo({
+      userId: session.user.id,
+      memberPlanId,
+      subscriptionId,
+      voucher,
+    });
   }
 }

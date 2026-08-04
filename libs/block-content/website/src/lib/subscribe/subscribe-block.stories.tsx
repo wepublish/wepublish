@@ -40,6 +40,8 @@ export const Upgrade = {
         data: {
           upgradeUserSubscriptionInfo: {
             discountAmount: 50,
+            discountPercent: null,
+            voucherValid: null,
           },
         },
       },
