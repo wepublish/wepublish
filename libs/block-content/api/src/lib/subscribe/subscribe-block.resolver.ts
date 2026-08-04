@@ -10,6 +10,7 @@ import {
   MemberPlanService,
 } from '@wepublish/member-plan/api';
 import { forwardRef, Inject } from '@nestjs/common';
+import { ascend, sortWith } from 'ramda';
 
 @Resolver(() => SubscribeBlock)
 export class SubscribeBlockResolver {
@@ -22,15 +23,21 @@ export class SubscribeBlockResolver {
 
   @ResolveField(() => [MemberPlan])
   async memberPlans(@Parent() parent: SubscribeBlock) {
-    const { memberPlanIds } = parent;
+    const { memberPlanIds, memberPlanRenderSettings } = parent;
 
-    if (!memberPlanIds?.length) {
+    const settingsOrder =
+      memberPlanRenderSettings?.map(({ memberPlanId }) => memberPlanId) ?? [];
+
+    const ids = sortWith(
+      [ascend(id => settingsOrder.indexOf(id))],
+      memberPlanIds ?? []
+    );
+
+    if (!ids.length) {
       return await this.memberPlanService.getActiveMemberPlans();
     }
 
-    return (await this.memberPlanDataloader.loadMany(memberPlanIds)).filter(
-      Boolean
-    );
+    return (await this.memberPlanDataloader.loadMany(ids)).filter(Boolean);
   }
 
   @ResolveField(() => [SubscribeBlockMemberPlanRenderSetting])
@@ -39,7 +46,15 @@ export class SubscribeBlockResolver {
   ): SubscribeBlockMemberPlanRenderSetting[] {
     const { memberPlanIds, memberPlanRenderSettings } = parent;
 
-    const settings = (memberPlanIds ?? []).map(id => {
+    const settingsOrder =
+      memberPlanRenderSettings?.map(({ memberPlanId }) => memberPlanId) ?? [];
+
+    const ids = sortWith(
+      [ascend(id => settingsOrder.indexOf(id))],
+      memberPlanIds ?? []
+    );
+
+    const settings = ids.map(id => {
       const renderSettings = memberPlanRenderSettings?.find(
         ({ memberPlanId }) => memberPlanId === id
       );
