@@ -13,29 +13,10 @@
             "command": "npx nx server editor"
           },
           {
-            "command": "npx nx browser editor"
+            "command": "npx nx run-many --target=browser,typecheck --projects=editor"
           }
         ],
         "parallel": false
-      }
-    },
-    "serve-ssr": {
-      "executor": "@nx/webpack:ssr-dev-server",
-      "defaultConfiguration": "development",
-      "options": {
-        "browserTarget": "editor:build:development",
-        "serverTarget": "editor:serve-server:development",
-        "port": 3000,
-        "browserTargetOptions": {
-          "watch": true
-        }
-      },
-      "configurations": {
-        "development": {},
-        "production": {
-          "browserTarget": "editor:build:production",
-          "serverTarget": "editor:serve-server:production"
-        }
       }
     },
     "lint": {
@@ -50,110 +31,54 @@
       }
     },
     "browser": {
-      "executor": "@nx/webpack:webpack",
+      "executor": "@nx/vite:build",
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
-        "compiler": "babel",
         "outputPath": "dist/apps/editor/browser",
-        "index": "apps/editor/src/index.html",
-        "baseHref": "/",
-        "main": "apps/editor/src/main.tsx",
-        "polyfills": "apps/editor/src/polyfills.ts",
-        "tsConfig": "apps/editor/tsconfig.app.json",
-        "assets": ["apps/editor/src/assets"],
-        "styles": [],
-        "scripts": [],
-        "webpackConfig": "apps/editor/webpack.config.js",
-        "isolatedConfig": true
+        "configFile": "apps/editor/vite.config.ts",
+        "generatePackageJson": false
       },
       "configurations": {
         "development": {
-          "extractLicenses": false,
-          "optimization": false,
-          "sourceMap": true,
-          "vendorChunk": true
+          "mode": "development"
         },
         "production": {
-          "fileReplacements": [
-            {
-              "replace": "apps/editor/src/environments/environment.ts",
-              "with": "apps/editor/src/environments/environment.prod.ts"
-            }
-          ],
-          "optimization": true,
-          "outputHashing": "all",
-          "sourceMap": false,
-          "namedChunks": false,
-          "extractLicenses": true,
-          "vendorChunk": false
+          "mode": "production"
         }
       }
     },
     "server": {
-      "executor": "@nx/webpack:webpack",
+      "executor": "@nx/vite:build",
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
-        "target": "node",
-        "main": "apps/editor/server.ts",
         "outputPath": "dist/apps/editor",
+        "configFile": "apps/editor/vite.config.server.ts",
         "tsConfig": "apps/editor/tsconfig.server.json",
-        "compiler": "babel",
-        "externalDependencies": "all",
-        "generatePackageJson": true,
-        "outputHashing": "none",
-        "webpackConfig": "apps/editor/webpack.config.server.js",
-        "isolatedConfig": true
+        "generatePackageJson": true
       },
       "configurations": {
         "development": {
-          "optimization": false,
-          "sourceMap": true
+          "mode": "development"
         },
         "production": {
-          "fileReplacements": [
-            {
-              "replace": "apps/editor/src/environments/environment.ts",
-              "with": "apps/editor/src/environments/environment.prod.ts"
-            }
-          ],
-          "sourceMap": false
+          "mode": "production"
         }
       }
     },
     "serve": {
-      "executor": "@nx/webpack:dev-server",
+      "executor": "@nx/vite:dev-server",
       "defaultConfiguration": "development",
       "options": {
-        "buildTarget": "editor:browser",
-        "port": 3000,
-        "hmr": true
+        "buildTarget": "editor:browser"
       },
       "configurations": {
         "development": {
-          "buildTarget": "editor:browser:development",
-          "host": "0.0.0.0"
+          "buildTarget": "editor:browser:development"
         },
         "production": {
-          "buildTarget": "editor:browser:production",
-          "hmr": false
-        }
-      }
-    },
-    "serve-server": {
-      "executor": "@nx/js:node",
-      "defaultConfiguration": "development",
-      "options": {
-        "buildTarget": "editor:server:development",
-        "buildTargetOptions": {
-          "watch": true
-        }
-      },
-      "configurations": {
-        "development": {},
-        "production": {
-          "buildTarget": "editor:server:production"
+          "buildTarget": "editor:browser:production"
         }
       }
     }

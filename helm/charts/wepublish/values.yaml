@@ -156,6 +156,7 @@ editor:
   image: ghcr.io/wepublish/editor
   env:
     PEER_BY_DEFAULT: "true"
+    SENTRY_DSN: ''
   envFromSecretRefName:
   dynamicEnv: {}
   properties: {}

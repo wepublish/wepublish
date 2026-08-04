@@ -2,13 +2,9 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
-    "types": ["node"]
+    "types": ["node", "vite/client"]
   },
-  "files": [
-    "../../node_modules/@nx/react/typings/cssmodule.d.ts",
-    "../../node_modules/@nx/react/typings/image.d.ts",
-    "src/emotion.d.ts"
-  ],
+  "files": ["src/emotion.d.ts"],
   "exclude": [
     "jest.config.ts",
     "**/*.spec.ts",
