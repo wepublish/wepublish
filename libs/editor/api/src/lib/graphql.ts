@@ -1768,15 +1768,43 @@ export type MailSendJobModel = {
   error?: Maybe<Scalars['String']>;
   failedCount: Scalars['Int'];
   finishedAt?: Maybe<Scalars['DateTime']>;
+  /** Last sign of life of the worker processing this job. */
+  heartbeatAt?: Maybe<Scalars['DateTime']>;
   id: Scalars['String'];
   mailTemplate?: Maybe<MailLogTemplate>;
   mailTemplateId: Scalars['String'];
   modifiedAt: Scalars['DateTime'];
+  /** How often the job was picked up again after an interruption. */
+  resumeCount: Scalars['Int'];
+  /** Mails handed to the provider whose outcome never came back — left over after an interruption. Never re-sent on their own. */
+  sendingCount: Scalars['Int'];
   sentCount: Scalars['Int'];
   startedAt?: Maybe<Scalars['DateTime']>;
   status: MailSendJobState;
   totalCount: Scalars['Int'];
 };
+
+export type MailSendJobRecipientModel = {
+  __typename?: 'MailSendJobRecipientModel';
+  attempts: Scalars['Int'];
+  error?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  mailLogId?: Maybe<Scalars['String']>;
+  memberPlanName?: Maybe<Scalars['String']>;
+  /** Position in the send queue. */
+  position: Scalars['Int'];
+  sentAt?: Maybe<Scalars['DateTime']>;
+  state: MailSendJobRecipientState;
+  user: MailLogRecipient;
+};
+
+/** Where one planned mail of a send job stands. */
+export enum MailSendJobRecipientState {
+  Failed = 'failed',
+  Pending = 'pending',
+  Sending = 'sending',
+  Sent = 'sent'
+}
 
 export enum MailSendJobState {
   Cancelled = 'cancelled',
@@ -2007,6 +2035,8 @@ export type Mutation = {
   addUserComment: Comment;
   /** Approves a comment */
   approveComment: Comment;
+  /** Stop a running send job. Unsent recipients stay open and can be continued. */
+  cancelMailSendJob: MailSendJobModel;
   /** Cancels a subscription. */
   cancelSubscription: PublicSubscription;
   /** This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null */
@@ -2237,6 +2267,8 @@ export type Mutation = {
   restoreArticleRevision: Article;
   /** Restores an older revision of a page as a new draft. */
   restorePageRevision: Page;
+  /** Continue a send job that stopped early. Recipients already sent are skipped. */
+  resumeMailSendJob: MailSendJobModel;
   /** This mutation revokes and deletes the active session. */
   revokeActiveSession: Scalars['Boolean'];
   /** This mutation sends a login link to the email if the user exists. Method will always return email address */
@@ -2377,6 +2409,11 @@ export type MutationAddUserCommentArgs = {
 
 
 export type MutationApproveCommentArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationCancelMailSendJobArgs = {
   id: Scalars['String'];
 };
 
@@ -3113,6 +3150,12 @@ export type MutationRestoreArticleRevisionArgs = {
 export type MutationRestorePageRevisionArgs = {
   id: Scalars['String'];
   revisionId: Scalars['String'];
+};
+
+
+export type MutationResumeMailSendJobArgs = {
+  id: Scalars['String'];
+  retryUnfinished?: InputMaybe<Scalars['Boolean']>;
 };
 
 
@@ -3929,6 +3972,13 @@ export type PaginatedMailSendJob = {
   totalCount: Scalars['Int'];
 };
 
+export type PaginatedMailSendJobRecipient = {
+  __typename?: 'PaginatedMailSendJobRecipient';
+  nodes: Array<MailSendJobRecipientModel>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
 export type PaginatedMailSendRecipient = {
   __typename?: 'PaginatedMailSendRecipient';
   nodes: Array<MailSendRecipientModel>;
@@ -4681,6 +4731,8 @@ export type Query = {
   mailProviderSettings: Array<SettingMailProvider>;
   /** A single mail send job (for progress polling) */
   mailSendJob?: Maybe<MailSendJobModel>;
+  /** The planned mails of a send job and where each of them stands */
+  mailSendJobRecipients: PaginatedMailSendJobRecipient;
   /** Paginated list of mail send jobs */
   mailSendJobs: PaginatedMailSendJob;
   /** Render a saved template for one recipient of an audience, exactly as the send would compose it */
@@ -5139,6 +5191,14 @@ export type QueryMailProviderSettingsArgs = {
 
 export type QueryMailSendJobArgs = {
   id: Scalars['String'];
+};
+
+
+export type QueryMailSendJobRecipientsArgs = {
+  jobId: Scalars['String'];
+  skip?: InputMaybe<Scalars['Int']>;
+  state?: InputMaybe<MailSendJobRecipientState>;
+  take?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -7687,7 +7747,7 @@ export type MailLogsQueryVariables = Exact<{
 
 export type MailLogsQuery = { __typename?: 'Query', mailLogs: { __typename?: 'PaginatedMailLog', totalCount: number, nodes: Array<{ __typename?: 'MailLogModel', id: string, createdAt: string, sentDate: string, state: MailLogState, type?: MailLogType | null, subject?: string | null, error?: string | null, mailProviderID: string, mailSendJobId?: string | null, recipient: { __typename?: 'MailLogRecipient', id: string, email: string, name: string, firstName?: string | null }, mailTemplate: { __typename?: 'MailLogTemplate', id: string, name: string } }>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } };
 
-export type FullMailSendJobFragment = { __typename?: 'MailSendJobModel', id: string, createdAt: string, modifiedAt: string, status: MailSendJobState, audience: MailSendAudience, totalCount: number, sentCount: number, failedCount: number, startedAt?: string | null, finishedAt?: string | null, error?: string | null, mailTemplate?: { __typename?: 'MailLogTemplate', id: string, name: string } | null };
+export type FullMailSendJobFragment = { __typename?: 'MailSendJobModel', id: string, createdAt: string, modifiedAt: string, status: MailSendJobState, audience: MailSendAudience, totalCount: number, sentCount: number, failedCount: number, sendingCount: number, resumeCount: number, startedAt?: string | null, finishedAt?: string | null, heartbeatAt?: string | null, error?: string | null, mailTemplate?: { __typename?: 'MailLogTemplate', id: string, name: string } | null };
 
 export type MailSendRecipientPreviewQueryVariables = Exact<{
   audience: MailAudienceInput;
@@ -7725,7 +7785,7 @@ export type MailSendJobQueryVariables = Exact<{
 }>;
 
 
-export type MailSendJobQuery = { __typename?: 'Query', mailSendJob?: { __typename?: 'MailSendJobModel', id: string, createdAt: string, modifiedAt: string, status: MailSendJobState, audience: MailSendAudience, totalCount: number, sentCount: number, failedCount: number, startedAt?: string | null, finishedAt?: string | null, error?: string | null, mailTemplate?: { __typename?: 'MailLogTemplate', id: string, name: string } | null } | null };
+export type MailSendJobQuery = { __typename?: 'Query', mailSendJob?: { __typename?: 'MailSendJobModel', id: string, createdAt: string, modifiedAt: string, status: MailSendJobState, audience: MailSendAudience, totalCount: number, sentCount: number, failedCount: number, sendingCount: number, resumeCount: number, startedAt?: string | null, finishedAt?: string | null, heartbeatAt?: string | null, error?: string | null, mailTemplate?: { __typename?: 'MailLogTemplate', id: string, name: string } | null } | null };
 
 export type MailSendJobsQueryVariables = Exact<{
   skip?: InputMaybe<Scalars['Int']>;
@@ -7733,7 +7793,32 @@ export type MailSendJobsQueryVariables = Exact<{
 }>;
 
 
-export type MailSendJobsQuery = { __typename?: 'Query', mailSendJobs: { __typename?: 'PaginatedMailSendJob', totalCount: number, nodes: Array<{ __typename?: 'MailSendJobModel', id: string, createdAt: string, modifiedAt: string, status: MailSendJobState, audience: MailSendAudience, totalCount: number, sentCount: number, failedCount: number, startedAt?: string | null, finishedAt?: string | null, error?: string | null, mailTemplate?: { __typename?: 'MailLogTemplate', id: string, name: string } | null }>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } };
+export type MailSendJobsQuery = { __typename?: 'Query', mailSendJobs: { __typename?: 'PaginatedMailSendJob', totalCount: number, nodes: Array<{ __typename?: 'MailSendJobModel', id: string, createdAt: string, modifiedAt: string, status: MailSendJobState, audience: MailSendAudience, totalCount: number, sentCount: number, failedCount: number, sendingCount: number, resumeCount: number, startedAt?: string | null, finishedAt?: string | null, heartbeatAt?: string | null, error?: string | null, mailTemplate?: { __typename?: 'MailLogTemplate', id: string, name: string } | null }>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } };
+
+export type MailSendJobRecipientsQueryVariables = Exact<{
+  jobId: Scalars['String'];
+  state?: InputMaybe<MailSendJobRecipientState>;
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type MailSendJobRecipientsQuery = { __typename?: 'Query', mailSendJobRecipients: { __typename?: 'PaginatedMailSendJobRecipient', totalCount: number, nodes: Array<{ __typename?: 'MailSendJobRecipientModel', id: string, position: number, state: MailSendJobRecipientState, attempts: number, error?: string | null, sentAt?: string | null, mailLogId?: string | null, memberPlanName?: string | null, user: { __typename?: 'MailLogRecipient', id: string, email: string, name: string, firstName?: string | null } }>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean } } };
+
+export type ResumeMailSendJobMutationVariables = Exact<{
+  id: Scalars['String'];
+  retryUnfinished?: InputMaybe<Scalars['Boolean']>;
+}>;
+
+
+export type ResumeMailSendJobMutation = { __typename?: 'Mutation', resumeMailSendJob: { __typename?: 'MailSendJobModel', id: string, createdAt: string, modifiedAt: string, status: MailSendJobState, audience: MailSendAudience, totalCount: number, sentCount: number, failedCount: number, sendingCount: number, resumeCount: number, startedAt?: string | null, finishedAt?: string | null, heartbeatAt?: string | null, error?: string | null, mailTemplate?: { __typename?: 'MailLogTemplate', id: string, name: string } | null } };
+
+export type CancelMailSendJobMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type CancelMailSendJobMutation = { __typename?: 'Mutation', cancelMailSendJob: { __typename?: 'MailSendJobModel', id: string, createdAt: string, modifiedAt: string, status: MailSendJobState, audience: MailSendAudience, totalCount: number, sentCount: number, failedCount: number, sendingCount: number, resumeCount: number, startedAt?: string | null, finishedAt?: string | null, heartbeatAt?: string | null, error?: string | null, mailTemplate?: { __typename?: 'MailLogTemplate', id: string, name: string } | null } };
 
 export type SendMailTemplateToUserMutationVariables = Exact<{
   templateId: Scalars['String'];
@@ -7741,14 +7826,14 @@ export type SendMailTemplateToUserMutationVariables = Exact<{
 }>;
 
 
-export type SendMailTemplateToUserMutation = { __typename?: 'Mutation', sendMailTemplateToUser: { __typename?: 'MailSendJobModel', id: string, createdAt: string, modifiedAt: string, status: MailSendJobState, audience: MailSendAudience, totalCount: number, sentCount: number, failedCount: number, startedAt?: string | null, finishedAt?: string | null, error?: string | null, mailTemplate?: { __typename?: 'MailLogTemplate', id: string, name: string } | null } };
+export type SendMailTemplateToUserMutation = { __typename?: 'Mutation', sendMailTemplateToUser: { __typename?: 'MailSendJobModel', id: string, createdAt: string, modifiedAt: string, status: MailSendJobState, audience: MailSendAudience, totalCount: number, sentCount: number, failedCount: number, sendingCount: number, resumeCount: number, startedAt?: string | null, finishedAt?: string | null, heartbeatAt?: string | null, error?: string | null, mailTemplate?: { __typename?: 'MailLogTemplate', id: string, name: string } | null } };
 
 export type CreateMailSendJobMutationVariables = Exact<{
   input: MailSendJobInput;
 }>;
 
 
-export type CreateMailSendJobMutation = { __typename?: 'Mutation', createMailSendJob: { __typename?: 'MailSendJobModel', id: string, createdAt: string, modifiedAt: string, status: MailSendJobState, audience: MailSendAudience, totalCount: number, sentCount: number, failedCount: number, startedAt?: string | null, finishedAt?: string | null, error?: string | null, mailTemplate?: { __typename?: 'MailLogTemplate', id: string, name: string } | null } };
+export type CreateMailSendJobMutation = { __typename?: 'Mutation', createMailSendJob: { __typename?: 'MailSendJobModel', id: string, createdAt: string, modifiedAt: string, status: MailSendJobState, audience: MailSendAudience, totalCount: number, sentCount: number, failedCount: number, sendingCount: number, resumeCount: number, startedAt?: string | null, finishedAt?: string | null, heartbeatAt?: string | null, error?: string | null, mailTemplate?: { __typename?: 'MailLogTemplate', id: string, name: string } | null } };
 
 export type MailTemplateQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -10408,8 +10493,11 @@ export const FullMailSendJobFragmentDoc = gql`
   totalCount
   sentCount
   failedCount
+  sendingCount
+  resumeCount
   startedAt
   finishedAt
+  heartbeatAt
   error
   mailTemplate {
     id
@@ -14916,6 +15004,131 @@ export function useMailSendJobsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
 export type MailSendJobsQueryHookResult = ReturnType<typeof useMailSendJobsQuery>;
 export type MailSendJobsLazyQueryHookResult = ReturnType<typeof useMailSendJobsLazyQuery>;
 export type MailSendJobsQueryResult = Apollo.QueryResult<MailSendJobsQuery, MailSendJobsQueryVariables>;
+export const MailSendJobRecipientsDocument = gql`
+    query MailSendJobRecipients($jobId: String!, $state: MailSendJobRecipientState, $skip: Int, $take: Int) {
+  mailSendJobRecipients(jobId: $jobId, state: $state, skip: $skip, take: $take) {
+    nodes {
+      id
+      position
+      state
+      attempts
+      error
+      sentAt
+      mailLogId
+      memberPlanName
+      user {
+        id
+        email
+        name
+        firstName
+      }
+    }
+    totalCount
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+    }
+  }
+}
+    `;
+
+/**
+ * __useMailSendJobRecipientsQuery__
+ *
+ * To run a query within a React component, call `useMailSendJobRecipientsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMailSendJobRecipientsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMailSendJobRecipientsQuery({
+ *   variables: {
+ *      jobId: // value for 'jobId'
+ *      state: // value for 'state'
+ *      skip: // value for 'skip'
+ *      take: // value for 'take'
+ *   },
+ * });
+ */
+export function useMailSendJobRecipientsQuery(baseOptions: Apollo.QueryHookOptions<MailSendJobRecipientsQuery, MailSendJobRecipientsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MailSendJobRecipientsQuery, MailSendJobRecipientsQueryVariables>(MailSendJobRecipientsDocument, options);
+      }
+export function useMailSendJobRecipientsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MailSendJobRecipientsQuery, MailSendJobRecipientsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MailSendJobRecipientsQuery, MailSendJobRecipientsQueryVariables>(MailSendJobRecipientsDocument, options);
+        }
+export type MailSendJobRecipientsQueryHookResult = ReturnType<typeof useMailSendJobRecipientsQuery>;
+export type MailSendJobRecipientsLazyQueryHookResult = ReturnType<typeof useMailSendJobRecipientsLazyQuery>;
+export type MailSendJobRecipientsQueryResult = Apollo.QueryResult<MailSendJobRecipientsQuery, MailSendJobRecipientsQueryVariables>;
+export const ResumeMailSendJobDocument = gql`
+    mutation ResumeMailSendJob($id: String!, $retryUnfinished: Boolean) {
+  resumeMailSendJob(id: $id, retryUnfinished: $retryUnfinished) {
+    ...FullMailSendJob
+  }
+}
+    ${FullMailSendJobFragmentDoc}`;
+export type ResumeMailSendJobMutationFn = Apollo.MutationFunction<ResumeMailSendJobMutation, ResumeMailSendJobMutationVariables>;
+
+/**
+ * __useResumeMailSendJobMutation__
+ *
+ * To run a mutation, you first call `useResumeMailSendJobMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useResumeMailSendJobMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [resumeMailSendJobMutation, { data, loading, error }] = useResumeMailSendJobMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      retryUnfinished: // value for 'retryUnfinished'
+ *   },
+ * });
+ */
+export function useResumeMailSendJobMutation(baseOptions?: Apollo.MutationHookOptions<ResumeMailSendJobMutation, ResumeMailSendJobMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ResumeMailSendJobMutation, ResumeMailSendJobMutationVariables>(ResumeMailSendJobDocument, options);
+      }
+export type ResumeMailSendJobMutationHookResult = ReturnType<typeof useResumeMailSendJobMutation>;
+export type ResumeMailSendJobMutationResult = Apollo.MutationResult<ResumeMailSendJobMutation>;
+export type ResumeMailSendJobMutationOptions = Apollo.BaseMutationOptions<ResumeMailSendJobMutation, ResumeMailSendJobMutationVariables>;
+export const CancelMailSendJobDocument = gql`
+    mutation CancelMailSendJob($id: String!) {
+  cancelMailSendJob(id: $id) {
+    ...FullMailSendJob
+  }
+}
+    ${FullMailSendJobFragmentDoc}`;
+export type CancelMailSendJobMutationFn = Apollo.MutationFunction<CancelMailSendJobMutation, CancelMailSendJobMutationVariables>;
+
+/**
+ * __useCancelMailSendJobMutation__
+ *
+ * To run a mutation, you first call `useCancelMailSendJobMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCancelMailSendJobMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [cancelMailSendJobMutation, { data, loading, error }] = useCancelMailSendJobMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useCancelMailSendJobMutation(baseOptions?: Apollo.MutationHookOptions<CancelMailSendJobMutation, CancelMailSendJobMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CancelMailSendJobMutation, CancelMailSendJobMutationVariables>(CancelMailSendJobDocument, options);
+      }
+export type CancelMailSendJobMutationHookResult = ReturnType<typeof useCancelMailSendJobMutation>;
+export type CancelMailSendJobMutationResult = Apollo.MutationResult<CancelMailSendJobMutation>;
+export type CancelMailSendJobMutationOptions = Apollo.BaseMutationOptions<CancelMailSendJobMutation, CancelMailSendJobMutationVariables>;
 export const SendMailTemplateToUserDocument = gql`
     mutation SendMailTemplateToUser($templateId: String!, $userId: String!) {
   sendMailTemplateToUser(templateId: $templateId, userId: $userId) {

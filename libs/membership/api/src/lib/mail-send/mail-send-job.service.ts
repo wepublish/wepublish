@@ -2,11 +2,14 @@ import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import {
   MailSendAudience,
   MailSendJob,
+  MailSendJobRecipient,
+  MailSendJobRecipientState,
   MailSendJobState,
   MailTemplate,
   Prisma,
   PrismaClient,
 } from '@prisma/client';
+import { randomUUID } from 'crypto';
 import { composeMail, MailContext, mailLogType } from '@wepublish/mail/api';
 import {
   assembleMailData,
@@ -16,18 +19,44 @@ import { MailAudienceInput, MailRecipientBase } from './mail-send.model';
 import {
   MailRecipient,
   MailSendRecipientService,
+  recipientKey,
 } from './mail-send-recipient.service';
 import { findMissingPlaceholders } from './placeholder-check';
 
-/** How many recipients are fetched and sent per drain iteration. */
+/** How many recipients are resolved per page while building the queue. */
 const BATCH_SIZE = 100;
 
+/** How many queued recipients are loaded per send round. */
+const SEND_BATCH_SIZE = 25;
+
+/** Write progress to the job row after this many recipients. */
+const PROGRESS_EVERY = 10;
+
 /**
- * A `running` job whose `startedAt` is older than this is considered
- * interrupted (e.g. process restart) and marked `failed` rather than resumed,
- * so recipients are never mailed twice.
+ * A `running` job that has not reported progress for this long is considered
+ * interrupted (process restart, lost connection) and is put back into the
+ * queue. This is a stall timeout, not a runtime limit: a job that keeps
+ * sending keeps its heartbeat fresh and may run for as long as it needs.
  */
-const STUCK_JOB_THRESHOLD_MS = 30 * 60 * 1000;
+const STALLED_AFTER_MS = 10 * 60 * 1000;
+
+/**
+ * How often a job may be picked up again automatically. Bounds a job that dies
+ * reproducibly at the same recipient; the editor can still continue it by hand.
+ */
+const MAX_AUTO_RESUMES = 5;
+
+const INTERRUPTED_ERROR = 'Job was interrupted and will be continued.';
+const ABANDONED_ERROR =
+  'Job was interrupted repeatedly and stopped. Continue it manually to send the remaining mails.';
+
+export interface MailSendJobCounts {
+  total: number;
+  sent: number;
+  failed: number;
+  sending: number;
+  pending: number;
+}
 
 @Injectable()
 export class MailSendJobService {
@@ -41,8 +70,9 @@ export class MailSendJobService {
   ) {}
 
   /**
-   * Manually send a template to a single user. Only `custom`-context templates
-   * are allowed here (no subscription data can be bound for an arbitrary user).
+   * Manually send a template to a single user. Runs inline (one mail), but is
+   * recorded as a job with one queue entry so it shows up and behaves like
+   * every other send.
    */
   async sendToUser(
     templateId: string,
@@ -64,33 +94,24 @@ export class MailSendJobService {
         audience: MailSendAudience.singleUser,
         status: MailSendJobState.running,
         startedAt: new Date(),
+        heartbeatAt: new Date(),
         totalCount: 1,
         recipientFilter: { userId } as Prisma.InputJsonValue,
+        recipientsResolvedAt: new Date(),
+        recipients: {
+          create: [{ userId, position: 0 }],
+        },
       },
+      include: { recipients: true },
     });
 
-    let sentCount = 0;
-    let failedCount = 0;
-    let error: string | null = null;
-    try {
-      await this.sendOne(job.id, template, { user });
-      sentCount = 1;
-    } catch (sendError) {
-      failedCount = 1;
-      error = (sendError as Error).message;
-      this.logger.error(`Manual mail to user ${userId} failed: ${error}`);
+    const [entry] = job.recipients;
+
+    if (await this.claimRecipient(entry.id)) {
+      await this.deliver(job.id, template, entry, { user });
     }
 
-    return this.prisma.mailSendJob.update({
-      where: { id: job.id },
-      data: {
-        sentCount,
-        failedCount,
-        status: failedCount ? MailSendJobState.failed : MailSendJobState.done,
-        finishedAt: new Date(),
-        error,
-      },
-    });
+    return this.finish(job.id);
   }
 
   /**
@@ -126,9 +147,93 @@ export class MailSendJobService {
   }
 
   /**
+   * Put a job that stopped early back into the queue. Only recipients that were
+   * never sent are picked up again, so continuing never mails anybody twice.
+   *
+   * `retryUnfinished` additionally re-opens recipients that failed and those
+   * whose delivery was cut off mid-flight — for the latter it is unknown
+   * whether the mail went out, which is why it takes a deliberate decision.
+   */
+  async resumeJob(
+    jobId: string,
+    retryUnfinished = false
+  ): Promise<MailSendJob> {
+    const job = await this.prisma.mailSendJob.findUnique({
+      where: { id: jobId },
+    });
+
+    if (!job) {
+      throw new BadRequestException('Mail send job not found.');
+    }
+
+    if (
+      job.status === MailSendJobState.running ||
+      job.status === MailSendJobState.queued
+    ) {
+      throw new BadRequestException('Job is already running.');
+    }
+
+    if (retryUnfinished) {
+      await this.prisma.mailSendJobRecipient.updateMany({
+        where: {
+          jobId,
+          state: {
+            in: [
+              MailSendJobRecipientState.failed,
+              MailSendJobRecipientState.sending,
+            ],
+          },
+        },
+        data: { state: MailSendJobRecipientState.pending, error: null },
+      });
+    }
+
+    const resumed = await this.prisma.mailSendJob.update({
+      where: { id: jobId },
+      data: {
+        status: MailSendJobState.queued,
+        error: null,
+        finishedAt: null,
+        // A deliberate continue clears the automatic-resume budget.
+        resumeCount: 0,
+      },
+    });
+
+    this.drain().catch(error =>
+      this.logger.error(`Drain after resume failed: ${error.message}`)
+    );
+
+    return resumed;
+  }
+
+  /**
+   * Stop a job. The send loop notices between two recipients, so at most the
+   * mail currently in flight still goes out. Everything not yet sent stays
+   * pending and can be continued later.
+   */
+  async cancelJob(jobId: string): Promise<MailSendJob> {
+    const { count } = await this.prisma.mailSendJob.updateMany({
+      where: {
+        id: jobId,
+        status: { in: [MailSendJobState.queued, MailSendJobState.running] },
+      },
+      data: {
+        status: MailSendJobState.cancelled,
+        finishedAt: new Date(),
+      },
+    });
+
+    if (!count) {
+      throw new BadRequestException('Only a running job can be cancelled.');
+    }
+
+    return this.prisma.mailSendJob.findUniqueOrThrow({ where: { id: jobId } });
+  }
+
+  /**
    * Process pending send jobs. Claims each `queued` job atomically (so the
-   * immediate trigger and the interval never double-process), and fails
-   * long-running interrupted jobs.
+   * immediate trigger and the interval never double-process), and re-queues
+   * jobs whose worker went away.
    */
   async drain(): Promise<void> {
     if (this.draining) {
@@ -137,7 +242,7 @@ export class MailSendJobService {
     this.draining = true;
 
     try {
-      await this.failStuckJobs();
+      await this.requeueStalledJobs();
 
       const queued = await this.prisma.mailSendJob.findMany({
         where: { status: MailSendJobState.queued },
@@ -155,27 +260,62 @@ export class MailSendJobService {
     }
   }
 
-  private async failStuckJobs(): Promise<void> {
-    const threshold = new Date(Date.now() - STUCK_JOB_THRESHOLD_MS);
+  /**
+   * Hand interrupted jobs back to the queue so they continue where they left
+   * off. A job that keeps dying is stopped after {@link MAX_AUTO_RESUMES}
+   * attempts rather than looping forever.
+   */
+  private async requeueStalledJobs(): Promise<void> {
+    const threshold = new Date(Date.now() - STALLED_AFTER_MS);
 
-    await this.prisma.mailSendJob.updateMany({
+    const stalled = await this.prisma.mailSendJob.findMany({
       where: {
         status: MailSendJobState.running,
-        startedAt: { lt: threshold },
+        OR: [
+          { heartbeatAt: { lt: threshold } },
+          { heartbeatAt: null, startedAt: { lt: threshold } },
+          { heartbeatAt: null, startedAt: null, createdAt: { lt: threshold } },
+        ],
       },
-      data: {
-        status: MailSendJobState.failed,
-        error: 'Job was interrupted and did not finish.',
-        finishedAt: new Date(),
-      },
+      select: { id: true, resumeCount: true },
     });
+
+    for (const job of stalled) {
+      const giveUp = job.resumeCount >= MAX_AUTO_RESUMES;
+
+      // Guarded by the status so a worker that comes back to life in the same
+      // moment is not overwritten.
+      await this.prisma.mailSendJob.updateMany({
+        where: { id: job.id, status: MailSendJobState.running },
+        data:
+          giveUp ?
+            {
+              status: MailSendJobState.failed,
+              error: ABANDONED_ERROR,
+              finishedAt: new Date(),
+            }
+          : {
+              status: MailSendJobState.queued,
+              error: INTERRUPTED_ERROR,
+              resumeCount: { increment: 1 },
+            },
+      });
+
+      this.logger.warn(
+        `Job ${job.id} stalled and was ${giveUp ? 'stopped' : 'requeued'}.`
+      );
+    }
   }
 
   /** Atomically move a queued job to running. Returns false if already taken. */
   private async claim(jobId: string): Promise<boolean> {
     const { count } = await this.prisma.mailSendJob.updateMany({
       where: { id: jobId, status: MailSendJobState.queued },
-      data: { status: MailSendJobState.running, startedAt: new Date() },
+      data: {
+        status: MailSendJobState.running,
+        startedAt: new Date(),
+        heartbeatAt: new Date(),
+      },
     });
 
     return count === 1;
@@ -205,18 +345,50 @@ export class MailSendJobService {
       return;
     }
 
+    try {
+      await this.buildQueue(job);
+      await this.sendQueue(jobId, template);
+    } catch (error) {
+      // Whatever went wrong here is about the job, not about one recipient:
+      // leave the remaining recipients pending so it can be continued.
+      await this.prisma.mailSendJob.update({
+        where: { id: jobId },
+        data: {
+          status: MailSendJobState.failed,
+          error: (error as Error).message,
+          finishedAt: new Date(),
+        },
+      });
+      this.logger.error(`Job ${jobId} aborted: ${(error as Error).message}`);
+      return;
+    }
+
+    await this.finish(jobId);
+  }
+
+  /**
+   * Materialise the audience into one queue row per planned mail. Done once per
+   * job: from here on the job works off those rows, which is what makes it
+   * resumable and inspectable.
+   */
+  private async buildQueue(job: MailSendJob): Promise<void> {
+    if (job.recipientsResolvedAt) {
+      return;
+    }
+
+    // Nothing can have been sent before the queue is complete, so a partial
+    // queue left behind by an interrupted build is safe to discard.
+    await this.prisma.mailSendJobRecipient.deleteMany({
+      where: { jobId: job.id },
+    });
+
     const audience = job.recipientFilter as unknown as MailAudienceInput;
-    let sentCount = 0;
-    let failedCount = 0;
-    let skip = 0;
-    // Kept as a summary for the editor; the per-recipient reasons live on the
-    // MailLog rows of this job.
-    let firstError: string | null = null;
+    let position = 0;
 
     for (;;) {
       const recipients = await this.recipientService.resolvePage(
         audience,
-        skip,
+        position,
         BATCH_SIZE
       );
 
@@ -224,40 +396,243 @@ export class MailSendJobService {
         break;
       }
 
-      for (const recipient of recipients) {
-        try {
-          await this.sendOne(jobId, template, recipient);
-          sentCount++;
-        } catch (error) {
-          failedCount++;
-          const message = (error as Error).message;
-          firstError ??= message;
-          this.logger.warn(
-            `Job ${jobId}: failed to mail ${recipient.user.email}: ${message}`
-          );
+      await this.prisma.mailSendJobRecipient.createMany({
+        data: recipients.map(({ user, subscription }, index) => ({
+          jobId: job.id,
+          userId: user.id,
+          subscriptionId: subscription?.id ?? null,
+          position: position + index,
+        })),
+      });
+
+      position += recipients.length;
+
+      await this.prisma.mailSendJob.update({
+        where: { id: job.id },
+        data: { heartbeatAt: new Date() },
+      });
+    }
+
+    await this.prisma.mailSendJob.update({
+      where: { id: job.id },
+      data: {
+        recipientsResolvedAt: new Date(),
+        totalCount: position,
+        heartbeatAt: new Date(),
+      },
+    });
+  }
+
+  /** Work through the pending recipients until none are left or the job stops. */
+  private async sendQueue(
+    jobId: string,
+    template: MailTemplate
+  ): Promise<void> {
+    let processed = 0;
+
+    for (;;) {
+      if (!(await this.isRunning(jobId))) {
+        return;
+      }
+
+      const batch = await this.prisma.mailSendJobRecipient.findMany({
+        where: { jobId, state: MailSendJobRecipientState.pending },
+        orderBy: { position: 'asc' },
+        take: SEND_BATCH_SIZE,
+      });
+
+      if (!batch.length) {
+        return;
+      }
+
+      const recipients = await this.recipientService.loadQueued(batch);
+
+      for (const entry of batch) {
+        // Checked per mail, not per batch: cancelling has to take effect on the
+        // next recipient, not 25 mails later.
+        if (!(await this.isRunning(jobId))) {
+          await this.writeProgress(jobId);
+
+          return;
+        }
+
+        if (!(await this.claimRecipient(entry.id))) {
+          continue;
+        }
+
+        const recipient = recipients.get(recipientKey(entry));
+
+        if (!recipient) {
+          await this.markRecipient(entry.id, MailSendJobRecipientState.failed, {
+            error: 'Recipient no longer exists.',
+          });
+          continue;
+        }
+
+        await this.deliver(jobId, template, entry, recipient);
+
+        if (++processed % PROGRESS_EVERY === 0) {
+          await this.writeProgress(jobId);
         }
       }
 
-      await this.prisma.mailSendJob.update({
-        where: { id: jobId },
-        data: { sentCount, failedCount },
+      await this.writeProgress(jobId);
+    }
+  }
+
+  /**
+   * Send one queued mail and record the outcome on its queue row. Never throws:
+   * a recipient that cannot be reached must not stop the rest of the job.
+   */
+  private async deliver(
+    jobId: string,
+    template: MailTemplate,
+    entry: Pick<MailSendJobRecipient, 'id'>,
+    recipient: MailRecipient
+  ): Promise<void> {
+    const mailLogId = randomUUID();
+
+    try {
+      const optionalData = await this.buildOptionalData(template, recipient);
+
+      await this.mailContext.sendMail({
+        mailTemplateId: template.id,
+        recipient: recipient.user,
+        optionalData,
+        mailType: mailLogType.Manual,
+        mailSendJobId: jobId,
+        mailLogId,
+        isRetry: false,
       });
 
-      skip += BATCH_SIZE;
+      await this.markRecipient(entry.id, MailSendJobRecipientState.sent, {
+        mailLogId,
+        sentAt: new Date(),
+        error: null,
+      });
+    } catch (error) {
+      const message = (error as Error).message;
+
+      await this.markRecipient(entry.id, MailSendJobRecipientState.failed, {
+        mailLogId,
+        error: message,
+      });
+
+      this.logger.warn(
+        `Job ${jobId}: failed to mail ${recipient.user.email}: ${message}`
+      );
     }
+  }
+
+  /**
+   * Take a recipient out of the queue before sending. Atomic, so two workers on
+   * the same job can never both deliver the same mail.
+   */
+  private async claimRecipient(id: string): Promise<boolean> {
+    const { count } = await this.prisma.mailSendJobRecipient.updateMany({
+      where: { id, state: MailSendJobRecipientState.pending },
+      data: {
+        state: MailSendJobRecipientState.sending,
+        attempts: { increment: 1 },
+      },
+    });
+
+    return count === 1;
+  }
+
+  private async markRecipient(
+    id: string,
+    state: MailSendJobRecipientState,
+    data: Partial<
+      Pick<MailSendJobRecipient, 'error' | 'mailLogId' | 'sentAt'>
+    > = {}
+  ): Promise<void> {
+    await this.prisma.mailSendJobRecipient.update({
+      where: { id },
+      data: { state, ...data },
+    });
+  }
+
+  private async isRunning(jobId: string): Promise<boolean> {
+    const job = await this.prisma.mailSendJob.findUnique({
+      where: { id: jobId },
+      select: { status: true },
+    });
+
+    return job?.status === MailSendJobState.running;
+  }
+
+  /** Counts of the queue rows, the single source of truth for a job's progress. */
+  async countsFor(jobId: string): Promise<MailSendJobCounts> {
+    const grouped = await this.prisma.mailSendJobRecipient.groupBy({
+      by: ['state'],
+      where: { jobId },
+      _count: { _all: true },
+    });
+
+    const countOf = (state: MailSendJobRecipientState) =>
+      grouped.find(group => group.state === state)?._count._all ?? 0;
+
+    const sent = countOf(MailSendJobRecipientState.sent);
+    const failed = countOf(MailSendJobRecipientState.failed);
+    const sending = countOf(MailSendJobRecipientState.sending);
+    const pending = countOf(MailSendJobRecipientState.pending);
+
+    return {
+      total: sent + failed + sending + pending,
+      sent,
+      failed,
+      sending,
+      pending,
+    };
+  }
+
+  private async writeProgress(jobId: string): Promise<void> {
+    const counts = await this.countsFor(jobId);
 
     await this.prisma.mailSendJob.update({
       where: { id: jobId },
       data: {
-        sentCount,
-        failedCount,
-        // Nothing got through: the job itself failed, not just some recipients.
+        sentCount: counts.sent,
+        failedCount: counts.failed,
+        sendingCount: counts.sending,
+        heartbeatAt: new Date(),
+      },
+    });
+  }
+
+  /**
+   * Close a job off. A job that was stopped from the outside keeps the status
+   * it was given — only its counts are brought up to date, so what is left over
+   * stays visible and can be continued.
+   */
+  private async finish(jobId: string): Promise<MailSendJob> {
+    const counts = await this.countsFor(jobId);
+    const job = await this.prisma.mailSendJob.findUniqueOrThrow({
+      where: { id: jobId },
+    });
+
+    const stoppedFromOutside = job.status !== MailSendJobState.running;
+    const unfinished = counts.pending + counts.sending;
+
+    return this.prisma.mailSendJob.update({
+      where: { id: jobId },
+      data: {
+        sentCount: counts.sent,
+        failedCount: counts.failed,
+        sendingCount: counts.sending,
+        // A job from before the queue existed has no rows to count.
+        totalCount: counts.total || job.totalCount,
         status:
-          failedCount && !sentCount ?
-            MailSendJobState.failed
+          stoppedFromOutside ? job.status
+            // Left the loop with work remaining although nobody stopped it.
+          : unfinished > 0 ? MailSendJobState.failed
+          : counts.failed && !counts.sent ? MailSendJobState.failed
           : MailSendJobState.done,
         finishedAt: new Date(),
-        error: firstError,
+        heartbeatAt: new Date(),
+        error:
+          !stoppedFromOutside && unfinished > 0 ? INTERRUPTED_ERROR : job.error,
       },
     });
   }
@@ -343,24 +718,6 @@ export class MailSendJobService {
 
       skip += BATCH_SIZE;
     }
-  }
-
-  /** Send the template to one recipient and record the MailLog row. */
-  private async sendOne(
-    mailSendJobId: string,
-    template: MailTemplate,
-    recipient: MailRecipient
-  ): Promise<void> {
-    const optionalData = await this.buildOptionalData(template, recipient);
-
-    await this.mailContext.sendMail({
-      mailTemplateId: template.id,
-      recipient: recipient.user,
-      optionalData,
-      mailType: mailLogType.Manual,
-      mailSendJobId,
-      isRetry: false,
-    });
   }
 
   /**

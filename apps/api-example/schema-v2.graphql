@@ -1689,14 +1689,47 @@ type MailSendJobModel {
   error: String
   failedCount: Int!
   finishedAt: DateTime
+
+  """Last sign of life of the worker processing this job."""
+  heartbeatAt: DateTime
   id: String!
   mailTemplate: MailLogTemplate
   mailTemplateId: String!
   modifiedAt: DateTime!
+
+  """How often the job was picked up again after an interruption."""
+  resumeCount: Int!
+
+  """
+  Mails handed to the provider whose outcome never came back — left over after an interruption. Never re-sent on their own.
+  """
+  sendingCount: Int!
   sentCount: Int!
   startedAt: DateTime
   status: MailSendJobState!
   totalCount: Int!
+}
+
+type MailSendJobRecipientModel {
+  attempts: Int!
+  error: String
+  id: String!
+  mailLogId: String
+  memberPlanName: String
+
+  """Position in the send queue."""
+  position: Int!
+  sentAt: DateTime
+  state: MailSendJobRecipientState!
+  user: MailLogRecipient!
+}
+
+"""Where one planned mail of a send job stands."""
+enum MailSendJobRecipientState {
+  failed
+  pending
+  sending
+  sent
 }
 
 enum MailSendJobState {
@@ -1926,6 +1959,11 @@ type Mutation {
 
   """Approves a comment"""
   approveComment(id: String!): Comment!
+
+  """
+  Stop a running send job. Unsent recipients stay open and can be continued.
+  """
+  cancelMailSendJob(id: String!): MailSendJobModel!
 
   """Cancels a subscription."""
   cancelSubscription(
@@ -2311,6 +2349,11 @@ type Mutation {
 
   """Restores an older revision of a page as a new draft."""
   restorePageRevision(id: String!, revisionId: String!): Page!
+
+  """
+  Continue a send job that stopped early. Recipients already sent are skipped.
+  """
+  resumeMailSendJob(id: String!, retryUnfinished: Boolean): MailSendJobModel!
 
   """This mutation revokes and deletes the active session."""
   revokeActiveSession: Boolean!
@@ -2702,6 +2745,12 @@ type PaginatedMailLog {
 
 type PaginatedMailSendJob {
   nodes: [MailSendJobModel!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type PaginatedMailSendJobRecipient {
+  nodes: [MailSendJobRecipientModel!]!
   pageInfo: PageInfo!
   totalCount: Int!
 }
@@ -3436,6 +3485,9 @@ type Query {
 
   """A single mail send job (for progress polling)"""
   mailSendJob(id: String!): MailSendJobModel
+
+  """The planned mails of a send job and where each of them stands"""
+  mailSendJobRecipients(jobId: String!, skip: Int, state: MailSendJobRecipientState, take: Int): PaginatedMailSendJobRecipient!
 
   """Paginated list of mail send jobs"""
   mailSendJobs(skip: Int, take: Int): PaginatedMailSendJob!

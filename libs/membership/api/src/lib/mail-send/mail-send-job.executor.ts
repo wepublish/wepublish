@@ -4,7 +4,8 @@ import { MailSendJobService } from './mail-send-job.service';
 
 /**
  * Safety net for the fire-and-forget drain triggered when a job is created:
- * re-drains queued jobs (e.g. after a restart) and fails interrupted ones.
+ * re-drains queued jobs and continues jobs whose worker went away (e.g. an API
+ * restart mid-send), picking up at the first recipient that was never mailed.
  */
 @Injectable()
 export class MailSendJobExecutor {

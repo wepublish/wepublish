@@ -9,6 +9,7 @@ import {
   MailLogState,
   MailLogType,
   MailSendAudience,
+  MailSendJobRecipientState,
   MailSendJobState,
   PaymentPeriodicity,
 } from '@prisma/client';
@@ -61,6 +62,11 @@ registerEnumType(MailSendJobState, {
 
 registerEnumType(MailSendAudience, {
   name: 'MailSendAudience',
+});
+
+registerEnumType(MailSendJobRecipientState, {
+  name: 'MailSendJobRecipientState',
+  description: 'Where one planned mail of a send job stands.',
 });
 
 @InputType()
@@ -233,11 +239,28 @@ export class MailSendJobModel {
   @Field(() => Int)
   failedCount!: number;
 
+  @Field(() => Int, {
+    description:
+      'Mails handed to the provider whose outcome never came back — left over after an interruption. Never re-sent on their own.',
+  })
+  sendingCount!: number;
+
   @Field(() => Date, { nullable: true })
   startedAt?: Date | null;
 
   @Field(() => Date, { nullable: true })
   finishedAt?: Date | null;
+
+  @Field(() => Date, {
+    nullable: true,
+    description: 'Last sign of life of the worker processing this job.',
+  })
+  heartbeatAt?: Date | null;
+
+  @Field(() => Int, {
+    description: 'How often the job was picked up again after an interruption.',
+  })
+  resumeCount!: number;
 
   @Field(() => String, { nullable: true })
   error?: string | null;
@@ -248,6 +271,41 @@ export class MailSendJobModel {
 
 @ObjectType()
 export class PaginatedMailSendJob extends PaginatedType(MailSendJobModel) {}
+
+@ObjectType()
+export class MailSendJobRecipientModel {
+  @Field()
+  id!: string;
+
+  @Field(() => Int, { description: 'Position in the send queue.' })
+  position!: number;
+
+  @Field(() => MailSendJobRecipientState)
+  state!: MailSendJobRecipientState;
+
+  @Field(() => Int)
+  attempts!: number;
+
+  @Field(() => String, { nullable: true })
+  error?: string | null;
+
+  @Field(() => Date, { nullable: true })
+  sentAt?: Date | null;
+
+  @Field(() => String, { nullable: true })
+  mailLogId?: string | null;
+
+  @Field(() => MailLogRecipient)
+  user!: MailLogRecipient;
+
+  @Field(() => String, { nullable: true })
+  memberPlanName?: string | null;
+}
+
+@ObjectType()
+export class PaginatedMailSendJobRecipient extends PaginatedType(
+  MailSendJobRecipientModel
+) {}
 
 @ObjectType()
 export class MailSendRecipientModel {

@@ -1,5 +1,5 @@
 import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { PrismaClient } from '@prisma/client';
+import { MailSendJobRecipientState, PrismaClient } from '@prisma/client';
 import { CurrentUser, UserSession } from '@wepublish/authentication/api';
 import { Permissions } from '@wepublish/permissions/api';
 import { CanGetMailLogs, CanSendMailTemplates } from '@wepublish/permissions';
@@ -13,6 +13,7 @@ import {
   MailSendRecipientPreview,
   PaginatedMailLog,
   PaginatedMailSendJob,
+  PaginatedMailSendJobRecipient,
   PaginatedMailSendRecipient,
 } from './mail-send.model';
 import { MailSendJobService } from './mail-send-job.service';
@@ -188,6 +189,75 @@ export class MailSendResolver {
     ]);
 
     return this.paginate(jobs, totalCount, skip, boundedTake);
+  }
+
+  @Permissions(CanGetMailLogs)
+  @Query(() => PaginatedMailSendJobRecipient, {
+    description: `The planned mails of a send job and where each of them stands`,
+  })
+  async mailSendJobRecipients(
+    @Args('jobId') jobId: string,
+    @Args('state', {
+      type: () => MailSendJobRecipientState,
+      nullable: true,
+    })
+    state: MailSendJobRecipientState | undefined,
+    @Args('skip', { type: () => Int, nullable: true }) skip = 0,
+    @Args('take', { type: () => Int, nullable: true }) take = 50
+  ): Promise<PaginatedMailSendJobRecipient> {
+    const boundedTake = Math.min(take, 100);
+    // An absent state means every state — `state: null` would match nothing.
+    const where = { jobId, ...(state ? { state } : {}) };
+
+    const [totalCount, entries] = await Promise.all([
+      this.prisma.mailSendJobRecipient.count({ where }),
+      this.prisma.mailSendJobRecipient.findMany({
+        where,
+        include: {
+          user: true,
+          subscription: { include: { memberPlan: true } },
+        },
+        skip,
+        take: boundedTake + 1,
+        orderBy: { position: 'asc' },
+      }),
+    ]);
+
+    const rows = entries.map(entry => ({
+      id: entry.id,
+      position: entry.position,
+      state: entry.state,
+      attempts: entry.attempts,
+      error: entry.error,
+      sentAt: entry.sentAt,
+      mailLogId: entry.mailLogId,
+      user: entry.user,
+      memberPlanName: entry.subscription?.memberPlan?.name ?? null,
+    }));
+
+    return this.paginate(rows, totalCount, skip, boundedTake);
+  }
+
+  @Permissions(CanSendMailTemplates)
+  @Mutation(() => MailSendJobModel, {
+    description: `Continue a send job that stopped early. Recipients already sent are skipped.`,
+  })
+  async resumeMailSendJob(
+    @Args('id') id: string,
+    @Args('retryUnfinished', { type: () => Boolean, nullable: true })
+    retryUnfinished = false
+  ): Promise<MailSendJobModel> {
+    return this.withTemplate(
+      this.mailSendJobService.resumeJob(id, retryUnfinished)
+    );
+  }
+
+  @Permissions(CanSendMailTemplates)
+  @Mutation(() => MailSendJobModel, {
+    description: `Stop a running send job. Unsent recipients stay open and can be continued.`,
+  })
+  async cancelMailSendJob(@Args('id') id: string): Promise<MailSendJobModel> {
+    return this.withTemplate(this.mailSendJobService.cancelJob(id));
   }
 
   @Permissions(CanGetMailLogs)

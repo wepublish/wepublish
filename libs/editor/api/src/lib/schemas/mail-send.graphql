@@ -7,8 +7,11 @@ fragment FullMailSendJob on MailSendJobModel {
   totalCount
   sentCount
   failedCount
+  sendingCount
+  resumeCount
   startedAt
   finishedAt
+  heartbeatAt
   error
   mailTemplate {
     id
@@ -24,7 +27,11 @@ query MailSendRecipientPreview($audience: MailAudienceInput!) {
   }
 }
 
-query MailSendRecipients($audience: MailAudienceInput!, $skip: Int, $take: Int) {
+query MailSendRecipients(
+  $audience: MailAudienceInput!
+  $skip: Int
+  $take: Int
+) {
   mailSendRecipients(audience: $audience, skip: $skip, take: $take) {
     nodes {
       id
@@ -85,6 +92,54 @@ query MailSendJobs($skip: Int, $take: Int) {
       startCursor
       endCursor
     }
+  }
+}
+
+query MailSendJobRecipients(
+  $jobId: String!
+  $state: MailSendJobRecipientState
+  $skip: Int
+  $take: Int
+) {
+  mailSendJobRecipients(
+    jobId: $jobId
+    state: $state
+    skip: $skip
+    take: $take
+  ) {
+    nodes {
+      id
+      position
+      state
+      attempts
+      error
+      sentAt
+      mailLogId
+      memberPlanName
+      user {
+        id
+        email
+        name
+        firstName
+      }
+    }
+    totalCount
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+    }
+  }
+}
+
+mutation ResumeMailSendJob($id: String!, $retryUnfinished: Boolean) {
+  resumeMailSendJob(id: $id, retryUnfinished: $retryUnfinished) {
+    ...FullMailSendJob
+  }
+}
+
+mutation CancelMailSendJob($id: String!) {
+  cancelMailSendJob(id: $id) {
+    ...FullMailSendJob
   }
 }
 

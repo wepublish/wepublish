@@ -63,6 +63,14 @@ import {
 } from 'rsuite';
 import { DEFAULT_QUERY_OPTIONS } from '../common';
 import { mailErrorHelpKey } from './mail-log-common';
+import {
+  CancelJobButton,
+  canResume,
+  isActive,
+  JobProgressBar,
+  openCount,
+  ResumeJobButton,
+} from './mail-job-common';
 import { MailPreview } from '../mail-template/mail-preview';
 
 /** Mirrors the API default for the win-back look-back window. */
@@ -1083,28 +1091,29 @@ function RecipientListModal({
 /** Polls a running send job and shows live progress. */
 function JobProgress({ jobId }: { jobId: string }) {
   const { t } = useTranslation();
-  const { data, startPolling, stopPolling } = useMailSendJobQuery({
+  const { data, startPolling, stopPolling, refetch } = useMailSendJobQuery({
     variables: { id: jobId },
     fetchPolicy: 'network-only',
   });
 
   const job = data?.mailSendJob;
-  const finished = job?.status === 'done' || job?.status === 'failed';
+  const active = job ? isActive(job) : true;
 
   useEffect(() => {
-    startPolling(2000);
-    return () => stopPolling();
-  }, [startPolling, stopPolling]);
-
-  useEffect(() => {
-    if (finished) {
+    if (active) {
+      startPolling(2000);
+    } else {
       stopPolling();
     }
-  }, [finished, stopPolling]);
+
+    return () => stopPolling();
+  }, [active, startPolling, stopPolling]);
 
   if (!job) {
     return null;
   }
+
+  const remaining = openCount(job);
 
   return (
     <Panel
@@ -1112,9 +1121,12 @@ function JobProgress({ jobId }: { jobId: string }) {
       header={t('mailSend.progress.title')}
       style={{ marginTop: 16 }}
     >
+      <JobProgressBar job={job} />
+
       <Stack
         spacing={24}
         wrap
+        style={{ marginTop: 8 }}
       >
         <span>
           {t('mailSend.progress.status')}: {t(`mailSend.status.${job.status}`)}
@@ -1126,6 +1138,18 @@ function JobProgress({ jobId }: { jobId: string }) {
           {t('mailSend.progress.failed')}: {job.failedCount}
         </span>
       </Stack>
+
+      {/* An unfinished send is the case that needs an action, so say what is
+          left and offer to continue right here. */}
+      {remaining > 0 && !active && (
+        <Message
+          type="warning"
+          showIcon
+          style={{ marginTop: 12 }}
+        >
+          {t('mailJobs.unfinishedHint', { count: remaining })}
+        </Message>
+      )}
 
       {(job.failedCount > 0 || job.error) && (
         <Message
@@ -1167,6 +1191,33 @@ function JobProgress({ jobId }: { jobId: string }) {
           </Stack>
         </Message>
       )}
+
+      <Stack
+        spacing={8}
+        wrap
+        style={{ marginTop: 12 }}
+      >
+        {canResume(job) && (
+          <ResumeJobButton
+            job={job}
+            onDone={() => refetch()}
+          />
+        )}
+        {isActive(job) && (
+          <CancelJobButton
+            job={job}
+            onDone={() => refetch()}
+          />
+        )}
+        <Button
+          size="sm"
+          appearance="ghost"
+          as={Link}
+          to={`/maillog?tab=jobs&job=${job.id}`}
+        >
+          {t('mailSend.progress.showJob')}
+        </Button>
+      </Stack>
     </Panel>
   );
 }

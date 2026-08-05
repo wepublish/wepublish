@@ -13,6 +13,7 @@ export const unselectPassword: Record<
     | 'userImage'
     | 'mailSent'
     | 'mailSendJobs'
+    | 'mailSendJobEntries'
     | 'consents'
     | 'mailSent'
     | 'articleRevisions'

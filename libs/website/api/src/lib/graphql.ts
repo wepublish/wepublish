@@ -1768,15 +1768,43 @@ export type MailSendJobModel = {
   error?: Maybe<Scalars['String']>;
   failedCount: Scalars['Int'];
   finishedAt?: Maybe<Scalars['DateTime']>;
+  /** Last sign of life of the worker processing this job. */
+  heartbeatAt?: Maybe<Scalars['DateTime']>;
   id: Scalars['String'];
   mailTemplate?: Maybe<MailLogTemplate>;
   mailTemplateId: Scalars['String'];
   modifiedAt: Scalars['DateTime'];
+  /** How often the job was picked up again after an interruption. */
+  resumeCount: Scalars['Int'];
+  /** Mails handed to the provider whose outcome never came back — left over after an interruption. Never re-sent on their own. */
+  sendingCount: Scalars['Int'];
   sentCount: Scalars['Int'];
   startedAt?: Maybe<Scalars['DateTime']>;
   status: MailSendJobState;
   totalCount: Scalars['Int'];
 };
+
+export type MailSendJobRecipientModel = {
+  __typename?: 'MailSendJobRecipientModel';
+  attempts: Scalars['Int'];
+  error?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  mailLogId?: Maybe<Scalars['String']>;
+  memberPlanName?: Maybe<Scalars['String']>;
+  /** Position in the send queue. */
+  position: Scalars['Int'];
+  sentAt?: Maybe<Scalars['DateTime']>;
+  state: MailSendJobRecipientState;
+  user: MailLogRecipient;
+};
+
+/** Where one planned mail of a send job stands. */
+export enum MailSendJobRecipientState {
+  Failed = 'failed',
+  Pending = 'pending',
+  Sending = 'sending',
+  Sent = 'sent'
+}
 
 export enum MailSendJobState {
   Cancelled = 'cancelled',
@@ -2007,6 +2035,8 @@ export type Mutation = {
   addUserComment: Comment;
   /** Approves a comment */
   approveComment: Comment;
+  /** Stop a running send job. Unsent recipients stay open and can be continued. */
+  cancelMailSendJob: MailSendJobModel;
   /** Cancels a subscription. */
   cancelSubscription: PublicSubscription;
   /** This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null */
@@ -2237,6 +2267,8 @@ export type Mutation = {
   restoreArticleRevision: Article;
   /** Restores an older revision of a page as a new draft. */
   restorePageRevision: Page;
+  /** Continue a send job that stopped early. Recipients already sent are skipped. */
+  resumeMailSendJob: MailSendJobModel;
   /** This mutation revokes and deletes the active session. */
   revokeActiveSession: Scalars['Boolean'];
   /** This mutation sends a login link to the email if the user exists. Method will always return email address */
@@ -2377,6 +2409,11 @@ export type MutationAddUserCommentArgs = {
 
 
 export type MutationApproveCommentArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationCancelMailSendJobArgs = {
   id: Scalars['String'];
 };
 
@@ -3113,6 +3150,12 @@ export type MutationRestoreArticleRevisionArgs = {
 export type MutationRestorePageRevisionArgs = {
   id: Scalars['String'];
   revisionId: Scalars['String'];
+};
+
+
+export type MutationResumeMailSendJobArgs = {
+  id: Scalars['String'];
+  retryUnfinished?: InputMaybe<Scalars['Boolean']>;
 };
 
 
@@ -3929,6 +3972,13 @@ export type PaginatedMailSendJob = {
   totalCount: Scalars['Int'];
 };
 
+export type PaginatedMailSendJobRecipient = {
+  __typename?: 'PaginatedMailSendJobRecipient';
+  nodes: Array<MailSendJobRecipientModel>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
 export type PaginatedMailSendRecipient = {
   __typename?: 'PaginatedMailSendRecipient';
   nodes: Array<MailSendRecipientModel>;
@@ -4681,6 +4731,8 @@ export type Query = {
   mailProviderSettings: Array<SettingMailProvider>;
   /** A single mail send job (for progress polling) */
   mailSendJob?: Maybe<MailSendJobModel>;
+  /** The planned mails of a send job and where each of them stands */
+  mailSendJobRecipients: PaginatedMailSendJobRecipient;
   /** Paginated list of mail send jobs */
   mailSendJobs: PaginatedMailSendJob;
   /** Render a saved template for one recipient of an audience, exactly as the send would compose it */
@@ -5139,6 +5191,14 @@ export type QueryMailProviderSettingsArgs = {
 
 export type QueryMailSendJobArgs = {
   id: Scalars['String'];
+};
+
+
+export type QueryMailSendJobRecipientsArgs = {
+  jobId: Scalars['String'];
+  skip?: InputMaybe<Scalars['Int']>;
+  state?: InputMaybe<MailSendJobRecipientState>;
+  take?: InputMaybe<Scalars['Int']>;
 };
 
 

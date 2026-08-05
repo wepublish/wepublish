@@ -2689,7 +2689,8 @@
         "sent": "Sent",
         "failed": "Failed",
         "reason": "Reason",
-        "showFailures": "Show {{count}} failed mails in the sending log"
+        "showFailures": "Show {{count}} failed mails in the sending log",
+        "showJob": "Open send details"
       },
       "status": {
         "queued": "Queued",
@@ -2806,6 +2807,10 @@
           "cause": "The mail server rejected the send with the message below.",
           "fix": "1. Check the configuration under Settings › Integrations › Mail.\n2. Look into the server log for the full error.\n3. Send a test mail from the template to check the connection."
         }
+      },
+      "tabs": {
+        "mails": "Mails",
+        "jobs": "Send jobs"
       }
     },
     "userMail": {
@@ -2815,6 +2820,63 @@
       "selectTemplate": "Select template",
       "send": "Send",
       "sent": "Email sent"
+    },
+    "mailJobs": {
+      "created": "Started",
+      "template": "Template",
+      "audience": "Audience",
+      "state": "Status",
+      "progress": "Progress",
+      "actions": "Actions",
+      "details": "Details",
+      "finished": "Finished",
+      "empty": "No sends started yet.",
+      "detailTitle": "Send job",
+      "progressCount": "{{sent}} of {{total}} sent",
+      "failedCount": "{{count}} failed",
+      "lastActivity": "Last activity: {{time}}",
+      "showMails": "Mails of this send",
+      "showFailedMails": "Show {{count}} failed",
+      "unfinishedHint": "This send did not run to the end: {{count}} mails were never sent. \"Continue\" picks up exactly those — mails already sent are never sent a second time.",
+      "resume": "Continue",
+      "resumeTitle": "Continue send",
+      "resumeText": "{{count}} mails are still open and were never sent.",
+      "resumeConfirm": "Send {{count}} mails",
+      "resumeSafety": "The {{count}} mails already sent will not be sent again.",
+      "resumed": "Send is being continued",
+      "retryUnfinished": "Retry failed and interrupted ones ({{count}})",
+      "retryUnfinishedHint": "For interrupted mails it is unknown whether the provider received them — they may end up delivered twice.",
+      "cancel": "Stop",
+      "cancelTitle": "Stop send",
+      "cancelText": "The send will stop. The {{count}} mails not sent yet stay open and can be continued later.",
+      "cancelConfirm": "Stop send",
+      "audiences": {
+        "singleUser": "Single person",
+        "filteredSubscriptions": "Filtered selection",
+        "allUsers": "All users"
+      },
+      "stats": {
+        "sent": "Sent",
+        "pending": "Pending",
+        "failed": "Failed",
+        "sending": "Delivering",
+        "interrupted": "Interrupted"
+      },
+      "recipientState": {
+        "pending": "Pending",
+        "sending": "Delivering",
+        "sent": "Sent",
+        "failed": "Failed"
+      },
+      "queue": {
+        "title": "Queue",
+        "allStates": "All states",
+        "recipient": "Recipient",
+        "state": "Status",
+        "sentAt": "Sent at",
+        "attempts": "Attempts",
+        "empty": "No entries for this filter."
+      }
     }
   }
 }

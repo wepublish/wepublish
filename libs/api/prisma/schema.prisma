@@ -582,21 +582,82 @@ model MailSendJob {
   audience MailSendAudience
 
   // Frozen audit snapshot of the resolved filter criteria. Opaque record, not
-  // queried per-element; the actual recipients are MailLog rows.
+  // queried per-element; the concrete recipients are MailSendJobRecipient rows.
   recipientFilter Json?
 
-  totalCount  Int @default(0)
-  sentCount   Int @default(0)
-  failedCount Int @default(0)
+  totalCount   Int @default(0)
+  sentCount    Int @default(0)
+  failedCount  Int @default(0)
+  // Recipients handed to the mail provider but not yet concluded. Left over
+  // after a crash: whether such a mail went out is unknown, so it is never
+  // re-sent automatically — only the editor may decide to try again.
+  sendingCount Int @default(0)
 
   startedAt  DateTime?
   finishedAt DateTime?
   error      String?
 
-  mailLogs MailLog[]
+  // Set once every recipient of the audience has a MailSendJobRecipient row.
+  // Until then the queue is still being built and may be re-built from scratch.
+  recipientsResolvedAt DateTime?
+
+  // Touched on every progress update. A running job that stops touching it is
+  // considered interrupted and is re-queued, continuing where it left off.
+  heartbeatAt DateTime?
+
+  // How often this job was picked up again after an interruption. Bounded, so
+  // a job that dies at the same recipient forever eventually stops.
+  resumeCount Int @default(0)
+
+  mailLogs   MailLog[]
+  recipients MailSendJobRecipient[]
 
   @@index([status])
   @@map("mail.send_jobs")
+}
+
+enum MailSendJobRecipientState {
+  pending @map("pending")
+  sending @map("sending")
+  sent    @map("sent")
+  failed  @map("failed")
+}
+
+/// One planned mail of a send job. Materialised up-front so a job can be
+/// interrupted and continued without sending anybody twice: only `pending` rows
+/// are ever picked up again.
+model MailSendJobRecipient {
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  job   MailSendJob @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  jobId String
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+
+  // The subscription this mail is bound to, for subscription-based audiences.
+  // A user with two matching subscriptions is two rows and receives two mails.
+  subscription   Subscription? @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+  subscriptionId String?
+
+  // Position in the queue. Fixed at materialisation, so continuing a job works
+  // through the remaining recipients in the original order.
+  position Int
+
+  state    MailSendJobRecipientState @default(pending)
+  attempts Int                       @default(0)
+  error    String?
+  sentAt   DateTime?
+
+  // The MailLog row written for this attempt. Plain id rather than a relation:
+  // mail logs outlive the queue and may be pruned independently.
+  mailLogId String?
+
+  @@unique([jobId, position])
+  @@index([jobId, state])
+  @@map("mail.send_job_recipients")
 }
 
 enum PaymentPeriodicity {
@@ -1013,6 +1074,8 @@ model Subscription {
 
   invoices Invoice[]
 
+  mailSendJobEntries MailSendJobRecipient[]
+
   @@index([userID])
   @@map("subscriptions")
 }
@@ -1084,6 +1147,7 @@ model User {
   pollVotes           PollVote[]
   mailSent            MailLog[]
   mailSendJobs        MailSendJob[]
+  mailSendJobEntries  MailSendJobRecipient[]
   consents            UserConsent[]
   articleRevisions    ArticleRevision[]
   pageRevisions       PageRevision[]

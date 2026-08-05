@@ -2635,7 +2635,8 @@
         "sent": "Gesendet",
         "failed": "Fehlgeschlagen",
         "reason": "Grund",
-        "showFailures": "{{count}} fehlgeschlagene Mails im Versandprotokoll ansehen"
+        "showFailures": "{{count}} fehlgeschlagene Mails im Versandprotokoll ansehen",
+        "showJob": "Versand-Details öffnen"
       },
       "status": {
         "queued": "In Warteschlange",
@@ -2752,6 +2753,10 @@
           "cause": "Der Mailserver hat den Versand mit der unten stehenden Meldung abgelehnt.",
           "fix": "1. Prüfe die Einstellungen unter Einstellungen › Integrationen › Mail.\n2. Sieh im Server-Log nach der vollständigen Fehlermeldung.\n3. Sende eine Testmail aus der Vorlage, um die Verbindung zu prüfen."
         }
+      },
+      "tabs": {
+        "mails": "E-Mails",
+        "jobs": "Versände"
       }
     },
     "userMail": {
@@ -2761,6 +2766,63 @@
       "selectTemplate": "Vorlage auswählen",
       "send": "Senden",
       "sent": "E-Mail gesendet"
+    },
+    "mailJobs": {
+      "created": "Gestartet",
+      "template": "Vorlage",
+      "audience": "Empfängergruppe",
+      "state": "Status",
+      "progress": "Fortschritt",
+      "actions": "Aktionen",
+      "details": "Details",
+      "finished": "Beendet",
+      "empty": "Noch keine Versände gestartet.",
+      "detailTitle": "Versand",
+      "progressCount": "{{sent}} von {{total}} gesendet",
+      "failedCount": "{{count}} fehlgeschlagen",
+      "lastActivity": "Letzte Aktivität: {{time}}",
+      "showMails": "E-Mails dieses Versands",
+      "showFailedMails": "{{count}} fehlgeschlagene ansehen",
+      "unfinishedHint": "Dieser Versand ist nicht zu Ende gelaufen: {{count}} E-Mails wurden noch nie verschickt. Mit «Fortsetzen» werden genau diese nachgeholt – bereits versendete E-Mails werden nie ein zweites Mal geschickt.",
+      "resume": "Fortsetzen",
+      "resumeTitle": "Versand fortsetzen",
+      "resumeText": "Es sind noch {{count}} E-Mails offen, die nie verschickt wurden.",
+      "resumeConfirm": "{{count}} E-Mails senden",
+      "resumeSafety": "Die {{count}} bereits gesendeten E-Mails werden nicht erneut verschickt.",
+      "resumed": "Versand wird fortgesetzt",
+      "retryUnfinished": "Fehlgeschlagene und unterbrochene erneut versuchen ({{count}})",
+      "retryUnfinishedHint": "Bei unterbrochenen E-Mails ist unklar, ob sie beim Anbieter angekommen sind – sie könnten dadurch doppelt zugestellt werden.",
+      "cancel": "Abbrechen",
+      "cancelTitle": "Versand abbrechen",
+      "cancelText": "Der Versand wird gestoppt. Die {{count}} noch nicht verschickten E-Mails bleiben offen und können später fortgesetzt werden.",
+      "cancelConfirm": "Versand stoppen",
+      "audiences": {
+        "singleUser": "Einzelne Person",
+        "filteredSubscriptions": "Gefilterte Auswahl",
+        "allUsers": "Alle Benutzer"
+      },
+      "stats": {
+        "sent": "Gesendet",
+        "pending": "Ausstehend",
+        "failed": "Fehlgeschlagen",
+        "sending": "In Zustellung",
+        "interrupted": "Unterbrochen"
+      },
+      "recipientState": {
+        "pending": "Ausstehend",
+        "sending": "In Zustellung",
+        "sent": "Gesendet",
+        "failed": "Fehlgeschlagen"
+      },
+      "queue": {
+        "title": "Warteschlange",
+        "allStates": "Alle Status",
+        "recipient": "Empfänger",
+        "state": "Status",
+        "sentAt": "Gesendet am",
+        "attempts": "Versuche",
+        "empty": "Keine Einträge für diesen Filter."
+      }
     }
   }
 }

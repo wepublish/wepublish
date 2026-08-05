@@ -30,6 +30,11 @@ export type MailControllerConfig = {
   jwtOverride?: string;
   /** Set for mails produced by a manual bulk send job. */
   mailSendJobId?: string | null;
+  /**
+   * Id the mail log entry has to be written under. Passed in when the caller
+   * needs to reference the entry regardless of how the delivery turns out.
+   */
+  mailLogId?: string;
 };
 
 export class MailController {
@@ -107,7 +112,7 @@ export class MailController {
       return;
     }
 
-    const mailLogId = randomUUID();
+    const mailLogId = this.config.mailLogId ?? randomUUID();
 
     let subject: string | null = null;
     try {

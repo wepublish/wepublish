@@ -19,6 +19,18 @@ export interface MailRecipient {
   subscription?: SubscriptionWithRelations;
 }
 
+/** A materialised queue row, reduced to what identifies its recipient. */
+export interface QueuedRecipientRef {
+  userId: string;
+  subscriptionId?: string | null;
+}
+
+/** Key a recipient is looked up by: one user, optionally one subscription. */
+export const recipientKey = ({
+  userId,
+  subscriptionId,
+}: QueuedRecipientRef): string => `${userId}:${subscriptionId ?? ''}`;
+
 const subscriptionInclude = {
   memberPlan: true,
   paymentMethod: true,
@@ -100,6 +112,65 @@ export class MailSendRecipientService {
     }
   }
 
+  /**
+   * The recipients behind already materialised queue rows. Loaded by id rather
+   * than by re-running the audience, so a job continues with exactly the people
+   * it was planned for even if the filter would match differently by now.
+   *
+   * Rows whose user or subscription has since been deleted are absent from the
+   * result — the caller decides what to do with them.
+   */
+  async loadQueued(
+    refs: QueuedRecipientRef[]
+  ): Promise<Map<string, MailRecipient>> {
+    const userIds = [...new Set(refs.map(({ userId }) => userId))];
+    const subscriptionIds = [
+      ...new Set(
+        refs
+          .map(({ subscriptionId }) => subscriptionId)
+          .filter((id): id is string => !!id)
+      ),
+    ];
+
+    const [users, subscriptions] = await Promise.all([
+      this.prisma.user.findMany({ where: { id: { in: userIds } } }),
+      subscriptionIds.length ?
+        this.prisma.subscription.findMany({
+          where: { id: { in: subscriptionIds } },
+          include: subscriptionInclude,
+        })
+      : Promise.resolve([]),
+    ]);
+
+    const usersById = new Map(users.map(user => [user.id, user]));
+    const subscriptionsById = new Map(
+      subscriptions.map(subscription => [subscription.id, subscription])
+    );
+
+    const recipients = new Map<string, MailRecipient>();
+
+    for (const ref of refs) {
+      const user = usersById.get(ref.userId);
+
+      if (!user) {
+        continue;
+      }
+
+      const subscription =
+        ref.subscriptionId ?
+          subscriptionsById.get(ref.subscriptionId)
+        : undefined;
+
+      if (ref.subscriptionId && !subscription) {
+        continue;
+      }
+
+      recipients.set(recipientKey(ref), { user, subscription });
+    }
+
+    return recipients;
+  }
+
   async resolvePage(
     audience: MailAudienceInput,
     skip: number,
@@ -110,7 +181,7 @@ export class MailSendRecipientService {
         const users = await this.prisma.user.findMany({
           skip,
           take,
-          orderBy: { createdAt: 'asc' },
+          orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
         });
 
         return users.map(user => ({ user }));
@@ -122,7 +193,7 @@ export class MailSendRecipientService {
           include: { ...subscriptionInclude, user: true },
           skip,
           take,
-          orderBy: { createdAt: 'asc' },
+          orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
         });
 
         return subscriptions
@@ -138,7 +209,7 @@ export class MailSendRecipientService {
           where: this.buildNoActiveSubscriptionWhere(),
           skip,
           take,
-          orderBy: { createdAt: 'asc' },
+          orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
         });
 
         return users.map(user => ({ user }));
@@ -151,7 +222,7 @@ export class MailSendRecipientService {
           skip,
           take,
           // Most recently ended first: those are the likeliest to come back.
-          orderBy: { paidUntil: 'desc' },
+          orderBy: [{ paidUntil: 'desc' }, { id: 'asc' }],
         });
 
         return subscriptions

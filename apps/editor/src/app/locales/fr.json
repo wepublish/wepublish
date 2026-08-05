@@ -2580,7 +2580,8 @@
         "sent": "Envoyés",
         "failed": "Échoués",
         "reason": "Motif",
-        "showFailures": "Voir les {{count}} e-mails échoués dans le journal d'envoi"
+        "showFailures": "Voir les {{count}} e-mails échoués dans le journal d'envoi",
+        "showJob": "Ouvrir les détails de l'envoi"
       },
       "status": {
         "queued": "En file d'attente",
@@ -2697,6 +2698,10 @@
           "cause": "Le serveur a refusé l’envoi avec le message ci-dessous.",
           "fix": "1. Vérifiez la configuration sous Réglages › Intégrations › Mail.\n2. Consultez le journal du serveur pour l’erreur complète.\n3. Envoyez un e-mail de test depuis le modèle pour vérifier la connexion."
         }
+      },
+      "tabs": {
+        "mails": "E-mails",
+        "jobs": "Envois"
       }
     },
     "userMail": {
@@ -2706,6 +2711,63 @@
       "selectTemplate": "Choisir un modèle",
       "send": "Envoyer",
       "sent": "E-mail envoyé"
+    },
+    "mailJobs": {
+      "created": "Démarré",
+      "template": "Modèle",
+      "audience": "Destinataires",
+      "state": "Statut",
+      "progress": "Progression",
+      "actions": "Actions",
+      "details": "Détails",
+      "finished": "Terminé le",
+      "empty": "Aucun envoi lancé pour le moment.",
+      "detailTitle": "Envoi",
+      "progressCount": "{{sent}} sur {{total}} envoyés",
+      "failedCount": "{{count}} en échec",
+      "lastActivity": "Dernière activité : {{time}}",
+      "showMails": "E-mails de cet envoi",
+      "showFailedMails": "Voir les {{count}} en échec",
+      "unfinishedHint": "Cet envoi n'est pas allé à son terme : {{count}} e-mails n'ont jamais été envoyés. « Reprendre » ne traite que ceux-là – les e-mails déjà envoyés ne le sont jamais une seconde fois.",
+      "resume": "Reprendre",
+      "resumeTitle": "Reprendre l'envoi",
+      "resumeText": "Il reste {{count}} e-mails qui n'ont jamais été envoyés.",
+      "resumeConfirm": "Envoyer {{count}} e-mails",
+      "resumeSafety": "Les {{count}} e-mails déjà envoyés ne seront pas renvoyés.",
+      "resumed": "L'envoi reprend",
+      "retryUnfinished": "Réessayer les échecs et les interrompus ({{count}})",
+      "retryUnfinishedHint": "Pour les e-mails interrompus, on ignore s'ils sont parvenus au prestataire – ils pourraient être livrés en double.",
+      "cancel": "Arrêter",
+      "cancelTitle": "Arrêter l'envoi",
+      "cancelText": "L'envoi sera arrêté. Les {{count}} e-mails pas encore envoyés restent en attente et pourront être repris plus tard.",
+      "cancelConfirm": "Arrêter l'envoi",
+      "audiences": {
+        "singleUser": "Une seule personne",
+        "filteredSubscriptions": "Sélection filtrée",
+        "allUsers": "Tous les utilisateurs"
+      },
+      "stats": {
+        "sent": "Envoyés",
+        "pending": "En attente",
+        "failed": "En échec",
+        "sending": "En cours de remise",
+        "interrupted": "Interrompus"
+      },
+      "recipientState": {
+        "pending": "En attente",
+        "sending": "En cours de remise",
+        "sent": "Envoyé",
+        "failed": "En échec"
+      },
+      "queue": {
+        "title": "File d'attente",
+        "allStates": "Tous les statuts",
+        "recipient": "Destinataire",
+        "state": "Statut",
+        "sentAt": "Envoyé le",
+        "attempts": "Tentatives",
+        "empty": "Aucune entrée pour ce filtre."
+      }
     }
   }
 }
