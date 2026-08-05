@@ -6,7 +6,6 @@ import {
   MailTemplateStatus,
 } from '@wepublish/mail/api';
 import { MailTemplateSyncService } from './mail-template-sync.service';
-import { MailTemplateService } from './mail-template.service';
 import { MailTemplatesResolver } from './mail-template.resolver';
 import { INestApplication, Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
@@ -70,7 +69,6 @@ const prismaServiceMock = {
 const mailProviderServiceMock = {
   getName: jest.fn(async () => 'MockProvider'),
   getTemplateUrl: jest.fn((): string => 'https://example.com/template.html'),
-  getConfig: jest.fn(async () => ({ type: 'MAILCHIMP' })),
 };
 
 const mailContextMock = {
@@ -80,13 +78,6 @@ const mailContextMock = {
 
 const syncServiceMock = {
   synchronizeTemplates: jest.fn((): void => undefined),
-};
-
-const mailTemplateServiceMock = {
-  create: jest.fn(),
-  update: jest.fn(),
-  delete: jest.fn(),
-  getContent: jest.fn(async () => ({ html: '' })),
 };
 
 @Module({
@@ -104,7 +95,6 @@ const mailTemplateServiceMock = {
   providers: [
     MailTemplatesResolver,
     MailTemplateSyncService,
-    MailTemplateService,
     {
       provide: APP_GUARD,
       useClass: PermissionsGuard,
@@ -131,7 +121,6 @@ describe('MailTemplatesResolver', () => {
         MailTemplatesResolver,
         { provide: PrismaClient, useValue: prismaServiceMock },
         { provide: MailTemplateSyncService, useValue: syncServiceMock },
-        { provide: MailTemplateService, useValue: mailTemplateServiceMock },
         { provide: MailContext, useValue: mailContextMock },
       ],
     }).compile();

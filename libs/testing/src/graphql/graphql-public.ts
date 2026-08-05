@@ -1715,23 +1715,9 @@ export enum LoginStatus {
   Unsubscribed = 'UNSUBSCRIBED',
 }
 
-export type MailPlaceholderGroupModel = {
-  __typename?: 'MailPlaceholderGroupModel';
-  event: Scalars['String'];
-  placeholders: Array<MailPlaceholderModel>;
-};
-
-export type MailPlaceholderModel = {
-  __typename?: 'MailPlaceholderModel';
-  example: Scalars['String'];
-  key: Scalars['String'];
-};
-
 export type MailProviderModel = {
   __typename?: 'MailProviderModel';
   name: Scalars['String'];
-  /** Provider type (e.g. MAILCHIMP, MAILGUN, SLACK) */
-  type?: Maybe<Scalars['String']>;
 };
 
 export enum MailProviderType {
@@ -1740,36 +1726,14 @@ export enum MailProviderType {
   Slack = 'SLACK',
 }
 
-export type MailTemplateContentModel = {
-  __typename?: 'MailTemplateContentModel';
-  html: Scalars['String'];
-  subject?: Maybe<Scalars['String']>;
-};
-
-export type MailTemplateCreateInput = {
-  description?: InputMaybe<Scalars['String']>;
-  html: Scalars['String'];
-  name: Scalars['String'];
-  subject?: InputMaybe<Scalars['String']>;
-};
-
 export type MailTemplateRef = {
   __typename?: 'MailTemplateRef';
   id: Scalars['String'];
   name: Scalars['String'];
 };
 
-export type MailTemplateUpdateInput = {
-  description?: InputMaybe<Scalars['String']>;
-  html: Scalars['String'];
-  name: Scalars['String'];
-  subject?: InputMaybe<Scalars['String']>;
-};
-
 export type MailTemplateWithUrlAndStatusModel = {
   __typename?: 'MailTemplateWithUrlAndStatusModel';
-  /** HTML content of the template fetched from the mail provider */
-  content: MailTemplateContentModel;
   description?: Maybe<Scalars['String']>;
   externalMailTemplateId: Scalars['String'];
   id: Scalars['String'];
@@ -1932,7 +1896,6 @@ export type Mutation = {
   createJWTForUser: SessionWithToken;
   /** Returns a JWT that is valid for 1min for the current logged in user. */
   createJWTForWebsiteLogin: SessionWithToken;
-  createMailTemplate: MailTemplateWithUrlAndStatusModel;
   /** Creates a new memberplan. */
   createMemberPlan: MemberPlan;
   /** Creates a new navigation. */
@@ -2014,7 +1977,6 @@ export type Mutation = {
   deleteImage: Scalars['String'];
   /** Deletes an existing invoice. */
   deleteInvoice: Invoice;
-  deleteMailTemplate: MailTemplateWithUrlAndStatusModel;
   /** Deletes a single sync error so the contact will be retried. */
   deleteMailchimpSyncError: Scalars['Boolean'];
   /** Deletes an existing memberplan. */
@@ -2175,7 +2137,6 @@ export type Mutation = {
   updateInvoice: Invoice;
   /** Updates an existing mail provider setting. */
   updateMailProviderSetting: SettingMailProvider;
-  updateMailTemplate: MailTemplateWithUrlAndStatusModel;
   /** Updates an existing memberplan. */
   updateMemberPlan: MemberPlan;
   /** Updates an existing navigation. */
@@ -2372,10 +2333,6 @@ export type MutationCreateInvoiceArgs = {
 export type MutationCreateJwtForUserArgs = {
   expiresInMinutes: Scalars['Float'];
   userId: Scalars['String'];
-};
-
-export type MutationCreateMailTemplateArgs = {
-  input: MailTemplateCreateInput;
 };
 
 export type MutationCreateMemberPlanArgs = {
@@ -2656,10 +2613,6 @@ export type MutationDeleteImageArgs = {
 
 export type MutationDeleteInvoiceArgs = {
   id: Scalars['String'];
-};
-
-export type MutationDeleteMailTemplateArgs = {
-  id: Scalars['ID'];
 };
 
 export type MutationDeleteMailchimpSyncErrorArgs = {
@@ -3085,11 +3038,6 @@ export type MutationUpdateMailProviderSettingArgs = {
   replyToAddress?: InputMaybe<Scalars['String']>;
   slack_webhookURL?: InputMaybe<Scalars['String']>;
   webhookEndpointSecret?: InputMaybe<Scalars['String']>;
-};
-
-export type MutationUpdateMailTemplateArgs = {
-  id: Scalars['ID'];
-  input: MailTemplateUpdateInput;
 };
 
 export type MutationUpdateMemberPlanArgs = {
@@ -4385,10 +4333,6 @@ export type Query = {
   mailProviderSetting: SettingMailProvider;
   /** Returns all mail provider settings. */
   mailProviderSettings: Array<SettingMailProvider>;
-  /** Return a single mail template */
-  mailTemplate: MailTemplateWithUrlAndStatusModel;
-  /** Return all available mail placeholders grouped by event */
-  mailTemplatePlaceholders: Array<MailPlaceholderGroupModel>;
   /** Return all mail templates */
   mailTemplates: Array<MailTemplateWithUrlAndStatusModel>;
   /** Fetches available interest groups for a Mailchimp list. */
@@ -4780,10 +4724,6 @@ export type QueryMailProviderSettingArgs = {
 
 export type QueryMailProviderSettingsArgs = {
   filter?: InputMaybe<SettingMailProviderFilter>;
-};
-
-export type QueryMailTemplateArgs = {
-  id: Scalars['ID'];
 };
 
 export type QueryMailchimpInterestGroupsArgs = {

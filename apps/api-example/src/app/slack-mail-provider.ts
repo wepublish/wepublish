@@ -2,9 +2,6 @@ import {
   MailProviderProps,
   BaseMailProvider,
   SendMailProps,
-  CreateMailProviderTemplateProps,
-  MailProviderTemplate,
-  MailProviderTemplateContent,
 } from '@wepublish/mail/api';
 import fetch from 'cross-fetch';
 
@@ -54,29 +51,6 @@ export class SlackMailProvider extends BaseMailProvider {
 
   async getTemplateUrl() {
     return 'http://example.com/';
-  }
-
-  async getTemplateContent(): Promise<MailProviderTemplateContent> {
-    return { html: '' };
-  }
-
-  async createTemplate(
-    props: CreateMailProviderTemplateProps
-  ): Promise<MailProviderTemplate> {
-    return {
-      name: props.name,
-      uniqueIdentifier: props.name,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-  }
-
-  async updateTemplate(): Promise<void> {
-    return;
-  }
-
-  async deleteTemplate(): Promise<void> {
-    return;
   }
 
   async getName(): Promise<string> {
