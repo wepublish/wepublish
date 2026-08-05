@@ -1,6 +1,7 @@
 import {
   MailLogStatus,
   MailProvider,
+  MailProviderTemplate,
   MailProviderTemplateContent,
   SendMailProps,
   WebhookForSendMailProps,
@@ -49,6 +50,10 @@ export abstract class BaseMailProvider implements MailProvider {
     externalMailTemplateId: string
   ): Promise<MailProviderTemplateContent>;
   abstract getName(): Promise<string>;
+  /** Overridden by providers that host templates remotely (Mandrill, Mailgun). */
+  async listTemplates(): Promise<MailProviderTemplate[]> {
+    return [];
+  }
   async getConfig(): Promise<SettingMailProvider | null> {
     return await new MailProviderConfig(
       this.prisma,

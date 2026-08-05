@@ -100,4 +100,73 @@ describe('MailchimpMailProvider', () => {
       MailProviderError
     );
   });
+
+  describe('listTemplates', () => {
+    it('lists the remote templates with content, preferring the published version', async () => {
+      nock(MANDRILL)
+        .post('/api/1.0/templates/list')
+        .reply(200, [
+          {
+            slug: 'welcome',
+            name: 'Welcome',
+            code: '<p>draft</p>',
+            publish_code: '<p>published</p>',
+            subject: 'draft subject',
+            publish_subject: 'published subject',
+          },
+        ]);
+
+      const templates = await (await makeProvider()).listTemplates();
+
+      expect(templates).toEqual([
+        {
+          externalId: 'welcome',
+          name: 'Welcome',
+          html: '<p>published</p>',
+          subject: 'published subject',
+        },
+      ]);
+    });
+
+    it('falls back to the draft version for an unpublished template', async () => {
+      nock(MANDRILL)
+        .post('/api/1.0/templates/list')
+        .reply(200, [
+          {
+            slug: 'draft-only',
+            name: 'Draft only',
+            code: '<p>draft</p>',
+            publish_code: null,
+            subject: 'draft subject',
+            publish_subject: null,
+          },
+        ]);
+
+      const templates = await (await makeProvider()).listTemplates();
+
+      expect(templates[0].html).toBe('<p>draft</p>');
+      expect(templates[0].subject).toBe('draft subject');
+    });
+
+    it('names a template after its slug when the name is empty', async () => {
+      nock(MANDRILL)
+        .post('/api/1.0/templates/list')
+        .reply(200, [{ slug: 'no-name', name: '', code: '<p>x</p>' }]);
+
+      const templates = await (await makeProvider()).listTemplates();
+
+      expect(templates[0].name).toBe('no-name');
+      expect(templates[0].subject).toBeUndefined();
+    });
+
+    it('fails loudly when the provider rejects the request', async () => {
+      nock(MANDRILL)
+        .post('/api/1.0/templates/list')
+        .reply(500, { message: 'Invalid API key' });
+
+      await expect((await makeProvider()).listTemplates()).rejects.toThrow(
+        MailProviderError
+      );
+    });
+  });
 });

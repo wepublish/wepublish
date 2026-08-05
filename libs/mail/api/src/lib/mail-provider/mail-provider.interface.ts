@@ -32,6 +32,15 @@ export interface MailProviderTemplateContent {
   subject?: string;
 }
 
+/** A template as it exists on the remote provider, for discovery on import. */
+export interface MailProviderTemplate {
+  /** Stable remote identifier, stored as `MailTemplate.externalMailTemplateId`. */
+  externalId: string;
+  name: string;
+  html: string;
+  subject?: string;
+}
+
 export class MailProviderError extends Error {}
 
 export interface MailProvider {
@@ -47,6 +56,12 @@ export interface MailProvider {
   getTemplateContent(
     externalMailTemplateId: string
   ): Promise<MailProviderTemplateContent>;
+
+  /**
+   * List every template available on the remote provider. Providers without a
+   * remote template store return an empty list.
+   */
+  listTemplates(): Promise<MailProviderTemplate[]>;
 
   getName(): Promise<string>;
 

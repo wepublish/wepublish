@@ -7,6 +7,7 @@ import { MailLogState } from '@prisma/client';
 import {
   MailLogStatus,
   MailProviderError,
+  MailProviderTemplate,
   MailProviderTemplateContent,
   SendMailProps,
   WebhookForSendMailProps,
@@ -18,6 +19,19 @@ type MessageMetadata = NonNullable<mailchimp.MessagesMessage['metadata']>;
 /** The typings demand a `website` key that Mandrill neither needs nor reads. */
 const mailLogMetadata = (mailLogID: string): MessageMetadata =>
   ({ mail_log_id: mailLogID }) as unknown as MessageMetadata;
+
+/**
+ * The fields of Mandrill's template payload we consume. `templates/info` and
+ * `templates/list` return the same shape, the latter as an array.
+ */
+type PartialTemplateResponse = {
+  slug?: string;
+  name?: string;
+  code?: string | null;
+  publish_code?: string | null;
+  subject?: string | null;
+  publish_subject?: string | null;
+};
 
 interface VerifyWebhookSignatureProps {
   signature: string;
@@ -185,16 +199,45 @@ export class MailchimpMailProvider extends BaseMailProvider {
       );
     }
 
-    const template = response as {
-      code?: string;
-      publish_code?: string;
-      subject?: string;
-      publish_subject?: string;
-    };
+    return this.toTemplateContent(response as PartialTemplateResponse);
+  }
 
+  /**
+   * `templates/list` already carries the code and subject of every template, so
+   * a single call is enough — no per-template `templates/info` round trip.
+   */
+  override async listTemplates(): Promise<MailProviderTemplate[]> {
+    const mailchimpClient = await this.getMailchimpClient();
+    const response = await mailchimpClient.templates.list({});
+
+    if (this.responseIsError(response)) {
+      throw new MailProviderError(
+        (response.response?.data as Error | undefined)?.message ??
+          'Failed to list templates'
+      );
+    }
+
+    return (response as PartialTemplateResponse[])
+      .filter(template => !!template.slug)
+      .map(template => {
+        const content = this.toTemplateContent(template);
+
+        return {
+          externalId: template.slug as string,
+          name: template.name || (template.slug as string),
+          html: content.html,
+          subject: content.subject ?? undefined,
+        };
+      });
+  }
+
+  /** Prefer the published version, falling back to the draft. */
+  private toTemplateContent(
+    template: PartialTemplateResponse
+  ): MailProviderTemplateContent {
     return {
-      html: template.publish_code ?? template.code ?? '',
-      subject: template.publish_subject ?? template.subject,
+      html: template.publish_code || template.code || '',
+      subject: template.publish_subject || template.subject || undefined,
     };
   }
 

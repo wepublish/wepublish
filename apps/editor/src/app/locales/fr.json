@@ -1005,7 +1005,7 @@
       "deleteConfirm": "Supprimer ce modèle de courriel ?",
       "importFromProvider": "Importer depuis le fournisseur",
       "importConfirm": "Importer & écraser",
-      "importWarning": "Cela écrase le HTML et l’objet de tous les modèles avec le contenu du fournisseur de messagerie. Les modifications locales seront perdues.",
+      "importWarning": "Cela importe tous les modèles du fournisseur de messagerie. Les modèles inconnus sont créés, ceux déjà importés voient leur HTML et leur objet écrasés. Les modifications locales seront perdues.",
       "importDone": "{{count}} modèle(s) importé(s) depuis le fournisseur.",
       "placeholderAlways": "Toujours disponible — dans chaque mail",
       "placeholderContextLabel": "Champs supplémentaires pour cette utilisation",

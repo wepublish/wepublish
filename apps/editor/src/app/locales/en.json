@@ -1017,7 +1017,7 @@
       "deleteConfirm": "Delete this mail template?",
       "importFromProvider": "Import from provider",
       "importConfirm": "Import & overwrite",
-      "importWarning": "This overwrites the HTML and subject of all templates with the content from the mail provider. Local changes will be lost.",
+      "importWarning": "This imports every template from the mail provider. Unknown ones are created, already imported ones have their HTML and subject overwritten. Local changes to them will be lost.",
       "importDone": "Imported {{count}} template(s) from the provider.",
       "placeholderNames": {
         "user_fullName": "Full name",

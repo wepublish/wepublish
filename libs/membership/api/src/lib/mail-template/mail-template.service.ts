@@ -75,41 +75,40 @@ export class MailTemplateService {
   }
 
   /**
-   * Import HTML + subject for every template that still has a remote provider
-   * id, overwriting the local content. Used to migrate installs from the
-   * remote-template model. Templates whose remote fetch fails are skipped.
+   * Pull every template the mail provider hosts into the local store: unknown
+   * ones are created, ones already linked by `externalMailTemplateId` get their
+   * HTML and subject overwritten. Used to migrate installs from the
+   * remote-template model.
+   *
+   * The local `name` and `context` are only set on creation — a template that
+   * was already imported keeps whatever the editor renamed/classified it as.
    */
   async importFromProvider(): Promise<number> {
-    const templates = await this.prisma.mailTemplate.findMany({
-      where: { externalMailTemplateId: { not: null } },
-    });
+    const remoteTemplates = await this.mailContext.mailProvider.listTemplates();
 
     let imported = 0;
-    for (const template of templates) {
-      if (!template.externalMailTemplateId) {
-        continue;
-      }
-      try {
-        const content = await this.mailContext.mailProvider.getTemplateContent(
-          template.externalMailTemplateId
-        );
-        await this.prisma.mailTemplate.update({
-          where: { id: template.id },
-          data: {
-            // Provider templates (e.g. Mandrill) use `*|NAME|*` merge tags;
-            // convert them to our `{{ name }}` syntax so the local engine
-            // renders them.
-            htmlContent: convertMandrillPlaceholders(content.html),
-            subject:
-              content.subject ?
-                convertMandrillPlaceholders(content.subject)
-              : template.subject,
-          },
-        });
-        imported++;
-      } catch {
-        // Skip templates that no longer exist remotely or fail to load.
-      }
+    for (const remote of remoteTemplates) {
+      // Provider templates (e.g. Mandrill) use `*|NAME|*` merge tags; convert
+      // them to our `{{ name }}` syntax so the local engine renders them.
+      const htmlContent = convertMandrillPlaceholders(remote.html);
+      const subject =
+        remote.subject ?
+          convertMandrillPlaceholders(remote.subject)
+        : undefined;
+
+      await this.prisma.mailTemplate.upsert({
+        where: { externalMailTemplateId: remote.externalId },
+        create: {
+          name: remote.name,
+          externalMailTemplateId: remote.externalId,
+          htmlContent,
+          subject: subject ?? '',
+        },
+        // Providers without a remote subject (e.g. Mailgun) must not blank the
+        // local one.
+        update: { htmlContent, ...(subject ? { subject } : {}) },
+      });
+      imported++;
     }
 
     return imported;

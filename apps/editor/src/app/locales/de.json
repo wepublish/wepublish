@@ -1076,7 +1076,7 @@
       "deleteConfirm": "Diese Mail-Vorlage löschen?",
       "importFromProvider": "Vom Provider importieren",
       "importConfirm": "Importieren & überschreiben",
-      "importWarning": "Dies überschreibt HTML und Betreff aller Vorlagen mit dem Inhalt des Mail-Providers. Lokale Änderungen gehen verloren.",
+      "importWarning": "Dies importiert alle Vorlagen des Mail-Providers. Noch unbekannte werden neu angelegt, bereits importierte werden mit HTML und Betreff des Providers überschrieben. Lokale Änderungen daran gehen verloren.",
       "importDone": "{{count}} Vorlage(n) vom Provider importiert.",
       "placeholderContextNotes": {
         "account": "Nur Benutzer-Felder verfügbar.",
