@@ -8,7 +8,7 @@ import {
   TagType,
 } from '@wepublish/editor/api';
 import { slugify } from '@wepublish/utils';
-import { useEffect, useState } from 'react';
+import { SetStateAction, useCallback, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import {
   MdAutoFixHigh,
@@ -25,7 +25,6 @@ import {
   Form as RForm,
   IconButton,
   Input,
-  InputGroup as RInputGroup,
   Message,
   Nav as RNav,
   NumberInput,
@@ -39,17 +38,17 @@ import {
   ChooseEditImage,
   CommentHistory,
   createCheckedPermissionComponent,
+  DeferredTextField,
   ListInput,
   ListValue,
   PermissionControl,
   SelectPaywall,
   SelectTags,
-  Textarea,
   useAuthorisation,
 } from '../atoms';
 import TrackingPixels from '../atoms/tracking/tracking-pixels';
 import { MetaDataType } from '../blocks';
-import { generateID } from '../utility';
+import { generateID, isFunctionalUpdate } from '../utility';
 import { AuthorCheckPicker } from './authorCheckPicker';
 import { ImageEditPanel } from './imageEditPanel';
 import { ImageSelectPanel } from './imageSelectPanel';
@@ -57,10 +56,6 @@ import { ImageSelectPanel } from './imageSelectPanel';
 const { Item } = RNav;
 
 const { Group, Control, Label, Text } = RForm;
-
-const InputGroup = styled(RInputGroup)`
-  width: 100%;
-`;
 
 const Nav = styled(RNav)`
   margin-bottom: 20px;
@@ -91,14 +86,6 @@ const FlexRow = styled.div`
 
 const PaddingBottom = styled.div`
   padding-bottom: 20px;
-`;
-
-const FloatRightLabel = styled.label`
-  float: right;
-`;
-
-const GoldLabel = styled.label`
-  color: gold;
 `;
 
 const FormGroup = styled(Group)`
@@ -207,14 +194,27 @@ function ArticleMetadataPanel({
 
   const isAuthorized = useAuthorisation('CAN_CREATE_ARTICLE');
 
-  useEffect(() => {
-    if (metaDataProperties) {
+  const handleMetadataPropertiesChange = useCallback(
+    (
+      updatedProperties: SetStateAction<ListValue<ArticleMetadataProperty>[]>
+    ) => {
+      const nextProperties =
+        (
+          isFunctionalUpdate<ListValue<ArticleMetadataProperty>[]>(
+            updatedProperties
+          )
+        ) ?
+          updatedProperties(metaDataProperties)
+        : updatedProperties;
+
+      setMetadataProperties(nextProperties);
       onChange?.({
         ...value,
-        properties: metaDataProperties.map(({ value }) => value),
+        properties: nextProperties.map(({ value }) => value),
       });
-    }
-  }, [metaDataProperties]);
+    },
+    [metaDataProperties, onChange, value]
+  );
 
   function handleImageChange(currentImage: FullImageFragment) {
     switch (activeKey) {
@@ -243,10 +243,17 @@ function ArticleMetadataPanel({
   const socialMediaDescriptionMax = 140;
 
   // Defines field requirements
-  const { StringType } = Schema.Types;
-  const model = Schema.Model({
-    canonicalUrl: StringType().isURL(t('errorMessages.invalidUrlErrorMessage')),
-  });
+  const canonicalUrlError = useMemo(() => {
+    if (!canonicalUrl) {
+      return undefined;
+    }
+
+    const { hasError, errorMessage } = Schema.Types.StringType()
+      .isURL(t('errorMessages.invalidUrlErrorMessage'))
+      .check(canonicalUrl);
+
+    return hasError ? errorMessage : undefined;
+  }, [canonicalUrl, t]);
 
   function currentContent() {
     switch (activeKey) {
@@ -262,60 +269,28 @@ function ArticleMetadataPanel({
               </Message>
             </Group>
 
-            <Group controlId="socialMediaTitle">
-              <Label>
-                {t('articleEditor.panels.socialMediaTitle')}
-                <FloatRightLabel>
-                  {value.socialMediaTitle ? value.socialMediaTitle.length : 0}/
-                  {socialMediaTitleMax}
-                </FloatRightLabel>
-              </Label>
-              <Control
-                name="social-media-title"
-                value={socialMediaTitle || ''}
-                onChange={(socialMediaTitle: string) => {
-                  onChange?.({ ...value, socialMediaTitle });
-                }}
-              />
-              {value.socialMediaTitle &&
-                value.socialMediaTitle?.length > socialMediaTitleMax && (
-                  <GoldLabel>
-                    {t('articleEditor.panels.charCountWarning', {
-                      charCountWarning: socialMediaTitleMax,
-                    })}
-                  </GoldLabel>
-                )}
-            </Group>
+            <DeferredTextField
+              controlId="socialMediaTitle"
+              name="social-media-title"
+              label={t('articleEditor.panels.socialMediaTitle')}
+              charLimit={socialMediaTitleMax}
+              value={socialMediaTitle || ''}
+              onChange={socialMediaTitle =>
+                onChange?.({ ...value, socialMediaTitle })
+              }
+            />
 
-            <Group controlId="socialMediaDescription">
-              <Label>
-                {t('articleEditor.panels.socialMediaDescription')}
-                <FloatRightLabel>
-                  {value.socialMediaDescription ?
-                    value.socialMediaDescription.length
-                  : 0}
-                  /{socialMediaDescriptionMax}
-                </FloatRightLabel>
-              </Label>
-              <Control
-                name="social-media-description"
-                rows={5}
-                accepter={Textarea}
-                value={socialMediaDescription || ''}
-                onChange={(socialMediaDescription: string) => {
-                  onChange?.({ ...value, socialMediaDescription });
-                }}
-              />
-              {value.socialMediaDescription &&
-                value.socialMediaDescription?.length >
-                  socialMediaDescriptionMax && (
-                  <GoldLabel>
-                    {t('articleEditor.panels.charCountWarning', {
-                      charCountWarning: socialMediaDescriptionMax,
-                    })}
-                  </GoldLabel>
-                )}
-            </Group>
+            <DeferredTextField
+              controlId="socialMediaDescription"
+              name="social-media-description"
+              label={t('articleEditor.panels.socialMediaDescription')}
+              charLimit={socialMediaDescriptionMax}
+              rows={5}
+              value={socialMediaDescription || ''}
+              onChange={socialMediaDescription =>
+                onChange?.({ ...value, socialMediaDescription })
+              }
+            />
 
             <Group controlId="socialMediaAuthors">
               <Label>{t('articleEditor.panels.socialMediaAuthors')}</Label>
@@ -371,96 +346,46 @@ function ArticleMetadataPanel({
               />
             </Group>
 
-            <Group>
-              <Label>
-                {t('articleEditor.panels.preTitle')}
-                <FloatRightLabel>
-                  {value.preTitle.length}/{preTitleMax}{' '}
-                </FloatRightLabel>
-              </Label>
-              <Control
-                name="pre-title"
-                className="preTitle"
-                value={preTitle}
-                onChange={(preTitle: string) =>
-                  onChange?.({ ...value, preTitle })
-                }
-              />
-              {value.preTitle.length > preTitleMax && (
-                <GoldLabel>
-                  {t('articleEditor.panels.charCountWarning', {
-                    charCountWarning: preTitleMax,
-                  })}
-                </GoldLabel>
-              )}
-            </Group>
+            <DeferredTextField
+              name="pre-title"
+              className="preTitle"
+              label={t('articleEditor.panels.preTitle')}
+              charLimit={preTitleMax}
+              value={preTitle}
+              onChange={preTitle => onChange?.({ ...value, preTitle })}
+            />
 
-            <Group controlId="articleTitle">
-              <Label>
-                {t('articleEditor.panels.title')}
-                <FloatRightLabel>
-                  {value.title.length}/{titleMax}{' '}
-                </FloatRightLabel>
-              </Label>
-              <Control
-                name="title"
-                className="title"
-                value={title}
-                onChange={(title: string) => onChange?.({ ...value, title })}
-              />
-              <Text>{t('articleEditor.panels.titleHelpBlock')}</Text>
-              {value.title.length > titleMax && (
-                <GoldLabel>
-                  {t('articleEditor.panels.charCountWarning', {
-                    charCountWarning: titleMax,
-                  })}
-                </GoldLabel>
-              )}
-            </Group>
+            <DeferredTextField
+              controlId="articleTitle"
+              name="title"
+              className="title"
+              label={t('articleEditor.panels.title')}
+              charLimit={titleMax}
+              value={title}
+              helpText={t('articleEditor.panels.titleHelpBlock')}
+              onChange={title => onChange?.({ ...value, title })}
+            />
 
-            <Group controlId="articleLead">
-              <Label>
-                {t('articleEditor.panels.lead')}
-                <FloatRightLabel>
-                  {value.lead.length}/{leadMax}{' '}
-                </FloatRightLabel>
-              </Label>
-              <Control
-                name="lead"
-                className="lead"
-                rows={5}
-                accepter={Textarea}
-                value={lead}
-                onChange={(lead: string) => {
-                  onChange?.({ ...value, lead });
-                }}
-              />
-              <Text>{t('articleEditor.panels.leadHelpBlock')}</Text>
-              {value.lead.length > leadMax && (
-                <GoldLabel>
-                  {t('articleEditor.panels.charCountWarning', {
-                    charCountWarning: leadMax,
-                  })}
-                </GoldLabel>
-              )}
-            </Group>
+            <DeferredTextField
+              controlId="articleLead"
+              name="lead"
+              className="lead"
+              label={t('articleEditor.panels.lead')}
+              charLimit={leadMax}
+              rows={5}
+              value={lead}
+              helpText={t('articleEditor.panels.leadHelpBlock')}
+              onChange={lead => onChange?.({ ...value, lead })}
+            />
 
-            <Group controlId="articleSeoTitle">
-              <Label>
-                {t('articleEditor.panels.seoTitle')}
-                <FloatRightLabel>
-                  {value.seoTitle.length}/{seoTitleMax}{' '}
-                </FloatRightLabel>
-              </Label>
-              <Control
-                name="seo-title"
-                className="seoTitle"
-                value={seoTitle}
-                onChange={(seoTitle: string) =>
-                  onChange?.({ ...value, seoTitle })
-                }
-              />
-              <Text>
+            <DeferredTextField
+              controlId="articleSeoTitle"
+              name="seo-title"
+              className="seoTitle"
+              label={t('articleEditor.panels.seoTitle')}
+              charLimit={seoTitleMax}
+              value={seoTitle}
+              helpText={
                 <Trans i18nKey={'articleEditor.panels.seoTitleHelpBlock'}>
                   text{' '}
                   <a
@@ -471,28 +396,21 @@ function ArticleMetadataPanel({
                     more text
                   </a>
                 </Trans>
-              </Text>
-              {value.seoTitle.length > seoTitleMax && (
-                <GoldLabel>
-                  {t('articleEditor.panels.charCountWarning', {
-                    charCountWarning: seoTitleMax,
-                  })}
-                </GoldLabel>
-              )}
-            </Group>
+              }
+              onChange={seoTitle => onChange?.({ ...value, seoTitle })}
+            />
 
-            <Group controlId="articleSlug">
-              <Label>{t('articleEditor.panels.slug')}</Label>
-              <InputGroup>
-                <Control
-                  name="slug"
-                  className="slug"
-                  value={slug}
-                  onChange={(slug: string) => onChange?.({ ...value, slug })}
-                  onBlur={() =>
-                    onChange?.({ ...value, slug: slug ? slugify(slug) : null })
-                  }
-                />
+            <DeferredTextField
+              controlId="articleSlug"
+              name="slug"
+              className="slug"
+              label={t('articleEditor.panels.slug')}
+              value={slug}
+              onChange={slug => onChange?.({ ...value, slug })}
+              onCommit={slug =>
+                onChange?.({ ...value, slug: slug ? slugify(slug) : null })
+              }
+              action={
                 <Whisper
                   placement="top"
                   trigger="hover"
@@ -509,18 +427,20 @@ function ArticleMetadataPanel({
                     }}
                   />
                 </Whisper>
-              </InputGroup>
-              <Text>
-                {t('articleEditor.panels.dontChangeSlug')}{' '}
-                <a
-                  href="https://wepublish.ch/just-another-page-2/"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  {t('articleEditor.panels.slugGuide')}
-                </a>
-              </Text>
-            </Group>
+              }
+              helpText={
+                <>
+                  {t('articleEditor.panels.dontChangeSlug')}{' '}
+                  <a
+                    href="https://wepublish.ch/just-another-page-2/"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {t('articleEditor.panels.slugGuide')}
+                  </a>
+                </>
+              }
+            />
 
             <Group controlId="articleAuthors">
               <Label>{t('articleEditor.panels.authors')}</Label>
@@ -564,18 +484,16 @@ function ArticleMetadataPanel({
               />
             </Group>
 
-            <Group controlId="articleCanonicalUrl">
-              <Label>{t('articleEditor.panels.canonicalUrl')}</Label>
-              <Control
-                name="canonicalUrl"
-                className="canonicalUrl"
-                placeholder={t('articleEditor.panels.urlPlaceholder')}
-                value={canonicalUrl}
-                onChange={(canonicalUrl: string) =>
-                  onChange?.({ ...value, canonicalUrl })
-                }
-              />
-              <Text>
+            <DeferredTextField
+              controlId="articleCanonicalUrl"
+              name="canonicalUrl"
+              className="canonicalUrl"
+              label={t('articleEditor.panels.canonicalUrl')}
+              placeholder={t('articleEditor.panels.urlPlaceholder')}
+              value={canonicalUrl}
+              error={canonicalUrlError}
+              onChange={canonicalUrl => onChange?.({ ...value, canonicalUrl })}
+              helpText={
                 <Trans i18nKey={'articleEditor.panels.canonicalUrLHelpBlock'}>
                   text{' '}
                   <a
@@ -586,8 +504,8 @@ function ArticleMetadataPanel({
                     more text
                   </a>
                 </Trans>
-              </Text>
-            </Group>
+              }
+            />
 
             {!peerId && (
               <Group controlId="articlePeering">
@@ -669,7 +587,7 @@ function ArticleMetadataPanel({
               <ListInput
                 value={metaDataProperties}
                 onChange={propertiesItemInput =>
-                  setMetadataProperties(propertiesItemInput)
+                  handleMetadataPropertiesChange(propertiesItemInput)
                 }
                 defaultValue={{ key: '', value: '', public: true }}
               >
@@ -728,8 +646,7 @@ function ArticleMetadataPanel({
   return (
     <Form
       fluid
-      model={model}
-      onSubmit={validationPassed => validationPassed && onClose?.()}
+      onSubmit={() => !canonicalUrlError && onClose?.()}
     >
       <Drawer.Header>
         <Drawer.Title>{t('articleEditor.panels.metadata')}</Drawer.Title>
