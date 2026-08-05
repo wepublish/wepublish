@@ -6,6 +6,6 @@ export * from './lib/mail-send/mail-log-list';
 export * from './lib/mail-send/send-mail-to-user';
 export * from './lib/mail-send/user-mail-log';
 export * from './lib/memberplan/memberplan-edit';
-export * from './lib/system-mail/system-mail-list';
+export * from './lib/system-mail/system-mail-section';
 export * from './lib/subscription-flow/subscription-flow-list';
 export * from './lib/periodic-job/periodic-job-logs';

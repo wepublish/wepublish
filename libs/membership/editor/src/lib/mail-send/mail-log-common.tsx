@@ -3,7 +3,7 @@ import { MailLogState, MailLogType } from '@wepublish/editor/api';
 import { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
 import { MdHelpOutline } from 'react-icons/md';
-import { Popover, Tag, Whisper } from 'rsuite';
+import { IconButton, Popover, Stack, Tag, Whisper } from 'rsuite';
 
 const STATE_COLORS: Record<MailLogState, 'green' | 'yellow' | 'red' | 'blue'> =
   {
@@ -15,8 +15,143 @@ const STATE_COLORS: Record<MailLogState, 'green' | 'yellow' | 'red' | 'blue'> =
     [MailLogState.Rejected]: 'red',
   };
 
+/**
+ * Order the states follow along a delivery, so the legend reads as the path a
+ * mail takes rather than as an alphabetical list.
+ */
+const STATE_ORDER: MailLogState[] = [
+  MailLogState.Submitted,
+  MailLogState.Accepted,
+  MailLogState.Delivered,
+  MailLogState.Deferred,
+  MailLogState.Bounced,
+  MailLogState.Rejected,
+];
+
+/**
+ * The raw state stays on the tag — it is the same word the mail provider's own
+ * dashboard uses, which is what makes the two comparable. The translation and
+ * the explanation live in the hover.
+ */
 export function MailLogStateTag({ state }: { state: MailLogState }) {
-  return <Tag color={STATE_COLORS[state] ?? 'blue'}>{state}</Tag>;
+  const { t } = useTranslation();
+
+  return (
+    <Whisper
+      trigger="hover"
+      placement="leftStart"
+      speaker={
+        <Popover style={{ maxWidth: 420 }}>
+          <Typography
+            variant="subtitle2"
+            display="block"
+          >
+            {t(`mailLog.stateHelp.${state}.name`)}
+          </Typography>
+          <Typography
+            variant="body2"
+            display="block"
+            style={{ marginBottom: 8 }}
+          >
+            {t(`mailLog.stateHelp.${state}.meaning`)}
+          </Typography>
+
+          <Typography
+            variant="subtitle2"
+            display="block"
+          >
+            {t('mailLog.stateHelp.nextTitle')}
+          </Typography>
+          <Typography
+            variant="body2"
+            display="block"
+            style={{ whiteSpace: 'pre-line' }}
+          >
+            {t(`mailLog.stateHelp.${state}.next`)}
+          </Typography>
+        </Popover>
+      }
+    >
+      <Tag
+        color={STATE_COLORS[state] ?? 'blue'}
+        style={{ cursor: 'help' }}
+      >
+        {state}
+      </Tag>
+    </Whisper>
+  );
+}
+
+/**
+ * All states at a glance, for the column header — the per-tag hover only ever
+ * explains the one state a reader happens to be pointing at.
+ */
+export function MailLogStateLegend() {
+  const { t } = useTranslation();
+
+  return (
+    <Whisper
+      trigger="click"
+      placement="bottomEnd"
+      speaker={
+        <Popover style={{ maxWidth: 520 }}>
+          <Typography
+            variant="subtitle2"
+            display="block"
+            style={{ marginBottom: 4 }}
+          >
+            {t('mailLog.stateHelp.legendTitle')}
+          </Typography>
+          <Typography
+            variant="body2"
+            display="block"
+            style={{ marginBottom: 12 }}
+          >
+            {t('mailLog.stateHelp.legendIntro')}
+          </Typography>
+
+          {STATE_ORDER.map(state => (
+            <div
+              key={state}
+              style={{ marginBottom: 10 }}
+            >
+              <Stack
+                spacing={8}
+                alignItems="center"
+                style={{ marginBottom: 2 }}
+              >
+                <Tag color={STATE_COLORS[state]}>{state}</Tag>
+                <Typography variant="subtitle2">
+                  {t(`mailLog.stateHelp.${state}.name`)}
+                </Typography>
+              </Stack>
+              <Typography
+                variant="body2"
+                display="block"
+              >
+                {t(`mailLog.stateHelp.${state}.meaning`)}
+              </Typography>
+            </div>
+          ))}
+
+          <Typography
+            variant="caption"
+            display="block"
+            style={{ color: '#8e8e93', whiteSpace: 'pre-line' }}
+          >
+            {t('mailLog.stateHelp.legendFooter')}
+          </Typography>
+        </Popover>
+      }
+    >
+      <IconButton
+        size="xs"
+        appearance="subtle"
+        icon={<MdHelpOutline />}
+        aria-label={t('mailLog.stateHelp.legendTitle')}
+      />
+    </Whisper>
+  );
 }
 
 export function mailLogTypeLabel(

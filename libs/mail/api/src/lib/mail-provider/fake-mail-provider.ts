@@ -11,7 +11,7 @@ export class FakeMailProvider extends BaseMailProvider {
   }
 
   async sendMail() {
-    return;
+    return {};
   }
 
   async getTemplateContent() {

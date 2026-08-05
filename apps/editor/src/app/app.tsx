@@ -33,7 +33,6 @@ import {
   MailTemplateList,
   MemberPlanEdit,
   SubscriptionFlowList,
-  SystemMailList,
 } from '@wepublish/membership/editor';
 import { SettingList } from '@wepublish/settings/editor';
 import {
@@ -1009,12 +1008,14 @@ export function App() {
                 </Base>
               }
             />
+            {/* System mails are now part of the automatic mails view */}
             <Route
               path="systemmails"
               element={
-                <Base>
-                  <SystemMailList />
-                </Base>
+                <Navigate
+                  to="/communicationflows/edit/default"
+                  replace
+                />
               }
             />
             <Route

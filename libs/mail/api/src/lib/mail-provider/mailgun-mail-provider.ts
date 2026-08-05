@@ -7,6 +7,7 @@ import {
   MailProviderTemplate,
   MailProviderTemplateContent,
   SendMailProps,
+  SendMailResult,
   WebhookForSendMailProps,
 } from './mail-provider.interface';
 import { BaseMailProvider, MailProviderProps } from './base-mail-provider';
@@ -93,7 +94,11 @@ export class MailgunMailProvider extends BaseMailProvider {
     return mailLogStatuses;
   }
 
-  async sendMail(props: SendMailProps): Promise<void> {
+  /**
+   * Delivery states arrive through Mailgun's webhook, so no message id is kept
+   * for polling — `getMessageStates` stays unimplemented for this provider.
+   */
+  async sendMail(props: SendMailProps): Promise<SendMailResult> {
     const config = await this.getConfig();
     const form = new FormData();
     form.append('from', config?.fromAddress ?? '');
@@ -120,7 +125,9 @@ export class MailgunMailProvider extends BaseMailProvider {
           },
         },
         (err, res) => {
-          return err || res.statusCode !== 200 ? reject(err || res) : resolve();
+          return err || res.statusCode !== 200 ?
+              reject(err || res)
+            : resolve({});
         }
       );
     });

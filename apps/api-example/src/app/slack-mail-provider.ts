@@ -2,6 +2,7 @@ import {
   MailProviderProps,
   BaseMailProvider,
   SendMailProps,
+  SendMailResult,
 } from '@wepublish/mail/api';
 import fetch from 'cross-fetch';
 
@@ -14,7 +15,7 @@ export class SlackMailProvider extends BaseMailProvider {
     return [];
   }
 
-  async sendMail(props: SendMailProps): Promise<void> {
+  async sendMail(props: SendMailProps): Promise<SendMailResult> {
     const config = await this.getConfig();
     const message = {
       blocks: [
@@ -38,6 +39,8 @@ export class SlackMailProvider extends BaseMailProvider {
       body: JSON.stringify(message),
       signal: AbortSignal.timeout(5_000),
     });
+
+    return {};
   }
 
   async getTemplateContent() {

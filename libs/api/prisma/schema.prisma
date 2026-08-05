@@ -540,6 +540,11 @@ model MailLog {
   // Why a `rejected` mail could not be delivered. Null for every other state.
   error String?
 
+  // Id the mail provider assigned to the accepted message. Lets the delivery
+  // state be polled later (see MailLogSyncService) for providers that can't
+  // reach us by webhook. Null for providers that return no id.
+  mailProviderMessageID String?
+
   // Origin of the mail. Nullable so pre-existing rows keep working; new sends
   // always set it.
   type MailLogType?
@@ -550,6 +555,7 @@ model MailLog {
 
   @@index([mailIdentifier])
   @@index([mailSendJobId])
+  @@index([mailProviderMessageID])
   @@map("mail.log")
 }
 

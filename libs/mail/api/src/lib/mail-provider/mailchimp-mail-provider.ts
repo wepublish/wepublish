@@ -7,9 +7,11 @@ import { MailLogState } from '@prisma/client';
 import {
   MailLogStatus,
   MailProviderError,
+  MailProviderMessageState,
   MailProviderTemplate,
   MailProviderTemplateContent,
   SendMailProps,
+  SendMailResult,
   WebhookForSendMailProps,
 } from './mail-provider.interface';
 import { BaseMailProvider, MailProviderProps } from './base-mail-provider';
@@ -37,6 +39,35 @@ interface VerifyWebhookSignatureProps {
   signature: string;
   url: string;
   params: Record<string, any>;
+}
+
+/**
+ * Map the state `messages/info` reports onto our own. Mandrill's `sent` means
+ * the receiving server accepted the message — that is what its UI labels
+ * "Delivered". `spam` and `unsub` are recipient reactions *after* a successful
+ * delivery, so they count as delivered too; the raw payload is kept in
+ * `mailData` for the detail.
+ */
+function mapMandrillStateToMailLogState(state: string): MailLogState | null {
+  switch (state) {
+    case 'sent':
+    case 'spam':
+    case 'unsub':
+      return MailLogState.delivered;
+    case 'queued':
+    case 'scheduled':
+      return MailLogState.submitted;
+    case 'deferred':
+      return MailLogState.deferred;
+    case 'bounced':
+    case 'soft-bounced':
+      return MailLogState.bounced;
+    case 'rejected':
+    case 'invalid':
+      return MailLogState.rejected;
+    default:
+      return null;
+  }
 }
 
 function mapMandrillEventToMailLogState(event: string): MailLogState | null {
@@ -128,7 +159,7 @@ export class MailchimpMailProvider extends BaseMailProvider {
     return mailLogStatuses;
   }
 
-  async sendMail(props: SendMailProps): Promise<void> {
+  async sendMail(props: SendMailProps): Promise<SendMailResult> {
     const config = await this.getConfig();
     const mailchimpClient = await this.getMailchimpClient();
 
@@ -155,6 +186,44 @@ export class MailchimpMailProvider extends BaseMailProvider {
     }
 
     this.throwOnRejectedRecipient(response);
+
+    // One recipient per send, so the first result is this message.
+    return { providerMessageID: response[0]?._id };
+  }
+
+  /**
+   * `messages/info` answers for a single id only, so poll one request per
+   * message. Ids Mandrill no longer knows (expired from its activity window)
+   * are skipped rather than failing the whole batch.
+   */
+  override async getMessageStates(
+    providerMessageIDs: string[]
+  ): Promise<MailProviderMessageState[]> {
+    const mailchimpClient = await this.getMailchimpClient();
+    const states: MailProviderMessageState[] = [];
+
+    for (const providerMessageID of providerMessageIDs) {
+      const response = await mailchimpClient.messages
+        .info({ id: providerMessageID })
+        .catch(() => null);
+
+      if (!response || this.responseIsError(response)) {
+        continue;
+      }
+
+      const state = mapMandrillStateToMailLogState(response.state);
+      if (!state) {
+        continue;
+      }
+
+      states.push({
+        providerMessageID,
+        state,
+        mailData: JSON.stringify(response),
+      });
+    }
+
+    return states;
   }
 
   /**

@@ -208,6 +208,20 @@ export class MailLogModel {
 export class PaginatedMailLog extends PaginatedType(MailLogModel) {}
 
 @ObjectType()
+export class MailLogSyncModel {
+  @Field(() => Int, {
+    description:
+      'Mails that were still in an open state and could be looked up at the provider.',
+  })
+  checked!: number;
+
+  @Field(() => Int, {
+    description: 'Mails whose state the provider reported differently.',
+  })
+  updated!: number;
+}
+
+@ObjectType()
 export class MailSendJobModel {
   @Field()
   id!: string;

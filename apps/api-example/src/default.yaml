@@ -4,8 +4,8 @@ general:
   bcryptHashCostFactor: 12
   urlAdapter: default
 mailProvider:
-  id: smtp # allowed is mailchimp/mailgun/slackmail/smtp
-  type: smtp # allowed mailchimp/mailgun/slackmail/smtp
+  id: mailchimp # allowed is mailchimp/mailgun/slackmail/smtp
+  type: mailchimp # allowed mailchimp/mailgun/slackmail/smtp
   fromAddress: no-reply@wepublish.local
   # SMTP defaults to localhost:1025 (Mailpit). docker-compose overrides the
   # host to `mailpit` via the MAIL_SMTP_HOST env var on the api service.

@@ -4,6 +4,7 @@ import { MailSendResolver } from './mail-send.resolver';
 import { MailSendJobService } from './mail-send-job.service';
 import { MailSendRecipientService } from './mail-send-recipient.service';
 import { MailSendJobExecutor } from './mail-send-job.executor';
+import { MailLogSyncService } from './mail-log-sync.service';
 
 @Module({
   imports: [PrismaModule],
@@ -12,6 +13,7 @@ import { MailSendJobExecutor } from './mail-send-job.executor';
     MailSendJobService,
     MailSendRecipientService,
     MailSendJobExecutor,
+    MailLogSyncService,
   ],
 })
 export class MailSendModule {}

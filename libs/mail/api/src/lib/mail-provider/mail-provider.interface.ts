@@ -21,6 +21,22 @@ export interface MailLogStatus {
   mailData?: string;
 }
 
+export interface SendMailResult {
+  /**
+   * Id the provider assigned to the accepted message, when it reports one.
+   * Persisted on the mail log so the delivery state can be polled later.
+   */
+  providerMessageID?: string;
+}
+
+/** Current delivery state of one previously sent message, as the provider sees it. */
+export interface MailProviderMessageState {
+  providerMessageID: string;
+  state: MailLogState;
+  /** Raw provider payload, stored for diagnosis. */
+  mailData?: string;
+}
+
 export enum MailTemplateStatus {
   Ok = 'ok',
   Unused = 'unused',
@@ -50,7 +66,17 @@ export interface MailProvider {
 
   webhookForSendMail(props: WebhookForSendMailProps): Promise<MailLogStatus[]>;
 
-  sendMail(props: SendMailProps): Promise<void>;
+  sendMail(props: SendMailProps): Promise<SendMailResult>;
+
+  /**
+   * Poll the current delivery state of messages already sent. Complements the
+   * webhook: it is the only way to learn the outcome when the provider cannot
+   * reach this installation (local development, webhook not configured, missed
+   * events). Providers that expose no such lookup return an empty list.
+   */
+  getMessageStates(
+    providerMessageIDs: string[]
+  ): Promise<MailProviderMessageState[]>;
 
   /** Fetch a template's content from the remote provider (for import/migration). */
   getTemplateContent(

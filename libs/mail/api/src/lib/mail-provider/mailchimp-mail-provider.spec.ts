@@ -1,5 +1,6 @@
 import bodyParser from 'body-parser';
 import nock from 'nock';
+import { MailLogState } from '@prisma/client';
 import { createKvMock } from '@wepublish/kv-ttl-cache/api';
 import { MailchimpMailProvider } from './mailchimp-mail-provider';
 import { MailProviderError } from './mail-provider.interface';
@@ -67,7 +68,7 @@ describe('MailchimpMailProvider', () => {
 
     await expect(
       (await makeProvider()).sendMail(sendProps)
-    ).resolves.toBeUndefined();
+    ).resolves.toBeDefined();
   });
 
   it('fails with the reject reason when the provider refuses the recipient', async () => {
@@ -99,6 +100,82 @@ describe('MailchimpMailProvider', () => {
     await expect((await makeProvider()).sendMail(sendProps)).rejects.toThrow(
       MailProviderError
     );
+  });
+
+  it('keeps the mandrill message id so the state can be polled later', async () => {
+    nock(MANDRILL)
+      .post('/api/1.0/messages/send')
+      .reply(200, [
+        { email: sendProps.recipient, status: 'sent', _id: 'msg-123' },
+      ]);
+
+    await expect((await makeProvider()).sendMail(sendProps)).resolves.toEqual({
+      providerMessageID: 'msg-123',
+    });
+  });
+
+  describe('getMessageStates', () => {
+    const infoReply = (state: string) => ({
+      _id: 'msg-1',
+      state,
+      email: 'user@example.com',
+    });
+
+    // Mandrill's `sent` is what its dashboard shows as "Delivered".
+    it.each([
+      ['sent', MailLogState.delivered],
+      ['spam', MailLogState.delivered],
+      ['unsub', MailLogState.delivered],
+      ['queued', MailLogState.submitted],
+      ['scheduled', MailLogState.submitted],
+      ['deferred', MailLogState.deferred],
+      ['bounced', MailLogState.bounced],
+      ['soft-bounced', MailLogState.bounced],
+      ['rejected', MailLogState.rejected],
+      ['invalid', MailLogState.rejected],
+    ])('maps mandrill state %s onto %s', async (mandrillState, expected) => {
+      nock(MANDRILL)
+        .post('/api/1.0/messages/info')
+        .reply(200, infoReply(mandrillState));
+
+      const states = await (await makeProvider()).getMessageStates(['msg-1']);
+
+      expect(states).toEqual([
+        {
+          providerMessageID: 'msg-1',
+          state: expected,
+          mailData: JSON.stringify(infoReply(mandrillState)),
+        },
+      ]);
+    });
+
+    it('skips a state it does not know instead of guessing', async () => {
+      nock(MANDRILL)
+        .post('/api/1.0/messages/info')
+        .reply(200, infoReply('something-new'));
+
+      await expect(
+        (await makeProvider()).getMessageStates(['msg-1'])
+      ).resolves.toEqual([]);
+    });
+
+    it('skips ids the provider no longer knows and keeps going', async () => {
+      nock(MANDRILL)
+        .post('/api/1.0/messages/info')
+        .reply(500, { message: 'Unknown_Message' })
+        .post('/api/1.0/messages/info')
+        .reply(200, { _id: 'msg-2', state: 'sent' });
+
+      const states = await (
+        await makeProvider()
+      ).getMessageStates(['msg-1', 'msg-2']);
+
+      expect(states).toHaveLength(1);
+      expect(states[0]).toMatchObject({
+        providerMessageID: 'msg-2',
+        state: MailLogState.delivered,
+      });
+    });
   });
 
   describe('listTemplates', () => {

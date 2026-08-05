@@ -13,18 +13,28 @@ import {
   useMailLogsQuery,
   useMailSendJobsQuery,
   useMailTemplateQuery,
+  useSyncMailLogStatesMutation,
 } from '@wepublish/editor/api';
 import styled from '@emotion/styled';
 import { ReactNode, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdFilterList } from 'react-icons/md';
+import { MdFilterList, MdSync } from 'react-icons/md';
 import { useSearchParams } from 'react-router-dom';
-import { Button, Pagination, Panel, SelectPicker, Stack } from 'rsuite';
-import { DEFAULT_QUERY_OPTIONS } from '../common';
+import {
+  Button,
+  Message,
+  Pagination,
+  Panel,
+  SelectPicker,
+  Stack,
+  toaster,
+} from 'rsuite';
+import { DEFAULT_MUTATION_OPTIONS, DEFAULT_QUERY_OPTIONS } from '../common';
 import {
   formatDateTime,
   MailErrorCell,
   mailLogTypeLabel,
+  MailLogStateLegend,
   MailLogStateTag,
 } from './mail-log-common';
 
@@ -114,6 +124,31 @@ export function MailLogTable() {
     },
   });
 
+  const [syncStates, { loading: syncing }] = useSyncMailLogStatesMutation({
+    ...DEFAULT_MUTATION_OPTIONS(t),
+    refetchQueries: ['MailLogs'],
+  });
+
+  // Delivery states normally arrive by provider webhook. Locally the provider
+  // cannot reach this installation, so offer an explicit pull.
+  const runSync = async () => {
+    const result = await syncStates();
+    const sync = result.data?.syncMailLogStates;
+
+    if (!sync) {
+      return;
+    }
+
+    toaster.push(
+      <Message type={sync.updated ? 'success' : 'info'}>
+        {t('mailLog.sync.done', {
+          checked: sync.checked,
+          updated: sync.updated,
+        })}
+      </Message>
+    );
+  };
+
   const logs = data?.mailLogs.nodes ?? [];
   const totalCount = data?.mailLogs.totalCount ?? 0;
 
@@ -183,15 +218,29 @@ export function MailLogTable() {
               <MdFilterList />
               <span>{t('mailLog.filter.title')}</span>
             </Stack>
-            {hasFilters && (
+            <Stack
+              spacing={8}
+              alignItems="center"
+            >
+              {hasFilters && (
+                <Button
+                  size="xs"
+                  appearance="link"
+                  onClick={resetFilters}
+                >
+                  {t('mailLog.filter.reset')}
+                </Button>
+              )}
               <Button
                 size="xs"
-                appearance="link"
-                onClick={resetFilters}
+                appearance="ghost"
+                loading={syncing}
+                onClick={runSync}
+                title={t('mailLog.sync.hint')}
               >
-                {t('mailLog.filter.reset')}
+                <MdSync /> {t('mailLog.sync.action')}
               </Button>
-            )}
+            </Stack>
           </Stack>
         }
       >
@@ -278,7 +327,13 @@ export function MailLogTable() {
                 <strong>{t('mailLog.type')}</strong>
               </TableCell>
               <TableCell>
-                <strong>{t('mailLog.state')}</strong>
+                <Stack
+                  spacing={4}
+                  alignItems="center"
+                >
+                  <strong>{t('mailLog.state')}</strong>
+                  <MailLogStateLegend />
+                </Stack>
               </TableCell>
               <TableCell>
                 <strong>{t('mailLog.error')}</strong>

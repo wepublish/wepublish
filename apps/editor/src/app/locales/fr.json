@@ -1101,7 +1101,7 @@
       }
     },
     "mailTemplateSelect": {
-      "noMailSentSelectNow": "pas d'envoi mail"
+      "noMailSentSelectNow": "Ne pas envoyer d’e-mail"
     },
     "memberPlanEdit": {
       "active": "Actif",
@@ -1180,7 +1180,7 @@
       "websiteSettings": "Paramètres du site web",
       "subscriptionPlans": "Plans d'abonnement",
       "subscriptions": "Abonnements",
-      "subscriptionSettings": "Default Mailing",
+      "subscriptionSettings": "E-mails automatiques",
       "tokens": "Tokens",
       "userConsents": "Consentement de l'utilisateur",
       "userRoles": "Rôles d'utilisateur/utilisatrice",
@@ -1534,19 +1534,23 @@
         "peerToken": "Expiration du peering (en cas d’erreur lors du peering d’un article, la tentative de peering s’arrête après la durée définie ci-après) — millisecondes"
       }
     },
+    "automaticMails": {
+      "title": "E-mails automatiques",
+      "intro": "Définissez ici quel modèle d’e-mail est envoyé automatiquement pour quel événement. Choisissez un modèle par événement – ou laissez « Ne pas envoyer d’e-mail » si rien ne doit partir. L’icône ⓘ explique chaque événement.",
+      "example": "Exemple : {{example}}"
+    },
     "subscriptionFlow": {
-      "subscribe": "S'abonner",
+      "subscribe": "Abonnement conclu",
       "renewal_success": "Renouvellement réussi",
       "renewal_failed": "Échec du renouvellement",
-      "deactivation_by_user": "Désactivé par l'utilisateur",
+      "deactivation_by_user": "Abonnement résilié",
       "reactivation": "Réactivé",
       "invoice_creation": "Création de facture",
       "deactivation_unpaid": "Désactivation pour facture impayée",
       "custom": "Événement personnalisé",
       "settings": "Paramètres du flux d'abonnement",
       "edit": "Modifier le flux d'abonnement",
-      "titleDefaultSettings": "Paramètres d'abonnement par défaut",
-      "settingsDescription": "Vous pouvez remplacer ces paramètres pour chaque plan d'abonnement.",
+      "settingsDescription": "Ces paramètres ne valent que pour ce plan d’abonnement et remplacent les e-mails automatiques.",
       "addNew": "Créer un nouveau flux",
       "dayWithNumber": "jour {{day}}",
       "days": "jours",
@@ -1564,12 +1568,49 @@
       "deletePermanently": "Supprimer définitivement",
       "dropHere": "Déposer ici",
       "filters": "Filtres",
-      "subscriptionEvents": "Événements d'abonnement statiques",
+      "filtersDescription": "Définit à quels abonnements ce flux s’applique : plan d’abonnement, mode de paiement, périodicité et renouvellement automatique.",
+      "filtersExample": "Uniquement les abonnements annuels payés par carte de crédit.",
+      "subscriptionEvents": "Événements d'abonnement",
+      "subscriptionEventsDescription": "E-mails envoyés immédiatement lorsqu’il se passe quelque chose dans l’abonnement. Ils ne dépendent d’aucune date.",
+      "subscriptionEventsExample": "Quelqu’un s’abonne sur le site web → l’e-mail de confirmation part aussitôt.",
       "timeline": "Chronologie",
+      "timelineDescription": "E-mails envoyés un jour précis autour de la fin de l’abonnement. Le jour 0 est le jour du renouvellement, les jours négatifs sont avant, les positifs après. Vert signifie « une facture est créée » et n’est possible qu’au jour 0 ou avant, orange signifie « l’abonnement se termine faute de paiement » et seulement au jour 0 ou après. Les deux cases doivent toujours être définies. Faites glisser une case colorée sur un autre jour pour la déplacer.",
+      "timelineExample": "Jour -14 : créer la facture et envoyer un rappel. Jour 5 : mettre fin à l’abonnement si la facture reste impayée.",
       "actions": "Actions",
+      "actionsDescription": "Le plus vert ajoute un jour supplémentaire à la chronologie. Les flux que vous avez créés peuvent aussi être supprimés ici.",
+      "actionsExample": "Ajouter le jour -30 pour rappeler tôt le renouvellement.",
+      "newDayTitle": "Nouveau jour dans la chronologie",
+      "newDayHint": "Nombre négatif = avant la fin de l’abonnement, nombre positif = après.",
       "dayOfRenewal": "Jour de renouvellement / fin d'abonnement",
       "subscriptionsAffected": "Le filtre s'applique à {{numberOfSubscriptions}} abonnements",
-      "confirm_subscription": "Confirmation d'abonnement"
+      "confirm_subscription": "Confirmation d’abonnement",
+      "eventInfo": {
+        "subscribe": {
+          "short": "Le cas normal sur le site web.",
+          "description": "Le cas normal : une personne a conclu elle-même un abonnement sur le site web et déclenché le paiement. L’abonnement est actif immédiatement.",
+          "example": "« Merci pour votre abonnement – voici votre facture. »"
+        },
+        "confirm_subscription": {
+          "short": "Pour reconquérir des abonné·e·s.",
+          "description": "Utilisé pour la reconquête : vous créez pour une personne un abonnement prêt à l’emploi qu’elle n’a plus qu’à confirmer et payer. L’abonnement ne devient actif qu’une fois la facture payée. Voir « Reconquérir des abonné·e·s » dans la documentation.",
+          "example": "« Votre abonnement est prêt – confirmez-le en un clic. »"
+        },
+        "renewal_success": {
+          "short": "Le renouvellement a fonctionné.",
+          "description": "Part lorsqu’un abonnement est renouvelé automatiquement et que le montant a été encaissé avec succès.",
+          "example": "« Votre abonnement continue – merci beaucoup. »"
+        },
+        "renewal_failed": {
+          "short": "Le prélèvement a échoué.",
+          "description": "Part lorsque le prélèvement automatique du renouvellement échoue – carte de crédit expirée, données de paiement manquantes ou paiement nécessitant une confirmation de la personne.",
+          "example": "« Votre paiement n’a pas abouti – merci de vérifier votre moyen de paiement. »"
+        },
+        "deactivation_by_user": {
+          "short": "Résilié par la personne ou par vous.",
+          "description": "Part lorsqu’un abonnement est résilié – par la personne sur le site web ou par vous dans l’éditeur. La résiliation pour facture impayée est gérée par la chronologie.",
+          "example": "« Dommage de vous voir partir – votre abonnement court jusqu’au 31.12. »"
+        }
+      }
     },
     "subscriptionList": {
       "filter": {
@@ -2510,7 +2551,45 @@
       }
     },
     "systemMails": {
-      "noTemplate": "Aucun modèle (ne pas envoyer)"
+      "title": "Compte et connexion",
+      "sectionDescription": "E-mails liés au compte utilisateur. Ils sont déclenchés par une action de la personne, qu’elle ait un abonnement ou non.",
+      "sectionExample": "Quelqu’un s’inscrit → l’e-mail de bienvenue part immédiatement.",
+      "sendTest": "M’envoyer un test",
+      "testSent": "E-mail de test envoyé",
+      "events": {
+        "account_creation": "Inscription",
+        "login_link": "Lien de connexion",
+        "password_reset": "Réinitialisation du mot de passe",
+        "email_change": "Adresse e-mail modifiée",
+        "test_mail": "E-mail de test"
+      },
+      "eventInfo": {
+        "account_creation": {
+          "short": "Un nouveau compte a été créé.",
+          "description": "Part dès qu’une personne s’inscrit ou obtient un compte lors de l’achat d’un abonnement.",
+          "example": "« Bienvenue – votre compte est prêt. »"
+        },
+        "login_link": {
+          "short": "Se connecter sans mot de passe.",
+          "description": "Part lorsqu’une personne souhaite se connecter par lien au lieu de saisir un mot de passe. L’e-mail doit contenir le lien de connexion.",
+          "example": "« Connectez-vous en un clic. »"
+        },
+        "password_reset": {
+          "short": "Mot de passe oublié.",
+          "description": "Part lorsqu’une personne clique sur « Mot de passe oublié ». L’e-mail doit contenir le lien pour définir un nouveau mot de passe.",
+          "example": "« Définissez ici un nouveau mot de passe. »"
+        },
+        "email_change": {
+          "short": "Confirmer la nouvelle adresse.",
+          "description": "Part à la nouvelle adresse lorsque quelqu’un modifie son adresse e-mail. Le changement n’est effectif qu’après confirmation.",
+          "example": "« Merci de confirmer votre nouvelle adresse e-mail. »"
+        },
+        "test_mail": {
+          "short": "Uniquement pour vos tests.",
+          "description": "N’est jamais envoyé automatiquement aux lectrices et lecteurs. Utilisez ce modèle pour tester vous-même l’envoi.",
+          "example": "« E-mail de test – si vous lisez ceci, l’envoi fonctionne. »"
+        }
+      }
     },
     "mailSend": {
       "steps": {
@@ -2650,9 +2729,9 @@
       "error": "Erreur",
       "typeDescriptions": {
         "manual": "Envoyé à la main via « Envoyer un e-mail » ou « Envoyer un test ». Exemple : newsletter à tou·te·s les abonné·e·s.",
-        "subscriptionFlow": "Programmé depuis « Default Mailing », calculé à partir de la date d’abonnement. Exemples : rappel 14 jours avant la fin, relance après une facture impayée.",
+        "subscriptionFlow": "Programmé depuis « E-mails automatiques », calculé à partir de la date d’abonnement. Exemples : rappel 14 jours avant la fin, relance après une facture impayée.",
         "userFlow": "Déclenché immédiatement par une action ou un événement précis. Exemples : lien de connexion demandé, adresse e-mail modifiée, échec du paiement de renouvellement.",
-        "systemMail": "E-mails de compte intégrés, configurés sous « System Mails ». Exemples : e-mail de bienvenue après l’inscription, réinitialisation du mot de passe."
+        "systemMail": "E-mails de compte, configurés sous « E-mails automatiques », section « Compte et connexion ». Exemples : e-mail de bienvenue après l’inscription, réinitialisation du mot de passe."
       },
       "errorHelp": {
         "causeTitle": "Que s’est-il passé ?",
@@ -2702,6 +2781,47 @@
       "tabs": {
         "mails": "E-mails",
         "jobs": "Envois"
+      },
+      "sync": {
+        "action": "Actualiser les statuts",
+        "hint": "Demande au fournisseur de messagerie le statut de livraison actuel de tous les e-mails encore en cours.",
+        "done": "{{checked}} e-mail(s) en cours vérifié(s) chez le fournisseur, {{updated}} mis à jour."
+      },
+      "stateHelp": {
+        "nextTitle": "Ce que vous pouvez faire",
+        "legendTitle": "Signification des statuts",
+        "legendIntro": "Le statut indique jusqu’où un e-mail est allé sur le chemin du destinataire. Il est communiqué par le fournisseur de messagerie, pas par We.Publish.",
+        "legendFooter": "Les statuts arrivent normalement du fournisseur par webhook. Si aucun webhook n’est configuré – ou si l’installation est locale et donc inaccessible au fournisseur – le statut reste sur « submitted ». « Actualiser les statuts » va alors le chercher directement chez le fournisseur.\nSMTP et Slack ne communiquent aucun statut de livraison : ces e-mails restent sur « submitted ».",
+        "submitted": {
+          "name": "submitted — Transmis",
+          "meaning": "We.Publish a remis l’e-mail au fournisseur de messagerie, qui l’a accepté. Il est en file d’attente chez lui. Ce statut ne dit encore rien de la boîte du destinataire.",
+          "next": "Patienter : le fournisseur communique l’issue plus tard par webhook. Si le statut reste longtemps ainsi, c’est généralement qu’aucun webhook n’est configuré – utilisez « Actualiser les statuts »."
+        },
+        "accepted": {
+          "name": "accepted — Accepté",
+          "meaning": "Le serveur de messagerie destinataire a accepté le message. Mailgun communique cette étape intermédiaire ; Mandrill la saute et passe directement à « delivered ».",
+          "next": "Rien. « delivered » suit normalement peu après."
+        },
+        "delivered": {
+          "name": "delivered — Livré",
+          "meaning": "Le serveur du destinataire a accepté le message et l’a livré dans la boîte. C’est l’état final réussi. Mandrill l’appelle « Delivered » dans son interface et « sent » dans son API.",
+          "next": "Rien. À noter : livré ne veut pas dire lu – et n’exclut pas que l’e-mail arrive dans les indésirables."
+        },
+        "deferred": {
+          "name": "deferred — Différé",
+          "meaning": "Le serveur destinataire a temporairement refusé le message : greylisting, limite d’envoi, boîte pleine ou panne brève. Le fournisseur réessaie automatiquement pendant plusieurs heures.",
+          "next": "Patienter. Le statut passera de lui-même à « delivered » ou « bounced ». Renvoyer à la main ne crée qu’un doublon."
+        },
+        "bounced": {
+          "name": "bounced — Non délivrable",
+          "meaning": "La livraison a définitivement échoué. Hard bounce : l’adresse ou le domaine n’existe pas. Soft bounce : échecs temporaires répétés (boîte pleine, serveur durablement inaccessible) jamais résolus.",
+          "next": "Vérifiez l’adresse du destinataire, puis corrigez-la ou supprimez-la. Des hard bounces répétés vers la même adresse nuisent à la réputation du domaine d’envoi. La raison SMTP exacte figure dans la colonne « Erreur » et dans le journal du fournisseur."
+        },
+        "rejected": {
+          "name": "rejected — Rejeté",
+          "meaning": "L’e-mail n’a jamais été envoyé. Soit We.Publish n’a pas pu le remettre (configuration du fournisseur absente ou erronée), soit le fournisseur l’a refusé d’emblée : domaine d’envoi non vérifié (« unsigned »), adresse sur la liste de suppression du fournisseur après un hard bounce ou une plainte pour spam, destinataire désabonné, ou limite d’envoi du compte atteinte.",
+          "next": "La colonne « Erreur » indique la raison – survolez-la pour la cause et la solution. Corrigez la cause et renvoyez : rien n’est réessayé automatiquement."
+        }
       }
     },
     "userMail": {

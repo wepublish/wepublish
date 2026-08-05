@@ -147,7 +147,10 @@ export class MailContext implements MailContextInterface {
     recipient,
     data,
     mailLogID,
-  }: SendComposedMailProps): Promise<{ subject: string }> {
+  }: SendComposedMailProps): Promise<{
+    subject: string;
+    providerMessageID?: string;
+  }> {
     if (!this.mailProvider) {
       throw new Error('MailProvider is not set!');
     }
@@ -168,7 +171,7 @@ export class MailContext implements MailContextInterface {
 
     const composed = composeMail(template, data);
 
-    await this.mailProvider.sendMail({
+    const result = await this.mailProvider.sendMail({
       mailLogID,
       recipient,
       replyToAddress: config?.replyToAddress ?? config?.fromAddress ?? '',
@@ -177,7 +180,10 @@ export class MailContext implements MailContextInterface {
       messageHtml: composed.messageHtml,
     });
 
-    return { subject: composed.subject };
+    return {
+      subject: composed.subject,
+      providerMessageID: result?.providerMessageID,
+    };
   }
 
   /**
@@ -189,7 +195,7 @@ export class MailContext implements MailContextInterface {
     recipient,
     data,
     mailLogID,
-  }: SendComposedContentProps): Promise<void> {
+  }: SendComposedContentProps): Promise<{ providerMessageID?: string }> {
     if (!this.mailProvider) {
       throw new Error('MailProvider is not set!');
     }
@@ -202,7 +208,7 @@ export class MailContext implements MailContextInterface {
 
     const composed = composeMail(content, data);
 
-    await this.mailProvider.sendMail({
+    const result = await this.mailProvider.sendMail({
       mailLogID,
       recipient,
       replyToAddress: config?.replyToAddress ?? config?.fromAddress ?? '',
@@ -210,6 +216,8 @@ export class MailContext implements MailContextInterface {
       message: composed.message,
       messageHtml: composed.messageHtml,
     });
+
+    return { providerMessageID: result?.providerMessageID };
   }
 
   async getUserTemplateId(

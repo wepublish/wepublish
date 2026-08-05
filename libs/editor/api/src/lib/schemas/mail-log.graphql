@@ -20,6 +20,13 @@ fragment FullMailLog on MailLogModel {
   }
 }
 
+mutation SyncMailLogStates($limit: Int) {
+  syncMailLogStates(limit: $limit) {
+    checked
+    updated
+  }
+}
+
 query MailLogs($filter: MailLogFilter, $skip: Int, $take: Int) {
   mailLogs(filter: $filter, skip: $skip, take: $take) {
     nodes {

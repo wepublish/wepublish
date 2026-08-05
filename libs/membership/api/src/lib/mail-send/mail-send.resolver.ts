@@ -6,6 +6,7 @@ import { CanGetMailLogs, CanSendMailTemplates } from '@wepublish/permissions';
 import {
   MailAudienceInput,
   MailLogFilter,
+  MailLogSyncModel,
   MailSendJobInput,
   MailSendJobModel,
   MailSendPreviewInput,
@@ -18,13 +19,15 @@ import {
 } from './mail-send.model';
 import { MailSendJobService } from './mail-send-job.service';
 import { MailSendRecipientService } from './mail-send-recipient.service';
+import { MailLogSyncService } from './mail-log-sync.service';
 
 @Resolver()
 export class MailSendResolver {
   constructor(
     private prisma: PrismaClient,
     private mailSendJobService: MailSendJobService,
-    private recipientService: MailSendRecipientService
+    private recipientService: MailSendRecipientService,
+    private mailLogSyncService: MailLogSyncService
   ) {}
 
   @Permissions(CanSendMailTemplates)
@@ -291,6 +294,16 @@ export class MailSendResolver {
     ]);
 
     return this.paginate(logs, totalCount, skip, boundedTake);
+  }
+
+  @Permissions(CanGetMailLogs)
+  @Mutation(() => MailLogSyncModel, {
+    description: `Ask the mail provider for the current delivery state of mails that are still open. Complements the provider webhook, which is not reachable in local development.`,
+  })
+  async syncMailLogStates(
+    @Args('limit', { type: () => Int, nullable: true }) limit?: number
+  ): Promise<MailLogSyncModel> {
+    return this.mailLogSyncService.syncOpenStates(limit ?? undefined);
   }
 
   private paginate<T extends { id: string }>(

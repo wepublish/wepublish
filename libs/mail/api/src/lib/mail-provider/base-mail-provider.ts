@@ -1,9 +1,11 @@
 import {
   MailLogStatus,
   MailProvider,
+  MailProviderMessageState,
   MailProviderTemplate,
   MailProviderTemplateContent,
   SendMailProps,
+  SendMailResult,
   WebhookForSendMailProps,
 } from './mail-provider.interface';
 import bodyParser from 'body-parser';
@@ -45,13 +47,19 @@ export abstract class BaseMailProvider implements MailProvider {
   abstract webhookForSendMail(
     props: WebhookForSendMailProps
   ): Promise<MailLogStatus[]>;
-  abstract sendMail(props: SendMailProps): Promise<void>;
+  abstract sendMail(props: SendMailProps): Promise<SendMailResult>;
   abstract getTemplateContent(
     externalMailTemplateId: string
   ): Promise<MailProviderTemplateContent>;
   abstract getName(): Promise<string>;
   /** Overridden by providers that host templates remotely (Mandrill, Mailgun). */
   async listTemplates(): Promise<MailProviderTemplate[]> {
+    return [];
+  }
+  /** Overridden by providers that can be asked about a sent message (Mandrill). */
+  async getMessageStates(
+    _providerMessageIDs: string[]
+  ): Promise<MailProviderMessageState[]> {
     return [];
   }
   async getConfig(): Promise<SettingMailProvider | null> {

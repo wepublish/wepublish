@@ -3,6 +3,7 @@ import {
   MailLogStatus,
   MailProviderTemplateContent,
   SendMailProps,
+  SendMailResult,
   WebhookForSendMailProps,
 } from './mail-provider.interface';
 import { BaseMailProvider, MailProviderProps } from './base-mail-provider';
@@ -47,7 +48,7 @@ export class SmtpMailProvider extends BaseMailProvider {
     return [];
   }
 
-  async sendMail(props: SendMailProps): Promise<void> {
+  async sendMail(props: SendMailProps): Promise<SendMailResult> {
     const config = await this.getConfig();
     const from =
       config?.fromAddress ||
@@ -63,6 +64,10 @@ export class SmtpMailProvider extends BaseMailProvider {
       text: props.message,
       html: props.messageHtml,
     });
+
+    // Handing over to the SMTP server is all this transport ever learns, so
+    // there is no id worth storing for a later status lookup.
+    return {};
   }
 
   async getTemplateContent(): Promise<MailProviderTemplateContent> {

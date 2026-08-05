@@ -920,9 +920,13 @@ export function Base({ children }: BaseProps) {
                       </Nav.Item>
                     </PermissionControl>
 
-                    {/* SUBSCRIPTION MAILING */}
+                    {/* AUTOMATIC MAILS (subscription mailing + system mails) */}
                     <PermissionControl
-                      qualifyingPermissions={[CanGetSubscriptionFlows.id]}
+                      qualifyingPermissions={[
+                        CanGetSubscriptionFlows.id,
+                        CanGetSystemMails.id,
+                        CanUpdateSystemMails.id,
+                      ]}
                     >
                       <Nav.Item
                         as={NavLink}
@@ -931,23 +935,6 @@ export function Base({ children }: BaseProps) {
                         icon={<MdOutgoingMail />}
                       >
                         {t('navbar.subscriptionSettings')}
-                      </Nav.Item>
-                    </PermissionControl>
-
-                    {/* SYSTEM MAILS */}
-                    <PermissionControl
-                      qualifyingPermissions={[
-                        CanGetSystemMails.id,
-                        CanUpdateSystemMails.id,
-                      ]}
-                    >
-                      <Nav.Item
-                        as={NavLink}
-                        href="/systemmails"
-                        active={path === 'systemmails'}
-                        icon={<MdMail />}
-                      >
-                        {t('navbar.systemMails')}
                       </Nav.Item>
                     </PermissionControl>
 

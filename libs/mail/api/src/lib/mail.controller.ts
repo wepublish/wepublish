@@ -115,13 +115,16 @@ export class MailController {
     const mailLogId = this.config.mailLogId ?? randomUUID();
 
     let subject: string | null = null;
+    let providerMessageID: string | undefined;
     try {
-      ({ subject } = await this.mailContext.sendComposedMail({
-        mailLogID: mailLogId,
-        mailTemplateId: this.config.mailTemplateId,
-        recipient: this.config.recipient.email,
-        data: await this.buildData(),
-      }));
+      ({ subject, providerMessageID } = await this.mailContext.sendComposedMail(
+        {
+          mailLogID: mailLogId,
+          mailTemplateId: this.config.mailTemplateId,
+          recipient: this.config.recipient.email,
+          data: await this.buildData(),
+        }
+      ));
     } catch (error) {
       // A failed delivery must leave a trace too — otherwise the send job only
       // reports a count and the reason is lost outside the server log.
@@ -135,14 +138,21 @@ export class MailController {
       throw error;
     }
 
-    await this.writeLog(mailLogId, MailLogState.submitted, subject, null);
+    await this.writeLog(
+      mailLogId,
+      MailLogState.submitted,
+      subject,
+      null,
+      providerMessageID
+    );
   }
 
   private async writeLog(
     mailLogId: string,
     state: MailLogState,
     subject: string | null,
-    error: string | null
+    error: string | null,
+    providerMessageID?: string
   ): Promise<void> {
     try {
       await this.prismaService.mailLog.create({
@@ -160,6 +170,7 @@ export class MailController {
           type: MAIL_LOG_TYPE_MAP[this.config.mailType],
           subject,
           error,
+          mailProviderMessageID: providerMessageID ?? null,
           mailTemplate: {
             connect: {
               id: this.config.mailTemplateId,

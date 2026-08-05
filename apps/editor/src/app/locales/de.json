@@ -1097,7 +1097,7 @@
       }
     },
     "mailTemplateSelect": {
-      "noMailSentSelectNow": "Kein Mailversand"
+      "noMailSentSelectNow": "Keine E-Mail senden"
     },
     "memberPlanEdit": {
       "active": "Aktiv",
@@ -1188,7 +1188,7 @@
       "settings": "Einstellungen",
       "subscriptionPlans": "Abo Pläne",
       "subscriptions": "Abonnements",
-      "subscriptionSettings": "Default Mailing",
+      "subscriptionSettings": "Automatische Mails",
       "tokens": "Tokens",
       "userConsents": "User-Konsens",
       "userRoles": "Userrollen",
@@ -1580,19 +1580,23 @@
         "newArticlePaywall": "Beeinflusst nicht schon erstellte Artikel"
       }
     },
+    "automaticMails": {
+      "title": "Automatische Mails",
+      "intro": "Hier legen Sie fest, welche E-Mail-Vorlage bei welchem Ereignis automatisch verschickt wird. Wählen Sie pro Ereignis eine Vorlage – oder lassen Sie das Feld auf «Keine E-Mail senden», wenn nichts verschickt werden soll. Das ⓘ-Symbol erklärt jedes Ereignis.",
+      "example": "Beispiel: {{example}}"
+    },
     "subscriptionFlow": {
-      "subscribe": "Abonnieren",
+      "subscribe": "Abo abgeschlossen",
       "renewal_success": "Verlängerung erfolgreich",
       "renewal_failed": "Verlängerung fehlgeschlagen",
-      "deactivation_by_user": "Vom Benutzer deaktiviert",
+      "deactivation_by_user": "Abo gekündigt",
       "reactivation": "Reaktiviert",
       "invoice_creation": "Rechnungserstellung",
       "deactivation_unpaid": "Deaktivierung wegen unbezahlter Rechnung",
       "custom": "Benutzerdefiniertes Ereignis",
       "settings": "Abonnement-Ablauf Einstellungen",
       "edit": "Abonnement-Ablauf bearbeiten",
-      "titleDefaultSettings": "Standard-Abonnement Einstellungen",
-      "settingsDescription": "Sie können diese Einstellungen für jeden Abonnementplan überschreiben.",
+      "settingsDescription": "Diese Einstellungen gelten nur für diesen Abo-Plan und überschreiben die automatischen Mails.",
       "addNew": "Neuen Ablauf erstellen",
       "dayWithNumber": "Tag {{day}}",
       "days": "Tage",
@@ -1610,12 +1614,49 @@
       "deletePermanently": "Permanent löschen",
       "dropHere": "Hier ablegen",
       "filters": "Filter",
-      "subscriptionEvents": "Statische Abonnement-Ereignisse",
+      "filtersDescription": "Legt fest, für welche Abos dieser Ablauf gilt: Abo-Plan, Zahlungsmethode, Periodizität und automatische Verlängerung.",
+      "filtersExample": "Nur Jahresabos, die per Kreditkarte bezahlt werden.",
+      "subscriptionEvents": "Abo-Ereignisse",
+      "subscriptionEventsDescription": "E-Mails, die sofort verschickt werden, wenn im Abo etwas passiert. Sie sind an kein Datum gebunden.",
+      "subscriptionEventsExample": "Jemand schliesst auf der Website ein Abo ab → Bestätigungsmail geht sofort raus.",
       "timeline": "Zeitleiste",
+      "timelineDescription": "E-Mails, die an einem bestimmten Tag rund um das Abo-Ende verschickt werden. Tag 0 ist der Tag der Verlängerung, negative Tage liegen davor, positive danach. Grün heisst «Rechnung wird erstellt» und ist nur an Tag 0 oder davor möglich, Orange heisst «Abo wird wegen unbezahlter Rechnung beendet» und nur an Tag 0 oder danach. Beide Felder müssen immer gesetzt sein. Ziehen Sie ein farbiges Feld auf einen anderen Tag, um es zu verschieben.",
+      "timelineExample": "Tag -14: Rechnung erstellen und Erinnerung verschicken. Tag 5: Abo beenden, falls die Rechnung offen bleibt.",
       "actions": "Aktionen",
+      "actionsDescription": "Mit dem grünen Plus fügen Sie der Zeitleiste einen weiteren Tag hinzu. Selber erstellte Abläufe können Sie hier auch löschen.",
+      "actionsExample": "Tag -30 hinzufügen, um früh an die Verlängerung zu erinnern.",
+      "newDayTitle": "Neuer Tag in der Zeitleiste",
+      "newDayHint": "Negative Zahl = vor dem Abo-Ende, positive Zahl = danach.",
       "dayOfRenewal": "Tag der Verlängerung / Abonnement endet",
       "subscriptionsAffected": "Filter gilt für {{numberOfSubscriptions}} Abonnements",
-      "confirm_subscription": "Abonnementbestätigung"
+      "confirm_subscription": "Abo-Bestätigung",
+      "eventInfo": {
+        "subscribe": {
+          "short": "Der Normalfall auf der Website.",
+          "description": "Der Normalfall: Eine Person hat auf der Website selber ein Abo abgeschlossen und die Zahlung ausgelöst. Das Abo ist damit sofort aktiv.",
+          "example": "«Danke für Ihr Abo – hier ist Ihre Rechnung.»"
+        },
+        "confirm_subscription": {
+          "short": "Für die Rückgewinnung von Abos.",
+          "description": "Wird für die Rückgewinnung verwendet: Sie legen für eine Person ein fertiges Abo an, das sie nur noch bestätigen und bezahlen muss. Aktiv wird das Abo erst, wenn die Rechnung bezahlt ist. Mehr dazu in der Dokumentation unter «Abonnent:innen zurückgewinnen».",
+          "example": "«Ihr Abo ist bereit – jetzt mit einem Klick bestätigen.»"
+        },
+        "renewal_success": {
+          "short": "Verlängerung hat geklappt.",
+          "description": "Geht raus, wenn ein Abo automatisch verlängert und der Betrag erfolgreich abgebucht wurde.",
+          "example": "«Ihr Abo läuft weiter – vielen Dank.»"
+        },
+        "renewal_failed": {
+          "short": "Abbuchung hat nicht geklappt.",
+          "description": "Geht raus, wenn die automatische Abbuchung bei der Verlängerung nicht klappt – etwa bei abgelaufener Kreditkarte, fehlenden Zahlungsdaten oder wenn die Zahlung eine Bestätigung der Person braucht.",
+          "example": "«Ihre Zahlung hat nicht funktioniert – bitte prüfen Sie Ihr Zahlungsmittel.»"
+        },
+        "deactivation_by_user": {
+          "short": "Kündigung durch Person oder Redaktion.",
+          "description": "Geht raus, wenn ein Abo gekündigt wird – von der Person selber auf der Website oder von Ihnen im Editor. Für die Kündigung wegen unbezahlter Rechnung ist die Zeitleiste zuständig.",
+          "example": "«Schade, dass Sie gehen – Ihr Abo läuft noch bis zum 31.12.»"
+        }
+      }
     },
     "subscriptionList": {
       "filter": {
@@ -2565,7 +2606,45 @@
       }
     },
     "systemMails": {
-      "noTemplate": "Keine Vorlage (nicht senden)"
+      "title": "Konto & Login",
+      "sectionDescription": "E-Mails rund um das Benutzerkonto. Sie werden durch eine Aktion der Person ausgelöst – unabhängig davon, ob sie ein Abo hat.",
+      "sectionExample": "Jemand registriert sich → Willkommensmail geht sofort raus.",
+      "sendTest": "Test an mich",
+      "testSent": "Test-E-Mail an Sie verschickt",
+      "events": {
+        "account_creation": "Registrierung",
+        "login_link": "Login-Link",
+        "password_reset": "Passwort zurücksetzen",
+        "email_change": "E-Mail-Adresse geändert",
+        "test_mail": "Testmail"
+      },
+      "eventInfo": {
+        "account_creation": {
+          "short": "Neues Konto wurde erstellt.",
+          "description": "Geht raus, sobald sich eine Person neu registriert oder beim Abo-Kauf ein Konto erhält.",
+          "example": "«Willkommen – Ihr Konto ist bereit.»"
+        },
+        "login_link": {
+          "short": "Anmelden ohne Passwort.",
+          "description": "Geht raus, wenn eine Person sich per Link anmelden will, statt ein Passwort einzugeben. Die E-Mail muss den Login-Link enthalten.",
+          "example": "«Mit einem Klick anmelden.»"
+        },
+        "password_reset": {
+          "short": "Passwort vergessen.",
+          "description": "Geht raus, wenn eine Person «Passwort vergessen» anklickt. Die E-Mail muss den Link zum Setzen eines neuen Passworts enthalten.",
+          "example": "«Hier setzen Sie ein neues Passwort.»"
+        },
+        "email_change": {
+          "short": "Neue Adresse bestätigen.",
+          "description": "Geht an die neue Adresse, wenn jemand seine E-Mail-Adresse ändert. Die Änderung gilt erst nach der Bestätigung.",
+          "example": "«Bitte bestätigen Sie Ihre neue E-Mail-Adresse.»"
+        },
+        "test_mail": {
+          "short": "Nur für Ihre eigenen Tests.",
+          "description": "Wird nie automatisch an Leser*innen verschickt. Diese Vorlage nutzen Sie, um den Mailversand selber auszuprobieren.",
+          "example": "«Testmail – wenn Sie das lesen, funktioniert der Versand.»"
+        }
+      }
     },
     "mailSend": {
       "steps": {
@@ -2705,9 +2784,9 @@
       "error": "Fehler",
       "typeDescriptions": {
         "manual": "Von Hand über «E-Mail senden» oder «Test senden» verschickt. Beispiel: Newsletter an alle Abonnent:innen.",
-        "subscriptionFlow": "Zeitgesteuert aus «Default Mailing», berechnet ab dem Abo-Datum. Beispiele: Erinnerung 14 Tage vor Ablauf, Mahnung nach unbezahlter Rechnung.",
+        "subscriptionFlow": "Zeitgesteuert aus «Automatische Mails», berechnet ab dem Abo-Datum. Beispiele: Erinnerung 14 Tage vor Ablauf, Mahnung nach unbezahlter Rechnung.",
         "userFlow": "Sofort ausgelöst durch eine konkrete Aktion oder ein Ereignis. Beispiele: Login-Link angefordert, E-Mail-Adresse geändert, Verlängerung der Zahlung fehlgeschlagen.",
-        "systemMail": "Fest im System hinterlegte Konto-Mails, konfiguriert unter «System Mails». Beispiele: Willkommensmail nach Registrierung, Passwort zurücksetzen."
+        "systemMail": "Konto-Mails, konfiguriert unter «Automatische Mails» im Abschnitt «Konto & Login». Beispiele: Willkommensmail nach Registrierung, Passwort zurücksetzen."
       },
       "errorHelp": {
         "causeTitle": "Was ist passiert?",
@@ -2757,6 +2836,47 @@
       "tabs": {
         "mails": "E-Mails",
         "jobs": "Versände"
+      },
+      "sync": {
+        "action": "Status aktualisieren",
+        "hint": "Fragt beim Mailanbieter den aktuellen Zustellstatus aller noch offenen E-Mails ab.",
+        "done": "{{checked}} offene E-Mail(s) beim Anbieter geprüft, {{updated}} aktualisiert."
+      },
+      "stateHelp": {
+        "nextTitle": "Was du tun kannst",
+        "legendTitle": "Bedeutung der Status",
+        "legendIntro": "Der Status zeigt, wie weit eine E-Mail auf dem Weg zum Empfänger gekommen ist. Gemeldet wird er vom Mailanbieter, nicht von We.Publish selbst.",
+        "legendFooter": "Statusmeldungen kommen normalerweise per Webhook vom Mailanbieter. Ist kein Webhook eingerichtet – oder läuft die Installation lokal, wo der Anbieter sie nicht erreichen kann – bleibt der Status auf «submitted» stehen. «Status aktualisieren» holt ihn dann direkt beim Anbieter ab.\nSMTP und Slack melden keine Zustellstatus: dort bleibt es bei «submitted».",
+        "submitted": {
+          "name": "submitted — Übermittelt",
+          "meaning": "We.Publish hat die E-Mail an den Mailanbieter übergeben und dieser hat sie angenommen. Sie ist dort in der Warteschlange. Über das Postfach des Empfängers sagt dieser Status noch nichts aus.",
+          "next": "Abwarten: Der Anbieter meldet den Ausgang per Webhook nachträglich. Bleibt der Status längere Zeit stehen, ist meist kein Webhook eingerichtet – dann holst du den aktuellen Stand mit «Status aktualisieren»."
+        },
+        "accepted": {
+          "name": "accepted — Angenommen",
+          "meaning": "Der empfangende Mailserver hat die Nachricht für den Empfänger angenommen. Diesen Zwischenschritt meldet Mailgun; Mandrill überspringt ihn und geht direkt auf «delivered».",
+          "next": "Nichts. Normalerweise folgt kurz darauf «delivered»."
+        },
+        "delivered": {
+          "name": "delivered — Zugestellt",
+          "meaning": "Der Mailserver des Empfängers hat die Nachricht angenommen und ins Postfach ausgeliefert. Das ist der erfolgreiche Endzustand. In Mandrill heisst dieser Zustand in der Oberfläche «Delivered» und in der API «sent».",
+          "next": "Nichts. Beachte: Zugestellt heisst nicht gelesen – und schliesst nicht aus, dass die E-Mail im Spam-Ordner landet."
+        },
+        "deferred": {
+          "name": "deferred — Zurückgestellt",
+          "meaning": "Der empfangende Server hat die Annahme vorübergehend verweigert, etwa wegen Greylisting, eines Sendelimits, eines vollen Postfachs oder einer kurzen Störung. Der Anbieter versucht es über Stunden automatisch erneut.",
+          "next": "Abwarten. Der Status wechselt von selbst auf «delivered» oder «bounced». Von Hand nachschicken erzeugt nur ein Duplikat."
+        },
+        "bounced": {
+          "name": "bounced — Unzustellbar",
+          "meaning": "Die Zustellung ist endgültig gescheitert. Hard Bounce: die Adresse oder die Domain existiert nicht. Soft Bounce: wiederholte vorübergehende Fehler (volles Postfach, Server dauerhaft nicht erreichbar), die sich nicht aufgelöst haben.",
+          "next": "Empfängeradresse auf Tippfehler prüfen und korrigieren oder entfernen. Wiederholte Hard Bounces an dieselbe Adresse schaden dem Ruf der Absenderdomain. Den genauen SMTP-Grund findest du in der Spalte «Fehler» und im Log des Anbieters."
+        },
+        "rejected": {
+          "name": "rejected — Abgewiesen",
+          "meaning": "Die E-Mail wurde nie verschickt. Entweder konnte We.Publish sie nicht übergeben (fehlende oder falsche Anbieter-Konfiguration), oder der Anbieter hat sie von vornherein verweigert: nicht verifizierte Absenderdomain («unsigned»), Adresse auf der Sperrliste des Anbieters nach früherem Hard Bounce oder Spam-Beschwerde, abgemeldeter Empfänger, oder das Sendelimit des Kontos ist erreicht.",
+          "next": "Die Spalte «Fehler» nennt den Grund – fahre mit der Maus darüber für Ursache und Behebung. Ursache beheben und erneut senden: automatisch wiederholt wird nichts."
+        }
       }
     },
     "userMail": {

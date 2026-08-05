@@ -3,6 +3,7 @@ import { UserSession } from '@wepublish/authentication/api';
 import { MailSendResolver } from './mail-send.resolver';
 import { MailSendJobService } from './mail-send-job.service';
 import { MailSendRecipientService } from './mail-send-recipient.service';
+import { MailLogSyncService } from './mail-log-sync.service';
 import { MailRecipientBase } from './mail-send.model';
 
 const session = { user: { id: 'editor-1' } } as UserSession;
@@ -10,12 +11,14 @@ const session = { user: { id: 'editor-1' } } as UserSession;
 const makeResolver = (
   prisma: any,
   jobService: any = {},
-  recipientService: any = {}
+  recipientService: any = {},
+  mailLogSyncService: any = {}
 ) =>
   new MailSendResolver(
     prisma as PrismaClient,
     jobService as MailSendJobService,
-    recipientService as MailSendRecipientService
+    recipientService as MailSendRecipientService,
+    mailLogSyncService as MailLogSyncService
   );
 
 describe('MailSendResolver', () => {

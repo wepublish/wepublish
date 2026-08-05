@@ -1102,7 +1102,7 @@
       }
     },
     "mailTemplateSelect": {
-      "noMailSentSelectNow": "No mailing"
+      "noMailSentSelectNow": "Do not send an email"
     },
     "memberPlanEdit": {
       "active": "Active",
@@ -1190,8 +1190,7 @@
       "settings": "Settings",
       "subscriptionPlans": "Subscription Plans",
       "subscriptions": "Subscriptions",
-      "subscriptionSettings": "Default Mailing",
-      "systemMails": "System Mails",
+      "subscriptionSettings": "Automatic emails",
       "tokens": "Tokens",
       "userConsents": "User Consents",
       "userRoles": "User Roles",
@@ -1603,19 +1602,23 @@
         "newArticlePaywall": "Will not affect already created articles"
       }
     },
+    "automaticMails": {
+      "title": "Automatic emails",
+      "intro": "Here you decide which email template goes out automatically for which event. Pick a template per event – or leave it on «Do not send an email» if nothing should go out. The ⓘ icon explains every event.",
+      "example": "Example: {{example}}"
+    },
     "subscriptionFlow": {
-      "subscribe": "Subscribe",
+      "subscribe": "Subscription started",
       "renewal_success": "Renewal successful",
       "renewal_failed": "Renewal failed",
-      "deactivation_by_user": "Deactivated by user",
+      "deactivation_by_user": "Subscription cancelled",
       "reactivation": "Reactivated",
       "invoice_creation": "Invoice creation",
       "deactivation_unpaid": "Deactivation for unpaid invoice",
       "custom": "Custom event",
       "settings": "Subscription flow settings",
       "edit": "Edit subscription flow",
-      "titleDefaultSettings": "Default Subscription Settings",
-      "settingsDescription": "You can overwrite these settings for every subscription plan.",
+      "settingsDescription": "These settings apply to this subscription plan only and overrule the automatic emails.",
       "addNew": "Create new flow",
       "dayWithNumber": "day {{day}}",
       "days": "days",
@@ -1633,12 +1636,49 @@
       "deletePermanently": "Delete permanently",
       "dropHere": "Drop here",
       "filters": "Filters",
-      "subscriptionEvents": "Static Subscription Events",
+      "filtersDescription": "Defines which subscriptions this flow applies to: subscription plan, payment method, periodicity and auto renewal.",
+      "filtersExample": "Yearly subscriptions paid by credit card only.",
+      "subscriptionEvents": "Subscription events",
+      "subscriptionEventsDescription": "Emails that go out immediately when something happens to a subscription. They are not tied to a date.",
+      "subscriptionEventsExample": "Someone subscribes on the website → the confirmation email goes out right away.",
       "timeline": "Timeline",
+      "timelineDescription": "Emails sent on a specific day around the end of the subscription. Day 0 is the day of renewal, negative days are before it, positive days after. Green means «an invoice is created» and is only possible on day 0 or earlier, orange means «the subscription ends because the invoice is unpaid» and only on day 0 or later. Both boxes always have to be set. Drag a coloured box onto another day to move it.",
+      "timelineExample": "Day -14: create the invoice and send a reminder. Day 5: end the subscription if the invoice is still open.",
       "actions": "Actions",
+      "actionsDescription": "The green plus adds another day to the timeline. Flows you created yourself can also be deleted here.",
+      "actionsExample": "Add day -30 to remind people early about the renewal.",
+      "newDayTitle": "New day in the timeline",
+      "newDayHint": "Negative number = before the subscription ends, positive number = after.",
       "dayOfRenewal": "Day of renewal / subscription ends",
       "subscriptionsAffected": "Filter applies to {{numberOfSubscriptions}} subscriptions",
-      "confirm_subscription": "Subscription confirmation"
+      "confirm_subscription": "Subscription confirmation",
+      "eventInfo": {
+        "subscribe": {
+          "short": "The normal case on the website.",
+          "description": "The normal case: a person subscribed on the website themselves and started the payment. The subscription is active right away.",
+          "example": "«Thanks for subscribing – here is your invoice.»"
+        },
+        "confirm_subscription": {
+          "short": "Used to win subscribers back.",
+          "description": "Used for winning subscribers back: you set up a ready-made subscription for a person who only has to confirm and pay for it. The subscription becomes active once the invoice is paid. See «Winning subscribers back» in the documentation.",
+          "example": "«Your subscription is ready – confirm it with one click.»"
+        },
+        "renewal_success": {
+          "short": "The renewal worked.",
+          "description": "Goes out when a subscription renews automatically and the amount was collected successfully.",
+          "example": "«Your subscription continues – many thanks.»"
+        },
+        "renewal_failed": {
+          "short": "Collecting the money failed.",
+          "description": "Goes out when collecting the money for an automatic renewal fails – an expired credit card, missing payment details, or a payment that needs the person to confirm it.",
+          "example": "«Your payment did not go through – please check your payment method.»"
+        },
+        "deactivation_by_user": {
+          "short": "Cancelled by the person or by you.",
+          "description": "Goes out when a subscription is cancelled – either by the person on the website or by you in the editor. Cancellation because of an unpaid invoice is handled by the timeline.",
+          "example": "«Sorry to see you go – your subscription runs until 31 December.»"
+        }
+      }
     },
     "subscriptionList": {
       "filter": {
@@ -1672,19 +1712,45 @@
       }
     },
     "systemMails": {
-      "event": "Event",
+      "title": "Account & login",
+      "sectionDescription": "Emails around the user account. They are triggered by something the person does – no matter whether they have a subscription.",
+      "sectionExample": "Someone registers → the welcome email goes out right away.",
+      "sendTest": "Send test to me",
+      "testSent": "Test email sent to you",
       "events": {
         "account_creation": "Registration",
-        "login_link": "Login Link",
+        "login_link": "Login link",
         "password_reset": "Password reset",
-        "test_mail": "Test mail",
-        "email_change": "Email change"
+        "email_change": "Email address changed",
+        "test_mail": "Test mail"
       },
-      "explanation": "You can view the available templates in the 'Mail templates' settings entry.",
-      "template": "Mail template",
-      "test": "Send test mail",
-      "title": "System Mails",
-      "noTemplate": "No template (do not send)"
+      "eventInfo": {
+        "account_creation": {
+          "short": "A new account was created.",
+          "description": "Goes out as soon as a person registers or gets an account while buying a subscription.",
+          "example": "«Welcome – your account is ready.»"
+        },
+        "login_link": {
+          "short": "Log in without a password.",
+          "description": "Goes out when a person wants to log in via a link instead of typing a password. The email has to contain the login link.",
+          "example": "«Log in with a single click.»"
+        },
+        "password_reset": {
+          "short": "Password forgotten.",
+          "description": "Goes out when a person clicks «Forgot password». The email has to contain the link for setting a new password.",
+          "example": "«Set a new password here.»"
+        },
+        "email_change": {
+          "short": "Confirm the new address.",
+          "description": "Goes to the new address when someone changes their email address. The change only takes effect after the confirmation.",
+          "example": "«Please confirm your new email address.»"
+        },
+        "test_mail": {
+          "short": "For your own tests only.",
+          "description": "Never sent to readers automatically. Use this template to try out the mail delivery yourself.",
+          "example": "«Test mail – if you can read this, sending works.»"
+        }
+      }
     },
     "tags": {
       "overview": {
@@ -2759,9 +2825,9 @@
       "error": "Error",
       "typeDescriptions": {
         "manual": "Sent by hand via «Send email» or «Send test». Example: a newsletter to all subscribers.",
-        "subscriptionFlow": "Time-based, from «Default mailing», scheduled off the subscription date. Examples: reminder 14 days before it ends, dunning after an unpaid invoice.",
+        "subscriptionFlow": "Time-based, from «Automatic emails», scheduled off the subscription date. Examples: reminder 14 days before it ends, dunning after an unpaid invoice.",
         "userFlow": "Triggered immediately by a concrete action or event. Examples: login link requested, email address changed, renewal payment failed.",
-        "systemMail": "Built-in account mails, configured under «System mails». Examples: welcome mail after registration, password reset."
+        "systemMail": "Account mails, configured under «Automatic emails» in the «Account & login» section. Examples: welcome mail after registration, password reset."
       },
       "errorHelp": {
         "causeTitle": "What happened?",
@@ -2811,6 +2877,47 @@
       "tabs": {
         "mails": "Mails",
         "jobs": "Send jobs"
+      },
+      "sync": {
+        "action": "Refresh states",
+        "hint": "Asks the mail provider for the current delivery state of every mail that is still open.",
+        "done": "Checked {{checked}} open mail(s) at the provider, updated {{updated}}."
+      },
+      "stateHelp": {
+        "nextTitle": "What you can do",
+        "legendTitle": "What the states mean",
+        "legendIntro": "The state shows how far a mail got on its way to the recipient. It is reported by the mail provider, not by We.Publish itself.",
+        "legendFooter": "State updates normally arrive from the mail provider by webhook. With no webhook configured — or on a local installation the provider cannot reach — the state stays at “submitted”. “Refresh states” then fetches it from the provider directly.\nSMTP and Slack report no delivery states at all, so those mails stay at “submitted”.",
+        "submitted": {
+          "name": "submitted",
+          "meaning": "We.Publish handed the mail to the mail provider and the provider accepted it. It is queued there. This state says nothing yet about the recipient's mailbox.",
+          "next": "Wait: the provider reports the outcome later by webhook. If the state sits here for a long time, usually no webhook is configured — use “Refresh states” to fetch the current state."
+        },
+        "accepted": {
+          "name": "accepted",
+          "meaning": "The receiving mail server accepted the message for the recipient. Mailgun reports this intermediate step; Mandrill skips it and goes straight to “delivered”.",
+          "next": "Nothing. “delivered” normally follows shortly after."
+        },
+        "delivered": {
+          "name": "delivered",
+          "meaning": "The recipient's mail server accepted the message and delivered it to the mailbox. This is the successful end state. Mandrill calls it “Delivered” in its UI and “sent” in its API.",
+          "next": "Nothing. Note that delivered does not mean read — and does not rule out the mail landing in the spam folder."
+        },
+        "deferred": {
+          "name": "deferred",
+          "meaning": "The receiving server temporarily refused the message — greylisting, a rate limit, a full mailbox or a short outage. The provider keeps retrying automatically for hours.",
+          "next": "Wait. The state moves to “delivered” or “bounced” on its own. Sending again by hand only produces a duplicate."
+        },
+        "bounced": {
+          "name": "bounced",
+          "meaning": "Delivery failed permanently. Hard bounce: the address or the domain does not exist. Soft bounce: repeated temporary failures (full mailbox, server permanently unreachable) that never resolved.",
+          "next": "Check the recipient address for typos, then correct or remove it. Repeated hard bounces to the same address damage the sending domain's reputation. The exact SMTP reason is in the “Error” column and in the provider's log."
+        },
+        "rejected": {
+          "name": "rejected",
+          "meaning": "The mail was never sent. Either We.Publish could not hand it over (missing or wrong provider configuration), or the provider refused it up front: unverified sending domain (“unsigned”), address on the provider's suppression list after an earlier hard bounce or spam complaint, unsubscribed recipient, or the account's sending limit was reached.",
+          "next": "The “Error” column names the reason — hover it for cause and remedy. Fix the cause and send again: nothing is retried automatically."
+        }
       }
     },
     "userMail": {

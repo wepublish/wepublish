@@ -1715,6 +1715,14 @@ export enum MailLogState {
   Submitted = 'submitted'
 }
 
+export type MailLogSyncModel = {
+  __typename?: 'MailLogSyncModel';
+  /** Mails that were still in an open state and could be looked up at the provider. */
+  checked: Scalars['Int'];
+  /** Mails whose state the provider reported differently. */
+  updated: Scalars['Int'];
+};
+
 export type MailLogTemplate = {
   __typename?: 'MailLogTemplate';
   id: Scalars['String'];
@@ -2281,6 +2289,8 @@ export type Mutation = {
   sendTestMailTemplate?: Maybe<Scalars['Boolean']>;
   /** This mutation sends a login link to the email if the user exists. Method will always return email address */
   sendWebsiteLogin: Scalars['String'];
+  /** Ask the mail provider for the current delivery state of mails that are still open. Complements the provider webhook, which is not reachable in local development. */
+  syncMailLogStates: MailLogSyncModel;
   /** Sends a test email for the given event */
   testSystemMail: Scalars['Boolean'];
   /** Triggers a mailchimp sync in the background. */
@@ -3182,6 +3192,11 @@ export type MutationSendTestMailTemplateArgs = {
 
 export type MutationSendWebsiteLoginArgs = {
   email: Scalars['String'];
+};
+
+
+export type MutationSyncMailLogStatesArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -7737,6 +7752,13 @@ export type MarkInvoiceAsPaidMutationVariables = Exact<{
 export type MarkInvoiceAsPaidMutation = { __typename?: 'Mutation', markInvoiceAsPaid: { __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> } };
 
 export type FullMailLogFragment = { __typename?: 'MailLogModel', id: string, createdAt: string, sentDate: string, state: MailLogState, type?: MailLogType | null, subject?: string | null, error?: string | null, mailProviderID: string, mailSendJobId?: string | null, recipient: { __typename?: 'MailLogRecipient', id: string, email: string, name: string, firstName?: string | null }, mailTemplate: { __typename?: 'MailLogTemplate', id: string, name: string } };
+
+export type SyncMailLogStatesMutationVariables = Exact<{
+  limit?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type SyncMailLogStatesMutation = { __typename?: 'Mutation', syncMailLogStates: { __typename?: 'MailLogSyncModel', checked: number, updated: number } };
 
 export type MailLogsQueryVariables = Exact<{
   filter?: InputMaybe<MailLogFilter>;
@@ -14711,6 +14733,40 @@ export function useMarkInvoiceAsPaidMutation(baseOptions?: Apollo.MutationHookOp
 export type MarkInvoiceAsPaidMutationHookResult = ReturnType<typeof useMarkInvoiceAsPaidMutation>;
 export type MarkInvoiceAsPaidMutationResult = Apollo.MutationResult<MarkInvoiceAsPaidMutation>;
 export type MarkInvoiceAsPaidMutationOptions = Apollo.BaseMutationOptions<MarkInvoiceAsPaidMutation, MarkInvoiceAsPaidMutationVariables>;
+export const SyncMailLogStatesDocument = gql`
+    mutation SyncMailLogStates($limit: Int) {
+  syncMailLogStates(limit: $limit) {
+    checked
+    updated
+  }
+}
+    `;
+export type SyncMailLogStatesMutationFn = Apollo.MutationFunction<SyncMailLogStatesMutation, SyncMailLogStatesMutationVariables>;
+
+/**
+ * __useSyncMailLogStatesMutation__
+ *
+ * To run a mutation, you first call `useSyncMailLogStatesMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSyncMailLogStatesMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [syncMailLogStatesMutation, { data, loading, error }] = useSyncMailLogStatesMutation({
+ *   variables: {
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useSyncMailLogStatesMutation(baseOptions?: Apollo.MutationHookOptions<SyncMailLogStatesMutation, SyncMailLogStatesMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SyncMailLogStatesMutation, SyncMailLogStatesMutationVariables>(SyncMailLogStatesDocument, options);
+      }
+export type SyncMailLogStatesMutationHookResult = ReturnType<typeof useSyncMailLogStatesMutation>;
+export type SyncMailLogStatesMutationResult = Apollo.MutationResult<SyncMailLogStatesMutation>;
+export type SyncMailLogStatesMutationOptions = Apollo.BaseMutationOptions<SyncMailLogStatesMutation, SyncMailLogStatesMutationVariables>;
 export const MailLogsDocument = gql`
     query MailLogs($filter: MailLogFilter, $skip: Int, $take: Int) {
   mailLogs(filter: $filter, skip: $skip, take: $take) {

@@ -1715,6 +1715,14 @@ export enum MailLogState {
   Submitted = 'submitted'
 }
 
+export type MailLogSyncModel = {
+  __typename?: 'MailLogSyncModel';
+  /** Mails that were still in an open state and could be looked up at the provider. */
+  checked: Scalars['Int'];
+  /** Mails whose state the provider reported differently. */
+  updated: Scalars['Int'];
+};
+
 export type MailLogTemplate = {
   __typename?: 'MailLogTemplate';
   id: Scalars['String'];
@@ -2281,6 +2289,8 @@ export type Mutation = {
   sendTestMailTemplate?: Maybe<Scalars['Boolean']>;
   /** This mutation sends a login link to the email if the user exists. Method will always return email address */
   sendWebsiteLogin: Scalars['String'];
+  /** Ask the mail provider for the current delivery state of mails that are still open. Complements the provider webhook, which is not reachable in local development. */
+  syncMailLogStates: MailLogSyncModel;
   /** Sends a test email for the given event */
   testSystemMail: Scalars['Boolean'];
   /** Triggers a mailchimp sync in the background. */
@@ -3182,6 +3192,11 @@ export type MutationSendTestMailTemplateArgs = {
 
 export type MutationSendWebsiteLoginArgs = {
   email: Scalars['String'];
+};
+
+
+export type MutationSyncMailLogStatesArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
 };
 
 

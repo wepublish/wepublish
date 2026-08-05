@@ -1639,6 +1639,16 @@ enum MailLogState {
   submitted
 }
 
+type MailLogSyncModel {
+  """
+  Mails that were still in an open state and could be looked up at the provider.
+  """
+  checked: Int!
+
+  """Mails whose state the provider reported differently."""
+  updated: Int!
+}
+
 type MailLogTemplate {
   id: String!
   name: String!
@@ -2378,6 +2388,11 @@ type Mutation {
   This mutation sends a login link to the email if the user exists. Method will always return email address
   """
   sendWebsiteLogin(email: String!): String!
+
+  """
+  Ask the mail provider for the current delivery state of mails that are still open. Complements the provider webhook, which is not reachable in local development.
+  """
+  syncMailLogStates(limit: Int): MailLogSyncModel!
 
   """Sends a test email for the given event"""
   testSystemMail(event: UserEvent!): Boolean!
