@@ -1658,23 +1658,9 @@ export enum LoginStatus {
   Unsubscribed = 'UNSUBSCRIBED'
 }
 
-export type MailPlaceholderGroupModel = {
-  __typename?: 'MailPlaceholderGroupModel';
-  event: Scalars['String'];
-  placeholders: Array<MailPlaceholderModel>;
-};
-
-export type MailPlaceholderModel = {
-  __typename?: 'MailPlaceholderModel';
-  example: Scalars['String'];
-  key: Scalars['String'];
-};
-
 export type MailProviderModel = {
   __typename?: 'MailProviderModel';
   name: Scalars['String'];
-  /** Provider type (e.g. MAILCHIMP, MAILGUN, SLACK) */
-  type?: Maybe<Scalars['String']>;
 };
 
 export enum MailProviderType {
@@ -1683,36 +1669,14 @@ export enum MailProviderType {
   Slack = 'SLACK'
 }
 
-export type MailTemplateContentModel = {
-  __typename?: 'MailTemplateContentModel';
-  html: Scalars['String'];
-  subject?: Maybe<Scalars['String']>;
-};
-
-export type MailTemplateCreateInput = {
-  description?: InputMaybe<Scalars['String']>;
-  html: Scalars['String'];
-  name: Scalars['String'];
-  subject?: InputMaybe<Scalars['String']>;
-};
-
 export type MailTemplateRef = {
   __typename?: 'MailTemplateRef';
   id: Scalars['String'];
   name: Scalars['String'];
 };
 
-export type MailTemplateUpdateInput = {
-  description?: InputMaybe<Scalars['String']>;
-  html: Scalars['String'];
-  name: Scalars['String'];
-  subject?: InputMaybe<Scalars['String']>;
-};
-
 export type MailTemplateWithUrlAndStatusModel = {
   __typename?: 'MailTemplateWithUrlAndStatusModel';
-  /** HTML content of the template fetched from the mail provider */
-  content: MailTemplateContentModel;
   description?: Maybe<Scalars['String']>;
   externalMailTemplateId: Scalars['String'];
   id: Scalars['String'];
@@ -1873,7 +1837,6 @@ export type Mutation = {
   createJWTForUser: SessionWithToken;
   /** Returns a JWT that is valid for 1min for the current logged in user. */
   createJWTForWebsiteLogin: SessionWithToken;
-  createMailTemplate: MailTemplateWithUrlAndStatusModel;
   /** Creates a new memberplan. */
   createMemberPlan: MemberPlan;
   /** Creates a new navigation. */
@@ -1955,7 +1918,6 @@ export type Mutation = {
   deleteImage: Scalars['String'];
   /** Deletes an existing invoice. */
   deleteInvoice: Invoice;
-  deleteMailTemplate: MailTemplateWithUrlAndStatusModel;
   /** Deletes a single sync error so the contact will be retried. */
   deleteMailchimpSyncError: Scalars['Boolean'];
   /** Deletes an existing memberplan. */
@@ -2116,7 +2078,6 @@ export type Mutation = {
   updateInvoice: Invoice;
   /** Updates an existing mail provider setting. */
   updateMailProviderSetting: SettingMailProvider;
-  updateMailTemplate: MailTemplateWithUrlAndStatusModel;
   /** Updates an existing memberplan. */
   updateMemberPlan: MemberPlan;
   /** Updates an existing navigation. */
@@ -2330,11 +2291,6 @@ export type MutationCreateInvoiceArgs = {
 export type MutationCreateJwtForUserArgs = {
   expiresInMinutes: Scalars['Float'];
   userId: Scalars['String'];
-};
-
-
-export type MutationCreateMailTemplateArgs = {
-  input: MailTemplateCreateInput;
 };
 
 
@@ -2651,11 +2607,6 @@ export type MutationDeleteImageArgs = {
 
 export type MutationDeleteInvoiceArgs = {
   id: Scalars['String'];
-};
-
-
-export type MutationDeleteMailTemplateArgs = {
-  id: Scalars['ID'];
 };
 
 
@@ -3153,12 +3104,6 @@ export type MutationUpdateMailProviderSettingArgs = {
   replyToAddress?: InputMaybe<Scalars['String']>;
   slack_webhookURL?: InputMaybe<Scalars['String']>;
   webhookEndpointSecret?: InputMaybe<Scalars['String']>;
-};
-
-
-export type MutationUpdateMailTemplateArgs = {
-  id: Scalars['ID'];
-  input: MailTemplateUpdateInput;
 };
 
 
@@ -4457,10 +4402,6 @@ export type Query = {
   mailProviderSetting: SettingMailProvider;
   /** Returns all mail provider settings. */
   mailProviderSettings: Array<SettingMailProvider>;
-  /** Return a single mail template */
-  mailTemplate: MailTemplateWithUrlAndStatusModel;
-  /** Return all available mail placeholders grouped by event */
-  mailTemplatePlaceholders: Array<MailPlaceholderGroupModel>;
   /** Return all mail templates */
   mailTemplates: Array<MailTemplateWithUrlAndStatusModel>;
   /** Fetches available interest groups for a Mailchimp list. */
@@ -4893,11 +4834,6 @@ export type QueryMailProviderSettingArgs = {
 
 export type QueryMailProviderSettingsArgs = {
   filter?: InputMaybe<SettingMailProviderFilter>;
-};
-
-
-export type QueryMailTemplateArgs = {
-  id: Scalars['ID'];
 };
 
 
@@ -7387,50 +7323,16 @@ export type MarkInvoiceAsPaidMutation = { __typename?: 'Mutation', markInvoiceAs
 export type MailTemplateQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MailTemplateQuery = { __typename?: 'Query', mailTemplates: Array<{ __typename?: 'MailTemplateWithUrlAndStatusModel', id: string, name: string, description?: string | null, externalMailTemplateId: string, remoteMissing: boolean, url: string, status: string }>, provider: { __typename?: 'MailProviderModel', name: string, type?: string | null } };
-
-export type MailTemplateContentQueryVariables = Exact<{
-  id: Scalars['ID'];
-}>;
-
-
-export type MailTemplateContentQuery = { __typename?: 'Query', mailTemplate: { __typename?: 'MailTemplateWithUrlAndStatusModel', id: string, name: string, description?: string | null, externalMailTemplateId: string, remoteMissing: boolean, url: string, status: string, content: { __typename?: 'MailTemplateContentModel', html: string, subject?: string | null } } };
-
-export type MailTemplatePlaceholdersQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type MailTemplatePlaceholdersQuery = { __typename?: 'Query', mailTemplatePlaceholders: Array<{ __typename?: 'MailPlaceholderGroupModel', event: string, placeholders: Array<{ __typename?: 'MailPlaceholderModel', key: string, example: string }> }> };
+export type MailTemplateQuery = { __typename?: 'Query', mailTemplates: Array<{ __typename?: 'MailTemplateWithUrlAndStatusModel', id: string, name: string, description?: string | null, externalMailTemplateId: string, remoteMissing: boolean, url: string, status: string }>, provider: { __typename?: 'MailProviderModel', name: string } };
 
 export type SynchronizeMailTemplatesMutationVariables = Exact<{ [key: string]: never; }>;
 
 
 export type SynchronizeMailTemplatesMutation = { __typename?: 'Mutation', syncTemplates?: boolean | null };
 
-export type CreateMailTemplateMutationVariables = Exact<{
-  input: MailTemplateCreateInput;
-}>;
-
-
-export type CreateMailTemplateMutation = { __typename?: 'Mutation', createMailTemplate: { __typename?: 'MailTemplateWithUrlAndStatusModel', id: string, name: string, description?: string | null, externalMailTemplateId: string, remoteMissing: boolean, url: string, status: string } };
-
-export type UpdateMailTemplateMutationVariables = Exact<{
-  id: Scalars['ID'];
-  input: MailTemplateUpdateInput;
-}>;
-
-
-export type UpdateMailTemplateMutation = { __typename?: 'Mutation', updateMailTemplate: { __typename?: 'MailTemplateWithUrlAndStatusModel', id: string, name: string, description?: string | null, externalMailTemplateId: string, remoteMissing: boolean, url: string, status: string } };
-
-export type DeleteMailTemplateMutationVariables = Exact<{
-  id: Scalars['ID'];
-}>;
-
-
-export type DeleteMailTemplateMutation = { __typename?: 'Mutation', deleteMailTemplate: { __typename?: 'MailTemplateWithUrlAndStatusModel', id: string } };
-
 export type FullMailTemplateFragment = { __typename?: 'MailTemplateWithUrlAndStatusModel', id: string, name: string, description?: string | null, externalMailTemplateId: string, remoteMissing: boolean, url: string, status: string };
 
-export type FullMailProviderFragment = { __typename?: 'MailProviderModel', name: string, type?: string | null };
+export type FullMailProviderFragment = { __typename?: 'MailProviderModel', name: string };
 
 export type FullAvailablePaymentMethodFragment = { __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> };
 
@@ -10010,7 +9912,6 @@ export const FullMailTemplateFragmentDoc = gql`
 export const FullMailProviderFragmentDoc = gql`
     fragment FullMailProvider on MailProviderModel {
   name
-  type
 }
     `;
 export const SlimNavigationFragmentDoc = gql`
@@ -14240,83 +14141,6 @@ export function useMailTemplateLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
 export type MailTemplateQueryHookResult = ReturnType<typeof useMailTemplateQuery>;
 export type MailTemplateLazyQueryHookResult = ReturnType<typeof useMailTemplateLazyQuery>;
 export type MailTemplateQueryResult = Apollo.QueryResult<MailTemplateQuery, MailTemplateQueryVariables>;
-export const MailTemplateContentDocument = gql`
-    query MailTemplateContent($id: ID!) {
-  mailTemplate(id: $id) {
-    ...FullMailTemplate
-    content {
-      html
-      subject
-    }
-  }
-}
-    ${FullMailTemplateFragmentDoc}`;
-
-/**
- * __useMailTemplateContentQuery__
- *
- * To run a query within a React component, call `useMailTemplateContentQuery` and pass it any options that fit your needs.
- * When your component renders, `useMailTemplateContentQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useMailTemplateContentQuery({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useMailTemplateContentQuery(baseOptions: Apollo.QueryHookOptions<MailTemplateContentQuery, MailTemplateContentQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<MailTemplateContentQuery, MailTemplateContentQueryVariables>(MailTemplateContentDocument, options);
-      }
-export function useMailTemplateContentLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MailTemplateContentQuery, MailTemplateContentQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<MailTemplateContentQuery, MailTemplateContentQueryVariables>(MailTemplateContentDocument, options);
-        }
-export type MailTemplateContentQueryHookResult = ReturnType<typeof useMailTemplateContentQuery>;
-export type MailTemplateContentLazyQueryHookResult = ReturnType<typeof useMailTemplateContentLazyQuery>;
-export type MailTemplateContentQueryResult = Apollo.QueryResult<MailTemplateContentQuery, MailTemplateContentQueryVariables>;
-export const MailTemplatePlaceholdersDocument = gql`
-    query MailTemplatePlaceholders {
-  mailTemplatePlaceholders {
-    event
-    placeholders {
-      key
-      example
-    }
-  }
-}
-    `;
-
-/**
- * __useMailTemplatePlaceholdersQuery__
- *
- * To run a query within a React component, call `useMailTemplatePlaceholdersQuery` and pass it any options that fit your needs.
- * When your component renders, `useMailTemplatePlaceholdersQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useMailTemplatePlaceholdersQuery({
- *   variables: {
- *   },
- * });
- */
-export function useMailTemplatePlaceholdersQuery(baseOptions?: Apollo.QueryHookOptions<MailTemplatePlaceholdersQuery, MailTemplatePlaceholdersQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<MailTemplatePlaceholdersQuery, MailTemplatePlaceholdersQueryVariables>(MailTemplatePlaceholdersDocument, options);
-      }
-export function useMailTemplatePlaceholdersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MailTemplatePlaceholdersQuery, MailTemplatePlaceholdersQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<MailTemplatePlaceholdersQuery, MailTemplatePlaceholdersQueryVariables>(MailTemplatePlaceholdersDocument, options);
-        }
-export type MailTemplatePlaceholdersQueryHookResult = ReturnType<typeof useMailTemplatePlaceholdersQuery>;
-export type MailTemplatePlaceholdersLazyQueryHookResult = ReturnType<typeof useMailTemplatePlaceholdersLazyQuery>;
-export type MailTemplatePlaceholdersQueryResult = Apollo.QueryResult<MailTemplatePlaceholdersQuery, MailTemplatePlaceholdersQueryVariables>;
 export const SynchronizeMailTemplatesDocument = gql`
     mutation SynchronizeMailTemplates {
   syncTemplates
@@ -14347,106 +14171,6 @@ export function useSynchronizeMailTemplatesMutation(baseOptions?: Apollo.Mutatio
 export type SynchronizeMailTemplatesMutationHookResult = ReturnType<typeof useSynchronizeMailTemplatesMutation>;
 export type SynchronizeMailTemplatesMutationResult = Apollo.MutationResult<SynchronizeMailTemplatesMutation>;
 export type SynchronizeMailTemplatesMutationOptions = Apollo.BaseMutationOptions<SynchronizeMailTemplatesMutation, SynchronizeMailTemplatesMutationVariables>;
-export const CreateMailTemplateDocument = gql`
-    mutation CreateMailTemplate($input: MailTemplateCreateInput!) {
-  createMailTemplate(input: $input) {
-    ...FullMailTemplate
-  }
-}
-    ${FullMailTemplateFragmentDoc}`;
-export type CreateMailTemplateMutationFn = Apollo.MutationFunction<CreateMailTemplateMutation, CreateMailTemplateMutationVariables>;
-
-/**
- * __useCreateMailTemplateMutation__
- *
- * To run a mutation, you first call `useCreateMailTemplateMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateMailTemplateMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createMailTemplateMutation, { data, loading, error }] = useCreateMailTemplateMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useCreateMailTemplateMutation(baseOptions?: Apollo.MutationHookOptions<CreateMailTemplateMutation, CreateMailTemplateMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateMailTemplateMutation, CreateMailTemplateMutationVariables>(CreateMailTemplateDocument, options);
-      }
-export type CreateMailTemplateMutationHookResult = ReturnType<typeof useCreateMailTemplateMutation>;
-export type CreateMailTemplateMutationResult = Apollo.MutationResult<CreateMailTemplateMutation>;
-export type CreateMailTemplateMutationOptions = Apollo.BaseMutationOptions<CreateMailTemplateMutation, CreateMailTemplateMutationVariables>;
-export const UpdateMailTemplateDocument = gql`
-    mutation UpdateMailTemplate($id: ID!, $input: MailTemplateUpdateInput!) {
-  updateMailTemplate(id: $id, input: $input) {
-    ...FullMailTemplate
-  }
-}
-    ${FullMailTemplateFragmentDoc}`;
-export type UpdateMailTemplateMutationFn = Apollo.MutationFunction<UpdateMailTemplateMutation, UpdateMailTemplateMutationVariables>;
-
-/**
- * __useUpdateMailTemplateMutation__
- *
- * To run a mutation, you first call `useUpdateMailTemplateMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateMailTemplateMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updateMailTemplateMutation, { data, loading, error }] = useUpdateMailTemplateMutation({
- *   variables: {
- *      id: // value for 'id'
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useUpdateMailTemplateMutation(baseOptions?: Apollo.MutationHookOptions<UpdateMailTemplateMutation, UpdateMailTemplateMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateMailTemplateMutation, UpdateMailTemplateMutationVariables>(UpdateMailTemplateDocument, options);
-      }
-export type UpdateMailTemplateMutationHookResult = ReturnType<typeof useUpdateMailTemplateMutation>;
-export type UpdateMailTemplateMutationResult = Apollo.MutationResult<UpdateMailTemplateMutation>;
-export type UpdateMailTemplateMutationOptions = Apollo.BaseMutationOptions<UpdateMailTemplateMutation, UpdateMailTemplateMutationVariables>;
-export const DeleteMailTemplateDocument = gql`
-    mutation DeleteMailTemplate($id: ID!) {
-  deleteMailTemplate(id: $id) {
-    id
-  }
-}
-    `;
-export type DeleteMailTemplateMutationFn = Apollo.MutationFunction<DeleteMailTemplateMutation, DeleteMailTemplateMutationVariables>;
-
-/**
- * __useDeleteMailTemplateMutation__
- *
- * To run a mutation, you first call `useDeleteMailTemplateMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useDeleteMailTemplateMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [deleteMailTemplateMutation, { data, loading, error }] = useDeleteMailTemplateMutation({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useDeleteMailTemplateMutation(baseOptions?: Apollo.MutationHookOptions<DeleteMailTemplateMutation, DeleteMailTemplateMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeleteMailTemplateMutation, DeleteMailTemplateMutationVariables>(DeleteMailTemplateDocument, options);
-      }
-export type DeleteMailTemplateMutationHookResult = ReturnType<typeof useDeleteMailTemplateMutation>;
-export type DeleteMailTemplateMutationResult = Apollo.MutationResult<DeleteMailTemplateMutation>;
-export type DeleteMailTemplateMutationOptions = Apollo.BaseMutationOptions<DeleteMailTemplateMutation, DeleteMailTemplateMutationVariables>;
 export const MemberPlanListDocument = gql`
     query MemberPlanList($filter: MemberPlanFilter, $cursorId: String, $take: Int, $skip: Int, $order: SortOrder, $sort: MemberPlanSort) {
   memberPlans(

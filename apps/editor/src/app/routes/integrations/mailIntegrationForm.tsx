@@ -7,19 +7,11 @@ import {
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 
-import mandrillLogo from './assets/mandrill.svg';
+import mailChimpLogo from './assets/mailchimp.webp';
 import mailgunLogo from './assets/mailgun.svg';
 import slackLogo from './assets/slack.webp';
 import { FieldDefinition } from './genericIntegrationForm';
 import { GenericIntegrationList } from './genericIntegrationList';
-
-// The transactional mail provider is Mandrill (Mailchimp Transactional); show
-// a friendly label instead of the raw enum value.
-const MAIL_PROVIDER_TYPE_LABELS: Record<string, string> = {
-  [MailProviderType.Mailchimp]: 'Mandrill',
-  [MailProviderType.Mailgun]: 'Mailgun',
-  [MailProviderType.Slack]: 'Slack',
-};
 
 const mailSettingsSchema = z.object({
   name: z.string().nullish().or(z.literal('')),
@@ -53,7 +45,7 @@ export function MailIntegrationForm() {
       getLogo={setting => {
         switch (setting.type) {
           case MailProviderType.Mailchimp:
-            return mandrillLogo;
+            return mailChimpLogo;
           case MailProviderType.Mailgun:
             return mailgunLogo;
           case MailProviderType.Slack:
@@ -69,7 +61,7 @@ export function MailIntegrationForm() {
             label: t('integrations.mailSettings.type'),
             type: 'select',
             options: Object.values(MailProviderType).map(v => ({
-              label: MAIL_PROVIDER_TYPE_LABELS[v] ?? v,
+              label: v,
               value: v,
             })),
             disabled: true,
