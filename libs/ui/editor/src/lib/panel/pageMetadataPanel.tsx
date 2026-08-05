@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { FullImageFragment, Tag, TagType } from '@wepublish/editor/api';
-import { useEffect, useState } from 'react';
+import { SetStateAction, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdListAlt, MdSettings, MdShare } from 'react-icons/md';
 import {
@@ -18,15 +18,15 @@ import {
 import {
   ChooseEditImage,
   createCheckedPermissionComponent,
+  DeferredTextField,
   ListInput,
   ListValue,
   PermissionControl,
   SelectTags,
-  Textarea,
   useAuthorisation,
 } from '../atoms';
 import { MetaDataType } from '../blocks';
-import { generateID } from '../utility';
+import { generateID, isFunctionalUpdate } from '../utility';
 import { ImageEditPanel } from './imageEditPanel';
 import { ImageSelectPanel } from './imageSelectPanel';
 
@@ -130,14 +130,25 @@ function PageMetadataPanel({
 
   const { t } = useTranslation();
 
-  useEffect(() => {
-    if (metaDataProperties) {
+  const handleMetadataPropertiesChange = useCallback(
+    (updatedProperties: SetStateAction<ListValue<PageMetadataProperty>[]>) => {
+      const nextProperties =
+        (
+          isFunctionalUpdate<ListValue<PageMetadataProperty>[]>(
+            updatedProperties
+          )
+        ) ?
+          updatedProperties(metaDataProperties)
+        : updatedProperties;
+
+      setMetadataProperties(nextProperties);
       onChange?.({
         ...value,
-        properties: metaDataProperties.map(({ value }) => value),
+        properties: nextProperties.map(({ value }) => value),
       });
-    }
-  }, [metaDataProperties, onChange, value]);
+    },
+    [metaDataProperties, onChange, value]
+  );
 
   function handleImageChange(currentImage: FullImageFragment) {
     switch (activeKey) {
@@ -172,31 +183,28 @@ function PageMetadataPanel({
               </Message>
             </Form.Group>
 
-            <Form.Group controlId="socialMediaTitle">
-              <Form.Label>{t('pageEditor.panels.socialMediaTitle')}</Form.Label>
-              <Form.Control
-                name="social-media-title"
-                value={socialMediaTitle}
-                onChange={(socialMediaTitle: string) => {
-                  onChange?.({ ...value, socialMediaTitle });
-                }}
-              />
-            </Form.Group>
+            <DeferredTextField
+              controlId="socialMediaTitle"
+              name="social-media-title"
+              label={t('pageEditor.panels.socialMediaTitle')}
+              disabled={!isAuthorized}
+              value={socialMediaTitle}
+              onChange={socialMediaTitle =>
+                onChange?.({ ...value, socialMediaTitle })
+              }
+            />
 
-            <Form.Group controlId="socialMediaDescription">
-              <Form.Label>
-                {t('pageEditor.panels.socialMediaDescription')}
-              </Form.Label>
-              <Form.Control
-                name="social-media-description"
-                rows={5}
-                accepter={Textarea}
-                value={socialMediaDescription}
-                onChange={(socialMediaDescription: string) => {
-                  onChange?.({ ...value, socialMediaDescription });
-                }}
-              />
-            </Form.Group>
+            <DeferredTextField
+              controlId="socialMediaDescription"
+              name="social-media-description"
+              label={t('pageEditor.panels.socialMediaDescription')}
+              disabled={!isAuthorized}
+              rows={5}
+              value={socialMediaDescription}
+              onChange={socialMediaDescription =>
+                onChange?.({ ...value, socialMediaDescription })
+              }
+            />
 
             <Form.Group controlId="socialMediaImage">
               <Form.Label>{t('pageEditor.panels.socialMediaImage')}</Form.Label>
@@ -220,39 +228,35 @@ function PageMetadataPanel({
       case MetaDataType.General:
         return (
           <Form.Stack fluid>
-            <Form.Group controlId="pageSlug">
-              <Form.Label>{t('pageEditor.panels.slug')}</Form.Label>
-              <Form.Control
-                name="slug"
-                value={slug}
-                onChange={(slug: string) => onChange?.({ ...value, slug })}
-              />
-            </Form.Group>
+            <DeferredTextField
+              controlId="pageSlug"
+              name="slug"
+              label={t('pageEditor.panels.slug')}
+              disabled={!isAuthorized}
+              value={slug}
+              onChange={slug => onChange?.({ ...value, slug })}
+            />
 
-            <Form.Group controlId="pageTitle">
-              <Form.Label>{t('pageEditor.panels.title')}</Form.Label>
-              <Form.Control
-                name="title"
-                value={title}
-                onChange={(title: string) => onChange?.({ ...value, title })}
-              />
-              <Form.Text>{t('pageEditor.panels.titleHelpBlock')}</Form.Text>
-            </Form.Group>
+            <DeferredTextField
+              controlId="pageTitle"
+              name="title"
+              label={t('pageEditor.panels.title')}
+              disabled={!isAuthorized}
+              value={title}
+              helpText={t('pageEditor.panels.titleHelpBlock')}
+              onChange={title => onChange?.({ ...value, title })}
+            />
 
-            <Form.Group controlId="pageDescription">
-              <Form.Label>{t('pageEditor.panels.description')}</Form.Label>
-              <Form.Control
-                name="description"
-                accepter={Textarea}
-                value={description}
-                onChange={(description: string) =>
-                  onChange?.({ ...value, description })
-                }
-              />
-              <Form.Text>
-                {t('pageEditor.panels.descriptionHelpBlock')}
-              </Form.Text>
-            </Form.Group>
+            <DeferredTextField
+              controlId="pageDescription"
+              name="description"
+              label={t('pageEditor.panels.description')}
+              disabled={!isAuthorized}
+              multiline
+              value={description}
+              helpText={t('pageEditor.panels.descriptionHelpBlock')}
+              onChange={description => onChange?.({ ...value, description })}
+            />
 
             <Form.Group controlId="pageTags">
               <Form.Label>{t('pageEditor.panels.tags')}</Form.Label>
@@ -313,7 +317,7 @@ function PageMetadataPanel({
                 disabled={!isAuthorized}
                 value={metaDataProperties}
                 onChange={propertiesItemInput =>
-                  setMetadataProperties(propertiesItemInput)
+                  handleMetadataPropertiesChange(propertiesItemInput)
                 }
                 defaultValue={{ key: '', value: '', public: true }}
               >
