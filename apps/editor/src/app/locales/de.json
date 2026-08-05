@@ -2568,8 +2568,27 @@
       "noTemplate": "Keine Vorlage (nicht senden)"
     },
     "mailSend": {
+      "steps": {
+        "audience": {
+          "title": "Empfänger wählen",
+          "description": "Empfängergruppe und Filter"
+        },
+        "content": {
+          "title": "E-Mail-Inhalt",
+          "description": "Vorlage und Vorschau"
+        },
+        "send": {
+          "title": "E-Mail senden",
+          "description": "Prüfen und absenden"
+        }
+      },
+      "back": "Zurück",
+      "next": "Weiter",
+      "selectTemplateHint": "Wähle eine Vorlage, um die Vorschau zu sehen.",
+      "summary": {
+        "title": "Zusammenfassung"
+      },
       "title": "E-Mail senden",
-      "description": "Sende eine E-Mail-Vorlage an eine ausgewählte Empfängergruppe. Der Versand läuft im Hintergrund.",
       "template": "E-Mail-Vorlage",
       "selectTemplate": "Vorlage auswählen",
       "audience": {
@@ -2627,6 +2646,7 @@
       },
       "missingPlaceholders": "Achtung: Diese Platzhalter werden für diese Empfänger nicht gefüllt: {{placeholders}}",
       "createTemplate": "Neue Vorlage",
+      "editTemplate": "Vorlage bearbeiten",
       "showRecipients": "Empfänger anzeigen",
       "recipientList": {
         "title": "Empfänger ({{count}})",
@@ -2644,7 +2664,16 @@
         "days": "Tage",
         "periodPlaceholder": "Von – bis wählen",
         "periodHint": "Nur Abos, die zwischen diesen beiden Daten deaktiviert wurden."
-      }
+      },
+      "preview": {
+        "title": "Vorschau",
+        "recipient": "Vorschau für",
+        "firstRecipient": "Erste:r Empfänger:in",
+        "hint": "So sieht die Mail für diese Person aus – mit ihren echten Daten.",
+        "loading": "Vorschau wird geladen …",
+        "noRecipients": "Keine Empfänger:innen – bitte zuerst die Empfängergruppe anpassen."
+      },
+      "recipientsCountPerPerson": "{{count}} Mails an {{people}} Personen"
     },
     "mailLog": {
       "title": "Gesendete E-Mails",

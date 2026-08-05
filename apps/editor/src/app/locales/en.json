@@ -2622,8 +2622,27 @@
       }
     },
     "mailSend": {
+      "steps": {
+        "audience": {
+          "title": "Choose recipients",
+          "description": "Audience and filters"
+        },
+        "content": {
+          "title": "Mail content",
+          "description": "Template and preview"
+        },
+        "send": {
+          "title": "Send email",
+          "description": "Review and send"
+        }
+      },
+      "back": "Back",
+      "next": "Next",
+      "selectTemplateHint": "Select a template to see the preview.",
+      "summary": {
+        "title": "Summary"
+      },
       "title": "Send email",
-      "description": "Send a mail template to a chosen audience. Sending runs in the background.",
       "template": "Mail template",
       "selectTemplate": "Select template",
       "audience": {
@@ -2681,6 +2700,7 @@
       },
       "missingPlaceholders": "Heads up: these placeholders won't be filled for these recipients: {{placeholders}}",
       "createTemplate": "New template",
+      "editTemplate": "Edit template",
       "showRecipients": "Show recipients",
       "recipientList": {
         "title": "Recipients ({{count}})",
@@ -2698,7 +2718,16 @@
         "days": "days",
         "periodPlaceholder": "Pick from – to",
         "periodHint": "Only subscriptions deactivated between these two dates."
-      }
+      },
+      "preview": {
+        "title": "Preview",
+        "recipient": "Preview for",
+        "firstRecipient": "First recipient",
+        "hint": "How the mail looks for this person — with their real data.",
+        "loading": "Loading preview …",
+        "noRecipients": "No recipients — adjust the audience first."
+      },
+      "recipientsCountPerPerson": "{{count}} mails to {{people}} people"
     },
     "mailLog": {
       "title": "Sent emails",

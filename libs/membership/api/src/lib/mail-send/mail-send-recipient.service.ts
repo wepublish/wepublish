@@ -69,6 +69,37 @@ export class MailSendRecipientService {
     }
   }
 
+  /**
+   * How many distinct people the audience reaches. Differs from {@link count}
+   * for subscription-based audiences, where someone with two matching
+   * subscriptions is two recipients — and receives two mails.
+   */
+  async countUsers(audience: MailAudienceInput): Promise<number> {
+    switch (audience.base) {
+      case MailRecipientBase.allUsers:
+        return this.prisma.user.count();
+
+      case MailRecipientBase.noActiveSubscription:
+        return this.prisma.user.count({
+          where: this.buildNoActiveSubscriptionWhere(),
+        });
+
+      case MailRecipientBase.hasSubscription:
+        return this.prisma.user.count({
+          where: {
+            subscriptions: { some: this.buildSubscriptionWhere(audience) },
+          },
+        });
+
+      case MailRecipientBase.endedSubscription:
+        return this.prisma.user.count({
+          where: {
+            subscriptions: { some: this.buildEndedSubscriptionWhere(audience) },
+          },
+        });
+    }
+  }
+
   async resolvePage(
     audience: MailAudienceInput,
     skip: number,

@@ -19,9 +19,11 @@ const makeResolver = (
   );
 
 describe('MailSendResolver', () => {
-  it('mailSendRecipientPreview returns count and template-eligibility', async () => {
+  it('mailSendRecipientPreview returns both counts and template-eligibility', async () => {
+    // Twelve mails, ten people: two of them match through a second subscription.
     const recipientService = {
       count: jest.fn(async () => 12),
+      countUsers: jest.fn(async () => 10),
       allowsSubscriptionTemplates: jest.fn(() => true),
     };
 
@@ -31,7 +33,11 @@ describe('MailSendResolver', () => {
       recipientService
     ).mailSendRecipientPreview({ base: MailRecipientBase.hasSubscription });
 
-    expect(preview).toEqual({ count: 12, allowsSubscriptionTemplates: true });
+    expect(preview).toEqual({
+      count: 12,
+      userCount: 10,
+      allowsSubscriptionTemplates: true,
+    });
   });
 
   it('sendMailTemplateToUser delegates and attaches the template', async () => {

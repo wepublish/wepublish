@@ -1786,6 +1786,22 @@ export enum MailSendJobState {
   Running = 'running'
 }
 
+export type MailSendPreviewInput = {
+  audience: MailAudienceInput;
+  mailTemplateId: Scalars['String'];
+  /** Row id of the recipient to render for. Defaults to the first of the audience. */
+  recipientId?: InputMaybe<Scalars['String']>;
+};
+
+export type MailSendPreviewModel = {
+  __typename?: 'MailSendPreviewModel';
+  html: Scalars['String'];
+  /** The recipient this preview was rendered for. */
+  recipient?: Maybe<MailSendRecipientModel>;
+  subject: Scalars['String'];
+  text?: Maybe<Scalars['String']>;
+};
+
 export type MailSendRecipientModel = {
   __typename?: 'MailSendRecipientModel';
   email: Scalars['String'];
@@ -1804,6 +1820,8 @@ export type MailSendRecipientPreview = {
   allowsSubscriptionTemplates: Scalars['Boolean'];
   /** Number of mails that would be sent. */
   count: Scalars['Int'];
+  /** Number of distinct people reached. Lower than `count` when someone has several matching subscriptions. */
+  userCount: Scalars['Int'];
 };
 
 export enum MailSubscriptionState {
@@ -4665,6 +4683,8 @@ export type Query = {
   mailSendJob?: Maybe<MailSendJobModel>;
   /** Paginated list of mail send jobs */
   mailSendJobs: PaginatedMailSendJob;
+  /** Render a saved template for one recipient of an audience, exactly as the send would compose it */
+  mailSendPreview: MailSendPreviewModel;
   /** Preview how many recipients an audience resolves to */
   mailSendRecipientPreview: MailSendRecipientPreview;
   /** The concrete recipients an audience resolves to */
@@ -5125,6 +5145,11 @@ export type QueryMailSendJobArgs = {
 export type QueryMailSendJobsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryMailSendPreviewArgs = {
+  input: MailSendPreviewInput;
 };
 
 
@@ -7669,7 +7694,7 @@ export type MailSendRecipientPreviewQueryVariables = Exact<{
 }>;
 
 
-export type MailSendRecipientPreviewQuery = { __typename?: 'Query', mailSendRecipientPreview: { __typename?: 'MailSendRecipientPreview', count: number, allowsSubscriptionTemplates: boolean } };
+export type MailSendRecipientPreviewQuery = { __typename?: 'Query', mailSendRecipientPreview: { __typename?: 'MailSendRecipientPreview', count: number, userCount: number, allowsSubscriptionTemplates: boolean } };
 
 export type MailSendRecipientsQueryVariables = Exact<{
   audience: MailAudienceInput;
@@ -7679,6 +7704,13 @@ export type MailSendRecipientsQueryVariables = Exact<{
 
 
 export type MailSendRecipientsQuery = { __typename?: 'Query', mailSendRecipients: { __typename?: 'PaginatedMailSendRecipient', totalCount: number, nodes: Array<{ __typename?: 'MailSendRecipientModel', id: string, userId: string, email: string, name: string, firstName?: string | null, subscriptionId?: string | null, memberPlanName?: string | null }>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean } } };
+
+export type MailSendPreviewQueryVariables = Exact<{
+  input: MailSendPreviewInput;
+}>;
+
+
+export type MailSendPreviewQuery = { __typename?: 'Query', mailSendPreview: { __typename?: 'MailSendPreviewModel', subject: string, html: string, recipient?: { __typename?: 'MailSendRecipientModel', id: string, email: string, name: string, firstName?: string | null, memberPlanName?: string | null } | null } };
 
 export type MailTemplateMissingPlaceholdersQueryVariables = Exact<{
   templateId: Scalars['String'];
@@ -14641,6 +14673,7 @@ export const MailSendRecipientPreviewDocument = gql`
     query MailSendRecipientPreview($audience: MailAudienceInput!) {
   mailSendRecipientPreview(audience: $audience) {
     count
+    userCount
     allowsSubscriptionTemplates
   }
 }
@@ -14723,6 +14756,49 @@ export function useMailSendRecipientsLazyQuery(baseOptions?: Apollo.LazyQueryHoo
 export type MailSendRecipientsQueryHookResult = ReturnType<typeof useMailSendRecipientsQuery>;
 export type MailSendRecipientsLazyQueryHookResult = ReturnType<typeof useMailSendRecipientsLazyQuery>;
 export type MailSendRecipientsQueryResult = Apollo.QueryResult<MailSendRecipientsQuery, MailSendRecipientsQueryVariables>;
+export const MailSendPreviewDocument = gql`
+    query MailSendPreview($input: MailSendPreviewInput!) {
+  mailSendPreview(input: $input) {
+    subject
+    html
+    recipient {
+      id
+      email
+      name
+      firstName
+      memberPlanName
+    }
+  }
+}
+    `;
+
+/**
+ * __useMailSendPreviewQuery__
+ *
+ * To run a query within a React component, call `useMailSendPreviewQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMailSendPreviewQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMailSendPreviewQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useMailSendPreviewQuery(baseOptions: Apollo.QueryHookOptions<MailSendPreviewQuery, MailSendPreviewQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MailSendPreviewQuery, MailSendPreviewQueryVariables>(MailSendPreviewDocument, options);
+      }
+export function useMailSendPreviewLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MailSendPreviewQuery, MailSendPreviewQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MailSendPreviewQuery, MailSendPreviewQueryVariables>(MailSendPreviewDocument, options);
+        }
+export type MailSendPreviewQueryHookResult = ReturnType<typeof useMailSendPreviewQuery>;
+export type MailSendPreviewLazyQueryHookResult = ReturnType<typeof useMailSendPreviewLazyQuery>;
+export type MailSendPreviewQueryResult = Apollo.QueryResult<MailSendPreviewQuery, MailSendPreviewQueryVariables>;
 export const MailTemplateMissingPlaceholdersDocument = gql`
     query MailTemplateMissingPlaceholders($templateId: String!, $withSubscriptionData: Boolean!) {
   mailTemplateMissingPlaceholders(

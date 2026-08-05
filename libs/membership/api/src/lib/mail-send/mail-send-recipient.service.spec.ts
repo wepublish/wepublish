@@ -35,6 +35,49 @@ describe('MailSendRecipientService', () => {
     });
   });
 
+  describe('countUsers', () => {
+    it('counts users directly for the user-based audiences', async () => {
+      const prisma = { user: { count: jest.fn(async () => 14) } };
+      const service = makeService(prisma);
+
+      expect(
+        await service.countUsers({ base: MailRecipientBase.allUsers })
+      ).toBe(14);
+      expect(prisma.user.count).toHaveBeenCalledWith();
+
+      expect(
+        await service.countUsers({
+          base: MailRecipientBase.noActiveSubscription,
+        })
+      ).toBe(14);
+    });
+
+    it('counts distinct owners for a subscription audience', async () => {
+      // Someone with two matching subscriptions is two mails but one person.
+      const prisma = { user: { count: jest.fn(async () => 6) } };
+      const count = await makeService(prisma).countUsers({
+        base: MailRecipientBase.hasSubscription,
+        memberPlanIDs: ['plan-1'],
+      });
+
+      expect(count).toBe(6);
+      const where = (prisma.user.count as jest.Mock).mock.calls[0][0].where;
+      expect(where.subscriptions.some).toEqual({
+        AND: [{ memberPlanID: { in: ['plan-1'] } }],
+      });
+    });
+
+    it('counts distinct owners for the win-back audience', async () => {
+      const prisma = { user: { count: jest.fn(async () => 3) } };
+      await makeService(prisma).countUsers({
+        base: MailRecipientBase.endedSubscription,
+      });
+
+      const where = (prisma.user.count as jest.Mock).mock.calls[0][0].where;
+      expect(where.subscriptions.some.AND[0].deactivation.date).toBeDefined();
+    });
+  });
+
   describe('win-back audience (endedSubscription)', () => {
     const whereFor = async (audience: any) => {
       const prisma = { subscription: { count: jest.fn(async () => 0) } };

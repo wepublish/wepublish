@@ -8,6 +8,8 @@ import {
   MailLogFilter,
   MailSendJobInput,
   MailSendJobModel,
+  MailSendPreviewInput,
+  MailSendPreviewModel,
   MailSendRecipientPreview,
   PaginatedMailLog,
   PaginatedMailSendJob,
@@ -31,14 +33,17 @@ export class MailSendResolver {
   async mailSendRecipientPreview(
     @Args('audience') audience: MailAudienceInput
   ): Promise<MailSendRecipientPreview> {
-    const [count, allowsSubscriptionTemplates] = await Promise.all([
+    const [count, userCount] = await Promise.all([
       this.recipientService.count(audience),
-      Promise.resolve(
-        this.recipientService.allowsSubscriptionTemplates(audience)
-      ),
+      this.recipientService.countUsers(audience),
     ]);
 
-    return { count, allowsSubscriptionTemplates };
+    return {
+      count,
+      userCount,
+      allowsSubscriptionTemplates:
+        this.recipientService.allowsSubscriptionTemplates(audience),
+    };
   }
 
   @Permissions(CanSendMailTemplates)
@@ -86,6 +91,41 @@ export class MailSendResolver {
       templateId,
       withSubscriptionData
     );
+  }
+
+  @Permissions(CanSendMailTemplates)
+  @Query(() => MailSendPreviewModel, {
+    description: `Render a saved template for one recipient of an audience, exactly as the send would compose it`,
+  })
+  async mailSendPreview(
+    @Args('input') input: MailSendPreviewInput
+  ): Promise<MailSendPreviewModel> {
+    const result = await this.mailSendJobService.previewForAudience(input);
+
+    return {
+      subject: result.subject,
+      html: result.html,
+      text: result.text,
+      recipient:
+        result.recipient ?
+          {
+            id: `${result.recipient.user.id}:${
+              result.recipient.subscription?.id ?? ''
+            }`,
+            userId: result.recipient.user.id,
+            email: result.recipient.user.email,
+            name: result.recipient.user.name,
+            firstName: result.recipient.user.firstName,
+            subscriptionId: result.recipient.subscription?.id ?? null,
+            memberPlanName:
+              (
+                result.recipient.subscription?.memberPlan as
+                  | { name?: string }
+                  | undefined
+              )?.name ?? null,
+          }
+        : null,
+    };
   }
 
   @Permissions(CanSendMailTemplates)

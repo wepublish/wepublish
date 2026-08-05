@@ -19,6 +19,7 @@ fragment FullMailSendJob on MailSendJobModel {
 query MailSendRecipientPreview($audience: MailAudienceInput!) {
   mailSendRecipientPreview(audience: $audience) {
     count
+    userCount
     allowsSubscriptionTemplates
   }
 }
@@ -38,6 +39,20 @@ query MailSendRecipients($audience: MailAudienceInput!, $skip: Int, $take: Int) 
     pageInfo {
       hasNextPage
       hasPreviousPage
+    }
+  }
+}
+
+query MailSendPreview($input: MailSendPreviewInput!) {
+  mailSendPreview(input: $input) {
+    subject
+    html
+    recipient {
+      id
+      email
+      name
+      firstName
+      memberPlanName
     }
   }
 }

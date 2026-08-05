@@ -1707,6 +1707,25 @@ enum MailSendJobState {
   running
 }
 
+input MailSendPreviewInput {
+  audience: MailAudienceInput!
+  mailTemplateId: String!
+
+  """
+  Row id of the recipient to render for. Defaults to the first of the audience.
+  """
+  recipientId: String
+}
+
+type MailSendPreviewModel {
+  html: String!
+
+  """The recipient this preview was rendered for."""
+  recipient: MailSendRecipientModel
+  subject: String!
+  text: String
+}
+
 type MailSendRecipientModel {
   email: String!
   firstName: String
@@ -1729,6 +1748,11 @@ type MailSendRecipientPreview {
 
   """Number of mails that would be sent."""
   count: Int!
+
+  """
+  Number of distinct people reached. Lower than `count` when someone has several matching subscriptions.
+  """
+  userCount: Int!
 }
 
 enum MailSubscriptionState {
@@ -3415,6 +3439,11 @@ type Query {
 
   """Paginated list of mail send jobs"""
   mailSendJobs(skip: Int, take: Int): PaginatedMailSendJob!
+
+  """
+  Render a saved template for one recipient of an audience, exactly as the send would compose it
+  """
+  mailSendPreview(input: MailSendPreviewInput!): MailSendPreviewModel!
 
   """Preview how many recipients an audience resolves to"""
   mailSendRecipientPreview(audience: MailAudienceInput!): MailSendRecipientPreview!

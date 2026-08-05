@@ -1843,6 +1843,22 @@ export enum MailSendJobState {
   Running = 'running',
 }
 
+export type MailSendPreviewInput = {
+  audience: MailAudienceInput;
+  mailTemplateId: Scalars['String'];
+  /** Row id of the recipient to render for. Defaults to the first of the audience. */
+  recipientId?: InputMaybe<Scalars['String']>;
+};
+
+export type MailSendPreviewModel = {
+  __typename?: 'MailSendPreviewModel';
+  html: Scalars['String'];
+  /** The recipient this preview was rendered for. */
+  recipient?: Maybe<MailSendRecipientModel>;
+  subject: Scalars['String'];
+  text?: Maybe<Scalars['String']>;
+};
+
 export type MailSendRecipientModel = {
   __typename?: 'MailSendRecipientModel';
   email: Scalars['String'];
@@ -1861,6 +1877,8 @@ export type MailSendRecipientPreview = {
   allowsSubscriptionTemplates: Scalars['Boolean'];
   /** Number of mails that would be sent. */
   count: Scalars['Int'];
+  /** Number of distinct people reached. Lower than `count` when someone has several matching subscriptions. */
+  userCount: Scalars['Int'];
 };
 
 export enum MailSubscriptionState {
@@ -4567,6 +4585,8 @@ export type Query = {
   mailSendJob?: Maybe<MailSendJobModel>;
   /** Paginated list of mail send jobs */
   mailSendJobs: PaginatedMailSendJob;
+  /** Render a saved template for one recipient of an audience, exactly as the send would compose it */
+  mailSendPreview: MailSendPreviewModel;
   /** Preview how many recipients an audience resolves to */
   mailSendRecipientPreview: MailSendRecipientPreview;
   /** The concrete recipients an audience resolves to */
@@ -4983,6 +5003,10 @@ export type QueryMailSendJobArgs = {
 export type QueryMailSendJobsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   take?: InputMaybe<Scalars['Int']>;
+};
+
+export type QueryMailSendPreviewArgs = {
+  input: MailSendPreviewInput;
 };
 
 export type QueryMailSendRecipientPreviewArgs = {

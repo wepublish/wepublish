@@ -281,10 +281,50 @@ export class PaginatedMailSendRecipient extends PaginatedType(
   MailSendRecipientModel
 ) {}
 
+@InputType()
+export class MailSendPreviewInput {
+  @Field()
+  mailTemplateId!: string;
+
+  @Field(() => MailAudienceInput)
+  audience!: MailAudienceInput;
+
+  @Field(() => String, {
+    nullable: true,
+    description:
+      'Row id of the recipient to render for. Defaults to the first of the audience.',
+  })
+  recipientId?: string;
+}
+
+@ObjectType()
+export class MailSendPreviewModel {
+  @Field()
+  subject!: string;
+
+  @Field()
+  html!: string;
+
+  @Field(() => String, { nullable: true })
+  text?: string | null;
+
+  @Field(() => MailSendRecipientModel, {
+    nullable: true,
+    description: 'The recipient this preview was rendered for.',
+  })
+  recipient?: MailSendRecipientModel | null;
+}
+
 @ObjectType()
 export class MailSendRecipientPreview {
   @Field(() => Int, { description: 'Number of mails that would be sent.' })
   count!: number;
+
+  @Field(() => Int, {
+    description:
+      'Number of distinct people reached. Lower than `count` when someone has several matching subscriptions.',
+  })
+  userCount!: number;
 
   @Field({
     description:

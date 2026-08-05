@@ -24,7 +24,6 @@ import {
   Button,
   ButtonGroup,
   Form,
-  IconButton,
   Input,
   InputNumber,
   Message,
@@ -34,7 +33,6 @@ import {
   Stack,
   toaster,
 } from 'rsuite';
-import { MdLaptopMac, MdPhoneIphone, MdTabletMac } from 'react-icons/md';
 import { DEFAULT_MUTATION_OPTIONS } from '../common';
 import { HtmlSourceEditor, HtmlSourceEditorHandle } from './html-source-editor';
 import { HtmlVisualEditor, HtmlVisualEditorHandle } from './html-visual-editor';
@@ -47,25 +45,9 @@ import {
   readShellSettings,
 } from './mail-html';
 import { MailColorPicker } from './color-picker';
+import { MailPreview } from './mail-preview';
 import { MAIL_PLACEHOLDER_CONTEXTS } from './mail-placeholders';
 import { PlaceholderPicker } from './placeholder-picker';
-
-const DEVICE_WIDTH: Record<'desktop' | 'tablet' | 'mobile', number | string> = {
-  desktop: '100%',
-  tablet: 820,
-  mobile: 390,
-};
-
-// Preview-only styling so a narrow (mobile/tablet) preview wraps like a real
-// device instead of scrolling horizontally on long unbreakable strings.
-const PREVIEW_STYLE =
-  '<style>html{overflow-x:hidden}img{max-width:100%;height:auto}' +
-  '*{overflow-wrap:anywhere;word-break:break-word}</style>';
-
-const withPreviewStyles = (html: string): string =>
-  html.includes('</head>') ?
-    html.replace('</head>', `${PREVIEW_STYLE}</head>`)
-  : `${PREVIEW_STYLE}${html}`;
 
 // Derive a plain-text fallback from the HTML body: links become "label (url)",
 // block elements become line breaks, remaining tags/styles are stripped.
@@ -143,9 +125,6 @@ function MailTemplateEdit() {
   const [previewLoading, setPreviewLoading] = useState(false);
   const [previewError, setPreviewError] = useState<string | null>(null);
   const [previewOpen, setPreviewOpen] = useState(false);
-  const [previewDevice, setPreviewDevice] = useState<
-    'desktop' | 'tablet' | 'mobile'
-  >('desktop');
   const [sendTest, { loading: testLoading }] = useSendTestMailTemplateMutation(
     DEFAULT_MUTATION_OPTIONS(t)
   );
@@ -723,55 +702,8 @@ function MailTemplateEdit() {
             {t('mailTemplates.subject')}: {previewSubject || '—'}
           </Modal.Title>
         </Modal.Header>
-        <Modal.Body
-          style={{ height: '85vh', display: 'flex', flexDirection: 'column' }}
-        >
-          <Stack
-            spacing={4}
-            justifyContent="center"
-            style={{ marginBottom: 8 }}
-          >
-            <IconButton
-              size="sm"
-              icon={<MdLaptopMac />}
-              appearance={previewDevice === 'desktop' ? 'primary' : 'default'}
-              onClick={() => setPreviewDevice('desktop')}
-            />
-            <IconButton
-              size="sm"
-              icon={<MdTabletMac />}
-              appearance={previewDevice === 'tablet' ? 'primary' : 'default'}
-              onClick={() => setPreviewDevice('tablet')}
-            />
-            <IconButton
-              size="sm"
-              icon={<MdPhoneIphone />}
-              appearance={previewDevice === 'mobile' ? 'primary' : 'default'}
-              onClick={() => setPreviewDevice('mobile')}
-            />
-          </Stack>
-          <div
-            style={{
-              flex: 1,
-              display: 'flex',
-              justifyContent: 'center',
-              overflow: 'auto',
-              background: '#f4f4f4',
-            }}
-          >
-            <iframe
-              title="preview"
-              srcDoc={withPreviewStyles(previewHtml ?? '')}
-              style={{
-                width: DEVICE_WIDTH[previewDevice],
-                maxWidth: '100%',
-                height: '100%',
-                border: '1px solid #e5e5ea',
-                borderRadius: 6,
-                background: '#fff',
-              }}
-            />
-          </div>
+        <Modal.Body style={{ height: '85vh' }}>
+          <MailPreview html={previewHtml ?? ''} />
         </Modal.Body>
       </Modal>
     </div>

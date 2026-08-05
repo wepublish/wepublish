@@ -2513,8 +2513,27 @@
       "noTemplate": "Aucun modèle (ne pas envoyer)"
     },
     "mailSend": {
+      "steps": {
+        "audience": {
+          "title": "Choisir les destinataires",
+          "description": "Public et filtres"
+        },
+        "content": {
+          "title": "Contenu de l'e-mail",
+          "description": "Modèle et aperçu"
+        },
+        "send": {
+          "title": "Envoyer l'e-mail",
+          "description": "Vérifier et envoyer"
+        }
+      },
+      "back": "Retour",
+      "next": "Suivant",
+      "selectTemplateHint": "Choisissez un modèle pour voir l'aperçu.",
+      "summary": {
+        "title": "Résumé"
+      },
       "title": "Envoyer un e-mail",
-      "description": "Envoyez un modèle d'e-mail à un public choisi. L'envoi s'exécute en arrière-plan.",
       "template": "Modèle d'e-mail",
       "selectTemplate": "Choisir un modèle",
       "audience": {
@@ -2572,6 +2591,7 @@
       },
       "missingPlaceholders": "Attention : ces variables ne seront pas remplies pour ces destinataires : {{placeholders}}",
       "createTemplate": "Nouveau modèle",
+      "editTemplate": "Modifier le modèle",
       "showRecipients": "Afficher les destinataires",
       "recipientList": {
         "title": "Destinataires ({{count}})",
@@ -2589,7 +2609,16 @@
         "days": "jours",
         "periodPlaceholder": "Choisir du – au",
         "periodHint": "Uniquement les abonnements désactivés entre ces deux dates."
-      }
+      },
+      "preview": {
+        "title": "Aperçu",
+        "recipient": "Aperçu pour",
+        "firstRecipient": "Premier·ère destinataire",
+        "hint": "À quoi ressemble le mail pour cette personne — avec ses données réelles.",
+        "loading": "Chargement de l’aperçu …",
+        "noRecipients": "Aucun destinataire — ajustez d’abord le groupe."
+      },
+      "recipientsCountPerPerson": "{{count}} e-mails à {{people}} personnes"
     },
     "mailLog": {
       "title": "E-mails envoyés",

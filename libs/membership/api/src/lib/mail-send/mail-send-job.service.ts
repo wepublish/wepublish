@@ -7,7 +7,7 @@ import {
   Prisma,
   PrismaClient,
 } from '@prisma/client';
-import { MailContext, mailLogType } from '@wepublish/mail/api';
+import { composeMail, MailContext, mailLogType } from '@wepublish/mail/api';
 import {
   assembleMailData,
   MailTemplateContextId,
@@ -260,6 +260,89 @@ export class MailSendJobService {
         error: firstError,
       },
     });
+  }
+
+  /**
+   * Render the template for one recipient of an audience, exactly as the send
+   * would compose it — same recipient resolution, same optional data. Without a
+   * `recipientId` the first recipient of the audience is used.
+   */
+  async previewForAudience(input: {
+    mailTemplateId: string;
+    audience: MailAudienceInput;
+    recipientId?: string | null;
+  }): Promise<{
+    subject: string;
+    html: string;
+    text?: string;
+    recipient: MailRecipient | null;
+  }> {
+    const template = await this.loadTemplate(input.mailTemplateId);
+    const recipient = await this.findPreviewRecipient(
+      input.audience,
+      input.recipientId
+    );
+
+    if (!recipient) {
+      return { subject: '', html: '', recipient: null };
+    }
+
+    const optionalData = await this.buildOptionalData(template, recipient);
+    const jwt = await this.mailContext.jwtGenerator(recipient.user.id);
+    const composed = composeMail(
+      {
+        subject: template.subject,
+        htmlContent: template.htmlContent,
+        textContent: template.textContent,
+      },
+      { user: recipient.user, optional: optionalData, jwt }
+    );
+
+    return {
+      subject: composed.subject,
+      html: composed.messageHtml,
+      text: composed.message,
+      recipient,
+    };
+  }
+
+  /**
+   * The recipient a preview is rendered for. `recipientId` is the row id the
+   * editor lists (`userId:subscriptionId`), which is only resolvable by walking
+   * the audience — the same order the send uses.
+   */
+  private async findPreviewRecipient(
+    audience: MailAudienceInput,
+    recipientId?: string | null
+  ): Promise<MailRecipient | null> {
+    let skip = 0;
+
+    for (;;) {
+      const page = await this.recipientService.resolvePage(
+        audience,
+        skip,
+        BATCH_SIZE
+      );
+
+      if (!page.length) {
+        return null;
+      }
+
+      if (!recipientId) {
+        return page[0];
+      }
+
+      const match = page.find(
+        ({ user, subscription }) =>
+          `${user.id}:${subscription?.id ?? ''}` === recipientId
+      );
+
+      if (match) {
+        return match;
+      }
+
+      skip += BATCH_SIZE;
+    }
   }
 
   /** Send the template to one recipient and record the MailLog row. */
