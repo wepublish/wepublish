@@ -990,39 +990,44 @@ function UserEditView() {
                 )}
               </RGrid>
             </Col>
-            {/* subscriptions */}
-            {subscriptionData?.subscriptions.nodes && (
+            {/* subscriptions + sent-mail history + manual mail sending */}
+            {(subscriptionData?.subscriptions.nodes ||
+              (isEditRoute && userId)) && (
               <Col xs={12}>
                 <Grid fluid>
-                  <RPanel
-                    bordered
-                    header={t('userCreateOrEditView.subscriptionsHeader')}
-                  >
-                    <UserSubscriptionsList
-                      subscriptions={subscriptionData.subscriptions.nodes}
-                      userId={user?.id}
-                    />
-                  </RPanel>
-                </Grid>
-              </Col>
-            )}
-            {/* manual mail sending + sent-mail history (edit mode only) */}
-            {isEditRoute && userId && (
-              <Col xs={12}>
-                <Grid fluid>
-                  <RPanel
-                    bordered
-                    header={t('userMail.sendTitle')}
-                  >
-                    <SendMailToUserPanel userId={userId} />
-                  </RPanel>
-                  <RPanel
-                    bordered
-                    header={t('userMail.logTitle')}
-                    style={{ marginTop: 16 }}
-                  >
-                    <UserMailLogPanel userId={userId} />
-                  </RPanel>
+                  {subscriptionData?.subscriptions.nodes && (
+                    <RPanel
+                      bordered
+                      header={t('userCreateOrEditView.subscriptionsHeader')}
+                    >
+                      <UserSubscriptionsList
+                        subscriptions={subscriptionData.subscriptions.nodes}
+                        userId={user?.id}
+                      />
+                    </RPanel>
+                  )}
+                  {isEditRoute && userId && (
+                    <>
+                      <RPanel
+                        bordered
+                        header={t('userMail.logTitle')}
+                        style={
+                          subscriptionData?.subscriptions.nodes ?
+                            { marginTop: 16 }
+                          : undefined
+                        }
+                      >
+                        <UserMailLogPanel userId={userId} />
+                      </RPanel>
+                      <RPanel
+                        bordered
+                        header={t('userMail.sendTitle')}
+                        style={{ marginTop: 16 }}
+                      >
+                        <SendMailToUserPanel userId={userId} />
+                      </RPanel>
+                    </>
+                  )}
                 </Grid>
               </Col>
             )}
