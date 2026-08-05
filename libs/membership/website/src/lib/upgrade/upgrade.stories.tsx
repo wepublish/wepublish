@@ -160,6 +160,8 @@ export const Default: StoryObj<typeof Upgrade> = {
       data: {
         upgradeSubscriptionInfo: {
           discountAmount: 500,
+          discountPercent: null,
+          voucherValid: null,
         },
       },
       loading: false,

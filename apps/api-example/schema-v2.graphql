@@ -2242,7 +2242,7 @@ type Mutation {
   updateWebsiteSettings(ads: WebsiteAdsInput, analytics: WebsiteAnalyticsInput, fonts: [WebsiteRemoteFontInput!], mail: WebsiteMailInput, theme: JSONObject): WebsiteSettings!
 
   """"""
-  upgradeUserSubscription(failureURL: String, memberPlanId: String!, monthlyAmount: Int!, paymentMethodId: String!, subscriptionId: String!, successURL: String): Payment!
+  upgradeUserSubscription(failureURL: String, memberPlanId: String!, monthlyAmount: Int!, paymentMethodId: String!, subscriptionId: String!, successURL: String, voucher: String): Payment!
 
   """Uploads a new document."""
   uploadDocument(description: String, file: Upload!, filename: String, title: String): Document!
@@ -3349,7 +3349,7 @@ type Query {
   trackingPixelSettings(filter: SettingTrackingPixelFilter): [SettingTrackingPixelProvider!]!
 
   """"""
-  upgradeUserSubscriptionInfo(memberPlanId: String!, subscriptionId: String!): UpgradeSubscription!
+  upgradeUserSubscriptionInfo(memberPlanId: String!, subscriptionId: String!, voucher: String): UpgradeSubscription!
 
   """Returns a user by id."""
   user(id: String!): SensitiveDataUser!
@@ -4265,6 +4265,8 @@ input UpdateUserSubscriptionInput {
 
 type UpgradeSubscription {
   discountAmount: Float!
+  discountPercent: Float
+  voucherValid: Boolean
 }
 
 """The `Upload` scalar type represents a file upload."""

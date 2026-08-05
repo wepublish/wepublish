@@ -209,6 +209,7 @@ mutation Upgrade(
   $monthlyAmount: Int!
   $successURL: String
   $failureURL: String
+  $voucher: String
 ) {
   upgradeUserSubscription(
     subscriptionId: $subscriptionId
@@ -217,6 +218,7 @@ mutation Upgrade(
     monthlyAmount: $monthlyAmount
     successURL: $successURL
     failureURL: $failureURL
+    voucher: $voucher
   ) {
     ...FullPayment
   }
@@ -343,12 +345,16 @@ query NewSubscribers($start: DateTime!, $end: DateTime) {
 query UpgradeSubscriptionInfo(
   $memberPlanId: String!
   $subscriptionId: String!
+  $voucher: String
 ) {
   upgradeUserSubscriptionInfo(
     memberPlanId: $memberPlanId
     subscriptionId: $subscriptionId
+    voucher: $voucher
   ) {
     discountAmount
+    discountPercent
+    voucherValid
   }
 }
 

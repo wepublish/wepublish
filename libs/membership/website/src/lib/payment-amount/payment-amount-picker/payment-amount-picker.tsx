@@ -13,6 +13,9 @@ import {
 } from './currency-number-spinner';
 import styled from '@emotion/styled';
 
+const GROUP_SEPARATORS = /[\u2019\u0027]/g;
+const NON_BREAKING_SPACES = /[\u00a0\u202f\u2009]/g;
+
 const formatNumber = (value: number, format: string, locale = 'de-CH') => {
   const [intPart = '', fracPart = ''] = format.split('.');
   const useGrouping = intPart.includes(',');
@@ -30,7 +33,10 @@ const formatNumber = (value: number, format: string, locale = 'de-CH') => {
     minimumFractionDigits,
     maximumFractionDigits,
     useGrouping,
-  }).format(value);
+  })
+    .format(value)
+    .replace(GROUP_SEPARATORS, "'")
+    .replace(NON_BREAKING_SPACES, ' ');
 };
 
 export const PaymentAmountPickerWrapper = styled(RadioGroup)`

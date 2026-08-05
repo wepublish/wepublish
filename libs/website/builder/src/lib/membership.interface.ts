@@ -179,8 +179,9 @@ export type BuilderUpgradeProps = {
   ) => Promise<void>;
   defaults?: Partial<{
     memberPlanSlug: string | null;
+    voucher: string;
   }>;
-  onSelect: (memberPlanId: string | undefined) => void;
+  onSelect: (memberPlanId: string | undefined, voucher?: string) => void;
   donate?: (memberPlan?: FullMemberPlanFragment) => boolean;
   termsOfServiceUrl?: string;
   transactionFee?: (monthlyAmount: number) => number;

@@ -64,12 +64,13 @@ export const UpgradeContainer = ({
   }, [upgradeSubscriptionId, userSubscriptions.data?.userSubscriptions]);
 
   const handleOnSelect = useCallback(
-    (memberPlanId: string | undefined) => {
+    (memberPlanId: string | undefined, voucher?: string) => {
       if (memberPlanId) {
         fetchUpgradeInfo({
           variables: {
             memberPlanId,
             subscriptionId: upgradeSubscriptionId as string,
+            voucher,
           },
         });
       }
