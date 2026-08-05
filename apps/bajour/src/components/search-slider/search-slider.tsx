@@ -7,8 +7,7 @@ import {
   isRichTextBlock,
   RichTextBlock,
 } from '@wepublish/block-content/website';
-import { CommentListItemShare } from '@wepublish/comments/website';
-import { H1, H4 } from '@wepublish/ui';
+import { H1, H4, Share } from '@wepublish/ui';
 import {
   Article,
   ArticleSort,
@@ -685,9 +684,9 @@ export function SearchSlider({
             likes={likes}
           />
 
-          <CommentListItemShare
+          <Share
             url={mainArticle.url}
-            title="Share"
+            title={mainArticle.latest.title ?? undefined}
           />
         </BtnContainer>
       </TextContainer>

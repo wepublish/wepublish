@@ -129,6 +129,7 @@ import { BuilderBlockStyleProps } from './block-styles.interface';
 import { BuilderContentWrapperProps } from './content-wrapper.interface';
 import { BuilderTeaserProps } from './teaser.interface';
 import { BuilderPaywallProps } from './paywall.interface';
+import { BuilderShareProps } from './share.interface';
 import { BuilderTagProps, BuilderTagSEOProps } from './tag.interface';
 import { BuilderTextToIconProps } from './text-to-icon.interface';
 
@@ -188,6 +189,7 @@ export type WebsiteBuilderProps = {
   ContentWrapper: ComponentType<BuilderContentWrapperProps>;
   Paywall: ComponentType<BuilderPaywallProps>;
   TextToIcon: ComponentType<BuilderTextToIconProps>;
+  Share: ComponentType<BuilderShareProps>;
 
   elements: {
     Rating: ComponentType<BuilderRatingProps>;
@@ -327,6 +329,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   ContentWrapper: NoComponent,
   Paywall: NoComponent,
   TextToIcon: NoComponent,
+  Share: NoComponent,
 
   elements: {
     Rating: NoComponent,
