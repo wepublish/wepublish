@@ -32,7 +32,6 @@ import cloudflareLogo from './assets/cloudflare.svg';
 import googleLogo from './assets/google.svg';
 import hcaptchaLogo from './assets/hcaptcha.webp';
 import mailChimpLogo from './assets/mailchimp.webp';
-import mandrillLogo from './assets/mandrill.svg';
 import mailgunLogo from './assets/mailgun.svg';
 import mollieLogo from './assets/mollie.webp';
 import payrexxLogo from './assets/payrexx.webp';
@@ -109,7 +108,7 @@ export function IntegrationList() {
       permission: CanGetMailProviderSettings.id,
       path: '/integrations/mail',
       icon: MdEmail,
-      logos: [mailgunLogo, mandrillLogo, slackLogo],
+      logos: [mailgunLogo, mailChimpLogo, slackLogo],
     },
     {
       title: t('integrations.analytics'),
