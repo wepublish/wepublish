@@ -98,6 +98,8 @@ export const mockMemberPlan = ({
   } as MemberPlan['confirmationPage'],
   amountPerMonthMax = 1000,
   externalReward = 'https://example.com/mock-external-reward-url',
+  periodicityPricing = null,
+  defaultPaymentPeriodicity = null,
 }: Partial<MemberPlan> = {}): MemberPlan & { active: boolean } => ({
   __typename: 'MemberPlan',
   id,
@@ -121,6 +123,8 @@ export const mockMemberPlan = ({
   confirmationPage,
   amountPerMonthMax,
   externalReward,
+  periodicityPricing,
+  defaultPaymentPeriodicity,
   active: true,
 });
 

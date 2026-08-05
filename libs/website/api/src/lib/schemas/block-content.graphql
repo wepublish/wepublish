@@ -112,6 +112,7 @@ fragment FullSubscribeBlock on SubscribeBlock {
   disabled
   blockStyle: blockStyleName
   memberPlanIds
+  periodicityDisplay
   memberPlans {
     ...FullMemberPlan
   }

@@ -24,6 +24,7 @@ import {
 } from '@wepublish/editor/api';
 import {
   ALL_PAYMENT_PERIODICITIES,
+  PAYMENT_PERIODICITY_MONTHS,
   createCheckedPermissionComponent,
   CurrencyInput,
   DescriptionList,
@@ -155,6 +156,23 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
   const [currency, setCurrency] = useState<Currency>(Currency.Chf);
 
   const [extendModal, setExtendModal] = useState<boolean>(false);
+
+  const periodicityMonths = PAYMENT_PERIODICITY_MONTHS[paymentPeriodicity];
+  const periodAmount = Math.round(monthlyAmount * periodicityMonths);
+  const periodMinAmount = useMemo(() => {
+    if (!memberPlan) {
+      return 0;
+    }
+
+    const override = memberPlan.periodicityPricing?.find(
+      price => price.periodicity === paymentPeriodicity
+    );
+
+    return (
+      override?.amountMin ??
+      Math.round(memberPlan.amountPerMonthMin * periodicityMonths)
+    );
+  }, [memberPlan, paymentPeriodicity, periodicityMonths]);
 
   const {
     data,
@@ -538,9 +556,9 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
     monthlyAmount: NumberType()
       .isRequired(t('errorMessages.noAmountErrorMessage'))
       .min(
-        (memberPlan?.amountPerMonthMin || 0) / 100,
+        periodMinAmount,
         t(`errorMessages.minimalAmountPerMonth`, {
-          amount: (memberPlan?.amountPerMonthMin || 0) / 100,
+          amount: (periodMinAmount / 100).toFixed(2),
           currency: memberPlan?.currency,
         })
       ),
@@ -572,7 +590,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
           user: user?.name,
           paymentMethod: paymentMethod?.name,
           paymentPeriodicity,
-          monthlyAmount,
+          monthlyAmount: periodAmount,
         }}
       >
         <ListViewContainer>
@@ -723,8 +741,15 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                                   mp => mp.id === value
                                 );
                                 if (!foundMemberPlan) return;
+                                const planPeriodMin =
+                                  foundMemberPlan.periodicityPricing?.find(
+                                    price =>
+                                      price.periodicity === paymentPeriodicity
+                                  )?.amountMin;
                                 setMonthlyAmount(
-                                  foundMemberPlan.amountPerMonthMin
+                                  planPeriodMin != null ?
+                                    planPeriodMin / periodicityMonths
+                                  : foundMemberPlan.amountPerMonthMin
                                 );
                                 setCurrency(foundMemberPlan.currency);
                                 return foundMemberPlan;
@@ -784,20 +809,22 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                             accepter={SelectPicker}
                           />
                         </Col>
-                        {/* monthly amount */}
+                        {/* amount per period */}
                         <Col xs={12}>
                           <Label>
                             {toggleRequiredLabel(
-                              t('userSubscriptionEdit.monthlyAmount')
+                              t('userSubscriptionEdit.periodAmount')
                             )}
                           </Label>
 
                           <CurrencyInput
                             name="monthlyAmount"
                             currency={currency}
-                            centAmount={monthlyAmount}
+                            centAmount={periodAmount}
                             onChange={centAmount => {
-                              setMonthlyAmount(Math.round(centAmount || 0));
+                              setMonthlyAmount(
+                                Math.round(centAmount || 0) / periodicityMonths
+                              );
                             }}
                             disabled={
                               isDisabled ||
@@ -805,6 +832,18 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                               isDeactivated
                             }
                           />
+                          {paymentPeriodicity !==
+                            PaymentPeriodicity.Monthly && (
+                            <HelpText>
+                              {t(
+                                'userSubscriptionEdit.monthlyAmountEquivalent',
+                                {
+                                  currency,
+                                  amount: (monthlyAmount / 100).toFixed(2),
+                                }
+                              )}
+                            </HelpText>
+                          )}
                         </Col>
                       </RowPaddingTop>
                       <RowPaddingTop>

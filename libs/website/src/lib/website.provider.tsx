@@ -82,6 +82,7 @@ import {
   InvoiceList,
   InvoiceListItem,
   MemberPlanItem,
+  MemberPlanOfferPicker,
   MemberPlanPicker,
   PaymentAmountSlider,
   PaymentMethodPicker,
@@ -233,6 +234,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({ children }) => (
         InvoiceListItem={InvoiceListItem}
         MemberPlanPicker={MemberPlanPicker}
         MemberPlanItem={MemberPlanItem}
+        MemberPlanOfferPicker={MemberPlanOfferPicker}
         PeriodicityPicker={PeriodicityPicker}
         PaymentAmount={PaymentAmountSlider}
         PaymentMethodPicker={PaymentMethodPicker}

@@ -2,12 +2,13 @@ import styled from '@emotion/styled';
 import {
   ProductType,
   SubscribeBlockField,
+  SubscribePeriodicityDisplay,
   useMemberPlanListQuery,
 } from '@wepublish/editor/api';
 import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { CheckPickerProps } from 'rsuite';
-import { CheckPicker, Panel as RPanel } from 'rsuite';
+import { CheckPicker, Panel as RPanel, Radio, RadioGroup } from 'rsuite';
 
 import { BlockProps } from '../atoms/blockList';
 import { SubscribeBlockValue } from '.';
@@ -169,6 +170,35 @@ export const SubscribeBlock = ({
         />
 
         <Hint>{t('blocks.subscribe.selectFieldsSelectionHint')}</Hint>
+      </Content>
+
+      <Content>
+        <Heading>{t('blocks.subscribe.periodicityDisplay')}</Heading>
+
+        <RadioGroup
+          inline
+          appearance="picker"
+          disabled={disabled}
+          value={
+            value.periodicityDisplay ?? SubscribePeriodicityDisplay.Dropdown
+          }
+          onChange={periodicityDisplay =>
+            onChange(current => ({
+              ...current,
+              periodicityDisplay:
+                periodicityDisplay as SubscribePeriodicityDisplay,
+            }))
+          }
+        >
+          <Radio value={SubscribePeriodicityDisplay.Dropdown}>
+            {t('blocks.subscribe.periodicityDisplayDropdown')}
+          </Radio>
+          <Radio value={SubscribePeriodicityDisplay.OfferCards}>
+            {t('blocks.subscribe.periodicityDisplayOfferCards')}
+          </Radio>
+        </RadioGroup>
+
+        <Hint>{t('blocks.subscribe.periodicityDisplayHint')}</Hint>
       </Content>
     </Panel>
   );

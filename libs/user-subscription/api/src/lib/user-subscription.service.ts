@@ -24,7 +24,12 @@ import {
   ExtendSubscriptionArgs,
 } from './subscription.model';
 import { PaymentsService } from '@wepublish/payment/api';
-import { logger, PrimeDataLoader } from '@wepublish/utils/api';
+import {
+  calculatePeriodAmount,
+  getPeriodPriceRange,
+  logger,
+  PrimeDataLoader,
+} from '@wepublish/utils/api';
 import { unselectPassword } from '@wepublish/authentication/api';
 import {
   calculateAmountForPeriodicity,
@@ -90,12 +95,13 @@ export class UserSubscriptionService {
     if (voucher) {
       const voucherObj = await this.getValidVoucher(voucher, memberPlan.id);
 
-      discount =
+      discount = Math.round(
         calculateAmountForPeriodicity(
           args.monthlyAmount,
           args.paymentPeriodicity
         ) *
-        (voucherObj.discountPercent / 100);
+          (voucherObj.discountPercent / 100)
+      );
       voucherId = voucherObj.id;
     }
 
@@ -416,9 +422,14 @@ export class UserSubscriptionService {
       throw new NotFoundException('PaymentMethod', paymentMethodID as string);
     }
 
+    const effectivePeriodicity =
+      (paymentPeriodicity as PaymentPeriodicity | undefined) ??
+      subscription.paymentPeriodicity;
+
     if (
       !monthlyAmount ||
-      (monthlyAmount as number) < memberPlan.amountPerMonthMin
+      calculatePeriodAmount(monthlyAmount as number, effectivePeriodicity) <
+        getPeriodPriceRange(memberPlan, effectivePeriodicity).amountMin
     )
       throw new BadRequestException(`Monthly amount is not enough`);
 
@@ -576,7 +587,10 @@ export class UserSubscriptionService {
       );
     }
 
-    if (monthlyAmount < memberPlan.amountPerMonthMin) {
+    if (
+      calculatePeriodAmount(monthlyAmount, paymentPeriodicity) <
+      getPeriodPriceRange(memberPlan, paymentPeriodicity).amountMin
+    ) {
       throw new BadRequestException(`Monthly amount not enough`);
     }
 

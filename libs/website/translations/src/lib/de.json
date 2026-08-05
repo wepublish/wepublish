@@ -17,7 +17,8 @@
   },
   "subscribe": {
     "memberplan": {
-      "price": "{amountPerMonthMin, select, 0 {Gratis} other {Ab {monthlyPrice} {extendable, select, true {pro Monat} other {}}}}"
+      "price": "{offerAmountMin, select, 0 {Gratis} other {{offerExactAmount, select, true {} other {Ab }}{offerPrice} {extendable, select, true {{offerPeriodicity, select, monthly {pro Monat} quarterly {pro Quartal} biannual {pro Halbjahr} yearly {pro Jahr} biennial {pro 2 Jahre} lifetime {einmalig} other {}}} other {}}}}",
+      "offerPrice": "{amountMin, select, 0 {Gratis} other {{exactAmount, select, true {} other {Ab }}{periodPrice} {periodicity, select, monthly {pro Monat} quarterly {pro Quartal} biannual {pro Halbjahr} yearly {pro Jahr} biennial {pro 2 Jahre} lifetime {einmalig} other {}}}}"
     },
     "discount": "{paymentPeriod} {monthlyAmount, select, 0 {gratis} other {für nur {formattedAmount}}}",
     "cancellable": "Jederzeit kündbar",

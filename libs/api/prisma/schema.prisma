@@ -585,6 +585,8 @@ model MemberPlan {
   amountPerMonthMin              Float
   amountPerMonthMax              Float?
   amountPerMonthTarget           Float?
+  periodicityPricing             Json?
+  defaultPaymentPeriodicity      PaymentPeriodicity?
   availablePaymentMethods        AvailablePaymentMethod[]
   migrateToTargetPaymentMethod   PaymentMethod?           @relation("PaymentMethodMigration", fields: [migrateToTargetPaymentMethodID], references: [id])
   migrateToTargetPaymentMethodID String?

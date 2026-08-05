@@ -32,7 +32,7 @@ import {
   SubscribeWrapper,
   usePaymentText,
 } from '../subscribe/subscribe';
-import { getPaymentPeriodicyMonths } from '../formatters/format-payment-period';
+import { calculatePeriodAmount } from '../formatters/format-payment-period';
 import styled from '@emotion/styled';
 
 const upgradeSchema = subscribeSchema.pick({
@@ -65,8 +65,8 @@ export const useUpgradeText = ({
     const variables = {
       productType,
       formattedAmount: formatCurrency(
-        (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity) -
-          discount / 100,
+        (calculatePeriodAmount(monthlyAmount, paymentPeriodicity) - discount) /
+          100,
         currency,
         locale
       ),

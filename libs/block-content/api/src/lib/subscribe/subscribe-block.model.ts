@@ -22,6 +22,15 @@ registerEnumType(SubscribeBlockField, {
   name: 'SubscribeBlockField',
 });
 
+export enum SubscribePeriodicityDisplay {
+  Dropdown = 'dropdown',
+  OfferCards = 'offerCards',
+}
+
+registerEnumType(SubscribePeriodicityDisplay, {
+  name: 'SubscribePeriodicityDisplay',
+});
+
 @ObjectType({
   implements: BaseBlock,
 })
@@ -38,6 +47,9 @@ export class SubscribeBlock extends BaseBlock<typeof BlockType.Subscribe> {
 
   @Field(() => [String], { nullable: true })
   memberPlanIds?: string[];
+
+  @Field(() => SubscribePeriodicityDisplay, { nullable: true })
+  periodicityDisplay?: SubscribePeriodicityDisplay;
 
   @Field(() => [MemberPlan])
   memberPlans!: MemberPlan[];

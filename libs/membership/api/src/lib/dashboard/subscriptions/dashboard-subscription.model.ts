@@ -1,4 +1,10 @@
-import { Field, Int, ObjectType, registerEnumType } from '@nestjs/graphql';
+import {
+  Field,
+  Float,
+  Int,
+  ObjectType,
+  registerEnumType,
+} from '@nestjs/graphql';
 import {
   PaymentPeriodicity,
   SubscriptionDeactivationReason,
@@ -32,7 +38,7 @@ export class DashboardSubscription {
   @Field(type => PaymentPeriodicity)
   paymentPeriodicity!: PaymentPeriodicity;
 
-  @Field(type => Int)
+  @Field(type => Float)
   monthlyAmount!: number;
 
   @Field(type => SubscriptionDeactivationReason, { nullable: true })
