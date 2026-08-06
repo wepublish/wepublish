@@ -5,13 +5,11 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Typography,
-  css,
-  keyframes,
 } from '@mui/material';
 import {
+  useDeleteMailTemplateMutation,
+  useImportMailTemplatesFromProviderMutation,
   useMailTemplateQuery,
-  useSynchronizeMailTemplatesMutation,
 } from '@wepublish/editor/api';
 import {
   ListViewContainer,
@@ -19,39 +17,70 @@ import {
   PermissionControl,
   createCheckedPermissionComponent,
 } from '@wepublish/ui/editor';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdCheck, MdDataObject, MdSync, MdWarning } from 'react-icons/md';
-import { Link } from 'react-router-dom';
-import { Button, Stack } from 'rsuite';
+import {
+  MdAdd,
+  MdCheck,
+  MdCloudDownload,
+  MdDelete,
+  MdEdit,
+  MdWarning,
+} from 'react-icons/md';
+import { useNavigate } from 'react-router-dom';
+import {
+  Button,
+  IconButton,
+  Message,
+  Modal,
+  Stack,
+  Tag,
+  toaster,
+} from 'rsuite';
 import { DEFAULT_MUTATION_OPTIONS, DEFAULT_QUERY_OPTIONS } from '../common';
-
-const spinAnimation = keyframes`
-  0% {
-    transform: rotate(359deg);
-  }
-
-  100% {
-    transform: rotate(0deg);
-  }
-`;
-
-const iconSpin = css`
-  animation: ${spinAnimation} 2s infinite linear;
-`;
+import { mailTypeLabel } from './mail-placeholders';
 
 function MailTemplateList() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const { data: queryData } = useMailTemplateQuery(DEFAULT_QUERY_OPTIONS());
-
-  const [syncTemplates, { loading: mutationLoading }] =
-    useSynchronizeMailTemplatesMutation({
+  const [deleteMailTemplate] = useDeleteMailTemplateMutation({
+    ...DEFAULT_MUTATION_OPTIONS(t),
+    refetchQueries: ['MailTemplate'],
+  });
+  const [importFromProvider, { loading: importing }] =
+    useImportMailTemplatesFromProviderMutation({
       ...DEFAULT_MUTATION_OPTIONS(t),
       refetchQueries: ['MailTemplate'],
     });
 
-  const openInNewTab = (url: string) => {
-    window.open(url, '_blank', 'noreferrer');
+  const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [importOpen, setImportOpen] = useState(false);
+
+  const confirmDelete = async () => {
+    if (!deleteId) {
+      return;
+    }
+    try {
+      await deleteMailTemplate({ variables: { id: deleteId } });
+    } finally {
+      setDeleteId(null);
+    }
+  };
+
+  const confirmImport = async () => {
+    try {
+      const result = await importFromProvider();
+      const count = result.data?.importMailTemplatesFromProvider ?? 0;
+      toaster.push(
+        <Message type="success">
+          {t('mailTemplates.importDone', { count })}
+        </Message>
+      );
+    } finally {
+      setImportOpen(false);
+    }
   };
 
   return (
@@ -60,27 +89,36 @@ function MailTemplateList() {
         <ListViewContainer>
           <ListViewHeader>
             <h2>{t('mailTemplates.availableTemplates')}</h2>
-
-            <Typography variant="subtitle1">
-              {t('mailTemplates.explanation', {
-                provider: queryData?.provider.name,
-              })}
-            </Typography>
           </ListViewHeader>
         </ListViewContainer>
 
-        <PermissionControl
-          showRejectionMessage={false}
-          qualifyingPermissions={['CAN_SYNC_MAIL-TEMPLATES']}
-        >
-          <Button
-            appearance="primary"
-            onClick={() => syncTemplates()}
+        <Stack spacing={8}>
+          <PermissionControl
+            showRejectionMessage={false}
+            qualifyingPermissions={['CAN_UPDATE_MAIL-TEMPLATES']}
           >
-            <MdSync css={mutationLoading ? iconSpin : undefined} />
-            {t('mailTemplates.synchronize')}
-          </Button>
-        </PermissionControl>
+            <Button
+              appearance="ghost"
+              loading={importing}
+              onClick={() => setImportOpen(true)}
+            >
+              <MdCloudDownload /> {t('mailTemplates.importFromProvider')}
+            </Button>
+          </PermissionControl>
+
+          <PermissionControl
+            showRejectionMessage={false}
+            qualifyingPermissions={['CAN_CREATE_MAIL-TEMPLATES']}
+          >
+            <Button
+              appearance="primary"
+              onClick={() => navigate('/mailtemplates/create')}
+            >
+              <MdAdd />
+              {t('mailTemplates.create')}
+            </Button>
+          </PermissionControl>
+        </Stack>
       </Stack>
 
       <TableContainer style={{ marginTop: '16px' }}>
@@ -90,77 +128,136 @@ function MailTemplateList() {
               <TableCell>
                 <strong>{t('mailTemplates.name')}</strong>
               </TableCell>
-
+              <TableCell>
+                <strong>{t('mailTemplates.edit.mailType')}</strong>
+              </TableCell>
               <TableCell>
                 <strong>{t('mailTemplates.description')}</strong>
               </TableCell>
-
               <TableCell>
-                <strong>{t('mailTemplates.content')}</strong>
+                <strong>{t('mailTemplates.subject')}</strong>
               </TableCell>
-
-              <TableCell>
-                <strong>{t('mailTemplates.showPlaceholders')}</strong>
-              </TableCell>
-
               <TableCell>
                 <strong>{t('mailTemplates.status')}</strong>
               </TableCell>
+              <TableCell />
             </TableRow>
           </TableHead>
 
           <TableBody>
-            {queryData &&
-              queryData.mailTemplates.map(template => (
-                <TableRow key={template.id.toString()}>
-                  <TableCell>{template.name}</TableCell>
-                  <TableCell>{template.description}</TableCell>
-                  <TableCell>
-                    {template.remoteMissing ?
-                      ''
-                    : <Button
-                        appearance="default"
-                        onClick={() => openInNewTab(template.url)}
-                      >
-                        {t('mailTemplates.view', {
-                          provider: queryData?.provider.name,
-                        })}
-                      </Button>
-                    }
-                  </TableCell>
-                  <TableCell>
-                    <Link to="/mailtemplates/placeholders">
-                      <Button
-                        appearance="default"
-                        endIcon={<MdDataObject />}
-                      >
-                        {t('mailTemplates.goToPlaceholders')}
-                      </Button>
-                    </Link>
-                  </TableCell>
-                  <TableCell>
-                    {template.status === 'ok' ?
-                      <MdCheck />
-                    : <>
-                        <MdWarning />{' '}
-                        {t(`mailTemplates.statuses.${template.status}`, {
-                          provider: queryData?.provider.name,
-                          internalName: template.externalMailTemplateId,
-                        })}
-                      </>
-                    }
-                  </TableCell>
-                </TableRow>
-              ))}
+            {queryData?.mailTemplates.map(template => (
+              <TableRow key={template.id}>
+                <TableCell>{template.name}</TableCell>
+                <TableCell>
+                  {mailTypeLabel(template.context, (k, f) => t(k, f)) ?? '—'}
+                </TableCell>
+                <TableCell>{template.description}</TableCell>
+                <TableCell>{template.subject}</TableCell>
+                <TableCell>
+                  {template.status === 'ok' ?
+                    <MdCheck />
+                  : <Tag color="yellow">
+                      <MdWarning />{' '}
+                      {t(`mailTemplates.statuses.${template.status}`)}
+                    </Tag>
+                  }
+                </TableCell>
+                <TableCell>
+                  <Stack spacing={8}>
+                    <PermissionControl
+                      showRejectionMessage={false}
+                      qualifyingPermissions={['CAN_UPDATE_MAIL-TEMPLATES']}
+                    >
+                      <IconButton
+                        icon={<MdEdit />}
+                        onClick={() =>
+                          navigate(`/mailtemplates/edit/${template.id}`)
+                        }
+                      />
+                    </PermissionControl>
+                    <PermissionControl
+                      showRejectionMessage={false}
+                      qualifyingPermissions={['CAN_DELETE_MAIL-TEMPLATES']}
+                    >
+                      <IconButton
+                        icon={<MdDelete />}
+                        color="red"
+                        appearance="primary"
+                        onClick={() => setDeleteId(template.id)}
+                      />
+                    </PermissionControl>
+                  </Stack>
+                </TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </TableContainer>
+
+      <Modal
+        open={!!deleteId}
+        onClose={() => setDeleteId(null)}
+        size="xs"
+      >
+        <Modal.Header>
+          <Modal.Title>{t('mailTemplates.delete')}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>{t('mailTemplates.deleteConfirm')}</Modal.Body>
+        <Modal.Footer>
+          <Button
+            appearance="primary"
+            color="red"
+            onClick={confirmDelete}
+          >
+            {t('mailTemplates.delete')}
+          </Button>
+          <Button
+            appearance="subtle"
+            onClick={() => setDeleteId(null)}
+          >
+            {t('mailTemplates.cancel')}
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      <Modal
+        open={importOpen}
+        onClose={() => setImportOpen(false)}
+        size="sm"
+      >
+        <Modal.Header>
+          <Modal.Title>{t('mailTemplates.importFromProvider')}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Message
+            type="warning"
+            showIcon
+          >
+            {t('mailTemplates.importWarning')}
+          </Message>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            appearance="primary"
+            color="red"
+            loading={importing}
+            onClick={confirmImport}
+          >
+            {t('mailTemplates.importConfirm')}
+          </Button>
+          <Button
+            appearance="subtle"
+            onClick={() => setImportOpen(false)}
+          >
+            {t('mailTemplates.cancel')}
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 }
 
 const CheckedPermissionComponent = createCheckedPermissionComponent([
   'CAN_GET_MAIL-TEMPLATES',
-  'CAN_SYNC_MAIL-TEMPLATES',
 ])(MailTemplateList);
 export { CheckedPermissionComponent as MailTemplateList };

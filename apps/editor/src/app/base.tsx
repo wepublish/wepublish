@@ -62,8 +62,10 @@ import {
   CanGetEvent,
   CanGetImage,
   CanGetImages,
+  CanGetMailLogs,
   CanGetMailProviderSettings,
   CanGetMailTemplates,
+  CanSendMailTemplates,
   CanGetMemberPlan,
   CanGetMemberPlans,
   CanGetNavigation,
@@ -94,7 +96,7 @@ import {
   CanPreview,
   CanPublishArticle,
   CanPublishPage,
-  CanSyncMailTemplates,
+  CanUpdateMailTemplates,
   CanTakeActionOnComment,
   CanUpdateBlockStyle,
   CanUpdateCommentRatingSystem,
@@ -139,6 +141,7 @@ import {
   MdMoney,
   MdMultilineChart,
   MdOutgoingMail,
+  MdSend,
   MdOutlineGridView,
   MdPayment,
   MdPersonAddAlt1,
@@ -886,6 +889,88 @@ export function Base({ children }: BaseProps) {
                   </Nav.Menu>
                 </PermissionControl>
 
+                {/* COMMUNICATION */}
+                <PermissionControl
+                  qualifyingPermissions={[
+                    CanGetMailTemplates.id,
+                    CanUpdateMailTemplates.id,
+                    CanGetSystemMails.id,
+                    CanUpdateSystemMails.id,
+                    CanSendMailTemplates.id,
+                    CanGetMailLogs.id,
+                    CanGetSubscriptionFlows.id,
+                  ]}
+                >
+                  <Nav.Menu
+                    eventKey={'communication'}
+                    title={t('navbar.communication')}
+                    icon={<MdMail />}
+                  >
+                    {/* SEND MAIL */}
+                    <PermissionControl
+                      qualifyingPermissions={[CanSendMailTemplates.id]}
+                    >
+                      <Nav.Item
+                        as={NavLink}
+                        href="/mailsend"
+                        active={path === 'mailsend'}
+                        icon={<MdSend />}
+                      >
+                        {t('navbar.mailSend')}
+                      </Nav.Item>
+                    </PermissionControl>
+
+                    {/* AUTOMATIC MAILS (subscription mailing + system mails) */}
+                    <PermissionControl
+                      qualifyingPermissions={[
+                        CanGetSubscriptionFlows.id,
+                        CanGetSystemMails.id,
+                        CanUpdateSystemMails.id,
+                      ]}
+                    >
+                      <Nav.Item
+                        as={NavLink}
+                        href="/communicationflows/edit/default"
+                        active={path === 'communicationflows/edit/default'}
+                        icon={<MdOutgoingMail />}
+                      >
+                        {t('navbar.subscriptionSettings')}
+                      </Nav.Item>
+                    </PermissionControl>
+
+                    {/* MAIL TEMPLATES */}
+                    <PermissionControl
+                      qualifyingPermissions={[
+                        CanGetMailTemplates.id,
+                        CanUpdateMailTemplates.id,
+                      ]}
+                    >
+                      <Nav.Item
+                        as={NavLink}
+                        href="/mailtemplates"
+                        active={path === 'mailtemplates'}
+                        icon={<MdMail />}
+                      >
+                        {t('navbar.mailTemplates')}
+                      </Nav.Item>
+                    </PermissionControl>
+
+                    {/* SENT MAILS */}
+                    <PermissionControl
+                      qualifyingPermissions={[CanGetMailLogs.id]}
+                    >
+                      <Nav.Item
+                        as={NavLink}
+                        href="/maillog"
+                        active={path === 'maillog'}
+                        icon={<MdOutgoingMail />}
+                      >
+                        {t('navbar.mailLog')}
+                      </Nav.Item>
+                    </PermissionControl>
+                  </Nav.Menu>
+                </PermissionControl>
+
                 <PermissionControl
                   qualifyingPermissions={[
                     CanGetMemberPlans.id,
@@ -941,20 +1026,6 @@ export function Base({ children }: BaseProps) {
                         icon={<MdCreditCard />}
                       >
                         {t('navbar.paymentMethods')}
-                      </Nav.Item>
-                    </PermissionControl>
-
-                    {/* SUBSCRIPTION MAILING */}
-                    <PermissionControl
-                      qualifyingPermissions={[CanGetSubscriptionFlows.id]}
-                    >
-                      <Nav.Item
-                        as={NavLink}
-                        href="/communicationflows/edit/default"
-                        active={path === 'communicationflows/edit/default'}
-                        icon={<MdOutgoingMail />}
-                      >
-                        {t('navbar.subscriptionSettings')}
                       </Nav.Item>
                     </PermissionControl>
 
@@ -1022,7 +1093,7 @@ export function Base({ children }: BaseProps) {
                     CanGetSettings.id,
                     CanUpdateSettings.id,
                     CanGetMailTemplates.id,
-                    CanSyncMailTemplates.id,
+                    CanUpdateMailTemplates.id,
                     CanGetUserRoles.id,
                     CanGetUserRole.id,
                     CanCreateUserRole.id,
@@ -1047,40 +1118,6 @@ export function Base({ children }: BaseProps) {
                         icon={<MdSettings />}
                       >
                         {t('navbar.settings')}
-                      </Nav.Item>
-                    </PermissionControl>
-
-                    {/* MAIL TEMPLATE SYNC */}
-                    <PermissionControl
-                      qualifyingPermissions={[
-                        CanGetMailTemplates.id,
-                        CanSyncMailTemplates.id,
-                      ]}
-                    >
-                      <Nav.Item
-                        as={NavLink}
-                        href="/mailtemplates"
-                        active={path === 'mailtemplates'}
-                        icon={<MdMail />}
-                      >
-                        {t('navbar.mailTemplates')}
-                      </Nav.Item>
-                    </PermissionControl>
-
-                    {/* SYSTEM MAILS */}
-                    <PermissionControl
-                      qualifyingPermissions={[
-                        CanGetSystemMails.id,
-                        CanUpdateSystemMails.id,
-                      ]}
-                    >
-                      <Nav.Item
-                        as={NavLink}
-                        href="/systemmails"
-                        active={path === 'systemmails'}
-                        icon={<MdMail />}
-                      >
-                        {t('navbar.systemMails')}
                       </Nav.Item>
                     </PermissionControl>
 

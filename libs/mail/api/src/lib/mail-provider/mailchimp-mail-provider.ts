@@ -1,25 +1,73 @@
 import crypto from 'crypto';
 
-import mailchimp, {
-  TemplateResponse,
-} from '@mailchimp/mailchimp_transactional';
+import mailchimp from '@mailchimp/mailchimp_transactional';
 import { AxiosError } from 'axios';
 
 import { MailLogState } from '@prisma/client';
 import {
   MailLogStatus,
   MailProviderError,
+  MailProviderMessageState,
   MailProviderTemplate,
+  MailProviderTemplateContent,
   SendMailProps,
+  SendMailResult,
   WebhookForSendMailProps,
-  WithExternalId,
 } from './mail-provider.interface';
 import { BaseMailProvider, MailProviderProps } from './base-mail-provider';
+
+type MessageMetadata = NonNullable<mailchimp.MessagesMessage['metadata']>;
+
+/** The typings demand a `website` key that Mandrill neither needs nor reads. */
+const mailLogMetadata = (mailLogID: string): MessageMetadata =>
+  ({ mail_log_id: mailLogID }) as unknown as MessageMetadata;
+
+/**
+ * The fields of Mandrill's template payload we consume. `templates/info` and
+ * `templates/list` return the same shape, the latter as an array.
+ */
+type PartialTemplateResponse = {
+  slug?: string;
+  name?: string;
+  code?: string | null;
+  publish_code?: string | null;
+  subject?: string | null;
+  publish_subject?: string | null;
+};
 
 interface VerifyWebhookSignatureProps {
   signature: string;
   url: string;
   params: Record<string, any>;
+}
+
+/**
+ * Map the state `messages/info` reports onto our own. Mandrill's `sent` means
+ * the receiving server accepted the message — that is what its UI labels
+ * "Delivered". `spam` and `unsub` are recipient reactions *after* a successful
+ * delivery, so they count as delivered too; the raw payload is kept in
+ * `mailData` for the detail.
+ */
+function mapMandrillStateToMailLogState(state: string): MailLogState | null {
+  switch (state) {
+    case 'sent':
+    case 'spam':
+    case 'unsub':
+      return MailLogState.delivered;
+    case 'queued':
+    case 'scheduled':
+      return MailLogState.submitted;
+    case 'deferred':
+      return MailLogState.deferred;
+    case 'bounced':
+    case 'soft-bounced':
+      return MailLogState.bounced;
+    case 'rejected':
+    case 'invalid':
+      return MailLogState.rejected;
+    default:
+      return null;
+  }
 }
 
 function mapMandrillEventToMailLogState(event: string): MailLogState | null {
@@ -36,43 +84,6 @@ function mapMandrillEventToMailLogState(event: string): MailLogState | null {
     default:
       return null;
   }
-}
-
-/*
- * Mandrill template engine does not support nested objects
- */
-function flattenObjForMandrill<T>(ob: T): Record<string, string> {
-  const nestedObject: Record<string, string> = {};
-
-  for (const i in ob) {
-    const nestedObj = ob[i];
-
-    if (Array.isArray(nestedObj)) {
-      for (const j in nestedObj) {
-        if (nestedObj[j] && typeof nestedObj[j] === 'object') {
-          const returnedNestedObject = flattenObjForMandrill(nestedObj[j]);
-
-          for (const k in returnedNestedObject) {
-            nestedObject[`${i}_${j}_${k}`] = returnedNestedObject[k];
-          }
-        } else {
-          nestedObject[`${i}_${j}`] = nestedObj[j];
-        }
-      }
-    } else if (nestedObj && typeof nestedObj === 'object') {
-      const returnedNestedObject = flattenObjForMandrill(nestedObj);
-
-      for (const j in returnedNestedObject) {
-        nestedObject[`${i}_${j}`] = returnedNestedObject[j];
-      }
-    } else {
-      // eventho it should be string according to Mandrill typings
-      // it accepts booleans, numbers etc.
-      nestedObject[i] = nestedObj as any;
-    }
-  }
-
-  return nestedObject;
 }
 
 export class MailchimpMailProvider extends BaseMailProvider {
@@ -148,51 +159,9 @@ export class MailchimpMailProvider extends BaseMailProvider {
     return mailLogStatuses;
   }
 
-  async sendMail(props: SendMailProps): Promise<void> {
+  async sendMail(props: SendMailProps): Promise<SendMailResult> {
     const config = await this.getConfig();
     const mailchimpClient = await this.getMailchimpClient();
-    if (props.template) {
-      const templateContent: mailchimp.MergeVar[] = [];
-      const flattenedObject = flattenObjForMandrill(props.templateData ?? {});
-
-      for (const [key, value] of Object.entries(flattenedObject)) {
-        templateContent.push({
-          name: key,
-          content: value,
-        });
-      }
-
-      const response = await mailchimpClient.messages.sendTemplate({
-        template_name: props.template,
-        template_content: [],
-        message: {
-          text: props.message,
-          subject: props.subject,
-          from_email: config?.fromAddress ?? '',
-          to: [
-            {
-              email: props.recipient,
-              type: 'to',
-            },
-          ],
-          merge_vars: [
-            {
-              rcpt: props.recipient,
-              vars: templateContent,
-            },
-          ],
-        },
-      });
-
-      if (this.responseIsError(response)) {
-        throw new MailProviderError(
-          (response.response?.data as Error | undefined)?.message ??
-            'Unknown Mailchimp error'
-        );
-      }
-
-      return;
-    }
 
     const response = await mailchimpClient.messages.send({
       message: {
@@ -206,40 +175,139 @@ export class MailchimpMailProvider extends BaseMailProvider {
             type: 'to',
           },
         ],
+        // Carried back by the webhook, which maps the delivery events of this
+        // message onto its mail log entry.
+        metadata: mailLogMetadata(props.mailLogID),
       },
     });
 
     if (this.responseIsError(response)) {
       throw new MailProviderError((response.response?.data as Error).message);
     }
+
+    this.throwOnRejectedRecipient(response);
+
+    // One recipient per send, so the first result is this message.
+    return { providerMessageID: response[0]?._id };
   }
 
-  // beware: Mailchimp templates are still created and stored in Mandrill: https://mandrillapp.com/templates
-  async getTemplates(): Promise<MailProviderTemplate[]> {
+  /**
+   * `messages/info` answers for a single id only, so poll one request per
+   * message. Ids Mandrill no longer knows (expired from its activity window)
+   * are skipped rather than failing the whole batch.
+   */
+  override async getMessageStates(
+    providerMessageIDs: string[]
+  ): Promise<MailProviderMessageState[]> {
     const mailchimpClient = await this.getMailchimpClient();
-    const response = await mailchimpClient.templates.list();
-    if (this.responseIsError(response)) {
-      throw new MailProviderError((response.response?.data as Error).message);
+    const states: MailProviderMessageState[] = [];
+
+    for (const providerMessageID of providerMessageIDs) {
+      const response = await mailchimpClient.messages
+        .info({ id: providerMessageID })
+        .catch(() => null);
+
+      if (!response || this.responseIsError(response)) {
+        continue;
+      }
+
+      const state = mapMandrillStateToMailLogState(response.state);
+      if (!state) {
+        continue;
+      }
+
+      states.push({
+        providerMessageID,
+        state,
+        mailData: JSON.stringify(response),
+      });
     }
-    const templates: MailProviderTemplate[] = (
-      response as TemplateResponse[]
-    ).map(mailTemplateResponse => {
-      return {
-        name: mailTemplateResponse.name,
-        uniqueIdentifier: mailTemplateResponse.slug,
-        createdAt: new Date(mailTemplateResponse.created_at),
-        updatedAt: new Date(mailTemplateResponse.updated_at),
-      };
-    });
-    return templates;
+
+    return states;
   }
 
-  async getTemplateUrl(template: WithExternalId): Promise<string> {
-    return `https://mandrillapp.com/templates/code?id=${template.externalMailTemplateId}`;
+  /**
+   * Mandrill answers a refused message with HTTP 200 and a per-recipient
+   * `rejected`/`invalid` status — without this the mail would be logged as
+   * submitted although the provider never accepted it.
+   */
+  private throwOnRejectedRecipient(
+    results: mailchimp.MessagesSendResponse[]
+  ): void {
+    const rejected = results.find(
+      result => result.status === 'rejected' || result.status === 'invalid'
+    );
+
+    if (!rejected) {
+      return;
+    }
+
+    throw new MailProviderError(
+      `Mandrill ${rejected.status} ${rejected.email}${
+        rejected.reject_reason ? `: ${rejected.reject_reason}` : ''
+      }`
+    );
   }
 
   private responseIsError<T>(response: T | AxiosError): response is AxiosError {
     return 'isAxiosError' in (response as object);
+  }
+
+  async getTemplateContent(
+    externalMailTemplateId: string
+  ): Promise<MailProviderTemplateContent> {
+    const mailchimpClient = await this.getMailchimpClient();
+    const response = await mailchimpClient.templates.info({
+      name: externalMailTemplateId,
+    });
+
+    if (this.responseIsError(response)) {
+      throw new MailProviderError(
+        (response.response?.data as Error | undefined)?.message ??
+          `Failed to load template ${externalMailTemplateId}`
+      );
+    }
+
+    return this.toTemplateContent(response as PartialTemplateResponse);
+  }
+
+  /**
+   * `templates/list` already carries the code and subject of every template, so
+   * a single call is enough — no per-template `templates/info` round trip.
+   */
+  override async listTemplates(): Promise<MailProviderTemplate[]> {
+    const mailchimpClient = await this.getMailchimpClient();
+    const response = await mailchimpClient.templates.list({});
+
+    if (this.responseIsError(response)) {
+      throw new MailProviderError(
+        (response.response?.data as Error | undefined)?.message ??
+          'Failed to list templates'
+      );
+    }
+
+    return (response as PartialTemplateResponse[])
+      .filter(template => !!template.slug)
+      .map(template => {
+        const content = this.toTemplateContent(template);
+
+        return {
+          externalId: template.slug as string,
+          name: template.name || (template.slug as string),
+          html: content.html,
+          subject: content.subject ?? undefined,
+        };
+      });
+  }
+
+  /** Prefer the published version, falling back to the draft. */
+  private toTemplateContent(
+    template: PartialTemplateResponse
+  ): MailProviderTemplateContent {
+    return {
+      html: template.publish_code || template.code || '',
+      subject: template.publish_subject || template.subject || undefined,
+    };
   }
 
   async getName(): Promise<string> {

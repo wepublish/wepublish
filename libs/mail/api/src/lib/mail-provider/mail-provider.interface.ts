@@ -1,4 +1,4 @@
-import { MailLogState, MailProviderType, PrismaClient } from '@prisma/client';
+import { MailLogState, MailProviderType } from '@prisma/client';
 import { NextHandleFunction } from 'connect';
 import express from 'express';
 
@@ -13,8 +13,6 @@ export interface SendMailProps {
   subject: string;
   message?: string;
   messageHtml?: string;
-  template?: string;
-  templateData?: Record<string, any>;
 }
 
 export interface MailLogStatus {
@@ -23,28 +21,41 @@ export interface MailLogStatus {
   mailData?: string;
 }
 
-export interface MailProviderTemplate {
-  name: string;
-  uniqueIdentifier: string;
-  createdAt: Date;
-  updatedAt: Date;
+export interface SendMailResult {
+  /**
+   * Id the provider assigned to the accepted message, when it reports one.
+   * Persisted on the mail log so the delivery state can be polled later.
+   */
+  providerMessageID?: string;
 }
 
-export type WithExternalId = {
-  externalMailTemplateId: string;
-};
+/** Current delivery state of one previously sent message, as the provider sees it. */
+export interface MailProviderMessageState {
+  providerMessageID: string;
+  state: MailLogState;
+  /** Raw provider payload, stored for diagnosis. */
+  mailData?: string;
+}
 
 export enum MailTemplateStatus {
   Ok = 'ok',
-  RemoteMissing = 'remoteMissing',
   Unused = 'unused',
   Error = 'error',
 }
 
-export type WithUrlAndStatus<T> = T & {
-  url: string;
-  status: MailTemplateStatus;
-};
+export interface MailProviderTemplateContent {
+  html: string;
+  subject?: string;
+}
+
+/** A template as it exists on the remote provider, for discovery on import. */
+export interface MailProviderTemplate {
+  /** Stable remote identifier, stored as `MailTemplate.externalMailTemplateId`. */
+  externalId: string;
+  name: string;
+  html: string;
+  subject?: string;
+}
 
 export class MailProviderError extends Error {}
 
@@ -55,17 +66,30 @@ export interface MailProvider {
 
   webhookForSendMail(props: WebhookForSendMailProps): Promise<MailLogStatus[]>;
 
-  sendMail(props: SendMailProps): Promise<void>;
+  sendMail(props: SendMailProps): Promise<SendMailResult>;
 
-  getTemplates(): Promise<MailProviderTemplate[]>;
+  /**
+   * Poll the current delivery state of messages already sent. Complements the
+   * webhook: it is the only way to learn the outcome when the provider cannot
+   * reach this installation (local development, webhook not configured, missed
+   * events). Providers that expose no such lookup return an empty list.
+   */
+  getMessageStates(
+    providerMessageIDs: string[]
+  ): Promise<MailProviderMessageState[]>;
 
-  getTemplateUrl(template: WithExternalId): Promise<string>;
+  /** Fetch a template's content from the remote provider (for import/migration). */
+  getTemplateContent(
+    externalMailTemplateId: string
+  ): Promise<MailProviderTemplateContent>;
+
+  /**
+   * List every template available on the remote provider. Providers without a
+   * remote template store return an empty list.
+   */
+  listTemplates(): Promise<MailProviderTemplate[]>;
 
   getName(): Promise<string>;
 
-  initDatabaseConfiguration(
-    id: string,
-    type: MailProviderType,
-    prisma: PrismaClient
-  ): Promise<void>;
+  initDatabaseConfiguration(type: MailProviderType): Promise<void>;
 }

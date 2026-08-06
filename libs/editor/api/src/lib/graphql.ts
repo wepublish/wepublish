@@ -1658,6 +1658,85 @@ export enum LoginStatus {
   Unsubscribed = 'UNSUBSCRIBED'
 }
 
+export type MailAudienceInput = {
+  autoRenew?: InputMaybe<Scalars['Boolean']>;
+  base: MailRecipientBase;
+  /** Win-back audience only: start of an explicit period the subscription ended in. */
+  endedFrom?: InputMaybe<Scalars['DateTime']>;
+  /** Win-back audience only: end of an explicit period the subscription ended in. */
+  endedTo?: InputMaybe<Scalars['DateTime']>;
+  /** Win-back audience only: how far back an ended subscription may lie, in days. Ignored when an explicit period is given. */
+  endedWithinDays?: InputMaybe<Scalars['Int']>;
+  /** Restrict to subscriptions of these member plans. */
+  memberPlanIDs?: InputMaybe<Array<Scalars['String']>>;
+  paymentMethodID?: InputMaybe<Scalars['String']>;
+  paymentPeriodicity?: InputMaybe<PaymentPeriodicity>;
+  subscriptionState?: InputMaybe<MailSubscriptionState>;
+};
+
+export type MailLogFilter = {
+  mailSendJobId?: InputMaybe<Scalars['String']>;
+  mailTemplateId?: InputMaybe<Scalars['String']>;
+  recipientId?: InputMaybe<Scalars['String']>;
+  state?: InputMaybe<MailLogState>;
+  type?: InputMaybe<MailLogType>;
+};
+
+export type MailLogModel = {
+  __typename?: 'MailLogModel';
+  createdAt: Scalars['DateTime'];
+  /** Why a rejected mail could not be delivered. */
+  error?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  mailProviderID: Scalars['String'];
+  mailSendJobId?: Maybe<Scalars['String']>;
+  mailTemplate: MailLogTemplate;
+  recipient: MailLogRecipient;
+  sentDate: Scalars['DateTime'];
+  state: MailLogState;
+  subject?: Maybe<Scalars['String']>;
+  type?: Maybe<MailLogType>;
+};
+
+export type MailLogRecipient = {
+  __typename?: 'MailLogRecipient';
+  email: Scalars['String'];
+  firstName?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  name: Scalars['String'];
+};
+
+export enum MailLogState {
+  Accepted = 'accepted',
+  Bounced = 'bounced',
+  Deferred = 'deferred',
+  Delivered = 'delivered',
+  Rejected = 'rejected',
+  Submitted = 'submitted'
+}
+
+export type MailLogSyncModel = {
+  __typename?: 'MailLogSyncModel';
+  /** Mails that were still in an open state and could be looked up at the provider. */
+  checked: Scalars['Int'];
+  /** Mails whose state the provider reported differently. */
+  updated: Scalars['Int'];
+};
+
+export type MailLogTemplate = {
+  __typename?: 'MailLogTemplate';
+  id: Scalars['String'];
+  name: Scalars['String'];
+};
+
+/** Origin of a sent mail. */
+export enum MailLogType {
+  Manual = 'manual',
+  SubscriptionFlow = 'subscriptionFlow',
+  SystemMail = 'systemMail',
+  UserFlow = 'userFlow'
+}
+
 export type MailProviderModel = {
   __typename?: 'MailProviderModel';
   name: Scalars['String'];
@@ -1666,8 +1745,175 @@ export type MailProviderModel = {
 export enum MailProviderType {
   Mailchimp = 'MAILCHIMP',
   Mailgun = 'MAILGUN',
-  Slack = 'SLACK'
+  Slack = 'SLACK',
+  Smtp = 'SMTP'
 }
+
+/** Base set of users a manual-send audience is drawn from. */
+export enum MailRecipientBase {
+  AllUsers = 'allUsers',
+  EndedSubscription = 'endedSubscription',
+  HasSubscription = 'hasSubscription',
+  NoActiveSubscription = 'noActiveSubscription'
+}
+
+export enum MailSendAudience {
+  AllUsers = 'allUsers',
+  FilteredSubscriptions = 'filteredSubscriptions',
+  SingleUser = 'singleUser'
+}
+
+export type MailSendJobInput = {
+  audience: MailAudienceInput;
+  mailTemplateId: Scalars['String'];
+};
+
+export type MailSendJobModel = {
+  __typename?: 'MailSendJobModel';
+  audience: MailSendAudience;
+  createdAt: Scalars['DateTime'];
+  createdByUserId: Scalars['String'];
+  error?: Maybe<Scalars['String']>;
+  failedCount: Scalars['Int'];
+  finishedAt?: Maybe<Scalars['DateTime']>;
+  /** Last sign of life of the worker processing this job. */
+  heartbeatAt?: Maybe<Scalars['DateTime']>;
+  id: Scalars['String'];
+  mailTemplate?: Maybe<MailLogTemplate>;
+  mailTemplateId: Scalars['String'];
+  modifiedAt: Scalars['DateTime'];
+  /** How often the job was picked up again after an interruption. */
+  resumeCount: Scalars['Int'];
+  /** Mails handed to the provider whose outcome never came back — left over after an interruption. Never re-sent on their own. */
+  sendingCount: Scalars['Int'];
+  sentCount: Scalars['Int'];
+  startedAt?: Maybe<Scalars['DateTime']>;
+  status: MailSendJobState;
+  totalCount: Scalars['Int'];
+};
+
+export type MailSendJobRecipientModel = {
+  __typename?: 'MailSendJobRecipientModel';
+  attempts: Scalars['Int'];
+  error?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  mailLogId?: Maybe<Scalars['String']>;
+  memberPlanName?: Maybe<Scalars['String']>;
+  /** Position in the send queue. */
+  position: Scalars['Int'];
+  sentAt?: Maybe<Scalars['DateTime']>;
+  state: MailSendJobRecipientState;
+  user: MailLogRecipient;
+};
+
+/** Where one planned mail of a send job stands. */
+export enum MailSendJobRecipientState {
+  Failed = 'failed',
+  Pending = 'pending',
+  Sending = 'sending',
+  Sent = 'sent'
+}
+
+export enum MailSendJobState {
+  Cancelled = 'cancelled',
+  Done = 'done',
+  Failed = 'failed',
+  Queued = 'queued',
+  Running = 'running'
+}
+
+export type MailSendPreviewInput = {
+  audience: MailAudienceInput;
+  mailTemplateId: Scalars['String'];
+  /** Row id of the recipient to render for. Defaults to the first of the audience. */
+  recipientId?: InputMaybe<Scalars['String']>;
+};
+
+export type MailSendPreviewModel = {
+  __typename?: 'MailSendPreviewModel';
+  html: Scalars['String'];
+  /** The recipient this preview was rendered for. */
+  recipient?: Maybe<MailSendRecipientModel>;
+  subject: Scalars['String'];
+  text?: Maybe<Scalars['String']>;
+};
+
+export type MailSendRecipientModel = {
+  __typename?: 'MailSendRecipientModel';
+  email: Scalars['String'];
+  firstName?: Maybe<Scalars['String']>;
+  /** Row identity. A user appears once per matching subscription, so this combines both. */
+  id: Scalars['String'];
+  memberPlanName?: Maybe<Scalars['String']>;
+  name: Scalars['String'];
+  subscriptionId?: Maybe<Scalars['String']>;
+  userId: Scalars['String'];
+};
+
+export type MailSendRecipientPreview = {
+  __typename?: 'MailSendRecipientPreview';
+  /** Whether recipients carry subscription data (subscription-context templates allowed). */
+  allowsSubscriptionTemplates: Scalars['Boolean'];
+  /** Number of mails that would be sent. */
+  count: Scalars['Int'];
+  /** Number of distinct people reached. Lower than `count` when someone has several matching subscriptions. */
+  userCount: Scalars['Int'];
+};
+
+export enum MailSubscriptionState {
+  Active = 'active',
+  Deactivated = 'deactivated',
+  Pending = 'pending'
+}
+
+/** The mail type / context a template is written for. */
+export enum MailTemplateContext {
+  Account = 'account',
+  Custom = 'custom',
+  CustomNoSubscription = 'customNoSubscription',
+  EmailChange = 'emailChange',
+  InvoiceCreation = 'invoiceCreation',
+  Renewal = 'renewal',
+  Subscription = 'subscription'
+}
+
+export type MailTemplateInput = {
+  context?: InputMaybe<MailTemplateContext>;
+  description?: InputMaybe<Scalars['String']>;
+  htmlContent: Scalars['String'];
+  name: Scalars['String'];
+  subject: Scalars['String'];
+  textContent?: InputMaybe<Scalars['String']>;
+};
+
+export type MailTemplateModel = {
+  __typename?: 'MailTemplateModel';
+  context?: Maybe<MailTemplateContext>;
+  description?: Maybe<Scalars['String']>;
+  htmlContent: Scalars['String'];
+  id: Scalars['String'];
+  name: Scalars['String'];
+  status: Scalars['String'];
+  subject: Scalars['String'];
+  textContent?: Maybe<Scalars['String']>;
+};
+
+export type MailTemplatePreviewInput = {
+  /** Mail type / context id, e.g. "renewal". */
+  contextId: Scalars['String'];
+  htmlContent: Scalars['String'];
+  subject: Scalars['String'];
+  /** Subscription to take sample data from. */
+  subscriptionId?: InputMaybe<Scalars['String']>;
+  textContent?: InputMaybe<Scalars['String']>;
+};
+
+export type MailTemplatePreviewModel = {
+  __typename?: 'MailTemplatePreviewModel';
+  html: Scalars['String'];
+  subject: Scalars['String'];
+  text?: Maybe<Scalars['String']>;
+};
 
 export type MailTemplateRef = {
   __typename?: 'MailTemplateRef';
@@ -1675,15 +1921,10 @@ export type MailTemplateRef = {
   name: Scalars['String'];
 };
 
-export type MailTemplateWithUrlAndStatusModel = {
-  __typename?: 'MailTemplateWithUrlAndStatusModel';
-  description?: Maybe<Scalars['String']>;
-  externalMailTemplateId: Scalars['String'];
+export type MailTemplateSubscriptionOption = {
+  __typename?: 'MailTemplateSubscriptionOption';
   id: Scalars['String'];
-  name: Scalars['String'];
-  remoteMissing: Scalars['Boolean'];
-  status: Scalars['String'];
-  url: Scalars['String'];
+  label: Scalars['String'];
 };
 
 export type MailchimpInterestGroup = {
@@ -1802,6 +2043,8 @@ export type Mutation = {
   addUserComment: Comment;
   /** Approves a comment */
   approveComment: Comment;
+  /** Stop a running send job. Unsent recipients stay open and can be continued. */
+  cancelMailSendJob: MailSendJobModel;
   /** Cancels a subscription. */
   cancelSubscription: PublicSubscription;
   /** This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null */
@@ -1837,6 +2080,10 @@ export type Mutation = {
   createJWTForUser: SessionWithToken;
   /** Returns a JWT that is valid for 1min for the current logged in user. */
   createJWTForWebsiteLogin: SessionWithToken;
+  /** Start a background job sending a template to a filtered audience */
+  createMailSendJob: MailSendJobModel;
+  /** Create a new mail template */
+  createMailTemplate: MailTemplateModel;
   /** Creates a new memberplan. */
   createMemberPlan: MemberPlan;
   /** Creates a new navigation. */
@@ -1918,6 +2165,8 @@ export type Mutation = {
   deleteImage: Scalars['String'];
   /** Deletes an existing invoice. */
   deleteInvoice: Invoice;
+  /** Delete an existing mail template */
+  deleteMailTemplate?: Maybe<Scalars['Boolean']>;
   /** Deletes a single sync error so the contact will be retried. */
   deleteMailchimpSyncError: Scalars['Boolean'];
   /** Deletes an existing memberplan. */
@@ -1990,6 +2239,8 @@ export type Mutation = {
    *
    */
   importEvent: Scalars['String'];
+  /** Import HTML/subject from the mail provider, overwriting local content */
+  importMailTemplatesFromProvider: Scalars['Int'];
   /** Imports an article from a peer as a draft. */
   importPeerArticle: Article;
   /** Imports a subscription. */
@@ -2024,15 +2275,22 @@ export type Mutation = {
   restoreArticleRevision: Article;
   /** Restores an older revision of a page as a new draft. */
   restorePageRevision: Page;
+  /** Continue a send job that stopped early. Recipients already sent are skipped. */
+  resumeMailSendJob: MailSendJobModel;
   /** This mutation revokes and deletes the active session. */
   revokeActiveSession: Scalars['Boolean'];
   /** This mutation sends a login link to the email if the user exists. Method will always return email address */
   sendJWTLogin: Scalars['String'];
+  /** Manually send a mail template to a single user */
+  sendMailTemplateToUser: MailSendJobModel;
   /** Sends a password reset email with a scoped JWT token. Always returns the email to prevent enumeration. */
   sendPasswordResetEmail: Scalars['String'];
+  /** Send a test mail for a draft template */
+  sendTestMailTemplate?: Maybe<Scalars['Boolean']>;
   /** This mutation sends a login link to the email if the user exists. Method will always return email address */
   sendWebsiteLogin: Scalars['String'];
-  syncTemplates?: Maybe<Scalars['Boolean']>;
+  /** Ask the mail provider for the current delivery state of mails that are still open. Complements the provider webhook, which is not reachable in local development. */
+  syncMailLogStates: MailLogSyncModel;
   /** Sends a test email for the given event */
   testSystemMail: Scalars['Boolean'];
   /** Triggers a mailchimp sync in the background. */
@@ -2078,6 +2336,8 @@ export type Mutation = {
   updateInvoice: Invoice;
   /** Updates an existing mail provider setting. */
   updateMailProviderSetting: SettingMailProvider;
+  /** Update an existing mail template */
+  updateMailTemplate: MailTemplateModel;
   /** Updates an existing memberplan. */
   updateMemberPlan: MemberPlan;
   /** Updates an existing navigation. */
@@ -2159,6 +2419,11 @@ export type MutationAddUserCommentArgs = {
 
 
 export type MutationApproveCommentArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationCancelMailSendJobArgs = {
   id: Scalars['String'];
 };
 
@@ -2291,6 +2556,16 @@ export type MutationCreateInvoiceArgs = {
 export type MutationCreateJwtForUserArgs = {
   expiresInMinutes: Scalars['Float'];
   userId: Scalars['String'];
+};
+
+
+export type MutationCreateMailSendJobArgs = {
+  input: MailSendJobInput;
+};
+
+
+export type MutationCreateMailTemplateArgs = {
+  input: MailTemplateInput;
 };
 
 
@@ -2610,6 +2885,11 @@ export type MutationDeleteInvoiceArgs = {
 };
 
 
+export type MutationDeleteMailTemplateArgs = {
+  id: Scalars['String'];
+};
+
+
 export type MutationDeleteMailchimpSyncErrorArgs = {
   id: Scalars['String'];
 };
@@ -2883,8 +3163,20 @@ export type MutationRestorePageRevisionArgs = {
 };
 
 
+export type MutationResumeMailSendJobArgs = {
+  id: Scalars['String'];
+  retryUnfinished?: InputMaybe<Scalars['Boolean']>;
+};
+
+
 export type MutationSendJwtLoginArgs = {
   email: Scalars['String'];
+};
+
+
+export type MutationSendMailTemplateToUserArgs = {
+  templateId: Scalars['String'];
+  userId: Scalars['String'];
 };
 
 
@@ -2893,8 +3185,18 @@ export type MutationSendPasswordResetEmailArgs = {
 };
 
 
+export type MutationSendTestMailTemplateArgs = {
+  input: SendTestMailTemplateInput;
+};
+
+
 export type MutationSendWebsiteLoginArgs = {
   email: Scalars['String'];
+};
+
+
+export type MutationSyncMailLogStatesArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -3103,7 +3405,17 @@ export type MutationUpdateMailProviderSettingArgs = {
   name?: InputMaybe<Scalars['String']>;
   replyToAddress?: InputMaybe<Scalars['String']>;
   slack_webhookURL?: InputMaybe<Scalars['String']>;
+  smtp_host?: InputMaybe<Scalars['String']>;
+  smtp_port?: InputMaybe<Scalars['Int']>;
+  smtp_secure?: InputMaybe<Scalars['Boolean']>;
+  smtp_user?: InputMaybe<Scalars['String']>;
   webhookEndpointSecret?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationUpdateMailTemplateArgs = {
+  id: Scalars['String'];
+  input: MailTemplateInput;
 };
 
 
@@ -3314,7 +3626,7 @@ export type MutationUpdateSyncProviderSettingArgs = {
 
 export type MutationUpdateSystemMailArgs = {
   event: UserEvent;
-  mailTemplateId: Scalars['String'];
+  mailTemplateId?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -3657,6 +3969,34 @@ export type PaginatedEventsFromSources = {
 export type PaginatedImages = {
   __typename?: 'PaginatedImages';
   nodes: Array<Image>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type PaginatedMailLog = {
+  __typename?: 'PaginatedMailLog';
+  nodes: Array<MailLogModel>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type PaginatedMailSendJob = {
+  __typename?: 'PaginatedMailSendJob';
+  nodes: Array<MailSendJobModel>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type PaginatedMailSendJobRecipient = {
+  __typename?: 'PaginatedMailSendJobRecipient';
+  nodes: Array<MailSendJobRecipientModel>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type PaginatedMailSendRecipient = {
+  __typename?: 'PaginatedMailSendRecipient';
+  nodes: Array<MailSendRecipientModel>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
 };
@@ -4398,12 +4738,32 @@ export type Query = {
   invoice: Invoice;
   /** Returns a paginated list of invoices based on the filters given. */
   invoices: InvoiceConnection;
+  /** Paginated list of sent mails */
+  mailLogs: PaginatedMailLog;
   /** Returns a single mail provider setting by id. */
   mailProviderSetting: SettingMailProvider;
   /** Returns all mail provider settings. */
   mailProviderSettings: Array<SettingMailProvider>;
+  /** A single mail send job (for progress polling) */
+  mailSendJob?: Maybe<MailSendJobModel>;
+  /** The planned mails of a send job and where each of them stands */
+  mailSendJobRecipients: PaginatedMailSendJobRecipient;
+  /** Paginated list of mail send jobs */
+  mailSendJobs: PaginatedMailSendJob;
+  /** Render a saved template for one recipient of an audience, exactly as the send would compose it */
+  mailSendPreview: MailSendPreviewModel;
+  /** Preview how many recipients an audience resolves to */
+  mailSendRecipientPreview: MailSendRecipientPreview;
+  /** The concrete recipients an audience resolves to */
+  mailSendRecipients: PaginatedMailSendRecipient;
+  /** Placeholders a template uses that would render empty for the given send (empty = none missing) */
+  mailTemplateMissingPlaceholders: Array<Scalars['String']>;
+  /** Render a draft mail template with a mail type's sample data */
+  mailTemplatePreview: MailTemplatePreviewModel;
+  /** Search subscriptions to use as sample data for previews/tests */
+  mailTemplateSubscriptions: Array<MailTemplateSubscriptionOption>;
   /** Return all mail templates */
-  mailTemplates: Array<MailTemplateWithUrlAndStatusModel>;
+  mailTemplates: Array<MailTemplateModel>;
   /** Fetches available interest groups for a Mailchimp list. */
   mailchimpInterestGroups: Array<MailchimpInterestGroup>;
   /** Fetches available Mailchimp lists/audiences for a sync config. */
@@ -4827,6 +5187,13 @@ export type QueryInvoicesArgs = {
 };
 
 
+export type QueryMailLogsArgs = {
+  filter?: InputMaybe<MailLogFilter>;
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
+
 export type QueryMailProviderSettingArgs = {
   id: Scalars['String'];
 };
@@ -4834,6 +5201,58 @@ export type QueryMailProviderSettingArgs = {
 
 export type QueryMailProviderSettingsArgs = {
   filter?: InputMaybe<SettingMailProviderFilter>;
+};
+
+
+export type QueryMailSendJobArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QueryMailSendJobRecipientsArgs = {
+  jobId: Scalars['String'];
+  skip?: InputMaybe<Scalars['Int']>;
+  state?: InputMaybe<MailSendJobRecipientState>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryMailSendJobsArgs = {
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryMailSendPreviewArgs = {
+  input: MailSendPreviewInput;
+};
+
+
+export type QueryMailSendRecipientPreviewArgs = {
+  audience: MailAudienceInput;
+};
+
+
+export type QueryMailSendRecipientsArgs = {
+  audience: MailAudienceInput;
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryMailTemplateMissingPlaceholdersArgs = {
+  templateId: Scalars['String'];
+  withSubscriptionData: Scalars['Boolean'];
+};
+
+
+export type QueryMailTemplatePreviewArgs = {
+  input: MailTemplatePreviewInput;
+};
+
+
+export type QueryMailTemplateSubscriptionsArgs = {
+  query?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -5266,6 +5685,14 @@ export type RichTextBlockInput = {
   richText?: InputMaybe<Scalars['RichText']>;
 };
 
+export type SendTestMailTemplateInput = {
+  contextId: Scalars['String'];
+  htmlContent: Scalars['String'];
+  subject: Scalars['String'];
+  subscriptionId?: InputMaybe<Scalars['String']>;
+  textContent?: InputMaybe<Scalars['String']>;
+};
+
 export type SensitiveDataUser = BaseUser & {
   __typename?: 'SensitiveDataUser';
   active: Scalars['Boolean'];
@@ -5398,6 +5825,10 @@ export type SettingMailProvider = SettingProvider & {
   name?: Maybe<Scalars['String']>;
   replyToAddress?: Maybe<Scalars['String']>;
   slack_webhookURL?: Maybe<Scalars['String']>;
+  smtp_host?: Maybe<Scalars['String']>;
+  smtp_port?: Maybe<Scalars['Int']>;
+  smtp_secure?: Maybe<Scalars['Boolean']>;
+  smtp_user?: Maybe<Scalars['String']>;
   type: MailProviderType;
 };
 
@@ -7320,17 +7751,166 @@ export type MarkInvoiceAsPaidMutationVariables = Exact<{
 
 export type MarkInvoiceAsPaidMutation = { __typename?: 'Mutation', markInvoiceAsPaid: { __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> } };
 
+export type FullMailLogFragment = { __typename?: 'MailLogModel', id: string, createdAt: string, sentDate: string, state: MailLogState, type?: MailLogType | null, subject?: string | null, error?: string | null, mailProviderID: string, mailSendJobId?: string | null, recipient: { __typename?: 'MailLogRecipient', id: string, email: string, name: string, firstName?: string | null }, mailTemplate: { __typename?: 'MailLogTemplate', id: string, name: string } };
+
+export type SyncMailLogStatesMutationVariables = Exact<{
+  limit?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type SyncMailLogStatesMutation = { __typename?: 'Mutation', syncMailLogStates: { __typename?: 'MailLogSyncModel', checked: number, updated: number } };
+
+export type MailLogsQueryVariables = Exact<{
+  filter?: InputMaybe<MailLogFilter>;
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type MailLogsQuery = { __typename?: 'Query', mailLogs: { __typename?: 'PaginatedMailLog', totalCount: number, nodes: Array<{ __typename?: 'MailLogModel', id: string, createdAt: string, sentDate: string, state: MailLogState, type?: MailLogType | null, subject?: string | null, error?: string | null, mailProviderID: string, mailSendJobId?: string | null, recipient: { __typename?: 'MailLogRecipient', id: string, email: string, name: string, firstName?: string | null }, mailTemplate: { __typename?: 'MailLogTemplate', id: string, name: string } }>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } };
+
+export type FullMailSendJobFragment = { __typename?: 'MailSendJobModel', id: string, createdAt: string, modifiedAt: string, status: MailSendJobState, audience: MailSendAudience, totalCount: number, sentCount: number, failedCount: number, sendingCount: number, resumeCount: number, startedAt?: string | null, finishedAt?: string | null, heartbeatAt?: string | null, error?: string | null, mailTemplate?: { __typename?: 'MailLogTemplate', id: string, name: string } | null };
+
+export type MailSendRecipientPreviewQueryVariables = Exact<{
+  audience: MailAudienceInput;
+}>;
+
+
+export type MailSendRecipientPreviewQuery = { __typename?: 'Query', mailSendRecipientPreview: { __typename?: 'MailSendRecipientPreview', count: number, userCount: number, allowsSubscriptionTemplates: boolean } };
+
+export type MailSendRecipientsQueryVariables = Exact<{
+  audience: MailAudienceInput;
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type MailSendRecipientsQuery = { __typename?: 'Query', mailSendRecipients: { __typename?: 'PaginatedMailSendRecipient', totalCount: number, nodes: Array<{ __typename?: 'MailSendRecipientModel', id: string, userId: string, email: string, name: string, firstName?: string | null, subscriptionId?: string | null, memberPlanName?: string | null }>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean } } };
+
+export type MailSendPreviewQueryVariables = Exact<{
+  input: MailSendPreviewInput;
+}>;
+
+
+export type MailSendPreviewQuery = { __typename?: 'Query', mailSendPreview: { __typename?: 'MailSendPreviewModel', subject: string, html: string, recipient?: { __typename?: 'MailSendRecipientModel', id: string, email: string, name: string, firstName?: string | null, memberPlanName?: string | null } | null } };
+
+export type MailTemplateMissingPlaceholdersQueryVariables = Exact<{
+  templateId: Scalars['String'];
+  withSubscriptionData: Scalars['Boolean'];
+}>;
+
+
+export type MailTemplateMissingPlaceholdersQuery = { __typename?: 'Query', mailTemplateMissingPlaceholders: Array<string> };
+
+export type MailSendJobQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type MailSendJobQuery = { __typename?: 'Query', mailSendJob?: { __typename?: 'MailSendJobModel', id: string, createdAt: string, modifiedAt: string, status: MailSendJobState, audience: MailSendAudience, totalCount: number, sentCount: number, failedCount: number, sendingCount: number, resumeCount: number, startedAt?: string | null, finishedAt?: string | null, heartbeatAt?: string | null, error?: string | null, mailTemplate?: { __typename?: 'MailLogTemplate', id: string, name: string } | null } | null };
+
+export type MailSendJobsQueryVariables = Exact<{
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type MailSendJobsQuery = { __typename?: 'Query', mailSendJobs: { __typename?: 'PaginatedMailSendJob', totalCount: number, nodes: Array<{ __typename?: 'MailSendJobModel', id: string, createdAt: string, modifiedAt: string, status: MailSendJobState, audience: MailSendAudience, totalCount: number, sentCount: number, failedCount: number, sendingCount: number, resumeCount: number, startedAt?: string | null, finishedAt?: string | null, heartbeatAt?: string | null, error?: string | null, mailTemplate?: { __typename?: 'MailLogTemplate', id: string, name: string } | null }>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } };
+
+export type MailSendJobRecipientsQueryVariables = Exact<{
+  jobId: Scalars['String'];
+  state?: InputMaybe<MailSendJobRecipientState>;
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type MailSendJobRecipientsQuery = { __typename?: 'Query', mailSendJobRecipients: { __typename?: 'PaginatedMailSendJobRecipient', totalCount: number, nodes: Array<{ __typename?: 'MailSendJobRecipientModel', id: string, position: number, state: MailSendJobRecipientState, attempts: number, error?: string | null, sentAt?: string | null, mailLogId?: string | null, memberPlanName?: string | null, user: { __typename?: 'MailLogRecipient', id: string, email: string, name: string, firstName?: string | null } }>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean } } };
+
+export type ResumeMailSendJobMutationVariables = Exact<{
+  id: Scalars['String'];
+  retryUnfinished?: InputMaybe<Scalars['Boolean']>;
+}>;
+
+
+export type ResumeMailSendJobMutation = { __typename?: 'Mutation', resumeMailSendJob: { __typename?: 'MailSendJobModel', id: string, createdAt: string, modifiedAt: string, status: MailSendJobState, audience: MailSendAudience, totalCount: number, sentCount: number, failedCount: number, sendingCount: number, resumeCount: number, startedAt?: string | null, finishedAt?: string | null, heartbeatAt?: string | null, error?: string | null, mailTemplate?: { __typename?: 'MailLogTemplate', id: string, name: string } | null } };
+
+export type CancelMailSendJobMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type CancelMailSendJobMutation = { __typename?: 'Mutation', cancelMailSendJob: { __typename?: 'MailSendJobModel', id: string, createdAt: string, modifiedAt: string, status: MailSendJobState, audience: MailSendAudience, totalCount: number, sentCount: number, failedCount: number, sendingCount: number, resumeCount: number, startedAt?: string | null, finishedAt?: string | null, heartbeatAt?: string | null, error?: string | null, mailTemplate?: { __typename?: 'MailLogTemplate', id: string, name: string } | null } };
+
+export type SendMailTemplateToUserMutationVariables = Exact<{
+  templateId: Scalars['String'];
+  userId: Scalars['String'];
+}>;
+
+
+export type SendMailTemplateToUserMutation = { __typename?: 'Mutation', sendMailTemplateToUser: { __typename?: 'MailSendJobModel', id: string, createdAt: string, modifiedAt: string, status: MailSendJobState, audience: MailSendAudience, totalCount: number, sentCount: number, failedCount: number, sendingCount: number, resumeCount: number, startedAt?: string | null, finishedAt?: string | null, heartbeatAt?: string | null, error?: string | null, mailTemplate?: { __typename?: 'MailLogTemplate', id: string, name: string } | null } };
+
+export type CreateMailSendJobMutationVariables = Exact<{
+  input: MailSendJobInput;
+}>;
+
+
+export type CreateMailSendJobMutation = { __typename?: 'Mutation', createMailSendJob: { __typename?: 'MailSendJobModel', id: string, createdAt: string, modifiedAt: string, status: MailSendJobState, audience: MailSendAudience, totalCount: number, sentCount: number, failedCount: number, sendingCount: number, resumeCount: number, startedAt?: string | null, finishedAt?: string | null, heartbeatAt?: string | null, error?: string | null, mailTemplate?: { __typename?: 'MailLogTemplate', id: string, name: string } | null } };
+
 export type MailTemplateQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MailTemplateQuery = { __typename?: 'Query', mailTemplates: Array<{ __typename?: 'MailTemplateWithUrlAndStatusModel', id: string, name: string, description?: string | null, externalMailTemplateId: string, remoteMissing: boolean, url: string, status: string }>, provider: { __typename?: 'MailProviderModel', name: string } };
+export type MailTemplateQuery = { __typename?: 'Query', mailTemplates: Array<{ __typename?: 'MailTemplateModel', id: string, name: string, description?: string | null, subject: string, htmlContent: string, textContent?: string | null, context?: MailTemplateContext | null, status: string }>, provider: { __typename?: 'MailProviderModel', name: string } };
 
-export type SynchronizeMailTemplatesMutationVariables = Exact<{ [key: string]: never; }>;
+export type CreateMailTemplateMutationVariables = Exact<{
+  input: MailTemplateInput;
+}>;
 
 
-export type SynchronizeMailTemplatesMutation = { __typename?: 'Mutation', syncTemplates?: boolean | null };
+export type CreateMailTemplateMutation = { __typename?: 'Mutation', createMailTemplate: { __typename?: 'MailTemplateModel', id: string, name: string, description?: string | null, subject: string, htmlContent: string, textContent?: string | null, context?: MailTemplateContext | null, status: string } };
 
-export type FullMailTemplateFragment = { __typename?: 'MailTemplateWithUrlAndStatusModel', id: string, name: string, description?: string | null, externalMailTemplateId: string, remoteMissing: boolean, url: string, status: string };
+export type UpdateMailTemplateMutationVariables = Exact<{
+  id: Scalars['String'];
+  input: MailTemplateInput;
+}>;
+
+
+export type UpdateMailTemplateMutation = { __typename?: 'Mutation', updateMailTemplate: { __typename?: 'MailTemplateModel', id: string, name: string, description?: string | null, subject: string, htmlContent: string, textContent?: string | null, context?: MailTemplateContext | null, status: string } };
+
+export type DeleteMailTemplateMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type DeleteMailTemplateMutation = { __typename?: 'Mutation', deleteMailTemplate?: boolean | null };
+
+export type ImportMailTemplatesFromProviderMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ImportMailTemplatesFromProviderMutation = { __typename?: 'Mutation', importMailTemplatesFromProvider: number };
+
+export type MailTemplateSubscriptionsQueryVariables = Exact<{
+  query?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type MailTemplateSubscriptionsQuery = { __typename?: 'Query', mailTemplateSubscriptions: Array<{ __typename?: 'MailTemplateSubscriptionOption', id: string, label: string }> };
+
+export type MailTemplatePreviewQueryVariables = Exact<{
+  input: MailTemplatePreviewInput;
+}>;
+
+
+export type MailTemplatePreviewQuery = { __typename?: 'Query', mailTemplatePreview: { __typename?: 'MailTemplatePreviewModel', subject: string, html: string, text?: string | null } };
+
+export type SendTestMailTemplateMutationVariables = Exact<{
+  input: SendTestMailTemplateInput;
+}>;
+
+
+export type SendTestMailTemplateMutation = { __typename?: 'Mutation', sendTestMailTemplate?: boolean | null };
+
+export type FullMailTemplateFragment = { __typename?: 'MailTemplateModel', id: string, name: string, description?: string | null, subject: string, htmlContent: string, textContent?: string | null, context?: MailTemplateContext | null, status: string };
 
 export type FullMailProviderFragment = { __typename?: 'MailProviderModel', name: string };
 
@@ -7984,7 +8564,7 @@ export type UpdateSettingsIntegrationsChallengeMutation = { __typename?: 'Mutati
 export type MailProviderSettingsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MailProviderSettingsQuery = { __typename?: 'Query', mailProviderSettings: Array<{ __typename?: 'SettingMailProvider', createdAt: string, fromAddress?: string | null, id: string, lastLoadedAt: string, mailchimp_baseURL?: string | null, mailgun_baseDomain?: string | null, mailgun_mailDomain?: string | null, modifiedAt: string, name?: string | null, replyToAddress?: string | null, slack_webhookURL?: string | null, type: MailProviderType }> };
+export type MailProviderSettingsQuery = { __typename?: 'Query', mailProviderSettings: Array<{ __typename?: 'SettingMailProvider', createdAt: string, fromAddress?: string | null, id: string, lastLoadedAt: string, mailchimp_baseURL?: string | null, mailgun_baseDomain?: string | null, mailgun_mailDomain?: string | null, modifiedAt: string, name?: string | null, replyToAddress?: string | null, slack_webhookURL?: string | null, smtp_host?: string | null, smtp_port?: number | null, smtp_secure?: boolean | null, smtp_user?: string | null, type: MailProviderType }> };
 
 export type UpdateMailProviderSettingMutationVariables = Exact<{
   apiKey?: InputMaybe<Scalars['String']>;
@@ -7996,11 +8576,15 @@ export type UpdateMailProviderSettingMutationVariables = Exact<{
   name?: InputMaybe<Scalars['String']>;
   replyToAddress?: InputMaybe<Scalars['String']>;
   slack_webhookURL?: InputMaybe<Scalars['String']>;
+  smtp_host?: InputMaybe<Scalars['String']>;
+  smtp_port?: InputMaybe<Scalars['Int']>;
+  smtp_secure?: InputMaybe<Scalars['Boolean']>;
+  smtp_user?: InputMaybe<Scalars['String']>;
   webhookEndpointSecret?: InputMaybe<Scalars['String']>;
 }>;
 
 
-export type UpdateMailProviderSettingMutation = { __typename?: 'Mutation', updateMailProviderSetting: { __typename?: 'SettingMailProvider', createdAt: string, fromAddress?: string | null, id: string, lastLoadedAt: string, mailchimp_baseURL?: string | null, mailgun_baseDomain?: string | null, mailgun_mailDomain?: string | null, modifiedAt: string, name?: string | null, replyToAddress?: string | null, slack_webhookURL?: string | null, type: MailProviderType } };
+export type UpdateMailProviderSettingMutation = { __typename?: 'Mutation', updateMailProviderSetting: { __typename?: 'SettingMailProvider', createdAt: string, fromAddress?: string | null, id: string, lastLoadedAt: string, mailchimp_baseURL?: string | null, mailgun_baseDomain?: string | null, mailgun_mailDomain?: string | null, modifiedAt: string, name?: string | null, replyToAddress?: string | null, slack_webhookURL?: string | null, smtp_host?: string | null, smtp_port?: number | null, smtp_secure?: boolean | null, smtp_user?: string | null, type: MailProviderType } };
 
 export type PaymentProviderSettingsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -8358,7 +8942,7 @@ export type SystemMailsQuery = { __typename?: 'Query', systemMails: Array<{ __ty
 
 export type UpdateSystemMailMutationVariables = Exact<{
   event: UserEvent;
-  mailTemplateId: Scalars['String'];
+  mailTemplateId?: InputMaybe<Scalars['String']>;
 }>;
 
 
@@ -9898,14 +10482,60 @@ export const InvoiceFragmentDoc = gql`
   currency
 }
     `;
+export const FullMailLogFragmentDoc = gql`
+    fragment FullMailLog on MailLogModel {
+  id
+  createdAt
+  sentDate
+  state
+  type
+  subject
+  error
+  mailProviderID
+  mailSendJobId
+  recipient {
+    id
+    email
+    name
+    firstName
+  }
+  mailTemplate {
+    id
+    name
+  }
+}
+    `;
+export const FullMailSendJobFragmentDoc = gql`
+    fragment FullMailSendJob on MailSendJobModel {
+  id
+  createdAt
+  modifiedAt
+  status
+  audience
+  totalCount
+  sentCount
+  failedCount
+  sendingCount
+  resumeCount
+  startedAt
+  finishedAt
+  heartbeatAt
+  error
+  mailTemplate {
+    id
+    name
+  }
+}
+    `;
 export const FullMailTemplateFragmentDoc = gql`
-    fragment FullMailTemplate on MailTemplateWithUrlAndStatusModel {
+    fragment FullMailTemplate on MailTemplateModel {
   id
   name
   description
-  externalMailTemplateId
-  remoteMissing
-  url
+  subject
+  htmlContent
+  textContent
+  context
   status
 }
     `;
@@ -14103,6 +14733,525 @@ export function useMarkInvoiceAsPaidMutation(baseOptions?: Apollo.MutationHookOp
 export type MarkInvoiceAsPaidMutationHookResult = ReturnType<typeof useMarkInvoiceAsPaidMutation>;
 export type MarkInvoiceAsPaidMutationResult = Apollo.MutationResult<MarkInvoiceAsPaidMutation>;
 export type MarkInvoiceAsPaidMutationOptions = Apollo.BaseMutationOptions<MarkInvoiceAsPaidMutation, MarkInvoiceAsPaidMutationVariables>;
+export const SyncMailLogStatesDocument = gql`
+    mutation SyncMailLogStates($limit: Int) {
+  syncMailLogStates(limit: $limit) {
+    checked
+    updated
+  }
+}
+    `;
+export type SyncMailLogStatesMutationFn = Apollo.MutationFunction<SyncMailLogStatesMutation, SyncMailLogStatesMutationVariables>;
+
+/**
+ * __useSyncMailLogStatesMutation__
+ *
+ * To run a mutation, you first call `useSyncMailLogStatesMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSyncMailLogStatesMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [syncMailLogStatesMutation, { data, loading, error }] = useSyncMailLogStatesMutation({
+ *   variables: {
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useSyncMailLogStatesMutation(baseOptions?: Apollo.MutationHookOptions<SyncMailLogStatesMutation, SyncMailLogStatesMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SyncMailLogStatesMutation, SyncMailLogStatesMutationVariables>(SyncMailLogStatesDocument, options);
+      }
+export type SyncMailLogStatesMutationHookResult = ReturnType<typeof useSyncMailLogStatesMutation>;
+export type SyncMailLogStatesMutationResult = Apollo.MutationResult<SyncMailLogStatesMutation>;
+export type SyncMailLogStatesMutationOptions = Apollo.BaseMutationOptions<SyncMailLogStatesMutation, SyncMailLogStatesMutationVariables>;
+export const MailLogsDocument = gql`
+    query MailLogs($filter: MailLogFilter, $skip: Int, $take: Int) {
+  mailLogs(filter: $filter, skip: $skip, take: $take) {
+    nodes {
+      ...FullMailLog
+    }
+    totalCount
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+      startCursor
+      endCursor
+    }
+  }
+}
+    ${FullMailLogFragmentDoc}`;
+
+/**
+ * __useMailLogsQuery__
+ *
+ * To run a query within a React component, call `useMailLogsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMailLogsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMailLogsQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *      skip: // value for 'skip'
+ *      take: // value for 'take'
+ *   },
+ * });
+ */
+export function useMailLogsQuery(baseOptions?: Apollo.QueryHookOptions<MailLogsQuery, MailLogsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MailLogsQuery, MailLogsQueryVariables>(MailLogsDocument, options);
+      }
+export function useMailLogsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MailLogsQuery, MailLogsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MailLogsQuery, MailLogsQueryVariables>(MailLogsDocument, options);
+        }
+export type MailLogsQueryHookResult = ReturnType<typeof useMailLogsQuery>;
+export type MailLogsLazyQueryHookResult = ReturnType<typeof useMailLogsLazyQuery>;
+export type MailLogsQueryResult = Apollo.QueryResult<MailLogsQuery, MailLogsQueryVariables>;
+export const MailSendRecipientPreviewDocument = gql`
+    query MailSendRecipientPreview($audience: MailAudienceInput!) {
+  mailSendRecipientPreview(audience: $audience) {
+    count
+    userCount
+    allowsSubscriptionTemplates
+  }
+}
+    `;
+
+/**
+ * __useMailSendRecipientPreviewQuery__
+ *
+ * To run a query within a React component, call `useMailSendRecipientPreviewQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMailSendRecipientPreviewQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMailSendRecipientPreviewQuery({
+ *   variables: {
+ *      audience: // value for 'audience'
+ *   },
+ * });
+ */
+export function useMailSendRecipientPreviewQuery(baseOptions: Apollo.QueryHookOptions<MailSendRecipientPreviewQuery, MailSendRecipientPreviewQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MailSendRecipientPreviewQuery, MailSendRecipientPreviewQueryVariables>(MailSendRecipientPreviewDocument, options);
+      }
+export function useMailSendRecipientPreviewLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MailSendRecipientPreviewQuery, MailSendRecipientPreviewQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MailSendRecipientPreviewQuery, MailSendRecipientPreviewQueryVariables>(MailSendRecipientPreviewDocument, options);
+        }
+export type MailSendRecipientPreviewQueryHookResult = ReturnType<typeof useMailSendRecipientPreviewQuery>;
+export type MailSendRecipientPreviewLazyQueryHookResult = ReturnType<typeof useMailSendRecipientPreviewLazyQuery>;
+export type MailSendRecipientPreviewQueryResult = Apollo.QueryResult<MailSendRecipientPreviewQuery, MailSendRecipientPreviewQueryVariables>;
+export const MailSendRecipientsDocument = gql`
+    query MailSendRecipients($audience: MailAudienceInput!, $skip: Int, $take: Int) {
+  mailSendRecipients(audience: $audience, skip: $skip, take: $take) {
+    nodes {
+      id
+      userId
+      email
+      name
+      firstName
+      subscriptionId
+      memberPlanName
+    }
+    totalCount
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+    }
+  }
+}
+    `;
+
+/**
+ * __useMailSendRecipientsQuery__
+ *
+ * To run a query within a React component, call `useMailSendRecipientsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMailSendRecipientsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMailSendRecipientsQuery({
+ *   variables: {
+ *      audience: // value for 'audience'
+ *      skip: // value for 'skip'
+ *      take: // value for 'take'
+ *   },
+ * });
+ */
+export function useMailSendRecipientsQuery(baseOptions: Apollo.QueryHookOptions<MailSendRecipientsQuery, MailSendRecipientsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MailSendRecipientsQuery, MailSendRecipientsQueryVariables>(MailSendRecipientsDocument, options);
+      }
+export function useMailSendRecipientsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MailSendRecipientsQuery, MailSendRecipientsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MailSendRecipientsQuery, MailSendRecipientsQueryVariables>(MailSendRecipientsDocument, options);
+        }
+export type MailSendRecipientsQueryHookResult = ReturnType<typeof useMailSendRecipientsQuery>;
+export type MailSendRecipientsLazyQueryHookResult = ReturnType<typeof useMailSendRecipientsLazyQuery>;
+export type MailSendRecipientsQueryResult = Apollo.QueryResult<MailSendRecipientsQuery, MailSendRecipientsQueryVariables>;
+export const MailSendPreviewDocument = gql`
+    query MailSendPreview($input: MailSendPreviewInput!) {
+  mailSendPreview(input: $input) {
+    subject
+    html
+    recipient {
+      id
+      email
+      name
+      firstName
+      memberPlanName
+    }
+  }
+}
+    `;
+
+/**
+ * __useMailSendPreviewQuery__
+ *
+ * To run a query within a React component, call `useMailSendPreviewQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMailSendPreviewQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMailSendPreviewQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useMailSendPreviewQuery(baseOptions: Apollo.QueryHookOptions<MailSendPreviewQuery, MailSendPreviewQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MailSendPreviewQuery, MailSendPreviewQueryVariables>(MailSendPreviewDocument, options);
+      }
+export function useMailSendPreviewLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MailSendPreviewQuery, MailSendPreviewQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MailSendPreviewQuery, MailSendPreviewQueryVariables>(MailSendPreviewDocument, options);
+        }
+export type MailSendPreviewQueryHookResult = ReturnType<typeof useMailSendPreviewQuery>;
+export type MailSendPreviewLazyQueryHookResult = ReturnType<typeof useMailSendPreviewLazyQuery>;
+export type MailSendPreviewQueryResult = Apollo.QueryResult<MailSendPreviewQuery, MailSendPreviewQueryVariables>;
+export const MailTemplateMissingPlaceholdersDocument = gql`
+    query MailTemplateMissingPlaceholders($templateId: String!, $withSubscriptionData: Boolean!) {
+  mailTemplateMissingPlaceholders(
+    templateId: $templateId
+    withSubscriptionData: $withSubscriptionData
+  )
+}
+    `;
+
+/**
+ * __useMailTemplateMissingPlaceholdersQuery__
+ *
+ * To run a query within a React component, call `useMailTemplateMissingPlaceholdersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMailTemplateMissingPlaceholdersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMailTemplateMissingPlaceholdersQuery({
+ *   variables: {
+ *      templateId: // value for 'templateId'
+ *      withSubscriptionData: // value for 'withSubscriptionData'
+ *   },
+ * });
+ */
+export function useMailTemplateMissingPlaceholdersQuery(baseOptions: Apollo.QueryHookOptions<MailTemplateMissingPlaceholdersQuery, MailTemplateMissingPlaceholdersQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MailTemplateMissingPlaceholdersQuery, MailTemplateMissingPlaceholdersQueryVariables>(MailTemplateMissingPlaceholdersDocument, options);
+      }
+export function useMailTemplateMissingPlaceholdersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MailTemplateMissingPlaceholdersQuery, MailTemplateMissingPlaceholdersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MailTemplateMissingPlaceholdersQuery, MailTemplateMissingPlaceholdersQueryVariables>(MailTemplateMissingPlaceholdersDocument, options);
+        }
+export type MailTemplateMissingPlaceholdersQueryHookResult = ReturnType<typeof useMailTemplateMissingPlaceholdersQuery>;
+export type MailTemplateMissingPlaceholdersLazyQueryHookResult = ReturnType<typeof useMailTemplateMissingPlaceholdersLazyQuery>;
+export type MailTemplateMissingPlaceholdersQueryResult = Apollo.QueryResult<MailTemplateMissingPlaceholdersQuery, MailTemplateMissingPlaceholdersQueryVariables>;
+export const MailSendJobDocument = gql`
+    query MailSendJob($id: String!) {
+  mailSendJob(id: $id) {
+    ...FullMailSendJob
+  }
+}
+    ${FullMailSendJobFragmentDoc}`;
+
+/**
+ * __useMailSendJobQuery__
+ *
+ * To run a query within a React component, call `useMailSendJobQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMailSendJobQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMailSendJobQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useMailSendJobQuery(baseOptions: Apollo.QueryHookOptions<MailSendJobQuery, MailSendJobQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MailSendJobQuery, MailSendJobQueryVariables>(MailSendJobDocument, options);
+      }
+export function useMailSendJobLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MailSendJobQuery, MailSendJobQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MailSendJobQuery, MailSendJobQueryVariables>(MailSendJobDocument, options);
+        }
+export type MailSendJobQueryHookResult = ReturnType<typeof useMailSendJobQuery>;
+export type MailSendJobLazyQueryHookResult = ReturnType<typeof useMailSendJobLazyQuery>;
+export type MailSendJobQueryResult = Apollo.QueryResult<MailSendJobQuery, MailSendJobQueryVariables>;
+export const MailSendJobsDocument = gql`
+    query MailSendJobs($skip: Int, $take: Int) {
+  mailSendJobs(skip: $skip, take: $take) {
+    nodes {
+      ...FullMailSendJob
+    }
+    totalCount
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+      startCursor
+      endCursor
+    }
+  }
+}
+    ${FullMailSendJobFragmentDoc}`;
+
+/**
+ * __useMailSendJobsQuery__
+ *
+ * To run a query within a React component, call `useMailSendJobsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMailSendJobsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMailSendJobsQuery({
+ *   variables: {
+ *      skip: // value for 'skip'
+ *      take: // value for 'take'
+ *   },
+ * });
+ */
+export function useMailSendJobsQuery(baseOptions?: Apollo.QueryHookOptions<MailSendJobsQuery, MailSendJobsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MailSendJobsQuery, MailSendJobsQueryVariables>(MailSendJobsDocument, options);
+      }
+export function useMailSendJobsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MailSendJobsQuery, MailSendJobsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MailSendJobsQuery, MailSendJobsQueryVariables>(MailSendJobsDocument, options);
+        }
+export type MailSendJobsQueryHookResult = ReturnType<typeof useMailSendJobsQuery>;
+export type MailSendJobsLazyQueryHookResult = ReturnType<typeof useMailSendJobsLazyQuery>;
+export type MailSendJobsQueryResult = Apollo.QueryResult<MailSendJobsQuery, MailSendJobsQueryVariables>;
+export const MailSendJobRecipientsDocument = gql`
+    query MailSendJobRecipients($jobId: String!, $state: MailSendJobRecipientState, $skip: Int, $take: Int) {
+  mailSendJobRecipients(jobId: $jobId, state: $state, skip: $skip, take: $take) {
+    nodes {
+      id
+      position
+      state
+      attempts
+      error
+      sentAt
+      mailLogId
+      memberPlanName
+      user {
+        id
+        email
+        name
+        firstName
+      }
+    }
+    totalCount
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+    }
+  }
+}
+    `;
+
+/**
+ * __useMailSendJobRecipientsQuery__
+ *
+ * To run a query within a React component, call `useMailSendJobRecipientsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMailSendJobRecipientsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMailSendJobRecipientsQuery({
+ *   variables: {
+ *      jobId: // value for 'jobId'
+ *      state: // value for 'state'
+ *      skip: // value for 'skip'
+ *      take: // value for 'take'
+ *   },
+ * });
+ */
+export function useMailSendJobRecipientsQuery(baseOptions: Apollo.QueryHookOptions<MailSendJobRecipientsQuery, MailSendJobRecipientsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MailSendJobRecipientsQuery, MailSendJobRecipientsQueryVariables>(MailSendJobRecipientsDocument, options);
+      }
+export function useMailSendJobRecipientsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MailSendJobRecipientsQuery, MailSendJobRecipientsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MailSendJobRecipientsQuery, MailSendJobRecipientsQueryVariables>(MailSendJobRecipientsDocument, options);
+        }
+export type MailSendJobRecipientsQueryHookResult = ReturnType<typeof useMailSendJobRecipientsQuery>;
+export type MailSendJobRecipientsLazyQueryHookResult = ReturnType<typeof useMailSendJobRecipientsLazyQuery>;
+export type MailSendJobRecipientsQueryResult = Apollo.QueryResult<MailSendJobRecipientsQuery, MailSendJobRecipientsQueryVariables>;
+export const ResumeMailSendJobDocument = gql`
+    mutation ResumeMailSendJob($id: String!, $retryUnfinished: Boolean) {
+  resumeMailSendJob(id: $id, retryUnfinished: $retryUnfinished) {
+    ...FullMailSendJob
+  }
+}
+    ${FullMailSendJobFragmentDoc}`;
+export type ResumeMailSendJobMutationFn = Apollo.MutationFunction<ResumeMailSendJobMutation, ResumeMailSendJobMutationVariables>;
+
+/**
+ * __useResumeMailSendJobMutation__
+ *
+ * To run a mutation, you first call `useResumeMailSendJobMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useResumeMailSendJobMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [resumeMailSendJobMutation, { data, loading, error }] = useResumeMailSendJobMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      retryUnfinished: // value for 'retryUnfinished'
+ *   },
+ * });
+ */
+export function useResumeMailSendJobMutation(baseOptions?: Apollo.MutationHookOptions<ResumeMailSendJobMutation, ResumeMailSendJobMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ResumeMailSendJobMutation, ResumeMailSendJobMutationVariables>(ResumeMailSendJobDocument, options);
+      }
+export type ResumeMailSendJobMutationHookResult = ReturnType<typeof useResumeMailSendJobMutation>;
+export type ResumeMailSendJobMutationResult = Apollo.MutationResult<ResumeMailSendJobMutation>;
+export type ResumeMailSendJobMutationOptions = Apollo.BaseMutationOptions<ResumeMailSendJobMutation, ResumeMailSendJobMutationVariables>;
+export const CancelMailSendJobDocument = gql`
+    mutation CancelMailSendJob($id: String!) {
+  cancelMailSendJob(id: $id) {
+    ...FullMailSendJob
+  }
+}
+    ${FullMailSendJobFragmentDoc}`;
+export type CancelMailSendJobMutationFn = Apollo.MutationFunction<CancelMailSendJobMutation, CancelMailSendJobMutationVariables>;
+
+/**
+ * __useCancelMailSendJobMutation__
+ *
+ * To run a mutation, you first call `useCancelMailSendJobMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCancelMailSendJobMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [cancelMailSendJobMutation, { data, loading, error }] = useCancelMailSendJobMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useCancelMailSendJobMutation(baseOptions?: Apollo.MutationHookOptions<CancelMailSendJobMutation, CancelMailSendJobMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CancelMailSendJobMutation, CancelMailSendJobMutationVariables>(CancelMailSendJobDocument, options);
+      }
+export type CancelMailSendJobMutationHookResult = ReturnType<typeof useCancelMailSendJobMutation>;
+export type CancelMailSendJobMutationResult = Apollo.MutationResult<CancelMailSendJobMutation>;
+export type CancelMailSendJobMutationOptions = Apollo.BaseMutationOptions<CancelMailSendJobMutation, CancelMailSendJobMutationVariables>;
+export const SendMailTemplateToUserDocument = gql`
+    mutation SendMailTemplateToUser($templateId: String!, $userId: String!) {
+  sendMailTemplateToUser(templateId: $templateId, userId: $userId) {
+    ...FullMailSendJob
+  }
+}
+    ${FullMailSendJobFragmentDoc}`;
+export type SendMailTemplateToUserMutationFn = Apollo.MutationFunction<SendMailTemplateToUserMutation, SendMailTemplateToUserMutationVariables>;
+
+/**
+ * __useSendMailTemplateToUserMutation__
+ *
+ * To run a mutation, you first call `useSendMailTemplateToUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSendMailTemplateToUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [sendMailTemplateToUserMutation, { data, loading, error }] = useSendMailTemplateToUserMutation({
+ *   variables: {
+ *      templateId: // value for 'templateId'
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useSendMailTemplateToUserMutation(baseOptions?: Apollo.MutationHookOptions<SendMailTemplateToUserMutation, SendMailTemplateToUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SendMailTemplateToUserMutation, SendMailTemplateToUserMutationVariables>(SendMailTemplateToUserDocument, options);
+      }
+export type SendMailTemplateToUserMutationHookResult = ReturnType<typeof useSendMailTemplateToUserMutation>;
+export type SendMailTemplateToUserMutationResult = Apollo.MutationResult<SendMailTemplateToUserMutation>;
+export type SendMailTemplateToUserMutationOptions = Apollo.BaseMutationOptions<SendMailTemplateToUserMutation, SendMailTemplateToUserMutationVariables>;
+export const CreateMailSendJobDocument = gql`
+    mutation CreateMailSendJob($input: MailSendJobInput!) {
+  createMailSendJob(input: $input) {
+    ...FullMailSendJob
+  }
+}
+    ${FullMailSendJobFragmentDoc}`;
+export type CreateMailSendJobMutationFn = Apollo.MutationFunction<CreateMailSendJobMutation, CreateMailSendJobMutationVariables>;
+
+/**
+ * __useCreateMailSendJobMutation__
+ *
+ * To run a mutation, you first call `useCreateMailSendJobMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateMailSendJobMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createMailSendJobMutation, { data, loading, error }] = useCreateMailSendJobMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateMailSendJobMutation(baseOptions?: Apollo.MutationHookOptions<CreateMailSendJobMutation, CreateMailSendJobMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateMailSendJobMutation, CreateMailSendJobMutationVariables>(CreateMailSendJobDocument, options);
+      }
+export type CreateMailSendJobMutationHookResult = ReturnType<typeof useCreateMailSendJobMutation>;
+export type CreateMailSendJobMutationResult = Apollo.MutationResult<CreateMailSendJobMutation>;
+export type CreateMailSendJobMutationOptions = Apollo.BaseMutationOptions<CreateMailSendJobMutation, CreateMailSendJobMutationVariables>;
 export const MailTemplateDocument = gql`
     query MailTemplate {
   mailTemplates {
@@ -14141,36 +15290,238 @@ export function useMailTemplateLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
 export type MailTemplateQueryHookResult = ReturnType<typeof useMailTemplateQuery>;
 export type MailTemplateLazyQueryHookResult = ReturnType<typeof useMailTemplateLazyQuery>;
 export type MailTemplateQueryResult = Apollo.QueryResult<MailTemplateQuery, MailTemplateQueryVariables>;
-export const SynchronizeMailTemplatesDocument = gql`
-    mutation SynchronizeMailTemplates {
-  syncTemplates
+export const CreateMailTemplateDocument = gql`
+    mutation CreateMailTemplate($input: MailTemplateInput!) {
+  createMailTemplate(input: $input) {
+    ...FullMailTemplate
+  }
 }
-    `;
-export type SynchronizeMailTemplatesMutationFn = Apollo.MutationFunction<SynchronizeMailTemplatesMutation, SynchronizeMailTemplatesMutationVariables>;
+    ${FullMailTemplateFragmentDoc}`;
+export type CreateMailTemplateMutationFn = Apollo.MutationFunction<CreateMailTemplateMutation, CreateMailTemplateMutationVariables>;
 
 /**
- * __useSynchronizeMailTemplatesMutation__
+ * __useCreateMailTemplateMutation__
  *
- * To run a mutation, you first call `useSynchronizeMailTemplatesMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useSynchronizeMailTemplatesMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useCreateMailTemplateMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateMailTemplateMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [synchronizeMailTemplatesMutation, { data, loading, error }] = useSynchronizeMailTemplatesMutation({
+ * const [createMailTemplateMutation, { data, loading, error }] = useCreateMailTemplateMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateMailTemplateMutation(baseOptions?: Apollo.MutationHookOptions<CreateMailTemplateMutation, CreateMailTemplateMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateMailTemplateMutation, CreateMailTemplateMutationVariables>(CreateMailTemplateDocument, options);
+      }
+export type CreateMailTemplateMutationHookResult = ReturnType<typeof useCreateMailTemplateMutation>;
+export type CreateMailTemplateMutationResult = Apollo.MutationResult<CreateMailTemplateMutation>;
+export type CreateMailTemplateMutationOptions = Apollo.BaseMutationOptions<CreateMailTemplateMutation, CreateMailTemplateMutationVariables>;
+export const UpdateMailTemplateDocument = gql`
+    mutation UpdateMailTemplate($id: String!, $input: MailTemplateInput!) {
+  updateMailTemplate(id: $id, input: $input) {
+    ...FullMailTemplate
+  }
+}
+    ${FullMailTemplateFragmentDoc}`;
+export type UpdateMailTemplateMutationFn = Apollo.MutationFunction<UpdateMailTemplateMutation, UpdateMailTemplateMutationVariables>;
+
+/**
+ * __useUpdateMailTemplateMutation__
+ *
+ * To run a mutation, you first call `useUpdateMailTemplateMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateMailTemplateMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateMailTemplateMutation, { data, loading, error }] = useUpdateMailTemplateMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateMailTemplateMutation(baseOptions?: Apollo.MutationHookOptions<UpdateMailTemplateMutation, UpdateMailTemplateMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateMailTemplateMutation, UpdateMailTemplateMutationVariables>(UpdateMailTemplateDocument, options);
+      }
+export type UpdateMailTemplateMutationHookResult = ReturnType<typeof useUpdateMailTemplateMutation>;
+export type UpdateMailTemplateMutationResult = Apollo.MutationResult<UpdateMailTemplateMutation>;
+export type UpdateMailTemplateMutationOptions = Apollo.BaseMutationOptions<UpdateMailTemplateMutation, UpdateMailTemplateMutationVariables>;
+export const DeleteMailTemplateDocument = gql`
+    mutation DeleteMailTemplate($id: String!) {
+  deleteMailTemplate(id: $id)
+}
+    `;
+export type DeleteMailTemplateMutationFn = Apollo.MutationFunction<DeleteMailTemplateMutation, DeleteMailTemplateMutationVariables>;
+
+/**
+ * __useDeleteMailTemplateMutation__
+ *
+ * To run a mutation, you first call `useDeleteMailTemplateMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteMailTemplateMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteMailTemplateMutation, { data, loading, error }] = useDeleteMailTemplateMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteMailTemplateMutation(baseOptions?: Apollo.MutationHookOptions<DeleteMailTemplateMutation, DeleteMailTemplateMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteMailTemplateMutation, DeleteMailTemplateMutationVariables>(DeleteMailTemplateDocument, options);
+      }
+export type DeleteMailTemplateMutationHookResult = ReturnType<typeof useDeleteMailTemplateMutation>;
+export type DeleteMailTemplateMutationResult = Apollo.MutationResult<DeleteMailTemplateMutation>;
+export type DeleteMailTemplateMutationOptions = Apollo.BaseMutationOptions<DeleteMailTemplateMutation, DeleteMailTemplateMutationVariables>;
+export const ImportMailTemplatesFromProviderDocument = gql`
+    mutation ImportMailTemplatesFromProvider {
+  importMailTemplatesFromProvider
+}
+    `;
+export type ImportMailTemplatesFromProviderMutationFn = Apollo.MutationFunction<ImportMailTemplatesFromProviderMutation, ImportMailTemplatesFromProviderMutationVariables>;
+
+/**
+ * __useImportMailTemplatesFromProviderMutation__
+ *
+ * To run a mutation, you first call `useImportMailTemplatesFromProviderMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useImportMailTemplatesFromProviderMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [importMailTemplatesFromProviderMutation, { data, loading, error }] = useImportMailTemplatesFromProviderMutation({
  *   variables: {
  *   },
  * });
  */
-export function useSynchronizeMailTemplatesMutation(baseOptions?: Apollo.MutationHookOptions<SynchronizeMailTemplatesMutation, SynchronizeMailTemplatesMutationVariables>) {
+export function useImportMailTemplatesFromProviderMutation(baseOptions?: Apollo.MutationHookOptions<ImportMailTemplatesFromProviderMutation, ImportMailTemplatesFromProviderMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<SynchronizeMailTemplatesMutation, SynchronizeMailTemplatesMutationVariables>(SynchronizeMailTemplatesDocument, options);
+        return Apollo.useMutation<ImportMailTemplatesFromProviderMutation, ImportMailTemplatesFromProviderMutationVariables>(ImportMailTemplatesFromProviderDocument, options);
       }
-export type SynchronizeMailTemplatesMutationHookResult = ReturnType<typeof useSynchronizeMailTemplatesMutation>;
-export type SynchronizeMailTemplatesMutationResult = Apollo.MutationResult<SynchronizeMailTemplatesMutation>;
-export type SynchronizeMailTemplatesMutationOptions = Apollo.BaseMutationOptions<SynchronizeMailTemplatesMutation, SynchronizeMailTemplatesMutationVariables>;
+export type ImportMailTemplatesFromProviderMutationHookResult = ReturnType<typeof useImportMailTemplatesFromProviderMutation>;
+export type ImportMailTemplatesFromProviderMutationResult = Apollo.MutationResult<ImportMailTemplatesFromProviderMutation>;
+export type ImportMailTemplatesFromProviderMutationOptions = Apollo.BaseMutationOptions<ImportMailTemplatesFromProviderMutation, ImportMailTemplatesFromProviderMutationVariables>;
+export const MailTemplateSubscriptionsDocument = gql`
+    query MailTemplateSubscriptions($query: String) {
+  mailTemplateSubscriptions(query: $query) {
+    id
+    label
+  }
+}
+    `;
+
+/**
+ * __useMailTemplateSubscriptionsQuery__
+ *
+ * To run a query within a React component, call `useMailTemplateSubscriptionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMailTemplateSubscriptionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMailTemplateSubscriptionsQuery({
+ *   variables: {
+ *      query: // value for 'query'
+ *   },
+ * });
+ */
+export function useMailTemplateSubscriptionsQuery(baseOptions?: Apollo.QueryHookOptions<MailTemplateSubscriptionsQuery, MailTemplateSubscriptionsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MailTemplateSubscriptionsQuery, MailTemplateSubscriptionsQueryVariables>(MailTemplateSubscriptionsDocument, options);
+      }
+export function useMailTemplateSubscriptionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MailTemplateSubscriptionsQuery, MailTemplateSubscriptionsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MailTemplateSubscriptionsQuery, MailTemplateSubscriptionsQueryVariables>(MailTemplateSubscriptionsDocument, options);
+        }
+export type MailTemplateSubscriptionsQueryHookResult = ReturnType<typeof useMailTemplateSubscriptionsQuery>;
+export type MailTemplateSubscriptionsLazyQueryHookResult = ReturnType<typeof useMailTemplateSubscriptionsLazyQuery>;
+export type MailTemplateSubscriptionsQueryResult = Apollo.QueryResult<MailTemplateSubscriptionsQuery, MailTemplateSubscriptionsQueryVariables>;
+export const MailTemplatePreviewDocument = gql`
+    query MailTemplatePreview($input: MailTemplatePreviewInput!) {
+  mailTemplatePreview(input: $input) {
+    subject
+    html
+    text
+  }
+}
+    `;
+
+/**
+ * __useMailTemplatePreviewQuery__
+ *
+ * To run a query within a React component, call `useMailTemplatePreviewQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMailTemplatePreviewQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMailTemplatePreviewQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useMailTemplatePreviewQuery(baseOptions: Apollo.QueryHookOptions<MailTemplatePreviewQuery, MailTemplatePreviewQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MailTemplatePreviewQuery, MailTemplatePreviewQueryVariables>(MailTemplatePreviewDocument, options);
+      }
+export function useMailTemplatePreviewLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MailTemplatePreviewQuery, MailTemplatePreviewQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MailTemplatePreviewQuery, MailTemplatePreviewQueryVariables>(MailTemplatePreviewDocument, options);
+        }
+export type MailTemplatePreviewQueryHookResult = ReturnType<typeof useMailTemplatePreviewQuery>;
+export type MailTemplatePreviewLazyQueryHookResult = ReturnType<typeof useMailTemplatePreviewLazyQuery>;
+export type MailTemplatePreviewQueryResult = Apollo.QueryResult<MailTemplatePreviewQuery, MailTemplatePreviewQueryVariables>;
+export const SendTestMailTemplateDocument = gql`
+    mutation SendTestMailTemplate($input: SendTestMailTemplateInput!) {
+  sendTestMailTemplate(input: $input)
+}
+    `;
+export type SendTestMailTemplateMutationFn = Apollo.MutationFunction<SendTestMailTemplateMutation, SendTestMailTemplateMutationVariables>;
+
+/**
+ * __useSendTestMailTemplateMutation__
+ *
+ * To run a mutation, you first call `useSendTestMailTemplateMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSendTestMailTemplateMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [sendTestMailTemplateMutation, { data, loading, error }] = useSendTestMailTemplateMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useSendTestMailTemplateMutation(baseOptions?: Apollo.MutationHookOptions<SendTestMailTemplateMutation, SendTestMailTemplateMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SendTestMailTemplateMutation, SendTestMailTemplateMutationVariables>(SendTestMailTemplateDocument, options);
+      }
+export type SendTestMailTemplateMutationHookResult = ReturnType<typeof useSendTestMailTemplateMutation>;
+export type SendTestMailTemplateMutationResult = Apollo.MutationResult<SendTestMailTemplateMutation>;
+export type SendTestMailTemplateMutationOptions = Apollo.BaseMutationOptions<SendTestMailTemplateMutation, SendTestMailTemplateMutationVariables>;
 export const MemberPlanListDocument = gql`
     query MemberPlanList($filter: MemberPlanFilter, $cursorId: String, $take: Int, $skip: Int, $order: SortOrder, $sort: MemberPlanSort) {
   memberPlans(
@@ -16828,6 +18179,10 @@ export const MailProviderSettingsDocument = gql`
     name
     replyToAddress
     slack_webhookURL
+    smtp_host
+    smtp_port
+    smtp_secure
+    smtp_user
     type
   }
 }
@@ -16860,7 +18215,7 @@ export type MailProviderSettingsQueryHookResult = ReturnType<typeof useMailProvi
 export type MailProviderSettingsLazyQueryHookResult = ReturnType<typeof useMailProviderSettingsLazyQuery>;
 export type MailProviderSettingsQueryResult = Apollo.QueryResult<MailProviderSettingsQuery, MailProviderSettingsQueryVariables>;
 export const UpdateMailProviderSettingDocument = gql`
-    mutation UpdateMailProviderSetting($apiKey: String, $fromAddress: String, $id: String!, $mailchimp_baseURL: String, $mailgun_baseDomain: String, $mailgun_mailDomain: String, $name: String, $replyToAddress: String, $slack_webhookURL: String, $webhookEndpointSecret: String) {
+    mutation UpdateMailProviderSetting($apiKey: String, $fromAddress: String, $id: String!, $mailchimp_baseURL: String, $mailgun_baseDomain: String, $mailgun_mailDomain: String, $name: String, $replyToAddress: String, $slack_webhookURL: String, $smtp_host: String, $smtp_port: Int, $smtp_secure: Boolean, $smtp_user: String, $webhookEndpointSecret: String) {
   updateMailProviderSetting(
     apiKey: $apiKey
     fromAddress: $fromAddress
@@ -16871,6 +18226,10 @@ export const UpdateMailProviderSettingDocument = gql`
     name: $name
     replyToAddress: $replyToAddress
     slack_webhookURL: $slack_webhookURL
+    smtp_host: $smtp_host
+    smtp_port: $smtp_port
+    smtp_secure: $smtp_secure
+    smtp_user: $smtp_user
     webhookEndpointSecret: $webhookEndpointSecret
   ) {
     createdAt
@@ -16884,6 +18243,10 @@ export const UpdateMailProviderSettingDocument = gql`
     name
     replyToAddress
     slack_webhookURL
+    smtp_host
+    smtp_port
+    smtp_secure
+    smtp_user
     type
   }
 }
@@ -16912,6 +18275,10 @@ export type UpdateMailProviderSettingMutationFn = Apollo.MutationFunction<Update
  *      name: // value for 'name'
  *      replyToAddress: // value for 'replyToAddress'
  *      slack_webhookURL: // value for 'slack_webhookURL'
+ *      smtp_host: // value for 'smtp_host'
+ *      smtp_port: // value for 'smtp_port'
+ *      smtp_secure: // value for 'smtp_secure'
+ *      smtp_user: // value for 'smtp_user'
  *      webhookEndpointSecret: // value for 'webhookEndpointSecret'
  *   },
  * });
@@ -18465,7 +19832,7 @@ export type SystemMailsQueryHookResult = ReturnType<typeof useSystemMailsQuery>;
 export type SystemMailsLazyQueryHookResult = ReturnType<typeof useSystemMailsLazyQuery>;
 export type SystemMailsQueryResult = Apollo.QueryResult<SystemMailsQuery, SystemMailsQueryVariables>;
 export const UpdateSystemMailDocument = gql`
-    mutation UpdateSystemMail($event: UserEvent!, $mailTemplateId: String!) {
+    mutation UpdateSystemMail($event: UserEvent!, $mailTemplateId: String) {
   updateSystemMail(event: $event, mailTemplateId: $mailTemplateId) {
     ...SystemMail
   }

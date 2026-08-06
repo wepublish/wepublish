@@ -30,12 +30,25 @@ services:
       WEBSITE_URL: http://localhost:4200
       JWT_PRIVATE_KEY: "-----BEGIN PRIVATE KEY-----\nMC4CAQAwBQYDK2VwBCIEIJWbdZ23hpurtFiEpnulSfJ1U4TwbkiDWmbGZSDVx3nR\n-----END PRIVATE KEY-----"
       JWT_PUBLIC_KEY: "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA93mjXbSful1W9nAVHuYHdRfgKEF+pvkwm4/5P27J4RA=\n-----END PUBLIC KEY-----"
+      MAIL_SMTP_HOST: mailpit
+      MAIL_SMTP_PORT: '1025'
+      MAIL_SMTP_FROM: no-reply@wepublish.local
     env_file: .env
     volumes:
       - ./apps/api-example/src/default.yaml:/config.yaml
     depends_on:
       - database
       - migration
+      - mailpit
+    networks:
+      - app-tier
+  mailpit:
+    image: axllent/mailpit:latest
+    platform: linux/amd64
+    ports:
+      # SMTP endpoint (providers connect here) + web UI to read caught mails.
+      - '127.0.0.1:1025:1025'
+      - '127.0.0.1:8025:8025'
     networks:
       - app-tier
   editor:
