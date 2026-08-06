@@ -1,4 +1,4 @@
-import type { JSX } from 'react';
+import type { ChangeEvent, JSX } from 'react';
 import { forwardRef, memo, useImperativeHandle, useRef, useState } from 'react';
 import {
   Box,

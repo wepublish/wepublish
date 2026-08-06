@@ -29,6 +29,10 @@ import {
   useAuthorisation,
   UserSubscriptionsList,
 } from '@wepublish/ui/editor';
+import {
+  SendMailToUserPanel,
+  UserMailLogPanel,
+} from '@wepublish/membership/editor';
 import { userCountryNames } from '@wepublish/user';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
