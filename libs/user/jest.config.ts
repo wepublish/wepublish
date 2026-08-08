@@ -1,4 +1,5 @@
 module.exports = {
+  testPathIgnorePatterns: ['<rootDir>/website/'],
   displayName: 'user',
   preset: '../../jest.preset.js',
   testEnvironment: 'node',
