@@ -24,6 +24,7 @@ export interface ClientSettings {
   readonly medium?: string;
   readonly peerByDefault: boolean;
   readonly imgMinSizeToCompress: number;
+  readonly sentryDSN?: string;
 }
 
 export enum LocalStorageKey {
@@ -57,6 +58,7 @@ export function getSettings(): ClientSettings {
       wepOneURL: 'https://one-admin.wepublish.cloud',
       medium: '',
       imgMinSizeToCompress: 10,
+      sentryDSN: '',
     };
 
     const settingsJson = document.getElementById(ElementID.Settings);
