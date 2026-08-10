@@ -26,7 +26,7 @@ export const useListViewState = <TFilter = Record<string, unknown>>(
   listKey: string,
   options: UseListViewStateOptions<TFilter> = {}
 ) => {
-  const defaultRef = useRef<PersistedListViewState<TFilter>>();
+  const defaultRef = useRef<PersistedListViewState<TFilter>>(null);
 
   if (!defaultRef.current) {
     defaultRef.current = {
