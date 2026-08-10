@@ -2,7 +2,13 @@ import {
   InvoiceWithItems,
   PaymentProvider,
 } from './payment-provider/payment-provider';
-import { Payment, PaymentState, PrismaClient } from '@prisma/client';
+import {
+  MemberPlan,
+  Payment,
+  PaymentState,
+  PrismaClient,
+  Subscription,
+} from '@prisma/client';
 import { sub } from 'date-fns';
 import { GraphQLError } from 'graphql/index';
 import {
@@ -212,6 +218,41 @@ export class PaymentsService {
     });
   }
 
+  private decorateUrlWithSubscriptionInformation(
+    url: string | undefined,
+    subscription: Subscription & { memberPlan: MemberPlan },
+    invoice: InvoiceWithItems
+  ) {
+    let parsedUrl: URL;
+
+    try {
+      parsedUrl = new URL(url ?? '');
+    } catch {
+      return url;
+    }
+
+    parsedUrl.searchParams.set('memberPlan', subscription.memberPlan.slug);
+    parsedUrl.searchParams.set(
+      'productType',
+      subscription.memberPlan.productType
+    );
+    parsedUrl.searchParams.set(
+      'monthlyAmount',
+      (subscription.monthlyAmount / 100).toString()
+    );
+    parsedUrl.searchParams.set('currency', subscription.currency);
+    parsedUrl.searchParams.set(
+      'amount',
+      (
+        invoice.items.reduce((acc, current) => acc + current.amount, 0) / 100
+      ).toString()
+    );
+    parsedUrl.searchParams.set('periodicity', subscription.paymentPeriodicity);
+    parsedUrl.searchParams.set('subscriptionId', subscription.id);
+
+    return parsedUrl.toString();
+  }
+
   async createPaymentWithProvider({
     paymentMethodID,
     invoice,
@@ -259,12 +300,15 @@ export class PaymentsService {
         },
       });
     }
-    await this.prisma.subscription.update({
+    const subscription = await this.prisma.subscription.update({
       data: {
         confirmed: true,
       },
       where: {
         id: invoice.subscriptionID || undefined,
+      },
+      include: {
+        memberPlan: true,
       },
     });
 
@@ -295,8 +339,16 @@ export class PaymentsService {
       invoice,
       currency: invoice.currency,
       saveCustomer,
-      successURL,
-      failureURL,
+      successURL: this.decorateUrlWithSubscriptionInformation(
+        successURL,
+        subscription,
+        invoice
+      ),
+      failureURL: this.decorateUrlWithSubscriptionInformation(
+        failureURL,
+        subscription,
+        invoice
+      ),
       customerID: customer?.customerID,
     });
 

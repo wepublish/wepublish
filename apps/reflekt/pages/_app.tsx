@@ -146,60 +146,60 @@ function CustomApp({
       src={`https://plausible.io/js/${settings?.analytics.plausible.key}.js`}
     >
       <AppCacheProvider emotionCache={cache}>
-        <WebsiteProvider>
-          <WebsiteBuilderProvider
-            Head={Head}
-            Script={Script}
-            Page={ReflektPage}
-            Footer={RefFooter}
-            Navbar={ReflektNavbar}
-            ArticleList={ReflektArticleList}
-            Article={ReflektArticle}
-            Tag={ReflektTag}
-            AuthorList={ReflektAuthorList}
-            AuthorListItem={ReflektAuthorListItem}
-            Banner={ReflektBanner}
-            Subscribe={ReflektSubscribeForm}
-            GoodiePicker={ReflektGoodiePicker}
-            MemberPlanPicker={ReflektMemberPlanPicker}
-            MemberPlanItem={ReflektMemberPlanItem}
-            UserForm={ReflektUserForm}
-            LoginForm={ReflektLoginForm}
-            RegistrationForm={ReflektRegistrationForm}
-            SubscriptionListItem={ReflektSubscriptionListItem}
-            elements={{
-              Link: ReflektLink,
-              UnorderedList: ReflektUnorderedList,
-              ListItem: ReflektListItem,
-              Modal: ReflektModal,
-            }}
-            date={{ format: dateFormatter }}
-            meta={{ siteTitle }}
-            richtext={{
-              RenderElement: ReflektRenderElement,
-              RenderRichtext: ReflektRenderRichtext,
-              RenderLeaf: ReflektRenderLeaf,
-            }}
-            blockStyles={{
-              ImageSlider: ReflektImageSlider,
-            }}
-            blocks={{
-              TeaserSlots: ReflektBaseTeaserSlots,
-              TeaserGridFlex: ReflektBaseGridFlex,
-              BaseTeaser: ReflektBaseTeaser,
-              Break: ReflektBaseBreakBlock,
-              FlexBlock: ReflektFlexBlock,
-              Quote: ReflektQuoteBlock,
-              Title: ReflektTitleBlock,
-              RichText: ReflektRichTextBlock,
-              Renderer: ReflektBlockRenderer,
-              Blocks: ReflektBlocks,
-              Subscribe: ReflektSubscribeBlock,
-              Image: ReflektImageBlock,
-              Crowdfunding: ReflektCrowdfundingBlock,
-            }}
-          >
-            <ThemeProvider theme={theme}>
+        <ThemeProvider theme={theme}>
+          <WebsiteProvider>
+            <WebsiteBuilderProvider
+              Head={Head}
+              Script={Script}
+              Page={ReflektPage}
+              Footer={RefFooter}
+              Navbar={ReflektNavbar}
+              ArticleList={ReflektArticleList}
+              Article={ReflektArticle}
+              Tag={ReflektTag}
+              AuthorList={ReflektAuthorList}
+              AuthorListItem={ReflektAuthorListItem}
+              Banner={ReflektBanner}
+              Subscribe={ReflektSubscribeForm}
+              GoodiePicker={ReflektGoodiePicker}
+              MemberPlanPicker={ReflektMemberPlanPicker}
+              MemberPlanItem={ReflektMemberPlanItem}
+              UserForm={ReflektUserForm}
+              LoginForm={ReflektLoginForm}
+              RegistrationForm={ReflektRegistrationForm}
+              SubscriptionListItem={ReflektSubscriptionListItem}
+              elements={{
+                Link: ReflektLink,
+                UnorderedList: ReflektUnorderedList,
+                ListItem: ReflektListItem,
+                Modal: ReflektModal,
+              }}
+              date={{ format: dateFormatter }}
+              meta={{ siteTitle }}
+              richtext={{
+                RenderElement: ReflektRenderElement,
+                RenderRichtext: ReflektRenderRichtext,
+                RenderLeaf: ReflektRenderLeaf,
+              }}
+              blockStyles={{
+                ImageSlider: ReflektImageSlider,
+              }}
+              blocks={{
+                TeaserSlots: ReflektBaseTeaserSlots,
+                TeaserGridFlex: ReflektBaseGridFlex,
+                BaseTeaser: ReflektBaseTeaser,
+                Break: ReflektBaseBreakBlock,
+                FlexBlock: ReflektFlexBlock,
+                Quote: ReflektQuoteBlock,
+                Title: ReflektTitleBlock,
+                RichText: ReflektRichTextBlock,
+                Renderer: ReflektBlockRenderer,
+                Blocks: ReflektBlocks,
+                Subscribe: ReflektSubscribeBlock,
+                Image: ReflektImageBlock,
+                Crowdfunding: ReflektCrowdfundingBlock,
+              }}
+            >
               <CssBaseline />
               <ReflektGlobalStyles />
 
@@ -263,9 +263,9 @@ function CustomApp({
                     data-sparkloop
                   />
                 )}
-            </ThemeProvider>
-          </WebsiteBuilderProvider>
-        </WebsiteProvider>
+            </WebsiteBuilderProvider>
+          </WebsiteProvider>
+        </ThemeProvider>
       </AppCacheProvider>
     </PlausibleProvider>
   );

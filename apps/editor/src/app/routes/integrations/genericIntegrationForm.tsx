@@ -177,9 +177,12 @@ export function SingleGenericIntegrationForm<
   return (
     <Form onSubmit={() => onSubmit()}>
       <Form.Stack fluid>
+        {/* Form.Stack is a column flexbox with `align-items: flex-start`, and
+            its `fluid` only widens `.rs-form-group` children — so the card has
+            to claim the full width itself or it shrinks to its content. */}
         <Card
           variant="outlined"
-          sx={{ alignSelf: 'start' }}
+          sx={{ alignSelf: 'stretch', width: '100%' }}
         >
           <CardContent>
             <Typography

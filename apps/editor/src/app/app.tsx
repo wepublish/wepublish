@@ -27,11 +27,12 @@ import {
 } from '@wepublish/editor/api';
 import { ImportableEventListView } from '@wepublish/event/import/editor';
 import {
+  MailLogList,
+  MailSendPage,
+  MailTemplateEdit,
   MailTemplateList,
   MemberPlanEdit,
-  PlaceholderList,
   SubscriptionFlowList,
-  SystemMailList,
 } from '@wepublish/membership/editor';
 import { SettingList } from '@wepublish/settings/editor';
 import {
@@ -1019,18 +1020,44 @@ export function App() {
               }
             />
             <Route
-              path="mailtemplates/placeholders"
+              path="mailtemplates/create"
               element={
                 <Base>
-                  <PlaceholderList />
+                  <MailTemplateEdit />
                 </Base>
               }
             />
             <Route
-              path="systemmails"
+              path="mailtemplates/edit/:id"
               element={
                 <Base>
-                  <SystemMailList />
+                  <MailTemplateEdit />
+                </Base>
+              }
+            />
+            {/* System mails are now part of the automatic mails view */}
+            <Route
+              path="systemmails"
+              element={
+                <Navigate
+                  to="/communicationflows/edit/default"
+                  replace
+                />
+              }
+            />
+            <Route
+              path="mailsend"
+              element={
+                <Base>
+                  <MailSendPage />
+                </Base>
+              }
+            />
+            <Route
+              path="maillog"
+              element={
+                <Base>
+                  <MailLogList />
                 </Base>
               }
             />

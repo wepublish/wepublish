@@ -156,52 +156,52 @@ function CustomApp({
       src={`https://plausible.io/js/${settings?.analytics.plausible.key}.js`}
     >
       <AppCacheProvider emotionCache={cache}>
-        <WebsiteProvider>
-          <WebsiteBuilderProvider
-            Head={Head}
-            Script={Script}
-            elements={{ Link: NextWepublishLink }}
-            Footer={HauptstadtFooter}
-            Navbar={HauptstadtNavbar}
-            ContentWrapper={HauptstadtContentWrapper}
-            AuthorChip={HauptstadtAuthorChip}
-            Page={HauptstadtPage}
-            Article={HauptstadtArticle}
-            ArticleAuthors={HauptstadtArticleAuthors}
-            ArticleMeta={HauptstadtArticleMeta}
-            ArticleDate={HauptstadtArticleDate}
-            Event={HauptstadtEvent}
-            Banner={HauptstadtBanner}
-            Paywall={HauptstadtPaywall}
-            MemberPlanPicker={HauptstadtMemberPlanPicker}
-            MemberPlanItem={HauptstadtMemberPlanItem}
-            CommentList={HauptstadtCommentList}
-            SubscriptionListItem={HauptstadtSubscriptionListItem}
-            PaymentMethodPicker={HauptstadtPaymentMethodPicker}
-            blocks={{
-              Renderer: HauptstadtBlockRenderer,
-              Title: HauptstadtTitleBlock,
-              Quote: HauptstadtQuoteBlock,
-              BaseTeaser: HauptstadtTeaser,
-              TeaserList: HauptstadtTeaserList,
-              TeaserGrid: HauptstadtTeaserGrid,
-              TeaserSlots: HauptstadtTeaserSlots,
-              Image: HauptstadtImageBlock,
-              ImageGallery: HauptstadtImageGalleryBlock,
-              Break: HauptstadtBreakBlock,
-              Listicle: HauptstadtListicle,
-              Subscribe: HauptstadtSubscribe,
-            }}
-            blockStyles={{
-              FocusTeaser: HauptstadtFocusTeaser,
-              AlternatingTeaser: HauptstadtAlternatingTeaser,
-              TeaserSlider: HauptstadtTeaserSlider,
-              ImageSlider: HauptstadtImageSlider,
-            }}
-            date={{ format: dateFormatter }}
-            meta={{ siteTitle }}
-          >
-            <ThemeProvider theme={theme}>
+        <ThemeProvider theme={theme}>
+          <WebsiteProvider>
+            <WebsiteBuilderProvider
+              Head={Head}
+              Script={Script}
+              elements={{ Link: NextWepublishLink }}
+              Footer={HauptstadtFooter}
+              Navbar={HauptstadtNavbar}
+              ContentWrapper={HauptstadtContentWrapper}
+              AuthorChip={HauptstadtAuthorChip}
+              Page={HauptstadtPage}
+              Article={HauptstadtArticle}
+              ArticleAuthors={HauptstadtArticleAuthors}
+              ArticleMeta={HauptstadtArticleMeta}
+              ArticleDate={HauptstadtArticleDate}
+              Event={HauptstadtEvent}
+              Banner={HauptstadtBanner}
+              Paywall={HauptstadtPaywall}
+              MemberPlanPicker={HauptstadtMemberPlanPicker}
+              MemberPlanItem={HauptstadtMemberPlanItem}
+              CommentList={HauptstadtCommentList}
+              SubscriptionListItem={HauptstadtSubscriptionListItem}
+              PaymentMethodPicker={HauptstadtPaymentMethodPicker}
+              blocks={{
+                Renderer: HauptstadtBlockRenderer,
+                Title: HauptstadtTitleBlock,
+                Quote: HauptstadtQuoteBlock,
+                BaseTeaser: HauptstadtTeaser,
+                TeaserList: HauptstadtTeaserList,
+                TeaserGrid: HauptstadtTeaserGrid,
+                TeaserSlots: HauptstadtTeaserSlots,
+                Image: HauptstadtImageBlock,
+                ImageGallery: HauptstadtImageGalleryBlock,
+                Break: HauptstadtBreakBlock,
+                Listicle: HauptstadtListicle,
+                Subscribe: HauptstadtSubscribe,
+              }}
+              blockStyles={{
+                FocusTeaser: HauptstadtFocusTeaser,
+                AlternatingTeaser: HauptstadtAlternatingTeaser,
+                TeaserSlider: HauptstadtTeaserSlider,
+                ImageSlider: HauptstadtImageSlider,
+              }}
+              date={{ format: dateFormatter }}
+              meta={{ siteTitle }}
+            >
               <FontSizeProvider>
                 <CssBaseline />
                 {printStyles}
@@ -269,9 +269,9 @@ function CustomApp({
                     />
                   )}
               </FontSizeProvider>
-            </ThemeProvider>
-          </WebsiteBuilderProvider>
-        </WebsiteProvider>
+            </WebsiteBuilderProvider>
+          </WebsiteProvider>
+        </ThemeProvider>
       </AppCacheProvider>
     </PlausibleProvider>
   );

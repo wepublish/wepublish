@@ -1,6 +1,7 @@
+import { ApolloError } from '@apollo/client';
+import styled from '@emotion/styled';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Checkbox, FormControlLabel, FormHelperText } from '@mui/material';
-import styled from '@emotion/styled';
 import {
   BuilderChallengeRef,
   Challenge,
@@ -9,14 +10,15 @@ import {
   useUser,
   zodAlwaysRefine,
 } from '@wepublish/authentication/website';
+import { ApiAlert } from '@wepublish/errors/website';
 import {
   Currency,
   PaymentMethod,
   PaymentPeriodicity,
   ProductType,
-  SubscribeBlockPlanRenderStyle,
   RegisterMutationVariables,
   ResubscribeMutationVariables,
+  SubscribeBlockPlanRenderStyle,
   SubscribeMutationVariables,
   UserAddressInput,
 } from '@wepublish/website/api';
@@ -25,13 +27,22 @@ import {
   BuilderUserFormFields,
   Button,
   Link,
+  Modal,
   useAsyncAction,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  ComponentProps,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+import { MdCheck, MdError } from 'react-icons/md';
 import { z } from 'zod';
-import { PaymentAmountPicker } from '../payment-amount/payment-amount-picker/payment-amount-picker';
 import { formatCurrency, roundUpTo5Cents } from '../formatters/format-currency';
 import {
   formatFirstPaymentPeriod,
@@ -39,11 +50,7 @@ import {
   getPaymentPeriodicyMonths,
 } from '../formatters/format-payment-period';
 import { formatRenewalPeriod } from '../formatters/format-renewal-period';
-import { ApolloError } from '@apollo/client';
-import { ApiAlert } from '@wepublish/errors/website';
-import { Modal } from '@wepublish/website/builder';
-import { useTranslation } from 'react-i18next';
-import { MdCheck, MdError } from 'react-icons/md';
+import { PaymentAmountPicker } from '../payment-amount/payment-amount-picker/payment-amount-picker';
 
 export const subscribeSchema = z.object({
   memberPlanId: z.string().min(1),

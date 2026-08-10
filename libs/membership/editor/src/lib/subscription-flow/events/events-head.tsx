@@ -17,6 +17,12 @@ const FlexContainer = styled('div')`
   display: flex;
 `;
 
+const PopoverHint = styled('span')`
+  font-size: 12px;
+  line-height: 1.4;
+  color: ${({ theme }) => theme.palette.text.secondary};
+`;
+
 interface EventsHeadProps {
   setNewDay(newDay: number): void;
 }
@@ -34,7 +40,9 @@ export function EventsHead({ setNewDay }: EventsHeadProps) {
           speaker={
             <Popover>
               <PopoverBody>
-                <h6>New day in timeline</h6>
+                <h6>{t('subscriptionFlow.newDayTitle')}</h6>
+
+                <PopoverHint>{t('subscriptionFlow.newDayHint')}</PopoverHint>
 
                 <FlexContainer style={{ marginTop: '5px' }}>
                   <NumberInput

@@ -200,35 +200,35 @@ function CustomApp({
     >
       <AppCacheProvider emotionCache={emotionCache}>
         <AdsProvider>
-          <WebsiteProvider>
-            <WebsiteBuilderProvider
-              Head={Head}
-              Script={Script}
-              AuthorChip={OnlineReportsAuthorChip}
-              ArticleAuthors={OnlineReportsArticleAuthors}
-              ArticleList={OnlineReportsArticleList}
-              Navbar={OnlineReportsNavbar}
-              Footer={OnlineReportsFooter}
-              Article={OnlineReportsArticle}
-              CommentListItem={OnlineReportsCommentListItem}
-              Page={OnlineReportsPage}
-              RegistrationForm={OnlineReportsRegistrationForm}
-              PaymentAmount={OnlineReportsPaymentAmount}
-              richtext={{ RenderElement: OnlineReportsRenderElement }}
-              elements={{ Link: NextWepublishLink }}
-              blocks={{
-                BaseTeaser: OnlineReportsTeaser,
-                Renderer: OnlineReportsBlockRenderer,
-                TeaserList: OnlineReportsTeaserListBlock,
-                TeaserGridFlex: OnlineReportsTeaserGridFlexBlock,
-                TeaserGrid: OnlineReportsTeaserGridBlock,
-                Quote: OnlineReportsQuoteBlock,
-                Title: OnlineReportsTitle,
-              }}
-              date={{ format: dateFormatter }}
-              meta={{ siteTitle }}
-            >
-              <ThemeProvider theme={theme}>
+          <ThemeProvider theme={theme}>
+            <WebsiteProvider>
+              <WebsiteBuilderProvider
+                Head={Head}
+                Script={Script}
+                AuthorChip={OnlineReportsAuthorChip}
+                ArticleAuthors={OnlineReportsArticleAuthors}
+                ArticleList={OnlineReportsArticleList}
+                Navbar={OnlineReportsNavbar}
+                Footer={OnlineReportsFooter}
+                Article={OnlineReportsArticle}
+                CommentListItem={OnlineReportsCommentListItem}
+                Page={OnlineReportsPage}
+                RegistrationForm={OnlineReportsRegistrationForm}
+                PaymentAmount={OnlineReportsPaymentAmount}
+                richtext={{ RenderElement: OnlineReportsRenderElement }}
+                elements={{ Link: NextWepublishLink }}
+                blocks={{
+                  BaseTeaser: OnlineReportsTeaser,
+                  Renderer: OnlineReportsBlockRenderer,
+                  TeaserList: OnlineReportsTeaserListBlock,
+                  TeaserGridFlex: OnlineReportsTeaserGridFlexBlock,
+                  TeaserGrid: OnlineReportsTeaserGridBlock,
+                  Quote: OnlineReportsQuoteBlock,
+                  Title: OnlineReportsTitle,
+                }}
+                date={{ format: dateFormatter }}
+                meta={{ siteTitle }}
+              >
                 <CssBaseline />
                 <OnlineReportsGlobalStyles />
 
@@ -309,9 +309,9 @@ function CustomApp({
                       data-sparkloop
                     />
                   )}
-              </ThemeProvider>
-            </WebsiteBuilderProvider>
-          </WebsiteProvider>
+              </WebsiteBuilderProvider>
+            </WebsiteProvider>
+          </ThemeProvider>
         </AdsProvider>
       </AppCacheProvider>
     </PlausibleProvider>

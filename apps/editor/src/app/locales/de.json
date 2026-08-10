@@ -932,18 +932,209 @@
     },
     "mailTemplates": {
       "availableTemplates": "Verfügbare E-Mail-Templates",
+      "cancel": "Abbrechen",
       "content": "Inhalt",
+      "create": "Template erstellen",
       "description": "Beschreibung",
-      "explanation": "Diese Templates von {{provider}} kannst du für den Versand von Benachrichtigungen verwenden.",
+      "edit": {
+        "createHeader": "Mail-Vorlage erstellen",
+        "editHeader": "Mail-Vorlage bearbeiten",
+        "saveAndClose": "Speichern & schließen",
+        "nameRequired": "Name ist erforderlich.",
+        "testSent": "Testmail gesendet.",
+        "details": "Details",
+        "previewAndTest": "Vorschau & Test",
+        "mailType": "Verwendungszweck",
+        "sampleSubscription": "Beispieldaten aus Abo",
+        "sampleDataFallback": "Beispieldaten (nichts gewählt)",
+        "testRecipient": "Test-Empfänger",
+        "testRecipientPlaceholder": "Deine Konto-E-Mail",
+        "preview": "Vorschau",
+        "sendTest": "Test senden",
+        "selectMailType": "Bitte zuerst einen Verwendungszweck wählen.",
+        "selectMailTypePlaceholder": "Verwendungszweck wählen …",
+        "testRecipientHint": "Testmails werden immer an dein eigenes Konto gesendet.",
+        "generateTextFromHtml": "Aus HTML erzeugen",
+        "textContentReadonlyHint": "Wird automatisch aus dem Inhalt erzeugt. Bearbeite den Visuell- oder HTML-Tab, um ihn zu ändern.",
+        "background": "Hintergrund",
+        "contentWidth": "Breite (px)",
+        "purposeHint": "Der Verwendungszweck legt fest, in welcher Situation diese Vorlage verschickt wird. Davon hängt ab, welche Daten – und damit welche Platzhalter – zur Verfügung stehen: Nur eine Rechnungs-Vorlage kennt z. B. den Rechnungsbetrag."
+      },
+      "editor": {
+        "undo": "Rückgängig",
+        "redo": "Wiederholen",
+        "bold": "Fett",
+        "italic": "Kursiv",
+        "underline": "Unterstrichen",
+        "strikethrough": "Durchgestrichen",
+        "bulletedList": "Aufzählung",
+        "numberedList": "Nummerierte Liste",
+        "horizontalRule": "Trennlinie",
+        "alignLeft": "Linksbündig",
+        "alignCenter": "Zentriert",
+        "alignRight": "Rechtsbündig",
+        "fontSize": "Grösse",
+        "textColor": "Textfarbe",
+        "link": "Link",
+        "image": "Bild",
+        "desktop": "Desktop",
+        "tablet": "Tablet",
+        "mobile": "Mobil",
+        "linkTitle": "Link",
+        "linkUrl": "URL",
+        "linkText": "Linktext",
+        "linkNewTab": "In neuem Tab öffnen",
+        "imageTitle": "Bild einfügen",
+        "imageUrl": "Bild-URL",
+        "imageAlt": "Alternativtext",
+        "imageWidth": "Breite (px, optional)",
+        "chooseFromLibrary": "Aus Bibliothek wählen",
+        "imageLink": "Link (optional)",
+        "button": "Button",
+        "buttonTitle": "Button einfügen",
+        "buttonText": "Button-Text",
+        "buttonUrl": "Link-URL",
+        "buttonSize": "Grösse",
+        "buttonColor": "Button-Farbe",
+        "buttonSizeSmall": "Klein",
+        "buttonSizeMedium": "Mittel",
+        "buttonSizeLarge": "Gross",
+        "cancel": "Abbrechen",
+        "apply": "Übernehmen",
+        "insert": "Einfügen",
+        "appendJwt": "Login-Token anhängen",
+        "appendJwtHint": "Hängt {{param}} an – damit ist der Empfänger beim Klick automatisch eingeloggt.",
+        "appendJwtDone": "Login-Token ist bereits enthalten – der Empfänger ist beim Klick eingeloggt."
+      },
       "goToPlaceholders": "Verfügbare Placeholders",
+      "htmlContent": "HTML-Inhalt",
       "name": "Name",
+      "placeholders": "Platzhalter",
+      "placeholdersHint": "Zum Einfügen ins gewählte Feld klicken",
+      "placeholderSelectType": "Wähle oben einen Verwendungszweck, um dessen Platzhalter zu sehen.",
+      "mailTypes": {
+        "account": "Konto & Login",
+        "emailChange": "E-Mail-Änderung",
+        "subscription": "Abo",
+        "renewal": "Verlängerung",
+        "invoiceCreation": "Rechnung",
+        "custom": "Freie Mail (Abo)",
+        "customNoSubscription": "Freie Mail (ohne Abo)"
+      },
+      "placeholderAlways": "Immer verfügbar – in jeder Mail",
+      "placeholderAlwaysHint": "Diese Empfänger-Felder funktionieren in jeder Vorlage, unabhängig vom gewählten Verwendungszweck.",
+      "searchPlaceholders": "Platzhalter suchen…",
+      "noPlaceholders": "Keine passenden Platzhalter.",
+      "placeholderExample": "Beispiel",
+      "placeholderContextLabel": "Zusätzliche Felder für diesen Verwendungszweck",
+      "placeholderContextNone": "Dieser Verwendungszweck nutzt nur die Empfänger-Felder oben.",
+      "dateFormat": {
+        "iso": "ISO",
+        "isoDate": "ISO-Datum",
+        "date": "Datum",
+        "long": "Lang",
+        "weekday": "Wochentag",
+        "time": "Zeit",
+        "dateTime": "Datum+Zeit"
+      },
+      "amountFormat": {
+        "display": "Mit Währung",
+        "chf": "CHF",
+        "rappen": "Rappen"
+      },
+      "placeholderContexts": {
+        "account": "Konto & Login (Registrierung, Login-Link, Passwort-Reset)",
+        "emailChange": "E-Mail-Änderung",
+        "subscription": "Abo (neu, bestätigt, Deaktivierung)",
+        "renewal": "Verlängerung – automatisch (Erfolg / Fehlschlag)",
+        "invoiceCreation": "Rechnung erstellt",
+        "custom": "Freie Mail an Abonnent:in",
+        "customNoSubscription": "Freie Mail an Nicht-Abonnent:in"
+      },
+      "placeholderNames": {
+        "user_fullName": "Vollständiger Name",
+        "user_firstName": "Vorname",
+        "user_name": "Nachname",
+        "user_email": "E-Mail",
+        "user_flair": "Flair",
+        "user_birthday": "Geburtstag",
+        "user_id": "Benutzer-ID",
+        "user_active": "Aktiv",
+        "user_lastLogin": "Letzter Login",
+        "user_createdAt": "Konto erstellt am",
+        "jwt": "Login-Token (JWT)",
+        "optional_subscription_id": "Abo-ID",
+        "optional_subscription_monthlyAmount": "Monatlicher Betrag",
+        "optional_subscription_periodAmount": "Betrag pro Periode",
+        "optional_subscription_periodMonths": "Monate pro Periode",
+        "optional_subscription_currency": "Währung",
+        "optional_subscription_paymentPeriodicity": "Zahlungsperiodizität (Code)",
+        "optional_subscription_paymentPeriodicity_display": "Zahlungsperiodizität",
+        "optional_subscription_autoRenew": "Automatische Verlängerung",
+        "optional_subscription_startsAt": "Beginnt am",
+        "optional_subscription_paidUntil": "Bezahlt bis",
+        "optional_invoice_id": "Rechnungs-ID",
+        "optional_invoice_description": "Rechnungsbeschreibung",
+        "optional_invoice_mail": "Rechnungs-E-Mail",
+        "optional_invoice_currency": "Rechnungswährung",
+        "optional_invoice_dueAt": "Rechnung fällig am",
+        "optional_invoice_paidAt": "Rechnung bezahlt am",
+        "optional_invoice_total": "Rechnungsbetrag",
+        "optional_newEmail": "Neue E-Mail-Adresse",
+        "optional_subscription_deactivation_reason": "Deaktivierungsgrund",
+        "optional_subscription_memberPlan_name": "Memberplan",
+        "optional_subscription_paymentMethod_name": "Zahlungsmethode",
+        "optional_items_0_name": "Rechnungsposten 1 — Name",
+        "optional_items_0_amount": "Rechnungsposten 1 — Betrag (Rappen)",
+        "optional_errorCode": "Zahlungsfehlercode",
+        "optional_subscriptionToCreateInvoice_id": "Abo-ID",
+        "optional_subscriptionToCreateInvoice_monthlyAmount": "Monatlicher Betrag",
+        "optional_subscriptionToCreateInvoice_periodAmount": "Betrag pro Periode",
+        "optional_subscriptionToCreateInvoice_memberPlan_name": "Memberplan",
+        "optional_invoice_items_0_name": "Rechnungsposten 1 — Name",
+        "optional_invoice_items_0_amount": "Rechnungsposten 1 — Betrag (Rappen)",
+        "optional_invoices_0_id": "Neueste Rechnung — ID",
+        "optional_invoices_0_description": "Neueste Rechnung — Beschreibung"
+      },
+      "rawHtml": "HTML",
+      "save": "Speichern",
       "showPlaceholders": "Placeholder Dokumentation",
       "status": "Status",
-      "synchronize": "Templates synchronisieren",
-      "view": "Auf {{provider}} ansehen"
+      "statuses": {
+        "error": "Unbekannter Fehler",
+        "ok": "🗸",
+        "unused": "Nicht verwendet"
+      },
+      "subject": "Betreff",
+      "switchToWysiwygWarning": "Beim Wechsel zum visuellen Editor kann HTML verloren gehen, das er nicht darstellen kann (Tabellen, Inline-Styles, eigene Attribute). Fortfahren?",
+      "textContent": "Text-Inhalt (Fallback)",
+      "wysiwyg": "Visuell",
+      "delete": "Löschen",
+      "deleteConfirm": "Diese Mail-Vorlage löschen?",
+      "importFromProvider": "Vom Provider importieren",
+      "importConfirm": "Importieren & überschreiben",
+      "importWarning": "Dies importiert alle Vorlagen des Mail-Providers. Noch unbekannte werden neu angelegt, bereits importierte werden mit HTML und Betreff des Providers überschrieben. Lokale Änderungen daran gehen verloren.",
+      "importDone": "{{count}} Vorlage(n) vom Provider importiert.",
+      "placeholderContextNotes": {
+        "account": "Nur Benutzer-Felder verfügbar.",
+        "subscription": "Abo-Stammdaten. Plan- und Zahlungsmethoden-Namen sind hier NICHT verfügbar – nur in Verlängerungs-Mails.",
+        "renewal": "Enthält zusätzlich Plan-/Zahlungsmethoden-Namen und Rechnungsdaten.",
+        "invoiceCreation": "Achtung: Abo-Felder hier unter dem Präfix optional_subscriptionToCreateInvoice_*.",
+        "custom": "Rechnungen kommen als Array: optional_invoices_0_* (neueste zuerst).",
+        "customNoSubscription": "Nur Empfänger-Felder verfügbar — diese Mail geht an Personen ohne Abo."
+      },
+      "purposeDescriptions": {
+        "account": "Rund um das Benutzerkonto: Registrierung bestätigen, Login-Link senden, Passwort zurücksetzen. Verfügbar sind nur die Empfänger-Felder.",
+        "emailChange": "Bestätigung, wenn jemand seine E-Mail-Adresse ändert. Zusätzlich verfügbar: die neu gewünschte Adresse.",
+        "subscription": "Rund um das Abo selbst: neu abgeschlossen, bestätigt oder deaktiviert. Zusätzlich verfügbar: Abo-Stammdaten wie Betrag und Laufzeit.",
+        "renewal": "Automatische Verlängerung – erfolgreich oder fehlgeschlagen. Zusätzlich verfügbar: Plan- und Zahlungsmethoden-Name sowie die Rechnungsdaten.",
+        "invoiceCreation": "Sobald eine neue Rechnung erstellt wurde. Zusätzlich verfügbar: die Rechnung und das zugehörige Abo.",
+        "custom": "Frei verschickbare Mail an Abonnent:innen, z. B. ein Newsletter über «E-Mail senden». Zusätzlich verfügbar: das Abo und die letzten Rechnungen.",
+        "customNoSubscription": "Frei verschickbare Mail an Personen ohne Abo, z. B. eine Einladung oder Reaktivierung. Verfügbar sind nur die Empfänger-Felder – Abo-Platzhalter bleiben leer."
+      }
     },
     "mailTemplateSelect": {
-      "noMailSentSelectNow": "Kein Mailversand"
+      "noMailSentSelectNow": "Keine E-Mail senden"
     },
     "memberPlanEdit": {
       "active": "Aktiv",
@@ -1034,7 +1225,7 @@
       "settings": "Einstellungen",
       "subscriptionPlans": "Abo Pläne",
       "subscriptions": "Abonnements",
-      "subscriptionSettings": "Default Mailing",
+      "subscriptionSettings": "Automatische Mails",
       "tokens": "Tokens",
       "userConsents": "User-Konsens",
       "userRoles": "Userrollen",
@@ -1043,7 +1234,10 @@
       "authorTags": "Tags",
       "audienceDashboard": "Dashboard",
       "integrations": "Integrationen",
-      "apps": "Apps"
+      "apps": "Apps",
+      "mailSend": "E-Mail senden",
+      "mailLog": "Gesendete E-Mails",
+      "communication": "Kommunikation"
     },
     "navigation": {
       "overview": {
@@ -1425,19 +1619,23 @@
         "newArticlePaywall": "Beeinflusst nicht schon erstellte Artikel"
       }
     },
+    "automaticMails": {
+      "title": "Automatische Mails",
+      "intro": "Hier legen Sie fest, welche E-Mail-Vorlage bei welchem Ereignis automatisch verschickt wird. Wählen Sie pro Ereignis eine Vorlage – oder lassen Sie das Feld auf «Keine E-Mail senden», wenn nichts verschickt werden soll. Das ⓘ-Symbol erklärt jedes Ereignis.",
+      "example": "Beispiel: {{example}}"
+    },
     "subscriptionFlow": {
-      "subscribe": "Abonnieren",
+      "subscribe": "Abo abgeschlossen",
       "renewal_success": "Verlängerung erfolgreich",
       "renewal_failed": "Verlängerung fehlgeschlagen",
-      "deactivation_by_user": "Vom Benutzer deaktiviert",
+      "deactivation_by_user": "Abo gekündigt",
       "reactivation": "Reaktiviert",
       "invoice_creation": "Rechnungserstellung",
       "deactivation_unpaid": "Deaktivierung wegen unbezahlter Rechnung",
       "custom": "Benutzerdefiniertes Ereignis",
       "settings": "Abonnement-Ablauf Einstellungen",
       "edit": "Abonnement-Ablauf bearbeiten",
-      "titleDefaultSettings": "Standard-Abonnement Einstellungen",
-      "settingsDescription": "Sie können diese Einstellungen für jeden Abonnementplan überschreiben.",
+      "settingsDescription": "Diese Einstellungen gelten nur für diesen Abo-Plan und überschreiben die automatischen Mails.",
       "addNew": "Neuen Ablauf erstellen",
       "dayWithNumber": "Tag {{day}}",
       "days": "Tage",
@@ -1455,12 +1653,49 @@
       "deletePermanently": "Permanent löschen",
       "dropHere": "Hier ablegen",
       "filters": "Filter",
-      "subscriptionEvents": "Statische Abonnement-Ereignisse",
+      "filtersDescription": "Legt fest, für welche Abos dieser Ablauf gilt: Abo-Plan, Zahlungsmethode, Periodizität und automatische Verlängerung.",
+      "filtersExample": "Nur Jahresabos, die per Kreditkarte bezahlt werden.",
+      "subscriptionEvents": "Abo-Ereignisse",
+      "subscriptionEventsDescription": "E-Mails, die sofort verschickt werden, wenn im Abo etwas passiert. Sie sind an kein Datum gebunden.",
+      "subscriptionEventsExample": "Jemand schliesst auf der Website ein Abo ab → Bestätigungsmail geht sofort raus.",
       "timeline": "Zeitleiste",
+      "timelineDescription": "E-Mails, die an einem bestimmten Tag rund um das Abo-Ende verschickt werden. Tag 0 ist der Tag der Verlängerung, negative Tage liegen davor, positive danach. Grün heisst «Rechnung wird erstellt» und ist nur an Tag 0 oder davor möglich, Orange heisst «Abo wird wegen unbezahlter Rechnung beendet» und nur an Tag 0 oder danach. Beide Felder müssen immer gesetzt sein. Ziehen Sie ein farbiges Feld auf einen anderen Tag, um es zu verschieben.",
+      "timelineExample": "Tag -14: Rechnung erstellen und Erinnerung verschicken. Tag 5: Abo beenden, falls die Rechnung offen bleibt.",
       "actions": "Aktionen",
+      "actionsDescription": "Mit dem grünen Plus fügen Sie der Zeitleiste einen weiteren Tag hinzu. Selber erstellte Abläufe können Sie hier auch löschen.",
+      "actionsExample": "Tag -30 hinzufügen, um früh an die Verlängerung zu erinnern.",
+      "newDayTitle": "Neuer Tag in der Zeitleiste",
+      "newDayHint": "Negative Zahl = vor dem Abo-Ende, positive Zahl = danach.",
       "dayOfRenewal": "Tag der Verlängerung / Abonnement endet",
       "subscriptionsAffected": "Filter gilt für {{numberOfSubscriptions}} Abonnements",
-      "confirm_subscription": "Abonnementbestätigung"
+      "confirm_subscription": "Abo-Bestätigung",
+      "eventInfo": {
+        "subscribe": {
+          "short": "Der Normalfall auf der Website.",
+          "description": "Der Normalfall: Eine Person hat auf der Website selber ein Abo abgeschlossen und die Zahlung ausgelöst. Das Abo ist damit sofort aktiv.",
+          "example": "«Danke für Ihr Abo – hier ist Ihre Rechnung.»"
+        },
+        "confirm_subscription": {
+          "short": "Für die Rückgewinnung von Abos.",
+          "description": "Wird für die Rückgewinnung verwendet: Sie legen für eine Person ein fertiges Abo an, das sie nur noch bestätigen und bezahlen muss. Aktiv wird das Abo erst, wenn die Rechnung bezahlt ist. Mehr dazu in der Dokumentation unter «Abonnent:innen zurückgewinnen».",
+          "example": "«Ihr Abo ist bereit – jetzt mit einem Klick bestätigen.»"
+        },
+        "renewal_success": {
+          "short": "Verlängerung hat geklappt.",
+          "description": "Geht raus, wenn ein Abo automatisch verlängert und der Betrag erfolgreich abgebucht wurde.",
+          "example": "«Ihr Abo läuft weiter – vielen Dank.»"
+        },
+        "renewal_failed": {
+          "short": "Abbuchung hat nicht geklappt.",
+          "description": "Geht raus, wenn die automatische Abbuchung bei der Verlängerung nicht klappt – etwa bei abgelaufener Kreditkarte, fehlenden Zahlungsdaten oder wenn die Zahlung eine Bestätigung der Person braucht.",
+          "example": "«Ihre Zahlung hat nicht funktioniert – bitte prüfen Sie Ihr Zahlungsmittel.»"
+        },
+        "deactivation_by_user": {
+          "short": "Kündigung durch Person oder Redaktion.",
+          "description": "Geht raus, wenn ein Abo gekündigt wird – von der Person selber auf der Website oder von Ihnen im Editor. Für die Kündigung wegen unbezahlter Rechnung ist die Zeitleiste zuständig.",
+          "example": "«Schade, dass Sie gehen – Ihr Abo läuft noch bis zum 31.12.»"
+        }
+      }
     },
     "subscriptionList": {
       "filter": {
@@ -2066,6 +2301,11 @@
         "mailgunBaseDomain": "Base Domain",
         "mailgunMailDomain": "Mail Domain",
         "slackWebhookUrl": "Webhook URL",
+        "smtpHost": "SMTP-Host",
+        "smtpPort": "SMTP-Port",
+        "smtpSecure": "TLS (SSL) verwenden",
+        "smtpUser": "SMTP-Benutzername",
+        "smtpPassword": "SMTP-Passwort",
         "webhookEndpointSecret": "Webhook Endpoint Secret"
       },
       "trackingPixelSettings": {
@@ -2433,6 +2673,345 @@
     },
     "columnConfigurator": {
       "title": "Spalten ein-/ausblenden"
+    },
+    "systemMails": {
+      "title": "Konto & Login",
+      "sectionDescription": "E-Mails rund um das Benutzerkonto. Sie werden durch eine Aktion der Person ausgelöst – unabhängig davon, ob sie ein Abo hat.",
+      "sectionExample": "Jemand registriert sich → Willkommensmail geht sofort raus.",
+      "sendTest": "Test an mich",
+      "testSent": "Test-E-Mail an Sie verschickt",
+      "events": {
+        "account_creation": "Registrierung",
+        "login_link": "Login-Link",
+        "password_reset": "Passwort zurücksetzen",
+        "email_change": "E-Mail-Adresse geändert",
+        "test_mail": "Testmail"
+      },
+      "eventInfo": {
+        "account_creation": {
+          "short": "Neues Konto wurde erstellt.",
+          "description": "Geht raus, sobald sich eine Person neu registriert oder beim Abo-Kauf ein Konto erhält.",
+          "example": "«Willkommen – Ihr Konto ist bereit.»"
+        },
+        "login_link": {
+          "short": "Anmelden ohne Passwort.",
+          "description": "Geht raus, wenn eine Person sich per Link anmelden will, statt ein Passwort einzugeben. Die E-Mail muss den Login-Link enthalten.",
+          "example": "«Mit einem Klick anmelden.»"
+        },
+        "password_reset": {
+          "short": "Passwort vergessen.",
+          "description": "Geht raus, wenn eine Person «Passwort vergessen» anklickt. Die E-Mail muss den Link zum Setzen eines neuen Passworts enthalten.",
+          "example": "«Hier setzen Sie ein neues Passwort.»"
+        },
+        "email_change": {
+          "short": "Neue Adresse bestätigen.",
+          "description": "Geht an die neue Adresse, wenn jemand seine E-Mail-Adresse ändert. Die Änderung gilt erst nach der Bestätigung.",
+          "example": "«Bitte bestätigen Sie Ihre neue E-Mail-Adresse.»"
+        },
+        "test_mail": {
+          "short": "Nur für Ihre eigenen Tests.",
+          "description": "Wird nie automatisch an Leser*innen verschickt. Diese Vorlage nutzen Sie, um den Mailversand selber auszuprobieren.",
+          "example": "«Testmail – wenn Sie das lesen, funktioniert der Versand.»"
+        }
+      }
+    },
+    "mailSend": {
+      "steps": {
+        "audience": {
+          "title": "Empfänger wählen",
+          "description": "Empfängergruppe und Filter"
+        },
+        "content": {
+          "title": "E-Mail-Inhalt",
+          "description": "Vorlage und Vorschau"
+        },
+        "send": {
+          "title": "E-Mail senden",
+          "description": "Prüfen und absenden"
+        }
+      },
+      "back": "Zurück",
+      "next": "Weiter",
+      "selectTemplateHint": "Wähle eine Vorlage, um die Vorschau zu sehen.",
+      "summary": {
+        "title": "Zusammenfassung"
+      },
+      "title": "E-Mail senden",
+      "template": "E-Mail-Vorlage",
+      "selectTemplate": "Vorlage auswählen",
+      "audience": {
+        "title": "Empfänger"
+      },
+      "base": {
+        "label": "Empfängergruppe",
+        "allUsers": "Alle Benutzer",
+        "hasSubscription": "Abonnenten (mit Abo)",
+        "noActiveSubscription": "Ohne aktives Abo",
+        "endedSubscription": "Rückgewinnung – Abo kürzlich deaktiviert",
+        "allUsersHint": "Alle registrierten Personen, unabhängig von einem Abo.",
+        "hasSubscriptionHint": "Personen mit einem Abo. Abo-Platzhalter sind verfügbar.",
+        "noActiveSubscriptionHint": "Personen ohne aktives Abo. Abo-Platzhalter bleiben leer.",
+        "endedSubscriptionHint": "Personen, deren Abo kürzlich deaktiviert wurde und die seither kein neues Abo haben. Das deaktivierte Abo wird mitgeschickt – die Abo-Platzhalter stehen also zur Verfügung."
+      },
+      "memberPlans": "Abo-Pläne",
+      "memberPlansAll": "Alle Abo-Pläne",
+      "state": {
+        "label": "Abo-Status",
+        "any": "Beliebig",
+        "active": "Aktiv",
+        "pending": "Ausstehend",
+        "deactivated": "Deaktiviert"
+      },
+      "autoRenew": "Automatische Verlängerung",
+      "paymentMethod": "Zahlungsmethode",
+      "periodicity": "Zahlungsintervall",
+      "any": "Beliebig",
+      "yes": "Ja",
+      "no": "Nein",
+      "counting": "Empfänger werden gezählt …",
+      "recipientsCount": "{{count}} Empfänger",
+      "send": "Senden",
+      "templateNeedsSubscription": "Diese Vorlage benötigt eine Abo-basierte Empfängergruppe, damit die Abo-Platzhalter gefüllt werden können.",
+      "confirmTitle": "E-Mail senden",
+      "confirmText": "Diese E-Mail an {{count}} Empfänger senden?",
+      "confirm": "Senden",
+      "cancel": "Abbrechen",
+      "started": "Versand gestartet",
+      "progress": {
+        "title": "Versandfortschritt",
+        "status": "Status",
+        "sent": "Gesendet",
+        "failed": "Fehlgeschlagen",
+        "reason": "Grund",
+        "showFailures": "{{count}} fehlgeschlagene Mails im Versandprotokoll ansehen",
+        "showJob": "Versand-Details öffnen"
+      },
+      "status": {
+        "queued": "In Warteschlange",
+        "running": "Läuft",
+        "done": "Abgeschlossen",
+        "failed": "Fehlgeschlagen",
+        "cancelled": "Abgebrochen"
+      },
+      "missingPlaceholders": "Achtung: Diese Platzhalter werden für diese Empfänger nicht gefüllt: {{placeholders}}",
+      "createTemplate": "Neue Vorlage",
+      "editTemplate": "Vorlage bearbeiten",
+      "showRecipients": "Empfänger anzeigen",
+      "recipientList": {
+        "title": "Empfänger ({{count}})",
+        "loading": "Empfänger werden geladen …",
+        "email": "E-Mail",
+        "name": "Name",
+        "memberPlan": "Abo-Plan"
+      },
+      "endedWithinDays": "Deaktiviert innerhalb der letzten … Tage",
+      "endedWithinDaysHint": "Nur Abos, die in diesem Zeitraum deaktiviert wurden.",
+      "endedWindow": {
+        "label": "Zeitraum der Abo-Deaktivierung",
+        "relative": "Letzte … Tage",
+        "period": "Fester Zeitraum",
+        "days": "Tage",
+        "periodPlaceholder": "Von – bis wählen",
+        "periodHint": "Nur Abos, die zwischen diesen beiden Daten deaktiviert wurden."
+      },
+      "preview": {
+        "title": "Vorschau",
+        "recipient": "Vorschau für",
+        "firstRecipient": "Erste:r Empfänger:in",
+        "hint": "So sieht die Mail für diese Person aus – mit ihren echten Daten.",
+        "loading": "Vorschau wird geladen …",
+        "noRecipients": "Keine Empfänger:innen – bitte zuerst die Empfängergruppe anpassen."
+      },
+      "recipientsCountPerPerson": "{{count}} Mails an {{people}} Personen"
+    },
+    "mailLog": {
+      "title": "Gesendete E-Mails",
+      "empty": "Keine E-Mails gefunden.",
+      "sentDate": "Datum",
+      "template": "Vorlage",
+      "subject": "Betreff",
+      "state": "Status",
+      "type": "Ausgelöst durch",
+      "recipient": "Empfänger",
+      "filter": {
+        "template": "Vorlage",
+        "state": "Status",
+        "type": "Ausgelöst durch",
+        "job": "Versand",
+        "jobAll": "Alle Versände",
+        "all": "Alle",
+        "title": "Filter",
+        "reset": "Filter zurücksetzen",
+        "typeHint": "Wodurch der Versand angestossen wurde."
+      },
+      "types": {
+        "subscriptionFlow": "Abo-Mailing",
+        "userFlow": "Ereignis-Mail",
+        "systemMail": "System-Mail",
+        "manual": "Manuell"
+      },
+      "error": "Fehler",
+      "typeDescriptions": {
+        "manual": "Von Hand über «E-Mail senden» oder «Test senden» verschickt. Beispiel: Newsletter an alle Abonnent:innen.",
+        "subscriptionFlow": "Zeitgesteuert aus «Automatische Mails», berechnet ab dem Abo-Datum. Beispiele: Erinnerung 14 Tage vor Ablauf, Mahnung nach unbezahlter Rechnung.",
+        "userFlow": "Sofort ausgelöst durch eine konkrete Aktion oder ein Ereignis. Beispiele: Login-Link angefordert, E-Mail-Adresse geändert, Verlängerung der Zahlung fehlgeschlagen.",
+        "systemMail": "Konto-Mails, konfiguriert unter «Automatische Mails» im Abschnitt «Konto & Login». Beispiele: Willkommensmail nach Registrierung, Passwort zurücksetzen."
+      },
+      "errorHelp": {
+        "causeTitle": "Was ist passiert?",
+        "fixTitle": "So behebst du es",
+        "raw": "Originalmeldung des Mailservers:",
+        "tls": {
+          "cause": "Der Mailserver hat die Verbindung per TLS verschlüsselt, sein Zertifikat ist aber nicht vertrauenswürdig (selbst signiert, abgelaufen oder auf einen anderen Hostnamen ausgestellt). Die Mail wurde deshalb nicht übermittelt.",
+          "fix": "1. Prüfe unter Einstellungen › Integrationen › Mail, welcher SMTP-Host und Port eingetragen sind.\n2. Stelle sicher, dass dort wirklich dein Mailserver antwortet – häufig belegt ein anderes Programm den Port (lokal z. B. die Proton Mail Bridge auf Port 1025).\n3. Verwende einen Mailserver mit gültigem Zertifikat, oder lokal einen SMTP-Server ohne TLS (z. B. Mailpit auf einem freien Port)."
+        },
+        "connectionRefused": {
+          "cause": "Unter dem eingetragenen SMTP-Host und Port nimmt niemand Verbindungen an.",
+          "fix": "1. Prüfe Host und Port unter Einstellungen › Integrationen › Mail.\n2. Starte den Mailserver (lokal z. B. «docker compose up mailpit»).\n3. Prüfe, ob eine Firewall den Port blockiert."
+        },
+        "hostNotFound": {
+          "cause": "Der Hostname des Mailservers lässt sich nicht auflösen – er existiert nicht oder DNS ist nicht erreichbar.",
+          "fix": "1. Kontrolliere den SMTP-Host auf Tippfehler (Einstellungen › Integrationen › Mail).\n2. In Docker muss der Servicename verwendet werden (z. B. «mailpit» statt «localhost»)."
+        },
+        "timeout": {
+          "cause": "Der Mailserver hat nicht rechtzeitig geantwortet. Meist blockiert eine Firewall den Port oder der Server ist überlastet.",
+          "fix": "1. Prüfe, ob der Port von diesem Server aus erreichbar ist.\n2. Viele Hoster sperren Port 25 – nutze 587 oder 465.\n3. Versuche den Versand später erneut."
+        },
+        "auth": {
+          "cause": "Der Mailanbieter hat die Zugangsdaten abgelehnt.",
+          "fix": "1. Erneuere API-Key bzw. Benutzer und Passwort unter Einstellungen › Integrationen › Mail.\n2. Prüfe, ob der Key zum richtigen Konto und zur richtigen Region gehört."
+        },
+        "recipientRejected": {
+          "cause": "Der Mailserver hat die Empfängeradresse abgelehnt – sie existiert nicht, oder die Absenderdomain darf nicht an diese Adresse senden.",
+          "fix": "1. Prüfe die Empfängeradresse.\n2. Verifiziere die Absenderdomain beim Anbieter (SPF/DKIM).\n3. Im Sandbox-Modus (z. B. Mailgun) müssen Empfänger vorab freigegeben werden."
+        },
+        "rateLimit": {
+          "cause": "Der Anbieter hat das Sendelimit erreicht und weitere Mails vorerst abgewiesen.",
+          "fix": "1. Warte ab und sende den Versand später erneut.\n2. Prüfe das Kontingent deines Tarifs beim Mailanbieter."
+        },
+        "noProvider": {
+          "cause": "Es ist kein Mailanbieter konfiguriert, deshalb kann nichts verschickt werden.",
+          "fix": "Richte unter Einstellungen › Integrationen › Mail einen Anbieter ein (SMTP, Mailgun, Mailchimp oder Slack)."
+        },
+        "templateMissing": {
+          "cause": "Die verwendete E-Mail-Vorlage existiert nicht mehr.",
+          "fix": "Wähle unter «E-Mail-Vorlagen» eine vorhandene Vorlage aus bzw. lege sie neu an und starte den Versand erneut."
+        },
+        "generic": {
+          "cause": "Der Mailserver hat den Versand mit der unten stehenden Meldung abgelehnt.",
+          "fix": "1. Prüfe die Einstellungen unter Einstellungen › Integrationen › Mail.\n2. Sieh im Server-Log nach der vollständigen Fehlermeldung.\n3. Sende eine Testmail aus der Vorlage, um die Verbindung zu prüfen."
+        }
+      },
+      "tabs": {
+        "mails": "E-Mails",
+        "jobs": "Versände"
+      },
+      "sync": {
+        "action": "Status aktualisieren",
+        "hint": "Fragt beim Mailanbieter den aktuellen Zustellstatus aller noch offenen E-Mails ab.",
+        "done": "{{checked}} offene E-Mail(s) beim Anbieter geprüft, {{updated}} aktualisiert."
+      },
+      "stateHelp": {
+        "nextTitle": "Was du tun kannst",
+        "legendTitle": "Bedeutung der Status",
+        "legendIntro": "Der Status zeigt, wie weit eine E-Mail auf dem Weg zum Empfänger gekommen ist. Gemeldet wird er vom Mailanbieter, nicht von We.Publish selbst.",
+        "legendFooter": "Statusmeldungen kommen normalerweise per Webhook vom Mailanbieter. Ist kein Webhook eingerichtet – oder läuft die Installation lokal, wo der Anbieter sie nicht erreichen kann – bleibt der Status auf «submitted» stehen. «Status aktualisieren» holt ihn dann direkt beim Anbieter ab.\nSMTP und Slack melden keine Zustellstatus: dort bleibt es bei «submitted».",
+        "submitted": {
+          "name": "submitted — Übermittelt",
+          "meaning": "We.Publish hat die E-Mail an den Mailanbieter übergeben und dieser hat sie angenommen. Sie ist dort in der Warteschlange. Über das Postfach des Empfängers sagt dieser Status noch nichts aus.",
+          "next": "Abwarten: Der Anbieter meldet den Ausgang per Webhook nachträglich. Bleibt der Status längere Zeit stehen, ist meist kein Webhook eingerichtet – dann holst du den aktuellen Stand mit «Status aktualisieren»."
+        },
+        "accepted": {
+          "name": "accepted — Angenommen",
+          "meaning": "Der empfangende Mailserver hat die Nachricht für den Empfänger angenommen. Diesen Zwischenschritt meldet Mailgun; Mandrill überspringt ihn und geht direkt auf «delivered».",
+          "next": "Nichts. Normalerweise folgt kurz darauf «delivered»."
+        },
+        "delivered": {
+          "name": "delivered — Zugestellt",
+          "meaning": "Der Mailserver des Empfängers hat die Nachricht angenommen und ins Postfach ausgeliefert. Das ist der erfolgreiche Endzustand. In Mandrill heisst dieser Zustand in der Oberfläche «Delivered» und in der API «sent».",
+          "next": "Nichts. Beachte: Zugestellt heisst nicht gelesen – und schliesst nicht aus, dass die E-Mail im Spam-Ordner landet."
+        },
+        "deferred": {
+          "name": "deferred — Zurückgestellt",
+          "meaning": "Der empfangende Server hat die Annahme vorübergehend verweigert, etwa wegen Greylisting, eines Sendelimits, eines vollen Postfachs oder einer kurzen Störung. Der Anbieter versucht es über Stunden automatisch erneut.",
+          "next": "Abwarten. Der Status wechselt von selbst auf «delivered» oder «bounced». Von Hand nachschicken erzeugt nur ein Duplikat."
+        },
+        "bounced": {
+          "name": "bounced — Unzustellbar",
+          "meaning": "Die Zustellung ist endgültig gescheitert. Hard Bounce: die Adresse oder die Domain existiert nicht. Soft Bounce: wiederholte vorübergehende Fehler (volles Postfach, Server dauerhaft nicht erreichbar), die sich nicht aufgelöst haben.",
+          "next": "Empfängeradresse auf Tippfehler prüfen und korrigieren oder entfernen. Wiederholte Hard Bounces an dieselbe Adresse schaden dem Ruf der Absenderdomain. Den genauen SMTP-Grund findest du in der Spalte «Fehler» und im Log des Anbieters."
+        },
+        "rejected": {
+          "name": "rejected — Abgewiesen",
+          "meaning": "Die E-Mail wurde nie verschickt. Entweder konnte We.Publish sie nicht übergeben (fehlende oder falsche Anbieter-Konfiguration), oder der Anbieter hat sie von vornherein verweigert: nicht verifizierte Absenderdomain («unsigned»), Adresse auf der Sperrliste des Anbieters nach früherem Hard Bounce oder Spam-Beschwerde, abgemeldeter Empfänger, oder das Sendelimit des Kontos ist erreicht.",
+          "next": "Die Spalte «Fehler» nennt den Grund – fahre mit der Maus darüber für Ursache und Behebung. Ursache beheben und erneut senden: automatisch wiederholt wird nichts."
+        }
+      }
+    },
+    "userMail": {
+      "sendTitle": "E-Mail senden",
+      "logTitle": "Gesendete E-Mails",
+      "customOnlyHint": "An einen einzelnen Benutzer können nur benutzerdefinierte Vorlagen gesendet werden.",
+      "selectTemplate": "Vorlage auswählen",
+      "send": "Senden",
+      "sent": "E-Mail gesendet"
+    },
+    "mailJobs": {
+      "created": "Gestartet",
+      "template": "Vorlage",
+      "audience": "Empfängergruppe",
+      "state": "Status",
+      "progress": "Fortschritt",
+      "actions": "Aktionen",
+      "details": "Details",
+      "finished": "Beendet",
+      "empty": "Noch keine Versände gestartet.",
+      "detailTitle": "Versand",
+      "progressCount": "{{sent}} von {{total}} gesendet",
+      "failedCount": "{{count}} fehlgeschlagen",
+      "lastActivity": "Letzte Aktivität: {{time}}",
+      "showMails": "E-Mails dieses Versands",
+      "showFailedMails": "{{count}} fehlgeschlagene ansehen",
+      "unfinishedHint": "Dieser Versand ist nicht zu Ende gelaufen: {{count}} E-Mails wurden noch nie verschickt. Mit «Fortsetzen» werden genau diese nachgeholt – bereits versendete E-Mails werden nie ein zweites Mal geschickt.",
+      "resume": "Fortsetzen",
+      "resumeTitle": "Versand fortsetzen",
+      "resumeText": "Es sind noch {{count}} E-Mails offen, die nie verschickt wurden.",
+      "resumeConfirm": "{{count}} E-Mails senden",
+      "resumeSafety": "Die {{count}} bereits gesendeten E-Mails werden nicht erneut verschickt.",
+      "resumed": "Versand wird fortgesetzt",
+      "retryUnfinished": "Fehlgeschlagene und unterbrochene erneut versuchen ({{count}})",
+      "retryUnfinishedHint": "Bei unterbrochenen E-Mails ist unklar, ob sie beim Anbieter angekommen sind – sie könnten dadurch doppelt zugestellt werden.",
+      "cancel": "Abbrechen",
+      "cancelTitle": "Versand abbrechen",
+      "cancelText": "Der Versand wird gestoppt. Die {{count}} noch nicht verschickten E-Mails bleiben offen und können später fortgesetzt werden.",
+      "cancelConfirm": "Versand stoppen",
+      "audiences": {
+        "singleUser": "Einzelne Person",
+        "filteredSubscriptions": "Gefilterte Auswahl",
+        "allUsers": "Alle Benutzer"
+      },
+      "stats": {
+        "sent": "Gesendet",
+        "pending": "Ausstehend",
+        "failed": "Fehlgeschlagen",
+        "sending": "In Zustellung",
+        "interrupted": "Unterbrochen"
+      },
+      "recipientState": {
+        "pending": "Ausstehend",
+        "sending": "In Zustellung",
+        "sent": "Gesendet",
+        "failed": "Fehlgeschlagen"
+      },
+      "queue": {
+        "title": "Warteschlange",
+        "allStates": "Alle Status",
+        "recipient": "Empfänger",
+        "state": "Status",
+        "sentAt": "Gesendet am",
+        "attempts": "Versuche",
+        "empty": "Keine Einträge für diesen Filter."
+      }
     }
   }
 }

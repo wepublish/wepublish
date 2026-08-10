@@ -2,6 +2,7 @@ import {
   MailProviderProps,
   BaseMailProvider,
   SendMailProps,
+  SendMailResult,
 } from '@wepublish/mail/api';
 import fetch from 'cross-fetch';
 
@@ -14,7 +15,7 @@ export class SlackMailProvider extends BaseMailProvider {
     return [];
   }
 
-  async sendMail(props: SendMailProps): Promise<void> {
+  async sendMail(props: SendMailProps): Promise<SendMailResult> {
     const config = await this.getConfig();
 
     if (!config?.slack_webhookURL) {
@@ -31,9 +32,9 @@ export class SlackMailProvider extends BaseMailProvider {
           type: 'section',
           text: {
             type: 'mrkdwn',
-            text: `*From*: ${props.replyToAddress}\n*To*: ${props.recipient}\n*Template*: ${
-              props.template
-            }\n\`\`\`${JSON.stringify(props.templateData)}\`\`\``,
+            text: `*From*: ${props.replyToAddress}\n*To*: ${props.recipient}\n*Subject*: ${
+              props.subject
+            }\n\`\`\`${props.messageHtml ?? props.message ?? ''}\`\`\``,
           },
         },
       ],
@@ -47,19 +48,12 @@ export class SlackMailProvider extends BaseMailProvider {
       body: JSON.stringify(message),
       signal: AbortSignal.timeout(5_000),
     });
+
+    return {};
   }
 
-  async getTemplates() {
-    return [...Array(10).keys()].map(key => ({
-      name: `Slack Template ${key + 1}`,
-      uniqueIdentifier: `slack-template-${key + 1}`,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    }));
-  }
-
-  async getTemplateUrl() {
-    return 'http://example.com/';
+  async getTemplateContent() {
+    return { html: '', subject: '' };
   }
 
   async getName(): Promise<string> {
