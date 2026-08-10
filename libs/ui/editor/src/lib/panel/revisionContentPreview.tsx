@@ -125,16 +125,14 @@ export function RevisionContentPreview({
         >
           <CircularProgress />
         </Box>
-      : <>
-          <ReadOnlyBlocks>
-            <BlockList
-              value={blocks}
-              onChange={() => undefined}
-              disabled
-              blockMap={BlockMap}
-            />
-          </ReadOnlyBlocks>
-        </>
+      : <ReadOnlyBlocks>
+          <BlockList
+            value={blocks}
+            onChange={() => undefined}
+            disabled
+            blockMap={BlockMap}
+          />
+        </ReadOnlyBlocks>
       }
     </Dialog>
   );

@@ -40,6 +40,7 @@ export const ImageBlockImage = styled(Image)`
 
 export const ImageBlockCaption = styled('figcaption')`
   max-width: 100%;
+  overflow-wrap: anywhere;
 `;
 
 export const ImageBlockSource = styled('span')``;
@@ -51,6 +52,7 @@ export const ImageBlock = ({
   className,
 }: BuilderImageBlockProps) => {
   const [realImageWidth, setRealImageWidth] = useState<number>();
+  const wrapperRef = useRef<HTMLElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
   const captionRef = useRef<HTMLElement>(null);
   const img = image && (
@@ -62,31 +64,63 @@ export const ImageBlock = ({
   );
 
   useEffect(() => {
+    const imageElement = imageRef.current;
+    const wrapper = wrapperRef.current;
+
+    if (!imageElement || !wrapper) {
+      return;
+    }
+
     const calcImageSize = () => {
-      if (imageRef.current && captionRef.current) {
-        captionRef.current.setAttribute('style', 'display: none;');
-        const [newImageWidth] = getContainedImageSize(imageRef.current);
+      const caption = captionRef.current;
+      caption?.setAttribute('style', 'width:initial;');
 
-        if (realImageWidth !== newImageWidth) {
-          setRealImageWidth(newImageWidth);
-        }
+      const { paddingLeft, paddingRight } = window.getComputedStyle(wrapper);
+      const wrapperWidth =
+        wrapper.clientWidth -
+        (parseFloat(paddingLeft) || 0) -
+        (parseFloat(paddingRight) || 0);
 
-        captionRef.current.setAttribute('style', '');
-      }
+      // blocks can break out of their container with negative margins, so the
+      // wrapper itself can be wider than the visible page. clientWidth of the
+      // document excludes the scrollbar, unlike 100vw.
+      const viewportWidth = document.documentElement.clientWidth;
+      const { left, right } = wrapper.getBoundingClientRect();
+      const visibleWidth = Math.min(right, viewportWidth) - Math.max(left, 0);
+      const availableWidth = Math.min(wrapperWidth, visibleWidth);
+
+      const [newImageWidth] = getContainedImageSize(
+        imageElement,
+        availableWidth
+      );
+
+      caption?.removeAttribute('style');
+
+      setRealImageWidth(currentImageWidth =>
+        newImageWidth > 0 ? Math.floor(newImageWidth) : currentImageWidth
+      );
     };
 
     calcImageSize();
+
+    const observer = new ResizeObserver(calcImageSize);
+    observer.observe(wrapper);
+
     window.addEventListener('resize', calcImageSize);
-    imageRef.current?.addEventListener('load', calcImageSize);
+    imageElement.addEventListener('load', calcImageSize);
 
     return () => {
+      observer.disconnect();
       window.removeEventListener('resize', calcImageSize);
-      imageRef.current?.removeEventListener('load', calcImageSize);
+      imageElement.removeEventListener('load', calcImageSize);
     };
-  }, [realImageWidth]);
+  }, []);
 
   return (
-    <ImageBlockWrapper className={className}>
+    <ImageBlockWrapper
+      ref={wrapperRef}
+      className={className}
+    >
       <ImageBlockInnerWrapper>
         {linkUrl ?
           <Link

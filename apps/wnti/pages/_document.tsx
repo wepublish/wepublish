@@ -9,11 +9,6 @@ export default function Document(props: DocumentProps) {
   return (
     <Html lang="de">
       <Head>
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1.0"
-        />
-
         {/* Feeds */}
         <link
           rel="alternate"
@@ -81,7 +76,9 @@ export default function Document(props: DocumentProps) {
 }
 
 Document.getInitialProps = async (ctx: DocumentContext) => {
-  const { props } = await documentGetInitialProps(ctx);
+  const { props } = await documentGetInitialProps(ctx, () => ({
+    stripeKey: process.env.STRIPE_PUBLIC_KEY,
+  }));
 
   return props;
 };

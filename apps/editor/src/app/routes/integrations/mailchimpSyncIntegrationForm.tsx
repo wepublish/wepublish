@@ -1,22 +1,4 @@
 import styled from '@emotion/styled';
-import {
-  DryRunMailchimpSyncMutation,
-  SyncProviderSettingsDocument,
-  SyncProviderSettingsQuery,
-  useDeleteAllMailchimpSyncErrorsMutation,
-  useDeleteMailchimpSyncErrorMutation,
-  useDryRunMailchimpSyncMutation,
-  useMailchimpInterestGroupsLazyQuery,
-  useMailchimpSyncErrorsQuery,
-  useMailchimpSyncProgressQuery,
-  useMailchimpListsLazyQuery,
-  useMailchimpMergeFieldsLazyQuery,
-  useMemberPlanListQuery,
-  usePaymentMethodListQuery,
-  useSyncProviderSettingsQuery,
-  useTriggerMailchimpSyncMutation,
-  useUpdateSyncProviderSettingMutation,
-} from '@wepublish/editor/api';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Accordion,
@@ -39,6 +21,24 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import {
+  DryRunMailchimpSyncMutation,
+  SyncProviderSettingsDocument,
+  SyncProviderSettingsQuery,
+  useDeleteAllMailchimpSyncErrorsMutation,
+  useDeleteMailchimpSyncErrorMutation,
+  useDryRunMailchimpSyncMutation,
+  useMailchimpInterestGroupsLazyQuery,
+  useMailchimpListsLazyQuery,
+  useMailchimpMergeFieldsLazyQuery,
+  useMailchimpSyncErrorsQuery,
+  useMailchimpSyncProgressQuery,
+  useMemberPlanListQuery,
+  usePaymentMethodListQuery,
+  useSyncProviderSettingsQuery,
+  useTriggerMailchimpSyncMutation,
+  useUpdateSyncProviderSettingMutation,
+} from '@wepublish/editor/api';
 import { useCallback, useEffect, useState } from 'react';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -908,10 +908,7 @@ function SyncProviderSettingCard({
 
   return (
     <SyncCard variant="outlined">
-      <Form
-        fluid
-        onSubmit={() => onSubmit()}
-      >
+      <Form onSubmit={() => onSubmit()}>
         <CardContent>
           <Typography
             variant="h5"

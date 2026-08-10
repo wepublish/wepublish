@@ -43,7 +43,15 @@ import {
   MdUnpublished,
 } from 'react-icons/md';
 import { Link, useNavigate } from 'react-router-dom';
-import { Button, Message, Modal, Pagination, Table as RTable } from 'rsuite';
+import {
+  Button,
+  IconButton as RIconButton,
+  Message,
+  Modal,
+  Pagination,
+  Table as RTable,
+} from 'rsuite';
+import type { RowDataType } from 'rsuite-table';
 
 interface State {
   state: string;
@@ -136,13 +144,13 @@ function PageList() {
         <PermissionControl qualifyingPermissions={['CAN_CREATE_PAGE']}>
           <ListViewActions>
             <Link to="/pages/create">
-              <IconButton
+              <RIconButton
                 appearance="primary"
                 disabled={isLoading}
                 icon={<MdAdd />}
               >
                 {t('pages.overview.newPage')}
-              </IconButton>
+              </RIconButton>
             </Link>
           </ListViewActions>
         </PermissionControl>
@@ -279,7 +287,7 @@ function PageList() {
           >
             <HeaderCell>{t('pages.overview.action')}</HeaderCell>
             <IconButtonCell>
-              {(rowData: FullPageFragment) => (
+              {(rowData: RowDataType<FullPageFragment>) => (
                 <>
                   <PermissionControl
                     qualifyingPermissions={['CAN_PUBLISH_PAGE']}
@@ -293,7 +301,7 @@ function PageList() {
                         disabled={!(rowData.published || rowData.pending)}
                         size="sm"
                         onClick={e => {
-                          setCurrentPage(rowData);
+                          setCurrentPage(rowData as FullPageFragment);
                           setConfirmAction(ConfirmAction.Unpublish);
                           setConfirmationDialogOpen(true);
                         }}
@@ -312,7 +320,7 @@ function PageList() {
                         circle
                         size="sm"
                         onClick={() => {
-                          setCurrentPage(rowData);
+                          setCurrentPage(rowData as FullPageFragment);
                           setConfirmAction(ConfirmAction.Duplicate);
                           setConfirmationDialogOpen(true);
                         }}
@@ -358,7 +366,7 @@ function PageList() {
                         appearance="ghost"
                         color="red"
                         onClick={() => {
-                          setCurrentPage(rowData);
+                          setCurrentPage(rowData as FullPageFragment);
                           setConfirmAction(ConfirmAction.Delete);
                           setConfirmationDialogOpen(true);
                         }}

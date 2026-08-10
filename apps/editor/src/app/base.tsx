@@ -62,8 +62,10 @@ import {
   CanGetEvent,
   CanGetImage,
   CanGetImages,
+  CanGetMailLogs,
   CanGetMailProviderSettings,
   CanGetMailTemplates,
+  CanSendMailTemplates,
   CanGetMemberPlan,
   CanGetMemberPlans,
   CanGetNavigation,
@@ -94,7 +96,7 @@ import {
   CanPreview,
   CanPublishArticle,
   CanPublishPage,
-  CanSyncMailTemplates,
+  CanUpdateMailTemplates,
   CanTakeActionOnComment,
   CanUpdateBlockStyle,
   CanUpdateCommentRatingSystem,
@@ -122,8 +124,6 @@ import {
   MdBadge,
   MdBookOnline,
   MdChat,
-  MdChevronLeft,
-  MdChevronRight,
   MdCountertops,
   MdCreditCard,
   MdDashboard,
@@ -141,6 +141,7 @@ import {
   MdMoney,
   MdMultilineChart,
   MdOutgoingMail,
+  MdSend,
   MdOutlineGridView,
   MdPayment,
   MdPersonAddAlt1,
@@ -221,31 +222,18 @@ const Sidenav = styled(RSidenav)`
 `;
 
 const IconButton = styled(RIconButton)`
-  width: 56px;
-  height: 56px;
   line-height: 56px;
   text-align: center;
+
+  && {
+    width: 56px;
+    height: 56px;
+  }
 
   svg {
     position: absolute;
     top: 20px;
     left: 20px;
-  }
-`;
-
-const FloatingButton = styled(RIconButton)`
-  display: block;
-  padding: 6px;
-  position: absolute;
-  top: 5vh;
-  transition:
-    transform 0.2s ease-in,
-    opacity 0.15s ease-in-out;
-  z-index: 100;
-  transform: translateX(${props => (props.isExpanded ? '241px' : '37px')});
-
-  .rs-sidebar:hover & {
-    opacity: 1;
   }
 `;
 
@@ -265,8 +253,6 @@ export function Base({ children }: BaseProps) {
 
   const { t, i18n } = useTranslation();
 
-  const [isExpanded, setIsExpanded] = useState(true);
-
   const [uiLanguage, setUILanguage] = useStickyState(
     AVAILABLE_LANG[0].id,
     'wepublish/language'
@@ -279,30 +265,12 @@ export function Base({ children }: BaseProps) {
   return (
     <Wrapper>
       <Container>
-        <Sidebar
-          isExpanded={isExpanded}
-          collapsible
-          width={isExpanded ? 260 : 56}
-        >
+        <Sidebar>
           <Sidenav
-            expanded={isExpanded}
             defaultOpenKeys={['1']}
             appearance="default"
           >
             <RSidenav.Body>
-              <FloatingButton
-                isExpanded={isExpanded}
-                appearance="primary"
-                circle
-                size="sm"
-                onClick={() => setIsExpanded(!isExpanded)}
-                icon={
-                  isExpanded ?
-                    <MdChevronLeft size="22px" />
-                  : <MdChevronRight size="22px" />
-                }
-              />
-
               <Navigation>
                 <Nav.Menu
                   eventKey={'dashboard'}
@@ -921,6 +889,88 @@ export function Base({ children }: BaseProps) {
                   </Nav.Menu>
                 </PermissionControl>
 
+                {/* COMMUNICATION */}
+                <PermissionControl
+                  qualifyingPermissions={[
+                    CanGetMailTemplates.id,
+                    CanUpdateMailTemplates.id,
+                    CanGetSystemMails.id,
+                    CanUpdateSystemMails.id,
+                    CanSendMailTemplates.id,
+                    CanGetMailLogs.id,
+                    CanGetSubscriptionFlows.id,
+                  ]}
+                >
+                  <Nav.Menu
+                    eventKey={'communication'}
+                    title={t('navbar.communication')}
+                    icon={<MdMail />}
+                  >
+                    {/* SEND MAIL */}
+                    <PermissionControl
+                      qualifyingPermissions={[CanSendMailTemplates.id]}
+                    >
+                      <Nav.Item
+                        as={NavLink}
+                        href="/mailsend"
+                        active={path === 'mailsend'}
+                        icon={<MdSend />}
+                      >
+                        {t('navbar.mailSend')}
+                      </Nav.Item>
+                    </PermissionControl>
+
+                    {/* AUTOMATIC MAILS (subscription mailing + system mails) */}
+                    <PermissionControl
+                      qualifyingPermissions={[
+                        CanGetSubscriptionFlows.id,
+                        CanGetSystemMails.id,
+                        CanUpdateSystemMails.id,
+                      ]}
+                    >
+                      <Nav.Item
+                        as={NavLink}
+                        href="/communicationflows/edit/default"
+                        active={path === 'communicationflows/edit/default'}
+                        icon={<MdOutgoingMail />}
+                      >
+                        {t('navbar.subscriptionSettings')}
+                      </Nav.Item>
+                    </PermissionControl>
+
+                    {/* MAIL TEMPLATES */}
+                    <PermissionControl
+                      qualifyingPermissions={[
+                        CanGetMailTemplates.id,
+                        CanUpdateMailTemplates.id,
+                      ]}
+                    >
+                      <Nav.Item
+                        as={NavLink}
+                        href="/mailtemplates"
+                        active={path === 'mailtemplates'}
+                        icon={<MdMail />}
+                      >
+                        {t('navbar.mailTemplates')}
+                      </Nav.Item>
+                    </PermissionControl>
+
+                    {/* SENT MAILS */}
+                    <PermissionControl
+                      qualifyingPermissions={[CanGetMailLogs.id]}
+                    >
+                      <Nav.Item
+                        as={NavLink}
+                        href="/maillog"
+                        active={path === 'maillog'}
+                        icon={<MdOutgoingMail />}
+                      >
+                        {t('navbar.mailLog')}
+                      </Nav.Item>
+                    </PermissionControl>
+                  </Nav.Menu>
+                </PermissionControl>
+
                 <PermissionControl
                   qualifyingPermissions={[
                     CanGetMemberPlans.id,
@@ -976,20 +1026,6 @@ export function Base({ children }: BaseProps) {
                         icon={<MdCreditCard />}
                       >
                         {t('navbar.paymentMethods')}
-                      </Nav.Item>
-                    </PermissionControl>
-
-                    {/* SUBSCRIPTION MAILING */}
-                    <PermissionControl
-                      qualifyingPermissions={[CanGetSubscriptionFlows.id]}
-                    >
-                      <Nav.Item
-                        as={NavLink}
-                        href="/communicationflows/edit/default"
-                        active={path === 'communicationflows/edit/default'}
-                        icon={<MdOutgoingMail />}
-                      >
-                        {t('navbar.subscriptionSettings')}
                       </Nav.Item>
                     </PermissionControl>
 
@@ -1057,7 +1093,7 @@ export function Base({ children }: BaseProps) {
                     CanGetSettings.id,
                     CanUpdateSettings.id,
                     CanGetMailTemplates.id,
-                    CanSyncMailTemplates.id,
+                    CanUpdateMailTemplates.id,
                     CanGetUserRoles.id,
                     CanGetUserRole.id,
                     CanCreateUserRole.id,
@@ -1082,40 +1118,6 @@ export function Base({ children }: BaseProps) {
                         icon={<MdSettings />}
                       >
                         {t('navbar.settings')}
-                      </Nav.Item>
-                    </PermissionControl>
-
-                    {/* MAIL TEMPLATE SYNC */}
-                    <PermissionControl
-                      qualifyingPermissions={[
-                        CanGetMailTemplates.id,
-                        CanSyncMailTemplates.id,
-                      ]}
-                    >
-                      <Nav.Item
-                        as={NavLink}
-                        href="/mailtemplates"
-                        active={path === 'mailtemplates'}
-                        icon={<MdMail />}
-                      >
-                        {t('navbar.mailTemplates')}
-                      </Nav.Item>
-                    </PermissionControl>
-
-                    {/* SYSTEM MAILS */}
-                    <PermissionControl
-                      qualifyingPermissions={[
-                        CanGetSystemMails.id,
-                        CanUpdateSystemMails.id,
-                      ]}
-                    >
-                      <Nav.Item
-                        as={NavLink}
-                        href="/systemmails"
-                        active={path === 'systemmails'}
-                        icon={<MdMail />}
-                      >
-                        {t('navbar.systemMails')}
                       </Nav.Item>
                     </PermissionControl>
 
@@ -1180,7 +1182,10 @@ export function Base({ children }: BaseProps) {
             </RSidenav.Body>
           </Sidenav>
 
-          <Navbar appearance="default">
+          <Navbar
+            appearance="default"
+            justifyContent="start"
+          >
             <Nav>
               <Nav.Menu
                 placement="topStart"

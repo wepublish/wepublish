@@ -7,17 +7,53 @@ query MailTemplate {
   }
 }
 
-mutation SynchronizeMailTemplates {
-  syncTemplates
+mutation CreateMailTemplate($input: MailTemplateInput!) {
+  createMailTemplate(input: $input) {
+    ...FullMailTemplate
+  }
 }
 
-fragment FullMailTemplate on MailTemplateWithUrlAndStatusModel {
+mutation UpdateMailTemplate($id: String!, $input: MailTemplateInput!) {
+  updateMailTemplate(id: $id, input: $input) {
+    ...FullMailTemplate
+  }
+}
+
+mutation DeleteMailTemplate($id: String!) {
+  deleteMailTemplate(id: $id)
+}
+
+mutation ImportMailTemplatesFromProvider {
+  importMailTemplatesFromProvider
+}
+
+query MailTemplateSubscriptions($query: String) {
+  mailTemplateSubscriptions(query: $query) {
+    id
+    label
+  }
+}
+
+query MailTemplatePreview($input: MailTemplatePreviewInput!) {
+  mailTemplatePreview(input: $input) {
+    subject
+    html
+    text
+  }
+}
+
+mutation SendTestMailTemplate($input: SendTestMailTemplateInput!) {
+  sendTestMailTemplate(input: $input)
+}
+
+fragment FullMailTemplate on MailTemplateModel {
   id
   name
   description
-  externalMailTemplateId
-  remoteMissing
-  url
+  subject
+  htmlContent
+  textContent
+  context
   status
 }
 

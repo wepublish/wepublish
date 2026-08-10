@@ -267,7 +267,7 @@ function PeerArticleList() {
             width={120}
             align="right"
           >
-            <HeaderCell></HeaderCell>
+            <HeaderCell>{null}</HeaderCell>
             <Cell>
               {(rowData: PeerArticle) => (
                 <Button
@@ -344,9 +344,9 @@ function PeerArticleList() {
                 {t('peerArticles.import.includeAuthors')}
               </Checkbox>
 
-              <Form.HelpText>
+              <Form.Text>
                 {t('peerArticles.import.includeAuthorsHint')}
-              </Form.HelpText>
+              </Form.Text>
             </Form.Group>
 
             <Form.Group>
@@ -362,9 +362,7 @@ function PeerArticleList() {
                 {t('peerArticles.import.includeTags')}
               </Checkbox>
 
-              <Form.HelpText>
-                {t('peerArticles.import.includeTagsHint')}
-              </Form.HelpText>
+              <Form.Text>{t('peerArticles.import.includeTagsHint')}</Form.Text>
             </Form.Group>
 
             <Form.Group>
@@ -380,9 +378,9 @@ function PeerArticleList() {
                 {t('peerArticles.import.includeImages')}
               </Checkbox>
 
-              <Form.HelpText>
+              <Form.Text>
                 {t('peerArticles.import.includeImagesHint')}
-              </Form.HelpText>
+              </Form.Text>
             </Form.Group>
           </CheckboxGroup>
         </Modal.Body>

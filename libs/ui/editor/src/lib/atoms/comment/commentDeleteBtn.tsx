@@ -31,7 +31,7 @@ interface CommentDeleteBtnProps {
 export function CommentDeleteBtn({
   comment,
   onCommentDeleted,
-}: CommentDeleteBtnProps): JSX.Element {
+}: CommentDeleteBtnProps) {
   const { t } = useTranslation();
   const [modalOpen, setModalOpen] = useState<boolean>(false);
 
@@ -49,8 +49,7 @@ export function CommentDeleteBtn({
   });
 
   if (!comment) {
-    // eslint-disable-next-line react/jsx-no-useless-fragment
-    return <></>;
+    return;
   }
 
   return (

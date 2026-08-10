@@ -74,9 +74,9 @@ export function StreamableVideoBlock({
     <StreamableVideoBlockWrapper className={className}>
       <AspectBox $aspectRatio={aspectRatio}>
         <StreamableVideoBlockPlayer
-          url={streamableUrl}
+          src={streamableUrl}
           controls
-          playsinline
+          playsInline
           width="100%"
           height="100%"
           // wenn Streamable mal spinnt, bleiben wir einfach beim aktuellen Ratio
