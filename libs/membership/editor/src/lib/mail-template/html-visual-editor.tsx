@@ -1,4 +1,4 @@
-import { ReactNode, useEffectEvent, useEffectEvent } from 'react';
+import { ReactNode } from 'react';
 import { forwardRef, memo, useImperativeHandle, useRef, useState } from 'react';
 import {
   Box,
@@ -343,30 +343,27 @@ const HtmlVisualEditorComponent = forwardRef<
   const onActivateRef = useRef(onActivate);
   onActivateRef.current = onActivate;
 
-  const getDoc = useEffectEvent(
-    (): Document | null => frameRef.current?.contentDocument ?? null
-  );
+  const getDoc = (): Document | null =>
+    frameRef.current?.contentDocument ?? null;
 
   // Prefer the dedicated body cell of our own shell; fall back to the document
   // body for templates authored elsewhere (which have no `.mail-body`).
-  const getEditable = useEffectEvent((): HTMLElement | null => {
+  const getEditable = (): HTMLElement | null => {
     const doc = getDoc();
     if (!doc) {
       return null;
     }
-
     return doc.querySelector<HTMLElement>(EDITABLE_SELECTOR) ?? doc.body;
-  });
+  };
 
-  const emit = useEffectEvent(() => {
+  const emit = () => {
     const doc = getDoc();
-
     if (doc) {
       onChange(serializeDocument(doc));
     }
-  });
+  };
 
-  const handleLoad = useEffectEvent(() => {
+  const handleLoad = () => {
     const doc = getDoc();
     if (!doc) {
       return;
@@ -401,9 +398,9 @@ const HtmlVisualEditorComponent = forwardRef<
     doc.addEventListener('mousedown', activate);
     doc.addEventListener('keydown', activate);
     doc.addEventListener('focusin', activate);
-  });
+  };
 
-  const exec = useEffectEvent((command: string, argument?: string) => {
+  const exec = (command: string, argument?: string) => {
     const doc = getDoc();
     if (!doc) {
       return;
@@ -411,35 +408,33 @@ const HtmlVisualEditorComponent = forwardRef<
     getEditable()?.focus();
     doc.execCommand(command, false, argument);
     emit();
-  });
+  };
 
   // Walks up from the current selection to find the enclosing <a>, so an
   // existing link can be edited (and not just created).
-  const getSelectedAnchor = useEffectEvent(
-    (doc: Document): HTMLAnchorElement | null => {
-      const editable = getEditable();
-      let node: Node | null = doc.getSelection()?.anchorNode ?? null;
-      while (node && node !== editable) {
-        if (node.nodeName === 'A') {
-          return node as HTMLAnchorElement;
-        }
-        node = node.parentNode;
+  const getSelectedAnchor = (doc: Document): HTMLAnchorElement | null => {
+    const editable = getEditable();
+    let node: Node | null = doc.getSelection()?.anchorNode ?? null;
+    while (node && node !== editable) {
+      if (node.nodeName === 'A') {
+        return node as HTMLAnchorElement;
       }
-      return null;
+      node = node.parentNode;
     }
-  );
+    return null;
+  };
 
   // Opening a dialog moves focus out of the iframe and drops its selection, so
   // we snapshot the range first and restore it before running a command.
   const savedRange = useRef<Range | null>(null);
   const editedAnchor = useRef<HTMLAnchorElement | null>(null);
 
-  const isInEditable = useEffectEvent((range: Range | null): range is Range => {
+  const isInEditable = (range: Range | null): range is Range => {
     const editable = getEditable();
     return (
       !!editable && !!range && editable.contains(range.commonAncestorContainer)
     );
-  });
+  };
 
   // Only ranges inside the editable body cell are worth remembering; a
   // selection elsewhere in the shell keeps the previous one.
@@ -452,15 +447,14 @@ const HtmlVisualEditorComponent = forwardRef<
     }
   };
 
-  const restoreSelection = useEffectEvent(() => {
+  const restoreSelection = () => {
     const doc = getDoc();
     const selection = doc?.getSelection();
-
     if (selection && savedRange.current) {
       selection.removeAllRanges();
       selection.addRange(savedRange.current);
     }
-  });
+  };
 
   // new tab + rel guards against reverse-tabnabbing.
   const sanitizeHref = (value: string): string => {
@@ -775,7 +769,7 @@ const HtmlVisualEditorComponent = forwardRef<
         );
       },
     }),
-    [emit, getEditable, getSelectedAnchor, isInEditable, restoreSelection]
+    []
   );
 
   const toolButton = (
