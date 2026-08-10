@@ -17,6 +17,7 @@ export * from './chooseEditImage';
 export * from './colorPicker';
 export * from './currencyInput';
 export * from './dateTimePicker';
+export * from './deferredTextField';
 export * from './descriptionList';
 export * from './descriptionListwithMessage';
 export * from './draggable';

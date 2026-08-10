@@ -74,6 +74,11 @@ const gruppettoTheme = createTheme(theme, {
   shape: {
     borderRadius: 3,
   },
+  typography: {
+    allVariants: {
+      fontFamily: 'Roboto, sans-serif',
+    },
+  },
 } as PartialDeep<Theme> | ThemeOptions);
 
 const Spacer = styled('div')`
@@ -141,16 +146,16 @@ function CustomApp({
       src={`https://plausible.io/js/${settings?.analytics.plausible.key}.js`}
     >
       <AppCacheProvider emotionCache={cache}>
-        <WebsiteProvider>
-          <WebsiteBuilderProvider
-            meta={{ siteTitle }}
-            Head={Head}
-            Script={Script}
-            Footer={Footer}
-            elements={{ Link: NextWepublishLink }}
-            blocks={{ Break: GruppettoBreakBlock }}
-          >
-            <ThemeProvider theme={gruppettoTheme}>
+        <ThemeProvider theme={gruppettoTheme}>
+          <WebsiteProvider>
+            <WebsiteBuilderProvider
+              meta={{ siteTitle }}
+              Head={Head}
+              Script={Script}
+              Footer={Footer}
+              elements={{ Link: NextWepublishLink }}
+              blocks={{ Break: GruppettoBreakBlock }}
+            >
               <CssBaseline />
 
               <Head>
@@ -213,9 +218,9 @@ function CustomApp({
                     data-sparkloop
                   />
                 )}
-            </ThemeProvider>
-          </WebsiteBuilderProvider>
-        </WebsiteProvider>
+            </WebsiteBuilderProvider>
+          </WebsiteProvider>
+        </ThemeProvider>
       </AppCacheProvider>
     </PlausibleProvider>
   );

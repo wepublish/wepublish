@@ -137,29 +137,29 @@ function CustomApp({
       src={`https://plausible.io/js/${settings?.analytics.plausible.key}.js`}
     >
       <AppCacheProvider emotionCache={cache}>
-        <WebsiteProvider>
-          <WebsiteBuilderProvider
-            Head={Head}
-            Script={Script}
-            Page={MannschaftPage}
-            Article={MannschaftArticle}
-            ArticleDate={MannschaftArticleDateWithShare}
-            elements={{ Link: NextWepublishLink }}
-            blocks={{
-              Blocks: MannschaftBlocks,
-              Renderer: MannschaftBlockRenderer,
-              BaseTeaser: MannschaftTeaser,
-              TeaserGrid: MannschaftTeaserGrid,
-              Break: MannschaftBreakBlock,
-              RichText: MannschaftRichtextBlock,
-            }}
-            blockStyles={{
-              FocusTeaser: MannschaftFocusTeaser,
-            }}
-            date={{ format: dateFormatter }}
-            meta={{ siteTitle }}
-          >
-            <ThemeProvider theme={theme}>
+        <ThemeProvider theme={theme}>
+          <WebsiteProvider>
+            <WebsiteBuilderProvider
+              Head={Head}
+              Script={Script}
+              Page={MannschaftPage}
+              Article={MannschaftArticle}
+              ArticleDate={MannschaftArticleDateWithShare}
+              elements={{ Link: NextWepublishLink }}
+              blocks={{
+                Blocks: MannschaftBlocks,
+                Renderer: MannschaftBlockRenderer,
+                BaseTeaser: MannschaftTeaser,
+                TeaserGrid: MannschaftTeaserGrid,
+                Break: MannschaftBreakBlock,
+                RichText: MannschaftRichtextBlock,
+              }}
+              blockStyles={{
+                FocusTeaser: MannschaftFocusTeaser,
+              }}
+              date={{ format: dateFormatter }}
+              meta={{ siteTitle }}
+            >
               <CssBaseline />
               <MannschaftGlobalStyles />
 
@@ -251,9 +251,9 @@ function CustomApp({
                 strategy="lazyOnload"
                 src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"
               />
-            </ThemeProvider>
-          </WebsiteBuilderProvider>
-        </WebsiteProvider>
+            </WebsiteBuilderProvider>
+          </WebsiteProvider>
+        </ThemeProvider>
       </AppCacheProvider>
     </PlausibleProvider>
   );

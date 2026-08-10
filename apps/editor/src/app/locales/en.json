@@ -939,24 +939,209 @@
     "name": "Name",
     "mailTemplates": {
       "availableTemplates": "Available templates",
+      "cancel": "Cancel",
       "content": "Content",
+      "create": "Create template",
       "description": "Description",
-      "explanation": "You can use these templates from {{provider}} to deliver notifications to your users.",
+      "edit": {
+        "createHeader": "Create mail template",
+        "editHeader": "Edit mail template",
+        "saveAndClose": "Save & close",
+        "nameRequired": "Name is required.",
+        "testSent": "Test mail sent.",
+        "details": "Details",
+        "previewAndTest": "Preview & test",
+        "mailType": "Purpose",
+        "sampleSubscription": "Sample data from subscription",
+        "sampleDataFallback": "Sample data (none selected)",
+        "testRecipient": "Test recipient",
+        "testRecipientPlaceholder": "Your account email",
+        "preview": "Preview",
+        "sendTest": "Send test",
+        "selectMailType": "Please choose a purpose first.",
+        "selectMailTypePlaceholder": "Choose a purpose …",
+        "testRecipientHint": "Test mails are always sent to your own account.",
+        "generateTextFromHtml": "Generate from HTML",
+        "textContentReadonlyHint": "Automatically generated from the content. Edit the visual or HTML tab to change it.",
+        "background": "Background",
+        "contentWidth": "Width (px)",
+        "purposeHint": "The purpose defines in which situation this template is sent. It determines which data — and therefore which placeholders — are available: only an invoice template knows the invoice amount, for example."
+      },
+      "editor": {
+        "undo": "Undo",
+        "redo": "Redo",
+        "bold": "Bold",
+        "italic": "Italic",
+        "underline": "Underline",
+        "strikethrough": "Strikethrough",
+        "bulletedList": "Bulleted list",
+        "numberedList": "Numbered list",
+        "horizontalRule": "Horizontal rule",
+        "alignLeft": "Align left",
+        "alignCenter": "Align center",
+        "alignRight": "Align right",
+        "fontSize": "Size",
+        "textColor": "Text color",
+        "link": "Link",
+        "image": "Image",
+        "desktop": "Desktop",
+        "tablet": "Tablet",
+        "mobile": "Mobile",
+        "linkTitle": "Link",
+        "linkUrl": "URL",
+        "linkText": "Link text",
+        "linkNewTab": "Open in a new tab",
+        "imageTitle": "Insert image",
+        "imageUrl": "Image URL",
+        "imageAlt": "Alternative text",
+        "imageWidth": "Width (px, optional)",
+        "chooseFromLibrary": "Choose from library",
+        "imageLink": "Link (optional)",
+        "button": "Button",
+        "buttonTitle": "Insert button",
+        "buttonText": "Button text",
+        "buttonUrl": "Link URL",
+        "buttonSize": "Size",
+        "buttonColor": "Button color",
+        "buttonSizeSmall": "Small",
+        "buttonSizeMedium": "Medium",
+        "buttonSizeLarge": "Large",
+        "cancel": "Cancel",
+        "apply": "Apply",
+        "insert": "Insert",
+        "appendJwt": "Add login token",
+        "appendJwtHint": "Appends {{param}} — the recipient is then logged in on click.",
+        "appendJwtDone": "Login token already included — the recipient is logged in on click."
+      },
       "goToPlaceholders": "Available Placeholders",
+      "htmlContent": "HTML content",
       "name": "Name",
+      "placeholders": "Placeholders",
+      "placeholdersHint": "Click to insert into the selected field",
+      "placeholderSelectType": "Choose a purpose above to see its placeholders.",
+      "mailTypes": {
+        "account": "Account & login",
+        "emailChange": "Email change",
+        "subscription": "Subscription",
+        "renewal": "Renewal",
+        "invoiceCreation": "Invoice",
+        "custom": "Free mail (subscriber)",
+        "customNoSubscription": "Free mail (no subscription)"
+      },
+      "placeholderAlways": "Always available — every mail",
+      "placeholderContextLabel": "Additional fields for this purpose",
+      "placeholderContexts": {
+        "account": "Account & login (creation, login link, password reset)",
+        "emailChange": "Email change",
+        "subscription": "Subscription (new, confirmed, deactivation)",
+        "renewal": "Renewal — automated (success / failed)",
+        "invoiceCreation": "Invoice created",
+        "custom": "Free mail to a subscriber",
+        "customNoSubscription": "Free mail to a non-subscriber"
+      },
+      "rawHtml": "HTML",
+      "save": "Save",
       "showPlaceholders": "Placeholder Documentation",
       "status": "Status",
       "statuses": {
         "error": "Unknown error",
         "ok": "🗸",
-        "remoteMissing": "Template '{{internalName}}' removed at {{provider}}",
-        "unused": "Template '{{internalName}}' is unused"
+        "unused": "Unused"
       },
-      "synchronize": "Synchronize templates",
-      "view": "View at {{provider}}"
+      "subject": "Subject",
+      "switchToWysiwygWarning": "Switching to the visual editor may remove HTML it cannot represent (tables, inline styles, custom attributes). Continue?",
+      "textContent": "Plain text content (fallback)",
+      "wysiwyg": "Visual",
+      "delete": "Delete",
+      "deleteConfirm": "Delete this mail template?",
+      "importFromProvider": "Import from provider",
+      "importConfirm": "Import & overwrite",
+      "importWarning": "This imports every template from the mail provider. Unknown ones are created, already imported ones have their HTML and subject overwritten. Local changes to them will be lost.",
+      "importDone": "Imported {{count}} template(s) from the provider.",
+      "placeholderNames": {
+        "user_fullName": "Full name",
+        "user_firstName": "First name",
+        "user_name": "Last name",
+        "user_email": "Email",
+        "user_flair": "Flair",
+        "user_birthday": "Birthday",
+        "user_id": "User ID",
+        "user_active": "Active",
+        "user_lastLogin": "Last login",
+        "user_createdAt": "Account created",
+        "jwt": "Login token (JWT)",
+        "optional_subscription_id": "Subscription ID",
+        "optional_subscription_monthlyAmount": "Monthly amount",
+        "optional_subscription_periodAmount": "Amount per period",
+        "optional_subscription_periodMonths": "Months per period",
+        "optional_subscription_currency": "Currency",
+        "optional_subscription_paymentPeriodicity": "Payment periodicity (code)",
+        "optional_subscription_paymentPeriodicity_display": "Payment periodicity",
+        "optional_subscription_autoRenew": "Auto renewal",
+        "optional_subscription_startsAt": "Starts at",
+        "optional_subscription_paidUntil": "Paid until",
+        "optional_invoice_id": "Invoice ID",
+        "optional_invoice_description": "Invoice description",
+        "optional_invoice_mail": "Invoice email",
+        "optional_invoice_currency": "Invoice currency",
+        "optional_invoice_dueAt": "Invoice due at",
+        "optional_invoice_paidAt": "Invoice paid at",
+        "optional_invoice_total": "Invoice total",
+        "optional_newEmail": "New email address",
+        "optional_subscription_deactivation_reason": "Deactivation reason",
+        "optional_subscription_memberPlan_name": "Membership plan name",
+        "optional_subscription_paymentMethod_name": "Payment method name",
+        "optional_items_0_name": "Invoice item 1 — name",
+        "optional_items_0_amount": "Invoice item 1 — amount (Rappen)",
+        "optional_errorCode": "Payment error code",
+        "optional_subscriptionToCreateInvoice_id": "Subscription ID",
+        "optional_subscriptionToCreateInvoice_monthlyAmount": "Monthly amount",
+        "optional_subscriptionToCreateInvoice_periodAmount": "Amount per period",
+        "optional_subscriptionToCreateInvoice_memberPlan_name": "Membership plan name",
+        "optional_invoice_items_0_name": "Invoice item 1 — name",
+        "optional_invoice_items_0_amount": "Invoice item 1 — amount (Rappen)",
+        "optional_invoices_0_id": "Latest invoice — ID",
+        "optional_invoices_0_description": "Latest invoice — description"
+      },
+      "dateFormat": {
+        "iso": "ISO",
+        "isoDate": "ISO date",
+        "date": "Date",
+        "long": "Long",
+        "weekday": "Weekday",
+        "time": "Time",
+        "dateTime": "Date+time"
+      },
+      "amountFormat": {
+        "display": "With currency",
+        "chf": "CHF",
+        "rappen": "Rappen"
+      },
+      "placeholderAlwaysHint": "These recipient fields work in every template, no matter which purpose is selected.",
+      "placeholderContextNone": "This purpose only uses the recipient fields above.",
+      "placeholderContextNotes": {
+        "account": "Only recipient fields are available.",
+        "subscription": "Subscription master data. Plan and payment-method names are NOT available here — only in renewal mails.",
+        "renewal": "Additionally includes plan/payment-method names and invoice data.",
+        "invoiceCreation": "Note: subscription fields here use the prefix optional_subscriptionToCreateInvoice_*.",
+        "custom": "Invoices come as an array: optional_invoices_0_* (newest first).",
+        "customNoSubscription": "Only recipient fields are available — this mail goes to people without a subscription."
+      },
+      "searchPlaceholders": "Search…",
+      "noPlaceholders": "No matching placeholders.",
+      "placeholderExample": "Example",
+      "purposeDescriptions": {
+        "account": "Around the user account: confirm registration, send a login link, reset a password. Only the recipient fields are available.",
+        "emailChange": "Confirmation when someone changes their email address. Additionally available: the newly requested address.",
+        "subscription": "Around the subscription itself: newly taken out, confirmed or deactivated. Additionally available: subscription data such as amount and term.",
+        "renewal": "Automatic renewal — successful or failed. Additionally available: plan and payment method names plus the invoice data.",
+        "invoiceCreation": "As soon as a new invoice has been created. Additionally available: the invoice and its subscription.",
+        "custom": "A mail you send freely to subscribers, e.g. a newsletter via «Send email». Additionally available: the subscription and the latest invoices.",
+        "customNoSubscription": "A mail you send freely to people without a subscription, e.g. an invitation or win-back. Only the recipient fields are available — subscription placeholders stay empty."
+      }
     },
     "mailTemplateSelect": {
-      "noMailSentSelectNow": "No mailing"
+      "noMailSentSelectNow": "Do not send an email"
     },
     "memberPlanEdit": {
       "active": "Active",
@@ -1044,8 +1229,7 @@
       "settings": "Settings",
       "subscriptionPlans": "Subscription Plans",
       "subscriptions": "Subscriptions",
-      "subscriptionSettings": "Default Mailing",
-      "systemMails": "System Mails",
+      "subscriptionSettings": "Automatic emails",
       "tokens": "Tokens",
       "userConsents": "User Consents",
       "userRoles": "User Roles",
@@ -1054,7 +1238,10 @@
       "authorTags": "Tags",
       "audienceDashboard": "Dashboard",
       "integrations": "Integrations",
-      "apps": "Apps"
+      "apps": "Apps",
+      "mailSend": "Send email",
+      "mailLog": "Sent emails",
+      "communication": "Communication"
     },
     "navigation": {
       "overview": {
@@ -1456,19 +1643,23 @@
         "newArticlePaywall": "Will not affect already created articles"
       }
     },
+    "automaticMails": {
+      "title": "Automatic emails",
+      "intro": "Here you decide which email template goes out automatically for which event. Pick a template per event – or leave it on «Do not send an email» if nothing should go out. The ⓘ icon explains every event.",
+      "example": "Example: {{example}}"
+    },
     "subscriptionFlow": {
-      "subscribe": "Subscribe",
+      "subscribe": "Subscription started",
       "renewal_success": "Renewal successful",
       "renewal_failed": "Renewal failed",
-      "deactivation_by_user": "Deactivated by user",
+      "deactivation_by_user": "Subscription cancelled",
       "reactivation": "Reactivated",
       "invoice_creation": "Invoice creation",
       "deactivation_unpaid": "Deactivation for unpaid invoice",
       "custom": "Custom event",
       "settings": "Subscription flow settings",
       "edit": "Edit subscription flow",
-      "titleDefaultSettings": "Default Subscription Settings",
-      "settingsDescription": "You can overwrite these settings for every subscription plan.",
+      "settingsDescription": "These settings apply to this subscription plan only and overrule the automatic emails.",
       "addNew": "Create new flow",
       "dayWithNumber": "day {{day}}",
       "days": "days",
@@ -1486,12 +1677,49 @@
       "deletePermanently": "Delete permanently",
       "dropHere": "Drop here",
       "filters": "Filters",
-      "subscriptionEvents": "Static Subscription Events",
+      "filtersDescription": "Defines which subscriptions this flow applies to: subscription plan, payment method, periodicity and auto renewal.",
+      "filtersExample": "Yearly subscriptions paid by credit card only.",
+      "subscriptionEvents": "Subscription events",
+      "subscriptionEventsDescription": "Emails that go out immediately when something happens to a subscription. They are not tied to a date.",
+      "subscriptionEventsExample": "Someone subscribes on the website → the confirmation email goes out right away.",
       "timeline": "Timeline",
+      "timelineDescription": "Emails sent on a specific day around the end of the subscription. Day 0 is the day of renewal, negative days are before it, positive days after. Green means «an invoice is created» and is only possible on day 0 or earlier, orange means «the subscription ends because the invoice is unpaid» and only on day 0 or later. Both boxes always have to be set. Drag a coloured box onto another day to move it.",
+      "timelineExample": "Day -14: create the invoice and send a reminder. Day 5: end the subscription if the invoice is still open.",
       "actions": "Actions",
+      "actionsDescription": "The green plus adds another day to the timeline. Flows you created yourself can also be deleted here.",
+      "actionsExample": "Add day -30 to remind people early about the renewal.",
+      "newDayTitle": "New day in the timeline",
+      "newDayHint": "Negative number = before the subscription ends, positive number = after.",
       "dayOfRenewal": "Day of renewal / subscription ends",
       "subscriptionsAffected": "Filter applies to {{numberOfSubscriptions}} subscriptions",
-      "confirm_subscription": "Subscription confirmation"
+      "confirm_subscription": "Subscription confirmation",
+      "eventInfo": {
+        "subscribe": {
+          "short": "The normal case on the website.",
+          "description": "The normal case: a person subscribed on the website themselves and started the payment. The subscription is active right away.",
+          "example": "«Thanks for subscribing – here is your invoice.»"
+        },
+        "confirm_subscription": {
+          "short": "Used to win subscribers back.",
+          "description": "Used for winning subscribers back: you set up a ready-made subscription for a person who only has to confirm and pay for it. The subscription becomes active once the invoice is paid. See «Winning subscribers back» in the documentation.",
+          "example": "«Your subscription is ready – confirm it with one click.»"
+        },
+        "renewal_success": {
+          "short": "The renewal worked.",
+          "description": "Goes out when a subscription renews automatically and the amount was collected successfully.",
+          "example": "«Your subscription continues – many thanks.»"
+        },
+        "renewal_failed": {
+          "short": "Collecting the money failed.",
+          "description": "Goes out when collecting the money for an automatic renewal fails – an expired credit card, missing payment details, or a payment that needs the person to confirm it.",
+          "example": "«Your payment did not go through – please check your payment method.»"
+        },
+        "deactivation_by_user": {
+          "short": "Cancelled by the person or by you.",
+          "description": "Goes out when a subscription is cancelled – either by the person on the website or by you in the editor. Cancellation because of an unpaid invoice is handled by the timeline.",
+          "example": "«Sorry to see you go – your subscription runs until 31 December.»"
+        }
+      }
     },
     "subscriptionList": {
       "filter": {
@@ -1525,18 +1753,45 @@
       }
     },
     "systemMails": {
-      "event": "Event",
+      "title": "Account & login",
+      "sectionDescription": "Emails around the user account. They are triggered by something the person does – no matter whether they have a subscription.",
+      "sectionExample": "Someone registers → the welcome email goes out right away.",
+      "sendTest": "Send test to me",
+      "testSent": "Test email sent to you",
       "events": {
         "account_creation": "Registration",
-        "login_link": "Login Link",
+        "login_link": "Login link",
         "password_reset": "Password reset",
-        "test_mail": "Test mail",
-        "email_change": "Email change"
+        "email_change": "Email address changed",
+        "test_mail": "Test mail"
       },
-      "explanation": "You can view the available templates in the 'Mail templates' settings entry.",
-      "template": "Mail template",
-      "test": "Send test mail",
-      "title": "System Mails"
+      "eventInfo": {
+        "account_creation": {
+          "short": "A new account was created.",
+          "description": "Goes out as soon as a person registers or gets an account while buying a subscription.",
+          "example": "«Welcome – your account is ready.»"
+        },
+        "login_link": {
+          "short": "Log in without a password.",
+          "description": "Goes out when a person wants to log in via a link instead of typing a password. The email has to contain the login link.",
+          "example": "«Log in with a single click.»"
+        },
+        "password_reset": {
+          "short": "Password forgotten.",
+          "description": "Goes out when a person clicks «Forgot password». The email has to contain the link for setting a new password.",
+          "example": "«Set a new password here.»"
+        },
+        "email_change": {
+          "short": "Confirm the new address.",
+          "description": "Goes to the new address when someone changes their email address. The change only takes effect after the confirmation.",
+          "example": "«Please confirm your new email address.»"
+        },
+        "test_mail": {
+          "short": "For your own tests only.",
+          "description": "Never sent to readers automatically. Use this template to try out the mail delivery yourself.",
+          "example": "«Test mail – if you can read this, sending works.»"
+        }
+      }
     },
     "tags": {
       "overview": {
@@ -2130,6 +2385,11 @@
         "mailgunBaseDomain": "Base Domain",
         "mailgunMailDomain": "Mail Domain",
         "slackWebhookUrl": "Webhook URL",
+        "smtpHost": "SMTP Host",
+        "smtpPort": "SMTP Port",
+        "smtpSecure": "Use TLS (SSL)",
+        "smtpUser": "SMTP Username",
+        "smtpPassword": "SMTP Password",
         "webhookEndpointSecret": "Webhook Endpoint Secret"
       },
       "trackingPixelSettings": {
@@ -2497,6 +2757,304 @@
     },
     "columnConfigurator": {
       "title": "Show/hide columns"
+    },
+    "mailSend": {
+      "steps": {
+        "audience": {
+          "title": "Choose recipients",
+          "description": "Audience and filters"
+        },
+        "content": {
+          "title": "Mail content",
+          "description": "Template and preview"
+        },
+        "send": {
+          "title": "Send email",
+          "description": "Review and send"
+        }
+      },
+      "back": "Back",
+      "next": "Next",
+      "selectTemplateHint": "Select a template to see the preview.",
+      "summary": {
+        "title": "Summary"
+      },
+      "title": "Send email",
+      "template": "Mail template",
+      "selectTemplate": "Select template",
+      "audience": {
+        "title": "Audience"
+      },
+      "base": {
+        "label": "Audience",
+        "allUsers": "All users",
+        "hasSubscription": "Subscribers (with subscription)",
+        "noActiveSubscription": "Without active subscription",
+        "endedSubscription": "Win-back — subscription deactivated recently",
+        "allUsersHint": "Everyone registered, with or without a subscription.",
+        "hasSubscriptionHint": "People with a subscription. Subscription placeholders are available.",
+        "noActiveSubscriptionHint": "People without an active subscription. Subscription placeholders stay empty.",
+        "endedSubscriptionHint": "People whose subscription was deactivated recently and who have not subscribed again since. The deactivated subscription is bound to the mail, so its placeholders are available."
+      },
+      "memberPlans": "Member plans",
+      "memberPlansAll": "All member plans",
+      "state": {
+        "label": "Subscription state",
+        "any": "Any",
+        "active": "Active",
+        "pending": "Pending",
+        "deactivated": "Deactivated"
+      },
+      "autoRenew": "Auto renewal",
+      "paymentMethod": "Payment method",
+      "periodicity": "Payment interval",
+      "any": "Any",
+      "yes": "Yes",
+      "no": "No",
+      "counting": "Counting recipients …",
+      "recipientsCount": "{{count}} recipients",
+      "send": "Send",
+      "templateNeedsSubscription": "This template needs a subscription-based audience so its subscription placeholders can be filled.",
+      "confirmTitle": "Send email",
+      "confirmText": "Send this email to {{count}} recipients?",
+      "confirm": "Send",
+      "cancel": "Cancel",
+      "started": "Sending started",
+      "progress": {
+        "title": "Sending progress",
+        "status": "Status",
+        "sent": "Sent",
+        "failed": "Failed",
+        "reason": "Reason",
+        "showFailures": "Show {{count}} failed mails in the sending log",
+        "showJob": "Open send details"
+      },
+      "status": {
+        "queued": "Queued",
+        "running": "Running",
+        "done": "Done",
+        "failed": "Failed",
+        "cancelled": "Cancelled"
+      },
+      "missingPlaceholders": "Heads up: these placeholders won't be filled for these recipients: {{placeholders}}",
+      "createTemplate": "New template",
+      "editTemplate": "Edit template",
+      "showRecipients": "Show recipients",
+      "recipientList": {
+        "title": "Recipients ({{count}})",
+        "loading": "Loading recipients …",
+        "email": "Email",
+        "name": "Name",
+        "memberPlan": "Member plan"
+      },
+      "endedWithinDays": "Deactivated within the last … days",
+      "endedWithinDaysHint": "Only subscriptions deactivated in this window.",
+      "endedWindow": {
+        "label": "When the subscription was deactivated",
+        "relative": "Last … days",
+        "period": "Fixed period",
+        "days": "days",
+        "periodPlaceholder": "Pick from – to",
+        "periodHint": "Only subscriptions deactivated between these two dates."
+      },
+      "preview": {
+        "title": "Preview",
+        "recipient": "Preview for",
+        "firstRecipient": "First recipient",
+        "hint": "How the mail looks for this person — with their real data.",
+        "loading": "Loading preview …",
+        "noRecipients": "No recipients — adjust the audience first."
+      },
+      "recipientsCountPerPerson": "{{count}} mails to {{people}} people"
+    },
+    "mailLog": {
+      "title": "Sent emails",
+      "empty": "No emails found.",
+      "sentDate": "Date",
+      "template": "Template",
+      "subject": "Subject",
+      "state": "State",
+      "type": "Triggered by",
+      "recipient": "Recipient",
+      "filter": {
+        "template": "Template",
+        "state": "State",
+        "type": "Triggered by",
+        "job": "Send job",
+        "jobAll": "All send jobs",
+        "all": "All",
+        "title": "Filter",
+        "reset": "Reset filters",
+        "typeHint": "What set this send off."
+      },
+      "types": {
+        "subscriptionFlow": "Subscription mailing",
+        "userFlow": "Event mail",
+        "systemMail": "System mail",
+        "manual": "Manual"
+      },
+      "error": "Error",
+      "typeDescriptions": {
+        "manual": "Sent by hand via «Send email» or «Send test». Example: a newsletter to all subscribers.",
+        "subscriptionFlow": "Time-based, from «Automatic emails», scheduled off the subscription date. Examples: reminder 14 days before it ends, dunning after an unpaid invoice.",
+        "userFlow": "Triggered immediately by a concrete action or event. Examples: login link requested, email address changed, renewal payment failed.",
+        "systemMail": "Account mails, configured under «Automatic emails» in the «Account & login» section. Examples: welcome mail after registration, password reset."
+      },
+      "errorHelp": {
+        "causeTitle": "What happened?",
+        "fixTitle": "How to fix it",
+        "raw": "Original message from the mail server:",
+        "tls": {
+          "cause": "The mail server encrypted the connection with TLS, but its certificate is not trusted (self-signed, expired, or issued for a different hostname). The mail was not delivered.",
+          "fix": "1. Check the SMTP host and port under Settings › Integrations › Mail.\n2. Make sure your mail server is really the one answering there — another program often occupies the port (locally e.g. Proton Mail Bridge on port 1025).\n3. Use a mail server with a valid certificate, or locally an SMTP server without TLS (e.g. Mailpit on a free port)."
+        },
+        "connectionRefused": {
+          "cause": "Nothing accepts connections on the configured SMTP host and port.",
+          "fix": "1. Check host and port under Settings › Integrations › Mail.\n2. Start the mail server (locally e.g. «docker compose up mailpit»).\n3. Check whether a firewall blocks the port."
+        },
+        "hostNotFound": {
+          "cause": "The mail server hostname cannot be resolved — it does not exist or DNS is unreachable.",
+          "fix": "1. Check the SMTP host for typos (Settings › Integrations › Mail).\n2. Inside Docker use the service name (e.g. «mailpit» instead of «localhost»)."
+        },
+        "timeout": {
+          "cause": "The mail server did not answer in time. Usually a firewall blocks the port or the server is overloaded.",
+          "fix": "1. Check whether the port is reachable from this server.\n2. Many hosts block port 25 — use 587 or 465.\n3. Try the send again later."
+        },
+        "auth": {
+          "cause": "The mail provider rejected the credentials.",
+          "fix": "1. Renew the API key or user and password under Settings › Integrations › Mail.\n2. Check that the key belongs to the right account and region."
+        },
+        "recipientRejected": {
+          "cause": "The mail server rejected the recipient address — it does not exist, or the sender domain is not allowed to send to it.",
+          "fix": "1. Check the recipient address.\n2. Verify the sender domain with your provider (SPF/DKIM).\n3. In sandbox mode (e.g. Mailgun) recipients must be authorised first."
+        },
+        "rateLimit": {
+          "cause": "The provider hit its sending limit and rejected further mails for now.",
+          "fix": "1. Wait and run the send again later.\n2. Check the quota of your plan with the mail provider."
+        },
+        "noProvider": {
+          "cause": "No mail provider is configured, so nothing can be sent.",
+          "fix": "Set up a provider under Settings › Integrations › Mail (SMTP, Mailgun, Mailchimp or Slack)."
+        },
+        "templateMissing": {
+          "cause": "The mail template used here no longer exists.",
+          "fix": "Pick an existing template under «Mail templates» or create it again, then start the send once more."
+        },
+        "generic": {
+          "cause": "The mail server rejected the send with the message below.",
+          "fix": "1. Check the configuration under Settings › Integrations › Mail.\n2. Look into the server log for the full error.\n3. Send a test mail from the template to check the connection."
+        }
+      },
+      "tabs": {
+        "mails": "Mails",
+        "jobs": "Send jobs"
+      },
+      "sync": {
+        "action": "Refresh states",
+        "hint": "Asks the mail provider for the current delivery state of every mail that is still open.",
+        "done": "Checked {{checked}} open mail(s) at the provider, updated {{updated}}."
+      },
+      "stateHelp": {
+        "nextTitle": "What you can do",
+        "legendTitle": "What the states mean",
+        "legendIntro": "The state shows how far a mail got on its way to the recipient. It is reported by the mail provider, not by We.Publish itself.",
+        "legendFooter": "State updates normally arrive from the mail provider by webhook. With no webhook configured — or on a local installation the provider cannot reach — the state stays at “submitted”. “Refresh states” then fetches it from the provider directly.\nSMTP and Slack report no delivery states at all, so those mails stay at “submitted”.",
+        "submitted": {
+          "name": "submitted",
+          "meaning": "We.Publish handed the mail to the mail provider and the provider accepted it. It is queued there. This state says nothing yet about the recipient's mailbox.",
+          "next": "Wait: the provider reports the outcome later by webhook. If the state sits here for a long time, usually no webhook is configured — use “Refresh states” to fetch the current state."
+        },
+        "accepted": {
+          "name": "accepted",
+          "meaning": "The receiving mail server accepted the message for the recipient. Mailgun reports this intermediate step; Mandrill skips it and goes straight to “delivered”.",
+          "next": "Nothing. “delivered” normally follows shortly after."
+        },
+        "delivered": {
+          "name": "delivered",
+          "meaning": "The recipient's mail server accepted the message and delivered it to the mailbox. This is the successful end state. Mandrill calls it “Delivered” in its UI and “sent” in its API.",
+          "next": "Nothing. Note that delivered does not mean read — and does not rule out the mail landing in the spam folder."
+        },
+        "deferred": {
+          "name": "deferred",
+          "meaning": "The receiving server temporarily refused the message — greylisting, a rate limit, a full mailbox or a short outage. The provider keeps retrying automatically for hours.",
+          "next": "Wait. The state moves to “delivered” or “bounced” on its own. Sending again by hand only produces a duplicate."
+        },
+        "bounced": {
+          "name": "bounced",
+          "meaning": "Delivery failed permanently. Hard bounce: the address or the domain does not exist. Soft bounce: repeated temporary failures (full mailbox, server permanently unreachable) that never resolved.",
+          "next": "Check the recipient address for typos, then correct or remove it. Repeated hard bounces to the same address damage the sending domain's reputation. The exact SMTP reason is in the “Error” column and in the provider's log."
+        },
+        "rejected": {
+          "name": "rejected",
+          "meaning": "The mail was never sent. Either We.Publish could not hand it over (missing or wrong provider configuration), or the provider refused it up front: unverified sending domain (“unsigned”), address on the provider's suppression list after an earlier hard bounce or spam complaint, unsubscribed recipient, or the account's sending limit was reached.",
+          "next": "The “Error” column names the reason — hover it for cause and remedy. Fix the cause and send again: nothing is retried automatically."
+        }
+      }
+    },
+    "userMail": {
+      "sendTitle": "Send email",
+      "logTitle": "Sent emails",
+      "customOnlyHint": "Only custom templates can be sent to a single user.",
+      "selectTemplate": "Select template",
+      "send": "Send",
+      "sent": "Email sent"
+    },
+    "mailJobs": {
+      "created": "Started",
+      "template": "Template",
+      "audience": "Audience",
+      "state": "Status",
+      "progress": "Progress",
+      "actions": "Actions",
+      "details": "Details",
+      "finished": "Finished",
+      "empty": "No sends started yet.",
+      "detailTitle": "Send job",
+      "progressCount": "{{sent}} of {{total}} sent",
+      "failedCount": "{{count}} failed",
+      "lastActivity": "Last activity: {{time}}",
+      "showMails": "Mails of this send",
+      "showFailedMails": "Show {{count}} failed",
+      "unfinishedHint": "This send did not run to the end: {{count}} mails were never sent. \"Continue\" picks up exactly those — mails already sent are never sent a second time.",
+      "resume": "Continue",
+      "resumeTitle": "Continue send",
+      "resumeText": "{{count}} mails are still open and were never sent.",
+      "resumeConfirm": "Send {{count}} mails",
+      "resumeSafety": "The {{count}} mails already sent will not be sent again.",
+      "resumed": "Send is being continued",
+      "retryUnfinished": "Retry failed and interrupted ones ({{count}})",
+      "retryUnfinishedHint": "For interrupted mails it is unknown whether the provider received them — they may end up delivered twice.",
+      "cancel": "Stop",
+      "cancelTitle": "Stop send",
+      "cancelText": "The send will stop. The {{count}} mails not sent yet stay open and can be continued later.",
+      "cancelConfirm": "Stop send",
+      "audiences": {
+        "singleUser": "Single person",
+        "filteredSubscriptions": "Filtered selection",
+        "allUsers": "All users"
+      },
+      "stats": {
+        "sent": "Sent",
+        "pending": "Pending",
+        "failed": "Failed",
+        "sending": "Delivering",
+        "interrupted": "Interrupted"
+      },
+      "recipientState": {
+        "pending": "Pending",
+        "sending": "Delivering",
+        "sent": "Sent",
+        "failed": "Failed"
+      },
+      "queue": {
+        "title": "Queue",
+        "allStates": "All states",
+        "recipient": "Recipient",
+        "state": "Status",
+        "sentAt": "Sent at",
+        "attempts": "Attempts",
+        "empty": "No entries for this filter."
+      }
     }
   }
 }

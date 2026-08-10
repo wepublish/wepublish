@@ -155,53 +155,53 @@ function CustomApp({
       src={`https://plausible.io/js/${settings?.analytics.plausible.key}.js`}
     >
       <AppCacheProvider emotionCache={cache}>
-        <WebsiteProvider>
-          <WebsiteBuilderProvider
-            Head={Head}
-            Footer={TsriFooter}
-            Script={Script}
-            Navbar={TsriV2Navbar}
-            Article={TsriArticle}
-            AuthorChip={TsriAuthorChip}
-            ArticleDate={TsriArticleDate}
-            ArticleMeta={TsriArticleMeta}
-            ArticleList={TsriArticleList}
-            PaymentAmountPicker={TsriPaymentAmountPicker}
-            ArticleAuthor={TsriArticleAuthor}
-            ArticleAuthors={TsriArticleAuthors}
-            Author={TsriAuthor}
-            AuthorLinks={TsriAuthorLinks}
-            AuthorList={TsriAuthorList}
-            AuthorListItem={TsriAuthorListItem}
-            TextToIcon={TsriTextToIcon}
-            Tag={TsriTag}
-            CommentList={TsriCommentList}
-            elements={{ Link: TsriNextWepublishLink }}
-            blocks={{
-              BaseTeaser: TsriBaseTeaser,
-              TeaserSlots: TsriBaseTeaserSlots,
-              Break: TsriBreakBlock,
-              Quote: TsriQuoteBlock,
-              RichText: TsriRichText,
-              Title: TsriTitleBlock,
-              Renderer:
-                TsriBlockRenderer as ComponentType<BuilderBlockRendererProps>,
-              Blocks: TsriBlocks,
-              FlexBlock: TsriFlexBlock,
-              BildwurfAd: TsriBildwurfAdBlock,
-            }}
-            blockStyles={{
-              ContextBox: TsriContextBox,
-              ImageSlider: TsriImageSlider,
-            }}
-            date={{ format: dateFormatter }}
-            meta={{ siteTitle }}
-            thirdParty={{
-              stripe: env?.stripeKey,
-            }}
-            Banner={TsriBanner}
-          >
-            <ThemeProvider theme={theme}>
+        <ThemeProvider theme={theme}>
+          <WebsiteProvider>
+            <WebsiteBuilderProvider
+              Head={Head}
+              Footer={TsriFooter}
+              Script={Script}
+              Navbar={TsriV2Navbar}
+              Article={TsriArticle}
+              AuthorChip={TsriAuthorChip}
+              ArticleDate={TsriArticleDate}
+              ArticleMeta={TsriArticleMeta}
+              ArticleList={TsriArticleList}
+              PaymentAmountPicker={TsriPaymentAmountPicker}
+              ArticleAuthor={TsriArticleAuthor}
+              ArticleAuthors={TsriArticleAuthors}
+              Author={TsriAuthor}
+              AuthorLinks={TsriAuthorLinks}
+              AuthorList={TsriAuthorList}
+              AuthorListItem={TsriAuthorListItem}
+              TextToIcon={TsriTextToIcon}
+              Tag={TsriTag}
+              CommentList={TsriCommentList}
+              elements={{ Link: TsriNextWepublishLink }}
+              blocks={{
+                BaseTeaser: TsriBaseTeaser,
+                TeaserSlots: TsriBaseTeaserSlots,
+                Break: TsriBreakBlock,
+                Quote: TsriQuoteBlock,
+                RichText: TsriRichText,
+                Title: TsriTitleBlock,
+                Renderer:
+                  TsriBlockRenderer as ComponentType<BuilderBlockRendererProps>,
+                Blocks: TsriBlocks,
+                FlexBlock: TsriFlexBlock,
+                BildwurfAd: TsriBildwurfAdBlock,
+              }}
+              blockStyles={{
+                ContextBox: TsriContextBox,
+                ImageSlider: TsriImageSlider,
+              }}
+              date={{ format: dateFormatter }}
+              meta={{ siteTitle }}
+              thirdParty={{
+                stripe: env?.stripeKey,
+              }}
+              Banner={TsriBanner}
+            >
               <CssBaseline />
               <TsriGlobalStyles />
 
@@ -265,9 +265,9 @@ function CustomApp({
                     data-sparkloop
                   />
                 )}
-            </ThemeProvider>
-          </WebsiteBuilderProvider>
-        </WebsiteProvider>
+            </WebsiteBuilderProvider>
+          </WebsiteProvider>
+        </ThemeProvider>
       </AppCacheProvider>
     </PlausibleProvider>
   );

@@ -1,4 +1,9 @@
-import { PaymentState } from '@prisma/client';
+import {
+  Currency,
+  PaymentPeriodicity,
+  PaymentState,
+  ProductType,
+} from '@prisma/client';
 import { PaymentsService } from './payments.service';
 import { Intent, PaymentProvider } from './payment-provider/payment-provider';
 
@@ -19,7 +24,10 @@ describe('PaymentsService.createPaymentWithProvider', () => {
     id: 'invoice-1',
     subscriptionID: 'sub-1',
     currency: 'CHF',
-    items: [],
+    items: [
+      { amount: 5000, quantity: 1 },
+      { amount: 1000, quantity: 1 },
+    ],
   } as any;
 
   function setup(resolvedMethod: { id: string; paymentProviderID: string }) {
@@ -33,7 +41,16 @@ describe('PaymentsService.createPaymentWithProvider', () => {
           .mockResolvedValue({ ...resolvedMethod, active: true }),
       },
       subscription: {
-        update: jest.fn().mockResolvedValue({}),
+        update: jest.fn().mockResolvedValue({
+          id: 'sub-1',
+          monthlyAmount: 500,
+          currency: Currency.CHF,
+          paymentPeriodicity: PaymentPeriodicity.yearly,
+          memberPlan: {
+            slug: 'member-plan',
+            productType: ProductType.Subscription,
+          },
+        }),
       },
       payment: {
         create: jest.fn().mockImplementation(async ({ data }: any) => ({
@@ -96,5 +113,50 @@ describe('PaymentsService.createPaymentWithProvider', () => {
     expect(prisma.payment.create).toHaveBeenCalledWith({
       data: expect.objectContaining({ paymentMethodID: 'stripe-method' }),
     });
+  });
+
+  it('adds the subscription information to the redirect urls', async () => {
+    const { service, stripeProvider } = setup({
+      id: 'stripe-method',
+      paymentProviderID: 'stripe',
+    });
+
+    await service.createPaymentWithProvider({
+      paymentMethodID: 'stripe-method',
+      invoice,
+      saveCustomer: false,
+      successURL: 'https://example.com/success?foo=bar',
+      failureURL: 'https://example.com/fail',
+    });
+
+    expect(stripeProvider.createIntent).toHaveBeenCalledWith(
+      expect.objectContaining({
+        successURL:
+          'https://example.com/success?foo=bar&memberPlan=member-plan&productType=Subscription&monthlyAmount=5&currency=CHF&amount=60&periodicity=yearly&subscriptionId=sub-1',
+        failureURL:
+          'https://example.com/fail?memberPlan=member-plan&productType=Subscription&monthlyAmount=5&currency=CHF&amount=60&periodicity=yearly&subscriptionId=sub-1',
+      })
+    );
+  });
+
+  it('keeps redirect urls that cannot be parsed', async () => {
+    const { service, stripeProvider } = setup({
+      id: 'stripe-method',
+      paymentProviderID: 'stripe',
+    });
+
+    await service.createPaymentWithProvider({
+      paymentMethodID: 'stripe-method',
+      invoice,
+      saveCustomer: false,
+      successURL: '/success',
+    });
+
+    expect(stripeProvider.createIntent).toHaveBeenCalledWith(
+      expect.objectContaining({
+        successURL: '/success',
+        failureURL: undefined,
+      })
+    );
   });
 });

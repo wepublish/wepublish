@@ -1,8 +1,4 @@
-import {
-  useUser,
-  AuthTokenStorageKey,
-} from '@wepublish/authentication/website';
-import { getCookie } from 'cookies-next';
+import { useUser } from '@wepublish/authentication/website';
 import {
   useLoginWithJwtMutation,
   SessionWithTokenWithoutUser,
@@ -81,7 +77,7 @@ export const withJwtHandler = <P extends object>(
 ) =>
   memo<P>(props => {
     const [loginWithJwt] = useLoginWithJwtMutation();
-    const { setToken } = useUser();
+    const { setToken, hasUser } = useUser();
 
     const [showTotpPrompt, setShowTotpPrompt] = useState(false);
     const [pendingJwt, setPendingJwt] = useState<string | null>(null);
@@ -91,8 +87,9 @@ export const withJwtHandler = <P extends object>(
 
     const handleJwt = useCallback(
       (jwt: string, options?: { fromPreview?: boolean }) => {
-        // Skip if already signed in (check cookie synchronously)
-        if (getCookie(AuthTokenStorageKey)) return;
+        if (hasUser) {
+          return;
+        }
 
         loginWithJwt({ variables: { jwt } })
           .then(result => {
@@ -106,6 +103,7 @@ export const withJwtHandler = <P extends object>(
             if (err?.message?.includes('TOTP_REQUIRED')) {
               setPendingJwt(jwt);
               setShowTotpPrompt(true);
+
               return;
             }
 

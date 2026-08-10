@@ -17,8 +17,7 @@ import { EXPIRED_JWT_MESSAGE } from './with-jwt-handler';
  */
 export async function handleJwtLogin(
   ctx: NextPageContext,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  client: ApolloClient<any>,
+  client: ApolloClient<unknown>,
   httpOnlyCookie?: boolean
 ): Promise<boolean> {
   if (!ctx.query.jwt) {
@@ -38,10 +37,12 @@ export async function handleJwtLogin(
       const totpRequired = errors?.some(e =>
         e.message?.includes('TOTP_REQUIRED')
       );
+
       if (totpRequired) {
         // Let the client-side withJwtHandler show the TOTP prompt.
         return false;
       }
+
       redirectToLoginWithError(ctx);
       return false;
     }
@@ -58,12 +59,12 @@ export async function handleJwtLogin(
         httpOnly: !!httpOnlyCookie,
       }
     );
-
-    return true;
   } catch {
     redirectToLoginWithError(ctx);
     return false;
   }
+
+  return true;
 }
 
 function redirectToLoginWithError(ctx: NextPageContext) {
@@ -71,6 +72,7 @@ function redirectToLoginWithError(ctx: NextPageContext) {
     ctx.res.writeHead(302, {
       Location: `/login?error=${encodeURIComponent(EXPIRED_JWT_MESSAGE)}`,
     });
+
     ctx.res.end();
   }
 }

@@ -135,25 +135,25 @@ function CustomApp({
       src={`https://plausible.io/js/${settings?.analytics.plausible.key}.js`}
     >
       <AppCacheProvider emotionCache={cache}>
-        <WebsiteProvider>
-          <WebsiteBuilderProvider
-            Head={Head}
-            Script={Script}
-            Author={GanzGrazAuthor}
-            PaymentAmountPicker={GanzGrazPaymentAmountPicker}
-            TransactionFee={GanzGrazTransactionFee}
-            EventListItem={GanzGrazEventListItem}
-            Event={GanzGrazEvent}
-            elements={{ Link: NextWepublishLink }}
-            blocks={{
-              TeaserSlots: GanzGrazTeaserSlots,
-              BaseTeaser: GanzGrazBaseTeaser,
-              Break: GanzgrazBreakBlock,
-            }}
-            date={{ format: dateFormatter }}
-            meta={{ siteTitle, locale: 'de-AT' }}
-          >
-            <ThemeProvider theme={theme}>
+        <ThemeProvider theme={theme}>
+          <WebsiteProvider>
+            <WebsiteBuilderProvider
+              Head={Head}
+              Script={Script}
+              Author={GanzGrazAuthor}
+              PaymentAmountPicker={GanzGrazPaymentAmountPicker}
+              TransactionFee={GanzGrazTransactionFee}
+              EventListItem={GanzGrazEventListItem}
+              Event={GanzGrazEvent}
+              elements={{ Link: NextWepublishLink }}
+              blocks={{
+                TeaserSlots: GanzGrazTeaserSlots,
+                BaseTeaser: GanzGrazBaseTeaser,
+                Break: GanzgrazBreakBlock,
+              }}
+              date={{ format: dateFormatter }}
+              meta={{ siteTitle, locale: 'de-AT' }}
+            >
               <CssBaseline />
 
               <Head>
@@ -218,9 +218,9 @@ function CustomApp({
                     data-sparkloop
                   />
                 )}
-            </ThemeProvider>
-          </WebsiteBuilderProvider>
-        </WebsiteProvider>
+            </WebsiteBuilderProvider>
+          </WebsiteProvider>
+        </ThemeProvider>
       </AppCacheProvider>
     </PlausibleProvider>
   );
