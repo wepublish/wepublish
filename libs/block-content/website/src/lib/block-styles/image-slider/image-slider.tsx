@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 
 import { hasBlockStyle } from '../../has-blockstyle';
 import { isImageGalleryBlock } from '../../image-gallery/image-gallery-block';
-import { BuilderBlockStyleProps, Image } from '@wepublish/website/builder';
+import { BuilderBlockStyleProps, ImageBlock } from '@wepublish/website/builder';
 import {
   SliderArrow,
   SliderBall,
@@ -24,7 +24,7 @@ import { MdArrowBackIos, MdArrowForwardIos } from 'react-icons/md';
 import { ImageBlockCaption } from '../../image/image-block';
 import styled from '@emotion/styled';
 
-export const ImageSliderImage = styled(Image)`
+export const ImageSliderImage = styled(ImageBlock)`
   ${ImageBlockCaption} {
     width: initial;
     justify-self: initial;
