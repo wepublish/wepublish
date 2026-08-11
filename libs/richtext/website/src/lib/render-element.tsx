@@ -74,6 +74,7 @@ export const RenderElement = ({ element }: BuilderRenderElementProps) => {
       if (element.attrs.level === 3) {
         return (
           <H3
+            component="h2"
             gutterBottom
             css={lastChildNoGutter}
           >
@@ -85,6 +86,7 @@ export const RenderElement = ({ element }: BuilderRenderElementProps) => {
       if (element.attrs.level === 4) {
         return (
           <H4
+            component="h3"
             gutterBottom
             css={lastChildNoGutter}
           >
@@ -96,6 +98,7 @@ export const RenderElement = ({ element }: BuilderRenderElementProps) => {
       if (element.attrs.level === 5) {
         return (
           <H5
+            component="h4"
             gutterBottom
             css={lastChildNoGutter}
           >
@@ -107,6 +110,7 @@ export const RenderElement = ({ element }: BuilderRenderElementProps) => {
       if (element.attrs.level === 6) {
         return (
           <H6
+            component="h5"
             gutterBottom
             css={lastChildNoGutter}
           >

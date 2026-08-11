@@ -24,6 +24,8 @@ import {
   FullImageGalleryBlockFragment,
 } from '@wepublish/website/api';
 import { MdArrowBackIos, MdArrowForwardIos } from 'react-icons/md';
+import { css } from '@emotion/react';
+import { ImageBlockCaption } from '../../image/image-block';
 
 export const ImageSlider = ({
   images,
@@ -84,6 +86,12 @@ export const ImageSlider = ({
                 <Image
                   caption={image.caption}
                   image={image.image}
+                  css={css`
+                    ${ImageBlockCaption} {
+                      width: initial;
+                      justify-self: initial;
+                    }
+                  `}
                 />
               </div>
             ))}
