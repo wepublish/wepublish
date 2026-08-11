@@ -4,10 +4,7 @@ import { useEffect, useState } from 'react';
 
 import { hasBlockStyle } from '../../has-blockstyle';
 import { isImageGalleryBlock } from '../../image-gallery/image-gallery-block';
-import {
-  BuilderBlockStyleProps,
-  useWebsiteBuilder,
-} from '@wepublish/website/builder';
+import { BuilderBlockStyleProps, Image } from '@wepublish/website/builder';
 import {
   SliderArrow,
   SliderBall,
@@ -24,8 +21,15 @@ import {
   FullImageGalleryBlockFragment,
 } from '@wepublish/website/api';
 import { MdArrowBackIos, MdArrowForwardIos } from 'react-icons/md';
-import { css } from '@emotion/react';
 import { ImageBlockCaption } from '../../image/image-block';
+import styled from '@emotion/styled';
+
+export const ImageSliderImage = styled(Image)`
+  ${ImageBlockCaption} {
+    width: initial;
+    justify-self: initial;
+  }
+`;
 
 export const ImageSlider = ({
   images,
@@ -35,9 +39,6 @@ export const ImageSlider = ({
   slideGap,
   className,
 }: BuilderBlockStyleProps['ImageSlider']) => {
-  const {
-    blocks: { Image },
-  } = useWebsiteBuilder();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [loaded, setLoaded] = useState(false);
 
@@ -83,15 +84,9 @@ export const ImageSlider = ({
                 key={index}
                 className="keen-slider__slide"
               >
-                <Image
+                <ImageSliderImage
                   caption={image.caption}
                   image={image.image}
-                  css={css`
-                    ${ImageBlockCaption} {
-                      width: initial;
-                      justify-self: initial;
-                    }
-                  `}
                 />
               </div>
             ))}
