@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { HttpModule } from '@nestjs/axios';
 import { ImageModule } from '@wepublish/image/api';
+import { MailchimpContactModule } from '@wepublish/mail/api';
 import { PrismaModule } from '@wepublish/nest-modules';
 import { UserDataloaderService } from './user-dataloader.service';
 import {
@@ -28,7 +29,7 @@ import { HibpService } from './hibp.service';
 import { UserSubscriptionCountDataloader } from './user-subscription-count.dataloader';
 
 @Module({
-  imports: [PrismaModule, ImageModule, HttpModule],
+  imports: [PrismaModule, ImageModule, HttpModule, MailchimpContactModule],
   providers: [
     HibpService,
     UserDataloaderService,
