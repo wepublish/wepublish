@@ -3,6 +3,7 @@ import {
   CaptchaType,
   Challenge,
   Currency,
+  FullGoodieFragment,
   Invoice,
   InvoiceItem,
   MemberPlan,
@@ -69,6 +70,21 @@ export const mockAvailablePaymentMethod = ({
   paymentMethodIDs,
 });
 
+export const mockGoodie = ({
+  id = faker.string.nanoid(),
+  name = faker.commerce.productName(),
+  description = mockShortRichText(),
+  image = mockImage(),
+  stock = 10,
+}: Partial<FullGoodieFragment> = {}): FullGoodieFragment => ({
+  __typename: 'Goodie',
+  id,
+  name,
+  description,
+  image,
+  stock,
+});
+
 export const mockMemberPlan = ({
   id = faker.string.nanoid(),
   image = mockImage(),
@@ -98,6 +114,7 @@ export const mockMemberPlan = ({
   } as MemberPlan['confirmationPage'],
   amountPerMonthMax = 1000,
   externalReward = 'https://example.com/mock-external-reward-url',
+  goodies = [],
 }: Partial<MemberPlan> = {}): MemberPlan & { active: boolean } => ({
   __typename: 'MemberPlan',
   id,
@@ -121,6 +138,7 @@ export const mockMemberPlan = ({
   confirmationPage,
   amountPerMonthMax,
   externalReward,
+  goodies,
   active: true,
 });
 
@@ -150,6 +168,7 @@ export const mockSubscription = ({
   properties = [],
   url = faker.internet.url(),
   externalReward,
+  goodie = null,
   deactivation,
   user = mockUser(),
   userID = user.id,
@@ -178,6 +197,7 @@ export const mockSubscription = ({
   properties,
   url,
   externalReward,
+  goodie,
   deactivation,
   user,
   userID,

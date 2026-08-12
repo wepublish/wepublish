@@ -1,9 +1,4 @@
-import {
-  ArticleContainer,
-  ArticleListContainer,
-  ArticleWrapper,
-} from '@wepublish/article/website';
-import { CommentListContainer } from '@wepublish/comments/website';
+import { ArticleContainer } from '@wepublish/article/website';
 import { getApiUrl } from '@wepublish/utils/website';
 import {
   addClientCacheToProps,
@@ -15,9 +10,7 @@ import {
   NavigationListDocument,
   PeerProfileDocument,
   Tag,
-  useArticleQuery,
 } from '@wepublish/website/api';
-import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
 import { ComponentProps } from 'react';
@@ -26,56 +19,13 @@ export default function ArticleBySlugOrId() {
   const {
     query: { slug, id },
   } = useRouter();
-  const {
-    elements: { H3 },
-  } = useWebsiteBuilder();
-
-  const { data } = useArticleQuery({
-    fetchPolicy: 'cache-only',
-    variables: {
-      slug: slug as string,
-      id: id as string,
-    },
-  });
 
   const containerProps = {
     slug,
     id,
   } as ComponentProps<typeof ArticleContainer>;
 
-  return (
-    <>
-      <ArticleContainer {...containerProps} />
-
-      {data?.article && (
-        <ArticleWrapper>
-          <H3 component={'h2'}>Das könnte dich auch interessieren</H3>
-
-          <ArticleListContainer
-            variables={{
-              filter: { tags: data.article.tags.map(tag => tag.id) },
-              take: 4,
-            }}
-            filter={articles =>
-              articles
-                .filter(article => article.id !== data.article?.id)
-                .splice(0, 3)
-            }
-          />
-        </ArticleWrapper>
-      )}
-
-      {data?.article && !data?.article?.disableComments && (
-        <ArticleWrapper>
-          <H3 component={'h2'}>Kommentare</H3>
-          <CommentListContainer
-            id={data!.article!.id}
-            type={CommentItemType.Article}
-          />
-        </ArticleWrapper>
-      )}
-    </>
-  );
+  return <ArticleContainer {...containerProps} />;
 }
 
 export const getStaticPaths = () => ({
@@ -83,8 +33,22 @@ export const getStaticPaths = () => ({
   fallback: 'blocking',
 });
 
+const externalArticleRedirects: Record<string, string> = {
+  wikipolitik: 'https://wiki.reflekt.ch/',
+};
+
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const { id, slug } = params || {};
+
+  if (typeof slug === 'string' && externalArticleRedirects[slug]) {
+    return {
+      redirect: {
+        destination: externalArticleRedirects[slug],
+        permanent: true,
+      },
+    };
+  }
+
   const client = getApiClient(getApiUrl(), []);
 
   const [article] = await Promise.all([
@@ -129,6 +93,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         query: CommentListDocument,
         variables: {
           itemId: article.data.article.id,
+          itemType: CommentItemType.Article,
         },
       }),
     ]);
@@ -138,6 +103,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
   return {
     props,
-    revalidate: 60, // every 60 seconds
+    revalidate: 60,
   };
 };

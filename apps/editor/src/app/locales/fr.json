@@ -403,17 +403,48 @@
       },
       "subscribe": {
         "label": "S'abonner",
-        "selectMemberPlans": "Plans affichés",
+        "selectMemberPlans": "Plans d’abonnement affichés",
         "selectMemberPlansPlaceholder": "Afficher tous les plans",
         "selectMemberPlansSelectionHintAll": "Sans sélection, tous les plans actifs sont affichés.",
-        "selectFields": "Champs de saisie",
+        "selectFields": "Champs de saisie utilisateur",
         "selectFieldsSelectionHint": "L’email et le nom de famille sont toujours demandés. L’ordre n’a pas d’importance",
+        "goodiesHeading": "Goodies",
+        "vouchersHeading": "Bons",
+        "showGoodies": "Afficher la sélection de goodies",
+        "showVouchers": "Afficher le champ de bon",
+        "goodieMinValue": {
+          "label": "Montant minimum du goodie :"
+        },
+        "hideRepeatGoodieOnUpgrade": "Lors de l’upgrade : pas de nouveau goodie",
         "FirstName": "Prénom",
         "Birthday": "Date de naissance",
         "Address": "Adresse",
         "EmailRepeated": "Répéter l’email",
         "Password": "Mot de passe",
-        "PasswordRepeated": "Répéter le mot de passe"
+        "PasswordRepeated": "Répéter le mot de passe",
+        "renderLayouts": {
+          "None": "Montant fixe",
+          "Input": "Saisie du montant",
+          "Slider": "Curseur de montant",
+          "Picker": "Montants prédéfinis"
+        },
+        "renderStylesHeading": "Ordre et affichage des plans d’abonnement",
+        "amountTileValues": {
+          "hint": "Montants des tuiles (en francs). Laisser vide pour les valeurs par défaut : 10, 15, 20.",
+          "placeholder": "p.ex. 10 15 20"
+        },
+        "showAmountInput": {
+          "label": "Saisie libre du montant",
+          "title": "En plus des tuiles, un montant libre peut être saisi."
+        },
+        "amountTileLayout": {
+          "hint": "Disposition des tuiles sur mobile",
+          "Narrow": "Étroit (2 tuiles par ligne)",
+          "Wide": "Large (1 tuile par ligne, grandes tuiles)"
+        },
+        "planAmountsTitle": "Montant minimum / cible / maximum par mois (en francs)",
+        "defaultPlanTitle": "Sélectionné par défaut — ce plan est présélectionné après le chargement de la page.",
+        "defaultPlanLabel": "Par défaut"
       },
       "image": {
         "label": "Image",
@@ -842,9 +873,17 @@
         "noInvoices": "Pas de factures."
       },
       "payManually": "Payer manuellement",
-      "total": "Montant facturé",
-      "unpaid": "(non payé)",
-      "userNotLoaded": "Erreur inattendue : vos données d'utilisateur trice n'ont pas pu être chargées."
+      "total": "Montant",
+      "unpaid": "non payé",
+      "userNotLoaded": "Erreur inattendue : vos données d'utilisateur trice n'ont pas pu être chargées.",
+      "table": {
+        "date": "Date",
+        "description": "Description",
+        "goodie": "Goodie",
+        "status": "Statut",
+        "action": "Action",
+        "idCopied": "ID de facture copié"
+      }
     },
     "linkPageBreakEditPanel": {
       "close": "Fermer",
@@ -1480,6 +1519,8 @@
       },
       "link": {
         "title": "Lier le texte avec",
+        "style": "Style du lien",
+        "defaultStyle": "Lien",
         "type": "Type",
         "url": "URL",
         "web": "Web",
@@ -2111,6 +2152,33 @@
         "areYouSureConfirmation": "Supprimer le bon de réduction"
       }
     },
+    "goodie": {
+      "navbar": "Goodies",
+      "form": {
+        "createTitle": "Créer un goodie",
+        "editTitle": "Modifier le goodie \"{{ goodie }}\"",
+        "name": "Nom",
+        "description": "Description",
+        "stock": "Stock",
+        "active": "Actif",
+        "image": "Image",
+        "memberPlans": "Plans d'abonnement"
+      },
+      "overview": {
+        "title": "Goodies",
+        "createGoodie": "Nouveau goodie",
+        "name": "Nom",
+        "memberPlans": "Plans d'abonnement",
+        "stock": "Stock",
+        "availableStock": "Disponible",
+        "active": "Actif",
+        "createdAt": "Créé le",
+        "unlimited": "∞",
+        "areYouSure": "Êtes-vous sûr(e) ?",
+        "areYouSureBody": "Le goodie \"{{ goodie }}\" sera définitivement supprimé et cette action est irréversible.",
+        "areYouSureConfirmation": "Supprimer le goodie"
+      }
+    },
     "paymentMethodEditPanel": {
       "gracePeriod": "Délai de paiement",
       "gracePeriodHelpText": "Si votre site web utilise un paywall, les utilisateurs peuvent lire immédiatement ou continuer à lire tous les contenus, même s'ils n'ont pas souscrit d'abonnement payant, pendant le délai de paiement. Cela est utile, par exemple, en cas de virement bancaire.",
@@ -2551,6 +2619,9 @@
         "Event": "Événement",
         "Custom": "Personnalisé"
       }
+    },
+    "columnConfigurator": {
+      "title": "Afficher/masquer les colonnes"
     },
     "systemMails": {
       "title": "Compte et connexion",

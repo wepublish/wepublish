@@ -399,17 +399,48 @@
       },
       "subscribe": {
         "label": "Abonnieren",
-        "selectMemberPlans": "Anzuzeigende Pläne",
+        "selectMemberPlans": "Anzuzeigende Abo-Pläne",
         "selectMemberPlansPlaceholder": "Alle Pläne anzeigen",
         "selectMemberPlansSelectionHintAll": "Ohne Auswahl werden alle aktiven Pläne angezeigt.",
-        "selectFields": "Eingabefelder",
+        "selectFields": "Benutzer-Eingabefelder",
         "selectFieldsSelectionHint": "Email & Nachname wird immer abgefragt. Reihenfolge spielt keine Rolle",
+        "goodiesHeading": "Goodies",
+        "vouchersHeading": "Gutscheine",
+        "showGoodies": "Goodie-Auswahl anzeigen",
+        "showVouchers": "Gutschein-Eingabe anzeigen",
+        "goodieMinValue": {
+          "label": "Goodie-Mindestbetrag:"
+        },
+        "hideRepeatGoodieOnUpgrade": "Bei Upgrade: kein erneutes Goodie",
         "FirstName": "Vorname",
         "Birthday": "Geburtstag",
         "Address": "Adresse",
         "EmailRepeated": "Email wiederholen",
         "Password": "Passwort",
-        "PasswordRepeated": "Passwort wiederholen"
+        "PasswordRepeated": "Passwort wiederholen",
+        "renderLayouts": {
+          "None": "Fixer Betrag",
+          "Input": "Betragseingabe",
+          "Slider": "Betrags-Slider",
+          "Picker": "Vordefinierte Beträge"
+        },
+        "renderStylesHeading": "Abo-Plan Reihenfolge und Darstellung",
+        "amountTileValues": {
+          "hint": "Beträge der Kacheln (in Franken). Leer lassen für Standard: 10, 15, 20.",
+          "placeholder": "z.B. 10 15 20"
+        },
+        "showAmountInput": {
+          "label": "Freie Betragseingabe",
+          "title": "Zusätzlich zu den Kacheln kann ein beliebiger Betrag eingegeben werden."
+        },
+        "amountTileLayout": {
+          "hint": "Kachel-Layout auf Mobilgeräten",
+          "Narrow": "Schmal (2 Kacheln pro Zeile)",
+          "Wide": "Breit (1 Kachel pro Zeile, grosse Kacheln)"
+        },
+        "planAmountsTitle": "Minimal- / Ziel- / Maximalbetrag pro Monat (in Franken)",
+        "defaultPlanTitle": "Standardmässig ausgewählt — dieser Abo-Plan ist nach dem Laden der Seite vorausgewählt.",
+        "defaultPlanLabel": "Standard"
       },
       "image": {
         "label": "Bild",
@@ -838,9 +869,17 @@
         "noInvoices": "Keine Rechnungen vorhanden."
       },
       "payManually": "Manuell bezahlen",
-      "total": "Rechnungsbetrag",
-      "unpaid": "(unbezahlt)",
-      "userNotLoaded": "Unerwarteter Fehler: Deine Benutzerdaten konnten nicht geladen werden."
+      "total": "Betrag",
+      "unpaid": "unbezahlt",
+      "userNotLoaded": "Unerwarteter Fehler: Deine Benutzerdaten konnten nicht geladen werden.",
+      "table": {
+        "date": "Datum",
+        "description": "Beschreibung",
+        "goodie": "Goodie",
+        "status": "Status",
+        "action": "Aktion",
+        "idCopied": "Rechnungs-ID kopiert"
+      }
     },
     "linkPageBreakEditPanel": {
       "close": "Schliessen",
@@ -1522,6 +1561,8 @@
       },
       "link": {
         "title": "Text verlinken mit",
+        "style": "Link-Stil",
+        "defaultStyle": "Link",
         "type": "Typ",
         "url": "URL",
         "web": "Web",
@@ -2166,6 +2207,33 @@
         "areYouSureConfirmation": "Gutschein löschen"
       }
     },
+    "goodie": {
+      "navbar": "Goodies",
+      "form": {
+        "createTitle": "Goodie erstellen",
+        "editTitle": "Goodie \"{{ goodie }}\" bearbeiten",
+        "name": "Name",
+        "description": "Beschreibung",
+        "stock": "Lagerbestand",
+        "active": "Aktiv",
+        "image": "Bild",
+        "memberPlans": "Abo-Pläne"
+      },
+      "overview": {
+        "title": "Goodies",
+        "createGoodie": "Neues Goodie",
+        "name": "Name",
+        "memberPlans": "Abo-Pläne",
+        "stock": "Lagerbestand",
+        "availableStock": "Verfügbar",
+        "active": "Aktiv",
+        "createdAt": "Erstellt am",
+        "unlimited": "∞",
+        "areYouSure": "Bist du sicher?",
+        "areYouSureBody": "Das Goodie \"{{ goodie }}\" wird unwiderruflich gelöscht.",
+        "areYouSureConfirmation": "Goodie löschen"
+      }
+    },
     "paymentMethodEditPanel": {
       "gracePeriod": "Zahlungsfrist",
       "gracePeriodHelpText": "Wenn deine Webseite eine Paywall verwendet, können die Nutzer alle Inhalte auch bei unbezahlten Abos sofort oder weiterhin lesen - innerhalb der Zahlungsfrist. Dies ist etwa bei Banküberweisung nützlich.",
@@ -2606,6 +2674,9 @@
         "Event": "Event",
         "Custom": "Custom"
       }
+    },
+    "columnConfigurator": {
+      "title": "Spalten ein-/ausblenden"
     },
     "systemMails": {
       "title": "Konto & Login",

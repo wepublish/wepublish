@@ -3,10 +3,10 @@ import { Button, Drawer } from 'rsuite';
 
 import { AddBlockList } from '../atoms/addBlockList';
 import { BlockMap } from '../blocks/blockMap';
-import { AlllowedBlockTypes } from './blockSelectAndEditPanel';
+import { AllowedBlockTypes } from './blockSelectAndEditPanel';
 
 export interface BlockSelectPanelProps {
-  allowedBlockTypes?: AlllowedBlockTypes;
+  allowedBlockTypes?: AllowedBlockTypes;
   onClose(): void;
   onSelect(test: any): void;
 }

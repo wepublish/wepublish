@@ -1150,6 +1150,32 @@ type FullPoll {
   question: String
 }
 
+type Goodie implements HasImage {
+  active: Boolean!
+  availableStock: Int
+  createdAt: DateTime!
+  description: RichText
+  id: String!
+  image: Image
+  imageID: String
+  memberPlans: [MemberPlan!]!
+  modifiedAt: DateTime!
+  name: String!
+  stock: Int
+}
+
+input GoodieFilter {
+  active: Boolean
+  memberPlans: [String!]
+  name: String
+}
+
+enum GoodieSort {
+  CreatedAt
+  ModifiedAt
+  Name
+}
+
 """Setting Value"""
 scalar GraphQLSettingValueType
 
@@ -1503,6 +1529,8 @@ type InvoiceItem {
   amount: Int!
   createdAt: DateTime!
   description: String
+  goodie: Goodie
+  goodieId: String
   id: String!
   modifiedAt: DateTime!
   name: String!
@@ -1938,6 +1966,11 @@ type MemberPlan implements HasImage {
   externalReward: String
   failPage: Page
   failPageId: String
+
+  """
+  Active goodies with remaining stock that can be chosen with this member plan.
+  """
+  goodies: [Goodie!]!
   id: String!
   image: Image
   imageID: String
@@ -2025,6 +2058,9 @@ type Mutation {
   Generates a short-lived JWT token for authenticating with an external app.
   """
   createExternalAppToken(externalAppId: String!): ExternalAppToken!
+
+  """Creates a new goodie."""
+  createGoodie(active: Boolean!, description: RichText, imageID: String, memberPlanIDs: [String!]!, name: String!, stock: Int): Goodie!
 
   """Creates a new invoice."""
   createInvoice(currency: Currency!, description: String, dueAt: DateTime!, items: [InvoiceItemInput!]!, mail: String!, manuallySetAsPaidByUserId: String, scheduledDeactivationAt: DateTime!, subscriptionID: String): Invoice!
@@ -2126,12 +2162,12 @@ type Mutation {
   createUserRole(description: String, name: String!, permissionIDs: [String!]!): UserRole!
 
   """Allows authenticated users to create additional subscriptions"""
-  createUserSubscription(autoRenew: Boolean!, deactivateSubscriptionId: String, failureURL: String, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Int!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], successURL: String, voucher: String): Payment!
+  createUserSubscription(autoRenew: Boolean!, deactivateSubscriptionId: String, failureURL: String, goodieId: String, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Int!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], successURL: String, voucher: String): Payment!
 
   """
   Allows guests and authenticated users to create additional subscriptions
   """
-  createUserSubscriptionWithConfirmation(autoRenew: Boolean!, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Int!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], userId: String, voucher: String): Boolean!
+  createUserSubscriptionWithConfirmation(autoRenew: Boolean!, goodieId: String, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Int!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], userId: String, voucher: String): Boolean!
 
   """Creates a new voucher."""
   createVoucher(code: String!, discountPercent: Int!, memberPlanId: String!, validFrom: DateTime!, validTo: DateTime!): Voucher!
@@ -2164,6 +2200,9 @@ type Mutation {
 
   """Deletes an external app."""
   deleteExternalApp(id: String!): ExternalApp!
+
+  """Deletes an existing goodie."""
+  deleteGoodie(id: String!): Goodie!
 
   """Deletes an existing image."""
   deleteImage(id: String!): String!
@@ -2448,6 +2487,9 @@ type Mutation {
   """Updates an existing external app."""
   updateExternalApp(description: String, icon: String, id: String!, name: String, target: ExternalAppsTarget, url: String): ExternalApp!
 
+  """Updates an existing goodie."""
+  updateGoodie(active: Boolean, description: RichText, id: String!, imageID: String, memberPlanIDs: [String!], name: String, stock: Int): Goodie!
+
   """Updates an existing image."""
   updateImage(description: String, filename: String, focalPointX: Float = 0.5, focalPointY: Float = 0.5, id: String!, license: String, link: String, source: String, tags: [String!], title: String): Image!
 
@@ -2548,7 +2590,7 @@ type Mutation {
   updateWebsiteSettings(ads: WebsiteAdsInput, analytics: WebsiteAnalyticsInput, fonts: [WebsiteRemoteFontInput!], mail: WebsiteMailInput, theme: JSONObject): WebsiteSettings!
 
   """"""
-  upgradeUserSubscription(failureURL: String, memberPlanId: String!, monthlyAmount: Int!, paymentMethodId: String!, subscriptionId: String!, successURL: String): Payment!
+  upgradeUserSubscription(failureURL: String, goodieId: String, memberPlanId: String!, monthlyAmount: Int!, paymentMethodId: String!, subscriptionId: String!, successURL: String): Payment!
 
   """Uploads a new document."""
   uploadDocument(description: String, file: Upload!, filename: String, title: String): Document!
@@ -2744,6 +2786,12 @@ type PaginatedEvents {
 
 type PaginatedEventsFromSources {
   nodes: [EventFromSource!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type PaginatedGoodies {
+  nodes: [Goodie!]!
   pageInfo: PageInfo!
   totalCount: Int!
 }
@@ -3319,6 +3367,7 @@ type PublicSubscription implements HasMemberPlan & HasPaymentMethod & HasUser {
   deactivation: SubscriptionDeactivation
   extendable: Boolean!
   externalReward: String
+  goodie: Goodie
   id: String!
   isActive: Boolean!
   memberPlan: MemberPlan!
@@ -3466,6 +3515,30 @@ type Query {
 
   """Returns images by tag."""
   getImagesByTag(tag: String!): [Image!]!
+
+  """Returns a goodie by id."""
+  goodie(id: String!): Goodie!
+
+  """This query returns a list of goodies"""
+  goodies(
+    """Cursor for pagination"""
+    cursorId: String
+
+    """Filter for goodies"""
+    filter: GoodieFilter
+
+    """Sort order"""
+    order: SortOrder = Descending
+
+    """Number of items to skip"""
+    skip: Int! = 0
+
+    """Field to sort by"""
+    sort: GoodieSort! = CreatedAt
+
+    """Number of items to fetch"""
+    take: Int! = 10
+  ): PaginatedGoodies!
 
   "\n      Returns the most viewed articles in descending order.\n    "
   hotAndTrending(start: DateTime, take: Int = 10): [Article!]!
@@ -4199,8 +4272,13 @@ type SubscribeBlock implements BaseBlock {
   blockStyleName: String
   disabled: Boolean
   fields: [SubscribeBlockField!]!
-  memberPlanIds: [String!]
+  goodieMinValue: Int
+  hideRepeatGoodieOnUpgrade: Boolean!
+  memberPlanIds: [String!]!
+  memberPlanRenderSettings: [SubscribeBlockMemberPlanRenderSetting!]!
   memberPlans: [MemberPlan!]!
+  showGoodies: Boolean!
+  showVouchers: Boolean!
   type: BlockType!
 }
 
@@ -4218,7 +4296,55 @@ input SubscribeBlockInput {
   blockStyleName: String
   disabled: Boolean
   fields: [SubscribeBlockField!]! = [FirstName, Password, PasswordRepeated, Address]
-  memberPlanIds: [String!]
+  goodieMinValue: Int
+  hideRepeatGoodieOnUpgrade: Boolean! = false
+  memberPlanIds: [String!]! = []
+  memberPlanRenderSettings: [SubscribeBlockMemberPlanRenderSettingInput!]!
+  showGoodies: Boolean! = false
+  showVouchers: Boolean! = false
+}
+
+interface SubscribeBlockLayoutConfig {
+  type: SubscribeBlockRenderLayout!
+}
+
+input SubscribeBlockLayoutConfigInput {
+  showInput: Boolean! = false
+  type: SubscribeBlockRenderLayout!
+  values: [Int!]
+}
+
+type SubscribeBlockLayoutNoneConfig implements SubscribeBlockLayoutConfig {
+  type: SubscribeBlockRenderLayout!
+}
+
+type SubscribeBlockLayoutPickerConfig implements SubscribeBlockLayoutConfig {
+  showInput: Boolean!
+  type: SubscribeBlockRenderLayout!
+  values: [Int!]!
+}
+
+type SubscribeBlockLayoutSliderConfig implements SubscribeBlockLayoutConfig {
+  showInput: Boolean!
+  type: SubscribeBlockRenderLayout!
+}
+
+type SubscribeBlockMemberPlanRenderSetting {
+  isDefault: Boolean!
+  layout: SubscribeBlockLayoutConfig!
+  memberPlanId: String!
+}
+
+input SubscribeBlockMemberPlanRenderSettingInput {
+  isDefault: Boolean! = false
+  layout: SubscribeBlockLayoutConfigInput!
+  memberPlanId: String!
+}
+
+enum SubscribeBlockRenderLayout {
+  None
+  Picker
+  Slider
 }
 
 type SubscriptionCreatedAction implements BaseAction & HasSubscriptionLc {

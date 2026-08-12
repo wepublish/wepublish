@@ -142,7 +142,7 @@ function CustomApp({
               Head={Head}
               Script={Script}
               Author={GanzGrazAuthor}
-              PaymentAmount={GanzGrazPaymentAmountPicker}
+              PaymentAmountPicker={GanzGrazPaymentAmountPicker}
               TransactionFee={GanzGrazTransactionFee}
               EventListItem={GanzGrazEventListItem}
               Event={GanzGrazEvent}

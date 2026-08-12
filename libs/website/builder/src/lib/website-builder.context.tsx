@@ -89,8 +89,9 @@ import {
   BuilderInvoiceListItemProps,
   BuilderInvoiceListProps,
   BuilderMemberPlanItemProps,
+  BuilderGoodiePickerProps,
   BuilderMemberPlanPickerProps,
-  BuilderPaymentAmountProps,
+  BuilderPaymentAmountSliderProps,
   BuilderPaymentMethodPickerProps,
   BuilderPeriodicityPickerProps,
   BuilderSubscribeProps,
@@ -98,6 +99,7 @@ import {
   BuilderSubscriptionListProps,
   BuilderTransactionFeeProps,
   BuilderUpgradeProps,
+  BuilderPaymentAmountPickerProps,
 } from './membership.interface';
 import { BuilderNavbarProps } from './navbar.interface';
 import { BuilderPageProps, BuilderPageSEOProps } from './page.interface';
@@ -124,6 +126,7 @@ import {
 import {
   BuilderImageUploadProps,
   BuilderPersonalDataFormProps,
+  BuilderUserFormProps,
 } from './user.interface';
 import { BuilderBlockStyleProps } from './block-styles.interface';
 import { BuilderContentWrapperProps } from './content-wrapper.interface';
@@ -173,13 +176,16 @@ export type WebsiteBuilderProps = {
   LoginForm: ComponentType<BuilderLoginFormProps>;
   RegistrationForm: ComponentType<BuilderRegistrationFormProps>;
   PersonalDataForm: ComponentType<BuilderPersonalDataFormProps>;
+  UserForm: ComponentType<BuilderUserFormProps>;
   SubscriptionList: ComponentType<BuilderSubscriptionListProps>;
   SubscriptionListItem: ComponentType<BuilderSubscriptionListItemProps>;
   InvoiceList: ComponentType<BuilderInvoiceListProps>;
   InvoiceListItem: ComponentType<BuilderInvoiceListItemProps>;
+  GoodiePicker: ComponentType<BuilderGoodiePickerProps>;
   MemberPlanPicker: ComponentType<BuilderMemberPlanPickerProps>;
   MemberPlanItem: ComponentType<BuilderMemberPlanItemProps>;
-  PaymentAmount: ComponentType<BuilderPaymentAmountProps>;
+  PaymentAmountSlider: ComponentType<BuilderPaymentAmountSliderProps>;
+  PaymentAmountPicker: ComponentType<BuilderPaymentAmountPickerProps>;
   PaymentMethodPicker: ComponentType<BuilderPaymentMethodPickerProps>;
   PeriodicityPicker: ComponentType<BuilderPeriodicityPickerProps>;
   TransactionFee: ComponentType<BuilderTransactionFeeProps>;
@@ -287,9 +293,11 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   Subscribe: NoComponent,
   Upgrade: NoComponent,
   TransactionFee: NoComponent,
+  GoodiePicker: NoComponent,
   MemberPlanPicker: NoComponent,
   MemberPlanItem: NoComponent,
-  PaymentAmount: NoComponent,
+  PaymentAmountSlider: NoComponent,
+  PaymentAmountPicker: NoComponent,
   PaymentMethodPicker: NoComponent,
   PeriodicityPicker: NoComponent,
   Page: NoComponent,
@@ -324,6 +332,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   LoginForm: NoComponent,
   RegistrationForm: NoComponent,
   PersonalDataForm: NoComponent,
+  UserForm: NoComponent,
   ContentWrapper: NoComponent,
   Paywall: NoComponent,
   TextToIcon: NoComponent,

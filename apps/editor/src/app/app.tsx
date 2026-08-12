@@ -67,6 +67,9 @@ import { EventEditView } from './routes/events/eventEditView';
 import { EventListView } from './routes/events/eventListView';
 import { ExternalAppIframeView } from './routes/externalApps/externalAppIframeView';
 import { ExternalApps } from './routes/externalApps/externalAppsEdit';
+import { GoodieCreateView } from './routes/goodie/goodieCreateView';
+import { GoodieEditView } from './routes/goodie/goodieEditView';
+import { GoodieList } from './routes/goodie/goodieList';
 import { ImageList } from './routes/images/imageList';
 import { IntegrationEditView } from './routes/integrations/integrationEditView';
 import { IntegrationList } from './routes/integrations/integrationList';
@@ -923,6 +926,30 @@ export function App() {
               element={
                 <Base>
                   <VoucherCreateView />
+                </Base>
+              }
+            />
+            <Route
+              path="goodies"
+              element={
+                <Base>
+                  <GoodieList />
+                </Base>
+              }
+            />
+            <Route
+              path="goodies/edit/:id"
+              element={
+                <Base>
+                  <GoodieEditView />
+                </Base>
+              }
+            />
+            <Route
+              path="goodies/create"
+              element={
+                <Base>
+                  <GoodieCreateView />
                 </Base>
               }
             />

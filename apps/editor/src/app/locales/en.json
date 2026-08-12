@@ -398,17 +398,48 @@
       },
       "subscribe": {
         "label": "Subscribe",
-        "selectMemberPlans": "Displayed plans",
+        "selectMemberPlans": "Displayed subscription plans",
         "selectMemberPlansPlaceholder": "Show all plans",
         "selectMemberPlansSelectionHintAll": "Leave empty to display every active plan.",
-        "selectFields": "Input fields",
+        "selectFields": "User input fields",
         "selectFieldsSelectionHint": "Email & last name are always requested. Order does not matter",
+        "goodiesHeading": "Goodies",
+        "vouchersHeading": "Vouchers",
+        "showGoodies": "Show goodie selection",
+        "showVouchers": "Show voucher input",
+        "goodieMinValue": {
+          "label": "Require minimum payment amount to be eligible for a goodie:"
+        },
+        "hideRepeatGoodieOnUpgrade": "Hide on upgrade when a goodie was already received",
         "FirstName": "First name",
         "Birthday": "Birthday",
         "Address": "Address",
         "EmailRepeated": "Repeat email",
         "Password": "Password",
-        "PasswordRepeated": "Repeat password"
+        "PasswordRepeated": "Repeat password",
+        "renderLayouts": {
+          "None": "Fixed amount",
+          "Input": "Amount input",
+          "Slider": "Amount slider",
+          "Picker": "Pre defined amounts"
+        },
+        "renderStylesHeading": "Subscription plan order and rendering",
+        "amountTileValues": {
+          "hint": "Tile amounts",
+          "placeholder": "e.g. 10 15 20"
+        },
+        "showAmountInput": {
+          "label": "Free amount input",
+          "title": "In addition to the tiles, any amount can be entered."
+        },
+        "amountTileLayout": {
+          "hint": "Tile layout on mobile",
+          "Narrow": "Narrow (2 tiles per row)",
+          "Wide": "Wide (1 tile per row, large tiles)"
+        },
+        "planAmountsTitle": "Minimum / target / maximum amount per month (in francs)",
+        "defaultPlanTitle": "Selected by default — this member plan is preselected after the page loads.",
+        "defaultPlanLabel": "Default"
       },
       "image": {
         "label": "Image",
@@ -842,9 +873,17 @@
         "noInvoices": "No invoices."
       },
       "payManually": "Pay manually",
-      "total": "Invoice amount",
-      "unpaid": "(unpaid)",
-      "userNotLoaded": "Unexpected error: Your user data could not be loaded."
+      "total": "Amount",
+      "unpaid": "unpaid",
+      "userNotLoaded": "Unexpected error: Your user data could not be loaded.",
+      "table": {
+        "date": "Date",
+        "description": "Description",
+        "goodie": "Goodie",
+        "status": "Status",
+        "action": "Action",
+        "idCopied": "Invoice ID copied"
+      }
     },
     "linkPageBreakEditPanel": {
       "close": "Close",
@@ -1521,6 +1560,8 @@
       },
       "link": {
         "title": "Link text with",
+        "style": "Link style",
+        "defaultStyle": "Link",
         "type": "Type",
         "url": "URL",
         "web": "Web",
@@ -2247,6 +2288,33 @@
         "areYouSureConfirmation": "Delete voucher"
       }
     },
+    "goodie": {
+      "navbar": "Goodies",
+      "form": {
+        "createTitle": "Create Goodie",
+        "editTitle": "Edit Goodie \"{{ goodie }}\"",
+        "name": "Name",
+        "description": "Description",
+        "stock": "Stock",
+        "active": "Active",
+        "image": "Image",
+        "memberPlans": "Memberplans"
+      },
+      "overview": {
+        "title": "Goodies",
+        "createGoodie": "New Goodie",
+        "name": "Name",
+        "memberPlans": "Memberplans",
+        "stock": "Stock",
+        "availableStock": "Available",
+        "active": "Active",
+        "createdAt": "Created At",
+        "unlimited": "∞",
+        "areYouSure": "Are you sure?",
+        "areYouSureBody": "The goodie \"{{ goodie }}\" will be deleted permanently and can not be reversed.",
+        "areYouSureConfirmation": "Delete goodie"
+      }
+    },
     "paymentMethodEditPanel": {
       "gracePeriod": "Grace Period",
       "gracePeriodHelpText": "If you use the paywall, allow users to read instantly after ordering a subscription, even if they don't pay eventually. This would apply to payments via bank transfer, for instance.",
@@ -2688,6 +2756,9 @@
         "Event": "Event",
         "Custom": "Custom"
       }
+    },
+    "columnConfigurator": {
+      "title": "Show/hide columns"
     },
     "mailSend": {
       "steps": {

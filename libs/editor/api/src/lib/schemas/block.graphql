@@ -264,7 +264,27 @@ fragment BlockWithoutTeaser on BlockContent {
     blockStyle
     blockStyleName
     memberPlanIds
+    memberPlanRenderSettings {
+      isDefault
+      memberPlanId
+      layout {
+        type
+
+        ... on SubscribeBlockLayoutSliderConfig {
+          showInput
+        }
+
+        ... on SubscribeBlockLayoutPickerConfig {
+          showInput
+          values
+        }
+      }
+    }
     fields
+    showGoodies
+    showVouchers
+    goodieMinValue
+    hideRepeatGoodieOnUpgrade
     type
   }
 }

@@ -25,6 +25,7 @@ export class UpgradeSubscriptionResolver {
     })
     monthlyAmount: number,
     @Args('paymentMethodId') paymentMethodId: string,
+    @Args('goodieId', { nullable: true }) goodieId?: string,
     @Args('successURL', { nullable: true }) successURL?: string,
     @Args('failureURL', { nullable: true }) failureURL?: string
   ) {
@@ -34,6 +35,7 @@ export class UpgradeSubscriptionResolver {
       subscriptionId,
       paymentMethodId,
       monthlyAmount,
+      goodieId,
       failureURL,
       successURL,
     });

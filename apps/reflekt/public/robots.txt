@@ -3,4 +3,4 @@ User-agent: *
 Allow: /
 
 
-Sitemap: https://wepublish.ch/api/sitemap
+Sitemap: https://reflekt.ch/api/sitemap

@@ -36,6 +36,7 @@ import {
   FlexAlignment,
   CrowdfundingBlock,
   SubscribeBlock,
+  SubscribeBlockRenderLayout,
   FlexBlock,
   BlockWithAlignment,
   Maybe,
@@ -663,6 +664,19 @@ export const mockSubscribeBlock = ({
     mockMemberPlan({ amountPerMonthMin: 10000, amountPerMonthTarget: 15000 }),
   ],
   memberPlanIds = [memberPlans[0].id, memberPlans[1].id],
+  memberPlanRenderSettings = memberPlanIds.map((memberPlanId, index) => ({
+    __typename: 'SubscribeBlockMemberPlanRenderSetting',
+    memberPlanId,
+    isDefault: index === 0,
+    layout: {
+      __typename: 'SubscribeBlockLayoutNoneConfig',
+      type: SubscribeBlockRenderLayout.None,
+    },
+  })),
+  showGoodies = false,
+  showVouchers = false,
+  goodieMinValue = null,
+  hideRepeatGoodieOnUpgrade = false,
 }: Partial<SubscribeBlock> = {}): SubscribeBlock => ({
   type: BlockType.Subscribe,
   __typename: 'SubscribeBlock',
@@ -671,6 +685,11 @@ export const mockSubscribeBlock = ({
   fields,
   memberPlans,
   memberPlanIds,
+  memberPlanRenderSettings,
+  showGoodies,
+  showVouchers,
+  goodieMinValue,
+  hideRepeatGoodieOnUpgrade,
 });
 export type MockTabbedContent = (args?: {
   blockStyle?: string;
