@@ -160,6 +160,7 @@ ARG SENTRY_ORG
 ARG SENTRY_PROJECT
 ARG SENTRY_RELEASE
 ARG APP_RELEASE_ID
+ENV NODE_OPTIONS="--max-old-space-size=6144"
 COPY . .
 RUN npx prisma generate && \
     npx nx build editor --ignore-nx-cache && \
