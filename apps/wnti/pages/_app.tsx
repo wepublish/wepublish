@@ -49,7 +49,6 @@ import { TsriRichText } from '../src/components/tsri-richtext';
 import { TsriTeaser } from '../src/components/tsri-teaser';
 import { WntiPaymentAmountPicker } from '../src/components/wnti-payment-amount-picker';
 import theme from '../src/theme';
-import { MitmachenInner } from './mitmachen';
 
 setDefaultOptions({
   locale: de,
@@ -150,7 +149,6 @@ function CustomApp({
                 Quote: TsriQuoteBlock,
                 RichText: TsriRichText,
                 Title: TsriTitle,
-                Subscribe: MitmachenInner,
               }}
               blockStyles={{
                 ContextBox: TsriContextBox,
