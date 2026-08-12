@@ -45,8 +45,7 @@ export default defineConfig(({ mode }) => ({
     emptyOutDir: true,
     // Keeps bundle output clear of the favicons served from public/assets.
     assetsDir: 'static',
-    // `hidden` emits the maps for the Sentry upload in the Docker build without referencing them from the shipped bundles.
-    sourcemap: mode === 'production' ? 'hidden' : true,
+    sourcemap: mode !== 'production',
     reportCompressedSize: true,
     commonjsOptions: {
       transformMixedEsModules: true,
