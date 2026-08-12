@@ -764,7 +764,7 @@
         "filename": "Nom du fichier",
         "information": "Informations",
         "maxFileSize": "Taille maximale du fichier : {{maxSize}} Mo",
-        "invalidDocument": "Type de fichier non pris en charge. Formats acceptés : PDF, Word, Excel, PowerPoint, OpenDocument, CSV, TXT, ZIP",
+        "invalidDocument": "Type de fichier non pris en charge. Formats acceptés : PDF, Word, Excel, PowerPoint, OpenDocument, CSV, TXT, JSON, XML, ZIP",
         "linkCopied": "Lien copié dans le presse-papiers",
         "notFound": "Document introuvable !",
         "publicLink": "Lien public",
