@@ -142,7 +142,7 @@ export class MailchimpContactService {
       });
     } catch (error) {
       this.logger.error(
-        `Could not record Mailchimp sync error for user ${userId}: ${this.getErrorMessage(
+        `Could not record Mailchimp sync error for user ${userId}: ${getErrorMessage(
           error
         )}`
       );
