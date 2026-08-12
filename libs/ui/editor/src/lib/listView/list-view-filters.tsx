@@ -226,6 +226,8 @@ export function ListViewFilters({
   function mapFilterFieldToField(name: keyof Filter): Field | null {
     if (name === 'from' || name === 'to') {
       return 'dates';
+    } else if (name === 'publicationDateFrom' || name === 'publicationDateTo') {
+      return 'publicationDate';
     } else if (fields.includes(name as Field)) {
       return name as Field;
     } else {
@@ -259,6 +261,10 @@ export function ListViewFilters({
 
     if (value.answerIds && !value.answerIds.length) {
       value = { answerIds: null };
+    }
+
+    if (value.tags && !value.tags.length) {
+      value = { tags: null };
     }
 
     const newFilter = {
@@ -445,6 +451,7 @@ export function ListViewFilters({
         <Group style={formInputStyle}>
           <SelectTags
             defaultTags={[]}
+            selectedTags={filter.tags ?? null}
             tagType={tagType ?? TagType.Article}
             setSelectedTags={tags => updateFilter({ tags })}
             placeholder={t('navbar.articleTags')}
@@ -525,6 +532,17 @@ export function ListViewFilters({
             placeholder={t('filterableList.filter.publicationDate')}
             block
             placement="auto"
+            value={
+              (
+                filter.publicationDateFrom?.date &&
+                filter.publicationDateTo?.date
+              ) ?
+                [
+                  new Date(filter.publicationDateFrom.date),
+                  new Date(filter.publicationDateTo.date),
+                ]
+              : null
+            }
             onChange={value => {
               if (value && value[0] && value[1]) {
                 updateFilter({
@@ -556,6 +574,11 @@ export function ListViewFilters({
             placeholder={t('filterableList.filter.dates')}
             block
             placement="auto"
+            value={
+              filter.from && filter.to ?
+                [new Date(filter.from), new Date(filter.to)]
+              : null
+            }
             onChange={value => {
               if (value && value[0] && value[1]) {
                 const [from, to] = value;

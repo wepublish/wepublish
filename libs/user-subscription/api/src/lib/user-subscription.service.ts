@@ -28,6 +28,7 @@ import { logger, PrimeDataLoader } from '@wepublish/utils/api';
 import { unselectPassword } from '@wepublish/authentication/api';
 import {
   calculateAmountForPeriodicity,
+  GoodieService,
   MemberContextService,
   VoucherDataloader,
 } from '@wepublish/membership/api';
@@ -44,7 +45,8 @@ export class UserSubscriptionService {
     private payments: PaymentsService,
     private memberPlanService: MemberPlanService,
     private memberPlanDataloader: MemberPlanDataloader,
-    private memberContext: MemberContextService
+    private memberContext: MemberContextService,
+    private goodieService: GoodieService
   ) {}
 
   public async getUserSubscriptions(userId: string) {
@@ -104,10 +106,15 @@ export class UserSubscriptionService {
       paymentPeriodicity,
       monthlyAmount,
       subscriptionProperties,
+      goodieId,
       successURL,
       failureURL,
       deactivateSubscriptionId,
     } = args;
+
+    if (goodieId) {
+      await this.goodieService.getValidGoodie(goodieId, memberPlan.id);
+    }
 
     // Check if subscription which should be deactivated exists
     let subscriptionToDeactivate: null | Subscription = null;
@@ -148,6 +155,7 @@ export class UserSubscriptionService {
         replacedSubscriptionId: subscriptionToDeactivate?.id,
         discount,
         voucherId,
+        goodieId,
       });
 
     if (!invoice) {
@@ -189,7 +197,12 @@ export class UserSubscriptionService {
         paymentPeriodicity,
         monthlyAmount,
         subscriptionProperties,
+        goodieId,
       } = args;
+
+      if (goodieId) {
+        await this.goodieService.getValidGoodie(goodieId, memberPlan.id);
+      }
 
       const properties = await this.memberContext.processSubscriptionProperties(
         subscriptionProperties ?? []
@@ -208,6 +221,7 @@ export class UserSubscriptionService {
           replacedSubscriptionId: undefined,
           startsAt: undefined,
           needsConfirmation: true,
+          goodieId,
         });
 
       if (!invoice) {

@@ -46,6 +46,10 @@ fragment SlimArticleRevision on ArticleRevision {
   image {
     ...SlimImage
   }
+
+  properties {
+    ...FullProperty
+  }
 }
 
 fragment FullArticleRevision on ArticleRevision {
@@ -63,10 +67,6 @@ fragment FullArticleRevision on ArticleRevision {
   socialMediaTitle
   socialMediaImage {
     ...FullImage
-  }
-
-  properties {
-    ...FullProperty
   }
 
   blocks {

@@ -5,7 +5,11 @@ import { UserSubscriptionResolver } from './user-subscription.resolver';
 import { MemberPlanModule } from '@wepublish/member-plan/api';
 import { PaymentMethodModule, PaymentsModule } from '@wepublish/payment/api';
 import { UserModule } from '@wepublish/user/api';
-import { MemberContextModule, VoucherModule } from '@wepublish/membership/api';
+import {
+  GoodieModule,
+  MemberContextModule,
+  VoucherModule,
+} from '@wepublish/membership/api';
 
 @Module({
   imports: [
@@ -16,6 +20,7 @@ import { MemberContextModule, VoucherModule } from '@wepublish/membership/api';
     UserModule,
     MemberContextModule,
     VoucherModule,
+    GoodieModule,
   ],
   providers: [UserSubscriptionService, UserSubscriptionResolver],
 })

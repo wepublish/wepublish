@@ -12,7 +12,8 @@ import {
 import { allPass } from 'ramda';
 import { useMemo } from 'react';
 
-import { BlockSiblings } from '../tsri-block-renderer';
+import { BlockSibling } from '../block-siblings';
+
 import { TsriBreakBlockType } from './tsri-base-break-block';
 
 export const SidebarContentWrapper = styled('div')`
@@ -160,7 +161,7 @@ export const TsriSidebarContent = ({
 }: BuilderBreakBlockProps & {
   index: number;
   count: number;
-  siblings: BlockSiblings;
+  siblings?: BlockSibling[];
 }) => {
   const {
     blocks: { RichText },
@@ -171,9 +172,11 @@ export const TsriSidebarContent = ({
   const nextOfTypeIndex = useMemo(() => {
     for (let i = index + 1; i < count; i++) {
       if (
-        (siblings[i].typeName === 'BreakBlock' &&
+        (siblings &&
+          siblings[i].typeName === 'BreakBlock' &&
           siblings[i].blockStyle === TsriBreakBlockType.SidebarContent) ||
-        (siblings[i].typeName === 'BreakBlock' &&
+        (siblings &&
+          siblings[i].typeName === 'BreakBlock' &&
           siblings[i].blockStyle === TsriBreakBlockType.SidebarContentAltColor)
       ) {
         return i;

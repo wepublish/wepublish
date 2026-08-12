@@ -275,6 +275,7 @@ export type Banner = {
   collapsible: Scalars['Boolean'];
   cta?: Maybe<Scalars['String']>;
   delay: Scalars['Int'];
+  embedUrl?: Maybe<Scalars['String']>;
   hideForMinutes: Scalars['Int'];
   html?: Maybe<Scalars['String']>;
   id: Scalars['String'];
@@ -745,6 +746,7 @@ export type CreateBannerInput = {
   collapsible: Scalars['Boolean'];
   cta?: InputMaybe<Scalars['String']>;
   delay: Scalars['Int'];
+  embedUrl?: InputMaybe<Scalars['String']>;
   hideForMinutes: Scalars['Int'];
   html?: InputMaybe<Scalars['String']>;
   imageId?: InputMaybe<Scalars['String']>;
@@ -1280,6 +1282,33 @@ export type FullPoll = {
   question?: Maybe<Scalars['String']>;
 };
 
+export type Goodie = HasImage & {
+  __typename?: 'Goodie';
+  active: Scalars['Boolean'];
+  availableStock?: Maybe<Scalars['Int']>;
+  createdAt: Scalars['DateTime'];
+  description?: Maybe<Scalars['RichText']>;
+  id: Scalars['String'];
+  image?: Maybe<Image>;
+  imageID?: Maybe<Scalars['String']>;
+  memberPlans: Array<MemberPlan>;
+  modifiedAt: Scalars['DateTime'];
+  name: Scalars['String'];
+  stock?: Maybe<Scalars['Int']>;
+};
+
+export type GoodieFilter = {
+  active?: InputMaybe<Scalars['Boolean']>;
+  memberPlans?: InputMaybe<Array<Scalars['String']>>;
+  name?: InputMaybe<Scalars['String']>;
+};
+
+export enum GoodieSort {
+  CreatedAt = 'CreatedAt',
+  ModifiedAt = 'ModifiedAt',
+  Name = 'Name',
+}
+
 export type HtmlBlock = BaseBlock & {
   __typename?: 'HTMLBlock';
   blockStyle?: Maybe<Scalars['String']>;
@@ -1645,6 +1674,8 @@ export type InvoiceItem = {
   amount: Scalars['Int'];
   createdAt: Scalars['DateTime'];
   description?: Maybe<Scalars['String']>;
+  goodie?: Maybe<Goodie>;
+  goodieId?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
@@ -2067,6 +2098,8 @@ export type MemberPlan = HasImage & {
   externalReward?: Maybe<Scalars['String']>;
   failPage?: Maybe<Page>;
   failPageId?: Maybe<Scalars['String']>;
+  /** Active goodies with remaining stock that can be chosen with this member plan. */
+  goodies: Array<Goodie>;
   id: Scalars['String'];
   image?: Maybe<Image>;
   imageID?: Maybe<Scalars['String']>;
@@ -2131,6 +2164,8 @@ export type Mutation = {
   createExternalApp: ExternalApp;
   /** Generates a short-lived JWT token for authenticating with an external app. */
   createExternalAppToken: ExternalAppToken;
+  /** Creates a new goodie. */
+  createGoodie: Goodie;
   /** Creates a new invoice. */
   createInvoice: Invoice;
   /** Returns a JWT that can be used to login as another user. */
@@ -2218,6 +2253,8 @@ export type Mutation = {
   deleteEvent: Event;
   /** Deletes an external app. */
   deleteExternalApp: ExternalApp;
+  /** Deletes an existing goodie. */
+  deleteGoodie: Goodie;
   /** Deletes an existing image. */
   deleteImage: Scalars['String'];
   /** Deletes an existing invoice. */
@@ -2387,6 +2424,8 @@ export type Mutation = {
   updateEvent: Event;
   /** Updates an existing external app. */
   updateExternalApp: ExternalApp;
+  /** Updates an existing goodie. */
+  updateGoodie: Goodie;
   /** Updates an existing image. */
   updateImage: Image;
   /** Updates an existing invoice. */
@@ -2579,6 +2618,15 @@ export type MutationCreateExternalAppArgs = {
 
 export type MutationCreateExternalAppTokenArgs = {
   externalAppId: Scalars['String'];
+};
+
+export type MutationCreateGoodieArgs = {
+  active: Scalars['Boolean'];
+  description?: InputMaybe<Scalars['RichText']>;
+  imageID?: InputMaybe<Scalars['String']>;
+  memberPlanIDs: Array<Scalars['String']>;
+  name: Scalars['String'];
+  stock?: InputMaybe<Scalars['Int']>;
 };
 
 export type MutationCreateInvoiceArgs = {
@@ -2799,6 +2847,7 @@ export type MutationCreateUserSubscriptionArgs = {
   autoRenew: Scalars['Boolean'];
   deactivateSubscriptionId?: InputMaybe<Scalars['String']>;
   failureURL?: InputMaybe<Scalars['String']>;
+  goodieId?: InputMaybe<Scalars['String']>;
   memberPlanID?: InputMaybe<Scalars['String']>;
   memberPlanSlug?: InputMaybe<Scalars['Slug']>;
   monthlyAmount: Scalars['Int'];
@@ -2812,6 +2861,7 @@ export type MutationCreateUserSubscriptionArgs = {
 
 export type MutationCreateUserSubscriptionWithConfirmationArgs = {
   autoRenew: Scalars['Boolean'];
+  goodieId?: InputMaybe<Scalars['String']>;
   memberPlanID?: InputMaybe<Scalars['String']>;
   memberPlanSlug?: InputMaybe<Scalars['Slug']>;
   monthlyAmount: Scalars['Int'];
@@ -2872,6 +2922,10 @@ export type MutationDeleteEventArgs = {
 };
 
 export type MutationDeleteExternalAppArgs = {
+  id: Scalars['String'];
+};
+
+export type MutationDeleteGoodieArgs = {
   id: Scalars['String'];
 };
 
@@ -3292,6 +3346,16 @@ export type MutationUpdateExternalAppArgs = {
   url?: InputMaybe<Scalars['String']>;
 };
 
+export type MutationUpdateGoodieArgs = {
+  active?: InputMaybe<Scalars['Boolean']>;
+  description?: InputMaybe<Scalars['RichText']>;
+  id: Scalars['String'];
+  imageID?: InputMaybe<Scalars['String']>;
+  memberPlanIDs?: InputMaybe<Array<Scalars['String']>>;
+  name?: InputMaybe<Scalars['String']>;
+  stock?: InputMaybe<Scalars['Int']>;
+};
+
 export type MutationUpdateImageArgs = {
   description?: InputMaybe<Scalars['String']>;
   filename?: InputMaybe<Scalars['String']>;
@@ -3613,6 +3677,7 @@ export type MutationUpdateWebsiteSettingsArgs = {
 
 export type MutationUpgradeUserSubscriptionArgs = {
   failureURL?: InputMaybe<Scalars['String']>;
+  goodieId?: InputMaybe<Scalars['String']>;
   memberPlanId: Scalars['String'];
   monthlyAmount: Scalars['Int'];
   paymentMethodId: Scalars['String'];
@@ -3857,6 +3922,13 @@ export type PaginatedEvents = {
 export type PaginatedEventsFromSources = {
   __typename?: 'PaginatedEventsFromSources';
   nodes: Array<EventFromSource>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type PaginatedGoodies = {
+  __typename?: 'PaginatedGoodies';
+  nodes: Array<Goodie>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
 };
@@ -4476,6 +4548,7 @@ export type PublicSubscription = HasMemberPlan &
     deactivation?: Maybe<SubscriptionDeactivation>;
     extendable: Scalars['Boolean'];
     externalReward?: Maybe<Scalars['String']>;
+    goodie?: Maybe<Goodie>;
     id: Scalars['String'];
     isActive: Scalars['Boolean'];
     memberPlan: MemberPlan;
@@ -4605,6 +4678,10 @@ export type Query = {
   externalApps: Array<ExternalApp>;
   /** Returns images by tag. */
   getImagesByTag: Array<Image>;
+  /** Returns a goodie by id. */
+  goodie: Goodie;
+  /** This query returns a list of goodies */
+  goodies: PaginatedGoodies;
   /**
    *
    *       Returns the most viewed articles in descending order.
@@ -5001,6 +5078,19 @@ export type QueryExternalAppsArgs = {
 
 export type QueryGetImagesByTagArgs = {
   tag: Scalars['String'];
+};
+
+export type QueryGoodieArgs = {
+  id: Scalars['String'];
+};
+
+export type QueryGoodiesArgs = {
+  cursorId?: InputMaybe<Scalars['String']>;
+  filter?: InputMaybe<GoodieFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: Scalars['Int'];
+  sort?: GoodieSort;
+  take?: Scalars['Int'];
 };
 
 export type QueryHotAndTrendingArgs = {
@@ -5835,8 +5925,13 @@ export type SubscribeBlock = BaseBlock & {
   blockStyleName?: Maybe<Scalars['String']>;
   disabled?: Maybe<Scalars['Boolean']>;
   fields: Array<SubscribeBlockField>;
-  memberPlanIds?: Maybe<Array<Scalars['String']>>;
+  goodieMinValue?: Maybe<Scalars['Int']>;
+  hideRepeatGoodieOnUpgrade: Scalars['Boolean'];
+  memberPlanIds: Array<Scalars['String']>;
+  memberPlanRenderSettings: Array<SubscribeBlockMemberPlanRenderSetting>;
   memberPlans: Array<MemberPlan>;
+  showGoodies: Scalars['Boolean'];
+  showVouchers: Scalars['Boolean'];
   type: BlockType;
 };
 
@@ -5854,8 +5949,60 @@ export type SubscribeBlockInput = {
   blockStyleName?: InputMaybe<Scalars['String']>;
   disabled?: InputMaybe<Scalars['Boolean']>;
   fields?: Array<SubscribeBlockField>;
-  memberPlanIds?: InputMaybe<Array<Scalars['String']>>;
+  goodieMinValue?: InputMaybe<Scalars['Int']>;
+  hideRepeatGoodieOnUpgrade?: Scalars['Boolean'];
+  memberPlanIds?: Array<Scalars['String']>;
+  memberPlanRenderSettings: Array<SubscribeBlockMemberPlanRenderSettingInput>;
+  showGoodies?: Scalars['Boolean'];
+  showVouchers?: Scalars['Boolean'];
 };
+
+export type SubscribeBlockLayoutConfig = {
+  type: SubscribeBlockRenderLayout;
+};
+
+export type SubscribeBlockLayoutConfigInput = {
+  showInput?: Scalars['Boolean'];
+  type: SubscribeBlockRenderLayout;
+  values?: InputMaybe<Array<Scalars['Int']>>;
+};
+
+export type SubscribeBlockLayoutNoneConfig = SubscribeBlockLayoutConfig & {
+  __typename?: 'SubscribeBlockLayoutNoneConfig';
+  type: SubscribeBlockRenderLayout;
+};
+
+export type SubscribeBlockLayoutPickerConfig = SubscribeBlockLayoutConfig & {
+  __typename?: 'SubscribeBlockLayoutPickerConfig';
+  showInput: Scalars['Boolean'];
+  type: SubscribeBlockRenderLayout;
+  values: Array<Scalars['Int']>;
+};
+
+export type SubscribeBlockLayoutSliderConfig = SubscribeBlockLayoutConfig & {
+  __typename?: 'SubscribeBlockLayoutSliderConfig';
+  showInput: Scalars['Boolean'];
+  type: SubscribeBlockRenderLayout;
+};
+
+export type SubscribeBlockMemberPlanRenderSetting = {
+  __typename?: 'SubscribeBlockMemberPlanRenderSetting';
+  isDefault: Scalars['Boolean'];
+  layout: SubscribeBlockLayoutConfig;
+  memberPlanId: Scalars['String'];
+};
+
+export type SubscribeBlockMemberPlanRenderSettingInput = {
+  isDefault?: Scalars['Boolean'];
+  layout: SubscribeBlockLayoutConfigInput;
+  memberPlanId: Scalars['String'];
+};
+
+export enum SubscribeBlockRenderLayout {
+  None = 'None',
+  Picker = 'Picker',
+  Slider = 'Slider',
+}
 
 export type SubscriptionCreatedAction = BaseAction &
   HasSubscriptionLc & {
@@ -6261,6 +6408,7 @@ export type UpdateBannerInput = {
   collapsible: Scalars['Boolean'];
   cta?: InputMaybe<Scalars['String']>;
   delay: Scalars['Int'];
+  embedUrl?: InputMaybe<Scalars['String']>;
   hideForMinutes: Scalars['Int'];
   html?: InputMaybe<Scalars['String']>;
   id: Scalars['String'];

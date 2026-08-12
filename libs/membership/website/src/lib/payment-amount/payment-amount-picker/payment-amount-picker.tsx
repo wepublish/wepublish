@@ -1,6 +1,6 @@
 import { css, FormControlLabel, Radio, RadioGroup } from '@mui/material';
 import {
-  BuilderPaymentAmountProps,
+  BuilderPaymentAmountPickerProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { Currency } from '@wepublish/website/api';
@@ -35,7 +35,7 @@ const formatNumber = (value: number, format: string, locale = 'de-CH') => {
 
 export const PaymentAmountPickerWrapper = styled(RadioGroup)`
   display: grid;
-  grid-template-columns: repeat(auto-fit, 125px);
+  grid-template-columns: repeat(auto-fit, 185px);
   align-items: top;
   justify-content: center;
   gap: ${({ theme }) => theme.spacing(2)};
@@ -127,8 +127,7 @@ export const PaymentAmountPickerItem = forwardRef<
 
 export const PaymentAmountPicker = forwardRef<
   HTMLInputElement,
-  BuilderPaymentAmountProps & {
-    pickerItems: number[];
+  BuilderPaymentAmountPickerProps & {
     format?: string;
     step?: number;
     snap?: CurrencyNumberSpinnerSnap;
@@ -142,7 +141,7 @@ export const PaymentAmountPicker = forwardRef<
       currency,
       amountPerMonthMin,
       amountPerMonthTarget,
-      pickerItems,
+      presetAmounts,
       format,
       snap,
       arrows,
@@ -160,10 +159,11 @@ export const PaymentAmountPicker = forwardRef<
 
     const [hasInteracted, setHasInteracted] = useState(false);
     const showSelection = !noInitialSelection || hasInteracted;
+    const items = presetAmounts ?? [];
     const isCustomValue =
       snap ?
         !snap.values.some(v => v * 100 === value)
-      : !pickerItems.some(p => p === value);
+      : !items.some(p => p === value);
 
     return (
       <PaymentAmountPickerWrapper
@@ -177,7 +177,7 @@ export const PaymentAmountPicker = forwardRef<
         }}
         value={value}
       >
-        {pickerItems.map(itemAmount => (
+        {items.map(itemAmount => (
           <FormControlLabel
             key={itemAmount}
             value={itemAmount}

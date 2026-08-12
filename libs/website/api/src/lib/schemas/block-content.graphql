@@ -112,10 +112,30 @@ fragment FullSubscribeBlock on SubscribeBlock {
   disabled
   blockStyle: blockStyleName
   memberPlanIds
+  memberPlanRenderSettings {
+    isDefault
+    memberPlanId
+    layout {
+      type
+
+      ... on SubscribeBlockLayoutSliderConfig {
+        showInput
+      }
+
+      ... on SubscribeBlockLayoutPickerConfig {
+        showInput
+        values
+      }
+    }
+  }
   memberPlans {
     ...FullMemberPlan
   }
   fields
+  showGoodies
+  showVouchers
+  goodieMinValue
+  hideRepeatGoodieOnUpgrade
 }
 
 fragment FullEventBlock on EventBlock {

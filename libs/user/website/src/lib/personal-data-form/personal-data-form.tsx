@@ -16,7 +16,7 @@ import {
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { useMemo, useReducer, useState } from 'react';
-import { Controller, useForm, useWatch } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
 import { z } from 'zod';
 import { useTranslation } from 'react-i18next';
@@ -160,7 +160,7 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
     [fieldsToDisplay, schema]
   );
 
-  const { handleSubmit, control, setValue } = useForm<
+  const { handleSubmit, control, setValue, watch } = useForm<
     PersonalDataFormFields & { newEmail?: string }
   >({
     resolver: zodResolver(validationSchema),
@@ -182,7 +182,7 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
   });
 
   const onSubmit = handleSubmit(data => onUpdate && callAction(onUpdate)(data));
-  const newEmail = useWatch({ control, name: 'newEmail' });
+  const newEmail = watch('newEmail');
 
   const userformFields = fields.filter(field => {
     const blacklist = [

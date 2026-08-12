@@ -7,7 +7,11 @@ import {
   ArticleSEO,
   ArticleTags,
 } from '@wepublish/article/website';
-import { LoginForm, RegistrationForm } from '@wepublish/authentication/website';
+import {
+  LoginForm,
+  RegistrationForm,
+  UserForm,
+} from '@wepublish/authentication/website';
 import {
   ArticleAuthor,
   Author,
@@ -82,6 +86,7 @@ import {
   InvoiceList,
   InvoiceListItem,
   MemberPlanItem,
+  GoodiePicker,
   MemberPlanPicker,
   PaymentAmountSlider,
   PaymentMethodPicker,
@@ -91,6 +96,7 @@ import {
   SubscriptionListItem,
   TransactionFee,
   Upgrade,
+  PaymentAmountPicker,
 } from '@wepublish/membership/website';
 import { Footer, Navbar } from '@wepublish/navigation/website';
 import { Page, PageSEO } from '@wepublish/page/website';
@@ -227,14 +233,17 @@ export const WebsiteProvider = memo<WebsiteProps>(({ children }) => (
         LoginForm={LoginForm}
         RegistrationForm={RegistrationForm}
         PersonalDataForm={PersonalDataForm}
+        UserForm={UserForm}
         SubscriptionList={SubscriptionList}
         SubscriptionListItem={SubscriptionListItem}
         InvoiceList={InvoiceList}
         InvoiceListItem={InvoiceListItem}
+        GoodiePicker={GoodiePicker}
         MemberPlanPicker={MemberPlanPicker}
         MemberPlanItem={MemberPlanItem}
         PeriodicityPicker={PeriodicityPicker}
-        PaymentAmount={PaymentAmountSlider}
+        PaymentAmountSlider={PaymentAmountSlider}
+        PaymentAmountPicker={PaymentAmountPicker}
         PaymentMethodPicker={PaymentMethodPicker}
         TransactionFee={TransactionFee}
         Subscribe={Subscribe}

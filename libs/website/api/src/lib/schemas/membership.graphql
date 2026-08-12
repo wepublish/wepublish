@@ -18,6 +18,16 @@ fragment FullAvailablePaymentMethod on AvailablePaymentMethod {
   forceAutoRenewal
 }
 
+fragment FullGoodie on Goodie {
+  id
+  name
+  description
+  stock
+  image {
+    ...FullImage
+  }
+}
+
 fragment FullMemberPlan on MemberPlan {
   id
   slug
@@ -52,6 +62,10 @@ fragment FullMemberPlan on MemberPlan {
   confirmationPageId
   confirmationPage {
     url
+  }
+
+  goodies {
+    ...FullGoodie
   }
 }
 
@@ -97,6 +111,10 @@ fragment FullSubscription on PublicSubscription {
 
   properties {
     ...FullProperty
+  }
+
+  goodie {
+    ...FullGoodie
   }
 
   canExtend
@@ -157,6 +175,7 @@ mutation Subscribe(
   $failureURL: String
   $deactivateSubscriptionId: String
   $voucher: String
+  $goodieId: String
 ) {
   createUserSubscription(
     memberPlanID: $memberPlanId
@@ -171,6 +190,7 @@ mutation Subscribe(
     failureURL: $failureURL
     deactivateSubscriptionId: $deactivateSubscriptionId
     voucher: $voucher
+    goodieId: $goodieId
   ) {
     ...FullPayment
   }
@@ -187,6 +207,7 @@ mutation Resubscribe(
   $paymentMethodSlug: Slug
   $subscriptionProperties: [PropertyInput!]
   $voucher: String
+  $goodieId: String
 ) {
   createUserSubscriptionWithConfirmation(
     userId: $userId
@@ -199,6 +220,7 @@ mutation Resubscribe(
     paymentMethodSlug: $paymentMethodSlug
     subscriptionProperties: $subscriptionProperties
     voucher: $voucher
+    goodieId: $goodieId
   )
 }
 
@@ -207,6 +229,7 @@ mutation Upgrade(
   $memberPlanId: String!
   $paymentMethodId: String!
   $monthlyAmount: Int!
+  $goodieId: String
   $successURL: String
   $failureURL: String
 ) {
@@ -215,6 +238,7 @@ mutation Upgrade(
     memberPlanId: $memberPlanId
     paymentMethodId: $paymentMethodId
     monthlyAmount: $monthlyAmount
+    goodieId: $goodieId
     successURL: $successURL
     failureURL: $failureURL
   ) {
