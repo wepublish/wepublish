@@ -73,6 +73,7 @@ fragment FullBanner on Banner {
   delay
   hideForMinutes
   html
+  embedUrl
 
   showOnArticles
   showOnPages {
