@@ -466,6 +466,8 @@ export class MediaService {
       '.odp': 'application/vnd.oasis.opendocument.presentation',
       '.csv': 'text/csv',
       '.txt': 'text/plain',
+      '.json': 'application/json',
+      '.xml': 'application/xml',
       '.zip': 'application/zip',
     };
     const contentType = extToMime[ext] ?? 'application/octet-stream';
