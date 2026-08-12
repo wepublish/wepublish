@@ -47,6 +47,7 @@ import { zodI18nMap } from 'zod-i18n-map';
 import deOverriden from '../locales/deOverriden.json';
 import { GanzGrazAuthor } from '../src/components/ganzgraz-author';
 import { GanzgrazBreakBlock } from '../src/components/ganzgraz-break-block';
+import { GanzGrazContentWrapper } from '../src/components/ganzgraz-content-wrapper';
 import { GanzGrazEvent } from '../src/components/ganzgraz-event';
 import { GanzGrazEventListItem } from '../src/components/ganzgraz-event-list-item';
 import {
@@ -145,6 +146,7 @@ function CustomApp({
               TransactionFee={GanzGrazTransactionFee}
               EventListItem={GanzGrazEventListItem}
               Event={GanzGrazEvent}
+              ContentWrapper={GanzGrazContentWrapper}
               elements={{ Link: NextWepublishLink }}
               blocks={{
                 TeaserSlots: GanzGrazTeaserSlots,
