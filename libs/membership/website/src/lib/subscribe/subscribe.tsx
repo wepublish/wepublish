@@ -254,6 +254,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   returningUserId,
   fetchSubscribeInfo,
   subscribeInfo,
+  supportPeriodicity = PaymentPeriodicity.Monthly,
 }: BuilderSubscribeProps<T>) => {
   const {
     meta: { locale, siteTitle },
@@ -441,7 +442,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     memberPlan: selectedMemberPlan?.name ?? '',
     extendable: selectedMemberPlan?.extendable ?? true,
     productType: selectedMemberPlan?.productType ?? ProductType.Subscription,
-    paymentPeriodicity: PaymentPeriodicity.Monthly,
+    paymentPeriodicity: supportPeriodicity,
     monthlyAmount: watchedMonthlyAmount,
     currency: selectedMemberPlan?.currency ?? Currency.Chf,
     siteTitle,
@@ -641,7 +642,21 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
           render={({ field }) => (
             <MemberPlanPicker
               {...field}
-              onChange={memberPlanId => field.onChange(memberPlanId)}
+              onChange={memberPlanId => {
+                field.onChange(memberPlanId);
+
+                const memberPlan = memberPlans.data?.memberPlans.nodes.find(
+                  ({ id }) => id === memberPlanId
+                );
+
+                if (memberPlan) {
+                  setValue<'monthlyAmount'>(
+                    'monthlyAmount',
+                    memberPlan.amountPerMonthTarget ||
+                      memberPlan.amountPerMonthMin
+                  );
+                }
+              }}
               memberPlans={memberPlans.data?.memberPlans.nodes ?? []}
             />
           )}

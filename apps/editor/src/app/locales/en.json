@@ -187,6 +187,7 @@
         "newArticle": "New Article",
         "notPublished": "Not yet published",
         "pending": "Pending",
+        "preTitle": "Pre-title",
         "publicationDate": "Publication date",
         "published": "Published",
         "states": "States",
@@ -2686,6 +2687,9 @@
         "Event": "Event",
         "Custom": "Custom"
       }
+    },
+    "columnConfigurator": {
+      "title": "Show/hide columns"
     },
     "mailSend": {
       "steps": {

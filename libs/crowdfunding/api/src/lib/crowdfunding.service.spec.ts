@@ -6,6 +6,7 @@ import {
   PaymentPeriodicity,
   PrismaClient,
 } from '@prisma/client';
+import { createKvMock, KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 import { CrowdfundingService } from './crowdfunding.service';
 import { CrowdfundingDataloaderService } from './crowdfunding-dataloader.service';
 
@@ -57,6 +58,7 @@ describe('CrowdfundingService', () => {
       providers: [
         CrowdfundingService,
         { provide: PrismaClient, useValue: prismaMock },
+        { provide: KvTtlCacheService, useValue: createKvMock() },
         {
           provide: CrowdfundingDataloaderService,
           useValue: { prime: jest.fn() },

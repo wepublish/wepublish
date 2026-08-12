@@ -61,6 +61,7 @@ export const MemberPlanItem = forwardRef<
       shortDescription,
       amountPerMonthMax,
       amountPerMonthMin,
+      amountPerMonthTarget,
       currency,
       extendable,
       ...props
@@ -89,6 +90,13 @@ export const MemberPlanItem = forwardRef<
                 amountPerMonthMin,
                 yearlyPrice: formatCurrency(
                   Math.ceil((amountPerMonthMin / 100) * 12),
+                  currency,
+                  locale
+                ),
+                yearlyTargetPrice: formatCurrency(
+                  Math.ceil(
+                    ((amountPerMonthTarget ?? amountPerMonthMin) / 100) * 12
+                  ),
                   currency,
                   locale
                 ),

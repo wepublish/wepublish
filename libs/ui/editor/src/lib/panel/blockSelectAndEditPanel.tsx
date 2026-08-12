@@ -12,6 +12,9 @@ export type AlllowedBlockTypes = {
 
 export const allowedBlockTypes: AlllowedBlockTypes = {
   [EditorBlockType.TeaserSlots]: true,
+  [EditorBlockType.RichText]: true,
+  [EditorBlockType.Crowdfunding]: true,
+  [EditorBlockType.LinkPageBreak]: true,
 };
 
 export function BlockSelectAndEditPanel({

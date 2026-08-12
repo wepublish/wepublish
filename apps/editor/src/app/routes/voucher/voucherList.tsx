@@ -21,6 +21,7 @@ import {
   PaddedCell,
   Table,
   TableWrapper,
+  useListViewState,
 } from '@wepublish/ui/editor';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -43,10 +44,11 @@ const { Column, HeaderCell, Cell: RCell } = RTable;
 
 function VoucherList() {
   const { t } = useTranslation();
+  const { sortField, sortOrder, setSort, limit, setLimit } = useListViewState(
+    'vouchers',
+    { defaultSortField: '' }
+  );
   const [page, setPage] = useState<number>(1);
-  const [limit, setLimit] = useState<number>(10);
-  const [sortField, setSortField] = useState<VoucherSort>();
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
   const [voucherToDelete, setVoucherToDelete] = useState<Voucher | undefined>(
     undefined
@@ -56,7 +58,7 @@ function VoucherList() {
     variables: {
       take: limit,
       skip: (page - 1) * limit,
-      sort: sortField,
+      sort: sortField ? (sortField as VoucherSort) : undefined,
       order: mapTableSortTypeToGraphQLSortOrder(sortOrder),
     },
   });
@@ -101,8 +103,8 @@ function VoucherList() {
           sortColumn={sortField}
           sortType={sortOrder}
           onSortColumn={(sortColumn, sortType) => {
-            setSortOrder(sortType ?? 'asc');
-            setSortField(sortColumn as VoucherSort);
+            setSort(sortColumn, sortType ?? 'asc');
+            setPage(1);
           }}
         >
           <Column
@@ -222,7 +224,10 @@ function VoucherList() {
         total={data?.vouchers?.totalCount ?? 0}
         activePage={page}
         onChangePage={page => setPage(page)}
-        onChangeLimit={limit => setLimit(limit)}
+        onChangeLimit={limit => {
+          setLimit(limit);
+          setPage(1);
+        }}
       />
 
       <Modal

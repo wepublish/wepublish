@@ -27,6 +27,8 @@
     "generate-api": "graphql-codegen -r dotenv/config --config codegen.yml",
     "try": "docker-compose up database migration api editor media storage",
     "prettier": "prettier --write \"{apps,libs}/**/*.{js,ts,tsx,json}\"",
+    "visual:eenews": "tsx apps/eenews/visual-tests/run.ts",
+    "visual:eenews:capture-references": "tsx apps/eenews/visual-tests/run.ts --capture-references",
     "prepare": "prisma generate",
     "postinstall": "node build/postInstall.js",
     "deploy:production": "node deployment/deploy_production.js",
