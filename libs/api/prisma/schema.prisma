@@ -375,6 +375,7 @@ model Comment {
   @@index([itemID, itemType])
   @@index([parentID])
   @@index([createdAt])
+  @@index([modifiedAt])
   @@map("comments")
 }
 
