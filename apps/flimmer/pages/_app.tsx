@@ -136,7 +136,7 @@ function CustomApp({
               Head={Head}
               Script={Script}
               Navbar={FlimmerNavbar}
-              PaymentAmount={FlimmerPaymentAmountPicker}
+              PaymentAmountPicker={FlimmerPaymentAmountPicker}
               elements={{ Link: NextWepublishLink }}
               blocks={{
                 BaseTeaser: FlimmerTeaser,

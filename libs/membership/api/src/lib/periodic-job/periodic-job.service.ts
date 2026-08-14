@@ -700,10 +700,10 @@ export class PeriodicJobService {
     optionalData: Record<string, any>,
     periodicJobRunDate: Date
   ) {
-    if (action.externalMailTemplate && user) {
+    if (action.mailTemplateId && user) {
       await new MailController(this.prismaService, this.mailContext, {
         daysAwayFromEnding: action.daysAwayFromEnding,
-        externalMailTemplateId: action.externalMailTemplate,
+        mailTemplateId: action.mailTemplateId,
         recipient: user,
         isRetry,
         optionalData,

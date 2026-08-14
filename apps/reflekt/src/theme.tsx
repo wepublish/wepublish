@@ -1,61 +1,1064 @@
 import { createTheme, Theme, ThemeOptions } from '@mui/material';
+import { createBreakpoints } from '@mui/system';
 import { theme as WePTheme } from '@wepublish/ui';
-import { Hanken_Grotesk } from 'next/font/google';
+import { Roboto_Mono } from 'next/font/google';
+import localFont from 'next/font/local';
+import { mergeDeepRight, reduce } from 'ramda';
 import { PartialDeep } from 'type-fest';
 
-const hankenGrotesk = Hanken_Grotesk({
-  weight: ['100', '300', '400', '500', '600', '700'],
-  style: ['italic', 'normal'],
+const mergeDeepAll = reduce(mergeDeepRight, {});
+
+export const recife = localFont({
+  src: [
+    {
+      path: '../public/fonts/recife/RecifeTextWeb-Regular.woff2',
+      weight: '400',
+      style: 'normal',
+    },
+    {
+      path: '../public/fonts/recife/RecifeTextWeb-RegularItalic.woff2',
+      weight: '400',
+      style: 'italic',
+    },
+    {
+      path: '../public/fonts/recife/RecifeTextWeb-Bold.woff2',
+      weight: '700',
+      style: 'normal',
+    },
+  ],
+});
+
+export const euclidCircularB = localFont({
+  src: [
+    {
+      path: '../public/fonts/euclid/EuclidCircularB-Light-WebS.woff2',
+      weight: '300',
+      style: 'normal',
+    },
+    {
+      path: '../public/fonts/euclid/EuclidCircularB-LightItalic-WebS.woff2',
+      weight: '300',
+      style: 'italic',
+    },
+    {
+      path: '../public/fonts/euclid/EuclidCircularB-Medium-WebS.woff2',
+      weight: '400',
+      style: 'normal',
+    },
+    {
+      path: '../public/fonts/euclid/EuclidCircularB-MediumItalic-WebS.woff2',
+      weight: '400',
+      style: 'italic',
+    },
+    {
+      path: '../public/fonts/euclid/EuclidCircularB-Bold-WebS.woff2',
+      weight: '700',
+      style: 'normal',
+    },
+  ],
+});
+
+export const robotoMono = Roboto_Mono({
+  weight: ['400'],
+  style: ['normal'],
   subsets: ['latin'],
   display: 'swap',
   preload: true,
 });
 
-const theme = createTheme(WePTheme, {
-  typography: {
-    h1: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+const colors = {
+  primary: {
+    main: '#000000',
+    light: '#f5ff64',
+    dark: '#1F1F1F',
+    contrastText: '#ffffff',
+  },
+  secondary: {
+    main: '#F3FF89',
+    light: '#E7FF04',
+    dark: '#2B4E47',
+    contrastText: '#ffffff',
+  },
+  common: {
+    black: '#000000',
+    white: '#ffffff',
+  },
+  background: {
+    default: '#ffffff',
+    paper: '#ffffff',
+  },
+};
+
+export const buttonLinkSecondaryStyles = {
+  fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(','),
+  textTransform: 'uppercase' as const,
+  borderRadius: '9999px',
+  color: colors.common.white,
+  backgroundColor: colors.common.black,
+  padding: '20px 36px',
+  display: 'inline-block',
+  position: 'relative' as const,
+  textDecoration: 'none',
+  fontSize: '1rem',
+  fontWeight: 400,
+  lineHeight: 1,
+  boxShadow: `0 0 0 0 ${colors.secondary.light}`,
+  transform: 'translateY(0)',
+  transition:
+    'box-shadow 200ms cubic-bezier(0.34, 1.56, 0.64, 1), transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1)',
+  '&:focus, &:focus-visible, &:visited': {
+    textDecoration: 'none',
+  },
+  '&.is-pressing, &:active': {
+    backgroundColor: colors.common.black,
+    color: colors.common.white,
+    textDecoration: 'none',
+    boxShadow: `0 -12px 0 0 ${colors.secondary.light}`,
+    transform: 'translateY(12px)',
+  },
+  '@media (hover: hover)': {
+    '&::before': {
+      content: '""',
+      position: 'absolute' as const,
+      top: '-18px',
+      left: '-18px',
+      right: '-18px',
+      bottom: 0,
     },
-    h2: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
-    },
-    h3: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
-    },
-    h4: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
-    },
-    h5: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
-    },
-    h6: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
-    },
-    body1: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
-    },
-    body2: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
-    },
-    button: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
-    },
-    caption: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
-    },
-    overline: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
-    },
-    subtitle1: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
-    },
-    subtitle2: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
-    },
-    allVariants: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+    '&:hover': {
+      backgroundColor: colors.common.black,
+      color: colors.common.white,
+      textDecoration: 'none',
+      boxShadow: `0 -12px 0 0 ${colors.secondary.light}`,
+      transform: 'translateY(12px)',
     },
   },
-} as PartialDeep<Theme> | ThemeOptions);
+};
+
+const breakPointValues = {
+  xs: 0,
+  sm: 600,
+  md: 900,
+  lg: 1133,
+  xl: 1133,
+  xxl: 1133,
+};
+
+const {
+  palette: { augmentColor },
+  breakpoints,
+} = WePTheme;
+
+export const categoryLinkStyles = {
+  fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(','),
+  fontWeight: 500,
+  fontStyle: 'normal' as const,
+  color: colors.common.white,
+  display: 'inline-block' as const,
+  verticalAlign: 'baseline' as const,
+  whiteSpace: 'nowrap' as const,
+  padding: '0',
+  textDecoration: 'none',
+  fontSize: '1.5rem',
+  lineHeight: 1.75,
+  '&:hover': {
+    backgroundColor: 'transparent',
+    textDecoration: 'underline',
+  },
+  [breakpoints.up('md')]: {
+    fontSize: '1.5rem',
+    lineHeight: '3rem',
+  },
+};
+
+const theme = createTheme(WePTheme, {
+  breakpoints: createBreakpoints({
+    values: breakPointValues,
+  }),
+  palette: {
+    common: {
+      black: colors.common.black,
+      white: colors.common.white,
+    },
+    primary: augmentColor({
+      color: {
+        main: colors.primary.main,
+        light: colors.primary.light,
+        dark: colors.primary.dark,
+        contrastText: colors.primary.contrastText,
+      },
+    }),
+    secondary: augmentColor({
+      color: {
+        main: colors.secondary.main,
+        light: colors.secondary.light,
+        dark: colors.secondary.dark,
+        contrastText: colors.secondary.contrastText,
+      },
+    }),
+  },
+  typography: {
+    // headings
+    ...{
+      h1: {
+        fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(','),
+      },
+
+      // heading 1 (part of the hero block, or standalone if no hero block is used)
+      h2: {
+        fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(','),
+        textTransform: 'uppercase',
+        fontWeight: 500,
+        fontSize: '3rem',
+        lineHeight: 1.2,
+      },
+
+      // same as heading 1 / h2
+      h3: {
+        fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(','),
+        textTransform: 'uppercase',
+        fontWeight: 500,
+        fontSize: '3rem',
+        lineHeight: 1.2,
+      },
+
+      // heading 2 with number
+      h4: {
+        fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(','),
+        textTransform: 'uppercase',
+        fontWeight: 500,
+        fontSize: '1.5rem',
+        textWrap: 'balanced',
+        [breakpoints.up('md')]: {
+          wordBreak: 'keep-all',
+          hyphens: 'none',
+          textWrap: 'unset',
+        },
+      },
+      // zwischentitel
+      h5: {
+        fontFamily: [recife.style.fontFamily, 'sans-serif'].join(','),
+        fontWeight: 700,
+        fontSize: '1.125rem',
+        textWrap: 'balanced',
+        [breakpoints.up('md')]: {
+          wordBreak: 'keep-all',
+          hyphens: 'none',
+          textWrap: 'unset',
+        },
+      },
+      h6: {
+        fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(','),
+      },
+
+      subtitle1: {
+        fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(','),
+        fontWeight: 400,
+        fontSize: '1.5rem',
+        lineHeight: 1.2,
+        fontStyle: 'normal',
+      },
+      subtitle2: {
+        fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(','),
+        fontWeight: 400,
+        fontStyle: 'normal',
+      },
+    },
+    // body
+    ...{
+      body1: {
+        fontFamily: [recife.style.fontFamily, 'serif'].join(','),
+        fontSize: '1.125rem',
+        lineHeight: 1.2,
+      },
+      body2: {
+        fontFamily: [recife.style.fontFamily, 'serif'].join(','),
+        fontSize: '1.125rem',
+        lineHeight: 1.2,
+      },
+    },
+    button: {
+      fontFamily: [robotoMono.style.fontFamily, 'sans-serif'].join(','),
+    },
+    overline: {
+      fontFamily: [robotoMono.style.fontFamily, 'sans-serif'].join(','),
+    },
+    // image
+    ...{
+      caption: {
+        fontFamily: [robotoMono.style.fontFamily, 'sans-serif'].join(','),
+        fontSize: '0.75rem',
+        lineHeight: 1.2,
+      },
+    },
+    // break block
+    ...{
+      blockBreakTitle: {
+        [breakpoints.up('xs')]: {
+          fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(
+            ','
+          ),
+          fontWeight: 500,
+          lineHeight: 1.2,
+          fontSize: '2.125rem',
+          textTransform: 'uppercase',
+          fontStyle: 'normal',
+        },
+        [breakpoints.up('md')]: {
+          fontSize: '2.25rem',
+        },
+      },
+      blockBreakBody: {
+        fontFamily: [recife.style.fontFamily, 'serif'].join(','),
+      },
+    },
+    // Table of Contents - RichText
+    ...{
+      tocHeading: {
+        fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(','),
+        fontWeight: 500,
+        lineHeight: 1.15,
+        fontSize: '1.5rem',
+        textTransform: 'uppercase',
+        color: colors.common.white,
+        padding: '1.5rem 0',
+        margin: '0 2rem',
+      },
+      tocDetails: {
+        fontFamily: [recife.style.fontFamily, 'serif'].join(','),
+        paddingBottom: '2rem',
+      },
+      ulToc: {
+        listStyle: 'none',
+        margin: 0,
+        padding: 0,
+      },
+      liToc: {
+        listStyle: 'none',
+        margin: 0,
+        padding: 0,
+        lineHeight: 0,
+        marginBottom: 0,
+      },
+    },
+    // Downloads - CollapsibleRichText
+    ...{
+      ulDownloads: {
+        listStyle: 'none',
+        margin: 0,
+        padding: 0,
+      },
+      liDownloads: {
+        listStyle: 'none',
+        lineHeight: 0,
+        display: 'flex',
+        alignItems: 'center',
+        gap: '1rem',
+        margin: '0.5rem 0',
+        padding: 0,
+        '&:before': {
+          content: "''",
+          width: '1.5rem',
+          height: '1.5rem',
+          display: 'flex',
+          flexShrink: 0,
+          flexGrow: 0,
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundImage: `url("data:image/svg+xml,%3Csvg stroke='%23000000' fill='%23000000' stroke-width='0' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='none' d='M0 0h24v24H0z'%3E%3C/path%3E%3Cpath d='M18 15v3H6v-3H4v3c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-3h-2zm-1-4-1.41-1.41L13 12.17V4h-2v8.17L8.41 9.59 7 11l5 5 5-5z'%3E%3C/path%3E%3C/svg%3E")`,
+          backgroundSize: 'contain',
+          backgroundRepeat: 'no-repeat',
+          backgroundPosition: 'center',
+          opacity: 0.3,
+        },
+        '&:hover': {
+          '&:before': {
+            opacity: 1,
+          },
+        },
+      },
+    },
+    // BlockQuote
+    ...{
+      blockQuote: {
+        fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(','),
+        fontWeight: 500,
+        lineHeight: 1.2,
+        fontSize: '3rem',
+        textTransform: 'uppercase',
+        '& + cite': {
+          fontFamily: [robotoMono.style.fontFamily, 'sans-serif'].join(','),
+          fontStyle: 'normal',
+          textTransform: 'uppercase',
+          fontSize: '0.75rem',
+          lineHeight: 1,
+          fontWeight: 400,
+        },
+      },
+    },
+    // Footer / Header
+    ...{
+      categoryLinkTitle: {
+        fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(','),
+        color: colors.common.white,
+        display: 'inline-block',
+        whiteSpace: 'nowrap',
+        margin: 0,
+        padding: '0 0.3rem',
+        fontSize: '1.5rem',
+        lineHeight: 1.2,
+        fontWeight: 700,
+        [breakpoints.up('md')]: {
+          fontSize: '1.5rem',
+          lineHeight: 1.2,
+        },
+      },
+      categoryLinkList: {
+        listStyle: 'none',
+        margin: 0,
+        padding: 0,
+      },
+      categoryLinkItem: {
+        listStyle: 'none',
+        margin: 0,
+        padding: 0,
+        lineHeight: '3rem',
+      },
+      categoryLink: {
+        [breakpoints.up('xs')]: {
+          fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(
+            ','
+          ),
+          color: 'inherit',
+          lineHeight: '1.2 !important',
+        },
+      },
+      categoryAddress: {
+        fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(','),
+        display: 'block',
+        margin: '0',
+        padding: 0,
+        lineHeight: '1.5 !important',
+        fontWeight: 400,
+        [breakpoints.up('md')]: {
+          margin: 0,
+          lineHeight: '1.5 !important',
+        },
+      },
+      categoryAddressText: {
+        fontFamily: 'inherit',
+        color: colors.common.white,
+        fontSize: '1.5rem',
+        fontWeight: 400,
+        fontStyle: 'normal',
+        '&:last-child': {
+          paddingTop: '0.4rem',
+          fontSize: '1.1rem',
+        },
+        [breakpoints.up('md')]: {
+          fontSize: '1.5rem',
+          '&:last-child': {
+            paddingTop: '0.3rem',
+            fontSize: '1.5rem',
+          },
+        },
+      },
+      footerLink: {
+        fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(','),
+        color: colors.common.white,
+        fontSize: '0.875rem',
+        fontWeight: 400,
+        fontStyle: 'normal',
+      },
+    },
+    // TeaserSlots
+    teaserSlotsTitle: {
+      fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(','),
+      fontWeight: 500,
+      color: colors.common.black,
+      textTransform: 'uppercase',
+      textAlign: 'center',
+      fontSize: '3rem',
+      paddingBottom: '2rem',
+      ['&:empty']: {
+        display: 'none',
+      },
+    },
+    // Teaser
+    ...{
+      teaserTitle: {
+        [breakpoints.up('xs')]: {
+          fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(
+            ','
+          ),
+          backgroundColor: 'transparent',
+          margin: 0,
+          padding: '0 0',
+          textAlign: 'center',
+          textTransform: 'uppercase',
+          fontWeight: 700,
+          fontSize: '2rem',
+          lineHeight: 1.2,
+        },
+      },
+      teaserPretitle: {
+        [breakpoints.up('xs')]: {
+          fontFamily: ['Euclid', 'sans-serif'].join(','),
+          color: colors.common.white,
+          backgroundColor: colors.common.black,
+          fontSize: '1rem',
+          lineHeight: 1.2,
+          fontWeight: 700,
+          padding: '0.5rem 1.5rem',
+        },
+      },
+      teaserLead: {
+        fontFamily: ['Recife', 'serif'].join(','),
+        fontSize: '1.125rem',
+        lineHeight: 1.2,
+        fontWeight: 400,
+        padding: '0 1rem',
+        backgroundColor: 'transparent',
+        color: colors.common.black,
+      },
+      teaserMeta: {
+        [breakpoints.up('xs')]: {
+          fontFamily: ['Euclid', 'sans-serif'].join(','),
+          backgroundColor: colors.common.white,
+          margin: 0,
+          fontSize: '1rem',
+          fontWeight: 700,
+          padding: '0 1.5rem',
+        },
+      },
+    },
+    ...{
+      bannerTitle: {
+        fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(','),
+        textTransform: 'uppercase',
+        fontWeight: 500,
+        fontSize: '3rem',
+        lineHeight: 1.2,
+      },
+    },
+  },
+  components: {
+    MuiTypography: {
+      defaultProps: {
+        variantMapping: {
+          // Footer / Header
+          categoryLinkList: 'ul',
+          categoryLinkItem: 'li',
+          categoryLinkTitle: 'h6',
+          categoryAddress: 'address',
+          categoryAddressText: 'p',
+          // Table of Contents - RichText
+          tocHeading: 'div',
+          tocDetails: 'div',
+          ulToc: 'ul',
+          liToc: 'li',
+          // Downloads - CollapsibleRichText
+          ulDownloads: 'ul',
+          liDownloads: 'li',
+          teaserSlotsTitle: 'h2',
+          // author-list-item
+          authorListItemName: 'h6',
+          authorListItemJobTitle: 'p',
+          authorListItemBio: 'p',
+        },
+      },
+    },
+    MuiLink: {
+      styleOverrides: {
+        root: {
+          color: colors.common.black,
+          textDecorationColor: colors.common.black,
+          textDecorationThickness: '1px',
+          '&:hover': {
+            textDecoration: 'underline',
+            textDecorationColor: colors.common.black,
+            textDecorationThickness: '2px',
+          },
+        },
+      },
+      variants: [
+        {
+          props: { variant: 'teaserTitleLink' },
+          style: {
+            [breakpoints.up('xs')]: {
+              textDecoration: 'none',
+              ['&:hover']: {
+                textDecoration: 'none',
+              },
+              ['&:after']: {
+                content: "''",
+                display: 'block',
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                backgroundColor: 'transparent',
+                cursor: 'pointer',
+              },
+            },
+          },
+        },
+
+        {
+          // Footer / NavPaper (slide-out menu)
+          props: { variant: 'categoryLink' },
+          style: categoryLinkStyles,
+        },
+        {
+          // NavBar
+          props: { variant: 'headerCategoryLink' },
+          style: {
+            ...categoryLinkStyles,
+            fontSize: '1.3rem',
+            lineHeight: 1.6,
+            [breakpoints.up('md')]: {
+              fontSize: '1.5rem',
+              lineHeight: '3rem',
+            },
+          },
+        },
+
+        {
+          // Author List Item - Bio --> email
+          props: { variant: 'linkAuthorListItemBio' },
+          style: {
+            display: 'inline-block',
+            paddingTop: '1.5rem',
+            textDecoration: 'none',
+            '&:hover': {
+              textDecoration: 'underline',
+              textDecorationColor: colors.common.black,
+              textDecorationThickness: '1px',
+            },
+          },
+        },
+
+        // Table of Contents - RichText
+        {
+          props: { variant: 'linkToc' },
+          style: {
+            fontFamily: [recife.style.fontFamily, 'sans-serif'].join(','),
+            fontWeight: 700,
+            lineHeight: 1,
+            fontSize: '1.125rem',
+            color: colors.common.white,
+            textDecoration: 'none',
+            textDecorationColor: colors.common.white,
+            '&:hover': {
+              textDecoration: 'underline',
+            },
+          },
+        },
+
+        // Downloads - CollapsibleRichText
+        {
+          props: { variant: 'linkDownloads' },
+          style: {
+            fontFamily: [recife.style.fontFamily, 'sans-serif'].join(','),
+            fontWeight: 400,
+            lineHeight: 1,
+            fontSize: '1.125rem',
+            color: colors.common.black,
+            textDecoration: 'none',
+            '&:hover': {
+              textDecoration: 'underline',
+              textDecorationColor: colors.common.black,
+              textDecorationThickness: '2px',
+            },
+          },
+        },
+
+        // Button-Links
+        {
+          props: { variant: 'buttonLinkMain' },
+          style: {
+            fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(
+              ','
+            ),
+            textTransform: 'uppercase',
+            borderRadius: '9999px',
+            color: colors.common.black,
+            backgroundColor: colors.secondary.light,
+            padding: '20px 36px',
+            display: 'inline-block',
+            position: 'relative',
+            textDecoration: 'none',
+            fontSize: '1rem',
+            fontWeight: 400,
+            lineHeight: 1,
+            boxShadow: `0 0 0 0 ${colors.common.black}`,
+            transform: 'translateY(0)',
+            transition:
+              'box-shadow 200ms cubic-bezier(0.34, 1.56, 0.64, 1), transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1)',
+            '&:focus, &:focus-visible, &:visited': {
+              textDecoration: 'none',
+            },
+            '&.is-pressing, &:active': {
+              backgroundColor: colors.secondary.light,
+              color: colors.common.black,
+              textDecoration: 'none',
+              boxShadow: `0 -12px 0 0 ${colors.common.black}`,
+              transform: 'translateY(12px)',
+            },
+            '@media (hover: hover)': {
+              '&::before': {
+                content: '""',
+                position: 'absolute',
+                top: '-18px',
+                left: '-18px',
+                right: '-18px',
+                bottom: 0,
+              },
+              '&:hover': {
+                backgroundColor: colors.secondary.light,
+                color: colors.common.black,
+                textDecoration: 'none',
+                boxShadow: `0 -12px 0 0 ${colors.common.black}`,
+                transform: 'translateY(12px)',
+              },
+            },
+          },
+        },
+        {
+          props: { variant: 'buttonLinkAlert' },
+          style: {
+            fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(
+              ','
+            ),
+            textTransform: 'uppercase',
+            borderRadius: '9999px',
+            color: colors.common.white,
+            backgroundColor: '#d32f2f',
+            padding: '20px 36px',
+            display: 'inline-block',
+            position: 'relative',
+            textDecoration: 'none',
+            fontSize: '1rem',
+            fontWeight: 400,
+            lineHeight: 1,
+            boxShadow: `0 0 0 0 ${colors.common.black}`,
+            transform: 'translateY(0)',
+            transition:
+              'box-shadow 200ms cubic-bezier(0.34, 1.56, 0.64, 1), transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1)',
+            '&:focus, &:focus-visible, &:visited': {
+              textDecoration: 'none',
+            },
+            '&.is-pressing, &:active': {
+              backgroundColor: '#d32f2f',
+              color: colors.common.white,
+              textDecoration: 'none',
+              boxShadow: `0 -12px 0 0 ${colors.common.black}`,
+              transform: 'translateY(12px)',
+            },
+            '@media (hover: hover)': {
+              '&::before': {
+                content: '""',
+                position: 'absolute',
+                top: '-18px',
+                left: '-18px',
+                right: '-18px',
+                bottom: 0,
+              },
+              '&:hover': {
+                backgroundColor: '#d32f2f',
+                color: colors.common.white,
+                textDecoration: 'none',
+                boxShadow: `0 -12px 0 0 ${colors.common.black}`,
+                transform: 'translateY(12px)',
+              },
+            },
+          },
+        },
+        {
+          props: { variant: 'buttonLinkSecondary' },
+          style: buttonLinkSecondaryStyles,
+        },
+      ],
+    },
+    MuiAccordion: {
+      styleOverrides: {
+        root: {
+          '&.MuiAccordion-root': {
+            boxShadow: 'none',
+            border: `1px solid ${colors.common.black}`,
+            borderLeft: 'none',
+            borderRight: 'none',
+            backgroundColor: 'transparent',
+            borderRadius: 0,
+            display: 'grid',
+            gridTemplateColumns: 'subgrid',
+            gridTemplateRows: 'repeat(2, auto)',
+            [breakpoints.up('md')]: {
+              gridTemplateColumns: 'repeat(12, 1fr)',
+            },
+            '&:before': {
+              display: 'none',
+            },
+          },
+          '.MuiAccordionSummary-root': {
+            fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(
+              ','
+            ),
+            fontWeight: 500,
+            padding: '0',
+            gridColumn: '-1 / 1',
+            gridRow: '1 / 2',
+            display: 'grid',
+            gridTemplateColumns: 'subgrid',
+            textTransform: 'uppercase',
+            fontSize: '1.5rem',
+            '.MuiAccordionSummary-content': {
+              gridColumn: '3 / 11',
+              gridRow: '1 / 2',
+              margin: '0',
+              paddingRight: '1.5rem',
+              [breakpoints.up('md')]: {
+                margin: '0 0 0 2rem',
+                paddingRight: '3.5rem',
+              },
+            },
+            '.MuiTypography-root': {
+              textWrap: 'wrap',
+            },
+            '&.Mui-expanded': {
+              minHeight: '48px',
+            },
+          },
+          '.MuiCollapse-root': {
+            padding: '0',
+            gridColumn: '3 / 11',
+            gridRow: '2 / 3',
+            [breakpoints.up('md')]: {
+              marginLeft: '2rem',
+              marginRight: '2rem',
+            },
+            '.MuiCollapse-wrapper': {
+              marginTop: '0.75rem',
+            },
+          },
+          '.MuiAccordionDetails-root': {
+            padding: '0',
+            [breakpoints.up('md')]: {
+              padding: '0',
+            },
+          },
+          '.MuiAccordionSummary-expandIconWrapper': {
+            fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(
+              ','
+            ),
+            position: 'static',
+            gridColumn: '3 / 11',
+            alignSelf: 'center',
+            justifySelf: 'end',
+            marginRight: '0',
+            gridRow: '1 / 2',
+            color: colors.common.black,
+            fontWeight: 700,
+            transition:
+              'transform 500ms cubic-bezier(0.4, 0, 0.2, 1) 0ms !important',
+
+            [breakpoints.up('md')]: {
+              marginRight: '2rem',
+            },
+            '&.Mui-expanded': {
+              transition:
+                'transform 500ms cubic-bezier(0.4, 0, 0.2, 1) 0ms !important',
+              transform: 'rotate(0deg)',
+            },
+          },
+          '&.Mui-expanded': {
+            margin: 0,
+            paddingBottom: '1rem',
+          },
+        },
+      },
+    },
+    MuiContainer: {
+      styleOverrides: {
+        root: ({ theme }: { theme: any }) => ({
+          [theme.breakpoints.up('md')]: {
+            maxWidth: `${breakPointValues.md + 48}px`,
+          },
+          [theme.breakpoints.up('lg')]: {
+            maxWidth: `${breakPointValues.lg + 48}px`,
+          },
+          [theme.breakpoints.up('xl')]: {
+            maxWidth: `${breakPointValues.xl + 48}px`,
+          },
+          [theme.breakpoints.up('xxl')]: {
+            maxWidth: `${breakPointValues.xxl + 48}px`,
+          },
+        }),
+      },
+    },
+    MuiSlider: {
+      styleOverrides: {
+        root: {
+          color: colors.secondary.main,
+          height: 4,
+          '& .MuiSlider-thumb': {
+            width: 20,
+            height: 20,
+            backgroundColor: colors.common.white,
+            border: `2px solid ${colors.common.black}`,
+            '&:hover, &.Mui-focusVisible, &.Mui-active': {
+              boxShadow: 'none',
+            },
+          },
+          '& .MuiSlider-rail': {
+            opacity: 0.5,
+            backgroundColor: colors.common.black,
+          },
+          '& .MuiSlider-track': {
+            backgroundColor: colors.common.black,
+            opacity: 1,
+          },
+        },
+      },
+    },
+  },
+} as unknown as PartialDeep<Theme> | ThemeOptions);
+
+export const teaserMoreAboutTheme = createTheme(theme, {
+  typography: {
+    teaserTitle: {
+      [breakpoints.up('xs')]: {
+        fontFamily: [robotoMono.style.fontFamily, 'sans-serif'].join(','),
+        padding: 0,
+        margin: '0',
+        fontSize: '1rem',
+        lineHeight: 1.2,
+        fontWeight: 700,
+        color: colors.common.black,
+        backgroundColor: 'transparent',
+      },
+    },
+    teaserPretitle: {
+      [breakpoints.up('xs')]: {
+        fontFamily: [robotoMono.style.fontFamily, 'sans-serif'].join(','),
+        fontSize: '1rem',
+        fontWeight: 700,
+        lineHeight: 1.2,
+        textAlign: 'right',
+        display: 'flex',
+        alignItems: 'flex-end',
+        justifyContent: 'flex-end',
+        backgroundColor: 'transparent',
+        color: colors.common.black,
+        justifySelf: 'end',
+        paddingRight: 0,
+        '&:has(.MuiTypography-buttonLinkMain_______, .MuiTypography-buttonLinkSecondary_______)':
+          {
+            paddingTop: '12px',
+          },
+      },
+    },
+    teaserLead: {
+      [breakpoints.up('xs')]: {
+        fontFamily: [robotoMono.style.fontFamily, 'sans-serif'].join(','),
+        display: 'block',
+        fontSize: '1.125rem',
+        lineHeight: '1.4rem',
+        fontWeight: 400,
+        padding: 0,
+        backgroundColor: 'transparent',
+        color: colors.common.black,
+      },
+      [breakpoints.up('md')]: {
+        margin: 0,
+      },
+    },
+  },
+  components: {
+    MuiLink: {
+      variants: [
+        // keep base variants
+        ...(theme.components?.MuiLink?.variants ?? []),
+        // add teaser-specific variants
+        {
+          props: { variant: 'teaserPretitleLink' },
+          style: {
+            fontFamily: [robotoMono.style.fontFamily, 'sans-serif'].join(','),
+            display: 'inline',
+            textDecoration: 'underline',
+            flexGrow: 0,
+            padding: 0,
+            color: colors.common.black,
+            '&:hover': {
+              backgroundColor: colors.primary.light,
+              color: colors.common.black,
+              textDecoration: 'none',
+            },
+          },
+        },
+      ],
+    },
+  },
+});
 
 export { theme as default };
+
+export const authorListItemTheme = createTheme(theme, {
+  typography: {
+    authorListItemName: {
+      fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(','),
+      display: 'inline-block',
+      padding: `0 0 ${theme.spacing(2)} 0`,
+      fontWeight: 400,
+      textDecoration: 'none',
+      textTransform: 'uppercase',
+      gridRow: '2 / 3',
+      fontSize: '24px',
+      lineHeight: 1.2,
+    },
+    authorListItemJobTitle: {
+      fontFamily: [robotoMono.style.fontFamily, 'sans-serif'].join(','),
+      lineHeight: 1.2,
+      gridRow: '1 / 2',
+      fontWeight: 400,
+      fontSize: '16px',
+    },
+    authorListItemBio: {
+      fontFamily: [recife.style.fontFamily, 'sans-serif'].join(','),
+      fontWeight: 400,
+      textDecoration: 'none',
+      gridRow: '3 / 4',
+      fontSize: '18px',
+      lineHeight: 1.2,
+      ['&:hover']: {
+        textDecoration: 'none',
+      },
+      ['&:has(a[href^="mailto:"])']: {
+        gridRow: '4 / 5',
+      },
+    },
+  },
+  components: {
+    MuiLink: {
+      variants: [
+        // keep base variants
+        ...(theme.components?.MuiLink?.variants ?? []),
+        // add author-list-item-specific variants
+        {
+          props: { variant: 'authorListItemLink' },
+          style: {
+            ['&&']: {
+              textDecoration: 'none',
+              backgroundColor: colors.secondary.main,
+              ['&:hover']: {
+                textDecoration: 'none',
+                textDecorationThickness: 0,
+              },
+            },
+          },
+        },
+      ],
+    },
+  },
+});

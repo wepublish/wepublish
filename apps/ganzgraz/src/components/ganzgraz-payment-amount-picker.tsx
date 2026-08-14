@@ -3,12 +3,10 @@ import {
   PaymentAmountPicker,
   StyledCurrencyNumberSpinner,
 } from '@wepublish/membership/website';
-import { BuilderPaymentAmountProps } from '@wepublish/website/builder';
+import { BuilderPaymentAmountPickerProps } from '@wepublish/website/builder';
 import { forwardRef } from 'react';
 
 const PaymentAmountPickerStyled = styled(PaymentAmountPicker)`
-  grid-template-columns: repeat(auto-fit, 185px);
-
   ${StyledCurrencyNumberSpinner} {
     input {
       font-weight: 600;
@@ -19,12 +17,12 @@ const PaymentAmountPickerStyled = styled(PaymentAmountPicker)`
 
 export const GanzGrazPaymentAmountPicker = forwardRef<
   HTMLInputElement,
-  BuilderPaymentAmountProps
+  BuilderPaymentAmountPickerProps
 >((props, ref) => (
   <PaymentAmountPickerStyled
     {...props}
     ref={ref}
-    pickerItems={[550, 1200, 2500]}
+    presetAmounts={props.presetAmounts ?? [550, 1200, 2500]}
     format={'0.00'}
     snap={{
       values: [5.5, 12, 25],

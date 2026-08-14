@@ -27,6 +27,11 @@ export * from './lib/invoice/has-invoice/has-invoice.model';
 export * from './lib/mailchimp-sync/mailchimp-sync.module';
 export * from './lib/mailchimp-sync/mailchimp-sync.service';
 
+export * from './lib/goodie/goodie.model';
+export * from './lib/goodie/goodie.service';
+export * from './lib/goodie/goodie.dataloader';
+export * from './lib/goodie/goodie.module';
+
 export * from './lib/voucher/voucher.model';
 export * from './lib/voucher/voucher.dataloader';
 export * from './lib/voucher/voucher.module';

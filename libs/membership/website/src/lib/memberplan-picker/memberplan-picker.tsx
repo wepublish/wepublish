@@ -59,48 +59,49 @@ export const MemberPlanPicker = forwardRef<
     }
   }, [memberPlans, onChange, selectedMemberPlan]);
 
+  if (!showPicker) {
+    return;
+  }
+
   return (
-    showPicker && (
-      <MemberPlanPickerWrapper className={className}>
-        {showRadioButtons && (
-          <MemberPlanPickerRadios
-            name={name}
-            onChange={event => onChange(event.target.value)}
-            value={value ? value : ''}
-            ref={ref}
-          >
-            {memberPlans.map(memberPlan => (
-              <FormControlLabel
-                key={memberPlan.id}
-                value={memberPlan.id}
-                control={
-                  <MemberPlanItem
-                    slug={memberPlan.slug}
-                    key={memberPlan.id}
-                    checked={memberPlan.id === value}
-                    name={memberPlan.name}
-                    currency={memberPlan.currency}
-                    amountPerMonthMin={memberPlan.amountPerMonthMin}
-                    amountPerMonthMax={memberPlan.amountPerMonthMax}
-                    extendable={memberPlan.extendable}
-                    shortDescription={memberPlan.shortDescription}
-                    tags={memberPlan.tags}
-                  />
-                }
-                label={memberPlan.name}
-              />
-            ))}
-          </MemberPlanPickerRadios>
-        )}
+    <MemberPlanPickerWrapper className={className}>
+      {showRadioButtons && (
+        <MemberPlanPickerRadios
+          name={name}
+          onChange={event => onChange(event.target.value)}
+          value={value ? value : ''}
+          ref={ref}
+        >
+          {memberPlans.map(memberPlan => (
+            <FormControlLabel
+              key={memberPlan.id}
+              value={memberPlan.id}
+              control={
+                <MemberPlanItem
+                  slug={memberPlan.slug}
+                  key={memberPlan.id}
+                  checked={memberPlan.id === value}
+                  name={memberPlan.name}
+                  currency={memberPlan.currency}
+                  amountPerMonthMin={memberPlan.amountPerMonthMin}
+                  amountPerMonthMax={memberPlan.amountPerMonthMax}
+                  extendable={memberPlan.extendable}
+                  shortDescription={memberPlan.shortDescription}
+                  tags={memberPlan.tags}
+                  goodies={memberPlan.goodies}
+                />
+              }
+              label={memberPlan.name}
+            />
+          ))}
+        </MemberPlanPickerRadios>
+      )}
 
-        {selectedMemberPlan?.image && (
-          <Image image={selectedMemberPlan.image} />
-        )}
+      {selectedMemberPlan?.image && <Image image={selectedMemberPlan.image} />}
 
-        {!!selectedMemberPlan?.description?.content?.length && (
-          <RichText richText={selectedMemberPlan.description} />
-        )}
-      </MemberPlanPickerWrapper>
-    )
+      {!!selectedMemberPlan?.description?.content?.length && (
+        <RichText richText={selectedMemberPlan.description} />
+      )}
+    </MemberPlanPickerWrapper>
   );
 });

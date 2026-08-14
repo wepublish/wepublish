@@ -1,7 +1,7 @@
 import { InputAdornment, Slider } from '@mui/material';
 import styled from '@emotion/styled';
 import {
-  BuilderPaymentAmountProps,
+  BuilderPaymentAmountSliderProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { Currency } from '@wepublish/website/api';
@@ -22,7 +22,7 @@ export const PaymentAmountSliderWrapper = styled('div')`
 
 export const PaymentAmountSlider = forwardRef<
   HTMLInputElement,
-  BuilderPaymentAmountProps
+  BuilderPaymentAmountSliderProps
 >(
   (
     {
@@ -34,6 +34,7 @@ export const PaymentAmountSlider = forwardRef<
       name,
       value,
       onChange,
+      showInput,
     },
     ref
   ) => {
@@ -60,7 +61,7 @@ export const PaymentAmountSlider = forwardRef<
           />
         )}
 
-        {donate && (
+        {showInput && (
           <TextField
             name={name}
             value={value / 100}

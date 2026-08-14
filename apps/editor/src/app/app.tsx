@@ -27,11 +27,12 @@ import {
 } from '@wepublish/editor/api';
 import { ImportableEventListView } from '@wepublish/event/import/editor';
 import {
+  MailLogList,
+  MailSendPage,
+  MailTemplateEdit,
   MailTemplateList,
   MemberPlanEdit,
-  PlaceholderList,
   SubscriptionFlowList,
-  SystemMailList,
 } from '@wepublish/membership/editor';
 import { SettingList } from '@wepublish/settings/editor';
 import {
@@ -66,6 +67,9 @@ import { EventEditView } from './routes/events/eventEditView';
 import { EventListView } from './routes/events/eventListView';
 import { ExternalAppIframeView } from './routes/externalApps/externalAppIframeView';
 import { ExternalApps } from './routes/externalApps/externalAppsEdit';
+import { GoodieCreateView } from './routes/goodie/goodieCreateView';
+import { GoodieEditView } from './routes/goodie/goodieEditView';
+import { GoodieList } from './routes/goodie/goodieList';
 import { ImageList } from './routes/images/imageList';
 import { IntegrationEditView } from './routes/integrations/integrationEditView';
 import { IntegrationList } from './routes/integrations/integrationList';
@@ -925,6 +929,30 @@ export function App() {
                 </Base>
               }
             />
+            <Route
+              path="goodies"
+              element={
+                <Base>
+                  <GoodieList />
+                </Base>
+              }
+            />
+            <Route
+              path="goodies/edit/:id"
+              element={
+                <Base>
+                  <GoodieEditView />
+                </Base>
+              }
+            />
+            <Route
+              path="goodies/create"
+              element={
+                <Base>
+                  <GoodieCreateView />
+                </Base>
+              }
+            />
             {/* Consents Routes */}
             <Route
               path="consents"
@@ -992,18 +1020,44 @@ export function App() {
               }
             />
             <Route
-              path="mailtemplates/placeholders"
+              path="mailtemplates/create"
               element={
                 <Base>
-                  <PlaceholderList />
+                  <MailTemplateEdit />
                 </Base>
               }
             />
             <Route
-              path="systemmails"
+              path="mailtemplates/edit/:id"
               element={
                 <Base>
-                  <SystemMailList />
+                  <MailTemplateEdit />
+                </Base>
+              }
+            />
+            {/* System mails are now part of the automatic mails view */}
+            <Route
+              path="systemmails"
+              element={
+                <Navigate
+                  to="/communicationflows/edit/default"
+                  replace
+                />
+              }
+            />
+            <Route
+              path="mailsend"
+              element={
+                <Base>
+                  <MailSendPage />
+                </Base>
+              }
+            />
+            <Route
+              path="maillog"
+              element={
+                <Base>
+                  <MailLogList />
                 </Base>
               }
             />

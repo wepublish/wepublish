@@ -30,6 +30,10 @@ fragment FullSubscription on PublicSubscription {
   }
   extendable
   currency
+  goodie {
+    id
+    name
+  }
 }
 
 fragment Deactivation on SubscriptionDeactivation {

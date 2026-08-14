@@ -18,7 +18,7 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends openssl python3 build-essential && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
-    npm ci
+    npm ci --no-audit --no-fund
 
 FROM ${PLAIN_BUILD_IMAGE} AS base-image
 LABEL org.opencontainers.image.authors="WePublish Foundation"
@@ -160,6 +160,7 @@ ARG SENTRY_ORG
 ARG SENTRY_PROJECT
 ARG SENTRY_RELEASE
 ARG APP_RELEASE_ID
+ENV NODE_OPTIONS="--max-old-space-size=6144"
 COPY . .
 RUN npx prisma generate && \
     npx nx build editor --ignore-nx-cache && \
@@ -205,7 +206,7 @@ COPY libs/api/prisma/schema.prisma prisma/schema.prisma
 COPY prisma.config.ts prisma.config.ts
 COPY libs/api/prisma/ca.crt /wepublish/ca.crt
 COPY docker/tsconfig.yaml_seed tsconfig.yaml
-RUN npm install prisma@7.5.0 @prisma/client@7.5.0 @prisma/adapter-pg pg @types/node @node-rs/argon2 typescript@~5.7.3 && \
+RUN npm install --no-audit --no-fund prisma@7.5.0 @prisma/client@7.5.0 @prisma/adapter-pg pg @types/node @node-rs/argon2 typescript@~5.7.3 && \
     npx prisma generate && \
     npx tsc -p tsconfig.yaml && \
     npx @sentry/cli sourcemaps inject ./dist && \
@@ -226,7 +227,7 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends openssl && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
-    npm install prisma@7.5.0 @prisma/client@7.5.0 @prisma/adapter-pg pg @node-rs/argon2 && \
+    npm install --no-audit --no-fund prisma@7.5.0 @prisma/client@7.5.0 @prisma/adapter-pg pg @node-rs/argon2 && \
     npx prisma generate && \
     chmod -R g=u /wepublish
 
@@ -259,7 +260,7 @@ RUN apt-get update && apt-get install -y libjemalloc-dev poppler-utils fonts-lib
 COPY . .
 COPY ./apps/media/package.json ./package.json
 COPY ./apps/media/package-lock.json ./package-lock.json
-RUN npm ci
+RUN npm ci --no-audit --no-fund
 RUN npx nx build media --ignore-nx-cache && \
     npx @sentry/cli sourcemaps inject ./dist/apps/media && \
     npx @sentry/cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist/apps/media && \

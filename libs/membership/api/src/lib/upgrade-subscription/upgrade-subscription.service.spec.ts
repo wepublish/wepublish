@@ -3,6 +3,7 @@ import { Currency, PaymentPeriodicity, PrismaClient } from '@prisma/client';
 import { UpgradeSubscriptionService } from './upgrade-subscription.service';
 
 import { MemberContextService } from '../legacy/member-context.service';
+import { GoodieService } from '../goodie/goodie.service';
 import { PaymentsService } from '@wepublish/payment/api';
 import { VoucherService } from '../voucher/voucher.service';
 
@@ -32,6 +33,10 @@ describe('UpgradeSubscriptionService', () => {
 
   let voucherServiceMock: {
     getValidVoucher: jest.Mock;
+  };
+
+  let goodieServiceMock: {
+    getValidGoodie: jest.Mock;
   };
 
   beforeAll(() => {
@@ -64,6 +69,9 @@ describe('UpgradeSubscriptionService', () => {
     voucherServiceMock = {
       getValidVoucher: jest.fn(),
     };
+    goodieServiceMock = {
+      getValidGoodie: jest.fn(),
+    };
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -83,6 +91,10 @@ describe('UpgradeSubscriptionService', () => {
         {
           provide: VoucherService,
           useValue: voucherServiceMock,
+        },
+        {
+          provide: GoodieService,
+          useValue: goodieServiceMock,
         },
       ],
     }).compile();

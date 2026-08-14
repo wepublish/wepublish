@@ -12,6 +12,7 @@ import {
 } from '@nestjs/common';
 import { differenceInDays, endOfDay, startOfDay } from 'date-fns';
 import { MemberContextService } from '../legacy/member-context.service';
+import { GoodieService } from '../goodie/goodie.service';
 import { PaymentsService } from '@wepublish/payment/api';
 import { VoucherService } from '../voucher/voucher.service';
 import { calculateAmountForPeriodicity } from '../legacy/member-context';
@@ -44,6 +45,7 @@ export class UpgradeSubscriptionService {
   constructor(
     private prisma: PrismaClient,
     private memberContext: MemberContextService,
+    private goodieService: GoodieService,
     private payments: PaymentsService,
     private voucherService: VoucherService
   ) {}
@@ -160,6 +162,7 @@ export class UpgradeSubscriptionService {
     failureURL,
     monthlyAmount,
     voucher,
+    goodieId,
   }: {
     userId: string;
     subscriptionId: string;
@@ -169,6 +172,7 @@ export class UpgradeSubscriptionService {
     failureURL?: string;
     monthlyAmount: number;
     voucher?: string;
+    goodieId?: string;
   }) {
     const { oldSubscription, oldSubscriptionPeriods } =
       await this.validateForUpgrade({
@@ -205,6 +209,10 @@ export class UpgradeSubscriptionService {
         amountAfterLeftoverDiscount * (voucherObj.discountPercent / 100);
     }
 
+    if (goodieId) {
+      await this.goodieService.getValidGoodie(goodieId, memberPlanId);
+    }
+
     const { invoice } = await this.memberContext.createSubscription({
       userID: userId,
       paymentMethodID: paymentMethodId,
@@ -218,6 +226,7 @@ export class UpgradeSubscriptionService {
       startsAt: new Date(),
       discount: leftoverDiscount + voucherDiscount || undefined,
       voucherId,
+      goodieId,
     });
 
     await Promise.all([

@@ -1,7 +1,9 @@
+import './polyfills';
+
 import { ApolloProvider } from '@apollo/client';
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import * as Sentry from '@sentry/react';
-import { getApiClientV2 } from '@wepublish/editor/api';
+import { getApiClientV2, getSettings } from '@wepublish/editor/api';
 import {
   AuthProvider,
   FacebookProvider,
@@ -16,17 +18,21 @@ import { initI18N } from './app/i18n';
 import { theme } from './app/theme';
 import { ElementID } from './shared/elementID';
 
-Sentry.init({
-  dsn: process.env.SENTRY_DSN,
-  release: process.env.APP_RELEASE_ID,
-  integrations: [
-    Sentry.browserTracingIntegration(),
-    Sentry.replayIntegration(),
-  ],
-  tracesSampleRate: 1.0,
-  replaysSessionSampleRate: 0.1,
-  replaysOnErrorSampleRate: 1.0,
-});
+const { sentryDSN } = getSettings();
+
+if (sentryDSN) {
+  Sentry.init({
+    dsn: sentryDSN,
+    release: process.env.APP_RELEASE_ID,
+    integrations: [
+      Sentry.browserTracingIntegration(),
+      Sentry.replayIntegration(),
+    ],
+    tracesSampleRate: 1.0,
+    replaysSessionSampleRate: 0.1,
+    replaysOnErrorSampleRate: 1.0,
+  });
+}
 
 const onDOMContentLoaded = async () => {
   const client = getApiClientV2();
