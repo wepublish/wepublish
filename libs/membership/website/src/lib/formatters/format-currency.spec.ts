@@ -25,6 +25,18 @@ describe('formatCurrency', () => {
       '50.000,00 \u20AC'
     );
   });
+
+  it('should normalize the group separator across CLDR versions', () => {
+    expect(formatCurrency(50000, Currency.Chf, 'de-CH')).not.toMatch(
+      /[\u2019\u02BC]/
+    );
+  });
+
+  it('should normalize non breaking spaces across CLDR versions', () => {
+    expect(formatCurrency(50000, Currency.Eur, 'de-DE')).not.toMatch(
+      /[\u00A0\u202F\u2009]/
+    );
+  });
 });
 
 describe('roundUpTo5Cents', () => {

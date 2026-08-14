@@ -1,4 +1,4 @@
-const GROUP_SEPARATORS = /[\u2019\u0027]/g;
+const GROUP_SEPARATORS = /[\u2019\u02bc\u0027]/g;
 const NON_BREAKING_SPACES = /[\u00a0\u202f\u2009]/g;
 
 export const formatNumber = (value: number, locale = 'de-CH') => {

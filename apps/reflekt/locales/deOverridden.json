@@ -8,10 +8,9 @@
   "subscribe": {
     "cancellable": "Jederzeit kündbar\n * Versand innerhalb der Schweiz",
     "button": {
-      "label": "Jetzt unterstützen"
-    },
-    "modal": {
-      "confirmLabel": "Jetzt unterstützen"
+      "subscribeForPeriod": "Jetzt unterstützen",
+      "payForPeriod": "Jetzt unterstützen",
+      "pay": "Jetzt unterstützen"
     },
     "transactionFee": {
       "label": "Ja, ich übernehme die Transaktionsgebühren von 2%"

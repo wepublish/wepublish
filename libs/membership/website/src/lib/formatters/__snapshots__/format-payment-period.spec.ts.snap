@@ -1,5 +1,29 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
+exports[`formatAfterFirstPaymentPeriod should format the period after the first one for biannual 1`] = `"den ersten 6 Monaten"`;
+
+exports[`formatAfterFirstPaymentPeriod should format the period after the first one for biennial 1`] = `"den ersten 2 Jahren"`;
+
+exports[`formatAfterFirstPaymentPeriod should format the period after the first one for lifetime 1`] = `"Lebenslang"`;
+
+exports[`formatAfterFirstPaymentPeriod should format the period after the first one for monthly 1`] = `"dem ersten Monat"`;
+
+exports[`formatAfterFirstPaymentPeriod should format the period after the first one for quarterly 1`] = `"den ersten 3 Monaten"`;
+
+exports[`formatAfterFirstPaymentPeriod should format the period after the first one for yearly 1`] = `"dem ersten Jahr"`;
+
+exports[`formatFirstPaymentPeriod should format the first payment period for biannual 1`] = `"Ersten 6 Monate"`;
+
+exports[`formatFirstPaymentPeriod should format the first payment period for biennial 1`] = `"Ersten 2 Jahre"`;
+
+exports[`formatFirstPaymentPeriod should format the first payment period for lifetime 1`] = `"Lebenslang"`;
+
+exports[`formatFirstPaymentPeriod should format the first payment period for monthly 1`] = `"Erster Monat"`;
+
+exports[`formatFirstPaymentPeriod should format the first payment period for quarterly 1`] = `"Ersten 3 Monate"`;
+
+exports[`formatFirstPaymentPeriod should format the first payment period for yearly 1`] = `"Erstes Jahr"`;
+
 exports[`formatPaymentPeriod should format payment period for biannual 1`] = `"6 Monate"`;
 
 exports[`formatPaymentPeriod should format payment period for biennial 1`] = `"2 Jahre"`;

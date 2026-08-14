@@ -3,7 +3,7 @@ import { cond } from 'ramda';
 
 export const formatFirstPaymentPeriod = cond([
   [period => period === PaymentPeriodicity.Monthly, () => 'Erster Monat'],
-  [period => period === PaymentPeriodicity.Quarterly, () => 'Ersten 4 Monate'],
+  [period => period === PaymentPeriodicity.Quarterly, () => 'Ersten 3 Monate'],
   [period => period === PaymentPeriodicity.Biannual, () => 'Ersten 6 Monate'],
   [period => period === PaymentPeriodicity.Biennial, () => 'Ersten 2 Jahre'],
   [period => period === PaymentPeriodicity.Lifetime, () => 'Lebenslang'],

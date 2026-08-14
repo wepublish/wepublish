@@ -40,19 +40,31 @@ export class SubscribeBlockResolver {
     return (await this.memberPlanDataloader.loadMany(ids)).filter(Boolean);
   }
 
+  @ResolveField(() => [String])
+  async memberPlanIds(@Parent() parent: SubscribeBlock): Promise<string[]> {
+    const { memberPlanIds } = parent;
+    const ids = memberPlanIds ?? [];
+    const memberPlans = await this.memberPlanDataloader.loadMany(ids);
+
+    return ids.filter((_id, index) => !!memberPlans[index]);
+  }
+
   @ResolveField(() => [SubscribeBlockMemberPlanRenderSetting])
-  memberPlanRenderSettings(
+  async memberPlanRenderSettings(
     @Parent() parent: SubscribeBlock
-  ): SubscribeBlockMemberPlanRenderSetting[] {
+  ): Promise<SubscribeBlockMemberPlanRenderSetting[]> {
     const { memberPlanIds, memberPlanRenderSettings } = parent;
 
     const settingsOrder =
       memberPlanRenderSettings?.map(({ memberPlanId }) => memberPlanId) ?? [];
 
-    const ids = sortWith(
+    const sortedIds = sortWith(
       [ascend(id => settingsOrder.indexOf(id))],
       memberPlanIds ?? []
     );
+
+    const memberPlans = await this.memberPlanDataloader.loadMany(sortedIds);
+    const ids = sortedIds.filter((_id, index) => !!memberPlans[index]);
 
     const settings = ids.map(id => {
       const renderSettings = memberPlanRenderSettings?.find(

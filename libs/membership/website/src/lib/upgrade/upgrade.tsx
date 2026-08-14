@@ -27,6 +27,7 @@ import {
   SubscribeAmount,
   SubscribeAmountText,
   SubscribeButton,
+  SubscribeCancelable,
   SubscribeContinuation,
   SubscribeNarrowSection,
   SubscribePayment,
