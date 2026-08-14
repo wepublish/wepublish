@@ -4,6 +4,7 @@ Source code formatting and linting should follow the existing conventions in the
 
 - Always use curly braces around conditional blocks, even for single statements.
 - Never add comments **unless** they are needed for the linter or to bypass the Typescript compiler.
+- Never run prettier as it's run by a commit hook.
 
 ## Typescript
 
