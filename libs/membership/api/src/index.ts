@@ -35,3 +35,4 @@ export * from './lib/goodie/goodie.module';
 export * from './lib/voucher/voucher.model';
 export * from './lib/voucher/voucher.dataloader';
 export * from './lib/voucher/voucher.module';
+export * from './lib/voucher/voucher.service';

@@ -697,3 +697,62 @@ export const WithDonate: StoryObj<typeof Subscribe> = {
     await changeMemberPlan(memberPlan4)(ctx);
   }),
 };
+
+// getAllByText throws when a text is missing, which fails the story
+const expectTexts =
+  (texts: string[]): NonNullable<StoryObj['play']> =>
+  async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step('Check texts', async () => {
+      texts.forEach(text => canvas.getAllByText(text, { exact: false }));
+    });
+  };
+
+export const WithVoucherDiscount: StoryObj<typeof Subscribe> = {
+  ...LoggedIn,
+  args: {
+    ...LoggedIn.args,
+    showVouchers: true,
+    subscribeInfo: {
+      data: {
+        createSubscriptionInfo: {
+          discountPercent: 0.2,
+          voucherValid: true,
+        },
+      },
+      loading: false,
+    },
+  },
+  // the button shows the discounted first period, the continuation below
+  // it shows what is charged once the discount ran out
+  play: waitForInitialDataIsSet(
+    expectTexts(['20% Rabatt angewendet', 'abonnieren', 'Nach dem ersten'])
+  ),
+};
+
+export const WithInvalidVoucher: StoryObj<typeof Subscribe> = {
+  ...LoggedIn,
+  args: {
+    ...LoggedIn.args,
+    showVouchers: true,
+    subscribeInfo: {
+      data: {
+        createSubscriptionInfo: {
+          discountPercent: null,
+          voucherValid: false,
+        },
+      },
+      loading: false,
+    },
+  },
+  play: waitForInitialDataIsSet(expectTexts(['Gutscheincode ungültig'])),
+};
+
+export const WithVoucherDiscountOnADonation: StoryObj<typeof Subscribe> = {
+  ...WithVoucherDiscount,
+  play: waitForInitialDataIsSet(async ctx => {
+    await changeMemberPlan(memberPlan4)(ctx);
+    await expectTexts(['spenden'])(ctx);
+  }),
+};

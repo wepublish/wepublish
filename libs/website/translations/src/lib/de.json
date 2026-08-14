@@ -19,12 +19,12 @@
     "memberplan": {
       "price": "{amountPerMonthMin, select, 0 {Gratis} other {Ab {monthlyPrice} {extendable, select, true {pro Monat} other {}}}}"
     },
-    "discount": "{paymentPeriod} {monthlyAmount, select, 0 {gratis} other {für nur {formattedAmount}}}",
+    "continuation": "Nach {afterFirstPaymentPeriod} {formattedAmount} {renewalPeriodL}.",
     "cancellable": "Jederzeit kündbar",
     "upgrade": {
       "infoTitle": "Dein Upgrade",
       "info": "Mach jetzt ein Upgrade von deinem {oldMemberPlan} auf das {newMemberPlan}. <bold>Dein Restguthaben von {discount} bei deinem {oldMemberPlan} wird Dir dabei angerechnet.</bold> Weiter unten siehst du Deinen noch zu zahlenden Upgrade-Preis für den Wechsel zum {newMemberPlan}.",
-      "button": "Für {formattedAmount} auf {memberPlan} upgraden"
+      "button": "Jetzt für {formattedAmount} auf {memberPlan} upgraden"
     },
     "support": {
       "subscribeForPeriod": "Ich unterstütze {siteTitle} {monthlyAmount, select, 0 {gratis} other {{renewalPeriodL} mit {formattedAmount}}}",
@@ -32,13 +32,9 @@
       "pay": "Ich unterstütze {siteTitle} {monthlyAmount, select, 0 {gratis} other {mit {formattedAmount}}}"
     },
     "button": {
-      "subscribeForPeriod": "{monthlyAmount, select, 0 {Gratis} other {{renewalPeriod} für {formattedAmount}}}",
-      "payForPeriod": "{monthlyAmount, select, 0 {Gratis} other {{paymentPeriod} für {formattedAmount}}}",
-      "pay": "{monthlyAmount, select, 0 {Gratis} other {Für {formattedAmount}}}",
-      "label": "{paymentText} {type, select, donation {spenden} other {abonnieren}}"
-    },
-    "modal": {
-      "confirmLabel": "{paymentText} {type, select, donation {Spenden} other {Abonnieren}}"
+      "subscribeForPeriod": "{monthlyAmount, select, 0 {Gratis} other {{renewalPeriod} für {formattedAmount}}} {productType, select, Donation {spenden} other {abonnieren}}",
+      "payForPeriod": "{monthlyAmount, select, 0 {Gratis} other {{paymentPeriod} für {formattedAmount}}} {productType, select, Donation {spenden} other {abonnieren}}",
+      "pay": "{monthlyAmount, select, 0 {Gratis} other {Für {formattedAmount}}} {productType, select, Donation {spenden} other {abonnieren}}"
     },
     "transactionFee": {
       "label": "Ja, ich will die Bearbeitungsgebühren von 2% übernehmen und damit {siteTitle} zusätzlich unterstützen."

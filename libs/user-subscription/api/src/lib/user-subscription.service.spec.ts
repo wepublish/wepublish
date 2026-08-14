@@ -5,6 +5,7 @@ import {
   GoodieService,
   MemberContextService,
   VoucherDataloader,
+  VoucherService,
 } from '@wepublish/membership/api';
 import { PaymentsService } from '@wepublish/payment/api';
 import {
@@ -96,6 +97,7 @@ describe('UserSubscriptionService', () => {
         UserSubscriptionService,
         { provide: MemberContextService, useValue: memberContextMock },
         { provide: VoucherDataloader, useValue: voucherDataloaderMock },
+        VoucherService,
         { provide: MemberPlanDataloader, useValue: memberPlanDataloaderMock },
         {
           provide: MemberPlanService,

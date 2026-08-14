@@ -45,7 +45,7 @@ import {
   isFixedAmountLayout,
   showsAmountInput,
 } from './member-plan-render-settings';
-import { useDiscountText, usePaymentText } from './subscribe-texts';
+import { useContinuationText, usePaymentText } from './subscribe-texts';
 
 export const subscribeSchema = z.object({
   memberPlanId: z.string().min(1),
@@ -140,10 +140,8 @@ export const SubscribeCancelable = styled('div')`
   justify-self: center;
 `;
 
-export const SubscribeWithDiscount = styled('div')`
-  text-align: center;
-  justify-self: center;
-  font-weight: 600;
+export const SubscribeContinuation = styled(SubscribeCancelable)`
+  margin-bottom: ${({ theme }) => theme.spacing(1)};
 `;
 
 export const SubscribeNarrowSection = styled(SubscribeSection)`
@@ -277,7 +275,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     resolver: zodResolver(schem),
     defaultValues: {
       ...defaults,
-      voucher: '',
+      voucher: defaults?.voucher ?? '',
       goodieId: null,
       monthlyAmount: 0,
       autoRenew: true,
@@ -392,16 +390,16 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     extendable: selectedMemberPlan?.extendable ?? true,
     productType: selectedMemberPlan?.productType ?? ProductType.Subscription,
     paymentPeriodicity: selectedPaymentPeriodicity,
-    monthlyAmount,
+    monthlyAmount: monthlyAmount * (1 - discountPercent),
     currency: selectedMemberPlan?.currency ?? Currency.Chf,
     siteTitle,
     locale,
   });
 
-  const discountText = useDiscountText({
+  const continuationText = useContinuationText({
     memberPlan: selectedMemberPlan?.name ?? '',
     paymentPeriodicity: selectedPaymentPeriodicity,
-    monthlyAmount: monthlyAmount * (1 - discountPercent),
+    monthlyAmount,
     currency: selectedMemberPlan?.currency ?? Currency.Chf,
     locale,
   });
@@ -905,10 +903,6 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
         )}
 
         <SubscribeNarrowSection area="submit">
-          {!!subscribeInfo.data?.createSubscriptionInfo.discountPercent && (
-            <SubscribeWithDiscount>{discountText}</SubscribeWithDiscount>
-          )}
-
           <SubscribeButton
             size={'large'}
             disabled={
@@ -925,11 +919,14 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
               }
             }}
           >
-            {t('subscribe.button.label', {
-              paymentText,
-              type: isDonation ? 'donation' : 'subscription',
-            })}
+            {paymentText}
           </SubscribeButton>
+
+          {!!discountPercent &&
+            autoRenew &&
+            (selectedMemberPlan?.extendable ?? true) && (
+              <SubscribeContinuation>{continuationText}</SubscribeContinuation>
+            )}
 
           {autoRenew && termsOfServiceUrl ?
             <Link
@@ -955,10 +952,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
             setOpenConfirm(false);
           }}
           onCancel={() => setOpenConfirm(false)}
-          submitText={t('subscribe.modal.confirmLabel', {
-            paymentText,
-            type: isDonation ? 'donation' : 'subscription',
-          })}
+          submitText={paymentText}
         >
           <H5
             id="modal-modal-title"

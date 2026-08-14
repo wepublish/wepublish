@@ -119,8 +119,10 @@ export const Default: StoryObj<typeof UpgradeContainer> = {
           },
           result: {
             data: {
-              upgradeSubscriptionInfo: {
+              upgradeUserSubscriptionInfo: {
                 discountAmount: 500,
+                discountPercent: null,
+                voucherValid: null,
               },
             },
           },
@@ -135,8 +137,10 @@ export const Default: StoryObj<typeof UpgradeContainer> = {
           },
           result: {
             data: {
-              upgradeSubscriptionInfo: {
+              upgradeUserSubscriptionInfo: {
                 discountAmount: 800,
+                discountPercent: null,
+                voucherValid: null,
               },
             },
           },

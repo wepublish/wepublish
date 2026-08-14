@@ -7,7 +7,7 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { formatCurrency } from '../formatters/format-currency';
 import {
-  formatFirstPaymentPeriod,
+  formatAfterFirstPaymentPeriod,
   formatPaymentPeriod,
   getPaymentPeriodicyMonths,
 } from '../formatters/format-payment-period';
@@ -79,7 +79,7 @@ export const usePaymentText = ({
   ]);
 };
 
-export const useDiscountText = ({
+export const useContinuationText = ({
   memberPlan,
   paymentPeriodicity,
   monthlyAmount,
@@ -96,7 +96,9 @@ export const useDiscountText = ({
 
   return useMemo(() => {
     const variables = {
-      paymentPeriod: formatFirstPaymentPeriod(paymentPeriodicity),
+      afterFirstPaymentPeriod:
+        formatAfterFirstPaymentPeriod(paymentPeriodicity),
+      renewalPeriodL: formatRenewalPeriod(paymentPeriodicity).toLowerCase(),
       formattedAmount: formatCurrency(
         (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity),
         currency,
@@ -106,13 +108,14 @@ export const useDiscountText = ({
       memberPlan,
     };
 
-    return t(`subscribe.discount`, variables);
+    return t(`subscribe.continuation`, variables);
   }, [currency, locale, monthlyAmount, paymentPeriodicity, memberPlan, t]);
 };
 
 export const useUpgradeText = ({
   productType,
   discount,
+  discountPercent = 0,
   paymentPeriodicity,
   monthlyAmount,
   memberPlan,
@@ -120,6 +123,7 @@ export const useUpgradeText = ({
   locale,
 }: {
   discount: number;
+  discountPercent?: number;
   productType: ProductType;
   paymentPeriodicity: PaymentPeriodicity;
   monthlyAmount: number;
@@ -130,11 +134,15 @@ export const useUpgradeText = ({
   const { t } = useTranslation();
 
   return useMemo(() => {
+    const fullAmount =
+      (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity);
+
+    const amountAfterDiscount = Math.max(fullAmount - discount / 100, 0);
+
     const variables = {
       productType,
       formattedAmount: formatCurrency(
-        (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity) -
-          discount / 100,
+        amountAfterDiscount - amountAfterDiscount * discountPercent,
         currency,
         locale
       ),
@@ -148,6 +156,7 @@ export const useUpgradeText = ({
     monthlyAmount,
     paymentPeriodicity,
     discount,
+    discountPercent,
     currency,
     locale,
     memberPlan,

@@ -3792,6 +3792,7 @@ export type MutationUpgradeUserSubscriptionArgs = {
   paymentMethodId: Scalars['String'];
   subscriptionId: Scalars['String'];
   successURL?: InputMaybe<Scalars['String']>;
+  voucher?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -5651,6 +5652,7 @@ export type QueryTrackingPixelSettingsArgs = {
 export type QueryUpgradeUserSubscriptionInfoArgs = {
   memberPlanId: Scalars['String'];
   subscriptionId: Scalars['String'];
+  voucher?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -6657,6 +6659,8 @@ export type UpdateUserSubscriptionInput = {
 export type UpgradeSubscription = {
   __typename?: 'UpgradeSubscription';
   discountAmount: Scalars['Float'];
+  discountPercent?: Maybe<Scalars['Float']>;
+  voucherValid?: Maybe<Scalars['Boolean']>;
 };
 
 export type User = BaseUser & {
@@ -7376,6 +7380,7 @@ export type UpgradeMutationVariables = Exact<{
   goodieId?: InputMaybe<Scalars['String']>;
   successURL?: InputMaybe<Scalars['String']>;
   failureURL?: InputMaybe<Scalars['String']>;
+  voucher?: InputMaybe<Scalars['String']>;
 }>;
 
 
@@ -7465,10 +7470,11 @@ export type NewSubscribersQuery = { __typename?: 'Query', newSubscribers: Array<
 export type UpgradeSubscriptionInfoQueryVariables = Exact<{
   memberPlanId: Scalars['String'];
   subscriptionId: Scalars['String'];
+  voucher?: InputMaybe<Scalars['String']>;
 }>;
 
 
-export type UpgradeSubscriptionInfoQuery = { __typename?: 'Query', upgradeUserSubscriptionInfo: { __typename?: 'UpgradeSubscription', discountAmount: number } };
+export type UpgradeSubscriptionInfoQuery = { __typename?: 'Query', upgradeUserSubscriptionInfo: { __typename?: 'UpgradeSubscription', discountAmount: number, discountPercent?: number | null, voucherValid?: boolean | null } };
 
 export type FullVoucherFragment = { __typename?: 'Voucher', id: string, code: string, discountPercent: number, validFrom: string, validTo: string, memberPlanId: string, memberPlan: { __typename?: 'MemberPlan', id: string, name: string } };
 
@@ -10143,7 +10149,7 @@ export type ResubscribeMutationHookResult = ReturnType<typeof useResubscribeMuta
 export type ResubscribeMutationResult = Apollo.MutationResult<ResubscribeMutation>;
 export type ResubscribeMutationOptions = Apollo.BaseMutationOptions<ResubscribeMutation, ResubscribeMutationVariables>;
 export const UpgradeDocument = gql`
-    mutation Upgrade($subscriptionId: String!, $memberPlanId: String!, $paymentMethodId: String!, $monthlyAmount: Int!, $goodieId: String, $successURL: String, $failureURL: String) {
+    mutation Upgrade($subscriptionId: String!, $memberPlanId: String!, $paymentMethodId: String!, $monthlyAmount: Int!, $goodieId: String, $successURL: String, $failureURL: String, $voucher: String) {
   upgradeUserSubscription(
     subscriptionId: $subscriptionId
     memberPlanId: $memberPlanId
@@ -10152,6 +10158,7 @@ export const UpgradeDocument = gql`
     goodieId: $goodieId
     successURL: $successURL
     failureURL: $failureURL
+    voucher: $voucher
   ) {
     ...FullPayment
   }
@@ -10179,6 +10186,7 @@ export type UpgradeMutationFn = Apollo.MutationFunction<UpgradeMutation, Upgrade
  *      goodieId: // value for 'goodieId'
  *      successURL: // value for 'successURL'
  *      failureURL: // value for 'failureURL'
+ *      voucher: // value for 'voucher'
  *   },
  * });
  */
@@ -10574,12 +10582,15 @@ export type NewSubscribersQueryHookResult = ReturnType<typeof useNewSubscribersQ
 export type NewSubscribersLazyQueryHookResult = ReturnType<typeof useNewSubscribersLazyQuery>;
 export type NewSubscribersQueryResult = Apollo.QueryResult<NewSubscribersQuery, NewSubscribersQueryVariables>;
 export const UpgradeSubscriptionInfoDocument = gql`
-    query UpgradeSubscriptionInfo($memberPlanId: String!, $subscriptionId: String!) {
+    query UpgradeSubscriptionInfo($memberPlanId: String!, $subscriptionId: String!, $voucher: String) {
   upgradeUserSubscriptionInfo(
     memberPlanId: $memberPlanId
     subscriptionId: $subscriptionId
+    voucher: $voucher
   ) {
     discountAmount
+    discountPercent
+    voucherValid
   }
 }
     `;
@@ -10598,6 +10609,7 @@ export const UpgradeSubscriptionInfoDocument = gql`
  *   variables: {
  *      memberPlanId: // value for 'memberPlanId'
  *      subscriptionId: // value for 'subscriptionId'
+ *      voucher: // value for 'voucher'
  *   },
  * });
  */

@@ -24,13 +24,13 @@ import {
   ExtendSubscriptionArgs,
 } from './subscription.model';
 import { PaymentsService } from '@wepublish/payment/api';
-import { logger, PrimeDataLoader } from '@wepublish/utils/api';
+import { logger } from '@wepublish/utils/api';
 import { unselectPassword } from '@wepublish/authentication/api';
 import {
   calculateAmountForPeriodicity,
   GoodieService,
   MemberContextService,
-  VoucherDataloader,
+  VoucherService,
 } from '@wepublish/membership/api';
 
 export type SubscriptionWithRelations = Subscription & {
@@ -46,6 +46,7 @@ export class UserSubscriptionService {
     private memberPlanService: MemberPlanService,
     private memberPlanDataloader: MemberPlanDataloader,
     private memberContext: MemberContextService,
+    private voucherService: VoucherService,
     private goodieService: GoodieService
   ) {}
 
@@ -55,28 +56,6 @@ export class UserSubscriptionService {
         userID: userId,
       },
     });
-  }
-
-  @PrimeDataLoader(VoucherDataloader)
-  async getValidVoucher(voucher: string, memberPlanId: string) {
-    const voucherObj = await this.prisma.voucher.findUnique({
-      where: {
-        code_memberPlanId: {
-          code: voucher.toLowerCase(),
-          memberPlanId,
-        },
-      },
-    });
-
-    if (!voucherObj || voucherObj.validFrom > new Date()) {
-      throw new BadRequestException('Voucher is invalid.');
-    }
-
-    if (new Date() > voucherObj.validTo) {
-      throw new BadRequestException('Voucher has expired.');
-    }
-
-    return voucherObj;
   }
 
   async createSubscription(
@@ -90,7 +69,10 @@ export class UserSubscriptionService {
     let voucherId: string | undefined = undefined;
 
     if (voucher) {
-      const voucherObj = await this.getValidVoucher(voucher, memberPlan.id);
+      const voucherObj = await this.voucherService.getValidVoucher(
+        voucher,
+        memberPlan.id
+      );
 
       discount =
         calculateAmountForPeriodicity(
