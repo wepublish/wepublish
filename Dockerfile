@@ -98,7 +98,7 @@ ARG APP_RELEASE_ID
 COPY . .
 RUN npx prisma generate && \
     node docker/inline-pkg-imports.js && \
-    npx nx build api-example --ignore-nx-cache && \
+    npx nx build api-example --skip-nx-cache && \
     npx @sentry/cli sourcemaps inject ./dist/apps/api-example && \
     npx @sentry/cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist/apps/api-example && \
     node docker/generate-pkg-shims.js && \
@@ -163,7 +163,7 @@ ARG APP_RELEASE_ID
 ENV NODE_OPTIONS="--max-old-space-size=6144"
 COPY . .
 RUN npx prisma generate && \
-    npx nx build editor --ignore-nx-cache && \
+    npx nx build editor --skip-nx-cache && \
     npx @sentry/cli sourcemaps inject ./dist/apps/editor && \
     npx @sentry/cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist/apps/editor && \
     cp docker/editor_build_package.json package.json && \
@@ -261,7 +261,7 @@ COPY . .
 COPY ./apps/media/package.json ./package.json
 COPY ./apps/media/package-lock.json ./package-lock.json
 RUN npm ci --no-audit --no-fund
-RUN npx nx build media --ignore-nx-cache && \
+RUN npx nx build media --skip-nx-cache && \
     npx @sentry/cli sourcemaps inject ./dist/apps/media && \
     npx @sentry/cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist/apps/media && \
     mkdir -p /poppler-dist/bin /poppler-dist/lib && \
