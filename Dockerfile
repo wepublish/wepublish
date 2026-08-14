@@ -260,7 +260,7 @@ COPY . .
 COPY ./apps/media/package.json ./package.json
 COPY ./apps/media/package-lock.json ./package-lock.json
 RUN npm ci
-RUN npx nx build media --ignore-nx-cache && \
+RUN npx nx build media --skip-nx-cache && \
     npx @sentry/cli sourcemaps inject ./dist/apps/media && \
     npx @sentry/cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist/apps/media && \
     mkdir -p /poppler-dist/bin /poppler-dist/lib && \
