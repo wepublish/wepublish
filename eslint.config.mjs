@@ -84,8 +84,19 @@ export default [
     files: ['**/*.spec.ts', '**/*.spec.tsx', '**/*.spec.js', '**/*.spec.jsx'],
     languageOptions: {
       globals: {
+        // The backend (NestJS) projects run on jest, everything else on vitest.
         ...globals.jest,
+        vi: 'readonly',
       },
+    },
+  },
+  {
+    // The per-project vitest configs share their setup through the root-level
+    // `vitest.shared.ts`, which is not part of any project and therefore has to
+    // be imported by a relative path.
+    files: ['**/vitest.config.ts'],
+    rules: {
+      '@nx/enforce-module-boundaries': 'off',
     },
   },
   {

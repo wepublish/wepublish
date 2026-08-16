@@ -19,7 +19,7 @@
         "name": "next"
       }
     ],
-    "types": ["jest", "node"],
+    "types": ["vitest/globals", "node"],
     "ignoreDeprecations": "6.0"
   },
   "include": [
@@ -32,7 +32,7 @@
   ],
   "exclude": [
     "node_modules",
-    "jest.config.ts",
+    "vitest.config.ts",
     "src/**/*.spec.ts",
     "src/**/*.test.ts"
   ]
