@@ -703,12 +703,6 @@ export function MemberPlanForm({
                           placement="auto"
                         />
                       </Col>
-
-                      {availablePaymentMethods.length > 1 && (
-                        <Col xs={24}>
-                          <Divider />
-                        </Col>
-                      )}
                     </Row>
                   </Panel>
                 )}
