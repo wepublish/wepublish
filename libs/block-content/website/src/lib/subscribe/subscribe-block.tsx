@@ -23,7 +23,12 @@ const lowercase = replace(/^./, toLower);
 export const SubscribeBlock = ({
   className,
   memberPlans,
+  memberPlanRenderSettings,
   fields,
+  showGoodies,
+  showVouchers,
+  goodieMinValue,
+  hideRepeatGoodieOnUpgrade,
 }: BuilderSubscribeBlockProps) => {
   const {
     register: [register],
@@ -40,7 +45,6 @@ export const SubscribeBlock = ({
   const {
     query: {
       memberPlanBySlug,
-      additionalMemberPlans,
       firstName,
       mail,
       lastName,
@@ -77,12 +81,13 @@ export const SubscribeBlock = ({
   );
 
   const handleOnSelect = useCallback(
-    (memberPlanId: string | undefined) => {
+    (memberPlanId: string | undefined, voucher?: string) => {
       if (memberPlanId) {
         fetchUpgradeInfo({
           variables: {
             memberPlanId,
             subscriptionId: upgradeSubscriptionId as string,
+            voucher,
           },
         });
       }
@@ -103,6 +108,10 @@ export const SubscribeBlock = ({
           className={className}
           memberPlans={memberPlansObj}
           fields={fields.map(lowercase) as BuilderSubscribeProps['fields']}
+          memberPlanRenderSettings={memberPlanRenderSettings}
+          showGoodies={showGoodies}
+          showVouchers={showVouchers}
+          goodieMinValue={goodieMinValue}
           defaults={{
             email: mail as string | undefined,
             firstName: firstName as string | undefined,
@@ -171,14 +180,20 @@ export const SubscribeBlock = ({
       {subscriptionToUpgrade && (
         <Upgrade
           {...subscribeProps}
+          defaults={{
+            memberPlanSlug: memberPlanBySlug as string | undefined,
+            voucher: voucher as string | undefined,
+          }}
           className={className}
           memberPlans={memberPlansObj}
+          memberPlanRenderSettings={memberPlanRenderSettings}
+          showGoodies={showGoodies}
+          showVouchers={showVouchers}
+          goodieMinValue={goodieMinValue}
+          hideRepeatGoodieOnUpgrade={hideRepeatGoodieOnUpgrade}
           subscriptionToUpgrade={subscriptionToUpgrade}
           upgradeInfo={upgradeInfo}
           onSelect={handleOnSelect}
-          defaults={{
-            memberPlanSlug: memberPlanBySlug as string | undefined,
-          }}
           onUpgrade={async formData => {
             const selectedMemberplan = memberPlans.find(
               mb => mb.id === formData.memberPlanId

@@ -1,6 +1,3 @@
-/**
- * @jest-environment jsdom
- */
 import { createTheme, ThemeProvider } from '@mui/material';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 
@@ -14,7 +11,7 @@ import {
 const theme = createTheme();
 
 // Translate to the raw key so assertions stay deterministic and locale-agnostic.
-jest.mock('react-i18next', () => ({
+vi.mock('react-i18next', () => ({
   useTranslation: () => ({
     t: (key: string, opts?: Record<string, unknown>) =>
       opts && 'count' in opts ? `${key}:${opts.count}` : key,
@@ -49,8 +46,8 @@ const archived: VersionHistoryRevision = {
 const renderPanel = (
   props: Partial<Parameters<typeof VersionHistory>[0]> = {}
 ) => {
-  const onRestore = jest.fn();
-  const onClose = jest.fn();
+  const onRestore = vi.fn();
+  const onClose = vi.fn();
 
   render(
     <ThemeProvider theme={theme}>
@@ -175,7 +172,7 @@ describe('VersionHistory', () => {
   });
 
   it('calls onPreview with the revision id when preview is clicked', () => {
-    const onPreview = jest.fn();
+    const onPreview = vi.fn();
     renderPanel({ onPreview });
 
     // every revision (including the current draft) is previewable
@@ -211,7 +208,7 @@ describe('VersionHistory', () => {
   });
 
   it('renders a load more control and triggers onLoadMore', () => {
-    const onLoadMore = jest.fn();
+    const onLoadMore = vi.fn();
     renderPanel({ hasMore: true, totalCount: 10, onLoadMore });
 
     const loadMore = screen.getByText('versionHistory.loadMore');

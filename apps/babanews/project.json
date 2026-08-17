@@ -10,7 +10,8 @@
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
-        "outputPath": "dist/apps/babanews"
+        "outputPath": "dist/apps/babanews",
+        "webpack": true
       },
       "configurations": {
         "development": {
@@ -25,7 +26,8 @@
       "options": {
         "buildTarget": "babanews:build",
         "port": 4203,
-        "dev": true
+        "dev": true,
+        "webpack": true
       },
       "configurations": {
         "development": {
@@ -45,10 +47,18 @@
       }
     },
     "test": {
-      "executor": "@nx/jest:jest",
+      "executor": "nx:run-commands",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "apps/babanews/jest.config.ts"
+        "command": "vitest run --passWithNoTests --config {projectRoot}/vitest.config.ts"
+      },
+      "configurations": {
+        "ci": {
+          "command": "vitest run --passWithNoTests --coverage --config {projectRoot}/vitest.config.ts"
+        },
+        "update": {
+          "command": "vitest run --passWithNoTests --update --config {projectRoot}/vitest.config.ts"
+        }
       }
     },
     "lint": {

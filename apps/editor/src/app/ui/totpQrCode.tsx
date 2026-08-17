@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import QRCodeStyling from 'qr-code-styling';
 import { useEffect, useMemo, useRef } from 'react';
+
 import markUrl from './wepublish-mark.png';
 
 const Wrapper = styled.div`

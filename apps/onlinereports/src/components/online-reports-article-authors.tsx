@@ -1,13 +1,12 @@
 import styled from '@emotion/styled';
 import { Button, css, IconButton } from '@mui/material';
 import { ArticleDateWrapper } from '@wepublish/article/website';
-import { CommentListItemShareWrapper } from '@wepublish/comments/website';
+import { ShareWrapper } from '@wepublish/ui';
 import { useCommentListQuery } from '@wepublish/website/api';
 import {
   BuilderArticleAuthorsProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { useEffect, useState } from 'react';
 import { MdOutlineModeComment } from 'react-icons/md';
 
 import {
@@ -94,12 +93,10 @@ export function OnlineReportsArticleAuthors({
   article,
 }: BuilderArticleAuthorsProps) {
   const {
-    CommentListItemShare,
+    Share,
     ArticleDate,
     elements: { Image, Link },
   } = useWebsiteBuilder();
-
-  const [url, setUrl] = useState(article.url);
 
   const { data } = useCommentListQuery({
     fetchPolicy: 'cache-only',
@@ -107,12 +104,6 @@ export function OnlineReportsArticleAuthors({
       itemId: article.id,
     },
   });
-
-  useEffect(() => {
-    if (url.startsWith('/')) {
-      setUrl(window.location.origin + article.url);
-    }
-  }, [article.url, url]);
 
   const authors =
     article?.latest.authors.filter(author => !author.hideOnArticle) || [];
@@ -164,7 +155,7 @@ export function OnlineReportsArticleAuthors({
 
       <CommentsShareBox>
         {!article?.disableComments && (
-          <CommentListItemShareWrapper>
+          <ShareWrapper>
             {data?.commentsForItem?.length ?
               <ShareButton
                 onClick={scrollToComments}
@@ -183,13 +174,13 @@ export function OnlineReportsArticleAuthors({
                 <MdOutlineModeComment />
               </IconButton>
             }
-          </CommentListItemShareWrapper>
+          </ShareWrapper>
         )}
 
-        <CommentListItemShare
-          title={article.latest.title ?? ''}
-          url={url}
-          forceNonSystemShare={true}
+        <Share
+          title={article.latest.title ?? undefined}
+          url={article.url}
+          overrideNavigatorShare={true}
         />
       </CommentsShareBox>
     </MetaWrapper>

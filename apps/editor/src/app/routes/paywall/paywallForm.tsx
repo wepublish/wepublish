@@ -18,12 +18,12 @@ import { MdDownload, MdQrCode } from 'react-icons/md';
 import {
   Button,
   Checkbox,
-  FlexboxGrid,
   Form,
   IconButton,
   Input,
   Modal,
   Panel,
+  Stack,
 } from 'rsuite';
 
 import markUrl from '../../ui/wepublish-mark.png';
@@ -179,20 +179,19 @@ export const PaywallForm = ({
     <PaywallFormWrapper>
       <PaywallFormSection>
         <Panel bordered>
-          <Form.Group controlId="name">
-            <Form.ControlLabel>{t('paywall.form.name')}</Form.ControlLabel>
-            <Form.Control
-              name="name"
-              value={paywall.name ?? ''}
-              onChange={(name: string) => onChange({ name })}
-            />
-          </Form.Group>
+          <Form.Stack fluid>
+            <Form.Group controlId="name">
+              <Form.Label>{t('paywall.form.name')}</Form.Label>
+              <Form.Control
+                name="name"
+                value={paywall.name ?? ''}
+                onChange={(name: string) => onChange({ name })}
+              />
+            </Form.Group>
 
-          <Form.Group controlId="description">
-            <Form.ControlLabel>
-              {t('paywall.form.description')}
-            </Form.ControlLabel>
-            <Panel bordered>
+            <Form.Group controlId="description">
+              <Form.Label>{t('paywall.form.description')}</Form.Label>
+
               <Form.Control
                 name="description"
                 value={paywall.description || []}
@@ -201,14 +200,11 @@ export const PaywallForm = ({
                 }
                 accepter={RichTextBlock}
               />
-            </Panel>
-          </Form.Group>
+            </Form.Group>
 
-          <Form.Group controlId="circumventDescription">
-            <Form.ControlLabel>
-              {t('paywall.form.circumventDescription')}
-            </Form.ControlLabel>
-            <Panel bordered>
+            <Form.Group controlId="circumventDescription">
+              <Form.Label>{t('paywall.form.circumventDescription')}</Form.Label>
+
               <Form.Control
                 name="circumventDescription"
                 value={paywall.circumventDescription || []}
@@ -217,8 +213,8 @@ export const PaywallForm = ({
                 ) => onChange({ circumventDescription })}
                 accepter={RichTextBlock}
               />
-            </Panel>
-          </Form.Group>
+            </Form.Group>
+          </Form.Stack>
         </Panel>
 
         <Panel
@@ -226,11 +222,10 @@ export const PaywallForm = ({
           collapsible
           header={t('paywall.form.upgrade')}
         >
-          <Form.Group controlId="upgradeDescription">
-            <Form.ControlLabel>
-              {t('paywall.form.description')}
-            </Form.ControlLabel>
-            <Panel bordered>
+          <Form.Stack fluid>
+            <Form.Group controlId="upgradeDescription">
+              <Form.Label>{t('paywall.form.description')}</Form.Label>
+
               <Form.Control
                 name="upgradeDescription"
                 value={paywall.upgradeDescription || []}
@@ -239,14 +234,11 @@ export const PaywallForm = ({
                 ) => onChange({ upgradeDescription })}
                 accepter={RichTextBlock}
               />
-            </Panel>
-          </Form.Group>
+            </Form.Group>
 
-          <Form.Group controlId="upgradeCircumventDescription">
-            <Form.ControlLabel>
-              {t('paywall.form.circumventDescription')}
-            </Form.ControlLabel>
-            <Panel bordered>
+            <Form.Group controlId="upgradeCircumventDescription">
+              <Form.Label>{t('paywall.form.circumventDescription')}</Form.Label>
+
               <Form.Control
                 name="upgradeCircumventDescription"
                 value={paywall.upgradeCircumventDescription || []}
@@ -255,8 +247,8 @@ export const PaywallForm = ({
                 ) => onChange({ upgradeCircumventDescription })}
                 accepter={RichTextBlock}
               />
-            </Panel>
-          </Form.Group>
+            </Form.Group>
+          </Form.Stack>
         </Panel>
       </PaywallFormSection>
 
@@ -265,49 +257,52 @@ export const PaywallForm = ({
           bordered
           style={{ overflow: 'initial' }}
         >
-          <Form.Group controlId="active">
-            <Form.Control
-              name="active"
-              checked={!!paywall.active}
-              onChange={() => onChange({ active: !paywall.active })}
-              accepter={Checkbox}
-            >
-              {t('paywall.form.active')}
-            </Form.Control>
+          <Form.Stack fluid>
+            <Form.Group controlId="active">
+              <Form.Control
+                name="active"
+                checked={!!paywall.active}
+                onChange={() => onChange({ active: !paywall.active })}
+                accepter={Checkbox}
+              >
+                {t('paywall.form.active')}
+              </Form.Control>
 
-            <Form.HelpText>{t('paywall.form.activeHelpText')}</Form.HelpText>
-          </Form.Group>
+              <Form.Text>{t('paywall.form.activeHelpText')}</Form.Text>
+            </Form.Group>
 
-          <Form.Group>
-            <Form.Control
-              name="anyMemberPlan"
-              checked={!!paywall.anyMemberPlan}
-              onChange={() =>
-                onChange({ anyMemberPlan: !paywall.anyMemberPlan })
-              }
-              accepter={Checkbox}
-            >
-              {t('paywall.form.anyMemberPlan')}
-            </Form.Control>
+            <Form.Group>
+              <Form.Control
+                name="anyMemberPlan"
+                checked={!!paywall.anyMemberPlan}
+                onChange={() =>
+                  onChange({ anyMemberPlan: !paywall.anyMemberPlan })
+                }
+                accepter={Checkbox}
+              >
+                {t('paywall.form.anyMemberPlan')}
+              </Form.Control>
+            </Form.Group>
 
-            <Form.ControlLabel>
-              {t('paywall.form.memberPlans')}
-            </Form.ControlLabel>
-            <Form.Control
-              name="memberPlans"
-              disabled={!!paywall.anyMemberPlan}
-              defaultMemberPlans={paywall.memberPlans ?? []}
-              selectedMemberPlans={paywall.memberPlanIds ?? []}
-              setSelectedMemberPlans={(memberPlanIds: string[]) =>
-                onChange({ memberPlanIds })
-              }
-              accepter={SelectMemberPlans}
-            />
+            <Form.Group>
+              <Form.Label>{t('paywall.form.memberPlans')}</Form.Label>
+
+              <Form.Control
+                name="memberPlans"
+                disabled={!!paywall.anyMemberPlan}
+                defaultMemberPlans={paywall.memberPlans ?? []}
+                selectedMemberPlans={paywall.memberPlanIds ?? []}
+                setSelectedMemberPlans={(memberPlanIds: string[]) =>
+                  onChange({ memberPlanIds })
+                }
+                accepter={SelectMemberPlans}
+              />
+            </Form.Group>
 
             <Form.Group controlId="alternativeSubscribeUrl">
-              <Form.ControlLabel>
+              <Form.Label>
                 {t('paywall.form.alternativeSubscribeUrl')}
-              </Form.ControlLabel>
+              </Form.Label>
 
               <Form.Control
                 name="alternativeSubscribeUrl"
@@ -318,31 +313,31 @@ export const PaywallForm = ({
                 type="url"
               />
 
-              <Form.HelpText>
+              <Form.Text>
                 {t('paywall.form.alternativeSubscribeUrlHelpText')}
-              </Form.HelpText>
+              </Form.Text>
             </Form.Group>
-          </Form.Group>
+          </Form.Stack>
         </Panel>
 
         <Panel bordered>
           <Form.Group>
-            <Form.ControlLabel>{t('paywall.form.bypasses')}</Form.ControlLabel>
+            <Form.Label>{t('paywall.form.bypasses')}</Form.Label>
 
             {(paywall.bypasses || []).map((bypass, index) => (
-              <FlexboxGrid
+              <Stack
                 key={index}
-                align="middle"
+                alignItems="center"
                 style={{ gap: '8px', marginBottom: '8px' }}
               >
-                <FlexboxGrid.Item style={{ flex: 1 }}>
+                <Stack.Item style={{ flex: 1 }}>
                   <Input
                     value={bypass.token}
                     onChange={value => updateBypassToken(index, value)}
                     placeholder={t('paywall.form.bypassToken')}
                   />
-                </FlexboxGrid.Item>
-                <FlexboxGrid.Item>
+                </Stack.Item>
+                <Stack.Item>
                   <IconButton
                     icon={<MdQrCode />}
                     size="sm"
@@ -351,8 +346,8 @@ export const PaywallForm = ({
                     onClick={() => showQRCode(bypass.token)}
                     disabled={!bypass.token}
                   />
-                </FlexboxGrid.Item>
-                <FlexboxGrid.Item>
+                </Stack.Item>
+                <Stack.Item>
                   <IconButton
                     icon={<TrashIcon />}
                     size="sm"
@@ -360,23 +355,24 @@ export const PaywallForm = ({
                     appearance="ghost"
                     onClick={() => removeBypass(index)}
                   />
-                </FlexboxGrid.Item>
-              </FlexboxGrid>
+                </Stack.Item>
+              </Stack>
             ))}
 
-            <FlexboxGrid
-              align="middle"
+            <Stack
+              alignItems="center"
               style={{ gap: '8px', marginTop: '8px' }}
             >
-              <FlexboxGrid.Item style={{ flex: 1 }}>
+              <Stack.Item style={{ flex: 1 }}>
                 <Input
                   value={newBypassToken}
                   onChange={setNewBypassToken}
                   placeholder={t('paywall.form.newBypassToken')}
                   onPressEnter={addBypass}
                 />
-              </FlexboxGrid.Item>
-              <FlexboxGrid.Item>
+              </Stack.Item>
+
+              <Stack.Item>
                 <Button
                   appearance="primary"
                   startIcon={<PlusIcon />}
@@ -385,8 +381,8 @@ export const PaywallForm = ({
                 >
                   {t('paywall.form.addBypass')}
                 </Button>
-              </FlexboxGrid.Item>
-            </FlexboxGrid>
+              </Stack.Item>
+            </Stack>
           </Form.Group>
         </Panel>
 
@@ -395,34 +391,34 @@ export const PaywallForm = ({
           collapsible
           header={t('paywall.form.display')}
         >
-          <Form.Group controlId="hideContentAfter">
-            <Form.ControlLabel>
-              {t('paywall.form.hideContentAfter')}
-            </Form.ControlLabel>
+          <Form.Stack fluid>
+            <Form.Group controlId="hideContentAfter">
+              <Form.Label>{t('paywall.form.hideContentAfter')}</Form.Label>
 
-            <Form.Control
-              name="hideContentAfter"
-              type="number"
-              min={0}
-              value={paywall.hideContentAfter ?? ''}
-              onChange={(hideContentAfter: string) =>
-                onChange({ hideContentAfter: +hideContentAfter })
-              }
-            />
-          </Form.Group>
+              <Form.Control
+                name="hideContentAfter"
+                type="number"
+                min={0}
+                value={paywall.hideContentAfter ?? ''}
+                onChange={(hideContentAfter: string) =>
+                  onChange({ hideContentAfter: +hideContentAfter })
+                }
+              />
+            </Form.Group>
 
-          <Form.Group controlId="fadeout">
-            <Form.Control
-              name="fadeout"
-              checked={!!paywall.fadeout}
-              onChange={() => onChange({ fadeout: !paywall.fadeout })}
-              accepter={Checkbox}
-            >
-              {t('paywall.form.fadeout')}
-            </Form.Control>
+            <Form.Group controlId="fadeout">
+              <Form.Control
+                name="fadeout"
+                checked={!!paywall.fadeout}
+                onChange={() => onChange({ fadeout: !paywall.fadeout })}
+                accepter={Checkbox}
+              >
+                {t('paywall.form.fadeout')}
+              </Form.Control>
 
-            <Form.HelpText>{t('paywall.form.fadeoutHelpText')}</Form.HelpText>
-          </Form.Group>
+              <Form.Text>{t('paywall.form.fadeoutHelpText')}</Form.Text>
+            </Form.Group>
+          </Form.Stack>
         </Panel>
       </PaywallFormSection>
 
@@ -434,6 +430,7 @@ export const PaywallForm = ({
         <Modal.Header>
           <Modal.Title>{t('paywall.form.qrCodeTitle')}</Modal.Title>
         </Modal.Header>
+
         <Modal.Body style={{ textAlign: 'center' }}>
           <BaseUrlInput
             value={qrBaseUrl}
@@ -445,6 +442,7 @@ export const PaywallForm = ({
           </QRCodeContainer>
           <TokenUrl>{fullBypassUrl}</TokenUrl>
         </Modal.Body>
+
         <Modal.Footer>
           <Button
             onClick={downloadQRCode}

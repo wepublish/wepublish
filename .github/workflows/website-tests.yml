@@ -25,7 +25,7 @@ jobs:
           node-version: '22'
           cache: 'npm'
       - run: npm ci
-      - run: npm run test-website -- --code-coverage
+      - run: npm run test-website -- --configuration=ci
         env:
           NODE_OPTIONS: "--max-old-space-size=4096"
           JWT_PRIVATE_KEY: "-----BEGIN PRIVATE KEY-----\nMC4CAQAwBQYDK2VwBCIEIJWbdZ23hpurtFiEpnulSfJ1U4TwbkiDWmbGZSDVx3nR\n-----END PRIVATE KEY-----"

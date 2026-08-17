@@ -7,7 +7,11 @@ import {
   ArticleSEO,
   ArticleTags,
 } from '@wepublish/article/website';
-import { LoginForm, RegistrationForm } from '@wepublish/authentication/website';
+import {
+  LoginForm,
+  RegistrationForm,
+  UserForm,
+} from '@wepublish/authentication/website';
 import {
   ArticleAuthor,
   Author,
@@ -67,7 +71,6 @@ import {
   CommentList,
   CommentListItem,
   CommentListItemChild,
-  CommentListItemShare,
   CommentRatings,
 } from '@wepublish/comments/website';
 import {
@@ -82,6 +85,7 @@ import {
   InvoiceList,
   InvoiceListItem,
   MemberPlanItem,
+  GoodiePicker,
   MemberPlanPicker,
   PaymentAmountSlider,
   PaymentMethodPicker,
@@ -91,6 +95,7 @@ import {
   SubscriptionListItem,
   TransactionFee,
   Upgrade,
+  PaymentAmountPicker,
 } from '@wepublish/membership/website';
 import { Footer, Navbar } from '@wepublish/navigation/website';
 import { Page, PageSEO } from '@wepublish/page/website';
@@ -117,15 +122,16 @@ import {
   Pagination,
   Paragraph,
   Rating,
+  Share,
   TextToIcon,
   UnorderedList,
 } from '@wepublish/ui';
 import { ImageUpload, PersonalDataForm } from '@wepublish/user/website';
 import { WebsiteBuilderProvider } from '@wepublish/website/builder';
-import { format, getDefaultOptions } from 'date-fns';
+import { format, getDefaultOptions, Locale } from 'date-fns';
 import { memo, PropsWithChildren } from 'react';
 import { IconContext } from 'react-icons';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { ContentWrapperStyled } from '@wepublish/content/website';
 import { Paywall } from '@wepublish/paywall/website';
@@ -217,7 +223,6 @@ export const WebsiteProvider = memo<WebsiteProps>(({ children }) => (
         EventListItem={EventListItem}
         CommentList={CommentList}
         CommentListItem={CommentListItem}
-        CommentListItemShare={CommentListItemShare}
         CommentListItemChild={CommentListItemChild}
         Comment={Comment}
         CommentEditor={CommentEditor}
@@ -227,14 +232,17 @@ export const WebsiteProvider = memo<WebsiteProps>(({ children }) => (
         LoginForm={LoginForm}
         RegistrationForm={RegistrationForm}
         PersonalDataForm={PersonalDataForm}
+        UserForm={UserForm}
         SubscriptionList={SubscriptionList}
         SubscriptionListItem={SubscriptionListItem}
         InvoiceList={InvoiceList}
         InvoiceListItem={InvoiceListItem}
+        GoodiePicker={GoodiePicker}
         MemberPlanPicker={MemberPlanPicker}
         MemberPlanItem={MemberPlanItem}
         PeriodicityPicker={PeriodicityPicker}
-        PaymentAmount={PaymentAmountSlider}
+        PaymentAmountSlider={PaymentAmountSlider}
+        PaymentAmountPicker={PaymentAmountPicker}
         PaymentMethodPicker={PaymentMethodPicker}
         TransactionFee={TransactionFee}
         Subscribe={Subscribe}
@@ -244,6 +252,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({ children }) => (
         Tag={Tag}
         TagSEO={TagSEO}
         TextToIcon={TextToIcon}
+        Share={Share}
         elements={{
           TextField,
           Rating,

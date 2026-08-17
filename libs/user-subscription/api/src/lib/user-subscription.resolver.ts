@@ -13,7 +13,7 @@ import {
   UserSession,
 } from '@wepublish/authentication/api';
 import { UserSubscriptionService } from './user-subscription.service';
-import { PublicSubscription } from '@wepublish/membership/api';
+import { PublicSubscription, VoucherService } from '@wepublish/membership/api';
 import { Payment } from '@wepublish/payment/api';
 import { UserDataloaderService } from '@wepublish/user/api';
 import { BadRequestException } from '@nestjs/common';
@@ -23,7 +23,8 @@ import { Voucher } from '@prisma/client';
 export class UserSubscriptionResolver {
   constructor(
     private userSubscriptionService: UserSubscriptionService,
-    private userDataloader: UserDataloaderService
+    private userDataloader: UserDataloaderService,
+    private voucherService: VoucherService
   ) {}
 
   @Authenticated()
@@ -45,7 +46,7 @@ export class UserSubscriptionResolver {
     let validVoucher: Voucher | null = null;
 
     try {
-      validVoucher = await this.userSubscriptionService.getValidVoucher(
+      validVoucher = await this.voucherService.getValidVoucher(
         voucher,
         memberPlanId
       );

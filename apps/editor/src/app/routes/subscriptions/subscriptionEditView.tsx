@@ -31,7 +31,7 @@ import {
   DescriptionListItem,
   InvoiceListPanel,
   ListViewActions,
-  ListViewContainer,
+  ListViewContainer as ListViewContainerDefault,
   ListViewHeader,
   PermissionControl,
   TableWrapper,
@@ -67,13 +67,13 @@ import {
   Toggle,
 } from 'rsuite';
 
-const { Group, ControlLabel, Control, HelpText } = RForm;
+const { Group, Label, Control, Text } = RForm;
 
 const Form = styled(RForm)`
   height: 100%;
 `;
 
-const FormControlLabelMarginLeft = styled(ControlLabel)`
+const FormLabelMarginLeft = styled(Label)`
   margin-left: 10px;
 `;
 
@@ -89,12 +89,17 @@ const RowPaddingTop = styled(Row)`
   padding-top: 12px;
 `;
 
+const ListViewContainer = styled(ListViewContainerDefault)`
+  grid-template-columns: 1fr 1fr;
+`;
+
 const UserFormGrid = styled(RGrid)`
   width: 100%;
   padding-left: 0px;
-  height: calc(100vh - 160px);
+  height: auto;
   overflow-y: auto;
   margin-top: 2rem;
+  padding-bottom: 2rem;
 `;
 
 const ButtonMarginRight = styled(Button)`
@@ -104,10 +109,6 @@ const ButtonMarginRight = styled(Button)`
 const IconButtonMarginRight = styled(IconButton)`
   margin-right: 10px;
   margin-top: 10px;
-`;
-
-const Actions = styled(ListViewActions)`
-  grid-column: 3;
 `;
 
 export interface SubscriptionEditViewProps {
@@ -585,7 +586,6 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
       <Form
         onSubmit={validationPassed => validationPassed && handleSave()}
         model={validationModel}
-        fluid
         formValue={{
           memberPlan: memberPlan?.name,
           user: user?.name,
@@ -605,7 +605,8 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
               : t('userSubscriptionEdit.createTitle')}
             </h2>
           </ListViewHeader>
-          <Actions>
+
+          <ListViewActions>
             <PermissionControl
               qualifyingPermissions={['CAN_CREATE_SUBSCRIPTION']}
             >
@@ -637,8 +638,9 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                 {user ? t('saveAndClose') : t('createAndClose')}
               </Button>
             </PermissionControl>
-          </Actions>
+          </ListViewActions>
         </ListViewContainer>
+
         <UserFormGrid>
           <Row gutter={10}>
             <Col xs={12}>
@@ -678,7 +680,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                       <Row gutter={24}>
                         {/* user */}
                         <Col xs={12}>
-                          <ControlLabel>
+                          <Label>
                             {user?.id ?
                               <Link
                                 to={`/users/edit/${user.id}`}
@@ -695,7 +697,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                                 )}
                               </p>
                             }
-                          </ControlLabel>
+                          </Label>
 
                           <UserSearch
                             name="user"
@@ -707,7 +709,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                         </Col>
                         {/* member plan */}
                         <Col xs={12}>
-                          <ControlLabel>
+                          <Label>
                             {memberPlan?.id ?
                               <Link
                                 to={`/memberplans/edit/${memberPlan?.id}`}
@@ -724,7 +726,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                                 )}
                               </p>
                             }
-                          </ControlLabel>
+                          </Label>
                           <Control
                             block
                             name="memberPlan"
@@ -758,7 +760,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                           />
 
                           {memberPlan && (
-                            <HelpText>
+                            <Text>
                               <DescriptionList>
                                 <DescriptionListItem
                                   label={t(
@@ -773,18 +775,18 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                                   )}
                                 </DescriptionListItem>
                               </DescriptionList>
-                            </HelpText>
+                            </Text>
                           )}
                         </Col>
                       </Row>
                       <RowPaddingTop>
                         {/* payment periodicity */}
                         <Col xs={12}>
-                          <ControlLabel>
+                          <Label>
                             {toggleRequiredLabel(
                               t('memberPlanList.paymentPeriodicities')
                             )}
-                          </ControlLabel>
+                          </Label>
 
                           <Control
                             virtualized
@@ -810,11 +812,11 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                         </Col>
                         {/* amount per period */}
                         <Col xs={12}>
-                          <ControlLabel>
+                          <Label>
                             {toggleRequiredLabel(
                               t('userSubscriptionEdit.periodAmount')
                             )}
-                          </ControlLabel>
+                          </Label>
 
                           <CurrencyInput
                             name="monthlyAmount"
@@ -833,7 +835,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                           />
                           {paymentPeriodicity !==
                             PaymentPeriodicity.Monthly && (
-                            <HelpText>
+                            <Text>
                               {t(
                                 'userSubscriptionEdit.monthlyAmountEquivalent',
                                 {
@@ -841,18 +843,18 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                                   amount: (monthlyAmount / 100).toFixed(2),
                                 }
                               )}
-                            </HelpText>
+                            </Text>
                           )}
                         </Col>
                       </RowPaddingTop>
                       <RowPaddingTop>
                         {/* payment method */}
                         <Col xs={12}>
-                          <ControlLabel>
+                          <Label>
                             {toggleRequiredLabel(
                               t('userSubscriptionEdit.paymentMethod')
                             )}
-                          </ControlLabel>
+                          </Label>
 
                           <Control
                             name="paymentMethod"
@@ -877,50 +879,11 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                             placement="auto"
                           />
                         </Col>
-                        {/* auto renew */}
-                        <Col xs={12}>
-                          <ControlLabel>
-                            {t('userSubscriptionEdit.autoRenew')}
-                          </ControlLabel>
-                          <Toggle
-                            checked={autoRenew}
-                            disabled={
-                              isDisabled ||
-                              hasNoMemberPlanSelected ||
-                              isDeactivated
-                            }
-                            onChange={value =>
-                              setAutoRenew(() =>
-                                checkTrialSubscription(extendable, value) ?
-                                  value
-                                : autoRenew
-                              )
-                            }
-                          />
-                          <HelpText>
-                            {t('userSubscriptionEdit.autoRenewDescription')}
-                          </HelpText>
-                        </Col>
-                      </RowPaddingTop>
-                      <RowPaddingTop>
-                        <Col xs={12}></Col>
-                        <Col xs={12}>
-                          <Button
-                            appearance="ghost"
-                            color="red"
-                            loading={isDisabled}
-                            onClick={() => setExtendModal(true)}
-                          >
-                            {t('userSubscriptionEdit.renewNow')}
-                          </Button>
-                        </Col>
                       </RowPaddingTop>
                       <RowPaddingTop>
                         {/* subscription start */}
                         <Col xs={12}>
-                          <ControlLabel>
-                            {t('userSubscriptionEdit.startsAt')}
-                          </ControlLabel>
+                          <Label>{t('userSubscriptionEdit.startsAt')}</Label>
                           <DatePicker
                             block
                             cleanable={false}
@@ -935,9 +898,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                         </Col>
                         {/* subscription paid until */}
                         <Col xs={12}>
-                          <ControlLabel>
-                            {t('userSubscriptionEdit.paidUntil')}
-                          </ControlLabel>
+                          <Label>{t('userSubscriptionEdit.paidUntil')}</Label>
                           <DatePicker
                             block
                             value={paidUntil ?? undefined}
@@ -1010,12 +971,47 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                             )
                           }
                         />
-                        <FormControlLabelMarginLeft>
+                        <FormLabelMarginLeft>
                           {t('memberplanForm.extendableToggle')}
-                        </FormControlLabelMarginLeft>
-                        <HelpText>
-                          {t('memberplanForm.extendableHelpText')}
-                        </HelpText>
+                        </FormLabelMarginLeft>
+                        <Text>{t('memberplanForm.extendableHelpText')}</Text>
+                      </Col>
+                    </RowPaddingTop>
+                    <RowPaddingTop>
+                      {/* auto renew */}
+                      <Col xs={12}>
+                        <Toggle
+                          checked={autoRenew}
+                          disabled={
+                            isDisabled ||
+                            hasNoMemberPlanSelected ||
+                            isDeactivated
+                          }
+                          onChange={value =>
+                            setAutoRenew(() =>
+                              checkTrialSubscription(extendable, value) ? value
+                              : autoRenew
+                            )
+                          }
+                        />
+                        <FormLabelMarginLeft>
+                          {t('userSubscriptionEdit.autoRenew')}
+                        </FormLabelMarginLeft>
+                        <Text>
+                          {t('userSubscriptionEdit.autoRenewDescription')}
+                        </Text>
+                      </Col>
+                    </RowPaddingTop>
+                    <RowPaddingTop>
+                      <Col xs={24}>
+                        <Button
+                          appearance="ghost"
+                          color="red"
+                          loading={isDisabled}
+                          onClick={() => setExtendModal(true)}
+                        >
+                          {t('userSubscriptionEdit.renewNow')}
+                        </Button>
                       </Col>
                     </RowPaddingTop>
                   </Grid>
@@ -1023,21 +1019,16 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
               </Grid>
             </Col>
 
-            <Col xs={12}>
+            <Col xs={24}>
               <Grid fluid>
-                <RPanel
-                  bordered
-                  header={t('invoice.panel.invoiceHistory')}
-                >
-                  {id && (
-                    <InvoiceListPanel
-                      subscriptionId={id}
-                      invoices={invoices}
-                      disabled={!!deactivation}
-                      onInvoicePaid={() => reloadSubscription()}
-                    />
-                  )}
-                </RPanel>
+                {id && (
+                  <InvoiceListPanel
+                    subscriptionId={id}
+                    invoices={invoices}
+                    disabled={!!deactivation}
+                    onInvoicePaid={() => reloadSubscription()}
+                  />
+                )}
               </Grid>
             </Col>
           </Row>

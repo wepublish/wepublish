@@ -2,8 +2,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { PaymentPeriodicity, PrismaClient } from '@prisma/client';
 import { UserSubscriptionService } from './user-subscription.service';
 import {
+  GoodieService,
   MemberContextService,
   VoucherDataloader,
+  VoucherService,
 } from '@wepublish/membership/api';
 import { PaymentsService } from '@wepublish/payment/api';
 import {
@@ -95,12 +97,17 @@ describe('UserSubscriptionService', () => {
         UserSubscriptionService,
         { provide: MemberContextService, useValue: memberContextMock },
         { provide: VoucherDataloader, useValue: voucherDataloaderMock },
+        VoucherService,
         { provide: MemberPlanDataloader, useValue: memberPlanDataloaderMock },
         {
           provide: MemberPlanService,
           useValue: { getMemberPlanBySlug: jest.fn() },
         },
         { provide: PaymentsService, useValue: paymentsMock },
+        {
+          provide: GoodieService,
+          useValue: { getValidGoodie: jest.fn() },
+        },
         { provide: PrismaClient, useValue: prismaMock },
       ],
     }).compile();

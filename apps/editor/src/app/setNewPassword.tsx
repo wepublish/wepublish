@@ -8,7 +8,7 @@ import { Button, Form as RForm, Message, toaster } from 'rsuite';
 
 import { Background } from './ui/loginBackground';
 
-const { Group, ControlLabel, Control } = RForm;
+const { Group, Label, Control } = RForm;
 
 const Form = styled(RForm)`
   display: flex;
@@ -103,47 +103,55 @@ export function SetNewPassword() {
 
   return (
     <LoginTemplate backgroundChildren={<Background />}>
-      <Form fluid>
-        {success ?
-          <>
-            <Description>{t('setNewPassword.success')}</Description>
-            <BackLink href="/login">{t('setNewPassword.goToLogin')}</BackLink>
-          </>
-        : <>
-            <Description>{t('setNewPassword.description')}</Description>
+      <Form>
+        <RForm.Stack fluid>
+          {success ?
+            <>
+              <Description>{t('setNewPassword.success')}</Description>
+              <BackLink href="/login">{t('setNewPassword.goToLogin')}</BackLink>
+            </>
+          : <>
+              <Description>{t('setNewPassword.description')}</Description>
 
-            <Group controlId="newPassword">
-              <ControlLabel>{t('setNewPassword.password')}</ControlLabel>
-              <Control
-                inputRef={passwordInputRef}
-                name="password"
-                type="password"
-                value={password}
-                autoComplete="new-password"
-                onChange={(value: string) => setPassword(value)}
-              />
-            </Group>
-            <Group controlId="newPasswordRepeat">
-              <ControlLabel>{t('setNewPassword.passwordRepeat')}</ControlLabel>
-              <Control
-                name="passwordRepeat"
-                type="password"
-                value={passwordRepeat}
-                autoComplete="new-password"
-                onChange={(value: string) => setPasswordRepeat(value)}
-              />
-            </Group>
-            <Button
-              appearance="primary"
-              type="submit"
-              disabled={loading || !password || !passwordRepeat}
-              onClick={handleSubmit}
-            >
-              {t('setNewPassword.submit')}
-            </Button>
-            <BackLink href="/login">{t('resetPassword.backToLogin')}</BackLink>
-          </>
-        }
+              <Group controlId="newPassword">
+                <Label>{t('setNewPassword.password')}</Label>
+                <Control
+                  inputRef={passwordInputRef}
+                  name="password"
+                  type="password"
+                  value={password}
+                  autoComplete="new-password"
+                  onChange={(value: string) => setPassword(value)}
+                />
+              </Group>
+
+              <Group controlId="newPasswordRepeat">
+                <Label>{t('setNewPassword.passwordRepeat')}</Label>
+
+                <Control
+                  name="passwordRepeat"
+                  type="password"
+                  value={passwordRepeat}
+                  autoComplete="new-password"
+                  onChange={(value: string) => setPasswordRepeat(value)}
+                />
+              </Group>
+
+              <Button
+                appearance="primary"
+                type="submit"
+                disabled={loading || !password || !passwordRepeat}
+                onClick={handleSubmit}
+              >
+                {t('setNewPassword.submit')}
+              </Button>
+
+              <BackLink href="/login">
+                {t('resetPassword.backToLogin')}
+              </BackLink>
+            </>
+          }
+        </RForm.Stack>
       </Form>
     </LoginTemplate>
   );

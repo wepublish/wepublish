@@ -113,10 +113,30 @@ fragment FullSubscribeBlock on SubscribeBlock {
   blockStyle: blockStyleName
   memberPlanIds
   periodicityDisplay
+  memberPlanRenderSettings {
+    isDefault
+    memberPlanId
+    layout {
+      type
+
+      ... on SubscribeBlockLayoutSliderConfig {
+        showInput
+      }
+
+      ... on SubscribeBlockLayoutPickerConfig {
+        showInput
+        values
+      }
+    }
+  }
   memberPlans {
     ...FullMemberPlan
   }
   fields
+  showGoodies
+  showVouchers
+  goodieMinValue
+  hideRepeatGoodieOnUpgrade
 }
 
 fragment FullEventBlock on EventBlock {

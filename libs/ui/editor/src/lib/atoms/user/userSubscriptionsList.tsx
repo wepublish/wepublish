@@ -23,13 +23,7 @@ import {
   MdTimelapse,
 } from 'react-icons/md';
 import { Link } from 'react-router-dom';
-import {
-  Button,
-  Divider,
-  FlexboxGrid,
-  IconButton,
-  Panel as RPanel,
-} from 'rsuite';
+import { Button, Col, Divider, IconButton, Panel as RPanel, Row } from 'rsuite';
 
 // import {NewSubscriptionButton} from '../../routes/subscriptionList'
 import {
@@ -57,31 +51,31 @@ const commonIconMargin = css`
   margin-right: 5px;
 `;
 
-const FlexItemAlignRight = styled(FlexboxGrid.Item)`
+const FlexItemAlignRight = styled(Col)`
   text-align: right;
 `;
 
-const FlexItemAlignSelf = styled(FlexboxGrid.Item)`
+const FlexItemAlignSelf = styled(Col)`
   align-self: center;
 `;
 
-const SubscriptionDetails = styled(FlexboxGrid.Item)`
+const SubscriptionDetails = styled(Col)`
   margin-top: 10px;
   padding-right: 5px;
 `;
 
-const InvoicesPeriods = styled(FlexboxGrid.Item)`
+const InvoicesPeriods = styled(Col)`
   margin-top: 10px;
   padding-left: 5px;
 `;
 
-const Periods = styled(FlexboxGrid.Item)`
+const Periods = styled(Col)`
   max-height: 400px;
   overflow-y: auto;
   margin-top: 5px;
 `;
 
-const FlexItemMLeft = styled(FlexboxGrid.Item)`
+const FlexItemMLeft = styled(Col)`
   margin-left: 10px;
 `;
 
@@ -231,9 +225,9 @@ function UserSubscriptionsList({
     <>
       {subscriptions?.map(subscription => (
         <div key={subscription.id}>
-          <FlexboxGrid>
+          <Row>
             {/* member plan name */}
-            <FlexItemAlignSelf colspan={18}>
+            <FlexItemAlignSelf span={18}>
               <h5>
                 {t('userSubscriptionList.subscriptionTitle', {
                   memberPlanName: subscription.memberPlan.name,
@@ -242,7 +236,7 @@ function UserSubscriptionsList({
               </h5>
             </FlexItemAlignSelf>
             {/* edit subscription */}
-            <FlexItemAlignRight colspan={6}>
+            <FlexItemAlignRight span={6}>
               <Link
                 to={`/subscriptions/edit/${subscription.id}?userId=${userId}`}
               >
@@ -252,40 +246,40 @@ function UserSubscriptionsList({
               </Link>
             </FlexItemAlignRight>
             {/* subscription details */}
-            <SubscriptionDetails colspan={12}>
-              <FlexboxGrid>
+            <SubscriptionDetails span={12}>
+              <Row>
                 {/* subscription details title */}
-                <FlexItemMLeft colspan={24}>
+                <FlexItemMLeft span={24}>
                   <h6>{t('userSubscriptionList.aboDetails')}</h6>
                 </FlexItemMLeft>
                 <PanelMTop bordered>
                   {/* created at */}
-                  <FlexboxGrid.Item colspan={24}>
+                  <Col span={24}>
                     <MdEvent css={commonIconMargin} />
                     {t('userSubscriptionList.subscriptionCreatedAt', {
                       date: new Intl.DateTimeFormat('de-CH').format(
                         new Date(subscription.createdAt)
                       ),
                     })}
-                  </FlexboxGrid.Item>
+                  </Col>
                   {/* starts at */}
-                  <FlexboxGrid.Item colspan={24}>
+                  <Col span={24}>
                     <MdEventAvailable css={commonIconMargin} />
                     {t('userSubscriptionList.subscriptionStartsAt', {
                       date: new Intl.DateTimeFormat('de-CH').format(
                         new Date(subscription.startsAt)
                       ),
                     })}
-                  </FlexboxGrid.Item>
+                  </Col>
                   {/* payment periodicity */}
-                  <FlexboxGrid.Item colspan={24}>
+                  <Col span={24}>
                     <MdTimelapse css={commonIconMargin} />
                     {t('userSubscriptionList.paymentPeriodicity', {
                       paymentPeriodicity: paymentPeriodicity(subscription),
                     })}
-                  </FlexboxGrid.Item>
+                  </Col>
                   {/* monthly amount */}
-                  <FlexboxGrid.Item colspan={24}>
+                  <Col span={24}>
                     <MdCreditCard css={commonIconMargin} />
                     {t('userSubscriptionList.monthlyAmount', {
                       monthlyAmount: (subscription.monthlyAmount / 100).toFixed(
@@ -293,14 +287,14 @@ function UserSubscriptionsList({
                       ),
                       currency: subscription.currency,
                     })}
-                  </FlexboxGrid.Item>
+                  </Col>
                   {/* paid until */}
-                  <FlexboxGrid.Item colspan={24}>
+                  <Col span={24}>
                     <MdMoneyOff css={commonIconMargin} />
                     {paidUntilView(subscription)}
-                  </FlexboxGrid.Item>
+                  </Col>
                   {/* confirmed */}
-                  <FlexboxGrid.Item colspan={24}>
+                  <Col span={24}>
                     {subscription.confirmed ?
                       <>
                         <MdOutlineCheckBox css={commonIconMargin} />
@@ -311,41 +305,39 @@ function UserSubscriptionsList({
                         {t('userSubscriptionList.unconfirmed')}
                       </>
                     }
-                  </FlexboxGrid.Item>
+                  </Col>
                   {/* auto renewal */}
-                  <FlexboxGrid.Item colspan={24}>
-                    {autoRenewalView(subscription)}
-                  </FlexboxGrid.Item>
+                  <Col span={24}>{autoRenewalView(subscription)}</Col>
                 </PanelMTop>
-              </FlexboxGrid>
+              </Row>
             </SubscriptionDetails>
 
             {/* periods with invoices */}
-            <InvoicesPeriods colspan={12}>
-              <FlexboxGrid>
+            <InvoicesPeriods span={12}>
+              <Row>
                 {/* periods title */}
-                <FlexItemMLeft colspan={24}>
+                <FlexItemMLeft span={24}>
                   <h6>{t('userSubscriptionList.periods')}</h6>
                 </FlexItemMLeft>
                 {/* iterate periods */}
-                <Periods colspan={24}>
+                <Periods span={24}>
                   {subscription.periods.map(period => {
                     return (
                       <PanelMBottom
                         key={period.id}
                         bordered
                       >
-                        <FlexboxGrid>
+                        <Row>
                           {/* period created at */}
-                          <FlexboxGrid.Item colspan={24}>
+                          <Col span={24}>
                             {t('userSubscriptionList.periodCreatedAt', {
                               date: new Intl.DateTimeFormat('de-CH').format(
                                 new Date(period.createdAt)
                               ),
                             })}
-                          </FlexboxGrid.Item>
+                          </Col>
                           {/* period from to dates */}
-                          <FlexboxGrid.Item colspan={24}>
+                          <Col span={24}>
                             {t('userSubscriptionList.periodStartsAt', {
                               date: new Intl.DateTimeFormat('de-CH').format(
                                 new Date(period.startsAt)
@@ -357,26 +349,24 @@ function UserSubscriptionsList({
                                 new Date(period.endsAt)
                               ),
                             })}
-                          </FlexboxGrid.Item>
+                          </Col>
                           {/* amount */}
-                          <FlexboxGrid.Item colspan={24}>
+                          <Col span={24}>
                             {t('userSubscriptionList.periodAmount', {
                               amount: (period.amount / 100).toFixed(2),
                               currency: subscription.currency,
                             })}
-                          </FlexboxGrid.Item>
+                          </Col>
                           {/* related invoice */}
-                          <FlexboxGrid.Item colspan={24}>
-                            {getInvoiceView(period)}
-                          </FlexboxGrid.Item>
-                        </FlexboxGrid>
+                          <Col span={24}>{getInvoiceView(period)}</Col>
+                        </Row>
                       </PanelMBottom>
                     );
                   })}
                 </Periods>
-              </FlexboxGrid>
+              </Row>
             </InvoicesPeriods>
-          </FlexboxGrid>
+          </Row>
           <Divider />
         </div>
       ))}

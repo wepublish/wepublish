@@ -71,6 +71,28 @@ export class VoucherService {
   }
 
   @PrimeDataLoader(VoucherDataloader)
+  async getValidVoucher(voucher: string, memberPlanId: string) {
+    const voucherObj = await this.prisma.voucher.findUnique({
+      where: {
+        code_memberPlanId: {
+          code: voucher.toLowerCase(),
+          memberPlanId,
+        },
+      },
+    });
+
+    if (!voucherObj || voucherObj.validFrom > new Date()) {
+      throw new BadRequestException('Voucher is invalid.');
+    }
+
+    if (new Date() > voucherObj.validTo) {
+      throw new BadRequestException('Voucher has expired.');
+    }
+
+    return voucherObj;
+  }
+
+  @PrimeDataLoader(VoucherDataloader)
   async updateVoucher({ id, ...input }: UpdateVoucherInput) {
     const voucher = await this.prisma.voucher.findUniqueOrThrow({
       where: {

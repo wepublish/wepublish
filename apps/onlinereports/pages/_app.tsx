@@ -20,7 +20,6 @@ import {
 import { withPaywallBypassToken } from '@wepublish/paywall/website';
 import {
   authLink,
-  getApiUrl,
   initWePublishTranslator,
   NextWepublishLink,
   RoutedAdminBar,
@@ -168,7 +167,11 @@ const AdvertisementPlacer = styled('div')`
 
 export type CustomAppProps = AppProps<{
   sessionToken?: SessionWithTokenWithoutUser;
-}> & { emotionCache?: EmotionCache; websiteSettings?: WebsiteSettingsFragment };
+}> & {
+  emotionCache?: EmotionCache;
+  websiteSettings?: WebsiteSettingsFragment;
+  publicEnv?: { apiUrl: string };
+};
 
 function CustomApp({
   Component,
@@ -197,40 +200,44 @@ function CustomApp({
     >
       <AppCacheProvider emotionCache={emotionCache}>
         <AdsProvider>
-          <WebsiteProvider>
-            <WebsiteBuilderProvider
-              Head={Head}
-              Script={Script}
-              AuthorChip={OnlineReportsAuthorChip}
-              ArticleAuthors={OnlineReportsArticleAuthors}
-              ArticleList={OnlineReportsArticleList}
-              Navbar={OnlineReportsNavbar}
-              Footer={OnlineReportsFooter}
-              Article={OnlineReportsArticle}
-              CommentListItem={OnlineReportsCommentListItem}
-              Page={OnlineReportsPage}
-              RegistrationForm={OnlineReportsRegistrationForm}
-              PaymentAmount={OnlineReportsPaymentAmount}
-              richtext={{ RenderElement: OnlineReportsRenderElement }}
-              elements={{ Link: NextWepublishLink }}
-              blocks={{
-                BaseTeaser: OnlineReportsTeaser,
-                Renderer: OnlineReportsBlockRenderer,
-                TeaserList: OnlineReportsTeaserListBlock,
-                TeaserGridFlex: OnlineReportsTeaserGridFlexBlock,
-                TeaserGrid: OnlineReportsTeaserGridBlock,
-                Quote: OnlineReportsQuoteBlock,
-                Title: OnlineReportsTitle,
-              }}
-              date={{ format: dateFormatter }}
-              meta={{ siteTitle }}
-            >
-              <ThemeProvider theme={theme}>
+          <ThemeProvider theme={theme}>
+            <WebsiteProvider>
+              <WebsiteBuilderProvider
+                Head={Head}
+                Script={Script}
+                AuthorChip={OnlineReportsAuthorChip}
+                ArticleAuthors={OnlineReportsArticleAuthors}
+                ArticleList={OnlineReportsArticleList}
+                Navbar={OnlineReportsNavbar}
+                Footer={OnlineReportsFooter}
+                Article={OnlineReportsArticle}
+                CommentListItem={OnlineReportsCommentListItem}
+                Page={OnlineReportsPage}
+                RegistrationForm={OnlineReportsRegistrationForm}
+                PaymentAmountPicker={OnlineReportsPaymentAmount}
+                richtext={{ RenderElement: OnlineReportsRenderElement }}
+                elements={{ Link: NextWepublishLink }}
+                blocks={{
+                  BaseTeaser: OnlineReportsTeaser,
+                  Renderer: OnlineReportsBlockRenderer,
+                  TeaserList: OnlineReportsTeaserListBlock,
+                  TeaserGridFlex: OnlineReportsTeaserGridFlexBlock,
+                  TeaserGrid: OnlineReportsTeaserGridBlock,
+                  Quote: OnlineReportsQuoteBlock,
+                  Title: OnlineReportsTitle,
+                }}
+                date={{ format: dateFormatter }}
+                meta={{ siteTitle }}
+              >
                 <CssBaseline />
                 <OnlineReportsGlobalStyles />
 
                 <Head>
                   <title key="title">{siteTitle}</title>
+                  <meta
+                    name="viewport"
+                    content="width=device-width, initial-scale=1.0"
+                  />
                 </Head>
 
                 <Script
@@ -302,16 +309,16 @@ function CustomApp({
                       data-sparkloop
                     />
                   )}
-              </ThemeProvider>
-            </WebsiteBuilderProvider>
-          </WebsiteProvider>
+              </WebsiteBuilderProvider>
+            </WebsiteProvider>
+          </ThemeProvider>
         </AdsProvider>
       </AppCacheProvider>
     </PlausibleProvider>
   );
 }
 
-const withApollo = createWithApiClient(getApiUrl(), [authLink, previewLink]);
+const withApollo = createWithApiClient([authLink, previewLink]);
 const ConnectedApp = withApollo(
   withBuilderRouter(
     withErrorSnackbar(

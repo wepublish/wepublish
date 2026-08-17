@@ -275,6 +275,7 @@ export type Banner = {
   collapsible: Scalars['Boolean'];
   cta?: Maybe<Scalars['String']>;
   delay: Scalars['Int'];
+  embedUrl?: Maybe<Scalars['String']>;
   hideForMinutes: Scalars['Int'];
   html?: Maybe<Scalars['String']>;
   id: Scalars['String'];
@@ -745,6 +746,7 @@ export type CreateBannerInput = {
   collapsible: Scalars['Boolean'];
   cta?: InputMaybe<Scalars['String']>;
   delay: Scalars['Int'];
+  embedUrl?: InputMaybe<Scalars['String']>;
   hideForMinutes: Scalars['Int'];
   html?: InputMaybe<Scalars['String']>;
   imageId?: InputMaybe<Scalars['String']>;
@@ -1280,6 +1282,33 @@ export type FullPoll = {
   question?: Maybe<Scalars['String']>;
 };
 
+export type Goodie = HasImage & {
+  __typename?: 'Goodie';
+  active: Scalars['Boolean'];
+  availableStock?: Maybe<Scalars['Int']>;
+  createdAt: Scalars['DateTime'];
+  description?: Maybe<Scalars['RichText']>;
+  id: Scalars['String'];
+  image?: Maybe<Image>;
+  imageID?: Maybe<Scalars['String']>;
+  memberPlans: Array<MemberPlan>;
+  modifiedAt: Scalars['DateTime'];
+  name: Scalars['String'];
+  stock?: Maybe<Scalars['Int']>;
+};
+
+export type GoodieFilter = {
+  active?: InputMaybe<Scalars['Boolean']>;
+  memberPlans?: InputMaybe<Array<Scalars['String']>>;
+  name?: InputMaybe<Scalars['String']>;
+};
+
+export enum GoodieSort {
+  CreatedAt = 'CreatedAt',
+  ModifiedAt = 'ModifiedAt',
+  Name = 'Name',
+}
+
 export type HtmlBlock = BaseBlock & {
   __typename?: 'HTMLBlock';
   blockStyle?: Maybe<Scalars['String']>;
@@ -1645,6 +1674,8 @@ export type InvoiceItem = {
   amount: Scalars['Int'];
   createdAt: Scalars['DateTime'];
   description?: Maybe<Scalars['String']>;
+  goodie?: Maybe<Goodie>;
+  goodieId?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
@@ -1715,6 +1746,85 @@ export enum LoginStatus {
   Unsubscribed = 'UNSUBSCRIBED',
 }
 
+export type MailAudienceInput = {
+  autoRenew?: InputMaybe<Scalars['Boolean']>;
+  base: MailRecipientBase;
+  /** Win-back audience only: start of an explicit period the subscription ended in. */
+  endedFrom?: InputMaybe<Scalars['DateTime']>;
+  /** Win-back audience only: end of an explicit period the subscription ended in. */
+  endedTo?: InputMaybe<Scalars['DateTime']>;
+  /** Win-back audience only: how far back an ended subscription may lie, in days. Ignored when an explicit period is given. */
+  endedWithinDays?: InputMaybe<Scalars['Int']>;
+  /** Restrict to subscriptions of these member plans. */
+  memberPlanIDs?: InputMaybe<Array<Scalars['String']>>;
+  paymentMethodID?: InputMaybe<Scalars['String']>;
+  paymentPeriodicity?: InputMaybe<PaymentPeriodicity>;
+  subscriptionState?: InputMaybe<MailSubscriptionState>;
+};
+
+export type MailLogFilter = {
+  mailSendJobId?: InputMaybe<Scalars['String']>;
+  mailTemplateId?: InputMaybe<Scalars['String']>;
+  recipientId?: InputMaybe<Scalars['String']>;
+  state?: InputMaybe<MailLogState>;
+  type?: InputMaybe<MailLogType>;
+};
+
+export type MailLogModel = {
+  __typename?: 'MailLogModel';
+  createdAt: Scalars['DateTime'];
+  /** Why a rejected mail could not be delivered. */
+  error?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  mailProviderID: Scalars['String'];
+  mailSendJobId?: Maybe<Scalars['String']>;
+  mailTemplate: MailLogTemplate;
+  recipient: MailLogRecipient;
+  sentDate: Scalars['DateTime'];
+  state: MailLogState;
+  subject?: Maybe<Scalars['String']>;
+  type?: Maybe<MailLogType>;
+};
+
+export type MailLogRecipient = {
+  __typename?: 'MailLogRecipient';
+  email: Scalars['String'];
+  firstName?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  name: Scalars['String'];
+};
+
+export enum MailLogState {
+  Accepted = 'accepted',
+  Bounced = 'bounced',
+  Deferred = 'deferred',
+  Delivered = 'delivered',
+  Rejected = 'rejected',
+  Submitted = 'submitted',
+}
+
+export type MailLogSyncModel = {
+  __typename?: 'MailLogSyncModel';
+  /** Mails that were still in an open state and could be looked up at the provider. */
+  checked: Scalars['Int'];
+  /** Mails whose state the provider reported differently. */
+  updated: Scalars['Int'];
+};
+
+export type MailLogTemplate = {
+  __typename?: 'MailLogTemplate';
+  id: Scalars['String'];
+  name: Scalars['String'];
+};
+
+/** Origin of a sent mail. */
+export enum MailLogType {
+  Manual = 'manual',
+  SubscriptionFlow = 'subscriptionFlow',
+  SystemMail = 'systemMail',
+  UserFlow = 'userFlow',
+}
+
 export type MailProviderModel = {
   __typename?: 'MailProviderModel';
   name: Scalars['String'];
@@ -1724,7 +1834,174 @@ export enum MailProviderType {
   Mailchimp = 'MAILCHIMP',
   Mailgun = 'MAILGUN',
   Slack = 'SLACK',
+  Smtp = 'SMTP',
 }
+
+/** Base set of users a manual-send audience is drawn from. */
+export enum MailRecipientBase {
+  AllUsers = 'allUsers',
+  EndedSubscription = 'endedSubscription',
+  HasSubscription = 'hasSubscription',
+  NoActiveSubscription = 'noActiveSubscription',
+}
+
+export enum MailSendAudience {
+  AllUsers = 'allUsers',
+  FilteredSubscriptions = 'filteredSubscriptions',
+  SingleUser = 'singleUser',
+}
+
+export type MailSendJobInput = {
+  audience: MailAudienceInput;
+  mailTemplateId: Scalars['String'];
+};
+
+export type MailSendJobModel = {
+  __typename?: 'MailSendJobModel';
+  audience: MailSendAudience;
+  createdAt: Scalars['DateTime'];
+  createdByUserId: Scalars['String'];
+  error?: Maybe<Scalars['String']>;
+  failedCount: Scalars['Int'];
+  finishedAt?: Maybe<Scalars['DateTime']>;
+  /** Last sign of life of the worker processing this job. */
+  heartbeatAt?: Maybe<Scalars['DateTime']>;
+  id: Scalars['String'];
+  mailTemplate?: Maybe<MailLogTemplate>;
+  mailTemplateId: Scalars['String'];
+  modifiedAt: Scalars['DateTime'];
+  /** How often the job was picked up again after an interruption. */
+  resumeCount: Scalars['Int'];
+  /** Mails handed to the provider whose outcome never came back — left over after an interruption. Never re-sent on their own. */
+  sendingCount: Scalars['Int'];
+  sentCount: Scalars['Int'];
+  startedAt?: Maybe<Scalars['DateTime']>;
+  status: MailSendJobState;
+  totalCount: Scalars['Int'];
+};
+
+export type MailSendJobRecipientModel = {
+  __typename?: 'MailSendJobRecipientModel';
+  attempts: Scalars['Int'];
+  error?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  mailLogId?: Maybe<Scalars['String']>;
+  memberPlanName?: Maybe<Scalars['String']>;
+  /** Position in the send queue. */
+  position: Scalars['Int'];
+  sentAt?: Maybe<Scalars['DateTime']>;
+  state: MailSendJobRecipientState;
+  user: MailLogRecipient;
+};
+
+/** Where one planned mail of a send job stands. */
+export enum MailSendJobRecipientState {
+  Failed = 'failed',
+  Pending = 'pending',
+  Sending = 'sending',
+  Sent = 'sent',
+}
+
+export enum MailSendJobState {
+  Cancelled = 'cancelled',
+  Done = 'done',
+  Failed = 'failed',
+  Queued = 'queued',
+  Running = 'running',
+}
+
+export type MailSendPreviewInput = {
+  audience: MailAudienceInput;
+  mailTemplateId: Scalars['String'];
+  /** Row id of the recipient to render for. Defaults to the first of the audience. */
+  recipientId?: InputMaybe<Scalars['String']>;
+};
+
+export type MailSendPreviewModel = {
+  __typename?: 'MailSendPreviewModel';
+  html: Scalars['String'];
+  /** The recipient this preview was rendered for. */
+  recipient?: Maybe<MailSendRecipientModel>;
+  subject: Scalars['String'];
+  text?: Maybe<Scalars['String']>;
+};
+
+export type MailSendRecipientModel = {
+  __typename?: 'MailSendRecipientModel';
+  email: Scalars['String'];
+  firstName?: Maybe<Scalars['String']>;
+  /** Row identity. A user appears once per matching subscription, so this combines both. */
+  id: Scalars['String'];
+  memberPlanName?: Maybe<Scalars['String']>;
+  name: Scalars['String'];
+  subscriptionId?: Maybe<Scalars['String']>;
+  userId: Scalars['String'];
+};
+
+export type MailSendRecipientPreview = {
+  __typename?: 'MailSendRecipientPreview';
+  /** Whether recipients carry subscription data (subscription-context templates allowed). */
+  allowsSubscriptionTemplates: Scalars['Boolean'];
+  /** Number of mails that would be sent. */
+  count: Scalars['Int'];
+  /** Number of distinct people reached. Lower than `count` when someone has several matching subscriptions. */
+  userCount: Scalars['Int'];
+};
+
+export enum MailSubscriptionState {
+  Active = 'active',
+  Deactivated = 'deactivated',
+  Pending = 'pending',
+}
+
+/** The mail type / context a template is written for. */
+export enum MailTemplateContext {
+  Account = 'account',
+  Custom = 'custom',
+  CustomNoSubscription = 'customNoSubscription',
+  EmailChange = 'emailChange',
+  InvoiceCreation = 'invoiceCreation',
+  Renewal = 'renewal',
+  Subscription = 'subscription',
+}
+
+export type MailTemplateInput = {
+  context?: InputMaybe<MailTemplateContext>;
+  description?: InputMaybe<Scalars['String']>;
+  htmlContent: Scalars['String'];
+  name: Scalars['String'];
+  subject: Scalars['String'];
+  textContent?: InputMaybe<Scalars['String']>;
+};
+
+export type MailTemplateModel = {
+  __typename?: 'MailTemplateModel';
+  context?: Maybe<MailTemplateContext>;
+  description?: Maybe<Scalars['String']>;
+  htmlContent: Scalars['String'];
+  id: Scalars['String'];
+  name: Scalars['String'];
+  status: Scalars['String'];
+  subject: Scalars['String'];
+  textContent?: Maybe<Scalars['String']>;
+};
+
+export type MailTemplatePreviewInput = {
+  /** Mail type / context id, e.g. "renewal". */
+  contextId: Scalars['String'];
+  htmlContent: Scalars['String'];
+  subject: Scalars['String'];
+  /** Subscription to take sample data from. */
+  subscriptionId?: InputMaybe<Scalars['String']>;
+  textContent?: InputMaybe<Scalars['String']>;
+};
+
+export type MailTemplatePreviewModel = {
+  __typename?: 'MailTemplatePreviewModel';
+  html: Scalars['String'];
+  subject: Scalars['String'];
+  text?: Maybe<Scalars['String']>;
+};
 
 export type MailTemplateRef = {
   __typename?: 'MailTemplateRef';
@@ -1732,15 +2009,10 @@ export type MailTemplateRef = {
   name: Scalars['String'];
 };
 
-export type MailTemplateWithUrlAndStatusModel = {
-  __typename?: 'MailTemplateWithUrlAndStatusModel';
-  description?: Maybe<Scalars['String']>;
-  externalMailTemplateId: Scalars['String'];
+export type MailTemplateSubscriptionOption = {
+  __typename?: 'MailTemplateSubscriptionOption';
   id: Scalars['String'];
-  name: Scalars['String'];
-  remoteMissing: Scalars['Boolean'];
-  status: Scalars['String'];
-  url: Scalars['String'];
+  label: Scalars['String'];
 };
 
 export type MailchimpInterestGroup = {
@@ -1827,6 +2099,8 @@ export type MemberPlan = HasImage & {
   externalReward?: Maybe<Scalars['String']>;
   failPage?: Maybe<Page>;
   failPageId?: Maybe<Scalars['String']>;
+  /** Active goodies with remaining stock that can be chosen with this member plan. */
+  goodies: Array<Goodie>;
   id: Scalars['String'];
   image?: Maybe<Image>;
   imageID?: Maybe<Scalars['String']>;
@@ -1861,6 +2135,8 @@ export type Mutation = {
   addUserComment: Comment;
   /** Approves a comment */
   approveComment: Comment;
+  /** Stop a running send job. Unsent recipients stay open and can be continued. */
+  cancelMailSendJob: MailSendJobModel;
   /** Cancels a subscription. */
   cancelSubscription: PublicSubscription;
   /** This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null */
@@ -1890,12 +2166,18 @@ export type Mutation = {
   createExternalApp: ExternalApp;
   /** Generates a short-lived JWT token for authenticating with an external app. */
   createExternalAppToken: ExternalAppToken;
+  /** Creates a new goodie. */
+  createGoodie: Goodie;
   /** Creates a new invoice. */
   createInvoice: Invoice;
   /** Returns a JWT that can be used to login as another user. */
   createJWTForUser: SessionWithToken;
   /** Returns a JWT that is valid for 1min for the current logged in user. */
   createJWTForWebsiteLogin: SessionWithToken;
+  /** Start a background job sending a template to a filtered audience */
+  createMailSendJob: MailSendJobModel;
+  /** Create a new mail template */
+  createMailTemplate: MailTemplateModel;
   /** Creates a new memberplan. */
   createMemberPlan: MemberPlan;
   /** Creates a new navigation. */
@@ -1973,10 +2255,14 @@ export type Mutation = {
   deleteEvent: Event;
   /** Deletes an external app. */
   deleteExternalApp: ExternalApp;
+  /** Deletes an existing goodie. */
+  deleteGoodie: Goodie;
   /** Deletes an existing image. */
   deleteImage: Scalars['String'];
   /** Deletes an existing invoice. */
   deleteInvoice: Invoice;
+  /** Delete an existing mail template */
+  deleteMailTemplate?: Maybe<Scalars['Boolean']>;
   /** Deletes a single sync error so the contact will be retried. */
   deleteMailchimpSyncError: Scalars['Boolean'];
   /** Deletes an existing memberplan. */
@@ -2049,6 +2335,8 @@ export type Mutation = {
    *
    */
   importEvent: Scalars['String'];
+  /** Import HTML/subject from the mail provider, overwriting local content */
+  importMailTemplatesFromProvider: Scalars['Int'];
   /** Imports an article from a peer as a draft. */
   importPeerArticle: Article;
   /** Imports a subscription. */
@@ -2083,15 +2371,22 @@ export type Mutation = {
   restoreArticleRevision: Article;
   /** Restores an older revision of a page as a new draft. */
   restorePageRevision: Page;
+  /** Continue a send job that stopped early. Recipients already sent are skipped. */
+  resumeMailSendJob: MailSendJobModel;
   /** This mutation revokes and deletes the active session. */
   revokeActiveSession: Scalars['Boolean'];
   /** This mutation sends a login link to the email if the user exists. Method will always return email address */
   sendJWTLogin: Scalars['String'];
+  /** Manually send a mail template to a single user */
+  sendMailTemplateToUser: MailSendJobModel;
   /** Sends a password reset email with a scoped JWT token. Always returns the email to prevent enumeration. */
   sendPasswordResetEmail: Scalars['String'];
+  /** Send a test mail for a draft template */
+  sendTestMailTemplate?: Maybe<Scalars['Boolean']>;
   /** This mutation sends a login link to the email if the user exists. Method will always return email address */
   sendWebsiteLogin: Scalars['String'];
-  syncTemplates?: Maybe<Scalars['Boolean']>;
+  /** Ask the mail provider for the current delivery state of mails that are still open. Complements the provider webhook, which is not reachable in local development. */
+  syncMailLogStates: MailLogSyncModel;
   /** Sends a test email for the given event */
   testSystemMail: Scalars['Boolean'];
   /** Triggers a mailchimp sync in the background. */
@@ -2131,12 +2426,16 @@ export type Mutation = {
   updateEvent: Event;
   /** Updates an existing external app. */
   updateExternalApp: ExternalApp;
+  /** Updates an existing goodie. */
+  updateGoodie: Goodie;
   /** Updates an existing image. */
   updateImage: Image;
   /** Updates an existing invoice. */
   updateInvoice: Invoice;
   /** Updates an existing mail provider setting. */
   updateMailProviderSetting: SettingMailProvider;
+  /** Update an existing mail template */
+  updateMailTemplate: MailTemplateModel;
   /** Updates an existing memberplan. */
   updateMemberPlan: MemberPlan;
   /** Updates an existing navigation. */
@@ -2216,6 +2515,10 @@ export type MutationAddUserCommentArgs = {
 };
 
 export type MutationApproveCommentArgs = {
+  id: Scalars['String'];
+};
+
+export type MutationCancelMailSendJobArgs = {
   id: Scalars['String'];
 };
 
@@ -2319,6 +2622,15 @@ export type MutationCreateExternalAppTokenArgs = {
   externalAppId: Scalars['String'];
 };
 
+export type MutationCreateGoodieArgs = {
+  active: Scalars['Boolean'];
+  description?: InputMaybe<Scalars['RichText']>;
+  imageID?: InputMaybe<Scalars['String']>;
+  memberPlanIDs: Array<Scalars['String']>;
+  name: Scalars['String'];
+  stock?: InputMaybe<Scalars['Int']>;
+};
+
 export type MutationCreateInvoiceArgs = {
   currency: Currency;
   description?: InputMaybe<Scalars['String']>;
@@ -2333,6 +2645,14 @@ export type MutationCreateInvoiceArgs = {
 export type MutationCreateJwtForUserArgs = {
   expiresInMinutes: Scalars['Float'];
   userId: Scalars['String'];
+};
+
+export type MutationCreateMailSendJobArgs = {
+  input: MailSendJobInput;
+};
+
+export type MutationCreateMailTemplateArgs = {
+  input: MailTemplateInput;
 };
 
 export type MutationCreateMemberPlanArgs = {
@@ -2531,6 +2851,7 @@ export type MutationCreateUserSubscriptionArgs = {
   autoRenew: Scalars['Boolean'];
   deactivateSubscriptionId?: InputMaybe<Scalars['String']>;
   failureURL?: InputMaybe<Scalars['String']>;
+  goodieId?: InputMaybe<Scalars['String']>;
   memberPlanID?: InputMaybe<Scalars['String']>;
   memberPlanSlug?: InputMaybe<Scalars['Slug']>;
   monthlyAmount: Scalars['Float'];
@@ -2544,6 +2865,7 @@ export type MutationCreateUserSubscriptionArgs = {
 
 export type MutationCreateUserSubscriptionWithConfirmationArgs = {
   autoRenew: Scalars['Boolean'];
+  goodieId?: InputMaybe<Scalars['String']>;
   memberPlanID?: InputMaybe<Scalars['String']>;
   memberPlanSlug?: InputMaybe<Scalars['Slug']>;
   monthlyAmount: Scalars['Float'];
@@ -2607,11 +2929,19 @@ export type MutationDeleteExternalAppArgs = {
   id: Scalars['String'];
 };
 
+export type MutationDeleteGoodieArgs = {
+  id: Scalars['String'];
+};
+
 export type MutationDeleteImageArgs = {
   id: Scalars['String'];
 };
 
 export type MutationDeleteInvoiceArgs = {
+  id: Scalars['String'];
+};
+
+export type MutationDeleteMailTemplateArgs = {
   id: Scalars['String'];
 };
 
@@ -2840,16 +3170,34 @@ export type MutationRestorePageRevisionArgs = {
   revisionId: Scalars['String'];
 };
 
+export type MutationResumeMailSendJobArgs = {
+  id: Scalars['String'];
+  retryUnfinished?: InputMaybe<Scalars['Boolean']>;
+};
+
 export type MutationSendJwtLoginArgs = {
   email: Scalars['String'];
+};
+
+export type MutationSendMailTemplateToUserArgs = {
+  templateId: Scalars['String'];
+  userId: Scalars['String'];
 };
 
 export type MutationSendPasswordResetEmailArgs = {
   email: Scalars['String'];
 };
 
+export type MutationSendTestMailTemplateArgs = {
+  input: SendTestMailTemplateInput;
+};
+
 export type MutationSendWebsiteLoginArgs = {
   email: Scalars['String'];
+};
+
+export type MutationSyncMailLogStatesArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
 };
 
 export type MutationTestSystemMailArgs = {
@@ -3002,6 +3350,16 @@ export type MutationUpdateExternalAppArgs = {
   url?: InputMaybe<Scalars['String']>;
 };
 
+export type MutationUpdateGoodieArgs = {
+  active?: InputMaybe<Scalars['Boolean']>;
+  description?: InputMaybe<Scalars['RichText']>;
+  id: Scalars['String'];
+  imageID?: InputMaybe<Scalars['String']>;
+  memberPlanIDs?: InputMaybe<Array<Scalars['String']>>;
+  name?: InputMaybe<Scalars['String']>;
+  stock?: InputMaybe<Scalars['Int']>;
+};
+
 export type MutationUpdateImageArgs = {
   description?: InputMaybe<Scalars['String']>;
   filename?: InputMaybe<Scalars['String']>;
@@ -3037,7 +3395,16 @@ export type MutationUpdateMailProviderSettingArgs = {
   name?: InputMaybe<Scalars['String']>;
   replyToAddress?: InputMaybe<Scalars['String']>;
   slack_webhookURL?: InputMaybe<Scalars['String']>;
+  smtp_host?: InputMaybe<Scalars['String']>;
+  smtp_port?: InputMaybe<Scalars['Int']>;
+  smtp_secure?: InputMaybe<Scalars['Boolean']>;
+  smtp_user?: InputMaybe<Scalars['String']>;
   webhookEndpointSecret?: InputMaybe<Scalars['String']>;
+};
+
+export type MutationUpdateMailTemplateArgs = {
+  id: Scalars['String'];
+  input: MailTemplateInput;
 };
 
 export type MutationUpdateMemberPlanArgs = {
@@ -3233,7 +3600,7 @@ export type MutationUpdateSyncProviderSettingArgs = {
 
 export type MutationUpdateSystemMailArgs = {
   event: UserEvent;
-  mailTemplateId: Scalars['String'];
+  mailTemplateId?: InputMaybe<Scalars['String']>;
 };
 
 export type MutationUpdateTagArgs = {
@@ -3316,11 +3683,13 @@ export type MutationUpdateWebsiteSettingsArgs = {
 
 export type MutationUpgradeUserSubscriptionArgs = {
   failureURL?: InputMaybe<Scalars['String']>;
+  goodieId?: InputMaybe<Scalars['String']>;
   memberPlanId: Scalars['String'];
   monthlyAmount: Scalars['Float'];
   paymentMethodId: Scalars['String'];
   subscriptionId: Scalars['String'];
   successURL?: InputMaybe<Scalars['String']>;
+  voucher?: InputMaybe<Scalars['String']>;
 };
 
 export type MutationUploadDocumentArgs = {
@@ -3564,9 +3933,44 @@ export type PaginatedEventsFromSources = {
   totalCount: Scalars['Int'];
 };
 
+export type PaginatedGoodies = {
+  __typename?: 'PaginatedGoodies';
+  nodes: Array<Goodie>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
 export type PaginatedImages = {
   __typename?: 'PaginatedImages';
   nodes: Array<Image>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type PaginatedMailLog = {
+  __typename?: 'PaginatedMailLog';
+  nodes: Array<MailLogModel>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type PaginatedMailSendJob = {
+  __typename?: 'PaginatedMailSendJob';
+  nodes: Array<MailSendJobModel>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type PaginatedMailSendJobRecipient = {
+  __typename?: 'PaginatedMailSendJobRecipient';
+  nodes: Array<MailSendJobRecipientModel>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type PaginatedMailSendRecipient = {
+  __typename?: 'PaginatedMailSendRecipient';
+  nodes: Array<MailSendRecipientModel>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
 };
@@ -4168,6 +4572,7 @@ export type PublicSubscription = HasMemberPlan &
     deactivation?: Maybe<SubscriptionDeactivation>;
     extendable: Scalars['Boolean'];
     externalReward?: Maybe<Scalars['String']>;
+    goodie?: Maybe<Goodie>;
     id: Scalars['String'];
     isActive: Scalars['Boolean'];
     memberPlan: MemberPlan;
@@ -4297,6 +4702,10 @@ export type Query = {
   externalApps: Array<ExternalApp>;
   /** Returns images by tag. */
   getImagesByTag: Array<Image>;
+  /** Returns a goodie by id. */
+  goodie: Goodie;
+  /** This query returns a list of goodies */
+  goodies: PaginatedGoodies;
   /**
    *
    *       Returns the most viewed articles in descending order.
@@ -4329,12 +4738,32 @@ export type Query = {
   invoice: Invoice;
   /** Returns a paginated list of invoices based on the filters given. */
   invoices: InvoiceConnection;
+  /** Paginated list of sent mails */
+  mailLogs: PaginatedMailLog;
   /** Returns a single mail provider setting by id. */
   mailProviderSetting: SettingMailProvider;
   /** Returns all mail provider settings. */
   mailProviderSettings: Array<SettingMailProvider>;
+  /** A single mail send job (for progress polling) */
+  mailSendJob?: Maybe<MailSendJobModel>;
+  /** The planned mails of a send job and where each of them stands */
+  mailSendJobRecipients: PaginatedMailSendJobRecipient;
+  /** Paginated list of mail send jobs */
+  mailSendJobs: PaginatedMailSendJob;
+  /** Render a saved template for one recipient of an audience, exactly as the send would compose it */
+  mailSendPreview: MailSendPreviewModel;
+  /** Preview how many recipients an audience resolves to */
+  mailSendRecipientPreview: MailSendRecipientPreview;
+  /** The concrete recipients an audience resolves to */
+  mailSendRecipients: PaginatedMailSendRecipient;
+  /** Placeholders a template uses that would render empty for the given send (empty = none missing) */
+  mailTemplateMissingPlaceholders: Array<Scalars['String']>;
+  /** Render a draft mail template with a mail type's sample data */
+  mailTemplatePreview: MailTemplatePreviewModel;
+  /** Search subscriptions to use as sample data for previews/tests */
+  mailTemplateSubscriptions: Array<MailTemplateSubscriptionOption>;
   /** Return all mail templates */
-  mailTemplates: Array<MailTemplateWithUrlAndStatusModel>;
+  mailTemplates: Array<MailTemplateModel>;
   /** Fetches available interest groups for a Mailchimp list. */
   mailchimpInterestGroups: Array<MailchimpInterestGroup>;
   /** Fetches available Mailchimp lists/audiences for a sync config. */
@@ -4675,6 +5104,19 @@ export type QueryGetImagesByTagArgs = {
   tag: Scalars['String'];
 };
 
+export type QueryGoodieArgs = {
+  id: Scalars['String'];
+};
+
+export type QueryGoodiesArgs = {
+  cursorId?: InputMaybe<Scalars['String']>;
+  filter?: InputMaybe<GoodieFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: Scalars['Int'];
+  sort?: GoodieSort;
+  take?: Scalars['Int'];
+};
+
 export type QueryHotAndTrendingArgs = {
   start?: InputMaybe<Scalars['DateTime']>;
   take?: InputMaybe<Scalars['Int']>;
@@ -4718,12 +5160,61 @@ export type QueryInvoicesArgs = {
   take?: InputMaybe<Scalars['Int']>;
 };
 
+export type QueryMailLogsArgs = {
+  filter?: InputMaybe<MailLogFilter>;
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
 export type QueryMailProviderSettingArgs = {
   id: Scalars['String'];
 };
 
 export type QueryMailProviderSettingsArgs = {
   filter?: InputMaybe<SettingMailProviderFilter>;
+};
+
+export type QueryMailSendJobArgs = {
+  id: Scalars['String'];
+};
+
+export type QueryMailSendJobRecipientsArgs = {
+  jobId: Scalars['String'];
+  skip?: InputMaybe<Scalars['Int']>;
+  state?: InputMaybe<MailSendJobRecipientState>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
+export type QueryMailSendJobsArgs = {
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
+export type QueryMailSendPreviewArgs = {
+  input: MailSendPreviewInput;
+};
+
+export type QueryMailSendRecipientPreviewArgs = {
+  audience: MailAudienceInput;
+};
+
+export type QueryMailSendRecipientsArgs = {
+  audience: MailAudienceInput;
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
+export type QueryMailTemplateMissingPlaceholdersArgs = {
+  templateId: Scalars['String'];
+  withSubscriptionData: Scalars['Boolean'];
+};
+
+export type QueryMailTemplatePreviewArgs = {
+  input: MailTemplatePreviewInput;
+};
+
+export type QueryMailTemplateSubscriptionsArgs = {
+  query?: InputMaybe<Scalars['String']>;
 };
 
 export type QueryMailchimpInterestGroupsArgs = {
@@ -4983,6 +5474,7 @@ export type QueryTrackingPixelSettingsArgs = {
 export type QueryUpgradeUserSubscriptionInfoArgs = {
   memberPlanId: Scalars['String'];
   subscriptionId: Scalars['String'];
+  voucher?: InputMaybe<Scalars['String']>;
 };
 
 export type QueryUserArgs = {
@@ -5102,6 +5594,14 @@ export type RichTextBlockInput = {
   blockStyleName?: InputMaybe<Scalars['String']>;
   disabled?: InputMaybe<Scalars['Boolean']>;
   richText?: InputMaybe<Scalars['RichText']>;
+};
+
+export type SendTestMailTemplateInput = {
+  contextId: Scalars['String'];
+  htmlContent: Scalars['String'];
+  subject: Scalars['String'];
+  subscriptionId?: InputMaybe<Scalars['String']>;
+  textContent?: InputMaybe<Scalars['String']>;
 };
 
 export type SensitiveDataUser = BaseUser & {
@@ -5236,6 +5736,10 @@ export type SettingMailProvider = SettingProvider & {
   name?: Maybe<Scalars['String']>;
   replyToAddress?: Maybe<Scalars['String']>;
   slack_webhookURL?: Maybe<Scalars['String']>;
+  smtp_host?: Maybe<Scalars['String']>;
+  smtp_port?: Maybe<Scalars['Int']>;
+  smtp_secure?: Maybe<Scalars['Boolean']>;
+  smtp_user?: Maybe<Scalars['String']>;
   type: MailProviderType;
 };
 
@@ -5446,9 +5950,14 @@ export type SubscribeBlock = BaseBlock & {
   blockStyleName?: Maybe<Scalars['String']>;
   disabled?: Maybe<Scalars['Boolean']>;
   fields: Array<SubscribeBlockField>;
-  memberPlanIds?: Maybe<Array<Scalars['String']>>;
+  goodieMinValue?: Maybe<Scalars['Int']>;
+  hideRepeatGoodieOnUpgrade: Scalars['Boolean'];
+  memberPlanIds: Array<Scalars['String']>;
+  memberPlanRenderSettings: Array<SubscribeBlockMemberPlanRenderSetting>;
   memberPlans: Array<MemberPlan>;
   periodicityDisplay?: Maybe<SubscribePeriodicityDisplay>;
+  showGoodies: Scalars['Boolean'];
+  showVouchers: Scalars['Boolean'];
   type: BlockType;
 };
 
@@ -5466,9 +5975,61 @@ export type SubscribeBlockInput = {
   blockStyleName?: InputMaybe<Scalars['String']>;
   disabled?: InputMaybe<Scalars['Boolean']>;
   fields?: Array<SubscribeBlockField>;
-  memberPlanIds?: InputMaybe<Array<Scalars['String']>>;
+  goodieMinValue?: InputMaybe<Scalars['Int']>;
+  hideRepeatGoodieOnUpgrade?: Scalars['Boolean'];
+  memberPlanIds?: Array<Scalars['String']>;
+  memberPlanRenderSettings: Array<SubscribeBlockMemberPlanRenderSettingInput>;
   periodicityDisplay?: InputMaybe<SubscribePeriodicityDisplay>;
+  showGoodies?: Scalars['Boolean'];
+  showVouchers?: Scalars['Boolean'];
 };
+
+export type SubscribeBlockLayoutConfig = {
+  type: SubscribeBlockRenderLayout;
+};
+
+export type SubscribeBlockLayoutConfigInput = {
+  showInput?: Scalars['Boolean'];
+  type: SubscribeBlockRenderLayout;
+  values?: InputMaybe<Array<Scalars['Int']>>;
+};
+
+export type SubscribeBlockLayoutNoneConfig = SubscribeBlockLayoutConfig & {
+  __typename?: 'SubscribeBlockLayoutNoneConfig';
+  type: SubscribeBlockRenderLayout;
+};
+
+export type SubscribeBlockLayoutPickerConfig = SubscribeBlockLayoutConfig & {
+  __typename?: 'SubscribeBlockLayoutPickerConfig';
+  showInput: Scalars['Boolean'];
+  type: SubscribeBlockRenderLayout;
+  values: Array<Scalars['Int']>;
+};
+
+export type SubscribeBlockLayoutSliderConfig = SubscribeBlockLayoutConfig & {
+  __typename?: 'SubscribeBlockLayoutSliderConfig';
+  showInput: Scalars['Boolean'];
+  type: SubscribeBlockRenderLayout;
+};
+
+export type SubscribeBlockMemberPlanRenderSetting = {
+  __typename?: 'SubscribeBlockMemberPlanRenderSetting';
+  isDefault: Scalars['Boolean'];
+  layout: SubscribeBlockLayoutConfig;
+  memberPlanId: Scalars['String'];
+};
+
+export type SubscribeBlockMemberPlanRenderSettingInput = {
+  isDefault?: Scalars['Boolean'];
+  layout: SubscribeBlockLayoutConfigInput;
+  memberPlanId: Scalars['String'];
+};
+
+export enum SubscribeBlockRenderLayout {
+  None = 'None',
+  Picker = 'Picker',
+  Slider = 'Slider',
+}
 
 export enum SubscribePeriodicityDisplay {
   Dropdown = 'Dropdown',
@@ -5879,6 +6440,7 @@ export type UpdateBannerInput = {
   collapsible: Scalars['Boolean'];
   cta?: InputMaybe<Scalars['String']>;
   delay: Scalars['Int'];
+  embedUrl?: InputMaybe<Scalars['String']>;
   hideForMinutes: Scalars['Int'];
   html?: InputMaybe<Scalars['String']>;
   id: Scalars['String'];
@@ -5919,6 +6481,8 @@ export type UpdateUserSubscriptionInput = {
 export type UpgradeSubscription = {
   __typename?: 'UpgradeSubscription';
   discountAmount: Scalars['Float'];
+  discountPercent?: Maybe<Scalars['Float']>;
+  voucherValid?: Maybe<Scalars['Boolean']>;
 };
 
 export type User = BaseUser & {

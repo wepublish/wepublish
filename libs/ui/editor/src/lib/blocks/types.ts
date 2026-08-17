@@ -11,6 +11,7 @@ import {
   FullPoll,
   FullTeaserFragment,
   PageWithoutBlocksFragment,
+  SubscribeBlock,
   SubscribeBlockField,
   SubscribePeriodicityDisplay,
   Tag,
@@ -73,8 +74,13 @@ export interface HTMLBlockValue extends BaseBlockValue {
 
 export interface SubscribeBlockValue extends BaseBlockValue {
   memberPlanIds: string[];
+  memberPlanRenderSettings: SubscribeBlock['memberPlanRenderSettings'];
   fields: SubscribeBlockField[];
   periodicityDisplay?: SubscribePeriodicityDisplay | null;
+  showGoodies: boolean;
+  showVouchers: boolean;
+  goodieMinValue?: number | null;
+  hideRepeatGoodieOnUpgrade: boolean;
 }
 
 export interface PollBlockValue extends BaseBlockValue {
@@ -502,8 +508,13 @@ export function mapBlockValueToBlockInput(
           blockStyle: block.value.blockStyle,
           disabled: block.value.disabled,
           memberPlanIds: block.value.memberPlanIds ?? [],
+          memberPlanRenderSettings: block.value.memberPlanRenderSettings ?? [],
           fields: block.value.fields,
           periodicityDisplay: block.value.periodicityDisplay,
+          showGoodies: block.value.showGoodies,
+          showVouchers: block.value.showVouchers,
+          goodieMinValue: block.value.goodieMinValue ?? null,
+          hideRepeatGoodieOnUpgrade: block.value.hideRepeatGoodieOnUpgrade,
         },
       };
 
@@ -1131,8 +1142,13 @@ export function blockForQueryBlock(
           disabled: block.disabled,
           blockStyle: block.blockStyle,
           fields: block.fields ?? [],
+          showGoodies: block.showGoodies ?? false,
+          showVouchers: block.showVouchers ?? false,
+          goodieMinValue: block.goodieMinValue ?? null,
+          hideRepeatGoodieOnUpgrade: block.hideRepeatGoodieOnUpgrade ?? false,
           memberPlanIds: block.memberPlanIds ?? [],
           periodicityDisplay: block.periodicityDisplay,
+          memberPlanRenderSettings: block.memberPlanRenderSettings,
         },
       };
 
