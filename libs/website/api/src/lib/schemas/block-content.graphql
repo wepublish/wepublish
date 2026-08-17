@@ -133,7 +133,7 @@ fragment FullSubscribeBlock on SubscribeBlock {
   }
   fields
   showGoodies
-  showVouchers
+  showDiscountCodes
   goodieMinValue
   hideRepeatGoodieOnUpgrade
 }

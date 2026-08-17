@@ -678,8 +678,8 @@ input CreateExternalAppInput {
 }
 
 type CreateSubscriptionInfo {
+  discountCodeValid: Boolean
   discountPercent: Float
-  voucherValid: Boolean
 }
 
 type Crowdfunding {
@@ -844,6 +844,30 @@ scalar DateTime
 
 type DeletePollVotesResult {
   count: Int!
+}
+
+type DiscountCode implements HasMemberPlanLc {
+  code: String!
+  createdAt: DateTime!
+  discountPercent: Int!
+  id: String!
+  memberPlan: MemberPlan!
+  memberPlanId: String!
+  modifiedAt: DateTime!
+  validFrom: DateTime!
+  validTo: DateTime!
+}
+
+input DiscountCodeFilter {
+  from: DateTime
+  memberPlans: [String!]
+  to: DateTime
+}
+
+enum DiscountCodesort {
+  CreatedAt
+  Discount
+  ModifiedAt
 }
 
 type Document {
@@ -2048,6 +2072,9 @@ type Mutation {
   """Create a new crowdfunding"""
   createCrowdfunding(input: CreateCrowdfundingInput!): Crowdfunding!
 
+  """Creates a new discountCode."""
+  createDiscountCode(code: String!, discountPercent: Int!, memberPlanId: String!, validFrom: DateTime!, validTo: DateTime!): DiscountCode!
+
   """Creates a new event."""
   createEvent(description: RichText, endsAt: DateTime, imageId: String, lead: String, location: String, name: String!, startsAt: DateTime!, status: EventStatus! = Scheduled, tagIds: [String!]): Event!
 
@@ -2162,15 +2189,12 @@ type Mutation {
   createUserRole(description: String, name: String!, permissionIDs: [String!]!): UserRole!
 
   """Allows authenticated users to create additional subscriptions"""
-  createUserSubscription(autoRenew: Boolean!, deactivateSubscriptionId: String, failureURL: String, goodieId: String, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Int!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], successURL: String, voucher: String): Payment!
+  createUserSubscription(autoRenew: Boolean!, deactivateSubscriptionId: String, discountCode: String, failureURL: String, goodieId: String, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Int!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], successURL: String): Payment!
 
   """
   Allows guests and authenticated users to create additional subscriptions
   """
-  createUserSubscriptionWithConfirmation(autoRenew: Boolean!, goodieId: String, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Int!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], userId: String, voucher: String): Boolean!
-
-  """Creates a new voucher."""
-  createVoucher(code: String!, discountPercent: Int!, memberPlanId: String!, validFrom: DateTime!, validTo: DateTime!): Voucher!
+  createUserSubscriptionWithConfirmation(autoRenew: Boolean!, discountCode: String, goodieId: String, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Int!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], userId: String): Boolean!
 
   """Deletes all sync errors for a config so all contacts will be retried."""
   deleteAllMailchimpSyncErrors(configId: String!): Boolean!
@@ -2191,6 +2215,9 @@ type Mutation {
   "\n      Deletes an existing consent.\n    "
   deleteConsent(id: String!): Consent!
   deleteCrowdfunding(id: String!): Boolean
+
+  """Deletes an existing discountCode."""
+  deleteDiscountCode(id: String!): DiscountCode!
 
   """Deletes an existing document."""
   deleteDocument(id: String!): String!
@@ -2272,9 +2299,6 @@ type Mutation {
 
   """Deletes an existing userrole."""
   deleteUserRole(id: String!): UserRole!
-
-  """Deletes an existing voucher."""
-  deleteVoucher(id: String!): Voucher!
 
   """
   Discards the current draft and reverts to the latest published revision.
@@ -2478,6 +2502,9 @@ type Mutation {
   """Updates the current logged in user."""
   updateCurrentUser(address: UserAddressInput, birthday: DateTime, challengeAnswer: ChallengeInput, firstName: String, flair: String, name: String, password: String): SensitiveDataUser!
 
+  """Updates an existing discountCode."""
+  updateDiscountCode(code: String, discountPercent: Int, id: String!, memberPlanId: String, validFrom: DateTime, validTo: DateTime): DiscountCode!
+
   """Updates an existing document."""
   updateDocument(description: String, id: String!, title: String): Document!
 
@@ -2583,14 +2610,11 @@ type Mutation {
   """
   updateUserSubscription(id: String!, input: UpdateUserSubscriptionInput!): PublicSubscription
 
-  """Updates an existing voucher."""
-  updateVoucher(code: String, discountPercent: Int, id: String!, memberPlanId: String, validFrom: DateTime, validTo: DateTime): Voucher!
-
   """Updates the website settings."""
   updateWebsiteSettings(ads: WebsiteAdsInput, analytics: WebsiteAnalyticsInput, fonts: [WebsiteRemoteFontInput!], mail: WebsiteMailInput, theme: JSONObject): WebsiteSettings!
 
   """"""
-  upgradeUserSubscription(failureURL: String, goodieId: String, memberPlanId: String!, monthlyAmount: Int!, paymentMethodId: String!, subscriptionId: String!, successURL: String, voucher: String): Payment!
+  upgradeUserSubscription(discountCode: String, failureURL: String, goodieId: String, memberPlanId: String!, monthlyAmount: Int!, paymentMethodId: String!, subscriptionId: String!, successURL: String): Payment!
 
   """Uploads a new document."""
   uploadDocument(description: String, file: Upload!, filename: String, title: String): Document!
@@ -2772,6 +2796,12 @@ type PaginatedComments {
   totalCount: Int!
 }
 
+type PaginatedDiscountCodes {
+  nodes: [DiscountCode!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
 type PaginatedDocuments {
   nodes: [Document!]!
   pageInfo: PageInfo!
@@ -2880,12 +2910,6 @@ type PaginatedUserRoles {
   totalCount: Int!
 }
 
-type PaginatedVouchers {
-  nodes: [Voucher!]!
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
 type Payment implements HasPaymentMethod {
   id: String!
   intentSecret: String!
@@ -2929,6 +2953,7 @@ enum PaymentMethodMollie {
   BLIK
   CREDITCARD
   DIRECTDEBIT
+  DISCOUNTCODE
   EPS
   GIFTCARD
   IDEAL
@@ -2946,7 +2971,6 @@ enum PaymentMethodMollie {
   SATISPAY
   TRUSTLY
   TWINT
-  VOUCHER
 }
 
 enum PaymentPeriodicity {
@@ -3475,7 +3499,7 @@ type Query {
   """
   Gives the user some information about the subscription they are about to create
   """
-  createSubscriptionInfo(memberPlanId: String!, voucher: String): CreateSubscriptionInfo!
+  createSubscriptionInfo(discountCode: String, memberPlanId: String!): CreateSubscriptionInfo!
 
   """Get a single crowdfunding by id"""
   crowdfunding(id: String!): Crowdfunding!
@@ -3485,6 +3509,30 @@ type Query {
 
   "\n      Returns daily stats in a given timeframe.\n    "
   dailySubscriptionStats(end: DateTime, memberPlanIds: [String!], start: DateTime!): [DailySubscriptionStats!]!
+
+  """Returns an discountCode by id or discountCode."""
+  discountCode(id: String!): DiscountCode!
+
+  """This query returns a list of discountCodes"""
+  discountCodes(
+    """Cursor for pagination"""
+    cursorId: String
+
+    """Filter for discountCodes"""
+    filter: DiscountCodeFilter
+
+    """Sort order"""
+    order: SortOrder = Descending
+
+    """Number of items to skip"""
+    skip: Int! = 0
+
+    """Field to sort by"""
+    sort: DiscountCodesort! = CreatedAt
+
+    """Number of items to fetch"""
+    take: Int! = 10
+  ): PaginatedDiscountCodes!
 
   """Returns a document by id."""
   document(id: String!): Document!
@@ -3786,7 +3834,7 @@ type Query {
   trackingPixelSettings(filter: SettingTrackingPixelFilter): [SettingTrackingPixelProvider!]!
 
   """"""
-  upgradeUserSubscriptionInfo(memberPlanId: String!, subscriptionId: String!, voucher: String): UpgradeSubscription!
+  upgradeUserSubscriptionInfo(discountCode: String, memberPlanId: String!, subscriptionId: String!): UpgradeSubscription!
 
   """Returns a user by id."""
   user(id: String!): SensitiveDataUser!
@@ -3831,30 +3879,6 @@ type Query {
     take: Int! = 10
   ): PaginatedSensitiveDataUsers!
   versionInformation: VersionInformation!
-
-  """Returns an voucher by id or voucher."""
-  voucher(id: String!): Voucher!
-
-  """This query returns a list of vouchers"""
-  vouchers(
-    """Cursor for pagination"""
-    cursorId: String
-
-    """Filter for vouchers"""
-    filter: VoucherFilter
-
-    """Sort order"""
-    order: SortOrder = Descending
-
-    """Number of items to skip"""
-    skip: Int! = 0
-
-    """Field to sort by"""
-    sort: VoucherSort! = CreatedAt
-
-    """Number of items to fetch"""
-    take: Int! = 10
-  ): PaginatedVouchers!
 
   """
   Returns the website settings, requires authentication to get sensitive settings.
@@ -4277,8 +4301,8 @@ type SubscribeBlock implements BaseBlock {
   memberPlanIds: [String!]!
   memberPlanRenderSettings: [SubscribeBlockMemberPlanRenderSetting!]!
   memberPlans: [MemberPlan!]!
+  showDiscountCodes: Boolean!
   showGoodies: Boolean!
-  showVouchers: Boolean!
   type: BlockType!
 }
 
@@ -4300,8 +4324,8 @@ input SubscribeBlockInput {
   hideRepeatGoodieOnUpgrade: Boolean! = false
   memberPlanIds: [String!]! = []
   memberPlanRenderSettings: [SubscribeBlockMemberPlanRenderSettingInput!]!
+  showDiscountCodes: Boolean! = false
   showGoodies: Boolean! = false
-  showVouchers: Boolean! = false
 }
 
 interface SubscribeBlockLayoutConfig {
@@ -4768,8 +4792,8 @@ input UpdateUserSubscriptionInput {
 
 type UpgradeSubscription {
   discountAmount: Float!
+  discountCodeValid: Boolean
   discountPercent: Float
-  voucherValid: Boolean
 }
 
 """The `Upload` scalar type represents a file upload."""
@@ -4888,30 +4912,6 @@ input VimeoVideoBlockInput {
 
 """A valid vote value"""
 scalar VoteValue
-
-type Voucher implements HasMemberPlanLc {
-  code: String!
-  createdAt: DateTime!
-  discountPercent: Int!
-  id: String!
-  memberPlan: MemberPlan!
-  memberPlanId: String!
-  modifiedAt: DateTime!
-  validFrom: DateTime!
-  validTo: DateTime!
-}
-
-input VoucherFilter {
-  from: DateTime
-  memberPlans: [String!]
-  to: DateTime
-}
-
-enum VoucherSort {
-  CreatedAt
-  Discount
-  ModifiedAt
-}
 
 type WebsiteAds {
   sparkLoop: KeyEnabled!

@@ -1,27 +1,27 @@
 import styled from '@emotion/styled';
 import {
   MemberPlan,
-  MutationCreateVoucherArgs,
-  MutationUpdateVoucherArgs,
+  MutationCreateDiscountCodeArgs,
+  MutationUpdateDiscountCodeArgs,
 } from '@wepublish/editor/api';
 import { DateTimePicker, SelectMemberPlan } from '@wepublish/ui/editor';
 import { useTranslation } from 'react-i18next';
 import { Form, NumberInput, Panel } from 'rsuite';
 
-type VoucherFormData = (
-  | MutationCreateVoucherArgs
-  | MutationUpdateVoucherArgs
+type DiscountCodeFormData = (
+  | MutationCreateDiscountCodeArgs
+  | MutationUpdateDiscountCodeArgs
 ) & {
   memberPlan?: Pick<MemberPlan, 'id' | 'name'>;
 };
 
-type VoucherFormProps = {
+type DiscountCodeFormProps = {
   create?: boolean;
-  voucher: Partial<VoucherFormData>;
-  onChange: (changes: Partial<VoucherFormData>) => void;
+  discountCode: Partial<DiscountCodeFormData>;
+  onChange: (changes: Partial<DiscountCodeFormData>) => void;
 };
 
-const VoucherFormWrapper = styled.div`
+const DiscountCodeFormWrapper = styled.div`
   display: grid;
   grid-template-columns: 1fr;
   align-items: start;
@@ -32,7 +32,7 @@ const VoucherFormWrapper = styled.div`
   }
 `;
 
-const VoucherFormSection = styled.div`
+const DiscountCodeFormSection = styled.div`
   display: grid;
   align-items: start;
   gap: 12px;
@@ -50,37 +50,37 @@ const DateRangeGrid = styled.div`
   gap: 12px;
 `;
 
-export const VoucherForm = ({
-  voucher,
+export const DiscountCodeForm = ({
+  discountCode,
   onChange,
   create,
-}: VoucherFormProps) => {
+}: DiscountCodeFormProps) => {
   const { t } = useTranslation();
 
   return (
-    <VoucherFormWrapper>
-      <VoucherFormSection>
+    <DiscountCodeFormWrapper>
+      <DiscountCodeFormSection>
         <Panel
           bordered
           css={{ overflow: 'initial' }}
         >
           <CodeDiscountGrid>
             <Form.Group controlId="code">
-              <Form.Label>{t('voucher.form.code')}</Form.Label>
+              <Form.Label>{t('discountCode.form.code')}</Form.Label>
 
               <Form.Control
                 name="code"
-                value={(voucher.code ?? '').toUpperCase()}
+                value={(discountCode.code ?? '').toUpperCase()}
                 onChange={(code: string) => onChange({ code })}
               />
             </Form.Group>
 
             <Form.Group controlId="discountPercent">
-              <Form.Label>{t('voucher.form.discountPercent')}</Form.Label>
+              <Form.Label>{t('discountCode.form.discountPercent')}</Form.Label>
 
               <Form.Control
                 name="discountPercent"
-                value={voucher.discountPercent ?? 0}
+                value={discountCode.discountPercent ?? 0}
                 onChange={(discountPercent: string) =>
                   onChange({ discountPercent: +discountPercent })
                 }
@@ -89,20 +89,20 @@ export const VoucherForm = ({
             </Form.Group>
           </CodeDiscountGrid>
         </Panel>
-      </VoucherFormSection>
+      </DiscountCodeFormSection>
 
-      <VoucherFormSection>
+      <DiscountCodeFormSection>
         <Panel
           bordered
           css={{ overflow: 'initial' }}
         >
           <Form.Group>
-            <Form.Label>{t('voucher.form.memberPlan')}</Form.Label>
+            <Form.Label>{t('discountCode.form.memberPlan')}</Form.Label>
 
             <Form.Control
               name="memberPlan"
-              defaultMemberPlan={voucher.memberPlan}
-              selectedMemberPlan={voucher.memberPlanId}
+              defaultMemberPlan={discountCode.memberPlan}
+              selectedMemberPlan={discountCode.memberPlanId}
               setSelectedMemberPlan={(memberPlanId: string) =>
                 onChange({ memberPlanId })
               }
@@ -114,9 +114,11 @@ export const VoucherForm = ({
             <Form.Group controlId="validFrom">
               <Form.Control
                 name="validFrom"
-                label={t('voucher.form.validFrom')}
+                label={t('discountCode.form.validFrom')}
                 dateTime={
-                  voucher.validFrom ? new Date(voucher.validFrom) : undefined
+                  discountCode.validFrom ?
+                    new Date(discountCode.validFrom)
+                  : undefined
                 }
                 changeDate={(date: Date) =>
                   onChange({ validFrom: date?.toISOString() })
@@ -128,9 +130,11 @@ export const VoucherForm = ({
             <Form.Group controlId="validTo">
               <Form.Control
                 name="validTo"
-                label={t('voucher.form.validTo')}
+                label={t('discountCode.form.validTo')}
                 dateTime={
-                  voucher.validTo ? new Date(voucher.validTo) : undefined
+                  discountCode.validTo ?
+                    new Date(discountCode.validTo)
+                  : undefined
                 }
                 changeDate={(date: Date) =>
                   onChange({ validTo: date?.toISOString() })
@@ -140,7 +144,7 @@ export const VoucherForm = ({
             </Form.Group>
           </DateRangeGrid>
         </Panel>
-      </VoucherFormSection>
-    </VoucherFormWrapper>
+      </DiscountCodeFormSection>
+    </DiscountCodeFormWrapper>
   );
 };

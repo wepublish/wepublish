@@ -26,7 +26,7 @@ export const SubscribeBlock = ({
   memberPlanRenderSettings,
   fields,
   showGoodies,
-  showVouchers,
+  showDiscountCodes,
   goodieMinValue,
   hideRepeatGoodieOnUpgrade,
 }: BuilderSubscribeBlockProps) => {
@@ -51,7 +51,7 @@ export const SubscribeBlock = ({
       upgradeSubscriptionId,
       deactivateSubscriptionId,
       userId,
-      voucher,
+      discountCode,
     },
   } = useContext(BuilderRouterContext);
 
@@ -81,13 +81,13 @@ export const SubscribeBlock = ({
   );
 
   const handleOnSelect = useCallback(
-    (memberPlanId: string | undefined, voucher?: string) => {
+    (memberPlanId: string | undefined, discountCode?: string) => {
       if (memberPlanId) {
         fetchUpgradeInfo({
           variables: {
             memberPlanId,
             subscriptionId: upgradeSubscriptionId as string,
-            voucher,
+            discountCode,
           },
         });
       }
@@ -110,14 +110,14 @@ export const SubscribeBlock = ({
           fields={fields.map(lowercase) as BuilderSubscribeProps['fields']}
           memberPlanRenderSettings={memberPlanRenderSettings}
           showGoodies={showGoodies}
-          showVouchers={showVouchers}
+          showDiscountCodes={showDiscountCodes}
           goodieMinValue={goodieMinValue}
           defaults={{
             email: mail as string | undefined,
             firstName: firstName as string | undefined,
             name: lastName as string | undefined,
             memberPlanSlug: memberPlanBySlug as string | undefined,
-            voucher: voucher as string | undefined,
+            discountCode: discountCode as string | undefined,
           }}
           fetchSubscribeInfo={fetchSubscribeInfo}
           subscribeInfo={subscribeInfo}
@@ -182,13 +182,13 @@ export const SubscribeBlock = ({
           {...subscribeProps}
           defaults={{
             memberPlanSlug: memberPlanBySlug as string | undefined,
-            voucher: voucher as string | undefined,
+            discountCode: discountCode as string | undefined,
           }}
           className={className}
           memberPlans={memberPlansObj}
           memberPlanRenderSettings={memberPlanRenderSettings}
           showGoodies={showGoodies}
-          showVouchers={showVouchers}
+          showDiscountCodes={showDiscountCodes}
           goodieMinValue={goodieMinValue}
           hideRepeatGoodieOnUpgrade={hideRepeatGoodieOnUpgrade}
           subscriptionToUpgrade={subscriptionToUpgrade}

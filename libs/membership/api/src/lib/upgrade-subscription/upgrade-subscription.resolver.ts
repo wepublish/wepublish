@@ -25,7 +25,7 @@ export class UpgradeSubscriptionResolver {
     })
     monthlyAmount: number,
     @Args('paymentMethodId') paymentMethodId: string,
-    @Args('voucher', { nullable: true }) voucher?: string,
+    @Args('discountCode', { nullable: true }) discountCode?: string,
     @Args('goodieId', { nullable: true }) goodieId?: string,
     @Args('successURL', { nullable: true }) successURL?: string,
     @Args('failureURL', { nullable: true }) failureURL?: string
@@ -39,7 +39,7 @@ export class UpgradeSubscriptionResolver {
       goodieId,
       failureURL,
       successURL,
-      voucher,
+      discountCode,
     });
   }
 
@@ -51,13 +51,13 @@ export class UpgradeSubscriptionResolver {
     @CurrentUser() session: UserSession,
     @Args('subscriptionId') subscriptionId: string,
     @Args('memberPlanId') memberPlanId: string,
-    @Args('voucher', { nullable: true }) voucher?: string
+    @Args('discountCode', { nullable: true }) discountCode?: string
   ): Promise<UpgradeSubscription> {
     return this.upgradeSubscriptionService.getInfo({
       userId: session.user.id,
       memberPlanId,
       subscriptionId,
-      voucher,
+      discountCode,
     });
   }
 }

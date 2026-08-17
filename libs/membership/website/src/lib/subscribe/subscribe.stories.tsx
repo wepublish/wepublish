@@ -709,16 +709,16 @@ const expectTexts =
     });
   };
 
-export const WithVoucherDiscount: StoryObj<typeof Subscribe> = {
+export const WithDiscountCodeDiscount: StoryObj<typeof Subscribe> = {
   ...LoggedIn,
   args: {
     ...LoggedIn.args,
-    showVouchers: true,
+    showDiscountCodes: true,
     subscribeInfo: {
       data: {
         createSubscriptionInfo: {
           discountPercent: 0.2,
-          voucherValid: true,
+          discountCodeValid: true,
         },
       },
       loading: false,
@@ -731,26 +731,26 @@ export const WithVoucherDiscount: StoryObj<typeof Subscribe> = {
   ),
 };
 
-export const WithInvalidVoucher: StoryObj<typeof Subscribe> = {
+export const WithInvalidDiscountCode: StoryObj<typeof Subscribe> = {
   ...LoggedIn,
   args: {
     ...LoggedIn.args,
-    showVouchers: true,
+    showDiscountCodes: true,
     subscribeInfo: {
       data: {
         createSubscriptionInfo: {
           discountPercent: null,
-          voucherValid: false,
+          discountCodeValid: false,
         },
       },
       loading: false,
     },
   },
-  play: waitForInitialDataIsSet(expectTexts(['Gutscheincode ungültig'])),
+  play: waitForInitialDataIsSet(expectTexts(['Rabattcode ungültig'])),
 };
 
-export const WithVoucherDiscountOnADonation: StoryObj<typeof Subscribe> = {
-  ...WithVoucherDiscount,
+export const WithDiscountCodeDiscountOnADonation: StoryObj<typeof Subscribe> = {
+  ...WithDiscountCodeDiscount,
   play: waitForInitialDataIsSet(async ctx => {
     await changeMemberPlan(memberPlan4)(ctx);
     await expectTexts(['spenden'])(ctx);

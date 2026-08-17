@@ -39,9 +39,9 @@
     "transactionFee": {
       "label": "Ja, ich will die Bearbeitungsgebühren von 2% übernehmen und damit {siteTitle} zusätzlich unterstützen."
     },
-    "voucher": {
+    "discountCode": {
       "discountApplied": "{discountPercent}% Rabatt angewendet",
-      "invalid": "Gutscheincode ungültig"
+      "invalid": "Rabattcode ungültig"
     },
     "goodie": {
       "title": "Goodie wählen",

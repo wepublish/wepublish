@@ -1,14 +1,14 @@
 import styled from '@emotion/styled';
 import {
-  useDeleteVoucherMutation,
-  useVoucherListQuery,
-  Voucher,
-  VoucherSort,
+  DiscountCode,
+  DiscountCodesort,
+  useDeleteDiscountCodeMutation,
+  useDiscountCodeListQuery,
 } from '@wepublish/editor/api';
 import {
-  CanCreateVoucher,
-  CanDeleteVoucher,
-  CanUpdateVoucher,
+  CanCreateDiscountCode,
+  CanDeleteDiscountCode,
+  CanUpdateDiscountCode,
 } from '@wepublish/permissions';
 import {
   createCheckedPermissionComponent,
@@ -41,18 +41,18 @@ const IconButton = styled(RIconButton)`
 
 const { Column, HeaderCell, Cell: RCell } = RTable;
 
-function VoucherList() {
+function DiscountCodeList() {
   const { t } = useTranslation();
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(10);
-  const [sortField, setSortField] = useState<VoucherSort>();
+  const [sortField, setSortField] = useState<DiscountCodesort>();
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
-  const [voucherToDelete, setVoucherToDelete] = useState<Voucher | undefined>(
-    undefined
-  );
+  const [discountCodeToDelete, setDiscountCodeToDelete] = useState<
+    DiscountCode | undefined
+  >(undefined);
 
-  const { data, loading, refetch } = useVoucherListQuery({
+  const { data, loading, refetch } = useDiscountCodeListQuery({
     variables: {
       take: limit,
       skip: (page - 1) * limit,
@@ -60,7 +60,7 @@ function VoucherList() {
       order: mapTableSortTypeToGraphQLSortOrder(sortOrder),
     },
   });
-  const [deleteVoucher] = useDeleteVoucherMutation({
+  const [deleteDiscountCode] = useDeleteDiscountCodeMutation({
     onCompleted() {
       refetch();
     },
@@ -77,7 +77,7 @@ function VoucherList() {
     <>
       <ListViewContainer>
         <ListViewHeader>
-          <h2>{t('voucher.overview.title')}</h2>
+          <h2>{t('discountCode.overview.title')}</h2>
         </ListViewHeader>
 
         <ListViewActions>
@@ -87,7 +87,7 @@ function VoucherList() {
               loading={false}
             >
               <MdAdd />
-              {t('voucher.overview.createVoucher')}
+              {t('discountCode.overview.createDiscountCode')}
             </IconButton>
           </Link>
         </ListViewActions>
@@ -97,22 +97,22 @@ function VoucherList() {
         <Table
           fillHeight
           loading={loading}
-          data={data?.vouchers.nodes ?? []}
+          data={data?.discountCodes.nodes ?? []}
           sortColumn={sortField}
           sortType={sortOrder}
           onSortColumn={(sortColumn, sortType) => {
             setSortOrder(sortType ?? 'asc');
-            setSortField(sortColumn as VoucherSort);
+            setSortField(sortColumn as DiscountCodesort);
           }}
         >
           <Column
             width={75}
             resizable
           >
-            <HeaderCell>{t('voucher.overview.valid')}</HeaderCell>
+            <HeaderCell>{t('discountCode.overview.valid')}</HeaderCell>
 
             <RCell>
-              {(rowData: RowDataType<Voucher>) =>
+              {(rowData: RowDataType<DiscountCode>) =>
                 (
                   new Date() > new Date(rowData.validFrom) &&
                   new Date(rowData.validTo) > new Date()
@@ -127,10 +127,10 @@ function VoucherList() {
             width={150}
             resizable
           >
-            <HeaderCell>{t('voucher.overview.code')}</HeaderCell>
+            <HeaderCell>{t('discountCode.overview.code')}</HeaderCell>
 
             <RCell>
-              {(rowData: RowDataType<Voucher>) => (
+              {(rowData: RowDataType<DiscountCode>) => (
                 <Link to={`edit/${rowData.id}`}>
                   {rowData.code.toUpperCase()}
                 </Link>
@@ -143,10 +143,12 @@ function VoucherList() {
             resizable
             sortable
           >
-            <HeaderCell>{t('voucher.overview.discountPercent')}</HeaderCell>
+            <HeaderCell>
+              {t('discountCode.overview.discountPercent')}
+            </HeaderCell>
 
-            <RCell dataKey={VoucherSort.Discount}>
-              {(rowData: Voucher) => `${rowData.discountPercent}%`}
+            <RCell dataKey={DiscountCodesort.Discount}>
+              {(rowData: DiscountCode) => `${rowData.discountPercent}%`}
             </RCell>
           </Column>
 
@@ -154,10 +156,10 @@ function VoucherList() {
             width={150}
             resizable
           >
-            <HeaderCell>{t('voucher.overview.memberPlan')}</HeaderCell>
+            <HeaderCell>{t('discountCode.overview.memberPlan')}</HeaderCell>
 
             <RCell>
-              {(rowData: RowDataType<Voucher>) => rowData.memberPlan.name}
+              {(rowData: RowDataType<DiscountCode>) => rowData.memberPlan.name}
             </RCell>
           </Column>
 
@@ -165,10 +167,10 @@ function VoucherList() {
             width={200}
             resizable
           >
-            <HeaderCell>{t('voucher.overview.validFrom')}</HeaderCell>
+            <HeaderCell>{t('discountCode.overview.validFrom')}</HeaderCell>
 
             <RCell>
-              {(rowData: Voucher) =>
+              {(rowData: DiscountCode) =>
                 `${new Date(rowData.validFrom).toDateString()}`
               }
             </RCell>
@@ -178,10 +180,10 @@ function VoucherList() {
             width={200}
             resizable
           >
-            <HeaderCell>{t('voucher.overview.validTo')}</HeaderCell>
+            <HeaderCell>{t('discountCode.overview.validTo')}</HeaderCell>
 
             <RCell>
-              {(rowData: Voucher) =>
+              {(rowData: DiscountCode) =>
                 `${new Date(rowData.validTo).toDateString()}`
               }
             </RCell>
@@ -193,14 +195,16 @@ function VoucherList() {
           >
             <HeaderCell align={'center'}>{t('delete')}</HeaderCell>
             <PaddedCell align={'center'}>
-              {(voucher: RowDataType<Voucher>) => (
+              {(discountCode: RowDataType<DiscountCode>) => (
                 <IconButton
                   icon={<MdDelete />}
                   circle
                   appearance="ghost"
                   color="red"
                   size="sm"
-                  onClick={() => setVoucherToDelete(voucher as Voucher)}
+                  onClick={() =>
+                    setDiscountCodeToDelete(discountCode as DiscountCode)
+                  }
                 />
               )}
             </PaddedCell>
@@ -219,24 +223,24 @@ function VoucherList() {
         ellipsis
         boundaryLinks
         layout={['total', '-', 'limit', '|', 'pager', 'skip']}
-        total={data?.vouchers?.totalCount ?? 0}
+        total={data?.discountCodes?.totalCount ?? 0}
         activePage={page}
         onChangePage={page => setPage(page)}
         onChangeLimit={limit => setLimit(limit)}
       />
 
       <Modal
-        open={!!voucherToDelete}
+        open={!!discountCodeToDelete}
         backdrop="static"
         size="xs"
-        onClose={() => setVoucherToDelete(undefined)}
+        onClose={() => setDiscountCodeToDelete(undefined)}
       >
-        <Modal.Title>{t('voucher.overview.areYouSure')}</Modal.Title>
+        <Modal.Title>{t('discountCode.overview.areYouSure')}</Modal.Title>
 
         <Modal.Body>
-          {voucherToDelete &&
-            t('voucher.overview.areYouSureBody', {
-              voucher: voucherToDelete.code,
+          {discountCodeToDelete &&
+            t('discountCode.overview.areYouSureBody', {
+              discountCode: discountCodeToDelete.code,
             })}
         </Modal.Body>
 
@@ -245,20 +249,20 @@ function VoucherList() {
             color="red"
             appearance="primary"
             onClick={() => {
-              deleteVoucher({
+              deleteDiscountCode({
                 variables: {
-                  id: voucherToDelete?.id ?? '',
+                  id: discountCodeToDelete?.id ?? '',
                 },
               });
-              setVoucherToDelete(undefined);
+              setDiscountCodeToDelete(undefined);
             }}
           >
-            {t('voucher.overview.areYouSureConfirmation')}
+            {t('discountCode.overview.areYouSureConfirmation')}
           </Button>
 
           <Button
             appearance="subtle"
-            onClick={() => setVoucherToDelete(undefined)}
+            onClick={() => setDiscountCodeToDelete(undefined)}
           >
             {t('cancel')}
           </Button>
@@ -269,9 +273,9 @@ function VoucherList() {
 }
 
 const CheckedPermissionComponent = createCheckedPermissionComponent([
-  CanCreateVoucher.id,
-  CanUpdateVoucher.id,
-  CanDeleteVoucher.id,
-])(VoucherList);
+  CanCreateDiscountCode.id,
+  CanUpdateDiscountCode.id,
+  CanDeleteDiscountCode.id,
+])(DiscountCodeList);
 
-export { CheckedPermissionComponent as VoucherList };
+export { CheckedPermissionComponent as DiscountCodeList };

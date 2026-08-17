@@ -57,7 +57,7 @@ const upgradeSchema = subscribeSchema.pick({
   paymentMethodId: true,
   payTransactionFee: true,
   goodieId: true,
-  voucher: true,
+  discountCode: true,
 });
 
 export const UpgradeInformation = styled('div')`
@@ -79,7 +79,7 @@ export const Upgrade = ({
   onUpgrade,
   donate,
   showGoodies = false,
-  showVouchers = false,
+  showDiscountCodes = false,
   goodieMinValue,
   hideRepeatGoodieOnUpgrade = false,
   termsOfServiceUrl,
@@ -123,7 +123,7 @@ export const Upgrade = ({
     defaultValues: {
       monthlyAmount: 0,
       goodieId: null,
-      voucher: defaults?.voucher ?? '',
+      discountCode: defaults?.discountCode ?? '',
       memberPlanId:
         defaults?.memberPlanSlug ?
           availableMemberplans.find(
@@ -136,7 +136,7 @@ export const Upgrade = ({
   const selectedPaymentMethodId = watch('paymentMethodId');
   const selectedMemberPlanId = watch('memberPlanId');
   const payTransactionFee = watch('payTransactionFee');
-  const voucher = watch('voucher');
+  const discountCode = watch('discountCode');
   const watchedMonthlyAmount = watch<'monthlyAmount'>('monthlyAmount') ?? 0;
   const monthlyAmount =
     watchedMonthlyAmount +
@@ -227,7 +227,9 @@ export const Upgrade = ({
   });
 
   const onSubmit = handleSubmit(data => {
-    if (upgradeInfo.data?.upgradeUserSubscriptionInfo.voucherValid === false) {
+    if (
+      upgradeInfo.data?.upgradeUserSubscriptionInfo.discountCodeValid === false
+    ) {
       return;
     }
 
@@ -237,7 +239,7 @@ export const Upgrade = ({
       paymentMethodId: data.paymentMethodId,
       subscriptionId: subscriptionToUpgrade.id,
       goodieId: data.goodieId,
-      voucher: data.voucher,
+      discountCode: data.discountCode,
     };
 
     return callAction(onUpgrade)(upgradeData);
@@ -269,8 +271,8 @@ export const Upgrade = ({
   }, [availableGoodies, goodieId, setValue]);
 
   useEffect(() => {
-    onSelect(selectedMemberPlan?.id, voucher ?? undefined);
-  }, [selectedMemberPlan?.id, voucher, onSelect]);
+    onSelect(selectedMemberPlan?.id, discountCode ?? undefined);
+  }, [selectedMemberPlan?.id, discountCode, onSelect]);
 
   const shouldHidePaymentAmount =
     selectedLayout ?
@@ -448,10 +450,10 @@ export const Upgrade = ({
         </SubscribeNarrowSection>
       )}
 
-      {showVouchers && (
-        <SubscribeNarrowSection area="voucher">
+      {showDiscountCodes && (
+        <SubscribeNarrowSection area="discountCode">
           <Controller
-            name={'voucher'}
+            name={'discountCode'}
             control={control}
             render={({ field, fieldState: { error } }) => (
               <div>
@@ -466,9 +468,9 @@ export const Upgrade = ({
                   <TextField
                     {...field}
                     value={field.value ?? ''}
-                    label={'Gutscheincode'}
+                    label={'Rabattcode'}
                     error={!!error}
-                    autoComplete="voucher"
+                    autoComplete="discountCode"
                     sx={{ maxWidth: 200 }}
                   />
 
@@ -478,7 +480,7 @@ export const Upgrade = ({
                       severity="success"
                       icon={<MdCheck />}
                     >
-                      {t('subscribe.voucher.discountApplied', {
+                      {t('subscribe.discountCode.discountApplied', {
                         discountPercent:
                           upgradeInfo.data.upgradeUserSubscriptionInfo
                             .discountPercent * 100,
@@ -487,12 +489,12 @@ export const Upgrade = ({
                   )}
 
                   {upgradeInfo.data?.upgradeUserSubscriptionInfo
-                    .voucherValid === false && (
+                    .discountCodeValid === false && (
                     <Alert
                       severity="error"
                       icon={<MdError />}
                     >
-                      {t('subscribe.voucher.invalid')}
+                      {t('subscribe.discountCode.invalid')}
                     </Alert>
                   )}
                 </div>

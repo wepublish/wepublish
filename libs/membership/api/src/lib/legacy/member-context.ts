@@ -50,7 +50,7 @@ export interface HandleSubscriptionChangeProps {
 export interface RenewSubscriptionForUserProps {
   subscription: SubscriptionWithRelations;
   discount?: number;
-  voucherId?: string;
+  discountCodeId?: string;
   goodieId?: string;
 }
 
@@ -222,7 +222,7 @@ export class MemberContext implements MemberContextInterface {
   async renewSubscriptionForUser({
     subscription,
     discount,
-    voucherId,
+    discountCodeId,
     goodieId,
   }: RenewSubscriptionForUserProps): Promise<InvoiceWithItems | null> {
     try {
@@ -352,7 +352,7 @@ export class MemberContext implements MemberContextInterface {
                 description: `From ${startDate.toISOString()} to ${nextDate.toISOString()}`,
                 amount,
                 quantity: 1,
-                voucherId,
+                discountCodeId,
               },
               ...(goodie ?
                 [
@@ -780,7 +780,7 @@ export class MemberContext implements MemberContextInterface {
     startsAt = new Date(),
     needsConfirmation,
     discount,
-    voucherId,
+    discountCodeId,
     goodieId,
   }: {
     userID: string;
@@ -795,7 +795,7 @@ export class MemberContext implements MemberContextInterface {
     startsAt?: Date | string;
     needsConfirmation?: boolean;
     discount?: number;
-    voucherId?: string;
+    discountCodeId?: string;
     goodieId?: string;
   }): Promise<{
     subscription: SubscriptionWithRelations;
@@ -867,7 +867,7 @@ export class MemberContext implements MemberContextInterface {
     const invoice = await this.renewSubscriptionForUser({
       subscription,
       discount,
-      voucherId,
+      discountCodeId,
       goodieId,
     });
 

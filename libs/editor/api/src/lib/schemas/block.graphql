@@ -282,7 +282,7 @@ fragment BlockWithoutTeaser on BlockContent {
     }
     fields
     showGoodies
-    showVouchers
+    showDiscountCodes
     goodieMinValue
     hideRepeatGoodieOnUpgrade
     type

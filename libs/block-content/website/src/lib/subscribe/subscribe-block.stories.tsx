@@ -41,7 +41,7 @@ export const Upgrade = {
           upgradeUserSubscriptionInfo: {
             discountAmount: 50,
             discountPercent: null,
-            voucherValid: null,
+            discountCodeValid: null,
           },
         },
       },

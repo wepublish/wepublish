@@ -409,9 +409,9 @@
         "selectFields": "Champs de saisie utilisateur",
         "selectFieldsSelectionHint": "L’email et le nom de famille sont toujours demandés. L’ordre n’a pas d’importance",
         "goodiesHeading": "Goodies",
-        "vouchersHeading": "Bons",
+        "discountCodesHeading": "Codes de réduction",
         "showGoodies": "Afficher la sélection de goodies",
-        "showVouchers": "Afficher le champ de bon",
+        "showDiscountCodes": "Afficher le champ de code de réduction",
         "goodieMinValue": {
           "label": "Montant minimum du goodie :"
         },
@@ -2126,11 +2126,11 @@
         "anyMemberPlan": "Tous les plans d’abonnement"
       }
     },
-    "voucher": {
-      "navbar": "Bon de réduction",
+    "discountCode": {
+      "navbar": "Codes de réduction",
       "form": {
-        "createTitle": "Créer un bon de réduction",
-        "editTitle": "Modifier le bon de réduction \"{{ voucher }}\"",
+        "createTitle": "Créer un code de réduction",
+        "editTitle": "Modifier le code de réduction \"{{ discountCode }}\"",
         "code": "Code",
         "discountPercent": "Réduction (%)",
         "validFrom": "Valable dès le",
@@ -2138,8 +2138,8 @@
         "memberPlan": "Plan d'abonnement"
       },
       "overview": {
-        "title": "Bons de réduction",
-        "createVoucher": "Nouveau bon de réduction",
+        "title": "Codes de réduction",
+        "createDiscountCode": "Nouveau code de réduction",
         "active": "Actif",
         "valid": "Valide",
         "code": "Code",
@@ -2148,8 +2148,8 @@
         "validFrom": "Valable dès le",
         "validTo": "Valable jusqu'au",
         "areYouSure": "Êtes-vous sûr(e) ?",
-        "areYouSureBody": "Le bon de réduction \"{{ voucher }}\" sera définitivement supprimé et cette action est irréversible.",
-        "areYouSureConfirmation": "Supprimer le bon de réduction"
+        "areYouSureBody": "Le code de réduction \"{{ discountCode }}\" sera définitivement supprimé et cette action est irréversible.",
+        "areYouSureConfirmation": "Supprimer le code de réduction"
       }
     },
     "goodie": {

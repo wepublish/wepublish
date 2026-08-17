@@ -9,5 +9,5 @@ export class UpgradeSubscription {
   discountPercent?: number;
 
   @Field({ nullable: true })
-  voucherValid?: boolean;
+  discountCodeValid?: boolean;
 }
