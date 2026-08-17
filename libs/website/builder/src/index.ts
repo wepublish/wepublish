@@ -8,6 +8,8 @@ export * from './lib/event.interface';
 export * from './lib/footer.interface';
 export * from './lib/navbar.interface';
 export * from './lib/page.interface';
+export * from './lib/richText.interface';
+export * from './lib/share.interface';
 export * from './lib/user.interface';
 export * from './lib/website-builder.context';
 export * from './lib/hooks/use-async-action';
