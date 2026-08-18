@@ -64,7 +64,9 @@ export function AudienceFilter({
 }: AudienceFilterProps) {
   const { t } = useTranslation();
 
-  const { data: memberPlans } = useMemberPlanListQuery({});
+  const { data: memberPlans } = useMemberPlanListQuery({
+    variables: { take: 100 },
+  });
 
   const memberPlansForPicker = useMemo<
     { label: string; value: string }[]
