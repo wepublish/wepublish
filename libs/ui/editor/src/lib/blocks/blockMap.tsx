@@ -271,7 +271,7 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
         SubscribeBlockField.Address,
       ],
       showGoodies: false,
-      showVouchers: false,
+      showDiscountCodes: false,
       goodieMinValue: null,
       hideRepeatGoodieOnUpgrade: false,
     },

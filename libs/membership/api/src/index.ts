@@ -32,7 +32,7 @@ export * from './lib/goodie/goodie.service';
 export * from './lib/goodie/goodie.dataloader';
 export * from './lib/goodie/goodie.module';
 
-export * from './lib/voucher/voucher.model';
-export * from './lib/voucher/voucher.dataloader';
-export * from './lib/voucher/voucher.module';
-export * from './lib/voucher/voucher.service';
+export * from './lib/discountCode/discountCode.model';
+export * from './lib/discountCode/discountCode.dataloader';
+export * from './lib/discountCode/discountCode.module';
+export * from './lib/discountCode/discountCode.service';

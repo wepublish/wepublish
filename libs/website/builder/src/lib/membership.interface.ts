@@ -165,7 +165,7 @@ export type BuilderSubscribeProps<
   >;
   memberPlanRenderSettings?: BuilderMemberPlanRenderSetting[];
   showGoodies?: boolean;
-  showVouchers?: boolean;
+  showDiscountCodes?: boolean;
   goodieMinValue?: number | null;
   subscribeInfo: Pick<
     QueryResult<CreateSubscriptionInfoQuery>,
@@ -191,7 +191,7 @@ export type BuilderSubscribeProps<
     email: string;
     name: string;
     firstName: string;
-    voucher: string;
+    discountCode: string;
   }>;
   deactivateSubscriptionId?: string;
   termsOfServiceUrl?: string;
@@ -216,7 +216,7 @@ export type BuilderUpgradeProps = {
   subscriptionToUpgrade: FullSubscriptionFragment;
   memberPlanRenderSettings?: BuilderMemberPlanRenderSetting[];
   showGoodies?: boolean;
-  showVouchers?: boolean;
+  showDiscountCodes?: boolean;
   goodieMinValue?: number | null;
   hideRepeatGoodieOnUpgrade?: boolean;
   className?: string;
@@ -225,9 +225,9 @@ export type BuilderUpgradeProps = {
   ) => Promise<void>;
   defaults?: Partial<{
     memberPlanSlug: string | null;
-    voucher: string;
+    discountCode: string;
   }>;
-  onSelect: (memberPlanId: string | undefined, voucher?: string) => void;
+  onSelect: (memberPlanId: string | undefined, discountCode?: string) => void;
   donate?: (memberPlan?: FullMemberPlanFragment) => boolean;
   termsOfServiceUrl?: string;
   transactionFee?: (monthlyAmount: number) => number;

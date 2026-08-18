@@ -14,7 +14,7 @@ import { PaginatedType, SortOrder } from '@wepublish/utils/api';
 @ObjectType({
   implements: [HasMemberPlanLc],
 })
-export class Voucher extends HasMemberPlanLc {
+export class DiscountCode extends HasMemberPlanLc {
   @Field()
   id!: string;
 
@@ -37,7 +37,7 @@ export class Voucher extends HasMemberPlanLc {
 }
 
 @InputType()
-export class VoucherFilter {
+export class DiscountCodeFilter {
   @Field(() => [String], { nullable: true })
   memberPlans?: string[];
 
@@ -48,21 +48,21 @@ export class VoucherFilter {
   to?: Date;
 }
 
-export enum VoucherSort {
+export enum DiscountCodesort {
   CreatedAt = 'CreatedAt',
   ModifiedAt = 'ModifiedAt',
   Discount = 'Discount',
 }
 
-registerEnumType(VoucherSort, {
-  name: 'VoucherSort',
+registerEnumType(DiscountCodesort, {
+  name: 'DiscountCodesort',
 });
 
 @ObjectType()
-export class PaginatedVouchers extends PaginatedType(Voucher) {}
+export class PaginatedDiscountCodes extends PaginatedType(DiscountCode) {}
 
 @ArgsType()
-export class VoucherListArgs {
+export class DiscountCodeListArgs {
   @Field(() => String, { nullable: true, description: 'Cursor for pagination' })
   cursorId?: string;
 
@@ -75,17 +75,17 @@ export class VoucherListArgs {
   @Field(() => Int, { defaultValue: 0, description: 'Number of items to skip' })
   skip?: number;
 
-  @Field(() => VoucherFilter, {
+  @Field(() => DiscountCodeFilter, {
     nullable: true,
-    description: 'Filter for vouchers',
+    description: 'Filter for discountCodes',
   })
-  filter?: VoucherFilter;
+  filter?: DiscountCodeFilter;
 
-  @Field(() => VoucherSort, {
-    defaultValue: VoucherSort.CreatedAt,
+  @Field(() => DiscountCodesort, {
+    defaultValue: DiscountCodesort.CreatedAt,
     description: 'Field to sort by',
   })
-  sort?: VoucherSort;
+  sort?: DiscountCodesort;
 
   @Field(() => SortOrder, {
     defaultValue: SortOrder.Descending,
@@ -96,15 +96,15 @@ export class VoucherListArgs {
 }
 
 @ArgsType()
-export class CreateVoucherInput extends PickType(
-  Voucher,
+export class CreateDiscountCodeInput extends PickType(
+  DiscountCode,
   ['code', 'discountPercent', 'memberPlanId', 'validFrom', 'validTo'] as const,
   ArgsType
 ) {}
 
 @ArgsType()
-export class UpdateVoucherInput extends PartialType(
-  CreateVoucherInput,
+export class UpdateDiscountCodeInput extends PartialType(
+  CreateDiscountCodeInput,
   ArgsType
 ) {
   @Field()

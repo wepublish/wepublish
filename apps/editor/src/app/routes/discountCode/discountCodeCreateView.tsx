@@ -1,9 +1,9 @@
 import { ApolloError } from '@apollo/client';
 import {
-  MutationCreateVoucherArgs,
-  useCreateVoucherMutation,
+  MutationCreateDiscountCodeArgs,
+  useCreateDiscountCodeMutation,
 } from '@wepublish/editor/api';
-import { CanCreateVoucher } from '@wepublish/permissions';
+import { CanCreateDiscountCode } from '@wepublish/permissions';
 import {
   createCheckedPermissionComponent,
   SingleViewTitle,
@@ -13,7 +13,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Form, Message, Schema, toaster } from 'rsuite';
 
-import { VoucherForm } from './voucherForm';
+import { DiscountCodeForm } from './discountCodeForm';
 
 const onErrorToast = (error: ApolloError) => {
   toaster.push(
@@ -28,29 +28,31 @@ const onErrorToast = (error: ApolloError) => {
   );
 };
 
-const VoucherCreateView = () => {
+const DiscountCodeCreateView = () => {
   const { t } = useTranslation();
   const [shouldClose, setShouldClose] = useState(false);
   const navigate = useNavigate();
   const closePath = './..';
 
-  const [voucher, setVoucher] = useState<MutationCreateVoucherArgs>();
+  const [discountCode, setDiscountCode] =
+    useState<MutationCreateDiscountCodeArgs>();
 
-  const [createVoucher, { loading: updateLoading }] = useCreateVoucherMutation({
-    onError: onErrorToast,
-    onCompleted: data => {
-      if (data.createVoucher) {
-        if (shouldClose) {
-          navigate(`./..`);
-        } else {
-          navigate(`./../edit/${data.createVoucher.id}`);
+  const [createDiscountCode, { loading: updateLoading }] =
+    useCreateDiscountCodeMutation({
+      onError: onErrorToast,
+      onCompleted: data => {
+        if (data.createDiscountCode) {
+          if (shouldClose) {
+            navigate(`./..`);
+          } else {
+            navigate(`./../edit/${data.createDiscountCode.id}`);
+          }
         }
-      }
-    },
-  });
+      },
+    });
 
   const loading = updateLoading;
-  const onSubmit = () => createVoucher({ variables: voucher });
+  const onSubmit = () => createDiscountCode({ variables: discountCode });
 
   const { StringType, DateType, NumberType } = Schema.Types;
   const validationModel = Schema.Model({
@@ -58,7 +60,7 @@ const VoucherCreateView = () => {
     discountPercent: NumberType().min(0).max(100).isInteger().isRequired(),
     validFrom: DateType().isRequired(),
     validTo: DateType()
-      .min(new Date(voucher?.validFrom ?? new Date()))
+      .min(new Date(discountCode?.validFrom ?? new Date()))
       .isRequired(),
     memberPlanId: StringType().isRequired(),
   });
@@ -66,14 +68,14 @@ const VoucherCreateView = () => {
   return (
     <Form
       fluid
-      formValue={voucher || {}}
+      formValue={discountCode || {}}
       model={validationModel}
       disabled={loading}
       onSubmit={validationPassed => validationPassed && onSubmit()}
     >
       <SingleViewTitle
         loading={loading}
-        title={t('voucher.form.createTitle')}
+        title={t('discountCode.form.createTitle')}
         loadingTitle={t('loading')}
         saveBtnTitle={t('save')}
         saveAndCloseBtnTitle={t('saveAndClose')}
@@ -81,10 +83,13 @@ const VoucherCreateView = () => {
         setCloseFn={setShouldClose}
       />
 
-      <VoucherForm
-        voucher={voucher ?? {}}
+      <DiscountCodeForm
+        discountCode={discountCode ?? {}}
         onChange={changes =>
-          setVoucher(oldVoucher => ({ ...oldVoucher, ...(changes as any) }))
+          setDiscountCode(oldDiscountCode => ({
+            ...oldDiscountCode,
+            ...(changes as any),
+          }))
         }
       />
     </Form>
@@ -92,6 +97,6 @@ const VoucherCreateView = () => {
 };
 
 const CheckedPermissionComponent = createCheckedPermissionComponent([
-  CanCreateVoucher.id,
-])(VoucherCreateView);
-export { CheckedPermissionComponent as VoucherCreateView };
+  CanCreateDiscountCode.id,
+])(DiscountCodeCreateView);
+export { CheckedPermissionComponent as DiscountCodeCreateView };

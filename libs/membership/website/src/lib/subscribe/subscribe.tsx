@@ -61,7 +61,7 @@ export const subscribeSchema = z.object({
     PaymentPeriodicity.Lifetime,
   ]),
   payTransactionFee: z.boolean(),
-  voucher: z.string().nullish(),
+  discountCode: z.string().nullish(),
   goodieId: z.string().nullish(),
 });
 
@@ -156,7 +156,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   memberPlans,
   memberPlanRenderSettings,
   showGoodies = false,
-  showVouchers = false,
+  showDiscountCodes = false,
   challenge,
   userSubscriptions,
   userInvoices,
@@ -275,7 +275,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     resolver: zodResolver(schem),
     defaultValues: {
       ...defaults,
-      voucher: defaults?.voucher ?? '',
+      discountCode: defaults?.discountCode ?? '',
       goodieId: null,
       monthlyAmount: 0,
       autoRenew: true,
@@ -303,7 +303,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   });
   const { control, handleSubmit, watch, setValue, resetField } = form;
 
-  const voucher = watch<'voucher'>('voucher');
+  const discountCode = watch<'discountCode'>('discountCode');
   const goodieId = watch<'goodieId'>('goodieId');
   const selectedPaymentMethodId = watch<'paymentMethodId'>('paymentMethodId');
   const selectedPaymentPeriodicity =
@@ -420,7 +420,9 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   const onSubmit = handleSubmit(data => {
     challengeRef.current?.reset();
 
-    if (subscribeInfo.data?.createSubscriptionInfo.voucherValid === false) {
+    if (
+      subscribeInfo.data?.createSubscriptionInfo.discountCodeValid === false
+    ) {
       return;
     }
 
@@ -430,7 +432,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       paymentMethodId: data.paymentMethodId,
       paymentPeriodicity: data.paymentPeriodicity,
       autoRenew: data.autoRenew,
-      voucher: data.voucher,
+      discountCode: data.discountCode,
       goodieId: data.goodieId,
     };
 
@@ -532,10 +534,10 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     fetchSubscribeInfo({
       variables: {
         memberPlanId: selectedMemberPlanId,
-        voucher,
+        discountCode,
       },
     });
-  }, [fetchSubscribeInfo, selectedMemberPlanId, voucher]);
+  }, [fetchSubscribeInfo, selectedMemberPlanId, discountCode]);
 
   useEffect(() => {
     if (goodieId && !availableGoodies.some(({ id }) => id === goodieId)) {
@@ -788,10 +790,10 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
           </SubscribeSection>
         )}
 
-        {showVouchers && (
-          <SubscribeNarrowSection area="voucher">
+        {showDiscountCodes && (
+          <SubscribeNarrowSection area="discountCode">
             <Controller
-              name={'voucher'}
+              name={'discountCode'}
               control={control}
               render={({ field, fieldState: { error } }) => (
                 <div>
@@ -806,9 +808,9 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
                     <TextField
                       {...field}
                       value={field.value ?? ''}
-                      label={'Gutscheincode'}
+                      label={'Rabattcode'}
                       error={!!error}
-                      autoComplete="voucher"
+                      autoComplete="discountCode"
                       sx={{ maxWidth: 200 }}
                     />
 
@@ -818,7 +820,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
                         severity="success"
                         icon={<MdCheck />}
                       >
-                        {t('subscribe.voucher.discountApplied', {
+                        {t('subscribe.discountCode.discountApplied', {
                           discountPercent:
                             subscribeInfo.data?.createSubscriptionInfo
                               .discountPercent * 100,
@@ -826,13 +828,13 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
                       </Alert>
                     )}
 
-                    {subscribeInfo.data?.createSubscriptionInfo.voucherValid ===
-                      false && (
+                    {subscribeInfo.data?.createSubscriptionInfo
+                      .discountCodeValid === false && (
                       <Alert
                         severity="error"
                         icon={<MdError />}
                       >
-                        {t('subscribe.voucher.invalid')}
+                        {t('subscribe.discountCode.invalid')}
                       </Alert>
                     )}
                   </div>

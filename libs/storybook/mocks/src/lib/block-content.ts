@@ -674,7 +674,7 @@ export const mockSubscribeBlock = ({
     },
   })),
   showGoodies = false,
-  showVouchers = false,
+  showDiscountCodes = false,
   goodieMinValue = null,
   hideRepeatGoodieOnUpgrade = false,
 }: Partial<SubscribeBlock> = {}): SubscribeBlock => ({
@@ -687,7 +687,7 @@ export const mockSubscribeBlock = ({
   memberPlanIds,
   memberPlanRenderSettings,
   showGoodies,
-  showVouchers,
+  showDiscountCodes,
   goodieMinValue,
   hideRepeatGoodieOnUpgrade,
 });

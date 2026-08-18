@@ -404,9 +404,9 @@
         "selectFields": "User input fields",
         "selectFieldsSelectionHint": "Email & last name are always requested. Order does not matter",
         "goodiesHeading": "Goodies",
-        "vouchersHeading": "Vouchers",
+        "discountCodesHeading": "Discount codes",
         "showGoodies": "Show goodie selection",
-        "showVouchers": "Show voucher input",
+        "showDiscountCodes": "Show discount code input",
         "goodieMinValue": {
           "label": "Require minimum payment amount to be eligible for a goodie:"
         },
@@ -2262,11 +2262,11 @@
         "anyMemberPlan": "All memberplans"
       }
     },
-    "voucher": {
-      "navbar": "Voucher",
+    "discountCode": {
+      "navbar": "Discount codes",
       "form": {
-        "createTitle": "Create Voucher",
-        "editTitle": "Edit Voucher \"{{ voucher }}\"",
+        "createTitle": "Create discount code",
+        "editTitle": "Edit discount code \"{{ discountCode }}\"",
         "code": "Code",
         "discountPercent": "Discount (%)",
         "validFrom": "Valid from",
@@ -2274,8 +2274,8 @@
         "memberPlan": "Memberplan"
       },
       "overview": {
-        "title": "Vouchers",
-        "createVoucher": "New Voucher",
+        "title": "Discount codes",
+        "createDiscountCode": "New discount code",
         "active": "Active",
         "valid": "Valid",
         "code": "Code",
@@ -2284,8 +2284,8 @@
         "validFrom": "Valid From",
         "validTo": "Valid To",
         "areYouSure": "Are you sure?",
-        "areYouSureBody": "The voucher \"{{ voucher }}\" will be deleted permanently and can not be reversed.",
-        "areYouSureConfirmation": "Delete voucher"
+        "areYouSureBody": "The discount code \"{{ discountCode }}\" will be deleted permanently and can not be reversed.",
+        "areYouSureConfirmation": "Delete discount code"
       }
     },
     "goodie": {

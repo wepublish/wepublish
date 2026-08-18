@@ -1,4 +1,4 @@
-fragment FullVoucher on Voucher {
+fragment FullDiscountCode on DiscountCode {
   id
   createdAt
   modifiedAt
@@ -16,15 +16,15 @@ fragment FullVoucher on Voucher {
   }
 }
 
-query VoucherList(
-  $filter: VoucherFilter
+query DiscountCodeList(
+  $filter: DiscountCodeFilter
   $cursor: String
   $take: Int
   $skip: Int
   $order: SortOrder
-  $sort: VoucherSort
+  $sort: DiscountCodesort
 ) {
-  vouchers(
+  discountCodes(
     filter: $filter
     cursorId: $cursor
     take: $take
@@ -33,7 +33,7 @@ query VoucherList(
     sort: $sort
   ) {
     nodes {
-      ...FullVoucher
+      ...FullDiscountCode
     }
 
     pageInfo {
@@ -47,31 +47,31 @@ query VoucherList(
   }
 }
 
-query Voucher($id: String!) {
-  voucher(id: $id) {
-    ...FullVoucher
+query DiscountCode($id: String!) {
+  discountCode(id: $id) {
+    ...FullDiscountCode
   }
 }
 
-mutation CreateVoucher(
+mutation CreateDiscountCode(
   $code: String!
   $discountPercent: Int!
   $memberPlanId: String!
   $validFrom: DateTime!
   $validTo: DateTime!
 ) {
-  createVoucher(
+  createDiscountCode(
     code: $code
     discountPercent: $discountPercent
     memberPlanId: $memberPlanId
     validFrom: $validFrom
     validTo: $validTo
   ) {
-    ...FullVoucher
+    ...FullDiscountCode
   }
 }
 
-mutation UpdateVoucher(
+mutation UpdateDiscountCode(
   $id: String!
   $code: String
   $discountPercent: Int
@@ -79,7 +79,7 @@ mutation UpdateVoucher(
   $validFrom: DateTime
   $validTo: DateTime
 ) {
-  updateVoucher(
+  updateDiscountCode(
     id: $id
     code: $code
     discountPercent: $discountPercent
@@ -87,12 +87,12 @@ mutation UpdateVoucher(
     validFrom: $validFrom
     validTo: $validTo
   ) {
-    ...FullVoucher
+    ...FullDiscountCode
   }
 }
 
-mutation DeleteVoucher($id: String!) {
-  deleteVoucher(id: $id) {
-    ...FullVoucher
+mutation DeleteDiscountCode($id: String!) {
+  deleteDiscountCode(id: $id) {
+    ...FullDiscountCode
   }
 }

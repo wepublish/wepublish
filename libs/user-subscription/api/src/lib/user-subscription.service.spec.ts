@@ -4,8 +4,8 @@ import { UserSubscriptionService } from './user-subscription.service';
 import {
   GoodieService,
   MemberContextService,
-  VoucherDataloader,
-  VoucherService,
+  DiscountCodeDataloader,
+  DiscountCodeService,
 } from '@wepublish/membership/api';
 import { PaymentsService } from '@wepublish/payment/api';
 import {
@@ -17,7 +17,7 @@ describe('UserSubscriptionService', () => {
   let service: UserSubscriptionService;
 
   let prismaMock: {
-    voucher: { findUnique: jest.Mock };
+    discountCode: { findUnique: jest.Mock };
     paymentMethod: { findFirst: jest.Mock };
     subscription: { findUnique: jest.Mock };
   };
@@ -34,7 +34,7 @@ describe('UserSubscriptionService', () => {
     load: jest.Mock;
   };
 
-  let voucherDataloaderMock: {
+  let discountCodeDataloaderMock: {
     prime: jest.Mock;
   };
 
@@ -53,7 +53,7 @@ describe('UserSubscriptionService', () => {
 
   beforeAll(async () => {
     prismaMock = {
-      voucher: { findUnique: jest.fn() },
+      discountCode: { findUnique: jest.fn() },
       paymentMethod: {
         findFirst: jest.fn().mockResolvedValue({ id: 'paymentMethodId' }),
       },
@@ -84,7 +84,7 @@ describe('UserSubscriptionService', () => {
       }),
     };
 
-    voucherDataloaderMock = {
+    discountCodeDataloaderMock = {
       prime: jest.fn(),
     };
 
@@ -96,8 +96,11 @@ describe('UserSubscriptionService', () => {
       providers: [
         UserSubscriptionService,
         { provide: MemberContextService, useValue: memberContextMock },
-        { provide: VoucherDataloader, useValue: voucherDataloaderMock },
-        VoucherService,
+        {
+          provide: DiscountCodeDataloader,
+          useValue: discountCodeDataloaderMock,
+        },
+        DiscountCodeService,
         { provide: MemberPlanDataloader, useValue: memberPlanDataloaderMock },
         {
           provide: MemberPlanService,
@@ -149,94 +152,103 @@ describe('UserSubscriptionService', () => {
       paymentMethodID: 'paymentMethodId',
     };
 
-    const validVoucher = {
-      id: 'voucherId',
+    const validDiscountCode = {
+      id: 'discountCodeId',
       discountPercent: 20,
       validFrom: new Date('2024-01-01'),
       validTo: new Date('2026-01-01'),
     };
 
     describe('happy path', () => {
-      it('should create subscription without voucher and pass no discount', async () => {
+      it('should create subscription without discountCode and pass no discount', async () => {
         await service.createSubscription('userId', baseArgs);
 
         expect(memberContextMock.createSubscription).toHaveBeenCalledWith(
-          expect.objectContaining({ discount: undefined, voucherId: undefined })
+          expect.objectContaining({
+            discount: undefined,
+            discountCodeId: undefined,
+          })
         );
       });
 
-      it('should apply voucher discount for a monthly subscription', async () => {
-        prismaMock.voucher.findUnique.mockResolvedValue(validVoucher);
+      it('should apply discountCode discount for a monthly subscription', async () => {
+        prismaMock.discountCode.findUnique.mockResolvedValue(validDiscountCode);
 
         await service.createSubscription('userId', {
           ...baseArgs,
-          voucher: 'testvoucher',
+          discountCode: 'testdiscountCode',
           paymentPeriodicity: PaymentPeriodicity.monthly,
           monthlyAmount: 100,
         });
 
         // monthly: 100 * 1 = 100, 20% of 100 = 20
         expect(memberContextMock.createSubscription).toHaveBeenCalledWith(
-          expect.objectContaining({ discount: 20, voucherId: 'voucherId' })
+          expect.objectContaining({
+            discount: 20,
+            discountCodeId: 'discountCodeId',
+          })
         );
       });
 
-      it('should apply voucher discount for a yearly subscription', async () => {
-        prismaMock.voucher.findUnique.mockResolvedValue({
-          ...validVoucher,
+      it('should apply discountCode discount for a yearly subscription', async () => {
+        prismaMock.discountCode.findUnique.mockResolvedValue({
+          ...validDiscountCode,
           discountPercent: 10,
         });
 
         await service.createSubscription('userId', {
           ...baseArgs,
-          voucher: 'testvoucher',
+          discountCode: 'testdiscountCode',
           paymentPeriodicity: PaymentPeriodicity.yearly,
           monthlyAmount: 100,
         });
 
         // yearly: 100 * 12 = 1200, 10% of 1200 = 120
         expect(memberContextMock.createSubscription).toHaveBeenCalledWith(
-          expect.objectContaining({ discount: 120, voucherId: 'voucherId' })
+          expect.objectContaining({
+            discount: 120,
+            discountCodeId: 'discountCodeId',
+          })
         );
       });
     });
 
     describe('unhappy path', () => {
-      it('should throw if voucher is not found', async () => {
-        prismaMock.voucher.findUnique.mockResolvedValue(null);
+      it('should throw if discountCode is not found', async () => {
+        prismaMock.discountCode.findUnique.mockResolvedValue(null);
 
         await expect(
           service.createSubscription('userId', {
             ...baseArgs,
-            voucher: 'invalid',
+            discountCode: 'invalid',
           })
         ).rejects.toMatchSnapshot();
       });
 
-      it('should throw if voucher is not yet valid', async () => {
-        prismaMock.voucher.findUnique.mockResolvedValue({
-          ...validVoucher,
+      it('should throw if discountCode is not yet valid', async () => {
+        prismaMock.discountCode.findUnique.mockResolvedValue({
+          ...validDiscountCode,
           validFrom: new Date('2025-06-01'),
         });
 
         await expect(
           service.createSubscription('userId', {
             ...baseArgs,
-            voucher: 'testvoucher',
+            discountCode: 'testdiscountCode',
           })
         ).rejects.toMatchSnapshot();
       });
 
-      it('should throw if voucher has expired', async () => {
-        prismaMock.voucher.findUnique.mockResolvedValue({
-          ...validVoucher,
+      it('should throw if discountCode has expired', async () => {
+        prismaMock.discountCode.findUnique.mockResolvedValue({
+          ...validDiscountCode,
           validTo: new Date('2024-12-31'),
         });
 
         await expect(
           service.createSubscription('userId', {
             ...baseArgs,
-            voucher: 'testvoucher',
+            discountCode: 'testdiscountCode',
           })
         ).rejects.toMatchSnapshot();
       });

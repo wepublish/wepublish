@@ -5,7 +5,7 @@ import { UpgradeSubscriptionService } from './upgrade-subscription.service';
 import { MemberContextService } from '../legacy/member-context.service';
 import { GoodieService } from '../goodie/goodie.service';
 import { PaymentsService } from '@wepublish/payment/api';
-import { VoucherService } from '../voucher/voucher.service';
+import { DiscountCodeService } from '../discountCode/discountCode.service';
 
 jest.mock('../legacy/member-context.service');
 jest.mock('@wepublish/payment/api');
@@ -31,8 +31,8 @@ describe('UpgradeSubscriptionService', () => {
     createPaymentWithProvider: jest.Mock;
   };
 
-  let voucherServiceMock: {
-    getValidVoucher: jest.Mock;
+  let discountCodeserviceMock: {
+    getValidDiscountCode: jest.Mock;
   };
 
   let goodieServiceMock: {
@@ -66,8 +66,8 @@ describe('UpgradeSubscriptionService', () => {
     paymentServiceMock = {
       createPaymentWithProvider: jest.fn(),
     };
-    voucherServiceMock = {
-      getValidVoucher: jest.fn(),
+    discountCodeserviceMock = {
+      getValidDiscountCode: jest.fn(),
     };
     goodieServiceMock = {
       getValidGoodie: jest.fn(),
@@ -89,8 +89,8 @@ describe('UpgradeSubscriptionService', () => {
           useValue: prismaMock,
         },
         {
-          provide: VoucherService,
-          useValue: voucherServiceMock,
+          provide: DiscountCodeService,
+          useValue: discountCodeserviceMock,
         },
         {
           provide: GoodieService,

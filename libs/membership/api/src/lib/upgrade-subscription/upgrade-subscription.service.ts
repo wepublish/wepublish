@@ -2,7 +2,7 @@ import {
   PrismaClient,
   SubscriptionDeactivationReason,
   SubscriptionPeriod,
-  Voucher,
+  DiscountCode,
 } from '@prisma/client';
 import {
   BadRequestException,
@@ -14,7 +14,7 @@ import { differenceInDays, endOfDay, startOfDay } from 'date-fns';
 import { MemberContextService } from '../legacy/member-context.service';
 import { GoodieService } from '../goodie/goodie.service';
 import { PaymentsService } from '@wepublish/payment/api';
-import { VoucherService } from '../voucher/voucher.service';
+import { DiscountCodeService } from '../discountCode/discountCode.service';
 import { calculateAmountForPeriodicity } from '../legacy/member-context';
 
 const roundUpTo5Cents = (amount: number) =>
@@ -47,7 +47,7 @@ export class UpgradeSubscriptionService {
     private memberContext: MemberContextService,
     private goodieService: GoodieService,
     private payments: PaymentsService,
-    private voucherService: VoucherService
+    private discountCodeservice: DiscountCodeService
   ) {}
 
   private async validateForUpgrade({
@@ -161,7 +161,7 @@ export class UpgradeSubscriptionService {
     successURL,
     failureURL,
     monthlyAmount,
-    voucher,
+    discountCode,
     goodieId,
   }: {
     userId: string;
@@ -171,7 +171,7 @@ export class UpgradeSubscriptionService {
     successURL?: string;
     failureURL?: string;
     monthlyAmount: number;
-    voucher?: string;
+    discountCode?: string;
     goodieId?: string;
   }) {
     const { oldSubscription, oldSubscriptionPeriods } =
@@ -187,14 +187,15 @@ export class UpgradeSubscriptionService {
         leftoverSubscriptionPeriodAmount(oldSubscriptionPeriods)
       : 0;
 
-    let voucherId: string | undefined = undefined;
-    let voucherDiscount = 0;
+    let discountCodeId: string | undefined = undefined;
+    let discountCodeDiscount = 0;
 
-    if (voucher) {
-      const voucherObj = await this.voucherService.getValidVoucher(
-        voucher,
-        memberPlanId
-      );
+    if (discountCode) {
+      const discountCodeObj =
+        await this.discountCodeservice.getValidDiscountCode(
+          discountCode,
+          memberPlanId
+        );
 
       const amountAfterLeftoverDiscount = Math.max(
         calculateAmountForPeriodicity(
@@ -204,9 +205,9 @@ export class UpgradeSubscriptionService {
         0
       );
 
-      voucherId = voucherObj.id;
-      voucherDiscount =
-        amountAfterLeftoverDiscount * (voucherObj.discountPercent / 100);
+      discountCodeId = discountCodeObj.id;
+      discountCodeDiscount =
+        amountAfterLeftoverDiscount * (discountCodeObj.discountPercent / 100);
     }
 
     if (goodieId) {
@@ -224,8 +225,8 @@ export class UpgradeSubscriptionService {
       extendable: oldSubscription.extendable,
       replacedSubscriptionId: oldSubscription.id,
       startsAt: new Date(),
-      discount: leftoverDiscount + voucherDiscount || undefined,
-      voucherId,
+      discount: leftoverDiscount + discountCodeDiscount || undefined,
+      discountCodeId,
       goodieId,
     });
 
@@ -278,12 +279,12 @@ export class UpgradeSubscriptionService {
     userId,
     subscriptionId,
     memberPlanId,
-    voucher,
+    discountCode,
   }: {
     userId: string;
     subscriptionId: string;
     memberPlanId: string;
-    voucher?: string;
+    discountCode?: string;
   }) {
     const { oldSubscriptionPeriods } = await this.validateForUpgrade({
       memberPlanId,
@@ -297,25 +298,26 @@ export class UpgradeSubscriptionService {
         leftoverSubscriptionPeriodAmount(oldSubscriptionPeriods)
       : 0;
 
-    if (!voucher) {
+    if (!discountCode) {
       return { discountAmount };
     }
 
-    let validVoucher: Voucher | null = null;
+    let validDiscountCode: DiscountCode | null = null;
 
     try {
-      validVoucher = await this.voucherService.getValidVoucher(
-        voucher,
+      validDiscountCode = await this.discountCodeservice.getValidDiscountCode(
+        discountCode,
         memberPlanId
       );
     } catch (e) {
-      validVoucher = null;
+      validDiscountCode = null;
     }
 
     return {
       discountAmount,
-      voucherValid: !!validVoucher,
-      discountPercent: validVoucher ? validVoucher.discountPercent / 100 : 0,
+      discountCodeValid: !!validDiscountCode,
+      discountPercent:
+        validDiscountCode ? validDiscountCode.discountPercent / 100 : 0,
     };
   }
 }

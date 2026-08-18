@@ -1,9 +1,9 @@
 import { createOptionalsArray, DataLoaderService } from '@wepublish/utils/api';
-import { PrismaClient, Voucher } from '@prisma/client';
+import { PrismaClient, DiscountCode } from '@prisma/client';
 import { Injectable, Scope } from '@nestjs/common';
 
 @Injectable({ scope: Scope.REQUEST })
-export class VoucherDataloader extends DataLoaderService<Voucher> {
+export class DiscountCodeDataloader extends DataLoaderService<DiscountCode> {
   constructor(private prisma: PrismaClient) {
     super();
   }
@@ -11,7 +11,7 @@ export class VoucherDataloader extends DataLoaderService<Voucher> {
   protected async loadByKeys(ids: string[]) {
     return createOptionalsArray(
       ids,
-      await this.prisma.voucher.findMany({
+      await this.prisma.discountCode.findMany({
         where: { id: { in: ids } },
       }),
       'id'

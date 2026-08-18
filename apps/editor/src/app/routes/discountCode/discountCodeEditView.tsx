@@ -1,11 +1,11 @@
 import { ApolloError } from '@apollo/client';
 import {
-  FullVoucherFragment,
-  MutationUpdateVoucherArgs,
-  useUpdateVoucherMutation,
-  useVoucherQuery,
+  FullDiscountCodeFragment,
+  MutationUpdateDiscountCodeArgs,
+  useDiscountCodeQuery,
+  useUpdateDiscountCodeMutation,
 } from '@wepublish/editor/api';
-import { CanUpdateVoucher } from '@wepublish/permissions';
+import { CanUpdateDiscountCode } from '@wepublish/permissions';
 import {
   createCheckedPermissionComponent,
   SingleViewTitle,
@@ -15,7 +15,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Form, Message, Schema, toaster } from 'rsuite';
 
-import { VoucherForm } from './voucherForm';
+import { DiscountCodeForm } from './discountCodeForm';
 
 const onErrorToast = (error: ApolloError) => {
   toaster.push(
@@ -31,10 +31,10 @@ const onErrorToast = (error: ApolloError) => {
 };
 
 const mapApiDataToInput = (
-  voucher: FullVoucherFragment
-): MutationUpdateVoucherArgs => voucher;
+  discountCode: FullDiscountCodeFragment
+): MutationUpdateDiscountCodeArgs => discountCode;
 
-const VoucherEditView = () => {
+const DiscountCodeEditView = () => {
   const { t } = useTranslation();
   const [shouldClose, setShouldClose] = useState(false);
   const navigate = useNavigate();
@@ -42,33 +42,35 @@ const VoucherEditView = () => {
   const { id } = params;
   const closePath = './../..';
 
-  const [voucher, setVoucher] = useState<MutationUpdateVoucherArgs>();
+  const [discountCode, setDiscountCode] =
+    useState<MutationUpdateDiscountCodeArgs>();
 
-  const { loading: dataLoading } = useVoucherQuery({
+  const { loading: dataLoading } = useDiscountCodeQuery({
     variables: {
       id: id as string,
     },
     onError: onErrorToast,
     onCompleted: data => {
-      setVoucher(mapApiDataToInput(data.voucher));
+      setDiscountCode(mapApiDataToInput(data.discountCode));
     },
   });
 
-  const [updateVoucher, { loading: updateLoading }] = useUpdateVoucherMutation({
-    onError: onErrorToast,
-    onCompleted: data => {
-      if (data.updateVoucher) {
-        if (shouldClose) {
-          navigate(closePath);
-        } else {
-          setVoucher(mapApiDataToInput(data.updateVoucher));
+  const [updateDiscountCode, { loading: updateLoading }] =
+    useUpdateDiscountCodeMutation({
+      onError: onErrorToast,
+      onCompleted: data => {
+        if (data.updateDiscountCode) {
+          if (shouldClose) {
+            navigate(closePath);
+          } else {
+            setDiscountCode(mapApiDataToInput(data.updateDiscountCode));
+          }
         }
-      }
-    },
-  });
+      },
+    });
 
   const loading = dataLoading || updateLoading;
-  const onSubmit = () => updateVoucher({ variables: voucher });
+  const onSubmit = () => updateDiscountCode({ variables: discountCode });
 
   const { StringType, DateType, NumberType } = Schema.Types;
   const validationModel = Schema.Model({
@@ -76,26 +78,28 @@ const VoucherEditView = () => {
     discountPercent: NumberType().min(0).max(100).isInteger().isRequired(),
     validFrom: DateType().isRequired(),
     validTo: DateType()
-      .min(new Date(voucher?.validFrom ?? new Date()))
+      .min(new Date(discountCode?.validFrom ?? new Date()))
       .isRequired(),
     memberPlanId: StringType().isRequired(),
   });
 
-  if (!voucher) {
+  if (!discountCode) {
     return;
   }
 
   return (
     <Form
       fluid
-      formValue={voucher || {}}
+      formValue={discountCode || {}}
       model={validationModel}
       disabled={loading}
       onSubmit={validationPassed => validationPassed && onSubmit()}
     >
       <SingleViewTitle
         loading={loading}
-        title={t('voucher.form.editTitle', { voucher: voucher.code })}
+        title={t('discountCode.form.editTitle', {
+          discountCode: discountCode.code,
+        })}
         loadingTitle={t('loading')}
         saveBtnTitle={t('save')}
         saveAndCloseBtnTitle={t('saveAndClose')}
@@ -103,10 +107,13 @@ const VoucherEditView = () => {
         setCloseFn={setShouldClose}
       />
 
-      <VoucherForm
-        voucher={voucher}
+      <DiscountCodeForm
+        discountCode={discountCode}
         onChange={changes =>
-          setVoucher(oldVoucher => ({ ...oldVoucher, ...(changes as any) }))
+          setDiscountCode(oldDiscountCode => ({
+            ...oldDiscountCode,
+            ...(changes as any),
+          }))
         }
       />
     </Form>
@@ -114,6 +121,6 @@ const VoucherEditView = () => {
 };
 
 const CheckedPermissionComponent = createCheckedPermissionComponent([
-  CanUpdateVoucher.id,
-])(VoucherEditView);
-export { CheckedPermissionComponent as VoucherEditView };
+  CanUpdateDiscountCode.id,
+])(DiscountCodeEditView);
+export { CheckedPermissionComponent as DiscountCodeEditView };
