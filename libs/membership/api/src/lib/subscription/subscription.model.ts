@@ -2,6 +2,7 @@ import {
   ArgsType,
   Field,
   InputType,
+  Float,
   Int,
   ObjectType,
   OmitType,
@@ -96,7 +97,7 @@ export class PublicSubscription
   @Field(() => PaymentPeriodicity)
   paymentPeriodicity!: PaymentPeriodicity;
 
-  @Field(() => Int)
+  @Field(() => Float)
   monthlyAmount!: number;
 
   @Field(() => Boolean)
