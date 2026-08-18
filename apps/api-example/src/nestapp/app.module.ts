@@ -59,7 +59,7 @@ import {
   SubscriptionModule,
   UpgradeSubscriptionModule,
   GoodieModule,
-  VoucherModule,
+  DiscountCodeModule,
 } from '@wepublish/membership/api';
 import { NavigationModule } from '@wepublish/navigation/api';
 import {
@@ -431,7 +431,7 @@ import { readConfig } from '../readConfig';
     MembershipModule,
     InvoiceModule,
     GoodieModule,
-    VoucherModule,
+    DiscountCodeModule,
     DashboardModule,
     AuthenticationModule,
 

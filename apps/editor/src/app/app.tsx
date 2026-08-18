@@ -96,9 +96,9 @@ import { TokenList } from './routes/tokens/tokenList';
 import { UserRoleList } from './routes/userRoles/userRoleList';
 import { UserEditView } from './routes/users/userEditView';
 import { UserList } from './routes/users/userList';
-import { VoucherCreateView } from './routes/voucher/voucherCreateView';
-import { VoucherEditView } from './routes/voucher/voucherEditView';
-import { VoucherList } from './routes/voucher/voucherList';
+import { DiscountCodeCreateView } from './routes/discountCode/discountCodeCreateView';
+import { DiscountCodeEditView } from './routes/discountCode/discountCodeEditView';
+import { DiscountCodeList } from './routes/discountCode/discountCodeList';
 import { WebsiteSettingsItem } from './routes/website-settings/website-settings-item';
 import { WebsiteSettingsList } from './routes/website-settings/website-settings-list';
 import { SetNewPassword } from './setNewPassword';
@@ -904,28 +904,28 @@ export function App() {
                 </Base>
               }
             />
-            {/* Voucher routes */}
+            {/* DiscountCode routes */}
             <Route
-              path="vouchers"
+              path="discountCodes"
               element={
                 <Base>
-                  <VoucherList />
+                  <DiscountCodeList />
                 </Base>
               }
             />
             <Route
-              path="vouchers/edit/:id"
+              path="discountCodes/edit/:id"
               element={
                 <Base>
-                  <VoucherEditView />
+                  <DiscountCodeEditView />
                 </Base>
               }
             />
             <Route
-              path="vouchers/create"
+              path="discountCodes/create"
               element={
                 <Base>
-                  <VoucherCreateView />
+                  <DiscountCodeCreateView />
                 </Base>
               }
             />

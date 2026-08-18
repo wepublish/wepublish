@@ -476,8 +476,8 @@ model InvoiceItem {
   invoices  Invoice? @relation(fields: [invoiceId], references: [id], onDelete: SetNull)
   invoiceId String?
 
-  voucher   Voucher? @relation(fields: [voucherId], references: [id], onDelete: SetNull)
-  voucherId String?
+  discountCode   DiscountCode? @relation(fields: [discountCodeId], references: [id], onDelete: SetNull)
+  discountCodeId String?
 
   goodie   Goodie? @relation(fields: [goodieId], references: [id], onDelete: SetNull)
   goodieId String?
@@ -747,7 +747,7 @@ model MemberPlan {
 
   crowdfundings Crowdfunding[]
   paywalls      PaywallMemberplan[]
-  vouchers      Voucher[]
+  discountCodes DiscountCode[]
   goodies       Goodie[]
 
   @@index([name])
@@ -1893,7 +1893,7 @@ enum MolliePaymentMethod {
   SATISPAY
   TRUSTLY
   TWINT
-  VOUCHER
+  DISCOUNTCODE
 }
 
 model SettingPaymentProvider {
@@ -2093,7 +2093,7 @@ model WebsiteSettings {
   @@map("settings.website")
 }
 
-model Voucher {
+model DiscountCode {
   id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
@@ -2110,7 +2110,7 @@ model Voucher {
   invoiceItems InvoiceItem[]
 
   @@unique([code, memberPlanId])
-  @@map("vouchers")
+  @@map("discountCodes")
 }
 
 model Goodie {

@@ -8,7 +8,7 @@ import { UserModule } from '@wepublish/user/api';
 import {
   GoodieModule,
   MemberContextModule,
-  VoucherModule,
+  DiscountCodeModule,
 } from '@wepublish/membership/api';
 
 @Module({
@@ -19,7 +19,7 @@ import {
     PaymentMethodModule,
     UserModule,
     MemberContextModule,
-    VoucherModule,
+    DiscountCodeModule,
     GoodieModule,
   ],
   providers: [UserSubscriptionService, UserSubscriptionResolver],

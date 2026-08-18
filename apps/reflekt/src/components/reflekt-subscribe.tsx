@@ -59,7 +59,7 @@ export const StyledReflektSubscribeBlock = styled(SubscribeBlock)`
     'userForm'
     ${({ showGoodies }) => (showGoodies ? "'goodie' 'goodieError'" : '')}
     'transactionFee'
-    ${({ showVouchers }) => (showVouchers ? "'voucher'" : '')}
+    ${({ showDiscountCodes }) => (showDiscountCodes ? "'discountCode'" : '')}
     'submit'
     'paymentPeriodicity'
     'challenge'

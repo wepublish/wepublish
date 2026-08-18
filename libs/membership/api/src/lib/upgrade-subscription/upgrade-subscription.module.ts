@@ -7,7 +7,7 @@ import { UpgradeSubscriptionService } from './upgrade-subscription.service';
 import { MemberContextModule } from '../legacy/member-context.module';
 import { GoodieModule } from '../goodie/goodie.module';
 import { PaymentMethodModule, PaymentsModule } from '@wepublish/payment/api';
-import { VoucherModule } from '../voucher/voucher.module';
+import { DiscountCodeModule } from '../discountCode/discountCode.module';
 
 @Module({
   imports: [
@@ -17,7 +17,7 @@ import { VoucherModule } from '../voucher/voucher.module';
     MemberContextModule,
     GoodieModule,
     PaymentsModule,
-    VoucherModule,
+    DiscountCodeModule,
   ],
   providers: [UpgradeSubscriptionResolver, UpgradeSubscriptionService],
 })

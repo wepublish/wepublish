@@ -30,7 +30,7 @@ import {
   calculateAmountForPeriodicity,
   GoodieService,
   MemberContextService,
-  VoucherService,
+  DiscountCodeService,
 } from '@wepublish/membership/api';
 
 export type SubscriptionWithRelations = Subscription & {
@@ -46,7 +46,7 @@ export class UserSubscriptionService {
     private memberPlanService: MemberPlanService,
     private memberPlanDataloader: MemberPlanDataloader,
     private memberContext: MemberContextService,
-    private voucherService: VoucherService,
+    private discountCodeservice: DiscountCodeService,
     private goodieService: GoodieService
   ) {}
 
@@ -60,27 +60,28 @@ export class UserSubscriptionService {
 
   async createSubscription(
     userId: string,
-    { voucher, ...args }: CreateSubscriptionArgs
+    { discountCode, ...args }: CreateSubscriptionArgs
   ) {
     const { memberPlan, paymentMethod } =
       await this.validateSubscriptionInput(args);
 
     let discount: number | undefined = undefined;
-    let voucherId: string | undefined = undefined;
+    let discountCodeId: string | undefined = undefined;
 
-    if (voucher) {
-      const voucherObj = await this.voucherService.getValidVoucher(
-        voucher,
-        memberPlan.id
-      );
+    if (discountCode) {
+      const discountCodeObj =
+        await this.discountCodeservice.getValidDiscountCode(
+          discountCode,
+          memberPlan.id
+        );
 
       discount =
         calculateAmountForPeriodicity(
           args.monthlyAmount,
           args.paymentPeriodicity
         ) *
-        (voucherObj.discountPercent / 100);
-      voucherId = voucherObj.id;
+        (discountCodeObj.discountPercent / 100);
+      discountCodeId = discountCodeObj.id;
     }
 
     const {
@@ -136,7 +137,7 @@ export class UserSubscriptionService {
         extendable: memberPlan.extendable,
         replacedSubscriptionId: subscriptionToDeactivate?.id,
         discount,
-        voucherId,
+        discountCodeId,
         goodieId,
       });
 

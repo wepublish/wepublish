@@ -135,7 +135,7 @@ export const Mollie_PaymentMethod_ID = {
   SATISPAY: 'satispay',
   TRUSTLY: 'trustly',
   TWINT: 'twint',
-  VOUCHER: 'voucher',
+  DISCOUNTCODE: 'discountCode',
 } as const;
 
 // Paxrexx PM

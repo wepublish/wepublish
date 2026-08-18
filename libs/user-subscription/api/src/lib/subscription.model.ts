@@ -44,13 +44,13 @@ export class CreateSubscriptionInfo {
   discountPercent?: number;
 
   @Field({ nullable: true })
-  voucherValid?: boolean;
+  discountCodeValid?: boolean;
 }
 
 @ArgsType()
 export class CreateSubscriptionArgs {
   @Field({ nullable: true })
-  voucher?: string;
+  discountCode?: string;
 
   @Field({ nullable: true })
   memberPlanID?: string;

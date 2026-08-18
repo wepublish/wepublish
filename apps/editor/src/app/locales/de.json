@@ -405,9 +405,9 @@
         "selectFields": "Benutzer-Eingabefelder",
         "selectFieldsSelectionHint": "Email & Nachname wird immer abgefragt. Reihenfolge spielt keine Rolle",
         "goodiesHeading": "Goodies",
-        "vouchersHeading": "Gutscheine",
+        "discountCodesHeading": "Rabattcodes",
         "showGoodies": "Goodie-Auswahl anzeigen",
-        "showVouchers": "Gutschein-Eingabe anzeigen",
+        "showDiscountCodes": "Rabattcode-Eingabe anzeigen",
         "goodieMinValue": {
           "label": "Goodie-Mindestbetrag:"
         },
@@ -2181,11 +2181,11 @@
         "anyMemberPlan": "Alle Abo-Pläne"
       }
     },
-    "voucher": {
-      "navbar": "Gutscheine",
+    "discountCode": {
+      "navbar": "Rabattcodes",
       "form": {
-        "createTitle": "Gutschein erstellen",
-        "editTitle": "Gutschein \"{{ voucher }}\" bearbeiten",
+        "createTitle": "Rabattcode erstellen",
+        "editTitle": "Rabattcode \"{{ discountCode }}\" bearbeiten",
         "code": "Code",
         "discountPercent": "Rabatt (%)",
         "validFrom": "Gültig ab",
@@ -2193,8 +2193,8 @@
         "memberPlan": "Abo-Plan"
       },
       "overview": {
-        "title": "Gutscheine",
-        "createVoucher": "Neuer Gutschein",
+        "title": "Rabattcodes",
+        "createDiscountCode": "Neuer Rabattcode",
         "active": "Aktiv",
         "valid": "Gültig",
         "code": "Code",
@@ -2203,8 +2203,8 @@
         "validFrom": "Gültig ab",
         "validTo": "Gültig bis",
         "areYouSure": "Bist du sicher?",
-        "areYouSureBody": "Der Gutschein \"{{ voucher }}\" wird unwiderruflich gelöscht.",
-        "areYouSureConfirmation": "Gutschein löschen"
+        "areYouSureBody": "Der Rabattcode \"{{ discountCode }}\" wird unwiderruflich gelöscht.",
+        "areYouSureConfirmation": "Rabattcode löschen"
       }
     },
     "goodie": {

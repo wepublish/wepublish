@@ -23,7 +23,7 @@ import {
   CanCreateToken,
   CanCreateUser,
   CanCreateUserRole,
-  CanCreateVoucher,
+  CanCreateDiscountCode,
   CanDeleteArticle,
   CanDeleteAuthor,
   CanDeleteBanner,
@@ -111,7 +111,7 @@ import {
   CanUpdateSettings,
   CanUpdateSystemMails,
   CanUpdateTag,
-  CanUpdateVoucher,
+  CanUpdateDiscountCode,
   CanUpdateWebsiteSettings,
 } from '@wepublish/permissions';
 import { PermissionControl, Version } from '@wepublish/ui/editor';
@@ -985,8 +985,8 @@ export function Base({ children }: BaseProps) {
                     CanCreatePaymentMethod.id,
                     CanDeletePaymentMethod.id,
                     CanGetSubscriptionFlows.id,
-                    CanCreateVoucher.id,
-                    CanUpdateVoucher.id,
+                    CanCreateDiscountCode.id,
+                    CanUpdateDiscountCode.id,
                     CanCreateGoodie.id,
                     CanUpdateGoodie.id,
                   ]}
@@ -1034,20 +1034,20 @@ export function Base({ children }: BaseProps) {
                       </Nav.Item>
                     </PermissionControl>
 
-                    {/* VOUCHERS */}
+                    {/* DISCOUNTCODES */}
                     <PermissionControl
                       qualifyingPermissions={[
-                        CanCreateVoucher.id,
-                        CanUpdateVoucher.id,
+                        CanCreateDiscountCode.id,
+                        CanUpdateDiscountCode.id,
                       ]}
                     >
                       <Nav.Item
                         as={NavLink}
-                        href="/vouchers"
+                        href="/discountCodes"
                         icon={<MdCountertops />}
-                        active={path === 'vouchers'}
+                        active={path === 'discountCodes'}
                       >
-                        {t('voucher.navbar')}
+                        {t('discountCode.navbar')}
                       </Nav.Item>
                     </PermissionControl>
 

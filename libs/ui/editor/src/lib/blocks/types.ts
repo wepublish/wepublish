@@ -76,7 +76,7 @@ export interface SubscribeBlockValue extends BaseBlockValue {
   memberPlanRenderSettings: SubscribeBlock['memberPlanRenderSettings'];
   fields: SubscribeBlockField[];
   showGoodies: boolean;
-  showVouchers: boolean;
+  showDiscountCodes: boolean;
   goodieMinValue?: number | null;
   hideRepeatGoodieOnUpgrade: boolean;
 }
@@ -509,7 +509,7 @@ export function mapBlockValueToBlockInput(
           memberPlanRenderSettings: block.value.memberPlanRenderSettings ?? [],
           fields: block.value.fields,
           showGoodies: block.value.showGoodies,
-          showVouchers: block.value.showVouchers,
+          showDiscountCodes: block.value.showDiscountCodes,
           goodieMinValue: block.value.goodieMinValue ?? null,
           hideRepeatGoodieOnUpgrade: block.value.hideRepeatGoodieOnUpgrade,
         },
@@ -1140,7 +1140,7 @@ export function blockForQueryBlock(
           blockStyle: block.blockStyle,
           fields: block.fields ?? [],
           showGoodies: block.showGoodies ?? false,
-          showVouchers: block.showVouchers ?? false,
+          showDiscountCodes: block.showDiscountCodes ?? false,
           goodieMinValue: block.goodieMinValue ?? null,
           hideRepeatGoodieOnUpgrade: block.hideRepeatGoodieOnUpgrade ?? false,
           memberPlanIds: block.memberPlanIds ?? [],

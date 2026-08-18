@@ -162,7 +162,7 @@ export const Default: StoryObj<typeof Upgrade> = {
         upgradeUserSubscriptionInfo: {
           discountAmount: 500,
           discountPercent: null,
-          voucherValid: null,
+          discountCodeValid: null,
         },
       },
       loading: false,
@@ -237,24 +237,24 @@ const expectTexts =
     });
   };
 
-export const WithVoucher: StoryObj<typeof Upgrade> = {
+export const WithDiscountCode: StoryObj<typeof Upgrade> = {
   ...Default,
   args: {
     ...Default.args,
-    showVouchers: true,
+    showDiscountCodes: true,
     upgradeInfo: {
       data: {
         upgradeUserSubscriptionInfo: {
           discountAmount: 500,
           discountPercent: 0.2,
-          voucherValid: true,
+          discountCodeValid: true,
         },
       },
       loading: false,
     },
   },
   // memberPlan2 for a year is CHF 96.-, minus the CHF 5.- leftover
-  // of the old subscription, minus 20% voucher discount
+  // of the old subscription, minus 20% discountCode discount
   play: expectTexts([
     '20% Rabatt angewendet',
     'CHF 72.80',
@@ -262,23 +262,23 @@ export const WithVoucher: StoryObj<typeof Upgrade> = {
   ]),
 };
 
-export const WithInvalidVoucher: StoryObj<typeof Upgrade> = {
+export const WithInvalidDiscountCode: StoryObj<typeof Upgrade> = {
   ...Default,
   args: {
     ...Default.args,
-    showVouchers: true,
+    showDiscountCodes: true,
     upgradeInfo: {
       data: {
         upgradeUserSubscriptionInfo: {
           discountAmount: 500,
           discountPercent: null,
-          voucherValid: false,
+          discountCodeValid: false,
         },
       },
       loading: false,
     },
   },
-  play: expectTexts(['Gutscheincode ungültig', 'CHF 91.-']),
+  play: expectTexts(['Rabattcode ungültig', 'CHF 91.-']),
 };
 
 export const WithDiscountCoveringTheFullAmount: StoryObj<typeof Upgrade> = {
@@ -290,7 +290,7 @@ export const WithDiscountCoveringTheFullAmount: StoryObj<typeof Upgrade> = {
         upgradeUserSubscriptionInfo: {
           discountAmount: 100000,
           discountPercent: 0.2,
-          voucherValid: true,
+          discountCodeValid: true,
         },
       },
       loading: false,

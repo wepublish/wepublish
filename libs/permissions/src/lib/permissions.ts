@@ -556,27 +556,27 @@ export const CanDeleteGoodie: Permission = {
   deprecated: false,
 };
 
-export const CanGetVoucher: Permission = {
-  id: 'CAN_GET_VOUCHER',
-  description: 'Allows to get a voucher',
+export const CanGetDiscountCode: Permission = {
+  id: 'CAN_GET_DISCOUNTCODE',
+  description: 'Allows to get a discountCode',
   deprecated: false,
 };
 
-export const CanCreateVoucher: Permission = {
-  id: 'CAN_CREATE_VOUCHER',
-  description: 'Allows to create a voucher',
+export const CanCreateDiscountCode: Permission = {
+  id: 'CAN_CREATE_DISCOUNTCODE',
+  description: 'Allows to create a discountCode',
   deprecated: false,
 };
 
-export const CanUpdateVoucher: Permission = {
-  id: 'CAN_UPDATE_VOUCHER',
-  description: 'Allows to update a voucher',
+export const CanUpdateDiscountCode: Permission = {
+  id: 'CAN_UPDATE_DISCOUNTCODE',
+  description: 'Allows to update a discountCode',
   deprecated: false,
 };
 
-export const CanDeleteVoucher: Permission = {
-  id: 'CAN_DELETE_VOUCHER',
-  description: 'Allows to delete a voucher',
+export const CanDeleteDiscountCode: Permission = {
+  id: 'CAN_DELETE_DISCOUNTCODE',
+  description: 'Allows to delete a discountCode',
   deprecated: false,
 };
 
@@ -1244,10 +1244,10 @@ export const AllPermissions: Permission[] = [
   CanCreateGoodie,
   CanUpdateGoodie,
   CanDeleteGoodie,
-  CanGetVoucher,
-  CanCreateVoucher,
-  CanUpdateVoucher,
-  CanDeleteVoucher,
+  CanGetDiscountCode,
+  CanCreateDiscountCode,
+  CanUpdateDiscountCode,
+  CanDeleteDiscountCode,
   CanLoginAsOtherUser,
   CanGetSettings,
   CanUpdateSettings,
