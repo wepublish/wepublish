@@ -72,6 +72,7 @@ const mockTemplate2: MailTemplate = {
 const prismaServiceMock = {
   mailTemplate: {
     findMany: jest.fn((): MailTemplate[] => [mockTemplate1, mockTemplate2]),
+    findUnique: jest.fn(async () => mockTemplate1),
     create: jest.fn(async () => mockTemplate1),
     update: jest.fn(async () => mockTemplate1),
     delete: jest.fn(async () => mockTemplate1),
@@ -160,6 +161,17 @@ describe('MailTemplatesResolver', () => {
     expect(result.length).toEqual(2);
     expect(result[0].name).toEqual('Mock Template 1');
     expect(result[1].name).toEqual('Mock Template 2');
+  });
+
+  // The list query deliberately omits htmlContent/textContent, so the edit view
+  // needs a way to load one template's body on its own.
+  it('returns a single template by id', async () => {
+    const result = await resolver.mailTemplate(mockTemplate1.id);
+
+    expect(prismaServiceMock.mailTemplate.findUnique).toHaveBeenCalledWith({
+      where: { id: mockTemplate1.id },
+    });
+    expect(result?.htmlContent).toEqual('<p>Content 1</p>');
   });
 
   it('resolves the provider', async () => {

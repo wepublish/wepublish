@@ -51,6 +51,17 @@ export class MailTemplatesResolver {
   }
 
   @Permissions(CanGetMailTemplates)
+  @Query(() => MailTemplateModel, {
+    nullable: true,
+    description: `Return a single mail template, including its html and text body.`,
+  })
+  async mailTemplate(@Args('id') id: string) {
+    return this.prismaService.mailTemplate.findUnique({
+      where: { id },
+    });
+  }
+
+  @Permissions(CanGetMailTemplates)
   @Query(() => MailProviderModel)
   async provider() {
     const provider = await this.mailContext.mailProvider;
