@@ -18,6 +18,9 @@ import { SlotTeasersLoader } from './teaser/slot-teasers-loader';
 import { TagModule } from '@wepublish/tag/api';
 import { SubscribeBlockResolver } from './subscribe/subscribe-block.resolver';
 import { MemberPlanModule } from '@wepublish/member-plan/api';
+import { SettingModule } from '@wepublish/settings/api';
+import { MailchimpSubscribeResolver } from './mailchimp-form/mailchimp-subscribe.resolver';
+import { MailchimpSubscribeService } from './mailchimp-form/mailchimp-subscribe.service';
 
 @Module({
   imports: [
@@ -31,6 +34,7 @@ import { MemberPlanModule } from '@wepublish/member-plan/api';
     CommentModule,
     TagModule,
     forwardRef(() => MemberPlanModule),
+    SettingModule,
   ],
   providers: [
     BaseBlockResolver,
@@ -40,6 +44,8 @@ import { MemberPlanModule } from '@wepublish/member-plan/api';
     TeaserListBlockFilterResolver,
     SlotTeasersLoader,
     SubscribeBlockResolver,
+    MailchimpSubscribeResolver,
+    MailchimpSubscribeService,
   ],
   exports: [SlotTeasersLoader],
 })
