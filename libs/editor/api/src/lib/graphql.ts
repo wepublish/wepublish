@@ -4866,6 +4866,8 @@ export type Query = {
   mailSendRecipientPreview: MailSendRecipientPreview;
   /** The concrete recipients an audience resolves to */
   mailSendRecipients: PaginatedMailSendRecipient;
+  /** Return a single mail template, including its html and text body. */
+  mailTemplate?: Maybe<MailTemplateModel>;
   /** Placeholders a template uses that would render empty for the given send (empty = none missing) */
   mailTemplateMissingPlaceholders: Array<Scalars['String']>;
   /** Render a draft mail template with a mail type's sample data */
@@ -5373,6 +5375,11 @@ export type QueryMailSendRecipientsArgs = {
   audience: MailAudienceInput;
   skip?: InputMaybe<Scalars['Int']>;
   take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryMailTemplateArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -8121,14 +8128,21 @@ export type CreateMailSendJobMutation = { __typename?: 'Mutation', createMailSen
 export type MailTemplateQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MailTemplateQuery = { __typename?: 'Query', mailTemplates: Array<{ __typename?: 'MailTemplateModel', id: string, name: string, description?: string | null, subject: string, htmlContent: string, textContent?: string | null, context?: MailTemplateContext | null, status: string }>, provider: { __typename?: 'MailProviderModel', name: string } };
+export type MailTemplateQuery = { __typename?: 'Query', mailTemplates: Array<{ __typename?: 'MailTemplateModel', id: string, name: string, description?: string | null, subject: string, context?: MailTemplateContext | null, status: string }>, provider: { __typename?: 'MailProviderModel', name: string } };
+
+export type MailTemplateByIdQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type MailTemplateByIdQuery = { __typename?: 'Query', mailTemplate?: { __typename?: 'MailTemplateModel', htmlContent: string, textContent?: string | null, id: string, name: string, description?: string | null, subject: string, context?: MailTemplateContext | null, status: string } | null };
 
 export type CreateMailTemplateMutationVariables = Exact<{
   input: MailTemplateInput;
 }>;
 
 
-export type CreateMailTemplateMutation = { __typename?: 'Mutation', createMailTemplate: { __typename?: 'MailTemplateModel', id: string, name: string, description?: string | null, subject: string, htmlContent: string, textContent?: string | null, context?: MailTemplateContext | null, status: string } };
+export type CreateMailTemplateMutation = { __typename?: 'Mutation', createMailTemplate: { __typename?: 'MailTemplateModel', htmlContent: string, textContent?: string | null, id: string, name: string, description?: string | null, subject: string, context?: MailTemplateContext | null, status: string } };
 
 export type UpdateMailTemplateMutationVariables = Exact<{
   id: Scalars['String'];
@@ -8136,7 +8150,7 @@ export type UpdateMailTemplateMutationVariables = Exact<{
 }>;
 
 
-export type UpdateMailTemplateMutation = { __typename?: 'Mutation', updateMailTemplate: { __typename?: 'MailTemplateModel', id: string, name: string, description?: string | null, subject: string, htmlContent: string, textContent?: string | null, context?: MailTemplateContext | null, status: string } };
+export type UpdateMailTemplateMutation = { __typename?: 'Mutation', updateMailTemplate: { __typename?: 'MailTemplateModel', htmlContent: string, textContent?: string | null, id: string, name: string, description?: string | null, subject: string, context?: MailTemplateContext | null, status: string } };
 
 export type DeleteMailTemplateMutationVariables = Exact<{
   id: Scalars['String'];
@@ -8171,7 +8185,9 @@ export type SendTestMailTemplateMutationVariables = Exact<{
 
 export type SendTestMailTemplateMutation = { __typename?: 'Mutation', sendTestMailTemplate?: boolean | null };
 
-export type FullMailTemplateFragment = { __typename?: 'MailTemplateModel', id: string, name: string, description?: string | null, subject: string, htmlContent: string, textContent?: string | null, context?: MailTemplateContext | null, status: string };
+export type TinyMailTemplateFragment = { __typename?: 'MailTemplateModel', id: string, name: string, description?: string | null, subject: string, context?: MailTemplateContext | null, status: string };
+
+export type FullMailTemplateFragment = { __typename?: 'MailTemplateModel', htmlContent: string, textContent?: string | null, id: string, name: string, description?: string | null, subject: string, context?: MailTemplateContext | null, status: string };
 
 export type FullMailProviderFragment = { __typename?: 'MailProviderModel', name: string };
 
@@ -10797,18 +10813,23 @@ export const FullMailSendJobFragmentDoc = gql`
   }
 }
     `;
-export const FullMailTemplateFragmentDoc = gql`
-    fragment FullMailTemplate on MailTemplateModel {
+export const TinyMailTemplateFragmentDoc = gql`
+    fragment TinyMailTemplate on MailTemplateModel {
   id
   name
   description
   subject
-  htmlContent
-  textContent
   context
   status
 }
     `;
+export const FullMailTemplateFragmentDoc = gql`
+    fragment FullMailTemplate on MailTemplateModel {
+  ...TinyMailTemplate
+  htmlContent
+  textContent
+}
+    ${TinyMailTemplateFragmentDoc}`;
 export const FullMailProviderFragmentDoc = gql`
     fragment FullMailProvider on MailProviderModel {
   name
@@ -15941,13 +15962,13 @@ export type CreateMailSendJobMutationOptions = Apollo.BaseMutationOptions<Create
 export const MailTemplateDocument = gql`
     query MailTemplate {
   mailTemplates {
-    ...FullMailTemplate
+    ...TinyMailTemplate
   }
   provider {
     ...FullMailProvider
   }
 }
-    ${FullMailTemplateFragmentDoc}
+    ${TinyMailTemplateFragmentDoc}
 ${FullMailProviderFragmentDoc}`;
 
 /**
@@ -15976,6 +15997,41 @@ export function useMailTemplateLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
 export type MailTemplateQueryHookResult = ReturnType<typeof useMailTemplateQuery>;
 export type MailTemplateLazyQueryHookResult = ReturnType<typeof useMailTemplateLazyQuery>;
 export type MailTemplateQueryResult = Apollo.QueryResult<MailTemplateQuery, MailTemplateQueryVariables>;
+export const MailTemplateByIdDocument = gql`
+    query MailTemplateById($id: String!) {
+  mailTemplate(id: $id) {
+    ...FullMailTemplate
+  }
+}
+    ${FullMailTemplateFragmentDoc}`;
+
+/**
+ * __useMailTemplateByIdQuery__
+ *
+ * To run a query within a React component, call `useMailTemplateByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMailTemplateByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMailTemplateByIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useMailTemplateByIdQuery(baseOptions: Apollo.QueryHookOptions<MailTemplateByIdQuery, MailTemplateByIdQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MailTemplateByIdQuery, MailTemplateByIdQueryVariables>(MailTemplateByIdDocument, options);
+      }
+export function useMailTemplateByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MailTemplateByIdQuery, MailTemplateByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MailTemplateByIdQuery, MailTemplateByIdQueryVariables>(MailTemplateByIdDocument, options);
+        }
+export type MailTemplateByIdQueryHookResult = ReturnType<typeof useMailTemplateByIdQuery>;
+export type MailTemplateByIdLazyQueryHookResult = ReturnType<typeof useMailTemplateByIdLazyQuery>;
+export type MailTemplateByIdQueryResult = Apollo.QueryResult<MailTemplateByIdQuery, MailTemplateByIdQueryVariables>;
 export const CreateMailTemplateDocument = gql`
     mutation CreateMailTemplate($input: MailTemplateInput!) {
   createMailTemplate(input: $input) {

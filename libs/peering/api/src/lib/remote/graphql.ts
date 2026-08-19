@@ -4864,6 +4864,8 @@ export type Query = {
   mailSendRecipientPreview: MailSendRecipientPreview;
   /** The concrete recipients an audience resolves to */
   mailSendRecipients: PaginatedMailSendRecipient;
+  /** Return a single mail template, including its html and text body. */
+  mailTemplate?: Maybe<MailTemplateModel>;
   /** Placeholders a template uses that would render empty for the given send (empty = none missing) */
   mailTemplateMissingPlaceholders: Array<Scalars['String']>;
   /** Render a draft mail template with a mail type's sample data */
@@ -5371,6 +5373,11 @@ export type QueryMailSendRecipientsArgs = {
   audience: MailAudienceInput;
   skip?: InputMaybe<Scalars['Int']>;
   take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryMailTemplateArgs = {
+  id: Scalars['String'];
 };
 
 
