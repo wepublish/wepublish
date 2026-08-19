@@ -29,6 +29,7 @@ export class MemberPlanService {
       },
       include: {
         availablePaymentMethods: true,
+        periodicityPricing: true,
       },
     });
   }
@@ -58,6 +59,7 @@ export class MemberPlanService {
         cursor: cursorId ? { id: cursorId } : undefined,
         include: {
           availablePaymentMethods: true,
+          periodicityPricing: true,
         },
       }),
     ]);
@@ -89,6 +91,7 @@ export class MemberPlanService {
       },
       include: {
         availablePaymentMethods: true,
+        periodicityPricing: true,
       },
     });
   }
@@ -153,9 +156,22 @@ export class MemberPlanService {
         description: input.description as any,
         shortDescription: input.shortDescription as any,
         periodicityPricing:
-          periodicityPricing === null ?
-            Prisma.DbNull
-          : periodicityPricingToJson(periodicityPricing),
+          periodicityPricing !== undefined ?
+            {
+              deleteMany: {
+                memberPlanId: {
+                  equals: id,
+                },
+              },
+              ...(periodicityPricing ?
+                {
+                  createMany: {
+                    data: periodicityPricing.map(toPeriodicityPriceCreate),
+                  },
+                }
+              : {}),
+            }
+          : undefined,
         availablePaymentMethods:
           availablePaymentMethods ?
             {
@@ -172,6 +188,7 @@ export class MemberPlanService {
       },
       include: {
         availablePaymentMethods: true,
+        periodicityPricing: true,
       },
     });
   }
@@ -197,7 +214,14 @@ export class MemberPlanService {
         ...input,
         description: input.description as any,
         shortDescription: input.shortDescription as any,
-        periodicityPricing: periodicityPricingToJson(periodicityPricing),
+        periodicityPricing:
+          periodicityPricing ?
+            {
+              createMany: {
+                data: periodicityPricing.map(toPeriodicityPriceCreate),
+              },
+            }
+          : undefined,
         availablePaymentMethods: {
           createMany: {
             data: availablePaymentMethods,
@@ -206,6 +230,7 @@ export class MemberPlanService {
       },
       include: {
         availablePaymentMethods: true,
+        periodicityPricing: true,
       },
     });
   }
@@ -325,18 +350,20 @@ function toPeriodicityArray(
   return [];
 }
 
-function periodicityPricingToJson(
-  periodicityPricing: PeriodicityPriceInput[] | undefined | null
-): Prisma.InputJsonValue[] | undefined {
-  return periodicityPricing?.map(
-    ({ periodicity, label, amountMin, amountTarget, amountMax }) => ({
-      periodicity,
-      label: label ?? null,
-      amountMin: amountMin ?? null,
-      amountTarget: amountTarget ?? null,
-      amountMax: amountMax ?? null,
-    })
-  );
+function toPeriodicityPriceCreate({
+  periodicity,
+  label,
+  amountMin,
+  amountTarget,
+  amountMax,
+}: PeriodicityPriceInput): Prisma.MemberPlanPeriodicityPriceCreateManyMemberPlanInput {
+  return {
+    periodicity,
+    label: label ?? null,
+    amountMin: amountMin ?? null,
+    amountTarget: amountTarget ?? null,
+    amountMax: amountMax ?? null,
+  };
 }
 
 function checkPeriodicityPricing(periodicityPricing: unknown): void {

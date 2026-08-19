@@ -2,6 +2,7 @@ import { createOptionalsArray, DataLoaderService } from '@wepublish/utils/api';
 import {
   AvailablePaymentMethod,
   MemberPlan,
+  MemberPlanPeriodicityPrice,
   PrismaClient,
 } from '@prisma/client';
 import { Injectable, Scope } from '@nestjs/common';
@@ -12,6 +13,7 @@ import { Injectable, Scope } from '@nestjs/common';
 export class MemberPlanDataloader extends DataLoaderService<
   MemberPlan & {
     availablePaymentMethods: AvailablePaymentMethod[];
+    periodicityPricing: MemberPlanPeriodicityPrice[];
   }
 > {
   constructor(protected prisma: PrismaClient) {
@@ -25,6 +27,7 @@ export class MemberPlanDataloader extends DataLoaderService<
         where: { id: { in: ids } },
         include: {
           availablePaymentMethods: true,
+          periodicityPricing: true,
         },
       }),
       'id'
