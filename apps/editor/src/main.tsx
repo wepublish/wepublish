@@ -18,7 +18,7 @@ import { initI18N } from './app/i18n';
 import { theme } from './app/theme';
 import { ElementID } from './shared/elementID';
 
-const { sentryDSN } = getSettings();
+const { sentryDSN, apiURL } = getSettings();
 
 if (sentryDSN) {
   Sentry.init({
@@ -28,6 +28,7 @@ if (sentryDSN) {
       Sentry.browserTracingIntegration(),
       Sentry.replayIntegration(),
     ],
+    tracePropagationTargets: [/^\//, 'localhost', apiURL],
     tracesSampleRate: 1.0,
     replaysSessionSampleRate: 0.1,
     replaysOnErrorSampleRate: 1.0,
