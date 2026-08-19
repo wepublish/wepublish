@@ -735,8 +735,8 @@ export type CreateExternalAppInput = {
 
 export type CreateSubscriptionInfo = {
   __typename?: 'CreateSubscriptionInfo';
-  discountPercent?: Maybe<Scalars['Float']>;
   discountCodeValid?: Maybe<Scalars['Boolean']>;
+  discountPercent?: Maybe<Scalars['Float']>;
 };
 
 export type Crowdfunding = {
@@ -903,6 +903,31 @@ export type DeletePollVotesResult = {
   __typename?: 'DeletePollVotesResult';
   count: Scalars['Int'];
 };
+
+export type DiscountCode = HasMemberPlanLc & {
+  __typename?: 'DiscountCode';
+  code: Scalars['String'];
+  createdAt: Scalars['DateTime'];
+  discountPercent: Scalars['Int'];
+  id: Scalars['String'];
+  memberPlan: MemberPlan;
+  memberPlanId: Scalars['String'];
+  modifiedAt: Scalars['DateTime'];
+  validFrom: Scalars['DateTime'];
+  validTo: Scalars['DateTime'];
+};
+
+export type DiscountCodeFilter = {
+  from?: InputMaybe<Scalars['DateTime']>;
+  memberPlans?: InputMaybe<Array<Scalars['String']>>;
+  to?: InputMaybe<Scalars['DateTime']>;
+};
+
+export enum DiscountCodesort {
+  CreatedAt = 'CreatedAt',
+  Discount = 'Discount',
+  ModifiedAt = 'ModifiedAt'
+}
 
 export type Document = {
   __typename?: 'Document';
@@ -2101,6 +2126,8 @@ export type Mutation = {
   createConsent: Consent;
   /** Create a new crowdfunding */
   createCrowdfunding: Crowdfunding;
+  /** Creates a new discountCode. */
+  createDiscountCode: DiscountCode;
   /** Creates a new event. */
   createEvent: Event;
   /** Creates a new external app. */
@@ -2170,8 +2197,6 @@ export type Mutation = {
   createUserSubscription: Payment;
   /** Allows guests and authenticated users to create additional subscriptions */
   createUserSubscriptionWithConfirmation: Scalars['Boolean'];
-  /** Creates a new discountCode. */
-  createDiscountCode: DiscountCode;
   /** Deletes all sync errors for a config so all contacts will be retried. */
   deleteAllMailchimpSyncErrors: Scalars['Boolean'];
   /** Deletes an article. */
@@ -2190,6 +2215,8 @@ export type Mutation = {
    */
   deleteConsent: Consent;
   deleteCrowdfunding?: Maybe<Scalars['Boolean']>;
+  /** Deletes an existing discountCode. */
+  deleteDiscountCode: DiscountCode;
   /** Deletes an existing document. */
   deleteDocument: Scalars['String'];
   /** Deletes an existing event. */
@@ -2249,8 +2276,6 @@ export type Mutation = {
   deleteUserConsent: UserConsent;
   /** Deletes an existing userrole. */
   deleteUserRole: UserRole;
-  /** Deletes an existing discountCode. */
-  deleteDiscountCode: DiscountCode;
   /** Discards the current draft and reverts to the latest published revision. */
   discardArticleDraft: Article;
   /** Discards the current draft and reverts to the latest published revision. */
@@ -2361,6 +2386,8 @@ export type Mutation = {
   updateCrowdfunding: Crowdfunding;
   /** Updates the current logged in user. */
   updateCurrentUser: SensitiveDataUser;
+  /** Updates an existing discountCode. */
+  updateDiscountCode: DiscountCode;
   /** Updates an existing document. */
   updateDocument: Document;
   /** Updates an existing event. */
@@ -2430,8 +2457,6 @@ export type Mutation = {
   updateUserRole: UserRole;
   /** This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null */
   updateUserSubscription?: Maybe<PublicSubscription>;
-  /** Updates an existing discountCode. */
-  updateDiscountCode: DiscountCode;
   /** Updates the website settings. */
   updateWebsiteSettings: WebsiteSettings;
   upgradeUserSubscription: Payment;
@@ -2554,6 +2579,15 @@ export type MutationCreateConsentArgs = {
 
 export type MutationCreateCrowdfundingArgs = {
   input: CreateCrowdfundingInput;
+};
+
+
+export type MutationCreateDiscountCodeArgs = {
+  code: Scalars['String'];
+  discountPercent: Scalars['Int'];
+  memberPlanId: Scalars['String'];
+  validFrom: Scalars['DateTime'];
+  validTo: Scalars['DateTime'];
 };
 
 
@@ -2833,6 +2867,7 @@ export type MutationCreateUserRoleArgs = {
 export type MutationCreateUserSubscriptionArgs = {
   autoRenew: Scalars['Boolean'];
   deactivateSubscriptionId?: InputMaybe<Scalars['String']>;
+  discountCode?: InputMaybe<Scalars['String']>;
   failureURL?: InputMaybe<Scalars['String']>;
   goodieId?: InputMaybe<Scalars['String']>;
   memberPlanID?: InputMaybe<Scalars['String']>;
@@ -2843,12 +2878,12 @@ export type MutationCreateUserSubscriptionArgs = {
   paymentPeriodicity: PaymentPeriodicity;
   subscriptionProperties?: InputMaybe<Array<PropertyInput>>;
   successURL?: InputMaybe<Scalars['String']>;
-  discountCode?: InputMaybe<Scalars['String']>;
 };
 
 
 export type MutationCreateUserSubscriptionWithConfirmationArgs = {
   autoRenew: Scalars['Boolean'];
+  discountCode?: InputMaybe<Scalars['String']>;
   goodieId?: InputMaybe<Scalars['String']>;
   memberPlanID?: InputMaybe<Scalars['String']>;
   memberPlanSlug?: InputMaybe<Scalars['Slug']>;
@@ -2858,16 +2893,6 @@ export type MutationCreateUserSubscriptionWithConfirmationArgs = {
   paymentPeriodicity: PaymentPeriodicity;
   subscriptionProperties?: InputMaybe<Array<PropertyInput>>;
   userId?: InputMaybe<Scalars['String']>;
-  discountCode?: InputMaybe<Scalars['String']>;
-};
-
-
-export type MutationCreateDiscountCodeArgs = {
-  code: Scalars['String'];
-  discountPercent: Scalars['Int'];
-  memberPlanId: Scalars['String'];
-  validFrom: Scalars['DateTime'];
-  validTo: Scalars['DateTime'];
 };
 
 
@@ -2907,6 +2932,11 @@ export type MutationDeleteConsentArgs = {
 
 
 export type MutationDeleteCrowdfundingArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationDeleteDiscountCodeArgs = {
   id: Scalars['String'];
 };
 
@@ -3042,11 +3072,6 @@ export type MutationDeleteUserConsentArgs = {
 
 
 export type MutationDeleteUserRoleArgs = {
-  id: Scalars['String'];
-};
-
-
-export type MutationDeleteDiscountCodeArgs = {
   id: Scalars['String'];
 };
 
@@ -3390,6 +3415,16 @@ export type MutationUpdateCurrentUserArgs = {
   flair?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
   password?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationUpdateDiscountCodeArgs = {
+  code?: InputMaybe<Scalars['String']>;
+  discountPercent?: InputMaybe<Scalars['Int']>;
+  id: Scalars['String'];
+  memberPlanId?: InputMaybe<Scalars['String']>;
+  validFrom?: InputMaybe<Scalars['DateTime']>;
+  validTo?: InputMaybe<Scalars['DateTime']>;
 };
 
 
@@ -3765,16 +3800,6 @@ export type MutationUpdateUserSubscriptionArgs = {
 };
 
 
-export type MutationUpdateDiscountCodeArgs = {
-  code?: InputMaybe<Scalars['String']>;
-  discountPercent?: InputMaybe<Scalars['Int']>;
-  id: Scalars['String'];
-  memberPlanId?: InputMaybe<Scalars['String']>;
-  validFrom?: InputMaybe<Scalars['DateTime']>;
-  validTo?: InputMaybe<Scalars['DateTime']>;
-};
-
-
 export type MutationUpdateWebsiteSettingsArgs = {
   ads?: InputMaybe<WebsiteAdsInput>;
   analytics?: InputMaybe<WebsiteAnalyticsInput>;
@@ -3785,6 +3810,7 @@ export type MutationUpdateWebsiteSettingsArgs = {
 
 
 export type MutationUpgradeUserSubscriptionArgs = {
+  discountCode?: InputMaybe<Scalars['String']>;
   failureURL?: InputMaybe<Scalars['String']>;
   goodieId?: InputMaybe<Scalars['String']>;
   memberPlanId: Scalars['String'];
@@ -3792,7 +3818,6 @@ export type MutationUpgradeUserSubscriptionArgs = {
   paymentMethodId: Scalars['String'];
   subscriptionId: Scalars['String'];
   successURL?: InputMaybe<Scalars['String']>;
-  discountCode?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -4014,6 +4039,13 @@ export type PaginatedComments = {
   totalCount: Scalars['Int'];
 };
 
+export type PaginatedDiscountCodes = {
+  __typename?: 'PaginatedDiscountCodes';
+  nodes: Array<DiscountCode>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
 export type PaginatedDocuments = {
   __typename?: 'PaginatedDocuments';
   nodes: Array<Document>;
@@ -4140,13 +4172,6 @@ export type PaginatedUserRoles = {
   totalCount: Scalars['Int'];
 };
 
-export type PaginatedDiscountCodes = {
-  __typename?: 'PaginatedDiscountCodes';
-  nodes: Array<DiscountCode>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
-};
-
 export type Payment = HasPaymentMethod & {
   __typename?: 'Payment';
   id: Scalars['String'];
@@ -4209,7 +4234,7 @@ export enum PaymentMethodMollie {
   Satispay = 'SATISPAY',
   Trustly = 'TRUSTLY',
   Twint = 'TWINT',
-  DiscountCode = 'DISCOUNTCODE'
+  Voucher = 'VOUCHER'
 }
 
 export enum PaymentPeriodicity {
@@ -4754,6 +4779,10 @@ export type Query = {
    *
    */
   dailySubscriptionStats: Array<DailySubscriptionStats>;
+  /** Returns an discountCode by id or discountCode. */
+  discountCode: DiscountCode;
+  /** This query returns a list of discountCodes */
+  discountCodes: PaginatedDiscountCodes;
   /** Returns a document by id. */
   document: Document;
   /** Returns the current document storage usage and limit. */
@@ -5009,10 +5038,6 @@ export type Query = {
   /** Returns a paginated list of users based on the filters given. */
   users: PaginatedSensitiveDataUsers;
   versionInformation: VersionInformation;
-  /** Returns an discountCode by id or discountCode. */
-  discountCode: DiscountCode;
-  /** This query returns a list of discountCodes */
-  discountCodes: PaginatedDiscountCodes;
   /** Returns the website settings, requires authentication to get sensitive settings. */
   websiteSettings: WebsiteSettings;
 };
@@ -5150,8 +5175,8 @@ export type QueryConsentsArgs = {
 
 
 export type QueryCreateSubscriptionInfoArgs = {
-  memberPlanId: Scalars['String'];
   discountCode?: InputMaybe<Scalars['String']>;
+  memberPlanId: Scalars['String'];
 };
 
 
@@ -5164,6 +5189,21 @@ export type QueryDailySubscriptionStatsArgs = {
   end?: InputMaybe<Scalars['DateTime']>;
   memberPlanIds?: InputMaybe<Array<Scalars['String']>>;
   start: Scalars['DateTime'];
+};
+
+
+export type QueryDiscountCodeArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QueryDiscountCodesArgs = {
+  cursorId?: InputMaybe<Scalars['String']>;
+  filter?: InputMaybe<DiscountCodeFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: Scalars['Int'];
+  sort?: DiscountCodesort;
+  take?: Scalars['Int'];
 };
 
 
@@ -5650,9 +5690,9 @@ export type QueryTrackingPixelSettingsArgs = {
 
 
 export type QueryUpgradeUserSubscriptionInfoArgs = {
+  discountCode?: InputMaybe<Scalars['String']>;
   memberPlanId: Scalars['String'];
   subscriptionId: Scalars['String'];
-  discountCode?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -5699,21 +5739,6 @@ export type QueryUsersArgs = {
   order?: InputMaybe<SortOrder>;
   skip?: Scalars['Int'];
   sort?: UserSort;
-  take?: Scalars['Int'];
-};
-
-
-export type QueryDiscountCodeArgs = {
-  id: Scalars['String'];
-};
-
-
-export type QueryDiscountCodesArgs = {
-  cursorId?: InputMaybe<Scalars['String']>;
-  filter?: InputMaybe<DiscountCodeFilter>;
-  order?: InputMaybe<SortOrder>;
-  skip?: Scalars['Int'];
-  sort?: DiscountCodesort;
   take?: Scalars['Int'];
 };
 
@@ -6141,8 +6166,8 @@ export type SubscribeBlock = BaseBlock & {
   memberPlanIds: Array<Scalars['String']>;
   memberPlanRenderSettings: Array<SubscribeBlockMemberPlanRenderSetting>;
   memberPlans: Array<MemberPlan>;
-  showGoodies: Scalars['Boolean'];
   showDiscountCodes: Scalars['Boolean'];
+  showGoodies: Scalars['Boolean'];
   type: BlockType;
 };
 
@@ -6164,8 +6189,8 @@ export type SubscribeBlockInput = {
   hideRepeatGoodieOnUpgrade?: Scalars['Boolean'];
   memberPlanIds?: Array<Scalars['String']>;
   memberPlanRenderSettings: Array<SubscribeBlockMemberPlanRenderSettingInput>;
-  showGoodies?: Scalars['Boolean'];
   showDiscountCodes?: Scalars['Boolean'];
+  showGoodies?: Scalars['Boolean'];
 };
 
 export type SubscribeBlockLayoutConfig = {
@@ -6659,8 +6684,8 @@ export type UpdateUserSubscriptionInput = {
 export type UpgradeSubscription = {
   __typename?: 'UpgradeSubscription';
   discountAmount: Scalars['Float'];
-  discountPercent?: Maybe<Scalars['Float']>;
   discountCodeValid?: Maybe<Scalars['Boolean']>;
+  discountPercent?: Maybe<Scalars['Float']>;
 };
 
 export type User = BaseUser & {
@@ -6780,31 +6805,6 @@ export type VimeoVideoBlockInput = {
   disabled?: InputMaybe<Scalars['Boolean']>;
   videoID?: InputMaybe<Scalars['String']>;
 };
-
-export type DiscountCode = HasMemberPlanLc & {
-  __typename?: 'DiscountCode';
-  code: Scalars['String'];
-  createdAt: Scalars['DateTime'];
-  discountPercent: Scalars['Int'];
-  id: Scalars['String'];
-  memberPlan: MemberPlan;
-  memberPlanId: Scalars['String'];
-  modifiedAt: Scalars['DateTime'];
-  validFrom: Scalars['DateTime'];
-  validTo: Scalars['DateTime'];
-};
-
-export type DiscountCodeFilter = {
-  from?: InputMaybe<Scalars['DateTime']>;
-  memberPlans?: InputMaybe<Array<Scalars['String']>>;
-  to?: InputMaybe<Scalars['DateTime']>;
-};
-
-export enum DiscountCodesort {
-  CreatedAt = 'CreatedAt',
-  Discount = 'Discount',
-  ModifiedAt = 'ModifiedAt'
-}
 
 export type WebsiteAds = {
   __typename?: 'WebsiteAds';
@@ -7636,6 +7636,57 @@ export type DailySubscriptionStatsQueryVariables = Exact<{
 
 
 export type DailySubscriptionStatsQuery = { __typename?: 'Query', dailySubscriptionStats: Array<{ __typename?: 'DailySubscriptionStats', date: string, totalActiveSubscriptionCount: number, createdSubscriptionCount: number, replacedSubscriptionCount: number, renewedSubscriptionCount: number, deactivatedSubscriptionCount: number, overdueSubscriptionCount: number, endingSubscriptionCount: number, createdSubscriptionUsers: Array<{ __typename?: 'DailySubscriptionStatsUser', subscriptionID?: string | null, id: string, name: string, firstName?: string | null, email: string }>, replacedSubscriptionUsers: Array<{ __typename?: 'DailySubscriptionStatsUser', subscriptionID?: string | null, id: string, name: string, firstName?: string | null, email: string }>, renewedSubscriptionUsers: Array<{ __typename?: 'DailySubscriptionStatsUser', subscriptionID?: string | null, id: string, name: string, firstName?: string | null, email: string }>, deactivatedSubscriptionUsers: Array<{ __typename?: 'DailySubscriptionStatsUser', subscriptionID?: string | null, id: string, name: string, firstName?: string | null, email: string }>, overdueSubscriptionUsers: Array<{ __typename?: 'DailySubscriptionStatsUser', subscriptionID?: string | null, id: string, name: string, firstName?: string | null, email: string }>, endingSubscriptionUsers: Array<{ __typename?: 'DailySubscriptionStatsUser', subscriptionID?: string | null, id: string, name: string, firstName?: string | null, email: string }>, predictedSubscriptionRenewalCount: { __typename?: 'DailyPredictedSubscriptionRenewalCount', high: number, low: number, total: number, perDayHighProbability: number, perDayLowProbability: number }, predictedSubscriptionRenewalUsersHighProbability: Array<{ __typename?: 'DailySubscriptionStatsUser', subscriptionID?: string | null, id: string, name: string, firstName?: string | null, email: string }>, predictedSubscriptionRenewalUsersLowProbability: Array<{ __typename?: 'DailySubscriptionStatsUser', subscriptionID?: string | null, id: string, name: string, firstName?: string | null, email: string }> }> };
+
+export type FullDiscountCodeFragment = { __typename?: 'DiscountCode', id: string, createdAt: string, modifiedAt: string, code: string, discountPercent: number, validFrom: string, validTo: string, memberPlanId: string, memberPlan: { __typename?: 'MemberPlan', id: string, name: string } };
+
+export type DiscountCodeListQueryVariables = Exact<{
+  filter?: InputMaybe<DiscountCodeFilter>;
+  cursor?: InputMaybe<Scalars['String']>;
+  take?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  order?: InputMaybe<SortOrder>;
+  sort?: InputMaybe<DiscountCodesort>;
+}>;
+
+
+export type DiscountCodeListQuery = { __typename?: 'Query', discountCodes: { __typename?: 'PaginatedDiscountCodes', totalCount: number, nodes: Array<{ __typename?: 'DiscountCode', id: string, createdAt: string, modifiedAt: string, code: string, discountPercent: number, validFrom: string, validTo: string, memberPlanId: string, memberPlan: { __typename?: 'MemberPlan', id: string, name: string } }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
+
+export type DiscountCodeQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type DiscountCodeQuery = { __typename?: 'Query', discountCode: { __typename?: 'DiscountCode', id: string, createdAt: string, modifiedAt: string, code: string, discountPercent: number, validFrom: string, validTo: string, memberPlanId: string, memberPlan: { __typename?: 'MemberPlan', id: string, name: string } } };
+
+export type CreateDiscountCodeMutationVariables = Exact<{
+  code: Scalars['String'];
+  discountPercent: Scalars['Int'];
+  memberPlanId: Scalars['String'];
+  validFrom: Scalars['DateTime'];
+  validTo: Scalars['DateTime'];
+}>;
+
+
+export type CreateDiscountCodeMutation = { __typename?: 'Mutation', createDiscountCode: { __typename?: 'DiscountCode', id: string, createdAt: string, modifiedAt: string, code: string, discountPercent: number, validFrom: string, validTo: string, memberPlanId: string, memberPlan: { __typename?: 'MemberPlan', id: string, name: string } } };
+
+export type UpdateDiscountCodeMutationVariables = Exact<{
+  id: Scalars['String'];
+  code?: InputMaybe<Scalars['String']>;
+  discountPercent?: InputMaybe<Scalars['Int']>;
+  memberPlanId?: InputMaybe<Scalars['String']>;
+  validFrom?: InputMaybe<Scalars['DateTime']>;
+  validTo?: InputMaybe<Scalars['DateTime']>;
+}>;
+
+
+export type UpdateDiscountCodeMutation = { __typename?: 'Mutation', updateDiscountCode: { __typename?: 'DiscountCode', id: string, createdAt: string, modifiedAt: string, code: string, discountPercent: number, validFrom: string, validTo: string, memberPlanId: string, memberPlan: { __typename?: 'MemberPlan', id: string, name: string } } };
+
+export type DeleteDiscountCodeMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type DeleteDiscountCodeMutation = { __typename?: 'Mutation', deleteDiscountCode: { __typename?: 'DiscountCode', id: string, createdAt: string, modifiedAt: string, code: string, discountPercent: number, validFrom: string, validTo: string, memberPlanId: string, memberPlan: { __typename?: 'MemberPlan', id: string, name: string } } };
 
 export type FullDocumentFragment = { __typename?: 'Document', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, fileSize: number, mimeType: string, description?: string | null, url: string, thumbnailURL?: string | null };
 
@@ -9399,57 +9450,6 @@ export type VersionInformationQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type VersionInformationQuery = { __typename?: 'Query', versionInformation: { __typename?: 'VersionInformation', version: string } };
 
-export type FullDiscountCodeFragment = { __typename?: 'DiscountCode', id: string, createdAt: string, modifiedAt: string, code: string, discountPercent: number, validFrom: string, validTo: string, memberPlanId: string, memberPlan: { __typename?: 'MemberPlan', id: string, name: string } };
-
-export type DiscountCodeListQueryVariables = Exact<{
-  filter?: InputMaybe<DiscountCodeFilter>;
-  cursor?: InputMaybe<Scalars['String']>;
-  take?: InputMaybe<Scalars['Int']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  order?: InputMaybe<SortOrder>;
-  sort?: InputMaybe<DiscountCodesort>;
-}>;
-
-
-export type DiscountCodeListQuery = { __typename?: 'Query', discountCodes: { __typename?: 'PaginatedDiscountCodes', totalCount: number, nodes: Array<{ __typename?: 'DiscountCode', id: string, createdAt: string, modifiedAt: string, code: string, discountPercent: number, validFrom: string, validTo: string, memberPlanId: string, memberPlan: { __typename?: 'MemberPlan', id: string, name: string } }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
-
-export type DiscountCodeQueryVariables = Exact<{
-  id: Scalars['String'];
-}>;
-
-
-export type DiscountCodeQuery = { __typename?: 'Query', discountCode: { __typename?: 'DiscountCode', id: string, createdAt: string, modifiedAt: string, code: string, discountPercent: number, validFrom: string, validTo: string, memberPlanId: string, memberPlan: { __typename?: 'MemberPlan', id: string, name: string } } };
-
-export type CreateDiscountCodeMutationVariables = Exact<{
-  code: Scalars['String'];
-  discountPercent: Scalars['Int'];
-  memberPlanId: Scalars['String'];
-  validFrom: Scalars['DateTime'];
-  validTo: Scalars['DateTime'];
-}>;
-
-
-export type CreateDiscountCodeMutation = { __typename?: 'Mutation', createDiscountCode: { __typename?: 'DiscountCode', id: string, createdAt: string, modifiedAt: string, code: string, discountPercent: number, validFrom: string, validTo: string, memberPlanId: string, memberPlan: { __typename?: 'MemberPlan', id: string, name: string } } };
-
-export type UpdateDiscountCodeMutationVariables = Exact<{
-  id: Scalars['String'];
-  code?: InputMaybe<Scalars['String']>;
-  discountPercent?: InputMaybe<Scalars['Int']>;
-  memberPlanId?: InputMaybe<Scalars['String']>;
-  validFrom?: InputMaybe<Scalars['DateTime']>;
-  validTo?: InputMaybe<Scalars['DateTime']>;
-}>;
-
-
-export type UpdateDiscountCodeMutation = { __typename?: 'Mutation', updateDiscountCode: { __typename?: 'DiscountCode', id: string, createdAt: string, modifiedAt: string, code: string, discountPercent: number, validFrom: string, validTo: string, memberPlanId: string, memberPlan: { __typename?: 'MemberPlan', id: string, name: string } } };
-
-export type DeleteDiscountCodeMutationVariables = Exact<{
-  id: Scalars['String'];
-}>;
-
-
-export type DeleteDiscountCodeMutation = { __typename?: 'Mutation', deleteDiscountCode: { __typename?: 'DiscountCode', id: string, createdAt: string, modifiedAt: string, code: string, discountPercent: number, validFrom: string, validTo: string, memberPlanId: string, memberPlan: { __typename?: 'MemberPlan', id: string, name: string } } };
-
 export const ArticleCreatedActionRevisionFragmentDoc = gql`
     fragment ArticleCreatedActionRevision on ArticleRevision {
   title
@@ -10647,6 +10647,22 @@ export const FullCrowdfundingFragmentDoc = gql`
 }
     ${FullCrowdfundingGoalFragmentDoc}
 ${FullCrowdfundingGoalWithProgressFragmentDoc}`;
+export const FullDiscountCodeFragmentDoc = gql`
+    fragment FullDiscountCode on DiscountCode {
+  id
+  createdAt
+  modifiedAt
+  code
+  discountPercent
+  validFrom
+  validTo
+  memberPlanId
+  memberPlan {
+    id
+    name
+  }
+}
+    `;
 export const FullDocumentFragmentDoc = gql`
     fragment FullDocument on Document {
   id
@@ -11302,22 +11318,6 @@ export const TinyUserFragmentDoc = gql`
   subscriptionCount
 }
     ${FullUserRoleFragmentDoc}`;
-export const FullDiscountCodeFragmentDoc = gql`
-    fragment FullDiscountCode on DiscountCode {
-  id
-  createdAt
-  modifiedAt
-  code
-  discountPercent
-  validFrom
-  validTo
-  memberPlanId
-  memberPlan {
-    id
-    name
-  }
-}
-    `;
 export const RecentActionsDocument = gql`
     query RecentActions {
   actions {
@@ -13863,6 +13863,218 @@ export function useDailySubscriptionStatsLazyQuery(baseOptions?: Apollo.LazyQuer
 export type DailySubscriptionStatsQueryHookResult = ReturnType<typeof useDailySubscriptionStatsQuery>;
 export type DailySubscriptionStatsLazyQueryHookResult = ReturnType<typeof useDailySubscriptionStatsLazyQuery>;
 export type DailySubscriptionStatsQueryResult = Apollo.QueryResult<DailySubscriptionStatsQuery, DailySubscriptionStatsQueryVariables>;
+export const DiscountCodeListDocument = gql`
+    query DiscountCodeList($filter: DiscountCodeFilter, $cursor: String, $take: Int, $skip: Int, $order: SortOrder, $sort: DiscountCodesort) {
+  discountCodes(
+    filter: $filter
+    cursorId: $cursor
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
+    nodes {
+      ...FullDiscountCode
+    }
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+    totalCount
+  }
+}
+    ${FullDiscountCodeFragmentDoc}`;
+
+/**
+ * __useDiscountCodeListQuery__
+ *
+ * To run a query within a React component, call `useDiscountCodeListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useDiscountCodeListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useDiscountCodeListQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *      cursor: // value for 'cursor'
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
+ *      order: // value for 'order'
+ *      sort: // value for 'sort'
+ *   },
+ * });
+ */
+export function useDiscountCodeListQuery(baseOptions?: Apollo.QueryHookOptions<DiscountCodeListQuery, DiscountCodeListQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<DiscountCodeListQuery, DiscountCodeListQueryVariables>(DiscountCodeListDocument, options);
+      }
+export function useDiscountCodeListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<DiscountCodeListQuery, DiscountCodeListQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<DiscountCodeListQuery, DiscountCodeListQueryVariables>(DiscountCodeListDocument, options);
+        }
+export type DiscountCodeListQueryHookResult = ReturnType<typeof useDiscountCodeListQuery>;
+export type DiscountCodeListLazyQueryHookResult = ReturnType<typeof useDiscountCodeListLazyQuery>;
+export type DiscountCodeListQueryResult = Apollo.QueryResult<DiscountCodeListQuery, DiscountCodeListQueryVariables>;
+export const DiscountCodeDocument = gql`
+    query DiscountCode($id: String!) {
+  discountCode(id: $id) {
+    ...FullDiscountCode
+  }
+}
+    ${FullDiscountCodeFragmentDoc}`;
+
+/**
+ * __useDiscountCodeQuery__
+ *
+ * To run a query within a React component, call `useDiscountCodeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useDiscountCodeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useDiscountCodeQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDiscountCodeQuery(baseOptions: Apollo.QueryHookOptions<DiscountCodeQuery, DiscountCodeQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<DiscountCodeQuery, DiscountCodeQueryVariables>(DiscountCodeDocument, options);
+      }
+export function useDiscountCodeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<DiscountCodeQuery, DiscountCodeQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<DiscountCodeQuery, DiscountCodeQueryVariables>(DiscountCodeDocument, options);
+        }
+export type DiscountCodeQueryHookResult = ReturnType<typeof useDiscountCodeQuery>;
+export type DiscountCodeLazyQueryHookResult = ReturnType<typeof useDiscountCodeLazyQuery>;
+export type DiscountCodeQueryResult = Apollo.QueryResult<DiscountCodeQuery, DiscountCodeQueryVariables>;
+export const CreateDiscountCodeDocument = gql`
+    mutation CreateDiscountCode($code: String!, $discountPercent: Int!, $memberPlanId: String!, $validFrom: DateTime!, $validTo: DateTime!) {
+  createDiscountCode(
+    code: $code
+    discountPercent: $discountPercent
+    memberPlanId: $memberPlanId
+    validFrom: $validFrom
+    validTo: $validTo
+  ) {
+    ...FullDiscountCode
+  }
+}
+    ${FullDiscountCodeFragmentDoc}`;
+export type CreateDiscountCodeMutationFn = Apollo.MutationFunction<CreateDiscountCodeMutation, CreateDiscountCodeMutationVariables>;
+
+/**
+ * __useCreateDiscountCodeMutation__
+ *
+ * To run a mutation, you first call `useCreateDiscountCodeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateDiscountCodeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createDiscountCodeMutation, { data, loading, error }] = useCreateDiscountCodeMutation({
+ *   variables: {
+ *      code: // value for 'code'
+ *      discountPercent: // value for 'discountPercent'
+ *      memberPlanId: // value for 'memberPlanId'
+ *      validFrom: // value for 'validFrom'
+ *      validTo: // value for 'validTo'
+ *   },
+ * });
+ */
+export function useCreateDiscountCodeMutation(baseOptions?: Apollo.MutationHookOptions<CreateDiscountCodeMutation, CreateDiscountCodeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateDiscountCodeMutation, CreateDiscountCodeMutationVariables>(CreateDiscountCodeDocument, options);
+      }
+export type CreateDiscountCodeMutationHookResult = ReturnType<typeof useCreateDiscountCodeMutation>;
+export type CreateDiscountCodeMutationResult = Apollo.MutationResult<CreateDiscountCodeMutation>;
+export type CreateDiscountCodeMutationOptions = Apollo.BaseMutationOptions<CreateDiscountCodeMutation, CreateDiscountCodeMutationVariables>;
+export const UpdateDiscountCodeDocument = gql`
+    mutation UpdateDiscountCode($id: String!, $code: String, $discountPercent: Int, $memberPlanId: String, $validFrom: DateTime, $validTo: DateTime) {
+  updateDiscountCode(
+    id: $id
+    code: $code
+    discountPercent: $discountPercent
+    memberPlanId: $memberPlanId
+    validFrom: $validFrom
+    validTo: $validTo
+  ) {
+    ...FullDiscountCode
+  }
+}
+    ${FullDiscountCodeFragmentDoc}`;
+export type UpdateDiscountCodeMutationFn = Apollo.MutationFunction<UpdateDiscountCodeMutation, UpdateDiscountCodeMutationVariables>;
+
+/**
+ * __useUpdateDiscountCodeMutation__
+ *
+ * To run a mutation, you first call `useUpdateDiscountCodeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateDiscountCodeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateDiscountCodeMutation, { data, loading, error }] = useUpdateDiscountCodeMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      code: // value for 'code'
+ *      discountPercent: // value for 'discountPercent'
+ *      memberPlanId: // value for 'memberPlanId'
+ *      validFrom: // value for 'validFrom'
+ *      validTo: // value for 'validTo'
+ *   },
+ * });
+ */
+export function useUpdateDiscountCodeMutation(baseOptions?: Apollo.MutationHookOptions<UpdateDiscountCodeMutation, UpdateDiscountCodeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateDiscountCodeMutation, UpdateDiscountCodeMutationVariables>(UpdateDiscountCodeDocument, options);
+      }
+export type UpdateDiscountCodeMutationHookResult = ReturnType<typeof useUpdateDiscountCodeMutation>;
+export type UpdateDiscountCodeMutationResult = Apollo.MutationResult<UpdateDiscountCodeMutation>;
+export type UpdateDiscountCodeMutationOptions = Apollo.BaseMutationOptions<UpdateDiscountCodeMutation, UpdateDiscountCodeMutationVariables>;
+export const DeleteDiscountCodeDocument = gql`
+    mutation DeleteDiscountCode($id: String!) {
+  deleteDiscountCode(id: $id) {
+    ...FullDiscountCode
+  }
+}
+    ${FullDiscountCodeFragmentDoc}`;
+export type DeleteDiscountCodeMutationFn = Apollo.MutationFunction<DeleteDiscountCodeMutation, DeleteDiscountCodeMutationVariables>;
+
+/**
+ * __useDeleteDiscountCodeMutation__
+ *
+ * To run a mutation, you first call `useDeleteDiscountCodeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteDiscountCodeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteDiscountCodeMutation, { data, loading, error }] = useDeleteDiscountCodeMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteDiscountCodeMutation(baseOptions?: Apollo.MutationHookOptions<DeleteDiscountCodeMutation, DeleteDiscountCodeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteDiscountCodeMutation, DeleteDiscountCodeMutationVariables>(DeleteDiscountCodeDocument, options);
+      }
+export type DeleteDiscountCodeMutationHookResult = ReturnType<typeof useDeleteDiscountCodeMutation>;
+export type DeleteDiscountCodeMutationResult = Apollo.MutationResult<DeleteDiscountCodeMutation>;
+export type DeleteDiscountCodeMutationOptions = Apollo.BaseMutationOptions<DeleteDiscountCodeMutation, DeleteDiscountCodeMutationVariables>;
 export const DocumentStorageUsageDocument = gql`
     query DocumentStorageUsage {
   documentStorageUsage {
@@ -21317,218 +21529,6 @@ export function useVersionInformationLazyQuery(baseOptions?: Apollo.LazyQueryHoo
 export type VersionInformationQueryHookResult = ReturnType<typeof useVersionInformationQuery>;
 export type VersionInformationLazyQueryHookResult = ReturnType<typeof useVersionInformationLazyQuery>;
 export type VersionInformationQueryResult = Apollo.QueryResult<VersionInformationQuery, VersionInformationQueryVariables>;
-export const DiscountCodeListDocument = gql`
-    query DiscountCodeList($filter: DiscountCodeFilter, $cursor: String, $take: Int, $skip: Int, $order: SortOrder, $sort: DiscountCodesort) {
-  discountCodes(
-    filter: $filter
-    cursorId: $cursor
-    take: $take
-    skip: $skip
-    order: $order
-    sort: $sort
-  ) {
-    nodes {
-      ...FullDiscountCode
-    }
-    pageInfo {
-      startCursor
-      endCursor
-      hasNextPage
-      hasPreviousPage
-    }
-    totalCount
-  }
-}
-    ${FullDiscountCodeFragmentDoc}`;
-
-/**
- * __useDiscountCodeListQuery__
- *
- * To run a query within a React component, call `useDiscountCodeListQuery` and pass it any options that fit your needs.
- * When your component renders, `useDiscountCodeListQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useDiscountCodeListQuery({
- *   variables: {
- *      filter: // value for 'filter'
- *      cursor: // value for 'cursor'
- *      take: // value for 'take'
- *      skip: // value for 'skip'
- *      order: // value for 'order'
- *      sort: // value for 'sort'
- *   },
- * });
- */
-export function useDiscountCodeListQuery(baseOptions?: Apollo.QueryHookOptions<DiscountCodeListQuery, DiscountCodeListQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<DiscountCodeListQuery, DiscountCodeListQueryVariables>(DiscountCodeListDocument, options);
-      }
-export function useDiscountCodeListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<DiscountCodeListQuery, DiscountCodeListQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<DiscountCodeListQuery, DiscountCodeListQueryVariables>(DiscountCodeListDocument, options);
-        }
-export type DiscountCodeListQueryHookResult = ReturnType<typeof useDiscountCodeListQuery>;
-export type DiscountCodeListLazyQueryHookResult = ReturnType<typeof useDiscountCodeListLazyQuery>;
-export type DiscountCodeListQueryResult = Apollo.QueryResult<DiscountCodeListQuery, DiscountCodeListQueryVariables>;
-export const DiscountCodeDocument = gql`
-    query DiscountCode($id: String!) {
-  discountCode(id: $id) {
-    ...FullDiscountCode
-  }
-}
-    ${FullDiscountCodeFragmentDoc}`;
-
-/**
- * __useDiscountCodeQuery__
- *
- * To run a query within a React component, call `useDiscountCodeQuery` and pass it any options that fit your needs.
- * When your component renders, `useDiscountCodeQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useDiscountCodeQuery({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useDiscountCodeQuery(baseOptions: Apollo.QueryHookOptions<DiscountCodeQuery, DiscountCodeQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<DiscountCodeQuery, DiscountCodeQueryVariables>(DiscountCodeDocument, options);
-      }
-export function useDiscountCodeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<DiscountCodeQuery, DiscountCodeQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<DiscountCodeQuery, DiscountCodeQueryVariables>(DiscountCodeDocument, options);
-        }
-export type DiscountCodeQueryHookResult = ReturnType<typeof useDiscountCodeQuery>;
-export type DiscountCodeLazyQueryHookResult = ReturnType<typeof useDiscountCodeLazyQuery>;
-export type DiscountCodeQueryResult = Apollo.QueryResult<DiscountCodeQuery, DiscountCodeQueryVariables>;
-export const CreateDiscountCodeDocument = gql`
-    mutation CreateDiscountCode($code: String!, $discountPercent: Int!, $memberPlanId: String!, $validFrom: DateTime!, $validTo: DateTime!) {
-  createDiscountCode(
-    code: $code
-    discountPercent: $discountPercent
-    memberPlanId: $memberPlanId
-    validFrom: $validFrom
-    validTo: $validTo
-  ) {
-    ...FullDiscountCode
-  }
-}
-    ${FullDiscountCodeFragmentDoc}`;
-export type CreateDiscountCodeMutationFn = Apollo.MutationFunction<CreateDiscountCodeMutation, CreateDiscountCodeMutationVariables>;
-
-/**
- * __useCreateDiscountCodeMutation__
- *
- * To run a mutation, you first call `useCreateDiscountCodeMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateDiscountCodeMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createDiscountCodeMutation, { data, loading, error }] = useCreateDiscountCodeMutation({
- *   variables: {
- *      code: // value for 'code'
- *      discountPercent: // value for 'discountPercent'
- *      memberPlanId: // value for 'memberPlanId'
- *      validFrom: // value for 'validFrom'
- *      validTo: // value for 'validTo'
- *   },
- * });
- */
-export function useCreateDiscountCodeMutation(baseOptions?: Apollo.MutationHookOptions<CreateDiscountCodeMutation, CreateDiscountCodeMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateDiscountCodeMutation, CreateDiscountCodeMutationVariables>(CreateDiscountCodeDocument, options);
-      }
-export type CreateDiscountCodeMutationHookResult = ReturnType<typeof useCreateDiscountCodeMutation>;
-export type CreateDiscountCodeMutationResult = Apollo.MutationResult<CreateDiscountCodeMutation>;
-export type CreateDiscountCodeMutationOptions = Apollo.BaseMutationOptions<CreateDiscountCodeMutation, CreateDiscountCodeMutationVariables>;
-export const UpdateDiscountCodeDocument = gql`
-    mutation UpdateDiscountCode($id: String!, $code: String, $discountPercent: Int, $memberPlanId: String, $validFrom: DateTime, $validTo: DateTime) {
-  updateDiscountCode(
-    id: $id
-    code: $code
-    discountPercent: $discountPercent
-    memberPlanId: $memberPlanId
-    validFrom: $validFrom
-    validTo: $validTo
-  ) {
-    ...FullDiscountCode
-  }
-}
-    ${FullDiscountCodeFragmentDoc}`;
-export type UpdateDiscountCodeMutationFn = Apollo.MutationFunction<UpdateDiscountCodeMutation, UpdateDiscountCodeMutationVariables>;
-
-/**
- * __useUpdateDiscountCodeMutation__
- *
- * To run a mutation, you first call `useUpdateDiscountCodeMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateDiscountCodeMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updateDiscountCodeMutation, { data, loading, error }] = useUpdateDiscountCodeMutation({
- *   variables: {
- *      id: // value for 'id'
- *      code: // value for 'code'
- *      discountPercent: // value for 'discountPercent'
- *      memberPlanId: // value for 'memberPlanId'
- *      validFrom: // value for 'validFrom'
- *      validTo: // value for 'validTo'
- *   },
- * });
- */
-export function useUpdateDiscountCodeMutation(baseOptions?: Apollo.MutationHookOptions<UpdateDiscountCodeMutation, UpdateDiscountCodeMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateDiscountCodeMutation, UpdateDiscountCodeMutationVariables>(UpdateDiscountCodeDocument, options);
-      }
-export type UpdateDiscountCodeMutationHookResult = ReturnType<typeof useUpdateDiscountCodeMutation>;
-export type UpdateDiscountCodeMutationResult = Apollo.MutationResult<UpdateDiscountCodeMutation>;
-export type UpdateDiscountCodeMutationOptions = Apollo.BaseMutationOptions<UpdateDiscountCodeMutation, UpdateDiscountCodeMutationVariables>;
-export const DeleteDiscountCodeDocument = gql`
-    mutation DeleteDiscountCode($id: String!) {
-  deleteDiscountCode(id: $id) {
-    ...FullDiscountCode
-  }
-}
-    ${FullDiscountCodeFragmentDoc}`;
-export type DeleteDiscountCodeMutationFn = Apollo.MutationFunction<DeleteDiscountCodeMutation, DeleteDiscountCodeMutationVariables>;
-
-/**
- * __useDeleteDiscountCodeMutation__
- *
- * To run a mutation, you first call `useDeleteDiscountCodeMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useDeleteDiscountCodeMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [deleteDiscountCodeMutation, { data, loading, error }] = useDeleteDiscountCodeMutation({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useDeleteDiscountCodeMutation(baseOptions?: Apollo.MutationHookOptions<DeleteDiscountCodeMutation, DeleteDiscountCodeMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeleteDiscountCodeMutation, DeleteDiscountCodeMutationVariables>(DeleteDiscountCodeDocument, options);
-      }
-export type DeleteDiscountCodeMutationHookResult = ReturnType<typeof useDeleteDiscountCodeMutation>;
-export type DeleteDiscountCodeMutationResult = Apollo.MutationResult<DeleteDiscountCodeMutation>;
-export type DeleteDiscountCodeMutationOptions = Apollo.BaseMutationOptions<DeleteDiscountCodeMutation, DeleteDiscountCodeMutationVariables>;
 
       export interface PossibleTypesResultData {
         possibleTypes: {
@@ -21770,3 +21770,4 @@ export type DeleteDiscountCodeMutationOptions = Apollo.BaseMutationOptions<Delet
   }
 };
       export default result;
+    

@@ -1893,7 +1893,7 @@ enum MolliePaymentMethod {
   SATISPAY
   TRUSTLY
   TWINT
-  DISCOUNTCODE
+  VOUCHER
 }
 
 model SettingPaymentProvider {

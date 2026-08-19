@@ -275,6 +275,9 @@ describe('MolliePaymentProvider', () => {
         PaymentMethod.paypal,
         PaymentMethod.creditcard,
       ]);
+      expect(mapMolliePaymentMethods(['VOUCHER'])).toEqual([
+        PaymentMethod.voucher,
+      ]);
     });
   });
 
