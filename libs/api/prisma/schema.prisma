@@ -43,7 +43,7 @@ model ArticleRevision {
   ArticleRevisionDraft     ArticleRevisionDraft[]
 
   @@index([publishedAt])
-  @@index([articleId])
+  @@index([articleId, createdAt(sort: Desc), id(sort: Desc)])
   @@map("articles.revisions")
 }
 
@@ -193,6 +193,7 @@ model AuthorsLinks {
   Author   Author? @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId String?
 
+  @@index([authorId])
   @@map("authors.links")
 }
 
@@ -330,6 +331,7 @@ model CommentsRevisions {
   commentId String?
 
   @@index([createdAt])
+  @@index([commentId])
   @@map("comments.revisions")
 }
 
@@ -444,6 +446,7 @@ model CommentRating {
   disabled    Boolean @default(false)
 
   @@unique([answerId, commentId, userId])
+  @@index([commentId])
   @@map("comments.ratings")
 }
 
@@ -460,6 +463,7 @@ model CommentRatingOverride {
   value Int?
 
   @@id([answerId, commentId])
+  @@index([commentId])
   @@map("comments.rating-override")
 }
 
@@ -482,6 +486,7 @@ model InvoiceItem {
   goodie   Goodie? @relation(fields: [goodieId], references: [id], onDelete: SetNull)
   goodieId String?
 
+  @@index([invoiceId])
   @@map("invoices.items")
 }
 
@@ -507,6 +512,7 @@ model Invoice {
 
   @@index([mail])
   @@index([subscriptionID])
+  @@index([dueAt])
   @@map("invoices")
 }
 
@@ -559,6 +565,7 @@ model MailLog {
   mailSendJobId String?
 
   @@index([mailIdentifier])
+  @@index([recipientID, sentDate(sort: Desc)])
   @@index([mailSendJobId])
   @@index([mailProviderMessageID])
   @@map("mail.log")
@@ -822,7 +829,7 @@ model PageRevision {
   PagesRevisionDraft     PagesRevisionDraft[]
 
   @@index([publishedAt])
-  @@index([pageId])
+  @@index([pageId, createdAt(sort: Desc), id(sort: Desc)])
   @@map("pages.revisions")
 }
 
@@ -1030,6 +1037,8 @@ model SubscriptionPeriod {
   subscription   Subscription? @relation(fields: [subscriptionId], references: [id], onDelete: SetNull)
   subscriptionId String?
 
+  @@index([subscriptionId])
+  @@index([invoiceID])
   @@map("subscriptions.periods")
 }
 
@@ -1089,6 +1098,7 @@ model Subscription {
   mailSendJobEntries MailSendJobRecipient[]
 
   @@index([userID])
+  @@index([memberPlanID, createdAt, id])
   @@map("subscriptions")
 }
 
@@ -1122,6 +1132,7 @@ model PaymentProviderCustomer {
   User   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String?
 
+  @@index([userId])
   @@map("users.payment-providers")
 }
 
