@@ -1,2 +1,0 @@
--- AlterEnum
-ALTER TYPE "MolliePaymentMethod" RENAME VALUE 'VOUCHER' TO 'DISCOUNTCODE';
