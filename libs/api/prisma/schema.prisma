@@ -1165,6 +1165,7 @@ model User {
   pageRevisions       PageRevision[]
   mailchimpSyncErrors MailchimpSyncError[]
 
+  @@index([createdAt])
   @@map("users")
 }
 
