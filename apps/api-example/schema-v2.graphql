@@ -2953,6 +2953,7 @@ enum PaymentMethodMollie {
   BLIK
   CREDITCARD
   DIRECTDEBIT
+  DISCOUNTCODE
   EPS
   GIFTCARD
   IDEAL
@@ -2970,7 +2971,6 @@ enum PaymentMethodMollie {
   SATISPAY
   TRUSTLY
   TWINT
-  VOUCHER
 }
 
 enum PaymentPeriodicity {
