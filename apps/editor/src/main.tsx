@@ -18,20 +18,28 @@ import { initI18N } from './app/i18n';
 import { theme } from './app/theme';
 import { ElementID } from './shared/elementID';
 
-const { sentryDSN } = getSettings();
+const { sentryDSN, apiURL, appName, appEnvironment } = getSettings();
 
 if (sentryDSN) {
+  const apiEndpoint = `${apiURL}/v1`;
+
   Sentry.init({
     dsn: sentryDSN,
+    environment: appEnvironment,
     release: process.env.APP_RELEASE_ID,
+    tracePropagationTargets: [/^\//, apiEndpoint],
     integrations: [
       Sentry.browserTracingIntegration(),
       Sentry.replayIntegration(),
+      Sentry.graphqlClientIntegration({ endpoints: [apiEndpoint] }),
     ],
     tracesSampleRate: 1.0,
     replaysSessionSampleRate: 0.1,
     replaysOnErrorSampleRate: 1.0,
   });
+
+  Sentry.setTag('app_name', appName);
+  Sentry.setTag('component', 'editor');
 }
 
 const onDOMContentLoaded = async () => {
