@@ -4215,7 +4215,6 @@ export enum PaymentMethodMollie {
   Blik = 'BLIK',
   Creditcard = 'CREDITCARD',
   Directdebit = 'DIRECTDEBIT',
-  Discountcode = 'DISCOUNTCODE',
   Eps = 'EPS',
   Giftcard = 'GIFTCARD',
   Ideal = 'IDEAL',
@@ -4232,7 +4231,8 @@ export enum PaymentMethodMollie {
   Riverty = 'RIVERTY',
   Satispay = 'SATISPAY',
   Trustly = 'TRUSTLY',
-  Twint = 'TWINT'
+  Twint = 'TWINT',
+  Voucher = 'VOUCHER'
 }
 
 export enum PaymentPeriodicity {
