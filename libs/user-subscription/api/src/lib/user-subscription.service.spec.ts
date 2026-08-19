@@ -81,6 +81,7 @@ describe('UserSubscriptionService', () => {
         active: true,
         extendable: true,
         amountPerMonthMin: 0,
+        periodicityPricing: [],
       }),
     };
 
@@ -133,6 +134,7 @@ describe('UserSubscriptionService', () => {
       active: true,
       extendable: true,
       amountPerMonthMin: 0,
+      periodicityPricing: [],
     });
     prismaMock.paymentMethod.findFirst.mockResolvedValue({
       id: 'paymentMethodId',

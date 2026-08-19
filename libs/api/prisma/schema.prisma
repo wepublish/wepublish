@@ -695,6 +695,24 @@ model AvailablePaymentMethod {
   @@map("member.plans.payment-methods")
 }
 
+model MemberPlanPeriodicityPrice {
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  periodicity  PaymentPeriodicity
+  label        String?
+  amountMin    Int?
+  amountTarget Int?
+  amountMax    Int?
+
+  memberPlan   MemberPlan @relation(fields: [memberPlanId], references: [id], onDelete: Cascade)
+  memberPlanId String
+
+  @@unique([memberPlanId, periodicity])
+  @@map("member.plans.periodicity-prices")
+}
+
 enum Currency {
   CHF @map("CHF")
   EUR @map("EUR")
@@ -722,7 +740,7 @@ model MemberPlan {
   amountPerMonthMin              Float
   amountPerMonthMax              Float?
   amountPerMonthTarget           Float?
-  periodicityPricing             Json?
+  periodicityPricing             MemberPlanPeriodicityPrice[]
   defaultPaymentPeriodicity      PaymentPeriodicity?
   availablePaymentMethods        AvailablePaymentMethod[]
   migrateToTargetPaymentMethod   PaymentMethod?           @relation("PaymentMethodMigration", fields: [migrateToTargetPaymentMethodID], references: [id])

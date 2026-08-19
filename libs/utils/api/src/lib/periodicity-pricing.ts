@@ -86,25 +86,26 @@ export const periodicityPricingSchema = z
 export type PeriodicityPriceValue = z.infer<typeof periodicityPriceSchema>;
 export type PeriodicityPricingValue = z.infer<typeof periodicityPricingSchema>;
 
+type PeriodicityPriceRow = {
+  periodicity: PaymentPeriodicity;
+  label?: string | null;
+  amountMin?: number | null;
+  amountTarget?: number | null;
+  amountMax?: number | null;
+};
+
 type MemberPlanAmounts = {
   amountPerMonthMin: number;
   amountPerMonthTarget?: number | null;
   amountPerMonthMax?: number | null;
-  periodicityPricing?: unknown;
+  periodicityPricing: PeriodicityPriceRow[];
 };
-
-export function parsePeriodicityPricing(
-  value: unknown
-): PeriodicityPricingValue {
-  const parsed = periodicityPricingSchema.safeParse(value);
-
-  return parsed.success ? parsed.data : [];
-}
 
 /**
  * Resolves the effective min/target/max amounts (integer cents) for one full
  * payment period of a member plan. Explicit per-periodicity prices take
- * precedence; otherwise the amounts derive from the monthly fields.
+ * precedence; otherwise the amounts derive from the monthly fields. The
+ * monthly periodicity never has an own price row (see periodicityPriceSchema).
  */
 export function getPeriodPriceRange(
   memberPlan: MemberPlanAmounts,
@@ -114,9 +115,12 @@ export function getPeriodPriceRange(
   amountTarget: number | null;
   amountMax: number | null;
 } {
-  const override = parsePeriodicityPricing(memberPlan.periodicityPricing).find(
-    price => price.periodicity === periodicity
-  );
+  const override =
+    periodicity === PaymentPeriodicity.monthly ?
+      undefined
+    : memberPlan.periodicityPricing.find(
+        price => price.periodicity === periodicity
+      );
 
   const amountMin =
     override?.amountMin ??

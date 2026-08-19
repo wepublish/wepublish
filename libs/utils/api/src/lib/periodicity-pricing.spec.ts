@@ -216,7 +216,7 @@ describe('getPeriodPriceRange', () => {
   it('keeps optional amounts null when the plan has no target/max', () => {
     expect(
       getPeriodPriceRange(
-        { amountPerMonthMin: 4000, periodicityPricing: null },
+        { amountPerMonthMin: 4000, periodicityPricing: [] },
         PaymentPeriodicity.yearly
       )
     ).toEqual({
@@ -252,22 +252,6 @@ describe('getPeriodPriceRange', () => {
           periodicityPricing: [
             { periodicity: PaymentPeriodicity.yearly, label: 'Jahresabo' },
           ],
-        },
-        PaymentPeriodicity.yearly
-      )
-    ).toEqual({
-      amountMin: 48000,
-      amountTarget: null,
-      amountMax: null,
-    });
-  });
-
-  it('ignores malformed pricing data', () => {
-    expect(
-      getPeriodPriceRange(
-        {
-          amountPerMonthMin: 4000,
-          periodicityPricing: { yearly: 'broken' },
         },
         PaymentPeriodicity.yearly
       )
