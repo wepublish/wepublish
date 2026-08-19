@@ -1,6 +1,3 @@
-  -- AlterEnum
-ALTER TYPE "MolliePaymentMethod" RENAME VALUE 'VOUCHER' TO 'DISCOUNTCODE'
-
 -- DropIndex
 DROP INDEX IF EXISTS "articles.revisions_articleId_idx";
 
