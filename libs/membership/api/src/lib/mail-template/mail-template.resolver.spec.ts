@@ -7,6 +7,7 @@ import {
 } from '@wepublish/mail/api';
 import { MailTemplatesResolver } from './mail-template.resolver';
 import { MailTemplateService } from './mail-template.service';
+import { UsedMailTemplateDataloader } from './used-mail-template.dataloader';
 import { INestApplication, Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
@@ -106,6 +107,7 @@ const mailTemplateServiceMock = {
   ],
   providers: [
     MailTemplatesResolver,
+    UsedMailTemplateDataloader,
     { provide: MailTemplateService, useValue: mailTemplateServiceMock },
     {
       provide: APP_GUARD,
@@ -131,13 +133,18 @@ describe('MailTemplatesResolver', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         MailTemplatesResolver,
+        UsedMailTemplateDataloader,
         { provide: PrismaClient, useValue: prismaServiceMock },
         { provide: MailContext, useValue: mailContextMock },
         { provide: MailTemplateService, useValue: mailTemplateServiceMock },
       ],
     }).compile();
 
-    resolver = module.get<MailTemplatesResolver>(MailTemplatesResolver);
+    // The resolver depends on a REQUEST-scoped dataloader, so it must be
+    // resolved rather than fetched from the singleton container.
+    resolver = await module.resolve<MailTemplatesResolver>(
+      MailTemplatesResolver
+    );
   });
 
   afterAll(async () => {
@@ -200,6 +207,27 @@ describe('MailTemplatesResolver', () => {
     expect(await resolver.status(template2 as any)).toEqual(
       MailTemplateStatus.Ok
     );
+  });
+
+  // Regression: `status` is a per-template field resolver. It used to call
+  // `getUsedTemplateIdentifiers()` once per template, so a single
+  // `mailTemplates` query fanned out to 2N concurrent queries and exhausted
+  // the Prisma connection pool — which timed out every other request in the
+  // process, not just this one.
+  it('resolves status for many templates with a single lookup', async () => {
+    mailContextMock.getUsedTemplateIdentifiers.mockClear();
+
+    const templates = Array.from({ length: 30 }, (_unused, index) => ({
+      ...mockTemplate1,
+      id: `template-${index}`,
+    }));
+
+    const statuses = await Promise.all(
+      templates.map(template => resolver.status(template as any))
+    );
+
+    expect(statuses).toHaveLength(30);
+    expect(mailContextMock.getUsedTemplateIdentifiers).toHaveBeenCalledTimes(1);
   });
 
   /**

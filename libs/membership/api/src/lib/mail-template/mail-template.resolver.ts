@@ -28,6 +28,7 @@ import { PrismaClient } from '@prisma/client';
 import { CurrentUser, UserSession } from '@wepublish/authentication/api';
 import { Permissions } from '@wepublish/permissions/api';
 import { MailTemplateService } from './mail-template.service';
+import { UsedMailTemplateDataloader } from './used-mail-template.dataloader';
 import { MailTemplateContextId } from './mail-template-data';
 
 @Resolver(() => MailTemplateModel)
@@ -35,7 +36,8 @@ export class MailTemplatesResolver {
   constructor(
     private prismaService: PrismaClient,
     private mailContext: MailContext,
-    private mailTemplateService: MailTemplateService
+    private mailTemplateService: MailTemplateService,
+    private usedMailTemplateDataloader: UsedMailTemplateDataloader
   ) {}
 
   @Permissions(CanGetMailTemplates)
@@ -177,12 +179,11 @@ export class MailTemplatesResolver {
   async status(
     @Parent() template: MailTemplateModel
   ): Promise<MailTemplateStatus> {
-    const usedTemplates = await this.mailContext.getUsedTemplateIdentifiers();
+    // Batched: this field resolves once per template, so looking the usage up
+    // per template would fan a single `mailTemplates` query out into one lookup
+    // per row and exhaust the connection pool.
+    const isUsed = await this.usedMailTemplateDataloader.load(template.id);
 
-    if (!usedTemplates.includes(template.id)) {
-      return MailTemplateStatus.Unused;
-    }
-
-    return MailTemplateStatus.Ok;
+    return isUsed ? MailTemplateStatus.Ok : MailTemplateStatus.Unused;
   }
 }
