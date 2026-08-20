@@ -9,28 +9,49 @@ const createContext = (prisma: unknown) =>
     jwtGenerator: async () => '',
   });
 
+const createPrismaMock = () => ({
+  subscriptionInterval: {
+    findMany: jest.fn((_args?: Record<string, unknown>) => [
+      { mailTemplateId: 'renewal-success' },
+      { mailTemplateId: null },
+    ]),
+  },
+  userFlowMail: {
+    findMany: jest.fn((_args?: Record<string, unknown>) => [
+      { mailTemplateId: 'login-link' },
+      { mailTemplateId: null },
+    ]),
+  },
+});
+
 describe('MailContext', () => {
   describe('getUsedTemplateIdentifiers', () => {
     it('includes templates from subscription intervals and user flow mails', async () => {
-      const prismaMock = {
-        subscriptionInterval: {
-          findMany: jest.fn(() => [
-            { mailTemplate: { id: 'renewal-success' } },
-            { mailTemplate: null },
-          ]),
-        },
-        userFlowMail: {
-          findMany: jest.fn(() => [
-            { mailTemplate: { id: 'login-link' } },
-            { mailTemplate: null },
-          ]),
-        },
-      };
+      const prismaMock = createPrismaMock();
 
       const result =
         await createContext(prismaMock).getUsedTemplateIdentifiers();
 
       expect(result).toEqual(['renewal-success', 'login-link']);
+    });
+
+    // Only the template id is ever read here. Joining the template in pulled
+    // every `htmlContent`/`textContent` blob across for nothing.
+    it('reads only the template id, without joining the template', async () => {
+      const prismaMock = createPrismaMock();
+
+      await createContext(prismaMock).getUsedTemplateIdentifiers();
+
+      for (const { findMany } of [
+        prismaMock.subscriptionInterval,
+        prismaMock.userFlowMail,
+      ]) {
+        const args = findMany.mock.calls[0]?.[0];
+
+        expect(args).toBeDefined();
+        expect(args).toHaveProperty('select', { mailTemplateId: true });
+        expect(args).not.toHaveProperty('include');
+      }
     });
   });
 });

@@ -3641,6 +3641,9 @@ type Query {
   """The concrete recipients an audience resolves to"""
   mailSendRecipients(audience: MailAudienceInput!, skip: Int, take: Int): PaginatedMailSendRecipient!
 
+  """Return a single mail template, including its html and text body."""
+  mailTemplate(id: String!): MailTemplateModel
+
   """
   Placeholders a template uses that would render empty for the given send (empty = none missing)
   """
