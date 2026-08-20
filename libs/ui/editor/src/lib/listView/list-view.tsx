@@ -13,7 +13,12 @@ export const ListViewContainer = styled.div`
   align-items: center;
 `;
 
-export const ListViewHeader = styled.div``;
+export const ListViewHeader = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+`;
+
 export const ListViewActions = styled.div`
   display: flex;
   gap: 8px;

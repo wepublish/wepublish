@@ -3927,6 +3927,7 @@ export type PageFilter = {
   publicationDateFrom?: InputMaybe<DateFilter>;
   publicationDateTo?: InputMaybe<DateFilter>;
   published?: InputMaybe<Scalars['Boolean']>;
+  slug?: InputMaybe<Scalars['String']>;
   tags?: InputMaybe<Array<Scalars['String']>>;
   title?: InputMaybe<Scalars['String']>;
 };

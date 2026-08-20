@@ -755,6 +755,7 @@
         "providers": "Providers",
         "publicationDate": "Publication Date",
         "reset": "Reset Filter",
+        "slug": "Filter by slug",
         "title": "Filter by title",
         "includeHiddenArticles": "Include hidden",
         "includeHiddenPages": "Include hidden"
@@ -1343,6 +1344,7 @@
         "pending": "Pending",
         "publicationDate": "Publication date",
         "published": "Published",
+        "slug": "Slug",
         "states": "States",
         "title": "Title",
         "untitled": "Untitled",
