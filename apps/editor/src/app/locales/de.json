@@ -860,6 +860,7 @@
     "invoice": {
       "areYouSure": "Bist Du sicher?",
       "canceledAt": "Storniert am",
+      "doNotSendMail": "Kein Mail an das Mitglied senden",
       "invoiceNo": "Rechnung Nr.",
       "manuallyPaidModalBody": "Die Rechnung wird als bezahlt markiert, obwohl keine Zahlung durch den oder die Benutzer:in eingegangen ist. Du solltest dein Vorhaben mit dem:r Buchführer:in besprechen.",
       "paidAt": "Bezahlt am",

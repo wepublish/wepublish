@@ -56,6 +56,7 @@ import {
   DashboardModule,
   InvoiceModule,
   MembershipModule,
+  RenewalMailModule,
   SubscriptionModule,
   UpgradeSubscriptionModule,
   GoodieModule,
@@ -433,6 +434,7 @@ import { readConfig } from '../readConfig';
     GoodieModule,
     DiscountCodeModule,
     DashboardModule,
+    RenewalMailModule,
     AuthenticationModule,
 
     // Register SessionModule after AuthenticationModule

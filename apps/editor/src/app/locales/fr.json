@@ -864,6 +864,7 @@
     "invoice": {
       "areYouSure": "Êtes-vous sûr·e ?",
       "canceledAt": "Annulé le",
+      "doNotSendMail": "Ne pas envoyer d'e-mail au membre",
       "invoiceNo": "Facture n°",
       "manuallyPaidModalBody": "La facture est marquée comme payée, bien qu'aucun paiement n'ait été effectué par l'utilisateur·trice. Veuillez vous adresser au comptable pour discuter de ce cas de figure.",
       "paidAt": "Payée le",
