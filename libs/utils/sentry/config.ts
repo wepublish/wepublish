@@ -17,6 +17,12 @@ export const getBaseConfig = () => ({
   },
 });
 
+export const getBrowserTracePropagationTargets = () => {
+  const apiUrl = process.env.API_URL;
+
+  return apiUrl ? [/^\//, apiUrl] : [/^\//];
+};
+
 export const setCommonTags = (
   Sentry: { setTag: (key: string, value: string | undefined) => void },
   component: string

@@ -1,9 +1,15 @@
 query MailTemplate {
   mailTemplates {
-    ...FullMailTemplate
+    ...TinyMailTemplate
   }
   provider {
     ...FullMailProvider
+  }
+}
+
+query MailTemplateById($id: String!) {
+  mailTemplate(id: $id) {
+    ...FullMailTemplate
   }
 }
 
@@ -46,15 +52,23 @@ mutation SendTestMailTemplate($input: SendTestMailTemplateInput!) {
   sendTestMailTemplate(input: $input)
 }
 
-fragment FullMailTemplate on MailTemplateModel {
+# Everything the list views and template pickers render. Deliberately without
+# htmlContent/textContent: those are whole email bodies, and loading every one of
+# them to populate a dropdown made the response grow with each new template.
+fragment TinyMailTemplate on MailTemplateModel {
   id
   name
   description
   subject
-  htmlContent
-  textContent
   context
   status
+}
+
+# Adds the mail bodies. Only the single-template edit view needs these.
+fragment FullMailTemplate on MailTemplateModel {
+  ...TinyMailTemplate
+  htmlContent
+  textContent
 }
 
 fragment FullMailProvider on MailProviderModel {
