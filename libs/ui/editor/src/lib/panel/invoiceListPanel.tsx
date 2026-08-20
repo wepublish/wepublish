@@ -10,6 +10,7 @@ import { LiaFileInvoiceSolid } from 'react-icons/lia';
 import { MdAccessTime, MdClose, MdContentCopy, MdDone } from 'react-icons/md';
 import {
   Button,
+  Checkbox,
   Message,
   Modal,
   Notification,
@@ -107,6 +108,7 @@ function InvoiceListPanel({
   const { data: me } = useMeQuery({});
   const { t } = useTranslation();
   const [invoiceToPay, setInvoiceToPay] = useState<InvoiceFragment>();
+  const [doNotSendMail, setDoNotSendMail] = useState(false);
   const { isVisible, toggle } = useColumnConfig(
     'subscription-invoices',
     CONFIG_COLUMNS
@@ -114,9 +116,15 @@ function InvoiceListPanel({
 
   const [markInvoiceAsPaid] = useMarkInvoiceAsPaidMutation();
 
+  function closePayModal() {
+    setInvoiceToPay(undefined);
+    setDoNotSendMail(false);
+  }
+
   async function payManually() {
     const invoiceId = invoiceToPay?.id;
     setInvoiceToPay(undefined);
+    setDoNotSendMail(false);
 
     if (!me?.me?.id) {
       toaster.push(
@@ -133,6 +141,7 @@ function InvoiceListPanel({
     await markInvoiceAsPaid({
       variables: {
         id: invoiceId,
+        sendMail: !doNotSendMail,
       },
     });
     onInvoicePaid();
@@ -339,10 +348,19 @@ function InvoiceListPanel({
         open={!!invoiceToPay}
         backdrop="static"
         size="xs"
-        onClose={() => setInvoiceToPay(undefined)}
+        onClose={closePayModal}
       >
         <Modal.Title>{t('invoice.areYouSure')}</Modal.Title>
-        <Modal.Body>{t('invoice.manuallyPaidModalBody')}</Modal.Body>
+        <Modal.Body>
+          {t('invoice.manuallyPaidModalBody')}
+
+          <Checkbox
+            checked={doNotSendMail}
+            onChange={(value, checked) => setDoNotSendMail(checked)}
+          >
+            {t('invoice.doNotSendMail')}
+          </Checkbox>
+        </Modal.Body>
         <Modal.Footer>
           <Button
             appearance="primary"
@@ -352,7 +370,7 @@ function InvoiceListPanel({
           </Button>
           <Button
             appearance="subtle"
-            onClick={() => setInvoiceToPay(undefined)}
+            onClick={closePayModal}
           >
             {t('cancel')}
           </Button>

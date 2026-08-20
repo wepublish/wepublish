@@ -864,6 +864,7 @@
     "invoice": {
       "areYouSure": "Are you sure?",
       "canceledAt": "Cancelled at",
+      "doNotSendMail": "Do not send a mail to the member",
       "invoiceNo": "Invoice No.",
       "manuallyPaidModalBody": "The invoice is marked as paid even though no payment has been received from the user. You should discuss your intention with the accountant.",
       "paidAt": "Paid at",

@@ -23,6 +23,7 @@ import { PaymentProvider, PaymentsService } from '@wepublish/payment/api';
 import { add, endOfDay, startOfDay, sub } from 'date-fns';
 import { Action } from '../subscription-event-dictionary/subscription-event-dictionary.type';
 import { logger, mapPaymentPeriodToMonths } from '@wepublish/utils/api';
+import { RenewalSuccessMailService } from '../renewal-mail/renewal-success-mail.service';
 
 export type SubscriptionControllerConfig = {
   subscription: Subscription;
@@ -47,7 +48,8 @@ interface PeriodBounds {
 export class SubscriptionService {
   constructor(
     private prismaService: PrismaClient,
-    private payments: PaymentsService
+    private payments: PaymentsService,
+    private renewalSuccessMail: RenewalSuccessMailService
   ) {}
 
   public async getActiveSubscriptionsWithoutInvoice(
@@ -541,6 +543,8 @@ export class SubscriptionService {
         );
       }
     }
+
+    await this.renewalSuccessMail.onInvoicePaid(invoice.id);
   }
 
   /**
