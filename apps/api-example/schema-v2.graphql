@@ -2695,6 +2695,7 @@ input PageFilter {
   publicationDateFrom: DateFilter
   publicationDateTo: DateFilter
   published: Boolean
+  slug: String
   tags: [String!]
   title: String
 }
