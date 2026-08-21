@@ -1,5 +1,6 @@
 export enum ReflektBlockStyles {
   FlexBlockHero = 'FlexBlockHero',
+  FlexBlockHeroCrowdfunding = 'FlexBlockHeroCrowdfunding',
   FlexBlockFullsizeImage = 'FlexBlockFullsizeImage',
   TeaserRecherchen = 'TeaserRecherchen',
   TeaserRecherchenGrid = 'TeaserRecherchenGrid',
