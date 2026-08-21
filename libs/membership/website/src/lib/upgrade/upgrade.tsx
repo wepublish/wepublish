@@ -105,11 +105,15 @@ export const Upgrade = ({
     () =>
       memberPlans.data?.memberPlans.nodes.filter(
         mb =>
+          mb.productType === ProductType.Subscription &&
+          mb.extendable &&
+          mb.id !== subscriptionToUpgrade.memberPlan.id &&
           mb.amountPerMonthMin >
-          subscriptionToUpgrade.memberPlan.amountPerMonthMin
+            subscriptionToUpgrade.memberPlan.amountPerMonthMin
       ) ?? [],
     [
       memberPlans.data?.memberPlans.nodes,
+      subscriptionToUpgrade.memberPlan.id,
       subscriptionToUpgrade.memberPlan.amountPerMonthMin,
     ]
   );
@@ -322,6 +326,7 @@ export const Upgrade = ({
               {...field}
               onChange={memberPlanId => field.onChange(memberPlanId)}
               memberPlans={availableMemberplans}
+              alwaysShow
             />
           )}
         />
