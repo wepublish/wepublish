@@ -105,7 +105,6 @@ export const Upgrade = ({
     () =>
       memberPlans.data?.memberPlans.nodes.filter(
         mb =>
-          mb.productType === ProductType.Subscription &&
           mb.extendable &&
           mb.id !== subscriptionToUpgrade.memberPlan.id &&
           mb.amountPerMonthMin >
