@@ -396,6 +396,7 @@ export type BlockContent =
   | ImageGalleryBlock
   | InstagramPostBlock
   | ListicleBlock
+  | MailchimpFormBlock
   | PolisConversationBlock
   | PollBlock
   | QuoteBlock
@@ -429,6 +430,7 @@ export type BlockContentInput = {
   instagramPost?: InputMaybe<InstagramPostBlockInput>;
   linkPageBreak?: InputMaybe<BreakBlockInput>;
   listicle?: InputMaybe<ListicleBlockInput>;
+  mailchimpForm?: InputMaybe<MailchimpFormBlockInput>;
   polisConversation?: InputMaybe<PolisConversationBlockInput>;
   poll?: InputMaybe<PollBlockInput>;
   quote?: InputMaybe<QuoteBlockInput>;
@@ -471,6 +473,7 @@ export enum BlockType {
   InstagramPost = 'InstagramPost',
   LinkPageBreak = 'LinkPageBreak',
   Listicle = 'Listicle',
+  MailchimpForm = 'MailchimpForm',
   PolisConversation = 'PolisConversation',
   Poll = 'Poll',
   Quote = 'Quote',
@@ -1025,6 +1028,7 @@ export enum EditorBlockType {
   ImageGallery = 'ImageGallery',
   LinkPageBreak = 'LinkPageBreak',
   Listicle = 'Listicle',
+  MailchimpForm = 'MailchimpForm',
   Poll = 'Poll',
   Quote = 'Quote',
   RichText = 'RichText',
@@ -2040,6 +2044,137 @@ export type MailTemplateSubscriptionOption = {
   label: Scalars['String'];
 };
 
+export type MailchimpContactInput = {
+  email: Scalars['String'];
+  interests?: InputMaybe<Scalars['JSONObject']>;
+  listId: Scalars['String'];
+  mergeFields?: InputMaybe<Scalars['JSONObject']>;
+  status: MailchimpContactStatus;
+  syncProviderId: Scalars['String'];
+};
+
+export enum MailchimpContactStatus {
+  Pending = 'Pending',
+  Subscribed = 'Subscribed',
+}
+
+export type MailchimpFormBlock = BaseBlock & {
+  __typename?: 'MailchimpFormBlock';
+  autoFocus: Scalars['Boolean'];
+  blockStyle?: Maybe<Scalars['String']>;
+  blockStyleName?: Maybe<Scalars['String']>;
+  buttonColor?: Maybe<Scalars['String']>;
+  buttonFontColor?: Maybe<Scalars['String']>;
+  disabled?: Maybe<Scalars['Boolean']>;
+  doubleOptIn?: Maybe<Scalars['Boolean']>;
+  interests: Array<Scalars['String']>;
+  listId?: Maybe<Scalars['String']>;
+  steps: Array<MailchimpFormStep>;
+  submitButtonLabel?: Maybe<Scalars['String']>;
+  successPage?: Maybe<MailchimpFormSuccessPage>;
+  successUrl?: Maybe<Scalars['String']>;
+  syncProviderId?: Maybe<Scalars['String']>;
+  type: BlockType;
+};
+
+export type MailchimpFormBlockInput = {
+  autoFocus?: Scalars['Boolean'];
+  blockStyle?: InputMaybe<Scalars['String']>;
+  blockStyleName?: InputMaybe<Scalars['String']>;
+  buttonColor?: InputMaybe<Scalars['String']>;
+  buttonFontColor?: InputMaybe<Scalars['String']>;
+  disabled?: InputMaybe<Scalars['Boolean']>;
+  doubleOptIn?: InputMaybe<Scalars['Boolean']>;
+  interests?: Array<Scalars['String']>;
+  listId?: InputMaybe<Scalars['String']>;
+  steps?: Array<MailchimpFormStepInput>;
+  submitButtonLabel?: InputMaybe<Scalars['String']>;
+  successPage?: InputMaybe<MailchimpFormSuccessPageInput>;
+  successUrl?: InputMaybe<Scalars['String']>;
+  syncProviderId?: InputMaybe<Scalars['String']>;
+};
+
+export type MailchimpFormFieldConfig = {
+  __typename?: 'MailchimpFormFieldConfig';
+  defaultValue?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  inputType?: Maybe<Scalars['String']>;
+  label?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  options: Array<MailchimpFormInterestOption>;
+  required?: Maybe<Scalars['Boolean']>;
+  urlParam?: Maybe<Scalars['String']>;
+  value?: Maybe<Scalars['String']>;
+};
+
+export type MailchimpFormFieldConfigInput = {
+  defaultValue?: InputMaybe<Scalars['String']>;
+  description?: InputMaybe<Scalars['String']>;
+  inputType?: InputMaybe<Scalars['String']>;
+  label?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  options?: Array<MailchimpFormInterestOptionInput>;
+  required?: InputMaybe<Scalars['Boolean']>;
+  urlParam?: InputMaybe<Scalars['String']>;
+  value?: InputMaybe<Scalars['String']>;
+};
+
+export type MailchimpFormInterestOption = {
+  __typename?: 'MailchimpFormInterestOption';
+  description?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  name: Scalars['String'];
+};
+
+export type MailchimpFormInterestOptionInput = {
+  description?: InputMaybe<Scalars['String']>;
+  id: Scalars['String'];
+  name: Scalars['String'];
+};
+
+export type MailchimpFormStep = {
+  __typename?: 'MailchimpFormStep';
+  inputs: Array<MailchimpFormFieldConfig>;
+  showIfInterestsFilled: Array<Scalars['String']>;
+  skipIfFieldsFilled: Array<Scalars['String']>;
+  skipIfInterestsFilled: Array<Scalars['String']>;
+};
+
+export type MailchimpFormStepInput = {
+  inputs?: Array<MailchimpFormFieldConfigInput>;
+  showIfInterestsFilled?: Array<Scalars['String']>;
+  skipIfFieldsFilled?: Array<Scalars['String']>;
+  skipIfInterestsFilled?: Array<Scalars['String']>;
+};
+
+export type MailchimpFormSuccessOption = {
+  __typename?: 'MailchimpFormSuccessOption';
+  background: Scalars['String'];
+  label: Scalars['String'];
+  mergeFieldName?: Maybe<Scalars['String']>;
+  mergeFieldValue?: Maybe<Scalars['String']>;
+  url: Scalars['String'];
+};
+
+export type MailchimpFormSuccessOptionInput = {
+  background: Scalars['String'];
+  label: Scalars['String'];
+  mergeFieldName?: InputMaybe<Scalars['String']>;
+  mergeFieldValue?: InputMaybe<Scalars['String']>;
+  url: Scalars['String'];
+};
+
+export type MailchimpFormSuccessPage = {
+  __typename?: 'MailchimpFormSuccessPage';
+  description?: Maybe<Scalars['String']>;
+  options: Array<MailchimpFormSuccessOption>;
+};
+
+export type MailchimpFormSuccessPageInput = {
+  description?: InputMaybe<Scalars['String']>;
+  options?: Array<MailchimpFormSuccessOptionInput>;
+};
+
 export type MailchimpInterestGroup = {
   __typename?: 'MailchimpInterestGroup';
   id: Scalars['String'];
@@ -2058,6 +2193,12 @@ export type MailchimpMergeField = {
   name: Scalars['String'];
   tag: Scalars['String'];
   type: Scalars['String'];
+};
+
+export type MailchimpSubscribeResult = {
+  __typename?: 'MailchimpSubscribeResult';
+  error?: Maybe<Scalars['String']>;
+  success: Scalars['Boolean'];
 };
 
 export type MailchimpSyncDryRunChange = {
@@ -2154,6 +2295,8 @@ export enum MemberPlanSort {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  /** Subscribes a contact to a Mailchimp list. */
+  addMailchimpContact: MailchimpSubscribeResult;
   /** Adds a new comment made by you. */
   addUserComment: Comment;
   /** Approves a comment */
@@ -2525,6 +2668,10 @@ export type Mutation = {
   uploadUserProfileImage?: Maybe<SensitiveDataUser>;
   /** This mutation allows to vote on a poll (or update one's decision). Supports logged in and anonymous */
   voteOnPoll?: Maybe<PollVote>;
+};
+
+export type MutationAddMailchimpContactArgs = {
+  input: MailchimpContactInput;
 };
 
 export type MutationAddUserCommentArgs = {
