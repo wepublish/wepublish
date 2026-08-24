@@ -890,10 +890,12 @@ function ArticleEditor() {
                             { previewJwt: token },
                             targetOrigin
                           );
-                          window.removeEventListener('message', handleMessage);
                         }
                       };
                       window.addEventListener('message', handleMessage);
+                      setTimeout(() => {
+                        window.removeEventListener('message', handleMessage);
+                      }, 60000);
                     }}
                   >
                     {t('articleEditor.overview.preview')}

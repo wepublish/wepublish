@@ -87,7 +87,7 @@ export const withJwtHandler = <P extends object>(
 
     const handleJwt = useCallback(
       (jwt: string, options?: { fromPreview?: boolean }) => {
-        if (hasUser) {
+        if (hasUser && !options?.fromPreview) {
           return;
         }
 
@@ -115,7 +115,7 @@ export const withJwtHandler = <P extends object>(
             )}`;
           });
       },
-      [loginWithJwt, setToken]
+      [loginWithJwt, setToken, hasUser]
     );
 
     const handleTotpSubmit = useCallback(async () => {
@@ -168,12 +168,13 @@ export const withJwtHandler = <P extends object>(
           const jwt = event.data?.previewJwt;
           if (jwt) {
             window.removeEventListener('message', handleMessage);
+            clearInterval(interval);
             handleJwt(jwt, { fromPreview: true });
           }
         };
         window.addEventListener('message', handleMessage);
 
-        const MAX_ATTEMPTS = 25;
+        const MAX_ATTEMPTS = 150;
         let attempts = 0;
         const interval = setInterval(() => {
           window.opener.postMessage('preview-jwt-ready', '*');
