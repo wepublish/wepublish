@@ -297,6 +297,16 @@ const getContentHintForFlexBlockNestedBlock = (block: BlockListValue) => {
     }
     return text;
   }
+  if (block.type === 'Crowdfunding') {
+    const name = block.value?.crowdfunding?.name;
+    if (!name) {
+      return 'Crowdfunding';
+    }
+    if (name.length > 25) {
+      return name.slice(0, 25) + '...';
+    }
+    return name;
+  }
 
   return 'unknown block value';
 };
