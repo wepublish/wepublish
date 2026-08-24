@@ -22,11 +22,7 @@ import {
 import { PaymentProvider, PaymentsService } from '@wepublish/payment/api';
 import { add, endOfDay, startOfDay, sub } from 'date-fns';
 import { Action } from '../subscription-event-dictionary/subscription-event-dictionary.type';
-import {
-  calculateAmountForPeriodicity,
-  logger,
-  mapPaymentPeriodToMonths,
-} from '@wepublish/utils/api';
+import { logger, mapPaymentPeriodToMonths } from '@wepublish/utils/api';
 
 export type SubscriptionControllerConfig = {
   subscription: Subscription;
@@ -311,10 +307,9 @@ export class SubscriptionService {
     },
     deactivationDate: Date
   ) {
-    const amount = calculateAmountForPeriodicity(
-      subscription.monthlyAmount,
-      subscription.paymentPeriodicity
-    );
+    const amount =
+      subscription.monthlyAmount *
+      mapPaymentPeriodToMonths(subscription.paymentPeriodicity);
     const description = `${subscription.paymentPeriodicity} renewal of subscription ${subscription.memberPlan.name}`;
 
     return this.prismaService.invoice.create({
