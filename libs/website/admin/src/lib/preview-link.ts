@@ -5,7 +5,7 @@ export const PREVIEW_MODE_KEY = 'PREVIEW_MODE';
 export const previewLink = new ApolloLink((operation, forward) => {
   const isPreview =
     !!Number(sessionStorage.getItem(PREVIEW_MODE_KEY)) ||
-    new URLSearchParams(location.search).has('preview');
+    new URLSearchParams(window.location.search).has('preview');
 
   operation.setContext((context: DefaultContext) => ({
     ...context,

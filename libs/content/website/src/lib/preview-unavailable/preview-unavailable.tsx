@@ -5,7 +5,7 @@ import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { getCookie } from 'cookies-next';
 import { useSyncExternalStore } from 'react';
 
-const noopSubscribe = () => () => {};
+const noopSubscribe = () => () => undefined;
 
 const useHasMounted = () =>
   useSyncExternalStore(
