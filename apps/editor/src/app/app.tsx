@@ -27,11 +27,15 @@ import {
 } from '@wepublish/editor/api';
 import { ImportableEventListView } from '@wepublish/event/import/editor';
 import {
+  LetterLogList,
+  LetterTemplateEdit,
+  LetterTemplateList,
   MailLogList,
   MailSendPage,
   MailTemplateEdit,
   MailTemplateList,
   MemberPlanEdit,
+  OrganisationSettings,
   SubscriptionFlowList,
 } from '@wepublish/membership/editor';
 import { SettingList } from '@wepublish/settings/editor';
@@ -1032,6 +1036,46 @@ export function App() {
               element={
                 <Base>
                   <MailTemplateEdit />
+                </Base>
+              }
+            />
+            <Route
+              path="lettertemplates"
+              element={
+                <Base>
+                  <LetterTemplateList />
+                </Base>
+              }
+            />
+            <Route
+              path="lettertemplates/create"
+              element={
+                <Base>
+                  <LetterTemplateEdit />
+                </Base>
+              }
+            />
+            <Route
+              path="lettertemplates/edit/:id"
+              element={
+                <Base>
+                  <LetterTemplateEdit />
+                </Base>
+              }
+            />
+            <Route
+              path="letterlog"
+              element={
+                <Base>
+                  <LetterLogList />
+                </Base>
+              }
+            />
+            <Route
+              path="organisationsettings"
+              element={
+                <Base>
+                  <OrganisationSettings />
                 </Base>
               }
             />

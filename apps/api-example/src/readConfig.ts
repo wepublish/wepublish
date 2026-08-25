@@ -151,9 +151,16 @@ type SyncProvider = {
   id: string;
 };
 
+type LetterProvider = {
+  id: string;
+  type: string;
+  pdfRendererURL?: string;
+};
+
 type Config = {
   general: General;
   mailProvider: MailProvider;
+  letterProvider?: LetterProvider;
   paymentProviders: PaymentProvider[];
   mediaServer: novaMediaServer;
   challenge: Turnstile | HCaptcha;

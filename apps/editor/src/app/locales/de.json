@@ -1297,7 +1297,10 @@
       "apps": "Apps",
       "mailSend": "E-Mail senden",
       "mailLog": "Gesendete E-Mails",
-      "communication": "Kommunikation"
+      "communication": "Kommunikation",
+      "letterTemplates": "Briefvorlagen",
+      "letterLog": "Versendete Briefe",
+      "organisationSettings": "Organisation"
     },
     "navigation": {
       "overview": {
@@ -3073,6 +3076,112 @@
         "attempts": "Versuche",
         "empty": "Keine Einträge für diesen Filter."
       }
+    },
+    "letterTemplates": {
+      "title": "Briefvorlagen",
+      "create": "Neue Briefvorlage",
+      "createTitle": "Briefvorlage erstellen",
+      "editTitle": "Briefvorlage bearbeiten",
+      "settings": "Einstellungen",
+      "content": "Inhalt",
+      "name": "Name",
+      "description": "Beschreibung",
+      "purpose": "Verwendungszweck",
+      "purposeHint": "Bestimmt, welche Platzhalter zur Verfügung stehen. Derselbe Zweck wie bei den E-Mail-Vorlagen.",
+      "noPurpose": "Kein Zweck gewählt",
+      "actions": "Aktionen",
+      "addressPosition": "Position Adressfenster",
+      "addressPositions": {
+        "LEFT": "Links",
+        "RIGHT": "Rechts"
+      },
+      "deliveryProduct": "Versandart",
+      "deliveryProducts": {
+        "CHEAP": "Günstig (B-Post)",
+        "FAST": "Schnell (A-Post)",
+        "PREMIUM": "Premium",
+        "REGISTERED": "Eingeschrieben",
+        "BULK": "Massensendung"
+      },
+      "printMode": "Druck",
+      "printModes": {
+        "SIMPLEX": "Einseitig",
+        "DUPLEX": "Beidseitig"
+      },
+      "printSpectrum": "Farbe",
+      "printSpectra": {
+        "GRAYSCALE": "Schwarz/Weiss",
+        "COLOR": "Farbig"
+      },
+      "qrBill": "QR-Rechnung",
+      "qrBills": {
+        "NONE": "Keine",
+        "LAST_PAGE": "Auf der letzten Seite"
+      },
+      "qrBillOn": "Mit QR-Rechnung",
+      "qrBillOff": "Ohne",
+      "qrBillHint": "Die QR-Rechnung füllt einen festen Bereich am Seitenende. Sie braucht eine Rechnung und die Organisationsangaben.",
+      "visual": "Visuell",
+      "html": "HTML",
+      "preview": "Vorschau",
+      "refreshPreview": "Vorschau erneuern",
+      "previewHint": "Noch keine Vorschau erzeugt. Die Vorschau zeigt das echte PDF mit Beispieldaten.",
+      "missingPlaceholders": "Diese Platzhalter bleiben leer: {{placeholders}}",
+      "providerHint": "Briefe werden über {{provider}} gedruckt und versendet.",
+      "save": "Speichern",
+      "saved": "Briefvorlage gespeichert",
+      "cancel": "Abbrechen",
+      "delete": "Löschen",
+      "deleteTitle": "Briefvorlage löschen",
+      "deleteBody": "Soll diese Briefvorlage wirklich gelöscht werden?"
+    },
+    "letterTemplateSelect": {
+      "noLetterSentSelectNow": "Kein Brief"
+    },
+    "letterLog": {
+      "title": "Versendete Briefe",
+      "created": "Erstellt",
+      "state": "Status",
+      "states": {
+        "pending": "In Arbeit",
+        "submitted": "Übergeben",
+        "accepted": "Angenommen",
+        "dispatched": "Aufgegeben",
+        "delivered": "Zugestellt",
+        "undeliverable": "Unzustellbar",
+        "rejected": "Abgelehnt",
+        "canceled": "Storniert"
+      },
+      "allStates": "Alle Status",
+      "recipient": "Empfänger*in",
+      "pages": "Seiten",
+      "tracking": "Sendungsnummer",
+      "actions": "Aktionen",
+      "dispatch": "Versenden",
+      "cancel": "Stornieren"
+    },
+    "organisationSettings": {
+      "title": "Organisation",
+      "hint": "Diese Angaben stehen als Absender auf jedem Brief und als Zahlungsempfänger auf jeder QR-Rechnung.",
+      "sender": "Absender",
+      "qrBill": "QR-Rechnung",
+      "name": "Name",
+      "street": "Strasse",
+      "number": "Nummer",
+      "zip": "PLZ",
+      "city": "Ort",
+      "country": "Land (ISO, z.B. CH)",
+      "iban": "IBAN",
+      "ibanHint": "Für eine QR-Referenz wird eine QR-IBAN benötigt, für eine Creditor Reference eine normale IBAN.",
+      "referenceType": "Referenzart",
+      "referenceTypes": {
+        "QRR": "QR-Referenz (QRR)",
+        "SCOR": "Creditor Reference (SCOR)",
+        "NON": "Ohne Referenz"
+      },
+      "referenceTypeHint": "Die Referenz verbindet eine Zahlung mit der Rechnung. Ohne Referenz muss von Hand zugeordnet werden.",
+      "save": "Speichern",
+      "saved": "Einstellungen gespeichert"
     }
   }
 }

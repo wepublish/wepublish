@@ -1299,7 +1299,10 @@
       "apps": "Apps",
       "mailSend": "Send email",
       "mailLog": "Sent emails",
-      "communication": "Communication"
+      "communication": "Communication",
+      "letterTemplates": "Letter templates",
+      "letterLog": "Sent letters",
+      "organisationSettings": "Organisation"
     },
     "navigation": {
       "overview": {
@@ -3114,6 +3117,112 @@
         "attempts": "Attempts",
         "empty": "No entries for this filter."
       }
+    },
+    "letterTemplates": {
+      "title": "Letter templates",
+      "create": "New letter template",
+      "createTitle": "Create letter template",
+      "editTitle": "Edit letter template",
+      "settings": "Settings",
+      "content": "Content",
+      "name": "Name",
+      "description": "Description",
+      "purpose": "Purpose",
+      "purposeHint": "Decides which placeholders are available. The same purposes as for mail templates.",
+      "noPurpose": "No purpose chosen",
+      "actions": "Actions",
+      "addressPosition": "Address window position",
+      "addressPositions": {
+        "LEFT": "Left",
+        "RIGHT": "Right"
+      },
+      "deliveryProduct": "Delivery",
+      "deliveryProducts": {
+        "CHEAP": "Cheap (B-Post)",
+        "FAST": "Fast (A-Post)",
+        "PREMIUM": "Premium",
+        "REGISTERED": "Registered",
+        "BULK": "Bulk"
+      },
+      "printMode": "Print",
+      "printModes": {
+        "SIMPLEX": "Single sided",
+        "DUPLEX": "Double sided"
+      },
+      "printSpectrum": "Colour",
+      "printSpectra": {
+        "GRAYSCALE": "Grayscale",
+        "COLOR": "Colour"
+      },
+      "qrBill": "QR bill",
+      "qrBills": {
+        "NONE": "None",
+        "LAST_PAGE": "On the last page"
+      },
+      "qrBillOn": "With QR bill",
+      "qrBillOff": "None",
+      "qrBillHint": "The QR bill fills a fixed slot at the bottom of the page. It needs an invoice and the organisation settings.",
+      "visual": "Visual",
+      "html": "HTML",
+      "preview": "Preview",
+      "refreshPreview": "Refresh preview",
+      "previewHint": "No preview yet. The preview shows the real pdf with sample data.",
+      "missingPlaceholders": "These placeholders stay empty: {{placeholders}}",
+      "providerHint": "Letters are printed and posted through {{provider}}.",
+      "save": "Save",
+      "saved": "Letter template saved",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "deleteTitle": "Delete letter template",
+      "deleteBody": "Do you really want to delete this letter template?"
+    },
+    "letterTemplateSelect": {
+      "noLetterSentSelectNow": "No letter"
+    },
+    "letterLog": {
+      "title": "Sent letters",
+      "created": "Created",
+      "state": "State",
+      "states": {
+        "pending": "In progress",
+        "submitted": "Submitted",
+        "accepted": "Accepted",
+        "dispatched": "Dispatched",
+        "delivered": "Delivered",
+        "undeliverable": "Undeliverable",
+        "rejected": "Rejected",
+        "canceled": "Canceled"
+      },
+      "allStates": "All states",
+      "recipient": "Recipient",
+      "pages": "Pages",
+      "tracking": "Tracking number",
+      "actions": "Actions",
+      "dispatch": "Send",
+      "cancel": "Cancel"
+    },
+    "organisationSettings": {
+      "title": "Organisation",
+      "hint": "These details are the sender on every letter and the creditor on every QR bill.",
+      "sender": "Sender",
+      "qrBill": "QR bill",
+      "name": "Name",
+      "street": "Street",
+      "number": "Number",
+      "zip": "Zip code",
+      "city": "City",
+      "country": "Country (ISO, e.g. CH)",
+      "iban": "IBAN",
+      "ibanHint": "A QR reference needs a QR-IBAN, a creditor reference a normal one.",
+      "referenceType": "Reference type",
+      "referenceTypes": {
+        "QRR": "QR reference (QRR)",
+        "SCOR": "Creditor reference (SCOR)",
+        "NON": "Without reference"
+      },
+      "referenceTypeHint": "The reference links an incoming payment to its invoice. Without one it has to be matched by hand.",
+      "save": "Save",
+      "saved": "Settings saved"
     }
   }
 }

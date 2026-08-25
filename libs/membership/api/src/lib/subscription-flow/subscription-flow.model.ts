@@ -40,6 +40,9 @@ export class SubscriptionInterval {
   @Field(() => MailTemplateRef, { nullable: true })
   mailTemplate!: MailTemplateRef | null;
 
+  @Field(() => MailTemplateRef, { nullable: true })
+  letterTemplate!: MailTemplateRef | null;
+
   @Field(() => SubscriptionEvent)
   event!: SubscriptionEvent;
 }
@@ -82,6 +85,9 @@ export class SubscriptionIntervalCreateInput {
   @Field({ nullable: true })
   mailTemplateId?: string;
 
+  @Field({ nullable: true })
+  letterTemplateId?: string;
+
   @Field(() => SubscriptionEvent)
   event!: SubscriptionEvent;
 }
@@ -91,6 +97,7 @@ export class SubscriptionIntervalUpdateInput extends PartialType(
   PickType(SubscriptionIntervalCreateInput, [
     'daysAwayFromEnding',
     'mailTemplateId',
+    'letterTemplateId',
   ] as const),
   ArgsType
 ) {

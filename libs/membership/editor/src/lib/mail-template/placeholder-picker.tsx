@@ -1,6 +1,6 @@
 import { Typography } from '@mui/material';
 import { MailTemplateContext } from '@wepublish/editor/api';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Input, Tooltip, Whisper } from 'rsuite';
 import {
@@ -14,6 +14,11 @@ interface PlaceholderPickerProps {
   onInsert: (token: string) => void;
   /** The selected purpose; scopes which placeholders are shown/searched. */
   context: MailTemplateContext | null;
+  /**
+   * Keys this channel cannot use. A letter has no clickable link, so the login
+   * token is hidden there instead of being printed onto paper.
+   */
+  hiddenKeys?: string[];
 }
 
 const DATE_FORMATS = [
@@ -67,6 +72,7 @@ const AMOUNT_FORMATS = [
 export function PlaceholderPicker({
   onInsert,
   context,
+  hiddenKeys = [],
 }: PlaceholderPickerProps) {
   const { t } = useTranslation();
   const [search, setSearch] = useState('');
@@ -76,9 +82,22 @@ export function PlaceholderPicker({
 
   // Search is scoped to the placeholders that actually resolve for the chosen
   // purpose (the always-available recipient fields + that purpose's fields).
+  const isVisible = useCallback(
+    (placeholder: MailPlaceholder) => !hiddenKeys.includes(placeholder.key),
+    [hiddenKeys]
+  );
+
+  const alwaysPlaceholders = useMemo(
+    () => ALWAYS_PLACEHOLDERS.filter(isVisible),
+    [isVisible]
+  );
+
   const scopedPlaceholders = useMemo(
-    () => [...ALWAYS_PLACEHOLDERS, ...(selectedContext?.placeholders ?? [])],
-    [selectedContext]
+    () => [
+      ...alwaysPlaceholders,
+      ...(selectedContext?.placeholders ?? []).filter(isVisible),
+    ],
+    [alwaysPlaceholders, isVisible, selectedContext]
   );
 
   const searchResults = useMemo(() => {
@@ -255,7 +274,7 @@ export function PlaceholderPicker({
               'These recipient fields work in every template, no matter which purpose is selected.'
             )}
           </Typography>
-          {ALWAYS_PLACEHOLDERS.map(renderPlaceholder)}
+          {alwaysPlaceholders.map(renderPlaceholder)}
 
           <div
             style={{
@@ -294,8 +313,10 @@ export function PlaceholderPicker({
                     )}
                   </Typography>
                 )}
-                {selectedContext.placeholders.length > 0 ?
-                  selectedContext.placeholders.map(renderPlaceholder)
+                {selectedContext.placeholders.filter(isVisible).length > 0 ?
+                  selectedContext.placeholders
+                    .filter(isVisible)
+                    .map(renderPlaceholder)
                 : <Typography
                     variant="caption"
                     display="block"

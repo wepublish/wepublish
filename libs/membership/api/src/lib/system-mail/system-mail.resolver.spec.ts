@@ -7,6 +7,7 @@ const mockTemplate1: UserFlowMail = {
   id: 'c29a088f-40f0-4578-a6c4-810249902495',
   event: UserEvent.ACCOUNT_CREATION,
   mailTemplateId: 'ef054424-8749-408c-bff8-198260ddf9ee',
+  letterTemplateId: null,
   createdAt: new Date(),
   modifiedAt: new Date(),
 };
@@ -15,6 +16,7 @@ const mockTemplate2: UserFlowMail = {
   id: 'e57efaa2-afd4-42b0-81f0-f22278b45f1e',
   event: UserEvent.LOGIN_LINK,
   mailTemplateId: '7df91a48-f12c-477c-be37-25b5490a65d3',
+  letterTemplateId: null,
   createdAt: new Date(),
   modifiedAt: new Date(),
 };

@@ -5,10 +5,14 @@ import {
   SubscriptionEvent,
   SubscriptionFlowFragment,
 } from '@wepublish/editor/api';
-import { useMemo } from 'react';
+import { useContext, useMemo } from 'react';
 import { MdDragIndicator } from 'react-icons/md';
+import { LetterTemplateSelect } from './letter-template-select';
 import { MailTemplateSelect } from './mail-template-select';
-import { DecoratedSubscriptionInterval } from './subscription-flow-list';
+import {
+  DecoratedSubscriptionInterval,
+  LetterTemplatesContext,
+} from './subscription-flow-list';
 
 import { Tooltip } from '@mui/material';
 import { useAuthorisation } from '@wepublish/ui/editor';
@@ -45,6 +49,8 @@ export function DraggableSubscriptionInterval({
   const canUpdateSubscriptionFlow = useAuthorisation(
     'CAN_UPDATE_SUBSCRIPTION_FLOW'
   );
+
+  const letterTemplates = useContext(LetterTemplatesContext);
 
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: `draggable-${subscriptionInterval?.object?.id}`,
@@ -116,6 +122,16 @@ export function DraggableSubscriptionInterval({
           event={event || subscriptionInterval?.object?.event}
           newDaysAwayFromEnding={newDaysAwayFromEnding}
         />
+
+        {letterTemplates.length > 0 && (
+          <LetterTemplateSelect
+            letterTemplates={letterTemplates}
+            subscriptionInterval={subscriptionInterval}
+            subscriptionFlow={subscriptionFlow}
+            event={event || subscriptionInterval?.object?.event}
+            newDaysAwayFromEnding={newDaysAwayFromEnding}
+          />
+        )}
       </DraggableContainer>
     </Tooltip>
   );

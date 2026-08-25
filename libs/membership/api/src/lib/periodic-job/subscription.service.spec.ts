@@ -521,6 +521,7 @@ describe('SubscriptionPaymentsService', () => {
         type: SubscriptionEvent.RENEWAL_SUCCESS,
         daysAwayFromEnding: 1,
         mailTemplateId: null,
+        letterTemplateId: null,
       };
       await subscriptionService['offSessionPayment'](
         { canceledAt: null, paidAt: null } as any,

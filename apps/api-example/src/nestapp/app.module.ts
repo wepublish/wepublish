@@ -7,6 +7,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 
 import { HttpModule, HttpService } from '@nestjs/axios';
 import {
+  LetterProviderType,
   MailProviderType,
   PaymentProviderType,
   PrismaClient,
@@ -18,6 +19,13 @@ import { V0Module } from '@wepublish/ai/api';
 import { NovaMediaAdapter } from '@wepublish/api';
 import { ArticleModule, HotAndTrendingModule } from '@wepublish/article/api';
 import { AuthenticationModule } from '@wepublish/authentication/api';
+import {
+  BaseLetterProvider,
+  FakeLetterProvider,
+  LettersModule,
+  PingenLetterProvider,
+  RemotePdfRenderer,
+} from '@wepublish/letter/api';
 import { AuthorModule } from '@wepublish/author/api';
 import { BannerApiModule } from '@wepublish/banner/api';
 import { BlockContentModule } from '@wepublish/block-content/api';
@@ -254,6 +262,50 @@ import { readConfig } from '../readConfig';
               audience: websiteURL,
               expiresInMinutes: jwtExpires,
             }),
+        };
+      },
+      inject: [ConfigService, PrismaClient, KvTtlCacheService],
+      global: true,
+    }),
+    LettersModule.registerAsync({
+      imports: [ConfigModule, PrismaModule, KvTtlCacheModule],
+      useFactory: async (
+        config: ConfigService,
+        prisma: PrismaClient,
+        kv: KvTtlCacheService
+      ) => {
+        const configFile = await readConfig(
+          config.getOrThrow('CONFIG_FILE_PATH')
+        );
+        const letterProviderRaw = configFile.letterProvider;
+        let letterProvider: BaseLetterProvider;
+
+        if (letterProviderRaw?.type === 'pingen') {
+          letterProvider = new PingenLetterProvider({
+            id: letterProviderRaw.id,
+            prisma,
+            kv,
+          });
+
+          await letterProvider.initDatabaseConfiguration(
+            LetterProviderType.PINGEN
+          );
+        } else {
+          letterProvider = new FakeLetterProvider({
+            id: letterProviderRaw?.id ?? 'fakeLetter',
+            prisma,
+            kv,
+          });
+        }
+
+        return {
+          letterProvider,
+          pdfRenderer: new RemotePdfRenderer({
+            url:
+              letterProviderRaw?.pdfRendererURL ??
+              config.get('PDF_RENDERER_URL') ??
+              'http://localhost:3001/forms/chromium/convert/html',
+          }),
         };
       },
       inject: [ConfigService, PrismaClient, KvTtlCacheService],
