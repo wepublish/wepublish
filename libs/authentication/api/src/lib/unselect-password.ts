@@ -21,6 +21,7 @@ export const unselectPassword: Record<
     | 'mailchimpSyncErrors'
     | 'changelogConfirmations'
     | 'notificationReads'
+    | 'notificationConfirmations'
   >,
   boolean
 > = {

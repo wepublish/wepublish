@@ -76,11 +76,8 @@ export function DashboardNotifications() {
       <PermissionControl qualifyingPermissions={['CAN_GET_PERIODIC_JOB_LOG']}>
         <PeriodicJobsLog
           onlyProblems
+          teamConfirm
           sourceTag={t('notifications.sourceJobLogs')}
-          readItemIds={
-            readItemIds.get(NotificationSource.PeriodicJob) ?? EMPTY_SET
-          }
-          onMarkRead={markRead(NotificationSource.PeriodicJob)}
         />
       </PermissionControl>
 

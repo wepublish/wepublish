@@ -572,14 +572,10 @@
       "actionRequired": "Action required",
       "done": "Done",
       "details": "Details",
-      "markAsDone": "Mark as done",
-      "confirmTitle": "Mark as done?",
-      "confirmMessage": "This confirms for your whole team that \"{{title}}\" has been completed. The notice will disappear from the dashboard.",
-      "confirmSuccess": "Thanks! The task has been marked as done.",
       "releasedAt": "Released on {{date, PP}}",
       "completedAt": "Completed on {{date, PP}}",
       "noEntries": "No changelog entries yet.",
-      "allCaughtUp": "All caught up – no new entries."
+      "allCaughtUp": "No unread changelog entries."
     },
     "chooseEditImage": {
       "chooseImage": "Choose Image",
@@ -1347,6 +1343,10 @@
       "sourceChangelog": "Changelog",
       "sourceJobLogs": "Job logs",
       "markAsRead": "Mark as read",
+      "markAsDone": "Mark as done",
+      "confirmTitle": "Mark as done?",
+      "confirmMessage": "This confirms for your whole team that \"{{title}}\" has been completed. The notice will disappear from the dashboard.",
+      "confirmSuccess": "Thanks! The task has been marked as done.",
       "loadMore": "Load more"
     },
     "no": "No",

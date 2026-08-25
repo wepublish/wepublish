@@ -2213,6 +2213,11 @@ type Mutation {
   """Confirms a pending email change for the logged-in user."""
   confirmEmailChange(newEmail: String!): SensitiveDataUser!
 
+  """
+  Confirms a notification for the whole instance, recording who confirmed it. Requires authentication.
+  """
+  confirmNotification(itemId: String!, source: NotificationSource!): NotificationConfirmation!
+
   """Creates an article."""
   createArticle(authorIds: [String!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, imageID: String, lead: String, likes: Int, paywallId: String, preTitle: String, properties: [PropertyInput!]!, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
 
@@ -2817,6 +2822,14 @@ enum NavigationLinkType {
   Article
   External
   Page
+}
+
+type NotificationConfirmation {
+  confirmedByUserId: String
+  createdAt: DateTime!
+  id: String!
+  itemId: String!
+  source: NotificationSource!
 }
 
 type NotificationRead {
@@ -3891,6 +3904,11 @@ type Query {
 
   "\n      Returns all new subscribers in a given timeframe.\n      Includes already deactivated ones.\n    "
   newSubscribers(end: DateTime, start: DateTime!): [DashboardSubscription!]!
+
+  """
+  Returns the instance-wide notification confirmations. Requires authentication.
+  """
+  notificationConfirmations: [NotificationConfirmation!]!
 
   """
   Returns the current user's read notifications. Requires authentication.

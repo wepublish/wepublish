@@ -1163,20 +1163,21 @@ model User {
   properties               Json                      @default("[]")
   paymentProviderCustomers PaymentProviderCustomer[]
 
-  comments               Comment[]
-  sessions               Session[]
-  subscriptions          Subscription[]
-  commentRatings         CommentRating[]
-  pollVotes              PollVote[]
-  mailSent               MailLog[]
-  mailSendJobs           MailSendJob[]
-  mailSendJobEntries     MailSendJobRecipient[]
-  consents               UserConsent[]
-  articleRevisions       ArticleRevision[]
-  pageRevisions          PageRevision[]
-  mailchimpSyncErrors    MailchimpSyncError[]
-  changelogConfirmations ChangelogEntry[]
-  notificationReads      NotificationRead[]
+  comments                  Comment[]
+  sessions                  Session[]
+  subscriptions             Subscription[]
+  commentRatings            CommentRating[]
+  pollVotes                 PollVote[]
+  mailSent                  MailLog[]
+  mailSendJobs              MailSendJob[]
+  mailSendJobEntries        MailSendJobRecipient[]
+  consents                  UserConsent[]
+  articleRevisions          ArticleRevision[]
+  pageRevisions             PageRevision[]
+  mailchimpSyncErrors       MailchimpSyncError[]
+  changelogConfirmations    ChangelogEntry[]
+  notificationReads         NotificationRead[]
+  notificationConfirmations NotificationConfirmation[]
 
   @@index([createdAt])
   @@map("users")
@@ -2165,6 +2166,20 @@ model NotificationRead {
 
   @@unique([userId, source, itemId])
   @@map("notifications.reads")
+}
+
+model NotificationConfirmation {
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  source            NotificationSource
+  itemId            String
+  confirmedByUserId String?
+  confirmedBy       User?              @relation(fields: [confirmedByUserId], references: [id], onDelete: SetNull)
+
+  @@unique([source, itemId])
+  @@map("notifications.confirmations")
 }
 
 model ChangelogEntry {

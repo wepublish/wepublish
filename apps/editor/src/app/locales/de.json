@@ -573,14 +573,10 @@
       "actionRequired": "Handlung erforderlich",
       "done": "Erledigt",
       "details": "Details",
-      "markAsDone": "Als erledigt markieren",
-      "confirmTitle": "Als erledigt markieren?",
-      "confirmMessage": "Damit bestätigen Sie für Ihr ganzes Team, dass «{{title}}» erledigt wurde. Der Hinweis verschwindet vom Dashboard.",
-      "confirmSuccess": "Danke! Die Aufgabe wurde als erledigt markiert.",
       "releasedAt": "Veröffentlicht am {{date, PP}}",
       "completedAt": "Erledigt am {{date, PP}}",
       "noEntries": "Noch keine Changelog-Einträge.",
-      "allCaughtUp": "Alles gelesen – keine neuen Einträge."
+      "allCaughtUp": "Keine ungelesenen Changelog-Einträge."
     },
     "chooseEditImage": {
       "chooseImage": "Bild wählen",
@@ -1345,6 +1341,10 @@
       "sourceChangelog": "Changelog",
       "sourceJobLogs": "Job-Logs",
       "markAsRead": "Als gelesen markieren",
+      "markAsDone": "Als erledigt markieren",
+      "confirmTitle": "Als erledigt markieren?",
+      "confirmMessage": "Damit bestätigen Sie für Ihr ganzes Team, dass «{{title}}» erledigt wurde. Der Hinweis verschwindet vom Dashboard.",
+      "confirmSuccess": "Danke! Die Aufgabe wurde als erledigt markiert.",
       "loadMore": "Mehr anzeigen"
     },
     "no": "Nein",

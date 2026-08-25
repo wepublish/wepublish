@@ -2,6 +2,7 @@
 export * from './comment';
 export * from './dashboard';
 export * from './memberPlan/selectMemberPlan';
+export * from './notification/confirmActionModal';
 export * from './notification/notificationItem';
 export * from './memberPlan/selectMemberPlans';
 export * from './paywall/selectPaywall';

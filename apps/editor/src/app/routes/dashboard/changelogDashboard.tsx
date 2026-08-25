@@ -4,7 +4,11 @@ import {
   useChangelogEntriesQuery,
   useConfirmChangelogEntryMutation,
 } from '@wepublish/editor/api';
-import { NotificationItem, NotificationSeverity } from '@wepublish/ui/editor';
+import {
+  ConfirmActionModal,
+  NotificationItem,
+  NotificationSeverity,
+} from '@wepublish/ui/editor';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ReactMarkdown, { defaultUrlTransform } from 'react-markdown';
@@ -163,7 +167,7 @@ function ChangelogEntryModal({
             appearance="default"
             onClick={onMarkAsDone}
           >
-            {t('changelog.markAsDone')}
+            {t('notifications.markAsDone')}
           </Button>
         )}
 
@@ -195,7 +199,7 @@ function ConfirmChangelogModal({ entry, onClose }: ConfirmChangelogModalProps) {
             showIcon
             closable
           >
-            {t('changelog.confirmSuccess')}
+            {t('notifications.confirmSuccess')}
           </Message>
         );
         onClose();
@@ -215,37 +219,13 @@ function ConfirmChangelogModal({ entry, onClose }: ConfirmChangelogModalProps) {
   );
 
   return (
-    <Modal
-      open
+    <ConfirmActionModal
+      title={t('notifications.confirmTitle')}
+      message={t('notifications.confirmMessage', { title: entry.title })}
+      loading={loading}
+      onConfirm={() => confirmChangelogEntry({ variables: { id: entry.id } })}
       onClose={onClose}
-      size="sm"
-      role="alertdialog"
-    >
-      <Modal.Header>
-        <Modal.Title>{t('changelog.confirmTitle')}</Modal.Title>
-      </Modal.Header>
-
-      <Modal.Body>
-        {t('changelog.confirmMessage', { title: entry.title })}
-      </Modal.Body>
-
-      <Modal.Footer>
-        <Button
-          appearance="primary"
-          loading={loading}
-          onClick={() => confirmChangelogEntry({ variables: { id: entry.id } })}
-        >
-          {t('confirm')}
-        </Button>
-
-        <Button
-          appearance="subtle"
-          onClick={onClose}
-        >
-          {t('cancel')}
-        </Button>
-      </Modal.Footer>
-    </Modal>
+    />
   );
 }
 
@@ -293,7 +273,7 @@ export function ChangelogActionRequired({
                   appearance={entry.description ? 'default' : 'primary'}
                   onClick={() => setConfirmEntry(entry)}
                 >
-                  {t('changelog.markAsDone')}
+                  {t('notifications.markAsDone')}
                 </Button>
 
                 {entry.description && (

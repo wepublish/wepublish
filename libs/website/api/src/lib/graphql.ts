@@ -2273,6 +2273,8 @@ export type Mutation = {
   confirmChangelogEntry: ChangelogEntry;
   /** Confirms a pending email change for the logged-in user. */
   confirmEmailChange: SensitiveDataUser;
+  /** Confirms a notification for the whole instance, recording who confirmed it. Requires authentication. */
+  confirmNotification: NotificationConfirmation;
   /** Creates an article. */
   createArticle: Article;
   /** Creates a new author. */
@@ -2682,6 +2684,12 @@ export type MutationConfirmChangelogEntryArgs = {
 
 export type MutationConfirmEmailChangeArgs = {
   newEmail: Scalars['String'];
+};
+
+
+export type MutationConfirmNotificationArgs = {
+  itemId: Scalars['String'];
+  source: NotificationSource;
 };
 
 
@@ -4067,6 +4075,15 @@ export enum NavigationLinkType {
   Page = 'Page'
 }
 
+export type NotificationConfirmation = {
+  __typename?: 'NotificationConfirmation';
+  confirmedByUserId?: Maybe<Scalars['String']>;
+  createdAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  itemId: Scalars['String'];
+  source: NotificationSource;
+};
+
 export type NotificationRead = {
   __typename?: 'NotificationRead';
   createdAt: Scalars['DateTime'];
@@ -5115,6 +5132,8 @@ export type Query = {
    *
    */
   newSubscribers: Array<DashboardSubscription>;
+  /** Returns the instance-wide notification confirmations. Requires authentication. */
+  notificationConfirmations: Array<NotificationConfirmation>;
   /** Returns the current user's read notifications. Requires authentication. */
   notificationReads: Array<NotificationRead>;
   /** Returns an page by id or slug. */
