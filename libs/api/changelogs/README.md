@@ -10,7 +10,19 @@ an entry is inserted as soon as its folder reaches the deployed code, and never 
 
 ## Adding an entry
 
-1. Scaffold it (mirrors `prisma migrate dev --name …`):
+0. Or let Claude write it for you — requires only an installed Claude Code with
+   a normal claude.ai login (no API key):
+
+   ```bash
+   npm run changelog:generate            # analyzes the branch diff vs origin/master
+   npm run changelog:generate -- --base <git-ref>
+   ```
+
+   This drafts the entry in all three languages (en/de/fr), validates it with
+   the same parser the sync uses, and tells you when the branch has nothing
+   user-facing to announce. Review the wording before committing.
+
+1. Or scaffold it manually (mirrors `prisma migrate dev --name …`):
 
    ```bash
    npm run changelog:create -- "New landing page block"

@@ -9,6 +9,7 @@
     "migrate": "prisma migrate deploy && prisma db seed && npm run changelog:sync",
     "changelog:sync": "tsx -r dotenv/config libs/changelog/api/src/lib/sync/run-sync-changelogs.ts",
     "changelog:create": "tsx libs/changelog/api/src/lib/sync/run-create-changelog.ts",
+    "changelog:generate": "tsx libs/changelog/api/src/lib/sync/run-generate-changelog.ts",
     "serve": "nx run-many  --parallel 10 -t serve --output-style stream",
     "dev": "run-s start:docker watch",
     "clean": "run-p --print-label clean:**",

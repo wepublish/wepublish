@@ -29,7 +29,10 @@ The migration container (and `npm run migrate` locally) runs three steps in orde
    `libs/api/changelogs/README.md`; sync code lives in
    `libs/changelog/api/src/lib/sync/`). Every PR that changes something an editor
    user can notice should add a changelog entry folder there — scaffold it with
-   `npm run changelog:create -- "Title" [--action-required]`.
+   `npm run changelog:create -- "Title" [--action-required]`, or let Claude Code
+   draft it (en/de/fr) from the branch diff with `npm run changelog:generate`
+   (uses the developer's local Claude Code login, no API key). Entries support
+   translations via `changelog.<locale>.md` files (de/en/fr).
    The sync source files are compiled standalone in the Dockerfile seed stage
    (`docker/tsconfig.yaml_seed`), so they must stay dependency-free (node builtins
    plus `@prisma/client` only).
