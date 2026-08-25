@@ -1713,6 +1713,7 @@
     },
     "subscriptionList": {
       "filter": {
+        "activeAt": "Actif au",
         "deactivationReason": "Motif de désactivation",
         "reasonInvoiceNotPaid": "Facture impayée",
         "reasonUserReplacedSubscription": "Remplacé par un autre abonnement",
