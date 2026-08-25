@@ -712,6 +712,7 @@
     "dashboard": {
       "activity": "Dernière activité",
       "dashboard": "Dashboard",
+      "notifications": "Notifications",
       "greeting": "Salut, {{name}}!",
       "newArticle": "Nouvel <0>article</0> créé",
       "newAuthor": "Nouvel <0>auteur</0> ajouté",

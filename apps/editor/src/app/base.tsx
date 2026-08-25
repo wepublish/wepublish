@@ -171,8 +171,6 @@ import {
   Sidenav as RSidenav,
 } from 'rsuite';
 
-import { OneMessages } from './oneMessages/oneMessages';
-
 export interface BaseProps {
   children?: ReactNode;
 }
@@ -1261,10 +1259,7 @@ export function Base({ children }: BaseProps) {
             </Nav>
           </Navbar>
         </Sidebar>
-        <ChildrenContainer>
-          <OneMessages />
-          {children}
-        </ChildrenContainer>
+        <ChildrenContainer>{children}</ChildrenContainer>
       </Container>
     </Wrapper>
   );

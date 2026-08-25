@@ -708,6 +708,7 @@
     "dashboard": {
       "activity": "Latest Activity",
       "dashboard": "Dashboard",
+      "notifications": "Notifications",
       "greeting": "Hello, {{name}}!",
       "newArticle": "New <0>article</0> added",
       "newAuthor": "New <0>author</0> added",

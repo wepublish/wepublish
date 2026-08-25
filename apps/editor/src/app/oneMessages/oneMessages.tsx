@@ -16,7 +16,6 @@ const Stack = styled.div`
   display: flex;
   flex-direction: column;
   gap: 12px;
-  margin-bottom: 20px;
 `;
 
 const Header = styled.h5`
