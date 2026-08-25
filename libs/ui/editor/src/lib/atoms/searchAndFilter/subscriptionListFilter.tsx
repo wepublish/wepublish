@@ -12,7 +12,13 @@ import {
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdClose } from 'react-icons/md';
-import { Button, DateRangePicker, Form as RForm, SelectPicker } from 'rsuite';
+import {
+  Button,
+  DatePicker,
+  DateRangePicker,
+  Form as RForm,
+  SelectPicker,
+} from 'rsuite';
 
 import { ALL_PAYMENT_PERIODICITIES } from '../../utility';
 import { UserSearch } from './userSearch';
@@ -381,6 +387,20 @@ export function SubscriptionListFilter({
               paidUntilTo: undefined,
             })
           }
+        />
+      </Group>
+
+      <Group style={formInputStyle}>
+        <DatePicker
+          key={`active-at-${resetFilterKey}`}
+          placeholder={t('subscriptionList.filter.activeAt')}
+          block
+          placement="auto"
+          oneTap
+          onChange={value =>
+            updateFilter({ activeAt: value?.toISOString() ?? undefined })
+          }
+          onClean={() => updateFilter({ activeAt: undefined })}
         />
       </Group>
 

@@ -1759,6 +1759,7 @@
     },
     "subscriptionList": {
       "filter": {
+        "activeAt": "Aktiv am",
         "deactivationReason": "Grund Deaktivierung",
         "reasonInvoiceNotPaid": "Rechnung nicht bezahlt",
         "reasonNone": "Kein Grund",

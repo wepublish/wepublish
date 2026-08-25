@@ -1781,6 +1781,7 @@
     },
     "subscriptionList": {
       "filter": {
+        "activeAt": "Active at",
         "deactivationReason": "Deactivation reason",
         "reasonInvoiceNotPaid": "Invoice not paid",
         "reasonUserReplacedSubscription": "Replaced by other subscription",
