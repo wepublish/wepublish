@@ -53,10 +53,22 @@ if [[ -z $PROJECT ]]; then
   exit 99
 fi
 
+IS_TTY=false
+if [[ -t 0 ]]; then
+  IS_TTY=true
+fi
+
 echo "⚠️  WARNING: This will OVERWRITE the existing database! ($DATABASE_URL)"
-read -r -p "Type 'yes' to continue: " CONFIRM
-if [[ "${CONFIRM,,}" != "yes" ]]; then
-  echo "❌ Aborted."
+if [[ "${AUTO_CONFIRM}" == "yes" ]]; then
+  echo "✅  AUTO_CONFIRM=yes - skipping confirmation"
+elif [[ $IS_TTY == true ]]; then
+  read -r -p "Type 'yes' to continue: " CONFIRM
+  if [[ "${CONFIRM,,}" != "yes" ]]; then
+    echo "❌ Aborted."
+    exit 1
+  fi
+else
+  echo "❌  Error: Non-interactive run without AUTO_CONFIRM=yes - aborting." >&2
   exit 1
 fi
 echo "✅  Downloading..."
@@ -80,9 +92,17 @@ echo "✅  Unpack database dump successful"
 # an explicit override.
 if ! tail -n 2 "${TMP_DIR}/database.dump" | grep -q "WEPUBLISH_DUMP_COMPLETE"; then
   echo "⚠️  Warning: dump has no completeness marker - it may be TRUNCATED, or it predates marker support."
-  read -r -p "Restore anyway? Type 'yes' to continue: " CONFIRM_MARKER
-  if [[ "${CONFIRM_MARKER,,}" != "yes" ]]; then
-    echo "❌ Aborted."
+  if [[ "${ALLOW_UNVERIFIED_DUMP}" == "yes" ]]; then
+    echo "⚠️  ALLOW_UNVERIFIED_DUMP=yes - continuing without verification"
+  elif [[ $IS_TTY == true ]]; then
+    read -r -p "Restore anyway? Type 'yes' to continue: " CONFIRM_MARKER
+    if [[ "${CONFIRM_MARKER,,}" != "yes" ]]; then
+      echo "❌ Aborted."
+      rm "${TMP_DIR}/database.dump"
+      exit 1
+    fi
+  else
+    echo "❌  Error: Refusing to restore an unverified dump non-interactively (set ALLOW_UNVERIFIED_DUMP=yes to override)." >&2
     rm "${TMP_DIR}/database.dump"
     exit 1
   fi
