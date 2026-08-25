@@ -116,12 +116,17 @@ export function PeriodicJobsLog({
 
   const showDidNotRun = jobDidNotRun && !isRead(didNotRunItemId);
   const showNeverRan = !jobs.length && !isRead(NEVER_RAN_ITEM_ID);
-  const visibleJobs = jobs.filter(job => !isRead(job.id));
+  const unreadJobs = jobs.filter(job => !isRead(job.id));
+
+  // Runs that were successful in the end (including "successful after
+  // retries") only matter in the archive, not as a dashboard notification.
+  const visibleJobs =
+    onlyProblems ?
+      unreadJobs.filter(job => getSeverity(job) === 'error')
+    : unreadJobs;
 
   const hasVisibleProblems =
-    showDidNotRun ||
-    showNeverRan ||
-    visibleJobs.some(job => ['error', 'warning'].includes(getSeverity(job)));
+    showDidNotRun || showNeverRan || visibleJobs.length > 0;
 
   if (onlyProblems && (loading || !hasVisibleProblems)) {
     return null;

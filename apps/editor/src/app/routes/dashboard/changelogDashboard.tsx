@@ -160,7 +160,7 @@ function ChangelogEntryModal({
       <Modal.Footer>
         {entry.actionRequired && !entry.confirmedAt && onMarkAsDone && (
           <Button
-            appearance="primary"
+            appearance="default"
             onClick={onMarkAsDone}
           >
             {t('changelog.markAsDone')}
@@ -168,7 +168,7 @@ function ChangelogEntryModal({
         )}
 
         <Button
-          appearance="subtle"
+          appearance="primary"
           onClick={onClose}
         >
           {t('close')}
