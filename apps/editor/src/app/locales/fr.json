@@ -572,6 +572,19 @@
       }
     },
     "cancel": "Annuler",
+    "changelog": {
+      "whatsNew": "Quoi de neuf",
+      "actionRequired": "Action requise",
+      "done": "Effectué",
+      "details": "Détails",
+      "markAsDone": "Marquer comme effectué",
+      "confirmTitle": "Marquer comme effectué ?",
+      "confirmMessage": "Vous confirmez ainsi pour toute votre équipe que « {{title}} » a été effectué. L'avis disparaîtra du tableau de bord.",
+      "confirmSuccess": "Merci ! La tâche a été marquée comme effectuée.",
+      "releasedAt": "Publié le {{date, PP}}",
+      "completedAt": "Effectué le {{date, PP}}",
+      "noEntries": "Aucune entrée de changelog pour l'instant."
+    },
     "chooseEditImage": {
       "chooseImage": "Choisir une image",
       "editImage": "Modifier l'image",

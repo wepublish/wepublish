@@ -567,6 +567,19 @@
       }
     },
     "cancel": "Cancel",
+    "changelog": {
+      "whatsNew": "What's new",
+      "actionRequired": "Action required",
+      "done": "Done",
+      "details": "Details",
+      "markAsDone": "Mark as done",
+      "confirmTitle": "Mark as done?",
+      "confirmMessage": "This confirms for your whole team that \"{{title}}\" has been completed. The notice will disappear from the dashboard.",
+      "confirmSuccess": "Thanks! The task has been marked as done.",
+      "releasedAt": "Released on {{date, PP}}",
+      "completedAt": "Completed on {{date, PP}}",
+      "noEntries": "No changelog entries yet."
+    },
     "chooseEditImage": {
       "chooseImage": "Choose Image",
       "editImage": "Edit Image",

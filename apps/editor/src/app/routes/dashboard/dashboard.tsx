@@ -14,6 +14,10 @@ import { Button, Col, Grid, Panel as RPanel, Row } from 'rsuite';
 
 import { AudienceDashboard } from '../audience/audience-dashboard';
 import NetworkContentDashboard from '../networkContent/networkContentDashboard';
+import {
+  ChangelogActionRequired,
+  ChangelogDashboard,
+} from './changelogDashboard';
 import { ExternalAppsDashboard } from './externalAppsDashboard';
 
 const StyledGrid = styled(Grid)`
@@ -25,6 +29,12 @@ export function Dashboard() {
 
   return (
     <StyledGrid fluid>
+      <Row>
+        <Col xs={24}>
+          <ChangelogActionRequired />
+        </Col>
+      </Row>
+
       <Row>
         {/* left column stack */}
         <Col xs={12}>
@@ -82,6 +92,15 @@ export function Dashboard() {
         {/* right column stack */}
         <Col xs={12}>
           <Row gutter={12}>
+            <Col xs={24}>
+              <RPanel
+                header={<h2>{t('changelog.whatsNew')}</h2>}
+                bordered
+              >
+                <ChangelogDashboard />
+              </RPanel>
+            </Col>
+
             <Col xs={24}>
               <RPanel
                 header={

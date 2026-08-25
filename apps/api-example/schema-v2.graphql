@@ -463,6 +463,25 @@ enum ChallengeProviderType {
   TURNSTILE
 }
 
+type ChangelogEntry {
+  actionRequired: Boolean!
+  confirmedAt: DateTime
+  confirmedByUserId: String
+  createdAt: DateTime!
+  description: String
+  id: String!
+  lead: String!
+  modifiedAt: DateTime!
+  name: String!
+  releasedAt: DateTime!
+  title: String!
+}
+
+input ChangelogEntryFilter {
+  actionRequired: Boolean
+  confirmed: Boolean
+}
+
 type Chat {
   chatId: String!
   message: String!
@@ -2186,6 +2205,11 @@ type Mutation {
   """
   cancelUserSubscription(id: String!): PublicSubscription
 
+  """
+  Confirms that the manual action required by a changelog entry has been completed. Requires authentication.
+  """
+  confirmChangelogEntry(id: String!): ChangelogEntry!
+
   """Confirms a pending email change for the logged-in user."""
   confirmEmailChange(newEmail: String!): SensitiveDataUser!
 
@@ -2926,6 +2950,12 @@ type PaginatedAuthors {
   totalCount: Int!
 }
 
+type PaginatedChangelogEntries {
+  nodes: [ChangelogEntry!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
 type PaginatedComments {
   nodes: [Comment!]!
   pageInfo: PageInfo!
@@ -3606,6 +3636,20 @@ type Query {
 
   """Returns all challenge provider settings."""
   challengeProviderSettings(filter: SettingChallengeProviderFilter): [SettingChallengeProvider!]!
+
+  """
+  Returns the changelog entries of this instance, newest first. Requires authentication.
+  """
+  changelogEntries(
+    """Filter for changelog entries"""
+    filter: ChangelogEntryFilter
+
+    """Number of items to skip"""
+    skip: Int! = 0
+
+    """Number of items to fetch"""
+    take: Int! = 10
+  ): PaginatedChangelogEntries!
 
   """
   Check the status of an invoice and update with information from the payment provider

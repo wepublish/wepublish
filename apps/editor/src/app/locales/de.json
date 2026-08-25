@@ -568,6 +568,19 @@
       }
     },
     "cancel": "Abbrechen",
+    "changelog": {
+      "whatsNew": "Was ist neu",
+      "actionRequired": "Handlung erforderlich",
+      "done": "Erledigt",
+      "details": "Details",
+      "markAsDone": "Als erledigt markieren",
+      "confirmTitle": "Als erledigt markieren?",
+      "confirmMessage": "Damit bestätigen Sie für Ihr ganzes Team, dass «{{title}}» erledigt wurde. Der Hinweis verschwindet vom Dashboard.",
+      "confirmSuccess": "Danke! Die Aufgabe wurde als erledigt markiert.",
+      "releasedAt": "Veröffentlicht am {{date, PP}}",
+      "completedAt": "Erledigt am {{date, PP}}",
+      "noEntries": "Noch keine Changelog-Einträge."
+    },
     "chooseEditImage": {
       "chooseImage": "Bild wählen",
       "editImage": "Bild bearbeiten",

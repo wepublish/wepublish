@@ -512,6 +512,26 @@ export enum ChallengeProviderType {
   Turnstile = 'TURNSTILE'
 }
 
+export type ChangelogEntry = {
+  __typename?: 'ChangelogEntry';
+  actionRequired: Scalars['Boolean'];
+  confirmedAt?: Maybe<Scalars['DateTime']>;
+  confirmedByUserId?: Maybe<Scalars['String']>;
+  createdAt: Scalars['DateTime'];
+  description?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  lead: Scalars['String'];
+  modifiedAt: Scalars['DateTime'];
+  name: Scalars['String'];
+  releasedAt: Scalars['DateTime'];
+  title: Scalars['String'];
+};
+
+export type ChangelogEntryFilter = {
+  actionRequired?: InputMaybe<Scalars['Boolean']>;
+  confirmed?: InputMaybe<Scalars['Boolean']>;
+};
+
 export type Chat = {
   __typename?: 'Chat';
   chatId: Scalars['String'];
@@ -2249,6 +2269,8 @@ export type Mutation = {
   cancelSubscription: PublicSubscription;
   /** This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null */
   cancelUserSubscription?: Maybe<PublicSubscription>;
+  /** Confirms that the manual action required by a changelog entry has been completed. Requires authentication. */
+  confirmChangelogEntry: ChangelogEntry;
   /** Confirms a pending email change for the logged-in user. */
   confirmEmailChange: SensitiveDataUser;
   /** Creates an article. */
@@ -2647,6 +2669,11 @@ export type MutationCancelSubscriptionArgs = {
 
 
 export type MutationCancelUserSubscriptionArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationConfirmChangelogEntryArgs = {
   id: Scalars['String'];
 };
 
@@ -4179,6 +4206,13 @@ export type PaginatedAuthors = {
   totalCount: Scalars['Int'];
 };
 
+export type PaginatedChangelogEntries = {
+  __typename?: 'PaginatedChangelogEntries';
+  nodes: Array<ChangelogEntry>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
 export type PaginatedComments = {
   __typename?: 'PaginatedComments';
   nodes: Array<Comment>;
@@ -4892,6 +4926,8 @@ export type Query = {
   challengeProviderSetting: SettingChallengeProvider;
   /** Returns all challenge provider settings. */
   challengeProviderSettings: Array<SettingChallengeProvider>;
+  /** Returns the changelog entries of this instance, newest first. Requires authentication. */
+  changelogEntries: PaginatedChangelogEntries;
   /** Check the status of an invoice and update with information from the payment provider */
   checkInvoiceStatus: Invoice;
   /** Checks whether a given email requires a TOTP code for login. Always returns true to prevent user enumeration. */
@@ -5277,6 +5313,13 @@ export type QueryChallengeProviderSettingArgs = {
 
 export type QueryChallengeProviderSettingsArgs = {
   filter?: InputMaybe<SettingChallengeProviderFilter>;
+};
+
+
+export type QueryChangelogEntriesArgs = {
+  filter?: InputMaybe<ChangelogEntryFilter>;
+  skip?: Scalars['Int'];
+  take?: Scalars['Int'];
 };
 
 
@@ -7551,6 +7594,24 @@ type FullBlock_VimeoVideoBlock_Fragment = { __typename: 'VimeoVideoBlock', disab
 type FullBlock_YouTubeVideoBlock_Fragment = { __typename: 'YouTubeVideoBlock', disabled?: boolean | null, blockStyle?: string | null, blockStyleName?: string | null, type: BlockType, videoID?: string | null };
 
 export type FullBlockFragment = FullBlock_BildwurfAdBlock_Fragment | FullBlock_BreakBlock_Fragment | FullBlock_CommentBlock_Fragment | FullBlock_CrowdfundingBlock_Fragment | FullBlock_EventBlock_Fragment | FullBlock_FacebookPostBlock_Fragment | FullBlock_FacebookVideoBlock_Fragment | FullBlock_FlexBlock_Fragment | FullBlock_HtmlBlock_Fragment | FullBlock_IFrameBlock_Fragment | FullBlock_ImageBlock_Fragment | FullBlock_ImageGalleryBlock_Fragment | FullBlock_InstagramPostBlock_Fragment | FullBlock_ListicleBlock_Fragment | FullBlock_MailchimpFormBlock_Fragment | FullBlock_PolisConversationBlock_Fragment | FullBlock_PollBlock_Fragment | FullBlock_QuoteBlock_Fragment | FullBlock_RichTextBlock_Fragment | FullBlock_SoundCloudTrackBlock_Fragment | FullBlock_StreamableVideoBlock_Fragment | FullBlock_SubscribeBlock_Fragment | FullBlock_TeaserGridBlock_Fragment | FullBlock_TeaserGridFlexBlock_Fragment | FullBlock_TeaserListBlock_Fragment | FullBlock_TeaserSlotsBlock_Fragment | FullBlock_TikTokVideoBlock_Fragment | FullBlock_TitleBlock_Fragment | FullBlock_TwitterTweetBlock_Fragment | FullBlock_UnknownBlock_Fragment | FullBlock_VimeoVideoBlock_Fragment | FullBlock_YouTubeVideoBlock_Fragment;
+
+export type ChangelogEntryFragment = { __typename?: 'ChangelogEntry', id: string, name: string, releasedAt: string, title: string, lead: string, description?: string | null, actionRequired: boolean, confirmedAt?: string | null, confirmedByUserId?: string | null };
+
+export type ChangelogEntriesQueryVariables = Exact<{
+  take?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  filter?: InputMaybe<ChangelogEntryFilter>;
+}>;
+
+
+export type ChangelogEntriesQuery = { __typename?: 'Query', changelogEntries: { __typename?: 'PaginatedChangelogEntries', totalCount: number, nodes: Array<{ __typename?: 'ChangelogEntry', id: string, name: string, releasedAt: string, title: string, lead: string, description?: string | null, actionRequired: boolean, confirmedAt?: string | null, confirmedByUserId?: string | null }>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean } } };
+
+export type ConfirmChangelogEntryMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type ConfirmChangelogEntryMutation = { __typename?: 'Mutation', confirmChangelogEntry: { __typename?: 'ChangelogEntry', id: string, name: string, releasedAt: string, title: string, lead: string, description?: string | null, actionRequired: boolean, confirmedAt?: string | null, confirmedByUserId?: string | null } };
 
 export type FullCommentRatingSystemFragment = { __typename?: 'CommentRatingSystem', id: string, name?: string | null, answers: Array<{ __typename?: 'CommentRatingSystemAnswer', id: string, type: RatingSystemType, answer?: string | null, ratingSystemId: string }> };
 
@@ -10720,6 +10781,19 @@ export const FullBlockStyleFragmentDoc = gql`
   blocks
 }
     `;
+export const ChangelogEntryFragmentDoc = gql`
+    fragment ChangelogEntry on ChangelogEntry {
+  id
+  name
+  releasedAt
+  title
+  lead
+  description
+  actionRequired
+  confirmedAt
+  confirmedByUserId
+}
+    `;
 export const FullCommentRatingSystemFragmentDoc = gql`
     fragment FullCommentRatingSystem on CommentRatingSystem {
   id
@@ -12991,6 +13065,82 @@ export function useDeleteBlockStyleMutation(baseOptions?: Apollo.MutationHookOpt
 export type DeleteBlockStyleMutationHookResult = ReturnType<typeof useDeleteBlockStyleMutation>;
 export type DeleteBlockStyleMutationResult = Apollo.MutationResult<DeleteBlockStyleMutation>;
 export type DeleteBlockStyleMutationOptions = Apollo.BaseMutationOptions<DeleteBlockStyleMutation, DeleteBlockStyleMutationVariables>;
+export const ChangelogEntriesDocument = gql`
+    query ChangelogEntries($take: Int, $skip: Int, $filter: ChangelogEntryFilter) {
+  changelogEntries(take: $take, skip: $skip, filter: $filter) {
+    nodes {
+      ...ChangelogEntry
+    }
+    totalCount
+    pageInfo {
+      hasNextPage
+    }
+  }
+}
+    ${ChangelogEntryFragmentDoc}`;
+
+/**
+ * __useChangelogEntriesQuery__
+ *
+ * To run a query within a React component, call `useChangelogEntriesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useChangelogEntriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useChangelogEntriesQuery({
+ *   variables: {
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
+ *      filter: // value for 'filter'
+ *   },
+ * });
+ */
+export function useChangelogEntriesQuery(baseOptions?: Apollo.QueryHookOptions<ChangelogEntriesQuery, ChangelogEntriesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ChangelogEntriesQuery, ChangelogEntriesQueryVariables>(ChangelogEntriesDocument, options);
+      }
+export function useChangelogEntriesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ChangelogEntriesQuery, ChangelogEntriesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ChangelogEntriesQuery, ChangelogEntriesQueryVariables>(ChangelogEntriesDocument, options);
+        }
+export type ChangelogEntriesQueryHookResult = ReturnType<typeof useChangelogEntriesQuery>;
+export type ChangelogEntriesLazyQueryHookResult = ReturnType<typeof useChangelogEntriesLazyQuery>;
+export type ChangelogEntriesQueryResult = Apollo.QueryResult<ChangelogEntriesQuery, ChangelogEntriesQueryVariables>;
+export const ConfirmChangelogEntryDocument = gql`
+    mutation ConfirmChangelogEntry($id: String!) {
+  confirmChangelogEntry(id: $id) {
+    ...ChangelogEntry
+  }
+}
+    ${ChangelogEntryFragmentDoc}`;
+export type ConfirmChangelogEntryMutationFn = Apollo.MutationFunction<ConfirmChangelogEntryMutation, ConfirmChangelogEntryMutationVariables>;
+
+/**
+ * __useConfirmChangelogEntryMutation__
+ *
+ * To run a mutation, you first call `useConfirmChangelogEntryMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useConfirmChangelogEntryMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [confirmChangelogEntryMutation, { data, loading, error }] = useConfirmChangelogEntryMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useConfirmChangelogEntryMutation(baseOptions?: Apollo.MutationHookOptions<ConfirmChangelogEntryMutation, ConfirmChangelogEntryMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ConfirmChangelogEntryMutation, ConfirmChangelogEntryMutationVariables>(ConfirmChangelogEntryDocument, options);
+      }
+export type ConfirmChangelogEntryMutationHookResult = ReturnType<typeof useConfirmChangelogEntryMutation>;
+export type ConfirmChangelogEntryMutationResult = Apollo.MutationResult<ConfirmChangelogEntryMutation>;
+export type ConfirmChangelogEntryMutationOptions = Apollo.BaseMutationOptions<ConfirmChangelogEntryMutation, ConfirmChangelogEntryMutationVariables>;
 export const RatingSystemDocument = gql`
     query RatingSystem {
   ratingSystem {

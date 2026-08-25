@@ -1163,18 +1163,19 @@ model User {
   properties               Json                      @default("[]")
   paymentProviderCustomers PaymentProviderCustomer[]
 
-  comments            Comment[]
-  sessions            Session[]
-  subscriptions       Subscription[]
-  commentRatings      CommentRating[]
-  pollVotes           PollVote[]
-  mailSent            MailLog[]
-  mailSendJobs        MailSendJob[]
-  mailSendJobEntries  MailSendJobRecipient[]
-  consents            UserConsent[]
-  articleRevisions    ArticleRevision[]
-  pageRevisions       PageRevision[]
-  mailchimpSyncErrors MailchimpSyncError[]
+  comments               Comment[]
+  sessions               Session[]
+  subscriptions          Subscription[]
+  commentRatings         CommentRating[]
+  pollVotes              PollVote[]
+  mailSent               MailLog[]
+  mailSendJobs           MailSendJob[]
+  mailSendJobEntries     MailSendJobRecipient[]
+  consents               UserConsent[]
+  articleRevisions       ArticleRevision[]
+  pageRevisions          PageRevision[]
+  mailchimpSyncErrors    MailchimpSyncError[]
+  changelogConfirmations ChangelogEntry[]
 
   @@index([createdAt])
   @@map("users")
@@ -2143,4 +2144,23 @@ model Goodie {
   invoiceItems InvoiceItem[]
 
   @@map("goodies")
+}
+
+model ChangelogEntry {
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  name           String   @unique
+  releasedAt     DateTime @db.Timestamptz(3)
+  title          String
+  lead           String
+  description    String?
+  actionRequired Boolean  @default(false)
+
+  confirmedAt       DateTime? @db.Timestamptz(3)
+  confirmedByUserId String?
+  confirmedBy       User?     @relation(fields: [confirmedByUserId], references: [id], onDelete: SetNull)
+
+  @@map("changelog.entries")
 }

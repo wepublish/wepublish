@@ -564,6 +564,26 @@ export enum ChallengeProviderType {
   Turnstile = 'TURNSTILE',
 }
 
+export type ChangelogEntry = {
+  __typename?: 'ChangelogEntry';
+  actionRequired: Scalars['Boolean'];
+  confirmedAt?: Maybe<Scalars['DateTime']>;
+  confirmedByUserId?: Maybe<Scalars['String']>;
+  createdAt: Scalars['DateTime'];
+  description?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  lead: Scalars['String'];
+  modifiedAt: Scalars['DateTime'];
+  name: Scalars['String'];
+  releasedAt: Scalars['DateTime'];
+  title: Scalars['String'];
+};
+
+export type ChangelogEntryFilter = {
+  actionRequired?: InputMaybe<Scalars['Boolean']>;
+  confirmed?: InputMaybe<Scalars['Boolean']>;
+};
+
 export type Chat = {
   __typename?: 'Chat';
   chatId: Scalars['String'];
@@ -2307,6 +2327,8 @@ export type Mutation = {
   cancelSubscription: PublicSubscription;
   /** This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null */
   cancelUserSubscription?: Maybe<PublicSubscription>;
+  /** Confirms that the manual action required by a changelog entry has been completed. Requires authentication. */
+  confirmChangelogEntry: ChangelogEntry;
   /** Confirms a pending email change for the logged-in user. */
   confirmEmailChange: SensitiveDataUser;
   /** Creates an article. */
@@ -2699,6 +2721,10 @@ export type MutationCancelSubscriptionArgs = {
 };
 
 export type MutationCancelUserSubscriptionArgs = {
+  id: Scalars['String'];
+};
+
+export type MutationConfirmChangelogEntryArgs = {
   id: Scalars['String'];
 };
 
@@ -4071,6 +4097,13 @@ export type PaginatedAuthors = {
   totalCount: Scalars['Int'];
 };
 
+export type PaginatedChangelogEntries = {
+  __typename?: 'PaginatedChangelogEntries';
+  nodes: Array<ChangelogEntry>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
 export type PaginatedComments = {
   __typename?: 'PaginatedComments';
   nodes: Array<Comment>;
@@ -4788,6 +4821,8 @@ export type Query = {
   challengeProviderSetting: SettingChallengeProvider;
   /** Returns all challenge provider settings. */
   challengeProviderSettings: Array<SettingChallengeProvider>;
+  /** Returns the changelog entries of this instance, newest first. Requires authentication. */
+  changelogEntries: PaginatedChangelogEntries;
   /** Check the status of an invoice and update with information from the payment provider */
   checkInvoiceStatus: Invoice;
   /** Checks whether a given email requires a TOTP code for login. Always returns true to prevent user enumeration. */
@@ -5159,6 +5194,12 @@ export type QueryChallengeProviderSettingArgs = {
 
 export type QueryChallengeProviderSettingsArgs = {
   filter?: InputMaybe<SettingChallengeProviderFilter>;
+};
+
+export type QueryChangelogEntriesArgs = {
+  filter?: InputMaybe<ChangelogEntryFilter>;
+  skip?: Scalars['Int'];
+  take?: Scalars['Int'];
 };
 
 export type QueryCheckInvoiceStatusArgs = {

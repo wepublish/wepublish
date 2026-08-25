@@ -202,6 +202,9 @@ WORKDIR /wepublish
 COPY libs/settings/api/src/lib/setting.ts settings/api/src/lib/setting.ts
 COPY libs/api/prisma/run-seed.ts api/prisma/run-seed.ts
 COPY libs/api/prisma/seed.ts api/prisma/seed.ts
+COPY libs/changelog/api/src/lib/sync/run-sync-changelogs.ts changelog/run-sync-changelogs.ts
+COPY libs/changelog/api/src/lib/sync/sync-changelogs.ts changelog/sync-changelogs.ts
+COPY libs/changelog/api/src/lib/sync/parse-changelog-markdown.ts changelog/parse-changelog-markdown.ts
 COPY libs/api/prisma/schema.prisma prisma/schema.prisma
 COPY prisma.config.ts prisma.config.ts
 COPY libs/api/prisma/ca.crt /wepublish/ca.crt
@@ -219,6 +222,7 @@ ENV NODE_ENV=production
 WORKDIR /wepublish
 COPY --from=build-migration /wepublish/dist ./dist
 COPY libs/api/prisma/migrations prisma/migrations
+COPY libs/api/changelogs changelogs
 COPY libs/api/prisma/schema.prisma prisma/schema.prisma
 COPY libs/api/prisma/ca.crt /wepublish/ca.crt
 COPY prisma.config.ts prisma.config.ts
