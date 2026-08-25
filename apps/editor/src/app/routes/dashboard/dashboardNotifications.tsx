@@ -12,38 +12,38 @@ import {
 const Section = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 12px;
 `;
 
-const Group = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-`;
-
-const GroupHeader = styled.h5`
-  margin: 0;
-`;
-
-// Compact variant for the dashboard: only what needs attention right now, plus
-// the latest changelog entries. The full history lives on /notifications.
+// Compact variant for the dashboard: one uniform stack with only what needs
+// attention right now, plus the latest changelog entries. Sources are told
+// apart by tags; the full history lives on /notifications. Entries shown as
+// action-required notifications are excluded from the recent list below so
+// nothing appears twice.
 export function DashboardNotifications() {
   const { t } = useTranslation();
 
   return (
     <Section>
-      <OneMessages />
+      <OneMessages
+        hideHeader
+        sourceTag={t('notifications.sourceTeam')}
+      />
 
-      <ChangelogActionRequired />
+      <ChangelogActionRequired sourceTag={t('notifications.sourceChangelog')} />
 
       <PermissionControl qualifyingPermissions={['CAN_GET_PERIODIC_JOB_LOG']}>
-        <PeriodicJobsLog onlyProblems />
+        <PeriodicJobsLog
+          onlyProblems
+          sourceTag={t('notifications.sourceJobLogs')}
+        />
       </PermissionControl>
 
-      <Group>
-        <GroupHeader>{t('changelog.whatsNew')}</GroupHeader>
-        <ChangelogDashboard take={3} />
-      </Group>
+      <ChangelogDashboard
+        take={3}
+        hideUnconfirmedActionRequired
+        sourceTag={t('notifications.sourceChangelog')}
+      />
     </Section>
   );
 }

@@ -1342,6 +1342,9 @@
     },
     "notifications": {
       "noTeamMessages": "No messages from the We.Publish team right now.",
+      "sourceTeam": "We.Publish Team",
+      "sourceChangelog": "Changelog",
+      "sourceJobLogs": "Job logs",
       "loadMore": "Load more"
     },
     "no": "No",

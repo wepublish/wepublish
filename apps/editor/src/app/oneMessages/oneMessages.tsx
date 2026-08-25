@@ -1,12 +1,12 @@
 import styled from '@emotion/styled';
+import { NotificationItem, NotificationSeverity } from '@wepublish/ui/editor';
 import { useReducer } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Message } from 'rsuite';
 
 import { isMinimized, setMinimized, useOneMessages } from './oneMessages.hooks';
 import type { Severity } from './oneMessages.types';
 
-const SEVERITY_TYPE: Record<Severity, 'info' | 'warning' | 'error'> = {
+const SEVERITY_TYPE: Record<Severity, NotificationSeverity> = {
   info: 'info',
   warning: 'warning',
   critical: 'error',
@@ -22,13 +22,9 @@ const Header = styled.h5`
   margin: 0;
 `;
 
-const MinimizedMessage = styled(Message)`
-  cursor: pointer;
-`;
-
 const Body = styled.p`
   white-space: pre-line;
-  margin: 4px 0 0;
+  margin: 0;
 `;
 
 const Link = styled.a`
@@ -45,9 +41,14 @@ const EmptyText = styled.p`
 export interface OneMessagesProps {
   hideHeader?: boolean;
   emptyMessage?: string;
+  sourceTag?: string;
 }
 
-export function OneMessages({ hideHeader, emptyMessage }: OneMessagesProps) {
+export function OneMessages({
+  hideHeader,
+  emptyMessage,
+  sourceTag,
+}: OneMessagesProps) {
   const { t, i18n } = useTranslation();
   const messages = useOneMessages(i18n.language);
   const [, forceRender] = useReducer((n: number) => n + 1, 0);
@@ -72,34 +73,37 @@ export function OneMessages({ hideHeader, emptyMessage }: OneMessagesProps) {
 
       {messages.map(message =>
         isMinimized(message) ?
-          <MinimizedMessage
+          <NotificationItem
             key={message.id}
-            showIcon
-            type={SEVERITY_TYPE[message.severity]}
-            header={<strong>{message.title}</strong>}
-            title={t('oneMessages.expand')}
+            severity={SEVERITY_TYPE[message.severity]}
+            title={message.title}
+            sourceTag={sourceTag}
             onClick={() => expand(message.id)}
           />
-        : <Message
+        : <NotificationItem
             key={message.id}
-            showIcon
-            type={SEVERITY_TYPE[message.severity]}
+            severity={SEVERITY_TYPE[message.severity]}
+            title={message.title}
+            sourceTag={sourceTag}
             closable={message.dismissible}
             onClose={() => minimize(message.id)}
-            header={<strong>{message.title}</strong>}
           >
-            {message.body && <Body>{message.body}</Body>}
+            {message.body || message.link_url ?
+              <>
+                {message.body && <Body>{message.body}</Body>}
 
-            {message.link_url && (
-              <Link
-                href={message.link_url}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {message.link_label ?? t('oneMessages.linkFallback')}
-              </Link>
-            )}
-          </Message>
+                {message.link_url && (
+                  <Link
+                    href={message.link_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {message.link_label || t('oneMessages.linkFallback')}
+                  </Link>
+                )}
+              </>
+            : null}
+          </NotificationItem>
       )}
     </Stack>
   );

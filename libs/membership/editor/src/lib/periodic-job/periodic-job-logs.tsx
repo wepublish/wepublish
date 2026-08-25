@@ -1,11 +1,10 @@
 import styled from '@emotion/styled';
-import { Alert, AlertColor, AlertTitle } from '@mui/material';
 import { PeriodicJob, usePeriodicJobLogsQuery } from '@wepublish/editor/api';
+import { NotificationItem, NotificationSeverity } from '@wepublish/ui/editor';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdOutlineHourglassEmpty } from 'react-icons/md';
 
-function getSeverity(periodicJob: PeriodicJob): AlertColor {
+function getSeverity(periodicJob: PeriodicJob): NotificationSeverity {
   if (periodicJob.finishedWithError && periodicJob.successfullyFinished) {
     return 'warning';
   }
@@ -21,6 +20,28 @@ function getSeverity(periodicJob: PeriodicJob): AlertColor {
   return 'error';
 }
 
+function getStatusText(
+  severity: NotificationSeverity,
+  t: (key: string) => string
+) {
+  switch (severity) {
+    case 'error':
+      return t('periodicJobsLog.failedJob');
+    case 'warning':
+      return t('periodicJobsLog.lastRunSuccessful');
+    case 'success':
+      return 'OK';
+    default:
+      return 'Running...';
+  }
+}
+
+const Stack = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+`;
+
 const Information = styled.div`
   display: grid;
 `;
@@ -28,11 +49,13 @@ const Information = styled.div`
 export interface PeriodicJobsLogProps {
   take?: number;
   onlyProblems?: boolean;
+  sourceTag?: string;
 }
 
 export function PeriodicJobsLog({
   take = 5,
   onlyProblems = false,
+  sourceTag,
 }: PeriodicJobsLogProps) {
   const { t } = useTranslation();
 
@@ -85,97 +108,77 @@ export function PeriodicJobsLog({
   }
 
   return (
-    <>
+    <Stack>
       {jobDidNotRun && (
-        <Alert
-          severity={'error'}
-          variant={'filled'}
+        <NotificationItem
+          severity="error"
+          title={t('periodicJobsLog.jobFailedTitle')}
+          sourceTag={sourceTag}
         >
-          <AlertTitle>
-            <strong>{t('periodicJobsLog.jobFailedTitle')}</strong>
-          </AlertTitle>
-
           {t('periodicJobsLog.concerns')}
-        </Alert>
+        </NotificationItem>
       )}
 
       {!jobs.length && (
-        <Alert severity={'warning'}>
-          <AlertTitle>{t('periodicJobsLog.noRun')}</AlertTitle>
-        </Alert>
+        <NotificationItem
+          severity="warning"
+          title={t('periodicJobsLog.noRun')}
+          sourceTag={sourceTag}
+        />
       )}
 
-      {jobs.map(periodicJob => (
-        <Alert
-          key={periodicJob.id}
-          sx={{ mt: 1 }}
-          severity={getSeverity(periodicJob)}
-          variant={getSeverity(periodicJob) === 'error' ? 'filled' : 'standard'}
-          icon={
-            getSeverity(periodicJob) === 'info' ?
-              <MdOutlineHourglassEmpty />
-            : undefined
-          }
-        >
-          <AlertTitle>
-            {new Date(periodicJob.date).toLocaleString('de', {
+      {jobs.map(periodicJob => {
+        const severity = getSeverity(periodicJob);
+
+        return (
+          <NotificationItem
+            key={periodicJob.id}
+            severity={severity}
+            sourceTag={sourceTag}
+            title={`${new Date(periodicJob.date).toLocaleString('de', {
               dateStyle: 'medium',
-            })}
+            })}: ${getStatusText(severity, t)}`}
+          >
+            <Information>
+              {periodicJob?.executionTime && (
+                <span>
+                  {t('periodicJobsLog.startTime', {
+                    date: new Date(periodicJob.executionTime),
+                  })}
+                </span>
+              )}
 
-            {getSeverity(periodicJob) === 'error' && (
+              {periodicJob?.successfullyFinished && (
+                <span>
+                  {t('periodicJobsLog.successTime', {
+                    date: new Date(periodicJob.successfullyFinished),
+                  })}
+                </span>
+              )}
+
+              {periodicJob?.finishedWithError && (
+                <span>
+                  {t('periodicJobsLog.successTime', {
+                    date: new Date(periodicJob.finishedWithError),
+                  })}
+                </span>
+              )}
+
               <span>
-                : <strong>{t('periodicJobsLog.failedJob')}</strong>
-              </span>
-            )}
-
-            {getSeverity(periodicJob) === 'warning' && (
-              <span>: {t('periodicJobsLog.lastRunSuccessful')} </span>
-            )}
-
-            {getSeverity(periodicJob) === 'success' && <span>: OK</span>}
-
-            {getSeverity(periodicJob) === 'info' && <span>: Running...</span>}
-          </AlertTitle>
-
-          <Information>
-            {periodicJob?.executionTime && (
-              <span>
-                {t('periodicJobsLog.startTime', {
-                  date: new Date(periodicJob.executionTime),
+                {t('periodicJobsLog.tries', {
+                  tries: periodicJob.tries,
                 })}
               </span>
-            )}
 
-            {periodicJob?.successfullyFinished && (
-              <span>
-                {t('periodicJobsLog.successTime', {
-                  date: new Date(periodicJob.successfullyFinished),
-                })}
-              </span>
-            )}
-
-            {periodicJob?.finishedWithError && (
-              <span>
-                {t('periodicJobsLog.successTime', {
-                  date: new Date(periodicJob.finishedWithError),
-                })}
-              </span>
-            )}
-
-            <span>
-              {t('periodicJobsLog.tries', {
-                tries: periodicJob.tries,
-              })}
-            </span>
-          </Information>
-
-          {periodicJob.error && (
-            <p>
-              <i>{periodicJob.error}</i>
-            </p>
-          )}
-        </Alert>
-      ))}
-    </>
+              {periodicJob.error && (
+                <span>
+                  <i>{periodicJob.error}</i>
+                </span>
+              )}
+            </Information>
+          </NotificationItem>
+        );
+      })}
+    </Stack>
   );
 }

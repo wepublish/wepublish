@@ -4,6 +4,7 @@ import {
   useChangelogEntriesQuery,
   useConfirmChangelogEntryMutation,
 } from '@wepublish/editor/api';
+import { NotificationItem, NotificationSeverity } from '@wepublish/ui/editor';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ReactMarkdown, { defaultUrlTransform } from 'react-markdown';
@@ -27,57 +28,10 @@ const EntryMeta = styled.p`
   font-size: 0.9em;
 `;
 
-const ActionMessage = styled(Message)`
-  margin-bottom: 12px;
-`;
-
-const ActionMessageContent = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  flex-wrap: wrap;
-`;
-
-const ActionMessageLead = styled.p`
-  margin: 4px 0 0;
-`;
-
-const ActionMessageButtons = styled.div`
-  display: flex;
-  gap: 8px;
-  flex-shrink: 0;
-`;
-
-const EntryList = styled.div`
+const Stack = styled.div`
   display: flex;
   flex-direction: column;
-`;
-
-const EntryItem = styled.button`
-  display: block;
-  width: 100%;
-  text-align: left;
-  background: none;
-  border: none;
-  border-bottom: 1px solid var(--rs-border-primary, #e5e5ea);
-  padding: 12px 4px;
-  cursor: pointer;
-
-  &:last-of-type {
-    border-bottom: none;
-  }
-
-  &:hover {
-    background: var(--rs-state-hover-bg, #f2faff);
-  }
-`;
-
-const EntryTitleRow = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 4px;
+  gap: 12px;
 `;
 
 const EntryLead = styled.p`
@@ -130,6 +84,38 @@ function ChangelogMarkdown({ children }: { children: string }) {
       </ReactMarkdown>
     </MarkdownContainer>
   );
+}
+
+const getEntrySeverity = (
+  entry: ChangelogEntryFragment
+): NotificationSeverity => {
+  if (!entry.actionRequired) {
+    return 'info';
+  }
+
+  return entry.confirmedAt ? 'success' : 'warning';
+};
+
+function ChangelogEntryTag({ entry }: { entry: ChangelogEntryFragment }) {
+  const { t } = useTranslation();
+
+  if (!entry.actionRequired) {
+    return null;
+  }
+
+  return entry.confirmedAt ?
+      <Tag
+        color="green"
+        size="sm"
+      >
+        {t('changelog.done')}
+      </Tag>
+    : <Tag
+        color="orange"
+        size="sm"
+      >
+        {t('changelog.actionRequired')}
+      </Tag>;
 }
 
 interface ChangelogEntryModalProps {
@@ -263,7 +249,13 @@ function ConfirmChangelogModal({ entry, onClose }: ConfirmChangelogModalProps) {
   );
 }
 
-export function ChangelogActionRequired() {
+export interface ChangelogActionRequiredProps {
+  sourceTag?: string;
+}
+
+export function ChangelogActionRequired({
+  sourceTag,
+}: ChangelogActionRequiredProps) {
   const { t } = useTranslation();
   const [detailsEntry, setDetailsEntry] =
     useState<ChangelogEntryFragment | null>(null);
@@ -286,49 +278,40 @@ export function ChangelogActionRequired() {
 
   return (
     <>
-      {entries.map(entry => (
-        <ActionMessage
-          key={entry.id}
-          type="warning"
-          showIcon
-        >
-          <ActionMessageContent>
-            <div>
-              <EntryTitleRow>
-                <strong>{entry.title}</strong>
-                <Tag
-                  color="orange"
-                  size="sm"
-                >
-                  {t('changelog.actionRequired')}
-                </Tag>
-              </EntryTitleRow>
+      <Stack>
+        {entries.map(entry => (
+          <NotificationItem
+            key={entry.id}
+            severity="warning"
+            title={entry.title}
+            tags={<ChangelogEntryTag entry={entry} />}
+            sourceTag={sourceTag}
+            actions={
+              <>
+                {entry.description && (
+                  <Button
+                    size="sm"
+                    appearance="subtle"
+                    onClick={() => setDetailsEntry(entry)}
+                  >
+                    {t('changelog.details')}
+                  </Button>
+                )}
 
-              <ActionMessageLead>{entry.lead}</ActionMessageLead>
-            </div>
-
-            <ActionMessageButtons>
-              {entry.description && (
                 <Button
                   size="sm"
-                  appearance="subtle"
-                  onClick={() => setDetailsEntry(entry)}
+                  appearance="primary"
+                  onClick={() => setConfirmEntry(entry)}
                 >
-                  {t('changelog.details')}
+                  {t('changelog.markAsDone')}
                 </Button>
-              )}
-
-              <Button
-                size="sm"
-                appearance="primary"
-                onClick={() => setConfirmEntry(entry)}
-              >
-                {t('changelog.markAsDone')}
-              </Button>
-            </ActionMessageButtons>
-          </ActionMessageContent>
-        </ActionMessage>
-      ))}
+              </>
+            }
+          >
+            <EntryLead>{entry.lead}</EntryLead>
+          </NotificationItem>
+        ))}
+      </Stack>
 
       {detailsEntry && (
         <ChangelogEntryModal
@@ -354,11 +337,19 @@ export function ChangelogActionRequired() {
 export interface ChangelogDashboardProps {
   take?: number;
   paginated?: boolean;
+  sourceTag?: string;
+  /**
+   * Hides entries that are already shown as prominent action-required
+   * notifications, so the dashboard does not list them twice.
+   */
+  hideUnconfirmedActionRequired?: boolean;
 }
 
 export function ChangelogDashboard({
   take = 5,
   paginated = false,
+  sourceTag,
+  hideUnconfirmedActionRequired = false,
 }: ChangelogDashboardProps) {
   const { t } = useTranslation();
   const [limit, setLimit] = useState(take);
@@ -370,7 +361,7 @@ export function ChangelogDashboard({
   const { data, loading, error } = useChangelogEntriesQuery({
     fetchPolicy: 'cache-and-network',
     variables: {
-      take: limit,
+      take: hideUnconfirmedActionRequired ? limit + 10 : limit,
     },
   });
 
@@ -386,7 +377,11 @@ export function ChangelogDashboard({
     return <Message type="error">{error.message}</Message>;
   }
 
-  const entries = data?.changelogEntries.nodes ?? [];
+  const nodes = data?.changelogEntries.nodes ?? [];
+  const entries = (
+    hideUnconfirmedActionRequired ?
+      nodes.filter(entry => !(entry.actionRequired && !entry.confirmedAt))
+    : nodes).slice(0, limit);
 
   if (!entries.length) {
     return <CenteredText>{t('changelog.noEntries')}</CenteredText>;
@@ -394,40 +389,24 @@ export function ChangelogDashboard({
 
   return (
     <>
-      <EntryList>
+      <Stack>
         {entries.map(entry => (
-          <EntryItem
+          <NotificationItem
             key={entry.id}
-            type="button"
+            severity={getEntrySeverity(entry)}
+            title={entry.title}
+            tags={<ChangelogEntryTag entry={entry} />}
+            sourceTag={sourceTag}
             onClick={() => setDetailsEntry(entry)}
           >
-            <EntryTitleRow>
-              <strong>{entry.title}</strong>
-
-              {entry.actionRequired &&
-                (entry.confirmedAt ?
-                  <Tag
-                    color="green"
-                    size="sm"
-                  >
-                    {t('changelog.done')}
-                  </Tag>
-                : <Tag
-                    color="orange"
-                    size="sm"
-                  >
-                    {t('changelog.actionRequired')}
-                  </Tag>)}
-            </EntryTitleRow>
-
             <EntryLead>{entry.lead}</EntryLead>
 
             <EntryDate>
               {t('changelog.releasedAt', { date: new Date(entry.releasedAt) })}
             </EntryDate>
-          </EntryItem>
+          </NotificationItem>
         ))}
-      </EntryList>
+      </Stack>
 
       {paginated && data?.changelogEntries.pageInfo.hasNextPage && (
         <LoadMoreWrapper>
