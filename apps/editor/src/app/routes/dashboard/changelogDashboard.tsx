@@ -415,10 +415,17 @@ export function ChangelogDashboard({
             tags={<ChangelogEntryTag entry={entry} />}
             sourceTag={sourceTag}
             onClick={() => setDetailsEntry(entry)}
-            closable={
-              !!onMarkRead && (!entry.actionRequired || !!entry.confirmedAt)
+            actions={
+              onMarkRead && (!entry.actionRequired || !!entry.confirmedAt) ?
+                <Button
+                  size="sm"
+                  appearance="default"
+                  onClick={() => onMarkRead(entry.id)}
+                >
+                  {t('notifications.markAsRead')}
+                </Button>
+              : undefined
             }
-            onClose={() => onMarkRead?.(entry.id)}
           >
             <EntryLead>{entry.lead}</EntryLead>
 

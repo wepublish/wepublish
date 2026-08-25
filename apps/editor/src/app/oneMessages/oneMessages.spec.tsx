@@ -130,23 +130,24 @@ it('renders the empty message when every message was read', () => {
   expect(screen.getByText('all read')).toBeTruthy();
 });
 
-it('marks a dismissible message as read when its close button is clicked', () => {
+it('marks a dismissible message as read when its mark-as-read button is clicked', () => {
   const onMarkRead = vi.fn();
   renderWith([message({ id: 5, dismissible: true })], { onMarkRead });
 
-  const closeButton = screen.getByRole('button');
-  fireEvent.click(closeButton);
+  fireEvent.click(
+    screen.getByRole('button', { name: 'notifications.markAsRead' })
+  );
 
   expect(onMarkRead).toHaveBeenCalledWith('5');
 });
 
-it('does not render a close button for non-dismissible messages', () => {
+it('does not render a mark-as-read button for non-dismissible messages', () => {
   renderWith([message({ dismissible: false })], { onMarkRead: vi.fn() });
 
   expect(screen.queryByRole('button')).toBeNull();
 });
 
-it('does not render a close button without an onMarkRead handler', () => {
+it('does not render a mark-as-read button without an onMarkRead handler', () => {
   renderWith([message({ dismissible: true })]);
 
   expect(screen.queryByRole('button')).toBeNull();

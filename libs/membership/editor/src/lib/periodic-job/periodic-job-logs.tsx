@@ -3,6 +3,7 @@ import { PeriodicJob, usePeriodicJobLogsQuery } from '@wepublish/editor/api';
 import { NotificationItem, NotificationSeverity } from '@wepublish/ui/editor';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Button } from 'rsuite';
 
 function getSeverity(periodicJob: PeriodicJob): NotificationSeverity {
   if (periodicJob.finishedWithError && periodicJob.successfullyFinished) {
@@ -108,6 +109,17 @@ export function PeriodicJobsLog({
 
   const isRead = (itemId: string) => readItemIds?.has(itemId) ?? false;
 
+  const markAsReadButton = (itemId: string) =>
+    onMarkRead ?
+      <Button
+        size="sm"
+        appearance="default"
+        onClick={() => onMarkRead(itemId)}
+      >
+        {t('notifications.markAsRead')}
+      </Button>
+    : undefined;
+
   // The "did not run" notice is keyed by the stale execution time, so marking
   // it as read only hides this occurrence — a new stale run shows up again.
   const didNotRunItemId = `did-not-run:${
@@ -139,8 +151,7 @@ export function PeriodicJobsLog({
           severity="error"
           title={t('periodicJobsLog.jobFailedTitle')}
           sourceTag={sourceTag}
-          closable={!!onMarkRead}
-          onClose={() => onMarkRead?.(didNotRunItemId)}
+          actions={markAsReadButton(didNotRunItemId)}
         >
           {t('periodicJobsLog.concerns')}
         </NotificationItem>
@@ -151,8 +162,7 @@ export function PeriodicJobsLog({
           severity="warning"
           title={t('periodicJobsLog.noRun')}
           sourceTag={sourceTag}
-          closable={!!onMarkRead}
-          onClose={() => onMarkRead?.(NEVER_RAN_ITEM_ID)}
+          actions={markAsReadButton(NEVER_RAN_ITEM_ID)}
         />
       )}
 
@@ -164,8 +174,7 @@ export function PeriodicJobsLog({
             key={periodicJob.id}
             severity={severity}
             sourceTag={sourceTag}
-            closable={!!onMarkRead}
-            onClose={() => onMarkRead?.(periodicJob.id)}
+            actions={markAsReadButton(periodicJob.id)}
             title={`${new Date(periodicJob.date).toLocaleString('de', {
               dateStyle: 'medium',
             })}: ${getStatusText(severity, t)}`}

@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import { NotificationItem, NotificationSeverity } from '@wepublish/ui/editor';
 import { useTranslation } from 'react-i18next';
+import { Button } from 'rsuite';
 
 import { useOneMessages } from './oneMessages.hooks';
 import type { Severity } from './oneMessages.types';
@@ -76,8 +77,17 @@ export function OneMessages({
           severity={SEVERITY_TYPE[message.severity]}
           title={message.title}
           sourceTag={sourceTag}
-          closable={!!onMarkRead && message.dismissible}
-          onClose={() => onMarkRead?.(String(message.id))}
+          actions={
+            onMarkRead && message.dismissible ?
+              <Button
+                size="sm"
+                appearance="default"
+                onClick={() => onMarkRead(String(message.id))}
+              >
+                {t('notifications.markAsRead')}
+              </Button>
+            : undefined
+          }
         >
           {message.body || message.link_url ?
             <>

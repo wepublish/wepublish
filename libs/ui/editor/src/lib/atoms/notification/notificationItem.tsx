@@ -43,8 +43,6 @@ export interface NotificationItemProps {
   actions?: ReactNode;
   children?: ReactNode;
   onClick?: () => void;
-  closable?: boolean;
-  onClose?: () => void;
 }
 
 export function NotificationItem({
@@ -55,8 +53,6 @@ export function NotificationItem({
   actions,
   children,
   onClick,
-  closable,
-  onClose,
 }: NotificationItemProps) {
   return (
     <Wrapper
@@ -66,11 +62,6 @@ export function NotificationItem({
       <Message
         type={severity}
         showIcon
-        closable={closable}
-        onClose={event => {
-          event?.stopPropagation();
-          onClose?.();
-        }}
         header={
           <TitleRow>
             <strong>{title}</strong>

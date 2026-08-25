@@ -1344,6 +1344,7 @@
       "sourceTeam": "We.Publish Team",
       "sourceChangelog": "Changelog",
       "sourceJobLogs": "Job-Logs",
+      "markAsRead": "Als gelesen markieren",
       "loadMore": "Mehr anzeigen"
     },
     "no": "Nein",
