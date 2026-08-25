@@ -36,13 +36,24 @@ const Link = styled.a`
   margin-top: 8px;
 `;
 
-export function OneMessages() {
+const EmptyText = styled.p`
+  text-align: center;
+  color: gray;
+  padding: 12px;
+`;
+
+export interface OneMessagesProps {
+  hideHeader?: boolean;
+  emptyMessage?: string;
+}
+
+export function OneMessages({ hideHeader, emptyMessage }: OneMessagesProps) {
   const { t, i18n } = useTranslation();
   const messages = useOneMessages(i18n.language);
   const [, forceRender] = useReducer((n: number) => n + 1, 0);
 
   if (!messages.length) {
-    return null;
+    return emptyMessage ? <EmptyText>{emptyMessage}</EmptyText> : null;
   }
 
   const expand = (id: number) => {
@@ -57,7 +68,7 @@ export function OneMessages() {
 
   return (
     <Stack>
-      <Header>{t('oneMessages.header')}</Header>
+      {!hideHeader && <Header>{t('oneMessages.header')}</Header>}
 
       {messages.map(message =>
         isMinimized(message) ?

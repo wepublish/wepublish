@@ -709,6 +709,7 @@
       "activity": "Latest Activity",
       "dashboard": "Dashboard",
       "notifications": "Notifications",
+      "showAllNotifications": "Show all",
       "greeting": "Hello, {{name}}!",
       "newArticle": "New <0>article</0> added",
       "newAuthor": "New <0>author</0> added",
@@ -1282,6 +1283,7 @@
       "pageTags": "Tags",
       "consents": "Consents",
       "dashboard": "Dashboard",
+      "notifications": "Notifications",
       "events": "Events",
       "eventTags": "Tags",
       "documentLibrary": "Documents",
@@ -1337,6 +1339,10 @@
         "selectPage": "Select Page",
         "url": "URL"
       }
+    },
+    "notifications": {
+      "noTeamMessages": "No messages from the We.Publish team right now.",
+      "loadMore": "Load more"
     },
     "no": "No",
     "pageEditor": {

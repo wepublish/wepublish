@@ -25,6 +25,8 @@ const GroupHeader = styled.h5`
   margin: 0;
 `;
 
+// Compact variant for the dashboard: only what needs attention right now, plus
+// the latest changelog entries. The full history lives on /notifications.
 export function DashboardNotifications() {
   const { t } = useTranslation();
 
@@ -35,15 +37,12 @@ export function DashboardNotifications() {
       <ChangelogActionRequired />
 
       <PermissionControl qualifyingPermissions={['CAN_GET_PERIODIC_JOB_LOG']}>
-        <Group>
-          <GroupHeader>{t('periodicJobsLog.title')}</GroupHeader>
-          <PeriodicJobsLog />
-        </Group>
+        <PeriodicJobsLog onlyProblems />
       </PermissionControl>
 
       <Group>
         <GroupHeader>{t('changelog.whatsNew')}</GroupHeader>
-        <ChangelogDashboard />
+        <ChangelogDashboard take={3} />
       </Group>
     </Section>
   );

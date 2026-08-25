@@ -102,6 +102,12 @@ const LoaderWrapper = styled.div`
   padding: 24px;
 `;
 
+const LoadMoreWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  padding-top: 12px;
+`;
+
 const markdownUrlTransform = (url: string) =>
   url.startsWith('data:image/') ? url : defaultUrlTransform(url);
 
@@ -345,8 +351,17 @@ export function ChangelogActionRequired() {
   );
 }
 
-export function ChangelogDashboard() {
+export interface ChangelogDashboardProps {
+  take?: number;
+  paginated?: boolean;
+}
+
+export function ChangelogDashboard({
+  take = 5,
+  paginated = false,
+}: ChangelogDashboardProps) {
   const { t } = useTranslation();
+  const [limit, setLimit] = useState(take);
   const [detailsEntry, setDetailsEntry] =
     useState<ChangelogEntryFragment | null>(null);
   const [confirmEntry, setConfirmEntry] =
@@ -355,7 +370,7 @@ export function ChangelogDashboard() {
   const { data, loading, error } = useChangelogEntriesQuery({
     fetchPolicy: 'cache-and-network',
     variables: {
-      take: 5,
+      take: limit,
     },
   });
 
@@ -413,6 +428,18 @@ export function ChangelogDashboard() {
           </EntryItem>
         ))}
       </EntryList>
+
+      {paginated && data?.changelogEntries.pageInfo.hasNextPage && (
+        <LoadMoreWrapper>
+          <Button
+            appearance="subtle"
+            loading={loading}
+            onClick={() => setLimit(limit + take)}
+          >
+            {t('notifications.loadMore')}
+          </Button>
+        </LoadMoreWrapper>
+      )}
 
       {detailsEntry && (
         <ChangelogEntryModal

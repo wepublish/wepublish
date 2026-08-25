@@ -25,12 +25,20 @@ const Information = styled.div`
   display: grid;
 `;
 
-export function PeriodicJobsLog() {
+export interface PeriodicJobsLogProps {
+  take?: number;
+  onlyProblems?: boolean;
+}
+
+export function PeriodicJobsLog({
+  take = 5,
+  onlyProblems = false,
+}: PeriodicJobsLogProps) {
   const { t } = useTranslation();
 
-  const { data } = usePeriodicJobLogsQuery({
+  const { data, loading } = usePeriodicJobLogsQuery({
     variables: {
-      take: 5,
+      take,
     },
   });
 
@@ -66,6 +74,15 @@ export function PeriodicJobsLog() {
 
     return now.getTime() - warningThreshold > lastJob.getTime();
   }, [jobs]);
+
+  const hasProblems =
+    jobDidNotRun ||
+    !jobs.length ||
+    jobs.some(job => ['error', 'warning'].includes(getSeverity(job)));
+
+  if (onlyProblems && (loading || !hasProblems)) {
+    return null;
+  }
 
   return (
     <>

@@ -29,20 +29,35 @@ export function Dashboard() {
   return (
     <StyledGrid fluid>
       <Row>
-        <Col xs={24}>
-          <NotificationsPanel
-            header={<h2>{t('dashboard.notifications')}</h2>}
-            bordered
-          >
-            <DashboardNotifications />
-          </NotificationsPanel>
-        </Col>
-      </Row>
-
-      <Row>
         {/* left column stack */}
         <Col xs={12}>
           <Row gutter={12}>
+            <Col xs={24}>
+              <NotificationsPanel
+                header={
+                  <ListViewContainer>
+                    <ListViewHeader>
+                      <h2>{t('dashboard.notifications')}</h2>
+                    </ListViewHeader>
+
+                    <ListViewActions>
+                      <Link to="/notifications">
+                        <Button
+                          appearance="primary"
+                          endIcon={<MdChevronRight />}
+                        >
+                          {t('dashboard.showAllNotifications')}
+                        </Button>
+                      </Link>
+                    </ListViewActions>
+                  </ListViewContainer>
+                }
+                bordered
+              >
+                <DashboardNotifications />
+              </NotificationsPanel>
+            </Col>
+
             <Col xs={24}>
               <RPanel
                 header={<h2>{t('dashboard.externalApps')}</h2>}

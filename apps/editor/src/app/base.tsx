@@ -143,6 +143,7 @@ import {
   MdMail,
   MdMoney,
   MdMultilineChart,
+  MdNotificationsNone,
   MdOutgoingMail,
   MdSend,
   MdOutlineGridView,
@@ -285,6 +286,15 @@ export function Base({ children }: BaseProps) {
                     active={path === 'dashboard' || path === ''}
                   >
                     {t('navbar.dashboard')}
+                  </Nav.Item>
+
+                  <Nav.Item
+                    as={NavLink}
+                    href="/notifications"
+                    icon={<MdNotificationsNone />}
+                    active={path === 'notifications'}
+                  >
+                    {t('navbar.notifications')}
                   </Nav.Item>
 
                   <PermissionControl
