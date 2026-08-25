@@ -2208,7 +2208,7 @@ type Mutation {
   """
   Confirms that the manual action required by a changelog entry has been completed. Requires authentication.
   """
-  confirmChangelogEntry(id: String!): ChangelogEntry!
+  confirmChangelogEntry(id: String!, locale: String): ChangelogEntry!
 
   """Confirms a pending email change for the logged-in user."""
   confirmEmailChange(newEmail: String!): SensitiveDataUser!
@@ -3674,6 +3674,11 @@ type Query {
   changelogEntries(
     """Filter for changelog entries"""
     filter: ChangelogEntryFilter
+
+    """
+    Locale (de, en, fr) for localized title, lead and description; falls back to the default content
+    """
+    locale: String
 
     """Number of items to skip"""
     skip: Int! = 0

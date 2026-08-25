@@ -3,7 +3,12 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { Prisma, PrismaClient } from '@prisma/client';
+import {
+  ChangelogEntry,
+  ChangelogEntryTranslation,
+  Prisma,
+  PrismaClient,
+} from '@prisma/client';
 import { getMaxTake } from '@wepublish/utils/api';
 import {
   ChangelogEntryFilter,
@@ -18,6 +23,7 @@ export class ChangelogService {
     filter,
     skip = 0,
     take = 10,
+    locale,
   }: ChangelogEntryListArgs) {
     const where = createChangelogEntryFilter(filter);
 
@@ -32,10 +38,19 @@ export class ChangelogService {
         orderBy: {
           releasedAt: 'desc',
         },
+        include: {
+          translations: {
+            where: { locale: locale ?? '' },
+          },
+        },
       }),
     ]);
 
-    const nodes = entries.slice(0, getMaxTake(take));
+    const nodes = entries
+      .slice(0, getMaxTake(take))
+      .map(({ translations, ...entry }) =>
+        localizeEntry(entry, translations[0])
+      );
     const firstEntry = nodes[0];
     const lastEntry = nodes[nodes.length - 1];
 
@@ -51,7 +66,7 @@ export class ChangelogService {
     };
   }
 
-  async confirmChangelogEntry(id: string, userId: string) {
+  async confirmChangelogEntry(id: string, userId: string, locale?: string) {
     const entry = await this.prisma.changelogEntry.findUnique({
       where: { id },
     });
@@ -66,18 +81,51 @@ export class ChangelogService {
       );
     }
 
-    if (entry.confirmedAt) {
-      return entry;
+    const confirmed =
+      entry.confirmedAt ? entry : (
+        await this.prisma.changelogEntry.update({
+          where: { id },
+          data: {
+            confirmedAt: new Date(),
+            confirmedByUserId: userId,
+          },
+        })
+      );
+
+    if (!locale) {
+      return confirmed;
     }
 
-    return this.prisma.changelogEntry.update({
-      where: { id },
-      data: {
-        confirmedAt: new Date(),
-        confirmedByUserId: userId,
+    const translation = await this.prisma.changelogEntryTranslation.findUnique({
+      where: {
+        entryId_locale: {
+          entryId: confirmed.id,
+          locale,
+        },
       },
     });
+
+    return localizeEntry(confirmed, translation ?? undefined);
   }
+}
+
+function localizeEntry(
+  entry: ChangelogEntry,
+  translation?: Pick<
+    ChangelogEntryTranslation,
+    'title' | 'lead' | 'description'
+  >
+) {
+  if (!translation) {
+    return entry;
+  }
+
+  return {
+    ...entry,
+    title: translation.title,
+    lead: translation.lead,
+    description: translation.description,
+  };
 }
 
 function createChangelogEntryFilter(

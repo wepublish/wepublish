@@ -184,7 +184,8 @@ describe('ChangelogResolver', () => {
     });
     expect(changelogService.confirmChangelogEntry).toHaveBeenCalledWith(
       'entry-1',
-      'user-1'
+      'user-1',
+      undefined
     );
   });
 });

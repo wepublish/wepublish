@@ -27,6 +27,9 @@ describe('ChangelogService', () => {
       findUnique: jest.fn(),
       update: jest.fn(),
     },
+    changelogEntryTranslation: {
+      findUnique: jest.fn(),
+    },
   };
 
   beforeAll(async () => {
@@ -50,7 +53,9 @@ describe('ChangelogService', () => {
   describe('getChangelogEntries', () => {
     it('returns entries newest first with pagination info', async () => {
       mockPrisma.changelogEntry.count.mockResolvedValue(1);
-      mockPrisma.changelogEntry.findMany.mockResolvedValue([mockEntry]);
+      mockPrisma.changelogEntry.findMany.mockResolvedValue([
+        { ...mockEntry, translations: [] },
+      ]);
 
       const result = await service.getChangelogEntries({});
 
@@ -60,6 +65,11 @@ describe('ChangelogService', () => {
         take: 11,
         orderBy: {
           releasedAt: 'desc',
+        },
+        include: {
+          translations: {
+            where: { locale: '' },
+          },
         },
       });
       expect(result).toEqual({
@@ -78,6 +88,7 @@ describe('ChangelogService', () => {
       const entries = Array.from({ length: 3 }, (_, index) => ({
         ...mockEntry,
         id: `entry-${index + 1}`,
+        translations: [],
       }));
       mockPrisma.changelogEntry.count.mockResolvedValue(10);
       mockPrisma.changelogEntry.findMany.mockResolvedValue(entries);
@@ -117,6 +128,45 @@ describe('ChangelogService', () => {
           },
         })
       );
+    });
+
+    it('returns localized content for the requested locale', async () => {
+      mockPrisma.changelogEntry.count.mockResolvedValue(2);
+      mockPrisma.changelogEntry.findMany.mockResolvedValue([
+        {
+          ...mockEntry,
+          translations: [
+            {
+              locale: 'de',
+              title: 'Ein Titel',
+              lead: 'Ein Lead',
+              description: 'Eine Beschreibung',
+            },
+          ],
+        },
+        { ...mockEntry, id: 'entry-2', translations: [] },
+      ]);
+
+      const result = await service.getChangelogEntries({ locale: 'de' });
+
+      expect(mockPrisma.changelogEntry.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          include: {
+            translations: {
+              where: { locale: 'de' },
+            },
+          },
+        })
+      );
+      expect(result.nodes[0]).toMatchObject({
+        title: 'Ein Titel',
+        lead: 'Ein Lead',
+        description: 'Eine Beschreibung',
+      });
+      expect(result.nodes[1]).toMatchObject({
+        title: 'A title',
+        lead: 'A lead',
+      });
     });
 
     it('caps the take at the maximum page size', async () => {
@@ -167,6 +217,38 @@ describe('ChangelogService', () => {
       await expect(
         service.confirmChangelogEntry('entry-1', 'user-1')
       ).rejects.toThrow(BadRequestException);
+    });
+
+    it('returns localized content when confirming with a locale', async () => {
+      mockPrisma.changelogEntry.findUnique.mockResolvedValue(mockEntry);
+      mockPrisma.changelogEntry.update.mockImplementation(({ data }) =>
+        Promise.resolve({ ...mockEntry, ...data })
+      );
+      mockPrisma.changelogEntryTranslation.findUnique.mockResolvedValue({
+        locale: 'fr',
+        title: 'Un titre',
+        lead: 'Un lead',
+        description: null,
+      });
+
+      const result = await service.confirmChangelogEntry(
+        'entry-1',
+        'user-1',
+        'fr'
+      );
+
+      expect(
+        mockPrisma.changelogEntryTranslation.findUnique
+      ).toHaveBeenCalledWith({
+        where: {
+          entryId_locale: {
+            entryId: 'entry-1',
+            locale: 'fr',
+          },
+        },
+      });
+      expect(result.title).toBe('Un titre');
+      expect(result.confirmedByUserId).toBe('user-1');
     });
 
     it('keeps the first confirmation when confirming twice', async () => {

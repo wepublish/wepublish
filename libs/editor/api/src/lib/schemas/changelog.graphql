@@ -10,8 +10,13 @@ fragment ChangelogEntry on ChangelogEntry {
   confirmedByUserId
 }
 
-query ChangelogEntries($take: Int, $skip: Int, $filter: ChangelogEntryFilter) {
-  changelogEntries(take: $take, skip: $skip, filter: $filter) {
+query ChangelogEntries(
+  $take: Int
+  $skip: Int
+  $filter: ChangelogEntryFilter
+  $locale: String
+) {
+  changelogEntries(take: $take, skip: $skip, filter: $filter, locale: $locale) {
     nodes {
       ...ChangelogEntry
     }
@@ -22,8 +27,8 @@ query ChangelogEntries($take: Int, $skip: Int, $filter: ChangelogEntryFilter) {
   }
 }
 
-mutation ConfirmChangelogEntry($id: String!) {
-  confirmChangelogEntry(id: $id) {
+mutation ConfirmChangelogEntry($id: String!, $locale: String) {
+  confirmChangelogEntry(id: $id, locale: $locale) {
     ...ChangelogEntry
   }
 }

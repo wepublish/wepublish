@@ -188,7 +188,7 @@ interface ConfirmChangelogModalProps {
 }
 
 function ConfirmChangelogModal({ entry, onClose }: ConfirmChangelogModalProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [confirmChangelogEntry, { loading }] = useConfirmChangelogEntryMutation(
     {
       refetchQueries: ['ChangelogEntries'],
@@ -223,7 +223,11 @@ function ConfirmChangelogModal({ entry, onClose }: ConfirmChangelogModalProps) {
       title={t('notifications.confirmTitle')}
       message={t('notifications.confirmMessage', { title: entry.title })}
       loading={loading}
-      onConfirm={() => confirmChangelogEntry({ variables: { id: entry.id } })}
+      onConfirm={() =>
+        confirmChangelogEntry({
+          variables: { id: entry.id, locale: i18n.language },
+        })
+      }
       onClose={onClose}
     />
   );
@@ -236,7 +240,7 @@ export interface ChangelogActionRequiredProps {
 export function ChangelogActionRequired({
   sourceTag,
 }: ChangelogActionRequiredProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [detailsEntry, setDetailsEntry] =
     useState<ChangelogEntryFragment | null>(null);
   const [confirmEntry, setConfirmEntry] =
@@ -247,6 +251,7 @@ export function ChangelogActionRequired({
     variables: {
       take: 100,
       filter: { actionRequired: true, confirmed: false },
+      locale: i18n.language,
     },
   });
 
@@ -337,7 +342,7 @@ export function ChangelogDashboard({
   readEntryIds,
   onMarkRead,
 }: ChangelogDashboardProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [limit, setLimit] = useState(take);
   const [detailsEntry, setDetailsEntry] =
     useState<ChangelogEntryFragment | null>(null);
@@ -351,6 +356,7 @@ export function ChangelogDashboard({
         limit +
         (hideUnconfirmedActionRequired ? 10 : 0) +
         (readEntryIds?.size ?? 0),
+      locale: i18n.language,
     },
   });
 

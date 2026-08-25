@@ -2198,5 +2198,24 @@ model ChangelogEntry {
   confirmedByUserId String?
   confirmedBy       User?     @relation(fields: [confirmedByUserId], references: [id], onDelete: SetNull)
 
+  translations ChangelogEntryTranslation[]
+
   @@map("changelog.entries")
+}
+
+model ChangelogEntryTranslation {
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  locale      String
+  title       String
+  lead        String
+  description String?
+
+  entryId String
+  entry   ChangelogEntry @relation(fields: [entryId], references: [id], onDelete: Cascade)
+
+  @@unique([entryId, locale])
+  @@map("changelog.entries.translations")
 }

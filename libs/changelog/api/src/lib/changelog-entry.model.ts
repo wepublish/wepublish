@@ -65,4 +65,11 @@ export class ChangelogEntryListArgs {
     description: 'Filter for changelog entries',
   })
   filter?: ChangelogEntryFilter;
+
+  @Field(() => String, {
+    nullable: true,
+    description:
+      'Locale (de, en, fr) for localized title, lead and description; falls back to the default content',
+  })
+  locale?: string;
 }

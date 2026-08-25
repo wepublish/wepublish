@@ -7,6 +7,16 @@ import {
 
 export const CHANGELOG_FILE_NAME = 'changelog.md';
 export const CHANGELOG_FOLDER_PATTERN = /^(\d{14})_[a-z0-9_]+$/;
+export const CHANGELOG_LOCALES = ['de', 'en', 'fr'];
+
+const TRANSLATION_FILE_PATTERN = /^changelog\.([a-z]{2,5})\.md$/;
+
+export type ChangelogTranslationData = {
+  locale: string;
+  title: string;
+  lead: string;
+  description: string | null;
+};
 
 export type ChangelogEntryData = {
   name: string;
@@ -15,9 +25,13 @@ export type ChangelogEntryData = {
   lead: string;
   description: string | null;
   actionRequired: boolean;
+  translations: ChangelogTranslationData[];
 };
 
-type ExistingChangelogEntry = ChangelogEntryData & { id: string };
+type ExistingChangelogEntry = Omit<ChangelogEntryData, 'translations'> & {
+  id: string;
+  translations: ChangelogTranslationData[];
+};
 
 type ExistingChangelogEntrySelect = {
   id: true;
@@ -27,6 +41,30 @@ type ExistingChangelogEntrySelect = {
   lead: true;
   description: true;
   actionRequired: true;
+  translations: {
+    select: {
+      locale: true;
+      title: true;
+      lead: true;
+      description: true;
+    };
+  };
+};
+
+type ChangelogEntryCreateData = Omit<ChangelogEntryData, 'translations'> & {
+  translations: {
+    createMany: { data: ChangelogTranslationData[] };
+  };
+};
+
+type ChangelogEntryUpdateData = Omit<
+  ChangelogEntryData,
+  'name' | 'releasedAt' | 'translations'
+> & {
+  translations: {
+    deleteMany: Record<string, never>;
+    createMany: { data: ChangelogTranslationData[] };
+  };
 };
 
 export type ChangelogSyncClient = {
@@ -34,10 +72,10 @@ export type ChangelogSyncClient = {
     findMany(args: {
       select: ExistingChangelogEntrySelect;
     }): Promise<ExistingChangelogEntry[]>;
-    create(args: { data: ChangelogEntryData }): Promise<unknown>;
+    create(args: { data: ChangelogEntryCreateData }): Promise<unknown>;
     update(args: {
       where: { id: string };
-      data: Omit<ChangelogEntryData, 'name' | 'releasedAt'>;
+      data: ChangelogEntryUpdateData;
     }): Promise<unknown>;
   };
 };
@@ -86,38 +124,106 @@ export function parseChangelogFolderTimestamp(folderName: string): Date {
   return date;
 }
 
+async function readChangelogFile(folderPath: string, fileName: string) {
+  let markdown: string;
+
+  try {
+    markdown = await fs.readFile(path.join(folderPath, fileName), 'utf-8');
+  } catch {
+    throw new Error(`"${fileName}" is not readable`);
+  }
+
+  const parsed = parseChangelogMarkdown(markdown);
+
+  return {
+    ...parsed,
+    description:
+      parsed.description ?
+        inlineChangelogImages(parsed.description, folderPath)
+      : null,
+  };
+}
+
+// The base changelog.md is the fallback content; changelog.<locale>.md files
+// translate title, lead and description. actionRequired always comes from the
+// base file.
+async function readChangelogTranslations(
+  folderPath: string
+): Promise<ChangelogTranslationData[]> {
+  const dirents = await fs.readdir(folderPath, { withFileTypes: true });
+  const translations: ChangelogTranslationData[] = [];
+
+  for (const dirent of dirents) {
+    const match = dirent.name.match(TRANSLATION_FILE_PATTERN);
+
+    if (!dirent.isFile() || !match) {
+      continue;
+    }
+
+    const locale = match[1];
+
+    if (!CHANGELOG_LOCALES.includes(locale)) {
+      throw new Error(
+        `"${dirent.name}" has an unsupported locale "${locale}". Supported: ${CHANGELOG_LOCALES.join(', ')}`
+      );
+    }
+
+    const parsed = await readChangelogFile(folderPath, dirent.name);
+
+    translations.push({
+      locale,
+      title: parsed.title,
+      lead: parsed.lead,
+      description: parsed.description,
+    });
+  }
+
+  return translations.sort((a, b) => a.locale.localeCompare(b.locale));
+}
+
 export async function readChangelogEntry(
   directory: string,
   folderName: string
 ): Promise<ChangelogEntryData> {
   const releasedAt = parseChangelogFolderTimestamp(folderName);
   const folderPath = path.join(directory, folderName);
-  const filePath = path.join(folderPath, CHANGELOG_FILE_NAME);
 
-  let markdown: string;
+  let base: Awaited<ReturnType<typeof readChangelogFile>>;
 
   try {
-    markdown = await fs.readFile(filePath, 'utf-8');
-  } catch {
+    base = await readChangelogFile(folderPath, CHANGELOG_FILE_NAME);
+  } catch (error) {
     throw new Error(
-      `Changelog folder "${folderName}" does not contain a readable ${CHANGELOG_FILE_NAME}`
+      `Changelog folder "${folderName}" does not contain a readable ${CHANGELOG_FILE_NAME}: ${
+        error instanceof Error ? error.message : error
+      }`
     );
   }
 
-  const parsed = parseChangelogMarkdown(markdown);
+  const translations = await readChangelogTranslations(folderPath);
 
   return {
     name: folderName,
     releasedAt,
-    title: parsed.title,
-    lead: parsed.lead,
-    description:
-      parsed.description ?
-        inlineChangelogImages(parsed.description, folderPath)
-      : null,
-    actionRequired: parsed.actionRequired,
+    title: base.title,
+    lead: base.lead,
+    description: base.description,
+    actionRequired: base.actionRequired,
+    translations,
   };
 }
+
+const serializeTranslations = (translations: ChangelogTranslationData[]) =>
+  JSON.stringify(
+    [...translations]
+      .sort((a, b) => a.locale.localeCompare(b.locale))
+      .map(({ locale, title, lead, description }) => ({
+        locale,
+        title,
+        lead,
+        description,
+      }))
+  );
 
 const hasContentChanged = (
   existing: ExistingChangelogEntry,
@@ -126,7 +232,9 @@ const hasContentChanged = (
   existing.title !== entry.title ||
   existing.lead !== entry.lead ||
   existing.description !== entry.description ||
-  existing.actionRequired !== entry.actionRequired;
+  existing.actionRequired !== entry.actionRequired ||
+  serializeTranslations(existing.translations) !==
+    serializeTranslations(entry.translations);
 
 // Inserts every changelog folder that is not in the database yet (keyed by the
 // unique folder name), so branches can be merged and deployed in any order
@@ -157,6 +265,14 @@ export async function syncChangelogs(
       lead: true,
       description: true,
       actionRequired: true,
+      translations: {
+        select: {
+          locale: true,
+          title: true,
+          lead: true,
+          description: true,
+        },
+      },
     },
   });
   const existingByName = new Map(
@@ -165,13 +281,23 @@ export async function syncChangelogs(
 
   for (const folderName of folderNames) {
     try {
-      const entry = await readChangelogEntry(directory, folderName);
+      const { translations, ...entry } = await readChangelogEntry(
+        directory,
+        folderName
+      );
       const existing = existingByName.get(folderName);
 
       if (!existing) {
-        await prisma.changelogEntry.create({ data: entry });
+        await prisma.changelogEntry.create({
+          data: {
+            ...entry,
+            translations: {
+              createMany: { data: translations },
+            },
+          },
+        });
         result.created.push(folderName);
-      } else if (hasContentChanged(existing, entry)) {
+      } else if (hasContentChanged(existing, { ...entry, translations })) {
         await prisma.changelogEntry.update({
           where: { id: existing.id },
           data: {
@@ -179,6 +305,10 @@ export async function syncChangelogs(
             lead: entry.lead,
             description: entry.description,
             actionRequired: entry.actionRequired,
+            translations: {
+              deleteMany: {},
+              createMany: { data: translations },
+            },
           },
         });
         result.updated.push(folderName);

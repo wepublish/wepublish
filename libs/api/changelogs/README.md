@@ -44,6 +44,19 @@ an entry is inserted as soon as its folder reaches the deployed code, and never 
    stored description as data URIs, so keep them small (screenshots, not photos).
    Supported: png, jpg, jpeg, gif, webp, svg.
 
+## Translations (de, en, fr)
+
+`changelog.md` is the default content and the fallback. To translate an entry,
+add `changelog.de.md`, `changelog.en.md` and/or `changelog.fr.md` next to it,
+each with its own `title`/`lead` frontmatter and body (images work the same
+way). The editor requests entries in the user's UI language and falls back to
+the default content when no translation exists. Rules:
+
+- Only `de`, `en` and `fr` are allowed as locale suffixes — anything else fails
+  the sync (and CI).
+- `actionRequired` belongs in the base `changelog.md` only; it is ignored in
+  translation files.
+
 ## `actionRequired: true`
 
 Use this when the change needs a manual step in every instance (e.g. "add the new

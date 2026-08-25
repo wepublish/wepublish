@@ -33,8 +33,13 @@ export class ChangelogResolver {
   })
   confirmChangelogEntry(
     @Args('id') id: string,
-    @CurrentUser() session: UserSession
+    @CurrentUser() session: UserSession,
+    @Args('locale', { nullable: true }) locale?: string
   ) {
-    return this.changelogService.confirmChangelogEntry(id, session.user.id);
+    return this.changelogService.confirmChangelogEntry(
+      id,
+      session.user.id,
+      locale
+    );
   }
 }

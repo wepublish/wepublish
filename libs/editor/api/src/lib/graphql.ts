@@ -2679,6 +2679,7 @@ export type MutationCancelUserSubscriptionArgs = {
 
 export type MutationConfirmChangelogEntryArgs = {
   id: Scalars['String'];
+  locale?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -5361,6 +5362,7 @@ export type QueryChallengeProviderSettingsArgs = {
 
 export type QueryChangelogEntriesArgs = {
   filter?: InputMaybe<ChangelogEntryFilter>;
+  locale?: InputMaybe<Scalars['String']>;
   skip?: Scalars['Int'];
   take?: Scalars['Int'];
 };
@@ -7644,6 +7646,7 @@ export type ChangelogEntriesQueryVariables = Exact<{
   take?: InputMaybe<Scalars['Int']>;
   skip?: InputMaybe<Scalars['Int']>;
   filter?: InputMaybe<ChangelogEntryFilter>;
+  locale?: InputMaybe<Scalars['String']>;
 }>;
 
 
@@ -7651,6 +7654,7 @@ export type ChangelogEntriesQuery = { __typename?: 'Query', changelogEntries: { 
 
 export type ConfirmChangelogEntryMutationVariables = Exact<{
   id: Scalars['String'];
+  locale?: InputMaybe<Scalars['String']>;
 }>;
 
 
@@ -13156,8 +13160,8 @@ export type DeleteBlockStyleMutationHookResult = ReturnType<typeof useDeleteBloc
 export type DeleteBlockStyleMutationResult = Apollo.MutationResult<DeleteBlockStyleMutation>;
 export type DeleteBlockStyleMutationOptions = Apollo.BaseMutationOptions<DeleteBlockStyleMutation, DeleteBlockStyleMutationVariables>;
 export const ChangelogEntriesDocument = gql`
-    query ChangelogEntries($take: Int, $skip: Int, $filter: ChangelogEntryFilter) {
-  changelogEntries(take: $take, skip: $skip, filter: $filter) {
+    query ChangelogEntries($take: Int, $skip: Int, $filter: ChangelogEntryFilter, $locale: String) {
+  changelogEntries(take: $take, skip: $skip, filter: $filter, locale: $locale) {
     nodes {
       ...ChangelogEntry
     }
@@ -13184,6 +13188,7 @@ export const ChangelogEntriesDocument = gql`
  *      take: // value for 'take'
  *      skip: // value for 'skip'
  *      filter: // value for 'filter'
+ *      locale: // value for 'locale'
  *   },
  * });
  */
@@ -13199,8 +13204,8 @@ export type ChangelogEntriesQueryHookResult = ReturnType<typeof useChangelogEntr
 export type ChangelogEntriesLazyQueryHookResult = ReturnType<typeof useChangelogEntriesLazyQuery>;
 export type ChangelogEntriesQueryResult = Apollo.QueryResult<ChangelogEntriesQuery, ChangelogEntriesQueryVariables>;
 export const ConfirmChangelogEntryDocument = gql`
-    mutation ConfirmChangelogEntry($id: String!) {
-  confirmChangelogEntry(id: $id) {
+    mutation ConfirmChangelogEntry($id: String!, $locale: String) {
+  confirmChangelogEntry(id: $id, locale: $locale) {
     ...ChangelogEntry
   }
 }
@@ -13221,6 +13226,7 @@ export type ConfirmChangelogEntryMutationFn = Apollo.MutationFunction<ConfirmCha
  * const [confirmChangelogEntryMutation, { data, loading, error }] = useConfirmChangelogEntryMutation({
  *   variables: {
  *      id: // value for 'id'
+ *      locale: // value for 'locale'
  *   },
  * });
  */

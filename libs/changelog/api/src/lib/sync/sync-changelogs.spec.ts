@@ -97,6 +97,9 @@ describe('syncChangelogs', () => {
         lead: 'A lead',
         description: 'A description',
         actionRequired: false,
+        translations: {
+          createMany: { data: [] },
+        },
       },
     });
     expect(client.changelogEntry.create).toHaveBeenCalledWith({
@@ -131,6 +134,7 @@ describe('syncChangelogs', () => {
         lead: 'A lead',
         description: 'A description',
         actionRequired: false,
+        translations: [],
       },
     ]);
 
@@ -158,6 +162,7 @@ describe('syncChangelogs', () => {
         lead: 'A lead',
         description: 'A description',
         actionRequired: true,
+        translations: [],
       },
     ]);
 
@@ -173,6 +178,10 @@ describe('syncChangelogs', () => {
       lead: 'A lead',
       description: 'A description',
       actionRequired: true,
+      translations: {
+        deleteMany: {},
+        createMany: { data: [] },
+      },
     });
     expect(updateArgs.data).not.toHaveProperty('confirmedAt');
     expect(updateArgs.data).not.toHaveProperty('confirmedByUserId');
@@ -222,6 +231,160 @@ describe('syncChangelogs', () => {
     expect(createArgs.data.description).toBe(
       `![Screenshot](data:image/png;base64,${Buffer.from('fake-png').toString('base64')})`
     );
+  });
+});
+
+describe('syncChangelogs translations', () => {
+  let directory: string;
+
+  beforeEach(() => {
+    directory = mkdtempSync(path.join(os.tmpdir(), 'changelogs-'));
+  });
+
+  afterEach(() => {
+    rmSync(directory, { recursive: true, force: true });
+  });
+
+  const germanMarkdown = [
+    '---',
+    'title: Erster Eintrag',
+    'lead: Ein Lead auf Deutsch',
+    '---',
+    '',
+    'Eine Beschreibung',
+  ].join('\n');
+
+  it('creates entries with their translations', async () => {
+    writeEntry(directory, '20260101120000_first', validMarkdown('First'));
+    writeFileSync(
+      path.join(directory, '20260101120000_first', 'changelog.de.md'),
+      germanMarkdown
+    );
+
+    const client = createMockClient();
+    const result = await syncChangelogs(client, directory);
+
+    expect(result.created).toEqual(['20260101120000_first']);
+    expect(client.changelogEntry.create).toHaveBeenCalledWith({
+      data: expect.objectContaining({
+        title: 'First',
+        translations: {
+          createMany: {
+            data: [
+              {
+                locale: 'de',
+                title: 'Erster Eintrag',
+                lead: 'Ein Lead auf Deutsch',
+                description: 'Eine Beschreibung',
+              },
+            ],
+          },
+        },
+      }),
+    });
+  });
+
+  it('updates an entry when only a translation changed', async () => {
+    writeEntry(directory, '20260101120000_first', validMarkdown('First'));
+    writeFileSync(
+      path.join(directory, '20260101120000_first', 'changelog.de.md'),
+      germanMarkdown
+    );
+
+    const client = createMockClient();
+    client.changelogEntry.findMany.mockResolvedValue([
+      {
+        id: 'entry-1',
+        name: '20260101120000_first',
+        releasedAt: new Date(Date.UTC(2026, 0, 1, 12, 0, 0)),
+        title: 'First',
+        lead: 'A lead',
+        description: 'A description',
+        actionRequired: false,
+        translations: [
+          {
+            locale: 'de',
+            title: 'Alter Titel',
+            lead: 'Ein Lead auf Deutsch',
+            description: 'Eine Beschreibung',
+          },
+        ],
+      },
+    ]);
+
+    const result = await syncChangelogs(client, directory);
+
+    expect(result.updated).toEqual(['20260101120000_first']);
+    expect(client.changelogEntry.update).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          translations: {
+            deleteMany: {},
+            createMany: {
+              data: [
+                {
+                  locale: 'de',
+                  title: 'Erster Eintrag',
+                  lead: 'Ein Lead auf Deutsch',
+                  description: 'Eine Beschreibung',
+                },
+              ],
+            },
+          },
+        }),
+      })
+    );
+  });
+
+  it('leaves entries untouched when base and translations are unchanged', async () => {
+    writeEntry(directory, '20260101120000_first', validMarkdown('First'));
+    writeFileSync(
+      path.join(directory, '20260101120000_first', 'changelog.de.md'),
+      germanMarkdown
+    );
+
+    const client = createMockClient();
+    client.changelogEntry.findMany.mockResolvedValue([
+      {
+        id: 'entry-1',
+        name: '20260101120000_first',
+        releasedAt: new Date(Date.UTC(2026, 0, 1, 12, 0, 0)),
+        title: 'First',
+        lead: 'A lead',
+        description: 'A description',
+        actionRequired: false,
+        translations: [
+          {
+            locale: 'de',
+            title: 'Erster Eintrag',
+            lead: 'Ein Lead auf Deutsch',
+            description: 'Eine Beschreibung',
+          },
+        ],
+      },
+    ]);
+
+    const result = await syncChangelogs(client, directory);
+
+    expect(result.unchanged).toEqual(['20260101120000_first']);
+    expect(client.changelogEntry.update).not.toHaveBeenCalled();
+  });
+
+  it('rejects translation files with unsupported locales', async () => {
+    writeEntry(directory, '20260101120000_first', validMarkdown('First'));
+    writeFileSync(
+      path.join(directory, '20260101120000_first', 'changelog.es.md'),
+      germanMarkdown
+    );
+
+    const client = createMockClient();
+    const result = await syncChangelogs(client, directory);
+
+    expect(result.errors.map(({ name }) => name)).toEqual([
+      '20260101120000_first',
+    ]);
+    expect(result.errors[0].error.message).toMatch(/unsupported locale "es"/);
+    expect(client.changelogEntry.create).not.toHaveBeenCalled();
   });
 });
 

@@ -41,7 +41,16 @@ describe('repository changelogs', () => {
 
     for (const folderName of folderNames) {
       const entry = await readChangelogEntry(changelogsDirectory, folderName);
-      const texts = [entry.title, entry.lead, entry.description ?? ''];
+      const texts = [
+        entry.title,
+        entry.lead,
+        entry.description ?? '',
+        ...entry.translations.flatMap(translation => [
+          translation.title,
+          translation.lead,
+          translation.description ?? '',
+        ]),
+      ];
 
       if (texts.some(text => text.includes(TODO_MARKER))) {
         offenders.push(folderName);

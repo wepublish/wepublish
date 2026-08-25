@@ -2730,6 +2730,7 @@ export type MutationCancelUserSubscriptionArgs = {
 
 export type MutationConfirmChangelogEntryArgs = {
   id: Scalars['String'];
+  locale?: InputMaybe<Scalars['String']>;
 };
 
 export type MutationConfirmEmailChangeArgs = {
@@ -5239,6 +5240,7 @@ export type QueryChallengeProviderSettingsArgs = {
 
 export type QueryChangelogEntriesArgs = {
   filter?: InputMaybe<ChangelogEntryFilter>;
+  locale?: InputMaybe<Scalars['String']>;
   skip?: Scalars['Int'];
   take?: Scalars['Int'];
 };
