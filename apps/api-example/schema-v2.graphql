@@ -3332,7 +3332,7 @@ type Query {
   subscriptions(cursorId: String, filter: SubscriptionFilter, order: SortOrder = Ascending, skip: Int = 0, sort: SubscriptionSort = ModifiedAt, take: Int = 10): PublicSubscriptionConnection!
 
   """Returns a paginated list of subscriptions based on the filters given."""
-  subscriptionsAsCsv(autoRenew: Boolean, cancellationDateFrom: DateFilter, cancellationDateTo: DateFilter, deactivationDateFrom: DateFilter, deactivationDateTo: DateFilter, deactivationReason: String, extendable: Boolean, memberPlanID: String, paidUntilFrom: DateFilter, paidUntilTo: DateFilter, paymentMethodID: String, paymentPeriodicity: PaymentPeriodicity, startsAtFrom: DateFilter, startsAtTo: DateFilter, subscriptionIDs: [String!], userHasAddress: Boolean, userID: String, userIDs: [String!]): String!
+  subscriptionsAsCsv(activeAt: DateTime, autoRenew: Boolean, cancellationDateFrom: DateFilter, cancellationDateTo: DateFilter, deactivationDateFrom: DateFilter, deactivationDateTo: DateFilter, deactivationReason: String, extendable: Boolean, memberPlanID: String, paidUntilFrom: DateFilter, paidUntilTo: DateFilter, paymentMethodID: String, paymentPeriodicity: PaymentPeriodicity, startsAtFrom: DateFilter, startsAtTo: DateFilter, subscriptionIDs: [String!], userHasAddress: Boolean, userID: String, userIDs: [String!]): String!
 
   """Returns a single sync provider setting by id."""
   syncProviderSetting(id: String!): SettingSyncProvider!
@@ -3912,6 +3912,7 @@ enum SubscriptionEvent {
 }
 
 input SubscriptionFilter {
+  activeAt: DateTime
   autoRenew: Boolean
   cancellationDateFrom: DateFilter
   cancellationDateTo: DateFilter

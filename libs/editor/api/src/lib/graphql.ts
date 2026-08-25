@@ -5099,6 +5099,7 @@ export type QuerySubscriptionsArgs = {
 
 
 export type QuerySubscriptionsAsCsvArgs = {
+  activeAt?: InputMaybe<Scalars['DateTime']>;
   autoRenew?: InputMaybe<Scalars['Boolean']>;
   cancellationDateFrom?: InputMaybe<DateFilter>;
   cancellationDateTo?: InputMaybe<DateFilter>;
@@ -5694,6 +5695,7 @@ export enum SubscriptionEvent {
 }
 
 export type SubscriptionFilter = {
+  activeAt?: InputMaybe<Scalars['DateTime']>;
   autoRenew?: InputMaybe<Scalars['Boolean']>;
   cancellationDateFrom?: InputMaybe<DateFilter>;
   cancellationDateTo?: InputMaybe<DateFilter>;
@@ -8298,6 +8300,7 @@ export type SubscriptionQueryVariables = Exact<{
 export type SubscriptionQuery = { __typename?: 'Query', subscription: { __typename?: 'PublicSubscription', id: string, createdAt: string, modifiedAt: string, confirmed: boolean, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, extendable: boolean, currency: Currency, user: { __typename?: 'User', id: string, name: string, firstName?: string | null }, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: RichtextJSONDocument | null, shortDescription?: RichtextJSONDocument | null, slug: string, active: boolean, productType: ProductType, tags?: Array<string> | null, externalReward?: string | null, currency: Currency, extendable: boolean, maxCount?: number | null, migrateToTargetPaymentMethodID?: string | null, amountPerMonthMin: number, amountPerMonthMax?: number | null, amountPerMonthTarget?: number | null, defaultPaymentPeriodicity?: PaymentPeriodicity | null, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, periodicityPricing?: Array<{ __typename?: 'PeriodicityPrice', periodicity: PaymentPeriodicity, label?: string | null, amountMin?: number | null, amountTarget?: number | null, amountMax?: number | null }> | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> }> }, properties: Array<{ __typename?: 'Property', key: string, value: string, public: boolean }>, paymentMethod: { __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null } };
 
 export type SubscriptionsAsCsvQueryVariables = Exact<{
+  activeAt?: InputMaybe<Scalars['DateTime']>;
   autoRenew?: InputMaybe<Scalars['Boolean']>;
   userHasAddress?: InputMaybe<Scalars['Boolean']>;
   extendable?: InputMaybe<Scalars['Boolean']>;
@@ -18168,8 +18171,9 @@ export type SubscriptionQueryHookResult = ReturnType<typeof useSubscriptionQuery
 export type SubscriptionLazyQueryHookResult = ReturnType<typeof useSubscriptionLazyQuery>;
 export type SubscriptionQueryResult = Apollo.QueryResult<SubscriptionQuery, SubscriptionQueryVariables>;
 export const SubscriptionsAsCsvDocument = gql`
-    query SubscriptionsAsCsv($autoRenew: Boolean, $userHasAddress: Boolean, $extendable: Boolean, $cancellationDateTo: DateFilter, $cancellationDateFrom: DateFilter, $deactivationDateTo: DateFilter, $deactivationDateFrom: DateFilter, $paidUntilTo: DateFilter, $paidUntilFrom: DateFilter, $startsAtTo: DateFilter, $startsAtFrom: DateFilter, $deactivationReason: String, $memberPlanID: String, $paymentMethodID: String, $subscriptionIDs: [String!], $userID: String, $userIDs: [String!], $paymentPeriodicity: PaymentPeriodicity) {
+    query SubscriptionsAsCsv($activeAt: DateTime, $autoRenew: Boolean, $userHasAddress: Boolean, $extendable: Boolean, $cancellationDateTo: DateFilter, $cancellationDateFrom: DateFilter, $deactivationDateTo: DateFilter, $deactivationDateFrom: DateFilter, $paidUntilTo: DateFilter, $paidUntilFrom: DateFilter, $startsAtTo: DateFilter, $startsAtFrom: DateFilter, $deactivationReason: String, $memberPlanID: String, $paymentMethodID: String, $subscriptionIDs: [String!], $userID: String, $userIDs: [String!], $paymentPeriodicity: PaymentPeriodicity) {
   subscriptionsAsCsv(
+    activeAt: $activeAt
     autoRenew: $autoRenew
     userHasAddress: $userHasAddress
     extendable: $extendable
@@ -18204,6 +18208,7 @@ export const SubscriptionsAsCsvDocument = gql`
  * @example
  * const { data, loading, error } = useSubscriptionsAsCsvQuery({
  *   variables: {
+ *      activeAt: // value for 'activeAt'
  *      autoRenew: // value for 'autoRenew'
  *      userHasAddress: // value for 'userHasAddress'
  *      extendable: // value for 'extendable'

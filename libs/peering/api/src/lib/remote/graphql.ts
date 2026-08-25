@@ -5097,6 +5097,7 @@ export type QuerySubscriptionsArgs = {
 
 
 export type QuerySubscriptionsAsCsvArgs = {
+  activeAt?: InputMaybe<Scalars['DateTime']>;
   autoRenew?: InputMaybe<Scalars['Boolean']>;
   cancellationDateFrom?: InputMaybe<DateFilter>;
   cancellationDateTo?: InputMaybe<DateFilter>;
@@ -5692,6 +5693,7 @@ export enum SubscriptionEvent {
 }
 
 export type SubscriptionFilter = {
+  activeAt?: InputMaybe<Scalars['DateTime']>;
   autoRenew?: InputMaybe<Scalars['Boolean']>;
   cancellationDateFrom?: InputMaybe<DateFilter>;
   cancellationDateTo?: InputMaybe<DateFilter>;
