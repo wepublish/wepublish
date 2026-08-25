@@ -583,7 +583,8 @@
       "confirmSuccess": "Merci ! La tâche a été marquée comme effectuée.",
       "releasedAt": "Publié le {{date, PP}}",
       "completedAt": "Effectué le {{date, PP}}",
-      "noEntries": "Aucune entrée de changelog pour l'instant."
+      "noEntries": "Aucune entrée de changelog pour l'instant.",
+      "allCaughtUp": "Tout est lu – aucune nouvelle entrée."
     },
     "chooseEditImage": {
       "chooseImage": "Choisir une image",

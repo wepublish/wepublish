@@ -1,0 +1,18 @@
+fragment NotificationRead on NotificationRead {
+  id
+  createdAt
+  source
+  itemId
+}
+
+query NotificationReads {
+  notificationReads {
+    ...NotificationRead
+  }
+}
+
+mutation MarkNotificationRead($source: NotificationSource!, $itemId: String!) {
+  markNotificationRead(source: $source, itemId: $itemId) {
+    ...NotificationRead
+  }
+}

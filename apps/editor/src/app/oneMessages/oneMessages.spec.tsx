@@ -2,13 +2,11 @@ import type { Mock } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
 
 import { OneMessages } from './oneMessages';
-import { isMinimized, setMinimized, useOneMessages } from './oneMessages.hooks';
+import { useOneMessages } from './oneMessages.hooks';
 import type { OneMessage } from './oneMessages.types';
 
 vi.mock('./oneMessages.hooks', () => ({
   useOneMessages: vi.fn(),
-  isMinimized: vi.fn(() => false),
-  setMinimized: vi.fn(),
 }));
 
 vi.mock('react-i18next', () => ({
@@ -19,8 +17,6 @@ vi.mock('react-i18next', () => ({
 }));
 
 const mockedUseOneMessages = useOneMessages as Mock;
-const mockedIsMinimized = isMinimized as Mock;
-const mockedSetMinimized = setMinimized as Mock;
 
 const message = (overrides: Partial<OneMessage> = {}): OneMessage => ({
   id: 1,
@@ -35,15 +31,13 @@ const message = (overrides: Partial<OneMessage> = {}): OneMessage => ({
   ...overrides,
 });
 
-const renderWith = (messages: OneMessage[]) => {
+const renderWith = (
+  messages: OneMessage[],
+  props: Parameters<typeof OneMessages>[0] = {}
+) => {
   mockedUseOneMessages.mockReturnValue(messages);
-  return render(<OneMessages />);
+  return render(<OneMessages {...props} />);
 };
-
-beforeEach(() => {
-  mockedIsMinimized.mockReturnValue(false);
-  mockedSetMinimized.mockClear();
-});
 
 it('renders nothing when there are no messages', () => {
   const { container } = renderWith([]);
@@ -51,10 +45,22 @@ it('renders nothing when there are no messages', () => {
   expect(container.firstChild).toBeNull();
 });
 
+it('renders the empty message when provided and there are no messages', () => {
+  renderWith([], { emptyMessage: 'nothing here' });
+
+  expect(screen.getByText('nothing here')).toBeTruthy();
+});
+
 it('renders the We.Publish team header above the messages', () => {
   renderWith([message()]);
 
   expect(screen.getByText('oneMessages.header')).toBeTruthy();
+});
+
+it('hides the header when hideHeader is set', () => {
+  renderWith([message()], { hideHeader: true });
+
+  expect(screen.queryByText('oneMessages.header')).toBeNull();
 });
 
 it('renders the title and the body', () => {
@@ -96,37 +102,52 @@ it('falls back to the generic link label when link_label is null', () => {
   ).toBeTruthy();
 });
 
-it('minimizes a dismissible message when its close button is clicked', () => {
-  renderWith([message({ id: 5, dismissible: true })]);
+it('renders the source tag when provided', () => {
+  renderWith([message()], { sourceTag: 'We.Publish Team' });
+
+  expect(screen.getByText('We.Publish Team')).toBeTruthy();
+});
+
+it('hides messages that were already read', () => {
+  renderWith(
+    [
+      message({ id: 1, title: 'Read one' }),
+      message({ id: 2, title: 'Unread' }),
+    ],
+    { readItemIds: new Set(['1']), onMarkRead: vi.fn() }
+  );
+
+  expect(screen.queryByText('Read one')).toBeNull();
+  expect(screen.getByText('Unread')).toBeTruthy();
+});
+
+it('renders the empty message when every message was read', () => {
+  renderWith([message({ id: 1 })], {
+    readItemIds: new Set(['1']),
+    emptyMessage: 'all read',
+  });
+
+  expect(screen.getByText('all read')).toBeTruthy();
+});
+
+it('marks a dismissible message as read when its close button is clicked', () => {
+  const onMarkRead = vi.fn();
+  renderWith([message({ id: 5, dismissible: true })], { onMarkRead });
 
   const closeButton = screen.getByRole('button');
   fireEvent.click(closeButton);
 
-  expect(mockedSetMinimized).toHaveBeenCalledWith(5, true);
+  expect(onMarkRead).toHaveBeenCalledWith('5');
 });
 
 it('does not render a close button for non-dismissible messages', () => {
-  renderWith([message({ dismissible: false })]);
+  renderWith([message({ dismissible: false })], { onMarkRead: vi.fn() });
 
   expect(screen.queryByRole('button')).toBeNull();
 });
 
-it('renders a minimized message as just the title without the body', () => {
-  mockedIsMinimized.mockReturnValue(true);
-  const { container } = renderWith([
-    message({ id: 8, title: 'Minimized notice', body: 'Hidden body' }),
-  ]);
+it('does not render a close button without an onMarkRead handler', () => {
+  renderWith([message({ dismissible: true })]);
 
-  expect(screen.getByText('Minimized notice')).toBeTruthy();
-  expect(screen.queryByText('Hidden body')).toBeNull();
-  expect(container.querySelector('p')).toBeNull();
-});
-
-it('expands a minimized message when it is clicked', () => {
-  mockedIsMinimized.mockReturnValue(true);
-  renderWith([message({ id: 8, title: 'Minimized notice' })]);
-
-  fireEvent.click(screen.getByText('Minimized notice'));
-
-  expect(mockedSetMinimized).toHaveBeenCalledWith(8, false);
+  expect(screen.queryByRole('button')).toBeNull();
 });

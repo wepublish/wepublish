@@ -288,23 +288,23 @@ export function ChangelogActionRequired({
             sourceTag={sourceTag}
             actions={
               <>
+                <Button
+                  size="sm"
+                  appearance={entry.description ? 'default' : 'primary'}
+                  onClick={() => setConfirmEntry(entry)}
+                >
+                  {t('changelog.markAsDone')}
+                </Button>
+
                 {entry.description && (
                   <Button
                     size="sm"
-                    appearance="subtle"
+                    appearance="primary"
                     onClick={() => setDetailsEntry(entry)}
                   >
                     {t('changelog.details')}
                   </Button>
                 )}
-
-                <Button
-                  size="sm"
-                  appearance="primary"
-                  onClick={() => setConfirmEntry(entry)}
-                >
-                  {t('changelog.markAsDone')}
-                </Button>
               </>
             }
           >
@@ -343,6 +343,10 @@ export interface ChangelogDashboardProps {
    * notifications, so the dashboard does not list them twice.
    */
   hideUnconfirmedActionRequired?: boolean;
+  /** Entries whose id is in here are hidden (already read by the user) */
+  readEntryIds?: ReadonlySet<string>;
+  /** Enables marking entries as read for the current user */
+  onMarkRead?: (itemId: string) => void;
 }
 
 export function ChangelogDashboard({
@@ -350,6 +354,8 @@ export function ChangelogDashboard({
   paginated = false,
   sourceTag,
   hideUnconfirmedActionRequired = false,
+  readEntryIds,
+  onMarkRead,
 }: ChangelogDashboardProps) {
   const { t } = useTranslation();
   const [limit, setLimit] = useState(take);
@@ -361,7 +367,10 @@ export function ChangelogDashboard({
   const { data, loading, error } = useChangelogEntriesQuery({
     fetchPolicy: 'cache-and-network',
     variables: {
-      take: hideUnconfirmedActionRequired ? limit + 10 : limit,
+      take:
+        limit +
+        (hideUnconfirmedActionRequired ? 10 : 0) +
+        (readEntryIds?.size ?? 0),
     },
   });
 
@@ -378,13 +387,21 @@ export function ChangelogDashboard({
   }
 
   const nodes = data?.changelogEntries.nodes ?? [];
-  const entries = (
-    hideUnconfirmedActionRequired ?
-      nodes.filter(entry => !(entry.actionRequired && !entry.confirmedAt))
-    : nodes).slice(0, limit);
+  const entries = nodes
+    .filter(
+      entry =>
+        !hideUnconfirmedActionRequired ||
+        !(entry.actionRequired && !entry.confirmedAt)
+    )
+    .filter(entry => !readEntryIds?.has(entry.id))
+    .slice(0, limit);
 
   if (!entries.length) {
-    return <CenteredText>{t('changelog.noEntries')}</CenteredText>;
+    return (
+      <CenteredText>
+        {nodes.length ? t('changelog.allCaughtUp') : t('changelog.noEntries')}
+      </CenteredText>
+    );
   }
 
   return (
@@ -398,6 +415,10 @@ export function ChangelogDashboard({
             tags={<ChangelogEntryTag entry={entry} />}
             sourceTag={sourceTag}
             onClick={() => setDetailsEntry(entry)}
+            closable={
+              !!onMarkRead && (!entry.actionRequired || !!entry.confirmedAt)
+            }
+            onClose={() => onMarkRead?.(entry.id)}
           >
             <EntryLead>{entry.lead}</EntryLead>
 

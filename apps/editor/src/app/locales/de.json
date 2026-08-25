@@ -579,7 +579,8 @@
       "confirmSuccess": "Danke! Die Aufgabe wurde als erledigt markiert.",
       "releasedAt": "Veröffentlicht am {{date, PP}}",
       "completedAt": "Erledigt am {{date, PP}}",
-      "noEntries": "Noch keine Changelog-Einträge."
+      "noEntries": "Noch keine Changelog-Einträge.",
+      "allCaughtUp": "Alles gelesen – keine neuen Einträge."
     },
     "chooseEditImage": {
       "chooseImage": "Bild wählen",

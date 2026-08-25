@@ -1176,6 +1176,7 @@ model User {
   pageRevisions          PageRevision[]
   mailchimpSyncErrors    MailchimpSyncError[]
   changelogConfirmations ChangelogEntry[]
+  notificationReads      NotificationRead[]
 
   @@index([createdAt])
   @@map("users")
@@ -2144,6 +2145,26 @@ model Goodie {
   invoiceItems InvoiceItem[]
 
   @@map("goodies")
+}
+
+enum NotificationSource {
+  CHANGELOG
+  ONE_MESSAGE
+  PERIODIC_JOB
+}
+
+model NotificationRead {
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  source NotificationSource
+  itemId String
+  userId String
+  user   User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, source, itemId])
+  @@map("notifications.reads")
 }
 
 model ChangelogEntry {

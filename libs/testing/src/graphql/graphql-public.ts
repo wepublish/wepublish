@@ -2533,6 +2533,8 @@ export type Mutation = {
   likeArticle: Article;
   /** Marks an invoice as paid. */
   markInvoiceAsPaid: Invoice;
+  /** Marks a notification as read for the current user. Requires authentication. */
+  markNotificationRead: NotificationRead;
   /** Publishes an article at the given time. */
   publishArticle: Article;
   /** Publishes an page at the given time. */
@@ -3295,6 +3297,11 @@ export type MutationMarkInvoiceAsPaidArgs = {
   id: Scalars['String'];
 };
 
+export type MutationMarkNotificationReadArgs = {
+  itemId: Scalars['String'];
+  source: NotificationSource;
+};
+
 export type MutationPublishArticleArgs = {
   id: Scalars['String'];
   publishedAt: Scalars['DateTime'];
@@ -3943,6 +3950,20 @@ export enum NavigationLinkType {
   Article = 'Article',
   External = 'External',
   Page = 'Page',
+}
+
+export type NotificationRead = {
+  __typename?: 'NotificationRead';
+  createdAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  itemId: Scalars['String'];
+  source: NotificationSource;
+};
+
+export enum NotificationSource {
+  Changelog = 'CHANGELOG',
+  OneMessage = 'ONE_MESSAGE',
+  PeriodicJob = 'PERIODIC_JOB',
 }
 
 export type OverriddenRating = {
@@ -4988,6 +5009,8 @@ export type Query = {
    *
    */
   newSubscribers: Array<DashboardSubscription>;
+  /** Returns the current user's read notifications. Requires authentication. */
+  notificationReads: Array<NotificationRead>;
   /** Returns an page by id or slug. */
   page: Page;
   /** Returns a single page revision including its full content. */

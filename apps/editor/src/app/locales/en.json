@@ -578,7 +578,8 @@
       "confirmSuccess": "Thanks! The task has been marked as done.",
       "releasedAt": "Released on {{date, PP}}",
       "completedAt": "Completed on {{date, PP}}",
-      "noEntries": "No changelog entries yet."
+      "noEntries": "No changelog entries yet.",
+      "allCaughtUp": "All caught up – no new entries."
     },
     "chooseEditImage": {
       "chooseImage": "Choose Image",

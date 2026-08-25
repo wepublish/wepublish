@@ -2536,6 +2536,11 @@ type Mutation {
   """Marks an invoice as paid."""
   markInvoiceAsPaid(id: String!): Invoice!
 
+  """
+  Marks a notification as read for the current user. Requires authentication.
+  """
+  markNotificationRead(itemId: String!, source: NotificationSource!): NotificationRead!
+
   """Publishes an article at the given time."""
   publishArticle(id: String!, publishedAt: DateTime!): Article!
 
@@ -2812,6 +2817,19 @@ enum NavigationLinkType {
   Article
   External
   Page
+}
+
+type NotificationRead {
+  createdAt: DateTime!
+  id: String!
+  itemId: String!
+  source: NotificationSource!
+}
+
+enum NotificationSource {
+  CHANGELOG
+  ONE_MESSAGE
+  PERIODIC_JOB
 }
 
 type OverriddenRating {
@@ -3873,6 +3891,11 @@ type Query {
 
   "\n      Returns all new subscribers in a given timeframe.\n      Includes already deactivated ones.\n    "
   newSubscribers(end: DateTime, start: DateTime!): [DashboardSubscription!]!
+
+  """
+  Returns the current user's read notifications. Requires authentication.
+  """
+  notificationReads: [NotificationRead!]!
 
   """Returns an page by id or slug."""
   page(id: String, slug: String): Page!

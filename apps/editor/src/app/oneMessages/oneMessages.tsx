@@ -1,9 +1,8 @@
 import styled from '@emotion/styled';
 import { NotificationItem, NotificationSeverity } from '@wepublish/ui/editor';
-import { useReducer } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { isMinimized, setMinimized, useOneMessages } from './oneMessages.hooks';
+import { useOneMessages } from './oneMessages.hooks';
 import type { Severity } from './oneMessages.types';
 
 const SEVERITY_TYPE: Record<Severity, NotificationSeverity> = {
@@ -42,69 +41,61 @@ export interface OneMessagesProps {
   hideHeader?: boolean;
   emptyMessage?: string;
   sourceTag?: string;
+  /** Messages whose id is in here are hidden (already read by the user) */
+  readItemIds?: ReadonlySet<string>;
+  /** Enables marking dismissible messages as read for the current user */
+  onMarkRead?: (itemId: string) => void;
 }
 
 export function OneMessages({
   hideHeader,
   emptyMessage,
   sourceTag,
+  readItemIds,
+  onMarkRead,
 }: OneMessagesProps) {
   const { t, i18n } = useTranslation();
   const messages = useOneMessages(i18n.language);
-  const [, forceRender] = useReducer((n: number) => n + 1, 0);
 
-  if (!messages.length) {
+  const visibleMessages =
+    readItemIds ?
+      messages.filter(message => !readItemIds.has(String(message.id)))
+    : messages;
+
+  if (!visibleMessages.length) {
     return emptyMessage ? <EmptyText>{emptyMessage}</EmptyText> : null;
   }
-
-  const expand = (id: number) => {
-    setMinimized(id, false);
-    forceRender();
-  };
-
-  const minimize = (id: number) => {
-    setMinimized(id, true);
-    forceRender();
-  };
 
   return (
     <Stack>
       {!hideHeader && <Header>{t('oneMessages.header')}</Header>}
 
-      {messages.map(message =>
-        isMinimized(message) ?
-          <NotificationItem
-            key={message.id}
-            severity={SEVERITY_TYPE[message.severity]}
-            title={message.title}
-            sourceTag={sourceTag}
-            onClick={() => expand(message.id)}
-          />
-        : <NotificationItem
-            key={message.id}
-            severity={SEVERITY_TYPE[message.severity]}
-            title={message.title}
-            sourceTag={sourceTag}
-            closable={message.dismissible}
-            onClose={() => minimize(message.id)}
-          >
-            {message.body || message.link_url ?
-              <>
-                {message.body && <Body>{message.body}</Body>}
+      {visibleMessages.map(message => (
+        <NotificationItem
+          key={message.id}
+          severity={SEVERITY_TYPE[message.severity]}
+          title={message.title}
+          sourceTag={sourceTag}
+          closable={!!onMarkRead && message.dismissible}
+          onClose={() => onMarkRead?.(String(message.id))}
+        >
+          {message.body || message.link_url ?
+            <>
+              {message.body && <Body>{message.body}</Body>}
 
-                {message.link_url && (
-                  <Link
-                    href={message.link_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {message.link_label || t('oneMessages.linkFallback')}
-                  </Link>
-                )}
-              </>
-            : null}
-          </NotificationItem>
-      )}
+              {message.link_url && (
+                <Link
+                  href={message.link_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {message.link_label || t('oneMessages.linkFallback')}
+                </Link>
+              )}
+            </>
+          : null}
+        </NotificationItem>
+      ))}
     </Stack>
   );
 }

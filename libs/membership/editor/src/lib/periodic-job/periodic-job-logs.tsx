@@ -50,12 +50,20 @@ export interface PeriodicJobsLogProps {
   take?: number;
   onlyProblems?: boolean;
   sourceTag?: string;
+  /** Log items whose id is in here are hidden (already read by the user) */
+  readItemIds?: ReadonlySet<string>;
+  /** Enables marking log items as read for the current user */
+  onMarkRead?: (itemId: string) => void;
 }
+
+const NEVER_RAN_ITEM_ID = 'never-ran';
 
 export function PeriodicJobsLog({
   take = 5,
   onlyProblems = false,
   sourceTag,
+  readItemIds,
+  onMarkRead,
 }: PeriodicJobsLogProps) {
   const { t } = useTranslation();
 
@@ -98,36 +106,52 @@ export function PeriodicJobsLog({
     return now.getTime() - warningThreshold > lastJob.getTime();
   }, [jobs]);
 
-  const hasProblems =
-    jobDidNotRun ||
-    !jobs.length ||
-    jobs.some(job => ['error', 'warning'].includes(getSeverity(job)));
+  const isRead = (itemId: string) => readItemIds?.has(itemId) ?? false;
 
-  if (onlyProblems && (loading || !hasProblems)) {
+  // The "did not run" notice is keyed by the stale execution time, so marking
+  // it as read only hides this occurrence — a new stale run shows up again.
+  const didNotRunItemId = `did-not-run:${
+    jobs.find(pj => !!pj.executionTime)?.executionTime ?? 'unknown'
+  }`;
+
+  const showDidNotRun = jobDidNotRun && !isRead(didNotRunItemId);
+  const showNeverRan = !jobs.length && !isRead(NEVER_RAN_ITEM_ID);
+  const visibleJobs = jobs.filter(job => !isRead(job.id));
+
+  const hasVisibleProblems =
+    showDidNotRun ||
+    showNeverRan ||
+    visibleJobs.some(job => ['error', 'warning'].includes(getSeverity(job)));
+
+  if (onlyProblems && (loading || !hasVisibleProblems)) {
     return null;
   }
 
   return (
     <Stack>
-      {jobDidNotRun && (
+      {showDidNotRun && (
         <NotificationItem
           severity="error"
           title={t('periodicJobsLog.jobFailedTitle')}
           sourceTag={sourceTag}
+          closable={!!onMarkRead}
+          onClose={() => onMarkRead?.(didNotRunItemId)}
         >
           {t('periodicJobsLog.concerns')}
         </NotificationItem>
       )}
 
-      {!jobs.length && (
+      {showNeverRan && (
         <NotificationItem
           severity="warning"
           title={t('periodicJobsLog.noRun')}
           sourceTag={sourceTag}
+          closable={!!onMarkRead}
+          onClose={() => onMarkRead?.(NEVER_RAN_ITEM_ID)}
         />
       )}
 
-      {jobs.map(periodicJob => {
+      {visibleJobs.map(periodicJob => {
         const severity = getSeverity(periodicJob);
 
         return (
@@ -135,6 +159,8 @@ export function PeriodicJobsLog({
             key={periodicJob.id}
             severity={severity}
             sourceTag={sourceTag}
+            closable={!!onMarkRead}
+            onClose={() => onMarkRead?.(periodicJob.id)}
             title={`${new Date(periodicJob.date).toLocaleString('de', {
               dateStyle: 'medium',
             })}: ${getStatusText(severity, t)}`}

@@ -20,6 +20,7 @@ export const unselectPassword: Record<
     | 'pageRevisions'
     | 'mailchimpSyncErrors'
     | 'changelogConfirmations'
+    | 'notificationReads'
   >,
   boolean
 > = {

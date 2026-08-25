@@ -67,7 +67,10 @@ export function NotificationItem({
         type={severity}
         showIcon
         closable={closable}
-        onClose={onClose}
+        onClose={event => {
+          event?.stopPropagation();
+          onClose?.();
+        }}
         header={
           <TitleRow>
             <strong>{title}</strong>
