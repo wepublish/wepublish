@@ -25,6 +25,7 @@ export type Action = {
   type: SubscriptionEvent;
   daysAwayFromEnding: number | null;
   mailTemplateId: string | null;
+  letterTemplateId: string | null;
 };
 
 export type LookupActionInput = {

@@ -59,6 +59,7 @@ export class SubscriptionFlowService {
         intervals: {
           include: {
             mailTemplate: true,
+            letterTemplate: true,
           },
         },
       },
@@ -257,6 +258,14 @@ export class SubscriptionFlowService {
               },
             }
           : {},
+        letterTemplate:
+          interval.letterTemplateId ?
+            {
+              connect: {
+                id: interval.letterTemplateId,
+              },
+            }
+          : {},
       },
     });
 
@@ -284,28 +293,30 @@ export class SubscriptionFlowService {
       false
     );
 
-    await this.prismaService.$transaction([
-      this.prismaService.subscriptionInterval.update({
-        where: { id: interval.id },
-        data: { mailTemplate: { disconnect: true } },
-      }),
-      this.prismaService.subscriptionInterval.update({
-        where: {
-          id: interval.id,
-        },
-        data: {
-          mailTemplate:
-            interval.mailTemplateId ?
-              {
-                connect: {
-                  id: interval.mailTemplateId,
-                },
-              }
-            : {},
-          daysAwayFromEnding: interval.daysAwayFromEnding,
-        },
-      }),
-    ]);
+    await this.prismaService.subscriptionInterval.update({
+      where: {
+        id: interval.id,
+      },
+      data: {
+        ...(interval.mailTemplateId !== undefined ?
+          {
+            mailTemplate:
+              interval.mailTemplateId ?
+                { connect: { id: interval.mailTemplateId } }
+              : { disconnect: true },
+          }
+        : {}),
+        ...(interval.letterTemplateId !== undefined ?
+          {
+            letterTemplate:
+              interval.letterTemplateId ?
+                { connect: { id: interval.letterTemplateId } }
+              : { disconnect: true },
+          }
+        : {}),
+        daysAwayFromEnding: interval.daysAwayFromEnding,
+      },
+    });
 
     return this.getFlows(false);
   }

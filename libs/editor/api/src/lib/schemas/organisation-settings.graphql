@@ -1,0 +1,22 @@
+query OrganisationSettings {
+  organisationSettings {
+    ...OrganisationSettings
+  }
+}
+
+mutation UpdateOrganisationSettings($input: OrganisationSettingsInput!) {
+  updateOrganisationSettings(input: $input) {
+    ...OrganisationSettings
+  }
+}
+
+fragment OrganisationSettings on OrganisationSettings {
+  name
+  street
+  number
+  zip
+  city
+  country
+  iban
+  referenceType
+}

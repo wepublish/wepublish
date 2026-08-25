@@ -1,0 +1,62 @@
+query LetterTemplate {
+  letterTemplates {
+    ...TinyLetterTemplate
+  }
+  letterProvider {
+    ...FullLetterProvider
+  }
+}
+
+query LetterTemplateById($id: String!) {
+  letterTemplate(id: $id) {
+    ...FullLetterTemplate
+  }
+}
+
+mutation CreateLetterTemplate($input: LetterTemplateInput!) {
+  createLetterTemplate(input: $input) {
+    ...FullLetterTemplate
+  }
+}
+
+mutation UpdateLetterTemplate($id: String!, $input: LetterTemplateInput!) {
+  updateLetterTemplate(id: $id, input: $input) {
+    ...FullLetterTemplate
+  }
+}
+
+mutation DeleteLetterTemplate($id: String!) {
+  deleteLetterTemplate(id: $id) {
+    id
+  }
+}
+
+query PreviewLetter($input: LetterTemplatePreviewInput!) {
+  previewLetter(input: $input) {
+    pdf
+    missingPlaceholders
+  }
+}
+
+# Everything the list views and the flow picker render. Without htmlContent:
+# it is a whole printed page per template and a dropdown does not need it.
+fragment TinyLetterTemplate on LetterTemplateModel {
+  id
+  name
+  description
+  context
+  qrBill
+}
+
+fragment FullLetterTemplate on LetterTemplateModel {
+  ...TinyLetterTemplate
+  htmlContent
+  addressPosition
+  deliveryProduct
+  printMode
+  printSpectrum
+}
+
+fragment FullLetterProvider on LetterProviderModel {
+  name
+}
