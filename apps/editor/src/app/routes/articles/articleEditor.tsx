@@ -75,6 +75,8 @@ import {
   toaster,
 } from 'rsuite';
 
+import { openPreviewWindow } from '../../openPreview';
+
 const IconButtonMarginTop = styled(RIconButton)`
   margin-top: 4px;
 `;
@@ -866,36 +868,39 @@ function ArticleEditor() {
                     disabled={hasChanged || !id || !canPreview}
                     size="lg"
                     icon={<MdRemoveRedEye />}
-                    onClick={async () => {
-                      const previewWindow = window.open(
+                    onClick={() => {
+                      const result = openPreviewWindow(
                         articleData!.article.previewUrl,
-                        '_blank'
-                      );
-                      if (!previewWindow) return;
+                        {
+                          createToken: async () => {
+                            const { data: jwtData } = await createJWT();
 
-                      const { data: jwtData } = await createJWT();
-                      const token = jwtData?.createJWTForWebsiteLogin?.token;
-                      if (!token) return;
-
-                      const targetOrigin = new URL(
-                        articleData!.article.previewUrl
-                      ).origin;
-
-                      const handleMessage = (event: MessageEvent) => {
-                        if (
-                          event.source === previewWindow &&
-                          event.data === 'preview-jwt-ready'
-                        ) {
-                          previewWindow.postMessage(
-                            { previewJwt: token },
-                            targetOrigin
-                          );
+                            return jwtData?.createJWTForWebsiteLogin?.token;
+                          },
+                          onSilence: () =>
+                            toaster.push(
+                              <Message
+                                type="warning"
+                                showIcon
+                                closable
+                              >
+                                {t('previewHandshake.notResponding')}
+                              </Message>
+                            ),
                         }
-                      };
-                      window.addEventListener('message', handleMessage);
-                      setTimeout(() => {
-                        window.removeEventListener('message', handleMessage);
-                      }, 60000);
+                      );
+
+                      if (result === 'popup-blocked') {
+                        toaster.push(
+                          <Message
+                            type="warning"
+                            showIcon
+                            closable
+                          >
+                            {t('previewHandshake.popupBlocked')}
+                          </Message>
+                        );
+                      }
                     }}
                   >
                     {t('articleEditor.overview.preview')}

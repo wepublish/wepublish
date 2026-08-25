@@ -1,5 +1,9 @@
 {
   "translation": {
+    "previewHandshake": {
+      "popupBlocked": "La fenêtre d'aperçu a été bloquée par le navigateur. Veuillez autoriser les pop-ups pour l'éditeur et réessayer.",
+      "notResponding": "La fenêtre d'aperçu ne répond pas. La connexion à l'aperçu a peut-être échoué."
+    },
     "oneMessages": {
       "header": "Messages de l'équipe We.Publish",
       "expand": "Développer",
