@@ -864,9 +864,10 @@
     "invoice": {
       "areYouSure": "Are you sure?",
       "canceledAt": "Cancelled at",
-      "doNotSendMail": "Do not send a mail to the member",
+      "doNotSendMail": "Do not send a payment confirmation to the member",
       "invoiceNo": "Invoice No.",
       "manuallyPaidModalBody": "The invoice is marked as paid even though no payment has been received from the user. You should discuss your intention with the accountant.",
+      "noMailForFirstPeriod": "No payment confirmation will be sent, because this is the first period of the subscription.",
       "paidAt": "Paid at",
       "panel": {
         "invoiceHistory": "Invoice history",
@@ -1709,7 +1710,7 @@
         },
         "renewal_success": {
           "short": "The renewal worked.",
-          "description": "Goes out when a subscription renews automatically and the amount was collected successfully.",
+          "description": "Goes out as soon as a subscription renewal is paid – whether the amount was collected automatically, paid by the person themselves or marked as paid manually by the editorial team. It does not go out for the first period of a new subscription.",
           "example": "«Your subscription continues – many thanks.»"
         },
         "renewal_failed": {

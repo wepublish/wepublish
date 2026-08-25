@@ -860,9 +860,10 @@
     "invoice": {
       "areYouSure": "Bist Du sicher?",
       "canceledAt": "Storniert am",
-      "doNotSendMail": "Kein Mail an das Mitglied senden",
+      "doNotSendMail": "Keine Zahlungsbestätigung an das Mitglied senden",
       "invoiceNo": "Rechnung Nr.",
       "manuallyPaidModalBody": "Die Rechnung wird als bezahlt markiert, obwohl keine Zahlung durch den oder die Benutzer:in eingegangen ist. Du solltest dein Vorhaben mit dem:r Buchführer:in besprechen.",
+      "noMailForFirstPeriod": "Es wird keine Zahlungsbestätigung versandt, da dies die erste Periode des Abos ist.",
       "paidAt": "Bezahlt am",
       "panel": {
         "invoiceHistory": "Rechnungsverlauf",
@@ -1687,7 +1688,7 @@
         },
         "renewal_success": {
           "short": "Verlängerung hat geklappt.",
-          "description": "Geht raus, wenn ein Abo automatisch verlängert und der Betrag erfolgreich abgebucht wurde.",
+          "description": "Geht raus, sobald die Verlängerung eines Abos bezahlt ist – ob automatisch abgebucht, von der Person selbst bezahlt oder von der Redaktion manuell als bezahlt markiert. Bei der ersten Periode eines neuen Abos geht es nicht raus.",
           "example": "«Ihr Abo läuft weiter – vielen Dank.»"
         },
         "renewal_failed": {

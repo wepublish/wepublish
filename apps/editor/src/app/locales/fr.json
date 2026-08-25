@@ -864,9 +864,10 @@
     "invoice": {
       "areYouSure": "Êtes-vous sûr·e ?",
       "canceledAt": "Annulé le",
-      "doNotSendMail": "Ne pas envoyer d'e-mail au membre",
+      "doNotSendMail": "Ne pas envoyer de confirmation de paiement au membre",
       "invoiceNo": "Facture n°",
       "manuallyPaidModalBody": "La facture est marquée comme payée, bien qu'aucun paiement n'ait été effectué par l'utilisateur·trice. Veuillez vous adresser au comptable pour discuter de ce cas de figure.",
+      "noMailForFirstPeriod": "Aucune confirmation de paiement ne sera envoyée, car il s'agit de la première période de l'abonnement.",
       "paidAt": "Payée le",
       "panel": {
         "invoiceHistory": "Historique de facturation",
@@ -1641,7 +1642,7 @@
         },
         "renewal_success": {
           "short": "Le renouvellement a fonctionné.",
-          "description": "Part lorsqu’un abonnement est renouvelé automatiquement et que le montant a été encaissé avec succès.",
+          "description": "Part dès que le renouvellement d’un abonnement est payé – que le montant ait été encaissé automatiquement, payé par la personne elle-même ou marqué comme payé manuellement par la rédaction. Ne part pas pour la première période d’un nouvel abonnement.",
           "example": "« Votre abonnement continue – merci beaucoup. »"
         },
         "renewal_failed": {

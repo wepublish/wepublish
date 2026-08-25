@@ -23,6 +23,16 @@
       "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"]
     },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "tsc --noEmit -p apps/editor/tsconfig.app.json",
+          "tsc --noEmit -p apps/editor/tsconfig.server.json"
+        ],
+        "parallel": false
+      }
+    },
     "test": {
       "executor": "nx:run-commands",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],

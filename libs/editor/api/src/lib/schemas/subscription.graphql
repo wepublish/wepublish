@@ -94,6 +94,12 @@ query SubscriptionList(
 query Subscription($id: String!) {
   subscription(id: $id) {
     ...FullSubscription
+
+    periods {
+      id
+      invoiceID
+      startsAt
+    }
   }
 }
 

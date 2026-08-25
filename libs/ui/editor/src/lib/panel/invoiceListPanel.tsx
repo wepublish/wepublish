@@ -90,9 +90,32 @@ const CONFIG_COLUMNS = [
   { id: 'action', alwaysVisible: true },
 ] as const;
 
+export interface SubscriptionPeriodRef {
+  invoiceID: string;
+  startsAt: string;
+}
+
+export function shouldOfferMailOptOut(
+  periods: SubscriptionPeriodRef[] | undefined,
+  invoiceId: string
+): boolean {
+  const invoicePeriod = periods?.find(period => period.invoiceID === invoiceId);
+
+  if (!invoicePeriod) {
+    return true;
+  }
+
+  const invoiceStart = new Date(invoicePeriod.startsAt).getTime();
+
+  return (periods ?? []).some(
+    period => new Date(period.startsAt).getTime() < invoiceStart
+  );
+}
+
 export interface InvoiceListPanelProps {
   subscriptionId?: string;
   invoices?: InvoiceFragment[];
+  periods?: SubscriptionPeriodRef[];
   disabled?: boolean;
   onClose?(): void;
   onSave?(): void;
@@ -102,6 +125,7 @@ export interface InvoiceListPanelProps {
 function InvoiceListPanel({
   subscriptionId,
   invoices,
+  periods,
   disabled,
   onInvoicePaid,
 }: InvoiceListPanelProps) {
@@ -109,6 +133,8 @@ function InvoiceListPanel({
   const { t } = useTranslation();
   const [invoiceToPay, setInvoiceToPay] = useState<InvoiceFragment>();
   const [doNotSendMail, setDoNotSendMail] = useState(false);
+  const offersMailOptOut =
+    invoiceToPay ? shouldOfferMailOptOut(periods, invoiceToPay.id) : true;
   const { isVisible, toggle } = useColumnConfig(
     'subscription-invoices',
     CONFIG_COLUMNS
@@ -354,12 +380,14 @@ function InvoiceListPanel({
         <Modal.Body>
           {t('invoice.manuallyPaidModalBody')}
 
-          <Checkbox
-            checked={doNotSendMail}
-            onChange={(value, checked) => setDoNotSendMail(checked)}
-          >
-            {t('invoice.doNotSendMail')}
-          </Checkbox>
+          {offersMailOptOut ?
+            <Checkbox
+              checked={doNotSendMail}
+              onChange={(value, checked) => setDoNotSendMail(checked)}
+            >
+              {t('invoice.doNotSendMail')}
+            </Checkbox>
+          : <p>{t('invoice.noMailForFirstPeriod')}</p>}
         </Modal.Body>
         <Modal.Footer>
           <Button
