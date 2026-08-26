@@ -65,28 +65,56 @@ jobs:
           PROJECT: ${{ inputs.project }}
           INSTANCE_NAME: ${{ steps.resolve.outputs.instance_name }}
         run: |
-          RESPONSE=$(jq -nc --arg project "$PROJECT" --arg instance_name "$INSTANCE_NAME" \
+          BODY_FILE=$(mktemp)
+          HTTP_CODE=$(jq -nc --arg project "$PROJECT" --arg instance_name "$INSTANCE_NAME" \
             '{project:$project, instance_name:$instance_name}' \
-            | curl -fsS -X POST "$DATABASE_SYNC_WEBHOOK_URL" \
+            | curl -sS -o "$BODY_FILE" -w "%{http_code}" -X POST "$DATABASE_SYNC_WEBHOOK_URL" \
                 -H "Authorization: Bearer $DATABASE_SYNC_WEBHOOK_TOKEN" \
                 -H "Content-Type: application/json" \
                 --data-binary @-)
-          echo "$RESPONSE"
+          echo "HTTP status: ${HTTP_CODE}"
+          echo "Response body:"
+          cat "$BODY_FILE" || true
+          echo
 
-          STATUS=$(jq -r '.status // empty' <<<"$RESPONSE")
-          if [ "$STATUS" != "accepted" ]; then
-            echo "::error::Sync was not accepted (status: ${STATUS:-unknown}). Another sync may be in progress."
-            exit 1
-          fi
+          STATUS=$(jq -r '.status // empty' "$BODY_FILE" 2>/dev/null || true)
+          case "$STATUS" in
+            accepted)
+              echo "Sync accepted."
+              ;;
+            busy)
+              echo "::error::Another sync is already in progress on the runner."
+              exit 1
+              ;;
+            *)
+              # The webhook gateway (Portcullis) hides the runner response
+              # unless return_response is enabled on the webhook. An empty
+              # 2xx means "forwarded blindly" - continue and let the status
+              # polling determine the outcome.
+              if [ "${HTTP_CODE}" -ge 200 ] && [ "${HTTP_CODE}" -lt 300 ]; then
+                echo "::warning::Gateway returned HTTP ${HTTP_CODE} without a runner status - sync was forwarded blindly."
+              else
+                echo "::error::Unexpected response from the sync webhook (HTTP ${HTTP_CODE}, status: ${STATUS:-none}). Body printed above."
+                exit 1
+              fi
+              ;;
+          esac
 
       - name: Wait for database sync to finish
         env:
-          DATABASE_SYNC_WEBHOOK_URL: ${{ secrets.DATABASE_SYNC_WEBHOOK_URL }}
+          # Separate Portcullis webhook (methods: [GET], target: the runner's
+          # /status endpoint, return_response: true, forward_headers:
+          # [Authorization]). Until it is configured, this step is skipped.
+          DATABASE_SYNC_STATUS_URL: ${{ secrets.DATABASE_SYNC_STATUS_URL }}
           DATABASE_SYNC_WEBHOOK_TOKEN: ${{ secrets.DATABASE_SYNC_WEBHOOK_TOKEN }}
           PROJECT: ${{ inputs.project }}
           INSTANCE_NAME: ${{ steps.resolve.outputs.instance_name }}
         run: |
-          STATUS_URL="${DATABASE_SYNC_WEBHOOK_URL%/sync}/status"
+          if [ -z "$DATABASE_SYNC_STATUS_URL" ]; then
+            echo "::warning::DATABASE_SYNC_STATUS_URL is not configured - cannot verify the sync outcome. Check the runner logs or the Portcullis webhook stats."
+            exit 0
+          fi
+
           DEADLINE=$(( $(date +%s) + 1200 ))
 
           while true; do
@@ -97,7 +125,7 @@ jobs:
 
             BODY=$(curl -fsS -H "Authorization: Bearer $DATABASE_SYNC_WEBHOOK_TOKEN" \
               --get --data-urlencode "project=$PROJECT" --data-urlencode "instance_name=$INSTANCE_NAME" \
-              "$STATUS_URL" || true)
+              "$DATABASE_SYNC_STATUS_URL" || true)
             STATUS=$(jq -r '.status // empty' <<<"$BODY" 2>/dev/null || true)
 
             case "$STATUS" in
@@ -113,6 +141,10 @@ jobs:
                 echo "Sync still running..."
                 ;;
               *)
+                if grep -qi "unauthorized" <<<"$BODY"; then
+                  echo "::error::The runner rejected the status request as unauthorized - add Authorization to forward_headers of the status webhook in Portcullis."
+                  exit 1
+                fi
                 echo "No status yet (response: ${BODY:-empty})"
                 ;;
             esac
