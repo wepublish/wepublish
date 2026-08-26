@@ -71,13 +71,47 @@ fi
 echo "✅  Download successful (${HTTP_CODE})"
 
 echo "⏳  Unpack database dump..."
-gzip -d "${TMP_DIR}/database.dump.gz"
+gzip -d -f "${TMP_DIR}/database.dump.gz"
 echo "✅  Unpack database dump successful"
 
+# A dump truncated inside a COPY block restores without any error (EOF ends
+# the COPY), silently dropping data and all indexes. The trailing marker is
+# the only reliable truncation check. Old dumps predate the marker, so allow
+# an explicit override.
+if ! tail -n 2 "${TMP_DIR}/database.dump" | grep -q "WEPUBLISH_DUMP_COMPLETE"; then
+  echo "⚠️  Warning: dump has no completeness marker - it may be TRUNCATED, or it predates marker support."
+  read -r -p "Restore anyway? Type 'yes' to continue: " CONFIRM_MARKER
+  if [[ "${CONFIRM_MARKER,,}" != "yes" ]]; then
+    echo "❌ Aborted."
+    rm "${TMP_DIR}/database.dump"
+    exit 1
+  fi
+fi
+
+# Current dumps declare all extensions of the source database themselves.
+# Older dumps miss extensions entirely (excluded by --schema=public), and
+# creating them beforehand does not help since the dump drops the public
+# schema (and with it the extension) first. Inject the statement right after
+# the schema is recreated instead.
+if ! grep -q "CREATE EXTENSION IF NOT EXISTS" "${TMP_DIR}/database.dump"; then
+  echo "⏳  Old dump without extension declarations - injecting pg_trgm..."
+  awk '{print} /^CREATE SCHEMA public;$/ && !done {print "CREATE EXTENSION IF NOT EXISTS \"pg_trgm\" WITH SCHEMA \"public\" CASCADE;"; done=1}' \
+    "${TMP_DIR}/database.dump" > "${TMP_DIR}/database.dump.patched" \
+    && mv "${TMP_DIR}/database.dump.patched" "${TMP_DIR}/database.dump"
+fi
+
 echo "⏳  Replacing database: $DATABASE_URL"
-psql "$DATABASE_URL" -f "${TMP_DIR}/database.dump"  1> ${TMP_DIR}/database_restore.log 2>&1
+# ON_ERROR_STOP fails on the first error instead of silently continuing;
+# --single-transaction rolls everything back on failure, so a failed restore
+# can never leave a partial schema behind.
+psql "$DATABASE_URL" --set ON_ERROR_STOP=1 --single-transaction \
+  -f "${TMP_DIR}/database.dump" 1> ${TMP_DIR}/database_restore.log 2>&1
 if [[ $? != 0 ]]; then
-  echo "❌  Error: Replacing database failed see log ${TMP_DIR}/database_restore.log" >&2
+  echo "❌  Error: Replacing database failed, database rolled back to previous state." >&2
+  echo "    See log ${TMP_DIR}/database_restore.log - last lines:" >&2
+  tail -n 5 "${TMP_DIR}/database_restore.log" >&2
+  rm "${TMP_DIR}/database.dump"
+  exit 1
 else
   echo "✅  Replacing database successful"
 fi
