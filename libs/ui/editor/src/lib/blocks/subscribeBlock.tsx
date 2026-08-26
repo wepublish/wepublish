@@ -493,9 +493,9 @@ export const SubscribeBlock = ({
     [onChange]
   );
 
-  const handleShowVouchersChange = useCallback(
+  const handleShowDiscountCodesChange = useCallback(
     (_value: unknown, checked: boolean) => {
-      onChange(current => ({ ...current, showVouchers: checked }));
+      onChange(current => ({ ...current, showDiscountCodes: checked }));
     },
     [onChange]
   );
@@ -760,14 +760,16 @@ export const SubscribeBlock = ({
       </Content>
 
       <Content>
-        <Heading>{t('blocks.subscribe.vouchersHeading')}</Heading>
+        <Heading>{t('blocks.subscribe.discountCodesHeading')}</Heading>
 
         <Toggle
-          checked={value.showVouchers}
+          checked={value.showDiscountCodes}
           disabled={disabled}
-          onChange={checked => handleShowVouchersChange(undefined, checked)}
+          onChange={checked =>
+            handleShowDiscountCodesChange(undefined, checked)
+          }
         >
-          {t('blocks.subscribe.showVouchers')}
+          {t('blocks.subscribe.showDiscountCodes')}
         </Toggle>
       </Content>
 

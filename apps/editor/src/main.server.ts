@@ -16,6 +16,8 @@ export function handleRequest(indexPath: string) {
           parseInt(process.env.IMG_MIN_SIZE_TO_COMPRESS)
         : 10,
       sentryDSN: process.env.SENTRY_DSN || '',
+      appName: process.env.APP_NAME || '',
+      appEnvironment: process.env.APP_ENVIRONMENT || '',
     };
 
     const clientSettingsHTML = `

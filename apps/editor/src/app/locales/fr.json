@@ -413,9 +413,9 @@
         "periodicityDisplayOfferCards": "Cartes d\u2019offre",
         "periodicityDisplayHint": "Les cartes d\u2019offre pr\u00e9sentent chaque intervalle de paiement comme une offre distincte avec son prix (p.ex. abonnement mensuel / annuel).",
         "goodiesHeading": "Goodies",
-        "vouchersHeading": "Bons",
+        "discountCodesHeading": "Codes de réduction",
         "showGoodies": "Afficher la sélection de goodies",
-        "showVouchers": "Afficher le champ de bon",
+        "showDiscountCodes": "Afficher le champ de code de réduction",
         "goodieMinValue": {
           "label": "Montant minimum du goodie :"
         },
@@ -517,6 +517,62 @@
         "leadText": "Lead",
         "title": "Titre",
         "preTitle": "Pré-titre"
+      },
+      "mailchimpForm": {
+        "label": "Formulaire newsletter",
+        "general": "Général",
+        "syncProvider": "Compte Mailchimp",
+        "syncProviderPlaceholder": "Choisir un compte",
+        "list": "Liste",
+        "listPlaceholder": "Choisir une liste",
+        "interests": "Intérêts prédéfinis",
+        "interestsPlaceholder": "Choisir des intérêts",
+        "autoFocus": "Focus automatique",
+        "doubleOptIn": "Double opt-in",
+        "submitButtonLabel": "Libellé du bouton d'envoi",
+        "buttonColor": "Couleur du bouton",
+        "buttonFontColor": "Couleur du texte du bouton",
+        "mergeFieldPlaceholder": "Sélectionner un champ de fusion",
+        "emailMergeField": "Adresse e-mail",
+        "fieldUrlParam": "Paramètre URL",
+        "fieldDefaultValue": "Valeur par défaut",
+        "fieldValue": "Valeur fixe",
+        "steps": "Étapes",
+        "step": "Étape {{number}}",
+        "skipIfFieldsFilled": "Ignorer si champs remplis",
+        "skipIfInterestsFilled": "Ignorer si intérêts définis",
+        "showIfInterestsFilled": "Afficher seulement si intérêts définis",
+        "inputs": "Champs de saisie",
+        "inputType": "Type",
+        "inputTypeHelp": "Type d'information pouvant être saisie dans le champ",
+        "required": "Obligatoire",
+        "inputName": "Nom",
+        "inputNameHelp": "Nom du merge field où cette information est stockée sur Mailchimp",
+        "inputLabel": "Libellé",
+        "inputLabelHelp": "Libellé du champ de formulaire",
+        "inputDescription": "Description",
+        "inputDescriptionHelp": "Description affichée sous le champ de formulaire",
+        "fieldUrlParamHelp": "Quel paramètre URL (?foo=bar) permet de préremplir cette information",
+        "fieldDefaultValueHelp": "Valeur à stocker lorsqu'aucune information n'est saisie",
+        "fieldValueHelp": "Valeur fixe à utiliser si rien n'est saisi",
+        "advanced": "Avancé",
+        "interestOptions": "Options d'intérêt",
+        "interestOptionPlaceholder": "Choisir un intérêt",
+        "interestOptionDescription": "Description",
+        "addInterestOption": "Ajouter une option",
+        "addInput": "Ajouter un champ",
+        "addStep": "Ajouter une étape",
+        "success": "Après l'envoi",
+        "successUrl": "URL de redirection",
+        "successUrlPlaceholder": "https://…",
+        "useSuccessPage": "Page de succès au lieu d'une redirection",
+        "successPageDescription": "Description",
+        "optionLabel": "Libellé",
+        "optionBackground": "Couleur de fond",
+        "optionUrl": "URL",
+        "optionMergeFieldName": "Nom du merge field",
+        "optionMergeFieldValue": "Valeur du merge field",
+        "addSuccessOption": "Ajouter une option"
       }
     },
     "cancel": "Annuler",
@@ -1661,6 +1717,7 @@
     },
     "subscriptionList": {
       "filter": {
+        "activeAt": "Actif au",
         "deactivationReason": "Motif de désactivation",
         "reasonInvoiceNotPaid": "Facture impayée",
         "reasonUserReplacedSubscription": "Remplacé par un autre abonnement",
@@ -2150,11 +2207,11 @@
         "anyMemberPlan": "Tous les plans d’abonnement"
       }
     },
-    "voucher": {
-      "navbar": "Bon de réduction",
+    "discountCode": {
+      "navbar": "Codes de réduction",
       "form": {
-        "createTitle": "Créer un bon de réduction",
-        "editTitle": "Modifier le bon de réduction \"{{ voucher }}\"",
+        "createTitle": "Créer un code de réduction",
+        "editTitle": "Modifier le code de réduction \"{{ discountCode }}\"",
         "code": "Code",
         "discountPercent": "Réduction (%)",
         "validFrom": "Valable dès le",
@@ -2162,8 +2219,8 @@
         "memberPlan": "Plan d'abonnement"
       },
       "overview": {
-        "title": "Bons de réduction",
-        "createVoucher": "Nouveau bon de réduction",
+        "title": "Codes de réduction",
+        "createDiscountCode": "Nouveau code de réduction",
         "active": "Actif",
         "valid": "Valide",
         "code": "Code",
@@ -2172,8 +2229,8 @@
         "validFrom": "Valable dès le",
         "validTo": "Valable jusqu'au",
         "areYouSure": "Êtes-vous sûr(e) ?",
-        "areYouSureBody": "Le bon de réduction \"{{ voucher }}\" sera définitivement supprimé et cette action est irréversible.",
-        "areYouSureConfirmation": "Supprimer le bon de réduction"
+        "areYouSureBody": "Le code de réduction \"{{ discountCode }}\" sera définitivement supprimé et cette action est irréversible.",
+        "areYouSureConfirmation": "Supprimer le code de réduction"
       }
     },
     "goodie": {

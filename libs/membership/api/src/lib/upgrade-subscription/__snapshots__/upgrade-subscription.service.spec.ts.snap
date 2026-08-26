@@ -27,6 +27,7 @@ exports[`UpgradeSubscriptionService happy path should upgrade a subscription 1`]
     {
       "autoRenew": true,
       "discount": 600,
+      "discountCodeId": undefined,
       "extendable": true,
       "goodieId": undefined,
       "memberPlanID": "memberPlanId",
@@ -37,7 +38,6 @@ exports[`UpgradeSubscriptionService happy path should upgrade a subscription 1`]
       "replacedSubscriptionId": "subscriptionId",
       "startsAt": 2025-01-01T00:00:00.000Z,
       "userID": "userId",
-      "voucherId": undefined,
     },
   ],
   "subscriptionUpdate": [

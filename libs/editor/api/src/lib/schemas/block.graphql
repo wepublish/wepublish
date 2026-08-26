@@ -283,10 +283,56 @@ fragment BlockWithoutTeaser on BlockContent {
     }
     fields
     showGoodies
-    showVouchers
+    showDiscountCodes
     goodieMinValue
     hideRepeatGoodieOnUpgrade
     type
+  }
+
+  ... on MailchimpFormBlock {
+    disabled
+    blockStyle
+    blockStyleName
+    type
+    syncProviderId
+    listId
+    interests
+    autoFocus
+    doubleOptIn
+    buttonColor
+    buttonFontColor
+    submitButtonLabel
+    successUrl
+    steps {
+      skipIfFieldsFilled
+      skipIfInterestsFilled
+      showIfInterestsFilled
+      inputs {
+        inputType
+        name
+        label
+        description
+        required
+        urlParam
+        defaultValue
+        value
+        options {
+          id
+          name
+          description
+        }
+      }
+    }
+    successPage {
+      description
+      options {
+        label
+        background
+        url
+        mergeFieldName
+        mergeFieldValue
+      }
+    }
   }
 }
 

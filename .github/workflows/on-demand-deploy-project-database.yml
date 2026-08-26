@@ -65,9 +65,57 @@ jobs:
           PROJECT: ${{ inputs.project }}
           INSTANCE_NAME: ${{ steps.resolve.outputs.instance_name }}
         run: |
-          jq -nc --arg project "$PROJECT" --arg instance_name "$INSTANCE_NAME" \
+          RESPONSE=$(jq -nc --arg project "$PROJECT" --arg instance_name "$INSTANCE_NAME" \
             '{project:$project, instance_name:$instance_name}' \
             | curl -fsS -X POST "$DATABASE_SYNC_WEBHOOK_URL" \
                 -H "Authorization: Bearer $DATABASE_SYNC_WEBHOOK_TOKEN" \
                 -H "Content-Type: application/json" \
-                --data-binary @-
+                --data-binary @-)
+          echo "$RESPONSE"
+
+          STATUS=$(jq -r '.status // empty' <<<"$RESPONSE")
+          if [ "$STATUS" != "accepted" ]; then
+            echo "::error::Sync was not accepted (status: ${STATUS:-unknown}). Another sync may be in progress."
+            exit 1
+          fi
+
+      - name: Wait for database sync to finish
+        env:
+          DATABASE_SYNC_WEBHOOK_URL: ${{ secrets.DATABASE_SYNC_WEBHOOK_URL }}
+          DATABASE_SYNC_WEBHOOK_TOKEN: ${{ secrets.DATABASE_SYNC_WEBHOOK_TOKEN }}
+          PROJECT: ${{ inputs.project }}
+          INSTANCE_NAME: ${{ steps.resolve.outputs.instance_name }}
+        run: |
+          STATUS_URL="${DATABASE_SYNC_WEBHOOK_URL%/sync}/status"
+          DEADLINE=$(( $(date +%s) + 1200 ))
+
+          while true; do
+            if [ "$(date +%s)" -gt "$DEADLINE" ]; then
+              echo "::error::Timed out waiting for the database sync to finish (20 minutes)."
+              exit 1
+            fi
+
+            BODY=$(curl -fsS -H "Authorization: Bearer $DATABASE_SYNC_WEBHOOK_TOKEN" \
+              --get --data-urlencode "project=$PROJECT" --data-urlencode "instance_name=$INSTANCE_NAME" \
+              "$STATUS_URL" || true)
+            STATUS=$(jq -r '.status // empty' <<<"$BODY" 2>/dev/null || true)
+
+            case "$STATUS" in
+              success)
+                echo "Database sync finished successfully."
+                exit 0
+                ;;
+              failed)
+                echo "::error::Database sync failed: $(jq -r '.error // "unknown error"' <<<"$BODY")"
+                exit 1
+                ;;
+              running)
+                echo "Sync still running..."
+                ;;
+              *)
+                echo "No status yet (response: ${BODY:-empty})"
+                ;;
+            esac
+
+            sleep 15
+          done

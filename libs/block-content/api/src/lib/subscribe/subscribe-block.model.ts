@@ -151,7 +151,7 @@ export class SubscribeBlock extends BaseBlock<typeof BlockType.Subscribe> {
   memberPlanRenderSettings?: SubscribeBlockMemberPlanRenderSetting[];
 
   @Field(() => Boolean, { defaultValue: false })
-  showVouchers!: boolean;
+  showDiscountCodes!: boolean;
 
   @Field(() => Boolean, { defaultValue: false })
   showGoodies!: boolean;

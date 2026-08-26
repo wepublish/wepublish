@@ -78,9 +78,61 @@ export interface SubscribeBlockValue extends BaseBlockValue {
   fields: SubscribeBlockField[];
   periodicityDisplay?: SubscribePeriodicityDisplay | null;
   showGoodies: boolean;
-  showVouchers: boolean;
+  showDiscountCodes: boolean;
   goodieMinValue?: number | null;
   hideRepeatGoodieOnUpgrade: boolean;
+}
+
+export interface MailchimpFormInterestOptionValue {
+  id: string;
+  name: string;
+  description?: string | null;
+}
+
+export interface MailchimpFormFieldConfigValue {
+  inputType?: string | null;
+  name?: string | null;
+  label?: string | null;
+  description?: string | null;
+  required?: boolean | null;
+  urlParam?: string | null;
+  defaultValue?: string | null;
+  value?: string | null;
+  options: MailchimpFormInterestOptionValue[];
+}
+
+export interface MailchimpFormStepValue {
+  skipIfFieldsFilled: string[];
+  skipIfInterestsFilled: string[];
+  showIfInterestsFilled: string[];
+  inputs: MailchimpFormFieldConfigValue[];
+}
+
+export interface MailchimpFormSuccessOptionValue {
+  label: string;
+  background: string;
+  url: string;
+  mergeFieldName?: string | null;
+  mergeFieldValue?: string | null;
+}
+
+export interface MailchimpFormSuccessPageValue {
+  description?: string | null;
+  options: MailchimpFormSuccessOptionValue[];
+}
+
+export interface MailchimpFormBlockValue extends BaseBlockValue {
+  syncProviderId?: string | null;
+  listId?: string | null;
+  interests: string[];
+  autoFocus: boolean;
+  doubleOptIn?: boolean | null;
+  buttonColor?: string | null;
+  buttonFontColor?: string | null;
+  submitButtonLabel?: string | null;
+  steps: MailchimpFormStepValue[];
+  successUrl?: string | null;
+  successPage?: MailchimpFormSuccessPageValue | null;
 }
 
 export interface PollBlockValue extends BaseBlockValue {
@@ -408,6 +460,10 @@ export type SubscribeBlockListValue = BlockListValue<
   EditorBlockType.Subscribe,
   SubscribeBlockValue
 >;
+export type MailchimpFormBlockListValue = BlockListValue<
+  EditorBlockType.MailchimpForm,
+  MailchimpFormBlockValue
+>;
 
 export type CommentBlockListValue = BlockListValue<
   EditorBlockType.Comment,
@@ -439,6 +495,7 @@ export type BlockValue =
   | TeaserSlotsBlockListValue
   | HTMLBlockListValue
   | SubscribeBlockListValue
+  | MailchimpFormBlockListValue
   | PollBlockListValue
   | CrowdfundingBlockListValue
   | CommentBlockListValue
@@ -512,9 +569,59 @@ export function mapBlockValueToBlockInput(
           fields: block.value.fields,
           periodicityDisplay: block.value.periodicityDisplay,
           showGoodies: block.value.showGoodies,
-          showVouchers: block.value.showVouchers,
+          showDiscountCodes: block.value.showDiscountCodes,
           goodieMinValue: block.value.goodieMinValue ?? null,
           hideRepeatGoodieOnUpgrade: block.value.hideRepeatGoodieOnUpgrade,
+        },
+      };
+
+    case EditorBlockType.MailchimpForm:
+      return {
+        mailchimpForm: {
+          blockStyle: block.value.blockStyle,
+          disabled: block.value.disabled,
+          syncProviderId: block.value.syncProviderId,
+          listId: block.value.listId,
+          interests: block.value.interests ?? [],
+          autoFocus: block.value.autoFocus ?? true,
+          doubleOptIn: block.value.doubleOptIn,
+          buttonColor: block.value.buttonColor,
+          buttonFontColor: block.value.buttonFontColor,
+          submitButtonLabel: block.value.submitButtonLabel,
+          successUrl: block.value.successUrl,
+          steps: block.value.steps.map(step => ({
+            skipIfFieldsFilled: step.skipIfFieldsFilled ?? [],
+            skipIfInterestsFilled: step.skipIfInterestsFilled ?? [],
+            showIfInterestsFilled: step.showIfInterestsFilled ?? [],
+            inputs: step.inputs.map(input => ({
+              inputType: input.inputType,
+              name: input.name,
+              label: input.label,
+              description: input.description,
+              required: input.required,
+              urlParam: input.urlParam,
+              defaultValue: input.defaultValue,
+              value: input.value,
+              options: input.options.map(option => ({
+                id: option.id,
+                name: option.name,
+                description: option.description,
+              })),
+            })),
+          })),
+          successPage:
+            block.value.successPage ?
+              {
+                description: block.value.successPage.description,
+                options: block.value.successPage.options.map(option => ({
+                  label: option.label,
+                  background: option.background,
+                  url: option.url,
+                  mergeFieldName: option.mergeFieldName,
+                  mergeFieldValue: option.mergeFieldValue,
+                })),
+              }
+            : undefined,
         },
       };
 
@@ -1143,12 +1250,64 @@ export function blockForQueryBlock(
           blockStyle: block.blockStyle,
           fields: block.fields ?? [],
           showGoodies: block.showGoodies ?? false,
-          showVouchers: block.showVouchers ?? false,
+          showDiscountCodes: block.showDiscountCodes ?? false,
           goodieMinValue: block.goodieMinValue ?? null,
           hideRepeatGoodieOnUpgrade: block.hideRepeatGoodieOnUpgrade ?? false,
           memberPlanIds: block.memberPlanIds ?? [],
           periodicityDisplay: block.periodicityDisplay,
           memberPlanRenderSettings: block.memberPlanRenderSettings,
+        },
+      };
+
+    case 'MailchimpFormBlock':
+      return {
+        key,
+        type: EditorBlockType.MailchimpForm,
+        value: {
+          disabled: block.disabled,
+          blockStyle: block.blockStyle,
+          syncProviderId: block.syncProviderId ?? null,
+          listId: block.listId ?? null,
+          interests: block.interests ?? [],
+          autoFocus: block.autoFocus ?? true,
+          doubleOptIn: block.doubleOptIn ?? null,
+          buttonColor: block.buttonColor ?? null,
+          buttonFontColor: block.buttonFontColor ?? null,
+          submitButtonLabel: block.submitButtonLabel ?? null,
+          successUrl: block.successUrl ?? null,
+          steps: (block.steps ?? []).map(step => ({
+            skipIfFieldsFilled: step.skipIfFieldsFilled ?? [],
+            skipIfInterestsFilled: step.skipIfInterestsFilled ?? [],
+            showIfInterestsFilled: step.showIfInterestsFilled ?? [],
+            inputs: (step.inputs ?? []).map(input => ({
+              inputType: input.inputType ?? null,
+              name: input.name ?? null,
+              label: input.label ?? null,
+              description: input.description ?? null,
+              required: input.required ?? null,
+              urlParam: input.urlParam ?? null,
+              defaultValue: input.defaultValue ?? null,
+              value: input.value ?? null,
+              options: (input.options ?? []).map(option => ({
+                id: option.id,
+                name: option.name,
+                description: option.description ?? null,
+              })),
+            })),
+          })),
+          successPage:
+            block.successPage ?
+              {
+                description: block.successPage.description ?? null,
+                options: (block.successPage.options ?? []).map(option => ({
+                  label: option.label,
+                  background: option.background,
+                  url: option.url,
+                  mergeFieldName: option.mergeFieldName ?? null,
+                  mergeFieldValue: option.mergeFieldValue ?? null,
+                })),
+              }
+            : null,
         },
       };
 
