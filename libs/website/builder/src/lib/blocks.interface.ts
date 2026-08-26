@@ -19,6 +19,7 @@ import {
   FullSoundCloudTrackBlockFragment,
   FullStreamableVideoBlockFragment,
   FullSubscribeBlockFragment,
+  FullNewsletterSubscribeBlockFragment,
   FullTeaserGridFlexBlockFragment,
   FullTeaserListBlockFragment,
   FullTeaserSlotsBlockFragment,
@@ -94,6 +95,8 @@ export type BuilderListicleBlockProps =
 export type BuilderCommentBlockProps = WithBlockProps<FullCommentBlockFragment>;
 export type BuilderSubscribeBlockProps =
   WithBlockProps<FullSubscribeBlockFragment>;
+export type BuilderNewsletterSubscribeBlockProps =
+  WithBlockProps<FullNewsletterSubscribeBlockFragment>;
 export type BuilderTeaserGridFlexBlockProps =
   WithBlockProps<FullTeaserGridFlexBlockFragment>;
 export type BuilderTeaserGridBlockProps =

@@ -97,6 +97,10 @@ import {
   StreamableVideoBlockInput,
 } from './embed/streamable-block.model';
 import { FlexBlock, FlexBlockInput } from './flex/flex-block.model';
+import {
+  NewsletterSubscribeBlock,
+  NewsletterSubscribeBlockInput,
+} from './newsletter/newsletter-subscribe-block.model';
 
 export const BlockContent = createUnionType({
   name: 'BlockContent',
@@ -128,6 +132,7 @@ export const BlockContent = createUnionType({
       StreamableVideoBlock,
       YouTubeVideoBlock,
       SubscribeBlock,
+      NewsletterSubscribeBlock,
       TeaserGridBlock,
       TeaserGridFlexBlock,
       TeaserListBlock,
@@ -186,6 +191,8 @@ export const BlockContent = createUnionType({
         return YouTubeVideoBlock.name;
       case BlockType.Subscribe:
         return SubscribeBlock.name;
+      case BlockType.NewsletterSubscribe:
+        return NewsletterSubscribeBlock.name;
       case BlockType.TeaserGrid:
         return TeaserGridBlock.name;
       case BlockType.TeaserGridFlex:
@@ -234,6 +241,8 @@ export class BlockContentInput {
   [BlockType.Comment]?: CommentBlockInput;
   @Field(() => SubscribeBlockInput, { nullable: true })
   [BlockType.Subscribe]?: SubscribeBlockInput;
+  @Field(() => NewsletterSubscribeBlockInput, { nullable: true })
+  [BlockType.NewsletterSubscribe]?: NewsletterSubscribeBlockInput;
 
   @Field(() => IFrameBlockInput, { nullable: true })
   [BlockType.Embed]?: IFrameBlockInput;

@@ -1,0 +1,6 @@
+query Newsletters {
+  newsletters {
+    id
+    name
+  }
+}

@@ -49,6 +49,7 @@ import {
   MailchimpMailProvider,
   MailgunMailProvider,
   MailsModule,
+  NewsletterModule,
   SmtpMailProvider,
 } from '@wepublish/mail/api';
 import { MemberPlanModule } from '@wepublish/member-plan/api';
@@ -427,6 +428,7 @@ import { readConfig } from '../readConfig';
     }),
     PaymentsModule,
     MemberPlanModule,
+    NewsletterModule,
     ApiModule,
     MembershipModule,
     InvoiceModule,

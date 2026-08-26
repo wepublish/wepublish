@@ -138,6 +138,18 @@ fragment FullSubscribeBlock on SubscribeBlock {
   hideRepeatGoodieOnUpgrade
 }
 
+fragment FullNewsletterSubscribeBlock on NewsletterSubscribeBlock {
+  disabled
+  blockStyle: blockStyleName
+  newsletterIds
+  newsletters {
+    id
+    name
+  }
+  additionalFields
+  source
+}
+
 fragment FullEventBlock on EventBlock {
   disabled
   blockStyle: blockStyleName
@@ -306,6 +318,10 @@ fragment BlockWithoutTeaser on BlockContent {
 
   ... on SubscribeBlock {
     ...FullSubscribeBlock
+  }
+
+  ... on NewsletterSubscribeBlock {
+    ...FullNewsletterSubscribeBlock
   }
 
   ... on EventBlock {

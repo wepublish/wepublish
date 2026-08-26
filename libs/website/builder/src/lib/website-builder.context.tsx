@@ -51,6 +51,7 @@ import {
   BuilderRichTextBlockProps,
   BuilderSoundCloudTrackBlockProps,
   BuilderSubscribeBlockProps,
+  BuilderNewsletterSubscribeBlockProps,
   BuilderTeaserGridBlockProps,
   BuilderTeaserGridFlexBlockProps,
   BuilderFlexBlockProps,
@@ -235,6 +236,7 @@ export type WebsiteBuilderProps = {
     RichText: ComponentType<BuilderRichTextBlockProps>;
     HTML: ComponentType<BuilderHTMLBlockProps>;
     Subscribe: ComponentType<BuilderSubscribeBlockProps>;
+    NewsletterSubscribe: ComponentType<BuilderNewsletterSubscribeBlockProps>;
     FacebookPost: ComponentType<BuilderFacebookPostBlockProps>;
     FacebookVideo: ComponentType<BuilderFacebookVideoBlockProps>;
     InstagramPost: ComponentType<BuilderInstagramPostBlockProps>;
@@ -377,6 +379,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
     RichText: NoComponent,
     HTML: NoComponent,
     Subscribe: NoComponent,
+    NewsletterSubscribe: NoComponent,
     FacebookPost: NoComponent,
     FacebookVideo: NoComponent,
     InstagramPost: NoComponent,

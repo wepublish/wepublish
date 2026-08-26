@@ -31,6 +31,7 @@ export enum BlockType {
   Event = 'event',
   Subscribe = 'subscribe',
   FlexBlock = 'flexBlock',
+  NewsletterSubscribe = 'newsletterSubscribe',
 }
 
 registerEnumType(BlockType, {

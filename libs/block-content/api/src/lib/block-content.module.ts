@@ -18,6 +18,8 @@ import { SlotTeasersLoader } from './teaser/slot-teasers-loader';
 import { TagModule } from '@wepublish/tag/api';
 import { SubscribeBlockResolver } from './subscribe/subscribe-block.resolver';
 import { MemberPlanModule } from '@wepublish/member-plan/api';
+import { NewsletterSubscribeBlockResolver } from './newsletter/newsletter-subscribe-block.resolver';
+import { NewsletterModule } from '@wepublish/mail/api';
 
 @Module({
   imports: [
@@ -31,6 +33,7 @@ import { MemberPlanModule } from '@wepublish/member-plan/api';
     CommentModule,
     TagModule,
     forwardRef(() => MemberPlanModule),
+    forwardRef(() => NewsletterModule),
   ],
   providers: [
     BaseBlockResolver,
@@ -40,6 +43,7 @@ import { MemberPlanModule } from '@wepublish/member-plan/api';
     TeaserListBlockFilterResolver,
     SlotTeasersLoader,
     SubscribeBlockResolver,
+    NewsletterSubscribeBlockResolver,
   ],
   exports: [SlotTeasersLoader],
 })

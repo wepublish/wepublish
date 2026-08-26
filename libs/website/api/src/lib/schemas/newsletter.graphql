@@ -1,0 +1,17 @@
+mutation SubscribeToNewsletter(
+  $newsletterId: String!
+  $email: String!
+  $firstName: String
+  $lastName: String
+  $source: String
+  $challenge: ChallengeInput
+) {
+  subscribeToNewsletter(
+    newsletterId: $newsletterId
+    email: $email
+    firstName: $firstName
+    lastName: $lastName
+    source: $source
+    challenge: $challenge
+  )
+}

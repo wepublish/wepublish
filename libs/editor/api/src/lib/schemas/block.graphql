@@ -287,6 +287,20 @@ fragment BlockWithoutTeaser on BlockContent {
     hideRepeatGoodieOnUpgrade
     type
   }
+
+  ... on NewsletterSubscribeBlock {
+    disabled
+    blockStyle
+    blockStyleName
+    newsletterIds
+    newsletters {
+      id
+      name
+    }
+    additionalFields
+    source
+    type
+  }
 }
 
 fragment FullTeaser on Teaser {

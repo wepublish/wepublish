@@ -318,7 +318,7 @@ input BildwurfAdBlockInput {
   zoneID: String
 }
 
-union BlockContent = BildwurfAdBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | FlexBlock | HTMLBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | StreamableVideoBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock
+union BlockContent = BildwurfAdBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | FlexBlock | HTMLBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | NewsletterSubscribeBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | StreamableVideoBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock
 
 input BlockContentInput {
   bildwurfAd: BildwurfAdBlockInput
@@ -335,6 +335,7 @@ input BlockContentInput {
   instagramPost: InstagramPostBlockInput
   linkPageBreak: BreakBlockInput
   listicle: ListicleBlockInput
+  newsletterSubscribe: NewsletterSubscribeBlockInput
   polisConversation: PolisConversationBlockInput
   poll: PollBlockInput
   quote: QuoteBlockInput
@@ -376,6 +377,7 @@ enum BlockType {
   InstagramPost
   LinkPageBreak
   Listicle
+  NewsletterSubscribe
   PolisConversation
   Poll
   Quote
@@ -910,6 +912,7 @@ enum EditorBlockType {
   ImageGallery
   LinkPageBreak
   Listicle
+  NewsletterSubscribe
   Poll
   Quote
   RichText
@@ -2455,6 +2458,11 @@ type Mutation {
   sendWebsiteLogin(email: String!): String!
 
   """
+  Requests a newsletter subscription. The newsletter provider asks the given address to confirm the subscription.
+  """
+  subscribeToNewsletter(challenge: ChallengeInput, email: String!, firstName: String, lastName: String, newsletterId: String!, source: String): Boolean!
+
+  """
   Ask the mail provider for the current delivery state of mails that are still open. Complements the provider webhook, which is not reachable in local development.
   """
   syncMailLogStates(limit: Int): MailLogSyncModel!
@@ -2652,6 +2660,36 @@ enum NavigationLinkType {
   Article
   External
   Page
+}
+
+type Newsletter {
+  id: String!
+  name: String
+}
+
+type NewsletterSubscribeBlock implements BaseBlock {
+  additionalFields: [NewsletterSubscribeBlockField!]!
+  blockStyle: String
+  blockStyleName: String
+  disabled: Boolean
+  newsletterIds: [String!]!
+  newsletters: [Newsletter!]!
+  source: String
+  type: BlockType!
+}
+
+enum NewsletterSubscribeBlockField {
+  FirstName
+  LastName
+}
+
+input NewsletterSubscribeBlockInput {
+  additionalFields: [NewsletterSubscribeBlockField!]! = []
+  blockStyle: String
+  blockStyleName: String
+  disabled: Boolean
+  newsletterIds: [String!]! = []
+  source: String
 }
 
 type OverriddenRating {
@@ -3690,6 +3728,9 @@ type Query {
 
   "\n      Returns all new subscribers in a given timeframe.\n      Includes already deactivated ones.\n    "
   newSubscribers(end: DateTime, start: DateTime!): [DashboardSubscription!]!
+
+  """Returns every newsletter a visitor can subscribe to."""
+  newsletters: [Newsletter!]!
 
   """Returns an page by id or slug."""
   page(id: String, slug: String): Page!
