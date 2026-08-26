@@ -13,6 +13,7 @@ import {
   PaymentPeriodicity,
   RegisterMutationVariables,
   SubscribeMutationVariables,
+  SubscribePeriodicityDisplay,
   SubscriptionsQuery,
   Currency,
   UpgradeMutationVariables,
@@ -87,16 +88,38 @@ export type BuilderMemberPlanItemProps = Pick<
   | 'slug'
   | 'amountPerMonthMin'
   | 'amountPerMonthMax'
+  | 'amountPerMonthTarget'
+  | 'periodicityPricing'
   | 'currency'
   | 'extendable'
   | 'shortDescription'
   | 'tags'
   | 'goodies'
 > &
-  RadioProps & { className?: string };
+  Partial<
+    Pick<
+      FullMemberPlanFragment,
+      'availablePaymentMethods' | 'defaultPaymentPeriodicity'
+    >
+  > &
+  Omit<RadioProps, 'ref'> & { className?: string } & { slug: string };
+
+export type MemberPlanOffer = {
+  memberPlanId: string;
+  paymentPeriodicity: PaymentPeriodicity;
+};
+
+export type BuilderMemberPlanOfferPickerProps = {
+  memberPlans: FullMemberPlanFragment[];
+  className?: string;
+  onChange: (offer: MemberPlanOffer) => void;
+  name?: string;
+  value?: Partial<MemberPlanOffer>;
+};
 
 export type BuilderPeriodicityPickerProps = {
   periodicities: PaymentPeriodicity[] | undefined;
+  memberPlan?: FullMemberPlanFragment | null;
   className?: string;
   onChange: (periodicitiy: PaymentPeriodicity) => void;
   name?: string;
@@ -123,6 +146,7 @@ export type BuilderPaymentAmountSliderProps = {
   amountPerMonthMin: number;
   amountPerMonthMax?: number;
   amountPerMonthTarget: number | undefined;
+  paymentPeriodicity?: PaymentPeriodicity;
   currency: Currency;
   donate: boolean;
   onChange: (amount: number) => void;
@@ -146,6 +170,7 @@ export type BuilderPaymentAmountPickerProps = {
   className?: string;
   presetAmounts?: number[];
   showInput?: boolean;
+  paymentPeriodicity?: PaymentPeriodicity;
 };
 
 export type BuilderSubscribeProps<
@@ -189,11 +214,13 @@ export type BuilderSubscribeProps<
   >;
   defaults?: Partial<{
     memberPlanSlug: string | null;
+    paymentPeriodicity: PaymentPeriodicity | null;
     email: string;
     name: string;
     firstName: string;
     discountCode: string;
   }>;
+  periodicityDisplay?: SubscribePeriodicityDisplay | null;
   deactivateSubscriptionId?: string;
   termsOfServiceUrl?: string;
   transactionFee?: (monthlyAmount: number) => number;
