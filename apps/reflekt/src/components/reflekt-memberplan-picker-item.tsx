@@ -1,14 +1,17 @@
 import styled from '@emotion/styled';
 import { Radio, useRadioGroup } from '@mui/material';
 import {
+  calculatePeriodAmount,
   CurrencyNumberSpinner,
   formatCurrency,
+  getPeriodPriceRange,
   MemberPlanItemContent,
   MemberPlanItemName,
   MemberPlanItemPicker,
   MemberPlanItemPrice,
   MemberPlanItemWrapper,
 } from '@wepublish/membership/website';
+import { PaymentPeriodicity } from '@wepublish/website/api';
 import {
   BuilderMemberPlanItemProps,
   useWebsiteBuilder,
@@ -43,6 +46,8 @@ export const MemberPlanItem = forwardRef<
     shortDescription,
     amountPerMonthMax,
     amountPerMonthMin,
+    amountPerMonthTarget,
+    periodicityPricing,
     currency,
     extendable,
     goodies,
@@ -74,8 +79,21 @@ export const MemberPlanItem = forwardRef<
 
   const hasInCardFreeInput = tags?.includes('inline-slider');
 
-  const displayedAmountPerMonth =
-    isChecked && monthlyAmount != null ? monthlyAmount : amountPerMonthMin;
+  const memberPlan = {
+    amountPerMonthMin,
+    amountPerMonthTarget,
+    amountPerMonthMax,
+    periodicityPricing,
+  };
+
+  const yearlyPriceRange = getPeriodPriceRange(
+    memberPlan,
+    PaymentPeriodicity.Yearly
+  );
+  const yearlyCents =
+    isChecked && monthlyAmount != null ?
+      calculatePeriodAmount(monthlyAmount, PaymentPeriodicity.Yearly)
+    : yearlyPriceRange.amountMin;
 
   return (
     <MemberPlanItemWrapper className={className}>
@@ -85,13 +103,9 @@ export const MemberPlanItem = forwardRef<
 
           <MemberPlanItemPrice>
             {t('subscribe.memberplan.price', {
-              yearlyAmount: Math.round((displayedAmountPerMonth * 12) / 100),
+              yearlyAmount: Math.round(yearlyCents / 100),
               amountPerMonthMin,
-              yearlyPrice: formatCurrency(
-                Math.ceil((amountPerMonthMin / 100) * 12),
-                currency,
-                locale
-              ),
+              yearlyPrice: formatCurrency(yearlyCents / 100, currency, locale),
               monthlyPrice: formatCurrency(
                 amountPerMonthMin / 100,
                 currency,
