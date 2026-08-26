@@ -49,7 +49,11 @@ import {
   showsAmountInput,
 } from '../subscribe/member-plan-render-settings';
 import styled from '@emotion/styled';
-import { getPaymentPeriodicyMonths } from '../formatters/format-payment-period';
+import {
+  getPaymentPeriodicyMonths,
+  getPeriodPriceRange,
+  monthlyAmountFromPeriodAmount,
+} from '../formatters/format-payment-period';
 
 const upgradeSchema = subscribeSchema.pick({
   memberPlanId: true,
@@ -250,13 +254,19 @@ export const Upgrade = ({
 
   useEffect(() => {
     if (selectedMemberPlan) {
+      const { amountMin, amountTarget } = getPeriodPriceRange(
+        selectedMemberPlan,
+        subscriptionToUpgrade.paymentPeriodicity
+      );
       setValue(
         'monthlyAmount',
-        selectedMemberPlan.amountPerMonthTarget ||
-          selectedMemberPlan.amountPerMonthMin
+        monthlyAmountFromPeriodAmount(
+          amountTarget || amountMin,
+          subscriptionToUpgrade.paymentPeriodicity
+        )
       );
     }
-  }, [selectedMemberPlan, setValue]);
+  }, [selectedMemberPlan, setValue, subscriptionToUpgrade.paymentPeriodicity]);
 
   useEffect(() => {
     if (
