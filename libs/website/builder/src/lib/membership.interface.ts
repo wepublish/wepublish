@@ -169,6 +169,7 @@ export type BuilderPaymentAmountPickerProps = {
   className?: string;
   presetAmounts?: number[];
   showInput?: boolean;
+  paymentPeriodicity?: PaymentPeriodicity;
 };
 
 export type BuilderSubscribeProps<
