@@ -53,22 +53,10 @@ if [[ -z $PROJECT ]]; then
   exit 99
 fi
 
-IS_TTY=false
-if [[ -t 0 ]]; then
-  IS_TTY=true
-fi
-
 echo "⚠️  WARNING: This will OVERWRITE the existing database! ($DATABASE_URL)"
-if [[ "${AUTO_CONFIRM}" == "yes" ]]; then
-  echo "✅  AUTO_CONFIRM=yes - skipping confirmation"
-elif [[ $IS_TTY == true ]]; then
-  read -r -p "Type 'yes' to continue: " CONFIRM
-  if [[ "${CONFIRM,,}" != "yes" ]]; then
-    echo "❌ Aborted."
-    exit 1
-  fi
-else
-  echo "❌  Error: Non-interactive run without AUTO_CONFIRM=yes - aborting." >&2
+read -r -p "Type 'yes' to continue: " CONFIRM
+if [[ "${CONFIRM,,}" != "yes" ]]; then
+  echo "❌ Aborted."
   exit 1
 fi
 echo "✅  Downloading..."
@@ -92,29 +80,22 @@ echo "✅  Unpack database dump successful"
 # an explicit override.
 if ! tail -n 2 "${TMP_DIR}/database.dump" | grep -q "WEPUBLISH_DUMP_COMPLETE"; then
   echo "⚠️  Warning: dump has no completeness marker - it may be TRUNCATED, or it predates marker support."
-  if [[ "${ALLOW_UNVERIFIED_DUMP}" == "yes" ]]; then
-    echo "⚠️  ALLOW_UNVERIFIED_DUMP=yes - continuing without verification"
-  elif [[ $IS_TTY == true ]]; then
-    read -r -p "Restore anyway? Type 'yes' to continue: " CONFIRM_MARKER
-    if [[ "${CONFIRM_MARKER,,}" != "yes" ]]; then
-      echo "❌ Aborted."
-      rm "${TMP_DIR}/database.dump"
-      exit 1
-    fi
-  else
-    echo "❌  Error: Refusing to restore an unverified dump non-interactively (set ALLOW_UNVERIFIED_DUMP=yes to override)." >&2
+  read -r -p "Restore anyway? Type 'yes' to continue: " CONFIRM_MARKER
+  if [[ "${CONFIRM_MARKER,,}" != "yes" ]]; then
+    echo "❌ Aborted."
     rm "${TMP_DIR}/database.dump"
     exit 1
   fi
 fi
 
+# Current dumps declare all extensions of the source database themselves.
 # Older dumps miss extensions entirely (excluded by --schema=public), and
 # creating them beforehand does not help since the dump drops the public
 # schema (and with it the extension) first. Inject the statement right after
 # the schema is recreated instead.
-if ! grep -q "CREATE EXTENSION IF NOT EXISTS pg_trgm" "${TMP_DIR}/database.dump"; then
-  echo "⏳  Injecting missing pg_trgm extension into dump..."
-  awk '{print} /^CREATE SCHEMA public;$/ && !done {print "CREATE EXTENSION IF NOT EXISTS pg_trgm WITH SCHEMA public;"; done=1}' \
+if ! grep -q "CREATE EXTENSION IF NOT EXISTS" "${TMP_DIR}/database.dump"; then
+  echo "⏳  Old dump without extension declarations - injecting pg_trgm..."
+  awk '{print} /^CREATE SCHEMA public;$/ && !done {print "CREATE EXTENSION IF NOT EXISTS \"pg_trgm\" WITH SCHEMA \"public\" CASCADE;"; done=1}' \
     "${TMP_DIR}/database.dump" > "${TMP_DIR}/database.dump.patched" \
     && mv "${TMP_DIR}/database.dump.patched" "${TMP_DIR}/database.dump"
 fi
