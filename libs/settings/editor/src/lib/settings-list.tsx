@@ -205,6 +205,11 @@ function SettingList() {
       name: SettingName.NewArticlePeering,
       label: 'settingList.newArticlePeering',
     },
+    [SettingName.SubscriptionUpgradeBillsFullDifference]: {
+      value: false,
+      name: SettingName.SubscriptionUpgradeBillsFullDifference,
+      label: 'settingList.subscriptionUpgradeModel',
+    },
   } as Record<SettingName, SettingWithLabel>);
 
   useEffect(() => {
@@ -778,6 +783,54 @@ function SettingList() {
                             onChange={checked =>
                               setSetting({
                                 ...settings[SettingName.MakeRevenueApiPublic],
+                                value: checked,
+                              })
+                            }
+                          />
+                        </Form.Group>
+                      </Form.Stack>
+                    </Panel>
+                  </Col>
+
+                  <Col xs={24}>
+                    <Panel
+                      bordered
+                      header={t('settingList.subscriptionPlans')}
+                    >
+                      <Form.Stack fluid>
+                        <Form.Group
+                          controlId={
+                            SettingName.SubscriptionUpgradeBillsFullDifference
+                          }
+                        >
+                          <Form.Label>
+                            {t(
+                              settings[
+                                SettingName
+                                  .SubscriptionUpgradeBillsFullDifference
+                              ].label
+                            )}
+                            <SettingInfo
+                              text={t(
+                                'settingList.warnings.subscriptionUpgradeModel'
+                              )}
+                            />
+                          </Form.Label>
+
+                          <Toggle
+                            disabled={isDisabled}
+                            checked={
+                              settings[
+                                SettingName
+                                  .SubscriptionUpgradeBillsFullDifference
+                              ].value
+                            }
+                            onChange={checked =>
+                              setSetting({
+                                ...settings[
+                                  SettingName
+                                    .SubscriptionUpgradeBillsFullDifference
+                                ],
                                 value: checked,
                               })
                             }
