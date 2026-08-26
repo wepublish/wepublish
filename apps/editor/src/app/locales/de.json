@@ -1666,6 +1666,8 @@
       "successTitle": "Gespeichert",
       "newArticlePeering": "Neue erstellte Artikel werden automatisch gepeered.",
       "newArticlePaywall": "Neue erstellte Artikel benötigen ein Abo um gelesen zu werden.",
+      "subscriptionPlans": "Abo-Pläne",
+      "subscriptionUpgradeModel": "Beim Upgrade die volle Preisdifferenz verrechnen (statt des anteiligen Restguthabens)",
       "warnings": {
         "askOperators": "Achtung: Das Ändern einer oder mehrerer Einstellungen kann die Website zum abstürzen bringen oder andere unvorhersehbare Folgen haben. Falls es Unsicherheiten gibt, wendet euch an eure Operators. Falls nicht, einfach fortfahren.",
         "guestCommenting": "Erlaube Gastbesuchern (nicht eingeloggt), Kommentare zu schreiben und zu veröffentlichen.",
@@ -1676,7 +1678,8 @@
         "passwordToken": "Wie lange (in Minuten) der per E-Mail gesendete Link zum Zurücksetzen des Passworts gültig ist. Die Standardeinstellung ist ein Tag (1440 / 60 / 24).",
         "peerToken": "Zeit in Millisekunden, nach der wir nicht mehr versuchen, Peer-Artikel abzurufen. Der Standardwert ist 3 Sekunden.",
         "newArticlePeering": "Beeinflusst nicht schon erstellte Artikel",
-        "newArticlePaywall": "Beeinflusst nicht schon erstellte Artikel"
+        "newArticlePaywall": "Beeinflusst nicht schon erstellte Artikel",
+        "subscriptionUpgradeModel": "Wenn aktiviert, wird bei einem Upgrade immer die Differenz zwischen dem neuen und dem aktuellen Plan-Preis verrechnet, unabhängig davon, wie viel Zeit in der aktuellen Periode noch verbleibt. Wenn deaktiviert, wird nur das ungenutzte (anteilige) Restguthaben der aktuellen Periode angerechnet."
       }
     },
     "automaticMails": {
@@ -1759,6 +1762,7 @@
     },
     "subscriptionList": {
       "filter": {
+        "activeAt": "Aktiv am",
         "deactivationReason": "Grund Deaktivierung",
         "reasonInvoiceNotPaid": "Rechnung nicht bezahlt",
         "reasonNone": "Kein Grund",

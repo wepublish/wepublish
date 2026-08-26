@@ -5785,6 +5785,7 @@ export type QuerySubscriptionsArgs = {
 
 
 export type QuerySubscriptionsAsCsvArgs = {
+  activeAt?: InputMaybe<Scalars['DateTime']>;
   autoRenew?: InputMaybe<Scalars['Boolean']>;
   cancellationDateFrom?: InputMaybe<DateFilter>;
   cancellationDateTo?: InputMaybe<DateFilter>;
@@ -6132,7 +6133,8 @@ export enum SettingName {
   PeeringTimeoutMs = 'PEERING_TIMEOUT_MS',
   ResetPasswordJwtExpiresMin = 'RESET_PASSWORD_JWT_EXPIRES_MIN',
   SendLoginJwtExpiresMin = 'SEND_LOGIN_JWT_EXPIRES_MIN',
-  ShowPendingWhenNotPublished = 'SHOW_PENDING_WHEN_NOT_PUBLISHED'
+  ShowPendingWhenNotPublished = 'SHOW_PENDING_WHEN_NOT_PUBLISHED',
+  SubscriptionUpgradeBillsFullDifference = 'SUBSCRIPTION_UPGRADE_BILLS_FULL_DIFFERENCE'
 }
 
 export type SettingPaymentProvider = SettingProvider & {
@@ -6428,6 +6430,7 @@ export enum SubscriptionEvent {
 }
 
 export type SubscriptionFilter = {
+  activeAt?: InputMaybe<Scalars['DateTime']>;
   autoRenew?: InputMaybe<Scalars['Boolean']>;
   cancellationDateFrom?: InputMaybe<DateFilter>;
   cancellationDateTo?: InputMaybe<DateFilter>;
