@@ -61,6 +61,23 @@ describe('PreviewUnavailable', () => {
     expect(screen.getByText('Vorschau wird geladen …')).toBeDefined();
   });
 
+  it('shows the login hint directly when the handshake window has passed', () => {
+    window.history.replaceState(null, '', '/a/foobar?preview');
+    Object.defineProperty(window, 'opener', {
+      value: window,
+      configurable: true,
+      writable: true,
+    });
+    const nowSpy = vi.spyOn(performance, 'now').mockReturnValue(60_000);
+
+    renderWithTheme(<PreviewUnavailable />);
+
+    expect(screen.getByText('Vorschau nicht verfügbar')).toBeDefined();
+    expect(screen.queryByText('Vorschau wird geladen …')).toBeNull();
+
+    nowSpy.mockRestore();
+  });
+
   it('shows the pending state while a session cookie may authorize the preview', () => {
     window.history.replaceState(null, '', '/a/foobar?preview');
     document.cookie = 'auth.token=some-token';
