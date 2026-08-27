@@ -441,7 +441,7 @@
           "Narrow": "Narrow (2 tiles per row)",
           "Wide": "Wide (1 tile per row, large tiles)"
         },
-        "planAmountsTitle": "Minimum / target / maximum amount per month (in francs)",
+        "planAmountsTitle": "Minimum / target / maximum amount for the default payment interval (in francs)",
         "defaultPlanTitle": "Selected by default — this member plan is preselected after the page loads.",
         "defaultPlanLabel": "Default"
       },
