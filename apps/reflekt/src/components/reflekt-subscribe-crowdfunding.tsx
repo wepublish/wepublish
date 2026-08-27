@@ -437,9 +437,15 @@ export const ReflektSubscribeCrowdfunding = (
     return subscription?.monthlyAmount ?? 0;
   }, [data?.userSubscriptions, upgradeSubscriptionId]);
 
+  const goodieMinValueApplies =
+    !upgradeSubscriptionId || (props.goodieMinValueAppliesToUpgrade ?? false);
+
   const value = useMemo(
-    () => ({ goodieMinValue: props.goodieMinValue, baselineMonthlyAmount }),
-    [baselineMonthlyAmount, props.goodieMinValue]
+    () => ({
+      goodieMinValue: goodieMinValueApplies ? props.goodieMinValue : null,
+      baselineMonthlyAmount,
+    }),
+    [goodieMinValueApplies, props.goodieMinValue, baselineMonthlyAmount]
   );
 
   return (
