@@ -442,7 +442,7 @@
           "Narrow": "Schmal (2 Kacheln pro Zeile)",
           "Wide": "Breit (1 Kachel pro Zeile, grosse Kacheln)"
         },
-        "planAmountsTitle": "Minimal- / Ziel- / Maximalbetrag pro Monat (in Franken)",
+        "planAmountsTitle": "Minimal- / Ziel- / Maximalbetrag für das Standard-Zahlungsintervall (in Franken)",
         "defaultPlanTitle": "Standardmässig ausgewählt — dieser Abo-Plan ist nach dem Laden der Seite vorausgewählt.",
         "defaultPlanLabel": "Standard"
       },
