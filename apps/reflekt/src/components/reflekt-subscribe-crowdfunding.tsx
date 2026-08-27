@@ -425,19 +425,21 @@ export const ReflektSubscribeCrowdfunding = (
     skip: !upgradeSubscriptionId,
   });
 
+  const upgradeSubscription = useMemo(
+    () =>
+      data?.userSubscriptions.find(
+        sub => sub.isActive && sub.id === upgradeSubscriptionId
+      ),
+    [data?.userSubscriptions, upgradeSubscriptionId]
+  );
+
   // On the upgrade flow the goodie threshold applies to the on-top delta
   // (new amount − current subscription amount), matching the core Upgrade.
   // In the plain subscribe flow there is no baseline, so it stays 0.
-  const baselineMonthlyAmount = useMemo(() => {
-    const subscription = data?.userSubscriptions.find(
-      sub => sub.isActive && sub.id === upgradeSubscriptionId
-    );
-
-    return subscription?.monthlyAmount ?? 0;
-  }, [data?.userSubscriptions, upgradeSubscriptionId]);
+  const baselineMonthlyAmount = upgradeSubscription?.monthlyAmount ?? 0;
 
   const goodieMinValueApplies =
-    !upgradeSubscriptionId || (props.goodieMinValueAppliesToUpgrade ?? false);
+    !upgradeSubscription || (props.goodieMinValueAppliesToUpgrade ?? false);
 
   const value = useMemo(
     () => ({
