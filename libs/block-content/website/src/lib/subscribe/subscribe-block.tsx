@@ -29,6 +29,7 @@ export const SubscribeBlock = ({
   showGoodies,
   showDiscountCodes,
   goodieMinValue,
+  goodieMinValueAppliesToUpgrade,
   hideRepeatGoodieOnUpgrade,
   periodicityDisplay,
 }: BuilderSubscribeBlockProps) => {
@@ -205,6 +206,7 @@ export const SubscribeBlock = ({
           showGoodies={showGoodies}
           showDiscountCodes={showDiscountCodes}
           goodieMinValue={goodieMinValue}
+          goodieMinValueAppliesToUpgrade={goodieMinValueAppliesToUpgrade}
           hideRepeatGoodieOnUpgrade={hideRepeatGoodieOnUpgrade}
           subscriptionToUpgrade={subscriptionToUpgrade}
           upgradeInfo={upgradeInfo}

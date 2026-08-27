@@ -419,6 +419,7 @@
         "goodieMinValue": {
           "label": "Montant minimum du goodie :"
         },
+        "goodieMinValueAppliesToUpgrade": "Appliquer ce montant minimum aussi aux upgrades",
         "hideRepeatGoodieOnUpgrade": "Lors de l’upgrade : pas de nouveau goodie",
         "FirstName": "Prénom",
         "Birthday": "Date de naissance",
