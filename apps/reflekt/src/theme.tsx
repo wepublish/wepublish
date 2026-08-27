@@ -330,6 +330,15 @@ const theme = createTheme(WePTheme, {
         fontFamily: [recife.style.fontFamily, 'serif'].join(','),
         paddingBottom: '2rem',
       },
+      toc: {
+        fontFamily: [recife.style.fontFamily, 'serif'].join(','),
+        fontWeight: 400,
+        fontSize: '1.125rem',
+        lineHeight: 1.4,
+        color: colors.common.white,
+        marginTop: 0,
+        marginBottom: '1rem',
+      },
       ulToc: {
         listStyle: 'none',
         margin: 0,
@@ -557,6 +566,7 @@ const theme = createTheme(WePTheme, {
           // Table of Contents - RichText
           tocHeading: 'div',
           tocDetails: 'div',
+          toc: 'p',
           ulToc: 'ul',
           liToc: 'li',
           // Downloads - CollapsibleRichText
