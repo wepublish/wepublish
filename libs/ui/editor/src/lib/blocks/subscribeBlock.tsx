@@ -88,6 +88,13 @@ const GoodieMinValueInput = styled(NumberInput)`
   max-width: 150px;
 `;
 
+const GoodieMinValueRow = styled('div')`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+`;
+
 const GoodiesToggleRow = styled('div')`
   display: flex;
   flex-wrap: wrap;
@@ -864,25 +871,27 @@ export const SubscribeBlock = ({
             {t('blocks.subscribe.goodieMinValue.label')}
           </SettingLabel>
 
-          <GoodieMinValueInput
-            disabled={disabled || !value.showGoodies}
-            min={0}
-            step={1}
-            value={
-              value.goodieMinValue != null ? value.goodieMinValue / 100 : ''
-            }
-            onChange={handleGoodieMinValueChange}
-          />
+          <GoodieMinValueRow>
+            <GoodieMinValueInput
+              disabled={disabled || !value.showGoodies}
+              min={0}
+              step={1}
+              value={
+                value.goodieMinValue != null ? value.goodieMinValue / 100 : ''
+              }
+              onChange={handleGoodieMinValueChange}
+            />
 
-          <SmallCheckbox
-            checked={value.goodieMinValueAppliesToUpgrade}
-            disabled={
-              disabled || !value.showGoodies || value.goodieMinValue == null
-            }
-            onChange={handleGoodieMinValueAppliesToUpgradeChange}
-          >
-            {t('blocks.subscribe.goodieMinValueAppliesToUpgrade')}
-          </SmallCheckbox>
+            <SmallCheckbox
+              checked={value.goodieMinValueAppliesToUpgrade}
+              disabled={
+                disabled || !value.showGoodies || value.goodieMinValue == null
+              }
+              onChange={handleGoodieMinValueAppliesToUpgradeChange}
+            >
+              {t('blocks.subscribe.goodieMinValueAppliesToUpgrade')}
+            </SmallCheckbox>
+          </GoodieMinValueRow>
         </div>
       </Content>
 
