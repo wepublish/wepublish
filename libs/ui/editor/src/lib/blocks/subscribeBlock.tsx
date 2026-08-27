@@ -819,7 +819,6 @@ export const SubscribeBlock = ({
 
         <RadioGroup
           inline
-          appearance="picker"
           disabled={disabled}
           value={
             value.periodicityDisplay ?? SubscribePeriodicityDisplay.Dropdown
