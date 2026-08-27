@@ -639,6 +639,16 @@ export const SubscribeBlock = ({
     [onChange]
   );
 
+  const handleGoodieMinValueAppliesToUpgradeChange = useCallback(
+    (_value: unknown, checked: boolean) => {
+      onChange(current => ({
+        ...current,
+        goodieMinValueAppliesToUpgrade: checked,
+      }));
+    },
+    [onChange]
+  );
+
   return (
     <Panel bordered>
       <Content>
@@ -863,6 +873,16 @@ export const SubscribeBlock = ({
             }
             onChange={handleGoodieMinValueChange}
           />
+
+          <SmallCheckbox
+            checked={value.goodieMinValueAppliesToUpgrade}
+            disabled={
+              disabled || !value.showGoodies || value.goodieMinValue == null
+            }
+            onChange={handleGoodieMinValueAppliesToUpgradeChange}
+          >
+            {t('blocks.subscribe.goodieMinValueAppliesToUpgrade')}
+          </SmallCheckbox>
         </div>
       </Content>
 

@@ -246,6 +246,7 @@ export type BuilderUpgradeProps = {
   showGoodies?: boolean;
   showDiscountCodes?: boolean;
   goodieMinValue?: number | null;
+  goodieMinValueAppliesToUpgrade?: boolean;
   hideRepeatGoodieOnUpgrade?: boolean;
   className?: string;
   onUpgrade?: (
