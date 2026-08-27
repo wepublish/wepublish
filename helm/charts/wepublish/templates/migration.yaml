@@ -1,10 +1,8 @@
-{{- $migrationEnv := merge (deepCopy .Values.migration.env) .Values.deployment.env }}
-{{- $migrationHash := printf "%s|%s" .Values.migration.image (toYaml $migrationEnv) | sha256sum | trunc 10 }}
 ---
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ include "helm.fullname" . }}-migration-{{ $migrationHash }}
+  name: {{ include "helm.fullname" . }}-migration-{{ .Release.Revision }}
   labels:
     app.kubernetes.io/name: {{ include "helm.name" . }}-migration
     helm.sh/chart: {{ include "helm.chart" . }}
