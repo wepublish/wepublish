@@ -426,6 +426,7 @@
         "goodieMinValue": {
           "label": "Require minimum payment amount to be eligible for a goodie:"
         },
+        "goodieMinValueAppliesToUpgrade": "Apply this minimum to upgrades too",
         "hideRepeatGoodieOnUpgrade": "Hide on upgrade when a goodie was already received",
         "periodicityDisplay": "Payment interval display",
         "periodicityDisplayDropdown": "Dropdown",

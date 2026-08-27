@@ -428,6 +428,7 @@
         "goodieMinValue": {
           "label": "Goodie-Mindestbetrag:"
         },
+        "goodieMinValueAppliesToUpgrade": "Mindestbetrag auch bei Upgrades anwenden",
         "hideRepeatGoodieOnUpgrade": "Bei Upgrade: kein erneutes Goodie",
         "periodicityDisplay": "Darstellung der Zahlungsintervalle",
         "periodicityDisplayDropdown": "Auswahlfeld",
