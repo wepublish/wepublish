@@ -1,10 +1,12 @@
+{{- $migrationEnv := merge (deepCopy .Values.migration.env) .Values.deployment.env }}
+{{- $migrationHash := printf "%s|%s" .Values.migration.image (toYaml $migrationEnv) | sha256sum | trunc 10 }}
 ---
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ include "helm.fullname" . }}-migration-{{ .Release.Revision }}
+  name: {{ include "helm.fullname" . }}-migration-{{ $migrationHash }}
   labels:
-    app.kubernetes.io/name: {{ include "helm.name" . }}-migration-{{ .Release.Revision }}
+    app.kubernetes.io/name: {{ include "helm.name" . }}-migration
     helm.sh/chart: {{ include "helm.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
@@ -58,7 +60,7 @@ spec:
             {{- end }}
           envFrom:
             - secretRef:
-                name: {{ include "helm.fullname" . }}-migration-environment-{{ .Release.Revision }}
+                name: {{ include "helm.fullname" . }}-migration-environment
             {{- if .Values.migration.envFromSecretRefName }}
             - secretRef:
                 name: {{ .Values.migration.envFromSecretRefName }}
@@ -67,13 +69,14 @@ spec:
           {{- toYaml . | nindent 10 }}
           {{- end }}
   backoffLimit: 4
+  ttlSecondsAfterFinished: {{ .Values.migration.ttlSecondsAfterFinished }}
 ---
 apiVersion: v1
 kind: Secret
 metadata:
-  name: {{ include "helm.fullname" . }}-migration-environment-{{ .Release.Revision }}
+  name: {{ include "helm.fullname" . }}-migration-environment
   labels:
-    app.kubernetes.io/name: {{ include "helm.fullname" . }}-migration-environment-{{ .Release.Revision }}
+    app.kubernetes.io/name: {{ include "helm.fullname" . }}-migration-environment
     helm.sh/chart: {{ include "helm.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
