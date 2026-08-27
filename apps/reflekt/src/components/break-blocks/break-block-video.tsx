@@ -255,6 +255,7 @@ export const BreakBlockVideo = ({
   fit?: 'cover' | 'contain';
 }) => {
   const [started, setStarted] = useState(false);
+  const [playing, setPlaying] = useState(true);
   const [nativeAspect, setNativeAspect] = useState(16 / 9);
   const { aspect: vimeoAspect, thumbnail: vimeoThumbnail } = useVimeoEmbedInfo(
     video.kind === 'vimeo' ? video.vimeoId : null
@@ -325,7 +326,9 @@ export const BreakBlockVideo = ({
         renderEmbed(
           <BreakYouTubePlayer
             src={video.videoUrl}
-            playing
+            playing={playing}
+            onPlay={() => setPlaying(true)}
+            onPause={() => setPlaying(false)}
             controls
             width="100%"
             height="100%"
