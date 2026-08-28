@@ -154,7 +154,8 @@ type SyncProvider = {
 type LetterProvider = {
   id: string;
   type: string;
-  pdfRendererURL?: string;
+  cloudflareAccountId?: string;
+  cloudflareApiToken?: string;
 };
 
 type Config = {

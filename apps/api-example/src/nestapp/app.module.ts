@@ -21,10 +21,10 @@ import { ArticleModule, HotAndTrendingModule } from '@wepublish/article/api';
 import { AuthenticationModule } from '@wepublish/authentication/api';
 import {
   BaseLetterProvider,
+  CloudflarePdfRenderer,
   FakeLetterProvider,
   LettersModule,
   PingenLetterProvider,
-  RemotePdfRenderer,
 } from '@wepublish/letter/api';
 import { AuthorModule } from '@wepublish/author/api';
 import { BannerApiModule } from '@wepublish/banner/api';
@@ -300,11 +300,15 @@ import { readConfig } from '../readConfig';
 
         return {
           letterProvider,
-          pdfRenderer: new RemotePdfRenderer({
-            url:
-              letterProviderRaw?.pdfRendererURL ??
-              config.get('PDF_RENDERER_URL') ??
-              'http://localhost:3001/forms/chromium/convert/html',
+          pdfRenderer: new CloudflarePdfRenderer({
+            accountId:
+              letterProviderRaw?.cloudflareAccountId ??
+              config.get('CLOUDFLARE_ACCOUNT_ID') ??
+              '',
+            apiToken:
+              letterProviderRaw?.cloudflareApiToken ??
+              config.get('CLOUDFLARE_API_TOKEN') ??
+              '',
           }),
         };
       },

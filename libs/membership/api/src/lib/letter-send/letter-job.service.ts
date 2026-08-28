@@ -11,6 +11,7 @@ import {
   DuplicateLetterError,
   LetterContext,
   LetterController,
+  LetterPrintSettings,
   UserWithAddress,
 } from '@wepublish/letter/api';
 
@@ -32,7 +33,8 @@ const ABANDONED_ERROR =
   'Job was interrupted repeatedly and stopped. Continue it manually.';
 
 export interface EnqueueLetterProps {
-  letterTemplateId: string;
+  mailTemplateId: string;
+  print: LetterPrintSettings;
   user: UserWithAddress;
   type: LetterLogType;
   subscriptionId?: string | null;
@@ -44,7 +46,7 @@ export interface EnqueueLetterProps {
 export function letterIdentifierFor(props: EnqueueLetterProps): string {
   return `${props.type}-${
     props.runDate ? props.runDate.toISOString() : 'null'
-  }-${props.daysAwayFromEnding}-${props.letterTemplateId}-${props.user.id}`;
+  }-${props.daysAwayFromEnding}-${props.mailTemplateId}-${props.user.id}`;
 }
 
 @Injectable()
@@ -64,7 +66,7 @@ export class LetterJobService {
   async enqueue(props: EnqueueLetterProps): Promise<LetterJob | null> {
     if (!canReceiveLetters(props.user)) {
       this.logger.warn(
-        `Skipping letter for user ${props.user.id} (template ${props.letterTemplateId}): no usable postal address`
+        `Skipping letter for user ${props.user.id} (template ${props.mailTemplateId}): no usable postal address`
       );
 
       return null;
@@ -75,7 +77,7 @@ export class LetterJobService {
     try {
       return await this.prisma.letterJob.create({
         data: {
-          letterTemplate: { connect: { id: props.letterTemplateId } },
+          mailTemplate: { connect: { id: props.mailTemplateId } },
           user: { connect: { id: props.user.id } },
           ...(props.subscriptionId ?
             { subscription: { connect: { id: props.subscriptionId } } }
@@ -87,6 +89,11 @@ export class LetterJobService {
           daysAwayFromEnding: props.daysAwayFromEnding,
           runDate: props.runDate,
           letterIdentifier,
+          addressPosition: props.print.addressPosition,
+          deliveryProduct: props.print.deliveryProduct,
+          printMode: props.print.printMode,
+          printSpectrum: props.print.printSpectrum,
+          qrBill: props.print.qrBill,
         },
       });
     } catch (error) {
@@ -194,7 +201,14 @@ export class LetterJobService {
         this.prisma,
         this.letterContext,
         {
-          letterTemplateId: job.letterTemplateId,
+          mailTemplateId: job.mailTemplateId,
+          print: {
+            addressPosition: job.addressPosition,
+            deliveryProduct: job.deliveryProduct,
+            printMode: job.printMode,
+            printSpectrum: job.printSpectrum,
+            qrBill: job.qrBill,
+          },
           recipient: user,
           letterType: job.type,
           optionalData: { subscription, invoice, items: invoice?.items ?? [] },

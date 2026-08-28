@@ -1,0 +1,12 @@
+query LetterProvider {
+  letterProvider {
+    name
+  }
+}
+
+query PreviewLetter($input: LetterPreviewInput!) {
+  previewLetter(input: $input) {
+    pdf
+    missingPlaceholders
+  }
+}

@@ -24,8 +24,6 @@ export * from './lib/invoice/invoice.model';
 export * from './lib/invoice/invoice.module';
 export * from './lib/invoice/has-invoice/has-invoice.model';
 
-export * from './lib/letter-template/letter-template.model';
-export * from './lib/letter-template/letter-template.module';
 export * from './lib/letter-send/letter-job.service';
 export * from './lib/letter-send/letter-send.module';
 

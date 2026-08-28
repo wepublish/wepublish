@@ -59,7 +59,6 @@ export class SubscriptionFlowService {
         intervals: {
           include: {
             mailTemplate: true,
-            letterTemplate: true,
           },
         },
       },
@@ -258,14 +257,12 @@ export class SubscriptionFlowService {
               },
             }
           : {},
-        letterTemplate:
-          interval.letterTemplateId ?
-            {
-              connect: {
-                id: interval.letterTemplateId,
-              },
-            }
-          : {},
+        channels: interval.channels,
+        addressPosition: interval.addressPosition,
+        deliveryProduct: interval.deliveryProduct,
+        printMode: interval.printMode,
+        printSpectrum: interval.printSpectrum,
+        qrBill: interval.qrBill,
       },
     });
 
@@ -306,14 +303,22 @@ export class SubscriptionFlowService {
               : { disconnect: true },
           }
         : {}),
-        ...(interval.letterTemplateId !== undefined ?
-          {
-            letterTemplate:
-              interval.letterTemplateId ?
-                { connect: { id: interval.letterTemplateId } }
-              : { disconnect: true },
-          }
+        ...(interval.channels !== undefined ?
+          { channels: interval.channels }
         : {}),
+        ...(interval.addressPosition !== undefined ?
+          { addressPosition: interval.addressPosition }
+        : {}),
+        ...(interval.deliveryProduct !== undefined ?
+          { deliveryProduct: interval.deliveryProduct }
+        : {}),
+        ...(interval.printMode !== undefined ?
+          { printMode: interval.printMode }
+        : {}),
+        ...(interval.printSpectrum !== undefined ?
+          { printSpectrum: interval.printSpectrum }
+        : {}),
+        ...(interval.qrBill !== undefined ? { qrBill: interval.qrBill } : {}),
         daysAwayFromEnding: interval.daysAwayFromEnding,
       },
     });

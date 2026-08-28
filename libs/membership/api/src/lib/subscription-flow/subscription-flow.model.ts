@@ -9,6 +9,14 @@ import {
   registerEnumType,
 } from '@nestjs/graphql';
 import { PaymentPeriodicity, SubscriptionEvent } from '@prisma/client';
+import {
+  LetterAddressPosition,
+  LetterDeliveryProduct,
+  LetterPrintMode,
+  LetterPrintSpectrum,
+  LetterQrBill,
+  MessageChannel,
+} from '../channel-enums';
 import { MemberPlan } from '@wepublish/member-plan/api';
 import { PaymentMethod } from '@wepublish/payment/api';
 
@@ -40,8 +48,23 @@ export class SubscriptionInterval {
   @Field(() => MailTemplateRef, { nullable: true })
   mailTemplate!: MailTemplateRef | null;
 
-  @Field(() => MailTemplateRef, { nullable: true })
-  letterTemplate!: MailTemplateRef | null;
+  @Field(() => [MessageChannel])
+  channels!: MessageChannel[];
+
+  @Field(() => LetterAddressPosition)
+  addressPosition!: LetterAddressPosition;
+
+  @Field(() => LetterDeliveryProduct)
+  deliveryProduct!: LetterDeliveryProduct;
+
+  @Field(() => LetterPrintMode)
+  printMode!: LetterPrintMode;
+
+  @Field(() => LetterPrintSpectrum)
+  printSpectrum!: LetterPrintSpectrum;
+
+  @Field(() => LetterQrBill)
+  qrBill!: LetterQrBill;
 
   @Field(() => SubscriptionEvent)
   event!: SubscriptionEvent;
@@ -85,8 +108,23 @@ export class SubscriptionIntervalCreateInput {
   @Field({ nullable: true })
   mailTemplateId?: string;
 
-  @Field({ nullable: true })
-  letterTemplateId?: string;
+  @Field(() => [MessageChannel], { nullable: true })
+  channels?: MessageChannel[];
+
+  @Field(() => LetterAddressPosition, { nullable: true })
+  addressPosition?: LetterAddressPosition;
+
+  @Field(() => LetterDeliveryProduct, { nullable: true })
+  deliveryProduct?: LetterDeliveryProduct;
+
+  @Field(() => LetterPrintMode, { nullable: true })
+  printMode?: LetterPrintMode;
+
+  @Field(() => LetterPrintSpectrum, { nullable: true })
+  printSpectrum?: LetterPrintSpectrum;
+
+  @Field(() => LetterQrBill, { nullable: true })
+  qrBill?: LetterQrBill;
 
   @Field(() => SubscriptionEvent)
   event!: SubscriptionEvent;
@@ -97,7 +135,12 @@ export class SubscriptionIntervalUpdateInput extends PartialType(
   PickType(SubscriptionIntervalCreateInput, [
     'daysAwayFromEnding',
     'mailTemplateId',
-    'letterTemplateId',
+    'channels',
+    'addressPosition',
+    'deliveryProduct',
+    'printMode',
+    'printSpectrum',
+    'qrBill',
   ] as const),
   ArgsType
 ) {

@@ -1739,6 +1739,24 @@ export enum LetterLogType {
   UserFlow = 'userFlow'
 }
 
+export type LetterPreviewInput = {
+  addressPosition?: InputMaybe<LetterAddressPosition>;
+  context?: InputMaybe<MailTemplateContext>;
+  htmlContent?: InputMaybe<Scalars['String']>;
+  mailTemplateId?: InputMaybe<Scalars['String']>;
+  qrBill?: InputMaybe<LetterQrBill>;
+  /** Render with the data of this subscription instead of samples. */
+  subscriptionId?: InputMaybe<Scalars['String']>;
+};
+
+export type LetterPreviewModel = {
+  __typename?: 'LetterPreviewModel';
+  /** Placeholders used by the template that resolve to nothing. */
+  missingPlaceholders: Array<Scalars['String']>;
+  /** The rendered pdf, base64 encoded. */
+  pdf: Scalars['String'];
+};
+
 export enum LetterPrintMode {
   Duplex = 'DUPLEX',
   Simplex = 'SIMPLEX'
@@ -1749,60 +1767,11 @@ export enum LetterPrintSpectrum {
   Grayscale = 'GRAYSCALE'
 }
 
-export type LetterProviderModel = {
-  __typename?: 'LetterProviderModel';
-  name: Scalars['String'];
-};
-
 /** Whether a Swiss QR bill is printed, and where. It fills a fixed slot, it is not a placeholder. */
 export enum LetterQrBill {
   LastPage = 'LAST_PAGE',
   None = 'NONE'
 }
-
-export type LetterTemplateInput = {
-  addressPosition?: InputMaybe<LetterAddressPosition>;
-  context?: InputMaybe<MailTemplateContext>;
-  deliveryProduct?: InputMaybe<LetterDeliveryProduct>;
-  description?: InputMaybe<Scalars['String']>;
-  htmlContent: Scalars['String'];
-  name: Scalars['String'];
-  printMode?: InputMaybe<LetterPrintMode>;
-  printSpectrum?: InputMaybe<LetterPrintSpectrum>;
-  qrBill?: InputMaybe<LetterQrBill>;
-};
-
-export type LetterTemplateModel = {
-  __typename?: 'LetterTemplateModel';
-  addressPosition: LetterAddressPosition;
-  context?: Maybe<MailTemplateContext>;
-  deliveryProduct: LetterDeliveryProduct;
-  description?: Maybe<Scalars['String']>;
-  htmlContent: Scalars['String'];
-  id: Scalars['String'];
-  name: Scalars['String'];
-  printMode: LetterPrintMode;
-  printSpectrum: LetterPrintSpectrum;
-  qrBill: LetterQrBill;
-};
-
-export type LetterTemplatePreviewInput = {
-  addressPosition?: InputMaybe<LetterAddressPosition>;
-  context?: InputMaybe<MailTemplateContext>;
-  htmlContent?: InputMaybe<Scalars['String']>;
-  letterTemplateId?: InputMaybe<Scalars['String']>;
-  qrBill?: InputMaybe<LetterQrBill>;
-  /** Render with the data of this subscription instead of samples. */
-  subscriptionId?: InputMaybe<Scalars['String']>;
-};
-
-export type LetterTemplatePreviewModel = {
-  __typename?: 'LetterTemplatePreviewModel';
-  /** Placeholders used by the template that resolve to nothing. */
-  missingPlaceholders: Array<Scalars['String']>;
-  /** The rendered pdf, base64 encoded. */
-  pdf: Scalars['String'];
-};
 
 export type ListicleBlock = BaseBlock & {
   __typename?: 'ListicleBlock';
@@ -2063,6 +2032,7 @@ export enum MailTemplateContext {
 }
 
 export type MailTemplateInput = {
+  channels?: InputMaybe<Array<MessageChannel>>;
   context?: InputMaybe<MailTemplateContext>;
   description?: InputMaybe<Scalars['String']>;
   htmlContent: Scalars['String'];
@@ -2073,6 +2043,8 @@ export type MailTemplateInput = {
 
 export type MailTemplateModel = {
   __typename?: 'MailTemplateModel';
+  /** The channels this template may be sent through. */
+  channels: Array<MessageChannel>;
   context?: Maybe<MailTemplateContext>;
   description?: Maybe<Scalars['String']>;
   htmlContent: Scalars['String'];
@@ -2361,6 +2333,12 @@ export enum MemberPlanSort {
   ModifiedAt = 'ModifiedAt'
 }
 
+/** A channel a message can be sent through. */
+export enum MessageChannel {
+  Letter = 'LETTER',
+  Mail = 'MAIL'
+}
+
 export type Mutation = {
   __typename?: 'Mutation';
   /** Subscribes a contact to a Mailchimp list. */
@@ -2411,7 +2389,6 @@ export type Mutation = {
   createJWTForUser: SessionWithToken;
   /** Returns a JWT that is valid for 1min for the current logged in user. */
   createJWTForWebsiteLogin: SessionWithToken;
-  createLetterTemplate: LetterTemplateModel;
   /** Start a background job sending a template to a filtered audience */
   createMailSendJob: MailSendJobModel;
   /** Create a new mail template */
@@ -2499,7 +2476,6 @@ export type Mutation = {
   deleteImage: Scalars['String'];
   /** Deletes an existing invoice. */
   deleteInvoice: Invoice;
-  deleteLetterTemplate: LetterTemplateModel;
   /** Delete an existing mail template */
   deleteMailTemplate?: Maybe<Scalars['Boolean']>;
   /** Deletes a single sync error so the contact will be retried. */
@@ -2672,7 +2648,6 @@ export type Mutation = {
   updateImage: Image;
   /** Updates an existing invoice. */
   updateInvoice: Invoice;
-  updateLetterTemplate: LetterTemplateModel;
   /** Updates an existing mail provider setting. */
   updateMailProviderSetting: SettingMailProvider;
   /** Update an existing mail template */
@@ -2927,11 +2902,6 @@ export type MutationCreateJwtForUserArgs = {
 };
 
 
-export type MutationCreateLetterTemplateArgs = {
-  input: LetterTemplateInput;
-};
-
-
 export type MutationCreateMailSendJobArgs = {
   input: MailSendJobInput;
 };
@@ -3102,10 +3072,15 @@ export type MutationCreateSubscriptionFlowArgs = {
 
 
 export type MutationCreateSubscriptionIntervalArgs = {
+  addressPosition?: InputMaybe<LetterAddressPosition>;
+  channels?: InputMaybe<Array<MessageChannel>>;
   daysAwayFromEnding?: InputMaybe<Scalars['Int']>;
+  deliveryProduct?: InputMaybe<LetterDeliveryProduct>;
   event: SubscriptionEvent;
-  letterTemplateId?: InputMaybe<Scalars['String']>;
   mailTemplateId?: InputMaybe<Scalars['String']>;
+  printMode?: InputMaybe<LetterPrintMode>;
+  printSpectrum?: InputMaybe<LetterPrintSpectrum>;
+  qrBill?: InputMaybe<LetterQrBill>;
   subscriptionFlowId: Scalars['String'];
 };
 
@@ -3260,11 +3235,6 @@ export type MutationDeleteImageArgs = {
 
 
 export type MutationDeleteInvoiceArgs = {
-  id: Scalars['String'];
-};
-
-
-export type MutationDeleteLetterTemplateArgs = {
   id: Scalars['String'];
 };
 
@@ -3801,12 +3771,6 @@ export type MutationUpdateInvoiceArgs = {
 };
 
 
-export type MutationUpdateLetterTemplateArgs = {
-  id: Scalars['String'];
-  input: LetterTemplateInput;
-};
-
-
 export type MutationUpdateMailProviderSettingArgs = {
   apiKey?: InputMaybe<Scalars['String']>;
   fromAddress?: InputMaybe<Scalars['String']>;
@@ -4024,10 +3988,15 @@ export type MutationUpdateSubscriptionFlowArgs = {
 
 
 export type MutationUpdateSubscriptionIntervalArgs = {
+  addressPosition?: InputMaybe<LetterAddressPosition>;
+  channels?: InputMaybe<Array<MessageChannel>>;
   daysAwayFromEnding?: InputMaybe<Scalars['Int']>;
+  deliveryProduct?: InputMaybe<LetterDeliveryProduct>;
   id: Scalars['String'];
-  letterTemplateId?: InputMaybe<Scalars['String']>;
   mailTemplateId?: InputMaybe<Scalars['String']>;
+  printMode?: InputMaybe<LetterPrintMode>;
+  printSpectrum?: InputMaybe<LetterPrintSpectrum>;
+  qrBill?: InputMaybe<LetterQrBill>;
 };
 
 
@@ -5204,11 +5173,8 @@ export type Query = {
   invoices: InvoiceConnection;
   /** Return the letters that were sent, newest first. */
   letterLogs: Array<LetterLogModel>;
-  letterProvider: LetterProviderModel;
-  /** Return a single letter template, including its html body. */
-  letterTemplate?: Maybe<LetterTemplateModel>;
-  /** Return all letter templates */
-  letterTemplates: Array<LetterTemplateModel>;
+  /** The provider letters are printed and posted through. */
+  letterProvider: MailProviderModel;
   /** Paginated list of sent mails */
   mailLogs: PaginatedMailLog;
   /** Returns a single mail provider setting by id. */
@@ -5313,8 +5279,8 @@ export type Query = {
   pollVotes: PaginatedPollVotes;
   /** Returns a paginated list of polls based on the filters given. */
   polls: PaginatedPolls;
-  /** Render a letter as it would be printed, without sending it. */
-  previewLetter: LetterTemplatePreviewModel;
+  /** Render a template as the letter it would be printed as, without sending it. */
+  previewLetter: LetterPreviewModel;
   primaryBanner?: Maybe<Banner>;
   promptHTML: Chat;
   provider: MailProviderModel;
@@ -5697,11 +5663,6 @@ export type QueryLetterLogsArgs = {
 };
 
 
-export type QueryLetterTemplateArgs = {
-  id: Scalars['String'];
-};
-
-
 export type QueryMailLogsArgs = {
   filter?: InputMaybe<MailLogFilter>;
   skip?: InputMaybe<Scalars['Int']>;
@@ -5946,7 +5907,7 @@ export type QueryPollsArgs = {
 
 
 export type QueryPreviewLetterArgs = {
-  input: LetterTemplatePreviewInput;
+  input: LetterPreviewInput;
 };
 
 
@@ -6699,11 +6660,16 @@ export type SubscriptionFlowModel = {
 
 export type SubscriptionInterval = {
   __typename?: 'SubscriptionInterval';
+  addressPosition: LetterAddressPosition;
+  channels: Array<MessageChannel>;
   daysAwayFromEnding?: Maybe<Scalars['Int']>;
+  deliveryProduct: LetterDeliveryProduct;
   event: SubscriptionEvent;
   id: Scalars['String'];
-  letterTemplate?: Maybe<MailTemplateRef>;
   mailTemplate?: Maybe<MailTemplateRef>;
+  printMode: LetterPrintMode;
+  printSpectrum: LetterPrintSpectrum;
+  qrBill: LetterQrBill;
 };
 
 export type SubscriptionPeriod = {
