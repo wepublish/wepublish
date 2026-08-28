@@ -26,12 +26,12 @@ import { allPass } from 'ramda';
 import { startTransition, useEffect, useRef, useState } from 'react';
 
 import theme from '../../theme';
+import { ReflektBlockStyles } from '../block-styles/reflekt-block-styles';
 import {
   BreakBlockVideo,
   BreakVideoFrame,
   breakVideoFromBlock,
 } from '../break-blocks/break-block-video';
-import { ReflektBlockStyles } from '../block-styles/reflekt-block-styles';
 import { ReflektLogo } from '../reflekt-navbar';
 
 const FLEX_GRID_COLUMN_COUNT = 12;
@@ -54,12 +54,12 @@ const isRightColumnBlock = (alignment: FlexAlignment): boolean =>
   alignment.x + alignment.w / 2 > FLEX_GRID_COLUMN_COUNT / 2;
 
 export const FlexBlockHeroCrowdfundingWrapper = styled('div')`
-  width: 100vw;
-  margin-left: calc(50% - 50vw);
-  margin-right: calc(50% - 50vw);
+  grid-column: -1 / 1;
   display: grid;
   justify-items: center;
   background-color: ${({ theme }) => theme.palette.secondary.dark};
+  padding-top: ${({ theme }) => theme.spacing(10)};
+  padding-bottom: ${({ theme }) => theme.spacing(8)};
 `;
 
 export const FlexBlockHeroCrowdfundingContent = styled('div')`
@@ -88,13 +88,13 @@ export const FlexBlockHeroCrowdfundingContent = styled('div')`
 
     h1,
     h2 {
-      font-size: 2.8rem;
+      font-size: clamp(2.25rem, 6.5vw, 2.8rem);
       margin-bottom: ${theme.spacing(2)};
       text-wrap: wrap;
     }
 
     h3 {
-      font-size: 1.5rem;
+      font-size: clamp(1.3rem, 3.2vw, 1.5rem);
       margin-bottom: ${theme.spacing(2)};
       text-wrap: wrap;
     }
