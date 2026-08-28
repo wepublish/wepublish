@@ -156,6 +156,10 @@ export const SubscribeNarrowSection = styled(SubscribeSection)`
   gap: ${({ theme }) => theme.spacing(1)};
 `;
 
+export const SubscribeOpenInvoicesNotice = styled('div')``;
+
+export const SubscribeExistingSubscriptionNotice = styled('div')``;
+
 export const clampMonthlyAmount = (amount: number, min: number, max?: number) =>
   Math.min(Math.max(amount, min), max ?? Number.MAX_SAFE_INTEGER);
 
@@ -683,27 +687,33 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
           </SubscribeSection>
         )}
 
-        <SubscribeSection area="memberPlans">
-          {(memberPlans.data?.memberPlans.nodes.length ?? 0) > 1 && (
-            <H5 component="h2">{t('subscribe.chooseSubscription')}</H5>
-          )}
-
+        <SubscribeSection area="notices">
           {hasOpenInvoices && (
-            <Alert severity="warning">
-              <Trans
-                i18nKey="subscribe.warning.openInvoices"
-                components={{ Link: <Link /> }}
-              />
-            </Alert>
+            <SubscribeOpenInvoicesNotice>
+              <Alert severity="warning">
+                <Trans
+                  i18nKey="subscribe.warning.openInvoices"
+                  components={{ Link: <Link /> }}
+                />
+              </Alert>
+            </SubscribeOpenInvoicesNotice>
           )}
 
           {alreadyHasSubscription && (
-            <Alert severity="warning">
-              <Trans
-                i18nKey="subscribe.warning.alreadyHasSubscription"
-                components={{ Link: <Link /> }}
-              />
-            </Alert>
+            <SubscribeExistingSubscriptionNotice>
+              <Alert severity="warning">
+                <Trans
+                  i18nKey="subscribe.warning.alreadyHasSubscription"
+                  components={{ Link: <Link /> }}
+                />
+              </Alert>
+            </SubscribeExistingSubscriptionNotice>
+          )}
+        </SubscribeSection>
+
+        <SubscribeSection area="memberPlans">
+          {(memberPlans.data?.memberPlans.nodes.length ?? 0) > 1 && (
+            <H5 component="h2">{t('subscribe.chooseSubscription')}</H5>
           )}
 
           {useOfferCards ?
