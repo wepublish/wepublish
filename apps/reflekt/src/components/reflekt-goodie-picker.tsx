@@ -40,6 +40,15 @@ const GoodieSliderTitle = styled(Typography)`
   ${({ theme }) => theme.breakpoints.down('md')} {
     padding: 0 32px;
   }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
 ` as typeof Typography;
 
 const GoodieSelectArea = styled('div')`
@@ -81,7 +90,7 @@ const GoodieSlider = memo(function GoodieSlider({
         variant="h2"
         component="h2"
       >
-        Crowdfunding-Geschenk
+        <a href="#Crowdfunding-Geschenk">Crowdfunding-Geschenk</a>
       </GoodieSliderTitle>
 
       <ReflektImageSliderSlim images={images} />
