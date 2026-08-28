@@ -4,7 +4,6 @@ import {
 } from './subscription-event-dictionary.type';
 import { startOfDay, subDays } from 'date-fns';
 import {
-  LetterTemplate,
   MailTemplate,
   PaymentMethod,
   PrismaClient,
@@ -27,7 +26,6 @@ export class SubscriptionEventDictionary {
     paymentMethods: PaymentMethod[];
     intervals: (SubscriptionInterval & {
       mailTemplate: MailTemplate | null;
-      letterTemplate: LetterTemplate | null;
     })[];
   })[] = [];
 
@@ -146,7 +144,6 @@ export class SubscriptionEventDictionary {
           intervals: {
             include: {
               mailTemplate: true,
-              letterTemplate: true,
             },
           },
         },
@@ -158,7 +155,14 @@ export class SubscriptionEventDictionary {
           type: int.event,
           daysAwayFromEnding: int.daysAwayFromEnding,
           mailTemplateId: int.mailTemplate ? int.mailTemplate.id : null,
-          letterTemplateId: int.letterTemplate ? int.letterTemplate.id : null,
+          channels: int.channels,
+          print: {
+            addressPosition: int.addressPosition,
+            deliveryProduct: int.deliveryProduct,
+            printMode: int.printMode,
+            printSpectrum: int.printSpectrum,
+            qrBill: int.qrBill,
+          },
         })),
       };
     });

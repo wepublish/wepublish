@@ -49,14 +49,14 @@ mutation CreateSubscriptionInterval(
   $subscriptionFlowId: String!
   $daysAwayFromEnding: Int
   $mailTemplateId: String
-  $letterTemplateId: String
+  $channels: [MessageChannel!]
   $event: SubscriptionEvent!
 ) {
   createSubscriptionInterval(
     subscriptionFlowId: $subscriptionFlowId
     daysAwayFromEnding: $daysAwayFromEnding
     mailTemplateId: $mailTemplateId
-    letterTemplateId: $letterTemplateId
+    channels: $channels
     event: $event
   ) {
     ...SubscriptionFlow
@@ -67,13 +67,23 @@ mutation UpdateSubscriptionInterval(
   $id: String!
   $daysAwayFromEnding: Int
   $mailTemplateId: String
-  $letterTemplateId: String
+  $channels: [MessageChannel!]
+  $addressPosition: LetterAddressPosition
+  $deliveryProduct: LetterDeliveryProduct
+  $printMode: LetterPrintMode
+  $printSpectrum: LetterPrintSpectrum
+  $qrBill: LetterQrBill
 ) {
   updateSubscriptionInterval(
     id: $id
     daysAwayFromEnding: $daysAwayFromEnding
     mailTemplateId: $mailTemplateId
-    letterTemplateId: $letterTemplateId
+    channels: $channels
+    addressPosition: $addressPosition
+    deliveryProduct: $deliveryProduct
+    printMode: $printMode
+    printSpectrum: $printSpectrum
+    qrBill: $qrBill
   ) {
     ...SubscriptionFlow
   }
@@ -115,9 +125,12 @@ fragment SubscriptionInterval on SubscriptionInterval {
   mailTemplate {
     ...MailTemplateRef
   }
-  letterTemplate {
-    ...MailTemplateRef
-  }
+  channels
+  addressPosition
+  deliveryProduct
+  printMode
+  printSpectrum
+  qrBill
 }
 
 fragment MailTemplateRef on MailTemplateRef {

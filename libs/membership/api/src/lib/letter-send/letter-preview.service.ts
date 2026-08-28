@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import {
   Currency,
   LetterAddressPosition,
@@ -17,10 +17,7 @@ import {
   MailTemplateContextId,
   SAMPLE_INVOICE,
 } from '../mail-template/mail-template-data';
-import {
-  LetterTemplateInput,
-  LetterTemplatePreviewInput,
-} from './letter-template.model';
+import { LetterPreviewInput } from '../mail-template/mail-template.model';
 
 const SAMPLE_RECIPIENT: LetterAddress = {
   name: 'Jane Doe',
@@ -60,39 +57,23 @@ const SAMPLE_QR_INVOICE: QrBillInvoice = {
   })),
 };
 
+/**
+ * Renders a mail template as the letter it would be printed as. The print
+ * options are passed in rather than read from the template: they belong to the
+ * flow step, so the preview shows them the way the step is configured.
+ */
 @Injectable()
-export class LetterTemplateService {
+export class LetterPreviewService {
   constructor(
     private prisma: PrismaClient,
     private letterContext: LetterContext
   ) {}
 
-  async create(input: LetterTemplateInput) {
-    return this.prisma.letterTemplate.create({ data: input });
-  }
-
-  async update(id: string, input: LetterTemplateInput) {
-    return this.prisma.letterTemplate.update({ where: { id }, data: input });
-  }
-
-  async delete(id: string) {
-    const used = await this.letterContext.getUsedTemplateIdentifiers();
-
-    if (used.includes(id)) {
-      throw new NotFoundException(
-        'This letter template is still used by a communication flow.'
-      );
-    }
-
-    return this.prisma.letterTemplate.delete({ where: { id } });
-  }
-
   missingPlaceholders(htmlContent: string, contextId: MailTemplateContextId) {
-    const data = assembleFullSampleMailData();
     const available = new Set(
-      resolvableKeys(assembleMailData(contextId, data, '')).map(key =>
-        key.toLowerCase()
-      )
+      resolvableKeys(
+        assembleMailData(contextId, assembleFullSampleMailData(), '')
+      ).map(key => key.toLowerCase())
     );
 
     return extractPlaceholders(htmlContent).filter(
@@ -100,24 +81,15 @@ export class LetterTemplateService {
     );
   }
 
-  async preview(input: LetterTemplatePreviewInput) {
+  async preview(input: LetterPreviewInput) {
     const template =
-      input.letterTemplateId ?
-        await this.prisma.letterTemplate.findUnique({
-          where: { id: input.letterTemplateId },
+      input.mailTemplateId ?
+        await this.prisma.mailTemplate.findUnique({
+          where: { id: input.mailTemplateId },
         })
       : null;
 
-    if (input.letterTemplateId && !template) {
-      throw new NotFoundException('The given letter template was not found.');
-    }
-
     const htmlContent = input.htmlContent ?? template?.htmlContent ?? '';
-    const qrBill = input.qrBill ?? template?.qrBill ?? LetterQrBill.NONE;
-    const addressPosition =
-      input.addressPosition ??
-      template?.addressPosition ??
-      LetterAddressPosition.LEFT;
     const contextId = (input.context ??
       template?.context ??
       'custom') as MailTemplateContextId;
@@ -125,11 +97,10 @@ export class LetterTemplateService {
     const { recipient, data, invoice } = await this.previewData(input);
 
     const pdf = await this.letterContext.renderLetter({
-      template: {
-        htmlContent,
-        addressPosition:
-          addressPosition === LetterAddressPosition.RIGHT ? 'right' : 'left',
-        qrBill,
+      template: { htmlContent },
+      print: {
+        addressPosition: input.addressPosition ?? LetterAddressPosition.LEFT,
+        qrBill: input.qrBill ?? LetterQrBill.NONE,
       },
       data,
       recipient,
@@ -143,7 +114,7 @@ export class LetterTemplateService {
     };
   }
 
-  private async previewData(input: LetterTemplatePreviewInput) {
+  private async previewData(input: LetterPreviewInput) {
     if (!input.subscriptionId) {
       return {
         recipient: SAMPLE_RECIPIENT,
@@ -163,7 +134,11 @@ export class LetterTemplateService {
     });
 
     if (!subscription?.user) {
-      throw new NotFoundException('The given subscription was not found.');
+      return {
+        recipient: SAMPLE_RECIPIENT,
+        data: assembleFullSampleMailData(),
+        invoice: SAMPLE_QR_INVOICE,
+      };
     }
 
     const invoice = subscription.invoices[0] ?? SAMPLE_QR_INVOICE;
@@ -187,7 +162,6 @@ export class LetterTemplateService {
 }
 
 function toLetterAddressOrSample(user: {
-  id: string;
   firstName: string | null;
   name: string;
   address: {

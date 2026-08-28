@@ -6,7 +6,7 @@ import {
   PrismaClient,
 } from '@prisma/client';
 import { randomUUID } from 'crypto';
-import { LetterContext } from './letter-context';
+import { LetterContext, LetterPrintSettings } from './letter-context';
 import { LetterState } from './letter-provider/letter-provider.interface';
 import { toLetterAddress, UserWithAddress } from './letter-recipient';
 import { QrBillInvoice } from './qr-bill/qr-bill.service';
@@ -24,7 +24,8 @@ const LOG_STATES: Record<LetterState, LetterLogState> = {
 export class DuplicateLetterError extends Error {}
 
 export type LetterControllerConfig = {
-  letterTemplateId: string;
+  mailTemplateId: string;
+  print: LetterPrintSettings;
   recipient: UserWithAddress;
   letterType: LetterLogType;
   optionalData: Record<string, any>;
@@ -54,7 +55,7 @@ export class LetterController {
       this.config.letterIdentifier ??
       `${this.config.letterType}-${
         this.config.runDate ? this.config.runDate.toISOString() : 'null'
-      }-${this.config.daysAwayFromEnding}-${this.config.letterTemplateId}-${
+      }-${this.config.daysAwayFromEnding}-${this.config.mailTemplateId}-${
         this.config.recipient.id
       }`
     );
@@ -85,7 +86,7 @@ export class LetterController {
         data: {
           id: letterLogId,
           recipient: { connect: { id: this.config.recipient.id } },
-          letterTemplate: { connect: { id: this.config.letterTemplateId } },
+          mailTemplate: { connect: { id: this.config.mailTemplateId } },
           ...(this.config.invoice ?
             { invoice: { connect: { id: this.config.invoice.id } } }
           : {}),
@@ -94,6 +95,11 @@ export class LetterController {
           letterIdentifier,
           providerID: this.letterContext.letterProvider.id,
           addressSnapshot: address as unknown as Prisma.InputJsonValue,
+          addressPosition: this.config.print.addressPosition,
+          deliveryProduct: this.config.print.deliveryProduct,
+          printMode: this.config.print.printMode,
+          printSpectrum: this.config.print.printSpectrum,
+          qrBill: this.config.print.qrBill,
         },
       });
     } catch (error) {
@@ -112,7 +118,8 @@ export class LetterController {
     try {
       const result = await this.letterContext.sendComposedLetter({
         letterLogID: letterLogId,
-        letterTemplateId: this.config.letterTemplateId,
+        mailTemplateId: this.config.mailTemplateId,
+        print: this.config.print,
         recipient: address,
         data: this.buildData(),
         invoice: this.config.invoice,

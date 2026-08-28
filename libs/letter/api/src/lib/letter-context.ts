@@ -1,12 +1,20 @@
 import { Injectable } from '@nestjs/common';
-import { LetterQrBill, LetterTemplate, PrismaClient } from '@prisma/client';
-import { BaseLetterProvider } from './letter-provider/base-letter-provider';
 import {
-  LetterAddress,
   LetterAddressPosition,
   LetterDeliveryProduct,
   LetterPrintMode,
   LetterPrintSpectrum,
+  LetterQrBill,
+  MessageChannel,
+  PrismaClient,
+} from '@prisma/client';
+import { BaseLetterProvider } from './letter-provider/base-letter-provider';
+import {
+  LetterAddress,
+  LetterAddressPosition as ProviderAddressPosition,
+  LetterDeliveryProduct as ProviderDeliveryProduct,
+  LetterPrintMode as ProviderPrintMode,
+  LetterPrintSpectrum as ProviderPrintSpectrum,
   SendLetterResult,
 } from './letter-provider/letter-provider.interface';
 import { composeLetter, LetterTemplateContent } from './letter-renderer';
@@ -22,11 +30,22 @@ export interface LetterContextProps {
   organisation: OrganisationService;
 }
 
+/**
+ * The print options a flow step carries. They live on the step, not on the
+ * template: the same words can go out as a cheap reminder and as an A-Post
+ * final notice.
+ */
+export interface LetterPrintSettings {
+  addressPosition: LetterAddressPosition;
+  deliveryProduct: LetterDeliveryProduct;
+  printMode: LetterPrintMode;
+  printSpectrum: LetterPrintSpectrum;
+  qrBill: LetterQrBill;
+}
+
 export interface RenderLetterProps {
-  template: LetterTemplateContent & {
-    addressPosition: LetterAddressPosition;
-    qrBill: LetterQrBill;
-  };
+  template: LetterTemplateContent;
+  print: Pick<LetterPrintSettings, 'addressPosition' | 'qrBill'>;
   data: Record<string, any>;
   recipient: LetterAddress;
   invoice?: QrBillInvoice | null;
@@ -34,31 +53,34 @@ export interface RenderLetterProps {
 }
 
 export interface SendComposedLetterProps {
-  letterTemplateId: string;
+  mailTemplateId: string;
   letterLogID: string;
   recipient: LetterAddress;
   data: Record<string, any>;
+  print: LetterPrintSettings;
   invoice?: QrBillInvoice | null;
 }
 
 export function toAddressPosition(
-  template: LetterTemplate
-): LetterAddressPosition {
-  return template.addressPosition === 'RIGHT' ? 'right' : 'left';
+  addressPosition: LetterAddressPosition
+): ProviderAddressPosition {
+  return addressPosition === LetterAddressPosition.RIGHT ? 'right' : 'left';
 }
 
 export function toDeliveryProduct(
-  template: LetterTemplate
-): LetterDeliveryProduct {
-  return template.deliveryProduct.toLowerCase() as LetterDeliveryProduct;
+  deliveryProduct: LetterDeliveryProduct
+): ProviderDeliveryProduct {
+  return deliveryProduct.toLowerCase() as ProviderDeliveryProduct;
 }
 
-export function toPrintMode(template: LetterTemplate): LetterPrintMode {
-  return template.printMode.toLowerCase() as LetterPrintMode;
+export function toPrintMode(printMode: LetterPrintMode): ProviderPrintMode {
+  return printMode.toLowerCase() as ProviderPrintMode;
 }
 
-export function toPrintSpectrum(template: LetterTemplate): LetterPrintSpectrum {
-  return template.printSpectrum.toLowerCase() as LetterPrintSpectrum;
+export function toPrintSpectrum(
+  printSpectrum: LetterPrintSpectrum
+): ProviderPrintSpectrum {
+  return printSpectrum.toLowerCase() as ProviderPrintSpectrum;
 }
 
 @Injectable()
@@ -79,6 +101,7 @@ export class LetterContext {
 
   async renderLetter({
     template,
+    print,
     data,
     recipient,
     invoice,
@@ -88,7 +111,7 @@ export class LetterContext {
 
     let qrBillSvg: string | undefined;
 
-    if (template.qrBill === LetterQrBill.LAST_PAGE) {
+    if (print.qrBill === LetterQrBill.LAST_PAGE) {
       if (!invoice) {
         throw new Error(
           'The letter template asks for a QR bill but no invoice is bound to this send'
@@ -107,7 +130,7 @@ export class LetterContext {
       data,
       recipient,
       sender,
-      addressPosition: template.addressPosition,
+      addressPosition: toAddressPosition(print.addressPosition),
       qrBillSvg,
     });
 
@@ -115,26 +138,30 @@ export class LetterContext {
   }
 
   async sendComposedLetter({
-    letterTemplateId,
+    mailTemplateId,
     letterLogID,
     recipient,
     data,
+    print,
     invoice,
   }: SendComposedLetterProps): Promise<SendLetterResult> {
-    const template = await this.prisma.letterTemplate.findUnique({
-      where: { id: letterTemplateId },
+    const template = await this.prisma.mailTemplate.findUnique({
+      where: { id: mailTemplateId },
     });
 
     if (!template) {
-      throw new Error(`LetterTemplate <${letterTemplateId}> not found!`);
+      throw new Error(`MailTemplate <${mailTemplateId}> not found!`);
+    }
+
+    if (!template.channels.includes(MessageChannel.LETTER)) {
+      throw new Error(
+        `MailTemplate <${mailTemplateId}> is not marked for print. Tag it for the letter channel first.`
+      );
     }
 
     const file = await this.renderLetter({
-      template: {
-        htmlContent: template.htmlContent,
-        addressPosition: toAddressPosition(template),
-        qrBill: template.qrBill,
-      },
+      template: { htmlContent: template.htmlContent },
+      print,
       data,
       recipient,
       invoice,
@@ -145,28 +172,10 @@ export class LetterContext {
       file,
       recipient,
       sender: await this.organisation.getSenderAddress(),
-      addressPosition: toAddressPosition(template),
-      deliveryProduct: toDeliveryProduct(template),
-      printMode: toPrintMode(template),
-      printSpectrum: toPrintSpectrum(template),
+      addressPosition: toAddressPosition(print.addressPosition),
+      deliveryProduct: toDeliveryProduct(print.deliveryProduct),
+      printMode: toPrintMode(print.printMode),
+      printSpectrum: toPrintSpectrum(print.printSpectrum),
     });
-  }
-
-  async getUsedTemplateIdentifiers(): Promise<string[]> {
-    const [intervals, userFlowLetters] = await Promise.all([
-      this.prisma.subscriptionInterval.findMany({
-        select: { letterTemplateId: true },
-      }),
-      this.prisma.userFlowMail.findMany({
-        select: { letterTemplateId: true },
-      }),
-    ]);
-
-    return [
-      ...intervals.flatMap(interval => interval.letterTemplateId ?? []),
-      ...userFlowLetters.flatMap(
-        userFlowLetter => userFlowLetter.letterTemplateId ?? []
-      ),
-    ];
   }
 }

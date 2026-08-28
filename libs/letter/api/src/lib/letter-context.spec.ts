@@ -1,5 +1,6 @@
 import {
   Currency,
+  LetterAddressPosition,
   LetterQrBill,
   PrismaClient,
   QrBillReferenceType,
@@ -86,9 +87,9 @@ describe('LetterContext.renderLetter', () => {
     const { context, rendered } = createContext();
 
     const pdf = await context.renderLetter({
-      template: {
-        htmlContent: '<p>Hallo {{user_firstName}}</p>',
-        addressPosition: 'left',
+      template: { htmlContent: '<p>Hallo {{user_firstName}}</p>' },
+      print: {
+        addressPosition: LetterAddressPosition.LEFT,
         qrBill: LetterQrBill.NONE,
       },
       data: { user: { firstName: 'Jane' } },
@@ -108,9 +109,9 @@ describe('LetterContext.renderLetter', () => {
     const { context, rendered } = createContext();
 
     await context.renderLetter({
-      template: {
-        htmlContent: '<p>Rechnung</p>',
-        addressPosition: 'left',
+      template: { htmlContent: '<p>Rechnung</p>' },
+      print: {
+        addressPosition: LetterAddressPosition.LEFT,
         qrBill: LetterQrBill.LAST_PAGE,
       },
       data: {},
@@ -130,9 +131,9 @@ describe('LetterContext.renderLetter', () => {
 
     await expect(
       context.renderLetter({
-        template: {
-          htmlContent: '<p>Rechnung</p>',
-          addressPosition: 'left',
+        template: { htmlContent: '<p>Rechnung</p>' },
+        print: {
+          addressPosition: LetterAddressPosition.LEFT,
           qrBill: LetterQrBill.LAST_PAGE,
         },
         data: {},

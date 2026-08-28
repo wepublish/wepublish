@@ -33,7 +33,6 @@ services:
       MAIL_SMTP_HOST: mailpit
       MAIL_SMTP_PORT: '1025'
       MAIL_SMTP_FROM: no-reply@wepublish.local
-      PDF_RENDERER_URL: http://pdf-renderer:3000/forms/chromium/convert/html
     env_file: .env
     volumes:
       - ./apps/api-example/src/default.yaml:/config.yaml
@@ -41,16 +40,6 @@ services:
       - database
       - migration
       - mailpit
-      - pdf-renderer
-    networks:
-      - app-tier
-  # Renders the letter html into a print ready pdf. Kept in its own container so
-  # the api image stays free of a browser.
-  pdf-renderer:
-    image: gotenberg/gotenberg:8
-    platform: linux/amd64
-    ports:
-      - '127.0.0.1:3001:3000'
     networks:
       - app-tier
   mailpit:

@@ -11,7 +11,6 @@ import {
 } from '@mui/material';
 import { useMemberPlanListQuery } from '@wepublish/editor/api';
 import {
-  TinyLetterTemplateFragment,
   TinyMailTemplateFragment,
   FullMemberPlanFragment,
   SubscriptionEvent,
@@ -21,7 +20,6 @@ import {
   useDeleteSubscriptionFlowMutation,
   useDeleteSubscriptionIntervalMutation,
   useListPaymentMethodsQuery,
-  useLetterTemplateQuery,
   useMailTemplateQuery,
   useSubscriptionFlowsQuery,
   useUpdateSubscriptionFlowMutation,
@@ -52,10 +50,6 @@ import { SubscriptionFlowHeadline } from './subscription-flow-headline';
 import { TimelineBody } from './timeline/timeline-body';
 import { TimelineHead } from './timeline/timeline-head';
 import styled from '@emotion/styled';
-
-export const LetterTemplatesContext = createContext<
-  TinyLetterTemplateFragment[]
->([]);
 
 export const MailTemplatesContext = createContext<TinyMailTemplateFragment[]>(
   []
@@ -153,9 +147,6 @@ function SubscriptionFlowTable({
 
   const { data: mailTemplates, loading: loadingMailTemplates } =
     useMailTemplateQuery(DEFAULT_QUERY_OPTIONS());
-  const { data: letterTemplates } = useLetterTemplateQuery(
-    DEFAULT_QUERY_OPTIONS()
-  );
   const { data: paymentMethods } = useListPaymentMethodsQuery(
     DEFAULT_QUERY_OPTIONS()
   );
@@ -275,114 +266,110 @@ function SubscriptionFlowTable({
   return (
     <TableContainer style={{ marginTop: '16px', maxWidth: '100%' }}>
       <MailTemplatesContext.Provider value={mailTemplates?.mailTemplates || []}>
-        <LetterTemplatesContext.Provider
-          value={letterTemplates?.letterTemplates || []}
+        <SubscriptionClientContext.Provider
+          value={{
+            createSubscriptionInterval,
+            updateSubscriptionInterval,
+            deleteSubscriptionInterval,
+            createSubscriptionFlow,
+            updateSubscriptionFlow,
+            deleteSubscriptionFlow,
+          }}
         >
-          <SubscriptionClientContext.Provider
-            value={{
-              createSubscriptionInterval,
-              updateSubscriptionInterval,
-              deleteSubscriptionInterval,
-              createSubscriptionFlow,
-              updateSubscriptionFlow,
-              deleteSubscriptionFlow,
-            }}
-          >
-            <Table size="small">
-              <TableHead>
-                <TableRow>
-                  <SubscriptionFlowHeadline
-                    defaultFlowOnly={defaultFlowOnly}
-                    userActionCount={userActionCount}
-                    filterCount={filterCount}
-                    nonUserActionCount={nonUserActionCount}
-                  />
-                </TableRow>
+          <Table size="small">
+            <TableHead>
+              <TableRow>
+                <SubscriptionFlowHeadline
+                  defaultFlowOnly={defaultFlowOnly}
+                  userActionCount={userActionCount}
+                  filterCount={filterCount}
+                  nonUserActionCount={nonUserActionCount}
+                />
+              </TableRow>
 
-                <SplitTableRow>
-                  {!defaultFlowOnly && <FilterHead />}
+              <SplitTableRow>
+                {!defaultFlowOnly && <FilterHead />}
 
-                  {userActionEvents.map(userActionEvent => (
-                    <EventTableCell
-                      key={userActionEvent.subscriptionEventKey}
-                      align="center"
-                    >
-                      <EventHeadCell
-                        title={userActionEvent.title}
-                        hint={userActionEvent.hint}
-                        description={userActionEvent.description}
-                        example={userActionEvent.example}
-                      />
-                    </EventTableCell>
-                  ))}
-
-                  <TimelineHead
-                    days={days}
-                    intervals={intervals}
-                  />
-                  <EventsHead setNewDay={setNewDay} />
-                </SplitTableRow>
-              </TableHead>
-
-              <TableBody>
-                {subscriptionFlows.subscriptionFlows.map(subscriptionFlow => (
-                  <SplitTableRow key={subscriptionFlow.id}>
-                    <DndContext onDragEnd={event => intervalDragEnd(event)}>
-                      {memberPlan && !defaultFlowOnly && (
-                        <FilterBody
-                          memberPlan={memberPlan}
-                          subscriptionFlow={subscriptionFlow}
-                          paymentMethods={paymentMethods}
-                        />
-                      )}
-
-                      <EventsBody
-                        subscriptionFlow={subscriptionFlow}
-                        userActionEvents={userActionEvents}
-                        eventIcons={eventIcons}
-                        eventColors={eventColors}
-                      />
-
-                      <TimelineBody
-                        subscriptionFlow={subscriptionFlow}
-                        days={days}
-                        eventIcons={eventIcons}
-                        eventColors={eventColors}
-                      />
-
-                      <TableCell align="center">
-                        {!subscriptionFlow.default && (
-                          <DeleteSubscriptionFlow
-                            subscriptionFlow={subscriptionFlow}
-                          />
-                        )}
-                      </TableCell>
-                    </DndContext>
-                  </SplitTableRow>
+                {userActionEvents.map(userActionEvent => (
+                  <EventTableCell
+                    key={userActionEvent.subscriptionEventKey}
+                    align="center"
+                  >
+                    <EventHeadCell
+                      title={userActionEvent.title}
+                      hint={userActionEvent.hint}
+                      description={userActionEvent.description}
+                      example={userActionEvent.example}
+                    />
+                  </EventTableCell>
                 ))}
-              </TableBody>
 
-              {!defaultFlowOnly && (
-                <PermissionControl
-                  showRejectionMessage={false}
-                  qualifyingPermissions={['CAN_CREATE_SUBSCRIPTION_FLOW']}
-                >
-                  <TableBody>
-                    <SplitTableRow>
-                      {memberPlan && (
-                        <FilterBody
-                          memberPlan={memberPlan}
-                          createNewFlow
-                          paymentMethods={paymentMethods}
+                <TimelineHead
+                  days={days}
+                  intervals={intervals}
+                />
+                <EventsHead setNewDay={setNewDay} />
+              </SplitTableRow>
+            </TableHead>
+
+            <TableBody>
+              {subscriptionFlows.subscriptionFlows.map(subscriptionFlow => (
+                <SplitTableRow key={subscriptionFlow.id}>
+                  <DndContext onDragEnd={event => intervalDragEnd(event)}>
+                    {memberPlan && !defaultFlowOnly && (
+                      <FilterBody
+                        memberPlan={memberPlan}
+                        subscriptionFlow={subscriptionFlow}
+                        paymentMethods={paymentMethods}
+                      />
+                    )}
+
+                    <EventsBody
+                      subscriptionFlow={subscriptionFlow}
+                      userActionEvents={userActionEvents}
+                      eventIcons={eventIcons}
+                      eventColors={eventColors}
+                    />
+
+                    <TimelineBody
+                      subscriptionFlow={subscriptionFlow}
+                      days={days}
+                      eventIcons={eventIcons}
+                      eventColors={eventColors}
+                    />
+
+                    <TableCell align="center">
+                      {!subscriptionFlow.default && (
+                        <DeleteSubscriptionFlow
+                          subscriptionFlow={subscriptionFlow}
                         />
                       )}
-                    </SplitTableRow>
-                  </TableBody>
-                </PermissionControl>
-              )}
-            </Table>
-          </SubscriptionClientContext.Provider>
-        </LetterTemplatesContext.Provider>
+                    </TableCell>
+                  </DndContext>
+                </SplitTableRow>
+              ))}
+            </TableBody>
+
+            {!defaultFlowOnly && (
+              <PermissionControl
+                showRejectionMessage={false}
+                qualifyingPermissions={['CAN_CREATE_SUBSCRIPTION_FLOW']}
+              >
+                <TableBody>
+                  <SplitTableRow>
+                    {memberPlan && (
+                      <FilterBody
+                        memberPlan={memberPlan}
+                        createNewFlow
+                        paymentMethods={paymentMethods}
+                      />
+                    )}
+                  </SplitTableRow>
+                </TableBody>
+              </PermissionControl>
+            )}
+          </Table>
+        </SubscriptionClientContext.Provider>
       </MailTemplatesContext.Provider>
     </TableContainer>
   );
