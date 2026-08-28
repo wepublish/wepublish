@@ -912,6 +912,7 @@ enum EditorBlockType {
   ImageGallery
   LinkPageBreak
   Listicle
+  MailchimpForm
   Poll
   Quote
   RichText
