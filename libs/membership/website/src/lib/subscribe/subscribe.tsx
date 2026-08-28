@@ -156,6 +156,10 @@ export const SubscribeNarrowSection = styled(SubscribeSection)`
   gap: ${({ theme }) => theme.spacing(1)};
 `;
 
+export const SubscribeOpenInvoicesNotice = styled('div')``;
+
+export const SubscribeExistingSubscriptionNotice = styled('div')``;
+
 export const clampMonthlyAmount = (amount: number, min: number, max?: number) =>
   Math.min(Math.max(amount, min), max ?? Number.MAX_SAFE_INTEGER);
 
@@ -680,24 +684,30 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
           </SubscribeSection>
         )}
 
-        <SubscribeSection area="memberPlans">
-          {(memberPlans.data?.memberPlans.nodes.length ?? 0) > 1 && (
-            <H5 component="h2">Abo wählen</H5>
-          )}
-
+        <SubscribeSection area="notices">
           {hasOpenInvoices && (
-            <Alert severity="warning">
-              Du hast bereits schon ein Abo mit offenen Rechnungen. Du kannst
-              deine offenen Rechnungen in deinem{' '}
-              <Link href="/profile">Profil</Link> anschauen.
-            </Alert>
+            <SubscribeOpenInvoicesNotice>
+              <Alert severity="warning">
+                Du hast bereits schon ein Abo mit offenen Rechnungen. Du kannst
+                deine offenen Rechnungen in deinem{' '}
+                <Link href="/profile">Profil</Link> anschauen.
+              </Alert>
+            </SubscribeOpenInvoicesNotice>
           )}
 
           {alreadyHasSubscription && (
-            <Alert severity="warning">
-              Du hast dieses Abo schon, bist du dir sicher? Du kannst deine Abos
-              in deinem <Link href="/profile">Profil</Link> anschauen.
-            </Alert>
+            <SubscribeExistingSubscriptionNotice>
+              <Alert severity="warning">
+                Du hast dieses Abo schon, bist du dir sicher? Du kannst deine
+                Abos in deinem <Link href="/profile">Profil</Link> anschauen.
+              </Alert>
+            </SubscribeExistingSubscriptionNotice>
+          )}
+        </SubscribeSection>
+
+        <SubscribeSection area="memberPlans">
+          {(memberPlans.data?.memberPlans.nodes.length ?? 0) > 1 && (
+            <H5 component="h2">Abo wählen</H5>
           )}
 
           {useOfferCards ?
