@@ -52,7 +52,7 @@ const BarFill = styled('div', {
 `;
 
 const HeroBarFill = styled(BarFill)`
-  background-color: ${theme.palette.secondary.main};
+  background-color: ${theme.palette.secondary.light};
 `;
 
 const BarLabel = styled('span')`
