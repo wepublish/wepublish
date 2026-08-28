@@ -138,6 +138,9 @@ api:
 
 migration:
   image: ghcr.io/wepublish/migration
+  # Finished (succeeded or failed) migration jobs delete themselves after this
+  # many seconds. Keeps a day of history for debugging a failed migration.
+  ttlSecondsAfterFinished: 86400
   env:
     DATABASE_URL: postgres://
   envFromSecretRefName:
