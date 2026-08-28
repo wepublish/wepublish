@@ -1,36 +1,8 @@
 import styled from '@emotion/styled';
 import { CircularProgress } from '@mui/material';
-import {
-  AuthTokenStorageKey,
-  getPreviewHandshakeState,
-  SessionTokenContext,
-  subscribeToPreviewHandshake,
-} from '@wepublish/authentication/website';
-import { CanPreview } from '@wepublish/permissions';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
-import { getCookie } from 'cookies-next';
-import { useContext, useSyncExternalStore } from 'react';
 
-const noopSubscribe = () => () => undefined;
-
-const useHasMounted = () =>
-  useSyncExternalStore(
-    noopSubscribe,
-    () => true,
-    () => false
-  );
-
-const usePreviewHandshakeState = () =>
-  useSyncExternalStore(
-    subscribeToPreviewHandshake,
-    getPreviewHandshakeState,
-    () => 'unknown' as const
-  );
-
-// The editor handshake pings only during the first ~30s after page load, so
-// an opener can deliver authentication only within that window - and once it
-// has settled (succeeded or failed) nothing can arrive anymore either way.
-const HANDSHAKE_WINDOW_MS = 35_000;
+import { usePreviewAuthState } from './use-preview-auth-state';
 
 // A session cookie resolves within a few roundtrips; only the editor
 // handshake justifies waiting for its full window.
@@ -105,28 +77,15 @@ const PreviewHintContent = () => {
 };
 
 export function PreviewUnavailable() {
-  const hasMounted = useHasMounted();
-  const handshake = usePreviewHandshakeState();
-  const sessionContext = useContext(SessionTokenContext);
-  const user = sessionContext?.[0];
+  const { previewRequested, editorAuthPossible, sessionAuthPossible } =
+    usePreviewAuthState();
   const {
     elements: { Paragraph },
   } = useWebsiteBuilder();
 
-  if (
-    !hasMounted ||
-    !new URLSearchParams(window.location.search).has('preview')
-  ) {
+  if (!previewRequested) {
     return null;
   }
-
-  const missingPermission = !!user && !user.permissions.includes(CanPreview.id);
-  const editorAuthPossible =
-    !!window.opener &&
-    (handshake === 'pending' || handshake === 'unknown') &&
-    performance.now() < HANDSHAKE_WINDOW_MS;
-  const sessionAuthPossible =
-    !missingPermission && !!getCookie(AuthTokenStorageKey);
 
   if (!editorAuthPossible && !sessionAuthPossible) {
     return (

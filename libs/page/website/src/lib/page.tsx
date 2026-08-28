@@ -1,5 +1,9 @@
 import styled from '@emotion/styled';
-import { ContentWrapper, PreviewUnavailable } from '@wepublish/content/website';
+import {
+  ContentWrapper,
+  PreviewStatusBanner,
+  PreviewUnavailable,
+} from '@wepublish/content/website';
 import { Page as PageType } from '@wepublish/website/api';
 import {
   BuilderPageProps,
@@ -23,6 +27,7 @@ export function Page({
   return (
     <PageWrapper className={className}>
       {!data?.page && !loading && <PreviewUnavailable />}
+      {data?.page && <PreviewStatusBanner />}
 
       {data?.page && <PageSEO page={data.page as PageType} />}
 
