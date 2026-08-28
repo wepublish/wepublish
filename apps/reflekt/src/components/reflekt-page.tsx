@@ -7,6 +7,9 @@ import {
 } from '@wepublish/membership/website';
 import { Page } from '@wepublish/page/website';
 import { BuilderPageProps } from '@wepublish/website/builder';
+import { useContext, useEffect } from 'react';
+
+import { NavbarSubscribeHrefContext } from './reflekt-navbar-subscribe-href-context';
 
 import { FlexBlockHeroWrapper } from './block-layouts/flex-block-hero';
 import { CollapsibleContentWrapper } from './break-blocks/reflekt-collapsible-content';
@@ -118,6 +121,17 @@ export const ReflektPage = (props: BuilderPageProps) => {
   const forceUpgrade = !!props.data?.page?.tags?.find(
     tag => tag.tag === FORCE_UPGRADE_PAGE_TAG
   );
+
+  const navbarSubscribeHref = props.data?.page?.latest?.properties?.find(
+    p => p.key === 'navbarSubscribeHref'
+  )?.value;
+
+  const { setHref } = useContext(NavbarSubscribeHrefContext);
+
+  useEffect(() => {
+    setHref(navbarSubscribeHref || undefined);
+    return () => setHref(undefined);
+  }, [navbarSubscribeHref, setHref]);
 
   return (
     <ForceUpgradeContext.Provider value={forceUpgrade}>

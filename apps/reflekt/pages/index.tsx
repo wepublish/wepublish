@@ -4,6 +4,7 @@ import { getApiUrl } from '@wepublish/utils/website';
 import {
   addClientCacheToProps,
   getApiClient,
+  MemberPlanListDocument,
   NavigationListDocument,
   PageDocument,
   PeerProfileDocument,
@@ -32,6 +33,15 @@ export const getStaticProps: GetStaticProps = async () => {
       query: PageDocument,
       variables: {
         slug: '',
+      },
+    }),
+    client.query({
+      query: MemberPlanListDocument,
+      variables: {
+        take: 50,
+        filter: {
+          active: true,
+        },
       },
     }),
     client.query({

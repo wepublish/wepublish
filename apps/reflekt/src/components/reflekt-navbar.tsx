@@ -25,6 +25,7 @@ import {
   forwardRef,
   PropsWithChildren,
   useCallback,
+  useContext,
   useEffect,
   useImperativeHandle,
   useMemo,
@@ -36,6 +37,7 @@ import { MdWarning } from 'react-icons/md';
 
 import theme from '../theme';
 import { useLoginLinkSwap } from './hooks/use-login-link-swap';
+import { NavbarSubscribeHrefContext } from './reflekt-navbar-subscribe-href-context';
 
 enum NavbarState {
   Low,
@@ -742,6 +744,9 @@ export const ReflektNavbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
     }, [isMenuOpen, controlledIsMenuOpen, onMenuToggle]);
 
     const router = useRouter();
+    const { href: navbarSubscribeHref } = useContext(
+      NavbarSubscribeHrefContext
+    );
 
     const mainItems = data?.navigations?.find(({ key }) => key === slug);
     const iconItems = data?.navigations?.find(({ key }) => key === iconSlug);
@@ -865,6 +870,11 @@ export const ReflektNavbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
                 {...((hasUnpaidInvoices && profileBtn ? profileBtn : (
                   subscribeBtn
                 )) as Omit<typeof subscribeBtn, 'variant'>)}
+                href={
+                  hasUnpaidInvoices && profileBtn ?
+                    profileBtn.href
+                  : navbarSubscribeHref
+                }
                 variant={
                   hasUnpaidInvoices && profileBtn ? 'buttonLinkAlert' : (
                     'buttonLinkMain'
