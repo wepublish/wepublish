@@ -1,6 +1,7 @@
 import {
   BlockContent,
   FullSubscribeBlockFragment,
+  PaymentPeriodicity,
 } from '@wepublish/website/api';
 import {
   BuilderRouterContext,
@@ -28,7 +29,9 @@ export const SubscribeBlock = ({
   showGoodies,
   showDiscountCodes,
   goodieMinValue,
+  goodieMinValueAppliesToUpgrade,
   hideRepeatGoodieOnUpgrade,
+  periodicityDisplay,
 }: BuilderSubscribeBlockProps) => {
   const {
     register: [register],
@@ -52,8 +55,19 @@ export const SubscribeBlock = ({
       deactivateSubscriptionId,
       userId,
       discountCode,
+      periodicity,
     },
   } = useContext(BuilderRouterContext);
+
+  const defaultPaymentPeriodicity = useMemo(
+    () =>
+      Object.values(PaymentPeriodicity).find(
+        value =>
+          typeof periodicity === 'string' &&
+          value.toLowerCase() === periodicity.toLowerCase()
+      ) ?? null,
+    [periodicity]
+  );
 
   const subscriptionToUpgrade = useMemo(() => {
     return userSubscriptions.data?.userSubscriptions.find(
@@ -112,11 +126,13 @@ export const SubscribeBlock = ({
           showGoodies={showGoodies}
           showDiscountCodes={showDiscountCodes}
           goodieMinValue={goodieMinValue}
+          periodicityDisplay={periodicityDisplay}
           defaults={{
             email: mail as string | undefined,
             firstName: firstName as string | undefined,
             name: lastName as string | undefined,
             memberPlanSlug: memberPlanBySlug as string | undefined,
+            paymentPeriodicity: defaultPaymentPeriodicity,
             discountCode: discountCode as string | undefined,
           }}
           fetchSubscribeInfo={fetchSubscribeInfo}
@@ -190,6 +206,7 @@ export const SubscribeBlock = ({
           showGoodies={showGoodies}
           showDiscountCodes={showDiscountCodes}
           goodieMinValue={goodieMinValue}
+          goodieMinValueAppliesToUpgrade={goodieMinValueAppliesToUpgrade}
           hideRepeatGoodieOnUpgrade={hideRepeatGoodieOnUpgrade}
           subscriptionToUpgrade={subscriptionToUpgrade}
           upgradeInfo={upgradeInfo}
