@@ -7,7 +7,9 @@ import {
   Subscribe,
   SubscribeButton,
   SubscribeCancelable,
+  SubscribeExistingSubscriptionNotice,
   SubscribeNarrowSection,
+  SubscribeOpenInvoicesNotice,
   SubscribePayment,
   SubscribeSection,
   TransactionFeeIcon,
@@ -50,20 +52,34 @@ export const ReflektSubscribeForm = styled(
   background-color: orange;
 `;
 
-export const StyledReflektSubscribeBlock = styled(SubscribeBlock)`
-  background-color: transparent;
-  grid-template-columns: 1fr;
-  grid-template-areas:
+const subscribeGridAreas = (
+  showGoodies?: boolean,
+  showDiscountCodes?: boolean,
+  withNotices?: boolean
+) => `
     'memberPlans'
     'monthlyAmount'
     'userForm'
-    ${({ showGoodies }) => (showGoodies ? "'goodie' 'goodieError'" : '')}
+    ${showGoodies ? "'goodie' 'goodieError'" : ''}
     'transactionFee'
-    ${({ showDiscountCodes }) => (showDiscountCodes ? "'discountCode'" : '')}
+    ${showDiscountCodes ? "'discountCode'" : ''}
+    ${withNotices ? "'notices'" : ''}
     'submit'
     'paymentPeriodicity'
     'challenge'
-    ${({ showGoodies }) => (showGoodies ? "'goodieSlider'" : '')};
+    ${showGoodies ? "'goodieSlider'" : ''}
+  `;
+
+export const StyledReflektSubscribeBlock = styled(SubscribeBlock)`
+  background-color: transparent;
+  grid-template-columns: 1fr;
+  grid-template-areas: ${({ showGoodies, showDiscountCodes }) =>
+    subscribeGridAreas(showGoodies, showDiscountCodes, false)};
+
+  &:has([data-area='notices']:not(:empty)) {
+    grid-template-areas: ${({ showGoodies, showDiscountCodes }) =>
+      subscribeGridAreas(showGoodies, showDiscountCodes, true)};
+  }
 
   ${SubscribeSection},
   ${SubscribeNarrowSection} {
@@ -137,6 +153,27 @@ export const StyledReflektSubscribeBlock = styled(SubscribeBlock)`
     margin-top: ${({ theme }) => theme.spacing(2)};
     white-space: pre-line;
     color: ${({ theme }) => theme.palette.common.black};
+  }
+
+  ${SubscribeOpenInvoicesNotice} .MuiAlert-root,
+  ${SubscribeExistingSubscriptionNotice} .MuiAlert-root {
+    background-color: transparent;
+    color: ${({ theme }) => theme.palette.text.secondary};
+    padding: 0;
+    font-size: 0.875rem;
+    max-width: 30rem;
+    text-align: center;
+    margin: 0 auto;
+  }
+
+  ${SubscribeOpenInvoicesNotice} .MuiAlert-icon,
+  ${SubscribeExistingSubscriptionNotice} .MuiAlert-icon {
+    display: none;
+  }
+
+  ${SubscribeOpenInvoicesNotice} .MuiAlert-message,
+  ${SubscribeExistingSubscriptionNotice} .MuiAlert-message {
+    padding: 0;
   }
 `;
 
