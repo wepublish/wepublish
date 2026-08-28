@@ -229,7 +229,7 @@ const theme = createTheme(WePTheme, {
         fontWeight: 500,
         fontSize: '1.5rem',
         textWrap: 'balanced',
-        lineHeight: 1.3,
+        lineHeight: 1.4,
         [breakpoints.up('md')]: {
           wordBreak: 'keep-all',
           hyphens: 'none',
@@ -242,7 +242,7 @@ const theme = createTheme(WePTheme, {
         fontWeight: 700,
         fontSize: '1.125rem',
         textWrap: 'balanced',
-        lineHeight: 1.3,
+        lineHeight: 1.4,
         [breakpoints.up('md')]: {
           wordBreak: 'keep-all',
           hyphens: 'none',
@@ -271,12 +271,12 @@ const theme = createTheme(WePTheme, {
       body1: {
         fontFamily: [recife.style.fontFamily, 'serif'].join(','),
         fontSize: '1.125rem',
-        lineHeight: 1.3,
+        lineHeight: 1.4,
       },
       body2: {
         fontFamily: [recife.style.fontFamily, 'serif'].join(','),
         fontSize: '1.125rem',
-        lineHeight: 1.3,
+        lineHeight: 1.4,
       },
     },
     button: {

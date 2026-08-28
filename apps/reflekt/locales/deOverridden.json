@@ -22,6 +22,10 @@
       "infoTitle": "Dein Upgrade",
       "info": "Mach jetzt ein Upgrade von <bold>{oldMemberPlan}</bold> auf <bold>{newMemberPlan}</bold> und ermögliche dadurch noch mehr mutige Recherchen. Deine bisherige Mitgliedschaft wird angerechnet, du bezahlst also nur den Aufpreis. Als Dankeschön kannst du dir eines der REFLEKT-Geschenke aussuchen.",
       "button": "Jetzt für {formattedAmount} auf {memberPlan} upgraden"
+    },
+    "goodie": {
+      "title": "Geschenk wählen",
+      "none": "Nur das Magazin"
     }
   },
   "subscription": {
@@ -38,6 +42,6 @@
     "cancelledSubscriptions": "Gekündigte Mitgliedschaften & Inaktive Spenden",
     "viewCancelledSubscriptions": "Gekündigte Mitgliedschaften & Inaktive Spenden anzeigen",
     "subscriptionsDetail": "{type, select, Donation {Spende} other {Mitgliedschaft}}",
-    "subscribeAnother": "Andere Mitgliedschaft lösen"
+    "subscribeAnother": "Jetzt Crowdfunding unterstützen"
   }
 }
