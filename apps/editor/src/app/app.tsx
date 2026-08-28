@@ -28,8 +28,6 @@ import {
 import { ImportableEventListView } from '@wepublish/event/import/editor';
 import {
   LetterLogList,
-  LetterTemplateEdit,
-  LetterTemplateList,
   MailLogList,
   MailSendPage,
   MailTemplateEdit,
@@ -1036,30 +1034,6 @@ export function App() {
               element={
                 <Base>
                   <MailTemplateEdit />
-                </Base>
-              }
-            />
-            <Route
-              path="lettertemplates"
-              element={
-                <Base>
-                  <LetterTemplateList />
-                </Base>
-              }
-            />
-            <Route
-              path="lettertemplates/create"
-              element={
-                <Base>
-                  <LetterTemplateEdit />
-                </Base>
-              }
-            />
-            <Route
-              path="lettertemplates/edit/:id"
-              element={
-                <Base>
-                  <LetterTemplateEdit />
                 </Base>
               }
             />

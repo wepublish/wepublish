@@ -1431,8 +1431,13 @@ model UserFlowMail {
   mailTemplate   MailTemplate? @relation(fields: [mailTemplateId], references: [id])
   mailTemplateId String?
 
-  letterTemplate   LetterTemplate? @relation(fields: [letterTemplateId], references: [id])
-  letterTemplateId String?
+  channels MessageChannel[] @default([MAIL])
+
+  addressPosition LetterAddressPosition @default(LEFT)
+  deliveryProduct LetterDeliveryProduct @default(CHEAP)
+  printMode       LetterPrintMode       @default(SIMPLEX)
+  printSpectrum   LetterPrintSpectrum   @default(GRAYSCALE)
+  qrBill          LetterQrBill          @default(NONE)
 
   @@map("user_communication_flows")
 }
@@ -1475,13 +1480,26 @@ model SubscriptionInterval {
   daysAwayFromEnding Int?              @db.SmallInt
   mailTemplate       MailTemplate?     @relation(fields: [mailTemplateId], references: [id])
   mailTemplateId     String?
-  letterTemplate     LetterTemplate?   @relation(fields: [letterTemplateId], references: [id])
-  letterTemplateId   String?
+
+  // How this step goes out. The template supplies the words, this decides the
+  // channels they are sent through.
+  channels MessageChannel[] @default([MAIL])
+
+  addressPosition LetterAddressPosition @default(LEFT)
+  deliveryProduct LetterDeliveryProduct @default(CHEAP)
+  printMode       LetterPrintMode       @default(SIMPLEX)
+  printSpectrum   LetterPrintSpectrum   @default(GRAYSCALE)
+  qrBill          LetterQrBill          @default(NONE)
 
   subscriptionFlow   SubscriptionFlow @relation(fields: [subscriptionFlowId], references: [id], onDelete: Cascade)
   subscriptionFlowId String
 
   @@map("subscriptions.intervals")
+}
+
+enum MessageChannel {
+  MAIL   @map("mail")
+  LETTER @map("letter")
 }
 
 enum MailTemplateContext {
@@ -1511,6 +1529,11 @@ model MailTemplate {
   // before the field existed; the editor enforces a value on the next save.
   context MailTemplateContext?
 
+  // Where this template may be used. A template can be written for mail, for
+  // print, or for both — the wording usually differs, since a letter has no
+  // clickable link.
+  channels MessageChannel[] @default([MAIL])
+
   // Kept (nullable) so content can be imported from the remote provider for
   // installs migrating from the remote-template model. Not used for sending.
   externalMailTemplateId String? @unique
@@ -1520,6 +1543,9 @@ model MailTemplate {
   userFlowMails UserFlowMail[]
 
   mailLog MailLog[]
+
+  letterLogs LetterLog[] @relation("LetterLogTemplate")
+  letterJobs LetterJob[] @relation("LetterJobTemplate")
 
   mailSendJobs MailSendJob[]
 
@@ -1818,31 +1844,6 @@ enum LetterQrBill {
   LAST_PAGE @map("lastPage")
 }
 
-model LetterTemplate {
-  id         String   @id @default(dbgenerated("gen_random_uuid()"))
-  createdAt  DateTime @default(now()) @db.Timestamptz(3)
-  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
-
-  name        String
-  description String?
-  htmlContent String  @default("")
-
-  context MailTemplateContext?
-
-  addressPosition LetterAddressPosition @default(LEFT)
-  deliveryProduct LetterDeliveryProduct @default(CHEAP)
-  printMode       LetterPrintMode       @default(SIMPLEX)
-  printSpectrum   LetterPrintSpectrum   @default(GRAYSCALE)
-  qrBill          LetterQrBill          @default(NONE)
-
-  subscriptionIntervals SubscriptionInterval[]
-  userFlowLetters       UserFlowMail[]
-  letterLogs            LetterLog[]
-  letterJobs            LetterJob[]
-
-  @@map("letter_templates")
-}
-
 enum LetterLogState {
   pending       @map("pending")
   submitted     @map("submitted")
@@ -1868,8 +1869,8 @@ model LetterLog {
   recipientID String
   recipient   User   @relation(fields: [recipientID], references: [id], onDelete: Cascade)
 
-  letterTemplate   LetterTemplate @relation(fields: [letterTemplateId], references: [id])
-  letterTemplateId String
+  mailTemplate   MailTemplate @relation("LetterLogTemplate", fields: [mailTemplateId], references: [id])
+  mailTemplateId String
 
   invoice   Invoice? @relation(fields: [invoiceId], references: [id], onDelete: SetNull)
   invoiceId String?
@@ -1877,6 +1878,14 @@ model LetterLog {
   state            LetterLogState
   type             LetterLogType
   letterIdentifier String         @unique
+
+  // What was actually printed. The flow step that produced this letter may be
+  // edited or deleted, so the record keeps its own copy.
+  addressPosition LetterAddressPosition
+  deliveryProduct LetterDeliveryProduct
+  printMode       LetterPrintMode
+  printSpectrum   LetterPrintSpectrum
+  qrBill          LetterQrBill
 
   providerID       String
   providerLetterID String? @unique
@@ -1912,8 +1921,8 @@ model LetterJob {
 
   state LetterJobState @default(queued)
 
-  letterTemplate   LetterTemplate @relation(fields: [letterTemplateId], references: [id])
-  letterTemplateId String
+  mailTemplate   MailTemplate @relation("LetterJobTemplate", fields: [mailTemplateId], references: [id])
+  mailTemplateId String
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
@@ -1929,6 +1938,14 @@ model LetterJob {
   type               LetterLogType
   daysAwayFromEnding Int?      @db.SmallInt
   runDate            DateTime? @db.Timestamptz(3)
+
+  // Snapshot of the print options the flow step carried when the letter was
+  // queued: the step may be edited or removed before the queue drains.
+  addressPosition LetterAddressPosition
+  deliveryProduct LetterDeliveryProduct
+  printMode       LetterPrintMode
+  printSpectrum   LetterPrintSpectrum
+  qrBill          LetterQrBill
 
   attempts    Int       @default(0)
   error       String?

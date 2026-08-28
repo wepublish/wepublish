@@ -1648,6 +1648,25 @@ enum LetterLogType {
   userFlow
 }
 
+input LetterPreviewInput {
+  addressPosition: LetterAddressPosition
+  context: MailTemplateContext
+  htmlContent: String
+  mailTemplateId: String
+  qrBill: LetterQrBill
+
+  """Render with the data of this subscription instead of samples."""
+  subscriptionId: String
+}
+
+type LetterPreviewModel {
+  """Placeholders used by the template that resolve to nothing."""
+  missingPlaceholders: [String!]!
+
+  """The rendered pdf, base64 encoded."""
+  pdf: String!
+}
+
 enum LetterPrintMode {
   DUPLEX
   SIMPLEX
@@ -1658,60 +1677,12 @@ enum LetterPrintSpectrum {
   GRAYSCALE
 }
 
-type LetterProviderModel {
-  name: String!
-}
-
 """
 Whether a Swiss QR bill is printed, and where. It fills a fixed slot, it is not a placeholder.
 """
 enum LetterQrBill {
   LAST_PAGE
   NONE
-}
-
-input LetterTemplateInput {
-  addressPosition: LetterAddressPosition
-  context: MailTemplateContext
-  deliveryProduct: LetterDeliveryProduct
-  description: String
-  htmlContent: String!
-  name: String!
-  printMode: LetterPrintMode
-  printSpectrum: LetterPrintSpectrum
-  qrBill: LetterQrBill
-}
-
-type LetterTemplateModel {
-  addressPosition: LetterAddressPosition!
-  context: MailTemplateContext
-  deliveryProduct: LetterDeliveryProduct!
-  description: String
-  htmlContent: String!
-  id: String!
-  name: String!
-  printMode: LetterPrintMode!
-  printSpectrum: LetterPrintSpectrum!
-  qrBill: LetterQrBill!
-}
-
-input LetterTemplatePreviewInput {
-  addressPosition: LetterAddressPosition
-  context: MailTemplateContext
-  htmlContent: String
-  letterTemplateId: String
-  qrBill: LetterQrBill
-
-  """Render with the data of this subscription instead of samples."""
-  subscriptionId: String
-}
-
-type LetterTemplatePreviewModel {
-  """Placeholders used by the template that resolve to nothing."""
-  missingPlaceholders: [String!]!
-
-  """The rendered pdf, base64 encoded."""
-  pdf: String!
 }
 
 type ListicleBlock implements BaseBlock {
@@ -1994,6 +1965,7 @@ enum MailTemplateContext {
 }
 
 input MailTemplateInput {
+  channels: [MessageChannel!]
   context: MailTemplateContext
   description: String
   htmlContent: String!
@@ -2003,6 +1975,8 @@ input MailTemplateInput {
 }
 
 type MailTemplateModel {
+  """The channels this template may be sent through."""
+  channels: [MessageChannel!]!
   context: MailTemplateContext
   description: String
   htmlContent: String!
@@ -2276,6 +2250,12 @@ enum MemberPlanSort {
   ModifiedAt
 }
 
+"""A channel a message can be sent through."""
+enum MessageChannel {
+  LETTER
+  MAIL
+}
+
 type Mutation {
   """Subscribes a contact to a Mailchimp list."""
   addMailchimpContact(input: MailchimpContactInput!): MailchimpSubscribeResult!
@@ -2355,7 +2335,6 @@ type Mutation {
 
   """Returns a JWT that is valid for 1min for the current logged in user."""
   createJWTForWebsiteLogin: SessionWithToken!
-  createLetterTemplate(input: LetterTemplateInput!): LetterTemplateModel!
 
   """Start a background job sending a template to a filtered audience"""
   createMailSendJob(input: MailSendJobInput!): MailSendJobModel!
@@ -2410,7 +2389,7 @@ type Mutation {
   createSubscriptionFlow(autoRenewal: [Boolean!]!, memberPlanId: String!, paymentMethodIds: [String!]!, periodicities: [PaymentPeriodicity!]!): [SubscriptionFlowModel!]!
 
   """Create a subscription interval"""
-  createSubscriptionInterval(daysAwayFromEnding: Int, event: SubscriptionEvent!, letterTemplateId: String, mailTemplateId: String, subscriptionFlowId: String!): [SubscriptionFlowModel!]!
+  createSubscriptionInterval(addressPosition: LetterAddressPosition, channels: [MessageChannel!], daysAwayFromEnding: Int, deliveryProduct: LetterDeliveryProduct, event: SubscriptionEvent!, mailTemplateId: String, printMode: LetterPrintMode, printSpectrum: LetterPrintSpectrum, qrBill: LetterQrBill, subscriptionFlowId: String!): [SubscriptionFlowModel!]!
 
   """Creates a new tag."""
   createTag(color: Color, description: RichText, main: Boolean! = false, tag: String, type: TagType!): Tag!
@@ -2495,7 +2474,6 @@ type Mutation {
 
   """Deletes an existing invoice."""
   deleteInvoice(id: String!): Invoice!
-  deleteLetterTemplate(id: String!): LetterTemplateModel!
 
   """Delete an existing mail template"""
   deleteMailTemplate(id: String!): Boolean
@@ -2783,7 +2761,6 @@ type Mutation {
 
   """Updates an existing invoice."""
   updateInvoice(currency: Currency, description: String, dueAt: DateTime, id: String!, items: [InvoiceItemInput!], mail: String, manuallySetAsPaidByUserId: String, scheduledDeactivationAt: DateTime, subscriptionID: String): Invoice!
-  updateLetterTemplate(id: String!, input: LetterTemplateInput!): LetterTemplateModel!
 
   """Updates an existing mail provider setting."""
   updateMailProviderSetting(apiKey: String, fromAddress: String, id: String, mailchimp_baseURL: String, mailgun_baseDomain: String, mailgun_mailDomain: String, name: String, replyToAddress: String, slack_webhookURL: String, smtp_host: String, smtp_port: Int, smtp_secure: Boolean, smtp_user: String, webhookEndpointSecret: String): SettingMailProvider!
@@ -2837,7 +2814,7 @@ type Mutation {
   updateSubscriptionFlow(autoRenewal: [Boolean!], id: String!, paymentMethodIds: [String!], periodicities: [PaymentPeriodicity!]): [SubscriptionFlowModel!]!
 
   """Update an existing subscription interval"""
-  updateSubscriptionInterval(daysAwayFromEnding: Int, id: String!, letterTemplateId: String, mailTemplateId: String): [SubscriptionFlowModel!]!
+  updateSubscriptionInterval(addressPosition: LetterAddressPosition, channels: [MessageChannel!], daysAwayFromEnding: Int, deliveryProduct: LetterDeliveryProduct, id: String!, mailTemplateId: String, printMode: LetterPrintMode, printSpectrum: LetterPrintSpectrum, qrBill: LetterQrBill): [SubscriptionFlowModel!]!
 
   """Updates an existing sync provider setting."""
   updateSyncProviderSetting(enabled: Boolean, id: String!, mailchimp_apiKey: String, mailchimp_defaultInterestGroupIds: [String!], mailchimp_extensions: JSONObject, mailchimp_interestGroupMappings: [JSONObject!], mailchimp_listId: String, mailchimp_mergeFieldMappings: [JSONObject!], name: String): SettingSyncProvider!
@@ -3910,13 +3887,9 @@ type Query {
 
   """Return the letters that were sent, newest first."""
   letterLogs(skip: Int, state: String, take: Int = 50): [LetterLogModel!]!
-  letterProvider: LetterProviderModel!
 
-  """Return a single letter template, including its html body."""
-  letterTemplate(id: String!): LetterTemplateModel
-
-  """Return all letter templates"""
-  letterTemplates: [LetterTemplateModel!]!
+  """The provider letters are printed and posted through."""
+  letterProvider: MailProviderModel!
 
   """Paginated list of sent mails"""
   mailLogs(filter: MailLogFilter, skip: Int, take: Int): PaginatedMailLog!
@@ -4066,8 +4039,10 @@ type Query {
   """Returns a paginated list of polls based on the filters given."""
   polls(cursorId: String, filter: PollFilter, order: SortOrder = Descending, skip: Int = 0, sort: PollSort = OpensAt, take: Int = 10): PaginatedPolls!
 
-  """Render a letter as it would be printed, without sending it."""
-  previewLetter(input: LetterTemplatePreviewInput!): LetterTemplatePreviewModel!
+  """
+  Render a template as the letter it would be printed as, without sending it.
+  """
+  previewLetter(input: LetterPreviewInput!): LetterPreviewModel!
   primaryBanner(documentId: String!, documentType: BannerDocumentType!, hasPaywallBypass: Boolean!, hasSubscription: Boolean!, loggedIn: Boolean!): Banner
   promptHTML(chatId: String, query: String!): Chat!
   provider: MailProviderModel!
@@ -4751,11 +4726,16 @@ type SubscriptionFlowModel {
 }
 
 type SubscriptionInterval {
+  addressPosition: LetterAddressPosition!
+  channels: [MessageChannel!]!
   daysAwayFromEnding: Int
+  deliveryProduct: LetterDeliveryProduct!
   event: SubscriptionEvent!
   id: String!
-  letterTemplate: MailTemplateRef
   mailTemplate: MailTemplateRef
+  printMode: LetterPrintMode!
+  printSpectrum: LetterPrintSpectrum!
+  qrBill: LetterQrBill!
 }
 
 type SubscriptionPeriod {

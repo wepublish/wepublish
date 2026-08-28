@@ -64,23 +64,9 @@ export function MailTemplateSelect({
     });
   };
 
-  /**
-   * Clearing the mail only removes the interval when nothing else is sent at
-   * this point — otherwise the letter keeps it alive.
-   */
   const deleteInterval = () => {
     if (!subscriptionInterval) {
       return;
-    }
-
-    if (subscriptionInterval.object.letterTemplate) {
-      return client.updateSubscriptionInterval({
-        variables: {
-          id: subscriptionInterval.object.id,
-          daysAwayFromEnding: subscriptionInterval.object.daysAwayFromEnding,
-          mailTemplateId: null,
-        },
-      });
     }
 
     return client.deleteSubscriptionInterval({

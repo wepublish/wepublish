@@ -1018,7 +1018,13 @@
         "textContentReadonlyHint": "Wird automatisch aus dem Inhalt erzeugt. Bearbeite den Visuell- oder HTML-Tab, um ihn zu ändern.",
         "background": "Hintergrund",
         "contentWidth": "Breite (px)",
-        "purposeHint": "Der Verwendungszweck legt fest, in welcher Situation diese Vorlage verschickt wird. Davon hängt ab, welche Daten – und damit welche Platzhalter – zur Verfügung stehen: Nur eine Rechnungs-Vorlage kennt z. B. den Rechnungsbetrag."
+        "purposeHint": "Der Verwendungszweck legt fest, in welcher Situation diese Vorlage verschickt wird. Davon hängt ab, welche Daten – und damit welche Platzhalter – zur Verfügung stehen: Nur eine Rechnungs-Vorlage kennt z. B. den Rechnungsbetrag.",
+        "channels": "Kanäle",
+        "channelMail": "E-Mail",
+        "channelLetter": "Brief",
+        "channelsHint": "Wofür diese Vorlage verwendet werden darf. Ein Brief hat keine klickbaren Links — meist lohnt sich eine eigene Vorlage.",
+        "previewLetter": "Brief-Vorschau (PDF)",
+        "letterMissingPlaceholders": "Diese Platzhalter bleiben leer: {{placeholders}}"
       },
       "editor": {
         "undo": "Rückgängig",
@@ -1298,7 +1304,6 @@
       "mailSend": "E-Mail senden",
       "mailLog": "Gesendete E-Mails",
       "communication": "Kommunikation",
-      "letterTemplates": "Briefvorlagen",
       "letterLog": "Versendete Briefe",
       "organisationSettings": "Organisation"
     },
@@ -3077,67 +3082,6 @@
         "empty": "Keine Einträge für diesen Filter."
       }
     },
-    "letterTemplates": {
-      "title": "Briefvorlagen",
-      "create": "Neue Briefvorlage",
-      "createTitle": "Briefvorlage erstellen",
-      "editTitle": "Briefvorlage bearbeiten",
-      "settings": "Einstellungen",
-      "content": "Inhalt",
-      "name": "Name",
-      "description": "Beschreibung",
-      "purpose": "Verwendungszweck",
-      "purposeHint": "Bestimmt, welche Platzhalter zur Verfügung stehen. Derselbe Zweck wie bei den E-Mail-Vorlagen.",
-      "noPurpose": "Kein Zweck gewählt",
-      "actions": "Aktionen",
-      "addressPosition": "Position Adressfenster",
-      "addressPositions": {
-        "LEFT": "Links",
-        "RIGHT": "Rechts"
-      },
-      "deliveryProduct": "Versandart",
-      "deliveryProducts": {
-        "CHEAP": "Günstig (B-Post)",
-        "FAST": "Schnell (A-Post)",
-        "PREMIUM": "Premium",
-        "REGISTERED": "Eingeschrieben",
-        "BULK": "Massensendung"
-      },
-      "printMode": "Druck",
-      "printModes": {
-        "SIMPLEX": "Einseitig",
-        "DUPLEX": "Beidseitig"
-      },
-      "printSpectrum": "Farbe",
-      "printSpectra": {
-        "GRAYSCALE": "Schwarz/Weiss",
-        "COLOR": "Farbig"
-      },
-      "qrBill": "QR-Rechnung",
-      "qrBills": {
-        "NONE": "Keine",
-        "LAST_PAGE": "Auf der letzten Seite"
-      },
-      "qrBillOn": "Mit QR-Rechnung",
-      "qrBillOff": "Ohne",
-      "qrBillHint": "Die QR-Rechnung füllt einen festen Bereich am Seitenende. Sie braucht eine Rechnung und die Organisationsangaben.",
-      "visual": "Visuell",
-      "html": "HTML",
-      "preview": "Vorschau",
-      "refreshPreview": "Vorschau erneuern",
-      "previewHint": "Noch keine Vorschau erzeugt. Die Vorschau zeigt das echte PDF mit Beispieldaten.",
-      "missingPlaceholders": "Diese Platzhalter bleiben leer: {{placeholders}}",
-      "providerHint": "Briefe werden über {{provider}} gedruckt und versendet.",
-      "save": "Speichern",
-      "saved": "Briefvorlage gespeichert",
-      "cancel": "Abbrechen",
-      "delete": "Löschen",
-      "deleteTitle": "Briefvorlage löschen",
-      "deleteBody": "Soll diese Briefvorlage wirklich gelöscht werden?"
-    },
-    "letterTemplateSelect": {
-      "noLetterSentSelectNow": "Kein Brief"
-    },
     "letterLog": {
       "title": "Versendete Briefe",
       "created": "Erstellt",
@@ -3182,6 +3126,40 @@
       "referenceTypeHint": "Die Referenz verbindet eine Zahlung mit der Rechnung. Ohne Referenz muss von Hand zugeordnet werden.",
       "save": "Speichern",
       "saved": "Einstellungen gespeichert"
+    },
+    "letterPrint": {
+      "title": "Druck- und Versandoptionen",
+      "sendAsMail": "Als E-Mail senden",
+      "sendAsLetter": "Als Brief senden",
+      "close": "Schliessen",
+      "addressPosition": "Position Adressfenster",
+      "addressPositions": {
+        "LEFT": "Links",
+        "RIGHT": "Rechts"
+      },
+      "deliveryProduct": "Versandart",
+      "deliveryProducts": {
+        "CHEAP": "Günstig (B-Post)",
+        "FAST": "Schnell (A-Post)",
+        "PREMIUM": "Premium",
+        "REGISTERED": "Eingeschrieben",
+        "BULK": "Massensendung"
+      },
+      "printMode": "Druck",
+      "printModes": {
+        "SIMPLEX": "Einseitig",
+        "DUPLEX": "Beidseitig"
+      },
+      "printSpectrum": "Farbe",
+      "printSpectra": {
+        "GRAYSCALE": "Schwarz/Weiss",
+        "COLOR": "Farbig"
+      },
+      "qrBill": "QR-Rechnung",
+      "qrBills": {
+        "NONE": "Keine",
+        "LAST_PAGE": "Auf der letzten Seite"
+      }
     }
   }
 }

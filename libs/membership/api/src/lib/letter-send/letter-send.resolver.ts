@@ -12,14 +12,39 @@ import {
 } from '@wepublish/permissions';
 import { Permissions } from '@wepublish/permissions/api';
 import { getMaxTake } from '@wepublish/utils/api';
+import {
+  LetterPreviewInput,
+  LetterPreviewModel,
+  MailProviderModel,
+} from '../mail-template/mail-template.model';
+import { LetterPreviewService } from './letter-preview.service';
 import { LetterLogModel } from './letter-send.model';
 
 @Resolver(() => LetterLogModel)
 export class LetterSendResolver {
   constructor(
     private prisma: PrismaClient,
-    private letterContext: LetterContext
+    private letterContext: LetterContext,
+    private letterPreviewService: LetterPreviewService
   ) {}
+
+  @Permissions(CanGetMailTemplates)
+  @Query(() => MailProviderModel, {
+    description: `The provider letters are printed and posted through.`,
+  })
+  async letterProvider() {
+    return { name: await this.letterContext.letterProvider.getName() };
+  }
+
+  @Permissions(CanGetMailTemplates)
+  @Query(() => LetterPreviewModel, {
+    description: `Render a template as the letter it would be printed as, without sending it.`,
+  })
+  async previewLetter(
+    @Args('input') input: LetterPreviewInput
+  ): Promise<LetterPreviewModel> {
+    return this.letterPreviewService.preview(input);
+  }
 
   @Permissions(CanGetMailTemplates)
   @Query(() => [LetterLogModel], {
@@ -48,7 +73,6 @@ export class LetterSendResolver {
   async dispatchLetter(@Args('id') id: string) {
     const letterLog = await this.prisma.letterLog.findUniqueOrThrow({
       where: { id },
-      include: { letterTemplate: true },
     });
 
     if (!letterLog.providerLetterID) {
@@ -57,9 +81,9 @@ export class LetterSendResolver {
 
     await this.letterContext.letterProvider.dispatchLetter({
       providerLetterID: letterLog.providerLetterID,
-      deliveryProduct: toDeliveryProduct(letterLog.letterTemplate),
-      printMode: toPrintMode(letterLog.letterTemplate),
-      printSpectrum: toPrintSpectrum(letterLog.letterTemplate),
+      deliveryProduct: toDeliveryProduct(letterLog.deliveryProduct),
+      printMode: toPrintMode(letterLog.printMode),
+      printSpectrum: toPrintSpectrum(letterLog.printSpectrum),
     });
 
     return this.prisma.letterLog.update({

@@ -1,6 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import {
   Currency,
+  LetterAddressPosition,
+  LetterDeliveryProduct,
+  LetterPrintMode,
+  LetterPrintSpectrum,
+  LetterQrBill,
+  MessageChannel,
   PaymentPeriodicity,
   SubscriptionEvent,
   User,
@@ -175,6 +181,14 @@ const mockLetterJobService = {
   enqueue: jest.fn(),
 };
 
+const PRINT = {
+  addressPosition: LetterAddressPosition.LEFT,
+  deliveryProduct: LetterDeliveryProduct.CHEAP,
+  printMode: LetterPrintMode.SIMPLEX,
+  printSpectrum: LetterPrintSpectrum.GRAYSCALE,
+  qrBill: LetterQrBill.NONE,
+};
+
 describe('PeriodicJobService', () => {
   let service: PeriodicJobService;
   let mockPrisma: ReturnType<typeof createMockPrisma>;
@@ -328,7 +342,8 @@ describe('PeriodicJobService', () => {
         type: SubscriptionEvent.RENEWAL_SUCCESS,
         daysAwayFromEnding: null,
         mailTemplateId: 'default-RENEWAL_SUCCESS',
-        letterTemplateId: null,
+        channels: [MessageChannel.MAIL],
+        print: PRINT,
       },
     });
 
@@ -624,7 +639,8 @@ describe('PeriodicJobService', () => {
       type: SubscriptionEvent.INVOICE_CREATION,
       daysAwayFromEnding: 10,
       mailTemplateId: 'template',
-      letterTemplateId: null,
+      channels: [MessageChannel.MAIL],
+      print: PRINT,
     };
     await service['sendTemplateMail'](action, user, true, {}, new Date());
     expect(mockMailContext.sendComposedMail).toHaveBeenCalledWith(
@@ -643,7 +659,8 @@ describe('PeriodicJobService', () => {
       type: SubscriptionEvent.INVOICE_CREATION,
       daysAwayFromEnding: 10,
       mailTemplateId: null,
-      letterTemplateId: null,
+      channels: [MessageChannel.MAIL],
+      print: PRINT,
     };
 
     await service['sendTemplateMail'](action, user, true, {}, new Date());
@@ -657,7 +674,8 @@ describe('PeriodicJobService', () => {
       type: SubscriptionEvent.INVOICE_CREATION,
       daysAwayFromEnding: 10,
       mailTemplateId: 'template',
-      letterTemplateId: null,
+      channels: [MessageChannel.MAIL],
+      print: PRINT,
     };
     await service['sendTemplateMail'](action, user, true, {}, new Date());
   });

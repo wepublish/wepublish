@@ -1023,7 +1023,13 @@
         "textContentReadonlyHint": "Automatically generated from the content. Edit the visual or HTML tab to change it.",
         "background": "Background",
         "contentWidth": "Width (px)",
-        "purposeHint": "The purpose defines in which situation this template is sent. It determines which data — and therefore which placeholders — are available: only an invoice template knows the invoice amount, for example."
+        "purposeHint": "The purpose defines in which situation this template is sent. It determines which data — and therefore which placeholders — are available: only an invoice template knows the invoice amount, for example.",
+        "channels": "Channels",
+        "channelMail": "Email",
+        "channelLetter": "Letter",
+        "channelsHint": "Where this template may be used. A letter has no clickable links — a separate template is usually worth it.",
+        "previewLetter": "Letter preview (PDF)",
+        "letterMissingPlaceholders": "These placeholders stay empty: {{placeholders}}"
       },
       "editor": {
         "undo": "Undo",
@@ -1300,7 +1306,6 @@
       "mailSend": "Send email",
       "mailLog": "Sent emails",
       "communication": "Communication",
-      "letterTemplates": "Letter templates",
       "letterLog": "Sent letters",
       "organisationSettings": "Organisation"
     },
@@ -3118,67 +3123,6 @@
         "empty": "No entries for this filter."
       }
     },
-    "letterTemplates": {
-      "title": "Letter templates",
-      "create": "New letter template",
-      "createTitle": "Create letter template",
-      "editTitle": "Edit letter template",
-      "settings": "Settings",
-      "content": "Content",
-      "name": "Name",
-      "description": "Description",
-      "purpose": "Purpose",
-      "purposeHint": "Decides which placeholders are available. The same purposes as for mail templates.",
-      "noPurpose": "No purpose chosen",
-      "actions": "Actions",
-      "addressPosition": "Address window position",
-      "addressPositions": {
-        "LEFT": "Left",
-        "RIGHT": "Right"
-      },
-      "deliveryProduct": "Delivery",
-      "deliveryProducts": {
-        "CHEAP": "Cheap (B-Post)",
-        "FAST": "Fast (A-Post)",
-        "PREMIUM": "Premium",
-        "REGISTERED": "Registered",
-        "BULK": "Bulk"
-      },
-      "printMode": "Print",
-      "printModes": {
-        "SIMPLEX": "Single sided",
-        "DUPLEX": "Double sided"
-      },
-      "printSpectrum": "Colour",
-      "printSpectra": {
-        "GRAYSCALE": "Grayscale",
-        "COLOR": "Colour"
-      },
-      "qrBill": "QR bill",
-      "qrBills": {
-        "NONE": "None",
-        "LAST_PAGE": "On the last page"
-      },
-      "qrBillOn": "With QR bill",
-      "qrBillOff": "None",
-      "qrBillHint": "The QR bill fills a fixed slot at the bottom of the page. It needs an invoice and the organisation settings.",
-      "visual": "Visual",
-      "html": "HTML",
-      "preview": "Preview",
-      "refreshPreview": "Refresh preview",
-      "previewHint": "No preview yet. The preview shows the real pdf with sample data.",
-      "missingPlaceholders": "These placeholders stay empty: {{placeholders}}",
-      "providerHint": "Letters are printed and posted through {{provider}}.",
-      "save": "Save",
-      "saved": "Letter template saved",
-      "cancel": "Cancel",
-      "delete": "Delete",
-      "deleteTitle": "Delete letter template",
-      "deleteBody": "Do you really want to delete this letter template?"
-    },
-    "letterTemplateSelect": {
-      "noLetterSentSelectNow": "No letter"
-    },
     "letterLog": {
       "title": "Sent letters",
       "created": "Created",
@@ -3223,6 +3167,40 @@
       "referenceTypeHint": "The reference links an incoming payment to its invoice. Without one it has to be matched by hand.",
       "save": "Save",
       "saved": "Settings saved"
+    },
+    "letterPrint": {
+      "title": "Print and delivery options",
+      "sendAsMail": "Send as email",
+      "sendAsLetter": "Send as letter",
+      "close": "Close",
+      "addressPosition": "Address window position",
+      "addressPositions": {
+        "LEFT": "Left",
+        "RIGHT": "Right"
+      },
+      "deliveryProduct": "Delivery",
+      "deliveryProducts": {
+        "CHEAP": "Cheap (B-Post)",
+        "FAST": "Fast (A-Post)",
+        "PREMIUM": "Premium",
+        "REGISTERED": "Registered",
+        "BULK": "Bulk"
+      },
+      "printMode": "Print",
+      "printModes": {
+        "SIMPLEX": "Single sided",
+        "DUPLEX": "Double sided"
+      },
+      "printSpectrum": "Colour",
+      "printSpectra": {
+        "GRAYSCALE": "Grayscale",
+        "COLOR": "Colour"
+      },
+      "qrBill": "QR bill",
+      "qrBills": {
+        "NONE": "None",
+        "LAST_PAGE": "On the last page"
+      }
     }
   }
 }

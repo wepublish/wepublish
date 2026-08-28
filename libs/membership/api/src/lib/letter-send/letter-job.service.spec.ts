@@ -1,4 +1,13 @@
-import { LetterLogType, Prisma, PrismaClient } from '@prisma/client';
+import {
+  LetterAddressPosition,
+  LetterDeliveryProduct,
+  LetterLogType,
+  LetterPrintMode,
+  LetterPrintSpectrum,
+  LetterQrBill,
+  Prisma,
+  PrismaClient,
+} from '@prisma/client';
 import { LetterContext, UserWithAddress } from '@wepublish/letter/api';
 import { LetterJobService, letterIdentifierFor } from './letter-job.service';
 
@@ -36,8 +45,17 @@ function createService() {
   };
 }
 
+const print = {
+  addressPosition: LetterAddressPosition.LEFT,
+  deliveryProduct: LetterDeliveryProduct.CHEAP,
+  printMode: LetterPrintMode.SIMPLEX,
+  printSpectrum: LetterPrintSpectrum.GRAYSCALE,
+  qrBill: LetterQrBill.NONE,
+};
+
 const props = {
-  letterTemplateId: 'template-1',
+  mailTemplateId: 'template-1',
+  print,
   type: LetterLogType.subscriptionFlow,
   subscriptionId: 'subscription-1',
   invoiceId: 'invoice-1',

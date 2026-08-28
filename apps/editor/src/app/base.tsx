@@ -143,7 +143,6 @@ import {
   MdLocationPin,
   MdLogout,
   MdMail,
-  MdMarkunreadMailbox,
   MdMoney,
   MdMultilineChart,
   MdOutgoingMail,
@@ -958,23 +957,6 @@ export function Base({ children }: BaseProps) {
                         icon={<MdMail />}
                       >
                         {t('navbar.mailTemplates')}
-                      </Nav.Item>
-                    </PermissionControl>
-
-                    {/* LETTER TEMPLATES */}
-                    <PermissionControl
-                      qualifyingPermissions={[
-                        CanGetMailTemplates.id,
-                        CanUpdateMailTemplates.id,
-                      ]}
-                    >
-                      <Nav.Item
-                        as={NavLink}
-                        href="/lettertemplates"
-                        active={path === 'lettertemplates'}
-                        icon={<MdMarkunreadMailbox />}
-                      >
-                        {t('navbar.letterTemplates')}
                       </Nav.Item>
                     </PermissionControl>
 
