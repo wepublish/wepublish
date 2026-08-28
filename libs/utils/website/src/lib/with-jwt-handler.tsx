@@ -1,5 +1,8 @@
 import { useApolloClient } from '@apollo/client';
-import { useUser } from '@wepublish/authentication/website';
+import {
+  setPreviewHandshakeState,
+  useUser,
+} from '@wepublish/authentication/website';
 import {
   useLoginWithJwtMutation,
   SessionWithTokenWithoutUser,
@@ -100,6 +103,10 @@ export const withJwtHandler = <P extends object>(
                 result.data.createSessionWithJWT as SessionWithTokenWithoutUser
               );
 
+              if (options?.fromPreview) {
+                setPreviewHandshakeState('succeeded');
+              }
+
               await client.resetStore();
             }
           })
@@ -112,6 +119,7 @@ export const withJwtHandler = <P extends object>(
             }
 
             if (options?.fromPreview) {
+              setPreviewHandshakeState('failed');
               console.warn('[preview] JWT login failed:', err?.message ?? err);
 
               return;
@@ -142,6 +150,7 @@ export const withJwtHandler = <P extends object>(
           );
           setShowTotpPrompt(false);
           setPendingJwt(null);
+          setPreviewHandshakeState('succeeded');
 
           await client.resetStore();
         }
@@ -166,6 +175,8 @@ export const withJwtHandler = <P extends object>(
 
     useEffect(() => {
       if (window.opener) {
+        setPreviewHandshakeState('pending');
+
         const isTrustedMessage = (event: MessageEvent): boolean =>
           event.source === window.opener;
 
@@ -196,6 +207,7 @@ export const withJwtHandler = <P extends object>(
             clearInterval(interval);
 
             if (!received) {
+              setPreviewHandshakeState('failed');
               console.warn(
                 '[preview] no JWT received from the opening window within 30s'
               );
