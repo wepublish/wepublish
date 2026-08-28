@@ -1,6 +1,8 @@
 import { Alert, Snackbar } from '@mui/material';
 import { ComponentType, createElement, memo, useEffect, useState } from 'react';
 
+import { translateApolloErrorMessage } from './api-alert';
+
 export const withErrorSnackbar = <P extends object>(
   ControlledComponent: ComponentType<P>
 ) =>
@@ -10,7 +12,8 @@ export const withErrorSnackbar = <P extends object>(
 
     useEffect(() => {
       const url = new URL(window.location.href);
-      const errorMsg = url.searchParams.get('error');
+      const rawError = url.searchParams.get('error');
+      const errorMsg = rawError ? translateApolloErrorMessage(rawError) : null;
 
       if (errorMsg && error !== errorMsg) {
         setError(errorMsg);
