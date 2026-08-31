@@ -66,7 +66,6 @@ import { ReflektMemberPlanItem } from '../src/components/reflekt-memberplan-pick
 import { ReflektUpgrade } from '../src/components/reflekt-upgrade';
 import { ReflektModal } from '../src/components/reflekt-modal';
 import { ReflektNavbar } from '../src/components/reflekt-navbar';
-import { NavbarSubscribeHrefProvider } from '../src/components/reflekt-navbar-subscribe-href-context';
 import { ReflektPage } from '../src/components/reflekt-page';
 import { ReflektQuoteBlock } from '../src/components/reflekt-quote-block';
 import { ReflektRegistrationForm } from '../src/components/reflekt-registration-form';
@@ -215,20 +214,18 @@ function CustomApp({
               </Head>
 
               <Spacer>
-                <NavbarSubscribeHrefProvider>
-                  <NavBar
-                    categorySlugs={[['main']]}
-                    slug="main"
-                    headerSlug="header"
-                    iconSlug="icons"
-                  />
+                <NavBar
+                  categorySlugs={[['main']]}
+                  slug="main"
+                  headerSlug="header"
+                  iconSlug="icons"
+                />
 
-                  <main>
-                    <MainSpacer maxWidth="lg">
-                      <Component {...pageProps} />
-                    </MainSpacer>
-                  </main>
-                </NavbarSubscribeHrefProvider>
+                <main>
+                  <MainSpacer maxWidth="lg">
+                    <Component {...pageProps} />
+                  </MainSpacer>
+                </main>
 
                 <FooterContainer
                   slug="footer"
