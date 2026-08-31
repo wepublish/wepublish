@@ -244,6 +244,23 @@ const ItemFreeAmountSpinner = styled(CurrencyNumberSpinner, {
       }
     }
   }
+
+  ${({ theme }) => theme.breakpoints.down('sm')} {
+    > div > div {
+      padding-left: 4px;
+      padding-right: 4px;
+    }
+
+    button {
+      width: 28px;
+    }
+
+    input {
+      font-size: clamp(1rem, 8cqi, 1.75rem);
+      margin-left: 0;
+      padding: ${({ theme }) => theme.spacing(1)} 0;
+    }
+  }
 `;
 
 const ItemPerYear = styled('span')`
