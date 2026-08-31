@@ -55,7 +55,9 @@ export const ReflektSubscribeForm = styled(
 const subscribeGridAreas = (
   showGoodies?: boolean,
   showDiscountCodes?: boolean,
-  withNotices?: boolean
+  withNotices?: boolean,
+  withError?: boolean,
+  withChallenge?: boolean
 ) => `
     'memberPlans'
     'monthlyAmount'
@@ -64,9 +66,10 @@ const subscribeGridAreas = (
     'transactionFee'
     ${showDiscountCodes ? "'discountCode'" : ''}
     ${withNotices ? "'notices'" : ''}
+    ${withError ? "'error'" : ''}
+    ${withChallenge ? "'challenge'" : ''}
     'submit'
     'paymentPeriodicity'
-    'challenge'
     ${showGoodies ? "'goodieSlider'" : ''}
   `;
 
@@ -74,11 +77,35 @@ export const StyledReflektSubscribeBlock = styled(SubscribeBlock)`
   background-color: transparent;
   grid-template-columns: 1fr;
   grid-template-areas: ${({ showGoodies, showDiscountCodes }) =>
-    subscribeGridAreas(showGoodies, showDiscountCodes, false)};
+    subscribeGridAreas(showGoodies, showDiscountCodes, false, false, false)};
 
   &:has([data-area='notices']:not(:empty)) {
     grid-template-areas: ${({ showGoodies, showDiscountCodes }) =>
-      subscribeGridAreas(showGoodies, showDiscountCodes, true)};
+      subscribeGridAreas(showGoodies, showDiscountCodes, true, false, false)};
+  }
+
+  &:has(> .MuiAlert-root) {
+    grid-template-areas: ${({ showGoodies, showDiscountCodes }) =>
+      subscribeGridAreas(showGoodies, showDiscountCodes, false, true, false)};
+  }
+
+  &:has([data-area='notices']:not(:empty)):has(> .MuiAlert-root) {
+    grid-template-areas: ${({ showGoodies, showDiscountCodes }) =>
+      subscribeGridAreas(showGoodies, showDiscountCodes, true, true, false)};
+  }
+
+  &:has([data-area='challenge']) {
+    grid-template-areas: ${({ showGoodies, showDiscountCodes }) =>
+      subscribeGridAreas(showGoodies, showDiscountCodes, false, false, true)};
+  }
+
+  &:has([data-area='challenge']):has(> .MuiAlert-root) {
+    grid-template-areas: ${({ showGoodies, showDiscountCodes }) =>
+      subscribeGridAreas(showGoodies, showDiscountCodes, false, true, true)};
+  }
+
+  & > .MuiAlert-root {
+    grid-area: error;
   }
 
   ${SubscribeSection},
