@@ -284,6 +284,7 @@ export const ReflektCrowdfundingMemberPlanItem = forwardRef<
   const form = useFormContext() as ReturnType<typeof useFormContext> | null;
   const setValue = form?.setValue;
   const errors = form?.formState.errors;
+  const watchedMonthlyAmount = form?.watch('monthlyAmount');
 
   const { goodieMinValue, baselineMonthlyAmount } = useContext(
     CrowdfundingGoodieContext
@@ -324,7 +325,7 @@ export const ReflektCrowdfundingMemberPlanItem = forwardRef<
     }
 
     const touched = freeAmountYearly != null;
-    const monthlyAmount =
+    const targetMonthlyAmount =
       touched ?
         monthlyAmountFromPeriodAmount(
           freeAmountYearly * 100,
@@ -332,8 +333,16 @@ export const ReflektCrowdfundingMemberPlanItem = forwardRef<
         )
       : 0;
 
-    setValue?.('monthlyAmount', monthlyAmount);
-  }, [hasFreePricing, isChecked, freeAmountYearly, setValue]);
+    if (watchedMonthlyAmount !== targetMonthlyAmount) {
+      setValue?.('monthlyAmount', targetMonthlyAmount);
+    }
+  }, [
+    hasFreePricing,
+    isChecked,
+    freeAmountYearly,
+    watchedMonthlyAmount,
+    setValue,
+  ]);
 
   return (
     <ItemWrapper className={className}>
