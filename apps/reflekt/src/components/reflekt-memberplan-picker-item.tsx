@@ -62,11 +62,10 @@ export const MemberPlanItem = forwardRef<
   const radioGroup = useRadioGroup();
   const isChecked = props.checked ?? radioGroup?.value === id;
   const { t } = useTranslation();
-  const {
-    control,
-    formState: { errors },
-    setValue,
-  } = useFormContext();
+  const form = useFormContext();
+  const control = form?.control;
+  const errors = form?.formState.errors;
+  const setValue = form?.setValue;
 
   const monthlyAmount = useWatch({
     control,
@@ -132,14 +131,14 @@ export const MemberPlanItem = forwardRef<
             value={(monthlyAmount ?? amountPerMonthMin) / 100}
             onValueChange={spinnerValue => {
               if (spinnerValue != null) {
-                setValue('monthlyAmount', Math.round(spinnerValue * 100));
+                setValue?.('monthlyAmount', Math.round(spinnerValue * 100));
               }
             }}
             helperText={`Min ${formatCurrency(amountPerMonthMin / 100, currency, locale)}`}
           />
         )}
 
-        {hasInCardFreeInput && isChecked && errors.monthlyAmount && (
+        {hasInCardFreeInput && isChecked && errors?.monthlyAmount && (
           <MemberPlanItemAmountError>
             {errors.monthlyAmount.message?.toString()}
           </MemberPlanItemAmountError>
