@@ -24,12 +24,20 @@ const GoodieSelect = styled(TextField)`
   }
 `;
 
+const webkitOnly = '@supports (background: -webkit-canvas(squares))';
+
 const GoodieSliderArea = styled('div')`
   grid-area: goodieSlider;
 
   ${({ theme }) => theme.breakpoints.down('md')} {
     width: 100vw;
     margin-left: calc(50% - 50vw);
+
+    ${webkitOnly} {
+      position: relative;
+      left: 50%;
+      margin-left: -50vw;
+    }
   }
 `;
 
