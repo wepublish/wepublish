@@ -47,10 +47,12 @@ ENV SSR_FETCH_TIMEOUT_MS=${SSR_FETCH_TIMEOUT_MS}
 ### FRONT_ARG_REPLACER ###
 
 COPY . .
+# Sourcemaps are injected and uploaded by withSentryConfig during `nx build`
+# (it picks up SENTRY_AUTH_TOKEN/ORG/PROJECT/RELEASE from the env set above).
+# Do not add a manual `sentry-cli sourcemaps upload` here: the client maps are
+# already deleted by then, and it would walk .next/standalone/node_modules.
 RUN npx prisma generate && \
     npx nx build ${NEXT_PROJECT} ${NX_NEXT_PROJECT_BUILD_OPTIONS} && \
-    npx @sentry/cli sourcemaps inject ./dist/apps/${NEXT_PROJECT}/.next && \
-    npx @sentry/cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist/apps/${NEXT_PROJECT}/.next && \
     node /wepublish/deployment/map-secrets.js clean
 
 FROM ${PLAIN_BUILD_IMAGE} AS website-setup
@@ -100,7 +102,7 @@ RUN npx prisma generate && \
     node docker/inline-pkg-imports.js && \
     npx nx build api-example --skip-nx-cache && \
     npx @sentry/cli sourcemaps inject ./dist/apps/api-example && \
-    npx @sentry/cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist/apps/api-example && \
+    { npx @sentry/cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist/apps/api-example || echo "sentry sourcemaps upload failed, continuing build"; } && \
     node docker/generate-pkg-shims.js && \
     cp docker/api_build_package.json package.json && \
     npx @yao-pkg/pkg package.json
@@ -165,7 +167,7 @@ COPY . .
 RUN npx prisma generate && \
     npx nx build editor --skip-nx-cache && \
     npx @sentry/cli sourcemaps inject ./dist/apps/editor && \
-    npx @sentry/cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist/apps/editor && \
+    { npx @sentry/cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist/apps/editor || echo "sentry sourcemaps upload failed, continuing build"; } && \
     cp docker/editor_build_package.json package.json && \
     npx @yao-pkg/pkg package.json
 
@@ -210,7 +212,7 @@ RUN npm install --no-audit --no-fund prisma@7.5.0 @prisma/client@7.5.0 @prisma/a
     npx prisma generate && \
     npx tsc -p tsconfig.yaml && \
     npx @sentry/cli sourcemaps inject ./dist && \
-    npx @sentry/cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist
+    { npx @sentry/cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist || echo "sentry sourcemaps upload failed, continuing build"; }
 
 FROM ${PLAIN_BUILD_IMAGE} AS migration-setup
 ARG APP_RELEASE_ID
@@ -263,7 +265,7 @@ COPY ./apps/media/package-lock.json ./package-lock.json
 RUN npm ci --no-audit --no-fund
 RUN npx nx build media --skip-nx-cache && \
     npx @sentry/cli sourcemaps inject ./dist/apps/media && \
-    npx @sentry/cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist/apps/media && \
+    { npx @sentry/cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist/apps/media || echo "sentry sourcemaps upload failed, continuing build"; } && \
     mkdir -p /poppler-dist/bin /poppler-dist/lib && \
     cp /usr/bin/pdftoppm /poppler-dist/bin/ && \
     ldd /usr/bin/pdftoppm | awk '/=>/ {print $3}' | xargs -I{} cp -L {} /poppler-dist/lib/ 2>/dev/null || true
