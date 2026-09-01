@@ -37,7 +37,7 @@ import {
 } from '@wepublish/website/api';
 import { WebsiteBuilderProvider } from '@wepublish/website/builder';
 import { format, setDefaultOptions } from 'date-fns';
-import { de } from 'date-fns/locale';
+import { fr } from 'date-fns/locale';
 import { AppProps } from 'next/app';
 import Head from 'next/head';
 import Script from 'next/script';
@@ -47,10 +47,11 @@ import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
 setDefaultOptions({
-  locale: de,
+  locale: fr,
 });
 
-initWePublishTranslator();
+initWePublishTranslator().changeLanguage('fr');
+
 z.setErrorMap(zodI18nMap);
 
 const Spacer = styled('div')`
