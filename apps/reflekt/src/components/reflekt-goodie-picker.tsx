@@ -1,14 +1,14 @@
-import styled from "@emotion/styled";
-import { MenuItem, TextField, Typography } from "@mui/material";
+import styled from '@emotion/styled';
+import { MenuItem, TextField, Typography } from '@mui/material';
 import {
   FullGoodieFragment,
   FullImageGalleryBlockFragment,
-} from "@wepublish/website/api";
-import { BuilderGoodiePickerProps } from "@wepublish/website/builder";
-import { createContext, forwardRef, memo, use, useMemo } from "react";
-import { useTranslation } from "react-i18next";
+} from '@wepublish/website/api';
+import { BuilderGoodiePickerProps } from '@wepublish/website/builder';
+import { createContext, forwardRef, memo, use, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 
-import { ReflektImageSliderSlim } from "./reflekt-image-slider";
+import { ReflektImageSliderSlim } from './reflekt-image-slider';
 
 export const AllGoodiesContext = createContext([] as FullGoodieFragment[]);
 
@@ -24,12 +24,12 @@ const GoodieSelect = styled(TextField)`
   }
 `;
 
-const webkitOnly = "@supports (background: -webkit-canvas(squares))";
+const webkitOnly = '@supports (background: -webkit-canvas(squares))';
 
-const GoodieSliderArea = styled("div")`
+const GoodieSliderArea = styled('div')`
   grid-area: goodieSlider;
 
-  ${({ theme }) => theme.breakpoints.down("md")} {
+  ${({ theme }) => theme.breakpoints.down('md')} {
     width: 100vw;
     margin-left: calc(50% - 50vw);
 
@@ -45,7 +45,7 @@ const GoodieSliderTitle = styled(Typography)`
   font-size: 1.5rem;
   margin-bottom: ${({ theme }) => theme.spacing(3)};
 
-  ${({ theme }) => theme.breakpoints.down("md")} {
+  ${({ theme }) => theme.breakpoints.down('md')} {
     padding: 0 32px;
   }
 
@@ -59,7 +59,7 @@ const GoodieSliderTitle = styled(Typography)`
   }
 ` as typeof Typography;
 
-const GoodieSelectArea = styled("div")`
+const GoodieSelectArea = styled('div')`
   grid-area: goodie;
 `;
 
@@ -76,15 +76,14 @@ const GoodieSlider = memo(function GoodieSlider({
 }) {
   const images = useMemo(() => {
     const goodieImages = goodies
-      .filter((goodie) => goodie.image)
-      .map((goodie) => ({
+      .filter(goodie => goodie.image)
+      .map(goodie => ({
         caption: null,
         image: goodie.image,
-      })) as FullImageGalleryBlockFragment["images"];
+      })) as FullImageGalleryBlockFragment['images'];
 
-    const repeatCount = goodieImages.length
-      ? Math.ceil(4 / goodieImages.length)
-      : 0;
+    const repeatCount =
+      goodieImages.length ? Math.ceil(4 / goodieImages.length) : 0;
 
     return Array.from({ length: repeatCount }).flatMap(() => goodieImages);
   }, [goodies]);
@@ -95,8 +94,11 @@ const GoodieSlider = memo(function GoodieSlider({
 
   return (
     <GoodieSliderArea>
-      <GoodieSliderTitle variant="h2" component="h2">
-        <a id="#Crowdfunding-Geschenk">Crowdfunding-Geschenk</a>
+      <GoodieSliderTitle
+        variant="h2"
+        component="h2"
+      >
+        <a id="Crowdfunding-Geschenk">Crowdfunding-Geschenk</a>
       </GoodieSliderTitle>
 
       <ReflektImageSliderSlim images={images} />
@@ -109,7 +111,7 @@ export const ReflektGoodiePicker = forwardRef<
   BuilderGoodiePickerProps
 >(function ReflektGoodiePicker(
   { goodies, className, name, value, disabled, onChange },
-  ref,
+  ref
 ) {
   const { t } = useTranslation();
   const allGoodies = use(AllGoodiesContext) ?? goodies;
@@ -125,17 +127,20 @@ export const ReflektGoodiePicker = forwardRef<
           inputRef={ref}
           className={className}
           name={name}
-          value={value ?? ""}
+          value={value ?? ''}
           disabled={disabled}
           label={
-            disabled ? t("subscribe.goodie.none") : t("subscribe.goodie.title")
+            disabled ? t('subscribe.goodie.none') : t('subscribe.goodie.title')
           }
-          onChange={(event) => onChange(event.target.value || null)}
+          onChange={event => onChange(event.target.value || null)}
         >
-          <MenuItem value="">{t("subscribe.goodie.none")}</MenuItem>
+          <MenuItem value="">{t('subscribe.goodie.none')}</MenuItem>
 
-          {goodies.map((goodie) => (
-            <MenuItem key={goodie.id} value={goodie.id}>
+          {goodies.map(goodie => (
+            <MenuItem
+              key={goodie.id}
+              value={goodie.id}
+            >
               {goodie.name}
             </MenuItem>
           ))}
