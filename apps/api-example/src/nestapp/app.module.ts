@@ -22,6 +22,7 @@ import { AuthorModule } from '@wepublish/author/api';
 import { BannerApiModule } from '@wepublish/banner/api';
 import { BlockContentModule } from '@wepublish/block-content/api';
 import { ChallengeModule } from '@wepublish/challenge/api';
+import { ChangelogModule } from '@wepublish/changelog/api';
 import { CommentModule } from '@wepublish/comments/api';
 import { ConsentModule } from '@wepublish/consent/api';
 import { CrowdfundingModule } from '@wepublish/crowdfunding/api';
@@ -480,6 +481,7 @@ import { readConfig } from '../readConfig';
       },
     }),
     PermissionModule,
+    ChangelogModule,
     ConsentModule,
     DocumentModule,
     StatsModule,

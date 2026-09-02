@@ -1,11 +1,9 @@
 import styled from '@emotion/styled';
-import { PeriodicJobsLog } from '@wepublish/membership/editor';
 import {
   ActivityFeed,
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
-  PermissionControl,
 } from '@wepublish/ui/editor';
 import { useTranslation } from 'react-i18next';
 import { MdChevronRight } from 'react-icons/md';
@@ -14,10 +12,15 @@ import { Button, Col, Grid, Panel as RPanel, Row } from 'rsuite';
 
 import { AudienceDashboard } from '../audience/audience-dashboard';
 import NetworkContentDashboard from '../networkContent/networkContentDashboard';
+import { DashboardNotifications } from './dashboardNotifications';
 import { ExternalAppsDashboard } from './externalAppsDashboard';
 
 const StyledGrid = styled(Grid)`
   width: 100%;
+`;
+
+const NotificationsPanel = styled(RPanel)`
+  margin-bottom: 12px;
 `;
 
 export function Dashboard() {
@@ -29,6 +32,32 @@ export function Dashboard() {
         {/* left column stack */}
         <Col xs={12}>
           <Row gutter={12}>
+            <Col xs={24}>
+              <NotificationsPanel
+                header={
+                  <ListViewContainer>
+                    <ListViewHeader>
+                      <h2>{t('dashboard.notifications')}</h2>
+                    </ListViewHeader>
+
+                    <ListViewActions>
+                      <Link to="/notifications">
+                        <Button
+                          appearance="primary"
+                          endIcon={<MdChevronRight />}
+                        >
+                          {t('dashboard.showAllNotifications')}
+                        </Button>
+                      </Link>
+                    </ListViewActions>
+                  </ListViewContainer>
+                }
+                bordered
+              >
+                <DashboardNotifications />
+              </NotificationsPanel>
+            </Col>
+
             <Col xs={24}>
               <RPanel
                 header={<h2>{t('dashboard.externalApps')}</h2>}
@@ -67,15 +96,6 @@ export function Dashboard() {
                 />
               </RPanel>
             </Col>
-
-            <Col xs={24}>
-              <RPanel
-                header={<h2>{t('dashboard.activity')}</h2>}
-                bordered
-              >
-                <ActivityFeed />
-              </RPanel>
-            </Col>
           </Row>
         </Col>
 
@@ -109,16 +129,12 @@ export function Dashboard() {
             </Col>
 
             <Col xs={24}>
-              <PermissionControl
-                qualifyingPermissions={['CAN_GET_PERIODIC_JOB_LOG']}
+              <RPanel
+                header={<h2>{t('dashboard.activity')}</h2>}
+                bordered
               >
-                <RPanel
-                  header={<h2>{t('periodicJobsLog.title')}</h2>}
-                  bordered
-                >
-                  <PeriodicJobsLog />
-                </RPanel>
-              </PermissionControl>
+                <ActivityFeed />
+              </RPanel>
             </Col>
           </Row>
         </Col>

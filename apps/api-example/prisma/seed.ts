@@ -38,6 +38,10 @@ import {
 } from '@wepublish/block-content/api';
 import { TrackingPixel } from '@wepublish/tracking-pixel/api';
 import { hash as argon2Hash } from '@node-rs/argon2';
+import {
+  seedChangelogEntries,
+  seedPeriodicJobLogs,
+} from './seed-notifications';
 
 async function hashPassword(password: string) {
   return await argon2Hash(password);
@@ -1653,6 +1657,9 @@ export async function runExampleSeed(prisma: PrismaClient): Promise<void> {
     await seedMemberPlans(prisma);
     console.log('Refreshing test subscribers');
     await seedSubscribers(prisma);
+    console.log('Refreshing demo notifications');
+    await seedPeriodicJobLogs(prisma);
+    await seedChangelogEntries(prisma);
 
     return;
   }
@@ -1749,4 +1756,8 @@ export async function runExampleSeed(prisma: PrismaClient): Promise<void> {
 
   console.log('Seeding test subscribers');
   await seedSubscribers(prisma);
+
+  console.log('Seeding demo notifications');
+  await seedPeriodicJobLogs(prisma);
+  await seedChangelogEntries(prisma);
 }

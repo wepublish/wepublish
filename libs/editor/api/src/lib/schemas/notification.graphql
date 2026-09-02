@@ -1,0 +1,38 @@
+fragment NotificationRead on NotificationRead {
+  id
+  createdAt
+  source
+  itemId
+}
+
+query NotificationReads {
+  notificationReads {
+    ...NotificationRead
+  }
+}
+
+mutation MarkNotificationRead($source: NotificationSource!, $itemId: String!) {
+  markNotificationRead(source: $source, itemId: $itemId) {
+    ...NotificationRead
+  }
+}
+
+fragment NotificationConfirmation on NotificationConfirmation {
+  id
+  createdAt
+  source
+  itemId
+  confirmedByUserId
+}
+
+query NotificationConfirmations {
+  notificationConfirmations {
+    ...NotificationConfirmation
+  }
+}
+
+mutation ConfirmNotification($source: NotificationSource!, $itemId: String!) {
+  confirmNotification(source: $source, itemId: $itemId) {
+    ...NotificationConfirmation
+  }
+}

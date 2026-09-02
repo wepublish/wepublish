@@ -1163,18 +1163,21 @@ model User {
   properties               Json                      @default("[]")
   paymentProviderCustomers PaymentProviderCustomer[]
 
-  comments            Comment[]
-  sessions            Session[]
-  subscriptions       Subscription[]
-  commentRatings      CommentRating[]
-  pollVotes           PollVote[]
-  mailSent            MailLog[]
-  mailSendJobs        MailSendJob[]
-  mailSendJobEntries  MailSendJobRecipient[]
-  consents            UserConsent[]
-  articleRevisions    ArticleRevision[]
-  pageRevisions       PageRevision[]
-  mailchimpSyncErrors MailchimpSyncError[]
+  comments                  Comment[]
+  sessions                  Session[]
+  subscriptions             Subscription[]
+  commentRatings            CommentRating[]
+  pollVotes                 PollVote[]
+  mailSent                  MailLog[]
+  mailSendJobs              MailSendJob[]
+  mailSendJobEntries        MailSendJobRecipient[]
+  consents                  UserConsent[]
+  articleRevisions          ArticleRevision[]
+  pageRevisions             PageRevision[]
+  mailchimpSyncErrors       MailchimpSyncError[]
+  changelogConfirmations    ChangelogEntry[]
+  notificationReads         NotificationRead[]
+  notificationConfirmations NotificationConfirmation[]
 
   @@index([createdAt])
   @@map("users")
@@ -2143,4 +2146,76 @@ model Goodie {
   invoiceItems InvoiceItem[]
 
   @@map("goodies")
+}
+
+enum NotificationSource {
+  CHANGELOG
+  ONE_MESSAGE
+  PERIODIC_JOB
+}
+
+model NotificationRead {
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  source NotificationSource
+  itemId String
+  userId String
+  user   User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, source, itemId])
+  @@map("notifications.reads")
+}
+
+model NotificationConfirmation {
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  source            NotificationSource
+  itemId            String
+  confirmedByUserId String?
+  confirmedBy       User?              @relation(fields: [confirmedByUserId], references: [id], onDelete: SetNull)
+
+  @@unique([source, itemId])
+  @@map("notifications.confirmations")
+}
+
+model ChangelogEntry {
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  name           String   @unique
+  releasedAt     DateTime @db.Timestamptz(3)
+  title          String
+  lead           String
+  description    String?
+  actionRequired Boolean  @default(false)
+
+  confirmedAt       DateTime? @db.Timestamptz(3)
+  confirmedByUserId String?
+  confirmedBy       User?     @relation(fields: [confirmedByUserId], references: [id], onDelete: SetNull)
+
+  translations ChangelogEntryTranslation[]
+
+  @@map("changelog.entries")
+}
+
+model ChangelogEntryTranslation {
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  locale      String
+  title       String
+  lead        String
+  description String?
+
+  entryId String
+  entry   ChangelogEntry @relation(fields: [entryId], references: [id], onDelete: Cascade)
+
+  @@unique([entryId, locale])
+  @@map("changelog.entries.translations")
 }

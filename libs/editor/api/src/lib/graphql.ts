@@ -512,6 +512,26 @@ export enum ChallengeProviderType {
   Turnstile = 'TURNSTILE'
 }
 
+export type ChangelogEntry = {
+  __typename?: 'ChangelogEntry';
+  actionRequired: Scalars['Boolean'];
+  confirmedAt?: Maybe<Scalars['DateTime']>;
+  confirmedByUserId?: Maybe<Scalars['String']>;
+  createdAt: Scalars['DateTime'];
+  description?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  lead: Scalars['String'];
+  modifiedAt: Scalars['DateTime'];
+  name: Scalars['String'];
+  releasedAt: Scalars['DateTime'];
+  title: Scalars['String'];
+};
+
+export type ChangelogEntryFilter = {
+  actionRequired?: InputMaybe<Scalars['Boolean']>;
+  confirmed?: InputMaybe<Scalars['Boolean']>;
+};
+
 export type Chat = {
   __typename?: 'Chat';
   chatId: Scalars['String'];
@@ -2249,8 +2269,12 @@ export type Mutation = {
   cancelSubscription: PublicSubscription;
   /** This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null */
   cancelUserSubscription?: Maybe<PublicSubscription>;
+  /** Confirms that the manual action required by a changelog entry has been completed. Requires authentication. */
+  confirmChangelogEntry: ChangelogEntry;
   /** Confirms a pending email change for the logged-in user. */
   confirmEmailChange: SensitiveDataUser;
+  /** Confirms a notification for the whole instance, recording who confirmed it. Requires authentication. */
+  confirmNotification: NotificationConfirmation;
   /** Creates an article. */
   createArticle: Article;
   /** Creates a new author. */
@@ -2453,6 +2477,8 @@ export type Mutation = {
   likeArticle: Article;
   /** Marks an invoice as paid. */
   markInvoiceAsPaid: Invoice;
+  /** Marks a notification as read for the current user. Requires authentication. */
+  markNotificationRead: NotificationRead;
   /** Publishes an article at the given time. */
   publishArticle: Article;
   /** Publishes an page at the given time. */
@@ -2651,8 +2677,20 @@ export type MutationCancelUserSubscriptionArgs = {
 };
 
 
+export type MutationConfirmChangelogEntryArgs = {
+  id: Scalars['String'];
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+
 export type MutationConfirmEmailChangeArgs = {
   newEmail: Scalars['String'];
+};
+
+
+export type MutationConfirmNotificationArgs = {
+  itemId: Scalars['String'];
+  source: NotificationSource;
 };
 
 
@@ -3306,6 +3344,12 @@ export type MutationLikeArticleArgs = {
 
 export type MutationMarkInvoiceAsPaidArgs = {
   id: Scalars['String'];
+};
+
+
+export type MutationMarkNotificationReadArgs = {
+  itemId: Scalars['String'];
+  source: NotificationSource;
 };
 
 
@@ -4032,6 +4076,29 @@ export enum NavigationLinkType {
   Page = 'Page'
 }
 
+export type NotificationConfirmation = {
+  __typename?: 'NotificationConfirmation';
+  confirmedByUserId?: Maybe<Scalars['String']>;
+  createdAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  itemId: Scalars['String'];
+  source: NotificationSource;
+};
+
+export type NotificationRead = {
+  __typename?: 'NotificationRead';
+  createdAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  itemId: Scalars['String'];
+  source: NotificationSource;
+};
+
+export enum NotificationSource {
+  Changelog = 'CHANGELOG',
+  OneMessage = 'ONE_MESSAGE',
+  PeriodicJob = 'PERIODIC_JOB'
+}
+
 export type OverriddenRating = {
   __typename?: 'OverriddenRating';
   answerId: Scalars['String'];
@@ -4175,6 +4242,13 @@ export type PaginatedArticles = {
 export type PaginatedAuthors = {
   __typename?: 'PaginatedAuthors';
   nodes: Array<Author>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type PaginatedChangelogEntries = {
+  __typename?: 'PaginatedChangelogEntries';
+  nodes: Array<ChangelogEntry>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
 };
@@ -4892,6 +4966,8 @@ export type Query = {
   challengeProviderSetting: SettingChallengeProvider;
   /** Returns all challenge provider settings. */
   challengeProviderSettings: Array<SettingChallengeProvider>;
+  /** Returns the changelog entries of this instance, newest first. Requires authentication. */
+  changelogEntries: PaginatedChangelogEntries;
   /** Check the status of an invoice and update with information from the payment provider */
   checkInvoiceStatus: Invoice;
   /** Checks whether a given email requires a TOTP code for login. Always returns true to prevent user enumeration. */
@@ -5057,6 +5133,10 @@ export type Query = {
    *
    */
   newSubscribers: Array<DashboardSubscription>;
+  /** Returns the instance-wide notification confirmations. Requires authentication. */
+  notificationConfirmations: Array<NotificationConfirmation>;
+  /** Returns the current user's read notifications. Requires authentication. */
+  notificationReads: Array<NotificationRead>;
   /** Returns an page by id or slug. */
   page: Page;
   /** Returns a single page revision including its full content. */
@@ -5277,6 +5357,14 @@ export type QueryChallengeProviderSettingArgs = {
 
 export type QueryChallengeProviderSettingsArgs = {
   filter?: InputMaybe<SettingChallengeProviderFilter>;
+};
+
+
+export type QueryChangelogEntriesArgs = {
+  filter?: InputMaybe<ChangelogEntryFilter>;
+  locale?: InputMaybe<Scalars['String']>;
+  skip?: Scalars['Int'];
+  take?: Scalars['Int'];
 };
 
 
@@ -7554,6 +7642,26 @@ type FullBlock_YouTubeVideoBlock_Fragment = { __typename: 'YouTubeVideoBlock', d
 
 export type FullBlockFragment = FullBlock_BildwurfAdBlock_Fragment | FullBlock_BreakBlock_Fragment | FullBlock_CommentBlock_Fragment | FullBlock_CrowdfundingBlock_Fragment | FullBlock_EventBlock_Fragment | FullBlock_FacebookPostBlock_Fragment | FullBlock_FacebookVideoBlock_Fragment | FullBlock_FlexBlock_Fragment | FullBlock_HtmlBlock_Fragment | FullBlock_IFrameBlock_Fragment | FullBlock_ImageBlock_Fragment | FullBlock_ImageGalleryBlock_Fragment | FullBlock_InstagramPostBlock_Fragment | FullBlock_ListicleBlock_Fragment | FullBlock_MailchimpFormBlock_Fragment | FullBlock_PolisConversationBlock_Fragment | FullBlock_PollBlock_Fragment | FullBlock_QuoteBlock_Fragment | FullBlock_RichTextBlock_Fragment | FullBlock_SoundCloudTrackBlock_Fragment | FullBlock_StreamableVideoBlock_Fragment | FullBlock_SubscribeBlock_Fragment | FullBlock_TeaserGridBlock_Fragment | FullBlock_TeaserGridFlexBlock_Fragment | FullBlock_TeaserListBlock_Fragment | FullBlock_TeaserSlotsBlock_Fragment | FullBlock_TikTokVideoBlock_Fragment | FullBlock_TitleBlock_Fragment | FullBlock_TwitterTweetBlock_Fragment | FullBlock_UnknownBlock_Fragment | FullBlock_VimeoVideoBlock_Fragment | FullBlock_YouTubeVideoBlock_Fragment;
 
+export type ChangelogEntryFragment = { __typename?: 'ChangelogEntry', id: string, name: string, releasedAt: string, title: string, lead: string, description?: string | null, actionRequired: boolean, confirmedAt?: string | null, confirmedByUserId?: string | null };
+
+export type ChangelogEntriesQueryVariables = Exact<{
+  take?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  filter?: InputMaybe<ChangelogEntryFilter>;
+  locale?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type ChangelogEntriesQuery = { __typename?: 'Query', changelogEntries: { __typename?: 'PaginatedChangelogEntries', totalCount: number, nodes: Array<{ __typename?: 'ChangelogEntry', id: string, name: string, releasedAt: string, title: string, lead: string, description?: string | null, actionRequired: boolean, confirmedAt?: string | null, confirmedByUserId?: string | null }>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean } } };
+
+export type ConfirmChangelogEntryMutationVariables = Exact<{
+  id: Scalars['String'];
+  locale?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type ConfirmChangelogEntryMutation = { __typename?: 'Mutation', confirmChangelogEntry: { __typename?: 'ChangelogEntry', id: string, name: string, releasedAt: string, title: string, lead: string, description?: string | null, actionRequired: boolean, confirmedAt?: string | null, confirmedByUserId?: string | null } };
+
 export type FullCommentRatingSystemFragment = { __typename?: 'CommentRatingSystem', id: string, name?: string | null, answers: Array<{ __typename?: 'CommentRatingSystemAnswer', id: string, type: RatingSystemType, answer?: string | null, ratingSystemId: string }> };
 
 export type RatingSystemQueryVariables = Exact<{ [key: string]: never; }>;
@@ -8468,6 +8576,36 @@ export type DeleteNavigationMutationVariables = Exact<{
 
 
 export type DeleteNavigationMutation = { __typename?: 'Mutation', deleteNavigation: { __typename?: 'Navigation', id: string, key: string, name: string, links: Array<{ __typename: 'ArticleNavigationLink', label: string, articleID: string } | { __typename: 'ExternalNavigationLink', label: string, url?: string | null } | { __typename: 'PageNavigationLink', label: string, pageID: string }> } };
+
+export type NotificationReadFragment = { __typename?: 'NotificationRead', id: string, createdAt: string, source: NotificationSource, itemId: string };
+
+export type NotificationReadsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type NotificationReadsQuery = { __typename?: 'Query', notificationReads: Array<{ __typename?: 'NotificationRead', id: string, createdAt: string, source: NotificationSource, itemId: string }> };
+
+export type MarkNotificationReadMutationVariables = Exact<{
+  source: NotificationSource;
+  itemId: Scalars['String'];
+}>;
+
+
+export type MarkNotificationReadMutation = { __typename?: 'Mutation', markNotificationRead: { __typename?: 'NotificationRead', id: string, createdAt: string, source: NotificationSource, itemId: string } };
+
+export type NotificationConfirmationFragment = { __typename?: 'NotificationConfirmation', id: string, createdAt: string, source: NotificationSource, itemId: string, confirmedByUserId?: string | null };
+
+export type NotificationConfirmationsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type NotificationConfirmationsQuery = { __typename?: 'Query', notificationConfirmations: Array<{ __typename?: 'NotificationConfirmation', id: string, createdAt: string, source: NotificationSource, itemId: string, confirmedByUserId?: string | null }> };
+
+export type ConfirmNotificationMutationVariables = Exact<{
+  source: NotificationSource;
+  itemId: Scalars['String'];
+}>;
+
+
+export type ConfirmNotificationMutation = { __typename?: 'Mutation', confirmNotification: { __typename?: 'NotificationConfirmation', id: string, createdAt: string, source: NotificationSource, itemId: string, confirmedByUserId?: string | null } };
 
 export type FullPageRevisionWithoutBlocksFragment = { __typename?: 'PageRevision', id: string, createdAt: string, publishedAt?: string | null, archivedAt?: string | null, title?: string | null, description?: string | null, socialMediaTitle?: string | null, socialMediaDescription?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, socialMediaImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Property', key: string, value: string, public: boolean }> };
 
@@ -10723,6 +10861,19 @@ export const FullBlockStyleFragmentDoc = gql`
   blocks
 }
     `;
+export const ChangelogEntryFragmentDoc = gql`
+    fragment ChangelogEntry on ChangelogEntry {
+  id
+  name
+  releasedAt
+  title
+  lead
+  description
+  actionRequired
+  confirmedAt
+  confirmedByUserId
+}
+    `;
 export const FullCommentRatingSystemFragmentDoc = gql`
     fragment FullCommentRatingSystem on CommentRatingSystem {
   id
@@ -11061,6 +11212,23 @@ export const FullNavigationFragmentDoc = gql`
   }
 }
     ${SlimNavigationFragmentDoc}`;
+export const NotificationReadFragmentDoc = gql`
+    fragment NotificationRead on NotificationRead {
+  id
+  createdAt
+  source
+  itemId
+}
+    `;
+export const NotificationConfirmationFragmentDoc = gql`
+    fragment NotificationConfirmation on NotificationConfirmation {
+  id
+  createdAt
+  source
+  itemId
+  confirmedByUserId
+}
+    `;
 export const FullPageRevisionFragmentDoc = gql`
     fragment FullPageRevision on PageRevision {
   ...FullPageRevisionWithoutBlocks
@@ -12994,6 +13162,84 @@ export function useDeleteBlockStyleMutation(baseOptions?: Apollo.MutationHookOpt
 export type DeleteBlockStyleMutationHookResult = ReturnType<typeof useDeleteBlockStyleMutation>;
 export type DeleteBlockStyleMutationResult = Apollo.MutationResult<DeleteBlockStyleMutation>;
 export type DeleteBlockStyleMutationOptions = Apollo.BaseMutationOptions<DeleteBlockStyleMutation, DeleteBlockStyleMutationVariables>;
+export const ChangelogEntriesDocument = gql`
+    query ChangelogEntries($take: Int, $skip: Int, $filter: ChangelogEntryFilter, $locale: String) {
+  changelogEntries(take: $take, skip: $skip, filter: $filter, locale: $locale) {
+    nodes {
+      ...ChangelogEntry
+    }
+    totalCount
+    pageInfo {
+      hasNextPage
+    }
+  }
+}
+    ${ChangelogEntryFragmentDoc}`;
+
+/**
+ * __useChangelogEntriesQuery__
+ *
+ * To run a query within a React component, call `useChangelogEntriesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useChangelogEntriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useChangelogEntriesQuery({
+ *   variables: {
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
+ *      filter: // value for 'filter'
+ *      locale: // value for 'locale'
+ *   },
+ * });
+ */
+export function useChangelogEntriesQuery(baseOptions?: Apollo.QueryHookOptions<ChangelogEntriesQuery, ChangelogEntriesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ChangelogEntriesQuery, ChangelogEntriesQueryVariables>(ChangelogEntriesDocument, options);
+      }
+export function useChangelogEntriesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ChangelogEntriesQuery, ChangelogEntriesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ChangelogEntriesQuery, ChangelogEntriesQueryVariables>(ChangelogEntriesDocument, options);
+        }
+export type ChangelogEntriesQueryHookResult = ReturnType<typeof useChangelogEntriesQuery>;
+export type ChangelogEntriesLazyQueryHookResult = ReturnType<typeof useChangelogEntriesLazyQuery>;
+export type ChangelogEntriesQueryResult = Apollo.QueryResult<ChangelogEntriesQuery, ChangelogEntriesQueryVariables>;
+export const ConfirmChangelogEntryDocument = gql`
+    mutation ConfirmChangelogEntry($id: String!, $locale: String) {
+  confirmChangelogEntry(id: $id, locale: $locale) {
+    ...ChangelogEntry
+  }
+}
+    ${ChangelogEntryFragmentDoc}`;
+export type ConfirmChangelogEntryMutationFn = Apollo.MutationFunction<ConfirmChangelogEntryMutation, ConfirmChangelogEntryMutationVariables>;
+
+/**
+ * __useConfirmChangelogEntryMutation__
+ *
+ * To run a mutation, you first call `useConfirmChangelogEntryMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useConfirmChangelogEntryMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [confirmChangelogEntryMutation, { data, loading, error }] = useConfirmChangelogEntryMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      locale: // value for 'locale'
+ *   },
+ * });
+ */
+export function useConfirmChangelogEntryMutation(baseOptions?: Apollo.MutationHookOptions<ConfirmChangelogEntryMutation, ConfirmChangelogEntryMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ConfirmChangelogEntryMutation, ConfirmChangelogEntryMutationVariables>(ConfirmChangelogEntryDocument, options);
+      }
+export type ConfirmChangelogEntryMutationHookResult = ReturnType<typeof useConfirmChangelogEntryMutation>;
+export type ConfirmChangelogEntryMutationResult = Apollo.MutationResult<ConfirmChangelogEntryMutation>;
+export type ConfirmChangelogEntryMutationOptions = Apollo.BaseMutationOptions<ConfirmChangelogEntryMutation, ConfirmChangelogEntryMutationVariables>;
 export const RatingSystemDocument = gql`
     query RatingSystem {
   ratingSystem {
@@ -16908,6 +17154,142 @@ export function useDeleteNavigationMutation(baseOptions?: Apollo.MutationHookOpt
 export type DeleteNavigationMutationHookResult = ReturnType<typeof useDeleteNavigationMutation>;
 export type DeleteNavigationMutationResult = Apollo.MutationResult<DeleteNavigationMutation>;
 export type DeleteNavigationMutationOptions = Apollo.BaseMutationOptions<DeleteNavigationMutation, DeleteNavigationMutationVariables>;
+export const NotificationReadsDocument = gql`
+    query NotificationReads {
+  notificationReads {
+    ...NotificationRead
+  }
+}
+    ${NotificationReadFragmentDoc}`;
+
+/**
+ * __useNotificationReadsQuery__
+ *
+ * To run a query within a React component, call `useNotificationReadsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useNotificationReadsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useNotificationReadsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useNotificationReadsQuery(baseOptions?: Apollo.QueryHookOptions<NotificationReadsQuery, NotificationReadsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<NotificationReadsQuery, NotificationReadsQueryVariables>(NotificationReadsDocument, options);
+      }
+export function useNotificationReadsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<NotificationReadsQuery, NotificationReadsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<NotificationReadsQuery, NotificationReadsQueryVariables>(NotificationReadsDocument, options);
+        }
+export type NotificationReadsQueryHookResult = ReturnType<typeof useNotificationReadsQuery>;
+export type NotificationReadsLazyQueryHookResult = ReturnType<typeof useNotificationReadsLazyQuery>;
+export type NotificationReadsQueryResult = Apollo.QueryResult<NotificationReadsQuery, NotificationReadsQueryVariables>;
+export const MarkNotificationReadDocument = gql`
+    mutation MarkNotificationRead($source: NotificationSource!, $itemId: String!) {
+  markNotificationRead(source: $source, itemId: $itemId) {
+    ...NotificationRead
+  }
+}
+    ${NotificationReadFragmentDoc}`;
+export type MarkNotificationReadMutationFn = Apollo.MutationFunction<MarkNotificationReadMutation, MarkNotificationReadMutationVariables>;
+
+/**
+ * __useMarkNotificationReadMutation__
+ *
+ * To run a mutation, you first call `useMarkNotificationReadMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useMarkNotificationReadMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [markNotificationReadMutation, { data, loading, error }] = useMarkNotificationReadMutation({
+ *   variables: {
+ *      source: // value for 'source'
+ *      itemId: // value for 'itemId'
+ *   },
+ * });
+ */
+export function useMarkNotificationReadMutation(baseOptions?: Apollo.MutationHookOptions<MarkNotificationReadMutation, MarkNotificationReadMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<MarkNotificationReadMutation, MarkNotificationReadMutationVariables>(MarkNotificationReadDocument, options);
+      }
+export type MarkNotificationReadMutationHookResult = ReturnType<typeof useMarkNotificationReadMutation>;
+export type MarkNotificationReadMutationResult = Apollo.MutationResult<MarkNotificationReadMutation>;
+export type MarkNotificationReadMutationOptions = Apollo.BaseMutationOptions<MarkNotificationReadMutation, MarkNotificationReadMutationVariables>;
+export const NotificationConfirmationsDocument = gql`
+    query NotificationConfirmations {
+  notificationConfirmations {
+    ...NotificationConfirmation
+  }
+}
+    ${NotificationConfirmationFragmentDoc}`;
+
+/**
+ * __useNotificationConfirmationsQuery__
+ *
+ * To run a query within a React component, call `useNotificationConfirmationsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useNotificationConfirmationsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useNotificationConfirmationsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useNotificationConfirmationsQuery(baseOptions?: Apollo.QueryHookOptions<NotificationConfirmationsQuery, NotificationConfirmationsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<NotificationConfirmationsQuery, NotificationConfirmationsQueryVariables>(NotificationConfirmationsDocument, options);
+      }
+export function useNotificationConfirmationsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<NotificationConfirmationsQuery, NotificationConfirmationsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<NotificationConfirmationsQuery, NotificationConfirmationsQueryVariables>(NotificationConfirmationsDocument, options);
+        }
+export type NotificationConfirmationsQueryHookResult = ReturnType<typeof useNotificationConfirmationsQuery>;
+export type NotificationConfirmationsLazyQueryHookResult = ReturnType<typeof useNotificationConfirmationsLazyQuery>;
+export type NotificationConfirmationsQueryResult = Apollo.QueryResult<NotificationConfirmationsQuery, NotificationConfirmationsQueryVariables>;
+export const ConfirmNotificationDocument = gql`
+    mutation ConfirmNotification($source: NotificationSource!, $itemId: String!) {
+  confirmNotification(source: $source, itemId: $itemId) {
+    ...NotificationConfirmation
+  }
+}
+    ${NotificationConfirmationFragmentDoc}`;
+export type ConfirmNotificationMutationFn = Apollo.MutationFunction<ConfirmNotificationMutation, ConfirmNotificationMutationVariables>;
+
+/**
+ * __useConfirmNotificationMutation__
+ *
+ * To run a mutation, you first call `useConfirmNotificationMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useConfirmNotificationMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [confirmNotificationMutation, { data, loading, error }] = useConfirmNotificationMutation({
+ *   variables: {
+ *      source: // value for 'source'
+ *      itemId: // value for 'itemId'
+ *   },
+ * });
+ */
+export function useConfirmNotificationMutation(baseOptions?: Apollo.MutationHookOptions<ConfirmNotificationMutation, ConfirmNotificationMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ConfirmNotificationMutation, ConfirmNotificationMutationVariables>(ConfirmNotificationDocument, options);
+      }
+export type ConfirmNotificationMutationHookResult = ReturnType<typeof useConfirmNotificationMutation>;
+export type ConfirmNotificationMutationResult = Apollo.MutationResult<ConfirmNotificationMutation>;
+export type ConfirmNotificationMutationOptions = Apollo.BaseMutationOptions<ConfirmNotificationMutation, ConfirmNotificationMutationVariables>;
 export const PageListDocument = gql`
     query PageList($filter: PageFilter, $cursor: String, $take: Int, $skip: Int, $order: SortOrder, $sort: PageSort) {
   pages(

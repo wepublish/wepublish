@@ -567,6 +567,16 @@
       }
     },
     "cancel": "Cancel",
+    "changelog": {
+      "whatsNew": "What's new",
+      "actionRequired": "Action required",
+      "done": "Done",
+      "details": "Details",
+      "releasedAt": "Released on {{date, PP}}",
+      "completedAt": "Completed on {{date, PP}}",
+      "noEntries": "No changelog entries yet.",
+      "allCaughtUp": "No unread changelog entries."
+    },
     "chooseEditImage": {
       "chooseImage": "Choose Image",
       "editImage": "Edit Image",
@@ -695,6 +705,8 @@
     "dashboard": {
       "activity": "Latest Activity",
       "dashboard": "Dashboard",
+      "notifications": "Notifications",
+      "showAllNotifications": "Show all",
       "greeting": "Hello, {{name}}!",
       "newArticle": "New <0>article</0> added",
       "newAuthor": "New <0>author</0> added",
@@ -1268,6 +1280,7 @@
       "pageTags": "Tags",
       "consents": "Consents",
       "dashboard": "Dashboard",
+      "notifications": "Notifications",
       "events": "Events",
       "eventTags": "Tags",
       "documentLibrary": "Documents",
@@ -1323,6 +1336,18 @@
         "selectPage": "Select Page",
         "url": "URL"
       }
+    },
+    "notifications": {
+      "noTeamMessages": "No messages from the We.Publish team right now.",
+      "sourceTeam": "We.Publish Team",
+      "sourceChangelog": "Changelog",
+      "sourceJobLogs": "Job logs",
+      "markAsRead": "Mark as read",
+      "markAsDone": "Mark as done",
+      "confirmTitle": "Mark as done?",
+      "confirmMessage": "This confirms for your whole team that \"{{title}}\" has been completed. The notice will disappear from the dashboard.",
+      "confirmSuccess": "Thanks! The task has been marked as done.",
+      "loadMore": "Load more"
     },
     "no": "No",
     "pageEditor": {

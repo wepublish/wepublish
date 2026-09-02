@@ -572,6 +572,16 @@
       }
     },
     "cancel": "Annuler",
+    "changelog": {
+      "whatsNew": "Quoi de neuf",
+      "actionRequired": "Action requise",
+      "done": "Effectué",
+      "details": "Détails",
+      "releasedAt": "Publié le {{date, PP}}",
+      "completedAt": "Effectué le {{date, PP}}",
+      "noEntries": "Aucune entrée de changelog pour l'instant.",
+      "allCaughtUp": "Aucune entrée de changelog non lue."
+    },
     "chooseEditImage": {
       "chooseImage": "Choisir une image",
       "editImage": "Modifier l'image",
@@ -699,6 +709,8 @@
     "dashboard": {
       "activity": "Dernière activité",
       "dashboard": "Dashboard",
+      "notifications": "Notifications",
+      "showAllNotifications": "Tout afficher",
       "greeting": "Salut, {{name}}!",
       "newArticle": "Nouvel <0>article</0> créé",
       "newAuthor": "Nouvel <0>auteur</0> ajouté",
@@ -1257,6 +1269,7 @@
       "pageTags": "Tags",
       "consents": "Consentement",
       "dashboard": "Dashboard",
+      "notifications": "Notifications",
       "events": "Events",
       "eventTags": "Tags",
       "documentLibrary": "Documents",
@@ -1313,6 +1326,18 @@
         "selectPage": "Sélectionner la page",
         "url": "URL"
       }
+    },
+    "notifications": {
+      "noTeamMessages": "Aucun message de l'équipe We.Publish pour le moment.",
+      "sourceTeam": "We.Publish Team",
+      "sourceChangelog": "Changelog",
+      "sourceJobLogs": "Job logs",
+      "markAsRead": "Marquer comme lu",
+      "markAsDone": "Marquer comme effectué",
+      "confirmTitle": "Marquer comme effectué ?",
+      "confirmMessage": "Vous confirmez ainsi pour toute votre équipe que « {{title}} » a été effectué. L'avis disparaîtra du tableau de bord.",
+      "confirmSuccess": "Merci ! La tâche a été marquée comme effectuée.",
+      "loadMore": "Afficher plus"
     },
     "no": "Non",
     "pageEditor": {

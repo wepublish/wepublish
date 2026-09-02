@@ -143,6 +143,7 @@ import {
   MdMail,
   MdMoney,
   MdMultilineChart,
+  MdNotificationsNone,
   MdOutgoingMail,
   MdSend,
   MdOutlineGridView,
@@ -170,8 +171,6 @@ import {
   Sidebar as RSidebar,
   Sidenav as RSidenav,
 } from 'rsuite';
-
-import { OneMessages } from './oneMessages/oneMessages';
 
 export interface BaseProps {
   children?: ReactNode;
@@ -287,6 +286,15 @@ export function Base({ children }: BaseProps) {
                     active={path === 'dashboard' || path === ''}
                   >
                     {t('navbar.dashboard')}
+                  </Nav.Item>
+
+                  <Nav.Item
+                    as={NavLink}
+                    href="/notifications"
+                    icon={<MdNotificationsNone />}
+                    active={path === 'notifications'}
+                  >
+                    {t('navbar.notifications')}
                   </Nav.Item>
 
                   <PermissionControl
@@ -1261,10 +1269,7 @@ export function Base({ children }: BaseProps) {
             </Nav>
           </Navbar>
         </Sidebar>
-        <ChildrenContainer>
-          <OneMessages />
-          {children}
-        </ChildrenContainer>
+        <ChildrenContainer>{children}</ChildrenContainer>
       </Container>
     </Wrapper>
   );
