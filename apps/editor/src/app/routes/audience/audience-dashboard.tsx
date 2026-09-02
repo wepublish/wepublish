@@ -13,6 +13,7 @@ import { useTranslation } from 'react-i18next';
 import { AudienceChart } from './audience-chart';
 import { AudienceFilter } from './audience-filter';
 import { AudienceTable } from './audience-table';
+import { AudienceTableExport } from './audience-table-export';
 import { useAudience } from './useAudience';
 import {
   PreDefinedDates,
@@ -26,6 +27,10 @@ const AudienceChartWrapper = styled('div')`
   height: 100%;
   width: 100%;
   min-height: 40vh;
+`;
+
+const AudienceTableExportWrapper = styled('div')`
+  margin-top: ${({ theme }) => theme.spacing(4)};
 `;
 
 const TableWrapperStyled = styled(TableWrapper)`
@@ -107,6 +112,15 @@ function AudienceDashboard({
           </ListViewFilterArea>
         )}
       </ListViewContainer>
+
+      <AudienceTableExportWrapper>
+        <AudienceTableExport
+          audienceStats={audienceStats}
+          clientFilter={audienceClientFilter}
+          timeResolution={resolution}
+          loading={loading}
+        />
+      </AudienceTableExportWrapper>
 
       {audienceComponentFilter.chart && (
         <AudienceChartWrapper>

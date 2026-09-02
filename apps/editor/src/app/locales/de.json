@@ -2199,6 +2199,15 @@
         "highProbability": "Abo-Erneuerungen Stammkunden"
       }
     },
+    "audienceTableExport": {
+      "download": "Herunterladen",
+      "csv": "CSV (.csv)",
+      "xlsx": "Excel (.xlsx)",
+      "header": {
+        "renewedAndReplaced": "Erneuerte und ersetzte Abos",
+        "totalToBeRenewed": "Zu erneuernde Abos"
+      }
+    },
     "paywall": {
       "navbar": "Paywall",
       "form": {

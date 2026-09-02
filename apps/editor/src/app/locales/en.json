@@ -2280,6 +2280,15 @@
         "highProbability": "Subsequent renewals "
       }
     },
+    "audienceTableExport": {
+      "download": "Download",
+      "csv": "CSV (.csv)",
+      "xlsx": "Excel (.xlsx)",
+      "header": {
+        "renewedAndReplaced": "Renewed and replaced subscriptions",
+        "totalToBeRenewed": "Subscriptions to be renewed"
+      }
+    },
     "paywall": {
       "navbar": "Paywall",
       "form": {
