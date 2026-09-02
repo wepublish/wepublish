@@ -1542,6 +1542,7 @@
     "pollAnswer": {
       "answerMissing": "Please, input your answer.",
       "copyVoteUrl": "Copy voting link",
+      "copyVoteUrlHint": "The voting links can now be copied directly in the poll block of the article or page the poll is used in.",
       "deleteBtn": "Delete",
       "deleteModalBody": "Do you want to delete the answer \"{{answer}}\" permanently? You'll lose the poll results.",
       "deleteModalTitle": "Delete?",

@@ -1501,6 +1501,7 @@
     "pollAnswer": {
       "answerMissing": "Ta réponse est vide. Veuillez saisir un texte.",
       "copyVoteUrl": "Copier le lien de vote",
+      "copyVoteUrlHint": "Les liens de vote peuvent désormais être copiés directement dans le bloc de sondage de l'article ou de la page où le sondage est utilisé.",
       "deleteBtn": "Supprimer",
       "deleteModalBody": "Veux-tu supprimer irrévocablement la réponse \"{{answer}}\" ? Les résultats du sondage seront alors perdus.",
       "deleteModalTitle": "Supprimer?",

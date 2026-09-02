@@ -34,6 +34,7 @@ import {
   BlockMap,
   BlockValue,
   createCheckedPermissionComponent,
+  DocumentUrlProvider,
   EditorTemplate,
   InfoData,
   ListicleBlockListValue,
@@ -903,13 +904,15 @@ function ArticleEditor() {
             />
           }
         >
-          <BlockList
-            itemId={articleID}
-            value={blocks}
-            onChange={handleChange}
-            disabled={isLoading || isDisabled || !isAuthorized}
-            blockMap={BlockMap}
-          />
+          <DocumentUrlProvider documentUrl={articleData?.article?.url}>
+            <BlockList
+              itemId={articleID}
+              value={blocks}
+              onChange={handleChange}
+              disabled={isLoading || isDisabled || !isAuthorized}
+              blockMap={BlockMap}
+            />
+          </DocumentUrlProvider>
         </EditorTemplate>
       </FieldSet>
 
