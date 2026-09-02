@@ -5,10 +5,17 @@ import {
   isSubscribeBlock,
 } from '@wepublish/block-content/website';
 import {
+  calculatePeriodAmount,
   CurrencyNumberSpinner,
+  getPeriodPriceRange,
   MemberPlanPickerRadios,
+  monthlyAmountFromPeriodAmount,
 } from '@wepublish/membership/website';
-import { BlockContent, useSubscriptionsQuery } from '@wepublish/website/api';
+import {
+  BlockContent,
+  PaymentPeriodicity,
+  useSubscriptionsQuery,
+} from '@wepublish/website/api';
 import {
   BuilderMemberPlanItemProps,
   BuilderRouterContext,
@@ -261,6 +268,8 @@ export const ReflektCrowdfundingMemberPlanItem = forwardRef<
     shortDescription,
     amountPerMonthMax,
     amountPerMonthMin,
+    amountPerMonthTarget,
+    periodicityPricing,
     currency,
     extendable,
     goodies,
@@ -272,10 +281,9 @@ export const ReflektCrowdfundingMemberPlanItem = forwardRef<
   const radioGroup = useRadioGroup();
   const isChecked = props.checked ?? radioGroup?.value === id;
   const radioInputRef = useRef<HTMLInputElement>(null);
-  const {
-    formState: { errors },
-    setValue,
-  } = useFormContext();
+  const form = useFormContext() as ReturnType<typeof useFormContext> | null;
+  const setValue = form?.setValue;
+  const errors = form?.formState.errors;
 
   const { goodieMinValue, baselineMonthlyAmount } = useContext(
     CrowdfundingGoodieContext
@@ -284,7 +292,17 @@ export const ReflektCrowdfundingMemberPlanItem = forwardRef<
   const hasFreePricing = tags?.includes('inline-slider');
   const hasMinValue = amountPerMonthMin > 0;
 
-  const yearlyMinChf = Math.round((amountPerMonthMin * 12) / 100);
+  const memberPlan = {
+    amountPerMonthMin,
+    amountPerMonthTarget,
+    amountPerMonthMax,
+    periodicityPricing,
+  };
+  const yearlyMinCents = getPeriodPriceRange(
+    memberPlan,
+    PaymentPeriodicity.Yearly
+  ).amountMin;
+  const yearlyMinChf = Math.round(yearlyMinCents / 100);
 
   const [freeAmountYearly, setFreeAmountYearly] = useState<number | null>(
     hasMinValue ? yearlyMinChf : null
@@ -293,8 +311,8 @@ export const ReflektCrowdfundingMemberPlanItem = forwardRef<
   const yearlyChf =
     hasFreePricing ? (freeAmountYearly ?? yearlyMinChf) : yearlyMinChf;
   const tileYearlyValue =
-    (hasFreePricing ? (freeAmountYearly ?? 0) * 100 : amountPerMonthMin * 12) -
-    baselineMonthlyAmount * 12;
+    (hasFreePricing ? (freeAmountYearly ?? 0) * 100 : yearlyMinCents) -
+    calculatePeriodAmount(baselineMonthlyAmount, PaymentPeriodicity.Yearly);
   const hasGoodie =
     goodieMinValue != null ?
       tileYearlyValue >= goodieMinValue
@@ -307,9 +325,14 @@ export const ReflektCrowdfundingMemberPlanItem = forwardRef<
 
     const touched = freeAmountYearly != null;
     const monthlyAmount =
-      touched ? Math.round((freeAmountYearly * 100) / 12) : 0;
+      touched ?
+        monthlyAmountFromPeriodAmount(
+          freeAmountYearly * 100,
+          PaymentPeriodicity.Yearly
+        )
+      : 0;
 
-    setValue('monthlyAmount', monthlyAmount);
+    setValue?.('monthlyAmount', monthlyAmount);
   }, [hasFreePricing, isChecked, freeAmountYearly, setValue]);
 
   return (
@@ -350,7 +373,7 @@ export const ReflektCrowdfundingMemberPlanItem = forwardRef<
                     </ItemFreeAmountSpinnerPlaceholder>
                   )}
 
-                  {errors.monthlyAmount && (
+                  {errors?.monthlyAmount && (
                     <ItemFreeAmountError>
                       {errors.monthlyAmount.message?.toString()}
                     </ItemFreeAmountError>
@@ -402,20 +425,28 @@ export const ReflektSubscribeCrowdfunding = (
     skip: !upgradeSubscriptionId,
   });
 
+  const upgradeSubscription = useMemo(
+    () =>
+      data?.userSubscriptions.find(
+        sub => sub.isActive && sub.id === upgradeSubscriptionId
+      ),
+    [data?.userSubscriptions, upgradeSubscriptionId]
+  );
+
   // On the upgrade flow the goodie threshold applies to the on-top delta
   // (new amount − current subscription amount), matching the core Upgrade.
   // In the plain subscribe flow there is no baseline, so it stays 0.
-  const baselineMonthlyAmount = useMemo(() => {
-    const subscription = data?.userSubscriptions.find(
-      sub => sub.isActive && sub.id === upgradeSubscriptionId
-    );
+  const baselineMonthlyAmount = upgradeSubscription?.monthlyAmount ?? 0;
 
-    return subscription?.monthlyAmount ?? 0;
-  }, [data?.userSubscriptions, upgradeSubscriptionId]);
+  const goodieMinValueApplies =
+    !upgradeSubscription || (props.goodieMinValueAppliesToUpgrade ?? false);
 
   const value = useMemo(
-    () => ({ goodieMinValue: props.goodieMinValue, baselineMonthlyAmount }),
-    [baselineMonthlyAmount, props.goodieMinValue]
+    () => ({
+      goodieMinValue: goodieMinValueApplies ? props.goodieMinValue : null,
+      baselineMonthlyAmount,
+    }),
+    [goodieMinValueApplies, props.goodieMinValue, baselineMonthlyAmount]
   );
 
   return (

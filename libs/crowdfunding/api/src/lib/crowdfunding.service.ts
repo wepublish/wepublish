@@ -81,7 +81,7 @@ export class CrowdfundingService {
           subscription.paymentPeriodicity
         );
 
-        return total + subscription.monthlyAmount * monthFactor;
+        return total + Math.round(subscription.monthlyAmount * monthFactor);
       }, 0) + (crowdfunding.additionalRevenue || 0)
     );
   }

@@ -8,6 +8,7 @@ import {
 import { Page } from '@wepublish/page/website';
 import { BuilderPageProps } from '@wepublish/website/builder';
 
+import { FlexBlockHeroCrowdfundingWrapper } from './block-layouts/flex-block-hero-crowdfunding';
 import { FlexBlockHeroWrapper } from './block-layouts/flex-block-hero';
 import { CollapsibleContentWrapper } from './break-blocks/reflekt-collapsible-content';
 import { CollapsibleDownloadsWrapper } from './break-blocks/reflekt-collapsible-downloads';
@@ -15,7 +16,7 @@ import {
   FORCE_UPGRADE_PAGE_TAG,
   ForceUpgradeContext,
 } from './reflekt-force-upgrade-context';
-import { ReflektLogo } from './reflekt-navbar';
+import { ReflektLogo, SubscribeBtn } from './reflekt-navbar';
 
 const fullWidthMainSpacer = (theme: Theme) => css`
   main > .MuiContainer-root {
@@ -35,7 +36,11 @@ const StyledReflektPage = styled(Page)`
     justify-content: center;
   }
 
-  & > .MuiContainer-root:has(${FlexBlockHeroWrapper}) {
+  &
+    > .MuiContainer-root:is(
+      :has(${FlexBlockHeroWrapper}),
+      :has(${FlexBlockHeroCrowdfundingWrapper})
+    ) {
     grid-template-columns: 1fr;
     justify-content: stretch;
   }
@@ -105,9 +110,18 @@ const secondaryBackgroundStyles = (theme: Theme) => css`
   }
 `;
 
+const noNavbarSubscribeButtonStyles = css`
+  ${SubscribeBtn}.MuiTypography-buttonLinkMain {
+    display: none;
+  }
+`;
+
 const pageGlobalStyles = <GlobalStyles styles={fullWidthMainSpacer} />;
 const secondaryBackgroundGlobalStyles = (
   <GlobalStyles styles={secondaryBackgroundStyles} />
+);
+const noNavbarSubscribeButtonGlobalStyles = (
+  <GlobalStyles styles={noNavbarSubscribeButtonStyles} />
 );
 export const ReflektPage = (props: BuilderPageProps) => {
   const secondaryBackground =
@@ -119,11 +133,17 @@ export const ReflektPage = (props: BuilderPageProps) => {
     tag => tag.tag === FORCE_UPGRADE_PAGE_TAG
   );
 
+  const noNavbarSubscribeButton =
+    props.data?.page?.latest?.properties?.find(
+      p => p.key === 'noNavbarSubscribeButton'
+    )?.value === 'true';
+
   return (
     <ForceUpgradeContext.Provider value={forceUpgrade}>
       <ContentWidthProvider fullWidth>
         {pageGlobalStyles}
         {secondaryBackground && secondaryBackgroundGlobalStyles}
+        {noNavbarSubscribeButton && noNavbarSubscribeButtonGlobalStyles}
 
         <StyledReflektPage
           {...props}

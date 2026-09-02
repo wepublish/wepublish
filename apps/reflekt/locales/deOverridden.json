@@ -17,6 +17,11 @@
     },
     "memberplan": {
       "price": "{yearlyAmount}"
+    },
+    "upgrade": {
+      "infoTitle": "Dein Upgrade",
+      "info": "Mach jetzt ein Upgrade von <bold>{oldMemberPlan}</bold> auf <bold>{newMemberPlan}</bold> und ermögliche dadurch noch mehr mutige Recherchen. Deine bisherige Mitgliedschaft wird angerechnet, du bezahlst also nur den Aufpreis. Als Dankeschön kannst du dir eines der REFLEKT-Geschenke aussuchen.",
+      "button": "Jetzt für {formattedAmount} auf {memberPlan} upgraden"
     }
   },
   "subscription": {
