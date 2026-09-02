@@ -249,15 +249,6 @@ export function LoginForm({
               </LoginFormButton>
             </>
           : <>
-              <LoginFormButton
-                disabled={loading || loginLinkSent}
-                type="submit"
-              >
-                {loginLinkSent ?
-                  t('login.loginLinkSent')
-                : t('login.loginWithLink')}
-              </LoginFormButton>
-
               {!disablePasswordLogin && (
                 <LoginFormSecondaryButton
                   variant="outlined"
@@ -267,6 +258,15 @@ export function LoginForm({
                   {t('login.loginWithPassword')}
                 </LoginFormSecondaryButton>
               )}
+
+              <LoginFormButton
+                disabled={loading || loginLinkSent}
+                type="submit"
+              >
+                {loginLinkSent ?
+                  t('login.loginLinkSent')
+                : t('login.loginWithLink')}
+              </LoginFormButton>
             </>
           }
         </LoginFormActions>
