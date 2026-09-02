@@ -35,9 +35,11 @@ export const getArticleSEO = (article: Article) => {
 
   const socialMediaDescription =
     article.latest.socialMediaDescription ||
+    article.latest.seoDescription ||
     article.latest.lead ||
     firstParagraphToPlaintext(firstRichText?.richText?.content ?? []);
   const description =
+    article.latest.seoDescription ||
     article.latest.lead ||
     firstParagraphToPlaintext(firstRichText?.richText?.content ?? []);
 
