@@ -2,21 +2,24 @@ import styled from '@emotion/styled';
 import { useMemberPlanListQuery } from '@wepublish/editor/api';
 import { Dispatch, SetStateAction, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdLink } from 'react-icons/md';
+import { MdInfo, MdLink } from 'react-icons/md';
 import type { DateRangePickerProps } from 'rsuite';
 import {
   Button,
   Col,
   DateRangePicker,
   Grid,
+  IconButton,
   Message,
   Panel,
+  Popover as RPopover,
   Radio,
   RadioGroup,
   Row,
   TagPicker,
   toaster,
   Toggle,
+  Whisper,
 } from 'rsuite';
 
 import {
@@ -46,7 +49,18 @@ const ToggleContainer = styled('div')`
 `;
 
 const ActionContainer = styled('div')`
+  display: flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing(1)};
   margin-top: ${({ theme }) => theme.spacing(1)};
+`;
+
+const HelpPopover = styled(RPopover)`
+  max-width: 320px;
+
+  p + p {
+    margin-top: ${({ theme }) => theme.spacing(1)};
+  }
 `;
 
 export interface AudienceFilterProps {
@@ -240,6 +254,25 @@ export function AudienceFilter({
               >
                 {t('audienceFilter.copyPermalink')}
               </Button>
+
+              <Whisper
+                trigger={['hover', 'focus']}
+                placement="rightStart"
+                speaker={
+                  <HelpPopover>
+                    <p>{t('audienceFilter.permalinkHelpWhat')}</p>
+                    <p>{t('audienceFilter.permalinkHelpWhy')}</p>
+                    <p>{t('audienceFilter.permalinkHelpExample')}</p>
+                  </HelpPopover>
+                }
+              >
+                <IconButton
+                  icon={<MdInfo size={20} />}
+                  circle
+                  size="sm"
+                  aria-label={t('audienceFilter.permalinkHelpLabel')}
+                />
+              </Whisper>
             </ActionContainer>
           </ComponentFilterContainer>
         </Col>
