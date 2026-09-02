@@ -190,7 +190,7 @@ function DiscountCodeList() {
           </Column>
 
           <Column
-            width={200}
+            width={50}
             resizable
             fixed="right"
           >
