@@ -10,7 +10,10 @@ import {
   getAudienceExportFilename,
 } from './audience-export';
 import { AudienceStatsComputed } from './useAudience';
-import { AudienceClientFilter, TimeResolution } from './useAudienceFilter';
+import {
+  type AudienceClientFilter,
+  type TimeResolution,
+} from './useAudienceFilter';
 
 type AudienceExportFormat = 'csv' | 'xlsx';
 

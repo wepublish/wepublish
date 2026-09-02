@@ -1731,7 +1731,6 @@
         "createdAt": "Créé",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
         "deleted": "Utilisateur·trice supprimé·e",
-        "downloadCsv": "Télécharger CSV",
         "email": "Email",
         "memberPlan": "Plan membre",
         "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
@@ -2273,8 +2272,13 @@
       "gracePeriodHelpText": "Si votre site web utilise un paywall, les utilisateurs peuvent lire immédiatement ou continuer à lire tous les contenus, même s'ils n'ont pas souscrit d'abonnement payant, pendant le délai de paiement. Cela est utile, par exemple, en cas de virement bancaire.",
       "days": "Jours"
     },
+    "subscriptionsExport": {
+      "download": "Télécharger",
+      "csv": "CSV (.csv)",
+      "xlsx": "Excel (.xlsx)"
+    },
     "audienceCsvBtn": {
-      "exportUsers": "Télécharger CSV"
+      "exportUsers": "Télécharger les utilisateur·trice·s"
     },
     "search": "Rechercher",
     "integrations": {
