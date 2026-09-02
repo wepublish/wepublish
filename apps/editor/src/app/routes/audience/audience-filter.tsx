@@ -2,27 +2,31 @@ import styled from '@emotion/styled';
 import { useMemberPlanListQuery } from '@wepublish/editor/api';
 import { Dispatch, SetStateAction, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { MdLink } from 'react-icons/md';
 import type { DateRangePickerProps } from 'rsuite';
 import {
+  Button,
   Col,
   DateRangePicker,
   Grid,
+  Message,
   Panel,
   Radio,
   RadioGroup,
   Row,
   TagPicker,
+  toaster,
   Toggle,
 } from 'rsuite';
 
-import { AudienceFilterToggle, ToggleLable } from './audience-filter-toggle';
 import {
   AudienceApiFilter,
   AudienceClientFilter,
   AudienceComponentFilter,
   preDefinedDates,
   TimeResolution,
-} from './useAudienceFilter';
+} from './audience-filter-params';
+import { AudienceFilterToggle, ToggleLable } from './audience-filter-toggle';
 
 type RangeType = NonNullable<DateRangePickerProps['ranges']>[number];
 
@@ -41,6 +45,10 @@ const ToggleContainer = styled('div')`
   margin-top: ${({ theme }) => theme.spacing(1)};
 `;
 
+const ActionContainer = styled('div')`
+  margin-top: ${({ theme }) => theme.spacing(1)};
+`;
+
 export interface AudienceFilterProps {
   resolution: TimeResolution;
   setResolution: Dispatch<SetStateAction<TimeResolution>>;
@@ -50,6 +58,7 @@ export interface AudienceFilterProps {
   setApiFilter: (data: AudienceApiFilter) => void;
   componentFilter: AudienceComponentFilter;
   setComponentFilter: Dispatch<SetStateAction<AudienceComponentFilter>>;
+  buildPermalink: () => string;
 }
 
 export function AudienceFilter({
@@ -61,8 +70,37 @@ export function AudienceFilter({
   setApiFilter,
   componentFilter,
   setComponentFilter,
+  buildPermalink,
 }: AudienceFilterProps) {
   const { t } = useTranslation();
+
+  const copyPermalink = async () => {
+    try {
+      await navigator.clipboard.writeText(buildPermalink());
+
+      toaster.push(
+        <Message
+          type="success"
+          showIcon
+          closable
+          duration={3000}
+        >
+          {t('audienceFilter.permalinkCopied')}
+        </Message>
+      );
+    } catch {
+      toaster.push(
+        <Message
+          type="error"
+          showIcon
+          closable
+          duration={3000}
+        >
+          {t('audienceFilter.permalinkCopyFailed')}
+        </Message>
+      );
+    }
+  };
 
   const { data: memberPlans } = useMemberPlanListQuery({
     variables: { take: 100 },
@@ -139,7 +177,7 @@ export function AudienceFilter({
             name="aggregation-picker"
             inline
             appearance="picker"
-            defaultValue={resolution}
+            value={resolution}
             onChange={newResolution =>
               setResolution(newResolution as TimeResolution)
             }
@@ -165,6 +203,7 @@ export function AudienceFilter({
           <TagPickerStyled
             size="lg"
             data={memberPlansForPicker}
+            value={apiFilter.memberPlanIds}
             style={{ width: '100%' }}
             placeholder={t('audienceFilter.filterSubscriptionPlans')}
             onChange={newMemberPlanIds =>
@@ -191,6 +230,17 @@ export function AudienceFilter({
               />{' '}
               <ToggleLable>{t('audienceFilter.table')}</ToggleLable>
             </ToggleContainer>
+
+            <ActionContainer>
+              <Button
+                appearance="ghost"
+                size="sm"
+                startIcon={<MdLink />}
+                onClick={copyPermalink}
+              >
+                {t('audienceFilter.copyPermalink')}
+              </Button>
+            </ActionContainer>
           </ComponentFilterContainer>
         </Col>
 

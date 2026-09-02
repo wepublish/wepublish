@@ -2112,6 +2112,9 @@
       }
     },
     "audienceFilter": {
+      "copyPermalink": "Permalink kopieren",
+      "permalinkCopied": "Permalink mit festem Zeitraum in die Zwischenablage kopiert",
+      "permalinkCopyFailed": "Permalink konnte nicht kopiert werden",
       "daily": "Täglich",
       "monthly": "Monatlich",
       "rangePickerPlaceholder": "von - bis",

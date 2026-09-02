@@ -2193,6 +2193,9 @@
       }
     },
     "audienceFilter": {
+      "copyPermalink": "Copy permalink",
+      "permalinkCopied": "Permalink with a fixed date range copied to the clipboard",
+      "permalinkCopyFailed": "Could not copy the permalink",
       "daily": "Daily",
       "monthly": "Monthly",
       "rangePickerPlaceholder": "from - to",
