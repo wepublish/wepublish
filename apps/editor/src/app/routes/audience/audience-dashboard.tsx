@@ -7,19 +7,16 @@ import {
   ListViewHeader,
   TableWrapper,
 } from '@wepublish/ui/editor';
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { AudienceChart } from './audience-chart';
 import { AudienceFilter } from './audience-filter';
+import { DateRangePresetKey } from './audience-filter-params';
 import { AudienceTable } from './audience-table';
 import { AudienceTableExport } from './audience-table-export';
 import { useAudience } from './useAudience';
-import {
-  PreDefinedDates,
-  preDefinedDates,
-  useAudienceFilter,
-} from './useAudienceFilter';
+import { useAudienceFilter } from './useAudienceFilter';
 
 const AudienceChartWrapper = styled('div')`
   margin-top: ${({ theme }) => theme.spacing(4)};
@@ -40,13 +37,15 @@ const TableWrapperStyled = styled(TableWrapper)`
 interface AudienceDashboardProps {
   hideHeader?: boolean;
   hideFilter?: boolean;
-  initialDateRange?: keyof PreDefinedDates;
+  initialDateRange?: DateRangePresetKey;
+  persist?: boolean;
 }
 
 function AudienceDashboard({
   hideHeader,
   hideFilter,
-  initialDateRange = 'lastMonth',
+  initialDateRange,
+  persist,
 }: AudienceDashboardProps) {
   const { t } = useTranslation();
 
@@ -62,8 +61,11 @@ function AudienceDashboard({
     setResolution,
     audienceComponentFilter,
     setAudienceComponentFilter,
+    buildPermalink,
   } = useAudienceFilter({
     fetchStats,
+    initialDateRange,
+    persist,
   });
 
   const { audienceStatsComputed, audienceStatsAggregatedByMonth } = useAudience(
@@ -80,13 +82,6 @@ function AudienceDashboard({
       : audienceStatsAggregatedByMonth,
     [resolution, audienceStatsComputed, audienceStatsAggregatedByMonth]
   );
-
-  // triggers initial data load
-  useEffect(() => {
-    const today = preDefinedDates()['today'];
-    const dateRange = preDefinedDates()[initialDateRange];
-    setAudienceApiFilter({ dateRange: [dateRange, today] });
-  }, [initialDateRange, setAudienceApiFilter]);
 
   return (
     <>
@@ -108,6 +103,7 @@ function AudienceDashboard({
               setApiFilter={setAudienceApiFilter}
               componentFilter={audienceComponentFilter}
               setComponentFilter={setAudienceComponentFilter}
+              buildPermalink={buildPermalink}
             />
           </ListViewFilterArea>
         )}
