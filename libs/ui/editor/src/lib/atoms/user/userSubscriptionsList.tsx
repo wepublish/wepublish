@@ -229,9 +229,13 @@ function UserSubscriptionsList({
     );
   }
 
+  const sortedSubscriptions = [...(subscriptions ?? [])].sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  );
+
   return (
     <>
-      {subscriptions?.map(subscription => (
+      {sortedSubscriptions.map(subscription => (
         <div key={subscription.id}>
           <Row>
             {/* member plan name */}
