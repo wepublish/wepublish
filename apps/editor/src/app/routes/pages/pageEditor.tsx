@@ -27,6 +27,7 @@ import {
   BlockMap,
   BlockValue,
   createCheckedPermissionComponent,
+  DocumentUrlProvider,
   EditorTemplate,
   EditorValidationProvider,
   mapBlockValueToBlockInput,
@@ -759,12 +760,14 @@ function PageEditor() {
                 />
               </TeaserOverviewWrapper>
 
-              <BlockList
-                value={blocks}
-                onChange={handleChange}
-                disabled={isDisabled || !isAuthorized}
-                blockMap={BlockMap}
-              />
+              <DocumentUrlProvider documentUrl={pageData?.page?.url}>
+                <BlockList
+                  value={blocks}
+                  onChange={handleChange}
+                  disabled={isDisabled || !isAuthorized}
+                  blockMap={BlockMap}
+                />
+              </DocumentUrlProvider>
             </EditorValidationProvider>
           </EditorContent>
         </EditorTemplate>
