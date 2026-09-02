@@ -2057,6 +2057,9 @@
       }
     },
     "audienceFilter": {
+      "copyPermalink": "Copier le permalien",
+      "permalinkCopied": "Permalien avec une période fixe copié dans le presse-papiers",
+      "permalinkCopyFailed": "Impossible de copier le permalien",
       "daily": "Quotidien",
       "monthly": "Mensuel",
       "rangePickerPlaceholder": "de - à",

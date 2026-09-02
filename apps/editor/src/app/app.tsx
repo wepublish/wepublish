@@ -824,7 +824,7 @@ export function App() {
               path="audience/dashboard"
               element={
                 <Base>
-                  <AudienceDashboard />
+                  <AudienceDashboard persist />
                 </Base>
               }
             />
