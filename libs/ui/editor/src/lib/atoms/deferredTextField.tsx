@@ -15,6 +15,7 @@ const CharCount = styled.label`
   float: right;
   margin-left: 8px;
   font-size: 0.875em;
+  margin-top: 0.15em;
   color: var(--rs-text-secondary, #8e8e93);
 `;
 
