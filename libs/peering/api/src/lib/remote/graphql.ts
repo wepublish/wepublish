@@ -108,6 +108,8 @@ export type ArticleFilter = {
   published?: InputMaybe<Scalars['Boolean']>;
   shared?: InputMaybe<Scalars['Boolean']>;
   tags?: InputMaybe<Array<Scalars['String']>>;
+  /** Only include articles that have every one of these tags */
+  tagsAll?: InputMaybe<Array<Scalars['String']>>;
   tagsNotIn?: InputMaybe<Array<Scalars['String']>>;
   title?: InputMaybe<Scalars['String']>;
 };

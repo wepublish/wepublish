@@ -12,7 +12,7 @@ import { PaywallWrapper } from '@wepublish/paywall/website';
 import {
   ArticleWrapperAppendix,
   ArticleWrapperComments,
-} from '../pages/a/[slug]';
+} from './components/standalone-article-page';
 import { HauptstadtArticleMetaWrapper } from '../src/components/hauptstadt-article';
 import { HauptstadtBannerContainer } from './components/hauptstadt-banner';
 import { NavbarWrapper } from './components/hauptstadt-navbar';

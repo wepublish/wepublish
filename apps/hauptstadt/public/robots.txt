@@ -14,4 +14,10 @@ Disallow: /*?next=
 Disallow: /*?trk=
 Disallow: /*?from=
 
+# Archivierte Nachtleben-Artikel und deren Übersicht nicht crawlen
+User-agent: *
+Disallow: /arch/
+Disallow: /a/tag/nachtleben
+Disallow: /a/tag/Nachtleben
+
 Sitemap: https://hauptstadt.be/api/sitemap

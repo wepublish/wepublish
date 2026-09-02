@@ -76,6 +76,9 @@ input ArticleFilter {
   published: Boolean
   shared: Boolean
   tags: [String!]
+
+  """Only include articles that have every one of these tags"""
+  tagsAll: [String!]
   tagsNotIn: [String!]
   title: String
 }
@@ -3290,6 +3293,9 @@ input PeerArticleFilter {
   publicationDateFrom: DateFilter
   publicationDateTo: DateFilter
   tags: [String!]
+
+  """Only include articles that have every one of these tags"""
+  tagsAll: [String!]
   title: String
 }
 

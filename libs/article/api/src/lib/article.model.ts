@@ -287,6 +287,11 @@ export class ArticleFilter {
   authors?: string[];
   @Field(() => [String], { nullable: true })
   tags?: string[];
+  @Field(() => [String], {
+    nullable: true,
+    description: 'Only include articles that have every one of these tags',
+  })
+  tagsAll?: string[];
   @Field(() => [String], { nullable: true })
   tagsNotIn?: string[];
 

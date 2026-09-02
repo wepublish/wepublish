@@ -15,17 +15,12 @@ import { useRouter } from 'next/router';
 import { isArchived } from '../../src/archiviert';
 import { StandaloneArticlePage } from '../../src/components/standalone-article-page';
 
-export default function ArticleBySlugOrId() {
+export default function ArchivedArticleBySlug() {
   const {
-    query: { slug, id },
+    query: { slug },
   } = useRouter();
 
-  return (
-    <StandaloneArticlePage
-      slug={slug as string}
-      id={id as string}
-    />
-  );
+  return <StandaloneArticlePage slug={slug as string} />;
 }
 
 export const getStaticPaths = () => ({
@@ -34,14 +29,13 @@ export const getStaticPaths = () => ({
 });
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const { id, slug } = params || {};
+  const { slug } = params || {};
   const client = getApiClient(getApiUrl(), []);
 
   const [article] = await Promise.all([
     client.query({
       query: ArticleDocument,
       variables: {
-        id,
         slug,
       },
     }),
@@ -62,15 +56,12 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     };
   }
 
-  // archived articles live under /arch/<slug> (see HauptstadtURLAdapter)
-  if (
-    article.data?.article &&
-    isArchived(article.data.article.tags) &&
-    article.data.article.slug
-  ) {
+  // only archived articles live under /arch — everything else keeps its
+  // canonical /a/<slug> url
+  if (article.data?.article && !isArchived(article.data.article.tags)) {
     return {
       redirect: {
-        destination: `/arch/${article.data.article.slug}`,
+        destination: `/a/${article.data.article.slug}`,
         permanent: false,
       },
       revalidate: 60,

@@ -21,14 +21,14 @@ export class URLAdapter {
     return `${this.baseURL}/profile/subscription/${subscription.id}`;
   }
 
-  async getArticleUrl(article: Article) {
+  async getArticleUrl(article: Article, tags?: Tag[]) {
     return article.slug ?
         `${this.baseURL}/a/${article.slug}`
       : `${this.baseURL}/a/id/${article.id}`;
   }
 
-  async getArticlePreviewUrl(article: Article) {
-    return `${await this.getArticleUrl(article)}?preview`;
+  async getArticlePreviewUrl(article: Article, tags?: Tag[]) {
+    return `${await this.getArticleUrl(article, tags)}?preview`;
   }
 
   async getPageUrl(page: Page) {
