@@ -13,14 +13,15 @@ import {
   useWebsiteSettingsLazyQuery,
 } from '@wepublish/editor/api';
 import { minimalTheme } from '@wepublish/ui';
-import { memo, PropsWithChildren, useState } from 'react';
+import { memo, PropsWithChildren, useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { MdArrowBack } from 'react-icons/md';
+import { MdArrowBack, MdFileDownload, MdFileUpload } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 import { Message, toaster } from 'rsuite';
 import { z } from 'zod';
 
+import { downloadJson } from './theme/download-json';
 import { PaletteList } from './theme/palette-list';
 import { normalizeTheme, themeSchema } from './theme/schema';
 import { TypographyList } from './theme/typography-list';
@@ -119,6 +120,56 @@ export const WebsiteTheme = memo(() => {
     });
   }, console.warn);
 
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const exportTheme = () => {
+    downloadJson(form.getValues(), 'website-theme.json');
+  };
+
+  const importTheme = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    event.target.value = '';
+
+    if (!file) {
+      return;
+    }
+
+    try {
+      const parsed = JSON.parse(await file.text());
+      const result = themeSchema.safeParse(
+        normalizeTheme(createTheme(minimalTheme, parsed))
+      );
+
+      if (!result.success) {
+        throw result.error;
+      }
+
+      form.reset(result.data);
+
+      toaster.push(
+        <Message
+          type="success"
+          showIcon
+          closable
+          duration={3000}
+        >
+          {t('websiteSettings.theme.importSuccess')}
+        </Message>
+      );
+    } catch {
+      toaster.push(
+        <Message
+          type="error"
+          showIcon
+          closable
+          duration={5000}
+        >
+          {t('websiteSettings.theme.importError')}
+        </Message>
+      );
+    }
+  };
+
   if (loading) {
     return (
       <CircularProgress
@@ -171,7 +222,7 @@ export const WebsiteTheme = memo(() => {
           <TypographyList name={'typography'} />
         </CustomTabPanel>
 
-        <Box>
+        <Box sx={{ display: 'flex', gap: 1 }}>
           <Button
             type="submit"
             variant="contained"
@@ -188,6 +239,32 @@ export const WebsiteTheme = memo(() => {
 
             {t('save')}
           </Button>
+
+          <Button
+            type="button"
+            variant="outlined"
+            startIcon={<MdFileDownload />}
+            onClick={exportTheme}
+          >
+            {t('websiteSettings.theme.exportTheme')}
+          </Button>
+
+          <Button
+            type="button"
+            variant="outlined"
+            startIcon={<MdFileUpload />}
+            onClick={() => fileInputRef.current?.click()}
+          >
+            {t('websiteSettings.theme.importTheme')}
+          </Button>
+
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="application/json"
+            hidden
+            onChange={importTheme}
+          />
         </Box>
       </FormProvider>
     </WebsiteThemeWrapper>
