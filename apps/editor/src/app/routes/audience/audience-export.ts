@@ -235,7 +235,7 @@ export async function exportAudienceStatsAsXlsx({
     cell: stat => {
       const value = column.value(stat);
 
-      if (value === null) {
+      if (value == null) {
         return null;
       }
 
