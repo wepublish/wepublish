@@ -87,6 +87,8 @@ export class ArticleRevision implements HasBlockContent, HasOptionalUserLc {
   @Field({ nullable: true })
   seoTitle?: string;
   @Field({ nullable: true })
+  seoDescription?: string;
+  @Field({ nullable: true })
   socialMediaTitle?: string;
   @Field({ nullable: true })
   socialMediaDescription?: string;

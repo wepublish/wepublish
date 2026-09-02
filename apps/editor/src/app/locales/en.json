@@ -115,7 +115,6 @@
         "invalidImage": "Invalid Image",
         "key": "Key",
         "lead": "Lead",
-        "leadHelpBlock": "Please use an SEO-optimised lead",
         "loading": "Loading ...",
         "loadMore": "Load More",
         "noDataToDisplay": "No data to display",
@@ -142,6 +141,8 @@
         "published": "Published",
         "seoTitle": "SEO Title",
         "seoTitleHelpBlock": "Please use an SEO-optimised title. <2>SEO Guide</2>",
+        "seoDescription": "SEO Description",
+        "seoDescriptionHelpBlock": "Please use an SEO-optimised description",
         "sharedWithPeers": "Shared With Peers",
         "slug": "Slug",
         "slugGuide": "Slug Guide",
@@ -157,7 +158,6 @@
         "status": "{{stateJoin}}",
         "tags": "Tags",
         "title": "Title",
-        "titleHelpBlock": "Please use an SEO-optimised title",
         "totalCharCount": "Total characters count is {{totalCharCount}}",
         "likeCount": "Likes",
         "type": "Type",
@@ -1354,9 +1354,12 @@
         "confirm": "Confirm",
         "createdAt": "{{createdAt, ccc PP p}}",
         "dateExplanationPopOver": "This can be used to reference articles that will be published at a later time. For example, helpful when scheduling social media posts in advance for the next morning.",
-        "description": "SEO Description",
-        "descriptionHelpBlock": "Please use an SEO-optimised description",
+        "description": "Description",
         "enterDescription": "Please enter a SEO description",
+        "seoTitle": "SEO Title",
+        "seoTitleHelpBlock": "Please use an SEO-optimised title",
+        "seoDescription": "SEO Description",
+        "seoDescriptionHelpBlock": "Please use an SEO-optimised description",
         "enterImage": "Please add an image",
         "enterSocialMediaDescription": "Please enter a description for social media",
         "enterSocialMediaTitle": "Please enter a title for social media",
@@ -1383,8 +1386,8 @@
         "socialMediaImage": "Image for Social Media",
         "socialMediaTitle": "Title for Social Media",
         "tags": "Tags",
-        "title": "SEO Title",
-        "titleHelpBlock": "Please use an SEO-optimised title",
+        "title": "Title",
+        "titleHelpBlock": "The title shown on the page",
         "url": "URL",
         "value": "Value"
       }
@@ -1542,6 +1545,7 @@
     "pollAnswer": {
       "answerMissing": "Please, input your answer.",
       "copyVoteUrl": "Copy voting link",
+      "copyVoteUrlHint": "The voting links can now be copied directly in the poll block of the article or page the poll is used in.",
       "deleteBtn": "Delete",
       "deleteModalBody": "Do you want to delete the answer \"{{answer}}\" permanently? You'll lose the poll results.",
       "deleteModalTitle": "Delete?",
@@ -2193,6 +2197,9 @@
       }
     },
     "audienceFilter": {
+      "copyPermalink": "Copy permalink",
+      "permalinkCopied": "Permalink with a fixed date range copied to the clipboard",
+      "permalinkCopyFailed": "Could not copy the permalink",
       "daily": "Daily",
       "monthly": "Monthly",
       "rangePickerPlaceholder": "from - to",
@@ -2342,7 +2349,23 @@
         "validTo": "Valid To",
         "areYouSure": "Are you sure?",
         "areYouSureBody": "The discount code \"{{ discountCode }}\" will be deleted permanently and can not be reversed.",
-        "areYouSureConfirmation": "Delete discount code"
+        "areYouSureConfirmation": "Delete discount code",
+        "usage": "Used",
+        "usageValue": "{{total}} ({{paid}} paid)"
+      },
+      "usage": {
+        "title": "Usages of \"{{ discountCode }}\"",
+        "summary": "{{total}} redemptions, {{paid}} of them paid",
+        "back": "Back to overview",
+        "date": "Date",
+        "mail": "Email",
+        "amount": "Amount",
+        "status": "Status",
+        "paid": "Paid",
+        "open": "Open",
+        "canceled": "Canceled",
+        "subscription": "Subscription",
+        "showSubscription": "Open subscription"
       }
     },
     "goodie": {

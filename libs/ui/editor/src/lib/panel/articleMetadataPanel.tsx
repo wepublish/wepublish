@@ -105,6 +105,7 @@ export interface ArticleMetadata {
   readonly title: string;
   readonly lead: string;
   readonly seoTitle: string;
+  readonly seoDescription: string;
   readonly authors: FullAuthorFragment[];
   readonly tags: string[];
   readonly defaultTags: Pick<Tag, 'id' | 'tag'>[];
@@ -154,6 +155,7 @@ function ArticleMetadataPanel({
     title,
     lead,
     seoTitle,
+    seoDescription,
     slug,
     tags,
     defaultTags,
@@ -237,6 +239,7 @@ function ArticleMetadataPanel({
 
   const preTitleMax = 30;
   const seoTitleMax = 70;
+  const seoDescriptionMax = 156;
   const titleMax = 140;
   const leadMax = 350;
   const socialMediaTitleMax = 100;
@@ -362,7 +365,6 @@ function ArticleMetadataPanel({
               label={t('articleEditor.panels.title')}
               charLimit={titleMax}
               value={title}
-              helpText={t('articleEditor.panels.titleHelpBlock')}
               onChange={title => onChange?.({ ...value, title })}
             />
 
@@ -374,7 +376,6 @@ function ArticleMetadataPanel({
               charLimit={leadMax}
               rows={5}
               value={lead}
-              helpText={t('articleEditor.panels.leadHelpBlock')}
               onChange={lead => onChange?.({ ...value, lead })}
             />
 
@@ -398,6 +399,20 @@ function ArticleMetadataPanel({
                 </Trans>
               }
               onChange={seoTitle => onChange?.({ ...value, seoTitle })}
+            />
+
+            <DeferredTextField
+              controlId="articleSeoDescription"
+              name="seo-description"
+              className="seoDescription"
+              label={t('articleEditor.panels.seoDescription')}
+              charLimit={seoDescriptionMax}
+              rows={5}
+              value={seoDescription}
+              helpText={t('articleEditor.panels.seoDescriptionHelpBlock')}
+              onChange={seoDescription =>
+                onChange?.({ ...value, seoDescription })
+              }
             />
 
             <DeferredTextField
