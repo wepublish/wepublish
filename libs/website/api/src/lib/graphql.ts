@@ -916,6 +916,10 @@ export type DiscountCode = HasMemberPlanLc & {
   memberPlan: MemberPlan;
   memberPlanId: Scalars['String'];
   modifiedAt: Scalars['DateTime'];
+  /** Number of redemptions of this discountCode on paid invoices. */
+  paidUsageCount: Scalars['Int'];
+  /** Number of times this discountCode was redeemed. */
+  usageCount: Scalars['Int'];
   validFrom: Scalars['DateTime'];
   validTo: Scalars['DateTime'];
 };
@@ -1635,6 +1639,7 @@ export type InvoiceConnection = {
 
 export type InvoiceFilter = {
   canceledAt?: InputMaybe<DateFilter>;
+  discountCodeId?: InputMaybe<Scalars['String']>;
   mail?: InputMaybe<Scalars['String']>;
   paidAt?: InputMaybe<DateFilter>;
   subscriptionID?: InputMaybe<Scalars['String']>;

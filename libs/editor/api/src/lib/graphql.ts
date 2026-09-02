@@ -916,6 +916,10 @@ export type DiscountCode = HasMemberPlanLc & {
   memberPlan: MemberPlan;
   memberPlanId: Scalars['String'];
   modifiedAt: Scalars['DateTime'];
+  /** Number of redemptions of this discountCode on paid invoices. */
+  paidUsageCount: Scalars['Int'];
+  /** Number of times this discountCode was redeemed. */
+  usageCount: Scalars['Int'];
   validFrom: Scalars['DateTime'];
   validTo: Scalars['DateTime'];
 };
@@ -1635,6 +1639,7 @@ export type InvoiceConnection = {
 
 export type InvoiceFilter = {
   canceledAt?: InputMaybe<DateFilter>;
+  discountCodeId?: InputMaybe<Scalars['String']>;
   mail?: InputMaybe<Scalars['String']>;
   paidAt?: InputMaybe<DateFilter>;
   subscriptionID?: InputMaybe<Scalars['String']>;
@@ -7808,7 +7813,7 @@ export type DailySubscriptionStatsQueryVariables = Exact<{
 
 export type DailySubscriptionStatsQuery = { __typename?: 'Query', dailySubscriptionStats: Array<{ __typename?: 'DailySubscriptionStats', date: string, totalActiveSubscriptionCount: number, createdSubscriptionCount: number, replacedSubscriptionCount: number, renewedSubscriptionCount: number, deactivatedSubscriptionCount: number, overdueSubscriptionCount: number, endingSubscriptionCount: number, createdSubscriptionUsers: Array<{ __typename?: 'DailySubscriptionStatsUser', subscriptionID?: string | null, id: string, name: string, firstName?: string | null, email: string }>, replacedSubscriptionUsers: Array<{ __typename?: 'DailySubscriptionStatsUser', subscriptionID?: string | null, id: string, name: string, firstName?: string | null, email: string }>, renewedSubscriptionUsers: Array<{ __typename?: 'DailySubscriptionStatsUser', subscriptionID?: string | null, id: string, name: string, firstName?: string | null, email: string }>, deactivatedSubscriptionUsers: Array<{ __typename?: 'DailySubscriptionStatsUser', subscriptionID?: string | null, id: string, name: string, firstName?: string | null, email: string }>, overdueSubscriptionUsers: Array<{ __typename?: 'DailySubscriptionStatsUser', subscriptionID?: string | null, id: string, name: string, firstName?: string | null, email: string }>, endingSubscriptionUsers: Array<{ __typename?: 'DailySubscriptionStatsUser', subscriptionID?: string | null, id: string, name: string, firstName?: string | null, email: string }>, predictedSubscriptionRenewalCount: { __typename?: 'DailyPredictedSubscriptionRenewalCount', high: number, low: number, total: number, perDayHighProbability: number, perDayLowProbability: number }, predictedSubscriptionRenewalUsersHighProbability: Array<{ __typename?: 'DailySubscriptionStatsUser', subscriptionID?: string | null, id: string, name: string, firstName?: string | null, email: string }>, predictedSubscriptionRenewalUsersLowProbability: Array<{ __typename?: 'DailySubscriptionStatsUser', subscriptionID?: string | null, id: string, name: string, firstName?: string | null, email: string }> }> };
 
-export type FullDiscountCodeFragment = { __typename?: 'DiscountCode', id: string, createdAt: string, modifiedAt: string, code: string, discountPercent: number, validFrom: string, validTo: string, memberPlanId: string, memberPlan: { __typename?: 'MemberPlan', id: string, name: string } };
+export type FullDiscountCodeFragment = { __typename?: 'DiscountCode', id: string, createdAt: string, modifiedAt: string, code: string, discountPercent: number, usageCount: number, paidUsageCount: number, validFrom: string, validTo: string, memberPlanId: string, memberPlan: { __typename?: 'MemberPlan', id: string, name: string } };
 
 export type DiscountCodeListQueryVariables = Exact<{
   filter?: InputMaybe<DiscountCodeFilter>;
@@ -7820,14 +7825,14 @@ export type DiscountCodeListQueryVariables = Exact<{
 }>;
 
 
-export type DiscountCodeListQuery = { __typename?: 'Query', discountCodes: { __typename?: 'PaginatedDiscountCodes', totalCount: number, nodes: Array<{ __typename?: 'DiscountCode', id: string, createdAt: string, modifiedAt: string, code: string, discountPercent: number, validFrom: string, validTo: string, memberPlanId: string, memberPlan: { __typename?: 'MemberPlan', id: string, name: string } }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
+export type DiscountCodeListQuery = { __typename?: 'Query', discountCodes: { __typename?: 'PaginatedDiscountCodes', totalCount: number, nodes: Array<{ __typename?: 'DiscountCode', id: string, createdAt: string, modifiedAt: string, code: string, discountPercent: number, usageCount: number, paidUsageCount: number, validFrom: string, validTo: string, memberPlanId: string, memberPlan: { __typename?: 'MemberPlan', id: string, name: string } }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type DiscountCodeQueryVariables = Exact<{
   id: Scalars['String'];
 }>;
 
 
-export type DiscountCodeQuery = { __typename?: 'Query', discountCode: { __typename?: 'DiscountCode', id: string, createdAt: string, modifiedAt: string, code: string, discountPercent: number, validFrom: string, validTo: string, memberPlanId: string, memberPlan: { __typename?: 'MemberPlan', id: string, name: string } } };
+export type DiscountCodeQuery = { __typename?: 'Query', discountCode: { __typename?: 'DiscountCode', id: string, createdAt: string, modifiedAt: string, code: string, discountPercent: number, usageCount: number, paidUsageCount: number, validFrom: string, validTo: string, memberPlanId: string, memberPlan: { __typename?: 'MemberPlan', id: string, name: string } } };
 
 export type CreateDiscountCodeMutationVariables = Exact<{
   code: Scalars['String'];
@@ -7838,7 +7843,7 @@ export type CreateDiscountCodeMutationVariables = Exact<{
 }>;
 
 
-export type CreateDiscountCodeMutation = { __typename?: 'Mutation', createDiscountCode: { __typename?: 'DiscountCode', id: string, createdAt: string, modifiedAt: string, code: string, discountPercent: number, validFrom: string, validTo: string, memberPlanId: string, memberPlan: { __typename?: 'MemberPlan', id: string, name: string } } };
+export type CreateDiscountCodeMutation = { __typename?: 'Mutation', createDiscountCode: { __typename?: 'DiscountCode', id: string, createdAt: string, modifiedAt: string, code: string, discountPercent: number, usageCount: number, paidUsageCount: number, validFrom: string, validTo: string, memberPlanId: string, memberPlan: { __typename?: 'MemberPlan', id: string, name: string } } };
 
 export type UpdateDiscountCodeMutationVariables = Exact<{
   id: Scalars['String'];
@@ -7850,14 +7855,25 @@ export type UpdateDiscountCodeMutationVariables = Exact<{
 }>;
 
 
-export type UpdateDiscountCodeMutation = { __typename?: 'Mutation', updateDiscountCode: { __typename?: 'DiscountCode', id: string, createdAt: string, modifiedAt: string, code: string, discountPercent: number, validFrom: string, validTo: string, memberPlanId: string, memberPlan: { __typename?: 'MemberPlan', id: string, name: string } } };
+export type UpdateDiscountCodeMutation = { __typename?: 'Mutation', updateDiscountCode: { __typename?: 'DiscountCode', id: string, createdAt: string, modifiedAt: string, code: string, discountPercent: number, usageCount: number, paidUsageCount: number, validFrom: string, validTo: string, memberPlanId: string, memberPlan: { __typename?: 'MemberPlan', id: string, name: string } } };
 
 export type DeleteDiscountCodeMutationVariables = Exact<{
   id: Scalars['String'];
 }>;
 
 
-export type DeleteDiscountCodeMutation = { __typename?: 'Mutation', deleteDiscountCode: { __typename?: 'DiscountCode', id: string, createdAt: string, modifiedAt: string, code: string, discountPercent: number, validFrom: string, validTo: string, memberPlanId: string, memberPlan: { __typename?: 'MemberPlan', id: string, name: string } } };
+export type DeleteDiscountCodeMutation = { __typename?: 'Mutation', deleteDiscountCode: { __typename?: 'DiscountCode', id: string, createdAt: string, modifiedAt: string, code: string, discountPercent: number, usageCount: number, paidUsageCount: number, validFrom: string, validTo: string, memberPlanId: string, memberPlan: { __typename?: 'MemberPlan', id: string, name: string } } };
+
+export type DiscountCodeUsagesQueryVariables = Exact<{
+  discountCodeId: Scalars['String'];
+  take?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<InvoiceSort>;
+  order?: InputMaybe<SortOrder>;
+}>;
+
+
+export type DiscountCodeUsagesQuery = { __typename?: 'Query', invoices: { __typename?: 'InvoiceConnection', totalCount: number, nodes: Array<{ __typename?: 'Invoice', id: string, createdAt: string, mail: string, total: number, currency: Currency, paidAt?: string | null, canceledAt?: string | null, subscriptionID?: string | null }> } };
 
 export type FullDocumentFragment = { __typename?: 'Document', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, fileSize: number, mimeType: string, description?: string | null, url: string, thumbnailURL?: string | null };
 
@@ -10887,6 +10903,8 @@ export const FullDiscountCodeFragmentDoc = gql`
   modifiedAt
   code
   discountPercent
+  usageCount
+  paidUsageCount
   validFrom
   validTo
   memberPlanId
@@ -14317,6 +14335,61 @@ export function useDeleteDiscountCodeMutation(baseOptions?: Apollo.MutationHookO
 export type DeleteDiscountCodeMutationHookResult = ReturnType<typeof useDeleteDiscountCodeMutation>;
 export type DeleteDiscountCodeMutationResult = Apollo.MutationResult<DeleteDiscountCodeMutation>;
 export type DeleteDiscountCodeMutationOptions = Apollo.BaseMutationOptions<DeleteDiscountCodeMutation, DeleteDiscountCodeMutationVariables>;
+export const DiscountCodeUsagesDocument = gql`
+    query DiscountCodeUsages($discountCodeId: String!, $take: Int, $skip: Int, $sort: InvoiceSort, $order: SortOrder) {
+  invoices(
+    filter: {discountCodeId: $discountCodeId}
+    take: $take
+    skip: $skip
+    sort: $sort
+    order: $order
+  ) {
+    nodes {
+      id
+      createdAt
+      mail
+      total
+      currency
+      paidAt
+      canceledAt
+      subscriptionID
+    }
+    totalCount
+  }
+}
+    `;
+
+/**
+ * __useDiscountCodeUsagesQuery__
+ *
+ * To run a query within a React component, call `useDiscountCodeUsagesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useDiscountCodeUsagesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useDiscountCodeUsagesQuery({
+ *   variables: {
+ *      discountCodeId: // value for 'discountCodeId'
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
+ *      sort: // value for 'sort'
+ *      order: // value for 'order'
+ *   },
+ * });
+ */
+export function useDiscountCodeUsagesQuery(baseOptions: Apollo.QueryHookOptions<DiscountCodeUsagesQuery, DiscountCodeUsagesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<DiscountCodeUsagesQuery, DiscountCodeUsagesQueryVariables>(DiscountCodeUsagesDocument, options);
+      }
+export function useDiscountCodeUsagesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<DiscountCodeUsagesQuery, DiscountCodeUsagesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<DiscountCodeUsagesQuery, DiscountCodeUsagesQueryVariables>(DiscountCodeUsagesDocument, options);
+        }
+export type DiscountCodeUsagesQueryHookResult = ReturnType<typeof useDiscountCodeUsagesQuery>;
+export type DiscountCodeUsagesLazyQueryHookResult = ReturnType<typeof useDiscountCodeUsagesLazyQuery>;
+export type DiscountCodeUsagesQueryResult = Apollo.QueryResult<DiscountCodeUsagesQuery, DiscountCodeUsagesQueryVariables>;
 export const DocumentStorageUsageDocument = gql`
     query DocumentStorageUsage {
   documentStorageUsage {

@@ -2270,7 +2270,23 @@
         "validTo": "Gültig bis",
         "areYouSure": "Bist du sicher?",
         "areYouSureBody": "Der Rabattcode \"{{ discountCode }}\" wird unwiderruflich gelöscht.",
-        "areYouSureConfirmation": "Rabattcode löschen"
+        "areYouSureConfirmation": "Rabattcode löschen",
+        "usage": "Verwendet",
+        "usageValue": "{{total}} ({{paid}} bezahlt)"
+      },
+      "usage": {
+        "title": "Verwendungen von \"{{ discountCode }}\"",
+        "summary": "{{total}} Einlösungen, davon {{paid}} bezahlt",
+        "back": "Zurück zur Übersicht",
+        "date": "Datum",
+        "mail": "E-Mail",
+        "amount": "Betrag",
+        "status": "Status",
+        "paid": "Bezahlt",
+        "open": "Offen",
+        "canceled": "Storniert",
+        "subscription": "Abo",
+        "showSubscription": "Abo öffnen"
       }
     },
     "goodie": {

@@ -857,6 +857,12 @@ type DiscountCode implements HasMemberPlanLc {
   memberPlan: MemberPlan!
   memberPlanId: String!
   modifiedAt: DateTime!
+
+  """Number of redemptions of this discountCode on paid invoices."""
+  paidUsageCount: Int!
+
+  """Number of times this discountCode was redeemed."""
+  usageCount: Int!
   validFrom: DateTime!
   validTo: DateTime!
 }
@@ -1547,6 +1553,7 @@ type InvoiceConnection {
 
 input InvoiceFilter {
   canceledAt: DateFilter
+  discountCodeId: String
   mail: String
   paidAt: DateFilter
   subscriptionID: String
