@@ -79,6 +79,14 @@ const FlexItemMLeft = styled(Col)`
   margin-left: 10px;
 `;
 
+const SubscriptionTitle = styled.h5`
+  margin: 0;
+`;
+
+const SectionTitle = styled.h6`
+  margin: 0;
+`;
+
 interface UserSubscriptionsProps {
   subscriptions?: UserSubscriptionFragment[] | null;
   userId?: string;
@@ -228,12 +236,12 @@ function UserSubscriptionsList({
           <Row>
             {/* member plan name */}
             <FlexItemAlignSelf span={18}>
-              <h5>
+              <SubscriptionTitle>
                 {t('userSubscriptionList.subscriptionTitle', {
                   memberPlanName: subscription.memberPlan.name,
                   subscriptionId: subscription.id,
                 })}
-              </h5>
+              </SubscriptionTitle>
             </FlexItemAlignSelf>
             {/* edit subscription */}
             <FlexItemAlignRight span={6}>
@@ -250,7 +258,9 @@ function UserSubscriptionsList({
               <Row>
                 {/* subscription details title */}
                 <FlexItemMLeft span={24}>
-                  <h6>{t('userSubscriptionList.aboDetails')}</h6>
+                  <SectionTitle>
+                    {t('userSubscriptionList.aboDetails')}
+                  </SectionTitle>
                 </FlexItemMLeft>
                 <PanelMTop bordered>
                   {/* created at */}
@@ -317,7 +327,9 @@ function UserSubscriptionsList({
               <Row>
                 {/* periods title */}
                 <FlexItemMLeft span={24}>
-                  <h6>{t('userSubscriptionList.periods')}</h6>
+                  <SectionTitle>
+                    {t('userSubscriptionList.periods')}
+                  </SectionTitle>
                 </FlexItemMLeft>
                 {/* iterate periods */}
                 <Periods span={24}>
