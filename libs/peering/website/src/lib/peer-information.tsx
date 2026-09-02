@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { useTranslation } from 'react-i18next';
 import {
   BuilderPeerProps,
   Button,
@@ -65,6 +66,8 @@ export function PeerInformation({
   originUrl,
   className,
 }: BuilderPeerProps) {
+  const { t } = useTranslation();
+
   if (!profile) {
     return;
   }
@@ -101,7 +104,7 @@ export function PeerInformation({
 
       {originUrl && (
         <PeerInformationLink href={originUrl}>
-          Zum Originalartikel
+          {t('article.toOriginal')}
         </PeerInformationLink>
       )}
     </PeerInformationWrapper>

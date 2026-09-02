@@ -25,6 +25,7 @@ import { z } from 'zod';
 import { PageWrapper } from '@wepublish/page/website';
 
 import { getApiUrl } from '../api-url';
+import { useTranslation } from 'react-i18next';
 
 const SearchForm = styled('form')`
   display: grid;
@@ -62,6 +63,7 @@ export const SearchPage = ({
     blocks: { TeaserGrid },
     elements: { IconButton, TextField, Pagination, Alert, H3, H4 },
   } = useWebsiteBuilder();
+  const { t } = useTranslation();
 
   const router = useRouter();
   const { page, q: phraseQuery } = searchPageSchema.parse(
@@ -119,7 +121,7 @@ export const SearchPage = ({
       fullWidth
       className={className}
     >
-      <H3 component="h1">Suche</H3>
+      <H3 component="h1">{t('search.search')}</H3>
 
       <SearchForm
         onSubmit={handleSubmit(({ q }) =>
@@ -137,7 +139,7 @@ export const SearchPage = ({
               type="search"
               autoComplete="search"
               fullWidth
-              placeholder="Suche nach Artikeln und Seiten"
+              placeholder={t('search.searchPlaceholder')}
               {...field}
             />
           )}
@@ -145,13 +147,13 @@ export const SearchPage = ({
 
         <IconButton
           type="submit"
-          aria-label="Suchen"
+          aria-label={t('search.search')}
         >
           <MdSearch size={28} />
         </IconButton>
       </SearchForm>
 
-      {phraseQuery && <H4 component="h2">Suchergebnisse</H4>}
+      {phraseQuery && <H4 component="h2">{t('search.searchResults')}</H4>}
 
       {loading && (
         <CircularProgress
@@ -161,7 +163,7 @@ export const SearchPage = ({
       )}
       {error && <Alert severity="error">{error.message}</Alert>}
       {noResultsFound && (
-        <Alert severity="info">Keine Suchergebnisse gefunden</Alert>
+        <Alert severity="info">{t('search.noResultsFound')}</Alert>
       )}
 
       <TeaserGrid

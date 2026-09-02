@@ -212,9 +212,11 @@ export function SubscriptionListItem({
           )}
 
           <SubscriptionListItemMetaItem>
-            <MdAttachMoney /> Kostet{' '}
-            {formatCurrency(monthlyAmount / 100, currency, locale)}{' '}
-            {extendable ? 'pro Monat' : ''}
+            <MdAttachMoney />
+            {t('subscription.costs', {
+              amount: formatCurrency(monthlyAmount / 100, currency, locale),
+              extendable,
+            })}
           </SubscriptionListItemMetaItem>
 
           <SubscriptionListItemMetaItem>
@@ -266,7 +268,7 @@ export function SubscriptionListItem({
                 onClick={() => setConfirmExtend(true)}
                 disabled={loading}
               >
-                Jetzt verlängern
+                {t('subscription.extendEarly')}
               </Button>
             )}
           </SubscriptionListItemActions>
@@ -300,7 +302,9 @@ export function SubscriptionListItem({
           setConfirmExtend(false);
           await callAction(extend)();
         }}
-        submitText={`Jetzt um ${subscriptionDuration} verlängern`}
+        submitText={t('subscription.extendBy', {
+          subscriptionDuration,
+        })}
       >
         <H5 component="h1">
           {t('subscription.extendEarly', {

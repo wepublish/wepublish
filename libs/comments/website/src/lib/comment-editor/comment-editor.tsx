@@ -21,6 +21,7 @@ import { useMemo, useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { MdClose, MdLogin, MdSend } from 'react-icons/md';
 import { z } from 'zod';
+import { useTranslation } from 'react-i18next';
 
 export const CommentEditorWrapper = styled('form')<{ modalOpen: boolean }>`
   display: grid;
@@ -229,8 +230,9 @@ export const CommentEditor = ({
 }: BuilderCommentEditorProps) => {
   const theme = useTheme();
   const {
-    elements: { TextField, Button, Alert, H3, Link },
+    elements: { TextField, Button, Alert, H3 },
   } = useWebsiteBuilder();
+  const { t } = useTranslation();
   const { hasUser } = useUser();
   const [modalOpen, setModalOpen] = useState(!hasUser);
   const [showInitialModal, setShowInitialModal] = useState(anonymousCanComment);
@@ -430,7 +432,7 @@ export const CommentEditor = ({
             endIcon={<MdSend />}
             disabled={loading}
           >
-            Kommentieren
+            {t('commentEditor.comment')}
           </Button>
 
           <Button
@@ -443,7 +445,7 @@ export const CommentEditor = ({
             variant="text"
             color="secondary"
           >
-            Abbrechen
+            {t('commentEditor.cancel')}
           </Button>
         </CommentEditorActions>
       </CommentEditorWrapper>
@@ -459,7 +461,7 @@ export const CommentEditor = ({
 
           {showInitialModal && (
             <InitialModalWrapper>
-              <H3 css={headingStyles}>Du bist nicht eingeloggt</H3>
+              <H3 css={headingStyles}>{t('commentEditor.notLoggedIn')}</H3>
 
               <InitialModalContent>
                 {anonymousCanComment && (
@@ -468,7 +470,7 @@ export const CommentEditor = ({
                     variant="outlined"
                     css={initialButtonsStyles}
                   >
-                    als gast kommentieren
+                    {t('commentEditor.guestComment')}
                   </Button>
                 )}
 
@@ -476,7 +478,7 @@ export const CommentEditor = ({
                   onClick={handleLoginRegister}
                   css={initialButtonsStyles}
                 >
-                  anmelden/registieren
+                  {t('commentEditor.loginRegister')}
                 </Button>
               </InitialModalContent>
             </InitialModalWrapper>
@@ -489,7 +491,7 @@ export const CommentEditor = ({
                   css={existingAccountsHeadingStyles}
                   gutterBottom={true}
                 >
-                  Login für Leserinnen und Leser
+                  {t('commentEditor.loginForReaders')}
                 </H3>
                 <LoginFormContainer
                   afterLoginCallback={handleAfterLoginCallback}
@@ -502,7 +504,7 @@ export const CommentEditor = ({
                   css={newAccountsHeadingStyles}
                   gutterBottom={true}
                 >
-                  Noch keinen Account?
+                  {t('commentEditor.noAccountYet')}
                 </H3>
                 <Register>
                   <Button
@@ -514,7 +516,9 @@ export const CommentEditor = ({
                       css={iconStyles}
                     />
 
-                    <SignupLink href={signUpUrl}>Jetzt registrieren</SignupLink>
+                    <SignupLink href={signUpUrl}>
+                      {t('commentEditor.registerNow')}
+                    </SignupLink>
                   </Button>
                 </Register>
               </NewAccountsLoginWrapper>

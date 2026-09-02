@@ -5,7 +5,9 @@
     "invoice": "Facture",
     "myAccount": "Mon compte",
     "logout": "Logout",
-    "login": "Login"
+    "login": "Login",
+    "backToProfile": "Retour au profil",
+    "profile": "Profil"
   },
   "paywall": {
     "subscribe": "S'abonner",
@@ -26,6 +28,8 @@
     },
     "continuation": "Après {afterFirstPaymentPeriod}, {formattedAmount} {renewalPeriodL}.",
     "cancellable": "Résiliable à tout moment",
+    "chooseSubscription": "Choisir un abonnement",
+    "choosePaymentMethod": "Choisir le mode de paiement",
     "upgrade": {
       "infoTitle": "Votre mise à niveau",
       "info": "Passez maintenant de votre formule {oldMemberPlan} à la formule {newMemberPlan}. <bold>Votre crédit restant de {discount} de votre formule {oldMemberPlan} sera déduit.</bold> Vous trouverez ci-dessous le montant restant à payer pour passer à la formule {newMemberPlan}.",
@@ -46,7 +50,8 @@
     },
     "discountCode": {
       "discountApplied": "Réduction de {discountPercent} % appliquée",
-      "invalid": "Code de réduction invalide"
+      "invalid": "Code de réduction invalide",
+      "label": "Code de réduction"
     },
     "goodie": {
       "title": "Choisir un cadeau",
@@ -78,12 +83,21 @@
     "cancelConfirmation": "{type, select, Donation {Toutes les factures ouvertes du don seront annulées.} other {L'abonnement ne sera pas renouvelé, mais restera valable jusqu'à sa date d'expiration. Toutes les factures ouvertes de l'abonnement seront annulées.}}",
     "extendEarly": "Prolonger {type, select, Donation {le don} other {l'abonnement}} à l'avance ?",
     "extendEarlyConfirmation": "Nous sommes ravis que vous souhaitiez prolonger votre {type, select, Donation {don} other {abonnement}} de {subscriptionDuration} à l'avance. Continuer ?",
+    "costs": "Coûte {amount} {extendable, select, true {par mois} other {}}",
+    "extendNow": "Prolonger maintenant",
+    "extendBy": "Prolonger maintenant de {subscriptionDuration}",
     "noActiveSubscriptions": "Vous n'avez pas encore d'abonnement actif.",
     "subscribeNow": "S'abonner maintenant.",
     "startsAt": "Terminé le <time>{startsAt}</time>"
   },
+  "article": {
+    "noArticles": "Aucun article disponible",
+    "toOriginal": "Vers l'article original"
+  },
   "invoice": {
+    "invoices": "Factures",
     "noOpenInvoices": "Aucune facture ouverte",
+    "openInvoices": "Factures impayées",
     "unpaid": "Facture impayée",
     "paid": "Facture payée",
     "canceled": "Facture annulée",
@@ -127,7 +141,29 @@
       "setupError": "Erreur lors de la configuration de la 2FA. Veuillez réessayer.",
       "invalidCode": "Code de confirmation invalide. Veuillez réessayer.",
       "setupSuccess": "L'authentification à deux facteurs a été activée avec succès."
-    }
+    },
+    "confirm": "Confirmer",
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "saveSuccess": "Modifications enregistrées avec succès !",
+    "passwordWarning": "Remplissez uniquement si vous souhaitez modifier le mot de passe. Sinon laissez vide.",
+    "pay": "Payer"
+  },
+  "commentEditor": {
+    "comment": "Commenter",
+    "cancel": "Annuler",
+    "guestComment": "Commenter en tant qu'invité",
+    "loginRegister": "Se connecter/S'inscrire",
+    "loginForReaders": "Connexion pour les lecteurs",
+    "noAccountYet": "Pas encore de compte?",
+    "registerNow": "S'inscrire maintenant",
+    "notLoggedIn": "Vous n'êtes pas connecté"
+  },
+  "search": {
+    "search": "Recherche",
+    "searchPlaceholder": "Rechercher des articles et des pages",
+    "searchResults": "Résultats de la recherche",
+    "noResultsFound": "Aucun résultat trouvé"
   },
   "zod": {
     "errors": {

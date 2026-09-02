@@ -227,8 +227,7 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
                     css={passwordNoteStyles(theme)}
                     gutterBottom={false}
                   >
-                    Nur ausfüllen, wenn Sie das Passwort ändern möchten.
-                    Ansonsten leer lassen.
+                    {t('user.passwordChangeWarning')}
                   </Paragraph>
 
                   <TextField
@@ -357,16 +356,14 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
       </PersonalDataInputForm>
 
       {error && <Alert severity="error">{error.message}</Alert>}
-      {success && (
-        <Alert severity="success">Änderungen erfolgreich gespeichert!</Alert>
-      )}
+      {success && <Alert severity="success">{t('user.saveSuccess')}</Alert>}
 
       <Button
         css={buttonStyles}
         disabled={loading}
         type="submit"
       >
-        Speichern
+        {t('user.save')}
       </Button>
     </PersonalDataFormWrapper>
   );

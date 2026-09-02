@@ -5,7 +5,9 @@
     "invoice": "Rechnung",
     "myAccount": "Mein Konto",
     "logout": "Logout",
-    "login": "Login"
+    "login": "Login",
+    "backToProfile": "Zurück zum Profil",
+    "profile": "Profil"
   },
   "paywall": {
     "subscribe": "Abonnent*in werden",
@@ -26,6 +28,8 @@
     },
     "continuation": "Nach {afterFirstPaymentPeriod} {formattedAmount} {renewalPeriodL}.",
     "cancellable": "Jederzeit kündbar",
+    "chooseSubscription": "Abo wählen",
+    "choosePaymentMethod": "Zahlungsmethode wählen",
     "upgrade": {
       "infoTitle": "Dein Upgrade",
       "info": "Mach jetzt ein Upgrade von deinem {oldMemberPlan} auf das {newMemberPlan}. <bold>Dein Restguthaben von {discount} bei deinem {oldMemberPlan} wird Dir dabei angerechnet.</bold> Weiter unten siehst du Deinen noch zu zahlenden Upgrade-Preis für den Wechsel zum {newMemberPlan}.",
@@ -46,7 +50,8 @@
     },
     "discountCode": {
       "discountApplied": "{discountPercent}% Rabatt angewendet",
-      "invalid": "Rabattcode ungültig"
+      "invalid": "Rabattcode ungültig",
+      "label": "Rabattcode"
     },
     "goodie": {
       "title": "Goodie wählen",
@@ -84,6 +89,9 @@
     "unpaid": "{type, select, Donation {Spende} other {Abo}} ist unbezahlt",
     "cancel": "{type, select, Donation {Spende} other {Abo}} kündigen",
     "cancelConfirmation": "{type, select, Donation {Alle offenen Rechnungen zur Spende werden storniert.} other {Das Abo wird nicht mehr verlängert, bleibt aber gültig bis zum Ablaufsdatum. Alle offene Rechnungen des Abos werden storniert.}}",
+    "costs": "Kostet {amount} {extendable, select, true {pro Monat} other {}}",
+    "extendNow": "Jetzt verlängern",
+    "extendBy": "Jetzt um {subscriptionDuration} verlängern",
     "extendEarly": "{type, select, Donation {Spende} other {Abo}} frühzeitig verlängern?",
     "extendEarlyConfirmation": "Wir freuen uns, dass du dein {type, select, Donation {Spende} other {Abo}} frühzeitig um ein {subscriptionDuration} verlängern willst. Weiterfahren?",
     "noActiveSubscriptions": "Du hast noch kein aktives Abo.",
@@ -91,7 +99,9 @@
     "startsAt": "Abgeschlossen am <time>{startsAt}</time>"
   },
   "invoice": {
+    "invoices": "Rechnungen",
     "noOpenInvoices": "Keine offenen Rechnungen",
+    "openInvoices": "Offene Rechnungen",
     "unpaid": "Offene Rechnung",
     "paid": "Bezahlte Rechnung",
     "canceled": "Stornierte Rechnung",
@@ -121,6 +131,12 @@
     "subscriptionsDetail": "{type, select, Donation {Spende} other {Abo}}",
     "viewCancelledSubscriptions": "Gekündigte Abos & Inaktive Spenden anzeigen",
     "subscribeAnother": "Anderes Abo lösen",
+    "confirm": "Bestätigen",
+    "cancel": "Abbrechen",
+    "save": "Speichern",
+    "saveSuccess": "Änderungen erfolgreich gespeichert!",
+    "passwordWarning": "Nur ausfüllen, wenn Sie das Passwort ändern möchten. Ansonsten leer lassen.",
+    "pay": "Bezahlen",
     "totp": {
       "title": "Zwei-Faktor-Authentifizierung",
       "enabled": "Zwei-Faktor-Authentifizierung ist aktiviert.",
@@ -136,6 +152,26 @@
       "invalidCode": "Ungültiger Bestätigungscode. Bitte versuche es erneut.",
       "setupSuccess": "Zwei-Faktor-Authentifizierung wurde erfolgreich aktiviert."
     }
+  },
+  "article": {
+    "noArticles": "Keine Artikel vorhanden",
+    "toOriginal": "Zum Originalartikel"
+  },
+  "commentEditor": {
+    "comment": "Kommentieren",
+    "cancel": "Abbrechen",
+    "guestComment": "Als Gast kommentieren",
+    "loginRegister": "Anmelden/Registrieren",
+    "loginForReaders": "Login für Leserinnen und Leser",
+    "noAccountYet": "Noch keinen Account?",
+    "registerNow": "Jetzt registrieren",
+    "notLoggedIn": "Du bist nicht eingeloggt"
+  },
+  "search": {
+    "search": "Suche",
+    "searchPlaceholder": "Suche nach Artikeln und Seiten",
+    "searchResults": "Suchergebnisse",
+    "noResultsFound": "Keine Suchergebnisse gefunden"
   },
   "zod": {
     "errors": {
