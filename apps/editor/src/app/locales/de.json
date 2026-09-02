@@ -807,6 +807,7 @@
         "providers": "Anbieter",
         "publicationDate": "Publikationsdatum",
         "reset": "Filter zurücksetzen",
+        "slug": "Nach Slug filtern",
         "title": "Nach Titel filtern",
         "includeHiddenArticles": "Ausgeblendete Artikel",
         "includeHiddenPages": "Ausgeblendete Seiten"
@@ -1400,6 +1401,7 @@
         "pending": "Geplant",
         "publicationDate": "Publikationsdatum",
         "published": "Publiziert",
+        "slug": "Slug",
         "states": "Status",
         "title": "Titel",
         "untitled": "Kein Titel",

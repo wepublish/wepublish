@@ -82,6 +82,7 @@ type Field =
   | 'preTitle'
   | 'lead'
   | 'description'
+  | 'slug'
   | 'draft'
   | 'published'
   | 'pending'
@@ -380,6 +381,16 @@ export function ListViewFilters({
             value={filter.description || ''}
             placeholder={t('filterableList.filter.description')}
             onChange={value => updateFilter({ description: value })}
+          />
+        </Group>
+      )}
+
+      {fields.includes('slug') && (
+        <Group style={formInputStyle}>
+          <Input
+            value={filter.slug || ''}
+            placeholder={t('filterableList.filter.slug')}
+            onChange={value => updateFilter({ slug: value })}
           />
         </Group>
       )}
