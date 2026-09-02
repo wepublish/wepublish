@@ -58,7 +58,6 @@ export interface AudienceFilterProps {
   setApiFilter: (data: AudienceApiFilter) => void;
   componentFilter: AudienceComponentFilter;
   setComponentFilter: Dispatch<SetStateAction<AudienceComponentFilter>>;
-  /** Builds a link to the current view whose date range does not roll along. */
   buildPermalink: () => string;
 }
 

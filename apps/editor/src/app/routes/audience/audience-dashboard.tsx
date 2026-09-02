@@ -33,11 +33,6 @@ interface AudienceDashboardProps {
   hideHeader?: boolean;
   hideFilter?: boolean;
   initialDateRange?: DateRangePresetKey;
-  /**
-   * Keep the selection in the URL and in this browser's storage. Only the
-   * dashboard that owns its route should ask for this — an embedded summary
-   * would otherwise write its filter into the address of its host page.
-   */
   persist?: boolean;
 }
 

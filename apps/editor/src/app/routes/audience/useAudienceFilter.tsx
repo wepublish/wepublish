@@ -34,13 +34,7 @@ interface UseAudienceFilterProps {
       memberPlanIds?: InputMaybe<Array<Scalars['String']> | Scalars['String']>;
     }>
   >;
-  /** Which one-click range to start from when there is nothing to restore. */
   initialDateRange?: DateRangePresetKey;
-  /**
-   * Mirror the selection into the URL and into this browser's storage, so it
-   * can be bookmarked, shared and comes back on the next visit. Off for the
-   * summary on the start page, which would otherwise hijack its address.
-   */
   persist?: boolean;
 }
 
@@ -61,7 +55,7 @@ const storeParams = (params: URLSearchParams) => {
       params.toString()
     );
   } catch {
-    // A browser that refuses storage still gets the selection in the URL.
+    return;
   }
 };
 
@@ -73,8 +67,6 @@ export function useAudienceFilter({
   const [searchParams, setSearchParams] = useSearchParams();
   const { pathname } = useLocation();
 
-  // Computed once: a shared link wins over what this browser remembers, and
-  // both win over the defaults.
   const [initialState] = useState<AudienceFilterState>(() => {
     const defaults: AudienceFilterState = {
       resolution: 'daily',
@@ -130,7 +122,6 @@ export function useAudienceFilter({
     }
   );
 
-  // Triggers the initial data load; every later change fetches through the reducer.
   useEffect(() => {
     setAudienceApiFilter({});
   }, [setAudienceApiFilter]);
@@ -161,13 +152,11 @@ export function useAudienceFilter({
 
     const next = mergeAudienceFilterParams(searchParams, params);
 
-    // Comparing before navigating keeps the effect from re-triggering itself.
     if (next.toString() !== searchParams.toString()) {
       setSearchParams(next, { replace: true });
     }
   }, [persist, filterState, searchParams, setSearchParams]);
 
-  /** The current view as a link whose date range stays put instead of rolling along. */
   const buildPermalink = useCallback(() => {
     const params = mergeAudienceFilterParams(
       searchParams,
