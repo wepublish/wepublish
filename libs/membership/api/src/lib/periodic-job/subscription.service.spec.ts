@@ -17,6 +17,7 @@ import {
   registerPaymentMethodModule,
 } from '../testing/module-registrars';
 import { SubscriptionService } from './subscription.service';
+import { RenewalSuccessMailService } from '../renewal-mail/renewal-success-mail.service';
 
 describe('SubscriptionPaymentsService', () => {
   let subscriptionService: SubscriptionService;
@@ -110,6 +111,10 @@ describe('SubscriptionPaymentsService', () => {
         {
           provide: PrismaClient,
           useValue: prismaMock,
+        },
+        {
+          provide: RenewalSuccessMailService,
+          useValue: { onInvoicePaid: jest.fn().mockResolvedValue(undefined) },
         },
       ],
     }).compile();
@@ -560,7 +565,8 @@ describe('SubscriptionPaymentsService', () => {
     };
     const subscriptionService = new SubscriptionService(
       prismaMock as any,
-      paymentsService as any
+      paymentsService as any,
+      { onInvoicePaid: jest.fn().mockResolvedValue(undefined) } as any
     );
 
     await expect(
@@ -610,7 +616,8 @@ describe('SubscriptionPaymentsService', () => {
     };
     const subscriptionService = new SubscriptionService(
       prismaMock as any,
-      paymentsService as any
+      paymentsService as any,
+      { onInvoicePaid: jest.fn().mockResolvedValue(undefined) } as any
     );
 
     await subscriptionService.checkInvoiceState(mockInvoice as any);
@@ -661,7 +668,8 @@ describe('SubscriptionPaymentsService', () => {
     };
     const subscriptionService = new SubscriptionService(
       prismaMock as any,
-      paymentsService as any
+      paymentsService as any,
+      { onInvoicePaid: jest.fn().mockResolvedValue(undefined) } as any
     );
 
     await subscriptionService.checkInvoiceState(mockInvoice as any);
@@ -702,7 +710,8 @@ describe('SubscriptionPaymentsService', () => {
     };
     const subscriptionService = new SubscriptionService(
       prismaMock as any,
-      paymentsService as any
+      paymentsService as any,
+      { onInvoicePaid: jest.fn().mockResolvedValue(undefined) } as any
     );
 
     await subscriptionService.checkInvoiceState(mockInvoice as any);
@@ -750,7 +759,8 @@ describe('SubscriptionPaymentsService', () => {
     };
     const subscriptionService = new SubscriptionService(
       prismaMock as any,
-      paymentsService as any
+      paymentsService as any,
+      { onInvoicePaid: jest.fn().mockResolvedValue(undefined) } as any
     );
 
     await expect(
@@ -762,5 +772,35 @@ describe('SubscriptionPaymentsService', () => {
     expect(updatePaymentWithIntentState).toHaveBeenCalledWith({
       intentState: 'payrexx-state',
     });
+  });
+
+  it('checkInvoiceState notifies that the invoice is paid after checking its payments', async () => {
+    const mockInvoice = {
+      id: 'invoice-1',
+      subscription: {
+        paymentMethod: { paymentProviderID: 'payrexx' },
+        memberPlan: {},
+        user: { paymentProviderCustomers: [] },
+      },
+      items: [],
+      subscriptionPeriods: [],
+    };
+
+    const paymentsService = {
+      findByInvoiceId: jest.fn().mockResolvedValue([]),
+      findPaymentProviderByPaymentMethodeId: jest.fn(),
+    };
+    const renewalSuccessMail = {
+      onInvoicePaid: jest.fn().mockResolvedValue(undefined),
+    };
+    const subscriptionService = new SubscriptionService(
+      prismaMock as any,
+      paymentsService as any,
+      renewalSuccessMail as any
+    );
+
+    await subscriptionService.checkInvoiceState(mockInvoice as any);
+
+    expect(renewalSuccessMail.onInvoicePaid).toHaveBeenCalledWith('invoice-1');
   });
 });

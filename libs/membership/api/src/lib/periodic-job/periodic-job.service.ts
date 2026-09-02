@@ -36,6 +36,7 @@ import { Action } from '../subscription-event-dictionary/subscription-event-dict
 import { SubscriptionService } from './subscription.service';
 import { PeriodicJobRunObject } from './periodic-job.type';
 import { getMaxTake } from '@wepublish/utils/api';
+import { RenewalSuccessMailService } from '../renewal-mail/renewal-success-mail.service';
 
 const FIVE_MINUTES_IN_MS = 5 * 60 * 1000;
 
@@ -56,7 +57,8 @@ export class PeriodicJobService {
     private prismaService: PrismaClient,
     private mailContext: MailContext,
     private subscriptionController: SubscriptionService,
-    private payments: PaymentsService
+    private payments: PaymentsService,
+    private renewalSuccessMail: RenewalSuccessMailService
   ) {}
 
   getJobLog(take: number, skip?: number) {
@@ -427,25 +429,33 @@ export class PeriodicJobService {
       eventsRenewal
     );
 
-    if (mailAction.action) {
-      const user = Object.assign({}, invoiceToCharge.subscription.user);
-      const { subscription, items, subscriptionPeriods, ...invoice } =
-        invoiceToCharge;
-
-      await this.sendTemplateMail(
-        mailAction.action,
-        user,
-        periodicJobRunObject.isRetry,
-        {
-          errorCode: mailAction.errorCode,
-          invoice,
-          subscriptionPeriods,
-          items,
-          subscription,
-        },
-        periodicJobRunObject.date
-      );
+    if (!mailAction.action) {
+      return;
     }
+
+    if (mailAction.action.type === SubscriptionEvent.RENEWAL_SUCCESS) {
+      await this.renewalSuccessMail.onInvoicePaid(invoiceToCharge.id);
+
+      return;
+    }
+
+    const user = Object.assign({}, invoiceToCharge.subscription.user);
+    const { subscription, items, subscriptionPeriods, ...invoice } =
+      invoiceToCharge;
+
+    await this.sendTemplateMail(
+      mailAction.action,
+      user,
+      periodicJobRunObject.isRetry,
+      {
+        errorCode: mailAction.errorCode,
+        invoice,
+        subscriptionPeriods,
+        items,
+        subscription,
+      },
+      periodicJobRunObject.date
+    );
   }
 
   private async checkInvoiceState(

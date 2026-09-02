@@ -12,6 +12,7 @@ import { SubscriptionService } from './subscription.service';
 import { PeriodicJobService } from './periodic-job.service';
 import { PaymentsService } from '@wepublish/payment/api';
 import { MailContext } from '@wepublish/mail/api';
+import { RenewalSuccessMailService } from '../renewal-mail/renewal-success-mail.service';
 
 const createMockPrisma = () => ({
   subscriptionFlow: {
@@ -170,6 +171,10 @@ const createMockPaymentsService = () => ({
   getProviders: jest.fn().mockReturnValue([]),
 });
 
+const createMockRenewalSuccessMail = () => ({
+  onInvoicePaid: jest.fn().mockResolvedValue(undefined),
+});
+
 describe('PeriodicJobService', () => {
   let service: PeriodicJobService;
   let mockPrisma: ReturnType<typeof createMockPrisma>;
@@ -178,12 +183,14 @@ describe('PeriodicJobService', () => {
   >;
   let mockMailContext: ReturnType<typeof createMockMailContext>;
   let mockPaymentsService: ReturnType<typeof createMockPaymentsService>;
+  let mockRenewalSuccessMail: ReturnType<typeof createMockRenewalSuccessMail>;
 
   beforeEach(async () => {
     mockPrisma = createMockPrisma();
     mockSubscriptionController = createMockSubscriptionController();
     mockMailContext = createMockMailContext();
     mockPaymentsService = createMockPaymentsService();
+    mockRenewalSuccessMail = createMockRenewalSuccessMail();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -192,6 +199,10 @@ describe('PeriodicJobService', () => {
         { provide: SubscriptionService, useValue: mockSubscriptionController },
         { provide: MailContext, useValue: mockMailContext },
         { provide: PaymentsService, useValue: mockPaymentsService },
+        {
+          provide: RenewalSuccessMailService,
+          useValue: mockRenewalSuccessMail,
+        },
       ],
     }).compile();
 
@@ -334,6 +345,9 @@ describe('PeriodicJobService', () => {
     expect(
       mockSubscriptionController.deactivateSubscription
     ).not.toHaveBeenCalled();
+
+    expect(mockRenewalSuccessMail.onInvoicePaid).toHaveBeenCalledWith('inv-1');
+    expect(mockMailContext.sendComposedMail).not.toHaveBeenCalled();
   });
 
   it('charge invoice onsession', async () => {

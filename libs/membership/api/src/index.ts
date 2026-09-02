@@ -36,3 +36,5 @@ export * from './lib/discountCode/discountCode.model';
 export * from './lib/discountCode/discountCode.dataloader';
 export * from './lib/discountCode/discountCode.module';
 export * from './lib/discountCode/discountCode.service';
+
+export * from './lib/renewal-mail/renewal-mail.module';

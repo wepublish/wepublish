@@ -504,6 +504,14 @@ model Invoice {
   items                     InvoiceItem[]
   manuallySetAsPaidByUserId String?
   currency                  Currency
+  // When the RENEWAL_SUCCESS mail for this invoice went out. Claimed
+  // atomically so the webhook, the nightly job and the admin path can never
+  // send it twice.
+  renewalSuccessMailSentAt   DateTime? @db.Timestamptz(3)
+
+  // Set when an admin marked the invoice as paid and explicitly asked for no
+  // mail. Blocks every later path from sending one.
+  suppressRenewalSuccessMail Boolean   @default(false)
 
   subscriptionID String?
   subscription   Subscription? @relation(fields: [subscriptionID], references: [id], onDelete: SetNull)

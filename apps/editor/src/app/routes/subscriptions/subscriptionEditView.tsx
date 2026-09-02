@@ -986,6 +986,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                   <InvoiceListPanel
                     subscriptionId={id}
                     invoices={invoices}
+                    periods={data?.subscription?.periods}
                     disabled={!!deactivation}
                     onInvoicePaid={() => reloadSubscription()}
                   />
