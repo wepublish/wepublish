@@ -2345,7 +2345,23 @@
         "validTo": "Valid To",
         "areYouSure": "Are you sure?",
         "areYouSureBody": "The discount code \"{{ discountCode }}\" will be deleted permanently and can not be reversed.",
-        "areYouSureConfirmation": "Delete discount code"
+        "areYouSureConfirmation": "Delete discount code",
+        "usage": "Used",
+        "usageValue": "{{total}} ({{paid}} paid)"
+      },
+      "usage": {
+        "title": "Usages of \"{{ discountCode }}\"",
+        "summary": "{{total}} redemptions, {{paid}} of them paid",
+        "back": "Back to overview",
+        "date": "Date",
+        "mail": "Email",
+        "amount": "Amount",
+        "status": "Status",
+        "paid": "Paid",
+        "open": "Open",
+        "canceled": "Canceled",
+        "subscription": "Subscription",
+        "showSubscription": "Open subscription"
       }
     },
     "goodie": {

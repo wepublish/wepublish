@@ -2209,7 +2209,23 @@
         "validTo": "Valable jusqu'au",
         "areYouSure": "Êtes-vous sûr(e) ?",
         "areYouSureBody": "Le code de réduction \"{{ discountCode }}\" sera définitivement supprimé et cette action est irréversible.",
-        "areYouSureConfirmation": "Supprimer le code de réduction"
+        "areYouSureConfirmation": "Supprimer le code de réduction",
+        "usage": "Utilisé",
+        "usageValue": "{{total}} ({{paid}} payé(s))"
+      },
+      "usage": {
+        "title": "Utilisations de \"{{ discountCode }}\"",
+        "summary": "{{total}} utilisations, dont {{paid}} payée(s)",
+        "back": "Retour à l'aperçu",
+        "date": "Date",
+        "mail": "E-mail",
+        "amount": "Montant",
+        "status": "Statut",
+        "paid": "Payé",
+        "open": "Ouvert",
+        "canceled": "Annulé",
+        "subscription": "Abonnement",
+        "showSubscription": "Ouvrir l'abonnement"
       }
     },
     "goodie": {
