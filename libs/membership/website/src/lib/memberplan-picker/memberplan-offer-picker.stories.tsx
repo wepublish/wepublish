@@ -1,5 +1,5 @@
 import { action } from 'storybook/actions';
-import { Meta, StoryObj } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/nextjs-vite';
 import {
   FullMemberPlanFragment,
   PaymentPeriodicity,
