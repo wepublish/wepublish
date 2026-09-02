@@ -14,6 +14,7 @@ const InputGroup = styled(RInputGroup)`
 const CharCount = styled.label`
   float: right;
   margin-left: 8px;
+  font-size: 0.875em;
   color: var(--rs-text-secondary, #8e8e93);
 `;
 
