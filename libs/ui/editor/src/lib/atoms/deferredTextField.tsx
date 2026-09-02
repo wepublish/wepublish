@@ -13,6 +13,8 @@ const InputGroup = styled(RInputGroup)`
 
 const CharCount = styled.label`
   float: right;
+  margin-left: 8px;
+  color: var(--rs-text-secondary, #8e8e93);
 `;
 
 const CharCountWarning = styled.label`
