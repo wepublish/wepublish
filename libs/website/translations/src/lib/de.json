@@ -1,6 +1,11 @@
 {
   "navbar": {
-    "subscribe": "Member werden"
+    "subscribe": "Member werden",
+    "unpaid": "Offene",
+    "invoice": "Rechnung",
+    "myAccount": "Mein Konto",
+    "logout": "Logout",
+    "login": "Login"
   },
   "paywall": {
     "subscribe": "Abonnent*in werden",
@@ -84,6 +89,22 @@
     "noActiveSubscriptions": "Du hast noch kein aktives Abo.",
     "subscribeNow": "Jetzt ein Abo lösen.",
     "startsAt": "Abgeschlossen am <time>{startsAt}</time>"
+  },
+  "invoice": {
+    "noOpenInvoices": "Keine offenen Rechnungen",
+    "unpaid": "Offene Rechnung",
+    "paid": "Bezahlte Rechnung",
+    "canceled": "Stornierte Rechnung",
+    "number": "Rechnungs-Nr",
+    "completedAt": "Abgeschlossen am",
+    "dueAt": "Fällig am",
+    "amount": "Betrag von",
+    "paidAt": "Bezahlt am",
+    "canceledAt": "Storniert am",
+    "sepaWarning": "Die Rechnung wird automatisch per Lastschriftverfahren beglichen. Dies kann einige Tage in Anspruch nehmen.",
+    "bexioWarning": "Du erhältst eine PDF-Rechnung per E-Mail zugeschickt.",
+    "payrexxWarning": "Wir haben vor einiger Zeit das Membersystem angepasst und dein Abo ist veraltet. Es wird automatisch angepasst wenn du auf \"Jetzt Bezahlen\" drückst.",
+    "payNow": "Jetzt Bezahlen"
   },
   "user": {
     "changeEmailRequest": "Klicke hier um deine Email zu ändern",

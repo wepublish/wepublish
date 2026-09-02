@@ -1,6 +1,11 @@
 {
   "navbar": {
-    "subscribe": "Devenir membre"
+    "subscribe": "Devenir membre",
+    "unpaid": "Impayé",
+    "invoice": "Facture",
+    "myAccount": "Mon compte",
+    "logout": "Logout",
+    "login": "Login"
   },
   "paywall": {
     "subscribe": "S'abonner",
@@ -76,6 +81,22 @@
     "noActiveSubscriptions": "Vous n'avez pas encore d'abonnement actif.",
     "subscribeNow": "S'abonner maintenant.",
     "startsAt": "Terminé le <time>{startsAt}</time>"
+  },
+  "invoice": {
+    "noOpenInvoices": "Aucune facture ouverte",
+    "unpaid": "Facture impayée",
+    "paid": "Facture payée",
+    "canceled": "Facture annulée",
+    "number": "N° de facture",
+    "completedAt": "Terminé le",
+    "dueAt": "Échéance le",
+    "amount": "Montant de",
+    "paidAt": "Payé le",
+    "canceledAt": "Annulé le",
+    "sepaWarning": "La facture sera automatiquement réglée par prélèvement automatique. Cela peut prendre quelques jours.",
+    "bexioWarning": "Vous recevrez une facture PDF par e-mail.",
+    "payrexxWarning": "Nous avons récemment mis à jour le système des membres et votre abonnement est obsolète. Il sera automatiquement mis à jour lorsque vous cliquerez sur \"Payer maintenant\".",
+    "payNow": "Payer maintenant"
   },
   "user": {
     "changeEmailRequest": "Cliquez ici pour modifier votre adresse e-mail",
