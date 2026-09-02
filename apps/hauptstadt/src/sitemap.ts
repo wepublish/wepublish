@@ -13,7 +13,7 @@ import {
 import { NextApiRequest } from 'next';
 import process from 'node:process';
 
-import { isArchived } from './archiviert';
+import { isArchived, isNachtleben } from './archiviert';
 
 export const getSitemap = async (req: NextApiRequest): Promise<string> => {
   const siteUrl = process.env.WEBSITE_URL || '';
@@ -45,10 +45,12 @@ export const getSitemap = async (req: NextApiRequest): Promise<string> => {
     }),
   ]);
 
-  // archived articles (/arch/…) are disallowed in robots.txt and must not
-  // be advertised in the sitemap
+  // archived articles (/archive/…) are disallowed in robots.txt and nachtleben
+  // article urls permanently redirect to /ausgang-in-bern — neither belongs
+  // in the sitemap
   const articles = (articleData.articles.nodes ?? []).filter(
-    (article: { tags: { tag?: string | null }[] }) => !isArchived(article.tags)
+    (article: { tags: { tag?: string | null }[] }) =>
+      !isArchived(article.tags) && !isNachtleben(article.tags)
   );
 
   return generate(articles, pageData.pages.nodes ?? [], [
@@ -57,5 +59,6 @@ export const getSitemap = async (req: NextApiRequest): Promise<string> => {
     `${siteUrl}/login`,
     `${siteUrl}/signup`,
     `${siteUrl}/mitmachen`,
+    `${siteUrl}/ausgang-in-bern`,
   ]);
 };

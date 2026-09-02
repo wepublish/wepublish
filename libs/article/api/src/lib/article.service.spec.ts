@@ -154,8 +154,8 @@ describe('ArticleService', () => {
       });
     });
 
-    it('should include only articles having every one of the tagsAll tags', () => {
-      expect(createArticleFilter({ tagsAll: ['tag-1', 'tag-2'] })).toEqual({
+    it('should include only articles having every one of the allTagsIn tags', () => {
+      expect(createArticleFilter({ allTagsIn: ['tag-1', 'tag-2'] })).toEqual({
         AND: [
           {
             AND: [

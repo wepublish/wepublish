@@ -279,16 +279,12 @@ export class ArticleResolver {
 
   @ResolveField(() => String, { nullable: true })
   async url(@Parent() parent: PArticle) {
-    const tags = await this.tagDataLoader.load(parent.id);
-
-    return this.urlAdapter.getArticleUrl(parent, tags ?? undefined);
+    return this.urlAdapter.getArticleUrl(parent);
   }
 
   @ResolveField(() => String, { nullable: true })
   async previewUrl(@Parent() parent: PArticle) {
-    const tags = await this.tagDataLoader.load(parent.id);
-
-    return this.urlAdapter.getArticlePreviewUrl(parent, tags ?? undefined);
+    return this.urlAdapter.getArticlePreviewUrl(parent);
   }
 
   @ResolveField(() => [Tag])

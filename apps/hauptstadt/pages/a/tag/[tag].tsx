@@ -167,7 +167,7 @@ export const getStaticProps = (async ({ params }) => {
 
   const articleFilter: ArticleFilter = {
     ...(requireIds.length ?
-      { tagsAll: [pageTag.id, ...requireIds] }
+      { allTagsIn: [pageTag.id, ...requireIds] }
     : { tags: [pageTag.id] }),
     ...(excludeIds.length ? { tagsNotIn: excludeIds } : {}),
   };

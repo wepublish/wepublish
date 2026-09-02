@@ -18,7 +18,7 @@ import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';
 
 import { TAG_ARCHIVIERT, TAG_NACHTLEBEN } from '../src/archiviert';
-import { StandaloneArticlePage } from '../src/components/standalone-article-page';
+import { StandaloneArticlePage } from './a/[slug]';
 
 type AusgangInBernProps = {
   articleId: string | null;

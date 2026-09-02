@@ -560,8 +560,8 @@ import { readConfig } from '../readConfig';
     CrowdfundingModule,
     ImportPeerArticleModule,
     URLAdapterModule.registerAsync({
-      imports: [ConfigModule],
-      useFactory: async (config: ConfigService) => {
+      imports: [ConfigModule, PrismaModule],
+      useFactory: async (config: ConfigService, prisma: PrismaClient) => {
         const configFile = await readConfig(
           config.getOrThrow('CONFIG_FILE_PATH')
         );
@@ -569,7 +569,8 @@ import { readConfig } from '../readConfig';
         let urlAdapter: URLAdapter;
         if (configFile.general.urlAdapter === 'hauptstadt') {
           urlAdapter = new HauptstadtURLAdapter(
-            config.getOrThrow('WEBSITE_URL')
+            config.getOrThrow('WEBSITE_URL'),
+            prisma
           );
         } else if (configFile.general.urlAdapter === 'wepublish-site') {
           urlAdapter = new WepublishSiteURLAdapter();
@@ -579,7 +580,7 @@ import { readConfig } from '../readConfig';
 
         return urlAdapter;
       },
-      inject: [ConfigService],
+      inject: [ConfigService, PrismaClient],
     }),
     MediaAdapterModule.registerAsync({
       imports: [ConfigModule],

@@ -291,7 +291,7 @@ export class ArticleFilter {
     nullable: true,
     description: 'Only include articles that have every one of these tags',
   })
-  tagsAll?: string[];
+  allTagsIn?: string[];
   @Field(() => [String], { nullable: true })
   tagsNotIn?: string[];
 

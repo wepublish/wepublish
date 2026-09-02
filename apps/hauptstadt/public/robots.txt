@@ -16,7 +16,7 @@ Disallow: /*?from=
 
 # Archivierte Nachtleben-Artikel und deren Übersicht nicht crawlen
 User-agent: *
-Disallow: /arch/
+Disallow: /archive/
 Disallow: /a/tag/nachtleben
 Disallow: /a/tag/Nachtleben
 

@@ -995,12 +995,12 @@ const createTagsFilter = (
   return {};
 };
 
-const createTagsAllFilter = (
+const createAllTagsInFilter = (
   filter: Partial<ArticleFilter>
 ): Prisma.ArticleWhereInput => {
-  if (filter?.tagsAll?.length) {
+  if (filter?.allTagsIn?.length) {
     return {
-      AND: filter.tagsAll.map(tagId => ({
+      AND: filter.allTagsIn.map(tagId => ({
         tags: {
           some: {
             tagId,
@@ -1131,7 +1131,7 @@ export const createArticleFilter = (
     createLeadFilter(filter),
     createSharedFilter(filter),
     createTagsFilter(filter),
-    createTagsAllFilter(filter),
+    createAllTagsInFilter(filter),
     createTagsNotInFilter(filter),
     createAuthorFilter(filter),
     createHiddenFilter(filter),

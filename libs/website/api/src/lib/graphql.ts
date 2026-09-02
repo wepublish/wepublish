@@ -95,6 +95,8 @@ export type ArticleCreatedAction = BaseAction & HasArticleLc & {
 };
 
 export type ArticleFilter = {
+  /** Only include articles that have every one of these tags */
+  allTagsIn?: InputMaybe<Array<Scalars['String']>>;
   authors?: InputMaybe<Array<Scalars['String']>>;
   body?: InputMaybe<Scalars['String']>;
   draft?: InputMaybe<Scalars['Boolean']>;
@@ -110,8 +112,6 @@ export type ArticleFilter = {
   published?: InputMaybe<Scalars['Boolean']>;
   shared?: InputMaybe<Scalars['Boolean']>;
   tags?: InputMaybe<Array<Scalars['String']>>;
-  /** Only include articles that have every one of these tags */
-  tagsAll?: InputMaybe<Array<Scalars['String']>>;
   tagsNotIn?: InputMaybe<Array<Scalars['String']>>;
   title?: InputMaybe<Scalars['String']>;
 };
@@ -4563,6 +4563,8 @@ export type PeerArticle = HasOptionalPeerLc & {
 };
 
 export type PeerArticleFilter = {
+  /** Only include articles that have every one of these tags */
+  allTagsIn?: InputMaybe<Array<Scalars['String']>>;
   authors?: InputMaybe<Array<Scalars['String']>>;
   body?: InputMaybe<Scalars['String']>;
   excludeIds?: InputMaybe<Array<Scalars['String']>>;
