@@ -125,6 +125,7 @@ import {
   MdAutorenew,
   MdBadge,
   MdBookOnline,
+  MdBusiness,
   MdCardGiftcard,
   MdChat,
   MdCountertops,
@@ -138,13 +139,13 @@ import {
   MdGroup,
   MdGroups,
   MdHub,
+  MdLocalPostOffice,
   MdLocationPin,
   MdLogout,
   MdMail,
   MdMoney,
   MdMultilineChart,
   MdOutgoingMail,
-  MdSend,
   MdOutlineGridView,
   MdPayment,
   MdPersonAddAlt1,
@@ -153,6 +154,7 @@ import {
   MdPower,
   MdQueryStats,
   MdSell,
+  MdSend,
   MdSettings,
   MdSettingsInputAntenna,
   MdSignpost,
@@ -955,6 +957,34 @@ export function Base({ children }: BaseProps) {
                         icon={<MdMail />}
                       >
                         {t('navbar.mailTemplates')}
+                      </Nav.Item>
+                    </PermissionControl>
+
+                    {/* SENT LETTERS */}
+                    <PermissionControl
+                      qualifyingPermissions={[CanGetMailTemplates.id]}
+                    >
+                      <Nav.Item
+                        as={NavLink}
+                        href="/letterlog"
+                        active={path === 'letterlog'}
+                        icon={<MdLocalPostOffice />}
+                      >
+                        {t('navbar.letterLog')}
+                      </Nav.Item>
+                    </PermissionControl>
+
+                    {/* ORGANISATION */}
+                    <PermissionControl
+                      qualifyingPermissions={[CanGetSettings.id]}
+                    >
+                      <Nav.Item
+                        as={NavLink}
+                        href="/organisationsettings"
+                        active={path === 'organisationsettings'}
+                        icon={<MdBusiness />}
+                      >
+                        {t('navbar.organisationSettings')}
                       </Nav.Item>
                     </PermissionControl>
 

@@ -1,0 +1,33 @@
+query LetterLogs($take: Int, $skip: Int, $state: String) {
+  letterLogs(take: $take, skip: $skip, state: $state) {
+    ...LetterLog
+  }
+}
+
+mutation DispatchLetter($id: String!) {
+  dispatchLetter(id: $id) {
+    ...LetterLog
+  }
+}
+
+mutation CancelLetter($id: String!) {
+  cancelLetter(id: $id) {
+    ...LetterLog
+  }
+}
+
+fragment LetterLog on LetterLogModel {
+  id
+  createdAt
+  sentDate
+  state
+  type
+  recipientID
+  letterTemplateId
+  invoiceId
+  providerLetterID
+  pageCount
+  priceCurrency
+  trackingNumber
+  error
+}

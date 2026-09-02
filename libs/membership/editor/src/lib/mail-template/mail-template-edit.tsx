@@ -1,6 +1,8 @@
 import { Typography } from '@mui/material';
 import { useApolloClient } from '@apollo/client';
 import {
+  MessageChannel,
+  usePreviewLetterLazyQuery,
   MailTemplateContext,
   MailTemplatePreviewDocument,
   MailTemplatePreviewInput,
@@ -23,6 +25,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import {
   Button,
   ButtonGroup,
+  CheckboxGroup,
+  Checkbox,
   Form,
   Input,
   InputNumber,
@@ -112,6 +116,8 @@ function MailTemplateEdit() {
   const [previewHtml, setPreviewHtml] = useState<string | null>(null);
   const [previewSubject, setPreviewSubject] = useState('');
 
+  const [loadLetterPreview, { loading: letterPreviewLoading }] =
+    usePreviewLetterLazyQuery({ fetchPolicy: 'network-only' });
   const [loadTemplate] = useMailTemplateByIdLazyQuery({
     fetchPolicy: 'network-only',
   });
@@ -125,6 +131,12 @@ function MailTemplateEdit() {
   const [previewLoading, setPreviewLoading] = useState(false);
   const [previewError, setPreviewError] = useState<string | null>(null);
   const [previewOpen, setPreviewOpen] = useState(false);
+  const [channels, setChannels] = useState<MessageChannel[]>([
+    MessageChannel.Mail,
+  ]);
+  const [letterPdf, setLetterPdf] = useState<string | null>(null);
+  const [letterOpen, setLetterOpen] = useState(false);
+  const [letterMissing, setLetterMissing] = useState<string[]>([]);
   const [sendTest, { loading: testLoading }] = useSendTestMailTemplateMutation(
     DEFAULT_MUTATION_OPTIONS(t)
   );
@@ -145,6 +157,9 @@ function MailTemplateEdit() {
       setSubject(template.subject);
       setTextContent(template.textContent ?? '');
       setContextId(template.context ?? null);
+      setChannels(
+        template.channels?.length ? template.channels : [MessageChannel.Mail]
+      );
       htmlRef.current = template.htmlContent || createEmptyEmailHtml();
       const shell = readShellSettings(htmlRef.current);
       setBackgroundColor(shell.backgroundColor);
@@ -229,6 +244,7 @@ function MailTemplateEdit() {
     // The text fallback is always regenerated from the HTML on save.
     textContent: deriveTextFromHtml(htmlRef.current),
     context: contextId,
+    channels,
   });
 
   const save = async (close: boolean) => {
@@ -322,6 +338,27 @@ function MailTemplateEdit() {
     toaster.push(
       <Message type="success">{t('mailTemplates.edit.testSent')}</Message>
     );
+  };
+
+  const doLetterPreview = async () => {
+    const { data } = await loadLetterPreview({
+      variables: {
+        input: {
+          mailTemplateId: id,
+          htmlContent: htmlRef.current,
+          context: contextId,
+          subscriptionId,
+        },
+      },
+    });
+
+    if (!data?.previewLetter) {
+      return;
+    }
+
+    setLetterPdf(data.previewLetter.pdf);
+    setLetterMissing(data.previewLetter.missingPlaceholders);
+    setLetterOpen(true);
   };
 
   const contextOptions = MAIL_PLACEHOLDER_CONTEXTS.map(c => ({
@@ -438,6 +475,32 @@ function MailTemplateEdit() {
                 </Typography>
               </Form.Group>
               <Form.Group style={{ flex: 1, minWidth: 200, marginBottom: 0 }}>
+                <Form.ControlLabel>
+                  {t('mailTemplates.edit.channels')}
+                </Form.ControlLabel>
+                <CheckboxGroup
+                  inline
+                  value={channels}
+                  onChange={value =>
+                    setChannels(value as unknown as MessageChannel[])
+                  }
+                >
+                  <Checkbox value={MessageChannel.Mail}>
+                    {t('mailTemplates.edit.channelMail')}
+                  </Checkbox>
+                  <Checkbox value={MessageChannel.Letter}>
+                    {t('mailTemplates.edit.channelLetter')}
+                  </Checkbox>
+                </CheckboxGroup>
+                <Typography
+                  variant="caption"
+                  display="block"
+                  style={{ marginTop: 4, color: '#8e8e93' }}
+                >
+                  {t('mailTemplates.edit.channelsHint')}
+                </Typography>
+              </Form.Group>
+              <Form.Group style={{ flex: 1, minWidth: 200, marginBottom: 0 }}>
                 <Form.ControlLabel>{t('mailTemplates.name')}</Form.ControlLabel>
                 <Input
                   value={name}
@@ -516,6 +579,15 @@ function MailTemplateEdit() {
               >
                 {t('mailTemplates.edit.sendTest')}
               </Button>
+              {channels.includes(MessageChannel.Letter) && (
+                <Button
+                  appearance="default"
+                  loading={letterPreviewLoading}
+                  onClick={doLetterPreview}
+                >
+                  {t('mailTemplates.edit.previewLetter')}
+                </Button>
+              )}
             </Stack>
           </div>
 
@@ -704,6 +776,38 @@ function MailTemplateEdit() {
         </Modal.Header>
         <Modal.Body style={{ height: '85vh' }}>
           <MailPreview html={previewHtml ?? ''} />
+        </Modal.Body>
+      </Modal>
+
+      <Modal
+        open={letterOpen}
+        onClose={() => setLetterOpen(false)}
+        size="full"
+      >
+        <Modal.Header>
+          <Modal.Title>{t('mailTemplates.edit.previewLetter')}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body style={{ height: '85vh' }}>
+          {letterMissing.length > 0 && (
+            <Message
+              type="warning"
+              showIcon
+              style={{ marginBottom: 12 }}
+            >
+              {t('mailTemplates.edit.letterMissingPlaceholders', {
+                placeholders: letterMissing.join(', '),
+              })}
+            </Message>
+          )}
+          {letterPdf && (
+            <object
+              data={`data:application/pdf;base64,${letterPdf}`}
+              type="application/pdf"
+              width="100%"
+              height="95%"
+              aria-label={t('mailTemplates.edit.previewLetter')}
+            />
+          )}
         </Modal.Body>
       </Modal>
     </div>

@@ -1023,7 +1023,13 @@
         "textContentReadonlyHint": "Automatically generated from the content. Edit the visual or HTML tab to change it.",
         "background": "Background",
         "contentWidth": "Width (px)",
-        "purposeHint": "The purpose defines in which situation this template is sent. It determines which data — and therefore which placeholders — are available: only an invoice template knows the invoice amount, for example."
+        "purposeHint": "The purpose defines in which situation this template is sent. It determines which data — and therefore which placeholders — are available: only an invoice template knows the invoice amount, for example.",
+        "channels": "Channels",
+        "channelMail": "Email",
+        "channelLetter": "Letter",
+        "channelsHint": "Where this template may be used. A letter has no clickable links — a separate template is usually worth it.",
+        "previewLetter": "Letter preview (PDF)",
+        "letterMissingPlaceholders": "These placeholders stay empty: {{placeholders}}"
       },
       "editor": {
         "undo": "Undo",
@@ -1299,7 +1305,9 @@
       "apps": "Apps",
       "mailSend": "Send email",
       "mailLog": "Sent emails",
-      "communication": "Communication"
+      "communication": "Communication",
+      "letterLog": "Sent letters",
+      "organisationSettings": "Organisation"
     },
     "navigation": {
       "overview": {
@@ -3113,6 +3121,85 @@
         "sentAt": "Sent at",
         "attempts": "Attempts",
         "empty": "No entries for this filter."
+      }
+    },
+    "letterLog": {
+      "title": "Sent letters",
+      "created": "Created",
+      "state": "State",
+      "states": {
+        "pending": "In progress",
+        "submitted": "Submitted",
+        "accepted": "Accepted",
+        "dispatched": "Dispatched",
+        "delivered": "Delivered",
+        "undeliverable": "Undeliverable",
+        "rejected": "Rejected",
+        "canceled": "Canceled"
+      },
+      "allStates": "All states",
+      "recipient": "Recipient",
+      "pages": "Pages",
+      "tracking": "Tracking number",
+      "actions": "Actions",
+      "dispatch": "Send",
+      "cancel": "Cancel"
+    },
+    "organisationSettings": {
+      "title": "Organisation",
+      "hint": "These details are the sender on every letter and the creditor on every QR bill.",
+      "sender": "Sender",
+      "qrBill": "QR bill",
+      "name": "Name",
+      "street": "Street",
+      "number": "Number",
+      "zip": "Zip code",
+      "city": "City",
+      "country": "Country (ISO, e.g. CH)",
+      "iban": "IBAN",
+      "ibanHint": "A QR reference needs a QR-IBAN, a creditor reference a normal one.",
+      "referenceType": "Reference type",
+      "referenceTypes": {
+        "QRR": "QR reference (QRR)",
+        "SCOR": "Creditor reference (SCOR)",
+        "NON": "Without reference"
+      },
+      "referenceTypeHint": "The reference links an incoming payment to its invoice. Without one it has to be matched by hand.",
+      "save": "Save",
+      "saved": "Settings saved"
+    },
+    "letterPrint": {
+      "title": "Print and delivery options",
+      "sendAsMail": "Send as email",
+      "sendAsLetter": "Send as letter",
+      "close": "Close",
+      "addressPosition": "Address window position",
+      "addressPositions": {
+        "LEFT": "Left",
+        "RIGHT": "Right"
+      },
+      "deliveryProduct": "Delivery",
+      "deliveryProducts": {
+        "CHEAP": "Cheap (B-Post)",
+        "FAST": "Fast (A-Post)",
+        "PREMIUM": "Premium",
+        "REGISTERED": "Registered",
+        "BULK": "Bulk"
+      },
+      "printMode": "Print",
+      "printModes": {
+        "SIMPLEX": "Single sided",
+        "DUPLEX": "Double sided"
+      },
+      "printSpectrum": "Colour",
+      "printSpectra": {
+        "GRAYSCALE": "Grayscale",
+        "COLOR": "Colour"
+      },
+      "qrBill": "QR bill",
+      "qrBills": {
+        "NONE": "None",
+        "LAST_PAGE": "On the last page"
       }
     }
   }

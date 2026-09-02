@@ -1,6 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import {
   Currency,
+  LetterAddressPosition,
+  LetterDeliveryProduct,
+  LetterPrintMode,
+  LetterPrintSpectrum,
+  LetterQrBill,
+  MessageChannel,
   PaymentPeriodicity,
   SubscriptionEvent,
   User,
@@ -9,6 +15,7 @@ import { PrismaClient } from '@prisma/client';
 import { add, startOfDay, sub } from 'date-fns';
 import { Action } from '../subscription-event-dictionary/subscription-event-dictionary.type';
 import { SubscriptionService } from './subscription.service';
+import { LetterJobService } from '../letter-send/letter-job.service';
 import { PeriodicJobService } from './periodic-job.service';
 import { PaymentsService } from '@wepublish/payment/api';
 import { MailContext } from '@wepublish/mail/api';
@@ -170,6 +177,18 @@ const createMockPaymentsService = () => ({
   getProviders: jest.fn().mockReturnValue([]),
 });
 
+const mockLetterJobService = {
+  enqueue: jest.fn(),
+};
+
+const PRINT = {
+  addressPosition: LetterAddressPosition.LEFT,
+  deliveryProduct: LetterDeliveryProduct.CHEAP,
+  printMode: LetterPrintMode.SIMPLEX,
+  printSpectrum: LetterPrintSpectrum.GRAYSCALE,
+  qrBill: LetterQrBill.NONE,
+};
+
 describe('PeriodicJobService', () => {
   let service: PeriodicJobService;
   let mockPrisma: ReturnType<typeof createMockPrisma>;
@@ -192,6 +211,7 @@ describe('PeriodicJobService', () => {
         { provide: SubscriptionService, useValue: mockSubscriptionController },
         { provide: MailContext, useValue: mockMailContext },
         { provide: PaymentsService, useValue: mockPaymentsService },
+        { provide: LetterJobService, useValue: mockLetterJobService },
       ],
     }).compile();
 
@@ -322,6 +342,8 @@ describe('PeriodicJobService', () => {
         type: SubscriptionEvent.RENEWAL_SUCCESS,
         daysAwayFromEnding: null,
         mailTemplateId: 'default-RENEWAL_SUCCESS',
+        channels: [MessageChannel.MAIL],
+        print: PRINT,
       },
     });
 
@@ -617,6 +639,8 @@ describe('PeriodicJobService', () => {
       type: SubscriptionEvent.INVOICE_CREATION,
       daysAwayFromEnding: 10,
       mailTemplateId: 'template',
+      channels: [MessageChannel.MAIL],
+      print: PRINT,
     };
     await service['sendTemplateMail'](action, user, true, {}, new Date());
     expect(mockMailContext.sendComposedMail).toHaveBeenCalledWith(
@@ -635,6 +659,8 @@ describe('PeriodicJobService', () => {
       type: SubscriptionEvent.INVOICE_CREATION,
       daysAwayFromEnding: 10,
       mailTemplateId: null,
+      channels: [MessageChannel.MAIL],
+      print: PRINT,
     };
 
     await service['sendTemplateMail'](action, user, true, {}, new Date());
@@ -648,6 +674,8 @@ describe('PeriodicJobService', () => {
       type: SubscriptionEvent.INVOICE_CREATION,
       daysAwayFromEnding: 10,
       mailTemplateId: 'template',
+      channels: [MessageChannel.MAIL],
+      print: PRINT,
     };
     await service['sendTemplateMail'](action, user, true, {}, new Date());
   });

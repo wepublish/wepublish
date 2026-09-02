@@ -510,6 +510,12 @@ model Invoice {
 
   subscriptionPeriods SubscriptionPeriod[]
 
+  number           Int     @unique @default(autoincrement())
+  paymentReference String? @unique
+
+  letterLogs LetterLog[]
+  letterJobs LetterJob[]
+
   @@index([mail])
   @@index([subscriptionID])
   @@index([dueAt])
@@ -1097,6 +1103,8 @@ model Subscription {
 
   mailSendJobEntries MailSendJobRecipient[]
 
+  letterJobs LetterJob[]
+
   @@index([userID])
   @@index([memberPlanID, createdAt, id])
   @@map("subscriptions")
@@ -1169,6 +1177,8 @@ model User {
   commentRatings      CommentRating[]
   pollVotes           PollVote[]
   mailSent            MailLog[]
+  lettersSent         LetterLog[]
+  letterJobs          LetterJob[]
   mailSendJobs        MailSendJob[]
   mailSendJobEntries  MailSendJobRecipient[]
   consents            UserConsent[]
@@ -1421,6 +1431,14 @@ model UserFlowMail {
   mailTemplate   MailTemplate? @relation(fields: [mailTemplateId], references: [id])
   mailTemplateId String?
 
+  channels MessageChannel[] @default([MAIL])
+
+  addressPosition LetterAddressPosition @default(LEFT)
+  deliveryProduct LetterDeliveryProduct @default(CHEAP)
+  printMode       LetterPrintMode       @default(SIMPLEX)
+  printSpectrum   LetterPrintSpectrum   @default(GRAYSCALE)
+  qrBill          LetterQrBill          @default(NONE)
+
   @@map("user_communication_flows")
 }
 
@@ -1463,10 +1481,25 @@ model SubscriptionInterval {
   mailTemplate       MailTemplate?     @relation(fields: [mailTemplateId], references: [id])
   mailTemplateId     String?
 
+  // How this step goes out. The template supplies the words, this decides the
+  // channels they are sent through.
+  channels MessageChannel[] @default([MAIL])
+
+  addressPosition LetterAddressPosition @default(LEFT)
+  deliveryProduct LetterDeliveryProduct @default(CHEAP)
+  printMode       LetterPrintMode       @default(SIMPLEX)
+  printSpectrum   LetterPrintSpectrum   @default(GRAYSCALE)
+  qrBill          LetterQrBill          @default(NONE)
+
   subscriptionFlow   SubscriptionFlow @relation(fields: [subscriptionFlowId], references: [id], onDelete: Cascade)
   subscriptionFlowId String
 
   @@map("subscriptions.intervals")
+}
+
+enum MessageChannel {
+  MAIL   @map("mail")
+  LETTER @map("letter")
 }
 
 enum MailTemplateContext {
@@ -1496,6 +1529,11 @@ model MailTemplate {
   // before the field existed; the editor enforces a value on the next save.
   context MailTemplateContext?
 
+  // Where this template may be used. A template can be written for mail, for
+  // print, or for both — the wording usually differs, since a letter has no
+  // clickable link.
+  channels MessageChannel[] @default([MAIL])
+
   // Kept (nullable) so content can be imported from the remote provider for
   // installs migrating from the remote-template model. Not used for sending.
   externalMailTemplateId String? @unique
@@ -1505,6 +1543,9 @@ model MailTemplate {
   userFlowMails UserFlowMail[]
 
   mailLog MailLog[]
+
+  letterLogs LetterLog[] @relation("LetterLogTemplate")
+  letterJobs LetterJob[] @relation("LetterJobTemplate")
 
   mailSendJobs MailSendJob[]
 
@@ -1744,6 +1785,204 @@ model SettingMailProvider {
   smtp_user             String?
 
   @@map("settings.mailprovider")
+}
+
+enum LetterProviderType {
+  PINGEN @map("pingen")
+}
+
+enum LetterProviderEnvironment {
+  PRODUCTION @map("production")
+  STAGING    @map("staging")
+}
+
+model SettingLetterProvider {
+  id           String   @id
+  createdAt    DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt   DateTime @updatedAt @db.Timestamptz(3)
+  lastLoadedAt DateTime @default(now()) @db.Timestamptz(3)
+
+  type        LetterProviderType
+  environment LetterProviderEnvironment @default(STAGING)
+  name        String?
+
+  clientId          String?
+  clientSecret      String?
+  organisationId    String?
+  webhookSigningKey String?
+
+  autoSend Boolean @default(false)
+
+  @@map("settings.letterprovider")
+}
+
+enum LetterAddressPosition {
+  LEFT  @map("left")
+  RIGHT @map("right")
+}
+
+enum LetterDeliveryProduct {
+  FAST       @map("fast")
+  CHEAP      @map("cheap")
+  BULK       @map("bulk")
+  PREMIUM    @map("premium")
+  REGISTERED @map("registered")
+}
+
+enum LetterPrintMode {
+  SIMPLEX @map("simplex")
+  DUPLEX  @map("duplex")
+}
+
+enum LetterPrintSpectrum {
+  COLOR     @map("color")
+  GRAYSCALE @map("grayscale")
+}
+
+enum LetterQrBill {
+  NONE      @map("none")
+  LAST_PAGE @map("lastPage")
+}
+
+enum LetterLogState {
+  pending       @map("pending")
+  submitted     @map("submitted")
+  accepted      @map("accepted")
+  dispatched    @map("dispatched")
+  delivered     @map("delivered")
+  undeliverable @map("undeliverable")
+  rejected      @map("rejected")
+  canceled      @map("canceled")
+}
+
+enum LetterLogType {
+  subscriptionFlow @map("subscriptionFlow")
+  userFlow         @map("userFlow")
+  manual           @map("manual")
+}
+
+model LetterLog {
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  recipientID String
+  recipient   User   @relation(fields: [recipientID], references: [id], onDelete: Cascade)
+
+  mailTemplate   MailTemplate @relation("LetterLogTemplate", fields: [mailTemplateId], references: [id])
+  mailTemplateId String
+
+  invoice   Invoice? @relation(fields: [invoiceId], references: [id], onDelete: SetNull)
+  invoiceId String?
+
+  state            LetterLogState
+  type             LetterLogType
+  letterIdentifier String         @unique
+
+  // What was actually printed. The flow step that produced this letter may be
+  // edited or deleted, so the record keeps its own copy.
+  addressPosition LetterAddressPosition
+  deliveryProduct LetterDeliveryProduct
+  printMode       LetterPrintMode
+  printSpectrum   LetterPrintSpectrum
+  qrBill          LetterQrBill
+
+  providerID       String
+  providerLetterID String? @unique
+
+  addressSnapshot Json
+  sentDate        DateTime? @db.Timestamptz(3)
+
+  pageCount      Int?
+  priceValue     Decimal? @db.Decimal(10, 2)
+  priceCurrency  String?
+  trackingNumber String?
+
+  letterData String?
+  error      String?
+
+  @@index([recipientID, createdAt(sort: Desc)])
+  @@index([state])
+  @@map("letter.log")
+}
+
+enum LetterJobState {
+  queued   @map("queued")
+  running  @map("running")
+  done     @map("done")
+  failed   @map("failed")
+  canceled @map("canceled")
+}
+
+model LetterJob {
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  state LetterJobState @default(queued)
+
+  mailTemplate   MailTemplate @relation("LetterJobTemplate", fields: [mailTemplateId], references: [id])
+  mailTemplateId String
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+
+  subscription   Subscription? @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+  subscriptionId String?
+
+  invoice   Invoice? @relation(fields: [invoiceId], references: [id], onDelete: SetNull)
+  invoiceId String?
+
+  letterIdentifier String @unique
+
+  type               LetterLogType
+  daysAwayFromEnding Int?      @db.SmallInt
+  runDate            DateTime? @db.Timestamptz(3)
+
+  // Snapshot of the print options the flow step carried when the letter was
+  // queued: the step may be edited or removed before the queue drains.
+  addressPosition LetterAddressPosition
+  deliveryProduct LetterDeliveryProduct
+  printMode       LetterPrintMode
+  printSpectrum   LetterPrintSpectrum
+  qrBill          LetterQrBill
+
+  attempts    Int       @default(0)
+  error       String?
+  heartbeatAt DateTime? @db.Timestamptz(3)
+  startedAt   DateTime? @db.Timestamptz(3)
+  finishedAt  DateTime? @db.Timestamptz(3)
+
+  letterLogId String?
+
+  @@index([state])
+  @@index([userId])
+  @@map("letter.jobs")
+}
+
+enum QrBillReferenceType {
+  QRR  @map("qrr")
+  SCOR @map("scor")
+  NON  @map("non")
+}
+
+model SettingOrganisation {
+  id           String   @id
+  createdAt    DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt   DateTime @updatedAt @db.Timestamptz(3)
+  lastLoadedAt DateTime @default(now()) @db.Timestamptz(3)
+
+  name    String?
+  street  String?
+  number  String?
+  zip     String?
+  city    String?
+  country String?
+
+  iban          String?
+  referenceType QrBillReferenceType @default(QRR)
+
+  @@map("settings.organisation")
 }
 
 model SettingTrackingPixel {

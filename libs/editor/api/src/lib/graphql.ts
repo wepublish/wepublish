@@ -1618,7 +1618,10 @@ export type Invoice = HasOptionalSubscription & {
   manuallySetAsPaidByUser?: Maybe<User>;
   manuallySetAsPaidByUserId?: Maybe<Scalars['String']>;
   modifiedAt: Scalars['DateTime'];
+  number: Scalars['Int'];
   paidAt?: Maybe<Scalars['DateTime']>;
+  /** The QR bill reference a bank transfer for this invoice carries. */
+  paymentReference?: Maybe<Scalars['String']>;
   scheduledDeactivationAt: Scalars['DateTime'];
   subscription?: Maybe<PublicSubscription>;
   subscriptionID?: Maybe<Scalars['String']>;
@@ -1636,6 +1639,8 @@ export type InvoiceFilter = {
   canceledAt?: InputMaybe<DateFilter>;
   mail?: InputMaybe<Scalars['String']>;
   paidAt?: InputMaybe<DateFilter>;
+  /** Find the invoice a bank transfer belongs to by its QR bill reference. */
+  paymentReference?: InputMaybe<Scalars['String']>;
   subscriptionID?: InputMaybe<Scalars['String']>;
   userID?: InputMaybe<Scalars['String']>;
 };
@@ -1677,6 +1682,89 @@ export type KeyEnabledInput = {
   enabled: Scalars['Boolean'];
   key?: InputMaybe<Scalars['String']>;
 };
+
+/** Where the address window sits on the printed sheet. */
+export enum LetterAddressPosition {
+  Left = 'LEFT',
+  Right = 'RIGHT'
+}
+
+export enum LetterDeliveryProduct {
+  Bulk = 'BULK',
+  Cheap = 'CHEAP',
+  Fast = 'FAST',
+  Premium = 'PREMIUM',
+  Registered = 'REGISTERED'
+}
+
+export type LetterLogModel = {
+  __typename?: 'LetterLogModel';
+  createdAt: Scalars['DateTime'];
+  error?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  invoiceId?: Maybe<Scalars['String']>;
+  letterTemplateId: Scalars['String'];
+  pageCount?: Maybe<Scalars['Int']>;
+  priceCurrency?: Maybe<Scalars['String']>;
+  providerLetterID?: Maybe<Scalars['String']>;
+  recipientID: Scalars['String'];
+  sentDate?: Maybe<Scalars['DateTime']>;
+  state: LetterLogState;
+  trackingNumber?: Maybe<Scalars['String']>;
+  type: LetterLogType;
+};
+
+/** Delivery state of a letter as the provider reports it. */
+export enum LetterLogState {
+  Accepted = 'accepted',
+  Canceled = 'canceled',
+  Delivered = 'delivered',
+  Dispatched = 'dispatched',
+  Pending = 'pending',
+  Rejected = 'rejected',
+  Submitted = 'submitted',
+  Undeliverable = 'undeliverable'
+}
+
+export enum LetterLogType {
+  Manual = 'manual',
+  SubscriptionFlow = 'subscriptionFlow',
+  UserFlow = 'userFlow'
+}
+
+export type LetterPreviewInput = {
+  addressPosition?: InputMaybe<LetterAddressPosition>;
+  context?: InputMaybe<MailTemplateContext>;
+  htmlContent?: InputMaybe<Scalars['String']>;
+  mailTemplateId?: InputMaybe<Scalars['String']>;
+  qrBill?: InputMaybe<LetterQrBill>;
+  /** Render with the data of this subscription instead of samples. */
+  subscriptionId?: InputMaybe<Scalars['String']>;
+};
+
+export type LetterPreviewModel = {
+  __typename?: 'LetterPreviewModel';
+  /** Placeholders used by the template that resolve to nothing. */
+  missingPlaceholders: Array<Scalars['String']>;
+  /** The rendered pdf, base64 encoded. */
+  pdf: Scalars['String'];
+};
+
+export enum LetterPrintMode {
+  Duplex = 'DUPLEX',
+  Simplex = 'SIMPLEX'
+}
+
+export enum LetterPrintSpectrum {
+  Color = 'COLOR',
+  Grayscale = 'GRAYSCALE'
+}
+
+/** Whether a Swiss QR bill is printed, and where. It fills a fixed slot, it is not a placeholder. */
+export enum LetterQrBill {
+  LastPage = 'LAST_PAGE',
+  None = 'NONE'
+}
 
 export type ListicleBlock = BaseBlock & {
   __typename?: 'ListicleBlock';
@@ -1937,6 +2025,7 @@ export enum MailTemplateContext {
 }
 
 export type MailTemplateInput = {
+  channels?: InputMaybe<Array<MessageChannel>>;
   context?: InputMaybe<MailTemplateContext>;
   description?: InputMaybe<Scalars['String']>;
   htmlContent: Scalars['String'];
@@ -1947,6 +2036,8 @@ export type MailTemplateInput = {
 
 export type MailTemplateModel = {
   __typename?: 'MailTemplateModel';
+  /** The channels this template may be sent through. */
+  channels: Array<MessageChannel>;
   context?: Maybe<MailTemplateContext>;
   description?: Maybe<Scalars['String']>;
   htmlContent: Scalars['String'];
@@ -2235,6 +2326,12 @@ export enum MemberPlanSort {
   ModifiedAt = 'ModifiedAt'
 }
 
+/** A channel a message can be sent through. */
+export enum MessageChannel {
+  Letter = 'LETTER',
+  Mail = 'MAIL'
+}
+
 export type Mutation = {
   __typename?: 'Mutation';
   /** Subscribes a contact to a Mailchimp list. */
@@ -2243,6 +2340,7 @@ export type Mutation = {
   addUserComment: Comment;
   /** Approves a comment */
   approveComment: Comment;
+  cancelLetter: LetterLogModel;
   /** Stop a running send job. Unsent recipients stay open and can be continued. */
   cancelMailSendJob: MailSendJobModel;
   /** Cancels a subscription. */
@@ -2424,6 +2522,7 @@ export type Mutation = {
   discardPageDraft: Page;
   /** Dislikes an article. */
   dislikeArticle: Article;
+  dispatchLetter: LetterLogModel;
   /** Simulates a mailchimp sync without making changes. Returns what would be updated. */
   dryRunMailchimpSync: MailchimpSyncDryRunResult;
   /** Duplicates an article. */
@@ -2550,6 +2649,7 @@ export type Mutation = {
   updateMemberPlan: MemberPlan;
   /** Updates an existing navigation. */
   updateNavigation: Navigation;
+  updateOrganisationSettings: OrganisationSettings;
   /** Updates an page. */
   updatePage: Page;
   /** This mutation allows to update the user's password by entering the new password. The repeated new password gives an error if the passwords don't match or if the user is not authenticated. */
@@ -2630,6 +2730,11 @@ export type MutationAddUserCommentArgs = {
 
 
 export type MutationApproveCommentArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationCancelLetterArgs = {
   id: Scalars['String'];
 };
 
@@ -2957,9 +3062,15 @@ export type MutationCreateSubscriptionFlowArgs = {
 
 
 export type MutationCreateSubscriptionIntervalArgs = {
+  addressPosition?: InputMaybe<LetterAddressPosition>;
+  channels?: InputMaybe<Array<MessageChannel>>;
   daysAwayFromEnding?: InputMaybe<Scalars['Int']>;
+  deliveryProduct?: InputMaybe<LetterDeliveryProduct>;
   event: SubscriptionEvent;
   mailTemplateId?: InputMaybe<Scalars['String']>;
+  printMode?: InputMaybe<LetterPrintMode>;
+  printSpectrum?: InputMaybe<LetterPrintSpectrum>;
+  qrBill?: InputMaybe<LetterQrBill>;
   subscriptionFlowId: Scalars['String'];
 };
 
@@ -3234,6 +3345,11 @@ export type MutationDiscardPageDraftArgs = {
 
 
 export type MutationDislikeArticleArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationDispatchLetterArgs = {
   id: Scalars['String'];
 };
 
@@ -3701,6 +3817,11 @@ export type MutationUpdateNavigationArgs = {
 };
 
 
+export type MutationUpdateOrganisationSettingsArgs = {
+  input: OrganisationSettingsInput;
+};
+
+
 export type MutationUpdatePageArgs = {
   blocks: Array<BlockContentInput>;
   description?: InputMaybe<Scalars['String']>;
@@ -3854,9 +3975,15 @@ export type MutationUpdateSubscriptionFlowArgs = {
 
 
 export type MutationUpdateSubscriptionIntervalArgs = {
+  addressPosition?: InputMaybe<LetterAddressPosition>;
+  channels?: InputMaybe<Array<MessageChannel>>;
   daysAwayFromEnding?: InputMaybe<Scalars['Int']>;
+  deliveryProduct?: InputMaybe<LetterDeliveryProduct>;
   id: Scalars['String'];
   mailTemplateId?: InputMaybe<Scalars['String']>;
+  printMode?: InputMaybe<LetterPrintMode>;
+  printSpectrum?: InputMaybe<LetterPrintSpectrum>;
+  qrBill?: InputMaybe<LetterQrBill>;
 };
 
 
@@ -4031,6 +4158,30 @@ export enum NavigationLinkType {
   External = 'External',
   Page = 'Page'
 }
+
+export type OrganisationSettings = {
+  __typename?: 'OrganisationSettings';
+  city?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  /** The account a QR bill is paid into. Stored encrypted. */
+  iban?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  number?: Maybe<Scalars['String']>;
+  referenceType: QrBillReferenceType;
+  street?: Maybe<Scalars['String']>;
+  zip?: Maybe<Scalars['String']>;
+};
+
+export type OrganisationSettingsInput = {
+  city?: InputMaybe<Scalars['String']>;
+  country?: InputMaybe<Scalars['String']>;
+  iban?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  number?: InputMaybe<Scalars['String']>;
+  referenceType?: InputMaybe<QrBillReferenceType>;
+  street?: InputMaybe<Scalars['String']>;
+  zip?: InputMaybe<Scalars['String']>;
+};
 
 export type OverriddenRating = {
   __typename?: 'OverriddenRating';
@@ -4851,6 +5002,13 @@ export type PublicSubscriptionConnection = {
   totalCount: Scalars['Int'];
 };
 
+/** How a QR bill references the invoice. QRR needs a QR-IBAN, SCOR a normal one. */
+export enum QrBillReferenceType {
+  Non = 'NON',
+  Qrr = 'QRR',
+  Scor = 'SCOR'
+}
+
 export type Query = {
   __typename?: 'Query';
   /** Returns latest actions */
@@ -4995,6 +5153,10 @@ export type Query = {
   invoice: Invoice;
   /** Returns a paginated list of invoices based on the filters given. */
   invoices: InvoiceConnection;
+  /** Return the letters that were sent, newest first. */
+  letterLogs: Array<LetterLogModel>;
+  /** The provider letters are printed and posted through. */
+  letterProvider: MailProviderModel;
   /** Paginated list of sent mails */
   mailLogs: PaginatedMailLog;
   /** Returns a single mail provider setting by id. */
@@ -5057,6 +5219,8 @@ export type Query = {
    *
    */
   newSubscribers: Array<DashboardSubscription>;
+  /** The sender of every letter and the creditor of every QR bill. */
+  organisationSettings: OrganisationSettings;
   /** Returns an page by id or slug. */
   page: Page;
   /** Returns a single page revision including its full content. */
@@ -5097,6 +5261,8 @@ export type Query = {
   pollVotes: PaginatedPollVotes;
   /** Returns a paginated list of polls based on the filters given. */
   polls: PaginatedPolls;
+  /** Render a template as the letter it would be printed as, without sending it. */
+  previewLetter: LetterPreviewModel;
   primaryBanner?: Maybe<Banner>;
   promptHTML: Chat;
   provider: MailProviderModel;
@@ -5472,6 +5638,13 @@ export type QueryInvoicesArgs = {
 };
 
 
+export type QueryLetterLogsArgs = {
+  skip?: InputMaybe<Scalars['Int']>;
+  state?: InputMaybe<Scalars['String']>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
+
 export type QueryMailLogsArgs = {
   filter?: InputMaybe<MailLogFilter>;
   skip?: InputMaybe<Scalars['Int']>;
@@ -5712,6 +5885,11 @@ export type QueryPollsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   sort?: InputMaybe<PollSort>;
   take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryPreviewLetterArgs = {
+  input: LetterPreviewInput;
 };
 
 
@@ -6464,10 +6642,16 @@ export type SubscriptionFlowModel = {
 
 export type SubscriptionInterval = {
   __typename?: 'SubscriptionInterval';
+  addressPosition: LetterAddressPosition;
+  channels: Array<MessageChannel>;
   daysAwayFromEnding?: Maybe<Scalars['Int']>;
+  deliveryProduct: LetterDeliveryProduct;
   event: SubscriptionEvent;
   id: Scalars['String'];
   mailTemplate?: Maybe<MailTemplateRef>;
+  printMode: LetterPrintMode;
+  printSpectrum: LetterPrintSpectrum;
+  qrBill: LetterQrBill;
 };
 
 export type SubscriptionPeriod = {
@@ -8172,6 +8356,43 @@ export type MarkInvoiceAsPaidMutationVariables = Exact<{
 
 export type MarkInvoiceAsPaidMutation = { __typename?: 'Mutation', markInvoiceAsPaid: { __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number, goodieId?: string | null, goodie?: { __typename?: 'Goodie', id: string, name: string } | null }> } };
 
+export type LetterLogsQueryVariables = Exact<{
+  take?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  state?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type LetterLogsQuery = { __typename?: 'Query', letterLogs: Array<{ __typename?: 'LetterLogModel', id: string, createdAt: string, sentDate?: string | null, state: LetterLogState, type: LetterLogType, recipientID: string, letterTemplateId: string, invoiceId?: string | null, providerLetterID?: string | null, pageCount?: number | null, priceCurrency?: string | null, trackingNumber?: string | null, error?: string | null }> };
+
+export type DispatchLetterMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type DispatchLetterMutation = { __typename?: 'Mutation', dispatchLetter: { __typename?: 'LetterLogModel', id: string, createdAt: string, sentDate?: string | null, state: LetterLogState, type: LetterLogType, recipientID: string, letterTemplateId: string, invoiceId?: string | null, providerLetterID?: string | null, pageCount?: number | null, priceCurrency?: string | null, trackingNumber?: string | null, error?: string | null } };
+
+export type CancelLetterMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type CancelLetterMutation = { __typename?: 'Mutation', cancelLetter: { __typename?: 'LetterLogModel', id: string, createdAt: string, sentDate?: string | null, state: LetterLogState, type: LetterLogType, recipientID: string, letterTemplateId: string, invoiceId?: string | null, providerLetterID?: string | null, pageCount?: number | null, priceCurrency?: string | null, trackingNumber?: string | null, error?: string | null } };
+
+export type LetterLogFragment = { __typename?: 'LetterLogModel', id: string, createdAt: string, sentDate?: string | null, state: LetterLogState, type: LetterLogType, recipientID: string, letterTemplateId: string, invoiceId?: string | null, providerLetterID?: string | null, pageCount?: number | null, priceCurrency?: string | null, trackingNumber?: string | null, error?: string | null };
+
+export type LetterProviderQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type LetterProviderQuery = { __typename?: 'Query', letterProvider: { __typename?: 'MailProviderModel', name: string } };
+
+export type PreviewLetterQueryVariables = Exact<{
+  input: LetterPreviewInput;
+}>;
+
+
+export type PreviewLetterQuery = { __typename?: 'Query', previewLetter: { __typename?: 'LetterPreviewModel', pdf: string, missingPlaceholders: Array<string> } };
+
 export type FullMailLogFragment = { __typename?: 'MailLogModel', id: string, createdAt: string, sentDate: string, state: MailLogState, type?: MailLogType | null, subject?: string | null, error?: string | null, mailProviderID: string, mailSendJobId?: string | null, recipient: { __typename?: 'MailLogRecipient', id: string, email: string, name: string, firstName?: string | null }, mailTemplate: { __typename?: 'MailLogTemplate', id: string, name: string } };
 
 export type SyncMailLogStatesMutationVariables = Exact<{
@@ -8281,21 +8502,21 @@ export type CreateMailSendJobMutation = { __typename?: 'Mutation', createMailSen
 export type MailTemplateQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MailTemplateQuery = { __typename?: 'Query', mailTemplates: Array<{ __typename?: 'MailTemplateModel', id: string, name: string, description?: string | null, subject: string, context?: MailTemplateContext | null, status: string }>, provider: { __typename?: 'MailProviderModel', name: string } };
+export type MailTemplateQuery = { __typename?: 'Query', mailTemplates: Array<{ __typename?: 'MailTemplateModel', id: string, name: string, description?: string | null, subject: string, context?: MailTemplateContext | null, channels: Array<MessageChannel>, status: string }>, provider: { __typename?: 'MailProviderModel', name: string } };
 
 export type MailTemplateByIdQueryVariables = Exact<{
   id: Scalars['String'];
 }>;
 
 
-export type MailTemplateByIdQuery = { __typename?: 'Query', mailTemplate?: { __typename?: 'MailTemplateModel', htmlContent: string, textContent?: string | null, id: string, name: string, description?: string | null, subject: string, context?: MailTemplateContext | null, status: string } | null };
+export type MailTemplateByIdQuery = { __typename?: 'Query', mailTemplate?: { __typename?: 'MailTemplateModel', htmlContent: string, textContent?: string | null, id: string, name: string, description?: string | null, subject: string, context?: MailTemplateContext | null, channels: Array<MessageChannel>, status: string } | null };
 
 export type CreateMailTemplateMutationVariables = Exact<{
   input: MailTemplateInput;
 }>;
 
 
-export type CreateMailTemplateMutation = { __typename?: 'Mutation', createMailTemplate: { __typename?: 'MailTemplateModel', htmlContent: string, textContent?: string | null, id: string, name: string, description?: string | null, subject: string, context?: MailTemplateContext | null, status: string } };
+export type CreateMailTemplateMutation = { __typename?: 'Mutation', createMailTemplate: { __typename?: 'MailTemplateModel', htmlContent: string, textContent?: string | null, id: string, name: string, description?: string | null, subject: string, context?: MailTemplateContext | null, channels: Array<MessageChannel>, status: string } };
 
 export type UpdateMailTemplateMutationVariables = Exact<{
   id: Scalars['String'];
@@ -8303,7 +8524,7 @@ export type UpdateMailTemplateMutationVariables = Exact<{
 }>;
 
 
-export type UpdateMailTemplateMutation = { __typename?: 'Mutation', updateMailTemplate: { __typename?: 'MailTemplateModel', htmlContent: string, textContent?: string | null, id: string, name: string, description?: string | null, subject: string, context?: MailTemplateContext | null, status: string } };
+export type UpdateMailTemplateMutation = { __typename?: 'Mutation', updateMailTemplate: { __typename?: 'MailTemplateModel', htmlContent: string, textContent?: string | null, id: string, name: string, description?: string | null, subject: string, context?: MailTemplateContext | null, channels: Array<MessageChannel>, status: string } };
 
 export type DeleteMailTemplateMutationVariables = Exact<{
   id: Scalars['String'];
@@ -8338,9 +8559,9 @@ export type SendTestMailTemplateMutationVariables = Exact<{
 
 export type SendTestMailTemplateMutation = { __typename?: 'Mutation', sendTestMailTemplate?: boolean | null };
 
-export type TinyMailTemplateFragment = { __typename?: 'MailTemplateModel', id: string, name: string, description?: string | null, subject: string, context?: MailTemplateContext | null, status: string };
+export type TinyMailTemplateFragment = { __typename?: 'MailTemplateModel', id: string, name: string, description?: string | null, subject: string, context?: MailTemplateContext | null, channels: Array<MessageChannel>, status: string };
 
-export type FullMailTemplateFragment = { __typename?: 'MailTemplateModel', htmlContent: string, textContent?: string | null, id: string, name: string, description?: string | null, subject: string, context?: MailTemplateContext | null, status: string };
+export type FullMailTemplateFragment = { __typename?: 'MailTemplateModel', htmlContent: string, textContent?: string | null, id: string, name: string, description?: string | null, subject: string, context?: MailTemplateContext | null, channels: Array<MessageChannel>, status: string };
 
 export type FullMailProviderFragment = { __typename?: 'MailProviderModel', name: string };
 
@@ -8468,6 +8689,20 @@ export type DeleteNavigationMutationVariables = Exact<{
 
 
 export type DeleteNavigationMutation = { __typename?: 'Mutation', deleteNavigation: { __typename?: 'Navigation', id: string, key: string, name: string, links: Array<{ __typename: 'ArticleNavigationLink', label: string, articleID: string } | { __typename: 'ExternalNavigationLink', label: string, url?: string | null } | { __typename: 'PageNavigationLink', label: string, pageID: string }> } };
+
+export type OrganisationSettingsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type OrganisationSettingsQuery = { __typename?: 'Query', organisationSettings: { __typename?: 'OrganisationSettings', name?: string | null, street?: string | null, number?: string | null, zip?: string | null, city?: string | null, country?: string | null, iban?: string | null, referenceType: QrBillReferenceType } };
+
+export type UpdateOrganisationSettingsMutationVariables = Exact<{
+  input: OrganisationSettingsInput;
+}>;
+
+
+export type UpdateOrganisationSettingsMutation = { __typename?: 'Mutation', updateOrganisationSettings: { __typename?: 'OrganisationSettings', name?: string | null, street?: string | null, number?: string | null, zip?: string | null, city?: string | null, country?: string | null, iban?: string | null, referenceType: QrBillReferenceType } };
+
+export type OrganisationSettingsFragment = { __typename?: 'OrganisationSettings', name?: string | null, street?: string | null, number?: string | null, zip?: string | null, city?: string | null, country?: string | null, iban?: string | null, referenceType: QrBillReferenceType };
 
 export type FullPageRevisionWithoutBlocksFragment = { __typename?: 'PageRevision', id: string, createdAt: string, publishedAt?: string | null, archivedAt?: string | null, title?: string | null, description?: string | null, socialMediaTitle?: string | null, socialMediaDescription?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, socialMediaImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Property', key: string, value: string, public: boolean }> };
 
@@ -9184,7 +9419,7 @@ export type SubscriptionFlowsQueryVariables = Exact<{
 }>;
 
 
-export type SubscriptionFlowsQuery = { __typename?: 'Query', subscriptionFlows: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string, productType: ProductType, amountPerMonthMin: number, amountPerMonthMax?: number | null, currency: Currency, extendable: boolean, slug: string, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> }> } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
+export type SubscriptionFlowsQuery = { __typename?: 'Query', subscriptionFlows: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string, productType: ProductType, amountPerMonthMin: number, amountPerMonthMax?: number | null, currency: Currency, extendable: boolean, slug: string, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> }> } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, channels: Array<MessageChannel>, addressPosition: LetterAddressPosition, deliveryProduct: LetterDeliveryProduct, printMode: LetterPrintMode, printSpectrum: LetterPrintSpectrum, qrBill: LetterQrBill, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
 
 export type CreateSubscriptionFlowMutationVariables = Exact<{
   memberPlanId: Scalars['String'];
@@ -9194,7 +9429,7 @@ export type CreateSubscriptionFlowMutationVariables = Exact<{
 }>;
 
 
-export type CreateSubscriptionFlowMutation = { __typename?: 'Mutation', createSubscriptionFlow: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string, productType: ProductType, amountPerMonthMin: number, amountPerMonthMax?: number | null, currency: Currency, extendable: boolean, slug: string, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> }> } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
+export type CreateSubscriptionFlowMutation = { __typename?: 'Mutation', createSubscriptionFlow: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string, productType: ProductType, amountPerMonthMin: number, amountPerMonthMax?: number | null, currency: Currency, extendable: boolean, slug: string, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> }> } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, channels: Array<MessageChannel>, addressPosition: LetterAddressPosition, deliveryProduct: LetterDeliveryProduct, printMode: LetterPrintMode, printSpectrum: LetterPrintSpectrum, qrBill: LetterQrBill, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
 
 export type UpdateSubscriptionFlowMutationVariables = Exact<{
   id: Scalars['String'];
@@ -9204,49 +9439,56 @@ export type UpdateSubscriptionFlowMutationVariables = Exact<{
 }>;
 
 
-export type UpdateSubscriptionFlowMutation = { __typename?: 'Mutation', updateSubscriptionFlow: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string, productType: ProductType, amountPerMonthMin: number, amountPerMonthMax?: number | null, currency: Currency, extendable: boolean, slug: string, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> }> } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
+export type UpdateSubscriptionFlowMutation = { __typename?: 'Mutation', updateSubscriptionFlow: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string, productType: ProductType, amountPerMonthMin: number, amountPerMonthMax?: number | null, currency: Currency, extendable: boolean, slug: string, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> }> } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, channels: Array<MessageChannel>, addressPosition: LetterAddressPosition, deliveryProduct: LetterDeliveryProduct, printMode: LetterPrintMode, printSpectrum: LetterPrintSpectrum, qrBill: LetterQrBill, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
 
 export type DeleteSubscriptionFlowMutationVariables = Exact<{
   id: Scalars['String'];
 }>;
 
 
-export type DeleteSubscriptionFlowMutation = { __typename?: 'Mutation', deleteSubscriptionFlow: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string, productType: ProductType, amountPerMonthMin: number, amountPerMonthMax?: number | null, currency: Currency, extendable: boolean, slug: string, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> }> } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
+export type DeleteSubscriptionFlowMutation = { __typename?: 'Mutation', deleteSubscriptionFlow: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string, productType: ProductType, amountPerMonthMin: number, amountPerMonthMax?: number | null, currency: Currency, extendable: boolean, slug: string, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> }> } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, channels: Array<MessageChannel>, addressPosition: LetterAddressPosition, deliveryProduct: LetterDeliveryProduct, printMode: LetterPrintMode, printSpectrum: LetterPrintSpectrum, qrBill: LetterQrBill, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
 
 export type CreateSubscriptionIntervalMutationVariables = Exact<{
   subscriptionFlowId: Scalars['String'];
   daysAwayFromEnding?: InputMaybe<Scalars['Int']>;
   mailTemplateId?: InputMaybe<Scalars['String']>;
+  channels?: InputMaybe<Array<MessageChannel> | MessageChannel>;
   event: SubscriptionEvent;
 }>;
 
 
-export type CreateSubscriptionIntervalMutation = { __typename?: 'Mutation', createSubscriptionInterval: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string, productType: ProductType, amountPerMonthMin: number, amountPerMonthMax?: number | null, currency: Currency, extendable: boolean, slug: string, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> }> } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
+export type CreateSubscriptionIntervalMutation = { __typename?: 'Mutation', createSubscriptionInterval: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string, productType: ProductType, amountPerMonthMin: number, amountPerMonthMax?: number | null, currency: Currency, extendable: boolean, slug: string, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> }> } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, channels: Array<MessageChannel>, addressPosition: LetterAddressPosition, deliveryProduct: LetterDeliveryProduct, printMode: LetterPrintMode, printSpectrum: LetterPrintSpectrum, qrBill: LetterQrBill, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
 
 export type UpdateSubscriptionIntervalMutationVariables = Exact<{
   id: Scalars['String'];
   daysAwayFromEnding?: InputMaybe<Scalars['Int']>;
   mailTemplateId?: InputMaybe<Scalars['String']>;
+  channels?: InputMaybe<Array<MessageChannel> | MessageChannel>;
+  addressPosition?: InputMaybe<LetterAddressPosition>;
+  deliveryProduct?: InputMaybe<LetterDeliveryProduct>;
+  printMode?: InputMaybe<LetterPrintMode>;
+  printSpectrum?: InputMaybe<LetterPrintSpectrum>;
+  qrBill?: InputMaybe<LetterQrBill>;
 }>;
 
 
-export type UpdateSubscriptionIntervalMutation = { __typename?: 'Mutation', updateSubscriptionInterval: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string, productType: ProductType, amountPerMonthMin: number, amountPerMonthMax?: number | null, currency: Currency, extendable: boolean, slug: string, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> }> } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
+export type UpdateSubscriptionIntervalMutation = { __typename?: 'Mutation', updateSubscriptionInterval: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string, productType: ProductType, amountPerMonthMin: number, amountPerMonthMax?: number | null, currency: Currency, extendable: boolean, slug: string, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> }> } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, channels: Array<MessageChannel>, addressPosition: LetterAddressPosition, deliveryProduct: LetterDeliveryProduct, printMode: LetterPrintMode, printSpectrum: LetterPrintSpectrum, qrBill: LetterQrBill, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
 
 export type DeleteSubscriptionIntervalMutationVariables = Exact<{
   id: Scalars['String'];
 }>;
 
 
-export type DeleteSubscriptionIntervalMutation = { __typename?: 'Mutation', deleteSubscriptionInterval: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string, productType: ProductType, amountPerMonthMin: number, amountPerMonthMax?: number | null, currency: Currency, extendable: boolean, slug: string, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> }> } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
+export type DeleteSubscriptionIntervalMutation = { __typename?: 'Mutation', deleteSubscriptionInterval: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string, productType: ProductType, amountPerMonthMin: number, amountPerMonthMax?: number | null, currency: Currency, extendable: boolean, slug: string, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> }> } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, channels: Array<MessageChannel>, addressPosition: LetterAddressPosition, deliveryProduct: LetterDeliveryProduct, printMode: LetterPrintMode, printSpectrum: LetterPrintSpectrum, qrBill: LetterQrBill, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
 
 export type ListPaymentMethodsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type ListPaymentMethodsQuery = { __typename?: 'Query', paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> };
 
-export type SubscriptionFlowFragment = { __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string, productType: ProductType, amountPerMonthMin: number, amountPerMonthMax?: number | null, currency: Currency, extendable: boolean, slug: string, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> }> } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> };
+export type SubscriptionFlowFragment = { __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string, productType: ProductType, amountPerMonthMin: number, amountPerMonthMax?: number | null, currency: Currency, extendable: boolean, slug: string, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> }> } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, channels: Array<MessageChannel>, addressPosition: LetterAddressPosition, deliveryProduct: LetterDeliveryProduct, printMode: LetterPrintMode, printSpectrum: LetterPrintSpectrum, qrBill: LetterQrBill, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> };
 
-export type SubscriptionIntervalFragment = { __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null };
+export type SubscriptionIntervalFragment = { __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, channels: Array<MessageChannel>, addressPosition: LetterAddressPosition, deliveryProduct: LetterDeliveryProduct, printMode: LetterPrintMode, printSpectrum: LetterPrintSpectrum, qrBill: LetterQrBill, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null };
 
 export type MailTemplateRefFragment = { __typename?: 'MailTemplateRef', id: string, name: string };
 
@@ -10967,6 +11209,23 @@ export const InvoiceFragmentDoc = gql`
   currency
 }
     `;
+export const LetterLogFragmentDoc = gql`
+    fragment LetterLog on LetterLogModel {
+  id
+  createdAt
+  sentDate
+  state
+  type
+  recipientID
+  letterTemplateId
+  invoiceId
+  providerLetterID
+  pageCount
+  priceCurrency
+  trackingNumber
+  error
+}
+    `;
 export const FullMailLogFragmentDoc = gql`
     fragment FullMailLog on MailLogModel {
   id
@@ -11019,6 +11278,7 @@ export const TinyMailTemplateFragmentDoc = gql`
   description
   subject
   context
+  channels
   status
 }
     `;
@@ -11061,6 +11321,18 @@ export const FullNavigationFragmentDoc = gql`
   }
 }
     ${SlimNavigationFragmentDoc}`;
+export const OrganisationSettingsFragmentDoc = gql`
+    fragment OrganisationSettings on OrganisationSettings {
+  name
+  street
+  number
+  zip
+  city
+  country
+  iban
+  referenceType
+}
+    `;
 export const FullPageRevisionFragmentDoc = gql`
     fragment FullPageRevision on PageRevision {
   ...FullPageRevisionWithoutBlocks
@@ -11317,6 +11589,12 @@ export const SubscriptionIntervalFragmentDoc = gql`
   mailTemplate {
     ...MailTemplateRef
   }
+  channels
+  addressPosition
+  deliveryProduct
+  printMode
+  printSpectrum
+  qrBill
 }
     ${MailTemplateRefFragmentDoc}`;
 export const SubscriptionFlowFragmentDoc = gql`
@@ -15639,6 +15917,179 @@ export function useMarkInvoiceAsPaidMutation(baseOptions?: Apollo.MutationHookOp
 export type MarkInvoiceAsPaidMutationHookResult = ReturnType<typeof useMarkInvoiceAsPaidMutation>;
 export type MarkInvoiceAsPaidMutationResult = Apollo.MutationResult<MarkInvoiceAsPaidMutation>;
 export type MarkInvoiceAsPaidMutationOptions = Apollo.BaseMutationOptions<MarkInvoiceAsPaidMutation, MarkInvoiceAsPaidMutationVariables>;
+export const LetterLogsDocument = gql`
+    query LetterLogs($take: Int, $skip: Int, $state: String) {
+  letterLogs(take: $take, skip: $skip, state: $state) {
+    ...LetterLog
+  }
+}
+    ${LetterLogFragmentDoc}`;
+
+/**
+ * __useLetterLogsQuery__
+ *
+ * To run a query within a React component, call `useLetterLogsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useLetterLogsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useLetterLogsQuery({
+ *   variables: {
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
+ *      state: // value for 'state'
+ *   },
+ * });
+ */
+export function useLetterLogsQuery(baseOptions?: Apollo.QueryHookOptions<LetterLogsQuery, LetterLogsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<LetterLogsQuery, LetterLogsQueryVariables>(LetterLogsDocument, options);
+      }
+export function useLetterLogsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<LetterLogsQuery, LetterLogsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<LetterLogsQuery, LetterLogsQueryVariables>(LetterLogsDocument, options);
+        }
+export type LetterLogsQueryHookResult = ReturnType<typeof useLetterLogsQuery>;
+export type LetterLogsLazyQueryHookResult = ReturnType<typeof useLetterLogsLazyQuery>;
+export type LetterLogsQueryResult = Apollo.QueryResult<LetterLogsQuery, LetterLogsQueryVariables>;
+export const DispatchLetterDocument = gql`
+    mutation DispatchLetter($id: String!) {
+  dispatchLetter(id: $id) {
+    ...LetterLog
+  }
+}
+    ${LetterLogFragmentDoc}`;
+export type DispatchLetterMutationFn = Apollo.MutationFunction<DispatchLetterMutation, DispatchLetterMutationVariables>;
+
+/**
+ * __useDispatchLetterMutation__
+ *
+ * To run a mutation, you first call `useDispatchLetterMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDispatchLetterMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [dispatchLetterMutation, { data, loading, error }] = useDispatchLetterMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDispatchLetterMutation(baseOptions?: Apollo.MutationHookOptions<DispatchLetterMutation, DispatchLetterMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DispatchLetterMutation, DispatchLetterMutationVariables>(DispatchLetterDocument, options);
+      }
+export type DispatchLetterMutationHookResult = ReturnType<typeof useDispatchLetterMutation>;
+export type DispatchLetterMutationResult = Apollo.MutationResult<DispatchLetterMutation>;
+export type DispatchLetterMutationOptions = Apollo.BaseMutationOptions<DispatchLetterMutation, DispatchLetterMutationVariables>;
+export const CancelLetterDocument = gql`
+    mutation CancelLetter($id: String!) {
+  cancelLetter(id: $id) {
+    ...LetterLog
+  }
+}
+    ${LetterLogFragmentDoc}`;
+export type CancelLetterMutationFn = Apollo.MutationFunction<CancelLetterMutation, CancelLetterMutationVariables>;
+
+/**
+ * __useCancelLetterMutation__
+ *
+ * To run a mutation, you first call `useCancelLetterMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCancelLetterMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [cancelLetterMutation, { data, loading, error }] = useCancelLetterMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useCancelLetterMutation(baseOptions?: Apollo.MutationHookOptions<CancelLetterMutation, CancelLetterMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CancelLetterMutation, CancelLetterMutationVariables>(CancelLetterDocument, options);
+      }
+export type CancelLetterMutationHookResult = ReturnType<typeof useCancelLetterMutation>;
+export type CancelLetterMutationResult = Apollo.MutationResult<CancelLetterMutation>;
+export type CancelLetterMutationOptions = Apollo.BaseMutationOptions<CancelLetterMutation, CancelLetterMutationVariables>;
+export const LetterProviderDocument = gql`
+    query LetterProvider {
+  letterProvider {
+    name
+  }
+}
+    `;
+
+/**
+ * __useLetterProviderQuery__
+ *
+ * To run a query within a React component, call `useLetterProviderQuery` and pass it any options that fit your needs.
+ * When your component renders, `useLetterProviderQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useLetterProviderQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useLetterProviderQuery(baseOptions?: Apollo.QueryHookOptions<LetterProviderQuery, LetterProviderQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<LetterProviderQuery, LetterProviderQueryVariables>(LetterProviderDocument, options);
+      }
+export function useLetterProviderLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<LetterProviderQuery, LetterProviderQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<LetterProviderQuery, LetterProviderQueryVariables>(LetterProviderDocument, options);
+        }
+export type LetterProviderQueryHookResult = ReturnType<typeof useLetterProviderQuery>;
+export type LetterProviderLazyQueryHookResult = ReturnType<typeof useLetterProviderLazyQuery>;
+export type LetterProviderQueryResult = Apollo.QueryResult<LetterProviderQuery, LetterProviderQueryVariables>;
+export const PreviewLetterDocument = gql`
+    query PreviewLetter($input: LetterPreviewInput!) {
+  previewLetter(input: $input) {
+    pdf
+    missingPlaceholders
+  }
+}
+    `;
+
+/**
+ * __usePreviewLetterQuery__
+ *
+ * To run a query within a React component, call `usePreviewLetterQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePreviewLetterQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePreviewLetterQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function usePreviewLetterQuery(baseOptions: Apollo.QueryHookOptions<PreviewLetterQuery, PreviewLetterQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PreviewLetterQuery, PreviewLetterQueryVariables>(PreviewLetterDocument, options);
+      }
+export function usePreviewLetterLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PreviewLetterQuery, PreviewLetterQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PreviewLetterQuery, PreviewLetterQueryVariables>(PreviewLetterDocument, options);
+        }
+export type PreviewLetterQueryHookResult = ReturnType<typeof usePreviewLetterQuery>;
+export type PreviewLetterLazyQueryHookResult = ReturnType<typeof usePreviewLetterLazyQuery>;
+export type PreviewLetterQueryResult = Apollo.QueryResult<PreviewLetterQuery, PreviewLetterQueryVariables>;
 export const SyncMailLogStatesDocument = gql`
     mutation SyncMailLogStates($limit: Int) {
   syncMailLogStates(limit: $limit) {
@@ -16908,6 +17359,73 @@ export function useDeleteNavigationMutation(baseOptions?: Apollo.MutationHookOpt
 export type DeleteNavigationMutationHookResult = ReturnType<typeof useDeleteNavigationMutation>;
 export type DeleteNavigationMutationResult = Apollo.MutationResult<DeleteNavigationMutation>;
 export type DeleteNavigationMutationOptions = Apollo.BaseMutationOptions<DeleteNavigationMutation, DeleteNavigationMutationVariables>;
+export const OrganisationSettingsDocument = gql`
+    query OrganisationSettings {
+  organisationSettings {
+    ...OrganisationSettings
+  }
+}
+    ${OrganisationSettingsFragmentDoc}`;
+
+/**
+ * __useOrganisationSettingsQuery__
+ *
+ * To run a query within a React component, call `useOrganisationSettingsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useOrganisationSettingsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useOrganisationSettingsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useOrganisationSettingsQuery(baseOptions?: Apollo.QueryHookOptions<OrganisationSettingsQuery, OrganisationSettingsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<OrganisationSettingsQuery, OrganisationSettingsQueryVariables>(OrganisationSettingsDocument, options);
+      }
+export function useOrganisationSettingsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<OrganisationSettingsQuery, OrganisationSettingsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<OrganisationSettingsQuery, OrganisationSettingsQueryVariables>(OrganisationSettingsDocument, options);
+        }
+export type OrganisationSettingsQueryHookResult = ReturnType<typeof useOrganisationSettingsQuery>;
+export type OrganisationSettingsLazyQueryHookResult = ReturnType<typeof useOrganisationSettingsLazyQuery>;
+export type OrganisationSettingsQueryResult = Apollo.QueryResult<OrganisationSettingsQuery, OrganisationSettingsQueryVariables>;
+export const UpdateOrganisationSettingsDocument = gql`
+    mutation UpdateOrganisationSettings($input: OrganisationSettingsInput!) {
+  updateOrganisationSettings(input: $input) {
+    ...OrganisationSettings
+  }
+}
+    ${OrganisationSettingsFragmentDoc}`;
+export type UpdateOrganisationSettingsMutationFn = Apollo.MutationFunction<UpdateOrganisationSettingsMutation, UpdateOrganisationSettingsMutationVariables>;
+
+/**
+ * __useUpdateOrganisationSettingsMutation__
+ *
+ * To run a mutation, you first call `useUpdateOrganisationSettingsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateOrganisationSettingsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateOrganisationSettingsMutation, { data, loading, error }] = useUpdateOrganisationSettingsMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateOrganisationSettingsMutation(baseOptions?: Apollo.MutationHookOptions<UpdateOrganisationSettingsMutation, UpdateOrganisationSettingsMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateOrganisationSettingsMutation, UpdateOrganisationSettingsMutationVariables>(UpdateOrganisationSettingsDocument, options);
+      }
+export type UpdateOrganisationSettingsMutationHookResult = ReturnType<typeof useUpdateOrganisationSettingsMutation>;
+export type UpdateOrganisationSettingsMutationResult = Apollo.MutationResult<UpdateOrganisationSettingsMutation>;
+export type UpdateOrganisationSettingsMutationOptions = Apollo.BaseMutationOptions<UpdateOrganisationSettingsMutation, UpdateOrganisationSettingsMutationVariables>;
 export const PageListDocument = gql`
     query PageList($filter: PageFilter, $cursor: String, $take: Int, $skip: Int, $order: SortOrder, $sort: PageSort) {
   pages(
@@ -20187,11 +20705,12 @@ export type DeleteSubscriptionFlowMutationHookResult = ReturnType<typeof useDele
 export type DeleteSubscriptionFlowMutationResult = Apollo.MutationResult<DeleteSubscriptionFlowMutation>;
 export type DeleteSubscriptionFlowMutationOptions = Apollo.BaseMutationOptions<DeleteSubscriptionFlowMutation, DeleteSubscriptionFlowMutationVariables>;
 export const CreateSubscriptionIntervalDocument = gql`
-    mutation CreateSubscriptionInterval($subscriptionFlowId: String!, $daysAwayFromEnding: Int, $mailTemplateId: String, $event: SubscriptionEvent!) {
+    mutation CreateSubscriptionInterval($subscriptionFlowId: String!, $daysAwayFromEnding: Int, $mailTemplateId: String, $channels: [MessageChannel!], $event: SubscriptionEvent!) {
   createSubscriptionInterval(
     subscriptionFlowId: $subscriptionFlowId
     daysAwayFromEnding: $daysAwayFromEnding
     mailTemplateId: $mailTemplateId
+    channels: $channels
     event: $event
   ) {
     ...SubscriptionFlow
@@ -20216,6 +20735,7 @@ export type CreateSubscriptionIntervalMutationFn = Apollo.MutationFunction<Creat
  *      subscriptionFlowId: // value for 'subscriptionFlowId'
  *      daysAwayFromEnding: // value for 'daysAwayFromEnding'
  *      mailTemplateId: // value for 'mailTemplateId'
+ *      channels: // value for 'channels'
  *      event: // value for 'event'
  *   },
  * });
@@ -20228,11 +20748,17 @@ export type CreateSubscriptionIntervalMutationHookResult = ReturnType<typeof use
 export type CreateSubscriptionIntervalMutationResult = Apollo.MutationResult<CreateSubscriptionIntervalMutation>;
 export type CreateSubscriptionIntervalMutationOptions = Apollo.BaseMutationOptions<CreateSubscriptionIntervalMutation, CreateSubscriptionIntervalMutationVariables>;
 export const UpdateSubscriptionIntervalDocument = gql`
-    mutation UpdateSubscriptionInterval($id: String!, $daysAwayFromEnding: Int, $mailTemplateId: String) {
+    mutation UpdateSubscriptionInterval($id: String!, $daysAwayFromEnding: Int, $mailTemplateId: String, $channels: [MessageChannel!], $addressPosition: LetterAddressPosition, $deliveryProduct: LetterDeliveryProduct, $printMode: LetterPrintMode, $printSpectrum: LetterPrintSpectrum, $qrBill: LetterQrBill) {
   updateSubscriptionInterval(
     id: $id
     daysAwayFromEnding: $daysAwayFromEnding
     mailTemplateId: $mailTemplateId
+    channels: $channels
+    addressPosition: $addressPosition
+    deliveryProduct: $deliveryProduct
+    printMode: $printMode
+    printSpectrum: $printSpectrum
+    qrBill: $qrBill
   ) {
     ...SubscriptionFlow
   }
@@ -20256,6 +20782,12 @@ export type UpdateSubscriptionIntervalMutationFn = Apollo.MutationFunction<Updat
  *      id: // value for 'id'
  *      daysAwayFromEnding: // value for 'daysAwayFromEnding'
  *      mailTemplateId: // value for 'mailTemplateId'
+ *      channels: // value for 'channels'
+ *      addressPosition: // value for 'addressPosition'
+ *      deliveryProduct: // value for 'deliveryProduct'
+ *      printMode: // value for 'printMode'
+ *      printSpectrum: // value for 'printSpectrum'
+ *      qrBill: // value for 'qrBill'
  *   },
  * });
  */

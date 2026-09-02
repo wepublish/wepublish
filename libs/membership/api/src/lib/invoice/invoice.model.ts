@@ -96,6 +96,15 @@ export class Invoice extends HasOptionalSubscription {
   items!: InvoiceItem[];
   @Field(() => Int)
   total!: number;
+
+  @Field(() => Int)
+  number!: number;
+
+  @Field(() => String, {
+    nullable: true,
+    description: `The QR bill reference a bank transfer for this invoice carries.`,
+  })
+  paymentReference?: string;
 }
 
 @ObjectType()
@@ -147,6 +156,11 @@ export class InvoiceFilter {
   userID?: string;
   @Field({ nullable: true })
   subscriptionID?: string;
+  @Field({
+    nullable: true,
+    description: `Find the invoice a bank transfer belongs to by its QR bill reference.`,
+  })
+  paymentReference?: string;
 }
 
 @ArgsType()

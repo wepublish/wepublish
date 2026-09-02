@@ -257,6 +257,12 @@ export class SubscriptionFlowService {
               },
             }
           : {},
+        channels: interval.channels,
+        addressPosition: interval.addressPosition,
+        deliveryProduct: interval.deliveryProduct,
+        printMode: interval.printMode,
+        printSpectrum: interval.printSpectrum,
+        qrBill: interval.qrBill,
       },
     });
 
@@ -284,28 +290,38 @@ export class SubscriptionFlowService {
       false
     );
 
-    await this.prismaService.$transaction([
-      this.prismaService.subscriptionInterval.update({
-        where: { id: interval.id },
-        data: { mailTemplate: { disconnect: true } },
-      }),
-      this.prismaService.subscriptionInterval.update({
-        where: {
-          id: interval.id,
-        },
-        data: {
-          mailTemplate:
-            interval.mailTemplateId ?
-              {
-                connect: {
-                  id: interval.mailTemplateId,
-                },
-              }
-            : {},
-          daysAwayFromEnding: interval.daysAwayFromEnding,
-        },
-      }),
-    ]);
+    await this.prismaService.subscriptionInterval.update({
+      where: {
+        id: interval.id,
+      },
+      data: {
+        ...(interval.mailTemplateId !== undefined ?
+          {
+            mailTemplate:
+              interval.mailTemplateId ?
+                { connect: { id: interval.mailTemplateId } }
+              : { disconnect: true },
+          }
+        : {}),
+        ...(interval.channels !== undefined ?
+          { channels: interval.channels }
+        : {}),
+        ...(interval.addressPosition !== undefined ?
+          { addressPosition: interval.addressPosition }
+        : {}),
+        ...(interval.deliveryProduct !== undefined ?
+          { deliveryProduct: interval.deliveryProduct }
+        : {}),
+        ...(interval.printMode !== undefined ?
+          { printMode: interval.printMode }
+        : {}),
+        ...(interval.printSpectrum !== undefined ?
+          { printSpectrum: interval.printSpectrum }
+        : {}),
+        ...(interval.qrBill !== undefined ? { qrBill: interval.qrBill } : {}),
+        daysAwayFromEnding: interval.daysAwayFromEnding,
+      },
+    });
 
     return this.getFlows(false);
   }

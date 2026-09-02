@@ -24,7 +24,9 @@ export class SubscriptionEventDictionary {
   private allFlows: (SubscriptionFlow & {
     actions: Action[];
     paymentMethods: PaymentMethod[];
-    intervals: (SubscriptionInterval & { mailTemplate: MailTemplate | null })[];
+    intervals: (SubscriptionInterval & {
+      mailTemplate: MailTemplate | null;
+    })[];
   })[] = [];
 
   constructor(private prismaService: PrismaClient) {}
@@ -153,6 +155,14 @@ export class SubscriptionEventDictionary {
           type: int.event,
           daysAwayFromEnding: int.daysAwayFromEnding,
           mailTemplateId: int.mailTemplate ? int.mailTemplate.id : null,
+          channels: int.channels,
+          print: {
+            addressPosition: int.addressPosition,
+            deliveryProduct: int.deliveryProduct,
+            printMode: int.printMode,
+            printSpectrum: int.printSpectrum,
+            qrBill: int.qrBill,
+          },
         })),
       };
     });

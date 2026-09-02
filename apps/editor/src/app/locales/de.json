@@ -1018,7 +1018,13 @@
         "textContentReadonlyHint": "Wird automatisch aus dem Inhalt erzeugt. Bearbeite den Visuell- oder HTML-Tab, um ihn zu ändern.",
         "background": "Hintergrund",
         "contentWidth": "Breite (px)",
-        "purposeHint": "Der Verwendungszweck legt fest, in welcher Situation diese Vorlage verschickt wird. Davon hängt ab, welche Daten – und damit welche Platzhalter – zur Verfügung stehen: Nur eine Rechnungs-Vorlage kennt z. B. den Rechnungsbetrag."
+        "purposeHint": "Der Verwendungszweck legt fest, in welcher Situation diese Vorlage verschickt wird. Davon hängt ab, welche Daten – und damit welche Platzhalter – zur Verfügung stehen: Nur eine Rechnungs-Vorlage kennt z. B. den Rechnungsbetrag.",
+        "channels": "Kanäle",
+        "channelMail": "E-Mail",
+        "channelLetter": "Brief",
+        "channelsHint": "Wofür diese Vorlage verwendet werden darf. Ein Brief hat keine klickbaren Links — meist lohnt sich eine eigene Vorlage.",
+        "previewLetter": "Brief-Vorschau (PDF)",
+        "letterMissingPlaceholders": "Diese Platzhalter bleiben leer: {{placeholders}}"
       },
       "editor": {
         "undo": "Rückgängig",
@@ -1297,7 +1303,9 @@
       "apps": "Apps",
       "mailSend": "E-Mail senden",
       "mailLog": "Gesendete E-Mails",
-      "communication": "Kommunikation"
+      "communication": "Kommunikation",
+      "letterLog": "Versendete Briefe",
+      "organisationSettings": "Organisation"
     },
     "navigation": {
       "overview": {
@@ -3072,6 +3080,85 @@
         "sentAt": "Gesendet am",
         "attempts": "Versuche",
         "empty": "Keine Einträge für diesen Filter."
+      }
+    },
+    "letterLog": {
+      "title": "Versendete Briefe",
+      "created": "Erstellt",
+      "state": "Status",
+      "states": {
+        "pending": "In Arbeit",
+        "submitted": "Übergeben",
+        "accepted": "Angenommen",
+        "dispatched": "Aufgegeben",
+        "delivered": "Zugestellt",
+        "undeliverable": "Unzustellbar",
+        "rejected": "Abgelehnt",
+        "canceled": "Storniert"
+      },
+      "allStates": "Alle Status",
+      "recipient": "Empfänger*in",
+      "pages": "Seiten",
+      "tracking": "Sendungsnummer",
+      "actions": "Aktionen",
+      "dispatch": "Versenden",
+      "cancel": "Stornieren"
+    },
+    "organisationSettings": {
+      "title": "Organisation",
+      "hint": "Diese Angaben stehen als Absender auf jedem Brief und als Zahlungsempfänger auf jeder QR-Rechnung.",
+      "sender": "Absender",
+      "qrBill": "QR-Rechnung",
+      "name": "Name",
+      "street": "Strasse",
+      "number": "Nummer",
+      "zip": "PLZ",
+      "city": "Ort",
+      "country": "Land (ISO, z.B. CH)",
+      "iban": "IBAN",
+      "ibanHint": "Für eine QR-Referenz wird eine QR-IBAN benötigt, für eine Creditor Reference eine normale IBAN.",
+      "referenceType": "Referenzart",
+      "referenceTypes": {
+        "QRR": "QR-Referenz (QRR)",
+        "SCOR": "Creditor Reference (SCOR)",
+        "NON": "Ohne Referenz"
+      },
+      "referenceTypeHint": "Die Referenz verbindet eine Zahlung mit der Rechnung. Ohne Referenz muss von Hand zugeordnet werden.",
+      "save": "Speichern",
+      "saved": "Einstellungen gespeichert"
+    },
+    "letterPrint": {
+      "title": "Druck- und Versandoptionen",
+      "sendAsMail": "Als E-Mail senden",
+      "sendAsLetter": "Als Brief senden",
+      "close": "Schliessen",
+      "addressPosition": "Position Adressfenster",
+      "addressPositions": {
+        "LEFT": "Links",
+        "RIGHT": "Rechts"
+      },
+      "deliveryProduct": "Versandart",
+      "deliveryProducts": {
+        "CHEAP": "Günstig (B-Post)",
+        "FAST": "Schnell (A-Post)",
+        "PREMIUM": "Premium",
+        "REGISTERED": "Eingeschrieben",
+        "BULK": "Massensendung"
+      },
+      "printMode": "Druck",
+      "printModes": {
+        "SIMPLEX": "Einseitig",
+        "DUPLEX": "Beidseitig"
+      },
+      "printSpectrum": "Farbe",
+      "printSpectra": {
+        "GRAYSCALE": "Schwarz/Weiss",
+        "COLOR": "Farbig"
+      },
+      "qrBill": "QR-Rechnung",
+      "qrBills": {
+        "NONE": "Keine",
+        "LAST_PAGE": "Auf der letzten Seite"
       }
     }
   }

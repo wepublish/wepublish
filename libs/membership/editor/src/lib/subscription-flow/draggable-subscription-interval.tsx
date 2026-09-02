@@ -7,6 +7,7 @@ import {
 } from '@wepublish/editor/api';
 import { useMemo } from 'react';
 import { MdDragIndicator } from 'react-icons/md';
+import { IntervalChannels } from './interval-channels';
 import { MailTemplateSelect } from './mail-template-select';
 import { DecoratedSubscriptionInterval } from './subscription-flow-list';
 
@@ -116,6 +117,10 @@ export function DraggableSubscriptionInterval({
           event={event || subscriptionInterval?.object?.event}
           newDaysAwayFromEnding={newDaysAwayFromEnding}
         />
+
+        {subscriptionInterval?.object?.mailTemplate && (
+          <IntervalChannels interval={subscriptionInterval.object} />
+        )}
       </DraggableContainer>
     </Tooltip>
   );
