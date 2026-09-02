@@ -135,7 +135,7 @@ export function TotpSetup({
         {secret && (
           <>
             <Alert severity="info">{t('user.totp.manualEntry')}</Alert>
-            <SecretCode>{secret}</SecretCode>
+            <SecretCode data-sentry-mask>{secret}</SecretCode>
           </>
         )}
 
