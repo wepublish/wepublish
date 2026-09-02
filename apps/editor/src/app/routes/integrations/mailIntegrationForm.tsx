@@ -29,6 +29,11 @@ const mailSettingsSchema = z.object({
   mailgun_mailDomain: z.string().nullish().or(z.literal('')),
 
   slack_webhookURL: z.string().nullish().or(z.literal('')),
+
+  smtp_host: z.string().nullish().or(z.literal('')),
+  smtp_port: z.number().nullish(),
+  smtp_secure: z.boolean().nullish(),
+  smtp_user: z.string().nullish().or(z.literal('')),
 });
 
 type IntegrationFormValues = z.infer<typeof mailSettingsSchema>;
@@ -133,6 +138,35 @@ export function MailIntegrationForm() {
             type: 'text',
             name: 'slack_webhookURL',
             label: t('integrations.mailSettings.slackWebhookUrl'),
+          });
+        }
+
+        if (setting.type === MailProviderType.Smtp) {
+          commonFields.push({
+            type: 'text',
+            name: 'smtp_host',
+            label: t('integrations.mailSettings.smtpHost'),
+          });
+          commonFields.push({
+            type: 'number',
+            name: 'smtp_port',
+            label: t('integrations.mailSettings.smtpPort'),
+          });
+          commonFields.push({
+            type: 'checkbox',
+            name: 'smtp_secure',
+            label: t('integrations.mailSettings.smtpSecure'),
+          });
+          commonFields.push({
+            type: 'text',
+            name: 'smtp_user',
+            label: t('integrations.mailSettings.smtpUser'),
+          });
+          commonFields.push({
+            name: 'apiKey',
+            label: t('integrations.mailSettings.smtpPassword'),
+            type: 'password',
+            autoComplete: 'one-time-code',
           });
         }
 

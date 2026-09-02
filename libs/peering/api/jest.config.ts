@@ -1,5 +1,5 @@
-/* eslint-disable */
-export default {
+module.exports = {
+  testPathIgnorePatterns: ['<rootDir>/import/'],
   displayName: 'peering-api',
   preset: '../../../jest.preset.js',
   testEnvironment: 'node',

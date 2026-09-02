@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import { css, lighten, Theme } from '@mui/material';
 import styled from '@emotion/styled';
 import { useUser } from '@wepublish/authentication/website';
@@ -9,7 +10,6 @@ import {
 import { cond } from 'ramda';
 import { MdEdit, MdReply } from 'react-icons/md';
 import { getStateForEditor } from './comment-list.state';
-import { CommentListItemShare } from './comment-list-item-share';
 
 export const CommentListItemChildren = styled('aside')`
   display: grid;
@@ -79,6 +79,7 @@ export const CommentListItem = ({
     CommentRatings,
     CommentListItemChild,
     Comment,
+    Share,
     elements: { Button },
   } = useWebsiteBuilder();
 
@@ -134,9 +135,9 @@ export const CommentListItem = ({
         />
 
         <CommentListItemActionsButtons>
-          <CommentListItemShare
+          <Share
             url={comment.url}
-            title="share"
+            title={title ?? undefined}
           />
 
           {canEdit && (

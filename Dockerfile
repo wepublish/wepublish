@@ -18,7 +18,7 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends openssl python3 build-essential && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
-    npm ci
+    npm ci --no-audit --no-fund
 
 FROM ${PLAIN_BUILD_IMAGE} AS base-image
 LABEL org.opencontainers.image.authors="WePublish Foundation"
@@ -47,10 +47,12 @@ ENV SSR_FETCH_TIMEOUT_MS=${SSR_FETCH_TIMEOUT_MS}
 ### FRONT_ARG_REPLACER ###
 
 COPY . .
+# Sourcemaps are injected and uploaded by withSentryConfig during `nx build`
+# (it picks up SENTRY_AUTH_TOKEN/ORG/PROJECT/RELEASE from the env set above).
+# Do not add a manual `sentry-cli sourcemaps upload` here: the client maps are
+# already deleted by then, and it would walk .next/standalone/node_modules.
 RUN npx prisma generate && \
     npx nx build ${NEXT_PROJECT} ${NX_NEXT_PROJECT_BUILD_OPTIONS} && \
-    npx @sentry/cli sourcemaps inject ./dist/apps/${NEXT_PROJECT}/.next && \
-    npx @sentry/cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist/apps/${NEXT_PROJECT}/.next && \
     node /wepublish/deployment/map-secrets.js clean
 
 FROM ${PLAIN_BUILD_IMAGE} AS website-setup
@@ -98,9 +100,9 @@ ARG APP_RELEASE_ID
 COPY . .
 RUN npx prisma generate && \
     node docker/inline-pkg-imports.js && \
-    npx nx build api-example --ignore-nx-cache && \
+    npx nx build api-example --skip-nx-cache && \
     npx @sentry/cli sourcemaps inject ./dist/apps/api-example && \
-    npx @sentry/cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist/apps/api-example && \
+    { npx @sentry/cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist/apps/api-example || echo "sentry sourcemaps upload failed, continuing build"; } && \
     node docker/generate-pkg-shims.js && \
     cp docker/api_build_package.json package.json && \
     npx @yao-pkg/pkg package.json
@@ -160,11 +162,12 @@ ARG SENTRY_ORG
 ARG SENTRY_PROJECT
 ARG SENTRY_RELEASE
 ARG APP_RELEASE_ID
+ENV NODE_OPTIONS="--max-old-space-size=6144"
 COPY . .
 RUN npx prisma generate && \
-    npx nx build editor --ignore-nx-cache && \
+    npx nx build editor --skip-nx-cache && \
     npx @sentry/cli sourcemaps inject ./dist/apps/editor && \
-    npx @sentry/cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist/apps/editor && \
+    { npx @sentry/cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist/apps/editor || echo "sentry sourcemaps upload failed, continuing build"; } && \
     cp docker/editor_build_package.json package.json && \
     npx @yao-pkg/pkg package.json
 
@@ -205,11 +208,11 @@ COPY libs/api/prisma/schema.prisma prisma/schema.prisma
 COPY prisma.config.ts prisma.config.ts
 COPY libs/api/prisma/ca.crt /wepublish/ca.crt
 COPY docker/tsconfig.yaml_seed tsconfig.yaml
-RUN npm install prisma@7.5.0 @prisma/client@7.5.0 @prisma/adapter-pg pg @types/node @node-rs/argon2 typescript@~5.7.3 && \
+RUN npm install --no-audit --no-fund prisma@7.5.0 @prisma/client@7.5.0 @prisma/adapter-pg pg @types/node @node-rs/argon2 typescript@~5.7.3 && \
     npx prisma generate && \
     npx tsc -p tsconfig.yaml && \
     npx @sentry/cli sourcemaps inject ./dist && \
-    npx @sentry/cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist
+    { npx @sentry/cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist || echo "sentry sourcemaps upload failed, continuing build"; }
 
 FROM ${PLAIN_BUILD_IMAGE} AS migration-setup
 ARG APP_RELEASE_ID
@@ -226,7 +229,7 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends openssl && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
-    npm install prisma@7.5.0 @prisma/client@7.5.0 @prisma/adapter-pg pg @node-rs/argon2 && \
+    npm install --no-audit --no-fund prisma@7.5.0 @prisma/client@7.5.0 @prisma/adapter-pg pg @node-rs/argon2 && \
     npx prisma generate && \
     chmod -R g=u /wepublish
 
@@ -259,10 +262,10 @@ RUN apt-get update && apt-get install -y libjemalloc-dev poppler-utils fonts-lib
 COPY . .
 COPY ./apps/media/package.json ./package.json
 COPY ./apps/media/package-lock.json ./package-lock.json
-RUN npm ci
-RUN npx nx build media --ignore-nx-cache && \
+RUN npm ci --no-audit --no-fund
+RUN npx nx build media --skip-nx-cache && \
     npx @sentry/cli sourcemaps inject ./dist/apps/media && \
-    npx @sentry/cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist/apps/media && \
+    { npx @sentry/cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist/apps/media || echo "sentry sourcemaps upload failed, continuing build"; } && \
     mkdir -p /poppler-dist/bin /poppler-dist/lib && \
     cp /usr/bin/pdftoppm /poppler-dist/bin/ && \
     ldd /usr/bin/pdftoppm | awk '/=>/ {print $3}' | xargs -I{} cp -L {} /poppler-dist/lib/ 2>/dev/null || true

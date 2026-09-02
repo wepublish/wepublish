@@ -30,6 +30,10 @@ fragment FullSubscription on PublicSubscription {
   }
   extendable
   currency
+  goodie {
+    id
+    name
+  }
 }
 
 fragment Deactivation on SubscriptionDeactivation {
@@ -94,6 +98,7 @@ query Subscription($id: String!) {
 }
 
 query SubscriptionsAsCsv(
+  $activeAt: DateTime
   $autoRenew: Boolean
   $userHasAddress: Boolean
   $extendable: Boolean
@@ -114,6 +119,7 @@ query SubscriptionsAsCsv(
   $paymentPeriodicity: PaymentPeriodicity
 ) {
   subscriptionsAsCsv(
+    activeAt: $activeAt
     autoRenew: $autoRenew
     userHasAddress: $userHasAddress
     extendable: $extendable

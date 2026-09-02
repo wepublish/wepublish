@@ -2,6 +2,8 @@ import { LazyQueryExecFunction, QueryResult } from '@apollo/client';
 import { RadioProps } from '@mui/material';
 import {
   ChallengeQuery,
+  FullGoodieFragment,
+  FullSubscribeBlockFragment,
   FullInvoiceFragment,
   FullMemberPlanFragment,
   FullSubscriptionFragment,
@@ -21,6 +23,11 @@ import {
 import { BuilderRegistrationFormProps } from './authentication.interface';
 import { BuilderUserFormFields } from './user.interface';
 import { FieldError } from 'react-hook-form';
+
+export type BuilderMemberPlanRenderSetting =
+  FullSubscribeBlockFragment['memberPlanRenderSettings'][number];
+
+export type BuilderMemberPlanLayout = BuilderMemberPlanRenderSetting['layout'];
 
 export type BuilderSubscriptionListItemProps = FullSubscriptionFragment & {
   className?: string;
@@ -57,6 +64,15 @@ export type BuilderInvoiceListProps = Pick<
   onPay?: (invoiceId: string, paymentMethodId: string) => Promise<void>;
 };
 
+export type BuilderGoodiePickerProps = {
+  goodies: FullGoodieFragment[];
+  className?: string;
+  name?: string;
+  value?: string | null;
+  disabled?: boolean;
+  onChange: (goodieId: string | null) => void;
+};
+
 export type BuilderMemberPlanPickerProps = {
   memberPlans: FullMemberPlanFragment[];
   className?: string;
@@ -67,14 +83,16 @@ export type BuilderMemberPlanPickerProps = {
 
 export type BuilderMemberPlanItemProps = Pick<
   FullMemberPlanFragment,
+  | 'slug'
   | 'amountPerMonthMin'
   | 'amountPerMonthMax'
   | 'currency'
   | 'extendable'
   | 'shortDescription'
   | 'tags'
+  | 'goodies'
 > &
-  Omit<RadioProps, 'ref'> & { className?: string } & { slug: string };
+  RadioProps & { className?: string };
 
 export type BuilderPeriodicityPickerProps = {
   periodicities: PaymentPeriodicity[] | undefined;
@@ -100,7 +118,7 @@ export type BuilderTransactionFeeProps = {
   value?: boolean;
 };
 
-export type BuilderPaymentAmountProps = {
+export type BuilderPaymentAmountSliderProps = {
   amountPerMonthMin: number;
   amountPerMonthMax?: number;
   amountPerMonthTarget: number | undefined;
@@ -111,7 +129,22 @@ export type BuilderPaymentAmountProps = {
   value: number;
   error: FieldError | undefined;
   className?: string;
-  slug?: string;
+  showInput?: boolean;
+};
+
+export type BuilderPaymentAmountPickerProps = {
+  amountPerMonthMin: number;
+  amountPerMonthMax?: number;
+  amountPerMonthTarget: number | undefined;
+  currency: Currency;
+  donate: boolean;
+  onChange: (amount: number) => void;
+  name?: string;
+  value: number;
+  error: FieldError | undefined;
+  className?: string;
+  presetAmounts?: number[];
+  showInput?: boolean;
 };
 
 export type BuilderSubscribeProps<
@@ -130,6 +163,10 @@ export type BuilderSubscribeProps<
     QueryResult<MemberPlanListQuery>,
     'data' | 'loading' | 'error'
   >;
+  memberPlanRenderSettings?: BuilderMemberPlanRenderSetting[];
+  showGoodies?: boolean;
+  showDiscountCodes?: boolean;
+  goodieMinValue?: number | null;
   subscribeInfo: Pick<
     QueryResult<CreateSubscriptionInfoQuery>,
     'data' | 'loading' | 'error'
@@ -154,13 +191,17 @@ export type BuilderSubscribeProps<
     email: string;
     name: string;
     firstName: string;
-    voucher: string;
+    discountCode: string;
   }>;
   deactivateSubscriptionId?: string;
   termsOfServiceUrl?: string;
   transactionFee?: (monthlyAmount: number) => number;
   transactionFeeText?: string;
   returningUserId?: string;
+  filterGoodies?: (
+    goodies: FullGoodieFragment[],
+    context: { monthlyAmount: number }
+  ) => FullGoodieFragment[];
 } & Pick<BuilderRegistrationFormProps<T>, 'schema' | 'fields'>;
 
 export type BuilderUpgradeProps = {
@@ -173,14 +214,20 @@ export type BuilderUpgradeProps = {
     'data' | 'loading' | 'error'
   >;
   subscriptionToUpgrade: FullSubscriptionFragment;
+  memberPlanRenderSettings?: BuilderMemberPlanRenderSetting[];
+  showGoodies?: boolean;
+  showDiscountCodes?: boolean;
+  goodieMinValue?: number | null;
+  hideRepeatGoodieOnUpgrade?: boolean;
   className?: string;
   onUpgrade?: (
     data: Omit<UpgradeMutationVariables, 'failureURL' | 'successURL'>
   ) => Promise<void>;
   defaults?: Partial<{
     memberPlanSlug: string | null;
+    discountCode: string;
   }>;
-  onSelect: (memberPlanId: string | undefined) => void;
+  onSelect: (memberPlanId: string | undefined, discountCode?: string) => void;
   donate?: (memberPlan?: FullMemberPlanFragment) => boolean;
   termsOfServiceUrl?: string;
   transactionFee?: (monthlyAmount: number) => number;

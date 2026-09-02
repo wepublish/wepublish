@@ -14,7 +14,7 @@ import {
   TagPicker,
   toaster,
 } from 'rsuite';
-import { ItemDataType } from 'rsuite/esm/@types/common';
+import type { Option } from 'rsuite/esm/internals/types';
 
 import { DEFAULT_MAX_TABLE_PAGES } from '../../utility';
 
@@ -48,7 +48,7 @@ export function SelectMemberPlans({
     defaultMemberPlans.map(memberplan => ({
       label: memberplan.name,
       value: memberplan.id,
-    })) as ItemDataType<string | number>[]
+    })) as Option<string | number>[]
   );
 
   /**
@@ -116,7 +116,7 @@ export function SelectMemberPlans({
       onChange={(value, item) => {
         setSelectedMemberPlans(value);
       }}
-      renderMenu={menu => {
+      renderListbox={menu => {
         return (
           <>
             {menu}

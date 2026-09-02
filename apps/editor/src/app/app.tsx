@@ -1,4 +1,4 @@
-import 'rsuite/styles/index.less';
+import 'rsuite/dist/rsuite.css';
 
 import { gql, useMutation } from '@apollo/client';
 import { css, Global } from '@emotion/react';
@@ -27,11 +27,12 @@ import {
 } from '@wepublish/editor/api';
 import { ImportableEventListView } from '@wepublish/event/import/editor';
 import {
+  MailLogList,
+  MailSendPage,
+  MailTemplateEdit,
   MailTemplateList,
   MemberPlanEdit,
-  PlaceholderList,
   SubscriptionFlowList,
-  SystemMailList,
 } from '@wepublish/membership/editor';
 import { SettingList } from '@wepublish/settings/editor';
 import {
@@ -43,11 +44,11 @@ import { useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { CustomProvider } from 'rsuite';
+import de from 'rsuite/locales/de_DE';
 import enGB from 'rsuite/locales/en_GB';
+import fr from 'rsuite/locales/fr_FR';
 
 import { Base } from './base';
-import de from './locales/rsuiteDe';
-import fr from './locales/rsuiteFr';
 import { Login } from './login';
 import { LoginJwt } from './loginJwt';
 import { ResetPassword } from './resetPassword';
@@ -66,6 +67,9 @@ import { EventEditView } from './routes/events/eventEditView';
 import { EventListView } from './routes/events/eventListView';
 import { ExternalAppIframeView } from './routes/externalApps/externalAppIframeView';
 import { ExternalApps } from './routes/externalApps/externalAppsEdit';
+import { GoodieCreateView } from './routes/goodie/goodieCreateView';
+import { GoodieEditView } from './routes/goodie/goodieEditView';
+import { GoodieList } from './routes/goodie/goodieList';
 import { ImageList } from './routes/images/imageList';
 import { IntegrationEditView } from './routes/integrations/integrationEditView';
 import { IntegrationList } from './routes/integrations/integrationList';
@@ -92,9 +96,9 @@ import { TokenList } from './routes/tokens/tokenList';
 import { UserRoleList } from './routes/userRoles/userRoleList';
 import { UserEditView } from './routes/users/userEditView';
 import { UserList } from './routes/users/userList';
-import { VoucherCreateView } from './routes/voucher/voucherCreateView';
-import { VoucherEditView } from './routes/voucher/voucherEditView';
-import { VoucherList } from './routes/voucher/voucherList';
+import { DiscountCodeCreateView } from './routes/discountCode/discountCodeCreateView';
+import { DiscountCodeEditView } from './routes/discountCode/discountCodeEditView';
+import { DiscountCodeList } from './routes/discountCode/discountCodeList';
 import { WebsiteSettingsItem } from './routes/website-settings/website-settings-item';
 import { WebsiteSettingsList } from './routes/website-settings/website-settings-list';
 import { SetNewPassword } from './setNewPassword';
@@ -249,6 +253,24 @@ export function App() {
               top: 0;
               background-color: #1675e0;
             }
+          }
+
+          // Styles missing from v6 of rsuite
+          :root {
+            --rs-form-control-width: 100%;
+          }
+
+          .rs-grid-container-fluid,
+          .rs-form-group {
+            width: 100%;
+          }
+
+          .rs-drawer-header {
+            width: 100%;
+          }
+
+          .rs-drawer-dialog {
+            overflow: scroll;
           }
         `}
       />
@@ -882,28 +904,52 @@ export function App() {
                 </Base>
               }
             />
-            {/* Voucher routes */}
+            {/* DiscountCode routes */}
             <Route
-              path="vouchers"
+              path="discountCodes"
               element={
                 <Base>
-                  <VoucherList />
+                  <DiscountCodeList />
                 </Base>
               }
             />
             <Route
-              path="vouchers/edit/:id"
+              path="discountCodes/edit/:id"
               element={
                 <Base>
-                  <VoucherEditView />
+                  <DiscountCodeEditView />
                 </Base>
               }
             />
             <Route
-              path="vouchers/create"
+              path="discountCodes/create"
               element={
                 <Base>
-                  <VoucherCreateView />
+                  <DiscountCodeCreateView />
+                </Base>
+              }
+            />
+            <Route
+              path="goodies"
+              element={
+                <Base>
+                  <GoodieList />
+                </Base>
+              }
+            />
+            <Route
+              path="goodies/edit/:id"
+              element={
+                <Base>
+                  <GoodieEditView />
+                </Base>
+              }
+            />
+            <Route
+              path="goodies/create"
+              element={
+                <Base>
+                  <GoodieCreateView />
                 </Base>
               }
             />
@@ -974,18 +1020,44 @@ export function App() {
               }
             />
             <Route
-              path="mailtemplates/placeholders"
+              path="mailtemplates/create"
               element={
                 <Base>
-                  <PlaceholderList />
+                  <MailTemplateEdit />
                 </Base>
               }
             />
             <Route
-              path="systemmails"
+              path="mailtemplates/edit/:id"
               element={
                 <Base>
-                  <SystemMailList />
+                  <MailTemplateEdit />
+                </Base>
+              }
+            />
+            {/* System mails are now part of the automatic mails view */}
+            <Route
+              path="systemmails"
+              element={
+                <Navigate
+                  to="/communicationflows/edit/default"
+                  replace
+                />
+              }
+            />
+            <Route
+              path="mailsend"
+              element={
+                <Base>
+                  <MailSendPage />
+                </Base>
+              }
+            />
+            <Route
+              path="maillog"
+              element={
+                <Base>
+                  <MailLogList />
                 </Base>
               }
             />

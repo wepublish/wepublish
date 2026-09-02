@@ -50,7 +50,8 @@ export interface HandleSubscriptionChangeProps {
 export interface RenewSubscriptionForUserProps {
   subscription: SubscriptionWithRelations;
   discount?: number;
-  voucherId?: string;
+  discountCodeId?: string;
+  goodieId?: string;
 }
 
 export interface ChargeInvoiceProps {
@@ -221,7 +222,8 @@ export class MemberContext implements MemberContextInterface {
   async renewSubscriptionForUser({
     subscription,
     discount,
-    voucherId,
+    discountCodeId,
+    goodieId,
   }: RenewSubscriptionForUserProps): Promise<InvoiceWithItems | null> {
     try {
       const { periods = [], paidUntil, deactivation } = subscription;
@@ -328,6 +330,13 @@ export class MemberContext implements MemberContextInterface {
         throw new Error('Memberplan not found');
       }
 
+      const goodie =
+        goodieId ?
+          await this.prisma.goodie.findUnique({
+            where: { id: goodieId },
+          })
+        : null;
+
       const newInvoice = await this.prisma.invoice.create({
         data: {
           subscriptionID: subscription.id,
@@ -337,13 +346,25 @@ export class MemberContext implements MemberContextInterface {
           scheduledDeactivationAt: deactivationDate,
           currency: subscription.currency,
           items: {
-            create: {
-              name: 'Membership',
-              description: `From ${startDate.toISOString()} to ${nextDate.toISOString()}`,
-              amount,
-              quantity: 1,
-              voucherId,
-            },
+            create: [
+              {
+                name: 'Membership',
+                description: `From ${startDate.toISOString()} to ${nextDate.toISOString()}`,
+                amount,
+                quantity: 1,
+                discountCodeId,
+              },
+              ...(goodie ?
+                [
+                  {
+                    name: goodie.name,
+                    amount: 0,
+                    quantity: 1,
+                    goodieId: goodie.id,
+                  },
+                ]
+              : []),
+            ],
           },
         },
         include: {
@@ -493,7 +514,7 @@ export class MemberContext implements MemberContextInterface {
 
       if (remoteTemplate) {
         await this.mailContext.sendMail({
-          externalMailTemplateId: remoteTemplate,
+          mailTemplateId: remoteTemplate,
           recipient: user,
           optionalData: {
             invoice,
@@ -759,7 +780,8 @@ export class MemberContext implements MemberContextInterface {
     startsAt = new Date(),
     needsConfirmation,
     discount,
-    voucherId,
+    discountCodeId,
+    goodieId,
   }: {
     userID: string;
     paymentMethodID: string;
@@ -773,7 +795,8 @@ export class MemberContext implements MemberContextInterface {
     startsAt?: Date | string;
     needsConfirmation?: boolean;
     discount?: number;
-    voucherId?: string;
+    discountCodeId?: string;
+    goodieId?: string;
   }): Promise<{
     subscription: SubscriptionWithRelations;
     invoice: InvoiceWithItems;
@@ -844,6 +867,8 @@ export class MemberContext implements MemberContextInterface {
     const invoice = await this.renewSubscriptionForUser({
       subscription,
       discount,
+      discountCodeId,
+      goodieId,
     });
 
     if (!invoice) {
@@ -1107,7 +1132,7 @@ export class MemberContext implements MemberContextInterface {
     }
 
     await this.mailContext.sendMail({
-      externalMailTemplateId: remoteTemplate,
+      mailTemplateId: remoteTemplate,
       recipient: user,
       optionalData: {
         subscription,

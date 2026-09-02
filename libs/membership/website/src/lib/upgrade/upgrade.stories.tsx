@@ -1,7 +1,7 @@
 import { ApolloError } from '@apollo/client';
-import { action } from '@storybook/addon-actions';
-import { Meta, StoryObj } from '@storybook/react';
-import { userEvent, within } from '@storybook/test';
+import { action } from 'storybook/actions';
+import { Meta, StoryObj } from '@storybook/nextjs-vite';
+import { userEvent, within } from 'storybook/test';
 import {
   mockAvailablePaymentMethod,
   mockMemberPlan,
@@ -71,7 +71,8 @@ const memberPlan4 = mockMemberPlan({
   id: undefined,
   name: 'Donation',
   shortDescription: undefined,
-  amountPerMonthMin: 0,
+  amountPerMonthMin: 1500,
+  amountPerMonthTarget: 1500,
   availablePaymentMethods: [memberPlan.availablePaymentMethods[2]],
   productType: ProductType.Donation,
 });
@@ -99,7 +100,7 @@ const clickPayTransactionFees: StoryObj['play'] = async ({
 
 const clickUpgrade: StoryObj['play'] = async ({ canvasElement, step }) => {
   const canvas = within(canvasElement);
-  const submitButton = canvas.getByText('Abonnieren', {
+  const submitButton = canvas.getByText('upgraden', {
     exact: false,
   });
 
@@ -158,8 +159,10 @@ export const Default: StoryObj<typeof Upgrade> = {
     },
     upgradeInfo: {
       data: {
-        upgradeSubscriptionInfo: {
+        upgradeUserSubscriptionInfo: {
           discountAmount: 500,
+          discountPercent: null,
+          discountCodeValid: null,
         },
       },
       loading: false,
@@ -207,8 +210,10 @@ export const ResetPaymentOptionsOnPaymentMethodChange: StoryObj<
 > = {
   ...Default,
   play: async ctx => {
+    // memberPlan2 is the default upgrade target, so only its payment
+    // methods are selectable
     await changePaymentMethod(
-      memberPlan.availablePaymentMethods[2].paymentMethods[0]
+      memberPlan.availablePaymentMethods[1].paymentMethods[1]
     )(ctx);
     await clickUpgrade(ctx);
   },
@@ -219,4 +224,79 @@ export const WithDonate: StoryObj<typeof Upgrade> = {
   play: async ctx => {
     await changeMemberPlan(memberPlan4)(ctx);
   },
+};
+
+// getAllByText throws when a text is missing, which fails the story
+const expectTexts =
+  (texts: string[]): NonNullable<StoryObj['play']> =>
+  async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step('Check texts', async () => {
+      texts.forEach(text => canvas.getAllByText(text, { exact: false }));
+    });
+  };
+
+export const WithDiscountCode: StoryObj<typeof Upgrade> = {
+  ...Default,
+  args: {
+    ...Default.args,
+    showDiscountCodes: true,
+    upgradeInfo: {
+      data: {
+        upgradeUserSubscriptionInfo: {
+          discountAmount: 500,
+          discountPercent: 0.2,
+          discountCodeValid: true,
+        },
+      },
+      loading: false,
+    },
+  },
+  // memberPlan2 for a year is CHF 96.-, minus the CHF 5.- leftover
+  // of the old subscription, minus 20% discountCode discount
+  play: expectTexts([
+    '20% Rabatt angewendet',
+    'CHF 72.80',
+    'Nach dem ersten Jahr',
+  ]),
+};
+
+export const WithInvalidDiscountCode: StoryObj<typeof Upgrade> = {
+  ...Default,
+  args: {
+    ...Default.args,
+    showDiscountCodes: true,
+    upgradeInfo: {
+      data: {
+        upgradeUserSubscriptionInfo: {
+          discountAmount: 500,
+          discountPercent: null,
+          discountCodeValid: false,
+        },
+      },
+      loading: false,
+    },
+  },
+  play: expectTexts(['Rabattcode ungültig', 'CHF 91.-']),
+};
+
+export const WithDiscountCoveringTheFullAmount: StoryObj<typeof Upgrade> = {
+  ...Default,
+  args: {
+    ...Default.args,
+    upgradeInfo: {
+      data: {
+        upgradeUserSubscriptionInfo: {
+          discountAmount: 100000,
+          discountPercent: 0.2,
+          discountCodeValid: true,
+        },
+      },
+      loading: false,
+    },
+  },
+  // the leftover discount is bigger than the upgrade, so it stays at zero
+  // instead of turning into a negative amount
+  play: expectTexts(['CHF 0.-']),
 };

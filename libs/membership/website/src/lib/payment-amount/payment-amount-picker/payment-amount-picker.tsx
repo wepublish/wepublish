@@ -1,16 +1,47 @@
 import { css, FormControlLabel, Radio, RadioGroup } from '@mui/material';
 import {
-  BuilderPaymentAmountProps,
+  BuilderPaymentAmountPickerProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { Currency } from '@wepublish/website/api';
-import { forwardRef, PropsWithChildren, useMemo } from 'react';
+import { forwardRef, PropsWithChildren, useState } from 'react';
 import { formatCurrency } from '../../formatters/format-currency';
+import {
+  CurrencyNumberSpinner,
+  CurrencyNumberSpinnerSnap,
+  HelperText,
+} from './currency-number-spinner';
 import styled from '@emotion/styled';
+
+const GROUP_SEPARATORS = /[\u2019\u0027]/g;
+const NON_BREAKING_SPACES = /[\u00a0\u202f\u2009]/g;
+
+const formatNumber = (value: number, format: string, locale = 'de-CH') => {
+  const [intPart = '', fracPart = ''] = format.split('.');
+  const useGrouping = intPart.includes(',');
+
+  const minimumIntegerDigits = Math.max(1, (intPart.match(/0/g) || []).length);
+  const minimumFractionDigits = (fracPart.match(/0/g) || []).length;
+  const maximumFractionDigits = Math.max(
+    minimumFractionDigits,
+    (fracPart.match(/[0#]/g) || []).length
+  );
+
+  return new Intl.NumberFormat(locale, {
+    style: 'decimal',
+    minimumIntegerDigits,
+    minimumFractionDigits,
+    maximumFractionDigits,
+    useGrouping,
+  })
+    .format(value)
+    .replace(GROUP_SEPARATORS, "'")
+    .replace(NON_BREAKING_SPACES, ' ');
+};
 
 export const PaymentAmountPickerWrapper = styled(RadioGroup)`
   display: grid;
-  grid-template-columns: repeat(auto-fit, 125px);
+  grid-template-columns: repeat(auto-fit, 185px);
   align-items: top;
   justify-content: center;
   gap: ${({ theme }) => theme.spacing(2)};
@@ -51,6 +82,10 @@ export const PaymentAmountPickerItemWrapper = styled('div')<
     css`
       color: ${theme.palette.primary.contrastText};
       background: ${theme.palette.primary.light};
+
+      ${HelperText} {
+        color: ${theme.palette.primary.contrastText};
+      }
     `}
 `;
 
@@ -74,6 +109,8 @@ export const PaymentAmountPickerItemAmount = styled('div')`
   font-weight: 600;
 `;
 
+export const StyledCurrencyNumberSpinner = styled(CurrencyNumberSpinner)``;
+
 export const PaymentAmountPickerItem = forwardRef<
   HTMLButtonElement,
   PaymentAmountPickerItemProps
@@ -96,15 +133,25 @@ export const PaymentAmountPickerItem = forwardRef<
 
 export const PaymentAmountPicker = forwardRef<
   HTMLInputElement,
-  BuilderPaymentAmountProps
+  BuilderPaymentAmountPickerProps & {
+    format?: string;
+    step?: number;
+    snap?: CurrencyNumberSpinnerSnap;
+    arrows?: 'split' | 'stacked';
+    noInitialSelection?: boolean;
+  }
 >(
   (
     {
       className,
-      slug,
       currency,
       amountPerMonthMin,
       amountPerMonthTarget,
+      presetAmounts,
+      format,
+      snap,
+      arrows,
+      noInitialSelection,
       name,
       error,
       value,
@@ -113,20 +160,16 @@ export const PaymentAmountPicker = forwardRef<
     ref
   ) => {
     const {
-      elements: { TextField },
-      meta: { locale, siteTitle },
+      meta: { locale },
     } = useWebsiteBuilder();
 
-    const pickerItems = useMemo(() => {
-      switch (siteTitle) {
-        case 'WNTI':
-          return slug?.includes('donate') ?
-              [10000, 15000, 20000]
-            : [1000, 1500, 2000];
-        default:
-          return [1000, 1500, 2000];
-      }
-    }, [siteTitle, slug]);
+    const [hasInteracted, setHasInteracted] = useState(false);
+    const showSelection = !noInitialSelection || hasInteracted;
+    const items = presetAmounts ?? [];
+    const isCustomValue =
+      snap ?
+        !snap.values.some(v => v * 100 === value)
+      : !items.some(p => p === value);
 
     return (
       <PaymentAmountPickerWrapper
@@ -134,22 +177,25 @@ export const PaymentAmountPicker = forwardRef<
         name={name}
         onChange={event => {
           if (+event.target.value) {
+            setHasInteracted(true);
             onChange(+event.target.value);
           }
         }}
         value={value}
       >
-        {pickerItems.map(itemAmount => (
+        {items.map(itemAmount => (
           <FormControlLabel
             key={itemAmount}
             value={itemAmount}
             control={
               <PaymentAmountPickerItem
                 currency={currency}
-                checked={itemAmount === value}
+                checked={showSelection && itemAmount === value}
               >
                 <PaymentAmountPickerItemAmount>
-                  {formatCurrency(itemAmount / 100, currency, locale, false)}
+                  {format ?
+                    formatNumber(itemAmount / 100, format, locale)
+                  : formatCurrency(itemAmount / 100, currency, locale, false)}
                 </PaymentAmountPickerItemAmount>
               </PaymentAmountPickerItem>
             }
@@ -162,20 +208,21 @@ export const PaymentAmountPicker = forwardRef<
           control={
             <PaymentAmountPickerItem
               currency={currency}
-              checked={false}
+              checked={showSelection && isCustomValue}
             >
-              <TextField
-                ref={ref}
-                name={name}
-                value={value / 100}
-                onChange={event => onChange(+event.target.value * 100)}
-                type={'number'}
-                fullWidth
-                error={!!error}
+              <StyledCurrencyNumberSpinner
+                value={showSelection ? value / 100 : undefined}
+                min={amountPerMonthMin / 100}
+                snap={snap}
+                arrows={arrows}
                 helperText={`Min ${formatCurrency(amountPerMonthMin / 100, currency, locale)}`}
-                inputProps={{
-                  step: 'any',
-                  min: amountPerMonthMin / 100,
+                onValueChange={v => {
+                  setHasInteracted(true);
+                  if (typeof v === 'number' && v >= 0) {
+                    onChange(v ? v * 100 : 0);
+                  } else {
+                    onChange(0);
+                  }
                 }}
               />
             </PaymentAmountPickerItem>

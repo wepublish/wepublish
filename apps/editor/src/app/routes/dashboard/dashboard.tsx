@@ -45,6 +45,7 @@ export function Dashboard() {
                     <ListViewHeader>
                       <h2>{t('dashboard.audience')}</h2>
                     </ListViewHeader>
+
                     <ListViewActions>
                       <Link to="/audience/dashboard">
                         <Button
@@ -88,6 +89,7 @@ export function Dashboard() {
                     <ListViewHeader>
                       <h2>{t('dashboard.networkContent')}</h2>
                     </ListViewHeader>
+
                     <ListViewActions>
                       <Link to="/network">
                         <Button

@@ -1,24 +1,74 @@
 query MailTemplate {
   mailTemplates {
-    ...FullMailTemplate
+    ...TinyMailTemplate
   }
   provider {
     ...FullMailProvider
   }
 }
 
-mutation SynchronizeMailTemplates {
-  syncTemplates
+query MailTemplateById($id: String!) {
+  mailTemplate(id: $id) {
+    ...FullMailTemplate
+  }
 }
 
-fragment FullMailTemplate on MailTemplateWithUrlAndStatusModel {
+mutation CreateMailTemplate($input: MailTemplateInput!) {
+  createMailTemplate(input: $input) {
+    ...FullMailTemplate
+  }
+}
+
+mutation UpdateMailTemplate($id: String!, $input: MailTemplateInput!) {
+  updateMailTemplate(id: $id, input: $input) {
+    ...FullMailTemplate
+  }
+}
+
+mutation DeleteMailTemplate($id: String!) {
+  deleteMailTemplate(id: $id)
+}
+
+mutation ImportMailTemplatesFromProvider {
+  importMailTemplatesFromProvider
+}
+
+query MailTemplateSubscriptions($query: String) {
+  mailTemplateSubscriptions(query: $query) {
+    id
+    label
+  }
+}
+
+query MailTemplatePreview($input: MailTemplatePreviewInput!) {
+  mailTemplatePreview(input: $input) {
+    subject
+    html
+    text
+  }
+}
+
+mutation SendTestMailTemplate($input: SendTestMailTemplateInput!) {
+  sendTestMailTemplate(input: $input)
+}
+
+# Everything the list views and template pickers render. Deliberately without
+# htmlContent/textContent: those are whole email bodies, and loading every one of
+# them to populate a dropdown made the response grow with each new template.
+fragment TinyMailTemplate on MailTemplateModel {
   id
   name
   description
-  externalMailTemplateId
-  remoteMissing
-  url
+  subject
+  context
   status
+}
+
+# Adds the mail bodies. Only the single-template edit view needs these.
+fragment FullMailTemplate on MailTemplateModel {
+  ...TinyMailTemplate
+  htmlContent
+  textContent
 }
 
 fragment FullMailProvider on MailProviderModel {

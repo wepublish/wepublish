@@ -5,8 +5,9 @@ import {
   MailProvider,
   MailTemplateStatus,
 } from '@wepublish/mail/api';
-import { MailTemplateSyncService } from './mail-template-sync.service';
 import { MailTemplatesResolver } from './mail-template.resolver';
+import { MailTemplateService } from './mail-template.service';
+import { UsedMailTemplateDataloader } from './used-mail-template.dataloader';
 import { INestApplication, Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
@@ -34,9 +35,11 @@ const providerQuery = `
     }
   }
 `;
-const syncTemplatesMutation = `
-  mutation Mutation {
-    syncTemplates
+const createTemplateMutation = `
+  mutation Mutation($input: MailTemplateInput!) {
+    createMailTemplate(input: $input) {
+      id
+    }
   }
 `;
 
@@ -44,8 +47,11 @@ const mockTemplate1: MailTemplate = {
   id: '8056eda4-9013-42eb-b584-55a4f450eaf3',
   name: 'Mock Template 1',
   description: 'Mock Desc 1',
-  externalMailTemplateId: '123',
-  remoteMissing: false,
+  subject: 'Subject 1',
+  htmlContent: '<p>Content 1</p>',
+  textContent: null,
+  externalMailTemplateId: null,
+  context: null,
   createdAt: new Date(),
   modifiedAt: new Date(),
 };
@@ -54,8 +60,11 @@ const mockTemplate2: MailTemplate = {
   id: '400764ac-babf-4662-bc6b-225260ac7f70',
   name: 'Mock Template 2',
   description: 'Mock Desc 2',
-  externalMailTemplateId: '124',
-  remoteMissing: true,
+  subject: 'Subject 2',
+  htmlContent: '<p>Content 2</p>',
+  textContent: null,
+  externalMailTemplateId: null,
+  context: null,
   createdAt: new Date(),
   modifiedAt: new Date(),
 };
@@ -63,21 +72,26 @@ const mockTemplate2: MailTemplate = {
 const prismaServiceMock = {
   mailTemplate: {
     findMany: jest.fn((): MailTemplate[] => [mockTemplate1, mockTemplate2]),
+    findUnique: jest.fn(async () => mockTemplate1),
+    create: jest.fn(async () => mockTemplate1),
+    update: jest.fn(async () => mockTemplate1),
+    delete: jest.fn(async () => mockTemplate1),
   },
 };
 
 const mailProviderServiceMock = {
   getName: jest.fn(async () => 'MockProvider'),
-  getTemplateUrl: jest.fn((): string => 'https://example.com/template.html'),
 };
 
 const mailContextMock = {
   mailProvider: mailProviderServiceMock as unknown as MailProvider,
-  getUsedTemplateIdentifiers: jest.fn((): string[] => ['124']),
+  getUsedTemplateIdentifiers: jest.fn((): string[] => [mockTemplate2.id]),
 };
 
-const syncServiceMock = {
-  synchronizeTemplates: jest.fn((): void => undefined),
+const mailTemplateServiceMock = {
+  deleteMailTemplate: jest.fn(async () => undefined),
+  preview: jest.fn(async () => ({ subject: 's', html: 'h', text: undefined })),
+  sendTest: jest.fn(async () => undefined),
 };
 
 @Module({
@@ -94,7 +108,8 @@ const syncServiceMock = {
   ],
   providers: [
     MailTemplatesResolver,
-    MailTemplateSyncService,
+    UsedMailTemplateDataloader,
+    { provide: MailTemplateService, useValue: mailTemplateServiceMock },
     {
       provide: APP_GUARD,
       useClass: PermissionsGuard,
@@ -119,13 +134,18 @@ describe('MailTemplatesResolver', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         MailTemplatesResolver,
+        UsedMailTemplateDataloader,
         { provide: PrismaClient, useValue: prismaServiceMock },
-        { provide: MailTemplateSyncService, useValue: syncServiceMock },
         { provide: MailContext, useValue: mailContextMock },
+        { provide: MailTemplateService, useValue: mailTemplateServiceMock },
       ],
     }).compile();
 
-    resolver = module.get<MailTemplatesResolver>(MailTemplatesResolver);
+    // The resolver depends on a REQUEST-scoped dataloader, so it must be
+    // resolved rather than fetched from the singleton container.
+    resolver = await module.resolve<MailTemplatesResolver>(
+      MailTemplatesResolver
+    );
   });
 
   afterAll(async () => {
@@ -143,10 +163,15 @@ describe('MailTemplatesResolver', () => {
     expect(result[1].name).toEqual('Mock Template 2');
   });
 
-  it('computes the template url', async () => {
-    const [template] = await resolver.mailTemplates();
-    const result = await resolver.url(template as any);
-    expect(result).toEqual('https://example.com/template.html');
+  // The list query deliberately omits htmlContent/textContent, so the edit view
+  // needs a way to load one template's body on its own.
+  it('returns a single template by id', async () => {
+    const result = await resolver.mailTemplate(mockTemplate1.id);
+
+    expect(prismaServiceMock.mailTemplate.findUnique).toHaveBeenCalledWith({
+      where: { id: mockTemplate1.id },
+    });
+    expect(result?.htmlContent).toEqual('<p>Content 1</p>');
   });
 
   it('resolves the provider', async () => {
@@ -154,9 +179,36 @@ describe('MailTemplatesResolver', () => {
     expect(await (result as any).name).toBe('MockProvider');
   });
 
-  it('synchronizes the mail templates', async () => {
-    const result = await resolver.syncTemplates();
-    expect(result).toEqual(undefined);
+  it('creates a mail template', async () => {
+    const input = {
+      name: 'New',
+      subject: 'Hi',
+      htmlContent: '<p>Hi</p>',
+    };
+    await resolver.createMailTemplate(input as any);
+    expect(prismaServiceMock.mailTemplate.create).toHaveBeenCalledWith({
+      data: input,
+    });
+  });
+
+  it('updates a mail template', async () => {
+    const input = {
+      name: 'Changed',
+      subject: 'Hi',
+      htmlContent: '<p>Hi</p>',
+    };
+    await resolver.updateMailTemplate(mockTemplate1.id, input as any);
+    expect(prismaServiceMock.mailTemplate.update).toHaveBeenCalledWith({
+      where: { id: mockTemplate1.id },
+      data: input,
+    });
+  });
+
+  it('deletes a mail template via the service', async () => {
+    await resolver.deleteMailTemplate(mockTemplate1.id);
+    expect(mailTemplateServiceMock.deleteMailTemplate).toHaveBeenCalledWith(
+      mockTemplate1.id
+    );
   });
 
   it('computes the template status', async () => {
@@ -165,8 +217,29 @@ describe('MailTemplatesResolver', () => {
       MailTemplateStatus.Unused
     );
     expect(await resolver.status(template2 as any)).toEqual(
-      MailTemplateStatus.RemoteMissing
+      MailTemplateStatus.Ok
     );
+  });
+
+  // Regression: `status` is a per-template field resolver. It used to call
+  // `getUsedTemplateIdentifiers()` once per template, so a single
+  // `mailTemplates` query fanned out to 2N concurrent queries and exhausted
+  // the Prisma connection pool — which timed out every other request in the
+  // process, not just this one.
+  it('resolves status for many templates with a single lookup', async () => {
+    mailContextMock.getUsedTemplateIdentifiers.mockClear();
+
+    const templates = Array.from({ length: 30 }, (_unused, index) => ({
+      ...mockTemplate1,
+      id: `template-${index}`,
+    }));
+
+    const statuses = await Promise.all(
+      templates.map(template => resolver.status(template as any))
+    );
+
+    expect(statuses).toHaveLength(30);
+    expect(mailContextMock.getUsedTemplateIdentifiers).toHaveBeenCalledTimes(1);
   });
 
   /**
@@ -206,11 +279,14 @@ describe('MailTemplatesResolver', () => {
       });
   });
 
-  it('syncMailTemplates is not public', () => {
+  it('createMailTemplate is not public', () => {
     return request(app.getHttpServer())
       .post('')
       .send({
-        query: syncTemplatesMutation,
+        query: createTemplateMutation,
+        variables: {
+          input: { name: 'x', subject: 'y', htmlContent: 'z' },
+        },
       })
       .expect(200)
       .expect(({ body }) => {
@@ -219,7 +295,7 @@ describe('MailTemplatesResolver', () => {
             (error: any) => error.message === 'Forbidden resource'
           )
         ).toEqual(true);
-        expect(body.data).toEqual({ syncTemplates: null });
+        expect(body.data).toBeNull();
       });
   });
 });

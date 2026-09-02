@@ -8,10 +8,15 @@
  */
 import * as Sentry from '@sentry/nextjs';
 
-import { getBaseConfig, setCommonTags } from './config';
+import {
+  getBaseConfig,
+  getBrowserTracePropagationTargets,
+  setCommonTags,
+} from './config';
 
 Sentry.init({
   ...getBaseConfig(),
+  tracePropagationTargets: getBrowserTracePropagationTargets(),
   integrations: [
     Sentry.replayIntegration(),
     Sentry.browserProfilingIntegration(),

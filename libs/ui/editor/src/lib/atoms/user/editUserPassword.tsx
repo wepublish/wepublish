@@ -118,9 +118,9 @@ export function EditUserPassword({
     // create new password form
     return (
       <Form.Group controlId="password">
-        <Form.ControlLabel>
+        <Form.Label>
           {toggleRequiredLabel(t('userCreateOrEditView.password'))}
-        </Form.ControlLabel>
+        </Form.Label>
 
         <Form.Control
           type="password"
@@ -135,14 +135,16 @@ export function EditUserPassword({
     );
   }
 
-  function resetPasswordModal(): JSX.Element {
+  function resetPasswordModal() {
     const userId = user?.id;
+
     if (!userId) {
-      // eslint-disable-next-line react/jsx-no-useless-fragment
-      return <></>;
+      return null;
     }
+
     const userName =
       user?.firstName ? `${user.firstName} ${user.name}` : user.name;
+
     return (
       <Modal
         open={isResetUserPasswordOpen}

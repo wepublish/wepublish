@@ -1,7 +1,7 @@
 import { ApolloError } from '@apollo/client';
-import { action } from '@storybook/addon-actions';
-import { Meta, StoryObj } from '@storybook/react';
-import { userEvent, within } from '@storybook/test';
+import { action } from 'storybook/actions';
+import { Meta, StoryObj } from '@storybook/nextjs-vite';
+import { userEvent, within } from 'storybook/test';
 import {
   mockAvailablePaymentMethod,
   mockChallenge,
@@ -695,5 +695,64 @@ export const WithDonate: StoryObj<typeof Subscribe> = {
   ...LoggedIn,
   play: waitForInitialDataIsSet(async ctx => {
     await changeMemberPlan(memberPlan4)(ctx);
+  }),
+};
+
+// getAllByText throws when a text is missing, which fails the story
+const expectTexts =
+  (texts: string[]): NonNullable<StoryObj['play']> =>
+  async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step('Check texts', async () => {
+      texts.forEach(text => canvas.getAllByText(text, { exact: false }));
+    });
+  };
+
+export const WithDiscountCodeDiscount: StoryObj<typeof Subscribe> = {
+  ...LoggedIn,
+  args: {
+    ...LoggedIn.args,
+    showDiscountCodes: true,
+    subscribeInfo: {
+      data: {
+        createSubscriptionInfo: {
+          discountPercent: 0.2,
+          discountCodeValid: true,
+        },
+      },
+      loading: false,
+    },
+  },
+  // the button shows the discounted first period, the continuation below
+  // it shows what is charged once the discount ran out
+  play: waitForInitialDataIsSet(
+    expectTexts(['20% Rabatt angewendet', 'abonnieren', 'Nach dem ersten'])
+  ),
+};
+
+export const WithInvalidDiscountCode: StoryObj<typeof Subscribe> = {
+  ...LoggedIn,
+  args: {
+    ...LoggedIn.args,
+    showDiscountCodes: true,
+    subscribeInfo: {
+      data: {
+        createSubscriptionInfo: {
+          discountPercent: null,
+          discountCodeValid: false,
+        },
+      },
+      loading: false,
+    },
+  },
+  play: waitForInitialDataIsSet(expectTexts(['Rabattcode ungültig'])),
+};
+
+export const WithDiscountCodeDiscountOnADonation: StoryObj<typeof Subscribe> = {
+  ...WithDiscountCodeDiscount,
+  play: waitForInitialDataIsSet(async ctx => {
+    await changeMemberPlan(memberPlan4)(ctx);
+    await expectTexts(['spenden'])(ctx);
   }),
 };

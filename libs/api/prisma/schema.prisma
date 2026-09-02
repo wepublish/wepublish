@@ -1,6 +1,6 @@
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["views"]
+  previewFeatures = ["views", "relationJoins"]
 }
 
 datasource db {
@@ -8,8 +8,8 @@ datasource db {
 }
 
 model ArticleRevision {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
+  id        String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
 
   preTitle               String?
   title                  String?
@@ -24,8 +24,8 @@ model ArticleRevision {
   socialMediaTitle       String?
   socialMediaDescription String?
   socialMediaAuthors     ArticleRevisionSocialMediaAuthor[]
-  publishedAt            DateTime?
-  archivedAt             DateTime?
+  publishedAt            DateTime?                          @db.Timestamptz(3)
+  archivedAt             DateTime?                          @db.Timestamptz(3)
 
   image   Image?  @relation("articleRevisionImage", fields: [imageID], references: [id])
   imageID String?
@@ -43,7 +43,7 @@ model ArticleRevision {
   ArticleRevisionDraft     ArticleRevisionDraft[]
 
   @@index([publishedAt])
-  @@index([articleId])
+  @@index([articleId, createdAt(sort: Desc), id(sort: Desc)])
   @@map("articles.revisions")
 }
 
@@ -100,10 +100,10 @@ model ArticleRevisionSocialMediaAuthor {
 }
 
 model Article {
-  id          String    @id @default(cuid())
-  createdAt   DateTime  @default(now())
-  modifiedAt  DateTime  @updatedAt
-  publishedAt DateTime?
+  id          String    @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt   DateTime  @default(now()) @db.Timestamptz(3)
+  modifiedAt  DateTime  @updatedAt @db.Timestamptz(3)
+  publishedAt DateTime? @db.Timestamptz(3)
 
   slug            String?
   shared          Boolean
@@ -130,6 +130,7 @@ model Article {
   @@index([modifiedAt])
   @@index([publishedAt])
   @@index([slug])
+  @@index([slug(ops: raw("gin_trgm_ops"))], type: Gin, map: "articles_slug_trgm_idx")
   @@index([hidden, publishedAt(sort: Desc)])
   @@map("articles")
 }
@@ -139,11 +140,11 @@ enum TrackingPixelProviderType {
 }
 
 model ArticleTrackingPixels {
-  id                   String              @id @default(cuid())
+  id                   String              @id @default(dbgenerated("gen_random_uuid()"))
   article              Article             @relation(fields: [articleId], references: [id], onDelete: Cascade)
   articleId            String
-  createdAt            DateTime            @default(now())
-  modifiedAt           DateTime            @updatedAt
+  createdAt            DateTime            @default(now()) @db.Timestamptz(3)
+  modifiedAt           DateTime            @updatedAt @db.Timestamptz(3)
   tackingPixelMethodID String
   trackingPixelMethod  TrackingPixelMethod @relation(fields: [tackingPixelMethodID], references: [id])
 
@@ -156,9 +157,9 @@ model ArticleTrackingPixels {
 }
 
 model TrackingPixelMethod {
-  id                        String                    @id @default(cuid())
-  createdAt                 DateTime                  @default(now())
-  modifiedAt                DateTime                  @updatedAt
+  id                        String                    @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt                 DateTime                  @default(now()) @db.Timestamptz(3)
+  modifiedAt                DateTime                  @updatedAt @db.Timestamptz(3)
   trackingPixelProviderID   String                    @unique
   trackingPixelProviderType TrackingPixelProviderType
 
@@ -172,18 +173,19 @@ model TaggedArticles {
   articleId  String
   tag        Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
   tagId      String
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
   @@id([articleId, tagId])
   @@index([tagId])
+  @@index([tagId, articleId])
   @@map("articles.tagged-articles")
 }
 
 model AuthorsLinks {
-  id         String   @id @default(cuid())
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
   title String
   url   String
@@ -191,13 +193,14 @@ model AuthorsLinks {
   Author   Author? @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId String?
 
+  @@index([authorId])
   @@map("authors.links")
 }
 
 model Author {
-  id         String         @id @default(cuid())
-  createdAt  DateTime       @default(now())
-  modifiedAt DateTime       @updatedAt
+  id         String         @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime       @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime       @updatedAt @db.Timestamptz(3)
   name       String
   slug       String
   jobTitle   String?
@@ -231,8 +234,8 @@ model TaggedAuthors {
   authorId   String
   tag        Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
   tagId      String
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
   @@id([authorId, tagId])
   @@map("authors.tagged-authors")
@@ -240,8 +243,8 @@ model TaggedAuthors {
 
 model Image {
   id         String   @id
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
   description String?
   extension   String
@@ -280,6 +283,7 @@ model Image {
   banners               Banner[]
   peerProfileLogo       PeerProfile[] @relation("logo")
   peerProfileSquareLogo PeerProfile[] @relation("squareLogo")
+  goodies               Goodie[]
 
   @@index([createdAt])
   @@index([modifiedAt])
@@ -290,8 +294,8 @@ model Image {
 
 model Document {
   id          String   @id
-  createdAt   DateTime @default(now())
-  modifiedAt  DateTime @updatedAt
+  createdAt   DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt  DateTime @updatedAt @db.Timestamptz(3)
   filename    String?
   title       String?
   description String?
@@ -316,8 +320,8 @@ enum CommentRejectionReason {
 }
 
 model CommentsRevisions {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
+  id        String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
   text      Json?
   slateText Json?
   title     String?
@@ -327,6 +331,7 @@ model CommentsRevisions {
   commentId String?
 
   @@index([createdAt])
+  @@index([commentId])
   @@map("comments.revisions")
 }
 
@@ -345,9 +350,9 @@ enum CommentAuthorType {
 }
 
 model Comment {
-  id         String   @id @default(cuid())
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
   itemID           String
   itemType         CommentItemType
@@ -372,6 +377,7 @@ model Comment {
   @@index([itemID, itemType])
   @@index([parentID])
   @@index([createdAt])
+  @@index([modifiedAt])
   @@map("comments")
 }
 
@@ -380,17 +386,17 @@ model TaggedComments {
   commentId  String
   tag        Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
   tagId      String
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
   @@id([commentId, tagId])
   @@map("comments.tagged-comments")
 }
 
 model CommentRatingSystem {
-  id         String   @id @default(cuid())
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
   name String? @unique
 
@@ -404,9 +410,9 @@ enum RatingSystemType {
 }
 
 model CommentRatingSystemAnswer {
-  id         String   @id @default(cuid())
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
   type   RatingSystemType
   answer String?
@@ -422,9 +428,9 @@ model CommentRatingSystemAnswer {
 }
 
 model CommentRating {
-  id         String   @id @default(cuid())
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
   userId String?
   user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
@@ -440,6 +446,7 @@ model CommentRating {
   disabled    Boolean @default(false)
 
   @@unique([answerId, commentId, userId])
+  @@index([commentId])
   @@map("comments.ratings")
 }
 
@@ -450,19 +457,20 @@ model CommentRatingOverride {
   commentId String
   comment   Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
 
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
   value Int?
 
   @@id([answerId, commentId])
+  @@index([commentId])
   @@map("comments.rating-override")
 }
 
 model InvoiceItem {
-  id         String   @id @default(cuid())
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
   name        String
   description String?
@@ -472,23 +480,27 @@ model InvoiceItem {
   invoices  Invoice? @relation(fields: [invoiceId], references: [id], onDelete: SetNull)
   invoiceId String?
 
-  voucher   Voucher? @relation(fields: [voucherId], references: [id], onDelete: SetNull)
-  voucherId String?
+  discountCode   DiscountCode? @relation(fields: [discountCodeId], references: [id], onDelete: SetNull)
+  discountCodeId String?
 
+  goodie   Goodie? @relation(fields: [goodieId], references: [id], onDelete: SetNull)
+  goodieId String?
+
+  @@index([invoiceId])
   @@map("invoices.items")
 }
 
 model Invoice {
-  id         String   @id @default(cuid())
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
   mail                      String
-  dueAt                     DateTime
+  dueAt                     DateTime      @db.Timestamptz(3)
   description               String?
-  paidAt                    DateTime?
-  canceledAt                DateTime?
-  scheduledDeactivationAt   DateTime
+  paidAt                    DateTime?     @db.Timestamptz(3)
+  canceledAt                DateTime?     @db.Timestamptz(3)
+  scheduledDeactivationAt   DateTime      @db.Timestamptz(3)
   items                     InvoiceItem[]
   manuallySetAsPaidByUserId String?
   currency                  Currency
@@ -500,6 +512,7 @@ model Invoice {
 
   @@index([mail])
   @@index([subscriptionID])
+  @@index([dueAt])
   @@map("invoices")
 }
 
@@ -512,15 +525,22 @@ enum MailLogState {
   rejected  @map("rejected")
 }
 
+enum MailLogType {
+  subscriptionFlow @map("subscriptionFlow")
+  userFlow         @map("userFlow")
+  systemMail       @map("systemMail")
+  manual           @map("manual")
+}
+
 model MailLog {
   id         String   @id @default(dbgenerated("gen_random_uuid()"))
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
   recipientID    String
   recipient      User         @relation(fields: [recipientID], references: [id], onDelete: Cascade)
   state          MailLogState
-  sentDate       DateTime
+  sentDate       DateTime     @db.Timestamptz(3)
   mailProviderID String
   mailIdentifier String
   mailTemplate   MailTemplate @relation(fields: [mailTemplateId], references: [id])
@@ -528,8 +548,134 @@ model MailLog {
   mailData       String?
   subject        String?
 
+  // Why a `rejected` mail could not be delivered. Null for every other state.
+  error String?
+
+  // Id the mail provider assigned to the accepted message. Lets the delivery
+  // state be polled later (see MailLogSyncService) for providers that can't
+  // reach us by webhook. Null for providers that return no id.
+  mailProviderMessageID String?
+
+  // Origin of the mail. Nullable so pre-existing rows keep working; new sends
+  // always set it.
+  type MailLogType?
+
+  // Set only for mails produced by a manual bulk send job.
+  mailSendJob   MailSendJob? @relation(fields: [mailSendJobId], references: [id], onDelete: SetNull)
+  mailSendJobId String?
+
   @@index([mailIdentifier])
+  @@index([recipientID, sentDate(sort: Desc)])
+  @@index([mailSendJobId])
+  @@index([mailProviderMessageID])
   @@map("mail.log")
+}
+
+enum MailSendJobState {
+  queued    @map("queued")
+  running   @map("running")
+  done      @map("done")
+  failed    @map("failed")
+  cancelled @map("cancelled")
+}
+
+enum MailSendAudience {
+  singleUser            @map("singleUser")
+  filteredSubscriptions @map("filteredSubscriptions")
+  allUsers              @map("allUsers")
+}
+
+model MailSendJob {
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  mailTemplate   MailTemplate @relation(fields: [mailTemplateId], references: [id])
+  mailTemplateId String
+
+  createdBy       User   @relation(fields: [createdByUserId], references: [id])
+  createdByUserId String
+
+  status   MailSendJobState @default(queued)
+  audience MailSendAudience
+
+  // Frozen audit snapshot of the resolved filter criteria. Opaque record, not
+  // queried per-element; the concrete recipients are MailSendJobRecipient rows.
+  recipientFilter Json?
+
+  totalCount   Int @default(0)
+  sentCount    Int @default(0)
+  failedCount  Int @default(0)
+  // Recipients handed to the mail provider but not yet concluded. Left over
+  // after a crash: whether such a mail went out is unknown, so it is never
+  // re-sent automatically — only the editor may decide to try again.
+  sendingCount Int @default(0)
+
+  startedAt  DateTime? @db.Timestamptz(3)
+  finishedAt DateTime? @db.Timestamptz(3)
+  error      String?
+
+  // Set once every recipient of the audience has a MailSendJobRecipient row.
+  // Until then the queue is still being built and may be re-built from scratch.
+  recipientsResolvedAt DateTime? @db.Timestamptz(3)
+
+  // Touched on every progress update. A running job that stops touching it is
+  // considered interrupted and is re-queued, continuing where it left off.
+  heartbeatAt DateTime? @db.Timestamptz(3)
+
+  // How often this job was picked up again after an interruption. Bounded, so
+  // a job that dies at the same recipient forever eventually stops.
+  resumeCount Int @default(0)
+
+  mailLogs   MailLog[]
+  recipients MailSendJobRecipient[]
+
+  @@index([status])
+  @@map("mail.send_jobs")
+}
+
+enum MailSendJobRecipientState {
+  pending @map("pending")
+  sending @map("sending")
+  sent    @map("sent")
+  failed  @map("failed")
+}
+
+/// One planned mail of a send job. Materialised up-front so a job can be
+/// interrupted and continued without sending anybody twice: only `pending` rows
+/// are ever picked up again.
+model MailSendJobRecipient {
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  job   MailSendJob @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  jobId String
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+
+  // The subscription this mail is bound to, for subscription-based audiences.
+  // A user with two matching subscriptions is two rows and receives two mails.
+  subscription   Subscription? @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+  subscriptionId String?
+
+  // Position in the queue. Fixed at materialisation, so continuing a job works
+  // through the remaining recipients in the original order.
+  position Int
+
+  state    MailSendJobRecipientState @default(pending)
+  attempts Int                       @default(0)
+  error    String?
+  sentAt   DateTime?                 @db.Timestamptz(3)
+
+  // The MailLog row written for this attempt. Plain id rather than a relation:
+  // mail logs outlive the queue and may be pruned independently.
+  mailLogId String?
+
+  @@unique([jobId, position])
+  @@index([jobId, state])
+  @@map("mail.send_job_recipients")
 }
 
 enum PaymentPeriodicity {
@@ -542,9 +688,9 @@ enum PaymentPeriodicity {
 }
 
 model AvailablePaymentMethod {
-  id         String   @id @default(cuid())
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
   paymentMethodIDs     String[]
   paymentPeriodicities PaymentPeriodicity[]
@@ -567,9 +713,9 @@ enum ProductType {
 }
 
 model MemberPlan {
-  id         String   @id @default(cuid())
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
   name                           String
   slug                           String                   @unique
@@ -608,16 +754,17 @@ model MemberPlan {
 
   crowdfundings Crowdfunding[]
   paywalls      PaywallMemberplan[]
-  vouchers      Voucher[]
+  discountCodes DiscountCode[]
+  goodies       Goodie[]
 
   @@index([name])
   @@map("member.plans")
 }
 
 model NavigationLink {
-  id         String   @id @default(cuid())
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
   label String
   type  String
@@ -639,9 +786,9 @@ model NavigationLink {
 }
 
 model Navigation {
-  id         String   @id @default(cuid())
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
   key   String           @unique
   links NavigationLink[]
@@ -654,11 +801,11 @@ model Navigation {
 }
 
 model PageRevision {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
+  id        String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
 
-  publishedAt            DateTime?
-  archivedAt             DateTime?
+  publishedAt            DateTime? @db.Timestamptz(3)
+  archivedAt             DateTime? @db.Timestamptz(3)
   title                  String?
   description            String?
   properties             Json      @default("[]")
@@ -682,15 +829,15 @@ model PageRevision {
   PagesRevisionDraft     PagesRevisionDraft[]
 
   @@index([publishedAt])
-  @@index([pageId])
+  @@index([pageId, createdAt(sort: Desc), id(sort: Desc)])
   @@map("pages.revisions")
 }
 
 model Page {
-  id          String    @id @default(cuid())
-  createdAt   DateTime  @default(now())
-  modifiedAt  DateTime  @updatedAt
-  publishedAt DateTime?
+  id          String    @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt   DateTime  @default(now()) @db.Timestamptz(3)
+  modifiedAt  DateTime  @updatedAt @db.Timestamptz(3)
+  publishedAt DateTime? @db.Timestamptz(3)
 
   slug   String?
   hidden Boolean @default(false)
@@ -709,6 +856,7 @@ model Page {
   @@index([createdAt])
   @@index([modifiedAt])
   @@index([publishedAt])
+  @@index([slug(ops: raw("gin_trgm_ops"))], type: Gin, map: "pages_slug_trgm_idx")
   @@map("pages")
 }
 
@@ -717,8 +865,8 @@ model TaggedPages {
   pageId     String
   tag        Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
   tagId      String
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
   @@id([pageId, tagId])
   @@map("pages.tagged-pages")
@@ -755,9 +903,9 @@ view PagesRevisionDraft {
 }
 
 model PaymentMethod {
-  id                String   @id @default(cuid())
-  createdAt         DateTime @default(now())
-  modifiedAt        DateTime @updatedAt
+  id                String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt         DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt        DateTime @updatedAt @db.Timestamptz(3)
   name              String
   slug              String
   description       String
@@ -784,12 +932,13 @@ enum PaymentState {
   paid               @map("paid")
   canceled           @map("canceled")
   declined           @map("declined")
+  chargeback         @map("chargeback")
 }
 
 model Payment {
-  id           String       @id @default(cuid())
-  createdAt    DateTime     @default(now())
-  modifiedAt   DateTime     @updatedAt
+  id           String       @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt    DateTime     @default(now()) @db.Timestamptz(3)
+  modifiedAt   DateTime     @updatedAt @db.Timestamptz(3)
   invoiceID    String
   state        PaymentState
   intentID     String?
@@ -805,7 +954,7 @@ model Payment {
 }
 
 model PeerProfile {
-  id                    String  @id @default(cuid())
+  id                    String  @id @default(dbgenerated("gen_random_uuid()"))
   name                  String
   themeColor            String
   themeFontColor        String
@@ -825,9 +974,9 @@ model PeerProfile {
 }
 
 model Peer {
-  id         String   @id @default(cuid())
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
   name             String
   slug             String  @unique
@@ -846,9 +995,9 @@ model Peer {
 }
 
 model Token {
-  id         String   @id @default(cuid())
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
   name    String   @unique
   token   String
@@ -858,9 +1007,9 @@ model Token {
 }
 
 model Session {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  expiresAt DateTime
+  id        String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  expiresAt DateTime @db.Timestamptz(3)
   token     String   @unique
 
   userID String
@@ -873,12 +1022,12 @@ model Session {
 }
 
 model SubscriptionPeriod {
-  id         String   @id @default(cuid())
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
-  startsAt           DateTime
-  endsAt             DateTime
+  startsAt           DateTime           @db.Timestamptz(3)
+  endsAt             DateTime           @db.Timestamptz(3)
   paymentPeriodicity PaymentPeriodicity
   amount             Float
 
@@ -888,6 +1037,8 @@ model SubscriptionPeriod {
   subscription   Subscription? @relation(fields: [subscriptionId], references: [id], onDelete: SetNull)
   subscriptionId String?
 
+  @@index([subscriptionId])
+  @@index([invoiceID])
   @@map("subscriptions.periods")
 }
 
@@ -896,14 +1047,15 @@ enum SubscriptionDeactivationReason {
   userSelfDeactivated      @map("userSelfDeactivated")
   invoiceNotPaid           @map("invoiceNotPaid")
   userReplacedSubscription @map("userReplacedSubscription")
+  chargeback               @map("chargeback")
 }
 
 model SubscriptionDeactivation {
-  id         String   @id @default(cuid())
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
-  date   DateTime
+  date   DateTime                       @db.Timestamptz(3)
   reason SubscriptionDeactivationReason
 
   subscriptionID String       @unique
@@ -913,14 +1065,14 @@ model SubscriptionDeactivation {
 }
 
 model Subscription {
-  id                 String                    @id @default(cuid())
-  createdAt          DateTime                  @default(now())
-  modifiedAt         DateTime                  @updatedAt
+  id                 String                    @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt          DateTime                  @default(now()) @db.Timestamptz(3)
+  modifiedAt         DateTime                  @updatedAt @db.Timestamptz(3)
   paymentPeriodicity PaymentPeriodicity
   monthlyAmount      Float
   autoRenew          Boolean
-  startsAt           DateTime
-  paidUntil          DateTime?
+  startsAt           DateTime                  @db.Timestamptz(3)
+  paidUntil          DateTime?                 @db.Timestamptz(3)
   periods            SubscriptionPeriod[]
   properties         Json                      @default("[]")
   deactivation       SubscriptionDeactivation?
@@ -943,13 +1095,16 @@ model Subscription {
 
   invoices Invoice[]
 
+  mailSendJobEntries MailSendJobRecipient[]
+
   @@index([userID])
+  @@index([memberPlanID, createdAt, id])
   @@map("subscriptions")
 }
 
 model UserAddress {
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
   company              String?
   streetAddress        String?
@@ -967,9 +1122,9 @@ model UserAddress {
 }
 
 model PaymentProviderCustomer {
-  id         String   @id @default(cuid())
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
   paymentProviderID String
   customerID        String
@@ -977,24 +1132,25 @@ model PaymentProviderCustomer {
   User   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String?
 
+  @@index([userId])
   @@map("users.payment-providers")
 }
 
 model User {
-  id              String    @id @default(cuid())
-  createdAt       DateTime  @default(now())
-  modifiedAt      DateTime  @updatedAt
+  id              String    @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt       DateTime  @default(now()) @db.Timestamptz(3)
+  modifiedAt      DateTime  @updatedAt @db.Timestamptz(3)
   birthday        DateTime? @db.Date
   email           String    @unique
-  emailVerifiedAt DateTime?
+  emailVerifiedAt DateTime? @db.Timestamptz(3)
   pendingEmail    String?
-  pendingEmailAt  DateTime?
+  pendingEmailAt  DateTime? @db.Timestamptz(3)
   name            String
   firstName       String?
   flair           String?
   password        String
   active          Boolean
-  lastLogin       DateTime?
+  lastLogin       DateTime? @db.Timestamptz(3)
   roleIDs         String[]
   totpSecret      String?
   totpEnabled     Boolean   @default(false)
@@ -1013,18 +1169,21 @@ model User {
   commentRatings      CommentRating[]
   pollVotes           PollVote[]
   mailSent            MailLog[]
+  mailSendJobs        MailSendJob[]
+  mailSendJobEntries  MailSendJobRecipient[]
   consents            UserConsent[]
   articleRevisions    ArticleRevision[]
   pageRevisions       PageRevision[]
   mailchimpSyncErrors MailchimpSyncError[]
 
+  @@index([createdAt])
   @@map("users")
 }
 
 model UserRole {
-  id         String   @id @default(cuid())
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
   description   String?
   name          String   @unique
@@ -1035,9 +1194,9 @@ model UserRole {
 }
 
 model Setting {
-  id                 String   @id @default(cuid())
-  createdAt          DateTime @default(now())
-  modifiedAt         DateTime @updatedAt
+  id                 String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt          DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt         DateTime @updatedAt @db.Timestamptz(3)
   name               String   @unique
   value              Json?
   settingRestriction Json?
@@ -1054,9 +1213,9 @@ enum TagType {
 }
 
 model Tag {
-  id         String   @id @default(cuid())
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
   type             TagType
   tag              String?
@@ -1079,12 +1238,12 @@ model Tag {
 }
 
 model Poll {
-  id         String   @id @default(cuid())
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
-  opensAt  DateTime  @default(now())
-  closedAt DateTime?
+  opensAt  DateTime  @default(now()) @db.Timestamptz(3)
+  closedAt DateTime? @db.Timestamptz(3)
 
   question      String?
   infoText      Json?
@@ -1098,9 +1257,9 @@ model Poll {
 }
 
 model PollAnswer {
-  id         String   @id @default(cuid())
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
   answer String?
 
@@ -1115,9 +1274,9 @@ model PollAnswer {
 }
 
 model PollVote {
-  id         String   @id @default(cuid())
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
   userId String?
   user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
@@ -1139,9 +1298,9 @@ model PollVote {
 }
 
 model PollExternalVoteSource {
-  id         String   @id @default(cuid())
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
   pollId String
   poll   Poll   @relation(fields: [pollId], references: [id], onDelete: Cascade)
@@ -1153,9 +1312,9 @@ model PollExternalVoteSource {
 }
 
 model PollExternalVote {
-  id         String   @id @default(cuid())
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
   answerId String
   answer   PollAnswer @relation(fields: [answerId], references: [id], onDelete: Cascade)
@@ -1178,8 +1337,8 @@ enum EventStatus {
 
 model Event {
   id         String   @id @default(dbgenerated("gen_random_uuid()"))
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
   name             String
   lead             String?
@@ -1191,8 +1350,8 @@ model Event {
   image   Image?  @relation(fields: [imageId], references: [id])
 
   location String?
-  startsAt DateTime
-  endsAt   DateTime?
+  startsAt DateTime  @db.Timestamptz(3)
+  endsAt   DateTime? @db.Timestamptz(3)
 
   externalSourceName String?
   externalSourceId   String?
@@ -1207,8 +1366,8 @@ model TaggedEvents {
   eventId    String
   tag        Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
   tagId      String
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
   @@id([eventId, tagId])
   @@map("events.tagged-events")
@@ -1216,8 +1375,8 @@ model TaggedEvents {
 
 model Consent {
   id         String   @id @default(dbgenerated("gen_random_uuid()"))
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
   name         String
   slug         String        @unique
@@ -1229,8 +1388,8 @@ model Consent {
 
 model UserConsent {
   id         String   @id @default(dbgenerated("gen_random_uuid()"))
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
   consent   Consent @relation(fields: [consentId], references: [id], onDelete: Cascade)
   consentId String
@@ -1254,8 +1413,8 @@ enum UserEvent {
 
 model UserFlowMail {
   id         String   @id @default(dbgenerated("gen_random_uuid()"))
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
   event UserEvent @unique
 
@@ -1278,8 +1437,8 @@ enum SubscriptionEvent {
 
 model SubscriptionFlow {
   id         String   @id @default(dbgenerated("gen_random_uuid()"))
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
   default Boolean @default(false)
 
@@ -1297,8 +1456,8 @@ model SubscriptionFlow {
 
 model SubscriptionInterval {
   id                 String            @id @default(dbgenerated("gen_random_uuid()"))
-  createdAt          DateTime          @default(now())
-  modifiedAt         DateTime          @updatedAt
+  createdAt          DateTime          @default(now()) @db.Timestamptz(3)
+  modifiedAt         DateTime          @updatedAt @db.Timestamptz(3)
   event              SubscriptionEvent
   daysAwayFromEnding Int?              @db.SmallInt
   mailTemplate       MailTemplate?     @relation(fields: [mailTemplateId], references: [id])
@@ -1310,15 +1469,36 @@ model SubscriptionInterval {
   @@map("subscriptions.intervals")
 }
 
+enum MailTemplateContext {
+  account
+  emailChange
+  subscription
+  renewal
+  invoiceCreation
+  // Free mail to a subscriber: subscription and invoices are available.
+  custom
+  // Free mail to someone without a subscription: recipient fields only.
+  customNoSubscription
+}
+
 model MailTemplate {
   id         String   @id @default(dbgenerated("gen_random_uuid()"))
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
-  name                   String
-  description            String?
-  externalMailTemplateId String  @unique
-  remoteMissing          Boolean @default(false)
+  name        String
+  description String?
+  subject     String  @default("")
+  htmlContent String  @default("")
+  textContent String?
+
+  // Mail type this template is written for. Nullable for templates created
+  // before the field existed; the editor enforces a value on the next save.
+  context MailTemplateContext?
+
+  // Kept (nullable) so content can be imported from the remote provider for
+  // installs migrating from the remote-template model. Not used for sending.
+  externalMailTemplateId String? @unique
 
   subscriptionIntervals SubscriptionInterval[]
 
@@ -1326,18 +1506,20 @@ model MailTemplate {
 
   mailLog MailLog[]
 
+  mailSendJobs MailSendJob[]
+
   @@map("mail_templates")
 }
 
 model PeriodicJob {
   id         String   @id @default(dbgenerated("gen_random_uuid()"))
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
   date                 DateTime  @unique @db.Date
-  executionTime        DateTime?
-  successfullyFinished DateTime?
-  finishedWithError    DateTime?
+  executionTime        DateTime? @db.Timestamptz(3)
+  successfullyFinished DateTime? @db.Timestamptz(3)
+  finishedWithError    DateTime? @db.Timestamptz(3)
   tries                Int       @default(0)
   error                String?
 
@@ -1360,6 +1542,7 @@ enum BlockType {
   TeaserSlots    @map("teaserSlots")
   HTML           @map("html")
   Subscribe      @map("subscribe")
+  MailchimpForm  @map("mailchimpForm")
   Crowdfunding   @map("crowdfunding")
   Poll           @map("poll")
   Comment        @map("comment")
@@ -1369,8 +1552,8 @@ enum BlockType {
 
 model BlockStyle {
   id         String   @id @default(dbgenerated("gen_random_uuid()"))
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
   name   String      @unique
   blocks BlockType[]
@@ -1380,13 +1563,14 @@ model BlockStyle {
 
 model Banner {
   id         String   @id @default(dbgenerated("gen_random_uuid()"))
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
-  title String
-  text  String
-  cta   String?
-  html  String?
+  title    String
+  text     String
+  cta      String?
+  html     String?
+  embedUrl String?
 
   imageId String?
   image   Image?  @relation(fields: [imageId], references: [id])
@@ -1417,8 +1601,8 @@ enum LoginStatus {
 
 model BannerAction {
   id         String   @id @default(dbgenerated("gen_random_uuid()"))
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
   banner   Banner @relation(fields: [bannerId], references: [id], onDelete: Cascade)
   bannerId String
@@ -1445,11 +1629,11 @@ enum CrowdfundingGoalType {
 
 model Crowdfunding {
   id                      String               @id @default(dbgenerated("gen_random_uuid()"))
-  createdAt               DateTime             @default(now())
-  modifiedAt              DateTime             @updatedAt
+  createdAt               DateTime             @default(now()) @db.Timestamptz(3)
+  modifiedAt              DateTime             @updatedAt @db.Timestamptz(3)
   name                    String
-  countSubscriptionsFrom  DateTime?
-  countSubscriptionsUntil DateTime?
+  countSubscriptionsFrom  DateTime?            @db.Timestamptz(3)
+  countSubscriptionsUntil DateTime?            @db.Timestamptz(3)
   additionalRevenue       Int?
   memberPlans             MemberPlan[]
   goals                   CrowdfundingGoal[]
@@ -1460,8 +1644,8 @@ model Crowdfunding {
 
 model CrowdfundingGoal {
   id          String   @id @default(dbgenerated("gen_random_uuid()"))
-  createdAt   DateTime @default(now())
-  modifiedAt  DateTime @updatedAt
+  createdAt   DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt  DateTime @updatedAt @db.Timestamptz(3)
   title       String
   description String?
   amount      Int
@@ -1474,8 +1658,8 @@ model CrowdfundingGoal {
 
 model Paywall {
   id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
   name String? @unique
 
@@ -1504,8 +1688,8 @@ model Paywall {
 }
 
 model PaywallMemberplan {
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
   memberPlan   MemberPlan @relation(fields: [memberPlanId], references: [id], onDelete: Cascade)
   memberPlanId String
@@ -1519,8 +1703,8 @@ model PaywallMemberplan {
 
 model PaywallBypass {
   id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
   token String
 
@@ -1535,13 +1719,14 @@ enum MailProviderType {
   MAILGUN   @map("mailgun")
   MAILCHIMP @map("mailchimp")
   SLACK     @map("slack")
+  SMTP      @map("smtp")
 }
 
 model SettingMailProvider {
   id           String   @id
-  createdAt    DateTime @default(now())
-  modifiedAt   DateTime @updatedAt
-  lastLoadedAt DateTime @default(now())
+  createdAt    DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt   DateTime @updatedAt @db.Timestamptz(3)
+  lastLoadedAt DateTime @default(now()) @db.Timestamptz(3)
 
   type                  MailProviderType
   name                  String?
@@ -1553,15 +1738,19 @@ model SettingMailProvider {
   mailgun_baseDomain    String?
   mailchimp_baseURL     String?
   slack_webhookURL      String?
+  smtp_host             String?
+  smtp_port             Int?
+  smtp_secure           Boolean?
+  smtp_user             String?
 
   @@map("settings.mailprovider")
 }
 
 model SettingTrackingPixel {
   id                                     String                    @id
-  createdAt                              DateTime                  @default(now())
-  modifiedAt                             DateTime                  @updatedAt
-  lastLoadedAt                           DateTime                  @default(now())
+  createdAt                              DateTime                  @default(now()) @db.Timestamptz(3)
+  modifiedAt                             DateTime                  @updatedAt @db.Timestamptz(3)
+  lastLoadedAt                           DateTime                  @default(now()) @db.Timestamptz(3)
   type                                   TrackingPixelProviderType
   name                                   String?
   prolitteris_memberNr                   String?
@@ -1722,9 +1911,9 @@ enum MolliePaymentMethod {
 
 model SettingPaymentProvider {
   id           String   @id
-  createdAt    DateTime @default(now())
-  modifiedAt   DateTime @updatedAt
-  lastLoadedAt DateTime @default(now())
+  createdAt    DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt   DateTime @updatedAt @db.Timestamptz(3)
+  lastLoadedAt DateTime @default(now()) @db.Timestamptz(3)
 
   type                  PaymentProviderType
   name                  String?
@@ -1767,9 +1956,9 @@ enum ChallengeProviderType {
 
 model SettingChallengeProvider {
   id           String   @id
-  createdAt    DateTime @default(now())
-  modifiedAt   DateTime @updatedAt
-  lastLoadedAt DateTime @default(now())
+  createdAt    DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt   DateTime @updatedAt @db.Timestamptz(3)
+  lastLoadedAt DateTime @default(now()) @db.Timestamptz(3)
   name         String?
 
   type    ChallengeProviderType
@@ -1785,9 +1974,9 @@ enum AIProviderType {
 
 model SettingAIProvider {
   id           String   @id
-  createdAt    DateTime @default(now())
-  modifiedAt   DateTime @updatedAt
-  lastLoadedAt DateTime @default(now())
+  createdAt    DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt   DateTime @updatedAt @db.Timestamptz(3)
+  lastLoadedAt DateTime @default(now()) @db.Timestamptz(3)
 
   type         AIProviderType
   name         String?
@@ -1804,8 +1993,8 @@ enum ExternalAppsTarget {
 
 model ExternalApps {
   id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
   name        String
   description String?
@@ -1822,9 +2011,9 @@ enum AnalyticsProviderType {
 
 model SettingAnalyticsProvider {
   id           String   @id
-  createdAt    DateTime @default(now())
-  modifiedAt   DateTime @updatedAt
-  lastLoadedAt DateTime @default(now())
+  createdAt    DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt   DateTime @updatedAt @db.Timestamptz(3)
+  lastLoadedAt DateTime @default(now()) @db.Timestamptz(3)
 
   type          AnalyticsProviderType
   name          String?
@@ -1841,9 +2030,9 @@ enum SyncProviderType {
 
 model SettingSyncProvider {
   id           String   @id
-  createdAt    DateTime @default(now())
-  modifiedAt   DateTime @updatedAt
-  lastLoadedAt DateTime @default(now())
+  createdAt    DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt   DateTime @updatedAt @db.Timestamptz(3)
+  lastLoadedAt DateTime @default(now()) @db.Timestamptz(3)
 
   type    SyncProviderType
   name    String?
@@ -1858,7 +2047,7 @@ model SettingSyncProvider {
   mailchimp_extensions              Json    @default("{}")
 
   // Last sync execution info
-  lastSyncAt    DateTime?
+  lastSyncAt    DateTime? @db.Timestamptz(3)
   lastSyncError String?
 
   mailchimpSyncErrors MailchimpSyncError[]
@@ -1868,8 +2057,8 @@ model SettingSyncProvider {
 
 model MailchimpSyncError {
   id         String   @id @default(dbgenerated("gen_random_uuid()"))
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
   userId         String
   syncProviderId String
@@ -1885,9 +2074,9 @@ model MailchimpSyncError {
 }
 
 model WebsiteSettings {
-  id         String   @id @default(cuid())
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
   // Analytics
   analyticsGAEnabled Boolean @default(false)
@@ -1917,16 +2106,16 @@ model WebsiteSettings {
   @@map("settings.website")
 }
 
-model Voucher {
+model DiscountCode {
   id         String   @id @default(dbgenerated("gen_random_uuid()"))
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
-  code            String @unique
+  code            String
   discountPercent Int
 
-  validFrom DateTime
-  validTo   DateTime
+  validFrom DateTime @db.Timestamptz(3)
+  validTo   DateTime @db.Timestamptz(3)
 
   memberPlan   MemberPlan @relation(fields: [memberPlanId], references: [id], onDelete: Cascade)
   memberPlanId String
@@ -1934,5 +2123,24 @@ model Voucher {
   invoiceItems InvoiceItem[]
 
   @@unique([code, memberPlanId])
-  @@map("vouchers")
+  @@map("discountCodes")
+}
+
+model Goodie {
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  name        String
+  description Json?
+  stock       Int?
+  active      Boolean @default(true)
+
+  imageID String?
+  image   Image?  @relation(fields: [imageID], references: [id], onDelete: SetNull)
+
+  memberPlans  MemberPlan[]
+  invoiceItems InvoiceItem[]
+
+  @@map("goodies")
 }

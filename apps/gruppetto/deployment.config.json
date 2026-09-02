@@ -3,10 +3,7 @@
     "production": {
       "deployment": true,
       "custom_domain": "https://gruppetto-magazin.ch",
-      "env": {
-        "GA_ID": "G-FL5CRKBXV4",
-        "GTM_ID": "GTM-T2KXKVMC"
-      },
+      "env": {},
       "secret_env": []
     },
     "staging": {

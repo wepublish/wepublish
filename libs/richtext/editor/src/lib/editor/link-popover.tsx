@@ -17,11 +17,19 @@ import styled from '@emotion/styled';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { TbExternalLink, TbLinkPlus } from 'react-icons/tb';
 import { useHeadings } from './use-headings';
+import {
+  LinkVariantOption,
+  LinkVariantOptions,
+} from './extensions/link-variant';
 import * as z from 'zod';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslation } from 'react-i18next';
-import { useCurrentEditor, useEditorState } from '@tiptap/react';
+import {
+  EditorStateSnapshot,
+  useCurrentEditor,
+  useEditorState,
+} from '@tiptap/react';
 import { equals } from 'ramda';
 
 const ElevatedPopper = styled(Popper)`
@@ -98,44 +106,67 @@ const linkSchema = z.union([
       .or(z.string().startsWith('#'))
       .or(z.string().startsWith('/')),
     newTab: z.boolean(),
+    variant: z.string().nullish(),
   }),
   z.object({
     type: z.literal('email'),
     url: z.string().email(),
     newTab: z.boolean(),
+    variant: z.string().nullish(),
   }),
   z.object({
     type: z.literal('anchor'),
     url: z.string(),
     newTab: z.boolean(),
+    variant: z.string().nullish(),
   }),
 ]);
+
+const selectLinkState = ({ editor }: EditorStateSnapshot) => {
+  if (!editor || editor.isDestroyed) {
+    return {
+      isLink: false,
+      href: undefined as string | undefined,
+      target: undefined as string | undefined,
+      variant: undefined as string | undefined,
+    };
+  }
+
+  return {
+    isLink: editor.isActive('link') ?? false,
+    href: editor.getAttributes('link').href,
+    target: editor.getAttributes('link').target,
+    variant: editor.getAttributes('link').variant,
+  };
+};
 
 export function LinkPopover({ open, anchorEl, onClose }: LinkPopoverProps) {
   const { t } = useTranslation();
   const headings = useHeadings();
 
   const editor = useCurrentEditor().editor!;
+  const variants =
+    (
+      editor.extensionManager.extensions.find(
+        extension => extension.name === 'linkVariant'
+      )?.options as LinkVariantOptions | undefined
+    )?.variants ?? [];
+
   const editorState = useEditorState({
     editor,
-    selector: ({ editor }) => {
-      return {
-        isLink: editor.isActive('link') ?? false,
-        href: editor.getAttributes('link').href,
-        target: editor.getAttributes('link').target,
-      };
-    },
+    selector: selectLinkState,
     equalityFn: equals,
   });
 
   const applyLink = useCallback(
-    (url: string, attrs?: { target?: string }) => {
+    (url: string, attrs?: { target?: string; variant?: string | null }) => {
       if (!url) {
         return;
       }
 
       const { empty } = editor.state.selection;
       const target = attrs?.target ?? editor.getAttributes('link').target;
+      const variant = attrs?.variant ?? null;
       const chain = editor.chain().focus().extendMarkRange('link');
 
       if (empty && !editor.isActive('link')) {
@@ -143,11 +174,14 @@ export function LinkPopover({ open, anchorEl, onClose }: LinkPopoverProps) {
           .insertContent({
             type: 'text',
             text: url,
-            marks: [{ type: 'link', attrs: { href: url, target } }],
+            marks: [{ type: 'link', attrs: { href: url, target, variant } }],
           })
           .run();
       } else {
-        chain.setLink({ href: url, target }).run();
+        chain
+          .setLink({ href: url, target })
+          .updateAttributes('link', { variant })
+          .run();
       }
     },
     [editor]
@@ -171,9 +205,10 @@ export function LinkPopover({ open, anchorEl, onClose }: LinkPopoverProps) {
     reValidateMode: 'onChange',
   });
 
-  const onSubmit = handleSubmit(({ type, url, newTab }) => {
+  const onSubmit = handleSubmit(({ type, url, newTab, variant }) => {
     applyLink(type === 'email' ? `${mailTo}${url}` : url, {
       target: newTab ? '_blank' : '',
+      variant: variant || null,
     });
     onClose();
   }, console.warn);
@@ -185,6 +220,7 @@ export function LinkPopover({ open, anchorEl, onClose }: LinkPopoverProps) {
       type: getLinkType(editorState.href, headings),
       url: stripMailto(editorState.href),
       newTab: editorState.isLink ? editorState.target === '_blank' : true,
+      variant: editorState.variant ?? null,
     } as z.infer<typeof linkSchema>);
   }, [headings, editorState, reset]);
 
@@ -340,6 +376,40 @@ export function LinkPopover({ open, anchorEl, onClose }: LinkPopoverProps) {
             />
           )}
         />
+
+        {variants.length > 0 && (
+          <Controller
+            control={control}
+            name="variant"
+            render={({ field }) => (
+              <FormControl
+                size="small"
+                fullWidth
+              >
+                <InputLabel shrink>{t('richtext.link.style')}</InputLabel>
+                <Select
+                  {...field}
+                  displayEmpty
+                  value={field.value ?? ''}
+                  label={t('richtext.link.style')}
+                  onChange={event => field.onChange(event.target.value || null)}
+                >
+                  <MenuItem value="">
+                    {t('richtext.link.defaultStyle')}
+                  </MenuItem>
+                  {variants.map((option: LinkVariantOption) => (
+                    <MenuItem
+                      key={option.value}
+                      value={option.value}
+                    >
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            )}
+          />
+        )}
 
         {editorState.isLink && (
           <RemoveLinkButton

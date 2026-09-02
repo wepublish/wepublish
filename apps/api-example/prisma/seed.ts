@@ -13,6 +13,9 @@ import {
   ChallengeProviderType,
   TrackingPixelProviderType,
   AIProviderType,
+  Currency,
+  PaymentPeriodicity,
+  SubscriptionDeactivationReason,
 } from '@prisma/client';
 import { faker } from '@faker-js/faker';
 import { createReadStream } from 'fs';
@@ -845,7 +848,9 @@ async function seedComments(
 }
 
 async function seedPaymentMethods(prisma: PrismaClient) {
+  // skipDuplicates keeps the seed re-runnable against an existing database.
   await prisma.paymentMethod.createMany({
+    skipDuplicates: true,
     data: [
       {
         id: 'payrexx',
@@ -867,14 +872,25 @@ async function seedPaymentMethods(prisma: PrismaClient) {
   });
 }
 
+/** Slugs of the seeded plans, so the test subscriptions can reference them. */
+const MEMBER_PLAN_SLUGS = {
+  chfYearly: 'test-abo-chf',
+  eurMonthly: 'test-abo-eur',
+  chfMonthly: 'test-abo-chf-monatlich',
+} as const;
+
 async function seedMemberPlans(prisma: PrismaClient) {
-  const testAbo1 = prisma.memberPlan.create({
-    data: {
+  // Upserted by slug (not id): existing databases already carry these plans
+  // under generated ids, and the slug is what stays stable.
+  const testAbo1 = prisma.memberPlan.upsert({
+    where: { slug: MEMBER_PLAN_SLUGS.chfYearly },
+    update: {},
+    create: {
       active: true,
       name: 'Test-Abo CHF',
       slateDescription: getText(),
       slateShortDescription: getText(),
-      slug: 'test-abo-chf',
+      slug: MEMBER_PLAN_SLUGS.chfYearly,
       amountPerMonthMin: 1000,
       extendable: true,
       currency: 'CHF',
@@ -888,13 +904,15 @@ async function seedMemberPlans(prisma: PrismaClient) {
     },
   });
 
-  const testAbo2 = prisma.memberPlan.create({
-    data: {
+  const testAbo2 = prisma.memberPlan.upsert({
+    where: { slug: MEMBER_PLAN_SLUGS.eurMonthly },
+    update: {},
+    create: {
       active: true,
       name: 'Test-Abo EUR',
       slateDescription: getText(),
       slateShortDescription: getText(),
-      slug: 'test-abo-eur',
+      slug: MEMBER_PLAN_SLUGS.eurMonthly,
       amountPerMonthMin: 2000,
       extendable: true,
       currency: 'EUR',
@@ -908,7 +926,510 @@ async function seedMemberPlans(prisma: PrismaClient) {
     },
   });
 
-  await Promise.all([testAbo1, testAbo2]);
+  // A second CHF plan so tests can tell "different plan" from "different
+  // currency" — the audience filters treat those as separate dimensions.
+  const testAbo3 = prisma.memberPlan.upsert({
+    where: { slug: MEMBER_PLAN_SLUGS.chfMonthly },
+    update: {},
+    create: {
+      active: true,
+      name: 'Test-Abo CHF Monatlich',
+      slateDescription: getText(),
+      slateShortDescription: getText(),
+      slug: MEMBER_PLAN_SLUGS.chfMonthly,
+      amountPerMonthMin: 500,
+      extendable: true,
+      currency: 'CHF',
+      availablePaymentMethods: {
+        create: {
+          forceAutoRenewal: false,
+          paymentMethodIDs: ['payrexx', 'stripe'],
+          paymentPeriodicities: ['monthly', 'quarterly'],
+        },
+      },
+    },
+  });
+
+  await Promise.all([testAbo1, testAbo2, testAbo3]);
+}
+
+// All test subscriptions are positioned relative to the moment of seeding, so
+// re-running the seed always produces a current data set instead of dates that
+// silently expired since the last run.
+const shiftDays = (days: number): Date => {
+  const date = new Date();
+  date.setDate(date.getDate() + days);
+
+  return date;
+};
+
+const shiftMonths = (months: number): Date => {
+  const date = new Date();
+  date.setMonth(date.getMonth() + months);
+
+  return date;
+};
+
+interface SeedSubscription {
+  planSlug: string;
+  paymentMethodID: 'payrexx' | 'stripe';
+  periodicity: PaymentPeriodicity;
+  currency: Currency;
+  /** Amount per month in the smallest currency unit (1000 = 10.00). */
+  monthlyAmount: number;
+  autoRenew: boolean;
+  /** Unconfirmed subscriptions are the "pending" audience state. */
+  confirmed?: boolean;
+  extendable?: boolean;
+  /** Offset in months from today; negative is in the past. */
+  startsAtMonths: number;
+  /** Offset in days from today. `null` = no paid-until (e.g. lifetime). */
+  paidUntilDays: number | null;
+  invoice: 'paid' | 'open' | 'none';
+  deactivation?: {
+    reason: SubscriptionDeactivationReason;
+    daysAgo: number;
+  };
+}
+
+interface SeedSubscriber {
+  email: string;
+  firstName: string;
+  name: string;
+  /** Why this row exists — printed after seeding as a quick test overview. */
+  purpose: string;
+  subscriptions: SeedSubscription[];
+}
+
+const MONTHS_PER_PERIOD: Record<PaymentPeriodicity, number> = {
+  monthly: 1,
+  quarterly: 3,
+  biannual: 6,
+  yearly: 12,
+  biennial: 24,
+  lifetime: 1200,
+};
+
+/**
+ * A deliberately broad matrix: active and deactivated subscriptions, several
+ * deactivation reasons, users with multiple subscriptions across plans and
+ * currencies, unconfirmed and lifetime subscriptions, paid and open invoices,
+ * plus a subscriber-less user for the "no active subscription" audience.
+ */
+const SEED_SUBSCRIBERS: SeedSubscriber[] = [
+  {
+    email: 'abo.aktiv.chf@wepublish.ch',
+    firstName: 'Anna',
+    name: 'Aktiv',
+    purpose: 'Active yearly CHF subscription, auto-renewing, invoice paid',
+    subscriptions: [
+      {
+        planSlug: MEMBER_PLAN_SLUGS.chfYearly,
+        paymentMethodID: 'payrexx',
+        periodicity: 'yearly',
+        currency: 'CHF',
+        monthlyAmount: 1000,
+        autoRenew: true,
+        startsAtMonths: -4,
+        paidUntilDays: 240,
+        invoice: 'paid',
+      },
+    ],
+  },
+  {
+    email: 'abo.aktiv.eur@wepublish.ch',
+    firstName: 'Bruno',
+    name: 'Monatlich',
+    purpose: 'Active monthly EUR subscription, auto-renewing, invoice paid',
+    subscriptions: [
+      {
+        planSlug: MEMBER_PLAN_SLUGS.eurMonthly,
+        paymentMethodID: 'stripe',
+        periodicity: 'monthly',
+        currency: 'EUR',
+        monthlyAmount: 2000,
+        autoRenew: true,
+        startsAtMonths: -7,
+        paidUntilDays: 12,
+        invoice: 'paid',
+      },
+    ],
+  },
+  {
+    email: 'abo.mehrfach@wepublish.ch',
+    firstName: 'Clara',
+    name: 'Mehrfach',
+    purpose:
+      'Three subscriptions at once: two active across plans and currencies, one deactivated',
+    subscriptions: [
+      {
+        planSlug: MEMBER_PLAN_SLUGS.chfYearly,
+        paymentMethodID: 'payrexx',
+        periodicity: 'yearly',
+        currency: 'CHF',
+        monthlyAmount: 1000,
+        autoRenew: true,
+        startsAtMonths: -14,
+        paidUntilDays: 180,
+        invoice: 'paid',
+      },
+      {
+        planSlug: MEMBER_PLAN_SLUGS.eurMonthly,
+        paymentMethodID: 'stripe',
+        periodicity: 'monthly',
+        currency: 'EUR',
+        monthlyAmount: 2000,
+        autoRenew: false,
+        startsAtMonths: -3,
+        paidUntilDays: 20,
+        invoice: 'paid',
+      },
+      {
+        planSlug: MEMBER_PLAN_SLUGS.chfMonthly,
+        paymentMethodID: 'stripe',
+        periodicity: 'monthly',
+        currency: 'CHF',
+        monthlyAmount: 500,
+        autoRenew: false,
+        startsAtMonths: -20,
+        paidUntilDays: -60,
+        invoice: 'paid',
+        deactivation: {
+          reason: SubscriptionDeactivationReason.userSelfDeactivated,
+          daysAgo: 60,
+        },
+      },
+    ],
+  },
+  {
+    email: 'abo.gekuendigt@wepublish.ch',
+    firstName: 'Daniel',
+    name: 'Gekündigt',
+    purpose: 'Deactivated by the user — no active subscription left',
+    subscriptions: [
+      {
+        planSlug: MEMBER_PLAN_SLUGS.chfYearly,
+        paymentMethodID: 'payrexx',
+        periodicity: 'yearly',
+        currency: 'CHF',
+        monthlyAmount: 1000,
+        autoRenew: false,
+        startsAtMonths: -18,
+        paidUntilDays: -30,
+        invoice: 'paid',
+        deactivation: {
+          reason: SubscriptionDeactivationReason.userSelfDeactivated,
+          daysAgo: 30,
+        },
+      },
+    ],
+  },
+  {
+    email: 'abo.chargeback@wepublish.ch',
+    firstName: 'Elena',
+    name: 'Rückbuchung',
+    purpose: 'Deactivated after a chargeback',
+    subscriptions: [
+      {
+        planSlug: MEMBER_PLAN_SLUGS.eurMonthly,
+        paymentMethodID: 'stripe',
+        periodicity: 'monthly',
+        currency: 'EUR',
+        monthlyAmount: 2000,
+        autoRenew: false,
+        startsAtMonths: -9,
+        paidUntilDays: -5,
+        invoice: 'paid',
+        deactivation: {
+          reason: SubscriptionDeactivationReason.chargeback,
+          daysAgo: 5,
+        },
+      },
+    ],
+  },
+  {
+    email: 'abo.offene.rechnung@wepublish.ch',
+    firstName: 'Fabio',
+    name: 'Unbezahlt',
+    purpose:
+      'Still active but the renewal invoice is open and overdue — deactivation is scheduled',
+    subscriptions: [
+      {
+        planSlug: MEMBER_PLAN_SLUGS.chfMonthly,
+        paymentMethodID: 'payrexx',
+        periodicity: 'monthly',
+        currency: 'CHF',
+        monthlyAmount: 500,
+        autoRenew: true,
+        startsAtMonths: -6,
+        paidUntilDays: -3,
+        invoice: 'open',
+      },
+    ],
+  },
+  {
+    email: 'abo.ausgelaufen@wepublish.ch',
+    firstName: 'Lena',
+    name: 'Ausgelaufen',
+    purpose:
+      'Ran out without auto-renewal; the periodic job deactivated it at paidUntil. A win-back target.',
+    subscriptions: [
+      {
+        planSlug: MEMBER_PLAN_SLUGS.chfYearly,
+        paymentMethodID: 'payrexx',
+        periodicity: 'yearly',
+        currency: 'CHF',
+        monthlyAmount: 1000,
+        autoRenew: false,
+        startsAtMonths: -14,
+        paidUntilDays: -20,
+        invoice: 'paid',
+        // Mirrors `deactivateExpiredNotAutoRenewSubscriptions`: reason
+        // `userSelfDeactivated`, dated at the day the subscription ran out.
+        deactivation: {
+          reason: SubscriptionDeactivationReason.userSelfDeactivated,
+          daysAgo: 20,
+        },
+      },
+    ],
+  },
+  {
+    email: 'abo.laeuft.ab@wepublish.ch',
+    firstName: 'Gina',
+    name: 'Ablauf',
+    purpose:
+      'Active without auto-renewal, ends in 10 days — target for renewal reminders',
+    subscriptions: [
+      {
+        planSlug: MEMBER_PLAN_SLUGS.chfYearly,
+        paymentMethodID: 'payrexx',
+        periodicity: 'yearly',
+        currency: 'CHF',
+        monthlyAmount: 1000,
+        autoRenew: false,
+        startsAtMonths: -12,
+        paidUntilDays: 10,
+        invoice: 'paid',
+      },
+    ],
+  },
+  {
+    email: 'abo.unbestaetigt@wepublish.ch',
+    firstName: 'Heidi',
+    name: 'Ausstehend',
+    purpose: 'Unconfirmed subscription — the "pending" audience state',
+    subscriptions: [
+      {
+        planSlug: MEMBER_PLAN_SLUGS.eurMonthly,
+        paymentMethodID: 'stripe',
+        periodicity: 'monthly',
+        currency: 'EUR',
+        monthlyAmount: 2000,
+        autoRenew: true,
+        confirmed: false,
+        startsAtMonths: 0,
+        paidUntilDays: null,
+        invoice: 'open',
+      },
+    ],
+  },
+  {
+    email: 'abo.lebenslang@wepublish.ch',
+    firstName: 'Igor',
+    name: 'Lebenslang',
+    purpose: 'Lifetime subscription without a paid-until date',
+    subscriptions: [
+      {
+        planSlug: MEMBER_PLAN_SLUGS.chfYearly,
+        paymentMethodID: 'payrexx',
+        periodicity: 'lifetime',
+        currency: 'CHF',
+        monthlyAmount: 1000,
+        autoRenew: false,
+        extendable: false,
+        startsAtMonths: -26,
+        paidUntilDays: null,
+        invoice: 'paid',
+      },
+    ],
+  },
+  {
+    email: 'abo.quartal@wepublish.ch',
+    firstName: 'Jana',
+    name: 'Quartal',
+    purpose: 'Quarterly billing period, auto-renewing',
+    subscriptions: [
+      {
+        planSlug: MEMBER_PLAN_SLUGS.chfMonthly,
+        paymentMethodID: 'stripe',
+        periodicity: 'quarterly',
+        currency: 'CHF',
+        monthlyAmount: 500,
+        autoRenew: true,
+        startsAtMonths: -5,
+        paidUntilDays: 45,
+        invoice: 'paid',
+      },
+    ],
+  },
+  {
+    email: 'ohne.abo@wepublish.ch',
+    firstName: 'Karl',
+    name: 'Ohne Abo',
+    purpose: 'Registered user without any subscription',
+    subscriptions: [],
+  },
+];
+
+/**
+ * Creates the test subscribers and their subscriptions. Safe to re-run: the
+ * previously seeded subscriptions of these users are removed first, so every
+ * run leaves exactly this data set with dates relative to today.
+ */
+export async function seedSubscribers(prisma: PrismaClient) {
+  const plans = await prisma.memberPlan.findMany({
+    where: { slug: { in: Object.values(MEMBER_PLAN_SLUGS) } },
+    select: { id: true, slug: true },
+  });
+  const planIdBySlug = new Map(plans.map(plan => [plan.slug, plan.id]));
+
+  const emails = SEED_SUBSCRIBERS.map(({ email }) => email);
+  const existingUsers = await prisma.user.findMany({
+    where: { email: { in: emails } },
+    select: { id: true },
+  });
+
+  // Wipe what a previous run created, deepest relation first: periods point at
+  // invoices, invoices and deactivations at subscriptions.
+  if (existingUsers.length) {
+    const staleSubscriptions = await prisma.subscription.findMany({
+      where: { userID: { in: existingUsers.map(({ id }) => id) } },
+      select: { id: true },
+    });
+    const staleIds = staleSubscriptions.map(({ id }) => id);
+
+    if (staleIds.length) {
+      await prisma.subscriptionPeriod.deleteMany({
+        where: { subscriptionId: { in: staleIds } },
+      });
+      await prisma.invoice.deleteMany({
+        where: { subscriptionID: { in: staleIds } },
+      });
+      await prisma.subscriptionDeactivation.deleteMany({
+        where: { subscriptionID: { in: staleIds } },
+      });
+      await prisma.subscription.deleteMany({ where: { id: { in: staleIds } } });
+    }
+  }
+
+  const password = await hashPassword('123');
+
+  for (const subscriber of SEED_SUBSCRIBERS) {
+    const user = await prisma.user.upsert({
+      where: { email: subscriber.email },
+      update: { active: true },
+      create: {
+        email: subscriber.email,
+        emailVerifiedAt: new Date(),
+        firstName: subscriber.firstName,
+        name: subscriber.name,
+        active: true,
+        roleIDs: [],
+        password,
+        totpExempt: true,
+      },
+    });
+
+    for (const seed of subscriber.subscriptions) {
+      const memberPlanID = planIdBySlug.get(seed.planSlug);
+
+      if (!memberPlanID) {
+        throw new Error(`Member plan <${seed.planSlug}> is missing`);
+      }
+
+      const startsAt = shiftMonths(seed.startsAtMonths);
+      const paidUntil =
+        seed.paidUntilDays === null ? null : shiftDays(seed.paidUntilDays);
+
+      const subscription = await prisma.subscription.create({
+        data: {
+          userID: user.id,
+          memberPlanID,
+          paymentMethodID: seed.paymentMethodID,
+          paymentPeriodicity: seed.periodicity,
+          monthlyAmount: seed.monthlyAmount,
+          currency: seed.currency,
+          autoRenew: seed.autoRenew,
+          confirmed: seed.confirmed ?? true,
+          extendable: seed.extendable ?? true,
+          startsAt,
+          paidUntil,
+        },
+      });
+
+      if (seed.invoice !== 'none') {
+        const periodMonths = MONTHS_PER_PERIOD[seed.periodicity];
+        const amount = Math.round(seed.monthlyAmount * periodMonths);
+        // The current period ends at paidUntil; without one (lifetime, pending)
+        // fall back to one period after the start.
+        const periodEndsAt =
+          paidUntil ??
+          new Date(
+            new Date(startsAt).setMonth(startsAt.getMonth() + periodMonths)
+          );
+        const periodStartsAt = new Date(
+          new Date(periodEndsAt).setMonth(
+            periodEndsAt.getMonth() - periodMonths
+          )
+        );
+        const isPaid = seed.invoice === 'paid';
+
+        const invoice = await prisma.invoice.create({
+          data: {
+            mail: subscriber.email,
+            description: `${seed.planSlug} — ${seed.periodicity}`,
+            currency: seed.currency,
+            subscriptionID: subscription.id,
+            dueAt: periodStartsAt,
+            paidAt: isPaid ? periodStartsAt : null,
+            // Unpaid invoices are deactivated a fortnight after they were due.
+            scheduledDeactivationAt: shiftDays(isPaid ? 365 : 11),
+            items: {
+              create: {
+                name: `Abo ${seed.currency}`,
+                description: `${seed.periodicity} — ${seed.planSlug}`,
+                quantity: 1,
+                amount,
+              },
+            },
+          },
+        });
+
+        await prisma.subscriptionPeriod.create({
+          data: {
+            subscriptionId: subscription.id,
+            invoiceID: invoice.id,
+            startsAt: periodStartsAt,
+            endsAt: periodEndsAt,
+            paymentPeriodicity: seed.periodicity,
+            amount,
+          },
+        });
+      }
+
+      if (seed.deactivation) {
+        await prisma.subscriptionDeactivation.create({
+          data: {
+            subscriptionID: subscription.id,
+            date: shiftDays(-seed.deactivation.daysAgo),
+            reason: seed.deactivation.reason,
+          },
+        });
+      }
+    }
+
+    console.log(`  ${subscriber.email} — ${subscriber.purpose}`);
+  }
 }
 
 async function seedSettings(prisma: PrismaClient) {
@@ -1123,7 +1644,16 @@ export async function runExampleSeed(prisma: PrismaClient): Promise<void> {
   });
 
   if (hasSeeded) {
-    console.warn('Website Example seeding has already been done. Skipping');
+    console.warn(
+      'Website Example content seeding has already been done. Skipping content.'
+    );
+    // Subscriptions are still refreshed: their dates are relative to now, so a
+    // re-seed brings an existing database back to a current test data set.
+    await seedPaymentMethods(prisma);
+    await seedMemberPlans(prisma);
+    console.log('Refreshing test subscribers');
+    await seedSubscribers(prisma);
+
     return;
   }
 
@@ -1216,4 +1746,7 @@ export async function runExampleSeed(prisma: PrismaClient): Promise<void> {
 
   console.log('Seeding Member Plans');
   await seedMemberPlans(prisma);
+
+  console.log('Seeding test subscribers');
+  await seedSubscribers(prisma);
 }

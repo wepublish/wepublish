@@ -254,6 +254,7 @@ export type Banner = {
   collapsible: Scalars['Boolean'];
   cta?: Maybe<Scalars['String']>;
   delay: Scalars['Int'];
+  embedUrl?: Maybe<Scalars['String']>;
   hideForMinutes: Scalars['Int'];
   html?: Maybe<Scalars['String']>;
   id: Scalars['String'];
@@ -359,7 +360,7 @@ export type BildwurfAdBlockInput = {
   zoneID?: InputMaybe<Scalars['String']>;
 };
 
-export type BlockContent = BildwurfAdBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | FlexBlock | HtmlBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | StreamableVideoBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock;
+export type BlockContent = BildwurfAdBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | FlexBlock | HtmlBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | MailchimpFormBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | StreamableVideoBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock;
 
 export type BlockContentInput = {
   bildwurfAd?: InputMaybe<BildwurfAdBlockInput>;
@@ -376,6 +377,7 @@ export type BlockContentInput = {
   instagramPost?: InputMaybe<InstagramPostBlockInput>;
   linkPageBreak?: InputMaybe<BreakBlockInput>;
   listicle?: InputMaybe<ListicleBlockInput>;
+  mailchimpForm?: InputMaybe<MailchimpFormBlockInput>;
   polisConversation?: InputMaybe<PolisConversationBlockInput>;
   poll?: InputMaybe<PollBlockInput>;
   quote?: InputMaybe<QuoteBlockInput>;
@@ -418,6 +420,7 @@ export enum BlockType {
   InstagramPost = 'InstagramPost',
   LinkPageBreak = 'LinkPageBreak',
   Listicle = 'Listicle',
+  MailchimpForm = 'MailchimpForm',
   PolisConversation = 'PolisConversation',
   Poll = 'Poll',
   Quote = 'Quote',
@@ -691,6 +694,7 @@ export type CreateBannerInput = {
   collapsible: Scalars['Boolean'];
   cta?: InputMaybe<Scalars['String']>;
   delay: Scalars['Int'];
+  embedUrl?: InputMaybe<Scalars['String']>;
   hideForMinutes: Scalars['Int'];
   html?: InputMaybe<Scalars['String']>;
   imageId?: InputMaybe<Scalars['String']>;
@@ -731,8 +735,8 @@ export type CreateExternalAppInput = {
 
 export type CreateSubscriptionInfo = {
   __typename?: 'CreateSubscriptionInfo';
+  discountCodeValid?: Maybe<Scalars['Boolean']>;
   discountPercent?: Maybe<Scalars['Float']>;
-  voucherValid?: Maybe<Scalars['Boolean']>;
 };
 
 export type Crowdfunding = {
@@ -900,6 +904,31 @@ export type DeletePollVotesResult = {
   count: Scalars['Int'];
 };
 
+export type DiscountCode = HasMemberPlanLc & {
+  __typename?: 'DiscountCode';
+  code: Scalars['String'];
+  createdAt: Scalars['DateTime'];
+  discountPercent: Scalars['Int'];
+  id: Scalars['String'];
+  memberPlan: MemberPlan;
+  memberPlanId: Scalars['String'];
+  modifiedAt: Scalars['DateTime'];
+  validFrom: Scalars['DateTime'];
+  validTo: Scalars['DateTime'];
+};
+
+export type DiscountCodeFilter = {
+  from?: InputMaybe<Scalars['DateTime']>;
+  memberPlans?: InputMaybe<Array<Scalars['String']>>;
+  to?: InputMaybe<Scalars['DateTime']>;
+};
+
+export enum DiscountCodesort {
+  CreatedAt = 'CreatedAt',
+  Discount = 'Discount',
+  ModifiedAt = 'ModifiedAt'
+}
+
 export type Document = {
   __typename?: 'Document';
   createdAt: Scalars['DateTime'];
@@ -942,6 +971,7 @@ export enum EditorBlockType {
   ImageGallery = 'ImageGallery',
   LinkPageBreak = 'LinkPageBreak',
   Listicle = 'Listicle',
+  MailchimpForm = 'MailchimpForm',
   Poll = 'Poll',
   Quote = 'Quote',
   RichText = 'RichText',
@@ -1220,6 +1250,33 @@ export type FullPoll = {
   opensAt: Scalars['DateTime'];
   question?: Maybe<Scalars['String']>;
 };
+
+export type Goodie = HasImage & {
+  __typename?: 'Goodie';
+  active: Scalars['Boolean'];
+  availableStock?: Maybe<Scalars['Int']>;
+  createdAt: Scalars['DateTime'];
+  description?: Maybe<Scalars['RichText']>;
+  id: Scalars['String'];
+  image?: Maybe<Image>;
+  imageID?: Maybe<Scalars['String']>;
+  memberPlans: Array<MemberPlan>;
+  modifiedAt: Scalars['DateTime'];
+  name: Scalars['String'];
+  stock?: Maybe<Scalars['Int']>;
+};
+
+export type GoodieFilter = {
+  active?: InputMaybe<Scalars['Boolean']>;
+  memberPlans?: InputMaybe<Array<Scalars['String']>>;
+  name?: InputMaybe<Scalars['String']>;
+};
+
+export enum GoodieSort {
+  CreatedAt = 'CreatedAt',
+  ModifiedAt = 'ModifiedAt',
+  Name = 'Name'
+}
 
 export type HtmlBlock = BaseBlock & {
   __typename?: 'HTMLBlock';
@@ -1586,6 +1643,8 @@ export type InvoiceItem = {
   amount: Scalars['Int'];
   createdAt: Scalars['DateTime'];
   description?: Maybe<Scalars['String']>;
+  goodie?: Maybe<Goodie>;
+  goodieId?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
@@ -1656,6 +1715,85 @@ export enum LoginStatus {
   Unsubscribed = 'UNSUBSCRIBED'
 }
 
+export type MailAudienceInput = {
+  autoRenew?: InputMaybe<Scalars['Boolean']>;
+  base: MailRecipientBase;
+  /** Win-back audience only: start of an explicit period the subscription ended in. */
+  endedFrom?: InputMaybe<Scalars['DateTime']>;
+  /** Win-back audience only: end of an explicit period the subscription ended in. */
+  endedTo?: InputMaybe<Scalars['DateTime']>;
+  /** Win-back audience only: how far back an ended subscription may lie, in days. Ignored when an explicit period is given. */
+  endedWithinDays?: InputMaybe<Scalars['Int']>;
+  /** Restrict to subscriptions of these member plans. */
+  memberPlanIDs?: InputMaybe<Array<Scalars['String']>>;
+  paymentMethodID?: InputMaybe<Scalars['String']>;
+  paymentPeriodicity?: InputMaybe<PaymentPeriodicity>;
+  subscriptionState?: InputMaybe<MailSubscriptionState>;
+};
+
+export type MailLogFilter = {
+  mailSendJobId?: InputMaybe<Scalars['String']>;
+  mailTemplateId?: InputMaybe<Scalars['String']>;
+  recipientId?: InputMaybe<Scalars['String']>;
+  state?: InputMaybe<MailLogState>;
+  type?: InputMaybe<MailLogType>;
+};
+
+export type MailLogModel = {
+  __typename?: 'MailLogModel';
+  createdAt: Scalars['DateTime'];
+  /** Why a rejected mail could not be delivered. */
+  error?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  mailProviderID: Scalars['String'];
+  mailSendJobId?: Maybe<Scalars['String']>;
+  mailTemplate: MailLogTemplate;
+  recipient: MailLogRecipient;
+  sentDate: Scalars['DateTime'];
+  state: MailLogState;
+  subject?: Maybe<Scalars['String']>;
+  type?: Maybe<MailLogType>;
+};
+
+export type MailLogRecipient = {
+  __typename?: 'MailLogRecipient';
+  email: Scalars['String'];
+  firstName?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  name: Scalars['String'];
+};
+
+export enum MailLogState {
+  Accepted = 'accepted',
+  Bounced = 'bounced',
+  Deferred = 'deferred',
+  Delivered = 'delivered',
+  Rejected = 'rejected',
+  Submitted = 'submitted'
+}
+
+export type MailLogSyncModel = {
+  __typename?: 'MailLogSyncModel';
+  /** Mails that were still in an open state and could be looked up at the provider. */
+  checked: Scalars['Int'];
+  /** Mails whose state the provider reported differently. */
+  updated: Scalars['Int'];
+};
+
+export type MailLogTemplate = {
+  __typename?: 'MailLogTemplate';
+  id: Scalars['String'];
+  name: Scalars['String'];
+};
+
+/** Origin of a sent mail. */
+export enum MailLogType {
+  Manual = 'manual',
+  SubscriptionFlow = 'subscriptionFlow',
+  SystemMail = 'systemMail',
+  UserFlow = 'userFlow'
+}
+
 export type MailProviderModel = {
   __typename?: 'MailProviderModel';
   name: Scalars['String'];
@@ -1664,8 +1802,175 @@ export type MailProviderModel = {
 export enum MailProviderType {
   Mailchimp = 'MAILCHIMP',
   Mailgun = 'MAILGUN',
-  Slack = 'SLACK'
+  Slack = 'SLACK',
+  Smtp = 'SMTP'
 }
+
+/** Base set of users a manual-send audience is drawn from. */
+export enum MailRecipientBase {
+  AllUsers = 'allUsers',
+  EndedSubscription = 'endedSubscription',
+  HasSubscription = 'hasSubscription',
+  NoActiveSubscription = 'noActiveSubscription'
+}
+
+export enum MailSendAudience {
+  AllUsers = 'allUsers',
+  FilteredSubscriptions = 'filteredSubscriptions',
+  SingleUser = 'singleUser'
+}
+
+export type MailSendJobInput = {
+  audience: MailAudienceInput;
+  mailTemplateId: Scalars['String'];
+};
+
+export type MailSendJobModel = {
+  __typename?: 'MailSendJobModel';
+  audience: MailSendAudience;
+  createdAt: Scalars['DateTime'];
+  createdByUserId: Scalars['String'];
+  error?: Maybe<Scalars['String']>;
+  failedCount: Scalars['Int'];
+  finishedAt?: Maybe<Scalars['DateTime']>;
+  /** Last sign of life of the worker processing this job. */
+  heartbeatAt?: Maybe<Scalars['DateTime']>;
+  id: Scalars['String'];
+  mailTemplate?: Maybe<MailLogTemplate>;
+  mailTemplateId: Scalars['String'];
+  modifiedAt: Scalars['DateTime'];
+  /** How often the job was picked up again after an interruption. */
+  resumeCount: Scalars['Int'];
+  /** Mails handed to the provider whose outcome never came back — left over after an interruption. Never re-sent on their own. */
+  sendingCount: Scalars['Int'];
+  sentCount: Scalars['Int'];
+  startedAt?: Maybe<Scalars['DateTime']>;
+  status: MailSendJobState;
+  totalCount: Scalars['Int'];
+};
+
+export type MailSendJobRecipientModel = {
+  __typename?: 'MailSendJobRecipientModel';
+  attempts: Scalars['Int'];
+  error?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  mailLogId?: Maybe<Scalars['String']>;
+  memberPlanName?: Maybe<Scalars['String']>;
+  /** Position in the send queue. */
+  position: Scalars['Int'];
+  sentAt?: Maybe<Scalars['DateTime']>;
+  state: MailSendJobRecipientState;
+  user: MailLogRecipient;
+};
+
+/** Where one planned mail of a send job stands. */
+export enum MailSendJobRecipientState {
+  Failed = 'failed',
+  Pending = 'pending',
+  Sending = 'sending',
+  Sent = 'sent'
+}
+
+export enum MailSendJobState {
+  Cancelled = 'cancelled',
+  Done = 'done',
+  Failed = 'failed',
+  Queued = 'queued',
+  Running = 'running'
+}
+
+export type MailSendPreviewInput = {
+  audience: MailAudienceInput;
+  mailTemplateId: Scalars['String'];
+  /** Row id of the recipient to render for. Defaults to the first of the audience. */
+  recipientId?: InputMaybe<Scalars['String']>;
+};
+
+export type MailSendPreviewModel = {
+  __typename?: 'MailSendPreviewModel';
+  html: Scalars['String'];
+  /** The recipient this preview was rendered for. */
+  recipient?: Maybe<MailSendRecipientModel>;
+  subject: Scalars['String'];
+  text?: Maybe<Scalars['String']>;
+};
+
+export type MailSendRecipientModel = {
+  __typename?: 'MailSendRecipientModel';
+  email: Scalars['String'];
+  firstName?: Maybe<Scalars['String']>;
+  /** Row identity. A user appears once per matching subscription, so this combines both. */
+  id: Scalars['String'];
+  memberPlanName?: Maybe<Scalars['String']>;
+  name: Scalars['String'];
+  subscriptionId?: Maybe<Scalars['String']>;
+  userId: Scalars['String'];
+};
+
+export type MailSendRecipientPreview = {
+  __typename?: 'MailSendRecipientPreview';
+  /** Whether recipients carry subscription data (subscription-context templates allowed). */
+  allowsSubscriptionTemplates: Scalars['Boolean'];
+  /** Number of mails that would be sent. */
+  count: Scalars['Int'];
+  /** Number of distinct people reached. Lower than `count` when someone has several matching subscriptions. */
+  userCount: Scalars['Int'];
+};
+
+export enum MailSubscriptionState {
+  Active = 'active',
+  Deactivated = 'deactivated',
+  Pending = 'pending'
+}
+
+/** The mail type / context a template is written for. */
+export enum MailTemplateContext {
+  Account = 'account',
+  Custom = 'custom',
+  CustomNoSubscription = 'customNoSubscription',
+  EmailChange = 'emailChange',
+  InvoiceCreation = 'invoiceCreation',
+  Renewal = 'renewal',
+  Subscription = 'subscription'
+}
+
+export type MailTemplateInput = {
+  context?: InputMaybe<MailTemplateContext>;
+  description?: InputMaybe<Scalars['String']>;
+  htmlContent: Scalars['String'];
+  name: Scalars['String'];
+  subject: Scalars['String'];
+  textContent?: InputMaybe<Scalars['String']>;
+};
+
+export type MailTemplateModel = {
+  __typename?: 'MailTemplateModel';
+  context?: Maybe<MailTemplateContext>;
+  description?: Maybe<Scalars['String']>;
+  htmlContent: Scalars['String'];
+  id: Scalars['String'];
+  name: Scalars['String'];
+  status: Scalars['String'];
+  subject: Scalars['String'];
+  textContent?: Maybe<Scalars['String']>;
+};
+
+export type MailTemplatePreviewInput = {
+  /** Mail type / context id, e.g. "renewal". */
+  contextId: Scalars['String'];
+  htmlContent: Scalars['String'];
+  subject: Scalars['String'];
+  /** Subscription to take sample data from. */
+  subscriptionId?: InputMaybe<Scalars['String']>;
+  textContent?: InputMaybe<Scalars['String']>;
+};
+
+export type MailTemplatePreviewModel = {
+  __typename?: 'MailTemplatePreviewModel';
+  html: Scalars['String'];
+  subject: Scalars['String'];
+  text?: Maybe<Scalars['String']>;
+};
 
 export type MailTemplateRef = {
   __typename?: 'MailTemplateRef';
@@ -1673,15 +1978,141 @@ export type MailTemplateRef = {
   name: Scalars['String'];
 };
 
-export type MailTemplateWithUrlAndStatusModel = {
-  __typename?: 'MailTemplateWithUrlAndStatusModel';
+export type MailTemplateSubscriptionOption = {
+  __typename?: 'MailTemplateSubscriptionOption';
+  id: Scalars['String'];
+  label: Scalars['String'];
+};
+
+export type MailchimpContactInput = {
+  email: Scalars['String'];
+  interests?: InputMaybe<Scalars['JSONObject']>;
+  listId: Scalars['String'];
+  mergeFields?: InputMaybe<Scalars['JSONObject']>;
+  status: MailchimpContactStatus;
+  syncProviderId: Scalars['String'];
+};
+
+export enum MailchimpContactStatus {
+  Pending = 'Pending',
+  Subscribed = 'Subscribed'
+}
+
+export type MailchimpFormBlock = BaseBlock & {
+  __typename?: 'MailchimpFormBlock';
+  autoFocus: Scalars['Boolean'];
+  blockStyle?: Maybe<Scalars['String']>;
+  blockStyleName?: Maybe<Scalars['String']>;
+  buttonColor?: Maybe<Scalars['String']>;
+  buttonFontColor?: Maybe<Scalars['String']>;
+  disabled?: Maybe<Scalars['Boolean']>;
+  doubleOptIn?: Maybe<Scalars['Boolean']>;
+  interests: Array<Scalars['String']>;
+  listId?: Maybe<Scalars['String']>;
+  steps: Array<MailchimpFormStep>;
+  submitButtonLabel?: Maybe<Scalars['String']>;
+  successPage?: Maybe<MailchimpFormSuccessPage>;
+  successUrl?: Maybe<Scalars['String']>;
+  syncProviderId?: Maybe<Scalars['String']>;
+  type: BlockType;
+};
+
+export type MailchimpFormBlockInput = {
+  autoFocus?: Scalars['Boolean'];
+  blockStyle?: InputMaybe<Scalars['String']>;
+  blockStyleName?: InputMaybe<Scalars['String']>;
+  buttonColor?: InputMaybe<Scalars['String']>;
+  buttonFontColor?: InputMaybe<Scalars['String']>;
+  disabled?: InputMaybe<Scalars['Boolean']>;
+  doubleOptIn?: InputMaybe<Scalars['Boolean']>;
+  interests?: Array<Scalars['String']>;
+  listId?: InputMaybe<Scalars['String']>;
+  steps?: Array<MailchimpFormStepInput>;
+  submitButtonLabel?: InputMaybe<Scalars['String']>;
+  successPage?: InputMaybe<MailchimpFormSuccessPageInput>;
+  successUrl?: InputMaybe<Scalars['String']>;
+  syncProviderId?: InputMaybe<Scalars['String']>;
+};
+
+export type MailchimpFormFieldConfig = {
+  __typename?: 'MailchimpFormFieldConfig';
+  defaultValue?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
-  externalMailTemplateId: Scalars['String'];
+  inputType?: Maybe<Scalars['String']>;
+  label?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  options: Array<MailchimpFormInterestOption>;
+  required?: Maybe<Scalars['Boolean']>;
+  urlParam?: Maybe<Scalars['String']>;
+  value?: Maybe<Scalars['String']>;
+};
+
+export type MailchimpFormFieldConfigInput = {
+  defaultValue?: InputMaybe<Scalars['String']>;
+  description?: InputMaybe<Scalars['String']>;
+  inputType?: InputMaybe<Scalars['String']>;
+  label?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  options?: Array<MailchimpFormInterestOptionInput>;
+  required?: InputMaybe<Scalars['Boolean']>;
+  urlParam?: InputMaybe<Scalars['String']>;
+  value?: InputMaybe<Scalars['String']>;
+};
+
+export type MailchimpFormInterestOption = {
+  __typename?: 'MailchimpFormInterestOption';
+  description?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   name: Scalars['String'];
-  remoteMissing: Scalars['Boolean'];
-  status: Scalars['String'];
+};
+
+export type MailchimpFormInterestOptionInput = {
+  description?: InputMaybe<Scalars['String']>;
+  id: Scalars['String'];
+  name: Scalars['String'];
+};
+
+export type MailchimpFormStep = {
+  __typename?: 'MailchimpFormStep';
+  inputs: Array<MailchimpFormFieldConfig>;
+  showIfInterestsFilled: Array<Scalars['String']>;
+  skipIfFieldsFilled: Array<Scalars['String']>;
+  skipIfInterestsFilled: Array<Scalars['String']>;
+};
+
+export type MailchimpFormStepInput = {
+  inputs?: Array<MailchimpFormFieldConfigInput>;
+  showIfInterestsFilled?: Array<Scalars['String']>;
+  skipIfFieldsFilled?: Array<Scalars['String']>;
+  skipIfInterestsFilled?: Array<Scalars['String']>;
+};
+
+export type MailchimpFormSuccessOption = {
+  __typename?: 'MailchimpFormSuccessOption';
+  background: Scalars['String'];
+  label: Scalars['String'];
+  mergeFieldName?: Maybe<Scalars['String']>;
+  mergeFieldValue?: Maybe<Scalars['String']>;
   url: Scalars['String'];
+};
+
+export type MailchimpFormSuccessOptionInput = {
+  background: Scalars['String'];
+  label: Scalars['String'];
+  mergeFieldName?: InputMaybe<Scalars['String']>;
+  mergeFieldValue?: InputMaybe<Scalars['String']>;
+  url: Scalars['String'];
+};
+
+export type MailchimpFormSuccessPage = {
+  __typename?: 'MailchimpFormSuccessPage';
+  description?: Maybe<Scalars['String']>;
+  options: Array<MailchimpFormSuccessOption>;
+};
+
+export type MailchimpFormSuccessPageInput = {
+  description?: InputMaybe<Scalars['String']>;
+  options?: Array<MailchimpFormSuccessOptionInput>;
 };
 
 export type MailchimpInterestGroup = {
@@ -1702,6 +2133,12 @@ export type MailchimpMergeField = {
   name: Scalars['String'];
   tag: Scalars['String'];
   type: Scalars['String'];
+};
+
+export type MailchimpSubscribeResult = {
+  __typename?: 'MailchimpSubscribeResult';
+  error?: Maybe<Scalars['String']>;
+  success: Scalars['Boolean'];
 };
 
 export type MailchimpSyncDryRunChange = {
@@ -1767,6 +2204,8 @@ export type MemberPlan = HasImage & {
   externalReward?: Maybe<Scalars['String']>;
   failPage?: Maybe<Page>;
   failPageId?: Maybe<Scalars['String']>;
+  /** Active goodies with remaining stock that can be chosen with this member plan. */
+  goodies: Array<Goodie>;
   id: Scalars['String'];
   image?: Maybe<Image>;
   imageID?: Maybe<Scalars['String']>;
@@ -1796,10 +2235,14 @@ export enum MemberPlanSort {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  /** Subscribes a contact to a Mailchimp list. */
+  addMailchimpContact: MailchimpSubscribeResult;
   /** Adds a new comment made by you. */
   addUserComment: Comment;
   /** Approves a comment */
   approveComment: Comment;
+  /** Stop a running send job. Unsent recipients stay open and can be continued. */
+  cancelMailSendJob: MailSendJobModel;
   /** Cancels a subscription. */
   cancelSubscription: PublicSubscription;
   /** This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null */
@@ -1823,18 +2266,26 @@ export type Mutation = {
   createConsent: Consent;
   /** Create a new crowdfunding */
   createCrowdfunding: Crowdfunding;
+  /** Creates a new discountCode. */
+  createDiscountCode: DiscountCode;
   /** Creates a new event. */
   createEvent: Event;
   /** Creates a new external app. */
   createExternalApp: ExternalApp;
   /** Generates a short-lived JWT token for authenticating with an external app. */
   createExternalAppToken: ExternalAppToken;
+  /** Creates a new goodie. */
+  createGoodie: Goodie;
   /** Creates a new invoice. */
   createInvoice: Invoice;
   /** Returns a JWT that can be used to login as another user. */
   createJWTForUser: SessionWithToken;
   /** Returns a JWT that is valid for 1min for the current logged in user. */
   createJWTForWebsiteLogin: SessionWithToken;
+  /** Start a background job sending a template to a filtered audience */
+  createMailSendJob: MailSendJobModel;
+  /** Create a new mail template */
+  createMailTemplate: MailTemplateModel;
   /** Creates a new memberplan. */
   createMemberPlan: MemberPlan;
   /** Creates a new navigation. */
@@ -1886,8 +2337,6 @@ export type Mutation = {
   createUserSubscription: Payment;
   /** Allows guests and authenticated users to create additional subscriptions */
   createUserSubscriptionWithConfirmation: Scalars['Boolean'];
-  /** Creates a new voucher. */
-  createVoucher: Voucher;
   /** Deletes all sync errors for a config so all contacts will be retried. */
   deleteAllMailchimpSyncErrors: Scalars['Boolean'];
   /** Deletes an article. */
@@ -1906,16 +2355,22 @@ export type Mutation = {
    */
   deleteConsent: Consent;
   deleteCrowdfunding?: Maybe<Scalars['Boolean']>;
+  /** Deletes an existing discountCode. */
+  deleteDiscountCode: DiscountCode;
   /** Deletes an existing document. */
   deleteDocument: Scalars['String'];
   /** Deletes an existing event. */
   deleteEvent: Event;
   /** Deletes an external app. */
   deleteExternalApp: ExternalApp;
+  /** Deletes an existing goodie. */
+  deleteGoodie: Goodie;
   /** Deletes an existing image. */
   deleteImage: Scalars['String'];
   /** Deletes an existing invoice. */
   deleteInvoice: Invoice;
+  /** Delete an existing mail template */
+  deleteMailTemplate?: Maybe<Scalars['Boolean']>;
   /** Deletes a single sync error so the contact will be retried. */
   deleteMailchimpSyncError: Scalars['Boolean'];
   /** Deletes an existing memberplan. */
@@ -1961,8 +2416,6 @@ export type Mutation = {
   deleteUserConsent: UserConsent;
   /** Deletes an existing userrole. */
   deleteUserRole: UserRole;
-  /** Deletes an existing voucher. */
-  deleteVoucher: Voucher;
   /** Discards the current draft and reverts to the latest published revision. */
   discardArticleDraft: Article;
   /** Discards the current draft and reverts to the latest published revision. */
@@ -1988,6 +2441,8 @@ export type Mutation = {
    *
    */
   importEvent: Scalars['String'];
+  /** Import HTML/subject from the mail provider, overwriting local content */
+  importMailTemplatesFromProvider: Scalars['Int'];
   /** Imports an article from a peer as a draft. */
   importPeerArticle: Article;
   /** Imports a subscription. */
@@ -2022,15 +2477,22 @@ export type Mutation = {
   restoreArticleRevision: Article;
   /** Restores an older revision of a page as a new draft. */
   restorePageRevision: Page;
+  /** Continue a send job that stopped early. Recipients already sent are skipped. */
+  resumeMailSendJob: MailSendJobModel;
   /** This mutation revokes and deletes the active session. */
   revokeActiveSession: Scalars['Boolean'];
   /** This mutation sends a login link to the email if the user exists. Method will always return email address */
   sendJWTLogin: Scalars['String'];
+  /** Manually send a mail template to a single user */
+  sendMailTemplateToUser: MailSendJobModel;
   /** Sends a password reset email with a scoped JWT token. Always returns the email to prevent enumeration. */
   sendPasswordResetEmail: Scalars['String'];
+  /** Send a test mail for a draft template */
+  sendTestMailTemplate?: Maybe<Scalars['Boolean']>;
   /** This mutation sends a login link to the email if the user exists. Method will always return email address */
   sendWebsiteLogin: Scalars['String'];
-  syncTemplates?: Maybe<Scalars['Boolean']>;
+  /** Ask the mail provider for the current delivery state of mails that are still open. Complements the provider webhook, which is not reachable in local development. */
+  syncMailLogStates: MailLogSyncModel;
   /** Sends a test email for the given event */
   testSystemMail: Scalars['Boolean'];
   /** Triggers a mailchimp sync in the background. */
@@ -2064,18 +2526,24 @@ export type Mutation = {
   updateCrowdfunding: Crowdfunding;
   /** Updates the current logged in user. */
   updateCurrentUser: SensitiveDataUser;
+  /** Updates an existing discountCode. */
+  updateDiscountCode: DiscountCode;
   /** Updates an existing document. */
   updateDocument: Document;
   /** Updates an existing event. */
   updateEvent: Event;
   /** Updates an existing external app. */
   updateExternalApp: ExternalApp;
+  /** Updates an existing goodie. */
+  updateGoodie: Goodie;
   /** Updates an existing image. */
   updateImage: Image;
   /** Updates an existing invoice. */
   updateInvoice: Invoice;
   /** Updates an existing mail provider setting. */
   updateMailProviderSetting: SettingMailProvider;
+  /** Update an existing mail template */
+  updateMailTemplate: MailTemplateModel;
   /** Updates an existing memberplan. */
   updateMemberPlan: MemberPlan;
   /** Updates an existing navigation. */
@@ -2129,8 +2597,6 @@ export type Mutation = {
   updateUserRole: UserRole;
   /** This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null */
   updateUserSubscription?: Maybe<PublicSubscription>;
-  /** Updates an existing voucher. */
-  updateVoucher: Voucher;
   /** Updates the website settings. */
   updateWebsiteSettings: WebsiteSettings;
   upgradeUserSubscription: Payment;
@@ -2142,6 +2608,11 @@ export type Mutation = {
   uploadUserProfileImage?: Maybe<SensitiveDataUser>;
   /** This mutation allows to vote on a poll (or update one's decision). Supports logged in and anonymous */
   voteOnPoll?: Maybe<PollVote>;
+};
+
+
+export type MutationAddMailchimpContactArgs = {
+  input: MailchimpContactInput;
 };
 
 
@@ -2157,6 +2628,11 @@ export type MutationAddUserCommentArgs = {
 
 
 export type MutationApproveCommentArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationCancelMailSendJobArgs = {
   id: Scalars['String'];
 };
 
@@ -2251,6 +2727,15 @@ export type MutationCreateCrowdfundingArgs = {
 };
 
 
+export type MutationCreateDiscountCodeArgs = {
+  code: Scalars['String'];
+  discountPercent: Scalars['Int'];
+  memberPlanId: Scalars['String'];
+  validFrom: Scalars['DateTime'];
+  validTo: Scalars['DateTime'];
+};
+
+
 export type MutationCreateEventArgs = {
   description?: InputMaybe<Scalars['RichText']>;
   endsAt?: InputMaybe<Scalars['DateTime']>;
@@ -2274,6 +2759,16 @@ export type MutationCreateExternalAppTokenArgs = {
 };
 
 
+export type MutationCreateGoodieArgs = {
+  active: Scalars['Boolean'];
+  description?: InputMaybe<Scalars['RichText']>;
+  imageID?: InputMaybe<Scalars['String']>;
+  memberPlanIDs: Array<Scalars['String']>;
+  name: Scalars['String'];
+  stock?: InputMaybe<Scalars['Int']>;
+};
+
+
 export type MutationCreateInvoiceArgs = {
   currency: Currency;
   description?: InputMaybe<Scalars['String']>;
@@ -2289,6 +2784,16 @@ export type MutationCreateInvoiceArgs = {
 export type MutationCreateJwtForUserArgs = {
   expiresInMinutes: Scalars['Float'];
   userId: Scalars['String'];
+};
+
+
+export type MutationCreateMailSendJobArgs = {
+  input: MailSendJobInput;
+};
+
+
+export type MutationCreateMailTemplateArgs = {
+  input: MailTemplateInput;
 };
 
 
@@ -2507,7 +3012,9 @@ export type MutationCreateUserRoleArgs = {
 export type MutationCreateUserSubscriptionArgs = {
   autoRenew: Scalars['Boolean'];
   deactivateSubscriptionId?: InputMaybe<Scalars['String']>;
+  discountCode?: InputMaybe<Scalars['String']>;
   failureURL?: InputMaybe<Scalars['String']>;
+  goodieId?: InputMaybe<Scalars['String']>;
   memberPlanID?: InputMaybe<Scalars['String']>;
   memberPlanSlug?: InputMaybe<Scalars['Slug']>;
   monthlyAmount: Scalars['Int'];
@@ -2516,12 +3023,13 @@ export type MutationCreateUserSubscriptionArgs = {
   paymentPeriodicity: PaymentPeriodicity;
   subscriptionProperties?: InputMaybe<Array<PropertyInput>>;
   successURL?: InputMaybe<Scalars['String']>;
-  voucher?: InputMaybe<Scalars['String']>;
 };
 
 
 export type MutationCreateUserSubscriptionWithConfirmationArgs = {
   autoRenew: Scalars['Boolean'];
+  discountCode?: InputMaybe<Scalars['String']>;
+  goodieId?: InputMaybe<Scalars['String']>;
   memberPlanID?: InputMaybe<Scalars['String']>;
   memberPlanSlug?: InputMaybe<Scalars['Slug']>;
   monthlyAmount: Scalars['Int'];
@@ -2530,16 +3038,6 @@ export type MutationCreateUserSubscriptionWithConfirmationArgs = {
   paymentPeriodicity: PaymentPeriodicity;
   subscriptionProperties?: InputMaybe<Array<PropertyInput>>;
   userId?: InputMaybe<Scalars['String']>;
-  voucher?: InputMaybe<Scalars['String']>;
-};
-
-
-export type MutationCreateVoucherArgs = {
-  code: Scalars['String'];
-  discountPercent: Scalars['Int'];
-  memberPlanId: Scalars['String'];
-  validFrom: Scalars['DateTime'];
-  validTo: Scalars['DateTime'];
 };
 
 
@@ -2583,6 +3081,11 @@ export type MutationDeleteCrowdfundingArgs = {
 };
 
 
+export type MutationDeleteDiscountCodeArgs = {
+  id: Scalars['String'];
+};
+
+
 export type MutationDeleteDocumentArgs = {
   id: Scalars['String'];
 };
@@ -2598,12 +3101,22 @@ export type MutationDeleteExternalAppArgs = {
 };
 
 
+export type MutationDeleteGoodieArgs = {
+  id: Scalars['String'];
+};
+
+
 export type MutationDeleteImageArgs = {
   id: Scalars['String'];
 };
 
 
 export type MutationDeleteInvoiceArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationDeleteMailTemplateArgs = {
   id: Scalars['String'];
 };
 
@@ -2704,11 +3217,6 @@ export type MutationDeleteUserConsentArgs = {
 
 
 export type MutationDeleteUserRoleArgs = {
-  id: Scalars['String'];
-};
-
-
-export type MutationDeleteVoucherArgs = {
   id: Scalars['String'];
 };
 
@@ -2881,8 +3389,20 @@ export type MutationRestorePageRevisionArgs = {
 };
 
 
+export type MutationResumeMailSendJobArgs = {
+  id: Scalars['String'];
+  retryUnfinished?: InputMaybe<Scalars['Boolean']>;
+};
+
+
 export type MutationSendJwtLoginArgs = {
   email: Scalars['String'];
+};
+
+
+export type MutationSendMailTemplateToUserArgs = {
+  templateId: Scalars['String'];
+  userId: Scalars['String'];
 };
 
 
@@ -2891,8 +3411,18 @@ export type MutationSendPasswordResetEmailArgs = {
 };
 
 
+export type MutationSendTestMailTemplateArgs = {
+  input: SendTestMailTemplateInput;
+};
+
+
 export type MutationSendWebsiteLoginArgs = {
   email: Scalars['String'];
+};
+
+
+export type MutationSyncMailLogStatesArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -3033,6 +3563,16 @@ export type MutationUpdateCurrentUserArgs = {
 };
 
 
+export type MutationUpdateDiscountCodeArgs = {
+  code?: InputMaybe<Scalars['String']>;
+  discountPercent?: InputMaybe<Scalars['Int']>;
+  id: Scalars['String'];
+  memberPlanId?: InputMaybe<Scalars['String']>;
+  validFrom?: InputMaybe<Scalars['DateTime']>;
+  validTo?: InputMaybe<Scalars['DateTime']>;
+};
+
+
 export type MutationUpdateDocumentArgs = {
   description?: InputMaybe<Scalars['String']>;
   id: Scalars['String'];
@@ -3061,6 +3601,17 @@ export type MutationUpdateExternalAppArgs = {
   name?: InputMaybe<Scalars['String']>;
   target?: InputMaybe<ExternalAppsTarget>;
   url?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationUpdateGoodieArgs = {
+  active?: InputMaybe<Scalars['Boolean']>;
+  description?: InputMaybe<Scalars['RichText']>;
+  id: Scalars['String'];
+  imageID?: InputMaybe<Scalars['String']>;
+  memberPlanIDs?: InputMaybe<Array<Scalars['String']>>;
+  name?: InputMaybe<Scalars['String']>;
+  stock?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -3101,7 +3652,17 @@ export type MutationUpdateMailProviderSettingArgs = {
   name?: InputMaybe<Scalars['String']>;
   replyToAddress?: InputMaybe<Scalars['String']>;
   slack_webhookURL?: InputMaybe<Scalars['String']>;
+  smtp_host?: InputMaybe<Scalars['String']>;
+  smtp_port?: InputMaybe<Scalars['Int']>;
+  smtp_secure?: InputMaybe<Scalars['Boolean']>;
+  smtp_user?: InputMaybe<Scalars['String']>;
   webhookEndpointSecret?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationUpdateMailTemplateArgs = {
+  id: Scalars['String'];
+  input: MailTemplateInput;
 };
 
 
@@ -3312,7 +3873,7 @@ export type MutationUpdateSyncProviderSettingArgs = {
 
 export type MutationUpdateSystemMailArgs = {
   event: UserEvent;
-  mailTemplateId: Scalars['String'];
+  mailTemplateId?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -3384,16 +3945,6 @@ export type MutationUpdateUserSubscriptionArgs = {
 };
 
 
-export type MutationUpdateVoucherArgs = {
-  code?: InputMaybe<Scalars['String']>;
-  discountPercent?: InputMaybe<Scalars['Int']>;
-  id: Scalars['String'];
-  memberPlanId?: InputMaybe<Scalars['String']>;
-  validFrom?: InputMaybe<Scalars['DateTime']>;
-  validTo?: InputMaybe<Scalars['DateTime']>;
-};
-
-
 export type MutationUpdateWebsiteSettingsArgs = {
   ads?: InputMaybe<WebsiteAdsInput>;
   analytics?: InputMaybe<WebsiteAnalyticsInput>;
@@ -3404,7 +3955,9 @@ export type MutationUpdateWebsiteSettingsArgs = {
 
 
 export type MutationUpgradeUserSubscriptionArgs = {
+  discountCode?: InputMaybe<Scalars['String']>;
   failureURL?: InputMaybe<Scalars['String']>;
+  goodieId?: InputMaybe<Scalars['String']>;
   memberPlanId: Scalars['String'];
   monthlyAmount: Scalars['Int'];
   paymentMethodId: Scalars['String'];
@@ -3631,6 +4184,13 @@ export type PaginatedComments = {
   totalCount: Scalars['Int'];
 };
 
+export type PaginatedDiscountCodes = {
+  __typename?: 'PaginatedDiscountCodes';
+  nodes: Array<DiscountCode>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
 export type PaginatedDocuments = {
   __typename?: 'PaginatedDocuments';
   nodes: Array<Document>;
@@ -3652,9 +4212,44 @@ export type PaginatedEventsFromSources = {
   totalCount: Scalars['Int'];
 };
 
+export type PaginatedGoodies = {
+  __typename?: 'PaginatedGoodies';
+  nodes: Array<Goodie>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
 export type PaginatedImages = {
   __typename?: 'PaginatedImages';
   nodes: Array<Image>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type PaginatedMailLog = {
+  __typename?: 'PaginatedMailLog';
+  nodes: Array<MailLogModel>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type PaginatedMailSendJob = {
+  __typename?: 'PaginatedMailSendJob';
+  nodes: Array<MailSendJobModel>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type PaginatedMailSendJobRecipient = {
+  __typename?: 'PaginatedMailSendJobRecipient';
+  nodes: Array<MailSendJobRecipientModel>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type PaginatedMailSendRecipient = {
+  __typename?: 'PaginatedMailSendRecipient';
+  nodes: Array<MailSendRecipientModel>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
 };
@@ -3718,13 +4313,6 @@ export type PaginatedTags = {
 export type PaginatedUserRoles = {
   __typename?: 'PaginatedUserRoles';
   nodes: Array<UserRole>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
-};
-
-export type PaginatedVouchers = {
-  __typename?: 'PaginatedVouchers';
-  nodes: Array<Voucher>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
 };
@@ -3827,6 +4415,7 @@ export enum PaymentProviderType {
 
 export enum PaymentState {
   Canceled = 'canceled',
+  Chargeback = 'chargeback',
   Created = 'created',
   Declined = 'declined',
   Paid = 'paid',
@@ -4234,6 +4823,7 @@ export type PublicSubscription = HasMemberPlan & HasPaymentMethod & HasUser & {
   deactivation?: Maybe<SubscriptionDeactivation>;
   extendable: Scalars['Boolean'];
   externalReward?: Maybe<Scalars['String']>;
+  goodie?: Maybe<Goodie>;
   id: Scalars['String'];
   isActive: Scalars['Boolean'];
   memberPlan: MemberPlan;
@@ -4334,6 +4924,10 @@ export type Query = {
    *
    */
   dailySubscriptionStats: Array<DailySubscriptionStats>;
+  /** Returns an discountCode by id or discountCode. */
+  discountCode: DiscountCode;
+  /** This query returns a list of discountCodes */
+  discountCodes: PaginatedDiscountCodes;
   /** Returns a document by id. */
   document: Document;
   /** Returns the current document storage usage and limit. */
@@ -4363,6 +4957,10 @@ export type Query = {
   externalApps: Array<ExternalApp>;
   /** Returns images by tag. */
   getImagesByTag: Array<Image>;
+  /** Returns a goodie by id. */
+  goodie: Goodie;
+  /** This query returns a list of goodies */
+  goodies: PaginatedGoodies;
   /**
    *
    *       Returns the most viewed articles in descending order.
@@ -4395,12 +4993,34 @@ export type Query = {
   invoice: Invoice;
   /** Returns a paginated list of invoices based on the filters given. */
   invoices: InvoiceConnection;
+  /** Paginated list of sent mails */
+  mailLogs: PaginatedMailLog;
   /** Returns a single mail provider setting by id. */
   mailProviderSetting: SettingMailProvider;
   /** Returns all mail provider settings. */
   mailProviderSettings: Array<SettingMailProvider>;
+  /** A single mail send job (for progress polling) */
+  mailSendJob?: Maybe<MailSendJobModel>;
+  /** The planned mails of a send job and where each of them stands */
+  mailSendJobRecipients: PaginatedMailSendJobRecipient;
+  /** Paginated list of mail send jobs */
+  mailSendJobs: PaginatedMailSendJob;
+  /** Render a saved template for one recipient of an audience, exactly as the send would compose it */
+  mailSendPreview: MailSendPreviewModel;
+  /** Preview how many recipients an audience resolves to */
+  mailSendRecipientPreview: MailSendRecipientPreview;
+  /** The concrete recipients an audience resolves to */
+  mailSendRecipients: PaginatedMailSendRecipient;
+  /** Return a single mail template, including its html and text body. */
+  mailTemplate?: Maybe<MailTemplateModel>;
+  /** Placeholders a template uses that would render empty for the given send (empty = none missing) */
+  mailTemplateMissingPlaceholders: Array<Scalars['String']>;
+  /** Render a draft mail template with a mail type's sample data */
+  mailTemplatePreview: MailTemplatePreviewModel;
+  /** Search subscriptions to use as sample data for previews/tests */
+  mailTemplateSubscriptions: Array<MailTemplateSubscriptionOption>;
   /** Return all mail templates */
-  mailTemplates: Array<MailTemplateWithUrlAndStatusModel>;
+  mailTemplates: Array<MailTemplateModel>;
   /** Fetches available interest groups for a Mailchimp list. */
   mailchimpInterestGroups: Array<MailchimpInterestGroup>;
   /** Fetches available Mailchimp lists/audiences for a sync config. */
@@ -4565,10 +5185,6 @@ export type Query = {
   /** Returns a paginated list of users based on the filters given. */
   users: PaginatedSensitiveDataUsers;
   versionInformation: VersionInformation;
-  /** Returns an voucher by id or voucher. */
-  voucher: Voucher;
-  /** This query returns a list of vouchers */
-  vouchers: PaginatedVouchers;
   /** Returns the website settings, requires authentication to get sensitive settings. */
   websiteSettings: WebsiteSettings;
 };
@@ -4706,8 +5322,8 @@ export type QueryConsentsArgs = {
 
 
 export type QueryCreateSubscriptionInfoArgs = {
+  discountCode?: InputMaybe<Scalars['String']>;
   memberPlanId: Scalars['String'];
-  voucher?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -4720,6 +5336,21 @@ export type QueryDailySubscriptionStatsArgs = {
   end?: InputMaybe<Scalars['DateTime']>;
   memberPlanIds?: InputMaybe<Array<Scalars['String']>>;
   start: Scalars['DateTime'];
+};
+
+
+export type QueryDiscountCodeArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QueryDiscountCodesArgs = {
+  cursorId?: InputMaybe<Scalars['String']>;
+  filter?: InputMaybe<DiscountCodeFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: Scalars['Int'];
+  sort?: DiscountCodesort;
+  take?: Scalars['Int'];
 };
 
 
@@ -4774,6 +5405,21 @@ export type QueryGetImagesByTagArgs = {
 };
 
 
+export type QueryGoodieArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QueryGoodiesArgs = {
+  cursorId?: InputMaybe<Scalars['String']>;
+  filter?: InputMaybe<GoodieFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: Scalars['Int'];
+  sort?: GoodieSort;
+  take?: Scalars['Int'];
+};
+
+
 export type QueryHotAndTrendingArgs = {
   start?: InputMaybe<Scalars['DateTime']>;
   take?: InputMaybe<Scalars['Int']>;
@@ -4824,6 +5470,13 @@ export type QueryInvoicesArgs = {
 };
 
 
+export type QueryMailLogsArgs = {
+  filter?: InputMaybe<MailLogFilter>;
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
+
 export type QueryMailProviderSettingArgs = {
   id: Scalars['String'];
 };
@@ -4831,6 +5484,63 @@ export type QueryMailProviderSettingArgs = {
 
 export type QueryMailProviderSettingsArgs = {
   filter?: InputMaybe<SettingMailProviderFilter>;
+};
+
+
+export type QueryMailSendJobArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QueryMailSendJobRecipientsArgs = {
+  jobId: Scalars['String'];
+  skip?: InputMaybe<Scalars['Int']>;
+  state?: InputMaybe<MailSendJobRecipientState>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryMailSendJobsArgs = {
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryMailSendPreviewArgs = {
+  input: MailSendPreviewInput;
+};
+
+
+export type QueryMailSendRecipientPreviewArgs = {
+  audience: MailAudienceInput;
+};
+
+
+export type QueryMailSendRecipientsArgs = {
+  audience: MailAudienceInput;
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryMailTemplateArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QueryMailTemplateMissingPlaceholdersArgs = {
+  templateId: Scalars['String'];
+  withSubscriptionData: Scalars['Boolean'];
+};
+
+
+export type QueryMailTemplatePreviewArgs = {
+  input: MailTemplatePreviewInput;
+};
+
+
+export type QueryMailTemplateSubscriptionsArgs = {
+  query?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -5073,6 +5783,7 @@ export type QuerySubscriptionsArgs = {
 
 
 export type QuerySubscriptionsAsCsvArgs = {
+  activeAt?: InputMaybe<Scalars['DateTime']>;
   autoRenew?: InputMaybe<Scalars['Boolean']>;
   cancellationDateFrom?: InputMaybe<DateFilter>;
   cancellationDateTo?: InputMaybe<DateFilter>;
@@ -5132,6 +5843,7 @@ export type QueryTrackingPixelSettingsArgs = {
 
 
 export type QueryUpgradeUserSubscriptionInfoArgs = {
+  discountCode?: InputMaybe<Scalars['String']>;
   memberPlanId: Scalars['String'];
   subscriptionId: Scalars['String'];
 };
@@ -5180,21 +5892,6 @@ export type QueryUsersArgs = {
   order?: InputMaybe<SortOrder>;
   skip?: Scalars['Int'];
   sort?: UserSort;
-  take?: Scalars['Int'];
-};
-
-
-export type QueryVoucherArgs = {
-  id: Scalars['String'];
-};
-
-
-export type QueryVouchersArgs = {
-  cursorId?: InputMaybe<Scalars['String']>;
-  filter?: InputMaybe<VoucherFilter>;
-  order?: InputMaybe<SortOrder>;
-  skip?: Scalars['Int'];
-  sort?: VoucherSort;
   take?: Scalars['Int'];
 };
 
@@ -5261,6 +5958,14 @@ export type RichTextBlockInput = {
   blockStyleName?: InputMaybe<Scalars['String']>;
   disabled?: InputMaybe<Scalars['Boolean']>;
   richText?: InputMaybe<Scalars['RichText']>;
+};
+
+export type SendTestMailTemplateInput = {
+  contextId: Scalars['String'];
+  htmlContent: Scalars['String'];
+  subject: Scalars['String'];
+  subscriptionId?: InputMaybe<Scalars['String']>;
+  textContent?: InputMaybe<Scalars['String']>;
 };
 
 export type SensitiveDataUser = BaseUser & {
@@ -5395,6 +6100,10 @@ export type SettingMailProvider = SettingProvider & {
   name?: Maybe<Scalars['String']>;
   replyToAddress?: Maybe<Scalars['String']>;
   slack_webhookURL?: Maybe<Scalars['String']>;
+  smtp_host?: Maybe<Scalars['String']>;
+  smtp_port?: Maybe<Scalars['Int']>;
+  smtp_secure?: Maybe<Scalars['Boolean']>;
+  smtp_user?: Maybe<Scalars['String']>;
   type: MailProviderType;
 };
 
@@ -5605,8 +6314,13 @@ export type SubscribeBlock = BaseBlock & {
   blockStyleName?: Maybe<Scalars['String']>;
   disabled?: Maybe<Scalars['Boolean']>;
   fields: Array<SubscribeBlockField>;
-  memberPlanIds?: Maybe<Array<Scalars['String']>>;
+  goodieMinValue?: Maybe<Scalars['Int']>;
+  hideRepeatGoodieOnUpgrade: Scalars['Boolean'];
+  memberPlanIds: Array<Scalars['String']>;
+  memberPlanRenderSettings: Array<SubscribeBlockMemberPlanRenderSetting>;
   memberPlans: Array<MemberPlan>;
+  showDiscountCodes: Scalars['Boolean'];
+  showGoodies: Scalars['Boolean'];
   type: BlockType;
 };
 
@@ -5624,8 +6338,60 @@ export type SubscribeBlockInput = {
   blockStyleName?: InputMaybe<Scalars['String']>;
   disabled?: InputMaybe<Scalars['Boolean']>;
   fields?: Array<SubscribeBlockField>;
-  memberPlanIds?: InputMaybe<Array<Scalars['String']>>;
+  goodieMinValue?: InputMaybe<Scalars['Int']>;
+  hideRepeatGoodieOnUpgrade?: Scalars['Boolean'];
+  memberPlanIds?: Array<Scalars['String']>;
+  memberPlanRenderSettings: Array<SubscribeBlockMemberPlanRenderSettingInput>;
+  showDiscountCodes?: Scalars['Boolean'];
+  showGoodies?: Scalars['Boolean'];
 };
+
+export type SubscribeBlockLayoutConfig = {
+  type: SubscribeBlockRenderLayout;
+};
+
+export type SubscribeBlockLayoutConfigInput = {
+  showInput?: Scalars['Boolean'];
+  type: SubscribeBlockRenderLayout;
+  values?: InputMaybe<Array<Scalars['Int']>>;
+};
+
+export type SubscribeBlockLayoutNoneConfig = SubscribeBlockLayoutConfig & {
+  __typename?: 'SubscribeBlockLayoutNoneConfig';
+  type: SubscribeBlockRenderLayout;
+};
+
+export type SubscribeBlockLayoutPickerConfig = SubscribeBlockLayoutConfig & {
+  __typename?: 'SubscribeBlockLayoutPickerConfig';
+  showInput: Scalars['Boolean'];
+  type: SubscribeBlockRenderLayout;
+  values: Array<Scalars['Int']>;
+};
+
+export type SubscribeBlockLayoutSliderConfig = SubscribeBlockLayoutConfig & {
+  __typename?: 'SubscribeBlockLayoutSliderConfig';
+  showInput: Scalars['Boolean'];
+  type: SubscribeBlockRenderLayout;
+};
+
+export type SubscribeBlockMemberPlanRenderSetting = {
+  __typename?: 'SubscribeBlockMemberPlanRenderSetting';
+  isDefault: Scalars['Boolean'];
+  layout: SubscribeBlockLayoutConfig;
+  memberPlanId: Scalars['String'];
+};
+
+export type SubscribeBlockMemberPlanRenderSettingInput = {
+  isDefault?: Scalars['Boolean'];
+  layout: SubscribeBlockLayoutConfigInput;
+  memberPlanId: Scalars['String'];
+};
+
+export enum SubscribeBlockRenderLayout {
+  None = 'None',
+  Picker = 'Picker',
+  Slider = 'Slider'
+}
 
 export type SubscriptionCreatedAction = BaseAction & HasSubscriptionLc & {
   __typename?: 'SubscriptionCreatedAction';
@@ -5642,6 +6408,7 @@ export type SubscriptionDeactivation = {
 };
 
 export enum SubscriptionDeactivationReason {
+  Chargeback = 'chargeback',
   InvoiceNotPaid = 'invoiceNotPaid',
   None = 'none',
   UserReplacedSubscription = 'userReplacedSubscription',
@@ -5660,6 +6427,7 @@ export enum SubscriptionEvent {
 }
 
 export type SubscriptionFilter = {
+  activeAt?: InputMaybe<Scalars['DateTime']>;
   autoRenew?: InputMaybe<Scalars['Boolean']>;
   cancellationDateFrom?: InputMaybe<DateFilter>;
   cancellationDateTo?: InputMaybe<DateFilter>;
@@ -6029,6 +6797,7 @@ export type UpdateBannerInput = {
   collapsible: Scalars['Boolean'];
   cta?: InputMaybe<Scalars['String']>;
   delay: Scalars['Int'];
+  embedUrl?: InputMaybe<Scalars['String']>;
   hideForMinutes: Scalars['Int'];
   html?: InputMaybe<Scalars['String']>;
   id: Scalars['String'];
@@ -6069,6 +6838,8 @@ export type UpdateUserSubscriptionInput = {
 export type UpgradeSubscription = {
   __typename?: 'UpgradeSubscription';
   discountAmount: Scalars['Float'];
+  discountCodeValid?: Maybe<Scalars['Boolean']>;
+  discountPercent?: Maybe<Scalars['Float']>;
 };
 
 export type User = BaseUser & {
@@ -6189,31 +6960,6 @@ export type VimeoVideoBlockInput = {
   videoID?: InputMaybe<Scalars['String']>;
 };
 
-export type Voucher = HasMemberPlanLc & {
-  __typename?: 'Voucher';
-  code: Scalars['String'];
-  createdAt: Scalars['DateTime'];
-  discountPercent: Scalars['Int'];
-  id: Scalars['String'];
-  memberPlan: MemberPlan;
-  memberPlanId: Scalars['String'];
-  modifiedAt: Scalars['DateTime'];
-  validFrom: Scalars['DateTime'];
-  validTo: Scalars['DateTime'];
-};
-
-export type VoucherFilter = {
-  from?: InputMaybe<Scalars['DateTime']>;
-  memberPlans?: InputMaybe<Array<Scalars['String']>>;
-  to?: InputMaybe<Scalars['DateTime']>;
-};
-
-export enum VoucherSort {
-  CreatedAt = 'CreatedAt',
-  Discount = 'Discount',
-  ModifiedAt = 'ModifiedAt'
-}
-
 export type WebsiteAds = {
   __typename?: 'WebsiteAds';
   sparkLoop: KeyEnabled;
@@ -6313,6 +7059,8 @@ type ImportBlock_InstagramPostBlock_Fragment = { __typename: 'InstagramPostBlock
 
 type ImportBlock_ListicleBlock_Fragment = { __typename: 'ListicleBlock', blockStyle?: string | null, type: BlockType, items: Array<{ __typename?: 'ListicleItem', title?: string | null, richText?: RichtextJSONDocument | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null }> };
 
+type ImportBlock_MailchimpFormBlock_Fragment = { __typename: 'MailchimpFormBlock' };
+
 type ImportBlock_PolisConversationBlock_Fragment = { __typename: 'PolisConversationBlock', blockStyle?: string | null, type: BlockType, conversationID?: string | null };
 
 type ImportBlock_PollBlock_Fragment = { __typename: 'PollBlock' };
@@ -6347,7 +7095,7 @@ type ImportBlock_VimeoVideoBlock_Fragment = { __typename: 'VimeoVideoBlock', blo
 
 type ImportBlock_YouTubeVideoBlock_Fragment = { __typename: 'YouTubeVideoBlock', blockStyle?: string | null, type: BlockType, videoID?: string | null };
 
-export type ImportBlockFragment = ImportBlock_BildwurfAdBlock_Fragment | ImportBlock_BreakBlock_Fragment | ImportBlock_CommentBlock_Fragment | ImportBlock_CrowdfundingBlock_Fragment | ImportBlock_EventBlock_Fragment | ImportBlock_FacebookPostBlock_Fragment | ImportBlock_FacebookVideoBlock_Fragment | ImportBlock_FlexBlock_Fragment | ImportBlock_HtmlBlock_Fragment | ImportBlock_IFrameBlock_Fragment | ImportBlock_ImageBlock_Fragment | ImportBlock_ImageGalleryBlock_Fragment | ImportBlock_InstagramPostBlock_Fragment | ImportBlock_ListicleBlock_Fragment | ImportBlock_PolisConversationBlock_Fragment | ImportBlock_PollBlock_Fragment | ImportBlock_QuoteBlock_Fragment | ImportBlock_RichTextBlock_Fragment | ImportBlock_SoundCloudTrackBlock_Fragment | ImportBlock_StreamableVideoBlock_Fragment | ImportBlock_SubscribeBlock_Fragment | ImportBlock_TeaserGridBlock_Fragment | ImportBlock_TeaserGridFlexBlock_Fragment | ImportBlock_TeaserListBlock_Fragment | ImportBlock_TeaserSlotsBlock_Fragment | ImportBlock_TikTokVideoBlock_Fragment | ImportBlock_TitleBlock_Fragment | ImportBlock_TwitterTweetBlock_Fragment | ImportBlock_UnknownBlock_Fragment | ImportBlock_VimeoVideoBlock_Fragment | ImportBlock_YouTubeVideoBlock_Fragment;
+export type ImportBlockFragment = ImportBlock_BildwurfAdBlock_Fragment | ImportBlock_BreakBlock_Fragment | ImportBlock_CommentBlock_Fragment | ImportBlock_CrowdfundingBlock_Fragment | ImportBlock_EventBlock_Fragment | ImportBlock_FacebookPostBlock_Fragment | ImportBlock_FacebookVideoBlock_Fragment | ImportBlock_FlexBlock_Fragment | ImportBlock_HtmlBlock_Fragment | ImportBlock_IFrameBlock_Fragment | ImportBlock_ImageBlock_Fragment | ImportBlock_ImageGalleryBlock_Fragment | ImportBlock_InstagramPostBlock_Fragment | ImportBlock_ListicleBlock_Fragment | ImportBlock_MailchimpFormBlock_Fragment | ImportBlock_PolisConversationBlock_Fragment | ImportBlock_PollBlock_Fragment | ImportBlock_QuoteBlock_Fragment | ImportBlock_RichTextBlock_Fragment | ImportBlock_SoundCloudTrackBlock_Fragment | ImportBlock_StreamableVideoBlock_Fragment | ImportBlock_SubscribeBlock_Fragment | ImportBlock_TeaserGridBlock_Fragment | ImportBlock_TeaserGridFlexBlock_Fragment | ImportBlock_TeaserListBlock_Fragment | ImportBlock_TeaserSlotsBlock_Fragment | ImportBlock_TikTokVideoBlock_Fragment | ImportBlock_TitleBlock_Fragment | ImportBlock_TwitterTweetBlock_Fragment | ImportBlock_UnknownBlock_Fragment | ImportBlock_VimeoVideoBlock_Fragment | ImportBlock_YouTubeVideoBlock_Fragment;
 
 export type SlimArticleRevisionFragment = { __typename?: 'ArticleRevision', id: string, createdAt: string, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null };
 
@@ -6369,7 +7117,7 @@ export type ArticleQueryVariables = Exact<{
 }>;
 
 
-export type ArticleQuery = { __typename?: 'Query', article: { __typename?: 'Article', id: string, url: string, slug?: string | null, tags: Array<{ __typename?: 'Tag', tag?: string | null }>, published?: { __typename?: 'ArticleRevision', title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null, blocks: Array<{ __typename: 'BildwurfAdBlock' } | { __typename: 'BreakBlock', blockStyle?: string | null, type: BlockType, text?: string | null, richText?: RichtextJSONDocument | null, hideButton?: boolean | null, linkTarget?: string | null, linkText?: string | null, linkURL?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null } | { __typename: 'CommentBlock' } | { __typename: 'CrowdfundingBlock' } | { __typename: 'EventBlock' } | { __typename: 'FacebookPostBlock', blockStyle?: string | null, type: BlockType, userID?: string | null, postID?: string | null } | { __typename: 'FacebookVideoBlock', blockStyle?: string | null, type: BlockType, userID?: string | null, videoID?: string | null } | { __typename: 'FlexBlock' } | { __typename: 'HTMLBlock' } | { __typename: 'IFrameBlock', blockStyle?: string | null, type: BlockType, url?: string | null, title?: string | null, width?: number | null, height?: number | null, styleCustom?: string | null, sandbox?: string | null } | { __typename: 'ImageBlock', blockStyle?: string | null, type: BlockType, caption?: string | null, linkUrl?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null } | { __typename: 'ImageGalleryBlock', blockStyle?: string | null, type: BlockType, images: Array<{ __typename?: 'ImageGalleryImage', caption?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null }> } | { __typename: 'InstagramPostBlock', blockStyle?: string | null, type: BlockType, postID?: string | null } | { __typename: 'ListicleBlock', blockStyle?: string | null, type: BlockType, items: Array<{ __typename?: 'ListicleItem', title?: string | null, richText?: RichtextJSONDocument | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null }> } | { __typename: 'PolisConversationBlock', blockStyle?: string | null, type: BlockType, conversationID?: string | null } | { __typename: 'PollBlock' } | { __typename: 'QuoteBlock', blockStyle?: string | null, type: BlockType, quote?: string | null, author?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null } | { __typename: 'RichTextBlock', blockStyle?: string | null, type: BlockType, richText?: RichtextJSONDocument | null } | { __typename: 'SoundCloudTrackBlock', blockStyle?: string | null, type: BlockType, trackID?: string | null } | { __typename: 'StreamableVideoBlock' } | { __typename: 'SubscribeBlock' } | { __typename: 'TeaserGridBlock' } | { __typename: 'TeaserGridFlexBlock' } | { __typename: 'TeaserListBlock' } | { __typename: 'TeaserSlotsBlock' } | { __typename: 'TikTokVideoBlock', blockStyle?: string | null, type: BlockType, userID?: string | null, videoID?: string | null } | { __typename: 'TitleBlock', blockStyle?: string | null, type: BlockType, title?: string | null, lead?: string | null } | { __typename: 'TwitterTweetBlock', blockStyle?: string | null, type: BlockType, userID?: string | null, tweetID?: string | null } | { __typename: 'UnknownBlock' } | { __typename: 'VimeoVideoBlock', blockStyle?: string | null, type: BlockType, videoID?: string | null } | { __typename: 'YouTubeVideoBlock', blockStyle?: string | null, type: BlockType, videoID?: string | null }>, authors: Array<{ __typename?: 'Author', name: string, slug: string, bio?: RichtextJSONDocument | null, jobTitle?: string | null, hideOnArticle: boolean, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null }> } | null } };
+export type ArticleQuery = { __typename?: 'Query', article: { __typename?: 'Article', id: string, url: string, slug?: string | null, tags: Array<{ __typename?: 'Tag', tag?: string | null }>, published?: { __typename?: 'ArticleRevision', title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null, blocks: Array<{ __typename: 'BildwurfAdBlock' } | { __typename: 'BreakBlock', blockStyle?: string | null, type: BlockType, text?: string | null, richText?: RichtextJSONDocument | null, hideButton?: boolean | null, linkTarget?: string | null, linkText?: string | null, linkURL?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null } | { __typename: 'CommentBlock' } | { __typename: 'CrowdfundingBlock' } | { __typename: 'EventBlock' } | { __typename: 'FacebookPostBlock', blockStyle?: string | null, type: BlockType, userID?: string | null, postID?: string | null } | { __typename: 'FacebookVideoBlock', blockStyle?: string | null, type: BlockType, userID?: string | null, videoID?: string | null } | { __typename: 'FlexBlock' } | { __typename: 'HTMLBlock' } | { __typename: 'IFrameBlock', blockStyle?: string | null, type: BlockType, url?: string | null, title?: string | null, width?: number | null, height?: number | null, styleCustom?: string | null, sandbox?: string | null } | { __typename: 'ImageBlock', blockStyle?: string | null, type: BlockType, caption?: string | null, linkUrl?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null } | { __typename: 'ImageGalleryBlock', blockStyle?: string | null, type: BlockType, images: Array<{ __typename?: 'ImageGalleryImage', caption?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null }> } | { __typename: 'InstagramPostBlock', blockStyle?: string | null, type: BlockType, postID?: string | null } | { __typename: 'ListicleBlock', blockStyle?: string | null, type: BlockType, items: Array<{ __typename?: 'ListicleItem', title?: string | null, richText?: RichtextJSONDocument | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null }> } | { __typename: 'MailchimpFormBlock' } | { __typename: 'PolisConversationBlock', blockStyle?: string | null, type: BlockType, conversationID?: string | null } | { __typename: 'PollBlock' } | { __typename: 'QuoteBlock', blockStyle?: string | null, type: BlockType, quote?: string | null, author?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null } | { __typename: 'RichTextBlock', blockStyle?: string | null, type: BlockType, richText?: RichtextJSONDocument | null } | { __typename: 'SoundCloudTrackBlock', blockStyle?: string | null, type: BlockType, trackID?: string | null } | { __typename: 'StreamableVideoBlock' } | { __typename: 'SubscribeBlock' } | { __typename: 'TeaserGridBlock' } | { __typename: 'TeaserGridFlexBlock' } | { __typename: 'TeaserListBlock' } | { __typename: 'TeaserSlotsBlock' } | { __typename: 'TikTokVideoBlock', blockStyle?: string | null, type: BlockType, userID?: string | null, videoID?: string | null } | { __typename: 'TitleBlock', blockStyle?: string | null, type: BlockType, title?: string | null, lead?: string | null } | { __typename: 'TwitterTweetBlock', blockStyle?: string | null, type: BlockType, userID?: string | null, tweetID?: string | null } | { __typename: 'UnknownBlock' } | { __typename: 'VimeoVideoBlock', blockStyle?: string | null, type: BlockType, videoID?: string | null } | { __typename: 'YouTubeVideoBlock', blockStyle?: string | null, type: BlockType, videoID?: string | null }>, authors: Array<{ __typename?: 'Author', name: string, slug: string, bio?: RichtextJSONDocument | null, jobTitle?: string | null, hideOnArticle: boolean, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null }> } | null } };
 
 export type ImageUrlsFragment = { __typename?: 'Image', url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null };
 
@@ -6694,6 +7442,7 @@ export const PeerProfile = gql`
       "ImageGalleryBlock",
       "InstagramPostBlock",
       "ListicleBlock",
+      "MailchimpFormBlock",
       "PolisConversationBlock",
       "PollBlock",
       "QuoteBlock",
@@ -6750,6 +7499,7 @@ export const PeerProfile = gql`
       "ImageGalleryBlock",
       "InstagramPostBlock",
       "ListicleBlock",
+      "MailchimpFormBlock",
       "PolisConversationBlock",
       "PollBlock",
       "QuoteBlock",
@@ -6793,6 +7543,7 @@ export const PeerProfile = gql`
       "BreakBlock",
       "CustomTeaser",
       "EventTeaser",
+      "Goodie",
       "ImageBlock",
       "ImageGalleryImage",
       "ListicleItem",
@@ -6807,7 +7558,7 @@ export const PeerProfile = gql`
       "PublicSubscription"
     ],
     "HasMemberPlanLc": [
-      "Voucher"
+      "DiscountCode"
     ],
     "HasOneBlockContent": [
       "BlockWithAlignment"
@@ -6876,6 +7627,11 @@ export const PeerProfile = gql`
       "SettingPaymentProvider",
       "SettingSyncProvider",
       "SettingTrackingPixelProvider"
+    ],
+    "SubscribeBlockLayoutConfig": [
+      "SubscribeBlockLayoutNoneConfig",
+      "SubscribeBlockLayoutPickerConfig",
+      "SubscribeBlockLayoutSliderConfig"
     ],
     "Teaser": [
       "ArticleTeaser",

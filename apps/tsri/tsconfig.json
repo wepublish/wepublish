@@ -18,7 +18,8 @@
         "name": "next"
       }
     ],
-    "types": ["jest", "node"]
+    "types": ["vitest/globals", "node"],
+    "ignoreDeprecations": "6.0"
   },
   "include": [
     "**/*.ts",
@@ -26,11 +27,12 @@
     "**/*.js",
     "**/*.jsx",
     "mui-augmentations.d.ts",
-    "next-env.d.ts"
+    "next-env.d.ts",
+    "../wnti/src/components/wnti-payment-amount-picker.tsx"
   ],
   "exclude": [
     "node_modules",
-    "jest.config.ts",
+    "vitest.config.ts",
     "src/**/*.spec.ts",
     "src/**/*.test.ts"
   ]

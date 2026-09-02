@@ -1,0 +1,98 @@
+fragment FullDiscountCode on DiscountCode {
+  id
+  createdAt
+  modifiedAt
+
+  code
+  discountPercent
+
+  validFrom
+  validTo
+
+  memberPlanId
+  memberPlan {
+    id
+    name
+  }
+}
+
+query DiscountCodeList(
+  $filter: DiscountCodeFilter
+  $cursor: String
+  $take: Int
+  $skip: Int
+  $order: SortOrder
+  $sort: DiscountCodesort
+) {
+  discountCodes(
+    filter: $filter
+    cursorId: $cursor
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
+    nodes {
+      ...FullDiscountCode
+    }
+
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+
+    totalCount
+  }
+}
+
+query DiscountCode($id: String!) {
+  discountCode(id: $id) {
+    ...FullDiscountCode
+  }
+}
+
+mutation CreateDiscountCode(
+  $code: String!
+  $discountPercent: Int!
+  $memberPlanId: String!
+  $validFrom: DateTime!
+  $validTo: DateTime!
+) {
+  createDiscountCode(
+    code: $code
+    discountPercent: $discountPercent
+    memberPlanId: $memberPlanId
+    validFrom: $validFrom
+    validTo: $validTo
+  ) {
+    ...FullDiscountCode
+  }
+}
+
+mutation UpdateDiscountCode(
+  $id: String!
+  $code: String
+  $discountPercent: Int
+  $memberPlanId: String
+  $validFrom: DateTime
+  $validTo: DateTime
+) {
+  updateDiscountCode(
+    id: $id
+    code: $code
+    discountPercent: $discountPercent
+    memberPlanId: $memberPlanId
+    validFrom: $validFrom
+    validTo: $validTo
+  ) {
+    ...FullDiscountCode
+  }
+}
+
+mutation DeleteDiscountCode($id: String!) {
+  deleteDiscountCode(id: $id) {
+    ...FullDiscountCode
+  }
+}

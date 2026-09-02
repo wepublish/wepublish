@@ -1,4 +1,4 @@
-import { StoryObj } from '@storybook/react';
+import { StoryObj } from '@storybook/nextjs-vite';
 import {
   MemberPlanListDocument,
   PaymentPeriodicity,
@@ -119,8 +119,10 @@ export const Default: StoryObj<typeof UpgradeContainer> = {
           },
           result: {
             data: {
-              upgradeSubscriptionInfo: {
+              upgradeUserSubscriptionInfo: {
                 discountAmount: 500,
+                discountPercent: null,
+                discountCodeValid: null,
               },
             },
           },
@@ -135,8 +137,10 @@ export const Default: StoryObj<typeof UpgradeContainer> = {
           },
           result: {
             data: {
-              upgradeSubscriptionInfo: {
+              upgradeUserSubscriptionInfo: {
                 discountAmount: 800,
+                discountPercent: null,
+                discountCodeValid: null,
               },
             },
           },

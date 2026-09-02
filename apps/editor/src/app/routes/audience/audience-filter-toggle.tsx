@@ -7,9 +7,9 @@ import { Form as RForm, Toggle, Tooltip, Whisper } from 'rsuite';
 import { chartColors } from './audience-chart';
 import { AudienceClientFilter } from './useAudienceFilter';
 
-const { ControlLabel } = RForm;
+const { Label } = RForm;
 
-export const ToggleLable = styled(ControlLabel)`
+export const ToggleLable = styled(Label)`
   padding-left: ${({ theme }) => theme.spacing(1)};
 `;
 
@@ -80,7 +80,9 @@ export function AudienceFilterToggle({
           })
         }
       />
+
       <ToggleLable>{t(`audience.legend.${filterKey}`)}</ToggleLable>
+
       <FilterInfo
         text={t(`audience.legend.info.${filterKey}`)}
         color={chartColor}

@@ -214,6 +214,7 @@ type Banner {
   collapsible: Boolean!
   cta: String
   delay: Int!
+  embedUrl: String
   hideForMinutes: Int!
   html: String
   id: String!
@@ -317,7 +318,7 @@ input BildwurfAdBlockInput {
   zoneID: String
 }
 
-union BlockContent = BildwurfAdBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | FlexBlock | HTMLBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | StreamableVideoBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock
+union BlockContent = BildwurfAdBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | FlexBlock | HTMLBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | MailchimpFormBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | StreamableVideoBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock
 
 input BlockContentInput {
   bildwurfAd: BildwurfAdBlockInput
@@ -334,6 +335,7 @@ input BlockContentInput {
   instagramPost: InstagramPostBlockInput
   linkPageBreak: BreakBlockInput
   listicle: ListicleBlockInput
+  mailchimpForm: MailchimpFormBlockInput
   polisConversation: PolisConversationBlockInput
   poll: PollBlockInput
   quote: QuoteBlockInput
@@ -375,6 +377,7 @@ enum BlockType {
   InstagramPost
   LinkPageBreak
   Listicle
+  MailchimpForm
   PolisConversation
   Poll
   Quote
@@ -637,6 +640,7 @@ input CreateBannerInput {
   collapsible: Boolean!
   cta: String
   delay: Int!
+  embedUrl: String
   hideForMinutes: Int!
   html: String
   imageId: String
@@ -676,8 +680,8 @@ input CreateExternalAppInput {
 }
 
 type CreateSubscriptionInfo {
+  discountCodeValid: Boolean
   discountPercent: Float
-  voucherValid: Boolean
 }
 
 type Crowdfunding {
@@ -844,6 +848,30 @@ type DeletePollVotesResult {
   count: Int!
 }
 
+type DiscountCode implements HasMemberPlanLc {
+  code: String!
+  createdAt: DateTime!
+  discountPercent: Int!
+  id: String!
+  memberPlan: MemberPlan!
+  memberPlanId: String!
+  modifiedAt: DateTime!
+  validFrom: DateTime!
+  validTo: DateTime!
+}
+
+input DiscountCodeFilter {
+  from: DateTime
+  memberPlans: [String!]
+  to: DateTime
+}
+
+enum DiscountCodesort {
+  CreatedAt
+  Discount
+  ModifiedAt
+}
+
 type Document {
   createdAt: DateTime!
   description: String
@@ -884,6 +912,7 @@ enum EditorBlockType {
   ImageGallery
   LinkPageBreak
   Listicle
+  MailchimpForm
   Poll
   Quote
   RichText
@@ -1146,6 +1175,32 @@ type FullPoll {
   infoText: RichText
   opensAt: DateTime!
   question: String
+}
+
+type Goodie implements HasImage {
+  active: Boolean!
+  availableStock: Int
+  createdAt: DateTime!
+  description: RichText
+  id: String!
+  image: Image
+  imageID: String
+  memberPlans: [MemberPlan!]!
+  modifiedAt: DateTime!
+  name: String!
+  stock: Int
+}
+
+input GoodieFilter {
+  active: Boolean
+  memberPlans: [String!]
+  name: String
+}
+
+enum GoodieSort {
+  CreatedAt
+  ModifiedAt
+  Name
 }
 
 """Setting Value"""
@@ -1501,6 +1556,8 @@ type InvoiceItem {
   amount: Int!
   createdAt: DateTime!
   description: String
+  goodie: Goodie
+  goodieId: String
   id: String!
   modifiedAt: DateTime!
   name: String!
@@ -1573,6 +1630,95 @@ enum LoginStatus {
   UNSUBSCRIBED
 }
 
+input MailAudienceInput {
+  autoRenew: Boolean
+  base: MailRecipientBase!
+
+  """
+  Win-back audience only: start of an explicit period the subscription ended in.
+  """
+  endedFrom: DateTime
+
+  """
+  Win-back audience only: end of an explicit period the subscription ended in.
+  """
+  endedTo: DateTime
+
+  """
+  Win-back audience only: how far back an ended subscription may lie, in days. Ignored when an explicit period is given.
+  """
+  endedWithinDays: Int
+
+  """Restrict to subscriptions of these member plans."""
+  memberPlanIDs: [String!]
+  paymentMethodID: String
+  paymentPeriodicity: PaymentPeriodicity
+  subscriptionState: MailSubscriptionState
+}
+
+input MailLogFilter {
+  mailSendJobId: String
+  mailTemplateId: String
+  recipientId: String
+  state: MailLogState
+  type: MailLogType
+}
+
+type MailLogModel {
+  createdAt: DateTime!
+
+  """Why a rejected mail could not be delivered."""
+  error: String
+  id: String!
+  mailProviderID: String!
+  mailSendJobId: String
+  mailTemplate: MailLogTemplate!
+  recipient: MailLogRecipient!
+  sentDate: DateTime!
+  state: MailLogState!
+  subject: String
+  type: MailLogType
+}
+
+type MailLogRecipient {
+  email: String!
+  firstName: String
+  id: String!
+  name: String!
+}
+
+enum MailLogState {
+  accepted
+  bounced
+  deferred
+  delivered
+  rejected
+  submitted
+}
+
+type MailLogSyncModel {
+  """
+  Mails that were still in an open state and could be looked up at the provider.
+  """
+  checked: Int!
+
+  """Mails whose state the provider reported differently."""
+  updated: Int!
+}
+
+type MailLogTemplate {
+  id: String!
+  name: String!
+}
+
+"""Origin of a sent mail."""
+enum MailLogType {
+  manual
+  subscriptionFlow
+  systemMail
+  userFlow
+}
+
 type MailProviderModel {
   name: String!
 }
@@ -1581,6 +1727,186 @@ enum MailProviderType {
   MAILCHIMP
   MAILGUN
   SLACK
+  SMTP
+}
+
+"""Base set of users a manual-send audience is drawn from."""
+enum MailRecipientBase {
+  allUsers
+  endedSubscription
+  hasSubscription
+  noActiveSubscription
+}
+
+enum MailSendAudience {
+  allUsers
+  filteredSubscriptions
+  singleUser
+}
+
+input MailSendJobInput {
+  audience: MailAudienceInput!
+  mailTemplateId: String!
+}
+
+type MailSendJobModel {
+  audience: MailSendAudience!
+  createdAt: DateTime!
+  createdByUserId: String!
+  error: String
+  failedCount: Int!
+  finishedAt: DateTime
+
+  """Last sign of life of the worker processing this job."""
+  heartbeatAt: DateTime
+  id: String!
+  mailTemplate: MailLogTemplate
+  mailTemplateId: String!
+  modifiedAt: DateTime!
+
+  """How often the job was picked up again after an interruption."""
+  resumeCount: Int!
+
+  """
+  Mails handed to the provider whose outcome never came back — left over after an interruption. Never re-sent on their own.
+  """
+  sendingCount: Int!
+  sentCount: Int!
+  startedAt: DateTime
+  status: MailSendJobState!
+  totalCount: Int!
+}
+
+type MailSendJobRecipientModel {
+  attempts: Int!
+  error: String
+  id: String!
+  mailLogId: String
+  memberPlanName: String
+
+  """Position in the send queue."""
+  position: Int!
+  sentAt: DateTime
+  state: MailSendJobRecipientState!
+  user: MailLogRecipient!
+}
+
+"""Where one planned mail of a send job stands."""
+enum MailSendJobRecipientState {
+  failed
+  pending
+  sending
+  sent
+}
+
+enum MailSendJobState {
+  cancelled
+  done
+  failed
+  queued
+  running
+}
+
+input MailSendPreviewInput {
+  audience: MailAudienceInput!
+  mailTemplateId: String!
+
+  """
+  Row id of the recipient to render for. Defaults to the first of the audience.
+  """
+  recipientId: String
+}
+
+type MailSendPreviewModel {
+  html: String!
+
+  """The recipient this preview was rendered for."""
+  recipient: MailSendRecipientModel
+  subject: String!
+  text: String
+}
+
+type MailSendRecipientModel {
+  email: String!
+  firstName: String
+
+  """
+  Row identity. A user appears once per matching subscription, so this combines both.
+  """
+  id: String!
+  memberPlanName: String
+  name: String!
+  subscriptionId: String
+  userId: String!
+}
+
+type MailSendRecipientPreview {
+  """
+  Whether recipients carry subscription data (subscription-context templates allowed).
+  """
+  allowsSubscriptionTemplates: Boolean!
+
+  """Number of mails that would be sent."""
+  count: Int!
+
+  """
+  Number of distinct people reached. Lower than `count` when someone has several matching subscriptions.
+  """
+  userCount: Int!
+}
+
+enum MailSubscriptionState {
+  active
+  deactivated
+  pending
+}
+
+"""The mail type / context a template is written for."""
+enum MailTemplateContext {
+  account
+  custom
+  customNoSubscription
+  emailChange
+  invoiceCreation
+  renewal
+  subscription
+}
+
+input MailTemplateInput {
+  context: MailTemplateContext
+  description: String
+  htmlContent: String!
+  name: String!
+  subject: String!
+  textContent: String
+}
+
+type MailTemplateModel {
+  context: MailTemplateContext
+  description: String
+  htmlContent: String!
+  id: String!
+  name: String!
+  status: String!
+  subject: String!
+  textContent: String
+}
+
+input MailTemplatePreviewInput {
+  """Mail type / context id, e.g. "renewal"."""
+  contextId: String!
+  htmlContent: String!
+  subject: String!
+
+  """Subscription to take sample data from."""
+  subscriptionId: String
+  textContent: String
+}
+
+type MailTemplatePreviewModel {
+  html: String!
+  subject: String!
+  text: String
 }
 
 type MailTemplateRef {
@@ -1588,14 +1914,134 @@ type MailTemplateRef {
   name: String!
 }
 
-type MailTemplateWithUrlAndStatusModel {
+type MailTemplateSubscriptionOption {
+  id: String!
+  label: String!
+}
+
+input MailchimpContactInput {
+  email: String!
+  interests: JSONObject
+  listId: String!
+  mergeFields: JSONObject
+  status: MailchimpContactStatus!
+  syncProviderId: String!
+}
+
+enum MailchimpContactStatus {
+  Pending
+  Subscribed
+}
+
+type MailchimpFormBlock implements BaseBlock {
+  autoFocus: Boolean!
+  blockStyle: String
+  blockStyleName: String
+  buttonColor: String
+  buttonFontColor: String
+  disabled: Boolean
+  doubleOptIn: Boolean
+  interests: [String!]!
+  listId: String
+  steps: [MailchimpFormStep!]!
+  submitButtonLabel: String
+  successPage: MailchimpFormSuccessPage
+  successUrl: String
+  syncProviderId: String
+  type: BlockType!
+}
+
+input MailchimpFormBlockInput {
+  autoFocus: Boolean! = true
+  blockStyle: String
+  blockStyleName: String
+  buttonColor: String
+  buttonFontColor: String
+  disabled: Boolean
+  doubleOptIn: Boolean
+  interests: [String!]! = []
+  listId: String
+  steps: [MailchimpFormStepInput!]! = []
+  submitButtonLabel: String
+  successPage: MailchimpFormSuccessPageInput
+  successUrl: String
+  syncProviderId: String
+}
+
+type MailchimpFormFieldConfig {
+  defaultValue: String
   description: String
-  externalMailTemplateId: String!
+  inputType: String
+  label: String
+  name: String
+  options: [MailchimpFormInterestOption!]!
+  required: Boolean
+  urlParam: String
+  value: String
+}
+
+input MailchimpFormFieldConfigInput {
+  defaultValue: String
+  description: String
+  inputType: String
+  label: String
+  name: String
+  options: [MailchimpFormInterestOptionInput!]! = []
+  required: Boolean
+  urlParam: String
+  value: String
+}
+
+type MailchimpFormInterestOption {
+  description: String
   id: String!
   name: String!
-  remoteMissing: Boolean!
-  status: String!
+}
+
+input MailchimpFormInterestOptionInput {
+  description: String
+  id: String!
+  name: String!
+}
+
+type MailchimpFormStep {
+  inputs: [MailchimpFormFieldConfig!]!
+  showIfInterestsFilled: [String!]!
+  skipIfFieldsFilled: [String!]!
+  skipIfInterestsFilled: [String!]!
+}
+
+input MailchimpFormStepInput {
+  inputs: [MailchimpFormFieldConfigInput!]! = []
+  showIfInterestsFilled: [String!]! = []
+  skipIfFieldsFilled: [String!]! = []
+  skipIfInterestsFilled: [String!]! = []
+}
+
+type MailchimpFormSuccessOption {
+  background: String!
+  label: String!
+  mergeFieldName: String
+  mergeFieldValue: String
   url: String!
+}
+
+input MailchimpFormSuccessOptionInput {
+  background: String!
+  label: String!
+  mergeFieldName: String
+  mergeFieldValue: String
+  url: String!
+}
+
+type MailchimpFormSuccessPage {
+  description: String
+  options: [MailchimpFormSuccessOption!]!
+}
+
+input MailchimpFormSuccessPageInput {
+  description: String
+  options: [MailchimpFormSuccessOptionInput!]! = []
 }
 
 type MailchimpInterestGroup {
@@ -1613,6 +2059,11 @@ type MailchimpMergeField {
   name: String!
   tag: String!
   type: String!
+}
+
+type MailchimpSubscribeResult {
+  error: String
+  success: Boolean!
 }
 
 type MailchimpSyncDryRunChange {
@@ -1672,6 +2123,11 @@ type MemberPlan implements HasImage {
   externalReward: String
   failPage: Page
   failPageId: String
+
+  """
+  Active goodies with remaining stock that can be chosen with this member plan.
+  """
+  goodies: [Goodie!]!
   id: String!
   image: Image
   imageID: String
@@ -1700,11 +2156,19 @@ enum MemberPlanSort {
 }
 
 type Mutation {
+  """Subscribes a contact to a Mailchimp list."""
+  addMailchimpContact(input: MailchimpContactInput!): MailchimpSubscribeResult!
+
   """Adds a new comment made by you."""
   addUserComment(challenge: ChallengeInput, guestUsername: String, itemID: String!, itemType: CommentItemType!, parentID: String, text: RichText!, title: String): Comment!
 
   """Approves a comment"""
   approveComment(id: String!): Comment!
+
+  """
+  Stop a running send job. Unsent recipients stay open and can be continued.
+  """
+  cancelMailSendJob(id: String!): MailSendJobModel!
 
   """Cancels a subscription."""
   cancelSubscription(
@@ -1744,6 +2208,9 @@ type Mutation {
   """Create a new crowdfunding"""
   createCrowdfunding(input: CreateCrowdfundingInput!): Crowdfunding!
 
+  """Creates a new discountCode."""
+  createDiscountCode(code: String!, discountPercent: Int!, memberPlanId: String!, validFrom: DateTime!, validTo: DateTime!): DiscountCode!
+
   """Creates a new event."""
   createEvent(description: RichText, endsAt: DateTime, imageId: String, lead: String, location: String, name: String!, startsAt: DateTime!, status: EventStatus! = Scheduled, tagIds: [String!]): Event!
 
@@ -1755,6 +2222,9 @@ type Mutation {
   """
   createExternalAppToken(externalAppId: String!): ExternalAppToken!
 
+  """Creates a new goodie."""
+  createGoodie(active: Boolean!, description: RichText, imageID: String, memberPlanIDs: [String!]!, name: String!, stock: Int): Goodie!
+
   """Creates a new invoice."""
   createInvoice(currency: Currency!, description: String, dueAt: DateTime!, items: [InvoiceItemInput!]!, mail: String!, manuallySetAsPaidByUserId: String, scheduledDeactivationAt: DateTime!, subscriptionID: String): Invoice!
 
@@ -1763,6 +2233,12 @@ type Mutation {
 
   """Returns a JWT that is valid for 1min for the current logged in user."""
   createJWTForWebsiteLogin: SessionWithToken!
+
+  """Start a background job sending a template to a filtered audience"""
+  createMailSendJob(input: MailSendJobInput!): MailSendJobModel!
+
+  """Create a new mail template"""
+  createMailTemplate(input: MailTemplateInput!): MailTemplateModel!
 
   """Creates a new memberplan."""
   createMemberPlan(active: Boolean!, amountPerMonthMax: Int, amountPerMonthMin: Int!, amountPerMonthTarget: Int, availablePaymentMethods: [AvailablePaymentMethodInput!]!, confirmationPageId: String, currency: Currency!, description: RichText, extendable: Boolean!, externalReward: String, failPageId: String, imageID: String, maxCount: Int, migrateToTargetPaymentMethodID: String, name: String!, productType: ProductType!, shortDescription: RichText, slug: String!, successPageId: String, tags: [String!]): MemberPlan!
@@ -1849,15 +2325,12 @@ type Mutation {
   createUserRole(description: String, name: String!, permissionIDs: [String!]!): UserRole!
 
   """Allows authenticated users to create additional subscriptions"""
-  createUserSubscription(autoRenew: Boolean!, deactivateSubscriptionId: String, failureURL: String, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Int!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], successURL: String, voucher: String): Payment!
+  createUserSubscription(autoRenew: Boolean!, deactivateSubscriptionId: String, discountCode: String, failureURL: String, goodieId: String, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Int!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], successURL: String): Payment!
 
   """
   Allows guests and authenticated users to create additional subscriptions
   """
-  createUserSubscriptionWithConfirmation(autoRenew: Boolean!, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Int!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], userId: String, voucher: String): Boolean!
-
-  """Creates a new voucher."""
-  createVoucher(code: String!, discountPercent: Int!, memberPlanId: String!, validFrom: DateTime!, validTo: DateTime!): Voucher!
+  createUserSubscriptionWithConfirmation(autoRenew: Boolean!, discountCode: String, goodieId: String, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Int!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], userId: String): Boolean!
 
   """Deletes all sync errors for a config so all contacts will be retried."""
   deleteAllMailchimpSyncErrors(configId: String!): Boolean!
@@ -1879,6 +2352,9 @@ type Mutation {
   deleteConsent(id: String!): Consent!
   deleteCrowdfunding(id: String!): Boolean
 
+  """Deletes an existing discountCode."""
+  deleteDiscountCode(id: String!): DiscountCode!
+
   """Deletes an existing document."""
   deleteDocument(id: String!): String!
 
@@ -1888,11 +2364,17 @@ type Mutation {
   """Deletes an external app."""
   deleteExternalApp(id: String!): ExternalApp!
 
+  """Deletes an existing goodie."""
+  deleteGoodie(id: String!): Goodie!
+
   """Deletes an existing image."""
   deleteImage(id: String!): String!
 
   """Deletes an existing invoice."""
   deleteInvoice(id: String!): Invoice!
+
+  """Delete an existing mail template"""
+  deleteMailTemplate(id: String!): Boolean
 
   """Deletes a single sync error so the contact will be retried."""
   deleteMailchimpSyncError(id: String!): Boolean!
@@ -1954,9 +2436,6 @@ type Mutation {
   """Deletes an existing userrole."""
   deleteUserRole(id: String!): UserRole!
 
-  """Deletes an existing voucher."""
-  deleteVoucher(id: String!): Voucher!
-
   """
   Discards the current draft and reverts to the latest published revision.
   """
@@ -2001,6 +2480,9 @@ type Mutation {
 
   "\n      Creates and event based on data from importable events list and an id and provider.\n      Also, uploads an image to WePublish Image library.\n    "
   importEvent(id: String!, source: String!): String!
+
+  """Import HTML/subject from the mail provider, overwriting local content"""
+  importMailTemplatesFromProvider: Int!
 
   """Imports an article from a peer as a draft."""
   importPeerArticle(articleId: String!, options: ImportArticleOptions! = {importAuthors: true, importContentImages: true, importTags: true}, peerId: String!): Article!
@@ -2079,6 +2561,11 @@ type Mutation {
   """Restores an older revision of a page as a new draft."""
   restorePageRevision(id: String!, revisionId: String!): Page!
 
+  """
+  Continue a send job that stopped early. Recipients already sent are skipped.
+  """
+  resumeMailSendJob(id: String!, retryUnfinished: Boolean): MailSendJobModel!
+
   """This mutation revokes and deletes the active session."""
   revokeActiveSession: Boolean!
 
@@ -2087,16 +2574,26 @@ type Mutation {
   """
   sendJWTLogin(email: String!): String!
 
+  """Manually send a mail template to a single user"""
+  sendMailTemplateToUser(templateId: String!, userId: String!): MailSendJobModel!
+
   """
   Sends a password reset email with a scoped JWT token. Always returns the email to prevent enumeration.
   """
   sendPasswordResetEmail(email: String!): String!
 
+  """Send a test mail for a draft template"""
+  sendTestMailTemplate(input: SendTestMailTemplateInput!): Boolean
+
   """
   This mutation sends a login link to the email if the user exists. Method will always return email address
   """
   sendWebsiteLogin(email: String!): String!
-  syncTemplates: Boolean
+
+  """
+  Ask the mail provider for the current delivery state of mails that are still open. Complements the provider webhook, which is not reachable in local development.
+  """
+  syncMailLogStates(limit: Int): MailLogSyncModel!
 
   """Sends a test email for the given event"""
   testSystemMail(event: UserEvent!): Boolean!
@@ -2141,6 +2638,9 @@ type Mutation {
   """Updates the current logged in user."""
   updateCurrentUser(address: UserAddressInput, birthday: DateTime, challengeAnswer: ChallengeInput, firstName: String, flair: String, name: String, password: String): SensitiveDataUser!
 
+  """Updates an existing discountCode."""
+  updateDiscountCode(code: String, discountPercent: Int, id: String!, memberPlanId: String, validFrom: DateTime, validTo: DateTime): DiscountCode!
+
   """Updates an existing document."""
   updateDocument(description: String, id: String!, title: String): Document!
 
@@ -2150,6 +2650,9 @@ type Mutation {
   """Updates an existing external app."""
   updateExternalApp(description: String, icon: String, id: String!, name: String, target: ExternalAppsTarget, url: String): ExternalApp!
 
+  """Updates an existing goodie."""
+  updateGoodie(active: Boolean, description: RichText, id: String!, imageID: String, memberPlanIDs: [String!], name: String, stock: Int): Goodie!
+
   """Updates an existing image."""
   updateImage(description: String, filename: String, focalPointX: Float = 0.5, focalPointY: Float = 0.5, id: String!, license: String, link: String, source: String, tags: [String!], title: String): Image!
 
@@ -2157,7 +2660,10 @@ type Mutation {
   updateInvoice(currency: Currency, description: String, dueAt: DateTime, id: String!, items: [InvoiceItemInput!], mail: String, manuallySetAsPaidByUserId: String, scheduledDeactivationAt: DateTime, subscriptionID: String): Invoice!
 
   """Updates an existing mail provider setting."""
-  updateMailProviderSetting(apiKey: String, fromAddress: String, id: String, mailchimp_baseURL: String, mailgun_baseDomain: String, mailgun_mailDomain: String, name: String, replyToAddress: String, slack_webhookURL: String, webhookEndpointSecret: String): SettingMailProvider!
+  updateMailProviderSetting(apiKey: String, fromAddress: String, id: String, mailchimp_baseURL: String, mailgun_baseDomain: String, mailgun_mailDomain: String, name: String, replyToAddress: String, slack_webhookURL: String, smtp_host: String, smtp_port: Int, smtp_secure: Boolean, smtp_user: String, webhookEndpointSecret: String): SettingMailProvider!
+
+  """Update an existing mail template"""
+  updateMailTemplate(id: String!, input: MailTemplateInput!): MailTemplateModel!
 
   """Updates an existing memberplan."""
   updateMemberPlan(active: Boolean, amountPerMonthMax: Int, amountPerMonthMin: Int, amountPerMonthTarget: Int, availablePaymentMethods: [AvailablePaymentMethodInput!], confirmationPageId: String, currency: Currency, description: RichText, extendable: Boolean, externalReward: String, failPageId: String, id: String!, imageID: String, maxCount: Int, migrateToTargetPaymentMethodID: String, name: String, productType: ProductType, shortDescription: RichText, slug: String, successPageId: String, tags: [String!]): MemberPlan!
@@ -2210,7 +2716,12 @@ type Mutation {
   updateSyncProviderSetting(enabled: Boolean, id: String!, mailchimp_apiKey: String, mailchimp_defaultInterestGroupIds: [String!], mailchimp_extensions: JSONObject, mailchimp_interestGroupMappings: [JSONObject!], mailchimp_listId: String, mailchimp_mergeFieldMappings: [JSONObject!], name: String): SettingSyncProvider!
 
   """Updates an existing mail flow"""
-  updateSystemMail(event: UserEvent!, mailTemplateId: String!): [SystemMailModel!]!
+  updateSystemMail(
+    event: UserEvent!
+
+    """Mail template to assign, or null to unassign."""
+    mailTemplateId: String
+  ): [SystemMailModel!]!
 
   """Updates an existing tag."""
   updateTag(color: Color, description: RichText, id: String!, main: Boolean = false, tag: String, type: TagType): Tag!
@@ -2235,14 +2746,11 @@ type Mutation {
   """
   updateUserSubscription(id: String!, input: UpdateUserSubscriptionInput!): PublicSubscription
 
-  """Updates an existing voucher."""
-  updateVoucher(code: String, discountPercent: Int, id: String!, memberPlanId: String, validFrom: DateTime, validTo: DateTime): Voucher!
-
   """Updates the website settings."""
   updateWebsiteSettings(ads: WebsiteAdsInput, analytics: WebsiteAnalyticsInput, fonts: [WebsiteRemoteFontInput!], mail: WebsiteMailInput, theme: JSONObject): WebsiteSettings!
 
   """"""
-  upgradeUserSubscription(failureURL: String, memberPlanId: String!, monthlyAmount: Int!, paymentMethodId: String!, subscriptionId: String!, successURL: String): Payment!
+  upgradeUserSubscription(discountCode: String, failureURL: String, goodieId: String, memberPlanId: String!, monthlyAmount: Int!, paymentMethodId: String!, subscriptionId: String!, successURL: String): Payment!
 
   """Uploads a new document."""
   uploadDocument(description: String, file: Upload!, filename: String, title: String): Document!
@@ -2424,6 +2932,12 @@ type PaginatedComments {
   totalCount: Int!
 }
 
+type PaginatedDiscountCodes {
+  nodes: [DiscountCode!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
 type PaginatedDocuments {
   nodes: [Document!]!
   pageInfo: PageInfo!
@@ -2442,8 +2956,38 @@ type PaginatedEventsFromSources {
   totalCount: Int!
 }
 
+type PaginatedGoodies {
+  nodes: [Goodie!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
 type PaginatedImages {
   nodes: [Image!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type PaginatedMailLog {
+  nodes: [MailLogModel!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type PaginatedMailSendJob {
+  nodes: [MailSendJobModel!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type PaginatedMailSendJobRecipient {
+  nodes: [MailSendJobRecipientModel!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type PaginatedMailSendRecipient {
+  nodes: [MailSendRecipientModel!]!
   pageInfo: PageInfo!
   totalCount: Int!
 }
@@ -2498,12 +3042,6 @@ type PaginatedTags {
 
 type PaginatedUserRoles {
   nodes: [UserRole!]!
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
-type PaginatedVouchers {
-  nodes: [Voucher!]!
   pageInfo: PageInfo!
   totalCount: Int!
 }
@@ -2602,6 +3140,7 @@ enum PaymentProviderType {
 
 enum PaymentState {
   canceled
+  chargeback
   created
   declined
   paid
@@ -2988,6 +3527,7 @@ type PublicSubscription implements HasMemberPlan & HasPaymentMethod & HasUser {
   deactivation: SubscriptionDeactivation
   extendable: Boolean!
   externalReward: String
+  goodie: Goodie
   id: String!
   isActive: Boolean!
   memberPlan: MemberPlan!
@@ -3095,7 +3635,7 @@ type Query {
   """
   Gives the user some information about the subscription they are about to create
   """
-  createSubscriptionInfo(memberPlanId: String!, voucher: String): CreateSubscriptionInfo!
+  createSubscriptionInfo(discountCode: String, memberPlanId: String!): CreateSubscriptionInfo!
 
   """Get a single crowdfunding by id"""
   crowdfunding(id: String!): Crowdfunding!
@@ -3105,6 +3645,30 @@ type Query {
 
   "\n      Returns daily stats in a given timeframe.\n    "
   dailySubscriptionStats(end: DateTime, memberPlanIds: [String!], start: DateTime!): [DailySubscriptionStats!]!
+
+  """Returns an discountCode by id or discountCode."""
+  discountCode(id: String!): DiscountCode!
+
+  """This query returns a list of discountCodes"""
+  discountCodes(
+    """Cursor for pagination"""
+    cursorId: String
+
+    """Filter for discountCodes"""
+    filter: DiscountCodeFilter
+
+    """Sort order"""
+    order: SortOrder = Descending
+
+    """Number of items to skip"""
+    skip: Int! = 0
+
+    """Field to sort by"""
+    sort: DiscountCodesort! = CreatedAt
+
+    """Number of items to fetch"""
+    take: Int! = 10
+  ): PaginatedDiscountCodes!
 
   """Returns a document by id."""
   document(id: String!): Document!
@@ -3136,6 +3700,30 @@ type Query {
   """Returns images by tag."""
   getImagesByTag(tag: String!): [Image!]!
 
+  """Returns a goodie by id."""
+  goodie(id: String!): Goodie!
+
+  """This query returns a list of goodies"""
+  goodies(
+    """Cursor for pagination"""
+    cursorId: String
+
+    """Filter for goodies"""
+    filter: GoodieFilter
+
+    """Sort order"""
+    order: SortOrder = Descending
+
+    """Number of items to skip"""
+    skip: Int! = 0
+
+    """Field to sort by"""
+    sort: GoodieSort! = CreatedAt
+
+    """Number of items to fetch"""
+    take: Int! = 10
+  ): PaginatedGoodies!
+
   "\n      Returns the most viewed articles in descending order.\n    "
   hotAndTrending(start: DateTime, take: Int = 10): [Article!]!
 
@@ -3160,14 +3748,51 @@ type Query {
   """Returns a paginated list of invoices based on the filters given."""
   invoices(cursorId: String, filter: InvoiceFilter, order: SortOrder = Ascending, skip: Int = 0, sort: InvoiceSort = ModifiedAt, take: Int = 10): InvoiceConnection!
 
+  """Paginated list of sent mails"""
+  mailLogs(filter: MailLogFilter, skip: Int, take: Int): PaginatedMailLog!
+
   """Returns a single mail provider setting by id."""
   mailProviderSetting(id: String!): SettingMailProvider!
 
   """Returns all mail provider settings."""
   mailProviderSettings(filter: SettingMailProviderFilter): [SettingMailProvider!]!
 
+  """A single mail send job (for progress polling)"""
+  mailSendJob(id: String!): MailSendJobModel
+
+  """The planned mails of a send job and where each of them stands"""
+  mailSendJobRecipients(jobId: String!, skip: Int, state: MailSendJobRecipientState, take: Int): PaginatedMailSendJobRecipient!
+
+  """Paginated list of mail send jobs"""
+  mailSendJobs(skip: Int, take: Int): PaginatedMailSendJob!
+
+  """
+  Render a saved template for one recipient of an audience, exactly as the send would compose it
+  """
+  mailSendPreview(input: MailSendPreviewInput!): MailSendPreviewModel!
+
+  """Preview how many recipients an audience resolves to"""
+  mailSendRecipientPreview(audience: MailAudienceInput!): MailSendRecipientPreview!
+
+  """The concrete recipients an audience resolves to"""
+  mailSendRecipients(audience: MailAudienceInput!, skip: Int, take: Int): PaginatedMailSendRecipient!
+
+  """Return a single mail template, including its html and text body."""
+  mailTemplate(id: String!): MailTemplateModel
+
+  """
+  Placeholders a template uses that would render empty for the given send (empty = none missing)
+  """
+  mailTemplateMissingPlaceholders(templateId: String!, withSubscriptionData: Boolean!): [String!]!
+
+  """Render a draft mail template with a mail type's sample data"""
+  mailTemplatePreview(input: MailTemplatePreviewInput!): MailTemplatePreviewModel!
+
+  """Search subscriptions to use as sample data for previews/tests"""
+  mailTemplateSubscriptions(query: String): [MailTemplateSubscriptionOption!]!
+
   """Return all mail templates"""
-  mailTemplates: [MailTemplateWithUrlAndStatusModel!]!
+  mailTemplates: [MailTemplateModel!]!
 
   """Fetches available interest groups for a Mailchimp list."""
   mailchimpInterestGroups(configId: String!, listId: String!): [MailchimpInterestGroup!]!
@@ -3303,7 +3928,7 @@ type Query {
   subscriptions(cursorId: String, filter: SubscriptionFilter, order: SortOrder = Ascending, skip: Int = 0, sort: SubscriptionSort = ModifiedAt, take: Int = 10): PublicSubscriptionConnection!
 
   """Returns a paginated list of subscriptions based on the filters given."""
-  subscriptionsAsCsv(autoRenew: Boolean, cancellationDateFrom: DateFilter, cancellationDateTo: DateFilter, deactivationDateFrom: DateFilter, deactivationDateTo: DateFilter, deactivationReason: String, extendable: Boolean, memberPlanID: String, paidUntilFrom: DateFilter, paidUntilTo: DateFilter, paymentMethodID: String, paymentPeriodicity: PaymentPeriodicity, startsAtFrom: DateFilter, startsAtTo: DateFilter, subscriptionIDs: [String!], userHasAddress: Boolean, userID: String, userIDs: [String!]): String!
+  subscriptionsAsCsv(activeAt: DateTime, autoRenew: Boolean, cancellationDateFrom: DateFilter, cancellationDateTo: DateFilter, deactivationDateFrom: DateFilter, deactivationDateTo: DateFilter, deactivationReason: String, extendable: Boolean, memberPlanID: String, paidUntilFrom: DateFilter, paidUntilTo: DateFilter, paymentMethodID: String, paymentPeriodicity: PaymentPeriodicity, startsAtFrom: DateFilter, startsAtTo: DateFilter, subscriptionIDs: [String!], userHasAddress: Boolean, userID: String, userIDs: [String!]): String!
 
   """Returns a single sync provider setting by id."""
   syncProviderSetting(id: String!): SettingSyncProvider!
@@ -3348,7 +3973,7 @@ type Query {
   trackingPixelSettings(filter: SettingTrackingPixelFilter): [SettingTrackingPixelProvider!]!
 
   """"""
-  upgradeUserSubscriptionInfo(memberPlanId: String!, subscriptionId: String!): UpgradeSubscription!
+  upgradeUserSubscriptionInfo(discountCode: String, memberPlanId: String!, subscriptionId: String!): UpgradeSubscription!
 
   """Returns a user by id."""
   user(id: String!): SensitiveDataUser!
@@ -3393,30 +4018,6 @@ type Query {
     take: Int! = 10
   ): PaginatedSensitiveDataUsers!
   versionInformation: VersionInformation!
-
-  """Returns an voucher by id or voucher."""
-  voucher(id: String!): Voucher!
-
-  """This query returns a list of vouchers"""
-  vouchers(
-    """Cursor for pagination"""
-    cursorId: String
-
-    """Filter for vouchers"""
-    filter: VoucherFilter
-
-    """Sort order"""
-    order: SortOrder = Descending
-
-    """Number of items to skip"""
-    skip: Int! = 0
-
-    """Field to sort by"""
-    sort: VoucherSort! = CreatedAt
-
-    """Number of items to fetch"""
-    take: Int! = 10
-  ): PaginatedVouchers!
 
   """
   Returns the website settings, requires authentication to get sensitive settings.
@@ -3485,6 +4086,14 @@ input RichTextBlockInput {
   blockStyleName: String
   disabled: Boolean
   richText: RichText
+}
+
+input SendTestMailTemplateInput {
+  contextId: String!
+  htmlContent: String!
+  subject: String!
+  subscriptionId: String
+  textContent: String
 }
 
 type SensitiveDataUser implements BaseUser {
@@ -3618,6 +4227,10 @@ type SettingMailProvider implements SettingProvider {
   name: String
   replyToAddress: String
   slack_webhookURL: String
+  smtp_host: String
+  smtp_port: Int
+  smtp_secure: Boolean
+  smtp_user: String
   type: MailProviderType!
 }
 
@@ -3822,8 +4435,13 @@ type SubscribeBlock implements BaseBlock {
   blockStyleName: String
   disabled: Boolean
   fields: [SubscribeBlockField!]!
-  memberPlanIds: [String!]
+  goodieMinValue: Int
+  hideRepeatGoodieOnUpgrade: Boolean!
+  memberPlanIds: [String!]!
+  memberPlanRenderSettings: [SubscribeBlockMemberPlanRenderSetting!]!
   memberPlans: [MemberPlan!]!
+  showDiscountCodes: Boolean!
+  showGoodies: Boolean!
   type: BlockType!
 }
 
@@ -3841,7 +4459,55 @@ input SubscribeBlockInput {
   blockStyleName: String
   disabled: Boolean
   fields: [SubscribeBlockField!]! = [FirstName, Password, PasswordRepeated, Address]
-  memberPlanIds: [String!]
+  goodieMinValue: Int
+  hideRepeatGoodieOnUpgrade: Boolean! = false
+  memberPlanIds: [String!]! = []
+  memberPlanRenderSettings: [SubscribeBlockMemberPlanRenderSettingInput!]!
+  showDiscountCodes: Boolean! = false
+  showGoodies: Boolean! = false
+}
+
+interface SubscribeBlockLayoutConfig {
+  type: SubscribeBlockRenderLayout!
+}
+
+input SubscribeBlockLayoutConfigInput {
+  showInput: Boolean! = false
+  type: SubscribeBlockRenderLayout!
+  values: [Int!]
+}
+
+type SubscribeBlockLayoutNoneConfig implements SubscribeBlockLayoutConfig {
+  type: SubscribeBlockRenderLayout!
+}
+
+type SubscribeBlockLayoutPickerConfig implements SubscribeBlockLayoutConfig {
+  showInput: Boolean!
+  type: SubscribeBlockRenderLayout!
+  values: [Int!]!
+}
+
+type SubscribeBlockLayoutSliderConfig implements SubscribeBlockLayoutConfig {
+  showInput: Boolean!
+  type: SubscribeBlockRenderLayout!
+}
+
+type SubscribeBlockMemberPlanRenderSetting {
+  isDefault: Boolean!
+  layout: SubscribeBlockLayoutConfig!
+  memberPlanId: String!
+}
+
+input SubscribeBlockMemberPlanRenderSettingInput {
+  isDefault: Boolean! = false
+  layout: SubscribeBlockLayoutConfigInput!
+  memberPlanId: String!
+}
+
+enum SubscribeBlockRenderLayout {
+  None
+  Picker
+  Slider
 }
 
 type SubscriptionCreatedAction implements BaseAction & HasSubscriptionLc {
@@ -3857,6 +4523,7 @@ type SubscriptionDeactivation {
 }
 
 enum SubscriptionDeactivationReason {
+  chargeback
   invoiceNotPaid
   none
   userReplacedSubscription
@@ -3875,6 +4542,7 @@ enum SubscriptionEvent {
 }
 
 input SubscriptionFilter {
+  activeAt: DateTime
   autoRenew: Boolean
   cancellationDateFrom: DateFilter
   cancellationDateTo: DateFilter
@@ -4224,6 +4892,7 @@ input UpdateBannerInput {
   collapsible: Boolean!
   cta: String
   delay: Int!
+  embedUrl: String
   hideForMinutes: Int!
   html: String
   id: String!
@@ -4263,6 +4932,8 @@ input UpdateUserSubscriptionInput {
 
 type UpgradeSubscription {
   discountAmount: Float!
+  discountCodeValid: Boolean
+  discountPercent: Float
 }
 
 """The `Upload` scalar type represents a file upload."""
@@ -4381,30 +5052,6 @@ input VimeoVideoBlockInput {
 
 """A valid vote value"""
 scalar VoteValue
-
-type Voucher implements HasMemberPlanLc {
-  code: String!
-  createdAt: DateTime!
-  discountPercent: Int!
-  id: String!
-  memberPlan: MemberPlan!
-  memberPlanId: String!
-  modifiedAt: DateTime!
-  validFrom: DateTime!
-  validTo: DateTime!
-}
-
-input VoucherFilter {
-  from: DateTime
-  memberPlans: [String!]
-  to: DateTime
-}
-
-enum VoucherSort {
-  CreatedAt
-  Discount
-  ModifiedAt
-}
 
 type WebsiteAds {
   sparkLoop: KeyEnabled!
