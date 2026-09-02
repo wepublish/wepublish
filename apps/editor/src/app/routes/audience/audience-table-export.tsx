@@ -9,11 +9,8 @@ import {
   getAudienceExportColumns,
   getAudienceExportFilename,
 } from './audience-export';
+import { AudienceClientFilter, TimeResolution } from './audience-filter-params';
 import { AudienceStatsComputed } from './useAudience';
-import {
-  type AudienceClientFilter,
-  type TimeResolution,
-} from './useAudienceFilter';
 
 type AudienceExportFormat = 'csv' | 'xlsx';
 

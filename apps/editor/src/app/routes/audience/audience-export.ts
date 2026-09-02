@@ -1,11 +1,8 @@
 import { TFunction } from 'i18next';
 import writeXlsxFile, { Column } from 'write-excel-file/browser';
 
+import { AudienceClientFilter, TimeResolution } from './audience-filter-params';
 import { AudienceStatsComputed } from './useAudience';
-import {
-  type AudienceClientFilter,
-  type TimeResolution,
-} from './useAudienceFilter';
 
 type AudienceExportValue = string | number | Date | null;
 
