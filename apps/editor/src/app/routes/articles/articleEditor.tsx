@@ -269,7 +269,8 @@ function ArticleEditor() {
   );
 
   // The /fact slash command, contributed to every richtext block while the
-  // knowledge provider is enabled. It hands the selected text to the panel.
+  // knowledge provider is enabled. Typing "/" replaces any selection, so the
+  // command takes the last fact anchor of the current paragraph as its search.
   const zettelkastenCommandItems = useMemo<CommandItem[]>(
     () =>
       zettelkastenEnabled ?
@@ -277,12 +278,15 @@ function ArticleEditor() {
           {
             title: t('zettelkasten.factCommand'),
             command: ({ editor, range }) => {
-              const { from, to } = editor.state.selection;
-              const selected = editor.state.doc
-                .textBetween(from, to, ' ')
-                .trim();
+              const { $from } = editor.state.selection;
+              const paragraph = editor.state.doc.textBetween(
+                $from.start(),
+                range.from,
+                ' '
+              );
+              const anchors = extractFactAnchors([paragraph]);
               editor.chain().focus().deleteRange(range).run();
-              setZettelkastenQuery(selected || undefined);
+              setZettelkastenQuery(anchors.at(-1));
               setZettelkastenOpen(true);
             },
           },
