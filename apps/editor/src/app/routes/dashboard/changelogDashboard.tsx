@@ -9,7 +9,7 @@ import {
   NotificationItem,
   NotificationSeverity,
 } from '@wepublish/ui/editor';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ReactMarkdown, { defaultUrlTransform } from 'react-markdown';
 import { Button, Loader, Message, Modal, Tag, toaster } from 'rsuite';
@@ -235,10 +235,13 @@ function ConfirmChangelogModal({ entry, onClose }: ConfirmChangelogModalProps) {
 
 export interface ChangelogActionRequiredProps {
   sourceTag?: string;
+  /** Reports whether at least one unconfirmed entry is currently rendered */
+  onVisibilityChange?: (visible: boolean) => void;
 }
 
 export function ChangelogActionRequired({
   sourceTag,
+  onVisibilityChange,
 }: ChangelogActionRequiredProps) {
   const { t, i18n } = useTranslation();
   const [detailsEntry, setDetailsEntry] =
@@ -256,8 +259,13 @@ export function ChangelogActionRequired({
   });
 
   const entries = data?.changelogEntries.nodes ?? [];
+  const hasEntries = entries.length > 0;
 
-  if (!entries.length) {
+  useEffect(() => {
+    onVisibilityChange?.(hasEntries);
+  }, [onVisibilityChange, hasEntries]);
+
+  if (!hasEntries) {
     return null;
   }
 
@@ -332,6 +340,10 @@ export interface ChangelogDashboardProps {
   readEntryIds?: ReadonlySet<string>;
   /** Enables marking entries as read for the current user */
   onMarkRead?: (itemId: string) => void;
+  /** Renders nothing instead of the "no entries" placeholder text */
+  hideEmptyState?: boolean;
+  /** Reports whether at least one entry is currently rendered */
+  onVisibilityChange?: (visible: boolean) => void;
 }
 
 export function ChangelogDashboard({
@@ -341,6 +353,8 @@ export function ChangelogDashboard({
   hideUnconfirmedActionRequired = false,
   readEntryIds,
   onMarkRead,
+  hideEmptyState = false,
+  onVisibilityChange,
 }: ChangelogDashboardProps) {
   const { t, i18n } = useTranslation();
   const [limit, setLimit] = useState(take);
@@ -360,6 +374,21 @@ export function ChangelogDashboard({
     },
   });
 
+  const nodes = data?.changelogEntries.nodes ?? [];
+  const entries = nodes
+    .filter(
+      entry =>
+        !hideUnconfirmedActionRequired ||
+        !(entry.actionRequired && !entry.confirmedAt)
+    )
+    .filter(entry => !readEntryIds?.has(entry.id))
+    .slice(0, limit);
+  const hasEntries = entries.length > 0;
+
+  useEffect(() => {
+    onVisibilityChange?.(hasEntries);
+  }, [onVisibilityChange, hasEntries]);
+
   if (loading && !data) {
     return (
       <LoaderWrapper>
@@ -372,22 +401,12 @@ export function ChangelogDashboard({
     return <Message type="error">{error.message}</Message>;
   }
 
-  const nodes = data?.changelogEntries.nodes ?? [];
-  const entries = nodes
-    .filter(
-      entry =>
-        !hideUnconfirmedActionRequired ||
-        !(entry.actionRequired && !entry.confirmedAt)
-    )
-    .filter(entry => !readEntryIds?.has(entry.id))
-    .slice(0, limit);
-
-  if (!entries.length) {
-    return (
-      <CenteredText>
-        {nodes.length ? t('changelog.allCaughtUp') : t('changelog.noEntries')}
-      </CenteredText>
-    );
+  if (!hasEntries) {
+    return hideEmptyState ? null : (
+        <CenteredText>
+          {nodes.length ? t('changelog.allCaughtUp') : t('changelog.noEntries')}
+        </CenteredText>
+      );
   }
 
   return (

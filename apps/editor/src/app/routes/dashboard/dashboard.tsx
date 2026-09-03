@@ -19,10 +19,6 @@ const StyledGrid = styled(Grid)`
   width: 100%;
 `;
 
-const NotificationsPanel = styled(RPanel)`
-  margin-bottom: 12px;
-`;
-
 export function Dashboard() {
   const { t } = useTranslation();
 
@@ -33,29 +29,8 @@ export function Dashboard() {
         <Col xs={12}>
           <Row gutter={12}>
             <Col xs={24}>
-              <NotificationsPanel
-                header={
-                  <ListViewContainer>
-                    <ListViewHeader>
-                      <h2>{t('dashboard.notifications')}</h2>
-                    </ListViewHeader>
-
-                    <ListViewActions>
-                      <Link to="/notifications">
-                        <Button
-                          appearance="primary"
-                          endIcon={<MdChevronRight />}
-                        >
-                          {t('dashboard.showAllNotifications')}
-                        </Button>
-                      </Link>
-                    </ListViewActions>
-                  </ListViewContainer>
-                }
-                bordered
-              >
-                <DashboardNotifications />
-              </NotificationsPanel>
+              {/* renders its own panel and hides it while there is nothing to show */}
+              <DashboardNotifications />
             </Col>
 
             <Col xs={24}>

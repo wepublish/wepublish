@@ -152,3 +152,27 @@ it('does not render a mark-as-read button without an onMarkRead handler', () => 
 
   expect(screen.queryByRole('button')).toBeNull();
 });
+
+it('reports that messages are visible', () => {
+  const onVisibilityChange = vi.fn();
+  renderWith([message()], { onVisibilityChange });
+
+  expect(onVisibilityChange).toHaveBeenLastCalledWith(true);
+});
+
+it('reports no visible messages when there are none', () => {
+  const onVisibilityChange = vi.fn();
+  renderWith([], { onVisibilityChange });
+
+  expect(onVisibilityChange).toHaveBeenLastCalledWith(false);
+});
+
+it('reports no visible messages when every message was read', () => {
+  const onVisibilityChange = vi.fn();
+  renderWith([message({ id: 1 })], {
+    readItemIds: new Set(['1']),
+    onVisibilityChange,
+  });
+
+  expect(onVisibilityChange).toHaveBeenLastCalledWith(false);
+});

@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { NotificationItem, NotificationSeverity } from '@wepublish/ui/editor';
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from 'rsuite';
 
@@ -46,6 +47,8 @@ export interface OneMessagesProps {
   readItemIds?: ReadonlySet<string>;
   /** Enables marking dismissible messages as read for the current user */
   onMarkRead?: (itemId: string) => void;
+  /** Reports whether at least one message is currently rendered */
+  onVisibilityChange?: (visible: boolean) => void;
 }
 
 export function OneMessages({
@@ -54,6 +57,7 @@ export function OneMessages({
   sourceTag,
   readItemIds,
   onMarkRead,
+  onVisibilityChange,
 }: OneMessagesProps) {
   const { t, i18n } = useTranslation();
   const messages = useOneMessages(i18n.language);
@@ -62,8 +66,13 @@ export function OneMessages({
     readItemIds ?
       messages.filter(message => !readItemIds.has(String(message.id)))
     : messages;
+  const hasVisibleMessages = visibleMessages.length > 0;
 
-  if (!visibleMessages.length) {
+  useEffect(() => {
+    onVisibilityChange?.(hasVisibleMessages);
+  }, [onVisibilityChange, hasVisibleMessages]);
+
+  if (!hasVisibleMessages) {
     return emptyMessage ? <EmptyText>{emptyMessage}</EmptyText> : null;
   }
 

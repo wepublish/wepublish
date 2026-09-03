@@ -11,7 +11,7 @@ import {
   NotificationItem,
   NotificationSeverity,
 } from '@wepublish/ui/editor';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Message, toaster } from 'rsuite';
 
@@ -66,6 +66,8 @@ export interface PeriodicJobsLogProps {
    * hidden for the whole team, mirroring action-required changelog entries.
    */
   teamConfirm?: boolean;
+  /** Reports whether at least one log item or notice is currently rendered */
+  onVisibilityChange?: (visible: boolean) => void;
 }
 
 const NEVER_RAN_ITEM_ID = 'never-ran';
@@ -80,6 +82,7 @@ export function PeriodicJobsLog({
   onlyProblems = false,
   sourceTag,
   teamConfirm = false,
+  onVisibilityChange,
 }: PeriodicJobsLogProps) {
   const { t } = useTranslation();
   const [toConfirm, setToConfirm] = useState<JobLogToConfirm | null>(null);
@@ -200,7 +203,14 @@ export function PeriodicJobsLog({
   const hasVisibleProblems =
     showDidNotRun || showNeverRan || visibleJobs.length > 0;
 
-  if (onlyProblems && (loading || !hasVisibleProblems)) {
+  // While the problems-only variant is still loading, nothing is shown yet.
+  const hasVisibleItems = hasVisibleProblems && !(onlyProblems && loading);
+
+  useEffect(() => {
+    onVisibilityChange?.(hasVisibleItems);
+  }, [onVisibilityChange, hasVisibleItems]);
+
+  if (onlyProblems && !hasVisibleItems) {
     return null;
   }
 
