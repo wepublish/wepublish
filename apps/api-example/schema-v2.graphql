@@ -105,6 +105,7 @@ type ArticleRevision implements HasBlockContent & HasOptionalUserLc {
   preTitle: String
   properties: [Property!]!
   publishedAt: DateTime
+  seoDescription: String
   seoTitle: String
   socialMediaAuthors: [Author!]!
   socialMediaDescription: String
@@ -856,6 +857,12 @@ type DiscountCode implements HasMemberPlanLc {
   memberPlan: MemberPlan!
   memberPlanId: String!
   modifiedAt: DateTime!
+
+  """Number of redemptions of this discountCode on paid invoices."""
+  paidUsageCount: Int!
+
+  """Number of times this discountCode was redeemed."""
+  usageCount: Int!
   validFrom: DateTime!
   validTo: DateTime!
 }
@@ -1546,6 +1553,7 @@ type InvoiceConnection {
 
 input InvoiceFilter {
   canceledAt: DateFilter
+  discountCodeId: String
   mail: String
   paidAt: DateFilter
   subscriptionID: String
@@ -2192,7 +2200,7 @@ type Mutation {
   confirmEmailChange(newEmail: String!): SensitiveDataUser!
 
   """Creates an article."""
-  createArticle(authorIds: [String!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, imageID: String, lead: String, likes: Int, paywallId: String, preTitle: String, properties: [PropertyInput!]!, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
+  createArticle(authorIds: [String!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, imageID: String, lead: String, likes: Int, paywallId: String, preTitle: String, properties: [PropertyInput!]!, seoDescription: String, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
 
   """Creates a new author."""
   createAuthor(bio: RichText, hideOnArticle: Boolean!, hideOnTeam: Boolean!, hideOnTeaser: Boolean!, imageID: String, jobTitle: String, links: [AuthorLinkInput!]!, name: String!, slug: Slug!, tagIds: [String!]!): Author!
@@ -2249,7 +2257,7 @@ type Mutation {
   createNavigation(key: String!, links: [NavigationLinkInput!]!, name: String!): Navigation!
 
   """Creates an page."""
-  createPage(blocks: [BlockContentInput!]!, description: String, hidden: Boolean!, imageID: String, properties: [PropertyInput!]!, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
+  createPage(blocks: [BlockContentInput!]!, description: String, hidden: Boolean!, imageID: String, properties: [PropertyInput!]!, seoDescription: String, seoTitle: String, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
 
   """
   This mutation allows to create payment by taking an input of type PaymentFromInvoiceInput.
@@ -2616,7 +2624,7 @@ type Mutation {
   updateAnalyticsProviderSetting(articlePrefix: String, credentials: SettingAnalyticsCredentialsInput, id: String, name: String, property: String): SettingAnalyticsProvider!
 
   """Updates an article."""
-  updateArticle(authorIds: [String!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, id: String!, imageID: String, lead: String, likes: Int, paywallId: String, preTitle: String, properties: [PropertyInput!]!, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
+  updateArticle(authorIds: [String!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, id: String!, imageID: String, lead: String, likes: Int, paywallId: String, preTitle: String, properties: [PropertyInput!]!, seoDescription: String, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
 
   """Updates an existing author."""
   updateAuthor(bio: RichText, hideOnArticle: Boolean, hideOnTeam: Boolean, hideOnTeaser: Boolean, id: String!, imageID: String, jobTitle: String, links: [AuthorLinkInput!], name: String, slug: Slug, tagIds: [String!]): Author!
@@ -2674,7 +2682,7 @@ type Mutation {
   updateNavigation(id: String!, key: String!, links: [NavigationLinkInput!]!, name: String!): Navigation!
 
   """Updates an page."""
-  updatePage(blocks: [BlockContentInput!]!, description: String, hidden: Boolean!, id: String!, imageID: String, properties: [PropertyInput!]!, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
+  updatePage(blocks: [BlockContentInput!]!, description: String, hidden: Boolean!, id: String!, imageID: String, properties: [PropertyInput!]!, seoDescription: String, seoTitle: String, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
 
   """
   This mutation allows to update the user's password by entering the new password. The repeated new password gives an error if the passwords don't match or if the user is not authenticated.
@@ -2872,6 +2880,8 @@ type PageRevision implements HasBlockContent & HasOptionalUserLc {
   imageID: String
   properties: [Property!]!
   publishedAt: DateTime
+  seoDescription: String
+  seoTitle: String
   socialMediaDescription: String
   socialMediaImage: Image
   socialMediaImageID: String

@@ -34,6 +34,7 @@ import {
   BlockMap,
   BlockValue,
   createCheckedPermissionComponent,
+  DocumentUrlProvider,
   EditorTemplate,
   InfoData,
   ListicleBlockListValue,
@@ -179,6 +180,7 @@ function ArticleEditor() {
     title: '',
     lead: '',
     seoTitle: '',
+    seoDescription: '',
     authors: [],
     tags: [],
     defaultTags: [],
@@ -357,6 +359,7 @@ function ArticleEditor() {
         preTitle,
         title,
         seoTitle,
+        seoDescription,
         lead,
         breaking,
         authors,
@@ -381,6 +384,7 @@ function ArticleEditor() {
         title: title ?? '',
         lead: lead ?? '',
         seoTitle: seoTitle ?? '',
+        seoDescription: seoDescription ?? '',
         tags: tags.map(({ id }) => id),
         defaultTags: tags,
         url,
@@ -566,6 +570,7 @@ function ArticleEditor() {
       title: metadata.title,
       lead: metadata.lead,
       seoTitle: metadata.seoTitle,
+      seoDescription: metadata.seoDescription,
       authorIds: metadata.authors.map(({ id }) => id),
       imageID: metadata.image?.id,
       breaking: metadata.breaking,
@@ -903,13 +908,15 @@ function ArticleEditor() {
             />
           }
         >
-          <BlockList
-            itemId={articleID}
-            value={blocks}
-            onChange={handleChange}
-            disabled={isLoading || isDisabled || !isAuthorized}
-            blockMap={BlockMap}
-          />
+          <DocumentUrlProvider documentUrl={articleData?.article?.url}>
+            <BlockList
+              itemId={articleID}
+              value={blocks}
+              onChange={handleChange}
+              disabled={isLoading || isDisabled || !isAuthorized}
+              blockMap={BlockMap}
+            />
+          </DocumentUrlProvider>
         </EditorTemplate>
       </FieldSet>
 

@@ -678,7 +678,9 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
         {!hasUser && returningUserId && (
           <SubscribeSection area="returning">
             <H5 component="h2">
-              {`Hallo ${defaults?.firstName ?? ''} ${defaults?.name ?? ''}`.trim()}
+              <span data-sentry-mask>
+                {`Hallo ${defaults?.firstName ?? ''} ${defaults?.name ?? ''}`.trim()}
+              </span>
               , willkommen zurück!
             </H5>
           </SubscribeSection>

@@ -15,6 +15,7 @@ model ArticleRevision {
   title                  String?
   lead                   String?
   seoTitle               String?
+  seoDescription         String?
   canonicalUrl           String?
   properties             Json                               @default("[]")
   authors                ArticleRevisionAuthor[]
@@ -828,6 +829,8 @@ model PageRevision {
   archivedAt             DateTime? @db.Timestamptz(3)
   title                  String?
   description            String?
+  seoTitle               String?
+  seoDescription         String?
   properties             Json      @default("[]")
   socialMediaTitle       String?
   socialMediaDescription String?
