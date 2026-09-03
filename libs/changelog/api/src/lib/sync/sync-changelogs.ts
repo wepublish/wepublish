@@ -7,12 +7,17 @@ import {
 
 export const CHANGELOG_FILE_NAME = 'changelog.md';
 export const CHANGELOG_FOLDER_PATTERN = /^(\d{14})_[a-z0-9_]+$/;
-export const CHANGELOG_LOCALES = ['de', 'en', 'fr'];
+export const CHANGELOG_LOCALES = ['de', 'en', 'fr'] as const;
+
+export type ChangelogLocale = (typeof CHANGELOG_LOCALES)[number];
+
+export const isChangelogLocale = (value: string): value is ChangelogLocale =>
+  (CHANGELOG_LOCALES as readonly string[]).includes(value);
 
 const TRANSLATION_FILE_PATTERN = /^changelog\.([a-z]{2,5})\.md$/;
 
 export type ChangelogTranslationData = {
-  locale: string;
+  locale: ChangelogLocale;
   title: string;
   lead: string;
   description: string | null;
@@ -162,7 +167,7 @@ async function readChangelogTranslations(
 
     const locale = match[1];
 
-    if (!CHANGELOG_LOCALES.includes(locale)) {
+    if (!isChangelogLocale(locale)) {
       throw new Error(
         `"${dirent.name}" has an unsupported locale "${locale}". Supported: ${CHANGELOG_LOCALES.join(', ')}`
       );

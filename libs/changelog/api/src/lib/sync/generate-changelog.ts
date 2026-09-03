@@ -3,8 +3,8 @@ import path from 'path';
 import { buildChangelogFolderName } from './create-changelog';
 import {
   CHANGELOG_FILE_NAME,
-  CHANGELOG_LOCALES,
   ChangelogEntryData,
+  isChangelogLocale,
   readChangelogEntry,
 } from './sync-changelogs';
 
@@ -129,10 +129,7 @@ export function parseGenerationResult(
   const validated: Record<string, GeneratedChangelogContent> = {};
 
   for (const [locale, content] of Object.entries(entries)) {
-    if (
-      locale !== GENERATION_BASE_LOCALE &&
-      !CHANGELOG_LOCALES.includes(locale)
-    ) {
+    if (locale !== GENERATION_BASE_LOCALE && !isChangelogLocale(locale)) {
       throw new Error(
         `Claude reply contains an unsupported locale "${locale}"`
       );

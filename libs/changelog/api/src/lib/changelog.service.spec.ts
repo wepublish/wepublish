@@ -68,7 +68,7 @@ describe('ChangelogService', () => {
         },
         include: {
           translations: {
-            where: { locale: '' },
+            where: { locale: { in: [] } },
           },
         },
       });
@@ -153,7 +153,7 @@ describe('ChangelogService', () => {
         expect.objectContaining({
           include: {
             translations: {
-              where: { locale: 'de' },
+              where: { locale: { in: ['de'] } },
             },
           },
         })

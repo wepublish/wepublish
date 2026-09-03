@@ -1,11 +1,19 @@
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'fs';
 import os from 'os';
 import path from 'path';
+import { Locale } from '@prisma/client';
 import {
+  CHANGELOG_LOCALES,
   parseChangelogFolderTimestamp,
   readChangelogEntry,
   syncChangelogs,
 } from './sync-changelogs';
+
+describe('CHANGELOG_LOCALES', () => {
+  it('matches the Locale enum of the database schema', () => {
+    expect([...CHANGELOG_LOCALES].sort()).toEqual(Object.values(Locale).sort());
+  });
+});
 
 const writeEntry = (
   directory: string,

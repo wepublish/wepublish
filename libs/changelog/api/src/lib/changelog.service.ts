@@ -6,6 +6,7 @@ import {
 import {
   ChangelogEntry,
   ChangelogEntryTranslation,
+  Locale,
   Prisma,
   PrismaClient,
 } from '@prisma/client';
@@ -14,6 +15,9 @@ import {
   ChangelogEntryFilter,
   ChangelogEntryListArgs,
 } from './changelog-entry.model';
+
+const isLocale = (value?: string): value is Locale =>
+  !!value && Object.values(Locale).includes(value as Locale);
 
 @Injectable()
 export class ChangelogService {
@@ -26,6 +30,7 @@ export class ChangelogService {
     locale,
   }: ChangelogEntryListArgs) {
     const where = createChangelogEntryFilter(filter);
+    const localeFilter = isLocale(locale) ? [locale] : [];
 
     const [totalCount, entries] = await Promise.all([
       this.prisma.changelogEntry.count({
@@ -40,7 +45,7 @@ export class ChangelogService {
         },
         include: {
           translations: {
-            where: { locale: locale ?? '' },
+            where: { locale: { in: localeFilter } },
           },
         },
       }),
@@ -92,7 +97,7 @@ export class ChangelogService {
         })
       );
 
-    if (!locale) {
+    if (!isLocale(locale)) {
       return confirmed;
     }
 

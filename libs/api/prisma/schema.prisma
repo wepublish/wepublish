@@ -2203,12 +2203,18 @@ model ChangelogEntry {
   @@map("changelog.entries")
 }
 
+enum Locale {
+  de
+  en
+  fr
+}
+
 model ChangelogEntryTranslation {
   id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
-  locale      String
+  locale      Locale
   title       String
   lead        String
   description String?
