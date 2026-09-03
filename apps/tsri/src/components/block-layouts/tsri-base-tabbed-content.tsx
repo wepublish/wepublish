@@ -37,6 +37,7 @@ export const TsriTabbedContent = cond([
       <HeroTeaserWithTabbedContent
         {...props}
         blockStyleByIndex={blockStyleByIndexTabbedSidebarContent}
+        randomizeTab
       />
     ),
   ],
@@ -47,6 +48,7 @@ export const TsriTabbedContent = cond([
         {...props}
         blockStyleByIndex={blockStyleByIndexTabbedMainContent}
         cssByBlockStyle={cssByBlockStyleTabbedMainContent}
+        randomizeTab
       />
     ),
   ],
