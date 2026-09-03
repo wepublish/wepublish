@@ -1,0 +1,15 @@
+query ZettelkastenEnabled {
+  zettelkastenEnabled
+}
+
+query ZettelkastenSearch($query: String!, $limit: Int, $offset: Int) {
+  zettelkastenSearch(query: $query, limit: $limit, offset: $offset)
+}
+
+query ZettelkastenPage($page: String!) {
+  zettelkastenPage(page: $page)
+}
+
+query ZettelkastenEvidence($evidence: String!, $quote: String) {
+  zettelkastenEvidence(evidence: $evidence, quote: $quote)
+}

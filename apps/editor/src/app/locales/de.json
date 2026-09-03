@@ -3123,5 +3123,16 @@
         "empty": "Keine Einträge für diesen Filter."
       }
     }
+  },
+  "zettelkasten": {
+    "title": "Zettelkasten",
+    "close": "Schliessen",
+    "search": "Suchen",
+    "searchPlaceholder": "Dossiers durchsuchen",
+    "anchors": "Aus dem Artikel",
+    "backToHits": "Zurück zu den Treffern",
+    "noHits": "Keine Treffer",
+    "open": "Zettelkasten",
+    "factCommand": "Fakt"
   }
 }

@@ -3162,5 +3162,16 @@
         "empty": "No entries for this filter."
       }
     }
+  },
+  "zettelkasten": {
+    "title": "Knowledge base",
+    "close": "Close",
+    "search": "Search",
+    "searchPlaceholder": "Search the dossiers",
+    "anchors": "From the article",
+    "backToHits": "Back to the hits",
+    "noHits": "No hits",
+    "open": "Knowledge base",
+    "factCommand": "Fact"
   }
 }

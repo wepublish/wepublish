@@ -21,6 +21,7 @@ generates:
         DateTime: string
         Color: string
         Slug: string
+        JSON: unknown
         RichText: RichtextJSONDocument
         Upload: File
       withHooks: true

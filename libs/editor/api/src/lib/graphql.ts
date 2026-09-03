@@ -23,6 +23,8 @@ export type Scalars = {
   DateTime: string;
   /** Setting Value */
   GraphQLSettingValueType: any;
+  /** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
+  JSON: unknown;
   /** The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
   JSONObject: any;
   RichText: RichtextJSONDocument;
@@ -5227,6 +5229,18 @@ export type Query = {
   versionInformation: VersionInformation;
   /** Returns the website settings, requires authentication to get sensitive settings. */
   websiteSettings: WebsiteSettings;
+  /** Full text search over articles and newsletters (archiv_suche). */
+  zettelkastenArchive: Scalars['JSON'];
+  /** The latest journal entries (tagesrapport). */
+  zettelkastenDailyReport: Scalars['JSON'];
+  /** Whether this editor has an enabled, complete knowledge provider setting. */
+  zettelkastenEnabled: Scalars['Boolean'];
+  /** The raw store entry behind a fact, optionally checking a quote (quelle_zeigen). */
+  zettelkastenEvidence: Scalars['JSON'];
+  /** One dossier page with all facts and source lines (wiki_seite). */
+  zettelkastenPage: Scalars['JSON'];
+  /** Full text search over the dossiers (wiki_suche). */
+  zettelkastenSearch: Scalars['JSON'];
 };
 
 
@@ -5943,6 +5957,37 @@ export type QueryUsersArgs = {
   skip?: Scalars['Int'];
   sort?: UserSort;
   take?: Scalars['Int'];
+};
+
+
+export type QueryZettelkastenArchiveArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  query: Scalars['String'];
+  source?: InputMaybe<Scalars['String']>;
+};
+
+
+export type QueryZettelkastenDailyReportArgs = {
+  count?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryZettelkastenEvidenceArgs = {
+  evidence: Scalars['String'];
+  quote?: InputMaybe<Scalars['String']>;
+};
+
+
+export type QueryZettelkastenPageArgs = {
+  page: Scalars['String'];
+};
+
+
+export type QueryZettelkastenSearchArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  query: Scalars['String'];
 };
 
 export type QuoteBlock = BaseBlock & HasImage & {
@@ -9720,6 +9765,35 @@ export type VersionInformationQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type VersionInformationQuery = { __typename?: 'Query', versionInformation: { __typename?: 'VersionInformation', version: string } };
+
+export type ZettelkastenEnabledQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ZettelkastenEnabledQuery = { __typename?: 'Query', zettelkastenEnabled: boolean };
+
+export type ZettelkastenSearchQueryVariables = Exact<{
+  query: Scalars['String'];
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type ZettelkastenSearchQuery = { __typename?: 'Query', zettelkastenSearch: unknown };
+
+export type ZettelkastenPageQueryVariables = Exact<{
+  page: Scalars['String'];
+}>;
+
+
+export type ZettelkastenPageQuery = { __typename?: 'Query', zettelkastenPage: unknown };
+
+export type ZettelkastenEvidenceQueryVariables = Exact<{
+  evidence: Scalars['String'];
+  quote?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type ZettelkastenEvidenceQuery = { __typename?: 'Query', zettelkastenEvidence: unknown };
 
 export const ArticleCreatedActionRevisionFragmentDoc = gql`
     fragment ArticleCreatedActionRevision on ArticleRevision {
@@ -22054,6 +22128,140 @@ export function useVersionInformationLazyQuery(baseOptions?: Apollo.LazyQueryHoo
 export type VersionInformationQueryHookResult = ReturnType<typeof useVersionInformationQuery>;
 export type VersionInformationLazyQueryHookResult = ReturnType<typeof useVersionInformationLazyQuery>;
 export type VersionInformationQueryResult = Apollo.QueryResult<VersionInformationQuery, VersionInformationQueryVariables>;
+export const ZettelkastenEnabledDocument = gql`
+    query ZettelkastenEnabled {
+  zettelkastenEnabled
+}
+    `;
+
+/**
+ * __useZettelkastenEnabledQuery__
+ *
+ * To run a query within a React component, call `useZettelkastenEnabledQuery` and pass it any options that fit your needs.
+ * When your component renders, `useZettelkastenEnabledQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useZettelkastenEnabledQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useZettelkastenEnabledQuery(baseOptions?: Apollo.QueryHookOptions<ZettelkastenEnabledQuery, ZettelkastenEnabledQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ZettelkastenEnabledQuery, ZettelkastenEnabledQueryVariables>(ZettelkastenEnabledDocument, options);
+      }
+export function useZettelkastenEnabledLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ZettelkastenEnabledQuery, ZettelkastenEnabledQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ZettelkastenEnabledQuery, ZettelkastenEnabledQueryVariables>(ZettelkastenEnabledDocument, options);
+        }
+export type ZettelkastenEnabledQueryHookResult = ReturnType<typeof useZettelkastenEnabledQuery>;
+export type ZettelkastenEnabledLazyQueryHookResult = ReturnType<typeof useZettelkastenEnabledLazyQuery>;
+export type ZettelkastenEnabledQueryResult = Apollo.QueryResult<ZettelkastenEnabledQuery, ZettelkastenEnabledQueryVariables>;
+export const ZettelkastenSearchDocument = gql`
+    query ZettelkastenSearch($query: String!, $limit: Int, $offset: Int) {
+  zettelkastenSearch(query: $query, limit: $limit, offset: $offset)
+}
+    `;
+
+/**
+ * __useZettelkastenSearchQuery__
+ *
+ * To run a query within a React component, call `useZettelkastenSearchQuery` and pass it any options that fit your needs.
+ * When your component renders, `useZettelkastenSearchQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useZettelkastenSearchQuery({
+ *   variables: {
+ *      query: // value for 'query'
+ *      limit: // value for 'limit'
+ *      offset: // value for 'offset'
+ *   },
+ * });
+ */
+export function useZettelkastenSearchQuery(baseOptions: Apollo.QueryHookOptions<ZettelkastenSearchQuery, ZettelkastenSearchQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ZettelkastenSearchQuery, ZettelkastenSearchQueryVariables>(ZettelkastenSearchDocument, options);
+      }
+export function useZettelkastenSearchLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ZettelkastenSearchQuery, ZettelkastenSearchQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ZettelkastenSearchQuery, ZettelkastenSearchQueryVariables>(ZettelkastenSearchDocument, options);
+        }
+export type ZettelkastenSearchQueryHookResult = ReturnType<typeof useZettelkastenSearchQuery>;
+export type ZettelkastenSearchLazyQueryHookResult = ReturnType<typeof useZettelkastenSearchLazyQuery>;
+export type ZettelkastenSearchQueryResult = Apollo.QueryResult<ZettelkastenSearchQuery, ZettelkastenSearchQueryVariables>;
+export const ZettelkastenPageDocument = gql`
+    query ZettelkastenPage($page: String!) {
+  zettelkastenPage(page: $page)
+}
+    `;
+
+/**
+ * __useZettelkastenPageQuery__
+ *
+ * To run a query within a React component, call `useZettelkastenPageQuery` and pass it any options that fit your needs.
+ * When your component renders, `useZettelkastenPageQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useZettelkastenPageQuery({
+ *   variables: {
+ *      page: // value for 'page'
+ *   },
+ * });
+ */
+export function useZettelkastenPageQuery(baseOptions: Apollo.QueryHookOptions<ZettelkastenPageQuery, ZettelkastenPageQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ZettelkastenPageQuery, ZettelkastenPageQueryVariables>(ZettelkastenPageDocument, options);
+      }
+export function useZettelkastenPageLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ZettelkastenPageQuery, ZettelkastenPageQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ZettelkastenPageQuery, ZettelkastenPageQueryVariables>(ZettelkastenPageDocument, options);
+        }
+export type ZettelkastenPageQueryHookResult = ReturnType<typeof useZettelkastenPageQuery>;
+export type ZettelkastenPageLazyQueryHookResult = ReturnType<typeof useZettelkastenPageLazyQuery>;
+export type ZettelkastenPageQueryResult = Apollo.QueryResult<ZettelkastenPageQuery, ZettelkastenPageQueryVariables>;
+export const ZettelkastenEvidenceDocument = gql`
+    query ZettelkastenEvidence($evidence: String!, $quote: String) {
+  zettelkastenEvidence(evidence: $evidence, quote: $quote)
+}
+    `;
+
+/**
+ * __useZettelkastenEvidenceQuery__
+ *
+ * To run a query within a React component, call `useZettelkastenEvidenceQuery` and pass it any options that fit your needs.
+ * When your component renders, `useZettelkastenEvidenceQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useZettelkastenEvidenceQuery({
+ *   variables: {
+ *      evidence: // value for 'evidence'
+ *      quote: // value for 'quote'
+ *   },
+ * });
+ */
+export function useZettelkastenEvidenceQuery(baseOptions: Apollo.QueryHookOptions<ZettelkastenEvidenceQuery, ZettelkastenEvidenceQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ZettelkastenEvidenceQuery, ZettelkastenEvidenceQueryVariables>(ZettelkastenEvidenceDocument, options);
+      }
+export function useZettelkastenEvidenceLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ZettelkastenEvidenceQuery, ZettelkastenEvidenceQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ZettelkastenEvidenceQuery, ZettelkastenEvidenceQueryVariables>(ZettelkastenEvidenceDocument, options);
+        }
+export type ZettelkastenEvidenceQueryHookResult = ReturnType<typeof useZettelkastenEvidenceQuery>;
+export type ZettelkastenEvidenceLazyQueryHookResult = ReturnType<typeof useZettelkastenEvidenceLazyQuery>;
+export type ZettelkastenEvidenceQueryResult = Apollo.QueryResult<ZettelkastenEvidenceQuery, ZettelkastenEvidenceQueryVariables>;
 
       export interface PossibleTypesResultData {
         possibleTypes: {
