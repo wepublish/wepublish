@@ -3073,9 +3073,34 @@
       "searchPlaceholder": "Rechercher dans les dossiers",
       "anchors": "Tiré de l'article",
       "backToHits": "Retour aux résultats",
-      "noHits": "Aucun résultat",
+      "noHits": "Rien trouvé signifie: pas dans le fonds, pas faux.",
       "open": "Base de connaissances",
-      "factCommand": "Fait"
+      "factCommand": "Fait",
+      "noFacts": "Aucun fait dans cette section.",
+      "lastChecked": "Dernière vérification contre les sources: {{date}}",
+      "valid": "valable {{from}} à {{to}}",
+      "learned": "appris {{date}}",
+      "source": "Source",
+      "showEvidence": "Afficher la preuve",
+      "openOriginal": "Ouvrir l'original",
+      "backToDossier": "Retour au dossier",
+      "origin": {
+        "haus": "recherche maison",
+        "community": "du public, agrégé",
+        "namensvergleich": "concordance de nom, pas d'identité"
+      },
+      "evidence": {
+        "source": "Source de la collecte",
+        "fetchedAt": "Collecté",
+        "payload": "Contenu",
+        "payloadPresent": "présent dans le dépôt brut",
+        "payloadGone": "plus présent, le sha256 reste",
+        "quote": "Citation «{{quote}}»",
+        "quoteFound": "figure dans la preuve",
+        "quoteMissing": "ne figure pas dans la preuve",
+        "files": "Fichiers de la collecte ({{count}})",
+        "notes": "Remarques sur la preuve"
+      }
     }
   }
 }

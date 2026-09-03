@@ -21,6 +21,9 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdArrowBack, MdClose, MdSearch } from 'react-icons/md';
 
+import { DossierFact, parseDossier } from './dossier';
+import { DossierView } from './dossier-view';
+import { EvidenceView } from './evidence-view';
 import { pageIdFromEvidence } from './page-id';
 
 /** One hit of wiki_suche, as the door delivers it. */
@@ -56,6 +59,7 @@ export function ZettelkastenPanel({
   const { t } = useTranslation();
   const [query, setQuery] = useState(initialQuery ?? '');
   const [openPage, setOpenPage] = useState<string | null>(null);
+  const [openFact, setOpenFact] = useState<DossierFact | null>(null);
   const [search, { data, loading, error }] = useZettelkastenSearchLazyQuery();
   const [loadPage, { data: pageData, loading: pageLoading, error: pageError }] =
     useZettelkastenPageLazyQuery();
@@ -63,6 +67,7 @@ export function ZettelkastenPanel({
   const runSearch = (value: string) => {
     setQuery(value);
     setOpenPage(null);
+    setOpenFact(null);
 
     if (value.trim()) {
       search({ variables: { query: value.trim(), limit: 20, offset: 0 } });
@@ -156,7 +161,10 @@ export function ZettelkastenPanel({
         >
           <Button
             startIcon={<MdArrowBack />}
-            onClick={() => setOpenPage(null)}
+            onClick={() => {
+              setOpenPage(null);
+              setOpenFact(null);
+            }}
             sx={{ alignSelf: 'flex-start' }}
           >
             {t('zettelkasten.backToHits')}
@@ -165,21 +173,18 @@ export function ZettelkastenPanel({
           {pageError && (
             <Typography color="error">{pageError.message}</Typography>
           )}
-          {page && (
-            <>
-              <Typography
-                variant="caption"
-                color="text.secondary"
-              >
-                {page.beleg}
-              </Typography>
-              <Box
-                component="pre"
-                sx={{ whiteSpace: 'pre-wrap', fontSize: 13, m: 0 }}
-              >
-                {page.inhalt}
-              </Box>
-            </>
+          {page && openFact && (
+            <EvidenceView
+              fact={openFact}
+              onBack={() => setOpenFact(null)}
+            />
+          )}
+          {page && !openFact && (
+            <DossierView
+              dossier={parseDossier(page.inhalt)}
+              beleg={page.beleg}
+              onShowEvidence={setOpenFact}
+            />
           )}
         </Stack>
       )}

@@ -3169,9 +3169,34 @@
       "searchPlaceholder": "Search the dossiers",
       "anchors": "From the article",
       "backToHits": "Back to the hits",
-      "noHits": "No hits",
+      "noHits": "Nothing found means: not in the holdings, not wrong.",
       "open": "Knowledge base",
-      "factCommand": "Fact"
+      "factCommand": "Fact",
+      "noFacts": "No facts in this section.",
+      "lastChecked": "Last checked against the sources: {{date}}",
+      "valid": "valid {{from}} to {{to}}",
+      "learned": "learned {{date}}",
+      "source": "Source",
+      "showEvidence": "Show evidence",
+      "openOriginal": "Open original",
+      "backToDossier": "Back to the dossier",
+      "origin": {
+        "haus": "in-house research",
+        "community": "from the audience, aggregated",
+        "namensvergleich": "name match, not identity"
+      },
+      "evidence": {
+        "source": "Source of the fetch",
+        "fetchedAt": "Fetched",
+        "payload": "Payload",
+        "payloadPresent": "present in the raw store",
+        "payloadGone": "no longer present, sha256 remains",
+        "quote": "Quote «{{quote}}»",
+        "quoteFound": "stands in the evidence",
+        "quoteMissing": "does not stand in the evidence",
+        "files": "Files of the fetch ({{count}})",
+        "notes": "Notes on the evidence"
+      }
     }
   }
 }

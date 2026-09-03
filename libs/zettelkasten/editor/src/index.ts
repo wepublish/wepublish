@@ -1,3 +1,6 @@
 export * from './lib/fact-anchors';
 export * from './lib/zettelkasten-panel';
 export * from './lib/page-id';
+export * from './lib/dossier';
+export * from './lib/dossier-view';
+export * from './lib/evidence-view';

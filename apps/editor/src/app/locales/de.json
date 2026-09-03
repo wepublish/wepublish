@@ -3130,9 +3130,34 @@
       "searchPlaceholder": "Dossiers durchsuchen",
       "anchors": "Aus dem Artikel",
       "backToHits": "Zurück zu den Treffern",
-      "noHits": "Keine Treffer",
+      "noHits": "Nichts gefunden heisst: nicht im Bestand, nicht falsch.",
       "open": "Zettelkasten",
-      "factCommand": "Fakt"
+      "factCommand": "Fakt",
+      "noFacts": "Keine Fakten in diesem Abschnitt.",
+      "lastChecked": "Zuletzt gegen die Quellen geprüft: {{date}}",
+      "valid": "gültig {{from}} bis {{to}}",
+      "learned": "erfahren {{date}}",
+      "source": "Quelle",
+      "showEvidence": "Beleg zeigen",
+      "openOriginal": "Original öffnen",
+      "backToDossier": "Zurück zum Dossier",
+      "origin": {
+        "haus": "hauseigene Recherche",
+        "community": "aus dem Publikum, aggregiert",
+        "namensvergleich": "Namensvergleich, keine Identität"
+      },
+      "evidence": {
+        "source": "Quelle des Abrufs",
+        "fetchedAt": "Abgerufen",
+        "payload": "Nutzlast",
+        "payloadPresent": "in der Rohablage vorhanden",
+        "payloadGone": "nicht mehr vorhanden, sha256 bleibt",
+        "quote": "Zitat «{{quote}}»",
+        "quoteFound": "steht im Beleg",
+        "quoteMissing": "steht nicht im Beleg",
+        "files": "Dateien des Abrufs ({{count}})",
+        "notes": "Hinweise zur Beleglage"
+      }
     }
   }
 }
