@@ -1686,6 +1686,10 @@ export type KeyEnabledInput = {
   key?: InputMaybe<Scalars['String']>;
 };
 
+export enum KnowledgeProviderType {
+  Zettelkasten = 'ZETTELKASTEN'
+}
+
 export type ListicleBlock = BaseBlock & {
   __typename?: 'ListicleBlock';
   blockStyle?: Maybe<Scalars['String']>;
@@ -2550,6 +2554,8 @@ export type Mutation = {
   updateImage: Image;
   /** Updates an existing invoice. */
   updateInvoice: Invoice;
+  /** Updates an existing knowledge provider setting. */
+  updateKnowledgeProviderSetting: SettingKnowledgeProvider;
   /** Updates an existing mail provider setting. */
   updateMailProviderSetting: SettingMailProvider;
   /** Update an existing mail template */
@@ -3653,6 +3659,16 @@ export type MutationUpdateInvoiceArgs = {
   manuallySetAsPaidByUserId?: InputMaybe<Scalars['String']>;
   scheduledDeactivationAt?: InputMaybe<Scalars['DateTime']>;
   subscriptionID?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationUpdateKnowledgeProviderSettingArgs = {
+  enabled?: InputMaybe<Scalars['Boolean']>;
+  id: Scalars['String'];
+  name?: InputMaybe<Scalars['String']>;
+  tenant?: InputMaybe<Scalars['String']>;
+  token?: InputMaybe<Scalars['String']>;
+  url?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -5013,6 +5029,10 @@ export type Query = {
   invoice: Invoice;
   /** Returns a paginated list of invoices based on the filters given. */
   invoices: InvoiceConnection;
+  /** Returns a single knowledge provider setting by id. */
+  knowledgeProviderSetting: SettingKnowledgeProvider;
+  /** Returns all knowledge provider settings. */
+  knowledgeProviderSettings: Array<SettingKnowledgeProvider>;
   /** Paginated list of sent mails */
   mailLogs: PaginatedMailLog;
   /** Returns a single mail provider setting by id. */
@@ -5487,6 +5507,16 @@ export type QueryInvoicesArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   sort?: InputMaybe<InvoiceSort>;
   take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryKnowledgeProviderSettingArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QueryKnowledgeProviderSettingsArgs = {
+  filter?: InputMaybe<SettingKnowledgeProviderFilter>;
 };
 
 
@@ -6105,6 +6135,25 @@ export type SettingChallengeProviderFilter = {
 
 export type SettingFilter = {
   name?: InputMaybe<Scalars['String']>;
+};
+
+export type SettingKnowledgeProvider = SettingProvider & {
+  __typename?: 'SettingKnowledgeProvider';
+  createdAt: Scalars['DateTime'];
+  enabled: Scalars['Boolean'];
+  id: Scalars['String'];
+  lastLoadedAt: Scalars['DateTime'];
+  modifiedAt: Scalars['DateTime'];
+  name?: Maybe<Scalars['String']>;
+  tenant?: Maybe<Scalars['String']>;
+  type: KnowledgeProviderType;
+  url?: Maybe<Scalars['String']>;
+};
+
+export type SettingKnowledgeProviderFilter = {
+  id?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  type?: InputMaybe<KnowledgeProviderType>;
 };
 
 export type SettingMailProvider = SettingProvider & {
@@ -9025,6 +9074,23 @@ export type UpdateSettingsIntegrationsChallengeMutationVariables = Exact<{
 
 
 export type UpdateSettingsIntegrationsChallengeMutation = { __typename?: 'Mutation', updateChallengeProviderSetting: { __typename?: 'SettingChallengeProvider', createdAt: string, id: string, lastLoadedAt: string, modifiedAt: string, name?: string | null, type: ChallengeProviderType } };
+
+export type SettingsIntegrationsKnowledgeProviderQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type SettingsIntegrationsKnowledgeProviderQuery = { __typename?: 'Query', knowledgeProviderSettings: Array<{ __typename?: 'SettingKnowledgeProvider', createdAt: string, id: string, lastLoadedAt: string, modifiedAt: string, name?: string | null, type: KnowledgeProviderType, url?: string | null, tenant?: string | null, enabled: boolean }> };
+
+export type UpdateSettingsIntegrationsKnowledgeProviderMutationVariables = Exact<{
+  id: Scalars['String'];
+  name?: InputMaybe<Scalars['String']>;
+  url?: InputMaybe<Scalars['String']>;
+  token?: InputMaybe<Scalars['String']>;
+  tenant?: InputMaybe<Scalars['String']>;
+  enabled?: InputMaybe<Scalars['Boolean']>;
+}>;
+
+
+export type UpdateSettingsIntegrationsKnowledgeProviderMutation = { __typename?: 'Mutation', updateKnowledgeProviderSetting: { __typename?: 'SettingKnowledgeProvider', createdAt: string, id: string, lastLoadedAt: string, modifiedAt: string, name?: string | null, type: KnowledgeProviderType, url?: string | null, tenant?: string | null, enabled: boolean } };
 
 export type MailProviderSettingsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -19213,6 +19279,101 @@ export function useUpdateSettingsIntegrationsChallengeMutation(baseOptions?: Apo
 export type UpdateSettingsIntegrationsChallengeMutationHookResult = ReturnType<typeof useUpdateSettingsIntegrationsChallengeMutation>;
 export type UpdateSettingsIntegrationsChallengeMutationResult = Apollo.MutationResult<UpdateSettingsIntegrationsChallengeMutation>;
 export type UpdateSettingsIntegrationsChallengeMutationOptions = Apollo.BaseMutationOptions<UpdateSettingsIntegrationsChallengeMutation, UpdateSettingsIntegrationsChallengeMutationVariables>;
+export const SettingsIntegrationsKnowledgeProviderDocument = gql`
+    query SettingsIntegrationsKnowledgeProvider {
+  knowledgeProviderSettings {
+    createdAt
+    id
+    lastLoadedAt
+    modifiedAt
+    name
+    type
+    url
+    tenant
+    enabled
+  }
+}
+    `;
+
+/**
+ * __useSettingsIntegrationsKnowledgeProviderQuery__
+ *
+ * To run a query within a React component, call `useSettingsIntegrationsKnowledgeProviderQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSettingsIntegrationsKnowledgeProviderQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSettingsIntegrationsKnowledgeProviderQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useSettingsIntegrationsKnowledgeProviderQuery(baseOptions?: Apollo.QueryHookOptions<SettingsIntegrationsKnowledgeProviderQuery, SettingsIntegrationsKnowledgeProviderQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SettingsIntegrationsKnowledgeProviderQuery, SettingsIntegrationsKnowledgeProviderQueryVariables>(SettingsIntegrationsKnowledgeProviderDocument, options);
+      }
+export function useSettingsIntegrationsKnowledgeProviderLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SettingsIntegrationsKnowledgeProviderQuery, SettingsIntegrationsKnowledgeProviderQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SettingsIntegrationsKnowledgeProviderQuery, SettingsIntegrationsKnowledgeProviderQueryVariables>(SettingsIntegrationsKnowledgeProviderDocument, options);
+        }
+export type SettingsIntegrationsKnowledgeProviderQueryHookResult = ReturnType<typeof useSettingsIntegrationsKnowledgeProviderQuery>;
+export type SettingsIntegrationsKnowledgeProviderLazyQueryHookResult = ReturnType<typeof useSettingsIntegrationsKnowledgeProviderLazyQuery>;
+export type SettingsIntegrationsKnowledgeProviderQueryResult = Apollo.QueryResult<SettingsIntegrationsKnowledgeProviderQuery, SettingsIntegrationsKnowledgeProviderQueryVariables>;
+export const UpdateSettingsIntegrationsKnowledgeProviderDocument = gql`
+    mutation UpdateSettingsIntegrationsKnowledgeProvider($id: String!, $name: String, $url: String, $token: String, $tenant: String, $enabled: Boolean) {
+  updateKnowledgeProviderSetting(
+    id: $id
+    name: $name
+    url: $url
+    token: $token
+    tenant: $tenant
+    enabled: $enabled
+  ) {
+    createdAt
+    id
+    lastLoadedAt
+    modifiedAt
+    name
+    type
+    url
+    tenant
+    enabled
+  }
+}
+    `;
+export type UpdateSettingsIntegrationsKnowledgeProviderMutationFn = Apollo.MutationFunction<UpdateSettingsIntegrationsKnowledgeProviderMutation, UpdateSettingsIntegrationsKnowledgeProviderMutationVariables>;
+
+/**
+ * __useUpdateSettingsIntegrationsKnowledgeProviderMutation__
+ *
+ * To run a mutation, you first call `useUpdateSettingsIntegrationsKnowledgeProviderMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateSettingsIntegrationsKnowledgeProviderMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateSettingsIntegrationsKnowledgeProviderMutation, { data, loading, error }] = useUpdateSettingsIntegrationsKnowledgeProviderMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      name: // value for 'name'
+ *      url: // value for 'url'
+ *      token: // value for 'token'
+ *      tenant: // value for 'tenant'
+ *      enabled: // value for 'enabled'
+ *   },
+ * });
+ */
+export function useUpdateSettingsIntegrationsKnowledgeProviderMutation(baseOptions?: Apollo.MutationHookOptions<UpdateSettingsIntegrationsKnowledgeProviderMutation, UpdateSettingsIntegrationsKnowledgeProviderMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateSettingsIntegrationsKnowledgeProviderMutation, UpdateSettingsIntegrationsKnowledgeProviderMutationVariables>(UpdateSettingsIntegrationsKnowledgeProviderDocument, options);
+      }
+export type UpdateSettingsIntegrationsKnowledgeProviderMutationHookResult = ReturnType<typeof useUpdateSettingsIntegrationsKnowledgeProviderMutation>;
+export type UpdateSettingsIntegrationsKnowledgeProviderMutationResult = Apollo.MutationResult<UpdateSettingsIntegrationsKnowledgeProviderMutation>;
+export type UpdateSettingsIntegrationsKnowledgeProviderMutationOptions = Apollo.BaseMutationOptions<UpdateSettingsIntegrationsKnowledgeProviderMutation, UpdateSettingsIntegrationsKnowledgeProviderMutationVariables>;
 export const MailProviderSettingsDocument = gql`
     query MailProviderSettings {
   mailProviderSettings {
@@ -22117,6 +22278,7 @@ export type VersionInformationQueryResult = Apollo.QueryResult<VersionInformatio
       "SettingAIProvider",
       "SettingAnalyticsProvider",
       "SettingChallengeProvider",
+      "SettingKnowledgeProvider",
       "SettingMailProvider",
       "SettingPaymentProvider",
       "SettingSyncProvider",

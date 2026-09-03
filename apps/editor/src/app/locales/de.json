@@ -2347,6 +2347,7 @@
       "infoText": " Integrationen sind in We.Publish eingebaute Schnittstellen von Drittanbietern. Diese werden etwa verwendet, um Mails zu versenden oder Zahlungen sicher abzuwickeln.",
       "title": "Integrationen",
       "ai": "AI",
+      "knowledgeProvider": "Zettelkasten",
       "challengeProvider": "Challenge Provider",
       "paymentProvider": "Zahlungsanbieter",
       "trackingPixel": "Tracking Pixel",
@@ -2362,6 +2363,12 @@
       "aiSettings": {
         "apiKey": "API Key",
         "systemPrompt": "System Prompt"
+      },
+      "knowledgeProviderSettings": {
+        "url": "Adresse der REST-Schnittstelle",
+        "tenant": "Mandant",
+        "token": "Token",
+        "enabled": "Im Artikel-Editor aktiv"
       },
       "challengeSettings": {
         "secret": "Geheimnis (Secret)",

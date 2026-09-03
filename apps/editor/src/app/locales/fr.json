@@ -2290,6 +2290,7 @@
       "infoText": "Les intégrations sont des interfaces tierces intégrées à We.Publish. Elles sont utilisées, par exemple, pour envoyer des e-mails ou traiter des paiements en toute sécurité.",
       "title": "Intégrations",
       "ai": "Intégration AI",
+      "knowledgeProvider": "Base de connaissances",
       "challengeProvider": "Fournisseur de challenge",
       "paymentProvider": "Fournisseur de paiement",
       "trackingPixel": "Pixel de suivi",
@@ -2305,6 +2306,12 @@
       "aiSettings": {
         "apiKey": "Clé API",
         "systemPrompt": "Invite système (System Prompt)"
+      },
+      "knowledgeProviderSettings": {
+        "url": "Adresse de l'interface REST",
+        "tenant": "Mandant",
+        "token": "Jeton",
+        "enabled": "Actif dans l'éditeur d'articles"
       },
       "challengeSettings": {
         "secret": "Secret",

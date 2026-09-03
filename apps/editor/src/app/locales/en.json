@@ -2426,6 +2426,7 @@
       "infoText": "Integrations are third-party interfaces built into We.Publish. These are used, for example, to send emails or process payments securely.",
       "title": "Integrations",
       "ai": "AI",
+      "knowledgeProvider": "Knowledge base",
       "challengeProvider": "Challenge Provider",
       "paymentProvider": "Payment Provider",
       "trackingPixel": "Tracking Pixel",
@@ -2442,6 +2443,12 @@
       "aiSettings": {
         "apiKey": "API Key",
         "systemPrompt": "System Prompt"
+      },
+      "knowledgeProviderSettings": {
+        "url": "REST endpoint",
+        "tenant": "Tenant",
+        "token": "Token",
+        "enabled": "Active in the article editor"
       },
       "challengeSettings": {
         "secret": "Secret",

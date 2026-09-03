@@ -8,6 +8,7 @@ import {
 } from '@mui/material';
 import {
   CanGetAISettings,
+  CanGetKnowledgeProviderSettings,
   CanGetAnalyticsProviderSettings,
   CanGetChallengeProviderSettings,
   CanGetMailchimpSyncSettings,
@@ -24,6 +25,7 @@ import {
   MdSecurity,
   MdSmartToy,
   MdSync,
+  MdMenuBook,
 } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 
@@ -81,6 +83,13 @@ export function IntegrationList() {
       path: '/integrations/ai',
       icon: MdSmartToy,
       logos: [vercelLogo],
+    },
+    {
+      title: t('integrations.knowledgeProvider'),
+      permission: CanGetKnowledgeProviderSettings.id,
+      path: '/integrations/knowledge-provider',
+      icon: MdMenuBook,
+      logos: [],
     },
     {
       title: t('integrations.challengeProvider'),
