@@ -27,6 +27,10 @@ export const selectTeaserAuthors = (teaser: FullTeaserFragment) => {
     }
 
     case 'ArticleTeaser': {
+      if (teaser.article?.latest.hideAuthor) {
+        return null;
+      }
+
       return teaser.article?.latest.authors.filter(
         author => !author.hideOnTeaser
       );

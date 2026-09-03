@@ -1029,11 +1029,16 @@ const createAuthorFilter = (
       },
     };
 
+    const publishedAuthorFilter: Prisma.ArticleRevisionWhereInput = {
+      ...authorFilter,
+      hideAuthor: false,
+    };
+
     return {
       ArticleRevisionPublished:
         filter?.published ?
           {
-            articleRevision: authorFilter,
+            articleRevision: publishedAuthorFilter,
           }
         : undefined,
       ArticleRevisionDraft:
