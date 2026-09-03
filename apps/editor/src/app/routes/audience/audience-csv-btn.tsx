@@ -1,12 +1,13 @@
-import FileDownloadIcon from '@rsuite/icons/FileDownload';
 import {
   DailySubscriptionStatsUser,
   SubscriptionFilter,
 } from '@wepublish/editor/api';
-import { useExportSubscriptionsAsCsv } from '@wepublish/ui/editor';
+import {
+  SubscriptionExportDropdown,
+  useExportSubscriptions,
+} from '@wepublish/ui/editor';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button } from 'rsuite';
 
 import { AggregatedUsers, AudienceStatsComputed } from './useAudience';
 
@@ -23,7 +24,7 @@ export function AudienceCsvBtn({
   selectedStatKey,
   fileNameDate,
 }: AudienceCsvBtnProps) {
-  const { initDownload, getCsv, loading } = useExportSubscriptionsAsCsv();
+  const { initDownload, getCsv, loading } = useExportSubscriptions();
   const { t } = useTranslation();
 
   // helper functions for the csv download
@@ -34,37 +35,31 @@ export function AudienceCsvBtn({
     return audienceStats[selectedStatKey];
   }, [audienceStats, selectedStatKey]);
 
-  // main function to download the csv file
-  const downloadCsv = () => {
-    const filter: SubscriptionFilter = {
-      subscriptionIDs: filteredStats.map(
-        filteredStat => filteredStat.subscriptionID as string
-      ),
-    };
-
-    initDownload({
-      getCsv,
-      filter,
-      filename: `${fileNameDate}-${t(`audience.legend.${selectedStatKey}`)}`,
-      prefixByDate: false,
-    });
-  };
-
   const disableBtn = useMemo<boolean>(
     () => !audienceStats || !filteredStats.length,
     [audienceStats, filteredStats]
   );
 
   return (
-    <Button
-      disabled={disableBtn}
+    <SubscriptionExportDropdown
+      label={t('audienceCsvBtn.exportUsers')}
       loading={loading}
-      appearance="primary"
-      color="green"
-      startIcon={<FileDownloadIcon />}
-      onClick={() => downloadCsv()}
-    >
-      {t('audienceCsvBtn.exportUsers')}
-    </Button>
+      disabled={disableBtn}
+      onExport={format => {
+        const filter: SubscriptionFilter = {
+          subscriptionIDs: filteredStats.map(
+            filteredStat => filteredStat.subscriptionID as string
+          ),
+        };
+
+        return initDownload({
+          getCsv,
+          format,
+          filter,
+          filename: `${fileNameDate}-${t(`audience.legend.${selectedStatKey}`)}`,
+          prefixByDate: false,
+        });
+      }}
+    />
   );
 }

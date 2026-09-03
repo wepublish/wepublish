@@ -1799,7 +1799,6 @@
         "createdAt": "Created",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
         "deleted": "Deleted user",
-        "downloadCsv": "Download CSV",
         "email": "Email",
         "memberPlan": "Memberplan",
         "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
@@ -2291,6 +2290,15 @@
         "highProbability": "Subsequent renewals "
       }
     },
+    "audienceTableExport": {
+      "download": "Download",
+      "csv": "CSV (.csv)",
+      "xlsx": "Excel (.xlsx)",
+      "header": {
+        "renewedAndReplaced": "Renewed and replaced subscriptions",
+        "totalToBeRenewed": "Subscriptions to be renewed"
+      }
+    },
     "paywall": {
       "navbar": "Paywall",
       "form": {
@@ -2404,8 +2412,13 @@
       "gracePeriodHelpText": "If you use the paywall, allow users to read instantly after ordering a subscription, even if they don't pay eventually. This would apply to payments via bank transfer, for instance.",
       "days": "days"
     },
+    "subscriptionsExport": {
+      "download": "Download",
+      "csv": "CSV (.csv)",
+      "xlsx": "Excel (.xlsx)"
+    },
     "audienceCsvBtn": {
-      "exportUsers": "Download CSV"
+      "exportUsers": "Download users"
     },
     "search": "Search",
     "integrations": {

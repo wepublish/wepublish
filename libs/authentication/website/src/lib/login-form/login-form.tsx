@@ -222,9 +222,11 @@ export function LoginForm({
 
         {loginLinkSent && (
           <Alert severity="success">
-            {t('login.alertLoginLinkSent', {
-              email: loginWithEmail.data?.sendWebsiteLogin,
-            })}
+            <span data-sentry-mask>
+              {t('login.alertLoginLinkSent', {
+                email: loginWithEmail.data?.sendWebsiteLogin,
+              })}
+            </span>
           </Alert>
         )}
 

@@ -1779,7 +1779,6 @@
         "createdAt": "Erstellt",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
         "deleted": "Gelöschte:r Benutzer:in",
-        "downloadCsv": "CSV herunterladen",
         "email": "Email",
         "memberPlan": "Member-Plan",
         "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
@@ -2212,6 +2211,15 @@
         "highProbability": "Abo-Erneuerungen Stammkunden"
       }
     },
+    "audienceTableExport": {
+      "download": "Herunterladen",
+      "csv": "CSV (.csv)",
+      "xlsx": "Excel (.xlsx)",
+      "header": {
+        "renewedAndReplaced": "Erneuerte und ersetzte Abos",
+        "totalToBeRenewed": "Zu erneuernde Abos"
+      }
+    },
     "paywall": {
       "navbar": "Paywall",
       "form": {
@@ -2325,8 +2333,13 @@
       "gracePeriodHelpText": "Wenn deine Webseite eine Paywall verwendet, können die Nutzer alle Inhalte auch bei unbezahlten Abos sofort oder weiterhin lesen - innerhalb der Zahlungsfrist. Dies ist etwa bei Banküberweisung nützlich.",
       "days": "Tage"
     },
+    "subscriptionsExport": {
+      "download": "Herunterladen",
+      "csv": "CSV (.csv)",
+      "xlsx": "Excel (.xlsx)"
+    },
     "audienceCsvBtn": {
-      "exportUsers": "CSV herunterladen"
+      "exportUsers": "Nutzer:innen herunterladen"
     },
     "search": "Suche",
     "integrations": {
