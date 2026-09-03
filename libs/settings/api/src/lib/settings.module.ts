@@ -9,6 +9,9 @@ import { SettingDataloaderService } from './setting-dataloader.service';
 import { AISettingsResolver } from './integrations/ai-settings.resolver';
 import { AISettingsService } from './integrations/ai-settings.service';
 import { AISettingsDataloaderService } from './integrations/ai-settings-dataloader.service';
+import { KnowledgeProviderSettingsResolver } from './integrations/knowledge-provider-settings.resolver';
+import { KnowledgeProviderSettingsService } from './integrations/knowledge-provider-settings.service';
+import { KnowledgeProviderSettingsDataloaderService } from './integrations/knowledge-provider-settings-dataloader.service';
 import { ChallengeProviderSettingsResolver } from './integrations/challenge-provider-settings.resolver';
 import { ChallengeProviderSettingsService } from './integrations/challenge-provider-settings.service';
 import { ChallengeProviderSettingsDataloaderService } from './integrations/challenge-provider-settings-dataloader.service';
@@ -40,6 +43,9 @@ import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
     AISettingsResolver,
     AISettingsService,
     AISettingsDataloaderService,
+    KnowledgeProviderSettingsResolver,
+    KnowledgeProviderSettingsService,
+    KnowledgeProviderSettingsDataloaderService,
     ChallengeProviderSettingsResolver,
     ChallengeProviderSettingsService,
     ChallengeProviderSettingsDataloaderService,
@@ -65,6 +71,8 @@ import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
     SettingsService,
     AISettingsService,
     AISettingsDataloaderService,
+    KnowledgeProviderSettingsService,
+    KnowledgeProviderSettingsDataloaderService,
     ChallengeProviderSettingsService,
     ChallengeProviderSettingsDataloaderService,
     PaymentProviderSettingsService,

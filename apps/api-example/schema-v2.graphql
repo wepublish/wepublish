@@ -1603,6 +1603,10 @@ input KeyEnabledInput {
   key: String
 }
 
+enum KnowledgeProviderType {
+  ZETTELKASTEN
+}
+
 type ListicleBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
@@ -2668,6 +2672,9 @@ type Mutation {
 
   """Updates an existing invoice."""
   updateInvoice(currency: Currency, description: String, dueAt: DateTime, id: String!, items: [InvoiceItemInput!], mail: String, manuallySetAsPaidByUserId: String, scheduledDeactivationAt: DateTime, subscriptionID: String): Invoice!
+
+  """Updates an existing knowledge provider setting."""
+  updateKnowledgeProviderSetting(enabled: Boolean, id: String!, name: String, tenant: String, token: String, url: String): SettingKnowledgeProvider!
 
   """Updates an existing mail provider setting."""
   updateMailProviderSetting(apiKey: String, fromAddress: String, id: String, mailchimp_baseURL: String, mailgun_baseDomain: String, mailgun_mailDomain: String, name: String, replyToAddress: String, slack_webhookURL: String, smtp_host: String, smtp_port: Int, smtp_secure: Boolean, smtp_user: String, webhookEndpointSecret: String): SettingMailProvider!
@@ -3762,6 +3769,12 @@ type Query {
   """Returns a paginated list of invoices based on the filters given."""
   invoices(cursorId: String, filter: InvoiceFilter, order: SortOrder = Ascending, skip: Int = 0, sort: InvoiceSort = ModifiedAt, take: Int = 10): InvoiceConnection!
 
+  """Returns a single knowledge provider setting by id."""
+  knowledgeProviderSetting(id: String!): SettingKnowledgeProvider!
+
+  """Returns all knowledge provider settings."""
+  knowledgeProviderSettings(filter: SettingKnowledgeProviderFilter): [SettingKnowledgeProvider!]!
+
   """Paginated list of sent mails"""
   mailLogs(filter: MailLogFilter, skip: Int, take: Int): PaginatedMailLog!
 
@@ -4227,6 +4240,24 @@ input SettingChallengeProviderFilter {
 
 input SettingFilter {
   name: String
+}
+
+type SettingKnowledgeProvider implements SettingProvider {
+  createdAt: DateTime!
+  enabled: Boolean!
+  id: String!
+  lastLoadedAt: DateTime!
+  modifiedAt: DateTime!
+  name: String
+  tenant: String
+  type: KnowledgeProviderType!
+  url: String
+}
+
+input SettingKnowledgeProviderFilter {
+  id: String
+  name: String
+  type: KnowledgeProviderType
 }
 
 type SettingMailProvider implements SettingProvider {
