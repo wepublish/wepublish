@@ -1,5 +1,5 @@
 import { MockedProvider } from '@apollo/client/testing';
-import { Meta, StoryObj } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/react-vite';
 import { ComponentType } from 'react';
 import { ZettelkastenSearchDocument } from '@wepublish/editor/api';
 
