@@ -21,6 +21,8 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdArrowBack, MdClose, MdSearch } from 'react-icons/md';
 
+import { pageIdFromEvidence } from './page-id';
+
 /** One hit of wiki_suche, as the door delivers it. */
 type Hit = {
   titel: string;
@@ -55,7 +57,7 @@ export function ZettelkastenPanel({
   const [query, setQuery] = useState(initialQuery ?? '');
   const [openPage, setOpenPage] = useState<string | null>(null);
   const [search, { data, loading, error }] = useZettelkastenSearchLazyQuery();
-  const [loadPage, { data: pageData, loading: pageLoading }] =
+  const [loadPage, { data: pageData, loading: pageLoading, error: pageError }] =
     useZettelkastenPageLazyQuery();
 
   const runSearch = (value: string) => {
@@ -160,6 +162,9 @@ export function ZettelkastenPanel({
             {t('zettelkasten.backToHits')}
           </Button>
           {pageLoading && <CircularProgress size={20} />}
+          {pageError && (
+            <Typography color="error">{pageError.message}</Typography>
+          )}
           {page && (
             <>
               <Typography
@@ -194,11 +199,15 @@ export function ZettelkastenPanel({
                   alignItems="flex-start"
                   onClick={() => {
                     setOpenPage(hit.beleg);
-                    loadPage({ variables: { page: hit.beleg } });
+                    loadPage({
+                      variables: { page: pageIdFromEvidence(hit.beleg) },
+                    });
                   }}
                 >
                   <ListItemText
-                    primary={`${hit.titel} · ${hit.datum}`}
+                    primary={
+                      hit.datum ? `${hit.titel} · ${hit.datum}` : hit.titel
+                    }
                     secondary={
                       <>
                         <Typography
