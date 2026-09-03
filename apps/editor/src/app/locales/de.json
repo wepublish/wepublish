@@ -3157,7 +3157,8 @@
         "quoteMissing": "steht nicht im Beleg",
         "files": "Dateien des Abrufs ({{count}})",
         "notes": "Hinweise zur Beleglage"
-      }
+      },
+      "openEnd": "offen"
     }
   }
 }

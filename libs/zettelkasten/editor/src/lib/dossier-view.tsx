@@ -109,7 +109,10 @@ export function DossierView({
                       variant="outlined"
                       label={t('zettelkasten.valid', {
                         from: fact.validFrom,
-                        to: fact.validTo,
+                        to:
+                          fact.validTo === 'offen' ?
+                            t('zettelkasten.openEnd')
+                          : fact.validTo,
                       })}
                     />
                   )}

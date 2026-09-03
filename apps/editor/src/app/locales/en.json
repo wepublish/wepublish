@@ -3196,7 +3196,8 @@
         "quoteMissing": "does not stand in the evidence",
         "files": "Files of the fetch ({{count}})",
         "notes": "Notes on the evidence"
-      }
+      },
+      "openEnd": "open"
     }
   }
 }

@@ -3100,7 +3100,8 @@
         "quoteMissing": "ne figure pas dans la preuve",
         "files": "Fichiers de la collecte ({{count}})",
         "notes": "Remarques sur la preuve"
-      }
+      },
+      "openEnd": "ouvert"
     }
   }
 }
