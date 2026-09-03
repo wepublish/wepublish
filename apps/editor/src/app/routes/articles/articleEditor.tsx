@@ -52,8 +52,9 @@ import {
   useUnsavedChangesDialog,
   VersionHistory,
   VersionHistoryRevision,
+  RichTextBlockValue,
 } from '@wepublish/ui/editor';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   MdCloudUpload,
@@ -63,8 +64,19 @@ import {
   MdKeyboardBackspace,
   MdRemoveRedEye,
   MdSave,
+  MdMenuBook,
 } from 'react-icons/md';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useZettelkastenEnabledQuery } from '@wepublish/editor/api';
+import {
+  CommandItem,
+  RichtextCommandItemsContext,
+} from '@wepublish/richtext/editor';
+import {
+  extractFactAnchors,
+  richtextToText,
+  ZettelkastenPanel,
+} from '@wepublish/zettelkasten/editor';
 import {
   Badge,
   Drawer,
@@ -159,6 +171,14 @@ function ArticleEditor() {
     useDiscardArticleDraftMutation({});
 
   const [isMetaDrawerOpen, setMetaDrawerOpen] = useState(false);
+  const [isZettelkastenOpen, setZettelkastenOpen] = useState(false);
+  const [zettelkastenQuery, setZettelkastenQuery] = useState<
+    string | undefined
+  >();
+  const { data: zettelkastenData } = useZettelkastenEnabledQuery({
+    fetchPolicy: 'cache-first',
+  });
+  const zettelkastenEnabled = !!zettelkastenData?.zettelkastenEnabled;
   const [isPublishDialogOpen, setPublishDialogOpen] = useState(false);
   const [isVersionHistoryOpen, setVersionHistoryOpen] = useState(false);
   const [isVersionHistoryRequested, setVersionHistoryRequested] =
@@ -223,6 +243,52 @@ function ArticleEditor() {
   const isNew = id === undefined;
   const [blocks, setBlocks] = useState<BlockValue[]>(
     isNew ? InitialArticleBlocks : []
+  );
+
+  // Capitalised word pairs from the title and richtext blocks, offered to the
+  // knowledge base as searches. Deterministic, no model involved.
+  const factAnchors = useMemo(
+    () =>
+      extractFactAnchors(
+        blocks.flatMap(block => {
+          if (block.type === EditorBlockType.Title) {
+            const { preTitle, title, lead } = block.value as TitleBlockValue;
+            return [preTitle ?? '', title ?? '', lead ?? ''];
+          }
+
+          if (block.type === EditorBlockType.RichText) {
+            return [
+              richtextToText((block.value as RichTextBlockValue).richText),
+            ];
+          }
+
+          return [];
+        })
+      ),
+    [blocks]
+  );
+
+  // The /fact slash command, contributed to every richtext block while the
+  // knowledge provider is enabled. It hands the selected text to the panel.
+  const zettelkastenCommandItems = useMemo<CommandItem[]>(
+    () =>
+      zettelkastenEnabled ?
+        [
+          {
+            title: t('zettelkasten.factCommand'),
+            command: ({ editor, range }) => {
+              const { from, to } = editor.state.selection;
+              const selected = editor.state.doc
+                .textBetween(from, to, ' ')
+                .trim();
+              editor.chain().focus().deleteRange(range).run();
+              setZettelkastenQuery(selected || undefined);
+              setZettelkastenOpen(true);
+            },
+          },
+        ]
+      : [],
+    [zettelkastenEnabled, t]
   );
 
   const articleID = id || createData?.createArticle.id;
@@ -729,7 +795,7 @@ function ArticleEditor() {
   }, [isMetaDrawerOpen]);
 
   return (
-    <>
+    <RichtextCommandItemsContext.Provider value={zettelkastenCommandItems}>
       <FieldSet stateColor={stateColor}>
         <Legend>
           <Tag stateColor={stateColor}>{tagTitle}</Tag>
@@ -765,6 +831,20 @@ function ArticleEditor() {
                   >
                     {t('articleEditor.overview.metadata')}
                   </RIconButton>
+
+                  {zettelkastenEnabled && (
+                    <RIconButton
+                      icon={<MdMenuBook />}
+                      size="lg"
+                      className="actionButton"
+                      onClick={() => {
+                        setZettelkastenQuery(undefined);
+                        setZettelkastenOpen(true);
+                      }}
+                    >
+                      {t('zettelkasten.open')}
+                    </RIconButton>
+                  )}
 
                   {!isNew && (
                     <>
@@ -941,6 +1021,18 @@ function ArticleEditor() {
         />
       </Drawer>
 
+      <Drawer
+        open={isZettelkastenOpen}
+        size="sm"
+        onClose={() => setZettelkastenOpen(false)}
+      >
+        <ZettelkastenPanel
+          anchors={factAnchors}
+          initialQuery={zettelkastenQuery}
+          onClose={() => setZettelkastenOpen(false)}
+        />
+      </Drawer>
+
       <Modal
         open={isPublishDialogOpen}
         size="sm"
@@ -1016,7 +1108,7 @@ function ArticleEditor() {
           </MuiButton>
         </MuiDialogActions>
       </MuiDialog>
-    </>
+    </RichtextCommandItemsContext.Provider>
   );
 }
 
