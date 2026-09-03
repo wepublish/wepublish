@@ -995,14 +995,32 @@ const createTagsFilter = (
   return {};
 };
 
+const createAllTagsInFilter = (
+  filter: Partial<ArticleFilter>
+): Prisma.ArticleWhereInput => {
+  if (filter?.allTagsIn?.length) {
+    return {
+      AND: filter.allTagsIn.map(tagId => ({
+        tags: {
+          some: {
+            tagId,
+          },
+        },
+      })),
+    };
+  }
+
+  return {};
+};
+
 const createTagsNotInFilter = (
   filter: Partial<ArticleFilter>
 ): Prisma.ArticleWhereInput => {
   if (filter?.tagsNotIn?.length) {
     const hasNotTags = {
-      some: {
+      none: {
         tagId: {
-          notIn: filter.tagsNotIn,
+          in: filter.tagsNotIn,
         },
       },
     } satisfies Prisma.TaggedArticlesListRelationFilter;
@@ -1118,6 +1136,7 @@ export const createArticleFilter = (
     createLeadFilter(filter),
     createSharedFilter(filter),
     createTagsFilter(filter),
+    createAllTagsInFilter(filter),
     createTagsNotInFilter(filter),
     createAuthorFilter(filter),
     createHiddenFilter(filter),

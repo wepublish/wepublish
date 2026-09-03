@@ -32,15 +32,24 @@ import { useRouter } from 'next/router';
 import { anyPass } from 'ramda';
 import { ComponentProps } from 'react';
 
+import { isArchived, isNachtleben } from '../../src/archiviert';
 import { DuplicatedPaywall } from '../../src/components/hauptstadt-paywall';
 
 export const ArticleWrapperComments = styled(ArticleWrapper)``;
 export const ArticleWrapperAppendix = styled(ArticleWrapper)``;
 
-export default function ArticleBySlugOrId() {
+export interface StandaloneArticlePageProps {
+  slug?: string;
+  id?: string;
+}
+
+export function StandaloneArticlePage({
+  slug,
+  id,
+}: StandaloneArticlePageProps) {
   const router = useRouter();
   const {
-    query: { slug, id, articleId },
+    query: { articleId },
   } = router;
   const {
     elements: { H4 },
@@ -49,8 +58,8 @@ export default function ArticleBySlugOrId() {
   const { data } = useArticleQuery({
     fetchPolicy: 'cache-only',
     variables: {
-      slug: slug as string,
-      id: id as string,
+      slug,
+      id,
     },
   });
   const searchParams = useSearchParams();
@@ -144,64 +153,128 @@ export default function ArticleBySlugOrId() {
   );
 }
 
+export default function ArticleBySlugOrId() {
+  const {
+    query: { slug, id },
+  } = useRouter();
+
+  return (
+    <StandaloneArticlePage
+      slug={slug as string}
+      id={id as string}
+    />
+  );
+}
+
 export const getStaticPaths = () => ({
   paths: [],
   fallback: 'blocking',
 });
 
-export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const { id, slug } = params || {};
-  const client = getApiClient(getApiUrl(), []);
+type ArticlePageVariant = 'default' | 'archive';
 
-  const [article] = await Promise.all([
-    client.query({
-      query: ArticleDocument,
-      variables: {
-        id,
-        slug,
-      },
-    }),
-    client.query({
-      query: NavigationListDocument,
-    }),
-    client.query({
-      query: PeerProfileDocument,
-    }),
-  ]);
-  const is404 = article.errors?.find(
-    ({ extensions }) => extensions?.status === 404
-  );
-  if (is404) {
-    return {
-      notFound: true,
-      revalidate: 1,
-    };
-  }
+const createArticleGetStaticProps =
+  (variant: ArticlePageVariant): GetStaticProps =>
+  async ({ params }) => {
+    const { id, slug } = params || {};
+    const client = getApiClient(getApiUrl(), []);
 
-  if (article.data?.article) {
-    await Promise.all([
+    const [article] = await Promise.all([
       client.query({
-        query: ArticleListDocument,
+        query: ArticleDocument,
         variables: {
-          filter: {
-            tags: article.data.article.tags.map((tag: Tag) => tag.id),
-          },
-          take: 4,
+          id,
+          slug,
         },
       }),
       client.query({
-        query: CommentListDocument,
-        variables: {
-          itemId: article.data.article.id,
-        },
+        query: NavigationListDocument,
+      }),
+      client.query({
+        query: PeerProfileDocument,
       }),
     ]);
-  }
+    const is404 = article.errors?.find(
+      ({ extensions }) => extensions?.status === 404
+    );
+    if (is404) {
+      return {
+        notFound: true,
+        revalidate: 1,
+      };
+    }
 
-  const props = addClientCacheToProps(client, {});
+    const articleData = article.data?.article;
 
-  return {
-    props,
-    revalidate: 60, // every 60 seconds
+    if (variant === 'default') {
+      // nachtleben articles permanently redirect to the ausgang-in-bern page
+      // so it inherits their page ranking; the archived ones stay readable
+      // under /archive/<slug> via the tag page
+      if (articleData && isNachtleben(articleData.tags)) {
+        return {
+          redirect: {
+            destination: '/ausgang-in-bern',
+            permanent: true,
+          },
+          revalidate: 60,
+        };
+      }
+
+      // other archived articles live under /archive/<slug>
+      // (see HauptstadtURLAdapter)
+      if (articleData && isArchived(articleData.tags) && articleData.slug) {
+        return {
+          redirect: {
+            destination: `/archive/${articleData.slug}`,
+            permanent: false,
+          },
+          revalidate: 60,
+        };
+      }
+    }
+
+    if (variant === 'archive') {
+      // only archived articles live under /archive — everything else keeps
+      // its canonical /a/<slug> url
+      if (articleData && !isArchived(articleData.tags)) {
+        return {
+          redirect: {
+            destination: `/a/${articleData.slug}`,
+            permanent: false,
+          },
+          revalidate: 60,
+        };
+      }
+    }
+
+    if (articleData) {
+      await Promise.all([
+        client.query({
+          query: ArticleListDocument,
+          variables: {
+            filter: {
+              tags: articleData.tags.map((tag: Tag) => tag.id),
+            },
+            take: 4,
+          },
+        }),
+        client.query({
+          query: CommentListDocument,
+          variables: {
+            itemId: articleData.id,
+          },
+        }),
+      ]);
+    }
+
+    const props = addClientCacheToProps(client, {});
+
+    return {
+      props,
+      revalidate: 60, // every 60 seconds
+    };
   };
-};
+
+export const getStaticProps = createArticleGetStaticProps('default');
+export const archiveArticleGetStaticProps =
+  createArticleGetStaticProps('archive');
