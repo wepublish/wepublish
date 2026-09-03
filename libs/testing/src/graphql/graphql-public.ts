@@ -108,6 +108,8 @@ export type ArticleCreatedAction = BaseAction &
   };
 
 export type ArticleFilter = {
+  /** Only include articles that have every one of these tags */
+  allTagsIn?: InputMaybe<Array<Scalars['String']>>;
   authors?: InputMaybe<Array<Scalars['String']>>;
   body?: InputMaybe<Scalars['String']>;
   draft?: InputMaybe<Scalars['Boolean']>;
@@ -4462,6 +4464,8 @@ export type PeerArticle = HasOptionalPeerLc & {
 };
 
 export type PeerArticleFilter = {
+  /** Only include articles that have every one of these tags */
+  allTagsIn?: InputMaybe<Array<Scalars['String']>>;
   authors?: InputMaybe<Array<Scalars['String']>>;
   body?: InputMaybe<Scalars['String']>;
   excludeIds?: InputMaybe<Array<Scalars['String']>>;

@@ -61,6 +61,8 @@ type ArticleCreatedAction implements BaseAction & HasArticleLc {
 }
 
 input ArticleFilter {
+  """Only include articles that have every one of these tags"""
+  allTagsIn: [String!]
   authors: [String!]
   body: String
   draft: Boolean
@@ -3290,6 +3292,8 @@ type PeerArticle implements HasOptionalPeerLc {
 }
 
 input PeerArticleFilter {
+  """Only include articles that have every one of these tags"""
+  allTagsIn: [String!]
   authors: [String!]
   body: String
   excludeIds: [String!]
