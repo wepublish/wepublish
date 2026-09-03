@@ -10,8 +10,11 @@ import TextAlign from '@tiptap/extension-text-align';
 import Typography from '@tiptap/extension-typography';
 import { TableKit } from '@tiptap/extension-table';
 import i18next from 'i18next';
-import { CommandItem, Commands } from './editor/extensions/commands';
-import { createCommandSuggestions } from './editor/extensions/commands/command-suggestions';
+import { Commands } from './editor/extensions/commands';
+import {
+  CommandItemsSource,
+  createCommandSuggestions,
+} from './editor/extensions/commands/command-suggestions';
 import { InvisibleCharacters } from './editor/extensions/invisible-characters';
 import { HeadingId } from './editor/extensions/heading-id';
 import { LinkVariant } from './editor/extensions/link-variant';
@@ -24,7 +27,7 @@ import { SmilieReplacer } from './editor/extensions/emoji';
  * `commandItems` are slash commands an integration contributes; they are
  * appended to the built-in ones. See `createCommandSuggestions`.
  */
-const createExtensions = (commandItems: CommandItem[] = []) => [
+const createExtensions = (commandItems: CommandItemsSource = []) => [
   TextStyleKit.configure({
     fontSize: false,
     fontFamily: false,
@@ -107,10 +110,10 @@ const createExtensions = (commandItems: CommandItem[] = []) => [
 export type EditorConfigOptions = {
   /**
    * Additional slash commands, contributed by an integration such as a
-   * knowledge provider. Optional; without them the editor behaves exactly as
-   * it did before this option existed.
+   * knowledge provider. A list or a function returning the current list.
+   * Optional; without them the editor behaves exactly as before.
    */
-  commandItems?: CommandItem[];
+  commandItems?: CommandItemsSource;
 };
 
 export const createEditorConfig = ({

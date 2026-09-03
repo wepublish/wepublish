@@ -104,4 +104,15 @@ describe('createCommandSuggestions', () => {
 
     expect(befehl).toHaveBeenCalledWith({ editor: {}, range });
   });
+
+  it('asks a provider function for the contributed items on every request', () => {
+    const contributed: CommandItem[] = [];
+    const suggestions = createCommandSuggestions(() => contributed);
+
+    expect(titles(suggestions)).toEqual(['Table', 'Quote', 'Code']);
+
+    contributed.push(item('Fakt'));
+
+    expect(titles(suggestions)).toEqual(['Table', 'Quote', 'Code', 'Fakt']);
+  });
 });

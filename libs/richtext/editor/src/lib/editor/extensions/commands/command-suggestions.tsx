@@ -48,10 +48,22 @@ const builtInCommandItems = (): CommandItem[] => [
  * writer relies on. Filtering and the limit of ten apply to the combined
  * list.
  */
-export const createCommandSuggestions = (additionalItems: CommandItem[] = []) =>
+/**
+ * Where contributed slash commands come from: a fixed list, or a function that
+ * is asked every time the list is requested. The function form lets a
+ * component change the contributed commands without rebuilding the editor.
+ */
+export type CommandItemsSource = CommandItem[] | (() => CommandItem[]);
+
+const resolveItems = (source: CommandItemsSource): CommandItem[] =>
+  typeof source === 'function' ? source() : source;
+
+export const createCommandSuggestions = (
+  additionalItems: CommandItemsSource = []
+) =>
   ({
     items: ({ query }) =>
-      [...builtInCommandItems(), ...additionalItems]
+      [...builtInCommandItems(), ...resolveItems(additionalItems)]
         .filter(item =>
           item.title.toLowerCase().startsWith(query.toLowerCase())
         )
