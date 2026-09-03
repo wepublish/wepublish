@@ -1,4 +1,12 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Int,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import { DiscountCodeService } from './discountCode.service';
 import {
   CreateDiscountCodeInput,
@@ -15,13 +23,15 @@ import {
 } from '@wepublish/permissions';
 import { Permissions } from '@wepublish/permissions/api';
 import { DiscountCodeDataloader } from './discountCode.dataloader';
+import { DiscountCodeUsageDataloader } from './discount-code-usage.dataloader';
 import { NotFoundException } from '@nestjs/common';
 
 @Resolver(() => DiscountCode)
 export class DiscountCodeResolver {
   constructor(
     private discountCodeservice: DiscountCodeService,
-    private dataloader: DiscountCodeDataloader
+    private dataloader: DiscountCodeDataloader,
+    private usageDataloader: DiscountCodeUsageDataloader
   ) {}
 
   @Permissions(CanGetDiscountCode)
@@ -68,5 +78,19 @@ export class DiscountCodeResolver {
   })
   public deleteDiscountCode(@Args('id') id: string) {
     return this.discountCodeservice.deleteDiscountCode(id);
+  }
+
+  @ResolveField(() => Int, {
+    description: 'Number of times this discountCode was redeemed.',
+  })
+  public async usageCount(@Parent() { id }: DiscountCode) {
+    return (await this.usageDataloader.load(id))?.total ?? 0;
+  }
+
+  @ResolveField(() => Int, {
+    description: 'Number of redemptions of this discountCode on paid invoices.',
+  })
+  public async paidUsageCount(@Parent() { id }: DiscountCode) {
+    return (await this.usageDataloader.load(id))?.paid ?? 0;
   }
 }

@@ -14,10 +14,13 @@ const nextConfig = {
   },
   env: {
     APP_ENVIRONMENT: process.env.APP_ENVIRONMENT,
+    APP_NAME: process.env.APP_NAME,
+    APP_RELEASE_ID: process.env.APP_RELEASE_ID,
     SSR_FETCH_TIMEOUT_MS: process.env.SSR_FETCH_TIMEOUT_MS,
     API_URL_INTERNAL: process.env.API_URL_INTERNAL || '',
     API_URL: process.env.API_URL || '',
     WEBSITE_URL: process.env.WEBSITE_URL || '',
+    SENTRY_DSN: process.env.SENTRY_DSN || undefined,
   },
   webpack(config, { webpack }) {
     /**
