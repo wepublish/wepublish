@@ -3065,17 +3065,17 @@
         "attempts": "Tentatives",
         "empty": "Aucune entrée pour ce filtre."
       }
+    },
+    "zettelkasten": {
+      "title": "Base de connaissances",
+      "close": "Fermer",
+      "search": "Rechercher",
+      "searchPlaceholder": "Rechercher dans les dossiers",
+      "anchors": "Tiré de l'article",
+      "backToHits": "Retour aux résultats",
+      "noHits": "Aucun résultat",
+      "open": "Base de connaissances",
+      "factCommand": "Fait"
     }
-  },
-  "zettelkasten": {
-    "title": "Base de connaissances",
-    "close": "Fermer",
-    "search": "Rechercher",
-    "searchPlaceholder": "Rechercher dans les dossiers",
-    "anchors": "Tiré de l'article",
-    "backToHits": "Retour aux résultats",
-    "noHits": "Aucun résultat",
-    "open": "Base de connaissances",
-    "factCommand": "Fait"
   }
 }
