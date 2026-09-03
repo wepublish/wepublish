@@ -381,6 +381,27 @@ describe('MediaService images', () => {
       .png()
       .toBuffer();
 
+  const createRotatedJpeg = () =>
+    sharp({
+      create: {
+        width: 8,
+        height: 4,
+        channels: 3,
+        background: { r: 200, g: 100, b: 50 },
+      },
+    })
+      .jpeg()
+      .withMetadata({ orientation: 6 })
+      .toBuffer();
+
+  const collectStream = async (stream: Readable) => {
+    const chunks: Buffer[] = [];
+    for await (const chunk of stream) {
+      chunks.push(chunk as Buffer);
+    }
+    return Buffer.concat(chunks);
+  };
+
   it('stores the uploaded image with its own content type', async () => {
     const { service, storage } = createService();
 
@@ -403,5 +424,39 @@ describe('MediaService images', () => {
     expect(storage.contentTypeOf(TRANSFORMATION_BUCKET, uri)).toBe(
       'image/webp'
     );
+  });
+
+  it('bakes the exif orientation into the stored image', async () => {
+    const { service, storage } = createService();
+
+    const returned = await service.saveImage(
+      'image-2',
+      await createRotatedJpeg()
+    );
+
+    const stored = await collectStream(
+      await storage.getFile(UPLOAD_BUCKET, 'images/image-2')
+    );
+    const metadata = await sharp(stored).metadata();
+    expect(metadata.width).toBe(4);
+    expect(metadata.height).toBe(8);
+    expect(metadata.orientation ?? 1).toBe(1);
+    expect(returned.width).toBe(4);
+    expect(returned.height).toBe(8);
+    expect(storage.contentTypeOf(UPLOAD_BUCKET, 'images/image-2')).toBe(
+      'image/jpeg'
+    );
+  });
+
+  it('stores an image without exif orientation byte-identical', async () => {
+    const { service, storage } = createService();
+    const image = await createImage();
+
+    await service.saveImage('image-3', image);
+
+    const stored = await collectStream(
+      await storage.getFile(UPLOAD_BUCKET, 'images/image-3')
+    );
+    expect(stored.equals(image)).toBe(true);
   });
 });
