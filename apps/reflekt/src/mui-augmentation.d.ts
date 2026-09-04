@@ -27,6 +27,7 @@ declare module '@mui/material/styles' {
     navbarTab: CSSProperties;
     tocHeading: CSSProperties;
     tocDetails: CSSProperties;
+    toc: CSSProperties;
     ulToc: CSSProperties;
     liToc: CSSProperties;
     linkToc: CSSProperties;
@@ -65,6 +66,7 @@ declare module '@mui/material/styles' {
     headerCategoryLink?: CSSProperties;
     tocHeading?: CSSProperties;
     tocDetails?: CSSProperties;
+    toc?: CSSProperties;
     ulToc?: CSSProperties;
     liToc?: CSSProperties;
     linkToc?: CSSProperties;
@@ -106,6 +108,7 @@ declare module '@mui/material/Typography' {
     navbarTab: true;
     tocHeading: true;
     tocDetails: true;
+    toc: true;
     ulToc: true;
     liToc: true;
     linkToc: true;

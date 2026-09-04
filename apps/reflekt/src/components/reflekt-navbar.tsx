@@ -49,6 +49,8 @@ enum ScrollDirection {
   Down,
 }
 
+const NAVBAR_HEIGHT_PX = 75;
+
 const cssVariables = (state: NavbarState[], isHomePage: boolean) => css`
   :root {
     ${isHomePage ?
@@ -188,8 +190,8 @@ export const NavbarHamburgerButton = styled(IconButton, {
     propName !== 'isMenuOpen' && propName !== 'isTransitioning',
 })<{ isMenuOpen: boolean; isTransitioning: boolean }>`
   background-color: ${theme.palette.primary.dark};
-  width: 75px;
-  height: 75px;
+  width: ${NAVBAR_HEIGHT_PX}px;
+  height: ${NAVBAR_HEIGHT_PX}px;
   border-radius: 0;
   transition: transform 100ms ease-out;
   position: relative;
@@ -478,7 +480,7 @@ export const NavPaperWrapper = styled('div', {
   shouldForwardProp: propName =>
     propName !== 'isMenuOpen' && propName !== 'isTransitioning',
 })<{ isMenuOpen: boolean; isTransitioning: boolean }>`
-  padding: calc(${theme.spacing(2)} + var(--navbar-height)) ${theme.spacing(2)}
+  padding: calc(${theme.spacing(2)} + ${NAVBAR_HEIGHT_PX}px) ${theme.spacing(2)}
     0 22.5px;
   background-color: ${theme.palette.primary.dark};
   color: ${theme.palette.common.white};
@@ -501,7 +503,7 @@ export const NavPaperWrapper = styled('div', {
 
   ${theme.breakpoints.up('md')} {
     row-gap: unset;
-    padding: calc(${theme.spacing(5)} + var(--navbar-height))
+    padding: calc(${theme.spacing(5)} + ${NAVBAR_HEIGHT_PX}px)
       ${theme.spacing(2)} 0 27px;
     grid-template-columns: 60px 1fr;
     grid-template-rows: min-content min-content;
@@ -657,7 +659,7 @@ export const NavbarInnerWrapper = styled(Toolbar, {
     `}
 `;
 
-const SubscribeBtn = styled(Link)`
+export const SubscribeBtn = styled(Link)`
   margin-left: auto;
 `;
 
@@ -681,7 +683,7 @@ export const ReflektNavbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
       hasUnpaidInvoices,
       loginBtn = { href: '/login' },
       profileBtn = { href: '/profile' },
-      subscribeBtn = { href: '/mitmachen' },
+      subscribeBtn = { href: '/crowdfunding' },
       isMenuOpen: controlledIsMenuOpen,
       onMenuToggle,
       navPaperClassName,
@@ -785,35 +787,62 @@ export const ReflektNavbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
 
     useImperativeHandle(forwardRef, () => ref.current!, []);
 
-    useEffect(() => {
-      if (typeof ResizeObserver !== 'undefined') {
-        const observer = new ResizeObserver(() => {
-          handleResize();
-        });
+    const lastNavbarHeightRef = useRef<number | null>(null);
+    const rafRef = useRef<number | null>(null);
 
-        if (!ref.current) {
+    useEffect(() => {
+      const el = ref.current;
+      if (!el) {
+        return;
+      }
+
+      const root = el.ownerDocument.documentElement;
+
+      const measure = () => {
+        rafRef.current = null;
+
+        if (isHomePage) {
+          root.style.removeProperty('--navbar-height');
+          lastNavbarHeightRef.current = null;
           return;
         }
 
-        observer.observe(ref.current);
+        const height = Math.round(el.getBoundingClientRect().height);
+        if (height === lastNavbarHeightRef.current) {
+          return;
+        }
 
-        return () =>
-          ref?.current ? observer.unobserve(ref.current) : undefined;
+        lastNavbarHeightRef.current = height;
+        root.style.setProperty('--navbar-height', `${height}px`);
+      };
+
+      const schedule = () => {
+        if (rafRef.current != null) {
+          return;
+        }
+        rafRef.current = requestAnimationFrame(measure);
+      };
+
+      schedule();
+
+      let cleanup: () => void;
+      if (typeof ResizeObserver !== 'undefined') {
+        const observer = new ResizeObserver(schedule);
+        observer.observe(el);
+        cleanup = () => observer.disconnect();
+      } else {
+        const win = el.ownerDocument.defaultView;
+        win?.addEventListener('resize', schedule);
+        cleanup = () => win?.removeEventListener('resize', schedule);
       }
 
-      window.addEventListener('resize', handleResize);
-
-      return () => window.removeEventListener('resize', handleResize);
-    }, [ref]);
-
-    function handleResize() {
-      if (ref?.current) {
-        ref.current.ownerDocument.documentElement.setAttribute(
-          'style',
-          `--navbar-height: ${ref.current.getBoundingClientRect().height}px`
-        );
-      }
-    }
+      return () => {
+        if (rafRef.current != null) {
+          cancelAnimationFrame(rafRef.current);
+        }
+        cleanup();
+      };
+    }, [ref, isHomePage]);
 
     return (
       <NavbarWrapper

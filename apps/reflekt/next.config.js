@@ -145,6 +145,11 @@ const nextConfig = {
           '/a/zuercher-unternehmer-war-pokerchef-der-gluecksspielmafia',
         permanent: true,
       },
+      {
+        source: '/mitmachen',
+        destination: '/crowdfunding',
+        permanent: false,
+      },
     ];
   },
 };

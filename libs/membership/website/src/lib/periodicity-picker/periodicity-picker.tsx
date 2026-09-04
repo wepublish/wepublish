@@ -1,8 +1,16 @@
 import { FormControl, InputLabel, Select } from '@mui/material';
 import styled from '@emotion/styled';
 import { PaymentPeriodicity } from '@wepublish/website/api';
-import { BuilderPeriodicityPickerProps } from '@wepublish/website/builder';
+import {
+  BuilderPeriodicityPickerProps,
+  useWebsiteBuilder,
+} from '@wepublish/website/builder';
 import { forwardRef, useEffect, useId } from 'react';
+import { formatCurrency } from '../formatters/format-currency';
+import {
+  getPeriodicityLabel,
+  getPeriodPriceRange,
+} from '../formatters/format-payment-period';
 import { formatRenewalPeriod } from '../formatters/format-renewal-period';
 
 export const PeriodicityPickerWrapper = styled(FormControl)`
@@ -13,9 +21,12 @@ export const PeriodicityPicker = forwardRef<
   HTMLButtonElement,
   BuilderPeriodicityPickerProps
 >(function PeriodicityPicker(
-  { periodicities, onChange, value, className, name },
+  { periodicities, memberPlan, onChange, value, className, name },
   ref
 ) {
+  const {
+    meta: { locale },
+  } = useWebsiteBuilder();
   const id = useId();
   const show = periodicities && periodicities.length > 1;
 
@@ -28,6 +39,27 @@ export const PeriodicityPicker = forwardRef<
   if (!show) {
     return null;
   }
+
+  const formatOption = (period: PaymentPeriodicity): string => {
+    const base = formatRenewalPeriod(period);
+
+    if (!memberPlan) {
+      return base;
+    }
+
+    const priceRange = getPeriodPriceRange(memberPlan, period);
+    const isFixed =
+      priceRange.amountMax != null &&
+      priceRange.amountMax === priceRange.amountMin;
+    const price = `${isFixed ? '' : 'ab '}${formatCurrency(
+      priceRange.amountMin / 100,
+      memberPlan.currency,
+      locale
+    )}`;
+    const label = getPeriodicityLabel(memberPlan, period);
+
+    return `${base} – ${price}${label ? ` (${label})` : ''}`;
+  };
 
   return (
     <PeriodicityPickerWrapper className={className}>
@@ -48,7 +80,7 @@ export const PeriodicityPicker = forwardRef<
               key={period}
               value={period}
             >
-              {formatRenewalPeriod(period)}
+              {formatOption(period)}
             </option>
           ))}
         </Select>
