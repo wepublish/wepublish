@@ -59,7 +59,7 @@ export const getArticleSEO = (article: Article) => {
   const headline = firstTitle?.title || article.latest.title;
   const url = article.latest.canonicalUrl ?? article.url;
 
-  const firstAuthor = article.latest.authors.at(0);
+  const firstAuthor = article.latest.authors.at(0)?.author;
 
   return {
     type: 'article',
@@ -72,7 +72,7 @@ export const getArticleSEO = (article: Article) => {
     tags: article.tags,
     updatedAt: article.latest.publishedAt,
     publishedAt: article.publishedAt,
-    authors: article.latest.authors ?? [],
+    authors: article.latest.authors.map(({ author }) => author),
     schema: {
       '@context': 'http://schema.org',
       '@type': 'NewsArticle',

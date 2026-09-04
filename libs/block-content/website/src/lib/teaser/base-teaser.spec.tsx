@@ -62,8 +62,8 @@ describe('Teaser', () => {
           latest: {
             hideAuthor,
             authors: [
-              { name: 'Visible Author', hideOnTeaser: false },
-              { name: 'Hidden Author', hideOnTeaser: true },
+              { author: { name: 'Visible Author', hideOnTeaser: false } },
+              { author: { name: 'Hidden Author', hideOnTeaser: true } },
             ],
           },
         },
