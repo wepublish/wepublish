@@ -13,6 +13,7 @@ export const mockTag = ({
   tag,
   description,
   main,
+  color: null,
   url: faker.internet.url(),
   type: TagType.Article,
 });
