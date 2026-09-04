@@ -8,9 +8,10 @@ import {
 } from '@wepublish/website/api';
 import {
   BuilderPollBlockProps,
+  BuilderRouterContext,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { PollBlockResult } from './poll-block-result';
 import { usePollBlock } from './poll-block.context';
 import { H4 } from '@wepublish/ui';
@@ -59,6 +60,9 @@ export const PollBlock = ({ poll, className }: BuilderPollBlockProps) => {
 
   const { hasUser } = useUser();
   const {
+    query: { answerId: autoVoteAnswerId },
+  } = useContext(BuilderRouterContext);
+  const {
     elements: { Button, H4, Alert },
     blocks: { RichText },
     date,
@@ -105,6 +109,27 @@ export const PollBlock = ({ poll, className }: BuilderPollBlockProps) => {
       }).then(setLoggedInVote);
     }
   }, [fetchUserVote, poll, hasUser]);
+
+  useEffect(() => {
+    if (
+      !poll ||
+      typeof autoVoteAnswerId !== 'string' ||
+      !poll.answers.some(answer => answer.id === autoVoteAnswerId)
+    ) {
+      return;
+    }
+
+    setVoteResult({
+      loading: true,
+    });
+
+    vote({ variables: { answerId: autoVoteAnswerId } }, poll.id).then(result =>
+      setVoteResult({
+        ...result,
+        loading: false,
+      })
+    );
+  }, [autoVoteAnswerId, poll, vote]);
 
   if (!poll) {
     return null;
