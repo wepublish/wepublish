@@ -1,9 +1,6 @@
 -- CreateEnum
 CREATE TYPE "KnowledgeProviderType" AS ENUM ('zettelkasten');
 
--- AlterEnum
-ALTER TYPE "BlockType" ADD VALUE 'mailchimpForm';
-
 -- CreateTable
 CREATE TABLE "settings.knowledgeprovider" (
     "id" TEXT NOT NULL,
