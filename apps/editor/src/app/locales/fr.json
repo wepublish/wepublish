@@ -715,7 +715,8 @@
       "goToAudienceDashboard": "Audience Dashboard",
       "externalApps": "We.Publish Apps",
       "networkContent": "Du réseau We.Publish",
-      "goToNetwork": "Aller au réseau"
+      "goToNetwork": "Aller au réseau",
+      "zettelkasten": "Base de connaissances : nouveautés"
     },
     "dateTimePicker": {
       "hour": "{{hour}}:00",
@@ -3088,6 +3089,12 @@
         "haus": "recherche maison",
         "community": "du public, agrégé",
         "namensvergleich": "concordance de nom, pas d'identité"
+      },
+      "report": {
+        "loading": "Chargement du rapport",
+        "feeds": "Sources",
+        "lint": "Lint",
+        "night": "Traitement nocturne"
       },
       "archive": {
         "title": "Nous en avons déjà parlé",

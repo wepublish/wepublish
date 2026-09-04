@@ -4,3 +4,5 @@ export * from './lib/page-id';
 export * from './lib/dossier';
 export * from './lib/dossier-view';
 export * from './lib/evidence-view';
+export * from './lib/daily-report';
+export * from './lib/daily-report-card';

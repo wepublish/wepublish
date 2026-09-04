@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { useZettelkastenEnabledQuery } from '@wepublish/editor/api';
 import { PeriodicJobsLog } from '@wepublish/membership/editor';
 import {
   ActivityFeed,
@@ -7,6 +8,7 @@ import {
   ListViewHeader,
   PermissionControl,
 } from '@wepublish/ui/editor';
+import { DailyReportCard } from '@wepublish/zettelkasten/editor';
 import { useTranslation } from 'react-i18next';
 import { MdChevronRight } from 'react-icons/md';
 import { Link } from 'react-router-dom';
@@ -22,6 +24,10 @@ const StyledGrid = styled(Grid)`
 
 export function Dashboard() {
   const { t } = useTranslation();
+  const { data: zettelkastenData } = useZettelkastenEnabledQuery({
+    fetchPolicy: 'cache-first',
+  });
+  const zettelkastenEnabled = !!zettelkastenData?.zettelkastenEnabled;
 
   return (
     <StyledGrid fluid>
@@ -37,6 +43,17 @@ export function Dashboard() {
                 <ExternalAppsDashboard />
               </RPanel>
             </Col>
+
+            {zettelkastenEnabled && (
+              <Col xs={24}>
+                <RPanel
+                  header={<h2>{t('dashboard.zettelkasten')}</h2>}
+                  bordered
+                >
+                  <DailyReportCard />
+                </RPanel>
+              </Col>
+            )}
 
             <Col xs={24}>
               <RPanel

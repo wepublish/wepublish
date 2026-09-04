@@ -711,7 +711,8 @@
       "goToAudienceDashboard": "Go to Audience Dashboard",
       "externalApps": "We.Publish Apps",
       "networkContent": "From the We.Publish Network",
-      "goToNetwork": "Go to Network"
+      "goToNetwork": "Go to Network",
+      "zettelkasten": "Knowledge base: what is new"
     },
     "dateTimePicker": {
       "hour": "{{hour}}:00",
@@ -3184,6 +3185,12 @@
         "haus": "in-house research",
         "community": "from the audience, aggregated",
         "namensvergleich": "name match, not identity"
+      },
+      "report": {
+        "loading": "Loading the report",
+        "feeds": "Feeds",
+        "lint": "Lint",
+        "night": "Night run"
       },
       "archive": {
         "title": "We have reported on this",

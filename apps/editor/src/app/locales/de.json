@@ -712,7 +712,8 @@
       "goToAudienceDashboard": "Zum Audience Dashboard",
       "externalApps": "We.Publish Apps",
       "networkContent": "Aus dem We.Publish-Netzwerk",
-      "goToNetwork": "Zum Netzwerk"
+      "goToNetwork": "Zum Netzwerk",
+      "zettelkasten": "Zettelkasten: was neu ist"
     },
     "dateTimePicker": {
       "hour": "{{hour}}:00",
@@ -3145,6 +3146,12 @@
         "haus": "hauseigene Recherche",
         "community": "aus dem Publikum, aggregiert",
         "namensvergleich": "Namensvergleich, keine Identität"
+      },
+      "report": {
+        "loading": "Rapport wird geladen",
+        "feeds": "Zubringer",
+        "lint": "Lint",
+        "night": "Nachtlauf"
       },
       "archive": {
         "title": "Dazu haben wir schon berichtet",
