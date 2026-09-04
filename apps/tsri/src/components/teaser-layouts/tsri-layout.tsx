@@ -5,6 +5,7 @@ import {
   BuilderTeaserSlotsBlockProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
+import { PropsWithChildren } from 'react';
 
 export enum TsriLayoutType {
   // basic teaser layouts
@@ -28,6 +29,9 @@ export enum TsriLayoutType {
 
   // hero teaser layouts
   HeroTeaser = 'HeroTeaser',
+
+  // dossier layouts
+  Dossier = 'Dossier',
 }
 
 export const TeaserLayoutWrapper = styled('div')`
@@ -68,10 +72,13 @@ export const TeaserSlots = ({
   alignmentForTeaserBlock,
   teaserBlockStyleByIndex,
   blockStyle,
-}: BuilderTeaserSlotsBlockProps & {
-  alignmentForTeaserBlock: (index: number, count?: number) => FlexAlignment;
-  teaserBlockStyleByIndex?: (index: number, count?: number) => string;
-}) => {
+  children,
+}: PropsWithChildren<
+  BuilderTeaserSlotsBlockProps & {
+    alignmentForTeaserBlock: (index: number, count?: number) => FlexAlignment;
+    teaserBlockStyleByIndex?: (index: number, count?: number) => string;
+  }
+>) => {
   const {
     blocks: { Teaser },
   } = useWebsiteBuilder();
@@ -80,6 +87,7 @@ export const TeaserSlots = ({
 
   return (
     <TeaserLayoutWrapper className={className}>
+      {children}
       {filledTeasers.map((teaser, index) => (
         <Teaser
           key={index}
