@@ -1,5 +1,9 @@
 {
   "translation": {
+    "previewHandshake": {
+      "popupBlocked": "The preview window was blocked by the browser. Please allow pop-ups for the editor and try again.",
+      "notResponding": "The preview window is not responding. The preview login may have failed."
+    },
     "oneMessages": {
       "header": "Messages from the We.Publish team",
       "expand": "Expand",
