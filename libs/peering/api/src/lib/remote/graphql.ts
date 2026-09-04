@@ -21,6 +21,8 @@ export type Scalars = {
   DateTime: string;
   /** Setting Value */
   GraphQLSettingValueType: any;
+  /** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
+  JSON: any;
   /** The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
   JSONObject: any;
   RichText: RichtextJSONDocument;
@@ -1684,6 +1686,10 @@ export type KeyEnabledInput = {
   key?: InputMaybe<Scalars['String']>;
 };
 
+export enum KnowledgeProviderType {
+  Zettelkasten = 'ZETTELKASTEN'
+}
+
 export type ListicleBlock = BaseBlock & {
   __typename?: 'ListicleBlock';
   blockStyle?: Maybe<Scalars['String']>;
@@ -2548,6 +2554,8 @@ export type Mutation = {
   updateImage: Image;
   /** Updates an existing invoice. */
   updateInvoice: Invoice;
+  /** Updates an existing knowledge provider setting. */
+  updateKnowledgeProviderSetting: SettingKnowledgeProvider;
   /** Updates an existing mail provider setting. */
   updateMailProviderSetting: SettingMailProvider;
   /** Update an existing mail template */
@@ -3651,6 +3659,16 @@ export type MutationUpdateInvoiceArgs = {
   manuallySetAsPaidByUserId?: InputMaybe<Scalars['String']>;
   scheduledDeactivationAt?: InputMaybe<Scalars['DateTime']>;
   subscriptionID?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationUpdateKnowledgeProviderSettingArgs = {
+  enabled?: InputMaybe<Scalars['Boolean']>;
+  id: Scalars['String'];
+  name?: InputMaybe<Scalars['String']>;
+  tenant?: InputMaybe<Scalars['String']>;
+  token?: InputMaybe<Scalars['String']>;
+  url?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -5011,6 +5029,10 @@ export type Query = {
   invoice: Invoice;
   /** Returns a paginated list of invoices based on the filters given. */
   invoices: InvoiceConnection;
+  /** Returns a single knowledge provider setting by id. */
+  knowledgeProviderSetting: SettingKnowledgeProvider;
+  /** Returns all knowledge provider settings. */
+  knowledgeProviderSettings: Array<SettingKnowledgeProvider>;
   /** Paginated list of sent mails */
   mailLogs: PaginatedMailLog;
   /** Returns a single mail provider setting by id. */
@@ -5205,6 +5227,20 @@ export type Query = {
   versionInformation: VersionInformation;
   /** Returns the website settings, requires authentication to get sensitive settings. */
   websiteSettings: WebsiteSettings;
+  /** For every anchor: how many wiki hits there are (wiki_suche, limit 1). Nothing is judged. */
+  zettelkastenAnchors: Scalars['JSON'];
+  /** Full text search over articles and newsletters (archiv_suche). */
+  zettelkastenArchive: Scalars['JSON'];
+  /** The latest journal entries (tagesrapport). */
+  zettelkastenDailyReport: Scalars['JSON'];
+  /** Whether this editor has an enabled, complete knowledge provider setting. */
+  zettelkastenEnabled: Scalars['Boolean'];
+  /** The raw store entry behind a fact, optionally checking a quote (quelle_zeigen). */
+  zettelkastenEvidence: Scalars['JSON'];
+  /** One dossier page with all facts and source lines (wiki_seite). */
+  zettelkastenPage: Scalars['JSON'];
+  /** Full text search over the dossiers (wiki_suche). */
+  zettelkastenSearch: Scalars['JSON'];
 };
 
 
@@ -5485,6 +5521,16 @@ export type QueryInvoicesArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   sort?: InputMaybe<InvoiceSort>;
   take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryKnowledgeProviderSettingArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QueryKnowledgeProviderSettingsArgs = {
+  filter?: InputMaybe<SettingKnowledgeProviderFilter>;
 };
 
 
@@ -5913,6 +5959,42 @@ export type QueryUsersArgs = {
   take?: Scalars['Int'];
 };
 
+
+export type QueryZettelkastenAnchorsArgs = {
+  anchors: Array<Scalars['String']>;
+};
+
+
+export type QueryZettelkastenArchiveArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  query: Scalars['String'];
+  source?: InputMaybe<Scalars['String']>;
+};
+
+
+export type QueryZettelkastenDailyReportArgs = {
+  count?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryZettelkastenEvidenceArgs = {
+  evidence: Scalars['String'];
+  quote?: InputMaybe<Scalars['String']>;
+};
+
+
+export type QueryZettelkastenPageArgs = {
+  page: Scalars['String'];
+};
+
+
+export type QueryZettelkastenSearchArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  query: Scalars['String'];
+};
+
 export type QuoteBlock = BaseBlock & HasImage & {
   __typename?: 'QuoteBlock';
   author?: Maybe<Scalars['String']>;
@@ -6103,6 +6185,25 @@ export type SettingChallengeProviderFilter = {
 
 export type SettingFilter = {
   name?: InputMaybe<Scalars['String']>;
+};
+
+export type SettingKnowledgeProvider = SettingProvider & {
+  __typename?: 'SettingKnowledgeProvider';
+  createdAt: Scalars['DateTime'];
+  enabled: Scalars['Boolean'];
+  id: Scalars['String'];
+  lastLoadedAt: Scalars['DateTime'];
+  modifiedAt: Scalars['DateTime'];
+  name?: Maybe<Scalars['String']>;
+  tenant?: Maybe<Scalars['String']>;
+  type: KnowledgeProviderType;
+  url?: Maybe<Scalars['String']>;
+};
+
+export type SettingKnowledgeProviderFilter = {
+  id?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  type?: InputMaybe<KnowledgeProviderType>;
 };
 
 export type SettingMailProvider = SettingProvider & {
@@ -7641,6 +7742,7 @@ export const PeerProfile = gql`
       "SettingAIProvider",
       "SettingAnalyticsProvider",
       "SettingChallengeProvider",
+      "SettingKnowledgeProvider",
       "SettingMailProvider",
       "SettingPaymentProvider",
       "SettingSyncProvider",
