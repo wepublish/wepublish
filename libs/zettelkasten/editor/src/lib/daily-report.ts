@@ -12,7 +12,10 @@ export type DailyReportEntry = {
 };
 
 const HEAD = /^## (\d{4}-\d{2}-\d{2}) (\S+)/;
-const FEEDS = /^Zubringer: (.+)$/m;
+// The journal writes the feed line with or without a qualifier between the
+// word and the colon: «Zubringer:» and «Zubringer für Sokrates:». Only the
+// part after the colon is shown, the qualifier is not.
+const FEEDS = /^Zubringer(?: [^:\n]+)?: (.+)$/m;
 const LINT = /^Lint: (.+)$/m;
 const NIGHT = /^Nachtlauf vom \S+: (.+)$/m;
 

@@ -12,6 +12,18 @@ const entry = [
   'Lint: 0 Widersprüche, 3 offene Fragen',
 ].join('\n');
 
+/** The entry of 2026-09-04, read verbatim from the holdings on the server. */
+const realEntry = `## 2026-09-04 mittagslauf
+
+Mandant: bajour.
+Zubringer für Sokrates: 5 von 5 durchgelaufen.
+
+- Newsletter über den Archiv-Feed (bajour): Angehaengt an /home/.../index/mailchimp_ausgaben.jsonl: 1 Ausgaben.
+- Frage des Tages nachfuehren (bajour): Die Kommentare liegen in community/, tilgbar mit werkzeuge/tilgung.py.
+- Lueckenwaechter Newsletter: 2 Werktag(e) ohne Ausgabe der Reihe basel-briefing im Fenster von 14 Tagen: 2026-08-28, 2026-09-03.
+- Volltextindex: Datei: /home/.../index/volltext.sqlite (640.2 MB)
+- Vorlagenprobe: Briefing 1675 vom 2026-09-04: 4 Hauptthemen, 3 Kurznews.`;
+
 /** The card asks for the last run only, and never through the cache. */
 const request = {
   query: ZettelkastenDailyReportDocument,
@@ -46,6 +58,15 @@ describe('DailyReportCard', () => {
     await waitFor(() =>
       expect(screen.getByText('2026-09-04 · nachtlauf')).toBeTruthy()
     );
+  });
+
+  it('shows the feed line of the real journal, whose word carries a qualifier', async () => {
+    renderCard(mockWith([realEntry]));
+
+    await waitFor(() =>
+      expect(screen.getByText('2026-09-04 · mittagslauf')).toBeTruthy()
+    );
+    expect(screen.getByText(/5 von 5 durchgelaufen\./)).toBeTruthy();
   });
 
   // The editor translations are not loaded in the test environment, so t()
