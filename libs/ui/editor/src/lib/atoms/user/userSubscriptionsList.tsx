@@ -64,8 +64,8 @@ const SectionTitle = styled.h6`
   margin: 0;
 `;
 
-const Panel = styled('div')`
-  &:first-child {
+const Panel = styled(Col)`
+  &:first-of-type {
     padding-bottom: 10px;
   }
   & + & {
@@ -262,12 +262,10 @@ function UserSubscriptionsList({
             <SubscriptionDetails span={12}>
               <Row>
                 {/* subscription details title */}
-                <Col span={24}>
+                <Panel span={24}>
                   <SectionTitle>
                     {t('userSubscriptionList.aboDetails')}
                   </SectionTitle>
-                </Col>
-                <Panel>
                   {/* created at */}
                   <Col span={24}>
                     <MdEvent css={commonIconMargin} />
@@ -335,9 +333,6 @@ function UserSubscriptionsList({
                   <SectionTitle>
                     {t('userSubscriptionList.periods')}
                   </SectionTitle>
-                </Col>
-                {/* iterate periods */}
-                <Col span={24}>
                   {sortPeriodsByNewest(subscription.periods).map(period => {
                     return (
                       <Panel key={period.id}>
