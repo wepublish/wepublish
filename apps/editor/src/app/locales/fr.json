@@ -3089,6 +3089,14 @@
         "community": "du public, agrégé",
         "namensvergleich": "concordance de nom, pas d'identité"
       },
+      "archive": {
+        "title": "Nous en avons déjà parlé",
+        "counts": "{{articles}} articles, {{newsletters}} numéros de la newsletter",
+        "source": {
+          "archiv": "Article",
+          "newsletter": "Newsletter"
+        }
+      },
       "evidence": {
         "source": "Source de la collecte",
         "fetchedAt": "Collecté",

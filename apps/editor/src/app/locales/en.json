@@ -3185,6 +3185,14 @@
         "community": "from the audience, aggregated",
         "namensvergleich": "name match, not identity"
       },
+      "archive": {
+        "title": "We have reported on this",
+        "counts": "{{articles}} articles, {{newsletters}} newsletter issues",
+        "source": {
+          "archiv": "Article",
+          "newsletter": "Newsletter"
+        }
+      },
       "evidence": {
         "source": "Source of the fetch",
         "fetchedAt": "Fetched",

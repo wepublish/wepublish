@@ -13,3 +13,21 @@ query ZettelkastenPage($page: String!) {
 query ZettelkastenEvidence($evidence: String!, $quote: String) {
   zettelkastenEvidence(evidence: $evidence, quote: $quote)
 }
+
+query ZettelkastenArchive(
+  $query: String!
+  $source: String
+  $limit: Int
+  $offset: Int
+) {
+  zettelkastenArchive(
+    query: $query
+    source: $source
+    limit: $limit
+    offset: $offset
+  )
+}
+
+query ZettelkastenDailyReport($count: Int) {
+  zettelkastenDailyReport(count: $count)
+}

@@ -14,6 +14,7 @@ import {
   Typography,
 } from '@mui/material';
 import {
+  useZettelkastenArchiveLazyQuery,
   useZettelkastenPageLazyQuery,
   useZettelkastenSearchLazyQuery,
 } from '@wepublish/editor/api';
@@ -37,6 +38,12 @@ type Hit = {
 };
 type SearchPayload = { gesamt: number; treffer: Hit[] };
 type PagePayload = { titel: string; beleg: string; inhalt: string };
+/** One answer of archiv_suche: how much the medium has, and the first hits. */
+type ArchivePayload = {
+  gesamt: number;
+  treffer_je_quelle: { archiv: number; newsletter: number };
+  treffer: Hit[];
+};
 
 export type ZettelkastenPanelProps = {
   /** Capitalised word pairs from the open article; each one is a suggested search. */
@@ -63,6 +70,8 @@ export function ZettelkastenPanel({
   const [search, { data, loading, error }] = useZettelkastenSearchLazyQuery();
   const [loadPage, { data: pageData, loading: pageLoading, error: pageError }] =
     useZettelkastenPageLazyQuery();
+  const [searchArchive, { data: archiveData, loading: archiveLoading }] =
+    useZettelkastenArchiveLazyQuery();
 
   const runSearch = (value: string) => {
     setQuery(value);
@@ -71,6 +80,14 @@ export function ZettelkastenPanel({
 
     if (value.trim()) {
       search({ variables: { query: value.trim(), limit: 20, offset: 0 } });
+      searchArchive({
+        variables: {
+          query: value.trim(),
+          source: 'beides',
+          limit: 5,
+          offset: 0,
+        },
+      });
     }
   };
 
@@ -83,6 +100,9 @@ export function ZettelkastenPanel({
 
   const payload = data?.zettelkastenSearch as SearchPayload | undefined;
   const page = pageData?.zettelkastenPage as PagePayload | undefined;
+  const archive = archiveData?.zettelkastenArchive as
+    | ArchivePayload
+    | undefined;
 
   return (
     <Stack
@@ -244,6 +264,61 @@ export function ZettelkastenPanel({
                 </ListItemButton>
               ))}
             </List>
+          )}
+
+          {payload && (
+            <Box sx={{ mt: 2 }}>
+              <Typography variant="overline">
+                {t('zettelkasten.archive.title')}
+              </Typography>
+              {archiveLoading && <CircularProgress size={16} />}
+              {archive && (
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                >
+                  {t('zettelkasten.archive.counts', {
+                    articles: archive.treffer_je_quelle.archiv,
+                    newsletters: archive.treffer_je_quelle.newsletter,
+                  })}
+                </Typography>
+              )}
+              {archive && archive.treffer.length === 0 && (
+                <Typography>{t('zettelkasten.noHits')}</Typography>
+              )}
+              {archive && (
+                <List dense>
+                  {archive.treffer.map(hit => (
+                    <ListItemText
+                      key={`${hit.beleg}-${hit.stelle}`}
+                      primary={
+                        hit.datum ? `${hit.titel} · ${hit.datum}` : hit.titel
+                      }
+                      secondary={
+                        <>
+                          <Typography
+                            component="span"
+                            variant="body2"
+                            display="block"
+                          >
+                            {hit.stelle}
+                          </Typography>
+                          <Typography
+                            component="span"
+                            variant="caption"
+                            color="text.secondary"
+                            display="block"
+                          >
+                            {t(`zettelkasten.archive.source.${hit.quelle}`)} ·{' '}
+                            {hit.beleg}
+                          </Typography>
+                        </>
+                      }
+                    />
+                  ))}
+                </List>
+              )}
+            </Box>
           )}
         </Box>
       )}

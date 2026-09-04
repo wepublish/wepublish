@@ -9795,6 +9795,23 @@ export type ZettelkastenEvidenceQueryVariables = Exact<{
 
 export type ZettelkastenEvidenceQuery = { __typename?: 'Query', zettelkastenEvidence: unknown };
 
+export type ZettelkastenArchiveQueryVariables = Exact<{
+  query: Scalars['String'];
+  source?: InputMaybe<Scalars['String']>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type ZettelkastenArchiveQuery = { __typename?: 'Query', zettelkastenArchive: unknown };
+
+export type ZettelkastenDailyReportQueryVariables = Exact<{
+  count?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type ZettelkastenDailyReportQuery = { __typename?: 'Query', zettelkastenDailyReport: unknown };
+
 export const ArticleCreatedActionRevisionFragmentDoc = gql`
     fragment ArticleCreatedActionRevision on ArticleRevision {
   title
@@ -22262,6 +22279,80 @@ export function useZettelkastenEvidenceLazyQuery(baseOptions?: Apollo.LazyQueryH
 export type ZettelkastenEvidenceQueryHookResult = ReturnType<typeof useZettelkastenEvidenceQuery>;
 export type ZettelkastenEvidenceLazyQueryHookResult = ReturnType<typeof useZettelkastenEvidenceLazyQuery>;
 export type ZettelkastenEvidenceQueryResult = Apollo.QueryResult<ZettelkastenEvidenceQuery, ZettelkastenEvidenceQueryVariables>;
+export const ZettelkastenArchiveDocument = gql`
+    query ZettelkastenArchive($query: String!, $source: String, $limit: Int, $offset: Int) {
+  zettelkastenArchive(
+    query: $query
+    source: $source
+    limit: $limit
+    offset: $offset
+  )
+}
+    `;
+
+/**
+ * __useZettelkastenArchiveQuery__
+ *
+ * To run a query within a React component, call `useZettelkastenArchiveQuery` and pass it any options that fit your needs.
+ * When your component renders, `useZettelkastenArchiveQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useZettelkastenArchiveQuery({
+ *   variables: {
+ *      query: // value for 'query'
+ *      source: // value for 'source'
+ *      limit: // value for 'limit'
+ *      offset: // value for 'offset'
+ *   },
+ * });
+ */
+export function useZettelkastenArchiveQuery(baseOptions: Apollo.QueryHookOptions<ZettelkastenArchiveQuery, ZettelkastenArchiveQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ZettelkastenArchiveQuery, ZettelkastenArchiveQueryVariables>(ZettelkastenArchiveDocument, options);
+      }
+export function useZettelkastenArchiveLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ZettelkastenArchiveQuery, ZettelkastenArchiveQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ZettelkastenArchiveQuery, ZettelkastenArchiveQueryVariables>(ZettelkastenArchiveDocument, options);
+        }
+export type ZettelkastenArchiveQueryHookResult = ReturnType<typeof useZettelkastenArchiveQuery>;
+export type ZettelkastenArchiveLazyQueryHookResult = ReturnType<typeof useZettelkastenArchiveLazyQuery>;
+export type ZettelkastenArchiveQueryResult = Apollo.QueryResult<ZettelkastenArchiveQuery, ZettelkastenArchiveQueryVariables>;
+export const ZettelkastenDailyReportDocument = gql`
+    query ZettelkastenDailyReport($count: Int) {
+  zettelkastenDailyReport(count: $count)
+}
+    `;
+
+/**
+ * __useZettelkastenDailyReportQuery__
+ *
+ * To run a query within a React component, call `useZettelkastenDailyReportQuery` and pass it any options that fit your needs.
+ * When your component renders, `useZettelkastenDailyReportQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useZettelkastenDailyReportQuery({
+ *   variables: {
+ *      count: // value for 'count'
+ *   },
+ * });
+ */
+export function useZettelkastenDailyReportQuery(baseOptions?: Apollo.QueryHookOptions<ZettelkastenDailyReportQuery, ZettelkastenDailyReportQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ZettelkastenDailyReportQuery, ZettelkastenDailyReportQueryVariables>(ZettelkastenDailyReportDocument, options);
+      }
+export function useZettelkastenDailyReportLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ZettelkastenDailyReportQuery, ZettelkastenDailyReportQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ZettelkastenDailyReportQuery, ZettelkastenDailyReportQueryVariables>(ZettelkastenDailyReportDocument, options);
+        }
+export type ZettelkastenDailyReportQueryHookResult = ReturnType<typeof useZettelkastenDailyReportQuery>;
+export type ZettelkastenDailyReportLazyQueryHookResult = ReturnType<typeof useZettelkastenDailyReportLazyQuery>;
+export type ZettelkastenDailyReportQueryResult = Apollo.QueryResult<ZettelkastenDailyReportQuery, ZettelkastenDailyReportQueryVariables>;
 
       export interface PossibleTypesResultData {
         possibleTypes: {

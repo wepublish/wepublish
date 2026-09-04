@@ -1,6 +1,9 @@
 import { MockedProvider } from '@apollo/client/testing';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { ZettelkastenSearchDocument } from '@wepublish/editor/api';
+import {
+  ZettelkastenArchiveDocument,
+  ZettelkastenSearchDocument,
+} from '@wepublish/editor/api';
 import { describe, expect, it, vi } from 'vitest';
 
 import { ZettelkastenPanel } from './zettelkasten-panel';
@@ -31,11 +34,39 @@ const mocks = [
   },
 ];
 
+const archive = {
+  gesamt: 146,
+  treffer_je_quelle: { archiv: 71, newsletter: 75 },
+  treffer: [
+    {
+      titel: 'Wohnschutz: Kommt das noch gut?',
+      quelle: 'archiv',
+      datum: '2024-02-09',
+      reihe: 'artikel',
+      beleg: 'rohablage/bajour_archiv/2026-08-21T1622/artikel_4338.json',
+      stelle: 'Der Wohnschutz, die Gesetzgebung, die festlegt ...',
+    },
+  ],
+};
+
+const archiveMock = {
+  request: {
+    query: ZettelkastenArchiveDocument,
+    variables: {
+      query: 'Conradin Cramer',
+      source: 'beides',
+      limit: 5,
+      offset: 0,
+    },
+  },
+  result: { data: { zettelkastenArchive: archive } },
+};
+
 describe('ZettelkastenPanel', () => {
   it('searches when a fact anchor is clicked and shows every hit with its evidence', async () => {
     render(
       <MockedProvider
-        mocks={mocks}
+        mocks={[...mocks, archiveMock]}
         addTypename={false}
       >
         <ZettelkastenPanel
@@ -55,5 +86,36 @@ describe('ZettelkastenPanel', () => {
     expect(
       screen.getByText('mandanten/bajour/wiki/personen/cramer_conradin.md')
     ).toBeTruthy();
+  });
+
+  it('shows what the medium already reported, with counts per source', async () => {
+    render(
+      <MockedProvider
+        mocks={[...mocks, archiveMock]}
+        addTypename={false}
+      >
+        <ZettelkastenPanel
+          anchors={['Conradin Cramer']}
+          onClose={vi.fn()}
+        />
+      </MockedProvider>
+    );
+
+    fireEvent.click(screen.getByText('Conradin Cramer'));
+
+    await waitFor(() =>
+      expect(
+        screen.getByText('Wohnschutz: Kommt das noch gut? · 2024-02-09')
+      ).toBeTruthy()
+    );
+    expect(
+      screen.getByText(
+        'rohablage/bajour_archiv/2026-08-21T1622/artikel_4338.json',
+        { exact: false }
+      )
+    ).toBeTruthy();
+    // The editor translations are not loaded in the test environment, so
+    // t() hands back the key instead of «71 Artikel, 75 Newsletter-Ausgaben».
+    expect(screen.getByText('zettelkasten.archive.counts')).toBeTruthy();
   });
 });

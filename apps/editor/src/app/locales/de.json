@@ -3146,6 +3146,14 @@
         "community": "aus dem Publikum, aggregiert",
         "namensvergleich": "Namensvergleich, keine Identität"
       },
+      "archive": {
+        "title": "Dazu haben wir schon berichtet",
+        "counts": "{{articles}} Artikel, {{newsletters}} Newsletter-Ausgaben",
+        "source": {
+          "archiv": "Artikel",
+          "newsletter": "Newsletter"
+        }
+      },
       "evidence": {
         "source": "Quelle des Abrufs",
         "fetchedAt": "Abgerufen",
