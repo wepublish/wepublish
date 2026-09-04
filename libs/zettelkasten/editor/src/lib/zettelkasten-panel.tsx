@@ -26,6 +26,7 @@ import { MdArrowBack, MdClose, MdSearch } from 'react-icons/md';
 import { DossierFact, parseDossier } from './dossier';
 import { DossierView } from './dossier-view';
 import { EvidenceView } from './evidence-view';
+import { formatFactCitation } from './fact-citation';
 import { pageIdFromEvidence } from './page-id';
 
 /** One hit of wiki_suche, as the door delivers it. */
@@ -51,6 +52,8 @@ export type ZettelkastenPanelProps = {
   anchors: string[];
   /** Filled by the /fact slash command with the selected text. */
   initialQuery?: string;
+  /** Set when an editor waits for the fact; without it nothing is written back. */
+  onInsertFact?: (text: string) => void;
   onClose: () => void;
 };
 
@@ -62,6 +65,7 @@ export type ZettelkastenPanelProps = {
 export function ZettelkastenPanel({
   anchors,
   initialQuery,
+  onInsertFact,
   onClose,
 }: ZettelkastenPanelProps) {
   const { t } = useTranslation();
@@ -207,6 +211,17 @@ export function ZettelkastenPanel({
               dossier={parseDossier(page.inhalt)}
               beleg={page.beleg}
               onShowEvidence={setOpenFact}
+              onInsert={
+                onInsertFact ?
+                  fact =>
+                    onInsertFact(
+                      formatFactCitation(fact, {
+                        source: t('zettelkasten.source'),
+                        asOf: t('zettelkasten.citation.asOf'),
+                      })
+                    )
+                : undefined
+              }
             />
           )}
         </Stack>

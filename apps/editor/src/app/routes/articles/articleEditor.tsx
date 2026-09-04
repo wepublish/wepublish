@@ -54,7 +54,14 @@ import {
   VersionHistoryRevision,
   RichTextBlockValue,
 } from '@wepublish/ui/editor';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import type { Editor } from '@tiptap/core';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   MdCloudUpload,
@@ -175,6 +182,9 @@ function ArticleEditor() {
   const [zettelkastenQuery, setZettelkastenQuery] = useState<
     string | undefined
   >();
+  // The editor the /fact command was typed in, so the fact lands where it was
+  // asked for. Null while the panel was opened over the button instead.
+  const factEditorRef = useRef<Editor | null>(null);
   const { data: zettelkastenData } = useZettelkastenEnabledQuery({
     fetchPolicy: 'cache-first',
   });
@@ -286,6 +296,7 @@ function ArticleEditor() {
               );
               const anchors = extractFactAnchors([paragraph]);
               editor.chain().focus().deleteRange(range).run();
+              factEditorRef.current = editor;
               setZettelkastenQuery(anchors.at(-1));
               setZettelkastenOpen(true);
             },
@@ -294,6 +305,31 @@ function ArticleEditor() {
       : [],
     [zettelkastenEnabled, t]
   );
+
+  // The fact, verbatim and with its evidence, into the paragraph /fact came
+  // from. Without that editor it goes to the clipboard and the writer is told.
+  const insertFact = (text: string) => {
+    const editor = factEditorRef.current;
+
+    if (editor && !editor.isDestroyed) {
+      editor.chain().focus().insertContent(text).run();
+      setZettelkastenOpen(false);
+      return;
+    }
+
+    navigator.clipboard?.writeText(text);
+    toaster.push(
+      <Message
+        type="info"
+        showIcon
+        closable
+        duration={4000}
+      >
+        {t('zettelkasten.copied')}
+      </Message>,
+      { placement: 'bottomEnd' }
+    );
+  };
 
   const articleID = id || createData?.createArticle.id;
 
@@ -842,6 +878,7 @@ function ArticleEditor() {
                       size="lg"
                       className="actionButton"
                       onClick={() => {
+                        factEditorRef.current = null;
                         setZettelkastenQuery(undefined);
                         setZettelkastenOpen(true);
                       }}
@@ -1033,6 +1070,7 @@ function ArticleEditor() {
         <ZettelkastenPanel
           anchors={factAnchors}
           initialQuery={zettelkastenQuery}
+          onInsertFact={insertFact}
           onClose={() => setZettelkastenOpen(false)}
         />
       </Drawer>

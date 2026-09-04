@@ -18,6 +18,8 @@ export type DossierViewProps = {
   /** The evidence path of the page itself, shown on top. */
   beleg: string;
   onShowEvidence: (fact: DossierFact) => void;
+  /** Set while an editor waits for the fact; absent, no insert button shows. */
+  onInsert?: (fact: DossierFact) => void;
 };
 
 /**
@@ -29,6 +31,7 @@ export function DossierView({
   dossier,
   beleg,
   onShowEvidence,
+  onInsert,
 }: DossierViewProps) {
   const { t } = useTranslation();
   const { meta, sections } = dossier;
@@ -164,6 +167,14 @@ export function DossierView({
                       onClick={() => onShowEvidence(fact)}
                     >
                       {t('zettelkasten.showEvidence')}
+                    </Button>
+                  )}
+                  {onInsert && (
+                    <Button
+                      size="small"
+                      onClick={() => onInsert(fact)}
+                    >
+                      {t('zettelkasten.insert')}
                     </Button>
                   )}
                   {fact.original && (

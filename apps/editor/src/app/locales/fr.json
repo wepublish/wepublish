@@ -3082,6 +3082,11 @@
       "valid": "valable {{from}} à {{to}}",
       "learned": "appris {{date}}",
       "source": "Source",
+      "insert": "Insérer avec la source",
+      "copied": "Copié avec sa source. Tapez /fait dans le texte pour insérer directement.",
+      "citation": {
+        "asOf": "état au"
+      },
       "showEvidence": "Afficher la preuve",
       "openOriginal": "Ouvrir l'original",
       "backToDossier": "Retour au dossier",

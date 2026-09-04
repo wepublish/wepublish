@@ -3139,6 +3139,11 @@
       "valid": "gültig {{from}} bis {{to}}",
       "learned": "erfahren {{date}}",
       "source": "Quelle",
+      "insert": "Einfügen mit Beleg",
+      "copied": "In die Zwischenablage kopiert, mit Beleg. Zum direkten Einfügen /fakt im Text tippen.",
+      "citation": {
+        "asOf": "Stand"
+      },
       "showEvidence": "Beleg zeigen",
       "openOriginal": "Original öffnen",
       "backToDossier": "Zurück zum Dossier",

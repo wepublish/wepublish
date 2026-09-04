@@ -3178,6 +3178,11 @@
       "valid": "valid {{from}} to {{to}}",
       "learned": "learned {{date}}",
       "source": "Source",
+      "insert": "Insert with evidence",
+      "copied": "Copied with its evidence. Type /fact in the text to insert directly.",
+      "citation": {
+        "asOf": "as of"
+      },
       "showEvidence": "Show evidence",
       "openOriginal": "Open original",
       "backToDossier": "Back to the dossier",
