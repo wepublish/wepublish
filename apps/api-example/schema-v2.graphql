@@ -66,6 +66,7 @@ input ArticleFilter {
   authors: [String!]
   body: String
   draft: Boolean
+  excludeHideAuthor: Boolean
   excludeIds: [String!]
   ids: [String!]
   includeHidden: Boolean
@@ -921,6 +922,7 @@ enum EditorBlockType {
   ImageGallery
   LinkPageBreak
   Listicle
+  MailchimpForm
   Poll
   Quote
   RichText
@@ -3295,6 +3297,7 @@ input PeerArticleFilter {
   allTagsIn: [String!]
   authors: [String!]
   body: String
+  excludeHideAuthor: Boolean
   excludeIds: [String!]
   ids: [String!]
   lead: String

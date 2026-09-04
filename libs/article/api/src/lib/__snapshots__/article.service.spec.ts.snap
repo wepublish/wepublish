@@ -413,13 +413,30 @@ exports[`ArticleService should query articles based on filter 2`] = `
                   },
                 },
               },
-              "hideAuthor": false,
             },
           },
           "revisions": undefined,
         },
         {
           "hidden": false,
+        },
+        {
+          "ArticleRevisionDraft": {
+            "articleRevision": {
+              "hideAuthor": false,
+            },
+          },
+          "ArticleRevisionPending": {
+            "articleRevision": {
+              "hideAuthor": false,
+            },
+          },
+          "ArticleRevisionPublished": {
+            "articleRevision": {
+              "hideAuthor": false,
+            },
+          },
+          "revisions": undefined,
         },
         {
           "peerId": "1234",
@@ -618,13 +635,30 @@ exports[`ArticleService should query articles based on filter 3`] = `
                   },
                 },
               },
-              "hideAuthor": false,
             },
           },
           "revisions": undefined,
         },
         {
           "hidden": false,
+        },
+        {
+          "ArticleRevisionDraft": {
+            "articleRevision": {
+              "hideAuthor": false,
+            },
+          },
+          "ArticleRevisionPending": {
+            "articleRevision": {
+              "hideAuthor": false,
+            },
+          },
+          "ArticleRevisionPublished": {
+            "articleRevision": {
+              "hideAuthor": false,
+            },
+          },
+          "revisions": undefined,
         },
         {
           "peerId": "1234",
@@ -855,13 +889,30 @@ exports[`ArticleService should query articles based on full text search 2`] = `
                   },
                 },
               },
-              "hideAuthor": false,
             },
           },
           "revisions": undefined,
         },
         {
           "hidden": false,
+        },
+        {
+          "ArticleRevisionDraft": {
+            "articleRevision": {
+              "hideAuthor": false,
+            },
+          },
+          "ArticleRevisionPending": {
+            "articleRevision": {
+              "hideAuthor": false,
+            },
+          },
+          "ArticleRevisionPublished": {
+            "articleRevision": {
+              "hideAuthor": false,
+            },
+          },
+          "revisions": undefined,
         },
         {
           "peerId": "1234",
@@ -1061,13 +1112,30 @@ exports[`ArticleService should query articles based on full text search 3`] = `
                   },
                 },
               },
-              "hideAuthor": false,
             },
           },
           "revisions": undefined,
         },
         {
           "hidden": false,
+        },
+        {
+          "ArticleRevisionDraft": {
+            "articleRevision": {
+              "hideAuthor": false,
+            },
+          },
+          "ArticleRevisionPending": {
+            "articleRevision": {
+              "hideAuthor": false,
+            },
+          },
+          "ArticleRevisionPublished": {
+            "articleRevision": {
+              "hideAuthor": false,
+            },
+          },
+          "revisions": undefined,
         },
         {
           "peerId": "1234",
@@ -1239,6 +1307,16 @@ exports[`ArticleService should query articles on all revisions 2`] = `
           "hidden": false,
         },
         {
+          "ArticleRevisionDraft": undefined,
+          "ArticleRevisionPending": undefined,
+          "ArticleRevisionPublished": undefined,
+          "revisions": {
+            "some": {
+              "hideAuthor": false,
+            },
+          },
+        },
+        {
           "peerId": "1234",
         },
         {
@@ -1349,6 +1427,16 @@ exports[`ArticleService should query articles on all revisions 3`] = `
         },
         {
           "hidden": false,
+        },
+        {
+          "ArticleRevisionDraft": undefined,
+          "ArticleRevisionPending": undefined,
+          "ArticleRevisionPublished": undefined,
+          "revisions": {
+            "some": {
+              "hideAuthor": false,
+            },
+          },
         },
         {
           "peerId": "1234",
