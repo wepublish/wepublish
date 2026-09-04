@@ -113,6 +113,7 @@ export type ArticleFilter = {
   authors?: InputMaybe<Array<Scalars['String']>>;
   body?: InputMaybe<Scalars['String']>;
   draft?: InputMaybe<Scalars['Boolean']>;
+  excludeHideAuthor?: InputMaybe<Scalars['Boolean']>;
   excludeIds?: InputMaybe<Array<Scalars['String']>>;
   ids?: InputMaybe<Array<Scalars['String']>>;
   includeHidden?: InputMaybe<Scalars['Boolean']>;
@@ -973,6 +974,10 @@ export type DiscountCode = HasMemberPlanLc & {
   memberPlan: MemberPlan;
   memberPlanId: Scalars['String'];
   modifiedAt: Scalars['DateTime'];
+  /** Number of redemptions of this discountCode on paid invoices. */
+  paidUsageCount: Scalars['Int'];
+  /** Number of times this discountCode was redeemed. */
+  usageCount: Scalars['Int'];
   validFrom: Scalars['DateTime'];
   validTo: Scalars['DateTime'];
 };
@@ -1695,6 +1700,7 @@ export type InvoiceConnection = {
 
 export type InvoiceFilter = {
   canceledAt?: InputMaybe<DateFilter>;
+  discountCodeId?: InputMaybe<Scalars['String']>;
   mail?: InputMaybe<Scalars['String']>;
   paidAt?: InputMaybe<DateFilter>;
   subscriptionID?: InputMaybe<Scalars['String']>;
@@ -4468,6 +4474,7 @@ export type PeerArticleFilter = {
   allTagsIn?: InputMaybe<Array<Scalars['String']>>;
   authors?: InputMaybe<Array<Scalars['String']>>;
   body?: InputMaybe<Scalars['String']>;
+  excludeHideAuthor?: InputMaybe<Scalars['Boolean']>;
   excludeIds?: InputMaybe<Array<Scalars['String']>>;
   ids?: InputMaybe<Array<Scalars['String']>>;
   lead?: InputMaybe<Scalars['String']>;
