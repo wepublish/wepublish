@@ -49,6 +49,8 @@ enum ScrollDirection {
   Down,
 }
 
+const NAVBAR_HEIGHT_PX = 75;
+
 const cssVariables = (state: NavbarState[], isHomePage: boolean) => css`
   :root {
     ${isHomePage ?
@@ -188,8 +190,8 @@ export const NavbarHamburgerButton = styled(IconButton, {
     propName !== 'isMenuOpen' && propName !== 'isTransitioning',
 })<{ isMenuOpen: boolean; isTransitioning: boolean }>`
   background-color: ${theme.palette.primary.dark};
-  width: 75px;
-  height: 75px;
+  width: ${NAVBAR_HEIGHT_PX}px;
+  height: ${NAVBAR_HEIGHT_PX}px;
   border-radius: 0;
   transition: transform 100ms ease-out;
   position: relative;
@@ -478,7 +480,7 @@ export const NavPaperWrapper = styled('div', {
   shouldForwardProp: propName =>
     propName !== 'isMenuOpen' && propName !== 'isTransitioning',
 })<{ isMenuOpen: boolean; isTransitioning: boolean }>`
-  padding: calc(${theme.spacing(2)} + var(--navbar-height)) ${theme.spacing(2)}
+  padding: calc(${theme.spacing(2)} + ${NAVBAR_HEIGHT_PX}px) ${theme.spacing(2)}
     0 22.5px;
   background-color: ${theme.palette.primary.dark};
   color: ${theme.palette.common.white};
@@ -501,7 +503,7 @@ export const NavPaperWrapper = styled('div', {
 
   ${theme.breakpoints.up('md')} {
     row-gap: unset;
-    padding: calc(${theme.spacing(5)} + var(--navbar-height))
+    padding: calc(${theme.spacing(5)} + ${NAVBAR_HEIGHT_PX}px)
       ${theme.spacing(2)} 0 27px;
     grid-template-columns: 60px 1fr;
     grid-template-rows: min-content min-content;
