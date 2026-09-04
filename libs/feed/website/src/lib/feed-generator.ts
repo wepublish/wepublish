@@ -45,9 +45,10 @@ export const generateFeed =
           }, [] as RichtextElements[]) ?? [],
       });
 
-      const authors = article.latest.authors
-        .filter(Boolean)
-        .map(author => ({ name: author.name, link: author.url }));
+      const authors = article.latest.authors.map(({ author }) => ({
+        name: author.name,
+        link: author.url,
+      }));
 
       return {
         title: seo.schema.headline ?? '',

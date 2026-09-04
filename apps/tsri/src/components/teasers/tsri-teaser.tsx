@@ -31,9 +31,9 @@ export const selectTeaserAuthors = (teaser: FullTeaserFragment) => {
         return null;
       }
 
-      return teaser.article?.latest.authors.filter(
-        author => !author.hideOnTeaser
-      );
+      return teaser.article?.latest.authors
+        .filter(({ author }) => !author.hideOnTeaser)
+        .map(({ author }) => author);
     }
 
     case 'EventTeaser':

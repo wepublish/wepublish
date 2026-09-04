@@ -41,7 +41,11 @@ fragment SlimArticleRevision on ArticleRevision {
   hideAuthor
 
   authors {
-    ...SlimAuthor
+    role
+
+    author {
+      ...SlimAuthor
+    }
   }
 
   image {
@@ -76,7 +80,11 @@ fragment FullArticleRevision on ArticleRevision {
   }
 
   authors {
-    ...FullAuthor
+    role
+
+    author {
+      ...FullAuthor
+    }
   }
 }
 
