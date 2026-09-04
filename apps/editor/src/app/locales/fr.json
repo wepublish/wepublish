@@ -1626,6 +1626,8 @@
       "settings": "Paramètres",
       "successMessage": "Paramètres mis à jour avec succès !",
       "successTitle": "Enregistré",
+      "subscriptionPlans": "Plans d'abonnement",
+      "subscriptionUpgradeModel": "Lors d'une mise à niveau, facturer la différence de prix complète (au lieu du crédit restant au prorata)",
       "warnings": {
         "askOperators": "Attention : la modification d'un ou de plusieurs des paramètres peut entraîner la rupture de la page ou avoir d'autres conséquences imprévisibles. En cas de doute, il est conseillé de consulter les opérateurs. Dans le cas contraire, vous pouvez continuer.",
         "guestCommenting": "Autoriser les commentaires des utilisateurs·trices non authentifiés·e·s.",
@@ -1634,7 +1636,8 @@
         "invoiceReminders": "Nombre de rappels de paiement par facture Délai entre les rappels de paiement — jours",
         "loginMinutes": "Durée de validité du token de connexion par email — minutes.",
         "passwordToken": "Durée de validité du token pour la réinitialisation du mot de passe par email — minutes.",
-        "peerToken": "Expiration du peering (en cas d’erreur lors du peering d’un article, la tentative de peering s’arrête après la durée définie ci-après) — millisecondes"
+        "peerToken": "Expiration du peering (en cas d’erreur lors du peering d’un article, la tentative de peering s’arrête après la durée définie ci-après) — millisecondes",
+        "subscriptionUpgradeModel": "Lorsque cette option est activée, une mise à niveau facture toujours la différence entre le prix du nouveau plan et celui du plan actuel, quel que soit le temps restant dans la période en cours. Lorsqu'elle est désactivée, seul le solde restant (au prorata) non utilisé de la période en cours est crédité."
       }
     },
     "automaticMails": {
