@@ -3131,6 +3131,7 @@
       "searchPlaceholder": "Dossiers durchsuchen",
       "anchors": "Aus dem Artikel",
       "anchorMissing": "Nicht im Bestand",
+      "anchorUnchecked": "Nicht geprüft, die Tür hat nicht geantwortet",
       "backToHits": "Zurück zu den Treffern",
       "noHits": "Nichts gefunden heisst: nicht im Bestand, nicht falsch.",
       "open": "Zettelkasten",
@@ -3156,6 +3157,7 @@
       },
       "report": {
         "loading": "Rapport wird geladen",
+        "empty": "Kein Eintrag im Rapport. Nichts gefunden heisst: nicht im Bestand, nicht falsch.",
         "feeds": "Zubringer",
         "lint": "Lint",
         "night": "Nachtlauf"

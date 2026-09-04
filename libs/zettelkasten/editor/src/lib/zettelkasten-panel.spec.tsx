@@ -98,6 +98,58 @@ const archiveErrorMock = {
   error: new Error('Das Bearer-Token fehlt oder stimmt nicht.'),
 };
 
+/** A door that answers 200 with a shape the panel does not expect. */
+const malformedMocks = [
+  {
+    request: mocks[0].request,
+    result: { data: { zettelkastenSearch: { gesamt: 0 } } },
+  },
+  {
+    request: archiveMock.request,
+    result: { data: { zettelkastenArchive: { gesamt: 0 } } },
+  },
+  mocks[1],
+];
+
+const emptyMocks = [
+  {
+    request: mocks[0].request,
+    result: { data: { zettelkastenSearch: { gesamt: 0, treffer: [] } } },
+  },
+  {
+    request: archiveMock.request,
+    result: {
+      data: {
+        zettelkastenArchive: {
+          gesamt: 0,
+          treffer_je_quelle: { archiv: 0, newsletter: 0 },
+          treffer: [],
+        },
+      },
+    },
+  },
+  mocks[1],
+];
+
+const uncheckedAnchorMock = {
+  request: anchorsMock.request,
+  result: {
+    data: {
+      zettelkastenAnchors: {
+        anchors: [
+          { anchor: 'Conradin Cramer', hits: 3 },
+          { anchor: 'Liebe Grüsse', hits: null },
+        ],
+      },
+    },
+  },
+};
+
+const anchorsErrorMock = {
+  request: mocks[1].request,
+  error: new Error('The knowledge provider did not answer'),
+};
+
 describe('ZettelkastenPanel', () => {
   it('searches when a fact anchor is clicked and shows every hit with its evidence', async () => {
     render(
@@ -197,6 +249,88 @@ describe('ZettelkastenPanel', () => {
 
     await waitFor(() =>
       expect(screen.getByTitle('zettelkasten.anchorMissing')).toBeTruthy()
+    );
+  });
+
+  it('marks an anchor the door could not answer for as unchecked', async () => {
+    render(
+      <MockedProvider
+        mocks={[uncheckedAnchorMock]}
+        addTypename={false}
+      >
+        <ZettelkastenPanel
+          anchors={['Conradin Cramer', 'Liebe Grüsse']}
+          onClose={vi.fn()}
+        />
+      </MockedProvider>
+    );
+
+    await waitFor(() =>
+      expect(screen.getByTitle('zettelkasten.anchorUnchecked')).toBeTruthy()
+    );
+    expect(screen.queryByTitle('zettelkasten.anchorMissing')).toBeNull();
+  });
+
+  it('says when the anchor check itself failed', async () => {
+    render(
+      <MockedProvider
+        mocks={[anchorsErrorMock]}
+        addTypename={false}
+      >
+        <ZettelkastenPanel
+          anchors={['Conradin Cramer']}
+          onClose={vi.fn()}
+        />
+      </MockedProvider>
+    );
+
+    await waitFor(() =>
+      expect(
+        screen.getByText('The knowledge provider did not answer')
+      ).toBeTruthy()
+    );
+  });
+
+  it('survives a payload without the treffer field and says nothing was found', async () => {
+    render(
+      <MockedProvider
+        mocks={malformedMocks}
+        addTypename={false}
+      >
+        <ZettelkastenPanel
+          anchors={['Conradin Cramer']}
+          onClose={vi.fn()}
+        />
+      </MockedProvider>
+    );
+
+    fireEvent.click(screen.getByText('Conradin Cramer'));
+
+    await waitFor(() =>
+      expect(screen.getAllByText('zettelkasten.noHits').length).toBe(2)
+    );
+    // The counters fall back to zero instead of reading through a missing
+    // treffer_je_quelle; the archive line is there either way.
+    expect(screen.getByText('zettelkasten.archive.counts')).toBeTruthy();
+  });
+
+  it('says «not in the holdings» for an empty result, in the wiki and in the archive', async () => {
+    render(
+      <MockedProvider
+        mocks={emptyMocks}
+        addTypename={false}
+      >
+        <ZettelkastenPanel
+          anchors={['Conradin Cramer']}
+          onClose={vi.fn()}
+        />
+      </MockedProvider>
+    );
+
+    fireEvent.click(screen.getByText('Conradin Cramer'));
+
+    await waitFor(() =>
+      expect(screen.getAllByText('zettelkasten.noHits').length).toBe(2)
     );
   });
 });

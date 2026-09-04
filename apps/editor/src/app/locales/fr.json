@@ -3074,6 +3074,7 @@
       "searchPlaceholder": "Rechercher dans les dossiers",
       "anchors": "Tiré de l'article",
       "anchorMissing": "Absent de la base",
+      "anchorUnchecked": "Non vérifié, la porte n'a pas répondu",
       "backToHits": "Retour aux résultats",
       "noHits": "Rien trouvé signifie: pas dans le fonds, pas faux.",
       "open": "Base de connaissances",
@@ -3099,6 +3100,7 @@
       },
       "report": {
         "loading": "Chargement du rapport",
+        "empty": "Aucune entrée dans le rapport. Rien trouvé signifie: pas dans le fonds, pas faux.",
         "feeds": "Sources",
         "lint": "Lint",
         "night": "Traitement nocturne"

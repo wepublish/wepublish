@@ -3170,6 +3170,7 @@
       "searchPlaceholder": "Search the dossiers",
       "anchors": "From the article",
       "anchorMissing": "Not in the knowledge base",
+      "anchorUnchecked": "Not checked, the door did not answer",
       "backToHits": "Back to the hits",
       "noHits": "Nothing found means: not in the holdings, not wrong.",
       "open": "Knowledge base",
@@ -3195,6 +3196,7 @@
       },
       "report": {
         "loading": "Loading the report",
+        "empty": "No entry in the report. Nothing found means: not in the holdings, not wrong.",
         "feeds": "Feeds",
         "lint": "Lint",
         "night": "Night run"

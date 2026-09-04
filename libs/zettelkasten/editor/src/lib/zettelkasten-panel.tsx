@@ -39,16 +39,27 @@ type Hit = {
   beleg: string;
   stelle: string;
 };
-type SearchPayload = { gesamt: number; treffer: Hit[] };
+/**
+ * The payloads travel as JSON and are cast, not validated; the fields are
+ * therefore all optional and every access is guarded. A door that renames a
+ * field must not throw during rendering: the editor has no error boundary, so
+ * an exception here would take the open, unsaved article with it.
+ */
+type SearchPayload = { gesamt?: number; treffer?: Hit[] };
 type PagePayload = { titel: string; beleg: string; inhalt: string };
 /** One answer of archiv_suche: how much the medium has, and the first hits. */
 type ArchivePayload = {
-  gesamt: number;
-  treffer_je_quelle: { archiv: number; newsletter: number };
-  treffer: Hit[];
+  gesamt?: number;
+  treffer_je_quelle?: { archiv?: number; newsletter?: number };
+  treffer?: Hit[];
 };
-/** One answer of zettelkastenAnchors: how many dossier hits each anchor has. */
-type AnchorsPayload = { anchors: { anchor: string; hits: number }[] };
+/**
+ * One answer of zettelkastenAnchors: how many dossier hits each anchor has.
+ * `hits` is null when the door did not answer for that anchor.
+ */
+type AnchorsPayload = {
+  anchors?: { anchor: string; hits: number | null }[];
+};
 
 export type ZettelkastenPanelProps = {
   /** Capitalised word pairs from the open article; each one is a suggested search. */
@@ -82,10 +93,11 @@ export function ZettelkastenPanel({
     searchArchive,
     { data: archiveData, loading: archiveLoading, error: archiveError },
   ] = useZettelkastenArchiveLazyQuery();
-  const { data: anchorsData } = useZettelkastenAnchorsQuery({
-    variables: { anchors: anchors.slice(0, 20) },
-    skip: anchors.length === 0,
-  });
+  const { data: anchorsData, error: anchorsError } =
+    useZettelkastenAnchorsQuery({
+      variables: { anchors: anchors.slice(0, 20) },
+      skip: anchors.length === 0,
+    });
 
   const runSearch = (value: string) => {
     setQuery(value);
@@ -117,11 +129,16 @@ export function ZettelkastenPanel({
   const archive = archiveData?.zettelkastenArchive as
     | ArchivePayload
     | undefined;
+  const wikiHits = Array.isArray(payload?.treffer) ? payload.treffer : [];
+  const archiveHits = Array.isArray(archive?.treffer) ? archive.treffer : [];
+  const anchorCounts = (
+    anchorsData?.zettelkastenAnchors as AnchorsPayload | undefined
+  )?.anchors;
   const hitsByAnchor = new Map(
-    (
-      (anchorsData?.zettelkastenAnchors as AnchorsPayload | undefined)
-        ?.anchors ?? []
-    ).map(entry => [entry.anchor, entry.hits])
+    (Array.isArray(anchorCounts) ? anchorCounts : []).map(entry => [
+      entry.anchor,
+      entry.hits,
+    ])
   );
 
   return (
@@ -183,6 +200,10 @@ export function ZettelkastenPanel({
             {anchors.map(anchor => {
               const hits = hitsByAnchor.get(anchor);
               const missing = hits === 0;
+              // null: the door did not answer for this one. It is neither a
+              // hit nor an absence, and the chip says so instead of looking
+              // like an anchor without a dossier.
+              const unchecked = hits === null;
 
               return (
                 <Chip
@@ -195,12 +216,20 @@ export function ZettelkastenPanel({
                       'filled'
                     : 'outlined'
                   }
-                  title={missing ? t('zettelkasten.anchorMissing') : undefined}
+                  title={
+                    missing ? t('zettelkasten.anchorMissing')
+                    : unchecked ?
+                      t('zettelkasten.anchorUnchecked')
+                    : undefined
+                  }
                   sx={missing ? { opacity: 0.6 } : undefined}
                 />
               );
             })}
           </Stack>
+          {anchorsError && (
+            <Typography color="error">{anchorsError.message}</Typography>
+          )}
         </Box>
       )}
 
@@ -256,12 +285,12 @@ export function ZettelkastenPanel({
         <Box sx={{ overflow: 'auto' }}>
           {loading && <CircularProgress size={20} />}
           {error && <Typography color="error">{error.message}</Typography>}
-          {payload && payload.treffer.length === 0 && (
+          {payload && wikiHits.length === 0 && (
             <Typography>{t('zettelkasten.noHits')}</Typography>
           )}
           {payload && (
             <List dense>
-              {payload.treffer.map(hit => (
+              {wikiHits.map(hit => (
                 <ListItemButton
                   key={`${hit.beleg}-${hit.stelle}`}
                   alignItems="flex-start"
@@ -324,17 +353,17 @@ export function ZettelkastenPanel({
                   color="text.secondary"
                 >
                   {t('zettelkasten.archive.counts', {
-                    articles: archive.treffer_je_quelle.archiv,
-                    newsletters: archive.treffer_je_quelle.newsletter,
+                    articles: archive.treffer_je_quelle?.archiv ?? 0,
+                    newsletters: archive.treffer_je_quelle?.newsletter ?? 0,
                   })}
                 </Typography>
               )}
-              {archive && archive.treffer.length === 0 && (
+              {archive && archiveHits.length === 0 && (
                 <Typography>{t('zettelkasten.noHits')}</Typography>
               )}
               {archive && (
                 <List dense>
-                  {archive.treffer.map(hit => (
+                  {archiveHits.map(hit => (
                     <ListItem
                       key={`${hit.beleg}-${hit.stelle}`}
                       alignItems="flex-start"
