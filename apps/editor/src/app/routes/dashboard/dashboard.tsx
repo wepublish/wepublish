@@ -22,12 +22,35 @@ const StyledGrid = styled(Grid)`
   width: 100%;
 `;
 
-export function Dashboard() {
+/**
+ * The knowledge base card. Its two queries need CAN_CREATE_ARTICLE, so they
+ * live here and not in the dashboard itself: PermissionControl renders nothing
+ * for a person without that permission, and then neither query ever runs.
+ */
+function ZettelkastenDashboardPanel() {
   const { t } = useTranslation();
-  const { data: zettelkastenData } = useZettelkastenEnabledQuery({
+  const { data } = useZettelkastenEnabledQuery({
     fetchPolicy: 'cache-first',
   });
-  const zettelkastenEnabled = !!zettelkastenData?.zettelkastenEnabled;
+
+  if (!data?.zettelkastenEnabled) {
+    return null;
+  }
+
+  return (
+    <Col xs={24}>
+      <RPanel
+        header={<h2>{t('dashboard.zettelkasten')}</h2>}
+        bordered
+      >
+        <DailyReportCard />
+      </RPanel>
+    </Col>
+  );
+}
+
+export function Dashboard() {
+  const { t } = useTranslation();
 
   return (
     <StyledGrid fluid>
@@ -44,16 +67,9 @@ export function Dashboard() {
               </RPanel>
             </Col>
 
-            {zettelkastenEnabled && (
-              <Col xs={24}>
-                <RPanel
-                  header={<h2>{t('dashboard.zettelkasten')}</h2>}
-                  bordered
-                >
-                  <DailyReportCard />
-                </RPanel>
-              </Col>
-            )}
+            <PermissionControl qualifyingPermissions={['CAN_CREATE_ARTICLE']}>
+              <ZettelkastenDashboardPanel />
+            </PermissionControl>
 
             <Col xs={24}>
               <RPanel
