@@ -31,3 +31,7 @@ query ZettelkastenArchive(
 query ZettelkastenDailyReport($count: Int) {
   zettelkastenDailyReport(count: $count)
 }
+
+query ZettelkastenAnchors($anchors: [String!]!) {
+  zettelkastenAnchors(anchors: $anchors)
+}

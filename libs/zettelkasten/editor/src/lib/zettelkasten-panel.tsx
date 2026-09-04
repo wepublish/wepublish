@@ -15,6 +15,7 @@ import {
   Typography,
 } from '@mui/material';
 import {
+  useZettelkastenAnchorsQuery,
   useZettelkastenArchiveLazyQuery,
   useZettelkastenPageLazyQuery,
   useZettelkastenSearchLazyQuery,
@@ -46,6 +47,8 @@ type ArchivePayload = {
   treffer_je_quelle: { archiv: number; newsletter: number };
   treffer: Hit[];
 };
+/** One answer of zettelkastenAnchors: how many dossier hits each anchor has. */
+type AnchorsPayload = { anchors: { anchor: string; hits: number }[] };
 
 export type ZettelkastenPanelProps = {
   /** Capitalised word pairs from the open article; each one is a suggested search. */
@@ -79,6 +82,10 @@ export function ZettelkastenPanel({
     searchArchive,
     { data: archiveData, loading: archiveLoading, error: archiveError },
   ] = useZettelkastenArchiveLazyQuery();
+  const { data: anchorsData } = useZettelkastenAnchorsQuery({
+    variables: { anchors: anchors.slice(0, 20) },
+    skip: anchors.length === 0,
+  });
 
   const runSearch = (value: string) => {
     setQuery(value);
@@ -110,6 +117,12 @@ export function ZettelkastenPanel({
   const archive = archiveData?.zettelkastenArchive as
     | ArchivePayload
     | undefined;
+  const hitsByAnchor = new Map(
+    (
+      (anchorsData?.zettelkastenAnchors as AnchorsPayload | undefined)
+        ?.anchors ?? []
+    ).map(entry => [entry.anchor, entry.hits])
+  );
 
   return (
     <Stack
@@ -167,14 +180,26 @@ export function ZettelkastenPanel({
             flexWrap="wrap"
             gap={1}
           >
-            {anchors.map(anchor => (
-              <Chip
-                key={anchor}
-                label={anchor}
-                onClick={() => runSearch(anchor)}
-                variant={anchor === query ? 'filled' : 'outlined'}
-              />
-            ))}
+            {anchors.map(anchor => {
+              const hits = hitsByAnchor.get(anchor);
+              const missing = hits === 0;
+
+              return (
+                <Chip
+                  key={anchor}
+                  label={anchor}
+                  onClick={() => runSearch(anchor)}
+                  color={hits && hits > 0 ? 'primary' : 'default'}
+                  variant={
+                    anchor === query || (hits && hits > 0) ?
+                      'filled'
+                    : 'outlined'
+                  }
+                  title={missing ? t('zettelkasten.anchorMissing') : undefined}
+                  sx={missing ? { opacity: 0.6 } : undefined}
+                />
+              );
+            })}
           </Stack>
         </Box>
       )}

@@ -3130,6 +3130,7 @@
       "search": "Suchen",
       "searchPlaceholder": "Dossiers durchsuchen",
       "anchors": "Aus dem Artikel",
+      "anchorMissing": "Nicht im Bestand",
       "backToHits": "Zurück zu den Treffern",
       "noHits": "Nichts gefunden heisst: nicht im Bestand, nicht falsch.",
       "open": "Zettelkasten",

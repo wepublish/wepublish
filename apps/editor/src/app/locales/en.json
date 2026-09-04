@@ -3169,6 +3169,7 @@
       "search": "Search",
       "searchPlaceholder": "Search the dossiers",
       "anchors": "From the article",
+      "anchorMissing": "Not in the knowledge base",
       "backToHits": "Back to the hits",
       "noHits": "Nothing found means: not in the holdings, not wrong.",
       "open": "Knowledge base",

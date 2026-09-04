@@ -3073,6 +3073,7 @@
       "search": "Rechercher",
       "searchPlaceholder": "Rechercher dans les dossiers",
       "anchors": "Tiré de l'article",
+      "anchorMissing": "Absent de la base",
       "backToHits": "Retour aux résultats",
       "noHits": "Rien trouvé signifie: pas dans le fonds, pas faux.",
       "open": "Base de connaissances",

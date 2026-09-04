@@ -5229,6 +5229,8 @@ export type Query = {
   versionInformation: VersionInformation;
   /** Returns the website settings, requires authentication to get sensitive settings. */
   websiteSettings: WebsiteSettings;
+  /** For every anchor: how many wiki hits there are (wiki_suche, limit 1). Nothing is judged. */
+  zettelkastenAnchors: Scalars['JSON'];
   /** Full text search over articles and newsletters (archiv_suche). */
   zettelkastenArchive: Scalars['JSON'];
   /** The latest journal entries (tagesrapport). */
@@ -5957,6 +5959,11 @@ export type QueryUsersArgs = {
   skip?: Scalars['Int'];
   sort?: UserSort;
   take?: Scalars['Int'];
+};
+
+
+export type QueryZettelkastenAnchorsArgs = {
+  anchors: Array<Scalars['String']>;
 };
 
 
@@ -9811,6 +9818,13 @@ export type ZettelkastenDailyReportQueryVariables = Exact<{
 
 
 export type ZettelkastenDailyReportQuery = { __typename?: 'Query', zettelkastenDailyReport: unknown };
+
+export type ZettelkastenAnchorsQueryVariables = Exact<{
+  anchors: Array<Scalars['String']> | Scalars['String'];
+}>;
+
+
+export type ZettelkastenAnchorsQuery = { __typename?: 'Query', zettelkastenAnchors: unknown };
 
 export const ArticleCreatedActionRevisionFragmentDoc = gql`
     fragment ArticleCreatedActionRevision on ArticleRevision {
@@ -22353,6 +22367,39 @@ export function useZettelkastenDailyReportLazyQuery(baseOptions?: Apollo.LazyQue
 export type ZettelkastenDailyReportQueryHookResult = ReturnType<typeof useZettelkastenDailyReportQuery>;
 export type ZettelkastenDailyReportLazyQueryHookResult = ReturnType<typeof useZettelkastenDailyReportLazyQuery>;
 export type ZettelkastenDailyReportQueryResult = Apollo.QueryResult<ZettelkastenDailyReportQuery, ZettelkastenDailyReportQueryVariables>;
+export const ZettelkastenAnchorsDocument = gql`
+    query ZettelkastenAnchors($anchors: [String!]!) {
+  zettelkastenAnchors(anchors: $anchors)
+}
+    `;
+
+/**
+ * __useZettelkastenAnchorsQuery__
+ *
+ * To run a query within a React component, call `useZettelkastenAnchorsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useZettelkastenAnchorsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useZettelkastenAnchorsQuery({
+ *   variables: {
+ *      anchors: // value for 'anchors'
+ *   },
+ * });
+ */
+export function useZettelkastenAnchorsQuery(baseOptions: Apollo.QueryHookOptions<ZettelkastenAnchorsQuery, ZettelkastenAnchorsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ZettelkastenAnchorsQuery, ZettelkastenAnchorsQueryVariables>(ZettelkastenAnchorsDocument, options);
+      }
+export function useZettelkastenAnchorsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ZettelkastenAnchorsQuery, ZettelkastenAnchorsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ZettelkastenAnchorsQuery, ZettelkastenAnchorsQueryVariables>(ZettelkastenAnchorsDocument, options);
+        }
+export type ZettelkastenAnchorsQueryHookResult = ReturnType<typeof useZettelkastenAnchorsQuery>;
+export type ZettelkastenAnchorsLazyQueryHookResult = ReturnType<typeof useZettelkastenAnchorsLazyQuery>;
+export type ZettelkastenAnchorsQueryResult = Apollo.QueryResult<ZettelkastenAnchorsQuery, ZettelkastenAnchorsQueryVariables>;
 
       export interface PossibleTypesResultData {
         possibleTypes: {

@@ -54,3 +54,12 @@ export class ZettelkastenDailyReportArgs {
   @Field(() => Int, { nullable: true, defaultValue: 1 })
   count?: number;
 }
+
+@ArgsType()
+export class ZettelkastenAnchorsArgs {
+  @Field(() => [String], {
+    description:
+      'Capitalised word pairs from the open article, at most twenty.',
+  })
+  anchors!: string[];
+}

@@ -57,4 +57,37 @@ describe('ZettelkastenResolver', () => {
 
     await expect(resolver.zettelkastenEnabled()).resolves.toBe(true);
   });
+
+  it('checks every anchor with one wiki_suche call, limit 1', async () => {
+    const { resolver, client } = await setup();
+    client.call
+      .mockResolvedValueOnce({ gesamt: 3 })
+      .mockResolvedValueOnce({ gesamt: 0 });
+
+    const result = await resolver.zettelkastenAnchors({
+      anchors: ['Conradin Cramer', 'Liebe Grüsse'],
+    });
+
+    expect(client.call).toHaveBeenNthCalledWith(1, 'wiki_suche', {
+      suche: '"Conradin Cramer"',
+      grenze: 1,
+      versatz: 0,
+    });
+    expect(result).toEqual({
+      anchors: [
+        { anchor: 'Conradin Cramer', hits: 3 },
+        { anchor: 'Liebe Grüsse', hits: 0 },
+      ],
+    });
+  });
+
+  it('refuses more than twenty anchors', async () => {
+    const { resolver } = await setup();
+
+    await expect(
+      resolver.zettelkastenAnchors({
+        anchors: Array.from({ length: 21 }, (_, i) => `Anker ${i}`),
+      })
+    ).rejects.toThrow(/twenty/);
+  });
 });

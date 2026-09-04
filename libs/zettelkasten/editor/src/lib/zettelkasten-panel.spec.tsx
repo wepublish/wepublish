@@ -1,6 +1,7 @@
 import { MockedProvider } from '@apollo/client/testing';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import {
+  ZettelkastenAnchorsDocument,
   ZettelkastenArchiveDocument,
   ZettelkastenSearchDocument,
 } from '@wepublish/editor/api';
@@ -32,7 +33,37 @@ const mocks = [
     },
     result: { data: { zettelkastenSearch: treffer } },
   },
+  {
+    request: {
+      query: ZettelkastenAnchorsDocument,
+      variables: { anchors: ['Conradin Cramer'] },
+    },
+    result: {
+      data: {
+        zettelkastenAnchors: {
+          anchors: [{ anchor: 'Conradin Cramer', hits: 3 }],
+        },
+      },
+    },
+  },
 ];
+
+const anchorsMock = {
+  request: {
+    query: ZettelkastenAnchorsDocument,
+    variables: { anchors: ['Conradin Cramer', 'Liebe Grüsse'] },
+  },
+  result: {
+    data: {
+      zettelkastenAnchors: {
+        anchors: [
+          { anchor: 'Conradin Cramer', hits: 3 },
+          { anchor: 'Liebe Grüsse', hits: 0 },
+        ],
+      },
+    },
+  },
+};
 
 const archive = {
   gesamt: 146,
@@ -147,5 +178,25 @@ describe('ZettelkastenPanel', () => {
     expect(
       screen.getByText('Regierungspräsident des Kantons Basel-Stadt.')
     ).toBeTruthy();
+  });
+
+  // The editor translations are not loaded in the test environment, so the
+  // chip title is the key instead of «Nicht im Bestand».
+  it('marks anchors without a dossier', async () => {
+    render(
+      <MockedProvider
+        mocks={[anchorsMock]}
+        addTypename={false}
+      >
+        <ZettelkastenPanel
+          anchors={['Conradin Cramer', 'Liebe Grüsse']}
+          onClose={vi.fn()}
+        />
+      </MockedProvider>
+    );
+
+    await waitFor(() =>
+      expect(screen.getByTitle('zettelkasten.anchorMissing')).toBeTruthy()
+    );
   });
 });

@@ -4,8 +4,12 @@ import { CanCreateArticle } from '@wepublish/permissions';
 import { Permissions } from '@wepublish/permissions/api';
 import { GraphQLJSON } from 'graphql-scalars';
 
-import { ZettelkastenClientService } from './zettelkasten-client.service';
 import {
+  ZettelkastenClientService,
+  ZettelkastenError,
+} from './zettelkasten-client.service';
+import {
+  ZettelkastenAnchorsArgs,
   ZettelkastenArchiveArgs,
   ZettelkastenDailyReportArgs,
   ZettelkastenEvidenceArgs,
@@ -97,5 +101,32 @@ export class ZettelkastenResolver {
     { count }: ZettelkastenDailyReportArgs
   ) {
     return this.client.call('tagesrapport', { anzahl: count });
+  }
+
+  @Permissions(CanCreateArticle)
+  @Query(() => GraphQLJSON, {
+    description:
+      'For every anchor: how many wiki hits there are (wiki_suche, limit 1). Nothing is judged.',
+  })
+  async zettelkastenAnchors(
+    @Args({ type: () => ZettelkastenAnchorsArgs })
+    { anchors }: ZettelkastenAnchorsArgs
+  ) {
+    if (anchors.length > 20) {
+      throw new ZettelkastenError(
+        'At most twenty anchors per call',
+        'ungueltige_eingabe'
+      );
+    }
+    const checked = [];
+    for (const anchor of anchors) {
+      const payload = (await this.client.call('wiki_suche', {
+        suche: `"${anchor.replace(/"/g, '')}"`,
+        grenze: 1,
+        versatz: 0,
+      })) as { gesamt?: number };
+      checked.push({ anchor, hits: payload?.gesamt ?? 0 });
+    }
+    return { anchors: checked };
   }
 }
