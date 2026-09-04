@@ -4056,6 +4056,14 @@ type Query {
   """
   websiteSettings: WebsiteSettings!
 
+  """
+  For every anchor: how many wiki hits there are (wiki_suche, limit 1). Nothing is judged.
+  """
+  zettelkastenAnchors(
+    """Capitalised word pairs from the open article, at most twenty."""
+    anchors: [String!]!
+  ): JSON!
+
   """Full text search over articles and newsletters (archiv_suche)."""
   zettelkastenArchive(
     limit: Int = 20
