@@ -37,6 +37,9 @@ export const mockArticleRevision = ({
   socialMediaTitle,
   canonicalUrl,
   breaking,
+  hideAuthor: false,
+  seoTitle: title,
+  seoDescription: lead,
 });
 
 export const mockArticle = ({
