@@ -28,6 +28,25 @@ type AnchorCount = { anchor: string; hits: number | null };
 const ANCHOR_BATCH_SIZE = 5;
 
 /**
+ * Why an anchor could not be checked, short enough for a log line. The door's
+ * own answers carry a code and a status (403 for a foreign tenant,
+ * `nicht_konfiguriert`); neither names a person, and without them twenty
+ * identical lines say nothing about what went wrong.
+ */
+function describeAnchorFailure(error: unknown): string {
+  if (error instanceof ZettelkastenError) {
+    const { code, status } = error.extensions;
+
+    return `code ${String(code)}, status ${String(status ?? 'none')}`;
+  }
+  if (error instanceof Error) {
+    return `${error.name}: ${error.message}`;
+  }
+
+  return String(error);
+}
+
+/**
  * Read access to the knowledge provider for everyone who may write articles.
  * Payloads are passed through unchanged so evidence is not lost in translation.
  */
@@ -159,10 +178,14 @@ export class ZettelkastenResolver {
       })) as { gesamt?: number };
 
       return { anchor, hits: payload?.gesamt ?? 0 };
-    } catch {
+    } catch (error) {
       // Without the anchor: it is a word pair out of the article and can name
-      // a private person, which has no business in a server log.
-      this.logger.warn('One anchor could not be checked, it counts as unknown');
+      // a private person, which has no business in a server log. The reason
+      // does belong there: a wrong token answers 403 for every anchor, and a
+      // log line without it cannot be told from a door that only times out.
+      this.logger.warn(
+        `One anchor could not be checked, it counts as unknown: ${describeAnchorFailure(error)}`
+      );
 
       return { anchor, hits: null };
     }

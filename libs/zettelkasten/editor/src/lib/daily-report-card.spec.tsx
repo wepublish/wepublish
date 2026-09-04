@@ -77,4 +77,13 @@ describe('DailyReportCard', () => {
       expect(screen.getByText('zettelkasten.report.empty')).toBeTruthy()
     );
   });
+
+  it('says that the report could not be read instead of claiming nothing is in the holdings', async () => {
+    renderCard(mockWith(['ein Rapport ohne Kopfzeile']));
+
+    await waitFor(() =>
+      expect(screen.getByText('zettelkasten.report.unreadable')).toBeTruthy()
+    );
+    expect(screen.queryByText('zettelkasten.report.empty')).toBeNull();
+  });
 });

@@ -3158,6 +3158,7 @@
       "report": {
         "loading": "Rapport wird geladen",
         "empty": "Kein Eintrag im Rapport. Nichts gefunden heisst: nicht im Bestand, nicht falsch.",
+        "unreadable": "Der Rapport liess sich nicht lesen. Das sagt nichts über den Bestand.",
         "feeds": "Zubringer",
         "lint": "Lint",
         "night": "Nachtlauf"

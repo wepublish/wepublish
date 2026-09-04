@@ -1,7 +1,11 @@
+import { Logger } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { describe, expect, it, vi } from 'vitest';
 
-import { ZettelkastenClientService } from './zettelkasten-client.service';
+import {
+  ZettelkastenClientService,
+  ZettelkastenError,
+} from './zettelkasten-client.service';
 import { ZettelkastenResolver } from './zettelkasten.resolver';
 
 vi.mock('@wepublish/settings/api', () => ({ SecretCrypto: class {} }));
@@ -106,6 +110,34 @@ describe('ZettelkastenResolver', () => {
       ],
     });
     expect(client.call).toHaveBeenCalledTimes(6);
+  });
+
+  it('logs why an anchor could not be checked, with the code and the status', async () => {
+    const { resolver, client } = await setup();
+    const warn = vi.spyOn(Logger.prototype, 'warn').mockImplementation(vi.fn());
+    client.call.mockRejectedValue(
+      new ZettelkastenError('Foreign tenant', 'kein_zugriff', 403)
+    );
+
+    await resolver.zettelkastenAnchors({ anchors: ['Conradin Cramer'] });
+
+    // The anchor itself stays out of the log; the reason does not.
+    const line = String(warn.mock.calls[0][0]);
+    expect(line).toContain('kein_zugriff');
+    expect(line).toContain('403');
+    expect(line).not.toContain('Conradin Cramer');
+    warn.mockRestore();
+  });
+
+  it('logs the class of a failure that is not a door answer', async () => {
+    const { resolver, client } = await setup();
+    const warn = vi.spyOn(Logger.prototype, 'warn').mockImplementation(vi.fn());
+    client.call.mockRejectedValue(new TypeError('fetch failed'));
+
+    await resolver.zettelkastenAnchors({ anchors: ['Conradin Cramer'] });
+
+    expect(String(warn.mock.calls[0][0])).toContain('TypeError: fetch failed');
+    warn.mockRestore();
   });
 
   it('checks the anchors five at a time instead of all at once', async () => {

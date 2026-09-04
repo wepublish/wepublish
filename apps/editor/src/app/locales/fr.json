@@ -3101,6 +3101,7 @@
       "report": {
         "loading": "Chargement du rapport",
         "empty": "Aucune entrée dans le rapport. Rien trouvé signifie: pas dans le fonds, pas faux.",
+        "unreadable": "Le rapport n'a pas pu être lu. Cela ne dit rien sur le fonds.",
         "feeds": "Sources",
         "lint": "Lint",
         "night": "Traitement nocturne"

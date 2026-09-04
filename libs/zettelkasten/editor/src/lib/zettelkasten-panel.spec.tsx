@@ -3,6 +3,7 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import {
   ZettelkastenAnchorsDocument,
   ZettelkastenArchiveDocument,
+  ZettelkastenPageDocument,
   ZettelkastenSearchDocument,
 } from '@wepublish/editor/api';
 import { describe, expect, it, vi } from 'vitest';
@@ -140,6 +141,22 @@ const uncheckedAnchorMock = {
           { anchor: 'Conradin Cramer', hits: 3 },
           { anchor: 'Liebe Grüsse', hits: null },
         ],
+      },
+    },
+  },
+};
+
+/** A page the door answers 200 for, without the inhalt field. */
+const pageWithoutContentMock = {
+  request: {
+    query: ZettelkastenPageDocument,
+    variables: { page: 'personen/cramer_conradin.md' },
+  },
+  result: {
+    data: {
+      zettelkastenPage: {
+        titel: 'Conradin Cramer',
+        beleg: 'mandanten/bajour/wiki/personen/cramer_conradin.md',
       },
     },
   },
@@ -312,6 +329,42 @@ describe('ZettelkastenPanel', () => {
     // The counters fall back to zero instead of reading through a missing
     // treffer_je_quelle; the archive line is there either way.
     expect(screen.getByText('zettelkasten.archive.counts')).toBeTruthy();
+  });
+
+  it('survives a page payload without the inhalt field', async () => {
+    render(
+      <MockedProvider
+        mocks={[...mocks, archiveMock, pageWithoutContentMock]}
+        addTypename={false}
+      >
+        <ZettelkastenPanel
+          anchors={['Conradin Cramer']}
+          onClose={vi.fn()}
+        />
+      </MockedProvider>
+    );
+
+    fireEvent.click(screen.getByText('Conradin Cramer'));
+
+    await waitFor(() =>
+      expect(
+        screen.getByText('Regierungspräsident des Kantons Basel-Stadt.')
+      ).toBeTruthy()
+    );
+    fireEvent.click(
+      screen.getByText('Regierungspräsident des Kantons Basel-Stadt.')
+    );
+
+    // The dossier stays empty, and the panel keeps standing: without the
+    // guard parseDossier throws on the missing inhalt and the editor, which
+    // has no error boundary, loses the open article.
+    await waitFor(() =>
+      expect(screen.getByText('zettelkasten.backToHits')).toBeTruthy()
+    );
+    expect(
+      screen.getAllByText('mandanten/bajour/wiki/personen/cramer_conradin.md')
+        .length
+    ).toBeGreaterThan(0);
   });
 
   it('says «not in the holdings» for an empty result, in the wiki and in the archive', async () => {

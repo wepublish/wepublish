@@ -46,7 +46,7 @@ type Hit = {
  * an exception here would take the open, unsaved article with it.
  */
 type SearchPayload = { gesamt?: number; treffer?: Hit[] };
-type PagePayload = { titel: string; beleg: string; inhalt: string };
+type PagePayload = { titel: string; beleg: string; inhalt?: string };
 /** One answer of archiv_suche: how much the medium has, and the first hits. */
 type ArchivePayload = {
   gesamt?: number;
@@ -262,7 +262,7 @@ export function ZettelkastenPanel({
           )}
           {page && !openFact && (
             <DossierView
-              dossier={parseDossier(page.inhalt)}
+              dossier={parseDossier(page.inhalt ?? '')}
               beleg={page.beleg}
               onShowEvidence={setOpenFact}
               onInsert={

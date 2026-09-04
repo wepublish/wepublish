@@ -3197,6 +3197,7 @@
       "report": {
         "loading": "Loading the report",
         "empty": "No entry in the report. Nothing found means: not in the holdings, not wrong.",
+        "unreadable": "The report could not be read. That says nothing about the holdings.",
         "feeds": "Feeds",
         "lint": "Lint",
         "night": "Night run"

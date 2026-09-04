@@ -19,10 +19,9 @@ export function DailyReportCard() {
   });
   const eintraege = (data?.zettelkastenDailyReport as Payload | undefined)
     ?.eintraege;
+  const delivered = Array.isArray(eintraege) ? eintraege : [];
   const entries = parseDailyReport(
-    Array.isArray(eintraege) ?
-      eintraege.filter((entry): entry is string => typeof entry === 'string')
-    : []
+    delivered.filter((entry): entry is string => typeof entry === 'string')
   ).reverse();
 
   if (loading) {
@@ -34,6 +33,16 @@ export function DailyReportCard() {
   }
   if (error) {
     return <Typography color="error">{error.message}</Typography>;
+  }
+  // Entries arrived and none of them could be decomposed. «Nothing found»
+  // would be a claim about the holdings, and here it would be a false one:
+  // the card says that it could not read the report, and nothing more.
+  if (entries.length === 0 && delivered.length > 0) {
+    return (
+      <Typography variant="body2">
+        {t('zettelkasten.report.unreadable')}
+      </Typography>
+    );
   }
   if (entries.length === 0) {
     return (
