@@ -85,7 +85,7 @@ export default function TsriAdHeader({
           <TsriAdvertiserContent>
             {isPromo(advertiser) ?
               <strong>Rubrik Kultur wird präsentiert von: </strong>
-            : <strong>Präsentiert von:</strong>}
+            : <strong>Bezahlte Partnerschaft mit:</strong>}
 
             <RichText richText={advertiser.bio} />
           </TsriAdvertiserContent>
