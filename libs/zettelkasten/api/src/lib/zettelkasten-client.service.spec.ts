@@ -79,6 +79,39 @@ describe('ZettelkastenClientService', () => {
     });
   });
 
+  it('never carries the transport message with host and port into the error', async () => {
+    const get = vi
+      .fn()
+      .mockReturnValue(
+        throwError(() => ({ message: 'connect ECONNREFUSED 10.0.3.14:8095' }))
+      );
+    const { service } = await setup(get);
+
+    await expect(
+      service.call('wiki_suche', { suche: 'x' })
+    ).rejects.toMatchObject({
+      message: 'The knowledge provider did not answer',
+      extensions: { code: 'nicht_erreichbar' },
+    });
+  });
+
+  it('keeps the transport message out of the error when the door answered without a fehler payload', async () => {
+    const get = vi.fn().mockReturnValue(
+      throwError(() => ({
+        response: { status: 502, data: {} },
+        message: 'Request failed with status code 502 at zk.intern:8095',
+      }))
+    );
+    const { service } = await setup(get);
+
+    await expect(
+      service.call('wiki_suche', { suche: 'x' })
+    ).rejects.toMatchObject({
+      message: 'The knowledge provider did not answer',
+      extensions: { code: 'nicht_erreichbar', status: 502 },
+    });
+  });
+
   it('refuses to call when the integration is disabled', async () => {
     const { service, get } = await setup(vi.fn(), { enabled: false });
 

@@ -1,5 +1,5 @@
 import { HttpService } from '@nestjs/axios';
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { GraphQLError } from 'graphql';
 import { firstValueFrom } from 'rxjs';
 
@@ -32,6 +32,8 @@ type DoorError = {
  */
 @Injectable()
 export class ZettelkastenClientService {
+  private readonly logger = new Logger(ZettelkastenClientService.name);
+
   constructor(
     @Inject(ZettelkastenConfig) private readonly config: ZettelkastenConfig,
     @Inject(HttpService) private readonly http: HttpService
@@ -77,8 +79,15 @@ export class ZettelkastenClientService {
       const { response, message } = error as DoorError;
       const fehler = response?.data?.fehler;
 
+      if (!fehler?.meldung) {
+        // The transport message names host and port of the knowledge provider
+        // («connect ECONNREFUSED 10.0.3.14:8095»). It stays on the server; the
+        // browser only ever sees what the door itself said.
+        this.logger.warn(`The call to ${tool} did not answer: ${message}`);
+      }
+
       throw new ZettelkastenError(
-        fehler?.meldung ?? message ?? 'The knowledge provider did not answer',
+        fehler?.meldung ?? 'The knowledge provider did not answer',
         fehler?.code ?? 'nicht_erreichbar',
         response?.status
       );

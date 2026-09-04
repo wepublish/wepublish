@@ -81,6 +81,65 @@ describe('ZettelkastenResolver', () => {
     });
   });
 
+  it('reports an anchor whose call failed as unchecked and keeps the other counts', async () => {
+    const { resolver, client } = await setup();
+    client.call
+      .mockResolvedValueOnce({ gesamt: 3 })
+      .mockResolvedValueOnce({ gesamt: 0 })
+      .mockRejectedValueOnce(new Error('the door timed out'))
+      .mockResolvedValueOnce({ gesamt: 7 })
+      .mockResolvedValueOnce({ gesamt: 1 })
+      .mockResolvedValueOnce({ gesamt: 2 });
+
+    const result = await resolver.zettelkastenAnchors({
+      anchors: ['Eins', 'Zwei', 'Drei', 'Vier', 'Fuenf', 'Sechs'],
+    });
+
+    expect(result).toEqual({
+      anchors: [
+        { anchor: 'Eins', hits: 3 },
+        { anchor: 'Zwei', hits: 0 },
+        { anchor: 'Drei', hits: null },
+        { anchor: 'Vier', hits: 7 },
+        { anchor: 'Fuenf', hits: 1 },
+        { anchor: 'Sechs', hits: 2 },
+      ],
+    });
+    expect(client.call).toHaveBeenCalledTimes(6);
+  });
+
+  it('checks the anchors five at a time instead of all at once', async () => {
+    const { resolver, client } = await setup();
+    const started: string[] = [];
+    const waiting: (() => void)[] = [];
+    client.call.mockImplementation(
+      (_tool: string, params: { suche: string }) => {
+        started.push(params.suche);
+
+        return new Promise(resolve =>
+          waiting.push(() => resolve({ gesamt: 1 }))
+        );
+      }
+    );
+
+    const pending = resolver.zettelkastenAnchors({
+      anchors: Array.from({ length: 6 }, (_, index) => `Anker ${index}`),
+    });
+    await new Promise(resolve => setTimeout(resolve, 0));
+
+    expect(started).toHaveLength(5);
+
+    waiting.splice(0).forEach(release => release());
+    await new Promise(resolve => setTimeout(resolve, 0));
+
+    expect(started).toHaveLength(6);
+
+    waiting.splice(0).forEach(release => release());
+    await expect(pending).resolves.toMatchObject({
+      anchors: expect.arrayContaining([{ anchor: 'Anker 5', hits: 1 }]),
+    });
+  });
+
   it('refuses more than twenty anchors', async () => {
     const { resolver } = await setup();
 
