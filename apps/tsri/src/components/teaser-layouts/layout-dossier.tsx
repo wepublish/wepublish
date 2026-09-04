@@ -94,7 +94,7 @@ const DossierSlots = styled(TeaserSlots)`
   }
 
   ${({ theme }) => theme.breakpoints.up('md')} {
-    padding: 0.75cqw 0 1.5cqw 0;
+    padding: 0.75cqw 1.5cqw 1.5cqw 4.44cqw;
     grid-template-columns: 1fr 32.5cqw 32.5cqw !important;
     column-gap: 2.2cqw;
     row-gap: 1.77cqw;
@@ -111,6 +111,7 @@ export const DossierTitle = styled('h2')`
 
   ${({ theme }) => theme.breakpoints.up('md')} {
     font-size: 1.5cqw;
+    margin-left: -3cqw;
   }
 `;
 
