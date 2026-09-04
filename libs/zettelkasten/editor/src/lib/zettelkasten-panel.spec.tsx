@@ -62,6 +62,11 @@ const archiveMock = {
   result: { data: { zettelkastenArchive: archive } },
 };
 
+const archiveErrorMock = {
+  request: archiveMock.request,
+  error: new Error('Das Bearer-Token fehlt oder stimmt nicht.'),
+};
+
 describe('ZettelkastenPanel', () => {
   it('searches when a fact anchor is clicked and shows every hit with its evidence', async () => {
     render(
@@ -117,5 +122,30 @@ describe('ZettelkastenPanel', () => {
     // The editor translations are not loaded in the test environment, so
     // t() hands back the key instead of «71 Artikel, 75 Newsletter-Ausgaben».
     expect(screen.getByText('zettelkasten.archive.counts')).toBeTruthy();
+  });
+
+  it('says when the archive door refuses, and keeps the wiki hits', async () => {
+    render(
+      <MockedProvider
+        mocks={[...mocks, archiveErrorMock]}
+        addTypename={false}
+      >
+        <ZettelkastenPanel
+          anchors={['Conradin Cramer']}
+          onClose={vi.fn()}
+        />
+      </MockedProvider>
+    );
+
+    fireEvent.click(screen.getByText('Conradin Cramer'));
+
+    await waitFor(() =>
+      expect(
+        screen.getByText('Das Bearer-Token fehlt oder stimmt nicht.')
+      ).toBeTruthy()
+    );
+    expect(
+      screen.getByText('Regierungspräsident des Kantons Basel-Stadt.')
+    ).toBeTruthy();
   });
 });

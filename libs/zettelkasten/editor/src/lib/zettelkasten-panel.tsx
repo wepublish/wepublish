@@ -7,6 +7,7 @@ import {
   IconButton,
   InputAdornment,
   List,
+  ListItem,
   ListItemButton,
   ListItemText,
   Stack,
@@ -70,8 +71,10 @@ export function ZettelkastenPanel({
   const [search, { data, loading, error }] = useZettelkastenSearchLazyQuery();
   const [loadPage, { data: pageData, loading: pageLoading, error: pageError }] =
     useZettelkastenPageLazyQuery();
-  const [searchArchive, { data: archiveData, loading: archiveLoading }] =
-    useZettelkastenArchiveLazyQuery();
+  const [
+    searchArchive,
+    { data: archiveData, loading: archiveLoading, error: archiveError },
+  ] = useZettelkastenArchiveLazyQuery();
 
   const runSearch = (value: string) => {
     setQuery(value);
@@ -266,12 +269,15 @@ export function ZettelkastenPanel({
             </List>
           )}
 
-          {payload && (
+          {(payload || archive || archiveLoading || archiveError) && (
             <Box sx={{ mt: 2 }}>
               <Typography variant="overline">
                 {t('zettelkasten.archive.title')}
               </Typography>
               {archiveLoading && <CircularProgress size={16} />}
+              {archiveError && (
+                <Typography color="error">{archiveError.message}</Typography>
+              )}
               {archive && (
                 <Typography
                   variant="body2"
@@ -289,32 +295,36 @@ export function ZettelkastenPanel({
               {archive && (
                 <List dense>
                   {archive.treffer.map(hit => (
-                    <ListItemText
+                    <ListItem
                       key={`${hit.beleg}-${hit.stelle}`}
-                      primary={
-                        hit.datum ? `${hit.titel} · ${hit.datum}` : hit.titel
-                      }
-                      secondary={
-                        <>
-                          <Typography
-                            component="span"
-                            variant="body2"
-                            display="block"
-                          >
-                            {hit.stelle}
-                          </Typography>
-                          <Typography
-                            component="span"
-                            variant="caption"
-                            color="text.secondary"
-                            display="block"
-                          >
-                            {t(`zettelkasten.archive.source.${hit.quelle}`)} ·{' '}
-                            {hit.beleg}
-                          </Typography>
-                        </>
-                      }
-                    />
+                      alignItems="flex-start"
+                    >
+                      <ListItemText
+                        primary={
+                          hit.datum ? `${hit.titel} · ${hit.datum}` : hit.titel
+                        }
+                        secondary={
+                          <>
+                            <Typography
+                              component="span"
+                              variant="body2"
+                              display="block"
+                            >
+                              {hit.stelle}
+                            </Typography>
+                            <Typography
+                              component="span"
+                              variant="caption"
+                              color="text.secondary"
+                              display="block"
+                            >
+                              {t(`zettelkasten.archive.source.${hit.quelle}`)} ·{' '}
+                              {hit.beleg}
+                            </Typography>
+                          </>
+                        }
+                      />
+                    </ListItem>
                   ))}
                 </List>
               )}
