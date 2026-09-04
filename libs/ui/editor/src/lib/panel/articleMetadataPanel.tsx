@@ -8,7 +8,7 @@ import {
   TagType,
 } from '@wepublish/editor/api';
 import { slugify } from '@wepublish/utils';
-import { SetStateAction, useCallback, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import {
   MdAutoFixHigh,
@@ -40,15 +40,15 @@ import {
   createCheckedPermissionComponent,
   DeferredTextField,
   ListInput,
-  ListValue,
   PermissionControl,
   SelectPaywall,
   SelectTags,
   useAuthorisation,
+  useListInputState,
 } from '../atoms';
 import TrackingPixels from '../atoms/tracking/tracking-pixels';
 import { MetaDataType } from '../blocks';
-import { generateID, isFunctionalUpdate } from '../utility';
+import { ArticleAuthor, ArticleAuthorList } from './articleAuthorList';
 import { AuthorCheckPicker } from './authorCheckPicker';
 import { ImageEditPanel } from './imageEditPanel';
 import { ImageSelectPanel } from './imageSelectPanel';
@@ -105,7 +105,7 @@ export interface ArticleMetadata {
   readonly title: string;
   readonly lead: string;
   readonly seoTitle: string;
-  readonly authors: FullAuthorFragment[];
+  readonly authors: ArticleAuthor[];
   readonly tags: string[];
   readonly defaultTags: Pick<Tag, 'id' | 'tag'>[];
   readonly url: string;
@@ -179,42 +179,19 @@ function ArticleMetadataPanel({
   const [isChooseModalOpen, setChooseModalOpen] = useState(false);
   const [isEditModalOpen, setEditModalOpen] = useState(false);
 
-  const [metaDataProperties, setMetadataProperties] = useState<
-    ListValue<ArticleMetadataProperty>[]
-  >(
-    properties ?
-      properties.map(metaDataProperty => ({
-        id: generateID(),
-        value: metaDataProperty,
-      }))
-    : []
+  const [metaDataProperties, handleMetadataPropertiesChange] =
+    useListInputState(properties ?? [], properties =>
+      onChange?.({ ...value, properties })
+    );
+
+  const [articleAuthors, handleArticleAuthorsChange] = useListInputState(
+    authors,
+    authors => onChange?.({ ...value, authors })
   );
 
   const { t } = useTranslation();
 
   const isAuthorized = useAuthorisation('CAN_CREATE_ARTICLE');
-
-  const handleMetadataPropertiesChange = useCallback(
-    (
-      updatedProperties: SetStateAction<ListValue<ArticleMetadataProperty>[]>
-    ) => {
-      const nextProperties =
-        (
-          isFunctionalUpdate<ListValue<ArticleMetadataProperty>[]>(
-            updatedProperties
-          )
-        ) ?
-          updatedProperties(metaDataProperties)
-        : updatedProperties;
-
-      setMetadataProperties(nextProperties);
-      onChange?.({
-        ...value,
-        properties: nextProperties.map(({ value }) => value),
-      });
-    },
-    [metaDataProperties, onChange, value]
-  );
 
   function handleImageChange(currentImage: FullImageFragment) {
     switch (activeKey) {
@@ -444,10 +421,10 @@ function ArticleMetadataPanel({
 
             <Group controlId="articleAuthors">
               <Label>{t('articleEditor.panels.authors')}</Label>
-              <AuthorCheckPicker
-                list={authors}
+              <ArticleAuthorList
+                value={articleAuthors}
                 disabled={!isAuthorized}
-                onChange={authors => onChange?.({ ...value, authors })}
+                onChange={handleArticleAuthorsChange}
               />
             </Group>
 

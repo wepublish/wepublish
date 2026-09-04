@@ -143,7 +143,7 @@ export type ArticleRevision = HasBlockContent &
   HasOptionalUserLc & {
     __typename?: 'ArticleRevision';
     archivedAt?: Maybe<Scalars['DateTime']>;
-    authors: Array<Author>;
+    authors: Array<ArticleRevisionAuthor>;
     blocks: Array<BlockContent>;
     breaking: Scalars['Boolean'];
     canonicalUrl?: Maybe<Scalars['String']>;
@@ -166,6 +166,17 @@ export type ArticleRevision = HasBlockContent &
     user?: Maybe<User>;
     userId?: Maybe<Scalars['String']>;
   };
+
+export type ArticleRevisionAuthor = {
+  __typename?: 'ArticleRevisionAuthor';
+  author: Author;
+  role?: Maybe<Scalars['String']>;
+};
+
+export type ArticleRevisionAuthorInput = {
+  authorId: Scalars['String'];
+  role?: InputMaybe<Scalars['String']>;
+};
 
 export type ArticleRevisionFilter = {
   userId?: InputMaybe<Scalars['String']>;
@@ -2707,7 +2718,7 @@ export type MutationConfirmEmailChangeArgs = {
 };
 
 export type MutationCreateArticleArgs = {
-  authorIds: Array<Scalars['String']>;
+  authors: Array<ArticleRevisionAuthorInput>;
   blocks: Array<BlockContentInput>;
   breaking: Scalars['Boolean'];
   canonicalUrl?: InputMaybe<Scalars['String']>;
@@ -3401,7 +3412,7 @@ export type MutationUpdateAnalyticsProviderSettingArgs = {
 };
 
 export type MutationUpdateArticleArgs = {
-  authorIds: Array<Scalars['String']>;
+  authors: Array<ArticleRevisionAuthorInput>;
   blocks: Array<BlockContentInput>;
   breaking: Scalars['Boolean'];
   canonicalUrl?: InputMaybe<Scalars['String']>;

@@ -1,12 +1,22 @@
 import { DataLoaderService } from '@wepublish/utils/api';
-import { Author, PrismaClient } from '@prisma/client';
+import {
+  Author,
+  ArticleRevisionAuthor as PrismaArticleRevisionAuthor,
+  PrismaClient,
+} from '@prisma/client';
 import { Injectable, Scope } from '@nestjs/common';
 import { groupBy } from 'ramda';
+
+export type ArticleRevisionAuthorWithAuthor = PrismaArticleRevisionAuthor & {
+  author: Author;
+};
 
 @Injectable({
   scope: Scope.REQUEST,
 })
-export class ArticleAuthorDataloader extends DataLoaderService<Author[]> {
+export class ArticleAuthorDataloader extends DataLoaderService<
+  ArticleRevisionAuthorWithAuthor[]
+> {
   constructor(private prisma: PrismaClient) {
     super();
   }
@@ -21,18 +31,15 @@ export class ArticleAuthorDataloader extends DataLoaderService<Author[]> {
             in: articleRevisionIds,
           },
         },
+        orderBy: {
+          position: 'asc',
+        },
         include: {
-          author: {
-            include: {
-              links: true,
-            },
-          },
+          author: true,
         },
       })
     );
 
-    return articleRevisionIds.map(
-      revisionId => authors[revisionId]?.map(author => author.author) ?? []
-    );
+    return articleRevisionIds.map(revisionId => authors[revisionId] ?? []);
   }
 }

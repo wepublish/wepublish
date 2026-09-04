@@ -15,9 +15,13 @@ exports[`ArticleService should create an article 1`] = `
               "data": [
                 {
                   "authorId": "1234",
+                  "position": 0,
+                  "role": "Text",
                 },
                 {
                   "authorId": "12345",
+                  "position": 1,
+                  "role": "Bilder",
                 },
               ],
             },
@@ -1507,9 +1511,13 @@ exports[`ArticleService should update an article 2`] = `
               "data": [
                 {
                   "authorId": "1234",
+                  "position": 0,
+                  "role": "Text",
                 },
                 {
                   "authorId": "12345",
+                  "position": 1,
+                  "role": "Bilder",
                 },
               ],
             },
@@ -1610,9 +1618,13 @@ exports[`ArticleService version history should restore a revision as a new draft
               "data": [
                 {
                   "authorId": "author-1",
+                  "position": 0,
+                  "role": "Text",
                 },
                 {
                   "authorId": "author-2",
+                  "position": 1,
+                  "role": null,
                 },
               ],
             },

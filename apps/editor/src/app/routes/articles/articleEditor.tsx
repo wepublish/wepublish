@@ -391,9 +391,7 @@ function ArticleEditor() {
         hidden,
         disableComments,
         breaking,
-        authors: authors.filter(
-          author => author != null
-        ) as FullAuthorFragment[],
+        authors,
         image: (image as FullImageFragment) || undefined,
         hideAuthor,
         socialMediaTitle: socialMediaTitle || '',
@@ -566,7 +564,9 @@ function ArticleEditor() {
       title: metadata.title,
       lead: metadata.lead,
       seoTitle: metadata.seoTitle,
-      authorIds: metadata.authors.map(({ id }) => id),
+      authors: metadata.authors.flatMap(({ author, role }) =>
+        author ? [{ authorId: author.id, role: role || undefined }] : []
+      ),
       imageID: metadata.image?.id,
       breaking: metadata.breaking,
       shared: !!metadata.shared,

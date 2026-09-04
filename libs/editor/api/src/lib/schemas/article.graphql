@@ -14,7 +14,11 @@ fragment FullArticleRevisionWithoutBlocks on ArticleRevision {
   socialMediaDescription
 
   authors {
-    ...FullAuthor
+    role
+
+    author {
+      ...FullAuthor
+    }
   }
 
   socialMediaAuthors {
@@ -123,8 +127,12 @@ query ArticleList(
         title
 
         authors {
-          id
-          name
+          role
+
+          author {
+            id
+            name
+          }
         }
       }
     }
@@ -141,7 +149,7 @@ query ArticleList(
 }
 
 mutation CreateArticle(
-  $authorIds: [String!]!
+  $authors: [ArticleRevisionAuthorInput!]!
   $blocks: [BlockContentInput!]!
   $breaking: Boolean!
   $canonicalUrl: String!
@@ -165,7 +173,7 @@ mutation CreateArticle(
   $likes: Int!
 ) {
   createArticle(
-    authorIds: $authorIds
+    authors: $authors
     blocks: $blocks
     breaking: $breaking
     canonicalUrl: $canonicalUrl
@@ -194,7 +202,7 @@ mutation CreateArticle(
 
 mutation UpdateArticle(
   $id: String!
-  $authorIds: [String!]!
+  $authors: [ArticleRevisionAuthorInput!]!
   $blocks: [BlockContentInput!]!
   $breaking: Boolean!
   $canonicalUrl: String!
@@ -218,7 +226,7 @@ mutation UpdateArticle(
 ) {
   updateArticle(
     id: $id
-    authorIds: $authorIds
+    authors: $authors
     blocks: $blocks
     breaking: $breaking
     canonicalUrl: $canonicalUrl

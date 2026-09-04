@@ -799,11 +799,15 @@ async function seedArticles(
 
   await Promise.all(
     articles.map(({ revisions }) =>
-      prisma.articleRevisionAuthor.create({
-        data: {
-          authorId: shuffle(authorIds).at(0),
-          revisionId: revisions[0].id,
-        },
+      prisma.articleRevisionAuthor.createMany({
+        data: shuffle(authorIds)
+          .slice(0, 2)
+          .map((authorId, position) => ({
+            authorId,
+            revisionId: revisions[0].id,
+            role: position === 0 ? 'Text' : 'Fotos',
+            position,
+          })),
       })
     )
   );

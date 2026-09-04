@@ -129,7 +129,7 @@ export const FdtPollBlock = ({ poll }: BuilderPollBlockProps) => {
     },
   });
 
-  const author = articleData?.article?.latest.authors[0];
+  const author = articleData?.article?.latest.authors[0]?.author;
 
   const autoVote = useCallback(async () => {
     const answerId = router.query.answerId as string;

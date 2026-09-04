@@ -36,6 +36,24 @@ registerEnumType(ArticleSort, {
   name: 'ArticleSort',
 });
 
+@ObjectType()
+export class ArticleRevisionAuthor {
+  @Field(() => Author)
+  author!: Author;
+
+  @Field({ nullable: true })
+  role?: string;
+}
+
+@InputType()
+export class ArticleRevisionAuthorInput {
+  @Field()
+  authorId!: string;
+
+  @Field({ nullable: true })
+  role?: string;
+}
+
 @ObjectType({
   implements: () => [HasBlockContent, HasOptionalUserLc],
 })
@@ -70,8 +88,8 @@ export class ArticleRevision implements HasBlockContent, HasOptionalUserLc {
   @Field(() => Image, { nullable: true })
   image?: Image;
 
-  @Field(() => [Author])
-  authors!: Author[];
+  @Field(() => [ArticleRevisionAuthor])
+  authors!: ArticleRevisionAuthor[];
 
   @Field({ nullable: true })
   canonicalUrl?: string;
@@ -237,8 +255,8 @@ export class CreateArticleInput extends OmitType(
   @Field(() => [String])
   tagIds!: string[];
 
-  @Field(() => [String])
-  authorIds!: string[];
+  @Field(() => [ArticleRevisionAuthorInput])
+  authors!: ArticleRevisionAuthorInput[];
 
   @Field(() => [String])
   socialMediaAuthorIds!: string[];

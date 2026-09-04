@@ -84,6 +84,9 @@ model ArticleRevisionAuthor {
   author   Author @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId String
 
+  role     String?
+  position Int     @default(0)
+
   @@id([revisionId, authorId])
   @@map("articles.revisions.author")
 }

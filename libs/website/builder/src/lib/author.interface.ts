@@ -15,6 +15,7 @@ export type BuilderAuthorProps = Pick<
 
 export type BuilderAuthorChipProps = {
   author: FullAuthorFragment;
+  role?: string | null;
   className?: string;
 };
 

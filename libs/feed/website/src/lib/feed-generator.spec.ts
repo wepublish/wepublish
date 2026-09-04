@@ -1,6 +1,11 @@
 import { Article } from '@wepublish/website/api';
 import { generateFeed } from './feed-generator';
-import { mockArticle, mockAuthor, mockImage } from '@wepublish/storybook/mocks';
+import {
+  mockArticle,
+  mockArticleRevisionAuthor,
+  mockAuthor,
+  mockImage,
+} from '@wepublish/storybook/mocks';
 import { faker } from '@faker-js/faker';
 
 const author = mockAuthor();
@@ -96,7 +101,7 @@ it('should escape ampersands in image URLs for RSS feed', async () => {
         publishedAt: new Date('2023-01-01').toISOString(),
         createdAt: new Date('2023-01-01').toISOString(),
         blocks: [],
-        authors: [mockAuthor()],
+        authors: [mockArticleRevisionAuthor()],
         properties: [],
         image: imageWithSignature,
         lead: 'Test lead',
