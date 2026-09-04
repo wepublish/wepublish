@@ -66,6 +66,7 @@ describe('parseDossier', () => {
       learnedAt: '2026-08-21',
       source:
         'Liste aller Mitglieder, Staatskanzlei (bs.ch/regierungsrat), rohablage/regierungsrat_bs/2026-08-21T1732, Blatt «Lebensdaten der RR»',
+      sourceName: 'Liste aller Mitglieder, Staatskanzlei (bs.ch/regierungsrat)',
       evidence: 'rohablage/regierungsrat_bs/2026-08-21T1732',
       original: undefined,
       origin: undefined,
@@ -89,6 +90,28 @@ describe('parseDossier', () => {
     expect(publication.original).toBe(
       'https://amtsblattportal.ch/api/v1/publications/75462ab9/pdf'
     );
+  });
+
+  it('keeps the publication number in the source name', () => {
+    const [publication] = dossier.sections[1].facts;
+
+    expect(publication.sourceName).toBe(
+      'Amtsblattportal, Publikation RS-BS40-0000000872'
+    );
+  });
+
+  it('leaves the source name empty when the line is only a raw-store path', () => {
+    const [fact] = parseDossier(
+      `## Amtliches
+
+- Etwas.
+  quelle: rohablage/regierungsrat_bs/2026-08-21T1732
+  status: gueltig
+`
+    ).sections[0].facts;
+
+    expect(fact.source).toBe('rohablage/regierungsrat_bs/2026-08-21T1732');
+    expect(fact.sourceName).toBeUndefined();
   });
 });
 

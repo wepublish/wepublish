@@ -3084,6 +3084,7 @@
       "source": "Source",
       "insert": "Insérer avec la source",
       "copied": "Copié avec sa source. Tapez /fait dans le texte pour insérer directement.",
+      "copyFailed": "Impossible de copier dans le presse-papiers. Tapez /fait dans le texte pour insérer.",
       "citation": {
         "asOf": "état au"
       },

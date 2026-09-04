@@ -3180,6 +3180,7 @@
       "source": "Source",
       "insert": "Insert with evidence",
       "copied": "Copied with its evidence. Type /fact in the text to insert directly.",
+      "copyFailed": "Could not copy to the clipboard. Type /fact in the text to insert.",
       "citation": {
         "asOf": "as of"
       },

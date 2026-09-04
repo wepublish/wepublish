@@ -306,29 +306,47 @@ function ArticleEditor() {
     [zettelkastenEnabled, t]
   );
 
-  // The fact, verbatim and with its evidence, into the paragraph /fact came
-  // from. Without that editor it goes to the clipboard and the writer is told.
-  const insertFact = (text: string) => {
-    const editor = factEditorRef.current;
+  // The panel is closed and the editor reference dropped together: the
+  // reference stands only while the panel was opened by /fact.
+  const closeZettelkasten = () => {
+    factEditorRef.current = null;
+    setZettelkastenOpen(false);
+  };
 
-    if (editor && !editor.isDestroyed) {
-      editor.chain().focus().insertContent(text).run();
-      setZettelkastenOpen(false);
-      return;
-    }
-
-    navigator.clipboard?.writeText(text);
+  const noteInsert = (message: string, type: 'info' | 'warning') =>
     toaster.push(
       <Message
-        type="info"
+        type={type}
         showIcon
         closable
         duration={4000}
       >
-        {t('zettelkasten.copied')}
+        {message}
       </Message>,
       { placement: 'bottomEnd' }
     );
+
+  // The fact, verbatim and with its evidence, into the paragraph /fact came
+  // from. Without that editor it goes to the clipboard and the writer is told,
+  // and told as well when the clipboard refuses.
+  const insertFact = (text: string) => {
+    const editor = factEditorRef.current;
+
+    if (editor && !editor.isDestroyed) {
+      editor.chain().focus().insertContent({ type: 'text', text }).run();
+      closeZettelkasten();
+      return;
+    }
+
+    if (!navigator.clipboard) {
+      noteInsert(t('zettelkasten.copyFailed'), 'warning');
+      return;
+    }
+
+    navigator.clipboard
+      .writeText(text)
+      .then(() => noteInsert(t('zettelkasten.copied'), 'info'))
+      .catch(() => noteInsert(t('zettelkasten.copyFailed'), 'warning'));
   };
 
   const articleID = id || createData?.createArticle.id;
@@ -1065,13 +1083,13 @@ function ArticleEditor() {
       <Drawer
         open={isZettelkastenOpen}
         size="sm"
-        onClose={() => setZettelkastenOpen(false)}
+        onClose={closeZettelkasten}
       >
         <ZettelkastenPanel
           anchors={factAnchors}
           initialQuery={zettelkastenQuery}
           onInsertFact={insertFact}
-          onClose={() => setZettelkastenOpen(false)}
+          onClose={closeZettelkasten}
         />
       </Drawer>
 

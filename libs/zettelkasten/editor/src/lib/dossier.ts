@@ -9,6 +9,11 @@ export type DossierFact = {
   validTo?: string;
   learnedAt?: string;
   source?: string;
+  /**
+   * The quelle line without its raw-store segment: what a reader may be told
+   * as the source.
+   */
+  sourceName?: string;
   /** The raw-store path inside the source line, zip entry included. */
   evidence?: string;
   /** The address of the original document, for official publications. */
@@ -38,6 +43,21 @@ const emptyFact = (statement: string): DossierFact => ({
   statement,
   valid: true,
 });
+
+/**
+ * The source line as a reader may be told it: the raw-store segment and
+ * everything after it removed, so that no path into the raw store can reach an
+ * article. Undefined when nothing but that segment stood there.
+ */
+function sourceNameOf(source: string): string | undefined {
+  const evidence = EVIDENCE.exec(source);
+  const name = (evidence ? source.slice(0, evidence.index) : source)
+    .trim()
+    .replace(/,$/, '')
+    .trim();
+
+  return name || undefined;
+}
 
 /** Parses the markdown of a wiki page into its head, sections and facts. */
 export function parseDossier(inhalt: string): Dossier {
@@ -92,6 +112,7 @@ export function parseDossier(inhalt: string): Dossier {
         fact.learnedAt = times?.[3]?.trim();
       } else if (key === 'quelle') {
         fact.source = value;
+        fact.sourceName = sourceNameOf(value);
         fact.evidence = EVIDENCE.exec(value)?.[0];
         fact.original = ORIGINAL.exec(value)?.[1];
       } else if (key === 'herkunft') {

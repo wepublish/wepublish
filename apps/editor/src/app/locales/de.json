@@ -3141,6 +3141,7 @@
       "source": "Quelle",
       "insert": "Einfügen mit Beleg",
       "copied": "In die Zwischenablage kopiert, mit Beleg. Zum direkten Einfügen /fakt im Text tippen.",
+      "copyFailed": "Konnte nicht in die Zwischenablage kopieren. Zum Einfügen /fakt im Text tippen.",
       "citation": {
         "asOf": "Stand"
       },
