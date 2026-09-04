@@ -52,8 +52,16 @@ import {
   useUnsavedChangesDialog,
   VersionHistory,
   VersionHistoryRevision,
+  RichTextBlockValue,
 } from '@wepublish/ui/editor';
-import React, { useCallback, useEffect, useState } from 'react';
+import type { Editor } from '@tiptap/core';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   MdCloudUpload,
@@ -63,8 +71,19 @@ import {
   MdKeyboardBackspace,
   MdRemoveRedEye,
   MdSave,
+  MdMenuBook,
 } from 'react-icons/md';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useZettelkastenEnabledQuery } from '@wepublish/editor/api';
+import {
+  CommandItem,
+  RichtextCommandItemsContext,
+} from '@wepublish/richtext/editor';
+import {
+  extractFactAnchors,
+  richtextToText,
+  ZettelkastenPanel,
+} from '@wepublish/zettelkasten/editor';
 import {
   Badge,
   Drawer,
@@ -159,6 +178,17 @@ function ArticleEditor() {
     useDiscardArticleDraftMutation({});
 
   const [isMetaDrawerOpen, setMetaDrawerOpen] = useState(false);
+  const [isZettelkastenOpen, setZettelkastenOpen] = useState(false);
+  const [zettelkastenQuery, setZettelkastenQuery] = useState<
+    string | undefined
+  >();
+  // The editor the /fact command was typed in, so the fact lands where it was
+  // asked for. Null while the panel was opened over the button instead.
+  const factEditorRef = useRef<Editor | null>(null);
+  const { data: zettelkastenData } = useZettelkastenEnabledQuery({
+    fetchPolicy: 'cache-first',
+  });
+  const zettelkastenEnabled = !!zettelkastenData?.zettelkastenEnabled;
   const [isPublishDialogOpen, setPublishDialogOpen] = useState(false);
   const [isVersionHistoryOpen, setVersionHistoryOpen] = useState(false);
   const [isVersionHistoryRequested, setVersionHistoryRequested] =
@@ -224,6 +254,100 @@ function ArticleEditor() {
   const [blocks, setBlocks] = useState<BlockValue[]>(
     isNew ? InitialArticleBlocks : []
   );
+
+  // Capitalised word pairs from the title and richtext blocks, offered to the
+  // knowledge base as searches. Deterministic, no model involved.
+  const factAnchors = useMemo(
+    () =>
+      extractFactAnchors(
+        blocks.flatMap(block => {
+          if (block.type === EditorBlockType.Title) {
+            const { preTitle, title, lead } = block.value as TitleBlockValue;
+            return [preTitle ?? '', title ?? '', lead ?? ''];
+          }
+
+          if (block.type === EditorBlockType.RichText) {
+            return [
+              richtextToText((block.value as RichTextBlockValue).richText),
+            ];
+          }
+
+          return [];
+        })
+      ),
+    [blocks]
+  );
+
+  // The /fact slash command, contributed to every richtext block while the
+  // knowledge provider is enabled. Typing "/" replaces any selection, so the
+  // command takes the last fact anchor of the current paragraph as its search.
+  const zettelkastenCommandItems = useMemo<CommandItem[]>(
+    () =>
+      zettelkastenEnabled ?
+        [
+          {
+            title: t('zettelkasten.factCommand'),
+            command: ({ editor, range }) => {
+              const { $from } = editor.state.selection;
+              const paragraph = editor.state.doc.textBetween(
+                $from.start(),
+                range.from,
+                ' '
+              );
+              const anchors = extractFactAnchors([paragraph]);
+              editor.chain().focus().deleteRange(range).run();
+              factEditorRef.current = editor;
+              setZettelkastenQuery(anchors.at(-1));
+              setZettelkastenOpen(true);
+            },
+          },
+        ]
+      : [],
+    [zettelkastenEnabled, t]
+  );
+
+  // The panel is closed and the editor reference dropped together: the
+  // reference stands only while the panel was opened by /fact.
+  const closeZettelkasten = () => {
+    factEditorRef.current = null;
+    setZettelkastenOpen(false);
+  };
+
+  const noteInsert = (message: string, type: 'info' | 'warning') =>
+    toaster.push(
+      <Message
+        type={type}
+        showIcon
+        closable
+        duration={4000}
+      >
+        {message}
+      </Message>,
+      { placement: 'bottomEnd' }
+    );
+
+  // The fact, verbatim and with its evidence, into the paragraph /fact came
+  // from. Without that editor it goes to the clipboard and the writer is told,
+  // and told as well when the clipboard refuses.
+  const insertFact = (text: string) => {
+    const editor = factEditorRef.current;
+
+    if (editor && !editor.isDestroyed) {
+      editor.chain().focus().insertContent({ type: 'text', text }).run();
+      closeZettelkasten();
+      return;
+    }
+
+    if (!navigator.clipboard) {
+      noteInsert(t('zettelkasten.copyFailed'), 'warning');
+      return;
+    }
+
+    navigator.clipboard
+      .writeText(text)
+      .then(() => noteInsert(t('zettelkasten.copied'), 'info'))
+      .catch(() => noteInsert(t('zettelkasten.copyFailed'), 'warning'));
+  };
 
   const articleID = id || createData?.createArticle.id;
 
@@ -729,7 +853,7 @@ function ArticleEditor() {
   }, [isMetaDrawerOpen]);
 
   return (
-    <>
+    <RichtextCommandItemsContext.Provider value={zettelkastenCommandItems}>
       <FieldSet stateColor={stateColor}>
         <Legend>
           <Tag stateColor={stateColor}>{tagTitle}</Tag>
@@ -765,6 +889,21 @@ function ArticleEditor() {
                   >
                     {t('articleEditor.overview.metadata')}
                   </RIconButton>
+
+                  {zettelkastenEnabled && (
+                    <RIconButton
+                      icon={<MdMenuBook />}
+                      size="lg"
+                      className="actionButton"
+                      onClick={() => {
+                        factEditorRef.current = null;
+                        setZettelkastenQuery(undefined);
+                        setZettelkastenOpen(true);
+                      }}
+                    >
+                      {t('zettelkasten.open')}
+                    </RIconButton>
+                  )}
 
                   {!isNew && (
                     <>
@@ -941,6 +1080,19 @@ function ArticleEditor() {
         />
       </Drawer>
 
+      <Drawer
+        open={isZettelkastenOpen}
+        size="sm"
+        onClose={closeZettelkasten}
+      >
+        <ZettelkastenPanel
+          anchors={factAnchors}
+          initialQuery={zettelkastenQuery}
+          onInsertFact={insertFact}
+          onClose={closeZettelkasten}
+        />
+      </Drawer>
+
       <Modal
         open={isPublishDialogOpen}
         size="sm"
@@ -1016,7 +1168,7 @@ function ArticleEditor() {
           </MuiButton>
         </MuiDialogActions>
       </MuiDialog>
-    </>
+    </RichtextCommandItemsContext.Provider>
   );
 }
 

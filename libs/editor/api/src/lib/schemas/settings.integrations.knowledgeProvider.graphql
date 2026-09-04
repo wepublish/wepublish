@@ -1,0 +1,41 @@
+query SettingsIntegrationsKnowledgeProvider {
+  knowledgeProviderSettings {
+    createdAt
+    id
+    lastLoadedAt
+    modifiedAt
+    name
+    type
+    url
+    tenant
+    enabled
+  }
+}
+
+mutation UpdateSettingsIntegrationsKnowledgeProvider(
+  $id: String!
+  $name: String
+  $url: String
+  $token: String
+  $tenant: String
+  $enabled: Boolean
+) {
+  updateKnowledgeProviderSetting(
+    id: $id
+    name: $name
+    url: $url
+    token: $token
+    tenant: $tenant
+    enabled: $enabled
+  ) {
+    createdAt
+    id
+    lastLoadedAt
+    modifiedAt
+    name
+    type
+    url
+    tenant
+    enabled
+  }
+}

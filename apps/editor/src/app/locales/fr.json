@@ -715,7 +715,8 @@
       "goToAudienceDashboard": "Audience Dashboard",
       "externalApps": "We.Publish Apps",
       "networkContent": "Du réseau We.Publish",
-      "goToNetwork": "Aller au réseau"
+      "goToNetwork": "Aller au réseau",
+      "zettelkasten": "Base de connaissances : nouveautés"
     },
     "dateTimePicker": {
       "hour": "{{hour}}:00",
@@ -2290,6 +2291,7 @@
       "infoText": "Les intégrations sont des interfaces tierces intégrées à We.Publish. Elles sont utilisées, par exemple, pour envoyer des e-mails ou traiter des paiements en toute sécurité.",
       "title": "Intégrations",
       "ai": "Intégration AI",
+      "knowledgeProvider": "Base de connaissances",
       "challengeProvider": "Fournisseur de challenge",
       "paymentProvider": "Fournisseur de paiement",
       "trackingPixel": "Pixel de suivi",
@@ -2305,6 +2307,12 @@
       "aiSettings": {
         "apiKey": "Clé API",
         "systemPrompt": "Invite système (System Prompt)"
+      },
+      "knowledgeProviderSettings": {
+        "url": "Adresse de l'interface REST",
+        "tenant": "Mandant",
+        "token": "Jeton",
+        "enabled": "Actif dans l'éditeur d'articles"
       },
       "challengeSettings": {
         "secret": "Secret",
@@ -3058,6 +3066,67 @@
         "attempts": "Tentatives",
         "empty": "Aucune entrée pour ce filtre."
       }
+    },
+    "zettelkasten": {
+      "title": "Base de connaissances",
+      "close": "Fermer",
+      "search": "Rechercher",
+      "searchPlaceholder": "Rechercher dans les dossiers",
+      "anchors": "Tiré de l'article",
+      "anchorMissing": "Absent de la base",
+      "anchorUnchecked": "Non vérifié, la porte n'a pas répondu",
+      "backToHits": "Retour aux résultats",
+      "noHits": "Rien trouvé signifie: pas dans le fonds, pas faux.",
+      "open": "Base de connaissances",
+      "factCommand": "Fait",
+      "noFacts": "Aucun fait dans cette section.",
+      "lastChecked": "Dernière vérification contre les sources: {{date}}",
+      "valid": "valable {{from}} à {{to}}",
+      "learned": "appris {{date}}",
+      "source": "Source",
+      "insert": "Insérer avec la source",
+      "copied": "Copié avec sa source. Tapez /fait dans le texte pour insérer directement.",
+      "copyFailed": "Impossible de copier dans le presse-papiers. Tapez /fait dans le texte pour insérer.",
+      "citation": {
+        "asOf": "état au"
+      },
+      "showEvidence": "Afficher la preuve",
+      "openOriginal": "Ouvrir l'original",
+      "backToDossier": "Retour au dossier",
+      "origin": {
+        "haus": "recherche maison",
+        "community": "du public, agrégé",
+        "namensvergleich": "concordance de nom, pas d'identité"
+      },
+      "report": {
+        "loading": "Chargement du rapport",
+        "empty": "Aucune entrée dans le rapport. Rien trouvé signifie: pas dans le fonds, pas faux.",
+        "unreadable": "Le rapport n'a pas pu être lu. Cela ne dit rien sur le fonds.",
+        "feeds": "Sources",
+        "lint": "Lint",
+        "night": "Traitement nocturne"
+      },
+      "archive": {
+        "title": "Nous en avons déjà parlé",
+        "counts": "{{articles}} articles, {{newsletters}} numéros de la newsletter",
+        "source": {
+          "archiv": "Article",
+          "newsletter": "Newsletter"
+        }
+      },
+      "evidence": {
+        "source": "Source de la collecte",
+        "fetchedAt": "Collecté",
+        "payload": "Contenu",
+        "payloadPresent": "présent dans le dépôt brut",
+        "payloadGone": "plus présent, le sha256 reste",
+        "quote": "Citation «{{quote}}»",
+        "quoteFound": "figure dans la preuve",
+        "quoteMissing": "ne figure pas dans la preuve",
+        "files": "Fichiers de la collecte ({{count}})",
+        "notes": "Remarques sur la preuve"
+      },
+      "openEnd": "ouvert"
     }
   }
 }

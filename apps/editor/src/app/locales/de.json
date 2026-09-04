@@ -712,7 +712,8 @@
       "goToAudienceDashboard": "Zum Audience Dashboard",
       "externalApps": "We.Publish Apps",
       "networkContent": "Aus dem We.Publish-Netzwerk",
-      "goToNetwork": "Zum Netzwerk"
+      "goToNetwork": "Zum Netzwerk",
+      "zettelkasten": "Zettelkasten: was neu ist"
     },
     "dateTimePicker": {
       "hour": "{{hour}}:00",
@@ -2347,6 +2348,7 @@
       "infoText": " Integrationen sind in We.Publish eingebaute Schnittstellen von Drittanbietern. Diese werden etwa verwendet, um Mails zu versenden oder Zahlungen sicher abzuwickeln.",
       "title": "Integrationen",
       "ai": "AI",
+      "knowledgeProvider": "Zettelkasten",
       "challengeProvider": "Challenge Provider",
       "paymentProvider": "Zahlungsanbieter",
       "trackingPixel": "Tracking Pixel",
@@ -2362,6 +2364,12 @@
       "aiSettings": {
         "apiKey": "API Key",
         "systemPrompt": "System Prompt"
+      },
+      "knowledgeProviderSettings": {
+        "url": "Adresse der REST-Schnittstelle",
+        "tenant": "Mandant",
+        "token": "Token",
+        "enabled": "Im Artikel-Editor aktiv"
       },
       "challengeSettings": {
         "secret": "Geheimnis (Secret)",
@@ -3115,6 +3123,67 @@
         "attempts": "Versuche",
         "empty": "Keine Einträge für diesen Filter."
       }
+    },
+    "zettelkasten": {
+      "title": "Zettelkasten",
+      "close": "Schliessen",
+      "search": "Suchen",
+      "searchPlaceholder": "Dossiers durchsuchen",
+      "anchors": "Aus dem Artikel",
+      "anchorMissing": "Nicht im Bestand",
+      "anchorUnchecked": "Nicht geprüft, die Tür hat nicht geantwortet",
+      "backToHits": "Zurück zu den Treffern",
+      "noHits": "Nichts gefunden heisst: nicht im Bestand, nicht falsch.",
+      "open": "Zettelkasten",
+      "factCommand": "Fakt",
+      "noFacts": "Keine Fakten in diesem Abschnitt.",
+      "lastChecked": "Zuletzt gegen die Quellen geprüft: {{date}}",
+      "valid": "gültig {{from}} bis {{to}}",
+      "learned": "erfahren {{date}}",
+      "source": "Quelle",
+      "insert": "Einfügen mit Beleg",
+      "copied": "In die Zwischenablage kopiert, mit Beleg. Zum direkten Einfügen /fakt im Text tippen.",
+      "copyFailed": "Konnte nicht in die Zwischenablage kopieren. Zum Einfügen /fakt im Text tippen.",
+      "citation": {
+        "asOf": "Stand"
+      },
+      "showEvidence": "Beleg zeigen",
+      "openOriginal": "Original öffnen",
+      "backToDossier": "Zurück zum Dossier",
+      "origin": {
+        "haus": "hauseigene Recherche",
+        "community": "aus dem Publikum, aggregiert",
+        "namensvergleich": "Namensvergleich, keine Identität"
+      },
+      "report": {
+        "loading": "Rapport wird geladen",
+        "empty": "Kein Eintrag im Rapport. Nichts gefunden heisst: nicht im Bestand, nicht falsch.",
+        "unreadable": "Der Rapport liess sich nicht lesen. Das sagt nichts über den Bestand.",
+        "feeds": "Zubringer",
+        "lint": "Lint",
+        "night": "Nachtlauf"
+      },
+      "archive": {
+        "title": "Dazu haben wir schon berichtet",
+        "counts": "{{articles}} Artikel, {{newsletters}} Newsletter-Ausgaben",
+        "source": {
+          "archiv": "Artikel",
+          "newsletter": "Newsletter"
+        }
+      },
+      "evidence": {
+        "source": "Quelle des Abrufs",
+        "fetchedAt": "Abgerufen",
+        "payload": "Nutzlast",
+        "payloadPresent": "in der Rohablage vorhanden",
+        "payloadGone": "nicht mehr vorhanden, sha256 bleibt",
+        "quote": "Zitat «{{quote}}»",
+        "quoteFound": "steht im Beleg",
+        "quoteMissing": "steht nicht im Beleg",
+        "files": "Dateien des Abrufs ({{count}})",
+        "notes": "Hinweise zur Beleglage"
+      },
+      "openEnd": "offen"
     }
   }
 }

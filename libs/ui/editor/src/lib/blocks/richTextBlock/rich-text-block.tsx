@@ -1,5 +1,8 @@
-import { RichtextEditor } from '@wepublish/richtext/editor';
-import React, { memo } from 'react';
+import {
+  RichtextCommandItemsContext,
+  RichtextEditor,
+} from '@wepublish/richtext/editor';
+import React, { memo, useContext } from 'react';
 
 import { BlockProps } from '../../atoms/blockList';
 import { RichTextBlockValue } from '../types';
@@ -15,11 +18,14 @@ export const RichTextBlock = memo(function RichTextBlock({
   disabled,
   onChange,
 }: RichTextBlockProps) {
+  const commandItems = useContext(RichtextCommandItemsContext);
+
   return (
     <RichtextEditor
       autofocus={!!autofocus}
       disabled={disabled}
       value={value}
+      commandItems={commandItems}
       onChange={({ json }) => onChange(json)}
     />
   );

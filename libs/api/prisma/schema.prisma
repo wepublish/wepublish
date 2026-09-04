@@ -1989,6 +1989,26 @@ model SettingAIProvider {
   @@map("settings.aiprovider")
 }
 
+enum KnowledgeProviderType {
+  ZETTELKASTEN @map("zettelkasten")
+}
+
+model SettingKnowledgeProvider {
+  id           String   @id
+  createdAt    DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt   DateTime @updatedAt @db.Timestamptz(3)
+  lastLoadedAt DateTime @default(now()) @db.Timestamptz(3)
+
+  type    KnowledgeProviderType
+  name    String?
+  url     String?
+  token   String?
+  tenant  String?
+  enabled Boolean @default(false)
+
+  @@map("settings.knowledgeprovider")
+}
+
 enum ExternalAppsTarget {
   BLANK  @map("blank")
   IFRAME @map("iframe")

@@ -711,7 +711,8 @@
       "goToAudienceDashboard": "Go to Audience Dashboard",
       "externalApps": "We.Publish Apps",
       "networkContent": "From the We.Publish Network",
-      "goToNetwork": "Go to Network"
+      "goToNetwork": "Go to Network",
+      "zettelkasten": "Knowledge base: what is new"
     },
     "dateTimePicker": {
       "hour": "{{hour}}:00",
@@ -2426,6 +2427,7 @@
       "infoText": "Integrations are third-party interfaces built into We.Publish. These are used, for example, to send emails or process payments securely.",
       "title": "Integrations",
       "ai": "AI",
+      "knowledgeProvider": "Knowledge base",
       "challengeProvider": "Challenge Provider",
       "paymentProvider": "Payment Provider",
       "trackingPixel": "Tracking Pixel",
@@ -2442,6 +2444,12 @@
       "aiSettings": {
         "apiKey": "API Key",
         "systemPrompt": "System Prompt"
+      },
+      "knowledgeProviderSettings": {
+        "url": "REST endpoint",
+        "tenant": "Tenant",
+        "token": "Token",
+        "enabled": "Active in the article editor"
       },
       "challengeSettings": {
         "secret": "Secret",
@@ -3154,6 +3162,67 @@
         "attempts": "Attempts",
         "empty": "No entries for this filter."
       }
+    },
+    "zettelkasten": {
+      "title": "Knowledge base",
+      "close": "Close",
+      "search": "Search",
+      "searchPlaceholder": "Search the dossiers",
+      "anchors": "From the article",
+      "anchorMissing": "Not in the knowledge base",
+      "anchorUnchecked": "Not checked, the door did not answer",
+      "backToHits": "Back to the hits",
+      "noHits": "Nothing found means: not in the holdings, not wrong.",
+      "open": "Knowledge base",
+      "factCommand": "Fact",
+      "noFacts": "No facts in this section.",
+      "lastChecked": "Last checked against the sources: {{date}}",
+      "valid": "valid {{from}} to {{to}}",
+      "learned": "learned {{date}}",
+      "source": "Source",
+      "insert": "Insert with evidence",
+      "copied": "Copied with its evidence. Type /fact in the text to insert directly.",
+      "copyFailed": "Could not copy to the clipboard. Type /fact in the text to insert.",
+      "citation": {
+        "asOf": "as of"
+      },
+      "showEvidence": "Show evidence",
+      "openOriginal": "Open original",
+      "backToDossier": "Back to the dossier",
+      "origin": {
+        "haus": "in-house research",
+        "community": "from the audience, aggregated",
+        "namensvergleich": "name match, not identity"
+      },
+      "report": {
+        "loading": "Loading the report",
+        "empty": "No entry in the report. Nothing found means: not in the holdings, not wrong.",
+        "unreadable": "The report could not be read. That says nothing about the holdings.",
+        "feeds": "Feeds",
+        "lint": "Lint",
+        "night": "Night run"
+      },
+      "archive": {
+        "title": "We have reported on this",
+        "counts": "{{articles}} articles, {{newsletters}} newsletter issues",
+        "source": {
+          "archiv": "Article",
+          "newsletter": "Newsletter"
+        }
+      },
+      "evidence": {
+        "source": "Source of the fetch",
+        "fetchedAt": "Fetched",
+        "payload": "Payload",
+        "payloadPresent": "present in the raw store",
+        "payloadGone": "no longer present, sha256 remains",
+        "quote": "Quote «{{quote}}»",
+        "quoteFound": "stands in the evidence",
+        "quoteMissing": "does not stand in the evidence",
+        "files": "Files of the fetch ({{count}})",
+        "notes": "Notes on the evidence"
+      },
+      "openEnd": "open"
     }
   }
 }
