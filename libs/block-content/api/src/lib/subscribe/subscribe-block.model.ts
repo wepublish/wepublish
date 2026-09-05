@@ -119,6 +119,15 @@ export class SubscribeBlockMemberPlanRenderSettingInput extends OmitType(
   layout!: SubscribeBlockLayoutConfigInput;
 }
 
+export enum SubscribePeriodicityDisplay {
+  Dropdown = 'dropdown',
+  OfferCards = 'offerCards',
+}
+
+registerEnumType(SubscribePeriodicityDisplay, {
+  name: 'SubscribePeriodicityDisplay',
+});
+
 @ObjectType({
   implements: BaseBlock,
 })
@@ -148,6 +157,8 @@ export class SubscribeBlock extends BaseBlock<typeof BlockType.Subscribe> {
   goodieMinValue?: number;
   @Field(() => Boolean, { defaultValue: false })
   hideRepeatGoodieOnUpgrade!: boolean;
+  @Field(() => SubscribePeriodicityDisplay, { nullable: true })
+  periodicityDisplay?: SubscribePeriodicityDisplay;
 
   @Field(() => [MemberPlan])
   memberPlans!: MemberPlan[];

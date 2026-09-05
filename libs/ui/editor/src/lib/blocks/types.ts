@@ -13,6 +13,7 @@ import {
   PageWithoutBlocksFragment,
   SubscribeBlock,
   SubscribeBlockField,
+  SubscribePeriodicityDisplay,
   Tag,
   TeaserInput,
   TeaserListBlockSort,
@@ -79,6 +80,7 @@ export interface SubscribeBlockValue extends BaseBlockValue {
   showDiscountCodes: boolean;
   goodieMinValue?: number | null;
   hideRepeatGoodieOnUpgrade: boolean;
+  periodicityDisplay?: SubscribePeriodicityDisplay | null;
 }
 
 export interface MailchimpFormInterestOptionValue {
@@ -569,6 +571,7 @@ export function mapBlockValueToBlockInput(
           showDiscountCodes: block.value.showDiscountCodes,
           goodieMinValue: block.value.goodieMinValue ?? null,
           hideRepeatGoodieOnUpgrade: block.value.hideRepeatGoodieOnUpgrade,
+          periodicityDisplay: block.value.periodicityDisplay,
         },
       };
 
@@ -1252,6 +1255,7 @@ export function blockForQueryBlock(
           hideRepeatGoodieOnUpgrade: block.hideRepeatGoodieOnUpgrade ?? false,
           memberPlanIds: block.memberPlanIds ?? [],
           memberPlanRenderSettings: block.memberPlanRenderSettings,
+          periodicityDisplay: block.periodicityDisplay,
         },
       };
 
