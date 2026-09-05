@@ -1,4 +1,5 @@
 import {
+  Editor,
   EditorContent,
   EditorContext,
   useEditor,
@@ -156,6 +157,14 @@ const Editor = styled(EditorContent)`
   }
 `;
 
+const loadContent = (editor: Editor, content: UseEditorOptions['content']) => {
+  editor
+    .chain()
+    .setMeta('addToHistory', false)
+    .setContent(content, { emitUpdate: false })
+    .run();
+};
+
 type RichtextEditorProps = {
   defaultValue?: UseEditorOptions['content'];
   value?: UseEditorOptions['content'];
@@ -192,14 +201,18 @@ export const RichtextEditor = forwardRef<HTMLDivElement, RichtextEditorProps>(
 
     useEffect(() => {
       if (editorReady && defaultValue) {
-        editor.commands.setContent(defaultValue, { emitUpdate: false });
+        loadContent(editor, defaultValue);
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
-      if (editorReady && value && !equals(value, editor.getJSON())) {
-        // editor.commands.setContent(value, { emitUpdate: false });
+      if (!editorReady || !value || editor.isFocused) {
+        return;
+      }
+
+      if (!equals(value, editor.getJSON())) {
+        loadContent(editor, value);
       }
     }, [value, editorReady, editor]);
 
