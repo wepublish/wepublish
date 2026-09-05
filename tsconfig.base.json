@@ -120,6 +120,13 @@
       "@wepublish/phrase/api": ["libs/phrase/api/src/index.ts"],
       "@wepublish/poll/api": ["libs/poll/api/src/index.ts"],
       "@wepublish/property/api": ["libs/property/api/src/index.ts"],
+      "@wepublish/puck-content/api": ["libs/puck-content/api/src/index.ts"],
+      "@wepublish/puck-content/editor": [
+        "libs/puck-content/editor/src/index.ts"
+      ],
+      "@wepublish/puck-content/website": [
+        "libs/puck-content/website/src/index.ts"
+      ],
       "@wepublish/public-content-cache/api": [
         "libs/public-content-cache/api/src/index.ts"
       ],
