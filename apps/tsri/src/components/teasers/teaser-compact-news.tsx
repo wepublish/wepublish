@@ -11,7 +11,7 @@ import {
   BuilderTeaserProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { FiArrowRight } from 'react-icons/fi';
+import { PiCaretRightBold } from 'react-icons/pi';
 
 import { TeaserWrapper as TeaserWrapperDefault } from './tsri-teaser';
 
@@ -131,7 +131,6 @@ export const CompactNewsRow = styled('li')`
     min-width: 0;
     overflow: hidden;
     background-color: ${({ theme }) => theme.palette.common.white};
-    border-radius: calc(var(--tw, 100cqw) * 0.004);
 
     & > a {
       display: block;
@@ -317,7 +316,7 @@ export const TeaserCompactNews = ({
                     </CompactNewsRowLead>
                   </CompactNewsRowText>
                   <CompactNewsRowArrow>
-                    <FiArrowRight />
+                    <PiCaretRightBold />
                   </CompactNewsRowArrow>
                 </CompactNewsRowContent>
               </Link>
