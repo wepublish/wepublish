@@ -46,6 +46,8 @@ import { useMemo } from 'react';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
+import { FactuelContentWrapper } from '../src/components/factuel-content-wrapper';
+
 setDefaultOptions({
   locale: fr,
 });
@@ -127,6 +129,7 @@ function CustomApp({
             <WebsiteBuilderProvider
               Head={Head}
               Script={Script}
+              ContentWrapper={FactuelContentWrapper}
               elements={{ Link: NextWepublishLink }}
               date={{ format: dateFormatter }}
               meta={{ siteTitle }}
