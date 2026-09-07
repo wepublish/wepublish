@@ -682,6 +682,147 @@ describe('audience filtering (semantics)', () => {
         await included(subscription(), { memberPlanIDs: [] as string[] })
       ).toBe(false);
     });
+
+    it('ends between uses the cancellation date when one exists', async () => {
+      const audience = { endsAtFrom: days(5), endsAtTo: days(15) };
+
+      expect(
+        await included(
+          subscription({
+            deactivation: { date: days(10) },
+            paidUntil: days(-20),
+          }),
+          audience
+        )
+      ).toBe(true);
+    });
+
+    it('ends between falls back to paidUntil only when not cancelled', async () => {
+      const audience = { endsAtFrom: days(5), endsAtTo: days(15) };
+
+      expect(
+        await included(
+          subscription({ deactivation: null, paidUntil: days(10) }),
+          audience
+        )
+      ).toBe(true);
+      expect(
+        await included(
+          subscription({ deactivation: null, paidUntil: days(-20) }),
+          audience
+        )
+      ).toBe(false);
+    });
+
+    it('ends between does not fall back to paidUntil when a cancellation is out of range', async () => {
+      expect(
+        await included(
+          subscription({
+            deactivation: { date: days(100) },
+            paidUntil: days(10),
+          }),
+          { endsAtFrom: days(5), endsAtTo: days(15) }
+        )
+      ).toBe(false);
+    });
+
+    it('ends between matches neither branch without a deactivation and without paidUntil', async () => {
+      expect(
+        await included(subscription({ deactivation: null, paidUntil: null }), {
+          endsAtFrom: days(5),
+          endsAtTo: days(15),
+        })
+      ).toBe(false);
+    });
+
+    it('ends between accepts an open lower or upper bound', async () => {
+      const row = subscription({ deactivation: null, paidUntil: days(10) });
+
+      expect(await included(row, { endsAtFrom: days(5) })).toBe(true);
+      expect(await included(row, { endsAtTo: days(15) })).toBe(true);
+      expect(await included(row, { endsAtFrom: days(20) })).toBe(false);
+      expect(await included(row, { endsAtTo: days(5) })).toBe(false);
+    });
+
+    it('starts between narrows on startsAt with both bounds optional', async () => {
+      const row = subscription({ startsAt: days(-10) });
+
+      expect(
+        await included(row, { startsAtFrom: days(-20), startsAtTo: days(-5) })
+      ).toBe(true);
+      expect(await included(row, { startsAtFrom: days(-5) })).toBe(false);
+      expect(await included(row, { startsAtTo: days(-20) })).toBe(false);
+      expect(await included(row, { startsAtFrom: days(-20) })).toBe(true);
+    });
+
+    it('is paid keeps only subscriptions that are started and paid up', async () => {
+      const audience = { isPaid: true };
+
+      expect(
+        await included(
+          subscription({ startsAt: days(-30), paidUntil: days(10) }),
+          audience
+        )
+      ).toBe(true);
+      expect(
+        await included(
+          subscription({ startsAt: days(-30), paidUntil: days(-1) }),
+          audience
+        )
+      ).toBe(false);
+      expect(
+        await included(
+          subscription({ startsAt: days(5), paidUntil: days(10) }),
+          audience
+        )
+      ).toBe(false);
+    });
+
+    it('is paid excludes an unpaid first invoice that the active state would keep', async () => {
+      const row = subscription({ startsAt: days(-30), paidUntil: null });
+
+      expect(
+        await included(row, { subscriptionState: MailSubscriptionState.active })
+      ).toBe(true);
+      expect(await included(row, { isPaid: true })).toBe(false);
+      expect(await included(row, { isPaid: false })).toBe(true);
+    });
+
+    it('is canceled counts a cancellation that only takes effect later', async () => {
+      expect(
+        await included(subscription({ deactivation: { date: days(30) } }), {
+          isCanceled: true,
+        })
+      ).toBe(true);
+      expect(
+        await included(subscription({ deactivation: null }), {
+          isCanceled: true,
+        })
+      ).toBe(false);
+      expect(
+        await included(subscription({ deactivation: null }), {
+          isCanceled: false,
+        })
+      ).toBe(true);
+    });
+
+    it('has replaced subscription splits on replacesSubscriptionID', async () => {
+      expect(
+        await included(subscription({ replacesSubscriptionID: 'sub-old' }), {
+          hasReplacedSubscription: true,
+        })
+      ).toBe(true);
+      expect(
+        await included(subscription({ replacesSubscriptionID: null }), {
+          hasReplacedSubscription: true,
+        })
+      ).toBe(false);
+      expect(
+        await included(subscription({ replacesSubscriptionID: null }), {
+          hasReplacedSubscription: false,
+        })
+      ).toBe(true);
+    });
   });
 
   describe('noActiveSubscription', () => {
