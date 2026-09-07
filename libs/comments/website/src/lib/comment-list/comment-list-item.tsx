@@ -1,12 +1,9 @@
 import { JSX } from 'react';
 import { css, lighten, Theme } from '@mui/material';
-import {
-  BuilderCommentListItemProps,
-  CommentState,
-} from '@wepublish/comment/api';
+import { CommentState } from '@wepublish/website/api';
 import { useTranslation } from 'react-i18next';
 import { useUser } from '@wepublish/authentication/website';
-import { CommentState } from '@wepublish/website/api';
+import styled from '@emotion/styled';
 import {
   BuilderCommentListItemProps,
   useWebsiteBuilder,
