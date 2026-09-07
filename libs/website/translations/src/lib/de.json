@@ -13,6 +13,9 @@
     "subscribe": "Abonnent*in werden",
     "login": "Login"
   },
+  "paymentAmountPicker": {
+    "manual": "Manuell"
+  },
   "teaser": {
     "author": {
       "text": "Von {authors}",
@@ -28,8 +31,11 @@
     },
     "continuation": "Nach {afterFirstPaymentPeriod} {formattedAmount} {renewalPeriodL}.",
     "cancellable": "Jederzeit kündbar",
+    "captcha": "Captcha",
     "chooseSubscription": "Abo wählen",
     "choosePaymentMethod": "Zahlungsmethode wählen",
+    "greeting": "Hallo {name}, willkommen zurück!",
+    "spamProtection": "Spam-Schutz",
     "upgrade": {
       "infoTitle": "Dein Upgrade",
       "info": "Mach jetzt ein Upgrade von deinem {oldMemberPlan} auf das {newMemberPlan}. <bold>Dein Restguthaben von {discount} bei deinem {oldMemberPlan} wird Dir dabei angerechnet.</bold> Weiter unten siehst du Deinen noch zu zahlenden Upgrade-Preis für den Wechsel zum {newMemberPlan}.",
@@ -57,6 +63,11 @@
       "title": "Goodie wählen",
       "none": "Kein Goodie",
       "soldOut": "Dieses Goodie ist leider ausverkauft. Bitte wähle ein anderes."
+    },
+    "warning": {
+      "confirmationTitle": "Bist du dir sicher?",
+      "openInvoices": "Du hast bereits schon ein Abo mit offenen Rechnungen. Du kannst deine offenen Rechnungen in deinem <Link href=\"/profile\">Profil</Link> anschauen.",
+      "alreadyHasSubscription": "Du hast dieses Abo schon, bist du dir sicher? Du kannst deine Abos in deinem <Link href=\"/profile\">Profil</Link> anschauen."
     }
   },
   "login": {
@@ -78,6 +89,11 @@
       "invalidCode": "Ungültiger Code. Bitte versuche es erneut."
     }
   },
+  "newsletter": {
+    "back": "Zurück",
+    "next": "Weiter",
+    "submit": "Abschliessen"
+  },
   "crowdfunding": {
     "goal": "{type, select, Revenue {Bereits <bold>{revenue}</bold> finanziert} other {Bereits <bold>{subscriptions, number}</bold> {subscriptions, plural, =1 {Person} other {Personen}} abonniert}}"
   },
@@ -96,7 +112,13 @@
     "extendEarlyConfirmation": "Wir freuen uns, dass du dein {type, select, Donation {Spende} other {Abo}} frühzeitig um ein {subscriptionDuration} verlängern willst. Weiterfahren?",
     "noActiveSubscriptions": "Du hast noch kein aktives Abo.",
     "subscribeNow": "Jetzt ein Abo lösen.",
-    "startsAt": "Abgeschlossen am <time>{startsAt}</time>"
+    "startsAt": "Abgeschlossen am <time>{startsAt}</time>",
+    "detailsAndPayments": "Details & Zahlungen",
+    "cancelledDueToInvoiceNotPaid": "Automatisch gekündigt",
+    "cancelledDueToUnknownReason": "Kündigungsgrund ist unbekannt",
+    "autoRenew": "Wird automatisch {periodicityTimeline} erneuert",
+    "validFor": "Gültig für {subscriptionDuration}",
+    "cancelProduct": "{productName} wirklich kündigen?"
   },
   "invoice": {
     "invoices": "Rechnungen",
@@ -121,6 +143,8 @@
     "email": "E-Mail",
     "changeEmail": "E-Mail-Adresse ändern",
     "newEmail": "Neue E-Mail-Adresse",
+    "password": "Passwort",
+    "passwordRepeat": "Passwort wiederholen",
     "requestEmailChange": "Änderung beantragen",
     "emailChangeRequested": "Eine Bestätigungs-E-Mail wurde an deine aktuelle E-Mail-Adresse gesendet. Bitte klicke auf den Link in der E-Mail, um die Änderung zu bestätigen.",
     "pendingEmailChange": "Eine Änderung zu {email} wartet auf Bestätigung. Bitte prüfe deinen Posteingang.",
@@ -151,6 +175,21 @@
       "setupError": "Fehler beim Einrichten der 2FA. Bitte versuche es erneut.",
       "invalidCode": "Ungültiger Bestätigungscode. Bitte versuche es erneut.",
       "setupSuccess": "Zwei-Faktor-Authentifizierung wurde erfolgreich aktiviert."
+    },
+    "form": {
+      "firstName": "Vorname",
+      "lastName": "Nachname",
+      "email": "Email",
+      "emailRepeated": "Email wiederholen",
+      "birthday": "Geburtstag",
+      "password": "Passwort",
+      "passwordRepeated": "Passwort wiederholen",
+      "street": "Strasse",
+      "houseNumber": "Hausnummer",
+      "zipCode": "PLZ",
+      "city": "Ort / Stadt",
+      "country": "Land",
+      "occupation": "Funktion / Beruf"
     }
   },
   "article": {
@@ -160,12 +199,33 @@
   "commentEditor": {
     "comment": "Kommentieren",
     "cancel": "Abbrechen",
+    "captcha": "Captcha",
     "guestComment": "Als Gast kommentieren",
     "loginRegister": "Anmelden/Registrieren",
     "loginForReaders": "Login für Leserinnen und Leser",
     "noAccountYet": "Noch keinen Account?",
     "registerNow": "Jetzt registrieren",
     "notLoggedIn": "Du bist nicht eingeloggt"
+  },
+  "comments": {
+    "list": {
+      "readMore": "Jetzt Mitreden",
+      "noComments": "Keine Kommentare vorhanden.",
+      "pendingApproval": "Kommentar wartet auf Freischaltung",
+      "pendingUserChanges": "Kommentar muss editiert werden bevor Freischaltung.",
+      "rejected": "Kommentar wurde nicht freigeschalten.",
+      "reply": "Antworten",
+      "edit": "Bearbeiten"
+    }
+  },
+  "poll": {
+    "totalVotes": "{count} Stimmen",
+    "closesAt": "Schliesst am <time>{date}</time>",
+    "closed": "&ndash; Abstimmung beendet."
+  },
+  "registrationForm": {
+    "register": "Registrieren",
+    "captcha": "Captcha"
   },
   "search": {
     "search": "Suche",

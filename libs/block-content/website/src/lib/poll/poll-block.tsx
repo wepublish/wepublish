@@ -14,6 +14,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { PollBlockResult } from './poll-block-result';
 import { usePollBlock } from './poll-block.context';
 import { H4 } from '@wepublish/ui';
+import { Trans, useTranslation } from 'react-i18next';
 
 export const isPollBlock = (
   block: Pick<BlockContent, '__typename'>
@@ -63,6 +64,7 @@ export const PollBlock = ({ poll, className }: BuilderPollBlockProps) => {
     blocks: { RichText },
     date,
   } = useWebsiteBuilder();
+  const { t } = useTranslation();
 
   const combinedVotes = useMemo(() => {
     const total: Record<string, number> = {};
@@ -189,20 +191,29 @@ export const PollBlock = ({ poll, className }: BuilderPollBlockProps) => {
       )}
 
       <PollBlockMeta>
-        {totalVotes} Stimmen
+        {t('poll.totalVotes', { count: totalVotes })}
+
         {poll.closedAt && isOpen && (
           <>
             {' '}
-            &ndash; Schliesst am{' '}
-            <time
-              suppressHydrationWarning
-              dateTime={poll.closedAt}
-            >
-              {date.format(new Date(poll.closedAt))}
-            </time>
+            &ndash;
+            <Trans
+              i18nKey="poll.closesAt"
+              values={{
+                date: date.format(new Date(poll.closedAt)),
+              }}
+              components={{
+                time: (
+                  <time
+                    suppressHydrationWarning
+                    dateTime={poll.closedAt}
+                  />
+                ),
+              }}
+            />
           </>
         )}
-        {!isOpen && <> &ndash; Abstimmung beendet.</>}
+        {!isOpen && <> &ndash; {t('poll.closed')}</>}
       </PollBlockMeta>
     </PollBlockWrapper>
   );

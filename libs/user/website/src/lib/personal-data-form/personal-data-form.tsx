@@ -236,7 +236,7 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
                     type={showPassword ? 'text' : 'password'}
                     fullWidth
                     autoComplete="new-password"
-                    label={'Passwort'}
+                    label={t('user.password')}
                     error={!!error}
                     helperText={error?.message}
                     InputProps={{
@@ -269,7 +269,7 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
                   type={showRepeatPassword ? 'text' : 'password'}
                   autoComplete="new-password"
                   fullWidth
-                  label={'Passwort wiederholen'}
+                  label={t('user.passwordRepeat')}
                   error={!!error}
                   helperText={error?.message}
                   InputProps={{

@@ -13,6 +13,9 @@
     "subscribe": "S'abonner",
     "login": "Login"
   },
+  "paymentAmountPicker": {
+    "manual": "Manuel"
+  },
   "teaser": {
     "author": {
       "text": "Par {authors}",
@@ -28,8 +31,11 @@
     },
     "continuation": "Après {afterFirstPaymentPeriod}, {formattedAmount} {renewalPeriodL}.",
     "cancellable": "Résiliable à tout moment",
+    "captcha": "Captcha",
     "chooseSubscription": "Choisir un abonnement",
     "choosePaymentMethod": "Choisir le mode de paiement",
+    "greeting": "Bonjour {name}, bon retour parmi nous !",
+    "spamProtection": "Protection anti-spam",
     "upgrade": {
       "infoTitle": "Votre mise à niveau",
       "info": "Passez maintenant de votre formule {oldMemberPlan} à la formule {newMemberPlan}. <bold>Votre crédit restant de {discount} de votre formule {oldMemberPlan} sera déduit.</bold> Vous trouverez ci-dessous le montant restant à payer pour passer à la formule {newMemberPlan}.",
@@ -57,9 +63,22 @@
       "title": "Choisir un cadeau",
       "none": "Aucun cadeau",
       "soldOut": "Ce cadeau est malheureusement épuisé. Veuillez en choisir un autre."
+    },
+    "warning": {
+      "confirmationTitle": "Êtes-vous sûr ?",
+      "openInvoices": "Vous avez déjà un abonnement avec des factures impayées. Vous pouvez consulter vos factures impayées dans votre <Link href=\"/profile\">profil</Link>.",
+      "alreadyHasSubscription": "Vous avez déjà cet abonnement, êtes-vous sûr ? Vous pouvez consulter vos abonnements dans votre <Link href=\"/profile\">profil</Link>."
     }
   },
   "login": {
+    "email": "E-mail",
+    "password": "Mot de passe",
+    "loginWithLink": "Se connecter avec un lien",
+    "loginWithPassword": "Se connecter avec un mot de passe",
+    "loginLinkSent": "Lien de connexion envoyé",
+    "submit": "Se connecter",
+    "useLinkInstead": "Recevoir plutôt un lien de connexion par e-mail",
+    "verifyingCredentials": "Un instant s'il vous plaît, les identifiants saisis sont en cours de vérification...",
     "alertLoginLinkSent": "Si un compte existe pour l'adresse e-mail \"{email}\", vous recevrez bientôt un lien de connexion dans votre boîte de réception. Cela peut prendre un moment. Veuillez également vérifier votre dossier de courrier indésirable.",
     "totp": {
       "code": "Code de confirmation (2FA)",
@@ -69,6 +88,11 @@
       "verify": "Confirmer",
       "invalidCode": "Code invalide. Veuillez réessayer."
     }
+  },
+  "newsletter": {
+    "back": "Retour",
+    "next": "Suivant",
+    "submit": "Terminer"
   },
   "crowdfunding": {
     "goal": "{type, select, Revenue {Déjà <bold>{revenue}</bold> financés} other {Déjà <bold>{subscriptions, number}</bold> {subscriptions, plural, =1 {personne abonnée} other {personnes abonnées}}}}"
@@ -81,18 +105,20 @@
     "unpaid": "{type, select, Donation {Don} other {Abonnement}} impayé",
     "cancel": "Résilier {type, select, Donation {le don} other {l'abonnement}}",
     "cancelConfirmation": "{type, select, Donation {Toutes les factures ouvertes du don seront annulées.} other {L'abonnement ne sera pas renouvelé, mais restera valable jusqu'à sa date d'expiration. Toutes les factures ouvertes de l'abonnement seront annulées.}}",
-    "extendEarly": "Prolonger {type, select, Donation {le don} other {l'abonnement}} à l'avance ?",
-    "extendEarlyConfirmation": "Nous sommes ravis que vous souhaitiez prolonger votre {type, select, Donation {don} other {abonnement}} de {subscriptionDuration} à l'avance. Continuer ?",
     "costs": "Coûte {amount} {extendable, select, true {par mois} other {}}",
     "extendNow": "Prolonger maintenant",
     "extendBy": "Prolonger maintenant de {subscriptionDuration}",
+    "extendEarly": "Prolonger {type, select, Donation {le don} other {l'abonnement}} à l'avance ?",
+    "extendEarlyConfirmation": "Nous sommes ravis que vous souhaitiez prolonger votre {type, select, Donation {don} other {abonnement}} de {subscriptionDuration} à l'avance. Continuer ?",
     "noActiveSubscriptions": "Vous n'avez pas encore d'abonnement actif.",
     "subscribeNow": "S'abonner maintenant.",
-    "startsAt": "Terminé le <time>{startsAt}</time>"
-  },
-  "article": {
-    "noArticles": "Aucun article disponible",
-    "toOriginal": "Vers l'article original"
+    "startsAt": "Terminé le <time>{startsAt}</time>",
+    "detailsAndPayments": "Détails et paiements",
+    "cancelledDueToInvoiceNotPaid": "Résilié automatiquement",
+    "cancelledDueToUnknownReason": "Le motif de résiliation est inconnu",
+    "autoRenew": "Sera renouvelé automatiquement {periodicityTimeline}",
+    "validFor": "Valable pour {subscriptionDuration}",
+    "cancelProduct": "Voulez-vous vraiment résilier {productName} ?"
   },
   "invoice": {
     "invoices": "Factures",
@@ -117,6 +143,8 @@
     "email": "E-Mail",
     "changeEmail": "Modifier l'adresse e-mail",
     "newEmail": "Nouvelle adresse e-mail",
+    "password": "Mot de passe",
+    "passwordRepeat": "Répéter le mot de passe",
     "requestEmailChange": "Demander la modification",
     "emailChangeRequested": "Un e-mail de confirmation a été envoyé à votre adresse e-mail actuelle. Cliquez sur le lien dans l'e-mail pour confirmer la modification.",
     "pendingEmailChange": "La modification vers {email} est en attente de confirmation. Veuillez vérifier votre boîte de réception.",
@@ -127,6 +155,12 @@
     "subscriptionsDetail": "{type, select, Donation {Don} other {Abonnement}}",
     "viewCancelledSubscriptions": "Afficher les abonnements résiliés et les dons inactifs",
     "subscribeAnother": "Souscrire un autre abonnement",
+    "confirm": "Confirmer",
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "saveSuccess": "Modifications enregistrées avec succès !",
+    "passwordWarning": "Remplissez uniquement si vous souhaitez modifier le mot de passe. Sinon laissez vide.",
+    "pay": "Payer",
     "totp": {
       "title": "Authentification à deux facteurs",
       "enabled": "L'authentification à deux facteurs est activée.",
@@ -142,22 +176,56 @@
       "invalidCode": "Code de confirmation invalide. Veuillez réessayer.",
       "setupSuccess": "L'authentification à deux facteurs a été activée avec succès."
     },
-    "confirm": "Confirmer",
-    "cancel": "Annuler",
-    "save": "Enregistrer",
-    "saveSuccess": "Modifications enregistrées avec succès !",
-    "passwordWarning": "Remplissez uniquement si vous souhaitez modifier le mot de passe. Sinon laissez vide.",
-    "pay": "Payer"
+    "form": {
+      "firstName": "Prénom",
+      "lastName": "Nom",
+      "email": "E-mail",
+      "emailRepeated": "Répéter l'e-mail",
+      "birthday": "Date de naissance",
+      "password": "Mot de passe",
+      "passwordRepeated": "Répéter le mot de passe",
+      "street": "Rue",
+      "houseNumber": "Numéro",
+      "zipCode": "NPA",
+      "city": "Localité / Ville",
+      "country": "Pays",
+      "occupation": "Fonction / Profession"
+    }
+  },
+  "article": {
+    "noArticles": "Aucun article disponible",
+    "toOriginal": "Vers l'article original"
   },
   "commentEditor": {
     "comment": "Commenter",
     "cancel": "Annuler",
+    "captcha": "Captcha",
     "guestComment": "Commenter en tant qu'invité",
     "loginRegister": "Se connecter/S'inscrire",
     "loginForReaders": "Connexion pour les lecteurs",
     "noAccountYet": "Pas encore de compte?",
     "registerNow": "S'inscrire maintenant",
     "notLoggedIn": "Vous n'êtes pas connecté"
+  },
+  "comments": {
+    "list": {
+      "readMore": "Participez à la discussion",
+      "noComments": "Aucun commentaire disponible.",
+      "pendingApproval": "Le commentaire est en attente de validation",
+      "pendingUserChanges": "Le commentaire doit être modifié avant sa validation.",
+      "rejected": "Le commentaire n'a pas été validé.",
+      "reply": "Répondre",
+      "edit": "Modifier"
+    }
+  },
+  "poll": {
+    "totalVotes": "{count} votes",
+    "closesAt": "Clôture le <time>{date}</time>",
+    "closed": "&ndash; Vote terminé."
+  },
+  "registrationForm": {
+    "register": "S'inscrire",
+    "captcha": "Captcha"
   },
   "search": {
     "search": "Recherche",

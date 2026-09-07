@@ -411,7 +411,7 @@ export const CommentEditor = ({
                 challengeRef={challengeRef}
                 onChange={field.onChange}
                 challenge={challenge.data!.challenge}
-                label={'Captcha'}
+                label={t('commentEditor.captcha')}
                 error={!!error}
                 helperText={error?.message}
               />

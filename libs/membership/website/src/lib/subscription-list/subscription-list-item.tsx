@@ -177,13 +177,13 @@ export function SubscriptionListItem({
               {deactivation.reason ===
                 SubscriptionDeactivationReason.InvoiceNotPaid && (
                 <SubscriptionListItemMetaItem>
-                  <MdCancel /> Automatisch gekündigt
+                  <MdCancel /> {t('subscription.cancelledDueToInvoiceNotPaid')}
                 </SubscriptionListItemMetaItem>
               )}
 
               {deactivation.reason === SubscriptionDeactivationReason.None && (
                 <SubscriptionListItemMetaItem>
-                  <MdCancel /> Kündigungsgrund ist unbekannt.
+                  <MdCancel /> {t('subscription.cancelledDueToUnknownReason')}
                 </SubscriptionListItemMetaItem>
               )}
             </>
@@ -201,13 +201,19 @@ export function SubscriptionListItem({
 
           {autoRenew && (
             <SubscriptionListItemMetaItem>
-              <MdAutorenew /> Wird automatisch {periodicityTimeline} erneuert
+              <MdAutorenew />{' '}
+              {t('subscription.autoRenew', {
+                periodicityTimeline,
+              })}
             </SubscriptionListItemMetaItem>
           )}
 
           {!autoRenew && (
             <SubscriptionListItemPaymentPeriodicity>
-              <MdTimelapse /> Gültig für {subscriptionDuration}
+              <MdTimelapse />{' '}
+              {t('subscription.validFor', {
+                subscriptionDuration,
+              })}
             </SubscriptionListItemPaymentPeriodicity>
           )}
 
@@ -220,7 +226,8 @@ export function SubscriptionListItem({
           </SubscriptionListItemMetaItem>
 
           <SubscriptionListItemMetaItem>
-            <MdHistory /> <Link href={url}>Details & Zahlungen</Link>
+            <MdHistory />{' '}
+            <Link href={url}>{t('subscription.detailsAndPayments')}</Link>
           </SubscriptionListItemMetaItem>
         </SubscriptionListItemMeta>
 
@@ -286,7 +293,11 @@ export function SubscriptionListItem({
           type: productType,
         })}
       >
-        <H5 component="h1">{name} wirklich kündigen?</H5>
+        <H5 component="h1">
+          {t('subscription.cancelProduct', {
+            productName: productType,
+          })}
+        </H5>
 
         <Paragraph gutterBottom={false}>
           {t('subscription.cancelConfirmation', {
