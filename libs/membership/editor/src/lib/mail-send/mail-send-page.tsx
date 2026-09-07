@@ -616,54 +616,50 @@ function MailSendPage() {
 
                       <Form.Group>
                         <Form.ControlLabel>
-                          {t('mailSend.startsAtFrom')}
+                          {t('mailSend.startsAt')}
                         </Form.ControlLabel>
-                        <DatePicker
-                          block
-                          oneTap
-                          format="dd.MM.yyyy"
-                          value={startsAtFrom}
-                          onChange={setStartsAtFrom}
-                        />
+                        <div style={{ display: 'flex', gap: 12 }}>
+                          <DatePicker
+                            oneTap
+                            format="dd.MM.yyyy"
+                            placeholder={t('mailSend.from')}
+                            value={startsAtFrom}
+                            onChange={setStartsAtFrom}
+                            style={{ flex: 1 }}
+                          />
+                          <DatePicker
+                            oneTap
+                            format="dd.MM.yyyy"
+                            placeholder={t('mailSend.to')}
+                            value={startsAtTo}
+                            onChange={setStartsAtTo}
+                            style={{ flex: 1 }}
+                          />
+                        </div>
                       </Form.Group>
 
                       <Form.Group>
                         <Form.ControlLabel>
-                          {t('mailSend.startsAtTo')}
+                          {t('mailSend.endsAt')}
                         </Form.ControlLabel>
-                        <DatePicker
-                          block
-                          oneTap
-                          format="dd.MM.yyyy"
-                          value={startsAtTo}
-                          onChange={setStartsAtTo}
-                        />
-                      </Form.Group>
-
-                      <Form.Group>
-                        <Form.ControlLabel>
-                          {t('mailSend.endsAtFrom')}
-                        </Form.ControlLabel>
-                        <DatePicker
-                          block
-                          oneTap
-                          format="dd.MM.yyyy"
-                          value={endsAtFrom}
-                          onChange={setEndsAtFrom}
-                        />
-                      </Form.Group>
-
-                      <Form.Group>
-                        <Form.ControlLabel>
-                          {t('mailSend.endsAtTo')}
-                        </Form.ControlLabel>
-                        <DatePicker
-                          block
-                          oneTap
-                          format="dd.MM.yyyy"
-                          value={endsAtTo}
-                          onChange={setEndsAtTo}
-                        />
+                        <div style={{ display: 'flex', gap: 12 }}>
+                          <DatePicker
+                            oneTap
+                            format="dd.MM.yyyy"
+                            placeholder={t('mailSend.from')}
+                            value={endsAtFrom}
+                            onChange={setEndsAtFrom}
+                            style={{ flex: 1 }}
+                          />
+                          <DatePicker
+                            oneTap
+                            format="dd.MM.yyyy"
+                            placeholder={t('mailSend.to')}
+                            value={endsAtTo}
+                            onChange={setEndsAtTo}
+                            style={{ flex: 1 }}
+                          />
+                        </div>
                         <Form.HelpText>
                           {t('mailSend.endsAtHint')}
                         </Form.HelpText>
