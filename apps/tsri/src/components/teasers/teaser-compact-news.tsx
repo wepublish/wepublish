@@ -11,7 +11,7 @@ import {
   BuilderTeaserProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { PiCaretRightBold } from 'react-icons/pi';
+import { MdArrowForwardIos } from 'react-icons/md';
 
 import { TeaserWrapper as TeaserWrapperDefault } from './tsri-teaser';
 
@@ -219,12 +219,16 @@ export const CompactNewsRowArrow = styled('span')`
     border-radius: 50%;
     background-color: ${({ theme }) => theme.palette.common.black};
     color: ${({ theme }) => theme.palette.common.white};
-    font-size: calc(var(--tw, 100cqw) * 0.05);
+    font-size: calc(var(--tw, 100cqw) * 0.055);
+
+    & svg {
+      transform: translateX(10%);
+    }
   }
 
   ${({ theme }) => theme.breakpoints.up('md')} {
     width: calc(var(--tw, 100cqw) * 0.055);
-    font-size: calc(var(--tw, 100cqw) * 0.03);
+    font-size: calc(var(--tw, 100cqw) * 0.04);
   }
 `;
 
@@ -316,7 +320,7 @@ export const TeaserCompactNews = ({
                     </CompactNewsRowLead>
                   </CompactNewsRowText>
                   <CompactNewsRowArrow>
-                    <PiCaretRightBold />
+                    <MdArrowForwardIos />
                   </CompactNewsRowArrow>
                 </CompactNewsRowContent>
               </Link>
