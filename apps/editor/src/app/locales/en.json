@@ -2989,7 +2989,18 @@
         "loading": "Loading preview …",
         "noRecipients": "No recipients — adjust the audience first."
       },
-      "recipientsCountPerPerson": "{{count}} mails to {{people}} people"
+      "recipientsCountPerPerson": "{{count}} mails to {{people}} people",
+      "startsAtFrom": "Subscription start from",
+      "startsAtTo": "Subscription start until",
+      "endsAtFrom": "Subscription end from",
+      "endsAtTo": "Subscription end until",
+      "endsAtHint": "Cancellation date, otherwise the date paid up to.",
+      "isPaid": "Paid (currently covered)",
+      "isPaidHint": "Grace periods are not taken into account.",
+      "isCanceled": "Cancelled",
+      "isCanceledHint": "Also includes cancellations that only take effect later.",
+      "hasReplacedSubscription": "Replaced another subscription (e.g. upgrade)",
+      "hasReplacedSubscriptionHint": "Also includes downgrades and plan switches; manual or imported changes are not detected."
     },
     "mailLog": {
       "title": "Sent emails",

@@ -1659,10 +1659,45 @@ input MailAudienceInput {
   """
   endedWithinDays: Int
 
+  """
+  Subscribers audience only: only subscriptions whose effective end (cancellation date, else paidUntil) is on or after this date.
+  """
+  endsAtFrom: DateTime
+
+  """
+  Subscribers audience only: only subscriptions whose effective end (cancellation date, else paidUntil) is on or before this date.
+  """
+  endsAtTo: DateTime
+
+  """
+  Subscribers audience only: true keeps only subscriptions that replaced another one (typically an upgrade, but downgrades and lateral plan switches are included too, and manual or imported changes are not detected).
+  """
+  hasReplacedSubscription: Boolean
+
+  """
+  Subscribers audience only: true keeps only subscriptions that have given notice, including cancellations that only take effect in the future; false keeps the rest.
+  """
+  isCanceled: Boolean
+
+  """
+  Subscribers audience only: true keeps only subscriptions that are currently paid up (started and paidUntil in the future); false keeps the rest. Grace periods are not considered.
+  """
+  isPaid: Boolean
+
   """Restrict to subscriptions of these member plans."""
   memberPlanIDs: [String!]
   paymentMethodID: String
   paymentPeriodicity: PaymentPeriodicity
+
+  """
+  Subscribers audience only: only subscriptions that started on or after this date.
+  """
+  startsAtFrom: DateTime
+
+  """
+  Subscribers audience only: only subscriptions that started on or before this date.
+  """
+  startsAtTo: DateTime
   subscriptionState: MailSubscriptionState
 }
 
