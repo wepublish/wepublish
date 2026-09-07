@@ -1731,7 +1731,6 @@
         "createdAt": "Créé",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
         "deleted": "Utilisateur·trice supprimé·e",
-        "downloadCsv": "Télécharger CSV",
         "email": "Email",
         "memberPlan": "Plan membre",
         "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
@@ -2064,6 +2063,10 @@
       "copyPermalink": "Copier le permalien",
       "permalinkCopied": "Permalien avec une période fixe copié dans le presse-papiers",
       "permalinkCopyFailed": "Impossible de copier le permalien",
+      "permalinkHelpLabel": "À propos du permalien",
+      "permalinkHelpWhat": "Le permalien est un lien vers cette vue précise : la période, les plans d'abonnement, les indicateurs sélectionnés ainsi que le graphique et le tableau sont tous contenus dans l'adresse.",
+      "permalinkHelpWhy": "Vous pouvez ainsi partager une analyse avec l'équipe ou l'enregistrer comme favori, sans devoir régler les filtres à chaque fois. La période est enregistrée sous forme de dates fixes, afin que le lien affiche les mêmes chiffres plus tard.",
+      "permalinkHelpExample": "Exemple : sélectionner « Mois dernier » et le plan d'abonnement « Abonnement annuel », copier le permalien et le partager dans le chat – tout le monde voit exactement ces chiffres, même la semaine prochaine.",
       "daily": "Quotidien",
       "monthly": "Mensuel",
       "rangePickerPlaceholder": "de - à",
@@ -2151,6 +2154,15 @@
         "highProbability": "Renouvellements d'abonnement subséquents"
       }
     },
+    "audienceTableExport": {
+      "download": "Télécharger",
+      "csv": "CSV (.csv)",
+      "xlsx": "Excel (.xlsx)",
+      "header": {
+        "renewedAndReplaced": "Abonnements renouvelés et remplacés",
+        "totalToBeRenewed": "Abonnements à renouveler"
+      }
+    },
     "paywall": {
       "navbar": "Paywall",
       "form": {
@@ -2213,7 +2225,23 @@
         "validTo": "Valable jusqu'au",
         "areYouSure": "Êtes-vous sûr(e) ?",
         "areYouSureBody": "Le code de réduction \"{{ discountCode }}\" sera définitivement supprimé et cette action est irréversible.",
-        "areYouSureConfirmation": "Supprimer le code de réduction"
+        "areYouSureConfirmation": "Supprimer le code de réduction",
+        "usage": "Utilisé",
+        "usageValue": "{{total}} ({{paid}} payé(s))"
+      },
+      "usage": {
+        "title": "Utilisations de \"{{ discountCode }}\"",
+        "summary": "{{total}} utilisations, dont {{paid}} payée(s)",
+        "back": "Retour à l'aperçu",
+        "date": "Date",
+        "mail": "E-mail",
+        "amount": "Montant",
+        "status": "Statut",
+        "paid": "Payé",
+        "open": "Ouvert",
+        "canceled": "Annulé",
+        "subscription": "Abonnement",
+        "showSubscription": "Ouvrir l'abonnement"
       }
     },
     "goodie": {
@@ -2248,8 +2276,13 @@
       "gracePeriodHelpText": "Si votre site web utilise un paywall, les utilisateurs peuvent lire immédiatement ou continuer à lire tous les contenus, même s'ils n'ont pas souscrit d'abonnement payant, pendant le délai de paiement. Cela est utile, par exemple, en cas de virement bancaire.",
       "days": "Jours"
     },
+    "subscriptionsExport": {
+      "download": "Télécharger",
+      "csv": "CSV (.csv)",
+      "xlsx": "Excel (.xlsx)"
+    },
     "audienceCsvBtn": {
-      "exportUsers": "Télécharger CSV"
+      "exportUsers": "Télécharger les utilisateur·trice·s"
     },
     "search": "Rechercher",
     "integrations": {

@@ -304,7 +304,9 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
 
           {user.pendingEmail && !emailChangeSuccess && (
             <Alert severity="info">
-              {t('user.pendingEmailChange', { email: user.pendingEmail })}
+              <span data-sentry-mask>
+                {t('user.pendingEmailChange', { email: user.pendingEmail })}
+              </span>
             </Alert>
           )}
 

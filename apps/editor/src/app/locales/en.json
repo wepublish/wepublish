@@ -1799,7 +1799,6 @@
         "createdAt": "Created",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
         "deleted": "Deleted user",
-        "downloadCsv": "Download CSV",
         "email": "Email",
         "memberPlan": "Memberplan",
         "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
@@ -2200,6 +2199,10 @@
       "copyPermalink": "Copy permalink",
       "permalinkCopied": "Permalink with a fixed date range copied to the clipboard",
       "permalinkCopyFailed": "Could not copy the permalink",
+      "permalinkHelpLabel": "About the permalink",
+      "permalinkHelpWhat": "The permalink is a link to exactly this view: the date range, the subscription plans, the selected metrics and whether chart and table are shown are all part of the address.",
+      "permalinkHelpWhy": "That lets you share an analysis with your team or bookmark it, without setting all the filters again every time. The date range is stored as fixed dates, so the link still shows the same numbers later on.",
+      "permalinkHelpExample": "Example: pick “Last month” and the “Annual subscription” plan, copy the permalink and share it in chat – everyone sees exactly these numbers, even next week.",
       "daily": "Daily",
       "monthly": "Monthly",
       "rangePickerPlaceholder": "from - to",
@@ -2287,6 +2290,15 @@
         "highProbability": "Subsequent renewals "
       }
     },
+    "audienceTableExport": {
+      "download": "Download",
+      "csv": "CSV (.csv)",
+      "xlsx": "Excel (.xlsx)",
+      "header": {
+        "renewedAndReplaced": "Renewed and replaced subscriptions",
+        "totalToBeRenewed": "Subscriptions to be renewed"
+      }
+    },
     "paywall": {
       "navbar": "Paywall",
       "form": {
@@ -2349,7 +2361,23 @@
         "validTo": "Valid To",
         "areYouSure": "Are you sure?",
         "areYouSureBody": "The discount code \"{{ discountCode }}\" will be deleted permanently and can not be reversed.",
-        "areYouSureConfirmation": "Delete discount code"
+        "areYouSureConfirmation": "Delete discount code",
+        "usage": "Used",
+        "usageValue": "{{total}} ({{paid}} paid)"
+      },
+      "usage": {
+        "title": "Usages of \"{{ discountCode }}\"",
+        "summary": "{{total}} redemptions, {{paid}} of them paid",
+        "back": "Back to overview",
+        "date": "Date",
+        "mail": "Email",
+        "amount": "Amount",
+        "status": "Status",
+        "paid": "Paid",
+        "open": "Open",
+        "canceled": "Canceled",
+        "subscription": "Subscription",
+        "showSubscription": "Open subscription"
       }
     },
     "goodie": {
@@ -2384,8 +2412,13 @@
       "gracePeriodHelpText": "If you use the paywall, allow users to read instantly after ordering a subscription, even if they don't pay eventually. This would apply to payments via bank transfer, for instance.",
       "days": "days"
     },
+    "subscriptionsExport": {
+      "download": "Download",
+      "csv": "CSV (.csv)",
+      "xlsx": "Excel (.xlsx)"
+    },
     "audienceCsvBtn": {
-      "exportUsers": "Download CSV"
+      "exportUsers": "Download users"
     },
     "search": "Search",
     "integrations": {

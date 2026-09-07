@@ -23,7 +23,7 @@ import {
   MdTimelapse,
 } from 'react-icons/md';
 import { Link } from 'react-router-dom';
-import { Button, Col, Divider, IconButton, Panel as RPanel, Row } from 'rsuite';
+import { Button, Col, IconButton, Panel as RPanel, Row } from 'rsuite';
 
 // import {NewSubscriptionButton} from '../../routes/subscriptionList'
 import {
@@ -37,14 +37,6 @@ const NewSubscriptionButtonWrapper = styled.div`
 
 const KeyboardArrow = styled(MdOutlineKeyboardArrowRight)`
   margin: 0px 5px;
-`;
-
-const PanelMBottom = styled(RPanel)`
-  margin-bottom: 10px;
-`;
-
-const PanelMTop = styled(RPanel)`
-  margin-top: 5px;
 `;
 
 const commonIconMargin = css`
@@ -64,20 +56,34 @@ const SubscriptionDetails = styled(Col)`
   padding-right: 5px;
 `;
 
-const InvoicesPeriods = styled(Col)`
-  margin-top: 10px;
-  padding-left: 5px;
+const SubscriptionTitle = styled.h5`
+  margin: 0;
 `;
 
-const Periods = styled(Col)`
-  max-height: 400px;
-  overflow-y: auto;
-  margin-top: 5px;
+const SectionTitle = styled.h6`
+  margin: 0;
 `;
 
-const FlexItemMLeft = styled(Col)`
-  margin-left: 10px;
+const Panel = styled(Col)`
+  &:first-of-type {
+    padding-bottom: 10px;
+  }
+  & + & {
+    border-top: 1px solid var(--rs-border-primary, #e5e5ea);
+    padding-top: 10px;
+  }
 `;
+
+const Subscription = styled(RPanel)`
+  & + & {
+    margin-top: 20px;
+  }
+`;
+
+const sortPeriodsByNewest = (periods: UserSubscriptionFragment['periods']) =>
+  [...periods].sort(
+    (a, b) => new Date(b.startsAt).getTime() - new Date(a.startsAt).getTime()
+  );
 
 interface UserSubscriptionsProps {
   subscriptions?: UserSubscriptionFragment[] | null;
@@ -221,19 +227,26 @@ function UserSubscriptionsList({
     );
   }
 
+  const sortedSubscriptions = [...(subscriptions ?? [])].sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  );
+
   return (
     <>
-      {subscriptions?.map(subscription => (
-        <div key={subscription.id}>
+      {sortedSubscriptions.map(subscription => (
+        <Subscription
+          bordered
+          key={subscription.id}
+        >
           <Row>
             {/* member plan name */}
             <FlexItemAlignSelf span={18}>
-              <h5>
+              <SubscriptionTitle>
                 {t('userSubscriptionList.subscriptionTitle', {
                   memberPlanName: subscription.memberPlan.name,
                   subscriptionId: subscription.id,
                 })}
-              </h5>
+              </SubscriptionTitle>
             </FlexItemAlignSelf>
             {/* edit subscription */}
             <FlexItemAlignRight span={6}>
@@ -249,10 +262,10 @@ function UserSubscriptionsList({
             <SubscriptionDetails span={12}>
               <Row>
                 {/* subscription details title */}
-                <FlexItemMLeft span={24}>
-                  <h6>{t('userSubscriptionList.aboDetails')}</h6>
-                </FlexItemMLeft>
-                <PanelMTop bordered>
+                <Panel span={24}>
+                  <SectionTitle>
+                    {t('userSubscriptionList.aboDetails')}
+                  </SectionTitle>
                   {/* created at */}
                   <Col span={24}>
                     <MdEvent css={commonIconMargin} />
@@ -308,67 +321,60 @@ function UserSubscriptionsList({
                   </Col>
                   {/* auto renewal */}
                   <Col span={24}>{autoRenewalView(subscription)}</Col>
-                </PanelMTop>
+                </Panel>
               </Row>
             </SubscriptionDetails>
 
             {/* periods with invoices */}
-            <InvoicesPeriods span={12}>
+            <Col span={12}>
               <Row>
                 {/* periods title */}
-                <FlexItemMLeft span={24}>
-                  <h6>{t('userSubscriptionList.periods')}</h6>
-                </FlexItemMLeft>
-                {/* iterate periods */}
-                <Periods span={24}>
-                  {subscription.periods.map(period => {
+                <Col span={24}>
+                  <SectionTitle>
+                    {t('userSubscriptionList.periods')}
+                  </SectionTitle>
+                  {sortPeriodsByNewest(subscription.periods).map(period => {
                     return (
-                      <PanelMBottom
-                        key={period.id}
-                        bordered
-                      >
-                        <Row>
-                          {/* period created at */}
-                          <Col span={24}>
-                            {t('userSubscriptionList.periodCreatedAt', {
-                              date: new Intl.DateTimeFormat('de-CH').format(
-                                new Date(period.createdAt)
-                              ),
-                            })}
-                          </Col>
-                          {/* period from to dates */}
-                          <Col span={24}>
-                            {t('userSubscriptionList.periodStartsAt', {
-                              date: new Intl.DateTimeFormat('de-CH').format(
-                                new Date(period.startsAt)
-                              ),
-                            })}
-                            <KeyboardArrow />
-                            {t('userSubscriptionList.periodEndsAt', {
-                              date: new Intl.DateTimeFormat('de-CH').format(
-                                new Date(period.endsAt)
-                              ),
-                            })}
-                          </Col>
-                          {/* amount */}
-                          <Col span={24}>
-                            {t('userSubscriptionList.periodAmount', {
-                              amount: (period.amount / 100).toFixed(2),
-                              currency: subscription.currency,
-                            })}
-                          </Col>
-                          {/* related invoice */}
-                          <Col span={24}>{getInvoiceView(period)}</Col>
-                        </Row>
-                      </PanelMBottom>
+                      <Panel key={period.id}>
+                        {/* period created at */}
+                        <Col span={24}>
+                          {t('userSubscriptionList.periodCreatedAt', {
+                            date: new Intl.DateTimeFormat('de-CH').format(
+                              new Date(period.createdAt)
+                            ),
+                          })}
+                        </Col>
+                        {/* period from to dates */}
+                        <Col span={24}>
+                          {t('userSubscriptionList.periodStartsAt', {
+                            date: new Intl.DateTimeFormat('de-CH').format(
+                              new Date(period.startsAt)
+                            ),
+                          })}
+                          <KeyboardArrow />
+                          {t('userSubscriptionList.periodEndsAt', {
+                            date: new Intl.DateTimeFormat('de-CH').format(
+                              new Date(period.endsAt)
+                            ),
+                          })}
+                        </Col>
+                        {/* amount */}
+                        <Col span={24}>
+                          {t('userSubscriptionList.periodAmount', {
+                            amount: (period.amount / 100).toFixed(2),
+                            currency: subscription.currency,
+                          })}
+                        </Col>
+                        {/* related invoice */}
+                        <Col span={24}>{getInvoiceView(period)}</Col>
+                      </Panel>
                     );
                   })}
-                </Periods>
+                </Col>
               </Row>
-            </InvoicesPeriods>
+            </Col>
           </Row>
-          <Divider />
-        </div>
+        </Subscription>
       ))}
 
       <NewSubscriptionButtonWrapper>

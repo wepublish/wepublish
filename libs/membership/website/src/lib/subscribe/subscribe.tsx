@@ -588,9 +588,11 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
         {!hasUser && returningUserId && (
           <SubscribeSection area="returning">
             <H5 component="h2">
-              {t('subscribe.greeting', {
-                name: `${defaults?.firstName ?? ''} ${defaults?.name ?? ''}`.trim(),
-              })}
+              <span data-sentry-mask>
+                {t('subscribe.greeting', {
+                  name: `${defaults?.firstName ?? ''} ${defaults?.name ?? ''}`.trim(),
+                })}
+              </span>
             </H5>
           </SubscribeSection>
         )}

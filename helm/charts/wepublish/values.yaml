@@ -177,6 +177,9 @@ website:
   image: ghcr.io/wepublish/website
   env:
     NODE_ENV: production
+    # Server-side only. The browser bundle takes its DSN from the SENTRY_DSN
+    # build arg, which shadows this value whenever it is set at build time.
+    SENTRY_DSN: ''
     # Optional cluster-internal API URL used for SSR/SSG only.
     # When unset, server-side falls back to API_URL.
     # API_URL_INTERNAL: http://wepublish-api:4000
