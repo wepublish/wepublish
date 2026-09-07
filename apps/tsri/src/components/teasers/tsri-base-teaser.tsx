@@ -1,6 +1,7 @@
 import { BuilderTeaserProps } from '@wepublish/website/builder';
 import { cond, T } from 'ramda';
 
+import { isTeaserCompactNews, TeaserCompactNews } from './teaser-compact-news';
 import {
   isTeaserFullsizeImage,
   TeaserFullsizeImage,
@@ -63,6 +64,7 @@ export enum TsriTeaserType {
 }
 
 export const TsriBaseTeaser = cond([
+  [isTeaserCompactNews, props => <TeaserCompactNews {...props} />],
   [isTeaserTsriLove, props => <TeaserTsriLove {...props} />],
   [isTeaserShopProducts, props => <TeaserShopProducts {...props} />],
   [isTeaserEvents, props => <TeaserEvents {...props} />],
