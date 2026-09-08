@@ -63,6 +63,10 @@ const FlexBlockWithShortNewsWrapper = styled(FlexBlockWrapper)`
   }
 
   ${({ theme }) => theme.breakpoints.up('xs')} {
+    & > ${BlockWithAlignment} {
+      grid-row: auto;
+    }
+
     ${BlockWithAlignment} {
       &:has(${TeaserSlotsXLFullsizeImage}) {
         grid-column-start: unset;
