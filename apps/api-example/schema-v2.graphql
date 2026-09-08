@@ -322,10 +322,11 @@ input BildwurfAdBlockInput {
   zoneID: String
 }
 
-union BlockContent = BildwurfAdBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | FlexBlock | HTMLBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | MailchimpFormBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | StreamableVideoBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock
+union BlockContent = BildwurfAdBlock | BlockTemplateBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | FlexBlock | HTMLBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | MailchimpFormBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | StreamableVideoBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock
 
 input BlockContentInput {
   bildwurfAd: BildwurfAdBlockInput
+  blockTemplate: BlockTemplateBlockInput
   comment: CommentBlockInput
   crowdfunding: CrowdfundingBlockInput
   embed: IFrameBlockInput
@@ -366,8 +367,33 @@ type BlockStyle {
   name: String!
 }
 
+type BlockTemplate implements HasBlockContent {
+  blocks: [BlockContent!]!
+  createdAt: DateTime!
+  id: String!
+  modifiedAt: DateTime!
+  name: String!
+}
+
+type BlockTemplateBlock implements BaseBlock {
+  blockStyle: String
+  blockStyleName: String
+  disabled: Boolean
+  template: BlockTemplate
+  templateID: String!
+  type: BlockType!
+}
+
+input BlockTemplateBlockInput {
+  blockStyle: String
+  blockStyleName: String
+  disabled: Boolean
+  templateID: String!
+}
+
 enum BlockType {
   BildwurfAd
+  BlockTemplate
   Comment
   Crowdfunding
   Embed
@@ -2245,6 +2271,9 @@ type Mutation {
   """Creates a new block style."""
   createBlockStyle(blocks: [EditorBlockType!]!, name: String!): BlockStyle!
 
+  """Creates a new block template."""
+  createBlockTemplate(blocks: [BlockContentInput!]!, name: String!): BlockTemplate!
+
   """Creates a comment for any user"""
   createComment(itemID: String!, itemType: CommentItemType!, lead: String, parentID: String, tagIds: [String!], text: RichText): Comment!
 
@@ -2390,6 +2419,9 @@ type Mutation {
 
   """Deletes an existing block style."""
   deleteBlockStyle(id: String!): BlockStyle!
+
+  """Deletes an existing block template."""
+  deleteBlockTemplate(id: String!): BlockTemplate!
 
   """Deletes a comment"""
   deleteComment(id: String!): Comment!
@@ -2668,6 +2700,9 @@ type Mutation {
 
   """Updates an existing block style."""
   updateBlockStyle(blocks: [EditorBlockType!], id: String!, name: String): BlockStyle!
+
+  """Updates an existing block template."""
+  updateBlockTemplate(blocks: [BlockContentInput!]!, id: String!, name: String!): BlockTemplate!
 
   """Updates an existing challenge provider setting."""
   updateChallengeProviderSetting(id: String, name: String, secret: String, siteKey: String): SettingChallengeProvider!
@@ -3646,6 +3681,9 @@ type Query {
 
   """Returns a list of block styles."""
   blockStyles: [BlockStyle!]!
+
+  """Returns a list of block templates."""
+  blockTemplates: [BlockTemplate!]!
 
   """
   This query generates a challenge which can be used to access protected endpoints.
