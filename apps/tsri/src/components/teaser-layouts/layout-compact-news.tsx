@@ -79,7 +79,7 @@ export const CompactNewsRows = styled('ul')`
     display: grid;
     grid-auto-rows: minmax(0, 1fr);
     grid-template-columns: minmax(0, 1fr);
-    row-gap: calc(var(--tw, 100cqw) * 0.02);
+    row-gap: calc(var(--tw, 100cqw) * 0.015);
     min-height: 0;
     min-width: 0;
     list-style: none;
@@ -89,7 +89,7 @@ export const CompactNewsRows = styled('ul')`
   }
 
   ${({ theme }) => theme.breakpoints.up('md')} {
-    row-gap: calc(var(--tw, 100cqw) * 0.012);
+    row-gap: calc(var(--tw, 100cqw) * 0.009);
     padding: calc(var(--tw, 100cqw) * 0.018) 0 calc(var(--tw, 100cqw) * 0.018)
       calc(var(--tw, 100cqw) * 0.1);
   }
