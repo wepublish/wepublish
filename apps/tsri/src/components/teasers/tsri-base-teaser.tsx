@@ -44,6 +44,7 @@ import {
 } from './teaser-two-row-author';
 
 export enum TsriTeaserType {
+  CompactNews = 'T_CompactNews',
   DailyBriefing = 'SB_DailyBriefing',
   FullsizeImage = 'T_FullsizeImage',
   MoreAbout = 'T_MoreAbout',

@@ -32,6 +32,9 @@ export enum TsriLayoutType {
 
   // dossier layouts
   Dossier = 'Dossier',
+
+  // compact news layouts
+  CompactNews = 'CompactNews',
 }
 
 export const TeaserLayoutWrapper = styled('div')`
