@@ -391,6 +391,16 @@ input BlockTemplateBlockInput {
   templateID: String!
 }
 
+input BlockTemplateFilter {
+  name: String
+}
+
+enum BlockTemplateSort {
+  CreatedAt
+  ModifiedAt
+  Name
+}
+
 enum BlockType {
   BildwurfAd
   BlockTemplate
@@ -3009,6 +3019,12 @@ type PaginatedAuthors {
   totalCount: Int!
 }
 
+type PaginatedBlockTemplates {
+  nodes: [BlockTemplate!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
 type PaginatedComments {
   nodes: [Comment!]!
   pageInfo: PageInfo!
@@ -3682,8 +3698,26 @@ type Query {
   """Returns a list of block styles."""
   blockStyles: [BlockStyle!]!
 
-  """Returns a list of block templates."""
-  blockTemplates: [BlockTemplate!]!
+  """Returns a paginated list of block templates."""
+  blockTemplates(
+    """Cursor for pagination"""
+    cursorId: String
+
+    """Filter for block templates"""
+    filter: BlockTemplateFilter
+
+    """Sort order"""
+    order: SortOrder = Ascending
+
+    """Number of items to skip"""
+    skip: Int! = 0
+
+    """Field to sort by"""
+    sort: BlockTemplateSort! = Name
+
+    """Number of items to fetch"""
+    take: Int! = 10
+  ): PaginatedBlockTemplates!
 
   """
   This query generates a challenge which can be used to access protected endpoints.

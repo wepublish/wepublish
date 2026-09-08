@@ -17,7 +17,9 @@ import { BlockTemplateDataloaderService } from './block-template-dataloader.serv
 import {
   BlockTemplate,
   BlockTemplateBlock,
+  BlockTemplateListArgs,
   CreateBlockTemplateInput,
+  PaginatedBlockTemplates,
   UpdateBlockTemplateInput,
 } from './block-template.model';
 import { BlockTemplateService } from './block-template.service';
@@ -27,11 +29,11 @@ export class BlockTemplateResolver {
   constructor(private blockTemplateService: BlockTemplateService) {}
 
   @Public()
-  @Query(returns => [BlockTemplate], {
-    description: `Returns a list of block templates.`,
+  @Query(returns => PaginatedBlockTemplates, {
+    description: `Returns a paginated list of block templates.`,
   })
-  public blockTemplates() {
-    return this.blockTemplateService.getBlockTemplates();
+  public blockTemplates(@Args() args: BlockTemplateListArgs) {
+    return this.blockTemplateService.getBlockTemplates(args);
   }
 
   @Permissions(CanCreateBlockTemplate)

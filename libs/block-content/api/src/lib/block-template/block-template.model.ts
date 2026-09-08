@@ -2,10 +2,13 @@ import {
   ArgsType,
   Field,
   InputType,
+  Int,
   ObjectType,
   OmitType,
   PickType,
+  registerEnumType,
 } from '@nestjs/graphql';
+import { PaginatedType, SortOrder } from '@wepublish/utils/api';
 import { BaseBlock } from '../base-block.model';
 import { BlockType } from '../block-type.model';
 import type {
@@ -31,6 +34,59 @@ export class BlockTemplate implements HasBlockContent {
   name!: string;
 
   blocks!: Array<typeof BlockContent>;
+}
+
+@InputType()
+export class BlockTemplateFilter {
+  @Field({ nullable: true })
+  name?: string;
+}
+
+export enum BlockTemplateSort {
+  CreatedAt = 'CreatedAt',
+  ModifiedAt = 'ModifiedAt',
+  Name = 'Name',
+}
+
+registerEnumType(BlockTemplateSort, {
+  name: 'BlockTemplateSort',
+});
+
+@ObjectType()
+export class PaginatedBlockTemplates extends PaginatedType(BlockTemplate) {}
+
+@ArgsType()
+export class BlockTemplateListArgs {
+  @Field(() => String, { nullable: true, description: 'Cursor for pagination' })
+  cursorId?: string;
+
+  @Field(() => Int, {
+    defaultValue: 10,
+    description: 'Number of items to fetch',
+  })
+  take?: number;
+
+  @Field(() => Int, { defaultValue: 0, description: 'Number of items to skip' })
+  skip?: number;
+
+  @Field(() => BlockTemplateFilter, {
+    nullable: true,
+    description: 'Filter for block templates',
+  })
+  filter?: BlockTemplateFilter;
+
+  @Field(() => BlockTemplateSort, {
+    defaultValue: BlockTemplateSort.Name,
+    description: 'Field to sort by',
+  })
+  sort?: BlockTemplateSort;
+
+  @Field(() => SortOrder, {
+    defaultValue: SortOrder.Ascending,
+    description: 'Sort order',
+    nullable: true,
+  })
+  order?: SortOrder;
 }
 
 @ArgsType()

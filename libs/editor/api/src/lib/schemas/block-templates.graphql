@@ -119,9 +119,34 @@ fragment FullBlockTemplate on BlockTemplate {
   }
 }
 
-query BlockTemplates {
-  blockTemplates {
-    ...FullBlockTemplate
+query BlockTemplates(
+  $filter: BlockTemplateFilter
+  $cursorId: String
+  $take: Int
+  $skip: Int
+  $order: SortOrder
+  $sort: BlockTemplateSort
+) {
+  blockTemplates(
+    filter: $filter
+    cursorId: $cursorId
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
+    nodes {
+      ...FullBlockTemplate
+    }
+
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+
+    totalCount
   }
 }
 

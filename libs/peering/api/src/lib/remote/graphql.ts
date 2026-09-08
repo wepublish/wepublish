@@ -436,6 +436,16 @@ export type BlockTemplateBlockInput = {
   templateID: Scalars['String'];
 };
 
+export type BlockTemplateFilter = {
+  name?: InputMaybe<Scalars['String']>;
+};
+
+export enum BlockTemplateSort {
+  CreatedAt = 'CreatedAt',
+  ModifiedAt = 'ModifiedAt',
+  Name = 'Name'
+}
+
 export enum BlockType {
   BildwurfAd = 'BildwurfAd',
   BlockTemplate = 'BlockTemplate',
@@ -4259,6 +4269,13 @@ export type PaginatedAuthors = {
   totalCount: Scalars['Int'];
 };
 
+export type PaginatedBlockTemplates = {
+  __typename?: 'PaginatedBlockTemplates';
+  nodes: Array<BlockTemplate>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
 export type PaginatedComments = {
   __typename?: 'PaginatedComments';
   nodes: Array<Comment>;
@@ -4969,8 +4986,8 @@ export type Query = {
   banners: Array<Banner>;
   /** Returns a list of block styles. */
   blockStyles: Array<BlockStyle>;
-  /** Returns a list of block templates. */
-  blockTemplates: Array<BlockTemplate>;
+  /** Returns a paginated list of block templates. */
+  blockTemplates: PaginatedBlockTemplates;
   /** This query generates a challenge which can be used to access protected endpoints. */
   challenge: Challenge;
   /** Returns a single challenge provider setting by id. */
@@ -5352,6 +5369,16 @@ export type QueryBannerArgs = {
 export type QueryBannersArgs = {
   skip: Scalars['Int'];
   take: Scalars['Int'];
+};
+
+
+export type QueryBlockTemplatesArgs = {
+  cursorId?: InputMaybe<Scalars['String']>;
+  filter?: InputMaybe<BlockTemplateFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: Scalars['Int'];
+  sort?: BlockTemplateSort;
+  take?: Scalars['Int'];
 };
 
 
