@@ -4,25 +4,48 @@ import DataLoader from 'dataloader';
 import { URLAdapter } from './url-adapter';
 
 export const ARCHIVED_TAG = 'archiviert';
+export const NACHTLEBEN_TAG = 'nachtleben';
+export const AUSGANG_PATH = '/ausgang-in-bern';
+
+type UrlTagFlags = {
+  archived: boolean;
+  nachtleben: boolean;
+};
 
 @Injectable()
 export class HauptstadtURLAdapter extends URLAdapter {
   // the adapter is a singleton, so the loader disables caching and only
   // batches lookups happening in the same tick (e.g. all teasers of a page)
-  private archivedLoader = new DataLoader<string, boolean>(
+  private tagFlagsLoader = new DataLoader<string, UrlTagFlags>(
     async articleIds => {
-      const archivedRows = await this.prisma.taggedArticles.findMany({
+      const rows = await this.prisma.taggedArticles.findMany({
         where: {
           articleId: { in: [...articleIds] },
           tag: {
-            tag: { equals: ARCHIVED_TAG, mode: 'insensitive' },
+            tag: { in: [ARCHIVED_TAG, NACHTLEBEN_TAG], mode: 'insensitive' },
           },
         },
-        select: { articleId: true },
+        select: {
+          articleId: true,
+          tag: { select: { tag: true } },
+        },
       });
-      const archivedIds = new Set(archivedRows.map(row => row.articleId));
 
-      return articleIds.map(articleId => archivedIds.has(articleId));
+      const flagsById = new Map<string, UrlTagFlags>();
+      for (const { articleId, tag } of rows) {
+        const flags = flagsById.get(articleId) ?? {
+          archived: false,
+          nachtleben: false,
+        };
+        if (tag.tag?.toLowerCase() === ARCHIVED_TAG) flags.archived = true;
+        if (tag.tag?.toLowerCase() === NACHTLEBEN_TAG) flags.nachtleben = true;
+        flagsById.set(articleId, flags);
+      }
+
+      return articleIds.map(
+        articleId =>
+          flagsById.get(articleId) ?? { archived: false, nachtleben: false }
+      );
     },
     { cache: false }
   );
@@ -35,16 +58,32 @@ export class HauptstadtURLAdapter extends URLAdapter {
   }
 
   override async getArticleUrl(article: Article) {
-    const isArchived = await this.archivedLoader.load(article.id);
+    const { archived, nachtleben } = await this.tagFlagsLoader.load(article.id);
 
-    if (isArchived && article.slug) {
+    if (archived && article.slug) {
       return `${this.baseURL}/archive/${article.slug}?articleId=${article.id}`;
+    }
+
+    // the current (non-archived) nachtleben article is only ever shown on the
+    // ausgang-in-bern page — link straight there instead of via the redirect
+    // that /a/<slug> would answer with
+    if (nachtleben) {
+      return `${this.baseURL}${AUSGANG_PATH}`;
     }
 
     return `${this.baseURL}/a/${article.slug}?articleId=${article.id}`;
   }
 
   override async getArticlePreviewUrl(article: Article) {
-    return `${await this.getArticleUrl(article)}&preview`;
+    const { archived } = await this.tagFlagsLoader.load(article.id);
+
+    // previews must stay on the article route — the ausgang-in-bern page always
+    // renders the published current article, never the previewed draft
+    const url =
+      archived && article.slug ?
+        `${this.baseURL}/archive/${article.slug}?articleId=${article.id}`
+      : `${this.baseURL}/a/${article.slug}?articleId=${article.id}`;
+
+    return `${url}&preview`;
   }
 }

@@ -113,6 +113,7 @@ export type ArticleFilter = {
   authors?: InputMaybe<Array<Scalars['String']>>;
   body?: InputMaybe<Scalars['String']>;
   draft?: InputMaybe<Scalars['Boolean']>;
+  excludeHideAuthor?: InputMaybe<Scalars['Boolean']>;
   excludeIds?: InputMaybe<Array<Scalars['String']>>;
   ids?: InputMaybe<Array<Scalars['String']>>;
   includeHidden?: InputMaybe<Scalars['Boolean']>;
@@ -1035,7 +1036,6 @@ export enum EditorBlockType {
   ImageGallery = 'ImageGallery',
   LinkPageBreak = 'LinkPageBreak',
   Listicle = 'Listicle',
-  MailchimpForm = 'MailchimpForm',
   Poll = 'Poll',
   Quote = 'Quote',
   RichText = 'RichText',
@@ -4493,6 +4493,7 @@ export type PeerArticleFilter = {
   allTagsIn?: InputMaybe<Array<Scalars['String']>>;
   authors?: InputMaybe<Array<Scalars['String']>>;
   body?: InputMaybe<Scalars['String']>;
+  excludeHideAuthor?: InputMaybe<Scalars['Boolean']>;
   excludeIds?: InputMaybe<Array<Scalars['String']>>;
   ids?: InputMaybe<Array<Scalars['String']>>;
   lead?: InputMaybe<Scalars['String']>;

@@ -77,4 +77,9 @@ export const TeaserNoImageAltColor = styled(TsriTeaser)`
   ${TeaserTime} {
     display: none;
   }
+
+  [data-authors-hidden] ${TeaserTime} {
+    display: inline;
+    color: ${({ theme }) => theme.palette.common.black};
+  }
 `;
