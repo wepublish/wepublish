@@ -18,7 +18,15 @@ import {
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
-import { ReactNode, SyntheticEvent, useId, useState } from 'react';
+import { useRouter } from 'next/router';
+import {
+  ReactNode,
+  SyntheticEvent,
+  useCallback,
+  useEffect,
+  useId,
+  useState,
+} from 'react';
 
 export const TabbedContentWrapper = styled('div')`
   width: 100%;
@@ -175,12 +183,15 @@ export const a11yProps = (index: number, id: string) => {
   };
 };
 
+const HOME_PATHNAME = '/';
+
 export const TabbedContent = ({
   className,
   blocks,
   blockStyle,
   blockStyleByIndex,
   cssByBlockStyle,
+  randomizeTab,
   type,
   level,
 }: BuilderFlexBlockProps & {
@@ -190,17 +201,43 @@ export const TabbedContent = ({
     theme: Theme,
     blockStyleOverride?: string | undefined | null
   ) => string;
+  randomizeTab?: boolean;
   type?: BuilderBlockRendererProps['type'];
   level?: number;
 }) => {
   const [value, setValue] = useState(0);
   const thisId = `TC-${useId()}`;
+  const { events, pathname } = useRouter();
 
   const {
     blocks: { Renderer },
   } = useWebsiteBuilder();
 
   const theme = useTheme();
+
+  const randomizeValue = useCallback(() => {
+    setValue(Math.floor(Math.random() * blocks.length));
+  }, [blocks.length]);
+
+  useEffect(() => {
+    if (!randomizeTab || pathname !== HOME_PATHNAME) {
+      return;
+    }
+
+    randomizeValue();
+
+    const handleRouteChange = (url: string) => {
+      if (new URL(url, window.location.origin).pathname === HOME_PATHNAME) {
+        randomizeValue();
+      }
+    };
+
+    events.on('routeChangeComplete', handleRouteChange);
+
+    return () => {
+      events.off('routeChangeComplete', handleRouteChange);
+    };
+  }, [randomizeTab, pathname, randomizeValue, events]);
 
   const sortedBlocks = [...blocks].sort(
     (a, b) => a.alignment.y - b.alignment.y || a.alignment.x - b.alignment.x
