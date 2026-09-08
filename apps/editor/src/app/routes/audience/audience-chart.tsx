@@ -13,7 +13,7 @@ import {
 import { Placeholder } from 'rsuite';
 
 import { AudienceStatsComputed } from './useAudience';
-import { AudienceClientFilter } from './useAudienceFilter';
+import { AudienceClientFilter } from './audience-filter-params';
 
 export const chartColors: {
   [K in keyof AudienceClientFilter]: string | string[];

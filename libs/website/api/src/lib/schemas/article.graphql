@@ -59,6 +59,9 @@ fragment FullArticleRevision on ArticleRevision {
 
   canonicalUrl
 
+  seoTitle
+  seoDescription
+
   image {
     ...FullImage
   }

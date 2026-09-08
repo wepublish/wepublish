@@ -27,6 +27,7 @@ import {
   BlockMap,
   BlockValue,
   createCheckedPermissionComponent,
+  DocumentUrlProvider,
   EditorTemplate,
   EditorValidationProvider,
   mapBlockValueToBlockInput,
@@ -152,6 +153,8 @@ function PageEditor() {
     slug: '',
     title: '',
     description: '',
+    seoTitle: '',
+    seoDescription: '',
     tags: [],
     defaultTags: [],
     url: '',
@@ -289,6 +292,8 @@ function PageEditor() {
       const {
         title,
         description,
+        seoTitle,
+        seoDescription,
         image,
         blocks,
         properties,
@@ -306,6 +311,8 @@ function PageEditor() {
         slug: slug ?? '',
         title: title ?? '',
         description: description ?? '',
+        seoTitle: seoTitle ?? '',
+        seoDescription: seoDescription ?? '',
         tags: tags.map(({ id }) => id),
         defaultTags: tags,
         url,
@@ -427,6 +434,8 @@ function PageEditor() {
       slug: metadata.slug ?? '',
       title: metadata.title ?? '',
       description: metadata.description,
+      seoTitle: metadata.seoTitle || undefined,
+      seoDescription: metadata.seoDescription || undefined,
       hidden: metadata.hidden ?? false,
       imageID: metadata.image?.id,
       tagIds: metadata.tags,
@@ -759,12 +768,14 @@ function PageEditor() {
                 />
               </TeaserOverviewWrapper>
 
-              <BlockList
-                value={blocks}
-                onChange={handleChange}
-                disabled={isDisabled || !isAuthorized}
-                blockMap={BlockMap}
-              />
+              <DocumentUrlProvider documentUrl={pageData?.page?.url}>
+                <BlockList
+                  value={blocks}
+                  onChange={handleChange}
+                  disabled={isDisabled || !isAuthorized}
+                  blockMap={BlockMap}
+                />
+              </DocumentUrlProvider>
             </EditorValidationProvider>
           </EditorContent>
         </EditorTemplate>

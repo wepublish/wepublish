@@ -1,40 +1,29 @@
 import { LazyQueryExecFunction } from '@apollo/client';
 import {
-  DailySubscriptionStats,
   DailySubscriptionStatsQuery,
   Exact,
   InputMaybe,
+  LocalStorageKey,
   Scalars,
 } from '@wepublish/editor/api';
-import { useReducer, useState } from 'react';
-import { DateRange } from 'rsuite/esm/DateRangePicker';
+import { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
+import { useLocation, useSearchParams } from 'react-router-dom';
 
-export interface AudienceApiFilter {
-  dateRange?: DateRange | null;
-  memberPlanIds?: string[];
-}
-
-export type TimeResolution = 'daily' | 'monthly';
-
-export type AudienceClientFilter = Pick<
-  {
-    [K in keyof DailySubscriptionStats]: boolean;
-  },
-  | 'totalActiveSubscriptionCount'
-  | 'createdSubscriptionCount'
-  | 'overdueSubscriptionCount'
-  | 'deactivatedSubscriptionCount'
-  | 'renewedSubscriptionCount'
-  | 'replacedSubscriptionCount'
-  | 'predictedSubscriptionRenewalCount'
-  | 'endingSubscriptionCount'
->;
-
-export interface AudienceComponentFilter {
-  filter: boolean;
-  chart: boolean;
-  table: boolean;
-}
+import {
+  AudienceApiFilter,
+  AudienceClientFilter,
+  AudienceComponentFilter,
+  AudienceFilterState,
+  dateRangeForPreset,
+  DateRangePresetKey,
+  decodeAudienceFilter,
+  DEFAULT_AUDIENCE_CLIENT_FILTER,
+  DEFAULT_AUDIENCE_COMPONENT_FILTER,
+  encodeAudienceFilter,
+  hasAudienceFilterParams,
+  mergeAudienceFilterParams,
+  TimeResolution,
+} from './audience-filter-params';
 
 interface UseAudienceFilterProps {
   fetchStats: LazyQueryExecFunction<
@@ -45,27 +34,65 @@ interface UseAudienceFilterProps {
       memberPlanIds?: InputMaybe<Array<Scalars['String']> | Scalars['String']>;
     }>
   >;
+  initialDateRange?: DateRangePresetKey;
+  persist?: boolean;
 }
 
-export function useAudienceFilter({ fetchStats }: UseAudienceFilterProps) {
-  const [resolution, setResolution] = useState<TimeResolution>('daily');
+const readStoredParams = () => {
+  try {
+    return new URLSearchParams(
+      window.localStorage.getItem(LocalStorageKey.AudienceDashboardFilter) ?? ''
+    );
+  } catch {
+    return new URLSearchParams();
+  }
+};
+
+const storeParams = (params: URLSearchParams) => {
+  try {
+    window.localStorage.setItem(
+      LocalStorageKey.AudienceDashboardFilter,
+      params.toString()
+    );
+  } catch {
+    return;
+  }
+};
+
+export function useAudienceFilter({
+  fetchStats,
+  initialDateRange = 'lastMonth',
+  persist = false,
+}: UseAudienceFilterProps) {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { pathname } = useLocation();
+
+  const [initialState] = useState<AudienceFilterState>(() => {
+    const defaults: AudienceFilterState = {
+      resolution: 'daily',
+      dateRange: dateRangeForPreset(initialDateRange),
+      memberPlanIds: [],
+      clientFilter: DEFAULT_AUDIENCE_CLIENT_FILTER,
+      componentFilter: DEFAULT_AUDIENCE_COMPONENT_FILTER,
+    };
+
+    if (!persist) {
+      return defaults;
+    }
+
+    const params =
+      hasAudienceFilterParams(searchParams) ? searchParams : readStoredParams();
+
+    return decodeAudienceFilter(params, defaults);
+  });
+
+  const [resolution, setResolution] = useState<TimeResolution>(
+    initialState.resolution
+  );
   const [audienceClientFilter, setAudienceClientFilter] =
-    useState<AudienceClientFilter>({
-      totalActiveSubscriptionCount: false,
-      createdSubscriptionCount: true,
-      overdueSubscriptionCount: true,
-      deactivatedSubscriptionCount: true,
-      renewedSubscriptionCount: true,
-      replacedSubscriptionCount: true,
-      predictedSubscriptionRenewalCount: false,
-      endingSubscriptionCount: false,
-    });
+    useState<AudienceClientFilter>(initialState.clientFilter);
   const [audienceComponentFilter, setAudienceComponentFilter] =
-    useState<AudienceComponentFilter>({
-      chart: true,
-      table: false,
-      filter: true,
-    });
+    useState<AudienceComponentFilter>(initialState.componentFilter);
 
   const [audienceApiFilter, setAudienceApiFilter] = useReducer(
     (state: AudienceApiFilter, action: AudienceApiFilter) => {
@@ -89,8 +116,55 @@ export function useAudienceFilter({ fetchStats }: UseAudienceFilterProps) {
         memberPlanIds,
       };
     },
-    {}
+    {
+      dateRange: initialState.dateRange,
+      memberPlanIds: initialState.memberPlanIds,
+    }
   );
+
+  useEffect(() => {
+    setAudienceApiFilter({});
+  }, [setAudienceApiFilter]);
+
+  const filterState = useMemo<AudienceFilterState>(
+    () => ({
+      resolution,
+      dateRange: audienceApiFilter.dateRange ?? null,
+      memberPlanIds: audienceApiFilter.memberPlanIds ?? [],
+      clientFilter: audienceClientFilter,
+      componentFilter: audienceComponentFilter,
+    }),
+    [
+      resolution,
+      audienceApiFilter,
+      audienceClientFilter,
+      audienceComponentFilter,
+    ]
+  );
+
+  useEffect(() => {
+    if (!persist) {
+      return;
+    }
+
+    const params = encodeAudienceFilter(filterState);
+    storeParams(params);
+
+    const next = mergeAudienceFilterParams(searchParams, params);
+
+    if (next.toString() !== searchParams.toString()) {
+      setSearchParams(next, { replace: true });
+    }
+  }, [persist, filterState, searchParams, setSearchParams]);
+
+  const buildPermalink = useCallback(() => {
+    const params = mergeAudienceFilterParams(
+      searchParams,
+      encodeAudienceFilter(filterState, { absoluteDates: true })
+    );
+
+    return `${window.location.origin}${pathname}?${params}`;
+  }, [filterState, pathname, searchParams]);
 
   return {
     audienceApiFilter,
@@ -101,41 +175,6 @@ export function useAudienceFilter({ fetchStats }: UseAudienceFilterProps) {
     setAudienceClientFilter,
     audienceComponentFilter,
     setAudienceComponentFilter,
-  };
-}
-
-export interface PreDefinedDates {
-  today: Date;
-  lastWeek: Date;
-  lastMonth: Date;
-  lastQuarter: Date;
-  lastYear: Date;
-  nextWeek: Date;
-  nextMonth: Date;
-  nextQuarter: Date;
-  nextYear: Date;
-}
-
-export function preDefinedDates(): PreDefinedDates {
-  const today = new Date(new Date().setHours(0, 0, 0, 0));
-  const lastWeek = new Date(new Date().setDate(today.getDate() - 7));
-  const lastMonth = new Date(new Date().setMonth(today.getMonth() - 1));
-  const lastQuarter = new Date(new Date().setMonth(today.getMonth() - 3));
-  const lastYear = new Date(new Date().setFullYear(today.getFullYear() - 1));
-
-  const nextWeek = new Date(new Date().setDate(today.getDate() + 7));
-  const nextMonth = new Date(new Date().setMonth(today.getMonth() + 1));
-  const nextQuarter = new Date(new Date().setMonth(today.getMonth() + 3));
-  const nextYear = new Date(new Date().setFullYear(today.getFullYear() + 1));
-  return {
-    today,
-    lastWeek,
-    lastMonth,
-    lastQuarter,
-    lastYear,
-    nextWeek,
-    nextMonth,
-    nextQuarter,
-    nextYear,
+    buildPermalink,
   };
 }

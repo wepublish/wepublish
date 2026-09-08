@@ -7,6 +7,7 @@ fragment FullArticleRevisionWithoutBlocks on ArticleRevision {
   title
   lead
   seoTitle
+  seoDescription
   canonicalUrl
   hideAuthor
   breaking
@@ -154,6 +155,7 @@ mutation CreateArticle(
   $preTitle: String
   $properties: [PropertyInput!]!
   $seoTitle: String
+  $seoDescription: String
   $shared: Boolean!
   $slug: String
   $socialMediaAuthorIds: [String!]!
@@ -178,6 +180,7 @@ mutation CreateArticle(
     preTitle: $preTitle
     properties: $properties
     seoTitle: $seoTitle
+    seoDescription: $seoDescription
     shared: $shared
     slug: $slug
     socialMediaAuthorIds: $socialMediaAuthorIds
@@ -207,6 +210,7 @@ mutation UpdateArticle(
   $preTitle: String
   $properties: [PropertyInput!]!
   $seoTitle: String
+  $seoDescription: String
   $shared: Boolean!
   $slug: String
   $socialMediaAuthorIds: [String!]!
@@ -231,6 +235,7 @@ mutation UpdateArticle(
     preTitle: $preTitle
     properties: $properties
     seoTitle: $seoTitle
+    seoDescription: $seoDescription
     shared: $shared
     slug: $slug
     socialMediaAuthorIds: $socialMediaAuthorIds

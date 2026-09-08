@@ -110,6 +110,10 @@ function PublishArticlePanel({
             {metadata.seoTitle}
           </DescriptionListItemWithMessage>
 
+          <DescriptionListItem label={t('articleEditor.panels.seoDescription')}>
+            {metadata.seoDescription || '-'}
+          </DescriptionListItem>
+
           <DescriptionListItemWithMessage
             label={t('articleEditor.panels.authors')}
             message={t('articleEditor.panels.enterAuthors')}
