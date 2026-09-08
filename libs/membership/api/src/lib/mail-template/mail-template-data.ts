@@ -39,12 +39,17 @@ export interface MailDataSources {
   invoice?: any;
 }
 
-/** Assemble the `{ user, optional, jwt }` payload for a context. */
+/** Assemble the `{ user, optional, jwt, currentDate }` payload for a context. */
 export function assembleMailData(
   contextId: MailTemplateContextId,
   sources: MailDataSources,
   jwt: string
-): { user: any; optional: Record<string, any>; jwt: string } {
+): {
+  user: any;
+  optional: Record<string, any>;
+  jwt: string;
+  currentDate: Date;
+} {
   const { user, subscription, invoice } = sources;
   const items = invoice?.items ?? [];
 
@@ -75,7 +80,7 @@ export function assembleMailData(
       break;
   }
 
-  return { user, optional, jwt };
+  return { user, optional, jwt, currentDate: new Date() };
 }
 
 const day = (iso: string) => new Date(iso);

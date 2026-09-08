@@ -75,10 +75,16 @@ export function findMissingPlaceholders(
         },
         SAMPLE_JWT
       )
-    : { user: SAMPLE_RECIPIENT, optional: {}, jwt: SAMPLE_JWT };
-
+    : {
+        user: SAMPLE_RECIPIENT,
+        optional: {},
+        jwt: SAMPLE_JWT,
+        currentDate: new Date(),
+      };
+  
+  console.log('XXXX', 'currentDate' in data ? 'YES' : 'NO');
   const available = new Set(resolvableKeys(data).map(key => key.toLowerCase()));
-
+  console.log(extractPlaceholders(templateText(template)));
   return extractPlaceholders(templateText(template)).filter(
     key => !available.has(key.toLowerCase())
   );
