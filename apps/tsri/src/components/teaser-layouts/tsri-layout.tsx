@@ -28,6 +28,9 @@ export enum TsriLayoutType {
 
   // hero teaser layouts
   HeroTeaser = 'HeroTeaser',
+
+  // compact news layouts
+  CompactNews = 'CompactNews',
 }
 
 export const TeaserLayoutWrapper = styled('div')`
