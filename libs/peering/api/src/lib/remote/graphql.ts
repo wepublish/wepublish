@@ -93,6 +93,8 @@ export type ArticleCreatedAction = BaseAction & HasArticleLc & {
 };
 
 export type ArticleFilter = {
+  /** Only include articles that have every one of these tags */
+  allTagsIn?: InputMaybe<Array<Scalars['String']>>;
   authors?: InputMaybe<Array<Scalars['String']>>;
   body?: InputMaybe<Scalars['String']>;
   draft?: InputMaybe<Scalars['Boolean']>;
@@ -139,6 +141,7 @@ export type ArticleRevision = HasBlockContent & HasOptionalUserLc & {
   preTitle?: Maybe<Scalars['String']>;
   properties: Array<Property>;
   publishedAt?: Maybe<Scalars['DateTime']>;
+  seoDescription?: Maybe<Scalars['String']>;
   seoTitle?: Maybe<Scalars['String']>;
   socialMediaAuthors: Array<Author>;
   socialMediaDescription?: Maybe<Scalars['String']>;
@@ -913,6 +916,10 @@ export type DiscountCode = HasMemberPlanLc & {
   memberPlan: MemberPlan;
   memberPlanId: Scalars['String'];
   modifiedAt: Scalars['DateTime'];
+  /** Number of redemptions of this discountCode on paid invoices. */
+  paidUsageCount: Scalars['Int'];
+  /** Number of times this discountCode was redeemed. */
+  usageCount: Scalars['Int'];
   validFrom: Scalars['DateTime'];
   validTo: Scalars['DateTime'];
 };
@@ -1632,6 +1639,7 @@ export type InvoiceConnection = {
 
 export type InvoiceFilter = {
   canceledAt?: InputMaybe<DateFilter>;
+  discountCodeId?: InputMaybe<Scalars['String']>;
   mail?: InputMaybe<Scalars['String']>;
   paidAt?: InputMaybe<DateFilter>;
   subscriptionID?: InputMaybe<Scalars['String']>;
@@ -2668,6 +2676,7 @@ export type MutationCreateArticleArgs = {
   paywallId?: InputMaybe<Scalars['String']>;
   preTitle?: InputMaybe<Scalars['String']>;
   properties: Array<PropertyInput>;
+  seoDescription?: InputMaybe<Scalars['String']>;
   seoTitle?: InputMaybe<Scalars['String']>;
   shared: Scalars['Boolean'];
   slug?: InputMaybe<Scalars['String']>;
@@ -2834,6 +2843,8 @@ export type MutationCreatePageArgs = {
   hidden: Scalars['Boolean'];
   imageID?: InputMaybe<Scalars['String']>;
   properties: Array<PropertyInput>;
+  seoDescription?: InputMaybe<Scalars['String']>;
+  seoTitle?: InputMaybe<Scalars['String']>;
   slug?: InputMaybe<Scalars['String']>;
   socialMediaDescription?: InputMaybe<Scalars['String']>;
   socialMediaImageID?: InputMaybe<Scalars['String']>;
@@ -3479,6 +3490,7 @@ export type MutationUpdateArticleArgs = {
   paywallId?: InputMaybe<Scalars['String']>;
   preTitle?: InputMaybe<Scalars['String']>;
   properties: Array<PropertyInput>;
+  seoDescription?: InputMaybe<Scalars['String']>;
   seoTitle?: InputMaybe<Scalars['String']>;
   shared: Scalars['Boolean'];
   slug?: InputMaybe<Scalars['String']>;
@@ -3706,6 +3718,8 @@ export type MutationUpdatePageArgs = {
   id: Scalars['String'];
   imageID?: InputMaybe<Scalars['String']>;
   properties: Array<PropertyInput>;
+  seoDescription?: InputMaybe<Scalars['String']>;
+  seoTitle?: InputMaybe<Scalars['String']>;
   slug?: InputMaybe<Scalars['String']>;
   socialMediaDescription?: InputMaybe<Scalars['String']>;
   socialMediaImageID?: InputMaybe<Scalars['String']>;
@@ -4117,6 +4131,8 @@ export type PageRevision = HasBlockContent & HasOptionalUserLc & {
   imageID?: Maybe<Scalars['String']>;
   properties: Array<Property>;
   publishedAt?: Maybe<Scalars['DateTime']>;
+  seoDescription?: Maybe<Scalars['String']>;
+  seoTitle?: Maybe<Scalars['String']>;
   socialMediaDescription?: Maybe<Scalars['String']>;
   socialMediaImage?: Maybe<Image>;
   socialMediaImageID?: Maybe<Scalars['String']>;
@@ -4559,6 +4575,8 @@ export type PeerArticle = HasOptionalPeerLc & {
 };
 
 export type PeerArticleFilter = {
+  /** Only include articles that have every one of these tags */
+  allTagsIn?: InputMaybe<Array<Scalars['String']>>;
   authors?: InputMaybe<Array<Scalars['String']>>;
   body?: InputMaybe<Scalars['String']>;
   excludeIds?: InputMaybe<Array<Scalars['String']>>;

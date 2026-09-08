@@ -117,7 +117,6 @@
         "invalidImage": "Image non valide",
         "key": "Clé",
         "lead": "Lead",
-        "leadHelpBlock": "Veuillez utiliser un lead optimisé pour le référencement",
         "loading": "Chargement ...",
         "loadMore": "Charger plus",
         "noDataToDisplay": "Pas de données à afficher",
@@ -147,6 +146,8 @@
         "removeTeaser": "Retirer le teaser",
         "seoTitle": "Titre de référencement",
         "seoTitleHelpBlock": "Veuillez utiliser un titre optimisé pour le référencement seo. <2>Guide du référencement</2>",
+        "seoDescription": "Description de référencement (SEO)",
+        "seoDescriptionHelpBlock": "Veuillez utiliser une description optimisée pour le référencement seo",
         "sharedWithPeers": "Partagé avec les peers",
         "slug": "Slug",
         "slugGuide": "Guide des slugs",
@@ -162,7 +163,6 @@
         "status": "{{stateJoin}}",
         "tags": "Tags",
         "title": "Titre",
-        "titleHelpBlock": "Veuillez utiliser un titre optimisé pour le référencement seo",
         "totalCharCount": "Le nombre total de caractères est de {{totalCharCount}}",
         "type": "Type",
         "Untitled": "Sans titre",
@@ -1344,9 +1344,12 @@
         "confirm": "Confirmer",
         "createdAt": "{{createdAt, ccc PP p}}",
         "dateExplanationPopOver": "Ceci peut être utilisé pour faire référence à des pages qui seront publiés ultérieurement. Par exemple, lorsque des posts pour les réseaux sociaux sont programmés pour êtres publiés le lendemain matin.",
-        "description": "Description du référencement (SEO)",
-        "descriptionHelpBlock": "Veuillez utiliser une description optimisée pour le référencement seo",
+        "description": "Description",
         "enterDescription": "Veuillez entrer une description seo",
+        "seoTitle": "Titre de référencement (SEO)",
+        "seoTitleHelpBlock": "Veuillez utiliser un titre optimisé pour le référencement (SEO)",
+        "seoDescription": "Description du référencement (SEO)",
+        "seoDescriptionHelpBlock": "Veuillez utiliser une description optimisée pour le référencement seo",
         "enterImage": "Veuillez ajouter une image",
         "enterSocialMediaDescription": "Veuillez entrer une description pour les réseaux sociaux",
         "enterSocialMediaTitle": "Veuillez entrer un titre pour les réseaux sociaux",
@@ -1373,8 +1376,8 @@
         "socialMediaImage": "Image pour les médias sociaux",
         "socialMediaTitle": "Titre pour les médias sociaux",
         "tags": "Tags",
-        "title": "Titre de référencement (SEO)",
-        "titleHelpBlock": "Veuillez utiliser un titre optimisé pour le référencement (SEO)",
+        "title": "Titre",
+        "titleHelpBlock": "Le titre affiché sur la page",
         "updateDate": "Date de mise à jour",
         "updateDateWarning": "La date de mise à jour ne peux pas être à antérieure à la date de publication.",
         "url": "URL",
@@ -1501,6 +1504,7 @@
     "pollAnswer": {
       "answerMissing": "Ta réponse est vide. Veuillez saisir un texte.",
       "copyVoteUrl": "Copier le lien de vote",
+      "copyVoteUrlHint": "Les liens de vote peuvent désormais être copiés directement dans le bloc de sondage de l'article ou de la page où le sondage est utilisé.",
       "deleteBtn": "Supprimer",
       "deleteModalBody": "Veux-tu supprimer irrévocablement la réponse \"{{answer}}\" ? Les résultats du sondage seront alors perdus.",
       "deleteModalTitle": "Supprimer?",
@@ -1727,7 +1731,6 @@
         "createdAt": "Créé",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
         "deleted": "Utilisateur·trice supprimé·e",
-        "downloadCsv": "Télécharger CSV",
         "email": "Email",
         "memberPlan": "Plan membre",
         "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
@@ -2057,6 +2060,13 @@
       }
     },
     "audienceFilter": {
+      "copyPermalink": "Copier le permalien",
+      "permalinkCopied": "Permalien avec une période fixe copié dans le presse-papiers",
+      "permalinkCopyFailed": "Impossible de copier le permalien",
+      "permalinkHelpLabel": "À propos du permalien",
+      "permalinkHelpWhat": "Le permalien est un lien vers cette vue précise : la période, les plans d'abonnement, les indicateurs sélectionnés ainsi que le graphique et le tableau sont tous contenus dans l'adresse.",
+      "permalinkHelpWhy": "Vous pouvez ainsi partager une analyse avec l'équipe ou l'enregistrer comme favori, sans devoir régler les filtres à chaque fois. La période est enregistrée sous forme de dates fixes, afin que le lien affiche les mêmes chiffres plus tard.",
+      "permalinkHelpExample": "Exemple : sélectionner « Mois dernier » et le plan d'abonnement « Abonnement annuel », copier le permalien et le partager dans le chat – tout le monde voit exactement ces chiffres, même la semaine prochaine.",
       "daily": "Quotidien",
       "monthly": "Mensuel",
       "rangePickerPlaceholder": "de - à",
@@ -2144,6 +2154,15 @@
         "highProbability": "Renouvellements d'abonnement subséquents"
       }
     },
+    "audienceTableExport": {
+      "download": "Télécharger",
+      "csv": "CSV (.csv)",
+      "xlsx": "Excel (.xlsx)",
+      "header": {
+        "renewedAndReplaced": "Abonnements renouvelés et remplacés",
+        "totalToBeRenewed": "Abonnements à renouveler"
+      }
+    },
     "paywall": {
       "navbar": "Paywall",
       "form": {
@@ -2206,7 +2225,23 @@
         "validTo": "Valable jusqu'au",
         "areYouSure": "Êtes-vous sûr(e) ?",
         "areYouSureBody": "Le code de réduction \"{{ discountCode }}\" sera définitivement supprimé et cette action est irréversible.",
-        "areYouSureConfirmation": "Supprimer le code de réduction"
+        "areYouSureConfirmation": "Supprimer le code de réduction",
+        "usage": "Utilisé",
+        "usageValue": "{{total}} ({{paid}} payé(s))"
+      },
+      "usage": {
+        "title": "Utilisations de \"{{ discountCode }}\"",
+        "summary": "{{total}} utilisations, dont {{paid}} payée(s)",
+        "back": "Retour à l'aperçu",
+        "date": "Date",
+        "mail": "E-mail",
+        "amount": "Montant",
+        "status": "Statut",
+        "paid": "Payé",
+        "open": "Ouvert",
+        "canceled": "Annulé",
+        "subscription": "Abonnement",
+        "showSubscription": "Ouvrir l'abonnement"
       }
     },
     "goodie": {
@@ -2241,8 +2276,13 @@
       "gracePeriodHelpText": "Si votre site web utilise un paywall, les utilisateurs peuvent lire immédiatement ou continuer à lire tous les contenus, même s'ils n'ont pas souscrit d'abonnement payant, pendant le délai de paiement. Cela est utile, par exemple, en cas de virement bancaire.",
       "days": "Jours"
     },
+    "subscriptionsExport": {
+      "download": "Télécharger",
+      "csv": "CSV (.csv)",
+      "xlsx": "Excel (.xlsx)"
+    },
     "audienceCsvBtn": {
-      "exportUsers": "Télécharger CSV"
+      "exportUsers": "Télécharger les utilisateur·trice·s"
     },
     "search": "Rechercher",
     "integrations": {
