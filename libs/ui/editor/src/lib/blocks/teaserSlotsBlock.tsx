@@ -82,7 +82,7 @@ const TeaserWrapper = styled('div', {
 
 export const TeaserToolbar = styled.div`
   position: absolute;
-  z-index: 2000;
+  z-index: 2;
   right: 4px;
   bottom: 4px;
   display: flex;
@@ -95,7 +95,7 @@ export const TeaserToolbar = styled.div`
 `;
 export const SlotToolbar = styled.div`
   position: absolute;
-  z-index: 2000;
+  z-index: 2;
   right: 4px;
   top: 4px;
   display: flex;
