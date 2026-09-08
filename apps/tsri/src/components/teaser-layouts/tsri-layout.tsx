@@ -30,6 +30,9 @@ export enum TsriLayoutType {
   // hero teaser layouts
   HeroTeaser = 'HeroTeaser',
 
+  // compact news layouts
+  CompactNews = 'CompactNews',
+  
   // dossier layouts
   Dossier = 'Dossier',
 }
