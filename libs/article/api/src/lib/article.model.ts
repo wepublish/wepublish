@@ -272,6 +272,8 @@ export class ArticleFilter {
   shared?: boolean;
   @Field({ nullable: true })
   includeHidden?: boolean;
+  @Field({ nullable: true })
+  excludeHideAuthor?: boolean;
 
   @Field({ nullable: true })
   publicationDateFrom?: DateFilter;

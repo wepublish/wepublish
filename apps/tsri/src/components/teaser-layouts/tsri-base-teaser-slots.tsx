@@ -27,6 +27,12 @@ import {
   TeaserSlotsDefault,
 } from './layout-default';
 import {
+  alignmentForTeaserBlock as alignmentForTeaserBlockDossier,
+  isTeaserSlotsDossier,
+  teaserBlockStyleByIndex as teaserBlockStyleByIndexDossier,
+  TeaserSlotsDossier,
+} from './layout-dossier';
+import {
   alignmentForTeaserBlock as alignmentForTeaserBlockTeaserSlotsHeroTeaser,
   isTeaserSlotsHeroTeaser,
   teaserBlockStyleByIndex as teaserBlockStyleByIndexHeroTeaser,
@@ -157,6 +163,16 @@ export const TsriBaseTeaserSlots = cond([
         {...props}
         alignmentForTeaserBlock={alignmentForTeaserBlock}
         teaserBlockStyleByIndex={teaserBlockStyleByIndexWithTwoCol}
+      />
+    ),
+  ],
+  [
+    isTeaserSlotsDossier,
+    (props: BuilderTeaserSlotsBlockProps) => (
+      <TeaserSlotsDossier
+        {...props}
+        teaserBlockStyleByIndex={teaserBlockStyleByIndexDossier}
+        alignmentForTeaserBlock={alignmentForTeaserBlockDossier}
       />
     ),
   ],
