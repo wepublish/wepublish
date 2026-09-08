@@ -1564,6 +1564,17 @@ model BlockStyle {
   @@map("block-content.styles")
 }
 
+model BlockTemplate {
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  name   String @unique
+  blocks Json
+
+  @@map("block_templates")
+}
+
 model Banner {
   id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now()) @db.Timestamptz(3)

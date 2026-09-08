@@ -1,0 +1,70 @@
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
+import {
+  CanCreateBlockTemplate,
+  CanDeleteBlockTemplate,
+  CanUpdateBlockTemplate,
+} from '@wepublish/permissions';
+import { Permissions } from '@wepublish/permissions/api';
+import { Public } from '@wepublish/authentication/api';
+import { BlockTemplateDataloaderService } from './block-template-dataloader.service';
+import {
+  BlockTemplate,
+  BlockTemplateBlock,
+  CreateBlockTemplateInput,
+  UpdateBlockTemplateInput,
+} from './block-template.model';
+import { BlockTemplateService } from './block-template.service';
+
+@Resolver(() => BlockTemplate)
+export class BlockTemplateResolver {
+  constructor(private blockTemplateService: BlockTemplateService) {}
+
+  @Public()
+  @Query(returns => [BlockTemplate], {
+    description: `Returns a list of block templates.`,
+  })
+  public blockTemplates() {
+    return this.blockTemplateService.getBlockTemplates();
+  }
+
+  @Permissions(CanCreateBlockTemplate)
+  @Mutation(returns => BlockTemplate, {
+    description: `Creates a new block template.`,
+  })
+  public createBlockTemplate(@Args() blockTemplate: CreateBlockTemplateInput) {
+    return this.blockTemplateService.createBlockTemplate(blockTemplate);
+  }
+
+  @Permissions(CanUpdateBlockTemplate)
+  @Mutation(returns => BlockTemplate, {
+    description: `Updates an existing block template.`,
+  })
+  public updateBlockTemplate(@Args() blockTemplate: UpdateBlockTemplateInput) {
+    return this.blockTemplateService.updateBlockTemplate(blockTemplate);
+  }
+
+  @Permissions(CanDeleteBlockTemplate)
+  @Mutation(returns => BlockTemplate, {
+    description: `Deletes an existing block template.`,
+  })
+  public deleteBlockTemplate(@Args('id') id: string) {
+    return this.blockTemplateService.deleteBlockTemplate(id);
+  }
+}
+
+@Resolver(() => BlockTemplateBlock)
+export class BlockTemplateBlockResolver {
+  constructor(private blockTemplates: BlockTemplateDataloaderService) {}
+
+  @ResolveField(() => BlockTemplate, { nullable: true })
+  public template(@Parent() block: BlockTemplateBlock) {
+    return this.blockTemplates.load(block.templateID);
+  }
+}
