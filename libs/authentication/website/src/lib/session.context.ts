@@ -1,3 +1,4 @@
+import { useApolloClient } from '@apollo/client';
 import {
   SensitiveDataUser,
   SessionWithTokenWithoutUser,
@@ -26,10 +27,12 @@ const useSessionContext = () => {
 };
 
 export const useUser = () => {
+  const client = useApolloClient();
   const [user, hasUser, setToken] = useSessionContext();
 
   const logout = async () => {
-    setToken(null);
+    await setToken(null);
+    await client.resetStore();
   };
 
   return { user, hasUser, setToken, logout };
