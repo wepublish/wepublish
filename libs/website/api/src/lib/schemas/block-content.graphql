@@ -448,6 +448,10 @@ fragment BlockWithoutTeaser on BlockContent {
     blockStyle: blockStyleName
   }
 
+  ... on BlockTemplateBlock {
+    blockStyle: blockStyleName
+  }
+
   ... on UnknownBlock {
     blockStyle: blockStyleName
   }
@@ -570,6 +574,42 @@ fragment FullTeaserSlotsBlock on TeaserSlotsBlock {
   }
 }
 
+fragment FullBlockTemplateBlock on BlockTemplateBlock {
+  disabled
+  blockStyle: blockStyleName
+  type
+  templateID
+
+  template {
+    id
+    name
+
+    blocks {
+      ...BlockWithoutTeaser
+
+      ... on TeaserGridFlexBlock {
+        ...FullTeaserGridFlexBlock
+      }
+
+      ... on TeaserGridBlock {
+        ...FullTeaserGridBlock
+      }
+
+      ... on TeaserListBlock {
+        ...FullTeaserListBlock
+      }
+
+      ... on TeaserSlotsBlock {
+        ...FullTeaserSlotsBlock
+      }
+
+      ... on FlexBlock {
+        ...FullFlexBlock
+      }
+    }
+  }
+}
+
 fragment FullBlock on BlockContent {
   ...BlockWithoutTeaser
 
@@ -591,6 +631,10 @@ fragment FullBlock on BlockContent {
 
   ... on FlexBlock {
     ...FullFlexBlock
+  }
+
+  ... on BlockTemplateBlock {
+    ...FullBlockTemplateBlock
   }
 }
 

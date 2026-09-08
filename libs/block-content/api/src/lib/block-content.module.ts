@@ -1,5 +1,6 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { BlockStylesModule } from './block-styles/block-styles.module';
+import { BlockTemplateModule } from './block-template/block-template.module';
 import { EventBlockResolver } from './event/event-block.resolver';
 import { CommentBlockResolver } from './comment/comment-block.resolver';
 import { ImageModule } from '@wepublish/image/api';
@@ -26,6 +27,7 @@ import { MailchimpSubscribeService } from './mailchimp-form/mailchimp-subscribe.
   imports: [
     PrismaModule,
     BlockStylesModule,
+    BlockTemplateModule,
     ImageModule,
     forwardRef(() => ArticleModule),
     forwardRef(() => PageModule),

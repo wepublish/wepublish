@@ -578,4 +578,15 @@ fragment FullBlock on BlockContent {
       }
     }
   }
+
+  ... on BlockTemplateBlock {
+    disabled
+    blockStyle
+    blockStyleName
+    type
+    templateID
+    template {
+      ...FullBlockTemplate
+    }
+  }
 }
