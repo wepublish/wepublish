@@ -1090,6 +1090,45 @@ const createHiddenFilter = (
   };
 };
 
+const createExcludeHideAuthorFilter = (
+  filter: Partial<ArticleFilter>
+): Prisma.ArticleWhereInput => {
+  if (filter?.excludeHideAuthor) {
+    const hideAuthorFilter: Prisma.ArticleRevisionWhereInput = {
+      hideAuthor: false,
+    };
+
+    return {
+      ArticleRevisionPublished:
+        filter?.published ?
+          {
+            articleRevision: hideAuthorFilter,
+          }
+        : undefined,
+      ArticleRevisionDraft:
+        filter?.draft ?
+          {
+            articleRevision: hideAuthorFilter,
+          }
+        : undefined,
+      ArticleRevisionPending:
+        filter?.pending ?
+          {
+            articleRevision: hideAuthorFilter,
+          }
+        : undefined,
+      revisions:
+        !filter?.draft && !filter?.published && !filter?.pending ?
+          {
+            some: hideAuthorFilter,
+          }
+        : undefined,
+    };
+  }
+
+  return {};
+};
+
 const createPeerIdFilter = (
   filter: Partial<ArticleFilter>
 ): Prisma.ArticleWhereInput => {
@@ -1135,6 +1174,7 @@ export const createArticleFilter = (
     createTagsNotInFilter(filter),
     createAuthorFilter(filter),
     createHiddenFilter(filter),
+    createExcludeHideAuthorFilter(filter),
     createPeerIdFilter(filter),
     createExcludeIdsFilter(filter),
   ].filter(c => !isEmptyWhere(c));
