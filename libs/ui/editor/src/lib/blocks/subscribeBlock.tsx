@@ -20,6 +20,7 @@ import {
   SubscribeBlockLayoutPickerConfig,
   SubscribeBlockLayoutSliderConfig,
   SubscribeBlockRenderLayout,
+  SubscribePeriodicityDisplay,
   useMemberPlanListQuery,
 } from '@wepublish/editor/api';
 import { ReactNode, useCallback, useMemo } from 'react';
@@ -27,11 +28,13 @@ import { useTranslation } from 'react-i18next';
 import { MdDragIndicator } from 'react-icons/md';
 import type { CheckPickerProps } from 'rsuite';
 import {
-  Checkbox,
   CheckPicker,
+  Checkbox,
   IconButton,
   NumberInput,
   Panel as RPanel,
+  Radio,
+  RadioGroup,
   SelectPicker,
   TagInput,
   Toggle,
@@ -809,6 +812,35 @@ export const SubscribeBlock = ({
         />
 
         <Hint>{t('blocks.subscribe.selectFieldsSelectionHint')}</Hint>
+      </Content>
+
+      <Content>
+        <Heading>{t('blocks.subscribe.periodicityDisplay')}</Heading>
+
+        <RadioGroup
+          inline
+          appearance="picker"
+          disabled={disabled}
+          value={
+            value.periodicityDisplay ?? SubscribePeriodicityDisplay.Dropdown
+          }
+          onChange={periodicityDisplay =>
+            onChange(current => ({
+              ...current,
+              periodicityDisplay:
+                periodicityDisplay as SubscribePeriodicityDisplay,
+            }))
+          }
+        >
+          <Radio value={SubscribePeriodicityDisplay.Dropdown}>
+            {t('blocks.subscribe.periodicityDisplayDropdown')}
+          </Radio>
+          <Radio value={SubscribePeriodicityDisplay.OfferCards}>
+            {t('blocks.subscribe.periodicityDisplayOfferCards')}
+          </Radio>
+        </RadioGroup>
+
+        <Hint>{t('blocks.subscribe.periodicityDisplayHint')}</Hint>
       </Content>
     </Panel>
   );

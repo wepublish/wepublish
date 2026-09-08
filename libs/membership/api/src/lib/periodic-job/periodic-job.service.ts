@@ -204,11 +204,32 @@ export class PeriodicJobService {
     }
   }
 
-  private async checkStateOfOpenInvoices() {
+  public async checkStateOfOpenInvoices() {
     const invoices = await this.subscriptionController.findAllOpenInvoices();
     for (const invoice of invoices) {
       await this.checkInvoiceState(invoice);
     }
+  }
+
+  /**
+   * Runs the invoice creation and charging steps of the daily periodic job
+   * for the current date, without touching the periodic job run log. Intended
+   * for manually triggered testing; deactivation and custom mail steps are
+   * deliberately skipped.
+   */
+  public async forceCreateAndChargeInvoices() {
+    const periodicJobRunObject: PeriodicJobRunObject = {
+      isRetry: false,
+      date: startOfDay(new Date()),
+    };
+
+    this.logger.log('Force run: processing invoice creation...');
+    await this.createMissingInvoicesForActiveSubscriptions(
+      periodicJobRunObject
+    );
+    this.logger.log('Force run: processing charge of invoices...');
+    await this.chargeUnpaidDueInvoices(periodicJobRunObject);
+    this.logger.log('Force run finished.');
   }
 
   private async createMissingInvoicesForActiveSubscriptions(

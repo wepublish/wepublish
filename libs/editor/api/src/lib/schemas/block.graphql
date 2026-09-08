@@ -280,6 +280,7 @@ fragment BlockWithoutTeaser on BlockContent {
         }
       }
     }
+    periodicityDisplay
     fields
     showGoodies
     showDiscountCodes
