@@ -5,7 +5,7 @@ import {
   BuilderMemberPlanPickerProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { forwardRef, useEffect, useMemo } from 'react';
+import { forwardRef, useEffect } from 'react';
 
 export const MemberPlanPickerWrapper = styled('fieldset')`
   display: grid;
@@ -37,7 +37,7 @@ export const MemberPlanPicker = forwardRef<
   HTMLButtonElement,
   BuilderMemberPlanPickerProps & { alwaysShow?: boolean }
 >(function MemberPlanPicker(
-  { memberPlans, onChange, value, className, name, alwaysShow, sortBy },
+  { memberPlans, onChange, value, className, name, alwaysShow },
   ref
 ) {
   const {
@@ -46,28 +46,18 @@ export const MemberPlanPicker = forwardRef<
     blocks: { RichText },
   } = useWebsiteBuilder();
 
-  const sortedMemberPlans = useMemo(
-    () =>
-      sortBy === 'priceAsc' ?
-        [...memberPlans].sort(
-          (a, b) => a.amountPerMonthMin - b.amountPerMonthMin
-        )
-      : memberPlans,
-    [memberPlans, sortBy]
-  );
-
-  const showRadioButtons = sortedMemberPlans.length > 1 || alwaysShow;
-  const selectedMemberPlan = sortedMemberPlans.find(({ id }) => id === value);
+  const showRadioButtons = memberPlans.length > 1 || alwaysShow;
+  const selectedMemberPlan = memberPlans.find(({ id }) => id === value);
   const showPicker =
     showRadioButtons ||
     toPlaintext(selectedMemberPlan?.description?.content) ||
     selectedMemberPlan?.image;
 
   useEffect(() => {
-    if (sortedMemberPlans.length && !selectedMemberPlan) {
-      onChange(sortedMemberPlans[0].id);
+    if (memberPlans.length && !selectedMemberPlan) {
+      onChange(memberPlans[0].id);
     }
-  }, [sortedMemberPlans, onChange, selectedMemberPlan]);
+  }, [memberPlans, onChange, selectedMemberPlan]);
 
   if (!showPicker) {
     return;
@@ -82,7 +72,7 @@ export const MemberPlanPicker = forwardRef<
           value={value ? value : ''}
           ref={ref}
         >
-          {sortedMemberPlans.map(memberPlan => (
+          {memberPlans.map(memberPlan => (
             <FormControlLabel
               key={memberPlan.id}
               value={memberPlan.id}

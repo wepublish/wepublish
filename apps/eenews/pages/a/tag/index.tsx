@@ -14,7 +14,6 @@ import {
   useArticleListQuery,
 } from '@wepublish/website/api';
 import { GetStaticProps } from 'next';
-import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { z } from 'zod';
 
@@ -87,9 +86,7 @@ export default function DossierIndex({
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const { publicRuntimeConfig } = getConfig();
-
-  if (!publicRuntimeConfig.env.API_URL) {
+  if (!getApiUrl()) {
     return { props: {}, revalidate: 1 };
   }
 

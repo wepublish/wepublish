@@ -9,7 +9,7 @@ import { useFullWidthContent } from '@wepublish/content/website';
 import { FullBlockFragment } from '@wepublish/website/api';
 import { BuilderBlockRendererProps } from '@wepublish/website/builder';
 import { cond } from 'ramda';
-import { useMemo } from 'react';
+import { JSX, useMemo } from 'react';
 
 import {
   isAktuellGrid,

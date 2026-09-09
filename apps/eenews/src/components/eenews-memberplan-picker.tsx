@@ -1,23 +1,8 @@
 import styled from '@emotion/styled';
 import { RichTextBlockWrapper } from '@wepublish/block-content/website';
 import { MemberPlanPicker } from '@wepublish/membership/website';
-import { BuilderMemberPlanPickerProps } from '@wepublish/website/builder';
-import { forwardRef } from 'react';
 
-const SortedMemberPlanPicker = forwardRef<
-  HTMLButtonElement,
-  BuilderMemberPlanPickerProps
->(function SortedMemberPlanPicker(props, ref) {
-  return (
-    <MemberPlanPicker
-      {...props}
-      ref={ref}
-      sortBy="priceAsc"
-    />
-  );
-});
-
-export const EeNewsMemberPlanPicker = styled(SortedMemberPlanPicker)`
+export const EeNewsMemberPlanPicker = styled(MemberPlanPicker)`
   > ${RichTextBlockWrapper} {
     font-family: ${({ theme }) => theme.typography.fontFamily};
     font-size: 1.5rem;
