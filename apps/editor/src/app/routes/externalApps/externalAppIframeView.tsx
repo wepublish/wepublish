@@ -1,12 +1,10 @@
 import styled from '@emotion/styled';
 import { Box, CircularProgress, Typography } from '@mui/material';
-import {
-  useCreateExternalAppTokenMutation,
-  useExternalAppQuery,
-} from '@wepublish/editor/api';
-import { useEffect } from 'react';
+import { useExternalAppQuery } from '@wepublish/editor/api';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
+
+import { useExternalAppSrc } from './useExternalAppSrc';
 
 const IframeWrapper = styled(Box)`
   width: calc(100% + 80px);
@@ -35,23 +33,14 @@ export function ExternalAppIframeView() {
     skip: !id,
   });
 
-  // The app is told who is sitting in the iframe with a short-lived JWT
-  // (`audience` = the app's registered url). It travels in the url fragment,
-  // never as a query parameter: fragments reach no server and no log, and the
-  // app is expected to strip it from the address bar once it has been traded
-  // for its own session.
-  const [createExternalAppToken, tokenState] =
-    useCreateExternalAppTokenMutation();
+  const app = data?.externalApp;
+  const {
+    src,
+    loading: tokenLoading,
+    error: tokenError,
+  } = useExternalAppSrc(app);
 
-  useEffect(() => {
-    if (data?.externalApp && !tokenState.called) {
-      createExternalAppToken({
-        variables: { externalAppId: data.externalApp.id },
-      });
-    }
-  }, [data, createExternalAppToken, tokenState.called]);
-
-  if (loading || tokenState.loading) {
+  if (loading || (app && tokenLoading)) {
     return (
       <Box
         p={3}
@@ -65,7 +54,7 @@ export function ExternalAppIframeView() {
     );
   }
 
-  if (error || !data?.externalApp) {
+  if (error || !app) {
     return (
       <Box p={3}>
         <Typography color="error">
@@ -78,28 +67,15 @@ export function ExternalAppIframeView() {
     );
   }
 
-  // A token that cannot be minted is shown, not swallowed: loading the app
-  // without one would silently sign the editor out of it.
-  if (tokenState.error) {
+  if (tokenError || !src) {
     return (
       <Box p={3}>
-        <Typography color="error">{tokenState.error.message}</Typography>
-      </Box>
-    );
-  }
-
-  const token = tokenState.data?.createExternalAppToken.token;
-
-  if (!token) {
-    return (
-      <Box
-        p={3}
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        height="100%"
-      >
-        <CircularProgress />
+        <Typography color="error">
+          {tokenError?.message ||
+            t('externalApps.noToken', {
+              defaultValue: 'Could not create a token for this app',
+            })}
+        </Typography>
       </Box>
     );
   }
@@ -107,8 +83,8 @@ export function ExternalAppIframeView() {
   return (
     <IframeWrapper>
       <StyledIframe
-        src={`${data.externalApp.url}#token=${encodeURIComponent(token)}`}
-        title={data.externalApp.name}
+        src={src}
+        title={app.name}
         allow="fullscreen; microphone; camera; display-capture"
       />
     </IframeWrapper>
