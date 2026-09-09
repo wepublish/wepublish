@@ -23,6 +23,7 @@ import {
   Table,
   TableWrapper,
   useAuthorisation,
+  useListViewState,
 } from '@wepublish/ui/editor';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -46,10 +47,11 @@ const { Column, HeaderCell, Cell: RCell } = RTable;
 function DiscountCodeList() {
   const { t } = useTranslation();
   const canSeeUsages = useAuthorisation(CanGetInvoices.id);
+  const { sortField, sortOrder, setSort, limit, setLimit } = useListViewState(
+    'discountCodes',
+    { defaultSortField: '' }
+  );
   const [page, setPage] = useState<number>(1);
-  const [limit, setLimit] = useState<number>(10);
-  const [sortField, setSortField] = useState<DiscountCodesort>();
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
   const [discountCodeToDelete, setDiscountCodeToDelete] = useState<
     DiscountCode | undefined
@@ -59,7 +61,7 @@ function DiscountCodeList() {
     variables: {
       take: limit,
       skip: (page - 1) * limit,
-      sort: sortField,
+      sort: sortField ? (sortField as DiscountCodesort) : undefined,
       order: mapTableSortTypeToGraphQLSortOrder(sortOrder),
     },
   });
@@ -104,8 +106,8 @@ function DiscountCodeList() {
           sortColumn={sortField}
           sortType={sortOrder}
           onSortColumn={(sortColumn, sortType) => {
-            setSortOrder(sortType ?? 'asc');
-            setSortField(sortColumn as DiscountCodesort);
+            setSort(sortColumn, sortType ?? 'asc');
+            setPage(1);
           }}
         >
           <Column
@@ -252,7 +254,10 @@ function DiscountCodeList() {
         total={data?.discountCodes?.totalCount ?? 0}
         activePage={page}
         onChangePage={page => setPage(page)}
-        onChangeLimit={limit => setLimit(limit)}
+        onChangeLimit={limit => {
+          setLimit(limit);
+          setPage(1);
+        }}
       />
 
       <Modal

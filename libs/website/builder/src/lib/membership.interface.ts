@@ -86,6 +86,7 @@ export type BuilderMemberPlanItemProps = Pick<
   | 'slug'
   | 'amountPerMonthMin'
   | 'amountPerMonthMax'
+  | 'amountPerMonthTarget'
   | 'currency'
   | 'extendable'
   | 'shortDescription'
@@ -198,6 +199,7 @@ export type BuilderSubscribeProps<
   transactionFee?: (monthlyAmount: number) => number;
   transactionFeeText?: string;
   returningUserId?: string;
+  supportPeriodicity?: PaymentPeriodicity;
   filterGoodies?: (
     goodies: FullGoodieFragment[],
     context: { monthlyAmount: number }

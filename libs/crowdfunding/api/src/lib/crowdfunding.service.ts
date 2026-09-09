@@ -13,11 +13,18 @@ import {
 } from './crowdfunding.model';
 import { CrowdfundingGoalWithProgress } from './crowdfunding-goal.model';
 import { PrimeDataLoader } from '@wepublish/utils/api';
+import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 import { CrowdfundingDataloaderService } from './crowdfunding-dataloader.service';
+
+const CROWDFUNDING_CACHE_NS = 'crowdfunding';
+const SUBSCRIPTIONS_CACHE_TTL_SECONDS = 60;
 
 @Injectable()
 export class CrowdfundingService {
-  constructor(private prisma: PrismaClient) {}
+  constructor(
+    private prisma: PrismaClient,
+    private kv: KvTtlCacheService
+  ) {}
 
   public getActiveGoalWithProgress({
     goalType,
@@ -111,26 +118,38 @@ export class CrowdfundingService {
       },
     } satisfies Prisma.InvoiceListRelationFilter;
 
-    const subscriptions = await this.prisma.subscription.findMany({
-      where: {
-        startsAt:
-          crowdfunding.countSubscriptionsFrom ?
-            {
-              gte: crowdfunding.countSubscriptionsFrom.toISOString(),
-            }
-          : undefined,
-        memberPlanID: {
-          in: memberPlanIds,
-        },
-        invoices: invoiceFilter,
-      },
-      select: {
-        monthlyAmount: true,
-        paymentPeriodicity: true,
-      },
-    });
+    const cacheKey = [
+      'subscriptions',
+      crowdfunding.id,
+      [...memberPlanIds].sort().join(','),
+      crowdfunding.countSubscriptionsFrom?.toISOString() ?? '',
+      crowdfunding.countSubscriptionsUntil?.toISOString() ?? '',
+    ].join(':');
 
-    return subscriptions;
+    return this.kv.getOrLoadNs(
+      CROWDFUNDING_CACHE_NS,
+      cacheKey,
+      () =>
+        this.prisma.subscription.findMany({
+          where: {
+            startsAt:
+              crowdfunding.countSubscriptionsFrom ?
+                {
+                  gte: crowdfunding.countSubscriptionsFrom.toISOString(),
+                }
+              : undefined,
+            memberPlanID: {
+              in: memberPlanIds,
+            },
+            invoices: invoiceFilter,
+          },
+          select: {
+            monthlyAmount: true,
+            paymentPeriodicity: true,
+          },
+        }),
+      SUBSCRIPTIONS_CACHE_TTL_SECONDS
+    );
   }
 
   calcMonthFactor(paymentPeriodicity: PaymentPeriodicity): number {

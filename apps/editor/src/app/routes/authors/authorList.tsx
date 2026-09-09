@@ -24,6 +24,7 @@ import {
   PermissionControl,
   Table,
   TableWrapper,
+  useListViewState,
 } from '@wepublish/ui/editor';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -82,10 +83,11 @@ function AuthorList() {
   );
 
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
-  const [sortField, setSortField] = useState('createdAt');
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
-  const [filter, setFilter] = useState('');
+  const { filter, setFilter, sortField, sortOrder, setSort, limit, setLimit } =
+    useListViewState<string>('authors', {
+      defaultFilter: '',
+      defaultSortField: 'createdAt',
+    });
 
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
   const [authors, setAuthors] = useState<FullAuthorFragment[]>([]);
@@ -167,7 +169,10 @@ function AuthorList() {
           <InputGroup>
             <Input
               value={filter}
-              onChange={value => setFilter(value)}
+              onChange={value => {
+                setFilter(value);
+                setPage(1);
+              }}
             />
             <InputGroup.Addon>
               <MdSearch />
@@ -184,8 +189,8 @@ function AuthorList() {
           sortColumn={sortField}
           sortType={sortOrder}
           onSortColumn={(sortColumn, sortType) => {
-            setSortOrder(sortType ?? 'asc');
-            setSortField(sortColumn);
+            setSort(sortColumn, sortType ?? 'asc');
+            setPage(1);
           }}
         >
           <Column
@@ -282,7 +287,10 @@ function AuthorList() {
           total={data?.authors.totalCount ?? 0}
           activePage={page}
           onChangePage={page => setPage(page)}
-          onChangeLimit={limit => setLimit(limit)}
+          onChangeLimit={limit => {
+            setLimit(limit);
+            setPage(1);
+          }}
         />
       </TableWrapper>
 

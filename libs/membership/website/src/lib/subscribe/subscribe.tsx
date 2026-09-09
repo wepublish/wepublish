@@ -175,6 +175,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   goodieMinValue,
   fetchSubscribeInfo,
   subscribeInfo,
+  supportPeriodicity = PaymentPeriodicity.Monthly,
 }: BuilderSubscribeProps<T>) => {
   const {
     meta: { locale, siteTitle },
@@ -410,7 +411,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     memberPlan: selectedMemberPlan?.name ?? '',
     extendable: selectedMemberPlan?.extendable ?? true,
     productType: selectedMemberPlan?.productType ?? ProductType.Subscription,
-    paymentPeriodicity: PaymentPeriodicity.Monthly,
+    paymentPeriodicity: supportPeriodicity,
     monthlyAmount: watchedMonthlyAmount,
     currency: selectedMemberPlan?.currency ?? Currency.Chf,
     siteTitle,

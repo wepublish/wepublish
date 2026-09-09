@@ -12,6 +12,8 @@ import { GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
 import { ComponentProps } from 'react';
 
+import { EenewsPageShell } from '../src/components/eenews-page-shell';
+
 export default function PageBySlugOrId() {
   const {
     query: { slug, id },
@@ -22,7 +24,11 @@ export default function PageBySlugOrId() {
     id,
   } as ComponentProps<typeof PageContainer>;
 
-  return <PageContainer {...containerProps} />;
+  return (
+    <EenewsPageShell>
+      <PageContainer {...containerProps} />
+    </EenewsPageShell>
+  );
 }
 
 export const getStaticPaths = () => ({
