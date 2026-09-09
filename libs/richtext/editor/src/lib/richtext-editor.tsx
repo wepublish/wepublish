@@ -21,7 +21,7 @@ import { useTranslation } from 'react-i18next';
 
 export const RichtextEditorWrapper = styled(Paper)``;
 
-const Editor = styled(EditorContent)`
+const StyledEditorContent = styled(EditorContent)`
   .tiptap {
     padding: ${({ theme }) => theme.spacing(3, 3, 3, 7)};
     outline: none;
@@ -170,7 +170,7 @@ const loadContent = (editor: Editor, content: UseEditorOptions['content']) => {
   editor
     .chain()
     .setMeta('addToHistory', false)
-    .setContent(content, { emitUpdate: false })
+    .setContent(content ?? null, { emitUpdate: false })
     .run();
 };
 
@@ -265,7 +265,7 @@ export const RichtextEditor = forwardRef<HTMLDivElement, RichtextEditorProps>(
           {editorReady && <CaretLinkPopover />}
           {editorReady && <DragHandle />}
 
-          <Editor
+          <StyledEditorContent
             editor={editor}
             ref={ref}
           />

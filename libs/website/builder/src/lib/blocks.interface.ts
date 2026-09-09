@@ -34,6 +34,7 @@ import {
   FullTeaserGridBlockFragment,
   FullBlockFragment,
 } from '@wepublish/website/api';
+import { Ref } from 'react';
 
 export type BuilderBlockRendererProps = {
   className?: string;
@@ -72,7 +73,11 @@ export type BuilderFlexBlockProps = WithBlockProps<FullFlexBlockFragment> & {
 export type BuilderBlockTemplateBlockProps =
   WithBlockProps<FullBlockTemplateBlockFragment>;
 export type BuilderTitleBlockProps = WithBlockProps<FullTitleBlockFragment>;
-export type BuilderBreakBlockProps = WithBlockProps<FullBreakBlockFragment>;
+export type BuilderBreakBlockProps = WithBlockProps<FullBreakBlockFragment> & {
+  refs?: {
+    button?: Ref<HTMLButtonElement | null>;
+  };
+};
 export type BuilderImageBlockProps = WithBlockProps<FullImageBlockFragment>;
 export type BuilderImageGalleryBlockProps =
   WithBlockProps<FullImageGalleryBlockFragment>;

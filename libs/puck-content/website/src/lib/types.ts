@@ -1,26 +1,39 @@
 import { Config } from '@puckeditor/core';
 import {
+  BuilderBildwurfAdBlockProps,
   BuilderBreakBlockProps,
+  BuilderCommentBlockProps,
+  BuilderCrowdfundingBlockProps,
+  BuilderEventBlockProps,
   BuilderFacebookPostBlockProps,
   BuilderFacebookVideoBlockProps,
   BuilderHTMLBlockProps,
   BuilderIFrameBlockProps,
+  BuilderImageBlockProps,
   BuilderInstagramPostBlockProps,
   BuilderListicleBlockProps,
+  BuilderPolisConversationBlockProps,
+  BuilderPollBlockProps,
   BuilderQuoteBlockProps,
   BuilderRichTextBlockProps,
+  BuilderSoundCloudTrackBlockProps,
+  BuilderStreamableVideoBlockProps,
   BuilderTikTokVideoBlockProps,
   BuilderTitleBlockProps,
+  BuilderTwitterTweetBlockProps,
   BuilderVimeoVideoBlockProps,
   BuilderYouTubeVideoBlockProps,
 } from '@wepublish/website/builder';
 
-import { ContainerProps } from './components/layout/container';
-import { FlexProps } from './components/layout/flex';
-import { GridProps } from './components/layout/grid';
-import { SpaceProps } from './components/layout/space';
-import { WithColumnSpan } from './components/layout/with-column-span';
-import { SubscribeConfigProps } from './components/subscribe.config';
+import { ContainerProps } from './components/layout/container.component';
+import { DynamicGridProps } from './components/layout/dynamic-grid.component';
+import { GridProps } from './components/layout/grid.component';
+import { RowProps } from './components/layout/row.component';
+import { SliderProps } from './components/layout/slider.component';
+import { SpaceProps } from './components/layout/space.component';
+import { WithVisibility } from './components/layout/with-visibility';
+import { MailchimpFormConfigProps } from './components/data/mailchimp-form.component';
+import { SubscribeConfigProps } from './components/subscribe.component';
 import { WithDataSource } from './components/with-datasource';
 import {
   AlignmentValue,
@@ -42,7 +55,9 @@ type BaseComponents = {
   Break: BuilderBreakBlockProps;
   Space: SpaceProps;
   Grid: WithDataSource<GridProps>;
-  Flex: WithDataSource<FlexProps>;
+  DynamicGrid: WithDataSource<DynamicGridProps>;
+  Row: WithDataSource<RowProps>;
+  Slider: WithDataSource<SliderProps>;
   Container: WithDataSource<ContainerProps>;
   RichText: BuilderRichTextBlockProps;
   Listicle: BuilderListicleBlockProps;
@@ -54,11 +69,22 @@ type BaseComponents = {
   Facebook: BuilderFacebookPostBlockProps;
   Instagram: BuilderInstagramPostBlockProps;
   Subscribe: SubscribeConfigProps;
+  Image: BuilderImageBlockProps;
   Button: { text: string; alignment?: AlignmentValue };
+  Twitter: BuilderTwitterTweetBlockProps;
+  SoundCloud: BuilderSoundCloudTrackBlockProps;
+  Streamable: BuilderStreamableVideoBlockProps;
+  Polis: BuilderPolisConversationBlockProps;
+  BildwurfAd: BuilderBildwurfAdBlockProps;
+  MailchimpForm: MailchimpFormConfigProps;
+  Comment: BuilderCommentBlockProps;
+  Event: BuilderEventBlockProps;
+  Crowdfunding: BuilderCrowdfundingBlockProps;
+  Poll: BuilderPollBlockProps;
 };
 
 export type Components = {
-  [K in keyof BaseComponents]: WithColumnSpan<BaseComponents[K]>;
+  [K in keyof BaseComponents]: WithVisibility<BaseComponents[K]>;
 };
 
 export type { UserFields };

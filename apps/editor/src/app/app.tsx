@@ -120,6 +120,7 @@ import { UserRoleList } from './routes/userRoles/userRoleList';
 import { UserEditView } from './routes/users/userEditView';
 import { UserList } from './routes/users/userList';
 import { WebsiteSettingsItem } from './routes/website-settings/website-settings-item';
+import { PuckEditor } from './routes/puck/puck-editor';
 import { WebsiteSettingsList } from './routes/website-settings/website-settings-list';
 import { SetNewPassword } from './setNewPassword';
 
@@ -276,6 +277,10 @@ function AppRoutes() {
         <Route
           path="articles/edit/:id"
           element={<ArticleEditor />}
+        />
+        <Route
+          path="puck"
+          element={<PuckEditor />}
         />
         <Route
           path="articles/peer"
