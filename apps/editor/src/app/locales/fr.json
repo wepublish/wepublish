@@ -1,5 +1,9 @@
 {
   "translation": {
+    "previewHandshake": {
+      "popupBlocked": "La fenêtre d'aperçu a été bloquée par le navigateur. Veuillez autoriser les pop-ups pour l'éditeur et réessayer.",
+      "notResponding": "La fenêtre d'aperçu ne répond pas. La connexion à l'aperçu a peut-être échoué."
+    },
     "oneMessages": {
       "header": "Messages de l'équipe We.Publish",
       "expand": "Développer",
@@ -1127,6 +1131,7 @@
         "user_lastLogin": "Dernière connexion",
         "user_createdAt": "Compte créé le",
         "jwt": "Jeton de connexion (JWT)",
+        "currentDate": "Date en cours",
         "optional_subscription_id": "ID d'abonnement",
         "optional_subscription_monthlyAmount": "Montant mensuel",
         "optional_subscription_periodAmount": "Montant par période",
@@ -1167,7 +1172,8 @@
         "long": "Long",
         "weekday": "Jour de la semaine",
         "time": "Heure",
-        "dateTime": "Date+heure"
+        "dateTime": "Date+heure",
+        "year": "Année"
       },
       "amountFormat": {
         "display": "Avec devise",

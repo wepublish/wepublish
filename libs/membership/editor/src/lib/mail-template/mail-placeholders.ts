@@ -3,12 +3,12 @@
  * locally (see the API `mail-renderer`) using the `{{key}}` notation before the
  * mail is sent.
  *
- * The data handed to a template is `{ user, optional, jwt }`, flattened with
+ * The data handed to a template is `{ user, optional, jwt, currentDate }`, flattened with
  * underscores (e.g. `user.firstName` -> `user_firstName`,
  * `optional.subscription.monthlyAmount` -> `optional_subscription_monthlyAmount`).
  * Dates are rendered as ISO strings; booleans as `true`/`false`; numbers as-is.
  *
- * IMPORTANT: `user_*` and `jwt` are ALWAYS available. The `optional_*` keys
+ * IMPORTANT: `user_*`, `jwt` and `currentDate` are ALWAYS available. The `optional_*` keys
  * depend on which event sends the mail — and the available keys (and even their
  * prefix) differ per event, because each event loads different data. The
  * contexts below mirror what actually resolves for each mail; picking one in
@@ -115,6 +115,13 @@ export const ALWAYS_PLACEHOLDERS: MailPlaceholder[] = [
       'Login-Token. An eine Frontend-URL anhängen, z.B. ?jwt={{jwt}}. Bei Passwort-Reset-Mails ist dies das Reset-Token.',
     example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9…',
   },
+  {
+    key: "currentDate",
+    label: "Current date",
+    description: "Aktuelles Datum.",
+    example: "14.06.2024",
+    kind: 'date',
+  }
 ];
 
 const SUBSCRIPTION_SCALARS: MailPlaceholder[] = [

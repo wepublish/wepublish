@@ -1,5 +1,9 @@
 {
   "translation": {
+    "previewHandshake": {
+      "popupBlocked": "The preview window was blocked by the browser. Please allow pop-ups for the editor and try again.",
+      "notResponding": "The preview window is not responding. The preview login may have failed."
+    },
     "oneMessages": {
       "header": "Messages from the We.Publish team",
       "expand": "Expand",
@@ -1128,6 +1132,7 @@
         "user_lastLogin": "Last login",
         "user_createdAt": "Account created",
         "jwt": "Login token (JWT)",
+        "currentDate": "Current date",
         "optional_subscription_id": "Subscription ID",
         "optional_subscription_monthlyAmount": "Monthly amount",
         "optional_subscription_periodAmount": "Amount per period",
@@ -1168,7 +1173,8 @@
         "long": "Long",
         "weekday": "Weekday",
         "time": "Time",
-        "dateTime": "Date+time"
+        "dateTime": "Date+time",
+        "year": "Year"
       },
       "amountFormat": {
         "display": "With currency",
