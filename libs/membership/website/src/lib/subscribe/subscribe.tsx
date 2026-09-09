@@ -576,7 +576,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     );
   }, [deactivateSubscriptionId, userInvoices.data?.userInvoices]);
 
-  const amountPerMonthMin = selectedMemberPlan?.amountPerMonthMin || 500;
+  const amountPerMonthMin = selectedMemberPlan?.amountPerMonthMin ?? 500;
 
   return (
     <FormProvider {...form}>
