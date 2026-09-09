@@ -272,10 +272,9 @@ export const ReflektCrowdfundingMemberPlanItem = forwardRef<
   const radioGroup = useRadioGroup();
   const isChecked = props.checked ?? radioGroup?.value === id;
   const radioInputRef = useRef<HTMLInputElement>(null);
-  const {
-    formState: { errors },
-    setValue,
-  } = useFormContext();
+  const form = useFormContext() as ReturnType<typeof useFormContext> | null;
+  const setValue = form?.setValue;
+  const errors = form?.formState.errors;
 
   const { goodieMinValue, baselineMonthlyAmount } = useContext(
     CrowdfundingGoodieContext
@@ -309,7 +308,7 @@ export const ReflektCrowdfundingMemberPlanItem = forwardRef<
     const monthlyAmount =
       touched ? Math.round((freeAmountYearly * 100) / 12) : 0;
 
-    setValue('monthlyAmount', monthlyAmount);
+    setValue?.('monthlyAmount', monthlyAmount);
   }, [hasFreePricing, isChecked, freeAmountYearly, setValue]);
 
   return (
@@ -350,7 +349,7 @@ export const ReflektCrowdfundingMemberPlanItem = forwardRef<
                     </ItemFreeAmountSpinnerPlaceholder>
                   )}
 
-                  {errors.monthlyAmount && (
+                  {errors?.monthlyAmount && (
                     <ItemFreeAmountError>
                       {errors.monthlyAmount.message?.toString()}
                     </ItemFreeAmountError>
