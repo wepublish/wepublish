@@ -77,6 +77,61 @@ describe('SlateToPmMigrator.migrate', () => {
     ]);
   });
 
+  it('keeps formatting marks from the link text leaves', () => {
+    const slate = [
+      {
+        type: 'paragraph',
+        children: [
+          { text: 'Mail an ', italic: true },
+          {
+            type: 'link',
+            url: 'mailto:redaktion@example.com',
+            children: [{ text: 'redaktion@example.com', italic: true }],
+          },
+          { text: '.', italic: true },
+        ],
+      },
+    ];
+
+    const doc: any = makeMigrator().migrate(slate);
+    const linkNode = doc.content[0].content[1];
+
+    expect(linkNode.text).toBe('redaktion@example.com');
+    expect(linkNode.marks).toEqual([
+      {
+        type: 'link',
+        attrs: {
+          href: 'mailto:redaktion@example.com',
+          rel: 'noopener noreferrer nofollow',
+        },
+      },
+      { type: 'italic', attrs: undefined },
+    ]);
+  });
+
+  it('splits a link into one text node per differently formatted leaf', () => {
+    const slate = [
+      {
+        type: 'paragraph',
+        children: [
+          {
+            type: 'link',
+            url: 'https://example.com',
+            children: [{ text: 'plain ' }, { text: 'bold', bold: true }],
+          },
+        ],
+      },
+    ];
+
+    const doc: any = makeMigrator().migrate(slate);
+    const [first, second] = doc.content[0].content;
+
+    expect(first.text).toBe('plain ');
+    expect(first.marks.map((m: any) => m.type)).toEqual(['link']);
+    expect(second.text).toBe('bold');
+    expect(second.marks.map((m: any) => m.type)).toEqual(['link', 'bold']);
+  });
+
   it('wraps list-item inline content in a paragraph (tiptap `paragraph block*`)', () => {
     const slate = [
       {

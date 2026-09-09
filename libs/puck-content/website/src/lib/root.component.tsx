@@ -1,10 +1,17 @@
 import styled from '@emotion/styled';
-import { PuckContext } from '@puckeditor/core';
+import { PuckComponent, PuckContext } from '@puckeditor/core';
 import {
   FooterContainer,
   NavbarContainer,
 } from '@wepublish/navigation/website';
 import { memo } from 'react';
+
+import { RootSEO, RootSEOProps } from './root-seo.component';
+
+export type RootProps = RootSEOProps & {
+  showFooter: boolean;
+  showNavigation: boolean;
+};
 
 const Container = styled('div')`
   display: flex;
@@ -59,3 +66,24 @@ const Render = ({
 
 // Improves performance by a lot as it doesn't need to rerender anymore when any props change
 export const RootRender = memo(Render);
+
+export const Root: PuckComponent<RootProps> = ({
+  puck: { renderDropZone },
+  showFooter,
+  showNavigation,
+  seo,
+  socialMedia,
+}) => (
+  <>
+    <RootSEO
+      seo={seo}
+      socialMedia={socialMedia}
+    />
+
+    <RootRender
+      DropZone={renderDropZone}
+      showFooter={showFooter}
+      showNavigation={showNavigation}
+    />
+  </>
+);

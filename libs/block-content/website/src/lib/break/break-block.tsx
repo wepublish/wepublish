@@ -70,6 +70,7 @@ export const BreakBlock = ({
   linkTarget,
   linkText,
   linkURL,
+  refs,
 }: BuilderBreakBlockProps) => {
   const {
     blocks: { RichText },
@@ -110,6 +111,7 @@ export const BreakBlock = ({
 
         {!hideButton && linkURL && linkText && (
           <BreakBlockButton
+            ref={refs?.button}
             color="accent"
             variant="contained"
             size="medium"

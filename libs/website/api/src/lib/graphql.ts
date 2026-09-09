@@ -7479,6 +7479,52 @@ export type UploadImageMutationVariables = Exact<{
 
 export type UploadImageMutation = { __typename?: 'Mutation', uploadUserProfileImage?: { __typename?: 'SensitiveDataUser', permissions: Array<string>, birthday?: string | null, email: string, pendingEmail?: string | null, totpEnabled: boolean, id: string, name: string, firstName?: string | null, flair?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddressNumber?: string | null, streetAddress2?: string | null, streetAddress2Number?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, paymentProviderCustomers?: Array<{ __typename?: 'PaymentProviderCustomer', paymentProviderID: string, customerID: string }> | null, image?: { __typename?: 'Image', id: string, width: number, height: number, title?: string | null, description?: string | null, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, xxxl?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxxlSquare?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null, properties: Array<{ __typename?: 'Property', key: string, value: string }> } | null };
 
+export type ImageQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type ImageQuery = { __typename?: 'Query', image: { __typename?: 'Image', id: string, width: number, height: number, title?: string | null, description?: string | null, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, xxxl?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxxlSquare?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } };
+
+export type ImagesQueryVariables = Exact<{
+  filter?: InputMaybe<ImageFilter>;
+  take?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  cursorId?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type ImagesQuery = { __typename?: 'Query', images: { __typename?: 'PaginatedImages', totalCount: number, nodes: Array<{ __typename?: 'Image', id: string, width: number, height: number, title?: string | null, description?: string | null, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, xxxl?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxxlSquare?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null }>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: string | null } } };
+
+export type UploadLibraryImageMutationVariables = Exact<{
+  title?: InputMaybe<Scalars['String']>;
+  description?: InputMaybe<Scalars['String']>;
+  focalPointX?: InputMaybe<Scalars['Float']>;
+  focalPointY?: InputMaybe<Scalars['Float']>;
+  license?: InputMaybe<Scalars['String']>;
+  link?: InputMaybe<Scalars['String']>;
+  source?: InputMaybe<Scalars['String']>;
+  file: Scalars['Upload'];
+  filename?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type UploadLibraryImageMutation = { __typename?: 'Mutation', uploadImage: { __typename?: 'Image', id: string, width: number, height: number, title?: string | null, description?: string | null, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, xxxl?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxxlSquare?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } };
+
+export type UpdateImageMutationVariables = Exact<{
+  id: Scalars['String'];
+  title?: InputMaybe<Scalars['String']>;
+  description?: InputMaybe<Scalars['String']>;
+  license?: InputMaybe<Scalars['String']>;
+  link?: InputMaybe<Scalars['String']>;
+  source?: InputMaybe<Scalars['String']>;
+  focalPointX?: InputMaybe<Scalars['Float']>;
+  focalPointY?: InputMaybe<Scalars['Float']>;
+}>;
+
+
+export type UpdateImageMutation = { __typename?: 'Mutation', updateImage: { __typename?: 'Image', id: string, width: number, height: number, title?: string | null, description?: string | null, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, xxxl?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxxlSquare?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } };
+
 export type FullPaymentMethodFragment = { __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, gracePeriod: number, image?: { __typename?: 'Image', id: string, width: number, height: number, title?: string | null, description?: string | null, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, xxxl?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxxlSquare?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null };
 
 export type FullAvailablePaymentMethodFragment = { __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, gracePeriod: number, image?: { __typename?: 'Image', id: string, width: number, height: number, title?: string | null, description?: string | null, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, xxxl?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxxlSquare?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null }> };
@@ -10251,6 +10297,187 @@ export function useUploadImageMutation(baseOptions?: Apollo.MutationHookOptions<
 export type UploadImageMutationHookResult = ReturnType<typeof useUploadImageMutation>;
 export type UploadImageMutationResult = Apollo.MutationResult<UploadImageMutation>;
 export type UploadImageMutationOptions = Apollo.BaseMutationOptions<UploadImageMutation, UploadImageMutationVariables>;
+export const ImageDocument = gql`
+    query Image($id: String!) {
+  image(id: $id) {
+    ...FullImage
+  }
+}
+    ${FullImageFragmentDoc}`;
+
+/**
+ * __useImageQuery__
+ *
+ * To run a query within a React component, call `useImageQuery` and pass it any options that fit your needs.
+ * When your component renders, `useImageQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useImageQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useImageQuery(baseOptions: Apollo.QueryHookOptions<ImageQuery, ImageQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ImageQuery, ImageQueryVariables>(ImageDocument, options);
+      }
+export function useImageLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ImageQuery, ImageQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ImageQuery, ImageQueryVariables>(ImageDocument, options);
+        }
+export type ImageQueryHookResult = ReturnType<typeof useImageQuery>;
+export type ImageLazyQueryHookResult = ReturnType<typeof useImageLazyQuery>;
+export type ImageQueryResult = Apollo.QueryResult<ImageQuery, ImageQueryVariables>;
+export const ImagesDocument = gql`
+    query Images($filter: ImageFilter, $take: Int, $skip: Int, $cursorId: String) {
+  images(filter: $filter, take: $take, skip: $skip, cursorId: $cursorId) {
+    nodes {
+      ...FullImage
+    }
+    totalCount
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+  }
+}
+    ${FullImageFragmentDoc}`;
+
+/**
+ * __useImagesQuery__
+ *
+ * To run a query within a React component, call `useImagesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useImagesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useImagesQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
+ *      cursorId: // value for 'cursorId'
+ *   },
+ * });
+ */
+export function useImagesQuery(baseOptions?: Apollo.QueryHookOptions<ImagesQuery, ImagesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ImagesQuery, ImagesQueryVariables>(ImagesDocument, options);
+      }
+export function useImagesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ImagesQuery, ImagesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ImagesQuery, ImagesQueryVariables>(ImagesDocument, options);
+        }
+export type ImagesQueryHookResult = ReturnType<typeof useImagesQuery>;
+export type ImagesLazyQueryHookResult = ReturnType<typeof useImagesLazyQuery>;
+export type ImagesQueryResult = Apollo.QueryResult<ImagesQuery, ImagesQueryVariables>;
+export const UploadLibraryImageDocument = gql`
+    mutation UploadLibraryImage($title: String, $description: String, $focalPointX: Float, $focalPointY: Float, $license: String, $link: String, $source: String, $file: Upload!, $filename: String) {
+  uploadImage(
+    title: $title
+    description: $description
+    focalPointX: $focalPointX
+    focalPointY: $focalPointY
+    license: $license
+    link: $link
+    source: $source
+    tags: []
+    file: $file
+    filename: $filename
+  ) {
+    ...FullImage
+  }
+}
+    ${FullImageFragmentDoc}`;
+export type UploadLibraryImageMutationFn = Apollo.MutationFunction<UploadLibraryImageMutation, UploadLibraryImageMutationVariables>;
+
+/**
+ * __useUploadLibraryImageMutation__
+ *
+ * To run a mutation, you first call `useUploadLibraryImageMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUploadLibraryImageMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [uploadLibraryImageMutation, { data, loading, error }] = useUploadLibraryImageMutation({
+ *   variables: {
+ *      title: // value for 'title'
+ *      description: // value for 'description'
+ *      focalPointX: // value for 'focalPointX'
+ *      focalPointY: // value for 'focalPointY'
+ *      license: // value for 'license'
+ *      link: // value for 'link'
+ *      source: // value for 'source'
+ *      file: // value for 'file'
+ *      filename: // value for 'filename'
+ *   },
+ * });
+ */
+export function useUploadLibraryImageMutation(baseOptions?: Apollo.MutationHookOptions<UploadLibraryImageMutation, UploadLibraryImageMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UploadLibraryImageMutation, UploadLibraryImageMutationVariables>(UploadLibraryImageDocument, options);
+      }
+export type UploadLibraryImageMutationHookResult = ReturnType<typeof useUploadLibraryImageMutation>;
+export type UploadLibraryImageMutationResult = Apollo.MutationResult<UploadLibraryImageMutation>;
+export type UploadLibraryImageMutationOptions = Apollo.BaseMutationOptions<UploadLibraryImageMutation, UploadLibraryImageMutationVariables>;
+export const UpdateImageDocument = gql`
+    mutation UpdateImage($id: String!, $title: String, $description: String, $license: String, $link: String, $source: String, $focalPointX: Float, $focalPointY: Float) {
+  updateImage(
+    id: $id
+    title: $title
+    description: $description
+    license: $license
+    link: $link
+    source: $source
+    focalPointX: $focalPointX
+    focalPointY: $focalPointY
+  ) {
+    ...FullImage
+  }
+}
+    ${FullImageFragmentDoc}`;
+export type UpdateImageMutationFn = Apollo.MutationFunction<UpdateImageMutation, UpdateImageMutationVariables>;
+
+/**
+ * __useUpdateImageMutation__
+ *
+ * To run a mutation, you first call `useUpdateImageMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateImageMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateImageMutation, { data, loading, error }] = useUpdateImageMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      title: // value for 'title'
+ *      description: // value for 'description'
+ *      license: // value for 'license'
+ *      link: // value for 'link'
+ *      source: // value for 'source'
+ *      focalPointX: // value for 'focalPointX'
+ *      focalPointY: // value for 'focalPointY'
+ *   },
+ * });
+ */
+export function useUpdateImageMutation(baseOptions?: Apollo.MutationHookOptions<UpdateImageMutation, UpdateImageMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateImageMutation, UpdateImageMutationVariables>(UpdateImageDocument, options);
+      }
+export type UpdateImageMutationHookResult = ReturnType<typeof useUpdateImageMutation>;
+export type UpdateImageMutationResult = Apollo.MutationResult<UpdateImageMutation>;
+export type UpdateImageMutationOptions = Apollo.BaseMutationOptions<UpdateImageMutation, UpdateImageMutationVariables>;
 export const CreateSubscriptionInfoDocument = gql`
     query CreateSubscriptionInfo($memberPlanId: String!, $discountCode: String) {
   createSubscriptionInfo(memberPlanId: $memberPlanId, discountCode: $discountCode) {

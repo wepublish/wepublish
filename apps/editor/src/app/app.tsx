@@ -100,6 +100,7 @@ import { DiscountCodeCreateView } from './routes/discountCode/discountCodeCreate
 import { DiscountCodeEditView } from './routes/discountCode/discountCodeEditView';
 import { DiscountCodeList } from './routes/discountCode/discountCodeList';
 import { WebsiteSettingsItem } from './routes/website-settings/website-settings-item';
+import { PuckEditor } from './routes/puck/puck-editor';
 import { WebsiteSettingsList } from './routes/website-settings/website-settings-list';
 import { SetNewPassword } from './setNewPassword';
 
@@ -343,6 +344,10 @@ export function App() {
             <Route
               path="articles/edit/:id"
               element={<ArticleEditor />}
+            />
+            <Route
+              path="puck"
+              element={<PuckEditor />}
             />
             <Route
               path="articles/peer"

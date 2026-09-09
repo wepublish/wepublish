@@ -42,6 +42,7 @@ export * from './lib/nested-blocks/flex-block';
 
 export * from './lib/block-styles/context-box/context-box';
 export * from './lib/block-styles/focus-teaser/focus-teaser';
+export * from './lib/block-styles/slider/slider';
 export * from './lib/block-styles/teaser-slider/teaser-slider';
 export * from './lib/block-styles/image-slider/image-slider';
 export * from './lib/block-styles/banner/banner';

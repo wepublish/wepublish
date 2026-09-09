@@ -1,8 +1,5 @@
 import 'keen-slider/keen-slider.min.css';
 
-import { useMediaQuery, useTheme } from '@mui/material';
-import styled from '@emotion/styled';
-import { useKeenSlider } from 'keen-slider/react';
 import { allPass, anyPass } from 'ramda';
 import { useEffect, useState } from 'react';
 
@@ -21,146 +18,24 @@ import {
 import { isTeaserListBlock } from '../../teaser/teaser-list-block';
 import {
   BuilderBlockStyleProps,
-  BuilderSlidesPerView,
   BuilderTeaserListBlockProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { MdArrowBackIos, MdArrowForwardIos } from 'react-icons/md';
 import { isTeaserSlotsBlock } from '../../teaser/teaser-slots-block';
-
-export const SliderWrapper = styled('section')`
-  display: grid;
-  gap: ${({ theme }) => theme.spacing(3)};
-`;
-
-export const SliderInnerContainer = styled('div')`
-  display: grid;
-  gap: ${({ theme }) => theme.spacing(5)};
-`;
-
-export const SlidesContainer = styled('div')`
-  position: relative;
-`;
-
-export const SliderTitle = styled('div')`
-  text-align: center;
-`;
-
-export const SliderBallContainer = styled('div')`
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: center;
-  gap: ${({ theme }) => theme.spacing(1)};
-  position: relative;
-`;
-
-export const SliderBall = styled('button')`
-  appearance: none;
-  border: none;
-  width: ${({ theme }) => theme.spacing(2)};
-  height: ${({ theme }) => theme.spacing(2)};
-  background-color: ${({ theme }) => theme.palette.grey[200]};
-  color: ${({ theme }) => theme.palette.primary.main};
-  border-radius: 50%;
-  cursor: pointer;
-  overflow: hidden;
-  padding: 0;
-
-  :focus {
-    outline: none;
-  }
-`;
-
-export const SliderBallFill = styled('span')`
-  display: block;
-  background-color: currentColor;
-  height: 100%;
-`;
-
-export const SliderArrow = styled('button')`
-  appearance: none;
-  border: none;
-  background: transparent;
-  position: absolute;
-  top: 50%;
-  left: 0;
-  transform: translateY(-50%);
-  z-index: 2;
-  cursor: pointer;
-  display: none;
-
-  &:last-of-type {
-    right: 0;
-    left: initial;
-  }
-
-  &:hover {
-    color: #000;
-  }
-
-  &:disabled {
-    opacity: 0.3;
-    cursor: default;
-  }
-`;
-
-export const useSlidesPerView = ({
-  xs = 1.4,
-  sm = 2,
-  md = 2.2,
-  lg = 2.3,
-  xl = 2.8,
-}: BuilderSlidesPerView = {}) => {
-  const theme = useTheme();
-
-  const smQuery = useMediaQuery(theme.breakpoints.up('sm'), {
-    ssrMatchMedia: () => ({ matches: false }),
-  });
-
-  const mdQuery = useMediaQuery(theme.breakpoints.up('md'), {
-    ssrMatchMedia: () => ({ matches: false }),
-  });
-
-  const lgQuery = useMediaQuery(theme.breakpoints.up('lg'), {
-    ssrMatchMedia: () => ({ matches: false }),
-  });
-
-  const xlQuery = useMediaQuery(theme.breakpoints.up('xl'), {
-    ssrMatchMedia: () => ({ matches: false }),
-  });
-
-  if (xlQuery) {
-    return xl;
-  }
-
-  if (lgQuery) {
-    return lg;
-  }
-
-  if (mdQuery) {
-    return md;
-  }
-
-  if (smQuery) {
-    return sm;
-  }
-
-  return xs;
-};
-
-export const useSlidesPadding = () => {
-  const theme = useTheme();
-
-  const sm = useMediaQuery(theme.breakpoints.up('sm'), {
-    ssrMatchMedia: () => ({ matches: false }),
-  });
-
-  if (sm) {
-    return 32;
-  }
-
-  return 16;
-};
+import {
+  useSlidesPerView,
+  useSlidesPadding,
+  useSlider,
+  SliderWrapper,
+  SliderTitle,
+  SliderInnerContainer,
+  SlidesContainer,
+  SliderBallContainer,
+  SliderBall,
+  SliderBallFill,
+  SliderArrow,
+} from '../slider/slider';
 
 export const TeaserSlider = ({
   blockStyle,
@@ -169,7 +44,7 @@ export const TeaserSlider = ({
   slidesPerViewConfig = {},
   dragDisabled = false,
   detailsChanged,
-  slideGap,
+  slideGapConfig = {},
   origin = 'center',
   ...props
 }: BuilderBlockStyleProps['TeaserSlider']) => {
@@ -182,12 +57,12 @@ export const TeaserSlider = ({
 
   const filledTeasers = teasers.filter(isFilledTeaser);
 
-  const slidesPerView = useSlidesPerView(slidesPerViewConfig);
-  let slidePadding = useSlidesPadding();
-  if (slideGap != null) {
-    slidePadding = slideGap;
-  }
-  const [ref, sliderRef] = useKeenSlider({
+  const [container, setContainer] = useState<HTMLElement | null>(null);
+
+  const slidesPerView = useSlidesPerView(slidesPerViewConfig, container);
+  const slidePadding = useSlidesPadding(slideGapConfig, container);
+
+  const sliderRef = useSlider(container, {
     mode: 'free-snap',
     loop: true,
     drag: dragDisabled ? false : true,
@@ -206,7 +81,7 @@ export const TeaserSlider = ({
   });
 
   useEffect(() => {
-    const frame = requestAnimationFrame(() => sliderRef.current?.update());
+    const frame = requestAnimationFrame(() => sliderRef.current?.update?.());
     return () => cancelAnimationFrame(frame);
   }, [sliderRef]);
 
@@ -223,7 +98,7 @@ export const TeaserSlider = ({
 
         <SliderInnerContainer>
           <SlidesContainer
-            ref={ref}
+            ref={setContainer}
             className="keen-slider"
           >
             {filledTeasers.map((teaser, index) => (

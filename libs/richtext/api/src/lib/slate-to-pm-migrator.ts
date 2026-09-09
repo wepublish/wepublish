@@ -43,31 +43,54 @@ const slateToPm = (content: any): RichtextElements | [] => {
         return [];
       }
 
-      // No type (or link type) = text node
+      const formattingMarks = (leaf: any): RichtextMarks[] =>
+        (
+          [
+            leaf.italic ? { type: 'italic', attrs: undefined } : [],
+            leaf.bold ? { type: 'bold', attrs: undefined } : [],
+            leaf.underline ? { type: 'underline', attrs: undefined } : [],
+            leaf.strikethrough ? { type: 'strike', attrs: undefined } : [],
+            leaf.subscript ? { type: 'subscript', attrs: undefined } : [],
+            leaf.superscript ? { type: 'superscript', attrs: undefined } : [],
+          ] satisfies Array<RichtextMarks | RichtextMarks[]>
+        ).flat();
+
+      if (isLink) {
+        const linkMark: RichtextMarks = {
+          type: 'link',
+          attrs: {
+            href: child.url,
+            // @TODO: target?
+            rel: 'noopener noreferrer nofollow',
+          },
+        };
+
+        // Formatting (italic, bold, ...) lives on the link's text leaves, not on
+        // the link node itself, so emit one text node per leaf and keep its marks.
+        return (child.children ?? []).flatMap(
+          (leaf: any): RichtextElements | [] => {
+            const leafText = slateText(leaf);
+
+            if (leafText.length === 0) {
+              return [];
+            }
+
+            return {
+              type: 'text',
+              attrs: undefined,
+              text: leafText,
+              marks: [linkMark, ...formattingMarks(leaf)],
+            };
+          }
+        );
+      }
+
+      // No type = text node
       return {
         type: 'text',
         attrs: undefined,
         text,
-        marks: (
-          [
-            isLink ?
-              {
-                type: 'link',
-                attrs: {
-                  href: child.url,
-                  // @TODO: target?
-                  rel: 'noopener noreferrer nofollow',
-                },
-              }
-            : [],
-            child.italic ? { type: 'italic', attrs: undefined } : [],
-            child.bold ? { type: 'bold', attrs: undefined } : [],
-            child.underline ? { type: 'underline', attrs: undefined } : [],
-            child.strikethrough ? { type: 'strike', attrs: undefined } : [],
-            child.subscript ? { type: 'subscript', attrs: undefined } : [],
-            child.superscript ? { type: 'superscript', attrs: undefined } : [],
-          ] satisfies Array<RichtextMarks | RichtextMarks[]>
-        ).flat(),
+        marks: formattingMarks(child),
       };
     }
   );

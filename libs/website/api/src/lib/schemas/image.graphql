@@ -126,3 +126,73 @@ mutation UploadImage(
     ...FullSensitiveDataUser
   }
 }
+
+query Image($id: String!) {
+  image(id: $id) {
+    ...FullImage
+  }
+}
+
+query Images($filter: ImageFilter, $take: Int, $skip: Int, $cursorId: String) {
+  images(filter: $filter, take: $take, skip: $skip, cursorId: $cursorId) {
+    nodes {
+      ...FullImage
+    }
+    totalCount
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+  }
+}
+
+mutation UploadLibraryImage(
+  $title: String
+  $description: String
+  $focalPointX: Float
+  $focalPointY: Float
+  $license: String
+  $link: String
+  $source: String
+  $file: Upload!
+  $filename: String
+) {
+  uploadImage(
+    title: $title
+    description: $description
+    focalPointX: $focalPointX
+    focalPointY: $focalPointY
+    license: $license
+    link: $link
+    source: $source
+    tags: []
+    file: $file
+    filename: $filename
+  ) {
+    ...FullImage
+  }
+}
+
+mutation UpdateImage(
+  $id: String!
+  $title: String
+  $description: String
+  $license: String
+  $link: String
+  $source: String
+  $focalPointX: Float
+  $focalPointY: Float
+) {
+  updateImage(
+    id: $id
+    title: $title
+    description: $description
+    license: $license
+    link: $link
+    source: $source
+    focalPointX: $focalPointX
+    focalPointY: $focalPointY
+  ) {
+    ...FullImage
+  }
+}
