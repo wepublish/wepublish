@@ -38,6 +38,7 @@ import {
   GoogleAnalyticsService,
 } from '@wepublish/google-analytics/api';
 import { HealthModule } from '@wepublish/health';
+import { PuckContentModule } from '@wepublish/puck-content/api';
 import { MediaAdapterModule } from '@wepublish/image/api';
 import {
   KvCacheModule,
@@ -315,6 +316,7 @@ import { API_SHARED_NAMESPACES } from './shared-namespaces';
     ConfigModule.forRoot(),
     HealthModule,
     SystemInfoModule,
+    PuckContentModule,
     HotAndTrendingModule.registerAsync({
       imports: [
         GoogleAnalyticsModule.registerAsync({
