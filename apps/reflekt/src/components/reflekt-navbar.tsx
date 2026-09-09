@@ -1,4 +1,4 @@
-import styled from '@emotion/styled';
+import styled from "@emotion/styled";
 import {
   alpha,
   AppBar as MuiAppBar,
@@ -9,18 +9,18 @@ import {
   Theme,
   Toolbar,
   Typography,
-} from '@mui/material';
-import { useHasActiveSubscription } from '@wepublish/membership/website';
-import { navigationLinkToUrl } from '@wepublish/navigation/website';
-import { ButtonProps, TextToIcon } from '@wepublish/ui';
-import { FullNavigationFragment } from '@wepublish/website/api';
+} from "@mui/material";
+import { useHasActiveSubscription } from "@wepublish/membership/website";
+import { navigationLinkToUrl } from "@wepublish/navigation/website";
+import { ButtonProps, TextToIcon } from "@wepublish/ui";
+import { FullNavigationFragment } from "@wepublish/website/api";
 import {
   BuilderNavbarProps,
   IconButton,
   Link,
   useWebsiteBuilder,
-} from '@wepublish/website/builder';
-import { useRouter } from 'next/router';
+} from "@wepublish/website/builder";
+import { useRouter } from "next/router";
 import {
   forwardRef,
   PropsWithChildren,
@@ -30,12 +30,12 @@ import {
   useMemo,
   useRef,
   useState,
-} from 'react';
-import { FiMenu as FiMenuDefault } from 'react-icons/fi';
-import { MdWarning } from 'react-icons/md';
+} from "react";
+import { FiMenu as FiMenuDefault } from "react-icons/fi";
+import { MdWarning } from "react-icons/md";
 
-import theme from '../theme';
-import { useLoginLinkSwap } from './hooks/use-login-link-swap';
+import theme from "../theme";
+import { useLoginLinkSwap } from "./hooks/use-login-link-swap";
 
 enum NavbarState {
   Low,
@@ -49,43 +49,45 @@ enum ScrollDirection {
   Down,
 }
 
+const NAVBAR_HEIGHT_PX = 75;
+
 const cssVariables = (state: NavbarState[], isHomePage: boolean) => css`
   :root {
-    ${isHomePage ?
-      `
+    ${isHomePage
+      ? `
         --navbar-height: -10px;
         --navbar-aspect-ratio: 3.7 / 1;
         --scrolled-navbar-aspect-ratio: 3.7 / 1;
 
-      ${theme.breakpoints.up('md')} {
+      ${theme.breakpoints.up("md")} {
         --navbar-height: -10px;
         --navbar-aspect-ratio: 6.5 / 1;
         --scrolled-navbar-aspect-ratio: 9 / 1;
       }
     `
-    : `
+      : `
     --navbar-aspect-ratio: 3.1 / 1;
     --scrolled-navbar-aspect-ratio: 3.1 / 1;
 
-      ${theme.breakpoints.up('md')} {
+      ${theme.breakpoints.up("md")} {
         --navbar-aspect-ratio: 8 / 1;
         --scrolled-navbar-aspect-ratio: 9.5 / 1;
       }
     `}
-    --changing-aspect-ratio: ${state.includes(NavbarState.Low) ?
-      'var(--navbar-aspect-ratio)'
-    : 'var(--scrolled-navbar-aspect-ratio)'};
+    --changing-aspect-ratio: ${state.includes(NavbarState.Low)
+      ? "var(--navbar-aspect-ratio)"
+      : "var(--scrolled-navbar-aspect-ratio)"};
   }
 `;
 
 export const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: propName => propName !== 'isMenuOpen',
+  shouldForwardProp: (propName) => propName !== "isMenuOpen",
 })<{ isMenuOpen?: boolean }>`
   position: relative;
   overflow-y: visible;
   background-color: transparent;
 
-  ${theme.breakpoints.up('md')} {
+  ${theme.breakpoints.up("md")} {
     background-color: var(--navbar-bg-color-hero-off-screen, white);
   }
 
@@ -96,7 +98,7 @@ export const AppBar = styled(MuiAppBar, {
     `}
 `;
 
-export const NavbarWrapper = styled('nav')`
+export const NavbarWrapper = styled("nav")`
   position: fixed;
   top: 0;
   left: 0;
@@ -107,7 +109,7 @@ export const NavbarWrapper = styled('nav')`
   margin-bottom: calc(${theme.spacing(-3)} + 1px);
   background-color: transparent;
 
-  ${theme.breakpoints.up('md')} {
+  ${theme.breakpoints.up("md")} {
     background-color: var(--navbar-bg-color-hero-off-screen, white);
   }
 
@@ -120,7 +122,7 @@ const getNavbarState = (
   isScrolled: boolean,
   scrollDirection: ScrollDirection,
   hasActiveSubscription: boolean,
-  isLoggedOut: boolean
+  isLoggedOut: boolean,
 ): NavbarState[] => {
   const navbarStates: NavbarState[] = [];
 
@@ -161,7 +163,7 @@ export const navbarButtonStyles = (theme: Theme) => css`
     }
   }
 
-  ${theme.breakpoints.up('md')} {
+  ${theme.breakpoints.up("md")} {
     width: 2.5rem;
     height: 2.5rem;
 
@@ -184,12 +186,12 @@ const FiMenu = styled(FiMenuDefault)`
 `;
 
 export const NavbarHamburgerButton = styled(IconButton, {
-  shouldForwardProp: propName =>
-    propName !== 'isMenuOpen' && propName !== 'isTransitioning',
+  shouldForwardProp: (propName) =>
+    propName !== "isMenuOpen" && propName !== "isTransitioning",
 })<{ isMenuOpen: boolean; isTransitioning: boolean }>`
   background-color: ${theme.palette.primary.dark};
-  width: 75px;
-  height: 75px;
+  width: ${NAVBAR_HEIGHT_PX}px;
+  height: ${NAVBAR_HEIGHT_PX}px;
   border-radius: 0;
   transition: transform 100ms ease-out;
   position: relative;
@@ -198,7 +200,7 @@ export const NavbarHamburgerButton = styled(IconButton, {
   &:hover {
     ${({ isTransitioning }) => {
       if (isTransitioning) {
-        return '';
+        return "";
       }
 
       return css`
@@ -209,11 +211,11 @@ export const NavbarHamburgerButton = styled(IconButton, {
   }
 
   ${({ isMenuOpen }) =>
-    isMenuOpen ?
-      css`
-        transform: scale(1.05);
-      `
-    : ''}
+    isMenuOpen
+      ? css`
+          transform: scale(1.05);
+        `
+      : ""}
 
   & > span {
     position: absolute;
@@ -238,31 +240,31 @@ export const NavbarHamburgerButton = styled(IconButton, {
     animation-delay: 250ms;
   }
   ${({ isMenuOpen }) =>
-    isMenuOpen ?
-      css`
-        transform: scale(1.05);
-        & > span:nth-of-type(1) {
-          transform: translateX(-15px) rotate(40deg);
-        }
-        & > span:nth-of-type(2) {
-          transform: translateX(-15px) rotate(-40deg);
-        }
-        & > span:nth-of-type(3) {
-          transform: translate(-15px, 9px);
-          opacity: 0;
-        }
-      `
-    : ''}
+    isMenuOpen
+      ? css`
+          transform: scale(1.05);
+          & > span:nth-of-type(1) {
+            transform: translateX(-15px) rotate(40deg);
+          }
+          & > span:nth-of-type(2) {
+            transform: translateX(-15px) rotate(-40deg);
+          }
+          & > span:nth-of-type(3) {
+            transform: translate(-15px, 9px);
+            opacity: 0;
+          }
+        `
+      : ""}
 `;
 
 export const NavbarSearchButton = styled(IconButton)`
   ${navbarButtonStyles(theme)}
 `;
 
-export const NavbarIconButtonWrapper = styled('div')``;
+export const NavbarIconButtonWrapper = styled("div")``;
 
-export const NavbarMain = styled('div', {
-  shouldForwardProp: propName => propName !== 'isMenuOpen',
+export const NavbarMain = styled("div", {
+  shouldForwardProp: (propName) => propName !== "isMenuOpen",
 })<{ isMenuOpen?: boolean }>`
   grid-column: -1 / 1;
   grid-row: 1 / 2;
@@ -276,7 +278,7 @@ export const NavbarMain = styled('div', {
   pointer-events: all;
   z-index: 30;
 
-  ${theme.breakpoints.up('sm')} {
+  ${theme.breakpoints.up("sm")} {
     margin: 0 0 0 ${({ theme }) => theme.spacing(-3)};
   }
 
@@ -293,8 +295,8 @@ export const NavbarMain = styled('div', {
     `}
 `;
 
-export const NavbarActions = styled('div', {
-  shouldForwardProp: propName => propName !== 'isMenuOpen',
+export const NavbarActions = styled("div", {
+  shouldForwardProp: (propName) => propName !== "isMenuOpen",
 })<{ isMenuOpen?: boolean }>`
   display: flex;
   flex-flow: row wrap;
@@ -323,7 +325,7 @@ export const NavbarHomeLink = styled(Link)`
   justify-self: left;
   transition: visibility 0s 240ms;
 
-  ${theme.breakpoints.up('md')} {
+  ${theme.breakpoints.up("md")} {
     display: grid;
   }
 
@@ -341,9 +343,9 @@ export const NavbarHomeLink = styled(Link)`
   }
 `;
 
-export const ReflektLogo = styled('img', {
-  shouldForwardProp: propName =>
-    propName !== 'isScrolled' && propName !== 'isHomePage',
+export const ReflektLogo = styled("img", {
+  shouldForwardProp: (propName) =>
+    propName !== "isScrolled" && propName !== "isHomePage",
 })<{ isScrolled?: boolean; isHomePage?: boolean }>`
   transition: width 300ms ease-out;
   transform: translate3d(0, 0, 0);
@@ -358,7 +360,7 @@ export const ReflektLogo = styled('img', {
   z-index: 32;
 `;
 
-const OpenInvoicesAlert = styled('div')`
+const OpenInvoicesAlert = styled("div")`
   position: absolute;
   transform: translateX(100%);
   display: grid;
@@ -375,12 +377,12 @@ const OpenInvoicesAlert = styled('div')`
 const MdWarningOIA = styled(MdWarning)`
   font-size: 2rem;
 
-  ${theme.breakpoints.up('md')} {
+  ${theme.breakpoints.up("md")} {
     font-size: 2rem;
   }
 `;
 
-export const NavPaperCategory = styled('div')`
+export const NavPaperCategory = styled("div")`
   grid-column: 1 / 2;
   grid-row: 1 / 2;
   row-gap: ${theme.spacing(1)};
@@ -397,7 +399,7 @@ export const NavPaperCategory = styled('div')`
     padding-right: ${theme.spacing(2)};
   }
 
-  ${theme.breakpoints.up('md')} {
+  ${theme.breakpoints.up("md")} {
     &:nth-of-type(n) {
       grid-column: unset;
       grid-row: unset;
@@ -406,7 +408,7 @@ export const NavPaperCategory = styled('div')`
   }
 `;
 
-export const NavPaperLinksGroup = styled('div')`
+export const NavPaperLinksGroup = styled("div")`
   display: grid;
   column-gap: ${theme.spacing(2)};
   grid-row: 1 / 2;
@@ -416,7 +418,7 @@ export const NavPaperLinksGroup = styled('div')`
   row-gap: unset;
   margin: 0;
 
-  ${theme.breakpoints.up('md')} {
+  ${theme.breakpoints.up("md")} {
     grid-template-rows: unset;
     grid-template-columns: repeat(3, min-content);
     grid-template-columns: unset;
@@ -428,7 +430,7 @@ export const NavPaperLinksGroup = styled('div')`
   }
 `;
 
-export const IconItemsWrapper = styled('div')`
+export const IconItemsWrapper = styled("div")`
   position: relative;
   padding: ${({ theme }) => theme.spacing(1.5, 1.5, 1.5, 0)};
   display: grid;
@@ -438,7 +440,7 @@ export const IconItemsWrapper = styled('div')`
   grid-row: 3 / 4;
   margin-left: ${({ theme }) => theme.spacing(-3)};
 
-  ${({ theme }) => theme.breakpoints.up('md')} {
+  ${({ theme }) => theme.breakpoints.up("md")} {
     grid-template-columns: 1fr;
     grid-template-rows: repeat(auto-fill, ${theme.spacing(1)});
     justify-items: start;
@@ -459,12 +461,12 @@ export const IconItemsWrapper = styled('div')`
   }
 `;
 
-const ButtonWrapper = styled('div')`
+const ButtonWrapper = styled("div")`
   display: flex;
   justify-content: flex-start;
   grid-row: 2 / 3;
 
-  ${theme.breakpoints.up('md')} {
+  ${theme.breakpoints.up("md")} {
     padding: ${theme.spacing(5, 0, 2, 8)};
     border-left: 1px solid rgba(255, 255, 255, 0.15);
     grid-column: 2 / 3;
@@ -474,21 +476,21 @@ const ButtonWrapper = styled('div')`
 
 const RegisterNewsletterButton = styled(Link)``;
 
-export const NavPaperWrapper = styled('div', {
-  shouldForwardProp: propName =>
-    propName !== 'isMenuOpen' && propName !== 'isTransitioning',
+export const NavPaperWrapper = styled("div", {
+  shouldForwardProp: (propName) =>
+    propName !== "isMenuOpen" && propName !== "isTransitioning",
 })<{ isMenuOpen: boolean; isTransitioning: boolean }>`
-  padding: calc(${theme.spacing(2)} + var(--navbar-height)) ${theme.spacing(2)}
+  padding: calc(${theme.spacing(2)} + ${NAVBAR_HEIGHT_PX}px) ${theme.spacing(2)}
     0 22.5px;
   background-color: ${theme.palette.primary.dark};
   color: ${theme.palette.common.white};
   top: 0;
   left: 0;
   right: 0;
-  transform: scale(${({ isMenuOpen }) => (isMenuOpen ? '100%' : '1%')});
+  transform: scale(${({ isMenuOpen }) => (isMenuOpen ? "100%" : "1%")});
   transform-origin: top left;
   transition: transform 300ms ease-out;
-  transition-delay: ${({ isMenuOpen }) => (isMenuOpen ? '0ms' : '100ms')};
+  transition-delay: ${({ isMenuOpen }) => (isMenuOpen ? "0ms" : "100ms")};
   overflow-y: hidden;
   z-index: 2;
   height: 100vh;
@@ -499,9 +501,9 @@ export const NavPaperWrapper = styled('div', {
   grid-template-rows: repeat(3, min-content);
   grid-template-columns: unset;
 
-  ${theme.breakpoints.up('md')} {
+  ${theme.breakpoints.up("md")} {
     row-gap: unset;
-    padding: calc(${theme.spacing(5)} + var(--navbar-height))
+    padding: calc(${theme.spacing(5)} + ${NAVBAR_HEIGHT_PX}px)
       ${theme.spacing(2)} 0 27px;
     grid-template-columns: 60px 1fr;
     grid-template-rows: min-content min-content;
@@ -509,11 +511,11 @@ export const NavPaperWrapper = styled('div', {
 
   ${NavPaperLinksGroup}, ${IconItemsWrapper}, ${ButtonWrapper} {
     ${({ isTransitioning, isMenuOpen }) =>
-      isTransitioning && !isMenuOpen ?
-        css`
-          opacity: 0;
-        `
-      : ''}
+      isTransitioning && !isMenuOpen
+        ? css`
+            opacity: 0;
+          `
+        : ""}
   }
 `;
 
@@ -547,7 +549,7 @@ const NavPaper = ({
     <NavPaperWrapper
       isMenuOpen={isMenuOpen}
       isTransitioning={isTransitioning}
-      className={`${className || ''} ${isMenuOpen ? 'menu-open' : ''}`.trim()}
+      className={`${className || ""} ${isMenuOpen ? "menu-open" : ""}`.trim()}
     >
       <IconItemsWrapper>
         {iconItems?.links.map((link, index) => (
@@ -559,10 +561,7 @@ const NavPaper = ({
             target="_blank"
             rel="noopener noreferrer"
           >
-            <TextToIcon
-              title={link.label}
-              size={24}
-            />
+            <TextToIcon title={link.label} size={24} />
           </Link>
         ))}
       </IconItemsWrapper>
@@ -578,7 +577,7 @@ const NavPaper = ({
       {!!categories.length &&
         categories.map((categoryArray, arrayIndex) => (
           <NavPaperLinksGroup key={arrayIndex}>
-            {categoryArray.map(nav => (
+            {categoryArray.map((nav) => (
               <NavPaperCategory key={nav.id}>
                 <Typography variant="categoryLinkList">
                   {nav.links?.map((link, index) => {
@@ -591,10 +590,7 @@ const NavPaper = ({
 
                     if (isLogin && hasUser) {
                       return (
-                        <Typography
-                          variant="categoryLinkItem"
-                          key={index}
-                        >
+                        <Typography variant="categoryLinkItem" key={index}>
                           <MuiLink
                             variant="headerCategoryLink"
                             component="button"
@@ -610,12 +606,9 @@ const NavPaper = ({
                     }
 
                     return (
-                      <Typography
-                        variant="categoryLinkItem"
-                        key={index}
-                      >
+                      <Typography variant="categoryLinkItem" key={index}>
                         <Link
-                          variant={'headerCategoryLink'}
+                          variant={"headerCategoryLink"}
                           href={url}
                           onClick={closeMenu}
                         >
@@ -634,8 +627,8 @@ const NavPaper = ({
 };
 
 export const NavbarInnerWrapper = styled(Toolbar, {
-  shouldForwardProp: propName =>
-    propName !== 'navbarState' && propName !== 'isMenuOpen',
+  shouldForwardProp: (propName) =>
+    propName !== "navbarState" && propName !== "isMenuOpen",
 })<{
   navbarState: NavbarState[];
   isMenuOpen?: boolean;
@@ -646,7 +639,7 @@ export const NavbarInnerWrapper = styled(Toolbar, {
       pointer-events: none;
       background-color: transparent;
 
-      ${theme.breakpoints.up('md')} {
+      ${theme.breakpoints.up("md")} {
         background-color: var(--navbar-bg-color-hero-off-screen, white);
       }
 
@@ -657,7 +650,7 @@ export const NavbarInnerWrapper = styled(Toolbar, {
     `}
 `;
 
-const SubscribeBtn = styled(Link)`
+export const SubscribeBtn = styled(Link)`
   margin-left: auto;
 `;
 
@@ -679,14 +672,14 @@ export const ReflektNavbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
       data,
       hasRunningSubscription,
       hasUnpaidInvoices,
-      loginBtn = { href: '/login' },
-      profileBtn = { href: '/profile' },
-      subscribeBtn = { href: '/mitmachen' },
+      loginBtn = { href: "/login" },
+      profileBtn = { href: "/profile" },
+      subscribeBtn = { href: "/crowdfunding" },
       isMenuOpen: controlledIsMenuOpen,
       onMenuToggle,
       navPaperClassName,
     }: ExtendedNavbarProps,
-    forwardRef
+    forwardRef,
   ) {
     const ref = useRef<HTMLElement>(null);
 
@@ -695,15 +688,15 @@ export const ReflektNavbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
 
     const [isScrolled, setIsScrolled] = useState(false);
     const [scrollDirection, setScrollDirection] = useState<ScrollDirection>(
-      ScrollDirection.Down
+      ScrollDirection.Down,
     );
     const lastScrollY = useRef(0);
     const hasActiveSubscription = useHasActiveSubscription();
 
     const isMenuOpen =
-      controlledIsMenuOpen !== undefined ? controlledIsMenuOpen : (
-        internalIsMenuOpen
-      );
+      controlledIsMenuOpen !== undefined
+        ? controlledIsMenuOpen
+        : internalIsMenuOpen;
 
     const handleScroll = useCallback(
       (...args: any) => {
@@ -727,7 +720,7 @@ export const ReflektNavbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
 
         lastScrollY.current = currentScrollY;
       },
-      [isScrolled, scrollDirection]
+      [isScrolled, scrollDirection],
     );
 
     const toggleMenu = useCallback(() => {
@@ -747,10 +740,10 @@ export const ReflektNavbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
     const iconItems = data?.navigations?.find(({ key }) => key === iconSlug);
 
     const categories = useMemo(() => {
-      return categorySlugs.map(categorySlugArray =>
+      return categorySlugs.map((categorySlugArray) =>
         categorySlugArray.reduce((navigations, categorySlug) => {
           const navItem = data?.navigations?.find(
-            ({ key }) => key === categorySlug
+            ({ key }) => key === categorySlug,
           );
 
           if (navItem) {
@@ -758,77 +751,97 @@ export const ReflektNavbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
           }
 
           return navigations;
-        }, [] as FullNavigationFragment[])
+        }, [] as FullNavigationFragment[]),
       );
     }, [categorySlugs, data?.navigations]);
 
     useEffect(() => {
       lastScrollY.current = window.scrollY;
-      window.addEventListener('scroll', handleScroll);
+      window.addEventListener("scroll", handleScroll);
 
-      return () => window.removeEventListener('scroll', handleScroll);
+      return () => window.removeEventListener("scroll", handleScroll);
     }, [handleScroll]);
 
     const navbarState = getNavbarState(
       isScrolled,
       scrollDirection,
       hasActiveSubscription,
-      (!hasRunningSubscription && !hasUnpaidInvoices && subscribeBtn) as boolean
+      (!hasRunningSubscription &&
+        !hasUnpaidInvoices &&
+        subscribeBtn) as boolean,
     );
 
-    const isHomePage = router.pathname === '/';
+    const isHomePage = router.pathname === "/";
 
     const navbarStyles = useMemo(
       () => cssVariables(navbarState, isHomePage),
-      [navbarState, isHomePage]
+      [navbarState, isHomePage],
     );
 
     useImperativeHandle(forwardRef, () => ref.current!, []);
 
-    useEffect(() => {
-      if (typeof ResizeObserver !== 'undefined') {
-        const observer = new ResizeObserver(() => {
-          handleResize();
-        });
+    const lastNavbarHeightRef = useRef<number | null>(null);
+    const rafRef = useRef<number | null>(null);
 
-        if (!ref.current) {
+    useEffect(() => {
+      const el = ref.current;
+      if (!el) {
+        return;
+      }
+
+      const root = el.ownerDocument.documentElement;
+
+      const measure = () => {
+        rafRef.current = null;
+
+        if (isHomePage) {
+          root.style.removeProperty("--navbar-height");
+          lastNavbarHeightRef.current = null;
           return;
         }
 
-        observer.observe(ref.current);
+        const height = Math.round(el.getBoundingClientRect().height);
+        if (height === lastNavbarHeightRef.current) {
+          return;
+        }
 
-        return () =>
-          ref?.current ? observer.unobserve(ref.current) : undefined;
+        lastNavbarHeightRef.current = height;
+        root.style.setProperty("--navbar-height", `${height}px`);
+      };
+
+      const schedule = () => {
+        if (rafRef.current != null) {
+          return;
+        }
+        rafRef.current = requestAnimationFrame(measure);
+      };
+
+      schedule();
+
+      let cleanup: () => void;
+      if (typeof ResizeObserver !== "undefined") {
+        const observer = new ResizeObserver(schedule);
+        observer.observe(el);
+        cleanup = () => observer.disconnect();
+      } else {
+        const win = el.ownerDocument.defaultView;
+        win?.addEventListener("resize", schedule);
+        cleanup = () => win?.removeEventListener("resize", schedule);
       }
 
-      window.addEventListener('resize', handleResize);
-
-      return () => window.removeEventListener('resize', handleResize);
-    }, [ref]);
-
-    function handleResize() {
-      if (ref?.current) {
-        ref.current.ownerDocument.documentElement.setAttribute(
-          'style',
-          `--navbar-height: ${ref.current.getBoundingClientRect().height}px`
-        );
-      }
-    }
+      return () => {
+        if (rafRef.current != null) {
+          cancelAnimationFrame(rafRef.current);
+        }
+        cleanup();
+      };
+    }, [ref, isHomePage]);
 
     return (
-      <NavbarWrapper
-        ref={ref}
-        className={className}
-      >
+      <NavbarWrapper ref={ref} className={className}>
         <GlobalStyles styles={navbarStyles} />
-        <AppBar
-          isMenuOpen={isMenuOpen}
-          elevation={0}
-        >
-          <NavbarInnerWrapper
-            navbarState={navbarState}
-            isMenuOpen={isMenuOpen}
-          >
+        <AppBar isMenuOpen={isMenuOpen} elevation={0}>
+          <NavbarInnerWrapper navbarState={navbarState} isMenuOpen={isMenuOpen}>
             <NavbarMain isMenuOpen={isMenuOpen}>
               <NavbarHamburgerButton
                 isMenuOpen={isMenuOpen}
@@ -848,10 +861,7 @@ export const ReflektNavbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
               </NavbarHamburgerButton>
             </NavbarMain>
 
-            <NavbarHomeLink
-              href="/"
-              aria-label="Startseite"
-            >
+            <NavbarHomeLink href="/" aria-label="Startseite">
               <ReflektLogo
                 src="/logo_reflekt.svg"
                 alt="Reflekt Logo"
@@ -862,13 +872,13 @@ export const ReflektNavbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
 
             <NavbarActions isMenuOpen={isMenuOpen}>
               <SubscribeBtn
-                {...((hasUnpaidInvoices && profileBtn ? profileBtn : (
-                  subscribeBtn
-                )) as Omit<typeof subscribeBtn, 'variant'>)}
+                {...((hasUnpaidInvoices && profileBtn
+                  ? profileBtn
+                  : subscribeBtn) as Omit<typeof subscribeBtn, "variant">)}
                 variant={
-                  hasUnpaidInvoices && profileBtn ? 'buttonLinkAlert' : (
-                    'buttonLinkMain'
-                  )
+                  hasUnpaidInvoices && profileBtn
+                    ? "buttonLinkAlert"
+                    : "buttonLinkMain"
                 }
                 onClick={() => {
                   if (controlledIsMenuOpen === undefined) {
@@ -877,12 +887,12 @@ export const ReflektNavbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
                   onMenuToggle?.(false);
                 }}
               >
-                {hasUnpaidInvoices && profileBtn ?
+                {hasUnpaidInvoices && profileBtn ? (
                   <Box
                     component="span"
                     sx={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
+                      display: "inline-flex",
+                      alignItems: "center",
                       gap: 0.75,
                     }}
                   >
@@ -890,14 +900,16 @@ export const ReflektNavbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
                     <span>
                       <Box
                         component="span"
-                        sx={{ display: { xs: 'none', md: 'inline' } }}
+                        sx={{ display: { xs: "none", md: "inline" } }}
                       >
-                        Offene{' '}
+                        Offene{" "}
                       </Box>
                       Rechnung
                     </span>
                   </Box>
-                : 'Unterstützen'}
+                ) : (
+                  "Unterstützen"
+                )}
               </SubscribeBtn>
             </NavbarActions>
           </NavbarInnerWrapper>
@@ -923,7 +935,7 @@ export const ReflektNavbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
         </AppBar>
       </NavbarWrapper>
     );
-  }
+  },
 );
 
 export const heroOffScreen = (isIntersecting: boolean) => {
@@ -931,8 +943,9 @@ export const heroOffScreen = (isIntersecting: boolean) => {
     <GlobalStyles
       styles={css`
         :root {
-          --navbar-bg-color-hero-off-screen: ${isIntersecting ? 'transparent'
-          : 'white'};
+          --navbar-bg-color-hero-off-screen: ${isIntersecting
+            ? "transparent"
+            : "white"};
         }
       `}
     />

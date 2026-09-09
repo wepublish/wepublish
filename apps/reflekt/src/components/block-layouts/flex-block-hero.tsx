@@ -477,7 +477,7 @@ export const BlockWithAlignment = styled('div')<FlexAlignment>`
     padding-bottom: 50px;
     box-sizing: border-box;
     overflow: hidden;
-    container-type: size;
+    container-type: inline-size;
   }
 
   ${ImageBlockWrapper}, ${YouTubeVideoBlockWrapper}, ${IFrameBlockWrapper} {
