@@ -204,7 +204,7 @@ const ImageSliderBase = ({
           lg: 'auto',
           xl: 'auto',
         }}
-        slideGap={10}
+        slideGapConfig={{ xs: 10, sm: 10 }}
       />
     </SliderWrapper>
   );

@@ -1,0 +1,175 @@
+diff --git a/libs/richtext/api/src/lib/slate-to-pm-migrator.spec.ts b/libs/richtext/api/src/lib/slate-to-pm-migrator.spec.ts
+index 90d38db21e..29be9025a5 100644
+--- a/libs/richtext/api/src/lib/slate-to-pm-migrator.spec.ts
++++ b/libs/richtext/api/src/lib/slate-to-pm-migrator.spec.ts
+@@ -77,6 +77,61 @@ describe('SlateToPmMigrator.migrate', () => {
+     ]);
+   });
+ 
++  it('keeps formatting marks from the link text leaves', () => {
++    const slate = [
++      {
++        type: 'paragraph',
++        children: [
++          { text: 'Mail an ', italic: true },
++          {
++            type: 'link',
++            url: 'mailto:redaktion@example.com',
++            children: [{ text: 'redaktion@example.com', italic: true }],
++          },
++          { text: '.', italic: true },
++        ],
++      },
++    ];
++
++    const doc: any = makeMigrator().migrate(slate);
++    const linkNode = doc.content[0].content[1];
++
++    expect(linkNode.text).toBe('redaktion@example.com');
++    expect(linkNode.marks).toEqual([
++      {
++        type: 'link',
++        attrs: {
++          href: 'mailto:redaktion@example.com',
++          rel: 'noopener noreferrer nofollow',
++        },
++      },
++      { type: 'italic', attrs: undefined },
++    ]);
++  });
++
++  it('splits a link into one text node per differently formatted leaf', () => {
++    const slate = [
++      {
++        type: 'paragraph',
++        children: [
++          {
++            type: 'link',
++            url: 'https://example.com',
++            children: [{ text: 'plain ' }, { text: 'bold', bold: true }],
++          },
++        ],
++      },
++    ];
++
++    const doc: any = makeMigrator().migrate(slate);
++    const [first, second] = doc.content[0].content;
++
++    expect(first.text).toBe('plain ');
++    expect(first.marks.map((m: any) => m.type)).toEqual(['link']);
++    expect(second.text).toBe('bold');
++    expect(second.marks.map((m: any) => m.type)).toEqual(['link', 'bold']);
++  });
++
+   it('wraps list-item inline content in a paragraph (tiptap `paragraph block*`)', () => {
+     const slate = [
+       {
+diff --git a/libs/richtext/api/src/lib/slate-to-pm-migrator.ts b/libs/richtext/api/src/lib/slate-to-pm-migrator.ts
+index 24618c32eb..ea8457f34d 100644
+--- a/libs/richtext/api/src/lib/slate-to-pm-migrator.ts
++++ b/libs/richtext/api/src/lib/slate-to-pm-migrator.ts
+@@ -43,31 +43,52 @@ const slateToPm = (content: any): RichtextElements | [] => {
+         return [];
+       }
+ 
+-      // No type (or link type) = text node
++      const formattingMarks = (leaf: any): RichtextMarks[] =>
++        (
++          [
++            leaf.italic ? { type: 'italic', attrs: undefined } : [],
++            leaf.bold ? { type: 'bold', attrs: undefined } : [],
++            leaf.underline ? { type: 'underline', attrs: undefined } : [],
++            leaf.strikethrough ? { type: 'strike', attrs: undefined } : [],
++            leaf.subscript ? { type: 'subscript', attrs: undefined } : [],
++            leaf.superscript ? { type: 'superscript', attrs: undefined } : [],
++          ] satisfies Array<RichtextMarks | RichtextMarks[]>
++        ).flat();
++
++      if (isLink) {
++        const linkMark: RichtextMarks = {
++          type: 'link',
++          attrs: {
++            href: child.url,
++            // @TODO: target?
++            rel: 'noopener noreferrer nofollow',
++          },
++        };
++
++        // Formatting (italic, bold, ...) lives on the link's text leaves, not on
++        // the link node itself, so emit one text node per leaf and keep its marks.
++        return (child.children ?? []).flatMap((leaf: any): RichtextElements | [] => {
++          const leafText = slateText(leaf);
++
++          if (leafText.length === 0) {
++            return [];
++          }
++
++          return {
++            type: 'text',
++            attrs: undefined,
++            text: leafText,
++            marks: [linkMark, ...formattingMarks(leaf)],
++          };
++        });
++      }
++
++      // No type = text node
+       return {
+         type: 'text',
+         attrs: undefined,
+         text,
+-        marks: (
+-          [
+-            isLink ?
+-              {
+-                type: 'link',
+-                attrs: {
+-                  href: child.url,
+-                  // @TODO: target?
+-                  rel: 'noopener noreferrer nofollow',
+-                },
+-              }
+-            : [],
+-            child.italic ? { type: 'italic', attrs: undefined } : [],
+-            child.bold ? { type: 'bold', attrs: undefined } : [],
+-            child.underline ? { type: 'underline', attrs: undefined } : [],
+-            child.strikethrough ? { type: 'strike', attrs: undefined } : [],
+-            child.subscript ? { type: 'subscript', attrs: undefined } : [],
+-            child.superscript ? { type: 'superscript', attrs: undefined } : [],
+-          ] satisfies Array<RichtextMarks | RichtextMarks[]>
+-        ).flat(),
++        marks: formattingMarks(child),
+       };
+     }
+   );
+diff --git a/libs/richtext/editor/src/lib/richtext-editor.tsx b/libs/richtext/editor/src/lib/richtext-editor.tsx
+index 2e8f2afe34..c016326642 100644
+--- a/libs/richtext/editor/src/lib/richtext-editor.tsx
++++ b/libs/richtext/editor/src/lib/richtext-editor.tsx
+@@ -19,7 +19,7 @@ import { equals } from 'ramda';
+ 
+ export const RichtextEditorWrapper = styled(Paper)``;
+ 
+-const Editor = styled(EditorContent)`
++const StyledEditorContent = styled(EditorContent)`
+   .tiptap {
+     padding: ${({ theme }) => theme.spacing(3, 3, 3, 7)};
+     outline: none;
+@@ -161,7 +161,7 @@ const loadContent = (editor: Editor, content: UseEditorOptions['content']) => {
+   editor
+     .chain()
+     .setMeta('addToHistory', false)
+-    .setContent(content, { emitUpdate: false })
++    .setContent(content ?? null, { emitUpdate: false })
+     .run();
+ };
+ 
+@@ -243,7 +243,7 @@ export const RichtextEditor = forwardRef<HTMLDivElement, RichtextEditorProps>(
+           <BubbleMenu />
+           <DragHandle />
+ 
+-          <Editor
++          <StyledEditorContent
+             editor={editor}
+             ref={ref}
+           />

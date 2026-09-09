@@ -1,4 +1,3 @@
-import { useKeenSlider } from 'keen-slider/react';
 import { allPass } from 'ramda';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -15,8 +14,9 @@ import {
   SliderWrapper,
   SlidesContainer,
   useSlidesPadding,
+  useSlider,
   useSlidesPerView,
-} from '../teaser-slider/teaser-slider';
+} from '../slider/slider';
 import {
   BlockContent,
   FullImageGalleryBlockFragment,
@@ -37,20 +37,19 @@ export const ImageSlider = ({
   slidesPerViewConfig = {},
   dragDisabled = false,
   detailsChanged,
-  slideGap,
+  slideGapConfig = {},
   className,
 }: BuilderBlockStyleProps['ImageSlider']) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [loaded, setLoaded] = useState(false);
   const { t } = useTranslation();
 
-  const slidesPerView = useSlidesPerView(slidesPerViewConfig);
-  let slidePadding = useSlidesPadding();
-  if (slideGap != null) {
-    slidePadding = slideGap;
-  }
+  const [container, setContainer] = useState<HTMLElement | null>(null);
 
-  const [ref, sliderRef] = useKeenSlider({
+  const slidesPerView = useSlidesPerView(slidesPerViewConfig, container);
+  const slidePadding = useSlidesPadding(slideGapConfig, container);
+
+  const sliderRef = useSlider(container, {
     mode: 'free-snap',
     loop: true,
     drag: dragDisabled ? false : true,
@@ -69,7 +68,7 @@ export const ImageSlider = ({
   });
 
   useEffect(() => {
-    const frame = requestAnimationFrame(() => sliderRef.current?.update());
+    const frame = requestAnimationFrame(() => sliderRef.current?.update?.());
     return () => cancelAnimationFrame(frame);
   }, [sliderRef]);
 
@@ -78,7 +77,7 @@ export const ImageSlider = ({
       <SliderWrapper className={className}>
         <SliderInnerContainer>
           <SlidesContainer
-            ref={ref}
+            ref={setContainer}
             className="keen-slider"
           >
             {images.map((image, index) => (

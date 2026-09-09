@@ -39,6 +39,7 @@ import {
   GoogleAnalyticsService,
 } from '@wepublish/google-analytics/api';
 import { HealthModule } from '@wepublish/health';
+import { PuckContentModule } from '@wepublish/puck-content/api';
 import { MediaAdapterModule } from '@wepublish/image/api';
 import {
   KvTtlCacheModule,
@@ -536,6 +537,7 @@ import { readConfig } from '../readConfig';
     ConfigModule.forRoot(),
     HealthModule,
     SystemInfoModule,
+    PuckContentModule,
     HotAndTrendingModule.registerAsync({
       imports: [
         GoogleAnalyticsModule.registerAsync({

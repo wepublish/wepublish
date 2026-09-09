@@ -13,6 +13,11 @@ import { GoogleSearchPreview } from './google';
 import { TwitterPreview } from './twitter';
 import { WhatsAppPreview } from './whatsapp';
 import { faker } from '@faker-js/faker';
+import { createUsePuck } from '@puckeditor/core';
+import { useImageQuery } from '@wepublish/editor/api';
+import { useMemo } from 'react';
+
+import { SEOValue } from '../seo/seo.field';
 
 const SectionHeader = styled(Box)({
   display: 'flex',
@@ -60,7 +65,7 @@ const WhatsAppBackground = styled(Box)({
   display: 'inline-block',
 });
 
-const sampleData = {
+const placeholders = {
   url: faker.internet.url(),
   domain: faker.internet.domainName(),
   siteName: faker.internet.displayName(),
@@ -70,7 +75,42 @@ const sampleData = {
   favicon: faker.image.urlPicsumPhotos(),
 };
 
+const usePuck = createUsePuck();
+
+type RootSEOProps = {
+  seo?: SEOValue;
+  socialMedia?: SEOValue;
+};
+
 export function SeoPreview() {
+  const rootProps = usePuck(
+    puck => puck.appState.data.root.props as RootSEOProps | undefined
+  );
+
+  // Social media shares use the social image, falling back to the SEO image
+  const imageId = rootProps?.socialMedia?.imageId || rootProps?.seo?.imageId;
+  const { data: imageData } = useImageQuery({
+    variables: { id: imageId ?? '' },
+    skip: !imageId,
+  });
+  const image = imageId ? imageData?.image : undefined;
+
+  const sampleData = useMemo(() => {
+    const seo = rootProps?.seo;
+    const socialMedia = rootProps?.socialMedia;
+
+    return {
+      ...placeholders,
+      image: image?.largeURL ?? image?.url ?? placeholders.image,
+      // Google uses the search engine values, everything else the social ones
+      searchTitle: seo?.title || socialMedia?.title || placeholders.title,
+      searchDescription:
+        seo?.lead || socialMedia?.lead || placeholders.description,
+      title: socialMedia?.title || seo?.title || placeholders.title,
+      description: socialMedia?.lead || seo?.lead || placeholders.description,
+    };
+  }, [rootProps?.seo, rootProps?.socialMedia, image]);
+
   return (
     <NoSsr>
       <Box sx={{ p: 2 }}>
@@ -113,8 +153,8 @@ export function SeoPreview() {
             <GoogleSearchPreview
               url={sampleData.url}
               breadcrumbs={[sampleData.url, 'blog']}
-              title={sampleData.title}
-              description={sampleData.description}
+              title={sampleData.searchTitle}
+              description={sampleData.searchDescription}
               favicon={sampleData.favicon}
               siteName={sampleData.siteName}
             />

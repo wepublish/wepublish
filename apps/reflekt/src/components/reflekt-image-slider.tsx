@@ -93,6 +93,6 @@ export const ReflektImageSliderSlim = (
   <ReflektImageSliderBase
     {...props}
     slidesPerViewConfig={slidesPerViewConfig}
-    slideGap={16}
+    slideGapConfig={{ xs: 16, sm: 16 }}
   />
 );
