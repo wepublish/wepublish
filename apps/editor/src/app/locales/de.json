@@ -1105,7 +1105,8 @@
         "long": "Lang",
         "weekday": "Wochentag",
         "time": "Zeit",
-        "dateTime": "Datum+Zeit"
+        "dateTime": "Datum+Zeit",
+        "year": "Jahr"
       },
       "amountFormat": {
         "display": "Mit Währung",
@@ -1133,6 +1134,7 @@
         "user_lastLogin": "Letzter Login",
         "user_createdAt": "Konto erstellt am",
         "jwt": "Login-Token (JWT)",
+        "currentDate": "Aktuelles Datum",
         "optional_subscription_id": "Abo-ID",
         "optional_subscription_monthlyAmount": "Monatlicher Betrag",
         "optional_subscription_periodAmount": "Betrag pro Periode",

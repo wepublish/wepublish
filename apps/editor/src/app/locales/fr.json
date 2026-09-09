@@ -1136,6 +1136,7 @@
         "user_lastLogin": "Dernière connexion",
         "user_createdAt": "Compte créé le",
         "jwt": "Jeton de connexion (JWT)",
+        "currentDate": "Date en cours",
         "optional_subscription_id": "ID d'abonnement",
         "optional_subscription_monthlyAmount": "Montant mensuel",
         "optional_subscription_periodAmount": "Montant par période",
@@ -1176,7 +1177,8 @@
         "long": "Long",
         "weekday": "Jour de la semaine",
         "time": "Heure",
-        "dateTime": "Date+heure"
+        "dateTime": "Date+heure",
+        "year": "Année"
       },
       "amountFormat": {
         "display": "Avec devise",
