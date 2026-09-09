@@ -275,7 +275,7 @@ export function SubscriptionListItem({
                 onClick={() => setConfirmExtend(true)}
                 disabled={loading}
               >
-                {t('subscription.extendEarly')}
+                {t('subscription.extendNow')}
               </Button>
             )}
           </SubscriptionListItemActions>
