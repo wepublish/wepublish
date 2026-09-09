@@ -1,6 +1,6 @@
 import { css, FormControlLabel, Radio, RadioGroup } from '@mui/material';
 import {
-  BuilderPaymentAmountProps,
+  BuilderPaymentAmountPickerProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { Currency } from '@wepublish/website/api';
@@ -12,6 +12,9 @@ import {
   HelperText,
 } from './currency-number-spinner';
 import styled from '@emotion/styled';
+
+const GROUP_SEPARATORS = /[\u2019\u0027]/g;
+const NON_BREAKING_SPACES = /[\u00a0\u202f\u2009]/g;
 
 const formatNumber = (value: number, format: string, locale = 'de-CH') => {
   const [intPart = '', fracPart = ''] = format.split('.');
@@ -30,12 +33,15 @@ const formatNumber = (value: number, format: string, locale = 'de-CH') => {
     minimumFractionDigits,
     maximumFractionDigits,
     useGrouping,
-  }).format(value);
+  })
+    .format(value)
+    .replace(GROUP_SEPARATORS, "'")
+    .replace(NON_BREAKING_SPACES, ' ');
 };
 
 export const PaymentAmountPickerWrapper = styled(RadioGroup)`
   display: grid;
-  grid-template-columns: repeat(auto-fit, 125px);
+  grid-template-columns: repeat(auto-fit, 185px);
   align-items: top;
   justify-content: center;
   gap: ${({ theme }) => theme.spacing(2)};
@@ -64,7 +70,8 @@ export const PaymentAmountPickerItemWrapper = styled('div')<
 >`
   position: relative;
   padding: ${({ theme }) => theme.spacing(2)};
-  aspect-ratio: 1;
+  width: 100%;
+  aspect-ratio: 1 / 1;
   border: 1px solid ${({ theme }) => theme.palette.divider};
   border-radius: ${({ theme }) => theme.shape.borderRadius}px;
   display: flex;
@@ -127,8 +134,7 @@ export const PaymentAmountPickerItem = forwardRef<
 
 export const PaymentAmountPicker = forwardRef<
   HTMLInputElement,
-  BuilderPaymentAmountProps & {
-    pickerItems: number[];
+  BuilderPaymentAmountPickerProps & {
     format?: string;
     step?: number;
     snap?: CurrencyNumberSpinnerSnap;
@@ -142,7 +148,7 @@ export const PaymentAmountPicker = forwardRef<
       currency,
       amountPerMonthMin,
       amountPerMonthTarget,
-      pickerItems,
+      presetAmounts,
       format,
       snap,
       arrows,
@@ -160,10 +166,11 @@ export const PaymentAmountPicker = forwardRef<
 
     const [hasInteracted, setHasInteracted] = useState(false);
     const showSelection = !noInitialSelection || hasInteracted;
+    const items = presetAmounts ?? [];
     const isCustomValue =
       snap ?
         !snap.values.some(v => v * 100 === value)
-      : !pickerItems.some(p => p === value);
+      : !items.some(p => p === value);
 
     return (
       <PaymentAmountPickerWrapper
@@ -177,7 +184,7 @@ export const PaymentAmountPicker = forwardRef<
         }}
         value={value}
       >
-        {pickerItems.map(itemAmount => (
+        {items.map(itemAmount => (
           <FormControlLabel
             key={itemAmount}
             value={itemAmount}

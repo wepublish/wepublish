@@ -1,0 +1,59 @@
+import {
+  ArticleListWrapper,
+  articleToTeaser,
+} from '@wepublish/article/website';
+import { FullArticleTeaserFragment } from '@wepublish/website/api';
+import {
+  BuilderArticleListProps,
+  useWebsiteBuilder,
+} from '@wepublish/website/builder';
+import { createContext, use, useMemo } from 'react';
+
+import { ReflektBlockStyles } from '../block-styles/reflekt-block-styles';
+
+export const TagAwareArticleListContext = createContext('');
+
+export const ReflektArticleList = ({
+  data,
+  className,
+}: BuilderArticleListProps) => {
+  const {
+    blocks: { TeaserGrid },
+  } = useWebsiteBuilder();
+
+  const tag = use(TagAwareArticleListContext);
+
+  const teasers = useMemo(
+    () =>
+      data?.articles?.nodes.map(article =>
+        articleToTeaser(
+          article as unknown as FullArticleTeaserFragment['article']
+        )
+      ) ?? [],
+    [data?.articles?.nodes]
+  );
+
+  const blockStyle = useMemo(() => {
+    if (tag) {
+      if (tag === 'recherchen') {
+        return ReflektBlockStyles.TeaserRecherchen;
+      }
+
+      if (tag === 'news') {
+        return ReflektBlockStyles.TeaserNews;
+      }
+    }
+
+    return undefined;
+  }, [tag]);
+
+  return (
+    <ArticleListWrapper className={className}>
+      <TeaserGrid
+        numColumns={3}
+        teasers={teasers}
+        blockStyle={blockStyle}
+      />
+    </ArticleListWrapper>
+  );
+};

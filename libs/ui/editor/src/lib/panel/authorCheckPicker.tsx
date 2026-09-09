@@ -98,7 +98,7 @@ export function AuthorCheckPicker({
           author => author.id === item.value
         )?.peer;
 
-        return <PeerAvatar peer={peer}>{label}</PeerAvatar>;
+        return <PeerAvatar peer={peer}>{item.label}</PeerAvatar>;
       }}
       renderExtraFooter={() =>
         authorsFilter &&

@@ -1,0 +1,270 @@
+import { css, SerializedStyles, Theme } from '@emotion/react';
+import styled from '@emotion/styled';
+import { GlobalStyles } from '@mui/material';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import {
+  ArticleListWrapper,
+  ArticleTrackingPixels,
+} from '@wepublish/article/website';
+import {
+  BreakBlockWrapper,
+  EventBlockWrapper,
+  HtmlBlockWrapper,
+  ImageBlockWrapper,
+  ImageGalleryBlockWrapper,
+  SliderWrapper,
+  TeaserGridBlockWrapper,
+  TeaserGridFlexBlockWrapper,
+  TeaserListBlockWrapper,
+  TeaserSlotsBlockWrapper,
+} from '@wepublish/block-content/website';
+import { CommentListWrapper } from '@wepublish/comments/website';
+import { ContentWrapper } from '@wepublish/content/website';
+import { SubscribeWrapper } from '@wepublish/membership/website';
+import {
+  Article as ArticleType,
+  FullArticleFragment,
+} from '@wepublish/website/api';
+import {
+  BuilderArticleProps,
+  PeerInformation,
+  useWebsiteBuilder,
+} from '@wepublish/website/builder';
+import { Paywall } from '@wepublish/website/builder';
+
+import { robotoMono } from '../theme';
+import { ArticlePropertiesContext } from './article-properties-context';
+import { FlexBlockFullsizeImageWrapper } from './block-layouts/flex-block-fullsize-image';
+import {
+  FlexBlockHeroWrapper,
+  isFlexBlockHero,
+} from './block-layouts/flex-block-hero';
+import { CollapsibleContentWrapper } from './break-blocks/reflekt-collapsible-content';
+import { CollapsibleDownloadsWrapper } from './break-blocks/reflekt-collapsible-downloads';
+import { TocWrapper } from './break-blocks/reflekt-toc';
+import { ReflektQuoteBlock } from './reflekt-quote-block';
+import { TeaserSlotsCreditsWrapper } from './teaser-layouts/teaser-slots-credits';
+import { TeaserSlotsTopicWrapper } from './teaser-layouts/teaser-slots-topic';
+
+const fullWidthMainSpacer = (theme: Theme) => css`
+  main > .MuiContainer-root {
+    max-width: initial;
+    padding: 0;
+  }
+`;
+
+const articleDate = (isFlexBlockHero: boolean) => (theme: Theme) => css`
+  ${isFlexBlockHero &&
+  css`
+    margin-top: ${theme.spacing(-6)};
+  `}
+`;
+
+const ArticleDateWrapper = styled('span')`
+  font-family: ${robotoMono.style.fontFamily};
+  font-size: 0.75rem;
+  line-height: 1;
+
+  time {
+    padding-left: ${({ theme }) => theme.spacing(1)};
+  }
+`;
+
+export const ArticleInfoWrapper = styled('aside')`
+  display: grid;
+  gap: ${({ theme }) => theme.spacing(4)};
+  grid-row-start: 2;
+`;
+
+export const defaultFadeoutStyles = css`
+  max-height: 250px;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 1) 30%,
+    rgba(0, 0, 0, 0) 100%
+  );
+`;
+
+export const ArticleWrapper = styled(ContentWrapper)<{
+  hideContent?: boolean;
+  hideContentAfter?: number;
+  fadeout?: boolean;
+  fadeoutStyles?: SerializedStyles;
+}>`
+  padding-bottom: ${({ theme }) => theme.spacing(14)};
+
+  & > :is(${FlexBlockHeroWrapper}, ${FlexBlockFullsizeImageWrapper}) {
+    margin-left: -${({ theme }) => theme.spacing(2)};
+    margin-right: -${({ theme }) => theme.spacing(2)};
+
+    ${({ theme }) => theme.breakpoints.up('sm')} {
+      margin-left: -${({ theme }) => theme.spacing(3)};
+      margin-right: -${({ theme }) => theme.spacing(3)};
+    }
+  }
+
+  ${HtmlBlockWrapper} {
+    overflow: hidden;
+    max-width: calc(100vw - ${({ theme }) => theme.spacing(6)});
+  }
+
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    grid-template-columns:
+      max(calc(100vw - var(--breakpoint-width) - 16px) / 2, 0px)
+      repeat(12, 1fr)
+      max(calc(100vw - var(--breakpoint-width) - 16px) / 2, 0px) !important;
+    justify-content: center;
+
+    & > *,
+    & > :is(${ImageBlockWrapper}) {
+      grid-column: 4/12;
+      margin-left: ${({ theme }) => theme.spacing(4)};
+      margin-right: ${({ theme }) => theme.spacing(4)};
+    }
+
+    &
+      > :is(
+        ${SliderWrapper},
+          ${EventBlockWrapper},
+          ${BreakBlockWrapper},
+          ${CollapsibleContentWrapper},
+          ${CollapsibleDownloadsWrapper},
+          ${TocWrapper},
+          ${ReflektQuoteBlock},
+          ${TeaserSlotsCreditsWrapper},
+          ${TeaserSlotsTopicWrapper}
+      ) {
+      grid-column: 2/14;
+      margin-left: 0;
+      margin-right: 0;
+    }
+
+    &
+      > :is(
+        ${TeaserGridFlexBlockWrapper},
+          ${TeaserGridBlockWrapper},
+          ${TeaserListBlockWrapper},
+          ${TeaserSlotsBlockWrapper},
+          ${ImageGalleryBlockWrapper},
+          ${SubscribeWrapper}
+      ) {
+      grid-column: 2/12;
+      margin-left: 0;
+      margin-right: 0;
+    }
+
+    & > :is(${FlexBlockHeroWrapper}, ${FlexBlockFullsizeImageWrapper}) {
+      grid-column: -1/1;
+      margin-left: 0;
+      margin-right: 0;
+    }
+  }
+
+  ${({
+    hideContent,
+    fadeoutStyles = defaultFadeoutStyles,
+    hideContentAfter = 3,
+    fadeout,
+  }) =>
+    hideContent &&
+    css`
+      // Shows the first N blocks (usually title, image, richtext) and hides the rest
+      > :nth-child(n + ${hideContentAfter + 1}):not(
+          :is(${ArticleInfoWrapper})
+        ) {
+        display: none;
+      }
+
+      ${fadeout &&
+      css`
+        // fade out the third block (usually richtext) to indicate the user that a paywall is hitting.
+        > :nth-child(${hideContentAfter}) {
+          ${fadeoutStyles}
+        }
+      `}
+    `}
+
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    & > :is(${ArticleListWrapper}, ${CommentListWrapper}) {
+      grid-column: 3/13;
+    }
+  }
+`;
+
+const articleGlobalStyles = <GlobalStyles styles={fullWidthMainSpacer} />;
+
+export function ReflektArticle({
+  className,
+  data,
+  children,
+  showPaywall,
+  hideContent,
+  loading,
+  error,
+}: BuilderArticleProps) {
+  const {
+    ArticleSEO,
+    ArticleDate,
+    blocks: { Blocks },
+  } = useWebsiteBuilder();
+
+  const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
+
+  const article = data?.article as FullArticleFragment | undefined;
+
+  return (
+    <ArticleWrapper
+      className={className}
+      hideContent={hideContent}
+      hideContentAfter={article?.paywall?.hideContentAfter}
+      fadeout={article?.paywall?.fadeout}
+    >
+      {isDesktop && articleGlobalStyles}
+
+      {article && <ArticleSEO article={article as unknown as ArticleType} />}
+
+      {article && (
+        <ArticlePropertiesContext.Provider
+          value={article.latest.properties ?? []}
+        >
+          <Blocks
+            key={article.id}
+            blocks={article.latest.blocks ?? []}
+            type="Article"
+          />
+        </ArticlePropertiesContext.Provider>
+      )}
+
+      <ArticleInfoWrapper>
+        {article && (
+          <ArticleDateWrapper
+            css={articleDate(isFlexBlockHero(article.latest.blocks[0]))}
+          >
+            Veröffentlicht am:
+            <ArticleDate article={article} />
+          </ArticleDateWrapper>
+        )}
+
+        {data?.article?.peer && (
+          <PeerInformation
+            {...data.article.peer}
+            originUrl={data.article.latest.canonicalUrl ?? undefined}
+          />
+        )}
+      </ArticleInfoWrapper>
+
+      {showPaywall && article?.paywall && (
+        <Paywall
+          {...article.paywall}
+          hideContent={hideContent}
+        />
+      )}
+
+      {children}
+
+      <ArticleTrackingPixels trackingPixels={article?.trackingPixels} />
+    </ArticleWrapper>
+  );
+}

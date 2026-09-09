@@ -24,11 +24,15 @@ export interface ClientSettings {
   readonly medium?: string;
   readonly peerByDefault: boolean;
   readonly imgMinSizeToCompress: number;
+  readonly sentryDSN?: string;
+  readonly appName?: string;
+  readonly appEnvironment?: string;
 }
 
 export enum LocalStorageKey {
   SessionToken = 'sessionToken',
   ImageListLayout = 'imageListLayout',
+  AudienceDashboardFilter = 'audienceDashboardFilter',
 }
 
 const authLink = new ApolloLink((operation, forward) => {
@@ -57,6 +61,9 @@ export function getSettings(): ClientSettings {
       wepOneURL: 'https://one-admin.wepublish.cloud',
       medium: '',
       imgMinSizeToCompress: 10,
+      sentryDSN: '',
+      appName: '',
+      appEnvironment: '',
     };
 
     const settingsJson = document.getElementById(ElementID.Settings);

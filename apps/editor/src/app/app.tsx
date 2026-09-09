@@ -67,6 +67,9 @@ import { EventEditView } from './routes/events/eventEditView';
 import { EventListView } from './routes/events/eventListView';
 import { ExternalAppIframeView } from './routes/externalApps/externalAppIframeView';
 import { ExternalApps } from './routes/externalApps/externalAppsEdit';
+import { GoodieCreateView } from './routes/goodie/goodieCreateView';
+import { GoodieEditView } from './routes/goodie/goodieEditView';
+import { GoodieList } from './routes/goodie/goodieList';
 import { ImageList } from './routes/images/imageList';
 import { IntegrationEditView } from './routes/integrations/integrationEditView';
 import { IntegrationList } from './routes/integrations/integrationList';
@@ -93,9 +96,10 @@ import { TokenList } from './routes/tokens/tokenList';
 import { UserRoleList } from './routes/userRoles/userRoleList';
 import { UserEditView } from './routes/users/userEditView';
 import { UserList } from './routes/users/userList';
-import { VoucherCreateView } from './routes/voucher/voucherCreateView';
-import { VoucherEditView } from './routes/voucher/voucherEditView';
-import { VoucherList } from './routes/voucher/voucherList';
+import { DiscountCodeCreateView } from './routes/discountCode/discountCodeCreateView';
+import { DiscountCodeEditView } from './routes/discountCode/discountCodeEditView';
+import { DiscountCodeList } from './routes/discountCode/discountCodeList';
+import { DiscountCodeUsageView } from './routes/discountCode/discountCodeUsageView';
 import { WebsiteSettingsItem } from './routes/website-settings/website-settings-item';
 import { WebsiteSettingsList } from './routes/website-settings/website-settings-list';
 import { SetNewPassword } from './setNewPassword';
@@ -255,6 +259,12 @@ export function App() {
           // Styles missing from v6 of rsuite
           :root {
             --rs-form-control-width: 100%;
+            --rs-form-group-direction: column;
+            --rs-form-group-spacing: var(--rs-spacing);
+          }
+
+          .rs-picker-toggle.rs-btn {
+            max-width: 100%;
           }
 
           .rs-grid-container-fluid,
@@ -821,7 +831,7 @@ export function App() {
               path="audience/dashboard"
               element={
                 <Base>
-                  <AudienceDashboard />
+                  <AudienceDashboard persist />
                 </Base>
               }
             />
@@ -901,28 +911,60 @@ export function App() {
                 </Base>
               }
             />
-            {/* Voucher routes */}
+            {/* DiscountCode routes */}
             <Route
-              path="vouchers"
+              path="discountCodes"
               element={
                 <Base>
-                  <VoucherList />
+                  <DiscountCodeList />
                 </Base>
               }
             />
             <Route
-              path="vouchers/edit/:id"
+              path="discountCodes/edit/:id"
               element={
                 <Base>
-                  <VoucherEditView />
+                  <DiscountCodeEditView />
                 </Base>
               }
             />
             <Route
-              path="vouchers/create"
+              path="discountCodes/create"
               element={
                 <Base>
-                  <VoucherCreateView />
+                  <DiscountCodeCreateView />
+                </Base>
+              }
+            />
+            <Route
+              path="discountCodes/usage/:id"
+              element={
+                <Base>
+                  <DiscountCodeUsageView />
+                </Base>
+              }
+            />
+            <Route
+              path="goodies"
+              element={
+                <Base>
+                  <GoodieList />
+                </Base>
+              }
+            />
+            <Route
+              path="goodies/edit/:id"
+              element={
+                <Base>
+                  <GoodieEditView />
+                </Base>
+              }
+            />
+            <Route
+              path="goodies/create"
+              element={
+                <Base>
+                  <GoodieCreateView />
                 </Base>
               }
             />

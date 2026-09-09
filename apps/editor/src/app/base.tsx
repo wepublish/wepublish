@@ -9,6 +9,7 @@ import {
   CanCreateCrowdfunding,
   CanCreateDocument,
   CanCreateExternalApp,
+  CanCreateGoodie,
   CanCreateImage,
   CanCreateMemberPlan,
   CanCreateNavigation,
@@ -22,7 +23,7 @@ import {
   CanCreateToken,
   CanCreateUser,
   CanCreateUserRole,
-  CanCreateVoucher,
+  CanCreateDiscountCode,
   CanDeleteArticle,
   CanDeleteAuthor,
   CanDeleteBanner,
@@ -105,11 +106,12 @@ import {
   CanUpdateCrowdfunding,
   CanUpdateEvent,
   CanUpdateExternalApp,
+  CanUpdateGoodie,
   CanUpdatePaywall,
   CanUpdateSettings,
   CanUpdateSystemMails,
   CanUpdateTag,
-  CanUpdateVoucher,
+  CanUpdateDiscountCode,
   CanUpdateWebsiteSettings,
 } from '@wepublish/permissions';
 import { PermissionControl, Version } from '@wepublish/ui/editor';
@@ -123,6 +125,7 @@ import {
   MdAutorenew,
   MdBadge,
   MdBookOnline,
+  MdCardGiftcard,
   MdChat,
   MdCountertops,
   MdCreditCard,
@@ -982,8 +985,10 @@ export function Base({ children }: BaseProps) {
                     CanCreatePaymentMethod.id,
                     CanDeletePaymentMethod.id,
                     CanGetSubscriptionFlows.id,
-                    CanCreateVoucher.id,
-                    CanUpdateVoucher.id,
+                    CanCreateDiscountCode.id,
+                    CanUpdateDiscountCode.id,
+                    CanCreateGoodie.id,
+                    CanUpdateGoodie.id,
                   ]}
                 >
                   <Nav.Menu
@@ -1029,20 +1034,36 @@ export function Base({ children }: BaseProps) {
                       </Nav.Item>
                     </PermissionControl>
 
-                    {/* VOUCHERS */}
+                    {/* DISCOUNTCODES */}
                     <PermissionControl
                       qualifyingPermissions={[
-                        CanCreateVoucher.id,
-                        CanUpdateVoucher.id,
+                        CanCreateDiscountCode.id,
+                        CanUpdateDiscountCode.id,
                       ]}
                     >
                       <Nav.Item
                         as={NavLink}
-                        href="/vouchers"
+                        href="/discountCodes"
                         icon={<MdCountertops />}
-                        active={path === 'vouchers'}
+                        active={path === 'discountCodes'}
                       >
-                        {t('voucher.navbar')}
+                        {t('discountCode.navbar')}
+                      </Nav.Item>
+                    </PermissionControl>
+
+                    <PermissionControl
+                      qualifyingPermissions={[
+                        CanCreateGoodie.id,
+                        CanUpdateGoodie.id,
+                      ]}
+                    >
+                      <Nav.Item
+                        as={NavLink}
+                        href="/goodies"
+                        icon={<MdCardGiftcard />}
+                        active={path === 'goodies'}
+                      >
+                        {t('goodie.navbar')}
                       </Nav.Item>
                     </PermissionControl>
                   </Nav.Menu>

@@ -7,6 +7,10 @@ fragment SlimPageRevision on PageRevision {
   image {
     ...SlimImage
   }
+
+  properties {
+    ...FullProperty
+  }
 }
 
 fragment FullPageRevision on PageRevision {
@@ -20,10 +24,6 @@ fragment FullPageRevision on PageRevision {
   socialMediaTitle
   socialMediaImage {
     ...FullImage
-  }
-
-  properties {
-    ...FullProperty
   }
 
   blocks {

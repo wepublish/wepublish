@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import { useMemberPlanListQuery } from '@wepublish/editor/api';
 import {
-  FullMailTemplateFragment,
+  TinyMailTemplateFragment,
   FullMemberPlanFragment,
   SubscriptionEvent,
   SubscriptionInterval,
@@ -51,7 +51,7 @@ import { TimelineBody } from './timeline/timeline-body';
 import { TimelineHead } from './timeline/timeline-head';
 import styled from '@emotion/styled';
 
-export const MailTemplatesContext = createContext<FullMailTemplateFragment[]>(
+export const MailTemplatesContext = createContext<TinyMailTemplateFragment[]>(
   []
 );
 

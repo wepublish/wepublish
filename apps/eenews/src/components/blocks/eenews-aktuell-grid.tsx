@@ -162,7 +162,7 @@ export const EenewsAktuellGrid = ({
     skip: !activeTagId,
     fetchPolicy: 'cache-first',
     variables: {
-      filter: { tagsInclude: activeTagId ? [activeTagId] : [] },
+      filter: { allTagsIn: activeTagId ? [activeTagId] : [] },
       take: articleCount,
       skip: 0,
       sort: ArticleSort.PublishedAt,

@@ -9,6 +9,11 @@ fragment Invoice on Invoice {
     quantity
     amount
     total
+    goodieId
+    goodie {
+      id
+      name
+    }
   }
   paidAt
   description

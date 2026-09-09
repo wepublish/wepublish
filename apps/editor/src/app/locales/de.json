@@ -1,5 +1,9 @@
 {
   "translation": {
+    "previewHandshake": {
+      "popupBlocked": "Das Vorschau-Fenster wurde vom Browser blockiert. Bitte Pop-ups für den Editor erlauben und erneut versuchen.",
+      "notResponding": "Das Vorschau-Fenster antwortet nicht. Die Anmeldung für die Vorschau ist möglicherweise fehlgeschlagen."
+    },
     "oneMessages": {
       "header": "Nachrichten vom We.Publish Team",
       "expand": "Ausklappen",
@@ -115,7 +119,6 @@
         "invalidImage": "Ungültiges Bild",
         "key": "Key",
         "lead": "Lead",
-        "leadHelpBlock": "Verwende einen SEO-optimierten Lead",
         "loading": "Laden ...",
         "loadMore": "Mehr laden",
         "noDataToDisplay": "Keine Daten zum Anzeigen",
@@ -142,6 +145,8 @@
         "published": "Publiziert",
         "seoTitle": "SEO-Titel",
         "seoTitleHelpBlock": "Verwende einen SEO-optimierten Titel <2>SEO Guide</2>",
+        "seoDescription": "SEO-Beschreibung",
+        "seoDescriptionHelpBlock": "Verwende eine SEO-optimierte Beschreibung",
         "sharedWithPeers": "Geteilt mit Peers",
         "slug": "Slug",
         "slugGuide": "Slug Guide",
@@ -267,6 +272,8 @@
         "showOnPages": "Auf Seiten anzeigen",
         "showForLoginStatus": "Anzeigen für",
         "html": "HTML-Code",
+        "embedUrl": "Embed-URL (iframe)",
+        "embedUrlHelp": "URL einer Seite, die als iframe mit automatischer Höhenanpassung eingebettet wird. Die Tags des Artikels werden als ?tags=... Query-Parameter angehängt.",
         "loginStatus": {
           "ALL": "alle",
           "LOGGED_IN": "nur eingeloggt",
@@ -398,17 +405,48 @@
       },
       "subscribe": {
         "label": "Abonnieren",
-        "selectMemberPlans": "Anzuzeigende Pläne",
+        "selectMemberPlans": "Anzuzeigende Abo-Pläne",
         "selectMemberPlansPlaceholder": "Alle Pläne anzeigen",
         "selectMemberPlansSelectionHintAll": "Ohne Auswahl werden alle aktiven Pläne angezeigt.",
-        "selectFields": "Eingabefelder",
+        "selectFields": "Benutzer-Eingabefelder",
         "selectFieldsSelectionHint": "Email & Nachname wird immer abgefragt. Reihenfolge spielt keine Rolle",
+        "goodiesHeading": "Goodies",
+        "discountCodesHeading": "Rabattcodes",
+        "showGoodies": "Goodie-Auswahl anzeigen",
+        "showDiscountCodes": "Rabattcode-Eingabe anzeigen",
+        "goodieMinValue": {
+          "label": "Goodie-Mindestbetrag:"
+        },
+        "hideRepeatGoodieOnUpgrade": "Bei Upgrade: kein erneutes Goodie",
         "FirstName": "Vorname",
         "Birthday": "Geburtstag",
         "Address": "Adresse",
         "EmailRepeated": "Email wiederholen",
         "Password": "Passwort",
-        "PasswordRepeated": "Passwort wiederholen"
+        "PasswordRepeated": "Passwort wiederholen",
+        "renderLayouts": {
+          "None": "Fixer Betrag",
+          "Input": "Betragseingabe",
+          "Slider": "Betrags-Slider",
+          "Picker": "Vordefinierte Beträge"
+        },
+        "renderStylesHeading": "Abo-Plan Reihenfolge und Darstellung",
+        "amountTileValues": {
+          "hint": "Beträge der Kacheln (in Franken). Leer lassen für Standard: 10, 15, 20.",
+          "placeholder": "z.B. 10 15 20"
+        },
+        "showAmountInput": {
+          "label": "Freie Betragseingabe",
+          "title": "Zusätzlich zu den Kacheln kann ein beliebiger Betrag eingegeben werden."
+        },
+        "amountTileLayout": {
+          "hint": "Kachel-Layout auf Mobilgeräten",
+          "Narrow": "Schmal (2 Kacheln pro Zeile)",
+          "Wide": "Breit (1 Kachel pro Zeile, grosse Kacheln)"
+        },
+        "planAmountsTitle": "Minimal- / Ziel- / Maximalbetrag pro Monat (in Franken)",
+        "defaultPlanTitle": "Standardmässig ausgewählt — dieser Abo-Plan ist nach dem Laden der Seite vorausgewählt.",
+        "defaultPlanLabel": "Standard"
       },
       "image": {
         "label": "Bild",
@@ -477,6 +515,62 @@
         "leadText": "Lead-Text",
         "title": "Titel",
         "preTitle": "Oberzeile"
+      },
+      "mailchimpForm": {
+        "label": "Newsletter-Formular",
+        "general": "Allgemein",
+        "syncProvider": "Mailchimp-Konto",
+        "syncProviderPlaceholder": "Konto auswählen",
+        "list": "Liste",
+        "listPlaceholder": "Liste auswählen",
+        "interests": "Voreingestellte Interessen",
+        "interestsPlaceholder": "Interessen auswählen",
+        "autoFocus": "Automatischer Fokus",
+        "doubleOptIn": "Double-Opt-In",
+        "submitButtonLabel": "Beschriftung Absende-Button",
+        "buttonColor": "Button-Farbe",
+        "buttonFontColor": "Button-Schriftfarbe",
+        "mergeFieldPlaceholder": "Merge-Feld auswählen",
+        "emailMergeField": "E-Mail-Adresse",
+        "fieldUrlParam": "URL-Parameter",
+        "fieldDefaultValue": "Standardwert",
+        "fieldValue": "Fixer Wert",
+        "steps": "Schritte",
+        "step": "Schritt {{number}}",
+        "skipIfFieldsFilled": "Überspringen, wenn Felder gefüllt",
+        "skipIfInterestsFilled": "Überspringen, wenn Interessen gesetzt",
+        "showIfInterestsFilled": "Nur zeigen, wenn Interessen gesetzt",
+        "inputs": "Eingabefelder",
+        "inputType": "Typ",
+        "inputTypeHelp": "Art der Information, die in das Eingabefeld eingegeben werden kann",
+        "required": "Pflichtfeld",
+        "inputName": "Name",
+        "inputNameHelp": "Name des Merge-Felds, unter dem diese Information bei Mailchimp gespeichert wird",
+        "inputLabel": "Beschriftung",
+        "inputLabelHelp": "Beschriftung des Formularfelds",
+        "inputDescription": "Beschreibung",
+        "inputDescriptionHelp": "Beschreibung, die unter dem Formularfeld angezeigt wird",
+        "fieldUrlParamHelp": "Welcher URL-Parameter (?foo=bar) diese Information vorbelegen kann",
+        "fieldDefaultValueHelp": "Wert, der gespeichert wird, wenn keine Information eingegeben wird",
+        "fieldValueHelp": "Fixer Wert, der verwendet wird, wenn nichts eingegeben wird",
+        "advanced": "Erweitert",
+        "interestOptions": "Interessen-Optionen",
+        "interestOptionPlaceholder": "Interesse auswählen",
+        "interestOptionDescription": "Beschreibung",
+        "addInterestOption": "Option hinzufügen",
+        "addInput": "Eingabefeld hinzufügen",
+        "addStep": "Schritt hinzufügen",
+        "success": "Nach dem Absenden",
+        "successUrl": "Weiterleitungs-URL",
+        "successUrlPlaceholder": "https://…",
+        "useSuccessPage": "Erfolgsseite statt Weiterleitung",
+        "successPageDescription": "Beschreibung",
+        "optionLabel": "Beschriftung",
+        "optionBackground": "Hintergrundfarbe",
+        "optionUrl": "URL",
+        "optionMergeFieldName": "Merge-Feld Name",
+        "optionMergeFieldValue": "Merge-Feld Wert",
+        "addSuccessOption": "Option hinzufügen"
       }
     },
     "cancel": "Abbrechen",
@@ -760,7 +854,7 @@
         "filename": "Dateiname",
         "information": "Informationen",
         "maxFileSize": "Maximale Dateigrösse: {{maxSize}} MB",
-        "invalidDocument": "Nicht unterstützter Dateityp. Unterstützt: PDF, Word, Excel, PowerPoint, OpenDocument, CSV, TXT, ZIP",
+        "invalidDocument": "Nicht unterstützter Dateityp. Unterstützt: PDF, Word, Excel, PowerPoint, OpenDocument, CSV, TXT, JSON, XML, ZIP",
         "linkCopied": "Link in Zwischenablage kopiert",
         "notFound": "Dokument nicht gefunden!",
         "publicLink": "Öffentlicher Link",
@@ -837,9 +931,17 @@
         "noInvoices": "Keine Rechnungen vorhanden."
       },
       "payManually": "Manuell bezahlen",
-      "total": "Rechnungsbetrag",
-      "unpaid": "(unbezahlt)",
-      "userNotLoaded": "Unerwarteter Fehler: Deine Benutzerdaten konnten nicht geladen werden."
+      "total": "Betrag",
+      "unpaid": "unbezahlt",
+      "userNotLoaded": "Unerwarteter Fehler: Deine Benutzerdaten konnten nicht geladen werden.",
+      "table": {
+        "date": "Datum",
+        "description": "Beschreibung",
+        "goodie": "Goodie",
+        "status": "Status",
+        "action": "Aktion",
+        "idCopied": "Rechnungs-ID kopiert"
+      }
     },
     "linkPageBreakEditPanel": {
       "close": "Schliessen",
@@ -999,7 +1101,8 @@
         "long": "Lang",
         "weekday": "Wochentag",
         "time": "Zeit",
-        "dateTime": "Datum+Zeit"
+        "dateTime": "Datum+Zeit",
+        "year": "Jahr"
       },
       "amountFormat": {
         "display": "Mit Währung",
@@ -1027,6 +1130,7 @@
         "user_lastLogin": "Letzter Login",
         "user_createdAt": "Konto erstellt am",
         "jwt": "Login-Token (JWT)",
+        "currentDate": "Aktuelles Datum",
         "optional_subscription_id": "Abo-ID",
         "optional_subscription_monthlyAmount": "Monatlicher Betrag",
         "optional_subscription_periodAmount": "Betrag pro Periode",
@@ -1257,9 +1361,13 @@
         "createdAt": "{{createdAt, ccc PP p}}",
         "chooseBlock": "Blocktyp wählen",
         "dateExplanationPopOver": "Dies kann verwendet werden, um auf Artikel zu verweisen, die zu einem späteren Zeitpunkt veröffentlicht werden sollen. Dies ist z. B. hilfreich, wenn Beiträge auf Sozialen Medien für den nächsten Morgen geplant werden.",
-        "description": "SEO Beschreibung",
-        "descriptionHelpBlock": "Verwende eine SEO-optimierte Beschreibung",
+        "description": "Beschreibung",
+        "descriptionHelpBlock": "Die Beschreibung, die auf der Seite angezeigt wird",
         "enterDescription": "Bitte SEO-Beschreibung hinzufügen",
+        "seoTitle": "SEO-Titel",
+        "seoTitleHelpBlock": "Verwende einen SEO-optimierten Titel",
+        "seoDescription": "SEO-Beschreibung",
+        "seoDescriptionHelpBlock": "Verwende eine SEO-optimierte Beschreibung",
         "enterImage": "Biite Bild hinzufügen",
         "enterSocialMediaDescription": "Bitte Beschreibung für Social Media eingeben",
         "enterSocialMediaTitle": "Bitte Titel für Social Media eingeben",
@@ -1286,8 +1394,8 @@
         "socialMediaImage": "Bild für Social Media",
         "socialMediaTitle": "Titel für Social Media",
         "tags": "Tags",
-        "title": "SEO-Titel",
-        "titleHelpBlock": "Verwende einen SEO-optimierten Titel",
+        "title": "Titel",
+        "titleHelpBlock": "Der Titel, der auf der Seite angezeigt wird",
         "updateDate": "Update-Datum",
         "updateDateWarning": "Das Update-Datum darf nicht vor dem Publikations-Datum liegen.",
         "url": "URL",
@@ -1447,6 +1555,7 @@
     "pollAnswer": {
       "answerMissing": "Deine Antwort ist leer. Bitte gib einen Text ein.",
       "copyVoteUrl": "Kopiere Abstimmungs-Link",
+      "copyVoteUrlHint": "Die Abstimmungs-Links können nun direkt im Umfrage-Block des Artikels oder der Seite kopiert werden, in welchem die Umfrage verwendet wird.",
       "deleteBtn": "Löschen",
       "deleteModalBody": "Willst Du die Antwort \"{{answer}}\" unwiderruflich löschen? Die Umfrageresultate gehen dabei verloren.",
       "deleteModalTitle": "Löschen?",
@@ -1521,6 +1630,8 @@
       },
       "link": {
         "title": "Text verlinken mit",
+        "style": "Link-Stil",
+        "defaultStyle": "Link",
         "type": "Typ",
         "url": "URL",
         "web": "Web",
@@ -1661,6 +1772,7 @@
     },
     "subscriptionList": {
       "filter": {
+        "activeAt": "Aktiv am",
         "deactivationReason": "Grund Deaktivierung",
         "reasonInvoiceNotPaid": "Rechnung nicht bezahlt",
         "reasonNone": "Kein Grund",
@@ -1674,7 +1786,6 @@
         "createdAt": "Erstellt",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
         "deleted": "Gelöschte:r Benutzer:in",
-        "downloadCsv": "CSV herunterladen",
         "email": "Email",
         "memberPlan": "Member-Plan",
         "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
@@ -2013,6 +2124,13 @@
       }
     },
     "audienceFilter": {
+      "copyPermalink": "Permalink kopieren",
+      "permalinkCopied": "Permalink mit festem Zeitraum in die Zwischenablage kopiert",
+      "permalinkCopyFailed": "Permalink konnte nicht kopiert werden",
+      "permalinkHelpLabel": "Hinweise zum Permalink",
+      "permalinkHelpWhat": "Der Permalink ist ein Link auf genau diese Ansicht: Zeitraum, Abo-Pläne, ausgewählte Kennzahlen sowie Diagramm und Tabelle stecken alle in der Adresse.",
+      "permalinkHelpWhy": "So kannst du eine Auswertung im Team teilen oder als Lesezeichen ablegen, ohne die Filter jedes Mal neu zu setzen. Der Zeitraum wird als festes Datum gespeichert, damit der Link auch später noch dieselben Zahlen zeigt.",
+      "permalinkHelpExample": "Beispiel: «Letzter Monat» und den Abo-Plan «Jahresabo» wählen, Permalink kopieren und im Chat teilen – alle sehen genau diese Zahlen, auch nächste Woche noch.",
       "daily": "Täglich",
       "monthly": "Monatlich",
       "rangePickerPlaceholder": "von - bis",
@@ -2100,6 +2218,15 @@
         "highProbability": "Abo-Erneuerungen Stammkunden"
       }
     },
+    "audienceTableExport": {
+      "download": "Herunterladen",
+      "csv": "CSV (.csv)",
+      "xlsx": "Excel (.xlsx)",
+      "header": {
+        "renewedAndReplaced": "Erneuerte und ersetzte Abos",
+        "totalToBeRenewed": "Zu erneuernde Abos"
+      }
+    },
     "paywall": {
       "navbar": "Paywall",
       "form": {
@@ -2139,11 +2266,11 @@
         "anyMemberPlan": "Alle Abo-Pläne"
       }
     },
-    "voucher": {
-      "navbar": "Gutscheine",
+    "discountCode": {
+      "navbar": "Rabattcodes",
       "form": {
-        "createTitle": "Gutschein erstellen",
-        "editTitle": "Gutschein \"{{ voucher }}\" bearbeiten",
+        "createTitle": "Rabattcode erstellen",
+        "editTitle": "Rabattcode \"{{ discountCode }}\" bearbeiten",
         "code": "Code",
         "discountPercent": "Rabatt (%)",
         "validFrom": "Gültig ab",
@@ -2151,8 +2278,8 @@
         "memberPlan": "Abo-Plan"
       },
       "overview": {
-        "title": "Gutscheine",
-        "createVoucher": "Neuer Gutschein",
+        "title": "Rabattcodes",
+        "createDiscountCode": "Neuer Rabattcode",
         "active": "Aktiv",
         "valid": "Gültig",
         "code": "Code",
@@ -2161,8 +2288,51 @@
         "validFrom": "Gültig ab",
         "validTo": "Gültig bis",
         "areYouSure": "Bist du sicher?",
-        "areYouSureBody": "Der Gutschein \"{{ voucher }}\" wird unwiderruflich gelöscht.",
-        "areYouSureConfirmation": "Gutschein löschen"
+        "areYouSureBody": "Der Rabattcode \"{{ discountCode }}\" wird unwiderruflich gelöscht.",
+        "areYouSureConfirmation": "Rabattcode löschen",
+        "usage": "Verwendet",
+        "usageValue": "{{total}} ({{paid}} bezahlt)"
+      },
+      "usage": {
+        "title": "Verwendungen von \"{{ discountCode }}\"",
+        "summary": "{{total}} Einlösungen, davon {{paid}} bezahlt",
+        "back": "Zurück zur Übersicht",
+        "date": "Datum",
+        "mail": "E-Mail",
+        "amount": "Betrag",
+        "status": "Status",
+        "paid": "Bezahlt",
+        "open": "Offen",
+        "canceled": "Storniert",
+        "subscription": "Abo",
+        "showSubscription": "Abo öffnen"
+      }
+    },
+    "goodie": {
+      "navbar": "Goodies",
+      "form": {
+        "createTitle": "Goodie erstellen",
+        "editTitle": "Goodie \"{{ goodie }}\" bearbeiten",
+        "name": "Name",
+        "description": "Beschreibung",
+        "stock": "Lagerbestand",
+        "active": "Aktiv",
+        "image": "Bild",
+        "memberPlans": "Abo-Pläne"
+      },
+      "overview": {
+        "title": "Goodies",
+        "createGoodie": "Neues Goodie",
+        "name": "Name",
+        "memberPlans": "Abo-Pläne",
+        "stock": "Lagerbestand",
+        "availableStock": "Verfügbar",
+        "active": "Aktiv",
+        "createdAt": "Erstellt am",
+        "unlimited": "∞",
+        "areYouSure": "Bist du sicher?",
+        "areYouSureBody": "Das Goodie \"{{ goodie }}\" wird unwiderruflich gelöscht.",
+        "areYouSureConfirmation": "Goodie löschen"
       }
     },
     "paymentMethodEditPanel": {
@@ -2170,8 +2340,13 @@
       "gracePeriodHelpText": "Wenn deine Webseite eine Paywall verwendet, können die Nutzer alle Inhalte auch bei unbezahlten Abos sofort oder weiterhin lesen - innerhalb der Zahlungsfrist. Dies ist etwa bei Banküberweisung nützlich.",
       "days": "Tage"
     },
+    "subscriptionsExport": {
+      "download": "Herunterladen",
+      "csv": "CSV (.csv)",
+      "xlsx": "Excel (.xlsx)"
+    },
     "audienceCsvBtn": {
-      "exportUsers": "CSV herunterladen"
+      "exportUsers": "Nutzer:innen herunterladen"
     },
     "search": "Suche",
     "integrations": {

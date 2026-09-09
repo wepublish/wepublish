@@ -216,7 +216,7 @@ const TopicFilterChip = ({
     variables: {
       take: 1,
       skip: 0,
-      filter: { tagsInclude: [topicTagId, chipTagId] },
+      filter: { allTagsIn: [topicTagId, chipTagId] },
     },
   });
 
@@ -309,7 +309,7 @@ export const EenewsTagPage = ({
     fetchPolicy: 'cache-first',
     variables: {
       ...variables,
-      filter: { tagsInclude: [tag?.id ?? '', intersectionTagId ?? ''] },
+      filter: { allTagsIn: [tag?.id ?? '', intersectionTagId ?? ''] },
     },
   });
 

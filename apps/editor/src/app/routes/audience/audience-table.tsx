@@ -9,7 +9,7 @@ import { RowDataType } from 'rsuite-table';
 
 import { AudienceDetailDrawer } from './audience-detail-drawer';
 import { AudienceStatsComputed } from './useAudience';
-import { AudienceClientFilter, TimeResolution } from './useAudienceFilter';
+import { AudienceClientFilter, TimeResolution } from './audience-filter-params';
 
 const { Column, HeaderCell, Cell } = Table;
 

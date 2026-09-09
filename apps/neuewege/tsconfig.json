@@ -17,14 +17,14 @@
         "name": "next"
       }
     ],
-    "types": ["jest", "node"],
+    "types": ["vitest/globals", "node"],
     "moduleResolution": "bundler",
     "ignoreDeprecations": "6.0"
   },
   "include": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx", "next-env.d.ts"],
   "exclude": [
     "node_modules",
-    "jest.config.ts",
+    "vitest.config.ts",
     "src/**/*.spec.ts",
     "src/**/*.test.ts"
   ]

@@ -5,7 +5,7 @@ import {
 } from '@wepublish/editor/api';
 import { useCallback, useMemo } from 'react';
 
-import { AudienceClientFilter } from './useAudienceFilter';
+import { AudienceClientFilter } from './audience-filter-params';
 
 export interface RenewalFigures {
   totalToBeRenewed: number;

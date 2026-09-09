@@ -1,19 +1,19 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`ImportableEventListView renders the event list view with events 1`] = `
+exports[`ImportableEventListView > renders the event list view with events 1`] = `
 <DocumentFragment>
   <div
-    class="emotion-0"
+    class="emotion-0 emotion-1"
   >
     <div
-      class="emotion-1"
+      class="emotion-2 emotion-3"
     >
       <h2>
         importableEvent.title
       </h2>
     </div>
     <form
-      class="emotion-2"
+      class="emotion-4 emotion-5 emotion-6"
       data-rs="form"
     >
       <div
@@ -50,7 +50,7 @@ exports[`ImportableEventListView renders the event list view with events 1`] = `
         style="margin-right: 15px; margin-top: 0px; margin-bottom: 10px;"
       >
         <div
-          class="emotion-3 rs-picker"
+          class="emotion-7 emotion-8 rs-picker"
           data-appearance="default"
           data-block="true"
           data-picker="check"
@@ -194,21 +194,21 @@ exports[`ImportableEventListView renders the event list view with events 1`] = `
     </form>
   </div>
   <div
-    class="emotion-0"
+    class="emotion-0 emotion-1"
   >
     <div
       aria-busy="false"
       aria-colcount="5"
       aria-rowcount="3"
-      class="emotion-1 rs-table rs-table-hover"
+      class="emotion-2 emotion-3 rs-table rs-table-hover"
       role="grid"
-      style="width: auto; height: 0px;"
+      style="width: auto; height: 100px;"
       tabindex="-1"
     >
       <div
         class="rs-table-header-row-wrapper"
         role="rowgroup"
-        style=""
+        style="transform: translate(0px,0px);"
       >
         <div
           aria-rowindex="1"
@@ -346,11 +346,11 @@ exports[`ImportableEventListView renders the event list view with events 1`] = `
       <div
         class="rs-table-body-row-wrapper"
         role="rowgroup"
-        style="top: 40px; height: 160px;"
+        style="top: 40px; height: 60px;"
       >
         <div
           class="rs-table-body-wheel-area"
-          style="position: absolute; height: 120px; min-height: 0; transition-timing-function: linear; transform: translate(0px,0px);"
+          style="position: absolute; height: 120px; min-height: 100px; transform: translate(0px,0px);"
         >
           <div
             aria-rowindex="2"
@@ -364,7 +364,7 @@ exports[`ImportableEventListView renders the event list view with events 1`] = `
             >
               <div
                 aria-colindex="1"
-                class="emotion-2 emotion-3 rs-table-cell rs-table-cell-first"
+                class="emotion-4 emotion-5 rs-table-cell rs-table-cell-first"
                 role="gridcell"
                 style="width: 200px; height: 60px; z-index: 0; left: 0px;"
               >
@@ -377,7 +377,7 @@ exports[`ImportableEventListView renders the event list view with events 1`] = `
               </div>
               <div
                 aria-colindex="2"
-                class="emotion-2 emotion-3 rs-table-cell"
+                class="emotion-4 emotion-5 rs-table-cell"
                 role="gridcell"
                 style="width: 220px; height: 60px; z-index: 0; left: 200px;"
               >
@@ -394,7 +394,7 @@ exports[`ImportableEventListView renders the event list view with events 1`] = `
               </div>
               <div
                 aria-colindex="3"
-                class="emotion-2 emotion-3 rs-table-cell"
+                class="emotion-4 emotion-5 rs-table-cell"
                 role="gridcell"
                 style="width: 220px; height: 60px; z-index: 0; left: 420px;"
               >
@@ -411,7 +411,7 @@ exports[`ImportableEventListView renders the event list view with events 1`] = `
               </div>
               <div
                 aria-colindex="4"
-                class="emotion-2 emotion-3 rs-table-cell"
+                class="emotion-4 emotion-5 rs-table-cell"
                 role="gridcell"
                 style="width: 150px; height: 60px; z-index: 0; left: 640px;"
               >
@@ -424,7 +424,7 @@ exports[`ImportableEventListView renders the event list view with events 1`] = `
               </div>
               <div
                 aria-colindex="5"
-                class="emotion-2 emotion-3 rs-table-cell rs-table-cell-last"
+                class="emotion-4 emotion-5 rs-table-cell rs-table-cell-last"
                 role="gridcell"
                 style="width: 150px; height: 60px; z-index: 0; left: 790px;"
               >
@@ -458,7 +458,7 @@ exports[`ImportableEventListView renders the event list view with events 1`] = `
             >
               <div
                 aria-colindex="1"
-                class="emotion-2 emotion-3 rs-table-cell rs-table-cell-first"
+                class="emotion-4 emotion-5 rs-table-cell rs-table-cell-first"
                 role="gridcell"
                 style="width: 200px; height: 60px; z-index: 0; left: 0px;"
               >
@@ -471,7 +471,7 @@ exports[`ImportableEventListView renders the event list view with events 1`] = `
               </div>
               <div
                 aria-colindex="2"
-                class="emotion-2 emotion-3 rs-table-cell"
+                class="emotion-4 emotion-5 rs-table-cell"
                 role="gridcell"
                 style="width: 220px; height: 60px; z-index: 0; left: 200px;"
               >
@@ -488,7 +488,7 @@ exports[`ImportableEventListView renders the event list view with events 1`] = `
               </div>
               <div
                 aria-colindex="3"
-                class="emotion-2 emotion-3 rs-table-cell"
+                class="emotion-4 emotion-5 rs-table-cell"
                 role="gridcell"
                 style="width: 220px; height: 60px; z-index: 0; left: 420px;"
               >
@@ -505,7 +505,7 @@ exports[`ImportableEventListView renders the event list view with events 1`] = `
               </div>
               <div
                 aria-colindex="4"
-                class="emotion-2 emotion-3 rs-table-cell"
+                class="emotion-4 emotion-5 rs-table-cell"
                 role="gridcell"
                 style="width: 150px; height: 60px; z-index: 0; left: 640px;"
               >
@@ -518,7 +518,7 @@ exports[`ImportableEventListView renders the event list view with events 1`] = `
               </div>
               <div
                 aria-colindex="5"
-                class="emotion-2 emotion-3 rs-table-cell rs-table-cell-last"
+                class="emotion-4 emotion-5 rs-table-cell rs-table-cell-last"
                 role="gridcell"
                 style="width: 150px; height: 60px; z-index: 0; left: 790px;"
               >
@@ -550,14 +550,14 @@ exports[`ImportableEventListView renders the event list view with events 1`] = `
           aria-orientation="vertical"
           aria-valuemax="100"
           aria-valuemin="0"
-          aria-valuenow="271.42857142857144"
+          aria-valuenow="42.857142857142854"
           class="rs-table-scrollbar rs-table-scrollbar-vertical"
           role="scrollbar"
         >
           <div
             class="rs-table-scrollbar-handle"
             role="button"
-            style="min-height: 14px; backface-visibility: hidden;"
+            style="height: 42.857142857142854%; min-height: 14px;"
             tabindex="-1"
           />
         </div>
@@ -580,7 +580,7 @@ exports[`ImportableEventListView renders the event list view with events 1`] = `
       </div>
       <div
         class="rs-table-mouse-area"
-        style="height: 0px;"
+        style="height: 100px;"
       >
         <span
           style="height: 39px;"

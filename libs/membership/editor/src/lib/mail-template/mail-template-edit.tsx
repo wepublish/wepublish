@@ -7,7 +7,7 @@ import {
   MailTemplatePreviewQuery,
   MailTemplatePreviewQueryVariables,
   useCreateMailTemplateMutation,
-  useMailTemplateLazyQuery,
+  useMailTemplateByIdLazyQuery,
   useMailTemplateSubscriptionsLazyQuery,
   useSendTestMailTemplateMutation,
   useUpdateMailTemplateMutation,
@@ -112,7 +112,7 @@ function MailTemplateEdit() {
   const [previewHtml, setPreviewHtml] = useState<string | null>(null);
   const [previewSubject, setPreviewSubject] = useState('');
 
-  const [loadTemplate] = useMailTemplateLazyQuery({
+  const [loadTemplate] = useMailTemplateByIdLazyQuery({
     fetchPolicy: 'network-only',
   });
   const [createMailTemplate] = useCreateMailTemplateMutation(
@@ -135,8 +135,8 @@ function MailTemplateEdit() {
     if (!isEdit) {
       return;
     }
-    loadTemplate().then(({ data }) => {
-      const template = data?.mailTemplates.find(mt => mt.id === id);
+    loadTemplate({ variables: { id } }).then(({ data }) => {
+      const template = data?.mailTemplate;
       if (!template) {
         return;
       }

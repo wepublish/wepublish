@@ -214,7 +214,7 @@ function CustomApp({
                 CommentListItem={OnlineReportsCommentListItem}
                 Page={OnlineReportsPage}
                 RegistrationForm={OnlineReportsRegistrationForm}
-                PaymentAmount={OnlineReportsPaymentAmount}
+                PaymentAmountPicker={OnlineReportsPaymentAmount}
                 richtext={{ RenderElement: OnlineReportsRenderElement }}
                 elements={{ Link: NextWepublishLink }}
                 blocks={{

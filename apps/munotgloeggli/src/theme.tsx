@@ -1,5 +1,4 @@
-import { createTheme, Theme, ThemeOptions } from '@mui/material';
-import { theme as WePTheme } from '@wepublish/ui';
+import { Theme, ThemeOptions } from '@mui/material';
 import localFont from 'next/font/local';
 import { PartialDeep } from 'type-fest';
 
@@ -66,14 +65,7 @@ export const ttNorms = localFont({
   ],
 });
 
-const {
-  palette: { augmentColor },
-} = WePTheme;
-
-const theme = createTheme(WePTheme, {
-  palette: {
-    primary: augmentColor({ color: { main: '#dc0d15' } }),
-  },
+const theme = {
   typography: {
     h1: {
       fontFamily: [sabon.style.fontFamily, 'sans-serif'].join(','),
@@ -161,6 +153,6 @@ const theme = createTheme(WePTheme, {
       fontFamily: [ttNorms.style.fontFamily, 'sans-serif'].join(','),
     },
   },
-} as PartialDeep<Theme> | ThemeOptions);
+} as PartialDeep<Theme> | ThemeOptions;
 
 export { theme as default };

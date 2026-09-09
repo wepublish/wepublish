@@ -1,15 +1,15 @@
 import { PaymentAmountPicker } from '@wepublish/membership/website';
-import { BuilderPaymentAmountProps } from '@wepublish/website/builder';
+import { BuilderPaymentAmountPickerProps } from '@wepublish/website/builder';
 import { forwardRef } from 'react';
 
 export const FlimmerPaymentAmountPicker = forwardRef<
   HTMLInputElement,
-  BuilderPaymentAmountProps
+  BuilderPaymentAmountPickerProps
 >((props, ref) => (
   <PaymentAmountPicker
     {...props}
     ref={ref}
-    pickerItems={[1000, 1500, 2000]}
+    presetAmounts={props.presetAmounts ?? [1000, 1500, 2000]}
   />
 ));
 

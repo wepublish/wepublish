@@ -4,7 +4,8 @@ import {
   BuilderTransactionFeeProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { forwardRef, useId } from 'react';
+import { forwardRef, PropsWithChildren, useId } from 'react';
+import { useTranslation } from 'react-i18next';
 import { MdFavorite } from 'react-icons/md';
 
 const iconSize = 32;
@@ -37,6 +38,10 @@ export const TransactionFeeIcon = styled('div')`
   transform: translate3d(-50%, -50%, 0);
 `;
 
+const TransactionFeeControl = ({ children }: PropsWithChildren) => (
+  <>{children}</>
+);
+
 export const TransactionFee = forwardRef<
   HTMLButtonElement,
   BuilderTransactionFeeProps
@@ -45,12 +50,13 @@ export const TransactionFee = forwardRef<
   const {
     meta: { siteTitle },
   } = useWebsiteBuilder();
+  const { t } = useTranslation();
 
   return (
     <TransactionFeeWrapper
       className={className}
       control={
-        <>
+        <TransactionFeeControl>
           <TransactionFeeIcon>
             <MdFavorite />
           </TransactionFeeIcon>
@@ -63,12 +69,9 @@ export const TransactionFee = forwardRef<
             onChange={(_, checked) => onChange(checked)}
             color="error"
           />
-        </>
+        </TransactionFeeControl>
       }
-      label={
-        text ??
-        `Ja, ich will die Bearbeitungsgebühren von 2% übernehmen und damit ${siteTitle} zusätzlich unterstützen.`
-      }
+      label={text ?? t('subscribe.transactionFee.label', { siteTitle })}
     />
   );
 });

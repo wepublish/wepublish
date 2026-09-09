@@ -11,7 +11,14 @@
       "cache": true
     },
     "test": {
-      "inputs": ["default", "^production", "{workspaceRoot}/jest.preset.js"],
+      "inputs": [
+        "default",
+        "^production",
+        "{workspaceRoot}/jest.preset.js",
+        "{workspaceRoot}/vitest.shared.ts",
+        "{workspaceRoot}/vitest.setup-tests.ts",
+        "{workspaceRoot}/vitest.emotion-serializer.ts"
+      ],
       "cache": true
     },
     "build-storybook": {
@@ -34,12 +41,16 @@
       "inputs": ["default", "^production", "{workspaceRoot}/jest.preset.js"],
       "cache": true,
       "options": {
-        "passWithNoTests": true
+        "passWithNoTests": true,
+        "runInBand": true
       },
       "configurations": {
         "ci": {
           "ci": true,
           "codeCoverage": true
+        },
+        "update": {
+          "updateSnapshot": true
         }
       }
     },
@@ -66,6 +77,7 @@
       "!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
       "!{projectRoot}/tsconfig.spec.json",
       "!{projectRoot}/jest.config.[jt]s",
+      "!{projectRoot}/vitest.config.[jt]s",
       "!{projectRoot}/.storybook/**/*",
       "!{projectRoot}/**/*.stories.@(js|jsx|ts|tsx|mdx)",
       "!{projectRoot}/src/test-setup.[jt]s",

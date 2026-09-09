@@ -48,6 +48,9 @@ export class InvoiceItem {
   amount!: number;
   @Field(() => Int)
   total!: number;
+
+  @Field(() => String, { nullable: true })
+  goodieId?: string;
 }
 
 @InputType()
@@ -144,6 +147,8 @@ export class InvoiceFilter {
   userID?: string;
   @Field({ nullable: true })
   subscriptionID?: string;
+  @Field({ nullable: true })
+  discountCodeId?: string;
 }
 
 @ArgsType()

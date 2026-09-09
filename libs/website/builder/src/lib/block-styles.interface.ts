@@ -20,6 +20,7 @@ export type BuilderSliderConfig = {
   dragDisabled?: boolean;
   detailsChanged?: (slider: any) => void;
   slideGap?: number;
+  origin?: 'auto' | 'center' | number;
 };
 
 export type BuilderBlockStyleProps = {

@@ -14,6 +14,7 @@ import { Commands } from './editor/extensions/commands';
 import { commandSuggestions } from './editor/extensions/commands/command-suggestions';
 import { InvisibleCharacters } from './editor/extensions/invisible-characters';
 import { HeadingId } from './editor/extensions/heading-id';
+import { LinkVariant } from './editor/extensions/link-variant';
 import { TableCellWithBorder, TableHeaderWithBorder } from './editor/table';
 import { SmilieReplacer } from './editor/extensions/emoji';
 
@@ -89,6 +90,12 @@ const extensions = [
   }),
   TableCellWithBorder,
   TableHeaderWithBorder,
+  LinkVariant.configure({
+    variants: [
+      { value: 'buttonLinkMain', label: 'Button (Main)' },
+      { value: 'buttonLinkSecondary', label: 'Button (Secondary)' },
+    ],
+  }),
 ];
 
 export const editorConfig: UseEditorOptions = {

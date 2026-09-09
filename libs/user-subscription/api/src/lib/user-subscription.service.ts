@@ -24,12 +24,13 @@ import {
   ExtendSubscriptionArgs,
 } from './subscription.model';
 import { PaymentsService } from '@wepublish/payment/api';
-import { logger, PrimeDataLoader } from '@wepublish/utils/api';
+import { logger } from '@wepublish/utils/api';
 import { unselectPassword } from '@wepublish/authentication/api';
 import {
   calculateAmountForPeriodicity,
+  GoodieService,
   MemberContextService,
-  VoucherDataloader,
+  DiscountCodeService,
 } from '@wepublish/membership/api';
 
 export type SubscriptionWithRelations = Subscription & {
@@ -44,7 +45,9 @@ export class UserSubscriptionService {
     private payments: PaymentsService,
     private memberPlanService: MemberPlanService,
     private memberPlanDataloader: MemberPlanDataloader,
-    private memberContext: MemberContextService
+    private memberContext: MemberContextService,
+    private discountCodeservice: DiscountCodeService,
+    private goodieService: GoodieService
   ) {}
 
   public async getUserSubscriptions(userId: string) {
@@ -55,48 +58,30 @@ export class UserSubscriptionService {
     });
   }
 
-  @PrimeDataLoader(VoucherDataloader)
-  async getValidVoucher(voucher: string, memberPlanId: string) {
-    const voucherObj = await this.prisma.voucher.findUnique({
-      where: {
-        code_memberPlanId: {
-          code: voucher.toLowerCase(),
-          memberPlanId,
-        },
-      },
-    });
-
-    if (!voucherObj || voucherObj.validFrom > new Date()) {
-      throw new BadRequestException('Voucher is invalid.');
-    }
-
-    if (new Date() > voucherObj.validTo) {
-      throw new BadRequestException('Voucher has expired.');
-    }
-
-    return voucherObj;
-  }
-
   async createSubscription(
     userId: string,
-    { voucher, ...args }: CreateSubscriptionArgs
+    { discountCode, ...args }: CreateSubscriptionArgs
   ) {
     const { memberPlan, paymentMethod } =
       await this.validateSubscriptionInput(args);
 
     let discount: number | undefined = undefined;
-    let voucherId: string | undefined = undefined;
+    let discountCodeId: string | undefined = undefined;
 
-    if (voucher) {
-      const voucherObj = await this.getValidVoucher(voucher, memberPlan.id);
+    if (discountCode) {
+      const discountCodeObj =
+        await this.discountCodeservice.getValidDiscountCode(
+          discountCode,
+          memberPlan.id
+        );
 
       discount =
         calculateAmountForPeriodicity(
           args.monthlyAmount,
           args.paymentPeriodicity
         ) *
-        (voucherObj.discountPercent / 100);
-      voucherId = voucherObj.id;
+        (discountCodeObj.discountPercent / 100);
+      discountCodeId = discountCodeObj.id;
     }
 
     const {
@@ -104,10 +89,15 @@ export class UserSubscriptionService {
       paymentPeriodicity,
       monthlyAmount,
       subscriptionProperties,
+      goodieId,
       successURL,
       failureURL,
       deactivateSubscriptionId,
     } = args;
+
+    if (goodieId) {
+      await this.goodieService.getValidGoodie(goodieId, memberPlan.id);
+    }
 
     // Check if subscription which should be deactivated exists
     let subscriptionToDeactivate: null | Subscription = null;
@@ -147,7 +137,8 @@ export class UserSubscriptionService {
         extendable: memberPlan.extendable,
         replacedSubscriptionId: subscriptionToDeactivate?.id,
         discount,
-        voucherId,
+        discountCodeId,
+        goodieId,
       });
 
     if (!invoice) {
@@ -189,7 +180,12 @@ export class UserSubscriptionService {
         paymentPeriodicity,
         monthlyAmount,
         subscriptionProperties,
+        goodieId,
       } = args;
+
+      if (goodieId) {
+        await this.goodieService.getValidGoodie(goodieId, memberPlan.id);
+      }
 
       const properties = await this.memberContext.processSubscriptionProperties(
         subscriptionProperties ?? []
@@ -208,6 +204,7 @@ export class UserSubscriptionService {
           replacedSubscriptionId: undefined,
           startsAt: undefined,
           needsConfirmation: true,
+          goodieId,
         });
 
       if (!invoice) {

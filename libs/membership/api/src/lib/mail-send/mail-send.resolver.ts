@@ -21,6 +21,17 @@ import { MailSendJobService } from './mail-send-job.service';
 import { MailSendRecipientService } from './mail-send-recipient.service';
 import { MailLogSyncService } from './mail-log-sync.service';
 
+/**
+ * `MailLogTemplate` and `MailLogRecipient` expose only these fields, so there is
+ * nothing to gain from loading the rest of the row — and plenty to lose:
+ * templates carry their full html/text body, users their password hash.
+ */
+const mailLogTemplateSelect = { select: { id: true, name: true } } as const;
+
+const mailLogRecipientSelect = {
+  select: { id: true, email: true, name: true, firstName: true },
+} as const;
+
 @Resolver()
 export class MailSendResolver {
   constructor(
@@ -167,7 +178,7 @@ export class MailSendResolver {
   async mailSendJob(@Args('id') id: string) {
     return this.prisma.mailSendJob.findUnique({
       where: { id },
-      include: { mailTemplate: true },
+      include: { mailTemplate: mailLogTemplateSelect },
     });
   }
 
@@ -184,7 +195,7 @@ export class MailSendResolver {
     const [totalCount, jobs] = await Promise.all([
       this.prisma.mailSendJob.count(),
       this.prisma.mailSendJob.findMany({
-        include: { mailTemplate: true },
+        include: { mailTemplate: mailLogTemplateSelect },
         skip,
         take: boundedTake + 1,
         orderBy: { createdAt: 'desc' },
@@ -286,7 +297,10 @@ export class MailSendResolver {
       this.prisma.mailLog.count({ where }),
       this.prisma.mailLog.findMany({
         where,
-        include: { recipient: true, mailTemplate: true },
+        include: {
+          mailTemplate: mailLogTemplateSelect,
+          recipient: mailLogRecipientSelect,
+        },
         skip,
         take: boundedTake + 1,
         orderBy: { sentDate: 'desc' },

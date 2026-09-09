@@ -1,5 +1,9 @@
 {
   "translation": {
+    "previewHandshake": {
+      "popupBlocked": "La fenêtre d'aperçu a été bloquée par le navigateur. Veuillez autoriser les pop-ups pour l'éditeur et réessayer.",
+      "notResponding": "La fenêtre d'aperçu ne répond pas. La connexion à l'aperçu a peut-être échoué."
+    },
     "oneMessages": {
       "header": "Messages de l'équipe We.Publish",
       "expand": "Développer",
@@ -117,7 +121,6 @@
         "invalidImage": "Image non valide",
         "key": "Clé",
         "lead": "Lead",
-        "leadHelpBlock": "Veuillez utiliser un lead optimisé pour le référencement",
         "loading": "Chargement ...",
         "loadMore": "Charger plus",
         "noDataToDisplay": "Pas de données à afficher",
@@ -147,6 +150,8 @@
         "removeTeaser": "Retirer le teaser",
         "seoTitle": "Titre de référencement",
         "seoTitleHelpBlock": "Veuillez utiliser un titre optimisé pour le référencement seo. <2>Guide du référencement</2>",
+        "seoDescription": "Description de référencement (SEO)",
+        "seoDescriptionHelpBlock": "Veuillez utiliser une description optimisée pour le référencement seo",
         "sharedWithPeers": "Partagé avec les peers",
         "slug": "Slug",
         "slugGuide": "Guide des slugs",
@@ -162,7 +167,6 @@
         "status": "{{stateJoin}}",
         "tags": "Tags",
         "title": "Titre",
-        "titleHelpBlock": "Veuillez utiliser un titre optimisé pour le référencement seo",
         "totalCharCount": "Le nombre total de caractères est de {{totalCharCount}}",
         "type": "Type",
         "Untitled": "Sans titre",
@@ -271,6 +275,8 @@
         "showOnPages": "Afficher sur ces pages",
         "showForLoginStatus": "Afficher pour",
         "html": "Code HTML",
+        "embedUrl": "URL d'intégration (iframe)",
+        "embedUrlHelp": "URL d'une page intégrée en iframe avec ajustement automatique de la hauteur. Les tags de l'article sont ajoutés comme paramètre ?tags=...",
         "loginStatus": {
           "ALL": "tous les visiteurs",
           "LOGGED_IN": "visiteurs connectés",
@@ -402,17 +408,48 @@
       },
       "subscribe": {
         "label": "S'abonner",
-        "selectMemberPlans": "Plans affichés",
+        "selectMemberPlans": "Plans d’abonnement affichés",
         "selectMemberPlansPlaceholder": "Afficher tous les plans",
         "selectMemberPlansSelectionHintAll": "Sans sélection, tous les plans actifs sont affichés.",
-        "selectFields": "Champs de saisie",
+        "selectFields": "Champs de saisie utilisateur",
         "selectFieldsSelectionHint": "L’email et le nom de famille sont toujours demandés. L’ordre n’a pas d’importance",
+        "goodiesHeading": "Goodies",
+        "discountCodesHeading": "Codes de réduction",
+        "showGoodies": "Afficher la sélection de goodies",
+        "showDiscountCodes": "Afficher le champ de code de réduction",
+        "goodieMinValue": {
+          "label": "Montant minimum du goodie :"
+        },
+        "hideRepeatGoodieOnUpgrade": "Lors de l’upgrade : pas de nouveau goodie",
         "FirstName": "Prénom",
         "Birthday": "Date de naissance",
         "Address": "Adresse",
         "EmailRepeated": "Répéter l’email",
         "Password": "Mot de passe",
-        "PasswordRepeated": "Répéter le mot de passe"
+        "PasswordRepeated": "Répéter le mot de passe",
+        "renderLayouts": {
+          "None": "Montant fixe",
+          "Input": "Saisie du montant",
+          "Slider": "Curseur de montant",
+          "Picker": "Montants prédéfinis"
+        },
+        "renderStylesHeading": "Ordre et affichage des plans d’abonnement",
+        "amountTileValues": {
+          "hint": "Montants des tuiles (en francs). Laisser vide pour les valeurs par défaut : 10, 15, 20.",
+          "placeholder": "p.ex. 10 15 20"
+        },
+        "showAmountInput": {
+          "label": "Saisie libre du montant",
+          "title": "En plus des tuiles, un montant libre peut être saisi."
+        },
+        "amountTileLayout": {
+          "hint": "Disposition des tuiles sur mobile",
+          "Narrow": "Étroit (2 tuiles par ligne)",
+          "Wide": "Large (1 tuile par ligne, grandes tuiles)"
+        },
+        "planAmountsTitle": "Montant minimum / cible / maximum par mois (en francs)",
+        "defaultPlanTitle": "Sélectionné par défaut — ce plan est présélectionné après le chargement de la page.",
+        "defaultPlanLabel": "Par défaut"
       },
       "image": {
         "label": "Image",
@@ -481,6 +518,62 @@
         "leadText": "Lead",
         "title": "Titre",
         "preTitle": "Pré-titre"
+      },
+      "mailchimpForm": {
+        "label": "Formulaire newsletter",
+        "general": "Général",
+        "syncProvider": "Compte Mailchimp",
+        "syncProviderPlaceholder": "Choisir un compte",
+        "list": "Liste",
+        "listPlaceholder": "Choisir une liste",
+        "interests": "Intérêts prédéfinis",
+        "interestsPlaceholder": "Choisir des intérêts",
+        "autoFocus": "Focus automatique",
+        "doubleOptIn": "Double opt-in",
+        "submitButtonLabel": "Libellé du bouton d'envoi",
+        "buttonColor": "Couleur du bouton",
+        "buttonFontColor": "Couleur du texte du bouton",
+        "mergeFieldPlaceholder": "Sélectionner un champ de fusion",
+        "emailMergeField": "Adresse e-mail",
+        "fieldUrlParam": "Paramètre URL",
+        "fieldDefaultValue": "Valeur par défaut",
+        "fieldValue": "Valeur fixe",
+        "steps": "Étapes",
+        "step": "Étape {{number}}",
+        "skipIfFieldsFilled": "Ignorer si champs remplis",
+        "skipIfInterestsFilled": "Ignorer si intérêts définis",
+        "showIfInterestsFilled": "Afficher seulement si intérêts définis",
+        "inputs": "Champs de saisie",
+        "inputType": "Type",
+        "inputTypeHelp": "Type d'information pouvant être saisie dans le champ",
+        "required": "Obligatoire",
+        "inputName": "Nom",
+        "inputNameHelp": "Nom du merge field où cette information est stockée sur Mailchimp",
+        "inputLabel": "Libellé",
+        "inputLabelHelp": "Libellé du champ de formulaire",
+        "inputDescription": "Description",
+        "inputDescriptionHelp": "Description affichée sous le champ de formulaire",
+        "fieldUrlParamHelp": "Quel paramètre URL (?foo=bar) permet de préremplir cette information",
+        "fieldDefaultValueHelp": "Valeur à stocker lorsqu'aucune information n'est saisie",
+        "fieldValueHelp": "Valeur fixe à utiliser si rien n'est saisi",
+        "advanced": "Avancé",
+        "interestOptions": "Options d'intérêt",
+        "interestOptionPlaceholder": "Choisir un intérêt",
+        "interestOptionDescription": "Description",
+        "addInterestOption": "Ajouter une option",
+        "addInput": "Ajouter un champ",
+        "addStep": "Ajouter une étape",
+        "success": "Après l'envoi",
+        "successUrl": "URL de redirection",
+        "successUrlPlaceholder": "https://…",
+        "useSuccessPage": "Page de succès au lieu d'une redirection",
+        "successPageDescription": "Description",
+        "optionLabel": "Libellé",
+        "optionBackground": "Couleur de fond",
+        "optionUrl": "URL",
+        "optionMergeFieldName": "Nom du merge field",
+        "optionMergeFieldValue": "Valeur du merge field",
+        "addSuccessOption": "Ajouter une option"
       }
     },
     "cancel": "Annuler",
@@ -764,7 +857,7 @@
         "filename": "Nom du fichier",
         "information": "Informations",
         "maxFileSize": "Taille maximale du fichier : {{maxSize}} Mo",
-        "invalidDocument": "Type de fichier non pris en charge. Formats acceptés : PDF, Word, Excel, PowerPoint, OpenDocument, CSV, TXT, ZIP",
+        "invalidDocument": "Type de fichier non pris en charge. Formats acceptés : PDF, Word, Excel, PowerPoint, OpenDocument, CSV, TXT, JSON, XML, ZIP",
         "linkCopied": "Lien copié dans le presse-papiers",
         "notFound": "Document introuvable !",
         "publicLink": "Lien public",
@@ -841,9 +934,17 @@
         "noInvoices": "Pas de factures."
       },
       "payManually": "Payer manuellement",
-      "total": "Montant facturé",
-      "unpaid": "(non payé)",
-      "userNotLoaded": "Erreur inattendue : vos données d'utilisateur trice n'ont pas pu être chargées."
+      "total": "Montant",
+      "unpaid": "non payé",
+      "userNotLoaded": "Erreur inattendue : vos données d'utilisateur trice n'ont pas pu être chargées.",
+      "table": {
+        "date": "Date",
+        "description": "Description",
+        "goodie": "Goodie",
+        "status": "Statut",
+        "action": "Action",
+        "idCopied": "ID de facture copié"
+      }
     },
     "linkPageBreakEditPanel": {
       "close": "Fermer",
@@ -1031,6 +1132,7 @@
         "user_lastLogin": "Dernière connexion",
         "user_createdAt": "Compte créé le",
         "jwt": "Jeton de connexion (JWT)",
+        "currentDate": "Date en cours",
         "optional_subscription_id": "ID d'abonnement",
         "optional_subscription_monthlyAmount": "Montant mensuel",
         "optional_subscription_periodAmount": "Montant par période",
@@ -1071,7 +1173,8 @@
         "long": "Long",
         "weekday": "Jour de la semaine",
         "time": "Heure",
-        "dateTime": "Date+heure"
+        "dateTime": "Date+heure",
+        "year": "Année"
       },
       "amountFormat": {
         "display": "Avec devise",
@@ -1248,9 +1351,12 @@
         "confirm": "Confirmer",
         "createdAt": "{{createdAt, ccc PP p}}",
         "dateExplanationPopOver": "Ceci peut être utilisé pour faire référence à des pages qui seront publiés ultérieurement. Par exemple, lorsque des posts pour les réseaux sociaux sont programmés pour êtres publiés le lendemain matin.",
-        "description": "Description du référencement (SEO)",
-        "descriptionHelpBlock": "Veuillez utiliser une description optimisée pour le référencement seo",
+        "description": "Description",
         "enterDescription": "Veuillez entrer une description seo",
+        "seoTitle": "Titre de référencement (SEO)",
+        "seoTitleHelpBlock": "Veuillez utiliser un titre optimisé pour le référencement (SEO)",
+        "seoDescription": "Description du référencement (SEO)",
+        "seoDescriptionHelpBlock": "Veuillez utiliser une description optimisée pour le référencement seo",
         "enterImage": "Veuillez ajouter une image",
         "enterSocialMediaDescription": "Veuillez entrer une description pour les réseaux sociaux",
         "enterSocialMediaTitle": "Veuillez entrer un titre pour les réseaux sociaux",
@@ -1277,8 +1383,8 @@
         "socialMediaImage": "Image pour les médias sociaux",
         "socialMediaTitle": "Titre pour les médias sociaux",
         "tags": "Tags",
-        "title": "Titre de référencement (SEO)",
-        "titleHelpBlock": "Veuillez utiliser un titre optimisé pour le référencement (SEO)",
+        "title": "Titre",
+        "titleHelpBlock": "Le titre affiché sur la page",
         "updateDate": "Date de mise à jour",
         "updateDateWarning": "La date de mise à jour ne peux pas être à antérieure à la date de publication.",
         "url": "URL",
@@ -1405,6 +1511,7 @@
     "pollAnswer": {
       "answerMissing": "Ta réponse est vide. Veuillez saisir un texte.",
       "copyVoteUrl": "Copier le lien de vote",
+      "copyVoteUrlHint": "Les liens de vote peuvent désormais être copiés directement dans le bloc de sondage de l'article ou de la page où le sondage est utilisé.",
       "deleteBtn": "Supprimer",
       "deleteModalBody": "Veux-tu supprimer irrévocablement la réponse \"{{answer}}\" ? Les résultats du sondage seront alors perdus.",
       "deleteModalTitle": "Supprimer?",
@@ -1479,6 +1586,8 @@
       },
       "link": {
         "title": "Lier le texte avec",
+        "style": "Style du lien",
+        "defaultStyle": "Lien",
         "type": "Type",
         "url": "URL",
         "web": "Web",
@@ -1615,6 +1724,7 @@
     },
     "subscriptionList": {
       "filter": {
+        "activeAt": "Actif au",
         "deactivationReason": "Motif de désactivation",
         "reasonInvoiceNotPaid": "Facture impayée",
         "reasonUserReplacedSubscription": "Remplacé par un autre abonnement",
@@ -1628,7 +1738,6 @@
         "createdAt": "Créé",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
         "deleted": "Utilisateur·trice supprimé·e",
-        "downloadCsv": "Télécharger CSV",
         "email": "Email",
         "memberPlan": "Plan membre",
         "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
@@ -1958,6 +2067,13 @@
       }
     },
     "audienceFilter": {
+      "copyPermalink": "Copier le permalien",
+      "permalinkCopied": "Permalien avec une période fixe copié dans le presse-papiers",
+      "permalinkCopyFailed": "Impossible de copier le permalien",
+      "permalinkHelpLabel": "À propos du permalien",
+      "permalinkHelpWhat": "Le permalien est un lien vers cette vue précise : la période, les plans d'abonnement, les indicateurs sélectionnés ainsi que le graphique et le tableau sont tous contenus dans l'adresse.",
+      "permalinkHelpWhy": "Vous pouvez ainsi partager une analyse avec l'équipe ou l'enregistrer comme favori, sans devoir régler les filtres à chaque fois. La période est enregistrée sous forme de dates fixes, afin que le lien affiche les mêmes chiffres plus tard.",
+      "permalinkHelpExample": "Exemple : sélectionner « Mois dernier » et le plan d'abonnement « Abonnement annuel », copier le permalien et le partager dans le chat – tout le monde voit exactement ces chiffres, même la semaine prochaine.",
       "daily": "Quotidien",
       "monthly": "Mensuel",
       "rangePickerPlaceholder": "de - à",
@@ -2045,6 +2161,15 @@
         "highProbability": "Renouvellements d'abonnement subséquents"
       }
     },
+    "audienceTableExport": {
+      "download": "Télécharger",
+      "csv": "CSV (.csv)",
+      "xlsx": "Excel (.xlsx)",
+      "header": {
+        "renewedAndReplaced": "Abonnements renouvelés et remplacés",
+        "totalToBeRenewed": "Abonnements à renouveler"
+      }
+    },
     "paywall": {
       "navbar": "Paywall",
       "form": {
@@ -2084,11 +2209,11 @@
         "anyMemberPlan": "Tous les plans d’abonnement"
       }
     },
-    "voucher": {
-      "navbar": "Bon de réduction",
+    "discountCode": {
+      "navbar": "Codes de réduction",
       "form": {
-        "createTitle": "Créer un bon de réduction",
-        "editTitle": "Modifier le bon de réduction \"{{ voucher }}\"",
+        "createTitle": "Créer un code de réduction",
+        "editTitle": "Modifier le code de réduction \"{{ discountCode }}\"",
         "code": "Code",
         "discountPercent": "Réduction (%)",
         "validFrom": "Valable dès le",
@@ -2096,8 +2221,8 @@
         "memberPlan": "Plan d'abonnement"
       },
       "overview": {
-        "title": "Bons de réduction",
-        "createVoucher": "Nouveau bon de réduction",
+        "title": "Codes de réduction",
+        "createDiscountCode": "Nouveau code de réduction",
         "active": "Actif",
         "valid": "Valide",
         "code": "Code",
@@ -2106,8 +2231,51 @@
         "validFrom": "Valable dès le",
         "validTo": "Valable jusqu'au",
         "areYouSure": "Êtes-vous sûr(e) ?",
-        "areYouSureBody": "Le bon de réduction \"{{ voucher }}\" sera définitivement supprimé et cette action est irréversible.",
-        "areYouSureConfirmation": "Supprimer le bon de réduction"
+        "areYouSureBody": "Le code de réduction \"{{ discountCode }}\" sera définitivement supprimé et cette action est irréversible.",
+        "areYouSureConfirmation": "Supprimer le code de réduction",
+        "usage": "Utilisé",
+        "usageValue": "{{total}} ({{paid}} payé(s))"
+      },
+      "usage": {
+        "title": "Utilisations de \"{{ discountCode }}\"",
+        "summary": "{{total}} utilisations, dont {{paid}} payée(s)",
+        "back": "Retour à l'aperçu",
+        "date": "Date",
+        "mail": "E-mail",
+        "amount": "Montant",
+        "status": "Statut",
+        "paid": "Payé",
+        "open": "Ouvert",
+        "canceled": "Annulé",
+        "subscription": "Abonnement",
+        "showSubscription": "Ouvrir l'abonnement"
+      }
+    },
+    "goodie": {
+      "navbar": "Goodies",
+      "form": {
+        "createTitle": "Créer un goodie",
+        "editTitle": "Modifier le goodie \"{{ goodie }}\"",
+        "name": "Nom",
+        "description": "Description",
+        "stock": "Stock",
+        "active": "Actif",
+        "image": "Image",
+        "memberPlans": "Plans d'abonnement"
+      },
+      "overview": {
+        "title": "Goodies",
+        "createGoodie": "Nouveau goodie",
+        "name": "Nom",
+        "memberPlans": "Plans d'abonnement",
+        "stock": "Stock",
+        "availableStock": "Disponible",
+        "active": "Actif",
+        "createdAt": "Créé le",
+        "unlimited": "∞",
+        "areYouSure": "Êtes-vous sûr(e) ?",
+        "areYouSureBody": "Le goodie \"{{ goodie }}\" sera définitivement supprimé et cette action est irréversible.",
+        "areYouSureConfirmation": "Supprimer le goodie"
       }
     },
     "paymentMethodEditPanel": {
@@ -2115,8 +2283,13 @@
       "gracePeriodHelpText": "Si votre site web utilise un paywall, les utilisateurs peuvent lire immédiatement ou continuer à lire tous les contenus, même s'ils n'ont pas souscrit d'abonnement payant, pendant le délai de paiement. Cela est utile, par exemple, en cas de virement bancaire.",
       "days": "Jours"
     },
+    "subscriptionsExport": {
+      "download": "Télécharger",
+      "csv": "CSV (.csv)",
+      "xlsx": "Excel (.xlsx)"
+    },
     "audienceCsvBtn": {
-      "exportUsers": "Télécharger CSV"
+      "exportUsers": "Télécharger les utilisateur·trice·s"
     },
     "search": "Rechercher",
     "integrations": {

@@ -22,6 +22,64 @@ const makeResolver = (
   );
 
 describe('MailSendResolver', () => {
+  // The GraphQL types for these relations are trimmed (`MailLogTemplate` exposes
+  // only id+name, `MailLogRecipient` only id/email/name/firstName), so
+  // `include: true` fetched whole rows — every template body, and the user's
+  // password hash — for fields that can never be returned.
+  describe('relation field selection', () => {
+    const templateSelect = { select: { id: true, name: true } };
+
+    it('mailLogs fetches only the exposed template and recipient fields', async () => {
+      const prisma = {
+        mailLog: {
+          count: jest.fn(async () => 0),
+          findMany: jest.fn(async () => []),
+        },
+      };
+
+      await makeResolver(prisma).mailLogs(undefined, 0, 20);
+
+      const args = (prisma.mailLog.findMany as jest.Mock).mock.calls[0][0];
+
+      expect(args.include).toEqual({
+        mailTemplate: templateSelect,
+        recipient: {
+          select: { id: true, email: true, name: true, firstName: true },
+        },
+      });
+    });
+
+    it('mailSendJobs fetches only the exposed template fields', async () => {
+      const prisma = {
+        mailSendJob: {
+          count: jest.fn(async () => 0),
+          findMany: jest.fn(async () => []),
+        },
+      };
+
+      await makeResolver(prisma).mailSendJobs(0, 20);
+
+      const args = (prisma.mailSendJob.findMany as jest.Mock).mock.calls[0][0];
+
+      expect(args.include).toEqual({ mailTemplate: templateSelect });
+    });
+
+    it('mailSendJob fetches only the exposed template fields', async () => {
+      const prisma = {
+        mailSendJob: {
+          findUnique: jest.fn(async () => null),
+        },
+      };
+
+      await makeResolver(prisma).mailSendJob('job-1');
+
+      const args = (prisma.mailSendJob.findUnique as jest.Mock).mock
+        .calls[0][0];
+
+      expect(args.include).toEqual({ mailTemplate: templateSelect });
+    });
+  });
+
   it('mailSendRecipientPreview returns both counts and template-eligibility', async () => {
     // Twelve mails, ten people: two of them match through a second subscription.
     const recipientService = {

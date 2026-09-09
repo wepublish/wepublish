@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`SettingList renders successfully 1`] = `
+exports[`SettingList > renders successfully 1`] = `
 <DocumentFragment>
   <form
     data-disabled="false"
@@ -8,17 +8,17 @@ exports[`SettingList renders successfully 1`] = `
     data-testid="form"
   >
     <div
-      class="emotion-0"
+      class="emotion-0 emotion-1"
     >
       <div
-        class="emotion-1"
+        class="emotion-2 emotion-3"
       >
         <h2>
           settingList.settings
         </h2>
       </div>
       <div
-        class="emotion-2"
+        class="emotion-4 emotion-5"
       >
         <button
           class="actionButton rs-btn-icon rs-btn"
@@ -110,7 +110,7 @@ exports[`SettingList renders successfully 1`] = `
               class="rs-col rs-col-xs-24"
             >
               <div
-                class="emotion-3 emotion-4 rs-panel rs-panel-bordered"
+                class="emotion-6 emotion-7 rs-panel rs-panel-bordered"
               >
                 <div
                   class="rs-panel-header"
@@ -139,7 +139,7 @@ exports[`SettingList renders successfully 1`] = `
                       >
                         settingList.guestCommenting
                         <div
-                          class="emotion-5 emotion-6"
+                          class="emotion-8 emotion-9"
                         >
                           <svg
                             fill="currentColor"
@@ -192,7 +192,7 @@ exports[`SettingList renders successfully 1`] = `
                       >
                         settingList.allowGuestCommentRating
                         <div
-                          class="emotion-5 emotion-6"
+                          class="emotion-8 emotion-9"
                         >
                           <svg
                             fill="currentColor"
@@ -245,7 +245,7 @@ exports[`SettingList renders successfully 1`] = `
                       >
                         settingList.allowCommentEditing
                         <div
-                          class="emotion-5 emotion-6"
+                          class="emotion-8 emotion-9"
                         >
                           <svg
                             fill="currentColor"
@@ -298,7 +298,7 @@ exports[`SettingList renders successfully 1`] = `
                       >
                         settingList.commentCharLimit
                         <div
-                          class="emotion-5 emotion-6"
+                          class="emotion-8 emotion-9"
                         >
                           <svg
                             fill="currentColor"
@@ -430,7 +430,7 @@ exports[`SettingList renders successfully 1`] = `
               class="rs-col rs-col-xs-24"
             >
               <div
-                class="emotion-3 emotion-4 rs-panel rs-panel-bordered"
+                class="emotion-6 emotion-7 rs-panel rs-panel-bordered"
               >
                 <div
                   class="rs-panel-header"
@@ -440,7 +440,7 @@ exports[`SettingList renders successfully 1`] = `
                   >
                     settingList.polls
                     <div
-                      class="emotion-5 emotion-6"
+                      class="emotion-8 emotion-9"
                     >
                       <svg
                         fill="currentColor"
@@ -509,7 +509,7 @@ exports[`SettingList renders successfully 1`] = `
               class="rs-col rs-col-xs-24"
             >
               <div
-                class="emotion-3 emotion-4 rs-panel rs-panel-bordered"
+                class="emotion-6 emotion-7 rs-panel rs-panel-bordered"
               >
                 <div
                   class="rs-panel-header"
@@ -538,7 +538,7 @@ exports[`SettingList renders successfully 1`] = `
                       >
                         settingList.newSubscriptionsApiPublic
                         <div
-                          class="emotion-5 emotion-6"
+                          class="emotion-8 emotion-9"
                         >
                           <svg
                             fill="currentColor"
@@ -591,7 +591,7 @@ exports[`SettingList renders successfully 1`] = `
                       >
                         settingList.activeSubscriptionsApiPublic
                         <div
-                          class="emotion-5 emotion-6"
+                          class="emotion-8 emotion-9"
                         >
                           <svg
                             fill="currentColor"
@@ -644,7 +644,7 @@ exports[`SettingList renders successfully 1`] = `
                       >
                         settingList.renewingSubscriptionsApiPublic
                         <div
-                          class="emotion-5 emotion-6"
+                          class="emotion-8 emotion-9"
                         >
                           <svg
                             fill="currentColor"
@@ -697,7 +697,7 @@ exports[`SettingList renders successfully 1`] = `
                       >
                         settingList.newDeactivationsApiPublic
                         <div
-                          class="emotion-5 emotion-6"
+                          class="emotion-8 emotion-9"
                         >
                           <svg
                             fill="currentColor"
@@ -750,7 +750,7 @@ exports[`SettingList renders successfully 1`] = `
                       >
                         settingList.expectedRevenueApiPublic
                         <div
-                          class="emotion-5 emotion-6"
+                          class="emotion-8 emotion-9"
                         >
                           <svg
                             fill="currentColor"
@@ -803,7 +803,7 @@ exports[`SettingList renders successfully 1`] = `
                       >
                         settingList.revenueApiPublic
                         <div
-                          class="emotion-5 emotion-6"
+                          class="emotion-8 emotion-9"
                         >
                           <svg
                             fill="currentColor"
@@ -861,7 +861,7 @@ exports[`SettingList renders successfully 1`] = `
               class="rs-col rs-col-xs-24"
             >
               <div
-                class="emotion-3 emotion-4 rs-panel rs-panel-bordered"
+                class="emotion-6 emotion-7 rs-panel rs-panel-bordered"
               >
                 <div
                   class="rs-panel-header"
@@ -890,7 +890,7 @@ exports[`SettingList renders successfully 1`] = `
                       >
                         settingList.loginMinutes
                         <div
-                          class="emotion-5 emotion-6"
+                          class="emotion-8 emotion-9"
                         >
                           <svg
                             fill="currentColor"
@@ -1030,7 +1030,7 @@ exports[`SettingList renders successfully 1`] = `
                       >
                         settingList.passwordToken
                         <div
-                          class="emotion-5 emotion-6"
+                          class="emotion-8 emotion-9"
                         >
                           <svg
                             fill="currentColor"
@@ -1167,7 +1167,7 @@ exports[`SettingList renders successfully 1`] = `
               class="rs-col rs-col-xs-24"
             >
               <div
-                class="emotion-3 emotion-4 rs-panel rs-panel-bordered"
+                class="emotion-6 emotion-7 rs-panel rs-panel-bordered"
               >
                 <div
                   class="rs-panel-header"
@@ -1177,7 +1177,7 @@ exports[`SettingList renders successfully 1`] = `
                   >
                     settingList.peering
                     <div
-                      class="emotion-5 emotion-6"
+                      class="emotion-8 emotion-9"
                     >
                       <svg
                         fill="currentColor"
@@ -1334,7 +1334,7 @@ exports[`SettingList renders successfully 1`] = `
             class="rs-col rs-col-xs-24"
           >
             <div
-              class="emotion-3 emotion-4 rs-panel rs-panel-bordered"
+              class="emotion-6 emotion-7 rs-panel rs-panel-bordered"
             >
               <div
                 class="rs-panel-header"
@@ -1363,7 +1363,7 @@ exports[`SettingList renders successfully 1`] = `
                     >
                       settingList.newArticlePeering
                       <div
-                        class="emotion-5 emotion-6"
+                        class="emotion-8 emotion-9"
                       >
                         <svg
                           fill="currentColor"
@@ -1416,7 +1416,7 @@ exports[`SettingList renders successfully 1`] = `
                     >
                       settingList.newArticlePaywall
                       <div
-                        class="emotion-5 emotion-6"
+                        class="emotion-8 emotion-9"
                       >
                         <svg
                           fill="currentColor"
@@ -1522,7 +1522,7 @@ exports[`SettingList renders successfully 1`] = `
                     >
                       settingList.showPendingWhenNotPublished
                       <div
-                        class="emotion-5 emotion-6"
+                        class="emotion-8 emotion-9"
                       >
                         <svg
                           fill="currentColor"

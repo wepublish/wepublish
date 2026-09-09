@@ -63,7 +63,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
           variables: {
             take: 1,
             skip: 0,
-            filter: { tagsInclude: [tagId, chipTagId] },
+            filter: { allTagsIn: [tagId, chipTagId] },
           },
         })
       )

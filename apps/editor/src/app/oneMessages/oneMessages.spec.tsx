@@ -1,28 +1,26 @@
-/**
- * @jest-environment jsdom
- */
+import type { Mock } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
 
 import { OneMessages } from './oneMessages';
 import { isMinimized, setMinimized, useOneMessages } from './oneMessages.hooks';
 import type { OneMessage } from './oneMessages.types';
 
-jest.mock('./oneMessages.hooks', () => ({
-  useOneMessages: jest.fn(),
-  isMinimized: jest.fn(() => false),
-  setMinimized: jest.fn(),
+vi.mock('./oneMessages.hooks', () => ({
+  useOneMessages: vi.fn(),
+  isMinimized: vi.fn(() => false),
+  setMinimized: vi.fn(),
 }));
 
-jest.mock('react-i18next', () => ({
+vi.mock('react-i18next', () => ({
   useTranslation: () => ({
     t: (key: string) => key,
     i18n: { language: 'en' },
   }),
 }));
 
-const mockedUseOneMessages = useOneMessages as jest.Mock;
-const mockedIsMinimized = isMinimized as jest.Mock;
-const mockedSetMinimized = setMinimized as jest.Mock;
+const mockedUseOneMessages = useOneMessages as Mock;
+const mockedIsMinimized = isMinimized as Mock;
+const mockedSetMinimized = setMinimized as Mock;
 
 const message = (overrides: Partial<OneMessage> = {}): OneMessage => ({
   id: 1,

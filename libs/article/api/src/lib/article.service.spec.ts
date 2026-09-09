@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ArticleService } from './article.service';
+import { ArticleService, createArticleFilter } from './article.service';
 import { Article, PrismaClient, TaggedArticles } from '@prisma/client';
 import { ArticleDataloaderService } from './article-dataloader.service';
 import { DateFilterComparison, SortOrder } from '@wepublish/utils/api';
@@ -106,6 +106,7 @@ describe('ArticleService', () => {
         ids: ['12345'],
         peerId: '1234',
         includeHidden: false,
+        excludeHideAuthor: true,
         preTitle: 'preTitle',
         title: 'title',
         lead: 'lead',
@@ -133,6 +134,54 @@ describe('ArticleService', () => {
     expect(prismaMock.article.count?.mock.calls[0]).toMatchSnapshot();
   });
 
+  describe('createArticleFilter tag filters', () => {
+    it('should include only articles having at least one of the given tags', () => {
+      expect(createArticleFilter({ tags: ['tag-1', 'tag-2'] })).toEqual({
+        AND: [
+          { tags: { some: { tagId: { in: ['tag-1', 'tag-2'] } } } },
+          { hidden: false },
+        ],
+      });
+    });
+
+    it('should exclude articles having any of the tagsNotIn tags', () => {
+      // `none` keeps untagged articles and drops articles carrying an
+      // excluded tag even when they also have other tags
+      expect(createArticleFilter({ tagsNotIn: ['tag-excluded'] })).toEqual({
+        AND: [
+          { tags: { none: { tagId: { in: ['tag-excluded'] } } } },
+          { hidden: false },
+        ],
+      });
+    });
+
+    it('should include only articles having every one of the allTagsIn tags', () => {
+      expect(createArticleFilter({ allTagsIn: ['tag-1', 'tag-2'] })).toEqual({
+        AND: [
+          {
+            AND: [
+              { tags: { some: { tagId: 'tag-1' } } },
+              { tags: { some: { tagId: 'tag-2' } } },
+            ],
+          },
+          { hidden: false },
+        ],
+      });
+    });
+
+    it('should combine tags and tagsNotIn so both must hold', () => {
+      expect(
+        createArticleFilter({ tags: ['tag-1'], tagsNotIn: ['tag-excluded'] })
+      ).toEqual({
+        AND: [
+          { tags: { some: { tagId: { in: ['tag-1'] } } } },
+          { tags: { none: { tagId: { in: ['tag-excluded'] } } } },
+          { hidden: false },
+        ],
+      });
+    });
+  });
+
   it('should query articles based on full text search', async () => {
     prismaMock.article.findMany?.mockResolvedValue([]);
     prismaMock.$queryRaw.mockResolvedValue([{ id: '1234' }, { id: '1235' }]);
@@ -144,6 +193,7 @@ describe('ArticleService', () => {
         excludeIds: ['1234'],
         peerId: '1234',
         includeHidden: false,
+        excludeHideAuthor: true,
         preTitle: 'preTitle',
         title: 'title',
         lead: 'lead',
@@ -184,6 +234,7 @@ describe('ArticleService', () => {
         ids: ['12345'],
         peerId: '1234',
         includeHidden: false,
+        excludeHideAuthor: true,
         preTitle: 'preTitle',
         title: 'title',
         lead: 'lead',

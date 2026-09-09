@@ -15,6 +15,7 @@ export * from './lib/iframe/iframe-block';
 export * from './lib/instagram/instagram-post-block';
 export * from './lib/youtube/youtube-video-block';
 export * from './lib/html/html-block';
+export * from './lib/mailchimp-form/mailchimp-form-block';
 export * from './lib/subscribe/subscribe-block';
 export * from './lib/subscribe/subscribe-block.context';
 export * from './lib/subscribe/subscribe-block.provider';

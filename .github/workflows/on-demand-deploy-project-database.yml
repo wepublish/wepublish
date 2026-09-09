@@ -65,9 +65,83 @@ jobs:
           PROJECT: ${{ inputs.project }}
           INSTANCE_NAME: ${{ steps.resolve.outputs.instance_name }}
         run: |
-          jq -nc --arg project "$PROJECT" --arg instance_name "$INSTANCE_NAME" \
+          RESPONSE=$(jq -nc --arg project "$PROJECT" --arg instance_name "$INSTANCE_NAME" \
             '{project:$project, instance_name:$instance_name}' \
             | curl -fsS -X POST "$DATABASE_SYNC_WEBHOOK_URL" \
                 -H "Authorization: Bearer $DATABASE_SYNC_WEBHOOK_TOKEN" \
                 -H "Content-Type: application/json" \
-                --data-binary @-
+                --data-binary @-)
+          echo "$RESPONSE"
+
+          STATUS=$(jq -r '.status // empty' <<<"$RESPONSE")
+          if [ "$STATUS" != "accepted" ]; then
+            echo "::error::Sync was not accepted (status: ${STATUS:-unknown}). Another sync may be in progress."
+            exit 1
+          fi
+
+      - name: Wait for database sync to finish
+        env:
+          # Same webhook URL as the trigger step: the gateway maps one secret
+          # path to one fixed target, so the runner serves the sync status on
+          # GET /sync. POST triggers, GET polls.
+          DATABASE_SYNC_WEBHOOK_URL: ${{ secrets.DATABASE_SYNC_WEBHOOK_URL }}
+          DATABASE_SYNC_WEBHOOK_TOKEN: ${{ secrets.DATABASE_SYNC_WEBHOOK_TOKEN }}
+          PROJECT: ${{ inputs.project }}
+          INSTANCE_NAME: ${{ steps.resolve.outputs.instance_name }}
+        run: |
+          RESPONSE_FILE="${RUNNER_TEMP:-/tmp}/db-sync-status.json"
+          DEADLINE=$(( $(date +%s) + 1200 ))
+          MAX_UNREADABLE=4
+          UNREADABLE=0
+
+          while true; do
+            if [ "$(date +%s)" -gt "$DEADLINE" ]; then
+              echo "::error::Timed out waiting for the database sync to finish (20 minutes)."
+              exit 1
+            fi
+
+            HTTP_CODE=$(curl -sS -o "$RESPONSE_FILE" -w '%{http_code}' \
+              -H "Authorization: Bearer $DATABASE_SYNC_WEBHOOK_TOKEN" \
+              --get --data-urlencode "project=$PROJECT" --data-urlencode "instance_name=$INSTANCE_NAME" \
+              "$DATABASE_SYNC_WEBHOOK_URL" || true)
+            case "$HTTP_CODE" in '' | *[!0-9]*) HTTP_CODE=000 ;; esac
+            BODY=$(cat "$RESPONSE_FILE" 2>/dev/null || true)
+
+            case "$HTTP_CODE" in
+              200)
+                UNREADABLE=0
+                STATUS=$(jq -r '.status // empty' <<<"$BODY" 2>/dev/null || true)
+                case "$STATUS" in
+                  success)
+                    echo "Database sync finished successfully."
+                    exit 0
+                    ;;
+                  failed)
+                    echo "::error::Database sync failed: $(jq -r '.error // "unknown error"' <<<"$BODY")"
+                    exit 1
+                    ;;
+                  running)
+                    echo "Sync still running..."
+                    ;;
+                  *)
+                    echo "::warning::Unexpected status payload: ${BODY:-<empty>}"
+                    ;;
+                esac
+                ;;
+              401 | 403)
+                echo "::error::The status endpoint rejected the token (HTTP $HTTP_CODE). The gateway webhook must forward the Authorization header to the runner ('forward_headers: [Authorization]')."
+                exit 1
+                ;;
+              *)
+                UNREADABLE=$((UNREADABLE + 1))
+                echo "Could not read status (HTTP $HTTP_CODE, attempt $UNREADABLE/$MAX_UNREADABLE): ${BODY:-<empty>}"
+                ;;
+            esac
+
+            if [ "$UNREADABLE" -ge "$MAX_UNREADABLE" ]; then
+              echo "::error::Gave up reading the sync status after $MAX_UNREADABLE consecutive failures (last HTTP $HTTP_CODE). A persistent 404 means the gateway webhook does not allow GET (it needs 'methods: [\"POST\", \"GET\"]'), or the runner restarted and lost its in-memory status."
+              exit 1
+            fi
+
+            sleep 15
+          done

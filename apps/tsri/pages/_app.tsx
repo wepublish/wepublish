@@ -167,7 +167,7 @@ function CustomApp({
               ArticleDate={TsriArticleDate}
               ArticleMeta={TsriArticleMeta}
               ArticleList={TsriArticleList}
-              PaymentAmount={TsriPaymentAmountPicker}
+              PaymentAmountPicker={TsriPaymentAmountPicker}
               ArticleAuthor={TsriArticleAuthor}
               ArticleAuthors={TsriArticleAuthors}
               Author={TsriAuthor}

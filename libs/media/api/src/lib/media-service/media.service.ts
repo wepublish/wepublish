@@ -19,12 +19,17 @@ import {
 import { JwksClientService } from '../authentication/jwks-client.service';
 import {
   getDocumentCategory,
+  getMimeTypeForExtension,
   DocumentCategory,
 } from './supported-documents-validator';
 
 export const MEDIA_SERVICE_MODULE_OPTIONS = Symbol(
   'MEDIA_SERVICE_MODULE_OPTIONS'
 );
+
+const GENERIC_CONTENT_TYPE = 'application/octet-stream';
+
+const GENERIC_CONTENT_TYPES = [GENERIC_CONTENT_TYPE, 'binary/octet-stream'];
 
 export type MediaServiceConfig = {
   uploadBucket: string;
@@ -260,7 +265,7 @@ export class MediaService {
           uri,
           transformedBuffer,
           info.size,
-          { ContentType: `image/webp` }
+          { 'Content-Type': `image/webp` }
         );
       } else {
         exists = false;
@@ -270,7 +275,7 @@ export class MediaService {
           uri,
           transformedBuffer,
           info.size,
-          { ContentType: `image/webp` }
+          { 'Content-Type': `image/webp` }
         );
       }
       return { uri, exists };
@@ -280,13 +285,25 @@ export class MediaService {
   }
 
   public async saveImage(imageId: string, image: Buffer) {
-    const metadata = await sharp(image).metadata();
+    let buffer = image;
+    let metadata = await sharp(image).metadata();
+
+    const isAnimated = (metadata.pages ?? 1) > 1;
+    if (metadata.orientation && metadata.orientation > 1 && !isAnimated) {
+      const pipeline = sharp(image).rotate().withMetadata();
+      if (metadata.format === 'jpeg') {
+        pipeline.jpeg({ quality: 95, mozjpeg: true });
+      }
+      buffer = await pipeline.toBuffer();
+      metadata = await sharp(buffer).metadata();
+    }
+
     await this.storage.saveFile(
       this.config.uploadBucket,
       `images/${imageId}`,
-      image,
+      buffer,
       metadata.size,
-      { ContentType: `image/${metadata.format}` }
+      { 'Content-Type': `image/${metadata.format}` }
     );
     return metadata;
   }
@@ -329,7 +346,7 @@ export class MediaService {
       objectKey,
       document,
       document.length,
-      { ContentType: mimeType }
+      { 'Content-Type': mimeType }
     );
     return { size: document.length };
   }
@@ -348,10 +365,12 @@ export class MediaService {
 
     const objectUri = uploadedFile.name;
 
-    // Check if already copied to transformation bucket
-    if (
-      await this.storage.hasFile(this.config.transformationBucket, objectUri)
-    ) {
+    // Check if already copied to transformation bucket with the current content type
+    const [contentType, copiedContentType] = await Promise.all([
+      this.getDocumentContentType(objectUri),
+      this.getStoredContentType(this.config.transformationBucket, objectUri),
+    ]);
+    if (copiedContentType === contentType) {
       return { uri: objectUri, exists: true };
     }
 
@@ -373,7 +392,7 @@ export class MediaService {
         objectUri,
         buffer,
         buffer.length,
-        { ContentType: 'application/pdf' }
+        { 'Content-Type': contentType }
       );
 
       return { uri: objectUri, exists: true };
@@ -383,6 +402,35 @@ export class MediaService {
       }
       throw e;
     }
+  }
+
+  private async getStoredContentType(
+    bucket: string,
+    objectUri: string
+  ): Promise<string | undefined> {
+    const information = await this.storage
+      .getFileInformation(bucket, objectUri)
+      .catch(() => undefined);
+    const contentType = Object.entries(information?.metaData ?? {}).find(
+      ([key]) => key.toLowerCase() === 'content-type'
+    )?.[1];
+    return typeof contentType === 'string' ? contentType : undefined;
+  }
+
+  private async getDocumentContentType(objectUri: string): Promise<string> {
+    const uploadedContentType = await this.getStoredContentType(
+      this.config.uploadBucket,
+      objectUri
+    );
+    if (
+      uploadedContentType &&
+      !GENERIC_CONTENT_TYPES.includes(uploadedContentType)
+    ) {
+      return uploadedContentType;
+    }
+    return (
+      getMimeTypeForExtension(path.extname(objectUri)) ?? GENERIC_CONTENT_TYPE
+    );
   }
 
   public async hasDocument(documentId: string): Promise<boolean> {
@@ -448,28 +496,10 @@ export class MediaService {
       return { uri: thumbnailUri, exists: false };
     }
 
-    // Determine file category from extension in the stored filename
-    const ext = path.extname(uploadedFile.name).toLowerCase();
-    const extToMime: Record<string, string> = {
-      '.pdf': 'application/pdf',
-      '.docx':
-        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-      '.doc': 'application/msword',
-      '.xlsx':
-        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      '.xls': 'application/vnd.ms-excel',
-      '.pptx':
-        'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-      '.ppt': 'application/vnd.ms-powerpoint',
-      '.odt': 'application/vnd.oasis.opendocument.text',
-      '.ods': 'application/vnd.oasis.opendocument.spreadsheet',
-      '.odp': 'application/vnd.oasis.opendocument.presentation',
-      '.csv': 'text/csv',
-      '.txt': 'text/plain',
-      '.zip': 'application/zip',
-    };
-    const contentType = extToMime[ext] ?? 'application/octet-stream';
-    const category = getDocumentCategory(contentType);
+    // Determine file category from the stored content type
+    const category = getDocumentCategory(
+      await this.getDocumentContentType(uploadedFile.name)
+    );
 
     // For PDFs, generate a preview of the first page
     if (category === 'pdf') {
@@ -507,7 +537,7 @@ export class MediaService {
         thumbnailUri,
         thumbnailBuffer,
         thumbnailBuffer.length,
-        { ContentType: 'image/webp' }
+        { 'Content-Type': 'image/webp' }
       );
 
       return { uri: thumbnailUri, exists: true };
@@ -599,7 +629,7 @@ export class MediaService {
         thumbnailUri,
         thumbnailBuffer,
         thumbnailBuffer.length,
-        { ContentType: 'image/webp' }
+        { 'Content-Type': 'image/webp' }
       );
 
       cleanup();

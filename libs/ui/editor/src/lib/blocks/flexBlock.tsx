@@ -50,6 +50,8 @@ import { BlockMap } from './blockMap';
 import { IconWrapper } from './teaserGridBlock';
 import {
   BlockValue,
+  EmbedBlockValue,
+  EmbedType,
   FlexAlignment,
   FlexBlockValue,
   FlexBlockWithAlignment,
@@ -232,26 +234,61 @@ export function FlexItem({
 
 const ContentForFlexBlockWrapper = styled('div')`
   width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
   align-self: end;
   padding: 0.25rem;
   background-color: rgba(0, 0, 0, 0.4);
   min-height: 2.5rem;
   color: white;
+
+  white-space: pre-line;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+
+  word-wrap: break-word;
 `;
 
-const getContentHintForFlexBlockNestedBlock = (block: BlockValue): string => {
-  if (!block) {
-    return '';
-  }
+const getContentHintForFlexBlockNestedBlock = (block: BlockListValue) => {
+  if (!block) return '';
 
   if (block.type === 'TeaserSlots') {
     return block.value?.title || 'Teaser Slots';
   }
+  if (block.type === 'Image') {
+    return block.value?.image?.filename || 'Image';
+  }
+  if (block.type === 'Embed') {
+    const embed = block.value as EmbedBlockValue | undefined;
+    if (!embed) return 'Embed';
 
+    switch (embed.type) {
+      case EmbedType.YouTubeVideo:
+        return `YouTube: ${embed.videoID || 'no ID'}`;
+      case EmbedType.VimeoVideo:
+        return `Vimeo: ${embed.videoID || 'no ID'}`;
+      case EmbedType.TikTokVideo:
+        return `TikTok: ${embed.videoID || 'no ID'}`;
+      case EmbedType.SoundCloudTrack:
+        return `SoundCloud: ${embed.trackID || 'no ID'}`;
+      case EmbedType.InstagramPost:
+        return `Instagram: ${embed.postID || 'no ID'}`;
+      case EmbedType.TwitterTweet:
+        return `Twitter: ${embed.tweetID || 'no ID'}`;
+      case EmbedType.FacebookPost:
+        return `Facebook Post: ${embed.postID || 'no ID'}`;
+      case EmbedType.FacebookVideo:
+        return `Facebook Video: ${embed.videoID || 'no ID'}`;
+      case EmbedType.Other:
+        return embed.title || embed.url || 'Embed';
+      default:
+        return 'Embed';
+    }
+  }
   if (block.type === 'RichText') {
-    const text = toPlaintext(block.value?.richText?.content)?.trim();
+    const text = toPlaintext(block.value?.richText);
     if (!text) {
       return 'Rich Text';
     }
@@ -272,12 +309,63 @@ const getContentHintForFlexBlockNestedBlock = (block: BlockValue): string => {
   return 'unknown block value';
 };
 
-export const ContentForFlexBlock = ({ block }: { block: BlockValue }) => {
-  return (
-    <ContentForFlexBlockWrapper>
-      {getContentHintForFlexBlockNestedBlock(block)}
-    </ContentForFlexBlockWrapper>
-  );
+const oEmbedUrlForEmbed = (embed: EmbedBlockValue): string | null => {
+  switch (embed.type) {
+    case EmbedType.YouTubeVideo:
+      return embed.videoID ?
+          `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${embed.videoID}&format=json`
+        : null;
+    case EmbedType.VimeoVideo:
+      return embed.videoID ?
+          `https://vimeo.com/api/oembed.json?url=https://vimeo.com/${embed.videoID}`
+        : null;
+    default:
+      return null;
+  }
+};
+
+const embedTitleCache = new Map<string, string>();
+
+const useEmbedTitle = (embed: EmbedBlockValue | undefined): string | null => {
+  const [title, setTitle] = useState<string | null>(null);
+  const oEmbedUrl = embed ? oEmbedUrlForEmbed(embed) : null;
+
+  useEffect(() => {
+    if (!oEmbedUrl) return;
+
+    const cached = embedTitleCache.get(oEmbedUrl);
+    if (cached) {
+      setTitle(cached);
+      return;
+    }
+
+    fetch(oEmbedUrl)
+      .then(res => res.json())
+      .then(data => {
+        if (data.title) {
+          embedTitleCache.set(oEmbedUrl, data.title);
+          setTitle(data.title);
+        }
+      })
+      .catch(() => undefined);
+  }, [oEmbedUrl]);
+
+  return title;
+};
+
+export const ContentForFlexBlock = ({ block }: { block: BlockListValue }) => {
+  const embed =
+    block?.type === 'Embed' ?
+      (block.value as EmbedBlockValue | undefined)
+    : undefined;
+  const embedTitle = useEmbedTitle(embed);
+
+  const hint =
+    embedTitle ?
+      `${getContentHintForFlexBlockNestedBlock(block).split(':')[0]}: ${embedTitle}`
+    : getContentHintForFlexBlockNestedBlock(block);
+
+  return <ContentForFlexBlockWrapper>{hint}</ContentForFlexBlockWrapper>;
 };
 
 export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {

@@ -14,9 +14,11 @@ const nodeToPlaintext = (node: unknown): string => {
     content?: unknown;
     children?: unknown;
   };
+
   if (typeof text === 'string') {
     return text;
   }
+
   const childNodes =
     Array.isArray(content) ? content
     : Array.isArray(children) ? children

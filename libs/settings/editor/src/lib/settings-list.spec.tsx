@@ -1,5 +1,5 @@
 import { MockedProvider as MockedProviderBase } from '@apollo/client/testing';
-import '@testing-library/jest-dom';
+import '@testing-library/jest-dom/vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import {
   SettingName,
@@ -71,7 +71,7 @@ const updateSettingMock = {
 
 describe('SettingList', () => {
   beforeAll(() => {
-    jest.spyOn(v2Client, 'getApiClientV2').mockReturnValue(undefined as any);
+    vi.spyOn(v2Client, 'getApiClientV2').mockReturnValue(undefined as any);
   });
 
   test('renders successfully', async () => {

@@ -17,6 +17,15 @@ export class SlackMailProvider extends BaseMailProvider {
 
   async sendMail(props: SendMailProps): Promise<SendMailResult> {
     const config = await this.getConfig();
+
+    if (!config?.slack_webhookURL) {
+      console.warn(
+        `SlackMailProvider <${this.id}>: slack_webhookURL is not configured, skipping mail to ${props.recipient}`
+      );
+
+      return;
+    }
+
     const message = {
       blocks: [
         {
@@ -34,7 +43,7 @@ export class SlackMailProvider extends BaseMailProvider {
     await fetch(config.slack_webhookURL, {
       method: 'POST',
       headers: {
-        'Conetent-type': 'application/json',
+        'Content-type': 'application/json',
       },
       body: JSON.stringify(message),
       signal: AbortSignal.timeout(5_000),

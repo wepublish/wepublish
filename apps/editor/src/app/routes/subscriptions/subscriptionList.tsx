@@ -12,7 +12,7 @@ import {
   DEFAULT_TABLE_PAGE_SIZES,
   DescriptionList,
   DescriptionListItem,
-  ExportSubscriptionsAsCsv,
+  ExportSubscriptions,
   IconButton,
   IconButtonTooltip,
   ListViewActions,
@@ -180,7 +180,7 @@ function SubscriptionList() {
 
         <PermissionControl qualifyingPermissions={['CAN_CREATE_SUBSCRIPTION']}>
           <Actions>
-            <ExportSubscriptionsAsCsv filter={filter} />
+            <ExportSubscriptions filter={filter} />
             <NewSubscriptionButton isLoading={isLoading} />
           </Actions>
         </PermissionControl>

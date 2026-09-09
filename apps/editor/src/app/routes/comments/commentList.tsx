@@ -237,7 +237,7 @@ function CommentList() {
                 rowData.revisions?.length ?
                   toPlaintext(
                     rowData.revisions[rowData.revisions.length - 1]?.text
-                      .content
+                      ?.content
                   )
                 : null
               }

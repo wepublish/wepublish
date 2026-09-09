@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import {
-  FullMailTemplateFragment,
+  TinyMailTemplateFragment,
   SubscriptionEvent,
   SubscriptionFlowFragment,
 } from '@wepublish/editor/api';
@@ -18,7 +18,7 @@ import { useAuthorisation } from '@wepublish/ui/editor';
 import { formatTemplateLabel } from '../mail-template/mail-placeholders';
 
 interface MailTemplateSelectProps {
-  mailTemplates: FullMailTemplateFragment[];
+  mailTemplates: TinyMailTemplateFragment[];
   subscriptionInterval?: DecoratedSubscriptionInterval<
     NonUserActionInterval | UserActionInterval
   >;

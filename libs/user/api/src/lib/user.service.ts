@@ -22,7 +22,11 @@ import {
   UserListArgs,
   UserSort,
 } from './user.model';
-import { MailContext, mailLogType } from '@wepublish/mail/api';
+import {
+  MailchimpContactService,
+  MailContext,
+  mailLogType,
+} from '@wepublish/mail/api';
 import * as crypto from 'crypto';
 import { HibpService } from './hibp.service';
 
@@ -31,7 +35,8 @@ export class UserService {
   constructor(
     private prisma: PrismaClient,
     private mailContext: MailContext,
-    private hibpService: HibpService
+    private hibpService: HibpService,
+    private mailchimpContactService: MailchimpContactService
   ) {}
 
   @PrimeDataLoader(UserDataloaderService)
@@ -186,7 +191,15 @@ export class UserService {
     await Validator.updateUser.parse(input);
     await Validator.createAddress.parse(address);
 
-    return this.prisma.user.update({
+    const previousUserEmail =
+      input.email ?
+        await this.prisma.user.findUnique({
+          where: { id },
+          select: { email: true },
+        })
+      : null;
+
+    const user = await this.prisma.user.update({
       where: { id },
       data: {
         ...input,
@@ -203,6 +216,16 @@ export class UserService {
       },
       select: unselectPassword,
     });
+
+    if (previousUserEmail) {
+      await this.mailchimpContactService.updateContactEmail(
+        user.id,
+        previousUserEmail.email,
+        user.email
+      );
+    }
+
+    return user;
   }
 
   async deleteUser(id: string) {
@@ -306,7 +329,7 @@ export class UserService {
       );
     }
 
-    return this.prisma.user.update({
+    const updatedUser = await this.prisma.user.update({
       where: { id: userId },
       data: {
         email: user.pendingEmail,
@@ -316,6 +339,14 @@ export class UserService {
       },
       select: unselectPassword,
     });
+
+    await this.mailchimpContactService.updateContactEmail(
+      updatedUser.id,
+      user.email,
+      updatedUser.email
+    );
+
+    return updatedUser;
   }
 }
 

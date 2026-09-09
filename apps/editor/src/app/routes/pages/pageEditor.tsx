@@ -27,6 +27,7 @@ import {
   BlockMap,
   BlockValue,
   createCheckedPermissionComponent,
+  DocumentUrlProvider,
   EditorTemplate,
   EditorValidationProvider,
   mapBlockValueToBlockInput,
@@ -65,6 +66,8 @@ import {
   Tag as RTag,
   toaster,
 } from 'rsuite';
+
+import { openPreviewWindow } from '../../openPreview';
 
 const EditorContent = styled.div`
   display: flex;
@@ -150,6 +153,8 @@ function PageEditor() {
     slug: '',
     title: '',
     description: '',
+    seoTitle: '',
+    seoDescription: '',
     tags: [],
     defaultTags: [],
     url: '',
@@ -287,6 +292,8 @@ function PageEditor() {
       const {
         title,
         description,
+        seoTitle,
+        seoDescription,
         image,
         blocks,
         properties,
@@ -304,6 +311,8 @@ function PageEditor() {
         slug: slug ?? '',
         title: title ?? '',
         description: description ?? '',
+        seoTitle: seoTitle ?? '',
+        seoDescription: seoDescription ?? '',
         tags: tags.map(({ id }) => id),
         defaultTags: tags,
         url,
@@ -425,6 +434,8 @@ function PageEditor() {
       slug: metadata.slug ?? '',
       title: metadata.title ?? '',
       description: metadata.description,
+      seoTitle: metadata.seoTitle || undefined,
+      seoDescription: metadata.seoDescription || undefined,
       hidden: metadata.hidden ?? false,
       imageID: metadata.image?.id,
       tagIds: metadata.tags,
@@ -706,33 +717,39 @@ function PageEditor() {
                     disabled={hasChanged || !id || !canPreview}
                     size="lg"
                     icon={<MdRemoveRedEye />}
-                    onClick={async () => {
-                      const previewWindow = window.open(
+                    onClick={() => {
+                      const result = openPreviewWindow(
                         pageData!.page.previewUrl,
-                        '_blank'
-                      );
-                      if (!previewWindow) return;
+                        {
+                          createToken: async () => {
+                            const { data: jwtData } = await createJWT();
 
-                      const { data: jwtData } = await createJWT();
-                      const token = jwtData?.createJWTForWebsiteLogin?.token;
-                      if (!token) return;
-
-                      const targetOrigin = new URL(pageData!.page.previewUrl)
-                        .origin;
-
-                      const handleMessage = (event: MessageEvent) => {
-                        if (
-                          event.source === previewWindow &&
-                          event.data === 'preview-jwt-ready'
-                        ) {
-                          previewWindow.postMessage(
-                            { previewJwt: token },
-                            targetOrigin
-                          );
-                          window.removeEventListener('message', handleMessage);
+                            return jwtData?.createJWTForWebsiteLogin?.token;
+                          },
+                          onSilence: () =>
+                            toaster.push(
+                              <Message
+                                type="warning"
+                                showIcon
+                                closable
+                              >
+                                {t('previewHandshake.notResponding')}
+                              </Message>
+                            ),
                         }
-                      };
-                      window.addEventListener('message', handleMessage);
+                      );
+
+                      if (result === 'popup-blocked') {
+                        toaster.push(
+                          <Message
+                            type="warning"
+                            showIcon
+                            closable
+                          >
+                            {t('previewHandshake.popupBlocked')}
+                          </Message>
+                        );
+                      }
                     }}
                   >
                     {t('pageEditor.overview.preview')}
@@ -751,12 +768,14 @@ function PageEditor() {
                 />
               </TeaserOverviewWrapper>
 
-              <BlockList
-                value={blocks}
-                onChange={handleChange}
-                disabled={isDisabled || !isAuthorized}
-                blockMap={BlockMap}
-              />
+              <DocumentUrlProvider documentUrl={pageData?.page?.url}>
+                <BlockList
+                  value={blocks}
+                  onChange={handleChange}
+                  disabled={isDisabled || !isAuthorized}
+                  blockMap={BlockMap}
+                />
+              </DocumentUrlProvider>
             </EditorValidationProvider>
           </EditorContent>
         </EditorTemplate>

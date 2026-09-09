@@ -25,6 +25,9 @@ const supportedTypes = [
   'application/vnd.oasis.opendocument.presentation',
   'text/csv',
   'text/plain',
+  'application/json',
+  'application/xml',
+  'text/xml',
   'application/zip',
 ];
 
@@ -93,7 +96,7 @@ export function DocumentUploadPanel({
           <FileDropInput
             icon={<MdUploadFile />}
             text={t('documents.panels.dropDocument')}
-            accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.odt,.ods,.odp,.csv,.txt,.zip"
+            accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.odt,.ods,.odp,.csv,.txt,.json,.xml,.zip"
             onDrop={handleDrop}
           />
         </InputWrapper>

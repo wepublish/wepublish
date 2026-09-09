@@ -214,13 +214,13 @@ export const Default: StoryObj<typeof SubscribeContainer> = {
             query: CreateSubscriptionInfoDocument,
             variables: {
               memberPlanId: mb.id,
-              voucher: '',
+              discountCode: '',
             },
           },
           result: {
             data: {
               createSubscriptionInfo: {
-                voucherValid: undefined,
+                discountCodeValid: undefined,
                 discountPercent: undefined,
               },
             },

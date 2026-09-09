@@ -43,7 +43,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdDelete, MdExpandMore, MdSync } from 'react-icons/md';
-import { Checkbox, Form, Input, Loader, Message, toaster } from 'rsuite';
+import { Checkbox, Form, Loader, Message, toaster } from 'rsuite';
 import { z } from 'zod';
 
 import mailChimpLogo from './assets/mailchimp.webp';
@@ -129,10 +129,6 @@ const MappingRow = styled.div`
   gap: 8px;
   align-items: center;
   margin-bottom: 8px;
-`;
-
-const MappingInput = styled(Input)`
-  flex: 1;
 `;
 
 const SectionTitle = styled(Typography)`

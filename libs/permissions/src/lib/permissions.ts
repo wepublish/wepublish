@@ -532,27 +532,51 @@ export const CanCancelSubscription: Permission = {
   deprecated: false,
 };
 
-export const CanGetVoucher: Permission = {
-  id: 'CAN_GET_VOUCHER',
-  description: 'Allows to get a voucher',
+export const CanGetGoodie: Permission = {
+  id: 'CAN_GET_GOODIE',
+  description: 'Allows to get a goodie',
   deprecated: false,
 };
 
-export const CanCreateVoucher: Permission = {
-  id: 'CAN_CREATE_VOUCHER',
-  description: 'Allows to create a voucher',
+export const CanCreateGoodie: Permission = {
+  id: 'CAN_CREATE_GOODIE',
+  description: 'Allows to create a goodie',
   deprecated: false,
 };
 
-export const CanUpdateVoucher: Permission = {
-  id: 'CAN_UPDATE_VOUCHER',
-  description: 'Allows to update a voucher',
+export const CanUpdateGoodie: Permission = {
+  id: 'CAN_UPDATE_GOODIE',
+  description: 'Allows to update a goodie',
   deprecated: false,
 };
 
-export const CanDeleteVoucher: Permission = {
-  id: 'CAN_DELETE_VOUCHER',
-  description: 'Allows to delete a voucher',
+export const CanDeleteGoodie: Permission = {
+  id: 'CAN_DELETE_GOODIE',
+  description: 'Allows to delete a goodie',
+  deprecated: false,
+};
+
+export const CanGetDiscountCode: Permission = {
+  id: 'CAN_GET_DISCOUNTCODE',
+  description: 'Allows to get a discountCode',
+  deprecated: false,
+};
+
+export const CanCreateDiscountCode: Permission = {
+  id: 'CAN_CREATE_DISCOUNTCODE',
+  description: 'Allows to create a discountCode',
+  deprecated: false,
+};
+
+export const CanUpdateDiscountCode: Permission = {
+  id: 'CAN_UPDATE_DISCOUNTCODE',
+  description: 'Allows to update a discountCode',
+  deprecated: false,
+};
+
+export const CanDeleteDiscountCode: Permission = {
+  id: 'CAN_DELETE_DISCOUNTCODE',
+  description: 'Allows to delete a discountCode',
   deprecated: false,
 };
 
@@ -1216,10 +1240,14 @@ export const AllPermissions: Permission[] = [
   CanGetSubscription,
   CanGetSubscriptions,
   CanDeleteSubscription,
-  CanGetVoucher,
-  CanCreateVoucher,
-  CanUpdateVoucher,
-  CanDeleteVoucher,
+  CanGetGoodie,
+  CanCreateGoodie,
+  CanUpdateGoodie,
+  CanDeleteGoodie,
+  CanGetDiscountCode,
+  CanCreateDiscountCode,
+  CanUpdateDiscountCode,
+  CanDeleteDiscountCode,
   CanLoginAsOtherUser,
   CanGetSettings,
   CanUpdateSettings,

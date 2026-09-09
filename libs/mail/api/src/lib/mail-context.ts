@@ -257,24 +257,32 @@ export class MailContext implements MailContextInterface {
     return userFlowMail.mailTemplate.id;
   }
 
+  /**
+   * Ids of every mail template referenced by a subscription interval or a user
+   * flow mail.
+   *
+   * Selects the foreign key rather than joining the template: only the id is
+   * ever read, and joining pulled each row's full `htmlContent`/`textContent`
+   * along with it.
+   */
   async getUsedTemplateIdentifiers(): Promise<string[]> {
     const [intervals, userFlowMails] = await Promise.all([
       this.prisma.subscriptionInterval.findMany({
-        include: {
-          mailTemplate: true,
+        select: {
+          mailTemplateId: true,
         },
       }),
       this.prisma.userFlowMail.findMany({
-        include: {
-          mailTemplate: true,
+        select: {
+          mailTemplateId: true,
         },
       }),
     ]);
 
     return [
-      ...intervals.flatMap(interval => interval.mailTemplate?.id ?? []),
+      ...intervals.flatMap(interval => interval.mailTemplateId ?? []),
       ...userFlowMails.flatMap(
-        userFlowMail => userFlowMail.mailTemplate?.id ?? []
+        userFlowMail => userFlowMail.mailTemplateId ?? []
       ),
     ];
   }

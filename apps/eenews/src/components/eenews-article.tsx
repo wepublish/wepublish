@@ -253,7 +253,7 @@ export const EenewsArticle = ({
 }: BuilderArticleProps) => {
   const {
     blocks: { Teaser },
-    CommentListItemShare,
+    Share,
   } = useWebsiteBuilder();
 
   const article = data?.article;
@@ -394,7 +394,7 @@ export const EenewsArticle = ({
 
         <ShareRow>
           <ShareLabel variant="pageEyebrow">Teilen</ShareLabel>
-          <CommentListItemShare
+          <Share
             url={url}
             title={title}
           />

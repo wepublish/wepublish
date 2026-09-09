@@ -1,19 +1,17 @@
 import { Parent, ResolveField, Resolver } from '@nestjs/graphql';
 import { SubscriptionPeriod } from './subscription.model';
-import { PrismaClient } from '@prisma/client';
 import { SubscriptionPeriod as PSubscriptionPeriod } from '@prisma/client';
+import { InvoiceDataloader } from '../invoice/invoice.dataloader';
 
 @Resolver(() => SubscriptionPeriod)
 export class SubscriptionPeriodResolver {
-  constructor(private prisma: PrismaClient) {}
+  constructor(private invoiceDataloader: InvoiceDataloader) {}
 
   @ResolveField(() => String, { nullable: true })
   async isPaid(@Parent() parent: PSubscriptionPeriod) {
-    const invoice = await this.prisma.invoice.findFirst({
-      where: {
-        id: parent.invoiceID,
-      },
-    });
+    // Batched: this resolves once per period, and a subscription list resolves
+    // every period of every subscription in one request.
+    const invoice = await this.invoiceDataloader.load(parent.invoiceID);
 
     return !!invoice?.paidAt;
   }

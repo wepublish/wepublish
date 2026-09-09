@@ -220,6 +220,8 @@ export class CancelPublicSubscriptionInput extends PickType(
 
 @InputType()
 export class SubscriptionFilter {
+  @Field(() => Date, { nullable: true })
+  activeAt?: Date;
   @Field(() => DateFilter, { nullable: true })
   startsAtFrom?: DateFilter;
   @Field(() => DateFilter, { nullable: true })

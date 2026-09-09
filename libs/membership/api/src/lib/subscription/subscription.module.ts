@@ -15,6 +15,7 @@ import { SubscriptionService } from './subscription.service';
 import { SubscriptionPeriodDataloader } from './subscription-periods.dataloader';
 import { MemberContextModule } from '../legacy/member-context.module';
 import { SubscriptionPeriodResolver } from './subscription-period.resolver';
+import { InvoiceModule } from '../invoice/invoice.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { SubscriptionPeriodResolver } from './subscription-period.resolver';
     MemberPlanModule,
     PaymentMethodModule,
     MemberContextModule,
+    InvoiceModule,
   ],
   providers: [
     SubscriptionPeriodResolver,

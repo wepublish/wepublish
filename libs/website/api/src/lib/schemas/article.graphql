@@ -38,6 +38,7 @@ fragment SlimArticleRevision on ArticleRevision {
   title
   lead
   breaking
+  hideAuthor
 
   authors {
     ...SlimAuthor
@@ -46,14 +47,19 @@ fragment SlimArticleRevision on ArticleRevision {
   image {
     ...SlimImage
   }
+
+  properties {
+    ...FullProperty
+  }
 }
 
 fragment FullArticleRevision on ArticleRevision {
   ...SlimArticleRevision
 
-  hideAuthor
-
   canonicalUrl
+
+  seoTitle
+  seoDescription
 
   image {
     ...FullImage
@@ -63,10 +69,6 @@ fragment FullArticleRevision on ArticleRevision {
   socialMediaTitle
   socialMediaImage {
     ...FullImage
-  }
-
-  properties {
-    ...FullProperty
   }
 
   blocks {

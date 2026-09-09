@@ -49,3 +49,26 @@ export const WithoutImage = {
     },
   },
 };
+
+export const WithEmbed = {
+  args: {
+    data: {
+      primaryBanner: {
+        ...banner,
+        embedUrl: 'https://briefing.bajour.ch/mini?iframe=true',
+      },
+    },
+  },
+};
+
+export const WithEmbedWithoutImage = {
+  args: {
+    data: {
+      primaryBanner: {
+        ...banner,
+        image: null,
+        embedUrl: 'https://briefing.bajour.ch/mini?iframe=true',
+      },
+    },
+  },
+};
