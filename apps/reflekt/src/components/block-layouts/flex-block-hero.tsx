@@ -554,6 +554,17 @@ export const BlockWithAlignment = styled('div')<FlexAlignment>`
     .MuiTypography-subtitle2 {
       font-size: clamp(1rem, 2.25cqw, 2.5rem);
     }
+
+    ${({ theme }) => theme.breakpoints.down('md')} {
+      h3,
+      .MuiTypography-h3 {
+        font-size: clamp(2.25rem, 10cqw, 3.5rem);
+      }
+      h4,
+      .MuiTypography-h4 {
+        font-size: clamp(1.75rem, 7.5cqw, 2.75rem);
+      }
+    }
   }
 
   ${ImageBlockImage} {

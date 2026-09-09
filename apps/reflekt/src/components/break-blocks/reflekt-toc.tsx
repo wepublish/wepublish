@@ -43,6 +43,11 @@ export const TocDetails = styled(Typography)`
     margin-left: ${({ theme }) => theme.spacing(4)};
     margin-right: ${({ theme }) => theme.spacing(4)};
   }
+
+  li,
+  li p {
+    margin-bottom: 0;
+  }
 `;
 
 export const isToc = (
