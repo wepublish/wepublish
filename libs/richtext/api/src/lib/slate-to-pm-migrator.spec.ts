@@ -77,6 +77,135 @@ describe('SlateToPmMigrator.migrate', () => {
     ]);
   });
 
+  it('keeps formatting marks from the link text leaves', () => {
+    const slate = [
+      {
+        type: 'paragraph',
+        children: [
+          { text: 'Mail an ', italic: true },
+          {
+            type: 'link',
+            url: 'mailto:redaktion@example.com',
+            children: [{ text: 'redaktion@example.com', italic: true }],
+          },
+          { text: '.', italic: true },
+        ],
+      },
+    ];
+
+    const doc: any = makeMigrator().migrate(slate);
+    const linkNode = doc.content[0].content[1];
+
+    expect(linkNode.text).toBe('redaktion@example.com');
+    expect(linkNode.marks).toEqual([
+      {
+        type: 'link',
+        attrs: {
+          href: 'mailto:redaktion@example.com',
+          rel: 'noopener noreferrer nofollow',
+          class: null,
+        },
+      },
+      { type: 'italic' },
+    ]);
+  });
+
+  it('keeps li links with em', () => {
+    const slate = [
+      {
+        type: 'unordered-list',
+        children: [
+          {
+            type: 'list-item',
+            children: [
+              {
+                text: '',
+                italic: true,
+              },
+              {
+                url: 'https://onlinereports.ch/a/wollen-die-gruenen-in-die-regierung-muessen-sie-thomi-jourdan-angreifen',
+                type: 'link',
+                title:
+                  'Wollen die Grünen in die Regierung, müssen sie Thomi Jourdan angreifen',
+                children: [
+                  {
+                    text: 'Wollen die Grünen in die Regierung, müssen sie Thomi Jourdan angreifen',
+                    italic: true,
+                  },
+                ],
+              },
+              {
+                text: '',
+                italic: true,
+              },
+            ],
+          },
+          {
+            type: 'list-item',
+            children: [
+              {
+                text: '',
+                italic: true,
+              },
+              {
+                url: 'https://onlinereports.ch/a/isi-spezial-isaac-reber-verabschiedet-sich-aus-der-regierung',
+                type: 'link',
+                title: 'Isi Spezial – bis zum Schluss',
+                children: [
+                  {
+                    text: 'Isi Spezial – bis zum Schluss',
+                    italic: true,
+                  },
+                ],
+              },
+              {
+                text: '',
+                italic: true,
+              },
+            ],
+          },
+        ],
+      },
+    ];
+    const doc: any = makeMigrator().migrate(slate);
+    const list = doc.content[0].content;
+
+    expect(list[0].content[0].content[0].marks).toEqual([
+      {
+        type: 'link',
+        attrs: {
+          href: 'https://onlinereports.ch/a/wollen-die-gruenen-in-die-regierung-muessen-sie-thomi-jourdan-angreifen',
+          rel: 'noopener noreferrer nofollow',
+          class: null,
+        },
+      },
+      { type: 'italic' },
+    ]);
+  });
+
+  it('splits a link into one text node per differently formatted leaf', () => {
+    const slate = [
+      {
+        type: 'paragraph',
+        children: [
+          {
+            type: 'link',
+            url: 'https://example.com',
+            children: [{ text: 'plain ' }, { text: 'bold', bold: true }],
+          },
+        ],
+      },
+    ];
+
+    const doc: any = makeMigrator().migrate(slate);
+    const [first, second] = doc.content[0].content;
+
+    expect(first.text).toBe('plain ');
+    expect(first.marks.map((m: any) => m.type)).toEqual(['link']);
+    expect(second.text).toBe('bold');
+    expect(second.marks.map((m: any) => m.type)).toEqual(['link', 'bold']);
+  });
+
   it('wraps list-item inline content in a paragraph (tiptap `paragraph block*`)', () => {
     const slate = [
       {
