@@ -260,6 +260,12 @@ exports[`PageService should query pages based on filter 2`] = `
           "revisions": undefined,
         },
         {
+          "slug": {
+            "contains": "slug",
+            "mode": "insensitive",
+          },
+        },
+        {
           "tags": {
             "some": {
               "tag": {
@@ -380,6 +386,12 @@ exports[`PageService should query pages based on filter 3`] = `
           "revisions": undefined,
         },
         {
+          "slug": {
+            "contains": "slug",
+            "mode": "insensitive",
+          },
+        },
+        {
           "tags": {
             "some": {
               "tag": {
@@ -477,6 +489,12 @@ exports[`PageService should query pages on all revisions 2`] = `
           },
         },
         {
+          "slug": {
+            "contains": "slug",
+            "mode": "insensitive",
+          },
+        },
+        {
           "tags": {
             "some": {
               "tag": {
@@ -550,6 +568,12 @@ exports[`PageService should query pages on all revisions 3`] = `
           },
         },
         {
+          "slug": {
+            "contains": "slug",
+            "mode": "insensitive",
+          },
+        },
+        {
           "tags": {
             "some": {
               "tag": {
@@ -596,6 +620,7 @@ exports[`PageService should query pages using cursor based pagination 1`] = `
         {},
         {},
         {},
+        {},
         {
           "hidden": false,
         },
@@ -620,6 +645,7 @@ exports[`PageService should query pages using cursor based pagination 2`] = `
     },
     "where": {
       "AND": [
+        {},
         {},
         {},
         {},
