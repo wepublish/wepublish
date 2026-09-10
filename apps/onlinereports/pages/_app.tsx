@@ -53,6 +53,7 @@ import { OnlineReportsFooter } from '../src/components/footer';
 import { OnlineReportsArticleAuthors } from '../src/components/online-reports-article-authors';
 import { OnlineReportsArticleList } from '../src/components/online-reports-article-list';
 import { OnlineReportsCommentListItem } from '../src/components/online-reports-comment-list-item';
+import { OnlineReportsSubscribe } from '../src/components/onlinereports-subscribe';
 import { OnlineReportsPage } from '../src/components/page';
 import { OnlineReportsPaymentAmount } from '../src/components/payment-amount';
 import { OnlineReportsQuoteBlock } from '../src/components/quote-block';
@@ -226,6 +227,7 @@ function CustomApp({
                   TeaserGrid: OnlineReportsTeaserGridBlock,
                   Quote: OnlineReportsQuoteBlock,
                   Title: OnlineReportsTitle,
+                  Subscribe: OnlineReportsSubscribe,
                 }}
                 date={{ format: dateFormatter }}
                 meta={{ siteTitle }}
