@@ -652,7 +652,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
         periodPriceRange.amountMin,
         selectedPaymentPeriodicity
       )
-    : selectedMemberPlan?.amountPerMonthMin || 500;
+    : (selectedMemberPlan?.amountPerMonthMin ?? 500);
   const amountPerMonthMax =
     periodPriceRange?.amountMax != null ?
       monthlyAmountFromPeriodAmount(
