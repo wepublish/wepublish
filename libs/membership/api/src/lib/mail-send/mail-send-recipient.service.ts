@@ -375,8 +375,15 @@ export class MailSendRecipientService {
         startsAt: { lt: now },
         paidUntil: { gt: now },
       };
+      const notPaidUp: Prisma.SubscriptionWhereInput = {
+        OR: [
+          { startsAt: { gte: now } },
+          { paidUntil: null },
+          { paidUntil: { lte: now } },
+        ],
+      };
 
-      and.push(audience.isPaid ? paidUp : { NOT: paidUp });
+      and.push(audience.isPaid ? paidUp : notPaidUp);
     }
 
     if (audience.isCanceled != null) {
