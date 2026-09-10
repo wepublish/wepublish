@@ -9,13 +9,20 @@ import {
   SubscribeWrapper,
   TransactionFeeIcon,
 } from '@wepublish/membership/website';
-import { SubscribePage } from '@wepublish/utils/website';
-import { useWebsiteBuilder } from '@wepublish/website/builder';
+import { PageContainer } from '@wepublish/page/website';
+import {
+  getApiUrl,
+  getSessionTokenProps,
+  ssrAuthLink,
+  SubscribePage,
+} from '@wepublish/utils/website';
+import { getApiClient, PageDocument } from '@wepublish/website/api';
+import { NextPageContext } from 'next';
 import { useEffect } from 'react';
 
 import { useAdsContext } from '../src/context/ads-context';
 
-const OnlineReportsSubscribePageWrapper = styled('div')`
+const MitmachenPage = styled(PageContainer)`
   ${SubscribeWrapper} {
     grid-template-columns: 100%;
     grid-template-areas:
@@ -42,13 +49,6 @@ const OnlineReportsSubscribePageWrapper = styled('div')`
       }
     }
   }
-`;
-
-const SubscribePageWrapper = styled('div')`
-  display: flex;
-  flex-direction: column;
-  gap: ${({ theme }) => theme.spacing(2.5)};
-  margin-top: ${({ theme }) => theme.spacing(4)};
 
   ${TransactionFeeIcon} {
     display: none;
@@ -72,30 +72,36 @@ const SubscribePageWrapper = styled('div')`
   }
 `;
 
-export const MitmachenInner = () => (
-  <OnlineReportsSubscribePageWrapper>
-    <SubscribePage fields={['firstName']} />
-  </OnlineReportsSubscribePageWrapper>
-);
-
 export default function Mitmachen() {
   const { setAdsDisabled } = useAdsContext();
-
-  const {
-    elements: { H3 },
-  } = useWebsiteBuilder();
 
   useEffect(() => {
     setAdsDisabled(true);
     return () => setAdsDisabled(false);
   }, [setAdsDisabled]);
 
-  return (
-    <SubscribePageWrapper>
-      <H3 component="h1">Herzlichen Dank für Ihre Unterstützung!</H3>
-      <MitmachenInner />
-    </SubscribePageWrapper>
-  );
+  return <MitmachenPage slug={'mitmachen'} />;
 }
 
-Mitmachen.getInitialProps = SubscribePage.getInitialProps;
+Mitmachen.getInitialProps = async (ctx: NextPageContext) => {
+  if (typeof window !== 'undefined') {
+    return {};
+  }
+
+  const client = getApiClient(getApiUrl(), [
+    ssrAuthLink(
+      async () => (await getSessionTokenProps(ctx)).sessionToken?.token
+    ),
+  ]);
+
+  await Promise.all([
+    client.query({
+      query: PageDocument,
+      variables: {
+        slug: 'mitmachen',
+      },
+    }),
+  ]);
+
+  return SubscribePage.getInitialProps(ctx);
+};
