@@ -87,6 +87,8 @@ export class ArticleRevision implements HasBlockContent, HasOptionalUserLc {
   @Field({ nullable: true })
   seoTitle?: string;
   @Field({ nullable: true })
+  seoDescription?: string;
+  @Field({ nullable: true })
   socialMediaTitle?: string;
   @Field({ nullable: true })
   socialMediaDescription?: string;
@@ -270,6 +272,8 @@ export class ArticleFilter {
   shared?: boolean;
   @Field({ nullable: true })
   includeHidden?: boolean;
+  @Field({ nullable: true })
+  excludeHideAuthor?: boolean;
 
   @Field({ nullable: true })
   publicationDateFrom?: DateFilter;
@@ -287,6 +291,11 @@ export class ArticleFilter {
   authors?: string[];
   @Field(() => [String], { nullable: true })
   tags?: string[];
+  @Field(() => [String], {
+    nullable: true,
+    description: 'Only include articles that have every one of these tags',
+  })
+  allTagsIn?: string[];
   @Field(() => [String], { nullable: true })
   tagsNotIn?: string[];
 

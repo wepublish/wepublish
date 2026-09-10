@@ -995,14 +995,32 @@ const createTagsFilter = (
   return {};
 };
 
+const createAllTagsInFilter = (
+  filter: Partial<ArticleFilter>
+): Prisma.ArticleWhereInput => {
+  if (filter?.allTagsIn?.length) {
+    return {
+      AND: filter.allTagsIn.map(tagId => ({
+        tags: {
+          some: {
+            tagId,
+          },
+        },
+      })),
+    };
+  }
+
+  return {};
+};
+
 const createTagsNotInFilter = (
   filter: Partial<ArticleFilter>
 ): Prisma.ArticleWhereInput => {
   if (filter?.tagsNotIn?.length) {
     const hasNotTags = {
-      some: {
+      none: {
         tagId: {
-          notIn: filter.tagsNotIn,
+          in: filter.tagsNotIn,
         },
       },
     } satisfies Prisma.TaggedArticlesListRelationFilter;
@@ -1072,6 +1090,45 @@ const createHiddenFilter = (
   };
 };
 
+const createExcludeHideAuthorFilter = (
+  filter: Partial<ArticleFilter>
+): Prisma.ArticleWhereInput => {
+  if (filter?.excludeHideAuthor) {
+    const hideAuthorFilter: Prisma.ArticleRevisionWhereInput = {
+      hideAuthor: false,
+    };
+
+    return {
+      ArticleRevisionPublished:
+        filter?.published ?
+          {
+            articleRevision: hideAuthorFilter,
+          }
+        : undefined,
+      ArticleRevisionDraft:
+        filter?.draft ?
+          {
+            articleRevision: hideAuthorFilter,
+          }
+        : undefined,
+      ArticleRevisionPending:
+        filter?.pending ?
+          {
+            articleRevision: hideAuthorFilter,
+          }
+        : undefined,
+      revisions:
+        !filter?.draft && !filter?.published && !filter?.pending ?
+          {
+            some: hideAuthorFilter,
+          }
+        : undefined,
+    };
+  }
+
+  return {};
+};
+
 const createPeerIdFilter = (
   filter: Partial<ArticleFilter>
 ): Prisma.ArticleWhereInput => {
@@ -1113,9 +1170,11 @@ export const createArticleFilter = (
     createLeadFilter(filter),
     createSharedFilter(filter),
     createTagsFilter(filter),
+    createAllTagsInFilter(filter),
     createTagsNotInFilter(filter),
     createAuthorFilter(filter),
     createHiddenFilter(filter),
+    createExcludeHideAuthorFilter(filter),
     createPeerIdFilter(filter),
     createExcludeIdsFilter(filter),
   ].filter(c => !isEmptyWhere(c));

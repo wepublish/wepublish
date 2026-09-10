@@ -1,5 +1,9 @@
 {
   "translation": {
+    "previewHandshake": {
+      "popupBlocked": "Das Vorschau-Fenster wurde vom Browser blockiert. Bitte Pop-ups für den Editor erlauben und erneut versuchen.",
+      "notResponding": "Das Vorschau-Fenster antwortet nicht. Die Anmeldung für die Vorschau ist möglicherweise fehlgeschlagen."
+    },
     "oneMessages": {
       "header": "Nachrichten vom We.Publish Team",
       "expand": "Ausklappen",
@@ -115,7 +119,6 @@
         "invalidImage": "Ungültiges Bild",
         "key": "Key",
         "lead": "Lead",
-        "leadHelpBlock": "Verwende einen SEO-optimierten Lead",
         "loading": "Laden ...",
         "loadMore": "Mehr laden",
         "noDataToDisplay": "Keine Daten zum Anzeigen",
@@ -142,6 +145,8 @@
         "published": "Publiziert",
         "seoTitle": "SEO-Titel",
         "seoTitleHelpBlock": "Verwende einen SEO-optimierten Titel <2>SEO Guide</2>",
+        "seoDescription": "SEO-Beschreibung",
+        "seoDescriptionHelpBlock": "Verwende eine SEO-optimierte Beschreibung",
         "sharedWithPeers": "Geteilt mit Peers",
         "slug": "Slug",
         "slugGuide": "Slug Guide",
@@ -1099,7 +1104,8 @@
         "long": "Lang",
         "weekday": "Wochentag",
         "time": "Zeit",
-        "dateTime": "Datum+Zeit"
+        "dateTime": "Datum+Zeit",
+        "year": "Jahr"
       },
       "amountFormat": {
         "display": "Mit Währung",
@@ -1127,6 +1133,7 @@
         "user_lastLogin": "Letzter Login",
         "user_createdAt": "Konto erstellt am",
         "jwt": "Login-Token (JWT)",
+        "currentDate": "Aktuelles Datum",
         "optional_subscription_id": "Abo-ID",
         "optional_subscription_monthlyAmount": "Monatlicher Betrag",
         "optional_subscription_periodAmount": "Betrag pro Periode",
@@ -1357,9 +1364,13 @@
         "createdAt": "{{createdAt, ccc PP p}}",
         "chooseBlock": "Blocktyp wählen",
         "dateExplanationPopOver": "Dies kann verwendet werden, um auf Artikel zu verweisen, die zu einem späteren Zeitpunkt veröffentlicht werden sollen. Dies ist z. B. hilfreich, wenn Beiträge auf Sozialen Medien für den nächsten Morgen geplant werden.",
-        "description": "SEO Beschreibung",
-        "descriptionHelpBlock": "Verwende eine SEO-optimierte Beschreibung",
+        "description": "Beschreibung",
+        "descriptionHelpBlock": "Die Beschreibung, die auf der Seite angezeigt wird",
         "enterDescription": "Bitte SEO-Beschreibung hinzufügen",
+        "seoTitle": "SEO-Titel",
+        "seoTitleHelpBlock": "Verwende einen SEO-optimierten Titel",
+        "seoDescription": "SEO-Beschreibung",
+        "seoDescriptionHelpBlock": "Verwende eine SEO-optimierte Beschreibung",
         "enterImage": "Biite Bild hinzufügen",
         "enterSocialMediaDescription": "Bitte Beschreibung für Social Media eingeben",
         "enterSocialMediaTitle": "Bitte Titel für Social Media eingeben",
@@ -1386,8 +1397,8 @@
         "socialMediaImage": "Bild für Social Media",
         "socialMediaTitle": "Titel für Social Media",
         "tags": "Tags",
-        "title": "SEO-Titel",
-        "titleHelpBlock": "Verwende einen SEO-optimierten Titel",
+        "title": "Titel",
+        "titleHelpBlock": "Der Titel, der auf der Seite angezeigt wird",
         "updateDate": "Update-Datum",
         "updateDateWarning": "Das Update-Datum darf nicht vor dem Publikations-Datum liegen.",
         "url": "URL",
@@ -1547,6 +1558,7 @@
     "pollAnswer": {
       "answerMissing": "Deine Antwort ist leer. Bitte gib einen Text ein.",
       "copyVoteUrl": "Kopiere Abstimmungs-Link",
+      "copyVoteUrlHint": "Die Abstimmungs-Links können nun direkt im Umfrage-Block des Artikels oder der Seite kopiert werden, in welchem die Umfrage verwendet wird.",
       "deleteBtn": "Löschen",
       "deleteModalBody": "Willst Du die Antwort \"{{answer}}\" unwiderruflich löschen? Die Umfrageresultate gehen dabei verloren.",
       "deleteModalTitle": "Löschen?",
@@ -1777,7 +1789,6 @@
         "createdAt": "Erstellt",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
         "deleted": "Gelöschte:r Benutzer:in",
-        "downloadCsv": "CSV herunterladen",
         "email": "Email",
         "memberPlan": "Member-Plan",
         "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
@@ -2133,6 +2144,13 @@
       }
     },
     "audienceFilter": {
+      "copyPermalink": "Permalink kopieren",
+      "permalinkCopied": "Permalink mit festem Zeitraum in die Zwischenablage kopiert",
+      "permalinkCopyFailed": "Permalink konnte nicht kopiert werden",
+      "permalinkHelpLabel": "Hinweise zum Permalink",
+      "permalinkHelpWhat": "Der Permalink ist ein Link auf genau diese Ansicht: Zeitraum, Abo-Pläne, ausgewählte Kennzahlen sowie Diagramm und Tabelle stecken alle in der Adresse.",
+      "permalinkHelpWhy": "So kannst du eine Auswertung im Team teilen oder als Lesezeichen ablegen, ohne die Filter jedes Mal neu zu setzen. Der Zeitraum wird als festes Datum gespeichert, damit der Link auch später noch dieselben Zahlen zeigt.",
+      "permalinkHelpExample": "Beispiel: «Letzter Monat» und den Abo-Plan «Jahresabo» wählen, Permalink kopieren und im Chat teilen – alle sehen genau diese Zahlen, auch nächste Woche noch.",
       "daily": "Täglich",
       "monthly": "Monatlich",
       "rangePickerPlaceholder": "von - bis",
@@ -2220,6 +2238,15 @@
         "highProbability": "Abo-Erneuerungen Stammkunden"
       }
     },
+    "audienceTableExport": {
+      "download": "Herunterladen",
+      "csv": "CSV (.csv)",
+      "xlsx": "Excel (.xlsx)",
+      "header": {
+        "renewedAndReplaced": "Erneuerte und ersetzte Abos",
+        "totalToBeRenewed": "Zu erneuernde Abos"
+      }
+    },
     "paywall": {
       "navbar": "Paywall",
       "form": {
@@ -2282,7 +2309,23 @@
         "validTo": "Gültig bis",
         "areYouSure": "Bist du sicher?",
         "areYouSureBody": "Der Rabattcode \"{{ discountCode }}\" wird unwiderruflich gelöscht.",
-        "areYouSureConfirmation": "Rabattcode löschen"
+        "areYouSureConfirmation": "Rabattcode löschen",
+        "usage": "Verwendet",
+        "usageValue": "{{total}} ({{paid}} bezahlt)"
+      },
+      "usage": {
+        "title": "Verwendungen von \"{{ discountCode }}\"",
+        "summary": "{{total}} Einlösungen, davon {{paid}} bezahlt",
+        "back": "Zurück zur Übersicht",
+        "date": "Datum",
+        "mail": "E-Mail",
+        "amount": "Betrag",
+        "status": "Status",
+        "paid": "Bezahlt",
+        "open": "Offen",
+        "canceled": "Storniert",
+        "subscription": "Abo",
+        "showSubscription": "Abo öffnen"
       }
     },
     "goodie": {
@@ -2317,8 +2360,13 @@
       "gracePeriodHelpText": "Wenn deine Webseite eine Paywall verwendet, können die Nutzer alle Inhalte auch bei unbezahlten Abos sofort oder weiterhin lesen - innerhalb der Zahlungsfrist. Dies ist etwa bei Banküberweisung nützlich.",
       "days": "Tage"
     },
+    "subscriptionsExport": {
+      "download": "Herunterladen",
+      "csv": "CSV (.csv)",
+      "xlsx": "Excel (.xlsx)"
+    },
     "audienceCsvBtn": {
-      "exportUsers": "CSV herunterladen"
+      "exportUsers": "Nutzer:innen herunterladen"
     },
     "search": "Suche",
     "integrations": {

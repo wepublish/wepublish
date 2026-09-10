@@ -147,6 +147,8 @@ export class InvoiceFilter {
   userID?: string;
   @Field({ nullable: true })
   subscriptionID?: string;
+  @Field({ nullable: true })
+  discountCodeId?: string;
 }
 
 @ArgsType()

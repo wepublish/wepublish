@@ -50,6 +50,14 @@
     }
   },
   "login": {
+    "email": "Email",
+    "password": "Passwort",
+    "loginWithLink": "Mit Link einloggen",
+    "loginWithPassword": "Mit Passwort einloggen",
+    "loginLinkSent": "Login-Link versendet",
+    "submit": "Einloggen",
+    "useLinkInstead": "Stattdessen Login-Link per E-Mail",
+    "verifyingCredentials": "Einen Moment bitte, die eingegebenen Anmeldedaten werden überprüft...",
     "alertLoginLinkSent": "Falls ein Account unter der Email \"{email}\" besteht, sollte bald ein Login-Link in deinem Email Postfach sein. Dies kann einen Moment dauern. Bitte prüfe auch deinen Spam-Ordner.",
     "totp": {
       "code": "Bestätigungscode (2FA)",

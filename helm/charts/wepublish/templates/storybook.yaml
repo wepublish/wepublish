@@ -45,6 +45,8 @@ spec:
       app.kubernetes.io/instance: {{ .Release.Name }}
   template:
     metadata:
+      annotations:
+        checksum/env: {{ merge (deepCopy .Values.storybook.env) .Values.deployment.env | toYaml | sha256sum }}
       labels:
         app.kubernetes.io/name: {{ include "helm.name" . }}-storybook
         app.kubernetes.io/instance: {{ .Release.Name }}
@@ -85,7 +87,7 @@ spec:
               protocol: TCP
           envFrom:
             - secretRef:
-                name: {{ include "helm.fullname" . }}-storybook-environment-{{ .Release.Revision }}
+                name: {{ include "helm.fullname" . }}-storybook-environment
             {{- if .Values.api.envFromSecretRefName }}
             - secretRef:
                 name: {{ .Values.api.envFromSecretRefName }}
@@ -99,9 +101,9 @@ spec:
 apiVersion: v1
 kind: Secret
 metadata:
-  name: {{ include "helm.fullname" . }}-storybook-environment-{{ .Release.Revision }}
+  name: {{ include "helm.fullname" . }}-storybook-environment
   labels:
-    app.kubernetes.io/name: {{ include "helm.fullname" . }}-storybook-environment-{{ .Release.Revision }}
+    app.kubernetes.io/name: {{ include "helm.fullname" . }}-storybook-environment
     helm.sh/chart: {{ include "helm.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
