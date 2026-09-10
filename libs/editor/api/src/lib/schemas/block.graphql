@@ -285,6 +285,7 @@ fragment BlockWithoutTeaser on BlockContent {
     showGoodies
     showDiscountCodes
     goodieMinValue
+    goodieMinValueAppliesToUpgrade
     hideRepeatGoodieOnUpgrade
     type
   }

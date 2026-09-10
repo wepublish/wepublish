@@ -158,6 +158,8 @@ export class SubscribeBlock extends BaseBlock<typeof BlockType.Subscribe> {
   @Field(() => Int, { nullable: true })
   goodieMinValue?: number;
   @Field(() => Boolean, { defaultValue: false })
+  goodieMinValueAppliesToUpgrade!: boolean;
+  @Field(() => Boolean, { defaultValue: false })
   hideRepeatGoodieOnUpgrade!: boolean;
 
   @Field(() => [MemberPlan])

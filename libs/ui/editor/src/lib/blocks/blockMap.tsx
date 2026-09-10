@@ -276,6 +276,7 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
       showGoodies: false,
       showDiscountCodes: false,
       goodieMinValue: null,
+      goodieMinValueAppliesToUpgrade: false,
       hideRepeatGoodieOnUpgrade: false,
     },
     label: 'blocks.subscribe.label',

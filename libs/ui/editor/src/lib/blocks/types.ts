@@ -80,6 +80,7 @@ export interface SubscribeBlockValue extends BaseBlockValue {
   showGoodies: boolean;
   showDiscountCodes: boolean;
   goodieMinValue?: number | null;
+  goodieMinValueAppliesToUpgrade: boolean;
   hideRepeatGoodieOnUpgrade: boolean;
 }
 
@@ -571,6 +572,8 @@ export function mapBlockValueToBlockInput(
           showGoodies: block.value.showGoodies,
           showDiscountCodes: block.value.showDiscountCodes,
           goodieMinValue: block.value.goodieMinValue ?? null,
+          goodieMinValueAppliesToUpgrade:
+            block.value.goodieMinValueAppliesToUpgrade,
           hideRepeatGoodieOnUpgrade: block.value.hideRepeatGoodieOnUpgrade,
         },
       };
@@ -1252,6 +1255,8 @@ export function blockForQueryBlock(
           showGoodies: block.showGoodies ?? false,
           showDiscountCodes: block.showDiscountCodes ?? false,
           goodieMinValue: block.goodieMinValue ?? null,
+          goodieMinValueAppliesToUpgrade:
+            block.goodieMinValueAppliesToUpgrade ?? false,
           hideRepeatGoodieOnUpgrade: block.hideRepeatGoodieOnUpgrade ?? false,
           memberPlanIds: block.memberPlanIds ?? [],
           periodicityDisplay: block.periodicityDisplay,

@@ -136,6 +136,7 @@ fragment FullSubscribeBlock on SubscribeBlock {
   showGoodies
   showDiscountCodes
   goodieMinValue
+  goodieMinValueAppliesToUpgrade
   hideRepeatGoodieOnUpgrade
 }
 
