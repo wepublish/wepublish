@@ -59,6 +59,15 @@ export interface MailProviderTemplate {
 
 export class MailProviderError extends Error {}
 
+/**
+ * A send that failed for this one recipient only — their address bounced, they
+ * complained, they unsubscribed, the provider will not deliver to them. The
+ * provider itself is healthy and the next recipient is unaffected, so a batch
+ * job may record the miss and carry on. Everything else stays a plain
+ * {@link MailProviderError} and has to bring the batch down.
+ */
+export class MailProviderRecipientError extends MailProviderError {}
+
 export interface MailProvider {
   readonly id: string;
 
