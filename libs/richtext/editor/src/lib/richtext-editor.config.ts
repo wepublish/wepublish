@@ -11,14 +11,23 @@ import Typography from '@tiptap/extension-typography';
 import { TableKit } from '@tiptap/extension-table';
 import i18next from 'i18next';
 import { Commands } from './editor/extensions/commands';
-import { commandSuggestions } from './editor/extensions/commands/command-suggestions';
+import {
+  CommandItemsSource,
+  createCommandSuggestions,
+} from './editor/extensions/commands/command-suggestions';
 import { InvisibleCharacters } from './editor/extensions/invisible-characters';
 import { HeadingId } from './editor/extensions/heading-id';
 import { LinkVariant } from './editor/extensions/link-variant';
 import { TableCellWithBorder, TableHeaderWithBorder } from './editor/table';
 import { SmilieReplacer } from './editor/extensions/emoji';
 
-const extensions = [
+/**
+ * The extensions of a We.Publish richtext editor.
+ *
+ * `commandItems` are slash commands an integration contributes; they are
+ * appended to the built-in ones. See `createCommandSuggestions`.
+ */
+const createExtensions = (commandItems: CommandItemsSource = []) => [
   TextStyleKit.configure({
     fontSize: false,
     fontFamily: false,
@@ -86,7 +95,7 @@ const extensions = [
   // We.Publish Extensions
   SmilieReplacer,
   Commands.configure({
-    suggestions: commandSuggestions,
+    suggestions: createCommandSuggestions(commandItems),
   }),
   TableCellWithBorder,
   TableHeaderWithBorder,
@@ -98,9 +107,26 @@ const extensions = [
   }),
 ];
 
-export const editorConfig: UseEditorOptions = {
-  extensions,
+export type EditorConfigOptions = {
+  /**
+   * Additional slash commands, contributed by an integration such as a
+   * knowledge provider. A list or a function returning the current list.
+   * Optional; without them the editor behaves exactly as before.
+   */
+  commandItems?: CommandItemsSource;
+};
+
+export const createEditorConfig = ({
+  commandItems = [],
+}: EditorConfigOptions = {}): UseEditorOptions => ({
+  extensions: createExtensions(commandItems),
   // Performance
   immediatelyRender: true,
   shouldRerenderOnTransaction: false,
-};
+});
+
+/**
+ * The configuration without any integration, kept as a constant because the
+ * editor component and the feed generator import it directly.
+ */
+export const editorConfig: UseEditorOptions = createEditorConfig();

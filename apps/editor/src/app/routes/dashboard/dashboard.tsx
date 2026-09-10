@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { useZettelkastenEnabledQuery } from '@wepublish/editor/api';
 import { PeriodicJobsLog } from '@wepublish/membership/editor';
 import {
   ActivityFeed,
@@ -7,6 +8,7 @@ import {
   ListViewHeader,
   PermissionControl,
 } from '@wepublish/ui/editor';
+import { DailyReportCard } from '@wepublish/zettelkasten/editor';
 import { useTranslation } from 'react-i18next';
 import { MdChevronRight } from 'react-icons/md';
 import { Link } from 'react-router-dom';
@@ -19,6 +21,33 @@ import { ExternalAppsDashboard } from './externalAppsDashboard';
 const StyledGrid = styled(Grid)`
   width: 100%;
 `;
+
+/**
+ * The knowledge base card. Its two queries need CAN_CREATE_ARTICLE, so they
+ * live here and not in the dashboard itself: PermissionControl renders nothing
+ * for a person without that permission, and then neither query ever runs.
+ */
+function ZettelkastenDashboardPanel() {
+  const { t } = useTranslation();
+  const { data } = useZettelkastenEnabledQuery({
+    fetchPolicy: 'cache-first',
+  });
+
+  if (!data?.zettelkastenEnabled) {
+    return null;
+  }
+
+  return (
+    <Col xs={24}>
+      <RPanel
+        header={<h2>{t('dashboard.zettelkasten')}</h2>}
+        bordered
+      >
+        <DailyReportCard />
+      </RPanel>
+    </Col>
+  );
+}
 
 export function Dashboard() {
   const { t } = useTranslation();
@@ -37,6 +66,10 @@ export function Dashboard() {
                 <ExternalAppsDashboard />
               </RPanel>
             </Col>
+
+            <PermissionControl qualifyingPermissions={['CAN_CREATE_ARTICLE']}>
+              <ZettelkastenDashboardPanel />
+            </PermissionControl>
 
             <Col xs={24}>
               <RPanel

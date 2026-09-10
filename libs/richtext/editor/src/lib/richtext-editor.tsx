@@ -9,11 +9,12 @@ import { MenuBar } from './editor/menu-bar';
 import styled from '@emotion/styled';
 import { Box, css, Paper } from '@mui/material';
 import { BubbleMenu } from './editor/bubble-menu';
-import { editorConfig } from './richtext-editor.config';
+import { createEditorConfig } from './richtext-editor.config';
+import { CommandItem } from './editor/extensions/commands';
 import { DragHandle } from './editor/drag-handle';
 import { FooterActions } from './editor/footer-actions';
 import { RichtextJSONDocument } from '@wepublish/richtext';
-import { forwardRef, useEffect, useMemo } from 'react';
+import { forwardRef, useEffect, useMemo, useRef } from 'react';
 import { equals } from 'ramda';
 
 export const RichtextEditorWrapper = styled(Paper)``;
@@ -161,11 +162,25 @@ type RichtextEditorProps = {
   value?: UseEditorOptions['content'];
   disabled?: boolean;
   autofocus?: boolean;
+  /** Slash commands contributed by an integration. May change between renders. */
+  commandItems?: CommandItem[];
   onChange?: (values: { json: RichtextJSONDocument; html: string }) => void;
 };
 
 export const RichtextEditor = forwardRef<HTMLDivElement, RichtextEditorProps>(
-  ({ defaultValue, value, onChange, disabled, autofocus }, ref) => {
+  (
+    { defaultValue, value, onChange, disabled, autofocus, commandItems },
+    ref
+  ) => {
+    // The suggestion list asks this ref on every "/", so a changed prop takes
+    // effect without rebuilding the editor (which would lose its content).
+    const commandItemsRef = useRef<CommandItem[]>(commandItems ?? []);
+    commandItemsRef.current = commandItems ?? [];
+    const editorConfig = useMemo(
+      () => createEditorConfig({ commandItems: () => commandItemsRef.current }),
+      []
+    );
+
     const editor = useEditor(
       {
         ...editorConfig,
