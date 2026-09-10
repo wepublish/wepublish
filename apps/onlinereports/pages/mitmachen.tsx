@@ -1,7 +1,6 @@
 import styled from '@emotion/styled';
 import { UserFormWrapper } from '@wepublish/authentication/website';
 import {
-  SubscribeAmount,
   SubscribeButton,
   SubscribeCancelable,
   SubscribeNarrowSection,
@@ -52,10 +51,6 @@ const MitmachenPage = styled(PageContainer)`
 
   ${TransactionFeeIcon} {
     display: none;
-  }
-
-  ${SubscribeAmount} {
-    background: ${({ theme }) => theme.palette.secondary.main};
   }
 
   ${SubscribeButton} {

@@ -56,6 +56,7 @@ import { OnlineReportsCommentListItem } from '../src/components/online-reports-c
 import { OnlineReportsPage } from '../src/components/page';
 import { OnlineReportsPaymentAmount } from '../src/components/payment-amount';
 import { OnlineReportsQuoteBlock } from '../src/components/quote-block';
+import { OnlineReportsSubscribe } from '../src/components/onlinereports-subscribe';
 import { AdsProvider } from '../src/context/ads-context';
 import { OnlineReportsRegistrationForm } from '../src/forms/registration-form';
 import { OnlineReportsNavbar } from '../src/navigation/onlinereports-navbar';
@@ -225,6 +226,7 @@ function CustomApp({
                   TeaserGrid: OnlineReportsTeaserGridBlock,
                   Quote: OnlineReportsQuoteBlock,
                   Title: OnlineReportsTitle,
+                  Subscribe: OnlineReportsSubscribe,
                 }}
                 date={{ format: dateFormatter }}
                 meta={{ siteTitle }}
