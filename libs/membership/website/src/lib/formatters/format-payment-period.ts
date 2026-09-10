@@ -71,7 +71,8 @@ type MemberPlanPeriodicityPricing = {
   amountPerMonthMax?: number | null;
   periodicityPricing?: Array<{
     periodicity: PaymentPeriodicity;
-    amountMin: number;
+    label?: string | null;
+    amountMin?: number | null;
     amountTarget?: number | null;
     amountMax?: number | null;
   }> | null;
