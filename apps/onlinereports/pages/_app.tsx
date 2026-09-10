@@ -53,10 +53,11 @@ import { OnlineReportsFooter } from '../src/components/footer';
 import { OnlineReportsArticleAuthors } from '../src/components/online-reports-article-authors';
 import { OnlineReportsArticleList } from '../src/components/online-reports-article-list';
 import { OnlineReportsCommentListItem } from '../src/components/online-reports-comment-list-item';
+import { OnlineReportsSubscribe } from '../src/components/onlinereports-subscribe';
 import { OnlineReportsPage } from '../src/components/page';
 import { OnlineReportsPaymentAmount } from '../src/components/payment-amount';
 import { OnlineReportsQuoteBlock } from '../src/components/quote-block';
-import { OnlineReportsSubscribe } from '../src/components/onlinereports-subscribe';
+import { ReviveScript } from '../src/components/revive-script';
 import { AdsProvider } from '../src/context/ads-context';
 import { OnlineReportsRegistrationForm } from '../src/forms/registration-form';
 import { OnlineReportsNavbar } from '../src/navigation/onlinereports-navbar';
@@ -240,12 +241,18 @@ function CustomApp({
                     name="viewport"
                     content="width=device-width, initial-scale=1.0"
                   />
+                  <link
+                    rel="preconnect"
+                    href="https://servedby.revive-adserver.net"
+                    crossOrigin="anonymous"
+                  />
+                  <link
+                    rel="preconnect"
+                    href="https://cdn.revive-adserver.net"
+                  />
                 </Head>
 
-                <Script
-                  src="//servedby.revive-adserver.net/asyncjs.php"
-                  async
-                />
+                <ReviveScript />
 
                 <AdblockOverlay />
 
