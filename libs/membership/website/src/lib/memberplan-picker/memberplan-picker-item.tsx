@@ -5,7 +5,9 @@ import {
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { forwardRef } from 'react';
+import { PaymentPeriodicity } from '@wepublish/website/api';
 import { formatCurrency } from '../formatters/format-currency';
+import { getPeriodPriceRange } from '../formatters/format-payment-period';
 import { useTranslation } from 'react-i18next';
 
 export const MemberPlanItemWrapper = styled('div')`
@@ -61,6 +63,8 @@ export const MemberPlanItem = forwardRef<
       shortDescription,
       amountPerMonthMax,
       amountPerMonthMin,
+      amountPerMonthTarget,
+      periodicityPricing,
       currency,
       extendable,
       ...props
@@ -78,6 +82,23 @@ export const MemberPlanItem = forwardRef<
     const hasFixedAmount =
       amountPerMonthMax != null && amountPerMonthMax === amountPerMonthMin;
 
+    const yearlyPriceRange = getPeriodPriceRange(
+      {
+        amountPerMonthMin,
+        amountPerMonthTarget,
+        amountPerMonthMax,
+        periodicityPricing,
+      },
+      PaymentPeriodicity.Yearly
+    );
+    const hasYearlyPricing = !!periodicityPricing?.some(
+      price => price.periodicity === PaymentPeriodicity.Yearly
+    );
+    const yearlyAmount =
+      hasYearlyPricing ?
+        yearlyPriceRange.amountMin / 100
+      : Math.ceil((amountPerMonthMin / 100) * 12);
+
     return (
       <MemberPlanItemWrapper className={className}>
         <MemberPlanItemPicker isChecked={isChecked}>
@@ -87,11 +108,8 @@ export const MemberPlanItem = forwardRef<
             <MemberPlanItemPrice>
               {t('subscribe.memberplan.price', {
                 amountPerMonthMin,
-                yearlyPrice: formatCurrency(
-                  Math.ceil((amountPerMonthMin / 100) * 12),
-                  currency,
-                  locale
-                ),
+                yearlyAmount,
+                yearlyPrice: formatCurrency(yearlyAmount, currency, locale),
                 monthlyPrice: formatCurrency(
                   amountPerMonthMin / 100,
                   currency,

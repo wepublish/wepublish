@@ -13,6 +13,7 @@ import {
   PageWithoutBlocksFragment,
   SubscribeBlock,
   SubscribeBlockField,
+  SubscribePeriodicityDisplay,
   Tag,
   TeaserInput,
   TeaserListBlockSort,
@@ -75,6 +76,7 @@ export interface SubscribeBlockValue extends BaseBlockValue {
   memberPlanIds: string[];
   memberPlanRenderSettings: SubscribeBlock['memberPlanRenderSettings'];
   fields: SubscribeBlockField[];
+  periodicityDisplay?: SubscribePeriodicityDisplay | null;
   showGoodies: boolean;
   showDiscountCodes: boolean;
   goodieMinValue?: number | null;
@@ -565,6 +567,7 @@ export function mapBlockValueToBlockInput(
           memberPlanIds: block.value.memberPlanIds ?? [],
           memberPlanRenderSettings: block.value.memberPlanRenderSettings ?? [],
           fields: block.value.fields,
+          periodicityDisplay: block.value.periodicityDisplay,
           showGoodies: block.value.showGoodies,
           showDiscountCodes: block.value.showDiscountCodes,
           goodieMinValue: block.value.goodieMinValue ?? null,
@@ -1251,6 +1254,7 @@ export function blockForQueryBlock(
           goodieMinValue: block.goodieMinValue ?? null,
           hideRepeatGoodieOnUpgrade: block.hideRepeatGoodieOnUpgrade ?? false,
           memberPlanIds: block.memberPlanIds ?? [],
+          periodicityDisplay: block.periodicityDisplay,
           memberPlanRenderSettings: block.memberPlanRenderSettings,
         },
       };

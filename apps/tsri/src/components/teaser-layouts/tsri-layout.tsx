@@ -32,7 +32,7 @@ export enum TsriLayoutType {
 
   // compact news layouts
   CompactNews = 'CompactNews',
-  
+
   // dossier layouts
   Dossier = 'Dossier',
 }
