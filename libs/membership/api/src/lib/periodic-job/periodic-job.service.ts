@@ -19,7 +19,7 @@ import {
   User,
 } from '@prisma/client';
 import { MailContext, MailController, mailLogType } from '@wepublish/mail/api';
-import { PaymentsService } from '@wepublish/payment/api';
+import { InvoicePaidNotifier, PaymentsService } from '@wepublish/payment/api';
 import {
   add,
   addDays,
@@ -36,7 +36,6 @@ import { Action } from '../subscription-event-dictionary/subscription-event-dict
 import { SubscriptionService } from './subscription.service';
 import { PeriodicJobRunObject } from './periodic-job.type';
 import { getMaxTake } from '@wepublish/utils/api';
-import { RenewalSuccessMailService } from '../renewal-mail/renewal-success-mail.service';
 
 const FIVE_MINUTES_IN_MS = 5 * 60 * 1000;
 
@@ -58,7 +57,7 @@ export class PeriodicJobService {
     private mailContext: MailContext,
     private subscriptionController: SubscriptionService,
     private payments: PaymentsService,
-    private renewalSuccessMail: RenewalSuccessMailService
+    private invoicePaidNotifier: InvoicePaidNotifier
   ) {}
 
   getJobLog(take: number, skip?: number) {
@@ -434,7 +433,7 @@ export class PeriodicJobService {
     }
 
     if (mailAction.action.type === SubscriptionEvent.RENEWAL_SUCCESS) {
-      await this.renewalSuccessMail.onInvoicePaid(invoiceToCharge.id);
+      await this.invoicePaidNotifier.notify(invoiceToCharge.id);
 
       return;
     }

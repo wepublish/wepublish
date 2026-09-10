@@ -10,9 +10,8 @@ import { add, startOfDay, sub } from 'date-fns';
 import { Action } from '../subscription-event-dictionary/subscription-event-dictionary.type';
 import { SubscriptionService } from './subscription.service';
 import { PeriodicJobService } from './periodic-job.service';
-import { PaymentsService } from '@wepublish/payment/api';
+import { InvoicePaidNotifier, PaymentsService } from '@wepublish/payment/api';
 import { MailContext } from '@wepublish/mail/api';
-import { RenewalSuccessMailService } from '../renewal-mail/renewal-success-mail.service';
 
 const createMockPrisma = () => ({
   subscriptionFlow: {
@@ -171,8 +170,8 @@ const createMockPaymentsService = () => ({
   getProviders: jest.fn().mockReturnValue([]),
 });
 
-const createMockRenewalSuccessMail = () => ({
-  onInvoicePaid: jest.fn().mockResolvedValue(undefined),
+const createMockInvoicePaidNotifier = () => ({
+  notify: jest.fn().mockResolvedValue(undefined),
 });
 
 describe('PeriodicJobService', () => {
@@ -183,14 +182,14 @@ describe('PeriodicJobService', () => {
   >;
   let mockMailContext: ReturnType<typeof createMockMailContext>;
   let mockPaymentsService: ReturnType<typeof createMockPaymentsService>;
-  let mockRenewalSuccessMail: ReturnType<typeof createMockRenewalSuccessMail>;
+  let mockInvoicePaidNotifier: ReturnType<typeof createMockInvoicePaidNotifier>;
 
   beforeEach(async () => {
     mockPrisma = createMockPrisma();
     mockSubscriptionController = createMockSubscriptionController();
     mockMailContext = createMockMailContext();
     mockPaymentsService = createMockPaymentsService();
-    mockRenewalSuccessMail = createMockRenewalSuccessMail();
+    mockInvoicePaidNotifier = createMockInvoicePaidNotifier();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -200,8 +199,8 @@ describe('PeriodicJobService', () => {
         { provide: MailContext, useValue: mockMailContext },
         { provide: PaymentsService, useValue: mockPaymentsService },
         {
-          provide: RenewalSuccessMailService,
-          useValue: mockRenewalSuccessMail,
+          provide: InvoicePaidNotifier,
+          useValue: mockInvoicePaidNotifier,
         },
       ],
     }).compile();
@@ -346,7 +345,7 @@ describe('PeriodicJobService', () => {
       mockSubscriptionController.deactivateSubscription
     ).not.toHaveBeenCalled();
 
-    expect(mockRenewalSuccessMail.onInvoicePaid).toHaveBeenCalledWith('inv-1');
+    expect(mockInvoicePaidNotifier.notify).toHaveBeenCalledWith('inv-1');
     expect(mockMailContext.sendComposedMail).not.toHaveBeenCalled();
   });
 

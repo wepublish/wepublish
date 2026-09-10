@@ -13,6 +13,6 @@ import { RenewalSuccessMailService } from './renewal-success-mail.service';
       useExisting: RenewalSuccessMailService,
     },
   ],
-  exports: [RenewalSuccessMailService, INVOICE_PAID_LISTENER],
+  exports: [INVOICE_PAID_LISTENER],
 })
 export class RenewalMailModule {}

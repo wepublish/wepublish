@@ -29,16 +29,6 @@ export class RenewalSuccessMailService implements InvoicePaidListener {
   ) {}
 
   public async onInvoicePaid(invoiceId: string): Promise<void> {
-    try {
-      await this.sendIfRenewal(invoiceId);
-    } catch (error) {
-      this.logger.error(
-        `Could not evaluate paid invoice ${invoiceId} for a renewal success mail: ${(error as Error).message}`
-      );
-    }
-  }
-
-  private async sendIfRenewal(invoiceId: string): Promise<void> {
     const invoice = await this.prisma.invoice.findUnique({
       where: { id: invoiceId },
       include: {
@@ -101,13 +91,14 @@ export class RenewalSuccessMailService implements InvoicePaidListener {
       return;
     }
 
+    const claimedAt = new Date();
     const claim = await this.prisma.invoice.updateMany({
       where: {
         id: invoiceId,
         renewalSuccessMailSentAt: null,
         suppressRenewalSuccessMail: false,
       },
-      data: { renewalSuccessMailSentAt: new Date() },
+      data: { renewalSuccessMailSentAt: claimedAt },
     });
 
     if (claim.count === 0) {
@@ -127,13 +118,26 @@ export class RenewalSuccessMailService implements InvoicePaidListener {
           subscription,
         },
       });
+    } catch (error) {
+      await this.releaseClaim(invoiceId, claimedAt);
 
-      this.logger.log(
-        `Sent RENEWAL_SUCCESS mail for invoice ${invoiceId} using template ${mailTemplateId}`
-      );
+      throw error;
+    }
+
+    this.logger.log(
+      `Sent RENEWAL_SUCCESS mail for invoice ${invoiceId} using template ${mailTemplateId}`
+    );
+  }
+
+  private async releaseClaim(invoiceId: string, claimedAt: Date) {
+    try {
+      await this.prisma.invoice.updateMany({
+        where: { id: invoiceId, renewalSuccessMailSentAt: claimedAt },
+        data: { renewalSuccessMailSentAt: null },
+      });
     } catch (error) {
       this.logger.error(
-        `Sending the RENEWAL_SUCCESS mail for invoice ${invoiceId} failed: ${(error as Error).message}`
+        `Could not release the RENEWAL_SUCCESS mail claim on invoice ${invoiceId} for a retry: ${(error as Error).message}`
       );
     }
   }

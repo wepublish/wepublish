@@ -135,6 +135,7 @@ describe('RenewalSuccessMailService', () => {
       },
       data: { renewalSuccessMailSentAt: expect.any(Date) },
     });
+    expect(prisma.invoice.updateMany).toHaveBeenCalledTimes(1);
     expect(mailContext.sendMail).toHaveBeenCalledTimes(1);
 
     const [sent] = mailContext.sendMail.mock.calls[0];
@@ -168,10 +169,12 @@ describe('RenewalSuccessMailService', () => {
     });
   });
 
-  it('resolves when loading the invoice fails', async () => {
+  it('propagates a failure while loading the invoice', async () => {
     const { service, mailContext } = await setup({ findUniqueRejects: true });
 
-    await expect(service.onInvoicePaid(INVOICE_ID)).resolves.toBeUndefined();
+    await expect(service.onInvoicePaid(INVOICE_ID)).rejects.toThrow(
+      'connection pool timeout'
+    );
 
     expect(mailContext.sendMail).not.toHaveBeenCalled();
   });
@@ -273,12 +276,37 @@ describe('RenewalSuccessMailService', () => {
     expect(mailContext.sendMail).not.toHaveBeenCalled();
   });
 
-  it('resolves and keeps the claim when the send fails', async () => {
+  it('releases the claim when the send fails so the mail is retried', async () => {
     const { service, prisma, mailContext } = await setup();
     mailContext.sendMail.mockRejectedValue(new Error('provider rejected'));
 
-    await expect(service.onInvoicePaid(INVOICE_ID)).resolves.toBeUndefined();
+    await expect(service.onInvoicePaid(INVOICE_ID)).rejects.toThrow(
+      'provider rejected'
+    );
 
-    expect(prisma.invoice.updateMany).toHaveBeenCalledTimes(1);
+    expect(prisma.invoice.updateMany).toHaveBeenCalledTimes(2);
+
+    const [claim] = prisma.invoice.updateMany.mock.calls[0];
+    const [release] = prisma.invoice.updateMany.mock.calls[1];
+
+    expect(release).toEqual({
+      where: {
+        id: INVOICE_ID,
+        renewalSuccessMailSentAt: claim.data.renewalSuccessMailSentAt,
+      },
+      data: { renewalSuccessMailSentAt: null },
+    });
+  });
+
+  it('still reports the send failure when the claim cannot be released', async () => {
+    const { service, prisma, mailContext } = await setup();
+    mailContext.sendMail.mockRejectedValue(new Error('provider rejected'));
+    prisma.invoice.updateMany
+      .mockResolvedValueOnce({ count: 1 })
+      .mockRejectedValueOnce(new Error('database is down'));
+
+    await expect(service.onInvoicePaid(INVOICE_ID)).rejects.toThrow(
+      'provider rejected'
+    );
   });
 });

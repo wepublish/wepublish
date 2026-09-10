@@ -21,10 +21,10 @@ import {
   UpdateInvoiceInput,
 } from './invoice.model';
 import {
+  InvoicePaidNotifier,
   PAYMENT_METHOD_CONFIG,
   PaymentMethodConfig,
 } from '@wepublish/payment/api';
-import { RenewalSuccessMailService } from '../renewal-mail/renewal-success-mail.service';
 
 @Injectable()
 export class InvoiceService {
@@ -32,7 +32,7 @@ export class InvoiceService {
     private prisma: PrismaClient,
     @Inject(PAYMENT_METHOD_CONFIG)
     private paymentMethodConfig: PaymentMethodConfig,
-    private renewalSuccessMail: RenewalSuccessMailService
+    private invoicePaidNotifier: InvoicePaidNotifier
   ) {}
 
   @PrimeDataLoader(InvoiceDataloader)
@@ -188,7 +188,7 @@ export class InvoiceService {
     });
 
     if (sendMail) {
-      await this.renewalSuccessMail.onInvoicePaid(id);
+      await this.invoicePaidNotifier.notify(id);
     }
 
     return invoiceMarkedAsPaid;
@@ -279,7 +279,7 @@ export class InvoiceService {
       });
     }
 
-    await this.renewalSuccessMail.onInvoicePaid(id);
+    await this.invoicePaidNotifier.notify(id);
 
     // FIXME: We need to implement a way to wait for all the database
     //  event hooks to finish before we return data. Will be solved in WPC-498

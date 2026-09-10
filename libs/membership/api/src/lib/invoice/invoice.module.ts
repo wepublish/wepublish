@@ -10,11 +10,11 @@ import { InvoiceDataloader } from './invoice.dataloader';
 import { InvoiceItemResolver, InvoiceResolver } from './invoice.resolver';
 import { InvoiceService } from './invoice.service';
 import { InvoiceItemDataloader } from './invoice-items.dataloader';
-import { PaymentMethodModule } from '@wepublish/payment/api';
+import { PaymentMethodModule, PaymentsModule } from '@wepublish/payment/api';
 import { UserModule } from '@wepublish/user/api';
 
 @Module({
-  imports: [PrismaModule, PaymentMethodModule, UserModule],
+  imports: [PrismaModule, PaymentMethodModule, PaymentsModule, UserModule],
   providers: [
     HasInvoiceResolver,
     HasOptionalInvoiceResolver,

@@ -1,7 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaClient } from '@prisma/client';
-import { PAYMENT_METHOD_CONFIG } from '@wepublish/payment/api';
-import { RenewalSuccessMailService } from '../renewal-mail/renewal-success-mail.service';
+import {
+  InvoicePaidNotifier,
+  PAYMENT_METHOD_CONFIG,
+} from '@wepublish/payment/api';
 import { InvoiceDataloader } from './invoice.dataloader';
 import { InvoiceService } from './invoice.service';
 
@@ -18,8 +20,8 @@ describe('InvoiceService.checkInvoiceStatus', () => {
       paymentMethod: { findMany: jest.fn().mockResolvedValue([]) },
     };
 
-    const renewalSuccessMail = {
-      onInvoicePaid: jest.fn().mockResolvedValue(undefined),
+    const invoicePaidNotifier = {
+      notify: jest.fn().mockResolvedValue(undefined),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -28,7 +30,7 @@ describe('InvoiceService.checkInvoiceStatus', () => {
         { provide: PrismaClient, useValue: prisma },
         { provide: PAYMENT_METHOD_CONFIG, useValue: { paymentProviders: [] } },
         { provide: InvoiceDataloader, useValue: { prime: jest.fn() } },
-        { provide: RenewalSuccessMailService, useValue: renewalSuccessMail },
+        { provide: InvoicePaidNotifier, useValue: invoicePaidNotifier },
       ],
     }).compile();
 
@@ -36,7 +38,7 @@ describe('InvoiceService.checkInvoiceStatus', () => {
       .get<InvoiceService>(InvoiceService)
       .checkInvoiceStatus('inv-2', 'user-1');
 
-    expect(renewalSuccessMail.onInvoicePaid).toHaveBeenCalledWith('inv-2');
+    expect(invoicePaidNotifier.notify).toHaveBeenCalledWith('inv-2');
   });
 });
 
@@ -61,8 +63,8 @@ async function setup() {
     },
   };
 
-  const renewalSuccessMail = {
-    onInvoicePaid: jest.fn().mockResolvedValue(undefined),
+  const invoicePaidNotifier = {
+    notify: jest.fn().mockResolvedValue(undefined),
   };
 
   const module: TestingModule = await Test.createTestingModule({
@@ -71,20 +73,20 @@ async function setup() {
       { provide: PrismaClient, useValue: prisma },
       { provide: PAYMENT_METHOD_CONFIG, useValue: { paymentProviders: [] } },
       { provide: InvoiceDataloader, useValue: { prime: jest.fn() } },
-      { provide: RenewalSuccessMailService, useValue: renewalSuccessMail },
+      { provide: InvoicePaidNotifier, useValue: invoicePaidNotifier },
     ],
   }).compile();
 
   return {
     service: module.get<InvoiceService>(InvoiceService),
     prisma,
-    renewalSuccessMail,
+    invoicePaidNotifier,
   };
 }
 
 describe('InvoiceService.markInvoiceAsPaid', () => {
   it('triggers the renewal success mail by default', async () => {
-    const { service, prisma, renewalSuccessMail } = await setup();
+    const { service, prisma, invoicePaidNotifier } = await setup();
 
     await service.markInvoiceAsPaid('inv-2', 'admin-1');
 
@@ -92,17 +94,17 @@ describe('InvoiceService.markInvoiceAsPaid', () => {
     expect(paidUpdate.data.paidAt).toBeInstanceOf(Date);
     expect(paidUpdate.data.manuallySetAsPaidByUserId).toBe('admin-1');
     expect(paidUpdate.data.suppressRenewalSuccessMail).toBeUndefined();
-    expect(renewalSuccessMail.onInvoicePaid).toHaveBeenCalledWith('inv-2');
+    expect(invoicePaidNotifier.notify).toHaveBeenCalledWith('inv-2');
   });
 
   it('suppresses the mail in the same update when asked not to send', async () => {
-    const { service, prisma, renewalSuccessMail } = await setup();
+    const { service, prisma, invoicePaidNotifier } = await setup();
 
     await service.markInvoiceAsPaid('inv-2', 'admin-1', false);
 
     const paidUpdate = prisma.invoice.update.mock.calls.at(-1)?.[0];
     expect(paidUpdate.data.paidAt).toBeInstanceOf(Date);
     expect(paidUpdate.data.suppressRenewalSuccessMail).toBe(true);
-    expect(renewalSuccessMail.onInvoicePaid).not.toHaveBeenCalled();
+    expect(invoicePaidNotifier.notify).not.toHaveBeenCalled();
   });
 });
