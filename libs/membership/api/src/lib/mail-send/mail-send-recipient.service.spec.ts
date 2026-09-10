@@ -788,6 +788,29 @@ describe('audience filtering (semantics)', () => {
       expect(await included(row, { isPaid: false })).toBe(true);
     });
 
+    it('is paid splits every subscription into exactly one of the two sides', async () => {
+      const rows = {
+        'paid up': subscription({ startsAt: days(-30), paidUntil: days(10) }),
+        lapsed: subscription({ startsAt: days(-30), paidUntil: days(-1) }),
+        'never paid': subscription({ startsAt: days(-30), paidUntil: null }),
+        'starts later': subscription({
+          startsAt: days(5),
+          paidUntil: days(10),
+        }),
+        'never paid, starts later': subscription({
+          startsAt: days(5),
+          paidUntil: null,
+        }),
+      };
+
+      for (const [name, row] of Object.entries(rows)) {
+        const paid = await included(row, { isPaid: true });
+        const unpaid = await included(row, { isPaid: false });
+
+        expect({ [name]: unpaid }).toEqual({ [name]: !paid });
+      }
+    });
+
     it('is canceled counts a cancellation that only takes effect later', async () => {
       expect(
         await included(subscription({ deactivation: { date: days(30) } }), {
