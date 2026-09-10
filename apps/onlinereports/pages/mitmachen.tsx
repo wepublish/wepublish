@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { UserFormWrapper } from '@wepublish/authentication/website';
+import { RichTextBlockWrapper } from '@wepublish/block-content/website';
 import {
   SubscribeButton,
   SubscribeCancelable,
@@ -22,6 +23,12 @@ import { useEffect } from 'react';
 import { useAdsContext } from '../src/context/ads-context';
 
 const MitmachenPage = styled(PageContainer)`
+  ${RichTextBlockWrapper} {
+    ${({ theme }) => theme.breakpoints.up('md')} {
+      grid-column: -1/1;
+    }
+  }
+
   ${SubscribeWrapper} {
     grid-template-columns: 100%;
     grid-template-areas:
