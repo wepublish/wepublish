@@ -69,6 +69,7 @@ import { TsriFooter } from '../src/components/tsri-footer';
 import { TsriGlobalStyles } from '../src/components/tsri-global-styles';
 import { TsriImageSlider } from '../src/components/tsri-image-slider';
 import { TsriNextWepublishLink } from '../src/components/tsri-next-wepublish-link';
+import { TsriPage } from '../src/components/tsri-page';
 import { TsriPaymentAmountPicker } from '../src/components/tsri-payment-amount-picker';
 import { TsriQuoteBlock } from '../src/components/tsri-quote-block';
 import { TsriRichText } from '../src/components/tsri-richtext';
@@ -163,6 +164,7 @@ function CustomApp({
               Script={Script}
               Navbar={TsriV2Navbar}
               Article={TsriArticle}
+              Page={TsriPage}
               AuthorChip={TsriAuthorChip}
               ArticleDate={TsriArticleDate}
               ArticleMeta={TsriArticleMeta}
