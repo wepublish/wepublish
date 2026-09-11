@@ -66,7 +66,10 @@ import {
 } from '../src/components/tsri-block-renderer';
 import { TsriCommentList } from '../src/components/tsri-comment-list';
 import { TsriEvent } from '../src/components/tsri-event';
-import { TsriEventListItem } from '../src/components/tsri-event-list-item';
+import {
+  TsriEventListItem,
+  TsriEventListView,
+} from '../src/components/tsri-event-list-item';
 import { TsriFooter } from '../src/components/tsri-footer';
 import { TsriGlobalStyles } from '../src/components/tsri-global-styles';
 import { TsriImageSlider } from '../src/components/tsri-image-slider';
@@ -168,6 +171,7 @@ function CustomApp({
               Article={TsriArticle}
               Page={TsriPage}
               Event={TsriEvent}
+              EventList={TsriEventListView}
               EventListItem={TsriEventListItem}
               AuthorChip={TsriAuthorChip}
               ArticleDate={TsriArticleDate}

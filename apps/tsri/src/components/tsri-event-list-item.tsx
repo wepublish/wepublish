@@ -1,8 +1,9 @@
 import styled from '@emotion/styled';
-import { css } from '@mui/material';
+import { EventList } from '@wepublish/event/website';
 import { ImageWrapper } from '@wepublish/image/website';
 import {
   BuilderEventListItemProps,
+  BuilderEventListProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { useState } from 'react';
@@ -10,11 +11,17 @@ import { MdLocationOn, MdTag } from 'react-icons/md';
 
 import { EVENT_LOCATION_FALLBACK, TsriEventTag } from './tsri-event';
 
-export const eventListItemStyles = css`
+export const TsriEventListView = (props: BuilderEventListProps) => (
+  <EventList
+    {...props}
+    descriptionMaxLength={500}
+  />
+);
+
+export const EventListItemContainer = styled('div')`
   display: grid;
   width: 100%;
-  color: inherit;
-  text-decoration: inherit;
+  position: relative;
   container-type: inline-size;
 `;
 
@@ -27,6 +34,18 @@ export const EventListItemName = styled('h2')`
 
   ${({ theme }) => theme.breakpoints.up('md')} {
     font-size: 1.125rem;
+  }
+
+  & a {
+    color: inherit;
+    text-decoration: none;
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+    }
   }
 `;
 
@@ -46,6 +65,7 @@ export const EventListItemDate = styled('span')`
   font-size: 0.75rem;
   line-height: 1.2;
   font-weight: 700;
+  pointer-events: none;
   transition:
     background-color 0.3s,
     color 0.3s;
@@ -56,10 +76,19 @@ export const EventListItemLead = styled('div')`
     margin: 0;
     font-size: 0.9375rem;
     line-height: 1.4;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+    overflow: hidden;
 
     ${({ theme }) => theme.breakpoints.up('md')} {
       font-size: 0.875rem;
     }
+  }
+
+  & a {
+    position: relative;
+    z-index: 2;
   }
 `;
 
@@ -307,11 +336,8 @@ export const TsriEventListItem = ({
   const [imageFailed, setImageFailed] = useState(false);
 
   return (
-    <Link
-      href={url}
-      css={eventListItemStyles}
-    >
-      <EventListItemWrapper className={className}>
+    <EventListItemContainer className={className}>
+      <EventListItemWrapper>
         <EventListItemImage>
           <EventPlaceholderIllustration />
           {image && !imageFailed && (
@@ -368,7 +394,9 @@ export const TsriEventListItem = ({
             )}
           </EventListItemMeta>
 
-          <EventListItemName>{name}</EventListItemName>
+          <EventListItemName>
+            <Link href={url}>{name}</Link>
+          </EventListItemName>
 
           <EventListItemLead>
             {lead ?
@@ -377,6 +405,6 @@ export const TsriEventListItem = ({
           </EventListItemLead>
         </EventListItemContent>
       </EventListItemWrapper>
-    </Link>
+    </EventListItemContainer>
   );
 };
