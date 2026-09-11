@@ -1,8 +1,9 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { Prisma, PrismaClient } from '@prisma/client';
+import { PaymentPeriodicity, Prisma, PrismaClient } from '@prisma/client';
 import {
   getMaxTake,
   graphQLSortOrderToPrisma,
+  periodicityPricingSchema,
   PrimeDataLoader,
   SortOrder,
 } from '@wepublish/utils/api';
@@ -11,6 +12,7 @@ import {
   MemberPlanFilter,
   MemberPlanListArgs,
   MemberPlanSort,
+  PeriodicityPriceInput,
   UpdateMemberPlanInput,
 } from './member-plan.model';
 import { MemberPlanDataloader } from './member-plan.dataloader';
@@ -27,6 +29,7 @@ export class MemberPlanService {
       },
       include: {
         availablePaymentMethods: true,
+        periodicityPricing: true,
       },
     });
   }
@@ -56,6 +59,7 @@ export class MemberPlanService {
         cursor: cursorId ? { id: cursorId } : undefined,
         include: {
           availablePaymentMethods: true,
+          periodicityPricing: true,
         },
       }),
     ]);
@@ -87,6 +91,7 @@ export class MemberPlanService {
       },
       include: {
         availablePaymentMethods: true,
+        periodicityPricing: true,
       },
     });
   }
@@ -95,8 +100,11 @@ export class MemberPlanService {
   async updateMemberPlan({
     id,
     availablePaymentMethods,
+    periodicityPricing,
     ...input
   }: UpdateMemberPlanInput) {
+    checkPeriodicityPricing(periodicityPricing);
+
     const existingMemberPlan = await this.prisma.memberPlan.findUniqueOrThrow({
       where: { id },
       select: {
@@ -104,6 +112,7 @@ export class MemberPlanService {
         amountPerMonthMin: true,
         amountPerMonthMax: true,
         amountPerMonthTarget: true,
+        defaultPaymentPeriodicity: true,
         availablePaymentMethods: true,
       },
     });
@@ -129,6 +138,13 @@ export class MemberPlanService {
         : ((input.amountPerMonthTarget as number | undefined) ??
           existingMemberPlan.amountPerMonthTarget),
 
+      defaultPaymentPeriodicity:
+        input.defaultPaymentPeriodicity === null ?
+          null
+        : ((input.defaultPaymentPeriodicity as
+            | PaymentPeriodicity
+            | undefined) ?? existingMemberPlan.defaultPaymentPeriodicity),
+
       availablePaymentMethods:
         availablePaymentMethods ?? existingMemberPlan.availablePaymentMethods,
     });
@@ -139,6 +155,23 @@ export class MemberPlanService {
         ...input,
         description: input.description as any,
         shortDescription: input.shortDescription as any,
+        periodicityPricing:
+          periodicityPricing !== undefined ?
+            {
+              deleteMany: {
+                memberPlanId: {
+                  equals: id,
+                },
+              },
+              ...(periodicityPricing ?
+                {
+                  createMany: {
+                    data: periodicityPricing.map(toPeriodicityPriceCreate),
+                  },
+                }
+              : {}),
+            }
+          : undefined,
         availablePaymentMethods:
           availablePaymentMethods ?
             {
@@ -155,6 +188,7 @@ export class MemberPlanService {
       },
       include: {
         availablePaymentMethods: true,
+        periodicityPricing: true,
       },
     });
   }
@@ -162,13 +196,16 @@ export class MemberPlanService {
   @PrimeDataLoader(MemberPlanDataloader)
   async createMemberPlan({
     availablePaymentMethods,
+    periodicityPricing,
     ...input
   }: CreateMemberPlanInput) {
+    checkPeriodicityPricing(periodicityPricing);
     checkMemberPlanIntegrity({
       extendable: input.extendable ?? true,
       amountPerMonthMin: input.amountPerMonthMin,
       amountPerMonthMax: input.amountPerMonthMax ?? null,
       amountPerMonthTarget: input.amountPerMonthTarget ?? null,
+      defaultPaymentPeriodicity: input.defaultPaymentPeriodicity ?? null,
       availablePaymentMethods,
     });
 
@@ -177,6 +214,14 @@ export class MemberPlanService {
         ...input,
         description: input.description as any,
         shortDescription: input.shortDescription as any,
+        periodicityPricing:
+          periodicityPricing ?
+            {
+              createMany: {
+                data: periodicityPricing.map(toPeriodicityPriceCreate),
+              },
+            }
+          : undefined,
         availablePaymentMethods: {
           createMany: {
             data: availablePaymentMethods,
@@ -185,6 +230,7 @@ export class MemberPlanService {
       },
       include: {
         availablePaymentMethods: true,
+        periodicityPricing: true,
       },
     });
   }
@@ -286,8 +332,55 @@ type MemberPlanIntegrityInput = {
   amountPerMonthMin: number;
   amountPerMonthMax: number | null;
   amountPerMonthTarget: number | null;
+  defaultPaymentPeriodicity: PaymentPeriodicity | null;
   availablePaymentMethods: Prisma.AvailablePaymentMethodUncheckedCreateWithoutMemberPlanInput[];
 };
+
+function toPeriodicityArray(
+  paymentPeriodicities: Prisma.AvailablePaymentMethodUncheckedCreateWithoutMemberPlanInput['paymentPeriodicities']
+): PaymentPeriodicity[] {
+  if (Array.isArray(paymentPeriodicities)) {
+    return paymentPeriodicities;
+  }
+
+  if (paymentPeriodicities?.set) {
+    return paymentPeriodicities.set;
+  }
+
+  return [];
+}
+
+function toPeriodicityPriceCreate({
+  periodicity,
+  label,
+  amountMin,
+  amountTarget,
+  amountMax,
+}: PeriodicityPriceInput): Prisma.MemberPlanPeriodicityPriceCreateManyMemberPlanInput {
+  return {
+    periodicity,
+    label: label ?? null,
+    amountMin: amountMin ?? null,
+    amountTarget: amountTarget ?? null,
+    amountMax: amountMax ?? null,
+  };
+}
+
+function checkPeriodicityPricing(periodicityPricing: unknown): void {
+  if (periodicityPricing == null) {
+    return;
+  }
+
+  const result = periodicityPricingSchema.safeParse(periodicityPricing);
+
+  if (!result.success) {
+    throw new BadRequestException(
+      `Invalid periodicityPricing: ${result.error.issues
+        .map(issue => issue.message)
+        .join(', ')}`
+    );
+  }
+}
 
 function checkMemberPlanIntegrity(input: MemberPlanIntegrityInput): void {
   const {
@@ -295,6 +388,7 @@ function checkMemberPlanIntegrity(input: MemberPlanIntegrityInput): void {
     amountPerMonthMin,
     amountPerMonthMax,
     amountPerMonthTarget,
+    defaultPaymentPeriodicity,
     availablePaymentMethods,
   } = input;
   const hasForceAutoRenew = !!availablePaymentMethods.find(
@@ -329,6 +423,19 @@ function checkMemberPlanIntegrity(input: MemberPlanIntegrityInput): void {
   ) {
     throw new BadRequestException(
       `Memberplan amountPerMonthTarget can not be higher than amountPerMonthMax`
+    );
+  }
+
+  if (
+    defaultPaymentPeriodicity != null &&
+    !availablePaymentMethods.some(apm =>
+      toPeriodicityArray(apm.paymentPeriodicities).includes(
+        defaultPaymentPeriodicity
+      )
+    )
+  ) {
+    throw new BadRequestException(
+      `Memberplan defaultPaymentPeriodicity has to be offered by at least one payment method`
     );
   }
 }

@@ -32,8 +32,10 @@ import { format, setDefaultOptions } from 'date-fns';
 import { de } from 'date-fns/locale';
 import { AppProps } from 'next/app';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import Script from 'next/script';
-import PlausibleProvider from 'next-plausible';
+import PlausibleProvider, { usePlausible } from 'next-plausible';
+import { useEffect, useRef } from 'react';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
@@ -63,6 +65,7 @@ import {
 import { ReflektLoginForm } from '../src/components/reflekt-login-form';
 import { ReflektMemberPlanPicker } from '../src/components/reflekt-memberplan-picker';
 import { ReflektMemberPlanItem } from '../src/components/reflekt-memberplan-picker-item';
+import { ReflektUpgrade } from '../src/components/reflekt-upgrade';
 import { ReflektModal } from '../src/components/reflekt-modal';
 import { ReflektNavbar } from '../src/components/reflekt-navbar';
 import { ReflektPage } from '../src/components/reflekt-page';
@@ -112,6 +115,47 @@ const dateFormatter = (date: Date, includeTime = true) =>
     `${format(date, 'dd. MMMM yyyy')} um ${format(date, 'HH:mm')}`
   : format(date, 'dd. MMMM yyyy');
 
+const CONVERSION_EVENTS: Record<string, string[]> = {
+  subscription: ['Payment success', 'Subscription success'],
+  upgrade: ['Payment success', 'Subscription success'],
+  invoice: ['Payment success'],
+};
+
+function PlausibleConversionEvents() {
+  const router = useRouter();
+  const plausible = usePlausible();
+  const handled = useRef(false);
+
+  useEffect(() => {
+    if (!router.isReady || handled.current) {
+      return;
+    }
+
+    const conversion = router.query.wepConversion;
+
+    if (typeof conversion !== 'string') {
+      return;
+    }
+
+    const events = CONVERSION_EVENTS[conversion];
+
+    if (!events) {
+      return;
+    }
+
+    handled.current = true;
+    events.forEach(event => plausible(event, { props: { type: conversion } }));
+
+    const query = { ...router.query };
+    delete query.wepConversion;
+    void router.replace({ pathname: router.pathname, query }, undefined, {
+      shallow: true,
+    });
+  }, [router, plausible]);
+
+  return null;
+}
+
 export type CustomAppProps = AppProps<{
   sessionToken?: SessionWithTokenWithoutUser;
 }> & {
@@ -145,6 +189,8 @@ function CustomApp({
       }
       src={`https://plausible.io/js/${settings?.analytics.plausible.key}.js`}
     >
+      <PlausibleConversionEvents />
+
       <AppCacheProvider emotionCache={cache}>
         <ThemeProvider theme={theme}>
           <WebsiteProvider>
@@ -161,6 +207,7 @@ function CustomApp({
               AuthorListItem={ReflektAuthorListItem}
               Banner={ReflektBanner}
               Subscribe={ReflektSubscribeForm}
+              Upgrade={ReflektUpgrade}
               GoodiePicker={ReflektGoodiePicker}
               MemberPlanPicker={ReflektMemberPlanPicker}
               MemberPlanItem={ReflektMemberPlanItem}

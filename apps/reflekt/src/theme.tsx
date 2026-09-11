@@ -229,6 +229,7 @@ const theme = createTheme(WePTheme, {
         fontWeight: 500,
         fontSize: '1.5rem',
         textWrap: 'balanced',
+        lineHeight: 1.4,
         [breakpoints.up('md')]: {
           wordBreak: 'keep-all',
           hyphens: 'none',
@@ -241,6 +242,7 @@ const theme = createTheme(WePTheme, {
         fontWeight: 700,
         fontSize: '1.125rem',
         textWrap: 'balanced',
+        lineHeight: 1.4,
         [breakpoints.up('md')]: {
           wordBreak: 'keep-all',
           hyphens: 'none',
@@ -269,12 +271,12 @@ const theme = createTheme(WePTheme, {
       body1: {
         fontFamily: [recife.style.fontFamily, 'serif'].join(','),
         fontSize: '1.125rem',
-        lineHeight: 1.2,
+        lineHeight: 1.4,
       },
       body2: {
         fontFamily: [recife.style.fontFamily, 'serif'].join(','),
         fontSize: '1.125rem',
-        lineHeight: 1.2,
+        lineHeight: 1.4,
       },
     },
     button: {
@@ -327,6 +329,15 @@ const theme = createTheme(WePTheme, {
       tocDetails: {
         fontFamily: [recife.style.fontFamily, 'serif'].join(','),
         paddingBottom: '2rem',
+      },
+      toc: {
+        fontFamily: [recife.style.fontFamily, 'serif'].join(','),
+        fontWeight: 400,
+        fontSize: '1.125rem',
+        lineHeight: 1.4,
+        color: colors.common.white,
+        marginTop: 0,
+        marginBottom: '1rem',
       },
       ulToc: {
         listStyle: 'none',
@@ -555,6 +566,7 @@ const theme = createTheme(WePTheme, {
           // Table of Contents - RichText
           tocHeading: 'div',
           tocDetails: 'div',
+          toc: 'p',
           ulToc: 'ul',
           liToc: 'li',
           // Downloads - CollapsibleRichText

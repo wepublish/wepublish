@@ -6,6 +6,12 @@
  * filter) so a spec can assert which recipients an audience actually includes,
  * instead of only asserting the shape of the query — the shape looks right even
  * when the semantics are wrong.
+ *
+ * It evaluates in JavaScript, which is two-valued, while Postgres is
+ * three-valued: a comparison against NULL is neither true nor false there, and
+ * negating it keeps it unknown, so the row drops out. `NOT` is therefore
+ * rejected rather than approximated — a filter that reads correctly here would
+ * otherwise still return nothing in production.
  */
 type Where = Record<string, any>;
 type Row = Record<string, any>;
@@ -86,7 +92,9 @@ export const matches = (row: Row, where: Where): boolean =>
     }
 
     if (key === 'NOT') {
-      return !matches(row, condition as Where);
+      throw new Error(
+        'where-matcher: "NOT" is not supported — it cannot model SQL three-valued logic. Express the complement explicitly, including the NULL case.'
+      );
     }
 
     const value = row[key];

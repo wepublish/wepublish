@@ -6,6 +6,7 @@ import { MemberContextService } from '../legacy/member-context.service';
 import { GoodieService } from '../goodie/goodie.service';
 import { PaymentsService } from '@wepublish/payment/api';
 import { DiscountCodeService } from '../discountCode/discountCode.service';
+import { SettingsService } from '@wepublish/settings/api';
 
 jest.mock('../legacy/member-context.service');
 jest.mock('@wepublish/payment/api');
@@ -37,6 +38,10 @@ describe('UpgradeSubscriptionService', () => {
 
   let goodieServiceMock: {
     getValidGoodie: jest.Mock;
+  };
+
+  let settingsServiceMock: {
+    settingByName: jest.Mock;
   };
 
   beforeAll(() => {
@@ -72,6 +77,9 @@ describe('UpgradeSubscriptionService', () => {
     goodieServiceMock = {
       getValidGoodie: jest.fn(),
     };
+    settingsServiceMock = {
+      settingByName: jest.fn().mockResolvedValue({ value: false }),
+    };
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -95,6 +103,10 @@ describe('UpgradeSubscriptionService', () => {
         {
           provide: GoodieService,
           useValue: goodieServiceMock,
+        },
+        {
+          provide: SettingsService,
+          useValue: settingsServiceMock,
         },
       ],
     }).compile();
@@ -305,6 +317,97 @@ describe('UpgradeSubscriptionService', () => {
       // Should not be 500 as the period has ended
       // Should not be 600 because 2 periods are still active and 5 comes from the nearly ended one
       expect(result.discountAmount).toBe(605);
+    });
+  });
+
+  describe('full difference upgrade model', () => {
+    const activeSubscription = {
+      id: 'subscriptionId',
+      userID: 'userId',
+      currency: Currency.CHF,
+      paymentPeriodicity: PaymentPeriodicity.yearly,
+      extendable: true,
+      autoRenew: true,
+      periods: [
+        {
+          id: '1',
+          paymentPeriodicity: PaymentPeriodicity.yearly,
+          amount: 6000,
+          startsAt: new Date('2024-07-01'),
+          endsAt: new Date('2025-07-01'),
+          createdAt: new Date('2024-07-01'),
+          invoice: {
+            paidAt: new Date('2024-07-01'),
+          },
+        },
+        {
+          id: '2',
+          paymentPeriodicity: PaymentPeriodicity.yearly,
+          amount: 9999,
+          startsAt: new Date('2026-01-01'),
+          endsAt: new Date('2027-01-01'),
+          createdAt: new Date('2026-01-01'),
+          invoice: {
+            paidAt: null,
+          },
+        },
+      ],
+    };
+
+    const memberPlan = {
+      currency: Currency.CHF,
+      availablePaymentMethods: [
+        {
+          paymentMethodIDs: ['paymentMethodId'],
+          paymentPeriodicities: [PaymentPeriodicity.yearly],
+          forceAutoRenewal: true,
+        },
+      ],
+    };
+
+    const getInfoArgs = {
+      subscriptionId: 'subscriptionId',
+      memberPlanId: 'memberPlanId',
+      userId: 'userId',
+    };
+
+    it('credits the full paid period amount when the setting is enabled', async () => {
+      prismaMock.subscription.findUnique.mockResolvedValue(activeSubscription);
+      prismaMock.memberPlan.findUnique.mockResolvedValue(memberPlan);
+      settingsServiceMock.settingByName.mockResolvedValueOnce({ value: true });
+
+      const result = await service.getInfo(getInfoArgs);
+
+      expect(result.discountAmount).toBe(6000);
+    });
+
+    it('credits only the pro-rated remainder when the setting is disabled', async () => {
+      prismaMock.subscription.findUnique.mockResolvedValue(activeSubscription);
+      prismaMock.memberPlan.findUnique.mockResolvedValue(memberPlan);
+      settingsServiceMock.settingByName.mockResolvedValueOnce({ value: false });
+
+      const result = await service.getInfo(getInfoArgs);
+
+      expect(result.discountAmount).toBeGreaterThan(0);
+      expect(result.discountAmount).toBeLessThan(6000);
+    });
+
+    it('falls back to the pro-rated remainder when the setting row is missing', async () => {
+      prismaMock.subscription.findUnique.mockResolvedValue(activeSubscription);
+      prismaMock.memberPlan.findUnique.mockResolvedValue(memberPlan);
+
+      settingsServiceMock.settingByName.mockResolvedValueOnce({ value: false });
+      const proRata = (await service.getInfo(getInfoArgs)).discountAmount;
+
+      settingsServiceMock.settingByName.mockRejectedValueOnce(
+        new Error(
+          'Setting with name subscriptionUpgradeBillsFullDifference not found'
+        )
+      );
+      const fallback = (await service.getInfo(getInfoArgs)).discountAmount;
+
+      expect(fallback).toBe(proRata);
+      expect(fallback).toBeLessThan(6000);
     });
   });
 

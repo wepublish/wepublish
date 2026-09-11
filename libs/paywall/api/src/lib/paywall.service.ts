@@ -139,6 +139,7 @@ export class PaywallService {
       },
       include: {
         availablePaymentMethods: true,
+        periodicityPricing: true,
       },
     });
   }
