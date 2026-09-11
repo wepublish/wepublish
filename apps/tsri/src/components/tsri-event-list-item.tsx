@@ -30,12 +30,6 @@ export const EventListItemName = styled('h2')`
   }
 `;
 
-export const EventListItemBody = styled('div')`
-  display: flex;
-  flex-flow: column;
-  align-items: stretch;
-`;
-
 export const EventListItemContent = styled('div')`
   display: flex;
   flex-flow: column;
@@ -49,16 +43,12 @@ export const EventListItemDate = styled('span')`
   background-color: ${({ theme }) => theme.palette.common.black};
   color: ${({ theme }) => theme.palette.common.white};
   padding: ${({ theme }) => theme.spacing(0.5, 1.5)};
-  font-size: 0.875rem;
+  font-size: 0.75rem;
   line-height: 1.2;
   font-weight: 700;
   transition:
     background-color 0.3s,
     color 0.3s;
-
-  ${({ theme }) => theme.breakpoints.up('md')} {
-    font-size: 0.75rem;
-  }
 `;
 
 export const EventListItemLead = styled('div')`
@@ -75,13 +65,47 @@ export const EventListItemLead = styled('div')`
 
 export const EventListItemWrapper = styled('article')`
   display: grid;
-  gap: ${({ theme }) => theme.spacing(2)};
-  grid-template-columns: min(68%, 468px) auto;
-  align-items: center;
+  grid-template-columns: 1fr;
+  grid-template-rows: min-content auto auto;
+  gap: 0;
   background-color: ${({ theme }) => theme.palette.primary.dark};
-  padding: ${({ theme }) => theme.spacing(2, 0, 2, 2)};
+  padding: ${({ theme }) => theme.spacing(1, 1, 4.5)};
   border-radius: 0.75rem;
   overflow: hidden;
+
+  ${EventListItemDate} {
+    grid-row: 3;
+    grid-column: 1;
+    justify-self: start;
+    align-self: start;
+    z-index: 1;
+    padding-left: ${({ theme }) => theme.spacing(2)};
+  }
+
+  ${EventListItemContent} {
+    grid-row: 3;
+    grid-column: 1;
+    padding-top: ${({ theme }) => theme.spacing(5)};
+  }
+
+  @container (min-width: 520px) {
+    grid-template-columns: min(68%, 468px) auto;
+    grid-template-rows: 1fr auto auto 1fr;
+    column-gap: ${({ theme }) => theme.spacing(2)};
+    padding: ${({ theme }) => theme.spacing(2, 0, 2, 2)};
+
+    ${EventListItemDate} {
+      grid-row: 2;
+      grid-column: 2;
+      padding-left: ${({ theme }) => theme.spacing(1.5)};
+    }
+
+    ${EventListItemContent} {
+      grid-row: 3;
+      grid-column: 2;
+      padding-top: ${({ theme }) => theme.spacing(2)};
+    }
+  }
 
   &:hover {
     ${EventListItemDate} {
@@ -112,10 +136,17 @@ export const EventListItemMeta = styled('div')`
 const EventListItemImage = styled('div')`
   position: relative;
   align-self: start;
+  grid-row: 1 / 3;
+  grid-column: 1;
   aspect-ratio: 16/9;
-  border-radius: 0.375rem;
+  border-radius: 0.375rem 0.375rem 0 0;
   overflow: hidden;
   background-color: #d9ccbc;
+
+  @container (min-width: 520px) {
+    grid-row: 1 / -1;
+    border-radius: 0.375rem;
+  }
 
   & svg {
     position: absolute;
@@ -237,8 +268,12 @@ const EventLocationWrapper = styled('div')`
   grid-template-columns: subgrid;
   grid-column: -1 / 1;
   gap: ${({ theme }) => theme.spacing(1)};
-  align-items: center;
+  align-items: start;
   width: 100%;
+
+  & svg {
+    margin-top: 2px;
+  }
 `;
 
 const EventLocation = styled('div')`
@@ -288,61 +323,59 @@ export const TsriEventListItem = ({
           )}
         </EventListItemImage>
 
-        <EventListItemBody>
-          <EventListItemDate>
-            <time
-              suppressHydrationWarning
-              dateTime={startsAt}
-            >
-              {date.format(new Date(startsAt), false)}
-            </time>
+        <EventListItemDate>
+          <time
+            suppressHydrationWarning
+            dateTime={startsAt}
+          >
+            {date.format(new Date(startsAt), false)}
+          </time>
 
-            {endsAt &&
-              new Date(endsAt).toDateString() !==
-                new Date(startsAt).toDateString() && (
-                <span>
-                  {' '}
-                  &ndash;{' '}
-                  <time
-                    suppressHydrationWarning
-                    dateTime={endsAt}
-                  >
-                    {date.format(new Date(endsAt), false)}
-                  </time>
-                </span>
-              )}
-          </EventListItemDate>
+          {endsAt &&
+            new Date(endsAt).toDateString() !==
+              new Date(startsAt).toDateString() && (
+              <span>
+                {' '}
+                &ndash;{' '}
+                <time
+                  suppressHydrationWarning
+                  dateTime={endsAt}
+                >
+                  {date.format(new Date(endsAt), false)}
+                </time>
+              </span>
+            )}
+        </EventListItemDate>
 
-          <EventListItemContent>
-            <EventListItemMeta>
+        <EventListItemContent>
+          <EventListItemMeta>
+            <EventLocationWrapper>
+              <MdLocationOn />
+              <EventLocation>
+                {location ?? EVENT_LOCATION_FALLBACK}
+              </EventLocation>
+            </EventLocationWrapper>
+
+            {!!tags?.length && (
               <EventLocationWrapper>
-                <MdLocationOn />
-                <EventLocation>
-                  {location ?? EVENT_LOCATION_FALLBACK}
-                </EventLocation>
+                <MdTag />
+                <EventTags>
+                  {tags.map(tag => (
+                    <TsriEventTag key={tag.id}>{tag.tag}</TsriEventTag>
+                  ))}
+                </EventTags>
               </EventLocationWrapper>
+            )}
+          </EventListItemMeta>
 
-              {!!tags?.length && (
-                <EventLocationWrapper>
-                  <MdTag />
-                  <EventTags>
-                    {tags.map(tag => (
-                      <TsriEventTag key={tag.id}>{tag.tag}</TsriEventTag>
-                    ))}
-                  </EventTags>
-                </EventLocationWrapper>
-              )}
-            </EventListItemMeta>
+          <EventListItemName>{name}</EventListItemName>
 
-            <EventListItemName>{name}</EventListItemName>
-
-            <EventListItemLead>
-              {lead ?
-                <Paragraph>{lead}</Paragraph>
-              : <RichText richText={description} />}
-            </EventListItemLead>
-          </EventListItemContent>
-        </EventListItemBody>
+          <EventListItemLead>
+            {lead ?
+              <Paragraph>{lead}</Paragraph>
+            : <RichText richText={description} />}
+          </EventListItemLead>
+        </EventListItemContent>
       </EventListItemWrapper>
     </Link>
   );

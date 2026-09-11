@@ -46,10 +46,11 @@ const TsriEventMetaRow = styled('div')`
   display: grid;
   grid-template-columns: 20px auto;
   gap: ${({ theme }) => theme.spacing(1)};
-  align-items: center;
+  align-items: start;
 
   & svg {
     font-size: 1rem;
+    margin-top: 2px;
   }
 `;
 

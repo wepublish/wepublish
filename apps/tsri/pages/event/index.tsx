@@ -47,10 +47,11 @@ const TsriEventList = styled(EventListContainer)`
       )
       800px
   );
-  border-radius: 1cqw;
+  border-radius: 1rem;
   padding: 2cqw;
 
   ${({ theme }) => theme.breakpoints.up('md')} {
+    border-radius: 1cqw;
     padding: 1.5cqw;
   }
 `;
