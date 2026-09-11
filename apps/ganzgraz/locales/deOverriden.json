@@ -1,0 +1,29 @@
+{
+  "subscribe": {
+    "support": {
+      "subscribeForPeriod": "Ich unterstütze ganzgraz {monthlyAmount, select, 0 {gratis} other {{renewalPeriodL} mit {formattedAmount}}}",
+      "payForPeriod": "Ich unterstütze ganzgraz {monthlyAmount, select, 0 {gratis} other {{paymentPeriodL} mit {formattedAmount}}}",
+      "pay": "Ich unterstütze ganzgraz {monthlyAmount, select, 0 {gratis} other {mit {formattedAmount}}}"
+    },
+    "transactionFees": "Ja, ich will die Bearbeitungsgebühren von 2% übernehmen und damit ganzgraz unterstützen."
+  },
+  "event": {
+    "filter": {
+      "today": "Heute",
+      "tomorrow": "Morgen",
+      "next7": "Nächste 7 Tage",
+      "next30": "Nächste 30 Tage",
+      "upcoming": "Alle bevorstehenden",
+      "reset": "Filter zurücksetzen"
+    },
+    "empty": {
+      "today": "Heute gibt es keine Veranstaltungen zum Anzeigen.",
+      "tomorrow": "Morgen gibt es keine Veranstaltungen zum Anzeigen.",
+      "next7": "In den nächsten 7 Tagen gibt es keine Veranstaltungen zum Anzeigen.",
+      "next30": "In den nächsten 30 Tagen gibt es keine Veranstaltungen zum Anzeigen.",
+      "upcoming": "Es gibt keine bevorstehenden Veranstaltungen zum Anzeigen.",
+      "all": "Es gibt keine Veranstaltungen zum Anzeigen.",
+      "custom": "Im gewählten Zeitraum gibt es keine Veranstaltungen zum Anzeigen."
+    }
+  }
+}

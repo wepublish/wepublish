@@ -1,7 +1,7 @@
 import { useDraggable } from '@dnd-kit/core';
 import styled from '@emotion/styled';
 import {
-  FullMailTemplateFragment,
+  TinyMailTemplateFragment,
   SubscriptionEvent,
   SubscriptionFlowFragment,
 } from '@wepublish/editor/api';
@@ -30,7 +30,7 @@ interface DraggableSubscriptionIntervalProps {
   subscriptionInterval?: DecoratedSubscriptionInterval<any>;
   newDaysAwayFromEnding?: number;
   event?: SubscriptionEvent;
-  mailTemplates: FullMailTemplateFragment[];
+  mailTemplates: TinyMailTemplateFragment[];
   subscriptionFlow: SubscriptionFlowFragment;
 }
 

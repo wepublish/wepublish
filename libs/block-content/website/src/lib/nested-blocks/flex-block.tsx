@@ -5,6 +5,7 @@ import {
   FullFlexBlockFragment,
 } from '@wepublish/website/api';
 import {
+  BuilderBlockRendererProps,
   BuilderFlexBlockProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
@@ -44,7 +45,15 @@ export const isFlexBlock = (
   return block.__typename === 'FlexBlock';
 };
 
-export const FlexBlock = ({ className, blocks }: BuilderFlexBlockProps) => {
+export const FlexBlock = ({
+  className,
+  blocks,
+  type,
+  level,
+}: BuilderFlexBlockProps & {
+  type?: BuilderBlockRendererProps['type'];
+  level?: number;
+}) => {
   const {
     blocks: { Renderer },
   } = useWebsiteBuilder();
@@ -63,7 +72,8 @@ export const FlexBlock = ({ className, blocks }: BuilderFlexBlockProps) => {
           >
             <Renderer
               block={nestedBlock.block as FullBlockFragment}
-              type="Article"
+              type={type ?? 'Page'}
+              level={(level ?? 0) + 1}
               index={index}
               count={sortedBlocks.length}
             />

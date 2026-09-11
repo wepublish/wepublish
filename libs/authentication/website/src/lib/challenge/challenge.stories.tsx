@@ -3,8 +3,8 @@ import {
   CaptchaType,
 } from '@wepublish/website/api';
 import { Challenge } from './challenge';
-import { Meta, StoryObj } from '@storybook/react';
-import { action } from '@storybook/addon-actions';
+import { Meta, StoryObj } from '@storybook/nextjs-vite';
+import { action } from 'storybook/actions';
 
 const turnstileChallenge = {
   type: CaptchaType.CfTurnstile,

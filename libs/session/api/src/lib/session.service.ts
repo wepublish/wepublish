@@ -209,12 +209,12 @@ export class SessionService {
       throw new Error('No value set for RESET_PASSWORD_JWT_EXPIRES_MIN');
     }
 
-    const remoteTemplate = await this.mailContext.getUserTemplateName(
+    const remoteTemplate = await this.mailContext.getUserTemplateId(
       UserEvent.LOGIN_LINK
     );
 
     await this.mailContext.sendMail({
-      externalMailTemplateId: remoteTemplate,
+      mailTemplateId: remoteTemplate,
       recipient: user,
       optionalData: {},
       mailType: mailLogType.UserFlow,
@@ -230,7 +230,7 @@ export class SessionService {
     }
 
     // Check if the PASSWORD_RESET template is configured
-    const remoteTemplate = await this.mailContext.getUserTemplateName(
+    const remoteTemplate = await this.mailContext.getUserTemplateId(
       UserEvent.PASSWORD_RESET,
       false
     );
@@ -249,7 +249,7 @@ export class SessionService {
     }
 
     await this.mailContext.sendMail({
-      externalMailTemplateId: remoteTemplate,
+      mailTemplateId: remoteTemplate,
       recipient: user,
       optionalData: {},
       mailType: mailLogType.UserFlow,
@@ -302,12 +302,12 @@ export class SessionService {
       return email;
     }
 
-    const remoteTemplate = await this.mailContext.getUserTemplateName(
+    const remoteTemplate = await this.mailContext.getUserTemplateId(
       UserEvent.LOGIN_LINK
     );
 
     await this.mailContext.sendMail({
-      externalMailTemplateId: remoteTemplate,
+      mailTemplateId: remoteTemplate,
       recipient: user,
       optionalData: {},
       mailType: mailLogType.UserFlow,

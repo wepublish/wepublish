@@ -11,6 +11,10 @@ query MailProviderSettings {
     name
     replyToAddress
     slack_webhookURL
+    smtp_host
+    smtp_port
+    smtp_secure
+    smtp_user
     type
   }
 }
@@ -25,6 +29,10 @@ mutation UpdateMailProviderSetting(
   $name: String
   $replyToAddress: String
   $slack_webhookURL: String
+  $smtp_host: String
+  $smtp_port: Int
+  $smtp_secure: Boolean
+  $smtp_user: String
   $webhookEndpointSecret: String
 ) {
   updateMailProviderSetting(
@@ -37,6 +45,10 @@ mutation UpdateMailProviderSetting(
     name: $name
     replyToAddress: $replyToAddress
     slack_webhookURL: $slack_webhookURL
+    smtp_host: $smtp_host
+    smtp_port: $smtp_port
+    smtp_secure: $smtp_secure
+    smtp_user: $smtp_user
     webhookEndpointSecret: $webhookEndpointSecret
   ) {
     createdAt
@@ -50,6 +62,10 @@ mutation UpdateMailProviderSetting(
     name
     replyToAddress
     slack_webhookURL
+    smtp_host
+    smtp_port
+    smtp_secure
+    smtp_user
     type
   }
 }

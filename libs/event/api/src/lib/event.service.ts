@@ -101,7 +101,7 @@ export class EventService {
       },
       data: {
         ...input,
-        description: description as any[],
+        description: description as any,
         tags:
           tagIds ?
             {
@@ -135,7 +135,7 @@ export class EventService {
     return this.prisma.event.create({
       data: {
         ...input,
-        description: description as any[],
+        description: description as any,
         tags:
           tagIds?.length ?
             {

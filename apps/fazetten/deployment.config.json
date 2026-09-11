@@ -3,23 +3,17 @@
     "production": {
       "deployment": true,
       "custom_domain": "https://fazetten.ch",
-      "env": {
-        "GA_ID": "G-0RQL04JWXX"
-      },
+      "env": {},
       "secret_env": []
     },
     "staging": {
       "deployment": true,
-      "env": {
-        "GA_ID": ""
-      },
+      "env": {},
       "secret_env": []
     },
     "review": {
       "deployment": true,
-      "env": {
-        "GA_ID": ""
-      },
+      "env": {},
       "secret_env": []
     }
   }

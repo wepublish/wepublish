@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { FullImageFragment } from '@wepublish/editor/api';
-import React from 'react';
+import React, { JSX } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdClose, MdEdit, MdPhoto } from 'react-icons/md';
 import { Dropdown, IconButton, Panel as RPanel, Placeholder } from 'rsuite';

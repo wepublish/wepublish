@@ -267,6 +267,7 @@ export function TeaserGridFlexBlock({
         onDrag={() => setIsDragging(true)} // buggy behavior with onDragStart with double click
         cols={12}
         rowHeight={30}
+        compactType={null}
         layout={flexTeasers.map(ft => ft.alignment)}
         width={640}
       >

@@ -12,7 +12,8 @@ import {
   DEFAULT_TABLE_PAGE_SIZES,
   DescriptionList,
   DescriptionListItem,
-  ExportSubscriptionsAsCsv,
+  ExportSubscriptions,
+  IconButton,
   IconButtonTooltip,
   ListViewActions,
   ListViewContainer,
@@ -27,7 +28,6 @@ import {
   TableWrapper,
   useAuthorisation,
 } from '@wepublish/ui/editor';
-import { TFunction } from 'i18next';
 import { ReactNode, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdDelete, MdInfo } from 'react-icons/md';
@@ -44,14 +44,6 @@ import {
 import { RowDataType } from 'rsuite-table';
 
 const { Column, HeaderCell, Cell: RCell } = RTable;
-
-const IconButtonSmallMargin = styled(RIconButton)`
-  margin-left: 5px;
-`;
-
-const IconButton = styled(RIconButton)`
-  margin-left: 20px;
-`;
 
 const Info = styled.div`
   position: relative;
@@ -83,24 +75,25 @@ function mapColumFieldToGraphQLField(
 
 export const NewSubscriptionButton = ({
   isLoading,
-  t,
   userId,
 }: {
   isLoading?: boolean;
-  t: TFunction<'translation'>;
   userId?: string;
 }) => {
+  const { t } = useTranslation();
+
   const canCreate = useAuthorisation('CAN_CREATE_SUBSCRIPTION');
   const urlToRedirect = `/subscriptions/create${userId ? `${`?userId=${userId}`}` : ''}`;
+
   return (
     <Link to={urlToRedirect}>
-      <IconButton
+      <RIconButton
         appearance="primary"
         disabled={isLoading || !canCreate}
       >
         <MdAdd />
         {t('subscriptionList.overview.newSubscription')}
-      </IconButton>
+      </RIconButton>
     </Link>
   );
 };
@@ -183,12 +176,14 @@ function SubscriptionList() {
         <ListViewHeader>
           <h2>{t('subscriptionList.overview.subscription')}</h2>
         </ListViewHeader>
+
         <PermissionControl qualifyingPermissions={['CAN_CREATE_SUBSCRIPTION']}>
           <Actions>
-            <ExportSubscriptionsAsCsv filter={filter} />
-            {NewSubscriptionButton({ isLoading, t })}
+            <ExportSubscriptions filter={filter} />
+            <NewSubscriptionButton isLoading={isLoading} />
           </Actions>
         </PermissionControl>
+
         <ListViewFilterArea>
           <SubscriptionListFilter
             filter={filter}
@@ -276,7 +271,7 @@ function SubscriptionList() {
               {(rowData: RowDataType<TinySubscriptionFragment>) => (
                 <>
                   <IconButtonTooltip caption={t('delete')}>
-                    <IconButtonSmallMargin
+                    <IconButton
                       circle
                       size="sm"
                       appearance="ghost"

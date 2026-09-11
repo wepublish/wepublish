@@ -4,7 +4,7 @@ import { PermissionControl } from '@wepublish/ui/editor';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd } from 'react-icons/md';
-import { Button, IconButton, InputNumber, Popover, Whisper } from 'rsuite';
+import { Button, IconButton, NumberInput, Popover, Whisper } from 'rsuite';
 
 const PopoverBody = styled('div')`
   display: grid;
@@ -15,6 +15,12 @@ const PopoverBody = styled('div')`
 
 const FlexContainer = styled('div')`
   display: flex;
+`;
+
+const PopoverHint = styled('span')`
+  font-size: 12px;
+  line-height: 1.4;
+  color: ${({ theme }) => theme.palette.text.secondary};
 `;
 
 interface EventsHeadProps {
@@ -34,12 +40,14 @@ export function EventsHead({ setNewDay }: EventsHeadProps) {
           speaker={
             <Popover>
               <PopoverBody>
-                <h6>New day in timeline</h6>
+                <h6>{t('subscriptionFlow.newDayTitle')}</h6>
+
+                <PopoverHint>{t('subscriptionFlow.newDayHint')}</PopoverHint>
 
                 <FlexContainer style={{ marginTop: '5px' }}>
-                  <InputNumber
+                  <NumberInput
                     defaultValue={createDayFrom}
-                    onChange={value => setCreateDayFrom(+value)}
+                    onChange={value => setCreateDayFrom(+(value ?? 0))}
                     step={1}
                   />
 

@@ -10,10 +10,14 @@ export function handleRequest(indexPath: string) {
     const clientSettings = {
       apiURL: process.env.API_URL,
       wepOneURL: process.env.WEP_ONE_URL || 'https://one-admin.wepublish.cloud',
+      medium: (process.env.APP_NAME || '').toLowerCase(),
       imgMinSizeToCompress:
         process.env.IMG_MIN_SIZE_TO_COMPRESS ?
           parseInt(process.env.IMG_MIN_SIZE_TO_COMPRESS)
         : 10,
+      sentryDSN: process.env.SENTRY_DSN || '',
+      appName: process.env.APP_NAME || '',
+      appEnvironment: process.env.APP_ENVIRONMENT || '',
     };
 
     const clientSettingsHTML = `

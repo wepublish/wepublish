@@ -1,4 +1,4 @@
-import { Meta } from '@storybook/react';
+import { Meta } from '@storybook/nextjs-vite';
 import { HtmlBlock } from './html-block';
 
 export default {

@@ -1,5 +1,5 @@
 import { ApolloError } from '@apollo/client';
-import { Meta } from '@storybook/react';
+import { Meta } from '@storybook/nextjs-vite';
 import { Author } from './author';
 import { mockAuthor } from '@wepublish/storybook/mocks';
 

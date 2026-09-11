@@ -4,10 +4,7 @@ import { useEffect, useState } from 'react';
 
 import { hasBlockStyle } from '../../has-blockstyle';
 import { isImageGalleryBlock } from '../../image-gallery/image-gallery-block';
-import {
-  BuilderBlockStyleProps,
-  useWebsiteBuilder,
-} from '@wepublish/website/builder';
+import { BuilderBlockStyleProps, ImageBlock } from '@wepublish/website/builder';
 import {
   SliderArrow,
   SliderBall,
@@ -24,6 +21,15 @@ import {
   FullImageGalleryBlockFragment,
 } from '@wepublish/website/api';
 import { MdArrowBackIos, MdArrowForwardIos } from 'react-icons/md';
+import { ImageBlockCaption } from '../../image/image-block';
+import styled from '@emotion/styled';
+
+export const ImageSliderImage = styled(ImageBlock)`
+  ${ImageBlockCaption} {
+    width: initial;
+    justify-self: initial;
+  }
+`;
 
 export const ImageSlider = ({
   images,
@@ -32,12 +38,7 @@ export const ImageSlider = ({
   detailsChanged,
   slideGap,
   className,
-  blockStyle,
-  ...props
 }: BuilderBlockStyleProps['ImageSlider']) => {
-  const {
-    blocks: { Image },
-  } = useWebsiteBuilder();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [loaded, setLoaded] = useState(false);
 
@@ -83,7 +84,7 @@ export const ImageSlider = ({
                 key={index}
                 className="keen-slider__slide"
               >
-                <Image
+                <ImageSliderImage
                   caption={image.caption}
                   image={image.image}
                 />
@@ -99,6 +100,7 @@ export const ImageSlider = ({
                 ).keys(),
               ].map(idx => (
                 <SliderBall
+                  type="button"
                   key={idx}
                   onClick={() => sliderRef.current?.moveToIdx(idx)}
                   aria-label={`Slide ${idx + 1}`}
@@ -108,6 +110,7 @@ export const ImageSlider = ({
               ))}
 
               <SliderArrow
+                type="button"
                 onClick={() => sliderRef.current?.prev()}
                 aria-label="Previous slide"
               >
@@ -115,6 +118,7 @@ export const ImageSlider = ({
               </SliderArrow>
 
               <SliderArrow
+                type="button"
                 onClick={() => sliderRef.current?.next()}
                 aria-label="Next slide"
               >

@@ -1,4 +1,4 @@
-import { Meta, StoryObj } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { ArticleListDocument, TagDocument } from '@wepublish/website/api';
 import { TagContainer } from './tag-container';
 import {
@@ -6,7 +6,7 @@ import {
   mockArticleRevision,
   mockTag,
 } from '@wepublish/storybook/mocks';
-import { action } from '@storybook/addon-actions';
+import { action } from 'storybook/actions';
 
 const tag = mockTag();
 

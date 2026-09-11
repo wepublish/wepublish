@@ -25,7 +25,7 @@ export function VimeoVideoBlock({
     <VimeoVideoBlockWrapper className={className}>
       <VimeoVideoBlockPlayer
         controls={true}
-        url={`https://vimeo.com/${videoID}`}
+        src={`https://vimeo.com/${videoID}`}
         width="auto"
         height="auto"
       />

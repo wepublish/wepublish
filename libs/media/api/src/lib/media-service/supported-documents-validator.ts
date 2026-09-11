@@ -20,6 +20,9 @@ export const supportedDocumentMimeTypes = [
   // Text/Data
   'text/csv',
   'text/plain',
+  'application/json',
+  'application/xml',
+  'text/xml',
   // Archive
   'application/zip',
 ];
@@ -59,7 +62,13 @@ export function getDocumentCategory(mimeType: string): DocumentCategory {
     mimeType === 'application/vnd.oasis.opendocument.presentation'
   )
     return 'powerpoint';
-  if (mimeType === 'text/plain') return 'text';
+  if (
+    mimeType === 'text/plain' ||
+    mimeType === 'application/json' ||
+    mimeType === 'application/xml' ||
+    mimeType === 'text/xml'
+  )
+    return 'text';
   if (mimeType === 'application/zip') return 'archive';
   return 'generic';
 }
@@ -81,9 +90,36 @@ export function getExtensionForMimeType(mimeType: string): string {
     'application/vnd.oasis.opendocument.presentation': '.odp',
     'text/csv': '.csv',
     'text/plain': '.txt',
+    'application/json': '.json',
+    'application/xml': '.xml',
+    'text/xml': '.xml',
     'application/zip': '.zip',
   };
   return map[mimeType] ?? '';
+}
+
+const extensionToMimeType: Record<string, string> = {
+  '.pdf': 'application/pdf',
+  '.docx':
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  '.doc': 'application/msword',
+  '.xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  '.xls': 'application/vnd.ms-excel',
+  '.pptx':
+    'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+  '.ppt': 'application/vnd.ms-powerpoint',
+  '.odt': 'application/vnd.oasis.opendocument.text',
+  '.ods': 'application/vnd.oasis.opendocument.spreadsheet',
+  '.odp': 'application/vnd.oasis.opendocument.presentation',
+  '.csv': 'text/csv',
+  '.txt': 'text/plain',
+  '.json': 'application/json',
+  '.xml': 'application/xml',
+  '.zip': 'application/zip',
+};
+
+export function getMimeTypeForExtension(extension: string): string | undefined {
+  return extensionToMimeType[extension.toLowerCase()];
 }
 
 export class SupportedDocumentsValidator extends FileValidator {
@@ -100,6 +136,6 @@ export class SupportedDocumentsValidator extends FileValidator {
   }
 
   override buildErrorMessage(file: IFile): string {
-    return `The file type ${file.mimetype} is not supported. Supported formats: PDF, Word, Excel, PowerPoint, OpenDocument, CSV, TXT, ZIP.`;
+    return `The file type ${file.mimetype} is not supported. Supported formats: PDF, Word, Excel, PowerPoint, OpenDocument, CSV, TXT, JSON, XML, ZIP.`;
   }
 }

@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { PrismaModule } from '@wepublish/nest-modules';
 import { NavigationService } from './navigation.service';
 import { NavigationDataloaderService } from './navigation-dataloader.service';
+import { NavigationLinksDataloaderService } from './navigation-links.dataloader';
 import { PageModule } from '@wepublish/page/api';
 import { ArticleModule } from '@wepublish/article/api';
 import { NavigationResolver } from './navigation.resolver';
@@ -11,6 +12,7 @@ import { NavigationResolver } from './navigation.resolver';
   providers: [
     NavigationService,
     NavigationDataloaderService,
+    NavigationLinksDataloaderService,
     NavigationResolver,
   ],
 })

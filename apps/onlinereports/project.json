@@ -10,7 +10,8 @@
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
-        "outputPath": "dist/apps/onlinereports"
+        "outputPath": "dist/apps/onlinereports",
+        "webpack": true
       },
       "configurations": {
         "development": {
@@ -24,7 +25,8 @@
       "defaultConfiguration": "development",
       "options": {
         "buildTarget": "onlinereports:build",
-        "dev": true
+        "dev": true,
+        "webpack": true
       },
       "configurations": {
         "development": {
@@ -44,10 +46,18 @@
       }
     },
     "test": {
-      "executor": "@nx/jest:jest",
+      "executor": "nx:run-commands",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "apps/onlinereports/jest.config.ts"
+        "command": "vitest run --passWithNoTests --config {projectRoot}/vitest.config.ts"
+      },
+      "configurations": {
+        "ci": {
+          "command": "vitest run --passWithNoTests --coverage --config {projectRoot}/vitest.config.ts"
+        },
+        "update": {
+          "command": "vitest run --passWithNoTests --update --config {projectRoot}/vitest.config.ts"
+        }
       }
     },
     "lint": {

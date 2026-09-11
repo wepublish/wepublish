@@ -84,7 +84,12 @@ function TokenGeneratePanel({ onClose }: TokenGeneratePanelProps) {
         {token ?
           <>
             <p>{t('tokenList.panels.creationSuccess')}</p>
-            <Panel bordered>{token}</Panel>
+            <Panel
+              bordered
+              data-sentry-mask
+            >
+              {token}
+            </Panel>
             <Message
               showIcon
               type="warning"

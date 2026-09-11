@@ -99,7 +99,9 @@ export function ExternalAppForm({ app }: ExternalAppFormProps) {
   });
 
   const handleDelete = () => {
-    if (!app) return;
+    if (!app) {
+      return;
+    }
 
     deleteExternalApp({
       variables: {

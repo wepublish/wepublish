@@ -1,0 +1,940 @@
+import styled from '@emotion/styled';
+import {
+  alpha,
+  AppBar as MuiAppBar,
+  Box,
+  css,
+  GlobalStyles,
+  Link as MuiLink,
+  Theme,
+  Toolbar,
+  Typography,
+} from '@mui/material';
+import { useHasActiveSubscription } from '@wepublish/membership/website';
+import { navigationLinkToUrl } from '@wepublish/navigation/website';
+import { ButtonProps, TextToIcon } from '@wepublish/ui';
+import { FullNavigationFragment } from '@wepublish/website/api';
+import {
+  BuilderNavbarProps,
+  IconButton,
+  Link,
+  useWebsiteBuilder,
+} from '@wepublish/website/builder';
+import { useRouter } from 'next/router';
+import {
+  forwardRef,
+  PropsWithChildren,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+import { FiMenu as FiMenuDefault } from 'react-icons/fi';
+import { MdWarning } from 'react-icons/md';
+
+import theme from '../theme';
+import { useLoginLinkSwap } from './hooks/use-login-link-swap';
+
+enum NavbarState {
+  Low,
+  High,
+  IsLoggedOut,
+  IsLoggedIn,
+}
+
+enum ScrollDirection {
+  Up,
+  Down,
+}
+
+const cssVariables = (state: NavbarState[], isHomePage: boolean) => css`
+  :root {
+    ${isHomePage ?
+      `
+        --navbar-height: -10px;
+        --navbar-aspect-ratio: 3.7 / 1;
+        --scrolled-navbar-aspect-ratio: 3.7 / 1;
+
+      ${theme.breakpoints.up('md')} {
+        --navbar-height: -10px;
+        --navbar-aspect-ratio: 6.5 / 1;
+        --scrolled-navbar-aspect-ratio: 9 / 1;
+      }
+    `
+    : `
+    --navbar-aspect-ratio: 3.1 / 1;
+    --scrolled-navbar-aspect-ratio: 3.1 / 1;
+
+      ${theme.breakpoints.up('md')} {
+        --navbar-aspect-ratio: 8 / 1;
+        --scrolled-navbar-aspect-ratio: 9.5 / 1;
+      }
+    `}
+    --changing-aspect-ratio: ${state.includes(NavbarState.Low) ?
+      'var(--navbar-aspect-ratio)'
+    : 'var(--scrolled-navbar-aspect-ratio)'};
+  }
+`;
+
+export const AppBar = styled(MuiAppBar, {
+  shouldForwardProp: propName => propName !== 'isMenuOpen',
+})<{ isMenuOpen?: boolean }>`
+  position: relative;
+  overflow-y: visible;
+  background-color: transparent;
+
+  ${theme.breakpoints.up('md')} {
+    background-color: var(--navbar-bg-color-hero-off-screen, white);
+  }
+
+  ${({ isMenuOpen }) =>
+    isMenuOpen &&
+    css`
+      background-color: transparent;
+    `}
+`;
+
+export const NavbarWrapper = styled('nav')`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  height: auto;
+  pointer-events: none;
+  margin-bottom: calc(${theme.spacing(-3)} + 1px);
+  background-color: transparent;
+
+  ${theme.breakpoints.up('md')} {
+    background-color: var(--navbar-bg-color-hero-off-screen, white);
+  }
+
+  > * {
+    pointer-events: all;
+  }
+`;
+
+const getNavbarState = (
+  isScrolled: boolean,
+  scrollDirection: ScrollDirection,
+  hasActiveSubscription: boolean,
+  isLoggedOut: boolean
+): NavbarState[] => {
+  const navbarStates: NavbarState[] = [];
+
+  if (!isScrolled) {
+    navbarStates.push(NavbarState.Low);
+  }
+
+  if (isLoggedOut) {
+    navbarStates.push(NavbarState.IsLoggedOut);
+  } else {
+    navbarStates.push(NavbarState.IsLoggedIn);
+  }
+
+  if (!navbarStates.includes(NavbarState.Low)) {
+    navbarStates.push(NavbarState.High);
+  }
+
+  return navbarStates;
+};
+
+export const navbarButtonStyles = (theme: Theme) => css`
+  padding: 0;
+  background-color: ${theme.palette.common.black};
+  border-radius: 50%;
+  width: 2rem;
+  height: 2rem;
+
+  > svg {
+    stroke-width: 1.25px;
+    stroke: ${theme.palette.common.white};
+    font-size: 1.25rem;
+  }
+
+  &:hover {
+    background-color: ${theme.palette.primary.light};
+    > svg {
+      stroke: ${theme.palette.common.black};
+    }
+  }
+
+  ${theme.breakpoints.up('md')} {
+    width: 2.5rem;
+    height: 2.5rem;
+
+    & > svg {
+      font-size: 2.5rem;
+    }
+  }
+`;
+
+export const NavbarInstaButton = styled(IconButton)`
+  ${navbarButtonStyles(theme)}
+  opacity: 0;
+  transition: opacity 300ms ease-in-out;
+  pointer-events: none;
+`;
+
+const FiMenu = styled(FiMenuDefault)`
+  transition: transform 300ms ease-out;
+  transform: rotate(0);
+`;
+
+export const NavbarHamburgerButton = styled(IconButton, {
+  shouldForwardProp: propName =>
+    propName !== 'isMenuOpen' && propName !== 'isTransitioning',
+})<{ isMenuOpen: boolean; isTransitioning: boolean }>`
+  background-color: ${theme.palette.primary.dark};
+  width: 75px;
+  height: 75px;
+  border-radius: 0;
+  transition: transform 100ms ease-out;
+  position: relative;
+  transform-origin: top left;
+
+  &:hover {
+    ${({ isTransitioning }) => {
+      if (isTransitioning) {
+        return '';
+      }
+
+      return css`
+        transform: scale(1.05);
+      `;
+    }}
+    background-color: ${theme.palette.primary.dark};
+  }
+
+  ${({ isMenuOpen }) =>
+    isMenuOpen ?
+      css`
+        transform: scale(1.05);
+      `
+    : ''}
+
+  & > span {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-15px);
+    top: 50%;
+    width: 30px;
+    height: 2px;
+    background-color: ${theme.palette.common.white};
+    transition: all 300ms cubic-bezier(0.84, 0.06, 0.52, 1.8);
+    transition: all 300ms ease-out;
+    opacity: 1;
+  }
+
+  & > span:nth-of-type(1) {
+    transform: translate(-15px, -9px);
+    animation-delay: 100ms;
+  }
+
+  & > span:nth-of-type(3) {
+    transform: translate(-15px, 9px);
+    animation-delay: 250ms;
+  }
+  ${({ isMenuOpen }) =>
+    isMenuOpen ?
+      css`
+        transform: scale(1.05);
+        & > span:nth-of-type(1) {
+          transform: translateX(-15px) rotate(40deg);
+        }
+        & > span:nth-of-type(2) {
+          transform: translateX(-15px) rotate(-40deg);
+        }
+        & > span:nth-of-type(3) {
+          transform: translate(-15px, 9px);
+          opacity: 0;
+        }
+      `
+    : ''}
+`;
+
+export const NavbarSearchButton = styled(IconButton)`
+  ${navbarButtonStyles(theme)}
+`;
+
+export const NavbarIconButtonWrapper = styled('div')``;
+
+export const NavbarMain = styled('div', {
+  shouldForwardProp: propName => propName !== 'isMenuOpen',
+})<{ isMenuOpen?: boolean }>`
+  grid-column: -1 / 1;
+  grid-row: 1 / 2;
+  margin: 0 0 0 ${({ theme }) => theme.spacing(-2)};
+  column-gap: ${({ theme }) => theme.spacing(2)};
+  display: grid;
+  grid-template-columns: unset;
+  align-items: center;
+  justify-self: end;
+  align-self: flex-start;
+  pointer-events: all;
+  z-index: 30;
+
+  ${theme.breakpoints.up('sm')} {
+    margin: 0 0 0 ${({ theme }) => theme.spacing(-3)};
+  }
+
+  ${({ isMenuOpen }) =>
+    isMenuOpen &&
+    css`
+      ${NavbarInstaButton} {
+        opacity: 1;
+        pointer-events: all;
+      }
+      ${FiMenu} {
+        transform: rotate(90deg);
+      }
+    `}
+`;
+
+export const NavbarActions = styled('div', {
+  shouldForwardProp: propName => propName !== 'isMenuOpen',
+})<{ isMenuOpen?: boolean }>`
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  gap: ${theme.spacing(1)};
+  grid-column: 2 / 3;
+  grid-row: 1 / 2;
+  align-self: flex-start;
+  justify-self: end;
+  margin-top: ${theme.spacing(1.25)};
+  z-index: 20;
+  pointer-events: all;
+  padding-right: ${theme.spacing(1.5)};
+  width: 100%;
+`;
+
+export const NavbarHomeLink = styled(Link)`
+  color: unset;
+  position: relative;
+  grid-column: 1 / 2;
+  grid-row: -1 / 1;
+  align-self: flex-start;
+  display: none;
+  align-items: center;
+  justify-items: center;
+  justify-self: left;
+  transition: visibility 0s 240ms;
+
+  ${theme.breakpoints.up('md')} {
+    display: grid;
+  }
+
+  & > svg {
+    transition: width 300ms ease-out;
+    transform: translate3d(0, 0, 0);
+    position: absolute;
+
+    width: 15.5rem;
+    height: auto;
+    top: 1.25rem;
+    left: calc(50vw - 15.5rem);
+
+    mix-blend-mode: difference;
+  }
+`;
+
+export const ReflektLogo = styled('img', {
+  shouldForwardProp: propName =>
+    propName !== 'isScrolled' && propName !== 'isHomePage',
+})<{ isScrolled?: boolean; isHomePage?: boolean }>`
+  transition: width 300ms ease-out;
+  transform: translate3d(0, 0, 0);
+  position: absolute;
+
+  width: 15.5rem;
+  height: auto;
+  top: 1.25rem;
+  left: calc(50vw - 15.5rem + 2rem);
+
+  mix-blend-mode: difference;
+  z-index: 32;
+`;
+
+const OpenInvoicesAlert = styled('div')`
+  position: absolute;
+  transform: translateX(100%);
+  display: grid;
+  gap: ${theme.spacing(0.5)};
+  grid-template-columns: max-content max-content;
+  align-items: center;
+  color: ${theme.palette.error.main};
+  font-size: ${theme.typography.body1.fontSize};
+  font-weight: 600;
+  top: 66%;
+  right: 111%;
+`;
+
+const MdWarningOIA = styled(MdWarning)`
+  font-size: 2rem;
+
+  ${theme.breakpoints.up('md')} {
+    font-size: 2rem;
+  }
+`;
+
+export const NavPaperCategory = styled('div')`
+  grid-column: 1 / 2;
+  grid-row: 1 / 2;
+  row-gap: ${theme.spacing(1)};
+
+  &:nth-of-type(n + 2) {
+    grid-column: 1 / 2;
+    grid-row: 2 / 3;
+  }
+
+  &:nth-of-type(n + 3) {
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+    padding-left: 0;
+    padding-right: ${theme.spacing(2)};
+  }
+
+  ${theme.breakpoints.up('md')} {
+    &:nth-of-type(n) {
+      grid-column: unset;
+      grid-row: unset;
+      padding: 0;
+    }
+  }
+`;
+
+export const NavPaperLinksGroup = styled('div')`
+  display: grid;
+  column-gap: ${theme.spacing(2)};
+  grid-row: 1 / 2;
+  grid-column: -1 / 1;
+  grid-template-columns: repeat(2, auto);
+  grid-template-rows: repeat(2, auto);
+  row-gap: unset;
+  margin: 0;
+
+  ${theme.breakpoints.up('md')} {
+    grid-template-rows: unset;
+    grid-template-columns: repeat(3, min-content);
+    grid-template-columns: unset;
+    opacity: 1;
+    transition: opacity 250ms ease-in-out;
+    grid-column: 2 / 3;
+    border-left: 1px solid rgba(255, 255, 255, 0.15);
+    padding-left: ${theme.spacing(8)};
+  }
+`;
+
+export const IconItemsWrapper = styled('div')`
+  position: relative;
+  padding: ${({ theme }) => theme.spacing(1.5, 1.5, 1.5, 0)};
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(40px, 1fr));
+  justify-items: center;
+  width: 100%;
+  grid-row: 3 / 4;
+  margin-left: ${({ theme }) => theme.spacing(-3)};
+
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(auto-fill, ${theme.spacing(1)});
+    justify-items: start;
+    align-items: start;
+    width: auto;
+    gap: ${theme.spacing(5)};
+    padding: ${theme.spacing(1.25, 0, 0, 0)};
+    grid-column: 1 / 2;
+    grid-row: 1 / 2;
+    color: ${alpha(theme.palette.common.white, 0.7)};
+    margin-left: 0;
+
+    & a {
+      &:hover {
+        color: ${theme.palette.common.white};
+      }
+    }
+  }
+`;
+
+const ButtonWrapper = styled('div')`
+  display: flex;
+  justify-content: flex-start;
+  grid-row: 2 / 3;
+
+  ${theme.breakpoints.up('md')} {
+    padding: ${theme.spacing(5, 0, 2, 8)};
+    border-left: 1px solid rgba(255, 255, 255, 0.15);
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+  }
+`;
+
+const RegisterNewsletterButton = styled(Link)``;
+
+export const NavPaperWrapper = styled('div', {
+  shouldForwardProp: propName =>
+    propName !== 'isMenuOpen' && propName !== 'isTransitioning',
+})<{ isMenuOpen: boolean; isTransitioning: boolean }>`
+  padding: calc(${theme.spacing(2)} + var(--navbar-height)) ${theme.spacing(2)}
+    0 22.5px;
+  background-color: ${theme.palette.primary.dark};
+  color: ${theme.palette.common.white};
+  top: 0;
+  left: 0;
+  right: 0;
+  transform: scale(${({ isMenuOpen }) => (isMenuOpen ? '100%' : '1%')});
+  transform-origin: top left;
+  transition: transform 300ms ease-out;
+  transition-delay: ${({ isMenuOpen }) => (isMenuOpen ? '0ms' : '100ms')};
+  overflow-y: hidden;
+  z-index: 2;
+  height: 100vh;
+  width: 100%;
+  display: grid;
+  row-gap: ${theme.spacing(2)};
+  position: absolute;
+  grid-template-rows: repeat(3, min-content);
+  grid-template-columns: unset;
+
+  ${theme.breakpoints.up('md')} {
+    row-gap: unset;
+    padding: calc(${theme.spacing(5)} + var(--navbar-height))
+      ${theme.spacing(2)} 0 27px;
+    grid-template-columns: 60px 1fr;
+    grid-template-rows: min-content min-content;
+  }
+
+  ${NavPaperLinksGroup}, ${IconItemsWrapper}, ${ButtonWrapper} {
+    ${({ isTransitioning, isMenuOpen }) =>
+      isTransitioning && !isMenuOpen ?
+        css`
+          opacity: 0;
+        `
+      : ''}
+  }
+`;
+
+const NavPaper = ({
+  categories,
+  loginBtn,
+  closeMenu,
+  isMenuOpen,
+  isTransitioning,
+  className,
+  children,
+  iconItems,
+  handleItemClick,
+}: PropsWithChildren<{
+  loginBtn?: ButtonProps | null;
+  main: FullNavigationFragment | null | undefined;
+  categories: FullNavigationFragment[][];
+  closeMenu: () => void;
+  isMenuOpen: boolean;
+  isTransitioning: boolean;
+  className?: string;
+  iconItems?: FullNavigationFragment | null;
+  handleItemClick: () => void;
+}>) => {
+  const {
+    elements: { Link },
+  } = useWebsiteBuilder();
+  const { hasUser, logout, mounted, matchesLoginUrl } = useLoginLinkSwap();
+
+  return (
+    <NavPaperWrapper
+      isMenuOpen={isMenuOpen}
+      isTransitioning={isTransitioning}
+      className={`${className || ''} ${isMenuOpen ? 'menu-open' : ''}`.trim()}
+    >
+      <IconItemsWrapper>
+        {iconItems?.links.map((link, index) => (
+          <Link
+            key={index}
+            href={navigationLinkToUrl(link)}
+            onClick={() => handleItemClick()}
+            color="inherit"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <TextToIcon
+              title={link.label}
+              size={24}
+            />
+          </Link>
+        ))}
+      </IconItemsWrapper>
+      <ButtonWrapper>
+        <RegisterNewsletterButton
+          variant="buttonLinkMain"
+          href="/newsletter"
+          onClick={() => handleItemClick()}
+        >
+          Newsletter
+        </RegisterNewsletterButton>
+      </ButtonWrapper>
+      {!!categories.length &&
+        categories.map((categoryArray, arrayIndex) => (
+          <NavPaperLinksGroup key={arrayIndex}>
+            {categoryArray.map(nav => (
+              <NavPaperCategory key={nav.id}>
+                <Typography variant="categoryLinkList">
+                  {nav.links?.map((link, index) => {
+                    const url = navigationLinkToUrl(link);
+                    const isLogin = matchesLoginUrl(url);
+
+                    if (isLogin && !mounted) {
+                      return null;
+                    }
+
+                    if (isLogin && hasUser) {
+                      return (
+                        <Typography
+                          variant="categoryLinkItem"
+                          key={index}
+                        >
+                          <MuiLink
+                            variant="headerCategoryLink"
+                            component="button"
+                            onClick={() => {
+                              logout();
+                              closeMenu();
+                            }}
+                          >
+                            Logout
+                          </MuiLink>
+                        </Typography>
+                      );
+                    }
+
+                    return (
+                      <Typography
+                        variant="categoryLinkItem"
+                        key={index}
+                      >
+                        <Link
+                          variant={'headerCategoryLink'}
+                          href={url}
+                          onClick={closeMenu}
+                        >
+                          {link.label}
+                        </Link>
+                      </Typography>
+                    );
+                  })}
+                </Typography>
+              </NavPaperCategory>
+            ))}
+          </NavPaperLinksGroup>
+        ))}
+    </NavPaperWrapper>
+  );
+};
+
+export const NavbarInnerWrapper = styled(Toolbar, {
+  shouldForwardProp: propName =>
+    propName !== 'navbarState' && propName !== 'isMenuOpen',
+})<{
+  navbarState: NavbarState[];
+  isMenuOpen?: boolean;
+}>`
+  ${({ isMenuOpen }) =>
+    isMenuOpen &&
+    css`
+      pointer-events: none;
+      background-color: transparent;
+
+      ${theme.breakpoints.up('md')} {
+        background-color: var(--navbar-bg-color-hero-off-screen, white);
+      }
+
+      ${NavbarHomeLink} {
+        visibility: hidden;
+        transition: visibility 0s 0s;
+      }
+    `}
+`;
+
+const SubscribeBtn = styled(Link)`
+  margin-left: auto;
+`;
+
+export interface ExtendedNavbarProps extends BuilderNavbarProps {
+  isMenuOpen?: boolean;
+  onMenuToggle?: (isOpen: boolean) => void;
+  navPaperClassName?: string;
+}
+
+export const ReflektNavbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
+  function ReflektNavbar(
+    {
+      className,
+      children,
+      categorySlugs,
+      slug,
+      headerSlug,
+      iconSlug,
+      data,
+      hasRunningSubscription,
+      hasUnpaidInvoices,
+      loginBtn = { href: '/login' },
+      profileBtn = { href: '/profile' },
+      subscribeBtn = { href: '/mitmachen' },
+      isMenuOpen: controlledIsMenuOpen,
+      onMenuToggle,
+      navPaperClassName,
+    }: ExtendedNavbarProps,
+    forwardRef
+  ) {
+    const ref = useRef<HTMLElement>(null);
+
+    const [internalIsMenuOpen, setInternalMenuOpen] = useState(false);
+    const [isTransitioning, setIsTransitioning] = useState(false);
+
+    const [isScrolled, setIsScrolled] = useState(false);
+    const [scrollDirection, setScrollDirection] = useState<ScrollDirection>(
+      ScrollDirection.Down
+    );
+    const lastScrollY = useRef(0);
+    const hasActiveSubscription = useHasActiveSubscription();
+
+    const isMenuOpen =
+      controlledIsMenuOpen !== undefined ? controlledIsMenuOpen : (
+        internalIsMenuOpen
+      );
+
+    const handleScroll = useCallback(
+      (...args: any) => {
+        const currentScrollY = window.scrollY;
+
+        if (currentScrollY > lastScrollY.current) {
+          if (scrollDirection !== ScrollDirection.Down) {
+            setScrollDirection(ScrollDirection.Down);
+          }
+        } else if (currentScrollY < lastScrollY.current) {
+          if (scrollDirection !== ScrollDirection.Up) {
+            setScrollDirection(ScrollDirection.Up);
+          }
+        }
+
+        const newIsScrolled = currentScrollY > 1;
+
+        if (newIsScrolled !== isScrolled) {
+          setIsScrolled(newIsScrolled);
+        }
+
+        lastScrollY.current = currentScrollY;
+      },
+      [isScrolled, scrollDirection]
+    );
+
+    const toggleMenu = useCallback(() => {
+      const newState = !isMenuOpen;
+      setIsTransitioning(true);
+
+      if (controlledIsMenuOpen === undefined) {
+        setInternalMenuOpen(newState);
+      }
+
+      onMenuToggle?.(newState);
+    }, [isMenuOpen, controlledIsMenuOpen, onMenuToggle]);
+
+    const router = useRouter();
+
+    const mainItems = data?.navigations?.find(({ key }) => key === slug);
+    const iconItems = data?.navigations?.find(({ key }) => key === iconSlug);
+
+    const categories = useMemo(() => {
+      return categorySlugs.map(categorySlugArray =>
+        categorySlugArray.reduce((navigations, categorySlug) => {
+          const navItem = data?.navigations?.find(
+            ({ key }) => key === categorySlug
+          );
+
+          if (navItem) {
+            navigations.push(navItem);
+          }
+
+          return navigations;
+        }, [] as FullNavigationFragment[])
+      );
+    }, [categorySlugs, data?.navigations]);
+
+    useEffect(() => {
+      lastScrollY.current = window.scrollY;
+      window.addEventListener('scroll', handleScroll);
+
+      return () => window.removeEventListener('scroll', handleScroll);
+    }, [handleScroll]);
+
+    const navbarState = getNavbarState(
+      isScrolled,
+      scrollDirection,
+      hasActiveSubscription,
+      (!hasRunningSubscription && !hasUnpaidInvoices && subscribeBtn) as boolean
+    );
+
+    const isHomePage = router.pathname === '/';
+
+    const navbarStyles = useMemo(
+      () => cssVariables(navbarState, isHomePage),
+      [navbarState, isHomePage]
+    );
+
+    useImperativeHandle(forwardRef, () => ref.current!, []);
+
+    useEffect(() => {
+      if (typeof ResizeObserver !== 'undefined') {
+        const observer = new ResizeObserver(() => {
+          handleResize();
+        });
+
+        if (!ref.current) {
+          return;
+        }
+
+        observer.observe(ref.current);
+
+        return () =>
+          ref?.current ? observer.unobserve(ref.current) : undefined;
+      }
+
+      window.addEventListener('resize', handleResize);
+
+      return () => window.removeEventListener('resize', handleResize);
+    }, [ref]);
+
+    function handleResize() {
+      if (ref?.current) {
+        ref.current.ownerDocument.documentElement.setAttribute(
+          'style',
+          `--navbar-height: ${ref.current.getBoundingClientRect().height}px`
+        );
+      }
+    }
+
+    return (
+      <NavbarWrapper
+        ref={ref}
+        className={className}
+      >
+        <GlobalStyles styles={navbarStyles} />
+        <AppBar
+          isMenuOpen={isMenuOpen}
+          elevation={0}
+        >
+          <NavbarInnerWrapper
+            navbarState={navbarState}
+            isMenuOpen={isMenuOpen}
+          >
+            <NavbarMain isMenuOpen={isMenuOpen}>
+              <NavbarHamburgerButton
+                isMenuOpen={isMenuOpen}
+                isTransitioning={isTransitioning}
+                size="small"
+                aria-label="Menu"
+                title="Menu"
+                onClick={toggleMenu}
+                onMouseLeave={() => {
+                  setTimeout(() => setIsTransitioning(false), 300);
+                }}
+                disableRipple={true}
+              >
+                <span></span>
+                <span></span>
+                <span></span>
+              </NavbarHamburgerButton>
+            </NavbarMain>
+
+            <NavbarHomeLink
+              href="/"
+              aria-label="Startseite"
+            >
+              <ReflektLogo
+                src="/logo_reflekt.svg"
+                alt="Reflekt Logo"
+                isScrolled={isScrolled}
+                isHomePage={isHomePage}
+              />
+            </NavbarHomeLink>
+
+            <NavbarActions isMenuOpen={isMenuOpen}>
+              <SubscribeBtn
+                {...((hasUnpaidInvoices && profileBtn ? profileBtn : (
+                  subscribeBtn
+                )) as Omit<typeof subscribeBtn, 'variant'>)}
+                variant={
+                  hasUnpaidInvoices && profileBtn ? 'buttonLinkAlert' : (
+                    'buttonLinkMain'
+                  )
+                }
+                onClick={() => {
+                  if (controlledIsMenuOpen === undefined) {
+                    setInternalMenuOpen(false);
+                  }
+                  onMenuToggle?.(false);
+                }}
+              >
+                {hasUnpaidInvoices && profileBtn ?
+                  <Box
+                    component="span"
+                    sx={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: 0.75,
+                    }}
+                  >
+                    <MdWarning />
+                    <span>
+                      <Box
+                        component="span"
+                        sx={{ display: { xs: 'none', md: 'inline' } }}
+                      >
+                        Offene{' '}
+                      </Box>
+                      Rechnung
+                    </span>
+                  </Box>
+                : 'Unterstützen'}
+              </SubscribeBtn>
+            </NavbarActions>
+          </NavbarInnerWrapper>
+
+          {Boolean(mainItems || categories?.length) && (
+            <NavPaper
+              loginBtn={loginBtn}
+              main={mainItems}
+              categories={categories}
+              closeMenu={toggleMenu}
+              isMenuOpen={isMenuOpen}
+              isTransitioning={isTransitioning}
+              className={navPaperClassName}
+              iconItems={iconItems}
+              handleItemClick={() => {
+                if (controlledIsMenuOpen === undefined) {
+                  setInternalMenuOpen(false);
+                }
+                onMenuToggle?.(false);
+              }}
+            />
+          )}
+        </AppBar>
+      </NavbarWrapper>
+    );
+  }
+);
+
+export const heroOffScreen = (isIntersecting: boolean) => {
+  return (
+    <GlobalStyles
+      styles={css`
+        :root {
+          --navbar-bg-color-hero-off-screen: ${isIntersecting ? 'transparent'
+          : 'white'};
+        }
+      `}
+    />
+  );
+};

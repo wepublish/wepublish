@@ -47,6 +47,10 @@ ${BannerCtaText} {
   ${BannerImage}, ${BannerTitle}, ${BannerText}, ${BannerCloseButton}, [data-role='CANCEL'], [data-role='OTHER'] {
     display: none;
   }
+}
+
+&[data-collapsed='true'][data-embed='true'] {
+  display: none;
 }`
 );
 

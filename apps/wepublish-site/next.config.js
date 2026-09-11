@@ -13,16 +13,6 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
  **/
 const nextConfig = {
   ...wepNextConfig,
-  serverRuntimeConfig: {
-    env: {
-      API_URL_INTERNAL: process.env.API_URL_INTERNAL || '',
-    },
-  },
-  publicRuntimeConfig: {
-    env: {
-      API_URL: process.env.API_URL || '',
-    },
-  },
   i18n: {
     defaultLocale: 'default',
     locales: ['default', 'de', 'fr'],
@@ -44,5 +34,11 @@ const plugins = [
 ];
 
 module.exports = withSentryConfig(composePlugins(...plugins)(nextConfig), {
-  silent: true,
+  // `silent: true` suppresses info, warn AND error, so a failed sourcemap
+  // upload leaves no trace in the build log. Keep the plugin loud.
+  silent: false,
+  // Upload all client chunks, not just static/chunks/pages + static/chunks/app.
+  // Shared chunks hold most of our app code; framework/polyfills/webpack chunks
+  // stay excluded by the plugin's own ignore list.
+  widenClientFileUpload: true,
 });

@@ -22,13 +22,14 @@ import { MdDelete, MdGeneratingTokens } from 'react-icons/md';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   Button,
+  Col,
   Drawer,
-  FlexboxGrid,
   IconButton,
   List as RList,
   Loader,
   Message,
   Modal,
+  Row,
   toaster,
 } from 'rsuite';
 
@@ -36,11 +37,11 @@ const List = styled(RList)`
   margin-top: 40px;
 `;
 
-const FlexItemPLeft = styled(FlexboxGrid.Item)`
+const FlexItemPLeft = styled(Col)`
   padding-left: 10px;
 `;
 
-const FlexItemPRight = styled(FlexboxGrid.Item)`
+const FlexItemPRight = styled(Col)`
   padding-right: 10px;
 `;
 
@@ -123,9 +124,9 @@ function TokenList() {
                 key={token.name}
                 index={index}
               >
-                <FlexboxGrid>
-                  <FlexItemPLeft colspan={23}>{token.name}</FlexItemPLeft>
-                  <FlexItemPRight colspan={1}>
+                <Row>
+                  <FlexItemPLeft span={23}>{token.name}</FlexItemPLeft>
+                  <FlexItemPRight span={1}>
                     <PermissionControl
                       qualifyingPermissions={['CAN_DELETE_TOKEN']}
                     >
@@ -144,7 +145,7 @@ function TokenList() {
                       </IconButtonTooltip>
                     </PermissionControl>
                   </FlexItemPRight>
-                </FlexboxGrid>
+                </Row>
               </RList.Item>
             ))}
           </List>

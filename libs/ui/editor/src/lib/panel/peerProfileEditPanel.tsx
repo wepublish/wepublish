@@ -27,11 +27,7 @@ import {
   PermissionControl,
   useAuthorisation,
 } from '../atoms';
-import {
-  createDefaultValue,
-  RichTextBlock,
-  RichTextBlockValue,
-} from '../blocks';
+import { RichTextBlock, RichTextBlockValue } from '../blocks';
 import { toggleRequiredLabel } from '../toggleRequiredLabel';
 import { getOperationNameFromDocument } from '../utility';
 import { ImageEditPanel, ImageEditPanelProps } from './imageEditPanel';
@@ -39,7 +35,7 @@ import { ImageSelectPanel } from './imageSelectPanel';
 
 type PeerProfileImage = NonNullable<PeerProfileQuery['peerProfile']>['logo'];
 
-const { Group, ControlLabel, Control } = RForm;
+const { Group, Label, Control } = RForm;
 
 const Form = styled(RForm)`
   height: 100%;
@@ -105,11 +101,7 @@ function PeerInfoEditPanel({ onClose, onSave }: ImageEditPanelProps) {
       setName(data.peerProfile.name);
       setThemeColor(data.peerProfile.themeColor);
       setThemeFontColor(data.peerProfile.themeFontColor);
-      setCallToActionText(
-        data.peerProfile.callToActionText.length ?
-          data.peerProfile.callToActionText
-        : createDefaultValue()
-      );
+      setCallToActionText(data.peerProfile.callToActionText);
       setCallToActionTextURL(data.peerProfile.callToActionURL);
       setCallToActionImage(data?.peerProfile?.callToActionImage);
       setCallToActionImageURL(data.peerProfile.callToActionImageURL ?? '');
@@ -278,9 +270,7 @@ function PeerInfoEditPanel({ onClose, onSave }: ImageEditPanelProps) {
 
         <Panel header={t('peerList.panels.information')}>
           <Group controlId="peerListName">
-            <ControlLabel>
-              {toggleRequiredLabel(t('peerList.panels.name'))}
-            </ControlLabel>
+            <Label>{toggleRequiredLabel(t('peerList.panels.name'))}</Label>
             <Control
               name="name"
               value={name}
@@ -288,7 +278,7 @@ function PeerInfoEditPanel({ onClose, onSave }: ImageEditPanelProps) {
             />
           </Group>
           <Group controlId="peerListThemeColor">
-            <ControlLabel>{t('peerList.panels.themeColor')}</ControlLabel>
+            <Label>{t('peerList.panels.themeColor')}</Label>
             <ColorPicker
               disabled={isDisabled}
               setColor={color => {
@@ -298,7 +288,7 @@ function PeerInfoEditPanel({ onClose, onSave }: ImageEditPanelProps) {
             />
           </Group>
           <Group controlId="peerListThemeFontColor">
-            <ControlLabel>{t('peerList.panels.themeFontColor')}</ControlLabel>
+            <Label>{t('peerList.panels.themeFontColor')}</Label>
             <ColorPicker
               disabled={isDisabled}
               setColor={color => {
@@ -308,19 +298,17 @@ function PeerInfoEditPanel({ onClose, onSave }: ImageEditPanelProps) {
             />
           </Group>
 
-          <ControlLabel>{t('peerList.panels.callToActionText')}</ControlLabel>
+          <Label>{t('peerList.panels.callToActionText')}</Label>
           <BoxWrapper>
             <Group controlId="peerListCallToAction">
-              <ControlLabel>{t('peerList.panels.text')}</ControlLabel>
-              {callToActionText && (
-                <Control
-                  name="callToActionText"
-                  value={callToActionText}
-                  onChange={setCallToActionText}
-                  accepter={RichTextBlock}
-                  disabled={isDisabled}
-                />
-              )}
+              <Label>{t('peerList.panels.text')}</Label>
+              <Control
+                name="callToActionText"
+                value={callToActionText}
+                onChange={setCallToActionText}
+                accepter={RichTextBlock}
+                disabled={isDisabled}
+              />
             </Group>
             <Group>
               <Control
@@ -334,14 +322,12 @@ function PeerInfoEditPanel({ onClose, onSave }: ImageEditPanelProps) {
 
           <br />
 
-          <ControlLabel>
+          <Label>
             {toggleRequiredLabel(t('peerList.panels.callToActionImage'))}
-          </ControlLabel>
+          </Label>
           <BoxWrapper>
             <Group controlId="peerListImage">
-              <ControlLabel>
-                {toggleRequiredLabel(t('peerList.panels.image'))}
-              </ControlLabel>
+              <Label>{toggleRequiredLabel(t('peerList.panels.image'))}</Label>
               <ChooseEditImage
                 image={callToActionImage}
                 header={''}

@@ -22,13 +22,13 @@ import { useTranslation } from 'react-i18next';
 import { MdAdd, MdDelete, MdOutlineSave, MdReplay } from 'react-icons/md';
 import {
   Button,
-  FlexboxGrid,
   Form,
   IconButton as RIconButton,
   Loader as RLoader,
   Message,
   Modal,
   SelectPicker,
+  Stack,
   toaster,
 } from 'rsuite';
 
@@ -41,9 +41,10 @@ const IconButton = styled(RIconButton)`
   margin-right: 12px;
 `;
 
-const AnswerGrid = styled(FlexboxGrid)`
+const AnswerGrid = styled(Stack)`
   margin-bottom: 12px;
   gap: 12px;
+  flex-wrap: wrap;
 `;
 
 const Loader = styled(RLoader)`
@@ -211,21 +212,23 @@ function CommentRatingEditView() {
       <TableWrapper>
         <Content>
           <Form>
-            {ratingSystem && (
-              <RatingAnswers
-                answers={ratingSystem.answers}
-                onDeleteAnswer={setAnswerToDelete}
-                onUpdateAnswer={updateAnswerLocally}
-              />
-            )}
+            <Form.Stack fluid>
+              {ratingSystem && (
+                <RatingAnswers
+                  answers={ratingSystem.answers}
+                  onDeleteAnswer={setAnswerToDelete}
+                  onUpdateAnswer={updateAnswerLocally}
+                />
+              )}
+            </Form.Stack>
           </Form>
         </Content>
       </TableWrapper>
 
       {isFetching && (
-        <FlexboxGrid justify="center">
+        <Stack justifyContent="center">
           <Loader size="lg" />
-        </FlexboxGrid>
+        </Stack>
       )}
 
       <Modal

@@ -155,7 +155,7 @@ export function UserConsentList(props: UserConsentListProps) {
             </Cell>
           </Column>
 
-          <Column resizable>
+          <Column width={75}>
             <HeaderCell align={'center'}>{t('delete')}</HeaderCell>
             <Cell
               align={'center'}

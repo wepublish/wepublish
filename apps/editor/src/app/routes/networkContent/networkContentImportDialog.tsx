@@ -37,6 +37,7 @@ export function NetworkContentImportDialog({
       onClose={onClose}
     >
       <DialogTitle>{t('networkContentDashboard.importTitle')}</DialogTitle>
+
       <DialogContent>
         <FormGroup>
           <FormControlLabel
@@ -50,6 +51,7 @@ export function NetworkContentImportDialog({
             }
             label={t('networkContentDashboard.importAuthors')}
           />
+
           <FormControlLabel
             control={
               <Checkbox
@@ -61,6 +63,7 @@ export function NetworkContentImportDialog({
             }
             label={t('networkContentDashboard.importTags')}
           />
+
           <FormControlLabel
             control={
               <Checkbox
@@ -77,6 +80,7 @@ export function NetworkContentImportDialog({
           />
         </FormGroup>
       </DialogContent>
+
       <DialogActions>
         <Button
           onClick={onClose}
@@ -84,6 +88,7 @@ export function NetworkContentImportDialog({
         >
           {t('networkContentDashboard.cancel')}
         </Button>
+
         <Button
           variant="contained"
           disabled={importing}

@@ -19,7 +19,7 @@ interface TeaserSlotsConfigPanelProps {
   onChange: (config: TeaserSlotsAutofillConfigInput) => void;
 }
 
-const ConfigContainer = styled.div`
+const ConfigContainer = styled(Form)`
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -82,11 +82,9 @@ export function TeaserSlotsAutofillConfigPanel({
   const sortOptions = [{ label: 'Published date', value: 'PublishedAt' }];
 
   return (
-    <ConfigContainer>
+    <ConfigContainer fluid>
       <FormGroup>
-        <Form.ControlLabel>
-          {t('blocks.teaserSlots.autofillType')}
-        </Form.ControlLabel>
+        <Form.Label>{t('blocks.teaserSlots.autofillType')}</Form.Label>
         <SelectPicker
           name="teaserType"
           cleanable={false}
@@ -112,11 +110,11 @@ export function TeaserSlotsAutofillConfigPanel({
           css={inputStyles}
         />
       </FormGroup>
+
       {tagType && (
         <FormGroup>
-          <Form.ControlLabel>
-            {t('blocks.teaserSlots.filter')}
-          </Form.ControlLabel>
+          <Form.Label>{t('blocks.teaserSlots.filter')}</Form.Label>
+
           <SelectTags
             defaultTags={[]}
             name="tags"
@@ -124,6 +122,7 @@ export function TeaserSlotsAutofillConfigPanel({
             setSelectedTags={tags => handleChange({ filter: { tags } })}
             selectedTags={config.filter?.tags}
           />
+
           <HelpText>{t('blocks.teaserSlots.filterHelpText')}</HelpText>
         </FormGroup>
       )}

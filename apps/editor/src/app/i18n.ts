@@ -6,7 +6,6 @@ import {
 } from 'date-fns/locale';
 import i18n from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
-import { registerLocale, setDefaultLocale } from 'react-datepicker';
 import { initReactI18next } from 'react-i18next';
 
 import de from './locales/de.json';
@@ -41,8 +40,4 @@ export const initI18N = () => {
       fr,
     },
   });
-
-  // TODO: how to handle other date and time formats
-  registerLocale('de', deLocale);
-  setDefaultLocale('de');
 };

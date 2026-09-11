@@ -1,0 +1,52 @@
+name: Deploy overview dashboard
+
+on:
+  push:
+    tags:
+      - 'deploy_*'
+  workflow_dispatch:
+
+permissions:
+  contents: read     # checkout + read own commits/branches (branches-where-head)
+  actions: read      # read own workflow runs
+
+concurrency:
+  group: deploy-dashboard
+  cancel-in-progress: false
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      # Load the deploy key so we can clone/push the publish repo over SSH.
+      - uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.DASHBOARD_DEPLOY_KEY }}
+
+      - name: Clone publish repo
+        run: git clone --depth 1 git@github.com:wepublish/deploy-dashboard.git publish
+
+      - name: Build dashboard
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}   # default token reads THIS repo's runs
+          OUT_DIR: publish                            # writes publish/index.html AND reads the prior one for the branch store
+        run: node deployment/dashboard/build-deploy-dashboard.mjs
+
+      - name: Commit & push to publish repo
+        run: |
+          cd publish
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          if git diff --cached --quiet; then
+            echo "No dashboard changes — nothing to publish."
+            exit 0
+          fi
+          git commit -m "Update production deploy overview"
+          git push origin HEAD:main

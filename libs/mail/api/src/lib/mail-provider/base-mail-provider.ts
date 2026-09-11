@@ -1,10 +1,12 @@
 import {
   MailLogStatus,
   MailProvider,
+  MailProviderMessageState,
   MailProviderTemplate,
+  MailProviderTemplateContent,
   SendMailProps,
+  SendMailResult,
   WebhookForSendMailProps,
-  WithExternalId,
 } from './mail-provider.interface';
 import bodyParser from 'body-parser';
 import { NextHandleFunction } from 'connect';
@@ -45,10 +47,21 @@ export abstract class BaseMailProvider implements MailProvider {
   abstract webhookForSendMail(
     props: WebhookForSendMailProps
   ): Promise<MailLogStatus[]>;
-  abstract sendMail(props: SendMailProps): Promise<void>;
-  abstract getTemplates(): Promise<MailProviderTemplate[]>;
-  abstract getTemplateUrl(template: WithExternalId): Promise<string>;
+  abstract sendMail(props: SendMailProps): Promise<SendMailResult>;
+  abstract getTemplateContent(
+    externalMailTemplateId: string
+  ): Promise<MailProviderTemplateContent>;
   abstract getName(): Promise<string>;
+  /** Overridden by providers that host templates remotely (Mandrill, Mailgun). */
+  async listTemplates(): Promise<MailProviderTemplate[]> {
+    return [];
+  }
+  /** Overridden by providers that can be asked about a sent message (Mandrill). */
+  async getMessageStates(
+    _providerMessageIDs: string[]
+  ): Promise<MailProviderMessageState[]> {
+    return [];
+  }
   async getConfig(): Promise<SettingMailProvider | null> {
     return await new MailProviderConfig(
       this.prisma,
@@ -57,8 +70,16 @@ export abstract class BaseMailProvider implements MailProvider {
     ).getConfig();
   }
   public async initDatabaseConfiguration(
-    type: MailProviderType
+    type: MailProviderType,
+    defaults?: Partial<
+      Omit<
+        SettingMailProvider,
+        'id' | 'type' | 'createdAt' | 'modifiedAt' | 'lastLoadedAt'
+      >
+    >
   ): Promise<void> {
+    // `defaults` seed a fresh row (e.g. local dev SMTP → Mailpit). Existing
+    // rows are left untouched (`update: {}`) so editor edits persist.
     await this.prisma.settingMailProvider.upsert({
       where: {
         id: this.id,
@@ -66,6 +87,7 @@ export abstract class BaseMailProvider implements MailProvider {
       create: {
         id: this.id,
         type,
+        ...defaults,
       },
       update: {},
     });

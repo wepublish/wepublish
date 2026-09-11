@@ -1,10 +1,9 @@
 import { Alert, Snackbar } from '@mui/material';
-import { ComponentType, memo, useEffect, useState } from 'react';
+import { ComponentType, createElement, memo, useEffect, useState } from 'react';
 
-export const withErrorSnackbar = <
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  P extends object,
->(
+import { translateApolloErrorMessage } from './api-alert';
+
+export const withErrorSnackbar = <P extends object>(
   ControlledComponent: ComponentType<P>
 ) =>
   memo<P>(props => {
@@ -13,7 +12,8 @@ export const withErrorSnackbar = <
 
     useEffect(() => {
       const url = new URL(window.location.href);
-      const errorMsg = url.searchParams.get('error');
+      const rawError = url.searchParams.get('error');
+      const errorMsg = rawError ? translateApolloErrorMessage(rawError) : null;
 
       if (errorMsg && error !== errorMsg) {
         setError(errorMsg);
@@ -23,7 +23,7 @@ export const withErrorSnackbar = <
 
     return (
       <>
-        <ControlledComponent {...(props as P)} />
+        {createElement(ControlledComponent, props as P)}
 
         <Snackbar
           anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}

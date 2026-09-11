@@ -91,6 +91,9 @@ const theme = createTheme(WePTheme, {
     allVariants: {
       fontFamily: [Faro.style.fontFamily, 'sans-serif'].join(','),
     },
+    teaserTitle: {
+      fontWeight: 800,
+    },
   },
   components: {
     MuiButton: {

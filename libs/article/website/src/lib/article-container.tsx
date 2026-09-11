@@ -34,6 +34,9 @@ export function ArticleContainer({
         <BannerContainer
           documentId={data?.article?.id}
           documentType={BannerDocumentType.Article}
+          tags={data?.article?.tags
+            .map(tag => tag.tag)
+            .filter((tag): tag is string => !!tag)}
         />
 
         <Article

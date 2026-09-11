@@ -69,10 +69,10 @@ export class GatewayClient {
     );
 
     if (response.status === 'error') {
-      if (
-        response.message ===
-        'An error occurred: No Gateway found with id ' + gatewayId
-      ) {
+      // Payrexx parses the id path segment to an integer server-side, so a
+      // non-numeric id is echoed back as "id 0". Match the message regardless
+      // of the echoed id instead of reconstructing the exact string.
+      if (response.message.includes('No Gateway found with id')) {
         return null;
       } else {
         throw new Error(

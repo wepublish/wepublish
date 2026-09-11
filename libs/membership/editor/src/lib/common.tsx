@@ -15,7 +15,7 @@ const showErrors = (error: ApolloError): void => {
   );
 };
 
-const showSavedToast = (t: TFunction): void => {
+const showSuccessToast = (message: string): void => {
   toaster.push(
     <Message
       type="success"
@@ -23,7 +23,7 @@ const showSavedToast = (t: TFunction): void => {
       closable
       duration={3000}
     >
-      {t('subscriptionFlow.savedChange').toString()}
+      {message}
     </Message>
   );
 };
@@ -35,9 +35,19 @@ const showSavedToast = (t: TFunction): void => {
  * @returns QueryHookOptions for the GraphQL client
  */
 export const DEFAULT_MUTATION_OPTIONS = (t: TFunction) => {
+  return MUTATION_OPTIONS_WITH_SUCCESS_MESSAGE(
+    t('subscriptionFlow.savedChange').toString()
+  );
+};
+
+/**
+ * Like DEFAULT_MUTATION_OPTIONS, but confirms with a message that fits the
+ * mutation instead of the generic «change saved».
+ */
+export const MUTATION_OPTIONS_WITH_SUCCESS_MESSAGE = (message: string) => {
   return {
     ...DEFAULT_QUERY_OPTIONS(),
-    onCompleted: () => showSavedToast(t),
+    onCompleted: () => showSuccessToast(message),
   };
 };
 

@@ -11,8 +11,7 @@ import { PropsWithChildren } from 'react';
 import { TextToIcon } from '@wepublish/ui';
 import { useIntersectionObserver } from 'usehooks-ts';
 import { forceHideBanner } from '@wepublish/banner/website';
-import { ReactComponent as WepublishLight } from './wepublish-light.svg';
-import { ReactComponent as WepublishDark } from './wepublish-dark.svg';
+import { WepublishDark, WepublishLight } from './wepublish-logo';
 
 export const FooterWrapper = styled('footer')`
   position: sticky;

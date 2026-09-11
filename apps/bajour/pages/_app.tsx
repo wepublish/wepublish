@@ -15,7 +15,6 @@ import {
 import { withPaywallBypassToken } from '@wepublish/paywall/website';
 import {
   authLink,
-  getApiUrl,
   initWePublishTranslator,
   NextWepublishLink,
   RoutedAdminBar,
@@ -34,7 +33,6 @@ import { WebsiteBuilderProvider } from '@wepublish/website/builder';
 import { format, setDefaultOptions } from 'date-fns';
 import { de } from 'date-fns/locale';
 import { AppProps } from 'next/app';
-import getConfig from 'next/config';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import Script from 'next/script';
@@ -72,7 +70,15 @@ const dateFormatter = (date: Date, includeTime = true) =>
 
 export type CustomAppProps = AppProps<{
   sessionToken?: SessionWithTokenWithoutUser;
-}> & { emotionCache?: EmotionCache; websiteSettings?: WebsiteSettingsFragment };
+}> & {
+  emotionCache?: EmotionCache;
+  websiteSettings?: WebsiteSettingsFragment;
+  publicEnv?: {
+    apiUrl: string;
+    mailchimpPopupScriptUrl: string;
+    stripeKey: string;
+  };
+};
 
 const NavBar = styled(NavbarContainer)`
   grid-column: -1/1;
@@ -87,13 +93,12 @@ const Footer = styled(FooterContainer)`
   }
 `;
 
-const { publicRuntimeConfig } = getConfig();
-
 function CustomApp({
   Component,
   pageProps,
   emotionCache,
   websiteSettings,
+  publicEnv,
 }: CustomAppProps) {
   const siteTitle = 'Bajour';
   const router = useRouter();
@@ -108,6 +113,12 @@ function CustomApp({
     websiteSettings ??
     (typeof window !== 'undefined' ? window.WEBSITE_SETTINGS : undefined);
 
+  const env =
+    publicEnv ??
+    (typeof window !== 'undefined' ?
+      (window.PUBLIC_ENV as typeof publicEnv)
+    : undefined);
+
   return (
     <PlausibleProvider
       enabled={
@@ -119,35 +130,39 @@ function CustomApp({
       <AppCacheProvider emotionCache={cache}>
         <Head>
           <title key="title">{siteTitle}</title>
+          <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+          />
         </Head>
 
-        <WebsiteProvider>
-          <WebsiteBuilderProvider
-            meta={{ siteTitle }}
-            Head={Head}
-            Script={Script}
-            elements={{ Link: NextWepublishLink }}
-            date={{ format: dateFormatter }}
-            blocks={{
-              Renderer: BajourBlockRenderer,
-              BaseTeaser: BajourTeaser,
-              TeaserGrid: BajourTeaserGrid,
-              TeaserList: BajourTeaserList,
-              Break: BajourBreakBlock,
-              Quote: BajourQuoteBlock,
-              Title: BajourTitleBlock,
-            }}
-            blockStyles={{
-              ContextBox: BajourContextBox,
-              TeaserSlider: BajourTeaserSlider,
-            }}
-            thirdParty={{
-              stripe: publicRuntimeConfig.env.STRIPE_PUBLIC_KEY,
-            }}
-            ArticleDate={BajourArticleDateWithShare}
-            Banner={BajourBanner}
-          >
-            <ThemeProvider theme={theme}>
+        <ThemeProvider theme={theme}>
+          <WebsiteProvider>
+            <WebsiteBuilderProvider
+              meta={{ siteTitle }}
+              Head={Head}
+              Script={Script}
+              elements={{ Link: NextWepublishLink }}
+              date={{ format: dateFormatter }}
+              blocks={{
+                Renderer: BajourBlockRenderer,
+                BaseTeaser: BajourTeaser,
+                TeaserGrid: BajourTeaserGrid,
+                TeaserList: BajourTeaserList,
+                Break: BajourBreakBlock,
+                Quote: BajourQuoteBlock,
+                Title: BajourTitleBlock,
+              }}
+              blockStyles={{
+                ContextBox: BajourContextBox,
+                TeaserSlider: BajourTeaserSlider,
+              }}
+              thirdParty={{
+                stripe: env?.stripeKey,
+              }}
+              ArticleDate={BajourArticleDateWithShare}
+              Banner={BajourBanner}
+            >
               <CssBaseline />
 
               <MainGrid>
@@ -202,19 +217,19 @@ function CustomApp({
 
               {popup && (
                 <Script
-                  src={publicRuntimeConfig.env.MAILCHIMP_POPUP_SCRIPT_URL!}
+                  src={env?.mailchimpPopupScriptUrl}
                   strategy="afterInteractive"
                 />
               )}
-            </ThemeProvider>
-          </WebsiteBuilderProvider>
-        </WebsiteProvider>
+            </WebsiteBuilderProvider>
+          </WebsiteProvider>
+        </ThemeProvider>
       </AppCacheProvider>
     </PlausibleProvider>
   );
 }
 
-const withApollo = createWithApiClient(getApiUrl(), [authLink, previewLink]);
+const withApollo = createWithApiClient([authLink, previewLink]);
 const ConnectedApp = withApollo(
   withBuilderRouter(
     withErrorSnackbar(

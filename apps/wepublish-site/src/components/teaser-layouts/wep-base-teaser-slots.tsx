@@ -46,4 +46,4 @@ export const WepBaseTeaserSlots = cond([
       </div>
     ),
   ],
-]) as (props: BuilderTeaserSlotsBlockProps) => JSX.Element;
+]);

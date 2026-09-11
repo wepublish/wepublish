@@ -4,6 +4,8 @@ import {
   CSSObject,
   SimplePaletteColorOptions,
   Theme as MaterialTheme,
+  useTheme,
+  ThemeOptions,
 } from '@mui/material';
 import { TypographyStyleOptions } from '@mui/material/styles/createTypography';
 import {
@@ -13,7 +15,8 @@ import {
   Theme,
   ThemeProvider,
 } from '@mui/system';
-import { ComponentType, memo } from 'react';
+import { ComponentType, createElement, memo, useMemo } from 'react';
+import { PartialDeep } from 'type-fest';
 
 declare module '@emotion/react' {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -347,18 +350,34 @@ export const theme = createTheme(minimalTheme, {
   },
 });
 
-export const createWithTheme = <
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  P extends object,
->(
+export const createWithTheme = <P extends object>(
   ControlledComponent: ComponentType<P>,
   theme: Theme
 ) =>
   memo<P>(props => (
     <ThemeProvider theme={theme}>
-      <ControlledComponent {...(props as P)} />
+      {createElement(ControlledComponent, props as P)}
     </ThemeProvider>
   ));
+
+export const createWithInheritedTheme = <P extends object>(
+  ControlledComponent: ComponentType<P>,
+  theme: PartialDeep<Theme> | ThemeOptions
+) =>
+  memo<P>(props => {
+    const parentTheme = useTheme();
+
+    const newTheme = useMemo(
+      () => createTheme(parentTheme, theme),
+      [parentTheme]
+    );
+
+    return (
+      <ThemeProvider theme={newTheme}>
+        {createElement(ControlledComponent, props as P)}
+      </ThemeProvider>
+    );
+  });
 
 export function responsiveProperty({
   cssProperty,

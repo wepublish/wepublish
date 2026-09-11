@@ -137,8 +137,8 @@ export class MemberPlanService {
       where: { id },
       data: {
         ...input,
-        description: input.description as any[],
-        shortDescription: input.shortDescription as any[],
+        description: input.description as any,
+        shortDescription: input.shortDescription as any,
         availablePaymentMethods:
           availablePaymentMethods ?
             {
@@ -175,8 +175,8 @@ export class MemberPlanService {
     return this.prisma.memberPlan.create({
       data: {
         ...input,
-        description: input.description as any[],
-        shortDescription: input.shortDescription as any[],
+        description: input.description as any,
+        shortDescription: input.shortDescription as any,
         availablePaymentMethods: {
           createMany: {
             data: availablePaymentMethods,

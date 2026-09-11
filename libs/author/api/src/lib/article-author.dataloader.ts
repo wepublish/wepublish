@@ -15,6 +15,7 @@ export class ArticleAuthorDataloader extends DataLoaderService<Author[]> {
     const authors = groupBy(
       author => author.revisionId!,
       await this.prisma.articleRevisionAuthor.findMany({
+        relationLoadStrategy: 'join',
         where: {
           revisionId: {
             in: articleRevisionIds,

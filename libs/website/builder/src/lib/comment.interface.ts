@@ -1,4 +1,5 @@
 import { ApolloError, MutationResult, QueryResult } from '@apollo/client';
+import type { RichtextJSONDocument } from '@wepublish/richtext';
 import {
   AddCommentMutation,
   AddCommentMutationVariables,
@@ -15,7 +16,6 @@ import {
   OverriddenRating,
 } from '@wepublish/website/api';
 import { Dispatch, PropsWithChildren } from 'react';
-import { Node } from 'slate';
 
 export type BuilderCommentListStateTypes = 'add' | 'edit';
 
@@ -76,13 +76,6 @@ export type BuilderCommentListProps = Pick<
 
   signUpUrl: string;
   maxCommentDepth?: number;
-};
-
-export type BuilderCommentListItemShareProps = {
-  className?: string;
-  url: string;
-  title: string;
-  forceNonSystemShare?: boolean;
 };
 
 export type BuilderCommentListItemProps = (CommentWithoutNestingFragment & {
@@ -146,7 +139,7 @@ type CreateCommentProps = {
 };
 
 type EditCommentProps = {
-  text?: Node[] | null;
+  text?: RichtextJSONDocument | null;
   title?: string | null;
   lead?: string | null;
   challenge?: never;

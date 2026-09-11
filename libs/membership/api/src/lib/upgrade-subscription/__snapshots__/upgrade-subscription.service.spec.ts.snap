@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`UpgradeSubscriptionService happy path should upgrade a subscription 1`] = `
 {
@@ -27,7 +27,9 @@ exports[`UpgradeSubscriptionService happy path should upgrade a subscription 1`]
     {
       "autoRenew": true,
       "discount": 600,
+      "discountCodeId": undefined,
       "extendable": true,
+      "goodieId": undefined,
       "memberPlanID": "memberPlanId",
       "monthlyAmount": 80,
       "paymentMethodID": "paymentMethodId",

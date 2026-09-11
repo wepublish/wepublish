@@ -66,7 +66,7 @@ export function Author({
         )}
       </AuthorImage>
 
-      <RichText richText={data.author.bio ?? []} />
+      <RichText richText={data.author.bio} />
     </AuthorWrapper>
   );
 }

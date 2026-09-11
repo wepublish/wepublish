@@ -24,7 +24,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import {
   Checkbox,
   Col as RCol,
-  FlexboxGrid,
   Form,
   Grid,
   IconButton,
@@ -35,13 +34,13 @@ import {
   SelectPicker,
   toaster,
 } from 'rsuite';
-import FormHelpText from 'rsuite/FormHelpText';
+import Text from 'rsuite/Text';
 
 const ColNoMargin = styled(RCol)`
   margin-top: 0px;
 `;
 
-const FlexItem = styled(FlexboxGrid.Item)`
+const FlexItem = styled(RCol)`
   margin-top: 10px;
 `;
 
@@ -216,7 +215,6 @@ const CommentEditView = memo(() => {
     <Form
       onSubmit={() => updateComment()}
       model={validationModel}
-      fluid
       disabled={loading}
       style={{
         maxHeight: 'calc(100vh - 135px)',
@@ -268,9 +266,9 @@ const CommentEditView = memo(() => {
                   bordered
                   header={t('commentEditView.actions')}
                 >
-                  <FlexboxGrid>
-                    <FlexboxGrid.Item
-                      colspan={24}
+                  <Row>
+                    <RCol
+                      span={24}
                       style={{ textAlign: 'start' }}
                     >
                       <IconButton
@@ -283,9 +281,9 @@ const CommentEditView = memo(() => {
                       >
                         {t('commentEditView.goToArticle')}
                       </IconButton>
-                    </FlexboxGrid.Item>
+                    </RCol>
 
-                    <FlexItem colspan={24}>
+                    <FlexItem span={24}>
                       {comment && (
                         <CommentStateDropdown
                           comment={comment}
@@ -300,7 +298,7 @@ const CommentEditView = memo(() => {
                       )}
                     </FlexItem>
 
-                    <FlexItem colspan={24}>
+                    <FlexItem span={24}>
                       <CommentDeleteBtn
                         comment={comment}
                         onCommentDeleted={() => {
@@ -308,7 +306,7 @@ const CommentEditView = memo(() => {
                         }}
                       />
                     </FlexItem>
-                  </FlexboxGrid>
+                  </Row>
                 </RPanel>
               </ColNoMargin>
 
@@ -333,17 +331,14 @@ const CommentEditView = memo(() => {
                         >
                           {t('commentEditView.featured')}
                         </Checkbox>
-                        <FormHelpText>
-                          {t('commentEditView.featuredHelpText')}
-                        </FormHelpText>
+
+                        <Text>{t('commentEditView.featuredHelpText')}</Text>
                       </RCol>
                     )}
 
                     {/* tags */}
                     <RCol xs={24}>
-                      <Form.ControlLabel>
-                        {t('commentEditView.tags')}
-                      </Form.ControlLabel>
+                      <Form.Label>{t('commentEditView.tags')}</Form.Label>
                       <SelectTags
                         defaultTags={comment?.tags ?? []}
                         selectedTags={commentTags}
@@ -354,9 +349,7 @@ const CommentEditView = memo(() => {
 
                     {/* external source */}
                     <RCol xs={24}>
-                      <Form.ControlLabel>
-                        {t('commentEditView.source')}
-                      </Form.ControlLabel>
+                      <Form.Label>{t('commentEditView.source')}</Form.Label>
                       <Form.Control
                         name="externalSource"
                         placeholder={t('commentEditView.source')}
@@ -364,7 +357,10 @@ const CommentEditView = memo(() => {
                         onChange={(source: string) => {
                           setComment(
                             oldComment =>
-                              ({ ...oldComment, source }) as FullCommentFragment
+                              ({
+                                ...oldComment,
+                                source,
+                              }) as FullCommentFragment
                           );
                         }}
                       />
@@ -392,13 +388,13 @@ const CommentEditView = memo(() => {
                   bordered
                   header={t('commentEditView.ratingOverrides')}
                 >
-                  <FlexboxGrid>
+                  <Row>
                     {ratingOverrides.map(override => (
                       <FlexItem
                         key={override.answerId}
-                        colspan={24}
+                        span={24}
                       >
-                        <Form.ControlLabel>{override.name}</Form.ControlLabel>
+                        <Form.Label>{override.name}</Form.Label>
                         <SelectPicker
                           block
                           cleanable={false}
@@ -428,7 +424,7 @@ const CommentEditView = memo(() => {
                         />
                       </FlexItem>
                     ))}
-                  </FlexboxGrid>
+                  </Row>
                 </RPanel>
               </ColNoMargin>
             </Row>

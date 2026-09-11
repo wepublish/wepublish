@@ -9,7 +9,7 @@ import { RowDataType } from 'rsuite-table';
 
 import { AudienceDetailDrawer } from './audience-detail-drawer';
 import { AudienceStatsComputed } from './useAudience';
-import { AudienceClientFilter, TimeResolution } from './useAudienceFilter';
+import { AudienceClientFilter, TimeResolution } from './audience-filter-params';
 
 const { Column, HeaderCell, Cell } = Table;
 
@@ -93,10 +93,11 @@ export function AudienceTable({
         </Column>
 
         {replacedSubscriptionCount && (
-          <Column resizable>
+          <Column width={50}>
             <HeaderCell>
               {t('audience.legend.replacedSubscriptionCount')}
             </HeaderCell>
+
             <Cell dataKey="replacedSubscriptionCount" />
           </Column>
         )}
@@ -214,10 +215,11 @@ export function AudienceTable({
         )}
 
         {totalActiveSubscriptionCount && (
-          <Column resizable>
+          <Column width={50}>
             <HeaderCell>
               {t('audience.legend.totalActiveSubscriptionCount')}
             </HeaderCell>
+
             <Cell dataKey="totalActiveSubscriptionCount" />
           </Column>
         )}

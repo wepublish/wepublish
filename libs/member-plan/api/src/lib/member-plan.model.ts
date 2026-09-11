@@ -12,10 +12,10 @@ import {
 import { PaginatedType, SortOrder } from '@wepublish/utils/api';
 import { HasImage } from '@wepublish/image/api';
 import { GraphQLRichText } from '@wepublish/richtext/api';
-import { Descendant } from 'slate';
 import { PaymentMethod } from '@wepublish/payment/api';
 import { Currency, PaymentPeriodicity, ProductType } from '@prisma/client';
 import { Page } from '@wepublish/page/api';
+import type { RichtextJSONDocument } from '@wepublish/richtext';
 
 export enum MemberPlanSort {
   CreatedAt = 'CreatedAt',
@@ -77,10 +77,10 @@ export class MemberPlan extends HasImage {
   slug!: string;
 
   @Field(() => GraphQLRichText, { nullable: true })
-  description?: Descendant[];
+  description?: RichtextJSONDocument;
 
   @Field(() => GraphQLRichText, { nullable: true })
-  shortDescription?: Descendant[];
+  shortDescription?: RichtextJSONDocument;
 
   @Field(() => [String], { nullable: true })
   tags?: string[];

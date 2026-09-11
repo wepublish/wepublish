@@ -1,18 +1,18 @@
-import { Descendant, Element, Node, Text } from 'slate';
 import { compose } from 'ramda';
+import { RichtextElements } from './json-format.interface';
 
 export const truncateParagraph =
   (maxLength: number) =>
-  (paragraph: Node | undefined): Descendant | undefined => {
+  (paragraph: RichtextElements | undefined): RichtextElements | undefined => {
     let textLength = 0;
 
-    if (!Element.isElement(paragraph)) {
+    if (paragraph?.type !== 'paragraph') {
       return;
     }
 
-    const truncated = paragraph.children.reduce(
-      (acc: Element, curr) => {
-        if (!Text.isText(curr)) {
+    const truncated = paragraph.content?.reduce(
+      (acc: RichtextElements, curr: RichtextElements) => {
+        if (curr.type !== 'text') {
           return acc;
         }
 
@@ -22,7 +22,7 @@ export const truncateParagraph =
           newText = curr.text.substring(0, Math.max(0, maxLength - textLength));
         }
 
-        acc.children.push({
+        acc.content.push({
           ...curr,
           text: newText,
         });
@@ -30,20 +30,16 @@ export const truncateParagraph =
 
         return acc;
       },
-      { ...paragraph, children: [] }
+      { ...paragraph, content: [] } as RichtextElements
     );
 
     return truncated;
   };
 
 export const findFirstParagraph = (
-  nodes: Node[] | undefined | null
-): Node | undefined =>
-  nodes?.find(node => Element.isElement(node) && node.type === 'paragraph');
+  nodes: RichtextElements[]
+): RichtextElements | undefined =>
+  nodes.find(node => node.type === 'paragraph');
 
 export const truncateFirstParagraph = (maxLength: number) =>
-  compose(
-    node => (node ? [node] : node),
-    truncateParagraph(maxLength),
-    findFirstParagraph
-  );
+  compose(truncateParagraph(maxLength), findFirstParagraph);

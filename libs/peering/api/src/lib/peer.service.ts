@@ -52,7 +52,7 @@ export class PeerService {
     return this.prisma.peer.create({
       data: {
         ...input,
-        information: information as any[],
+        information: information as any,
       },
     });
   }
@@ -65,7 +65,7 @@ export class PeerService {
       },
       data: {
         ...input,
-        information: information as any[],
+        information: information as any,
       },
     });
   }

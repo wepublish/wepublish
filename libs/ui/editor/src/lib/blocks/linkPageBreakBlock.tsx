@@ -10,10 +10,7 @@ import { ImageEditPanel } from '../panel/imageEditPanel';
 import { ImageSelectPanel } from '../panel/imageSelectPanel';
 import { LinkPageBreakEditPanel } from '../panel/linkPageBreakEditPanel';
 import { isFunctionalUpdate } from '../utility';
-import {
-  createDefaultValue,
-  RichTextBlock,
-} from './richTextBlock/rich-text-block';
+import { RichTextBlock } from './richTextBlock/rich-text-block';
 import { LinkPageBreakBlockValue, RichTextBlockValue } from './types';
 
 const Input = styled(RInput)`
@@ -107,6 +104,7 @@ export function LinkPageBreakBlock({
             minHeight={150}
           />
         </ChooseImageWrapper>
+
         <InputWrapper>
           <Input
             ref={focusInputRef}
@@ -117,11 +115,12 @@ export function LinkPageBreakBlock({
           />
 
           <RichTextBlock
-            value={richText || createDefaultValue()}
+            value={richText}
             onChange={handleRichTextChange}
           />
         </InputWrapper>
       </ContentWrapper>
+
       <Drawer
         open={isChooseModalOpen}
         size="sm"

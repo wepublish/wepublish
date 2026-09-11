@@ -55,7 +55,7 @@ jobs:
       - name: Get environment variables
         id: get-env
         run: |
-          ./deployment/website_read_env.sh ${{ inputs.environment == 'review_deployed' && 'review' || inputs.environment }} ${{ inputs.website_project }} docker NEXT_PROJECT=${{ inputs.website_project }} API_URL=${{ inputs.api_url }} NX_NEXT_PROJECT_BUILD_OPTIONS="\"${{ !inputs.prerender && '--skip-nx-cache --experimental-build-mode compile' || '--skip-nx-cache' }}\""
+          ./deployment/website_read_env.sh ${{ inputs.environment == 'review_deployed' && 'review' || inputs.environment }} ${{ inputs.website_project }} docker NEXT_PROJECT=${{ inputs.website_project }} APP_NAME=${{ inputs.website_project }} API_URL=${{ inputs.api_url }} NX_NEXT_PROJECT_BUILD_OPTIONS="\"${{ !inputs.prerender && '--skip-nx-cache --experimental-build-mode compile' || '--skip-nx-cache' }}\""
         env:
           SECRETS_CONTEXT: ${{ toJson(secrets) }}
       - name: Wait for api version to be deployed
@@ -97,6 +97,7 @@ jobs:
             SENTRY_ORG=wepublish-foundation
             SENTRY_PROJECT=wepublish-cms
             SENTRY_RELEASE=${{ github.sha }}
+            SENTRY_DSN=https://a015f6d558e9e245baa1d31fc8ee0571@o4507730765873152.ingest.de.sentry.io/4510947424075856
             APP_RELEASE_ID=${{ github.sha }}
             SSR_FETCH_TIMEOUT_MS=${{ secrets.SSR_FETCH_TIMEOUT_MS }}
           push: true

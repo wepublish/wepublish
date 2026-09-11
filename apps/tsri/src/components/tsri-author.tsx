@@ -102,7 +102,7 @@ export function TsriAuthor({
 
       <RichTextWrapper>
         <RichText
-          richText={data.author.bio ?? []}
+          richText={data.author.bio}
           css={richTextStyles}
         />
       </RichTextWrapper>

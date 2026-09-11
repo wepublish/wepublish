@@ -1,5 +1,5 @@
 import { Stack } from '@mui/material';
-import { Meta } from '@storybook/react';
+import { Meta } from '@storybook/nextjs-vite';
 
 import { ListItem, OrderedList, UnorderedList } from './lists';
 

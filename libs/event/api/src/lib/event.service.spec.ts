@@ -109,7 +109,11 @@ describe('EventService', () => {
       name: 'Name',
       startsAt: new Date('2023-01-01'),
       endsAt: new Date('2023-01-01'),
-      description: [],
+      description: {
+        attrs: undefined,
+        type: 'doc',
+        content: [],
+      },
       imageId: '123',
       location: 'Location',
       tagIds: ['123', '321'],
@@ -128,7 +132,11 @@ describe('EventService', () => {
       name: 'Name',
       startsAt: new Date('2023-01-01'),
       endsAt: new Date('2023-01-01'),
-      description: [],
+      description: {
+        attrs: undefined,
+        type: 'doc',
+        content: [],
+      },
       imageId: '123',
       location: 'Location',
       tagIds: ['123', '321'],
@@ -150,7 +158,11 @@ describe('EventService', () => {
         name: 'Foo',
         startsAt: new Date('2023-01-02'),
         endsAt: new Date('2023-01-01'),
-        description: [],
+        description: {
+          attrs: undefined,
+          type: 'doc',
+          content: [],
+        },
       });
     }).rejects.toThrow(BadRequestException);
 

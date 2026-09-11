@@ -28,7 +28,7 @@ export const RichTextBlock = ({
 
   return (
     <RichTextBlockWrapper className={className}>
-      <RenderRichtext elements={richText ?? []} />
+      <RenderRichtext document={richText} />
     </RichTextBlockWrapper>
   );
 };

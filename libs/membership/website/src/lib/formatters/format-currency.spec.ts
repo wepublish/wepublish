@@ -1,38 +1,40 @@
 import { Currency } from '@wepublish/website/api';
 import { formatCurrency, roundUpTo5Cents } from './format-currency';
 
-// Intl.NumberFormat uses different thousands separators depending on the ICU data version.
-const normalize = (s: string) =>
-  s.replace(/[\u2019\u0027]/g, "'").replace(/\u00a0/g, ' ');
-
 describe('formatCurrency', () => {
   it('should format CHF without decimals in the swiss german locale', () => {
-    expect(normalize(formatCurrency(50000, Currency.Chf, 'de-CH'))).toBe(
-      "CHF 50'000.-"
-    );
+    expect(formatCurrency(50000, Currency.Chf, 'de-CH')).toBe("CHF 50'000.-");
   });
 
   it('should format CHF with decimals in the swiss german locale', () => {
-    expect(normalize(formatCurrency(50000.25, Currency.Chf, 'de-CH'))).toBe(
+    expect(formatCurrency(50000.25, Currency.Chf, 'de-CH')).toBe(
       "CHF 50'000.25"
     );
   });
 
   it('should format CHF in another locale', () => {
-    expect(normalize(formatCurrency(50000, Currency.Chf, 'de-DE'))).toBe(
-      '50.000,00 CHF'
-    );
+    expect(formatCurrency(50000, Currency.Chf, 'de-DE')).toBe('50.000,00 CHF');
   });
 
   it('should format a number without decimals in the swiss german locale but as euros', () => {
-    expect(normalize(formatCurrency(50000, Currency.Eur, 'de-CH'))).toBe(
-      "EUR 50'000.00"
-    );
+    expect(formatCurrency(50000, Currency.Eur, 'de-CH')).toBe("EUR 50'000.00");
   });
 
   it('should format a number without decimals in the german locale as euros', () => {
-    expect(normalize(formatCurrency(50000, Currency.Eur, 'de-DE'))).toBe(
+    expect(formatCurrency(50000, Currency.Eur, 'de-DE')).toBe(
       '50.000,00 \u20AC'
+    );
+  });
+
+  it('should normalize the group separator across CLDR versions', () => {
+    expect(formatCurrency(50000, Currency.Chf, 'de-CH')).not.toMatch(
+      /[\u2019\u02BC]/
+    );
+  });
+
+  it('should normalize non breaking spaces across CLDR versions', () => {
+    expect(formatCurrency(50000, Currency.Eur, 'de-DE')).not.toMatch(
+      /[\u00A0\u202F\u2009]/
     );
   });
 });

@@ -66,13 +66,16 @@ function CrowdfundingList() {
               )}
             </RCell>
           </Column>
+
           <Column
             resizable
+            width={75}
             fixed="right"
           >
             <HeaderCell align={'center'}>
               {t('crowdfunding.list.delete')}
             </HeaderCell>
+
             <PaddedCell align={'center'}>
               {(crowdfunding: RowDataType<Crowdfunding>) => (
                 <IconButton

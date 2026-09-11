@@ -25,6 +25,35 @@ export class MediaServerError extends Error {
   }
 }
 
+async function parseErrorBody(response: {
+  json(): Promise<unknown>;
+}): Promise<unknown> {
+  try {
+    return await response.json();
+  } catch {
+    return undefined;
+  }
+}
+
+function mediaServerErrorMessage(
+  response: { status: number; statusText: string },
+  body: unknown
+): string {
+  const message =
+    body && typeof body === 'object' && 'message' in body ?
+      (body as { message: unknown }).message
+    : undefined;
+
+  const detail =
+    Array.isArray(message) ? message.join(', ')
+    : typeof message === 'string' ? message
+    : undefined;
+
+  return detail ?
+      `${response.statusText} (${response.status}) - ${detail}`
+    : `${response.statusText} (${response.status})`;
+}
+
 export class NovaMediaAdapter implements MediaAdapter {
   private privateKeyPromise: Promise<KeyLike>;
 
@@ -76,11 +105,13 @@ export class NovaMediaAdapter implements MediaAdapter {
       signal: AbortSignal.timeout(50000) as any,
     });
 
-    const json = await response.json();
-
     if (response.status >= 400) {
-      throw new MediaServerError(response.statusText);
+      throw new MediaServerError(
+        mediaServerErrorMessage(response, await parseErrorBody(response))
+      );
     }
+
+    const json = await response.json();
 
     const {
       id,
@@ -147,7 +178,9 @@ export class NovaMediaAdapter implements MediaAdapter {
     });
 
     if (response.status >= 400) {
-      throw new MediaServerError(response.statusText);
+      throw new MediaServerError(
+        mediaServerErrorMessage(response, await parseErrorBody(response))
+      );
     }
 
     return true;
@@ -265,11 +298,13 @@ export class NovaMediaAdapter implements MediaAdapter {
       signal: AbortSignal.timeout(50000) as any,
     });
 
-    const json = await response.json();
-
     if (response.status >= 400) {
-      throw new MediaServerError(response.statusText);
+      throw new MediaServerError(
+        mediaServerErrorMessage(response, await parseErrorBody(response))
+      );
     }
+
+    const json = await response.json();
 
     const { id, filename, fileSize, mimeType, extension } = json;
 
@@ -285,7 +320,9 @@ export class NovaMediaAdapter implements MediaAdapter {
     });
 
     if (response.status >= 400) {
-      throw new MediaServerError(response.statusText);
+      throw new MediaServerError(
+        mediaServerErrorMessage(response, await parseErrorBody(response))
+      );
     }
 
     return true;

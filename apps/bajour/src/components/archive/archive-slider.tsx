@@ -165,7 +165,9 @@ const ArchiveSlide = ({ teaser, onClick, isCurrent }: ArchiveSlideProps) => {
         />
       )}
       {publishDate && (
-        <ArchiveDate>{date.format(new Date(publishDate), false)}</ArchiveDate>
+        <ArchiveDate suppressHydrationWarning>
+          {date.format(new Date(publishDate), false)}
+        </ArchiveDate>
       )}
     </Slide>
   );

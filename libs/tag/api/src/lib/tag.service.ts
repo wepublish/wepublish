@@ -80,7 +80,7 @@ export class TagService {
       },
       data: {
         ...input,
-        description: description as any[],
+        description: description as any,
       },
     });
   }
@@ -90,7 +90,7 @@ export class TagService {
     return this.prisma.tag.create({
       data: {
         ...input,
-        description: description as any[],
+        description: description as any,
       },
     });
   }

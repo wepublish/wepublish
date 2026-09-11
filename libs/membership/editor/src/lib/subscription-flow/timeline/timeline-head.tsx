@@ -5,7 +5,7 @@ import { useAuthorisation } from '@wepublish/ui/editor';
 import { useContext, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdCheck, MdEdit, MdRefresh } from 'react-icons/md';
-import { IconButton, InputNumber, Popover, Tag, Whisper } from 'rsuite';
+import { IconButton, NumberInput, Popover, Tag, Whisper } from 'rsuite';
 import { SubscriptionClientContext } from '../graphql-client-context';
 
 interface FlowHeadProps {
@@ -80,8 +80,8 @@ export function TimelineHead({ days, intervals }: FlowHeadProps) {
               speaker={
                 <Popover>
                   <PopoverBody>
-                    <InputNumber
-                      onChange={value => (editDay.current = +value)}
+                    <NumberInput
+                      onChange={value => (editDay.current = +(value ?? 0))}
                       size="sm"
                       defaultValue={day ?? 0}
                       step={1}

@@ -36,6 +36,7 @@ export const parameters = {
   },
   apolloClient: {
     MockedProvider,
+    mocks: [],
     cache,
     showWarnings: false,
     assumeImmutableResults: true,

@@ -23,6 +23,7 @@ describe('BannerService', () => {
     active: true,
     delay: 0,
     html: null,
+    embedUrl: null,
     showOnArticles: true,
     showOnPages: pages,
     showForLoginStatus: LoginStatus.ALL,

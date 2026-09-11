@@ -3,16 +3,12 @@
     "production": {
       "custom_domain": "https://www.zwoelf.ch",
       "deployment": true,
-      "env": {
-        "GA_ID": "G-3BJ1PZ36RK"
-      },
+      "env": {},
       "secret_env": []
     },
     "staging": {
       "deployment": true,
-      "env": {
-        "GA_ID": "G-3BJ1PZ36RK"
-      },
+      "env": {},
       "secret_env": []
     },
     "review": {

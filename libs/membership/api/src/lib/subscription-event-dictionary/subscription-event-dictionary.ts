@@ -152,8 +152,7 @@ export class SubscriptionEventDictionary {
         actions: flow.intervals.map(int => ({
           type: int.event,
           daysAwayFromEnding: int.daysAwayFromEnding,
-          externalMailTemplate:
-            int.mailTemplate ? int.mailTemplate.externalMailTemplateId : null,
+          mailTemplateId: int.mailTemplate ? int.mailTemplate.id : null,
         })),
       };
     });
@@ -268,7 +267,7 @@ export class SubscriptionEventDictionary {
       if (!flow.intervals[0].mailTemplate) {
         return undefined;
       }
-      return flow.intervals[0].mailTemplate.externalMailTemplateId;
+      return flow.intervals[0].mailTemplate.id;
     }
     return undefined;
   }

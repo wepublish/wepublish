@@ -1,7 +1,7 @@
 import { NumberField } from '@base-ui-components/react/number-field';
 import styled from '@emotion/styled';
 import { RadioGroup } from '@mui/material';
-import { BuilderPaymentAmountProps } from '@wepublish/website/builder';
+import { BuilderPaymentAmountPickerProps } from '@wepublish/website/builder';
 import { forwardRef } from 'react';
 
 import { CurrencyNumberSpinner } from './currency-number-spinner';
@@ -27,17 +27,16 @@ const PaymentAmountInput = styled(CurrencyNumberSpinner)`
   background: #fff;
   // Chrome, Safari, Edge
 
-  & input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button {
+  & input::-webkit-outer-spin-button,
+  & input::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
   }
 
-,
   // Firefox
-& input [ type = number ] {
-  -moz-appearance: textfield;
-},
-
+  & input [type='number'] {
+    -moz-appearance: textfield;
+  }
 `;
 
 const PaymentAmountInputWrapper = styled('div')`
@@ -46,12 +45,11 @@ const PaymentAmountInputWrapper = styled('div')`
 
 export const OnlineReportsPaymentAmount = forwardRef<
   typeof CurrencyNumberSpinner,
-  BuilderPaymentAmountProps
+  BuilderPaymentAmountPickerProps
 >(
   (
     {
       className,
-      slug,
       currency,
       amountPerMonthMin,
       amountPerMonthTarget,

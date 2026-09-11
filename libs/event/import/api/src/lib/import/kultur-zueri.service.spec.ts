@@ -13,7 +13,11 @@ const mockedEvent: EventFromSource = {
   name: 'Foobar',
   startsAt: new Date('2023-01-01'),
   status: EventStatus.Scheduled,
-  description: [],
+  description: {
+    type: 'doc',
+    attrs: undefined,
+    content: [],
+  },
   externalSourceId: '123',
   externalSourceName: 'KulturZueri',
 };
@@ -92,9 +96,7 @@ describe('KulturZueriService', () => {
         id: 'non-existing-event-id',
       };
 
-      await expect(
-        service.importedEvent(importedEventParams)
-      ).rejects.toThrowError(
+      await expect(service.importedEvent(importedEventParams)).rejects.toThrow(
         `Event with id ${importedEventParams.id} not found.`
       );
     });
@@ -119,7 +121,7 @@ describe('KulturZueriService', () => {
         id: 'non-existent-event-id',
       };
 
-      await expect(service.createEvent(createEventParams)).rejects.toThrowError(
+      await expect(service.createEvent(createEventParams)).rejects.toThrow(
         `Event with id ${createEventParams.id} not found.`
       );
     });

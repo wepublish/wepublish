@@ -1,15 +1,19 @@
 import styled from '@emotion/styled';
 import { Typography } from '@mui/material';
 import {
+  IntendedRouteExpiryInSeconds,
   IntendedRouteStorageKey,
   LoginFormContainer,
   useUser,
 } from '@wepublish/authentication/website';
 import { getApiUrl, handleJwtLogin } from '@wepublish/utils/website';
-import { SessionWithTokenWithoutUser } from '@wepublish/website/api';
-import { getApiClient } from '@wepublish/website/api';
+import {
+  getApiClient,
+  SessionWithTokenWithoutUser,
+} from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
-import { deleteCookie, getCookie } from 'cookies-next';
+import { deleteCookie, getCookie, setCookie } from 'cookies-next';
+import { add } from 'date-fns';
 import { NextPageContext } from 'next';
 import { useRouter } from 'next/router';
 import { useEffect, useRef } from 'react';
@@ -35,6 +39,17 @@ export default function Login({ sessionToken }: LoginProps) {
     }
   }, [sessionToken, setToken]);
 
+  if (
+    router.query.intended &&
+    (router.query.intended as string).startsWith('/')
+  ) {
+    setCookie(IntendedRouteStorageKey, router.query.intended, {
+      expires: add(new Date(), {
+        seconds: IntendedRouteExpiryInSeconds,
+      }),
+    });
+  }
+
   if (hasUser && typeof window !== 'undefined') {
     const intendedRoute = getCookie(IntendedRouteStorageKey)?.toString();
     deleteCookie(IntendedRouteStorageKey);
@@ -48,7 +63,7 @@ export default function Login({ sessionToken }: LoginProps) {
 
   return (
     <LoginWrapper>
-      <H3 component="h1">Login für Abonnent*innen</H3>
+      <H3 component="h1">Login für Unterstützer:innen</H3>
 
       <Typography
         variant="body1"

@@ -1,0 +1,106 @@
+fragment FullGoodie on Goodie {
+  id
+  createdAt
+  modifiedAt
+
+  name
+  description
+  stock
+  availableStock
+  active
+
+  imageID
+  image {
+    ...FullImage
+  }
+
+  memberPlans {
+    id
+    name
+  }
+}
+
+query GoodieList(
+  $filter: GoodieFilter
+  $cursor: String
+  $take: Int
+  $skip: Int
+  $order: SortOrder
+  $sort: GoodieSort
+) {
+  goodies(
+    filter: $filter
+    cursorId: $cursor
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
+    nodes {
+      ...FullGoodie
+    }
+
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+
+    totalCount
+  }
+}
+
+query Goodie($id: String!) {
+  goodie(id: $id) {
+    ...FullGoodie
+  }
+}
+
+mutation CreateGoodie(
+  $name: String!
+  $description: RichText
+  $stock: Int
+  $active: Boolean!
+  $imageID: String
+  $memberPlanIDs: [String!]!
+) {
+  createGoodie(
+    name: $name
+    description: $description
+    stock: $stock
+    active: $active
+    imageID: $imageID
+    memberPlanIDs: $memberPlanIDs
+  ) {
+    ...FullGoodie
+  }
+}
+
+mutation UpdateGoodie(
+  $id: String!
+  $name: String
+  $description: RichText
+  $stock: Int
+  $active: Boolean
+  $imageID: String
+  $memberPlanIDs: [String!]
+) {
+  updateGoodie(
+    id: $id
+    name: $name
+    description: $description
+    stock: $stock
+    active: $active
+    imageID: $imageID
+    memberPlanIDs: $memberPlanIDs
+  ) {
+    ...FullGoodie
+  }
+}
+
+mutation DeleteGoodie($id: String!) {
+  deleteGoodie(id: $id) {
+    ...FullGoodie
+  }
+}

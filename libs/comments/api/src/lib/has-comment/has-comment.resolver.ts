@@ -12,6 +12,7 @@ export class HasCommentResolver {
     if (!commentId) {
       return null;
     }
+
     return this.commentDataloaderService.load(commentId);
   }
 }

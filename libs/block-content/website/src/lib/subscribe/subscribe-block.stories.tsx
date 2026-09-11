@@ -1,4 +1,4 @@
-import { Meta } from '@storybook/react';
+import { Meta } from '@storybook/nextjs-vite';
 import {
   mockChallenge,
   mockMemberPlan,
@@ -40,6 +40,8 @@ export const Upgrade = {
         data: {
           upgradeUserSubscriptionInfo: {
             discountAmount: 50,
+            discountPercent: null,
+            discountCodeValid: null,
           },
         },
       },

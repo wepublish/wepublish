@@ -3,25 +3,26 @@
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/document/api/src",
   "projectType": "library",
+  "tags": [],
   "targets": {
     "lint": {
       "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"]
     },
     "test": {
-      "executor": "@nx/jest:jest",
+      "executor": "nx:run-commands",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "libs/document/api/jest.config.ts",
-        "passWithNoTests": true
+        "command": "vitest run --passWithNoTests --config {projectRoot}/vitest.config.ts"
       },
       "configurations": {
         "ci": {
-          "ci": true,
-          "codeCoverage": true
+          "command": "vitest run --passWithNoTests --coverage --config {projectRoot}/vitest.config.ts"
+        },
+        "update": {
+          "command": "vitest run --passWithNoTests --update --config {projectRoot}/vitest.config.ts"
         }
       }
     }
-  },
-  "tags": []
+  }
 }

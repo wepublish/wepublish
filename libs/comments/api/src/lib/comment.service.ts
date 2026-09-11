@@ -467,7 +467,7 @@ export class CommentService {
     session?: UserSession | null
   ) {
     let authorType: CommentAuthorType = CommentAuthorType.verifiedUser;
-    const commentLength = toPlaintext(input.text)?.length ?? 0;
+    const commentLength = toPlaintext(input.text.content)?.length ?? 0;
 
     const maxCommentLength = (
       await this.settingsService.settingByName(SettingName.COMMENT_CHAR_LIMIT)

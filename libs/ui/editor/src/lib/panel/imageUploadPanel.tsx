@@ -59,12 +59,12 @@ export function ImageUploadPanel({ onClose, onUpload }: ImageUploadPanelProps) {
             onDrop={handleDrop}
           />
         </InputWrapper>
-        <Form.ControlLabel>
+        <Form.Label>
           <br />
           {t('images.panels.resizedImage', {
             sizeMB: getImgMinSizeToCompress(),
           })}
-        </Form.ControlLabel>
+        </Form.Label>
       </Drawer.Body>
     </>
   );

@@ -1,0 +1,68 @@
+{
+  "name": "neuewege",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/neuewege",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/next:build",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "outputPath": "dist/apps/neuewege",
+        "webpack": true
+      },
+      "configurations": {
+        "development": {
+          "outputPath": "apps/neuewege"
+        },
+        "production": {}
+      }
+    },
+    "serve": {
+      "executor": "@nx/next:server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "neuewege:build",
+        "dev": true,
+        "webpack": true
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "neuewege:build:development",
+          "dev": true
+        },
+        "production": {
+          "buildTarget": "neuewege:build:production",
+          "dev": false
+        }
+      }
+    },
+    "export": {
+      "executor": "@nx/next:export",
+      "options": {
+        "buildTarget": "neuewege:build:production"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "command": "vitest run --passWithNoTests --config {projectRoot}/vitest.config.ts"
+      },
+      "configurations": {
+        "ci": {
+          "command": "vitest run --passWithNoTests --coverage --config {projectRoot}/vitest.config.ts"
+        },
+        "update": {
+          "command": "vitest run --passWithNoTests --update --config {projectRoot}/vitest.config.ts"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
+    }
+  }
+}

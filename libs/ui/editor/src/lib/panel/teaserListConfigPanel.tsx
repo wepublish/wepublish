@@ -38,7 +38,7 @@ export function TeaserListConfigPanel({
   onClose,
   onSelect,
 }: TeaserListConfigPanelProps) {
-  const previousType = useRef<TeaserType>();
+  const previousType = useRef<TeaserType>(undefined);
   const [tagFilter, setTagFilter] = useState(value.filter.tags ?? []);
   const [take, setTake] = useState(value.take);
   const [skip, setSkip] = useState(value.skip);
@@ -117,9 +117,7 @@ export function TeaserListConfigPanel({
 
       <DrawerBody>
         <Form.Group controlId="teaserType">
-          <Form.ControlLabel>
-            {t('blocks.teaserList.teaserTypeLabel')}
-          </Form.ControlLabel>
+          <Form.Label>{t('blocks.teaserList.teaserTypeLabel')}</Form.Label>
 
           <SelectPicker
             name="teaserType"
@@ -145,9 +143,7 @@ export function TeaserListConfigPanel({
         </Form.Group>
 
         <Form.Group controlId="sort">
-          <Form.ControlLabel>
-            {t('blocks.teaserList.sortLabel')}
-          </Form.ControlLabel>
+          <Form.Label>{t('blocks.teaserList.sortLabel')}</Form.Label>
 
           <SelectPicker
             name="sort"
@@ -184,9 +180,7 @@ export function TeaserListConfigPanel({
         </Form.Group>
 
         <Form.Group controlId="skip">
-          <Form.ControlLabel>
-            {t('blocks.teaserList.skipLabel')}
-          </Form.ControlLabel>
+          <Form.Label>{t('blocks.teaserList.skipLabel')}</Form.Label>
 
           <Form.Control
             name="skip"
@@ -198,9 +192,7 @@ export function TeaserListConfigPanel({
         </Form.Group>
 
         <Form.Group controlId="take">
-          <Form.ControlLabel>
-            {t('blocks.teaserList.takeLabel')}
-          </Form.ControlLabel>
+          <Form.Label>{t('blocks.teaserList.takeLabel')}</Form.Label>
 
           <Form.Control
             name="take"
@@ -213,9 +205,7 @@ export function TeaserListConfigPanel({
 
         {sort !== TeaserListBlockSort.HotAndTrending && (
           <Form.Group controlId="tags">
-            <Form.ControlLabel>
-              {t('blocks.teaserList.tagsLabel')}
-            </Form.ControlLabel>
+            <Form.Label>{t('blocks.teaserList.tagsLabel')}</Form.Label>
 
             <SelectTags
               defaultTags={value.filter.tagObjects}

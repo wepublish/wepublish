@@ -1,4 +1,3 @@
-import styled from '@emotion/styled';
 import {
   Paywall,
   useDeletePaywallMutation,
@@ -11,6 +10,7 @@ import {
 } from '@wepublish/permissions';
 import {
   createCheckedPermissionComponent,
+  IconButton,
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
@@ -29,10 +29,6 @@ import {
   Table as RTable,
 } from 'rsuite';
 import { RowDataType } from 'rsuite/esm/Table';
-
-const IconButton = styled(RIconButton)`
-  margin-left: 12px;
-`;
 
 const { Column, HeaderCell, Cell: RCell } = RTable;
 
@@ -58,13 +54,13 @@ function PaywallList() {
 
         <ListViewActions>
           <Link to="create">
-            <IconButton
+            <RIconButton
               appearance="primary"
               loading={false}
             >
               <MdAdd />
               {t('paywall.overview.createPaywall')}
-            </IconButton>
+            </RIconButton>
           </Link>
         </ListViewActions>
       </ListViewContainer>
@@ -125,6 +121,7 @@ function PaywallList() {
           <Column
             resizable
             fixed="right"
+            width={75}
           >
             <HeaderCell align={'center'}>{t('delete')}</HeaderCell>
             <PaddedCell align={'center'}>

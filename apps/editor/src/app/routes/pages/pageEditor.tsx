@@ -1,10 +1,22 @@
 import styled from '@emotion/styled';
 import {
+  Button as MuiButton,
+  Dialog as MuiDialog,
+  DialogActions as MuiDialogActions,
+  DialogContent as MuiDialogContent,
+  DialogContentText as MuiDialogContentText,
+  DialogTitle as MuiDialogTitle,
+} from '@mui/material';
+import {
   CreatePageMutationVariables,
   useCreateJwtForWebsiteLoginMutation,
   useCreatePageMutation,
+  useDiscardPageDraftMutation,
   usePageQuery,
+  usePageRevisionListQuery,
+  usePageRevisionPreviewLazyQuery,
   usePublishPageMutation,
+  useRestorePageRevisionMutation,
   useUpdatePageMutation,
 } from '@wepublish/editor/api';
 import { CanPreview } from '@wepublish/permissions';
@@ -15,6 +27,7 @@ import {
   BlockMap,
   BlockValue,
   createCheckedPermissionComponent,
+  DocumentUrlProvider,
   EditorTemplate,
   EditorValidationProvider,
   mapBlockValueToBlockInput,
@@ -23,15 +36,20 @@ import {
   PageMetadataPanel,
   PermissionControl,
   PublishPagePanel,
+  RevisionContentPreview,
   StateColor,
   TeaserOverviewPanel,
   useAuthorisation,
   useUnsavedChangesDialog,
+  VersionHistory,
+  VersionHistoryRevision,
 } from '@wepublish/ui/editor';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   MdCloudUpload,
+  MdDeleteOutline,
+  MdHistory,
   MdIntegrationInstructions,
   MdKeyboardBackspace,
   MdRemoveRedEye,
@@ -48,6 +66,8 @@ import {
   Tag as RTag,
   toaster,
 } from 'rsuite';
+
+import { openPreviewWindow } from '../../openPreview';
 
 const EditorContent = styled.div`
   display: flex;
@@ -94,6 +114,8 @@ const Tag = styled(RTag, {
   background-color: ${({ stateColor }) => stateColor};
 `;
 
+const REVISIONS_PAGE_SIZE = 20;
+
 function PageEditor() {
   const navigate = useNavigate();
   const params = useParams();
@@ -107,15 +129,32 @@ function PageEditor() {
     useUpdatePageMutation();
   const [publishPage, { loading: isPublishing, error: publishError }] =
     usePublishPageMutation({});
+  const [restorePageRevision, { loading: isRestoring, error: restoreError }] =
+    useRestorePageRevisionMutation({});
+  const [discardPageDraft, { loading: isDiscarding, error: discardError }] =
+    useDiscardPageDraftMutation({});
 
   const [isMetaDrawerOpen, setMetaDrawerOpen] = useState(false);
   const [isPublishDialogOpen, setPublishDialogOpen] = useState(false);
+  const [isVersionHistoryOpen, setVersionHistoryOpen] = useState(false);
+  const [isVersionHistoryRequested, setVersionHistoryRequested] =
+    useState(false);
+  const [isDiscardDialogOpen, setDiscardDialogOpen] = useState(false);
+  const [isLoadingMoreRevisions, setLoadingMoreRevisions] = useState(false);
+  const [previewRevisionId, setPreviewRevisionId] = useState<string | null>(
+    null
+  );
+  const [restoringRevisionId, setRestoringRevisionId] = useState<string | null>(
+    null
+  );
 
   const [publishedAt, setPublishedAt] = useState<Date>();
   const [metadata, setMetadata] = useState<PageMetadata>({
     slug: '',
     title: '',
     description: '',
+    seoTitle: '',
+    seoDescription: '',
     tags: [],
     defaultTags: [],
     url: '',
@@ -146,12 +185,93 @@ function PageEditor() {
     fetchPolicy: 'no-cache',
   });
 
+  const {
+    data: revisionsData,
+    refetch: refetchRevisions,
+    fetchMore: fetchMoreRevisions,
+    loading: isRevisionsLoading,
+  } = usePageRevisionListQuery({
+    errorPolicy: 'all',
+    fetchPolicy: 'cache-and-network',
+    notifyOnNetworkStatusChange: true,
+    variables: { id: pageID!, take: REVISIONS_PAGE_SIZE, skip: 0 },
+    skip: !pageID || !isVersionHistoryRequested,
+  });
+
+  const revisionNodes = revisionsData?.pageRevisions?.nodes ?? [];
+
+  const revisions: VersionHistoryRevision[] = revisionNodes.map(revision => ({
+    id: revision.id,
+    createdAt: revision.createdAt,
+    publishedAt: revision.publishedAt,
+    archivedAt: revision.archivedAt,
+    title: revision.title,
+    subtitle: revision.description,
+    author: revision.user,
+  }));
+
+  const reloadRevisions = () =>
+    isVersionHistoryRequested ? refetchRevisions() : Promise.resolve();
+
+  async function loadMoreRevisions() {
+    setLoadingMoreRevisions(true);
+
+    try {
+      await fetchMoreRevisions({
+        variables: { skip: revisionNodes.length },
+        updateQuery: (prev, { fetchMoreResult }) => {
+          if (!fetchMoreResult?.pageRevisions) {
+            return prev;
+          }
+
+          return {
+            ...prev,
+            pageRevisions: {
+              ...fetchMoreResult.pageRevisions,
+              nodes: [
+                ...(prev.pageRevisions?.nodes ?? []),
+                ...fetchMoreResult.pageRevisions.nodes,
+              ],
+            },
+          };
+        },
+      });
+    } finally {
+      setLoadingMoreRevisions(false);
+    }
+  }
+
+  const [
+    loadRevisionPreview,
+    { data: previewData, loading: isPreviewLoading },
+  ] = usePageRevisionPreviewLazyQuery({ errorPolicy: 'all' });
+
+  function handlePreviewRevision(revisionId: string) {
+    setPreviewRevisionId(revisionId);
+    loadRevisionPreview({ variables: { id: revisionId } });
+  }
+
+  const previewRevision =
+    previewData?.pageRevision?.id === previewRevisionId ?
+      previewData?.pageRevision
+    : undefined;
+
   const { t } = useTranslation();
 
   const isNotFound = pageData && !pageData.page;
   const isDisabled =
-    isLoading || isCreating || isUpdating || isPublishing || isNotFound;
-  const canPreview = Boolean(pageData?.page?.draft);
+    isLoading ||
+    isCreating ||
+    isUpdating ||
+    isPublishing ||
+    isRestoring ||
+    isDiscarding ||
+    isNotFound;
+  const canPreview = Boolean(
+    pageData?.page?.draft ||
+      pageData?.page?.published ||
+      pageData?.page?.pending
+  );
 
   const [hasChanged, setChanged] = useState(false);
   const unsavedChangesDialog = useUnsavedChangesDialog(hasChanged);
@@ -172,6 +292,8 @@ function PageEditor() {
       const {
         title,
         description,
+        seoTitle,
+        seoDescription,
         image,
         blocks,
         properties,
@@ -189,6 +311,8 @@ function PageEditor() {
         slug: slug ?? '',
         title: title ?? '',
         description: description ?? '',
+        seoTitle: seoTitle ?? '',
+        seoDescription: seoDescription ?? '',
         tags: tags.map(({ id }) => id),
         defaultTags: tags,
         url,
@@ -230,7 +354,11 @@ function PageEditor() {
 
   useEffect(() => {
     const error =
-      createError?.message ?? updateError?.message ?? publishError?.message;
+      createError?.message ??
+      updateError?.message ??
+      publishError?.message ??
+      restoreError?.message ??
+      discardError?.message;
     if (error)
       toaster.push(
         <Message
@@ -242,13 +370,72 @@ function PageEditor() {
           {error}
         </Message>
       );
-  }, [createError, updateError, publishError]);
+  }, [createError, updateError, publishError, restoreError, discardError]);
+
+  async function handleDiscardDraft() {
+    if (!pageID) {
+      return;
+    }
+
+    const { data } = await discardPageDraft({
+      variables: { id: pageID },
+    });
+
+    if (data) {
+      setChanged(false);
+      await Promise.all([refetch({ id: pageID }), reloadRevisions()]);
+
+      toaster.push(
+        <Notification
+          type="success"
+          header={t('discardDraft.success')}
+          duration={2000}
+        />,
+        { placement: 'topEnd' }
+      );
+    }
+  }
+
+  async function handleRestoreRevision(revisionId: string) {
+    if (!pageID) {
+      return;
+    }
+
+    setRestoringRevisionId(revisionId);
+
+    try {
+      const { data } = await restorePageRevision({
+        variables: { id: pageID, revisionId },
+      });
+
+      if (data) {
+        // Let the page query repopulate the editor with the restored draft.
+        setChanged(false);
+        await Promise.all([refetch({ id: pageID }), reloadRevisions()]);
+
+        toaster.push(
+          <Notification
+            type="success"
+            header={t('versionHistory.restored')}
+            duration={2000}
+          />,
+          { placement: 'topEnd' }
+        );
+
+        setVersionHistoryOpen(false);
+      }
+    } finally {
+      setRestoringRevisionId(null);
+    }
+  }
 
   function createInput(): CreatePageMutationVariables {
     return {
       slug: metadata.slug ?? '',
       title: metadata.title ?? '',
       description: metadata.description,
+      seoTitle: metadata.seoTitle || undefined,
+      seoDescription: metadata.seoDescription || undefined,
       hidden: metadata.hidden ?? false,
       imageID: metadata.image?.id,
       tagIds: metadata.tags,
@@ -309,9 +496,9 @@ function PageEditor() {
           header={t('pageEditor.overview.pageDraftSaved')}
           duration={2000}
         />,
-        { placement: 'topEnd' }
+        { placement: 'bottomEnd' }
       );
-      await refetch({ id: pageID });
+      await Promise.all([refetch({ id: pageID }), reloadRevisions()]);
     } else {
       const { data } = await createPage({ variables: input });
 
@@ -325,7 +512,7 @@ function PageEditor() {
           header={t('pageEditor.overview.pageDraftCreated')}
           duration={2000}
         />,
-        { placement: 'topEnd' }
+        { placement: 'bottomEnd' }
       );
     }
   }
@@ -353,7 +540,7 @@ function PageEditor() {
           );
         }
       }
-      await refetch({ id: pageID });
+      await Promise.all([refetch({ id: pageID }), reloadRevisions()]);
     }
 
     setChanged(false);
@@ -367,7 +554,7 @@ function PageEditor() {
         )}
         duration={2000}
       />,
-      { placement: 'topEnd' }
+      { placement: 'bottomEnd' }
     );
   }
 
@@ -421,6 +608,46 @@ function PageEditor() {
                   >
                     {t('pageEditor.overview.metadata')}
                   </RIconButton>
+
+                  {!isNew && (
+                    <>
+                      <PermissionControl
+                        qualifyingPermissions={['CAN_GET_PAGE']}
+                      >
+                        <IconButton
+                          className="actionButton"
+                          icon={<MdHistory />}
+                          size="lg"
+                          disabled={isDisabled}
+                          onClick={() => {
+                            if (isVersionHistoryRequested) {
+                              refetchRevisions();
+                            }
+                            setVersionHistoryRequested(true);
+                            setVersionHistoryOpen(true);
+                          }}
+                        >
+                          {t('versionHistory.title')}
+                        </IconButton>
+                      </PermissionControl>
+
+                      {pageData?.page?.draft && pageData?.page?.published && (
+                        <PermissionControl
+                          qualifyingPermissions={['CAN_CREATE_PAGE']}
+                        >
+                          <IconButton
+                            className="actionButton"
+                            icon={<MdDeleteOutline />}
+                            size="lg"
+                            disabled={isDisabled}
+                            onClick={() => setDiscardDialogOpen(true)}
+                          >
+                            {t('discardDraft.button')}
+                          </IconButton>
+                        </PermissionControl>
+                      )}
+                    </>
+                  )}
 
                   {isNew && createData == null ?
                     <PermissionControl
@@ -490,33 +717,39 @@ function PageEditor() {
                     disabled={hasChanged || !id || !canPreview}
                     size="lg"
                     icon={<MdRemoveRedEye />}
-                    onClick={async () => {
-                      const previewWindow = window.open(
+                    onClick={() => {
+                      const result = openPreviewWindow(
                         pageData!.page.previewUrl,
-                        '_blank'
-                      );
-                      if (!previewWindow) return;
+                        {
+                          createToken: async () => {
+                            const { data: jwtData } = await createJWT();
 
-                      const { data: jwtData } = await createJWT();
-                      const token = jwtData?.createJWTForWebsiteLogin?.token;
-                      if (!token) return;
-
-                      const targetOrigin = new URL(pageData!.page.previewUrl)
-                        .origin;
-
-                      const handleMessage = (event: MessageEvent) => {
-                        if (
-                          event.source === previewWindow &&
-                          event.data === 'preview-jwt-ready'
-                        ) {
-                          previewWindow.postMessage(
-                            { previewJwt: token },
-                            targetOrigin
-                          );
-                          window.removeEventListener('message', handleMessage);
+                            return jwtData?.createJWTForWebsiteLogin?.token;
+                          },
+                          onSilence: () =>
+                            toaster.push(
+                              <Message
+                                type="warning"
+                                showIcon
+                                closable
+                              >
+                                {t('previewHandshake.notResponding')}
+                              </Message>
+                            ),
                         }
-                      };
-                      window.addEventListener('message', handleMessage);
+                      );
+
+                      if (result === 'popup-blocked') {
+                        toaster.push(
+                          <Message
+                            type="warning"
+                            showIcon
+                            closable
+                          >
+                            {t('previewHandshake.popupBlocked')}
+                          </Message>
+                        );
+                      }
                     }}
                   >
                     {t('pageEditor.overview.preview')}
@@ -535,12 +768,14 @@ function PageEditor() {
                 />
               </TeaserOverviewWrapper>
 
-              <BlockList
-                value={blocks}
-                onChange={handleChange}
-                disabled={isDisabled || !isAuthorized}
-                blockMap={BlockMap}
-              />
+              <DocumentUrlProvider documentUrl={pageData?.page?.url}>
+                <BlockList
+                  value={blocks}
+                  onChange={handleChange}
+                  disabled={isDisabled || !isAuthorized}
+                  blockMap={BlockMap}
+                />
+              </DocumentUrlProvider>
             </EditorValidationProvider>
           </EditorContent>
         </EditorTemplate>
@@ -579,6 +814,61 @@ function PageEditor() {
           }}
         />
       </Modal>
+
+      <VersionHistory
+        open={isVersionHistoryOpen}
+        onClose={() => setVersionHistoryOpen(false)}
+        loading={isRevisionsLoading && revisions.length === 0}
+        revisions={revisions}
+        totalCount={revisionsData?.pageRevisions?.totalCount}
+        hasMore={!!revisionsData?.pageRevisions?.pageInfo?.hasNextPage}
+        loadingMore={isLoadingMoreRevisions}
+        onLoadMore={loadMoreRevisions}
+        draftId={pageData?.page?.draft?.id}
+        pendingId={pageData?.page?.pending?.id}
+        publishedId={pageData?.page?.published?.id}
+        restoringId={restoringRevisionId}
+        canRestore={isAuthorized}
+        onRestore={handleRestoreRevision}
+        onPreview={handlePreviewRevision}
+      />
+
+      <RevisionContentPreview
+        open={!!previewRevisionId}
+        loading={isPreviewLoading || !previewRevision}
+        onClose={() => setPreviewRevisionId(null)}
+        title={previewRevision?.title}
+        subtitle={previewRevision?.description}
+        blocks={(previewRevision?.blocks ?? []).map(blockForQueryBlock)}
+      />
+
+      <MuiDialog
+        open={isDiscardDialogOpen}
+        onClose={() => setDiscardDialogOpen(false)}
+      >
+        <MuiDialogTitle>{t('discardDraft.confirm.title')}</MuiDialogTitle>
+        <MuiDialogContent>
+          <MuiDialogContentText>
+            {t('discardDraft.confirm.message')}
+          </MuiDialogContentText>
+        </MuiDialogContent>
+        <MuiDialogActions>
+          <MuiButton onClick={() => setDiscardDialogOpen(false)}>
+            {t('discardDraft.confirm.cancel')}
+          </MuiButton>
+          <MuiButton
+            color="error"
+            variant="contained"
+            startIcon={<MdDeleteOutline />}
+            onClick={() => {
+              setDiscardDialogOpen(false);
+              handleDiscardDraft();
+            }}
+          >
+            {t('discardDraft.confirm.confirm')}
+          </MuiButton>
+        </MuiDialogActions>
+      </MuiDialog>
     </>
   );
 }

@@ -55,7 +55,8 @@ export const TeaserNoImageAltColor = styled(TsriTeaser)`
   }
 
   ${TeaserPreTitle} {
-    padding: calc(var(--tw, 100cqw) * 0.0065) calc(var(--tw, 100cqw) * 0.015);
+    padding: calc(var(--tw, 100cqw) * 0.0065) calc(var(--tw, 100cqw) * 0.015)
+      calc(var(--tw, 100cqw) * 0.1);
   }
 
   ${TeaserTitle} {
@@ -75,5 +76,10 @@ export const TeaserNoImageAltColor = styled(TsriTeaser)`
 
   ${TeaserTime} {
     display: none;
+  }
+
+  [data-authors-hidden] ${TeaserTime} {
+    display: inline;
+    color: ${({ theme }) => theme.palette.common.black};
   }
 `;

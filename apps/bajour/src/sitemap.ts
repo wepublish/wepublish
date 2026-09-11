@@ -20,6 +20,7 @@ export const getSitemap = async (req: NextApiRequest): Promise<string> => {
     siteUrl,
     title: 'Bajour',
   });
+
   const client = getApiClient(getApiUrl(), [], {
     typePolicies: {},
   });

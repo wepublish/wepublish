@@ -5,5 +5,6 @@ import { PropsWithChildren } from 'react';
 export type BuilderBannerProps = PropsWithChildren<
   Pick<QueryResult<PrimaryBannerQuery>, 'data' | 'loading' | 'error'> & {
     className?: string;
+    tags?: string[];
   }
 >;

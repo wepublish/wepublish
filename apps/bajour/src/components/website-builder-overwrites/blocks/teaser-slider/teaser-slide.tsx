@@ -96,7 +96,17 @@ export const TeaserSlide = ({
           gutterBottom={false}
         >
           {authors?.join(',')}{' '}
-          {publishDate && <>am {date.format(new Date(publishDate), false)}</>}
+          {publishDate && (
+            <>
+              am{' '}
+              <time
+                suppressHydrationWarning
+                dateTime={publishDate}
+              >
+                {date.format(new Date(publishDate), false)}
+              </time>
+            </>
+          )}
         </Paragraph>
 
         <H5 css={titleStyles}>{title}</H5>

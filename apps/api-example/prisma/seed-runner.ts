@@ -7,7 +7,11 @@ import { runExampleSeed } from './seed';
 async function seed() {
   const { app } = await bootstrap(['error']);
   const adapter = new PrismaPg({
-    connectionString: process.env['DATABASE_URL']!,
+    connectionString: process.env.DATABASE_URL || 'postgresql://',
+    options: '-c timezone=UTC',
+    max: parseInt(process.env['DATABASE_POOL_SIZE'] ?? '20'),
+    connectionTimeoutMillis: 5_000,
+    idleTimeoutMillis: 10_000,
   });
   const prisma = new PrismaClient({ adapter });
   await prisma.$connect();

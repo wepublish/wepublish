@@ -6,7 +6,6 @@ import {
   CommentListItemActions,
   CommentListItemActionsButtons,
   CommentListItemChildren,
-  CommentListItemShare,
   CommentListItemStateWarnings,
   getStateForEditor,
 } from '@wepublish/comments/website';
@@ -52,6 +51,7 @@ const OnlineReportsCommentListItemBase = ({
     CommentRatings,
     CommentListItemChild,
     Comment,
+    Share,
     elements: { Button },
   } = useWebsiteBuilder();
 
@@ -105,10 +105,10 @@ const OnlineReportsCommentListItemBase = ({
         />
 
         <CommentListItemActionsButtons>
-          <CommentListItemShare
+          <Share
             url={comment.url}
-            title="share"
-            forceNonSystemShare={true}
+            title={title ?? undefined}
+            overrideNavigatorShare={true}
           />
 
           {canEdit && (

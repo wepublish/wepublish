@@ -1,4 +1,4 @@
-import { Meta } from '@storybook/react';
+import { Meta } from '@storybook/nextjs-vite';
 import { PolisConversationBlock } from './polis-conversation-block';
 import { mockPolisConversationBlock } from '@wepublish/storybook/mocks';
 

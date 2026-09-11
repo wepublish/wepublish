@@ -12,6 +12,8 @@ export const unselectPassword: Record<
     | 'pollVotes'
     | 'userImage'
     | 'mailSent'
+    | 'mailSendJobs'
+    | 'mailSendJobEntries'
     | 'consents'
     | 'mailSent'
     | 'articleRevisions'

@@ -1,6 +1,7 @@
 /**
  * Shared Sentry configuration options used across all instrumentation variants.
  */
+import type { SpanJSON } from '@sentry/core';
 
 export const getBaseConfig = () => ({
   dsn: process.env.SENTRY_DSN,
@@ -8,7 +9,19 @@ export const getBaseConfig = () => ({
   sendDefaultPii: true,
   tracesSampleRate: process.env.APP_ENVIRONMENT === 'production' ? 0.1 : 1.0,
   release: process.env.APP_RELEASE_ID,
+  beforeSendSpan: (span: SpanJSON) => {
+    if (process.env.APP_NAME) {
+      span.data.app_name = process.env.APP_NAME;
+    }
+    return span;
+  },
 });
+
+export const getBrowserTracePropagationTargets = () => {
+  const apiUrl = process.env.API_URL;
+
+  return apiUrl ? [/^\//, apiUrl] : [/^\//];
+};
 
 export const setCommonTags = (
   Sentry: { setTag: (key: string, value: string | undefined) => void },

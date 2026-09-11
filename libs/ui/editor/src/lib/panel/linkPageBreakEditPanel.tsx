@@ -35,64 +35,72 @@ export function LinkPageBreakEditPanel({
       </Drawer.Header>
 
       <Drawer.Body>
-        <Form fluid>
-          <Form.Group controlId="linkUrlLabel">
-            <Form.ControlLabel>
-              {t('linkPageBreakEditPanel.link.urlLabel')}
-            </Form.ControlLabel>
-            <Form.Control
-              name="link"
-              value={linkURL}
-              onChange={(linkURL: string) => onChange?.({ ...value, linkURL })}
-            />
-          </Form.Group>
+        <Form>
+          <Form.Stack fluid>
+            <Form.Group controlId="linkUrlLabel">
+              <Form.Label>
+                {t('linkPageBreakEditPanel.link.urlLabel')}
+              </Form.Label>
 
-          <Form.Group controlId="linkButtonLabel">
-            <Form.ControlLabel>
-              {t('linkPageBreakEditPanel.link.buttonLabel')}
-            </Form.ControlLabel>
-            <Form.Control
-              name="link-text"
-              value={linkText}
-              onChange={(linkText: string) =>
-                onChange?.({ ...value, linkText })
-              }
-            />
-          </Form.Group>
+              <Form.Control
+                name="link"
+                value={linkURL}
+                onChange={(linkURL: string) =>
+                  onChange?.({ ...value, linkURL })
+                }
+              />
+            </Form.Group>
 
-          <Form.Group controlId="target_radio">
-            <Form.ControlLabel>
-              {t('linkPageBreakEditPanel.link.targetLabel')}
-            </Form.ControlLabel>
-            <RadioGroup
-              name="target_radio"
-              inline
-              onChange={linkTarget =>
-                onChange?.({ ...value, linkTarget: linkTarget as string })
-              }
-              value={linkTarget}
-            >
-              <Radio value={'_self'}>
-                {t('linkPageBreakEditPanel.link.targetLabelSelf')}
-              </Radio>
-              <Radio value={'_blank'}>
-                {t('linkPageBreakEditPanel.link.targetLabelBlank')}
-              </Radio>
-            </RadioGroup>
-          </Form.Group>
+            <Form.Group controlId="linkButtonLabel">
+              <Form.Label>
+                {t('linkPageBreakEditPanel.link.buttonLabel')}
+              </Form.Label>
 
-          <Form.Group controlId="linkHideToggle">
-            <Form.ControlLabel>
-              {t('linkPageBreakEditPanel.link.hideToggleLabel')}
-            </Form.ControlLabel>
-            <Toggle
-              onChange={hideButton => onChange?.({ ...value, hideButton })}
-              checked={hideButton}
-            />
-            <Form.HelpText>
-              {t('linkPageBreakEditPanel.link.hideToogleDescription')}
-            </Form.HelpText>
-          </Form.Group>
+              <Form.Control
+                name="link-text"
+                value={linkText}
+                onChange={(linkText: string) =>
+                  onChange?.({ ...value, linkText })
+                }
+              />
+            </Form.Group>
+
+            <Form.Group controlId="target_radio">
+              <Form.Label>
+                {t('linkPageBreakEditPanel.link.targetLabel')}
+              </Form.Label>
+
+              <RadioGroup
+                name="target_radio"
+                inline
+                onChange={linkTarget =>
+                  onChange?.({ ...value, linkTarget: linkTarget as string })
+                }
+                value={linkTarget}
+              >
+                <Radio value={'_self'}>
+                  {t('linkPageBreakEditPanel.link.targetLabelSelf')}
+                </Radio>
+
+                <Radio value={'_blank'}>
+                  {t('linkPageBreakEditPanel.link.targetLabelBlank')}
+                </Radio>
+              </RadioGroup>
+            </Form.Group>
+
+            <Form.Group controlId="linkHideToggle">
+              <Form.Label>
+                {t('linkPageBreakEditPanel.link.hideToggleLabel')}
+              </Form.Label>
+              <Toggle
+                onChange={hideButton => onChange?.({ ...value, hideButton })}
+                checked={hideButton}
+              />
+              <Form.Text>
+                {t('linkPageBreakEditPanel.link.hideToogleDescription')}
+              </Form.Text>
+            </Form.Group>
+          </Form.Stack>
         </Form>
       </Drawer.Body>
     </>

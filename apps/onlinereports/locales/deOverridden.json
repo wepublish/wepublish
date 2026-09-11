@@ -22,9 +22,9 @@
   },
   "subscribe": {
     "button": {
-      "subscribeForPeriod": "{renewalPeriod} mit {formattedAmount}",
-      "payForPeriod": "{paymentPeriod} mit {formattedAmount}",
-      "pay": "Mit {formattedAmount}}"
+      "subscribeForPeriod": "{renewalPeriod} mit {formattedAmount} {productType, select, Donation {spenden} other {abonnieren}}",
+      "payForPeriod": "{paymentPeriod} mit {formattedAmount} {productType, select, Donation {spenden} other {abonnieren}}",
+      "pay": "Mit {formattedAmount} {productType, select, Donation {spenden} other {abonnieren}}"
     },
     "subscribe": {
       "subscribeForPeriod": "Ich unterstütze {siteTitle} {renewalPeriodL} mit {formattedAmount}",

@@ -27,6 +27,10 @@ export const selectTeaserAuthors = (teaser: FullTeaserFragment) => {
     }
 
     case 'ArticleTeaser': {
+      if (teaser.article?.latest.hideAuthor) {
+        return null;
+      }
+
       return teaser.article?.latest.authors.filter(
         author => !author.hideOnTeaser
       );
@@ -184,8 +188,6 @@ export const TeaserContentWrapper = styled('article')`
 export const TeaserTitle = styled('h1')`
   grid-row: 3;
   grid-column: 2 / 3;
-  position: relative;
-  z-index: 1;
 `;
 
 export const TeaserLead = styled('p')``;
@@ -348,6 +350,12 @@ export const TsriTeaser = ({
           <Typography
             variant="teaserMeta"
             component={TeaserMetadata}
+            data-authors-hidden={
+              (teaser &&
+                'article' in teaser &&
+                teaser.article?.latest.hideAuthor) ||
+              undefined
+            }
           >
             {authors && authors?.length ?
               <TeaserAuthors>

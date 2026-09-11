@@ -24,6 +24,10 @@ export default function Profile() {
 }
 
 Profile.getInitialProps = async (ctx: NextPageContext) => {
+  if (typeof window !== 'undefined') {
+    return {};
+  }
+
   const client = getApiClient(getApiUrl(), [
     ssrAuthLink(
       async () => (await getSessionTokenProps(ctx)).sessionToken?.token

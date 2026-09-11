@@ -1,15 +1,7 @@
-import React from 'react';
 import { MdAlarmOn, MdCelebration, MdFilterAlt } from 'react-icons/md';
-import { TableCell } from '@mui/material';
-import styled from '@emotion/styled';
 import { useTranslation } from 'react-i18next';
 import { PermissionControl } from '@wepublish/ui/editor';
-
-const DarkTableCell = styled(TableCell)`
-  background-color: ${({ theme }) => theme.palette.common.black};
-  color: ${({ theme }) => theme.palette.common.white};
-  border-right: 1px solid ${({ theme }) => theme.palette.common.white};
-`;
+import { SectionBandCell } from '../mail-settings-layout';
 
 interface SubscriptionFlowHeadlineProps {
   defaultFlowOnly?: boolean;
@@ -29,39 +21,30 @@ export function SubscriptionFlowHeadline({
   return (
     <>
       {!defaultFlowOnly && (
-        <DarkTableCell
-          align="center"
+        <SectionBandCell
           colSpan={filterCount}
-        >
-          <MdFilterAlt
-            size={20}
-            style={{ marginRight: '5px' }}
-          />
-          {t('subscriptionFlow.filters')}
-        </DarkTableCell>
+          label={t('subscriptionFlow.filters')}
+          icon={<MdFilterAlt size={20} />}
+          description={t('subscriptionFlow.filtersDescription')}
+          example={t('subscriptionFlow.filtersExample')}
+        />
       )}
 
-      <DarkTableCell
-        align="center"
+      <SectionBandCell
         colSpan={userActionCount}
-      >
-        <MdCelebration
-          size={20}
-          style={{ marginRight: '5px' }}
-        />
-        {t('subscriptionFlow.subscriptionEvents')}
-      </DarkTableCell>
+        label={t('subscriptionFlow.subscriptionEvents')}
+        icon={<MdCelebration size={20} />}
+        description={t('subscriptionFlow.subscriptionEventsDescription')}
+        example={t('subscriptionFlow.subscriptionEventsExample')}
+      />
 
-      <DarkTableCell
-        align="center"
+      <SectionBandCell
         colSpan={nonUserActionCount}
-      >
-        <MdAlarmOn
-          size={20}
-          style={{ marginRight: '5px' }}
-        />
-        {t('subscriptionFlow.timeline')}
-      </DarkTableCell>
+        label={t('subscriptionFlow.timeline')}
+        icon={<MdAlarmOn size={20} />}
+        description={t('subscriptionFlow.timelineDescription')}
+        example={t('subscriptionFlow.timelineExample')}
+      />
 
       <PermissionControl
         qualifyingPermissions={[
@@ -69,9 +52,11 @@ export function SubscriptionFlowHeadline({
           'CAN_DELETE_SUBSCRIPTION_FLOW',
         ]}
       >
-        <DarkTableCell align="center">
-          {t('subscriptionFlow.actions')}
-        </DarkTableCell>
+        <SectionBandCell
+          label={t('subscriptionFlow.actions')}
+          description={t('subscriptionFlow.actionsDescription')}
+          example={t('subscriptionFlow.actionsExample')}
+        />
       </PermissionControl>
     </>
   );

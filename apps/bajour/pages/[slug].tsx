@@ -39,6 +39,7 @@ export const getStaticPaths = () => ({
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const { slug, id } = params || {};
   const client = getApiClient(getApiUrl(), []);
+
   const [page] = await Promise.all([
     client.query<PageQuery>({
       query: PageDocument,

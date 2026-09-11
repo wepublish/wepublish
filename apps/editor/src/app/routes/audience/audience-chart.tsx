@@ -13,7 +13,7 @@ import {
 import { Placeholder } from 'rsuite';
 
 import { AudienceStatsComputed } from './useAudience';
-import { AudienceClientFilter } from './useAudienceFilter';
+import { AudienceClientFilter } from './audience-filter-params';
 
 export const chartColors: {
   [K in keyof AudienceClientFilter]: string | string[];
@@ -76,7 +76,7 @@ export function AudienceChart({
               tick={({ x, y, payload }) => (
                 <text
                   x={x}
-                  y={y + 15}
+                  y={+y + 15}
                   textAnchor="middle"
                 >
                   {new Date(payload.value).toLocaleDateString(language, {

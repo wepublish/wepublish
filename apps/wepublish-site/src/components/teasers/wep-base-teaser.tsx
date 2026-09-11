@@ -30,4 +30,4 @@ export const WepBaseTeaser = cond([
       </div>
     ),
   ],
-]) as (props: BuilderTeaserProps) => JSX.Element;
+]);

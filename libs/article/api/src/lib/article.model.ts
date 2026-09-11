@@ -20,6 +20,7 @@ import { HasOptionalPeerLc, Peer } from '@wepublish/peering/api';
 import { TrackingPixel } from '@wepublish/tracking-pixel/api';
 import { HasOptionalPaywall, Paywall } from '@wepublish/paywall/api';
 import { Property, PropertyInput } from '@wepublish/property/api';
+import { HasOptionalUserLc, User } from '@wepublish/user/api';
 
 export enum ArticleSort {
   CreatedAt = 'CreatedAt',
@@ -36,10 +37,15 @@ registerEnumType(ArticleSort, {
 });
 
 @ObjectType({
-  implements: () => [HasBlockContent],
+  implements: () => [HasBlockContent, HasOptionalUserLc],
 })
-export class ArticleRevision implements HasBlockContent {
+export class ArticleRevision implements HasBlockContent, HasOptionalUserLc {
   blocks!: Array<typeof BlockContent>;
+
+  // The user who created this revision. `userId` is populated from the DB row;
+  // `user` is resolved by the global HasOptionalUserLc resolver.
+  userId?: string;
+  user?: User;
 
   @Field()
   id!: string;
@@ -48,6 +54,9 @@ export class ArticleRevision implements HasBlockContent {
 
   @Field({ nullable: true })
   publishedAt?: Date;
+
+  @Field({ nullable: true })
+  archivedAt?: Date;
 
   @Field({ nullable: true })
   preTitle?: string;
@@ -77,6 +86,8 @@ export class ArticleRevision implements HasBlockContent {
 
   @Field({ nullable: true })
   seoTitle?: string;
+  @Field({ nullable: true })
+  seoDescription?: string;
   @Field({ nullable: true })
   socialMediaTitle?: string;
   @Field({ nullable: true })
@@ -157,6 +168,39 @@ export class Article implements HasOptionalPeerLc, HasOptionalPaywall {
 @ObjectType()
 export class PaginatedArticles extends PaginatedType(Article) {}
 
+@ObjectType()
+export class PaginatedArticleRevisions extends PaginatedType(ArticleRevision) {}
+
+@InputType()
+export class ArticleRevisionFilter {
+  @Field({ nullable: true })
+  userId?: string;
+}
+
+@ArgsType()
+export class ArticleRevisionListArgs {
+  @Field()
+  articleId!: string;
+
+  @Field(() => ArticleRevisionFilter, { nullable: true })
+  filter?: ArticleRevisionFilter;
+
+  @Field(() => SortOrder, {
+    nullable: true,
+    defaultValue: SortOrder.Descending,
+  })
+  order?: SortOrder;
+
+  @Field(() => Int, { nullable: true, defaultValue: 10 })
+  take?: number;
+
+  @Field(() => Int, { nullable: true, defaultValue: 0 })
+  skip?: number;
+
+  @Field({ nullable: true })
+  cursorId?: string;
+}
+
 @ArgsType()
 export class CreateArticleInput extends OmitType(
   ArticleRevision,
@@ -164,6 +208,9 @@ export class CreateArticleInput extends OmitType(
     'id',
     'createdAt',
     'publishedAt',
+    'archivedAt',
+    'userId',
+    'user',
     'image',
     'socialMediaImage',
     'authors',
@@ -225,6 +272,8 @@ export class ArticleFilter {
   shared?: boolean;
   @Field({ nullable: true })
   includeHidden?: boolean;
+  @Field({ nullable: true })
+  excludeHideAuthor?: boolean;
 
   @Field({ nullable: true })
   publicationDateFrom?: DateFilter;
@@ -242,6 +291,11 @@ export class ArticleFilter {
   authors?: string[];
   @Field(() => [String], { nullable: true })
   tags?: string[];
+  @Field(() => [String], {
+    nullable: true,
+    description: 'Only include articles that have every one of these tags',
+  })
+  allTagsIn?: string[];
   @Field(() => [String], { nullable: true })
   tagsNotIn?: string[];
 

@@ -9,20 +9,143 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
   openAnalyzer: false,
 });
 
+const reflektArticleRedirectSlugs = [
+  'angst-am-lehrstuhl',
+  'antepay',
+  'antepay-prozess',
+  'antepay_kamp',
+  'asylatlas',
+  'ausbeutung-mit-aussicht',
+  'aussageverweigerung',
+  'berater',
+  'berater_kamp',
+  'boyun',
+  'cities-for-sale',
+  'coaching',
+  'credit-crisis',
+  'das-schattenregister',
+  'datenbank-der-datenbanken',
+  'datenfestung',
+  'der-gluecksspielkoenig-vom-bodensee',
+  'eritrea',
+  'eritrea-yonas',
+  'eritrea_yonas',
+  'europas-neue-grossgrundbesitzer',
+  'gift',
+  'globalunion',
+  'haft',
+  'hatespeech',
+  'hatespeech_kamp',
+  'im-stich-gelassen',
+  'interview-odermatt',
+  'interview_odermatt',
+  'jacobs',
+  'malta',
+  'palumbo',
+  'pokerchef',
+  'sammelwut',
+  'sewn-on-the-edge',
+  'sewn-on-the-edge-bangla',
+  'so-in-transparent-sind-die-immobilien-unternehmen',
+  'swisslife',
+  'syngenta',
+  'taliban',
+  'tonnage',
+  'uni',
+  'uni-eng',
+  'unifr',
+  'welchen-firmen-gehoert-zuerich',
+  'wem-gehoert-basel',
+  'windkraft',
+  'wohnen-am-limit',
+  'wohnenamlimit',
+  'zuerichaufdecken',
+];
+
+const reflektArticleRedirectAliases = [{ from: 'asy', to: 'asylatlas' }];
+
 /**
  * @type {import('@nx/next/plugins/with-nx').WithNxOptions}
  **/
 const nextConfig = {
   ...wepNextConfig,
-  serverRuntimeConfig: {
-    env: {
-      API_URL_INTERNAL: process.env.API_URL_INTERNAL || '',
-    },
+  env: {
+    ...wepNextConfig.env,
+    PA_ID: process.env.PA_ID || '',
+    GTM_ID: process.env.GTM_ID || '',
   },
-  publicRuntimeConfig: {
-    env: {
-      API_URL: process.env.API_URL || '',
-    },
+  async redirects() {
+    return [
+      ...((await wepNextConfig.redirects?.()) ?? []),
+      {
+        source: '/recherchen/wikipolitik',
+        destination: 'https://wiki.reflekt.ch/',
+        permanent: true,
+      },
+      {
+        source: '/wikipolitik',
+        destination: 'https://wiki.reflekt.ch/',
+        permanent: true,
+      },
+      ...reflektArticleRedirectSlugs.flatMap(slug => [
+        {
+          source: `/recherchen/${slug}`,
+          destination: `/a/${slug}`,
+          permanent: true,
+        },
+        { source: `/${slug}`, destination: `/a/${slug}`, permanent: true },
+      ]),
+      ...reflektArticleRedirectAliases.flatMap(({ from, to }) => [
+        {
+          source: `/recherchen/${from}`,
+          destination: `/a/${to}`,
+          permanent: true,
+        },
+        { source: `/${from}`, destination: `/a/${to}`, permanent: true },
+      ]),
+      {
+        source: '/recherchen',
+        destination: '/a/tag/recherchen',
+        permanent: true,
+      },
+      { source: '/news', destination: '/a/tag/news', permanent: true },
+      {
+        source: '/jetzt-lesen',
+        destination: '/a/tag/recherchen',
+        permanent: true,
+      },
+      { source: '/mein-konto', destination: '/login', permanent: true },
+      { source: '/kasse', destination: '/login', permanent: true },
+      { source: '/kasse/:path*', destination: '/login', permanent: true },
+      { source: '/spenden-3', destination: '/mitmachen', permanent: true },
+      { source: '/spenden', destination: '/mitmachen', permanent: true },
+      {
+        source: '/jetzt-mitmachen',
+        destination: '/mitmachen',
+        permanent: true,
+      },
+      {
+        source: '/reflekt-im-gespraech',
+        destination: '/a/reflekt-im-gespraech',
+        permanent: true,
+      },
+      {
+        source: '/willkommen-guelsha',
+        destination: '/a/willkommen-guelsha',
+        permanent: true,
+      },
+      {
+        source: '/zuercher-journalistenpreis-fuer-mocambique-recherche',
+        destination: '/a/zuercher-journalistenpreis-fuer-mocambique-recherche',
+        permanent: true,
+      },
+      {
+        source: '/zuercher-unternehmer-war-pokerchef-der-gluecksspielmafia',
+        destination:
+          '/a/zuercher-unternehmer-war-pokerchef-der-gluecksspielmafia',
+        permanent: true,
+      },
+    ];
   },
 };
 
@@ -33,5 +156,11 @@ const plugins = [
 ];
 
 module.exports = withSentryConfig(composePlugins(...plugins)(nextConfig), {
-  silent: true,
+  // `silent: true` suppresses info, warn AND error, so a failed sourcemap
+  // upload leaves no trace in the build log. Keep the plugin loud.
+  silent: false,
+  // Upload all client chunks, not just static/chunks/pages + static/chunks/app.
+  // Shared chunks hold most of our app code; framework/polyfills/webpack chunks
+  // stay excluded by the plugin's own ignore list.
+  widenClientFileUpload: true,
 });

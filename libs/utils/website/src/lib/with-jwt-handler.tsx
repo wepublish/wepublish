@@ -1,14 +1,21 @@
+import { useApolloClient } from '@apollo/client';
 import {
+  setPreviewHandshakeState,
   useUser,
-  AuthTokenStorageKey,
 } from '@wepublish/authentication/website';
-import { getCookie } from 'cookies-next';
 import {
   useLoginWithJwtMutation,
   SessionWithTokenWithoutUser,
 } from '@wepublish/website/api';
 import styled from '@emotion/styled';
-import { ComponentType, memo, useCallback, useEffect, useState } from 'react';
+import {
+  ComponentType,
+  createElement,
+  memo,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 
 export const EXPIRED_JWT_MESSAGE =
   'Dieser Link ist nicht mehr gültig. Bitte hier einen neuen Link anfordern oder mit Benutzernamen und Passwort anmelden.';
@@ -69,15 +76,13 @@ const ButtonRow = styled('div')`
   justify-content: flex-end;
 `;
 
-export const withJwtHandler = <
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  P extends object,
->(
+export const withJwtHandler = <P extends object>(
   ControlledComponent: ComponentType<P>
 ) =>
   memo<P>(props => {
+    const client = useApolloClient();
     const [loginWithJwt] = useLoginWithJwtMutation();
-    const { setToken } = useUser();
+    const { setToken, hasUser } = useUser();
 
     const [showTotpPrompt, setShowTotpPrompt] = useState(false);
     const [pendingJwt, setPendingJwt] = useState<string | null>(null);
@@ -87,33 +92,45 @@ export const withJwtHandler = <
 
     const handleJwt = useCallback(
       (jwt: string, options?: { fromPreview?: boolean }) => {
-        // Skip if already signed in (check cookie synchronously)
-        if (getCookie(AuthTokenStorageKey)) return;
+        if (hasUser && !options?.fromPreview) {
+          return;
+        }
 
         loginWithJwt({ variables: { jwt } })
-          .then(result => {
+          .then(async result => {
             if (result?.data?.createSessionWithJWT) {
-              setToken(
+              await setToken(
                 result.data.createSessionWithJWT as SessionWithTokenWithoutUser
               );
+
+              if (options?.fromPreview) {
+                setPreviewHandshakeState('succeeded');
+              }
+
+              await client.resetStore();
             }
           })
           .catch(err => {
             if (err?.message?.includes('TOTP_REQUIRED')) {
               setPendingJwt(jwt);
               setShowTotpPrompt(true);
+
               return;
             }
 
-            // Preview JWTs fail silently — the user can't act on them
-            if (options?.fromPreview) return;
+            if (options?.fromPreview) {
+              setPreviewHandshakeState('failed');
+              console.warn('[preview] JWT login failed:', err?.message ?? err);
+
+              return;
+            }
 
             window.location.href = `/login?error=${encodeURIComponent(
               EXPIRED_JWT_MESSAGE
             )}`;
           });
       },
-      [loginWithJwt, setToken]
+      [loginWithJwt, setToken, hasUser, client]
     );
 
     const handleTotpSubmit = useCallback(async () => {
@@ -128,11 +145,14 @@ export const withJwtHandler = <
         });
 
         if (result?.data?.createSessionWithJWT) {
-          setToken(
+          await setToken(
             result.data.createSessionWithJWT as SessionWithTokenWithoutUser
           );
           setShowTotpPrompt(false);
           setPendingJwt(null);
+          setPreviewHandshakeState('succeeded');
+
+          await client.resetStore();
         }
       } catch (err: any) {
         setError(
@@ -144,7 +164,7 @@ export const withJwtHandler = <
       } finally {
         setLoading(false);
       }
-    }, [pendingJwt, totpToken, loginWithJwt, setToken]);
+    }, [pendingJwt, totpToken, loginWithJwt, setToken, client]);
 
     const handleCancel = useCallback(() => {
       setShowTotpPrompt(false);
@@ -155,8 +175,12 @@ export const withJwtHandler = <
 
     useEffect(() => {
       if (window.opener) {
+        setPreviewHandshakeState('pending');
+
         const isTrustedMessage = (event: MessageEvent): boolean =>
           event.source === window.opener;
+
+        let received = false;
 
         const handleMessage = (event: MessageEvent) => {
           if (!isTrustedMessage(event)) {
@@ -165,17 +189,30 @@ export const withJwtHandler = <
 
           const jwt = event.data?.previewJwt;
           if (jwt) {
+            received = true;
             window.removeEventListener('message', handleMessage);
+            clearInterval(interval);
+            window.opener.postMessage('preview-jwt-received', '*');
             handleJwt(jwt, { fromPreview: true });
           }
         };
         window.addEventListener('message', handleMessage);
 
-        const MAX_ATTEMPTS = 25;
+        const MAX_ATTEMPTS = 150;
         let attempts = 0;
         const interval = setInterval(() => {
           window.opener.postMessage('preview-jwt-ready', '*');
-          if (++attempts >= MAX_ATTEMPTS) clearInterval(interval);
+
+          if (++attempts >= MAX_ATTEMPTS) {
+            clearInterval(interval);
+
+            if (!received) {
+              setPreviewHandshakeState('failed');
+              console.warn(
+                '[preview] no JWT received from the opening window within 30s'
+              );
+            }
+          }
         }, 200);
 
         return () => {
@@ -196,7 +233,7 @@ export const withJwtHandler = <
 
     return (
       <>
-        <ControlledComponent {...(props as P)} />
+        {createElement(ControlledComponent, props as P)}
 
         {showTotpPrompt && (
           <TotpOverlay onClick={handleCancel}>

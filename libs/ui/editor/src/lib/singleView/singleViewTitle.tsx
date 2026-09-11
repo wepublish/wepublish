@@ -1,20 +1,20 @@
 import styled from '@emotion/styled';
-import { ReactNode } from 'react';
 import { MdChevronLeft } from 'react-icons/md';
 import { Link } from 'react-router-dom';
-import { Button, Col, FlexboxGrid, Loader as RLoader, Row } from 'rsuite';
+import { Button, Loader as RLoader } from 'rsuite';
 
 const ChevronLeft = styled(MdChevronLeft)`
   font-size: 48px;
 `;
 
-const FlexGrid = styled(FlexboxGrid)`
-  padding-right: 5px;
-  padding-bottom: 20px;
-`;
-
-const FlexboxItem = styled(FlexboxGrid.Item)`
-  margin-left: 40px;
+const Grid = styled.div`
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr max-content;
+  align-items: center;
+  justify-items: start;
+  gap: 40px;
+  margin-bottom: 20px;
 `;
 
 const Loader = styled(RLoader)`
@@ -25,18 +25,13 @@ const SaveButton = styled(Button)`
   margin-right: 10px;
 `;
 
-const PaddedCol = styled(Col)`
+const PaddedCol = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
   padding-top: 3px;
   margin-right: 1rem;
-`;
-
-const FlexRow = styled(Row)`
-  display: flex;
-  align-items: center;
 `;
 
 const FlexLink = styled(Link)`
@@ -55,7 +50,6 @@ interface SingleViewTitleProps {
   saveBtnTitle: string;
   saveAndCloseBtnTitle: string;
   closePath: string;
-  additionalMenu?: ReactNode;
   setCloseFn(close: boolean): void;
 }
 
@@ -66,12 +60,8 @@ export function SingleViewTitle({
   saveBtnTitle,
   saveAndCloseBtnTitle,
   closePath,
-  additionalMenu,
   setCloseFn,
 }: SingleViewTitleProps) {
-  /**
-   * UI helpers
-   */
   function titleView() {
     if (loading) {
       return (
@@ -81,13 +71,21 @@ export function SingleViewTitle({
         </>
       );
     }
+
     return title;
   }
 
-  function actionsView() {
-    return (
-      <>
-        {/* save button */}
+  return (
+    <Grid>
+      <PaddedCol>
+        <FlexLink to={closePath}>
+          <ChevronLeft />
+        </FlexLink>
+
+        <Heading>{titleView()}</Heading>
+      </PaddedCol>
+
+      <div>
         <SaveButton
           appearance="ghost"
           loading={loading}
@@ -96,7 +94,7 @@ export function SingleViewTitle({
         >
           {saveBtnTitle}
         </SaveButton>
-        {/* save and close button */}
+
         <Button
           appearance="primary"
           loading={loading}
@@ -106,39 +104,7 @@ export function SingleViewTitle({
         >
           {saveAndCloseBtnTitle}
         </Button>
-      </>
-    );
-  }
-
-  return (
-    <FlexGrid align="middle">
-      {/* title */}
-      <FlexboxGrid.Item colspan={12}>
-        <FlexboxGrid align="middle">
-          <FlexRow>
-            <PaddedCol xs={29}>
-              <FlexLink to={closePath}>
-                <ChevronLeft />
-              </FlexLink>
-              <Heading>{titleView()}</Heading>
-            </PaddedCol>
-          </FlexRow>
-        </FlexboxGrid>
-      </FlexboxGrid.Item>
-
-      {/* actions */}
-      <FlexboxGrid.Item colspan={12}>
-        <FlexboxGrid
-          justify="end"
-          align="middle"
-        >
-          {/* additional menu content */}
-          <FlexboxGrid.Item>{additionalMenu}</FlexboxGrid.Item>
-
-          {/* save btns */}
-          <FlexboxItem>{actionsView()}</FlexboxItem>
-        </FlexboxGrid>
-      </FlexboxGrid.Item>
-    </FlexGrid>
+      </div>
+    </Grid>
   );
 }

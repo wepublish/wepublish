@@ -1,4 +1,4 @@
-import { Meta } from '@storybook/react';
+import { Meta } from '@storybook/nextjs-vite';
 import { AuthorLink } from '@wepublish/website/api';
 import { AuthorLinks } from './author-links';
 

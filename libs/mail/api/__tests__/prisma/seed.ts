@@ -55,14 +55,15 @@ async function seed() {
   for (let i = 0; i < 10; i++) {
     const template = await prisma.mailTemplate.upsert({
       where: {
-        externalMailTemplateId: `sample-slug-${i}`,
+        id: `sample-mail-template-${i}`,
       },
       update: {},
       create: {
+        id: `sample-mail-template-${i}`,
         name: `sample-template-${i}`,
         description: `sample-template-description-${i}`,
-        externalMailTemplateId: `sample-slug-${i}`,
-        remoteMissing: false,
+        subject: `sample-subject-${i}`,
+        htmlContent: `<p>sample-content-${i}</p>`,
       },
     });
     mailTemplates.push(template);

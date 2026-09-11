@@ -19,13 +19,15 @@ import {
 } from './navigation.model';
 import { NavigationService } from './navigation.service';
 import { NavigationDataloaderService } from './navigation-dataloader.service';
+import { NavigationLinksDataloaderService } from './navigation-links.dataloader';
 import { Public } from '@wepublish/authentication/api';
 
 @Resolver(() => Navigation)
 export class NavigationResolver {
   constructor(
     private navigationService: NavigationService,
-    private navigationDataLoader: NavigationDataloaderService
+    private navigationDataLoader: NavigationDataloaderService,
+    private navigationLinksDataLoader: NavigationLinksDataloaderService
   ) {}
 
   @Public()
@@ -64,6 +66,6 @@ export class NavigationResolver {
 
   @ResolveField(() => [BaseNavigationLink], { nullable: true })
   public links(@Parent() navigation: Navigation) {
-    return this.navigationService.getNavigationLinks(navigation.id);
+    return this.navigationLinksDataLoader.load(navigation.id);
   }
 }

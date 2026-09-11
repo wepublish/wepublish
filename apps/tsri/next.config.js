@@ -14,21 +14,11 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
  **/
 const nextConfig = {
   ...wepNextConfig,
-  publicRuntimeConfig: {
-    env: {
-      API_URL: process.env.API_URL || '',
-      GTM_ID: process.env.GTM_ID || '',
-      GA_ID: process.env.GA_ID || '',
-      SPARKLOOP_ID: process.env.SPARKLOOP_ID || '',
-      STRIPE_PUBLIC_KEY: process.env.STRIPE_PUBLIC_KEY || '',
-    },
-  },
-  serverRuntimeConfig: {
-    env: {
-      API_URL_INTERNAL: process.env.API_URL_INTERNAL || '',
-      MAILCHIMP_API_KEY: process.env.MAILCHIMP_API_KEY || '',
-      MAILCHIMP_SERVER_PREFIX: process.env.MAILCHIMP_SERVER_PREFIX || '',
-    },
+  env: {
+    ...wepNextConfig.env,
+    STRIPE_PUBLIC_KEY: process.env.STRIPE_PUBLIC_KEY || '',
+    MAILCHIMP_API_KEY: process.env.MAILCHIMP_API_KEY,
+    MAILCHIMP_SERVER_PREFIX: process.env.MAILCHIMP_SERVER_PREFIX,
   },
   async redirects() {
     return [
@@ -100,5 +90,11 @@ const plugins = [
 ];
 
 module.exports = withSentryConfig(composePlugins(...plugins)(nextConfig), {
-  silent: true,
+  // `silent: true` suppresses info, warn AND error, so a failed sourcemap
+  // upload leaves no trace in the build log. Keep the plugin loud.
+  silent: false,
+  // Upload all client chunks, not just static/chunks/pages + static/chunks/app.
+  // Shared chunks hold most of our app code; framework/polyfills/webpack chunks
+  // stay excluded by the plugin's own ignore list.
+  widenClientFileUpload: true,
 });

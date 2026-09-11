@@ -1,16 +1,15 @@
 import { useAsyncAction } from './use-async-action';
 
-jest.mock('react', () => ({
-  // eslint-disable-next-line @typescript-eslint/ban-types
+vi.mock('react', () => ({
   useCallback: (a: Function) => a,
 }));
 
 describe('useAsyncAction', () => {
   it('should reset error, set to loading and end loading', async () => {
-    const setLoading = jest.fn();
-    const setError = jest.fn();
+    const setLoading = vi.fn();
+    const setError = vi.fn();
 
-    await useAsyncAction(setLoading, setError)(jest.fn())();
+    await useAsyncAction(setLoading, setError)(vi.fn())();
 
     expect(setLoading).toHaveBeenNthCalledWith(1, true);
     expect(setLoading).toHaveBeenNthCalledWith(2, false);
@@ -18,8 +17,8 @@ describe('useAsyncAction', () => {
   });
 
   it('should set error, set to loading and end loading', async () => {
-    const setLoading = jest.fn();
-    const setError = jest.fn();
+    const setLoading = vi.fn();
+    const setError = vi.fn();
     const error = new Error();
 
     await useAsyncAction(
@@ -36,9 +35,9 @@ describe('useAsyncAction', () => {
   });
 
   it('should pass parameters', async () => {
-    const setLoading = jest.fn();
-    const setError = jest.fn();
-    const mockFunc = jest.fn();
+    const setLoading = vi.fn();
+    const setError = vi.fn();
+    const mockFunc = vi.fn();
 
     await useAsyncAction(setLoading, setError)(mockFunc)('foo', 'bar');
 

@@ -11,7 +11,11 @@ import { Action } from '../subscription-event-dictionary/subscription-event-dict
 import { SubscriptionService } from './subscription.service';
 import { PeriodicJobService } from './periodic-job.service';
 import { PaymentsService } from '@wepublish/payment/api';
-import { MailContext } from '@wepublish/mail/api';
+import {
+  MailContext,
+  MailProviderError,
+  MailProviderRecipientError,
+} from '@wepublish/mail/api';
 
 const createMockPrisma = () => ({
   subscriptionFlow: {
@@ -30,7 +34,6 @@ const createMockPrisma = () => ({
             daysAwayFromEnding: null,
             mailTemplate: {
               id: 'mt-1',
-              externalMailTemplateId: 'default-SUBSCRIBE',
             },
           },
           {
@@ -39,7 +42,6 @@ const createMockPrisma = () => ({
             daysAwayFromEnding: null,
             mailTemplate: {
               id: 'mt-2',
-              externalMailTemplateId: 'default-RENEWAL_SUCCESS',
             },
           },
           {
@@ -48,7 +50,6 @@ const createMockPrisma = () => ({
             daysAwayFromEnding: null,
             mailTemplate: {
               id: 'mt-3',
-              externalMailTemplateId: 'default-RENEWAL_FAILED',
             },
           },
           {
@@ -57,7 +58,6 @@ const createMockPrisma = () => ({
             daysAwayFromEnding: -14,
             mailTemplate: {
               id: 'mt-4',
-              externalMailTemplateId: 'default-INVOICE_CREATION',
             },
           },
           {
@@ -66,7 +66,6 @@ const createMockPrisma = () => ({
             daysAwayFromEnding: 5,
             mailTemplate: {
               id: 'mt-5',
-              externalMailTemplateId: 'default-DEACTIVATION_UNPAID',
             },
           },
           {
@@ -75,7 +74,6 @@ const createMockPrisma = () => ({
             daysAwayFromEnding: null,
             mailTemplate: {
               id: 'mt-6',
-              externalMailTemplateId: 'default-DEACTIVATION_BY_USER',
             },
           },
           {
@@ -84,7 +82,6 @@ const createMockPrisma = () => ({
             daysAwayFromEnding: -15,
             mailTemplate: {
               id: 'mt-7',
-              externalMailTemplateId: 'default-CUSTOM1',
             },
           },
         ],
@@ -169,7 +166,7 @@ const createMockMailContext = () => ({
   prisma: null,
   kv: null,
   jwtGenerator: jest.fn().mockResolvedValue('test-jwt-token'),
-  sendRemoteTemplateDirect: jest.fn().mockResolvedValue(undefined),
+  sendComposedMail: jest.fn().mockResolvedValue({ subject: 'Test subject' }),
 });
 
 const createMockPaymentsService = () => ({
@@ -328,7 +325,7 @@ describe('PeriodicJobService', () => {
       action: {
         type: SubscriptionEvent.RENEWAL_SUCCESS,
         daysAwayFromEnding: null,
-        externalMailTemplate: 'default-RENEWAL_SUCCESS',
+        mailTemplateId: 'default-RENEWAL_SUCCESS',
       },
     });
 
@@ -479,6 +476,81 @@ describe('PeriodicJobService', () => {
     expect(mockPrisma.subscription.findMany).toHaveBeenCalled();
   });
 
+  describe('a mail the provider refuses', () => {
+    const customMailSubscription = () => ({
+      id: 'sub-1',
+      memberPlanID: 'plan-yearly',
+      paymentMethodID: 'payrexx-subscription',
+      paymentPeriodicity: PaymentPeriodicity.yearly,
+      paidUntil: add(new Date(), { days: 15 }),
+      autoRenew: true,
+      monthlyAmount: 200,
+      currency: Currency.CHF,
+      deactivation: null,
+      user: {
+        id: 'user-1',
+        name: 'test user',
+        email: 'bea.bregante@bluewin.ch',
+      },
+      memberPlan: { name: 'yearly' },
+    });
+
+    const successfulRuns = () =>
+      mockPrisma.periodicJob.update.mock.calls.filter(
+        ([{ data }]: any) => data.successfullyFinished
+      );
+
+    it('lets the run finish when only that one recipient is at fault', async () => {
+      mockPrisma.subscription.findMany.mockResolvedValue([
+        customMailSubscription(),
+      ]);
+      mockMailContext.sendComposedMail.mockRejectedValue(
+        new MailProviderRecipientError(
+          'Mandrill rejected bea.bregante@bluewin.ch: spam'
+        )
+      );
+
+      await expect(service.execute()).resolves.toBeUndefined();
+
+      expect(successfulRuns()).toHaveLength(1);
+    });
+
+    it('records the refusal on the mail log so it is not lost', async () => {
+      mockPrisma.subscription.findMany.mockResolvedValue([
+        customMailSubscription(),
+      ]);
+      mockMailContext.sendComposedMail.mockRejectedValue(
+        new MailProviderRecipientError(
+          'Mandrill rejected bea.bregante@bluewin.ch: spam'
+        )
+      );
+
+      await service.execute();
+
+      expect(mockPrisma.mailLog.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({
+            state: 'rejected',
+            error: 'Mandrill rejected bea.bregante@bluewin.ch: spam',
+          }),
+        })
+      );
+    });
+
+    it('still fails the run when the provider itself refuses to send', async () => {
+      mockPrisma.subscription.findMany.mockResolvedValue([
+        customMailSubscription(),
+      ]);
+      mockMailContext.sendComposedMail.mockRejectedValue(
+        new MailProviderError('Mandrill rejected sender@example.com: unsigned')
+      );
+
+      await expect(service.execute()).rejects.toThrow('unsigned');
+
+      expect(successfulRuns()).toHaveLength(0);
+    });
+  });
+
   it('Periodic after error rerun', async () => {
     const today = new Date();
 
@@ -581,7 +653,6 @@ describe('PeriodicJobService', () => {
             daysAwayFromEnding: -14,
             mailTemplate: {
               id: 'mt-4',
-              externalMailTemplateId: 'default-INVOICE_CREATION',
             },
           },
           {
@@ -590,7 +661,6 @@ describe('PeriodicJobService', () => {
             daysAwayFromEnding: 5,
             mailTemplate: {
               id: 'mt-5',
-              externalMailTemplateId: 'default-DEACTIVATION_UNPAID',
             },
           },
         ],
@@ -625,13 +695,13 @@ describe('PeriodicJobService', () => {
     const action: Action = {
       type: SubscriptionEvent.INVOICE_CREATION,
       daysAwayFromEnding: 10,
-      externalMailTemplate: 'template',
+      mailTemplateId: 'template',
     };
     await service['sendTemplateMail'](action, user, true, {}, new Date());
-    expect(mockMailContext.sendRemoteTemplateDirect).toHaveBeenCalledWith(
+    expect(mockMailContext.sendComposedMail).toHaveBeenCalledWith(
       expect.objectContaining({
         recipient: undefined,
-        remoteTemplate: 'template',
+        mailTemplateId: 'template',
       })
     );
   });
@@ -643,7 +713,7 @@ describe('PeriodicJobService', () => {
     const action: Action = {
       type: SubscriptionEvent.INVOICE_CREATION,
       daysAwayFromEnding: 10,
-      externalMailTemplate: null,
+      mailTemplateId: null,
     };
 
     await service['sendTemplateMail'](action, user, true, {}, new Date());
@@ -656,7 +726,7 @@ describe('PeriodicJobService', () => {
     const action: Action = {
       type: SubscriptionEvent.INVOICE_CREATION,
       daysAwayFromEnding: 10,
-      externalMailTemplate: 'template',
+      mailTemplateId: 'template',
     };
     await service['sendTemplateMail'](action, user, true, {}, new Date());
   });
@@ -952,7 +1022,7 @@ describe('PeriodicJobService', () => {
     await service['createInvoice'](pjo, invoice);
     expect(mockSubscriptionController.createInvoice).toHaveBeenCalledTimes(1);
     // No mail sent because mailTemplate is null in the flow
-    expect(mockMailContext.sendRemoteTemplateDirect).not.toHaveBeenCalled();
+    expect(mockMailContext.sendComposedMail).not.toHaveBeenCalled();
 
     invoice.paidUntil = add(runDate, { days: 9 });
     await service['createInvoice'](pjo, invoice);

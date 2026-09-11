@@ -20,7 +20,7 @@ import { generateID } from '../utility';
 import { ImageEditPanel } from './imageEditPanel';
 import { ImageSelectPanel } from './imageSelectPanel';
 
-const { Group, ControlLabel, Control } = Form;
+const { Group, Label, Control } = Form;
 
 const Panel = styled(RPanel)<{ imageUrl?: string | null }>`
   height: 200px;
@@ -144,102 +144,111 @@ export function TeaserEditPanel({
 
       <Drawer.Body>
         {previewForTeaser(initialTeaser, t)}
+
         <RPanel header={t('articleEditor.panels.displayOptions')}>
-          <Form fluid>
-            <Group controlId="articlePreTitle">
-              <ControlLabel>{t('articleEditor.panels.preTitle')}</ControlLabel>
-              <Control
-                name="pre-title"
-                value={preTitle}
-                onChange={(preTitle: string) => setPreTitle(preTitle)}
-              />
-            </Group>
-            <Group controlId="articleTitle">
-              <ControlLabel>{t('articleEditor.panels.title')}</ControlLabel>
-              <Control
-                name="title"
-                value={title}
-                onChange={(title: string) => setTitle(title)}
-              />
-            </Group>
-            <Group controlId="articleLead">
-              <ControlLabel>{t('articleEditor.panels.lead')}</ControlLabel>
-              <Control
-                name="lead"
-                value={lead}
-                onChange={(lead: string) => setLead(lead)}
-              />
-            </Group>
-            {initialTeaser.type === TeaserType.Custom && (
-              <>
-                <Group controlId="contentUrl">
-                  <ControlLabel>
-                    {t('articleEditor.panels.contentUrl')}
-                  </ControlLabel>
-                  <Control
-                    name="content-url"
-                    value={contentUrl}
-                    onChange={(contentUrl: string) => setContentUrl(contentUrl)}
-                  />
-                </Group>
-                <Group controlId="openInNewTab">
-                  <ControlLabel>
-                    {t('articleEditor.panels.openInNewTab')}
-                  </ControlLabel>
-                  <Toggle
-                    checked={!!openInNewTab}
-                    onChange={(isChecked: boolean) =>
-                      setOpenInNewTab(isChecked)
-                    }
-                    checkedChildren={t('articleEditor.panels.yes')}
-                    unCheckedChildren={t('articleEditor.panels.no')}
-                  />
-                </Group>
-                <Group controlId="properties">
-                  <ControlLabel>
-                    {t('articleEditor.panels.properties')}
-                  </ControlLabel>
-                  <ListInput
-                    value={metaDataProperties}
-                    onChange={propertiesItemInput =>
-                      setMetadataProperties(propertiesItemInput)
-                    }
-                    defaultValue={{ key: '', value: '', public: true }}
-                  >
-                    {({ value, onChange }) => (
-                      <InputsWrapper>
-                        <InputWidth40
-                          placeholder={t('articleEditor.panels.key')}
-                          value={value.key}
-                          onChange={propertyKey =>
-                            onChange({ ...value, key: propertyKey })
-                          }
-                        />
-                        <InputWidth60
-                          placeholder={t('articleEditor.panels.value')}
-                          value={value.value}
-                          onChange={propertyValue =>
-                            onChange({ ...value, value: propertyValue })
-                          }
-                        />
-                        <FormGroup controlId="articleProperty">
-                          <Toggle
-                            checkedChildren={t('articleEditor.panels.public')}
-                            unCheckedChildren={t(
-                              'articleEditor.panels.private'
-                            )}
-                            checked={value.public}
-                            onChange={isPublic =>
-                              onChange({ ...value, public: isPublic })
+          <Form>
+            <Form.Stack fluid>
+              <Group controlId="articlePreTitle">
+                <Label>{t('articleEditor.panels.preTitle')}</Label>
+                <Control
+                  name="pre-title"
+                  value={preTitle}
+                  onChange={(preTitle: string) => setPreTitle(preTitle)}
+                />
+              </Group>
+
+              <Group controlId="articleTitle">
+                <Label>{t('articleEditor.panels.title')}</Label>
+                <Control
+                  name="title"
+                  value={title}
+                  onChange={(title: string) => setTitle(title)}
+                />
+              </Group>
+
+              <Group controlId="articleLead">
+                <Label>{t('articleEditor.panels.lead')}</Label>
+                <Control
+                  name="lead"
+                  value={lead}
+                  onChange={(lead: string) => setLead(lead)}
+                />
+              </Group>
+
+              {initialTeaser.type === TeaserType.Custom && (
+                <>
+                  <Group controlId="contentUrl">
+                    <Label>{t('articleEditor.panels.contentUrl')}</Label>
+
+                    <Control
+                      name="content-url"
+                      value={contentUrl}
+                      onChange={(contentUrl: string) =>
+                        setContentUrl(contentUrl)
+                      }
+                    />
+                  </Group>
+
+                  <Group controlId="openInNewTab">
+                    <Label>{t('articleEditor.panels.openInNewTab')}</Label>
+
+                    <Toggle
+                      checked={!!openInNewTab}
+                      onChange={(isChecked: boolean) =>
+                        setOpenInNewTab(isChecked)
+                      }
+                      checkedChildren={t('articleEditor.panels.yes')}
+                      unCheckedChildren={t('articleEditor.panels.no')}
+                    />
+                  </Group>
+
+                  <Group controlId="properties">
+                    <Label>{t('articleEditor.panels.properties')}</Label>
+
+                    <ListInput
+                      value={metaDataProperties}
+                      onChange={propertiesItemInput =>
+                        setMetadataProperties(propertiesItemInput)
+                      }
+                      defaultValue={{ key: '', value: '', public: true }}
+                    >
+                      {({ value, onChange }) => (
+                        <InputsWrapper>
+                          <InputWidth40
+                            placeholder={t('articleEditor.panels.key')}
+                            value={value.key}
+                            onChange={propertyKey =>
+                              onChange({ ...value, key: propertyKey })
                             }
                           />
-                        </FormGroup>
-                      </InputsWrapper>
-                    )}
-                  </ListInput>
-                </Group>
-              </>
-            )}
+
+                          <InputWidth60
+                            placeholder={t('articleEditor.panels.value')}
+                            value={value.value}
+                            onChange={propertyValue =>
+                              onChange({ ...value, value: propertyValue })
+                            }
+                          />
+
+                          <FormGroup controlId="articleProperty">
+                            <Toggle
+                              checkedChildren={t('articleEditor.panels.public')}
+                              unCheckedChildren={t(
+                                'articleEditor.panels.private'
+                              )}
+                              checked={value.public}
+                              onChange={isPublic =>
+                                onChange({ ...value, public: isPublic })
+                              }
+                            />
+                          </FormGroup>
+                        </InputsWrapper>
+                      )}
+                    </ListInput>
+                  </Group>
+                </>
+              )}
+            </Form.Stack>
           </Form>
         </RPanel>
 
@@ -251,6 +260,7 @@ export function TeaserEditPanel({
           removeImage={() => setImage(undefined)}
         />
       </Drawer.Body>
+
       <Drawer
         open={isChooseModalOpen}
         size="sm"
@@ -264,6 +274,7 @@ export function TeaserEditPanel({
           }}
         />
       </Drawer>
+
       {image && (
         <Drawer
           open={isEditModalOpen}

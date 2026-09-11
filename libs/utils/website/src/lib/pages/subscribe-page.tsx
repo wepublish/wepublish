@@ -1,5 +1,4 @@
 import { NextPageContext } from 'next';
-import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { ssrAuthLink } from '../auth-link';
 import { getSessionTokenProps } from '../get-session-token-props';
@@ -37,7 +36,7 @@ export function SubscribePage(props: SubscribePageProps) {
       deactivateSubscriptionId,
       upgradeSubscriptionId,
       userId,
-      voucher,
+      discountCode,
     },
   } = useRouter();
 
@@ -64,7 +63,7 @@ export function SubscribePage(props: SubscribePageProps) {
             firstName: firstName as string | undefined,
             name: lastName as string | undefined,
             memberPlanSlug: memberPlanBySlug as string | undefined,
-            voucher: voucher as string | undefined,
+            discountCode: discountCode as string | undefined,
             ...props.defaults,
           }}
           filter={memberPlans => {
@@ -129,14 +128,17 @@ export function SubscribePage(props: SubscribePageProps) {
 }
 
 SubscribePage.getInitialProps = async (ctx: NextPageContext) => {
-  const { publicRuntimeConfig } = getConfig();
+  if (typeof window !== 'undefined') {
+    return {};
+  }
+
   const client = getApiClient(getApiUrl(), [
     ssrAuthLink(
       async () => (await getSessionTokenProps(ctx)).sessionToken?.token
     ),
   ]);
 
-  await handleJwtLogin(ctx, client, !!publicRuntimeConfig.env.HTTP_ONLY_COOKIE);
+  await handleJwtLogin(ctx, client, !!process.env.HTTP_ONLY_COOKIE);
 
   const sessionProps = await getSessionTokenProps(ctx);
 

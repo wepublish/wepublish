@@ -36,7 +36,7 @@ import {
   getOperationNameFromDocument,
 } from '../utility';
 
-const { ControlLabel, Control, Group } = RForm;
+const { Label, Control, Group } = RForm;
 
 const Panel = styled(RPanel)`
   background-color: dark;
@@ -303,7 +303,6 @@ function ImageEditPanel({
 
   return (
     <Form
-      fluid
       model={validationModel}
       onSubmit={validationPassed => validationPassed && handleSave()}
     >
@@ -324,6 +323,7 @@ function ImageEditPanel({
               {isUpload ? t('images.panels.upload') : t('save')}
             </Button>
           </PermissionControl>
+
           <Button
             appearance={'subtle'}
             onClick={() => onClose?.()}
@@ -348,18 +348,21 @@ function ImageEditPanel({
                 />
               )}
             </Panel>
+
             <RPanel header={t('images.panels.description')}>
               <DescriptionList>
                 <DescriptionListItem label={t('images.panels.filename')}>
                   {filename || t('images.panels.untitled')}
                   {extension}
                 </DescriptionListItem>
+
                 <DescriptionListItem label={t('images.panels.dimension')}>
                   {t('images.panels.imageDimension', {
                     imageWidth,
                     imageHeight,
                   })}
                 </DescriptionListItem>
+
                 {createdAt && (
                   <DescriptionListItem label={t('images.panels.created')}>
                     {t('images.panels.createdAt', {
@@ -367,6 +370,7 @@ function ImageEditPanel({
                     })}
                   </DescriptionListItem>
                 )}
+
                 {updatedAt && (
                   <DescriptionListItem label={t('images.panels.updated')}>
                     {t('images.panels.updatedAt', {
@@ -374,6 +378,7 @@ function ImageEditPanel({
                     })}
                   </DescriptionListItem>
                 )}
+
                 <DescriptionListItem label={t('images.panels.fileSize')}>
                   {prettyBytes(fileSize)}
                 </DescriptionListItem>
@@ -395,63 +400,71 @@ function ImageEditPanel({
                 )}
               </DescriptionList>
             </RPanel>
+
             <RPanel header={t('images.panels.information')}>
-              <Group controlId="imageFilename">
-                <ControlLabel>{t('images.panels.filename')}</ControlLabel>
-                <Control
-                  name="filename"
-                  value={filename}
-                  disabled={isDisabled}
-                  onChange={(value: string) => setFilename(value)}
-                />
-              </Group>
-              <Group controlId="imageTitle">
-                <ControlLabel>{t('images.panels.title')}</ControlLabel>
-                <Control
-                  name="title"
-                  value={title}
-                  disabled={isDisabled}
-                  onChange={(value: string) => setTitle(value)}
-                />
-              </Group>
-              <Group controlId="imageDescription">
-                <ControlLabel>{t('images.panels.description')}</ControlLabel>
-                <Control
-                  name="description"
-                  value={description}
-                  disabled={isDisabled}
-                  onChange={(value: string) => setDescription(value)}
-                />
-              </Group>
-              {imageBlock && (
-                <Group controlId="imageLinkUrl">
-                  <ControlLabel>{t('images.panels.linkUrl')}</ControlLabel>
+              <RForm.Stack fluid>
+                <Group controlId="imageFilename">
+                  <Label>{t('images.panels.filename')}</Label>
                   <Control
-                    name="linkUrl"
-                    value={imageBlock.linkUrl}
+                    name="filename"
+                    value={filename}
                     disabled={isDisabled}
-                    onChange={(value: string) =>
-                      setImageBlock({ ...imageBlock, linkUrl: value })
-                    }
+                    onChange={(value: string) => setFilename(value)}
                   />
                 </Group>
-              )}
-              <Group controlId="imageTags">
-                <ControlLabel>{t('images.panels.tags')}</ControlLabel>
-                <TagPicker
-                  virtualized
-                  block
-                  creatable
-                  disabled={isDisabled}
-                  value={tags}
-                  data={tags.map(tag => ({ value: tag, label: tag }))}
-                  onChange={value => setTags(value ?? [])}
-                />
-              </Group>
+
+                <Group controlId="imageTitle">
+                  <Label>{t('images.panels.title')}</Label>
+                  <Control
+                    name="title"
+                    value={title}
+                    disabled={isDisabled}
+                    onChange={(value: string) => setTitle(value)}
+                  />
+                </Group>
+
+                <Group controlId="imageDescription">
+                  <Label>{t('images.panels.description')}</Label>
+                  <Control
+                    name="description"
+                    value={description}
+                    disabled={isDisabled}
+                    onChange={(value: string) => setDescription(value)}
+                  />
+                </Group>
+
+                {imageBlock && (
+                  <Group controlId="imageLinkUrl">
+                    <Label>{t('images.panels.linkUrl')}</Label>
+                    <Control
+                      name="linkUrl"
+                      value={imageBlock.linkUrl}
+                      disabled={isDisabled}
+                      onChange={(value: string) =>
+                        setImageBlock({ ...imageBlock, linkUrl: value })
+                      }
+                    />
+                  </Group>
+                )}
+
+                <Group controlId="imageTags">
+                  <Label>{t('images.panels.tags')}</Label>
+                  <TagPicker
+                    virtualized
+                    block
+                    creatable
+                    disabled={isDisabled}
+                    value={tags}
+                    data={tags.map(tag => ({ value: tag, label: tag }))}
+                    onChange={value => setTags(value ?? [])}
+                  />
+                </Group>
+              </RForm.Stack>
             </RPanel>
+
             <RPanel header={t('images.panels.attribution')}>
               <Group controlId="imageSource">
-                <ControlLabel>{t('images.panels.source')}</ControlLabel>
+                <Label>{t('images.panels.source')}</Label>
                 <Control
                   name="source"
                   value={source}
@@ -460,7 +473,7 @@ function ImageEditPanel({
                 />
               </Group>
               <Group controlId="imageLink">
-                <ControlLabel>{t('images.panels.link')}</ControlLabel>
+                <Label>{t('images.panels.link')}</Label>
                 <Control
                   name="link"
                   value={link}
@@ -471,7 +484,7 @@ function ImageEditPanel({
                 <p>{t('images.panels.sourceLink')}</p>
               </Group>
               <Group controlId="imageLicense">
-                <ControlLabel>{t('images.panels.license')}</ControlLabel>
+                <Label>{t('images.panels.license')}</Label>
                 <Control
                   name="license"
                   value={license}

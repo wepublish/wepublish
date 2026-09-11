@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`BannerService findMany should return null if no banner found 1`] = `
 [
@@ -22,18 +22,14 @@ exports[`BannerService findMany should return null if no banner found 1`] = `
 ]
 `;
 
-exports[`BannerService findMany should return the first active banner for {
-  documentType: 0,
-  loggedIn: false,
-  hasSubscription: false,
-  hasPaywallBypass: false
-} 1`] = `
+exports[`BannerService findMany should return the first active banner for {\\n  documentType: 0,\\n  loggedIn: false,\\n  hasSubscription: false,\\n  hasPaywallBypass: false\\n} 1`] = `
 {
   "active": true,
   "collapsible": true,
   "createdAt": 2023-01-01T00:00:00.000Z,
   "cta": null,
   "delay": 0,
+  "embedUrl": null,
   "hideForMinutes": 1440,
   "html": null,
   "id": "1",
@@ -56,12 +52,7 @@ exports[`BannerService findMany should return the first active banner for {
 }
 `;
 
-exports[`BannerService findMany should return the first active banner for {
-  documentType: 0,
-  loggedIn: false,
-  hasSubscription: false,
-  hasPaywallBypass: false
-} 2`] = `
+exports[`BannerService findMany should return the first active banner for {\\n  documentType: 0,\\n  loggedIn: false,\\n  hasSubscription: false,\\n  hasPaywallBypass: false\\n} 2`] = `
 [
   {
     "where": {
@@ -87,18 +78,14 @@ exports[`BannerService findMany should return the first active banner for {
 ]
 `;
 
-exports[`BannerService findMany should return the first active banner for {
-  documentType: 0,
-  loggedIn: true,
-  hasSubscription: false,
-  hasPaywallBypass: false
-} 1`] = `
+exports[`BannerService findMany should return the first active banner for {\\n  documentType: 0,\\n  loggedIn: true,\\n  hasSubscription: false,\\n  hasPaywallBypass: false\\n} 1`] = `
 {
   "active": true,
   "collapsible": true,
   "createdAt": 2023-01-01T00:00:00.000Z,
   "cta": null,
   "delay": 0,
+  "embedUrl": null,
   "hideForMinutes": 1440,
   "html": null,
   "id": "1",
@@ -121,12 +108,7 @@ exports[`BannerService findMany should return the first active banner for {
 }
 `;
 
-exports[`BannerService findMany should return the first active banner for {
-  documentType: 0,
-  loggedIn: true,
-  hasSubscription: false,
-  hasPaywallBypass: false
-} 2`] = `
+exports[`BannerService findMany should return the first active banner for {\\n  documentType: 0,\\n  loggedIn: true,\\n  hasSubscription: false,\\n  hasPaywallBypass: false\\n} 2`] = `
 [
   {
     "where": {
@@ -152,18 +134,14 @@ exports[`BannerService findMany should return the first active banner for {
 ]
 `;
 
-exports[`BannerService findMany should return the first active banner for {
-  documentType: 0,
-  loggedIn: true,
-  hasSubscription: true,
-  hasPaywallBypass: true
-} 1`] = `
+exports[`BannerService findMany should return the first active banner for {\\n  documentType: 0,\\n  loggedIn: true,\\n  hasSubscription: true,\\n  hasPaywallBypass: true\\n} 1`] = `
 {
   "active": true,
   "collapsible": true,
   "createdAt": 2023-01-01T00:00:00.000Z,
   "cta": null,
   "delay": 0,
+  "embedUrl": null,
   "hideForMinutes": 1440,
   "html": null,
   "id": "1",
@@ -186,12 +164,7 @@ exports[`BannerService findMany should return the first active banner for {
 }
 `;
 
-exports[`BannerService findMany should return the first active banner for {
-  documentType: 0,
-  loggedIn: true,
-  hasSubscription: true,
-  hasPaywallBypass: true
-} 2`] = `
+exports[`BannerService findMany should return the first active banner for {\\n  documentType: 0,\\n  loggedIn: true,\\n  hasSubscription: true,\\n  hasPaywallBypass: true\\n} 2`] = `
 [
   {
     "where": {
@@ -220,18 +193,14 @@ exports[`BannerService findMany should return the first active banner for {
 ]
 `;
 
-exports[`BannerService findMany should return the first active banner for {
-  documentType: 1,
-  loggedIn: false,
-  hasSubscription: false,
-  hasPaywallBypass: false
-} 1`] = `
+exports[`BannerService findMany should return the first active banner for {\\n  documentType: 1,\\n  loggedIn: false,\\n  hasSubscription: false,\\n  hasPaywallBypass: false\\n} 1`] = `
 {
   "active": true,
   "collapsible": true,
   "createdAt": 2023-01-01T00:00:00.000Z,
   "cta": null,
   "delay": 0,
+  "embedUrl": null,
   "hideForMinutes": 1440,
   "html": null,
   "id": "1",
@@ -254,12 +223,7 @@ exports[`BannerService findMany should return the first active banner for {
 }
 `;
 
-exports[`BannerService findMany should return the first active banner for {
-  documentType: 1,
-  loggedIn: false,
-  hasSubscription: false,
-  hasPaywallBypass: false
-} 2`] = `
+exports[`BannerService findMany should return the first active banner for {\\n  documentType: 1,\\n  loggedIn: false,\\n  hasSubscription: false,\\n  hasPaywallBypass: false\\n} 2`] = `
 [
   {
     "where": {
@@ -281,18 +245,14 @@ exports[`BannerService findMany should return the first active banner for {
 ]
 `;
 
-exports[`BannerService findMany should return the first active banner for {
-  documentType: 1,
-  loggedIn: true,
-  hasSubscription: false,
-  hasPaywallBypass: false
-} 1`] = `
+exports[`BannerService findMany should return the first active banner for {\\n  documentType: 1,\\n  loggedIn: true,\\n  hasSubscription: false,\\n  hasPaywallBypass: false\\n} 1`] = `
 {
   "active": true,
   "collapsible": true,
   "createdAt": 2023-01-01T00:00:00.000Z,
   "cta": null,
   "delay": 0,
+  "embedUrl": null,
   "hideForMinutes": 1440,
   "html": null,
   "id": "1",
@@ -315,12 +275,7 @@ exports[`BannerService findMany should return the first active banner for {
 }
 `;
 
-exports[`BannerService findMany should return the first active banner for {
-  documentType: 1,
-  loggedIn: true,
-  hasSubscription: false,
-  hasPaywallBypass: false
-} 2`] = `
+exports[`BannerService findMany should return the first active banner for {\\n  documentType: 1,\\n  loggedIn: true,\\n  hasSubscription: false,\\n  hasPaywallBypass: false\\n} 2`] = `
 [
   {
     "where": {
@@ -342,18 +297,14 @@ exports[`BannerService findMany should return the first active banner for {
 ]
 `;
 
-exports[`BannerService findMany should return the first active banner for {
-  documentType: 1,
-  loggedIn: true,
-  hasSubscription: true,
-  hasPaywallBypass: true
-} 1`] = `
+exports[`BannerService findMany should return the first active banner for {\\n  documentType: 1,\\n  loggedIn: true,\\n  hasSubscription: true,\\n  hasPaywallBypass: true\\n} 1`] = `
 {
   "active": true,
   "collapsible": true,
   "createdAt": 2023-01-01T00:00:00.000Z,
   "cta": null,
   "delay": 0,
+  "embedUrl": null,
   "hideForMinutes": 1440,
   "html": null,
   "id": "1",
@@ -376,12 +327,7 @@ exports[`BannerService findMany should return the first active banner for {
 }
 `;
 
-exports[`BannerService findMany should return the first active banner for {
-  documentType: 1,
-  loggedIn: true,
-  hasSubscription: true,
-  hasPaywallBypass: true
-} 2`] = `
+exports[`BannerService findMany should return the first active banner for {\\n  documentType: 1,\\n  loggedIn: true,\\n  hasSubscription: true,\\n  hasPaywallBypass: true\\n} 2`] = `
 [
   {
     "where": {

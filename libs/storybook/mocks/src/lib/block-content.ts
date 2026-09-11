@@ -36,6 +36,7 @@ import {
   FlexAlignment,
   CrowdfundingBlock,
   SubscribeBlock,
+  SubscribeBlockRenderLayout,
   FlexBlock,
   BlockWithAlignment,
   Maybe,
@@ -61,6 +62,7 @@ export const mockTitleBlock = ({
   __typename: 'TitleBlock',
   blockStyle: null,
   blockStyleName: null,
+  disabled: false,
   lead,
   title,
   preTitle,
@@ -74,6 +76,7 @@ export const mockImageBlock = ({
   __typename: 'ImageBlock',
   blockStyle: null,
   blockStyleName: null,
+  disabled: false,
   caption: 'Caption',
   image,
   imageID: image?.id,
@@ -87,6 +90,7 @@ export const mockRichTextBlock = ({
   __typename: 'RichTextBlock',
   blockStyle: null,
   blockStyleName: null,
+  disabled: false,
   richText,
 });
 
@@ -99,6 +103,7 @@ export const mockQuoteBlock = ({
   __typename: 'QuoteBlock',
   blockStyle: null,
   blockStyleName: null,
+  disabled: false,
   quote,
   author,
   image,
@@ -118,6 +123,7 @@ export const mockBreakBlock = ({
   __typename: 'BreakBlock',
   blockStyle: null,
   blockStyleName: null,
+  disabled: false,
   richText,
   hideButton,
   image,
@@ -135,6 +141,7 @@ export const mockPollBlock = ({
   __typename: 'PollBlock',
   blockStyle: null,
   blockStyleName: null,
+  disabled: false,
   poll,
 });
 
@@ -152,6 +159,7 @@ export const mockEventBlock = ({
   __typename: 'EventBlock',
   blockStyle: null,
   blockStyleName: null,
+  disabled: false,
   events,
   filter: {
     __typename: 'EventBlockFilter',
@@ -184,6 +192,7 @@ export const mockHTMLBlock = ({
   __typename: 'HTMLBlock',
   blockStyle: null,
   blockStyleName: null,
+  disabled: false,
   html,
 });
 
@@ -213,6 +222,7 @@ export const mockListicleBlock = ({
   __typename: 'ListicleBlock',
   blockStyle: null,
   blockStyleName: null,
+  disabled: false,
   items,
 });
 
@@ -223,6 +233,7 @@ export const mockCommentBlock = ({
   __typename: 'CommentBlock',
   blockStyle: null,
   blockStyleName: null,
+  disabled: false,
   comments,
   filter: {
     __typename: 'CommentBlockFilter',
@@ -238,6 +249,7 @@ export const mockCrowdfundingBlock = ({
   __typename: 'CrowdfundingBlock',
   blockStyle: null,
   blockStyleName: null,
+  disabled: false,
   crowdfunding,
 });
 
@@ -248,6 +260,7 @@ export const mockBildwurfBlock = ({
   __typename: 'BildwurfAdBlock',
   blockStyle: null,
   blockStyleName: null,
+  disabled: false,
   zoneID,
 });
 
@@ -259,6 +272,7 @@ export const mockFacebookPostBlock = ({
   __typename: 'FacebookPostBlock',
   blockStyle: null,
   blockStyleName: null,
+  disabled: false,
   postID,
   userID,
 });
@@ -271,6 +285,7 @@ export const mockFacebookVideoBlock = ({
   __typename: 'FacebookVideoBlock',
   blockStyle: null,
   blockStyleName: null,
+  disabled: false,
   userID,
   videoID,
 });
@@ -282,6 +297,7 @@ export const mockInstagramPostBlock = ({
   __typename: 'InstagramPostBlock',
   blockStyle: null,
   blockStyleName: null,
+  disabled: false,
   postID,
 });
 
@@ -293,6 +309,7 @@ export const mockTikTokVideoBlock = ({
   __typename: 'TikTokVideoBlock',
   blockStyle: null,
   blockStyleName: null,
+  disabled: false,
   userID,
   videoID,
 });
@@ -304,6 +321,7 @@ export const mockVimeoVideoBlock = ({
   __typename: 'VimeoVideoBlock',
   blockStyle: null,
   blockStyleName: null,
+  disabled: false,
   videoID,
 });
 
@@ -314,6 +332,7 @@ export const mockStreamableVideoBlock = ({
   __typename: 'StreamableVideoBlock',
   blockStyle: null,
   blockStyleName: null,
+  disabled: false,
   videoID,
 });
 
@@ -324,6 +343,7 @@ export const mockYouTubeVideoBlock = ({
   __typename: 'YouTubeVideoBlock',
   blockStyle: null,
   blockStyleName: null,
+  disabled: false,
   videoID,
 });
 
@@ -334,6 +354,7 @@ export const mockSoundCloudTrackBlock = ({
   __typename: 'SoundCloudTrackBlock',
   blockStyle: null,
   blockStyleName: null,
+  disabled: false,
   trackID,
 });
 
@@ -345,6 +366,7 @@ export const mockTwitterTweetBlock = ({
   __typename: 'TwitterTweetBlock',
   blockStyle: null,
   blockStyleName: null,
+  disabled: false,
   tweetID,
   userID,
 });
@@ -356,6 +378,7 @@ export const mockPolisConversationBlock = ({
   __typename: 'PolisConversationBlock',
   blockStyle: null,
   blockStyleName: null,
+  disabled: false,
   conversationID,
 });
 
@@ -371,6 +394,7 @@ export const mockIFrameBlock = ({
   __typename: 'IFrameBlock',
   blockStyle: null,
   blockStyleName: null,
+  disabled: false,
   height,
   sandbox,
   styleCustom,
@@ -402,6 +426,7 @@ export const mockImageGalleryBlock = ({
   __typename: 'ImageGalleryBlock',
   blockStyle: null,
   blockStyleName: null,
+  disabled: false,
   images,
 });
 
@@ -484,6 +509,7 @@ export const mockTeaserListBlock = ({
   type: BlockType.TeaserList,
   __typename: 'TeaserListBlock',
   blockStyle: null,
+  disabled: false,
   filter,
   title,
   teasers,
@@ -499,11 +525,14 @@ export const mockTeaserGridBlock = ({
     mockPageTeaser(),
     mockArticleTeaser(),
   ],
-  blockStyle,
+  blockStyle = null,
+  title = null,
 }: Partial<FullTeaserGridBlockFragment> = {}): FullTeaserGridBlockFragment => ({
   type: BlockType.TeaserList,
   __typename: 'TeaserGridBlock',
   blockStyle,
+  title,
+  disabled: false,
   teasers,
   numColumns,
 });
@@ -602,6 +631,7 @@ export const mockTeaserSlotsBlock = ({
   title,
   teasers,
   blockStyle,
+  disabled: false,
   className,
   autofillConfig,
   autofillTeasers,
@@ -649,10 +679,13 @@ export const mockTeaserGridFlexBlock = ({
     },
   ],
   blockStyle = '',
+  title = null,
 }: Partial<FullTeaserGridFlexBlockFragment> = {}): FullTeaserGridFlexBlockFragment => ({
   type: BlockType.TeaserGridFlex,
   __typename: 'TeaserGridFlexBlock',
   blockStyle,
+  title,
+  disabled: false,
   flexTeasers,
 });
 
@@ -663,14 +696,33 @@ export const mockSubscribeBlock = ({
     mockMemberPlan({ amountPerMonthMin: 10000, amountPerMonthTarget: 15000 }),
   ],
   memberPlanIds = [memberPlans[0].id, memberPlans[1].id],
+  memberPlanRenderSettings = memberPlanIds.map((memberPlanId, index) => ({
+    __typename: 'SubscribeBlockMemberPlanRenderSetting',
+    memberPlanId,
+    isDefault: index === 0,
+    layout: {
+      __typename: 'SubscribeBlockLayoutNoneConfig',
+      type: SubscribeBlockRenderLayout.None,
+    },
+  })),
+  showGoodies = false,
+  showDiscountCodes = false,
+  goodieMinValue = null,
+  hideRepeatGoodieOnUpgrade = false,
 }: Partial<SubscribeBlock> = {}): SubscribeBlock => ({
   type: BlockType.Subscribe,
   __typename: 'SubscribeBlock',
   blockStyle: null,
   blockStyleName: null,
+  disabled: false,
   fields,
   memberPlans,
   memberPlanIds,
+  memberPlanRenderSettings,
+  showGoodies,
+  showDiscountCodes,
+  goodieMinValue,
+  hideRepeatGoodieOnUpgrade,
 });
 export type MockTabbedContent = (args?: {
   blockStyle?: string;

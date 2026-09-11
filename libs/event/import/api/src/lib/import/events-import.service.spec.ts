@@ -53,7 +53,11 @@ describe('EventsImportService', () => {
     createdAt: new Date(),
     modifiedAt: new Date(),
     name: 'Event 1',
-    description: [],
+    description: {
+      type: 'doc',
+      attrs: undefined,
+      content: [],
+    },
     status: EventStatus.Scheduled,
     location: '',
     externalSourceId: '',
@@ -100,7 +104,7 @@ describe('EventsImportService', () => {
 
     const result = await service.importedEvent({ id, source });
 
-    expect(service.importedEvent).toBeCalledWith({
+    expect(service.importedEvent).toHaveBeenCalledWith({
       source,
       id: '1',
     });
@@ -115,7 +119,7 @@ describe('EventsImportService', () => {
 
     const result = await service.importedEvent({ id, source });
 
-    expect(service.importedEvent).toBeCalledWith({
+    expect(service.importedEvent).toHaveBeenCalledWith({
       source,
       id: '1',
     });
@@ -134,7 +138,7 @@ describe('EventsImportService', () => {
 
     const result = await service.createEventFromSource(createEvent);
 
-    expect(service.createEventFromSource).toBeCalledWith({
+    expect(service.createEventFromSource).toHaveBeenCalledWith({
       id: '1',
       source: 'AgendaBasel',
     });

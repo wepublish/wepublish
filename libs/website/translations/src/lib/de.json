@@ -19,12 +19,12 @@
     "memberplan": {
       "price": "{amountPerMonthMin, select, 0 {Gratis} other {Ab {monthlyPrice} {extendable, select, true {pro Monat} other {}}}}"
     },
-    "discount": "{paymentPeriod} {monthlyAmount, select, 0 {gratis} other {für nur {formattedAmount}}}",
+    "continuation": "Nach {afterFirstPaymentPeriod} {formattedAmount} {renewalPeriodL}.",
     "cancellable": "Jederzeit kündbar",
     "upgrade": {
       "infoTitle": "Dein Upgrade",
       "info": "Mach jetzt ein Upgrade von deinem {oldMemberPlan} auf das {newMemberPlan}. <bold>Dein Restguthaben von {discount} bei deinem {oldMemberPlan} wird Dir dabei angerechnet.</bold> Weiter unten siehst du Deinen noch zu zahlenden Upgrade-Preis für den Wechsel zum {newMemberPlan}.",
-      "button": "Für {formattedAmount} auf {memberPlan} upgraden"
+      "button": "Jetzt für {formattedAmount} auf {memberPlan} upgraden"
     },
     "support": {
       "subscribeForPeriod": "Ich unterstütze {siteTitle} {monthlyAmount, select, 0 {gratis} other {{renewalPeriodL} mit {formattedAmount}}}",
@@ -32,16 +32,32 @@
       "pay": "Ich unterstütze {siteTitle} {monthlyAmount, select, 0 {gratis} other {mit {formattedAmount}}}"
     },
     "button": {
-      "subscribeForPeriod": "{monthlyAmount, select, 0 {Gratis} other {{renewalPeriod} für {formattedAmount}}}",
-      "payForPeriod": "{monthlyAmount, select, 0 {Gratis} other {{paymentPeriod} für {formattedAmount}}}",
-      "pay": "{monthlyAmount, select, 0 {Gratis} other {Für {formattedAmount}}}"
+      "subscribeForPeriod": "{monthlyAmount, select, 0 {Gratis} other {{renewalPeriod} für {formattedAmount}}} {productType, select, Donation {spenden} other {abonnieren}}",
+      "payForPeriod": "{monthlyAmount, select, 0 {Gratis} other {{paymentPeriod} für {formattedAmount}}} {productType, select, Donation {spenden} other {abonnieren}}",
+      "pay": "{monthlyAmount, select, 0 {Gratis} other {Für {formattedAmount}}} {productType, select, Donation {spenden} other {abonnieren}}"
     },
-    "voucher": {
+    "transactionFee": {
+      "label": "Ja, ich will die Bearbeitungsgebühren von 2% übernehmen und damit {siteTitle} zusätzlich unterstützen."
+    },
+    "discountCode": {
       "discountApplied": "{discountPercent}% Rabatt angewendet",
-      "invalid": "Gutscheincode ungültig"
+      "invalid": "Rabattcode ungültig"
+    },
+    "goodie": {
+      "title": "Goodie wählen",
+      "none": "Kein Goodie",
+      "soldOut": "Dieses Goodie ist leider ausverkauft. Bitte wähle ein anderes."
     }
   },
   "login": {
+    "email": "Email",
+    "password": "Passwort",
+    "loginWithLink": "Mit Link einloggen",
+    "loginWithPassword": "Mit Passwort einloggen",
+    "loginLinkSent": "Login-Link versendet",
+    "submit": "Einloggen",
+    "useLinkInstead": "Stattdessen Login-Link per E-Mail",
+    "verifyingCredentials": "Einen Moment bitte, die eingegebenen Anmeldedaten werden überprüft...",
     "alertLoginLinkSent": "Falls ein Account unter der Email \"{email}\" besteht, sollte bald ein Login-Link in deinem Email Postfach sein. Dies kann einen Moment dauern. Bitte prüfe auch deinen Spam-Ordner.",
     "totp": {
       "code": "Bestätigungscode (2FA)",
@@ -83,6 +99,7 @@
     "cancelledSubscriptions": "Gekündigte Abos & Inaktive Spenden",
     "subscriptionsDetail": "{type, select, Donation {Spende} other {Abo}}",
     "viewCancelledSubscriptions": "Gekündigte Abos & Inaktive Spenden anzeigen",
+    "subscribeAnother": "Anderes Abo lösen",
     "totp": {
       "title": "Zwei-Faktor-Authentifizierung",
       "enabled": "Zwei-Faktor-Authentifizierung ist aktiviert.",

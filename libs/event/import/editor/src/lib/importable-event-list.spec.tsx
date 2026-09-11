@@ -3,7 +3,7 @@ import {
   MockLink,
   MockedProvider as MockedProviderBase,
 } from '@apollo/client/testing';
-import '@testing-library/jest-dom';
+import '@testing-library/jest-dom/vitest';
 import { format } from 'date-fns';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import {
@@ -20,11 +20,10 @@ import {
   actWait,
   sessionWithPermissions,
 } from '@wepublish/ui/editor';
-import fetch from 'jest-fetch-mock';
 import { BrowserRouter } from 'react-router-dom';
 import ImportableEventListView from './importable-event-list';
 
-jest.setMock('node-fetch', fetch);
+vi.mock('node-fetch', () => ({ default: vi.fn() }));
 
 const eventsMockData: ImportedEventListQuery = {
   importedEvents: {
@@ -145,7 +144,7 @@ const mocks = [
 
 describe('ImportableEventListView', () => {
   beforeAll(() => {
-    jest.spyOn(v2Client, 'getApiClientV2').mockReturnValue(
+    vi.spyOn(v2Client, 'getApiClientV2').mockReturnValue(
       new ApolloClient({
         cache: new InMemoryCache(),
         link: new MockLink(mocks, true, { showWarnings: false }),

@@ -4,8 +4,8 @@ import { MockedProvider } from '@apollo/client/testing';
 
 import { ConsentCreateView } from './consent-create-view';
 import { BrowserRouter } from 'react-router-dom';
-import fetch from 'jest-fetch-mock';
-jest.setMock('node-fetch', fetch);
+
+vi.mock('node-fetch', () => ({ default: vi.fn() }));
 
 describe('ConsentCreateView', () => {
   it('should render successfully', () => {

@@ -1,9 +1,9 @@
 import styled from '@emotion/styled';
 import {
   BreakBlock,
+  BreakBlockButton,
   BreakBlockImage,
   BreakBlockSegment,
-  BreakBlockButton,
 } from '@wepublish/block-content/website';
 
 export const WepBreakBlock = styled(BreakBlock)`
