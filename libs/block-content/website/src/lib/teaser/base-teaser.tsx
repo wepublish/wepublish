@@ -176,8 +176,8 @@ export const selectTeaserAuthors = (teaser: FullTeaserFragment) => {
       }
 
       return teaser.article?.latest.authors
-        .filter(author => !author.hideOnTeaser)
-        .map(author => author.name);
+        .filter(({ author }) => !author.hideOnTeaser)
+        .map(({ author }) => author.name);
     }
 
     case 'EventTeaser':

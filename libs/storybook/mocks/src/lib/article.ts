@@ -8,6 +8,15 @@ import { mockAuthor } from './author';
 import { mockImage } from './image';
 import { faker } from '@faker-js/faker';
 
+export const mockArticleRevisionAuthor = ({
+  author = mockAuthor(),
+  role = null,
+}: Partial<FullArticleRevisionFragment['authors'][number]> = {}) => ({
+  __typename: 'ArticleRevisionAuthor' as const,
+  author,
+  role,
+});
+
 export const mockArticleRevision = ({
   title = 'This is an article title',
   preTitle = 'This is an article pretitle',
@@ -16,7 +25,10 @@ export const mockArticleRevision = ({
   socialMediaDescription = 'This is an article social media description',
   socialMediaImage = mockImage(),
   image = mockImage(),
-  authors = [mockAuthor(), mockAuthor()],
+  authors = [
+    mockArticleRevisionAuthor({ role: 'Text' }),
+    mockArticleRevisionAuthor({ role: 'Bilder' }),
+  ],
   blocks = mockBlockContent(),
   canonicalUrl = 'https://example.com',
   breaking = false,

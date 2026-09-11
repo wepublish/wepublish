@@ -1,6 +1,10 @@
 import styled from '@emotion/styled';
 import { css, Typography } from '@mui/material';
-import { Article, ArticleInfoWrapper } from '@wepublish/article/website';
+import {
+  Article,
+  ArticleInfoWrapper,
+  selectArticleAuthors,
+} from '@wepublish/article/website';
 import {
   ImageBlockWrapper,
   TeaserGridBlockWrapper,
@@ -86,8 +90,7 @@ export const HauptstadtArticleAuthors = ({
   className,
 }: BuilderArticleAuthorsProps) => {
   const { AuthorChip, ArticleDate } = useWebsiteBuilder();
-  const authors =
-    article?.latest.authors.filter(author => !author.hideOnArticle) || [];
+  const authors = selectArticleAuthors(article);
 
   if (!authors.length) {
     return;
@@ -102,10 +105,13 @@ export const HauptstadtArticleAuthors = ({
       {authors.length && (
         <>
           Von{' '}
-          {authors.map((author, index) => (
+          {authors.map(({ author, role }, index) => (
             <Fragment key={author.id}>
-              <AuthorChip author={author} />
-              {index !== authors.length - 1 ? ' und ' : ', '}
+              <AuthorChip
+                author={author}
+                role={role}
+              />
+              {index === authors.length - 2 ? ' und ' : ', '}
             </Fragment>
           ))}
         </>

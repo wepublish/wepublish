@@ -142,9 +142,9 @@ export default function ArticleBySlugOrId() {
                 </ArticleWrapper>
 
                 {!isFDT &&
-                  data.article.latest.authors.map(a => (
-                    <AuthorWrapper key={a.id}>
-                      <ArticleAuthor author={a} />
+                  data.article.latest.authors.map(({ author }) => (
+                    <AuthorWrapper key={author.id}>
+                      <ArticleAuthor author={author} />
                     </AuthorWrapper>
                   ))}
 

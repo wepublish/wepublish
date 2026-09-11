@@ -14,11 +14,11 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 import styled from '@emotion/styled';
 import nanoid from 'nanoid';
-import React, { JSX } from 'react';
+import React, { JSX, useCallback, useState } from 'react';
 import { MdAddCircle, MdDelete, MdDragIndicator } from 'react-icons/md';
 import { IconButton, Panel as RPanel } from 'rsuite';
 
-import { isFunctionalUpdate } from '../utility';
+import { generateID, isFunctionalUpdate } from '../utility';
 
 const IconButtonWrapper = styled.div`
   margin-left: 10px;
@@ -58,6 +58,27 @@ export interface ListFieldProps<T = any> extends FieldProps<ListValue<T>[]> {
 export interface ListValue<T = any> {
   readonly id: string;
   readonly value: T;
+}
+
+export function useListInputState<T>(
+  initialValues: T[],
+  onCommit: (values: T[]) => void
+): [ListValue<T>[], React.Dispatch<React.SetStateAction<ListValue<T>[]>>] {
+  const [items, setItems] = useState<ListValue<T>[]>(() =>
+    initialValues.map(value => ({ id: generateID(), value }))
+  );
+
+  const handleChange = useCallback(
+    (update: React.SetStateAction<ListValue<T>[]>) => {
+      const nextItems = isFunctionalUpdate(update) ? update(items) : update;
+
+      setItems(nextItems);
+      onCommit(nextItems.map(({ value }) => value));
+    },
+    [items, onCommit]
+  );
+
+  return [items, handleChange];
 }
 
 export interface ListItemProps<T = any> {

@@ -1,6 +1,9 @@
 import styled from '@emotion/styled';
 import { Button, css, IconButton } from '@mui/material';
-import { ArticleDateWrapper } from '@wepublish/article/website';
+import {
+  ArticleDateWrapper,
+  selectArticleAuthors,
+} from '@wepublish/article/website';
 import { ShareWrapper } from '@wepublish/ui';
 import { useCommentListQuery } from '@wepublish/website/api';
 import {
@@ -105,8 +108,7 @@ export function OnlineReportsArticleAuthors({
     },
   });
 
-  const authors =
-    article?.latest.authors.filter(author => !author.hideOnArticle) || [];
+  const authors = selectArticleAuthors(article).map(({ author }) => author);
 
   const scrollToComments = () => {
     const el = document.getElementById('comments');

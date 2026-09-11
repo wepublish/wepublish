@@ -190,7 +190,7 @@ export const FrageDesTages = ({
           <AuthorAndContext>
             <div>
               {article?.latest.authors[0] ?
-                <AuthorBox author={article?.latest.authors[0]} />
+                <AuthorBox author={article.latest.authors[0].author} />
               : null}
             </div>
 
