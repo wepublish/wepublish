@@ -1,18 +1,19 @@
 import { Theme } from '@emotion/react';
-import { Breakpoint } from '@mui/material';
 import { PuckComponent, Slot } from '@puckeditor/core';
 
 import {
+  breakpointsStyles,
   BreakpointsValue,
   columnsPresets,
   ColumnsValue,
-  resolveBreakpointValue,
-  sortBreakpoints,
 } from '@wepublish/puck-content/editor';
+import { gapStyles, GapValue } from './gap';
+import { ItemsAlignment, itemsAlignmentStyles } from './items-alignment';
 
-export type GridLayout = {
-  columns: ColumnsValue;
-};
+export type GridLayout = GapValue &
+  ItemsAlignment & {
+    columns: ColumnsValue;
+  };
 
 export type GridProps = {
   className?: string;
@@ -32,31 +33,15 @@ export const GridRender: PuckComponent<GridProps> = ({
     minEmptyHeight={300}
     collisionAxis="dynamic"
     {...props}
-    css={(theme: Theme) => {
-      const breakpoints = sortBreakpoints(
-        theme,
-        Object.keys(layout ?? {}) as Breakpoint[]
-      );
-
-      return {
-        display: 'grid',
-        gap: 16,
+    css={(theme: Theme) => ({
+      display: 'grid',
+      ...breakpointsStyles(theme, layout, resolved => ({
         gridTemplateColumns: toGridTemplateColumns(
-          resolveBreakpointValue(theme, layout, breakpoints[0] ?? 'xs')
-            ?.columns ?? columnsPresets[0]
+          resolved?.columns ?? columnsPresets[0]
         ),
-        ...Object.fromEntries(
-          breakpoints.slice(1).map(breakpoint => [
-            theme.breakpoints.up(breakpoint),
-            {
-              gridTemplateColumns: toGridTemplateColumns(
-                resolveBreakpointValue(theme, layout, breakpoint)?.columns ??
-                  columnsPresets[0]
-              ),
-            },
-          ])
-        ),
-      };
-    }}
+        ...gapStyles(resolved),
+        ...itemsAlignmentStyles(resolved),
+      })),
+    })}
   />
 );

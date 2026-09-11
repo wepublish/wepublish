@@ -4,11 +4,20 @@ import { z } from 'zod/v4';
 
 import { toAiSchema } from '../ai-schema';
 
-export type AlignmentValue = 'left' | 'start' | 'center' | 'right' | 'end';
+export type AlignmentValue =
+  | 'left'
+  | 'start'
+  | 'center'
+  | 'right'
+  | 'end'
+  | 'stretch';
+
+export type AlignmentOrientation = 'horizontal' | 'vertical';
 
 export type AlignmentField = BaseField & {
   type: 'alignment';
   alignments?: AlignmentValue[];
+  orientation?: AlignmentOrientation;
 };
 
 export const alignmentSchema = (
@@ -16,8 +25,9 @@ export const alignmentSchema = (
 ) => z.enum(alignments);
 
 export const alignmentFieldAi = (
-  alignments: AlignmentValue[] = ['start', 'center', 'end']
+  alignments: AlignmentValue[] = ['start', 'center', 'end'],
+  orientation: AlignmentOrientation = 'horizontal'
 ): FieldAiParams => ({
-  instructions: `Horizontal alignment of the element. One of: ${alignments.join(', ')}.`,
+  instructions: `${orientation === 'vertical' ? 'Vertical' : 'Horizontal'} alignment of the element. One of: ${alignments.join(', ')}.`,
   schema: toAiSchema(alignmentSchema(alignments)),
 });
