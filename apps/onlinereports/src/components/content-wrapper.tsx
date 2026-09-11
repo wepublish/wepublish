@@ -8,6 +8,7 @@ import {
   ImageBlockCaption,
   ImageBlockInnerWrapper,
   ImageBlockWrapper,
+  LightboxWrapper,
   RichTextBlockWrapper,
   SliderWrapper,
 } from '@wepublish/block-content/website';
@@ -52,6 +53,7 @@ export const OnlineReportsContentWrapperStyled = styled(ContentWrapperStyled)<{
           > :is(
             ${ImageBlockWrapper},
               ${SliderWrapper},
+              ${LightboxWrapper}
               ${EventBlockWrapper},
               ${BreakBlockWrapper}
           ) {

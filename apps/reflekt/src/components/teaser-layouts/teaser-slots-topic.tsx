@@ -5,6 +5,7 @@ import {
   hasBlockStyle,
   isFilledTeaser,
   isTeaserSlotsBlock,
+  LightboxWrapper,
   SliderBallContainer,
   SliderInnerContainer,
   SliderWrapper,
@@ -42,7 +43,7 @@ export const isTeaserSlotsTopic = (
 export const TeaserSlotsTopicWrapper = styled(TeaserSlotsBlockWrapperDefault)<{
   blockStyle?: string;
 }>`
-  ${SliderWrapper} ${TeaserWrapper} {
+  :is(${SliderWrapper}, ${LightboxWrapper}) ${TeaserWrapper} {
     ${({ theme }) => theme.breakpoints.down('md')} {
       width: 100%;
     }
