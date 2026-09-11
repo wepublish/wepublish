@@ -1,8 +1,9 @@
 import { JSX } from 'react';
 import { css, lighten, Theme } from '@mui/material';
-import styled from '@emotion/styled';
-import { useUser } from '@wepublish/authentication/website';
 import { CommentState } from '@wepublish/website/api';
+import { useTranslation } from 'react-i18next';
+import { useUser } from '@wepublish/authentication/website';
+import styled from '@emotion/styled';
 import {
   BuilderCommentListItemProps,
   useWebsiteBuilder,
@@ -84,6 +85,7 @@ export const CommentListItem = ({
   } = useWebsiteBuilder();
 
   const { hasUser: hasLoggedInUser, user: loggedInUser } = useUser();
+  const { t } = useTranslation();
 
   const canEdit =
     hasLoggedInUser &&
@@ -153,7 +155,7 @@ export const CommentListItem = ({
                 })
               }
             >
-              Editieren
+              {t('comments.list.edit')}
             </Button>
           )}
 
@@ -171,7 +173,7 @@ export const CommentListItem = ({
                 });
               }}
             >
-              Antworten
+              {t('comments.list.reply')}
             </Button>
           )}
         </CommentListItemActionsButtons>
@@ -239,25 +241,24 @@ export const CommentListItemStateWarnings = (
   const {
     elements: { Alert },
   } = useWebsiteBuilder();
+  const { t } = useTranslation();
 
   const errors = cond([
     [
       ({ state }) => state === CommentState.PendingApproval,
-      () => <Alert severity="info">Kommentar wartet auf Freischaltung.</Alert>,
+      () => <Alert severity="info">{t('comments.list.pendingApproval')}</Alert>,
     ],
     [
       ({ state }) => state === CommentState.PendingUserChanges,
       () => (
         <Alert severity="warning">
-          Kommentar muss editiert werden bevor Freischaltung.
+          {t('comments.list.pendingUserChanges')}
         </Alert>
       ),
     ],
     [
       ({ state }) => state === CommentState.Rejected,
-      () => (
-        <Alert severity="error">Kommentar wurde nicht freigeschalten.</Alert>
-      ),
+      () => <Alert severity="error">{t('comments.list.rejected')}</Alert>,
     ],
     [
       ({ state }: typeof props) => true,

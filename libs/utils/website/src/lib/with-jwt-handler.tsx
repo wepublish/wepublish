@@ -16,6 +16,7 @@ import {
   useEffect,
   useState,
 } from 'react';
+import { useTranslation } from 'react-i18next';
 
 export const EXPIRED_JWT_MESSAGE =
   'Dieser Link ist nicht mehr gültig. Bitte hier einen neuen Link anfordern oder mit Benutzernamen und Passwort anmelden.';
@@ -83,6 +84,7 @@ export const withJwtHandler = <P extends object>(
     const client = useApolloClient();
     const [loginWithJwt] = useLoginWithJwtMutation();
     const { setToken, hasUser } = useUser();
+    const { t } = useTranslation();
 
     const [showTotpPrompt, setShowTotpPrompt] = useState(false);
     const [pendingJwt, setPendingJwt] = useState<string | null>(null);
@@ -238,11 +240,9 @@ export const withJwtHandler = <P extends object>(
         {showTotpPrompt && (
           <TotpOverlay onClick={handleCancel}>
             <TotpDialog onClick={e => e.stopPropagation()}>
-              <TotpTitle>Zwei-Faktor-Authentifizierung</TotpTitle>
+              <TotpTitle>{t('login.totp.verifyTitle')}</TotpTitle>
 
-              <TotpInfo>
-                Bitte gib den 6-stelligen Code aus deiner Authenticator-App ein.
-              </TotpInfo>
+              <TotpInfo>{t('login.totp.verifyDescription')}</TotpInfo>
 
               <TotpInput
                 value={totpToken}
@@ -270,7 +270,7 @@ export const withJwtHandler = <P extends object>(
                     cursor: 'pointer',
                   }}
                 >
-                  Abbrechen
+                  {t('user.cancel')}
                 </button>
                 <button
                   disabled={loading || !totpToken}
@@ -285,7 +285,7 @@ export const withJwtHandler = <P extends object>(
                     cursor: loading || !totpToken ? 'default' : 'pointer',
                   }}
                 >
-                  Bestätigen
+                  {t('user.confirm')}
                 </button>
               </ButtonRow>
             </TotpDialog>

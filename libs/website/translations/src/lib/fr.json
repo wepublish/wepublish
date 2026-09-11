@@ -1,0 +1,349 @@
+{
+  "navbar": {
+    "subscribe": "Devenir membre",
+    "unpaid": "Impayé",
+    "invoice": "Facture",
+    "myAccount": "Mon compte",
+    "logout": "Logout",
+    "login": "Login",
+    "backToProfile": "Retour au profil",
+    "profile": "Profil"
+  },
+  "paywall": {
+    "subscribe": "S'abonner",
+    "login": "Login"
+  },
+  "paymentAmountPicker": {
+    "manual": "Manuel"
+  },
+  "teaser": {
+    "author": {
+      "text": "Par {authors}",
+      "seperator": ", "
+    },
+    "meta": {
+      "seperator": " | "
+    }
+  },
+  "subscribe": {
+    "memberplan": {
+      "price": "{amountPerMonthMin, select, 0 {Gratuit} other {À partir de {monthlyPrice} {extendable, select, true {par mois} other {}}}}"
+    },
+    "continuation": "Après {afterFirstPaymentPeriod}, {formattedAmount} {renewalPeriodL}.",
+    "cancellable": "Résiliable à tout moment",
+    "captcha": "Captcha",
+    "chooseSubscription": "Choisir un abonnement",
+    "choosePaymentMethod": "Choisir le mode de paiement",
+    "greeting": "Bonjour {name}, bon retour parmi nous !",
+    "spamProtection": "Protection anti-spam",
+    "upgrade": {
+      "infoTitle": "Votre mise à niveau",
+      "info": "Passez maintenant de votre formule {oldMemberPlan} à la formule {newMemberPlan}. <bold>Votre crédit restant de {discount} de votre formule {oldMemberPlan} sera déduit.</bold> Vous trouverez ci-dessous le montant restant à payer pour passer à la formule {newMemberPlan}.",
+      "button": "Passer à {memberPlan} pour {formattedAmount}"
+    },
+    "support": {
+      "subscribeForPeriod": "Je soutiens {siteTitle} {monthlyAmount, select, 0 {gratuitement} other {{renewalPeriodL} avec {formattedAmount}}}",
+      "payForPeriod": "Je soutiens {siteTitle} {monthlyAmount, select, 0 {gratuitement} other {{paymentPeriodL} avec {formattedAmount}}}",
+      "pay": "Je soutiens {siteTitle} {monthlyAmount, select, 0 {gratuitement} other {avec {formattedAmount}}}"
+    },
+    "button": {
+      "subscribeForPeriod": "{monthlyAmount, select, 0 {Gratuit} other {{renewalPeriod} pour {formattedAmount}}} {productType, select, Donation {faire un don} other {s'abonner}}",
+      "payForPeriod": "{monthlyAmount, select, 0 {Gratuit} other {{paymentPeriod} pour {formattedAmount}}} {productType, select, Donation {faire un don} other {s'abonner}}",
+      "pay": "{monthlyAmount, select, 0 {Gratuit} other {Pour {formattedAmount}}} {productType, select, Donation {faire un don} other {s'abonner}}"
+    },
+    "transactionFee": {
+      "label": "Oui, je souhaite prendre en charge les frais de traitement de 2 % et ainsi soutenir davantage {siteTitle}."
+    },
+    "discountCode": {
+      "discountApplied": "Réduction de {discountPercent} % appliquée",
+      "invalid": "Code de réduction invalide",
+      "label": "Code de réduction"
+    },
+    "goodie": {
+      "title": "Choisir un cadeau",
+      "none": "Aucun cadeau",
+      "soldOut": "Ce cadeau est malheureusement épuisé. Veuillez en choisir un autre."
+    },
+    "warning": {
+      "confirmationTitle": "Êtes-vous sûr ?",
+      "openInvoices": "Vous avez déjà un abonnement avec des factures impayées. Vous pouvez consulter vos factures impayées dans votre <Link href=\"/profile\">profil</Link>.",
+      "alreadyHasSubscription": "Vous avez déjà cet abonnement, êtes-vous sûr ? Vous pouvez consulter vos abonnements dans votre <Link href=\"/profile\">profil</Link>."
+    }
+  },
+  "login": {
+    "email": "E-mail",
+    "password": "Mot de passe",
+    "loginWithLink": "Se connecter avec un lien",
+    "loginWithPassword": "Se connecter avec un mot de passe",
+    "loginLinkSent": "Lien de connexion envoyé",
+    "submit": "Se connecter",
+    "useLinkInstead": "Recevoir plutôt un lien de connexion par e-mail",
+    "verifyingCredentials": "Un instant s'il vous plaît, les identifiants saisis sont en cours de vérification...",
+    "alertLoginLinkSent": "Si un compte existe pour l'adresse e-mail \"{email}\", vous recevrez bientôt un lien de connexion dans votre boîte de réception. Cela peut prendre un moment. Veuillez également vérifier votre dossier de courrier indésirable.",
+    "totp": {
+      "code": "Code de confirmation (2FA)",
+      "emailLoginDisabled": "La connexion par lien e-mail n'est pas disponible pour ce compte. Si un compte existe pour cette adresse, connectez-vous avec votre mot de passe et votre code de confirmation.",
+      "verifyTitle": "Authentification à deux facteurs",
+      "verifyDescription": "Saisissez le code à 6 chiffres de votre application d'authentification.",
+      "verify": "Confirmer",
+      "invalidCode": "Code invalide. Veuillez réessayer."
+    }
+  },
+  "newsletter": {
+    "back": "Retour",
+    "next": "Suivant",
+    "submit": "Terminer"
+  },
+  "crowdfunding": {
+    "goal": "{type, select, Revenue {Déjà <bold>{revenue}</bold> financés} other {Déjà <bold>{subscriptions, number}</bold> {subscriptions, plural, =1 {personne abonnée} other {personnes abonnées}}}}"
+  },
+  "image": {
+    "caption": "{caption} {source, select, EMPTY {} other {<ImageSource>(Image : {source})</ImageSource>}}"
+  },
+  "subscription": {
+    "externalReward": "{isLink, select, true {Lien vers une récompense externe} other {{externalReward}}}",
+    "unpaid": "{type, select, Donation {Don} other {Abonnement}} impayé",
+    "cancel": "Résilier {type, select, Donation {le don} other {l'abonnement}}",
+    "cancelConfirmation": "{type, select, Donation {Toutes les factures ouvertes du don seront annulées.} other {L'abonnement ne sera pas renouvelé, mais restera valable jusqu'à sa date d'expiration. Toutes les factures ouvertes de l'abonnement seront annulées.}}",
+    "costs": "Coûte {amount} {extendable, select, true {par mois} other {}}",
+    "extendNow": "Prolonger maintenant",
+    "extendBy": "Prolonger maintenant de {subscriptionDuration}",
+    "extendEarly": "Prolonger {type, select, Donation {le don} other {l'abonnement}} à l'avance ?",
+    "extendEarlyConfirmation": "Nous sommes ravis que vous souhaitiez prolonger votre {type, select, Donation {don} other {abonnement}} de {subscriptionDuration} à l'avance. Continuer ?",
+    "noActiveSubscriptions": "Vous n'avez pas encore d'abonnement actif.",
+    "subscribeNow": "S'abonner maintenant.",
+    "startsAt": "Terminé le <time>{startsAt}</time>",
+    "detailsAndPayments": "Détails et paiements",
+    "cancelledDueToInvoiceNotPaid": "Résilié automatiquement",
+    "cancelledDueToUnknownReason": "Le motif de résiliation est inconnu",
+    "autoRenew": "Sera renouvelé automatiquement {periodicityTimeline}",
+    "validFor": "Valable pour {subscriptionDuration}",
+    "cancelProduct": "Voulez-vous vraiment résilier {productName} ?"
+  },
+  "invoice": {
+    "invoices": "Factures",
+    "noOpenInvoices": "Aucune facture ouverte",
+    "openInvoices": "Factures impayées",
+    "unpaid": "Facture impayée",
+    "paid": "Facture payée",
+    "canceled": "Facture annulée",
+    "number": "N° de facture",
+    "completedAt": "Terminé le",
+    "dueAt": "Échéance le",
+    "amount": "Montant de",
+    "paidAt": "Payé le",
+    "canceledAt": "Annulé le",
+    "sepaWarning": "La facture sera automatiquement réglée par prélèvement automatique. Cela peut prendre quelques jours.",
+    "bexioWarning": "Vous recevrez une facture PDF par e-mail.",
+    "payrexxWarning": "Nous avons récemment mis à jour le système des membres et votre abonnement est obsolète. Il sera automatiquement mis à jour lorsque vous cliquerez sur \"Payer maintenant\".",
+    "payNow": "Payer maintenant"
+  },
+  "user": {
+    "changeEmailRequest": "Cliquez ici pour modifier votre adresse e-mail",
+    "email": "E-Mail",
+    "changeEmail": "Modifier l'adresse e-mail",
+    "newEmail": "Nouvelle adresse e-mail",
+    "password": "Mot de passe",
+    "passwordRepeat": "Répéter le mot de passe",
+    "requestEmailChange": "Demander la modification",
+    "emailChangeRequested": "Un e-mail de confirmation a été envoyé à votre adresse e-mail actuelle. Cliquez sur le lien dans l'e-mail pour confirmer la modification.",
+    "pendingEmailChange": "La modification vers {email} est en attente de confirmation. Veuillez vérifier votre boîte de réception.",
+    "emailChangeConfirmed": "Votre adresse e-mail a été modifiée avec succès.",
+    "emailChangeExpired": "La confirmation a expiré. Veuillez demander à nouveau la modification.",
+    "activeSubscriptions": "{type, select, Donation {Dons actifs} other {Abonnements actifs}}",
+    "cancelledSubscriptions": "Abonnements résiliés et dons inactifs",
+    "subscriptionsDetail": "{type, select, Donation {Don} other {Abonnement}}",
+    "viewCancelledSubscriptions": "Afficher les abonnements résiliés et les dons inactifs",
+    "subscribeAnother": "Souscrire un autre abonnement",
+    "confirm": "Confirmer",
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "saveSuccess": "Modifications enregistrées avec succès !",
+    "passwordWarning": "Remplissez uniquement si vous souhaitez modifier le mot de passe. Sinon laissez vide.",
+    "pay": "Payer",
+    "totp": {
+      "title": "Authentification à deux facteurs",
+      "enabled": "L'authentification à deux facteurs est activée.",
+      "optionalDescription": "Protégez votre compte avec un code de sécurité supplémentaire fourni par une application d'authentification.",
+      "downloadApp": "Télécharger Proton Authenticator :",
+      "setup": "Configurer la 2FA",
+      "setupDescription": "Scannez le code QR avec votre application d'authentification et saisissez le code à 6 chiffres.",
+      "backupHint": "Activez la sauvegarde ou la synchronisation dans l'application afin de ne pas être bloqué en cas de perte de votre appareil.",
+      "manualEntry": "Ou saisissez ce code manuellement dans votre application d'authentification :",
+      "code": "Code de confirmation",
+      "activate": "Activer la 2FA",
+      "setupError": "Erreur lors de la configuration de la 2FA. Veuillez réessayer.",
+      "invalidCode": "Code de confirmation invalide. Veuillez réessayer.",
+      "setupSuccess": "L'authentification à deux facteurs a été activée avec succès."
+    },
+    "form": {
+      "firstName": "Prénom",
+      "lastName": "Nom",
+      "email": "E-mail",
+      "emailRepeated": "Répéter l'e-mail",
+      "birthday": "Date de naissance",
+      "password": "Mot de passe",
+      "passwordRepeated": "Répéter le mot de passe",
+      "street": "Rue",
+      "houseNumber": "Numéro",
+      "zipCode": "NPA",
+      "city": "Localité / Ville",
+      "country": "Pays",
+      "occupation": "Fonction / Profession"
+    }
+  },
+  "article": {
+    "noArticles": "Aucun article disponible",
+    "toOriginal": "Vers l'article original"
+  },
+  "commentEditor": {
+    "comment": "Commenter",
+    "cancel": "Annuler",
+    "captcha": "Captcha",
+    "guestComment": "Commenter en tant qu'invité",
+    "loginRegister": "Se connecter/S'inscrire",
+    "loginForReaders": "Connexion pour les lecteurs",
+    "noAccountYet": "Pas encore de compte?",
+    "registerNow": "S'inscrire maintenant",
+    "notLoggedIn": "Vous n'êtes pas connecté"
+  },
+  "comments": {
+    "list": {
+      "readMore": "Participez à la discussion",
+      "noComments": "Aucun commentaire disponible.",
+      "pendingApproval": "Le commentaire est en attente de validation",
+      "pendingUserChanges": "Le commentaire doit être modifié avant sa validation.",
+      "rejected": "Le commentaire n'a pas été validé.",
+      "reply": "Répondre",
+      "edit": "Modifier"
+    }
+  },
+  "poll": {
+    "totalVotes": "{count} votes",
+    "closesAt": "Clôture le <time>{date}</time>",
+    "closed": "&ndash; Vote terminé."
+  },
+  "registrationForm": {
+    "register": "S'inscrire",
+    "captcha": "Captcha"
+  },
+  "search": {
+    "search": "Recherche",
+    "searchPlaceholder": "Rechercher des articles et des pages",
+    "searchResults": "Résultats de la recherche",
+    "noResultsFound": "Aucun résultat trouvé"
+  },
+  "zod": {
+    "errors": {
+      "invalid_type": "{expected} attendu, {received} reçu",
+      "invalid_type_received_undefined": "Ne peut pas être vide",
+      "invalid_type_received_null": "Ne peut pas être vide",
+      "invalid_literal": "Valeur littérale invalide, {expected} attendu",
+      "unrecognized_keys": "Clé(s) non reconnue(s) dans l'objet : {- keys}",
+      "invalid_union": "Entrée invalide",
+      "invalid_union_discriminator": "Valeur de discriminateur invalide, {- options} attendu",
+      "invalid_enum_value": "Valeur d'énumération invalide. {- options} attendu, '{received}' reçu",
+      "invalid_arguments": "Arguments de fonction invalides",
+      "invalid_return_type": "Valeur de retour de fonction invalide",
+      "invalid_date": "Date invalide",
+      "custom": "Entrée invalide",
+      "invalid_intersection_types": "Les résultats d'intersection n'ont pas pu être fusionnés",
+      "not_multiple_of": "Le nombre doit être un multiple de {multipleOf}",
+      "not_finite": "Le nombre doit être fini",
+      "invalid_string": {
+        "email": "{validation} invalide",
+        "url": "{validation} invalide",
+        "uuid": "{validation} invalide",
+        "cuid": "{validation} invalide",
+        "regex": "Invalide",
+        "datetime": "{validation} invalide",
+        "startsWith": "Entrée invalide : doit commencer par \"{startsWith}\"",
+        "endsWith": "Entrée invalide : doit se terminer par \"{endsWith}\""
+      },
+      "too_small": {
+        "array": {
+          "exact": "Le tableau doit contenir exactement {minimum} élément(s)",
+          "inclusive": "Le tableau doit contenir au moins {minimum} élément(s)",
+          "not_inclusive": "Le tableau doit contenir plus de {minimum} élément(s)"
+        },
+        "string": {
+          "exact": "La chaîne doit contenir exactement {minimum} caractère(s)",
+          "inclusive": "La chaîne doit contenir au moins {minimum} caractère(s)",
+          "not_inclusive": "La chaîne doit contenir plus de {minimum} caractère(s)"
+        },
+        "number": {
+          "exact": "Le nombre doit être exactement égal à {minimum}",
+          "inclusive": "Le nombre doit être supérieur ou égal à {minimum}",
+          "not_inclusive": "Le nombre doit être supérieur à {minimum}"
+        },
+        "set": {
+          "exact": "Entrée invalide",
+          "inclusive": "Entrée invalide",
+          "not_inclusive": "Entrée invalide"
+        },
+        "date": {
+          "exact": "La date doit être exactement égale à {- minimum, datetime}",
+          "inclusive": "La date doit être postérieure ou égale à {- minimum, datetime}",
+          "not_inclusive": "La date doit être postérieure à {- minimum, datetime}"
+        }
+      },
+      "too_big": {
+        "array": {
+          "exact": "Le tableau doit contenir exactement {maximum} élément(s)",
+          "inclusive": "Le tableau peut contenir au plus {maximum} élément(s)",
+          "not_inclusive": "Le tableau doit contenir moins de {maximum} élément(s)"
+        },
+        "string": {
+          "exact": "La chaîne doit contenir exactement {maximum} caractère(s)",
+          "inclusive": "La chaîne peut contenir au plus {maximum} caractère(s)",
+          "not_inclusive": "La chaîne doit contenir moins de {maximum} caractère(s)"
+        },
+        "number": {
+          "exact": "Le nombre doit être exactement égal à {maximum}",
+          "inclusive": "Le nombre doit être inférieur ou égal à {maximum}",
+          "not_inclusive": "Le nombre doit être inférieur à {maximum}"
+        },
+        "set": {
+          "exact": "Entrée invalide",
+          "inclusive": "Entrée invalide",
+          "not_inclusive": "Entrée invalide"
+        },
+        "date": {
+          "exact": "La date doit être exactement égale à {- maximum, datetime}",
+          "inclusive": "La date doit être antérieure ou égale à {- maximum, datetime}",
+          "not_inclusive": "La date doit être antérieure à {- maximum, datetime}"
+        }
+      }
+    },
+    "validations": {
+      "email": "Adresse e-mail",
+      "url": "URL",
+      "uuid": "UUID",
+      "cuid": "CUID",
+      "regex": "Expression régulière",
+      "datetime": "Date et heure"
+    },
+    "types": {
+      "function": "Fonction",
+      "number": "Nombre",
+      "string": "Chaîne",
+      "nan": "NaN",
+      "integer": "Entier",
+      "float": "Nombre à virgule flottante",
+      "boolean": "Booléen",
+      "date": "Date",
+      "bigint": "Grand entier",
+      "undefined": "Indéfini",
+      "symbol": "Symbole",
+      "null": "Nul",
+      "array": "Tableau",
+      "object": "Objet",
+      "unknown": "Inconnu",
+      "promise": "Promesse",
+      "void": "Vide",
+      "never": "Jamais",
+      "map": "Map",
+      "set": "Ensemble"
+    }
+  }
+}

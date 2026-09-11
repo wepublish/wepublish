@@ -80,7 +80,7 @@ function SubscriptionPage() {
       </SubscriptionListWrapper>
 
       <SubscriptionListWrapper>
-        <H4 component={'h1'}>Rechnungen</H4>
+        <H4 component={'h1'}>{t('invoice.invoices')}</H4>
 
         <InvoiceListContainer
           filter={invoices =>
@@ -89,7 +89,7 @@ function SubscriptionPage() {
         />
       </SubscriptionListWrapper>
 
-      <Link href="/profile">Zurück zum Profil</Link>
+      <Link href="/profile">{t('navbar.backToProfile')}</Link>
     </SubscriptionsWrapper>
   );
 }

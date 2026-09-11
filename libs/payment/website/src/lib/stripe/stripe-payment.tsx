@@ -3,6 +3,7 @@ import {
   useElements,
   useStripe,
 } from '@stripe/react-stripe-js';
+import { useTranslation } from 'react-i18next';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { SyntheticEvent, useCallback, useState } from 'react';
 import { Modal } from '@mui/material';
@@ -44,6 +45,7 @@ const StripePaymentModalActions = styled('div')`
 export function StripePayment({ onClose }: StripePaymentProps) {
   const stripe = useStripe();
   const elements = useElements();
+  const { t } = useTranslation();
 
   const [errorMessage, setErrorMessage] = useState<string>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -106,14 +108,14 @@ export function StripePayment({ onClose }: StripePaymentProps) {
               color="secondary"
               onClick={() => onClose(false)}
             >
-              Abbrechen
+              {t('user.cancel')}
             </Button>
 
             <Button
               type="submit"
               disabled={!stripe || isLoading}
             >
-              Bezahlen
+              {t('user.pay')}
             </Button>
           </StripePaymentModalActions>
         </StripePaymentModalWrapper>

@@ -1,4 +1,5 @@
 import { IconButton, InputAdornment, Theme, css } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import styled from '@emotion/styled';
 import { MobileDatePicker } from '@mui/x-date-pickers';
 import {
@@ -68,6 +69,8 @@ export function UserForm<T extends BuilderUserFormFields>({
     elements: { TextField },
   } = useWebsiteBuilder();
 
+  const { t } = useTranslation();
+
   const fieldsToDisplay = fields.reduce(
     (obj, field) => ({ ...obj, [field]: true }),
     {} as Record<BuilderUserFormFields, true>
@@ -83,7 +86,7 @@ export function UserForm<T extends BuilderUserFormFields>({
             <TextField
               {...field}
               value={field.value ?? ''}
-              label={'Vorname'}
+              label={t('user.form.firstName')}
               error={!!error}
               helperText={error?.message}
               autoComplete="firstname"
@@ -99,7 +102,7 @@ export function UserForm<T extends BuilderUserFormFields>({
           render={({ field, fieldState: { error } }) => (
             <TextField
               {...field}
-              label={'Funktion / Beruf'}
+              label={t('user.form.occupation')}
               error={!!error}
               helperText={error?.message}
             />
@@ -114,7 +117,7 @@ export function UserForm<T extends BuilderUserFormFields>({
           <TextField
             {...field}
             value={field.value ?? ''}
-            label={'Nachname'}
+            label={t('user.form.lastName')}
             error={!!error}
             helperText={error?.message}
             autoComplete="lastname"
@@ -134,7 +137,7 @@ export function UserForm<T extends BuilderUserFormFields>({
                 autoComplete="email"
                 type={'email'}
                 fullWidth
-                label={'Email'}
+                label={t('user.form.email')}
                 error={!!error}
                 helperText={error?.message}
               />
@@ -151,7 +154,7 @@ export function UserForm<T extends BuilderUserFormFields>({
                   value={field.value ?? ''}
                   type={'email'}
                   fullWidth
-                  label={'Email wiederholen'}
+                  label={t('user.form.emailRepeated')}
                   error={!!error}
                   helperText={error?.message}
                 />
@@ -170,7 +173,7 @@ export function UserForm<T extends BuilderUserFormFields>({
               {...field}
               value={field.value ? new Date(field.value) : null}
               onClose={field.onBlur}
-              label={'Geburtstag'}
+              label={t('user.form.birthday')}
               format="PP"
               openTo="year"
               views={['year', 'month', 'day']}
@@ -199,7 +202,7 @@ export function UserForm<T extends BuilderUserFormFields>({
                 autoComplete="new-password"
                 type={showPassword ? 'text' : 'password'}
                 fullWidth
-                label={'Passwort'}
+                label={t('user.form.password')}
                 error={!!error}
                 helperText={error?.message}
                 InputProps={{
@@ -232,7 +235,7 @@ export function UserForm<T extends BuilderUserFormFields>({
                   type={showPassword ? 'text' : 'password'}
                   autoComplete="new-password"
                   fullWidth
-                  label={'Passwort wiederholen'}
+                  label={t('user.form.passwordRepeated')}
                   error={!!error}
                   helperText={error?.message}
                   InputProps={{
@@ -268,7 +271,7 @@ export function UserForm<T extends BuilderUserFormFields>({
                   {...field}
                   value={field.value ?? ''}
                   fullWidth
-                  label={'Strasse'}
+                  label={t('user.form.street')}
                   error={!!error}
                   helperText={error?.message}
                   autoComplete="address"
@@ -284,7 +287,7 @@ export function UserForm<T extends BuilderUserFormFields>({
                   {...field}
                   value={field.value ?? ''}
                   fullWidth
-                  label={'Hausnummer'}
+                  label={t('user.form.houseNumber')}
                   error={!!error}
                   helperText={error?.message}
                   autoComplete="house number"
@@ -301,7 +304,7 @@ export function UserForm<T extends BuilderUserFormFields>({
                 {...field}
                 value={field.value ?? ''}
                 fullWidth
-                label={'PLZ'}
+                label={t('user.form.zipCode')}
                 error={!!error}
                 helperText={error?.message}
                 autoComplete="zip"
@@ -317,7 +320,7 @@ export function UserForm<T extends BuilderUserFormFields>({
                 {...field}
                 value={field.value ?? ''}
                 fullWidth
-                label={'Ort / Stadt'}
+                label={t('user.form.city')}
                 error={!!error}
                 helperText={error?.message}
                 autoComplete="city"

@@ -5,6 +5,8 @@ import {
 } from '@wepublish/website/builder';
 import { Currency } from '@wepublish/website/api';
 import { forwardRef, PropsWithChildren, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+
 import { formatCurrency } from '../../formatters/format-currency';
 import {
   CurrencyNumberSpinner,
@@ -163,6 +165,7 @@ export const PaymentAmountPicker = forwardRef<
     const {
       meta: { locale },
     } = useWebsiteBuilder();
+    const { t } = useTranslation();
 
     const [hasInteracted, setHasInteracted] = useState(false);
     const showSelection = !noInitialSelection || hasInteracted;
@@ -228,7 +231,7 @@ export const PaymentAmountPicker = forwardRef<
               />
             </PaymentAmountPickerItem>
           }
-          label={'Manuell'}
+          label={t('paymentAmountPicker.manual')}
         />
       </PaymentAmountPickerWrapper>
     );

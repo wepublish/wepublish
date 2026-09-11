@@ -32,7 +32,7 @@ import {
 } from '@wepublish/website/builder';
 import { ComponentProps, useEffect, useMemo, useRef, useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
+import { useTranslation, Trans } from 'react-i18next';
 import { MdCheck, MdError } from 'react-icons/md';
 import { z } from 'zod';
 import { roundUpTo5Cents } from '../formatters/format-currency';
@@ -589,30 +589,34 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
           <SubscribeSection area="returning">
             <H5 component="h2">
               <span data-sentry-mask>
-                {`Hallo ${defaults?.firstName ?? ''} ${defaults?.name ?? ''}`.trim()}
+                {t('subscribe.greeting', {
+                  name: `${defaults?.firstName ?? ''} ${defaults?.name ?? ''}`.trim(),
+                })}
               </span>
-              , willkommen zurück!
             </H5>
           </SubscribeSection>
         )}
 
         <SubscribeSection area="memberPlans">
           {(memberPlans.data?.memberPlans.nodes.length ?? 0) > 1 && (
-            <H5 component="h2">Abo wählen</H5>
+            <H5 component="h2">{t('subscribe.chooseSubscription')}</H5>
           )}
 
           {hasOpenInvoices && (
             <Alert severity="warning">
-              Du hast bereits schon ein Abo mit offenen Rechnungen. Du kannst
-              deine offenen Rechnungen in deinem{' '}
-              <Link href="/profile">Profil</Link> anschauen.
+              <Trans
+                i18nKey="subscribe.warning.openInvoices"
+                components={{ Link: <Link /> }}
+              />
             </Alert>
           )}
 
           {alreadyHasSubscription && (
             <Alert severity="warning">
-              Du hast dieses Abo schon, bist du dir sicher? Du kannst deine Abos
-              in deinem <Link href="/profile">Profil</Link> anschauen.
+              <Trans
+                i18nKey="subscribe.warning.alreadyHasSubscription"
+                components={{ Link: <Link /> }}
+              />
             </Alert>
           )}
 
@@ -710,7 +714,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
 
         <SubscribeSection area="paymentPeriodicity">
           {allPaymentMethods.length > 1 && (
-            <H5 component="h2">Zahlungsmethode wählen</H5>
+            <H5 component="h2">{t('subscribe.choosePaymentMethod')}</H5>
           )}
 
           <SubscribePayment>
@@ -810,7 +814,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
                     <TextField
                       {...field}
                       value={field.value ?? ''}
-                      label={'Rabattcode'}
+                      label={t('subscribe.discountCode.label')}
                       error={!!error}
                       autoComplete="discountCode"
                       sx={{ maxWidth: 200 }}
@@ -854,7 +858,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
 
         {!hasUserContext && (
           <SubscribeSection area="challenge">
-            <H5 component="h2">Spam-Schutz</H5>
+            <H5 component="h2">{t('subscribe.spamProtection')}</H5>
 
             {challenge.data?.challenge && (
               <Controller
@@ -867,7 +871,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
                     value={field.value || ''}
                     onChange={field.onChange}
                     challenge={challenge.data!.challenge}
-                    label={'Captcha'}
+                    label={t('subscribe.captcha')}
                     error={!!error}
                     helperText={error?.message}
                   />
@@ -962,21 +966,24 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
             id="modal-modal-title"
             component="h1"
           >
-            Bist du dir sicher?
+            {t('subscribe.warning.confirmationTitle')}
           </H5>
 
           {hasOpenInvoices && (
             <Paragraph gutterBottom={false}>
-              Du hast bereits schon ein Abo mit offenen Rechnungen. Du kannst
-              deine offenen Rechnungen in deinem{' '}
-              <Link href="/profile">Profil</Link> anschauen.
+              <Trans
+                i18nKey="subscribe.warning.openInvoices"
+                component={{ Link: <Link /> }}
+              />
             </Paragraph>
           )}
 
           {alreadyHasSubscription && (
             <Paragraph gutterBottom={false}>
-              Du hast dieses Abo schon. Du kannst deine Abos in deinem{' '}
-              <Link href="/profile">Profil</Link> anschauen.
+              <Trans
+                i18nKey="subscribe.warning.alreadyHasSubscription"
+                component={{ Link: <Link /> }}
+              />
             </Paragraph>
           )}
         </Modal>
