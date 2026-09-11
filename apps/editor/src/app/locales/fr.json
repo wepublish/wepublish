@@ -2874,7 +2874,18 @@
         "loading": "Chargement de l’aperçu …",
         "noRecipients": "Aucun destinataire — ajustez d’abord le groupe."
       },
-      "recipientsCountPerPerson": "{{count}} e-mails à {{people}} personnes"
+      "recipientsCountPerPerson": "{{count}} e-mails à {{people}} personnes",
+      "endsAtHint": "Date de résiliation, sinon la date jusqu'à laquelle l'abonnement est payé.",
+      "isPaid": "Payé (actuellement couvert)",
+      "isPaidHint": "Les délais de grâce ne sont pas pris en compte.",
+      "isCanceled": "Résilié",
+      "isCanceledHint": "Inclut aussi les résiliations qui ne prennent effet que plus tard.",
+      "hasReplacedSubscription": "A remplacé un autre abonnement (p. ex. surclassement)",
+      "hasReplacedSubscriptionHint": "Inclut aussi les déclassements et les changements de plan ; les modifications manuelles ou importées ne sont pas détectées.",
+      "startsAt": "Début de l'abonnement",
+      "endsAt": "Fin de l'abonnement",
+      "from": "À partir du",
+      "to": "Jusqu'au"
     },
     "mailLog": {
       "title": "E-mails envoyés",

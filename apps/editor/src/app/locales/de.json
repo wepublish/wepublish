@@ -2931,7 +2931,18 @@
         "loading": "Vorschau wird geladen …",
         "noRecipients": "Keine Empfänger:innen – bitte zuerst die Empfängergruppe anpassen."
       },
-      "recipientsCountPerPerson": "{{count}} Mails an {{people}} Personen"
+      "recipientsCountPerPerson": "{{count}} Mails an {{people}} Personen",
+      "endsAtHint": "Kündigungsdatum, sonst das Datum, bis zu dem bezahlt ist.",
+      "isPaid": "Bezahlt (aktuell gedeckt)",
+      "isPaidHint": "Karenzfristen werden nicht berücksichtigt.",
+      "isCanceled": "Gekündigt",
+      "isCanceledHint": "Enthält auch Kündigungen, die erst später wirksam werden.",
+      "hasReplacedSubscription": "Hat ein anderes Abo ersetzt (z. B. Upgrade)",
+      "hasReplacedSubscriptionHint": "Enthält auch Downgrades und Plan-Wechsel; manuelle oder importierte Änderungen werden nicht erkannt.",
+      "startsAt": "Abo-Beginn",
+      "endsAt": "Abo-Ende",
+      "from": "ab",
+      "to": "bis"
     },
     "mailLog": {
       "title": "Gesendete E-Mails",

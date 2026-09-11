@@ -1793,10 +1793,24 @@ export type MailAudienceInput = {
   endedTo?: InputMaybe<Scalars['DateTime']>;
   /** Win-back audience only: how far back an ended subscription may lie, in days. Ignored when an explicit period is given. */
   endedWithinDays?: InputMaybe<Scalars['Int']>;
+  /** Subscribers audience only: only subscriptions whose effective end (cancellation date, else paidUntil) is on or after this date. */
+  endsAtFrom?: InputMaybe<Scalars['DateTime']>;
+  /** Subscribers audience only: only subscriptions whose effective end (cancellation date, else paidUntil) is on or before this date. */
+  endsAtTo?: InputMaybe<Scalars['DateTime']>;
+  /** Subscribers audience only: true keeps only subscriptions that replaced another one (typically an upgrade, but downgrades and lateral plan switches are included too, and manual or imported changes are not detected). */
+  hasReplacedSubscription?: InputMaybe<Scalars['Boolean']>;
+  /** Subscribers audience only: true keeps only subscriptions that have given notice, including cancellations that only take effect in the future; false keeps the rest. */
+  isCanceled?: InputMaybe<Scalars['Boolean']>;
+  /** Subscribers audience only: true keeps only subscriptions that are currently paid up (started and paidUntil in the future); false keeps the rest. Grace periods are not considered. */
+  isPaid?: InputMaybe<Scalars['Boolean']>;
   /** Restrict to subscriptions of these member plans. */
   memberPlanIDs?: InputMaybe<Array<Scalars['String']>>;
   paymentMethodID?: InputMaybe<Scalars['String']>;
   paymentPeriodicity?: InputMaybe<PaymentPeriodicity>;
+  /** Subscribers audience only: only subscriptions that started on or after this date. */
+  startsAtFrom?: InputMaybe<Scalars['DateTime']>;
+  /** Subscribers audience only: only subscriptions that started on or before this date. */
+  startsAtTo?: InputMaybe<Scalars['DateTime']>;
   subscriptionState?: InputMaybe<MailSubscriptionState>;
 };
 
