@@ -228,5 +228,16 @@
       "map": "Map",
       "set": "Set"
     }
+  },
+  "slider": {
+    "previous": "Zurück",
+    "next": "Weiter",
+    "slide": "Slide {index}"
+  },
+  "lightbox": {
+    "previous": "Vorheriges Bild",
+    "next": "Nächstes Bild",
+    "fullscreen": "Vollbild",
+    "exitFullscreen": "Vollbild beenden"
   }
 }

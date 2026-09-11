@@ -408,6 +408,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
 
   blockStyles: {
     ImageSlider: NoComponent,
+    Lightbox: NoComponent,
     TeaserSlider: NoComponent,
     AlternatingTeaser: NoComponent,
     AlternatingTeaserGrid: NoComponent,
