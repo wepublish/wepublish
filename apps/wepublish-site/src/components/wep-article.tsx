@@ -11,6 +11,7 @@ import {
   EventBlockWrapper,
   ImageBlockWrapper,
   ImageGalleryBlockWrapper,
+  LightboxWrapper,
   SliderWrapper,
   TeaserGridBlockWrapper,
   TeaserGridFlexBlockWrapper,
@@ -82,7 +83,13 @@ export const ArticleWrapper = styled(ContentWrapper)<{
       margin-right: ${({ theme }) => theme.spacing(4)};
     }
 
-    & > :is(${SliderWrapper}, ${EventBlockWrapper}, ${BreakBlockWrapper},) {
+    &
+      > :is(
+        ${SliderWrapper},
+          ${LightboxWrapper},
+          ${EventBlockWrapper},
+          ${BreakBlockWrapper},
+      ) {
       grid-column: 2/14;
       margin-left: 0;
       margin-right: 0;
