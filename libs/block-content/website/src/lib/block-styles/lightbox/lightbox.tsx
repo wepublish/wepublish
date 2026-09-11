@@ -21,18 +21,45 @@ import { Theme } from '@mui/material';
 export const LightboxImage = styled(ImageBlock)`
   justify-items: initial;
 
-  ${ImageWrapper} {
-    width: 100%;
-    height: 350px;
-    object-fit: contain;
-    background-color: ${({ theme }) => theme.palette.grey[200]};
+  ${ImageBlockInnerWrapper} {
+    position: relative;
+    grid-template-rows: auto auto;
+    justify-items: center;
 
-    ${({ theme }) => theme.breakpoints.up('lg')} {
-      height: 500px;
+    &::before {
+      content: '';
+      grid-area: 1 / 1;
+      justify-self: stretch;
+      height: var(--lightbox-image-height);
+      aspect-ratio: var(--lightbox-image-aspect-ratio);
+      background-color: ${({ theme }) => theme.palette.grey[200]};
+    }
+
+    > a,
+    > ${ImageWrapper} {
+      grid-area: 1 / 1 / 2 / 2;
+      position: absolute;
+      inset: 0;
+      margin: auto;
+    }
+
+    > a {
+      display: grid;
+      justify-items: center;
     }
   }
 
+  ${ImageWrapper} {
+    height: 100%;
+    width: auto;
+    max-width: 100%;
+    max-height: none;
+    aspect-ratio: auto;
+    object-fit: cover;
+  }
+
   ${ImageBlockCaption} {
+    grid-row: 2;
     width: initial;
     justify-self: start;
   }
@@ -45,6 +72,12 @@ export const LightboxStage = styled('div')`
 
 export const LightboxWrapper = styled('section')<{ fullscreen: boolean }>`
   display: grid;
+  --lightbox-image-height: 350px;
+  --lightbox-image-aspect-ratio: auto;
+
+  ${({ theme }) => theme.breakpoints.up('lg')} {
+    --lightbox-image-height: 500px;
+  }
 
   ${({ fullscreen, theme }) =>
     fullscreen &&
@@ -56,30 +89,35 @@ export const LightboxWrapper = styled('section')<{ fullscreen: boolean }>`
       padding: ${theme.spacing(2)};
       background-color: #000;
       color: #fff;
-      align-content: center;
+      grid-template-rows: minmax(0, 1fr);
 
       ${LightboxStage} {
-        height: 100%;
         min-height: 0;
+        grid-template-rows: minmax(0, 1fr);
       }
 
       ${LightboxImage} {
         min-height: 0;
-        grid-template-rows: 1fr;
+        grid-template-rows: minmax(0, 1fr);
       }
 
       ${ImageBlockInnerWrapper} {
+        height: 100%;
         min-height: 0;
         grid-template-rows: 1fr auto;
+
+        &::before {
+          height: auto;
+          aspect-ratio: auto;
+          background-color: transparent;
+        }
       }
 
       ${ImageWrapper} {
         width: 100%;
         height: 100%;
-        max-height: none;
         min-height: 0;
         object-fit: contain;
-        background-color: transparent;
       }
 
       ${ImageBlockCaption} {
@@ -190,6 +228,7 @@ export const Lightbox = ({
     <LightboxWrapper
       className={className}
       fullscreen={fullscreen}
+      data-fullscreen={fullscreen}
     >
       <LightboxStage>
         <LightboxImage
