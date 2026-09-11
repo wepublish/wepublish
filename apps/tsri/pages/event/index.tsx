@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { DateTimePicker } from '@mui/x-date-pickers';
+import { ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { EventListContainer } from '@wepublish/event/website';
 import { getApiUrl } from '@wepublish/utils/website';
 import { EventSort, SortOrder } from '@wepublish/website/api';
@@ -17,34 +17,140 @@ import { GetStaticProps } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useMemo } from 'react';
-import { z } from 'zod';
+import { useTranslation } from 'react-i18next';
+import { MdClose } from 'react-icons/md';
+
+import {
+  ActiveEventFilter,
+  DATE_RANGES,
+  DateRange,
+  detectActiveEventFilter,
+  eventListPageSchema,
+  getDateBounds,
+  getEventListFilter,
+} from '../../src/components/event-list-filter';
 
 const Filter = styled('div')`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, 250px);
-  align-items: center;
-  gap: ${({ theme }) => theme.spacing(2)};
-  margin-bottom: ${({ theme }) => theme.spacing(3)};
+  margin-top: ${({ theme }) => theme.spacing(6)};
 `;
 
-const pageSchema = z.object({
-  page: z.coerce.number().gte(1).optional(),
-  upcomingOnly: z
-    .string()
-    .toLowerCase()
-    .transform(string => JSON.parse(string))
-    .pipe(z.boolean())
-    .optional()
-    .default('true'),
-  from: z.coerce.date().optional(),
-  to: z.coerce.date().optional(),
-});
+const TsriEventList = styled(EventListContainer)`
+  justify-items: stretch;
+  margin-top: ${({ theme }) => theme.spacing(-2)};
+  background: linear-gradient(
+    to bottom,
+    ${({ theme }) => theme.palette.primary.dark} 0px,
+    color-mix(
+        in srgb,
+        ${({ theme }) => theme.palette.common.white} 60%,
+        ${({ theme }) => theme.palette.primary.dark}
+      )
+      800px
+  );
+  border-radius: 1rem;
+  padding: 2cqw;
+
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    border-radius: 1cqw;
+    padding: 1.5cqw;
+  }
+`;
+
+const FilterGroup = styled(ToggleButtonGroup)`
+  flex-wrap: wrap;
+  gap: ${({ theme }) => theme.spacing(1)};
+
+  && .MuiToggleButtonGroup-grouped {
+    margin: 0;
+    padding: ${({ theme }) => theme.spacing(0.75, 2)};
+    border-radius: 999px;
+    border: 1px solid ${({ theme }) => theme.palette.common.black};
+    color: ${({ theme }) => theme.palette.common.black};
+    font-weight: 700;
+    text-transform: none;
+
+    &:hover {
+      background-color: ${({ theme }) => theme.palette.primary.light};
+      border-color: ${({ theme }) => theme.palette.primary.light};
+    }
+
+    &.Mui-selected {
+      background-color: ${({ theme }) => theme.palette.common.black};
+      color: ${({ theme }) => theme.palette.common.white};
+
+      &:hover {
+        background-color: ${({ theme }) => theme.palette.primary.light};
+        border-color: ${({ theme }) => theme.palette.primary.light};
+        color: ${({ theme }) => theme.palette.common.black};
+      }
+    }
+
+    &.Mui-disabled {
+      border: 1px solid ${({ theme }) => theme.palette.common.black};
+      background-color: ${({ theme }) => theme.palette.common.black};
+      color: ${({ theme }) => theme.palette.common.white};
+      font-weight: 800;
+
+      & svg {
+        font-size: 1.25em;
+      }
+    }
+  }
+`;
+
+const EmptyMessage = styled('p')`
+  text-align: left;
+  margin: ${({ theme }) => theme.spacing(4, 0, 4, 2)};
+  color: ${({ theme }) => theme.palette.text.secondary};
+`;
+
+function useDateRangeLabels(): Record<DateRange, string> {
+  const { t } = useTranslation();
+
+  return useMemo(
+    () => ({
+      today: t('event.filter.today'),
+      tomorrow: t('event.filter.tomorrow'),
+      next7: t('event.filter.next7'),
+      next30: t('event.filter.next30'),
+    }),
+    [t]
+  );
+}
+
+function useEmptyMessages(): Record<
+  Exclude<ActiveEventFilter, null> | 'custom',
+  string
+> {
+  const { t } = useTranslation();
+
+  return useMemo(
+    () => ({
+      today: t('event.empty.today'),
+      tomorrow: t('event.empty.tomorrow'),
+      next7: t('event.empty.next7'),
+      next30: t('event.empty.next30'),
+      upcoming: t('event.empty.upcoming'),
+      all: t('event.empty.all'),
+      custom: t('event.empty.custom'),
+    }),
+    [t]
+  );
+}
 
 const take = 25;
 
 export default function EventList() {
   const { query, replace } = useRouter();
-  const { page, upcomingOnly, from, to } = pageSchema.parse(query);
+  const { t } = useTranslation();
+  const dateRangeLabels = useDateRangeLabels();
+  const emptyMessages = useEmptyMessages();
+  const { page, from, to, upcomingOnly } = eventListPageSchema.parse(query);
+
+  const active = useMemo(
+    () => detectActiveEventFilter({ from, to, upcomingOnly }),
+    [from, to, upcomingOnly]
+  );
 
   const {
     elements: { Pagination },
@@ -55,15 +161,11 @@ export default function EventList() {
       ({
         take,
         skip: ((page ?? 1) - 1) * take,
-        filter: {
-          from: from?.toISOString(),
-          to: to?.toISOString(),
-          upcomingOnly,
-        },
+        filter: getEventListFilter({ from, to, upcomingOnly }),
         sort: EventSort.StartsAt,
         order: SortOrder.Ascending,
       }) satisfies Partial<EventListQueryVariables>,
-    [from, page, to, upcomingOnly]
+    [page, from, to, upcomingOnly]
   );
 
   const { data } = useEventListQuery({
@@ -84,36 +186,67 @@ export default function EventList() {
   return (
     <>
       <Filter>
-        <DateTimePicker
-          label="Von"
-          value={from ?? null}
-          onChange={value => {
+        <FilterGroup
+          value={active}
+          exclusive
+          onChange={(_, value: ActiveEventFilter) => {
+            if (value === null) {
+              return;
+            }
+            const {
+              page: _page,
+              from: _from,
+              to: _to,
+              upcomingOnly: _upcomingOnly,
+              ...rest
+            } = query;
+            void _page;
+            void _from;
+            void _to;
+            void _upcomingOnly;
+            const nextQuery: Record<string, string | string[] | undefined> = {
+              ...rest,
+            };
+            if (value === 'all') {
+              nextQuery.upcomingOnly = 'false';
+            } else if (value !== 'upcoming') {
+              const bounds = getDateBounds(value);
+              nextQuery.from = bounds.from;
+              nextQuery.to = bounds.to;
+            }
             replace(
               {
-                query: { ...query, from: value?.toISOString() },
+                query: nextQuery,
               },
               undefined,
               { shallow: true, scroll: true }
             );
           }}
-        />
-
-        <DateTimePicker
-          label="Bis"
-          value={to ?? null}
-          onChange={value => {
-            replace(
-              {
-                query: { ...query, to: value?.toISOString() },
-              },
-              undefined,
-              { shallow: true, scroll: true }
-            );
-          }}
-        />
+        >
+          {DATE_RANGES.map(range => (
+            <ToggleButton
+              key={range}
+              value={range}
+            >
+              {dateRangeLabels[range]}
+            </ToggleButton>
+          ))}
+          <ToggleButton value="upcoming">
+            {t('event.filter.upcoming')}
+          </ToggleButton>
+          <ToggleButton
+            value="all"
+            aria-label={t('event.filter.reset')}
+            disabled={active === 'all'}
+          >
+            <MdClose />
+          </ToggleButton>
+        </FilterGroup>
       </Filter>
 
-      <EventListContainer variables={variables} />
+      {data?.events && data.events.totalCount === 0 ?
+        <EmptyMessage>{emptyMessages[active ?? 'custom']}</EmptyMessage>
+      : <TsriEventList variables={variables} />}
 
       {pageCount > 1 && (
         <>
@@ -156,6 +289,7 @@ export const getStaticProps: GetStaticProps = async () => {
       variables: {
         take,
         skip: 0,
+        filter: { upcomingOnly: true },
         sort: EventSort.StartsAt,
         order: SortOrder.Ascending,
       },
