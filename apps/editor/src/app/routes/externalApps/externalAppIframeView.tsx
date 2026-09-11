@@ -4,6 +4,8 @@ import { useExternalAppQuery } from '@wepublish/editor/api';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 
+import { useExternalAppSrc } from './useExternalAppSrc';
+
 const IframeWrapper = styled(Box)`
   width: calc(100% + 80px);
   height: calc(100vh + 92px);
@@ -31,7 +33,14 @@ export function ExternalAppIframeView() {
     skip: !id,
   });
 
-  if (loading) {
+  const app = data?.externalApp;
+  const {
+    src,
+    loading: tokenLoading,
+    error: tokenError,
+  } = useExternalAppSrc(app);
+
+  if (loading || (app && tokenLoading)) {
     return (
       <Box
         p={3}
@@ -45,7 +54,7 @@ export function ExternalAppIframeView() {
     );
   }
 
-  if (error || !data?.externalApp) {
+  if (error || !app) {
     return (
       <Box p={3}>
         <Typography color="error">
@@ -58,11 +67,24 @@ export function ExternalAppIframeView() {
     );
   }
 
+  if (tokenError || !src) {
+    return (
+      <Box p={3}>
+        <Typography color="error">
+          {tokenError?.message ||
+            t('externalApps.noToken', {
+              defaultValue: 'Could not create a token for this app',
+            })}
+        </Typography>
+      </Box>
+    );
+  }
+
   return (
     <IframeWrapper>
       <StyledIframe
-        src={data.externalApp.url}
-        title={data.externalApp.name}
+        src={src}
+        title={app.name}
         allow="fullscreen; microphone; camera; display-capture"
       />
     </IframeWrapper>

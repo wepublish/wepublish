@@ -8,6 +8,10 @@ import {
   DialogTitle as MuiDialogTitle,
 } from '@mui/material';
 import {
+  ExternalAppsTarget,
+  useExternalAppsQuery,
+} from '@wepublish/editor/api';
+import {
   CreateArticleMutationVariables,
   EditorBlockType,
   FullAuthorFragment,
@@ -77,6 +81,8 @@ import {
 } from 'rsuite';
 
 import { openPreviewWindow } from '../../openPreview';
+import { AppIcon } from '../externalApps/appIcon';
+import { ExternalAppArticlePanel } from '../externalApps/externalAppArticlePanel';
 
 const IconButtonMarginTop = styled(RIconButton)`
   margin-top: 4px;
@@ -228,6 +234,21 @@ function ArticleEditor() {
   );
 
   const articleID = id || createData?.createArticle.id;
+
+  // External apps that run in an iframe get a button beside the metadata, so
+  // an assistant can look at the article that is open instead of asking which
+  // one it is. The token is minted when the drawer opens, never before: the
+  // editor asks for no token for a tool nobody used.
+  const [openExternalAppId, setOpenExternalAppId] = useState<string | null>(
+    null
+  );
+  const { data: externalAppsData } = useExternalAppsQuery({
+    variables: { filter: { target: ExternalAppsTarget.Iframe } },
+  });
+  const externalApps = externalAppsData?.externalApps ?? [];
+  const openExternalApp = externalApps.find(
+    app => app.id === openExternalAppId
+  );
 
   const {
     data: articleData,
@@ -768,6 +789,21 @@ function ArticleEditor() {
                     {t('articleEditor.overview.metadata')}
                   </RIconButton>
 
+                  {!isNew &&
+                    articleID &&
+                    externalApps.map(app => (
+                      <IconButton
+                        key={app.id}
+                        className="actionButton"
+                        icon={<AppIcon iconName={app.icon} />}
+                        size="lg"
+                        disabled={isDisabled}
+                        onClick={() => setOpenExternalAppId(app.id)}
+                      >
+                        {app.name}
+                      </IconButton>
+                    ))}
+
                   {!isNew && (
                     <>
                       <PermissionControl
@@ -946,6 +982,19 @@ function ArticleEditor() {
             setChanged(true);
           }}
         />
+      </Drawer>
+
+      <Drawer
+        open={!!openExternalApp}
+        size="md"
+        onClose={() => setOpenExternalAppId(null)}
+      >
+        {openExternalApp && articleID && (
+          <ExternalAppArticlePanel
+            app={openExternalApp}
+            articleId={articleID}
+          />
+        )}
       </Drawer>
 
       <Modal
