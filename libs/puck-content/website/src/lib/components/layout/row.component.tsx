@@ -1,10 +1,20 @@
+import { Theme } from '@emotion/react';
 import styled from '@emotion/styled';
 import { PuckComponent, Slot } from '@puckeditor/core';
+
+import {
+  breakpointsStyles,
+  BreakpointsValue,
+} from '@wepublish/puck-content/editor';
+import { gapStyles, GapValue } from './gap';
+import { ItemsAlignment, itemsAlignmentStyles } from './items-alignment';
+
+export type RowLayout = Pick<GapValue, 'columnGap'> & ItemsAlignment;
 
 export type RowProps = {
   className?: string;
   content: Slot;
-  alignItems: 'start' | 'center' | 'end';
+  layout?: BreakpointsValue<RowLayout>;
 };
 
 const RowContent = styled.div`
@@ -14,15 +24,19 @@ const RowContent = styled.div`
 
 export const RowRender: PuckComponent<RowProps> = ({
   content: Content,
-  alignItems,
+  layout,
   ...props
 }) => (
   <Content
     as={RowContent}
     minEmptyHeight={100}
     collisionAxis="dynamic"
-    css={{
-      alignItems,
-    }}
+    {...props}
+    css={(theme: Theme) =>
+      breakpointsStyles(theme, layout, resolved => ({
+        ...gapStyles(resolved),
+        ...itemsAlignmentStyles(resolved),
+      }))
+    }
   />
 );

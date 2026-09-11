@@ -1,12 +1,20 @@
 import styled from '@emotion/styled';
 import { FieldLabel, FieldProps } from '@puckeditor/core';
 
-import { AlignmentField, AlignmentValue } from './alignment.field';
+import {
+  AlignmentField,
+  AlignmentOrientation,
+  AlignmentValue,
+} from './alignment.field';
 import { useTranslation } from 'react-i18next';
 import {
   MdFormatAlignCenter,
   MdFormatAlignLeft,
   MdFormatAlignRight,
+  MdUnfoldMore,
+  MdVerticalAlignBottom,
+  MdVerticalAlignCenter,
+  MdVerticalAlignTop,
 } from 'react-icons/md';
 
 const useAlignmentLabels = (): Record<AlignmentValue, string> => {
@@ -18,15 +26,30 @@ const useAlignmentLabels = (): Record<AlignmentValue, string> => {
     center: t('', 'Center'),
     right: t('', 'Right'),
     end: t('', 'End'),
+    stretch: t('', 'Stretch'),
   };
 };
 
-const alignmentIcons: Record<AlignmentValue, typeof MdFormatAlignLeft> = {
-  start: MdFormatAlignLeft,
-  left: MdFormatAlignLeft,
-  center: MdFormatAlignCenter,
-  right: MdFormatAlignRight,
-  end: MdFormatAlignRight,
+const alignmentIcons: Record<
+  AlignmentOrientation,
+  Record<AlignmentValue, typeof MdFormatAlignLeft>
+> = {
+  horizontal: {
+    start: MdFormatAlignLeft,
+    left: MdFormatAlignLeft,
+    center: MdFormatAlignCenter,
+    right: MdFormatAlignRight,
+    end: MdFormatAlignRight,
+    stretch: MdUnfoldMore,
+  },
+  vertical: {
+    start: MdVerticalAlignTop,
+    left: MdVerticalAlignTop,
+    center: MdVerticalAlignCenter,
+    right: MdVerticalAlignBottom,
+    end: MdVerticalAlignBottom,
+    stretch: MdUnfoldMore,
+  },
 };
 
 const AlignmentOptions = styled.div`
@@ -67,7 +90,11 @@ export type AlignmentFieldRenderProps = FieldProps<
 };
 
 export const AlignmentFieldRender = ({
-  field: { alignments = ['start', 'center', 'end'], ...field },
+  field: {
+    alignments = ['start', 'center', 'end'],
+    orientation = 'horizontal',
+    ...field
+  },
   value,
   onChange,
   readOnly,
@@ -83,7 +110,7 @@ export const AlignmentFieldRender = ({
     >
       <AlignmentOptions>
         {alignments.map(alignment => {
-          const Icon = alignmentIcons[alignment];
+          const Icon = alignmentIcons[orientation][alignment];
           const active = value === alignment;
 
           return (
