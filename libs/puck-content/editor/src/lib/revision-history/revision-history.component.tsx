@@ -2,13 +2,13 @@ import { faker } from '@faker-js/faker';
 import {
   Box,
   Divider,
+  IconButton,
   ListItemButton,
   NoSsr,
   Stack,
   Typography,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { IconButton } from '@wepublish/ui';
 import { format, formatDistanceToNow, isFuture } from 'date-fns';
 import nanoid from 'nanoid';
 import { useMemo, useState } from 'react';

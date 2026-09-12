@@ -1,7 +1,9 @@
 import { ComponentConfig } from '@puckeditor/core';
-import { RichTextBlock } from '@wepublish/block-content/website';
 import { mockRichText } from '@wepublish/storybook/mocks';
-import { BuilderRichTextBlockProps } from '@wepublish/website/builder';
+import {
+  BuilderRichTextBlockProps,
+  RichTextBlock,
+} from '@wepublish/website/builder';
 
 import { richtextFieldAi } from '@wepublish/puck-content/editor';
 import { UserFields } from '../../types';

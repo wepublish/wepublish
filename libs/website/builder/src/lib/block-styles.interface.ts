@@ -37,7 +37,13 @@ export type BuilderSliderConfig = {
 
 export type BuilderBlockStyleProps = {
   ImageSlider: BuilderImageGalleryBlockProps & BuilderSliderConfig;
-  Lightbox: BuilderImageGalleryBlockProps;
+  Lightbox: BuilderImageGalleryBlockProps & {
+    refs?: {
+      prev?: Ref<HTMLButtonElement | null>;
+      next?: Ref<HTMLButtonElement | null>;
+      fullscreen?: Ref<HTMLButtonElement | null>;
+    };
+  };
   TeaserSlider: (
     | BuilderTeaserListBlockProps
     | BuilderTeaserGridBlockProps

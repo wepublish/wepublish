@@ -108,7 +108,7 @@ services:
       - app-tier
 
   storage:
-    image: minio/minio:latest
+    image: quay.io/minio/minio:latest
     entrypoint: ["/bin/sh"]
     command:  ["-ec",
       "mkdir -p /data/wepublish-staff /data/wepublish-transformed; \

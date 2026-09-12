@@ -26,6 +26,7 @@ import {
   resolvedPlugin,
   RevisionHistoryPlugin,
   richtextPlugin,
+  searchPlugin,
   SEOPreviewPlugin,
   StockImagePlugin,
   switchPlugin,
@@ -34,6 +35,7 @@ import {
   viewportSelectionPlugin,
   visibilityPlugin,
   webComponentsPlugin,
+  websiteTranslationsPlugin,
 } from '@wepublish/puck-content/editor';
 import { config, UserConfig } from '@wepublish/puck-content/website';
 import { minimalTheme } from '@wepublish/ui';
@@ -42,9 +44,6 @@ import {
   BuilderLinkProps,
   WebsiteBuilderProvider,
 } from '@wepublish/website/builder';
-import websiteTranslations from '@wepublish/website/translations/de.json';
-import { format } from 'date-fns';
-import i18n from 'i18next';
 import { ContextType, forwardRef, useMemo } from 'react';
 import {
   Md2K,
@@ -54,7 +53,17 @@ import {
   MdTablet,
 } from 'react-icons/md';
 
-const initialData: Partial<Data<UserConfig['components']>> = {};
+const initialData = {
+  content: [
+    {
+      type: 'Container',
+      props: {
+        id: 'Container-initial',
+        content: [],
+      },
+    },
+  ],
+} satisfies Partial<Data<UserConfig['components']>>;
 
 // The preview renders the website as an anonymous reader
 const anonymousSession: NonNullable<ContextType<typeof SessionTokenContext>> = [
@@ -62,11 +71,6 @@ const anonymousSession: NonNullable<ContextType<typeof SessionTokenContext>> = [
   false,
   async () => undefined,
 ];
-
-const dateFormatter = (date: Date, includeTime = true) =>
-  includeTime ?
-    `${format(date, 'dd. MMMM yyyy')} um ${format(date, 'HH:mm')}`
-  : format(date, 'dd. MMMM yyyy');
 
 // The preview renders website components, whose links must not use the
 // editor's router
@@ -82,32 +86,7 @@ const Link = forwardRef<HTMLAnchorElement, BuilderLinkProps>(function Link(
   );
 });
 
-let websiteTranslationsAdded = false;
-
-/**
- * The website components translate with the website's German bundle, which
- * the editor's i18n instance does not know about. The preview always shows the
- * German copy, whatever language the editor UI runs in, so the bundle is added
- * to every editor language without overriding editor translations.
- */
-const useWebsiteTranslations = () => {
-  if (!websiteTranslationsAdded && i18n.isInitialized) {
-    for (const language of ['de', 'en', 'fr']) {
-      i18n.addResourceBundle(
-        language,
-        'translation',
-        websiteTranslations,
-        true,
-        false
-      );
-    }
-
-    websiteTranslationsAdded = true;
-  }
-};
-
 export function PuckEditor() {
-  useWebsiteTranslations();
   const { data } = useWebsiteSettingsQuery();
 
   const theme = useMemo(
@@ -176,11 +155,7 @@ export function PuckEditor() {
   return (
     <ThemeProvider theme={theme}>
       <WebsiteProvider>
-        <WebsiteBuilderProvider
-          elements={{ Link }}
-          date={{ format: dateFormatter }}
-          meta={{ siteTitle: 'We.Publish' }}
-        >
+        <WebsiteBuilderProvider elements={{ Link }}>
           <SessionTokenContext.Provider value={anonymousSession}>
             <Puck
               dnd={{ behavior: 'static' }}
@@ -192,11 +167,13 @@ export function PuckEditor() {
                 OutlinePlugin,
                 StockImagePlugin,
                 RevisionHistoryPlugin,
+                searchPlugin,
                 SEOPreviewPlugin,
                 HeadingAnalyzerPlugin,
                 RawDataPlugin,
                 EmotionPlugin,
                 webComponentsPlugin,
+                websiteTranslationsPlugin,
                 aiPlugin,
                 //
                 themePlugin,

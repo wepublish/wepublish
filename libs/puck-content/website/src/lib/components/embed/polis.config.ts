@@ -1,6 +1,8 @@
 import { ComponentConfig } from '@puckeditor/core';
-import { PolisConversationBlock } from '@wepublish/block-content/website';
-import { BuilderPolisConversationBlockProps } from '@wepublish/website/builder';
+import {
+  BuilderPolisConversationBlockProps,
+  PolisConversationBlock,
+} from '@wepublish/website/builder';
 
 import { UserFields } from '../../types';
 

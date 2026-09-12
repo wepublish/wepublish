@@ -1,6 +1,8 @@
 import { ComponentConfig } from '@puckeditor/core';
-import { SoundCloudTrackBlock } from '@wepublish/block-content/website';
-import { BuilderSoundCloudTrackBlockProps } from '@wepublish/website/builder';
+import {
+  BuilderSoundCloudTrackBlockProps,
+  SoundCloudTrackBlock,
+} from '@wepublish/website/builder';
 
 import { UserFields } from '../../types';
 

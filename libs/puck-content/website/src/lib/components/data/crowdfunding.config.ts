@@ -1,6 +1,8 @@
 import { ComponentConfig } from '@puckeditor/core';
-import { CrowdfundingBlock } from '@wepublish/block-content/website';
-import { BuilderCrowdfundingBlockProps } from '@wepublish/website/builder';
+import {
+  BuilderCrowdfundingBlockProps,
+  CrowdfundingBlock,
+} from '@wepublish/website/builder';
 
 import { resolvedFieldAi } from '@wepublish/puck-content/editor';
 import { UserFields } from '../../types';

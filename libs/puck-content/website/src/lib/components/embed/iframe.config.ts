@@ -1,6 +1,8 @@
 import { ComponentConfig } from '@puckeditor/core';
-import { IFrameBlock } from '@wepublish/block-content/website';
-import { BuilderIFrameBlockProps } from '@wepublish/website/builder';
+import {
+  BuilderIFrameBlockProps,
+  IFrameBlock,
+} from '@wepublish/website/builder';
 
 import { UserFields } from '../../types';
 

@@ -1,6 +1,5 @@
 import { ComponentConfig } from '@puckeditor/core';
-import { TitleBlock } from '@wepublish/block-content/website';
-import { BuilderTitleBlockProps } from '@wepublish/website/builder';
+import { BuilderTitleBlockProps, TitleBlock } from '@wepublish/website/builder';
 
 import { UserFields } from '../../types';
 
