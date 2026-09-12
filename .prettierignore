@@ -4,11 +4,12 @@ static/
 .next/
 
 libs/editor/api/src/lib/graphql.ts
-libs/editor/api/src/lib/graphql.ts
+libs/editor/api/src/lib/schemas/index.ts
+*.generated.ts
 libs/api/__tests__/api/private/index.ts
 libs/api/__tests__/api/public/index.ts
 libs/website/api/src/lib/graphql.ts
-libs/website/api/src/lib/graphql.ts
 libs/peering/api/src/lib/remote/graphql.ts
+libs/testing/src/graphql/graphql-public.ts
 
 apps/**/*/next-env.d.ts

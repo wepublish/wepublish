@@ -20,8 +20,3 @@ fragment SystemMail on SystemMailModel {
     ...MailTemplateRef
   }
 }
-
-fragment MailTemplateRef on MailTemplateRef {
-  id
-  name
-}

@@ -210,7 +210,3 @@ mutation DeleteUser($id: String!) {
     ...FullUser
   }
 }
-
-mutation SendWebsiteLogin($email: String!) {
-  sendWebsiteLogin(email: $email)
-}
