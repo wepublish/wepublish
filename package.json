@@ -10,7 +10,7 @@
     "serve": "nx run-many  --parallel 10 -t serve --output-style stream",
     "dev": "run-s start:docker watch",
     "clean": "run-p --print-label clean:**",
-    "clean:media": "docker volume rm wepublish_storage_data",
+    "clean:media": "docker volume rm wepublish_storage",
     "lint": "nx run-many --target=lint",
     "build": "nx run-many --targets=build",
     "i18n": "node_modules/i18next-parser/bin/cli.js --config i18next-parser.config.js",

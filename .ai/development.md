@@ -20,7 +20,7 @@ npm run watch                # Start all services (API, editor, media, website)
 | Service | URL | Description |
 |---------|-----|-------------|
 | API | http://localhost:4000 | GraphQL API (NestJS) |
-| Editor | http://localhost:3000 | Admin CMS UI (Next.js) |
+| Editor | http://localhost:3000 | Admin CMS UI (Vite SPA) |
 | Website | http://localhost:4200 | Example website frontend |
 | Media | http://localhost:4100 | Media/image server |
 | PGAdmin | http://localhost:8000 | Database admin UI |
@@ -64,7 +64,9 @@ npm run test-u               # All tests with snapshot update
 nx test <project-name>       # Test a specific library/app
 ```
 
-Tests use Jest with `@nestjs/testing` for backend and Testing Library for frontend.
+Two runners: **Jest** for NestJS `libs/*/api`, **Vitest** for everything else
+(website, editor, ui, utils). Check for `jest.config.ts` vs `vitest.config.ts`
+in the project before writing a test. See `.claude/docs/testing.md`.
 
 ## Linting & Formatting
 
