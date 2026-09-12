@@ -1,6 +1,5 @@
 import { ComponentConfig } from '@puckeditor/core';
-import { EventBlock } from '@wepublish/block-content/website';
-import { BuilderEventBlockProps } from '@wepublish/website/builder';
+import { BuilderEventBlockProps, EventBlock } from '@wepublish/website/builder';
 
 import { resolvedFieldAi } from '@wepublish/puck-content/editor';
 import { UserFields } from '../../types';

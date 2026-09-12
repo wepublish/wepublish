@@ -25,6 +25,14 @@ import {
   BuilderYouTubeVideoBlockProps,
 } from '@wepublish/website/builder';
 
+import { LightboxConfigProps } from './components/content/lightbox.component';
+import { TeaserAuthorsConfigProps } from './components/teaser/teaser-authors.component';
+import { TeaserDateConfigProps } from './components/teaser/teaser-date.component';
+import { TeaserImageConfigProps } from './components/teaser/teaser-image.component';
+import { TeaserLeadConfigProps } from './components/teaser/teaser-lead.component';
+import { TeaserPreTitleConfigProps } from './components/teaser/teaser-pre-title.component';
+import { TeaserTagsConfigProps } from './components/teaser/teaser-tags.component';
+import { TeaserTitleConfigProps } from './components/teaser/teaser-title.component';
 import { ContainerProps } from './components/layout/container.component';
 import { DynamicGridProps } from './components/layout/dynamic-grid.component';
 import { GridProps } from './components/layout/grid.component';
@@ -70,6 +78,7 @@ type BaseComponents = {
   Instagram: BuilderInstagramPostBlockProps;
   Subscribe: SubscribeConfigProps;
   Image: BuilderImageBlockProps;
+  Lightbox: LightboxConfigProps;
   Button: { text: string; alignment?: AlignmentValue };
   Twitter: BuilderTwitterTweetBlockProps;
   SoundCloud: BuilderSoundCloudTrackBlockProps;
@@ -81,6 +90,13 @@ type BaseComponents = {
   Event: BuilderEventBlockProps;
   Crowdfunding: BuilderCrowdfundingBlockProps;
   Poll: BuilderPollBlockProps;
+  TeaserTitle: TeaserTitleConfigProps;
+  TeaserPreTitle: TeaserPreTitleConfigProps;
+  TeaserLead: TeaserLeadConfigProps;
+  TeaserImage: TeaserImageConfigProps;
+  TeaserAuthors: TeaserAuthorsConfigProps;
+  TeaserDate: TeaserDateConfigProps;
+  TeaserTags: TeaserTagsConfigProps;
 };
 
 export type Components = {
@@ -93,5 +109,5 @@ export type UserConfig = Config<{
   components: Components;
   fields: UserFields;
   root: RootProps;
-  categories: ['recommended', 'content', 'layout', 'embed'];
+  categories: ['recommended', 'content', 'layout', 'embed', 'teaser'];
 }>;

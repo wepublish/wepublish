@@ -1,7 +1,9 @@
 import { ComponentConfig } from '@puckeditor/core';
-import { ListicleBlock } from '@wepublish/block-content/website';
 import { mockRichText } from '@wepublish/storybook/mocks';
-import { BuilderListicleBlockProps } from '@wepublish/website/builder';
+import {
+  BuilderListicleBlockProps,
+  ListicleBlock,
+} from '@wepublish/website/builder';
 
 import { imageFieldAi, richtextFieldAi } from '@wepublish/puck-content/editor';
 import { UserFields } from '../../types';

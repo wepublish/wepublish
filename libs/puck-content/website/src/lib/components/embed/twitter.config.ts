@@ -1,6 +1,8 @@
 import { ComponentConfig } from '@puckeditor/core';
-import { TwitterTweetBlock } from '@wepublish/block-content/website';
-import { BuilderTwitterTweetBlockProps } from '@wepublish/website/builder';
+import {
+  BuilderTwitterTweetBlockProps,
+  TwitterTweetBlock,
+} from '@wepublish/website/builder';
 
 import { UserFields } from '../../types';
 

@@ -1,7 +1,6 @@
 import { PuckComponent } from '@puckeditor/core';
-import { BreakBlock } from '@wepublish/block-content/website';
 import { useImageQuery } from '@wepublish/website/api';
-import { BuilderBreakBlockProps } from '@wepublish/website/builder';
+import { BreakBlock, BuilderBreakBlockProps } from '@wepublish/website/builder';
 
 import { useOverlayPortalOnModifier } from '@wepublish/puck-content/editor';
 

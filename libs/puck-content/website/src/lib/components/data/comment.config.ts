@@ -1,6 +1,8 @@
 import { ComponentConfig } from '@puckeditor/core';
-import { CommentBlock } from '@wepublish/block-content/website';
-import { BuilderCommentBlockProps } from '@wepublish/website/builder';
+import {
+  BuilderCommentBlockProps,
+  CommentBlock,
+} from '@wepublish/website/builder';
 
 import { resolvedFieldAi } from '@wepublish/puck-content/editor';
 import { UserFields } from '../../types';

@@ -1,4 +1,4 @@
-import { useWebsiteBuilder } from '@wepublish/website/builder';
+import { Head, useWebsiteBuilder } from '@wepublish/website/builder';
 
 import { SEOValue } from '@wepublish/puck-content/editor';
 
@@ -8,7 +8,7 @@ export type RootSEOProps = {
 };
 
 export const RootSEO = ({ seo, socialMedia }: RootSEOProps) => {
-  const { meta, Head } = useWebsiteBuilder();
+  const { meta } = useWebsiteBuilder();
 
   const title = seo?.title || socialMedia?.title;
   const description = seo?.lead || socialMedia?.lead;

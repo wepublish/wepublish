@@ -1,13 +1,11 @@
 import { ComponentConfig } from '@puckeditor/core';
 import {
-  FacebookPostBlock,
-  FacebookVideoBlock,
-  InstagramPostBlock,
-} from '@wepublish/block-content/website';
-import {
   BuilderFacebookPostBlockProps,
   BuilderFacebookVideoBlockProps,
   BuilderInstagramPostBlockProps,
+  FacebookPostBlock,
+  FacebookVideoBlock,
+  InstagramPostBlock,
 } from '@wepublish/website/builder';
 
 import { UserFields } from '../../types';
