@@ -1,6 +1,8 @@
 import { ComponentConfig } from '@puckeditor/core';
-import { BildwurfAdBlock } from '@wepublish/block-content/website';
-import { BuilderBildwurfAdBlockProps } from '@wepublish/website/builder';
+import {
+  BildwurfAdBlock,
+  BuilderBildwurfAdBlockProps,
+} from '@wepublish/website/builder';
 
 import { UserFields } from '../../types';
 

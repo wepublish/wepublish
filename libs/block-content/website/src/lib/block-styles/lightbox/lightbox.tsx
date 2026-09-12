@@ -34,7 +34,6 @@ export const LightboxImage = styled(ImageBlock)`
 
   ${ImageBlockInnerWrapper} {
     position: relative;
-    grid-template-rows: auto auto;
     justify-items: center;
 
     &::before {
@@ -216,6 +215,7 @@ export const Lightbox = ({
   animationDisabled = true,
   dragAnimationDisabled = false,
   className,
+  refs,
 }: BuilderBlockStyleProps['Lightbox']) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [fullscreen, setFullscreen] = useState(false);
@@ -356,6 +356,7 @@ export const Lightbox = ({
         </LightboxCounter>
 
         <LightboxFullscreenButton
+          ref={refs?.fullscreen}
           type="button"
           onClick={fullscreen ? closeFullscreen : openFullscreen}
           aria-label={
@@ -370,6 +371,7 @@ export const Lightbox = ({
         {multiple && (
           <>
             <LightboxArrow
+              ref={refs?.prev}
               type="button"
               onClick={() => sliderRef.current?.prev()}
               aria-label={t('lightbox.previous')}
@@ -378,6 +380,7 @@ export const Lightbox = ({
             </LightboxArrow>
 
             <LightboxArrow
+              ref={refs?.next}
               type="button"
               onClick={() => sliderRef.current?.next()}
               aria-label={t('lightbox.next')}

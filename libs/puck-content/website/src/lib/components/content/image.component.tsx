@@ -1,7 +1,6 @@
 import { PuckComponent } from '@puckeditor/core';
-import { ImageBlock } from '@wepublish/block-content/website';
 import { useImageQuery } from '@wepublish/website/api';
-import { BuilderImageBlockProps } from '@wepublish/website/builder';
+import { BuilderImageBlockProps, ImageBlock } from '@wepublish/website/builder';
 
 export type ImageConfigProps = BuilderImageBlockProps & { imageId?: string };
 

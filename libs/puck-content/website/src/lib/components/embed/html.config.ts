@@ -1,6 +1,5 @@
 import { ComponentConfig } from '@puckeditor/core';
-import { HtmlBlock } from '@wepublish/block-content/website';
-import { BuilderHTMLBlockProps } from '@wepublish/website/builder';
+import { BuilderHTMLBlockProps, HTMLBlock } from '@wepublish/website/builder';
 
 import { UserFields } from '../../types';
 
@@ -21,5 +20,5 @@ export const HtmlConfig: ComponentConfig<{
     html: '',
   },
 
-  render: HtmlBlock,
+  render: HTMLBlock,
 };

@@ -1,6 +1,8 @@
 import { ComponentConfig } from '@puckeditor/core';
-import { StreamableVideoBlock } from '@wepublish/block-content/website';
-import { BuilderStreamableVideoBlockProps } from '@wepublish/website/builder';
+import {
+  BuilderStreamableVideoBlockProps,
+  StreamableVideoBlock,
+} from '@wepublish/website/builder';
 
 import { UserFields } from '../../types';
 

@@ -38,6 +38,14 @@ import { seoField, switchFieldAi } from '@wepublish/puck-content/editor';
 import { Root } from './root.component';
 import { UserConfig } from './types';
 import { ImageConfig } from './components/content/image.config';
+import { LightboxConfig } from './components/content/lightbox.config';
+import { TeaserAuthorsConfig } from './components/teaser/teaser-authors.config';
+import { TeaserDateConfig } from './components/teaser/teaser-date.config';
+import { TeaserImageConfig } from './components/teaser/teaser-image.config';
+import { TeaserLeadConfig } from './components/teaser/teaser-lead.config';
+import { TeaserPreTitleConfig } from './components/teaser/teaser-pre-title.config';
+import { TeaserTagsConfig } from './components/teaser/teaser-tags.config';
+import { TeaserTitleConfig } from './components/teaser/teaser-title.config';
 
 export const config: UserConfig = {
   root: {
@@ -114,6 +122,7 @@ export const config: UserConfig = {
     Subscribe: withVisibility(SubscribeConfig),
     Button: withVisibility(ButtonConfig),
     Image: withVisibility(ImageConfig),
+    Lightbox: withVisibility(LightboxConfig),
     Twitter: withVisibility(TwitterConfig),
     SoundCloud: withVisibility(SoundCloudConfig),
     Streamable: withVisibility(StreamableConfig),
@@ -124,13 +133,20 @@ export const config: UserConfig = {
     Event: withVisibility(EventConfig),
     Crowdfunding: withVisibility(CrowdfundingConfig),
     Poll: withVisibility(PollConfig),
+    TeaserTitle: withVisibility(TeaserTitleConfig),
+    TeaserPreTitle: withVisibility(TeaserPreTitleConfig),
+    TeaserLead: withVisibility(TeaserLeadConfig),
+    TeaserImage: withVisibility(TeaserImageConfig),
+    TeaserAuthors: withVisibility(TeaserAuthorsConfig),
+    TeaserDate: withVisibility(TeaserDateConfig),
+    TeaserTags: withVisibility(TeaserTagsConfig),
   },
   categories: {
     recommended: {
       components: ['Title', 'RichText', 'Subscribe'],
     },
     content: {
-      components: ['Title', 'Quote', 'RichText', 'Image'],
+      components: ['Title', 'Quote', 'RichText', 'Image', 'Lightbox'],
       defaultExpanded: false,
     },
     layout: {
@@ -158,6 +174,19 @@ export const config: UserConfig = {
         'Streamable',
         'Polis',
         'Html',
+      ],
+      defaultExpanded: false,
+    },
+    teaser: {
+      title: 'Teaser',
+      components: [
+        'TeaserTitle',
+        'TeaserPreTitle',
+        'TeaserLead',
+        'TeaserImage',
+        'TeaserAuthors',
+        'TeaserDate',
+        'TeaserTags',
       ],
       defaultExpanded: false,
     },

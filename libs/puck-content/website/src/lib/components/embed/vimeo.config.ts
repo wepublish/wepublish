@@ -1,6 +1,8 @@
 import { ComponentConfig } from '@puckeditor/core';
-import { VimeoVideoBlock } from '@wepublish/block-content/website';
-import { BuilderVimeoVideoBlockProps } from '@wepublish/website/builder';
+import {
+  BuilderVimeoVideoBlockProps,
+  VimeoVideoBlock,
+} from '@wepublish/website/builder';
 
 import { UserFields } from '../../types';
 

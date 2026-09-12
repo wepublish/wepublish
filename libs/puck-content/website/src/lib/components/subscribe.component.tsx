@@ -1,9 +1,9 @@
 import { PuckComponent } from '@puckeditor/core';
+import { SubscribeBlockProvider } from '@wepublish/block-content/website';
 import {
+  BuilderSubscribeBlockProps,
   SubscribeBlock,
-  SubscribeBlockProvider,
-} from '@wepublish/block-content/website';
-import { BuilderSubscribeBlockProps } from '@wepublish/website/builder';
+} from '@wepublish/website/builder';
 
 import { DatasourceValueType } from '@wepublish/puck-content/editor';
 
