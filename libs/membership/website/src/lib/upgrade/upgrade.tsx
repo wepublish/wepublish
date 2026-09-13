@@ -49,7 +49,11 @@ import {
   showsAmountInput,
 } from '../subscribe/member-plan-render-settings';
 import styled from '@emotion/styled';
-import { getPaymentPeriodicyMonths } from '../formatters/format-payment-period';
+import {
+  getPaymentPeriodicyMonths,
+  getPeriodPriceRange,
+  monthlyAmountFromPeriodAmount,
+} from '../formatters/format-payment-period';
 
 const upgradeSchema = subscribeSchema.pick({
   memberPlanId: true,
@@ -81,6 +85,7 @@ export const Upgrade = ({
   showGoodies = false,
   showDiscountCodes = false,
   goodieMinValue,
+  goodieMinValueAppliesToUpgrade = false,
   hideRepeatGoodieOnUpgrade = false,
   termsOfServiceUrl,
   transactionFee = amount => roundUpTo5Cents((amount * 0.02) / 100) * 100,
@@ -163,7 +168,11 @@ export const Upgrade = ({
       (monthlyAmount - subscriptionToUpgrade.monthlyAmount) *
       getPaymentPeriodicyMonths(subscriptionToUpgrade.paymentPeriodicity);
 
-    if (goodieMinValue && goodieMinValue > deltaYearly) {
+    if (
+      goodieMinValueAppliesToUpgrade &&
+      goodieMinValue &&
+      goodieMinValue > deltaYearly
+    ) {
       return [];
     }
 
@@ -173,6 +182,7 @@ export const Upgrade = ({
     monthlyAmount,
     subscriptionToUpgrade.monthlyAmount,
     subscriptionToUpgrade.paymentPeriodicity,
+    goodieMinValueAppliesToUpgrade,
     goodieMinValue,
     selectedMemberPlan?.goodies,
   ]);
@@ -247,13 +257,19 @@ export const Upgrade = ({
 
   useEffect(() => {
     if (selectedMemberPlan) {
+      const { amountMin, amountTarget } = getPeriodPriceRange(
+        selectedMemberPlan,
+        subscriptionToUpgrade.paymentPeriodicity
+      );
       setValue(
         'monthlyAmount',
-        selectedMemberPlan.amountPerMonthTarget ||
-          selectedMemberPlan.amountPerMonthMin
+        monthlyAmountFromPeriodAmount(
+          amountTarget || amountMin,
+          subscriptionToUpgrade.paymentPeriodicity
+        )
       );
     }
-  }, [selectedMemberPlan, setValue]);
+  }, [selectedMemberPlan, setValue, subscriptionToUpgrade.paymentPeriodicity]);
 
   useEffect(() => {
     if (

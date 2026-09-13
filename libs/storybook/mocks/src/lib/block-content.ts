@@ -708,6 +708,7 @@ export const mockSubscribeBlock = ({
   showGoodies = false,
   showDiscountCodes = false,
   goodieMinValue = null,
+  goodieMinValueAppliesToUpgrade = false,
   hideRepeatGoodieOnUpgrade = false,
 }: Partial<SubscribeBlock> = {}): SubscribeBlock => ({
   type: BlockType.Subscribe,
@@ -722,6 +723,7 @@ export const mockSubscribeBlock = ({
   showGoodies,
   showDiscountCodes,
   goodieMinValue,
+  goodieMinValueAppliesToUpgrade,
   hideRepeatGoodieOnUpgrade,
 });
 export type MockTabbedContent = (args?: {

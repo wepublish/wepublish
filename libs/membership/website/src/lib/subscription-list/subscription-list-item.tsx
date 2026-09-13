@@ -17,8 +17,10 @@ import {
 } from 'react-icons/md';
 import { formatCurrency } from '../formatters/format-currency';
 import {
+  calculatePeriodAmount,
   formatPaymentPeriod,
   formatPaymentTimeline,
+  formatPeriodUnit,
 } from '../formatters/format-payment-period';
 import { Modal } from '@wepublish/website/builder';
 import { Trans, useTranslation } from 'react-i18next';
@@ -213,8 +215,12 @@ export function SubscriptionListItem({
 
           <SubscriptionListItemMetaItem>
             <MdAttachMoney /> Kostet{' '}
-            {formatCurrency(monthlyAmount / 100, currency, locale)}{' '}
-            {extendable ? 'pro Monat' : ''}
+            {formatCurrency(
+              calculatePeriodAmount(monthlyAmount, paymentPeriodicity) / 100,
+              currency,
+              locale
+            )}{' '}
+            {extendable ? `pro ${formatPeriodUnit(paymentPeriodicity)}` : ''}
           </SubscriptionListItemMetaItem>
 
           <SubscriptionListItemMetaItem>
