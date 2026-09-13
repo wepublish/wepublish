@@ -44,7 +44,9 @@ export function EmbedEditPanel({ value, onClose, onConfirm }: EmbedEditPanel) {
       /twitter.com\/([0-9a-zA-Z-_]+)\/status\/([0-9]+)/
     );
     const vimeoMatch = input.match(/vimeo.com\/([0-9]+)/);
-    const youTubeMatch = input.match(/youtube.com\/watch\?v=([0-9a-zA-Z-_]+)/);
+    const youTubeMatch = input.match(
+      /(?:youtube\.com\/(?:watch\?v=|shorts\/|embed\/|live\/)|youtu\.be\/)([0-9a-zA-Z-_]+)/
+    );
     const polisMatch = input.match(/pol.is\/([0-9a-zA-Z-_]+)/);
     const tikTokMatch = input.match(
       /tiktok\.com\/@([0-9a-zA-Z-_.]+)\/video\/([0-9]+)/
