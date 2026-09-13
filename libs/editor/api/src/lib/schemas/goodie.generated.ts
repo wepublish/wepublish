@@ -2,11 +2,15 @@
 import * as Types from '../graphql';
 
 import {RichtextJSONDocument} from '@wepublish/richtext';
+import { FullImageFragment, ImageUrLsFragment, FullPeerImageFragment } from './image.generated';
 import { gql } from '@apollo/client';
-import { FullImageFragmentDoc, FullPeerImageFragmentDoc } from './image.generated';
+import { FullImageFragmentDoc, ImageUrLsFragmentDoc, FullPeerImageFragmentDoc } from './image.generated';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
-export type FullGoodieFragment = { __typename?: 'Goodie', id: string, createdAt: string, modifiedAt: string, name: string, description?: RichtextJSONDocument | null, stock?: number | null, availableStock?: number | null, active: boolean, imageID?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, memberPlans: Array<{ __typename?: 'MemberPlan', id: string, name: string }> };
+export type FullGoodieFragment = { __typename?: 'Goodie', id: string, createdAt: string, modifiedAt: string, name: string, description?: RichtextJSONDocument | null, stock?: number | null, availableStock?: number | null, active: boolean, imageID?: string | null, image?: (
+    { __typename?: 'Image' }
+    & FullImageFragment
+  ) | null, memberPlans: Array<{ __typename?: 'MemberPlan', id: string, name: string }> };
 
 export type GoodieListQueryVariables = Types.Exact<{
   filter?: Types.InputMaybe<Types.GoodieFilter>;
@@ -18,14 +22,20 @@ export type GoodieListQueryVariables = Types.Exact<{
 }>;
 
 
-export type GoodieListQuery = { __typename?: 'Query', goodies: { __typename?: 'PaginatedGoodies', totalCount: number, nodes: Array<{ __typename?: 'Goodie', id: string, createdAt: string, modifiedAt: string, name: string, description?: RichtextJSONDocument | null, stock?: number | null, availableStock?: number | null, active: boolean, imageID?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, memberPlans: Array<{ __typename?: 'MemberPlan', id: string, name: string }> }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
+export type GoodieListQuery = { __typename?: 'Query', goodies: { __typename?: 'PaginatedGoodies', totalCount: number, nodes: Array<(
+      { __typename?: 'Goodie' }
+      & FullGoodieFragment
+    )>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type GoodieQueryVariables = Types.Exact<{
   id: Types.Scalars['String'];
 }>;
 
 
-export type GoodieQuery = { __typename?: 'Query', goodie: { __typename?: 'Goodie', id: string, createdAt: string, modifiedAt: string, name: string, description?: RichtextJSONDocument | null, stock?: number | null, availableStock?: number | null, active: boolean, imageID?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, memberPlans: Array<{ __typename?: 'MemberPlan', id: string, name: string }> } };
+export type GoodieQuery = { __typename?: 'Query', goodie: (
+    { __typename?: 'Goodie' }
+    & FullGoodieFragment
+  ) };
 
 export type CreateGoodieMutationVariables = Types.Exact<{
   name: Types.Scalars['String'];
@@ -37,7 +47,10 @@ export type CreateGoodieMutationVariables = Types.Exact<{
 }>;
 
 
-export type CreateGoodieMutation = { __typename?: 'Mutation', createGoodie: { __typename?: 'Goodie', id: string, createdAt: string, modifiedAt: string, name: string, description?: RichtextJSONDocument | null, stock?: number | null, availableStock?: number | null, active: boolean, imageID?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, memberPlans: Array<{ __typename?: 'MemberPlan', id: string, name: string }> } };
+export type CreateGoodieMutation = { __typename?: 'Mutation', createGoodie: (
+    { __typename?: 'Goodie' }
+    & FullGoodieFragment
+  ) };
 
 export type UpdateGoodieMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
@@ -50,14 +63,20 @@ export type UpdateGoodieMutationVariables = Types.Exact<{
 }>;
 
 
-export type UpdateGoodieMutation = { __typename?: 'Mutation', updateGoodie: { __typename?: 'Goodie', id: string, createdAt: string, modifiedAt: string, name: string, description?: RichtextJSONDocument | null, stock?: number | null, availableStock?: number | null, active: boolean, imageID?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, memberPlans: Array<{ __typename?: 'MemberPlan', id: string, name: string }> } };
+export type UpdateGoodieMutation = { __typename?: 'Mutation', updateGoodie: (
+    { __typename?: 'Goodie' }
+    & FullGoodieFragment
+  ) };
 
 export type DeleteGoodieMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
 }>;
 
 
-export type DeleteGoodieMutation = { __typename?: 'Mutation', deleteGoodie: { __typename?: 'Goodie', id: string, createdAt: string, modifiedAt: string, name: string, description?: RichtextJSONDocument | null, stock?: number | null, availableStock?: number | null, active: boolean, imageID?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, memberPlans: Array<{ __typename?: 'MemberPlan', id: string, name: string }> } };
+export type DeleteGoodieMutation = { __typename?: 'Mutation', deleteGoodie: (
+    { __typename?: 'Goodie' }
+    & FullGoodieFragment
+  ) };
 
 export const FullGoodieFragmentDoc = gql`
     fragment FullGoodie on Goodie {
@@ -78,7 +97,7 @@ export const FullGoodieFragmentDoc = gql`
     name
   }
 }
-    ${FullImageFragmentDoc}`;
+    `;
 export const GoodieListDocument = gql`
     query GoodieList($filter: GoodieFilter, $cursor: String, $take: Int, $skip: Int, $order: SortOrder, $sort: GoodieSort) {
   goodies(
@@ -101,7 +120,9 @@ export const GoodieListDocument = gql`
     totalCount
   }
 }
-    ${FullGoodieFragmentDoc}`;
+    ${FullGoodieFragmentDoc}
+${FullImageFragmentDoc}
+${ImageUrLsFragmentDoc}`;
 
 /**
  * __useGoodieListQuery__
@@ -141,7 +162,9 @@ export const GoodieDocument = gql`
     ...FullGoodie
   }
 }
-    ${FullGoodieFragmentDoc}`;
+    ${FullGoodieFragmentDoc}
+${FullImageFragmentDoc}
+${ImageUrLsFragmentDoc}`;
 
 /**
  * __useGoodieQuery__
@@ -183,7 +206,9 @@ export const CreateGoodieDocument = gql`
     ...FullGoodie
   }
 }
-    ${FullGoodieFragmentDoc}`;
+    ${FullGoodieFragmentDoc}
+${FullImageFragmentDoc}
+${ImageUrLsFragmentDoc}`;
 export type CreateGoodieMutationFn = Apollo.MutationFunction<CreateGoodieMutation, CreateGoodieMutationVariables>;
 
 /**
@@ -229,7 +254,9 @@ export const UpdateGoodieDocument = gql`
     ...FullGoodie
   }
 }
-    ${FullGoodieFragmentDoc}`;
+    ${FullGoodieFragmentDoc}
+${FullImageFragmentDoc}
+${ImageUrLsFragmentDoc}`;
 export type UpdateGoodieMutationFn = Apollo.MutationFunction<UpdateGoodieMutation, UpdateGoodieMutationVariables>;
 
 /**
@@ -268,7 +295,9 @@ export const DeleteGoodieDocument = gql`
     ...FullGoodie
   }
 }
-    ${FullGoodieFragmentDoc}`;
+    ${FullGoodieFragmentDoc}
+${FullImageFragmentDoc}
+${ImageUrLsFragmentDoc}`;
 export type DeleteGoodieMutationFn = Apollo.MutationFunction<DeleteGoodieMutation, DeleteGoodieMutationVariables>;
 
 /**

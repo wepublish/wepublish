@@ -2,16 +2,32 @@
 import * as Types from '../graphql';
 
 import {RichtextJSONDocument} from '@wepublish/richtext';
+import { FullMemberPlanFragment, FullAvailablePaymentMethodFragment } from './memberPlan.generated';
+import { FullImageFragment, ImageUrLsFragment, FullPeerImageFragment } from './image.generated';
+import { FullPaymentMethodFragment, FullPaymentProviderFragment } from './paymentMethod.generated';
 import { gql } from '@apollo/client';
-import { FullMemberPlanFragmentDoc } from './memberPlan.generated';
-import { FullPaymentMethodFragmentDoc } from './paymentMethod.generated';
+import { FullMemberPlanFragmentDoc, FullAvailablePaymentMethodFragmentDoc } from './memberPlan.generated';
+import { FullImageFragmentDoc, ImageUrLsFragmentDoc, FullPeerImageFragmentDoc } from './image.generated';
+import { FullPaymentMethodFragmentDoc, FullPaymentProviderFragmentDoc } from './paymentMethod.generated';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
-export type FullSubscriptionFragment = { __typename?: 'PublicSubscription', id: string, createdAt: string, modifiedAt: string, confirmed: boolean, paymentPeriodicity: Types.PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, extendable: boolean, currency: Types.Currency, user: { __typename?: 'User', id: string, name: string, firstName?: string | null }, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: RichtextJSONDocument | null, shortDescription?: RichtextJSONDocument | null, slug: string, active: boolean, productType: Types.ProductType, tags?: Array<string> | null, externalReward?: string | null, currency: Types.Currency, extendable: boolean, maxCount?: number | null, migrateToTargetPaymentMethodID?: string | null, amountPerMonthMin: number, amountPerMonthMax?: number | null, amountPerMonthTarget?: number | null, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<Types.PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> }> }, properties: Array<{ __typename?: 'Property', key: string, value: string, public: boolean }>, paymentMethod: { __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: Types.SubscriptionDeactivationReason } | null, goodie?: { __typename?: 'Goodie', id: string, name: string } | null };
+export type FullSubscriptionFragment = { __typename?: 'PublicSubscription', id: string, createdAt: string, modifiedAt: string, confirmed: boolean, paymentPeriodicity: Types.PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, extendable: boolean, currency: Types.Currency, user: { __typename?: 'User', id: string, name: string, firstName?: string | null }, memberPlan: (
+    { __typename?: 'MemberPlan' }
+    & FullMemberPlanFragment
+  ), properties: Array<{ __typename?: 'Property', key: string, value: string, public: boolean }>, paymentMethod: (
+    { __typename?: 'PaymentMethod' }
+    & FullPaymentMethodFragment
+  ), deactivation?: (
+    { __typename?: 'SubscriptionDeactivation' }
+    & DeactivationFragment
+  ) | null, goodie?: { __typename?: 'Goodie', id: string, name: string } | null };
 
 export type DeactivationFragment = { __typename?: 'SubscriptionDeactivation', date: string, reason: Types.SubscriptionDeactivationReason };
 
-export type TinySubscriptionFragment = { __typename?: 'PublicSubscription', id: string, createdAt: string, modifiedAt: string, user: { __typename?: 'User', id: string, name: string, firstName?: string | null }, memberPlan: { __typename?: 'MemberPlan', id: string, name: string }, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: Types.SubscriptionDeactivationReason } | null };
+export type TinySubscriptionFragment = { __typename?: 'PublicSubscription', id: string, createdAt: string, modifiedAt: string, user: { __typename?: 'User', id: string, name: string, firstName?: string | null }, memberPlan: { __typename?: 'MemberPlan', id: string, name: string }, deactivation?: (
+    { __typename?: 'SubscriptionDeactivation' }
+    & DeactivationFragment
+  ) | null };
 
 export type SubscriptionListQueryVariables = Types.Exact<{
   filter?: Types.InputMaybe<Types.SubscriptionFilter>;
@@ -23,14 +39,20 @@ export type SubscriptionListQueryVariables = Types.Exact<{
 }>;
 
 
-export type SubscriptionListQuery = { __typename?: 'Query', subscriptions: { __typename?: 'PublicSubscriptionConnection', totalCount: number, nodes: Array<{ __typename?: 'PublicSubscription', id: string, createdAt: string, modifiedAt: string, user: { __typename?: 'User', id: string, name: string, firstName?: string | null }, memberPlan: { __typename?: 'MemberPlan', id: string, name: string }, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: Types.SubscriptionDeactivationReason } | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
+export type SubscriptionListQuery = { __typename?: 'Query', subscriptions: { __typename?: 'PublicSubscriptionConnection', totalCount: number, nodes: Array<(
+      { __typename?: 'PublicSubscription' }
+      & TinySubscriptionFragment
+    )>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type SubscriptionQueryVariables = Types.Exact<{
   id: Types.Scalars['String'];
 }>;
 
 
-export type SubscriptionQuery = { __typename?: 'Query', subscription: { __typename?: 'PublicSubscription', id: string, createdAt: string, modifiedAt: string, confirmed: boolean, paymentPeriodicity: Types.PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, extendable: boolean, currency: Types.Currency, user: { __typename?: 'User', id: string, name: string, firstName?: string | null }, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: RichtextJSONDocument | null, shortDescription?: RichtextJSONDocument | null, slug: string, active: boolean, productType: Types.ProductType, tags?: Array<string> | null, externalReward?: string | null, currency: Types.Currency, extendable: boolean, maxCount?: number | null, migrateToTargetPaymentMethodID?: string | null, amountPerMonthMin: number, amountPerMonthMax?: number | null, amountPerMonthTarget?: number | null, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<Types.PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> }> }, properties: Array<{ __typename?: 'Property', key: string, value: string, public: boolean }>, paymentMethod: { __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: Types.SubscriptionDeactivationReason } | null, goodie?: { __typename?: 'Goodie', id: string, name: string } | null } };
+export type SubscriptionQuery = { __typename?: 'Query', subscription: (
+    { __typename?: 'PublicSubscription' }
+    & FullSubscriptionFragment
+  ) };
 
 export type SubscriptionsAsCsvQueryVariables = Types.Exact<{
   activeAt?: Types.InputMaybe<Types.Scalars['DateTime']>;
@@ -71,7 +93,10 @@ export type CreateSubscriptionMutationVariables = Types.Exact<{
 }>;
 
 
-export type CreateSubscriptionMutation = { __typename?: 'Mutation', createSubscription: { __typename?: 'PublicSubscription', id: string, createdAt: string, modifiedAt: string, confirmed: boolean, paymentPeriodicity: Types.PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, extendable: boolean, currency: Types.Currency, user: { __typename?: 'User', id: string, name: string, firstName?: string | null }, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: RichtextJSONDocument | null, shortDescription?: RichtextJSONDocument | null, slug: string, active: boolean, productType: Types.ProductType, tags?: Array<string> | null, externalReward?: string | null, currency: Types.Currency, extendable: boolean, maxCount?: number | null, migrateToTargetPaymentMethodID?: string | null, amountPerMonthMin: number, amountPerMonthMax?: number | null, amountPerMonthTarget?: number | null, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<Types.PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> }> }, properties: Array<{ __typename?: 'Property', key: string, value: string, public: boolean }>, paymentMethod: { __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: Types.SubscriptionDeactivationReason } | null, goodie?: { __typename?: 'Goodie', id: string, name: string } | null } };
+export type CreateSubscriptionMutation = { __typename?: 'Mutation', createSubscription: (
+    { __typename?: 'PublicSubscription' }
+    & FullSubscriptionFragment
+  ) };
 
 export type UpdateSubscriptionMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
@@ -88,7 +113,10 @@ export type UpdateSubscriptionMutationVariables = Types.Exact<{
 }>;
 
 
-export type UpdateSubscriptionMutation = { __typename?: 'Mutation', updateSubscription: { __typename?: 'PublicSubscription', id: string, createdAt: string, modifiedAt: string, confirmed: boolean, paymentPeriodicity: Types.PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, extendable: boolean, currency: Types.Currency, user: { __typename?: 'User', id: string, name: string, firstName?: string | null }, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: RichtextJSONDocument | null, shortDescription?: RichtextJSONDocument | null, slug: string, active: boolean, productType: Types.ProductType, tags?: Array<string> | null, externalReward?: string | null, currency: Types.Currency, extendable: boolean, maxCount?: number | null, migrateToTargetPaymentMethodID?: string | null, amountPerMonthMin: number, amountPerMonthMax?: number | null, amountPerMonthTarget?: number | null, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<Types.PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> }> }, properties: Array<{ __typename?: 'Property', key: string, value: string, public: boolean }>, paymentMethod: { __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: Types.SubscriptionDeactivationReason } | null, goodie?: { __typename?: 'Goodie', id: string, name: string } | null } };
+export type UpdateSubscriptionMutation = { __typename?: 'Mutation', updateSubscription: (
+    { __typename?: 'PublicSubscription' }
+    & FullSubscriptionFragment
+  ) };
 
 export type CancelSubscriptionMutationVariables = Types.Exact<{
   cancelSubscriptionId: Types.Scalars['String'];
@@ -96,30 +124,45 @@ export type CancelSubscriptionMutationVariables = Types.Exact<{
 }>;
 
 
-export type CancelSubscriptionMutation = { __typename?: 'Mutation', cancelSubscription: { __typename?: 'PublicSubscription', id: string, createdAt: string, modifiedAt: string, confirmed: boolean, paymentPeriodicity: Types.PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, extendable: boolean, currency: Types.Currency, user: { __typename?: 'User', id: string, name: string, firstName?: string | null }, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: RichtextJSONDocument | null, shortDescription?: RichtextJSONDocument | null, slug: string, active: boolean, productType: Types.ProductType, tags?: Array<string> | null, externalReward?: string | null, currency: Types.Currency, extendable: boolean, maxCount?: number | null, migrateToTargetPaymentMethodID?: string | null, amountPerMonthMin: number, amountPerMonthMax?: number | null, amountPerMonthTarget?: number | null, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<Types.PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> }> }, properties: Array<{ __typename?: 'Property', key: string, value: string, public: boolean }>, paymentMethod: { __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: Types.SubscriptionDeactivationReason } | null, goodie?: { __typename?: 'Goodie', id: string, name: string } | null } };
+export type CancelSubscriptionMutation = { __typename?: 'Mutation', cancelSubscription: (
+    { __typename?: 'PublicSubscription' }
+    & FullSubscriptionFragment
+  ) };
 
 export type DeleteSubscriptionMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
 }>;
 
 
-export type DeleteSubscriptionMutation = { __typename?: 'Mutation', deleteSubscription: { __typename?: 'PublicSubscription', id: string, createdAt: string, modifiedAt: string, confirmed: boolean, paymentPeriodicity: Types.PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, extendable: boolean, currency: Types.Currency, user: { __typename?: 'User', id: string, name: string, firstName?: string | null }, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: RichtextJSONDocument | null, shortDescription?: RichtextJSONDocument | null, slug: string, active: boolean, productType: Types.ProductType, tags?: Array<string> | null, externalReward?: string | null, currency: Types.Currency, extendable: boolean, maxCount?: number | null, migrateToTargetPaymentMethodID?: string | null, amountPerMonthMin: number, amountPerMonthMax?: number | null, amountPerMonthTarget?: number | null, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<Types.PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> }> }, properties: Array<{ __typename?: 'Property', key: string, value: string, public: boolean }>, paymentMethod: { __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: Types.SubscriptionDeactivationReason } | null, goodie?: { __typename?: 'Goodie', id: string, name: string } | null } };
+export type DeleteSubscriptionMutation = { __typename?: 'Mutation', deleteSubscription: (
+    { __typename?: 'PublicSubscription' }
+    & FullSubscriptionFragment
+  ) };
 
 export type RenewSubscriptionMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
 }>;
 
 
-export type RenewSubscriptionMutation = { __typename?: 'Mutation', renewSubscription: { __typename?: 'PublicSubscription', id: string, createdAt: string, modifiedAt: string, confirmed: boolean, paymentPeriodicity: Types.PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, extendable: boolean, currency: Types.Currency, user: { __typename?: 'User', id: string, name: string, firstName?: string | null }, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: RichtextJSONDocument | null, shortDescription?: RichtextJSONDocument | null, slug: string, active: boolean, productType: Types.ProductType, tags?: Array<string> | null, externalReward?: string | null, currency: Types.Currency, extendable: boolean, maxCount?: number | null, migrateToTargetPaymentMethodID?: string | null, amountPerMonthMin: number, amountPerMonthMax?: number | null, amountPerMonthTarget?: number | null, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<Types.PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> }> }, properties: Array<{ __typename?: 'Property', key: string, value: string, public: boolean }>, paymentMethod: { __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: Types.SubscriptionDeactivationReason } | null, goodie?: { __typename?: 'Goodie', id: string, name: string } | null } };
+export type RenewSubscriptionMutation = { __typename?: 'Mutation', renewSubscription: (
+    { __typename?: 'PublicSubscription' }
+    & FullSubscriptionFragment
+  ) };
 
-export type UserSubscriptionFragment = { __typename?: 'PublicSubscription', id: string, createdAt: string, modifiedAt: string, confirmed: boolean, paymentPeriodicity: Types.PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, extendable: boolean, currency: Types.Currency, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, createdAt: string, startsAt: string, endsAt: string, amount: number, invoiceID: string, isPaid: boolean }>, user: { __typename?: 'User', id: string, name: string, firstName?: string | null }, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: RichtextJSONDocument | null, shortDescription?: RichtextJSONDocument | null, slug: string, active: boolean, productType: Types.ProductType, tags?: Array<string> | null, externalReward?: string | null, currency: Types.Currency, extendable: boolean, maxCount?: number | null, migrateToTargetPaymentMethodID?: string | null, amountPerMonthMin: number, amountPerMonthMax?: number | null, amountPerMonthTarget?: number | null, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<Types.PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> }> }, properties: Array<{ __typename?: 'Property', key: string, value: string, public: boolean }>, paymentMethod: { __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: Types.SubscriptionDeactivationReason } | null, goodie?: { __typename?: 'Goodie', id: string, name: string } | null };
+export type UserSubscriptionFragment = (
+  { __typename?: 'PublicSubscription', periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, createdAt: string, startsAt: string, endsAt: string, amount: number, invoiceID: string, isPaid: boolean }> }
+  & FullSubscriptionFragment
+);
 
 export type UserSubscriptionListQueryVariables = Types.Exact<{
   userId: Types.Scalars['String'];
 }>;
 
 
-export type UserSubscriptionListQuery = { __typename?: 'Query', subscriptions: { __typename?: 'PublicSubscriptionConnection', nodes: Array<{ __typename?: 'PublicSubscription', id: string, createdAt: string, modifiedAt: string, confirmed: boolean, paymentPeriodicity: Types.PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, extendable: boolean, currency: Types.Currency, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, createdAt: string, startsAt: string, endsAt: string, amount: number, invoiceID: string, isPaid: boolean }>, user: { __typename?: 'User', id: string, name: string, firstName?: string | null }, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: RichtextJSONDocument | null, shortDescription?: RichtextJSONDocument | null, slug: string, active: boolean, productType: Types.ProductType, tags?: Array<string> | null, externalReward?: string | null, currency: Types.Currency, extendable: boolean, maxCount?: number | null, migrateToTargetPaymentMethodID?: string | null, amountPerMonthMin: number, amountPerMonthMax?: number | null, amountPerMonthTarget?: number | null, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<Types.PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> }> }, properties: Array<{ __typename?: 'Property', key: string, value: string, public: boolean }>, paymentMethod: { __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: Types.SubscriptionDeactivationReason } | null, goodie?: { __typename?: 'Goodie', id: string, name: string } | null }> } };
+export type UserSubscriptionListQuery = { __typename?: 'Query', subscriptions: { __typename?: 'PublicSubscriptionConnection', nodes: Array<(
+      { __typename?: 'PublicSubscription' }
+      & UserSubscriptionFragment
+    )> } };
 
 export const DeactivationFragmentDoc = gql`
     fragment Deactivation on SubscriptionDeactivation {
@@ -145,7 +188,7 @@ export const TinySubscriptionFragmentDoc = gql`
     ...Deactivation
   }
 }
-    ${DeactivationFragmentDoc}`;
+    `;
 export const FullSubscriptionFragmentDoc = gql`
     fragment FullSubscription on PublicSubscription {
   id
@@ -183,9 +226,7 @@ export const FullSubscriptionFragmentDoc = gql`
     name
   }
 }
-    ${FullMemberPlanFragmentDoc}
-${FullPaymentMethodFragmentDoc}
-${DeactivationFragmentDoc}`;
+    `;
 export const UserSubscriptionFragmentDoc = gql`
     fragment UserSubscription on PublicSubscription {
   ...FullSubscription
@@ -199,7 +240,7 @@ export const UserSubscriptionFragmentDoc = gql`
     isPaid
   }
 }
-    ${FullSubscriptionFragmentDoc}`;
+    `;
 export const SubscriptionListDocument = gql`
     query SubscriptionList($filter: SubscriptionFilter, $cursor: String, $take: Int, $skip: Int, $order: SortOrder, $sort: SubscriptionSort) {
   subscriptions(
@@ -222,7 +263,8 @@ export const SubscriptionListDocument = gql`
     totalCount
   }
 }
-    ${TinySubscriptionFragmentDoc}`;
+    ${TinySubscriptionFragmentDoc}
+${DeactivationFragmentDoc}`;
 
 /**
  * __useSubscriptionListQuery__
@@ -262,7 +304,14 @@ export const SubscriptionDocument = gql`
     ...FullSubscription
   }
 }
-    ${FullSubscriptionFragmentDoc}`;
+    ${FullSubscriptionFragmentDoc}
+${FullMemberPlanFragmentDoc}
+${FullImageFragmentDoc}
+${ImageUrLsFragmentDoc}
+${FullAvailablePaymentMethodFragmentDoc}
+${FullPaymentMethodFragmentDoc}
+${FullPaymentProviderFragmentDoc}
+${DeactivationFragmentDoc}`;
 
 /**
  * __useSubscriptionQuery__
@@ -379,7 +428,14 @@ export const CreateSubscriptionDocument = gql`
     ...FullSubscription
   }
 }
-    ${FullSubscriptionFragmentDoc}`;
+    ${FullSubscriptionFragmentDoc}
+${FullMemberPlanFragmentDoc}
+${FullImageFragmentDoc}
+${ImageUrLsFragmentDoc}
+${FullAvailablePaymentMethodFragmentDoc}
+${FullPaymentMethodFragmentDoc}
+${FullPaymentProviderFragmentDoc}
+${DeactivationFragmentDoc}`;
 export type CreateSubscriptionMutationFn = Apollo.MutationFunction<CreateSubscriptionMutation, CreateSubscriptionMutationVariables>;
 
 /**
@@ -433,7 +489,14 @@ export const UpdateSubscriptionDocument = gql`
     ...FullSubscription
   }
 }
-    ${FullSubscriptionFragmentDoc}`;
+    ${FullSubscriptionFragmentDoc}
+${FullMemberPlanFragmentDoc}
+${FullImageFragmentDoc}
+${ImageUrLsFragmentDoc}
+${FullAvailablePaymentMethodFragmentDoc}
+${FullPaymentMethodFragmentDoc}
+${FullPaymentProviderFragmentDoc}
+${DeactivationFragmentDoc}`;
 export type UpdateSubscriptionMutationFn = Apollo.MutationFunction<UpdateSubscriptionMutation, UpdateSubscriptionMutationVariables>;
 
 /**
@@ -476,7 +539,14 @@ export const CancelSubscriptionDocument = gql`
     ...FullSubscription
   }
 }
-    ${FullSubscriptionFragmentDoc}`;
+    ${FullSubscriptionFragmentDoc}
+${FullMemberPlanFragmentDoc}
+${FullImageFragmentDoc}
+${ImageUrLsFragmentDoc}
+${FullAvailablePaymentMethodFragmentDoc}
+${FullPaymentMethodFragmentDoc}
+${FullPaymentProviderFragmentDoc}
+${DeactivationFragmentDoc}`;
 export type CancelSubscriptionMutationFn = Apollo.MutationFunction<CancelSubscriptionMutation, CancelSubscriptionMutationVariables>;
 
 /**
@@ -510,7 +580,14 @@ export const DeleteSubscriptionDocument = gql`
     ...FullSubscription
   }
 }
-    ${FullSubscriptionFragmentDoc}`;
+    ${FullSubscriptionFragmentDoc}
+${FullMemberPlanFragmentDoc}
+${FullImageFragmentDoc}
+${ImageUrLsFragmentDoc}
+${FullAvailablePaymentMethodFragmentDoc}
+${FullPaymentMethodFragmentDoc}
+${FullPaymentProviderFragmentDoc}
+${DeactivationFragmentDoc}`;
 export type DeleteSubscriptionMutationFn = Apollo.MutationFunction<DeleteSubscriptionMutation, DeleteSubscriptionMutationVariables>;
 
 /**
@@ -543,7 +620,14 @@ export const RenewSubscriptionDocument = gql`
     ...FullSubscription
   }
 }
-    ${FullSubscriptionFragmentDoc}`;
+    ${FullSubscriptionFragmentDoc}
+${FullMemberPlanFragmentDoc}
+${FullImageFragmentDoc}
+${ImageUrLsFragmentDoc}
+${FullAvailablePaymentMethodFragmentDoc}
+${FullPaymentMethodFragmentDoc}
+${FullPaymentProviderFragmentDoc}
+${DeactivationFragmentDoc}`;
 export type RenewSubscriptionMutationFn = Apollo.MutationFunction<RenewSubscriptionMutation, RenewSubscriptionMutationVariables>;
 
 /**
@@ -578,7 +662,15 @@ export const UserSubscriptionListDocument = gql`
     }
   }
 }
-    ${UserSubscriptionFragmentDoc}`;
+    ${UserSubscriptionFragmentDoc}
+${FullSubscriptionFragmentDoc}
+${FullMemberPlanFragmentDoc}
+${FullImageFragmentDoc}
+${ImageUrLsFragmentDoc}
+${FullAvailablePaymentMethodFragmentDoc}
+${FullPaymentMethodFragmentDoc}
+${FullPaymentProviderFragmentDoc}
+${DeactivationFragmentDoc}`;
 
 /**
  * __useUserSubscriptionListQuery__

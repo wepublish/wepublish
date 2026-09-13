@@ -17,14 +17,20 @@ export type DiscountCodeListQueryVariables = Types.Exact<{
 }>;
 
 
-export type DiscountCodeListQuery = { __typename?: 'Query', discountCodes: { __typename?: 'PaginatedDiscountCodes', totalCount: number, nodes: Array<{ __typename?: 'DiscountCode', id: string, createdAt: string, modifiedAt: string, code: string, discountPercent: number, usageCount: number, paidUsageCount: number, validFrom: string, validTo: string, memberPlanId: string, memberPlan: { __typename?: 'MemberPlan', id: string, name: string } }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
+export type DiscountCodeListQuery = { __typename?: 'Query', discountCodes: { __typename?: 'PaginatedDiscountCodes', totalCount: number, nodes: Array<(
+      { __typename?: 'DiscountCode' }
+      & FullDiscountCodeFragment
+    )>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type DiscountCodeQueryVariables = Types.Exact<{
   id: Types.Scalars['String'];
 }>;
 
 
-export type DiscountCodeQuery = { __typename?: 'Query', discountCode: { __typename?: 'DiscountCode', id: string, createdAt: string, modifiedAt: string, code: string, discountPercent: number, usageCount: number, paidUsageCount: number, validFrom: string, validTo: string, memberPlanId: string, memberPlan: { __typename?: 'MemberPlan', id: string, name: string } } };
+export type DiscountCodeQuery = { __typename?: 'Query', discountCode: (
+    { __typename?: 'DiscountCode' }
+    & FullDiscountCodeFragment
+  ) };
 
 export type CreateDiscountCodeMutationVariables = Types.Exact<{
   code: Types.Scalars['String'];
@@ -35,7 +41,10 @@ export type CreateDiscountCodeMutationVariables = Types.Exact<{
 }>;
 
 
-export type CreateDiscountCodeMutation = { __typename?: 'Mutation', createDiscountCode: { __typename?: 'DiscountCode', id: string, createdAt: string, modifiedAt: string, code: string, discountPercent: number, usageCount: number, paidUsageCount: number, validFrom: string, validTo: string, memberPlanId: string, memberPlan: { __typename?: 'MemberPlan', id: string, name: string } } };
+export type CreateDiscountCodeMutation = { __typename?: 'Mutation', createDiscountCode: (
+    { __typename?: 'DiscountCode' }
+    & FullDiscountCodeFragment
+  ) };
 
 export type UpdateDiscountCodeMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
@@ -47,14 +56,20 @@ export type UpdateDiscountCodeMutationVariables = Types.Exact<{
 }>;
 
 
-export type UpdateDiscountCodeMutation = { __typename?: 'Mutation', updateDiscountCode: { __typename?: 'DiscountCode', id: string, createdAt: string, modifiedAt: string, code: string, discountPercent: number, usageCount: number, paidUsageCount: number, validFrom: string, validTo: string, memberPlanId: string, memberPlan: { __typename?: 'MemberPlan', id: string, name: string } } };
+export type UpdateDiscountCodeMutation = { __typename?: 'Mutation', updateDiscountCode: (
+    { __typename?: 'DiscountCode' }
+    & FullDiscountCodeFragment
+  ) };
 
 export type DeleteDiscountCodeMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
 }>;
 
 
-export type DeleteDiscountCodeMutation = { __typename?: 'Mutation', deleteDiscountCode: { __typename?: 'DiscountCode', id: string, createdAt: string, modifiedAt: string, code: string, discountPercent: number, usageCount: number, paidUsageCount: number, validFrom: string, validTo: string, memberPlanId: string, memberPlan: { __typename?: 'MemberPlan', id: string, name: string } } };
+export type DeleteDiscountCodeMutation = { __typename?: 'Mutation', deleteDiscountCode: (
+    { __typename?: 'DiscountCode' }
+    & FullDiscountCodeFragment
+  ) };
 
 export type DiscountCodeUsagesQueryVariables = Types.Exact<{
   discountCodeId: Types.Scalars['String'];

@@ -7,19 +7,28 @@ import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type SlimNavigationFragment = { __typename?: 'Navigation', id: string, key: string, name: string };
 
-export type FullNavigationFragment = { __typename?: 'Navigation', id: string, key: string, name: string, links: Array<{ __typename: 'ArticleNavigationLink', label: string, articleID: string } | { __typename: 'ExternalNavigationLink', label: string, url?: string | null } | { __typename: 'PageNavigationLink', label: string, pageID: string }> };
+export type FullNavigationFragment = (
+  { __typename?: 'Navigation', links: Array<{ __typename: 'ArticleNavigationLink', label: string, articleID: string } | { __typename: 'ExternalNavigationLink', label: string, url?: string | null } | { __typename: 'PageNavigationLink', label: string, pageID: string }> }
+  & SlimNavigationFragment
+);
 
 export type NavigationListQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type NavigationListQuery = { __typename?: 'Query', navigations: Array<{ __typename?: 'Navigation', id: string, key: string, name: string }> };
+export type NavigationListQuery = { __typename?: 'Query', navigations: Array<(
+    { __typename?: 'Navigation' }
+    & SlimNavigationFragment
+  )> };
 
 export type NavigationQueryVariables = Types.Exact<{
   id: Types.Scalars['String'];
 }>;
 
 
-export type NavigationQuery = { __typename?: 'Query', navigation: { __typename?: 'Navigation', id: string, key: string, name: string, links: Array<{ __typename: 'ArticleNavigationLink', label: string, articleID: string } | { __typename: 'ExternalNavigationLink', label: string, url?: string | null } | { __typename: 'PageNavigationLink', label: string, pageID: string }> } };
+export type NavigationQuery = { __typename?: 'Query', navigation: (
+    { __typename?: 'Navigation' }
+    & FullNavigationFragment
+  ) };
 
 export type CreateNavigationMutationVariables = Types.Exact<{
   key: Types.Scalars['String'];
@@ -28,7 +37,10 @@ export type CreateNavigationMutationVariables = Types.Exact<{
 }>;
 
 
-export type CreateNavigationMutation = { __typename?: 'Mutation', createNavigation: { __typename?: 'Navigation', id: string, key: string, name: string, links: Array<{ __typename: 'ArticleNavigationLink', label: string, articleID: string } | { __typename: 'ExternalNavigationLink', label: string, url?: string | null } | { __typename: 'PageNavigationLink', label: string, pageID: string }> } };
+export type CreateNavigationMutation = { __typename?: 'Mutation', createNavigation: (
+    { __typename?: 'Navigation' }
+    & FullNavigationFragment
+  ) };
 
 export type UpdateNavigationMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
@@ -38,14 +50,20 @@ export type UpdateNavigationMutationVariables = Types.Exact<{
 }>;
 
 
-export type UpdateNavigationMutation = { __typename?: 'Mutation', updateNavigation: { __typename?: 'Navigation', id: string, key: string, name: string, links: Array<{ __typename: 'ArticleNavigationLink', label: string, articleID: string } | { __typename: 'ExternalNavigationLink', label: string, url?: string | null } | { __typename: 'PageNavigationLink', label: string, pageID: string }> } };
+export type UpdateNavigationMutation = { __typename?: 'Mutation', updateNavigation: (
+    { __typename?: 'Navigation' }
+    & FullNavigationFragment
+  ) };
 
 export type DeleteNavigationMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
 }>;
 
 
-export type DeleteNavigationMutation = { __typename?: 'Mutation', deleteNavigation: { __typename?: 'Navigation', id: string, key: string, name: string, links: Array<{ __typename: 'ArticleNavigationLink', label: string, articleID: string } | { __typename: 'ExternalNavigationLink', label: string, url?: string | null } | { __typename: 'PageNavigationLink', label: string, pageID: string }> } };
+export type DeleteNavigationMutation = { __typename?: 'Mutation', deleteNavigation: (
+    { __typename?: 'Navigation' }
+    & FullNavigationFragment
+  ) };
 
 export const SlimNavigationFragmentDoc = gql`
     fragment SlimNavigation on Navigation {
@@ -73,7 +91,7 @@ export const FullNavigationFragmentDoc = gql`
     }
   }
 }
-    ${SlimNavigationFragmentDoc}`;
+    `;
 export const NavigationListDocument = gql`
     query NavigationList {
   navigations {
@@ -114,7 +132,8 @@ export const NavigationDocument = gql`
     ...FullNavigation
   }
 }
-    ${FullNavigationFragmentDoc}`;
+    ${FullNavigationFragmentDoc}
+${SlimNavigationFragmentDoc}`;
 
 /**
  * __useNavigationQuery__
@@ -149,7 +168,8 @@ export const CreateNavigationDocument = gql`
     ...FullNavigation
   }
 }
-    ${FullNavigationFragmentDoc}`;
+    ${FullNavigationFragmentDoc}
+${SlimNavigationFragmentDoc}`;
 export type CreateNavigationMutationFn = Apollo.MutationFunction<CreateNavigationMutation, CreateNavigationMutationVariables>;
 
 /**
@@ -184,7 +204,8 @@ export const UpdateNavigationDocument = gql`
     ...FullNavigation
   }
 }
-    ${FullNavigationFragmentDoc}`;
+    ${FullNavigationFragmentDoc}
+${SlimNavigationFragmentDoc}`;
 export type UpdateNavigationMutationFn = Apollo.MutationFunction<UpdateNavigationMutation, UpdateNavigationMutationVariables>;
 
 /**
@@ -220,7 +241,8 @@ export const DeleteNavigationDocument = gql`
     ...FullNavigation
   }
 }
-    ${FullNavigationFragmentDoc}`;
+    ${FullNavigationFragmentDoc}
+${SlimNavigationFragmentDoc}`;
 export type DeleteNavigationMutationFn = Apollo.MutationFunction<DeleteNavigationMutation, DeleteNavigationMutationVariables>;
 
 /**

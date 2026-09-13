@@ -7,19 +7,28 @@ import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type FullConsentFragment = { __typename?: 'Consent', id: string, name: string, slug: string, defaultValue: boolean, createdAt: string, modifiedAt: string };
 
-export type FullUserConsentFragment = { __typename?: 'UserConsent', id: string, value: boolean, createdAt: string, modifiedAt: string, consent: { __typename?: 'Consent', id: string, name: string, slug: string, defaultValue: boolean, createdAt: string, modifiedAt: string }, user: { __typename?: 'User', id: string, name: string, firstName?: string | null } };
+export type FullUserConsentFragment = { __typename?: 'UserConsent', id: string, value: boolean, createdAt: string, modifiedAt: string, consent: (
+    { __typename?: 'Consent' }
+    & FullConsentFragment
+  ), user: { __typename?: 'User', id: string, name: string, firstName?: string | null } };
 
 export type ConsentsQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type ConsentsQuery = { __typename?: 'Query', consents: Array<{ __typename?: 'Consent', id: string, name: string, slug: string, defaultValue: boolean, createdAt: string, modifiedAt: string }> };
+export type ConsentsQuery = { __typename?: 'Query', consents: Array<(
+    { __typename?: 'Consent' }
+    & FullConsentFragment
+  )> };
 
 export type ConsentQueryVariables = Types.Exact<{
   id: Types.Scalars['String'];
 }>;
 
 
-export type ConsentQuery = { __typename?: 'Query', consent: { __typename?: 'Consent', id: string, name: string, slug: string, defaultValue: boolean, createdAt: string, modifiedAt: string } };
+export type ConsentQuery = { __typename?: 'Query', consent: (
+    { __typename?: 'Consent' }
+    & FullConsentFragment
+  ) };
 
 export type CreateConsentMutationVariables = Types.Exact<{
   name: Types.Scalars['String'];
@@ -28,7 +37,10 @@ export type CreateConsentMutationVariables = Types.Exact<{
 }>;
 
 
-export type CreateConsentMutation = { __typename?: 'Mutation', createConsent: { __typename?: 'Consent', id: string, name: string, slug: string, defaultValue: boolean, createdAt: string, modifiedAt: string } };
+export type CreateConsentMutation = { __typename?: 'Mutation', createConsent: (
+    { __typename?: 'Consent' }
+    & FullConsentFragment
+  ) };
 
 export type UpdateConsentMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
@@ -38,26 +50,38 @@ export type UpdateConsentMutationVariables = Types.Exact<{
 }>;
 
 
-export type UpdateConsentMutation = { __typename?: 'Mutation', updateConsent: { __typename?: 'Consent', id: string, name: string, slug: string, defaultValue: boolean, createdAt: string, modifiedAt: string } };
+export type UpdateConsentMutation = { __typename?: 'Mutation', updateConsent: (
+    { __typename?: 'Consent' }
+    & FullConsentFragment
+  ) };
 
 export type DeleteConsentMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
 }>;
 
 
-export type DeleteConsentMutation = { __typename?: 'Mutation', deleteConsent: { __typename?: 'Consent', id: string, name: string, slug: string, defaultValue: boolean, createdAt: string, modifiedAt: string } };
+export type DeleteConsentMutation = { __typename?: 'Mutation', deleteConsent: (
+    { __typename?: 'Consent' }
+    & FullConsentFragment
+  ) };
 
 export type UserConsentsQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type UserConsentsQuery = { __typename?: 'Query', userConsents: Array<{ __typename?: 'UserConsent', id: string, value: boolean, createdAt: string, modifiedAt: string, consent: { __typename?: 'Consent', id: string, name: string, slug: string, defaultValue: boolean, createdAt: string, modifiedAt: string }, user: { __typename?: 'User', id: string, name: string, firstName?: string | null } }> };
+export type UserConsentsQuery = { __typename?: 'Query', userConsents: Array<(
+    { __typename?: 'UserConsent' }
+    & FullUserConsentFragment
+  )> };
 
 export type UserConsentQueryVariables = Types.Exact<{
   id: Types.Scalars['String'];
 }>;
 
 
-export type UserConsentQuery = { __typename?: 'Query', userConsent: { __typename?: 'UserConsent', id: string, value: boolean, createdAt: string, modifiedAt: string, consent: { __typename?: 'Consent', id: string, name: string, slug: string, defaultValue: boolean, createdAt: string, modifiedAt: string }, user: { __typename?: 'User', id: string, name: string, firstName?: string | null } } };
+export type UserConsentQuery = { __typename?: 'Query', userConsent: (
+    { __typename?: 'UserConsent' }
+    & FullUserConsentFragment
+  ) };
 
 export type CreateUserConsentMutationVariables = Types.Exact<{
   consentId: Types.Scalars['String'];
@@ -66,7 +90,10 @@ export type CreateUserConsentMutationVariables = Types.Exact<{
 }>;
 
 
-export type CreateUserConsentMutation = { __typename?: 'Mutation', createUserConsent: { __typename?: 'UserConsent', id: string, value: boolean, createdAt: string, modifiedAt: string, consent: { __typename?: 'Consent', id: string, name: string, slug: string, defaultValue: boolean, createdAt: string, modifiedAt: string }, user: { __typename?: 'User', id: string, name: string, firstName?: string | null } } };
+export type CreateUserConsentMutation = { __typename?: 'Mutation', createUserConsent: (
+    { __typename?: 'UserConsent' }
+    & FullUserConsentFragment
+  ) };
 
 export type UpdateUserConsentMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
@@ -74,14 +101,20 @@ export type UpdateUserConsentMutationVariables = Types.Exact<{
 }>;
 
 
-export type UpdateUserConsentMutation = { __typename?: 'Mutation', updateUserConsent: { __typename?: 'UserConsent', id: string, value: boolean, createdAt: string, modifiedAt: string, consent: { __typename?: 'Consent', id: string, name: string, slug: string, defaultValue: boolean, createdAt: string, modifiedAt: string }, user: { __typename?: 'User', id: string, name: string, firstName?: string | null } } };
+export type UpdateUserConsentMutation = { __typename?: 'Mutation', updateUserConsent: (
+    { __typename?: 'UserConsent' }
+    & FullUserConsentFragment
+  ) };
 
 export type DeleteUserConsentMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
 }>;
 
 
-export type DeleteUserConsentMutation = { __typename?: 'Mutation', deleteUserConsent: { __typename?: 'UserConsent', id: string, value: boolean, createdAt: string, modifiedAt: string, consent: { __typename?: 'Consent', id: string, name: string, slug: string, defaultValue: boolean, createdAt: string, modifiedAt: string }, user: { __typename?: 'User', id: string, name: string, firstName?: string | null } } };
+export type DeleteUserConsentMutation = { __typename?: 'Mutation', deleteUserConsent: (
+    { __typename?: 'UserConsent' }
+    & FullUserConsentFragment
+  ) };
 
 export const FullConsentFragmentDoc = gql`
     fragment FullConsent on Consent {
@@ -108,7 +141,7 @@ export const FullUserConsentFragmentDoc = gql`
     firstName
   }
 }
-    ${FullConsentFragmentDoc}`;
+    `;
 export const ConsentsDocument = gql`
     query Consents {
   consents {
@@ -288,7 +321,8 @@ export const UserConsentsDocument = gql`
     ...FullUserConsent
   }
 }
-    ${FullUserConsentFragmentDoc}`;
+    ${FullUserConsentFragmentDoc}
+${FullConsentFragmentDoc}`;
 
 /**
  * __useUserConsentsQuery__
@@ -322,7 +356,8 @@ export const UserConsentDocument = gql`
     ...FullUserConsent
   }
 }
-    ${FullUserConsentFragmentDoc}`;
+    ${FullUserConsentFragmentDoc}
+${FullConsentFragmentDoc}`;
 
 /**
  * __useUserConsentQuery__
@@ -357,7 +392,8 @@ export const CreateUserConsentDocument = gql`
     ...FullUserConsent
   }
 }
-    ${FullUserConsentFragmentDoc}`;
+    ${FullUserConsentFragmentDoc}
+${FullConsentFragmentDoc}`;
 export type CreateUserConsentMutationFn = Apollo.MutationFunction<CreateUserConsentMutation, CreateUserConsentMutationVariables>;
 
 /**
@@ -392,7 +428,8 @@ export const UpdateUserConsentDocument = gql`
     ...FullUserConsent
   }
 }
-    ${FullUserConsentFragmentDoc}`;
+    ${FullUserConsentFragmentDoc}
+${FullConsentFragmentDoc}`;
 export type UpdateUserConsentMutationFn = Apollo.MutationFunction<UpdateUserConsentMutation, UpdateUserConsentMutationVariables>;
 
 /**
@@ -426,7 +463,8 @@ export const DeleteUserConsentDocument = gql`
     ...FullUserConsent
   }
 }
-    ${FullUserConsentFragmentDoc}`;
+    ${FullUserConsentFragmentDoc}
+${FullConsentFragmentDoc}`;
 export type DeleteUserConsentMutationFn = Apollo.MutationFunction<DeleteUserConsentMutation, DeleteUserConsentMutationVariables>;
 
 /**

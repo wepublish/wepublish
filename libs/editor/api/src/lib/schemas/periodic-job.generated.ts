@@ -13,7 +13,10 @@ export type PeriodicJobLogsQueryVariables = Types.Exact<{
 }>;
 
 
-export type PeriodicJobLogsQuery = { __typename?: 'Query', periodicJobLog: Array<{ __typename?: 'PeriodicJob', id: string, date: string, error?: string | null, executionTime?: string | null, finishedWithError?: string | null, modifiedAt: string, successfullyFinished?: string | null, tries: number, createdAt: string }> };
+export type PeriodicJobLogsQuery = { __typename?: 'Query', periodicJobLog: Array<(
+    { __typename?: 'PeriodicJob' }
+    & FullPeriodicJobFragment
+  )> };
 
 export const FullPeriodicJobFragmentDoc = gql`
     fragment FullPeriodicJob on PeriodicJob {

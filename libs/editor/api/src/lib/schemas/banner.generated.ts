@@ -2,8 +2,9 @@
 import * as Types from '../graphql';
 
 import {RichtextJSONDocument} from '@wepublish/richtext';
+import { FullImageFragment, ImageUrLsFragment, FullPeerImageFragment } from './image.generated';
 import { gql } from '@apollo/client';
-import { FullImageFragmentDoc, FullPeerImageFragmentDoc } from './image.generated';
+import { FullImageFragmentDoc, ImageUrLsFragmentDoc, FullPeerImageFragmentDoc } from './image.generated';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type BannersQueryVariables = Types.Exact<{
@@ -12,28 +13,40 @@ export type BannersQueryVariables = Types.Exact<{
 }>;
 
 
-export type BannersQuery = { __typename?: 'Query', banners: Array<{ __typename?: 'Banner', id: string, title: string, text: string, cta?: string | null, active: boolean, collapsible: boolean, delay: number, hideForMinutes: number, html?: string | null, embedUrl?: string | null, showOnArticles: boolean, showForLoginStatus: Types.LoginStatus, showOnPages?: Array<{ __typename?: 'PageModel', id: string }> | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, actions?: Array<{ __typename?: 'BannerAction', id: string, label: string, url: string, style: string, role: Types.BannerActionRole }> | null }> };
+export type BannersQuery = { __typename?: 'Query', banners: Array<(
+    { __typename?: 'Banner' }
+    & FullBannerFragment
+  )> };
 
 export type BannerQueryVariables = Types.Exact<{
   id: Types.Scalars['String'];
 }>;
 
 
-export type BannerQuery = { __typename?: 'Query', banner: { __typename?: 'Banner', id: string, title: string, text: string, cta?: string | null, active: boolean, collapsible: boolean, delay: number, hideForMinutes: number, html?: string | null, embedUrl?: string | null, showOnArticles: boolean, showForLoginStatus: Types.LoginStatus, showOnPages?: Array<{ __typename?: 'PageModel', id: string }> | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, actions?: Array<{ __typename?: 'BannerAction', id: string, label: string, url: string, style: string, role: Types.BannerActionRole }> | null } };
+export type BannerQuery = { __typename?: 'Query', banner: (
+    { __typename?: 'Banner' }
+    & FullBannerFragment
+  ) };
 
 export type CreateBannerMutationVariables = Types.Exact<{
   input: Types.CreateBannerInput;
 }>;
 
 
-export type CreateBannerMutation = { __typename?: 'Mutation', createBanner: { __typename?: 'Banner', id: string, title: string, text: string, cta?: string | null, active: boolean, collapsible: boolean, delay: number, hideForMinutes: number, html?: string | null, embedUrl?: string | null, showOnArticles: boolean, showForLoginStatus: Types.LoginStatus, showOnPages?: Array<{ __typename?: 'PageModel', id: string }> | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, actions?: Array<{ __typename?: 'BannerAction', id: string, label: string, url: string, style: string, role: Types.BannerActionRole }> | null } };
+export type CreateBannerMutation = { __typename?: 'Mutation', createBanner: (
+    { __typename?: 'Banner' }
+    & FullBannerFragment
+  ) };
 
 export type UpdateBannerMutationVariables = Types.Exact<{
   input: Types.UpdateBannerInput;
 }>;
 
 
-export type UpdateBannerMutation = { __typename?: 'Mutation', updateBanner: { __typename?: 'Banner', id: string, title: string, text: string, cta?: string | null, active: boolean, collapsible: boolean, delay: number, hideForMinutes: number, html?: string | null, embedUrl?: string | null, showOnArticles: boolean, showForLoginStatus: Types.LoginStatus, showOnPages?: Array<{ __typename?: 'PageModel', id: string }> | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, actions?: Array<{ __typename?: 'BannerAction', id: string, label: string, url: string, style: string, role: Types.BannerActionRole }> | null } };
+export type UpdateBannerMutation = { __typename?: 'Mutation', updateBanner: (
+    { __typename?: 'Banner' }
+    & FullBannerFragment
+  ) };
 
 export type DeleteBannerMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
@@ -44,7 +57,16 @@ export type DeleteBannerMutation = { __typename?: 'Mutation', deleteBanner?: boo
 
 export type Page2RefFragment = { __typename?: 'PageModel', id: string };
 
-export type FullBannerFragment = { __typename?: 'Banner', id: string, title: string, text: string, cta?: string | null, active: boolean, collapsible: boolean, delay: number, hideForMinutes: number, html?: string | null, embedUrl?: string | null, showOnArticles: boolean, showForLoginStatus: Types.LoginStatus, showOnPages?: Array<{ __typename?: 'PageModel', id: string }> | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, actions?: Array<{ __typename?: 'BannerAction', id: string, label: string, url: string, style: string, role: Types.BannerActionRole }> | null };
+export type FullBannerFragment = { __typename?: 'Banner', id: string, title: string, text: string, cta?: string | null, active: boolean, collapsible: boolean, delay: number, hideForMinutes: number, html?: string | null, embedUrl?: string | null, showOnArticles: boolean, showForLoginStatus: Types.LoginStatus, showOnPages?: Array<(
+    { __typename?: 'PageModel' }
+    & Page2RefFragment
+  )> | null, image?: (
+    { __typename?: 'Image' }
+    & FullImageFragment
+  ) | null, actions?: Array<(
+    { __typename?: 'BannerAction' }
+    & FullBannerActionFragment
+  )> | null };
 
 export type FullBannerActionFragment = { __typename?: 'BannerAction', id: string, label: string, url: string, style: string, role: Types.BannerActionRole };
 
@@ -86,16 +108,18 @@ export const FullBannerFragmentDoc = gql`
     ...FullBannerAction
   }
 }
-    ${Page2RefFragmentDoc}
-${FullImageFragmentDoc}
-${FullBannerActionFragmentDoc}`;
+    `;
 export const BannersDocument = gql`
     query Banners($take: Int!, $skip: Int!) {
   banners(take: $take, skip: $skip) {
     ...FullBanner
   }
 }
-    ${FullBannerFragmentDoc}`;
+    ${FullBannerFragmentDoc}
+${Page2RefFragmentDoc}
+${FullImageFragmentDoc}
+${ImageUrLsFragmentDoc}
+${FullBannerActionFragmentDoc}`;
 
 /**
  * __useBannersQuery__
@@ -131,7 +155,11 @@ export const BannerDocument = gql`
     ...FullBanner
   }
 }
-    ${FullBannerFragmentDoc}`;
+    ${FullBannerFragmentDoc}
+${Page2RefFragmentDoc}
+${FullImageFragmentDoc}
+${ImageUrLsFragmentDoc}
+${FullBannerActionFragmentDoc}`;
 
 /**
  * __useBannerQuery__
@@ -166,7 +194,11 @@ export const CreateBannerDocument = gql`
     ...FullBanner
   }
 }
-    ${FullBannerFragmentDoc}`;
+    ${FullBannerFragmentDoc}
+${Page2RefFragmentDoc}
+${FullImageFragmentDoc}
+${ImageUrLsFragmentDoc}
+${FullBannerActionFragmentDoc}`;
 export type CreateBannerMutationFn = Apollo.MutationFunction<CreateBannerMutation, CreateBannerMutationVariables>;
 
 /**
@@ -199,7 +231,11 @@ export const UpdateBannerDocument = gql`
     ...FullBanner
   }
 }
-    ${FullBannerFragmentDoc}`;
+    ${FullBannerFragmentDoc}
+${Page2RefFragmentDoc}
+${FullImageFragmentDoc}
+${ImageUrLsFragmentDoc}
+${FullBannerActionFragmentDoc}`;
 export type UpdateBannerMutationFn = Apollo.MutationFunction<UpdateBannerMutation, UpdateBannerMutationVariables>;
 
 /**

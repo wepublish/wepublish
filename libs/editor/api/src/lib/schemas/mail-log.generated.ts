@@ -21,7 +21,10 @@ export type MailLogsQueryVariables = Types.Exact<{
 }>;
 
 
-export type MailLogsQuery = { __typename?: 'Query', mailLogs: { __typename?: 'PaginatedMailLog', totalCount: number, nodes: Array<{ __typename?: 'MailLogModel', id: string, createdAt: string, sentDate: string, state: Types.MailLogState, type?: Types.MailLogType | null, subject?: string | null, error?: string | null, mailProviderID: string, mailSendJobId?: string | null, recipient: { __typename?: 'MailLogRecipient', id: string, email: string, name: string, firstName?: string | null }, mailTemplate: { __typename?: 'MailLogTemplate', id: string, name: string } }>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } };
+export type MailLogsQuery = { __typename?: 'Query', mailLogs: { __typename?: 'PaginatedMailLog', totalCount: number, nodes: Array<(
+      { __typename?: 'MailLogModel' }
+      & FullMailLogFragment
+    )>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } };
 
 export const FullMailLogFragmentDoc = gql`
     fragment FullMailLog on MailLogModel {

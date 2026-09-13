@@ -10,7 +10,10 @@ export type FullCommentRatingSystemFragment = { __typename?: 'CommentRatingSyste
 export type RatingSystemQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type RatingSystemQuery = { __typename?: 'Query', ratingSystem: { __typename?: 'CommentRatingSystem', id: string, name?: string | null, answers: Array<{ __typename?: 'CommentRatingSystemAnswer', id: string, type: Types.RatingSystemType, answer?: string | null, ratingSystemId: string }> } };
+export type RatingSystemQuery = { __typename?: 'Query', ratingSystem: (
+    { __typename?: 'CommentRatingSystem' }
+    & FullCommentRatingSystemFragment
+  ) };
 
 export type UpdateRatingSystemMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];

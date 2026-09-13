@@ -8,21 +8,33 @@ const defaultOptions = {} as const;
 export type MailTemplateQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type MailTemplateQuery = { __typename?: 'Query', mailTemplates: Array<{ __typename?: 'MailTemplateModel', id: string, name: string, description?: string | null, subject: string, context?: Types.MailTemplateContext | null, status: string }>, provider: { __typename?: 'MailProviderModel', name: string } };
+export type MailTemplateQuery = { __typename?: 'Query', mailTemplates: Array<(
+    { __typename?: 'MailTemplateModel' }
+    & TinyMailTemplateFragment
+  )>, provider: (
+    { __typename?: 'MailProviderModel' }
+    & FullMailProviderFragment
+  ) };
 
 export type MailTemplateByIdQueryVariables = Types.Exact<{
   id: Types.Scalars['String'];
 }>;
 
 
-export type MailTemplateByIdQuery = { __typename?: 'Query', mailTemplate?: { __typename?: 'MailTemplateModel', htmlContent: string, textContent?: string | null, id: string, name: string, description?: string | null, subject: string, context?: Types.MailTemplateContext | null, status: string } | null };
+export type MailTemplateByIdQuery = { __typename?: 'Query', mailTemplate?: (
+    { __typename?: 'MailTemplateModel' }
+    & FullMailTemplateFragment
+  ) | null };
 
 export type CreateMailTemplateMutationVariables = Types.Exact<{
   input: Types.MailTemplateInput;
 }>;
 
 
-export type CreateMailTemplateMutation = { __typename?: 'Mutation', createMailTemplate: { __typename?: 'MailTemplateModel', htmlContent: string, textContent?: string | null, id: string, name: string, description?: string | null, subject: string, context?: Types.MailTemplateContext | null, status: string } };
+export type CreateMailTemplateMutation = { __typename?: 'Mutation', createMailTemplate: (
+    { __typename?: 'MailTemplateModel' }
+    & FullMailTemplateFragment
+  ) };
 
 export type UpdateMailTemplateMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
@@ -30,7 +42,10 @@ export type UpdateMailTemplateMutationVariables = Types.Exact<{
 }>;
 
 
-export type UpdateMailTemplateMutation = { __typename?: 'Mutation', updateMailTemplate: { __typename?: 'MailTemplateModel', htmlContent: string, textContent?: string | null, id: string, name: string, description?: string | null, subject: string, context?: Types.MailTemplateContext | null, status: string } };
+export type UpdateMailTemplateMutation = { __typename?: 'Mutation', updateMailTemplate: (
+    { __typename?: 'MailTemplateModel' }
+    & FullMailTemplateFragment
+  ) };
 
 export type DeleteMailTemplateMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
@@ -67,7 +82,10 @@ export type SendTestMailTemplateMutation = { __typename?: 'Mutation', sendTestMa
 
 export type TinyMailTemplateFragment = { __typename?: 'MailTemplateModel', id: string, name: string, description?: string | null, subject: string, context?: Types.MailTemplateContext | null, status: string };
 
-export type FullMailTemplateFragment = { __typename?: 'MailTemplateModel', htmlContent: string, textContent?: string | null, id: string, name: string, description?: string | null, subject: string, context?: Types.MailTemplateContext | null, status: string };
+export type FullMailTemplateFragment = (
+  { __typename?: 'MailTemplateModel', htmlContent: string, textContent?: string | null }
+  & TinyMailTemplateFragment
+);
 
 export type FullMailProviderFragment = { __typename?: 'MailProviderModel', name: string };
 
@@ -87,7 +105,7 @@ export const FullMailTemplateFragmentDoc = gql`
   htmlContent
   textContent
 }
-    ${TinyMailTemplateFragmentDoc}`;
+    `;
 export const FullMailProviderFragmentDoc = gql`
     fragment FullMailProvider on MailProviderModel {
   name
@@ -137,7 +155,8 @@ export const MailTemplateByIdDocument = gql`
     ...FullMailTemplate
   }
 }
-    ${FullMailTemplateFragmentDoc}`;
+    ${FullMailTemplateFragmentDoc}
+${TinyMailTemplateFragmentDoc}`;
 
 /**
  * __useMailTemplateByIdQuery__
@@ -172,7 +191,8 @@ export const CreateMailTemplateDocument = gql`
     ...FullMailTemplate
   }
 }
-    ${FullMailTemplateFragmentDoc}`;
+    ${FullMailTemplateFragmentDoc}
+${TinyMailTemplateFragmentDoc}`;
 export type CreateMailTemplateMutationFn = Apollo.MutationFunction<CreateMailTemplateMutation, CreateMailTemplateMutationVariables>;
 
 /**
@@ -205,7 +225,8 @@ export const UpdateMailTemplateDocument = gql`
     ...FullMailTemplate
   }
 }
-    ${FullMailTemplateFragmentDoc}`;
+    ${FullMailTemplateFragmentDoc}
+${TinyMailTemplateFragmentDoc}`;
 export type UpdateMailTemplateMutationFn = Apollo.MutationFunction<UpdateMailTemplateMutation, UpdateMailTemplateMutationVariables>;
 
 /**

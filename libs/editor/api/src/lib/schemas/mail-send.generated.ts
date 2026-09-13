@@ -43,7 +43,10 @@ export type MailSendJobQueryVariables = Types.Exact<{
 }>;
 
 
-export type MailSendJobQuery = { __typename?: 'Query', mailSendJob?: { __typename?: 'MailSendJobModel', id: string, createdAt: string, modifiedAt: string, status: Types.MailSendJobState, audience: Types.MailSendAudience, totalCount: number, sentCount: number, failedCount: number, sendingCount: number, resumeCount: number, startedAt?: string | null, finishedAt?: string | null, heartbeatAt?: string | null, error?: string | null, mailTemplate?: { __typename?: 'MailLogTemplate', id: string, name: string } | null } | null };
+export type MailSendJobQuery = { __typename?: 'Query', mailSendJob?: (
+    { __typename?: 'MailSendJobModel' }
+    & FullMailSendJobFragment
+  ) | null };
 
 export type MailSendJobsQueryVariables = Types.Exact<{
   skip?: Types.InputMaybe<Types.Scalars['Int']>;
@@ -51,7 +54,10 @@ export type MailSendJobsQueryVariables = Types.Exact<{
 }>;
 
 
-export type MailSendJobsQuery = { __typename?: 'Query', mailSendJobs: { __typename?: 'PaginatedMailSendJob', totalCount: number, nodes: Array<{ __typename?: 'MailSendJobModel', id: string, createdAt: string, modifiedAt: string, status: Types.MailSendJobState, audience: Types.MailSendAudience, totalCount: number, sentCount: number, failedCount: number, sendingCount: number, resumeCount: number, startedAt?: string | null, finishedAt?: string | null, heartbeatAt?: string | null, error?: string | null, mailTemplate?: { __typename?: 'MailLogTemplate', id: string, name: string } | null }>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } };
+export type MailSendJobsQuery = { __typename?: 'Query', mailSendJobs: { __typename?: 'PaginatedMailSendJob', totalCount: number, nodes: Array<(
+      { __typename?: 'MailSendJobModel' }
+      & FullMailSendJobFragment
+    )>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } };
 
 export type MailSendJobRecipientsQueryVariables = Types.Exact<{
   jobId: Types.Scalars['String'];
@@ -69,14 +75,20 @@ export type ResumeMailSendJobMutationVariables = Types.Exact<{
 }>;
 
 
-export type ResumeMailSendJobMutation = { __typename?: 'Mutation', resumeMailSendJob: { __typename?: 'MailSendJobModel', id: string, createdAt: string, modifiedAt: string, status: Types.MailSendJobState, audience: Types.MailSendAudience, totalCount: number, sentCount: number, failedCount: number, sendingCount: number, resumeCount: number, startedAt?: string | null, finishedAt?: string | null, heartbeatAt?: string | null, error?: string | null, mailTemplate?: { __typename?: 'MailLogTemplate', id: string, name: string } | null } };
+export type ResumeMailSendJobMutation = { __typename?: 'Mutation', resumeMailSendJob: (
+    { __typename?: 'MailSendJobModel' }
+    & FullMailSendJobFragment
+  ) };
 
 export type CancelMailSendJobMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
 }>;
 
 
-export type CancelMailSendJobMutation = { __typename?: 'Mutation', cancelMailSendJob: { __typename?: 'MailSendJobModel', id: string, createdAt: string, modifiedAt: string, status: Types.MailSendJobState, audience: Types.MailSendAudience, totalCount: number, sentCount: number, failedCount: number, sendingCount: number, resumeCount: number, startedAt?: string | null, finishedAt?: string | null, heartbeatAt?: string | null, error?: string | null, mailTemplate?: { __typename?: 'MailLogTemplate', id: string, name: string } | null } };
+export type CancelMailSendJobMutation = { __typename?: 'Mutation', cancelMailSendJob: (
+    { __typename?: 'MailSendJobModel' }
+    & FullMailSendJobFragment
+  ) };
 
 export type SendMailTemplateToUserMutationVariables = Types.Exact<{
   templateId: Types.Scalars['String'];
@@ -84,14 +96,20 @@ export type SendMailTemplateToUserMutationVariables = Types.Exact<{
 }>;
 
 
-export type SendMailTemplateToUserMutation = { __typename?: 'Mutation', sendMailTemplateToUser: { __typename?: 'MailSendJobModel', id: string, createdAt: string, modifiedAt: string, status: Types.MailSendJobState, audience: Types.MailSendAudience, totalCount: number, sentCount: number, failedCount: number, sendingCount: number, resumeCount: number, startedAt?: string | null, finishedAt?: string | null, heartbeatAt?: string | null, error?: string | null, mailTemplate?: { __typename?: 'MailLogTemplate', id: string, name: string } | null } };
+export type SendMailTemplateToUserMutation = { __typename?: 'Mutation', sendMailTemplateToUser: (
+    { __typename?: 'MailSendJobModel' }
+    & FullMailSendJobFragment
+  ) };
 
 export type CreateMailSendJobMutationVariables = Types.Exact<{
   input: Types.MailSendJobInput;
 }>;
 
 
-export type CreateMailSendJobMutation = { __typename?: 'Mutation', createMailSendJob: { __typename?: 'MailSendJobModel', id: string, createdAt: string, modifiedAt: string, status: Types.MailSendJobState, audience: Types.MailSendAudience, totalCount: number, sentCount: number, failedCount: number, sendingCount: number, resumeCount: number, startedAt?: string | null, finishedAt?: string | null, heartbeatAt?: string | null, error?: string | null, mailTemplate?: { __typename?: 'MailLogTemplate', id: string, name: string } | null } };
+export type CreateMailSendJobMutation = { __typename?: 'Mutation', createMailSendJob: (
+    { __typename?: 'MailSendJobModel' }
+    & FullMailSendJobFragment
+  ) };
 
 export const FullMailSendJobFragmentDoc = gql`
     fragment FullMailSendJob on MailSendJobModel {

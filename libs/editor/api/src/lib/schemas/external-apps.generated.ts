@@ -12,21 +12,30 @@ export type ExternalAppQueryVariables = Types.Exact<{
 }>;
 
 
-export type ExternalAppQuery = { __typename?: 'Query', externalApp: { __typename?: 'ExternalApp', createdAt: string, icon?: string | null, id: string, modifiedAt: string, name: string, description?: string | null, target: Types.ExternalAppsTarget, url: string } };
+export type ExternalAppQuery = { __typename?: 'Query', externalApp: (
+    { __typename?: 'ExternalApp' }
+    & ExternalAppFragment
+  ) };
 
 export type ExternalAppsQueryVariables = Types.Exact<{
   filter?: Types.InputMaybe<Types.ExternalAppFilter>;
 }>;
 
 
-export type ExternalAppsQuery = { __typename?: 'Query', externalApps: Array<{ __typename?: 'ExternalApp', createdAt: string, icon?: string | null, id: string, modifiedAt: string, name: string, description?: string | null, target: Types.ExternalAppsTarget, url: string }> };
+export type ExternalAppsQuery = { __typename?: 'Query', externalApps: Array<(
+    { __typename?: 'ExternalApp' }
+    & ExternalAppFragment
+  )> };
 
 export type CreateExternalAppMutationVariables = Types.Exact<{
   input: Types.CreateExternalAppInput;
 }>;
 
 
-export type CreateExternalAppMutation = { __typename?: 'Mutation', createExternalApp: { __typename?: 'ExternalApp', createdAt: string, icon?: string | null, id: string, modifiedAt: string, name: string, description?: string | null, target: Types.ExternalAppsTarget, url: string } };
+export type CreateExternalAppMutation = { __typename?: 'Mutation', createExternalApp: (
+    { __typename?: 'ExternalApp' }
+    & ExternalAppFragment
+  ) };
 
 export type UpdateExternalAppMutationVariables = Types.Exact<{
   icon?: Types.InputMaybe<Types.Scalars['String']>;
@@ -38,14 +47,20 @@ export type UpdateExternalAppMutationVariables = Types.Exact<{
 }>;
 
 
-export type UpdateExternalAppMutation = { __typename?: 'Mutation', updateExternalApp: { __typename?: 'ExternalApp', createdAt: string, icon?: string | null, id: string, modifiedAt: string, name: string, description?: string | null, target: Types.ExternalAppsTarget, url: string } };
+export type UpdateExternalAppMutation = { __typename?: 'Mutation', updateExternalApp: (
+    { __typename?: 'ExternalApp' }
+    & ExternalAppFragment
+  ) };
 
 export type DeleteExternalAppMutationVariables = Types.Exact<{
   deleteExternalAppId: Types.Scalars['String'];
 }>;
 
 
-export type DeleteExternalAppMutation = { __typename?: 'Mutation', deleteExternalApp: { __typename?: 'ExternalApp', createdAt: string, icon?: string | null, id: string, modifiedAt: string, name: string, description?: string | null, target: Types.ExternalAppsTarget, url: string } };
+export type DeleteExternalAppMutation = { __typename?: 'Mutation', deleteExternalApp: (
+    { __typename?: 'ExternalApp' }
+    & ExternalAppFragment
+  ) };
 
 export const ExternalAppFragmentDoc = gql`
     fragment ExternalApp on ExternalApp {

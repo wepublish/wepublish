@@ -14,21 +14,30 @@ export type FullTokenFragment = FullToken_Token_Fragment | FullToken_TokenWithSe
 export type TokenListQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type TokenListQuery = { __typename?: 'Query', tokens: Array<{ __typename?: 'Token', id: string, name: string }> };
+export type TokenListQuery = { __typename?: 'Query', tokens: Array<(
+    { __typename?: 'Token' }
+    & FullToken_Token_Fragment
+  )> };
 
 export type CreateTokenMutationVariables = Types.Exact<{
   name: Types.Scalars['String'];
 }>;
 
 
-export type CreateTokenMutation = { __typename?: 'Mutation', createToken: { __typename?: 'TokenWithSecret', token: string, id: string, name: string } };
+export type CreateTokenMutation = { __typename?: 'Mutation', createToken: (
+    { __typename?: 'TokenWithSecret', token: string }
+    & FullToken_TokenWithSecret_Fragment
+  ) };
 
 export type DeleteTokenMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
 }>;
 
 
-export type DeleteTokenMutation = { __typename?: 'Mutation', deleteToken: { __typename?: 'Token', id: string, name: string } };
+export type DeleteTokenMutation = { __typename?: 'Mutation', deleteToken: (
+    { __typename?: 'Token' }
+    & FullToken_Token_Fragment
+  ) };
 
 export const FullTokenFragmentDoc = gql`
     fragment FullToken on BaseToken {

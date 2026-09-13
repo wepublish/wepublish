@@ -12,7 +12,10 @@ export type TagQueryVariables = Types.Exact<{
 }>;
 
 
-export type TagQuery = { __typename?: 'Query', tag: { __typename?: 'Tag', id: string, tag?: string | null, description?: RichtextJSONDocument | null, type: Types.TagType, main: boolean, url: string, color?: string | null } };
+export type TagQuery = { __typename?: 'Query', tag: (
+    { __typename?: 'Tag' }
+    & FullTagFragment
+  ) };
 
 export type TagListQueryVariables = Types.Exact<{
   filter?: Types.InputMaybe<Types.TagFilter>;
@@ -24,7 +27,10 @@ export type TagListQueryVariables = Types.Exact<{
 }>;
 
 
-export type TagListQuery = { __typename?: 'Query', tags: { __typename?: 'PaginatedTags', totalCount: number, nodes: Array<{ __typename?: 'Tag', id: string, tag?: string | null, description?: RichtextJSONDocument | null, type: Types.TagType, main: boolean, url: string, color?: string | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
+export type TagListQuery = { __typename?: 'Query', tags: { __typename?: 'PaginatedTags', totalCount: number, nodes: Array<(
+      { __typename?: 'Tag' }
+      & FullTagFragment
+    )>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type CreateTagMutationVariables = Types.Exact<{
   tag?: Types.InputMaybe<Types.Scalars['String']>;
@@ -34,7 +40,10 @@ export type CreateTagMutationVariables = Types.Exact<{
 }>;
 
 
-export type CreateTagMutation = { __typename?: 'Mutation', createTag: { __typename?: 'Tag', id: string, tag?: string | null, description?: RichtextJSONDocument | null, type: Types.TagType, main: boolean, url: string, color?: string | null } };
+export type CreateTagMutation = { __typename?: 'Mutation', createTag: (
+    { __typename?: 'Tag' }
+    & FullTagFragment
+  ) };
 
 export type UpdateTagMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
@@ -45,14 +54,20 @@ export type UpdateTagMutationVariables = Types.Exact<{
 }>;
 
 
-export type UpdateTagMutation = { __typename?: 'Mutation', updateTag: { __typename?: 'Tag', id: string, tag?: string | null, description?: RichtextJSONDocument | null, type: Types.TagType, main: boolean, url: string, color?: string | null } };
+export type UpdateTagMutation = { __typename?: 'Mutation', updateTag: (
+    { __typename?: 'Tag' }
+    & FullTagFragment
+  ) };
 
 export type DeleteTagMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
 }>;
 
 
-export type DeleteTagMutation = { __typename?: 'Mutation', deleteTag: { __typename?: 'Tag', id: string, tag?: string | null, description?: RichtextJSONDocument | null, type: Types.TagType, main: boolean, url: string, color?: string | null } };
+export type DeleteTagMutation = { __typename?: 'Mutation', deleteTag: (
+    { __typename?: 'Tag' }
+    & FullTagFragment
+  ) };
 
 export const FullTagFragmentDoc = gql`
     fragment FullTag on Tag {

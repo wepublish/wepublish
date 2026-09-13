@@ -10,14 +10,20 @@ export type FullPaywallFragment = { __typename?: 'Paywall', id: string, createdA
 export type PaywallListQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type PaywallListQuery = { __typename?: 'Query', paywalls: Array<{ __typename?: 'Paywall', id: string, createdAt: string, modifiedAt: string, name?: string | null, description?: RichtextJSONDocument | null, circumventDescription?: RichtextJSONDocument | null, upgradeDescription?: RichtextJSONDocument | null, upgradeCircumventDescription?: RichtextJSONDocument | null, active: boolean, anyMemberPlan: boolean, alternativeSubscribeUrl?: string | null, fadeout: boolean, hideContentAfter: number, memberPlans: Array<{ __typename?: 'MemberPlan', id: string, name: string }>, bypasses: Array<{ __typename?: 'PaywallBypass', id: string, token: string }> }> };
+export type PaywallListQuery = { __typename?: 'Query', paywalls: Array<(
+    { __typename?: 'Paywall' }
+    & FullPaywallFragment
+  )> };
 
 export type PaywallQueryVariables = Types.Exact<{
   id: Types.Scalars['String'];
 }>;
 
 
-export type PaywallQuery = { __typename?: 'Query', paywall: { __typename?: 'Paywall', id: string, createdAt: string, modifiedAt: string, name?: string | null, description?: RichtextJSONDocument | null, circumventDescription?: RichtextJSONDocument | null, upgradeDescription?: RichtextJSONDocument | null, upgradeCircumventDescription?: RichtextJSONDocument | null, active: boolean, anyMemberPlan: boolean, alternativeSubscribeUrl?: string | null, fadeout: boolean, hideContentAfter: number, memberPlans: Array<{ __typename?: 'MemberPlan', id: string, name: string }>, bypasses: Array<{ __typename?: 'PaywallBypass', id: string, token: string }> } };
+export type PaywallQuery = { __typename?: 'Query', paywall: (
+    { __typename?: 'Paywall' }
+    & FullPaywallFragment
+  ) };
 
 export type CreatePaywallMutationVariables = Types.Exact<{
   name?: Types.InputMaybe<Types.Scalars['String']>;
@@ -35,7 +41,10 @@ export type CreatePaywallMutationVariables = Types.Exact<{
 }>;
 
 
-export type CreatePaywallMutation = { __typename?: 'Mutation', createPaywall: { __typename?: 'Paywall', id: string, createdAt: string, modifiedAt: string, name?: string | null, description?: RichtextJSONDocument | null, circumventDescription?: RichtextJSONDocument | null, upgradeDescription?: RichtextJSONDocument | null, upgradeCircumventDescription?: RichtextJSONDocument | null, active: boolean, anyMemberPlan: boolean, alternativeSubscribeUrl?: string | null, fadeout: boolean, hideContentAfter: number, memberPlans: Array<{ __typename?: 'MemberPlan', id: string, name: string }>, bypasses: Array<{ __typename?: 'PaywallBypass', id: string, token: string }> } };
+export type CreatePaywallMutation = { __typename?: 'Mutation', createPaywall: (
+    { __typename?: 'Paywall' }
+    & FullPaywallFragment
+  ) };
 
 export type UpdatePaywallMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
@@ -54,14 +63,20 @@ export type UpdatePaywallMutationVariables = Types.Exact<{
 }>;
 
 
-export type UpdatePaywallMutation = { __typename?: 'Mutation', updatePaywall: { __typename?: 'Paywall', id: string, createdAt: string, modifiedAt: string, name?: string | null, description?: RichtextJSONDocument | null, circumventDescription?: RichtextJSONDocument | null, upgradeDescription?: RichtextJSONDocument | null, upgradeCircumventDescription?: RichtextJSONDocument | null, active: boolean, anyMemberPlan: boolean, alternativeSubscribeUrl?: string | null, fadeout: boolean, hideContentAfter: number, memberPlans: Array<{ __typename?: 'MemberPlan', id: string, name: string }>, bypasses: Array<{ __typename?: 'PaywallBypass', id: string, token: string }> } };
+export type UpdatePaywallMutation = { __typename?: 'Mutation', updatePaywall: (
+    { __typename?: 'Paywall' }
+    & FullPaywallFragment
+  ) };
 
 export type DeletePaywallMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
 }>;
 
 
-export type DeletePaywallMutation = { __typename?: 'Mutation', deletePaywall: { __typename?: 'Paywall', id: string, createdAt: string, modifiedAt: string, name?: string | null, description?: RichtextJSONDocument | null, circumventDescription?: RichtextJSONDocument | null, upgradeDescription?: RichtextJSONDocument | null, upgradeCircumventDescription?: RichtextJSONDocument | null, active: boolean, anyMemberPlan: boolean, alternativeSubscribeUrl?: string | null, fadeout: boolean, hideContentAfter: number, memberPlans: Array<{ __typename?: 'MemberPlan', id: string, name: string }>, bypasses: Array<{ __typename?: 'PaywallBypass', id: string, token: string }> } };
+export type DeletePaywallMutation = { __typename?: 'Mutation', deletePaywall: (
+    { __typename?: 'Paywall' }
+    & FullPaywallFragment
+  ) };
 
 export const FullPaywallFragmentDoc = gql`
     fragment FullPaywall on Paywall {

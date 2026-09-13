@@ -2,11 +2,15 @@
 import * as Types from '../graphql';
 
 import {RichtextJSONDocument} from '@wepublish/richtext';
+import { FullPermissionFragment } from './permissions.generated';
 import { gql } from '@apollo/client';
 import { FullPermissionFragmentDoc } from './permissions.generated';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
-export type FullUserRoleFragment = { __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> };
+export type FullUserRoleFragment = { __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<(
+    { __typename?: 'Permission' }
+    & FullPermissionFragment
+  )> };
 
 export type UserRoleListQueryVariables = Types.Exact<{
   filter?: Types.InputMaybe<Types.Scalars['String']>;
@@ -18,14 +22,20 @@ export type UserRoleListQueryVariables = Types.Exact<{
 }>;
 
 
-export type UserRoleListQuery = { __typename?: 'Query', userRoles: { __typename?: 'PaginatedUserRoles', totalCount: number, nodes: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
+export type UserRoleListQuery = { __typename?: 'Query', userRoles: { __typename?: 'PaginatedUserRoles', totalCount: number, nodes: Array<(
+      { __typename?: 'UserRole' }
+      & FullUserRoleFragment
+    )>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type UserRoleQueryVariables = Types.Exact<{
   id: Types.Scalars['String'];
 }>;
 
 
-export type UserRoleQuery = { __typename?: 'Query', userRole: { __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> } };
+export type UserRoleQuery = { __typename?: 'Query', userRole: (
+    { __typename?: 'UserRole' }
+    & FullUserRoleFragment
+  ) };
 
 export type CreateUserRoleMutationVariables = Types.Exact<{
   name: Types.Scalars['String'];
@@ -34,7 +44,10 @@ export type CreateUserRoleMutationVariables = Types.Exact<{
 }>;
 
 
-export type CreateUserRoleMutation = { __typename?: 'Mutation', createUserRole: { __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> } };
+export type CreateUserRoleMutation = { __typename?: 'Mutation', createUserRole: (
+    { __typename?: 'UserRole' }
+    & FullUserRoleFragment
+  ) };
 
 export type UpdateUserRoleMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
@@ -44,14 +57,20 @@ export type UpdateUserRoleMutationVariables = Types.Exact<{
 }>;
 
 
-export type UpdateUserRoleMutation = { __typename?: 'Mutation', updateUserRole: { __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> } };
+export type UpdateUserRoleMutation = { __typename?: 'Mutation', updateUserRole: (
+    { __typename?: 'UserRole' }
+    & FullUserRoleFragment
+  ) };
 
 export type DeleteUserRoleMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
 }>;
 
 
-export type DeleteUserRoleMutation = { __typename?: 'Mutation', deleteUserRole: { __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> } };
+export type DeleteUserRoleMutation = { __typename?: 'Mutation', deleteUserRole: (
+    { __typename?: 'UserRole' }
+    & FullUserRoleFragment
+  ) };
 
 export const FullUserRoleFragmentDoc = gql`
     fragment FullUserRole on UserRole {
@@ -63,7 +82,7 @@ export const FullUserRoleFragmentDoc = gql`
     ...FullPermission
   }
 }
-    ${FullPermissionFragmentDoc}`;
+    `;
 export const UserRoleListDocument = gql`
     query UserRoleList($filter: String, $cursorId: String, $take: Int, $skip: Int, $order: SortOrder, $sort: UserRoleSort) {
   userRoles(
@@ -86,7 +105,8 @@ export const UserRoleListDocument = gql`
     totalCount
   }
 }
-    ${FullUserRoleFragmentDoc}`;
+    ${FullUserRoleFragmentDoc}
+${FullPermissionFragmentDoc}`;
 
 /**
  * __useUserRoleListQuery__
@@ -126,7 +146,8 @@ export const UserRoleDocument = gql`
     ...FullUserRole
   }
 }
-    ${FullUserRoleFragmentDoc}`;
+    ${FullUserRoleFragmentDoc}
+${FullPermissionFragmentDoc}`;
 
 /**
  * __useUserRoleQuery__
@@ -165,7 +186,8 @@ export const CreateUserRoleDocument = gql`
     ...FullUserRole
   }
 }
-    ${FullUserRoleFragmentDoc}`;
+    ${FullUserRoleFragmentDoc}
+${FullPermissionFragmentDoc}`;
 export type CreateUserRoleMutationFn = Apollo.MutationFunction<CreateUserRoleMutation, CreateUserRoleMutationVariables>;
 
 /**
@@ -205,7 +227,8 @@ export const UpdateUserRoleDocument = gql`
     ...FullUserRole
   }
 }
-    ${FullUserRoleFragmentDoc}`;
+    ${FullUserRoleFragmentDoc}
+${FullPermissionFragmentDoc}`;
 export type UpdateUserRoleMutationFn = Apollo.MutationFunction<UpdateUserRoleMutation, UpdateUserRoleMutationVariables>;
 
 /**
@@ -241,7 +264,8 @@ export const DeleteUserRoleDocument = gql`
     ...FullUserRole
   }
 }
-    ${FullUserRoleFragmentDoc}`;
+    ${FullUserRoleFragmentDoc}
+${FullPermissionFragmentDoc}`;
 export type DeleteUserRoleMutationFn = Apollo.MutationFunction<DeleteUserRoleMutation, DeleteUserRoleMutationVariables>;
 
 /**

@@ -2,11 +2,18 @@
 import * as Types from '../graphql';
 
 import {RichtextJSONDocument} from '@wepublish/richtext';
+import { FullImageFragment, ImageUrLsFragment, FullPeerImageFragment } from './image.generated';
 import { gql } from '@apollo/client';
-import { FullImageFragmentDoc, FullPeerImageFragmentDoc } from './image.generated';
+import { FullImageFragmentDoc, ImageUrLsFragmentDoc, FullPeerImageFragmentDoc } from './image.generated';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
-export type CommentBlockCommentFragment = { __typename?: 'Comment', id: string, state: Types.CommentState, guestUsername?: string | null, text?: RichtextJSONDocument | null, source?: string | null, itemID: string, itemType: Types.CommentItemType, featured?: boolean | null, guestUserImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, user?: { __typename?: 'User', id: string, name: string, firstName?: string | null, flair?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, overriddenRatings: Array<{ __typename?: 'OverriddenRating', answerId: string, value?: number | null }> };
+export type CommentBlockCommentFragment = { __typename?: 'Comment', id: string, state: Types.CommentState, guestUsername?: string | null, text?: RichtextJSONDocument | null, source?: string | null, itemID: string, itemType: Types.CommentItemType, featured?: boolean | null, guestUserImage?: (
+    { __typename?: 'Image' }
+    & FullImageFragment
+  ) | null, user?: (
+    { __typename?: 'User' }
+    & CommentUserFragment
+  ) | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, overriddenRatings: Array<{ __typename?: 'OverriddenRating', answerId: string, value?: number | null }> };
 
 export type ApproveCommentMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
@@ -33,11 +40,32 @@ export type RequestChangesOnCommentMutation = { __typename?: 'Mutation', request
 
 export type CommentRevisionFragment = { __typename?: 'CommentRevision', text?: RichtextJSONDocument | null, title?: string | null, lead?: string | null, createdAt: string };
 
-export type CommentUserFragment = { __typename?: 'User', id: string, name: string, firstName?: string | null, flair?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null };
+export type CommentUserFragment = { __typename?: 'User', id: string, name: string, firstName?: string | null, flair?: string | null, image?: (
+    { __typename?: 'Image' }
+    & FullImageFragment
+  ) | null };
 
-export type FullParentCommentFragment = { __typename?: 'Comment', id: string, state: Types.CommentState, rejectionReason?: Types.CommentRejectionReason | null, guestUsername?: string | null, createdAt: string, modifiedAt: string, user?: { __typename?: 'User', id: string, name: string, firstName?: string | null, flair?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: RichtextJSONDocument | null, title?: string | null, lead?: string | null, createdAt: string }> };
+export type FullParentCommentFragment = { __typename?: 'Comment', id: string, state: Types.CommentState, rejectionReason?: Types.CommentRejectionReason | null, guestUsername?: string | null, createdAt: string, modifiedAt: string, user?: (
+    { __typename?: 'User' }
+    & CommentUserFragment
+  ) | null, revisions: Array<(
+    { __typename?: 'CommentRevision' }
+    & CommentRevisionFragment
+  )> };
 
-export type FullCommentFragment = { __typename?: 'Comment', id: string, state: Types.CommentState, rejectionReason?: Types.CommentRejectionReason | null, guestUsername?: string | null, source?: string | null, createdAt: string, modifiedAt: string, itemID: string, itemType: Types.CommentItemType, featured?: boolean | null, guestUserImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, user?: { __typename?: 'User', id: string, name: string, firstName?: string | null, flair?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: RichtextJSONDocument | null, title?: string | null, lead?: string | null, createdAt: string }>, parentComment?: { __typename?: 'Comment', id: string, state: Types.CommentState, rejectionReason?: Types.CommentRejectionReason | null, guestUsername?: string | null, createdAt: string, modifiedAt: string, user?: { __typename?: 'User', id: string, name: string, firstName?: string | null, flair?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: RichtextJSONDocument | null, title?: string | null, lead?: string | null, createdAt: string }> } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, overriddenRatings: Array<{ __typename?: 'OverriddenRating', answerId: string, value?: number | null }> };
+export type FullCommentFragment = { __typename?: 'Comment', id: string, state: Types.CommentState, rejectionReason?: Types.CommentRejectionReason | null, guestUsername?: string | null, source?: string | null, createdAt: string, modifiedAt: string, itemID: string, itemType: Types.CommentItemType, featured?: boolean | null, guestUserImage?: (
+    { __typename?: 'Image' }
+    & FullImageFragment
+  ) | null, user?: (
+    { __typename?: 'User' }
+    & CommentUserFragment
+  ) | null, revisions: Array<(
+    { __typename?: 'CommentRevision' }
+    & CommentRevisionFragment
+  )>, parentComment?: (
+    { __typename?: 'Comment' }
+    & FullParentCommentFragment
+  ) | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, overriddenRatings: Array<{ __typename?: 'OverriddenRating', answerId: string, value?: number | null }> };
 
 export type CommentListQueryVariables = Types.Exact<{
   filter?: Types.InputMaybe<Types.CommentFilter>;
@@ -49,14 +77,20 @@ export type CommentListQueryVariables = Types.Exact<{
 }>;
 
 
-export type CommentListQuery = { __typename?: 'Query', comments: { __typename?: 'PaginatedComments', totalCount: number, nodes: Array<{ __typename?: 'Comment', id: string, state: Types.CommentState, rejectionReason?: Types.CommentRejectionReason | null, guestUsername?: string | null, source?: string | null, createdAt: string, modifiedAt: string, itemID: string, itemType: Types.CommentItemType, featured?: boolean | null, guestUserImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, user?: { __typename?: 'User', id: string, name: string, firstName?: string | null, flair?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: RichtextJSONDocument | null, title?: string | null, lead?: string | null, createdAt: string }>, parentComment?: { __typename?: 'Comment', id: string, state: Types.CommentState, rejectionReason?: Types.CommentRejectionReason | null, guestUsername?: string | null, createdAt: string, modifiedAt: string, user?: { __typename?: 'User', id: string, name: string, firstName?: string | null, flair?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: RichtextJSONDocument | null, title?: string | null, lead?: string | null, createdAt: string }> } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, overriddenRatings: Array<{ __typename?: 'OverriddenRating', answerId: string, value?: number | null }> }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
+export type CommentListQuery = { __typename?: 'Query', comments: { __typename?: 'PaginatedComments', totalCount: number, nodes: Array<(
+      { __typename?: 'Comment' }
+      & FullCommentFragment
+    )>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type CommentQueryVariables = Types.Exact<{
   id: Types.Scalars['String'];
 }>;
 
 
-export type CommentQuery = { __typename?: 'Query', comment: { __typename?: 'Comment', id: string, state: Types.CommentState, rejectionReason?: Types.CommentRejectionReason | null, guestUsername?: string | null, source?: string | null, createdAt: string, modifiedAt: string, itemID: string, itemType: Types.CommentItemType, featured?: boolean | null, guestUserImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, user?: { __typename?: 'User', id: string, name: string, firstName?: string | null, flair?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: RichtextJSONDocument | null, title?: string | null, lead?: string | null, createdAt: string }>, parentComment?: { __typename?: 'Comment', id: string, state: Types.CommentState, rejectionReason?: Types.CommentRejectionReason | null, guestUsername?: string | null, createdAt: string, modifiedAt: string, user?: { __typename?: 'User', id: string, name: string, firstName?: string | null, flair?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: RichtextJSONDocument | null, title?: string | null, lead?: string | null, createdAt: string }> } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, overriddenRatings: Array<{ __typename?: 'OverriddenRating', answerId: string, value?: number | null }> } };
+export type CommentQuery = { __typename?: 'Query', comment: (
+    { __typename?: 'Comment' }
+    & FullCommentFragment
+  ) };
 
 export type UpdateCommentMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
@@ -71,7 +105,10 @@ export type UpdateCommentMutationVariables = Types.Exact<{
 }>;
 
 
-export type UpdateCommentMutation = { __typename?: 'Mutation', updateComment: { __typename?: 'Comment', id: string, state: Types.CommentState, rejectionReason?: Types.CommentRejectionReason | null, guestUsername?: string | null, source?: string | null, createdAt: string, modifiedAt: string, itemID: string, itemType: Types.CommentItemType, featured?: boolean | null, guestUserImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, user?: { __typename?: 'User', id: string, name: string, firstName?: string | null, flair?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: RichtextJSONDocument | null, title?: string | null, lead?: string | null, createdAt: string }>, parentComment?: { __typename?: 'Comment', id: string, state: Types.CommentState, rejectionReason?: Types.CommentRejectionReason | null, guestUsername?: string | null, createdAt: string, modifiedAt: string, user?: { __typename?: 'User', id: string, name: string, firstName?: string | null, flair?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: RichtextJSONDocument | null, title?: string | null, lead?: string | null, createdAt: string }> } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, overriddenRatings: Array<{ __typename?: 'OverriddenRating', answerId: string, value?: number | null }> } };
+export type UpdateCommentMutation = { __typename?: 'Mutation', updateComment: (
+    { __typename?: 'Comment' }
+    & FullCommentFragment
+  ) };
 
 export type CreateCommentMutationVariables = Types.Exact<{
   itemID: Types.Scalars['String'];
@@ -101,7 +138,7 @@ export const CommentUserFragmentDoc = gql`
     ...FullImage
   }
 }
-    ${FullImageFragmentDoc}`;
+    `;
 export const CommentBlockCommentFragmentDoc = gql`
     fragment CommentBlockComment on Comment {
   id
@@ -127,8 +164,7 @@ export const CommentBlockCommentFragmentDoc = gql`
   }
   featured
 }
-    ${FullImageFragmentDoc}
-${CommentUserFragmentDoc}`;
+    `;
 export const CommentRevisionFragmentDoc = gql`
     fragment CommentRevision on CommentRevision {
   text
@@ -152,8 +188,7 @@ export const FullParentCommentFragmentDoc = gql`
   createdAt
   modifiedAt
 }
-    ${CommentUserFragmentDoc}
-${CommentRevisionFragmentDoc}`;
+    `;
 export const FullCommentFragmentDoc = gql`
     fragment FullComment on Comment {
   id
@@ -187,10 +222,7 @@ export const FullCommentFragmentDoc = gql`
   }
   featured
 }
-    ${FullImageFragmentDoc}
-${CommentUserFragmentDoc}
-${CommentRevisionFragmentDoc}
-${FullParentCommentFragmentDoc}`;
+    `;
 export const ApproveCommentDocument = gql`
     mutation ApproveComment($id: String!) {
   approveComment(id: $id) {
@@ -316,7 +348,12 @@ export const CommentListDocument = gql`
     totalCount
   }
 }
-    ${FullCommentFragmentDoc}`;
+    ${FullCommentFragmentDoc}
+${FullImageFragmentDoc}
+${ImageUrLsFragmentDoc}
+${CommentUserFragmentDoc}
+${CommentRevisionFragmentDoc}
+${FullParentCommentFragmentDoc}`;
 
 /**
  * __useCommentListQuery__
@@ -356,7 +393,12 @@ export const CommentDocument = gql`
     ...FullComment
   }
 }
-    ${FullCommentFragmentDoc}`;
+    ${FullCommentFragmentDoc}
+${FullImageFragmentDoc}
+${ImageUrLsFragmentDoc}
+${CommentUserFragmentDoc}
+${CommentRevisionFragmentDoc}
+${FullParentCommentFragmentDoc}`;
 
 /**
  * __useCommentQuery__
@@ -401,7 +443,12 @@ export const UpdateCommentDocument = gql`
     ...FullComment
   }
 }
-    ${FullCommentFragmentDoc}`;
+    ${FullCommentFragmentDoc}
+${FullImageFragmentDoc}
+${ImageUrLsFragmentDoc}
+${CommentUserFragmentDoc}
+${CommentRevisionFragmentDoc}
+${FullParentCommentFragmentDoc}`;
 export type UpdateCommentMutationFn = Apollo.MutationFunction<UpdateCommentMutation, UpdateCommentMutationVariables>;
 
 /**

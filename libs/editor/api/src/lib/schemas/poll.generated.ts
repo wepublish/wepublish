@@ -9,7 +9,10 @@ export type FullPollFragment = { __typename?: 'FullPoll', id: string, question?:
 
 export type FullPollVoteFragment = { __typename?: 'PollVote', id: string, createdAt: string, pollId: string, answerId: string, userId?: string | null, fingerprint?: string | null };
 
-export type FullPollVoteWithAnswerFragment = { __typename?: 'PollVote', id: string, createdAt: string, pollId: string, answerId: string, userId?: string | null, fingerprint?: string | null, answer: { __typename?: 'PollAnswerInVote', id: string, answer: string } };
+export type FullPollVoteWithAnswerFragment = (
+  { __typename?: 'PollVote', answer: { __typename?: 'PollAnswerInVote', id: string, answer: string } }
+  & FullPollVoteFragment
+);
 
 export type PollExternalVoteSourceFragment = { __typename?: 'PollExternalVoteSource', id: string, source?: string | null, voteAmounts: Array<{ __typename?: 'PollExternalVote', id: string, answerId: string, amount: number }> };
 
@@ -33,7 +36,10 @@ export type UpdatePollMutationVariables = Types.Exact<{
 }>;
 
 
-export type UpdatePollMutation = { __typename?: 'Mutation', updatePoll: { __typename?: 'FullPoll', id: string, question?: string | null, opensAt: string, closedAt?: string | null, infoText?: RichtextJSONDocument | null, answers: Array<{ __typename?: 'PollAnswer', id: string, pollId: string, answer?: string | null, votes: number }>, externalVoteSources: Array<{ __typename?: 'PollExternalVoteSource', id: string, source?: string | null, voteAmounts: Array<{ __typename?: 'PollExternalVote', id: string, answerId: string, amount: number }> }> } };
+export type UpdatePollMutation = { __typename?: 'Mutation', updatePoll: (
+    { __typename?: 'FullPoll' }
+    & FullPollFragment
+  ) };
 
 export type DeletePollMutationVariables = Types.Exact<{
   deletePollId: Types.Scalars['String'];
@@ -63,14 +69,20 @@ export type CreatePollExternalVoteSourceMutationVariables = Types.Exact<{
 }>;
 
 
-export type CreatePollExternalVoteSourceMutation = { __typename?: 'Mutation', createPollExternalVoteSource: { __typename?: 'PollExternalVoteSource', id: string, source?: string | null, voteAmounts: Array<{ __typename?: 'PollExternalVote', id: string, answerId: string, amount: number }> } };
+export type CreatePollExternalVoteSourceMutation = { __typename?: 'Mutation', createPollExternalVoteSource: (
+    { __typename?: 'PollExternalVoteSource' }
+    & PollExternalVoteSourceFragment
+  ) };
 
 export type DeletePollExternalVoteSourceMutationVariables = Types.Exact<{
   deletePollExternalVoteSourceId: Types.Scalars['String'];
 }>;
 
 
-export type DeletePollExternalVoteSourceMutation = { __typename?: 'Mutation', deletePollExternalVoteSource: { __typename?: 'PollExternalVoteSource', id: string, source?: string | null, voteAmounts: Array<{ __typename?: 'PollExternalVote', id: string, answerId: string, amount: number }> } };
+export type DeletePollExternalVoteSourceMutation = { __typename?: 'Mutation', deletePollExternalVoteSource: (
+    { __typename?: 'PollExternalVoteSource' }
+    & PollExternalVoteSourceFragment
+  ) };
 
 export type PollsQueryVariables = Types.Exact<{
   cursorId?: Types.InputMaybe<Types.Scalars['String']>;
@@ -89,7 +101,10 @@ export type PollQueryVariables = Types.Exact<{
 }>;
 
 
-export type PollQuery = { __typename?: 'Query', poll: { __typename?: 'FullPoll', id: string, question?: string | null, opensAt: string, closedAt?: string | null, infoText?: RichtextJSONDocument | null, answers: Array<{ __typename?: 'PollAnswer', id: string, pollId: string, answer?: string | null, votes: number }>, externalVoteSources: Array<{ __typename?: 'PollExternalVoteSource', id: string, source?: string | null, voteAmounts: Array<{ __typename?: 'PollExternalVote', id: string, answerId: string, amount: number }> }> } };
+export type PollQuery = { __typename?: 'Query', poll: (
+    { __typename?: 'FullPoll' }
+    & FullPollFragment
+  ) };
 
 export type PollVoteListQueryVariables = Types.Exact<{
   filter?: Types.InputMaybe<Types.PollVoteFilter>;
@@ -101,7 +116,10 @@ export type PollVoteListQueryVariables = Types.Exact<{
 }>;
 
 
-export type PollVoteListQuery = { __typename?: 'Query', pollVotes: { __typename?: 'PaginatedPollVotes', totalCount: number, nodes: Array<{ __typename?: 'PollVote', id: string, createdAt: string, pollId: string, answerId: string, userId?: string | null, fingerprint?: string | null, answer: { __typename?: 'PollAnswerInVote', id: string, answer: string } }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
+export type PollVoteListQuery = { __typename?: 'Query', pollVotes: { __typename?: 'PaginatedPollVotes', totalCount: number, nodes: Array<(
+      { __typename?: 'PollVote' }
+      & FullPollVoteWithAnswerFragment
+    )>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type DeletePollVotesMutationVariables = Types.Exact<{
   ids: Array<Types.Scalars['String']> | Types.Scalars['String'];
@@ -152,7 +170,7 @@ export const FullPollVoteWithAnswerFragmentDoc = gql`
     answer
   }
 }
-    ${FullPollVoteFragmentDoc}`;
+    `;
 export const PollExternalVoteSourceFragmentDoc = gql`
     fragment PollExternalVoteSource on PollExternalVoteSource {
   id
@@ -539,7 +557,8 @@ export const PollVoteListDocument = gql`
     totalCount
   }
 }
-    ${FullPollVoteWithAnswerFragmentDoc}`;
+    ${FullPollVoteWithAnswerFragmentDoc}
+${FullPollVoteFragmentDoc}`;
 
 /**
  * __usePollVoteListQuery__

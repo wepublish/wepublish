@@ -2,14 +2,25 @@
 import * as Types from '../graphql';
 
 import {RichtextJSONDocument} from '@wepublish/richtext';
+import { FullPaymentMethodFragment, FullPaymentProviderFragment } from './paymentMethod.generated';
+import { FullImageFragment, ImageUrLsFragment, FullPeerImageFragment } from './image.generated';
 import { gql } from '@apollo/client';
-import { FullPaymentMethodFragmentDoc } from './paymentMethod.generated';
-import { FullImageFragmentDoc, FullPeerImageFragmentDoc } from './image.generated';
+import { FullPaymentMethodFragmentDoc, FullPaymentProviderFragmentDoc } from './paymentMethod.generated';
+import { FullImageFragmentDoc, ImageUrLsFragmentDoc, FullPeerImageFragmentDoc } from './image.generated';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
-export type FullAvailablePaymentMethodFragment = { __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<Types.PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> };
+export type FullAvailablePaymentMethodFragment = { __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<Types.PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<(
+    { __typename?: 'PaymentMethod' }
+    & FullPaymentMethodFragment
+  )> };
 
-export type FullMemberPlanFragment = { __typename?: 'MemberPlan', id: string, name: string, description?: RichtextJSONDocument | null, shortDescription?: RichtextJSONDocument | null, slug: string, active: boolean, productType: Types.ProductType, tags?: Array<string> | null, externalReward?: string | null, currency: Types.Currency, extendable: boolean, maxCount?: number | null, migrateToTargetPaymentMethodID?: string | null, amountPerMonthMin: number, amountPerMonthMax?: number | null, amountPerMonthTarget?: number | null, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<Types.PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> }> };
+export type FullMemberPlanFragment = { __typename?: 'MemberPlan', id: string, name: string, description?: RichtextJSONDocument | null, shortDescription?: RichtextJSONDocument | null, slug: string, active: boolean, productType: Types.ProductType, tags?: Array<string> | null, externalReward?: string | null, currency: Types.Currency, extendable: boolean, maxCount?: number | null, migrateToTargetPaymentMethodID?: string | null, amountPerMonthMin: number, amountPerMonthMax?: number | null, amountPerMonthTarget?: number | null, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: (
+    { __typename?: 'Image' }
+    & FullImageFragment
+  ) | null, availablePaymentMethods: Array<(
+    { __typename?: 'AvailablePaymentMethod' }
+    & FullAvailablePaymentMethodFragment
+  )> };
 
 export type MemberPlanListQueryVariables = Types.Exact<{
   filter?: Types.InputMaybe<Types.MemberPlanFilter>;
@@ -21,14 +32,20 @@ export type MemberPlanListQueryVariables = Types.Exact<{
 }>;
 
 
-export type MemberPlanListQuery = { __typename?: 'Query', memberPlans: { __typename?: 'PaginatedMemberPlans', totalCount: number, nodes: Array<{ __typename?: 'MemberPlan', id: string, name: string, description?: RichtextJSONDocument | null, shortDescription?: RichtextJSONDocument | null, slug: string, active: boolean, productType: Types.ProductType, tags?: Array<string> | null, externalReward?: string | null, currency: Types.Currency, extendable: boolean, maxCount?: number | null, migrateToTargetPaymentMethodID?: string | null, amountPerMonthMin: number, amountPerMonthMax?: number | null, amountPerMonthTarget?: number | null, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<Types.PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> }> }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
+export type MemberPlanListQuery = { __typename?: 'Query', memberPlans: { __typename?: 'PaginatedMemberPlans', totalCount: number, nodes: Array<(
+      { __typename?: 'MemberPlan' }
+      & FullMemberPlanFragment
+    )>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type MemberPlanQueryVariables = Types.Exact<{
   id: Types.Scalars['String'];
 }>;
 
 
-export type MemberPlanQuery = { __typename?: 'Query', memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: RichtextJSONDocument | null, shortDescription?: RichtextJSONDocument | null, slug: string, active: boolean, productType: Types.ProductType, tags?: Array<string> | null, externalReward?: string | null, currency: Types.Currency, extendable: boolean, maxCount?: number | null, migrateToTargetPaymentMethodID?: string | null, amountPerMonthMin: number, amountPerMonthMax?: number | null, amountPerMonthTarget?: number | null, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<Types.PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> }> } };
+export type MemberPlanQuery = { __typename?: 'Query', memberPlan: (
+    { __typename?: 'MemberPlan' }
+    & FullMemberPlanFragment
+  ) };
 
 export type CreateMemberPlanMutationVariables = Types.Exact<{
   name: Types.Scalars['String'];
@@ -54,7 +71,10 @@ export type CreateMemberPlanMutationVariables = Types.Exact<{
 }>;
 
 
-export type CreateMemberPlanMutation = { __typename?: 'Mutation', createMemberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: RichtextJSONDocument | null, shortDescription?: RichtextJSONDocument | null, slug: string, active: boolean, productType: Types.ProductType, tags?: Array<string> | null, externalReward?: string | null, currency: Types.Currency, extendable: boolean, maxCount?: number | null, migrateToTargetPaymentMethodID?: string | null, amountPerMonthMin: number, amountPerMonthMax?: number | null, amountPerMonthTarget?: number | null, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<Types.PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> }> } };
+export type CreateMemberPlanMutation = { __typename?: 'Mutation', createMemberPlan: (
+    { __typename?: 'MemberPlan' }
+    & FullMemberPlanFragment
+  ) };
 
 export type UpdateMemberPlanMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
@@ -81,14 +101,20 @@ export type UpdateMemberPlanMutationVariables = Types.Exact<{
 }>;
 
 
-export type UpdateMemberPlanMutation = { __typename?: 'Mutation', updateMemberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: RichtextJSONDocument | null, shortDescription?: RichtextJSONDocument | null, slug: string, active: boolean, productType: Types.ProductType, tags?: Array<string> | null, externalReward?: string | null, currency: Types.Currency, extendable: boolean, maxCount?: number | null, migrateToTargetPaymentMethodID?: string | null, amountPerMonthMin: number, amountPerMonthMax?: number | null, amountPerMonthTarget?: number | null, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<Types.PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> }> } };
+export type UpdateMemberPlanMutation = { __typename?: 'Mutation', updateMemberPlan: (
+    { __typename?: 'MemberPlan' }
+    & FullMemberPlanFragment
+  ) };
 
 export type DeleteMemberPlanMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
 }>;
 
 
-export type DeleteMemberPlanMutation = { __typename?: 'Mutation', deleteMemberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: RichtextJSONDocument | null, shortDescription?: RichtextJSONDocument | null, slug: string, active: boolean, productType: Types.ProductType, tags?: Array<string> | null, externalReward?: string | null, currency: Types.Currency, extendable: boolean, maxCount?: number | null, migrateToTargetPaymentMethodID?: string | null, amountPerMonthMin: number, amountPerMonthMax?: number | null, amountPerMonthTarget?: number | null, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<Types.PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> }> } };
+export type DeleteMemberPlanMutation = { __typename?: 'Mutation', deleteMemberPlan: (
+    { __typename?: 'MemberPlan' }
+    & FullMemberPlanFragment
+  ) };
 
 export const FullAvailablePaymentMethodFragmentDoc = gql`
     fragment FullAvailablePaymentMethod on AvailablePaymentMethod {
@@ -98,7 +124,7 @@ export const FullAvailablePaymentMethodFragmentDoc = gql`
   paymentPeriodicities
   forceAutoRenewal
 }
-    ${FullPaymentMethodFragmentDoc}`;
+    `;
 export const FullMemberPlanFragmentDoc = gql`
     fragment FullMemberPlan on MemberPlan {
   id
@@ -128,8 +154,7 @@ export const FullMemberPlanFragmentDoc = gql`
     ...FullAvailablePaymentMethod
   }
 }
-    ${FullImageFragmentDoc}
-${FullAvailablePaymentMethodFragmentDoc}`;
+    `;
 export const MemberPlanListDocument = gql`
     query MemberPlanList($filter: MemberPlanFilter, $cursorId: String, $take: Int, $skip: Int, $order: SortOrder, $sort: MemberPlanSort) {
   memberPlans(
@@ -152,7 +177,12 @@ export const MemberPlanListDocument = gql`
     totalCount
   }
 }
-    ${FullMemberPlanFragmentDoc}`;
+    ${FullMemberPlanFragmentDoc}
+${FullImageFragmentDoc}
+${ImageUrLsFragmentDoc}
+${FullAvailablePaymentMethodFragmentDoc}
+${FullPaymentMethodFragmentDoc}
+${FullPaymentProviderFragmentDoc}`;
 
 /**
  * __useMemberPlanListQuery__
@@ -192,7 +222,12 @@ export const MemberPlanDocument = gql`
     ...FullMemberPlan
   }
 }
-    ${FullMemberPlanFragmentDoc}`;
+    ${FullMemberPlanFragmentDoc}
+${FullImageFragmentDoc}
+${ImageUrLsFragmentDoc}
+${FullAvailablePaymentMethodFragmentDoc}
+${FullPaymentMethodFragmentDoc}
+${FullPaymentProviderFragmentDoc}`;
 
 /**
  * __useMemberPlanQuery__
@@ -248,7 +283,12 @@ export const CreateMemberPlanDocument = gql`
     ...FullMemberPlan
   }
 }
-    ${FullMemberPlanFragmentDoc}`;
+    ${FullMemberPlanFragmentDoc}
+${FullImageFragmentDoc}
+${ImageUrLsFragmentDoc}
+${FullAvailablePaymentMethodFragmentDoc}
+${FullPaymentMethodFragmentDoc}
+${FullPaymentProviderFragmentDoc}`;
 export type CreateMemberPlanMutationFn = Apollo.MutationFunction<CreateMemberPlanMutation, CreateMemberPlanMutationVariables>;
 
 /**
@@ -322,7 +362,12 @@ export const UpdateMemberPlanDocument = gql`
     ...FullMemberPlan
   }
 }
-    ${FullMemberPlanFragmentDoc}`;
+    ${FullMemberPlanFragmentDoc}
+${FullImageFragmentDoc}
+${ImageUrLsFragmentDoc}
+${FullAvailablePaymentMethodFragmentDoc}
+${FullPaymentMethodFragmentDoc}
+${FullPaymentProviderFragmentDoc}`;
 export type UpdateMemberPlanMutationFn = Apollo.MutationFunction<UpdateMemberPlanMutation, UpdateMemberPlanMutationVariables>;
 
 /**
@@ -375,7 +420,12 @@ export const DeleteMemberPlanDocument = gql`
     ...FullMemberPlan
   }
 }
-    ${FullMemberPlanFragmentDoc}`;
+    ${FullMemberPlanFragmentDoc}
+${FullImageFragmentDoc}
+${ImageUrLsFragmentDoc}
+${FullAvailablePaymentMethodFragmentDoc}
+${FullPaymentMethodFragmentDoc}
+${FullPaymentProviderFragmentDoc}`;
 export type DeleteMemberPlanMutationFn = Apollo.MutationFunction<DeleteMemberPlanMutation, DeleteMemberPlanMutationVariables>;
 
 /**

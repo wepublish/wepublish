@@ -7,7 +7,10 @@ import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type ImageUrLsFragment = { __typename?: 'Image', url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null };
 
-export type FullImageFragment = { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null };
+export type FullImageFragment = (
+  { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number }
+  & ImageUrLsFragment
+);
 
 export type FullPeerImageFragment = { __typename?: 'PeerImage', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null };
 
@@ -19,14 +22,20 @@ export type ImageListQueryVariables = Types.Exact<{
 }>;
 
 
-export type ImageListQuery = { __typename?: 'Query', images: { __typename?: 'PaginatedImages', totalCount: number, nodes: Array<{ __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
+export type ImageListQuery = { __typename?: 'Query', images: { __typename?: 'PaginatedImages', totalCount: number, nodes: Array<(
+      { __typename?: 'Image' }
+      & FullImageFragment
+    )>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type ImageQueryVariables = Types.Exact<{
   id: Types.Scalars['String'];
 }>;
 
 
-export type ImageQuery = { __typename?: 'Query', image: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } };
+export type ImageQuery = { __typename?: 'Query', image: (
+    { __typename?: 'Image' }
+    & FullImageFragment
+  ) };
 
 export type UploadImageMutationVariables = Types.Exact<{
   title?: Types.InputMaybe<Types.Scalars['String']>;
@@ -42,7 +51,10 @@ export type UploadImageMutationVariables = Types.Exact<{
 }>;
 
 
-export type UploadImageMutation = { __typename?: 'Mutation', uploadImage: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } };
+export type UploadImageMutation = { __typename?: 'Mutation', uploadImage: (
+    { __typename?: 'Image' }
+    & FullImageFragment
+  ) };
 
 export type UpdateImageMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
@@ -58,7 +70,10 @@ export type UpdateImageMutationVariables = Types.Exact<{
 }>;
 
 
-export type UpdateImageMutation = { __typename?: 'Mutation', updateImage: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } };
+export type UpdateImageMutation = { __typename?: 'Mutation', updateImage: (
+    { __typename?: 'Image' }
+    & FullImageFragment
+  ) };
 
 export type DeleteImageMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
@@ -99,7 +114,7 @@ export const FullImageFragmentDoc = gql`
   focalPointY
   ...ImageURLs
 }
-    ${ImageUrLsFragmentDoc}`;
+    `;
 export const FullPeerImageFragmentDoc = gql`
     fragment FullPeerImage on PeerImage {
   id
@@ -152,7 +167,8 @@ export const ImageListDocument = gql`
     totalCount
   }
 }
-    ${FullImageFragmentDoc}`;
+    ${FullImageFragmentDoc}
+${ImageUrLsFragmentDoc}`;
 
 /**
  * __useImageListQuery__
@@ -190,7 +206,8 @@ export const ImageDocument = gql`
     ...FullImage
   }
 }
-    ${FullImageFragmentDoc}`;
+    ${FullImageFragmentDoc}
+${ImageUrLsFragmentDoc}`;
 
 /**
  * __useImageQuery__
@@ -236,7 +253,8 @@ export const UploadImageDocument = gql`
     ...FullImage
   }
 }
-    ${FullImageFragmentDoc}`;
+    ${FullImageFragmentDoc}
+${ImageUrLsFragmentDoc}`;
 export type UploadImageMutationFn = Apollo.MutationFunction<UploadImageMutation, UploadImageMutationVariables>;
 
 /**
@@ -289,7 +307,8 @@ export const UpdateImageDocument = gql`
     ...FullImage
   }
 }
-    ${FullImageFragmentDoc}`;
+    ${FullImageFragmentDoc}
+${ImageUrLsFragmentDoc}`;
 export type UpdateImageMutationFn = Apollo.MutationFunction<UpdateImageMutation, UpdateImageMutationVariables>;
 
 /**

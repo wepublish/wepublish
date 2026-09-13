@@ -16,14 +16,20 @@ export type ImportedEventListQueryVariables = Types.Exact<{
 }>;
 
 
-export type ImportedEventListQuery = { __typename?: 'Query', importedEvents: { __typename?: 'PaginatedEventsFromSources', totalCount: number, nodes: Array<{ __typename?: 'EventFromSource', id: string, name: string, description?: RichtextJSONDocument | null, status: Types.EventStatus, location?: string | null, externalSourceId?: string | null, externalSourceName?: string | null, imageUrl?: string | null, startsAt: string, endsAt?: string | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
+export type ImportedEventListQuery = { __typename?: 'Query', importedEvents: { __typename?: 'PaginatedEventsFromSources', totalCount: number, nodes: Array<(
+      { __typename?: 'EventFromSource' }
+      & ImportableEventRefFragment
+    )>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type ImportedEventQueryVariables = Types.Exact<{
   filter: Types.SingleEventFilter;
 }>;
 
 
-export type ImportedEventQuery = { __typename?: 'Query', importedEvent: { __typename?: 'EventFromSource', id: string, name: string, description?: RichtextJSONDocument | null, status: Types.EventStatus, location?: string | null, externalSourceId?: string | null, externalSourceName?: string | null, imageUrl?: string | null, startsAt: string, endsAt?: string | null } };
+export type ImportedEventQuery = { __typename?: 'Query', importedEvent: (
+    { __typename?: 'EventFromSource' }
+    & ImportableEventRefFragment
+  ) };
 
 export type ImportedEventsIdsQueryVariables = Types.Exact<{ [key: string]: never; }>;
 

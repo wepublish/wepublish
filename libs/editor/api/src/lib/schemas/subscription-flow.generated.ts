@@ -2,8 +2,12 @@
 import * as Types from '../graphql';
 
 import {RichtextJSONDocument} from '@wepublish/richtext';
+import { FullPaymentMethodFragment, FullPaymentProviderFragment } from './paymentMethod.generated';
+import { FullImageFragment, ImageUrLsFragment, FullPeerImageFragment } from './image.generated';
+import { FullAvailablePaymentMethodFragment } from './memberPlan.generated';
 import { gql } from '@apollo/client';
-import { FullPaymentMethodFragmentDoc } from './paymentMethod.generated';
+import { FullPaymentMethodFragmentDoc, FullPaymentProviderFragmentDoc } from './paymentMethod.generated';
+import { FullImageFragmentDoc, ImageUrLsFragmentDoc, FullPeerImageFragmentDoc } from './image.generated';
 import { FullAvailablePaymentMethodFragmentDoc } from './memberPlan.generated';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
@@ -13,7 +17,10 @@ export type SubscriptionFlowsQueryVariables = Types.Exact<{
 }>;
 
 
-export type SubscriptionFlowsQuery = { __typename?: 'Query', subscriptionFlows: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<Types.PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string, productType: Types.ProductType, amountPerMonthMin: number, amountPerMonthMax?: number | null, currency: Types.Currency, extendable: boolean, slug: string, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<Types.PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> }> } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: Types.SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
+export type SubscriptionFlowsQuery = { __typename?: 'Query', subscriptionFlows: Array<(
+    { __typename?: 'SubscriptionFlowModel' }
+    & SubscriptionFlowFragment
+  )> };
 
 export type CreateSubscriptionFlowMutationVariables = Types.Exact<{
   memberPlanId: Types.Scalars['String'];
@@ -23,7 +30,10 @@ export type CreateSubscriptionFlowMutationVariables = Types.Exact<{
 }>;
 
 
-export type CreateSubscriptionFlowMutation = { __typename?: 'Mutation', createSubscriptionFlow: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<Types.PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string, productType: Types.ProductType, amountPerMonthMin: number, amountPerMonthMax?: number | null, currency: Types.Currency, extendable: boolean, slug: string, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<Types.PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> }> } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: Types.SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
+export type CreateSubscriptionFlowMutation = { __typename?: 'Mutation', createSubscriptionFlow: Array<(
+    { __typename?: 'SubscriptionFlowModel' }
+    & SubscriptionFlowFragment
+  )> };
 
 export type UpdateSubscriptionFlowMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
@@ -33,14 +43,20 @@ export type UpdateSubscriptionFlowMutationVariables = Types.Exact<{
 }>;
 
 
-export type UpdateSubscriptionFlowMutation = { __typename?: 'Mutation', updateSubscriptionFlow: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<Types.PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string, productType: Types.ProductType, amountPerMonthMin: number, amountPerMonthMax?: number | null, currency: Types.Currency, extendable: boolean, slug: string, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<Types.PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> }> } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: Types.SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
+export type UpdateSubscriptionFlowMutation = { __typename?: 'Mutation', updateSubscriptionFlow: Array<(
+    { __typename?: 'SubscriptionFlowModel' }
+    & SubscriptionFlowFragment
+  )> };
 
 export type DeleteSubscriptionFlowMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
 }>;
 
 
-export type DeleteSubscriptionFlowMutation = { __typename?: 'Mutation', deleteSubscriptionFlow: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<Types.PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string, productType: Types.ProductType, amountPerMonthMin: number, amountPerMonthMax?: number | null, currency: Types.Currency, extendable: boolean, slug: string, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<Types.PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> }> } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: Types.SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
+export type DeleteSubscriptionFlowMutation = { __typename?: 'Mutation', deleteSubscriptionFlow: Array<(
+    { __typename?: 'SubscriptionFlowModel' }
+    & SubscriptionFlowFragment
+  )> };
 
 export type CreateSubscriptionIntervalMutationVariables = Types.Exact<{
   subscriptionFlowId: Types.Scalars['String'];
@@ -50,7 +66,10 @@ export type CreateSubscriptionIntervalMutationVariables = Types.Exact<{
 }>;
 
 
-export type CreateSubscriptionIntervalMutation = { __typename?: 'Mutation', createSubscriptionInterval: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<Types.PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string, productType: Types.ProductType, amountPerMonthMin: number, amountPerMonthMax?: number | null, currency: Types.Currency, extendable: boolean, slug: string, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<Types.PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> }> } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: Types.SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
+export type CreateSubscriptionIntervalMutation = { __typename?: 'Mutation', createSubscriptionInterval: Array<(
+    { __typename?: 'SubscriptionFlowModel' }
+    & SubscriptionFlowFragment
+  )> };
 
 export type UpdateSubscriptionIntervalMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
@@ -59,27 +78,51 @@ export type UpdateSubscriptionIntervalMutationVariables = Types.Exact<{
 }>;
 
 
-export type UpdateSubscriptionIntervalMutation = { __typename?: 'Mutation', updateSubscriptionInterval: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<Types.PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string, productType: Types.ProductType, amountPerMonthMin: number, amountPerMonthMax?: number | null, currency: Types.Currency, extendable: boolean, slug: string, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<Types.PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> }> } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: Types.SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
+export type UpdateSubscriptionIntervalMutation = { __typename?: 'Mutation', updateSubscriptionInterval: Array<(
+    { __typename?: 'SubscriptionFlowModel' }
+    & SubscriptionFlowFragment
+  )> };
 
 export type DeleteSubscriptionIntervalMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
 }>;
 
 
-export type DeleteSubscriptionIntervalMutation = { __typename?: 'Mutation', deleteSubscriptionInterval: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<Types.PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string, productType: Types.ProductType, amountPerMonthMin: number, amountPerMonthMax?: number | null, currency: Types.Currency, extendable: boolean, slug: string, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<Types.PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> }> } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: Types.SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
+export type DeleteSubscriptionIntervalMutation = { __typename?: 'Mutation', deleteSubscriptionInterval: Array<(
+    { __typename?: 'SubscriptionFlowModel' }
+    & SubscriptionFlowFragment
+  )> };
 
 export type ListPaymentMethodsQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type ListPaymentMethodsQuery = { __typename?: 'Query', paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> };
+export type ListPaymentMethodsQuery = { __typename?: 'Query', paymentMethods: Array<(
+    { __typename?: 'PaymentMethod' }
+    & FullPaymentMethodFragment
+  )> };
 
-export type SubscriptionFlowFragment = { __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<Types.PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string, productType: Types.ProductType, amountPerMonthMin: number, amountPerMonthMax?: number | null, currency: Types.Currency, extendable: boolean, slug: string, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<Types.PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> }> } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: Types.SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> };
+export type SubscriptionFlowFragment = { __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<Types.PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: (
+    { __typename?: 'MemberPlan' }
+    & MemberPlanRefFragment
+  ) | null, paymentMethods: Array<(
+    { __typename?: 'PaymentMethod' }
+    & FullPaymentMethodFragment
+  )>, intervals: Array<(
+    { __typename?: 'SubscriptionInterval' }
+    & SubscriptionIntervalFragment
+  )> };
 
-export type SubscriptionIntervalFragment = { __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: Types.SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null };
+export type SubscriptionIntervalFragment = { __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: Types.SubscriptionEvent, mailTemplate?: (
+    { __typename?: 'MailTemplateRef' }
+    & MailTemplateRefFragment
+  ) | null };
 
 export type MailTemplateRefFragment = { __typename?: 'MailTemplateRef', id: string, name: string };
 
-export type MemberPlanRefFragment = { __typename?: 'MemberPlan', id: string, name: string, productType: Types.ProductType, amountPerMonthMin: number, amountPerMonthMax?: number | null, currency: Types.Currency, extendable: boolean, slug: string, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<Types.PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> }> };
+export type MemberPlanRefFragment = { __typename?: 'MemberPlan', id: string, name: string, productType: Types.ProductType, amountPerMonthMin: number, amountPerMonthMax?: number | null, currency: Types.Currency, extendable: boolean, slug: string, availablePaymentMethods: Array<(
+    { __typename?: 'AvailablePaymentMethod' }
+    & FullAvailablePaymentMethodFragment
+  )> };
 
 export const MemberPlanRefFragmentDoc = gql`
     fragment MemberPlanRef on MemberPlan {
@@ -95,7 +138,7 @@ export const MemberPlanRefFragmentDoc = gql`
   extendable
   slug
 }
-    ${FullAvailablePaymentMethodFragmentDoc}`;
+    `;
 export const MailTemplateRefFragmentDoc = gql`
     fragment MailTemplateRef on MailTemplateRef {
   id
@@ -111,7 +154,7 @@ export const SubscriptionIntervalFragmentDoc = gql`
     ...MailTemplateRef
   }
 }
-    ${MailTemplateRefFragmentDoc}`;
+    `;
 export const SubscriptionFlowFragmentDoc = gql`
     fragment SubscriptionFlow on SubscriptionFlowModel {
   id
@@ -129,9 +172,7 @@ export const SubscriptionFlowFragmentDoc = gql`
   }
   numberOfSubscriptions
 }
-    ${MemberPlanRefFragmentDoc}
-${FullPaymentMethodFragmentDoc}
-${SubscriptionIntervalFragmentDoc}`;
+    `;
 export const SubscriptionFlowsDocument = gql`
     query SubscriptionFlows($defaultFlowOnly: Boolean!, $memberPlanId: String) {
   subscriptionFlows(
@@ -141,7 +182,15 @@ export const SubscriptionFlowsDocument = gql`
     ...SubscriptionFlow
   }
 }
-    ${SubscriptionFlowFragmentDoc}`;
+    ${SubscriptionFlowFragmentDoc}
+${MemberPlanRefFragmentDoc}
+${FullAvailablePaymentMethodFragmentDoc}
+${FullPaymentMethodFragmentDoc}
+${FullPaymentProviderFragmentDoc}
+${FullImageFragmentDoc}
+${ImageUrLsFragmentDoc}
+${SubscriptionIntervalFragmentDoc}
+${MailTemplateRefFragmentDoc}`;
 
 /**
  * __useSubscriptionFlowsQuery__
@@ -182,7 +231,15 @@ export const CreateSubscriptionFlowDocument = gql`
     ...SubscriptionFlow
   }
 }
-    ${SubscriptionFlowFragmentDoc}`;
+    ${SubscriptionFlowFragmentDoc}
+${MemberPlanRefFragmentDoc}
+${FullAvailablePaymentMethodFragmentDoc}
+${FullPaymentMethodFragmentDoc}
+${FullPaymentProviderFragmentDoc}
+${FullImageFragmentDoc}
+${ImageUrLsFragmentDoc}
+${SubscriptionIntervalFragmentDoc}
+${MailTemplateRefFragmentDoc}`;
 export type CreateSubscriptionFlowMutationFn = Apollo.MutationFunction<CreateSubscriptionFlowMutation, CreateSubscriptionFlowMutationVariables>;
 
 /**
@@ -223,7 +280,15 @@ export const UpdateSubscriptionFlowDocument = gql`
     ...SubscriptionFlow
   }
 }
-    ${SubscriptionFlowFragmentDoc}`;
+    ${SubscriptionFlowFragmentDoc}
+${MemberPlanRefFragmentDoc}
+${FullAvailablePaymentMethodFragmentDoc}
+${FullPaymentMethodFragmentDoc}
+${FullPaymentProviderFragmentDoc}
+${FullImageFragmentDoc}
+${ImageUrLsFragmentDoc}
+${SubscriptionIntervalFragmentDoc}
+${MailTemplateRefFragmentDoc}`;
 export type UpdateSubscriptionFlowMutationFn = Apollo.MutationFunction<UpdateSubscriptionFlowMutation, UpdateSubscriptionFlowMutationVariables>;
 
 /**
@@ -259,7 +324,15 @@ export const DeleteSubscriptionFlowDocument = gql`
     ...SubscriptionFlow
   }
 }
-    ${SubscriptionFlowFragmentDoc}`;
+    ${SubscriptionFlowFragmentDoc}
+${MemberPlanRefFragmentDoc}
+${FullAvailablePaymentMethodFragmentDoc}
+${FullPaymentMethodFragmentDoc}
+${FullPaymentProviderFragmentDoc}
+${FullImageFragmentDoc}
+${ImageUrLsFragmentDoc}
+${SubscriptionIntervalFragmentDoc}
+${MailTemplateRefFragmentDoc}`;
 export type DeleteSubscriptionFlowMutationFn = Apollo.MutationFunction<DeleteSubscriptionFlowMutation, DeleteSubscriptionFlowMutationVariables>;
 
 /**
@@ -297,7 +370,15 @@ export const CreateSubscriptionIntervalDocument = gql`
     ...SubscriptionFlow
   }
 }
-    ${SubscriptionFlowFragmentDoc}`;
+    ${SubscriptionFlowFragmentDoc}
+${MemberPlanRefFragmentDoc}
+${FullAvailablePaymentMethodFragmentDoc}
+${FullPaymentMethodFragmentDoc}
+${FullPaymentProviderFragmentDoc}
+${FullImageFragmentDoc}
+${ImageUrLsFragmentDoc}
+${SubscriptionIntervalFragmentDoc}
+${MailTemplateRefFragmentDoc}`;
 export type CreateSubscriptionIntervalMutationFn = Apollo.MutationFunction<CreateSubscriptionIntervalMutation, CreateSubscriptionIntervalMutationVariables>;
 
 /**
@@ -337,7 +418,15 @@ export const UpdateSubscriptionIntervalDocument = gql`
     ...SubscriptionFlow
   }
 }
-    ${SubscriptionFlowFragmentDoc}`;
+    ${SubscriptionFlowFragmentDoc}
+${MemberPlanRefFragmentDoc}
+${FullAvailablePaymentMethodFragmentDoc}
+${FullPaymentMethodFragmentDoc}
+${FullPaymentProviderFragmentDoc}
+${FullImageFragmentDoc}
+${ImageUrLsFragmentDoc}
+${SubscriptionIntervalFragmentDoc}
+${MailTemplateRefFragmentDoc}`;
 export type UpdateSubscriptionIntervalMutationFn = Apollo.MutationFunction<UpdateSubscriptionIntervalMutation, UpdateSubscriptionIntervalMutationVariables>;
 
 /**
@@ -372,7 +461,15 @@ export const DeleteSubscriptionIntervalDocument = gql`
     ...SubscriptionFlow
   }
 }
-    ${SubscriptionFlowFragmentDoc}`;
+    ${SubscriptionFlowFragmentDoc}
+${MemberPlanRefFragmentDoc}
+${FullAvailablePaymentMethodFragmentDoc}
+${FullPaymentMethodFragmentDoc}
+${FullPaymentProviderFragmentDoc}
+${FullImageFragmentDoc}
+${ImageUrLsFragmentDoc}
+${SubscriptionIntervalFragmentDoc}
+${MailTemplateRefFragmentDoc}`;
 export type DeleteSubscriptionIntervalMutationFn = Apollo.MutationFunction<DeleteSubscriptionIntervalMutation, DeleteSubscriptionIntervalMutationVariables>;
 
 /**
@@ -405,7 +502,10 @@ export const ListPaymentMethodsDocument = gql`
     ...FullPaymentMethod
   }
 }
-    ${FullPaymentMethodFragmentDoc}`;
+    ${FullPaymentMethodFragmentDoc}
+${FullPaymentProviderFragmentDoc}
+${FullImageFragmentDoc}
+${ImageUrLsFragmentDoc}`;
 
 /**
  * __useListPaymentMethodsQuery__

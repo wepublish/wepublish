@@ -2,8 +2,11 @@
 import * as Types from '../graphql';
 
 import {RichtextJSONDocument} from '@wepublish/richtext';
+import { FullUserRoleFragment } from './userRole.generated';
+import { FullPermissionFragment } from './permissions.generated';
 import { gql } from '@apollo/client';
 import { FullUserRoleFragmentDoc } from './userRole.generated';
+import { FullPermissionFragmentDoc } from './permissions.generated';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type CheckLoginOtpQueryVariables = Types.Exact<{
@@ -20,7 +23,10 @@ export type CreateSessionMutationVariables = Types.Exact<{
 }>;
 
 
-export type CreateSessionMutation = { __typename?: 'Mutation', createSession: { __typename?: 'SessionWithToken', token: string, totpEnabled: boolean, user: { __typename?: 'SensitiveDataUser', email: string, totpEnabled: boolean, totpExempt: boolean, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> } } };
+export type CreateSessionMutation = { __typename?: 'Mutation', createSession: { __typename?: 'SessionWithToken', token: string, totpEnabled: boolean, user: { __typename?: 'SensitiveDataUser', email: string, totpEnabled: boolean, totpExempt: boolean, roles: Array<(
+        { __typename?: 'UserRole' }
+        & FullUserRoleFragment
+      )> } } };
 
 export type CreateSessionWithJwtMutationVariables = Types.Exact<{
   jwt: Types.Scalars['String'];
@@ -28,7 +34,10 @@ export type CreateSessionWithJwtMutationVariables = Types.Exact<{
 }>;
 
 
-export type CreateSessionWithJwtMutation = { __typename?: 'Mutation', createSessionWithJWT: { __typename?: 'SessionWithToken', token: string, totpEnabled: boolean, user: { __typename?: 'SensitiveDataUser', email: string, totpEnabled: boolean, totpExempt: boolean, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> } } };
+export type CreateSessionWithJwtMutation = { __typename?: 'Mutation', createSessionWithJWT: { __typename?: 'SessionWithToken', token: string, totpEnabled: boolean, user: { __typename?: 'SensitiveDataUser', email: string, totpEnabled: boolean, totpExempt: boolean, roles: Array<(
+        { __typename?: 'UserRole' }
+        & FullUserRoleFragment
+      )> } } };
 
 export type CreateJwtForWebsiteLoginMutationVariables = Types.Exact<{ [key: string]: never; }>;
 
@@ -125,7 +134,8 @@ export const CreateSessionDocument = gql`
     totpEnabled
   }
 }
-    ${FullUserRoleFragmentDoc}`;
+    ${FullUserRoleFragmentDoc}
+${FullPermissionFragmentDoc}`;
 export type CreateSessionMutationFn = Apollo.MutationFunction<CreateSessionMutation, CreateSessionMutationVariables>;
 
 /**
@@ -169,7 +179,8 @@ export const CreateSessionWithJwtDocument = gql`
     totpEnabled
   }
 }
-    ${FullUserRoleFragmentDoc}`;
+    ${FullUserRoleFragmentDoc}
+${FullPermissionFragmentDoc}`;
 export type CreateSessionWithJwtMutationFn = Apollo.MutationFunction<CreateSessionWithJwtMutation, CreateSessionWithJwtMutationVariables>;
 
 /**

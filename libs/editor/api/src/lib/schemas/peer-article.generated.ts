@@ -2,13 +2,22 @@
 import * as Types from '../graphql';
 
 import {RichtextJSONDocument} from '@wepublish/richtext';
+import { FullPeerFragment, FullRemotePeerProfileFragment } from './peer.generated';
+import { FullPeerImageFragment, FullImageFragment, ImageUrLsFragment } from './image.generated';
 import { gql } from '@apollo/client';
-import { FullPeerFragmentDoc } from './peer.generated';
+import { FullPeerFragmentDoc, FullRemotePeerProfileFragmentDoc } from './peer.generated';
+import { FullPeerImageFragmentDoc, FullImageFragmentDoc, ImageUrLsFragmentDoc } from './image.generated';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type SlimPeerArticleRevisionFragment = { __typename?: 'PeerArticleRevision', id: string, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'PeerImage', id: string, url: string, license?: string | null, source?: string | null } | null };
 
-export type SlimPeerArticleFragment = { __typename?: 'PeerArticle', id: string, createdAt: string, modifiedAt: string, publishedAt: string, slug?: string | null, url: string, latest: { __typename?: 'PeerArticleRevision', id: string, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'PeerImage', id: string, url: string, license?: string | null, source?: string | null } | null }, peer?: { __typename?: 'Peer', id: string, createdAt: string, modifiedAt: string, name: string, slug: string, isDisabled?: boolean | null, information?: RichtextJSONDocument | null, hostURL: string, token: string, profile?: { __typename?: 'RemotePeerProfile', name: string, themeColor: string, themeFontColor: string, hostURL: string, websiteURL: string, callToActionText?: RichtextJSONDocument | null, callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'PeerImage', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null, squareLogo?: { __typename?: 'PeerImage', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null, callToActionImage?: { __typename?: 'PeerImage', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null } | null } | null };
+export type SlimPeerArticleFragment = { __typename?: 'PeerArticle', id: string, createdAt: string, modifiedAt: string, publishedAt: string, slug?: string | null, url: string, latest: (
+    { __typename?: 'PeerArticleRevision' }
+    & SlimPeerArticleRevisionFragment
+  ), peer?: (
+    { __typename?: 'Peer' }
+    & FullPeerFragment
+  ) | null };
 
 export type PeerArticleListQueryVariables = Types.Exact<{
   filter?: Types.InputMaybe<Types.PeerArticleFilter>;
@@ -19,7 +28,10 @@ export type PeerArticleListQueryVariables = Types.Exact<{
 }>;
 
 
-export type PeerArticleListQuery = { __typename?: 'Query', peerArticles: { __typename?: 'PaginatedPeerArticles', totalCount: number, nodes: Array<{ __typename?: 'PeerArticle', id: string, createdAt: string, modifiedAt: string, publishedAt: string, slug?: string | null, url: string, latest: { __typename?: 'PeerArticleRevision', id: string, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'PeerImage', id: string, url: string, license?: string | null, source?: string | null } | null }, peer?: { __typename?: 'Peer', id: string, createdAt: string, modifiedAt: string, name: string, slug: string, isDisabled?: boolean | null, information?: RichtextJSONDocument | null, hostURL: string, token: string, profile?: { __typename?: 'RemotePeerProfile', name: string, themeColor: string, themeFontColor: string, hostURL: string, websiteURL: string, callToActionText?: RichtextJSONDocument | null, callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'PeerImage', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null, squareLogo?: { __typename?: 'PeerImage', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null, callToActionImage?: { __typename?: 'PeerImage', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null } | null } | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
+export type PeerArticleListQuery = { __typename?: 'Query', peerArticles: { __typename?: 'PaginatedPeerArticles', totalCount: number, nodes: Array<(
+      { __typename?: 'PeerArticle' }
+      & SlimPeerArticleFragment
+    )>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type ImportPeerArticleMutationVariables = Types.Exact<{
   peerId: Types.Scalars['String'];
@@ -59,8 +71,7 @@ export const SlimPeerArticleFragmentDoc = gql`
     ...FullPeer
   }
 }
-    ${SlimPeerArticleRevisionFragmentDoc}
-${FullPeerFragmentDoc}`;
+    `;
 export const PeerArticleListDocument = gql`
     query PeerArticleList($filter: PeerArticleFilter, $take: Int, $skip: Int, $order: SortOrder, $sort: ArticleSort) {
   peerArticles(
@@ -82,7 +93,11 @@ export const PeerArticleListDocument = gql`
     totalCount
   }
 }
-    ${SlimPeerArticleFragmentDoc}`;
+    ${SlimPeerArticleFragmentDoc}
+${SlimPeerArticleRevisionFragmentDoc}
+${FullPeerFragmentDoc}
+${FullRemotePeerProfileFragmentDoc}
+${FullPeerImageFragmentDoc}`;
 
 /**
  * __usePeerArticleListQuery__

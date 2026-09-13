@@ -6,7 +6,10 @@ const path = require('path')
  * outputs (schemas/*.generated.ts), so `@wepublish/editor/api` keeps exposing
  * every operation without manual upkeep. Runs as part of `npm run generate-api`.
  */
-const schemaDirs = ['libs/editor/api/src/lib/schemas']
+const schemaDirs = [
+  'libs/editor/api/src/lib/schemas',
+  'libs/website/api/src/lib/schemas',
+]
 
 for (const dir of schemaDirs) {
   const files = fs

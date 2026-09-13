@@ -10,7 +10,10 @@ export type FullBlockStyleFragment = { __typename?: 'BlockStyle', id: string, cr
 export type BlockStylesQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type BlockStylesQuery = { __typename?: 'Query', blockStyles: Array<{ __typename?: 'BlockStyle', id: string, createdAt: string, modifiedAt: string, name: string, blocks: Array<Types.EditorBlockType> }> };
+export type BlockStylesQuery = { __typename?: 'Query', blockStyles: Array<(
+    { __typename?: 'BlockStyle' }
+    & FullBlockStyleFragment
+  )> };
 
 export type CreateBlockStyleMutationVariables = Types.Exact<{
   name: Types.Scalars['String'];
@@ -18,7 +21,10 @@ export type CreateBlockStyleMutationVariables = Types.Exact<{
 }>;
 
 
-export type CreateBlockStyleMutation = { __typename?: 'Mutation', createBlockStyle: { __typename?: 'BlockStyle', id: string, createdAt: string, modifiedAt: string, name: string, blocks: Array<Types.EditorBlockType> } };
+export type CreateBlockStyleMutation = { __typename?: 'Mutation', createBlockStyle: (
+    { __typename?: 'BlockStyle' }
+    & FullBlockStyleFragment
+  ) };
 
 export type UpdateBlockStyleMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
@@ -27,14 +33,20 @@ export type UpdateBlockStyleMutationVariables = Types.Exact<{
 }>;
 
 
-export type UpdateBlockStyleMutation = { __typename?: 'Mutation', updateBlockStyle: { __typename?: 'BlockStyle', id: string, createdAt: string, modifiedAt: string, name: string, blocks: Array<Types.EditorBlockType> } };
+export type UpdateBlockStyleMutation = { __typename?: 'Mutation', updateBlockStyle: (
+    { __typename?: 'BlockStyle' }
+    & FullBlockStyleFragment
+  ) };
 
 export type DeleteBlockStyleMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
 }>;
 
 
-export type DeleteBlockStyleMutation = { __typename?: 'Mutation', deleteBlockStyle: { __typename?: 'BlockStyle', id: string, createdAt: string, modifiedAt: string, name: string, blocks: Array<Types.EditorBlockType> } };
+export type DeleteBlockStyleMutation = { __typename?: 'Mutation', deleteBlockStyle: (
+    { __typename?: 'BlockStyle' }
+    & FullBlockStyleFragment
+  ) };
 
 export const FullBlockStyleFragmentDoc = gql`
     fragment FullBlockStyle on BlockStyle {

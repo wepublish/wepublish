@@ -2,32 +2,63 @@
 import * as Types from '../graphql';
 
 import {RichtextJSONDocument} from '@wepublish/richtext';
+import { FullImageFragment, ImageUrLsFragment, FullPeerImageFragment } from './image.generated';
 import { gql } from '@apollo/client';
-import { FullImageFragmentDoc, FullPeerImageFragmentDoc } from './image.generated';
+import { FullImageFragmentDoc, ImageUrLsFragmentDoc, FullPeerImageFragmentDoc } from './image.generated';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
-export type FullPeerProfileFragment = { __typename?: 'PeerProfile', name: string, themeColor: string, themeFontColor: string, hostURL: string, websiteURL: string, callToActionText?: RichtextJSONDocument | null, callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, squareLogo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null };
+export type FullPeerProfileFragment = { __typename?: 'PeerProfile', name: string, themeColor: string, themeFontColor: string, hostURL: string, websiteURL: string, callToActionText?: RichtextJSONDocument | null, callToActionURL: string, callToActionImageURL?: string | null, logo?: (
+    { __typename?: 'Image' }
+    & FullImageFragment
+  ) | null, squareLogo?: (
+    { __typename?: 'Image' }
+    & FullImageFragment
+  ) | null, callToActionImage?: (
+    { __typename?: 'Image' }
+    & FullImageFragment
+  ) | null };
 
-export type FullRemotePeerProfileFragment = { __typename?: 'RemotePeerProfile', name: string, themeColor: string, themeFontColor: string, hostURL: string, websiteURL: string, callToActionText?: RichtextJSONDocument | null, callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'PeerImage', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null, squareLogo?: { __typename?: 'PeerImage', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null, callToActionImage?: { __typename?: 'PeerImage', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null };
+export type FullRemotePeerProfileFragment = { __typename?: 'RemotePeerProfile', name: string, themeColor: string, themeFontColor: string, hostURL: string, websiteURL: string, callToActionText?: RichtextJSONDocument | null, callToActionURL: string, callToActionImageURL?: string | null, logo?: (
+    { __typename?: 'PeerImage' }
+    & FullPeerImageFragment
+  ) | null, squareLogo?: (
+    { __typename?: 'PeerImage' }
+    & FullPeerImageFragment
+  ) | null, callToActionImage?: (
+    { __typename?: 'PeerImage' }
+    & FullPeerImageFragment
+  ) | null };
 
-export type FullPeerFragment = { __typename?: 'Peer', id: string, createdAt: string, modifiedAt: string, name: string, slug: string, isDisabled?: boolean | null, information?: RichtextJSONDocument | null, hostURL: string, token: string, profile?: { __typename?: 'RemotePeerProfile', name: string, themeColor: string, themeFontColor: string, hostURL: string, websiteURL: string, callToActionText?: RichtextJSONDocument | null, callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'PeerImage', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null, squareLogo?: { __typename?: 'PeerImage', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null, callToActionImage?: { __typename?: 'PeerImage', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null } | null };
+export type FullPeerFragment = { __typename?: 'Peer', id: string, createdAt: string, modifiedAt: string, name: string, slug: string, isDisabled?: boolean | null, information?: RichtextJSONDocument | null, hostURL: string, token: string, profile?: (
+    { __typename?: 'RemotePeerProfile' }
+    & FullRemotePeerProfileFragment
+  ) | null };
 
 export type PeerProfileQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type PeerProfileQuery = { __typename?: 'Query', peerProfile: { __typename?: 'PeerProfile', name: string, themeColor: string, themeFontColor: string, hostURL: string, websiteURL: string, callToActionText?: RichtextJSONDocument | null, callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, squareLogo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } };
+export type PeerProfileQuery = { __typename?: 'Query', peerProfile: (
+    { __typename?: 'PeerProfile' }
+    & FullPeerProfileFragment
+  ) };
 
 export type PeerListQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type PeerListQuery = { __typename?: 'Query', peers: Array<{ __typename?: 'Peer', id: string, createdAt: string, modifiedAt: string, name: string, slug: string, isDisabled?: boolean | null, information?: RichtextJSONDocument | null, hostURL: string, token: string, profile?: { __typename?: 'RemotePeerProfile', name: string, themeColor: string, themeFontColor: string, hostURL: string, websiteURL: string, callToActionText?: RichtextJSONDocument | null, callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'PeerImage', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null, squareLogo?: { __typename?: 'PeerImage', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null, callToActionImage?: { __typename?: 'PeerImage', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null } | null }> };
+export type PeerListQuery = { __typename?: 'Query', peers: Array<(
+    { __typename?: 'Peer' }
+    & FullPeerFragment
+  )> };
 
 export type PeerQueryVariables = Types.Exact<{
   id: Types.Scalars['String'];
 }>;
 
 
-export type PeerQuery = { __typename?: 'Query', peer?: { __typename?: 'Peer', id: string, createdAt: string, modifiedAt: string, name: string, slug: string, isDisabled?: boolean | null, information?: RichtextJSONDocument | null, hostURL: string, token: string, profile?: { __typename?: 'RemotePeerProfile', name: string, themeColor: string, themeFontColor: string, hostURL: string, websiteURL: string, callToActionText?: RichtextJSONDocument | null, callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'PeerImage', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null, squareLogo?: { __typename?: 'PeerImage', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null, callToActionImage?: { __typename?: 'PeerImage', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null } | null } | null };
+export type PeerQuery = { __typename?: 'Query', peer?: (
+    { __typename?: 'Peer' }
+    & FullPeerFragment
+  ) | null };
 
 export type CreatePeerMutationVariables = Types.Exact<{
   hostURL: Types.Scalars['String'];
@@ -38,7 +69,10 @@ export type CreatePeerMutationVariables = Types.Exact<{
 }>;
 
 
-export type CreatePeerMutation = { __typename?: 'Mutation', createPeer: { __typename?: 'Peer', id: string, createdAt: string, modifiedAt: string, name: string, slug: string, isDisabled?: boolean | null, information?: RichtextJSONDocument | null, hostURL: string, token: string, profile?: { __typename?: 'RemotePeerProfile', name: string, themeColor: string, themeFontColor: string, hostURL: string, websiteURL: string, callToActionText?: RichtextJSONDocument | null, callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'PeerImage', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null, squareLogo?: { __typename?: 'PeerImage', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null, callToActionImage?: { __typename?: 'PeerImage', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null } | null } };
+export type CreatePeerMutation = { __typename?: 'Mutation', createPeer: (
+    { __typename?: 'Peer' }
+    & FullPeerFragment
+  ) };
 
 export type UpdatePeerMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
@@ -51,7 +85,10 @@ export type UpdatePeerMutationVariables = Types.Exact<{
 }>;
 
 
-export type UpdatePeerMutation = { __typename?: 'Mutation', updatePeer: { __typename?: 'Peer', id: string, createdAt: string, modifiedAt: string, name: string, slug: string, isDisabled?: boolean | null, information?: RichtextJSONDocument | null, hostURL: string, token: string, profile?: { __typename?: 'RemotePeerProfile', name: string, themeColor: string, themeFontColor: string, hostURL: string, websiteURL: string, callToActionText?: RichtextJSONDocument | null, callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'PeerImage', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null, squareLogo?: { __typename?: 'PeerImage', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null, callToActionImage?: { __typename?: 'PeerImage', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null } | null } };
+export type UpdatePeerMutation = { __typename?: 'Mutation', updatePeer: (
+    { __typename?: 'Peer' }
+    & FullPeerFragment
+  ) };
 
 export type DeletePeerMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
@@ -73,7 +110,10 @@ export type UpdatePeerProfileMutationVariables = Types.Exact<{
 }>;
 
 
-export type UpdatePeerProfileMutation = { __typename?: 'Mutation', updatePeerProfile: { __typename?: 'PeerProfile', name: string, themeColor: string, themeFontColor: string, hostURL: string, websiteURL: string, callToActionText?: RichtextJSONDocument | null, callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, squareLogo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } };
+export type UpdatePeerProfileMutation = { __typename?: 'Mutation', updatePeerProfile: (
+    { __typename?: 'PeerProfile' }
+    & FullPeerProfileFragment
+  ) };
 
 export type RemotePeerProfileQueryVariables = Types.Exact<{
   hostURL: Types.Scalars['String'];
@@ -81,7 +121,10 @@ export type RemotePeerProfileQueryVariables = Types.Exact<{
 }>;
 
 
-export type RemotePeerProfileQuery = { __typename?: 'Query', remotePeerProfile: { __typename?: 'RemotePeerProfile', name: string, themeColor: string, themeFontColor: string, hostURL: string, websiteURL: string, callToActionText?: RichtextJSONDocument | null, callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'PeerImage', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null, squareLogo?: { __typename?: 'PeerImage', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null, callToActionImage?: { __typename?: 'PeerImage', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null } };
+export type RemotePeerProfileQuery = { __typename?: 'Query', remotePeerProfile: (
+    { __typename?: 'RemotePeerProfile' }
+    & FullRemotePeerProfileFragment
+  ) };
 
 export const FullPeerProfileFragmentDoc = gql`
     fragment FullPeerProfile on PeerProfile {
@@ -103,7 +146,7 @@ export const FullPeerProfileFragmentDoc = gql`
     ...FullImage
   }
 }
-    ${FullImageFragmentDoc}`;
+    `;
 export const FullRemotePeerProfileFragmentDoc = gql`
     fragment FullRemotePeerProfile on RemotePeerProfile {
   name
@@ -124,7 +167,7 @@ export const FullRemotePeerProfileFragmentDoc = gql`
     ...FullPeerImage
   }
 }
-    ${FullPeerImageFragmentDoc}`;
+    `;
 export const FullPeerFragmentDoc = gql`
     fragment FullPeer on Peer {
   id
@@ -140,14 +183,16 @@ export const FullPeerFragmentDoc = gql`
     ...FullRemotePeerProfile
   }
 }
-    ${FullRemotePeerProfileFragmentDoc}`;
+    `;
 export const PeerProfileDocument = gql`
     query PeerProfile {
   peerProfile {
     ...FullPeerProfile
   }
 }
-    ${FullPeerProfileFragmentDoc}`;
+    ${FullPeerProfileFragmentDoc}
+${FullImageFragmentDoc}
+${ImageUrLsFragmentDoc}`;
 
 /**
  * __usePeerProfileQuery__
@@ -181,7 +226,9 @@ export const PeerListDocument = gql`
     ...FullPeer
   }
 }
-    ${FullPeerFragmentDoc}`;
+    ${FullPeerFragmentDoc}
+${FullRemotePeerProfileFragmentDoc}
+${FullPeerImageFragmentDoc}`;
 
 /**
  * __usePeerListQuery__
@@ -215,7 +262,9 @@ export const PeerDocument = gql`
     ...FullPeer
   }
 }
-    ${FullPeerFragmentDoc}`;
+    ${FullPeerFragmentDoc}
+${FullRemotePeerProfileFragmentDoc}
+${FullPeerImageFragmentDoc}`;
 
 /**
  * __usePeerQuery__
@@ -257,7 +306,9 @@ export const CreatePeerDocument = gql`
     ...FullPeer
   }
 }
-    ${FullPeerFragmentDoc}`;
+    ${FullPeerFragmentDoc}
+${FullRemotePeerProfileFragmentDoc}
+${FullPeerImageFragmentDoc}`;
 export type CreatePeerMutationFn = Apollo.MutationFunction<CreatePeerMutation, CreatePeerMutationVariables>;
 
 /**
@@ -302,7 +353,9 @@ export const UpdatePeerDocument = gql`
     ...FullPeer
   }
 }
-    ${FullPeerFragmentDoc}`;
+    ${FullPeerFragmentDoc}
+${FullRemotePeerProfileFragmentDoc}
+${FullPeerImageFragmentDoc}`;
 export type UpdatePeerMutationFn = Apollo.MutationFunction<UpdatePeerMutation, UpdatePeerMutationVariables>;
 
 /**
@@ -382,7 +435,9 @@ export const UpdatePeerProfileDocument = gql`
     ...FullPeerProfile
   }
 }
-    ${FullPeerProfileFragmentDoc}`;
+    ${FullPeerProfileFragmentDoc}
+${FullImageFragmentDoc}
+${ImageUrLsFragmentDoc}`;
 export type UpdatePeerProfileMutationFn = Apollo.MutationFunction<UpdatePeerProfileMutation, UpdatePeerProfileMutationVariables>;
 
 /**
@@ -423,7 +478,8 @@ export const RemotePeerProfileDocument = gql`
     ...FullRemotePeerProfile
   }
 }
-    ${FullRemotePeerProfileFragmentDoc}`;
+    ${FullRemotePeerProfileFragmentDoc}
+${FullPeerImageFragmentDoc}`;
 
 /**
  * __useRemotePeerProfileQuery__

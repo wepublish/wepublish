@@ -20,14 +20,20 @@ export type DocumentListQueryVariables = Types.Exact<{
 }>;
 
 
-export type DocumentListQuery = { __typename?: 'Query', documents: { __typename?: 'PaginatedDocuments', totalCount: number, nodes: Array<{ __typename?: 'Document', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, fileSize: number, mimeType: string, description?: string | null, url: string, thumbnailURL?: string | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
+export type DocumentListQuery = { __typename?: 'Query', documents: { __typename?: 'PaginatedDocuments', totalCount: number, nodes: Array<(
+      { __typename?: 'Document' }
+      & FullDocumentFragment
+    )>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type DocumentQueryVariables = Types.Exact<{
   id: Types.Scalars['String'];
 }>;
 
 
-export type DocumentQuery = { __typename?: 'Query', document: { __typename?: 'Document', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, fileSize: number, mimeType: string, description?: string | null, url: string, thumbnailURL?: string | null } };
+export type DocumentQuery = { __typename?: 'Query', document: (
+    { __typename?: 'Document' }
+    & FullDocumentFragment
+  ) };
 
 export type UploadDocumentMutationVariables = Types.Exact<{
   title?: Types.InputMaybe<Types.Scalars['String']>;
@@ -37,7 +43,10 @@ export type UploadDocumentMutationVariables = Types.Exact<{
 }>;
 
 
-export type UploadDocumentMutation = { __typename?: 'Mutation', uploadDocument: { __typename?: 'Document', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, fileSize: number, mimeType: string, description?: string | null, url: string, thumbnailURL?: string | null } };
+export type UploadDocumentMutation = { __typename?: 'Mutation', uploadDocument: (
+    { __typename?: 'Document' }
+    & FullDocumentFragment
+  ) };
 
 export type UpdateDocumentMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
@@ -46,7 +55,10 @@ export type UpdateDocumentMutationVariables = Types.Exact<{
 }>;
 
 
-export type UpdateDocumentMutation = { __typename?: 'Mutation', updateDocument: { __typename?: 'Document', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, fileSize: number, mimeType: string, description?: string | null, url: string, thumbnailURL?: string | null } };
+export type UpdateDocumentMutation = { __typename?: 'Mutation', updateDocument: (
+    { __typename?: 'Document' }
+    & FullDocumentFragment
+  ) };
 
 export type DeleteDocumentMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];

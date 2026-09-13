@@ -2,30 +2,46 @@
 import * as Types from '../graphql';
 
 import {RichtextJSONDocument} from '@wepublish/richtext';
+import { FullImageFragment, ImageUrLsFragment, FullPeerImageFragment } from './image.generated';
 import { gql } from '@apollo/client';
-import { FullImageFragmentDoc, FullPeerImageFragmentDoc } from './image.generated';
+import { FullImageFragmentDoc, ImageUrLsFragmentDoc, FullPeerImageFragmentDoc } from './image.generated';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type FullPaymentProviderFragment = { __typename?: 'PaymentProvider', id: string, name?: string | null };
 
-export type FullPaymentMethodFragment = { __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null };
+export type FullPaymentMethodFragment = { __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: (
+    { __typename?: 'PaymentProvider' }
+    & FullPaymentProviderFragment
+  ) | null, image?: (
+    { __typename?: 'Image' }
+    & FullImageFragment
+  ) | null };
 
 export type PaymentProviderListQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type PaymentProviderListQuery = { __typename?: 'Query', paymentProviders: Array<{ __typename?: 'PaymentProvider', id: string, name?: string | null }> };
+export type PaymentProviderListQuery = { __typename?: 'Query', paymentProviders: Array<(
+    { __typename?: 'PaymentProvider' }
+    & FullPaymentProviderFragment
+  )> };
 
 export type PaymentMethodListQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type PaymentMethodListQuery = { __typename?: 'Query', paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> };
+export type PaymentMethodListQuery = { __typename?: 'Query', paymentMethods: Array<(
+    { __typename?: 'PaymentMethod' }
+    & FullPaymentMethodFragment
+  )> };
 
 export type PaymentMethodQueryVariables = Types.Exact<{
   id: Types.Scalars['String'];
 }>;
 
 
-export type PaymentMethodQuery = { __typename?: 'Query', paymentMethod: { __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } };
+export type PaymentMethodQuery = { __typename?: 'Query', paymentMethod: (
+    { __typename?: 'PaymentMethod' }
+    & FullPaymentMethodFragment
+  ) };
 
 export type CreatePaymentMethodMutationVariables = Types.Exact<{
   name: Types.Scalars['String'];
@@ -38,7 +54,10 @@ export type CreatePaymentMethodMutationVariables = Types.Exact<{
 }>;
 
 
-export type CreatePaymentMethodMutation = { __typename?: 'Mutation', createPaymentMethod: { __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } };
+export type CreatePaymentMethodMutation = { __typename?: 'Mutation', createPaymentMethod: (
+    { __typename?: 'PaymentMethod' }
+    & FullPaymentMethodFragment
+  ) };
 
 export type UpdatePaymentMethodMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
@@ -52,14 +71,20 @@ export type UpdatePaymentMethodMutationVariables = Types.Exact<{
 }>;
 
 
-export type UpdatePaymentMethodMutation = { __typename?: 'Mutation', updatePaymentMethod: { __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } };
+export type UpdatePaymentMethodMutation = { __typename?: 'Mutation', updatePaymentMethod: (
+    { __typename?: 'PaymentMethod' }
+    & FullPaymentMethodFragment
+  ) };
 
 export type DeletePaymentMethodMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
 }>;
 
 
-export type DeletePaymentMethodMutation = { __typename?: 'Mutation', deletePaymentMethod: { __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } };
+export type DeletePaymentMethodMutation = { __typename?: 'Mutation', deletePaymentMethod: (
+    { __typename?: 'PaymentMethod' }
+    & FullPaymentMethodFragment
+  ) };
 
 export const FullPaymentProviderFragmentDoc = gql`
     fragment FullPaymentProvider on PaymentProvider {
@@ -84,8 +109,7 @@ export const FullPaymentMethodFragmentDoc = gql`
     ...FullImage
   }
 }
-    ${FullPaymentProviderFragmentDoc}
-${FullImageFragmentDoc}`;
+    `;
 export const PaymentProviderListDocument = gql`
     query PaymentProviderList {
   paymentProviders {
@@ -126,7 +150,10 @@ export const PaymentMethodListDocument = gql`
     ...FullPaymentMethod
   }
 }
-    ${FullPaymentMethodFragmentDoc}`;
+    ${FullPaymentMethodFragmentDoc}
+${FullPaymentProviderFragmentDoc}
+${FullImageFragmentDoc}
+${ImageUrLsFragmentDoc}`;
 
 /**
  * __usePaymentMethodListQuery__
@@ -160,7 +187,10 @@ export const PaymentMethodDocument = gql`
     ...FullPaymentMethod
   }
 }
-    ${FullPaymentMethodFragmentDoc}`;
+    ${FullPaymentMethodFragmentDoc}
+${FullPaymentProviderFragmentDoc}
+${FullImageFragmentDoc}
+${ImageUrLsFragmentDoc}`;
 
 /**
  * __usePaymentMethodQuery__
@@ -203,7 +233,10 @@ export const CreatePaymentMethodDocument = gql`
     ...FullPaymentMethod
   }
 }
-    ${FullPaymentMethodFragmentDoc}`;
+    ${FullPaymentMethodFragmentDoc}
+${FullPaymentProviderFragmentDoc}
+${FullImageFragmentDoc}
+${ImageUrLsFragmentDoc}`;
 export type CreatePaymentMethodMutationFn = Apollo.MutationFunction<CreatePaymentMethodMutation, CreatePaymentMethodMutationVariables>;
 
 /**
@@ -251,7 +284,10 @@ export const UpdatePaymentMethodDocument = gql`
     ...FullPaymentMethod
   }
 }
-    ${FullPaymentMethodFragmentDoc}`;
+    ${FullPaymentMethodFragmentDoc}
+${FullPaymentProviderFragmentDoc}
+${FullImageFragmentDoc}
+${ImageUrLsFragmentDoc}`;
 export type UpdatePaymentMethodMutationFn = Apollo.MutationFunction<UpdatePaymentMethodMutation, UpdatePaymentMethodMutationVariables>;
 
 /**
@@ -291,7 +327,10 @@ export const DeletePaymentMethodDocument = gql`
     ...FullPaymentMethod
   }
 }
-    ${FullPaymentMethodFragmentDoc}`;
+    ${FullPaymentMethodFragmentDoc}
+${FullPaymentProviderFragmentDoc}
+${FullImageFragmentDoc}
+${ImageUrLsFragmentDoc}`;
 export type DeletePaymentMethodMutationFn = Apollo.MutationFunction<DeletePaymentMethodMutation, DeletePaymentMethodMutationVariables>;
 
 /**

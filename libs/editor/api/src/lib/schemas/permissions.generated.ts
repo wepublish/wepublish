@@ -10,7 +10,10 @@ export type FullPermissionFragment = { __typename?: 'Permission', id: string, de
 export type PermissionListQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type PermissionListQuery = { __typename?: 'Query', permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> };
+export type PermissionListQuery = { __typename?: 'Query', permissions: Array<(
+    { __typename?: 'Permission' }
+    & FullPermissionFragment
+  )> };
 
 export const FullPermissionFragmentDoc = gql`
     fragment FullPermission on Permission {

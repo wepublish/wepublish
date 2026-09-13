@@ -17,14 +17,20 @@ export type InvoicesQueryVariables = Types.Exact<{
 }>;
 
 
-export type InvoicesQuery = { __typename?: 'Query', invoices: { __typename?: 'InvoiceConnection', totalCount: number, nodes: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Types.Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number, goodieId?: string | null, goodie?: { __typename?: 'Goodie', id: string, name: string } | null }> }>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean } } };
+export type InvoicesQuery = { __typename?: 'Query', invoices: { __typename?: 'InvoiceConnection', totalCount: number, nodes: Array<(
+      { __typename?: 'Invoice' }
+      & InvoiceFragment
+    )>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type MarkInvoiceAsPaidMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
 }>;
 
 
-export type MarkInvoiceAsPaidMutation = { __typename?: 'Mutation', markInvoiceAsPaid: { __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Types.Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number, goodieId?: string | null, goodie?: { __typename?: 'Goodie', id: string, name: string } | null }> } };
+export type MarkInvoiceAsPaidMutation = { __typename?: 'Mutation', markInvoiceAsPaid: (
+    { __typename?: 'Invoice' }
+    & InvoiceFragment
+  ) };
 
 export const InvoiceFragmentDoc = gql`
     fragment Invoice on Invoice {

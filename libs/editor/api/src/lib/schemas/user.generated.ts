@@ -2,14 +2,27 @@
 import * as Types from '../graphql';
 
 import {RichtextJSONDocument} from '@wepublish/richtext';
+import { FullImageFragment, ImageUrLsFragment, FullPeerImageFragment } from './image.generated';
+import { FullUserRoleFragment } from './userRole.generated';
+import { FullPermissionFragment } from './permissions.generated';
 import { gql } from '@apollo/client';
-import { FullImageFragmentDoc, FullPeerImageFragmentDoc } from './image.generated';
+import { FullImageFragmentDoc, ImageUrLsFragmentDoc, FullPeerImageFragmentDoc } from './image.generated';
 import { FullUserRoleFragmentDoc } from './userRole.generated';
+import { FullPermissionFragmentDoc } from './permissions.generated';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
-export type FullUserFragment = { __typename?: 'SensitiveDataUser', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, note?: string | null, totpEnabled: boolean, totpExempt: boolean, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddressNumber?: string | null, streetAddress2?: string | null, streetAddress2Number?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Property', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> };
+export type FullUserFragment = { __typename?: 'SensitiveDataUser', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, note?: string | null, totpEnabled: boolean, totpExempt: boolean, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddressNumber?: string | null, streetAddress2?: string | null, streetAddress2Number?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, image?: (
+    { __typename?: 'Image' }
+    & FullImageFragment
+  ) | null, properties: Array<{ __typename?: 'Property', key: string, value: string, public: boolean }>, roles: Array<(
+    { __typename?: 'UserRole' }
+    & FullUserRoleFragment
+  )> };
 
-export type TinyUserFragment = { __typename?: 'SensitiveDataUser', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, active: boolean, lastLogin?: string | null, email: string, totpEnabled: boolean, subscriptionCount: number, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> };
+export type TinyUserFragment = { __typename?: 'SensitiveDataUser', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, active: boolean, lastLogin?: string | null, email: string, totpEnabled: boolean, subscriptionCount: number, roles: Array<(
+    { __typename?: 'UserRole' }
+    & FullUserRoleFragment
+  )> };
 
 export type TinyUserListQueryVariables = Types.Exact<{
   filter?: Types.InputMaybe<Types.UserFilter>;
@@ -21,7 +34,10 @@ export type TinyUserListQueryVariables = Types.Exact<{
 }>;
 
 
-export type TinyUserListQuery = { __typename?: 'Query', users: { __typename?: 'PaginatedSensitiveDataUsers', totalCount: number, nodes: Array<{ __typename?: 'SensitiveDataUser', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, active: boolean, lastLogin?: string | null, email: string, totpEnabled: boolean, subscriptionCount: number, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
+export type TinyUserListQuery = { __typename?: 'Query', users: { __typename?: 'PaginatedSensitiveDataUsers', totalCount: number, nodes: Array<(
+      { __typename?: 'SensitiveDataUser' }
+      & TinyUserFragment
+    )>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type UserListQueryVariables = Types.Exact<{
   filter?: Types.InputMaybe<Types.UserFilter>;
@@ -33,19 +49,28 @@ export type UserListQueryVariables = Types.Exact<{
 }>;
 
 
-export type UserListQuery = { __typename?: 'Query', users: { __typename?: 'PaginatedSensitiveDataUsers', totalCount: number, nodes: Array<{ __typename?: 'SensitiveDataUser', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, note?: string | null, totpEnabled: boolean, totpExempt: boolean, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddressNumber?: string | null, streetAddress2?: string | null, streetAddress2Number?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Property', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
+export type UserListQuery = { __typename?: 'Query', users: { __typename?: 'PaginatedSensitiveDataUsers', totalCount: number, nodes: Array<(
+      { __typename?: 'SensitiveDataUser' }
+      & FullUserFragment
+    )>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type UserQueryVariables = Types.Exact<{
   id: Types.Scalars['String'];
 }>;
 
 
-export type UserQuery = { __typename?: 'Query', user: { __typename?: 'SensitiveDataUser', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, note?: string | null, totpEnabled: boolean, totpExempt: boolean, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddressNumber?: string | null, streetAddress2?: string | null, streetAddress2Number?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Property', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> } };
+export type UserQuery = { __typename?: 'Query', user: (
+    { __typename?: 'SensitiveDataUser' }
+    & FullUserFragment
+  ) };
 
 export type MeQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'SensitiveDataUser', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, note?: string | null, totpEnabled: boolean, totpExempt: boolean, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddressNumber?: string | null, streetAddress2?: string | null, streetAddress2Number?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Property', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> } | null };
+export type MeQuery = { __typename?: 'Query', me?: (
+    { __typename?: 'SensitiveDataUser' }
+    & FullUserFragment
+  ) | null };
 
 export type CreateUserMutationVariables = Types.Exact<{
   name: Types.Scalars['String'];
@@ -64,7 +89,10 @@ export type CreateUserMutationVariables = Types.Exact<{
 }>;
 
 
-export type CreateUserMutation = { __typename?: 'Mutation', createUser: { __typename?: 'SensitiveDataUser', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, note?: string | null, totpEnabled: boolean, totpExempt: boolean, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddressNumber?: string | null, streetAddress2?: string | null, streetAddress2Number?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Property', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> } };
+export type CreateUserMutation = { __typename?: 'Mutation', createUser: (
+    { __typename?: 'SensitiveDataUser' }
+    & FullUserFragment
+  ) };
 
 export type UpdateUserMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
@@ -84,7 +112,10 @@ export type UpdateUserMutationVariables = Types.Exact<{
 }>;
 
 
-export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'SensitiveDataUser', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, note?: string | null, totpEnabled: boolean, totpExempt: boolean, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddressNumber?: string | null, streetAddress2?: string | null, streetAddress2Number?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Property', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> } };
+export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: (
+    { __typename?: 'SensitiveDataUser' }
+    & FullUserFragment
+  ) };
 
 export type ResetUserPasswordMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
@@ -92,14 +123,20 @@ export type ResetUserPasswordMutationVariables = Types.Exact<{
 }>;
 
 
-export type ResetUserPasswordMutation = { __typename?: 'Mutation', resetPassword: { __typename?: 'SensitiveDataUser', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, note?: string | null, totpEnabled: boolean, totpExempt: boolean, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddressNumber?: string | null, streetAddress2?: string | null, streetAddress2Number?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Property', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> } };
+export type ResetUserPasswordMutation = { __typename?: 'Mutation', resetPassword: (
+    { __typename?: 'SensitiveDataUser' }
+    & FullUserFragment
+  ) };
 
 export type DeleteUserMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
 }>;
 
 
-export type DeleteUserMutation = { __typename?: 'Mutation', deleteUser: { __typename?: 'SensitiveDataUser', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, note?: string | null, totpEnabled: boolean, totpExempt: boolean, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddressNumber?: string | null, streetAddress2?: string | null, streetAddress2Number?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Property', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> } };
+export type DeleteUserMutation = { __typename?: 'Mutation', deleteUser: (
+    { __typename?: 'SensitiveDataUser' }
+    & FullUserFragment
+  ) };
 
 export const FullUserFragmentDoc = gql`
     fragment FullUser on SensitiveDataUser {
@@ -139,8 +176,7 @@ export const FullUserFragmentDoc = gql`
     ...FullUserRole
   }
 }
-    ${FullImageFragmentDoc}
-${FullUserRoleFragmentDoc}`;
+    `;
 export const TinyUserFragmentDoc = gql`
     fragment TinyUser on SensitiveDataUser {
   id
@@ -157,7 +193,7 @@ export const TinyUserFragmentDoc = gql`
   }
   subscriptionCount
 }
-    ${FullUserRoleFragmentDoc}`;
+    `;
 export const TinyUserListDocument = gql`
     query TinyUserList($filter: UserFilter, $cursorId: String, $take: Int, $skip: Int, $order: SortOrder, $sort: UserSort) {
   users(
@@ -180,7 +216,9 @@ export const TinyUserListDocument = gql`
     totalCount
   }
 }
-    ${TinyUserFragmentDoc}`;
+    ${TinyUserFragmentDoc}
+${FullUserRoleFragmentDoc}
+${FullPermissionFragmentDoc}`;
 
 /**
  * __useTinyUserListQuery__
@@ -236,7 +274,11 @@ export const UserListDocument = gql`
     totalCount
   }
 }
-    ${FullUserFragmentDoc}`;
+    ${FullUserFragmentDoc}
+${FullImageFragmentDoc}
+${ImageUrLsFragmentDoc}
+${FullUserRoleFragmentDoc}
+${FullPermissionFragmentDoc}`;
 
 /**
  * __useUserListQuery__
@@ -276,7 +318,11 @@ export const UserDocument = gql`
     ...FullUser
   }
 }
-    ${FullUserFragmentDoc}`;
+    ${FullUserFragmentDoc}
+${FullImageFragmentDoc}
+${ImageUrLsFragmentDoc}
+${FullUserRoleFragmentDoc}
+${FullPermissionFragmentDoc}`;
 
 /**
  * __useUserQuery__
@@ -311,7 +357,11 @@ export const MeDocument = gql`
     ...FullUser
   }
 }
-    ${FullUserFragmentDoc}`;
+    ${FullUserFragmentDoc}
+${FullImageFragmentDoc}
+${ImageUrLsFragmentDoc}
+${FullUserRoleFragmentDoc}
+${FullPermissionFragmentDoc}`;
 
 /**
  * __useMeQuery__
@@ -359,7 +409,11 @@ export const CreateUserDocument = gql`
     ...FullUser
   }
 }
-    ${FullUserFragmentDoc}`;
+    ${FullUserFragmentDoc}
+${FullImageFragmentDoc}
+${ImageUrLsFragmentDoc}
+${FullUserRoleFragmentDoc}
+${FullPermissionFragmentDoc}`;
 export type CreateUserMutationFn = Apollo.MutationFunction<CreateUserMutation, CreateUserMutationVariables>;
 
 /**
@@ -419,7 +473,11 @@ export const UpdateUserDocument = gql`
     ...FullUser
   }
 }
-    ${FullUserFragmentDoc}`;
+    ${FullUserFragmentDoc}
+${FullImageFragmentDoc}
+${ImageUrLsFragmentDoc}
+${FullUserRoleFragmentDoc}
+${FullPermissionFragmentDoc}`;
 export type UpdateUserMutationFn = Apollo.MutationFunction<UpdateUserMutation, UpdateUserMutationVariables>;
 
 /**
@@ -465,7 +523,11 @@ export const ResetUserPasswordDocument = gql`
     ...FullUser
   }
 }
-    ${FullUserFragmentDoc}`;
+    ${FullUserFragmentDoc}
+${FullImageFragmentDoc}
+${ImageUrLsFragmentDoc}
+${FullUserRoleFragmentDoc}
+${FullPermissionFragmentDoc}`;
 export type ResetUserPasswordMutationFn = Apollo.MutationFunction<ResetUserPasswordMutation, ResetUserPasswordMutationVariables>;
 
 /**
@@ -499,7 +561,11 @@ export const DeleteUserDocument = gql`
     ...FullUser
   }
 }
-    ${FullUserFragmentDoc}`;
+    ${FullUserFragmentDoc}
+${FullImageFragmentDoc}
+${ImageUrLsFragmentDoc}
+${FullUserRoleFragmentDoc}
+${FullPermissionFragmentDoc}`;
 export type DeleteUserMutationFn = Apollo.MutationFunction<DeleteUserMutation, DeleteUserMutationVariables>;
 
 /**

@@ -2,13 +2,25 @@
 import * as Types from '../graphql';
 
 import {RichtextJSONDocument} from '@wepublish/richtext';
+import { FullPeerFragment, FullRemotePeerProfileFragment } from './peer.generated';
+import { FullPeerImageFragment, FullImageFragment, ImageUrLsFragment } from './image.generated';
+import { FullTagFragment } from './tag.generated';
 import { gql } from '@apollo/client';
-import { FullPeerFragmentDoc } from './peer.generated';
+import { FullPeerFragmentDoc, FullRemotePeerProfileFragmentDoc } from './peer.generated';
+import { FullPeerImageFragmentDoc, FullImageFragmentDoc, ImageUrLsFragmentDoc } from './image.generated';
 import { FullTagFragmentDoc } from './tag.generated';
-import { FullImageFragmentDoc, FullPeerImageFragmentDoc } from './image.generated';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
-export type FullAuthorFragment = { __typename?: 'Author', id: string, name: string, jobTitle?: string | null, slug: string, bio?: RichtextJSONDocument | null, url: string, createdAt: string, modifiedAt: string, imageID?: string | null, hideOnArticle: boolean, hideOnTeaser: boolean, hideOnTeam: boolean, peer?: { __typename?: 'Peer', id: string, createdAt: string, modifiedAt: string, name: string, slug: string, isDisabled?: boolean | null, information?: RichtextJSONDocument | null, hostURL: string, token: string, profile?: { __typename?: 'RemotePeerProfile', name: string, themeColor: string, themeFontColor: string, hostURL: string, websiteURL: string, callToActionText?: RichtextJSONDocument | null, callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'PeerImage', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null, squareLogo?: { __typename?: 'PeerImage', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null, callToActionImage?: { __typename?: 'PeerImage', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null } | null } | null, links: Array<{ __typename?: 'AuthorLink', title: string, url: string }>, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null, description?: RichtextJSONDocument | null, type: Types.TagType, main: boolean, url: string, color?: string | null }>, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null };
+export type FullAuthorFragment = { __typename?: 'Author', id: string, name: string, jobTitle?: string | null, slug: string, bio?: RichtextJSONDocument | null, url: string, createdAt: string, modifiedAt: string, imageID?: string | null, hideOnArticle: boolean, hideOnTeaser: boolean, hideOnTeam: boolean, peer?: (
+    { __typename?: 'Peer' }
+    & FullPeerFragment
+  ) | null, links: Array<{ __typename?: 'AuthorLink', title: string, url: string }>, tags: Array<(
+    { __typename?: 'Tag' }
+    & FullTagFragment
+  )>, image?: (
+    { __typename?: 'Image' }
+    & FullImageFragment
+  ) | null };
 
 export type AuthorListQueryVariables = Types.Exact<{
   filter?: Types.InputMaybe<Types.Scalars['String']>;
@@ -20,14 +32,20 @@ export type AuthorListQueryVariables = Types.Exact<{
 }>;
 
 
-export type AuthorListQuery = { __typename?: 'Query', authors: { __typename?: 'PaginatedAuthors', totalCount: number, nodes: Array<{ __typename?: 'Author', id: string, name: string, jobTitle?: string | null, slug: string, bio?: RichtextJSONDocument | null, url: string, createdAt: string, modifiedAt: string, imageID?: string | null, hideOnArticle: boolean, hideOnTeaser: boolean, hideOnTeam: boolean, peer?: { __typename?: 'Peer', id: string, createdAt: string, modifiedAt: string, name: string, slug: string, isDisabled?: boolean | null, information?: RichtextJSONDocument | null, hostURL: string, token: string, profile?: { __typename?: 'RemotePeerProfile', name: string, themeColor: string, themeFontColor: string, hostURL: string, websiteURL: string, callToActionText?: RichtextJSONDocument | null, callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'PeerImage', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null, squareLogo?: { __typename?: 'PeerImage', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null, callToActionImage?: { __typename?: 'PeerImage', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null } | null } | null, links: Array<{ __typename?: 'AuthorLink', title: string, url: string }>, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null, description?: RichtextJSONDocument | null, type: Types.TagType, main: boolean, url: string, color?: string | null }>, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
+export type AuthorListQuery = { __typename?: 'Query', authors: { __typename?: 'PaginatedAuthors', totalCount: number, nodes: Array<(
+      { __typename?: 'Author' }
+      & FullAuthorFragment
+    )>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type AuthorQueryVariables = Types.Exact<{
   id: Types.Scalars['String'];
 }>;
 
 
-export type AuthorQuery = { __typename?: 'Query', author?: { __typename?: 'Author', id: string, name: string, jobTitle?: string | null, slug: string, bio?: RichtextJSONDocument | null, url: string, createdAt: string, modifiedAt: string, imageID?: string | null, hideOnArticle: boolean, hideOnTeaser: boolean, hideOnTeam: boolean, peer?: { __typename?: 'Peer', id: string, createdAt: string, modifiedAt: string, name: string, slug: string, isDisabled?: boolean | null, information?: RichtextJSONDocument | null, hostURL: string, token: string, profile?: { __typename?: 'RemotePeerProfile', name: string, themeColor: string, themeFontColor: string, hostURL: string, websiteURL: string, callToActionText?: RichtextJSONDocument | null, callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'PeerImage', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null, squareLogo?: { __typename?: 'PeerImage', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null, callToActionImage?: { __typename?: 'PeerImage', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null } | null } | null, links: Array<{ __typename?: 'AuthorLink', title: string, url: string }>, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null, description?: RichtextJSONDocument | null, type: Types.TagType, main: boolean, url: string, color?: string | null }>, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null };
+export type AuthorQuery = { __typename?: 'Query', author?: (
+    { __typename?: 'Author' }
+    & FullAuthorFragment
+  ) | null };
 
 export type CreateAuthorMutationVariables = Types.Exact<{
   slug: Types.Scalars['Slug'];
@@ -43,7 +61,10 @@ export type CreateAuthorMutationVariables = Types.Exact<{
 }>;
 
 
-export type CreateAuthorMutation = { __typename?: 'Mutation', createAuthor: { __typename?: 'Author', id: string, name: string, jobTitle?: string | null, slug: string, bio?: RichtextJSONDocument | null, url: string, createdAt: string, modifiedAt: string, imageID?: string | null, hideOnArticle: boolean, hideOnTeaser: boolean, hideOnTeam: boolean, peer?: { __typename?: 'Peer', id: string, createdAt: string, modifiedAt: string, name: string, slug: string, isDisabled?: boolean | null, information?: RichtextJSONDocument | null, hostURL: string, token: string, profile?: { __typename?: 'RemotePeerProfile', name: string, themeColor: string, themeFontColor: string, hostURL: string, websiteURL: string, callToActionText?: RichtextJSONDocument | null, callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'PeerImage', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null, squareLogo?: { __typename?: 'PeerImage', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null, callToActionImage?: { __typename?: 'PeerImage', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null } | null } | null, links: Array<{ __typename?: 'AuthorLink', title: string, url: string }>, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null, description?: RichtextJSONDocument | null, type: Types.TagType, main: boolean, url: string, color?: string | null }>, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } };
+export type CreateAuthorMutation = { __typename?: 'Mutation', createAuthor: (
+    { __typename?: 'Author' }
+    & FullAuthorFragment
+  ) };
 
 export type UpdateAuthorMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
@@ -60,14 +81,20 @@ export type UpdateAuthorMutationVariables = Types.Exact<{
 }>;
 
 
-export type UpdateAuthorMutation = { __typename?: 'Mutation', updateAuthor: { __typename?: 'Author', id: string, name: string, jobTitle?: string | null, slug: string, bio?: RichtextJSONDocument | null, url: string, createdAt: string, modifiedAt: string, imageID?: string | null, hideOnArticle: boolean, hideOnTeaser: boolean, hideOnTeam: boolean, peer?: { __typename?: 'Peer', id: string, createdAt: string, modifiedAt: string, name: string, slug: string, isDisabled?: boolean | null, information?: RichtextJSONDocument | null, hostURL: string, token: string, profile?: { __typename?: 'RemotePeerProfile', name: string, themeColor: string, themeFontColor: string, hostURL: string, websiteURL: string, callToActionText?: RichtextJSONDocument | null, callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'PeerImage', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null, squareLogo?: { __typename?: 'PeerImage', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null, callToActionImage?: { __typename?: 'PeerImage', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null } | null } | null, links: Array<{ __typename?: 'AuthorLink', title: string, url: string }>, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null, description?: RichtextJSONDocument | null, type: Types.TagType, main: boolean, url: string, color?: string | null }>, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } };
+export type UpdateAuthorMutation = { __typename?: 'Mutation', updateAuthor: (
+    { __typename?: 'Author' }
+    & FullAuthorFragment
+  ) };
 
 export type DeleteAuthorMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
 }>;
 
 
-export type DeleteAuthorMutation = { __typename?: 'Mutation', deleteAuthor: { __typename?: 'Author', id: string, name: string, jobTitle?: string | null, slug: string, bio?: RichtextJSONDocument | null, url: string, createdAt: string, modifiedAt: string, imageID?: string | null, hideOnArticle: boolean, hideOnTeaser: boolean, hideOnTeam: boolean, peer?: { __typename?: 'Peer', id: string, createdAt: string, modifiedAt: string, name: string, slug: string, isDisabled?: boolean | null, information?: RichtextJSONDocument | null, hostURL: string, token: string, profile?: { __typename?: 'RemotePeerProfile', name: string, themeColor: string, themeFontColor: string, hostURL: string, websiteURL: string, callToActionText?: RichtextJSONDocument | null, callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'PeerImage', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null, squareLogo?: { __typename?: 'PeerImage', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null, callToActionImage?: { __typename?: 'PeerImage', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null } | null } | null, links: Array<{ __typename?: 'AuthorLink', title: string, url: string }>, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null, description?: RichtextJSONDocument | null, type: Types.TagType, main: boolean, url: string, color?: string | null }>, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } };
+export type DeleteAuthorMutation = { __typename?: 'Mutation', deleteAuthor: (
+    { __typename?: 'Author' }
+    & FullAuthorFragment
+  ) };
 
 export const FullAuthorFragmentDoc = gql`
     fragment FullAuthor on Author {
@@ -97,9 +124,7 @@ export const FullAuthorFragmentDoc = gql`
   hideOnTeaser
   hideOnTeam
 }
-    ${FullPeerFragmentDoc}
-${FullTagFragmentDoc}
-${FullImageFragmentDoc}`;
+    `;
 export const AuthorListDocument = gql`
     query AuthorList($filter: String, $cursorId: String, $take: Int, $skip: Int, $order: SortOrder, $sort: AuthorSort) {
   authors(
@@ -122,7 +147,13 @@ export const AuthorListDocument = gql`
     totalCount
   }
 }
-    ${FullAuthorFragmentDoc}`;
+    ${FullAuthorFragmentDoc}
+${FullPeerFragmentDoc}
+${FullRemotePeerProfileFragmentDoc}
+${FullPeerImageFragmentDoc}
+${FullTagFragmentDoc}
+${FullImageFragmentDoc}
+${ImageUrLsFragmentDoc}`;
 
 /**
  * __useAuthorListQuery__
@@ -162,7 +193,13 @@ export const AuthorDocument = gql`
     ...FullAuthor
   }
 }
-    ${FullAuthorFragmentDoc}`;
+    ${FullAuthorFragmentDoc}
+${FullPeerFragmentDoc}
+${FullRemotePeerProfileFragmentDoc}
+${FullPeerImageFragmentDoc}
+${FullTagFragmentDoc}
+${FullImageFragmentDoc}
+${ImageUrLsFragmentDoc}`;
 
 /**
  * __useAuthorQuery__
@@ -208,7 +245,13 @@ export const CreateAuthorDocument = gql`
     ...FullAuthor
   }
 }
-    ${FullAuthorFragmentDoc}`;
+    ${FullAuthorFragmentDoc}
+${FullPeerFragmentDoc}
+${FullRemotePeerProfileFragmentDoc}
+${FullPeerImageFragmentDoc}
+${FullTagFragmentDoc}
+${FullImageFragmentDoc}
+${ImageUrLsFragmentDoc}`;
 export type CreateAuthorMutationFn = Apollo.MutationFunction<CreateAuthorMutation, CreateAuthorMutationVariables>;
 
 /**
@@ -262,7 +305,13 @@ export const UpdateAuthorDocument = gql`
     ...FullAuthor
   }
 }
-    ${FullAuthorFragmentDoc}`;
+    ${FullAuthorFragmentDoc}
+${FullPeerFragmentDoc}
+${FullRemotePeerProfileFragmentDoc}
+${FullPeerImageFragmentDoc}
+${FullTagFragmentDoc}
+${FullImageFragmentDoc}
+${ImageUrLsFragmentDoc}`;
 export type UpdateAuthorMutationFn = Apollo.MutationFunction<UpdateAuthorMutation, UpdateAuthorMutationVariables>;
 
 /**
@@ -305,7 +354,13 @@ export const DeleteAuthorDocument = gql`
     ...FullAuthor
   }
 }
-    ${FullAuthorFragmentDoc}`;
+    ${FullAuthorFragmentDoc}
+${FullPeerFragmentDoc}
+${FullRemotePeerProfileFragmentDoc}
+${FullPeerImageFragmentDoc}
+${FullTagFragmentDoc}
+${FullImageFragmentDoc}
+${ImageUrLsFragmentDoc}`;
 export type DeleteAuthorMutationFn = Apollo.MutationFunction<DeleteAuthorMutation, DeleteAuthorMutationVariables>;
 
 /**

@@ -3,7 +3,10 @@ import * as Types from '../graphql';
 
 import {RichtextJSONDocument} from '@wepublish/richtext';
 import { gql } from '@apollo/client';
-export type FullTrackingPixelFragment = { __typename?: 'TrackingPixel', id: string, uri?: string | null, error?: string | null, pixelUid?: string | null, trackingPixelMethod: { __typename?: 'TrackingPixelMethod', trackingPixelProviderID: string, trackingPixelProviderType: Types.TrackingPixelProviderType } };
+export type FullTrackingPixelFragment = { __typename?: 'TrackingPixel', id: string, uri?: string | null, error?: string | null, pixelUid?: string | null, trackingPixelMethod: (
+    { __typename?: 'TrackingPixelMethod' }
+    & FullTrackingPixelMethodFragment
+  ) };
 
 export type FullTrackingPixelMethodFragment = { __typename?: 'TrackingPixelMethod', trackingPixelProviderID: string, trackingPixelProviderType: Types.TrackingPixelProviderType };
 
@@ -23,4 +26,4 @@ export const FullTrackingPixelFragmentDoc = gql`
     ...FullTrackingPixelMethod
   }
 }
-    ${FullTrackingPixelMethodFragmentDoc}`;
+    `;

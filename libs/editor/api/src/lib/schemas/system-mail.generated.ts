@@ -2,6 +2,7 @@
 import * as Types from '../graphql';
 
 import {RichtextJSONDocument} from '@wepublish/richtext';
+import { MailTemplateRefFragment } from './subscription-flow.generated';
 import { gql } from '@apollo/client';
 import { MailTemplateRefFragmentDoc } from './subscription-flow.generated';
 import * as Apollo from '@apollo/client';
@@ -9,7 +10,10 @@ const defaultOptions = {} as const;
 export type SystemMailsQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type SystemMailsQuery = { __typename?: 'Query', systemMails: Array<{ __typename?: 'SystemMailModel', event: Types.UserEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> };
+export type SystemMailsQuery = { __typename?: 'Query', systemMails: Array<(
+    { __typename?: 'SystemMailModel' }
+    & SystemMailFragment
+  )> };
 
 export type UpdateSystemMailMutationVariables = Types.Exact<{
   event: Types.UserEvent;
@@ -17,7 +21,10 @@ export type UpdateSystemMailMutationVariables = Types.Exact<{
 }>;
 
 
-export type UpdateSystemMailMutation = { __typename?: 'Mutation', updateSystemMail: Array<{ __typename?: 'SystemMailModel', event: Types.UserEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> };
+export type UpdateSystemMailMutation = { __typename?: 'Mutation', updateSystemMail: Array<(
+    { __typename?: 'SystemMailModel' }
+    & SystemMailFragment
+  )> };
 
 export type TestSystemMailMutationVariables = Types.Exact<{
   event: Types.UserEvent;
@@ -26,7 +33,10 @@ export type TestSystemMailMutationVariables = Types.Exact<{
 
 export type TestSystemMailMutation = { __typename?: 'Mutation', testSystemMail: boolean };
 
-export type SystemMailFragment = { __typename?: 'SystemMailModel', event: Types.UserEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null };
+export type SystemMailFragment = { __typename?: 'SystemMailModel', event: Types.UserEvent, mailTemplate?: (
+    { __typename?: 'MailTemplateRef' }
+    & MailTemplateRefFragment
+  ) | null };
 
 export const SystemMailFragmentDoc = gql`
     fragment SystemMail on SystemMailModel {
@@ -35,14 +45,15 @@ export const SystemMailFragmentDoc = gql`
     ...MailTemplateRef
   }
 }
-    ${MailTemplateRefFragmentDoc}`;
+    `;
 export const SystemMailsDocument = gql`
     query SystemMails {
   systemMails {
     ...SystemMail
   }
 }
-    ${SystemMailFragmentDoc}`;
+    ${SystemMailFragmentDoc}
+${MailTemplateRefFragmentDoc}`;
 
 /**
  * __useSystemMailsQuery__
@@ -76,7 +87,8 @@ export const UpdateSystemMailDocument = gql`
     ...SystemMail
   }
 }
-    ${SystemMailFragmentDoc}`;
+    ${SystemMailFragmentDoc}
+${MailTemplateRefFragmentDoc}`;
 export type UpdateSystemMailMutationFn = Apollo.MutationFunction<UpdateSystemMailMutation, UpdateSystemMailMutationVariables>;
 
 /**

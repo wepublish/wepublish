@@ -10,7 +10,10 @@ export type FullWebsiteSettingsFragment = { __typename?: 'WebsiteSettings', them
 export type WebsiteSettingsQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type WebsiteSettingsQuery = { __typename?: 'Query', websiteSettings: { __typename?: 'WebsiteSettings', theme: any, analytics: { __typename?: 'WebsiteAnalytics', googleAnalytics: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null }, googleTagManager: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null }, plausible: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null }, piwik: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null } }, mail: { __typename?: 'WebsiteMail', mailchimp?: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null } | null }, ads: { __typename?: 'WebsiteAds', sparkLoop: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null } }, fonts: Array<{ __typename?: 'WebsiteRemoteFont', weight: Array<Types.FontWeight>, style: Array<Types.FontStyle>, name: string }> } };
+export type WebsiteSettingsQuery = { __typename?: 'Query', websiteSettings: (
+    { __typename?: 'WebsiteSettings' }
+    & FullWebsiteSettingsFragment
+  ) };
 
 export type UpdateWebsiteSettingsMutationVariables = Types.Exact<{
   analytics?: Types.InputMaybe<Types.WebsiteAnalyticsInput>;
@@ -21,7 +24,10 @@ export type UpdateWebsiteSettingsMutationVariables = Types.Exact<{
 }>;
 
 
-export type UpdateWebsiteSettingsMutation = { __typename?: 'Mutation', updateWebsiteSettings: { __typename?: 'WebsiteSettings', theme: any, analytics: { __typename?: 'WebsiteAnalytics', googleAnalytics: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null }, googleTagManager: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null }, plausible: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null }, piwik: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null } }, mail: { __typename?: 'WebsiteMail', mailchimp?: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null } | null }, ads: { __typename?: 'WebsiteAds', sparkLoop: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null } }, fonts: Array<{ __typename?: 'WebsiteRemoteFont', weight: Array<Types.FontWeight>, style: Array<Types.FontStyle>, name: string }> } };
+export type UpdateWebsiteSettingsMutation = { __typename?: 'Mutation', updateWebsiteSettings: (
+    { __typename?: 'WebsiteSettings' }
+    & FullWebsiteSettingsFragment
+  ) };
 
 export const FullWebsiteSettingsFragmentDoc = gql`
     fragment FullWebsiteSettings on WebsiteSettings {

@@ -2,12 +2,20 @@
 import * as Types from '../graphql';
 
 import {RichtextJSONDocument} from '@wepublish/richtext';
+import { FullImageFragment, ImageUrLsFragment, FullPeerImageFragment } from './image.generated';
+import { FullTagFragment } from './tag.generated';
 import { gql } from '@apollo/client';
-import { FullImageFragmentDoc, FullPeerImageFragmentDoc } from './image.generated';
+import { FullImageFragmentDoc, ImageUrLsFragmentDoc, FullPeerImageFragmentDoc } from './image.generated';
 import { FullTagFragmentDoc } from './tag.generated';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
-export type FullEventFragment = { __typename?: 'Event', id: string, name: string, lead?: string | null, description?: RichtextJSONDocument | null, status: Types.EventStatus, location?: string | null, startsAt: string, endsAt?: string | null, createdAt: string, modifiedAt: string, url: string, externalSourceName?: string | null, externalSourceId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags?: Array<{ __typename?: 'Tag', id: string, tag?: string | null, description?: RichtextJSONDocument | null, type: Types.TagType, main: boolean, url: string, color?: string | null }> | null };
+export type FullEventFragment = { __typename?: 'Event', id: string, name: string, lead?: string | null, description?: RichtextJSONDocument | null, status: Types.EventStatus, location?: string | null, startsAt: string, endsAt?: string | null, createdAt: string, modifiedAt: string, url: string, externalSourceName?: string | null, externalSourceId?: string | null, image?: (
+    { __typename?: 'Image' }
+    & FullImageFragment
+  ) | null, tags?: Array<(
+    { __typename?: 'Tag' }
+    & FullTagFragment
+  )> | null };
 
 export type EventListQueryVariables = Types.Exact<{
   filter?: Types.InputMaybe<Types.EventFilter>;
@@ -19,14 +27,20 @@ export type EventListQueryVariables = Types.Exact<{
 }>;
 
 
-export type EventListQuery = { __typename?: 'Query', events: { __typename?: 'PaginatedEvents', totalCount: number, nodes: Array<{ __typename?: 'Event', id: string, name: string, lead?: string | null, description?: RichtextJSONDocument | null, status: Types.EventStatus, location?: string | null, startsAt: string, endsAt?: string | null, createdAt: string, modifiedAt: string, url: string, externalSourceName?: string | null, externalSourceId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags?: Array<{ __typename?: 'Tag', id: string, tag?: string | null, description?: RichtextJSONDocument | null, type: Types.TagType, main: boolean, url: string, color?: string | null }> | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
+export type EventListQuery = { __typename?: 'Query', events: { __typename?: 'PaginatedEvents', totalCount: number, nodes: Array<(
+      { __typename?: 'Event' }
+      & FullEventFragment
+    )>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type EventQueryVariables = Types.Exact<{
   id: Types.Scalars['String'];
 }>;
 
 
-export type EventQuery = { __typename?: 'Query', event: { __typename?: 'Event', id: string, name: string, lead?: string | null, description?: RichtextJSONDocument | null, status: Types.EventStatus, location?: string | null, startsAt: string, endsAt?: string | null, createdAt: string, modifiedAt: string, url: string, externalSourceName?: string | null, externalSourceId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags?: Array<{ __typename?: 'Tag', id: string, tag?: string | null, description?: RichtextJSONDocument | null, type: Types.TagType, main: boolean, url: string, color?: string | null }> | null } };
+export type EventQuery = { __typename?: 'Query', event: (
+    { __typename?: 'Event' }
+    & FullEventFragment
+  ) };
 
 export type CreateEventMutationVariables = Types.Exact<{
   name: Types.Scalars['String'];
@@ -40,7 +54,10 @@ export type CreateEventMutationVariables = Types.Exact<{
 }>;
 
 
-export type CreateEventMutation = { __typename?: 'Mutation', createEvent: { __typename?: 'Event', id: string, name: string, lead?: string | null, description?: RichtextJSONDocument | null, status: Types.EventStatus, location?: string | null, startsAt: string, endsAt?: string | null, createdAt: string, modifiedAt: string, url: string, externalSourceName?: string | null, externalSourceId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags?: Array<{ __typename?: 'Tag', id: string, tag?: string | null, description?: RichtextJSONDocument | null, type: Types.TagType, main: boolean, url: string, color?: string | null }> | null } };
+export type CreateEventMutation = { __typename?: 'Mutation', createEvent: (
+    { __typename?: 'Event' }
+    & FullEventFragment
+  ) };
 
 export type UpdateEventMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
@@ -56,14 +73,20 @@ export type UpdateEventMutationVariables = Types.Exact<{
 }>;
 
 
-export type UpdateEventMutation = { __typename?: 'Mutation', updateEvent: { __typename?: 'Event', id: string, name: string, lead?: string | null, description?: RichtextJSONDocument | null, status: Types.EventStatus, location?: string | null, startsAt: string, endsAt?: string | null, createdAt: string, modifiedAt: string, url: string, externalSourceName?: string | null, externalSourceId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags?: Array<{ __typename?: 'Tag', id: string, tag?: string | null, description?: RichtextJSONDocument | null, type: Types.TagType, main: boolean, url: string, color?: string | null }> | null } };
+export type UpdateEventMutation = { __typename?: 'Mutation', updateEvent: (
+    { __typename?: 'Event' }
+    & FullEventFragment
+  ) };
 
 export type DeleteEventMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
 }>;
 
 
-export type DeleteEventMutation = { __typename?: 'Mutation', deleteEvent: { __typename?: 'Event', id: string, name: string, lead?: string | null, description?: RichtextJSONDocument | null, status: Types.EventStatus, location?: string | null, startsAt: string, endsAt?: string | null, createdAt: string, modifiedAt: string, url: string, externalSourceName?: string | null, externalSourceId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags?: Array<{ __typename?: 'Tag', id: string, tag?: string | null, description?: RichtextJSONDocument | null, type: Types.TagType, main: boolean, url: string, color?: string | null }> | null } };
+export type DeleteEventMutation = { __typename?: 'Mutation', deleteEvent: (
+    { __typename?: 'Event' }
+    & FullEventFragment
+  ) };
 
 export const FullEventFragmentDoc = gql`
     fragment FullEvent on Event {
@@ -87,8 +110,7 @@ export const FullEventFragmentDoc = gql`
   externalSourceName
   externalSourceId
 }
-    ${FullImageFragmentDoc}
-${FullTagFragmentDoc}`;
+    `;
 export const EventListDocument = gql`
     query EventList($filter: EventFilter, $cursorId: String, $take: Int, $skip: Int, $order: SortOrder, $sort: EventSort) {
   events(
@@ -111,7 +133,10 @@ export const EventListDocument = gql`
     totalCount
   }
 }
-    ${FullEventFragmentDoc}`;
+    ${FullEventFragmentDoc}
+${FullImageFragmentDoc}
+${ImageUrLsFragmentDoc}
+${FullTagFragmentDoc}`;
 
 /**
  * __useEventListQuery__
@@ -151,7 +176,10 @@ export const EventDocument = gql`
     ...FullEvent
   }
 }
-    ${FullEventFragmentDoc}`;
+    ${FullEventFragmentDoc}
+${FullImageFragmentDoc}
+${ImageUrLsFragmentDoc}
+${FullTagFragmentDoc}`;
 
 /**
  * __useEventQuery__
@@ -195,7 +223,10 @@ export const CreateEventDocument = gql`
     ...FullEvent
   }
 }
-    ${FullEventFragmentDoc}`;
+    ${FullEventFragmentDoc}
+${FullImageFragmentDoc}
+${ImageUrLsFragmentDoc}
+${FullTagFragmentDoc}`;
 export type CreateEventMutationFn = Apollo.MutationFunction<CreateEventMutation, CreateEventMutationVariables>;
 
 /**
@@ -246,7 +277,10 @@ export const UpdateEventDocument = gql`
     ...FullEvent
   }
 }
-    ${FullEventFragmentDoc}`;
+    ${FullEventFragmentDoc}
+${FullImageFragmentDoc}
+${ImageUrLsFragmentDoc}
+${FullTagFragmentDoc}`;
 export type UpdateEventMutationFn = Apollo.MutationFunction<UpdateEventMutation, UpdateEventMutationVariables>;
 
 /**
@@ -288,7 +322,10 @@ export const DeleteEventDocument = gql`
     ...FullEvent
   }
 }
-    ${FullEventFragmentDoc}`;
+    ${FullEventFragmentDoc}
+${FullImageFragmentDoc}
+${ImageUrLsFragmentDoc}
+${FullTagFragmentDoc}`;
 export type DeleteEventMutationFn = Apollo.MutationFunction<DeleteEventMutation, DeleteEventMutationVariables>;
 
 /**
