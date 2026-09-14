@@ -1,4 +1,3 @@
-import { css } from '@mui/material';
 import styled from '@emotion/styled';
 import { useReducer } from 'react';
 import { MdInfoOutline } from 'react-icons/md';
@@ -32,17 +31,11 @@ export const ContextBoxTitle = styled('div')`
 `;
 
 export const ContextBoxCollapse = styled('div')<{ expanded: boolean }>`
-  height: ${({ theme }) => theme.spacing(15)};
+  height: ${({ theme, expanded }) => (expanded ? `auto` : theme.spacing(15))};
   overflow: hidden;
   interpolate-size: allow-keywords;
   transition: height 0.3s ease-in-out;
   font-style: italic;
-
-  ${({ theme, expanded }) =>
-    expanded &&
-    css`
-      height: auto;
-    `}
 `;
 
 export const ContextBoxContent = styled('div')`

@@ -25,23 +25,24 @@ import {
   BuilderYouTubeVideoBlockProps,
 } from '@wepublish/website/builder';
 
-import { LightboxConfigProps } from './components/content/lightbox.component';
-import { TeaserAuthorsConfigProps } from './components/teaser/teaser-authors.component';
-import { TeaserDateConfigProps } from './components/teaser/teaser-date.component';
-import { TeaserImageConfigProps } from './components/teaser/teaser-image.component';
-import { TeaserLeadConfigProps } from './components/teaser/teaser-lead.component';
-import { TeaserPreTitleConfigProps } from './components/teaser/teaser-pre-title.component';
-import { TeaserTagsConfigProps } from './components/teaser/teaser-tags.component';
-import { TeaserTitleConfigProps } from './components/teaser/teaser-title.component';
-import { ContainerProps } from './components/layout/container.component';
-import { DynamicGridProps } from './components/layout/dynamic-grid.component';
-import { GridProps } from './components/layout/grid.component';
-import { RowProps } from './components/layout/row.component';
-import { SliderProps } from './components/layout/slider.component';
-import { SpaceProps } from './components/layout/space.component';
+import { LightboxConfigProps } from './components/content/lightbox/lightbox.component';
+import { TeaserAuthorsConfigProps } from './components/teaser/teaser-authors/teaser-authors.component';
+import { TeaserDateConfigProps } from './components/teaser/teaser-date/teaser-date.component';
+import { TeaserImageConfigProps } from './components/teaser/teaser-image/teaser-image.component';
+import { TeaserLeadConfigProps } from './components/teaser/teaser-lead/teaser-lead.component';
+import { TeaserPreTitleConfigProps } from './components/teaser/teaser-pre-title/teaser-pre-title.component';
+import { TeaserTagsConfigProps } from './components/teaser/teaser-tags/teaser-tags.component';
+import { TeaserTitleConfigProps } from './components/teaser/teaser-title/teaser-title.component';
+import { CollapsibleConfigProps } from './components/layout/collapsible/collapsible.component';
+import { ContainerProps } from './components/layout/container/container.component';
+import { DynamicGridProps } from './components/layout/dynamic-grid/dynamic-grid.component';
+import { GridProps } from './components/layout/grid/grid.component';
+import { RowProps } from './components/layout/row/row.component';
+import { SliderProps } from './components/layout/slider/slider.component';
+import { SpaceProps } from './components/layout/space/space.component';
 import { WithVisibility } from './components/layout/with-visibility';
-import { MailchimpFormConfigProps } from './components/data/mailchimp-form.component';
-import { SubscribeConfigProps } from './components/subscribe.component';
+import { MailchimpFormConfigProps } from './components/data/mailchimp-form/mailchimp-form.component';
+import { SubscribeConfigProps } from './components/subscribe/subscribe.component';
 import { WithDataSource } from './components/with-datasource';
 import {
   AlignmentValue,
@@ -67,6 +68,7 @@ type BaseComponents = {
   Row: WithDataSource<RowProps>;
   Slider: WithDataSource<SliderProps>;
   Container: WithDataSource<ContainerProps>;
+  Collapsible: CollapsibleConfigProps;
   RichText: BuilderRichTextBlockProps;
   Listicle: BuilderListicleBlockProps;
   IFrame: BuilderIFrameBlockProps;

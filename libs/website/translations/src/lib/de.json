@@ -356,5 +356,9 @@
     "next": "Nächstes Bild",
     "fullscreen": "Vollbild",
     "exitFullscreen": "Vollbild beenden"
+  },
+  "collapsible": {
+    "expand": "Aufklappen",
+    "collapse": "Zuklappen"
   }
 }

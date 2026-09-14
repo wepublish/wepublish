@@ -37,6 +37,64 @@ export type GetImagesByTagQuery = { __typename?: 'Query', getImagesByTag: Array<
 
 export type FullPeerImageFragment = { __typename?: 'PeerImage', id: string, width: number, height: number, description?: string | null, title?: string | null, focalPointX: number, focalPointY: number, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null };
 
+export type ImageQueryVariables = Types.Exact<{
+  id: Types.Scalars['String'];
+}>;
+
+
+export type ImageQuery = { __typename?: 'Query', image: (
+    { __typename?: 'Image' }
+    & FullImageFragment
+  ) };
+
+export type ImagesQueryVariables = Types.Exact<{
+  filter?: Types.InputMaybe<Types.ImageFilter>;
+  take?: Types.InputMaybe<Types.Scalars['Int']>;
+  skip?: Types.InputMaybe<Types.Scalars['Int']>;
+  cursorId?: Types.InputMaybe<Types.Scalars['String']>;
+}>;
+
+
+export type ImagesQuery = { __typename?: 'Query', images: { __typename?: 'PaginatedImages', totalCount: number, nodes: Array<(
+      { __typename?: 'Image' }
+      & FullImageFragment
+    )>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: string | null } } };
+
+export type UploadLibraryImageMutationVariables = Types.Exact<{
+  title?: Types.InputMaybe<Types.Scalars['String']>;
+  description?: Types.InputMaybe<Types.Scalars['String']>;
+  focalPointX?: Types.InputMaybe<Types.Scalars['Float']>;
+  focalPointY?: Types.InputMaybe<Types.Scalars['Float']>;
+  license?: Types.InputMaybe<Types.Scalars['String']>;
+  link?: Types.InputMaybe<Types.Scalars['String']>;
+  source?: Types.InputMaybe<Types.Scalars['String']>;
+  file: Types.Scalars['Upload'];
+  filename?: Types.InputMaybe<Types.Scalars['String']>;
+}>;
+
+
+export type UploadLibraryImageMutation = { __typename?: 'Mutation', uploadImage: (
+    { __typename?: 'Image' }
+    & FullImageFragment
+  ) };
+
+export type UpdateImageMutationVariables = Types.Exact<{
+  id: Types.Scalars['String'];
+  title?: Types.InputMaybe<Types.Scalars['String']>;
+  description?: Types.InputMaybe<Types.Scalars['String']>;
+  license?: Types.InputMaybe<Types.Scalars['String']>;
+  link?: Types.InputMaybe<Types.Scalars['String']>;
+  source?: Types.InputMaybe<Types.Scalars['String']>;
+  focalPointX?: Types.InputMaybe<Types.Scalars['Float']>;
+  focalPointY?: Types.InputMaybe<Types.Scalars['Float']>;
+}>;
+
+
+export type UpdateImageMutation = { __typename?: 'Mutation', updateImage: (
+    { __typename?: 'Image' }
+    & FullImageFragment
+  ) };
+
 export const ImageUrLsFragmentDoc = gql`
     fragment ImageURLs on Image {
   url
@@ -160,3 +218,196 @@ export function useGetImagesByTagLazyQuery(baseOptions?: Apollo.LazyQueryHookOpt
 export type GetImagesByTagQueryHookResult = ReturnType<typeof useGetImagesByTagQuery>;
 export type GetImagesByTagLazyQueryHookResult = ReturnType<typeof useGetImagesByTagLazyQuery>;
 export type GetImagesByTagQueryResult = Apollo.QueryResult<GetImagesByTagQuery, GetImagesByTagQueryVariables>;
+export const ImageDocument = gql`
+    query Image($id: String!) {
+  image(id: $id) {
+    ...FullImage
+  }
+}
+    ${FullImageFragmentDoc}
+${FullImageUrLsFragmentDoc}
+${ImageUrLsFragmentDoc}
+${SquareImageUrLsFragmentDoc}`;
+
+/**
+ * __useImageQuery__
+ *
+ * To run a query within a React component, call `useImageQuery` and pass it any options that fit your needs.
+ * When your component renders, `useImageQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useImageQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useImageQuery(baseOptions: Apollo.QueryHookOptions<ImageQuery, ImageQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ImageQuery, ImageQueryVariables>(ImageDocument, options);
+      }
+export function useImageLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ImageQuery, ImageQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ImageQuery, ImageQueryVariables>(ImageDocument, options);
+        }
+export type ImageQueryHookResult = ReturnType<typeof useImageQuery>;
+export type ImageLazyQueryHookResult = ReturnType<typeof useImageLazyQuery>;
+export type ImageQueryResult = Apollo.QueryResult<ImageQuery, ImageQueryVariables>;
+export const ImagesDocument = gql`
+    query Images($filter: ImageFilter, $take: Int, $skip: Int, $cursorId: String) {
+  images(filter: $filter, take: $take, skip: $skip, cursorId: $cursorId) {
+    nodes {
+      ...FullImage
+    }
+    totalCount
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+  }
+}
+    ${FullImageFragmentDoc}
+${FullImageUrLsFragmentDoc}
+${ImageUrLsFragmentDoc}
+${SquareImageUrLsFragmentDoc}`;
+
+/**
+ * __useImagesQuery__
+ *
+ * To run a query within a React component, call `useImagesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useImagesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useImagesQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
+ *      cursorId: // value for 'cursorId'
+ *   },
+ * });
+ */
+export function useImagesQuery(baseOptions?: Apollo.QueryHookOptions<ImagesQuery, ImagesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ImagesQuery, ImagesQueryVariables>(ImagesDocument, options);
+      }
+export function useImagesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ImagesQuery, ImagesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ImagesQuery, ImagesQueryVariables>(ImagesDocument, options);
+        }
+export type ImagesQueryHookResult = ReturnType<typeof useImagesQuery>;
+export type ImagesLazyQueryHookResult = ReturnType<typeof useImagesLazyQuery>;
+export type ImagesQueryResult = Apollo.QueryResult<ImagesQuery, ImagesQueryVariables>;
+export const UploadLibraryImageDocument = gql`
+    mutation UploadLibraryImage($title: String, $description: String, $focalPointX: Float, $focalPointY: Float, $license: String, $link: String, $source: String, $file: Upload!, $filename: String) {
+  uploadImage(
+    title: $title
+    description: $description
+    focalPointX: $focalPointX
+    focalPointY: $focalPointY
+    license: $license
+    link: $link
+    source: $source
+    tags: []
+    file: $file
+    filename: $filename
+  ) {
+    ...FullImage
+  }
+}
+    ${FullImageFragmentDoc}
+${FullImageUrLsFragmentDoc}
+${ImageUrLsFragmentDoc}
+${SquareImageUrLsFragmentDoc}`;
+export type UploadLibraryImageMutationFn = Apollo.MutationFunction<UploadLibraryImageMutation, UploadLibraryImageMutationVariables>;
+
+/**
+ * __useUploadLibraryImageMutation__
+ *
+ * To run a mutation, you first call `useUploadLibraryImageMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUploadLibraryImageMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [uploadLibraryImageMutation, { data, loading, error }] = useUploadLibraryImageMutation({
+ *   variables: {
+ *      title: // value for 'title'
+ *      description: // value for 'description'
+ *      focalPointX: // value for 'focalPointX'
+ *      focalPointY: // value for 'focalPointY'
+ *      license: // value for 'license'
+ *      link: // value for 'link'
+ *      source: // value for 'source'
+ *      file: // value for 'file'
+ *      filename: // value for 'filename'
+ *   },
+ * });
+ */
+export function useUploadLibraryImageMutation(baseOptions?: Apollo.MutationHookOptions<UploadLibraryImageMutation, UploadLibraryImageMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UploadLibraryImageMutation, UploadLibraryImageMutationVariables>(UploadLibraryImageDocument, options);
+      }
+export type UploadLibraryImageMutationHookResult = ReturnType<typeof useUploadLibraryImageMutation>;
+export type UploadLibraryImageMutationResult = Apollo.MutationResult<UploadLibraryImageMutation>;
+export type UploadLibraryImageMutationOptions = Apollo.BaseMutationOptions<UploadLibraryImageMutation, UploadLibraryImageMutationVariables>;
+export const UpdateImageDocument = gql`
+    mutation UpdateImage($id: String!, $title: String, $description: String, $license: String, $link: String, $source: String, $focalPointX: Float, $focalPointY: Float) {
+  updateImage(
+    id: $id
+    title: $title
+    description: $description
+    license: $license
+    link: $link
+    source: $source
+    focalPointX: $focalPointX
+    focalPointY: $focalPointY
+  ) {
+    ...FullImage
+  }
+}
+    ${FullImageFragmentDoc}
+${FullImageUrLsFragmentDoc}
+${ImageUrLsFragmentDoc}
+${SquareImageUrLsFragmentDoc}`;
+export type UpdateImageMutationFn = Apollo.MutationFunction<UpdateImageMutation, UpdateImageMutationVariables>;
+
+/**
+ * __useUpdateImageMutation__
+ *
+ * To run a mutation, you first call `useUpdateImageMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateImageMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateImageMutation, { data, loading, error }] = useUpdateImageMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      title: // value for 'title'
+ *      description: // value for 'description'
+ *      license: // value for 'license'
+ *      link: // value for 'link'
+ *      source: // value for 'source'
+ *      focalPointX: // value for 'focalPointX'
+ *      focalPointY: // value for 'focalPointY'
+ *   },
+ * });
+ */
+export function useUpdateImageMutation(baseOptions?: Apollo.MutationHookOptions<UpdateImageMutation, UpdateImageMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateImageMutation, UpdateImageMutationVariables>(UpdateImageDocument, options);
+      }
+export type UpdateImageMutationHookResult = ReturnType<typeof useUpdateImageMutation>;
+export type UpdateImageMutationResult = Apollo.MutationResult<UpdateImageMutation>;
+export type UpdateImageMutationOptions = Apollo.BaseMutationOptions<UpdateImageMutation, UpdateImageMutationVariables>;
