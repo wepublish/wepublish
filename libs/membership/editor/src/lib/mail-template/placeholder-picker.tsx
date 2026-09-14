@@ -41,6 +41,12 @@ const DATE_FORMATS = [
     label: 'Time',
     example: '10:22',
   },
+  {
+    suffix: '_year',
+    labelKey: 'mailTemplates.dateFormat.year',
+    label: 'Year',
+    example: '2024',
+  }
 ];
 
 const AMOUNT_FORMATS = [

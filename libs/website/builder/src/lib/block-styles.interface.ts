@@ -25,6 +25,7 @@ export type BuilderSliderConfig = {
 
 export type BuilderBlockStyleProps = {
   ImageSlider: BuilderImageGalleryBlockProps & BuilderSliderConfig;
+  Lightbox: BuilderImageGalleryBlockProps;
   TeaserSlider: (
     | BuilderTeaserListBlockProps
     | BuilderTeaserGridBlockProps

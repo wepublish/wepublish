@@ -259,6 +259,12 @@ export function App() {
           // Styles missing from v6 of rsuite
           :root {
             --rs-form-control-width: 100%;
+            --rs-form-group-direction: column;
+            --rs-form-group-spacing: var(--rs-spacing);
+          }
+
+          .rs-picker-toggle.rs-btn {
+            max-width: 100%;
           }
 
           .rs-grid-container-fluid,

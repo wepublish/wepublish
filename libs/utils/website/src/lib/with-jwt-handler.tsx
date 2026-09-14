@@ -1,4 +1,8 @@
-import { useUser } from '@wepublish/authentication/website';
+import { useApolloClient } from '@apollo/client';
+import {
+  setPreviewHandshakeState,
+  useUser,
+} from '@wepublish/authentication/website';
 import {
   useLoginWithJwtMutation,
   SessionWithTokenWithoutUser,
@@ -76,6 +80,7 @@ export const withJwtHandler = <P extends object>(
   ControlledComponent: ComponentType<P>
 ) =>
   memo<P>(props => {
+    const client = useApolloClient();
     const [loginWithJwt] = useLoginWithJwtMutation();
     const { setToken, hasUser } = useUser();
 
@@ -87,16 +92,22 @@ export const withJwtHandler = <P extends object>(
 
     const handleJwt = useCallback(
       (jwt: string, options?: { fromPreview?: boolean }) => {
-        if (hasUser) {
+        if (hasUser && !options?.fromPreview) {
           return;
         }
 
         loginWithJwt({ variables: { jwt } })
-          .then(result => {
+          .then(async result => {
             if (result?.data?.createSessionWithJWT) {
-              setToken(
+              await setToken(
                 result.data.createSessionWithJWT as SessionWithTokenWithoutUser
               );
+
+              if (options?.fromPreview) {
+                setPreviewHandshakeState('succeeded');
+              }
+
+              await client.resetStore();
             }
           })
           .catch(err => {
@@ -107,15 +118,19 @@ export const withJwtHandler = <P extends object>(
               return;
             }
 
-            // Preview JWTs fail silently — the user can't act on them
-            if (options?.fromPreview) return;
+            if (options?.fromPreview) {
+              setPreviewHandshakeState('failed');
+              console.warn('[preview] JWT login failed:', err?.message ?? err);
+
+              return;
+            }
 
             window.location.href = `/login?error=${encodeURIComponent(
               EXPIRED_JWT_MESSAGE
             )}`;
           });
       },
-      [loginWithJwt, setToken]
+      [loginWithJwt, setToken, hasUser, client]
     );
 
     const handleTotpSubmit = useCallback(async () => {
@@ -130,11 +145,14 @@ export const withJwtHandler = <P extends object>(
         });
 
         if (result?.data?.createSessionWithJWT) {
-          setToken(
+          await setToken(
             result.data.createSessionWithJWT as SessionWithTokenWithoutUser
           );
           setShowTotpPrompt(false);
           setPendingJwt(null);
+          setPreviewHandshakeState('succeeded');
+
+          await client.resetStore();
         }
       } catch (err: any) {
         setError(
@@ -146,7 +164,7 @@ export const withJwtHandler = <P extends object>(
       } finally {
         setLoading(false);
       }
-    }, [pendingJwt, totpToken, loginWithJwt, setToken]);
+    }, [pendingJwt, totpToken, loginWithJwt, setToken, client]);
 
     const handleCancel = useCallback(() => {
       setShowTotpPrompt(false);
@@ -157,8 +175,12 @@ export const withJwtHandler = <P extends object>(
 
     useEffect(() => {
       if (window.opener) {
+        setPreviewHandshakeState('pending');
+
         const isTrustedMessage = (event: MessageEvent): boolean =>
           event.source === window.opener;
+
+        let received = false;
 
         const handleMessage = (event: MessageEvent) => {
           if (!isTrustedMessage(event)) {
@@ -167,17 +189,30 @@ export const withJwtHandler = <P extends object>(
 
           const jwt = event.data?.previewJwt;
           if (jwt) {
+            received = true;
             window.removeEventListener('message', handleMessage);
+            clearInterval(interval);
+            window.opener.postMessage('preview-jwt-received', '*');
             handleJwt(jwt, { fromPreview: true });
           }
         };
         window.addEventListener('message', handleMessage);
 
-        const MAX_ATTEMPTS = 25;
+        const MAX_ATTEMPTS = 150;
         let attempts = 0;
         const interval = setInterval(() => {
           window.opener.postMessage('preview-jwt-ready', '*');
-          if (++attempts >= MAX_ATTEMPTS) clearInterval(interval);
+
+          if (++attempts >= MAX_ATTEMPTS) {
+            clearInterval(interval);
+
+            if (!received) {
+              setPreviewHandshakeState('failed');
+              console.warn(
+                '[preview] no JWT received from the opening window within 30s'
+              );
+            }
+          }
         }, 200);
 
         return () => {

@@ -38,6 +38,7 @@ fragment SlimArticleRevision on ArticleRevision {
   title
   lead
   breaking
+  hideAuthor
 
   authors {
     ...SlimAuthor
@@ -54,8 +55,6 @@ fragment SlimArticleRevision on ArticleRevision {
 
 fragment FullArticleRevision on ArticleRevision {
   ...SlimArticleRevision
-
-  hideAuthor
 
   canonicalUrl
 

@@ -49,6 +49,7 @@ import { memo } from 'react';
 import { isTeaserListBlock } from './teaser/teaser-list-block';
 import { isTeaserSliderBlockStyle } from './block-styles/teaser-slider/teaser-slider';
 import { isImageSliderBlockStyle } from './block-styles/image-slider/image-slider';
+import { isLightboxBlockStyle } from './block-styles/lightbox/is-lightbox';
 import { isFocusTeaserBlockStyle } from './block-styles/focus-teaser/focus-teaser';
 import { isContextBoxBlockStyle } from './block-styles/context-box/context-box';
 import { isBannerBlockStyle } from './block-styles/banner/banner';
@@ -87,6 +88,15 @@ export const BlockRenderer = memo(
     }
 
     const blockStylesCond = cond([
+      [
+        isLightboxBlockStyle,
+        block => (
+          <blockStyles.Lightbox
+            {...block}
+            className={className}
+          />
+        ),
+      ],
       [
         isImageSliderBlockStyle,
         block => (

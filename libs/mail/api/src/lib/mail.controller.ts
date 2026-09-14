@@ -94,6 +94,7 @@ export class MailController {
       jwt:
         this.config.jwtOverride ??
         (await this.mailContext.jwtGenerator(recipient.id)),
+      currentDate: (new Date()),
     };
   }
 

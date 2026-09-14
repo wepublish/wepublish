@@ -70,7 +70,8 @@ export const PaymentAmountPickerItemWrapper = styled('div')<
 >`
   position: relative;
   padding: ${({ theme }) => theme.spacing(2)};
-  aspect-ratio: 1;
+  width: 100%;
+  aspect-ratio: 1 / 1;
   border: 1px solid ${({ theme }) => theme.palette.divider};
   border-radius: ${({ theme }) => theme.shape.borderRadius}px;
   display: flex;

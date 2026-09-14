@@ -58,7 +58,7 @@ import {
   HauptstadtImageBlock,
   HauptstadtImageGalleryBlock,
 } from '../src/components/hauptstadt-image-block';
-import { HauptstadtImageSlider } from '../src/components/hauptstadt-image-slider';
+import { HauptstadtLightbox } from '../src/components/hauptstadt-lightbox';
 import { HauptstadtListicle } from '../src/components/hauptstadt-listicle';
 import {
   HauptstadtMemberPlanItem,
@@ -197,7 +197,7 @@ function CustomApp({
                 FocusTeaser: HauptstadtFocusTeaser,
                 AlternatingTeaser: HauptstadtAlternatingTeaser,
                 TeaserSlider: HauptstadtTeaserSlider,
-                ImageSlider: HauptstadtImageSlider,
+                Lightbox: HauptstadtLightbox,
               }}
               date={{ format: dateFormatter }}
               meta={{ siteTitle }}

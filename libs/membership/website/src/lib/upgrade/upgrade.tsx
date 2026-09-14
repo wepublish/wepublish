@@ -280,7 +280,7 @@ export const Upgrade = ({
     : selectedMemberPlan?.amountPerMonthMin ===
       selectedMemberPlan?.amountPerMonthMax;
 
-  const amountPerMonthMin = selectedMemberPlan?.amountPerMonthMin || 500;
+  const amountPerMonthMin = selectedMemberPlan?.amountPerMonthMin ?? 500;
 
   return (
     <SubscribeWrapper
