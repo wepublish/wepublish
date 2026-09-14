@@ -29,8 +29,11 @@ const StyledGrid = styled(Grid)`
  */
 function ZettelkastenDashboardPanel() {
   const { t } = useTranslation();
+  // cache-and-network for the same reason as in the article editor: a tab
+  // opened before the knowledge provider was set up would keep its cached
+  // answer and never show the card until a reload.
   const { data } = useZettelkastenEnabledQuery({
-    fetchPolicy: 'cache-first',
+    fetchPolicy: 'cache-and-network',
   });
 
   if (!data?.zettelkastenEnabled) {

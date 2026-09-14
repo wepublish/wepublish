@@ -187,8 +187,13 @@ function ArticleEditor() {
   // The editor the /fact command was typed in, so the fact lands where it was
   // asked for. Null while the panel was opened over the button instead.
   const factEditorRef = useRef<Editor | null>(null);
+  // cache-and-network, not cache-first: a tab opened before the knowledge
+  // provider was set up under Settings > Integrations would keep its cached
+  // answer and show no button, no card and no /fact until a reload, and the
+  // same the other way round when the integration is switched off. The cache
+  // still paints immediately, the background result corrects it.
   const { data: zettelkastenData } = useZettelkastenEnabledQuery({
-    fetchPolicy: 'cache-first',
+    fetchPolicy: 'cache-and-network',
   });
   const zettelkastenEnabled = !!zettelkastenData?.zettelkastenEnabled;
   const [isPublishDialogOpen, setPublishDialogOpen] = useState(false);
