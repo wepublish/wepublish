@@ -103,7 +103,7 @@ function setupSide(medium, label, commitHash, dir, apiPort, uiPort, postgresImgP
         .then(() => startProject(logPath, dir, dbConnectionString, medium, apiPort, uiPort));
     });
   return { dbPromise, runningPromise };
-};
+}
 
 async function main(medium, baselineCommitHash, currentCommitHash) {
   if (!medium || !baselineCommitHash || !currentCommitHash) {
