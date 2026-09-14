@@ -26,7 +26,7 @@ import {
   resolvedPlugin,
   RevisionHistoryPlugin,
   richtextPlugin,
-  searchPlugin,
+  SearchPlugin,
   SEOPreviewPlugin,
   StockImagePlugin,
   switchPlugin,
@@ -35,7 +35,7 @@ import {
   viewportSelectionPlugin,
   visibilityPlugin,
   webComponentsPlugin,
-  websiteTranslationsPlugin,
+  WebsiteTranslationsPlugin,
 } from '@wepublish/puck-content/editor';
 import { config, UserConfig } from '@wepublish/puck-content/website';
 import { minimalTheme } from '@wepublish/ui';
@@ -167,13 +167,13 @@ export function PuckEditor() {
                 OutlinePlugin,
                 StockImagePlugin,
                 RevisionHistoryPlugin,
-                searchPlugin,
+                SearchPlugin,
                 SEOPreviewPlugin,
                 HeadingAnalyzerPlugin,
                 RawDataPlugin,
                 EmotionPlugin,
                 webComponentsPlugin,
-                websiteTranslationsPlugin,
+                WebsiteTranslationsPlugin,
                 aiPlugin,
                 //
                 themePlugin,

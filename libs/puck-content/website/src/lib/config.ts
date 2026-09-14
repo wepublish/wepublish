@@ -1,51 +1,52 @@
-import { BreakConfig } from './components/break.config';
-import { ButtonConfig } from './components/content/button.config';
-import { ListicleConfig } from './components/content/listicle.config';
-import { QuoteConfig } from './components/content/quote.config';
-import { RichTextConfig } from './components/content/richtext.config';
-import { TitleConfig } from './components/content/title.config';
+import { BreakConfig } from './components/break/break.config';
+import { ButtonConfig } from './components/content/button/button.config';
+import { ListicleConfig } from './components/content/listicle/listicle.config';
+import { QuoteConfig } from './components/content/quote/quote.config';
+import { RichTextConfig } from './components/content/richtext/richtext.config';
+import { TitleConfig } from './components/content/title/title.config';
 import {
   FacebookConfig,
   FacebookVideoConfig,
   InstagramConfig,
-} from './components/embed/facebook.config';
-import { HtmlConfig } from './components/embed/html.config';
-import { IFrameConfig } from './components/embed/iframe.config';
-import { TikTokConfig } from './components/embed/tiktok.config';
-import { VimeoConfig } from './components/embed/vimeo.config';
-import { YouTubeConfig } from './components/embed/youtube.config';
-import { BildwurfAdConfig } from './components/embed/bildwurf-ad.config';
-import { PolisConfig } from './components/embed/polis.config';
-import { SoundCloudConfig } from './components/embed/sound-cloud.config';
-import { StreamableConfig } from './components/embed/streamable.config';
-import { TwitterConfig } from './components/embed/twitter.config';
-import { CommentConfig } from './components/data/comment.config';
-import { CrowdfundingConfig } from './components/data/crowdfunding.config';
-import { EventConfig } from './components/data/event.config';
-import { MailchimpFormConfig } from './components/data/mailchimp-form.config';
-import { PollConfig } from './components/data/poll.config';
-import { ContainerConfig } from './components/layout/container.config';
-import { DynamicGrid } from './components/layout/dynamic-grid.config';
-import { Grid } from './components/layout/grid.config';
-import { Row } from './components/layout/row.config';
-import { Slider } from './components/layout/slider.config';
-import { Space } from './components/layout/space.config';
+} from './components/embed/facebook/facebook.config';
+import { HtmlConfig } from './components/embed/html/html.config';
+import { IFrameConfig } from './components/embed/iframe/iframe.config';
+import { TikTokConfig } from './components/embed/tiktok/tiktok.config';
+import { VimeoConfig } from './components/embed/vimeo/vimeo.config';
+import { YouTubeConfig } from './components/embed/youtube/youtube.config';
+import { BildwurfAdConfig } from './components/embed/bildwurf-ad/bildwurf-ad.config';
+import { PolisConfig } from './components/embed/polis/polis.config';
+import { SoundCloudConfig } from './components/embed/sound-cloud/sound-cloud.config';
+import { StreamableConfig } from './components/embed/streamable/streamable.config';
+import { TwitterConfig } from './components/embed/twitter/twitter.config';
+import { CommentConfig } from './components/data/comment/comment.config';
+import { CrowdfundingConfig } from './components/data/crowdfunding/crowdfunding.config';
+import { EventConfig } from './components/data/event/event.config';
+import { MailchimpFormConfig } from './components/data/mailchimp-form/mailchimp-form.config';
+import { PollConfig } from './components/data/poll/poll.config';
+import { CollapsibleConfig } from './components/layout/collapsible/collapsible.config';
+import { ContainerConfig } from './components/layout/container/container.config';
+import { DynamicGrid } from './components/layout/dynamic-grid/dynamic-grid.config';
+import { Grid } from './components/layout/grid/grid.config';
+import { Row } from './components/layout/row/row.config';
+import { Slider } from './components/layout/slider/slider.config';
+import { Space } from './components/layout/space/space.config';
 import { withCSS } from './components/layout/with-css';
 import { withVisibility } from './components/layout/with-visibility';
-import { SubscribeConfig } from './components/subscribe.config';
+import { SubscribeConfig } from './components/subscribe/subscribe.config';
 import { withDataSource } from './components/with-datasource';
 import { seoField, switchFieldAi } from '@wepublish/puck-content/editor';
 import { Root } from './root.component';
 import { UserConfig } from './types';
-import { ImageConfig } from './components/content/image.config';
-import { LightboxConfig } from './components/content/lightbox.config';
-import { TeaserAuthorsConfig } from './components/teaser/teaser-authors.config';
-import { TeaserDateConfig } from './components/teaser/teaser-date.config';
-import { TeaserImageConfig } from './components/teaser/teaser-image.config';
-import { TeaserLeadConfig } from './components/teaser/teaser-lead.config';
-import { TeaserPreTitleConfig } from './components/teaser/teaser-pre-title.config';
-import { TeaserTagsConfig } from './components/teaser/teaser-tags.config';
-import { TeaserTitleConfig } from './components/teaser/teaser-title.config';
+import { ImageConfig } from './components/content/image/image.config';
+import { LightboxConfig } from './components/content/lightbox/lightbox.config';
+import { TeaserAuthorsConfig } from './components/teaser/teaser-authors/teaser-authors.config';
+import { TeaserDateConfig } from './components/teaser/teaser-date/teaser-date.config';
+import { TeaserImageConfig } from './components/teaser/teaser-image/teaser-image.config';
+import { TeaserLeadConfig } from './components/teaser/teaser-lead/teaser-lead.config';
+import { TeaserPreTitleConfig } from './components/teaser/teaser-pre-title/teaser-pre-title.config';
+import { TeaserTagsConfig } from './components/teaser/teaser-tags/teaser-tags.config';
+import { TeaserTitleConfig } from './components/teaser/teaser-title/teaser-title.config';
 
 export const config: UserConfig = {
   root: {
@@ -110,6 +111,7 @@ export const config: UserConfig = {
         types: ['autofill', 'list', 'items'],
       })
     ),
+    Collapsible: withVisibility(withCSS(CollapsibleConfig)),
     RichText: withVisibility(RichTextConfig),
     Listicle: withVisibility(ListicleConfig),
     IFrame: withVisibility(IFrameConfig),
@@ -157,6 +159,7 @@ export const config: UserConfig = {
         'Row',
         'Slider',
         'Container',
+        'Collapsible',
       ],
       defaultExpanded: false,
     },

@@ -52,9 +52,6 @@ const EmptyState = styled.div`
   text-align: center;
 `;
 
-// Wraps the block list with a search field. Without a query the default
-// (categorised) list is shown; with a query a flat list of matching blocks
-// replaces it so results are not hidden inside collapsed categories.
 export const SearchDrawer = ({ children }: SearchDrawerProps) => {
   const { t } = useTranslation();
   const [query, setQuery] = useState('');
