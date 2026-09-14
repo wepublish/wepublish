@@ -2,6 +2,7 @@
 import * as Types from '../graphql';
 
 import {RichtextJSONDocument} from '@wepublish/richtext';
+import { SlimPageRevisionFragment, SlimPageFragment } from './slim-page.generated';
 import { SlimImageFragment, ImageUrLsFragment, FullPeerImageFragment, FullImageFragment, FullImageUrLsFragment, SquareImageUrLsFragment } from './image.generated';
 import { FullPropertyFragment } from './properties.generated';
 import { FullBlock_BildwurfAdBlock_Fragment, FullBlock_BreakBlock_Fragment, FullBlock_CommentBlock_Fragment, FullBlock_CrowdfundingBlock_Fragment, FullBlock_EventBlock_Fragment, FullBlock_FacebookPostBlock_Fragment, FullBlock_FacebookVideoBlock_Fragment, FullBlock_FlexBlock_Fragment, FullBlock_HtmlBlock_Fragment, FullBlock_IFrameBlock_Fragment, FullBlock_ImageBlock_Fragment, FullBlock_ImageGalleryBlock_Fragment, FullBlock_InstagramPostBlock_Fragment, FullBlock_ListicleBlock_Fragment, FullBlock_MailchimpFormBlock_Fragment, FullBlock_PolisConversationBlock_Fragment, FullBlock_PollBlock_Fragment, FullBlock_QuoteBlock_Fragment, FullBlock_RichTextBlock_Fragment, FullBlock_SoundCloudTrackBlock_Fragment, FullBlock_StreamableVideoBlock_Fragment, FullBlock_SubscribeBlock_Fragment, FullBlock_TeaserGridBlock_Fragment, FullBlock_TeaserGridFlexBlock_Fragment, FullBlock_TeaserListBlock_Fragment, FullBlock_TeaserSlotsBlock_Fragment, FullBlock_TikTokVideoBlock_Fragment, FullBlock_TitleBlock_Fragment, FullBlock_TwitterTweetBlock_Fragment, FullBlock_UnknownBlock_Fragment, FullBlock_VimeoVideoBlock_Fragment, FullBlock_YouTubeVideoBlock_Fragment, BlockWithoutTeaser_BildwurfAdBlock_Fragment, BlockWithoutTeaser_BreakBlock_Fragment, BlockWithoutTeaser_CommentBlock_Fragment, BlockWithoutTeaser_CrowdfundingBlock_Fragment, BlockWithoutTeaser_EventBlock_Fragment, BlockWithoutTeaser_FacebookPostBlock_Fragment, BlockWithoutTeaser_FacebookVideoBlock_Fragment, BlockWithoutTeaser_FlexBlock_Fragment, BlockWithoutTeaser_HtmlBlock_Fragment, BlockWithoutTeaser_IFrameBlock_Fragment, BlockWithoutTeaser_ImageBlock_Fragment, BlockWithoutTeaser_ImageGalleryBlock_Fragment, BlockWithoutTeaser_InstagramPostBlock_Fragment, BlockWithoutTeaser_ListicleBlock_Fragment, BlockWithoutTeaser_MailchimpFormBlock_Fragment, BlockWithoutTeaser_PolisConversationBlock_Fragment, BlockWithoutTeaser_PollBlock_Fragment, BlockWithoutTeaser_QuoteBlock_Fragment, BlockWithoutTeaser_RichTextBlock_Fragment, BlockWithoutTeaser_SoundCloudTrackBlock_Fragment, BlockWithoutTeaser_StreamableVideoBlock_Fragment, BlockWithoutTeaser_SubscribeBlock_Fragment, BlockWithoutTeaser_TeaserGridBlock_Fragment, BlockWithoutTeaser_TeaserGridFlexBlock_Fragment, BlockWithoutTeaser_TeaserListBlock_Fragment, BlockWithoutTeaser_TeaserSlotsBlock_Fragment, BlockWithoutTeaser_TikTokVideoBlock_Fragment, BlockWithoutTeaser_TitleBlock_Fragment, BlockWithoutTeaser_TwitterTweetBlock_Fragment, BlockWithoutTeaser_UnknownBlock_Fragment, BlockWithoutTeaser_VimeoVideoBlock_Fragment, BlockWithoutTeaser_YouTubeVideoBlock_Fragment, FullTitleBlockFragment, FullImageBlockFragment, FullImageGalleryBlockFragment, FullQuoteBlockFragment, FullRichTextBlockFragment, FullHtmlBlockFragment, FullSubscribeBlockFragment, FullMailchimpFormBlockFragment, FullEventBlockFragment, FullCommentBlockFragment, FullPollBlockFragment, FullCrowdfundingBlockFragment, FullListicleBlockFragment, FullBreakBlockFragment, FullFacebookPostBlockFragment, FullFacebookVideoBlockFragment, FullInstagramPostBlockFragment, FullTwitterTweetBlockFragment, FullVimeoVideoBlockFragment, FullYouTubeVideoBlockFragment, FullStreamableVideoBlockFragment, FullSoundCloudTrackBlockFragment, FullPolisConversationBlockFragment, FullTikTokVideoBlockFragment, FullBildwurfAdBlockFragment, FullIFrameBlockFragment, FullTeaserGridFlexBlockFragment, FullFlexTeaserFragment, FullFlexAlignmentFragment, FullTeaser_ArticleTeaser_Fragment, FullTeaser_CustomTeaser_Fragment, FullTeaser_EventTeaser_Fragment, FullTeaser_PageTeaser_Fragment, FullArticleTeaserFragment, FullPageTeaserFragment, FullEventTeaserFragment, FullTeaserGridBlockFragment, FullTeaserListBlockFragment, FullTeaserSlotsBlockFragment, FullFlexBlockFragment } from './block-content.generated';
@@ -12,10 +13,12 @@ import { FullCommentFragment, CommentWithoutNestingFragment, FullCalculatedRatin
 import { FullUserFragment, FullBaseUser_SensitiveDataUser_Fragment, FullBaseUser_User_Fragment } from './user.generated';
 import { FullPollFragment } from './poll.generated';
 import { FullCrowdfundingFragment } from './crowdfunding.generated';
-import { SlimArticleFragment, SlimArticleRevisionFragment, SlimPaywallFragment } from './article.generated';
+import { SlimArticleFragment, SlimArticleRevisionFragment } from './slim-article.generated';
 import { SlimAuthorFragment, FullAuthorFragment } from './author.generated';
+import { SlimPaywallFragment, FullPaywallFragment } from './paywall.generated';
 import { FullPeerFragment, FullRemotePeerProfileFragment } from './peer.generated';
 import { gql } from '@apollo/client';
+import { SlimPageRevisionFragmentDoc, SlimPageFragmentDoc } from './slim-page.generated';
 import { SlimImageFragmentDoc, ImageUrLsFragmentDoc, FullPeerImageFragmentDoc, FullImageFragmentDoc, FullImageUrLsFragmentDoc, SquareImageUrLsFragmentDoc } from './image.generated';
 import { FullPropertyFragmentDoc } from './properties.generated';
 import { FullBlockFragmentDoc, BlockWithoutTeaserFragmentDoc, FullTitleBlockFragmentDoc, FullImageBlockFragmentDoc, FullImageGalleryBlockFragmentDoc, FullQuoteBlockFragmentDoc, FullRichTextBlockFragmentDoc, FullHtmlBlockFragmentDoc, FullSubscribeBlockFragmentDoc, FullMailchimpFormBlockFragmentDoc, FullEventBlockFragmentDoc, FullCommentBlockFragmentDoc, FullPollBlockFragmentDoc, FullCrowdfundingBlockFragmentDoc, FullListicleBlockFragmentDoc, FullBreakBlockFragmentDoc, FullFacebookPostBlockFragmentDoc, FullFacebookVideoBlockFragmentDoc, FullInstagramPostBlockFragmentDoc, FullTwitterTweetBlockFragmentDoc, FullVimeoVideoBlockFragmentDoc, FullYouTubeVideoBlockFragmentDoc, FullStreamableVideoBlockFragmentDoc, FullSoundCloudTrackBlockFragmentDoc, FullPolisConversationBlockFragmentDoc, FullTikTokVideoBlockFragmentDoc, FullBildwurfAdBlockFragmentDoc, FullIFrameBlockFragmentDoc, FullTeaserGridFlexBlockFragmentDoc, FullFlexTeaserFragmentDoc, FullFlexAlignmentFragmentDoc, FullTeaserFragmentDoc, FullArticleTeaserFragmentDoc, FullPageTeaserFragmentDoc, FullEventTeaserFragmentDoc, FullTeaserGridBlockFragmentDoc, FullTeaserListBlockFragmentDoc, FullTeaserSlotsBlockFragmentDoc, FullFlexBlockFragmentDoc } from './block-content.generated';
@@ -26,19 +29,12 @@ import { FullCommentFragmentDoc, CommentWithoutNestingFragmentDoc, FullCalculate
 import { FullUserFragmentDoc, FullBaseUserFragmentDoc } from './user.generated';
 import { FullPollFragmentDoc } from './poll.generated';
 import { FullCrowdfundingFragmentDoc } from './crowdfunding.generated';
-import { SlimArticleFragmentDoc, SlimArticleRevisionFragmentDoc, SlimPaywallFragmentDoc } from './article.generated';
+import { SlimArticleFragmentDoc, SlimArticleRevisionFragmentDoc } from './slim-article.generated';
 import { SlimAuthorFragmentDoc, FullAuthorFragmentDoc } from './author.generated';
+import { SlimPaywallFragmentDoc, FullPaywallFragmentDoc } from './paywall.generated';
 import { FullPeerFragmentDoc, FullRemotePeerProfileFragmentDoc } from './peer.generated';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
-export type SlimPageRevisionFragment = { __typename?: 'PageRevision', id: string, publishedAt?: string | null, description?: string | null, title?: string | null, image?: (
-    { __typename?: 'Image' }
-    & SlimImageFragment
-  ) | null, properties: Array<(
-    { __typename?: 'Property' }
-    & FullPropertyFragment
-  )> };
-
 export type FullPageRevisionFragment = (
   { __typename?: 'PageRevision', socialMediaDescription?: string | null, socialMediaTitle?: string | null, image?: (
     { __typename?: 'Image' }
@@ -146,14 +142,6 @@ export type FullPageRevisionFragment = (
   & SlimPageRevisionFragment
 );
 
-export type SlimPageFragment = { __typename?: 'Page', id: string, publishedAt?: string | null, modifiedAt: string, url: string, slug?: string | null, tags: Array<(
-    { __typename?: 'Tag' }
-    & FullTagFragment
-  )>, latest: (
-    { __typename?: 'PageRevision' }
-    & SlimPageRevisionFragment
-  ) };
-
 export type FullPageFragment = (
   { __typename?: 'Page', latest: (
     { __typename?: 'PageRevision' }
@@ -188,35 +176,6 @@ export type PageListQuery = { __typename?: 'Query', pages: { __typename?: 'Pagin
       & SlimPageFragment
     )>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
-export const SlimPageRevisionFragmentDoc = gql`
-    fragment SlimPageRevision on PageRevision {
-  id
-  publishedAt
-  description
-  title
-  image {
-    ...SlimImage
-  }
-  properties {
-    ...FullProperty
-  }
-}
-    `;
-export const SlimPageFragmentDoc = gql`
-    fragment SlimPage on Page {
-  id
-  publishedAt
-  modifiedAt
-  url
-  slug
-  tags {
-    ...FullTag
-  }
-  latest {
-    ...SlimPageRevision
-  }
-}
-    `;
 export const FullPageRevisionFragmentDoc = gql`
     fragment FullPageRevision on PageRevision {
   ...SlimPageRevision

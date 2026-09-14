@@ -2,18 +2,20 @@
 import * as Types from '../graphql';
 
 import {RichtextJSONDocument} from '@wepublish/richtext';
-import { SlimArticleFragment, SlimArticleRevisionFragment, SlimPaywallFragment } from './article.generated';
+import { SlimArticleFragment, SlimArticleRevisionFragment } from './slim-article.generated';
 import { FullTagFragment } from './tag.generated';
 import { SlimAuthorFragment, FullAuthorFragment } from './author.generated';
 import { SlimImageFragment, ImageUrLsFragment, FullPeerImageFragment, FullImageFragment, FullImageUrLsFragment, SquareImageUrLsFragment } from './image.generated';
 import { FullPropertyFragment } from './properties.generated';
+import { SlimPaywallFragment, FullPaywallFragment } from './paywall.generated';
 import { FullPeerFragment, FullRemotePeerProfileFragment } from './peer.generated';
 import { gql } from '@apollo/client';
-import { SlimArticleFragmentDoc, SlimArticleRevisionFragmentDoc, SlimPaywallFragmentDoc } from './article.generated';
+import { SlimArticleFragmentDoc, SlimArticleRevisionFragmentDoc } from './slim-article.generated';
 import { FullTagFragmentDoc } from './tag.generated';
 import { SlimAuthorFragmentDoc, FullAuthorFragmentDoc } from './author.generated';
 import { SlimImageFragmentDoc, ImageUrLsFragmentDoc, FullPeerImageFragmentDoc, FullImageFragmentDoc, FullImageUrLsFragmentDoc, SquareImageUrLsFragmentDoc } from './image.generated';
 import { FullPropertyFragmentDoc } from './properties.generated';
+import { SlimPaywallFragmentDoc, FullPaywallFragmentDoc } from './paywall.generated';
 import { FullPeerFragmentDoc, FullRemotePeerProfileFragmentDoc } from './peer.generated';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;

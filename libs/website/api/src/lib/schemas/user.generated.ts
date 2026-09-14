@@ -171,6 +171,24 @@ export type ConfirmEmailChangeMutation = { __typename?: 'Mutation', confirmEmail
     & FullSensitiveDataUserFragment
   ) };
 
+export type UploadImageMutationVariables = Types.Exact<{
+  title?: Types.InputMaybe<Types.Scalars['String']>;
+  description?: Types.InputMaybe<Types.Scalars['String']>;
+  focalPointX: Types.Scalars['Float'];
+  focalPointY: Types.Scalars['Float'];
+  license?: Types.InputMaybe<Types.Scalars['String']>;
+  link?: Types.InputMaybe<Types.Scalars['String']>;
+  source?: Types.InputMaybe<Types.Scalars['String']>;
+  file: Types.Scalars['Upload'];
+  filename?: Types.InputMaybe<Types.Scalars['String']>;
+}>;
+
+
+export type UploadImageMutation = { __typename?: 'Mutation', uploadUserProfileImage?: (
+    { __typename?: 'SensitiveDataUser' }
+    & FullSensitiveDataUserFragment
+  ) | null };
+
 export const FullBaseUserFragmentDoc = gql`
     fragment FullBaseUser on BaseUser {
   id
@@ -707,3 +725,63 @@ export function useConfirmEmailChangeMutation(baseOptions?: Apollo.MutationHookO
 export type ConfirmEmailChangeMutationHookResult = ReturnType<typeof useConfirmEmailChangeMutation>;
 export type ConfirmEmailChangeMutationResult = Apollo.MutationResult<ConfirmEmailChangeMutation>;
 export type ConfirmEmailChangeMutationOptions = Apollo.BaseMutationOptions<ConfirmEmailChangeMutation, ConfirmEmailChangeMutationVariables>;
+export const UploadImageDocument = gql`
+    mutation UploadImage($title: String, $description: String, $focalPointX: Float!, $focalPointY: Float!, $license: String, $link: String, $source: String, $file: Upload!, $filename: String) {
+  uploadUserProfileImage(
+    title: $title
+    description: $description
+    focalPointX: $focalPointX
+    focalPointY: $focalPointY
+    license: $license
+    link: $link
+    source: $source
+    tags: []
+    file: $file
+    filename: $filename
+  ) {
+    ...FullSensitiveDataUser
+  }
+}
+    ${FullSensitiveDataUserFragmentDoc}
+${FullBaseUserFragmentDoc}
+${FullImageFragmentDoc}
+${FullImageUrLsFragmentDoc}
+${ImageUrLsFragmentDoc}
+${SquareImageUrLsFragmentDoc}
+${FullPropertyFragmentDoc}
+${FullAddressFragmentDoc}
+${FullPaymentProviderCustomerFragmentDoc}`;
+export type UploadImageMutationFn = Apollo.MutationFunction<UploadImageMutation, UploadImageMutationVariables>;
+
+/**
+ * __useUploadImageMutation__
+ *
+ * To run a mutation, you first call `useUploadImageMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUploadImageMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [uploadImageMutation, { data, loading, error }] = useUploadImageMutation({
+ *   variables: {
+ *      title: // value for 'title'
+ *      description: // value for 'description'
+ *      focalPointX: // value for 'focalPointX'
+ *      focalPointY: // value for 'focalPointY'
+ *      license: // value for 'license'
+ *      link: // value for 'link'
+ *      source: // value for 'source'
+ *      file: // value for 'file'
+ *      filename: // value for 'filename'
+ *   },
+ * });
+ */
+export function useUploadImageMutation(baseOptions?: Apollo.MutationHookOptions<UploadImageMutation, UploadImageMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UploadImageMutation, UploadImageMutationVariables>(UploadImageDocument, options);
+      }
+export type UploadImageMutationHookResult = ReturnType<typeof useUploadImageMutation>;
+export type UploadImageMutationResult = Apollo.MutationResult<UploadImageMutation>;
+export type UploadImageMutationOptions = Apollo.BaseMutationOptions<UploadImageMutation, UploadImageMutationVariables>;

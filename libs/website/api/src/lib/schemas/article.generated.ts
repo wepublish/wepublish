@@ -2,6 +2,7 @@
 import * as Types from '../graphql';
 
 import {RichtextJSONDocument} from '@wepublish/richtext';
+import { SlimArticleRevisionFragment, SlimArticleFragment } from './slim-article.generated';
 import { SlimAuthorFragment, FullAuthorFragment } from './author.generated';
 import { SlimImageFragment, ImageUrLsFragment, FullPeerImageFragment, FullImageFragment, FullImageUrLsFragment, SquareImageUrLsFragment } from './image.generated';
 import { FullPropertyFragment } from './properties.generated';
@@ -13,10 +14,12 @@ import { FullCommentFragment, CommentWithoutNestingFragment, FullCalculatedRatin
 import { FullUserFragment, FullBaseUser_SensitiveDataUser_Fragment, FullBaseUser_User_Fragment } from './user.generated';
 import { FullPollFragment } from './poll.generated';
 import { FullCrowdfundingFragment } from './crowdfunding.generated';
+import { SlimPaywallFragment, FullPaywallFragment } from './paywall.generated';
 import { FullPeerFragment, FullRemotePeerProfileFragment } from './peer.generated';
-import { SlimPageFragment, SlimPageRevisionFragment } from './page.generated';
+import { SlimPageFragment, SlimPageRevisionFragment } from './slim-page.generated';
 import { FullTrackingPixelFragment } from './tracking-pixel.generated';
 import { gql } from '@apollo/client';
+import { SlimArticleRevisionFragmentDoc, SlimArticleFragmentDoc } from './slim-article.generated';
 import { SlimAuthorFragmentDoc, FullAuthorFragmentDoc } from './author.generated';
 import { SlimImageFragmentDoc, ImageUrLsFragmentDoc, FullPeerImageFragmentDoc, FullImageFragmentDoc, FullImageUrLsFragmentDoc, SquareImageUrLsFragmentDoc } from './image.generated';
 import { FullPropertyFragmentDoc } from './properties.generated';
@@ -28,26 +31,12 @@ import { FullCommentFragmentDoc, CommentWithoutNestingFragmentDoc, FullCalculate
 import { FullUserFragmentDoc, FullBaseUserFragmentDoc } from './user.generated';
 import { FullPollFragmentDoc } from './poll.generated';
 import { FullCrowdfundingFragmentDoc } from './crowdfunding.generated';
+import { SlimPaywallFragmentDoc, FullPaywallFragmentDoc } from './paywall.generated';
 import { FullPeerFragmentDoc, FullRemotePeerProfileFragmentDoc } from './peer.generated';
-import { SlimPageFragmentDoc, SlimPageRevisionFragmentDoc } from './page.generated';
+import { SlimPageFragmentDoc, SlimPageRevisionFragmentDoc } from './slim-page.generated';
 import { FullTrackingPixelFragmentDoc } from './tracking-pixel.generated';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
-export type SlimPaywallFragment = { __typename?: 'Paywall', id: string, memberPlans: Array<{ __typename?: 'MemberPlan', id: string, name: string, tags?: Array<string> | null }> };
-
-export type FullPaywallFragment = { __typename?: 'Paywall', id: string, active: boolean, anyMemberPlan: boolean, name?: string | null, description?: RichtextJSONDocument | null, circumventDescription?: RichtextJSONDocument | null, alternativeSubscribeUrl?: string | null, upgradeDescription?: RichtextJSONDocument | null, upgradeCircumventDescription?: RichtextJSONDocument | null, fadeout: boolean, hideContentAfter: number, memberPlans: Array<{ __typename?: 'MemberPlan', id: string, name: string, tags?: Array<string> | null }>, bypasses: Array<{ __typename?: 'PaywallBypass', id: string, token: string }> };
-
-export type SlimArticleRevisionFragment = { __typename?: 'ArticleRevision', id: string, publishedAt?: string | null, preTitle?: string | null, title?: string | null, lead?: string | null, breaking: boolean, hideAuthor: boolean, authors: Array<(
-    { __typename?: 'Author' }
-    & SlimAuthorFragment
-  )>, image?: (
-    { __typename?: 'Image' }
-    & SlimImageFragment
-  ) | null, properties: Array<(
-    { __typename?: 'Property' }
-    & FullPropertyFragment
-  )> };
-
 export type FullArticleRevisionFragment = (
   { __typename?: 'ArticleRevision', canonicalUrl?: string | null, seoTitle?: string | null, seoDescription?: string | null, socialMediaDescription?: string | null, socialMediaTitle?: string | null, image?: (
     { __typename?: 'Image' }
@@ -158,20 +147,6 @@ export type FullArticleRevisionFragment = (
   & SlimArticleRevisionFragment
 );
 
-export type SlimArticleFragment = { __typename?: 'Article', id: string, publishedAt?: string | null, url: string, slug?: string | null, likes: number, disableComments: boolean, peerId?: string | null, tags: Array<(
-    { __typename?: 'Tag' }
-    & FullTagFragment
-  )>, latest: (
-    { __typename?: 'ArticleRevision' }
-    & SlimArticleRevisionFragment
-  ), paywall?: (
-    { __typename?: 'Paywall' }
-    & SlimPaywallFragment
-  ) | null, peer?: (
-    { __typename?: 'Peer' }
-    & FullPeerFragment
-  ) | null };
-
 export type FullArticleFragment = (
   { __typename?: 'Article', trackingPixels: Array<(
     { __typename?: 'TrackingPixel' }
@@ -247,83 +222,6 @@ export type DislikeArticleMutation = { __typename?: 'Mutation', dislikeArticle: 
     & FullArticleFragment
   ) };
 
-export const SlimArticleRevisionFragmentDoc = gql`
-    fragment SlimArticleRevision on ArticleRevision {
-  id
-  publishedAt
-  preTitle
-  title
-  lead
-  breaking
-  hideAuthor
-  authors {
-    ...SlimAuthor
-  }
-  image {
-    ...SlimImage
-  }
-  properties {
-    ...FullProperty
-  }
-}
-    `;
-export const SlimPaywallFragmentDoc = gql`
-    fragment SlimPaywall on Paywall {
-  id
-  memberPlans {
-    id
-    name
-    tags
-  }
-}
-    `;
-export const SlimArticleFragmentDoc = gql`
-    fragment SlimArticle on Article {
-  id
-  publishedAt
-  url
-  slug
-  likes
-  disableComments
-  tags {
-    ...FullTag
-  }
-  latest {
-    ...SlimArticleRevision
-  }
-  paywall {
-    ...SlimPaywall
-  }
-  peerId
-  peer {
-    ...FullPeer
-  }
-}
-    `;
-export const FullPaywallFragmentDoc = gql`
-    fragment FullPaywall on Paywall {
-  id
-  active
-  anyMemberPlan
-  name
-  description
-  circumventDescription
-  alternativeSubscribeUrl
-  upgradeDescription
-  upgradeCircumventDescription
-  memberPlans {
-    id
-    name
-    tags
-  }
-  bypasses {
-    id
-    token
-  }
-  fadeout
-  hideContentAfter
-}
-    `;
 export const FullArticleRevisionFragmentDoc = gql`
     fragment FullArticleRevision on ArticleRevision {
   ...SlimArticleRevision

@@ -2,37 +2,31 @@
 import * as Types from '../graphql';
 
 import {RichtextJSONDocument} from '@wepublish/richtext';
+import { FullPageRevisionWithoutBlocksFragment, PageWithoutBlocksFragment } from './page-without-blocks.generated';
 import { FullImageFragment, ImageUrLsFragment, FullPeerImageFragment } from './image.generated';
 import { FullBlock_BildwurfAdBlock_Fragment, FullBlock_BreakBlock_Fragment, FullBlock_CommentBlock_Fragment, FullBlock_CrowdfundingBlock_Fragment, FullBlock_EventBlock_Fragment, FullBlock_FacebookPostBlock_Fragment, FullBlock_FacebookVideoBlock_Fragment, FullBlock_FlexBlock_Fragment, FullBlock_HtmlBlock_Fragment, FullBlock_IFrameBlock_Fragment, FullBlock_ImageBlock_Fragment, FullBlock_ImageGalleryBlock_Fragment, FullBlock_InstagramPostBlock_Fragment, FullBlock_ListicleBlock_Fragment, FullBlock_MailchimpFormBlock_Fragment, FullBlock_PolisConversationBlock_Fragment, FullBlock_PollBlock_Fragment, FullBlock_QuoteBlock_Fragment, FullBlock_RichTextBlock_Fragment, FullBlock_SoundCloudTrackBlock_Fragment, FullBlock_StreamableVideoBlock_Fragment, FullBlock_SubscribeBlock_Fragment, FullBlock_TeaserGridBlock_Fragment, FullBlock_TeaserGridFlexBlock_Fragment, FullBlock_TeaserListBlock_Fragment, FullBlock_TeaserSlotsBlock_Fragment, FullBlock_TikTokVideoBlock_Fragment, FullBlock_TitleBlock_Fragment, FullBlock_TwitterTweetBlock_Fragment, FullBlock_UnknownBlock_Fragment, FullBlock_VimeoVideoBlock_Fragment, FullBlock_YouTubeVideoBlock_Fragment, BlockWithoutTeaser_BildwurfAdBlock_Fragment, BlockWithoutTeaser_BreakBlock_Fragment, BlockWithoutTeaser_CommentBlock_Fragment, BlockWithoutTeaser_CrowdfundingBlock_Fragment, BlockWithoutTeaser_EventBlock_Fragment, BlockWithoutTeaser_FacebookPostBlock_Fragment, BlockWithoutTeaser_FacebookVideoBlock_Fragment, BlockWithoutTeaser_FlexBlock_Fragment, BlockWithoutTeaser_HtmlBlock_Fragment, BlockWithoutTeaser_IFrameBlock_Fragment, BlockWithoutTeaser_ImageBlock_Fragment, BlockWithoutTeaser_ImageGalleryBlock_Fragment, BlockWithoutTeaser_InstagramPostBlock_Fragment, BlockWithoutTeaser_ListicleBlock_Fragment, BlockWithoutTeaser_MailchimpFormBlock_Fragment, BlockWithoutTeaser_PolisConversationBlock_Fragment, BlockWithoutTeaser_PollBlock_Fragment, BlockWithoutTeaser_QuoteBlock_Fragment, BlockWithoutTeaser_RichTextBlock_Fragment, BlockWithoutTeaser_SoundCloudTrackBlock_Fragment, BlockWithoutTeaser_StreamableVideoBlock_Fragment, BlockWithoutTeaser_SubscribeBlock_Fragment, BlockWithoutTeaser_TeaserGridBlock_Fragment, BlockWithoutTeaser_TeaserGridFlexBlock_Fragment, BlockWithoutTeaser_TeaserListBlock_Fragment, BlockWithoutTeaser_TeaserSlotsBlock_Fragment, BlockWithoutTeaser_TikTokVideoBlock_Fragment, BlockWithoutTeaser_TitleBlock_Fragment, BlockWithoutTeaser_TwitterTweetBlock_Fragment, BlockWithoutTeaser_UnknownBlock_Fragment, BlockWithoutTeaser_VimeoVideoBlock_Fragment, BlockWithoutTeaser_YouTubeVideoBlock_Fragment, FullTeaser_ArticleTeaser_Fragment, FullTeaser_CustomTeaser_Fragment, FullTeaser_EventTeaser_Fragment, FullTeaser_PageTeaser_Fragment } from './block.generated';
 import { FullEventFragment } from './events.generated';
 import { FullTagFragment } from './tag.generated';
 import { CommentBlockCommentFragment, CommentUserFragment } from './comment.generated';
 import { FullPollFragment } from './poll.generated';
-import { ArticleWithoutBlocksFragment, FullArticleRevisionWithoutBlocksFragment } from './article.generated';
+import { ArticleWithoutBlocksFragment, FullArticleRevisionWithoutBlocksFragment } from './article-without-blocks.generated';
 import { FullAuthorFragment } from './author.generated';
 import { FullPeerFragment, FullRemotePeerProfileFragment } from './peer.generated';
 import { FullTrackingPixelFragment, FullTrackingPixelMethodFragment } from './tracking-pixel.generated';
 import { gql } from '@apollo/client';
+import { FullPageRevisionWithoutBlocksFragmentDoc, PageWithoutBlocksFragmentDoc } from './page-without-blocks.generated';
 import { FullImageFragmentDoc, ImageUrLsFragmentDoc, FullPeerImageFragmentDoc } from './image.generated';
 import { FullBlockFragmentDoc, BlockWithoutTeaserFragmentDoc, FullTeaserFragmentDoc } from './block.generated';
 import { FullEventFragmentDoc } from './events.generated';
 import { FullTagFragmentDoc } from './tag.generated';
 import { CommentBlockCommentFragmentDoc, CommentUserFragmentDoc } from './comment.generated';
 import { FullPollFragmentDoc } from './poll.generated';
-import { ArticleWithoutBlocksFragmentDoc, FullArticleRevisionWithoutBlocksFragmentDoc } from './article.generated';
+import { ArticleWithoutBlocksFragmentDoc, FullArticleRevisionWithoutBlocksFragmentDoc } from './article-without-blocks.generated';
 import { FullAuthorFragmentDoc } from './author.generated';
 import { FullPeerFragmentDoc, FullRemotePeerProfileFragmentDoc } from './peer.generated';
 import { FullTrackingPixelFragmentDoc, FullTrackingPixelMethodFragmentDoc } from './tracking-pixel.generated';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
-export type FullPageRevisionWithoutBlocksFragment = { __typename?: 'PageRevision', id: string, createdAt: string, publishedAt?: string | null, archivedAt?: string | null, title?: string | null, description?: string | null, seoTitle?: string | null, seoDescription?: string | null, socialMediaTitle?: string | null, socialMediaDescription?: string | null, image?: (
-    { __typename?: 'Image' }
-    & FullImageFragment
-  ) | null, socialMediaImage?: (
-    { __typename?: 'Image' }
-    & FullImageFragment
-  ) | null, properties: Array<{ __typename?: 'Property', key: string, value: string, public: boolean }> };
-
 export type FullPageRevisionFragment = (
   { __typename?: 'PageRevision', blocks: Array<(
     { __typename?: 'BildwurfAdBlock' }
@@ -133,14 +127,6 @@ export type FullPageRevisionFragment = (
   )> }
   & FullPageRevisionWithoutBlocksFragment
 );
-
-export type PageWithoutBlocksFragment = { __typename?: 'Page', id: string, publishedAt?: string | null, createdAt: string, modifiedAt: string, slug?: string | null, url: string, previewUrl: string, hidden: boolean, tags: Array<(
-    { __typename?: 'Tag' }
-    & FullTagFragment
-  )>, latest: (
-    { __typename?: 'PageRevision' }
-    & FullPageRevisionWithoutBlocksFragment
-  ), draft?: { __typename?: 'PageRevision', id: string } | null, pending?: { __typename?: 'PageRevision', id: string, publishedAt?: string | null } | null, published?: { __typename?: 'PageRevision', id: string, publishedAt?: string | null } | null };
 
 export type FullPageFragment = (
   { __typename?: 'Page', latest: (
@@ -306,60 +292,6 @@ export type PageQuery = { __typename?: 'Query', page: (
     & FullPageFragment
   ) };
 
-export const FullPageRevisionWithoutBlocksFragmentDoc = gql`
-    fragment FullPageRevisionWithoutBlocks on PageRevision {
-  id
-  createdAt
-  publishedAt
-  archivedAt
-  title
-  description
-  seoTitle
-  seoDescription
-  socialMediaTitle
-  socialMediaDescription
-  image {
-    ...FullImage
-  }
-  socialMediaImage {
-    ...FullImage
-  }
-  properties {
-    key
-    value
-    public
-  }
-}
-    `;
-export const PageWithoutBlocksFragmentDoc = gql`
-    fragment PageWithoutBlocks on Page {
-  id
-  publishedAt
-  createdAt
-  modifiedAt
-  slug
-  url
-  previewUrl
-  hidden
-  tags {
-    ...FullTag
-  }
-  latest {
-    ...FullPageRevisionWithoutBlocks
-  }
-  draft {
-    id
-  }
-  pending {
-    id
-    publishedAt
-  }
-  published {
-    id
-    publishedAt
-  }
-}
-    `;
 export const FullPageRevisionFragmentDoc = gql`
     fragment FullPageRevision on PageRevision {
   ...FullPageRevisionWithoutBlocks

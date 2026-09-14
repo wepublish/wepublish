@@ -7,22 +7,22 @@ import { FullEventFragment } from './events.generated';
 import { FullTagFragment } from './tag.generated';
 import { CommentBlockCommentFragment, CommentUserFragment } from './comment.generated';
 import { FullPollFragment } from './poll.generated';
-import { ArticleWithoutBlocksFragment, FullArticleRevisionWithoutBlocksFragment } from './article.generated';
+import { ArticleWithoutBlocksFragment, FullArticleRevisionWithoutBlocksFragment } from './article-without-blocks.generated';
 import { FullAuthorFragment } from './author.generated';
 import { FullPeerFragment, FullRemotePeerProfileFragment } from './peer.generated';
 import { FullTrackingPixelFragment, FullTrackingPixelMethodFragment } from './tracking-pixel.generated';
-import { PageWithoutBlocksFragment, FullPageRevisionWithoutBlocksFragment } from './page.generated';
+import { PageWithoutBlocksFragment, FullPageRevisionWithoutBlocksFragment } from './page-without-blocks.generated';
 import { gql } from '@apollo/client';
 import { FullImageFragmentDoc, ImageUrLsFragmentDoc, FullPeerImageFragmentDoc } from './image.generated';
 import { FullEventFragmentDoc } from './events.generated';
 import { FullTagFragmentDoc } from './tag.generated';
 import { CommentBlockCommentFragmentDoc, CommentUserFragmentDoc } from './comment.generated';
 import { FullPollFragmentDoc } from './poll.generated';
-import { ArticleWithoutBlocksFragmentDoc, FullArticleRevisionWithoutBlocksFragmentDoc } from './article.generated';
+import { ArticleWithoutBlocksFragmentDoc, FullArticleRevisionWithoutBlocksFragmentDoc } from './article-without-blocks.generated';
 import { FullAuthorFragmentDoc } from './author.generated';
 import { FullPeerFragmentDoc, FullRemotePeerProfileFragmentDoc } from './peer.generated';
 import { FullTrackingPixelFragmentDoc, FullTrackingPixelMethodFragmentDoc } from './tracking-pixel.generated';
-import { PageWithoutBlocksFragmentDoc, FullPageRevisionWithoutBlocksFragmentDoc } from './page.generated';
+import { PageWithoutBlocksFragmentDoc, FullPageRevisionWithoutBlocksFragmentDoc } from './page-without-blocks.generated';
 export type BlockWithoutTeaser_BildwurfAdBlock_Fragment = { __typename: 'BildwurfAdBlock', disabled?: boolean | null, blockStyle?: string | null, blockStyleName?: string | null, type: Types.BlockType, zoneID?: string | null };
 
 export type BlockWithoutTeaser_BreakBlock_Fragment = { __typename: 'BreakBlock', disabled?: boolean | null, blockStyle?: string | null, blockStyleName?: string | null, type: Types.BlockType, text?: string | null, richText?: RichtextJSONDocument | null, hideButton?: boolean | null, linkTarget?: string | null, linkText?: string | null, linkURL?: string | null, image?: (

@@ -2,11 +2,7 @@
 import * as Types from '../graphql';
 
 import {RichtextJSONDocument} from '@wepublish/richtext';
-import { FullSensitiveDataUserFragment, FullBaseUser_SensitiveDataUser_Fragment, FullBaseUser_User_Fragment, FullAddressFragment, FullPaymentProviderCustomerFragment } from './user.generated';
-import { FullPropertyFragment } from './properties.generated';
 import { gql } from '@apollo/client';
-import { FullSensitiveDataUserFragmentDoc, FullBaseUserFragmentDoc, FullAddressFragmentDoc, FullPaymentProviderCustomerFragmentDoc } from './user.generated';
-import { FullPropertyFragmentDoc } from './properties.generated';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type ImageUrLsFragment = { __typename?: 'Image', url: string, xxxl?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null };
@@ -41,24 +37,6 @@ export type GetImagesByTagQuery = { __typename?: 'Query', getImagesByTag: Array<
 
 export type FullPeerImageFragment = { __typename?: 'PeerImage', id: string, width: number, height: number, description?: string | null, title?: string | null, focalPointX: number, focalPointY: number, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null };
 
-export type UploadImageMutationVariables = Types.Exact<{
-  title?: Types.InputMaybe<Types.Scalars['String']>;
-  description?: Types.InputMaybe<Types.Scalars['String']>;
-  focalPointX: Types.Scalars['Float'];
-  focalPointY: Types.Scalars['Float'];
-  license?: Types.InputMaybe<Types.Scalars['String']>;
-  link?: Types.InputMaybe<Types.Scalars['String']>;
-  source?: Types.InputMaybe<Types.Scalars['String']>;
-  file: Types.Scalars['Upload'];
-  filename?: Types.InputMaybe<Types.Scalars['String']>;
-}>;
-
-
-export type UploadImageMutation = { __typename?: 'Mutation', uploadUserProfileImage?: (
-    { __typename?: 'SensitiveDataUser' }
-    & FullSensitiveDataUserFragment
-  ) | null };
-
 export const ImageUrLsFragmentDoc = gql`
     fragment ImageURLs on Image {
   url
@@ -82,31 +60,6 @@ export const SlimImageFragmentDoc = gql`
   focalPointX
   focalPointY
   ...ImageURLs
-}
-    `;
-export const FullPeerImageFragmentDoc = gql`
-    fragment FullPeerImage on PeerImage {
-  id
-  width
-  height
-  description
-  title
-  focalPointX
-  focalPointY
-  xxl
-  xl
-  l
-  m
-  s
-  xs
-  xxs
-  xxlSquare
-  xlSquare
-  lSquare
-  mSquare
-  sSquare
-  xsSquare
-  xxsSquare
 }
     `;
 export const SquareImageUrLsFragmentDoc = gql`
@@ -142,6 +95,31 @@ export const FullImageFragmentDoc = gql`
   focalPointX
   focalPointY
   ...FullImageURLs
+}
+    `;
+export const FullPeerImageFragmentDoc = gql`
+    fragment FullPeerImage on PeerImage {
+  id
+  width
+  height
+  description
+  title
+  focalPointX
+  focalPointY
+  xxl
+  xl
+  l
+  m
+  s
+  xs
+  xxs
+  xxlSquare
+  xlSquare
+  lSquare
+  mSquare
+  sSquare
+  xsSquare
+  xxsSquare
 }
     `;
 export const GetImagesByTagDocument = gql`
@@ -182,63 +160,3 @@ export function useGetImagesByTagLazyQuery(baseOptions?: Apollo.LazyQueryHookOpt
 export type GetImagesByTagQueryHookResult = ReturnType<typeof useGetImagesByTagQuery>;
 export type GetImagesByTagLazyQueryHookResult = ReturnType<typeof useGetImagesByTagLazyQuery>;
 export type GetImagesByTagQueryResult = Apollo.QueryResult<GetImagesByTagQuery, GetImagesByTagQueryVariables>;
-export const UploadImageDocument = gql`
-    mutation UploadImage($title: String, $description: String, $focalPointX: Float!, $focalPointY: Float!, $license: String, $link: String, $source: String, $file: Upload!, $filename: String) {
-  uploadUserProfileImage(
-    title: $title
-    description: $description
-    focalPointX: $focalPointX
-    focalPointY: $focalPointY
-    license: $license
-    link: $link
-    source: $source
-    tags: []
-    file: $file
-    filename: $filename
-  ) {
-    ...FullSensitiveDataUser
-  }
-}
-    ${FullSensitiveDataUserFragmentDoc}
-${FullBaseUserFragmentDoc}
-${FullImageFragmentDoc}
-${FullImageUrLsFragmentDoc}
-${ImageUrLsFragmentDoc}
-${SquareImageUrLsFragmentDoc}
-${FullPropertyFragmentDoc}
-${FullAddressFragmentDoc}
-${FullPaymentProviderCustomerFragmentDoc}`;
-export type UploadImageMutationFn = Apollo.MutationFunction<UploadImageMutation, UploadImageMutationVariables>;
-
-/**
- * __useUploadImageMutation__
- *
- * To run a mutation, you first call `useUploadImageMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUploadImageMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [uploadImageMutation, { data, loading, error }] = useUploadImageMutation({
- *   variables: {
- *      title: // value for 'title'
- *      description: // value for 'description'
- *      focalPointX: // value for 'focalPointX'
- *      focalPointY: // value for 'focalPointY'
- *      license: // value for 'license'
- *      link: // value for 'link'
- *      source: // value for 'source'
- *      file: // value for 'file'
- *      filename: // value for 'filename'
- *   },
- * });
- */
-export function useUploadImageMutation(baseOptions?: Apollo.MutationHookOptions<UploadImageMutation, UploadImageMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UploadImageMutation, UploadImageMutationVariables>(UploadImageDocument, options);
-      }
-export type UploadImageMutationHookResult = ReturnType<typeof useUploadImageMutation>;
-export type UploadImageMutationResult = Apollo.MutationResult<UploadImageMutation>;
-export type UploadImageMutationOptions = Apollo.BaseMutationOptions<UploadImageMutation, UploadImageMutationVariables>;
