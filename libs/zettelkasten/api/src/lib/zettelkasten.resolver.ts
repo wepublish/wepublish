@@ -125,13 +125,20 @@ export class ZettelkastenResolver {
 
   @Permissions(CanCreateArticle)
   @Query(() => GraphQLJSON, {
-    description: 'The latest journal entries (tagesrapport).',
+    description:
+      'The latest journal entries (tagesrapport), head lines only: the door itself drops the deadlines and register notices that name private persons.',
   })
   zettelkastenDailyReport(
     @Args({ type: () => ZettelkastenDailyReportArgs })
     { count }: ZettelkastenDailyReportArgs
   ) {
-    return this.client.call('tagesrapport', { anzahl: count });
+    // The short form is the contract of this query, not a caller's choice: the
+    // dashboard card is the only reader and shows four head lines. Asking the
+    // door to shorten keeps the names off the wire and out of the cache.
+    return this.client.call('tagesrapport', {
+      anzahl: count,
+      umfang: 'kopfzeilen',
+    });
   }
 
   @Permissions(CanCreateArticle)

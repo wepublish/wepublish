@@ -56,6 +56,19 @@ describe('ZettelkastenResolver', () => {
     });
   });
 
+  it('asks the door for the head lines of the journal, not the full entries', async () => {
+    const { resolver, client } = await setup();
+
+    await resolver.zettelkastenDailyReport({ count: 1 });
+
+    // umfang: the door drops the deadlines and the register notices that name
+    // private persons, so they never reach the browser or the Apollo cache.
+    expect(client.call).toHaveBeenCalledWith('tagesrapport', {
+      anzahl: 1,
+      umfang: 'kopfzeilen',
+    });
+  });
+
   it('answers enabled from the client', async () => {
     const { resolver } = await setup();
 

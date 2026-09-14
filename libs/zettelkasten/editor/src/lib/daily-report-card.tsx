@@ -10,9 +10,10 @@ type Payload = { eintraege?: unknown };
 /** The last journal entries of the knowledge base: what came in, what the lint found. */
 export function DailyReportCard() {
   const { t } = useTranslation();
-  // One run, and never in the cache: the entries carry the deadlines of the
-  // day with the names of private persons, and the card needs four head lines
-  // of them. Shortening them at the door itself is the next step.
+  // One run, and never in the cache: the door already shortens each entry to
+  // its head lines, so the deadlines and the register notices that name
+  // private persons never leave it. The parser only picks the four lines it
+  // shows out of what arrives; no-cache keeps even those out of Apollo.
   const { data, loading, error } = useZettelkastenDailyReportQuery({
     variables: { count: 1 },
     fetchPolicy: 'no-cache',
