@@ -5233,7 +5233,7 @@ export type Query = {
   zettelkastenAnchors: Scalars['JSON'];
   /** Full text search over articles and newsletters (archiv_suche). */
   zettelkastenArchive: Scalars['JSON'];
-  /** The latest journal entries (tagesrapport). */
+  /** The latest journal entries (tagesrapport), head lines only: the door itself drops the deadlines and register notices that name private persons. */
   zettelkastenDailyReport: Scalars['JSON'];
   /** Whether this editor has an enabled, complete knowledge provider setting. */
   zettelkastenEnabled: Scalars['Boolean'];

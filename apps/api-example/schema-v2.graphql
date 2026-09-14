@@ -4078,7 +4078,9 @@ type Query {
     source: String = "beides"
   ): JSON!
 
-  """The latest journal entries (tagesrapport)."""
+  """
+  The latest journal entries (tagesrapport), head lines only: the door itself drops the deadlines and register notices that name private persons.
+  """
   zettelkastenDailyReport(count: Int = 1): JSON!
 
   """
