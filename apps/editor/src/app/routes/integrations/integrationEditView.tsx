@@ -3,6 +3,7 @@ import {
   CanGetAISettings,
   CanGetAnalyticsProviderSettings,
   CanGetChallengeProviderSettings,
+  CanGetKnowledgeProviderSettings,
   CanGetMailchimpSyncSettings,
   CanGetMailProviderSettings,
   CanGetPaymentProviderSettings,
@@ -17,6 +18,7 @@ import { Link, useParams } from 'react-router-dom';
 import { AIIntegrationForm } from './aiIntegrationForm';
 import { AnalyticsIntegrationForm } from './analyticsIntegrationForm';
 import { ChallengeIntegrationForm } from './challengeIntegrationForm';
+import { KnowledgeProviderIntegrationForm } from './knowledgeProviderIntegrationForm';
 import { MailchimpSyncIntegrationForm } from './mailchimpSyncIntegrationForm';
 import { MailIntegrationForm } from './mailIntegrationForm';
 import { PaymentIntegrationForm } from './paymentIntegrationForm';
@@ -28,6 +30,8 @@ const useIntegrationTitle = (type: string | undefined) => {
   switch (type) {
     case 'ai':
       return t('integrations.ai');
+    case 'knowledge-provider':
+      return t('integrations.knowledgeProvider');
     case 'challenge':
       return t('integrations.challengeProvider');
     case 'payment':
@@ -49,6 +53,8 @@ const getPermission = (type: string | undefined): Permission | undefined => {
   switch (type) {
     case 'ai':
       return CanGetAISettings;
+    case 'knowledge-provider':
+      return CanGetKnowledgeProviderSettings;
     case 'challenge':
       return CanGetChallengeProviderSettings;
     case 'payment':
@@ -77,6 +83,8 @@ export function IntegrationEditView() {
     switch (type) {
       case 'ai':
         return <AIIntegrationForm />;
+      case 'knowledge-provider':
+        return <KnowledgeProviderIntegrationForm />;
       case 'challenge':
         return <ChallengeIntegrationForm />;
       case 'payment':

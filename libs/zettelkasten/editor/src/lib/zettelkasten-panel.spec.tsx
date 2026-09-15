@@ -1,0 +1,389 @@
+import { MockedProvider } from '@apollo/client/testing';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import {
+  ZettelkastenAnchorsDocument,
+  ZettelkastenArchiveDocument,
+  ZettelkastenPageDocument,
+  ZettelkastenSearchDocument,
+} from '@wepublish/editor/api';
+import { describe, expect, it, vi } from 'vitest';
+
+import { ZettelkastenPanel } from './zettelkasten-panel';
+
+const treffer = {
+  mandant: 'bajour',
+  suche: 'Conradin Cramer',
+  gesamt: 1,
+  treffer: [
+    {
+      titel: 'Conradin Cramer',
+      quelle: 'staatskalender.bs.ch/api',
+      datum: '2026-08-25',
+      reihe: 'personen',
+      beleg: 'mandanten/bajour/wiki/personen/cramer_conradin.md',
+      stelle: 'Regierungspräsident des Kantons Basel-Stadt.',
+    },
+  ],
+};
+
+const mocks = [
+  {
+    request: {
+      query: ZettelkastenSearchDocument,
+      variables: { query: 'Conradin Cramer', limit: 20, offset: 0 },
+    },
+    result: { data: { zettelkastenSearch: treffer } },
+  },
+  {
+    request: {
+      query: ZettelkastenAnchorsDocument,
+      variables: { anchors: ['Conradin Cramer'] },
+    },
+    result: {
+      data: {
+        zettelkastenAnchors: {
+          anchors: [{ anchor: 'Conradin Cramer', hits: 3 }],
+        },
+      },
+    },
+  },
+];
+
+const anchorsMock = {
+  request: {
+    query: ZettelkastenAnchorsDocument,
+    variables: { anchors: ['Conradin Cramer', 'Liebe Grüsse'] },
+  },
+  result: {
+    data: {
+      zettelkastenAnchors: {
+        anchors: [
+          { anchor: 'Conradin Cramer', hits: 3 },
+          { anchor: 'Liebe Grüsse', hits: 0 },
+        ],
+      },
+    },
+  },
+};
+
+const archive = {
+  gesamt: 146,
+  treffer_je_quelle: { archiv: 71, newsletter: 75 },
+  treffer: [
+    {
+      titel: 'Wohnschutz: Kommt das noch gut?',
+      quelle: 'archiv',
+      datum: '2024-02-09',
+      reihe: 'artikel',
+      beleg: 'rohablage/bajour_archiv/2026-08-21T1622/artikel_4338.json',
+      stelle: 'Der Wohnschutz, die Gesetzgebung, die festlegt ...',
+    },
+  ],
+};
+
+const archiveMock = {
+  request: {
+    query: ZettelkastenArchiveDocument,
+    variables: {
+      query: 'Conradin Cramer',
+      source: 'beides',
+      limit: 5,
+      offset: 0,
+    },
+  },
+  result: { data: { zettelkastenArchive: archive } },
+};
+
+const archiveErrorMock = {
+  request: archiveMock.request,
+  error: new Error('Das Bearer-Token fehlt oder stimmt nicht.'),
+};
+
+/** A door that answers 200 with a shape the panel does not expect. */
+const malformedMocks = [
+  {
+    request: mocks[0].request,
+    result: { data: { zettelkastenSearch: { gesamt: 0 } } },
+  },
+  {
+    request: archiveMock.request,
+    result: { data: { zettelkastenArchive: { gesamt: 0 } } },
+  },
+  mocks[1],
+];
+
+const emptyMocks = [
+  {
+    request: mocks[0].request,
+    result: { data: { zettelkastenSearch: { gesamt: 0, treffer: [] } } },
+  },
+  {
+    request: archiveMock.request,
+    result: {
+      data: {
+        zettelkastenArchive: {
+          gesamt: 0,
+          treffer_je_quelle: { archiv: 0, newsletter: 0 },
+          treffer: [],
+        },
+      },
+    },
+  },
+  mocks[1],
+];
+
+const uncheckedAnchorMock = {
+  request: anchorsMock.request,
+  result: {
+    data: {
+      zettelkastenAnchors: {
+        anchors: [
+          { anchor: 'Conradin Cramer', hits: 3 },
+          { anchor: 'Liebe Grüsse', hits: null },
+        ],
+      },
+    },
+  },
+};
+
+/** A page the door answers 200 for, without the inhalt field. */
+const pageWithoutContentMock = {
+  request: {
+    query: ZettelkastenPageDocument,
+    variables: { page: 'personen/cramer_conradin.md' },
+  },
+  result: {
+    data: {
+      zettelkastenPage: {
+        titel: 'Conradin Cramer',
+        beleg: 'mandanten/bajour/wiki/personen/cramer_conradin.md',
+      },
+    },
+  },
+};
+
+const anchorsErrorMock = {
+  request: mocks[1].request,
+  error: new Error('The knowledge provider did not answer'),
+};
+
+describe('ZettelkastenPanel', () => {
+  it('searches when a fact anchor is clicked and shows every hit with its evidence', async () => {
+    render(
+      <MockedProvider
+        mocks={[...mocks, archiveMock]}
+        addTypename={false}
+      >
+        <ZettelkastenPanel
+          anchors={['Conradin Cramer']}
+          onClose={vi.fn()}
+        />
+      </MockedProvider>
+    );
+
+    fireEvent.click(screen.getByText('Conradin Cramer'));
+
+    await waitFor(() =>
+      expect(
+        screen.getByText('Regierungspräsident des Kantons Basel-Stadt.')
+      ).toBeTruthy()
+    );
+    expect(
+      screen.getByText('mandanten/bajour/wiki/personen/cramer_conradin.md')
+    ).toBeTruthy();
+  });
+
+  it('shows what the medium already reported, with counts per source', async () => {
+    render(
+      <MockedProvider
+        mocks={[...mocks, archiveMock]}
+        addTypename={false}
+      >
+        <ZettelkastenPanel
+          anchors={['Conradin Cramer']}
+          onClose={vi.fn()}
+        />
+      </MockedProvider>
+    );
+
+    fireEvent.click(screen.getByText('Conradin Cramer'));
+
+    await waitFor(() =>
+      expect(
+        screen.getByText('Wohnschutz: Kommt das noch gut? · 2024-02-09')
+      ).toBeTruthy()
+    );
+    expect(
+      screen.getByText(
+        'rohablage/bajour_archiv/2026-08-21T1622/artikel_4338.json',
+        { exact: false }
+      )
+    ).toBeTruthy();
+    // The editor translations are not loaded in the test environment, so
+    // t() hands back the key instead of «71 Artikel, 75 Newsletter-Ausgaben».
+    expect(screen.getByText('zettelkasten.archive.counts')).toBeTruthy();
+  });
+
+  it('says when the archive door refuses, and keeps the wiki hits', async () => {
+    render(
+      <MockedProvider
+        mocks={[...mocks, archiveErrorMock]}
+        addTypename={false}
+      >
+        <ZettelkastenPanel
+          anchors={['Conradin Cramer']}
+          onClose={vi.fn()}
+        />
+      </MockedProvider>
+    );
+
+    fireEvent.click(screen.getByText('Conradin Cramer'));
+
+    await waitFor(() =>
+      expect(
+        screen.getByText('Das Bearer-Token fehlt oder stimmt nicht.')
+      ).toBeTruthy()
+    );
+    expect(
+      screen.getByText('Regierungspräsident des Kantons Basel-Stadt.')
+    ).toBeTruthy();
+  });
+
+  // The editor translations are not loaded in the test environment, so the
+  // chip title is the key instead of «Nicht im Bestand».
+  it('marks anchors without a dossier', async () => {
+    render(
+      <MockedProvider
+        mocks={[anchorsMock]}
+        addTypename={false}
+      >
+        <ZettelkastenPanel
+          anchors={['Conradin Cramer', 'Liebe Grüsse']}
+          onClose={vi.fn()}
+        />
+      </MockedProvider>
+    );
+
+    await waitFor(() =>
+      expect(screen.getByTitle('zettelkasten.anchorMissing')).toBeTruthy()
+    );
+  });
+
+  it('marks an anchor the door could not answer for as unchecked', async () => {
+    render(
+      <MockedProvider
+        mocks={[uncheckedAnchorMock]}
+        addTypename={false}
+      >
+        <ZettelkastenPanel
+          anchors={['Conradin Cramer', 'Liebe Grüsse']}
+          onClose={vi.fn()}
+        />
+      </MockedProvider>
+    );
+
+    await waitFor(() =>
+      expect(screen.getByTitle('zettelkasten.anchorUnchecked')).toBeTruthy()
+    );
+    expect(screen.queryByTitle('zettelkasten.anchorMissing')).toBeNull();
+  });
+
+  it('says when the anchor check itself failed', async () => {
+    render(
+      <MockedProvider
+        mocks={[anchorsErrorMock]}
+        addTypename={false}
+      >
+        <ZettelkastenPanel
+          anchors={['Conradin Cramer']}
+          onClose={vi.fn()}
+        />
+      </MockedProvider>
+    );
+
+    await waitFor(() =>
+      expect(
+        screen.getByText('The knowledge provider did not answer')
+      ).toBeTruthy()
+    );
+  });
+
+  it('survives a payload without the treffer field and says nothing was found', async () => {
+    render(
+      <MockedProvider
+        mocks={malformedMocks}
+        addTypename={false}
+      >
+        <ZettelkastenPanel
+          anchors={['Conradin Cramer']}
+          onClose={vi.fn()}
+        />
+      </MockedProvider>
+    );
+
+    fireEvent.click(screen.getByText('Conradin Cramer'));
+
+    await waitFor(() =>
+      expect(screen.getAllByText('zettelkasten.noHits').length).toBe(2)
+    );
+    // The counters fall back to zero instead of reading through a missing
+    // treffer_je_quelle; the archive line is there either way.
+    expect(screen.getByText('zettelkasten.archive.counts')).toBeTruthy();
+  });
+
+  it('survives a page payload without the inhalt field', async () => {
+    render(
+      <MockedProvider
+        mocks={[...mocks, archiveMock, pageWithoutContentMock]}
+        addTypename={false}
+      >
+        <ZettelkastenPanel
+          anchors={['Conradin Cramer']}
+          onClose={vi.fn()}
+        />
+      </MockedProvider>
+    );
+
+    fireEvent.click(screen.getByText('Conradin Cramer'));
+
+    await waitFor(() =>
+      expect(
+        screen.getByText('Regierungspräsident des Kantons Basel-Stadt.')
+      ).toBeTruthy()
+    );
+    fireEvent.click(
+      screen.getByText('Regierungspräsident des Kantons Basel-Stadt.')
+    );
+
+    // The dossier stays empty, and the panel keeps standing: without the
+    // guard parseDossier throws on the missing inhalt and the editor, which
+    // has no error boundary, loses the open article.
+    await waitFor(() =>
+      expect(screen.getByText('zettelkasten.backToHits')).toBeTruthy()
+    );
+    expect(
+      screen.getAllByText('mandanten/bajour/wiki/personen/cramer_conradin.md')
+        .length
+    ).toBeGreaterThan(0);
+  });
+
+  it('says «not in the holdings» for an empty result, in the wiki and in the archive', async () => {
+    render(
+      <MockedProvider
+        mocks={emptyMocks}
+        addTypename={false}
+      >
+        <ZettelkastenPanel
+          anchors={['Conradin Cramer']}
+          onClose={vi.fn()}
+        />
+      </MockedProvider>
+    );
+
+    fireEvent.click(screen.getByText('Conradin Cramer'));
+
+    await waitFor(() =>
+      expect(screen.getAllByText('zettelkasten.noHits').length).toBe(2)
+    );
+  });
+});

@@ -15,6 +15,7 @@ import {
 import { SentryGlobalFilter, SentryModule } from '@sentry/nestjs/setup';
 import { ActionModule } from '@wepublish/action/api';
 import { V0Module } from '@wepublish/ai/api';
+import { ZettelkastenModule } from '@wepublish/zettelkasten/api';
 import { NovaMediaAdapter } from '@wepublish/api';
 import { ArticleModule, HotAndTrendingModule } from '@wepublish/article/api';
 import { AuthenticationModule } from '@wepublish/authentication/api';
@@ -149,6 +150,7 @@ import { readConfig } from '../readConfig';
     V0Module.registerAsync({
       imports: [PrismaModule, KvTtlCacheModule],
     }),
+    ZettelkastenModule,
     AuthorModule,
     PrismaModule,
     MailsModule.registerAsync({
