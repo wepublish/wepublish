@@ -13,10 +13,9 @@ import {
   useExternalAppsQuery,
 } from '@wepublish/editor/api';
 import { useTranslation } from 'react-i18next';
-import { MdExtension } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
 
-import { ICON_REGISTRY } from '../externalApps/iconRegistry';
+import { AppIcon } from '../externalApps/appIcon';
 
 const AppGrid = styled(Grid)`
   padding: ${({ theme }) => theme.spacing(4)};
@@ -44,19 +43,6 @@ const EmptyText = styled(Typography)`
   padding: ${({ theme }) => theme.spacing(3)};
   text-align: center;
 `;
-
-interface AppIconProps {
-  iconName?: string | null;
-}
-
-function AppIcon({ iconName }: AppIconProps) {
-  if (!iconName || !ICON_REGISTRY[iconName]) {
-    return <MdExtension />;
-  }
-
-  const RegisteredIcon = ICON_REGISTRY[iconName].icon;
-  return <RegisteredIcon />;
-}
 
 export function ExternalAppsDashboard() {
   const { t } = useTranslation();

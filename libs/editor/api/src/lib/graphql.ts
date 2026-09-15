@@ -8036,6 +8036,13 @@ export type DeleteExternalAppMutationVariables = Exact<{
 
 export type DeleteExternalAppMutation = { __typename?: 'Mutation', deleteExternalApp: { __typename?: 'ExternalApp', createdAt: string, icon?: string | null, id: string, modifiedAt: string, name: string, description?: string | null, target: ExternalAppsTarget, url: string } };
 
+export type CreateExternalAppTokenMutationVariables = Exact<{
+  externalAppId: Scalars['String'];
+}>;
+
+
+export type CreateExternalAppTokenMutation = { __typename?: 'Mutation', createExternalAppToken: { __typename?: 'ExternalAppToken', token: string, expiresAt: string } };
+
 export type FullGoodieFragment = { __typename?: 'Goodie', id: string, createdAt: string, modifiedAt: string, name: string, description?: RichtextJSONDocument | null, stock?: number | null, availableStock?: number | null, active: boolean, imageID?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, memberPlans: Array<{ __typename?: 'MemberPlan', id: string, name: string }> };
 
 export type GoodieListQueryVariables = Exact<{
@@ -15065,6 +15072,40 @@ export function useDeleteExternalAppMutation(baseOptions?: Apollo.MutationHookOp
 export type DeleteExternalAppMutationHookResult = ReturnType<typeof useDeleteExternalAppMutation>;
 export type DeleteExternalAppMutationResult = Apollo.MutationResult<DeleteExternalAppMutation>;
 export type DeleteExternalAppMutationOptions = Apollo.BaseMutationOptions<DeleteExternalAppMutation, DeleteExternalAppMutationVariables>;
+export const CreateExternalAppTokenDocument = gql`
+    mutation CreateExternalAppToken($externalAppId: String!) {
+  createExternalAppToken(externalAppId: $externalAppId) {
+    token
+    expiresAt
+  }
+}
+    `;
+export type CreateExternalAppTokenMutationFn = Apollo.MutationFunction<CreateExternalAppTokenMutation, CreateExternalAppTokenMutationVariables>;
+
+/**
+ * __useCreateExternalAppTokenMutation__
+ *
+ * To run a mutation, you first call `useCreateExternalAppTokenMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateExternalAppTokenMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createExternalAppTokenMutation, { data, loading, error }] = useCreateExternalAppTokenMutation({
+ *   variables: {
+ *      externalAppId: // value for 'externalAppId'
+ *   },
+ * });
+ */
+export function useCreateExternalAppTokenMutation(baseOptions?: Apollo.MutationHookOptions<CreateExternalAppTokenMutation, CreateExternalAppTokenMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateExternalAppTokenMutation, CreateExternalAppTokenMutationVariables>(CreateExternalAppTokenDocument, options);
+      }
+export type CreateExternalAppTokenMutationHookResult = ReturnType<typeof useCreateExternalAppTokenMutation>;
+export type CreateExternalAppTokenMutationResult = Apollo.MutationResult<CreateExternalAppTokenMutation>;
+export type CreateExternalAppTokenMutationOptions = Apollo.BaseMutationOptions<CreateExternalAppTokenMutation, CreateExternalAppTokenMutationVariables>;
 export const GoodieListDocument = gql`
     query GoodieList($filter: GoodieFilter, $cursor: String, $take: Int, $skip: Int, $order: SortOrder, $sort: GoodieSort) {
   goodies(
