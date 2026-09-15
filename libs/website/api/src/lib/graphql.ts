@@ -1718,6 +1718,15 @@ export enum LetterPrintSpectrum {
   Grayscale = 'grayscale'
 }
 
+export enum LetterProviderEnvironment {
+  Production = 'production',
+  Staging = 'staging'
+}
+
+export enum LetterProviderType {
+  Pingen = 'pingen'
+}
+
 export type ListicleBlock = BaseBlock & {
   __typename?: 'ListicleBlock';
   blockStyle?: Maybe<Scalars['String']>;
@@ -2610,6 +2619,8 @@ export type Mutation = {
   updateImage: Image;
   /** Updates an existing invoice. */
   updateInvoice: Invoice;
+  /** Updates an existing letter provider setting. */
+  updateLetterProviderSetting: SettingLetterProvider;
   /** Updates an existing mail provider setting. */
   updateMailProviderSetting: SettingMailProvider;
   /** Update an existing mail template */
@@ -3713,6 +3724,18 @@ export type MutationUpdateInvoiceArgs = {
   manuallySetAsPaidByUserId?: InputMaybe<Scalars['String']>;
   scheduledDeactivationAt?: InputMaybe<Scalars['DateTime']>;
   subscriptionID?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationUpdateLetterProviderSettingArgs = {
+  autoSend?: InputMaybe<Scalars['Boolean']>;
+  clientId?: InputMaybe<Scalars['String']>;
+  clientSecret?: InputMaybe<Scalars['String']>;
+  environment?: InputMaybe<LetterProviderEnvironment>;
+  id?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  organisationId?: InputMaybe<Scalars['String']>;
+  webhookSigningKey?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -5074,6 +5097,10 @@ export type Query = {
   invoice: Invoice;
   /** Returns a paginated list of invoices based on the filters given. */
   invoices: InvoiceConnection;
+  /** Returns a single letter provider setting by id. */
+  letterProviderSetting: SettingLetterProvider;
+  /** Returns all letter provider settings. */
+  letterProviderSettings: Array<SettingLetterProvider>;
   /** Paginated list of sent mails */
   mailLogs: PaginatedMailLog;
   /** Returns a single mail provider setting by id. */
@@ -5548,6 +5575,16 @@ export type QueryInvoicesArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   sort?: InputMaybe<InvoiceSort>;
   take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryLetterProviderSettingArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QueryLetterProviderSettingsArgs = {
+  filter?: InputMaybe<SettingLetterProviderFilter>;
 };
 
 
@@ -6166,6 +6203,26 @@ export type SettingChallengeProviderFilter = {
 
 export type SettingFilter = {
   name?: InputMaybe<Scalars['String']>;
+};
+
+export type SettingLetterProvider = SettingProvider & {
+  __typename?: 'SettingLetterProvider';
+  autoSend: Scalars['Boolean'];
+  clientId?: Maybe<Scalars['String']>;
+  createdAt: Scalars['DateTime'];
+  environment: LetterProviderEnvironment;
+  id: Scalars['String'];
+  lastLoadedAt: Scalars['DateTime'];
+  modifiedAt: Scalars['DateTime'];
+  name?: Maybe<Scalars['String']>;
+  organisationId?: Maybe<Scalars['String']>;
+  type: LetterProviderType;
+};
+
+export type SettingLetterProviderFilter = {
+  id?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  type?: InputMaybe<LetterProviderType>;
 };
 
 export type SettingMailProvider = SettingProvider & {
@@ -12289,6 +12346,7 @@ export type VersionInformationQueryResult = Apollo.QueryResult<VersionInformatio
       "SettingAIProvider",
       "SettingAnalyticsProvider",
       "SettingChallengeProvider",
+      "SettingLetterProvider",
       "SettingMailProvider",
       "SettingPaymentProvider",
       "SettingSyncProvider",

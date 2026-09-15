@@ -1709,6 +1709,15 @@ export enum LetterPrintSpectrum {
   Grayscale = 'grayscale'
 }
 
+export enum LetterProviderEnvironment {
+  Production = 'production',
+  Staging = 'staging'
+}
+
+export enum LetterProviderType {
+  Pingen = 'pingen'
+}
+
 export type ListicleBlock = BaseBlock & {
   __typename?: 'ListicleBlock';
   blockStyle?: Maybe<Scalars['String']>;
@@ -2601,6 +2610,8 @@ export type Mutation = {
   updateImage: Image;
   /** Updates an existing invoice. */
   updateInvoice: Invoice;
+  /** Updates an existing letter provider setting. */
+  updateLetterProviderSetting: SettingLetterProvider;
   /** Updates an existing mail provider setting. */
   updateMailProviderSetting: SettingMailProvider;
   /** Update an existing mail template */
@@ -3700,6 +3711,18 @@ export type MutationUpdateInvoiceArgs = {
   manuallySetAsPaidByUserId?: InputMaybe<Scalars['String']>;
   scheduledDeactivationAt?: InputMaybe<Scalars['DateTime']>;
   subscriptionID?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationUpdateLetterProviderSettingArgs = {
+  autoSend?: InputMaybe<Scalars['Boolean']>;
+  clientId?: InputMaybe<Scalars['String']>;
+  clientSecret?: InputMaybe<Scalars['String']>;
+  environment?: InputMaybe<LetterProviderEnvironment>;
+  id?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  organisationId?: InputMaybe<Scalars['String']>;
+  webhookSigningKey?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -5054,6 +5077,10 @@ export type Query = {
   invoice: Invoice;
   /** Returns a paginated list of invoices based on the filters given. */
   invoices: InvoiceConnection;
+  /** Returns a single letter provider setting by id. */
+  letterProviderSetting: SettingLetterProvider;
+  /** Returns all letter provider settings. */
+  letterProviderSettings: Array<SettingLetterProvider>;
   /** Paginated list of sent mails */
   mailLogs: PaginatedMailLog;
   /** Returns a single mail provider setting by id. */
@@ -5528,6 +5555,16 @@ export type QueryInvoicesArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   sort?: InputMaybe<InvoiceSort>;
   take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryLetterProviderSettingArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QueryLetterProviderSettingsArgs = {
+  filter?: InputMaybe<SettingLetterProviderFilter>;
 };
 
 
@@ -6146,6 +6183,26 @@ export type SettingChallengeProviderFilter = {
 
 export type SettingFilter = {
   name?: InputMaybe<Scalars['String']>;
+};
+
+export type SettingLetterProvider = SettingProvider & {
+  __typename?: 'SettingLetterProvider';
+  autoSend: Scalars['Boolean'];
+  clientId?: Maybe<Scalars['String']>;
+  createdAt: Scalars['DateTime'];
+  environment: LetterProviderEnvironment;
+  id: Scalars['String'];
+  lastLoadedAt: Scalars['DateTime'];
+  modifiedAt: Scalars['DateTime'];
+  name?: Maybe<Scalars['String']>;
+  organisationId?: Maybe<Scalars['String']>;
+  type: LetterProviderType;
+};
+
+export type SettingLetterProviderFilter = {
+  id?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  type?: InputMaybe<LetterProviderType>;
 };
 
 export type SettingMailProvider = SettingProvider & {
@@ -9049,6 +9106,25 @@ export type UpdateSettingsIntegrationsChallengeMutationVariables = Exact<{
 
 
 export type UpdateSettingsIntegrationsChallengeMutation = { __typename?: 'Mutation', updateChallengeProviderSetting: { __typename?: 'SettingChallengeProvider', createdAt: string, id: string, lastLoadedAt: string, modifiedAt: string, name?: string | null, type: ChallengeProviderType } };
+
+export type LetterProviderSettingsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type LetterProviderSettingsQuery = { __typename?: 'Query', letterProviderSettings: Array<{ __typename?: 'SettingLetterProvider', autoSend: boolean, clientId?: string | null, createdAt: string, environment: LetterProviderEnvironment, id: string, lastLoadedAt: string, modifiedAt: string, name?: string | null, organisationId?: string | null, type: LetterProviderType }> };
+
+export type UpdateLetterProviderSettingMutationVariables = Exact<{
+  autoSend?: InputMaybe<Scalars['Boolean']>;
+  clientId?: InputMaybe<Scalars['String']>;
+  clientSecret?: InputMaybe<Scalars['String']>;
+  environment?: InputMaybe<LetterProviderEnvironment>;
+  id: Scalars['String'];
+  name?: InputMaybe<Scalars['String']>;
+  organisationId?: InputMaybe<Scalars['String']>;
+  webhookSigningKey?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type UpdateLetterProviderSettingMutation = { __typename?: 'Mutation', updateLetterProviderSetting: { __typename?: 'SettingLetterProvider', autoSend: boolean, clientId?: string | null, createdAt: string, environment: LetterProviderEnvironment, id: string, lastLoadedAt: string, modifiedAt: string, name?: string | null, organisationId?: string | null, type: LetterProviderType } };
 
 export type MailProviderSettingsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -19171,6 +19247,107 @@ export function useUpdateSettingsIntegrationsChallengeMutation(baseOptions?: Apo
 export type UpdateSettingsIntegrationsChallengeMutationHookResult = ReturnType<typeof useUpdateSettingsIntegrationsChallengeMutation>;
 export type UpdateSettingsIntegrationsChallengeMutationResult = Apollo.MutationResult<UpdateSettingsIntegrationsChallengeMutation>;
 export type UpdateSettingsIntegrationsChallengeMutationOptions = Apollo.BaseMutationOptions<UpdateSettingsIntegrationsChallengeMutation, UpdateSettingsIntegrationsChallengeMutationVariables>;
+export const LetterProviderSettingsDocument = gql`
+    query LetterProviderSettings {
+  letterProviderSettings {
+    autoSend
+    clientId
+    createdAt
+    environment
+    id
+    lastLoadedAt
+    modifiedAt
+    name
+    organisationId
+    type
+  }
+}
+    `;
+
+/**
+ * __useLetterProviderSettingsQuery__
+ *
+ * To run a query within a React component, call `useLetterProviderSettingsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useLetterProviderSettingsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useLetterProviderSettingsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useLetterProviderSettingsQuery(baseOptions?: Apollo.QueryHookOptions<LetterProviderSettingsQuery, LetterProviderSettingsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<LetterProviderSettingsQuery, LetterProviderSettingsQueryVariables>(LetterProviderSettingsDocument, options);
+      }
+export function useLetterProviderSettingsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<LetterProviderSettingsQuery, LetterProviderSettingsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<LetterProviderSettingsQuery, LetterProviderSettingsQueryVariables>(LetterProviderSettingsDocument, options);
+        }
+export type LetterProviderSettingsQueryHookResult = ReturnType<typeof useLetterProviderSettingsQuery>;
+export type LetterProviderSettingsLazyQueryHookResult = ReturnType<typeof useLetterProviderSettingsLazyQuery>;
+export type LetterProviderSettingsQueryResult = Apollo.QueryResult<LetterProviderSettingsQuery, LetterProviderSettingsQueryVariables>;
+export const UpdateLetterProviderSettingDocument = gql`
+    mutation UpdateLetterProviderSetting($autoSend: Boolean, $clientId: String, $clientSecret: String, $environment: LetterProviderEnvironment, $id: String!, $name: String, $organisationId: String, $webhookSigningKey: String) {
+  updateLetterProviderSetting(
+    autoSend: $autoSend
+    clientId: $clientId
+    clientSecret: $clientSecret
+    environment: $environment
+    id: $id
+    name: $name
+    organisationId: $organisationId
+    webhookSigningKey: $webhookSigningKey
+  ) {
+    autoSend
+    clientId
+    createdAt
+    environment
+    id
+    lastLoadedAt
+    modifiedAt
+    name
+    organisationId
+    type
+  }
+}
+    `;
+export type UpdateLetterProviderSettingMutationFn = Apollo.MutationFunction<UpdateLetterProviderSettingMutation, UpdateLetterProviderSettingMutationVariables>;
+
+/**
+ * __useUpdateLetterProviderSettingMutation__
+ *
+ * To run a mutation, you first call `useUpdateLetterProviderSettingMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateLetterProviderSettingMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateLetterProviderSettingMutation, { data, loading, error }] = useUpdateLetterProviderSettingMutation({
+ *   variables: {
+ *      autoSend: // value for 'autoSend'
+ *      clientId: // value for 'clientId'
+ *      clientSecret: // value for 'clientSecret'
+ *      environment: // value for 'environment'
+ *      id: // value for 'id'
+ *      name: // value for 'name'
+ *      organisationId: // value for 'organisationId'
+ *      webhookSigningKey: // value for 'webhookSigningKey'
+ *   },
+ * });
+ */
+export function useUpdateLetterProviderSettingMutation(baseOptions?: Apollo.MutationHookOptions<UpdateLetterProviderSettingMutation, UpdateLetterProviderSettingMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateLetterProviderSettingMutation, UpdateLetterProviderSettingMutationVariables>(UpdateLetterProviderSettingDocument, options);
+      }
+export type UpdateLetterProviderSettingMutationHookResult = ReturnType<typeof useUpdateLetterProviderSettingMutation>;
+export type UpdateLetterProviderSettingMutationResult = Apollo.MutationResult<UpdateLetterProviderSettingMutation>;
+export type UpdateLetterProviderSettingMutationOptions = Apollo.BaseMutationOptions<UpdateLetterProviderSettingMutation, UpdateLetterProviderSettingMutationVariables>;
 export const MailProviderSettingsDocument = gql`
     query MailProviderSettings {
   mailProviderSettings {
@@ -22075,6 +22252,7 @@ export type VersionInformationQueryResult = Apollo.QueryResult<VersionInformatio
       "SettingAIProvider",
       "SettingAnalyticsProvider",
       "SettingChallengeProvider",
+      "SettingLetterProvider",
       "SettingMailProvider",
       "SettingPaymentProvider",
       "SettingSyncProvider",
