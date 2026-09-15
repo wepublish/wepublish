@@ -1455,6 +1455,16 @@ ${body}
   </body>
 </html>`;
 
+const letterDocument = (body: string) => `<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+${body}
+  </body>
+</html>`;
+
 interface SeedMailTemplate {
   id: string;
   name: string;
@@ -1681,6 +1691,36 @@ Letzte Rechnung: {{optional_invoices_0_description}}`,
 Hier steht der Text der Mitteilung.
 
 Du erhältst diese Nachricht an {{user_email}}.`,
+  },
+  {
+    id: 'seed-letter-paper-invoice',
+    name: 'Papierrechnung',
+    description:
+      'Brief-Vorlage für den Postversand. Adresse und Seitenrand kommen vom Brief-Renderer.',
+    context: MailTemplateContext.custom,
+    subject: 'Rechnung für dein Abo',
+    htmlContent:
+      letterDocument(`    <h1 style="font-size: 14pt; margin: 0 0 8mm;">Rechnung für dein Abo</h1>
+    <p>Guten Tag {{user_fullName}}</p>
+    <p>
+      Für dein Abo stellen wir dir
+      {{optional_subscription_periodAmount_display}} in Rechnung
+      ({{optional_subscription_paymentPeriodicity_display}}, bezahlt bis
+      {{optional_subscription_paidUntil_date}}).
+    </p>
+    <p>Rechnung: {{optional_invoices_0_description}}</p>
+    <p>Bitte begleiche den Betrag mit dem beiliegenden Einzahlungsschein.</p>
+    <p>Freundliche Grüsse<br />We.Publish</p>`),
+    textContent: `Guten Tag {{user_fullName}}
+
+Für dein Abo stellen wir dir {{optional_subscription_periodAmount_display}} in Rechnung ({{optional_subscription_paymentPeriodicity_display}}, bezahlt bis {{optional_subscription_paidUntil_date}}).
+
+Rechnung: {{optional_invoices_0_description}}
+
+Bitte begleiche den Betrag mit dem beiliegenden Einzahlungsschein.
+
+Freundliche Grüsse
+We.Publish`,
   },
 ];
 

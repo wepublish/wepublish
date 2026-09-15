@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma, PrismaClient, Subscription, User } from '@prisma/client';
+import { Prisma, PrismaClient, Subscription } from '@prisma/client';
+import { UserWithAddress } from '@wepublish/letter/api';
 import {
   DEFAULT_ENDED_WITHIN_DAYS,
   MailAudienceInput,
@@ -15,7 +16,11 @@ export type SubscriptionWithRelations = Subscription & {
 };
 
 export interface MailRecipient {
-  user: User;
+  /**
+   * Loaded with its address throughout: a letter send needs it, and it is one
+   * small relation rather than a second code path through every audience.
+   */
+  user: UserWithAddress;
   subscription?: SubscriptionWithRelations;
 }
 
@@ -38,6 +43,41 @@ const subscriptionInclude = {
   periods: true,
 } satisfies Prisma.SubscriptionInclude;
 
+const userInclude = { address: true } satisfies Prisma.UserInclude;
+
+/** A field that is either unset or empty. */
+const blank = (field: keyof Prisma.UserAddressWhereInput) => [
+  { [field]: null },
+  { [field]: '' },
+];
+
+/**
+ * Users a letter could not be addressed to, as far as the database can tell:
+ * no address at all, or one missing a street, a zip, a city or a country.
+ */
+const WITHOUT_ADDRESS: Prisma.UserWhereInput = {
+  OR: [
+    { address: { is: null } },
+    {
+      address: {
+        is: {
+          OR: [
+            ...blank('zipCode'),
+            ...blank('city'),
+            ...blank('country'),
+            {
+              AND: [
+                { OR: blank('streetAddress') },
+                { OR: blank('streetAddress2') },
+              ],
+            },
+          ],
+        },
+      },
+    },
+  ],
+};
+
 /**
  * Resolves a manual-send audience into concrete recipients and counts.
  *
@@ -48,6 +88,51 @@ const subscriptionInclude = {
 @Injectable()
 export class MailSendRecipientService {
   constructor(private prisma: PrismaClient) {}
+
+  /**
+   * How many recipients of an audience a letter send would skip for lack of a
+   * postal address. Deliberately a single count over the obviously missing
+   * fields rather than {@link canReceiveLetters} over every row: this is a
+   * warning shown while the audience is still being edited, and it re-runs on
+   * every change. The send itself applies the real check, so a recipient whose
+   * address is present but unusable (an unrecognised country, say) is missing
+   * from this number and shows up in the log instead.
+   */
+  async countWithoutAddress(audience: MailAudienceInput): Promise<number> {
+    switch (audience.base) {
+      case MailRecipientBase.allUsers:
+        return this.prisma.user.count({ where: WITHOUT_ADDRESS });
+
+      case MailRecipientBase.noActiveSubscription:
+        return this.prisma.user.count({
+          where: {
+            AND: [this.buildNoActiveSubscriptionWhere(), WITHOUT_ADDRESS],
+          },
+        });
+
+      // Subscription audiences are counted per subscription, like `count`:
+      // someone with two matching subscriptions would be skipped twice.
+      case MailRecipientBase.hasSubscription:
+        return this.prisma.subscription.count({
+          where: {
+            AND: [
+              this.buildSubscriptionWhere(audience),
+              { user: WITHOUT_ADDRESS },
+            ],
+          },
+        });
+
+      case MailRecipientBase.endedSubscription:
+        return this.prisma.subscription.count({
+          where: {
+            AND: [
+              this.buildEndedSubscriptionWhere(audience),
+              { user: WITHOUT_ADDRESS },
+            ],
+          },
+        });
+    }
+  }
 
   /** Whether recipients of this audience carry subscription data. */
   allowsSubscriptionTemplates(audience: MailAudienceInput): boolean {
@@ -133,7 +218,10 @@ export class MailSendRecipientService {
     ];
 
     const [users, subscriptions] = await Promise.all([
-      this.prisma.user.findMany({ where: { id: { in: userIds } } }),
+      this.prisma.user.findMany({
+        where: { id: { in: userIds } },
+        include: userInclude,
+      }),
       subscriptionIds.length ?
         this.prisma.subscription.findMany({
           where: { id: { in: subscriptionIds } },
@@ -179,6 +267,7 @@ export class MailSendRecipientService {
     switch (audience.base) {
       case MailRecipientBase.allUsers: {
         const users = await this.prisma.user.findMany({
+          include: userInclude,
           skip,
           take,
           orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
@@ -190,7 +279,10 @@ export class MailSendRecipientService {
       case MailRecipientBase.hasSubscription: {
         const subscriptions = await this.prisma.subscription.findMany({
           where: this.buildSubscriptionWhere(audience),
-          include: { ...subscriptionInclude, user: true },
+          include: {
+            ...subscriptionInclude,
+            user: { include: userInclude },
+          },
           skip,
           take,
           orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
@@ -199,7 +291,7 @@ export class MailSendRecipientService {
         return subscriptions
           .filter(subscription => subscription.user)
           .map(({ user, ...subscription }) => ({
-            user: user as User,
+            user: user as UserWithAddress,
             subscription: subscription as SubscriptionWithRelations,
           }));
       }
@@ -207,6 +299,7 @@ export class MailSendRecipientService {
       case MailRecipientBase.noActiveSubscription: {
         const users = await this.prisma.user.findMany({
           where: this.buildNoActiveSubscriptionWhere(),
+          include: userInclude,
           skip,
           take,
           orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
@@ -218,7 +311,10 @@ export class MailSendRecipientService {
       case MailRecipientBase.endedSubscription: {
         const subscriptions = await this.prisma.subscription.findMany({
           where: this.buildEndedSubscriptionWhere(audience),
-          include: { ...subscriptionInclude, user: true },
+          include: {
+            ...subscriptionInclude,
+            user: { include: userInclude },
+          },
           skip,
           take,
           // Most recently ended first: those are the likeliest to come back.
@@ -228,7 +324,7 @@ export class MailSendRecipientService {
         return subscriptions
           .filter(subscription => subscription.user)
           .map(({ user, ...subscription }) => ({
-            user: user as User,
+            user: user as UserWithAddress,
             subscription: subscription as SubscriptionWithRelations,
           }));
       }

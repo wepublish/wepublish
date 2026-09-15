@@ -4,6 +4,7 @@ fragment FullMailSendJob on MailSendJobModel {
   modifiedAt
   status
   audience
+  channel
   totalCount
   sentCount
   failedCount
@@ -23,6 +24,7 @@ query MailSendRecipientPreview($audience: MailAudienceInput!) {
   mailSendRecipientPreview(audience: $audience) {
     count
     userCount
+    withoutAddressCount
     allowsSubscriptionTemplates
   }
 }
@@ -54,6 +56,7 @@ query MailSendPreview($input: MailSendPreviewInput!) {
   mailSendPreview(input: $input) {
     subject
     html
+    pdf
     recipient {
       id
       email

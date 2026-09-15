@@ -7,9 +7,7 @@ import {
 import {
   Invoice,
   InvoiceItem,
-  LetterLogType,
   MemberPlan,
-  MessageChannel,
   PaymentMethod,
   PaymentProviderCustomer,
   PeriodicJob,
@@ -39,11 +37,7 @@ import {
 } from 'date-fns';
 import { inspect } from 'util';
 import { SubscriptionEventDictionary } from '../subscription-event-dictionary/subscription-event-dictionary';
-import {
-  Action,
-  sendsThrough,
-} from '../subscription-event-dictionary/subscription-event-dictionary.type';
-import { LetterJobService } from '../letter-send/letter-job.service';
+import { Action } from '../subscription-event-dictionary/subscription-event-dictionary.type';
 import { SubscriptionService } from './subscription.service';
 import { PeriodicJobRunObject } from './periodic-job.type';
 import { getMaxTake } from '@wepublish/utils/api';
@@ -67,8 +61,7 @@ export class PeriodicJobService {
     private prismaService: PrismaClient,
     private mailContext: MailContext,
     private subscriptionController: SubscriptionService,
-    private payments: PaymentsService,
-    private letterJobService: LetterJobService
+    private payments: PaymentsService
   ) {}
 
   getJobLog(take: number, skip?: number) {
@@ -308,11 +301,7 @@ export class PeriodicJobService {
           subscriptionsWithEvent.user,
           periodicJobRunObject.isRetry,
           { subscription: subscriptionsWithEvent, invoices },
-          periodicJobRunObject.date,
-          {
-            subscriptionId: subscriptionsWithEvent.id,
-            invoiceId: invoices[0]?.id,
-          }
+          periodicJobRunObject.date
         );
       }
     }
@@ -399,8 +388,7 @@ export class PeriodicJobService {
       subscriptionToCreateInvoice.user,
       periodicJobRunObject.isRetry,
       { subscriptionToCreateInvoice, invoice },
-      periodicJobRunObject.date,
-      { subscriptionId: subscriptionToCreateInvoice.id, invoiceId: invoice.id }
+      periodicJobRunObject.date
     );
     return true;
   }
@@ -460,8 +448,7 @@ export class PeriodicJobService {
           items,
           subscription,
         },
-        periodicJobRunObject.date,
-        { subscriptionId: subscription?.id, invoiceId: invoice.id }
+        periodicJobRunObject.date
       );
     }
   }
@@ -542,8 +529,7 @@ export class PeriodicJobService {
       unpaidInvoice.subscription.user,
       periodicJobRunObject.isRetry,
       { subscription, invoice },
-      periodicJobRunObject.date,
-      { subscriptionId: subscription?.id, invoiceId: invoice.id }
+      periodicJobRunObject.date
     );
   }
 
@@ -727,83 +713,30 @@ export class PeriodicJobService {
     user: User,
     isRetry: boolean,
     optionalData: Record<string, any>,
-    periodicJobRunDate: Date,
-    references: {
-      subscriptionId?: string | null;
-      invoiceId?: string | null;
-    } = {}
+    periodicJobRunDate: Date
   ) {
-    if (
-      action.mailTemplateId &&
-      user &&
-      sendsThrough(action, MessageChannel.MAIL)
-    ) {
-      try {
-        await new MailController(this.prismaService, this.mailContext, {
-          daysAwayFromEnding: action.daysAwayFromEnding,
-          mailTemplateId: action.mailTemplateId,
-          recipient: user,
-          isRetry,
-          optionalData,
-          periodicJobRunDate,
-          mailType: mailLogType.SubscriptionFlow,
-        }).sendMail();
-      } catch (error) {
-        if (!(error instanceof MailProviderRecipientError)) {
-          throw error;
-        }
+    if (!action.mailTemplateId || !user) {
+      return;
+    }
 
-        this.logger.warn(
-          `Skipping mail to ${user.email}: ${(error as Error).message}`
-        );
+    try {
+      await new MailController(this.prismaService, this.mailContext, {
+        daysAwayFromEnding: action.daysAwayFromEnding,
+        mailTemplateId: action.mailTemplateId,
+        recipient: user,
+        isRetry,
+        optionalData,
+        periodicJobRunDate,
+        mailType: mailLogType.SubscriptionFlow,
+      }).sendMail();
+    } catch (error) {
+      if (!(error instanceof MailProviderRecipientError)) {
+        throw error;
       }
+
+      this.logger.warn(
+        `Skipping mail to ${user.email}: ${(error as Error).message}`
+      );
     }
-
-    await this.enqueueTemplateLetter(
-      action,
-      user,
-      periodicJobRunDate,
-      references
-    );
-  }
-
-  /**
-   * The flow only queues the letter. Rendering a pdf and calling the print
-   * vendor happens in the letter queue, so a slow or failing vendor cannot fail
-   * the day's periodic job.
-   */
-  private async enqueueTemplateLetter(
-    action: Action,
-    user: User,
-    periodicJobRunDate: Date,
-    references: { subscriptionId?: string | null; invoiceId?: string | null }
-  ) {
-    if (
-      !action.mailTemplateId ||
-      !user ||
-      !sendsThrough(action, MessageChannel.LETTER)
-    ) {
-      return;
-    }
-
-    const recipient = await this.prismaService.user.findUnique({
-      where: { id: user.id },
-      include: { address: true },
-    });
-
-    if (!recipient) {
-      return;
-    }
-
-    await this.letterJobService.enqueue({
-      mailTemplateId: action.mailTemplateId,
-      print: action.print,
-      user: recipient,
-      type: LetterLogType.subscriptionFlow,
-      subscriptionId: references.subscriptionId,
-      invoiceId: references.invoiceId,
-      daysAwayFromEnding: action.daysAwayFromEnding,
-      runDate: periodicJobRunDate,
-    });
   }
 }

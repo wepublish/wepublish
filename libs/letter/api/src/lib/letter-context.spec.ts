@@ -1,17 +1,20 @@
 import {
-  Currency,
   LetterAddressPosition,
-  LetterQrBill,
+  LetterDeliveryProduct,
+  LetterPrintMode,
+  LetterPrintSpectrum,
+  MailChannel,
+  MailLogState,
   PrismaClient,
-  QrBillReferenceType,
-  SettingOrganisation,
 } from '@prisma/client';
-import { LetterContext } from './letter-context';
+import { LetterContext, LetterPrintSettings } from './letter-context';
 import { BaseLetterProvider } from './letter-provider/base-letter-provider';
-import { LetterAddress } from './letter-provider/letter-provider.interface';
-import { OrganisationService } from './organisation/organisation.service';
+import {
+  LetterAddress,
+  LetterState,
+} from './letter-provider/letter-provider.interface';
+import { UserWithAddress } from './letter-recipient';
 import { PdfRenderer } from './pdf/pdf-renderer';
-import { QrBillInvoice, QrBillService } from './qr-bill/qr-bill.service';
 
 const recipient: LetterAddress = {
   name: 'Jane Doe',
@@ -22,36 +25,36 @@ const recipient: LetterAddress = {
   country: 'CH',
 };
 
-const sender: LetterAddress = {
-  name: 'Beispiel Verlag',
-  street: 'Verlagsweg',
-  number: '1',
-  zip: '3000',
-  city: 'Bern',
-  country: 'CH',
+const user = {
+  id: 'user-1',
+  email: 'jane@example.com',
+  name: 'Doe',
+  firstName: 'Jane',
+  address: {
+    company: null,
+    streetAddress: 'Musterstrasse',
+    streetAddressNumber: '7',
+    streetAddress2: null,
+    streetAddress2Number: null,
+    zipCode: '8000',
+    city: 'Zürich',
+    country: 'CH',
+  },
+} as unknown as UserWithAddress;
+
+const print: LetterPrintSettings = {
+  addressPosition: LetterAddressPosition.left,
+  deliveryProduct: LetterDeliveryProduct.cheap,
+  printMode: LetterPrintMode.simplex,
+  printSpectrum: LetterPrintSpectrum.grayscale,
 };
 
-const organisationSettings = {
-  id: 'default',
-  name: 'Beispiel Verlag',
-  street: 'Verlagsweg',
-  number: '1',
-  zip: '3000',
-  city: 'Bern',
-  country: 'CH',
-  iban: 'CH4431999123000889012',
-  referenceType: QrBillReferenceType.QRR,
-} as SettingOrganisation;
-
-const invoice = {
-  id: 'invoice-1',
-  currency: Currency.CHF,
-  number: 42,
-  paymentReference: null,
-  items: [{ amount: 12000, quantity: 1 }],
-} as QrBillInvoice;
-
-function createContext() {
+function createContext(
+  sendLetter: BaseLetterProvider['sendLetter'] = jest.fn().mockResolvedValue({
+    providerLetterID: 'pingen-1',
+    state: LetterState.submitted,
+  })
+) {
   const rendered: string[] = [];
 
   const pdfRenderer: PdfRenderer = {
@@ -62,36 +65,38 @@ function createContext() {
     },
   };
 
+  const create = jest.fn();
+
   const prisma = {
-    invoice: { update: jest.fn() },
+    mailTemplate: {
+      findUnique: jest.fn().mockResolvedValue({
+        id: 'template-1',
+        subject: 'Ihre Rechnung',
+        htmlContent: '<p>Hallo {{user_firstName}}</p>',
+      }),
+    },
+    mailLog: { create },
   } as unknown as PrismaClient;
 
-  const organisation = {
-    getOrThrow: jest.fn().mockResolvedValue(organisationSettings),
-    getSenderAddress: jest.fn().mockResolvedValue(sender),
-  } as unknown as OrganisationService;
-
   const context = new LetterContext({
-    letterProvider: {} as BaseLetterProvider,
+    letterProvider: {
+      id: 'pingen',
+      sendLetter,
+    } as unknown as BaseLetterProvider,
     prisma,
     pdfRenderer,
-    qrBill: new QrBillService(prisma, organisation),
-    organisation,
   });
 
-  return { context, rendered };
+  return { context, rendered, create };
 }
 
 describe('LetterContext.renderLetter', () => {
-  it('renders the template, the address window and the sender into one sheet', async () => {
+  it('renders the template and the address window into one sheet', async () => {
     const { context, rendered } = createContext();
 
     const pdf = await context.renderLetter({
       template: { htmlContent: '<p>Hallo {{user_firstName}}</p>' },
-      print: {
-        addressPosition: LetterAddressPosition.LEFT,
-        qrBill: LetterQrBill.NONE,
-      },
+      addressPosition: LetterAddressPosition.left,
       data: { user: { firstName: 'Jane' } },
       recipient,
     });
@@ -99,46 +104,91 @@ describe('LetterContext.renderLetter', () => {
     expect(pdf.toString()).toContain('%PDF');
     expect(rendered[0]).toContain('<p>Hallo Jane</p>');
     expect(rendered[0]).toContain('8000 Zürich');
-    expect(rendered[0]).toContain(
-      'Beispiel Verlag, Verlagsweg 1, 3000 Bern, CH'
-    );
-    expect(rendered[0]).not.toContain('<svg');
   });
 
-  it('places the qr bill on the sheet when the template asks for it', async () => {
+  it('moves the address window for a right window envelope', async () => {
     const { context, rendered } = createContext();
 
     await context.renderLetter({
-      template: { htmlContent: '<p>Rechnung</p>' },
-      print: {
-        addressPosition: LetterAddressPosition.LEFT,
-        qrBill: LetterQrBill.LAST_PAGE,
-      },
+      template: { htmlContent: '<p>Hallo</p>' },
+      addressPosition: LetterAddressPosition.right,
       data: {},
       recipient,
-      invoice,
-      persistReference: false,
     });
 
-    expect(rendered[0]).toContain('class="qr-bill"');
-    expect(rendered[0]).toContain('<svg');
-    // The amount as it is printed on the payment part.
-    expect(rendered[0]).toContain('120.00');
+    expect(rendered[0]).toContain('left: 120mm');
+  });
+});
+
+describe('LetterContext.sendLetter', () => {
+  it('posts the rendered letter and logs it on the letter channel', async () => {
+    const sendLetter = jest.fn().mockResolvedValue({
+      providerLetterID: 'pingen-1',
+      state: LetterState.submitted,
+    });
+    const { context, create } = createContext(sendLetter);
+
+    const mailLogId = await context.sendLetter({
+      mailTemplateId: 'template-1',
+      recipient: user,
+      data: { user },
+      print,
+      mailSendJobId: 'job-1',
+    });
+
+    expect(sendLetter).toHaveBeenCalledWith(
+      expect.objectContaining({
+        deliveryProduct: 'cheap',
+        printMode: 'simplex',
+        printSpectrum: 'grayscale',
+        addressPosition: 'left',
+      })
+    );
+
+    expect(create).toHaveBeenCalledWith({
+      data: expect.objectContaining({
+        id: mailLogId,
+        channel: MailChannel.letter,
+        state: MailLogState.submitted,
+        providerLetterID: 'pingen-1',
+        subject: 'Ihre Rechnung',
+        addressSnapshot: expect.objectContaining({ city: 'Zürich' }),
+      }),
+    });
   });
 
-  it('refuses to print a qr bill without an invoice', async () => {
+  it('logs a rejected letter and rethrows when the vendor fails', async () => {
+    const { context, create } = createContext(
+      jest.fn().mockRejectedValue(new Error('vendor down'))
+    );
+
+    await expect(
+      context.sendLetter({
+        mailTemplateId: 'template-1',
+        recipient: user,
+        data: { user },
+        print,
+      })
+    ).rejects.toThrow('vendor down');
+
+    expect(create).toHaveBeenCalledWith({
+      data: expect.objectContaining({
+        state: MailLogState.rejected,
+        error: 'vendor down',
+      }),
+    });
+  });
+
+  it('refuses a recipient without a usable address', async () => {
     const { context } = createContext();
 
     await expect(
-      context.renderLetter({
-        template: { htmlContent: '<p>Rechnung</p>' },
-        print: {
-          addressPosition: LetterAddressPosition.LEFT,
-          qrBill: LetterQrBill.LAST_PAGE,
-        },
+      context.sendLetter({
+        mailTemplateId: 'template-1',
+        recipient: { ...user, address: null } as UserWithAddress,
         data: {},
-        recipient,
+        print,
       })
-    ).rejects.toThrow('no invoice is bound');
+    ).rejects.toThrow('has no address');
   });
 });

@@ -5,11 +5,6 @@ import {
   registerEnumType,
 } from '@nestjs/graphql';
 import { MailTemplateContext } from '@prisma/client';
-import {
-  LetterAddressPosition,
-  LetterQrBill,
-  MessageChannel,
-} from '../channel-enums';
 import { MailTemplateStatus } from '@wepublish/mail/api';
 
 registerEnumType(MailTemplateStatus, {
@@ -23,11 +18,6 @@ registerEnumType(MailTemplateContext, {
 
 @ObjectType()
 export class MailTemplateModel {
-  @Field(() => [MessageChannel], {
-    description: `The channels this template may be sent through.`,
-  })
-  channels!: MessageChannel[];
-
   @Field()
   id!: string;
 
@@ -61,9 +51,6 @@ export class MailProviderModel {
 
 @InputType()
 export class MailTemplateInput {
-  @Field(() => [MessageChannel], { nullable: true })
-  channels?: MessageChannel[];
-
   @Field()
   name!: string;
 
@@ -93,42 +80,6 @@ export class MailTemplatePreviewModel {
 
   @Field({ nullable: true })
   text?: string;
-}
-
-@InputType()
-export class LetterPreviewInput {
-  @Field({ nullable: true })
-  mailTemplateId?: string;
-
-  @Field({ nullable: true })
-  htmlContent?: string;
-
-  @Field(() => MailTemplateContext, { nullable: true })
-  context?: MailTemplateContext;
-
-  @Field(() => LetterAddressPosition, { nullable: true })
-  addressPosition?: LetterAddressPosition;
-
-  @Field(() => LetterQrBill, { nullable: true })
-  qrBill?: LetterQrBill;
-
-  @Field({
-    nullable: true,
-    description:
-      'Render with the data of this subscription instead of samples.',
-  })
-  subscriptionId?: string;
-}
-
-@ObjectType()
-export class LetterPreviewModel {
-  @Field({ description: 'The rendered pdf, base64 encoded.' })
-  pdf!: string;
-
-  @Field(() => [String], {
-    description: 'Placeholders used by the template that resolve to nothing.',
-  })
-  missingPlaceholders!: string[];
 }
 
 @ObjectType()

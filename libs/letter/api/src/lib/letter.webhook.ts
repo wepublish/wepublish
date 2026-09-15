@@ -10,26 +10,16 @@ import {
   Req,
   Res,
 } from '@nestjs/common';
-import { LetterLogState, PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import { Public } from '@wepublish/authentication/api';
 import { NextFunction, Request, Response } from 'express';
-import { LetterState } from './letter-provider/letter-provider.interface';
+import { toProviderState } from './letter-context';
 import {
   LETTERS_MODULE_OPTIONS,
   LettersModuleOptions,
 } from './letters-module-options';
 
 export const LETTER_WEBHOOK_PATH_PREFIX = 'letter-webhooks';
-
-const LOG_STATES: Record<LetterState, LetterLogState> = {
-  [LetterState.submitted]: LetterLogState.submitted,
-  [LetterState.accepted]: LetterLogState.accepted,
-  [LetterState.dispatched]: LetterLogState.dispatched,
-  [LetterState.delivered]: LetterLogState.delivered,
-  [LetterState.undeliverable]: LetterLogState.undeliverable,
-  [LetterState.rejected]: LetterLogState.rejected,
-  [LetterState.canceled]: LetterLogState.canceled,
-};
 
 @Controller(LETTER_WEBHOOK_PATH_PREFIX)
 export class LetterWebhookController {
@@ -66,7 +56,7 @@ export class LetterWebhookController {
     const statuses = await provider.webhookForSendLetter({ req });
 
     for (const status of statuses) {
-      const letterLog = await this.prisma.letterLog.findUnique({
+      const letterLog = await this.prisma.mailLog.findUnique({
         where: { providerLetterID: status.providerLetterID },
       });
 
@@ -78,11 +68,11 @@ export class LetterWebhookController {
         continue;
       }
 
-      await this.prisma.letterLog.update({
+      await this.prisma.mailLog.update({
         where: { id: letterLog.id },
         data: {
-          state: LOG_STATES[status.state],
-          letterData: status.letterData,
+          state: toProviderState(status.state),
+          mailData: status.letterData,
           error: status.error ?? letterLog.error,
         },
       });
