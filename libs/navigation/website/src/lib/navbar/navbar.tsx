@@ -362,8 +362,10 @@ export function Navbar({
                 size="medium"
                 {...profileBtn}
               >
-                <Box sx={{ display: { xs: 'none', md: 'unset' } }}>Offene</Box>
-                &nbsp;Rechnung
+                <Box sx={{ display: { xs: 'none', md: 'unset' } }}>
+                  {t('navbar.unpaid')}
+                </Box>
+                &nbsp;{t('navbar.invoice')}
               </Button>
             )}
 
@@ -385,7 +387,7 @@ export function Navbar({
                 size="medium"
                 {...profileBtn}
               >
-                Mein Konto
+                {t('navbar.myAccount')}
               </Button>
             )}
           </NavbarActions>
@@ -620,7 +622,7 @@ const NavPaper = ({
               startIcon={<MdWarning />}
               {...profileBtn}
             >
-              Offene Rechnung
+              {t('navbar.unpaid')} {t('navbar.invoice')}
             </Button>
           )}
 
@@ -644,7 +646,7 @@ const NavPaper = ({
               onClick={closeMenu}
               {...profileBtn}
             >
-              Mein Konto
+              {t('navbar.myAccount')}
             </Button>
           )}
 
@@ -657,7 +659,7 @@ const NavPaper = ({
               variant="contained"
               color="primary"
             >
-              Logout
+              {t('navbar.logout')}
             </Button>
           )}
 
@@ -669,7 +671,7 @@ const NavPaper = ({
               onClick={closeMenu}
               {...loginBtn}
             >
-              Login
+              {t('navbar.login')}
             </Button>
           )}
         </NavPaperActions>

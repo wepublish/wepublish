@@ -1,10 +1,20 @@
 {
   "navbar": {
-    "subscribe": "Member werden"
+    "subscribe": "Member werden",
+    "unpaid": "Offene",
+    "invoice": "Rechnung",
+    "myAccount": "Mein Konto",
+    "logout": "Logout",
+    "login": "Login",
+    "backToProfile": "Zurück zum Profil",
+    "profile": "Profil"
   },
   "paywall": {
     "subscribe": "Abonnent*in werden",
     "login": "Login"
+  },
+  "paymentAmountPicker": {
+    "manual": "Manuell"
   },
   "teaser": {
     "author": {
@@ -21,6 +31,11 @@
     },
     "continuation": "Nach {afterFirstPaymentPeriod} {formattedAmount} {renewalPeriodL}.",
     "cancellable": "Jederzeit kündbar",
+    "captcha": "Captcha",
+    "chooseSubscription": "Abo wählen",
+    "choosePaymentMethod": "Zahlungsmethode wählen",
+    "greeting": "Hallo {name}, willkommen zurück!",
+    "spamProtection": "Spam-Schutz",
     "upgrade": {
       "infoTitle": "Dein Upgrade",
       "info": "Mach jetzt ein Upgrade von deinem {oldMemberPlan} auf das {newMemberPlan}. <bold>Dein Restguthaben von {discount} bei deinem {oldMemberPlan} wird Dir dabei angerechnet.</bold> Weiter unten siehst du Deinen noch zu zahlenden Upgrade-Preis für den Wechsel zum {newMemberPlan}.",
@@ -41,12 +56,18 @@
     },
     "discountCode": {
       "discountApplied": "{discountPercent}% Rabatt angewendet",
-      "invalid": "Rabattcode ungültig"
+      "invalid": "Rabattcode ungültig",
+      "label": "Rabattcode"
     },
     "goodie": {
       "title": "Goodie wählen",
       "none": "Kein Goodie",
       "soldOut": "Dieses Goodie ist leider ausverkauft. Bitte wähle ein anderes."
+    },
+    "warning": {
+      "confirmationTitle": "Bist du dir sicher?",
+      "openInvoices": "Du hast bereits schon ein Abo mit offenen Rechnungen. Du kannst deine offenen Rechnungen in deinem <Link href=\"/profile\">Profil</Link> anschauen.",
+      "alreadyHasSubscription": "Du hast dieses Abo schon, bist du dir sicher? Du kannst deine Abos in deinem <Link href=\"/profile\">Profil</Link> anschauen."
     }
   },
   "login": {
@@ -68,6 +89,11 @@
       "invalidCode": "Ungültiger Code. Bitte versuche es erneut."
     }
   },
+  "newsletter": {
+    "back": "Zurück",
+    "next": "Weiter",
+    "submit": "Abschliessen"
+  },
   "crowdfunding": {
     "goal": "{type, select, Revenue {Bereits <bold>{revenue}</bold> finanziert} other {Bereits <bold>{subscriptions, number}</bold> {subscriptions, plural, =1 {Person} other {Personen}} abonniert}}"
   },
@@ -79,17 +105,46 @@
     "unpaid": "{type, select, Donation {Spende} other {Abo}} ist unbezahlt",
     "cancel": "{type, select, Donation {Spende} other {Abo}} kündigen",
     "cancelConfirmation": "{type, select, Donation {Alle offenen Rechnungen zur Spende werden storniert.} other {Das Abo wird nicht mehr verlängert, bleibt aber gültig bis zum Ablaufsdatum. Alle offene Rechnungen des Abos werden storniert.}}",
+    "costs": "Kostet {amount} {extendable, select, true {pro Monat} other {}}",
+    "extendNow": "Jetzt verlängern",
+    "extendBy": "Jetzt um {subscriptionDuration} verlängern",
     "extendEarly": "{type, select, Donation {Spende} other {Abo}} frühzeitig verlängern?",
     "extendEarlyConfirmation": "Wir freuen uns, dass du dein {type, select, Donation {Spende} other {Abo}} frühzeitig um ein {subscriptionDuration} verlängern willst. Weiterfahren?",
     "noActiveSubscriptions": "Du hast noch kein aktives Abo.",
     "subscribeNow": "Jetzt ein Abo lösen.",
-    "startsAt": "Abgeschlossen am <time>{startsAt}</time>"
+    "startsAt": "Abgeschlossen am <time>{startsAt}</time>",
+    "detailsAndPayments": "Details & Zahlungen",
+    "cancelledDueToInvoiceNotPaid": "Automatisch gekündigt",
+    "cancelledDueToUnknownReason": "Kündigungsgrund ist unbekannt",
+    "autoRenew": "Wird automatisch {periodicityTimeline} erneuert",
+    "validFor": "Gültig für {subscriptionDuration}",
+    "cancelProduct": "{productName} wirklich kündigen?"
+  },
+  "invoice": {
+    "invoices": "Rechnungen",
+    "noOpenInvoices": "Keine offenen Rechnungen",
+    "openInvoices": "Offene Rechnungen",
+    "unpaid": "Offene Rechnung",
+    "paid": "Bezahlte Rechnung",
+    "canceled": "Stornierte Rechnung",
+    "number": "Rechnungs-Nr",
+    "completedAt": "Abgeschlossen am",
+    "dueAt": "Fällig am",
+    "amount": "Betrag von",
+    "paidAt": "Bezahlt am",
+    "canceledAt": "Storniert am",
+    "sepaWarning": "Die Rechnung wird automatisch per Lastschriftverfahren beglichen. Dies kann einige Tage in Anspruch nehmen.",
+    "bexioWarning": "Du erhältst eine PDF-Rechnung per E-Mail zugeschickt.",
+    "payrexxWarning": "Wir haben vor einiger Zeit das Membersystem angepasst und dein Abo ist veraltet. Es wird automatisch angepasst wenn du auf \"Jetzt Bezahlen\" drückst.",
+    "payNow": "Jetzt Bezahlen"
   },
   "user": {
     "changeEmailRequest": "Klicke hier um deine Email zu ändern",
     "email": "E-Mail",
     "changeEmail": "E-Mail-Adresse ändern",
     "newEmail": "Neue E-Mail-Adresse",
+    "password": "Passwort",
+    "passwordRepeat": "Passwort wiederholen",
     "requestEmailChange": "Änderung beantragen",
     "emailChangeRequested": "Eine Bestätigungs-E-Mail wurde an deine aktuelle E-Mail-Adresse gesendet. Bitte klicke auf den Link in der E-Mail, um die Änderung zu bestätigen.",
     "pendingEmailChange": "Eine Änderung zu {email} wartet auf Bestätigung. Bitte prüfe deinen Posteingang.",
@@ -100,6 +155,12 @@
     "subscriptionsDetail": "{type, select, Donation {Spende} other {Abo}}",
     "viewCancelledSubscriptions": "Gekündigte Abos & Inaktive Spenden anzeigen",
     "subscribeAnother": "Anderes Abo lösen",
+    "confirm": "Bestätigen",
+    "cancel": "Abbrechen",
+    "save": "Speichern",
+    "saveSuccess": "Änderungen erfolgreich gespeichert!",
+    "passwordWarning": "Nur ausfüllen, wenn Sie das Passwort ändern möchten. Ansonsten leer lassen.",
+    "pay": "Bezahlen",
     "totp": {
       "title": "Zwei-Faktor-Authentifizierung",
       "enabled": "Zwei-Faktor-Authentifizierung ist aktiviert.",
@@ -114,7 +175,63 @@
       "setupError": "Fehler beim Einrichten der 2FA. Bitte versuche es erneut.",
       "invalidCode": "Ungültiger Bestätigungscode. Bitte versuche es erneut.",
       "setupSuccess": "Zwei-Faktor-Authentifizierung wurde erfolgreich aktiviert."
+    },
+    "form": {
+      "firstName": "Vorname",
+      "lastName": "Nachname",
+      "email": "Email",
+      "emailRepeated": "Email wiederholen",
+      "birthday": "Geburtstag",
+      "password": "Passwort",
+      "passwordRepeated": "Passwort wiederholen",
+      "street": "Strasse",
+      "houseNumber": "Hausnummer",
+      "zipCode": "PLZ",
+      "city": "Ort / Stadt",
+      "country": "Land",
+      "occupation": "Funktion / Beruf"
     }
+  },
+  "article": {
+    "noArticles": "Keine Artikel vorhanden",
+    "toOriginal": "Zum Originalartikel"
+  },
+  "commentEditor": {
+    "comment": "Kommentieren",
+    "cancel": "Abbrechen",
+    "captcha": "Captcha",
+    "guestComment": "Als Gast kommentieren",
+    "loginRegister": "Anmelden/Registrieren",
+    "loginForReaders": "Login für Leserinnen und Leser",
+    "noAccountYet": "Noch keinen Account?",
+    "registerNow": "Jetzt registrieren",
+    "notLoggedIn": "Du bist nicht eingeloggt"
+  },
+  "comments": {
+    "list": {
+      "readMore": "Jetzt Mitreden",
+      "noComments": "Keine Kommentare vorhanden.",
+      "pendingApproval": "Kommentar wartet auf Freischaltung",
+      "pendingUserChanges": "Kommentar muss editiert werden bevor Freischaltung.",
+      "rejected": "Kommentar wurde nicht freigeschalten.",
+      "reply": "Antworten",
+      "edit": "Bearbeiten"
+    }
+  },
+  "poll": {
+    "totalVotes": "{count} Stimmen",
+    "closesAt": "Schliesst am <time>{date}</time>",
+    "closed": "&ndash; Abstimmung beendet."
+  },
+  "registrationForm": {
+    "register": "Registrieren",
+    "captcha": "Captcha"
+  },
+  "search": {
+    "search": "Suche",
+    "searchPlaceholder": "Suche nach Artikeln und Seiten",
+    "searchResults": "Suchergebnisse",
+    "noResultsFound": "Keine Suchergebnisse gefunden"
   },
   "zod": {
     "errors": {

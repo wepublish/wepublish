@@ -4,6 +4,7 @@ import { PaymentPeriodicity } from '@wepublish/website/api';
 import { BuilderPeriodicityPickerProps } from '@wepublish/website/builder';
 import { forwardRef, useEffect, useId } from 'react';
 import { formatRenewalPeriod } from '../formatters/format-renewal-period';
+import { useTranslation } from 'react-i18next';
 
 export const PeriodicityPickerWrapper = styled(FormControl)`
   display: grid;
@@ -16,6 +17,7 @@ export const PeriodicityPicker = forwardRef<
   { periodicities, onChange, value, className, name },
   ref
 ) {
+  const { t } = useTranslation();
   const id = useId();
   const show = periodicities && periodicities.length > 1;
 
@@ -32,11 +34,11 @@ export const PeriodicityPicker = forwardRef<
   return (
     <PeriodicityPickerWrapper className={className}>
       <>
-        <InputLabel htmlFor={id}>Zahlungsintervall</InputLabel>
+        <InputLabel htmlFor={id}>{t('subscribe.periodicity')}</InputLabel>
 
         <Select
           native
-          label={'Zahlungsintervall'}
+          label={t('subscribe.periodicity')}
           ref={ref}
           name={name}
           onChange={event => onChange(event.target.value as PaymentPeriodicity)}

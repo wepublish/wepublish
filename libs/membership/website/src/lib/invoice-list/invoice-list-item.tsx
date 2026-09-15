@@ -4,6 +4,7 @@ import {
   useAsyncAction,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
+import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
 import {
   MdAttachMoney,
@@ -65,47 +66,48 @@ export function InvoiceListItem({
 }: BuilderInvoiceListItemProps) {
   const {
     meta: { locale },
-    elements: { H6, Button, Alert, Link },
+    elements: { H6, Button, Alert },
     date,
   } = useWebsiteBuilder();
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error>();
   const callAction = useAsyncAction(setLoading, setError);
+  const { t } = useTranslation();
 
   return (
     <InvoiceListItemWrapper className={className}>
       <InvoiceListItemContent>
         {!paidAt && !canceledAt && (
           <H6>
-            Offene Rechnung{' '}
+            {t('invoice.unpaid')}{' '}
             {subscription && <>für {subscription.memberPlan.name}</>}
           </H6>
         )}
 
         {paidAt && (
           <H6>
-            Bezahlte Rechnung{' '}
+            {t('invoice.paid')}{' '}
             {subscription && <>für {subscription.memberPlan.name}</>}
           </H6>
         )}
 
         {canceledAt && (
           <H6>
-            Stornierte Rechnung{' '}
+            {t('invoice.canceled')}{' '}
             {subscription && <>für {subscription.memberPlan.name}</>}
           </H6>
         )}
 
         <InvoiceListItemMeta>
           <InvoiceListItemMetaItem>
-            <MdOutlineInfo /> Rechnungs-Nr: {id}
+            <MdOutlineInfo /> {t('invoice.number')}: {id}
           </InvoiceListItemMetaItem>
 
           <InvoiceListItemMetaItem>
             <MdCalendarMonth />
             <span>
-              Abgeschlossen am{' '}
+              {t('invoice.completedAt')}{' '}
               <time
                 suppressHydrationWarning
                 dateTime={createdAt}
@@ -119,7 +121,7 @@ export function InvoiceListItem({
             <InvoiceListItemMetaItem>
               <MdOutlineWarning />
               <span>
-                Fällig am{' '}
+                {t('invoice.dueAt')}{' '}
                 <time
                   suppressHydrationWarning
                   dateTime={dueAt}
@@ -131,7 +133,7 @@ export function InvoiceListItem({
           )}
 
           <InvoiceListItemMetaItem>
-            <MdAttachMoney /> Betrag von{' '}
+            <MdAttachMoney /> {t('invoice.amount')}{' '}
             {formatCurrency(
               total / 100,
               subscription?.memberPlan.currency ?? Currency.Chf,
@@ -142,7 +144,7 @@ export function InvoiceListItem({
 
         {paidAt && (
           <strong>
-            Bezahlt am{' '}
+            {t('invoice.paidAt')}{' '}
             <time
               suppressHydrationWarning
               dateTime={paidAt}
@@ -154,7 +156,7 @@ export function InvoiceListItem({
 
         {canceledAt && (
           <strong>
-            Storniert am{' '}
+            {t('invoice.canceledAt')}{' '}
             <time
               suppressHydrationWarning
               dateTime={canceledAt}
@@ -166,26 +168,15 @@ export function InvoiceListItem({
 
         {error && <Alert severity="error">{error.message}</Alert>}
 
-        {isSepa && (
-          <Alert severity="warning">
-            Die Rechnung wird automatisch per Lastschriftverfahren beglichen.
-            Dies kann einige Tage in Anspruch nehmen.
-          </Alert>
-        )}
+        {isSepa && <Alert severity="warning">{t('invoice.sepaWarning')}</Alert>}
 
         {isBexio && (
-          <Alert severity="warning">
-            Du erhältst eine PDF-Rechnung per E-Mail zugeschickt.
-          </Alert>
+          <Alert severity="warning">{t('invoice.bexioWarning')}</Alert>
         )}
 
         {/* @TODO: Remove when all 'payrexx subscriptions' subscriptions have been migrated  */}
         {isPayrexxSubscription && (
-          <Alert severity="warning">
-            Wir haben vor einiger Zeit das Membersystem angepasst und dein Abo
-            ist veraltet. Es wird automatisch angepasst wenn du auf "Jetzt
-            Bezahlen" drückst.
-          </Alert>
+          <Alert severity="warning">{t('invoice.payrexxWarning')}</Alert>
         )}
 
         {canPay && (
@@ -194,7 +185,7 @@ export function InvoiceListItem({
               onClick={callAction(pay)}
               disabled={loading}
             >
-              Jetzt Bezahlen
+              {t('invoice.payNow')}
             </Button>
           </InvoiceListItemActions>
         )}
