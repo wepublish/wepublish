@@ -1,5 +1,10 @@
 import {
+  LetterAddressPosition,
+  LetterDeliveryProduct,
+  LetterPrintMode,
+  LetterPrintSpectrum,
   MailAudienceInput,
+  MailChannel,
   MailLogState,
   MailRecipientBase,
   MailSubscriptionState,
@@ -72,9 +77,26 @@ import {
   ResumeJobButton,
 } from './mail-job-common';
 import { MailPreview } from '../mail-template/mail-preview';
+import { LetterPreview } from '../mail-template/letter-preview';
 
 /** Mirrors the API default for the win-back look-back window. */
 const DEFAULT_ENDED_WITHIN_DAYS = 90;
+
+/** The print options as the editor holds them: chosen, so never null. */
+type PrintSettings = {
+  addressPosition: LetterAddressPosition;
+  deliveryProduct: LetterDeliveryProduct;
+  printMode: LetterPrintMode;
+  printSpectrum: LetterPrintSpectrum;
+};
+
+/** Mirrors the API defaults for a letter send. */
+const DEFAULT_PRINT: PrintSettings = {
+  addressPosition: LetterAddressPosition.Left,
+  deliveryProduct: LetterDeliveryProduct.Cheap,
+  printMode: LetterPrintMode.Simplex,
+  printSpectrum: LetterPrintSpectrum.Grayscale,
+};
 
 /** How the author expresses "recently ended": rolling days or a fixed period. */
 type EndedMode = 'days' | 'period';
@@ -153,6 +175,9 @@ function MailSendPage() {
   );
   const [endedMode, setEndedMode] = useState<EndedMode>('days');
   const [endedPeriod, setEndedPeriod] = useState<DateRange | null>(null);
+
+  const [channel, setChannel] = useState<MailChannel>(MailChannel.Mail);
+  const [print, setPrint] = useState<PrintSettings>(DEFAULT_PRINT);
 
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [recipientsOpen, setRecipientsOpen] = useState(false);
@@ -252,6 +277,11 @@ function MailSendPage() {
   const userCount = previewData?.mailSendRecipientPreview.userCount ?? 0;
   const allowsSubscriptionTemplates =
     previewData?.mailSendRecipientPreview.allowsSubscriptionTemplates ?? false;
+  const isLetter = channel === MailChannel.Letter;
+  // A letter send skips whoever has no usable postal address, so say how many
+  // that is before the send rather than leaving it to the log.
+  const withoutAddressCount =
+    previewData?.mailSendRecipientPreview.withoutAddressCount ?? 0;
 
   // Warn (never block) when the template uses placeholders that this audience
   // won't fill. `withSubscriptionData` mirrors whether the audience carries a
@@ -309,7 +339,14 @@ function MailSendPage() {
     }
     setConfirmOpen(false);
     await createJob({
-      variables: { input: { mailTemplateId: templateId, audience } },
+      variables: {
+        input: {
+          mailTemplateId: templateId,
+          audience,
+          channel,
+          print: isLetter ? print : undefined,
+        },
+      },
     });
   };
 
@@ -646,6 +683,14 @@ function MailSendPage() {
                 )}
               </Panel>
 
+              <ChannelPanel
+                channel={channel}
+                onChannelChange={setChannel}
+                print={print}
+                onPrintChange={setPrint}
+                withoutAddressCount={withoutAddressCount}
+              />
+
               <StepNav
                 onBack={() => setStep(STEP_AUDIENCE)}
                 onNext={() => setStep(STEP_SEND)}
@@ -668,7 +713,28 @@ function MailSendPage() {
                   <strong>{t('mailSend.template')}:</strong>
                   <span>{templateName ?? '—'}</span>
                 </Stack>
+                <Stack
+                  spacing={8}
+                  alignItems="center"
+                  style={{ marginTop: 8 }}
+                >
+                  <strong>{t('mailSend.channel.label')}:</strong>
+                  <span>
+                    {t(`mailSend.channel.${isLetter ? 'letter' : 'mail'}`)}
+                  </span>
+                </Stack>
               </Panel>
+
+              {isLetter && withoutAddressCount > 0 && (
+                <Message
+                  type="warning"
+                  style={{ marginTop: 16 }}
+                >
+                  {t('mailSend.channel.withoutAddress', {
+                    count: withoutAddressCount,
+                  })}
+                </Message>
+              )}
 
               {recipientSummary(
                 <Button
@@ -697,6 +763,8 @@ function MailSendPage() {
               templateId={templateId}
               audience={audience}
               recipientCount={count}
+              channel={channel}
+              print={print}
             />
           : <Panel
               bordered
@@ -864,14 +932,151 @@ function StepNav({
  * API through the same composition the send uses, so placeholders show real
  * values. Defaults to the first recipient; any other can be picked.
  */
+/**
+ * The medium the send goes out through, and — for a letter — how it is printed
+ * and posted. Both are the job's, not the template's: the same words can go out
+ * as a mail today and as a letter tomorrow.
+ */
+function ChannelPanel({
+  channel,
+  onChannelChange,
+  print,
+  onPrintChange,
+  withoutAddressCount,
+}: {
+  channel: MailChannel;
+  onChannelChange: (channel: MailChannel) => void;
+  print: PrintSettings;
+  onPrintChange: (print: PrintSettings) => void;
+  withoutAddressCount: number;
+}) {
+  const { t } = useTranslation();
+  const isLetter = channel === MailChannel.Letter;
+
+  const option = <T extends string>(values: readonly T[], group: string) =>
+    values.map(value => ({
+      label: t(`mailSend.print.${group}.${value}`),
+      value,
+    }));
+
+  return (
+    <Panel
+      bordered
+      header={t('mailSend.channel.label')}
+      style={{ marginTop: 16 }}
+    >
+      <RadioGroup
+        inline
+        value={channel}
+        onChange={value => onChannelChange(value as MailChannel)}
+      >
+        <Radio value={MailChannel.Mail}>{t('mailSend.channel.mail')}</Radio>
+        <Radio value={MailChannel.Letter}>{t('mailSend.channel.letter')}</Radio>
+      </RadioGroup>
+
+      {isLetter && (
+        <>
+          {withoutAddressCount > 0 && (
+            <Message
+              type="warning"
+              style={{ marginTop: 12 }}
+            >
+              {t('mailSend.channel.withoutAddress', {
+                count: withoutAddressCount,
+              })}
+            </Message>
+          )}
+
+          <MuiStack
+            direction="row"
+            flexWrap="wrap"
+            gap={2}
+            sx={{ marginTop: 2 }}
+          >
+            <PrintOption
+              label={t('mailSend.print.addressPosition.label')}
+              value={print.addressPosition}
+              options={option(
+                Object.values(LetterAddressPosition),
+                'addressPosition'
+              )}
+              onChange={addressPosition =>
+                onPrintChange({ ...print, addressPosition })
+              }
+            />
+            <PrintOption
+              label={t('mailSend.print.deliveryProduct.label')}
+              value={print.deliveryProduct}
+              options={option(
+                Object.values(LetterDeliveryProduct),
+                'deliveryProduct'
+              )}
+              onChange={deliveryProduct =>
+                onPrintChange({ ...print, deliveryProduct })
+              }
+            />
+            <PrintOption
+              label={t('mailSend.print.printMode.label')}
+              value={print.printMode}
+              options={option(Object.values(LetterPrintMode), 'printMode')}
+              onChange={printMode => onPrintChange({ ...print, printMode })}
+            />
+            <PrintOption
+              label={t('mailSend.print.printSpectrum.label')}
+              value={print.printSpectrum}
+              options={option(
+                Object.values(LetterPrintSpectrum),
+                'printSpectrum'
+              )}
+              onChange={printSpectrum =>
+                onPrintChange({ ...print, printSpectrum })
+              }
+            />
+          </MuiStack>
+        </>
+      )}
+    </Panel>
+  );
+}
+
+function PrintOption<T extends string>({
+  label,
+  value,
+  options,
+  onChange,
+}: {
+  label: string;
+  value: T;
+  options: { label: string; value: T }[];
+  onChange: (value: T) => void;
+}) {
+  return (
+    <div style={{ minWidth: 180, flex: 1 }}>
+      <Form.ControlLabel>{label}</Form.ControlLabel>
+      <SelectPicker
+        block
+        cleanable={false}
+        searchable={false}
+        data={options}
+        value={value}
+        onChange={next => next && onChange(next as T)}
+      />
+    </div>
+  );
+}
+
 function TemplatePreview({
   templateId,
   audience,
   recipientCount,
+  channel,
+  print,
 }: {
   templateId: string;
   audience: MailAudienceInput;
   recipientCount: number;
+  channel: MailChannel;
+  print: PrintSettings;
 }) {
   const { t } = useTranslation();
   const [recipientId, setRecipientId] = useState<string | null>(null);
@@ -887,11 +1092,19 @@ function TemplatePreview({
     variables: { audience, take: RECIPIENTS_PAGE_SIZE },
   });
 
+  const isLetter = channel === MailChannel.Letter;
+
   const { data, loading, error, refetch } = useMailSendPreviewQuery({
     ...DEFAULT_QUERY_OPTIONS(),
     skip: recipientCount === 0,
     variables: {
-      input: { mailTemplateId: templateId, audience, recipientId },
+      input: {
+        mailTemplateId: templateId,
+        audience,
+        recipientId,
+        channel,
+        print: isLetter ? print : undefined,
+      },
     },
   });
 
@@ -961,16 +1174,20 @@ function TemplatePreview({
 
           {error && <Message type="error">{error.message}</Message>}
 
-          {preview && (
+          {/* Both end with the viewport instead of stretching the page — but
+              never get so short that the message is unreadable. */}
+          {preview?.pdf ?
+            <LetterPreview
+              pdf={preview.pdf}
+              height="max(420px, calc(100vh - 250px))"
+            />
+          : preview && !isLetter ?
             <MailPreview
               html={preview.html}
               subject={preview.subject}
-              // The panel is pinned next to the wizard, so it ends with the
-              // viewport instead of stretching the page — but never gets so
-              // short that the mail is unreadable.
               height="max(420px, calc(100vh - 250px))"
             />
-          )}
+          : null}
 
           {loading && !preview && <span>{t('mailSend.preview.loading')}</span>}
         </>

@@ -33,8 +33,8 @@ const config: SettingLetterProvider = {
   createdAt: new Date(),
   modifiedAt: new Date(),
   lastLoadedAt: new Date(),
-  type: 'PINGEN',
-  environment: 'STAGING',
+  type: 'pingen',
+  environment: 'staging',
   name: 'Pingen',
   clientId: 'client-id',
   clientSecret: 'client-secret',
@@ -203,12 +203,10 @@ describe('PingenLetterProvider', () => {
 
     it('falls back to the configured auto send', async () => {
       const provider = createProvider();
-      global.fetch = jest
-        .fn()
-        .mockResolvedValue({
-          ok: true,
-          status: 200,
-        }) as unknown as typeof fetch;
+      global.fetch = jest.fn().mockResolvedValue({
+        ok: true,
+        status: 200,
+      }) as unknown as typeof fetch;
 
       fileUploadMock.requestFileUpload.mockResolvedValue({
         url: 'https://objects.example/bucket/file',
@@ -233,12 +231,10 @@ describe('PingenLetterProvider', () => {
 
     it('does not create a letter when the upload fails', async () => {
       const provider = createProvider();
-      global.fetch = jest
-        .fn()
-        .mockResolvedValue({
-          ok: false,
-          status: 403,
-        }) as unknown as typeof fetch;
+      global.fetch = jest.fn().mockResolvedValue({
+        ok: false,
+        status: 403,
+      }) as unknown as typeof fetch;
 
       fileUploadMock.requestFileUpload.mockResolvedValue({
         url: 'https://objects.example/bucket/file',

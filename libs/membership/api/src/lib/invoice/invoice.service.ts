@@ -398,18 +398,6 @@ const createDiscountCodeFilter = (
   return {};
 };
 
-const createPaymentReferenceFilter = (
-  filter: Partial<InvoiceFilter>
-): Prisma.InvoiceWhereInput => {
-  if (filter?.paymentReference) {
-    return {
-      paymentReference: filter.paymentReference.replace(/\s/g, ''),
-    };
-  }
-
-  return {};
-};
-
 export const createInvoiceFilter = (
   filter: Partial<InvoiceFilter>
 ): Prisma.InvoiceWhereInput => ({
@@ -420,6 +408,5 @@ export const createInvoiceFilter = (
     createCancelledAtFilter(filter),
     createSubscriptionFilter(filter),
     createDiscountCodeFilter(filter),
-    createPaymentReferenceFilter(filter),
   ],
 });

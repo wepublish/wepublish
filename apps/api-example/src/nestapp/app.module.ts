@@ -288,7 +288,7 @@ import { readConfig } from '../readConfig';
           });
 
           await letterProvider.initDatabaseConfiguration(
-            LetterProviderType.PINGEN
+            LetterProviderType.pingen
           );
         } else {
           letterProvider = new FakeLetterProvider({

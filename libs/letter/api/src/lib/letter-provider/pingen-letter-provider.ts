@@ -39,8 +39,8 @@ import {
 } from './letter-provider.interface';
 
 const API_URLS: Record<LetterProviderEnvironment, string> = {
-  PRODUCTION: 'https://api.pingen.com',
-  STAGING: 'https://api-staging.pingen.com',
+  production: 'https://api.pingen.com',
+  staging: 'https://api-staging.pingen.com',
 };
 
 const JSON_API_CONTENT_TYPE = 'application/vnd.api+json';
@@ -451,7 +451,7 @@ export class PingenLetterProvider extends BaseLetterProvider {
       return this.connection;
     }
 
-    const useStaging = config.environment === 'STAGING';
+    const useStaging = config.environment === 'staging';
     const oauth = new OAuth({
       clientId: config.clientId,
       clientSecret: config.clientSecret,

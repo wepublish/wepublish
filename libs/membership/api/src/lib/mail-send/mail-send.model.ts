@@ -6,6 +6,11 @@ import {
   registerEnumType,
 } from '@nestjs/graphql';
 import {
+  LetterAddressPosition,
+  LetterDeliveryProduct,
+  LetterPrintMode,
+  LetterPrintSpectrum,
+  MailChannel,
   MailLogState,
   MailLogType,
   MailSendAudience,
@@ -69,6 +74,47 @@ registerEnumType(MailSendJobRecipientState, {
   description: 'Where one planned mail of a send job stands.',
 });
 
+registerEnumType(MailChannel, {
+  name: 'MailChannel',
+  description: 'Whether a send goes out as an email or as a printed letter.',
+});
+
+registerEnumType(LetterAddressPosition, {
+  name: 'LetterAddressPosition',
+  description: 'Where the address window sits on the printed sheet.',
+});
+
+registerEnumType(LetterDeliveryProduct, {
+  name: 'LetterDeliveryProduct',
+});
+
+registerEnumType(LetterPrintMode, {
+  name: 'LetterPrintMode',
+});
+
+registerEnumType(LetterPrintSpectrum, {
+  name: 'LetterPrintSpectrum',
+});
+
+/**
+ * How a letter is printed and posted. Every field has a default, so a mail send
+ * never has to supply them.
+ */
+@InputType()
+export class LetterPrintInput {
+  @Field(() => LetterAddressPosition, { nullable: true })
+  addressPosition?: LetterAddressPosition;
+
+  @Field(() => LetterDeliveryProduct, { nullable: true })
+  deliveryProduct?: LetterDeliveryProduct;
+
+  @Field(() => LetterPrintMode, { nullable: true })
+  printMode?: LetterPrintMode;
+
+  @Field(() => LetterPrintSpectrum, { nullable: true })
+  printSpectrum?: LetterPrintSpectrum;
+}
+
 @InputType()
 export class MailAudienceInput {
   @Field(() => MailRecipientBase)
@@ -121,6 +167,18 @@ export class MailSendJobInput {
 
   @Field(() => MailAudienceInput)
   audience!: MailAudienceInput;
+
+  @Field(() => MailChannel, {
+    nullable: true,
+    description: 'Defaults to mail.',
+  })
+  channel?: MailChannel;
+
+  @Field(() => LetterPrintInput, {
+    nullable: true,
+    description: 'Letter sends only. Ignored for mail.',
+  })
+  print?: LetterPrintInput;
 }
 
 @InputType()
@@ -136,6 +194,9 @@ export class MailLogFilter {
 
   @Field(() => MailLogType, { nullable: true })
   type?: MailLogType;
+
+  @Field(() => MailChannel, { nullable: true })
+  channel?: MailChannel;
 
   @Field({ nullable: true })
   mailSendJobId?: string;
@@ -181,6 +242,21 @@ export class MailLogModel {
 
   @Field(() => MailLogType, { nullable: true })
   type?: MailLogType | null;
+
+  @Field(() => MailChannel)
+  channel!: MailChannel;
+
+  @Field(() => String, {
+    nullable: true,
+    description: 'Letters only: id the print vendor assigned to the letter.',
+  })
+  providerLetterID?: string | null;
+
+  @Field(() => String, {
+    nullable: true,
+    description: 'Letters only: the address the letter was sent to.',
+  })
+  address?: string | null;
 
   @Field(() => String, { nullable: true })
   subject?: string | null;
@@ -243,6 +319,9 @@ export class MailSendJobModel {
 
   @Field(() => MailSendAudience)
   audience!: MailSendAudience;
+
+  @Field(() => MailChannel)
+  channel!: MailChannel;
 
   @Field(() => Int)
   totalCount!: number;
@@ -361,6 +440,15 @@ export class MailSendPreviewInput {
   @Field(() => MailAudienceInput)
   audience!: MailAudienceInput;
 
+  @Field(() => MailChannel, {
+    nullable: true,
+    description: 'Defaults to mail. A letter preview renders the pdf.',
+  })
+  channel?: MailChannel;
+
+  @Field(() => LetterPrintInput, { nullable: true })
+  print?: LetterPrintInput;
+
   @Field(() => String, {
     nullable: true,
     description:
@@ -374,11 +462,18 @@ export class MailSendPreviewModel {
   @Field()
   subject!: string;
 
-  @Field()
+  @Field({ description: 'Empty for a letter preview.' })
   html!: string;
 
   @Field(() => String, { nullable: true })
   text?: string | null;
+
+  @Field(() => String, {
+    nullable: true,
+    description:
+      'Letter previews only: the rendered pdf, base64 encoded, exactly as it would be printed.',
+  })
+  pdf?: string | null;
 
   @Field(() => MailSendRecipientModel, {
     nullable: true,
@@ -403,4 +498,10 @@ export class MailSendRecipientPreview {
       'Whether recipients carry subscription data (subscription-context templates allowed).',
   })
   allowsSubscriptionTemplates!: boolean;
+
+  @Field(() => Int, {
+    description:
+      'How many of the recipients have no usable postal address and would be skipped by a letter send.',
+  })
+  withoutAddressCount!: number;
 }

@@ -5,7 +5,6 @@ import {
   Provider,
 } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 import { PrismaModule } from '@wepublish/nest-modules';
 import { createAsyncOptionsProvider } from '@wepublish/utils/api';
 import { LetterContext } from './letter-context';
@@ -18,15 +17,12 @@ import {
   LettersModuleAsyncOptions,
   LettersModuleOptions,
 } from './letters-module-options';
-import { OrganisationResolver } from './organisation/organisation.resolver';
-import { OrganisationService } from './organisation/organisation.service';
-import { QrBillService } from './qr-bill/qr-bill.service';
 
 @Module({
   imports: [PrismaModule],
   controllers: [LetterWebhookController],
   providers: [LetterWebhookMiddleware],
-  exports: [LetterContext, OrganisationService, QrBillService],
+  exports: [LetterContext],
 })
 export class LettersModule {
   configure(consumer: MiddlewareConsumer) {
@@ -39,7 +35,7 @@ export class LettersModule {
       global: options.global,
       imports: options.imports || [],
       providers: this.createAsyncProviders(options),
-      exports: [LetterContext, OrganisationService, QrBillService],
+      exports: [LetterContext],
     };
   }
 
@@ -53,39 +49,12 @@ export class LettersModule {
         options
       ),
       {
-        provide: OrganisationService,
-        useFactory: (prisma: PrismaClient, kv: KvTtlCacheService) =>
-          new OrganisationService(prisma, kv),
-        inject: [PrismaClient, KvTtlCacheService],
-      },
-      OrganisationResolver,
-      {
-        provide: QrBillService,
-        useFactory: (prisma: PrismaClient, organisation: OrganisationService) =>
-          new QrBillService(prisma, organisation),
-        inject: [PrismaClient, OrganisationService],
-      },
-      {
         provide: LetterContext,
         useFactory: (
           { letterProvider, pdfRenderer }: LettersModuleOptions,
-          prisma: PrismaClient,
-          qrBill: QrBillService,
-          organisation: OrganisationService
-        ) =>
-          new LetterContext({
-            letterProvider,
-            pdfRenderer,
-            prisma,
-            qrBill,
-            organisation,
-          }),
-        inject: [
-          LETTERS_MODULE_OPTIONS,
-          PrismaClient,
-          QrBillService,
-          OrganisationService,
-        ],
+          prisma: PrismaClient
+        ) => new LetterContext({ letterProvider, pdfRenderer, prisma }),
+        inject: [LETTERS_MODULE_OPTIONS, PrismaClient],
       },
     ];
   }

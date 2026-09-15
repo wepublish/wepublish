@@ -1,6 +1,5 @@
 import {
   Currency,
-  MessageChannel,
   PaymentPeriodicity,
   PrismaClient,
   SubscriptionDeactivationReason,
@@ -522,14 +521,6 @@ describe('SubscriptionPaymentsService', () => {
         type: SubscriptionEvent.RENEWAL_SUCCESS,
         daysAwayFromEnding: 1,
         mailTemplateId: null,
-        channels: [MessageChannel.MAIL],
-        print: {
-          addressPosition: 'LEFT',
-          deliveryProduct: 'CHEAP',
-          printMode: 'SIMPLEX',
-          printSpectrum: 'GRAYSCALE',
-          qrBill: 'NONE',
-        },
       };
       await subscriptionService['offSessionPayment'](
         { canceledAt: null, paidAt: null } as any,

@@ -14,15 +14,6 @@ const recipient: LetterAddress = {
   country: 'CH',
 };
 
-const sender: LetterAddress = {
-  name: 'Beispiel Verlag',
-  street: 'Verlagsweg',
-  number: '1',
-  zip: '3000',
-  city: 'Bern',
-  country: 'CH',
-};
-
 describe('formatAddressLines', () => {
   it('joins street and number and drops empty lines', () => {
     expect(formatAddressLines(recipient)).toEqual([
@@ -39,7 +30,6 @@ describe('composeLetter', () => {
     template: { htmlContent: '<p>Hallo {{user_firstName}}</p>' },
     data: { user: { firstName: 'Jane' } },
     recipient,
-    sender,
     addressPosition: 'left' as const,
   };
 
@@ -57,11 +47,8 @@ describe('composeLetter', () => {
     );
   });
 
-  it('prints the recipient and the sender line', () => {
-    const html = composeLetter(base);
-
-    expect(html).toContain('8000 Zürich');
-    expect(html).toContain('Beispiel Verlag, Verlagsweg 1, 3000 Bern, CH');
+  it('prints the recipient into the address window', () => {
+    expect(composeLetter(base)).toContain('8000 Zürich');
   });
 
   it('escapes the address so a name cannot inject markup', () => {
@@ -72,17 +59,6 @@ describe('composeLetter', () => {
 
     expect(html).not.toContain('<script>');
     expect(html).toContain('&lt;script&gt;');
-  });
-
-  it('reserves the bottom of the page when a qr bill is placed', () => {
-    const html = composeLetter({ ...base, qrBillSvg: '<svg id="qr"></svg>' });
-
-    expect(html).toContain('<svg id="qr"></svg>');
-    expect(html).toContain('padding: 20mm 20mm 115mm 20mm');
-  });
-
-  it('uses the full page when there is no qr bill', () => {
-    expect(composeLetter(base)).toContain('padding: 20mm 20mm 20mm 20mm');
   });
 });
 

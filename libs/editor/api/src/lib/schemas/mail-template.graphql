@@ -61,7 +61,6 @@ fragment TinyMailTemplate on MailTemplateModel {
   description
   subject
   context
-  channels
   status
 }
 

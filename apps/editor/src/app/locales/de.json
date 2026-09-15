@@ -1023,13 +1023,7 @@
         "textContentReadonlyHint": "Wird automatisch aus dem Inhalt erzeugt. Bearbeite den Visuell- oder HTML-Tab, um ihn zu ändern.",
         "background": "Hintergrund",
         "contentWidth": "Breite (px)",
-        "purposeHint": "Der Verwendungszweck legt fest, in welcher Situation diese Vorlage verschickt wird. Davon hängt ab, welche Daten – und damit welche Platzhalter – zur Verfügung stehen: Nur eine Rechnungs-Vorlage kennt z. B. den Rechnungsbetrag.",
-        "channels": "Kanäle",
-        "channelMail": "E-Mail",
-        "channelLetter": "Brief",
-        "channelsHint": "Wofür diese Vorlage verwendet werden darf. Ein Brief hat keine klickbaren Links — meist lohnt sich eine eigene Vorlage.",
-        "previewLetter": "Brief-Vorschau (PDF)",
-        "letterMissingPlaceholders": "Diese Platzhalter bleiben leer: {{placeholders}}"
+        "purposeHint": "Der Verwendungszweck legt fest, in welcher Situation diese Vorlage verschickt wird. Davon hängt ab, welche Daten – und damit welche Platzhalter – zur Verfügung stehen: Nur eine Rechnungs-Vorlage kennt z. B. den Rechnungsbetrag."
       },
       "editor": {
         "undo": "Rückgängig",
@@ -1310,9 +1304,7 @@
       "apps": "Apps",
       "mailSend": "E-Mail senden",
       "mailLog": "Gesendete E-Mails",
-      "communication": "Kommunikation",
-      "letterLog": "Versendete Briefe",
-      "organisationSettings": "Organisation"
+      "communication": "Kommunikation"
     },
     "navigation": {
       "overview": {
@@ -2937,9 +2929,41 @@
         "firstRecipient": "Erste:r Empfänger:in",
         "hint": "So sieht die Mail für diese Person aus – mit ihren echten Daten.",
         "loading": "Vorschau wird geladen …",
-        "noRecipients": "Keine Empfänger:innen – bitte zuerst die Empfängergruppe anpassen."
+        "noRecipients": "Keine Empfänger:innen – bitte zuerst die Empfängergruppe anpassen.",
+        "letterTitle": "Briefvorschau"
       },
-      "recipientsCountPerPerson": "{{count}} Mails an {{people}} Personen"
+      "recipientsCountPerPerson": "{{count}} Mails an {{people}} Personen",
+      "channel": {
+        "label": "Versand",
+        "mail": "E-Mail",
+        "letter": "Brief",
+        "withoutAddress": "{{count}} der Empfänger:innen haben keine brauchbare Postadresse und werden übersprungen."
+      },
+      "print": {
+        "addressPosition": {
+          "label": "Adressfenster",
+          "left": "Links",
+          "right": "Rechts"
+        },
+        "deliveryProduct": {
+          "label": "Zustellung",
+          "cheap": "Günstig (B-Post)",
+          "fast": "Schnell (A-Post)",
+          "premium": "Premium",
+          "registered": "Eingeschrieben",
+          "bulk": "Massensendung"
+        },
+        "printMode": {
+          "label": "Druck",
+          "simplex": "Einseitig",
+          "duplex": "Beidseitig"
+        },
+        "printSpectrum": {
+          "label": "Farbe",
+          "grayscale": "Graustufen",
+          "color": "Farbig"
+        }
+      }
     },
     "mailLog": {
       "title": "Gesendete E-Mails",
@@ -2959,7 +2983,8 @@
         "all": "Alle",
         "title": "Filter",
         "reset": "Filter zurücksetzen",
-        "typeHint": "Wodurch der Versand angestossen wurde."
+        "typeHint": "Wodurch der Versand angestossen wurde.",
+        "channel": "Versand"
       },
       "types": {
         "subscriptionFlow": "Abo-Mailing",
@@ -3062,7 +3087,27 @@
           "name": "rejected — Abgewiesen",
           "meaning": "Die E-Mail wurde nie verschickt. Entweder konnte We.Publish sie nicht übergeben (fehlende oder falsche Anbieter-Konfiguration), oder der Anbieter hat sie von vornherein verweigert: nicht verifizierte Absenderdomain («unsigned»), Adresse auf der Sperrliste des Anbieters nach früherem Hard Bounce oder Spam-Beschwerde, abgemeldeter Empfänger, oder das Sendelimit des Kontos ist erreicht.",
           "next": "Die Spalte «Fehler» nennt den Grund – fahre mit der Maus darüber für Ursache und Behebung. Ursache beheben und erneut senden: automatisch wiederholt wird nichts."
+        },
+        "dispatched": {
+          "name": "Aufgegeben",
+          "meaning": "Der Druckdienstleister hat den Brief gedruckt und der Post übergeben.",
+          "next": "Nichts zu tun. Der Status wechselt auf zugestellt, sobald die Post die Zustellung meldet."
+        },
+        "undeliverable": {
+          "name": "Unzustellbar",
+          "meaning": "Die Post konnte den Brief nicht zustellen und hat ihn retourniert.",
+          "next": "Adresse der Empfängerin oder des Empfängers prüfen und den Brief erneut senden."
+        },
+        "canceled": {
+          "name": "Storniert",
+          "meaning": "Der Brief wurde zurückgezogen, bevor er gedruckt wurde.",
+          "next": "Nichts zu tun. Es wurde nichts gedruckt und nichts verrechnet."
         }
+      },
+      "channel": "Versand",
+      "channels": {
+        "mail": "E-Mail",
+        "letter": "Brief"
       }
     },
     "userMail": {
@@ -3128,85 +3173,6 @@
         "sentAt": "Gesendet am",
         "attempts": "Versuche",
         "empty": "Keine Einträge für diesen Filter."
-      }
-    },
-    "letterLog": {
-      "title": "Versendete Briefe",
-      "created": "Erstellt",
-      "state": "Status",
-      "states": {
-        "pending": "In Arbeit",
-        "submitted": "Übergeben",
-        "accepted": "Angenommen",
-        "dispatched": "Aufgegeben",
-        "delivered": "Zugestellt",
-        "undeliverable": "Unzustellbar",
-        "rejected": "Abgelehnt",
-        "canceled": "Storniert"
-      },
-      "allStates": "Alle Status",
-      "recipient": "Empfänger*in",
-      "pages": "Seiten",
-      "tracking": "Sendungsnummer",
-      "actions": "Aktionen",
-      "dispatch": "Versenden",
-      "cancel": "Stornieren"
-    },
-    "organisationSettings": {
-      "title": "Organisation",
-      "hint": "Diese Angaben stehen als Absender auf jedem Brief und als Zahlungsempfänger auf jeder QR-Rechnung.",
-      "sender": "Absender",
-      "qrBill": "QR-Rechnung",
-      "name": "Name",
-      "street": "Strasse",
-      "number": "Nummer",
-      "zip": "PLZ",
-      "city": "Ort",
-      "country": "Land (ISO, z.B. CH)",
-      "iban": "IBAN",
-      "ibanHint": "Für eine QR-Referenz wird eine QR-IBAN benötigt, für eine Creditor Reference eine normale IBAN.",
-      "referenceType": "Referenzart",
-      "referenceTypes": {
-        "QRR": "QR-Referenz (QRR)",
-        "SCOR": "Creditor Reference (SCOR)",
-        "NON": "Ohne Referenz"
-      },
-      "referenceTypeHint": "Die Referenz verbindet eine Zahlung mit der Rechnung. Ohne Referenz muss von Hand zugeordnet werden.",
-      "save": "Speichern",
-      "saved": "Einstellungen gespeichert"
-    },
-    "letterPrint": {
-      "title": "Druck- und Versandoptionen",
-      "sendAsMail": "Als E-Mail senden",
-      "sendAsLetter": "Als Brief senden",
-      "close": "Schliessen",
-      "addressPosition": "Position Adressfenster",
-      "addressPositions": {
-        "LEFT": "Links",
-        "RIGHT": "Rechts"
-      },
-      "deliveryProduct": "Versandart",
-      "deliveryProducts": {
-        "CHEAP": "Günstig (B-Post)",
-        "FAST": "Schnell (A-Post)",
-        "PREMIUM": "Premium",
-        "REGISTERED": "Eingeschrieben",
-        "BULK": "Massensendung"
-      },
-      "printMode": "Druck",
-      "printModes": {
-        "SIMPLEX": "Einseitig",
-        "DUPLEX": "Beidseitig"
-      },
-      "printSpectrum": "Farbe",
-      "printSpectra": {
-        "GRAYSCALE": "Schwarz/Weiss",
-        "COLOR": "Farbig"
-      },
-      "qrBill": "QR-Rechnung",
-      "qrBills": {
-        "NONE": "Keine",
-        "LAST_PAGE": "Auf der letzten Seite"
       }
     }
   }

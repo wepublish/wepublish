@@ -1,181 +1,200 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import {
   LetterAddressPosition,
   LetterDeliveryProduct,
   LetterPrintMode,
   LetterPrintSpectrum,
-  LetterQrBill,
-  MessageChannel,
+  MailChannel,
+  MailLogState,
+  MailLogType,
+  Prisma,
   PrismaClient,
 } from '@prisma/client';
+import { randomUUID } from 'crypto';
 import { BaseLetterProvider } from './letter-provider/base-letter-provider';
 import {
   LetterAddress,
-  LetterAddressPosition as ProviderAddressPosition,
-  LetterDeliveryProduct as ProviderDeliveryProduct,
-  LetterPrintMode as ProviderPrintMode,
-  LetterPrintSpectrum as ProviderPrintSpectrum,
-  SendLetterResult,
+  LetterState,
 } from './letter-provider/letter-provider.interface';
+import { toLetterAddress, UserWithAddress } from './letter-recipient';
 import { composeLetter, LetterTemplateContent } from './letter-renderer';
 import { PdfRenderer } from './pdf/pdf-renderer';
-import { QrBillInvoice, QrBillService } from './qr-bill/qr-bill.service';
-import { OrganisationService } from './organisation/organisation.service';
 
 export interface LetterContextProps {
   letterProvider: BaseLetterProvider;
   prisma: PrismaClient;
   pdfRenderer: PdfRenderer;
-  qrBill: QrBillService;
-  organisation: OrganisationService;
 }
 
-/**
- * The print options a flow step carries. They live on the step, not on the
- * template: the same words can go out as a cheap reminder and as an A-Post
- * final notice.
- */
+/** How a letter is printed and posted. Chosen per send, not per template. */
 export interface LetterPrintSettings {
   addressPosition: LetterAddressPosition;
   deliveryProduct: LetterDeliveryProduct;
   printMode: LetterPrintMode;
   printSpectrum: LetterPrintSpectrum;
-  qrBill: LetterQrBill;
 }
 
 export interface RenderLetterProps {
   template: LetterTemplateContent;
-  print: Pick<LetterPrintSettings, 'addressPosition' | 'qrBill'>;
+  addressPosition: LetterAddressPosition;
   data: Record<string, any>;
   recipient: LetterAddress;
-  invoice?: QrBillInvoice | null;
-  persistReference?: boolean;
 }
 
-export interface SendComposedLetterProps {
+export interface SendTemplateLetterProps {
   mailTemplateId: string;
-  letterLogID: string;
-  recipient: LetterAddress;
+  recipient: UserWithAddress;
   data: Record<string, any>;
   print: LetterPrintSettings;
-  invoice?: QrBillInvoice | null;
+  /** Id the log entry has to be written under, so the caller can reference it. */
+  mailLogId?: string;
+  mailSendJobId?: string | null;
 }
 
-export function toAddressPosition(
-  addressPosition: LetterAddressPosition
-): ProviderAddressPosition {
-  return addressPosition === LetterAddressPosition.RIGHT ? 'right' : 'left';
+/** The letter states that map onto a mail log state one-to-one. */
+const LOG_STATES: Record<LetterState, MailLogState> = {
+  [LetterState.submitted]: MailLogState.submitted,
+  [LetterState.accepted]: MailLogState.accepted,
+  [LetterState.dispatched]: MailLogState.dispatched,
+  [LetterState.delivered]: MailLogState.delivered,
+  [LetterState.undeliverable]: MailLogState.undeliverable,
+  [LetterState.rejected]: MailLogState.rejected,
+  [LetterState.canceled]: MailLogState.canceled,
+};
+
+export function toProviderState(state: LetterState): MailLogState {
+  return LOG_STATES[state];
 }
 
-export function toDeliveryProduct(
-  deliveryProduct: LetterDeliveryProduct
-): ProviderDeliveryProduct {
-  return deliveryProduct.toLowerCase() as ProviderDeliveryProduct;
-}
-
-export function toPrintMode(printMode: LetterPrintMode): ProviderPrintMode {
-  return printMode.toLowerCase() as ProviderPrintMode;
-}
-
-export function toPrintSpectrum(
-  printSpectrum: LetterPrintSpectrum
-): ProviderPrintSpectrum {
-  return printSpectrum.toLowerCase() as ProviderPrintSpectrum;
-}
-
+/**
+ * Sends a mail template as a printed letter. The counterpart of `MailContext`:
+ * same templates, same log, different medium.
+ */
 @Injectable()
 export class LetterContext {
+  private readonly logger = new Logger('LetterContext');
+
   letterProvider: BaseLetterProvider;
   prisma: PrismaClient;
   pdfRenderer: PdfRenderer;
-  qrBill: QrBillService;
-  organisation: OrganisationService;
 
   constructor(props: LetterContextProps) {
     this.letterProvider = props.letterProvider;
     this.prisma = props.prisma;
     this.pdfRenderer = props.pdfRenderer;
-    this.qrBill = props.qrBill;
-    this.organisation = props.organisation;
   }
 
+  /** Render a template as the pdf that would be printed. */
   async renderLetter({
     template,
-    print,
+    addressPosition,
     data,
     recipient,
-    invoice,
-    persistReference,
   }: RenderLetterProps): Promise<Buffer> {
-    const sender = await this.organisation.getSenderAddress();
-
-    let qrBillSvg: string | undefined;
-
-    if (print.qrBill === LetterQrBill.LAST_PAGE) {
-      if (!invoice) {
-        throw new Error(
-          'The letter template asks for a QR bill but no invoice is bound to this send'
-        );
-      }
-
-      qrBillSvg = await this.qrBill.build({
-        invoice,
-        debtor: recipient,
-        persistReference,
-      });
-    }
-
-    const html = composeLetter({
-      template,
-      data,
-      recipient,
-      sender,
-      addressPosition: toAddressPosition(print.addressPosition),
-      qrBillSvg,
-    });
-
-    return this.pdfRenderer.render(html);
+    return this.pdfRenderer.render(
+      composeLetter({
+        template,
+        data,
+        recipient,
+        addressPosition,
+      })
+    );
   }
 
-  async sendComposedLetter({
-    mailTemplateId,
-    letterLogID,
-    recipient,
-    data,
-    print,
-    invoice,
-  }: SendComposedLetterProps): Promise<SendLetterResult> {
+  /**
+   * Render one letter, hand it to the print vendor and record the outcome in
+   * the mail log. Throws if either step fails; the log entry is written either
+   * way, so a failed letter leaves a trace like a failed mail does.
+   */
+  async sendLetter(props: SendTemplateLetterProps): Promise<string> {
+    const mailLogId = props.mailLogId ?? randomUUID();
+    const address = toLetterAddress(props.recipient);
+
     const template = await this.prisma.mailTemplate.findUnique({
-      where: { id: mailTemplateId },
+      where: { id: props.mailTemplateId },
     });
 
     if (!template) {
-      throw new Error(`MailTemplate <${mailTemplateId}> not found!`);
+      throw new Error(`MailTemplate <${props.mailTemplateId}> not found!`);
     }
 
-    if (!template.channels.includes(MessageChannel.LETTER)) {
-      throw new Error(
-        `MailTemplate <${mailTemplateId}> is not marked for print. Tag it for the letter channel first.`
+    try {
+      const file = await this.renderLetter({
+        template: { htmlContent: template.htmlContent },
+        addressPosition: props.print.addressPosition,
+        data: props.data,
+        recipient: address,
+      });
+
+      const result = await this.letterProvider.sendLetter({
+        letterLogID: mailLogId,
+        file,
+        recipient: address,
+        ...props.print,
+      });
+
+      await this.writeLog(mailLogId, props, template.subject, address, {
+        state: LOG_STATES[result.state],
+        providerLetterID: result.providerLetterID,
+        letterData: result.letterData,
+      });
+    } catch (error) {
+      await this.writeLog(mailLogId, props, template.subject, address, {
+        state: MailLogState.rejected,
+        error: (error as Error).message,
+      });
+
+      throw error;
+    }
+
+    return mailLogId;
+  }
+
+  private async writeLog(
+    mailLogId: string,
+    props: SendTemplateLetterProps,
+    subject: string,
+    address: LetterAddress,
+    outcome: {
+      state: MailLogState;
+      providerLetterID?: string;
+      letterData?: string;
+      error?: string;
+    }
+  ): Promise<void> {
+    try {
+      await this.prisma.mailLog.create({
+        data: {
+          id: mailLogId,
+          channel: MailChannel.letter,
+          recipient: { connect: { id: props.recipient.id } },
+          mailTemplate: { connect: { id: props.mailTemplateId } },
+          ...(props.mailSendJobId ?
+            { mailSendJob: { connect: { id: props.mailSendJobId } } }
+          : {}),
+          state: outcome.state,
+          type: MailLogType.manual,
+          sentDate: new Date(),
+          subject,
+          mailProviderID: this.letterProvider.id,
+          mailIdentifier: mailLogId,
+          providerLetterID: outcome.providerLetterID ?? null,
+          mailData: outcome.letterData ?? null,
+          error: outcome.error ?? null,
+          addressSnapshot: address as unknown as Prisma.InputJsonValue,
+        },
+      });
+    } catch (logError) {
+      // Never let bookkeeping mask the delivery outcome.
+      this.logger.error(
+        `Could not write letter log <${mailLogId}>: ${
+          (logError as Error).message
+        }`
       );
+
+      if (outcome.state !== MailLogState.rejected) {
+        throw logError;
+      }
     }
-
-    const file = await this.renderLetter({
-      template: { htmlContent: template.htmlContent },
-      print,
-      data,
-      recipient,
-      invoice,
-    });
-
-    return this.letterProvider.sendLetter({
-      letterLogID,
-      file,
-      recipient,
-      sender: await this.organisation.getSenderAddress(),
-      addressPosition: toAddressPosition(print.addressPosition),
-      deliveryProduct: toDeliveryProduct(print.deliveryProduct),
-      printMode: toPrintMode(print.printMode),
-      printSpectrum: toPrintSpectrum(print.printSpectrum),
-    });
   }
 }

@@ -52,7 +52,6 @@ const mockTemplate1: MailTemplate = {
   textContent: null,
   externalMailTemplateId: null,
   context: null,
-  channels: [],
   createdAt: new Date(),
   modifiedAt: new Date(),
 };
@@ -66,7 +65,6 @@ const mockTemplate2: MailTemplate = {
   textContent: null,
   externalMailTemplateId: null,
   context: null,
-  channels: [],
   createdAt: new Date(),
   modifiedAt: new Date(),
 };
