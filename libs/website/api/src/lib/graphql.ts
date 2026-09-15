@@ -1687,6 +1687,46 @@ export type KeyEnabledInput = {
   key?: InputMaybe<Scalars['String']>;
 };
 
+/** Where the address window sits on the printed sheet. */
+export enum LetterAddressPosition {
+  Left = 'left',
+  Right = 'right'
+}
+
+export enum LetterDeliveryProduct {
+  Bulk = 'bulk',
+  Cheap = 'cheap',
+  Fast = 'fast',
+  Premium = 'premium',
+  Registered = 'registered'
+}
+
+export type LetterPrintInput = {
+  addressPosition?: InputMaybe<LetterAddressPosition>;
+  deliveryProduct?: InputMaybe<LetterDeliveryProduct>;
+  printMode?: InputMaybe<LetterPrintMode>;
+  printSpectrum?: InputMaybe<LetterPrintSpectrum>;
+};
+
+export enum LetterPrintMode {
+  Duplex = 'duplex',
+  Simplex = 'simplex'
+}
+
+export enum LetterPrintSpectrum {
+  Color = 'color',
+  Grayscale = 'grayscale'
+}
+
+export enum LetterProviderEnvironment {
+  Production = 'production',
+  Staging = 'staging'
+}
+
+export enum LetterProviderType {
+  Pingen = 'pingen'
+}
+
 export type ListicleBlock = BaseBlock & {
   __typename?: 'ListicleBlock';
   blockStyle?: Maybe<Scalars['String']>;
@@ -1742,7 +1782,14 @@ export type MailAudienceInput = {
   subscriptionState?: InputMaybe<MailSubscriptionState>;
 };
 
+/** Whether a send goes out as an email or as a printed letter. */
+export enum MailChannel {
+  Letter = 'letter',
+  Mail = 'mail'
+}
+
 export type MailLogFilter = {
+  channel?: InputMaybe<MailChannel>;
   mailSendJobId?: InputMaybe<Scalars['String']>;
   mailTemplateId?: InputMaybe<Scalars['String']>;
   recipientId?: InputMaybe<Scalars['String']>;
@@ -1752,6 +1799,9 @@ export type MailLogFilter = {
 
 export type MailLogModel = {
   __typename?: 'MailLogModel';
+  /** Letters only: the address the letter was sent to. */
+  address?: Maybe<Scalars['String']>;
+  channel: MailChannel;
   createdAt: Scalars['DateTime'];
   /** Why a rejected mail could not be delivered. */
   error?: Maybe<Scalars['String']>;
@@ -1759,6 +1809,8 @@ export type MailLogModel = {
   mailProviderID: Scalars['String'];
   mailSendJobId?: Maybe<Scalars['String']>;
   mailTemplate: MailLogTemplate;
+  /** Letters only: id the print vendor assigned to the letter. */
+  providerLetterID?: Maybe<Scalars['String']>;
   recipient: MailLogRecipient;
   sentDate: Scalars['DateTime'];
   state: MailLogState;
@@ -1777,10 +1829,13 @@ export type MailLogRecipient = {
 export enum MailLogState {
   Accepted = 'accepted',
   Bounced = 'bounced',
+  Canceled = 'canceled',
   Deferred = 'deferred',
   Delivered = 'delivered',
+  Dispatched = 'dispatched',
   Rejected = 'rejected',
-  Submitted = 'submitted'
+  Submitted = 'submitted',
+  Undeliverable = 'undeliverable'
 }
 
 export type MailLogSyncModel = {
@@ -1833,12 +1888,17 @@ export enum MailSendAudience {
 
 export type MailSendJobInput = {
   audience: MailAudienceInput;
+  /** Defaults to mail. */
+  channel?: InputMaybe<MailChannel>;
   mailTemplateId: Scalars['String'];
+  /** Letter sends only. Ignored for mail. */
+  print?: InputMaybe<LetterPrintInput>;
 };
 
 export type MailSendJobModel = {
   __typename?: 'MailSendJobModel';
   audience: MailSendAudience;
+  channel: MailChannel;
   createdAt: Scalars['DateTime'];
   createdByUserId: Scalars['String'];
   error?: Maybe<Scalars['String']>;
@@ -1892,14 +1952,20 @@ export enum MailSendJobState {
 
 export type MailSendPreviewInput = {
   audience: MailAudienceInput;
+  /** Defaults to mail. A letter preview renders the pdf. */
+  channel?: InputMaybe<MailChannel>;
   mailTemplateId: Scalars['String'];
+  print?: InputMaybe<LetterPrintInput>;
   /** Row id of the recipient to render for. Defaults to the first of the audience. */
   recipientId?: InputMaybe<Scalars['String']>;
 };
 
 export type MailSendPreviewModel = {
   __typename?: 'MailSendPreviewModel';
+  /** Empty for a letter preview. */
   html: Scalars['String'];
+  /** Letter previews only: the rendered pdf, base64 encoded, exactly as it would be printed. */
+  pdf?: Maybe<Scalars['String']>;
   /** The recipient this preview was rendered for. */
   recipient?: Maybe<MailSendRecipientModel>;
   subject: Scalars['String'];
@@ -1926,6 +1992,8 @@ export type MailSendRecipientPreview = {
   count: Scalars['Int'];
   /** Number of distinct people reached. Lower than `count` when someone has several matching subscriptions. */
   userCount: Scalars['Int'];
+  /** How many of the recipients have no usable postal address and would be skipped by a letter send. */
+  withoutAddressCount: Scalars['Int'];
 };
 
 export enum MailSubscriptionState {
@@ -2551,6 +2619,8 @@ export type Mutation = {
   updateImage: Image;
   /** Updates an existing invoice. */
   updateInvoice: Invoice;
+  /** Updates an existing letter provider setting. */
+  updateLetterProviderSetting: SettingLetterProvider;
   /** Updates an existing mail provider setting. */
   updateMailProviderSetting: SettingMailProvider;
   /** Update an existing mail template */
@@ -3654,6 +3724,18 @@ export type MutationUpdateInvoiceArgs = {
   manuallySetAsPaidByUserId?: InputMaybe<Scalars['String']>;
   scheduledDeactivationAt?: InputMaybe<Scalars['DateTime']>;
   subscriptionID?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationUpdateLetterProviderSettingArgs = {
+  autoSend?: InputMaybe<Scalars['Boolean']>;
+  clientId?: InputMaybe<Scalars['String']>;
+  clientSecret?: InputMaybe<Scalars['String']>;
+  environment?: InputMaybe<LetterProviderEnvironment>;
+  id?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  organisationId?: InputMaybe<Scalars['String']>;
+  webhookSigningKey?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -5015,6 +5097,10 @@ export type Query = {
   invoice: Invoice;
   /** Returns a paginated list of invoices based on the filters given. */
   invoices: InvoiceConnection;
+  /** Returns a single letter provider setting by id. */
+  letterProviderSetting: SettingLetterProvider;
+  /** Returns all letter provider settings. */
+  letterProviderSettings: Array<SettingLetterProvider>;
   /** Paginated list of sent mails */
   mailLogs: PaginatedMailLog;
   /** Returns a single mail provider setting by id. */
@@ -5489,6 +5575,16 @@ export type QueryInvoicesArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   sort?: InputMaybe<InvoiceSort>;
   take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryLetterProviderSettingArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QueryLetterProviderSettingsArgs = {
+  filter?: InputMaybe<SettingLetterProviderFilter>;
 };
 
 
@@ -6107,6 +6203,26 @@ export type SettingChallengeProviderFilter = {
 
 export type SettingFilter = {
   name?: InputMaybe<Scalars['String']>;
+};
+
+export type SettingLetterProvider = SettingProvider & {
+  __typename?: 'SettingLetterProvider';
+  autoSend: Scalars['Boolean'];
+  clientId?: Maybe<Scalars['String']>;
+  createdAt: Scalars['DateTime'];
+  environment: LetterProviderEnvironment;
+  id: Scalars['String'];
+  lastLoadedAt: Scalars['DateTime'];
+  modifiedAt: Scalars['DateTime'];
+  name?: Maybe<Scalars['String']>;
+  organisationId?: Maybe<Scalars['String']>;
+  type: LetterProviderType;
+};
+
+export type SettingLetterProviderFilter = {
+  id?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  type?: InputMaybe<LetterProviderType>;
 };
 
 export type SettingMailProvider = SettingProvider & {
@@ -12230,6 +12346,7 @@ export type VersionInformationQueryResult = Apollo.QueryResult<VersionInformatio
       "SettingAIProvider",
       "SettingAnalyticsProvider",
       "SettingChallengeProvider",
+      "SettingLetterProvider",
       "SettingMailProvider",
       "SettingPaymentProvider",
       "SettingSyncProvider",

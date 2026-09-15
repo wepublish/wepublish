@@ -1,5 +1,6 @@
 import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { MailSendJobRecipientState, PrismaClient } from '@prisma/client';
+import { formatAddressLines, LetterAddress } from '@wepublish/letter/api';
 import { CurrentUser, UserSession } from '@wepublish/authentication/api';
 import { Permissions } from '@wepublish/permissions/api';
 import { CanGetMailLogs, CanSendMailTemplates } from '@wepublish/permissions';
@@ -48,14 +49,16 @@ export class MailSendResolver {
   async mailSendRecipientPreview(
     @Args('audience') audience: MailAudienceInput
   ): Promise<MailSendRecipientPreview> {
-    const [count, userCount] = await Promise.all([
+    const [count, userCount, withoutAddressCount] = await Promise.all([
       this.recipientService.count(audience),
       this.recipientService.countUsers(audience),
+      this.recipientService.countWithoutAddress(audience),
     ]);
 
     return {
       count,
       userCount,
+      withoutAddressCount,
       allowsSubscriptionTemplates:
         this.recipientService.allowsSubscriptionTemplates(audience),
     };
@@ -121,6 +124,7 @@ export class MailSendResolver {
       subject: result.subject,
       html: result.html,
       text: result.text,
+      pdf: result.pdf,
       recipient:
         result.recipient ?
           {
@@ -290,6 +294,7 @@ export class MailSendResolver {
       recipientID: filter?.recipientId,
       state: filter?.state,
       type: filter?.type,
+      channel: filter?.channel,
       mailSendJobId: filter?.mailSendJobId,
     };
 
@@ -307,7 +312,18 @@ export class MailSendResolver {
       }),
     ]);
 
-    return this.paginate(logs, totalCount, skip, boundedTake);
+    const rows = logs.map(log => ({
+      ...log,
+      // Flattened for display: the snapshot is only ever read as one line.
+      address:
+        log.addressSnapshot ?
+          formatAddressLines(
+            log.addressSnapshot as unknown as LetterAddress
+          ).join(', ')
+        : null,
+    }));
+
+    return this.paginate(rows, totalCount, skip, boundedTake);
   }
 
   @Permissions(CanGetMailLogs)

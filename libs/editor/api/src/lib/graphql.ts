@@ -1687,6 +1687,46 @@ export type KeyEnabledInput = {
   key?: InputMaybe<Scalars['String']>;
 };
 
+/** Where the address window sits on the printed sheet. */
+export enum LetterAddressPosition {
+  Left = 'left',
+  Right = 'right'
+}
+
+export enum LetterDeliveryProduct {
+  Bulk = 'bulk',
+  Cheap = 'cheap',
+  Fast = 'fast',
+  Premium = 'premium',
+  Registered = 'registered'
+}
+
+export type LetterPrintInput = {
+  addressPosition?: InputMaybe<LetterAddressPosition>;
+  deliveryProduct?: InputMaybe<LetterDeliveryProduct>;
+  printMode?: InputMaybe<LetterPrintMode>;
+  printSpectrum?: InputMaybe<LetterPrintSpectrum>;
+};
+
+export enum LetterPrintMode {
+  Duplex = 'duplex',
+  Simplex = 'simplex'
+}
+
+export enum LetterPrintSpectrum {
+  Color = 'color',
+  Grayscale = 'grayscale'
+}
+
+export enum LetterProviderEnvironment {
+  Production = 'production',
+  Staging = 'staging'
+}
+
+export enum LetterProviderType {
+  Pingen = 'pingen'
+}
+
 export type ListicleBlock = BaseBlock & {
   __typename?: 'ListicleBlock';
   blockStyle?: Maybe<Scalars['String']>;
@@ -1742,7 +1782,14 @@ export type MailAudienceInput = {
   subscriptionState?: InputMaybe<MailSubscriptionState>;
 };
 
+/** Whether a send goes out as an email or as a printed letter. */
+export enum MailChannel {
+  Letter = 'letter',
+  Mail = 'mail'
+}
+
 export type MailLogFilter = {
+  channel?: InputMaybe<MailChannel>;
   mailSendJobId?: InputMaybe<Scalars['String']>;
   mailTemplateId?: InputMaybe<Scalars['String']>;
   recipientId?: InputMaybe<Scalars['String']>;
@@ -1752,6 +1799,9 @@ export type MailLogFilter = {
 
 export type MailLogModel = {
   __typename?: 'MailLogModel';
+  /** Letters only: the address the letter was sent to. */
+  address?: Maybe<Scalars['String']>;
+  channel: MailChannel;
   createdAt: Scalars['DateTime'];
   /** Why a rejected mail could not be delivered. */
   error?: Maybe<Scalars['String']>;
@@ -1759,6 +1809,8 @@ export type MailLogModel = {
   mailProviderID: Scalars['String'];
   mailSendJobId?: Maybe<Scalars['String']>;
   mailTemplate: MailLogTemplate;
+  /** Letters only: id the print vendor assigned to the letter. */
+  providerLetterID?: Maybe<Scalars['String']>;
   recipient: MailLogRecipient;
   sentDate: Scalars['DateTime'];
   state: MailLogState;
@@ -1777,10 +1829,13 @@ export type MailLogRecipient = {
 export enum MailLogState {
   Accepted = 'accepted',
   Bounced = 'bounced',
+  Canceled = 'canceled',
   Deferred = 'deferred',
   Delivered = 'delivered',
+  Dispatched = 'dispatched',
   Rejected = 'rejected',
-  Submitted = 'submitted'
+  Submitted = 'submitted',
+  Undeliverable = 'undeliverable'
 }
 
 export type MailLogSyncModel = {
@@ -1833,12 +1888,17 @@ export enum MailSendAudience {
 
 export type MailSendJobInput = {
   audience: MailAudienceInput;
+  /** Defaults to mail. */
+  channel?: InputMaybe<MailChannel>;
   mailTemplateId: Scalars['String'];
+  /** Letter sends only. Ignored for mail. */
+  print?: InputMaybe<LetterPrintInput>;
 };
 
 export type MailSendJobModel = {
   __typename?: 'MailSendJobModel';
   audience: MailSendAudience;
+  channel: MailChannel;
   createdAt: Scalars['DateTime'];
   createdByUserId: Scalars['String'];
   error?: Maybe<Scalars['String']>;
@@ -1892,14 +1952,20 @@ export enum MailSendJobState {
 
 export type MailSendPreviewInput = {
   audience: MailAudienceInput;
+  /** Defaults to mail. A letter preview renders the pdf. */
+  channel?: InputMaybe<MailChannel>;
   mailTemplateId: Scalars['String'];
+  print?: InputMaybe<LetterPrintInput>;
   /** Row id of the recipient to render for. Defaults to the first of the audience. */
   recipientId?: InputMaybe<Scalars['String']>;
 };
 
 export type MailSendPreviewModel = {
   __typename?: 'MailSendPreviewModel';
+  /** Empty for a letter preview. */
   html: Scalars['String'];
+  /** Letter previews only: the rendered pdf, base64 encoded, exactly as it would be printed. */
+  pdf?: Maybe<Scalars['String']>;
   /** The recipient this preview was rendered for. */
   recipient?: Maybe<MailSendRecipientModel>;
   subject: Scalars['String'];
@@ -1926,6 +1992,8 @@ export type MailSendRecipientPreview = {
   count: Scalars['Int'];
   /** Number of distinct people reached. Lower than `count` when someone has several matching subscriptions. */
   userCount: Scalars['Int'];
+  /** How many of the recipients have no usable postal address and would be skipped by a letter send. */
+  withoutAddressCount: Scalars['Int'];
 };
 
 export enum MailSubscriptionState {
@@ -2551,6 +2619,8 @@ export type Mutation = {
   updateImage: Image;
   /** Updates an existing invoice. */
   updateInvoice: Invoice;
+  /** Updates an existing letter provider setting. */
+  updateLetterProviderSetting: SettingLetterProvider;
   /** Updates an existing mail provider setting. */
   updateMailProviderSetting: SettingMailProvider;
   /** Update an existing mail template */
@@ -3654,6 +3724,18 @@ export type MutationUpdateInvoiceArgs = {
   manuallySetAsPaidByUserId?: InputMaybe<Scalars['String']>;
   scheduledDeactivationAt?: InputMaybe<Scalars['DateTime']>;
   subscriptionID?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationUpdateLetterProviderSettingArgs = {
+  autoSend?: InputMaybe<Scalars['Boolean']>;
+  clientId?: InputMaybe<Scalars['String']>;
+  clientSecret?: InputMaybe<Scalars['String']>;
+  environment?: InputMaybe<LetterProviderEnvironment>;
+  id?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  organisationId?: InputMaybe<Scalars['String']>;
+  webhookSigningKey?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -5015,6 +5097,10 @@ export type Query = {
   invoice: Invoice;
   /** Returns a paginated list of invoices based on the filters given. */
   invoices: InvoiceConnection;
+  /** Returns a single letter provider setting by id. */
+  letterProviderSetting: SettingLetterProvider;
+  /** Returns all letter provider settings. */
+  letterProviderSettings: Array<SettingLetterProvider>;
   /** Paginated list of sent mails */
   mailLogs: PaginatedMailLog;
   /** Returns a single mail provider setting by id. */
@@ -5489,6 +5575,16 @@ export type QueryInvoicesArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   sort?: InputMaybe<InvoiceSort>;
   take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryLetterProviderSettingArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QueryLetterProviderSettingsArgs = {
+  filter?: InputMaybe<SettingLetterProviderFilter>;
 };
 
 
@@ -6107,6 +6203,26 @@ export type SettingChallengeProviderFilter = {
 
 export type SettingFilter = {
   name?: InputMaybe<Scalars['String']>;
+};
+
+export type SettingLetterProvider = SettingProvider & {
+  __typename?: 'SettingLetterProvider';
+  autoSend: Scalars['Boolean'];
+  clientId?: Maybe<Scalars['String']>;
+  createdAt: Scalars['DateTime'];
+  environment: LetterProviderEnvironment;
+  id: Scalars['String'];
+  lastLoadedAt: Scalars['DateTime'];
+  modifiedAt: Scalars['DateTime'];
+  name?: Maybe<Scalars['String']>;
+  organisationId?: Maybe<Scalars['String']>;
+  type: LetterProviderType;
+};
+
+export type SettingLetterProviderFilter = {
+  id?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  type?: InputMaybe<LetterProviderType>;
 };
 
 export type SettingMailProvider = SettingProvider & {
@@ -8205,7 +8321,7 @@ export type MarkInvoiceAsPaidMutationVariables = Exact<{
 
 export type MarkInvoiceAsPaidMutation = { __typename?: 'Mutation', markInvoiceAsPaid: { __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number, goodieId?: string | null, goodie?: { __typename?: 'Goodie', id: string, name: string } | null }> } };
 
-export type FullMailLogFragment = { __typename?: 'MailLogModel', id: string, createdAt: string, sentDate: string, state: MailLogState, type?: MailLogType | null, subject?: string | null, error?: string | null, mailProviderID: string, mailSendJobId?: string | null, recipient: { __typename?: 'MailLogRecipient', id: string, email: string, name: string, firstName?: string | null }, mailTemplate: { __typename?: 'MailLogTemplate', id: string, name: string } };
+export type FullMailLogFragment = { __typename?: 'MailLogModel', id: string, createdAt: string, sentDate: string, state: MailLogState, type?: MailLogType | null, channel: MailChannel, providerLetterID?: string | null, address?: string | null, subject?: string | null, error?: string | null, mailProviderID: string, mailSendJobId?: string | null, recipient: { __typename?: 'MailLogRecipient', id: string, email: string, name: string, firstName?: string | null }, mailTemplate: { __typename?: 'MailLogTemplate', id: string, name: string } };
 
 export type SyncMailLogStatesMutationVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']>;
@@ -8221,16 +8337,16 @@ export type MailLogsQueryVariables = Exact<{
 }>;
 
 
-export type MailLogsQuery = { __typename?: 'Query', mailLogs: { __typename?: 'PaginatedMailLog', totalCount: number, nodes: Array<{ __typename?: 'MailLogModel', id: string, createdAt: string, sentDate: string, state: MailLogState, type?: MailLogType | null, subject?: string | null, error?: string | null, mailProviderID: string, mailSendJobId?: string | null, recipient: { __typename?: 'MailLogRecipient', id: string, email: string, name: string, firstName?: string | null }, mailTemplate: { __typename?: 'MailLogTemplate', id: string, name: string } }>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } };
+export type MailLogsQuery = { __typename?: 'Query', mailLogs: { __typename?: 'PaginatedMailLog', totalCount: number, nodes: Array<{ __typename?: 'MailLogModel', id: string, createdAt: string, sentDate: string, state: MailLogState, type?: MailLogType | null, channel: MailChannel, providerLetterID?: string | null, address?: string | null, subject?: string | null, error?: string | null, mailProviderID: string, mailSendJobId?: string | null, recipient: { __typename?: 'MailLogRecipient', id: string, email: string, name: string, firstName?: string | null }, mailTemplate: { __typename?: 'MailLogTemplate', id: string, name: string } }>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } };
 
-export type FullMailSendJobFragment = { __typename?: 'MailSendJobModel', id: string, createdAt: string, modifiedAt: string, status: MailSendJobState, audience: MailSendAudience, totalCount: number, sentCount: number, failedCount: number, sendingCount: number, resumeCount: number, startedAt?: string | null, finishedAt?: string | null, heartbeatAt?: string | null, error?: string | null, mailTemplate?: { __typename?: 'MailLogTemplate', id: string, name: string } | null };
+export type FullMailSendJobFragment = { __typename?: 'MailSendJobModel', id: string, createdAt: string, modifiedAt: string, status: MailSendJobState, audience: MailSendAudience, channel: MailChannel, totalCount: number, sentCount: number, failedCount: number, sendingCount: number, resumeCount: number, startedAt?: string | null, finishedAt?: string | null, heartbeatAt?: string | null, error?: string | null, mailTemplate?: { __typename?: 'MailLogTemplate', id: string, name: string } | null };
 
 export type MailSendRecipientPreviewQueryVariables = Exact<{
   audience: MailAudienceInput;
 }>;
 
 
-export type MailSendRecipientPreviewQuery = { __typename?: 'Query', mailSendRecipientPreview: { __typename?: 'MailSendRecipientPreview', count: number, userCount: number, allowsSubscriptionTemplates: boolean } };
+export type MailSendRecipientPreviewQuery = { __typename?: 'Query', mailSendRecipientPreview: { __typename?: 'MailSendRecipientPreview', count: number, userCount: number, withoutAddressCount: number, allowsSubscriptionTemplates: boolean } };
 
 export type MailSendRecipientsQueryVariables = Exact<{
   audience: MailAudienceInput;
@@ -8246,7 +8362,7 @@ export type MailSendPreviewQueryVariables = Exact<{
 }>;
 
 
-export type MailSendPreviewQuery = { __typename?: 'Query', mailSendPreview: { __typename?: 'MailSendPreviewModel', subject: string, html: string, recipient?: { __typename?: 'MailSendRecipientModel', id: string, email: string, name: string, firstName?: string | null, memberPlanName?: string | null } | null } };
+export type MailSendPreviewQuery = { __typename?: 'Query', mailSendPreview: { __typename?: 'MailSendPreviewModel', subject: string, html: string, pdf?: string | null, recipient?: { __typename?: 'MailSendRecipientModel', id: string, email: string, name: string, firstName?: string | null, memberPlanName?: string | null } | null } };
 
 export type MailTemplateMissingPlaceholdersQueryVariables = Exact<{
   templateId: Scalars['String'];
@@ -8261,7 +8377,7 @@ export type MailSendJobQueryVariables = Exact<{
 }>;
 
 
-export type MailSendJobQuery = { __typename?: 'Query', mailSendJob?: { __typename?: 'MailSendJobModel', id: string, createdAt: string, modifiedAt: string, status: MailSendJobState, audience: MailSendAudience, totalCount: number, sentCount: number, failedCount: number, sendingCount: number, resumeCount: number, startedAt?: string | null, finishedAt?: string | null, heartbeatAt?: string | null, error?: string | null, mailTemplate?: { __typename?: 'MailLogTemplate', id: string, name: string } | null } | null };
+export type MailSendJobQuery = { __typename?: 'Query', mailSendJob?: { __typename?: 'MailSendJobModel', id: string, createdAt: string, modifiedAt: string, status: MailSendJobState, audience: MailSendAudience, channel: MailChannel, totalCount: number, sentCount: number, failedCount: number, sendingCount: number, resumeCount: number, startedAt?: string | null, finishedAt?: string | null, heartbeatAt?: string | null, error?: string | null, mailTemplate?: { __typename?: 'MailLogTemplate', id: string, name: string } | null } | null };
 
 export type MailSendJobsQueryVariables = Exact<{
   skip?: InputMaybe<Scalars['Int']>;
@@ -8269,7 +8385,7 @@ export type MailSendJobsQueryVariables = Exact<{
 }>;
 
 
-export type MailSendJobsQuery = { __typename?: 'Query', mailSendJobs: { __typename?: 'PaginatedMailSendJob', totalCount: number, nodes: Array<{ __typename?: 'MailSendJobModel', id: string, createdAt: string, modifiedAt: string, status: MailSendJobState, audience: MailSendAudience, totalCount: number, sentCount: number, failedCount: number, sendingCount: number, resumeCount: number, startedAt?: string | null, finishedAt?: string | null, heartbeatAt?: string | null, error?: string | null, mailTemplate?: { __typename?: 'MailLogTemplate', id: string, name: string } | null }>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } };
+export type MailSendJobsQuery = { __typename?: 'Query', mailSendJobs: { __typename?: 'PaginatedMailSendJob', totalCount: number, nodes: Array<{ __typename?: 'MailSendJobModel', id: string, createdAt: string, modifiedAt: string, status: MailSendJobState, audience: MailSendAudience, channel: MailChannel, totalCount: number, sentCount: number, failedCount: number, sendingCount: number, resumeCount: number, startedAt?: string | null, finishedAt?: string | null, heartbeatAt?: string | null, error?: string | null, mailTemplate?: { __typename?: 'MailLogTemplate', id: string, name: string } | null }>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } };
 
 export type MailSendJobRecipientsQueryVariables = Exact<{
   jobId: Scalars['String'];
@@ -8287,14 +8403,14 @@ export type ResumeMailSendJobMutationVariables = Exact<{
 }>;
 
 
-export type ResumeMailSendJobMutation = { __typename?: 'Mutation', resumeMailSendJob: { __typename?: 'MailSendJobModel', id: string, createdAt: string, modifiedAt: string, status: MailSendJobState, audience: MailSendAudience, totalCount: number, sentCount: number, failedCount: number, sendingCount: number, resumeCount: number, startedAt?: string | null, finishedAt?: string | null, heartbeatAt?: string | null, error?: string | null, mailTemplate?: { __typename?: 'MailLogTemplate', id: string, name: string } | null } };
+export type ResumeMailSendJobMutation = { __typename?: 'Mutation', resumeMailSendJob: { __typename?: 'MailSendJobModel', id: string, createdAt: string, modifiedAt: string, status: MailSendJobState, audience: MailSendAudience, channel: MailChannel, totalCount: number, sentCount: number, failedCount: number, sendingCount: number, resumeCount: number, startedAt?: string | null, finishedAt?: string | null, heartbeatAt?: string | null, error?: string | null, mailTemplate?: { __typename?: 'MailLogTemplate', id: string, name: string } | null } };
 
 export type CancelMailSendJobMutationVariables = Exact<{
   id: Scalars['String'];
 }>;
 
 
-export type CancelMailSendJobMutation = { __typename?: 'Mutation', cancelMailSendJob: { __typename?: 'MailSendJobModel', id: string, createdAt: string, modifiedAt: string, status: MailSendJobState, audience: MailSendAudience, totalCount: number, sentCount: number, failedCount: number, sendingCount: number, resumeCount: number, startedAt?: string | null, finishedAt?: string | null, heartbeatAt?: string | null, error?: string | null, mailTemplate?: { __typename?: 'MailLogTemplate', id: string, name: string } | null } };
+export type CancelMailSendJobMutation = { __typename?: 'Mutation', cancelMailSendJob: { __typename?: 'MailSendJobModel', id: string, createdAt: string, modifiedAt: string, status: MailSendJobState, audience: MailSendAudience, channel: MailChannel, totalCount: number, sentCount: number, failedCount: number, sendingCount: number, resumeCount: number, startedAt?: string | null, finishedAt?: string | null, heartbeatAt?: string | null, error?: string | null, mailTemplate?: { __typename?: 'MailLogTemplate', id: string, name: string } | null } };
 
 export type SendMailTemplateToUserMutationVariables = Exact<{
   templateId: Scalars['String'];
@@ -8302,14 +8418,14 @@ export type SendMailTemplateToUserMutationVariables = Exact<{
 }>;
 
 
-export type SendMailTemplateToUserMutation = { __typename?: 'Mutation', sendMailTemplateToUser: { __typename?: 'MailSendJobModel', id: string, createdAt: string, modifiedAt: string, status: MailSendJobState, audience: MailSendAudience, totalCount: number, sentCount: number, failedCount: number, sendingCount: number, resumeCount: number, startedAt?: string | null, finishedAt?: string | null, heartbeatAt?: string | null, error?: string | null, mailTemplate?: { __typename?: 'MailLogTemplate', id: string, name: string } | null } };
+export type SendMailTemplateToUserMutation = { __typename?: 'Mutation', sendMailTemplateToUser: { __typename?: 'MailSendJobModel', id: string, createdAt: string, modifiedAt: string, status: MailSendJobState, audience: MailSendAudience, channel: MailChannel, totalCount: number, sentCount: number, failedCount: number, sendingCount: number, resumeCount: number, startedAt?: string | null, finishedAt?: string | null, heartbeatAt?: string | null, error?: string | null, mailTemplate?: { __typename?: 'MailLogTemplate', id: string, name: string } | null } };
 
 export type CreateMailSendJobMutationVariables = Exact<{
   input: MailSendJobInput;
 }>;
 
 
-export type CreateMailSendJobMutation = { __typename?: 'Mutation', createMailSendJob: { __typename?: 'MailSendJobModel', id: string, createdAt: string, modifiedAt: string, status: MailSendJobState, audience: MailSendAudience, totalCount: number, sentCount: number, failedCount: number, sendingCount: number, resumeCount: number, startedAt?: string | null, finishedAt?: string | null, heartbeatAt?: string | null, error?: string | null, mailTemplate?: { __typename?: 'MailLogTemplate', id: string, name: string } | null } };
+export type CreateMailSendJobMutation = { __typename?: 'Mutation', createMailSendJob: { __typename?: 'MailSendJobModel', id: string, createdAt: string, modifiedAt: string, status: MailSendJobState, audience: MailSendAudience, channel: MailChannel, totalCount: number, sentCount: number, failedCount: number, sendingCount: number, resumeCount: number, startedAt?: string | null, finishedAt?: string | null, heartbeatAt?: string | null, error?: string | null, mailTemplate?: { __typename?: 'MailLogTemplate', id: string, name: string } | null } };
 
 export type MailTemplateQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -9027,6 +9143,25 @@ export type UpdateSettingsIntegrationsChallengeMutationVariables = Exact<{
 
 
 export type UpdateSettingsIntegrationsChallengeMutation = { __typename?: 'Mutation', updateChallengeProviderSetting: { __typename?: 'SettingChallengeProvider', createdAt: string, id: string, lastLoadedAt: string, modifiedAt: string, name?: string | null, type: ChallengeProviderType } };
+
+export type LetterProviderSettingsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type LetterProviderSettingsQuery = { __typename?: 'Query', letterProviderSettings: Array<{ __typename?: 'SettingLetterProvider', autoSend: boolean, clientId?: string | null, createdAt: string, environment: LetterProviderEnvironment, id: string, lastLoadedAt: string, modifiedAt: string, name?: string | null, organisationId?: string | null, type: LetterProviderType }> };
+
+export type UpdateLetterProviderSettingMutationVariables = Exact<{
+  autoSend?: InputMaybe<Scalars['Boolean']>;
+  clientId?: InputMaybe<Scalars['String']>;
+  clientSecret?: InputMaybe<Scalars['String']>;
+  environment?: InputMaybe<LetterProviderEnvironment>;
+  id: Scalars['String'];
+  name?: InputMaybe<Scalars['String']>;
+  organisationId?: InputMaybe<Scalars['String']>;
+  webhookSigningKey?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type UpdateLetterProviderSettingMutation = { __typename?: 'Mutation', updateLetterProviderSetting: { __typename?: 'SettingLetterProvider', autoSend: boolean, clientId?: string | null, createdAt: string, environment: LetterProviderEnvironment, id: string, lastLoadedAt: string, modifiedAt: string, name?: string | null, organisationId?: string | null, type: LetterProviderType } };
 
 export type MailProviderSettingsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -11016,6 +11151,9 @@ export const FullMailLogFragmentDoc = gql`
   sentDate
   state
   type
+  channel
+  providerLetterID
+  address
   subject
   error
   mailProviderID
@@ -11039,6 +11177,7 @@ export const FullMailSendJobFragmentDoc = gql`
   modifiedAt
   status
   audience
+  channel
   totalCount
   sentCount
   failedCount
@@ -15825,6 +15964,7 @@ export const MailSendRecipientPreviewDocument = gql`
   mailSendRecipientPreview(audience: $audience) {
     count
     userCount
+    withoutAddressCount
     allowsSubscriptionTemplates
   }
 }
@@ -15912,6 +16052,7 @@ export const MailSendPreviewDocument = gql`
   mailSendPreview(input: $input) {
     subject
     html
+    pdf
     recipient {
       id
       email
@@ -19215,6 +19356,107 @@ export function useUpdateSettingsIntegrationsChallengeMutation(baseOptions?: Apo
 export type UpdateSettingsIntegrationsChallengeMutationHookResult = ReturnType<typeof useUpdateSettingsIntegrationsChallengeMutation>;
 export type UpdateSettingsIntegrationsChallengeMutationResult = Apollo.MutationResult<UpdateSettingsIntegrationsChallengeMutation>;
 export type UpdateSettingsIntegrationsChallengeMutationOptions = Apollo.BaseMutationOptions<UpdateSettingsIntegrationsChallengeMutation, UpdateSettingsIntegrationsChallengeMutationVariables>;
+export const LetterProviderSettingsDocument = gql`
+    query LetterProviderSettings {
+  letterProviderSettings {
+    autoSend
+    clientId
+    createdAt
+    environment
+    id
+    lastLoadedAt
+    modifiedAt
+    name
+    organisationId
+    type
+  }
+}
+    `;
+
+/**
+ * __useLetterProviderSettingsQuery__
+ *
+ * To run a query within a React component, call `useLetterProviderSettingsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useLetterProviderSettingsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useLetterProviderSettingsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useLetterProviderSettingsQuery(baseOptions?: Apollo.QueryHookOptions<LetterProviderSettingsQuery, LetterProviderSettingsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<LetterProviderSettingsQuery, LetterProviderSettingsQueryVariables>(LetterProviderSettingsDocument, options);
+      }
+export function useLetterProviderSettingsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<LetterProviderSettingsQuery, LetterProviderSettingsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<LetterProviderSettingsQuery, LetterProviderSettingsQueryVariables>(LetterProviderSettingsDocument, options);
+        }
+export type LetterProviderSettingsQueryHookResult = ReturnType<typeof useLetterProviderSettingsQuery>;
+export type LetterProviderSettingsLazyQueryHookResult = ReturnType<typeof useLetterProviderSettingsLazyQuery>;
+export type LetterProviderSettingsQueryResult = Apollo.QueryResult<LetterProviderSettingsQuery, LetterProviderSettingsQueryVariables>;
+export const UpdateLetterProviderSettingDocument = gql`
+    mutation UpdateLetterProviderSetting($autoSend: Boolean, $clientId: String, $clientSecret: String, $environment: LetterProviderEnvironment, $id: String!, $name: String, $organisationId: String, $webhookSigningKey: String) {
+  updateLetterProviderSetting(
+    autoSend: $autoSend
+    clientId: $clientId
+    clientSecret: $clientSecret
+    environment: $environment
+    id: $id
+    name: $name
+    organisationId: $organisationId
+    webhookSigningKey: $webhookSigningKey
+  ) {
+    autoSend
+    clientId
+    createdAt
+    environment
+    id
+    lastLoadedAt
+    modifiedAt
+    name
+    organisationId
+    type
+  }
+}
+    `;
+export type UpdateLetterProviderSettingMutationFn = Apollo.MutationFunction<UpdateLetterProviderSettingMutation, UpdateLetterProviderSettingMutationVariables>;
+
+/**
+ * __useUpdateLetterProviderSettingMutation__
+ *
+ * To run a mutation, you first call `useUpdateLetterProviderSettingMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateLetterProviderSettingMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateLetterProviderSettingMutation, { data, loading, error }] = useUpdateLetterProviderSettingMutation({
+ *   variables: {
+ *      autoSend: // value for 'autoSend'
+ *      clientId: // value for 'clientId'
+ *      clientSecret: // value for 'clientSecret'
+ *      environment: // value for 'environment'
+ *      id: // value for 'id'
+ *      name: // value for 'name'
+ *      organisationId: // value for 'organisationId'
+ *      webhookSigningKey: // value for 'webhookSigningKey'
+ *   },
+ * });
+ */
+export function useUpdateLetterProviderSettingMutation(baseOptions?: Apollo.MutationHookOptions<UpdateLetterProviderSettingMutation, UpdateLetterProviderSettingMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateLetterProviderSettingMutation, UpdateLetterProviderSettingMutationVariables>(UpdateLetterProviderSettingDocument, options);
+      }
+export type UpdateLetterProviderSettingMutationHookResult = ReturnType<typeof useUpdateLetterProviderSettingMutation>;
+export type UpdateLetterProviderSettingMutationResult = Apollo.MutationResult<UpdateLetterProviderSettingMutation>;
+export type UpdateLetterProviderSettingMutationOptions = Apollo.BaseMutationOptions<UpdateLetterProviderSettingMutation, UpdateLetterProviderSettingMutationVariables>;
 export const MailProviderSettingsDocument = gql`
     query MailProviderSettings {
   mailProviderSettings {
@@ -22119,6 +22361,7 @@ export type VersionInformationQueryResult = Apollo.QueryResult<VersionInformatio
       "SettingAIProvider",
       "SettingAnalyticsProvider",
       "SettingChallengeProvider",
+      "SettingLetterProvider",
       "SettingMailProvider",
       "SettingPaymentProvider",
       "SettingSyncProvider",

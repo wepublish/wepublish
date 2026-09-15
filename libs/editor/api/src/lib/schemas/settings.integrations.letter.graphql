@@ -1,0 +1,47 @@
+query LetterProviderSettings {
+  letterProviderSettings {
+    autoSend
+    clientId
+    createdAt
+    environment
+    id
+    lastLoadedAt
+    modifiedAt
+    name
+    organisationId
+    type
+  }
+}
+
+mutation UpdateLetterProviderSetting(
+  $autoSend: Boolean
+  $clientId: String
+  $clientSecret: String
+  $environment: LetterProviderEnvironment
+  $id: String!
+  $name: String
+  $organisationId: String
+  $webhookSigningKey: String
+) {
+  updateLetterProviderSetting(
+    autoSend: $autoSend
+    clientId: $clientId
+    clientSecret: $clientSecret
+    environment: $environment
+    id: $id
+    name: $name
+    organisationId: $organisationId
+    webhookSigningKey: $webhookSigningKey
+  ) {
+    autoSend
+    clientId
+    createdAt
+    environment
+    id
+    lastLoadedAt
+    modifiedAt
+    name
+    organisationId
+    type
+  }
+}

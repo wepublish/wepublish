@@ -2437,6 +2437,7 @@
       "trackingPixel": "Tracking Pixel",
       "analytics": "Hot & Trending Provider",
       "mailProvider": "Mail Provider",
+      "letterProvider": "Letter Provider",
       "back": "Back to Integrations",
       "unknown": "Unknown Integration",
       "notFound": "Integration not found",
@@ -2481,6 +2482,15 @@
         "bexioInvoiceTitleRenewalMembership": "Invoice Title (Renewal Membership)"
       },
       "placeholderSecret": "Unchanged (Hidden)",
+      "letterSettings": {
+        "type": "Type",
+        "environment": "Environment",
+        "clientId": "Client ID",
+        "clientSecret": "Client Secret",
+        "organisationId": "Organisation ID",
+        "webhookSigningKey": "Webhook Signing Key",
+        "autoSend": "Send letters automatically"
+      },
       "mailSettings": {
         "type": "Type",
         "fromAddress": "From Address",
@@ -2968,9 +2978,41 @@
         "firstRecipient": "First recipient",
         "hint": "How the mail looks for this person — with their real data.",
         "loading": "Loading preview …",
-        "noRecipients": "No recipients — adjust the audience first."
+        "noRecipients": "No recipients — adjust the audience first.",
+        "letterTitle": "Letter preview"
       },
-      "recipientsCountPerPerson": "{{count}} mails to {{people}} people"
+      "recipientsCountPerPerson": "{{count}} mails to {{people}} people",
+      "channel": {
+        "label": "Delivery",
+        "mail": "Email",
+        "letter": "Letter",
+        "withoutAddress": "{{count}} of the recipients have no usable postal address and will be skipped."
+      },
+      "print": {
+        "addressPosition": {
+          "label": "Address window",
+          "left": "Left",
+          "right": "Right"
+        },
+        "deliveryProduct": {
+          "label": "Delivery",
+          "cheap": "Cheap (B-Post)",
+          "fast": "Fast (A-Post)",
+          "premium": "Premium",
+          "registered": "Registered",
+          "bulk": "Bulk"
+        },
+        "printMode": {
+          "label": "Print",
+          "simplex": "Single sided",
+          "duplex": "Double sided"
+        },
+        "printSpectrum": {
+          "label": "Colour",
+          "grayscale": "Grayscale",
+          "color": "Colour"
+        }
+      }
     },
     "mailLog": {
       "title": "Sent emails",
@@ -2990,7 +3032,8 @@
         "all": "All",
         "title": "Filter",
         "reset": "Reset filters",
-        "typeHint": "What set this send off."
+        "typeHint": "What set this send off.",
+        "channel": "Delivery"
       },
       "types": {
         "subscriptionFlow": "Subscription mailing",
@@ -3093,7 +3136,27 @@
           "name": "rejected",
           "meaning": "The mail was never sent. Either We.Publish could not hand it over (missing or wrong provider configuration), or the provider refused it up front: unverified sending domain (“unsigned”), address on the provider's suppression list after an earlier hard bounce or spam complaint, unsubscribed recipient, or the account's sending limit was reached.",
           "next": "The “Error” column names the reason — hover it for cause and remedy. Fix the cause and send again: nothing is retried automatically."
+        },
+        "dispatched": {
+          "name": "Dispatched",
+          "meaning": "The print vendor has printed the letter and handed it to the post.",
+          "next": "Nothing to do. The state changes to delivered once the post reports the delivery."
+        },
+        "undeliverable": {
+          "name": "Undeliverable",
+          "meaning": "The post could not deliver the letter and returned it.",
+          "next": "Check the address on the recipient and send the letter again."
+        },
+        "canceled": {
+          "name": "Canceled",
+          "meaning": "The letter was withdrawn before it was printed.",
+          "next": "Nothing to do. Nothing was printed and nothing was charged."
         }
+      },
+      "channel": "Delivery",
+      "channels": {
+        "mail": "Email",
+        "letter": "Letter"
       }
     },
     "userMail": {
