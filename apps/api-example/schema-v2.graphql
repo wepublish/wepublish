@@ -1690,6 +1690,15 @@ enum LetterPrintSpectrum {
   grayscale
 }
 
+enum LetterProviderEnvironment {
+  production
+  staging
+}
+
+enum LetterProviderType {
+  pingen
+}
+
 type ListicleBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
@@ -3001,6 +3010,9 @@ type Mutation {
   """Updates an existing invoice."""
   updateInvoice(currency: Currency, description: String, dueAt: DateTime, id: String!, items: [InvoiceItemInput!], mail: String, manuallySetAsPaidByUserId: String, scheduledDeactivationAt: DateTime, subscriptionID: String): Invoice!
 
+  """Updates an existing letter provider setting."""
+  updateLetterProviderSetting(autoSend: Boolean, clientId: String, clientSecret: String, environment: LetterProviderEnvironment, id: String, name: String, organisationId: String, webhookSigningKey: String): SettingLetterProvider!
+
   """Updates an existing mail provider setting."""
   updateMailProviderSetting(apiKey: String, fromAddress: String, id: String, mailchimp_baseURL: String, mailgun_baseDomain: String, mailgun_mailDomain: String, name: String, replyToAddress: String, slack_webhookURL: String, smtp_host: String, smtp_port: Int, smtp_secure: Boolean, smtp_user: String, webhookEndpointSecret: String): SettingMailProvider!
 
@@ -4163,6 +4175,12 @@ type Query {
   """Returns a paginated list of invoices based on the filters given."""
   invoices(cursorId: String, filter: InvoiceFilter, order: SortOrder = Ascending, skip: Int = 0, sort: InvoiceSort = ModifiedAt, take: Int = 10): InvoiceConnection!
 
+  """Returns a single letter provider setting by id."""
+  letterProviderSetting(id: String!): SettingLetterProvider!
+
+  """Returns all letter provider settings."""
+  letterProviderSettings(filter: SettingLetterProviderFilter): [SettingLetterProvider!]!
+
   """Paginated list of sent mails"""
   mailLogs(filter: MailLogFilter, skip: Int, take: Int): PaginatedMailLog!
 
@@ -4647,6 +4665,25 @@ input SettingChallengeProviderFilter {
 
 input SettingFilter {
   name: String
+}
+
+type SettingLetterProvider implements SettingProvider {
+  autoSend: Boolean!
+  clientId: String
+  createdAt: DateTime!
+  environment: LetterProviderEnvironment!
+  id: String!
+  lastLoadedAt: DateTime!
+  modifiedAt: DateTime!
+  name: String
+  organisationId: String
+  type: LetterProviderType!
+}
+
+input SettingLetterProviderFilter {
+  id: String
+  name: String
+  type: LetterProviderType
 }
 
 type SettingMailProvider implements SettingProvider {

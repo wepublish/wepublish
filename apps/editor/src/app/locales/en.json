@@ -2483,6 +2483,7 @@
       "trackingPixel": "Tracking Pixel",
       "analytics": "Hot & Trending Provider",
       "mailProvider": "Mail Provider",
+      "letterProvider": "Letter Provider",
       "back": "Back to Integrations",
       "unknown": "Unknown Integration",
       "notFound": "Integration not found",
@@ -2527,6 +2528,15 @@
         "bexioInvoiceTitleRenewalMembership": "Invoice Title (Renewal Membership)"
       },
       "placeholderSecret": "Unchanged (Hidden)",
+      "letterSettings": {
+        "type": "Type",
+        "environment": "Environment",
+        "clientId": "Client ID",
+        "clientSecret": "Client Secret",
+        "organisationId": "Organisation ID",
+        "webhookSigningKey": "Webhook Signing Key",
+        "autoSend": "Send letters automatically"
+      },
       "mailSettings": {
         "type": "Type",
         "fromAddress": "From Address",

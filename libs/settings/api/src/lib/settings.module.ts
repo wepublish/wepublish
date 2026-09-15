@@ -21,6 +21,9 @@ import { TrackingPixelSettingsProviderDataloaderService } from './integrations/t
 import { MailProviderSettingsResolver } from './integrations/mail-provider-settings.resolver';
 import { MailProviderSettingsService } from './integrations/mail-provider-settings.service';
 import { MailProviderSettingsDataloaderService } from './integrations/mail-provider-settings-dataloader.service';
+import { LetterProviderSettingsResolver } from './integrations/letter-provider-settings.resolver';
+import { LetterProviderSettingsService } from './integrations/letter-provider-settings.service';
+import { LetterProviderSettingsDataloaderService } from './integrations/letter-provider-settings-dataloader.service';
 import { AnalyticsProviderSettingsResolver } from './integrations/analytics-provider-settings.resolver';
 import { AnalyticsProviderSettingsService } from './integrations/analytics-provider-settings.service';
 import { AnalyticsProviderSettingsDataloaderService } from './integrations/analytics-provider-settings-dataloader.service';
@@ -52,6 +55,9 @@ import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
     MailProviderSettingsResolver,
     MailProviderSettingsService,
     MailProviderSettingsDataloaderService,
+    LetterProviderSettingsResolver,
+    LetterProviderSettingsService,
+    LetterProviderSettingsDataloaderService,
     AnalyticsProviderSettingsResolver,
     AnalyticsProviderSettingsService,
     AnalyticsProviderSettingsDataloaderService,
@@ -73,6 +79,8 @@ import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
     TrackingPixelSettingsProviderDataloaderService,
     MailProviderSettingsService,
     MailProviderSettingsDataloaderService,
+    LetterProviderSettingsService,
+    LetterProviderSettingsDataloaderService,
     AnalyticsProviderSettingsService,
     AnalyticsProviderSettingsDataloaderService,
     SyncProviderSettingsService,
