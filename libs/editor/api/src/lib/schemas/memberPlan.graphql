@@ -22,9 +22,6 @@ fragment FullMemberPlan on MemberPlan {
   maxCount
   migrateToTargetPaymentMethodID
 
-  amountPerMonthMin
-  amountPerMonthMax
-  amountPerMonthTarget
 
   periodicityPricing {
     periodicity
@@ -93,9 +90,6 @@ mutation CreateMemberPlan(
   $shortDescription: RichText
   $description: RichText
   $imageID: String
-  $amountPerMonthMax: Int
-  $amountPerMonthMin: Int!
-  $amountPerMonthTarget: Int
   $periodicityPricing: [PeriodicityPriceInput!]
   $defaultPaymentPeriodicity: PaymentPeriodicity
   $confirmationPageId: String
@@ -119,9 +113,6 @@ mutation CreateMemberPlan(
     description: $description
     imageID: $imageID
 
-    amountPerMonthMax: $amountPerMonthMax
-    amountPerMonthMin: $amountPerMonthMin
-    amountPerMonthTarget: $amountPerMonthTarget
     periodicityPricing: $periodicityPricing
     defaultPaymentPeriodicity: $defaultPaymentPeriodicity
 
@@ -151,9 +142,6 @@ mutation UpdateMemberPlan(
   $shortDescription: RichText
   $description: RichText
   $imageID: String
-  $amountPerMonthMax: Int
-  $amountPerMonthMin: Int
-  $amountPerMonthTarget: Int
   $periodicityPricing: [PeriodicityPriceInput!]
   $defaultPaymentPeriodicity: PaymentPeriodicity
   $confirmationPageId: String
@@ -178,9 +166,6 @@ mutation UpdateMemberPlan(
     description: $description
     imageID: $imageID
 
-    amountPerMonthMax: $amountPerMonthMax
-    amountPerMonthMin: $amountPerMonthMin
-    amountPerMonthTarget: $amountPerMonthTarget
     periodicityPricing: $periodicityPricing
     defaultPaymentPeriodicity: $defaultPaymentPeriodicity
 

@@ -2008,6 +2008,7 @@
       "periodicityPricingHelpText": "Définis des prix exacts (min / cible / max) par intervalle de paiement. Sans prix personnalisés, le montant est extrapolé à partir du prix mensuel. Le rabais par rapport au prix mensuel extrapolé est calculé automatiquement.",
       "periodicityPricingHelpTextNoMonthly": "Définis pour chaque intervalle de paiement activé le prix de la période entière : montant minimal (à payer au minimum), montant cible (préréglage dans le formulaire de paiement) et, en option, montant maximal.",
       "periodicityPricingNoPeriodicities": "Active d'abord des intervalles de paiement dans les paramètres de paiement pour configurer des prix spécifiques aux intervalles.",
+      "periodicityPricingRequired": "Au moins un intervalle de paiement nécessite un montant minimal.",
       "periodicityPricingLabel": "Label marketing",
       "periodicityPricingLabelHelpText": "Note facultative affich\u00e9e pour cet intervalle de paiement sur la page d\u2019abonnement, p.ex. \u00ab2 mois offerts\u00bb.",
       "defaultPaymentPeriodicity": "Intervalle de paiement par d\u00e9faut",

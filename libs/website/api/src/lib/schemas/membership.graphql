@@ -40,9 +40,6 @@ fragment FullMemberPlan on MemberPlan {
     ...FullImage
   }
 
-  amountPerMonthMin
-  amountPerMonthMax
-  amountPerMonthTarget
   periodicityPricing {
     periodicity
     label

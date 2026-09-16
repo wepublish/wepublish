@@ -10,6 +10,7 @@ import { MdPriceCheck } from 'react-icons/md';
 import { Col, Form, Input, Nav, Panel, Row, Toggle } from 'rsuite';
 import {
   CurrencyInput,
+  getMonthlyEquivalentRange,
   ListValue,
   PAYMENT_PERIODICITY_MONTHS,
 } from '@wepublish/ui/editor';
@@ -43,6 +44,10 @@ const TabContent = styled('div')`
 
 const RowPaddingTop = styled(Row)`
   padding-top: 12px;
+`;
+
+const ErrorHelpText = styled(HelpText)`
+  color: var(--rs-state-error);
 `;
 
 function derivePeriodAmount(
@@ -101,89 +106,53 @@ export function MemberPlanPricing({
   );
 
   useEffect(() => {
-    if (monthlyEnabled || !memberPlan || !enabledPeriodicities.length) {
+    if (!memberPlan) {
       return;
     }
 
-    const materialized = enabledPeriodicities.map(entryPeriodicity => {
-      const existing = pricing.find(p => p.periodicity === entryPeriodicity);
-
-      return {
-        ...existing,
-        periodicity: entryPeriodicity,
-        amountMin:
-          existing?.amountMin ??
-          derivePeriodAmount(memberPlan.amountPerMonthMin, entryPeriodicity) ??
-          0,
-        amountTarget:
-          existing?.amountMin != null ?
-            (existing.amountTarget ?? null)
-          : derivePeriodAmount(
-              memberPlan.amountPerMonthTarget,
-              entryPeriodicity
-            ),
-        amountMax:
-          existing?.amountMin != null ?
-            (existing.amountMax ?? null)
-          : derivePeriodAmount(memberPlan.amountPerMonthMax, entryPeriodicity),
-      };
-    });
-
-    const nonLifetime = materialized.filter(
-      entry => entry.periodicity !== PaymentPeriodicity.Lifetime
-    );
-    const referenceCandidates = nonLifetime.length ? nonLifetime : materialized;
-    const reference = referenceCandidates.reduce((cheapest, entry) =>
-      (
-        entry.amountMin / PAYMENT_PERIODICITY_MONTHS[entry.periodicity] <
-        cheapest.amountMin / PAYMENT_PERIODICITY_MONTHS[cheapest.periodicity]
-      ) ?
-        entry
-      : cheapest
-    );
-    const referenceMonths = PAYMENT_PERIODICITY_MONTHS[reference.periodicity];
-    const amountPerMonthMin = Math.round(reference.amountMin / referenceMonths);
-    const derivedTargetPerMonth =
-      reference.amountTarget != null ?
-        Math.round(reference.amountTarget / referenceMonths)
-      : null;
-    // member.plans has CHECK ("amountPerMonthTarget" > "amountPerMonthMin")
-    const amountPerMonthTarget =
-      (
-        derivedTargetPerMonth != null &&
-        derivedTargetPerMonth > amountPerMonthMin
-      ) ?
-        derivedTargetPerMonth
-      : null;
-    const amountPerMonthMax =
-      reference.amountMax != null ?
-        Math.round(reference.amountMax / referenceMonths)
-      : null;
-
-    const missingOverride = enabledPeriodicities.some(
+    const toMaterialize = (
+      monthlyEnabled ?
+        [PaymentPeriodicity.Monthly]
+      : enabledPeriodicities).filter(
       entryPeriodicity =>
         !pricing.some(
           p => p.periodicity === entryPeriodicity && p.amountMin != null
         )
     );
-    const referenceChanged =
-      amountPerMonthMin !== memberPlan.amountPerMonthMin ||
-      amountPerMonthTarget !== (memberPlan.amountPerMonthTarget ?? null) ||
-      amountPerMonthMax !== (memberPlan.amountPerMonthMax ?? null);
 
-    if (!missingOverride && !referenceChanged) {
+    if (!toMaterialize.length) {
       return;
     }
 
+    const equivalent = getMonthlyEquivalentRange(pricing);
+    const materialized = toMaterialize.map(entryPeriodicity => {
+      const existing = pricing.find(p => p.periodicity === entryPeriodicity);
+      const months = PAYMENT_PERIODICITY_MONTHS[entryPeriodicity];
+
+      return {
+        ...existing,
+        periodicity: entryPeriodicity,
+        amountMin: Math.round(equivalent.amountPerMonthMin * months),
+        amountTarget:
+          equivalent.amountPerMonthTarget != null ?
+            Math.round(equivalent.amountPerMonthTarget * months)
+          : null,
+        amountMax:
+          equivalent.amountPerMonthMax != null ?
+            Math.round(equivalent.amountPerMonthMax * months)
+          : null,
+      };
+    });
+
     const untouched = pricing.filter(
-      entry => !enabledPeriodicities.includes(entry.periodicity)
+      entry =>
+        !materialized.some(
+          replaced => replaced.periodicity === entry.periodicity
+        )
     );
 
     setMemberPlan({
       ...memberPlan,
-      amountPerMonthMin,
-      amountPerMonthTarget,
-      amountPerMonthMax,
       periodicityPricing: [...untouched, ...materialized],
     });
   }, [
@@ -220,9 +189,9 @@ export function MemberPlanPricing({
     setMemberPlan({
       ...memberPlan,
       periodicityPricing:
-        !isEmpty ? [...withoutPeriodicity, { periodicity, ...price }]
-        : withoutPeriodicity.length ? withoutPeriodicity
-        : null,
+        !isEmpty ?
+          [...withoutPeriodicity, { periodicity, ...price }]
+        : withoutPeriodicity,
     });
   }
 
@@ -240,20 +209,23 @@ export function MemberPlanPricing({
   }
 
   const isMonthlyTab = periodicity === PaymentPeriodicity.Monthly;
+  const monthlyRow = pricing.find(
+    p => p.periodicity === PaymentPeriodicity.Monthly
+  );
+  const monthlyPriced = monthlyRow?.amountMin != null;
   const override = pricing.find(p => p.periodicity === periodicity);
   const derivedMin = derivePeriodAmount(
-    memberPlan?.amountPerMonthMin ?? 0,
+    monthlyRow?.amountMin ?? 0,
     periodicity
   );
   const derivedTarget = derivePeriodAmount(
-    memberPlan?.amountPerMonthTarget,
+    monthlyRow?.amountTarget,
     periodicity
   );
-  const derivedMax = derivePeriodAmount(
-    memberPlan?.amountPerMonthMax,
-    periodicity
-  );
+  const derivedMax = derivePeriodAmount(monthlyRow?.amountMax, periodicity);
+  const showDeriveToggle = !isMonthlyTab && monthlyEnabled && monthlyPriced;
   const hasOverride = override?.amountMin != null;
+  const fieldsEditable = isMonthlyTab || !showDeriveToggle || hasOverride;
   const overrideBase =
     hasOverride ? override : (
       {
@@ -263,6 +235,15 @@ export function MemberPlanPricing({
         amountMax: derivedMax,
       }
     );
+
+  const shownMin = override?.amountMin ?? derivedMin ?? 0;
+  const shownTarget =
+    hasOverride ? (override?.amountTarget ?? null) : derivedTarget;
+  const shownMax = hasOverride ? (override?.amountMax ?? null) : derivedMax;
+  const targetInvalid =
+    shownTarget != null &&
+    (shownTarget < shownMin || (shownMax != null && shownTarget > shownMax));
+  const maxInvalid = shownMax != null && shownMax < shownMin;
 
   function setPeriodicityLabel(label: string | null) {
     setPeriodicityPrice({
@@ -275,7 +256,9 @@ export function MemberPlanPricing({
 
   const referenceDerived = derivedTarget ?? derivedMin;
   const referenceOverride =
-    override ? (override.amountTarget ?? override.amountMin) : null;
+    hasOverride ?
+      (override?.amountTarget ?? override?.amountMin ?? null)
+    : null;
   const delta =
     referenceDerived != null && referenceOverride != null ?
       referenceDerived - referenceOverride
@@ -321,190 +304,141 @@ export function MemberPlanPricing({
       </Nav>
 
       <TabContent>
-        {isMonthlyTab ?
+        {showDeriveToggle && (
           <Row>
-            <Col xs={8}>
-              <Form.ControlLabel>
-                {t('memberPlanEdit.amountPerMonthMin')}
-              </Form.ControlLabel>
-              <CurrencyInput
-                name="amountPerMonthMin"
-                currency={currency}
-                centAmount={memberPlan?.amountPerMonthMin || 0}
+            <Col xs={18}>
+              {delta != null && delta !== 0 && referenceDerived != null && (
+                <HelpText>
+                  {t('memberplanForm.periodicityPricingDelta', {
+                    delta: formatDelta(delta, referenceDerived, currency),
+                  })}
+                </HelpText>
+              )}
+            </Col>
+
+            <ToggleCol xs={6}>
+              <Toggle
+                checked={hasOverride}
                 disabled={loading}
-                onChange={centAmount => {
-                  if (!memberPlan) {
-                    return;
-                  }
-                  setMemberPlan({
-                    ...memberPlan,
-                    amountPerMonthMin: centAmount || 0,
-                  });
-                }}
+                checkedChildren={t('memberplanForm.periodicityPricingCustom')}
+                unCheckedChildren={t(
+                  'memberplanForm.periodicityPricingDerived'
+                )}
+                onChange={enabled =>
+                  setPeriodicityPrice(
+                    enabled ?
+                      {
+                        label: override?.label ?? null,
+                        amountMin: derivedMin ?? 0,
+                        amountTarget: derivedTarget,
+                        amountMax: derivedMax,
+                      }
+                    : {
+                        label: override?.label ?? null,
+                        amountMin: null,
+                        amountTarget: null,
+                        amountMax: null,
+                      }
+                  )
+                }
               />
+            </ToggleCol>
+          </Row>
+        )}
+
+        <Row>
+          <Col xs={8}>
+            <Form.ControlLabel>
+              {t(
+                isMonthlyTab ?
+                  'memberPlanEdit.amountPerMonthMin'
+                : 'memberplanForm.periodicityPricingMin'
+              )}
+            </Form.ControlLabel>
+            <CurrencyInput
+              name={`periodicityPricing.${periodicity}.amountMin`}
+              currency={currency}
+              centAmount={shownMin}
+              disabled={loading || !fieldsEditable}
+              onChange={centAmount => {
+                setPeriodicityPrice({
+                  ...overrideBase,
+                  amountMin: Math.round(centAmount || 0),
+                });
+              }}
+            />
+            {isMonthlyTab && (
               <HelpText>
                 {t('memberplanForm.amountPerMonthMinHelpText')}
               </HelpText>
-            </Col>
+            )}
+          </Col>
 
-            <Col xs={8}>
-              <Form.ControlLabel>
-                {t('memberplanForm.amountPerMonthTarget')}
-              </Form.ControlLabel>
-              <CurrencyInput
-                name="amountPerMonthTarget"
-                currency={currency}
-                centAmount={memberPlan?.amountPerMonthTarget || 0}
-                disabled={loading}
-                onChange={centAmount => {
-                  if (!memberPlan) {
-                    return;
-                  }
-                  setMemberPlan({
-                    ...memberPlan,
-                    amountPerMonthTarget: centAmount || null,
-                  });
-                }}
-              />
+          <Col xs={8}>
+            <Form.ControlLabel>
+              {t(
+                isMonthlyTab ?
+                  'memberplanForm.amountPerMonthTarget'
+                : 'memberplanForm.periodicityPricingTarget'
+              )}
+            </Form.ControlLabel>
+            <CurrencyInput
+              name={`periodicityPricing.${periodicity}.amountTarget`}
+              currency={currency}
+              centAmount={shownTarget}
+              disabled={loading || !fieldsEditable}
+              onChange={centAmount => {
+                setPeriodicityPrice({
+                  ...overrideBase,
+                  amountTarget:
+                    centAmount != null ? Math.round(centAmount) : null,
+                });
+              }}
+            />
+            {targetInvalid && (
+              <ErrorHelpText>
+                {t('memberPlanEdit.targetPriceMustBeGreaterThanMin')}
+              </ErrorHelpText>
+            )}
+            {isMonthlyTab && !targetInvalid && (
               <HelpText>
                 {t('memberplanForm.amountPerMonthTargetHelpText')}
               </HelpText>
-            </Col>
+            )}
+          </Col>
 
-            <Col xs={8}>
-              <Form.ControlLabel>
-                {t('memberPlanEdit.amountPerMonthMax')}
-              </Form.ControlLabel>
-              <CurrencyInput
-                name="amountPerMonthMax"
-                currency={currency}
-                centAmount={memberPlan?.amountPerMonthMax ?? null}
-                disabled={loading}
-                onChange={centAmount => {
-                  if (!memberPlan) {
-                    return;
-                  }
-                  setMemberPlan({
-                    ...memberPlan,
-                    amountPerMonthMax: centAmount ?? null,
-                  });
-                }}
-              />
+          <Col xs={8}>
+            <Form.ControlLabel>
+              {t(
+                isMonthlyTab ?
+                  'memberPlanEdit.amountPerMonthMax'
+                : 'memberplanForm.periodicityPricingMax'
+              )}
+            </Form.ControlLabel>
+            <CurrencyInput
+              name={`periodicityPricing.${periodicity}.amountMax`}
+              currency={currency}
+              centAmount={shownMax}
+              disabled={loading || !fieldsEditable}
+              onChange={centAmount => {
+                setPeriodicityPrice({
+                  ...overrideBase,
+                  amountMax: centAmount != null ? Math.round(centAmount) : null,
+                });
+              }}
+            />
+            {maxInvalid && (
+              <ErrorHelpText>
+                {t('memberPlanEdit.maxPriceMustBeGreaterThanMin')}
+              </ErrorHelpText>
+            )}
+            {isMonthlyTab && !maxInvalid && (
               <HelpText>
                 {t('memberplanForm.amountPerMonthMaxHelpText')}
               </HelpText>
-            </Col>
-          </Row>
-        : <>
-            {monthlyEnabled && (
-              <Row>
-                <Col xs={18}>
-                  {delta != null && delta !== 0 && referenceDerived != null && (
-                    <HelpText>
-                      {t('memberplanForm.periodicityPricingDelta', {
-                        delta: formatDelta(delta, referenceDerived, currency),
-                      })}
-                    </HelpText>
-                  )}
-                </Col>
-
-                <ToggleCol xs={6}>
-                  <Toggle
-                    checked={hasOverride}
-                    disabled={loading}
-                    checkedChildren={t(
-                      'memberplanForm.periodicityPricingCustom'
-                    )}
-                    unCheckedChildren={t(
-                      'memberplanForm.periodicityPricingDerived'
-                    )}
-                    onChange={enabled =>
-                      setPeriodicityPrice(
-                        enabled ?
-                          {
-                            label: override?.label ?? null,
-                            amountMin: derivedMin ?? 0,
-                            amountTarget: derivedTarget,
-                            amountMax: derivedMax,
-                          }
-                        : {
-                            label: override?.label ?? null,
-                            amountMin: null,
-                            amountTarget: null,
-                            amountMax: null,
-                          }
-                      )
-                    }
-                  />
-                </ToggleCol>
-              </Row>
             )}
-
-            <Row>
-              <Col xs={8}>
-                <Form.ControlLabel>
-                  {t('memberplanForm.periodicityPricingMin')}
-                </Form.ControlLabel>
-                <CurrencyInput
-                  name={`periodicityPricing.${periodicity}.amountMin`}
-                  currency={currency}
-                  centAmount={override?.amountMin ?? derivedMin ?? 0}
-                  disabled={loading || (monthlyEnabled && !hasOverride)}
-                  onChange={centAmount => {
-                    setPeriodicityPrice({
-                      ...overrideBase,
-                      amountMin: Math.round(centAmount || 0),
-                    });
-                  }}
-                />
-              </Col>
-
-              <Col xs={8}>
-                <Form.ControlLabel>
-                  {t('memberplanForm.periodicityPricingTarget')}
-                </Form.ControlLabel>
-                <CurrencyInput
-                  name={`periodicityPricing.${periodicity}.amountTarget`}
-                  currency={currency}
-                  centAmount={
-                    hasOverride ?
-                      (override?.amountTarget ?? null)
-                    : derivedTarget
-                  }
-                  disabled={loading || (monthlyEnabled && !hasOverride)}
-                  onChange={centAmount => {
-                    setPeriodicityPrice({
-                      ...overrideBase,
-                      amountTarget:
-                        centAmount != null ? Math.round(centAmount) : null,
-                    });
-                  }}
-                />
-              </Col>
-
-              <Col xs={8}>
-                <Form.ControlLabel>
-                  {t('memberplanForm.periodicityPricingMax')}
-                </Form.ControlLabel>
-                <CurrencyInput
-                  name={`periodicityPricing.${periodicity}.amountMax`}
-                  currency={currency}
-                  centAmount={
-                    hasOverride ? (override?.amountMax ?? null) : derivedMax
-                  }
-                  disabled={loading || (monthlyEnabled && !hasOverride)}
-                  onChange={centAmount => {
-                    setPeriodicityPrice({
-                      ...overrideBase,
-                      amountMax:
-                        centAmount != null ? Math.round(centAmount) : null,
-                    });
-                  }}
-                />
-              </Col>
-            </Row>
-          </>
-        }
+          </Col>
+        </Row>
 
         <RowPaddingTop>
           <Col xs={12}>
