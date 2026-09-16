@@ -6,6 +6,7 @@
   "website": {
     "production": {
       "deployment": true,
+      "custom_domain": "https://ee-news.ch",
       "env": {},
       "secret_env": []
     },
