@@ -847,6 +847,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                           <Label>{t('userSubscriptionEdit.startsAt')}</Label>
                           <DatePicker
                             block
+                            oneTap
                             cleanable={false}
                             value={startsAt}
                             disabled={

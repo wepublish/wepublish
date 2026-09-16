@@ -5,6 +5,7 @@ import {
   FocusTeaserWrapper,
   isFocusTeaserBlockStyle,
   isTeaserSliderBlockStyle,
+  LightboxWrapper,
   SliderBall,
   SliderWrapper,
   TeaserTitle,
@@ -48,7 +49,13 @@ import {
 
 const seamlessBackground = (theme: Theme) => css`
   &:has(
-    + * > :is(${BreakBlockWrapper}, ${SliderWrapper}, ${FocusTeaserWrapper})
+    + *
+      > :is(
+        ${BreakBlockWrapper},
+          ${SliderWrapper},
+          ${LightboxWrapper},
+          ${FocusTeaserWrapper}
+      )
   ) {
     margin-bottom: -${theme.spacing(7)};
   }

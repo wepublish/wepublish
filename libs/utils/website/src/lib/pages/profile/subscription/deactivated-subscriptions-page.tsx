@@ -39,7 +39,7 @@ function DeactivatedSubscriptions() {
         }
       />
 
-      <Link href="/profile">Zurück zum Profil</Link>
+      <Link href="/profile">{t('navbar.backToProfile')}</Link>
     </SubscriptionsWrapper>
   );
 }

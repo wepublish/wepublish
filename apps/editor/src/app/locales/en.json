@@ -2523,7 +2523,7 @@
         "apiKey": "Mailchimp API Key",
         "listId": "Mailchimp List/Audience ID",
         "mergeFieldMappings": "Merge Field Mappings",
-        "mergeFieldHelp": "Determines which value is written to a Mailchimp merge field. Combine multiple expressions with | (OR) – the first match wins.\n\nAvailable expressions:\n• user.firstName / user.name – first or last name\n• slug:contains:value – \"1\" if the subscription slug contains \"value\"\n• slug:contains_any:v1,v2 – \"1\" if any of the values is contained\n• slug:equals:value – \"1\" on exact match\n• active_abo – \"1\" active, \"-1\" expired, empty if no subscription\n• active_abo_with_payment:slug:days – like active_abo, but also \"1\" if the last payment method is \"slug\" and the subscription expired within the last \"days\" days\n• retarget:days – \"1\" if the subscription expired within the last \"days\" days\n• static:value – always returns \"value\"",
+        "mergeFieldHelp": "Determines which value is written to a Mailchimp merge field. Combine multiple expressions with | (OR) – the first match wins.\n\nAvailable expressions:\n• user.firstName / user.name – first or last name\n• slug:contains:value – \"1\" if the subscription slug contains \"value\"\n• slug:contains_any:v1,v2 – \"1\" if any of the values is contained\n• slug:equals:value – \"1\" on exact match\n• active_abo – \"1\" active, \"-1\" expired, empty if no subscription\n• active_abo_with_payment:slug:days – like active_abo, but also \"1\" if the last payment method is \"slug\" and the subscription expired within the last \"days\" days\n• retarget:days – \"1\" if the subscription expired within the last \"days\" days, \"-1\" for any other former subscriber, empty if no subscription\n• static:value – always returns \"value\"",
         "mergeFieldTag": "Merge Field Tag (e.g. FNAME)",
         "mergeFieldExpression": "Expression (e.g. user.firstName)",
         "addMergeField": "Add Merge Field",
@@ -2971,7 +2971,18 @@
         "loading": "Loading preview …",
         "noRecipients": "No recipients — adjust the audience first."
       },
-      "recipientsCountPerPerson": "{{count}} mails to {{people}} people"
+      "recipientsCountPerPerson": "{{count}} mails to {{people}} people",
+      "endsAtHint": "Cancellation date, otherwise the date paid up to.",
+      "isPaid": "Paid (currently covered)",
+      "isPaidHint": "Grace periods are not taken into account.",
+      "isCanceled": "Cancelled",
+      "isCanceledHint": "Also includes cancellations that only take effect later.",
+      "hasReplacedSubscription": "Replaced another subscription (e.g. upgrade)",
+      "hasReplacedSubscriptionHint": "Also includes downgrades and plan switches; manual or imported changes are not detected.",
+      "startsAt": "Subscription start",
+      "endsAt": "Subscription end",
+      "from": "From",
+      "to": "Until"
     },
     "mailLog": {
       "title": "Sent emails",

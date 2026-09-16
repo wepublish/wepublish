@@ -239,6 +239,20 @@ export class MailSendRecipientService {
    * The period an ended subscription must fall into: either an explicit range
    * the editor picked, or a rolling window of the last N days.
    */
+  private dateRange(from?: Date, to?: Date): Prisma.DateTimeFilter {
+    const range: Prisma.DateTimeFilter = {};
+
+    if (from) {
+      range.gte = new Date(from);
+    }
+
+    if (to) {
+      range.lte = new Date(to);
+    }
+
+    return range;
+  }
+
   private endedWindow(audience: MailAudienceInput): { from: Date; to: Date } {
     const now = new Date();
 
@@ -336,6 +350,53 @@ export class MailSendRecipientService {
 
     if (audience.paymentPeriodicity) {
       and.push({ paymentPeriodicity: audience.paymentPeriodicity });
+    }
+
+    if (audience.startsAtFrom || audience.startsAtTo) {
+      and.push({
+        startsAt: this.dateRange(audience.startsAtFrom, audience.startsAtTo),
+      });
+    }
+
+    if (audience.endsAtFrom || audience.endsAtTo) {
+      const endsAt = this.dateRange(audience.endsAtFrom, audience.endsAtTo);
+
+      and.push({
+        OR: [
+          { deactivation: { is: { date: endsAt } } },
+          { deactivation: { is: null }, paidUntil: endsAt },
+        ],
+      });
+    }
+
+    if (audience.isPaid != null) {
+      const now = new Date();
+      const paidUp: Prisma.SubscriptionWhereInput = {
+        startsAt: { lt: now },
+        paidUntil: { gt: now },
+      };
+      const notPaidUp: Prisma.SubscriptionWhereInput = {
+        OR: [
+          { startsAt: { gte: now } },
+          { paidUntil: null },
+          { paidUntil: { lte: now } },
+        ],
+      };
+
+      and.push(audience.isPaid ? paidUp : notPaidUp);
+    }
+
+    if (audience.isCanceled != null) {
+      and.push({
+        deactivation: audience.isCanceled ? { isNot: null } : { is: null },
+      });
+    }
+
+    if (audience.hasReplacedSubscription != null) {
+      and.push({
+        replacesSubscriptionID:
+          audience.hasReplacedSubscription ? { not: null } : { equals: null },
+      });
     }
 
     return and.length ? { AND: and } : {};

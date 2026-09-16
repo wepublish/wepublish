@@ -92,6 +92,7 @@ const theme = createTheme(WePTheme, {
       fontFamily: [inter.style.fontFamily, 'sans-serif'].join(','),
       fontWeight: 300,
       fontSize: 18,
+      lineHeight: 1.7,
     },
     body2: {
       fontWeight: 300,
@@ -103,6 +104,7 @@ const theme = createTheme(WePTheme, {
     },
     caption: {
       fontFamily: [inter.style.fontFamily, 'sans-serif'].join(','),
+      lineHeight: 1.7,
     },
     overline: {
       fontFamily: [inter.style.fontFamily, 'sans-serif'].join(','),
@@ -114,6 +116,7 @@ const theme = createTheme(WePTheme, {
       fontFamily: [lora.style.fontFamily, 'sans-serif'].join(','),
       fontStyle: 'italic',
       fontWeight: 600,
+      lineHeight: 1.4,
     },
     blockBreakBody: {
       fontFamily: [inter.style.fontFamily, 'sans-serif'].join(','),
@@ -127,6 +130,18 @@ const theme = createTheme(WePTheme, {
     },
     allVariants: {
       fontFamily: [inter.style.fontFamily, 'sans-serif'].join(','),
+    },
+    articleAuthors: {
+      lineHeight: 1.7,
+    },
+    peerInformation: {
+      lineHeight: 1.7,
+    },
+    bannerText: {
+      lineHeight: 1.7,
+    },
+    teaserLead: {
+      lineHeight: 1.4,
     },
   },
   components: {
