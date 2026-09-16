@@ -12,6 +12,14 @@ import { ONE_URL_TOKEN } from './one.tokens';
 
 export const HEARTBEAT_INTERVAL_MS = 5 * 60 * 1000;
 
+export const VERSION_PATTERN = /^[A-Za-z0-9._-]{1,64}$/;
+
+export function sanitiseVersion(raw: string): string {
+  const trimmed = raw.trim();
+
+  return VERSION_PATTERN.test(trimmed) ? trimmed : 'unknown';
+}
+
 @Injectable()
 export class OneHeartbeatService implements OnApplicationBootstrap {
   private readonly logger = new Logger(OneHeartbeatService.name);
@@ -51,7 +59,7 @@ export class OneHeartbeatService implements OnApplicationBootstrap {
 
   private async readVersion(): Promise<string> {
     try {
-      return (await fs.readFile('.version', 'utf-8')).trim();
+      return sanitiseVersion(await fs.readFile('.version', 'utf-8'));
     } catch {
       return 'unknown';
     }

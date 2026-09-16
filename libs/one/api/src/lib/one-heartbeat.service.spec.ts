@@ -1,6 +1,35 @@
 import { OneChannelStateService } from './one-channel-state.service';
 import { OneClientService } from './one-client.service';
-import { OneHeartbeatService } from './one-heartbeat.service';
+import { OneHeartbeatService, sanitiseVersion } from './one-heartbeat.service';
+
+describe('sanitiseVersion', () => {
+  it('accepts a git sha', () => {
+    expect(sanitiseVersion('890550c1f2e3')).toBe('890550c1f2e3');
+  });
+
+  it('accepts a semver tag', () => {
+    expect(sanitiseVersion('v6.1.1')).toBe('v6.1.1');
+  });
+
+  it('trims surrounding whitespace and newlines', () => {
+    expect(sanitiseVersion('  890550c\n')).toBe('890550c');
+  });
+
+  it('refuses anything with characters a version cannot contain', () => {
+    expect(sanitiseVersion('890550c\nX-Injected: 1')).toBe('unknown');
+    expect(sanitiseVersion('../../etc/passwd')).toBe('unknown');
+    expect(sanitiseVersion('sha; rm -rf /')).toBe('unknown');
+  });
+
+  it('refuses an absurdly long value', () => {
+    expect(sanitiseVersion('a'.repeat(65))).toBe('unknown');
+  });
+
+  it('refuses an empty file', () => {
+    expect(sanitiseVersion('')).toBe('unknown');
+    expect(sanitiseVersion('   ')).toBe('unknown');
+  });
+});
 
 describe('OneHeartbeatService', () => {
   let client: { post: jest.Mock };
