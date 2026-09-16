@@ -2,7 +2,7 @@ import { ComponentConfig } from '@puckeditor/core';
 import { SubscribeBlockField } from '@wepublish/website/api';
 import { z } from 'zod/v4';
 
-import { listFieldAi, resolvedFieldAi } from '@wepublish/puck-content/editor';
+import { resolvedFieldAi, tagFieldAi } from '@wepublish/puck-content/editor';
 import { UserFields } from '../../types';
 import { SubscribeConfigProps, SubscribeRender } from './subscribe.component';
 import { withDataSource } from '../with-datasource';
@@ -32,8 +32,7 @@ export const SubscribeConfig: ComponentConfig<{
         ai: resolvedFieldAi,
       },
       fields: {
-        type: 'list',
-        defaultItem: SubscribeBlockField.FirstName,
+        type: 'tag',
         itemField: {
           type: 'select',
           options: subscribeFields.map(field => ({
@@ -41,9 +40,9 @@ export const SubscribeConfig: ComponentConfig<{
             value: field,
           })),
         },
-        ai: listFieldAi(
+        ai: tagFieldAi(
           z.enum(subscribeFields),
-          'Extra input fields the sign-up form asks for, in display order.'
+          'Extra input fields the sign-up form asks for.'
         ),
       },
     },

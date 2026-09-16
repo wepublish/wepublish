@@ -1,6 +1,8 @@
 export * from './lib/ai';
 export * from './lib/ai-schema';
 export * from './lib/alignment/alignment';
+export * from './lib/api/api';
+export * from './lib/api/api.field';
 export * from './lib/alignment/alignment.field';
 export * from './lib/border/border';
 export * from './lib/border/border.field';
@@ -38,6 +40,8 @@ export * from './lib/visibility/visibility.field';
 export * from './lib/stock-image/stock-image';
 export * from './lib/switch/switch';
 export * from './lib/switch/switch.field';
+export * from './lib/tag/tag';
+export * from './lib/tag/tag.field';
 export * from './lib/theme';
 export * from './lib/typography/typography';
 export * from './lib/typography/typography.field';
