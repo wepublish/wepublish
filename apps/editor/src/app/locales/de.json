@@ -309,6 +309,12 @@
       }
     },
     "blocks": {
+      "blockTemplate": {
+        "editTemplate": "Vorlage bearbeiten",
+        "label": "Blockvorlage",
+        "select": "Blockvorlage auswählen",
+        "useContent": "Inhalt übernehmen"
+      },
       "crowdfunding": {
         "edit": "Bearbeiten",
         "label": "Crowdfunding",

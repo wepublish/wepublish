@@ -369,7 +369,7 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
 
   [EditorBlockType.BlockTemplate]: {
     field: props => <BlockTemplateBlock {...props} />,
-    defaultValue: { blockTemplates: [], blockStyle: undefined },
+    defaultValue: { template: null, blockStyle: undefined },
     label: 'blocks.blockTemplate.label',
     icon: <MdFileCopy />,
   },

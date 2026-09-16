@@ -312,6 +312,12 @@
       }
     },
     "blocks": {
+      "blockTemplate": {
+        "editTemplate": "Modifier le modèle",
+        "label": "Modèle de bloc",
+        "select": "Sélectionner un modèle de bloc",
+        "useContent": "Utiliser le contenu"
+      },
       "crowdfunding": {
         "edit": "Modifier",
         "label": "Crowdfunding",

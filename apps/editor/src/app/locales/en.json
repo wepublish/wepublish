@@ -307,7 +307,10 @@
     },
     "blocks": {
       "blockTemplate": {
-        "label": "Block Template"
+        "editTemplate": "Edit template",
+        "label": "Block Template",
+        "select": "Select a block template",
+        "useContent": "Use content"
       },
       "crowdfunding": {
         "crowdfundingName": "Crowdfunding {{name}}",

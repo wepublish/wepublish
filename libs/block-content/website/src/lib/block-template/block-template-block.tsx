@@ -15,12 +15,6 @@ export const isBlockTemplateBlock = (
   return block.__typename === 'BlockTemplateBlock';
 };
 
-/**
- * Renders the blocks of the referenced template as if they were placed
- * directly into the content. No wrapper element is rendered, otherwise the
- * blocks would lose the column placement they get as direct children of the
- * content grid.
- */
 export const BlockTemplateBlock = ({
   template,
   type,

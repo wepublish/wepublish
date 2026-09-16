@@ -117,7 +117,6 @@ function BlockTemplateList() {
             </RCell>
           </Column>
 
-          {/* delete */}
           <Column
             resizable
             fixed="right"

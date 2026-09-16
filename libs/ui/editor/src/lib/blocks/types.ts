@@ -5,6 +5,7 @@ import {
   CommentBlockCommentFragment,
   EditorBlockType,
   FullBlockFragment,
+  FullBlockTemplateFragment,
   FullCrowdfundingFragment,
   FullEventFragment,
   FullImageFragment,
@@ -184,7 +185,7 @@ export interface FlexBlockValue extends BaseBlockValue {
 }
 
 export interface BlockTemplateBlockValue extends BaseBlockValue {
-  blockTemplates: Array<BlockValue>;
+  template?: FullBlockTemplateFragment | null;
 }
 
 export enum EmbedType {
@@ -940,9 +941,7 @@ export function mapBlockValueToBlockInput(
     case EditorBlockType.BlockTemplate: {
       return {
         blockTemplate: {
-          blockTemplates: block.value.blockTemplates.map(nb => ({
-            block: mapBlockValueToBlockInput(nb as BlockValue),
-          })),
+          templateID: block.value.template?.id ?? '',
           blockStyle: block.value.blockStyle,
           disabled: block.value.disabled,
         },
@@ -1457,6 +1456,17 @@ export function blockForQueryBlock(
                 blockForQueryBlock(block as FullBlockFragment)
               : undefined,
           })),
+        },
+      };
+
+    case 'BlockTemplateBlock':
+      return {
+        key,
+        type: EditorBlockType.BlockTemplate,
+        value: {
+          disabled: block.disabled,
+          blockStyle: block.blockStyle,
+          template: block.template,
         },
       };
 
