@@ -7,6 +7,7 @@ import { SessionTokenContext } from '@wepublish/authentication/website';
 import { getSettings, useWebsiteSettingsQuery } from '@wepublish/editor/api';
 import {
   alignmentPlugin,
+  apiPlugin,
   BlocksPlugin,
   borderPlugin,
   breakpointsPlugin,
@@ -30,6 +31,7 @@ import {
   SEOPreviewPlugin,
   StockImagePlugin,
   switchPlugin,
+  tagPlugin,
   themePlugin,
   typographyPlugin,
   viewportSelectionPlugin,
@@ -180,6 +182,7 @@ export function PuckEditor() {
                 viewportSelectionPlugin,
                 //
                 datasourcePlugin,
+                apiPlugin,
                 paddingPlugin,
                 borderPlugin,
                 breakpointsPlugin,
@@ -187,6 +190,7 @@ export function PuckEditor() {
                 palettePlugin,
                 columnsPlugin,
                 listPlugin,
+                tagPlugin,
                 richtextPlugin,
                 colorPlugin,
                 typographyPlugin,

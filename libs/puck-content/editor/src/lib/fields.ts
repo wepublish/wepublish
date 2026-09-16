@@ -1,6 +1,7 @@
 import { Config } from '@puckeditor/core';
 
 import { AlignmentField } from './alignment/alignment.field';
+import { ApiField } from './api/api.field';
 import { BorderField } from './border/border.field';
 import { BreakpointsField } from './breakpoints/breakpoints.field';
 import { ColorField } from './color/color.field';
@@ -14,15 +15,18 @@ import { ResolvedField } from './resolved';
 import { RichtextField } from './richtext/richtext.field';
 import { VisibilityField } from './visibility/visibility.field';
 import { SwitchField } from './switch/switch.field';
+import { TagField } from './tag/tag.field';
 import { TypographyField } from './typography/typography.field';
 
 export type UserFields = {
+  api: ApiField;
   datasource: DatasourceField;
   padding: PaddingField;
   border: BorderField;
   breakpoints: BreakpointsField;
   columns: ColumnsField;
   list: ListField;
+  tag: TagField;
   alignment: AlignmentField;
   palette: PaletteField;
   richtext: RichtextField;
