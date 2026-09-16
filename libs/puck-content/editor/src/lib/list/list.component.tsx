@@ -24,7 +24,13 @@ import {
   IconButton,
 } from '@puckeditor/core';
 
-import { ListField, ListValue } from './list.field';
+import {
+  getListItemOptions,
+  isSameListItem,
+  ListField,
+  ListValue,
+  withoutTakenOptions,
+} from './list.field';
 import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdDelete, MdDragIndicator } from 'react-icons/md';
@@ -284,8 +290,15 @@ export const ListFieldRender = <Item,>({
   const { t } = useTranslation();
   const current = value ?? [];
   const ids = useItemIds(current.length);
+  const options =
+    field.unique ? getListItemOptions(field.itemField) : undefined;
+  const unusedOptions = options?.filter(
+    option => !current.some(item => isSameListItem(item, option.value))
+  );
   const canAdd =
-    !readOnly && (field.max === undefined || current.length < field.max);
+    !readOnly &&
+    (field.max === undefined || current.length < field.max) &&
+    (unusedOptions === undefined || unusedOptions.length > 0);
   const canRemove =
     !readOnly && (field.min === undefined || current.length > field.min);
 
@@ -297,10 +310,16 @@ export const ListFieldRender = <Item,>({
   );
 
   const addItem = () => {
-    onChange([
-      ...current,
-      resolveDefaultItem(field.defaultItem, current.length),
-    ]);
+    const defaultItem = resolveDefaultItem(field.defaultItem, current.length);
+    const nextItem =
+      (
+        unusedOptions &&
+        !unusedOptions.some(option => isSameListItem(option.value, defaultItem))
+      ) ?
+        (unusedOptions[0].value as Item)
+      : defaultItem;
+
+    onChange([...current, nextItem]);
   };
 
   const removeItem = (index: number) => {
@@ -350,7 +369,14 @@ export const ListFieldRender = <Item,>({
                 id={ids.current[index]}
                 index={index}
                 fieldId={id}
-                itemField={field.itemField as Field}
+                itemField={
+                  (field.unique ?
+                    withoutTakenOptions(
+                      field.itemField,
+                      current.filter((_, i) => i !== index)
+                    )
+                  : field.itemField) as Field
+                }
                 value={item}
                 readOnly={readOnly}
                 canRemove={canRemove}
