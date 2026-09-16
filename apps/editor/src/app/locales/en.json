@@ -4,6 +4,15 @@
       "popupBlocked": "The preview window was blocked by the browser. Please allow pop-ups for the editor and try again.",
       "notResponding": "The preview window is not responding. The preview login may have failed."
     },
+    "oneChannel": {
+      "connected": "We.Publish Channel: connected",
+      "failing": "We.Publish Channel: connection failing",
+      "notConfigured": "We.Publish Channel: not configured",
+      "notConfiguredHint": "This instance sends no data to We.Publish.",
+      "lastSuccess": "Last successful contact: {{value}}",
+      "lastSuccessNever": "Last successful contact: never",
+      "lastAttemptFailed": "Last attempt: {{value}} – failed: {{error}}"
+    },
     "oneMessages": {
       "header": "Messages from the We.Publish team",
       "expand": "Expand",

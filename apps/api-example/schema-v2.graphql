@@ -2155,6 +2155,101 @@ type MailchimpSyncProgressType {
   updated: Int!
 }
 
+type MediumAccountStats {
+  activeSessions: Int!
+  adminCount: Int!
+  usersLoggedIn: Int!
+  usersTotal: Int!
+  usersWithRole: Int!
+}
+
+type MediumCommunityStats {
+  activePolls: Int!
+  commentsPendingModeration: Int!
+  commentsPublished: Int!
+  pollVotes: Int!
+}
+
+type MediumDeactivationReasonCount {
+  count: Int!
+  reason: String!
+}
+
+type MediumEditorialStats {
+  articleRevisionsCount: Int!
+  articlesCount: Int!
+  articlesPublished: Int!
+  authorsCount: Int!
+  lastPublishedAt: DateTime
+  pageRevisionsCount: Int!
+  pagesCount: Int!
+  pagesPublished: Int!
+}
+
+type MediumIntegrationsStats {
+  analyticsProviders: Int!
+  mailProviders: Int!
+  paymentProviders: Int!
+  syncProviders: Int!
+}
+
+type MediumMailStats {
+  bounced: Int!
+  failures: Int!
+  lastCampaignAt: DateTime
+  rejected: Int!
+  sends: Int!
+}
+
+type MediumMembershipStats {
+  activeSubscribers: Int!
+  deactivations: Int!
+  deactivationsByReason: [MediumDeactivationReasonCount!]!
+  newSubscribers: Int!
+}
+
+type MediumMoneyStats {
+  atRisk: Int!
+  expectedRevenue: Int!
+  revenue: Int!
+}
+
+type MediumNetworkStats {
+  peersDisabled: Int!
+  peersTotal: Int!
+}
+
+type MediumOperationsStats {
+  imageCount: Int!
+  lastPeriodicJobAt: DateTime
+  mailchimpSyncErrors: Int!
+  periodicJobError: String
+  periodicJobFailing: Boolean!
+  periodicJobTries: Int!
+  storageBytes: Float!
+}
+
+type MediumStats {
+  accounts: MediumAccountStats!
+  community: MediumCommunityStats!
+  currency: String
+  editorial: MediumEditorialStats!
+  generatedAt: DateTime!
+  integrations: MediumIntegrationsStats!
+  mail: MediumMailStats!
+  membership: MediumMembershipStats!
+  money: MediumMoneyStats!
+  network: MediumNetworkStats!
+  operations: MediumOperationsStats!
+  schemaVersion: Int!
+  window: MediumStatsWindow!
+}
+
+type MediumStatsWindow {
+  from: DateTime!
+  to: DateTime!
+}
+
 type MemberPlan implements HasImage {
   active: Boolean!
   amountPerMonthMax: Int
@@ -2834,6 +2929,20 @@ enum NavigationLinkType {
   Article
   External
   Page
+}
+
+enum OneChannelConnectionState {
+  Connected
+  Failing
+  NotConfigured
+}
+
+type OneChannelStatus {
+  lastAttemptAt: DateTime
+  lastError: String
+  lastSuccessAt: DateTime
+  oneUrl: String
+  state: OneChannelConnectionState!
 }
 
 type OverriddenRating {
@@ -3862,6 +3971,7 @@ type Query {
 
   """This query returns the user."""
   me: SensitiveDataUser
+  mediumStats(from: DateTime, to: DateTime): MediumStats!
 
   """Returns a memberplan by id or slug."""
   memberPlan(id: String, slug: Slug): MemberPlan!
@@ -3880,6 +3990,7 @@ type Query {
 
   "\n      Returns all new subscribers in a given timeframe.\n      Includes already deactivated ones.\n    "
   newSubscribers(end: DateTime, start: DateTime!): [DashboardSubscription!]!
+  oneChannelStatus: OneChannelStatus!
 
   """Returns an page by id or slug."""
   page(id: String, slug: String): Page!

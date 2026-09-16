@@ -4,6 +4,15 @@
       "popupBlocked": "Das Vorschau-Fenster wurde vom Browser blockiert. Bitte Pop-ups für den Editor erlauben und erneut versuchen.",
       "notResponding": "Das Vorschau-Fenster antwortet nicht. Die Anmeldung für die Vorschau ist möglicherweise fehlgeschlagen."
     },
+    "oneChannel": {
+      "connected": "We.Publish Channel: verbunden",
+      "failing": "We.Publish Channel: Verbindung gestört",
+      "notConfigured": "We.Publish Channel: nicht konfiguriert",
+      "notConfiguredHint": "Diese Instanz sendet keine Daten an We.Publish.",
+      "lastSuccess": "Letzter erfolgreicher Kontakt: {{value}}",
+      "lastSuccessNever": "Letzter erfolgreicher Kontakt: nie",
+      "lastAttemptFailed": "Letzter Versuch: {{value}} – fehlgeschlagen: {{error}}"
+    },
     "oneMessages": {
       "header": "Nachrichten vom We.Publish Team",
       "expand": "Ausklappen",

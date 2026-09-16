@@ -4058,6 +4058,21 @@ export enum NavigationLinkType {
   Page = 'Page'
 }
 
+export enum OneChannelConnectionState {
+  Connected = 'Connected',
+  Failing = 'Failing',
+  NotConfigured = 'NotConfigured'
+}
+
+export type OneChannelStatus = {
+  __typename?: 'OneChannelStatus';
+  lastAttemptAt?: Maybe<Scalars['DateTime']>;
+  lastError?: Maybe<Scalars['String']>;
+  lastSuccessAt?: Maybe<Scalars['DateTime']>;
+  oneUrl?: Maybe<Scalars['String']>;
+  state: OneChannelConnectionState;
+};
+
 export type OverriddenRating = {
   __typename?: 'OverriddenRating';
   answerId: Scalars['String'];
@@ -5088,6 +5103,7 @@ export type Query = {
    *
    */
   newSubscribers: Array<DashboardSubscription>;
+  oneChannelStatus: OneChannelStatus;
   /** Returns an page by id or slug. */
   page: Page;
   /** Returns a single page revision including its full content. */

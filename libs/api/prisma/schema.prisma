@@ -2147,3 +2147,12 @@ model Goodie {
 
   @@map("goodies")
 }
+
+model OneChannelState {
+  id            String    @id
+  createdAt     DateTime  @default(now()) @db.Timestamptz(3)
+  modifiedAt    DateTime  @updatedAt @db.Timestamptz(3)
+  lastSuccessAt DateTime? @db.Timestamptz(3)
+
+  @@map("one_channel_state")
+}

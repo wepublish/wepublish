@@ -81,17 +81,21 @@ export class JwtService {
   async generateScopedJWT({
     scope,
     expiresInMinutes = 5,
+    audience,
+    subject,
   }: {
     scope: string;
     expiresInMinutes?: number;
+    audience?: string;
+    subject?: string;
   }): Promise<string> {
     const key = await this.privateKey;
 
     return new SignJWT({ scope })
       .setProtectedHeader({ alg: 'EdDSA', kid: this.kid })
-      .setSubject('website-service')
+      .setSubject(subject ?? 'website-service')
       .setIssuer(this.hostURL)
-      .setAudience(this.websiteURL)
+      .setAudience(audience ?? this.websiteURL)
       .setExpirationTime(`${expiresInMinutes}m`)
       .sign(key);
   }
