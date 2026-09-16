@@ -4,9 +4,11 @@ import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { useEffect, useState } from 'react';
 
 import { useAdsContext } from '../context/ads-context';
+import { isReviveAvailable } from './revive-ad';
 
 const OVERLAY_KEY = 'adblock_overlay_dismissed_until';
 const DISMISS_DURATION = 24 * 60 * 60 * 1000; // 24h
+const BLOCK_CONFIRM_TIMEOUT_MS = 15000;
 
 const Backdrop = styled.div`
   position: fixed;
@@ -39,51 +41,66 @@ const Buttons = styled('div')`
   gap: ${({ theme }) => theme.spacing(3)};
 `;
 
-export const AdblockOverlay = () => {
-  const { adsDisabled } = useAdsContext();
-
-  return <>{!adsDisabled && <AdblockOverlayComponent />}</>;
+const isDismissed = () => {
+  try {
+    const dismissedUntil = localStorage.getItem(OVERLAY_KEY);
+    return !!dismissedUntil && Date.now() <= parseInt(dismissedUntil, 10);
+  } catch {
+    return true;
+  }
 };
 
-const AdblockOverlayComponent = () => {
+export const AdblockOverlay = () => {
+  const { adsDisabled, reviveStatus, setReviveStatus } = useAdsContext();
   const [showOverlay, setShowOverlay] = useState(false);
   const {
     elements: { Button },
   } = useWebsiteBuilder();
 
   useEffect(() => {
+    if (reviveStatus !== 'pending') {
+      return;
+    }
+    // The Revive loader (servedby.revive-adserver.net) is on every ad-blocker
+    // list, so a blocked client never gets `window.reviveAsync`. Using that as
+    // the signal — rather than "are the <ins> slots empty?" — avoids nagging
+    // readers who simply hit a page/zone with no ad booked (those still degrade
+    // gracefully via the house-ad fallback in advertisement.tsx).
     const timeout = setTimeout(() => {
-      // The Revive loader (servedby.revive-adserver.net) is on every ad-blocker
-      // list, so a blocked client never gets `window.reviveAsync`. Using that as
-      // the signal — rather than "are the <ins> slots empty?" — avoids nagging
-      // readers who simply hit a page/zone with no ad booked (those still degrade
-      // gracefully via the house-ad fallback in advertisement.tsx).
-      const adBlocked = typeof (window as any).reviveAsync === 'undefined';
-      if (!adBlocked) {
-        return;
+      if (!isReviveAvailable()) {
+        setReviveStatus('blocked');
       }
-
-      const dismissedUntil = localStorage.getItem(OVERLAY_KEY);
-      const now = Date.now();
-      if (!dismissedUntil || now > parseInt(dismissedUntil, 10)) {
-        setShowOverlay(true);
-        document.body.style.overflow = 'hidden';
-      }
-    }, 4200);
+    }, BLOCK_CONFIRM_TIMEOUT_MS);
 
     return () => clearTimeout(timeout);
-  }, []);
+  }, [reviveStatus, setReviveStatus]);
+
+  useEffect(() => {
+    if (adsDisabled || reviveStatus !== 'blocked' || isDismissed()) {
+      return;
+    }
+    setShowOverlay(true);
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [adsDisabled, reviveStatus]);
 
   const handleClose = () => {
-    localStorage.setItem(
-      OVERLAY_KEY,
-      (Date.now() + DISMISS_DURATION).toString()
-    );
+    try {
+      localStorage.setItem(
+        OVERLAY_KEY,
+        (Date.now() + DISMISS_DURATION).toString()
+      );
+    } catch {
+      // storage unavailable, dismiss for this page view only
+    }
     setShowOverlay(false);
     document.body.style.overflow = '';
   };
 
-  if (!showOverlay) {
+  if (!showOverlay || adsDisabled) {
     return null;
   }
 

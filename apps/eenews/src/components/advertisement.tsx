@@ -1,10 +1,9 @@
 import styled from '@emotion/styled';
 import { Box, useMediaQuery, useTheme } from '@mui/material';
-import { useRouter } from 'next/router';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { useAdsContext } from '../context/ads-context';
-import { ReviveAd } from './revive-ad';
+import { ReviveAd, ReviveSlotStatus } from './revive-ad';
 
 type AdType = 'leaderboard' | 'skyscraper' | 'medium-rectangle';
 
@@ -14,9 +13,18 @@ type AdvertisementProps = {
 
 const REVIVE_ID = '727bec5e09208690b050ccfc6a45d384';
 
+const AD_SLOTS = {
+  leaderboard: { zoneId: '29587', fallbackSrc: '/house/leaderboard.png' },
+  skyscraper: { zoneId: '29588', fallbackSrc: '/house/skyscraper.png' },
+  'medium-rectangle': { zoneId: '29589', fallbackSrc: '/house/rectangle.png' },
+} as const;
+
 export const Advertisement = ({ type }: AdvertisementProps) => {
   const { adsDisabled } = useAdsContext();
-  return <>{!adsDisabled && <AdvertisementComponent type={type} />}</>;
+  if (adsDisabled) {
+    return null;
+  }
+  return <AdvertisementComponent type={type} />;
 };
 
 const AdvertisementComponent = ({ type }: AdvertisementProps) => {
@@ -24,55 +32,17 @@ const AdvertisementComponent = ({ type }: AdvertisementProps) => {
   const belowMd = useMediaQuery(theme.breakpoints.down('md'), {
     ssrMatchMedia: () => ({ matches: false }),
   });
-  const [version, setVersion] = useState(0);
 
-  const router = useRouter();
+  const resolvedType =
+    type === 'leaderboard' && belowMd ? 'medium-rectangle' : type;
+  const Wrapper = WRAPPERS[resolvedType];
 
-  useEffect(() => {
-    const handleRouteChange = () => {
-      setVersion(version => version + 1);
-    };
-
-    router.events.on('routeChangeComplete', handleRouteChange);
-
-    return () => {
-      router.events.off('routeChangeComplete', handleRouteChange);
-    };
-  }, [router]);
-
-  if (type === 'leaderboard' && belowMd) {
-    type = 'medium-rectangle';
-  }
-
-  switch (type) {
-    case 'leaderboard':
-      return (
-        <AdSlot
-          Wrapper={Leaderboard}
-          zoneId="29587"
-          fallbackSrc="/house/leaderboard.png"
-          version={version}
-        />
-      );
-    case 'skyscraper':
-      return (
-        <AdSlot
-          Wrapper={Skyscraper}
-          zoneId="29588"
-          fallbackSrc="/house/skyscraper.png"
-          version={version}
-        />
-      );
-    case 'medium-rectangle':
-      return (
-        <AdSlot
-          Wrapper={MediumRectangle}
-          zoneId="29589"
-          fallbackSrc="/house/rectangle.png"
-          version={version}
-        />
-      );
-  }
+  return (
+    <AdSlot
+      Wrapper={Wrapper}
+      {...AD_SLOTS[resolvedType]}
+    />
+  );
 };
 
 type AdStatus = 'loading' | 'filled' | 'fallback';
@@ -81,60 +51,41 @@ type AdSlotProps = {
   Wrapper: typeof Leaderboard;
   zoneId: string;
   fallbackSrc: string;
-  version: number;
 };
 
-// While the Revive ad loads we show the skeleton. If the `<ins>` never fills —
-// blocked by an ad-blocker, or simply no ad booked for the zone — we swap in a
-// house-ad placeholder instead of leaving the skeleton shimmering forever. A
-// MutationObserver also catches ads that fill late and clears the fallback.
-const AdSlot = ({ Wrapper, zoneId, fallbackSrc, version }: AdSlotProps) => {
-  const ref = useRef<HTMLDivElement>(null);
+const FALLBACK_TIMEOUT_MS = 4000;
+
+// While the Revive ad loads we show the skeleton. Revive's delivery event
+// reports whether the zone filled; a blocked script or a silent zone swaps in
+// a house-ad placeholder, and a late fill clears it again.
+const AdSlot = ({ Wrapper, zoneId, fallbackSrc }: AdSlotProps) => {
+  const { reviveStatus } = useAdsContext();
   const [status, setStatus] = useState<AdStatus>('loading');
 
-  useEffect(() => {
-    setStatus('loading');
+  const onStatusChange = useCallback((slotStatus: ReviveSlotStatus) => {
+    setStatus(slotStatus === 'empty' ? 'fallback' : slotStatus);
+  }, []);
 
-    const element = ref.current;
-    if (!element) {
+  useEffect(() => {
+    if (reviveStatus === 'blocked') {
+      setStatus(current => (current === 'filled' ? current : 'fallback'));
+    }
+  }, [reviveStatus]);
+
+  useEffect(() => {
+    if (status !== 'loading') {
       return;
     }
-
-    const isFilled = () => {
-      const ins = element.querySelector('ins[data-revive-zoneid]');
-      return (
-        ins instanceof HTMLElement &&
-        ins.offsetHeight > 0 &&
-        ins.childElementCount > 0
-      );
-    };
-
-    const observer = new MutationObserver(() => {
-      if (isFilled()) {
-        setStatus('filled');
-      }
-    });
-    observer.observe(element, { childList: true, subtree: true });
-
-    const timer = setTimeout(() => {
-      setStatus(isFilled() ? 'filled' : 'fallback');
-    }, 3500);
-
-    return () => {
-      observer.disconnect();
-      clearTimeout(timer);
-    };
-  }, [version, zoneId]);
+    const timer = setTimeout(() => setStatus('fallback'), FALLBACK_TIMEOUT_MS);
+    return () => clearTimeout(timer);
+  }, [status]);
 
   return (
-    <Wrapper
-      ref={ref}
-      status={status}
-    >
+    <Wrapper status={status}>
       <ReviveAd
-        key={version}
         reviveId={REVIVE_ID}
         zoneId={zoneId}
+        onStatusChange={onStatusChange}
       />
       {status === 'fallback' && (
         <img
@@ -216,3 +167,9 @@ const MediumRectangle = styled(AdBox)`
     inset: 0;
   }
 `;
+
+const WRAPPERS = {
+  leaderboard: Leaderboard,
+  skyscraper: Skyscraper,
+  'medium-rectangle': MediumRectangle,
+} as const;

@@ -57,6 +57,7 @@ import { EenewsNavbar } from '../src/components/eenews-navbar';
 import { EeNewsSubscribe } from '../src/components/eenews-subscribe';
 import { EenewsSubscriptionListItem } from '../src/components/eenews-subscription-list-item';
 import { EenewsTagPage } from '../src/components/eenews-tag-page';
+import { ReviveScript } from '../src/components/revive-script';
 import { EenewsTeaser } from '../src/components/teasers/eenews-teaser';
 import { AdsProvider } from '../src/context/ads-context';
 import eenewsTheme from '../src/theme';
@@ -193,12 +194,18 @@ function CustomApp({
                     name="viewport"
                     content="width=device-width, initial-scale=1.0"
                   />
+                  <link
+                    rel="preconnect"
+                    href="https://servedby.revive-adserver.net"
+                    crossOrigin="anonymous"
+                  />
+                  <link
+                    rel="preconnect"
+                    href="https://cdn.revive-adserver.net"
+                  />
                 </Head>
 
-                <Script
-                  src="//servedby.revive-adserver.net/asyncjs.php"
-                  async
-                />
+                <ReviveScript />
 
                 <AdblockOverlay />
 
