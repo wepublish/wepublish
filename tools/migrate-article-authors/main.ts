@@ -17,6 +17,8 @@
  *                       read/create/publish articles and read/create/update/delete authors.
  *   WEPUBLISH_EMAIL / WEPUBLISH_PASSWORD
  *                       alternative to WEPUBLISH_TOKEN: logs in as an editor user.
+ *   WEPUBLISH_TOTP      six digit code, required when the user has TOTP enabled.
+ *                       Codes expire after ~30s, so enter a fresh one per run.
  *
  * `analyze` works without credentials (published articles only). `apply` and `cleanup`
  * require credentials and an API that already exposes `ArticleRevisionAuthorInput`.
@@ -208,10 +210,28 @@ class Client {
     const email = process.env.WEPUBLISH_EMAIL;
     const password = process.env.WEPUBLISH_PASSWORD;
     if (email && password) {
-      const data = await this.request<{ createSession: { token: string } }>(
-        LOGIN_MUTATION,
-        { email, password }
-      );
+      // strip the spaces authenticator apps like to add ("123 456")
+      const totpToken = process.env.WEPUBLISH_TOTP?.replace(/\s/g, '');
+      let data: { createSession: { token: string } };
+      try {
+        // the totpToken argument only exists on newer APIs, so send the plain
+        // mutation unless a code was actually provided
+        data = totpToken
+          ? await this.request(LOGIN_WITH_TOTP_MUTATION, {
+              email,
+              password,
+              totpToken,
+            })
+          : await this.request(LOGIN_MUTATION, { email, password });
+      } catch (error) {
+        if (!totpToken && /credentials are invalid/i.test(String(error))) {
+          throw new Error(
+            `Login failed for ${email}. If this user has TOTP enabled, set WEPUBLISH_TOTP=<six digit code> ` +
+              'or use an API token via WEPUBLISH_TOKEN instead.'
+          );
+        }
+        throw error;
+      }
       this.token = data.createSession.token;
       this.isApiToken = false;
     }
@@ -608,6 +628,10 @@ export const LOGIN_MUTATION = `mutation Login($email: String!, $password: String
   createSession(email: $email, password: $password) { token }
 }`;
 
+export const LOGIN_WITH_TOTP_MUTATION = `mutation LoginWithTotp($email: String!, $password: String!, $totpToken: String) {
+  createSession(email: $email, password: $password, totpToken: $totpToken) { token }
+}`;
+
 export const AUTHOR_FIELDS = `id slug name jobTitle bio createdAt hideOnArticle hideOnTeam hideOnTeaser
   image { id } links { title url } tags { id tag }`;
 
@@ -973,6 +997,12 @@ const sameAuthors = (a: RevAuthor[], b: RevAuthor[]) =>
 const sameIds = (a: string[], b: string[]) =>
   a.length === b.length && a.every((x, i) => x === b[i]);
 
+// ArticleRevisionSocialMediaAuthor has no position column (unlike
+// ArticleRevisionAuthor), so the API returns social media authors in arbitrary
+// order – only the set of ids is meaningful.
+const sameIdSet = (a: string[], b: string[]) =>
+  sameIds([...a].sort(), [...b].sort());
+
 function buildPlan(
   apiUrl: string,
   client: Client,
@@ -1251,7 +1281,7 @@ function buildPlan(
       const smTo = mapSocialMediaAuthors(rev.socialMediaAuthorIds, authorMap);
       if (
         !sameAuthors(rev.authors, to) ||
-        !sameIds(rev.socialMediaAuthorIds, smTo)
+        !sameIdSet(rev.socialMediaAuthorIds, smTo)
       ) {
         plan[key] = {
           revisionId: rev.id,
@@ -1259,7 +1289,7 @@ function buildPlan(
           to,
           mappings: mappingsFor(rev.authors),
         };
-        if (!sameIds(rev.socialMediaAuthorIds, smTo)) {
+        if (!sameIdSet(rev.socialMediaAuthorIds, smTo)) {
           plan.socialMediaChanged = true;
           plan[key]!.socialMedia = {
             from: rev.socialMediaAuthorIds.map(id => currentLabel({ authorId: id, role: null })),
@@ -1732,6 +1762,9 @@ class Migrator {
       resolved[id] = replacements.map(r => {
         if (!r.authorId.startsWith('new:')) return r;
         const created = this.createdAuthors.get(r.authorId.slice(4));
+        // a dry run never creates anything, so keep the "new:" placeholder –
+        // describeAuthor() renders it as "<name> (new author)"
+        if (!created && this.dryRun) return r;
         if (!created)
           throw new Error(`Author "${r.authorId.slice(4)}" was not created`);
         return { authorId: created, role: r.role };
@@ -1777,7 +1810,7 @@ class Migrator {
 
     const changed =
       !sameAuthors(currentAuthors, authors) ||
-      !sameIds(
+      !sameIdSet(
         revision.socialMediaAuthors.map(a => a.id),
         socialMediaAuthorIds
       );
@@ -1839,8 +1872,8 @@ class Migrator {
     );
     check(
       'socialMediaAuthorIds',
-      variables.socialMediaAuthorIds,
-      draft.socialMediaAuthors.map(a => a.id)
+      [...variables.socialMediaAuthorIds].sort(),
+      draft.socialMediaAuthors.map(a => a.id).sort()
     );
     for (const field of [
       'preTitle',
@@ -1907,12 +1940,13 @@ class Migrator {
 
       if (!published?.changed && !draft?.changed) {
         log(`  = ${article.slug}: nothing to change`);
-        this.actionLog.write({
-          type: 'article',
-          id: article.id,
-          status: 'done',
-          details: 'unchanged',
-        });
+        if (!this.dryRun)
+          this.actionLog.write({
+            type: 'article',
+            id: article.id,
+            status: 'done',
+            details: 'unchanged',
+          });
         continue;
       }
 
@@ -2070,7 +2104,7 @@ async function main() {
 
     const schemaPath =
       (flags.schema as string) ||
-      path.resolve(__dirname, '../../../apps/api-example/schema-v2.graphql');
+      path.resolve(__dirname, '../../apps/api-example/schema-v2.graphql');
     const mapper = new SchemaMapper(parse(fs.readFileSync(schemaPath, 'utf8')));
     const dryRun = !!flags['dry-run'];
     const actionLog = new ActionLog(

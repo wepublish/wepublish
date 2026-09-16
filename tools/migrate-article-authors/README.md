@@ -50,6 +50,8 @@ Everything runs from the repository root with `npx tsx`.
 export WEPUBLISH_TOKEN=...
 # … or an editor login
 export WEPUBLISH_EMAIL=... WEPUBLISH_PASSWORD=...
+# … plus a fresh six digit code if that user has TOTP enabled (codes expire after ~30s)
+export WEPUBLISH_TOTP=123456
 
 # optional – defaults to https://api-hauptstadt.wepublish.cloud/v1
 export WEPUBLISH_API_URL=https://api-hauptstadt.wepublish.cloud/v1
