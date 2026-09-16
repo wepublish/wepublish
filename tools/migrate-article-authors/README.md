@@ -32,7 +32,8 @@ The tool only talks to the GraphQL API. It does not need database access.
    - articles with a pending (scheduled) revision and peered articles are skipped and listed
    - after every write the new revision is fetched again and compared field by field
      (blocks, properties, metadata, authors). On any mismatch the run stops.
-4. **Deletes the merged authors** (`cleanup`) once no published/draft revision references them.
+4. **Deletes the merged authors** (`cleanup`) once no published, draft or pending revision
+   references them.
    Note: deleting an author also removes it from archived (historic) revisions.
 
 Blocks are round-tripped generically: the selection set and the output → input conversion are

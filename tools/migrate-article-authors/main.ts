@@ -678,7 +678,8 @@ export function articlesLightQuery(
   authenticated: boolean
 ) {
   const rev = revisionSelection(shape);
-  const privateFields = authenticated ? `draft { ${rev} } pending { id }` : '';
+  const privateFields =
+    authenticated ? `draft { ${rev} } pending { ${rev} }` : '';
   return `query Articles($skip: Int!, $take: Int!) {
     articles(skip: $skip, take: $take, sort: CreatedAt, order: Ascending, filter: {}) {
       totalCount
@@ -741,7 +742,7 @@ type LightArticle = {
   peer: boolean;
   published: LightRevision | null;
   draft: LightRevision | null;
-  pending: { id: string } | null;
+  pending: LightRevision | null;
 };
 
 async function fetchAllAuthors(client: Client): Promise<AuthorRec[]> {
@@ -815,7 +816,7 @@ async function fetchAllArticlesLight(
         peer: !!node.peer,
         published: toLightRevision(node.published, shape),
         draft: toLightRevision(node.draft ?? null, shape),
-        pending: node.pending ?? null,
+        pending: toLightRevision(node.pending ?? null, shape),
       });
     }
     process.stdout.write(
@@ -1994,10 +1995,11 @@ class Migrator {
       `\n▸ Deleting ${this.plan.authorsToDelete.length} merged author(s)${this.dryRun ? ' (dry run)' : ''}`
     );
     const articles = await fetchAllArticlesLight(this.client, 'new');
-    const pendingIds = articles.filter(a => a.pending).map(a => a.id);
     const referenced = new Map<string, string[]>();
     for (const article of articles) {
-      for (const rev of [article.published, article.draft]) {
+      // pending (scheduled) revisions count as references too: `apply` skips those
+      // articles, so they may still carry a composite author that goes live later.
+      for (const rev of [article.published, article.draft, article.pending]) {
         if (!rev) continue;
         for (const id of [
           ...rev.authors.map(a => a.authorId),
@@ -2008,11 +2010,6 @@ class Migrator {
           referenced.set(id, list);
         }
       }
-    }
-    if (pendingIds.length) {
-      warn(
-        `${pendingIds.length} article(s) have pending revisions whose authors cannot be checked here: ${pendingIds.join(', ')}`
-      );
     }
 
     for (const author of this.plan.authorsToDelete) {
