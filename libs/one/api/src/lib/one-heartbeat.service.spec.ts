@@ -1,6 +1,10 @@
 import { OneChannelStateService } from './one-channel-state.service';
 import { OneClientService } from './one-client.service';
-import { OneHeartbeatService, sanitiseVersion } from './one-heartbeat.service';
+import {
+  BOOTSTRAP_DELAY_MS,
+  OneHeartbeatService,
+  sanitiseVersion,
+} from './one-heartbeat.service';
 
 describe('sanitiseVersion', () => {
   it('accepts a git sha', () => {
@@ -83,11 +87,41 @@ describe('OneHeartbeatService', () => {
     );
   });
 
-  it('does not throw out of application bootstrap', async () => {
+  it('does not send at bootstrap, because the HTTP server is not listening yet', () => {
+    jest.useFakeTimers();
+
+    try {
+      makeService('https://one.wepublish.ch').onApplicationBootstrap();
+
+      expect(client.post).not.toHaveBeenCalled();
+    } finally {
+      jest.useRealTimers();
+    }
+  });
+
+  it('schedules the first heartbeat past the bootstrap delay', () => {
+    const scheduled: number[] = [];
+    const original = global.setTimeout;
+    global.setTimeout = ((fn: () => void, ms?: number) => {
+      scheduled.push(ms ?? 0);
+      return original(() => undefined, 0);
+    }) as unknown as typeof global.setTimeout;
+
+    try {
+      makeService('https://one.wepublish.ch').onApplicationBootstrap();
+
+      expect(scheduled).toContain(BOOTSTRAP_DELAY_MS);
+      expect(BOOTSTRAP_DELAY_MS).toBeGreaterThan(0);
+    } finally {
+      global.setTimeout = original;
+    }
+  });
+
+  it('does not throw out of application bootstrap', () => {
     client.post.mockRejectedValue(new Error('ECONNREFUSED'));
 
-    await expect(
+    expect(() =>
       makeService('https://one.wepublish.ch').onApplicationBootstrap()
-    ).resolves.toBeUndefined();
+    ).not.toThrow();
   });
 });

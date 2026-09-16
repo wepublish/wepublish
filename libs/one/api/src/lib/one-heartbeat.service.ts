@@ -12,6 +12,15 @@ import { ONE_URL_TOKEN } from './one.tokens';
 
 export const HEARTBEAT_INTERVAL_MS = 5 * 60 * 1000;
 
+/**
+ * NestJS runs onApplicationBootstrap BEFORE app.listen(), so a heartbeat sent
+ * there reaches One while this API is not yet serving — One then cannot fetch
+ * our JWKS to verify the token and answers 403. Delaying the first beat past
+ * the listen() call avoids that race; a failure here is still recoverable via
+ * the regular interval.
+ */
+export const BOOTSTRAP_DELAY_MS = 10 * 1000;
+
 export const VERSION_PATTERN = /^[A-Za-z0-9._-]{1,64}$/;
 
 export function sanitiseVersion(raw: string): string {
@@ -30,8 +39,12 @@ export class OneHeartbeatService implements OnApplicationBootstrap {
     @Inject(ONE_URL_TOKEN) private oneURL: string
   ) {}
 
-  async onApplicationBootstrap(): Promise<void> {
-    await this.send();
+  onApplicationBootstrap(): void {
+    const timer = setTimeout(() => {
+      void this.send();
+    }, BOOTSTRAP_DELAY_MS);
+
+    timer.unref?.();
   }
 
   @Interval(HEARTBEAT_INTERVAL_MS)
