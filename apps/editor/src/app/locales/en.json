@@ -2113,7 +2113,9 @@
         "backToList": "Back to list",
         "noName": "No name",
         "delete": "Delete",
-        "saved": "Saved"
+        "saved": "Saved",
+        "new": "New",
+        "editing": "Editing"
       }
     },
     "yes": "Yes",

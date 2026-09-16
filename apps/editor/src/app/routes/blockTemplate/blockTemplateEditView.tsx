@@ -18,11 +18,13 @@ import {
   BlockValue,
   createCheckedPermissionComponent,
   EditorTemplate,
-  IconButton,
   mapBlockValueToBlockInput,
   NavigationBar,
   PermissionControl,
+  StateColor,
+  TypographicTextArea,
   useAuthorisation,
+  useUnsavedChangesDialog,
 } from '@wepublish/ui/editor';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -33,10 +35,28 @@ import {
   IconButton as RIconButton,
   Message,
   Notification,
+  Tag as RTag,
   toaster,
 } from 'rsuite';
 
 const FieldSet = styled('fieldset')``;
+
+const Legend = styled.legend`
+  width: auto;
+  margin: 0px auto;
+`;
+
+const Tag = styled(RTag, {
+  shouldForwardProp: prop => prop !== 'stateColor',
+})<{ stateColor: string }>`
+  background-color: ${({ stateColor }) => stateColor};
+`;
+
+const IconButton = styled(RIconButton)`
+  margin-left: 10px;
+`;
+
+const NameInput = styled(TypographicTextArea)``;
 
 const initialBlocks: BlockValue[] = [];
 
@@ -52,6 +72,10 @@ function BlockTemplateEditView() {
   const [blocks, setBlocks] = useState<BlockValue[]>(
     isNew ? initialBlocks : []
   );
+  const [tagTitle, setTagTitle] = useState(
+    isNew ? t('blockTemplates.edit.new') : t('blockTemplates.edit.editing')
+  );
+  const [stateColor, setStateColor] = useState<StateColor>(StateColor.none);
 
   const [
     createBlockTemplate,
@@ -59,6 +83,8 @@ function BlockTemplateEditView() {
   ] = useCreateBlockTemplateMutation();
   const [updateBlockTemplate, { loading: isUpdating, error: updateError }] =
     useUpdateBlockTemplateMutation();
+
+  const unsavedChangesDialog = useUnsavedChangesDialog(hasChanged);
 
   const blockTemplateId = (id || createData?.createBlockTemplate.id) ?? '';
   const {
@@ -100,6 +126,19 @@ function BlockTemplateEditView() {
       setBlocks((blocks as FullBlockFragment[]).map(blockForQueryBlock));
     }
   }, [blockTemplateData]);
+
+  useEffect(() => {
+    if (isNew) {
+      setTagTitle(t('blockTemplates.edit.new'));
+      setStateColor(StateColor.none);
+    } else if (hasChanged) {
+      setTagTitle(t('blockTemplates.edit.editing'));
+      setStateColor(StateColor.draft);
+    } else {
+      setTagTitle(t('blockTemplates.edit.saved'));
+      setStateColor(StateColor.published);
+    }
+  }, [isNew, t, hasChanged]);
 
   function createInput(): CreateBlockTemplateMutationVariables {
     return {
@@ -153,6 +192,9 @@ function BlockTemplateEditView() {
 
   return (
     <FieldSet>
+      <Legend>
+        <Tag stateColor={stateColor}>{tagTitle}</Tag>
+      </Legend>
       <EditorTemplate
         navigationChildren={
           <NavigationBar
@@ -161,12 +203,28 @@ function BlockTemplateEditView() {
                 <RIconButton
                   size="lg"
                   icon={<MdKeyboardBackspace />}
+                  onClick={e => {
+                    if (!unsavedChangesDialog()) e.preventDefault();
+                  }}
                 >
                   {t('blockTemplates.edit.backToList')}
                 </RIconButton>
               </Link>
             }
             centerChildren={
+              <NameInput
+                value={name}
+                disabled={isDisabled}
+                variant="title"
+                align="center"
+                placeholder={t('blockTemplates.edit.name')}
+                onChange={e => {
+                  setName(e?.target?.value);
+                  setChanged(true);
+                }}
+              />
+            }
+            rightChildren={
               isNew && createData == null ?
                 <PermissionControl
                   qualifyingPermissions={[CanCreateBlockTemplate.id]}
@@ -206,7 +264,7 @@ function BlockTemplateEditView() {
           value={blocks}
           disabled={isLoading || isDisabled || !isAuthorized}
           onChange={handleChange}
-        ></BlockList>
+        />
       </EditorTemplate>
     </FieldSet>
   );

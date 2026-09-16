@@ -2037,7 +2037,9 @@
         "backToList": "Zurück zur Liste",
         "noName": "Kein Name",
         "delete": "Löschen",
-        "saved": "Gespeichert"
+        "saved": "Gespeichert",
+        "new": "Neu",
+        "editing": "Bearbeiten"
       }
     },
     "yes": "Ja",

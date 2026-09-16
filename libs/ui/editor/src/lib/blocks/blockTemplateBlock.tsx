@@ -5,7 +5,7 @@ import {
 } from '@wepublish/editor/api';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdEdit, MdOutput } from 'react-icons/md';
+import { MdEdit, MdOutput, MdRefresh } from 'react-icons/md';
 import {
   ButtonToolbar,
   IconButton,
@@ -64,7 +64,7 @@ export const BlockTemplateBlock = ({
   const { t } = useTranslation();
   const blockMap = BlockMap as BlockMapType;
 
-  const { data, loading } = useBlockTemplateListQuery({
+  const { data, loading, refetch } = useBlockTemplateListQuery({
     variables: { take: 100 },
     fetchPolicy: 'cache-and-network',
   });
@@ -74,7 +74,6 @@ export const BlockTemplateBlock = ({
     [data?.blockTemplates.nodes]
   );
 
-  // The selected template might not be part of the first page of results.
   const selectedTemplate =
     templates.find(({ id }) => id === template?.id) ?? template;
 
@@ -107,6 +106,13 @@ export const BlockTemplateBlock = ({
 
         <ButtonToolbar>
           <IconButton
+            icon={<MdRefresh />}
+            onClick={event => {
+              refetch();
+              event.preventDefault();
+            }}
+          />
+          <IconButton
             icon={<MdEdit />}
             disabled={!selectedTemplate}
             href={
@@ -114,8 +120,6 @@ export const BlockTemplateBlock = ({
                 `/block-content/templates/edit/${selectedTemplate.id}`
               : undefined
             }
-            // Editing the template navigates away from the current editor,
-            // which would discard any unsaved changes.
             target="_blank"
           >
             {t('blocks.blockTemplate.editTemplate')}

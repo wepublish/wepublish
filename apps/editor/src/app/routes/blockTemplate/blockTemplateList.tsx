@@ -104,7 +104,7 @@ function BlockTemplateList() {
           data={data?.blockTemplates?.nodes || []}
         >
           <Column
-            width={200}
+            flexGrow={1}
             resizable
           >
             <HeaderCell>{t('blockTemplates.list.name')}</HeaderCell>
@@ -116,9 +116,8 @@ function BlockTemplateList() {
               )}
             </RCell>
           </Column>
-
           <Column
-            resizable
+            width={50}
             fixed="right"
           >
             <HeaderCell align={'center'}>

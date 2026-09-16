@@ -1988,7 +1988,9 @@
         "backToList": "Retour à la liste",
         "noName": "Pas de nom",
         "delete": "Supprimer",
-        "saved": "Enregistré"
+        "saved": "Enregistré",
+        "new": "Nouveau",
+        "editing": "Modification"
       }
     },
     "yes": "Oui",
