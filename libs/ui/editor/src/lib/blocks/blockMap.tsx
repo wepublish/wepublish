@@ -12,6 +12,7 @@ import {
   MdCoffee,
   MdComment,
   MdEvent,
+  MdFileCopy,
   MdFilter,
   MdFilter1,
   MdFilter6,
@@ -32,6 +33,7 @@ import {
 
 import { BlockMapForValue } from '../atoms/blockList';
 import { isFunctionalUpdate } from '../utility';
+import { BlockTemplateBlock } from './blockTemplateBlock';
 import { CommentBlock } from './commentBlock';
 import { CrowdfundingBlock } from './CrowdfundingBlock';
 import { EmbedBlock } from './embedBlock';
@@ -363,5 +365,12 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
       return 'blocks.flexBlock.label';
     })(),
     icon: <MdInterests />,
+  },
+
+  [EditorBlockType.BlockTemplate]: {
+    field: props => <BlockTemplateBlock {...props} />,
+    defaultValue: { blockTemplates: [], blockStyle: undefined },
+    label: 'blocks.blockTemplate.label',
+    icon: <MdFileCopy />,
   },
 };

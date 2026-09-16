@@ -1007,6 +1007,7 @@ export type DocumentStorageUsage = {
 };
 
 export enum EditorBlockType {
+  BlockTemplate = 'BlockTemplate',
   Comment = 'Comment',
   Crowdfunding = 'Crowdfunding',
   Embed = 'Embed',
@@ -1017,6 +1018,7 @@ export enum EditorBlockType {
   ImageGallery = 'ImageGallery',
   LinkPageBreak = 'LinkPageBreak',
   Listicle = 'Listicle',
+  MailchimpForm = 'MailchimpForm',
   Poll = 'Poll',
   Quote = 'Quote',
   RichText = 'RichText',
@@ -4269,8 +4271,8 @@ export type PaginatedAuthors = {
   totalCount: Scalars['Int'];
 };
 
-export type PaginatedBlockTemplates = {
-  __typename?: 'PaginatedBlockTemplates';
+export type PaginatedBlockTemplate = {
+  __typename?: 'PaginatedBlockTemplate';
   nodes: Array<BlockTemplate>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
@@ -4986,8 +4988,10 @@ export type Query = {
   banners: Array<Banner>;
   /** Returns a list of block styles. */
   blockStyles: Array<BlockStyle>;
+  /** Returns a single block template by ID. */
+  blockTemplate: BlockTemplate;
   /** Returns a paginated list of block templates. */
-  blockTemplates: PaginatedBlockTemplates;
+  blockTemplates: PaginatedBlockTemplate;
   /** This query generates a challenge which can be used to access protected endpoints. */
   challenge: Challenge;
   /** Returns a single challenge provider setting by id. */
@@ -5369,6 +5373,11 @@ export type QueryBannerArgs = {
 export type QueryBannersArgs = {
   skip: Scalars['Int'];
   take: Scalars['Int'];
+};
+
+
+export type QueryBlockTemplateArgs = {
+  id: Scalars['String'];
 };
 
 

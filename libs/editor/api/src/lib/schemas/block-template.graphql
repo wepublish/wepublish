@@ -119,7 +119,7 @@ fragment FullBlockTemplate on BlockTemplate {
   }
 }
 
-query BlockTemplates(
+query BlockTemplateList(
   $filter: BlockTemplateFilter
   $cursorId: String
   $take: Int
@@ -150,13 +150,23 @@ query BlockTemplates(
   }
 }
 
+query BlockTemplate($id: String!) {
+  blockTemplate(id: $id) {
+    ...FullBlockTemplate
+  }
+}
+
 mutation CreateBlockTemplate($name: String!, $blocks: [BlockContentInput!]!) {
   createBlockTemplate(name: $name, blocks: $blocks) {
     ...FullBlockTemplate
   }
 }
 
-mutation UpdateBlockTemplate($id: String!, $name: String!, $blocks: [BlockContentInput!]!) {
+mutation UpdateBlockTemplate(
+  $id: String!
+  $name: String!
+  $blocks: [BlockContentInput!]!
+) {
   updateBlockTemplate(id: $id, name: $name, blocks: $blocks) {
     ...FullBlockTemplate
   }

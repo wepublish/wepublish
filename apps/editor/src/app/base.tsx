@@ -4,9 +4,11 @@ import {
   CanCreateAuthor,
   CanCreateBanner,
   CanCreateBlockStyle,
+  CanCreateBlockTemplate,
   CanCreateCommentRatingSystem,
   CanCreateConsent,
   CanCreateCrowdfunding,
+  CanCreateDiscountCode,
   CanCreateDocument,
   CanCreateExternalApp,
   CanCreateGoodie,
@@ -23,11 +25,11 @@ import {
   CanCreateToken,
   CanCreateUser,
   CanCreateUserRole,
-  CanCreateDiscountCode,
   CanDeleteArticle,
   CanDeleteAuthor,
   CanDeleteBanner,
   CanDeleteBlockStyle,
+  CanDeleteBlockTemplate,
   CanDeleteCommentRatingSystem,
   CanDeleteConsent,
   CanDeleteDocument,
@@ -66,7 +68,6 @@ import {
   CanGetMailLogs,
   CanGetMailProviderSettings,
   CanGetMailTemplates,
-  CanSendMailTemplates,
   CanGetMemberPlan,
   CanGetMemberPlans,
   CanGetNavigation,
@@ -97,21 +98,23 @@ import {
   CanPreview,
   CanPublishArticle,
   CanPublishPage,
-  CanUpdateMailTemplates,
+  CanSendMailTemplates,
   CanTakeActionOnComment,
   CanUpdateBlockStyle,
+  CanUpdateBlockTemplate,
   CanUpdateCommentRatingSystem,
   CanUpdateComments,
   CanUpdateConsent,
   CanUpdateCrowdfunding,
+  CanUpdateDiscountCode,
   CanUpdateEvent,
   CanUpdateExternalApp,
   CanUpdateGoodie,
+  CanUpdateMailTemplates,
   CanUpdatePaywall,
   CanUpdateSettings,
   CanUpdateSystemMails,
   CanUpdateTag,
-  CanUpdateDiscountCode,
   CanUpdateWebsiteSettings,
 } from '@wepublish/permissions';
 import { PermissionControl, Version } from '@wepublish/ui/editor';
@@ -127,6 +130,7 @@ import {
   MdBookOnline,
   MdCardGiftcard,
   MdChat,
+  MdContentCopy,
   MdCountertops,
   MdCreditCard,
   MdDashboard,
@@ -144,7 +148,6 @@ import {
   MdMoney,
   MdMultilineChart,
   MdOutgoingMail,
-  MdSend,
   MdOutlineGridView,
   MdPayment,
   MdPersonAddAlt1,
@@ -153,6 +156,7 @@ import {
   MdPower,
   MdQueryStats,
   MdSell,
+  MdSend,
   MdSettings,
   MdSettingsInputAntenna,
   MdSignpost,
@@ -528,6 +532,22 @@ export function Base({ children }: BaseProps) {
                         icon={<MdStyle />}
                       >
                         {t('navbar.blocks.blockStyles')}
+                      </Nav.Item>
+                    </PermissionControl>
+                    <PermissionControl
+                      qualifyingPermissions={[
+                        CanCreateBlockTemplate.id,
+                        CanUpdateBlockTemplate.id,
+                        CanDeleteBlockTemplate.id,
+                      ]}
+                    >
+                      <Nav.Item
+                        as={NavLink}
+                        href="/block-content/templates"
+                        active={path === 'block-content/templates'}
+                        icon={<MdContentCopy />}
+                      >
+                        {t('navbar.blocks.blockTemplates')}
                       </Nav.Item>
                     </PermissionControl>
                   </Nav.Menu>

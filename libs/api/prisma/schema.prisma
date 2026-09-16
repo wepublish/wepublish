@@ -1551,6 +1551,7 @@ enum BlockType {
   Comment        @map("comment")
   Event          @map("event")
   FlexBlock      @map("flexBlock")
+  BlockTemplate  @map("blockTemplate")
 }
 
 model BlockStyle {

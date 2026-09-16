@@ -183,6 +183,10 @@ export interface FlexBlockValue extends BaseBlockValue {
   blocks: Array<FlexBlockWithAlignment>;
 }
 
+export interface BlockTemplateBlockValue extends BaseBlockValue {
+  blockTemplates: Array<BlockValue>;
+}
+
 export enum EmbedType {
   StreamableVideo = 'streamableVideo',
   FacebookPost = 'facebookPost',
@@ -477,6 +481,10 @@ export type FlexBlockListValue = BlockListValue<
   EditorBlockType.FlexBlock,
   FlexBlockValue
 >;
+export type BlockTemplateListValue = BlockListValue<
+  EditorBlockType.BlockTemplate,
+  BlockTemplateBlockValue
+>;
 
 export type BlockValue =
   | TitleBlockListValue
@@ -499,7 +507,8 @@ export type BlockValue =
   | CommentBlockListValue
   | EventBlockListValue
   | TeaserListBlockListValue
-  | FlexBlockListValue;
+  | FlexBlockListValue
+  | BlockTemplateListValue;
 
 export function mapBlockValueToBlockInput(
   block: BlockValue
@@ -927,6 +936,17 @@ export function mapBlockValueToBlockInput(
       };
 
       return { flexBlock };
+    }
+    case EditorBlockType.BlockTemplate: {
+      return {
+        blockTemplate: {
+          blockTemplates: block.value.blockTemplates.map(nb => ({
+            block: mapBlockValueToBlockInput(nb as BlockValue),
+          })),
+          blockStyle: block.value.blockStyle,
+          disabled: block.value.disabled,
+        },
+      };
     }
   }
 }

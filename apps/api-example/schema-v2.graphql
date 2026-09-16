@@ -948,6 +948,7 @@ type DocumentStorageUsage {
 }
 
 enum EditorBlockType {
+  BlockTemplate
   Comment
   Crowdfunding
   Embed
@@ -3019,7 +3020,7 @@ type PaginatedAuthors {
   totalCount: Int!
 }
 
-type PaginatedBlockTemplates {
+type PaginatedBlockTemplate {
   nodes: [BlockTemplate!]!
   pageInfo: PageInfo!
   totalCount: Int!
@@ -3698,6 +3699,9 @@ type Query {
   """Returns a list of block styles."""
   blockStyles: [BlockStyle!]!
 
+  """Returns a single block template by ID."""
+  blockTemplate(id: String!): BlockTemplate!
+
   """Returns a paginated list of block templates."""
   blockTemplates(
     """Cursor for pagination"""
@@ -3717,7 +3721,7 @@ type Query {
 
     """Number of items to fetch"""
     take: Int! = 10
-  ): PaginatedBlockTemplates!
+  ): PaginatedBlockTemplate!
 
   """
   This query generates a challenge which can be used to access protected endpoints.

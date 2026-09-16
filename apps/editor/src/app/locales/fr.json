@@ -318,7 +318,8 @@
         "title": "Sélectionner le crowdfunding",
         "name": "Nom du crowdfunding",
         "select": "Sélectionner",
-        "open": "Ouvrir"
+        "open": "Ouvrir",
+        "blockTemplates": "Modèles de blocs"
       },
       "comment": {
         "cherryPick": "Select specific comments",
@@ -730,6 +731,11 @@
       "tomorrow": "Demain"
     },
     "delete": "Supprimer",
+    "deleteBlockTemplateModal": {
+      "body": "Veux-tu vraiment supprimer le modèle de bloc \"{{name}}\"?",
+      "deleteBtn": "Oui, supprimer",
+      "title": "Supprimer le modèle de bloc?"
+    },
     "deletePollModal": {
       "body": "Veux-tu vraiment supprimer le sondage \"{{pollQuestion}}\"?",
       "deleteBtn": "Oui, supprimer",
@@ -1960,6 +1966,24 @@
       "subscriptionStartsAt": "L'abonnement débute le {{date}}",
       "subscriptionTitle": "{{memberPlanName}} / N° {{subscriptionId}}",
       "unexpectedErrorNoInvoice": "Erreur inattendue : facture inexistante."
+    },
+    "blockTemplates": {
+      "list": {
+        "title": "Modèles de blocs",
+        "newBlockTemplate": "Nouveau modèle de bloc",
+        "name": "Nom",
+        "noName": "Pas de nom",
+        "delete": "Supprimer"
+      },
+      "edit": {
+        "title": "Modifier le modèle de bloc",
+        "name": "Nom",
+        "back": "Retour",
+        "backToList": "Retour à la liste",
+        "noName": "Pas de nom",
+        "delete": "Supprimer",
+        "saved": "Enregistré"
+      }
     },
     "yes": "Oui",
     "memberplanForm": {

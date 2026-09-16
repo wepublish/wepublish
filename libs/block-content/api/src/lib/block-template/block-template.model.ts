@@ -33,7 +33,8 @@ export class BlockTemplate implements HasBlockContent {
   @Field()
   name!: string;
 
-  blocks!: Array<typeof BlockContent>;
+  @Field(() => [BlockContent])
+  blocks!: BlockContent[];
 }
 
 @InputType()
@@ -53,7 +54,7 @@ registerEnumType(BlockTemplateSort, {
 });
 
 @ObjectType()
-export class PaginatedBlockTemplates extends PaginatedType(BlockTemplate) {}
+export class PaginatedBlockTemplate extends PaginatedType(BlockTemplate) {}
 
 @ArgsType()
 export class BlockTemplateListArgs {

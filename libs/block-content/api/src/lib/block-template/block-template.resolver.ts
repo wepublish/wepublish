@@ -19,21 +19,41 @@ import {
   BlockTemplateBlock,
   BlockTemplateListArgs,
   CreateBlockTemplateInput,
-  PaginatedBlockTemplates,
+  PaginatedBlockTemplate,
   UpdateBlockTemplateInput,
 } from './block-template.model';
 import { BlockTemplateService } from './block-template.service';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 
 @Resolver(() => BlockTemplate)
 export class BlockTemplateResolver {
-  constructor(private blockTemplateService: BlockTemplateService) {}
+  constructor(
+    private blockTemplateService: BlockTemplateService,
+    private blockTemplateDataLoader: BlockTemplateDataloaderService
+  ) {}
 
   @Public()
-  @Query(returns => PaginatedBlockTemplates, {
+  @Query(returns => PaginatedBlockTemplate, {
     description: `Returns a paginated list of block templates.`,
   })
   public blockTemplates(@Args() args: BlockTemplateListArgs) {
     return this.blockTemplateService.getBlockTemplates(args);
+  }
+
+  @Public()
+  @Query(returns => BlockTemplate, {
+    description: `Returns a single block template by ID.`,
+  })
+  public async blockTemplate(@Args('id') id?: string) {
+    if (id == null) {
+      throw new BadRequestException(`Block template ID required`);
+    }
+    const template = await this.blockTemplateDataLoader.load(id);
+
+    if (!template) {
+      throw new NotFoundException(`Block template with ID ${id} not found`);
+    }
+    return template;
   }
 
   @Permissions(CanCreateBlockTemplate)
