@@ -10,7 +10,7 @@ We.Publish is a headless CMS platform for publishers, built as an Nx monorepo. I
 /
 ├── apps/               # Deployable applications
 │   ├── api-example/    # NestJS GraphQL API server (main backend)
-│   ├── editor/         # React/Next.js CMS admin panel
+│   ├── editor/         # React CMS admin panel (Vite SPA, React Router)
 │   ├── media/          # Express media server (image transform + S3)
 │   ├── website-example/# Reference Next.js website frontend
 │   └── <publisher>/    # Publisher-specific websites (bajour, tsri, mannschaft, etc.)
@@ -30,9 +30,18 @@ We.Publish is a headless CMS platform for publishers, built as an Nx monorepo. I
 | App | Tech | Port | Purpose |
 |-----|------|------|---------|
 | `api-example` | NestJS + Apollo Server | 4000 | GraphQL API backend |
-| `editor` | Next.js + React | 3000 | Admin CMS interface |
+| `editor` | Vite + React + React Router (client-rendered; Express host) | 3000 | Admin CMS interface |
 | `media` | Express | 4100 | Image upload, transformation, S3 storage |
 | `website-example` | Next.js | 4200 | Reference website frontend |
+
+**The editor is client-rendered — there is no SSR.** `nx build editor` produces
+two bundles: `browser` (the Vite client bundle) and `server`. The server is a
+small Express host ([apps/editor/server.ts](apps/editor/server.ts)) that serves
+the static browser bundle and, in `src/main.server.ts`, splices a
+`<script type="application/json">` settings blob into `index.html` before
+`</head>` — that is how runtime env (`API_URL`, `SENTRY_DSN`, `APP_NAME`) reaches
+the client. It does not render React. Do not mistake `server.ts` for SSR, and do
+not add `renderToString` there expecting the app to hydrate.
 
 ## Library Organization
 
