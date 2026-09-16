@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
+
 import {
   ArgsType,
   Field,
@@ -33,8 +35,8 @@ export class BlockTemplate implements HasBlockContent {
   @Field()
   name!: string;
 
-  @Field(() => [BlockContent])
-  blocks!: BlockContent[];
+  @Field(() => [require('../block-content.model').BlockContent])
+  blocks!: Array<typeof BlockContent>;
 }
 
 @InputType()
