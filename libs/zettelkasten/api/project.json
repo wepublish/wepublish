@@ -1,0 +1,27 @@
+{
+  "name": "zettelkasten-api",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/zettelkasten/api/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "command": "vitest run --passWithNoTests --config {projectRoot}/vitest.config.ts"
+      },
+      "configurations": {
+        "ci": {
+          "command": "vitest run --passWithNoTests --coverage --config {projectRoot}/vitest.config.ts"
+        },
+        "update": {
+          "command": "vitest run --passWithNoTests --update --config {projectRoot}/vitest.config.ts"
+        }
+      }
+    }
+  }
+}

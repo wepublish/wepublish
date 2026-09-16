@@ -948,6 +948,21 @@ export const CanDeleteAISettings: Permission = {
 };
 
 /**
+ * Knowledge Provider Settings (Zettelkasten)
+ */
+export const CanGetKnowledgeProviderSettings: Permission = {
+  id: 'CAN_GET_KNOWLEDGE_PROVIDER_SETTINGS',
+  description: 'Allows to get knowledge provider settings',
+  deprecated: false,
+};
+
+export const CanUpdateKnowledgeProviderSettings: Permission = {
+  id: 'CAN_UPDATE_KNOWLEDGE_PROVIDER_SETTINGS',
+  description: 'Allows to update knowledge provider settings',
+  deprecated: false,
+};
+
+/**
  * External Apps
  */
 export const CanCreateExternalApp: Permission = {
@@ -1300,6 +1315,8 @@ export const AllPermissions: Permission[] = [
   CanCreateAISettings,
   CanUpdateAISettings,
   CanDeleteAISettings,
+  CanGetKnowledgeProviderSettings,
+  CanUpdateKnowledgeProviderSettings,
   CanGetChallengeProviderSettings,
   CanCreateChallengeProviderSettings,
   CanUpdateChallengeProviderSettings,
