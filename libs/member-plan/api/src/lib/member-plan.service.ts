@@ -199,22 +199,24 @@ export class MemberPlanService {
       availablePaymentMethods,
     });
 
-    return this.prisma.memberPlan.create({
-      data: {
-        ...input,
-        description: input.description as any,
-        shortDescription: input.shortDescription as any,
-        periodicityPricing: {
-          createMany: {
-            data: pricing.map(toPeriodicityPriceCreate),
-          },
-        },
-        availablePaymentMethods: {
-          createMany: {
-            data: availablePaymentMethods,
-          },
+    const data: Prisma.MemberPlanUncheckedCreateInput = {
+      ...input,
+      description: input.description as any,
+      shortDescription: input.shortDescription as any,
+      periodicityPricing: {
+        createMany: {
+          data: pricing.map(toPeriodicityPriceCreate),
         },
       },
+      availablePaymentMethods: {
+        createMany: {
+          data: availablePaymentMethods,
+        },
+      },
+    };
+
+    return this.prisma.memberPlan.create({
+      data,
       include: {
         availablePaymentMethods: true,
         periodicityPricing: true,
