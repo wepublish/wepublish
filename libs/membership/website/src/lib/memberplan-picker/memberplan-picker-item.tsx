@@ -9,6 +9,7 @@ import { PaymentPeriodicity } from '@wepublish/website/api';
 import { formatCurrency } from '../formatters/format-currency';
 import {
   getCheapestOffer,
+  getMonthlyEquivalentRange,
   getPeriodPriceRange,
 } from '../formatters/format-payment-period';
 import { useTranslation } from 'react-i18next';
@@ -64,9 +65,6 @@ export const MemberPlanItem = forwardRef<
       name,
       slug,
       shortDescription,
-      amountPerMonthMax,
-      amountPerMonthMin,
-      amountPerMonthTarget,
       periodicityPricing,
       availablePaymentMethods,
       defaultPaymentPeriodicity,
@@ -85,16 +83,18 @@ export const MemberPlanItem = forwardRef<
     const { t } = useTranslation();
 
     const memberPlan = {
-      amountPerMonthMin,
-      amountPerMonthTarget,
-      amountPerMonthMax,
       periodicityPricing,
       availablePaymentMethods,
       defaultPaymentPeriodicity,
     };
 
+    const monthlyEquivalent = getMonthlyEquivalentRange(memberPlan);
+    const amountPerMonthMin = monthlyEquivalent.amountPerMonthMin;
+
     const hasFixedAmount =
-      amountPerMonthMax != null && amountPerMonthMax === amountPerMonthMin;
+      monthlyEquivalent.amountPerMonthMax != null &&
+      monthlyEquivalent.amountPerMonthMax ===
+        monthlyEquivalent.amountPerMonthMin;
 
     const yearlyPriceRange = getPeriodPriceRange(
       memberPlan,

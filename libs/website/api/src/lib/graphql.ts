@@ -2436,9 +2436,6 @@ export type MediumStatsWindow = {
 export type MemberPlan = HasImage & {
   __typename?: 'MemberPlan';
   active: Scalars['Boolean'];
-  amountPerMonthMax?: Maybe<Scalars['Int']>;
-  amountPerMonthMin: Scalars['Int'];
-  amountPerMonthTarget?: Maybe<Scalars['Int']>;
   availablePaymentMethods: Array<AvailablePaymentMethod>;
   confirmationPage?: Maybe<Page>;
   confirmationPageId?: Maybe<Scalars['String']>;
@@ -2458,7 +2455,7 @@ export type MemberPlan = HasImage & {
   migrateToTargetPaymentMethod?: Maybe<PaymentMethod>;
   migrateToTargetPaymentMethodID?: Maybe<Scalars['String']>;
   name: Scalars['String'];
-  periodicityPricing?: Maybe<Array<PeriodicityPrice>>;
+  periodicityPricing: Array<PeriodicityPrice>;
   productType: ProductType;
   shortDescription?: Maybe<Scalars['RichText']>;
   slug: Scalars['String'];
@@ -3067,9 +3064,6 @@ export type MutationCreateMailTemplateArgs = {
 
 export type MutationCreateMemberPlanArgs = {
   active: Scalars['Boolean'];
-  amountPerMonthMax?: InputMaybe<Scalars['Int']>;
-  amountPerMonthMin: Scalars['Int'];
-  amountPerMonthTarget?: InputMaybe<Scalars['Int']>;
   availablePaymentMethods: Array<AvailablePaymentMethodInput>;
   confirmationPageId?: InputMaybe<Scalars['String']>;
   currency: Currency;
@@ -3952,9 +3946,6 @@ export type MutationUpdateMailTemplateArgs = {
 
 export type MutationUpdateMemberPlanArgs = {
   active?: InputMaybe<Scalars['Boolean']>;
-  amountPerMonthMax?: InputMaybe<Scalars['Int']>;
-  amountPerMonthMin?: InputMaybe<Scalars['Int']>;
-  amountPerMonthTarget?: InputMaybe<Scalars['Int']>;
   availablePaymentMethods?: InputMaybe<Array<AvailablePaymentMethodInput>>;
   confirmationPageId?: InputMaybe<Scalars['String']>;
   currency?: InputMaybe<Currency>;

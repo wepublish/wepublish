@@ -83,9 +83,6 @@ export const MemberPlanPicker = forwardRef<
                   checked={memberPlan.id === value}
                   name={memberPlan.name}
                   currency={memberPlan.currency}
-                  amountPerMonthMin={memberPlan.amountPerMonthMin}
-                  amountPerMonthMax={memberPlan.amountPerMonthMax}
-                  amountPerMonthTarget={memberPlan.amountPerMonthTarget}
                   periodicityPricing={memberPlan.periodicityPricing}
                   availablePaymentMethods={memberPlan.availablePaymentMethods}
                   defaultPaymentPeriodicity={

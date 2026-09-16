@@ -15,6 +15,7 @@ import {
   BuilderSubscribeBlockProps,
   WebsiteBuilderProvider,
 } from '@wepublish/website/builder';
+import { getMonthlyEquivalentRange } from '@wepublish/membership/website';
 import { allPass } from 'ramda';
 import {
   createContext,
@@ -259,8 +260,7 @@ export const ReflektCrowdfundingMemberPlanItem = forwardRef<
     name,
     slug,
     shortDescription,
-    amountPerMonthMax,
-    amountPerMonthMin,
+    periodicityPricing,
     currency,
     extendable,
     goodies,
@@ -269,6 +269,9 @@ export const ReflektCrowdfundingMemberPlanItem = forwardRef<
   },
   ref
 ) {
+  const { amountPerMonthMin } = getMonthlyEquivalentRange({
+    periodicityPricing,
+  });
   const radioGroup = useRadioGroup();
   const isChecked = props.checked ?? radioGroup?.value === id;
   const radioInputRef = useRef<HTMLInputElement>(null);

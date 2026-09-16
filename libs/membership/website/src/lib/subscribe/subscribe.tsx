@@ -437,8 +437,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     selectedLayout ? isFixedAmountLayout(selectedLayout)
     : periodPriceRange ?
       periodPriceRange.amountMin === periodPriceRange.amountMax
-    : selectedMemberPlan?.amountPerMonthMin ===
-      selectedMemberPlan?.amountPerMonthMax;
+    : true;
 
   const discountPercent =
     subscribeInfo.data?.createSubscriptionInfo.discountPercent ?? 0;
@@ -652,21 +651,21 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
         periodPriceRange.amountMin,
         selectedPaymentPeriodicity
       )
-    : (selectedMemberPlan?.amountPerMonthMin ?? 500);
+    : 500;
   const amountPerMonthMax =
     periodPriceRange?.amountMax != null ?
       monthlyAmountFromPeriodAmount(
         periodPriceRange.amountMax,
         selectedPaymentPeriodicity
       )
-    : (selectedMemberPlan?.amountPerMonthMax ?? undefined);
+    : undefined;
   const amountPerMonthTarget =
     periodPriceRange?.amountTarget != null ?
       monthlyAmountFromPeriodAmount(
         periodPriceRange.amountTarget,
         selectedPaymentPeriodicity
       )
-    : (selectedMemberPlan?.amountPerMonthTarget ?? undefined);
+    : undefined;
 
   return (
     <FormProvider {...form}>

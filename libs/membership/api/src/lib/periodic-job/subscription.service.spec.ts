@@ -40,7 +40,6 @@ describe('SubscriptionPaymentsService', () => {
     slug: 'memberplan',
     description: 'Test Plan',
     active: true,
-    amountPerMonthMin: 100,
     currency: Currency.CHF,
     createdAt: new Date(),
     modifiedAt: new Date(),

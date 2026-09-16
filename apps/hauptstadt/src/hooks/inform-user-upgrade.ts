@@ -1,5 +1,8 @@
 import { useUser } from '@wepublish/authentication/website';
-import { useActiveSubscriptions } from '@wepublish/membership/website';
+import {
+  getMonthlyEquivalentRange,
+  useActiveSubscriptions,
+} from '@wepublish/membership/website';
 import {
   FullMemberPlanFragment,
   FullSubscriptionFragment,
@@ -52,7 +55,8 @@ export const useInformUserAboutUpgrade = () => {
             isSubscriptionUpgradeable,
             (sub: FullSubscriptionFragment) => mb.id !== sub.memberPlan.id,
             (sub: FullSubscriptionFragment) =>
-              mb.amountPerMonthMin > sub.memberPlan.amountPerMonthMin,
+              getMonthlyEquivalentRange(mb).amountPerMonthMin >
+              getMonthlyEquivalentRange(sub.memberPlan).amountPerMonthMin,
           ])
         )
     );

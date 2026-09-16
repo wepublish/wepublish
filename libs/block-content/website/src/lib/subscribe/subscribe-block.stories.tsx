@@ -5,6 +5,7 @@ import {
   mockSubscribeBlock,
   mockSubscription,
 } from '@wepublish/storybook/mocks';
+import { PaymentPeriodicity } from '@wepublish/website/api';
 import { SubscribeBlock } from './subscribe-block';
 import {
   WithRouterDecorator,
@@ -52,7 +53,16 @@ export const Upgrade = {
               id: 'subcriptionToUpgrade',
               monthlyAmount: 100,
               memberPlan: mockMemberPlan({
-                amountPerMonthMin: 100,
+                periodicityPricing: [
+                  {
+                    __typename: 'PeriodicityPrice',
+                    periodicity: PaymentPeriodicity.Monthly,
+                    label: null,
+                    amountMin: 100,
+                    amountTarget: null,
+                    amountMax: null,
+                  },
+                ],
               }),
             }),
           ],
