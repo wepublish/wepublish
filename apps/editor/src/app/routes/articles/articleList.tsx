@@ -30,6 +30,7 @@ import {
   PeerAvatar,
   PermissionControl,
   StatusBadge,
+  formatArticleAuthors,
   Table,
   TableWrapper,
 } from '@wepublish/ui/editor';
@@ -254,14 +255,9 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
           >
             <HeaderCell>{t('articles.overview.authors')}</HeaderCell>
             <Cell>
-              {(rowData: FullArticleFragment) => {
-                return (rowData as FullArticleFragment).latest.authors.reduce(
-                  (allAuthors, author, index) => {
-                    return `${allAuthors}${index !== 0 ? ', ' : ''}${author?.name}`;
-                  },
-                  ''
-                );
-              }}
+              {(rowData: FullArticleFragment) =>
+                formatArticleAuthors(rowData.latest.authors)
+              }
             </Cell>
           </Column>
 

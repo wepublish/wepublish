@@ -8,7 +8,11 @@ fragment SlimArticleRevision on ArticleRevision {
   hideAuthor
 
   authors {
-    ...SlimAuthor
+    role
+
+    author {
+      ...SlimAuthor
+    }
   }
 
   image {

@@ -15,7 +15,11 @@ fragment FullArticleRevisionWithoutBlocks on ArticleRevision {
   socialMediaDescription
 
   authors {
-    ...FullAuthor
+    role
+
+    author {
+      ...FullAuthor
+    }
   }
 
   socialMediaAuthors {

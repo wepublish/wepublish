@@ -13,10 +13,10 @@ import { FullPeerFragmentDoc, FullRemotePeerProfileFragmentDoc } from './peer.ge
 import { FullPeerImageFragmentDoc, FullImageFragmentDoc, ImageUrLsFragmentDoc } from './image.generated';
 import { FullTagFragmentDoc } from './tag.generated';
 import { FullTrackingPixelFragmentDoc, FullTrackingPixelMethodFragmentDoc } from './tracking-pixel.generated';
-export type FullArticleRevisionWithoutBlocksFragment = { __typename?: 'ArticleRevision', id: string, createdAt: string, publishedAt?: string | null, archivedAt?: string | null, preTitle?: string | null, title?: string | null, lead?: string | null, seoTitle?: string | null, seoDescription?: string | null, canonicalUrl?: string | null, hideAuthor: boolean, breaking: boolean, socialMediaTitle?: string | null, socialMediaDescription?: string | null, authors: Array<(
-    { __typename?: 'Author' }
-    & FullAuthorFragment
-  )>, socialMediaAuthors: Array<(
+export type FullArticleRevisionWithoutBlocksFragment = { __typename?: 'ArticleRevision', id: string, createdAt: string, publishedAt?: string | null, archivedAt?: string | null, preTitle?: string | null, title?: string | null, lead?: string | null, seoTitle?: string | null, seoDescription?: string | null, canonicalUrl?: string | null, hideAuthor: boolean, breaking: boolean, socialMediaTitle?: string | null, socialMediaDescription?: string | null, authors: Array<{ __typename?: 'ArticleRevisionAuthor', role?: string | null, author: (
+      { __typename?: 'Author' }
+      & FullAuthorFragment
+    ) }>, socialMediaAuthors: Array<(
     { __typename?: 'Author' }
     & FullAuthorFragment
   )>, image?: (
@@ -58,7 +58,10 @@ export const FullArticleRevisionWithoutBlocksFragmentDoc = gql`
   socialMediaTitle
   socialMediaDescription
   authors {
-    ...FullAuthor
+    role
+    author {
+      ...FullAuthor
+    }
   }
   socialMediaAuthors {
     ...FullAuthor

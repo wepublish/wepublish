@@ -21,7 +21,11 @@ fragment FullArticleRevision on ArticleRevision {
   }
 
   authors {
-    ...FullAuthor
+    role
+
+    author {
+      ...FullAuthor
+    }
   }
 }
 
