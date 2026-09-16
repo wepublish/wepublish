@@ -70,6 +70,7 @@ type PrismaStub = {
   mailLog: { count: jest.Mock };
   periodicJob: { findFirst: jest.Mock };
   image: { aggregate: jest.Mock };
+  document: { aggregate: jest.Mock };
   subscription: { count: jest.Mock };
   subscriptionDeactivation: { groupBy: jest.Mock };
   article: { count: jest.Mock };
@@ -95,6 +96,11 @@ function makePrisma(): PrismaStub {
     mailLog: { count: jest.fn().mockResolvedValue(0) },
     periodicJob: { findFirst: jest.fn().mockResolvedValue(null) },
     image: {
+      aggregate: jest
+        .fn()
+        .mockResolvedValue({ _count: { _all: 0 }, _sum: { fileSize: null } }),
+    },
+    document: {
       aggregate: jest
         .fn()
         .mockResolvedValue({ _count: { _all: 0 }, _sum: { fileSize: null } }),
@@ -296,5 +302,48 @@ describe('MediumStatsService new groups', () => {
     expect(stats.editorial.pagesPublished).toBe(3);
     expect(stats.editorial.articleRevisionsCount).toBe(500);
     expect(stats.editorial.pageRevisionsCount).toBe(60);
+  });
+});
+
+describe('MediumStatsService storage', () => {
+  it('reports images and documents separately and as a sum', async () => {
+    const prisma = makePrisma();
+    prisma.image.aggregate.mockResolvedValue({
+      _count: { _all: 12 },
+      _sum: { fileSize: 3000 },
+    });
+    prisma.document.aggregate.mockResolvedValue({
+      _count: { _all: 4 },
+      _sum: { fileSize: 500 },
+    });
+
+    const { operations } = await makeService(prisma).getMediumStats();
+
+    expect(operations.imageCount).toBe(12);
+    expect(operations.imageBytes).toBe(3000);
+    expect(operations.documentCount).toBe(4);
+    expect(operations.documentBytes).toBe(500);
+    expect(operations.storageBytes).toBe(3500);
+  });
+
+  it('treats a medium with no uploads as zero, not null', async () => {
+    const { operations } = await makeService(makePrisma()).getMediumStats();
+
+    expect(operations.imageBytes).toBe(0);
+    expect(operations.documentBytes).toBe(0);
+    expect(operations.storageBytes).toBe(0);
+    expect(operations.documentCount).toBe(0);
+  });
+
+  it('counts documents even when there are no images', async () => {
+    const prisma = makePrisma();
+    prisma.document.aggregate.mockResolvedValue({
+      _count: { _all: 9 },
+      _sum: { fileSize: 900 },
+    });
+
+    const { operations } = await makeService(prisma).getMediumStats();
+
+    expect(operations.storageBytes).toBe(900);
   });
 });

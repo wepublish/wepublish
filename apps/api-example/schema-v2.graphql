@@ -2220,6 +2220,9 @@ type MediumNetworkStats {
 }
 
 type MediumOperationsStats {
+  documentBytes: Float!
+  documentCount: Int!
+  imageBytes: Float!
   imageCount: Int!
   lastPeriodicJobAt: DateTime
   mailchimpSyncErrors: Int!

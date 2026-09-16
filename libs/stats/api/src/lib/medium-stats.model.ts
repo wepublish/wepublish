@@ -61,11 +61,21 @@ export class MediumOperationsStats {
   @Field(() => Int)
   periodicJobTries!: number;
 
-  @Field(() => Float)
-  storageBytes!: number;
-
   @Field(() => Int)
   imageCount!: number;
+
+  @Field(() => Float)
+  imageBytes!: number;
+
+  @Field(() => Int)
+  documentCount!: number;
+
+  @Field(() => Float)
+  documentBytes!: number;
+
+  /** Images plus documents, as uploaded. Excludes derived image variants. */
+  @Field(() => Float)
+  storageBytes!: number;
 
   @Field(() => Int)
   mailchimpSyncErrors!: number;

@@ -172,22 +172,32 @@ export class MediumStatsService {
   }
 
   private async operations(): Promise<MediumOperationsStats> {
-    const [job, images, mailchimpSyncErrors] = await Promise.all([
+    const [job, images, documents, mailchimpSyncErrors] = await Promise.all([
       this.prisma.periodicJob.findFirst({ orderBy: { date: 'desc' } }),
       this.prisma.image.aggregate({
+        _count: { _all: true },
+        _sum: { fileSize: true },
+      }),
+      this.prisma.document.aggregate({
         _count: { _all: true },
         _sum: { fileSize: true },
       }),
       this.prisma.mailchimpSyncError.count(),
     ]);
 
+    const imageBytes = images._sum.fileSize ?? 0;
+    const documentBytes = documents._sum.fileSize ?? 0;
+
     return {
       lastPeriodicJobAt: job?.executionTime ?? null,
       periodicJobFailing: Boolean(job?.finishedWithError),
       periodicJobError: job?.error ?? null,
       periodicJobTries: job?.tries ?? 0,
-      storageBytes: images._sum.fileSize ?? 0,
       imageCount: images._count._all,
+      imageBytes,
+      documentCount: documents._count._all,
+      documentBytes,
+      storageBytes: imageBytes + documentBytes,
       mailchimpSyncErrors,
     };
   }
