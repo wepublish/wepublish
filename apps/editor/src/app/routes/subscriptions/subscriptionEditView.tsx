@@ -835,7 +835,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                           />
                           {paymentPeriodicity !==
                             PaymentPeriodicity.Monthly && (
-                            <HelpText>
+                            <Text>
                               {t(
                                 'userSubscriptionEdit.monthlyAmountEquivalent',
                                 {
@@ -843,7 +843,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                                   amount: (monthlyAmount / 100).toFixed(2),
                                 }
                               )}
-                            </HelpText>
+                            </Text>
                           )}
                         </Col>
                       </RowPaddingTop>
