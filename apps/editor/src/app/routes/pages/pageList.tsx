@@ -14,6 +14,7 @@ import {
 } from '@wepublish/editor/api';
 import { CanPreview } from '@wepublish/permissions';
 import {
+  ColumnConfigurator,
   createCheckedPermissionComponent,
   DEFAULT_MAX_TABLE_PAGES,
   DEFAULT_TABLE_PAGE_SIZES,
@@ -31,6 +32,7 @@ import {
   StatusBadge,
   Table,
   TableWrapper,
+  useColumnConfig,
 } from '@wepublish/ui/editor';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -64,6 +66,8 @@ enum ConfirmAction {
   Unpublish = 'unpublish',
   Duplicate = 'duplicate',
 }
+
+const CONFIG_COLUMNS = [{ id: 'slug' }];
 
 function mapColumFieldToGraphQLField(columnField: string): PageSort | null {
   switch (columnField) {
@@ -136,11 +140,19 @@ function PageList() {
 
   const [createComment] = useCreateCommentMutation({});
 
+  const { isVisible, toggle } = useColumnConfig('pages', CONFIG_COLUMNS);
+
   return (
     <>
       <ListViewContainer>
         <ListViewHeader>
           <h2>{t('pages.overview.pages')}</h2>
+
+          <ColumnConfigurator
+            columns={[{ id: 'slug', label: t('pages.overview.slug') }]}
+            isVisible={isVisible}
+            onToggle={toggle}
+          />
         </ListViewHeader>
         <PermissionControl qualifyingPermissions={['CAN_CREATE_PAGE']}>
           <ListViewActions>
@@ -160,6 +172,7 @@ function PageList() {
           fields={[
             'title',
             'description',
+            'slug',
             'draft',
             'pending',
             'published',
@@ -240,6 +253,19 @@ function PageList() {
               )}
             </Cell>
           </Column>
+
+          {isVisible('slug') && (
+            <Column
+              width={210}
+              align="left"
+              resizable
+            >
+              <HeaderCell>{t('pages.overview.slug')}</HeaderCell>
+              <Cell dataKey="slug">
+                {(rowData: FullPageFragment) => rowData.slug}
+              </Cell>
+            </Column>
+          )}
 
           <Column
             width={210}
