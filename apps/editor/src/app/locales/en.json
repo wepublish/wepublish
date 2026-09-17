@@ -987,6 +987,11 @@
         "invalidCode": "Invalid verification code. Please try again.",
         "setupError": "Failed to generate 2FA setup. Please try again.",
         "setupSuccess": "Two-factor authentication has been enabled successfully."
+      },
+      "impersonate": {
+        "pending": "Signing in as the user …",
+        "failed": "Sign-in failed. The link has expired or was already used.",
+        "notAGrant": "This link is not a valid impersonation link."
       }
     },
     "resetPassword": {

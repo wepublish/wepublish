@@ -1493,6 +1493,32 @@ input ImageTransformation {
   width: Int
 }
 
+type ImpersonationGrantResult {
+  durationMinutes: Int!
+  email: String!
+  expiresAt: DateTime!
+  token: String!
+}
+
+type ImpersonationSessionInfo {
+  createdAt: DateTime!
+  expiresAt: DateTime!
+  id: String!
+  impersonatedBy: String
+  impersonationReason: String
+  userEmail: String!
+  userId: String!
+  userName: String
+}
+
+type ImpersonationUser {
+  active: Boolean!
+  email: String!
+  id: String!
+  name: String
+  roles: [String!]!
+}
+
 input ImportArticleOptions {
   importAuthors: Boolean
   importContentImages: Boolean
@@ -2368,12 +2394,10 @@ type Mutation {
 
   """Creates a new goodie."""
   createGoodie(active: Boolean!, description: RichText, imageID: String, memberPlanIDs: [String!]!, name: String!, stock: Int): Goodie!
+  createImpersonationGrant(durationMinutes: Int!, impersonatedBy: String!, reason: String!, userId: String!): ImpersonationGrantResult!
 
   """Creates a new invoice."""
   createInvoice(currency: Currency!, description: String, dueAt: DateTime!, items: [InvoiceItemInput!]!, mail: String!, manuallySetAsPaidByUserId: String, scheduledDeactivationAt: DateTime!, subscriptionID: String): Invoice!
-
-  """Returns a JWT that can be used to login as another user."""
-  createJWTForUser(expiresInMinutes: Float!, userId: String!): SessionWithToken!
 
   """Returns a JWT that is valid for 1min for the current logged in user."""
   createJWTForWebsiteLogin: SessionWithToken!
@@ -2712,6 +2736,7 @@ type Mutation {
 
   """This mutation revokes and deletes the active session."""
   revokeActiveSession: Boolean!
+  revokeImpersonationSessions(ids: [String!]): Int!
 
   """
   This mutation sends a login link to the email if the user exists. Method will always return email address
@@ -3895,6 +3920,9 @@ type Query {
 
   """Returns a paginated list of images based on the filters given."""
   images(cursorId: String, filter: ImageFilter, order: SortOrder = Descending, skip: Int = 0, sort: ImageSort = ModifiedAt, take: Int = 10): PaginatedImages!
+  impersonationEnabled: Boolean!
+  impersonationSearchUsers(limit: Int, query: String!): [ImpersonationUser!]!
+  impersonationSessions: [ImpersonationSessionInfo!]!
 
   "\n      Returns a more detailed version of a single importable event, by id and source.\n    "
   importedEvent(filter: SingleEventFilter!): EventFromSource!
@@ -4297,6 +4325,11 @@ type SensitiveDataUser implements BaseUser {
 type SessionWithToken {
   createdAt: DateTime!
   expiresAt: DateTime!
+
+  """
+  Whether this session was created by redeeming an impersonation grant from the One dashboard. Clients must never treat an ordinary JWT login as impersonation.
+  """
+  impersonated: Boolean!
   token: String!
 
   """

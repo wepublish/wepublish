@@ -51,6 +51,7 @@ import fr from 'rsuite/locales/fr_FR';
 import { Base } from './base';
 import { Login } from './login';
 import { LoginJwt } from './loginJwt';
+import { LoginImpersonate } from './loginImpersonate';
 import { ResetPassword } from './resetPassword';
 import { ArticleEditor } from './routes/articles/articleEditor';
 import { ArticleList } from './routes/articles/articleList';
@@ -291,6 +292,10 @@ export function App() {
             <Route
               path="login/jwt/:jwt"
               element={<LoginJwt />}
+            />
+            <Route
+              path="login/impersonate/:jwt"
+              element={<LoginImpersonate />}
             />
             <Route
               path="login/reset-password"

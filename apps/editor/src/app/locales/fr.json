@@ -987,6 +987,11 @@
         "invalidCode": "Code de vérification invalide. Veuillez réessayer.",
         "setupError": "Échec de la configuration 2FA. Veuillez réessayer.",
         "setupSuccess": "L'authentification à deux facteurs a été activée avec succès."
+      },
+      "impersonate": {
+        "pending": "Connexion en tant qu'utilisateur …",
+        "failed": "La connexion a échoué. Le lien a expiré ou a déjà été utilisé.",
+        "notAGrant": "Ce lien n'est pas un lien d'usurpation valide."
       }
     },
     "resetPassword": {

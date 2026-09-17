@@ -10,3 +10,6 @@ export * from './one.module';
 export * from './one-channel-status.model';
 export * from './one-channel-status.resolver';
 export * from './medium-stats.resolver';
+export * from './impersonation.model';
+export * from './impersonation.service';
+export * from './impersonation.resolver';

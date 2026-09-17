@@ -8,6 +8,8 @@ import { ModuleMetadata } from '@nestjs/common/interfaces';
 import { PrismaModule } from '@wepublish/nest-modules';
 import { StatsModule } from '@wepublish/stats/api';
 import { MediumStatsResolver } from './medium-stats.resolver';
+import { ImpersonationResolver } from './impersonation.resolver';
+import { ImpersonationSearchService } from './impersonation.service';
 import { OneChannelStateService } from './one-channel-state.service';
 import { OneChannelStatusResolver } from './one-channel-status.resolver';
 import { OneClientService } from './one-client.service';
@@ -51,6 +53,8 @@ export class OneModule {
         OneChannelStateService,
         OneChannelStatusResolver,
         MediumStatsResolver,
+        ImpersonationResolver,
+        ImpersonationSearchService,
         OneClientService,
         OneHeartbeatService,
         { provide: ONE_SCOPED_JWT_VERIFIER, useExisting: OneTokenVerifier },

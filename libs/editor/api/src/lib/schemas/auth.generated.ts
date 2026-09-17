@@ -34,7 +34,7 @@ export type CreateSessionWithJwtMutationVariables = Types.Exact<{
 }>;
 
 
-export type CreateSessionWithJwtMutation = { __typename?: 'Mutation', createSessionWithJWT: { __typename?: 'SessionWithToken', token: string, totpEnabled: boolean, user: { __typename?: 'SensitiveDataUser', email: string, totpEnabled: boolean, totpExempt: boolean, roles: Array<(
+export type CreateSessionWithJwtMutation = { __typename?: 'Mutation', createSessionWithJWT: { __typename?: 'SessionWithToken', token: string, totpEnabled: boolean, impersonated: boolean, user: { __typename?: 'SensitiveDataUser', email: string, totpEnabled: boolean, totpExempt: boolean, roles: Array<(
         { __typename?: 'UserRole' }
         & FullUserRoleFragment
       )> } } };
@@ -177,6 +177,7 @@ export const CreateSessionWithJwtDocument = gql`
     }
     token
     totpEnabled
+    impersonated
   }
 }
     ${FullUserRoleFragmentDoc}

@@ -984,6 +984,11 @@
         "invalidCode": "Ungültiger Bestätigungscode. Bitte versuchen Sie es erneut.",
         "setupError": "Fehler beim Erstellen der 2FA-Einrichtung. Bitte versuchen Sie es erneut.",
         "setupSuccess": "Zwei-Faktor-Authentifizierung wurde erfolgreich aktiviert."
+      },
+      "impersonate": {
+        "pending": "Anmeldung als Benutzer läuft …",
+        "failed": "Die Anmeldung ist fehlgeschlagen. Der Link ist abgelaufen oder wurde bereits verwendet.",
+        "notAGrant": "Dieser Link ist kein gültiger Impersonations-Link."
       }
     },
     "resetPassword": {
