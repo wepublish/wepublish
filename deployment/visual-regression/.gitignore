@@ -1,0 +1,7 @@
+.env
+*.sql.gz
+*.meta.json
+*/logs/current
+*/logs/baseline
+*/artifacts
+*.log
