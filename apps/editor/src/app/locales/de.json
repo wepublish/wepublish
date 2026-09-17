@@ -5,13 +5,14 @@
       "notResponding": "Das Vorschau-Fenster antwortet nicht. Die Anmeldung für die Vorschau ist möglicherweise fehlgeschlagen."
     },
     "oneChannel": {
-      "connected": "We.Publish Channel: verbunden",
-      "failing": "We.Publish Channel: Verbindung gestört",
-      "notConfigured": "We.Publish Channel: nicht konfiguriert",
+      "connected": "We.Publish Connector: verbunden",
+      "failing": "We.Publish Connector: Verbindung gestört",
+      "notConfigured": "We.Publish Connector: nicht konfiguriert",
       "notConfiguredHint": "Diese Instanz sendet keine Daten an We.Publish.",
       "lastSuccess": "Letzter erfolgreicher Kontakt: {{value}}",
       "lastSuccessNever": "Letzter erfolgreicher Kontakt: nie",
-      "lastAttemptFailed": "Letzter Versuch: {{value}} – fehlgeschlagen: {{error}}"
+      "lastAttemptFailed": "Letzter Versuch: {{value}} – fehlgeschlagen: {{error}}",
+      "label": "We.Publish Connector"
     },
     "oneMessages": {
       "header": "Nachrichten vom We.Publish Team",

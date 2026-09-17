@@ -5,13 +5,14 @@
       "notResponding": "La fenêtre d'aperçu ne répond pas. La connexion à l'aperçu a peut-être échoué."
     },
     "oneChannel": {
-      "connected": "We.Publish Channel : connecté",
-      "failing": "We.Publish Channel : connexion défaillante",
-      "notConfigured": "We.Publish Channel : non configuré",
+      "connected": "Connecteur We.Publish : connecté",
+      "failing": "Connecteur We.Publish : connexion perturbée",
+      "notConfigured": "Connecteur We.Publish : non configuré",
       "notConfiguredHint": "Cette instance n'envoie aucune donnée à We.Publish.",
       "lastSuccess": "Dernier contact réussi : {{value}}",
       "lastSuccessNever": "Dernier contact réussi : jamais",
-      "lastAttemptFailed": "Dernière tentative : {{value}} – échec : {{error}}"
+      "lastAttemptFailed": "Dernière tentative : {{value}} – échec : {{error}}",
+      "label": "Connecteur We.Publish"
     },
     "oneMessages": {
       "header": "Messages de l'équipe We.Publish",

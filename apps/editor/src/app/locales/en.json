@@ -5,13 +5,14 @@
       "notResponding": "The preview window is not responding. The preview login may have failed."
     },
     "oneChannel": {
-      "connected": "We.Publish Channel: connected",
-      "failing": "We.Publish Channel: connection failing",
-      "notConfigured": "We.Publish Channel: not configured",
+      "connected": "We.Publish connector: connected",
+      "failing": "We.Publish connector: connection disrupted",
+      "notConfigured": "We.Publish connector: not configured",
       "notConfiguredHint": "This instance sends no data to We.Publish.",
       "lastSuccess": "Last successful contact: {{value}}",
       "lastSuccessNever": "Last successful contact: never",
-      "lastAttemptFailed": "Last attempt: {{value}} – failed: {{error}}"
+      "lastAttemptFailed": "Last attempt: {{value}} – failed: {{error}}",
+      "label": "We.Publish connector"
     },
     "oneMessages": {
       "header": "Messages from the We.Publish team",
