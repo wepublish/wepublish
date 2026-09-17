@@ -1584,6 +1584,35 @@ export type ImageTransformation = {
   width?: InputMaybe<Scalars['Int']>;
 };
 
+export type ImpersonationGrantResult = {
+  __typename?: 'ImpersonationGrantResult';
+  durationMinutes: Scalars['Int'];
+  email: Scalars['String'];
+  expiresAt: Scalars['DateTime'];
+  token: Scalars['String'];
+};
+
+export type ImpersonationSessionInfo = {
+  __typename?: 'ImpersonationSessionInfo';
+  createdAt: Scalars['DateTime'];
+  expiresAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  impersonatedBy?: Maybe<Scalars['String']>;
+  impersonationReason?: Maybe<Scalars['String']>;
+  userEmail: Scalars['String'];
+  userId: Scalars['String'];
+  userName?: Maybe<Scalars['String']>;
+};
+
+export type ImpersonationUser = {
+  __typename?: 'ImpersonationUser';
+  active: Scalars['Boolean'];
+  email: Scalars['String'];
+  id: Scalars['String'];
+  name?: Maybe<Scalars['String']>;
+  roles: Array<Scalars['String']>;
+};
+
 export type ImportArticleOptions = {
   importAuthors?: InputMaybe<Scalars['Boolean']>;
   importContentImages?: InputMaybe<Scalars['Boolean']>;
@@ -2222,6 +2251,116 @@ export type MailchimpSyncProgressType = {
   updated: Scalars['Int'];
 };
 
+export type MediumAccountStats = {
+  __typename?: 'MediumAccountStats';
+  activeSessions: Scalars['Int'];
+  adminCount: Scalars['Int'];
+  usersLoggedIn: Scalars['Int'];
+  usersTotal: Scalars['Int'];
+  usersWithRole: Scalars['Int'];
+};
+
+export type MediumCommunityStats = {
+  __typename?: 'MediumCommunityStats';
+  activePolls: Scalars['Int'];
+  commentsPendingModeration: Scalars['Int'];
+  commentsPublished: Scalars['Int'];
+  pollVotes: Scalars['Int'];
+};
+
+export type MediumDeactivationReasonCount = {
+  __typename?: 'MediumDeactivationReasonCount';
+  count: Scalars['Int'];
+  reason: Scalars['String'];
+};
+
+export type MediumEditorialStats = {
+  __typename?: 'MediumEditorialStats';
+  articleRevisionsCount: Scalars['Int'];
+  articlesCount: Scalars['Int'];
+  articlesPublished: Scalars['Int'];
+  authorsCount: Scalars['Int'];
+  lastPublishedAt?: Maybe<Scalars['DateTime']>;
+  pageRevisionsCount: Scalars['Int'];
+  pagesCount: Scalars['Int'];
+  pagesPublished: Scalars['Int'];
+};
+
+export type MediumIntegrationsStats = {
+  __typename?: 'MediumIntegrationsStats';
+  analyticsProviders: Scalars['Int'];
+  mailProviders: Scalars['Int'];
+  paymentProviders: Scalars['Int'];
+  syncProviders: Scalars['Int'];
+};
+
+export type MediumMailStats = {
+  __typename?: 'MediumMailStats';
+  bounced: Scalars['Int'];
+  failures: Scalars['Int'];
+  lastCampaignAt?: Maybe<Scalars['DateTime']>;
+  rejected: Scalars['Int'];
+  sends: Scalars['Int'];
+};
+
+export type MediumMembershipStats = {
+  __typename?: 'MediumMembershipStats';
+  activeSubscribers: Scalars['Int'];
+  deactivations: Scalars['Int'];
+  deactivationsByReason: Array<MediumDeactivationReasonCount>;
+  newSubscribers: Scalars['Int'];
+};
+
+export type MediumMoneyStats = {
+  __typename?: 'MediumMoneyStats';
+  atRisk: Scalars['Int'];
+  expectedRevenue: Scalars['Int'];
+  revenue: Scalars['Int'];
+};
+
+export type MediumNetworkStats = {
+  __typename?: 'MediumNetworkStats';
+  peersDisabled: Scalars['Int'];
+  peersTotal: Scalars['Int'];
+};
+
+export type MediumOperationsStats = {
+  __typename?: 'MediumOperationsStats';
+  documentBytes: Scalars['Float'];
+  documentCount: Scalars['Int'];
+  imageBytes: Scalars['Float'];
+  imageCount: Scalars['Int'];
+  lastPeriodicJobAt?: Maybe<Scalars['DateTime']>;
+  mailchimpSyncErrors: Scalars['Int'];
+  periodicJobError?: Maybe<Scalars['String']>;
+  periodicJobFailing: Scalars['Boolean'];
+  periodicJobTries: Scalars['Int'];
+  storageBytes: Scalars['Float'];
+};
+
+export type MediumStats = {
+  __typename?: 'MediumStats';
+  accounts: MediumAccountStats;
+  community: MediumCommunityStats;
+  currency?: Maybe<Scalars['String']>;
+  editorial: MediumEditorialStats;
+  generatedAt: Scalars['DateTime'];
+  integrations: MediumIntegrationsStats;
+  mail: MediumMailStats;
+  membership: MediumMembershipStats;
+  money: MediumMoneyStats;
+  network: MediumNetworkStats;
+  operations: MediumOperationsStats;
+  schemaVersion: Scalars['Int'];
+  window: MediumStatsWindow;
+};
+
+export type MediumStatsWindow = {
+  __typename?: 'MediumStatsWindow';
+  from: Scalars['DateTime'];
+  to: Scalars['DateTime'];
+};
+
 export type MemberPlan = HasImage & {
   __typename?: 'MemberPlan';
   active: Scalars['Boolean'];
@@ -2309,10 +2448,9 @@ export type Mutation = {
   createExternalAppToken: ExternalAppToken;
   /** Creates a new goodie. */
   createGoodie: Goodie;
+  createImpersonationGrant: ImpersonationGrantResult;
   /** Creates a new invoice. */
   createInvoice: Invoice;
-  /** Returns a JWT that can be used to login as another user. */
-  createJWTForUser: SessionWithToken;
   /** Returns a JWT that is valid for 1min for the current logged in user. */
   createJWTForWebsiteLogin: SessionWithToken;
   /** Start a background job sending a template to a filtered audience */
@@ -2514,6 +2652,7 @@ export type Mutation = {
   resumeMailSendJob: MailSendJobModel;
   /** This mutation revokes and deletes the active session. */
   revokeActiveSession: Scalars['Boolean'];
+  revokeImpersonationSessions: Scalars['Int'];
   /** This mutation sends a login link to the email if the user exists. Method will always return email address */
   sendJWTLogin: Scalars['String'];
   /** Manually send a mail template to a single user */
@@ -2803,6 +2942,14 @@ export type MutationCreateGoodieArgs = {
 };
 
 
+export type MutationCreateImpersonationGrantArgs = {
+  durationMinutes: Scalars['Int'];
+  impersonatedBy: Scalars['String'];
+  reason: Scalars['String'];
+  userId: Scalars['String'];
+};
+
+
 export type MutationCreateInvoiceArgs = {
   currency: Currency;
   description?: InputMaybe<Scalars['String']>;
@@ -2812,12 +2959,6 @@ export type MutationCreateInvoiceArgs = {
   manuallySetAsPaidByUserId?: InputMaybe<Scalars['String']>;
   scheduledDeactivationAt: Scalars['DateTime'];
   subscriptionID?: InputMaybe<Scalars['String']>;
-};
-
-
-export type MutationCreateJwtForUserArgs = {
-  expiresInMinutes: Scalars['Float'];
-  userId: Scalars['String'];
 };
 
 
@@ -3428,6 +3569,11 @@ export type MutationRestorePageRevisionArgs = {
 export type MutationResumeMailSendJobArgs = {
   id: Scalars['String'];
   retryUnfinished?: InputMaybe<Scalars['Boolean']>;
+};
+
+
+export type MutationRevokeImpersonationSessionsArgs = {
+  ids?: InputMaybe<Array<Scalars['String']>>;
 };
 
 
@@ -4068,6 +4214,21 @@ export enum NavigationLinkType {
   External = 'External',
   Page = 'Page'
 }
+
+export enum OneChannelConnectionState {
+  Connected = 'Connected',
+  Failing = 'Failing',
+  NotConfigured = 'NotConfigured'
+}
+
+export type OneChannelStatus = {
+  __typename?: 'OneChannelStatus';
+  lastAttemptAt?: Maybe<Scalars['DateTime']>;
+  lastError?: Maybe<Scalars['String']>;
+  lastSuccessAt?: Maybe<Scalars['DateTime']>;
+  oneUrl?: Maybe<Scalars['String']>;
+  state: OneChannelConnectionState;
+};
 
 export type OverriddenRating = {
   __typename?: 'OverriddenRating';
@@ -5015,6 +5176,9 @@ export type Query = {
   image: Image;
   /** Returns a paginated list of images based on the filters given. */
   images: PaginatedImages;
+  impersonationEnabled: Scalars['Boolean'];
+  impersonationSearchUsers: Array<ImpersonationUser>;
+  impersonationSessions: Array<ImpersonationSessionInfo>;
   /**
    *
    *       Returns a more detailed version of a single importable event, by id and source.
@@ -5077,6 +5241,7 @@ export type Query = {
   mailchimpSyncProgress?: Maybe<MailchimpSyncProgressType>;
   /** This query returns the user. */
   me?: Maybe<SensitiveDataUser>;
+  mediumStats: MediumStats;
   /** Returns a memberplan by id or slug. */
   memberPlan: MemberPlan;
   /** Returns a paginated list of memberplans based on the filters given. */
@@ -5099,6 +5264,7 @@ export type Query = {
    *
    */
   newSubscribers: Array<DashboardSubscription>;
+  oneChannelStatus: OneChannelStatus;
   /** Returns an page by id or slug. */
   page: Page;
   /** Returns a single page revision including its full content. */
@@ -5485,6 +5651,12 @@ export type QueryImagesArgs = {
 };
 
 
+export type QueryImpersonationSearchUsersArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  query: Scalars['String'];
+};
+
+
 export type QueryImportedEventArgs = {
   filter: SingleEventFilter;
 };
@@ -5614,6 +5786,12 @@ export type QueryMailchimpSyncErrorsArgs = {
 
 export type QueryMailchimpSyncProgressArgs = {
   configId: Scalars['String'];
+};
+
+
+export type QueryMediumStatsArgs = {
+  from?: InputMaybe<Scalars['DateTime']>;
+  to?: InputMaybe<Scalars['DateTime']>;
 };
 
 
@@ -6046,6 +6224,8 @@ export type SessionWithToken = {
   __typename?: 'SessionWithToken';
   createdAt: Scalars['DateTime'];
   expiresAt: Scalars['DateTime'];
+  /** Whether this session was created by redeeming an impersonation grant from the One dashboard. Clients must never treat an ordinary JWT login as impersonation. */
+  impersonated: Scalars['Boolean'];
   token: Scalars['String'];
   /** Whether the user has two-factor authentication enabled. If true and the user is an admin, the client must verify TOTP before proceeding. */
   totpEnabled: Scalars['Boolean'];

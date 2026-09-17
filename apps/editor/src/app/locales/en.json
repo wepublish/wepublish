@@ -4,6 +4,16 @@
       "popupBlocked": "The preview window was blocked by the browser. Please allow pop-ups for the editor and try again.",
       "notResponding": "The preview window is not responding. The preview login may have failed."
     },
+    "oneChannel": {
+      "connected": "We.Publish connector: connected",
+      "failing": "We.Publish connector: connection disrupted",
+      "notConfigured": "We.Publish connector: not configured",
+      "notConfiguredHint": "This instance sends no data to We.Publish.",
+      "lastSuccess": "Last successful contact: {{value}}",
+      "lastSuccessNever": "Last successful contact: never",
+      "lastAttemptFailed": "Last attempt: {{value}} – failed: {{error}}",
+      "label": "We.Publish connector"
+    },
     "oneMessages": {
       "header": "Messages from the We.Publish team",
       "expand": "Expand",
@@ -980,6 +990,11 @@
         "invalidCode": "Invalid verification code. Please try again.",
         "setupError": "Failed to generate 2FA setup. Please try again.",
         "setupSuccess": "Two-factor authentication has been enabled successfully."
+      },
+      "impersonate": {
+        "pending": "Signing in as the user …",
+        "failed": "Sign-in failed. The link has expired or was already used.",
+        "notAGrant": "This link is not a valid impersonation link."
       }
     },
     "resetPassword": {

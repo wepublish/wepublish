@@ -4,6 +4,16 @@
       "popupBlocked": "Das Vorschau-Fenster wurde vom Browser blockiert. Bitte Pop-ups für den Editor erlauben und erneut versuchen.",
       "notResponding": "Das Vorschau-Fenster antwortet nicht. Die Anmeldung für die Vorschau ist möglicherweise fehlgeschlagen."
     },
+    "oneChannel": {
+      "connected": "We.Publish Connector: verbunden",
+      "failing": "We.Publish Connector: Verbindung gestört",
+      "notConfigured": "We.Publish Connector: nicht konfiguriert",
+      "notConfiguredHint": "Diese Instanz sendet keine Daten an We.Publish.",
+      "lastSuccess": "Letzter erfolgreicher Kontakt: {{value}}",
+      "lastSuccessNever": "Letzter erfolgreicher Kontakt: nie",
+      "lastAttemptFailed": "Letzter Versuch: {{value}} – fehlgeschlagen: {{error}}",
+      "label": "We.Publish Connector"
+    },
     "oneMessages": {
       "header": "Nachrichten vom We.Publish Team",
       "expand": "Ausklappen",
@@ -977,6 +987,11 @@
         "invalidCode": "Ungültiger Bestätigungscode. Bitte versuchen Sie es erneut.",
         "setupError": "Fehler beim Erstellen der 2FA-Einrichtung. Bitte versuchen Sie es erneut.",
         "setupSuccess": "Zwei-Faktor-Authentifizierung wurde erfolgreich aktiviert."
+      },
+      "impersonate": {
+        "pending": "Anmeldung als Benutzer läuft …",
+        "failed": "Die Anmeldung ist fehlgeschlagen. Der Link ist abgelaufen oder wurde bereits verwendet.",
+        "notAGrant": "Dieser Link ist kein gültiger Impersonations-Link."
       }
     },
     "resetPassword": {

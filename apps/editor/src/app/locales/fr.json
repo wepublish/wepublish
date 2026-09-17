@@ -4,6 +4,16 @@
       "popupBlocked": "La fenêtre d'aperçu a été bloquée par le navigateur. Veuillez autoriser les pop-ups pour l'éditeur et réessayer.",
       "notResponding": "La fenêtre d'aperçu ne répond pas. La connexion à l'aperçu a peut-être échoué."
     },
+    "oneChannel": {
+      "connected": "Connecteur We.Publish : connecté",
+      "failing": "Connecteur We.Publish : connexion perturbée",
+      "notConfigured": "Connecteur We.Publish : non configuré",
+      "notConfiguredHint": "Cette instance n'envoie aucune donnée à We.Publish.",
+      "lastSuccess": "Dernier contact réussi : {{value}}",
+      "lastSuccessNever": "Dernier contact réussi : jamais",
+      "lastAttemptFailed": "Dernière tentative : {{value}} – échec : {{error}}",
+      "label": "Connecteur We.Publish"
+    },
     "oneMessages": {
       "header": "Messages de l'équipe We.Publish",
       "expand": "Développer",
@@ -980,6 +990,11 @@
         "invalidCode": "Code de vérification invalide. Veuillez réessayer.",
         "setupError": "Échec de la configuration 2FA. Veuillez réessayer.",
         "setupSuccess": "L'authentification à deux facteurs a été activée avec succès."
+      },
+      "impersonate": {
+        "pending": "Connexion en tant qu'utilisateur …",
+        "failed": "La connexion a échoué. Le lien a expiré ou a déjà été utilisé.",
+        "notAGrant": "Ce lien n'est pas un lien d'usurpation valide."
       }
     },
     "resetPassword": {

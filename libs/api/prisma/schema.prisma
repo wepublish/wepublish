@@ -1018,13 +1018,30 @@ model Session {
   expiresAt DateTime @db.Timestamptz(3)
   token     String   @unique
 
+  impersonatedBy      String?
+  impersonationReason String?
+  impersonatedAt      DateTime? @db.Timestamptz(3)
+
   userID String
   user   User   @relation(fields: [userID], references: [id], onDelete: Cascade)
 
   @@index([userID])
   @@index([token])
   @@index([expiresAt])
+  @@index([impersonatedBy])
   @@map("sessions")
+}
+
+model ImpersonationGrant {
+  id        String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+
+  jti       String    @unique
+  expiresAt DateTime  @db.Timestamptz(3)
+  redeemedAt DateTime? @db.Timestamptz(3)
+
+  @@index([expiresAt])
+  @@map("impersonation_grants")
 }
 
 model SubscriptionPeriod {
@@ -2149,4 +2166,13 @@ model Goodie {
   invoiceItems InvoiceItem[]
 
   @@map("goodies")
+}
+
+model OneChannelState {
+  id            String    @id
+  createdAt     DateTime  @default(now()) @db.Timestamptz(3)
+  modifiedAt    DateTime  @updatedAt @db.Timestamptz(3)
+  lastSuccessAt DateTime? @db.Timestamptz(3)
+
+  @@map("one_channel_state")
 }
