@@ -79,6 +79,7 @@ export type BuilderMemberPlanPickerProps = {
   onChange: (memberPlanId: string) => void;
   name?: string;
   value?: string;
+  alwaysShow?: boolean;
 };
 
 export type BuilderMemberPlanItemProps = Pick<
