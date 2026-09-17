@@ -1,6 +1,10 @@
 import styled from '@emotion/styled';
 import { Box, CircularProgress, Typography } from '@mui/material';
-import { useExternalAppQuery } from '@wepublish/editor/api';
+import {
+  useCreateExternalAppTokenMutation,
+  useExternalAppQuery,
+} from '@wepublish/editor/api';
+import { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 
@@ -22,6 +26,13 @@ const StyledIframe = styled('iframe')`
   background-color: transparent;
 `;
 
+export function appUrlWithToken(url: string, token: string) {
+  const urlWithToken = new URL(url);
+  urlWithToken.searchParams.set('token', token);
+
+  return urlWithToken.toString();
+}
+
 export function ExternalAppIframeView() {
   const { id } = useParams<{ id: string }>();
   const { t } = useTranslation();
@@ -31,7 +42,61 @@ export function ExternalAppIframeView() {
     skip: !id,
   });
 
-  if (loading) {
+  const [createExternalAppToken, { data: tokenData, error: tokenError }] =
+    useCreateExternalAppTokenMutation();
+
+  useEffect(() => {
+    if (!id) {
+      return;
+    }
+
+    createExternalAppToken({ variables: { externalAppId: id } }).catch(
+      () => undefined
+    );
+  }, [createExternalAppToken, id]);
+
+  const url = data?.externalApp?.url;
+  const token = tokenData?.createExternalAppToken.token;
+
+  const iframeSrc = useMemo(() => {
+    if (!url || !token) {
+      return null;
+    }
+
+    try {
+      return appUrlWithToken(url, token);
+    } catch {
+      return null;
+    }
+  }, [token, url]);
+
+  if (error || tokenError || (!loading && !data?.externalApp)) {
+    return (
+      <Box p={3}>
+        <Typography color="error">
+          {error?.message ||
+            tokenError?.message ||
+            t('externalApps.notFound', {
+              defaultValue: 'External app not found',
+            })}
+        </Typography>
+      </Box>
+    );
+  }
+
+  if (url && token && !iframeSrc) {
+    return (
+      <Box p={3}>
+        <Typography color="error">
+          {t('externalApps.invalidUrl', {
+            defaultValue: 'The external app has an invalid url',
+          })}
+        </Typography>
+      </Box>
+    );
+  }
+
+  if (!iframeSrc) {
     return (
       <Box
         p={3}
@@ -45,24 +110,11 @@ export function ExternalAppIframeView() {
     );
   }
 
-  if (error || !data?.externalApp) {
-    return (
-      <Box p={3}>
-        <Typography color="error">
-          {error?.message ||
-            t('externalApps.notFound', {
-              defaultValue: 'External app not found',
-            })}
-        </Typography>
-      </Box>
-    );
-  }
-
   return (
     <IframeWrapper>
       <StyledIframe
-        src={data.externalApp.url}
-        title={data.externalApp.name}
+        src={iframeSrc}
+        title={data?.externalApp.name}
         allow="fullscreen; microphone; camera; display-capture"
       />
     </IframeWrapper>
