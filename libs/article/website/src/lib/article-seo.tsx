@@ -57,7 +57,7 @@ export const getArticleSEO = (article: Article) => {
     article.latest.title ||
     firstTitle?.title;
   const headline = firstTitle?.title || article.latest.title;
-  const url = article.latest.canonicalUrl ?? article.url;
+  const url = article.latest.canonicalUrl || article.url;
 
   const firstAuthor = article.latest.authors.at(0)?.author;
 
