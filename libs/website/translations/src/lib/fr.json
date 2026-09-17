@@ -29,6 +29,7 @@
     "memberplan": {
       "price": "{amountPerMonthMin, select, 0 {Gratuit} other {À partir de {monthlyPrice} {extendable, select, true {par mois} other {}}}}"
     },
+    "periodicity": "Intervalle de paiement",
     "continuation": "Après {afterFirstPaymentPeriod}, {formattedAmount} {renewalPeriodL}.",
     "cancellable": "Résiliable à tout moment",
     "captcha": "Captcha",
