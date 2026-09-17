@@ -37,8 +37,17 @@ export function assertReason(reason: string): string {
   return trimmed.slice(0, 500);
 }
 
+/**
+ * Impersonation is on unless a medium explicitly turns it off. The protection
+ * does not rest on this switch — a request still has to carry a One-signed
+ * channel token with the `write:impersonate` scope, and One only issues one for
+ * an operator whose account came through the GitHub staff login. The switch is
+ * there for a medium that wants the door shut regardless.
+ */
 export function isImpersonationEnabled(
   env: Record<string, string | undefined>
 ): boolean {
-  return env['WEP_ONE_IMPERSONATION'] === 'true';
+  const value = env['WEP_ONE_IMPERSONATION']?.trim().toLowerCase();
+
+  return value !== 'false' && value !== '0' && value !== 'off';
 }

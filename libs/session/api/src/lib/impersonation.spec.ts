@@ -47,23 +47,34 @@ describe('assertReason', () => {
 });
 
 describe('isImpersonationEnabled', () => {
-  it('is off when unset — a medium must opt in', () => {
-    expect(isImpersonationEnabled({})).toBe(false);
+  it('is on when unset — a medium opts out, not in', () => {
+    expect(isImpersonationEnabled({})).toBe(true);
   });
 
-  it('is off for anything other than the exact string true', () => {
+  it('is off only when a medium says so', () => {
     expect(isImpersonationEnabled({ WEP_ONE_IMPERSONATION: 'false' })).toBe(
       false
     );
-    expect(isImpersonationEnabled({ WEP_ONE_IMPERSONATION: '1' })).toBe(false);
-    expect(isImpersonationEnabled({ WEP_ONE_IMPERSONATION: 'TRUE' })).toBe(
+    expect(isImpersonationEnabled({ WEP_ONE_IMPERSONATION: '0' })).toBe(false);
+    expect(isImpersonationEnabled({ WEP_ONE_IMPERSONATION: 'off' })).toBe(
       false
     );
   });
 
-  it('is on only for the exact string true', () => {
-    expect(isImpersonationEnabled({ WEP_ONE_IMPERSONATION: 'true' })).toBe(
-      true
+  it('accepts the off values regardless of casing and padding', () => {
+    expect(isImpersonationEnabled({ WEP_ONE_IMPERSONATION: 'FALSE' })).toBe(
+      false
     );
+    expect(isImpersonationEnabled({ WEP_ONE_IMPERSONATION: '  false  ' })).toBe(
+      false
+    );
+  });
+
+  it('stays on for anything that does not mean off', () => {
+    for (const value of ['true', 'TRUE', '1', 'yes', '', 'nonsense']) {
+      expect(isImpersonationEnabled({ WEP_ONE_IMPERSONATION: value })).toBe(
+        true
+      );
+    }
   });
 });
