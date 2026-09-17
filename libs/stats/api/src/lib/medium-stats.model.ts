@@ -47,6 +47,44 @@ export class MediumMembershipStats {
   deactivationsByReason!: MediumDeactivationReasonCount[];
 }
 
+/**
+ * State of the database's own migration history. A deployment that dies during
+ * a migration leaves the schema half-applied, and nothing applies the rest
+ * until someone resolves it — so this travels with the operational stats.
+ */
+@ObjectType()
+export class MediumMigrationSummary {
+  @Field(() => Int)
+  total!: number;
+
+  @Field(() => Int)
+  applied!: number;
+
+  @Field(() => Int)
+  failed!: number;
+
+  @Field(() => Int)
+  rolledBack!: number;
+
+  @Field(() => Int)
+  running!: number;
+
+  @Field(() => String, { nullable: true })
+  lastMigrationName!: string | null;
+
+  @Field(() => String, { nullable: true })
+  lastMigrationState!: string | null;
+
+  @Field(() => Date, { nullable: true })
+  lastAppliedAt!: Date | null;
+
+  @Field(() => Boolean, {
+    description:
+      'The newest migration did not complete. The schema is then in a state nobody designed.',
+  })
+  lastMigrationFailed!: boolean;
+}
+
 @ObjectType()
 export class MediumOperationsStats {
   @Field(() => Date, { nullable: true })
@@ -79,6 +117,9 @@ export class MediumOperationsStats {
 
   @Field(() => Int)
   mailchimpSyncErrors!: number;
+
+  @Field(() => MediumMigrationSummary)
+  migrations!: MediumMigrationSummary;
 }
 
 @ObjectType()

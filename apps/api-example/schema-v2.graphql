@@ -2234,6 +2234,35 @@ type MediumMembershipStats {
   newSubscribers: Int!
 }
 
+type MediumMigration {
+  appliedStepsCount: Int!
+  error: String
+  finishedAt: DateTime
+  id: String!
+  name: String!
+  rolledBackAt: DateTime
+  startedAt: DateTime!
+
+  """applied, failed, rolledBack or running"""
+  state: String!
+}
+
+type MediumMigrationSummary {
+  applied: Int!
+  failed: Int!
+  lastAppliedAt: DateTime
+
+  """
+  The newest migration did not complete. The schema is then in a state nobody designed.
+  """
+  lastMigrationFailed: Boolean!
+  lastMigrationName: String
+  lastMigrationState: String
+  rolledBack: Int!
+  running: Int!
+  total: Int!
+}
+
 type MediumMoneyStats {
   atRisk: Int!
   expectedRevenue: Int!
@@ -2252,6 +2281,7 @@ type MediumOperationsStats {
   imageCount: Int!
   lastPeriodicJobAt: DateTime
   mailchimpSyncErrors: Int!
+  migrations: MediumMigrationSummary!
   periodicJobError: String
   periodicJobFailing: Boolean!
   periodicJobTries: Int!
@@ -4002,6 +4032,7 @@ type Query {
 
   """This query returns the user."""
   me: SensitiveDataUser
+  mediumMigrations(limit: Int): [MediumMigration!]!
   mediumStats(from: DateTime, to: DateTime): MediumStats!
 
   """Returns a memberplan by id or slug."""

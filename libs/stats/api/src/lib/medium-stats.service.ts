@@ -1,4 +1,12 @@
+import {
+  summarise,
+  toMigration,
+  type Migration,
+  type MigrationRow,
+  type MigrationSummary,
+} from './migrations';
 import { Injectable } from '@nestjs/common';
+import { logger } from '@wepublish/utils/api';
 import { PrismaClient } from '@prisma/client';
 import { DashboardInvoiceService } from '@wepublish/membership/api';
 import {
@@ -14,6 +22,9 @@ import {
   MediumOperationsStats,
   MediumStats,
 } from './medium-stats.model';
+
+/** Hard cap on how many migration rows one call may return. */
+export const MIGRATION_LIST_LIMIT = 200;
 
 export const DEFAULT_WINDOW_DAYS = 30;
 
@@ -171,19 +182,52 @@ export class MediumStatsService {
     };
   }
 
+  /**
+   * Prisma's own migration table. Read raw because it is not part of the
+   * generated client — and read with a hard row cap so a long history cannot
+   * turn a stats call into a large response.
+   */
+  async listMigrations(limit = MIGRATION_LIST_LIMIT): Promise<Migration[]> {
+    const rows = await this.prisma.$queryRaw<MigrationRow[]>`
+      SELECT id, migration_name, started_at, finished_at, rolled_back_at,
+             applied_steps_count, logs
+      FROM _prisma_migrations
+      ORDER BY started_at DESC
+      LIMIT ${Math.min(Math.max(limit, 1), MIGRATION_LIST_LIMIT)}
+    `;
+
+    return rows.map(row => toMigration(row));
+  }
+
+  private async migrations(): Promise<MigrationSummary> {
+    try {
+      return summarise(await this.listMigrations());
+    } catch (error) {
+      // A database without the table (or without permission to read it) must
+      // not take the whole stats call down.
+      logger('medium-stats').warn(
+        `Could not read _prisma_migrations: ${(error as Error).message}`
+      );
+
+      return summarise([]);
+    }
+  }
+
   private async operations(): Promise<MediumOperationsStats> {
-    const [job, images, documents, mailchimpSyncErrors] = await Promise.all([
-      this.prisma.periodicJob.findFirst({ orderBy: { date: 'desc' } }),
-      this.prisma.image.aggregate({
-        _count: { _all: true },
-        _sum: { fileSize: true },
-      }),
-      this.prisma.document.aggregate({
-        _count: { _all: true },
-        _sum: { fileSize: true },
-      }),
-      this.prisma.mailchimpSyncError.count(),
-    ]);
+    const [job, images, documents, mailchimpSyncErrors, migrations] =
+      await Promise.all([
+        this.prisma.periodicJob.findFirst({ orderBy: { date: 'desc' } }),
+        this.prisma.image.aggregate({
+          _count: { _all: true },
+          _sum: { fileSize: true },
+        }),
+        this.prisma.document.aggregate({
+          _count: { _all: true },
+          _sum: { fileSize: true },
+        }),
+        this.prisma.mailchimpSyncError.count(),
+        this.migrations(),
+      ]);
 
     const imageBytes = images._sum.fileSize ?? 0;
     const documentBytes = documents._sum.fileSize ?? 0;
@@ -199,6 +243,7 @@ export class MediumStatsService {
       documentBytes,
       storageBytes: imageBytes + documentBytes,
       mailchimpSyncErrors,
+      migrations,
     };
   }
 
