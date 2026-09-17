@@ -1,7 +1,6 @@
 import { css, SerializedStyles, Theme } from '@emotion/react';
 import styled from '@emotion/styled';
 import { GlobalStyles } from '@mui/material';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import {
   ArticleListWrapper,
   ArticleTrackingPixels,
@@ -47,9 +46,11 @@ import { TeaserSlotsCreditsWrapper } from './teaser-layouts/teaser-slots-credits
 import { TeaserSlotsTopicWrapper } from './teaser-layouts/teaser-slots-topic';
 
 const fullWidthMainSpacer = (theme: Theme) => css`
-  main > .MuiContainer-root {
-    max-width: initial;
-    padding: 0;
+  ${theme.breakpoints.up('md')} {
+    main > .MuiContainer-root {
+      max-width: initial;
+      padding: 0;
+    }
   }
 `;
 
@@ -210,8 +211,6 @@ export function ReflektArticle({
     blocks: { Blocks },
   } = useWebsiteBuilder();
 
-  const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
-
   const article = data?.article as FullArticleFragment | undefined;
 
   return (
@@ -221,7 +220,7 @@ export function ReflektArticle({
       hideContentAfter={article?.paywall?.hideContentAfter}
       fadeout={article?.paywall?.fadeout}
     >
-      {isDesktop && articleGlobalStyles}
+      {articleGlobalStyles}
 
       {article && <ArticleSEO article={article as unknown as ArticleType} />}
 
