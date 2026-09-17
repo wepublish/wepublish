@@ -81,7 +81,7 @@ export type FullRichTextBlockFragment = { __typename?: 'RichTextBlock', disabled
 
 export type FullHtmlBlockFragment = { __typename?: 'HTMLBlock', disabled?: boolean | null, html?: string | null, blockStyle?: string | null };
 
-export type FullSubscribeBlockFragment = { __typename?: 'SubscribeBlock', disabled?: boolean | null, memberPlanIds: Array<string>, periodicityDisplay?: Types.SubscribePeriodicityDisplay | null, fields: Array<Types.SubscribeBlockField>, showGoodies: boolean, showDiscountCodes: boolean, goodieMinValue?: number | null, hideRepeatGoodieOnUpgrade: boolean, blockStyle?: string | null, memberPlanRenderSettings: Array<{ __typename?: 'SubscribeBlockMemberPlanRenderSetting', isDefault: boolean, memberPlanId: string, layout: { __typename?: 'SubscribeBlockLayoutNoneConfig', type: Types.SubscribeBlockRenderLayout } | { __typename?: 'SubscribeBlockLayoutPickerConfig', showInput: boolean, values: Array<number>, type: Types.SubscribeBlockRenderLayout } | { __typename?: 'SubscribeBlockLayoutSliderConfig', showInput: boolean, type: Types.SubscribeBlockRenderLayout } }>, memberPlans: Array<(
+export type FullSubscribeBlockFragment = { __typename?: 'SubscribeBlock', disabled?: boolean | null, memberPlanIds: Array<string>, periodicityDisplay?: Types.SubscribePeriodicityDisplay | null, fields: Array<Types.SubscribeBlockField>, showGoodies: boolean, showDiscountCodes: boolean, goodieMinValue?: number | null, goodieMinValueAppliesToUpgrade: boolean, hideRepeatGoodieOnUpgrade: boolean, blockStyle?: string | null, memberPlanRenderSettings: Array<{ __typename?: 'SubscribeBlockMemberPlanRenderSetting', isDefault: boolean, memberPlanId: string, layout: { __typename?: 'SubscribeBlockLayoutNoneConfig', type: Types.SubscribeBlockRenderLayout } | { __typename?: 'SubscribeBlockLayoutPickerConfig', showInput: boolean, values: Array<number>, type: Types.SubscribeBlockRenderLayout } | { __typename?: 'SubscribeBlockLayoutSliderConfig', showInput: boolean, type: Types.SubscribeBlockRenderLayout } }>, memberPlans: Array<(
     { __typename?: 'MemberPlan' }
     & FullMemberPlanFragment
   )> };
@@ -735,6 +735,7 @@ export const FullSubscribeBlockFragmentDoc = gql`
   showGoodies
   showDiscountCodes
   goodieMinValue
+  goodieMinValueAppliesToUpgrade
   hideRepeatGoodieOnUpgrade
 }
     `;

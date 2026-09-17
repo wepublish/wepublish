@@ -106,7 +106,7 @@
     "unpaid": "{type, select, Donation {Don} other {Abonnement}} impayé",
     "cancel": "Résilier {type, select, Donation {le don} other {l'abonnement}}",
     "cancelConfirmation": "{type, select, Donation {Toutes les factures ouvertes du don seront annulées.} other {L'abonnement ne sera pas renouvelé, mais restera valable jusqu'à sa date d'expiration. Toutes les factures ouvertes de l'abonnement seront annulées.}}",
-    "costs": "Coûte {amount} {extendable, select, true {par mois} other {}}",
+    "costs": "Coûte {amount} {extendable, select, true {{periodicity, select, monthly {par mois} quarterly {par trimestre} biannual {par semestre} yearly {par an} biennial {par 2 ans} lifetime {une seule fois} other {}}} other {}}",
     "extendNow": "Prolonger maintenant",
     "extendBy": "Prolonger maintenant de {subscriptionDuration}",
     "extendEarly": "Prolonger {type, select, Donation {le don} other {l'abonnement}} à l'avance ?",
