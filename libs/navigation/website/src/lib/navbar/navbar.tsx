@@ -122,13 +122,20 @@ export const NavbarLink = styled(Link)`
   }
 `;
 
-export const NavbarMain = styled('div')<{ isMenuOpen?: boolean }>`
+export const NavbarMain = styled('div')<{
+  isMenuOpen?: boolean;
+  hideMenu?: boolean;
+}>`
   display: grid;
   grid-template-columns: max-content 1fr;
   align-items: center;
   justify-self: start;
   gap: ${({ theme }) => theme.spacing(2)};
-  min-height: var(--navbar-height);
+  ${({ hideMenu }) =>
+    hideMenu &&
+    css`
+      min-height: var(--navbar-height, 52px);
+    `}
 
   ${({ isMenuOpen }) =>
     isMenuOpen &&
@@ -309,7 +316,7 @@ export function Navbar({
         css={appBarStyles(isMenuOpen)}
       >
         <NavbarInnerWrapper>
-          <NavbarMain>
+          <NavbarMain hideMenu={hideMenu}>
             {!hideMenu && (
               <>
                 <NavbarIconButtonWrapper>
