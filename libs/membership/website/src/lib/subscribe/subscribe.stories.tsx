@@ -17,6 +17,8 @@ import {
   PaymentMethod,
   PaymentPeriodicity,
   ProductType,
+  SubscribeBlockRenderLayout,
+  SubscribePeriodicityDisplay,
   SubscriptionDeactivationReason,
 } from '@wepublish/website/api';
 import { z } from 'zod';
@@ -699,7 +701,7 @@ const lifetimeOnlyMemberPlan = mockMemberPlan({
   ],
 });
 
-export const DropdownDisablesPlansWithoutMonthly: StoryObj<typeof Subscribe> = {
+export const DropdownKeepsPlansWithoutMonthly: StoryObj<typeof Subscribe> = {
   ...LoggedIn,
   args: {
     ...LoggedIn.args,
@@ -721,27 +723,82 @@ export const DropdownDisablesPlansWithoutMonthly: StoryObj<typeof Subscribe> = {
   play: waitForInitialDataIsSet(async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
-    await step('Plan without monthly is not selectable', async () => {
+    await step('Plan without monthly stays selectable', async () => {
       const input = canvas.getByLabelText(lifetimeOnlyMemberPlan.name, {
         selector: 'input',
         exact: false,
       });
 
-      expect(input).toBeDisabled();
-    });
-
-    await step('A plan offering monthly is selected instead', async () => {
-      const input = canvas.getByLabelText(memberPlan.name, {
-        selector: 'input',
-        exact: false,
-      });
-
-      expect(input).toBeChecked();
+      expect(input).toBeEnabled();
     });
   }),
 };
 
-export const DropdownWithoutAnyMonthlyPlan: StoryObj<typeof Subscribe> = {
+const fixedPriceMemberPlan = mockMemberPlan({
+  availablePaymentMethods: [
+    mockAvailablePaymentMethod({
+      paymentPeriodicities: [
+        PaymentPeriodicity.Monthly,
+        PaymentPeriodicity.Yearly,
+      ],
+    }),
+  ],
+  periodicityPricing: [
+    {
+      __typename: 'PeriodicityPrice',
+      periodicity: PaymentPeriodicity.Monthly,
+      label: null,
+      amountMin: 1000,
+      amountTarget: null,
+      amountMax: 1000,
+    },
+  ],
+}) as FullMemberPlanFragment;
+
+export const FixedPriceHidesAmountPicker: StoryObj<typeof Subscribe> = {
+  ...LoggedIn,
+  args: {
+    ...LoggedIn.args,
+    periodicityDisplay: SubscribePeriodicityDisplay.Toggle,
+    memberPlans: {
+      data: {
+        memberPlans: {
+          nodes: [fixedPriceMemberPlan],
+          pageInfo: {
+            hasNextPage: false,
+            hasPreviousPage: false,
+            __typename: 'PageInfo',
+          },
+          totalCount: 1,
+        },
+      },
+      loading: false,
+    },
+    memberPlanRenderSettings: [
+      {
+        __typename: 'SubscribeBlockMemberPlanRenderSetting',
+        memberPlanId: fixedPriceMemberPlan.id,
+        isDefault: true,
+        layout: {
+          __typename: 'SubscribeBlockLayoutPickerConfig',
+          type: SubscribeBlockRenderLayout.Picker,
+          showInput: true,
+          values: [],
+          valuesByPeriodicity: [],
+        },
+      },
+    ],
+  },
+  play: waitForInitialDataIsSet(async ({ canvasElement, step }) => {
+    await step('No amount tiles are offered for a fixed price', async () => {
+      expect(
+        canvasElement.querySelector('[data-area="monthlyAmount"] input')
+      ).toBeNull();
+    });
+  }),
+};
+
+export const DropdownSellsPlanWithoutMonthly: StoryObj<typeof Subscribe> = {
   ...LoggedIn,
   args: {
     ...LoggedIn.args,
@@ -761,10 +818,10 @@ export const DropdownWithoutAnyMonthlyPlan: StoryObj<typeof Subscribe> = {
     },
   },
   play: waitForInitialDataIsSet(async ({ canvasElement, step }) => {
-    await step('Subscribing is not possible', async () => {
+    await step('Subscribing stays possible', async () => {
       const button = canvasElement.querySelector('button[type="submit"]');
 
-      expect(button).toBeDisabled();
+      expect(button).toBeEnabled();
     });
   }),
 };

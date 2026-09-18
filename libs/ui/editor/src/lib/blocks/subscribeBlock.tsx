@@ -110,10 +110,6 @@ const RadioOptionHint = styled('span')`
   color: #6c757d;
 `;
 
-const RadioOptionWarning = styled(RadioOptionHint)`
-  color: var(--rs-state-error);
-`;
-
 const RadioOptionNote = styled(RadioOptionHint)`
   color: var(--rs-state-info);
 `;
@@ -348,9 +344,6 @@ const getPlanPeriodicities = (
     )
   );
 
-const offersMonthly = (plan: PlanForPeriodAmount) =>
-  getPlanPeriodicities(plan).includes(PaymentPeriodicity.Monthly);
-
 const hasNonMonthlyPricing = (plan: PlanForPeriodAmount) =>
   !!plan.periodicityPricing?.some(
     price =>
@@ -504,11 +497,6 @@ export const SubscribeBlock = ({
     return selected.length ? selected : allPlans;
   }, [data?.memberPlans?.nodes, memberPlanById, value.memberPlanIds]);
 
-  const plansWithoutMonthly = useMemo(
-    () => displayedPlans.filter(plan => !offersMonthly(plan)),
-    [displayedPlans]
-  );
-
   const plansWithIgnoredPricing = useMemo(
     () => displayedPlans.filter(hasNonMonthlyPricing),
     [displayedPlans]
@@ -518,7 +506,6 @@ export const SubscribeBlock = ({
     value.periodicityDisplay ?? SubscribePeriodicityDisplay.Dropdown;
   const usesMonthlyOnlyDisplay =
     periodicityDisplay === SubscribePeriodicityDisplay.Dropdown;
-  const monthlyOnlyDisplayUnavailable = plansWithoutMonthly.length > 0;
 
   const handleMemberPlansChange = useCallback<
     NonNullable<CheckPickerProps<string>['onChange']>
@@ -1183,10 +1170,7 @@ export const SubscribeBlock = ({
             }))
           }
         >
-          <DisplayOptionRadio
-            value={SubscribePeriodicityDisplay.Dropdown}
-            disabled={disabled || monthlyOnlyDisplayUnavailable}
-          >
+          <DisplayOptionRadio value={SubscribePeriodicityDisplay.Dropdown}>
             <RadioOption>
               <RadioOptionLabel>
                 {t('blocks.subscribe.periodicityDisplayDropdown')}
@@ -1194,17 +1178,6 @@ export const SubscribeBlock = ({
               <RadioOptionHint>
                 {t('blocks.subscribe.periodicityDisplayDropdownHint')}
               </RadioOptionHint>
-
-              {monthlyOnlyDisplayUnavailable && (
-                <RadioOptionWarning>
-                  {t('blocks.subscribe.periodicityDisplayDropdownUnavailable', {
-                    count: plansWithoutMonthly.length,
-                    plans: plansWithoutMonthly
-                      .map(({ name }) => name)
-                      .join(', '),
-                  })}
-                </RadioOptionWarning>
-              )}
 
               {usesMonthlyOnlyDisplay && !!plansWithIgnoredPricing.length && (
                 <RadioOptionNote>
