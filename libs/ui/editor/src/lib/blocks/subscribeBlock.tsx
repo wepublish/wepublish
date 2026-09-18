@@ -25,9 +25,9 @@ import {
   SubscribePeriodicityDisplay,
   useMemberPlanListQuery,
 } from '@wepublish/editor/api';
-import { ReactNode, useCallback, useMemo, useState } from 'react';
+import { Fragment, ReactNode, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdDragIndicator, MdPriceCheck } from 'react-icons/md';
+import { MdDragIndicator, MdInfo, MdPriceCheck } from 'react-icons/md';
 import type { CheckPickerProps } from 'rsuite';
 import {
   Checkbox,
@@ -36,11 +36,13 @@ import {
   Nav,
   NumberInput,
   Panel as RPanel,
+  Popover as RPopover,
   Radio,
   RadioGroup,
   SelectPicker,
   TagInput,
   Toggle,
+  Whisper,
 } from 'rsuite';
 
 import { BlockProps } from '../atoms/blockList';
@@ -164,7 +166,7 @@ const SmallCheckbox = styled(Checkbox)`
 
 const PlanStyleRow = styled('div')`
   display: grid;
-  grid-template-columns: max-content 1fr max-content max-content;
+  grid-template-columns: minmax(0, max-content) 1fr max-content max-content;
   gap: 12px;
   align-items: center;
 `;
@@ -175,10 +177,13 @@ const PlanDefaultToggle = styled(Toggle)`
 
 const PlanStyleName = styled('span')`
   font-size: 14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `;
 
 const PlanAmounts = styled('span')`
-  width: 150px;
+  min-width: 150px;
   font-size: 12px;
   color: #6c757d;
   white-space: nowrap;
@@ -190,6 +195,24 @@ const TileTabs = styled(Nav)`
 
 const TileValuesHint = styled(Hint)`
   margin-top: 6px;
+`;
+
+const PlanAmountsCell = styled('span')`
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+  flex-shrink: 0;
+`;
+
+const PlanAmountsPopover = styled(RPopover)`
+  max-width: 320px;
+`;
+
+const PlanAmountsBreakdown = styled('div')`
+  display: grid;
+  grid-template-columns: max-content max-content;
+  gap: 2px 12px;
+  font-size: 12px;
 `;
 
 const PickerSettings = styled('div')`
@@ -397,6 +420,30 @@ const formatPlanPeriodicityAmounts = (
   return [currency, amounts, `(${periodicityLabel(periodicity)})`]
     .filter(Boolean)
     .join(' ');
+};
+
+const getPlanPeriodicityBreakdown = (
+  plan: PlanForPeriodAmount | undefined,
+  currency: string | null | undefined
+) => {
+  if (!plan) {
+    return [];
+  }
+
+  return getPlanPeriodicities(plan).map(periodicity => {
+    const { amountMin, amountTarget, amountMax } = getPeriodPriceRange(
+      plan,
+      periodicity
+    );
+    const amounts = [amountMin, amountTarget, amountMax]
+      .map(formatPlanAmount)
+      .join(' / ');
+
+    return {
+      periodicity,
+      amounts: [currency, amounts].filter(Boolean).join(' '),
+    };
+  });
 };
 
 export const SubscribeBlock = ({
@@ -834,27 +881,70 @@ export const SubscribeBlock = ({
                     >
                       <SettingRowContent>
                         <PlanStyleRow>
-                          <PlanStyleName>
+                          <PlanStyleName
+                            title={
+                              memberPlanOptions.find(
+                                ({ value: id }) => id === plan.memberPlanId
+                              )?.label ?? plan.memberPlanId
+                            }
+                          >
                             {memberPlanOptions.find(
                               ({ value: id }) => id === plan.memberPlanId
                             )?.label ?? plan.memberPlanId}
                           </PlanStyleName>
 
-                          <PlanAmounts
-                            title={t('blocks.subscribe.planAmountsTitle')}
-                          >
-                            {formatPlanPeriodicityAmounts(
-                              memberPlanById.get(plan.memberPlanId),
-                              memberPlanById.get(plan.memberPlanId)?.currency,
-                              periodicity =>
-                                t(
-                                  `memberPlanList.paymentPeriodicity.${periodicity}`
-                                ),
-                              usesMonthlyOnlyDisplay ?
-                                PaymentPeriodicity.Monthly
-                              : undefined
-                            )}
-                          </PlanAmounts>
+                          <PlanAmountsCell>
+                            <PlanAmounts>
+                              {formatPlanPeriodicityAmounts(
+                                memberPlanById.get(plan.memberPlanId),
+                                memberPlanById.get(plan.memberPlanId)?.currency,
+                                periodicity =>
+                                  t(
+                                    `memberPlanList.paymentPeriodicity.${periodicity}`
+                                  ),
+                                usesMonthlyOnlyDisplay ?
+                                  PaymentPeriodicity.Monthly
+                                : undefined
+                              )}
+                            </PlanAmounts>
+
+                            <Whisper
+                              trigger={['hover', 'focus']}
+                              placement="top"
+                              speaker={
+                                <PlanAmountsPopover
+                                  title={t('blocks.subscribe.planAmountsTitle')}
+                                >
+                                  <PlanAmountsBreakdown>
+                                    {getPlanPeriodicityBreakdown(
+                                      memberPlanById.get(plan.memberPlanId),
+                                      memberPlanById.get(plan.memberPlanId)
+                                        ?.currency
+                                    ).map(({ periodicity, amounts }) => (
+                                      <Fragment key={periodicity}>
+                                        <span>
+                                          {t(
+                                            `memberPlanList.paymentPeriodicity.${periodicity}`
+                                          )}
+                                        </span>
+                                        <span>{amounts}</span>
+                                      </Fragment>
+                                    ))}
+                                  </PlanAmountsBreakdown>
+                                </PlanAmountsPopover>
+                              }
+                            >
+                              <IconButton
+                                icon={<MdInfo size={16} />}
+                                circle
+                                size="xs"
+                                appearance="subtle"
+                                aria-label={t(
+                                  'blocks.subscribe.planAmountsTitle'
+                                )}
+                              />
+                            </Whisper>
+                          </PlanAmountsCell>
 
                           <SelectPicker
                             cleanable={false}

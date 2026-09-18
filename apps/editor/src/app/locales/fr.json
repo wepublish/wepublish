@@ -479,7 +479,7 @@
           "Narrow": "Étroit (2 tuiles par ligne)",
           "Wide": "Large (1 tuile par ligne, grandes tuiles)"
         },
-        "planAmountsTitle": "Montant minimum / cible / maximum pour l’intervalle de paiement par défaut (en francs)",
+        "planAmountsTitle": "Montant minimum / cible / maximum",
         "defaultPlanTitle": "Sélectionné par défaut — ce plan est présélectionné après le chargement de la page.",
         "defaultPlanLabel": "Par défaut"
       },
