@@ -376,27 +376,33 @@ export function Navbar({
               </Button>
             )}
 
-            {!hasRunningSubscription && !hasUnpaidInvoices && subscribeBtn && (
-              <Button
-                LinkComponent={Link}
-                sx={navbarButtonStyles}
-                size="medium"
-                {...subscribeBtn}
-              >
-                {t('navbar.subscribe')}
-              </Button>
-            )}
+            {!hideMenu &&
+              !hasRunningSubscription &&
+              !hasUnpaidInvoices &&
+              subscribeBtn && (
+                <Button
+                  LinkComponent={Link}
+                  sx={navbarButtonStyles}
+                  size="medium"
+                  {...subscribeBtn}
+                >
+                  {t('navbar.subscribe')}
+                </Button>
+              )}
 
-            {hasRunningSubscription && !hasUnpaidInvoices && profileBtn && (
-              <Button
-                LinkComponent={Link}
-                sx={navbarButtonStyles}
-                size="medium"
-                {...profileBtn}
-              >
-                {t('navbar.myAccount')}
-              </Button>
-            )}
+            {!hideMenu &&
+              hasRunningSubscription &&
+              !hasUnpaidInvoices &&
+              profileBtn && (
+                <Button
+                  LinkComponent={Link}
+                  sx={navbarButtonStyles}
+                  size="medium"
+                  {...profileBtn}
+                >
+                  {t('navbar.myAccount')}
+                </Button>
+              )}
           </NavbarActions>
         </NavbarInnerWrapper>
       </AppBar>
