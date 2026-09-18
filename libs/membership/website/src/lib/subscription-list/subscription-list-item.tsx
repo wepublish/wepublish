@@ -18,8 +18,6 @@ import {
 import { formatCurrency } from '../formatters/format-currency';
 import {
   calculatePeriodAmount,
-  formatPaymentPeriod,
-  formatPaymentTimeline,
   formatPeriodUnit,
 } from '../formatters/format-payment-period';
 import { Modal } from '@wepublish/website/builder';
@@ -110,8 +108,12 @@ export function SubscriptionListItem({
   const [error, setError] = useState<Error>();
   const callAction = useAsyncAction(setLoading, setError);
 
-  const periodicityTimeline = formatPaymentTimeline(paymentPeriodicity);
-  const subscriptionDuration = formatPaymentPeriod(paymentPeriodicity);
+  const periodicityTimeline = t(
+    `subscription.paymentTimeline.${paymentPeriodicity || 'yearly'}`
+  );
+  const subscriptionDuration = t(
+    `subscription.paymentPeriod.${paymentPeriodicity || 'yearly'}`
+  );
 
   const [confirmCancel, setConfirmCancel] = useState(false);
   const [confirmExtend, setConfirmExtend] = useState<boolean>(false);
@@ -150,7 +152,7 @@ export function SubscriptionListItem({
             <SubscriptionListItemMetaItem>
               <MdOutlinePayments />
               <span>
-                Bezahlt bis{' '}
+                {t('subscription.paidUntil')}{' '}
                 <time
                   suppressHydrationWarning
                   dateTime={paidUntil}
@@ -166,7 +168,7 @@ export function SubscriptionListItem({
               <SubscriptionListItemMetaItem>
                 <MdCancel />
                 <span>
-                  Gekündigt am{' '}
+                  {t('subscription.cancelledOn')}{' '}
                   <time
                     suppressHydrationWarning
                     dateTime={deactivation.date}
@@ -296,6 +298,7 @@ export function SubscriptionListItem({
         submitText={t('subscription.cancel', {
           type: productType,
         })}
+        cancelText={t('user.cancel')}
       >
         <H5 component="h1">
           {t('subscription.cancelProduct', {
@@ -320,6 +323,7 @@ export function SubscriptionListItem({
         submitText={t('subscription.extendBy', {
           subscriptionDuration,
         })}
+        cancelText={t('user.cancel')}
       >
         <H5 component="h1">
           {t('subscription.extendEarly', {

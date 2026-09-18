@@ -19,7 +19,8 @@
   "teaser": {
     "author": {
       "text": "Par {authors}",
-      "seperator": ", "
+      "seperator": ", ",
+      "lastSeperator": ", "
     },
     "meta": {
       "seperator": " | "
@@ -43,14 +44,14 @@
       "button": "Passer à {memberPlan} pour {formattedAmount}"
     },
     "support": {
-      "subscribeForPeriod": "Je soutiens {siteTitle} {monthlyAmount, select, 0 {gratuitement} other {{renewalPeriodL} avec {formattedAmount}}}",
-      "payForPeriod": "Je soutiens {siteTitle} {monthlyAmount, select, 0 {gratuitement} other {{paymentPeriodL} avec {formattedAmount}}}",
+      "subscribeForPeriod": "Je soutiens {siteTitle} {monthlyAmount, select, 0 {gratuitement} other {avec {formattedAmount} {renewalPeriodL}}}",
+      "payForPeriod": "Je soutiens {siteTitle} {monthlyAmount, select, 0 {gratuitement} other {pendant {paymentPeriodL} avec {formattedAmount}}}",
       "pay": "Je soutiens {siteTitle} {monthlyAmount, select, 0 {gratuitement} other {avec {formattedAmount}}}"
     },
     "button": {
-      "subscribeForPeriod": "{monthlyAmount, select, 0 {Gratuit} other {{renewalPeriod} pour {formattedAmount}}} {productType, select, Donation {faire un don} other {s'abonner}}",
-      "payForPeriod": "{monthlyAmount, select, 0 {Gratuit} other {{paymentPeriod} pour {formattedAmount}}} {productType, select, Donation {faire un don} other {s'abonner}}",
-      "pay": "{monthlyAmount, select, 0 {Gratuit} other {Pour {formattedAmount}}} {productType, select, Donation {faire un don} other {s'abonner}}"
+      "subscribeForPeriod": "{productType, select, Donation {Faire un don {monthlyAmount, select, 0 {gratuitement} other {de {formattedAmount} {renewalPeriodL}}}} other {S'abonner {monthlyAmount, select, 0 {gratuitement} other {pour {formattedAmount} {renewalPeriodL}}}}}",
+      "payForPeriod": "{productType, select, Donation {Faire un don {monthlyAmount, select, 0 {gratuitement} other {de {formattedAmount} pour {paymentPeriodL}}}} other {S'abonner {monthlyAmount, select, 0 {gratuitement} other {pour {paymentPeriodL} à {formattedAmount}}}}}",
+      "pay": "{productType, select, Donation {Faire un don {monthlyAmount, select, 0 {gratuitement} other {de {formattedAmount}}}} other {S'abonner {monthlyAmount, select, 0 {gratuitement} other {pour {formattedAmount}}}}}"
     },
     "transactionFee": {
       "label": "Oui, je souhaite prendre en charge les frais de traitement de 2 % et ainsi soutenir davantage {siteTitle}."
@@ -113,13 +114,47 @@
     "extendEarlyConfirmation": "Nous sommes ravis que vous souhaitiez prolonger votre {type, select, Donation {don} other {abonnement}} de {subscriptionDuration} à l'avance. Continuer ?",
     "noActiveSubscriptions": "Vous n'avez pas encore d'abonnement actif.",
     "subscribeNow": "S'abonner maintenant.",
-    "startsAt": "Terminé le <time>{startsAt}</time>",
+    "startsAt": "{type, select, Donation {Effectué le} other {Souscrit le}} <time>{startsAt}</time>",
     "detailsAndPayments": "Détails et paiements",
+    "paidUntil": "Payé jusqu'au",
+    "cancelledOn": "Résilié le",
     "cancelledDueToInvoiceNotPaid": "Résilié automatiquement",
     "cancelledDueToUnknownReason": "Le motif de résiliation est inconnu",
     "autoRenew": "Sera renouvelé automatiquement {periodicityTimeline}",
-    "validFor": "Valable pour {subscriptionDuration}",
-    "cancelProduct": "Voulez-vous vraiment résilier {productName} ?"
+    "validFor": "Valable {subscriptionDuration}",
+    "cancelProduct": "Voulez-vous vraiment résilier {productName} ?",
+    "afterFirstPaymentPeriod": {
+      "monthly": "le premier mois",
+      "quarterly": "les trois premiers mois",
+      "biannual": "les six premiers mois",
+      "yearly": "la première année",
+      "biennial": "les deux premières années",
+      "lifetime": "la première période"
+    },
+    "paymentPeriod": {
+      "monthly": "1 mois",
+      "quarterly": "3 mois",
+      "biannual": "6 mois",
+      "yearly": "1 an",
+      "biennial": "2 ans",
+      "lifetime": "toute la vie"
+    },
+    "paymentTimeline": {
+      "monthly": "tous les mois",
+      "quarterly": "tous les trois mois",
+      "biannual": "tous les six mois",
+      "yearly": "tous les ans",
+      "biennial": "tous les deux ans",
+      "lifetime": "à vie"
+    },
+    "renewalPeriod": {
+      "monthly": "Par mois",
+      "quarterly": "Par trimestre",
+      "biannual": "Par semestre",
+      "yearly": "Par an",
+      "biennial": "Tous les deux ans",
+      "lifetime": "À vie"
+    }
   },
   "invoice": {
     "invoices": "Factures",
@@ -190,7 +225,9 @@
       "zipCode": "NPA",
       "city": "Localité / Ville",
       "country": "Pays",
-      "occupation": "Fonction / Profession"
+      "suggested": "Suggéré",
+      "occupation": "Fonction / Profession",
+      "passwordsDoNotMatch": "Les mots de passe ne correspondent pas."
     }
   },
   "article": {
@@ -240,10 +277,10 @@
       "invalid_type_received_undefined": "Ne peut pas être vide",
       "invalid_type_received_null": "Ne peut pas être vide",
       "invalid_literal": "Valeur littérale invalide, {expected} attendu",
-      "unrecognized_keys": "Clé(s) non reconnue(s) dans l'objet : {- keys}",
+      "unrecognized_keys": "Clé(s) non reconnue(s) dans l'objet : {keys}",
       "invalid_union": "Entrée invalide",
-      "invalid_union_discriminator": "Valeur de discriminateur invalide, {- options} attendu",
-      "invalid_enum_value": "Valeur d'énumération invalide. {- options} attendu, '{received}' reçu",
+      "invalid_union_discriminator": "Valeur de discriminateur invalide, {options} attendu",
+      "invalid_enum_value": "Valeur d'énumération invalide. {options} attendu, \"{received}\" reçu",
       "invalid_arguments": "Arguments de fonction invalides",
       "invalid_return_type": "Valeur de retour de fonction invalide",
       "invalid_date": "Date invalide",
@@ -283,9 +320,9 @@
           "not_inclusive": "Entrée invalide"
         },
         "date": {
-          "exact": "La date doit être exactement égale à {- minimum, datetime}",
-          "inclusive": "La date doit être postérieure ou égale à {- minimum, datetime}",
-          "not_inclusive": "La date doit être postérieure à {- minimum, datetime}"
+          "exact": "La date doit être exactement égale à {minimum, date, medium}",
+          "inclusive": "La date doit être postérieure ou égale à {minimum, date, medium}",
+          "not_inclusive": "La date doit être postérieure à {minimum, date, medium}"
         }
       },
       "too_big": {
@@ -310,9 +347,9 @@
           "not_inclusive": "Entrée invalide"
         },
         "date": {
-          "exact": "La date doit être exactement égale à {- maximum, datetime}",
-          "inclusive": "La date doit être antérieure ou égale à {- maximum, datetime}",
-          "not_inclusive": "La date doit être antérieure à {- maximum, datetime}"
+          "exact": "La date doit être exactement égale à {maximum, date, medium}",
+          "inclusive": "La date doit être antérieure ou égale à {maximum, date, medium}",
+          "not_inclusive": "La date doit être antérieure à {maximum, date, medium}"
         }
       }
     },

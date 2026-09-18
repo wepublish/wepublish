@@ -46,13 +46,15 @@ import { useMemo } from 'react';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
+import frOverridden from '../locales/frOverridden.json';
 import { FactuelContentWrapper } from '../src/components/factuel-content-wrapper';
+import { FactuelNavbar } from '../src/components/factuel-navbar';
 
 setDefaultOptions({
   locale: fr,
 });
 
-initWePublishTranslator().changeLanguage('fr');
+initWePublishTranslator(frOverridden).changeLanguage('fr');
 
 z.setErrorMap(zodI18nMap);
 
@@ -82,7 +84,7 @@ const NavBar = styled(NavbarContainer)`
 
 const dateFormatter = (date: Date, includeTime = true) =>
   includeTime ?
-    `${format(date, 'dd. MMMM yyyy')} um ${format(date, 'HH:mm')}`
+    `${format(date, 'dd. MMMM yyyy')} à ${format(date, 'HH:mm')}`
   : format(date, 'dd. MMMM yyyy');
 
 export type CustomAppProps = AppProps<{
@@ -130,9 +132,10 @@ function CustomApp({
               Head={Head}
               Script={Script}
               ContentWrapper={FactuelContentWrapper}
+              Navbar={FactuelNavbar}
               elements={{ Link: NextWepublishLink }}
               date={{ format: dateFormatter }}
-              meta={{ siteTitle }}
+              meta={{ siteTitle, locale: 'fr-CH' }}
             >
               <CssBaseline />
 
