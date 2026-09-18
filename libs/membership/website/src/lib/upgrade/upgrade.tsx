@@ -299,11 +299,14 @@ export const Upgrade = ({
       )
     : null;
 
+  const hasFixedPrice =
+    !!periodPriceRange &&
+    periodPriceRange.amountMax != null &&
+    periodPriceRange.amountMin === periodPriceRange.amountMax;
+
   const shouldHidePaymentAmount =
-    selectedLayout ? isFixedAmountLayout(selectedLayout)
-    : periodPriceRange ?
-      periodPriceRange.amountMin === periodPriceRange.amountMax
-    : true;
+    hasFixedPrice ||
+    (selectedLayout ? isFixedAmountLayout(selectedLayout) : !periodPriceRange);
 
   const amountPerMonthMin =
     periodPriceRange ?

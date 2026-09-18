@@ -81,6 +81,7 @@ export type BuilderMemberPlanPickerProps = {
   name?: string;
   value?: string;
   paymentPeriodicity?: PaymentPeriodicity;
+  requiredPeriodicity?: PaymentPeriodicity;
   memberPlanRenderSettings?: BuilderMemberPlanRenderSetting[];
   amount?: number;
   onAmountChange?: (monthlyAmount: number) => void;
