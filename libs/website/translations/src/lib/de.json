@@ -19,7 +19,8 @@
   "teaser": {
     "author": {
       "text": "Von {authors}",
-      "seperator": ", "
+      "seperator": ", ",
+      "lastSeperator": ", "
     },
     "meta": {
       "seperator": " | "
