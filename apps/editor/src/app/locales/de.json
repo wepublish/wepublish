@@ -421,6 +421,10 @@
         "selectMemberPlansSelectionHintAll": "Ohne Auswahl werden alle aktiven Pläne angezeigt.",
         "selectFields": "Benutzer-Eingabefelder",
         "selectFieldsSelectionHint": "Email & Nachname wird immer abgefragt. Reihenfolge spielt keine Rolle",
+        "periodicityDisplay": "Darstellung der Zahlungsintervalle",
+        "periodicityDisplayDropdown": "Auswahlfeld",
+        "periodicityDisplayOfferCards": "Angebots-Karten",
+        "periodicityDisplayHint": "Angebots-Karten zeigen jedes Zahlungsintervall als eigenes Angebot mit Preis an (z.B. Monatsabo / Jahresabo).",
         "goodiesHeading": "Goodies",
         "discountCodesHeading": "Rabattcodes",
         "showGoodies": "Goodie-Auswahl anzeigen",
@@ -428,6 +432,7 @@
         "goodieMinValue": {
           "label": "Goodie-Mindestbetrag:"
         },
+        "goodieMinValueAppliesToUpgrade": "Mindestbetrag auch bei Upgrades anwenden",
         "hideRepeatGoodieOnUpgrade": "Bei Upgrade: kein erneutes Goodie",
         "periodicityDisplay": "Darstellung der Zahlungsintervalle",
         "periodicityDisplayDropdown": "Auswahlfeld",
@@ -459,7 +464,7 @@
           "Narrow": "Schmal (2 Kacheln pro Zeile)",
           "Wide": "Breit (1 Kachel pro Zeile, grosse Kacheln)"
         },
-        "planAmountsTitle": "Minimal- / Ziel- / Maximalbetrag pro Monat (in Franken)",
+        "planAmountsTitle": "Minimal- / Ziel- / Maximalbetrag für das Standard-Zahlungsintervall (in Franken)",
         "defaultPlanTitle": "Standardmässig ausgewählt — dieser Abo-Plan ist nach dem Laden der Seite vorausgewählt.",
         "defaultPlanLabel": "Standard"
       },
