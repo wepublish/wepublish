@@ -47,7 +47,7 @@ plus curated multi-plan, block-feature and hostile-configuration groups —
 | `three-intervals`     | ✓    | monthly, quarterly, yearly | all three priced               | multi-interval tabs and toggles          |
 | `monthly-target`      |      | monthly, yearly            | min 5.00, target 12.00         | target ≠ min — what Fixer Betrag charges |
 | `monthly-range`       |      | monthly, yearly            | min 5, target 10, max 50       | bounded range                            |
-| `per-interval-labels` |      | monthly, quarterly, yearly | priced + marketing labels      | badge rendering, incl. a long label      |
+| `per-interval-labels` |      | monthly, quarterly, yearly | priced + marketing labels      | badge rendering, incl. a 60-char label   |
 | `yearly-only-priced`  |      | monthly, yearly            | yearly 120.00 only             | monthly derived from yearly              |
 | `lifetime`            |      | lifetime                   | lifetime 500.00                | 1200-month periodicity                   |
 | `donation`            |      | monthly, yearly            | monthly min 0                  | `ProductType.Donation`                   |
@@ -55,7 +55,7 @@ plus curated multi-plan, block-feature and hostile-configuration groups —
 | `non-extendable`      |      | monthly, yearly            | monthly 10.00                  | `extendable: false` — no period suffix   |
 | `default-yearly`      |      | monthly, yearly            | monthly 10.00, yearly 100.00   | `defaultPaymentPeriodicity: yearly`      |
 | `biennial`            |      | monthly, biennial          | monthly 10.00, biennial 200.00 | 24-month periodicity                     |
-| `long-name`           |      | monthly, yearly            | monthly 10.00 + 200-char label | layout stress                            |
+| `long-name`           |      | monthly, yearly            | monthly 10.00 + 60-char label  | layout stress                            |
 | `no-methods`          |      | _(none)_                   | monthly 10.00                  | plan offering no payment method at all   |
 
 ## Dimension 4 — plans per block

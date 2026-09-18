@@ -81,8 +81,8 @@ type PlanSpec = {
 
 const { Monthly, Quarterly, Yearly, Biennial, Lifetime } = PaymentPeriodicity;
 
-const LONG_LABEL =
-  '2 Monate geschenkt im Vergleich zur monatlichen Zahlung, ausserdem erhältst du unser Jahresmagazin gratis nach Hause geliefert und wirst zu allen Mitglieder-Anlässen eingeladen.';
+const MAX_LENGTH_LABEL =
+  '2 Monate geschenkt gegenüber der monatlichen Zahlungsweise!!';
 
 const PLAN_SPECS: PlanSpec[] = [
   {
@@ -160,7 +160,7 @@ const PLAN_SPECS: PlanSpec[] = [
     prices: [
       { periodicity: Monthly, amountMin: 1000 },
       { periodicity: Quarterly, amountMin: 2700, label: 'Beliebteste Wahl' },
-      { periodicity: Yearly, amountMin: 10000, label: LONG_LABEL },
+      { periodicity: Yearly, amountMin: 10000, label: MAX_LENGTH_LABEL },
     ],
   },
   {
@@ -221,7 +221,7 @@ const PLAN_SPECS: PlanSpec[] = [
     periodicities: [Monthly, Yearly],
     prices: [
       { periodicity: Monthly, amountMin: 1000 },
-      { periodicity: Yearly, amountMin: 10000, label: LONG_LABEL },
+      { periodicity: Yearly, amountMin: 10000, label: MAX_LENGTH_LABEL },
     ],
   },
   {
