@@ -47,6 +47,7 @@ export const MemberPlanPicker = forwardRef<
     name,
     alwaysShow,
     paymentPeriodicity,
+    requiredPeriodicity,
     memberPlanRenderSettings,
     amount,
     onAmountChange,
@@ -68,9 +69,9 @@ export const MemberPlanPicker = forwardRef<
 
   const isUnavailable = useCallback(
     (memberPlan: (typeof memberPlans)[number]) =>
-      !!paymentPeriodicity &&
-      !getPlanPeriodicities(memberPlan).includes(paymentPeriodicity),
-    [paymentPeriodicity]
+      !!requiredPeriodicity &&
+      !getPlanPeriodicities(memberPlan).includes(requiredPeriodicity),
+    [requiredPeriodicity]
   );
 
   useEffect(() => {
