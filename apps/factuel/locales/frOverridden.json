@@ -2,5 +2,9 @@
   "login": {
     "title": "Connexion pour les abonnés",
     "noAccount": "(Si vous n'avez pas encore de compte, <Link>cliquez ici.</Link>)"
+  },
+  "article": {
+    "related": "Cela pourrait également vous intéresser",
+    "comments": "Commentaires"
   }
 }
