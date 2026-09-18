@@ -176,11 +176,20 @@ const VideoFacade = styled('button')`
   border: 0;
   cursor: pointer;
   background-color: ${({ theme }) => theme.palette.common.black};
-  background-size: cover;
-  background-position: center;
+  overflow: hidden;
+`;
+
+const VideoFacadeImage = styled('img')`
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border: 0;
 `;
 
 const VideoFacadePlayIcon = styled('span')`
+  position: relative;
   display: grid;
   align-items: center;
   justify-items: center;
@@ -207,9 +216,10 @@ const PlayTriangle = () => (
   </svg>
 );
 
-const useVimeoEmbedInfo = (vimeoId: string | null) => {
+const vimeoPosterUrl = (vimeoId: string) => `/api/vimeo-poster/${vimeoId}`;
+
+const useVimeoAspect = (vimeoId: string | null) => {
   const [aspect, setAspect] = useState(16 / 9);
-  const [thumbnail, setThumbnail] = useState<string | null>(null);
 
   useEffect(() => {
     if (!vimeoId) {
@@ -232,10 +242,6 @@ const useVimeoEmbedInfo = (vimeoId: string | null) => {
         if (data?.width > 0 && data?.height > 0) {
           setAspect(data.width / data.height);
         }
-
-        if (data?.thumbnail_url) {
-          setThumbnail(data.thumbnail_url);
-        }
       })
       .catch(() => undefined);
 
@@ -244,7 +250,7 @@ const useVimeoEmbedInfo = (vimeoId: string | null) => {
     };
   }, [vimeoId]);
 
-  return { aspect, thumbnail };
+  return aspect;
 };
 
 export const BreakBlockVideo = ({
@@ -257,7 +263,7 @@ export const BreakBlockVideo = ({
   const [started, setStarted] = useState(false);
   const [playing, setPlaying] = useState(true);
   const [nativeAspect, setNativeAspect] = useState(16 / 9);
-  const { aspect: vimeoAspect, thumbnail: vimeoThumbnail } = useVimeoEmbedInfo(
+  const vimeoAspect = useVimeoAspect(
     video.kind === 'vimeo' ? video.vimeoId : null
   );
 
@@ -270,7 +276,8 @@ export const BreakBlockVideo = ({
   const thumbnail =
     video.kind === 'youtube' ?
       `https://i.ytimg.com/vi/${video.videoId}/hqdefault.jpg`
-    : vimeoThumbnail;
+    : video.kind === 'vimeo' ? vimeoPosterUrl(video.vimeoId)
+    : null;
 
   const renderEmbed = (embed: ReactNode) =>
     fit === 'contain' ?
@@ -299,11 +306,17 @@ export const BreakBlockVideo = ({
         <VideoFacade
           type="button"
           aria-label="Video abspielen"
-          style={
-            thumbnail ? { backgroundImage: `url(${thumbnail})` } : undefined
-          }
           onClick={() => setStarted(true)}
         >
+          {thumbnail && (
+            <VideoFacadeImage
+              src={thumbnail}
+              alt=""
+              fetchPriority="high"
+              decoding="async"
+            />
+          )}
+
           <VideoFacadePlayIcon>
             <PlayTriangle />
           </VideoFacadePlayIcon>
