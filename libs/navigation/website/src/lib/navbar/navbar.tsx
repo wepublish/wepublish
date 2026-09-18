@@ -128,6 +128,7 @@ export const NavbarMain = styled('div')<{ isMenuOpen?: boolean }>`
   align-items: center;
   justify-self: start;
   gap: ${({ theme }) => theme.spacing(2)};
+  min-height: var(--navbar-height);
 
   ${({ isMenuOpen }) =>
     isMenuOpen &&
