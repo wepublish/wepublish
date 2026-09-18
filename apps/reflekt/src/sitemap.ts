@@ -46,12 +46,33 @@ const fetchUpToSitemapLimit = async <TNode>(
   return collected;
 };
 
+const firstHeader = (value: string | string[] | undefined) =>
+  Array.isArray(value) ? value[0] : value;
+
+const siteUrlFromRequest = (req: NextApiRequest) => {
+  const host = firstHeader(req.headers['x-forwarded-host'] ?? req.headers.host);
+
+  if (!host) {
+    return '';
+  }
+
+  const protocol =
+    firstHeader(req.headers['x-forwarded-proto']) ??
+    (host.startsWith('localhost') ? 'http' : 'https');
+
+  return `${protocol}://${host}`;
+};
+
 export const getSitemap = async (req: NextApiRequest): Promise<string> => {
-  const siteUrl = process.env.WEBSITE_URL || '';
+  const siteUrl = (
+    process.env.WEBSITE_URL || siteUrlFromRequest(req)
+  ).replace(/\/$/, '');
 
   const generate = generateSitemap({
     siteUrl,
     title: 'Reflekt',
+    newsMaxAgeDays: 2,
+    homepageLastmod: true,
   });
   const client = getApiClient(getApiUrl(), [], {
     typePolicies: {},
