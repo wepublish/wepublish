@@ -2311,6 +2311,33 @@ export type MediumMembershipStats = {
   newSubscribers: Scalars['Int'];
 };
 
+export type MediumMigration = {
+  __typename?: 'MediumMigration';
+  appliedStepsCount: Scalars['Int'];
+  error?: Maybe<Scalars['String']>;
+  finishedAt?: Maybe<Scalars['DateTime']>;
+  id: Scalars['String'];
+  name: Scalars['String'];
+  rolledBackAt?: Maybe<Scalars['DateTime']>;
+  startedAt: Scalars['DateTime'];
+  /** applied, failed, rolledBack or running */
+  state: Scalars['String'];
+};
+
+export type MediumMigrationSummary = {
+  __typename?: 'MediumMigrationSummary';
+  applied: Scalars['Int'];
+  failed: Scalars['Int'];
+  lastAppliedAt?: Maybe<Scalars['DateTime']>;
+  /** The newest migration did not complete. The schema is then in a state nobody designed. */
+  lastMigrationFailed: Scalars['Boolean'];
+  lastMigrationName?: Maybe<Scalars['String']>;
+  lastMigrationState?: Maybe<Scalars['String']>;
+  rolledBack: Scalars['Int'];
+  running: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
 export type MediumMoneyStats = {
   __typename?: 'MediumMoneyStats';
   atRisk: Scalars['Int'];
@@ -2332,6 +2359,7 @@ export type MediumOperationsStats = {
   imageCount: Scalars['Int'];
   lastPeriodicJobAt?: Maybe<Scalars['DateTime']>;
   mailchimpSyncErrors: Scalars['Int'];
+  migrations: MediumMigrationSummary;
   periodicJobError?: Maybe<Scalars['String']>;
   periodicJobFailing: Scalars['Boolean'];
   periodicJobTries: Scalars['Int'];
@@ -5255,6 +5283,7 @@ export type Query = {
   mailchimpSyncProgress?: Maybe<MailchimpSyncProgressType>;
   /** This query returns the user. */
   me?: Maybe<SensitiveDataUser>;
+  mediumMigrations: Array<MediumMigration>;
   mediumStats: MediumStats;
   /** Returns a memberplan by id or slug. */
   memberPlan: MemberPlan;
@@ -5800,6 +5829,11 @@ export type QueryMailchimpSyncErrorsArgs = {
 
 export type QueryMailchimpSyncProgressArgs = {
   configId: Scalars['String'];
+};
+
+
+export type QueryMediumMigrationsArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -6596,10 +6630,12 @@ export type SubscribeBlockLayoutConfigInput = {
   showInput?: Scalars['Boolean'];
   type: SubscribeBlockRenderLayout;
   values?: InputMaybe<Array<Scalars['Int']>>;
+  valuesByPeriodicity?: InputMaybe<Array<SubscribeBlockPeriodicityValuesInput>>;
 };
 
 export type SubscribeBlockLayoutNoneConfig = SubscribeBlockLayoutConfig & {
   __typename?: 'SubscribeBlockLayoutNoneConfig';
+  showInput: Scalars['Boolean'];
   type: SubscribeBlockRenderLayout;
 };
 
@@ -6608,6 +6644,7 @@ export type SubscribeBlockLayoutPickerConfig = SubscribeBlockLayoutConfig & {
   showInput: Scalars['Boolean'];
   type: SubscribeBlockRenderLayout;
   values: Array<Scalars['Int']>;
+  valuesByPeriodicity: Array<SubscribeBlockPeriodicityValues>;
 };
 
 export type SubscribeBlockLayoutSliderConfig = SubscribeBlockLayoutConfig & {
@@ -6629,6 +6666,17 @@ export type SubscribeBlockMemberPlanRenderSettingInput = {
   memberPlanId: Scalars['String'];
 };
 
+export type SubscribeBlockPeriodicityValues = {
+  __typename?: 'SubscribeBlockPeriodicityValues';
+  periodicity: PaymentPeriodicity;
+  values: Array<Scalars['Int']>;
+};
+
+export type SubscribeBlockPeriodicityValuesInput = {
+  periodicity: PaymentPeriodicity;
+  values: Array<Scalars['Int']>;
+};
+
 export enum SubscribeBlockRenderLayout {
   None = 'None',
   Picker = 'Picker',
@@ -6637,7 +6685,8 @@ export enum SubscribeBlockRenderLayout {
 
 export enum SubscribePeriodicityDisplay {
   Dropdown = 'Dropdown',
-  OfferCards = 'OfferCards'
+  OfferCards = 'OfferCards',
+  Toggle = 'Toggle'
 }
 
 export type SubscriptionCreatedAction = BaseAction & HasSubscriptionLc & {

@@ -299,11 +299,14 @@ export const Upgrade = ({
       )
     : null;
 
+  const hasFixedPrice =
+    !!periodPriceRange &&
+    periodPriceRange.amountMax != null &&
+    periodPriceRange.amountMin === periodPriceRange.amountMax;
+
   const shouldHidePaymentAmount =
-    selectedLayout ? isFixedAmountLayout(selectedLayout)
-    : periodPriceRange ?
-      periodPriceRange.amountMin === periodPriceRange.amountMax
-    : true;
+    hasFixedPrice ||
+    (selectedLayout ? isFixedAmountLayout(selectedLayout) : !periodPriceRange);
 
   const amountPerMonthMin =
     periodPriceRange ?
@@ -369,6 +372,7 @@ export const Upgrade = ({
               {...field}
               onChange={memberPlanId => field.onChange(memberPlanId)}
               memberPlans={availableMemberplans}
+              memberPlanRenderSettings={memberPlanRenderSettings}
             />
           )}
         />
@@ -414,7 +418,10 @@ export const Upgrade = ({
                     amountPerMonthMax={amountPerMonthMax}
                     amountPerMonthTarget={amountPerMonthTarget}
                     currency={selectedMemberPlan?.currency ?? Currency.Chf}
-                    presetAmounts={getAmountPickerValues(selectedLayout)}
+                    presetAmounts={getAmountPickerValues(
+                      selectedLayout,
+                      subscriptionToUpgrade.paymentPeriodicity
+                    )}
                     showInput={showsAmountInput(selectedLayout)}
                   />
                 )}

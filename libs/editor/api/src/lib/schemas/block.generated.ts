@@ -89,7 +89,7 @@ export type BlockWithoutTeaser_SoundCloudTrackBlock_Fragment = { __typename: 'So
 
 export type BlockWithoutTeaser_StreamableVideoBlock_Fragment = { __typename: 'StreamableVideoBlock', disabled?: boolean | null, blockStyle?: string | null, blockStyleName?: string | null, type: Types.BlockType, videoID?: string | null };
 
-export type BlockWithoutTeaser_SubscribeBlock_Fragment = { __typename: 'SubscribeBlock', disabled?: boolean | null, blockStyle?: string | null, blockStyleName?: string | null, memberPlanIds: Array<string>, periodicityDisplay?: Types.SubscribePeriodicityDisplay | null, fields: Array<Types.SubscribeBlockField>, showGoodies: boolean, showDiscountCodes: boolean, goodieMinValue?: number | null, goodieMinValueAppliesToUpgrade: boolean, hideRepeatGoodieOnUpgrade: boolean, type: Types.BlockType, memberPlanRenderSettings: Array<{ __typename?: 'SubscribeBlockMemberPlanRenderSetting', isDefault: boolean, memberPlanId: string, layout: { __typename?: 'SubscribeBlockLayoutNoneConfig', type: Types.SubscribeBlockRenderLayout } | { __typename?: 'SubscribeBlockLayoutPickerConfig', showInput: boolean, values: Array<number>, type: Types.SubscribeBlockRenderLayout } | { __typename?: 'SubscribeBlockLayoutSliderConfig', showInput: boolean, type: Types.SubscribeBlockRenderLayout } }> };
+export type BlockWithoutTeaser_SubscribeBlock_Fragment = { __typename: 'SubscribeBlock', disabled?: boolean | null, blockStyle?: string | null, blockStyleName?: string | null, memberPlanIds: Array<string>, periodicityDisplay?: Types.SubscribePeriodicityDisplay | null, fields: Array<Types.SubscribeBlockField>, showGoodies: boolean, showDiscountCodes: boolean, goodieMinValue?: number | null, goodieMinValueAppliesToUpgrade: boolean, hideRepeatGoodieOnUpgrade: boolean, type: Types.BlockType, memberPlanRenderSettings: Array<{ __typename?: 'SubscribeBlockMemberPlanRenderSetting', isDefault: boolean, memberPlanId: string, layout: { __typename?: 'SubscribeBlockLayoutNoneConfig', showInput: boolean, type: Types.SubscribeBlockRenderLayout } | { __typename?: 'SubscribeBlockLayoutPickerConfig', showInput: boolean, values: Array<number>, type: Types.SubscribeBlockRenderLayout, valuesByPeriodicity: Array<{ __typename?: 'SubscribeBlockPeriodicityValues', periodicity: Types.PaymentPeriodicity, values: Array<number> }> } | { __typename?: 'SubscribeBlockLayoutSliderConfig', showInput: boolean, type: Types.SubscribeBlockRenderLayout } }> };
 
 export type BlockWithoutTeaser_TeaserGridBlock_Fragment = { __typename: 'TeaserGridBlock' };
 
@@ -745,12 +745,19 @@ export const BlockWithoutTeaserFragmentDoc = gql`
       memberPlanId
       layout {
         type
+        ... on SubscribeBlockLayoutNoneConfig {
+          showInput
+        }
         ... on SubscribeBlockLayoutSliderConfig {
           showInput
         }
         ... on SubscribeBlockLayoutPickerConfig {
           showInput
           values
+          valuesByPeriodicity {
+            periodicity
+            values
+          }
         }
       }
     }

@@ -425,9 +425,14 @@
         "selectFields": "Champs de saisie utilisateur",
         "selectFieldsSelectionHint": "L’email et le nom de famille sont toujours demandés. L’ordre n’a pas d’importance",
         "periodicityDisplay": "Affichage des intervalles de paiement",
-        "periodicityDisplayDropdown": "Menu d\u00e9roulant",
-        "periodicityDisplayOfferCards": "Cartes d\u2019offre",
-        "periodicityDisplayHint": "Les cartes d\u2019offre pr\u00e9sentent chaque intervalle de paiement comme une offre distincte avec son prix (p.ex. abonnement mensuel / annuel).",
+        "periodicityDisplayDropdown": "Champ de sélection",
+        "periodicityDisplayOfferCards": "Une carte par intervalle",
+        "periodicityDisplayToggle": "Commutateur",
+        "periodicityDisplayDropdownHint": "Tous les prix sont affichés mensuellement – cartes, montant et montants proposés. L’intervalle se choisit plus bas avec le mode de paiement et détermine uniquement la fréquence de facturation.",
+        "periodicityDisplayOfferCardsHint": "Chaque offre comme carte distincte (plan × intervalle) avec son prix exact – idéal pour un ou deux plans.",
+        "periodicityDisplayToggleHint": "L’intervalle se choisit en haut comme première étape ; les cartes affichent le prix de cet intervalle.",
+        "periodicityDisplayDropdownIgnoredRows_one": "Remarque : le plan « {{plans}} » a des prix configurés pour des intervalles de paiement qui sont ignorés en mode « Champ de sélection ».",
+        "periodicityDisplayDropdownIgnoredRows_other": "Remarque : les plans « {{plans}} » ont des prix configurés pour des intervalles de paiement qui sont ignorés en mode « Champ de sélection ».",
         "goodiesHeading": "Goodies",
         "discountCodesHeading": "Codes de réduction",
         "showGoodies": "Afficher la sélection de goodies",
@@ -437,10 +442,6 @@
         },
         "goodieMinValueAppliesToUpgrade": "Appliquer ce montant minimum aussi aux upgrades",
         "hideRepeatGoodieOnUpgrade": "Lors de l’upgrade : pas de nouveau goodie",
-        "periodicityDisplay": "Affichage des intervalles de paiement",
-        "periodicityDisplayDropdown": "Menu d\u00e9roulant",
-        "periodicityDisplayOfferCards": "Cartes d\u2019offre",
-        "periodicityDisplayHint": "Les cartes d\u2019offre pr\u00e9sentent chaque intervalle de paiement comme une offre distincte avec son prix (p.ex. abonnement mensuel / annuel).",
         "FirstName": "Prénom",
         "Birthday": "Date de naissance",
         "Address": "Adresse",
@@ -455,8 +456,14 @@
         },
         "renderStylesHeading": "Ordre et affichage des plans d’abonnement",
         "amountTileValues": {
-          "hint": "Montants des tuiles (en francs). Laisser vide pour les valeurs par défaut : 10, 15, 20.",
+          "hint": "Montants des tuiles par intervalle de paiement (en francs). Laisser vide pour les valeurs par défaut.",
+          "hintMonthly": "Montants des tuiles (en francs, par mois). Laisser vide pour les valeurs par défaut.",
           "placeholder": "p.ex. 10 15 20"
+        },
+        "fixedAmountHint": "Montant fixe : aucun champ de montant n’est affiché. Le montant cible du plan est facturé – si aucun n’est défini, le montant minimum. Les visiteurs ne peuvent donc pas payer davantage.",
+        "showInCardAmountInput": {
+          "label": "Saisie libre du montant dans la carte",
+          "title": "Au lieu d’un champ de montant séparé, chaque carte d’abonnement reçoit un champ dans lequel les visiteurs définissent eux-mêmes leur montant."
         },
         "showAmountInput": {
           "label": "Saisie libre du montant",
@@ -467,7 +474,7 @@
           "Narrow": "Étroit (2 tuiles par ligne)",
           "Wide": "Large (1 tuile par ligne, grandes tuiles)"
         },
-        "planAmountsTitle": "Montant minimum / cible / maximum pour l’intervalle de paiement par défaut (en francs)",
+        "planAmountsTitle": "Montant minimum / cible / maximum",
         "defaultPlanTitle": "Sélectionné par défaut — ce plan est présélectionné après le chargement de la page.",
         "defaultPlanLabel": "Par défaut"
       },
@@ -2016,6 +2023,9 @@
       "periodicityPricingDelta": "Rabais par rapport au prix mensuel : {{delta}}",
       "periodicityPricingCustom": "Prix personnalisés",
       "periodicityPricingDerived": "À partir du prix mensuel",
+      "periodicityPricingMinHelpText": "Le montant minimum est le prix effectif de l'abonnement qui doit être payé au minimum. Les utilisateur·trice·s peuvent toutefois payer volontairement davantage lors de la souscription.",
+      "periodicityPricingTargetHelpText": "Le montant cible définit le prix d'abonnement souhaité que les utilisateur·trice·s devraient payer. Il doit se situer entre le montant minimum et maximum et définit typiquement la valeur par défaut dans le formulaire de paiement.",
+      "periodicityPricingMaxHelpText": "Le montant maximum est le montant le plus élevé que les utilisateur·trice·s peuvent payer lors de la souscription.",
       "periodicityPricingMin": "Montant minimal par période",
       "periodicityPricingTarget": "Montant cible par période",
       "periodicityPricingMax": "Montant maximal par période",
