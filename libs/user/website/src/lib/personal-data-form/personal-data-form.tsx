@@ -154,7 +154,7 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
           })
         )
       ).refine(data => data.password === data.passwordRepeated, {
-        message: 'Passwörter stimmen nicht überein.',
+        message: t('user.form.passwordsDoNotMatch'),
         path: ['passwordRepeated'],
       }),
     [fieldsToDisplay, schema]

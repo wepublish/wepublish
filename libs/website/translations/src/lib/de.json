@@ -114,11 +114,45 @@
     "subscribeNow": "Jetzt ein Abo lösen.",
     "startsAt": "Abgeschlossen am <time>{startsAt}</time>",
     "detailsAndPayments": "Details & Zahlungen",
+    "paidUntil": "Bezahlt bis",
+    "cancelledOn": "Gekündigt am",
     "cancelledDueToInvoiceNotPaid": "Automatisch gekündigt",
     "cancelledDueToUnknownReason": "Kündigungsgrund ist unbekannt",
     "autoRenew": "Wird automatisch {periodicityTimeline} erneuert",
     "validFor": "Gültig für {subscriptionDuration}",
-    "cancelProduct": "{productName} wirklich kündigen?"
+    "cancelProduct": "{productName} wirklich kündigen?",
+    "afterFirstPaymentPeriod": {
+      "monthly": "dem ersten Monat",
+      "quarterly": "den ersten 3 Monaten",
+      "biannual": "den ersten 6 Monaten",
+      "yearly": "dem ersten Jahr",
+      "biennial": "den ersten 2 Jahren",
+      "lifetime": "Lebenslang"
+    },
+    "paymentPeriod": {
+      "monthly": "1 Monat",
+      "quarterly": "3 Monate",
+      "biannual": "6 Monate",
+      "yearly": "1 Jahr",
+      "biennial": "2 Jahre",
+      "lifetime": "Lebenslang"
+    },
+    "paymentTimeline": {
+      "monthly": "monatlich",
+      "quarterly": "vierteljährlich",
+      "biannual": "halbjährlich",
+      "yearly": "jährlich",
+      "biennial": "zweijährlich",
+      "lifetime": "Lebenslang"
+    },
+    "renewalPeriod": {
+      "monthly": "Monatlich",
+      "quarterly": "Vierteljährlich",
+      "biannual": "Halbjährlich",
+      "yearly": "Jährlich",
+      "biennial": "Zweijährlich",
+      "lifetime": "Lebenslang"
+    }
   },
   "invoice": {
     "invoices": "Rechnungen",
@@ -189,7 +223,9 @@
       "zipCode": "PLZ",
       "city": "Ort / Stadt",
       "country": "Land",
-      "occupation": "Funktion / Beruf"
+      "suggested": "Vorgeschlagen",
+      "occupation": "Funktion / Beruf",
+      "passwordsDoNotMatch": "Passwörter stimmen nicht überein."
     }
   },
   "article": {
@@ -239,10 +275,10 @@
       "invalid_type_received_undefined": "Darf nicht leer sein",
       "invalid_type_received_null": "Darf nicht leer sein",
       "invalid_literal": "Ungültiger Literalwert, {expected} erwartet",
-      "unrecognized_keys": "Unbekannte Schlüssel im Objekt: {- keys}",
+      "unrecognized_keys": "Unbekannte Schlüssel im Objekt: {keys}",
       "invalid_union": "Ungültige Eingabe",
-      "invalid_union_discriminator": "Ungültiger Diskriminatorwert, {- options} erwartet",
-      "invalid_enum_value": "Ungültiger Enum-Wert. {- options} erwartet, '{received}' erhalten",
+      "invalid_union_discriminator": "Ungültiger Diskriminatorwert, {options} erwartet",
+      "invalid_enum_value": "Ungültiger Enum-Wert. {options} erwartet, \"{received}\" erhalten",
       "invalid_arguments": "Ungültige Funktionsargumente",
       "invalid_return_type": "Ungültiger Funktionsrückgabewert",
       "invalid_date": "Ungültiges Datum",
@@ -282,9 +318,9 @@
           "not_inclusive": "Ungültige Eingabe"
         },
         "date": {
-          "exact": "Datum muss genau {- minimum, datetime} sein",
-          "inclusive": "Datum muss größer oder gleich {- minimum, datetime} sein",
-          "not_inclusive": "Datum muss größer als {- minimum, datetime} sein"
+          "exact": "Datum muss genau {minimum, date, medium} sein",
+          "inclusive": "Datum muss größer oder gleich {minimum, date, medium} sein",
+          "not_inclusive": "Datum muss größer als {minimum, date, medium} sein"
         }
       },
       "too_big": {
@@ -309,9 +345,9 @@
           "not_inclusive": "Ungültige Eingabe"
         },
         "date": {
-          "exact": "Datum muss genau {- maximum, datetime} sein",
-          "inclusive": "Datum muss kleiner oder gleich {- maximum, datetime} sein",
-          "not_inclusive": "Datum muss kleiner als {- maximum, datetime} sein"
+          "exact": "Datum muss genau {maximum, date, medium} sein",
+          "inclusive": "Datum muss kleiner oder gleich {maximum, date, medium} sein",
+          "not_inclusive": "Datum muss kleiner als {maximum, date, medium} sein"
         }
       }
     },
