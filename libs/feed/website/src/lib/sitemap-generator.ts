@@ -53,7 +53,7 @@ export const generateSitemap =
 
     const homepageLastmodTag =
       homepageLastmod && mostRecentPublishedAt ?
-        `<lastmod>${mostRecentPublishedAt}</lastmod>`
+        `\n            <lastmod>${mostRecentPublishedAt}</lastmod>`
       : '';
 
     const sitemap = `
@@ -61,8 +61,7 @@ export const generateSitemap =
         <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
 
         <url>
-            <loc>${siteUrl}</loc>
-            ${homepageLastmodTag}
+            <loc>${siteUrl}</loc>${homepageLastmodTag}
             <changefreq>daily</changefreq>
             <priority>1.0</priority>
         </url>
