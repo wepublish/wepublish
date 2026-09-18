@@ -80,6 +80,10 @@ export type BuilderMemberPlanPickerProps = {
   onChange: (memberPlanId: string) => void;
   name?: string;
   value?: string;
+  paymentPeriodicity?: PaymentPeriodicity;
+  memberPlanRenderSettings?: BuilderMemberPlanRenderSetting[];
+  amount?: number;
+  onAmountChange?: (monthlyAmount: number) => void;
 };
 
 export type BuilderMemberPlanItemProps = Pick<
@@ -98,7 +102,14 @@ export type BuilderMemberPlanItemProps = Pick<
       'availablePaymentMethods' | 'defaultPaymentPeriodicity'
     >
   > &
-  Omit<RadioProps, 'ref'> & { className?: string } & { slug: string };
+  Omit<RadioProps, 'ref'> & { className?: string } & {
+    slug: string;
+    paymentPeriodicity?: PaymentPeriodicity;
+    showPeriodicity?: boolean;
+    amountLayout?: BuilderMemberPlanLayout;
+    amount?: number;
+    onAmountChange?: (monthlyAmount: number) => void;
+  };
 
 export type MemberPlanOffer = {
   memberPlanId: string;
@@ -111,10 +122,14 @@ export type BuilderMemberPlanOfferPickerProps = {
   onChange: (offer: MemberPlanOffer) => void;
   name?: string;
   value?: Partial<MemberPlanOffer>;
+  memberPlanRenderSettings?: BuilderMemberPlanRenderSetting[];
+  amount?: number;
+  onAmountChange?: (monthlyAmount: number) => void;
 };
 
 export type BuilderPeriodicityPickerProps = {
   periodicities: PaymentPeriodicity[] | undefined;
+  variant?: 'select' | 'toggle';
   memberPlan?: FullMemberPlanFragment | null;
   className?: string;
   onChange: (periodicitiy: PaymentPeriodicity) => void;

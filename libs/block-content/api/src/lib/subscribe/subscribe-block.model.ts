@@ -10,6 +10,7 @@ import {
 import { BaseBlock } from '../base-block.model';
 import { BlockType } from '../block-type.model';
 import { MemberPlan } from '@wepublish/member-plan/api';
+import { PaymentPeriodicity } from '@prisma/client';
 
 export enum SubscribeBlockField {
   FirstName = 'firstName',
@@ -27,6 +28,7 @@ registerEnumType(SubscribeBlockField, {
 export enum SubscribePeriodicityDisplay {
   Dropdown = 'dropdown',
   OfferCards = 'offerCards',
+  Toggle = 'toggle',
 }
 
 registerEnumType(SubscribePeriodicityDisplay, {
@@ -67,6 +69,9 @@ export class SubscribeBlockLayoutConfig {
 })
 export class SubscribeBlockLayoutNoneConfig extends SubscribeBlockLayoutConfig {
   override type!: SubscribeBlockRenderLayout.None;
+
+  @Field({ defaultValue: false })
+  showInput!: boolean;
 }
 
 @ObjectType({
@@ -79,6 +84,22 @@ export class SubscribeBlockLayoutSliderConfig extends SubscribeBlockLayoutConfig
   showInput!: boolean;
 }
 
+@ObjectType()
+export class SubscribeBlockPeriodicityValues {
+  @Field(() => PaymentPeriodicity)
+  periodicity!: PaymentPeriodicity;
+
+  @Field(() => [Int])
+  values!: number[];
+}
+
+@InputType()
+export class SubscribeBlockPeriodicityValuesInput extends OmitType(
+  SubscribeBlockPeriodicityValues,
+  [] as const,
+  InputType
+) {}
+
 @ObjectType({
   implements: () => [SubscribeBlockLayoutConfig],
 })
@@ -90,6 +111,9 @@ export class SubscribeBlockLayoutPickerConfig extends SubscribeBlockLayoutConfig
 
   @Field(() => [Int])
   values!: number[];
+
+  @Field(() => [SubscribeBlockPeriodicityValues], { defaultValue: [] })
+  valuesByPeriodicity!: SubscribeBlockPeriodicityValues[];
 }
 
 @InputType()
@@ -104,6 +128,10 @@ export class SubscribeBlockLayoutConfigInput extends OmitType(
   // For picker
   @Field(() => [Int], { nullable: true })
   values?: number[];
+
+  // For picker: amounts per payment interval
+  @Field(() => [SubscribeBlockPeriodicityValuesInput], { nullable: true })
+  valuesByPeriodicity?: SubscribeBlockPeriodicityValuesInput[];
 }
 
 @ObjectType()

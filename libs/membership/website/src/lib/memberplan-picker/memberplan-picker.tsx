@@ -5,7 +5,9 @@ import {
   BuilderMemberPlanPickerProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { forwardRef, useEffect } from 'react';
+import { forwardRef, useCallback, useEffect } from 'react';
+import { getPlanPeriodicities } from '../formatters/format-payment-period';
+import { findMemberPlanRenderSetting } from '../subscribe/member-plan-render-settings';
 
 export const MemberPlanPickerWrapper = styled('fieldset')`
   display: grid;
@@ -37,7 +39,18 @@ export const MemberPlanPicker = forwardRef<
   HTMLButtonElement,
   BuilderMemberPlanPickerProps & { alwaysShow?: boolean }
 >(function MemberPlanPicker(
-  { memberPlans, onChange, value, className, name, alwaysShow },
+  {
+    memberPlans,
+    onChange,
+    value,
+    className,
+    name,
+    alwaysShow,
+    paymentPeriodicity,
+    memberPlanRenderSettings,
+    amount,
+    onAmountChange,
+  },
   ref
 ) {
   const {
@@ -53,11 +66,24 @@ export const MemberPlanPicker = forwardRef<
     toPlaintext(selectedMemberPlan?.description?.content) ||
     selectedMemberPlan?.image;
 
+  const isUnavailable = useCallback(
+    (memberPlan: (typeof memberPlans)[number]) =>
+      !!paymentPeriodicity &&
+      !getPlanPeriodicities(memberPlan).includes(paymentPeriodicity),
+    [paymentPeriodicity]
+  );
+
   useEffect(() => {
-    if (memberPlans.length && !selectedMemberPlan) {
-      onChange(memberPlans[0].id);
+    if (!memberPlans.length || selectedMemberPlan) {
+      return;
     }
-  }, [memberPlans, onChange, selectedMemberPlan]);
+
+    const available = memberPlans.find(
+      memberPlan => !isUnavailable(memberPlan)
+    );
+
+    onChange((available ?? memberPlans[0]).id);
+  }, [memberPlans, onChange, selectedMemberPlan, isUnavailable]);
 
   if (!showPicker) {
     return;
@@ -76,11 +102,25 @@ export const MemberPlanPicker = forwardRef<
             <FormControlLabel
               key={memberPlan.id}
               value={memberPlan.id}
+              disabled={isUnavailable(memberPlan)}
               control={
                 <MemberPlanItem
                   slug={memberPlan.slug}
                   key={memberPlan.id}
                   checked={memberPlan.id === value}
+                  paymentPeriodicity={paymentPeriodicity}
+                  amountLayout={
+                    findMemberPlanRenderSetting(
+                      memberPlanRenderSettings,
+                      memberPlan.id
+                    )?.layout
+                  }
+                  amount={amount}
+                  onAmountChange={monthlyAmount => {
+                    onChange(memberPlan.id);
+                    onAmountChange?.(monthlyAmount);
+                  }}
+                  disabled={isUnavailable(memberPlan)}
                   name={memberPlan.name}
                   currency={memberPlan.currency}
                   periodicityPricing={memberPlan.periodicityPricing}

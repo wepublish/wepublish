@@ -28,7 +28,9 @@
   "subscribe": {
     "memberplan": {
       "price": "{offerAmountMin, select, 0 {Gratis} other {{offerExactAmount, select, true {} other {Ab }}{offerPrice} {extendable, select, true {{offerPeriodicity, select, monthly {pro Monat} quarterly {pro Quartal} biannual {pro Halbjahr} yearly {pro Jahr} biennial {pro 2 Jahre} lifetime {einmalig} other {}}} other {}}}}",
-      "offerPrice": "{amountMin, select, 0 {Gratis} other {{exactAmount, select, true {} other {Ab }}{periodPrice} {periodicity, select, monthly {pro Monat} quarterly {pro Quartal} biannual {pro Halbjahr} yearly {pro Jahr} biennial {pro 2 Jahre} lifetime {einmalig} other {}}}}"
+      "offerPrice": "{amountMin, select, 0 {Gratis} other {{exactAmount, select, true {} other {Ab }}{periodPrice} {periodicity, select, monthly {pro Monat} quarterly {pro Quartal} biannual {pro Halbjahr} yearly {pro Jahr} biennial {pro 2 Jahre} lifetime {einmalig} other {}}}}",
+      "amountMin": "Mindestens {amount}",
+      "periodicityUnavailable": "Für dieses Zahlungsintervall nicht verfügbar"
     },
     "periodicity": "Zahlungsintervall",
     "continuation": "Nach {afterFirstPaymentPeriod} {formattedAmount} {renewalPeriodL}.",
