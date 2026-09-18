@@ -230,6 +230,7 @@ export interface ExtendedNavbarProps extends BuilderNavbarProps {
   isMenuOpen?: boolean;
   onMenuToggle?: (isOpen: boolean) => void;
   navPaperClassName?: string;
+  hideMenu?: boolean;
 }
 
 export function Navbar({
@@ -251,6 +252,7 @@ export function Navbar({
   navPaperClassName,
   navbarActions,
   paperActions,
+  hideMenu,
 }: ExtendedNavbarProps) {
   const [internalIsMenuOpen, setInternalMenuOpen] = useState(false);
 
@@ -307,29 +309,33 @@ export function Navbar({
       >
         <NavbarInnerWrapper>
           <NavbarMain>
-            <NavbarIconButtonWrapper>
-              <IconButton
-                size="large"
-                aria-label="Menu"
-                onClick={toggleMenu}
-                color={'inherit'}
-              >
-                {!isMenuOpen && <MdMenu />}
-                {isMenuOpen && <MdClose />}
-              </IconButton>
-            </NavbarIconButtonWrapper>
-
-            {!!headerItems?.links.length && (
-              <NavbarLinks isMenuOpen={isMenuOpen}>
-                {headerItems.links.map((link, index) => (
-                  <NavbarLink
-                    key={index}
-                    href={navigationLinkToUrl(link)}
+            {!hideMenu && (
+              <>
+                <NavbarIconButtonWrapper>
+                  <IconButton
+                    size="large"
+                    aria-label="Menu"
+                    onClick={toggleMenu}
+                    color={'inherit'}
                   >
-                    {link.label}
-                  </NavbarLink>
-                ))}
-              </NavbarLinks>
+                    {!isMenuOpen && <MdMenu />}
+                    {isMenuOpen && <MdClose />}
+                  </IconButton>
+                </NavbarIconButtonWrapper>
+
+                {!!headerItems?.links.length && (
+                  <NavbarLinks isMenuOpen={isMenuOpen}>
+                    {headerItems.links.map((link, index) => (
+                      <NavbarLink
+                        key={index}
+                        href={navigationLinkToUrl(link)}
+                      >
+                        {link.label}
+                      </NavbarLink>
+                    ))}
+                  </NavbarLinks>
+                )}
+              </>
             )}
           </NavbarMain>
 
