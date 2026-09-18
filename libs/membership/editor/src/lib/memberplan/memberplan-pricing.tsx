@@ -38,6 +38,11 @@ const ToggleCol = styled(Col)`
   text-align: end;
 `;
 
+// keeps the row height stable while switching between tabs
+const ToggleColReserved = styled(ToggleCol)`
+  visibility: hidden;
+`;
+
 const TabContent = styled('div')`
   padding-top: 12px;
 `;
@@ -224,6 +229,7 @@ export function MemberPlanPricing({
   );
   const derivedMax = derivePeriodAmount(monthlyRow?.amountMax, periodicity);
   const showDeriveToggle = !isMonthlyTab && monthlyEnabled && monthlyPriced;
+  const ToggleWrapper = showDeriveToggle ? ToggleCol : ToggleColReserved;
   const hasOverride = override?.amountMin != null;
   const fieldsEditable = isMonthlyTab || !showDeriveToggle || hasOverride;
   const overrideBase =
@@ -304,7 +310,7 @@ export function MemberPlanPricing({
       </Nav>
 
       <TabContent>
-        {showDeriveToggle && (
+        {monthlyEnabled && (
           <Row>
             <Col xs={18}>
               {delta != null && delta !== 0 && referenceDerived != null && (
@@ -316,7 +322,7 @@ export function MemberPlanPricing({
               )}
             </Col>
 
-            <ToggleCol xs={6}>
+            <ToggleWrapper xs={6}>
               <Toggle
                 checked={hasOverride}
                 disabled={loading}
@@ -342,7 +348,7 @@ export function MemberPlanPricing({
                   )
                 }
               />
-            </ToggleCol>
+            </ToggleWrapper>
           </Row>
         )}
 
@@ -367,11 +373,9 @@ export function MemberPlanPricing({
                 });
               }}
             />
-            {isMonthlyTab && (
-              <HelpText>
-                {t('memberplanForm.amountPerMonthMinHelpText')}
-              </HelpText>
-            )}
+            <HelpText>
+              {t('memberplanForm.periodicityPricingMinHelpText')}
+            </HelpText>
           </Col>
 
           <Col xs={8}>
@@ -400,11 +404,9 @@ export function MemberPlanPricing({
                 {t('memberPlanEdit.targetPriceMustBeGreaterThanMin')}
               </ErrorHelpText>
             )}
-            {isMonthlyTab && !targetInvalid && (
-              <HelpText>
-                {t('memberplanForm.amountPerMonthTargetHelpText')}
-              </HelpText>
-            )}
+            <HelpText>
+              {t('memberplanForm.periodicityPricingTargetHelpText')}
+            </HelpText>
           </Col>
 
           <Col xs={8}>
@@ -432,11 +434,9 @@ export function MemberPlanPricing({
                 {t('memberPlanEdit.maxPriceMustBeGreaterThanMin')}
               </ErrorHelpText>
             )}
-            {isMonthlyTab && !maxInvalid && (
-              <HelpText>
-                {t('memberplanForm.amountPerMonthMaxHelpText')}
-              </HelpText>
-            )}
+            <HelpText>
+              {t('memberplanForm.periodicityPricingMaxHelpText')}
+            </HelpText>
           </Col>
         </Row>
 

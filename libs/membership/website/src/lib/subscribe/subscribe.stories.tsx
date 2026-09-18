@@ -1,7 +1,7 @@
 import { ApolloError } from '@apollo/client';
 import { action } from 'storybook/actions';
 import { Meta, StoryObj } from '@storybook/nextjs-vite';
-import { userEvent, within } from 'storybook/test';
+import { expect, userEvent, within } from 'storybook/test';
 import {
   mockAvailablePaymentMethod,
   mockChallenge,
@@ -51,6 +51,16 @@ const memberPlan = mockMemberPlan({
   ],
 });
 
+const monthlyPaymentMethod = mockAvailablePaymentMethod({
+  forceAutoRenewal: false,
+  paymentPeriodicities: [PaymentPeriodicity.Monthly, PaymentPeriodicity.Yearly],
+});
+
+const monthlyForcedAutoRenewalPaymentMethod = mockAvailablePaymentMethod({
+  forceAutoRenewal: true,
+  paymentPeriodicities: [PaymentPeriodicity.Monthly, PaymentPeriodicity.Yearly],
+});
+
 const memberPlan2 = mockMemberPlan({
   ...memberPlan,
   id: undefined,
@@ -66,7 +76,7 @@ const memberPlan2 = mockMemberPlan({
       amountMax: null,
     },
   ],
-  availablePaymentMethods: [memberPlan.availablePaymentMethods[1]],
+  availablePaymentMethods: [monthlyPaymentMethod],
   currency: Currency.Eur,
 });
 
@@ -85,7 +95,7 @@ const memberPlan3 = mockMemberPlan({
       amountMax: null,
     },
   ],
-  availablePaymentMethods: [memberPlan.availablePaymentMethods[2]],
+  availablePaymentMethods: [monthlyForcedAutoRenewalPaymentMethod],
 });
 
 const memberPlan4 = mockMemberPlan({
@@ -103,7 +113,7 @@ const memberPlan4 = mockMemberPlan({
       amountMax: null,
     },
   ],
-  availablePaymentMethods: [memberPlan.availablePaymentMethods[2]],
+  availablePaymentMethods: [monthlyForcedAutoRenewalPaymentMethod],
   productType: ProductType.Donation,
 });
 
@@ -675,6 +685,89 @@ export const ResetPaymentOptionsOnMemberPlanChange: StoryObj<typeof Subscribe> =
       await clickSubscribe(ctx);
     }),
   };
+
+const lifetimeOnlyMemberPlan = mockMemberPlan({
+  ...memberPlan,
+  id: undefined,
+  name: 'Lifetime only',
+  shortDescription: undefined,
+  availablePaymentMethods: [
+    mockAvailablePaymentMethod({
+      forceAutoRenewal: false,
+      paymentPeriodicities: [PaymentPeriodicity.Lifetime],
+    }),
+  ],
+});
+
+export const DropdownDisablesPlansWithoutMonthly: StoryObj<typeof Subscribe> = {
+  ...LoggedIn,
+  args: {
+    ...LoggedIn.args,
+    memberPlans: {
+      data: {
+        memberPlans: {
+          nodes: [lifetimeOnlyMemberPlan, memberPlan],
+          pageInfo: {
+            hasNextPage: false,
+            hasPreviousPage: false,
+            __typename: 'PageInfo',
+          },
+          totalCount: 2,
+        },
+      },
+      loading: false,
+    },
+  },
+  play: waitForInitialDataIsSet(async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step('Plan without monthly is not selectable', async () => {
+      const input = canvas.getByLabelText(lifetimeOnlyMemberPlan.name, {
+        selector: 'input',
+        exact: false,
+      });
+
+      expect(input).toBeDisabled();
+    });
+
+    await step('A plan offering monthly is selected instead', async () => {
+      const input = canvas.getByLabelText(memberPlan.name, {
+        selector: 'input',
+        exact: false,
+      });
+
+      expect(input).toBeChecked();
+    });
+  }),
+};
+
+export const DropdownWithoutAnyMonthlyPlan: StoryObj<typeof Subscribe> = {
+  ...LoggedIn,
+  args: {
+    ...LoggedIn.args,
+    memberPlans: {
+      data: {
+        memberPlans: {
+          nodes: [lifetimeOnlyMemberPlan],
+          pageInfo: {
+            hasNextPage: false,
+            hasPreviousPage: false,
+            __typename: 'PageInfo',
+          },
+          totalCount: 1,
+        },
+      },
+      loading: false,
+    },
+  },
+  play: waitForInitialDataIsSet(async ({ canvasElement, step }) => {
+    await step('Subscribing is not possible', async () => {
+      const button = canvasElement.querySelector('button[type="submit"]');
+
+      expect(button).toBeDisabled();
+    });
+  }),
+};
 
 export const ResetPaymentOptionsOnPeriodicityChange: StoryObj<
   typeof Subscribe

@@ -369,6 +369,7 @@ export const Upgrade = ({
               {...field}
               onChange={memberPlanId => field.onChange(memberPlanId)}
               memberPlans={availableMemberplans}
+              memberPlanRenderSettings={memberPlanRenderSettings}
             />
           )}
         />
@@ -414,7 +415,10 @@ export const Upgrade = ({
                     amountPerMonthMax={amountPerMonthMax}
                     amountPerMonthTarget={amountPerMonthTarget}
                     currency={selectedMemberPlan?.currency ?? Currency.Chf}
-                    presetAmounts={getAmountPickerValues(selectedLayout)}
+                    presetAmounts={getAmountPickerValues(
+                      selectedLayout,
+                      subscriptionToUpgrade.paymentPeriodicity
+                    )}
                     showInput={showsAmountInput(selectedLayout)}
                   />
                 )}
