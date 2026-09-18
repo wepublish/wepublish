@@ -1,18 +1,22 @@
 import styled from '@emotion/styled';
 import { Radio, useRadioGroup } from '@mui/material';
 import {
+  calculatePeriodAmount,
   CurrencyNumberSpinner,
   formatCurrency,
+  getPeriodPriceRange,
   MemberPlanItemContent,
   MemberPlanItemName,
   MemberPlanItemPicker,
   MemberPlanItemPrice,
   MemberPlanItemWrapper,
 } from '@wepublish/membership/website';
+import { PaymentPeriodicity } from '@wepublish/website/api';
 import {
   BuilderMemberPlanItemProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
+import { forwardRef } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
@@ -30,32 +34,38 @@ export const MemberPlanItemAmountError = styled('small')`
   color: ${({ theme }) => theme.palette.error.main};
 `;
 
-export const MemberPlanItem = ({
-  className,
-  id,
-  name,
-  slug,
-  shortDescription,
-  amountPerMonthMax,
-  amountPerMonthMin,
-  currency,
-  extendable,
-  goodies,
-  tags,
-  ref,
-  ...props
-}: BuilderMemberPlanItemProps) => {
+export const MemberPlanItem = forwardRef<
+  HTMLButtonElement,
+  BuilderMemberPlanItemProps
+>(function MemberPlanItem(
+  {
+    className,
+    id,
+    name,
+    slug,
+    shortDescription,
+    amountPerMonthMax,
+    amountPerMonthMin,
+    amountPerMonthTarget,
+    periodicityPricing,
+    currency,
+    extendable,
+    goodies,
+    tags,
+    ...props
+  },
+  ref
+) {
   const {
     meta: { locale },
   } = useWebsiteBuilder();
   const radioGroup = useRadioGroup();
   const isChecked = props.checked ?? radioGroup?.value === id;
   const { t } = useTranslation();
-  const {
-    control,
-    formState: { errors },
-    setValue,
-  } = useFormContext();
+  const form = useFormContext();
+  const control = form?.control;
+  const errors = form?.formState.errors;
+  const setValue = form?.setValue;
 
   const monthlyAmount = useWatch({
     control,
@@ -68,8 +78,21 @@ export const MemberPlanItem = ({
 
   const hasInCardFreeInput = tags?.includes('inline-slider');
 
-  const displayedAmountPerMonth =
-    isChecked && monthlyAmount != null ? monthlyAmount : amountPerMonthMin;
+  const memberPlan = {
+    amountPerMonthMin,
+    amountPerMonthTarget,
+    amountPerMonthMax,
+    periodicityPricing,
+  };
+
+  const yearlyPriceRange = getPeriodPriceRange(
+    memberPlan,
+    PaymentPeriodicity.Yearly
+  );
+  const yearlyCents =
+    isChecked && monthlyAmount != null ?
+      calculatePeriodAmount(monthlyAmount, PaymentPeriodicity.Yearly)
+    : yearlyPriceRange.amountMin;
 
   return (
     <MemberPlanItemWrapper className={className}>
@@ -79,13 +102,9 @@ export const MemberPlanItem = ({
 
           <MemberPlanItemPrice>
             {t('subscribe.memberplan.price', {
-              yearlyAmount: Math.round((displayedAmountPerMonth * 12) / 100),
+              yearlyAmount: Math.round(yearlyCents / 100),
               amountPerMonthMin,
-              yearlyPrice: formatCurrency(
-                Math.ceil((amountPerMonthMin / 100) * 12),
-                currency,
-                locale
-              ),
+              yearlyPrice: formatCurrency(yearlyCents / 100, currency, locale),
               monthlyPrice: formatCurrency(
                 amountPerMonthMin / 100,
                 currency,
@@ -112,14 +131,14 @@ export const MemberPlanItem = ({
             value={(monthlyAmount ?? amountPerMonthMin) / 100}
             onValueChange={spinnerValue => {
               if (spinnerValue != null) {
-                setValue('monthlyAmount', Math.round(spinnerValue * 100));
+                setValue?.('monthlyAmount', Math.round(spinnerValue * 100));
               }
             }}
             helperText={`Min ${formatCurrency(amountPerMonthMin / 100, currency, locale)}`}
           />
         )}
 
-        {hasInCardFreeInput && isChecked && errors.monthlyAmount && (
+        {hasInCardFreeInput && isChecked && errors?.monthlyAmount && (
           <MemberPlanItemAmountError>
             {errors.monthlyAmount.message?.toString()}
           </MemberPlanItemAmountError>
@@ -127,7 +146,7 @@ export const MemberPlanItem = ({
       </MemberPlanItemPicker>
     </MemberPlanItemWrapper>
   );
-};
+});
 
 export const ReflektMemberPlanItem = styled(MemberPlanItem)`
   container-type: inline-size;

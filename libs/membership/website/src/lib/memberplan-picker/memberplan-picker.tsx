@@ -35,7 +35,7 @@ export const MemberPlanPickerRadios = styled(RadioGroup)`
 
 export const MemberPlanPicker = forwardRef<
   HTMLButtonElement,
-  BuilderMemberPlanPickerProps & { alwaysShow?: boolean }
+  BuilderMemberPlanPickerProps
 >(function MemberPlanPicker(
   { memberPlans, onChange, value, className, name, alwaysShow },
   ref
@@ -85,6 +85,12 @@ export const MemberPlanPicker = forwardRef<
                   currency={memberPlan.currency}
                   amountPerMonthMin={memberPlan.amountPerMonthMin}
                   amountPerMonthMax={memberPlan.amountPerMonthMax}
+                  amountPerMonthTarget={memberPlan.amountPerMonthTarget}
+                  periodicityPricing={memberPlan.periodicityPricing}
+                  availablePaymentMethods={memberPlan.availablePaymentMethods}
+                  defaultPaymentPeriodicity={
+                    memberPlan.defaultPaymentPeriodicity
+                  }
                   extendable={memberPlan.extendable}
                   shortDescription={memberPlan.shortDescription}
                   tags={memberPlan.tags}

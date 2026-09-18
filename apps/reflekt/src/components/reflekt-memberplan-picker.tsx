@@ -18,7 +18,12 @@ export const StyledMemberPlanPicker = styled(MemberPlanPicker)`
     }
 
     ${({ theme }) => theme.breakpoints.up('sm')} {
-      grid-template-columns: repeat(4, 1fr);
+      display: grid;
+      grid-template-columns: none;
+      grid-auto-flow: column;
+      grid-auto-columns: calc((100% - 3 * 1rem) / 4);
+      justify-content: center;
+      gap: 1rem;
     }
   }
 

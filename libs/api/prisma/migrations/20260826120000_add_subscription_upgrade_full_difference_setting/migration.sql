@@ -1,0 +1,1 @@
+INSERT INTO "settings" ("id", "modifiedAt", "name", "value", "settingRestriction") VALUES (gen_random_uuid(), CURRENT_TIMESTAMP, 'subscriptionUpgradeBillsFullDifference', 'false'::jsonb, '{"allowedValues": {"boolChoice": true}}'::jsonb) ON CONFLICT ("name") DO NOTHING;

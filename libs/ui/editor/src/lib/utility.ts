@@ -147,6 +147,15 @@ export const ALL_PAYMENT_PERIODICITIES: PaymentPeriodicity[] = [
   PaymentPeriodicity.Lifetime,
 ];
 
+export const PAYMENT_PERIODICITY_MONTHS: Record<PaymentPeriodicity, number> = {
+  [PaymentPeriodicity.Monthly]: 1,
+  [PaymentPeriodicity.Quarterly]: 3,
+  [PaymentPeriodicity.Biannual]: 6,
+  [PaymentPeriodicity.Yearly]: 12,
+  [PaymentPeriodicity.Biennial]: 24,
+  [PaymentPeriodicity.Lifetime]: 1200,
+};
+
 export enum StateColor {
   pending = '#f8def2',
   published = '#e1f8de',
