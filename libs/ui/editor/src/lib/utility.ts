@@ -147,6 +147,77 @@ export const ALL_PAYMENT_PERIODICITIES: PaymentPeriodicity[] = [
   PaymentPeriodicity.Lifetime,
 ];
 
+export const PAYMENT_PERIODICITY_MONTHS: Record<PaymentPeriodicity, number> = {
+  [PaymentPeriodicity.Monthly]: 1,
+  [PaymentPeriodicity.Quarterly]: 3,
+  [PaymentPeriodicity.Biannual]: 6,
+  [PaymentPeriodicity.Yearly]: 12,
+  [PaymentPeriodicity.Biennial]: 24,
+  [PaymentPeriodicity.Lifetime]: 1200,
+};
+
+export type PeriodicityPriceRow = {
+  periodicity: PaymentPeriodicity;
+  label?: string | null;
+  amountMin?: number | null;
+  amountTarget?: number | null;
+  amountMax?: number | null;
+};
+
+export function getMonthlyEquivalentRange(
+  periodicityPricing: PeriodicityPriceRow[] | null | undefined
+): {
+  amountPerMonthMin: number;
+  amountPerMonthTarget: number | null;
+  amountPerMonthMax: number | null;
+  periodicity: PaymentPeriodicity;
+} {
+  const rows = periodicityPricing ?? [];
+  const monthly = rows.find(
+    row => row.periodicity === PaymentPeriodicity.Monthly
+  );
+  const priced = rows.filter(row => row.amountMin != null);
+  const nonLifetime = priced.filter(
+    row => row.periodicity !== PaymentPeriodicity.Lifetime
+  );
+  const candidates = nonLifetime.length ? nonLifetime : priced;
+
+  const base =
+    monthly?.amountMin != null ?
+      monthly
+    : candidates.reduce<PeriodicityPriceRow | undefined>((cheapest, row) => {
+        if (!cheapest) {
+          return row;
+        }
+
+        const perMonth = (candidate: PeriodicityPriceRow) =>
+          candidate.amountMin! /
+          PAYMENT_PERIODICITY_MONTHS[candidate.periodicity];
+
+        return perMonth(row) < perMonth(cheapest) ? row : cheapest;
+      }, undefined);
+
+  if (!base) {
+    return {
+      amountPerMonthMin: 0,
+      amountPerMonthTarget: null,
+      amountPerMonthMax: null,
+      periodicity: PaymentPeriodicity.Monthly,
+    };
+  }
+
+  const months = PAYMENT_PERIODICITY_MONTHS[base.periodicity];
+  const perMonth = (amount: number | null | undefined) =>
+    amount != null ? amount / months : null;
+
+  return {
+    amountPerMonthMin: perMonth(base.amountMin) ?? 0,
+    amountPerMonthTarget: perMonth(base.amountTarget),
+    amountPerMonthMax: perMonth(base.amountMax),
+    periodicity: base.periodicity,
+  };
+}
+
 export enum StateColor {
   pending = '#f8def2',
   published = '#e1f8de',

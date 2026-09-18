@@ -7,9 +7,9 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { formatCurrency } from '../formatters/format-currency';
 import {
+  calculatePeriodAmount,
   formatAfterFirstPaymentPeriod,
   formatPaymentPeriod,
-  getPaymentPeriodicyMonths,
 } from '../formatters/format-payment-period';
 import { formatRenewalPeriod } from '../formatters/format-renewal-period';
 
@@ -46,7 +46,7 @@ export const usePaymentText = ({
       paymentPeriod: formatPaymentPeriod(paymentPeriodicity),
       paymentPeriodL: formatPaymentPeriod(paymentPeriodicity).toLowerCase(),
       formattedAmount: formatCurrency(
-        (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity),
+        calculatePeriodAmount(monthlyAmount, paymentPeriodicity) / 100,
         currency,
         locale
       ),
@@ -100,7 +100,7 @@ export const useContinuationText = ({
         formatAfterFirstPaymentPeriod(paymentPeriodicity),
       renewalPeriodL: formatRenewalPeriod(paymentPeriodicity).toLowerCase(),
       formattedAmount: formatCurrency(
-        (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity),
+        calculatePeriodAmount(monthlyAmount, paymentPeriodicity) / 100,
         currency,
         locale
       ),
@@ -135,7 +135,7 @@ export const useUpgradeText = ({
 
   return useMemo(() => {
     const fullAmount =
-      (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity);
+      calculatePeriodAmount(monthlyAmount, paymentPeriodicity) / 100;
 
     const amountAfterDiscount = Math.max(fullAmount - discount / 100, 0);
 
