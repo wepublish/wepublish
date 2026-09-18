@@ -48,6 +48,7 @@ import { zodI18nMap } from 'zod-i18n-map';
 
 import frOverridden from '../locales/frOverridden.json';
 import { FactuelContentWrapper } from '../src/components/factuel-content-wrapper';
+import { FactuelFooter } from '../src/components/factuel-footer';
 import { FactuelNavbar } from '../src/components/factuel-navbar';
 
 setDefaultOptions({
@@ -101,7 +102,7 @@ function CustomApp({
   emotionCache,
   websiteSettings,
 }: CustomAppProps) {
-  const siteTitle = 'We.Publish';
+  const siteTitle = 'Courant';
 
   // Emotion cache from _document is not supplied when client side rendering
   // Compat removes certain warnings that are irrelevant to us
@@ -133,6 +134,7 @@ function CustomApp({
               Script={Script}
               ContentWrapper={FactuelContentWrapper}
               Navbar={FactuelNavbar}
+              Footer={FactuelFooter}
               elements={{ Link: NextWepublishLink }}
               date={{ format: dateFormatter }}
               meta={{ siteTitle, locale: 'fr-CH' }}
