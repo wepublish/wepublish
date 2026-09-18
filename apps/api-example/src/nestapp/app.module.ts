@@ -91,6 +91,7 @@ import { PhraseModule } from '@wepublish/phrase/api';
 import { PollModule } from '@wepublish/poll/api';
 import { GraphQLRichText, SlateToPmMigrator } from '@wepublish/richtext/api';
 import { SessionModule } from '@wepublish/session/api';
+import { OneModule } from '@wepublish/one/api';
 import {
   SettingModule,
   SettingName,
@@ -478,6 +479,15 @@ import { readConfig } from '../readConfig';
           websiteURL,
         };
       },
+    }),
+
+    OneModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        oneURL: config.get('WEP_ONE_URL') || '',
+        hostURL: config.get('HOST_URL') || 'http://localhost:4000',
+      }),
     }),
     PermissionModule,
     ConsentModule,

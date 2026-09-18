@@ -4,6 +4,16 @@
       "popupBlocked": "La fenêtre d'aperçu a été bloquée par le navigateur. Veuillez autoriser les pop-ups pour l'éditeur et réessayer.",
       "notResponding": "La fenêtre d'aperçu ne répond pas. La connexion à l'aperçu a peut-être échoué."
     },
+    "oneChannel": {
+      "connected": "Connecteur We.Publish : connecté",
+      "failing": "Connecteur We.Publish : connexion perturbée",
+      "notConfigured": "Connecteur We.Publish : non configuré",
+      "notConfiguredHint": "Cette instance n'envoie aucune donnée à We.Publish.",
+      "lastSuccess": "Dernier contact réussi : {{value}}",
+      "lastSuccessNever": "Dernier contact réussi : jamais",
+      "lastAttemptFailed": "Dernière tentative : {{value}} – échec : {{error}}",
+      "label": "Connecteur We.Publish"
+    },
     "oneMessages": {
       "header": "Messages de l'équipe We.Publish",
       "expand": "Développer",
@@ -86,6 +96,7 @@
         "articlePreviewLinkDesc": "Le lien de prévisualisation montre toujours les dernières modifications apportées à la version préliminaire de l'article. Le lien de prévisualisation cesse de fonctionner après la publication de l'article.",
         "articlePreviewLinkField": "Lien de prévisualisation",
         "articlePreviewLinkHours": "Période de validité du lien",
+        "authorRole": "Rôle (p.ex. Texte, Images)",
         "authors": "Auteurs/Autrices",
         "back": "Retour",
         "breakingNews": "Breaking News",
@@ -148,6 +159,7 @@
         "publishDate": "Date de publication",
         "published": "Publié",
         "removeTeaser": "Retirer le teaser",
+        "selectAuthor": "Choisir un auteur/une autrice",
         "seoTitle": "Titre de référencement",
         "seoTitleHelpBlock": "Veuillez utiliser un titre optimisé pour le référencement seo. <2>Guide du référencement</2>",
         "seoDescription": "Description de référencement (SEO)",
@@ -983,6 +995,11 @@
         "invalidCode": "Code de vérification invalide. Veuillez réessayer.",
         "setupError": "Échec de la configuration 2FA. Veuillez réessayer.",
         "setupSuccess": "L'authentification à deux facteurs a été activée avec succès."
+      },
+      "impersonate": {
+        "pending": "Connexion en tant qu'utilisateur …",
+        "failed": "La connexion a échoué. Le lien a expiré ou a déjà été utilisé.",
+        "notAGrant": "Ce lien n'est pas un lien d'usurpation valide."
       }
     },
     "resetPassword": {
@@ -2413,7 +2430,7 @@
         "apiKey": "Clé API Mailchimp",
         "listId": "ID de liste/audience Mailchimp",
         "mergeFieldMappings": "Correspondances des champs de fusion",
-        "mergeFieldHelp": "Détermine quelle valeur est écrite dans un champ de fusion Mailchimp. Combinez plusieurs expressions avec | (OU) – le premier résultat gagne.\n\nExpressions disponibles :\n• user.firstName / user.name – prénom ou nom\n• slug:contains:valeur – \"1\" si le slug d'abonnement contient \"valeur\"\n• slug:contains_any:v1,v2 – \"1\" si l'une des valeurs est contenue\n• slug:equals:valeur – \"1\" en cas de correspondance exacte\n• active_abo – \"1\" actif, \"-1\" expiré, vide si aucun abonnement\n• active_abo_with_payment:slug:jours – comme active_abo, mais aussi \"1\" si la dernière méthode de paiement est \"slug\" et l'abonnement a expiré dans les derniers \"jours\" jours\n• retarget:jours – \"1\" si l'abonnement a expiré dans les derniers \"jours\" jours\n• static:valeur – retourne toujours \"valeur\"",
+        "mergeFieldHelp": "Détermine quelle valeur est écrite dans un champ de fusion Mailchimp. Combinez plusieurs expressions avec | (OU) – le premier résultat gagne.\n\nExpressions disponibles :\n• user.firstName / user.name – prénom ou nom\n• slug:contains:valeur – \"1\" si le slug d'abonnement contient \"valeur\"\n• slug:contains_any:v1,v2 – \"1\" si l'une des valeurs est contenue\n• slug:equals:valeur – \"1\" en cas de correspondance exacte\n• active_abo – \"1\" actif, \"-1\" expiré, vide si aucun abonnement\n• active_abo_with_payment:slug:jours – comme active_abo, mais aussi \"1\" si la dernière méthode de paiement est \"slug\" et l'abonnement a expiré dans les derniers \"jours\" jours\n• retarget:jours – \"1\" si l'abonnement a expiré dans les derniers \"jours\" jours, \"-1\" pour tout autre ancien abonné, vide si aucun abonnement\n• static:valeur – retourne toujours \"valeur\"",
         "mergeFieldTag": "Tag du champ de fusion (ex. FNAME)",
         "mergeFieldExpression": "Expression (ex. user.firstName)",
         "addMergeField": "Ajouter un champ de fusion",

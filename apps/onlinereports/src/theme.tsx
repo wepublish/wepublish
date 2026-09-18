@@ -116,6 +116,7 @@ const theme = createTheme(WePTheme, {
       fontFamily: [lora.style.fontFamily, 'sans-serif'].join(','),
       fontStyle: 'italic',
       fontWeight: 600,
+      lineHeight: 1.4,
     },
     blockBreakBody: {
       fontFamily: [inter.style.fontFamily, 'sans-serif'].join(','),
@@ -138,6 +139,9 @@ const theme = createTheme(WePTheme, {
     },
     bannerText: {
       lineHeight: 1.7,
+    },
+    teaserLead: {
+      lineHeight: 1.4,
     },
   },
   components: {

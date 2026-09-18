@@ -332,7 +332,7 @@ export const Upgrade = ({
 
         <SubscribeSection area="memberPlans">
           {availableMemberplans.length > 1 && (
-            <H5 component="h2">Abo wählen</H5>
+            <H5 component="h2">{t('subscribe.chooseSubscription')}</H5>
           )}
 
           <Controller
@@ -422,7 +422,7 @@ export const Upgrade = ({
 
         <SubscribeSection area="paymentPeriodicity">
           {allPaymentMethods.length > 1 && (
-            <H5 component="h2">Zahlungsmethode wählen</H5>
+            <H5 component="h2">{t('subscribe.choosePaymentMethod')}</H5>
           )}
 
           <SubscribePayment>
@@ -490,7 +490,7 @@ export const Upgrade = ({
                     <TextField
                       {...field}
                       value={field.value ?? ''}
-                      label={'Rabattcode'}
+                      label={t('subscribe.discountCode.label')}
                       error={!!error}
                       autoComplete="discountCode"
                       sx={{ maxWidth: 200 }}

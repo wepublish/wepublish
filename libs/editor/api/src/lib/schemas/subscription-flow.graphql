@@ -131,11 +131,3 @@ fragment MemberPlanRef on MemberPlan {
   extendable
   slug
 }
-
-fragment FullAvailablePaymentMethod on AvailablePaymentMethod {
-  paymentMethods {
-    ...FullPaymentMethod
-  }
-  paymentPeriodicities
-  forceAutoRenewal
-}

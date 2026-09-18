@@ -92,11 +92,13 @@ export default function ArticleBySlugOrId() {
 
   return (
     <>
-      <TsriAdHeader authors={data?.article?.latest.authors} />
+      <TsriAdHeader
+        authors={data?.article?.latest.authors.map(({ author }) => author)}
+      />
 
       <ArticleContainer {...containerProps}>
         {!data?.article?.latest.hideAuthor &&
-          data?.article?.latest.authors.map(author => (
+          data?.article?.latest.authors.map(({ author }) => (
             <AfterArticleAuthorWrapper
               key={author.id}
               fullWidth

@@ -4,6 +4,16 @@
       "popupBlocked": "Das Vorschau-Fenster wurde vom Browser blockiert. Bitte Pop-ups für den Editor erlauben und erneut versuchen.",
       "notResponding": "Das Vorschau-Fenster antwortet nicht. Die Anmeldung für die Vorschau ist möglicherweise fehlgeschlagen."
     },
+    "oneChannel": {
+      "connected": "We.Publish Connector: verbunden",
+      "failing": "We.Publish Connector: Verbindung gestört",
+      "notConfigured": "We.Publish Connector: nicht konfiguriert",
+      "notConfiguredHint": "Diese Instanz sendet keine Daten an We.Publish.",
+      "lastSuccess": "Letzter erfolgreicher Kontakt: {{value}}",
+      "lastSuccessNever": "Letzter erfolgreicher Kontakt: nie",
+      "lastAttemptFailed": "Letzter Versuch: {{value}} – fehlgeschlagen: {{error}}",
+      "label": "We.Publish Connector"
+    },
     "oneMessages": {
       "header": "Nachrichten vom We.Publish Team",
       "expand": "Ausklappen",
@@ -85,6 +95,7 @@
         "articlePreviewLinkDesc": "Vorschau-Links zeigen immer die neuesten Änderungen im Entwurf des Artikels an. Vorschau-Links funktionieren nicht mehr, nachdem der Artikel publiziert oder geplant wurde.",
         "articlePreviewLinkField": "Vorschau Link",
         "articlePreviewLinkHours": "Gültigkeitsdauer des Links",
+        "authorRole": "Funktion (z.B. Text, Bilder)",
         "authors": "Autor*innen",
         "back": "Zurück",
         "breakingNews": "Breaking News",
@@ -143,6 +154,7 @@
         "publishAtDateCheckbox": "Wähle ein anderes Datum für die online Verfügbarkeit",
         "publishDate": "Publikationsdatum",
         "published": "Publiziert",
+        "selectAuthor": "Autor*in wählen",
         "seoTitle": "SEO-Titel",
         "seoTitleHelpBlock": "Verwende einen SEO-optimierten Titel <2>SEO Guide</2>",
         "seoDescription": "SEO-Beschreibung",
@@ -980,6 +992,11 @@
         "invalidCode": "Ungültiger Bestätigungscode. Bitte versuchen Sie es erneut.",
         "setupError": "Fehler beim Erstellen der 2FA-Einrichtung. Bitte versuchen Sie es erneut.",
         "setupSuccess": "Zwei-Faktor-Authentifizierung wurde erfolgreich aktiviert."
+      },
+      "impersonate": {
+        "pending": "Anmeldung als Benutzer läuft …",
+        "failed": "Die Anmeldung ist fehlgeschlagen. Der Link ist abgelaufen oder wurde bereits verwendet.",
+        "notAGrant": "Dieser Link ist kein gültiger Impersonations-Link."
       }
     },
     "resetPassword": {
@@ -2467,7 +2484,7 @@
         "apiKey": "Mailchimp API Key",
         "listId": "Mailchimp Listen-/Zielgruppen-ID",
         "mergeFieldMappings": "Merge-Feld-Zuordnungen",
-        "mergeFieldHelp": "Bestimmt, welcher Wert in ein Mailchimp Merge-Feld geschrieben wird. Mehrere Ausdrücke mit | (ODER) kombinierbar – der erste Treffer gewinnt.\n\nVerfügbare Ausdrücke:\n• user.firstName / user.name – Vorname bzw. Nachname\n• slug:contains:wert – \"1\" wenn der Abo-Slug \"wert\" enthält\n• slug:contains_any:w1,w2 – \"1\" wenn einer der Werte enthalten ist\n• slug:equals:wert – \"1\" bei exakter Übereinstimmung\n• active_abo – \"1\" aktiv, \"-1\" abgelaufen, leer wenn kein Abo\n• active_abo_with_payment:slug:tage – wie active_abo, aber auch \"1\" wenn die letzte Zahlungsmethode \"slug\" ist und das Abo innerhalb der letzten \"tage\" Tage ablief\n• retarget:tage – \"1\" wenn das Abo innerhalb der letzten \"tage\" Tage ablief\n• static:wert – gibt immer \"wert\" zurück",
+        "mergeFieldHelp": "Bestimmt, welcher Wert in ein Mailchimp Merge-Feld geschrieben wird. Mehrere Ausdrücke mit | (ODER) kombinierbar – der erste Treffer gewinnt.\n\nVerfügbare Ausdrücke:\n• user.firstName / user.name – Vorname bzw. Nachname\n• slug:contains:wert – \"1\" wenn der Abo-Slug \"wert\" enthält\n• slug:contains_any:w1,w2 – \"1\" wenn einer der Werte enthalten ist\n• slug:equals:wert – \"1\" bei exakter Übereinstimmung\n• active_abo – \"1\" aktiv, \"-1\" abgelaufen, leer wenn kein Abo\n• active_abo_with_payment:slug:tage – wie active_abo, aber auch \"1\" wenn die letzte Zahlungsmethode \"slug\" ist und das Abo innerhalb der letzten \"tage\" Tage ablief\n• retarget:tage – \"1\" wenn das Abo innerhalb der letzten \"tage\" Tage ablief, \"-1\" bei allen übrigen ehemaligen Abonnent:innen, leer wenn kein Abo\n• static:wert – gibt immer \"wert\" zurück",
         "mergeFieldTag": "Merge-Feld-Tag (z.B. FNAME)",
         "mergeFieldExpression": "Ausdruck (z.B. user.firstName)",
         "addMergeField": "Merge-Feld hinzufügen",

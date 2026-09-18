@@ -1,6 +1,7 @@
 import { useKeenSlider } from 'keen-slider/react';
 import { allPass } from 'ramda';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { hasBlockStyle } from '../../has-blockstyle';
 import { isImageGalleryBlock } from '../../image-gallery/image-gallery-block';
@@ -20,7 +21,7 @@ import {
   BlockContent,
   FullImageGalleryBlockFragment,
 } from '@wepublish/website/api';
-import { MdArrowBackIos, MdArrowForwardIos } from 'react-icons/md';
+import { MdArrowBackIosNew, MdArrowForwardIos } from 'react-icons/md';
 import { ImageBlockCaption } from '../../image/image-block';
 import styled from '@emotion/styled';
 
@@ -41,6 +42,7 @@ export const ImageSlider = ({
 }: BuilderBlockStyleProps['ImageSlider']) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [loaded, setLoaded] = useState(false);
+  const { t } = useTranslation();
 
   const slidesPerView = useSlidesPerView(slidesPerViewConfig);
   let slidePadding = useSlidesPadding();
@@ -103,7 +105,7 @@ export const ImageSlider = ({
                   type="button"
                   key={idx}
                   onClick={() => sliderRef.current?.moveToIdx(idx)}
-                  aria-label={`Slide ${idx + 1}`}
+                  aria-label={t('slider.slide', { index: idx + 1 })}
                 >
                   {currentSlide === idx && <SliderBallFill />}
                 </SliderBall>
@@ -112,15 +114,15 @@ export const ImageSlider = ({
               <SliderArrow
                 type="button"
                 onClick={() => sliderRef.current?.prev()}
-                aria-label="Previous slide"
+                aria-label={t('slider.previous')}
               >
-                <MdArrowBackIos size={22} />
+                <MdArrowBackIosNew size={22} />
               </SliderArrow>
 
               <SliderArrow
                 type="button"
                 onClick={() => sliderRef.current?.next()}
-                aria-label="Next slide"
+                aria-label={t('slider.next')}
               >
                 <MdArrowForwardIos size={22} />
               </SliderArrow>

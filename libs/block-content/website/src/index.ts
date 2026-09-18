@@ -44,6 +44,8 @@ export * from './lib/block-styles/context-box/context-box';
 export * from './lib/block-styles/focus-teaser/focus-teaser';
 export * from './lib/block-styles/teaser-slider/teaser-slider';
 export * from './lib/block-styles/image-slider/image-slider';
+export * from './lib/block-styles/lightbox/lightbox';
+export * from './lib/block-styles/lightbox/is-lightbox';
 export * from './lib/block-styles/banner/banner';
 export * from './lib/block-styles/alternating/alternating-teaser';
 export * from './lib/block-styles/alternating/alternating-teaser-grid';

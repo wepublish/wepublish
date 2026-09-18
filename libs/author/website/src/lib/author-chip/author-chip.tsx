@@ -33,11 +33,19 @@ export const AuthorChipName = styled('div')`
 
 export const AuthorChipJob = styled('div')``;
 
+export const AuthorChipRole = styled('span')`
+  font-weight: 400;
+`;
+
 export const imageStyles = css`
   border-radius: 50%;
 `;
 
-export function AuthorChip({ className, author }: BuilderAuthorChipProps) {
+export function AuthorChip({
+  className,
+  author,
+  role,
+}: BuilderAuthorChipProps) {
   const {
     AuthorLinks,
     elements: { Image, Link },
@@ -60,6 +68,7 @@ export function AuthorChip({ className, author }: BuilderAuthorChipProps) {
         <div>
           <AuthorChipName>
             Von <Link href={author.url}>{author.name}</Link>
+            {role && <AuthorChipRole> ({role})</AuthorChipRole>}
           </AuthorChipName>
 
           {author.jobTitle && <AuthorChipJob>{author.jobTitle}</AuthorChipJob>}

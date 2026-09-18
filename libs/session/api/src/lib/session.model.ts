@@ -21,11 +21,17 @@ export class SessionWithToken {
       'Whether the user has two-factor authentication enabled. If true and the user is an admin, the client must verify TOTP before proceeding.',
   })
   totpEnabled!: boolean;
+
+  @Field(() => Boolean, {
+    description:
+      'Whether this session was created by redeeming an impersonation grant from the One dashboard. Clients must never treat an ordinary JWT login as impersonation.',
+  })
+  impersonated!: boolean;
 }
 
 @ObjectType()
 export class SessionWithTokenWithoutUser extends OmitType(
   SessionWithToken,
-  ['user', 'totpEnabled'] as const,
+  ['user', 'totpEnabled', 'impersonated'] as const,
   ObjectType
 ) {}
