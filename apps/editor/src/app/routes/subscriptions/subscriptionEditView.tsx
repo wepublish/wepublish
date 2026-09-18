@@ -24,6 +24,7 @@ import {
 } from '@wepublish/editor/api';
 import {
   ALL_PAYMENT_PERIODICITIES,
+  getMonthlyEquivalentRange,
   PAYMENT_PERIODICITY_MONTHS,
   createCheckedPermissionComponent,
   CurrencyInput,
@@ -166,12 +167,16 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
     }
 
     const override = memberPlan.periodicityPricing?.find(
-      price => price.periodicity === paymentPeriodicity
+      price =>
+        price.periodicity === paymentPeriodicity && price.amountMin != null
     );
 
     return (
       override?.amountMin ??
-      Math.round(memberPlan.amountPerMonthMin * periodicityMonths)
+      Math.round(
+        getMonthlyEquivalentRange(memberPlan.periodicityPricing)
+          .amountPerMonthMin * periodicityMonths
+      )
     );
   }, [memberPlan, paymentPeriodicity, periodicityMonths]);
 
@@ -750,7 +755,9 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                                 setMonthlyAmount(
                                   planPeriodMin != null ?
                                     planPeriodMin / periodicityMonths
-                                  : foundMemberPlan.amountPerMonthMin
+                                  : getMonthlyEquivalentRange(
+                                      foundMemberPlan.periodicityPricing
+                                    ).amountPerMonthMin
                                 );
                                 setCurrency(foundMemberPlan.currency);
                                 return foundMemberPlan;
@@ -770,9 +777,11 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                                     }
                                   )}
                                 >
-                                  {(memberPlan.amountPerMonthMin / 100).toFixed(
-                                    2
-                                  )}
+                                  {(
+                                    getMonthlyEquivalentRange(
+                                      memberPlan.periodicityPricing
+                                    ).amountPerMonthMin / 100
+                                  ).toFixed(2)}
                                 </DescriptionListItem>
                               </DescriptionList>
                             </Text>

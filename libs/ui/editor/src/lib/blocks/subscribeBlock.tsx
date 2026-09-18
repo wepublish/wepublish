@@ -41,6 +41,7 @@ import {
   Toggle,
 } from 'rsuite';
 
+import { getMonthlyEquivalentRange } from '../utility';
 import { BlockProps } from '../atoms/blockList';
 import { SubscribeBlockValue } from './types';
 
@@ -245,9 +246,6 @@ const PERIODICITY_MONTHS: Record<PaymentPeriodicity, number> = {
 };
 
 type PlanForPeriodAmount = {
-  amountPerMonthMin: number;
-  amountPerMonthTarget?: number | null;
-  amountPerMonthMax?: number | null;
   defaultPaymentPeriodicity?: PaymentPeriodicity | null;
   periodicityPricing?: Array<{
     periodicity: PaymentPeriodicity;
@@ -293,25 +291,18 @@ const getPeriodPriceRange = (
   plan: PlanForPeriodAmount,
   periodicity: PaymentPeriodicity
 ) => {
-  const override =
-    periodicity === PaymentPeriodicity.Monthly ?
-      undefined
-    : plan.periodicityPricing?.find(price => price.periodicity === periodicity);
+  const row = plan.periodicityPricing?.find(
+    price => price.periodicity === periodicity
+  );
+  const equivalent = getMonthlyEquivalentRange(plan.periodicityPricing);
+
+  const derive = (amount: number | null | undefined) =>
+    amount != null ? calculatePeriodAmount(amount, periodicity) : null;
 
   return {
-    amountMin:
-      override?.amountMin ??
-      calculatePeriodAmount(plan.amountPerMonthMin, periodicity),
-    amountTarget:
-      override?.amountTarget ??
-      (plan.amountPerMonthTarget != null ?
-        calculatePeriodAmount(plan.amountPerMonthTarget, periodicity)
-      : null),
-    amountMax:
-      override?.amountMax ??
-      (plan.amountPerMonthMax != null ?
-        calculatePeriodAmount(plan.amountPerMonthMax, periodicity)
-      : null),
+    amountMin: row?.amountMin ?? derive(equivalent.amountPerMonthMin) ?? 0,
+    amountTarget: row?.amountTarget ?? derive(equivalent.amountPerMonthTarget),
+    amountMax: row?.amountMax ?? derive(equivalent.amountPerMonthMax),
   };
 };
 

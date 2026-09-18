@@ -1,7 +1,10 @@
 import styled from '@emotion/styled';
 import { useUser } from '@wepublish/authentication/website';
 import { SubscribeBlock } from '@wepublish/block-content/website';
-import { SubscribeButton } from '@wepublish/membership/website';
+import {
+  getMonthlyEquivalentRange,
+  SubscribeButton,
+} from '@wepublish/membership/website';
 import { useSubscriptionsQuery } from '@wepublish/website/api';
 import { BuilderSubscribeBlockProps } from '@wepublish/website/builder';
 import { useRouter } from 'next/router';
@@ -42,7 +45,9 @@ export const HauptstadtSubscribe = (props: BuilderSubscribeBlockProps) => {
           isMemberplanUpgradeableTo(mb) &&
           filteredSubscriptions.every(sub => sub.memberPlan.id !== mb.id) &&
           filteredSubscriptions.some(
-            sub => mb.amountPerMonthMin > sub.memberPlan.amountPerMonthMin
+            sub =>
+              getMonthlyEquivalentRange(mb).amountPerMonthMin >
+              getMonthlyEquivalentRange(sub.memberPlan).amountPerMonthMin
           )
       ),
     [filteredSubscriptions, props.memberPlans]

@@ -85,9 +85,6 @@ export type BuilderMemberPlanPickerProps = {
 export type BuilderMemberPlanItemProps = Pick<
   FullMemberPlanFragment,
   | 'slug'
-  | 'amountPerMonthMin'
-  | 'amountPerMonthMax'
-  | 'amountPerMonthTarget'
   | 'periodicityPricing'
   | 'currency'
   | 'extendable'
