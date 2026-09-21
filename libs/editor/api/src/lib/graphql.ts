@@ -4324,6 +4324,8 @@ export type OneChannelStatus = {
   lastSuccessAt?: Maybe<Scalars['DateTime']>;
   oneUrl?: Maybe<Scalars['String']>;
   state: OneChannelConnectionState;
+  /** No successful heartbeat for longer than the outage threshold. Always false while the connector is not configured. */
+  unreachable: Scalars['Boolean'];
 };
 
 export type OverriddenRating = {

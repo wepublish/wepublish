@@ -3067,6 +3067,11 @@ type OneChannelStatus {
   lastSuccessAt: DateTime
   oneUrl: String
   state: OneChannelConnectionState!
+
+  """
+  No successful heartbeat for longer than the outage threshold. Always false while the connector is not configured.
+  """
+  unreachable: Boolean!
 }
 
 type OverriddenRating {
@@ -4143,7 +4148,6 @@ type Query {
 
   "\n      Returns all new subscribers in a given timeframe.\n      Includes already deactivated ones.\n    "
   newSubscribers(end: DateTime, start: DateTime!): [DashboardSubscription!]!
-  oneChannelStatus: OneChannelStatus!
 
   """
   Returns the instance-wide notification confirmations. Requires authentication.
@@ -4154,6 +4158,7 @@ type Query {
   Returns the current user's read notifications. Requires authentication.
   """
   notificationReads: [NotificationRead!]!
+  oneChannelStatus: OneChannelStatus!
 
   """Returns an page by id or slug."""
   page(id: String, slug: String): Page!

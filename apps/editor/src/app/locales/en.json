@@ -12,7 +12,10 @@
       "lastSuccess": "Last successful contact: {{value}}",
       "lastSuccessNever": "Last successful contact: never",
       "lastAttemptFailed": "Last attempt: {{value}} – failed: {{error}}",
-      "label": "We.Publish connector"
+      "label": "We.Publish connector",
+      "outageTitle": "We.Publish connector is not responding",
+      "outageText": "No successful contact since {{value}}. Statistics and messages are currently not being exchanged with We.Publish.",
+      "outageTextNever": "There has never been successful contact. Please check the connector URL and credentials."
     },
     "oneMessages": {
       "header": "Messages from the We.Publish team",
@@ -1370,7 +1373,8 @@
       "confirmTitle": "Mark as done?",
       "confirmMessage": "This confirms for your whole team that \"{{title}}\" has been completed. The notice will disappear from the dashboard.",
       "confirmSuccess": "Thanks! The task has been marked as done.",
-      "loadMore": "Load more"
+      "loadMore": "Load more",
+      "sourceConnector": "We.Publish Connector"
     },
     "no": "No",
     "pageEditor": {

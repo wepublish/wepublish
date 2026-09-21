@@ -247,6 +247,66 @@ describe('MediumStatsService null tolerance', () => {
     expect(stats.operations.periodicJobTries).toBe(0);
   });
 
+  it('does not call a run that succeeded on retry a failure', async () => {
+    // The editor dashboard grades this as a warning, not an error
+    // (`getSeverity`: finishedWithError + successfullyFinished). Reporting it
+    // as failing turned every recovered night into a red medium in One.
+    const prisma = makePrisma();
+    prisma.periodicJob.findFirst.mockResolvedValue({
+      executionTime: new Date('2026-09-21T02:00:00.000Z'),
+      finishedWithError: new Date('2026-09-21T02:05:00.000Z'),
+      successfullyFinished: new Date('2026-09-21T02:10:00.000Z'),
+      tries: 3,
+      error: 'timeout',
+    });
+
+    const stats = await makeService(prisma).getMediumStats();
+
+    expect(stats.operations.periodicJobFailing).toBe(false);
+    expect(stats.operations.periodicJobTries).toBe(3);
+  });
+
+  it('still calls a run that never got through a failure', async () => {
+    const prisma = makePrisma();
+    prisma.periodicJob.findFirst.mockResolvedValue({
+      executionTime: new Date('2026-09-21T02:00:00.000Z'),
+      finishedWithError: new Date('2026-09-21T02:05:00.000Z'),
+      successfullyFinished: null,
+      tries: 3,
+      error: 'timeout',
+    });
+
+    const stats = await makeService(prisma).getMediumStats();
+
+    expect(stats.operations.periodicJobFailing).toBe(true);
+  });
+
+  it('reports the last run that EXECUTED, not the newest row', async () => {
+    // A row that was scheduled and never ran would otherwise report "no job
+    // has ever run" and hide the very case where the job got stuck.
+    const prisma = makePrisma();
+    const executed = new Date('2026-09-19T02:00:00.000Z');
+    prisma.periodicJob.findFirst
+      .mockResolvedValueOnce({
+        executionTime: null,
+        finishedWithError: null,
+        successfullyFinished: null,
+        tries: 0,
+        error: null,
+      })
+      .mockResolvedValueOnce({
+        executionTime: executed,
+        finishedWithError: null,
+        successfullyFinished: executed,
+        tries: 1,
+        error: null,
+      });
+
+    const stats = await makeService(prisma).getMediumStats();
+
+    expect(stats.operations.lastPeriodicJobAt).toEqual(executed);
+  });
+
   it('stamps the schema version and generation time', async () => {
     const now = new Date('2026-09-16T12:00:00.000Z');
     const stats = await makeService(makePrisma()).getMediumStats({ now });

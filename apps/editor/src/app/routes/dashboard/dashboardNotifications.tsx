@@ -22,6 +22,7 @@ import {
   ChangelogActionRequired,
   ChangelogDashboard,
 } from './changelogDashboard';
+import { OneChannelAlert } from './oneChannelAlert';
 
 const NotificationsPanel = styled(Panel)`
   margin-bottom: 12px;
@@ -48,13 +49,18 @@ const EMPTY_SET: ReadonlySet<string> = new Set();
 export function DashboardNotifications() {
   const { t } = useTranslation();
 
+  const [hasConnectorOutage, setHasConnectorOutage] = useState(false);
   const [hasTeamMessages, setHasTeamMessages] = useState(false);
   const [hasActionRequired, setHasActionRequired] = useState(false);
   const [hasJobProblems, setHasJobProblems] = useState(false);
   const [hasRecentEntries, setHasRecentEntries] = useState(false);
 
   const hasNotifications =
-    hasTeamMessages || hasActionRequired || hasJobProblems || hasRecentEntries;
+    hasConnectorOutage ||
+    hasTeamMessages ||
+    hasActionRequired ||
+    hasJobProblems ||
+    hasRecentEntries;
 
   const { data } = useNotificationReadsQuery({
     fetchPolicy: 'cache-and-network',
@@ -108,6 +114,11 @@ export function DashboardNotifications() {
       bordered
     >
       <Section>
+        <OneChannelAlert
+          sourceTag={t('notifications.sourceConnector')}
+          onVisibilityChange={setHasConnectorOutage}
+        />
+
         <OneMessages
           hideHeader
           sourceTag={t('notifications.sourceTeam')}

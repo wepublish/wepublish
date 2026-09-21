@@ -214,27 +214,49 @@ export class MediumStatsService {
   }
 
   private async operations(): Promise<MediumOperationsStats> {
-    const [job, images, documents, mailchimpSyncErrors, migrations] =
-      await Promise.all([
-        this.prisma.periodicJob.findFirst({ orderBy: { date: 'desc' } }),
-        this.prisma.image.aggregate({
-          _count: { _all: true },
-          _sum: { fileSize: true },
-        }),
-        this.prisma.document.aggregate({
-          _count: { _all: true },
-          _sum: { fileSize: true },
-        }),
-        this.prisma.mailchimpSyncError.count(),
-        this.migrations(),
-      ]);
+    const [
+      job,
+      lastExecuted,
+      images,
+      documents,
+      mailchimpSyncErrors,
+      migrations,
+    ] = await Promise.all([
+      this.prisma.periodicJob.findFirst({ orderBy: { date: 'desc' } }),
+      // The newest run that actually executed. The newest ROW may be one
+      // that was scheduled and never ran, and reporting its empty
+      // executionTime as "no job has ever run" hides exactly the case where
+      // the job got stuck — the editor dashboard looks at the same thing
+      // (periodic-job-logs.tsx, `jobs.find(pj => !!pj.executionTime)`).
+      this.prisma.periodicJob.findFirst({
+        where: { executionTime: { not: null } },
+        orderBy: { date: 'desc' },
+      }),
+      this.prisma.image.aggregate({
+        _count: { _all: true },
+        _sum: { fileSize: true },
+      }),
+      this.prisma.document.aggregate({
+        _count: { _all: true },
+        _sum: { fileSize: true },
+      }),
+      this.prisma.mailchimpSyncError.count(),
+      this.migrations(),
+    ]);
 
     const imageBytes = images._sum.fileSize ?? 0;
     const documentBytes = documents._sum.fileSize ?? 0;
 
     return {
-      lastPeriodicJobAt: job?.executionTime ?? null,
-      periodicJobFailing: Boolean(job?.finishedWithError),
+      lastPeriodicJobAt: lastExecuted?.executionTime ?? null,
+      // Failing means it errored and never got through — a run that errored
+      // and then SUCCEEDED on a retry is a warning in the editor dashboard
+      // (`getSeverity`: finishedWithError + successfullyFinished => warning),
+      // not a failure, and it must not be one here either. Reporting the
+      // retry as a failure turned every recovered night into a red medium.
+      periodicJobFailing: Boolean(
+        job?.finishedWithError && !job?.successfullyFinished
+      ),
       periodicJobError: job?.error ?? null,
       periodicJobTries: job?.tries ?? 0,
       imageCount: images._count._all,

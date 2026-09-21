@@ -34,6 +34,13 @@ vi.mock('../../oneMessages/oneMessages', () => ({
   },
 }));
 
+vi.mock('./oneChannelAlert', () => ({
+  OneChannelAlert: ({ onVisibilityChange }: VisibilityProps) => {
+    reporters.connector = onVisibilityChange;
+    return null;
+  },
+}));
+
 vi.mock('./changelogDashboard', () => ({
   ChangelogActionRequired: ({ onVisibilityChange }: VisibilityProps) => {
     reporters.actionRequired = onVisibilityChange;
@@ -85,6 +92,7 @@ it('hides the panel while no source has anything to show', () => {
   expect(panel.hasAttribute('hidden')).toBe(true);
   expect(Object.keys(reporters).sort()).toEqual([
     'actionRequired',
+    'connector',
     'jobLogs',
     'recent',
     'team',
@@ -94,6 +102,7 @@ it('hides the panel while no source has anything to show', () => {
 it('keeps the panel hidden when every source reports nothing to show', () => {
   const panel = renderPanel();
 
+  report('connector', false);
   report('team', false);
   report('actionRequired', false);
   report('jobLogs', false);
@@ -102,7 +111,7 @@ it('keeps the panel hidden when every source reports nothing to show', () => {
   expect(panel.hasAttribute('hidden')).toBe(true);
 });
 
-it.each(['team', 'actionRequired', 'jobLogs', 'recent'])(
+it.each(['connector', 'team', 'actionRequired', 'jobLogs', 'recent'])(
   'shows the panel with its header as soon as the %s source has something to show',
   source => {
     const panel = renderPanel();

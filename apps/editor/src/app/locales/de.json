@@ -12,7 +12,10 @@
       "lastSuccess": "Letzter erfolgreicher Kontakt: {{value}}",
       "lastSuccessNever": "Letzter erfolgreicher Kontakt: nie",
       "lastAttemptFailed": "Letzter Versuch: {{value}} – fehlgeschlagen: {{error}}",
-      "label": "We.Publish Connector"
+      "label": "We.Publish Connector",
+      "outageTitle": "We.Publish Connector antwortet nicht",
+      "outageText": "Seit {{value}} kein erfolgreicher Kontakt mehr. Statistiken und Nachrichten werden derzeit nicht mit We.Publish ausgetauscht.",
+      "outageTextNever": "Es gab noch nie erfolgreichen Kontakt. Bitte URL und Zugang des Connectors prüfen."
     },
     "oneMessages": {
       "header": "Nachrichten vom We.Publish Team",
@@ -1369,7 +1372,8 @@
       "confirmTitle": "Als erledigt markieren?",
       "confirmMessage": "Damit bestätigen Sie für Ihr ganzes Team, dass «{{title}}» erledigt wurde. Der Hinweis verschwindet vom Dashboard.",
       "confirmSuccess": "Danke! Die Aufgabe wurde als erledigt markiert.",
-      "loadMore": "Mehr anzeigen"
+      "loadMore": "Mehr anzeigen",
+      "sourceConnector": "We.Publish Connector"
     },
     "no": "Nein",
     "pageEditor": {
