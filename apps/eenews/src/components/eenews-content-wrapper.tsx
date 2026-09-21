@@ -4,6 +4,9 @@ import {
   CrowdfundingContainer,
 } from '@wepublish/block-content/website';
 import { ContentWrapperStyled } from '@wepublish/content/website';
+import { SubscribeWrapper } from '@wepublish/membership/website';
+
+import { EenewsBreakBlockWrapper } from './blocks/eenews-break-block';
 
 export const EenewsContentWrapper = styled(ContentWrapperStyled)`
   & {
@@ -20,6 +23,10 @@ export const EenewsContentWrapper = styled(ContentWrapperStyled)`
 
   ${({ theme }) => theme.breakpoints.up('md')} {
     & > ${CrowdfundingContainer} {
+      grid-column: -1/1;
+    }
+
+    & > ${SubscribeWrapper} + ${EenewsBreakBlockWrapper} {
       grid-column: -1/1;
     }
   }

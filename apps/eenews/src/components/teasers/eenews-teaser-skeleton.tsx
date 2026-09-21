@@ -1,6 +1,8 @@
 import styled from '@emotion/styled';
+import { Theme } from '@mui/material';
 
-const shimmer = `#e6ece9 url('/skeleton.gif') center / cover no-repeat`;
+const shimmer = (theme: Theme) =>
+  `${theme.palette.background.skeleton} url('/skeleton.gif') center / cover no-repeat`;
 
 const Card = styled('div')`
   display: flex;
@@ -13,7 +15,7 @@ const ImageFrame = styled('div')`
   width: 100%;
   aspect-ratio: 4 / 3;
   overflow: hidden;
-  background: ${shimmer};
+  background: ${({ theme }) => shimmer(theme)};
 `;
 
 const Lines = styled('div')`
@@ -29,7 +31,7 @@ const Bar = styled('span', {
   width: ${({ w }) => w};
   height: ${({ h }) => h}px;
   border-radius: 3px;
-  background: ${shimmer};
+  background: ${({ theme }) => shimmer(theme)};
 `;
 
 export const EenewsTeaserSkeleton = ({ className }: { className?: string }) => (

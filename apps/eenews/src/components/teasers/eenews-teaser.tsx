@@ -40,7 +40,8 @@ const ImageFrame = styled('div')`
   width: 100%;
   aspect-ratio: 4 / 3;
   overflow: hidden;
-  background: #e6ece9 url('/skeleton.gif') center / cover no-repeat;
+  background: ${({ theme }) => theme.palette.background.skeleton}
+    url('/skeleton.gif') center / cover no-repeat;
 `;
 
 const TeaserImage = styled(Image)`
@@ -78,7 +79,7 @@ const BreakingBadge = styled(Typography)`
   gap: 4px;
   height: 24px;
   padding: 0 9px;
-  background: #d6342f;
+  background: ${({ theme }) => theme.palette.live};
   color: ${({ theme }) => theme.palette.background.paper};
   line-height: 1;
   border-radius: 3px;

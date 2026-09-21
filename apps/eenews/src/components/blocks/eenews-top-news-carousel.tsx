@@ -65,7 +65,7 @@ const CarouselBtn = styled('button')<{ side: 'left' | 'right' }>`
   border-radius: 50%;
   border: 0;
   background: ${({ theme }) => theme.palette.primary.main};
-  color: #e7ffda;
+  color: ${({ theme }) => theme.palette.secondary.light};
   display: inline-flex;
   align-items: center;
   justify-content: center;

@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { css, Typography } from '@mui/material';
+import { alpha, css, Typography } from '@mui/material';
 import {
   FullNavigationFragment,
   NavigationListQuery,
@@ -38,15 +38,9 @@ const MegaOverlay = styled('div', {
   opacity: 0;
   overflow: hidden;
   padding: 0;
-  background-image: linear-gradient(
-    90deg,
-    #b6e9a8 0%,
-    #abe1b5 35%,
-    #98d6c0 65%,
-    #84cdc4 100%
-  );
+  background-image: ${({ theme }) => theme.palette.heroGradient};
   border-bottom: 0 solid ${({ theme }) => theme.palette.primary.main};
-  box-shadow: 0 8px 24px rgba(25, 90, 125, 0);
+  box-shadow: 0 8px 24px ${({ theme }) => alpha(theme.palette.primary.main, 0)};
   transition:
     max-height 0.55s cubic-bezier(0.22, 0.61, 0.36, 1),
     opacity 0.55s ease,
@@ -62,7 +56,7 @@ const MegaOverlay = styled('div', {
       opacity: 1;
       padding: 28px 0 36px;
       border-bottom: 1.5px solid ${theme.palette.primary.main};
-      box-shadow: 0 28px 28px -12px rgba(25, 90, 125, 0.16);
+      box-shadow: 0 28px 28px -12px ${alpha(theme.palette.primary.main, 0.16)};
     `}
 
   ${({ theme }) => theme.breakpoints.down('md')} {

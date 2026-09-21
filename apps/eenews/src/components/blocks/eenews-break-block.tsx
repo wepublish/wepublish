@@ -8,7 +8,7 @@ import {
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 
-const Wrapper = styled('div')`
+export const EenewsBreakBlockWrapper = styled('div')`
   width: 100%;
   box-sizing: border-box;
   font-family: ${({ theme }) => theme.typography.fontFamily};
@@ -110,7 +110,7 @@ export const EenewsBreakBlock = ({
     textSizeNormal ? RichTextWrapperNormal : RichTextWrapper;
 
   return (
-    <Wrapper className={className}>
+    <EenewsBreakBlockWrapper className={className}>
       <Segment>
         {image && <BreakImage image={image} />}
 
@@ -134,6 +134,6 @@ export const EenewsBreakBlock = ({
           </Actions>
         )}
       </Segment>
-    </Wrapper>
+    </EenewsBreakBlockWrapper>
   );
 };

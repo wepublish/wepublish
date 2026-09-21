@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { Button, Typography } from '@mui/material';
+import { alpha, Button, Typography } from '@mui/material';
 import { BuilderInvoiceListItemProps } from '@wepublish/website/builder';
 
 const Row = styled('div')`
@@ -8,7 +8,8 @@ const Row = styled('div')`
   align-items: center;
   gap: 6px 20px;
   padding: 16px 0;
-  border-bottom: 1px solid rgba(193, 54, 27, 0.18);
+  border-bottom: 1px solid
+    ${({ theme }) => alpha(theme.palette.error.main, 0.18)};
   &:last-child {
     border-bottom: 0;
   }

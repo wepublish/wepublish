@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { Theme } from '@mui/material';
+import { alpha, Theme } from '@mui/material';
 import { MdChevronLeft, MdChevronRight } from 'react-icons/md';
 
 const Nav = styled('nav')`
@@ -45,7 +45,9 @@ const PageNum = styled('button', {
     isActive ? theme.palette.secondary.main : theme.palette.primary.main};
   &:hover {
     background: ${({ theme, isActive }) =>
-      isActive ? theme.palette.primary.main : 'rgba(25, 90, 125, 0.10)'};
+      isActive ?
+        theme.palette.primary.main
+      : alpha(theme.palette.primary.main, 0.1)};
   }
 `;
 
@@ -54,7 +56,7 @@ const PageArrow = styled('button')`
   padding: 0;
   width: 42px;
   &:hover:not(:disabled) {
-    background: rgba(25, 90, 125, 0.1);
+    background: ${({ theme }) => alpha(theme.palette.primary.main, 0.1)};
   }
   &:disabled {
     opacity: 0.35;

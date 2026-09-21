@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { Typography, useTheme } from '@mui/material';
+import { alpha, Typography, useTheme } from '@mui/material';
 import {
   FullNavigationFragment,
   NavigationListQuery,
@@ -27,7 +27,7 @@ const findNavBySlug = (
 
 const Wrapper = styled('footer')`
   background: ${({ theme }) => theme.palette.primary.main};
-  color: #d8ecf6;
+  color: ${({ theme }) => theme.palette.primary.light};
   padding: 56px 56px 24px;
   margin-top: auto;
   ${({ theme }) => theme.breakpoints.down('md')} {
@@ -42,7 +42,8 @@ const Inner = styled('div')`
   grid-template-columns: 1.4fr 1fr 1fr 1.2fr;
   gap: 48px;
   padding-bottom: 40px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+  border-bottom: 1px solid
+    ${({ theme }) => alpha(theme.palette.common.white, 0.18)};
 
   ${({ theme }) => theme.breakpoints.down('md')} {
     grid-template-columns: repeat(3, 1fr);
@@ -69,7 +70,7 @@ const Heading = styled(Typography)`
 
 const Tagline = styled(Typography)`
   display: block;
-  color: rgba(255, 255, 255, 0.78);
+  color: ${({ theme }) => alpha(theme.palette.common.white, 0.78)};
   margin: 0 0 14px;
 `;
 
@@ -83,7 +84,7 @@ const ColList = styled('ul')`
 `;
 
 const ColLink = styled(Link)`
-  color: #d8ecf6;
+  color: ${({ theme }) => theme.palette.primary.light};
   text-decoration: none;
   &:hover {
     color: ${({ theme }) => theme.palette.background.paper};
@@ -118,7 +119,7 @@ const FooterLogo = styled('img')`
 const Bottom = styled('div')`
   max-width: var(--max-width);
   margin: 24px auto 0;
-  color: rgba(255, 255, 255, 0.55);
+  color: ${({ theme }) => alpha(theme.palette.common.white, 0.55)};
   display: flex;
   justify-content: space-between;
   gap: 16px;
@@ -130,7 +131,7 @@ const PoweredBy = styled(Link)`
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  color: rgba(255, 255, 255, 0.78);
+  color: ${({ theme }) => alpha(theme.palette.common.white, 0.78)};
   text-decoration: none;
   transition: color 140ms;
   &:hover {

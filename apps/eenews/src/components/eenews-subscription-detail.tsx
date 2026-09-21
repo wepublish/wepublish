@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { Typography } from '@mui/material';
+import { Theme, Typography } from '@mui/material';
 import { InvoiceListContainer } from '@wepublish/membership/website';
 import {
   FullInvoiceFragment,
@@ -63,11 +63,17 @@ const Lead = styled(Typography)`
 
 type Tone = 'active' | 'due' | 'cancelled';
 
-const TONES: Record<Tone, { bg: string; fg: string }> = {
-  active: { bg: '#baf09c', fg: '#195a7d' },
-  due: { bg: '#f8e0db', fg: '#8a2010' },
-  cancelled: { bg: '#eef1f0', fg: '#5b6770' },
-};
+const tones = (theme: Theme): Record<Tone, { bg: string; fg: string }> => ({
+  active: {
+    bg: theme.palette.secondary.main,
+    fg: theme.palette.primary.main,
+  },
+  due: { bg: theme.palette.error.light, fg: theme.palette.error.dark },
+  cancelled: {
+    bg: theme.palette.background.skeleton,
+    fg: theme.palette.text.secondary,
+  },
+});
 
 const StatusPill = styled('span', {
   shouldForwardProp: p => p !== 'tone',
@@ -77,8 +83,8 @@ const StatusPill = styled('span', {
   gap: 6px;
   padding: 5px 12px;
   border-radius: 999px;
-  background: ${({ tone }) => TONES[tone].bg};
-  color: ${({ tone }) => TONES[tone].fg};
+  background: ${({ theme, tone }) => tones(theme)[tone].bg};
+  color: ${({ theme, tone }) => tones(theme)[tone].fg};
 `;
 
 const Dot = styled('span')`

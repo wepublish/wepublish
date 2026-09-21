@@ -96,6 +96,17 @@ declare module '@mui/material/styles' {
 
   interface TypeBackground {
     alt: string;
+    skeleton: string;
+  }
+
+  interface Palette {
+    live: string;
+    heroGradient: string;
+  }
+
+  interface PaletteOptions {
+    live?: string;
+    heroGradient?: string;
   }
 }
 

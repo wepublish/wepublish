@@ -15,14 +15,14 @@ export const EeNewsMemberPlanPicker = styled(MemberPlanPicker)`
       font-size: inherit;
       font-weight: inherit;
       line-height: inherit;
-      color: #096b5f;
+      color: ${({ theme }) => theme.palette.primary.main};
     }
 
     ${({ theme }) => theme.breakpoints.up('md')} {
-      font-size: 2rem;
-      width: 50%;
+      font-size: 1.5rem;
+      width: auto;
       margin: 0 auto;
-      min-height: 220px;
+      min-height: 50px;
     }
   }
 `;

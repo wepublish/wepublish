@@ -46,20 +46,27 @@ const sans = [gilroy.style.fontFamily, 'system-ui', 'sans-serif'].join(',');
 
 const serif = [cactus.style.fontFamily, 'Georgia', 'serif'].join(',');
 
-export const eenewsColors = {
+const eenewsColors = {
   accent: '#195a7d',
   accentDark: '#103f5a',
+  accentSoft: '#d8ecf6',
   tag: '#baf09c',
+  band: '#eaffdd',
   bg: '#f8fff5',
   bgAlt: '#f0faff',
+  neutral: '#e6ece9',
   line: 'rgba(25, 90, 125, 0.18)',
   text: '#0e1116',
   muted: '#5b6770',
   alert: '#c1361b',
   alertSoft: '#f8e0db',
   alertDeep: '#8a2010',
+  live: '#d6342f',
   white: '#ffffff',
 } as const;
+
+const eenewsHeroGradient =
+  'linear-gradient(90deg, #b6e9a8 0%, #abe1b5 35%, #98d6c0 65%, #84cdc4 100%)';
 
 const toVariant = (style: CSSObject): React.CSSProperties =>
   style as React.CSSProperties;
@@ -117,20 +124,32 @@ const theme = createTheme(WePTheme, {
     primary: {
       main: eenewsColors.accent,
       dark: eenewsColors.accentDark,
+      light: eenewsColors.accentSoft,
       contrastText: eenewsColors.white,
     },
-    secondary: { main: eenewsColors.tag, contrastText: eenewsColors.accent },
+    secondary: {
+      main: eenewsColors.tag,
+      light: eenewsColors.band,
+      contrastText: eenewsColors.accent,
+    },
     background: {
       default: eenewsColors.bg,
       paper: eenewsColors.white,
       alt: eenewsColors.bgAlt,
+      skeleton: eenewsColors.neutral,
     },
     text: {
       primary: eenewsColors.text,
       secondary: eenewsColors.muted,
     },
     divider: eenewsColors.line,
-    error: { main: eenewsColors.alert, dark: eenewsColors.alertDeep },
+    error: {
+      main: eenewsColors.alert,
+      light: eenewsColors.alertSoft,
+      dark: eenewsColors.alertDeep,
+    },
+    live: eenewsColors.live,
+    heroGradient: eenewsHeroGradient,
   },
   typography: {
     fontFamily: sans,

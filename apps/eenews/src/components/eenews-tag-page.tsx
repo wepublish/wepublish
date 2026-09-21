@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { Typography, useTheme } from '@mui/material';
+import { alpha, Typography, useTheme } from '@mui/material';
 import {
   FullNavigationFragment,
   FullTeaserFragment,
@@ -124,8 +124,10 @@ const Chip = styled(Link, {
   color: ${({ isActive, theme }) =>
     isActive ? theme.palette.secondary.main : theme.palette.primary.main};
   border: 0;
-  box-shadow: ${({ isActive }) =>
-    isActive ? '0 4px 14px rgba(0, 0, 0, 0.45)' : 'none'};
+  box-shadow: ${({ isActive, theme }) =>
+    isActive ?
+      `0 4px 14px ${alpha(theme.palette.common.black, 0.45)}`
+    : 'none'};
   padding: 7px 18px;
   height: 34px;
   display: inline-flex;

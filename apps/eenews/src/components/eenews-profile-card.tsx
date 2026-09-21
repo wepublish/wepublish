@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { Typography } from '@mui/material';
+import { alpha, Typography } from '@mui/material';
 
 export const ProfileCard = styled('section', {
   shouldForwardProp: p => p !== 'alert',
@@ -8,7 +8,7 @@ export const ProfileCard = styled('section', {
     ${({ theme, alert }) =>
       alert ? theme.palette.error.main : theme.palette.divider};
   background: ${({ theme, alert }) =>
-    alert ? '#f8e0db' : theme.palette.background.paper};
+    alert ? theme.palette.error.light : theme.palette.background.paper};
 `;
 
 export const ProfileCardHead = styled('div', {
@@ -22,7 +22,7 @@ export const ProfileCardHead = styled('div', {
   padding: 22px 28px;
   border-bottom: 1px solid
     ${({ theme, alert }) =>
-      alert ? 'rgba(193, 54, 27, 0.25)' : theme.palette.divider};
+      alert ? alpha(theme.palette.error.main, 0.25) : theme.palette.divider};
   ${({ theme }) => theme.breakpoints.down('sm')} {
     padding: 18px 20px;
   }

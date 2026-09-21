@@ -118,7 +118,7 @@ const HeroFigure = styled('figure')`
 
 const HeroFrame = styled('div')`
   overflow: hidden;
-  background: #e6ece9;
+  background: ${({ theme }) => theme.palette.background.skeleton};
 `;
 
 const HeroImage = styled(Image)`
@@ -148,7 +148,7 @@ const BreakingBadge = styled(Typography)`
   align-items: center;
   height: 30px;
   padding: 0 14px;
-  background: #d6342f;
+  background: ${({ theme }) => theme.palette.live};
   color: ${({ theme }) => theme.palette.background.paper};
   border-radius: 3px;
 `;

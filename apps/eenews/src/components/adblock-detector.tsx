@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { Typography } from '@mui/material';
+import { alpha, Typography } from '@mui/material';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { useEffect, useState } from 'react';
 
@@ -14,7 +14,7 @@ const Backdrop = styled.div`
   position: fixed;
   inset: 0;
   z-index: 9998;
-  background: rgba(0, 0, 0, 0.6);
+  background: ${({ theme }) => alpha(theme.palette.common.black, 0.6)};
 `;
 
 const Overlay = styled.div`

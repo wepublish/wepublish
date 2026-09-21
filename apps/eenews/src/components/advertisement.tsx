@@ -102,7 +102,7 @@ const AdBox = styled(Box, {
 })<{ status: AdStatus }>`
   position: relative;
   margin: 0 auto;
-  background-color: #e6ece9;
+  background-color: ${({ theme }) => theme.palette.background.skeleton};
 
   img {
     height: 100%;

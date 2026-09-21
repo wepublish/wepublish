@@ -29,7 +29,7 @@ import { EenewsArticleRichText } from '../eenews-article-richtext';
 // like Top-News and Aktuell — the crowdfunding block constrains itself to the
 // centre column instead of spanning the whole window.
 const CrowdfundingSection = styled('section')`
-  background-color: #eaffdd;
+  background-color: ${({ theme }) => theme.palette.secondary.light};
   padding: 56px 56px 36px;
 
   ${({ theme }) => theme.breakpoints.down('lg')} {

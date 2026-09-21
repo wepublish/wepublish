@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { css, Typography } from '@mui/material';
+import { alpha, css, Typography } from '@mui/material';
 import { useUser } from '@wepublish/authentication/website';
 import {
   FullNavigationFragment,
@@ -176,13 +176,15 @@ const InvoiceDot = styled('span')`
 
   @keyframes pulse-dot {
     0% {
-      box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
+      box-shadow: 0 0 0 0
+        ${({ theme }) => alpha(theme.palette.common.white, 0.7)};
     }
     70% {
-      box-shadow: 0 0 0 8px rgba(255, 255, 255, 0);
+      box-shadow: 0 0 0 8px
+        ${({ theme }) => alpha(theme.palette.common.white, 0)};
     }
     100% {
-      box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+      box-shadow: 0 0 0 0 ${({ theme }) => alpha(theme.palette.common.white, 0)};
     }
   }
 `;
@@ -191,13 +193,7 @@ const Hero = styled('div', {
   shouldForwardProp: p => p !== 'isAnimating' && p !== 'isOpen',
 })<{ isAnimating: boolean; isOpen: boolean }>`
   position: relative;
-  background-image: linear-gradient(
-    90deg,
-    #b6e9a8 0%,
-    #abe1b5 35%,
-    #98d6c0 65%,
-    #84cdc4 100%
-  );
+  background-image: ${({ theme }) => theme.palette.heroGradient};
   border-bottom: 1.5px solid ${({ theme }) => theme.palette.primary.main};
   transition: border-bottom-color 0.3s ease;
   ${({ isOpen, isAnimating }) =>
@@ -283,7 +279,9 @@ const IconBtn = styled('button', {
   transition: background 120ms ease;
   &:hover {
     background: ${({ theme, isActive }) =>
-      isActive ? theme.palette.primary.main : 'rgba(255,255,255,0.45)'};
+      isActive ?
+        theme.palette.primary.main
+      : alpha(theme.palette.common.white, 0.45)};
   }
 `;
 
@@ -300,7 +298,7 @@ const IconBtnLink = styled(Link)`
   text-decoration: none;
   transition: background 120ms ease;
   &:hover {
-    background: rgba(255, 255, 255, 0.45);
+    background: ${({ theme }) => alpha(theme.palette.common.white, 0.45)};
   }
 `;
 

@@ -5,6 +5,8 @@ import {
 } from '@wepublish/utils/website';
 import { DocumentContext, Head, Html, Main, NextScript } from 'next/document';
 
+import theme from '../src/theme';
+
 export default function Document(props: DocumentProps) {
   return (
     <Html lang="de">
@@ -70,11 +72,11 @@ export default function Document(props: DocumentProps) {
         />
         <meta
           name="msapplication-TileColor"
-          content="#ffffff"
+          content={theme.palette.common.white}
         />
         <meta
           name="theme-color"
-          content="#ffffff"
+          content={theme.palette.common.white}
         />
 
         <DocumentHeadTags {...props} />
