@@ -31,6 +31,12 @@ Mitmachen.getInitialProps = async (ctx: NextPageContext) => {
         slug: 'mitmachen',
       },
     }),
+    client.query({
+      query: PageDocument,
+      variables: {
+        slug: 'footer',
+      },
+    }),
   ]);
 
   return SubscribePage.getInitialProps(ctx);
