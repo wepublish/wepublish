@@ -1358,6 +1358,7 @@
         "unpublished": "Non publié"
       },
       "panels": {
+        "chooseBlock": "Choisir le bloc",
         "close": "Fermer",
         "confirm": "Confirmer",
         "createdAt": "{{createdAt, ccc PP p}}",
