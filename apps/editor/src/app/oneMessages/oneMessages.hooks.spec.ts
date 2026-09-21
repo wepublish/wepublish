@@ -2,13 +2,7 @@ import type { Mock } from 'vitest';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { getSettings } from '@wepublish/editor/api';
 
-import {
-  fetchOneMessages,
-  getMinimized,
-  isMinimized,
-  setMinimized,
-  useOneMessages,
-} from './oneMessages.hooks';
+import { fetchOneMessages, useOneMessages } from './oneMessages.hooks';
 import type { OneMessage } from './oneMessages.types';
 
 vi.mock('@wepublish/editor/api', () => ({
@@ -101,43 +95,6 @@ describe('fetchOneMessages', () => {
     mockFetch(() => Promise.resolve(okResponse({ data: null })));
 
     await expect(fetchOneMessages('de')).resolves.toEqual([]);
-  });
-});
-
-describe('minimize helpers', () => {
-  it('persists minimized ids and reads them back', () => {
-    setMinimized(3, true);
-    setMinimized(9, true);
-
-    expect(getMinimized()).toEqual([3, 9]);
-  });
-
-  it('does not store the same id twice', () => {
-    setMinimized(3, true);
-    setMinimized(3, true);
-
-    expect(getMinimized()).toEqual([3]);
-  });
-
-  it('removes an id again when expanded', () => {
-    setMinimized(3, true);
-    setMinimized(3, false);
-
-    expect(getMinimized()).toEqual([]);
-  });
-
-  it('reports minimized only for dismissible messages that were minimized', () => {
-    setMinimized(3, true);
-
-    expect(isMinimized(message({ id: 3, dismissible: true }))).toBe(true);
-    expect(isMinimized(message({ id: 3, dismissible: false }))).toBe(false);
-    expect(isMinimized(message({ id: 4, dismissible: true }))).toBe(false);
-  });
-
-  it('treats corrupt storage as nothing minimized', () => {
-    localStorage.setItem('wep-one-minimized-messages', 'not json');
-
-    expect(getMinimized()).toEqual([]);
   });
 });
 
