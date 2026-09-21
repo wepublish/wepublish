@@ -244,13 +244,15 @@ export const ReflektBlocks = memo(({ blocks, type }: BuilderBlocksProps) => {
         <ImageContext.Provider
           key={index}
           value={
-            // Above the fold images should be loaded with a high priority
-            3 > index ?
+            index === 0 ?
               {
                 fetchPriority: 'high',
                 loading: 'eager',
               }
-            : {}
+            : {
+                fetchPriority: 'low',
+                loading: 'lazy',
+              }
           }
         >
           <TypedRenderer
