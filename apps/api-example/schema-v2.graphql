@@ -912,7 +912,6 @@ type DocumentStorageUsage {
 }
 
 enum EditorBlockType {
-  BlockTemplate
   Comment
   Crowdfunding
   Embed
