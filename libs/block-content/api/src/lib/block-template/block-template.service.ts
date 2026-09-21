@@ -62,24 +62,28 @@ export class BlockTemplateService {
   }
 
   @PrimeDataLoader(BlockTemplateDataloaderService)
-  public createBlockTemplate({ name, blocks }: CreateBlockTemplateInput) {
+  public async createBlockTemplate({ name, blocks }: CreateBlockTemplateInput) {
     return this.prisma.blockTemplate.create({
       data: {
         name,
-        blocks: this.mapBlocks(blocks),
+        blocks: await this.mapBlocks(blocks),
       },
     });
   }
 
   @PrimeDataLoader(BlockTemplateDataloaderService)
-  public updateBlockTemplate({ id, name, blocks }: UpdateBlockTemplateInput) {
+  public async updateBlockTemplate({
+    id,
+    name,
+    blocks,
+  }: UpdateBlockTemplateInput) {
     return this.prisma.blockTemplate.update({
       where: {
         id,
       },
       data: {
         name,
-        blocks: this.mapBlocks(blocks),
+        blocks: await this.mapBlocks(blocks, id),
       },
     });
   }
@@ -92,10 +96,61 @@ export class BlockTemplateService {
     });
   }
 
-  private mapBlocks(blocks: BlockContentInput[]): Prisma.InputJsonValue {
-    blocks.forEach(assertNoTemplateBlock);
+  private async mapBlocks(
+    blocks: BlockContentInput[],
+    id?: string
+  ): Promise<Prisma.InputJsonValue> {
+    const referencedIDs = getInputTemplateIDs(blocks);
+
+    if (referencedIDs.some(referencedID => !referencedID)) {
+      throw new BadRequestException(
+        `Block template blocks without a referenced block template can not be saved.`
+      );
+    }
+
+    if (id) {
+      await this.assertNoCircularReference(id, referencedIDs);
+    }
 
     return blocks.map(mapBlockUnionMap) as unknown as Prisma.InputJsonValue;
+  }
+
+  private async assertNoCircularReference(id: string, templateIDs: string[]) {
+    let referencedIDs = new Set(templateIDs);
+    const visitedIDs = new Set<string>();
+
+    while (referencedIDs.size) {
+      if (referencedIDs.has(id)) {
+        throw new BadRequestException(
+          `Block templates can not contain circular references.`
+        );
+      }
+
+      const idsToVisit = [...referencedIDs].filter(
+        referencedID => !visitedIDs.has(referencedID)
+      );
+
+      if (!idsToVisit.length) {
+        return;
+      }
+
+      idsToVisit.forEach(idToVisit => visitedIDs.add(idToVisit));
+
+      const templates = await this.prisma.blockTemplate.findMany({
+        where: {
+          id: {
+            in: idsToVisit,
+          },
+        },
+        select: {
+          blocks: true,
+        },
+      });
+
+      referencedIDs = new Set(
+        templates.flatMap(({ blocks }) => getStoredTemplateIDs(blocks))
+      );
+    }
   }
 }
 
@@ -139,16 +194,46 @@ function createBlockTemplateFilter(
   return conditions.length ? { AND: conditions } : {};
 }
 
-function assertNoTemplateBlock(block: BlockContentInput) {
-  if (block[BlockType.BlockTemplate]) {
-    throw new BadRequestException(
-      `Block templates can not contain other block templates.`
-    );
+function getInputTemplateIDs(blocks: BlockContentInput[]): string[] {
+  return blocks.flatMap(block => {
+    const templateBlock = block[BlockType.BlockTemplate];
+
+    if (templateBlock) {
+      return [templateBlock.templateID];
+    }
+
+    const nestedBlocks = block[BlockType.FlexBlock]?.blocks
+      .map(({ block }) => block)
+      .filter((block): block is BlockContentInput => !!block);
+
+    return nestedBlocks ? getInputTemplateIDs(nestedBlocks) : [];
+  });
+}
+
+type StoredBlock = {
+  type?: BlockType;
+  templateID?: string;
+  blocks?: ({ block?: StoredBlock } | null)[];
+};
+
+function getStoredTemplateIDs(blocks: unknown): string[] {
+  if (!Array.isArray(blocks)) {
+    return [];
   }
 
-  block[BlockType.FlexBlock]?.blocks.forEach(({ block }) => {
-    if (block) {
-      assertNoTemplateBlock(block);
+  return (blocks as (StoredBlock | null)[]).flatMap(block => {
+    if (block?.type === BlockType.BlockTemplate) {
+      return block.templateID ? [block.templateID] : [];
     }
+
+    if (block?.type === BlockType.FlexBlock) {
+      return getStoredTemplateIDs(
+        block.blocks
+          ?.map(nestedBlock => nestedBlock?.block)
+          .filter(nestedBlock => !!nestedBlock) ?? []
+      );
+    }
+
+    return [];
   });
 }

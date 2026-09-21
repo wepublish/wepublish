@@ -26,7 +26,7 @@ import {
   useAuthorisation,
   useUnsavedChangesDialog,
 } from '@wepublish/ui/editor';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdKeyboardBackspace, MdSave } from 'react-icons/md';
 import { Link, useNavigate, useParams } from 'react-router-dom';
@@ -119,12 +119,26 @@ function BlockTemplateEditView() {
       );
   }, [createError, updateError]);
 
+  const hydratedRevision = useRef<string | null>(null);
+
   useEffect(() => {
-    if (blockTemplateData?.blockTemplate) {
-      const { name, blocks } = blockTemplateData.blockTemplate;
-      setName(name);
-      setBlocks((blocks as FullBlockFragment[]).map(blockForQueryBlock));
+    const blockTemplate = blockTemplateData?.blockTemplate;
+
+    if (!blockTemplate) {
+      return;
     }
+
+    const revision = `${blockTemplate.id}:${blockTemplate.modifiedAt}`;
+
+    if (hydratedRevision.current === revision) {
+      return;
+    }
+
+    hydratedRevision.current = revision;
+
+    const { name, blocks } = blockTemplate;
+    setName(name);
+    setBlocks((blocks as FullBlockFragment[]).map(blockForQueryBlock));
   }, [blockTemplateData]);
 
   useEffect(() => {

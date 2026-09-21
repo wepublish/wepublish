@@ -104,8 +104,31 @@ fragment BlockTemplateContent on BlockContent {
       block {
         __typename
         ...BlockWithoutTeaser
+        ...NestedTeaserBlock
+
+        ... on BlockTemplateBlock {
+          ...NestedBlockTemplateBlock
+        }
       }
     }
+  }
+
+  ... on BlockTemplateBlock {
+    ...NestedBlockTemplateBlock
+  }
+}
+
+fragment NestedBlockTemplateBlock on BlockTemplateBlock {
+  disabled
+  blockStyle
+  blockStyleName
+  type
+  templateID
+  template {
+    id
+    createdAt
+    modifiedAt
+    name
   }
 }
 
