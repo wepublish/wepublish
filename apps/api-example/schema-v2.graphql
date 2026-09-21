@@ -477,6 +477,25 @@ enum ChallengeProviderType {
   TURNSTILE
 }
 
+type ChangelogEntry {
+  actionRequired: Boolean!
+  confirmedAt: DateTime
+  confirmedByUserId: String
+  createdAt: DateTime!
+  description: String
+  id: String!
+  lead: String!
+  modifiedAt: DateTime!
+  name: String!
+  releasedAt: DateTime!
+  title: String!
+}
+
+input ChangelogEntryFilter {
+  actionRequired: Boolean
+  confirmed: Boolean
+}
+
 type Chat {
   chatId: String!
   message: String!
@@ -2199,6 +2218,34 @@ type MediumAccountStats {
   usersWithRole: Int!
 }
 
+type MediumChangelogAction {
+  """
+  False for a purely informative entry, which is never counted as open or overdue.
+  """
+  actionRequired: Boolean!
+
+  """Null while the action is still open."""
+  confirmedAt: DateTime
+  confirmedByEmail: String
+  confirmedByName: String
+  id: String!
+  name: String!
+  releasedAt: DateTime!
+  title: String!
+}
+
+type MediumChangelogStats {
+  """
+  Release date of the longest-open action-required entry, or null when none is open.
+  """
+  oldestOpenActionAt: DateTime
+
+  """
+  Action-required entries that nobody has confirmed yet. Informative entries are excluded.
+  """
+  openActions: Int!
+}
+
 type MediumCommunityStats {
   activePolls: Int!
   commentsPendingModeration: Int!
@@ -2286,6 +2333,7 @@ type MediumNetworkStats {
 }
 
 type MediumOperationsStats {
+  changelog: MediumChangelogStats!
   documentBytes: Float!
   documentCount: Int!
   imageBytes: Float!
@@ -2397,8 +2445,18 @@ type Mutation {
   """
   cancelUserSubscription(id: String!): PublicSubscription
 
+  """
+  Confirms that the manual action required by a changelog entry has been completed. Requires the permission to update settings.
+  """
+  confirmChangelogEntry(id: String!, locale: String): ChangelogEntry!
+
   """Confirms a pending email change for the logged-in user."""
   confirmEmailChange(newEmail: String!): SensitiveDataUser!
+
+  """
+  Confirms a notification for the whole instance, recording who confirmed it. Requires authentication.
+  """
+  confirmNotification(itemId: String!, source: NotificationSource!): NotificationConfirmation!
 
   """Creates an article."""
   createArticle(authors: [ArticleRevisionAuthorInput!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, imageID: String, lead: String, likes: Int, paywallId: String, preTitle: String, properties: [PropertyInput!]!, seoDescription: String, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
@@ -2721,6 +2779,11 @@ type Mutation {
   """Marks an invoice as paid."""
   markInvoiceAsPaid(id: String!): Invoice!
 
+  """
+  Marks a notification as read for the current user. Requires authentication.
+  """
+  markNotificationRead(itemId: String!, source: NotificationSource!): NotificationRead!
+
   """Publishes an article at the given time."""
   publishArticle(id: String!, publishedAt: DateTime!): Article!
 
@@ -3000,6 +3063,27 @@ enum NavigationLinkType {
   Page
 }
 
+type NotificationConfirmation {
+  confirmedByUserId: String
+  createdAt: DateTime!
+  id: String!
+  itemId: String!
+  source: NotificationSource!
+}
+
+type NotificationRead {
+  createdAt: DateTime!
+  id: String!
+  itemId: String!
+  source: NotificationSource!
+}
+
+enum NotificationSource {
+  CHANGELOG
+  ONE_MESSAGE
+  PERIODIC_JOB
+}
+
 enum OneChannelConnectionState {
   Connected
   Failing
@@ -3012,6 +3096,11 @@ type OneChannelStatus {
   lastSuccessAt: DateTime
   oneUrl: String
   state: OneChannelConnectionState!
+
+  """
+  No successful heartbeat for longer than the outage threshold. Always false while the connector is not configured.
+  """
+  unreachable: Boolean!
 }
 
 type OverriddenRating {
@@ -3148,6 +3237,12 @@ type PaginatedArticles {
 
 type PaginatedAuthors {
   nodes: [Author!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type PaginatedChangelogEntries {
+  nodes: [ChangelogEntry!]!
   pageInfo: PageInfo!
   totalCount: Int!
 }
@@ -3837,6 +3932,25 @@ type Query {
   challengeProviderSettings(filter: SettingChallengeProviderFilter): [SettingChallengeProvider!]!
 
   """
+  Returns the changelog entries of this instance, newest first. Requires authentication.
+  """
+  changelogEntries(
+    """Filter for changelog entries"""
+    filter: ChangelogEntryFilter
+
+    """
+    Locale (de, en, fr) for localized title, lead and description; falls back to the default content
+    """
+    locale: String
+
+    """Number of items to skip"""
+    skip: Int! = 0
+
+    """Number of items to fetch"""
+    take: Int! = 10
+  ): PaginatedChangelogEntries!
+
+  """
   Check the status of an invoice and update with information from the payment provider
   """
   checkInvoiceStatus(id: String!): Invoice!
@@ -4043,6 +4157,7 @@ type Query {
 
   """This query returns the user."""
   me: SensitiveDataUser
+  mediumChangelogActions(limit: Int): [MediumChangelogAction!]!
   mediumMigrations(limit: Int): [MediumMigration!]!
   mediumStats(from: DateTime, to: DateTime): MediumStats!
 
@@ -4063,6 +4178,16 @@ type Query {
 
   "\n      Returns all new subscribers in a given timeframe.\n      Includes already deactivated ones.\n    "
   newSubscribers(end: DateTime, start: DateTime!): [DashboardSubscription!]!
+
+  """
+  Returns the instance-wide notification confirmations. Requires authentication.
+  """
+  notificationConfirmations: [NotificationConfirmation!]!
+
+  """
+  Returns the current user's read notifications. Requires authentication.
+  """
+  notificationReads: [NotificationRead!]!
   oneChannelStatus: OneChannelStatus!
 
   """Returns an page by id or slug."""

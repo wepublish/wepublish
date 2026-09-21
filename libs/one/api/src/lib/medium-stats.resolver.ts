@@ -1,5 +1,6 @@
 import { Args, Int, Query, Resolver } from '@nestjs/graphql';
 import { MediumStats, MediumStatsService } from '@wepublish/stats/api';
+import { MediumChangelogAction } from './medium-changelog-actions.model';
 import { MediumMigration } from './medium-migrations.model';
 import { OneScopedJwt } from './one-scoped-jwt.decorator';
 
@@ -27,5 +28,18 @@ export class MediumStatsResolver {
     @Args('limit', { type: () => Int, nullable: true }) limit?: number
   ): Promise<MediumMigration[]> {
     return this.mediumStatsService.listMigrations(limit ?? undefined);
+  }
+
+  /**
+   * Every action-required changelog entry with its sign-off, newest first. The
+   * stats query carries only the open count; this is the drill-down that says
+   * which ones are still open and who did the rest.
+   */
+  @OneScopedJwt('read:stats')
+  @Query(() => [MediumChangelogAction], { name: 'mediumChangelogActions' })
+  async getMediumChangelogActions(
+    @Args('limit', { type: () => Int, nullable: true }) limit?: number
+  ): Promise<MediumChangelogAction[]> {
+    return this.mediumStatsService.listChangelogActions(limit ?? undefined);
   }
 }

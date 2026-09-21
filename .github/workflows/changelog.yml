@@ -1,0 +1,34 @@
+name: Changelog
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled, unlabeled]
+
+jobs:
+  Changelog:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # The check compares the branch against the pull request's base, so
+          # the history both sides share has to be present.
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+      - run: npm ci
+
+      - name: Check for a changelog entry
+        # Labelling the pull request "no-changelog" drops the requirement, but
+        # every entry that IS there is still validated — a placeholder nobody
+        # filled in must not reach an instance.
+        env:
+          EXEMPT: ${{ contains(github.event.pull_request.labels.*.name, 'no-changelog') }}
+        run: |
+          if [ "$EXEMPT" = "true" ]; then
+            echo "Labelled no-changelog — only validating the entries that exist."
+            npm run changelog:check
+          else
+            npm run changelog:check -- --since "origin/${{ github.base_ref }}"
+          fi

@@ -524,6 +524,26 @@ export enum ChallengeProviderType {
   Turnstile = 'TURNSTILE'
 }
 
+export type ChangelogEntry = {
+  __typename?: 'ChangelogEntry';
+  actionRequired: Scalars['Boolean'];
+  confirmedAt?: Maybe<Scalars['DateTime']>;
+  confirmedByUserId?: Maybe<Scalars['String']>;
+  createdAt: Scalars['DateTime'];
+  description?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  lead: Scalars['String'];
+  modifiedAt: Scalars['DateTime'];
+  name: Scalars['String'];
+  releasedAt: Scalars['DateTime'];
+  title: Scalars['String'];
+};
+
+export type ChangelogEntryFilter = {
+  actionRequired?: InputMaybe<Scalars['Boolean']>;
+  confirmed?: InputMaybe<Scalars['Boolean']>;
+};
+
 export type Chat = {
   __typename?: 'Chat';
   chatId: Scalars['String'];
@@ -2301,6 +2321,7 @@ export type MediumMailStats = {
   lastCampaignAt?: Maybe<Scalars['DateTime']>;
   rejected: Scalars['Int'];
   sends: Scalars['Int'];
+  total: Scalars['Int'];
 };
 
 export type MediumMembershipStats = {
@@ -2309,6 +2330,33 @@ export type MediumMembershipStats = {
   deactivations: Scalars['Int'];
   deactivationsByReason: Array<MediumDeactivationReasonCount>;
   newSubscribers: Scalars['Int'];
+};
+
+export type MediumMigration = {
+  __typename?: 'MediumMigration';
+  appliedStepsCount: Scalars['Int'];
+  error?: Maybe<Scalars['String']>;
+  finishedAt?: Maybe<Scalars['DateTime']>;
+  id: Scalars['String'];
+  name: Scalars['String'];
+  rolledBackAt?: Maybe<Scalars['DateTime']>;
+  startedAt: Scalars['DateTime'];
+  /** applied, failed, rolledBack or running */
+  state: Scalars['String'];
+};
+
+export type MediumMigrationSummary = {
+  __typename?: 'MediumMigrationSummary';
+  applied: Scalars['Int'];
+  failed: Scalars['Int'];
+  lastAppliedAt?: Maybe<Scalars['DateTime']>;
+  /** The newest migration did not complete. The schema is then in a state nobody designed. */
+  lastMigrationFailed: Scalars['Boolean'];
+  lastMigrationName?: Maybe<Scalars['String']>;
+  lastMigrationState?: Maybe<Scalars['String']>;
+  rolledBack: Scalars['Int'];
+  running: Scalars['Int'];
+  total: Scalars['Int'];
 };
 
 export type MediumMoneyStats = {
@@ -2332,6 +2380,7 @@ export type MediumOperationsStats = {
   imageCount: Scalars['Int'];
   lastPeriodicJobAt?: Maybe<Scalars['DateTime']>;
   mailchimpSyncErrors: Scalars['Int'];
+  migrations: MediumMigrationSummary;
   periodicJobError?: Maybe<Scalars['String']>;
   periodicJobFailing: Scalars['Boolean'];
   periodicJobTries: Scalars['Int'];
@@ -2419,8 +2468,12 @@ export type Mutation = {
   cancelSubscription: PublicSubscription;
   /** This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null */
   cancelUserSubscription?: Maybe<PublicSubscription>;
+  /** Confirms that the manual action required by a changelog entry has been completed. Requires authentication. */
+  confirmChangelogEntry: ChangelogEntry;
   /** Confirms a pending email change for the logged-in user. */
   confirmEmailChange: SensitiveDataUser;
+  /** Confirms a notification for the whole instance, recording who confirmed it. Requires authentication. */
+  confirmNotification: NotificationConfirmation;
   /** Creates an article. */
   createArticle: Article;
   /** Creates a new author. */
@@ -2622,6 +2675,8 @@ export type Mutation = {
   likeArticle: Article;
   /** Marks an invoice as paid. */
   markInvoiceAsPaid: Invoice;
+  /** Marks a notification as read for the current user. Requires authentication. */
+  markNotificationRead: NotificationRead;
   /** Publishes an article at the given time. */
   publishArticle: Article;
   /** Publishes an page at the given time. */
@@ -2821,8 +2876,20 @@ export type MutationCancelUserSubscriptionArgs = {
 };
 
 
+export type MutationConfirmChangelogEntryArgs = {
+  id: Scalars['String'];
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+
 export type MutationConfirmEmailChangeArgs = {
   newEmail: Scalars['String'];
+};
+
+
+export type MutationConfirmNotificationArgs = {
+  itemId: Scalars['String'];
+  source: NotificationSource;
 };
 
 
@@ -3481,6 +3548,12 @@ export type MutationLikeArticleArgs = {
 
 export type MutationMarkInvoiceAsPaidArgs = {
   id: Scalars['String'];
+};
+
+
+export type MutationMarkNotificationReadArgs = {
+  itemId: Scalars['String'];
+  source: NotificationSource;
 };
 
 
@@ -4215,6 +4288,29 @@ export enum NavigationLinkType {
   Page = 'Page'
 }
 
+export type NotificationConfirmation = {
+  __typename?: 'NotificationConfirmation';
+  confirmedByUserId?: Maybe<Scalars['String']>;
+  createdAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  itemId: Scalars['String'];
+  source: NotificationSource;
+};
+
+export type NotificationRead = {
+  __typename?: 'NotificationRead';
+  createdAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  itemId: Scalars['String'];
+  source: NotificationSource;
+};
+
+export enum NotificationSource {
+  Changelog = 'CHANGELOG',
+  OneMessage = 'ONE_MESSAGE',
+  PeriodicJob = 'PERIODIC_JOB'
+}
+
 export enum OneChannelConnectionState {
   Connected = 'Connected',
   Failing = 'Failing',
@@ -4228,6 +4324,8 @@ export type OneChannelStatus = {
   lastSuccessAt?: Maybe<Scalars['DateTime']>;
   oneUrl?: Maybe<Scalars['String']>;
   state: OneChannelConnectionState;
+  /** No successful heartbeat for longer than the outage threshold. Always false while the connector is not configured. */
+  unreachable: Scalars['Boolean'];
 };
 
 export type OverriddenRating = {
@@ -4375,6 +4473,13 @@ export type PaginatedArticles = {
 export type PaginatedAuthors = {
   __typename?: 'PaginatedAuthors';
   nodes: Array<Author>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type PaginatedChangelogEntries = {
+  __typename?: 'PaginatedChangelogEntries';
+  nodes: Array<ChangelogEntry>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
 };
@@ -5095,6 +5200,8 @@ export type Query = {
   challengeProviderSetting: SettingChallengeProvider;
   /** Returns all challenge provider settings. */
   challengeProviderSettings: Array<SettingChallengeProvider>;
+  /** Returns the changelog entries of this instance, newest first. Requires authentication. */
+  changelogEntries: PaginatedChangelogEntries;
   /** Check the status of an invoice and update with information from the payment provider */
   checkInvoiceStatus: Invoice;
   /** Checks whether a given email requires a TOTP code for login. Always returns true to prevent user enumeration. */
@@ -5241,6 +5348,7 @@ export type Query = {
   mailchimpSyncProgress?: Maybe<MailchimpSyncProgressType>;
   /** This query returns the user. */
   me?: Maybe<SensitiveDataUser>;
+  mediumMigrations: Array<MediumMigration>;
   mediumStats: MediumStats;
   /** Returns a memberplan by id or slug. */
   memberPlan: MemberPlan;
@@ -5264,6 +5372,10 @@ export type Query = {
    *
    */
   newSubscribers: Array<DashboardSubscription>;
+  /** Returns the instance-wide notification confirmations. Requires authentication. */
+  notificationConfirmations: Array<NotificationConfirmation>;
+  /** Returns the current user's read notifications. Requires authentication. */
+  notificationReads: Array<NotificationRead>;
   oneChannelStatus: OneChannelStatus;
   /** Returns an page by id or slug. */
   page: Page;
@@ -5485,6 +5597,14 @@ export type QueryChallengeProviderSettingArgs = {
 
 export type QueryChallengeProviderSettingsArgs = {
   filter?: InputMaybe<SettingChallengeProviderFilter>;
+};
+
+
+export type QueryChangelogEntriesArgs = {
+  filter?: InputMaybe<ChangelogEntryFilter>;
+  locale?: InputMaybe<Scalars['String']>;
+  skip?: Scalars['Int'];
+  take?: Scalars['Int'];
 };
 
 
@@ -5786,6 +5906,11 @@ export type QueryMailchimpSyncErrorsArgs = {
 
 export type QueryMailchimpSyncProgressArgs = {
   configId: Scalars['String'];
+};
+
+
+export type QueryMediumMigrationsArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
 };
 
 

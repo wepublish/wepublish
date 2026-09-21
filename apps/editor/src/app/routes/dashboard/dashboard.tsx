@@ -1,11 +1,9 @@
 import styled from '@emotion/styled';
-import { PeriodicJobsLog } from '@wepublish/membership/editor';
 import {
   ActivityFeed,
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
-  PermissionControl,
 } from '@wepublish/ui/editor';
 import { useTranslation } from 'react-i18next';
 import { MdChevronRight } from 'react-icons/md';
@@ -14,6 +12,7 @@ import { Button, Col, Grid, Panel as RPanel, Row } from 'rsuite';
 
 import { AudienceDashboard } from '../audience/audience-dashboard';
 import NetworkContentDashboard from '../networkContent/networkContentDashboard';
+import { DashboardNotifications } from './dashboardNotifications';
 import { ExternalAppsDashboard } from './externalAppsDashboard';
 
 const StyledGrid = styled(Grid)`
@@ -29,6 +28,11 @@ export function Dashboard() {
         {/* left column stack */}
         <Col xs={12}>
           <Row gutter={12}>
+            <Col xs={24}>
+              {/* renders its own panel and hides it while there is nothing to show */}
+              <DashboardNotifications />
+            </Col>
+
             <Col xs={24}>
               <RPanel
                 header={<h2>{t('dashboard.externalApps')}</h2>}
@@ -67,15 +71,6 @@ export function Dashboard() {
                 />
               </RPanel>
             </Col>
-
-            <Col xs={24}>
-              <RPanel
-                header={<h2>{t('dashboard.activity')}</h2>}
-                bordered
-              >
-                <ActivityFeed />
-              </RPanel>
-            </Col>
           </Row>
         </Col>
 
@@ -109,16 +104,12 @@ export function Dashboard() {
             </Col>
 
             <Col xs={24}>
-              <PermissionControl
-                qualifyingPermissions={['CAN_GET_PERIODIC_JOB_LOG']}
+              <RPanel
+                header={<h2>{t('dashboard.activity')}</h2>}
+                bordered
               >
-                <RPanel
-                  header={<h2>{t('periodicJobsLog.title')}</h2>}
-                  bordered
-                >
-                  <PeriodicJobsLog />
-                </RPanel>
-              </PermissionControl>
+                <ActivityFeed />
+              </RPanel>
             </Col>
           </Row>
         </Col>

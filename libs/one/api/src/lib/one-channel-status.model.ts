@@ -26,4 +26,10 @@ export class OneChannelStatus {
 
   @Field(() => String, { nullable: true })
   lastError!: string | null;
+
+  @Field(() => Boolean, {
+    description:
+      'No successful heartbeat for longer than the outage threshold. Always false while the connector is not configured.',
+  })
+  unreachable!: boolean;
 }
