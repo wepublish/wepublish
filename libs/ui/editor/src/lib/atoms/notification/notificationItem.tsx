@@ -4,8 +4,25 @@ import { Message, Tag } from 'rsuite';
 
 export type NotificationSeverity = 'info' | 'success' | 'warning' | 'error';
 
-const Wrapper = styled.div<{ clickable: boolean }>`
+/**
+ * Worst first. Stacks of notifications are flex columns, so every item carries
+ * its own `order` and a list mixing several sources sorts itself by severity —
+ * a failing job never sits below a piece of news just because its source is
+ * rendered later. Items of equal severity keep the order they were written in.
+ */
+export const SEVERITY_ORDER: Record<NotificationSeverity, number> = {
+  error: 0,
+  warning: 1,
+  info: 2,
+  success: 3,
+};
+
+const Wrapper = styled.div<{
+  clickable: boolean;
+  severity: NotificationSeverity;
+}>`
   cursor: ${({ clickable }) => (clickable ? 'pointer' : 'inherit')};
+  order: ${({ severity }) => SEVERITY_ORDER[severity]};
 `;
 
 const TitleRow = styled.div`
@@ -57,6 +74,7 @@ export function NotificationItem({
   return (
     <Wrapper
       clickable={!!onClick}
+      severity={severity}
       onClick={onClick}
     >
       <Message

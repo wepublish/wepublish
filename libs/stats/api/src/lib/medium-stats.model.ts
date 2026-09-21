@@ -85,6 +85,27 @@ export class MediumMigrationSummary {
   lastMigrationFailed!: boolean;
 }
 
+/**
+ * Changelog entries that ask the medium to do something. Purely informative
+ * entries are never counted here — they need nobody's attention and would
+ * otherwise turn every release into an open task.
+ */
+@ObjectType()
+export class MediumChangelogStats {
+  @Field(() => Int, {
+    description:
+      'Action-required entries that nobody has confirmed yet. Informative entries are excluded.',
+  })
+  openActions!: number;
+
+  @Field(() => Date, {
+    nullable: true,
+    description:
+      'Release date of the longest-open action-required entry, or null when none is open.',
+  })
+  oldestOpenActionAt!: Date | null;
+}
+
 @ObjectType()
 export class MediumOperationsStats {
   @Field(() => Date, { nullable: true })
@@ -120,6 +141,9 @@ export class MediumOperationsStats {
 
   @Field(() => MediumMigrationSummary)
   migrations!: MediumMigrationSummary;
+
+  @Field(() => MediumChangelogStats)
+  changelog!: MediumChangelogStats;
 }
 
 @ObjectType()

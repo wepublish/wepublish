@@ -137,36 +137,28 @@ describe('PeriodicJobsLog in problems-only mode', () => {
     expect(onVisibilityChange).toHaveBeenLastCalledWith(false);
   });
 
-  it('hides failed runs the team already marked as done', () => {
+  it('offers no way to mark a failed run as done', () => {
+    mockJobs([failedJob({ id: 'job-7' })]);
+
+    render(<PeriodicJobsLog onlyProblems />);
+
+    expect(screen.queryByRole('button')).toBeNull();
+  });
+
+  it('keeps showing a failed run even when a confirmation exists for it', () => {
     mockJobs([failedJob({ id: 'job-7' })]);
     mockConfirmations(['job-7']);
     const onVisibilityChange = vi.fn();
 
-    const { container } = render(
+    render(
       <PeriodicJobsLog
         onlyProblems
-        teamConfirm
         onVisibilityChange={onVisibilityChange}
       />
     );
 
-    expect(container.firstChild).toBeNull();
-    expect(onVisibilityChange).toHaveBeenLastCalledWith(false);
-  });
-
-  it('offers the team-wide mark-as-done action when enabled', () => {
-    mockJobs([failedJob()]);
-
-    render(
-      <PeriodicJobsLog
-        onlyProblems
-        teamConfirm
-      />
-    );
-
-    expect(
-      screen.getByRole('button', { name: 'notifications.markAsDone' })
-    ).toBeTruthy();
+    expect(screen.getByText(/periodicJobsLog.failedJob/)).toBeTruthy();
+    expect(onVisibilityChange).toHaveBeenLastCalledWith(true);
   });
 });
 

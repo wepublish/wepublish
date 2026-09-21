@@ -4,6 +4,8 @@ import {
   CurrentUser,
   UserSession,
 } from '@wepublish/authentication/api';
+import { CanUpdateSettings } from '@wepublish/permissions';
+import { Permissions } from '@wepublish/permissions/api';
 import {
   ChangelogEntry,
   ChangelogEntryListArgs,
@@ -25,11 +27,14 @@ export class ChangelogResolver {
     return this.changelogService.getChangelogEntries(args);
   }
 
-  @Authenticated()
+  // Signing an entry off speaks for the whole instance — the notice then
+  // disappears for everyone, including the people who would have had to act.
+  // That is an administrator's call, not every editor's.
+  @Permissions(CanUpdateSettings)
   @Mutation(returns => ChangelogEntry, {
     name: 'confirmChangelogEntry',
     description:
-      'Confirms that the manual action required by a changelog entry has been completed. Requires authentication.',
+      'Confirms that the manual action required by a changelog entry has been completed. Requires the permission to update settings.',
   })
   confirmChangelogEntry(
     @Args('id') id: string,

@@ -8,8 +8,9 @@ import {
   ConfirmActionModal,
   NotificationItem,
   NotificationSeverity,
+  useHasPermission,
 } from '@wepublish/ui/editor';
-import { useEffect, useState } from 'react';
+import { ReactElement, ReactNode, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ReactMarkdown, { defaultUrlTransform } from 'react-markdown';
 import { Button, Loader, Message, Modal, Tag, toaster } from 'rsuite';
@@ -65,6 +66,9 @@ const LoadMoreWrapper = styled.div`
   justify-content: center;
   padding-top: 12px;
 `;
+
+/** Signing an entry off hides it for the whole instance, so it is admin-only. */
+const CONFIRM_PERMISSION = ['CAN_UPDATE_SETTINGS'];
 
 const markdownUrlTransform = (url: string) =>
   url.startsWith('data:image/') ? url : defaultUrlTransform(url);
@@ -134,6 +138,7 @@ function ChangelogEntryModal({
   onMarkAsDone,
 }: ChangelogEntryModalProps) {
   const { t } = useTranslation();
+  const mayConfirm = useHasPermission(CONFIRM_PERMISSION);
 
   return (
     <Modal
@@ -162,14 +167,17 @@ function ChangelogEntryModal({
       </Modal.Body>
 
       <Modal.Footer>
-        {entry.actionRequired && !entry.confirmedAt && onMarkAsDone && (
-          <Button
-            appearance="default"
-            onClick={onMarkAsDone}
-          >
-            {t('notifications.markAsDone')}
-          </Button>
-        )}
+        {mayConfirm &&
+          entry.actionRequired &&
+          !entry.confirmedAt &&
+          onMarkAsDone && (
+            <Button
+              appearance="default"
+              onClick={onMarkAsDone}
+            >
+              {t('notifications.markAsDone')}
+            </Button>
+          )}
 
         <Button
           appearance="primary"
@@ -239,11 +247,22 @@ export interface ChangelogActionRequiredProps {
   onVisibilityChange?: (visible: boolean) => void;
 }
 
-export function ChangelogActionRequired({
+export interface NotificationSourceResult {
+  items: ReactElement[];
+  /** Modals belonging to these items, rendered outside the sorted list. */
+  overlay?: ReactNode;
+}
+
+/**
+ * The open action-required entries as items, so a panel mixing several sources
+ * can sort everything by severity instead of stacking source after source.
+ */
+export function useChangelogActionNotifications({
   sourceTag,
   onVisibilityChange,
-}: ChangelogActionRequiredProps) {
+}: ChangelogActionRequiredProps): NotificationSourceResult {
   const { t, i18n } = useTranslation();
+  const mayConfirm = useHasPermission(CONFIRM_PERMISSION);
   const [detailsEntry, setDetailsEntry] =
     useState<ChangelogEntryFragment | null>(null);
   const [confirmEntry, setConfirmEntry] =
@@ -265,47 +284,8 @@ export function ChangelogActionRequired({
     onVisibilityChange?.(hasEntries);
   }, [onVisibilityChange, hasEntries]);
 
-  if (!hasEntries) {
-    return null;
-  }
-
-  return (
+  const overlay = (
     <>
-      <Stack>
-        {entries.map(entry => (
-          <NotificationItem
-            key={entry.id}
-            severity="warning"
-            title={entry.title}
-            tags={<ChangelogEntryTag entry={entry} />}
-            sourceTag={sourceTag}
-            actions={
-              <>
-                <Button
-                  size="sm"
-                  appearance={entry.description ? 'default' : 'primary'}
-                  onClick={() => setConfirmEntry(entry)}
-                >
-                  {t('notifications.markAsDone')}
-                </Button>
-
-                {entry.description && (
-                  <Button
-                    size="sm"
-                    appearance="primary"
-                    onClick={() => setDetailsEntry(entry)}
-                  >
-                    {t('changelog.details')}
-                  </Button>
-                )}
-              </>
-            }
-          >
-            <EntryLead>{entry.lead}</EntryLead>
-          </NotificationItem>
-        ))}
-      </Stack>
-
       {detailsEntry && (
         <ChangelogEntryModal
           entry={detailsEntry}
@@ -323,6 +303,55 @@ export function ChangelogActionRequired({
           onClose={() => setConfirmEntry(null)}
         />
       )}
+    </>
+  );
+
+  return {
+    overlay,
+    items: entries.map(entry => (
+      <NotificationItem
+        key={entry.id}
+        severity="warning"
+        title={entry.title}
+        tags={<ChangelogEntryTag entry={entry} />}
+        sourceTag={sourceTag}
+        actions={
+          <>
+            {mayConfirm && (
+              <Button
+                size="sm"
+                appearance={entry.description ? 'default' : 'primary'}
+                onClick={() => setConfirmEntry(entry)}
+              >
+                {t('notifications.markAsDone')}
+              </Button>
+            )}
+
+            {entry.description && (
+              <Button
+                size="sm"
+                appearance="primary"
+                onClick={() => setDetailsEntry(entry)}
+              >
+                {t('changelog.details')}
+              </Button>
+            )}
+          </>
+        }
+      >
+        <EntryLead>{entry.lead}</EntryLead>
+      </NotificationItem>
+    )),
+  };
+}
+
+export function ChangelogActionRequired(props: ChangelogActionRequiredProps) {
+  const { items, overlay } = useChangelogActionNotifications(props);
+
+  return (
+    <>
+      {!!items.length && <Stack>{items}</Stack>}
+      {overlay}
     </>
   );
 }
@@ -346,16 +375,27 @@ export interface ChangelogDashboardProps {
   onVisibilityChange?: (visible: boolean) => void;
 }
 
-export function ChangelogDashboard({
+/**
+ * The recent entries as items, for a panel that sorts several sources by
+ * severity. Loading, the error and the empty state come back with them, since
+ * a sorted list has nowhere to put those.
+ */
+export function useChangelogNewsNotifications({
   take = 5,
   paginated = false,
   sourceTag,
   hideUnconfirmedActionRequired = false,
   readEntryIds,
   onMarkRead,
-  hideEmptyState = false,
   onVisibilityChange,
-}: ChangelogDashboardProps) {
+}: ChangelogDashboardProps): NotificationSourceResult & {
+  loading: boolean;
+  error?: Error;
+  /** How many entries the query returned, before any filtering */
+  totalFetched: number;
+  /** The "load more" control, when paginating and more pages exist */
+  footer?: ReactNode;
+} {
   const { t, i18n } = useTranslation();
   const [limit, setLimit] = useState(take);
   const [detailsEntry, setDetailsEntry] =
@@ -389,70 +429,8 @@ export function ChangelogDashboard({
     onVisibilityChange?.(hasEntries);
   }, [onVisibilityChange, hasEntries]);
 
-  if (loading && !data) {
-    return (
-      <LoaderWrapper>
-        <Loader />
-      </LoaderWrapper>
-    );
-  }
-
-  if (error) {
-    return <Message type="error">{error.message}</Message>;
-  }
-
-  if (!hasEntries) {
-    return hideEmptyState ? null : (
-        <CenteredText>
-          {nodes.length ? t('changelog.allCaughtUp') : t('changelog.noEntries')}
-        </CenteredText>
-      );
-  }
-
-  return (
+  const overlay = (
     <>
-      <Stack>
-        {entries.map(entry => (
-          <NotificationItem
-            key={entry.id}
-            severity={getEntrySeverity(entry)}
-            title={entry.title}
-            tags={<ChangelogEntryTag entry={entry} />}
-            sourceTag={sourceTag}
-            onClick={() => setDetailsEntry(entry)}
-            actions={
-              onMarkRead && (!entry.actionRequired || !!entry.confirmedAt) ?
-                <Button
-                  size="sm"
-                  appearance="default"
-                  onClick={() => onMarkRead(entry.id)}
-                >
-                  {t('notifications.markAsRead')}
-                </Button>
-              : undefined
-            }
-          >
-            <EntryLead>{entry.lead}</EntryLead>
-
-            <EntryDate>
-              {t('changelog.releasedAt', { date: new Date(entry.releasedAt) })}
-            </EntryDate>
-          </NotificationItem>
-        ))}
-      </Stack>
-
-      {paginated && data?.changelogEntries.pageInfo.hasNextPage && (
-        <LoadMoreWrapper>
-          <Button
-            appearance="subtle"
-            loading={loading}
-            onClick={() => setLimit(limit + take)}
-          >
-            {t('notifications.loadMore')}
-          </Button>
-        </LoadMoreWrapper>
-      )}
-
       {detailsEntry && (
         <ChangelogEntryModal
           entry={detailsEntry}
@@ -470,6 +448,88 @@ export function ChangelogDashboard({
           onClose={() => setConfirmEntry(null)}
         />
       )}
+    </>
+  );
+
+  const footer =
+    paginated && data?.changelogEntries.pageInfo.hasNextPage ?
+      <LoadMoreWrapper>
+        <Button
+          appearance="subtle"
+          loading={loading}
+          onClick={() => setLimit(limit + take)}
+        >
+          {t('notifications.loadMore')}
+        </Button>
+      </LoadMoreWrapper>
+    : undefined;
+
+  return {
+    overlay,
+    footer,
+    loading,
+    error,
+    totalFetched: nodes.length,
+    items: entries.map(entry => (
+      <NotificationItem
+        key={entry.id}
+        severity={getEntrySeverity(entry)}
+        title={entry.title}
+        tags={<ChangelogEntryTag entry={entry} />}
+        sourceTag={sourceTag}
+        onClick={() => setDetailsEntry(entry)}
+        actions={
+          onMarkRead && (!entry.actionRequired || !!entry.confirmedAt) ?
+            <Button
+              size="sm"
+              appearance="default"
+              onClick={() => onMarkRead(entry.id)}
+            >
+              {t('notifications.markAsRead')}
+            </Button>
+          : undefined
+        }
+      >
+        <EntryLead>{entry.lead}</EntryLead>
+
+        <EntryDate>
+          {t('changelog.releasedAt', { date: new Date(entry.releasedAt) })}
+        </EntryDate>
+      </NotificationItem>
+    )),
+  };
+}
+
+export function ChangelogDashboard(props: ChangelogDashboardProps) {
+  const { t } = useTranslation();
+  const { items, overlay, footer, loading, error, totalFetched } =
+    useChangelogNewsNotifications(props);
+
+  if (loading && !totalFetched) {
+    return (
+      <LoaderWrapper>
+        <Loader />
+      </LoaderWrapper>
+    );
+  }
+
+  if (error) {
+    return <Message type="error">{error.message}</Message>;
+  }
+
+  if (!items.length) {
+    return props.hideEmptyState ? null : (
+        <CenteredText>
+          {totalFetched ? t('changelog.allCaughtUp') : t('changelog.noEntries')}
+        </CenteredText>
+      );
+  }
+
+  return (
+    <>
+      <Stack>{items}</Stack>
+      {footer}
+      {overlay}
     </>
   );
 }

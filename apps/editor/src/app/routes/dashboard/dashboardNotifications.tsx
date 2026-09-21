@@ -4,30 +4,37 @@ import {
   useMarkNotificationReadMutation,
   useNotificationReadsQuery,
 } from '@wepublish/editor/api';
-import { PeriodicJobsLog } from '@wepublish/membership/editor';
+import { usePeriodicJobNotifications } from '@wepublish/membership/editor';
 import {
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
-  PermissionControl,
+  NotificationSeverity,
+  SEVERITY_ORDER,
+  useHasPermission,
 } from '@wepublish/ui/editor';
-import { useCallback, useMemo, useState } from 'react';
+import { ReactElement, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdChevronRight } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 import { Button, Panel } from 'rsuite';
 
-import { OneMessages } from '../../oneMessages/oneMessages';
+import { useOneMessageNotifications } from '../../oneMessages/oneMessages';
 import {
-  ChangelogActionRequired,
-  ChangelogDashboard,
+  useChangelogActionNotifications,
+  useChangelogNewsNotifications,
 } from './changelogDashboard';
-import { OneChannelAlert } from './oneChannelAlert';
+import { useOneChannelNotifications } from './oneChannelAlert';
 
 const NotificationsPanel = styled(Panel)`
   margin-bottom: 12px;
 `;
 
+// Every source renders its own stack of notification items. Dissolving those
+// stacks puts all items into this one flex column, where the `order` each
+// NotificationItem carries sorts them by severity across sources — so a failing
+// job is never pushed below a changelog entry by the order the sources happen
+// to be rendered in.
 const Section = styled.div`
   display: flex;
   flex-direction: column;
@@ -36,31 +43,20 @@ const Section = styled.div`
 
 const EMPTY_SET: ReadonlySet<string> = new Set();
 
-// Compact variant for the dashboard: one uniform stack with only what needs
-// attention right now, plus the latest changelog entries. Sources are told
-// apart by tags; the full history lives on /notifications. Items can be marked
-// as read per user, which hides them here but not in the archive. Entries
-// shown as action-required notifications are excluded from the recent list
-// below so nothing appears twice.
-//
-// The whole panel is hidden while no source has anything to show. The sources
-// stay mounted meanwhile so they keep fetching and can bring the panel back
-// (a new team message, a job that starts failing).
+const JOB_LOG_PERMISSION = ['CAN_GET_PERIODIC_JOB_LOG'];
+
+/**
+ * Every source contributes its notifications to ONE list, which is then sorted
+ * by severity: a failing job belongs above a piece of news no matter which
+ * source happens to be asked first. Rendering source after source, as this
+ * panel used to, let an orange changelog task sit above a red outage.
+ *
+ * The whole panel is hidden while nothing has anything to show. The sources
+ * keep fetching meanwhile, so a new message or a job that starts failing
+ * brings it back.
+ */
 export function DashboardNotifications() {
   const { t } = useTranslation();
-
-  const [hasConnectorOutage, setHasConnectorOutage] = useState(false);
-  const [hasTeamMessages, setHasTeamMessages] = useState(false);
-  const [hasActionRequired, setHasActionRequired] = useState(false);
-  const [hasJobProblems, setHasJobProblems] = useState(false);
-  const [hasRecentEntries, setHasRecentEntries] = useState(false);
-
-  const hasNotifications =
-    hasConnectorOutage ||
-    hasTeamMessages ||
-    hasActionRequired ||
-    hasJobProblems ||
-    hasRecentEntries;
 
   const { data } = useNotificationReadsQuery({
     fetchPolicy: 'cache-and-network',
@@ -90,9 +86,58 @@ export function DashboardNotifications() {
     [markNotificationRead]
   );
 
+  const mayReadJobLogs = useHasPermission(JOB_LOG_PERMISSION);
+
+  const connector = useOneChannelNotifications({
+    sourceTag: t('notifications.sourceConnector'),
+  });
+
+  const team = useOneMessageNotifications({
+    hideHeader: true,
+    sourceTag: t('notifications.sourceTeam'),
+    readItemIds: readItemIds.get(NotificationSource.OneMessage) ?? EMPTY_SET,
+    onMarkRead: markRead(NotificationSource.OneMessage),
+  });
+
+  const actionRequired = useChangelogActionNotifications({
+    sourceTag: t('notifications.sourceChangelog'),
+  });
+
+  const jobs = usePeriodicJobNotifications({
+    onlyProblems: true,
+    skip: !mayReadJobLogs,
+    sourceTag: t('notifications.sourceJobLogs'),
+  });
+
+  const news = useChangelogNewsNotifications({
+    take: 3,
+    hideUnconfirmedActionRequired: true,
+    hideEmptyState: true,
+    sourceTag: t('notifications.sourceChangelog'),
+    readEntryIds: readItemIds.get(NotificationSource.Changelog) ?? EMPTY_SET,
+    onMarkRead: markRead(NotificationSource.Changelog),
+  });
+
+  const items = useMemo<ReactElement<{ severity: NotificationSeverity }>[]>(
+    () =>
+      (
+        [
+          ...connector,
+          ...team,
+          ...actionRequired.items,
+          ...(mayReadJobLogs ? jobs : []),
+          ...news.items,
+        ] as ReactElement<{ severity: NotificationSeverity }>[]
+      ).sort(
+        (a, b) =>
+          SEVERITY_ORDER[a.props.severity] - SEVERITY_ORDER[b.props.severity]
+      ),
+    [connector, team, actionRequired.items, jobs, mayReadJobLogs, news.items]
+  );
+
   return (
     <NotificationsPanel
-      hidden={!hasNotifications}
+      hidden={!items.length}
       header={
         <ListViewContainer>
           <ListViewHeader>
@@ -113,48 +158,10 @@ export function DashboardNotifications() {
       }
       bordered
     >
-      <Section>
-        <OneChannelAlert
-          sourceTag={t('notifications.sourceConnector')}
-          onVisibilityChange={setHasConnectorOutage}
-        />
+      <Section>{items}</Section>
 
-        <OneMessages
-          hideHeader
-          sourceTag={t('notifications.sourceTeam')}
-          readItemIds={
-            readItemIds.get(NotificationSource.OneMessage) ?? EMPTY_SET
-          }
-          onMarkRead={markRead(NotificationSource.OneMessage)}
-          onVisibilityChange={setHasTeamMessages}
-        />
-
-        <ChangelogActionRequired
-          sourceTag={t('notifications.sourceChangelog')}
-          onVisibilityChange={setHasActionRequired}
-        />
-
-        <PermissionControl qualifyingPermissions={['CAN_GET_PERIODIC_JOB_LOG']}>
-          <PeriodicJobsLog
-            onlyProblems
-            teamConfirm
-            sourceTag={t('notifications.sourceJobLogs')}
-            onVisibilityChange={setHasJobProblems}
-          />
-        </PermissionControl>
-
-        <ChangelogDashboard
-          take={3}
-          hideUnconfirmedActionRequired
-          hideEmptyState
-          sourceTag={t('notifications.sourceChangelog')}
-          readEntryIds={
-            readItemIds.get(NotificationSource.Changelog) ?? EMPTY_SET
-          }
-          onMarkRead={markRead(NotificationSource.Changelog)}
-          onVisibilityChange={setHasRecentEntries}
-        />
-      </Section>
+      {actionRequired.overlay}
+      {news.overlay}
     </NotificationsPanel>
   );
 }

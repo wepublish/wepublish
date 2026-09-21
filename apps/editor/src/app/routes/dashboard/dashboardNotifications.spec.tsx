@@ -1,19 +1,31 @@
-import { act, render, screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
+import { NotificationItem, NotificationSeverity } from '@wepublish/ui/editor';
 import { MemoryRouter } from 'react-router-dom';
 
 import { DashboardNotifications } from './dashboardNotifications';
 
-type VisibilityReporter = (visible: boolean) => void;
-type VisibilityProps = { onVisibilityChange?: VisibilityReporter };
-
-// The child components report whether they render anything through
-// onVisibilityChange. The mocks capture those callbacks so the tests can
-// drive the panel from the outside.
-const { reporters } = vi.hoisted(() => ({
-  reporters: {} as Record<string, VisibilityReporter | undefined>,
+// Each source is reduced to the notifications it contributes, so these tests
+// are about how the panel merges and orders them — not about how any single
+// source decides what to show.
+const { sources } = vi.hoisted(() => ({
+  sources: {
+    connector: [] as unknown[],
+    team: [] as unknown[],
+    actionRequired: [] as unknown[],
+    jobs: [] as unknown[],
+    news: [] as unknown[],
+    mayReadJobLogs: true,
+  },
 }));
 
-// Partial mock: the UI library imports enums from the same module.
+const item = (id: string, severity: NotificationSeverity) => (
+  <NotificationItem
+    key={id}
+    severity={severity}
+    title={id}
+  />
+);
+
 vi.mock('@wepublish/editor/api', async importOriginal => ({
   ...(await importOriginal<typeof import('@wepublish/editor/api')>()),
   useNotificationReadsQuery: () => ({ data: { notificationReads: [] } }),
@@ -21,35 +33,26 @@ vi.mock('@wepublish/editor/api', async importOriginal => ({
 }));
 
 vi.mock('@wepublish/membership/editor', () => ({
-  PeriodicJobsLog: ({ onVisibilityChange }: VisibilityProps) => {
-    reporters.jobLogs = onVisibilityChange;
-    return null;
-  },
+  usePeriodicJobNotifications: () => sources.jobs,
 }));
 
 vi.mock('../../oneMessages/oneMessages', () => ({
-  OneMessages: ({ onVisibilityChange }: VisibilityProps) => {
-    reporters.team = onVisibilityChange;
-    return null;
-  },
-}));
-
-vi.mock('./oneChannelAlert', () => ({
-  OneChannelAlert: ({ onVisibilityChange }: VisibilityProps) => {
-    reporters.connector = onVisibilityChange;
-    return null;
-  },
+  useOneMessageNotifications: () => sources.team,
 }));
 
 vi.mock('./changelogDashboard', () => ({
-  ChangelogActionRequired: ({ onVisibilityChange }: VisibilityProps) => {
-    reporters.actionRequired = onVisibilityChange;
-    return null;
-  },
-  ChangelogDashboard: ({ onVisibilityChange }: VisibilityProps) => {
-    reporters.recent = onVisibilityChange;
-    return null;
-  },
+  useChangelogActionNotifications: () => ({
+    items: sources.actionRequired,
+    overlay: null,
+  }),
+  useChangelogNewsNotifications: () => ({
+    items: sources.news,
+    overlay: null,
+  }),
+}));
+
+vi.mock('./oneChannelAlert', () => ({
+  useOneChannelNotifications: () => sources.connector,
 }));
 
 vi.mock('react-i18next', () => ({
@@ -75,48 +78,39 @@ const renderPanel = () => {
   return panel;
 };
 
-const report = (source: string, visible: boolean) =>
-  act(() => {
-    reporters[source]?.(visible);
-  });
+/** The titles of the rendered notifications, in the order they appear. */
+const renderedOrder = () =>
+  Array.from(document.querySelectorAll('.rs-message')).map(
+    node => node.textContent ?? ''
+  );
 
 beforeEach(() => {
-  for (const key of Object.keys(reporters)) {
-    delete reporters[key];
-  }
+  sources.connector = [];
+  sources.team = [];
+  sources.actionRequired = [];
+  sources.jobs = [];
+  sources.news = [];
+  sources.mayReadJobLogs = true;
 });
 
 it('hides the panel while no source has anything to show', () => {
   const panel = renderPanel();
 
   expect(panel.hasAttribute('hidden')).toBe(true);
-  expect(Object.keys(reporters).sort()).toEqual([
-    'actionRequired',
-    'connector',
-    'jobLogs',
-    'recent',
-    'team',
-  ]);
 });
 
-it('keeps the panel hidden when every source reports nothing to show', () => {
-  const panel = renderPanel();
-
-  report('connector', false);
-  report('team', false);
-  report('actionRequired', false);
-  report('jobLogs', false);
-  report('recent', false);
-
-  expect(panel.hasAttribute('hidden')).toBe(true);
-});
-
-it.each(['connector', 'team', 'actionRequired', 'jobLogs', 'recent'])(
-  'shows the panel with its header as soon as the %s source has something to show',
+it.each([
+  ['connector'],
+  ['team'],
+  ['actionRequired'],
+  ['jobs'],
+  ['news'],
+] as const)(
+  'shows the panel with its header as soon as the %s source has something',
   source => {
-    const panel = renderPanel();
+    sources[source] = [item(`${source}-1`, 'info')];
 
-    report(source, true);
+    const panel = renderPanel();
 
     expect(panel.hasAttribute('hidden')).toBe(false);
     expect(screen.getByText('dashboard.notifications')).toBeTruthy();
@@ -126,22 +120,39 @@ it.each(['connector', 'team', 'actionRequired', 'jobLogs', 'recent'])(
   }
 );
 
-it('stays visible while at least one source still has something to show', () => {
-  const panel = renderPanel();
+it('orders notifications by severity across all sources', () => {
+  sources.news = [item('news-info', 'info')];
+  sources.actionRequired = [item('action-warning', 'warning')];
+  sources.jobs = [item('job-error', 'error')];
+  sources.team = [item('team-success', 'success')];
 
-  report('team', true);
-  report('jobLogs', true);
-  report('team', false);
+  renderPanel();
 
-  expect(panel.hasAttribute('hidden')).toBe(false);
+  expect(renderedOrder().map(text => text.trim())).toEqual([
+    'job-error',
+    'action-warning',
+    'news-info',
+    'team-success',
+  ]);
 });
 
-it('hides the panel again once the last source runs empty', () => {
-  const panel = renderPanel();
+it('puts a failing job above a changelog task, whatever the source order', () => {
+  sources.actionRequired = [item('changelog-task', 'warning')];
+  sources.jobs = [item('failing-job', 'error')];
 
-  report('recent', true);
-  expect(panel.hasAttribute('hidden')).toBe(false);
+  renderPanel();
 
-  report('recent', false);
-  expect(panel.hasAttribute('hidden')).toBe(true);
+  expect(renderedOrder()[0]?.trim()).toBe('failing-job');
+});
+
+it('keeps the order sources were asked in when severities match', () => {
+  sources.connector = [item('connector-error', 'error')];
+  sources.jobs = [item('job-error', 'error')];
+
+  renderPanel();
+
+  expect(renderedOrder().map(text => text.trim())).toEqual([
+    'connector-error',
+    'job-error',
+  ]);
 });

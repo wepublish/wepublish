@@ -19,12 +19,27 @@ import {
   MediumMailStats,
   MediumMembershipStats,
   MediumMoneyStats,
+  MediumChangelogStats,
   MediumOperationsStats,
   MediumStats,
 } from './medium-stats.model';
 
 /** Hard cap on how many migration rows one call may return. */
 export const MIGRATION_LIST_LIMIT = 200;
+
+/** Hard cap on how many changelog actions one call may return. */
+export const CHANGELOG_ACTION_LIST_LIMIT = 200;
+
+export interface ChangelogAction {
+  id: string;
+  name: string;
+  title: string;
+  actionRequired: boolean;
+  releasedAt: Date;
+  confirmedAt: Date | null;
+  confirmedByName: string | null;
+  confirmedByEmail: string | null;
+}
 
 export const DEFAULT_WINDOW_DAYS = 30;
 
@@ -213,6 +228,69 @@ export class MediumStatsService {
     }
   }
 
+  async listChangelogActions(
+    limit = CHANGELOG_ACTION_LIST_LIMIT
+  ): Promise<ChangelogAction[]> {
+    try {
+      const rows = await this.prisma.changelogEntry.findMany({
+        orderBy: { releasedAt: 'desc' },
+        take: Math.min(Math.max(limit, 1), CHANGELOG_ACTION_LIST_LIMIT),
+        select: {
+          id: true,
+          name: true,
+          title: true,
+          actionRequired: true,
+          releasedAt: true,
+          confirmedAt: true,
+          confirmedBy: { select: { name: true, firstName: true, email: true } },
+        },
+      });
+
+      return rows.map(({ confirmedBy, ...entry }) => ({
+        ...entry,
+        confirmedByName:
+          confirmedBy ?
+            [confirmedBy.firstName, confirmedBy.name].filter(Boolean).join(' ')
+          : null,
+        confirmedByEmail: confirmedBy?.email ?? null,
+      }));
+    } catch (error) {
+      logger('medium-stats').warn(
+        `Could not read changelog entries: ${(error as Error).message}`
+      );
+
+      return [];
+    }
+  }
+
+  private async changelogActions(): Promise<MediumChangelogStats> {
+    const where = { actionRequired: true, confirmedAt: null };
+
+    try {
+      const [openActions, oldest] = await Promise.all([
+        this.prisma.changelogEntry.count({ where }),
+        this.prisma.changelogEntry.findFirst({
+          where,
+          orderBy: { releasedAt: 'asc' },
+          select: { releasedAt: true },
+        }),
+      ]);
+
+      return {
+        openActions,
+        oldestOpenActionAt: oldest?.releasedAt ?? null,
+      };
+    } catch (error) {
+      // A CMS whose database predates the changelog tables must still answer
+      // the rest of the stats.
+      logger('medium-stats').warn(
+        `Could not read changelog entries: ${(error as Error).message}`
+      );
+
+      return { openActions: 0, oldestOpenActionAt: null };
+    }
+  }
+
   private async operations(): Promise<MediumOperationsStats> {
     const [
       job,
@@ -221,6 +299,7 @@ export class MediumStatsService {
       documents,
       mailchimpSyncErrors,
       migrations,
+      changelog,
     ] = await Promise.all([
       this.prisma.periodicJob.findFirst({ orderBy: { date: 'desc' } }),
       // The newest run that actually executed. The newest ROW may be one
@@ -242,6 +321,7 @@ export class MediumStatsService {
       }),
       this.prisma.mailchimpSyncError.count(),
       this.migrations(),
+      this.changelogActions(),
     ]);
 
     const imageBytes = images._sum.fileSize ?? 0;
@@ -266,6 +346,7 @@ export class MediumStatsService {
       storageBytes: imageBytes + documentBytes,
       mailchimpSyncErrors,
       migrations,
+      changelog,
     };
   }
 

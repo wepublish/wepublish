@@ -2218,6 +2218,34 @@ type MediumAccountStats {
   usersWithRole: Int!
 }
 
+type MediumChangelogAction {
+  """
+  False for a purely informative entry, which is never counted as open or overdue.
+  """
+  actionRequired: Boolean!
+
+  """Null while the action is still open."""
+  confirmedAt: DateTime
+  confirmedByEmail: String
+  confirmedByName: String
+  id: String!
+  name: String!
+  releasedAt: DateTime!
+  title: String!
+}
+
+type MediumChangelogStats {
+  """
+  Release date of the longest-open action-required entry, or null when none is open.
+  """
+  oldestOpenActionAt: DateTime
+
+  """
+  Action-required entries that nobody has confirmed yet. Informative entries are excluded.
+  """
+  openActions: Int!
+}
+
 type MediumCommunityStats {
   activePolls: Int!
   commentsPendingModeration: Int!
@@ -2305,6 +2333,7 @@ type MediumNetworkStats {
 }
 
 type MediumOperationsStats {
+  changelog: MediumChangelogStats!
   documentBytes: Float!
   documentCount: Int!
   imageBytes: Float!
@@ -2417,7 +2446,7 @@ type Mutation {
   cancelUserSubscription(id: String!): PublicSubscription
 
   """
-  Confirms that the manual action required by a changelog entry has been completed. Requires authentication.
+  Confirms that the manual action required by a changelog entry has been completed. Requires the permission to update settings.
   """
   confirmChangelogEntry(id: String!, locale: String): ChangelogEntry!
 
@@ -4128,6 +4157,7 @@ type Query {
 
   """This query returns the user."""
   me: SensitiveDataUser
+  mediumChangelogActions(limit: Int): [MediumChangelogAction!]!
   mediumMigrations(limit: Int): [MediumMigration!]!
   mediumStats(from: DateTime, to: DateTime): MediumStats!
 

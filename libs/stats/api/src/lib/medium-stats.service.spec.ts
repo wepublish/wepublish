@@ -69,6 +69,11 @@ type PrismaStub = {
   settingAnalyticsProvider: { count: jest.Mock };
   mailLog: { count: jest.Mock };
   periodicJob: { findFirst: jest.Mock };
+  changelogEntry: {
+    count: jest.Mock;
+    findFirst: jest.Mock;
+    findMany: jest.Mock;
+  };
   image: { aggregate: jest.Mock };
   document: { aggregate: jest.Mock };
   subscription: { count: jest.Mock };
@@ -95,6 +100,11 @@ function makePrisma(): PrismaStub {
     },
     mailLog: { count: jest.fn().mockResolvedValue(0) },
     periodicJob: { findFirst: jest.fn().mockResolvedValue(null) },
+    changelogEntry: {
+      count: jest.fn().mockResolvedValue(0),
+      findFirst: jest.fn().mockResolvedValue(null),
+      findMany: jest.fn().mockResolvedValue([]),
+    },
     image: {
       aggregate: jest
         .fn()
@@ -419,5 +429,171 @@ describe('MediumStatsService storage', () => {
     const { operations } = await makeService(prisma).getMediumStats();
 
     expect(operations.storageBytes).toBe(900);
+  });
+});
+
+describe('MediumStatsService changelog actions', () => {
+  const released = new Date('2026-09-16T08:00:00.000Z');
+
+  async function operations(prisma: PrismaStub) {
+    const stats = await makeService(prisma).getMediumStats({});
+
+    return stats.operations.changelog;
+  }
+
+  it('reports nothing open when no action is required', async () => {
+    const prisma = makePrisma();
+
+    expect(await operations(prisma)).toEqual({
+      openActions: 0,
+      oldestOpenActionAt: null,
+    });
+  });
+
+  it('counts only unconfirmed action-required entries', async () => {
+    const prisma = makePrisma();
+    prisma.changelogEntry.count.mockResolvedValue(3);
+    prisma.changelogEntry.findFirst.mockResolvedValue({ releasedAt: released });
+
+    expect(await operations(prisma)).toEqual({
+      openActions: 3,
+      oldestOpenActionAt: released,
+    });
+
+    expect(prisma.changelogEntry.count).toHaveBeenCalledWith({
+      where: { actionRequired: true, confirmedAt: null },
+    });
+  });
+
+  it('takes the oldest open entry by release date', async () => {
+    const prisma = makePrisma();
+    prisma.changelogEntry.count.mockResolvedValue(1);
+    prisma.changelogEntry.findFirst.mockResolvedValue({ releasedAt: released });
+
+    await operations(prisma);
+
+    expect(prisma.changelogEntry.findFirst).toHaveBeenCalledWith({
+      where: { actionRequired: true, confirmedAt: null },
+      orderBy: { releasedAt: 'asc' },
+      select: { releasedAt: true },
+    });
+  });
+
+  it('survives a database without the changelog table', async () => {
+    const prisma = makePrisma();
+    prisma.changelogEntry.count.mockRejectedValue(new Error('no such table'));
+
+    expect(await operations(prisma)).toEqual({
+      openActions: 0,
+      oldestOpenActionAt: null,
+    });
+  });
+});
+
+describe('MediumStatsService.listChangelogActions', () => {
+  const released = new Date('2026-09-16T08:00:00.000Z');
+  const confirmed = new Date('2026-09-16T09:30:00.000Z');
+
+  it('lists informative entries too, flagged as no task', async () => {
+    const prisma = makePrisma();
+    prisma.changelogEntry.findMany = jest.fn().mockResolvedValue([
+      {
+        id: 'i1',
+        name: '20260916080000_news',
+        title: 'Just news',
+        actionRequired: false,
+        releasedAt: released,
+        confirmedAt: null,
+        confirmedBy: null,
+      },
+    ]);
+
+    const [entry] = await makeService(prisma).listChangelogActions();
+
+    expect(prisma.changelogEntry.findMany).toHaveBeenCalledWith(
+      expect.not.objectContaining({ where: expect.anything() })
+    );
+    expect(entry.actionRequired).toBe(false);
+  });
+
+  it('maps the confirming user to a name and an email', async () => {
+    const prisma = makePrisma();
+    prisma.changelogEntry.findMany = jest.fn().mockResolvedValue([
+      {
+        id: 'e1',
+        name: '20260916080000_entry',
+        title: 'Do the thing',
+        actionRequired: true,
+        releasedAt: released,
+        confirmedAt: confirmed,
+        confirmedBy: {
+          name: 'Muster',
+          firstName: 'Anna',
+          email: 'anna@example.ch',
+        },
+      },
+    ]);
+
+    const [action] = await makeService(prisma).listChangelogActions();
+
+    expect(action).toEqual({
+      id: 'e1',
+      name: '20260916080000_entry',
+      title: 'Do the thing',
+      actionRequired: true,
+      releasedAt: released,
+      confirmedAt: confirmed,
+      confirmedByName: 'Anna Muster',
+      confirmedByEmail: 'anna@example.ch',
+    });
+  });
+
+  it('reports an open action with no one attached', async () => {
+    const prisma = makePrisma();
+    prisma.changelogEntry.findMany = jest.fn().mockResolvedValue([
+      {
+        id: 'e2',
+        name: '20260916080000_open',
+        title: 'Still open',
+        actionRequired: true,
+        releasedAt: released,
+        confirmedAt: null,
+        confirmedBy: null,
+      },
+    ]);
+
+    const [action] = await makeService(prisma).listChangelogActions();
+
+    expect(action.confirmedAt).toBeNull();
+    expect(action.confirmedByName).toBeNull();
+    expect(action.confirmedByEmail).toBeNull();
+  });
+
+  it('falls back to the last name when no first name is set', async () => {
+    const prisma = makePrisma();
+    prisma.changelogEntry.findMany = jest.fn().mockResolvedValue([
+      {
+        id: 'e3',
+        name: '20260916080000_entry',
+        title: 'Do the thing',
+        actionRequired: true,
+        releasedAt: released,
+        confirmedAt: confirmed,
+        confirmedBy: { name: 'Muster', firstName: null, email: 'm@example.ch' },
+      },
+    ]);
+
+    const [action] = await makeService(prisma).listChangelogActions();
+
+    expect(action.confirmedByName).toBe('Muster');
+  });
+
+  it('answers empty when the changelog table is missing', async () => {
+    const prisma = makePrisma();
+    prisma.changelogEntry.findMany = jest
+      .fn()
+      .mockRejectedValue(new Error('no such table'));
+
+    expect(await makeService(prisma).listChangelogActions()).toEqual([]);
   });
 });

@@ -51,7 +51,7 @@ export interface OneMessagesProps {
   onVisibilityChange?: (visible: boolean) => void;
 }
 
-export function OneMessages({
+export function useOneMessageNotifications({
   hideHeader,
   emptyMessage,
   sourceTag,
@@ -73,48 +73,59 @@ export function OneMessages({
   }, [onVisibilityChange, hasVisibleMessages]);
 
   if (!hasVisibleMessages) {
-    return emptyMessage ? <EmptyText>{emptyMessage}</EmptyText> : null;
+    return [];
   }
 
-  return (
-    <Stack>
-      {!hideHeader && <Header>{t('oneMessages.header')}</Header>}
+  return [
+    ...(hideHeader ?
+      []
+    : [<Header key="one-messages-header">{t('oneMessages.header')}</Header>]),
+    ...visibleMessages.map(message => (
+      <NotificationItem
+        key={message.id}
+        severity={SEVERITY_TYPE[message.severity]}
+        title={message.title}
+        sourceTag={sourceTag}
+        actions={
+          onMarkRead && message.dismissible ?
+            <Button
+              size="sm"
+              appearance="default"
+              onClick={() => onMarkRead(String(message.id))}
+            >
+              {t('notifications.markAsRead')}
+            </Button>
+          : undefined
+        }
+      >
+        {message.body || message.link_url ?
+          <>
+            {message.body && <Body>{message.body}</Body>}
 
-      {visibleMessages.map(message => (
-        <NotificationItem
-          key={message.id}
-          severity={SEVERITY_TYPE[message.severity]}
-          title={message.title}
-          sourceTag={sourceTag}
-          actions={
-            onMarkRead && message.dismissible ?
-              <Button
-                size="sm"
-                appearance="default"
-                onClick={() => onMarkRead(String(message.id))}
+            {message.link_url && (
+              <Link
+                href={message.link_url}
+                target="_blank"
+                rel="noopener noreferrer"
               >
-                {t('notifications.markAsRead')}
-              </Button>
-            : undefined
-          }
-        >
-          {message.body || message.link_url ?
-            <>
-              {message.body && <Body>{message.body}</Body>}
+                {message.link_label || t('oneMessages.linkFallback')}
+              </Link>
+            )}
+          </>
+        : null}
+      </NotificationItem>
+    )),
+  ];
+}
 
-              {message.link_url && (
-                <Link
-                  href={message.link_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {message.link_label || t('oneMessages.linkFallback')}
-                </Link>
-              )}
-            </>
-          : null}
-        </NotificationItem>
-      ))}
-    </Stack>
-  );
+export function OneMessages(props: OneMessagesProps) {
+  const items = useOneMessageNotifications(props);
+
+  if (!items.length) {
+    return props.emptyMessage ?
+        <EmptyText>{props.emptyMessage}</EmptyText>
+      : null;
+  }
+
+  return <Stack>{items}</Stack>;
 }

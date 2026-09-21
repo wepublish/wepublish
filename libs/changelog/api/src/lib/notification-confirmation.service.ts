@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import {
   NotificationSource as PrismaNotificationSource,
   PrismaClient,
@@ -25,6 +25,15 @@ export class NotificationConfirmationService {
     source: NotificationSource,
     itemId: string
   ) {
+    // A failing job is a live state, not a task someone can sign off: the run
+    // either recovers or it does not. Letting it be confirmed away would hide
+    // an outage from everyone while nothing about the job had changed.
+    if (source === NotificationSource.PERIODIC_JOB) {
+      throw new BadRequestException(
+        'Periodic job logs cannot be confirmed — they reflect the current state of the job.'
+      );
+    }
+
     const trimmedItemId = validateNotificationItemId(itemId);
 
     return this.prisma.notificationConfirmation.upsert({

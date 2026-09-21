@@ -1,19 +1,8 @@
 import styled from '@emotion/styled';
-import {
-  NotificationSource,
-  PeriodicJob,
-  useConfirmNotificationMutation,
-  useNotificationConfirmationsQuery,
-  usePeriodicJobLogsQuery,
-} from '@wepublish/editor/api';
-import {
-  ConfirmActionModal,
-  NotificationItem,
-  NotificationSeverity,
-} from '@wepublish/ui/editor';
-import { useEffect, useMemo, useState } from 'react';
+import { PeriodicJob, usePeriodicJobLogsQuery } from '@wepublish/editor/api';
+import { NotificationItem, NotificationSeverity } from '@wepublish/ui/editor';
+import { ReactElement, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, Message, toaster } from 'rsuite';
 
 function getSeverity(periodicJob: PeriodicJob): NotificationSeverity {
   if (periodicJob.finishedWithError && periodicJob.successfullyFinished) {
@@ -61,80 +50,31 @@ export interface PeriodicJobsLogProps {
   take?: number;
   onlyProblems?: boolean;
   sourceTag?: string;
-  /**
-   * Enables the instance-wide "mark as done" flow: confirmed problems are
-   * hidden for the whole team, mirroring action-required changelog entries.
-   */
-  teamConfirm?: boolean;
+  /** Skips the query entirely, for a user who may not read the logs */
+  skip?: boolean;
   /** Reports whether at least one log item or notice is currently rendered */
   onVisibilityChange?: (visible: boolean) => void;
 }
 
-const NEVER_RAN_ITEM_ID = 'never-ran';
-
-type JobLogToConfirm = {
-  itemId: string;
-  title: string;
-};
-
-export function PeriodicJobsLog({
+/**
+ * The log as a list of items, so a panel mixing several sources can sort
+ * everything by severity rather than rendering one source after another.
+ */
+export function usePeriodicJobNotifications({
   take = 5,
   onlyProblems = false,
   sourceTag,
-  teamConfirm = false,
+  skip = false,
   onVisibilityChange,
-}: PeriodicJobsLogProps) {
+}: PeriodicJobsLogProps): ReactElement[] {
   const { t } = useTranslation();
-  const [toConfirm, setToConfirm] = useState<JobLogToConfirm | null>(null);
 
   const { data, loading } = usePeriodicJobLogsQuery({
+    skip,
     variables: {
       take,
     },
   });
-
-  const { data: confirmationsData } = useNotificationConfirmationsQuery({
-    fetchPolicy: 'cache-and-network',
-    skip: !teamConfirm,
-  });
-
-  const [confirmNotification, { loading: confirming }] =
-    useConfirmNotificationMutation({
-      refetchQueries: ['NotificationConfirmations'],
-      onCompleted() {
-        toaster.push(
-          <Message
-            type="success"
-            showIcon
-            closable
-          >
-            {t('notifications.confirmSuccess')}
-          </Message>
-        );
-        setToConfirm(null);
-      },
-      onError(error) {
-        toaster.push(
-          <Message
-            type="error"
-            showIcon
-            closable
-          >
-            {error.message}
-          </Message>
-        );
-      },
-    });
-
-  const confirmedItemIds = useMemo(
-    () =>
-      new Set(
-        (confirmationsData?.notificationConfirmations ?? [])
-          .filter(({ source }) => source === NotificationSource.PeriodicJob)
-          .map(({ itemId }) => itemId)
-      ),
-    [confirmationsData?.notificationConfirmations]
-  );
 
   /**
    * If all jobs were successfully (no finished with error), return only first periodic job log entry.
@@ -169,36 +109,13 @@ export function PeriodicJobsLog({
     return now.getTime() - warningThreshold > lastJob.getTime();
   }, [jobs]);
 
-  const isDone = (itemId: string) =>
-    teamConfirm && confirmedItemIds.has(itemId);
-
-  const markAsDoneButton = (itemId: string, title: string) =>
-    teamConfirm ?
-      <Button
-        size="sm"
-        appearance="primary"
-        onClick={() => setToConfirm({ itemId, title })}
-      >
-        {t('notifications.markAsDone')}
-      </Button>
-    : undefined;
-
-  // The "did not run" notice is keyed by the stale execution time, so marking
-  // it as done only hides this occurrence — a new stale run shows up again.
-  const didNotRunItemId = `did-not-run:${
-    jobs.find(pj => !!pj.executionTime)?.executionTime ?? 'unknown'
-  }`;
-
-  const showDidNotRun = jobDidNotRun && !isDone(didNotRunItemId);
-  const showNeverRan = !jobs.length && !isDone(NEVER_RAN_ITEM_ID);
-  const unconfirmedJobs = jobs.filter(job => !isDone(job.id));
+  const showDidNotRun = jobDidNotRun;
+  const showNeverRan = !jobs.length;
 
   // Runs that were successful in the end (including "successful after
   // retries") only matter in the archive, not as a dashboard notification.
   const visibleJobs =
-    onlyProblems ?
-      unconfirmedJobs.filter(job => getSeverity(job) === 'error')
-    : unconfirmedJobs;
+    onlyProblems ? jobs.filter(job => getSeverity(job) === 'error') : jobs;
 
   const hasVisibleProblems =
     showDidNotRun || showNeverRan || visibleJobs.length > 0;
@@ -211,112 +128,90 @@ export function PeriodicJobsLog({
   }, [onVisibilityChange, hasVisibleItems]);
 
   if (onlyProblems && !hasVisibleItems) {
-    return null;
+    return [];
   }
 
-  return (
-    <>
-      <Stack>
-        {showDidNotRun && (
-          <NotificationItem
-            severity="error"
-            title={t('periodicJobsLog.jobFailedTitle')}
-            sourceTag={sourceTag}
-            actions={markAsDoneButton(
-              didNotRunItemId,
-              t('periodicJobsLog.jobFailedTitle')
+  return [
+    ...(showDidNotRun ?
+      [
+        <NotificationItem
+          key="did-not-run"
+          severity="error"
+          title={t('periodicJobsLog.jobFailedTitle')}
+          sourceTag={sourceTag}
+        >
+          {t('periodicJobsLog.concerns')}
+        </NotificationItem>,
+      ]
+    : []),
+    ...(showNeverRan ?
+      [
+        <NotificationItem
+          key="never-ran"
+          severity="warning"
+          title={t('periodicJobsLog.noRun')}
+          sourceTag={sourceTag}
+        />,
+      ]
+    : []),
+    ...visibleJobs.map(periodicJob => {
+      const severity = getSeverity(periodicJob);
+      const title = `${new Date(periodicJob.date).toLocaleString('de', {
+        dateStyle: 'medium',
+      })}: ${getStatusText(severity, t)}`;
+
+      return (
+        <NotificationItem
+          key={periodicJob.id}
+          severity={severity}
+          sourceTag={sourceTag}
+          title={title}
+        >
+          <Information>
+            {periodicJob?.executionTime && (
+              <span>
+                {t('periodicJobsLog.startTime', {
+                  date: new Date(periodicJob.executionTime),
+                })}
+              </span>
             )}
-          >
-            {t('periodicJobsLog.concerns')}
-          </NotificationItem>
-        )}
 
-        {showNeverRan && (
-          <NotificationItem
-            severity="warning"
-            title={t('periodicJobsLog.noRun')}
-            sourceTag={sourceTag}
-            actions={markAsDoneButton(
-              NEVER_RAN_ITEM_ID,
-              t('periodicJobsLog.noRun')
+            {periodicJob?.successfullyFinished && (
+              <span>
+                {t('periodicJobsLog.successTime', {
+                  date: new Date(periodicJob.successfullyFinished),
+                })}
+              </span>
             )}
-          />
-        )}
 
-        {visibleJobs.map(periodicJob => {
-          const severity = getSeverity(periodicJob);
-          const title = `${new Date(periodicJob.date).toLocaleString('de', {
-            dateStyle: 'medium',
-          })}: ${getStatusText(severity, t)}`;
+            {periodicJob?.finishedWithError && (
+              <span>
+                {t('periodicJobsLog.successTime', {
+                  date: new Date(periodicJob.finishedWithError),
+                })}
+              </span>
+            )}
 
-          return (
-            <NotificationItem
-              key={periodicJob.id}
-              severity={severity}
-              sourceTag={sourceTag}
-              actions={markAsDoneButton(periodicJob.id, title)}
-              title={title}
-            >
-              <Information>
-                {periodicJob?.executionTime && (
-                  <span>
-                    {t('periodicJobsLog.startTime', {
-                      date: new Date(periodicJob.executionTime),
-                    })}
-                  </span>
-                )}
+            <span>
+              {t('periodicJobsLog.tries', {
+                tries: periodicJob.tries,
+              })}
+            </span>
 
-                {periodicJob?.successfullyFinished && (
-                  <span>
-                    {t('periodicJobsLog.successTime', {
-                      date: new Date(periodicJob.successfullyFinished),
-                    })}
-                  </span>
-                )}
+            {periodicJob.error && (
+              <span>
+                <i>{periodicJob.error}</i>
+              </span>
+            )}
+          </Information>
+        </NotificationItem>
+      );
+    }),
+  ];
+}
 
-                {periodicJob?.finishedWithError && (
-                  <span>
-                    {t('periodicJobsLog.successTime', {
-                      date: new Date(periodicJob.finishedWithError),
-                    })}
-                  </span>
-                )}
+export function PeriodicJobsLog(props: PeriodicJobsLogProps) {
+  const items = usePeriodicJobNotifications(props);
 
-                <span>
-                  {t('periodicJobsLog.tries', {
-                    tries: periodicJob.tries,
-                  })}
-                </span>
-
-                {periodicJob.error && (
-                  <span>
-                    <i>{periodicJob.error}</i>
-                  </span>
-                )}
-              </Information>
-            </NotificationItem>
-          );
-        })}
-      </Stack>
-
-      {toConfirm && (
-        <ConfirmActionModal
-          title={t('notifications.confirmTitle')}
-          message={t('notifications.confirmMessage', {
-            title: toConfirm.title,
-          })}
-          loading={confirming}
-          onConfirm={() =>
-            confirmNotification({
-              variables: {
-                source: NotificationSource.PeriodicJob,
-                itemId: toConfirm.itemId,
-              },
-            })
-          }
-          onClose={() => setToConfirm(null)}
-        />
-      )}
-    </>
-  );
+  return items.length ? <Stack>{items}</Stack> : null;
 }

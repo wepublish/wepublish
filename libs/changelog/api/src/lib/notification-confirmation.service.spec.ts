@@ -51,21 +51,21 @@ describe('NotificationConfirmationService', () => {
 
     await service.confirmNotification(
       'user-1',
-      NotificationSource.PERIODIC_JOB,
-      ' job-1 '
+      NotificationSource.CHANGELOG,
+      ' entry-1 '
     );
 
     expect(mockPrisma.notificationConfirmation.upsert).toHaveBeenCalledWith({
       where: {
         source_itemId: {
-          source: 'PERIODIC_JOB',
-          itemId: 'job-1',
+          source: 'CHANGELOG',
+          itemId: 'entry-1',
         },
       },
       update: {},
       create: {
-        source: 'PERIODIC_JOB',
-        itemId: 'job-1',
+        source: 'CHANGELOG',
+        itemId: 'entry-1',
         confirmedByUserId: 'user-1',
       },
     });
@@ -89,5 +89,43 @@ describe('NotificationConfirmationService', () => {
     ).rejects.toThrow(BadRequestException);
 
     expect(mockPrisma.notificationConfirmation.upsert).not.toHaveBeenCalled();
+  });
+});
+
+describe('NotificationConfirmationService job logs', () => {
+  it('refuses to confirm a periodic job log', async () => {
+    const prisma = {
+      notificationConfirmation: { upsert: jest.fn() },
+    } as unknown as PrismaClient;
+    const service = new NotificationConfirmationService(prisma);
+
+    await expect(
+      service.confirmNotification(
+        'user-1',
+        NotificationSource.PERIODIC_JOB,
+        'job-7'
+      )
+    ).rejects.toThrow(/cannot be confirmed/i);
+
+    expect(
+      (prisma as unknown as { notificationConfirmation: { upsert: jest.Mock } })
+        .notificationConfirmation.upsert
+    ).not.toHaveBeenCalled();
+  });
+
+  it('still allows a changelog entry to be confirmed', async () => {
+    const upsert = jest.fn().mockResolvedValue({});
+    const prisma = {
+      notificationConfirmation: { upsert },
+    } as unknown as PrismaClient;
+    const service = new NotificationConfirmationService(prisma);
+
+    await service.confirmNotification(
+      'user-1',
+      NotificationSource.CHANGELOG,
+      'entry-1'
+    );
+
+    expect(upsert).toHaveBeenCalled();
   });
 });
