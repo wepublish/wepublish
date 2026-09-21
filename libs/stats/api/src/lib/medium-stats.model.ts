@@ -166,6 +166,19 @@ export class MediumCommunityStats {
 
 @ObjectType()
 export class MediumMailStats {
+  /**
+   * Every individual mail handed to the provider in the window — invoices,
+   * dunning, password links and campaign mail alike.
+   *
+   * `sends` below counts something narrower: the sentCount of CAMPAIGN jobs. A
+   * medium that mails 1023 invoices and runs no newsletter reports `sends: 0`,
+   * which reads as "nothing was sent" when the opposite is true. The two are
+   * kept apart rather than merged, because "did the newsletter go out" and "how
+   * much mail did we send" are different questions.
+   */
+  @Field(() => Int)
+  total!: number;
+
   @Field(() => Int)
   sends!: number;
 
