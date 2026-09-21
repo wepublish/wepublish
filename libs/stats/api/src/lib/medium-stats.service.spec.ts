@@ -225,6 +225,20 @@ describe('MediumStatsService null tolerance', () => {
     expect(stats.operations.imageCount).toBe(0);
   });
 
+  it('counts every mail, not just the campaign ones', async () => {
+    // Measured on a real medium: 1023 invoices and dunning mails in thirty days
+    // and not a single newsletter. The campaign sum said 0, which read as "no
+    // mail went out" — so the individual mails are counted in their own right.
+    const prisma = makePrisma();
+
+    prisma.mailLog.count.mockResolvedValue(1023);
+
+    const stats = await makeService(prisma).getMediumStats();
+
+    expect(stats.mail.total).toBe(1023);
+    expect(stats.mail.sends).toBe(0);
+  });
+
   it('reports a medium with no periodic job as not failing', async () => {
     const stats = await makeService(makePrisma()).getMediumStats();
 
