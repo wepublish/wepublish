@@ -1,4 +1,3 @@
-import { ContentWidthProvider } from '@wepublish/content/website';
 import { PageContainer } from '@wepublish/page/website';
 import { getApiUrl } from '@wepublish/utils/website';
 import {
@@ -14,9 +13,7 @@ import { GetStaticProps } from 'next';
 export default function Index() {
   return (
     <LinkContext.Provider value={{ prefetch: true }}>
-      <ContentWidthProvider fullWidth>
-        <PageContainer slug={''} />
-      </ContentWidthProvider>
+      <PageContainer slug={''} />
     </LinkContext.Provider>
   );
 }

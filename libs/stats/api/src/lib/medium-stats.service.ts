@@ -331,7 +331,11 @@ export class MediumStatsService {
   }
 
   private async mail({ from, to }: StatsWindow): Promise<MediumMailStats> {
-    const [jobs, bounced, rejected, lastCampaign] = await Promise.all([
+    const [total, jobs, bounced, rejected, lastCampaign] = await Promise.all([
+      // Every mail, not just the campaigns — see MediumMailStats.total.
+      this.prisma.mailLog.count({
+        where: { sentDate: { gte: from, lte: to } },
+      }),
       this.prisma.mailSendJob.aggregate({
         where: { createdAt: { gte: from, lte: to } },
         _sum: { sentCount: true, failedCount: true },
@@ -349,6 +353,7 @@ export class MediumStatsService {
     ]);
 
     return {
+      total,
       sends: jobs._sum.sentCount ?? 0,
       failures: jobs._sum.failedCount ?? 0,
       bounced,

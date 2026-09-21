@@ -2235,6 +2235,7 @@ type MediumMailStats {
   lastCampaignAt: DateTime
   rejected: Int!
   sends: Int!
+  total: Int!
 }
 
 type MediumMembershipStats {
