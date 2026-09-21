@@ -129,7 +129,7 @@ export type ArticleNavigationLink = BaseNavigationLink & HasArticle & {
 export type ArticleRevision = HasBlockContent & HasOptionalUserLc & {
   __typename?: 'ArticleRevision';
   archivedAt?: Maybe<Scalars['DateTime']>;
-  authors: Array<Author>;
+  authors: Array<ArticleRevisionAuthor>;
   blocks: Array<BlockContent>;
   breaking: Scalars['Boolean'];
   canonicalUrl?: Maybe<Scalars['String']>;
@@ -152,6 +152,17 @@ export type ArticleRevision = HasBlockContent & HasOptionalUserLc & {
   title?: Maybe<Scalars['String']>;
   user?: Maybe<User>;
   userId?: Maybe<Scalars['String']>;
+};
+
+export type ArticleRevisionAuthor = {
+  __typename?: 'ArticleRevisionAuthor';
+  author: Author;
+  role?: Maybe<Scalars['String']>;
+};
+
+export type ArticleRevisionAuthorInput = {
+  authorId: Scalars['String'];
+  role?: InputMaybe<Scalars['String']>;
 };
 
 export type ArticleRevisionFilter = {
@@ -1574,6 +1585,35 @@ export type ImageTransformation = {
   width?: InputMaybe<Scalars['Int']>;
 };
 
+export type ImpersonationGrantResult = {
+  __typename?: 'ImpersonationGrantResult';
+  durationMinutes: Scalars['Int'];
+  email: Scalars['String'];
+  expiresAt: Scalars['DateTime'];
+  token: Scalars['String'];
+};
+
+export type ImpersonationSessionInfo = {
+  __typename?: 'ImpersonationSessionInfo';
+  createdAt: Scalars['DateTime'];
+  expiresAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  impersonatedBy?: Maybe<Scalars['String']>;
+  impersonationReason?: Maybe<Scalars['String']>;
+  userEmail: Scalars['String'];
+  userId: Scalars['String'];
+  userName?: Maybe<Scalars['String']>;
+};
+
+export type ImpersonationUser = {
+  __typename?: 'ImpersonationUser';
+  active: Scalars['Boolean'];
+  email: Scalars['String'];
+  id: Scalars['String'];
+  name?: Maybe<Scalars['String']>;
+  roles: Array<Scalars['String']>;
+};
+
 export type ImportArticleOptions = {
   importAuthors?: InputMaybe<Scalars['Boolean']>;
   importContentImages?: InputMaybe<Scalars['Boolean']>;
@@ -2212,6 +2252,116 @@ export type MailchimpSyncProgressType = {
   updated: Scalars['Int'];
 };
 
+export type MediumAccountStats = {
+  __typename?: 'MediumAccountStats';
+  activeSessions: Scalars['Int'];
+  adminCount: Scalars['Int'];
+  usersLoggedIn: Scalars['Int'];
+  usersTotal: Scalars['Int'];
+  usersWithRole: Scalars['Int'];
+};
+
+export type MediumCommunityStats = {
+  __typename?: 'MediumCommunityStats';
+  activePolls: Scalars['Int'];
+  commentsPendingModeration: Scalars['Int'];
+  commentsPublished: Scalars['Int'];
+  pollVotes: Scalars['Int'];
+};
+
+export type MediumDeactivationReasonCount = {
+  __typename?: 'MediumDeactivationReasonCount';
+  count: Scalars['Int'];
+  reason: Scalars['String'];
+};
+
+export type MediumEditorialStats = {
+  __typename?: 'MediumEditorialStats';
+  articleRevisionsCount: Scalars['Int'];
+  articlesCount: Scalars['Int'];
+  articlesPublished: Scalars['Int'];
+  authorsCount: Scalars['Int'];
+  lastPublishedAt?: Maybe<Scalars['DateTime']>;
+  pageRevisionsCount: Scalars['Int'];
+  pagesCount: Scalars['Int'];
+  pagesPublished: Scalars['Int'];
+};
+
+export type MediumIntegrationsStats = {
+  __typename?: 'MediumIntegrationsStats';
+  analyticsProviders: Scalars['Int'];
+  mailProviders: Scalars['Int'];
+  paymentProviders: Scalars['Int'];
+  syncProviders: Scalars['Int'];
+};
+
+export type MediumMailStats = {
+  __typename?: 'MediumMailStats';
+  bounced: Scalars['Int'];
+  failures: Scalars['Int'];
+  lastCampaignAt?: Maybe<Scalars['DateTime']>;
+  rejected: Scalars['Int'];
+  sends: Scalars['Int'];
+};
+
+export type MediumMembershipStats = {
+  __typename?: 'MediumMembershipStats';
+  activeSubscribers: Scalars['Int'];
+  deactivations: Scalars['Int'];
+  deactivationsByReason: Array<MediumDeactivationReasonCount>;
+  newSubscribers: Scalars['Int'];
+};
+
+export type MediumMoneyStats = {
+  __typename?: 'MediumMoneyStats';
+  atRisk: Scalars['Int'];
+  expectedRevenue: Scalars['Int'];
+  revenue: Scalars['Int'];
+};
+
+export type MediumNetworkStats = {
+  __typename?: 'MediumNetworkStats';
+  peersDisabled: Scalars['Int'];
+  peersTotal: Scalars['Int'];
+};
+
+export type MediumOperationsStats = {
+  __typename?: 'MediumOperationsStats';
+  documentBytes: Scalars['Float'];
+  documentCount: Scalars['Int'];
+  imageBytes: Scalars['Float'];
+  imageCount: Scalars['Int'];
+  lastPeriodicJobAt?: Maybe<Scalars['DateTime']>;
+  mailchimpSyncErrors: Scalars['Int'];
+  periodicJobError?: Maybe<Scalars['String']>;
+  periodicJobFailing: Scalars['Boolean'];
+  periodicJobTries: Scalars['Int'];
+  storageBytes: Scalars['Float'];
+};
+
+export type MediumStats = {
+  __typename?: 'MediumStats';
+  accounts: MediumAccountStats;
+  community: MediumCommunityStats;
+  currency?: Maybe<Scalars['String']>;
+  editorial: MediumEditorialStats;
+  generatedAt: Scalars['DateTime'];
+  integrations: MediumIntegrationsStats;
+  mail: MediumMailStats;
+  membership: MediumMembershipStats;
+  money: MediumMoneyStats;
+  network: MediumNetworkStats;
+  operations: MediumOperationsStats;
+  schemaVersion: Scalars['Int'];
+  window: MediumStatsWindow;
+};
+
+export type MediumStatsWindow = {
+  __typename?: 'MediumStatsWindow';
+  from: Scalars['DateTime'];
+  to: Scalars['DateTime'];
+};
+
 export type MemberPlan = HasImage & {
   __typename?: 'MemberPlan';
   active: Scalars['Boolean'];
@@ -2299,10 +2449,9 @@ export type Mutation = {
   createExternalAppToken: ExternalAppToken;
   /** Creates a new goodie. */
   createGoodie: Goodie;
+  createImpersonationGrant: ImpersonationGrantResult;
   /** Creates a new invoice. */
   createInvoice: Invoice;
-  /** Returns a JWT that can be used to login as another user. */
-  createJWTForUser: SessionWithToken;
   /** Returns a JWT that is valid for 1min for the current logged in user. */
   createJWTForWebsiteLogin: SessionWithToken;
   /** Start a background job sending a template to a filtered audience */
@@ -2504,6 +2653,7 @@ export type Mutation = {
   resumeMailSendJob: MailSendJobModel;
   /** This mutation revokes and deletes the active session. */
   revokeActiveSession: Scalars['Boolean'];
+  revokeImpersonationSessions: Scalars['Int'];
   /** This mutation sends a login link to the email if the user exists. Method will always return email address */
   sendJWTLogin: Scalars['String'];
   /** Manually send a mail template to a single user */
@@ -2678,7 +2828,7 @@ export type MutationConfirmEmailChangeArgs = {
 
 
 export type MutationCreateArticleArgs = {
-  authorIds: Array<Scalars['String']>;
+  authors: Array<ArticleRevisionAuthorInput>;
   blocks: Array<BlockContentInput>;
   breaking: Scalars['Boolean'];
   canonicalUrl?: InputMaybe<Scalars['String']>;
@@ -2793,6 +2943,14 @@ export type MutationCreateGoodieArgs = {
 };
 
 
+export type MutationCreateImpersonationGrantArgs = {
+  durationMinutes: Scalars['Int'];
+  impersonatedBy: Scalars['String'];
+  reason: Scalars['String'];
+  userId: Scalars['String'];
+};
+
+
 export type MutationCreateInvoiceArgs = {
   currency: Currency;
   description?: InputMaybe<Scalars['String']>;
@@ -2802,12 +2960,6 @@ export type MutationCreateInvoiceArgs = {
   manuallySetAsPaidByUserId?: InputMaybe<Scalars['String']>;
   scheduledDeactivationAt: Scalars['DateTime'];
   subscriptionID?: InputMaybe<Scalars['String']>;
-};
-
-
-export type MutationCreateJwtForUserArgs = {
-  expiresInMinutes: Scalars['Float'];
-  userId: Scalars['String'];
 };
 
 
@@ -3421,6 +3573,11 @@ export type MutationResumeMailSendJobArgs = {
 };
 
 
+export type MutationRevokeImpersonationSessionsArgs = {
+  ids?: InputMaybe<Array<Scalars['String']>>;
+};
+
+
 export type MutationSendJwtLoginArgs = {
   email: Scalars['String'];
 };
@@ -3491,7 +3648,7 @@ export type MutationUpdateAnalyticsProviderSettingArgs = {
 
 
 export type MutationUpdateArticleArgs = {
-  authorIds: Array<Scalars['String']>;
+  authors: Array<ArticleRevisionAuthorInput>;
   blocks: Array<BlockContentInput>;
   breaking: Scalars['Boolean'];
   canonicalUrl?: InputMaybe<Scalars['String']>;
@@ -4058,6 +4215,21 @@ export enum NavigationLinkType {
   External = 'External',
   Page = 'Page'
 }
+
+export enum OneChannelConnectionState {
+  Connected = 'Connected',
+  Failing = 'Failing',
+  NotConfigured = 'NotConfigured'
+}
+
+export type OneChannelStatus = {
+  __typename?: 'OneChannelStatus';
+  lastAttemptAt?: Maybe<Scalars['DateTime']>;
+  lastError?: Maybe<Scalars['String']>;
+  lastSuccessAt?: Maybe<Scalars['DateTime']>;
+  oneUrl?: Maybe<Scalars['String']>;
+  state: OneChannelConnectionState;
+};
 
 export type OverriddenRating = {
   __typename?: 'OverriddenRating';
@@ -5005,6 +5177,9 @@ export type Query = {
   image: Image;
   /** Returns a paginated list of images based on the filters given. */
   images: PaginatedImages;
+  impersonationEnabled: Scalars['Boolean'];
+  impersonationSearchUsers: Array<ImpersonationUser>;
+  impersonationSessions: Array<ImpersonationSessionInfo>;
   /**
    *
    *       Returns a more detailed version of a single importable event, by id and source.
@@ -5067,6 +5242,7 @@ export type Query = {
   mailchimpSyncProgress?: Maybe<MailchimpSyncProgressType>;
   /** This query returns the user. */
   me?: Maybe<SensitiveDataUser>;
+  mediumStats: MediumStats;
   /** Returns a memberplan by id or slug. */
   memberPlan: MemberPlan;
   /** Returns a paginated list of memberplans based on the filters given. */
@@ -5089,6 +5265,7 @@ export type Query = {
    *
    */
   newSubscribers: Array<DashboardSubscription>;
+  oneChannelStatus: OneChannelStatus;
   /** Returns an page by id or slug. */
   page: Page;
   /** Returns a single page revision including its full content. */
@@ -5475,6 +5652,12 @@ export type QueryImagesArgs = {
 };
 
 
+export type QueryImpersonationSearchUsersArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  query: Scalars['String'];
+};
+
+
 export type QueryImportedEventArgs = {
   filter: SingleEventFilter;
 };
@@ -5604,6 +5787,12 @@ export type QueryMailchimpSyncErrorsArgs = {
 
 export type QueryMailchimpSyncProgressArgs = {
   configId: Scalars['String'];
+};
+
+
+export type QueryMediumStatsArgs = {
+  from?: InputMaybe<Scalars['DateTime']>;
+  to?: InputMaybe<Scalars['DateTime']>;
 };
 
 
@@ -6036,6 +6225,8 @@ export type SessionWithToken = {
   __typename?: 'SessionWithToken';
   createdAt: Scalars['DateTime'];
   expiresAt: Scalars['DateTime'];
+  /** Whether this session was created by redeeming an impersonation grant from the One dashboard. Clients must never treat an ordinary JWT login as impersonation. */
+  impersonated: Scalars['Boolean'];
   token: Scalars['String'];
   /** Whether the user has two-factor authentication enabled. If true and the user is an admin, the client must verify TOTP before proceeding. */
   totpEnabled: Scalars['Boolean'];
@@ -7151,7 +7342,7 @@ export type ArticleQueryVariables = Exact<{
 }>;
 
 
-export type ArticleQuery = { __typename?: 'Query', article: { __typename?: 'Article', id: string, url: string, slug?: string | null, tags: Array<{ __typename?: 'Tag', tag?: string | null }>, published?: { __typename?: 'ArticleRevision', title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null, blocks: Array<{ __typename: 'BildwurfAdBlock' } | { __typename: 'BreakBlock', blockStyle?: string | null, type: BlockType, text?: string | null, richText?: RichtextJSONDocument | null, hideButton?: boolean | null, linkTarget?: string | null, linkText?: string | null, linkURL?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null } | { __typename: 'CommentBlock' } | { __typename: 'CrowdfundingBlock' } | { __typename: 'EventBlock' } | { __typename: 'FacebookPostBlock', blockStyle?: string | null, type: BlockType, userID?: string | null, postID?: string | null } | { __typename: 'FacebookVideoBlock', blockStyle?: string | null, type: BlockType, userID?: string | null, videoID?: string | null } | { __typename: 'FlexBlock' } | { __typename: 'HTMLBlock' } | { __typename: 'IFrameBlock', blockStyle?: string | null, type: BlockType, url?: string | null, title?: string | null, width?: number | null, height?: number | null, styleCustom?: string | null, sandbox?: string | null } | { __typename: 'ImageBlock', blockStyle?: string | null, type: BlockType, caption?: string | null, linkUrl?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null } | { __typename: 'ImageGalleryBlock', blockStyle?: string | null, type: BlockType, images: Array<{ __typename?: 'ImageGalleryImage', caption?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null }> } | { __typename: 'InstagramPostBlock', blockStyle?: string | null, type: BlockType, postID?: string | null } | { __typename: 'ListicleBlock', blockStyle?: string | null, type: BlockType, items: Array<{ __typename?: 'ListicleItem', title?: string | null, richText?: RichtextJSONDocument | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null }> } | { __typename: 'MailchimpFormBlock' } | { __typename: 'PolisConversationBlock', blockStyle?: string | null, type: BlockType, conversationID?: string | null } | { __typename: 'PollBlock' } | { __typename: 'QuoteBlock', blockStyle?: string | null, type: BlockType, quote?: string | null, author?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null } | { __typename: 'RichTextBlock', blockStyle?: string | null, type: BlockType, richText?: RichtextJSONDocument | null } | { __typename: 'SoundCloudTrackBlock', blockStyle?: string | null, type: BlockType, trackID?: string | null } | { __typename: 'StreamableVideoBlock' } | { __typename: 'SubscribeBlock' } | { __typename: 'TeaserGridBlock' } | { __typename: 'TeaserGridFlexBlock' } | { __typename: 'TeaserListBlock' } | { __typename: 'TeaserSlotsBlock' } | { __typename: 'TikTokVideoBlock', blockStyle?: string | null, type: BlockType, userID?: string | null, videoID?: string | null } | { __typename: 'TitleBlock', blockStyle?: string | null, type: BlockType, title?: string | null, lead?: string | null } | { __typename: 'TwitterTweetBlock', blockStyle?: string | null, type: BlockType, userID?: string | null, tweetID?: string | null } | { __typename: 'UnknownBlock' } | { __typename: 'VimeoVideoBlock', blockStyle?: string | null, type: BlockType, videoID?: string | null } | { __typename: 'YouTubeVideoBlock', blockStyle?: string | null, type: BlockType, videoID?: string | null }>, authors: Array<{ __typename?: 'Author', name: string, slug: string, bio?: RichtextJSONDocument | null, jobTitle?: string | null, hideOnArticle: boolean, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null }> } | null } };
+export type ArticleQuery = { __typename?: 'Query', article: { __typename?: 'Article', id: string, url: string, slug?: string | null, tags: Array<{ __typename?: 'Tag', tag?: string | null }>, published?: { __typename?: 'ArticleRevision', title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null, blocks: Array<{ __typename: 'BildwurfAdBlock' } | { __typename: 'BreakBlock', blockStyle?: string | null, type: BlockType, text?: string | null, richText?: RichtextJSONDocument | null, hideButton?: boolean | null, linkTarget?: string | null, linkText?: string | null, linkURL?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null } | { __typename: 'CommentBlock' } | { __typename: 'CrowdfundingBlock' } | { __typename: 'EventBlock' } | { __typename: 'FacebookPostBlock', blockStyle?: string | null, type: BlockType, userID?: string | null, postID?: string | null } | { __typename: 'FacebookVideoBlock', blockStyle?: string | null, type: BlockType, userID?: string | null, videoID?: string | null } | { __typename: 'FlexBlock' } | { __typename: 'HTMLBlock' } | { __typename: 'IFrameBlock', blockStyle?: string | null, type: BlockType, url?: string | null, title?: string | null, width?: number | null, height?: number | null, styleCustom?: string | null, sandbox?: string | null } | { __typename: 'ImageBlock', blockStyle?: string | null, type: BlockType, caption?: string | null, linkUrl?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null } | { __typename: 'ImageGalleryBlock', blockStyle?: string | null, type: BlockType, images: Array<{ __typename?: 'ImageGalleryImage', caption?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null }> } | { __typename: 'InstagramPostBlock', blockStyle?: string | null, type: BlockType, postID?: string | null } | { __typename: 'ListicleBlock', blockStyle?: string | null, type: BlockType, items: Array<{ __typename?: 'ListicleItem', title?: string | null, richText?: RichtextJSONDocument | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null }> } | { __typename: 'MailchimpFormBlock' } | { __typename: 'PolisConversationBlock', blockStyle?: string | null, type: BlockType, conversationID?: string | null } | { __typename: 'PollBlock' } | { __typename: 'QuoteBlock', blockStyle?: string | null, type: BlockType, quote?: string | null, author?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null } | { __typename: 'RichTextBlock', blockStyle?: string | null, type: BlockType, richText?: RichtextJSONDocument | null } | { __typename: 'SoundCloudTrackBlock', blockStyle?: string | null, type: BlockType, trackID?: string | null } | { __typename: 'StreamableVideoBlock' } | { __typename: 'SubscribeBlock' } | { __typename: 'TeaserGridBlock' } | { __typename: 'TeaserGridFlexBlock' } | { __typename: 'TeaserListBlock' } | { __typename: 'TeaserSlotsBlock' } | { __typename: 'TikTokVideoBlock', blockStyle?: string | null, type: BlockType, userID?: string | null, videoID?: string | null } | { __typename: 'TitleBlock', blockStyle?: string | null, type: BlockType, title?: string | null, lead?: string | null } | { __typename: 'TwitterTweetBlock', blockStyle?: string | null, type: BlockType, userID?: string | null, tweetID?: string | null } | { __typename: 'UnknownBlock' } | { __typename: 'VimeoVideoBlock', blockStyle?: string | null, type: BlockType, videoID?: string | null } | { __typename: 'YouTubeVideoBlock', blockStyle?: string | null, type: BlockType, videoID?: string | null }>, authors: Array<{ __typename?: 'ArticleRevisionAuthor', role?: string | null, author: { __typename?: 'Author', name: string, slug: string, bio?: RichtextJSONDocument | null, jobTitle?: string | null, hideOnArticle: boolean, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null } }> } | null } };
 
 export type ImageUrlsFragment = { __typename?: 'Image', url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null };
 
@@ -7412,14 +7603,17 @@ export const Article = gql`
         ...ImportBlock
       }
       authors {
-        name
-        slug
-        bio
-        jobTitle
-        image {
-          ...RemoteImage
+        role
+        author {
+          name
+          slug
+          bio
+          jobTitle
+          image {
+            ...RemoteImage
+          }
+          hideOnArticle
         }
-        hideOnArticle
       }
     }
   }

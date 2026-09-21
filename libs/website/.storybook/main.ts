@@ -48,7 +48,8 @@ export default {
     config.plugins ??= [];
     config.plugins.push(
       tsconfigPaths({
-        projects: [join(configDir, '../../../tsconfig.base.json')],
+        root: join(configDir, '../../..'),
+        projects: ['tsconfig.base.json'],
       })
     );
 

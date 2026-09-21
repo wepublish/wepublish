@@ -4,7 +4,7 @@
   "sourceRoot": "libs/image/api/src",
   "projectType": "library",
   "targets": {
-    "build": {
+    "typecheck": {
       "executor": "@nx/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {

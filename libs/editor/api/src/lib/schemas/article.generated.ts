@@ -147,12 +147,12 @@ export type ArticleListQueryVariables = Types.Exact<{
 
 
 export type ArticleListQuery = { __typename?: 'Query', articles: { __typename?: 'PaginatedArticles', totalCount: number, nodes: Array<(
-      { __typename?: 'Article', latest: { __typename?: 'ArticleRevision', id: string, createdAt: string, publishedAt?: string | null, title?: string | null, authors: Array<{ __typename?: 'Author', id: string, name: string }> } }
+      { __typename?: 'Article', latest: { __typename?: 'ArticleRevision', id: string, createdAt: string, publishedAt?: string | null, title?: string | null, authors: Array<{ __typename?: 'ArticleRevisionAuthor', role?: string | null, author: { __typename?: 'Author', id: string, name: string } }> } }
       & ArticleWithoutBlocksFragment
     )>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type CreateArticleMutationVariables = Types.Exact<{
-  authorIds: Array<Types.Scalars['String']> | Types.Scalars['String'];
+  authors: Array<Types.ArticleRevisionAuthorInput> | Types.ArticleRevisionAuthorInput;
   blocks: Array<Types.BlockContentInput> | Types.BlockContentInput;
   breaking: Types.Scalars['Boolean'];
   canonicalUrl: Types.Scalars['String'];
@@ -185,7 +185,7 @@ export type CreateArticleMutation = { __typename?: 'Mutation', createArticle: (
 
 export type UpdateArticleMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
-  authorIds: Array<Types.Scalars['String']> | Types.Scalars['String'];
+  authors: Array<Types.ArticleRevisionAuthorInput> | Types.ArticleRevisionAuthorInput;
   blocks: Array<Types.BlockContentInput> | Types.BlockContentInput;
   breaking: Types.Scalars['Boolean'];
   canonicalUrl: Types.Scalars['String'];
@@ -361,8 +361,11 @@ export const ArticleListDocument = gql`
         publishedAt
         title
         authors {
-          id
-          name
+          role
+          author {
+            id
+            name
+          }
         }
       }
     }
@@ -420,9 +423,9 @@ export type ArticleListQueryHookResult = ReturnType<typeof useArticleListQuery>;
 export type ArticleListLazyQueryHookResult = ReturnType<typeof useArticleListLazyQuery>;
 export type ArticleListQueryResult = Apollo.QueryResult<ArticleListQuery, ArticleListQueryVariables>;
 export const CreateArticleDocument = gql`
-    mutation CreateArticle($authorIds: [String!]!, $blocks: [BlockContentInput!]!, $breaking: Boolean!, $canonicalUrl: String!, $disableComments: Boolean!, $hidden: Boolean!, $hideAuthor: Boolean!, $imageID: String, $paywallId: String, $lead: String, $preTitle: String, $properties: [PropertyInput!]!, $seoTitle: String, $seoDescription: String, $shared: Boolean!, $slug: String, $socialMediaAuthorIds: [String!]!, $socialMediaDescription: String, $socialMediaImageID: String, $socialMediaTitle: String, $tagIds: [String!]!, $title: String, $likes: Int!) {
+    mutation CreateArticle($authors: [ArticleRevisionAuthorInput!]!, $blocks: [BlockContentInput!]!, $breaking: Boolean!, $canonicalUrl: String!, $disableComments: Boolean!, $hidden: Boolean!, $hideAuthor: Boolean!, $imageID: String, $paywallId: String, $lead: String, $preTitle: String, $properties: [PropertyInput!]!, $seoTitle: String, $seoDescription: String, $shared: Boolean!, $slug: String, $socialMediaAuthorIds: [String!]!, $socialMediaDescription: String, $socialMediaImageID: String, $socialMediaTitle: String, $tagIds: [String!]!, $title: String, $likes: Int!) {
   createArticle(
-    authorIds: $authorIds
+    authors: $authors
     blocks: $blocks
     breaking: $breaking
     canonicalUrl: $canonicalUrl
@@ -486,7 +489,7 @@ export type CreateArticleMutationFn = Apollo.MutationFunction<CreateArticleMutat
  * @example
  * const [createArticleMutation, { data, loading, error }] = useCreateArticleMutation({
  *   variables: {
- *      authorIds: // value for 'authorIds'
+ *      authors: // value for 'authors'
  *      blocks: // value for 'blocks'
  *      breaking: // value for 'breaking'
  *      canonicalUrl: // value for 'canonicalUrl'
@@ -520,10 +523,10 @@ export type CreateArticleMutationHookResult = ReturnType<typeof useCreateArticle
 export type CreateArticleMutationResult = Apollo.MutationResult<CreateArticleMutation>;
 export type CreateArticleMutationOptions = Apollo.BaseMutationOptions<CreateArticleMutation, CreateArticleMutationVariables>;
 export const UpdateArticleDocument = gql`
-    mutation UpdateArticle($id: String!, $authorIds: [String!]!, $blocks: [BlockContentInput!]!, $breaking: Boolean!, $canonicalUrl: String!, $disableComments: Boolean!, $hidden: Boolean!, $hideAuthor: Boolean!, $imageID: String, $paywallId: String, $lead: String, $preTitle: String, $properties: [PropertyInput!]!, $seoTitle: String, $seoDescription: String, $shared: Boolean!, $slug: String, $socialMediaAuthorIds: [String!]!, $socialMediaDescription: String, $socialMediaImageID: String, $socialMediaTitle: String, $tagIds: [String!]!, $title: String) {
+    mutation UpdateArticle($id: String!, $authors: [ArticleRevisionAuthorInput!]!, $blocks: [BlockContentInput!]!, $breaking: Boolean!, $canonicalUrl: String!, $disableComments: Boolean!, $hidden: Boolean!, $hideAuthor: Boolean!, $imageID: String, $paywallId: String, $lead: String, $preTitle: String, $properties: [PropertyInput!]!, $seoTitle: String, $seoDescription: String, $shared: Boolean!, $slug: String, $socialMediaAuthorIds: [String!]!, $socialMediaDescription: String, $socialMediaImageID: String, $socialMediaTitle: String, $tagIds: [String!]!, $title: String) {
   updateArticle(
     id: $id
-    authorIds: $authorIds
+    authors: $authors
     blocks: $blocks
     breaking: $breaking
     canonicalUrl: $canonicalUrl
@@ -587,7 +590,7 @@ export type UpdateArticleMutationFn = Apollo.MutationFunction<UpdateArticleMutat
  * const [updateArticleMutation, { data, loading, error }] = useUpdateArticleMutation({
  *   variables: {
  *      id: // value for 'id'
- *      authorIds: // value for 'authorIds'
+ *      authors: // value for 'authors'
  *      blocks: // value for 'blocks'
  *      breaking: // value for 'breaking'
  *      canonicalUrl: // value for 'canonicalUrl'

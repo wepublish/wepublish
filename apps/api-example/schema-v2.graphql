@@ -95,7 +95,7 @@ type ArticleNavigationLink implements BaseNavigationLink & HasArticle {
 
 type ArticleRevision implements HasBlockContent & HasOptionalUserLc {
   archivedAt: DateTime
-  authors: [Author!]!
+  authors: [ArticleRevisionAuthor!]!
   blocks: [BlockContent!]!
   breaking: Boolean!
   canonicalUrl: String
@@ -118,6 +118,16 @@ type ArticleRevision implements HasBlockContent & HasOptionalUserLc {
   title: String
   user: User
   userId: String
+}
+
+type ArticleRevisionAuthor {
+  author: Author!
+  role: String
+}
+
+input ArticleRevisionAuthorInput {
+  authorId: String!
+  role: String
 }
 
 input ArticleRevisionFilter {
@@ -1493,6 +1503,32 @@ input ImageTransformation {
   width: Int
 }
 
+type ImpersonationGrantResult {
+  durationMinutes: Int!
+  email: String!
+  expiresAt: DateTime!
+  token: String!
+}
+
+type ImpersonationSessionInfo {
+  createdAt: DateTime!
+  expiresAt: DateTime!
+  id: String!
+  impersonatedBy: String
+  impersonationReason: String
+  userEmail: String!
+  userId: String!
+  userName: String
+}
+
+type ImpersonationUser {
+  active: Boolean!
+  email: String!
+  id: String!
+  name: String
+  roles: [String!]!
+}
+
 input ImportArticleOptions {
   importAuthors: Boolean
   importContentImages: Boolean
@@ -2155,6 +2191,135 @@ type MailchimpSyncProgressType {
   updated: Int!
 }
 
+type MediumAccountStats {
+  activeSessions: Int!
+  adminCount: Int!
+  usersLoggedIn: Int!
+  usersTotal: Int!
+  usersWithRole: Int!
+}
+
+type MediumCommunityStats {
+  activePolls: Int!
+  commentsPendingModeration: Int!
+  commentsPublished: Int!
+  pollVotes: Int!
+}
+
+type MediumDeactivationReasonCount {
+  count: Int!
+  reason: String!
+}
+
+type MediumEditorialStats {
+  articleRevisionsCount: Int!
+  articlesCount: Int!
+  articlesPublished: Int!
+  authorsCount: Int!
+  lastPublishedAt: DateTime
+  pageRevisionsCount: Int!
+  pagesCount: Int!
+  pagesPublished: Int!
+}
+
+type MediumIntegrationsStats {
+  analyticsProviders: Int!
+  mailProviders: Int!
+  paymentProviders: Int!
+  syncProviders: Int!
+}
+
+type MediumMailStats {
+  bounced: Int!
+  failures: Int!
+  lastCampaignAt: DateTime
+  rejected: Int!
+  sends: Int!
+  total: Int!
+}
+
+type MediumMembershipStats {
+  activeSubscribers: Int!
+  deactivations: Int!
+  deactivationsByReason: [MediumDeactivationReasonCount!]!
+  newSubscribers: Int!
+}
+
+type MediumMigration {
+  appliedStepsCount: Int!
+  error: String
+  finishedAt: DateTime
+  id: String!
+  name: String!
+  rolledBackAt: DateTime
+  startedAt: DateTime!
+
+  """applied, failed, rolledBack or running"""
+  state: String!
+}
+
+type MediumMigrationSummary {
+  applied: Int!
+  failed: Int!
+  lastAppliedAt: DateTime
+
+  """
+  The newest migration did not complete. The schema is then in a state nobody designed.
+  """
+  lastMigrationFailed: Boolean!
+  lastMigrationName: String
+  lastMigrationState: String
+  rolledBack: Int!
+  running: Int!
+  total: Int!
+}
+
+type MediumMoneyStats {
+  atRisk: Int!
+  expectedRevenue: Int!
+  revenue: Int!
+}
+
+type MediumNetworkStats {
+  peersDisabled: Int!
+  peersTotal: Int!
+}
+
+type MediumOperationsStats {
+  documentBytes: Float!
+  documentCount: Int!
+  imageBytes: Float!
+  imageCount: Int!
+  lastPeriodicJobAt: DateTime
+  mailchimpSyncErrors: Int!
+  migrations: MediumMigrationSummary!
+  periodicJobError: String
+  periodicJobFailing: Boolean!
+  periodicJobTries: Int!
+  storageBytes: Float!
+}
+
+type MediumStats {
+  accounts: MediumAccountStats!
+  community: MediumCommunityStats!
+  currency: String
+  editorial: MediumEditorialStats!
+  generatedAt: DateTime!
+  integrations: MediumIntegrationsStats!
+  mail: MediumMailStats!
+  membership: MediumMembershipStats!
+  money: MediumMoneyStats!
+  network: MediumNetworkStats!
+  operations: MediumOperationsStats!
+  schemaVersion: Int!
+  window: MediumStatsWindow!
+}
+
+type MediumStatsWindow {
+  from: DateTime!
+  to: DateTime!
+}
+
 type MemberPlan implements HasImage {
   active: Boolean!
   amountPerMonthMax: Int
@@ -2236,7 +2401,7 @@ type Mutation {
   confirmEmailChange(newEmail: String!): SensitiveDataUser!
 
   """Creates an article."""
-  createArticle(authorIds: [String!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, imageID: String, lead: String, likes: Int, paywallId: String, preTitle: String, properties: [PropertyInput!]!, seoDescription: String, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
+  createArticle(authors: [ArticleRevisionAuthorInput!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, imageID: String, lead: String, likes: Int, paywallId: String, preTitle: String, properties: [PropertyInput!]!, seoDescription: String, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
 
   """Creates a new author."""
   createAuthor(bio: RichText, hideOnArticle: Boolean!, hideOnTeam: Boolean!, hideOnTeaser: Boolean!, imageID: String, jobTitle: String, links: [AuthorLinkInput!]!, name: String!, slug: Slug!, tagIds: [String!]!): Author!
@@ -2270,12 +2435,10 @@ type Mutation {
 
   """Creates a new goodie."""
   createGoodie(active: Boolean!, description: RichText, imageID: String, memberPlanIDs: [String!]!, name: String!, stock: Int): Goodie!
+  createImpersonationGrant(durationMinutes: Int!, impersonatedBy: String!, reason: String!, userId: String!): ImpersonationGrantResult!
 
   """Creates a new invoice."""
   createInvoice(currency: Currency!, description: String, dueAt: DateTime!, items: [InvoiceItemInput!]!, mail: String!, manuallySetAsPaidByUserId: String, scheduledDeactivationAt: DateTime!, subscriptionID: String): Invoice!
-
-  """Returns a JWT that can be used to login as another user."""
-  createJWTForUser(expiresInMinutes: Float!, userId: String!): SessionWithToken!
 
   """Returns a JWT that is valid for 1min for the current logged in user."""
   createJWTForWebsiteLogin: SessionWithToken!
@@ -2614,6 +2777,7 @@ type Mutation {
 
   """This mutation revokes and deletes the active session."""
   revokeActiveSession: Boolean!
+  revokeImpersonationSessions(ids: [String!]): Int!
 
   """
   This mutation sends a login link to the email if the user exists. Method will always return email address
@@ -2660,7 +2824,7 @@ type Mutation {
   updateAnalyticsProviderSetting(articlePrefix: String, credentials: SettingAnalyticsCredentialsInput, id: String, name: String, property: String): SettingAnalyticsProvider!
 
   """Updates an article."""
-  updateArticle(authorIds: [String!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, id: String!, imageID: String, lead: String, likes: Int, paywallId: String, preTitle: String, properties: [PropertyInput!]!, seoDescription: String, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
+  updateArticle(authors: [ArticleRevisionAuthorInput!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, id: String!, imageID: String, lead: String, likes: Int, paywallId: String, preTitle: String, properties: [PropertyInput!]!, seoDescription: String, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
 
   """Updates an existing author."""
   updateAuthor(bio: RichText, hideOnArticle: Boolean, hideOnTeam: Boolean, hideOnTeaser: Boolean, id: String!, imageID: String, jobTitle: String, links: [AuthorLinkInput!], name: String, slug: Slug, tagIds: [String!]): Author!
@@ -2834,6 +2998,20 @@ enum NavigationLinkType {
   Article
   External
   Page
+}
+
+enum OneChannelConnectionState {
+  Connected
+  Failing
+  NotConfigured
+}
+
+type OneChannelStatus {
+  lastAttemptAt: DateTime
+  lastError: String
+  lastSuccessAt: DateTime
+  oneUrl: String
+  state: OneChannelConnectionState!
 }
 
 type OverriddenRating {
@@ -3783,6 +3961,9 @@ type Query {
 
   """Returns a paginated list of images based on the filters given."""
   images(cursorId: String, filter: ImageFilter, order: SortOrder = Descending, skip: Int = 0, sort: ImageSort = ModifiedAt, take: Int = 10): PaginatedImages!
+  impersonationEnabled: Boolean!
+  impersonationSearchUsers(limit: Int, query: String!): [ImpersonationUser!]!
+  impersonationSessions: [ImpersonationSessionInfo!]!
 
   "\n      Returns a more detailed version of a single importable event, by id and source.\n    "
   importedEvent(filter: SingleEventFilter!): EventFromSource!
@@ -3862,6 +4043,8 @@ type Query {
 
   """This query returns the user."""
   me: SensitiveDataUser
+  mediumMigrations(limit: Int): [MediumMigration!]!
+  mediumStats(from: DateTime, to: DateTime): MediumStats!
 
   """Returns a memberplan by id or slug."""
   memberPlan(id: String, slug: Slug): MemberPlan!
@@ -3880,6 +4063,7 @@ type Query {
 
   "\n      Returns all new subscribers in a given timeframe.\n      Includes already deactivated ones.\n    "
   newSubscribers(end: DateTime, start: DateTime!): [DashboardSubscription!]!
+  oneChannelStatus: OneChannelStatus!
 
   """Returns an page by id or slug."""
   page(id: String, slug: String): Page!
@@ -4183,6 +4367,11 @@ type SensitiveDataUser implements BaseUser {
 type SessionWithToken {
   createdAt: DateTime!
   expiresAt: DateTime!
+
+  """
+  Whether this session was created by redeeming an impersonation grant from the One dashboard. Clients must never treat an ordinary JWT login as impersonation.
+  """
+  impersonated: Boolean!
   token: String!
 
   """

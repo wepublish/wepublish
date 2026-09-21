@@ -25,6 +25,7 @@ export * from './mail-send.generated';
 export * from './mail-template.generated';
 export * from './memberPlan.generated';
 export * from './navigation.generated';
+export * from './one-channel-status.generated';
 export * from './page-without-blocks.generated';
 export * from './page.generated';
 export * from './paymentMethod.generated';

@@ -22,6 +22,18 @@ import {
 } from '@wepublish/utils/api';
 import { mapBlockUnionMap } from '@wepublish/block-content/api';
 import { TrackingPixelService } from '@wepublish/tracking-pixel/api';
+import { uniqBy } from 'ramda';
+
+export const mapArticleRevisionAuthors = (
+  authors: { authorId: string; role?: string | null }[]
+): Prisma.ArticleRevisionAuthorCreateManyRevisionInput[] =>
+  uniqBy(({ authorId }) => authorId, authors).map(
+    ({ authorId, role }, position) => ({
+      authorId,
+      role: role?.trim() || null,
+      position,
+    })
+  );
 
 @Injectable()
 export class ArticleService {
@@ -105,7 +117,7 @@ export class ArticleService {
       hidden,
       likes,
       disableComments,
-      authorIds,
+      authors,
       socialMediaAuthorIds,
       tagIds,
       properties,
@@ -141,7 +153,7 @@ export class ArticleService {
             properties: properties as any,
             authors: {
               createMany: {
-                data: authorIds.map(authorId => ({ authorId })),
+                data: mapArticleRevisionAuthors(authors),
               },
             },
             socialMediaAuthors: {
@@ -176,7 +188,7 @@ export class ArticleService {
       paywallId,
       hidden,
       disableComments,
-      authorIds,
+      authors,
       socialMediaAuthorIds,
       tagIds,
       properties,
@@ -224,7 +236,7 @@ export class ArticleService {
             properties: properties as any,
             authors: {
               createMany: {
-                data: authorIds.map(authorId => ({ authorId })),
+                data: mapArticleRevisionAuthors(authors),
               },
             },
             socialMediaAuthors: {
@@ -400,7 +412,7 @@ export class ArticleService {
             createdAt: 'desc',
           },
           include: {
-            authors: true,
+            authors: { orderBy: { position: 'asc' } },
             socialMediaAuthors: true,
           },
         },
@@ -447,7 +459,7 @@ export class ArticleService {
             properties: properties as any,
             authors: {
               createMany: {
-                data: authors.map(({ authorId }) => ({ authorId })),
+                data: mapArticleRevisionAuthors(authors),
               },
             },
             socialMediaAuthors: {
@@ -538,7 +550,7 @@ export class ArticleService {
     const revision = await this.prisma.articleRevision.findUnique({
       where: { id: revisionId },
       include: {
-        authors: true,
+        authors: { orderBy: { position: 'asc' } },
         socialMediaAuthors: true,
       },
     });
@@ -583,7 +595,7 @@ export class ArticleService {
             properties: properties as any,
             authors: {
               createMany: {
-                data: authors.map(({ authorId }) => ({ authorId })),
+                data: mapArticleRevisionAuthors(authors),
               },
             },
             socialMediaAuthors: {

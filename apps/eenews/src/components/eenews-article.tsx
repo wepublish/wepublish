@@ -280,7 +280,9 @@ export const EenewsArticle = ({
   const adsSuppressed = (article.tags ?? []).some(
     t => t.tag?.trim().toLowerCase() === PUBLIREPORTAGE_TAG
   );
-  const authors = (latest.authors ?? []).filter(a => !a.hideOnArticle);
+  const authors = (latest.authors ?? [])
+    .map(({ author }) => author)
+    .filter(author => !author.hideOnArticle);
   const hero = latest.image ?? undefined;
   const heroCaption = (hero?.description ?? '')
     .trim()

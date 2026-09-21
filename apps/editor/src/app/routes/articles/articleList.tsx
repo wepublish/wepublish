@@ -31,6 +31,7 @@ import {
   PeerAvatar,
   PermissionControl,
   StatusBadge,
+  formatArticleAuthors,
   Table,
   TableWrapper,
   useColumnConfig,
@@ -205,12 +206,7 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
         id: 'authors',
         label: t('articles.overview.authors'),
         width: 200,
-        render: article =>
-          article.latest.authors.reduce(
-            (allAuthors, author, index) =>
-              `${allAuthors}${index !== 0 ? ', ' : ''}${author?.name}`,
-            ''
-          ),
+        render: article => formatArticleAuthors(article.latest.authors),
       },
       {
         id: 'publicationDate',

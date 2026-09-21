@@ -15,10 +15,10 @@ import { FullPropertyFragmentDoc } from './properties.generated';
 import { FullTagFragmentDoc } from './tag.generated';
 import { SlimPaywallFragmentDoc, FullPaywallFragmentDoc } from './paywall.generated';
 import { FullPeerFragmentDoc, FullRemotePeerProfileFragmentDoc } from './peer.generated';
-export type SlimArticleRevisionFragment = { __typename?: 'ArticleRevision', id: string, publishedAt?: string | null, preTitle?: string | null, title?: string | null, lead?: string | null, breaking: boolean, hideAuthor: boolean, authors: Array<(
-    { __typename?: 'Author' }
-    & SlimAuthorFragment
-  )>, image?: (
+export type SlimArticleRevisionFragment = { __typename?: 'ArticleRevision', id: string, publishedAt?: string | null, preTitle?: string | null, title?: string | null, lead?: string | null, breaking: boolean, hideAuthor: boolean, authors: Array<{ __typename?: 'ArticleRevisionAuthor', role?: string | null, author: (
+      { __typename?: 'Author' }
+      & SlimAuthorFragment
+    ) }>, image?: (
     { __typename?: 'Image' }
     & SlimImageFragment
   ) | null, properties: Array<(
@@ -50,7 +50,10 @@ export const SlimArticleRevisionFragmentDoc = gql`
   breaking
   hideAuthor
   authors {
-    ...SlimAuthor
+    role
+    author {
+      ...SlimAuthor
+    }
   }
   image {
     ...SlimImage

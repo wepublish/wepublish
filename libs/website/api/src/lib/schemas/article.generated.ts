@@ -140,10 +140,10 @@ export type FullArticleRevisionFragment = (
   ) | (
     { __typename?: 'YouTubeVideoBlock' }
     & FullBlock_YouTubeVideoBlock_Fragment
-  )>, authors: Array<(
-    { __typename?: 'Author' }
-    & FullAuthorFragment
-  )> }
+  )>, authors: Array<{ __typename?: 'ArticleRevisionAuthor', role?: string | null, author: (
+      { __typename?: 'Author' }
+      & FullAuthorFragment
+    ) }> }
   & SlimArticleRevisionFragment
 );
 
@@ -240,7 +240,10 @@ export const FullArticleRevisionFragmentDoc = gql`
     ...FullBlock
   }
   authors {
-    ...FullAuthor
+    role
+    author {
+      ...FullAuthor
+    }
   }
 }
     `;
