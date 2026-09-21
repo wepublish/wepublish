@@ -15,6 +15,7 @@ model ArticleRevision {
   title                  String?
   lead                   String?
   seoTitle               String?
+  seoDescription         String?
   canonicalUrl           String?
   properties             Json                               @default("[]")
   authors                ArticleRevisionAuthor[]
@@ -83,6 +84,9 @@ model ArticleRevisionAuthor {
 
   author   Author @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId String
+
+  role     String?
+  position Int     @default(0)
 
   @@id([revisionId, authorId])
   @@map("articles.revisions.author")
@@ -808,6 +812,8 @@ model PageRevision {
   archivedAt             DateTime? @db.Timestamptz(3)
   title                  String?
   description            String?
+  seoTitle               String?
+  seoDescription         String?
   properties             Json      @default("[]")
   socialMediaTitle       String?
   socialMediaDescription String?
@@ -1012,13 +1018,30 @@ model Session {
   expiresAt DateTime @db.Timestamptz(3)
   token     String   @unique
 
+  impersonatedBy      String?
+  impersonationReason String?
+  impersonatedAt      DateTime? @db.Timestamptz(3)
+
   userID String
   user   User   @relation(fields: [userID], references: [id], onDelete: Cascade)
 
   @@index([userID])
   @@index([token])
   @@index([expiresAt])
+  @@index([impersonatedBy])
   @@map("sessions")
+}
+
+model ImpersonationGrant {
+  id        String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+
+  jti       String    @unique
+  expiresAt DateTime  @db.Timestamptz(3)
+  redeemedAt DateTime? @db.Timestamptz(3)
+
+  @@index([expiresAt])
+  @@map("impersonation_grants")
 }
 
 model SubscriptionPeriod {
@@ -2224,4 +2247,13 @@ model ChangelogEntryTranslation {
 
   @@unique([entryId, locale])
   @@map("changelog.entries.translations")
+}
+
+model OneChannelState {
+  id            String    @id
+  createdAt     DateTime  @default(now()) @db.Timestamptz(3)
+  modifiedAt    DateTime  @updatedAt @db.Timestamptz(3)
+  lastSuccessAt DateTime? @db.Timestamptz(3)
+
+  @@map("one_channel_state")
 }

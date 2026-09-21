@@ -29,6 +29,7 @@ mutation CreateSessionWithJWT($jwt: String!, $totpToken: String) {
     }
     token
     totpEnabled
+    impersonated
   }
 }
 

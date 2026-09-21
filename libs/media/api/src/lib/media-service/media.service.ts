@@ -285,11 +285,23 @@ export class MediaService {
   }
 
   public async saveImage(imageId: string, image: Buffer) {
-    const metadata = await sharp(image).metadata();
+    let buffer = image;
+    let metadata = await sharp(image).metadata();
+
+    const isAnimated = (metadata.pages ?? 1) > 1;
+    if (metadata.orientation && metadata.orientation > 1 && !isAnimated) {
+      const pipeline = sharp(image).rotate().withMetadata();
+      if (metadata.format === 'jpeg') {
+        pipeline.jpeg({ quality: 95, mozjpeg: true });
+      }
+      buffer = await pipeline.toBuffer();
+      metadata = await sharp(buffer).metadata();
+    }
+
     await this.storage.saveFile(
       this.config.uploadBucket,
       `images/${imageId}`,
-      image,
+      buffer,
       metadata.size,
       { 'Content-Type': `image/${metadata.format}` }
     );

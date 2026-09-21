@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ArticleService } from './article.service';
+import { ArticleService, createArticleFilter } from './article.service';
 import { Article, PrismaClient, TaggedArticles } from '@prisma/client';
 import { ArticleDataloaderService } from './article-dataloader.service';
 import { DateFilterComparison, SortOrder } from '@wepublish/utils/api';
@@ -106,6 +106,7 @@ describe('ArticleService', () => {
         ids: ['12345'],
         peerId: '1234',
         includeHidden: false,
+        excludeHideAuthor: true,
         preTitle: 'preTitle',
         title: 'title',
         lead: 'lead',
@@ -133,6 +134,54 @@ describe('ArticleService', () => {
     expect(prismaMock.article.count?.mock.calls[0]).toMatchSnapshot();
   });
 
+  describe('createArticleFilter tag filters', () => {
+    it('should include only articles having at least one of the given tags', () => {
+      expect(createArticleFilter({ tags: ['tag-1', 'tag-2'] })).toEqual({
+        AND: [
+          { tags: { some: { tagId: { in: ['tag-1', 'tag-2'] } } } },
+          { hidden: false },
+        ],
+      });
+    });
+
+    it('should exclude articles having any of the tagsNotIn tags', () => {
+      // `none` keeps untagged articles and drops articles carrying an
+      // excluded tag even when they also have other tags
+      expect(createArticleFilter({ tagsNotIn: ['tag-excluded'] })).toEqual({
+        AND: [
+          { tags: { none: { tagId: { in: ['tag-excluded'] } } } },
+          { hidden: false },
+        ],
+      });
+    });
+
+    it('should include only articles having every one of the allTagsIn tags', () => {
+      expect(createArticleFilter({ allTagsIn: ['tag-1', 'tag-2'] })).toEqual({
+        AND: [
+          {
+            AND: [
+              { tags: { some: { tagId: 'tag-1' } } },
+              { tags: { some: { tagId: 'tag-2' } } },
+            ],
+          },
+          { hidden: false },
+        ],
+      });
+    });
+
+    it('should combine tags and tagsNotIn so both must hold', () => {
+      expect(
+        createArticleFilter({ tags: ['tag-1'], tagsNotIn: ['tag-excluded'] })
+      ).toEqual({
+        AND: [
+          { tags: { some: { tagId: { in: ['tag-1'] } } } },
+          { tags: { none: { tagId: { in: ['tag-excluded'] } } } },
+          { hidden: false },
+        ],
+      });
+    });
+  });
+
   it('should query articles based on full text search', async () => {
     prismaMock.article.findMany?.mockResolvedValue([]);
     prismaMock.$queryRaw.mockResolvedValue([{ id: '1234' }, { id: '1235' }]);
@@ -144,6 +193,7 @@ describe('ArticleService', () => {
         excludeIds: ['1234'],
         peerId: '1234',
         includeHidden: false,
+        excludeHideAuthor: true,
         preTitle: 'preTitle',
         title: 'title',
         lead: 'lead',
@@ -184,6 +234,7 @@ describe('ArticleService', () => {
         ids: ['12345'],
         peerId: '1234',
         includeHidden: false,
+        excludeHideAuthor: true,
         preTitle: 'preTitle',
         title: 'title',
         lead: 'lead',
@@ -250,7 +301,10 @@ describe('ArticleService', () => {
         properties: [{ id: '123', key: 'key', value: 'value', public: true }],
         socialMediaAuthorIds: ['1234', '12345'],
         tagIds: ['1234', '12345'],
-        authorIds: ['1234', '12345'],
+        authors: [
+          { authorId: '1234', role: 'Text' },
+          { authorId: '12345', role: 'Bilder' },
+        ],
         blocks: [
           {
             title: {
@@ -287,7 +341,7 @@ describe('ArticleService', () => {
         properties: [],
         socialMediaAuthorIds: [],
         tagIds: [],
-        authorIds: [],
+        authors: [],
         blocks: [],
       },
       '1234'
@@ -316,7 +370,10 @@ describe('ArticleService', () => {
         properties: [{ id: '123', key: 'key', value: 'value', public: true }],
         socialMediaAuthorIds: ['1234', '12345'],
         tagIds: ['1234', '12345'],
-        authorIds: ['1234', '12345'],
+        authors: [
+          { authorId: '1234', role: 'Text' },
+          { authorId: '12345', role: 'Bilder' },
+        ],
         blocks: [
           {
             title: {
@@ -491,8 +548,18 @@ describe('ArticleService', () => {
       blocks: [{ title: { title: 'Old', lead: 'Old' } }],
       properties: [{ key: 'key', value: 'value', public: true }],
       authors: [
-        { authorId: 'author-1', revisionId: 'rev-old' },
-        { authorId: 'author-2', revisionId: 'rev-old' },
+        {
+          authorId: 'author-1',
+          revisionId: 'rev-old',
+          role: 'Text',
+          position: 0,
+        },
+        {
+          authorId: 'author-2',
+          revisionId: 'rev-old',
+          role: null,
+          position: 1,
+        },
       ],
       socialMediaAuthors: [{ authorId: 'sm-author-1', revisionId: 'rev-old' }],
       ...overrides,
@@ -572,7 +639,10 @@ describe('ArticleService', () => {
 
       expect(prismaMock.articleRevision.findUnique?.mock.calls[0][0]).toEqual({
         where: { id: 'rev-old' },
-        include: { authors: true, socialMediaAuthors: true },
+        include: {
+          authors: { orderBy: { position: 'asc' } },
+          socialMediaAuthors: true,
+        },
       });
       expect(prismaMock.article.update?.mock.calls[0]).toMatchSnapshot();
     });
@@ -605,8 +675,8 @@ describe('ArticleService', () => {
         { title: { title: 'Old', lead: 'Old' } },
       ]);
       expect(created.authors.createMany.data).toEqual([
-        { authorId: 'author-1' },
-        { authorId: 'author-2' },
+        { authorId: 'author-1', role: 'Text', position: 0 },
+        { authorId: 'author-2', role: null, position: 1 },
       ]);
       expect(created.socialMediaAuthors.createMany.data).toEqual([
         { authorId: 'sm-author-1' },
@@ -712,7 +782,7 @@ describe('ArticleService', () => {
             properties: [],
             socialMediaAuthorIds: [],
             tagIds: [],
-            authorIds: [],
+            authors: [],
             blocks: [],
           },
           '1234'

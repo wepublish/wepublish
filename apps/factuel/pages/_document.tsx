@@ -7,7 +7,7 @@ import { DocumentContext, Head, Html, Main, NextScript } from 'next/document';
 
 export default function Document(props: DocumentProps) {
   return (
-    <Html lang="de">
+    <Html lang="fr">
       <Head>
         {/* Feeds */}
         <link

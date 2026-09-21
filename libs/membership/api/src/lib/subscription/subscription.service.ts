@@ -303,6 +303,37 @@ export const createSubscriptionOrder = (
   }
 };
 
+const createActiveAtFilter = (
+  filter: Partial<SubscriptionFilter>
+): Prisma.SubscriptionWhereInput => {
+  if (filter?.activeAt) {
+    const activeAt = filter.activeAt;
+
+    return {
+      startsAt: {
+        lte: activeAt,
+      },
+      paidUntil: {
+        gte: activeAt,
+      },
+      OR: [
+        { deactivation: { is: null } },
+        {
+          deactivation: {
+            is: {
+              date: {
+                gte: activeAt,
+              },
+            },
+          },
+        },
+      ],
+    };
+  }
+
+  return {};
+};
+
 const createStartsAtFromFilter = (
   filter: Partial<SubscriptionFilter>
 ): Prisma.SubscriptionWhereInput => {
@@ -604,6 +635,7 @@ export const createSubscriptionFilter = (
   filter: Partial<SubscriptionFilter>
 ): Prisma.SubscriptionWhereInput => ({
   AND: [
+    createActiveAtFilter(filter),
     createStartsAtFromFilter(filter),
     createStartsAtToFilter(filter),
     createPaidUntilFromFilter(filter),

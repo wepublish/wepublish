@@ -670,7 +670,12 @@ export class MailSendJobService {
         htmlContent: template.htmlContent,
         textContent: template.textContent,
       },
-      { user: recipient.user, optional: optionalData, jwt }
+      {
+        user: recipient.user,
+        optional: optionalData,
+        jwt,
+        currentDate: new Date(),
+      }
     );
 
     return {

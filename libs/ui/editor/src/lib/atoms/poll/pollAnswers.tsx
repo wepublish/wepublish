@@ -9,7 +9,7 @@ import {
 } from '@wepublish/editor/api';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdAdd, MdContentCopy, MdDelete } from 'react-icons/md';
+import { MdAdd, MdDelete } from 'react-icons/md';
 import {
   Badge as RBadge,
   Button,
@@ -18,8 +18,6 @@ import {
   Message,
   Modal,
   toaster,
-  Tooltip,
-  Whisper,
 } from 'rsuite';
 
 const IconButton = styled(RIconButton)`
@@ -42,11 +40,11 @@ const Grid = styled.div`
   margin-bottom: 8px;
 `;
 
-const Actions = styled.div`
-  align-items: center;
-  display: grid;
-  grid-template-columns: max-content max-content;
-  gap: 4px;
+const Hint = styled(Form.HelpText)`
+  && {
+    display: block;
+    margin-top: 12px;
+  }
 `;
 
 function getTotalUserVotesByAnswerId(poll: FullPoll, answerId: string): number {
@@ -104,14 +102,6 @@ function getTotalVotesByAnswerId(poll: FullPoll, answerId: string): number {
 interface PollAnswersProps {
   poll?: FullPoll;
   onPollChange(poll: FullPoll): void;
-}
-
-function generateUrlParams(answer: PollAnswer): undefined | string {
-  if (!answer) {
-    return undefined;
-  }
-
-  return `?answerId=${answer.id}`;
 }
 
 export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
@@ -246,40 +236,6 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
     });
   }
 
-  async function copyUrlParamsIntoClipboard(answer: PollAnswer): Promise<void> {
-    const urlParams = generateUrlParams(answer);
-
-    if (!urlParams) {
-      return;
-    }
-
-    try {
-      await navigator.clipboard.writeText(urlParams);
-
-      toaster.push(
-        <Message
-          type="success"
-          showIcon
-          closable
-          duration={3000}
-        >
-          {t('pollAnswer.urlCopied')}
-        </Message>
-      );
-    } catch (e) {
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-          duration={3000}
-        >
-          {t('pollAnswer.urlCopyingFailed')}
-        </Message>
-      );
-    }
-  }
-
   return (
     <>
       {poll?.answers?.map(answer => (
@@ -299,31 +255,21 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
             />
           </Badge>
 
-          <Actions>
-            <IconButton
-              icon={<MdDelete />}
-              circle
-              size="sm"
-              appearance="ghost"
-              color="red"
-              onClick={() => {
-                setAnswerToDelete(answer);
-                setModalOpen(true);
-              }}
-            />
-
-            <Whisper speaker={<Tooltip>{t('pollAnswer.copyVoteUrl')}</Tooltip>}>
-              <IconButton
-                icon={<MdContentCopy />}
-                circle
-                size="sm"
-                appearance="ghost"
-                onClick={() => copyUrlParamsIntoClipboard(answer)}
-              />
-            </Whisper>
-          </Actions>
+          <IconButton
+            icon={<MdDelete />}
+            circle
+            size="sm"
+            appearance="ghost"
+            color="red"
+            onClick={() => {
+              setAnswerToDelete(answer);
+              setModalOpen(true);
+            }}
+          />
         </Grid>
       ))}
+
+      <Hint>{t('pollAnswer.copyVoteUrlHint')}</Hint>
 
       <Grid css={{ marginTop: 24, marginBottom: 0 }}>
         <Form.Control

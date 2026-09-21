@@ -12,6 +12,7 @@ import {
   HtmlBlockWrapper,
   ImageBlockWrapper,
   ImageGalleryBlockWrapper,
+  LightboxWrapper,
   SliderWrapper,
   TeaserGridBlockWrapper,
   TeaserGridFlexBlockWrapper,
@@ -127,6 +128,7 @@ export const ArticleWrapper = styled(ContentWrapper)<{
     &
       > :is(
         ${SliderWrapper},
+          ${LightboxWrapper},
           ${EventBlockWrapper},
           ${BreakBlockWrapper},
           ${CollapsibleContentWrapper},

@@ -13,6 +13,7 @@ import { z } from 'zod';
 import { ApiAlert } from '@wepublish/errors/website';
 import { userCountryNames } from '@wepublish/user';
 import { BuilderChallengeRef, Challenge } from '../challenge/challenge';
+import { useTranslation } from 'react-i18next';
 
 export const RegistrationFormWrapper = styled('form')`
   display: grid;
@@ -83,6 +84,7 @@ export function RegistrationForm<
   }
 >) {
   const { UserForm } = useWebsiteBuilder();
+  const { t } = useTranslation();
   const challengeRef = useRef<BuilderChallengeRef>(null);
   const fieldsToDisplay = fields.reduce(
     (obj, field) => ({ ...obj, [field]: true }),
@@ -175,7 +177,7 @@ export function RegistrationForm<
               value={field.value || ''}
               onChange={field.onChange}
               challenge={challenge.data!.challenge}
-              label={'Captcha'}
+              label={t('registrationForm.captcha')}
               error={!!error}
               helperText={error?.message}
             />
@@ -201,7 +203,7 @@ export function RegistrationForm<
         disabled={register.loading || challenge.loading}
         type="submit"
       >
-        Registrieren
+        {t('registrationForm.register')}
       </RegistrationFormButton>
     </RegistrationFormWrapper>
   );

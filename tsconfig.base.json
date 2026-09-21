@@ -82,6 +82,7 @@
       "@wepublish/navigation/api": ["libs/navigation/api/src/index.ts"],
       "@wepublish/navigation/website": ["libs/navigation/website/src/index.ts"],
       "@wepublish/nest-modules": ["libs/nest-modules/src/index.ts"],
+      "@wepublish/one/api": ["libs/one/api/src/index.ts"],
       "@wepublish/page/api": ["libs/page/api/src/index.ts"],
       "@wepublish/page/website": ["libs/page/website/src/index.ts"],
       "@wepublish/payment/api": ["libs/payment/api/src/index.ts"],

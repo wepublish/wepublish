@@ -51,6 +51,7 @@ import fr from 'rsuite/locales/fr_FR';
 import { Base } from './base';
 import { Login } from './login';
 import { LoginJwt } from './loginJwt';
+import { LoginImpersonate } from './loginImpersonate';
 import { ResetPassword } from './resetPassword';
 import { ArticleEditor } from './routes/articles/articleEditor';
 import { ArticleList } from './routes/articles/articleList';
@@ -100,6 +101,7 @@ import { UserList } from './routes/users/userList';
 import { DiscountCodeCreateView } from './routes/discountCode/discountCodeCreateView';
 import { DiscountCodeEditView } from './routes/discountCode/discountCodeEditView';
 import { DiscountCodeList } from './routes/discountCode/discountCodeList';
+import { DiscountCodeUsageView } from './routes/discountCode/discountCodeUsageView';
 import { WebsiteSettingsItem } from './routes/website-settings/website-settings-item';
 import { WebsiteSettingsList } from './routes/website-settings/website-settings-list';
 import { SetNewPassword } from './setNewPassword';
@@ -259,6 +261,12 @@ export function App() {
           // Styles missing from v6 of rsuite
           :root {
             --rs-form-control-width: 100%;
+            --rs-form-group-direction: column;
+            --rs-form-group-spacing: var(--rs-spacing);
+          }
+
+          .rs-picker-toggle.rs-btn {
+            max-width: 100%;
           }
 
           .rs-grid-container-fluid,
@@ -285,6 +293,10 @@ export function App() {
             <Route
               path="login/jwt/:jwt"
               element={<LoginJwt />}
+            />
+            <Route
+              path="login/impersonate/:jwt"
+              element={<LoginImpersonate />}
             />
             <Route
               path="login/reset-password"
@@ -833,7 +845,7 @@ export function App() {
               path="audience/dashboard"
               element={
                 <Base>
-                  <AudienceDashboard />
+                  <AudienceDashboard persist />
                 </Base>
               }
             />
@@ -935,6 +947,14 @@ export function App() {
               element={
                 <Base>
                   <DiscountCodeCreateView />
+                </Base>
+              }
+            />
+            <Route
+              path="discountCodes/usage/:id"
+              element={
+                <Base>
+                  <DiscountCodeUsageView />
                 </Base>
               }
             />

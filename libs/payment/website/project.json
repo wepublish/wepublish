@@ -5,6 +5,16 @@
   "projectType": "library",
   "tags": [],
   "targets": {
+    "typecheck": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/payment/website",
+        "tsConfig": "libs/payment/website/tsconfig.lib.json",
+        "main": "libs/payment/website/src/index.ts",
+        "rootDir": "."
+      }
+    },
     "lint": {
       "executor": "@nx/eslint:lint"
     },

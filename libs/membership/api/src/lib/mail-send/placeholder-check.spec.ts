@@ -14,7 +14,7 @@ const template = (
 describe('findMissingPlaceholders', () => {
   it('never flags user placeholders or the jwt (available in both modes)', () => {
     const tpl = template(
-      '<p>{{user_email}} {{user_firstName}} {{user_name}} {{jwt}}</p>'
+      '<p>{{user_email}} {{user_firstName}} {{user_name}} {{jwt}} {{currentDate_year}}</p>'
     );
 
     expect(findMissingPlaceholders(tpl, false)).toEqual([]);

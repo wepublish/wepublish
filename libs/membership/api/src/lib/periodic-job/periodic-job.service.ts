@@ -18,7 +18,12 @@ import {
   SubscriptionPeriod,
   User,
 } from '@prisma/client';
-import { MailContext, MailController, mailLogType } from '@wepublish/mail/api';
+import {
+  MailContext,
+  MailController,
+  mailLogType,
+  MailProviderRecipientError,
+} from '@wepublish/mail/api';
 import { PaymentsService } from '@wepublish/payment/api';
 import {
   add,
@@ -687,6 +692,16 @@ export class PeriodicJobService {
 
   /**
    * Send an email and store it in the Mail Log
+   *
+   * A recipient the mail provider refuses — a bounced address, a spam
+   * complaint, an unsubscribe — is logged and stepped over: one unreachable
+   * member must not stop the run before it has created invoices, charged them
+   * and deactivated overdue subscriptions. The rejection is already on that
+   * member's mail log entry, written by the {@link MailController}. Every other
+   * failure still aborts the run, because it says the provider or its
+   * configuration is broken and no further mail of this run would go out
+   * either.
+   *
    * @param action the event and template to send
    * @param user the recipient
    * @param isRetry whether this is a retried delivery
@@ -700,7 +715,11 @@ export class PeriodicJobService {
     optionalData: Record<string, any>,
     periodicJobRunDate: Date
   ) {
-    if (action.mailTemplateId && user) {
+    if (!action.mailTemplateId || !user) {
+      return;
+    }
+
+    try {
       await new MailController(this.prismaService, this.mailContext, {
         daysAwayFromEnding: action.daysAwayFromEnding,
         mailTemplateId: action.mailTemplateId,
@@ -710,6 +729,14 @@ export class PeriodicJobService {
         periodicJobRunDate,
         mailType: mailLogType.SubscriptionFlow,
       }).sendMail();
+    } catch (error) {
+      if (!(error instanceof MailProviderRecipientError)) {
+        throw error;
+      }
+
+      this.logger.warn(
+        `Skipping mail to ${user.email}: ${(error as Error).message}`
+      );
     }
   }
 }

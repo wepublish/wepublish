@@ -5,6 +5,16 @@
   "projectType": "library",
   "tags": [],
   "targets": {
+    "typecheck": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/article/api",
+        "tsConfig": "libs/article/api/tsconfig.lib.json",
+        "main": "libs/article/api/src/index.ts",
+        "rootDir": "."
+      }
+    },
     "lint": {
       "executor": "@nx/eslint:lint"
     },

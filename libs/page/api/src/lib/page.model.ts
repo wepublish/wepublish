@@ -62,6 +62,12 @@ export class PageRevision implements HasBlockContent, HasOptionalUserLc {
   description?: string;
 
   @Field({ nullable: true })
+  seoTitle?: string;
+
+  @Field({ nullable: true })
+  seoDescription?: string;
+
+  @Field({ nullable: true })
   imageID?: string;
 
   @Field(() => Image, { nullable: true })

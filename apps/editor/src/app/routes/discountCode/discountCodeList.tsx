@@ -8,6 +8,7 @@ import {
 import {
   CanCreateDiscountCode,
   CanDeleteDiscountCode,
+  CanGetInvoices,
   CanUpdateDiscountCode,
 } from '@wepublish/permissions';
 import {
@@ -21,6 +22,7 @@ import {
   PaddedCell,
   Table,
   TableWrapper,
+  useAuthorisation,
 } from '@wepublish/ui/editor';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -43,6 +45,7 @@ const { Column, HeaderCell, Cell: RCell } = RTable;
 
 function DiscountCodeList() {
   const { t } = useTranslation();
+  const canSeeUsages = useAuthorisation(CanGetInvoices.id);
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(10);
   const [sortField, setSortField] = useState<DiscountCodesort>();
@@ -153,6 +156,28 @@ function DiscountCodeList() {
           </Column>
 
           <Column
+            width={160}
+            resizable
+          >
+            <HeaderCell>{t('discountCode.overview.usage')}</HeaderCell>
+
+            <RCell>
+              {(rowData: RowDataType<DiscountCode>) => {
+                const usage = t('discountCode.overview.usageValue', {
+                  total: rowData.usageCount,
+                  paid: rowData.paidUsageCount,
+                });
+
+                if (!canSeeUsages) {
+                  return usage;
+                }
+
+                return <Link to={`usage/${rowData.id}`}>{usage}</Link>;
+              }}
+            </RCell>
+          </Column>
+
+          <Column
             width={150}
             resizable
           >
@@ -190,6 +215,7 @@ function DiscountCodeList() {
           </Column>
 
           <Column
+            width={50}
             resizable
             fixed="right"
           >

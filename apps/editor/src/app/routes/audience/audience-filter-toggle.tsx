@@ -5,7 +5,7 @@ import { MdInfo } from 'react-icons/md';
 import { Form as RForm, Toggle, Tooltip, Whisper } from 'rsuite';
 
 import { chartColors } from './audience-chart';
-import { AudienceClientFilter } from './useAudienceFilter';
+import { AudienceClientFilter } from './audience-filter-params';
 
 const { Label } = RForm;
 

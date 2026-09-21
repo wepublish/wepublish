@@ -1206,7 +1206,6 @@ export function Base({ children }: BaseProps) {
                     </PermissionControl>
                   </Nav.Menu>
                 </PermissionControl>
-                <Version />
               </Navigation>
             </RSidenav.Body>
           </Sidenav>
@@ -1268,6 +1267,8 @@ export function Base({ children }: BaseProps) {
               </Nav.Menu>
             </Nav>
           </Navbar>
+
+          <Version />
         </Sidebar>
         <ChildrenContainer>{children}</ChildrenContainer>
       </Container>
