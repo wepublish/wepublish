@@ -1,5 +1,4 @@
-import { css, Theme } from '@emotion/react';
-import useMediaQuery from '@mui/material/useMediaQuery';
+import { css } from '@emotion/react';
 import {
   BlockRenderer,
   isCrowdfundingBlock,
@@ -21,7 +20,7 @@ import {
   BuilderTitleBlockProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { allPass, anyPass, cond } from 'ramda';
+import { anyPass, cond } from 'ramda';
 import {
   type PropsWithChildren,
   memo,
@@ -30,6 +29,7 @@ import {
   useState,
 } from 'react';
 
+import theme from '../theme';
 import {
   FlexBlockFullsizeImage,
   isFlexBlockFullsizeImage,
@@ -79,10 +79,6 @@ const ClientOnly = ({ children }: PropsWithChildren) => {
 export const ReflektBlockRenderer = (
   props: BuilderBlockRendererProps & { siblings?: BlockSibling[] }
 ) => {
-  const isMobile = useMediaQuery((theme: Theme) =>
-    theme.breakpoints.down('md')
-  );
-
   const extraBlockMap = useMemo(
     () =>
       cond([
@@ -149,50 +145,46 @@ export const ReflektBlockRenderer = (
           `,
         ],
         [
-          allPass([
-            (block: FullBlockFragment) =>
-              anyPass([
-                (topicBlock: FullBlockFragment) =>
-                  isTeaserSlotsTopic(
-                    topicBlock as BuilderTeaserSlotsBlockProps
-                  ),
-                isImageSliderBlockStyle,
-                isImageSliderSlimBlockStyle,
-              ])(block),
-            () => isMobile,
-          ]),
+          (block: FullBlockFragment) =>
+            anyPass([
+              (topicBlock: FullBlockFragment) =>
+                isTeaserSlotsTopic(topicBlock as BuilderTeaserSlotsBlockProps),
+              isImageSliderBlockStyle,
+              isImageSliderSlimBlockStyle,
+            ])(block),
           () => css`
-            grid-template-columns: auto !important;
-            padding: 0 !important;
+            ${theme.breakpoints.down('md')} {
+              grid-template-columns: auto !important;
+              padding: 0 !important;
+            }
           `,
         ],
         [
-          allPass([
-            (block: FullBlockFragment) =>
-              anyPass([
-                isImageBlock,
-                isImageSliderSlimBlockStyle,
-                isRichTextBlock,
-                isTitleBlock,
-                isSubscribeBlock,
-                isCrowdfundingBlock,
-              ])(block),
-            () => !isMobile,
-          ]),
+          (block: FullBlockFragment) =>
+            anyPass([
+              isImageBlock,
+              isImageSliderSlimBlockStyle,
+              isRichTextBlock,
+              isTitleBlock,
+              isSubscribeBlock,
+              isCrowdfundingBlock,
+            ])(block),
           () => css`
-            grid-template-columns:
-              max(calc(100vw - var(--breakpoint-width)) / 2, 0px)
-              repeat(12, 1fr)
-              max(calc(100vw - var(--breakpoint-width)) / 2, 0px) !important;
-            & > * {
-              grid-column: 3/13;
-              margin-left: 0;
-              margin-right: 0;
+            ${theme.breakpoints.up('md')} {
+              grid-template-columns:
+                max(calc(100vw - var(--breakpoint-width)) / 2, 0px)
+                repeat(12, 1fr)
+                max(calc(100vw - var(--breakpoint-width)) / 2, 0px) !important;
+              & > * {
+                grid-column: 3/13;
+                margin-left: 0;
+                margin-right: 0;
+              }
             }
           `,
         ],
       ]),
-    [isMobile]
+    []
   );
 
   const isEmbed =

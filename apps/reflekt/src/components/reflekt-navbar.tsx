@@ -66,6 +66,7 @@ const cssVariables = (state: NavbarState[], isHomePage: boolean) => css`
       }
     `
     : `
+    --navbar-height: ${NAVBAR_HEIGHT_PX}px;
     --navbar-aspect-ratio: 3.1 / 1;
     --scrolled-navbar-aspect-ratio: 3.1 / 1;
 
@@ -642,6 +643,8 @@ export const NavbarInnerWrapper = styled(Toolbar, {
   navbarState: NavbarState[];
   isMenuOpen?: boolean;
 }>`
+  height: ${NAVBAR_HEIGHT_PX}px;
+
   ${({ isMenuOpen }) =>
     isMenuOpen &&
     css`
