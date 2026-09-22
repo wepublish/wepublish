@@ -780,63 +780,6 @@ export const ReflektNavbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
 
     useImperativeHandle(forwardRef, () => ref.current!, []);
 
-    const lastNavbarHeightRef = useRef<number | null>(null);
-    const rafRef = useRef<number | null>(null);
-
-    useEffect(() => {
-      const el = ref.current;
-      if (!el) {
-        return;
-      }
-
-      const root = el.ownerDocument.documentElement;
-
-      const measure = () => {
-        rafRef.current = null;
-
-        if (isHomePage) {
-          root.style.removeProperty("--navbar-height");
-          lastNavbarHeightRef.current = null;
-          return;
-        }
-
-        const height = Math.round(el.getBoundingClientRect().height);
-        if (height === lastNavbarHeightRef.current) {
-          return;
-        }
-
-        lastNavbarHeightRef.current = height;
-        root.style.setProperty("--navbar-height", `${height}px`);
-      };
-
-      const schedule = () => {
-        if (rafRef.current != null) {
-          return;
-        }
-        rafRef.current = requestAnimationFrame(measure);
-      };
-
-      schedule();
-
-      let cleanup: () => void;
-      if (typeof ResizeObserver !== "undefined") {
-        const observer = new ResizeObserver(schedule);
-        observer.observe(el);
-        cleanup = () => observer.disconnect();
-      } else {
-        const win = el.ownerDocument.defaultView;
-        win?.addEventListener("resize", schedule);
-        cleanup = () => win?.removeEventListener("resize", schedule);
-      }
-
-      return () => {
-        if (rafRef.current != null) {
-          cancelAnimationFrame(rafRef.current);
-        }
-        cleanup();
-      };
-    }, [ref, isHomePage]);
-
     return (
       <NavbarWrapper ref={ref} className={className}>
         <GlobalStyles styles={navbarStyles} />
