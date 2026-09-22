@@ -116,7 +116,7 @@ describe('LetterContext.renderLetter', () => {
       recipient,
     });
 
-    expect(rendered[0]).toContain('left: 120mm');
+    expect(rendered[0]).toContain('left: 118mm');
   });
 });
 

@@ -49,6 +49,27 @@ export function normalizeCountry(country: string | null): string | null {
   return COUNTRY_CODES[value.toLowerCase()] ?? null;
 }
 
+const COUNTRY_NAMES = new Intl.DisplayNames(['de'], { type: 'region' });
+
+// A code `Intl` does not know comes back as the name of the unknown region,
+// which must not end up on an envelope.
+const UNKNOWN_REGION = COUNTRY_NAMES.of('ZZ');
+
+/**
+ * Pingen reads the last address line and rejects a letter whose country it
+ * cannot recognise, and it does not accept the iso code we hand its api. So the
+ * code is spelled out for the sheet, and `Intl` is what knows the spelling.
+ */
+export function countryName(country: string): string {
+  try {
+    const name = COUNTRY_NAMES.of(country);
+
+    return !name || name === UNKNOWN_REGION ? country : name;
+  } catch {
+    return country;
+  }
+}
+
 function truncate(value: string, limit: number): string {
   return value.length > limit ? value.slice(0, limit) : value;
 }

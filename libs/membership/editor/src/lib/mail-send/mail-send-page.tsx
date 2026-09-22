@@ -112,9 +112,10 @@ const STEP_KEYS = ['audience', 'content', 'send'] as const;
 /**
  * Width of the wizard column. Fixed rather than fluid so the steps keep their
  * layout whether or not a template is selected — the preview beside it absorbs
- * every bit of remaining screen instead.
+ * every bit of remaining screen instead. Kept just wide enough for the steps
+ * and the print options, because the letter is the thing worth reading.
  */
-const WIZARD_WIDTH = 820;
+const WIZARD_WIDTH = 560;
 
 /**
  * Templates are edited in a second browser tab, so everything derived from one

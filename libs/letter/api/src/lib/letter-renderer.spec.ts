@@ -20,8 +20,18 @@ describe('formatAddressLines', () => {
       'Jane Doe',
       'Musterstrasse 7',
       '8000 Zürich',
-      'CH',
+      'Schweiz',
     ]);
+  });
+
+  it('spells out the country pingen would not recognise as a code', () => {
+    expect(formatAddressLines({ ...recipient, country: 'DE' })).toContain(
+      'Deutschland'
+    );
+  });
+
+  it('keeps an unknown country as given rather than dropping the line', () => {
+    expect(formatAddressLines({ ...recipient, country: 'ZZ' })).toContain('ZZ');
   });
 });
 
@@ -38,13 +48,21 @@ describe('composeLetter', () => {
   });
 
   it('puts the address window on the left by default', () => {
-    expect(composeLetter(base)).toContain('left: 20mm');
+    expect(composeLetter(base)).toContain('left: 22mm');
   });
 
   it('moves the address window for a right window envelope', () => {
     expect(composeLetter({ ...base, addressPosition: 'right' })).toContain(
-      'left: 120mm'
+      'left: 118mm'
     );
+  });
+
+  it('puts the address into the zone pingen reserves for it', () => {
+    expect(composeLetter(base)).toContain('top: 60mm');
+  });
+
+  it('keeps the body out of the franking zone', () => {
+    expect(composeLetter(base)).toContain('padding-top: 70mm');
   });
 
   it('prints the recipient into the address window', () => {
