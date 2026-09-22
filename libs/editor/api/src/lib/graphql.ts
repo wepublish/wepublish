@@ -2280,6 +2280,28 @@ export type MediumAccountStats = {
   usersWithRole: Scalars['Int'];
 };
 
+export type MediumChangelogAction = {
+  __typename?: 'MediumChangelogAction';
+  /** False for a purely informative entry, which is never counted as open or overdue. */
+  actionRequired: Scalars['Boolean'];
+  /** Null while the action is still open. */
+  confirmedAt?: Maybe<Scalars['DateTime']>;
+  confirmedByEmail?: Maybe<Scalars['String']>;
+  confirmedByName?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  name: Scalars['String'];
+  releasedAt: Scalars['DateTime'];
+  title: Scalars['String'];
+};
+
+export type MediumChangelogStats = {
+  __typename?: 'MediumChangelogStats';
+  /** Release date of the longest-open action-required entry, or null when none is open. */
+  oldestOpenActionAt?: Maybe<Scalars['DateTime']>;
+  /** Action-required entries that nobody has confirmed yet. Informative entries are excluded. */
+  openActions: Scalars['Int'];
+};
+
 export type MediumCommunityStats = {
   __typename?: 'MediumCommunityStats';
   activePolls: Scalars['Int'];
@@ -2374,6 +2396,7 @@ export type MediumNetworkStats = {
 
 export type MediumOperationsStats = {
   __typename?: 'MediumOperationsStats';
+  changelog: MediumChangelogStats;
   documentBytes: Scalars['Float'];
   documentCount: Scalars['Int'];
   imageBytes: Scalars['Float'];
@@ -2468,7 +2491,7 @@ export type Mutation = {
   cancelSubscription: PublicSubscription;
   /** This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null */
   cancelUserSubscription?: Maybe<PublicSubscription>;
-  /** Confirms that the manual action required by a changelog entry has been completed. Requires authentication. */
+  /** Confirms that the manual action required by a changelog entry has been completed. Requires the permission to update settings. */
   confirmChangelogEntry: ChangelogEntry;
   /** Confirms a pending email change for the logged-in user. */
   confirmEmailChange: SensitiveDataUser;
@@ -5348,6 +5371,7 @@ export type Query = {
   mailchimpSyncProgress?: Maybe<MailchimpSyncProgressType>;
   /** This query returns the user. */
   me?: Maybe<SensitiveDataUser>;
+  mediumChangelogActions: Array<MediumChangelogAction>;
   mediumMigrations: Array<MediumMigration>;
   mediumStats: MediumStats;
   /** Returns a memberplan by id or slug. */
@@ -5906,6 +5930,11 @@ export type QueryMailchimpSyncErrorsArgs = {
 
 export type QueryMailchimpSyncProgressArgs = {
   configId: Scalars['String'];
+};
+
+
+export type QueryMediumChangelogActionsArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
 };
 
 
