@@ -49,6 +49,8 @@ enum ScrollDirection {
   Down,
 }
 
+const NAVBAR_HEIGHT_PX = 75;
+
 const cssVariables = (state: NavbarState[], isHomePage: boolean) => css`
   :root {
     ${isHomePage ?
@@ -64,6 +66,7 @@ const cssVariables = (state: NavbarState[], isHomePage: boolean) => css`
       }
     `
     : `
+    --navbar-height: ${NAVBAR_HEIGHT_PX}px;
     --navbar-aspect-ratio: 3.1 / 1;
     --scrolled-navbar-aspect-ratio: 3.1 / 1;
 
@@ -188,8 +191,8 @@ export const NavbarHamburgerButton = styled(IconButton, {
     propName !== 'isMenuOpen' && propName !== 'isTransitioning',
 })<{ isMenuOpen: boolean; isTransitioning: boolean }>`
   background-color: ${theme.palette.primary.dark};
-  width: 75px;
-  height: 75px;
+  width: ${NAVBAR_HEIGHT_PX}px;
+  height: ${NAVBAR_HEIGHT_PX}px;
   border-radius: 0;
   transition: transform 100ms ease-out;
   position: relative;
@@ -640,6 +643,8 @@ export const NavbarInnerWrapper = styled(Toolbar, {
   navbarState: NavbarState[];
   isMenuOpen?: boolean;
 }>`
+  height: ${NAVBAR_HEIGHT_PX}px;
+
   ${({ isMenuOpen }) =>
     isMenuOpen &&
     css`
