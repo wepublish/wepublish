@@ -5,6 +5,24 @@
   "projectType": "library",
   "tags": [],
   "targets": {
+    "typecheck": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/website/translations",
+        "tsConfig": "libs/website/translations/tsconfig.lib.json",
+        "packageJson": "libs/website/translations/package.json",
+        "main": "libs/website/translations/src/index.ts",
+        "rootDir": ".",
+        "assets": [
+          {
+            "input": "libs/website/translations/src/lib",
+            "glob": "*.json",
+            "output": "."
+          }
+        ]
+      }
+    },
     "lint": {
       "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"]

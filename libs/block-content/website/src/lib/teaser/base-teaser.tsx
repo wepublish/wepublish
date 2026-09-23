@@ -164,7 +164,24 @@ export const selectTeaserLastPublishDate = (teaser: FullTeaserFragment) => {
   }
 };
 
-export const selectTeaserAuthors = (teaser: FullTeaserFragment) => {
+export const formatAuthorName = ({
+  author,
+  role,
+}: {
+  author: { name: string };
+  role?: string | null;
+}) => (role ? `${author.name} (${role})` : author.name);
+
+export const joinAuthorNames = (
+  authors: string[],
+  separator: string,
+  lastSeparator: string
+) =>
+  authors.length > 1 ?
+    `${authors.slice(0, -1).join(separator)}${lastSeparator}${authors.at(-1)}`
+  : (authors[0] ?? '');
+
+const selectTeaserAuthorEntries = (teaser: FullTeaserFragment) => {
   switch (teaser.__typename) {
     case 'PageTeaser': {
       return null;
@@ -175,15 +192,25 @@ export const selectTeaserAuthors = (teaser: FullTeaserFragment) => {
         return null;
       }
 
-      return teaser.article?.latest.authors
-        .filter(author => !author.hideOnTeaser)
-        .map(author => author.name);
+      return teaser.article?.latest.authors.filter(
+        ({ author }) => !author.hideOnTeaser
+      );
     }
 
     case 'EventTeaser':
     case 'CustomTeaser':
       return null;
   }
+};
+
+export const selectTeaserAuthors = (teaser: FullTeaserFragment) => {
+  return (
+    selectTeaserAuthorEntries(teaser)?.map(({ author }) => author.name) ?? null
+  );
+};
+
+export const selectTeaserAuthorsWithRole = (teaser: FullTeaserFragment) => {
+  return selectTeaserAuthorEntries(teaser)?.map(formatAuthorName) ?? null;
 };
 
 export const selectTeaserTags = (teaser: FullTeaserFragment) => {
@@ -464,7 +491,7 @@ export const BaseTeaser = ({
   const peerLogo = teaser && selectTeaserPeerImage(teaser);
   const publishDate = teaser && selectTeaserDate(teaser);
   const updatedPublishDate = teaser && selectTeaserLastPublishDate(teaser);
-  const authors = teaser && selectTeaserAuthors(teaser);
+  const authors = teaser && selectTeaserAuthorsWithRole(teaser);
   const tags =
     teaser && selectTeaserTags(teaser).filter(tag => tag.tag !== preTitle);
 
@@ -521,7 +548,11 @@ export const BaseTeaser = ({
           {authors && authors?.length ?
             <TeaserAuthors>
               {t('teaser.author.text', {
-                authors: authors?.join(t('teaser.author.seperator')),
+                authors: joinAuthorNames(
+                  authors,
+                  t('teaser.author.seperator'),
+                  t('teaser.author.lastSeperator')
+                ),
               })}
             </TeaserAuthors>
           : null}

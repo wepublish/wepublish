@@ -16,6 +16,7 @@ import {
   Currency,
   PaymentPeriodicity,
   SubscriptionDeactivationReason,
+  MailTemplateContext,
 } from '@prisma/client';
 import { faker } from '@faker-js/faker';
 import { createReadStream } from 'fs';
@@ -38,6 +39,10 @@ import {
 } from '@wepublish/block-content/api';
 import { TrackingPixel } from '@wepublish/tracking-pixel/api';
 import { hash as argon2Hash } from '@node-rs/argon2';
+import {
+  seedChangelogEntries,
+  seedPeriodicJobLogs,
+} from './seed-notifications';
 
 async function hashPassword(password: string) {
   return await argon2Hash(password);
@@ -799,11 +804,15 @@ async function seedArticles(
 
   await Promise.all(
     articles.map(({ revisions }) =>
-      prisma.articleRevisionAuthor.create({
-        data: {
-          authorId: shuffle(authorIds).at(0),
-          revisionId: revisions[0].id,
-        },
+      prisma.articleRevisionAuthor.createMany({
+        data: shuffle(authorIds)
+          .slice(0, 2)
+          .map((authorId, position) => ({
+            authorId,
+            revisionId: revisions[0].id,
+            role: position === 0 ? 'Text' : 'Fotos',
+            position,
+          })),
       })
     )
   );
@@ -1432,6 +1441,261 @@ export async function seedSubscribers(prisma: PrismaClient) {
   }
 }
 
+const SEED_LOGIN_URL = `${
+  process.env.WEBSITE_URL ?? 'http://localhost:4200'
+}/login?jwt={{jwt}}`;
+
+const mailDocument = (body: string) => `<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+  </head>
+  <body style="margin: 0; padding: 24px; font-family: Helvetica, Arial, sans-serif; font-size: 15px; line-height: 1.6; color: #1a1a1a;">
+${body}
+  </body>
+</html>`;
+
+interface SeedMailTemplate {
+  id: string;
+  name: string;
+  description: string;
+  context: MailTemplateContext;
+  subject: string;
+  htmlContent: string;
+  textContent: string;
+}
+
+const SEED_MAIL_TEMPLATES: SeedMailTemplate[] = [
+  {
+    id: 'seed-account-creation',
+    name: 'Konto erstellt',
+    description: 'Begrüssung nach der Registrierung, mit Login-Link.',
+    context: MailTemplateContext.account,
+    subject: 'Willkommen bei We.Publish, {{user_firstName}}',
+    htmlContent:
+      mailDocument(`    <h1 style="font-size: 20px; margin: 0 0 16px;">Willkommen, {{user_fullName}}</h1>
+    <p>Dein Konto für {{user_email}} ist bereit.</p>
+    <p><a href="${SEED_LOGIN_URL}">Jetzt anmelden</a></p>
+    <p>Der Link ist nur eine begrenzte Zeit gültig.</p>`),
+    textContent: `Willkommen, {{user_fullName}}
+
+Dein Konto für {{user_email}} ist bereit.
+
+Jetzt anmelden: ${SEED_LOGIN_URL}
+
+Der Link ist nur eine begrenzte Zeit gültig.`,
+  },
+  {
+    id: 'seed-password-reset',
+    name: 'Passwort zurücksetzen',
+    description: 'Reset-Link für ein vergessenes Passwort.',
+    context: MailTemplateContext.account,
+    subject: 'Passwort zurücksetzen',
+    htmlContent: mailDocument(`    <p>Hallo {{user_firstName}}</p>
+    <p>Für das Konto {{user_email}} wurde ein neues Passwort angefordert.</p>
+    <p><a href="${SEED_LOGIN_URL}">Passwort jetzt neu setzen</a></p>
+    <p>Wenn du das nicht warst, kannst du diese Nachricht ignorieren.</p>`),
+    textContent: `Hallo {{user_firstName}}
+
+Für das Konto {{user_email}} wurde ein neues Passwort angefordert.
+
+Passwort jetzt neu setzen: ${SEED_LOGIN_URL}
+
+Wenn du das nicht warst, kannst du diese Nachricht ignorieren.`,
+  },
+  {
+    id: 'seed-login-link',
+    name: 'Login-Link',
+    description: 'Anmeldung ohne Passwort über einen Einmal-Link.',
+    context: MailTemplateContext.account,
+    subject: 'Dein Login-Link',
+    htmlContent: mailDocument(`    <p>Hallo {{user_firstName}}</p>
+    <p>Mit diesem Link meldest du dich ohne Passwort an:</p>
+    <p><a href="${SEED_LOGIN_URL}">Anmelden</a></p>
+    <p>Letzte Anmeldung: {{user_lastLogin_dateTime}}</p>`),
+    textContent: `Hallo {{user_firstName}}
+
+Mit diesem Link meldest du dich ohne Passwort an:
+${SEED_LOGIN_URL}
+
+Letzte Anmeldung: {{user_lastLogin_dateTime}}`,
+  },
+  {
+    id: 'seed-email-change',
+    name: 'E-Mail-Adresse ändern',
+    description: 'Bestätigung der neuen Adresse bei einem Adresswechsel.',
+    context: MailTemplateContext.emailChange,
+    subject: 'Bestätige deine neue E-Mail-Adresse',
+    htmlContent: mailDocument(`    <p>Hallo {{user_firstName}}</p>
+    <p>Du möchtest künftig <strong>{{optional_newEmail}}</strong> verwenden.</p>
+    <p><a href="${SEED_LOGIN_URL}">Änderung bestätigen</a></p>
+    <p>Bis zur Bestätigung bleibt {{user_email}} aktiv.</p>`),
+    textContent: `Hallo {{user_firstName}}
+
+Du möchtest künftig {{optional_newEmail}} verwenden.
+
+Änderung bestätigen: ${SEED_LOGIN_URL}
+
+Bis zur Bestätigung bleibt {{user_email}} aktiv.`,
+  },
+  {
+    id: 'seed-subscription-confirmed',
+    name: 'Abo bestätigt',
+    description: 'Bestätigung eines neu abgeschlossenen Abos.',
+    context: MailTemplateContext.subscription,
+    subject: 'Dein Abo ist aktiv',
+    htmlContent: mailDocument(`    <p>Hallo {{user_firstName}}</p>
+    <p>Dein Abo läuft seit {{optional_subscription_startsAt_date}}.</p>
+    <p>
+      Du bezahlst {{optional_subscription_periodAmount_display}}
+      {{optional_subscription_paymentPeriodicity_display}}, bezahlt bis
+      {{optional_subscription_paidUntil_date}}.
+    </p>
+    <p>Danke für deine Unterstützung.</p>`),
+    textContent: `Hallo {{user_firstName}}
+
+Dein Abo läuft seit {{optional_subscription_startsAt_date}}.
+
+Du bezahlst {{optional_subscription_periodAmount_display}} {{optional_subscription_paymentPeriodicity_display}}, bezahlt bis {{optional_subscription_paidUntil_date}}.
+
+Danke für deine Unterstützung.`,
+  },
+  {
+    id: 'seed-subscription-deactivated',
+    name: 'Abo beendet',
+    description: 'Information über ein deaktiviertes Abo, mit Grund.',
+    context: MailTemplateContext.subscription,
+    subject: 'Dein Abo wurde beendet',
+    htmlContent: mailDocument(`    <p>Hallo {{user_firstName}}</p>
+    <p>Dein Abo endet am {{optional_subscription_paidUntil_date}}.</p>
+    <p>Grund: {{optional_subscription_deactivation_reason}}</p>
+    <p>Du kannst jederzeit ein neues Abo abschliessen.</p>`),
+    textContent: `Hallo {{user_firstName}}
+
+Dein Abo endet am {{optional_subscription_paidUntil_date}}.
+
+Grund: {{optional_subscription_deactivation_reason}}
+
+Du kannst jederzeit ein neues Abo abschliessen.`,
+  },
+  {
+    id: 'seed-invoice-created',
+    name: 'Neue Rechnung',
+    description: 'Rechnungsstellung für die kommende Abo-Periode.',
+    context: MailTemplateContext.invoiceCreation,
+    subject: 'Deine Rechnung über {{optional_invoice_total_display}}',
+    htmlContent: mailDocument(`    <p>Hallo {{user_firstName}}</p>
+    <p>
+      Für dein Abo «{{optional_subscriptionToCreateInvoice_memberPlan_name}}»
+      haben wir eine neue Rechnung erstellt.
+    </p>
+    <p>
+      {{optional_invoice_description}}<br />
+      Betrag: {{optional_invoice_total_display}}<br />
+      Zahlbar bis: {{optional_invoice_dueAt_date}}
+    </p>`),
+    textContent: `Hallo {{user_firstName}}
+
+Für dein Abo «{{optional_subscriptionToCreateInvoice_memberPlan_name}}» haben wir eine neue Rechnung erstellt.
+
+{{optional_invoice_description}}
+Betrag: {{optional_invoice_total_display}}
+Zahlbar bis: {{optional_invoice_dueAt_date}}`,
+  },
+  {
+    id: 'seed-renewal-success',
+    name: 'Verlängerung erfolgreich',
+    description: 'Quittung nach einer erfolgreichen automatischen Zahlung.',
+    context: MailTemplateContext.renewal,
+    subject: 'Dein Abo wurde verlängert',
+    htmlContent: mailDocument(`    <p>Hallo {{user_firstName}}</p>
+    <p>
+      Dein Abo «{{optional_subscription_memberPlan_name}}» wurde verlängert.
+    </p>
+    <p>
+      Betrag: {{optional_invoice_total_display}}<br />
+      Zahlungsmethode: {{optional_subscription_paymentMethod_name}}<br />
+      Bezahlt bis: {{optional_subscription_paidUntil_date}}
+    </p>`),
+    textContent: `Hallo {{user_firstName}}
+
+Dein Abo «{{optional_subscription_memberPlan_name}}» wurde verlängert.
+
+Betrag: {{optional_invoice_total_display}}
+Zahlungsmethode: {{optional_subscription_paymentMethod_name}}
+Bezahlt bis: {{optional_subscription_paidUntil_date}}`,
+  },
+  {
+    id: 'seed-renewal-failed',
+    name: 'Verlängerung fehlgeschlagen',
+    description: 'Zahlungsfehler bei der automatischen Verlängerung.',
+    context: MailTemplateContext.renewal,
+    subject: 'Die Zahlung für dein Abo hat nicht geklappt',
+    htmlContent: mailDocument(`    <p>Hallo {{user_firstName}}</p>
+    <p>
+      Wir konnten {{optional_invoice_total_display}} nicht über
+      {{optional_subscription_paymentMethod_name}} einziehen.
+    </p>
+    <p>Fehler: {{optional_errorCode}}</p>
+    <p>Bitte begleiche die Rechnung bis {{optional_invoice_dueAt_date}}.</p>`),
+    textContent: `Hallo {{user_firstName}}
+
+Wir konnten {{optional_invoice_total_display}} nicht über {{optional_subscription_paymentMethod_name}} einziehen.
+
+Fehler: {{optional_errorCode}}
+
+Bitte begleiche die Rechnung bis {{optional_invoice_dueAt_date}}.`,
+  },
+  {
+    id: 'seed-custom-subscriber',
+    name: 'Mitteilung an Abonnent:innen',
+    description: 'Freier Versand an Personen mit Abo.',
+    context: MailTemplateContext.custom,
+    subject: 'Eine Mitteilung an dich, {{user_firstName}}',
+    htmlContent: mailDocument(`    <p>Hallo {{user_fullName}}</p>
+    <p>Hier steht der Text der Mitteilung.</p>
+    <p>
+      Dein Abo: {{optional_subscription_periodAmount_display}}
+      {{optional_subscription_paymentPeriodicity_display}}, bezahlt bis
+      {{optional_subscription_paidUntil_date}}.<br />
+      Letzte Rechnung: {{optional_invoices_0_description}}
+    </p>`),
+    textContent: `Hallo {{user_fullName}}
+
+Hier steht der Text der Mitteilung.
+
+Dein Abo: {{optional_subscription_periodAmount_display}} {{optional_subscription_paymentPeriodicity_display}}, bezahlt bis {{optional_subscription_paidUntil_date}}.
+Letzte Rechnung: {{optional_invoices_0_description}}`,
+  },
+  {
+    id: 'seed-custom-no-subscription',
+    name: 'Mitteilung ohne Abo',
+    description: 'Freier Versand an Personen ohne Abo.',
+    context: MailTemplateContext.customNoSubscription,
+    subject: 'Hallo {{user_firstName}}',
+    htmlContent: mailDocument(`    <p>Hallo {{user_fullName}}</p>
+    <p>Hier steht der Text der Mitteilung.</p>
+    <p>Du erhältst diese Nachricht an {{user_email}}.</p>`),
+    textContent: `Hallo {{user_fullName}}
+
+Hier steht der Text der Mitteilung.
+
+Du erhältst diese Nachricht an {{user_email}}.`,
+  },
+];
+
+async function seedMailTemplates(prisma: PrismaClient) {
+  for (const { id, ...content } of SEED_MAIL_TEMPLATES) {
+    await prisma.mailTemplate.upsert({
+      where: { id },
+      update: {},
+      create: { id, ...content },
+    });
+
+    console.log(`  ${content.name} — ${content.description}`);
+  }
+}
+
 async function seedSettings(prisma: PrismaClient) {
   const upsert = <T extends { id: string }>(data: T) => ({
     where: { id: data.id },
@@ -1653,6 +1917,11 @@ export async function runExampleSeed(prisma: PrismaClient): Promise<void> {
     await seedMemberPlans(prisma);
     console.log('Refreshing test subscribers');
     await seedSubscribers(prisma);
+    console.log('Refreshing demo notifications');
+    await seedPeriodicJobLogs(prisma);
+    await seedChangelogEntries(prisma);
+    console.log('Seeding mail templates');
+    await seedMailTemplates(prisma);
 
     return;
   }
@@ -1749,4 +2018,10 @@ export async function runExampleSeed(prisma: PrismaClient): Promise<void> {
 
   console.log('Seeding test subscribers');
   await seedSubscribers(prisma);
+
+  console.log('Seeding demo notifications');
+  await seedPeriodicJobLogs(prisma);
+  await seedChangelogEntries(prisma);
+  console.log('Seeding mail templates');
+  await seedMailTemplates(prisma);
 }

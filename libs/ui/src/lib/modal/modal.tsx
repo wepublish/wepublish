@@ -35,6 +35,7 @@ export type ModalProps = PropsWithChildren<{
   className?: string;
   open: boolean;
   submitText: string;
+  cancelText?: string;
   onCancel: () => void;
   onSubmit: () => void;
 }>;
@@ -45,6 +46,7 @@ export const Modal = ({
   onCancel,
   onSubmit,
   submitText,
+  cancelText = 'Abbrechen',
   children,
 }: ModalProps) => {
   return (
@@ -61,7 +63,7 @@ export const Modal = ({
             variant="text"
             color="secondary"
           >
-            Abbrechen
+            {cancelText}
           </Button>
 
           <Button

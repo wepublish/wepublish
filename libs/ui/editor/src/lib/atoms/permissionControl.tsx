@@ -36,14 +36,10 @@ interface PermissionControlProps {
   showRejectionMessage?: boolean;
 }
 
-export function PermissionControl({
-  children,
-  qualifyingPermissions,
-  showRejectionMessage,
-}: PropsWithChildren<PermissionControlProps>) {
+export function useHasPermission(qualifyingPermissions: string[]): boolean {
   const roles = useContext(AuthContext)?.session?.sessionRoles;
 
-  const isAuthorized = useMemo(() => {
+  return useMemo(() => {
     if (!roles) {
       return true;
     }
@@ -56,6 +52,14 @@ export function PermissionControl({
       )
     );
   }, [qualifyingPermissions, roles]);
+}
+
+export function PermissionControl({
+  children,
+  qualifyingPermissions,
+  showRejectionMessage,
+}: PropsWithChildren<PermissionControlProps>) {
+  const isAuthorized = useHasPermission(qualifyingPermissions);
 
   if (isAuthorized) {
     return <>{children}</>;

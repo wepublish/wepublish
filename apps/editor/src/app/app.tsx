@@ -51,6 +51,7 @@ import fr from 'rsuite/locales/fr_FR';
 import { Base } from './base';
 import { Login } from './login';
 import { LoginJwt } from './loginJwt';
+import { LoginImpersonate } from './loginImpersonate';
 import { ResetPassword } from './resetPassword';
 import { ArticleEditor } from './routes/articles/articleEditor';
 import { ArticleList } from './routes/articles/articleList';
@@ -67,6 +68,7 @@ import { DiscountCodeCreateView } from './routes/discountCode/discountCodeCreate
 import { DiscountCodeEditView } from './routes/discountCode/discountCodeEditView';
 import { DiscountCodeList } from './routes/discountCode/discountCodeList';
 import { DiscountCodeUsageView } from './routes/discountCode/discountCodeUsageView';
+import { NotificationsPage } from './routes/notifications/notificationsPage';
 import { DocumentList } from './routes/documents/documentList';
 import { EventCreateView } from './routes/events/eventCreateView';
 import { EventEditView } from './routes/events/eventEditView';
@@ -295,6 +297,10 @@ export function App() {
               element={<LoginJwt />}
             />
             <Route
+              path="login/impersonate/:jwt"
+              element={<LoginImpersonate />}
+            />
+            <Route
               path="login/reset-password"
               element={<ResetPassword />}
             />
@@ -316,6 +322,14 @@ export function App() {
               element={
                 <Base>
                   <Dashboard />
+                </Base>
+              }
+            />
+            <Route
+              path="notifications"
+              element={
+                <Base>
+                  <NotificationsPage />
                 </Base>
               }
             />

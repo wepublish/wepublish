@@ -580,12 +580,6 @@ export const CanDeleteDiscountCode: Permission = {
   deprecated: false,
 };
 
-export const CanLoginAsOtherUser: Permission = {
-  id: 'CAN_LOGIN_AS_OTHER_USER',
-  description: 'Allows to login as other user',
-  deprecated: false,
-};
-
 export const CanGetSettings: Permission = {
   id: 'CAN_GET_SETTINGS',
   description: 'Allows to get all settings',
@@ -1270,7 +1264,6 @@ export const AllPermissions: Permission[] = [
   CanCreateDiscountCode,
   CanUpdateDiscountCode,
   CanDeleteDiscountCode,
-  CanLoginAsOtherUser,
   CanGetSettings,
   CanUpdateSettings,
   CanGetCommentRatingSystem,
