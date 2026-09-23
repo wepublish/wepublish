@@ -15,11 +15,13 @@ import { BlockTemplateBlock } from './blockTemplateBlock';
 import { BlockTemplateBlockValue, BlockValue } from './types';
 
 const useBlockTemplateListQuery = vi.fn();
+const useBlockTemplateQuery = vi.fn();
 
 vi.mock('@wepublish/editor/api', async importOriginal => ({
   ...((await importOriginal()) as object),
   useBlockTemplateListQuery: (...args: unknown[]) =>
     useBlockTemplateListQuery(...args),
+  useBlockTemplateQuery: (...args: unknown[]) => useBlockTemplateQuery(...args),
 }));
 
 vi.mock('react-i18next', () => ({
@@ -62,7 +64,12 @@ const blockStylesMock = [
 const mockQuery = ({
   templates = [defaultTemplate],
   loading = false,
-}: { templates?: FullBlockTemplateFragment[]; loading?: boolean } = {}) => {
+  selected = defaultTemplate,
+}: {
+  templates?: FullBlockTemplateFragment[];
+  loading?: boolean;
+  selected?: FullBlockTemplateFragment;
+} = {}) => {
   const refetch = vi.fn();
 
   useBlockTemplateListQuery.mockReturnValue({
@@ -70,6 +77,10 @@ const mockQuery = ({
     loading,
     refetch,
   });
+
+  useBlockTemplateQuery.mockImplementation(({ skip }: { skip?: boolean }) => ({
+    data: skip ? undefined : { blockTemplate: selected },
+  }));
 
   return { refetch };
 };
@@ -174,10 +185,17 @@ describe('BlockTemplateBlock', () => {
       expect(screen.queryByDisplayValue('Stale Title')).not.toBeInTheDocument();
     });
 
-    it('should fall back to the stored template while the list is still loading', () => {
+    it('should load the selected template on its own while the list is still loading', () => {
       mockQuery({ templates: [], loading: true });
 
-      renderBlock();
+      renderBlock({
+        value: {
+          template: {
+            id: 'template-1',
+            name: 'Header Template',
+          } as BlockTemplateBlockValue['template'],
+        },
+      });
 
       expect(screen.getByDisplayValue('First Title')).toBeInTheDocument();
     });

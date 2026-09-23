@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import {
   FullBlockFragment,
   useBlockTemplateListQuery,
+  useBlockTemplateQuery,
 } from '@wepublish/editor/api';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -74,15 +75,23 @@ export const BlockTemplateBlock = ({
     [data?.blockTemplates.nodes]
   );
 
-  const selectedTemplate =
-    templates.find(({ id }) => id === template?.id) ?? template;
+  const { data: templateData } = useBlockTemplateQuery({
+    variables: { id: template?.id ?? '' },
+    skip: !template?.id,
+    fetchPolicy: 'cache-and-network',
+  });
+
+  const fullTemplate =
+    templates.find(({ id }) => id === template?.id) ??
+    templateData?.blockTemplate;
+  const selectedTemplate = fullTemplate ?? template;
 
   const blocks = useMemo(
     () =>
-      (selectedTemplate?.blocks ?? []).map(block =>
+      (fullTemplate?.blocks ?? []).map(block =>
         blockForQueryBlock(block as FullBlockFragment)
       ),
-    [selectedTemplate]
+    [fullTemplate]
   );
 
   return (

@@ -5,12 +5,12 @@ import {
   CommentBlockCommentFragment,
   EditorBlockType,
   FullBlockFragment,
-  FullBlockTemplateFragment,
   FullCrowdfundingFragment,
   FullEventFragment,
   FullImageFragment,
   FullPoll,
   FullTeaserFragment,
+  NestedBlockTemplateBlockFragment,
   PageWithoutBlocksFragment,
   SubscribeBlock,
   SubscribeBlockField,
@@ -185,7 +185,7 @@ export interface FlexBlockValue extends BaseBlockValue {
 }
 
 export interface BlockTemplateBlockValue extends BaseBlockValue {
-  template?: FullBlockTemplateFragment | null;
+  template?: NestedBlockTemplateBlockFragment['template'];
 }
 
 export enum EmbedType {

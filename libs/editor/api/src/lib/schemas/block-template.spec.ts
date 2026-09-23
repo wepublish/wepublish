@@ -4,7 +4,9 @@ import {
   Kind,
   SelectionSetNode,
 } from 'graphql';
-import { BlockTemplateDocument, FullBlockFragmentDoc } from '../graphql';
+import { ArticleDocument } from './article.generated';
+import { BlockTemplateDocument } from './block-template.generated';
+import { PageDocument } from './page.generated';
 
 type BlockSelection = Record<string, string[]>;
 
@@ -128,10 +130,7 @@ const blockSelections = (document: DocumentNode) => {
 };
 
 const blockTemplateSelections = blockSelections(BlockTemplateDocument);
-const contentSelections = blockSelections({
-  ...FullBlockFragmentDoc,
-  kind: Kind.DOCUMENT,
-} as DocumentNode);
+const contentSelections = blockSelections(PageDocument);
 
 const TEMPLATE_BLOCKS = 'BlockTemplateContent';
 const TEMPLATE_FLEX_BLOCKS = 'BlockTemplateContent.FlexBlock.blocks.block';
@@ -159,6 +158,37 @@ describe('block template fragments', () => {
       )
     );
   });
+
+  it.each([
+    ['a block template', BlockTemplateDocument],
+    ['an article', ArticleDocument],
+    ['a page', PageDocument],
+  ])(
+    'should not read the blocks of nested block templates in %s',
+    (_name, document) => {
+      // Embedding a template's blocks inside other block content multiplies the
+      // generated types and makes TS fail with TS2589 in the Apollo hooks.
+      const template = fragmentsOf(document)
+        .get('NestedBlockTemplateBlock')
+        ?.selectionSet.selections.find(
+          selection =>
+            selection.kind === Kind.FIELD && selection.name.value === 'template'
+        );
+
+      expect(template).toBeDefined();
+      expect(
+        template?.kind === Kind.FIELD &&
+          template.selectionSet?.selections.map(selection =>
+            selection.kind === Kind.FIELD ?
+              selection.name.value
+            : selection.kind
+          )
+      ).not.toContain('blocks');
+      expect(fragmentsOf(document).has('BlockTemplateContent')).toBe(
+        document === BlockTemplateDocument
+      );
+    }
+  );
 
   it.each([
     ['blocks', TEMPLATE_BLOCKS, CONTENT_BLOCKS],

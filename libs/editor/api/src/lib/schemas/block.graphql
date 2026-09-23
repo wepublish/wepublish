@@ -525,25 +525,14 @@ fragment FullBlock on BlockContent {
         ...NestedTeaserBlock
 
         ... on BlockTemplateBlock {
-          ...FullBlockTemplateBlock
+          ...NestedBlockTemplateBlock
         }
       }
     }
   }
 
   ... on BlockTemplateBlock {
-    ...FullBlockTemplateBlock
-  }
-}
-
-fragment FullBlockTemplateBlock on BlockTemplateBlock {
-  disabled
-  blockStyle
-  blockStyleName
-  type
-  templateID
-  template {
-    ...FullBlockTemplate
+    ...NestedBlockTemplateBlock
   }
 }
 
