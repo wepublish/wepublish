@@ -3,7 +3,7 @@ import * as Types from '../graphql';
 
 import {RichtextJSONDocument} from '@wepublish/richtext';
 import { gql } from '@apollo/client';
-export type FullCrowdfundingFragment = { __typename?: 'Crowdfunding', id: string, name: string, revenue?: number | null, subscriptions?: number | null, goalType: Types.CrowdfundingGoalType, countSubscriptionsUntil?: string | null, activeGoal?: { __typename?: 'CrowdfundingGoalWithProgress', id: string, title: string, description?: string | null, amount: number, progress?: number | null } | null };
+export type FullCrowdfundingFragment = { __typename?: 'Crowdfunding', id: string, name: string, revenue?: number | null, subscriptions?: number | null, goalType: Types.CrowdfundingGoalType, countSubscriptionsUntil?: string | null, goals: Array<{ __typename?: 'CrowdfundingGoal', id: string, title: string, amount: number }>, activeGoal?: { __typename?: 'CrowdfundingGoalWithProgress', id: string, title: string, description?: string | null, amount: number, progress?: number | null } | null };
 
 export const FullCrowdfundingFragmentDoc = gql`
     fragment FullCrowdfunding on Crowdfunding {
@@ -13,6 +13,11 @@ export const FullCrowdfundingFragmentDoc = gql`
   subscriptions
   goalType
   countSubscriptionsUntil
+  goals {
+    id
+    title
+    amount
+  }
   activeGoal {
     id
     title
