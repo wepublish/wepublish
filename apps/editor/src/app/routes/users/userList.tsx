@@ -112,7 +112,7 @@ function UserList() {
   useEffect(() => {
     if (data?.users?.nodes) {
       setUsers(data.users.nodes);
-      if (data.users.totalCount + 9 < page * limit) {
+      if (Math.ceil(data.users.totalCount / limit) < page) {
         setPage(1);
       }
     }
