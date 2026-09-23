@@ -146,30 +146,33 @@ export const BlockTemplateBlock = ({
 
       {!!selectedTemplate && (
         <Preview>
-          {blocks.map(block => {
-            const { field, label, icon } = blockMap[block.type];
+          {blocks
+            // hidden blocks of the template are not rendered on the website
+            .filter(block => !block.value.disabled)
+            .map(block => {
+              const { field, label, icon } = blockMap[block.type];
 
-            return (
-              <PreviewItem
-                key={block.key}
-                bordered
-                bodyFill
-              >
-                <PreviewLabel>
-                  {icon}
-                  <span>{t(label)}</span>
-                </PreviewLabel>
+              return (
+                <PreviewItem
+                  key={block.key}
+                  bordered
+                  bodyFill
+                >
+                  <PreviewLabel>
+                    {icon}
+                    <span>{t(label)}</span>
+                  </PreviewLabel>
 
-                <PreviewBlock>
-                  {field({
-                    value: block.value,
-                    onChange: () => undefined,
-                    disabled: true,
-                  })}
-                </PreviewBlock>
-              </PreviewItem>
-            );
-          })}
+                  <PreviewBlock>
+                    {field({
+                      value: block.value,
+                      onChange: () => undefined,
+                      disabled: true,
+                    })}
+                  </PreviewBlock>
+                </PreviewItem>
+              );
+            })}
         </Preview>
       )}
     </Wrapper>

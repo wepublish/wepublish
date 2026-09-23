@@ -23,13 +23,24 @@ import {
   UpdateBlockTemplateInput,
 } from './block-template.model';
 import { BlockTemplateService } from './block-template.service';
-import { BadRequestException, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  forwardRef,
+  Inject,
+  NotFoundException,
+} from '@nestjs/common';
+import { BaseBlock } from '../base-block.model';
+import { BlockContent } from '../block-content.model';
+import { BlockType } from '../block-type.model';
+import { SlotTeasersLoader } from '../teaser/slot-teasers-loader';
 
 @Resolver(() => BlockTemplate)
 export class BlockTemplateResolver {
   constructor(
     private blockTemplateService: BlockTemplateService,
-    private blockTemplateDataLoader: BlockTemplateDataloaderService
+    private blockTemplateDataLoader: BlockTemplateDataloaderService,
+    @Inject(forwardRef(() => SlotTeasersLoader))
+    private slotTeasersLoader: SlotTeasersLoader
   ) {}
 
   @Public()
@@ -79,6 +90,17 @@ export class BlockTemplateResolver {
   public deleteBlockTemplate(@Args('id') id: string) {
     return this.blockTemplateService.deleteBlockTemplate(id);
   }
+
+  @ResolveField(() => [BlockContent])
+  public async blocks(@Parent() template: BlockTemplate) {
+    if (this.slotTeasersLoader.isPopulatedTemplate(template)) {
+      return template.blocks;
+    }
+
+    return this.slotTeasersLoader.loadSlotTeasersIntoTemplateBlocks(
+      template.blocks as BaseBlock<BlockType>[]
+    );
+  }
 }
 
 @Resolver(() => BlockTemplateBlock)
@@ -87,6 +109,10 @@ export class BlockTemplateBlockResolver {
 
   @ResolveField(() => BlockTemplate, { nullable: true })
   public template(@Parent() block: BlockTemplateBlock) {
+    if (block.template !== undefined) {
+      return block.template;
+    }
+
     return this.blockTemplates.load(block.templateID);
   }
 }

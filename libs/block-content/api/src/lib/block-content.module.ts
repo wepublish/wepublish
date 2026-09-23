@@ -27,7 +27,7 @@ import { MailchimpSubscribeService } from './mailchimp-form/mailchimp-subscribe.
   imports: [
     PrismaModule,
     BlockStylesModule,
-    BlockTemplateModule,
+    forwardRef(() => BlockTemplateModule),
     ImageModule,
     forwardRef(() => ArticleModule),
     forwardRef(() => PageModule),

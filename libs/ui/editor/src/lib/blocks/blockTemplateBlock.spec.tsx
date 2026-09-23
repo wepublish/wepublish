@@ -157,6 +157,28 @@ describe('BlockTemplateBlock', () => {
       inputs.forEach(input => expect(input).toBeDisabled());
     });
 
+    it('should not preview hidden blocks of the template', () => {
+      const withHiddenBlock = template('template-1', 'Header Template', [
+        titleBlock('Visible Title'),
+        { ...titleBlock('Hidden Title'), disabled: true },
+      ]);
+      mockQuery({ templates: [withHiddenBlock] });
+
+      const { onReplace } = renderBlock({
+        value: { template: withHiddenBlock },
+      });
+
+      expect(screen.getByDisplayValue('Visible Title')).toBeInTheDocument();
+      expect(
+        screen.queryByDisplayValue('Hidden Title')
+      ).not.toBeInTheDocument();
+
+      // using the content still takes over hidden blocks (as hidden)
+      fireEvent.click(useContentButton());
+      const [blocks] = onReplace.mock.calls[0] as [BlockValue[]];
+      expect(blocks.map(({ value }) => value.disabled)).toEqual([false, true]);
+    });
+
     it('should not preview anything when no template is selected', () => {
       renderBlock({ value: { template: null } });
 
