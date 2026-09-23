@@ -6,6 +6,7 @@ export * from './auth.generated';
 export * from './author.generated';
 export * from './banner.generated';
 export * from './block-styles.generated';
+export * from './block-template.generated';
 export * from './block.generated';
 export * from './changelog.generated';
 export * from './comment-rating.generated';

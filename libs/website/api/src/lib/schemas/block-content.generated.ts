@@ -45,7 +45,7 @@ export type FullArticleTeaserFragment = { __typename?: 'ArticleTeaser', type: st
     { __typename?: 'Image' }
     & FullImageFragment
   ) | null, article?: (
-    { __typename?: 'Article', latest: { __typename?: 'ArticleRevision', blocks: Array<{ __typename: 'BildwurfAdBlock' } | { __typename: 'BreakBlock' } | { __typename: 'CommentBlock' } | { __typename: 'CrowdfundingBlock' } | { __typename: 'EventBlock' } | { __typename: 'FacebookPostBlock' } | { __typename: 'FacebookVideoBlock' } | { __typename: 'FlexBlock' } | { __typename: 'HTMLBlock' } | { __typename: 'IFrameBlock' } | { __typename: 'ImageBlock' } | { __typename: 'ImageGalleryBlock' } | { __typename: 'InstagramPostBlock' } | { __typename: 'ListicleBlock' } | { __typename: 'MailchimpFormBlock' } | { __typename: 'PolisConversationBlock' } | { __typename: 'PollBlock', disabled?: boolean | null, blockStyle?: string | null, poll?: (
+    { __typename?: 'Article', latest: { __typename?: 'ArticleRevision', blocks: Array<{ __typename: 'BildwurfAdBlock' } | { __typename: 'BlockTemplateBlock' } | { __typename: 'BreakBlock' } | { __typename: 'CommentBlock' } | { __typename: 'CrowdfundingBlock' } | { __typename: 'EventBlock' } | { __typename: 'FacebookPostBlock' } | { __typename: 'FacebookVideoBlock' } | { __typename: 'FlexBlock' } | { __typename: 'HTMLBlock' } | { __typename: 'IFrameBlock' } | { __typename: 'ImageBlock' } | { __typename: 'ImageGalleryBlock' } | { __typename: 'InstagramPostBlock' } | { __typename: 'ListicleBlock' } | { __typename: 'MailchimpFormBlock' } | { __typename: 'PolisConversationBlock' } | { __typename: 'PollBlock', disabled?: boolean | null, blockStyle?: string | null, poll?: (
           { __typename?: 'FullPoll' }
           & FullPollFragment
         ) | null } | { __typename: 'QuoteBlock' } | { __typename: 'RichTextBlock' } | { __typename: 'SoundCloudTrackBlock' } | { __typename: 'StreamableVideoBlock' } | { __typename: 'SubscribeBlock' } | { __typename: 'TeaserGridBlock' } | { __typename: 'TeaserGridFlexBlock' } | { __typename: 'TeaserListBlock' } | { __typename: 'TeaserSlotsBlock' } | { __typename: 'TikTokVideoBlock' } | { __typename: 'TitleBlock' } | { __typename: 'TwitterTweetBlock' } | { __typename: 'UnknownBlock' } | { __typename: 'VimeoVideoBlock' } | { __typename: 'YouTubeVideoBlock' }> } }
@@ -146,6 +146,8 @@ export type BlockWithoutTeaser_BildwurfAdBlock_Fragment = (
   { __typename: 'BildwurfAdBlock' }
   & FullBildwurfAdBlockFragment
 );
+
+export type BlockWithoutTeaser_BlockTemplateBlock_Fragment = { __typename: 'BlockTemplateBlock', blockStyle?: string | null };
 
 export type BlockWithoutTeaser_BreakBlock_Fragment = (
   { __typename: 'BreakBlock' }
@@ -284,7 +286,7 @@ export type BlockWithoutTeaser_YouTubeVideoBlock_Fragment = (
   & FullYouTubeVideoBlockFragment
 );
 
-export type BlockWithoutTeaserFragment = BlockWithoutTeaser_BildwurfAdBlock_Fragment | BlockWithoutTeaser_BreakBlock_Fragment | BlockWithoutTeaser_CommentBlock_Fragment | BlockWithoutTeaser_CrowdfundingBlock_Fragment | BlockWithoutTeaser_EventBlock_Fragment | BlockWithoutTeaser_FacebookPostBlock_Fragment | BlockWithoutTeaser_FacebookVideoBlock_Fragment | BlockWithoutTeaser_FlexBlock_Fragment | BlockWithoutTeaser_HtmlBlock_Fragment | BlockWithoutTeaser_IFrameBlock_Fragment | BlockWithoutTeaser_ImageBlock_Fragment | BlockWithoutTeaser_ImageGalleryBlock_Fragment | BlockWithoutTeaser_InstagramPostBlock_Fragment | BlockWithoutTeaser_ListicleBlock_Fragment | BlockWithoutTeaser_MailchimpFormBlock_Fragment | BlockWithoutTeaser_PolisConversationBlock_Fragment | BlockWithoutTeaser_PollBlock_Fragment | BlockWithoutTeaser_QuoteBlock_Fragment | BlockWithoutTeaser_RichTextBlock_Fragment | BlockWithoutTeaser_SoundCloudTrackBlock_Fragment | BlockWithoutTeaser_StreamableVideoBlock_Fragment | BlockWithoutTeaser_SubscribeBlock_Fragment | BlockWithoutTeaser_TeaserGridBlock_Fragment | BlockWithoutTeaser_TeaserGridFlexBlock_Fragment | BlockWithoutTeaser_TeaserListBlock_Fragment | BlockWithoutTeaser_TeaserSlotsBlock_Fragment | BlockWithoutTeaser_TikTokVideoBlock_Fragment | BlockWithoutTeaser_TitleBlock_Fragment | BlockWithoutTeaser_TwitterTweetBlock_Fragment | BlockWithoutTeaser_UnknownBlock_Fragment | BlockWithoutTeaser_VimeoVideoBlock_Fragment | BlockWithoutTeaser_YouTubeVideoBlock_Fragment;
+export type BlockWithoutTeaserFragment = BlockWithoutTeaser_BildwurfAdBlock_Fragment | BlockWithoutTeaser_BlockTemplateBlock_Fragment | BlockWithoutTeaser_BreakBlock_Fragment | BlockWithoutTeaser_CommentBlock_Fragment | BlockWithoutTeaser_CrowdfundingBlock_Fragment | BlockWithoutTeaser_EventBlock_Fragment | BlockWithoutTeaser_FacebookPostBlock_Fragment | BlockWithoutTeaser_FacebookVideoBlock_Fragment | BlockWithoutTeaser_FlexBlock_Fragment | BlockWithoutTeaser_HtmlBlock_Fragment | BlockWithoutTeaser_IFrameBlock_Fragment | BlockWithoutTeaser_ImageBlock_Fragment | BlockWithoutTeaser_ImageGalleryBlock_Fragment | BlockWithoutTeaser_InstagramPostBlock_Fragment | BlockWithoutTeaser_ListicleBlock_Fragment | BlockWithoutTeaser_MailchimpFormBlock_Fragment | BlockWithoutTeaser_PolisConversationBlock_Fragment | BlockWithoutTeaser_PollBlock_Fragment | BlockWithoutTeaser_QuoteBlock_Fragment | BlockWithoutTeaser_RichTextBlock_Fragment | BlockWithoutTeaser_SoundCloudTrackBlock_Fragment | BlockWithoutTeaser_StreamableVideoBlock_Fragment | BlockWithoutTeaser_SubscribeBlock_Fragment | BlockWithoutTeaser_TeaserGridBlock_Fragment | BlockWithoutTeaser_TeaserGridFlexBlock_Fragment | BlockWithoutTeaser_TeaserListBlock_Fragment | BlockWithoutTeaser_TeaserSlotsBlock_Fragment | BlockWithoutTeaser_TikTokVideoBlock_Fragment | BlockWithoutTeaser_TitleBlock_Fragment | BlockWithoutTeaser_TwitterTweetBlock_Fragment | BlockWithoutTeaser_UnknownBlock_Fragment | BlockWithoutTeaser_VimeoVideoBlock_Fragment | BlockWithoutTeaser_YouTubeVideoBlock_Fragment;
 
 export type FullFlexAlignmentFragment = { __typename?: 'FlexAlignment', i: string, x: number, y: number, w: number, h: number };
 
@@ -316,6 +318,9 @@ export type FullFlexBlockFragment = { __typename?: 'FlexBlock', disabled?: boole
     ), block?: (
       { __typename: 'BildwurfAdBlock' }
       & BlockWithoutTeaser_BildwurfAdBlock_Fragment
+    ) | (
+      { __typename: 'BlockTemplateBlock' }
+      & BlockWithoutTeaser_BlockTemplateBlock_Fragment
     ) | (
       { __typename: 'BreakBlock' }
       & BlockWithoutTeaser_BreakBlock_Fragment
@@ -477,9 +482,121 @@ export type FullTeaserSlotsBlockFragment = { __typename?: 'TeaserSlotsBlock', ti
     & FullTeaser_PageTeaser_Fragment
   ) | null> };
 
+export type FullBlockTemplateBlockFragment = { __typename?: 'BlockTemplateBlock', disabled?: boolean | null, type: Types.BlockType, templateID: string, blockStyle?: string | null, template?: { __typename?: 'BlockTemplate', id: string, name: string, blocks: Array<(
+      { __typename?: 'BildwurfAdBlock' }
+      & BlockWithoutTeaser_BildwurfAdBlock_Fragment
+    ) | (
+      { __typename?: 'BlockTemplateBlock' }
+      & BlockWithoutTeaser_BlockTemplateBlock_Fragment
+    ) | (
+      { __typename?: 'BreakBlock' }
+      & BlockWithoutTeaser_BreakBlock_Fragment
+    ) | (
+      { __typename?: 'CommentBlock' }
+      & BlockWithoutTeaser_CommentBlock_Fragment
+    ) | (
+      { __typename?: 'CrowdfundingBlock' }
+      & BlockWithoutTeaser_CrowdfundingBlock_Fragment
+    ) | (
+      { __typename?: 'EventBlock' }
+      & BlockWithoutTeaser_EventBlock_Fragment
+    ) | (
+      { __typename?: 'FacebookPostBlock' }
+      & BlockWithoutTeaser_FacebookPostBlock_Fragment
+    ) | (
+      { __typename?: 'FacebookVideoBlock' }
+      & BlockWithoutTeaser_FacebookVideoBlock_Fragment
+    ) | (
+      { __typename?: 'FlexBlock' }
+      & FullFlexBlockFragment
+      & BlockWithoutTeaser_FlexBlock_Fragment
+    ) | (
+      { __typename?: 'HTMLBlock' }
+      & BlockWithoutTeaser_HtmlBlock_Fragment
+    ) | (
+      { __typename?: 'IFrameBlock' }
+      & BlockWithoutTeaser_IFrameBlock_Fragment
+    ) | (
+      { __typename?: 'ImageBlock' }
+      & BlockWithoutTeaser_ImageBlock_Fragment
+    ) | (
+      { __typename?: 'ImageGalleryBlock' }
+      & BlockWithoutTeaser_ImageGalleryBlock_Fragment
+    ) | (
+      { __typename?: 'InstagramPostBlock' }
+      & BlockWithoutTeaser_InstagramPostBlock_Fragment
+    ) | (
+      { __typename?: 'ListicleBlock' }
+      & BlockWithoutTeaser_ListicleBlock_Fragment
+    ) | (
+      { __typename?: 'MailchimpFormBlock' }
+      & BlockWithoutTeaser_MailchimpFormBlock_Fragment
+    ) | (
+      { __typename?: 'PolisConversationBlock' }
+      & BlockWithoutTeaser_PolisConversationBlock_Fragment
+    ) | (
+      { __typename?: 'PollBlock' }
+      & BlockWithoutTeaser_PollBlock_Fragment
+    ) | (
+      { __typename?: 'QuoteBlock' }
+      & BlockWithoutTeaser_QuoteBlock_Fragment
+    ) | (
+      { __typename?: 'RichTextBlock' }
+      & BlockWithoutTeaser_RichTextBlock_Fragment
+    ) | (
+      { __typename?: 'SoundCloudTrackBlock' }
+      & BlockWithoutTeaser_SoundCloudTrackBlock_Fragment
+    ) | (
+      { __typename?: 'StreamableVideoBlock' }
+      & BlockWithoutTeaser_StreamableVideoBlock_Fragment
+    ) | (
+      { __typename?: 'SubscribeBlock' }
+      & BlockWithoutTeaser_SubscribeBlock_Fragment
+    ) | (
+      { __typename?: 'TeaserGridBlock' }
+      & FullTeaserGridBlockFragment
+      & BlockWithoutTeaser_TeaserGridBlock_Fragment
+    ) | (
+      { __typename?: 'TeaserGridFlexBlock' }
+      & FullTeaserGridFlexBlockFragment
+      & BlockWithoutTeaser_TeaserGridFlexBlock_Fragment
+    ) | (
+      { __typename?: 'TeaserListBlock' }
+      & FullTeaserListBlockFragment
+      & BlockWithoutTeaser_TeaserListBlock_Fragment
+    ) | (
+      { __typename?: 'TeaserSlotsBlock' }
+      & FullTeaserSlotsBlockFragment
+      & BlockWithoutTeaser_TeaserSlotsBlock_Fragment
+    ) | (
+      { __typename?: 'TikTokVideoBlock' }
+      & BlockWithoutTeaser_TikTokVideoBlock_Fragment
+    ) | (
+      { __typename?: 'TitleBlock' }
+      & BlockWithoutTeaser_TitleBlock_Fragment
+    ) | (
+      { __typename?: 'TwitterTweetBlock' }
+      & BlockWithoutTeaser_TwitterTweetBlock_Fragment
+    ) | (
+      { __typename?: 'UnknownBlock' }
+      & BlockWithoutTeaser_UnknownBlock_Fragment
+    ) | (
+      { __typename?: 'VimeoVideoBlock' }
+      & BlockWithoutTeaser_VimeoVideoBlock_Fragment
+    ) | (
+      { __typename?: 'YouTubeVideoBlock' }
+      & BlockWithoutTeaser_YouTubeVideoBlock_Fragment
+    )> } | null };
+
 export type FullBlock_BildwurfAdBlock_Fragment = (
   { __typename?: 'BildwurfAdBlock' }
   & BlockWithoutTeaser_BildwurfAdBlock_Fragment
+);
+
+export type FullBlock_BlockTemplateBlock_Fragment = (
+  { __typename?: 'BlockTemplateBlock' }
+  & FullBlockTemplateBlockFragment
+  & BlockWithoutTeaser_BlockTemplateBlock_Fragment
 );
 
 export type FullBlock_BreakBlock_Fragment = (
@@ -642,7 +759,7 @@ export type FullBlock_YouTubeVideoBlock_Fragment = (
   & BlockWithoutTeaser_YouTubeVideoBlock_Fragment
 );
 
-export type FullBlockFragment = FullBlock_BildwurfAdBlock_Fragment | FullBlock_BreakBlock_Fragment | FullBlock_CommentBlock_Fragment | FullBlock_CrowdfundingBlock_Fragment | FullBlock_EventBlock_Fragment | FullBlock_FacebookPostBlock_Fragment | FullBlock_FacebookVideoBlock_Fragment | FullBlock_FlexBlock_Fragment | FullBlock_HtmlBlock_Fragment | FullBlock_IFrameBlock_Fragment | FullBlock_ImageBlock_Fragment | FullBlock_ImageGalleryBlock_Fragment | FullBlock_InstagramPostBlock_Fragment | FullBlock_ListicleBlock_Fragment | FullBlock_MailchimpFormBlock_Fragment | FullBlock_PolisConversationBlock_Fragment | FullBlock_PollBlock_Fragment | FullBlock_QuoteBlock_Fragment | FullBlock_RichTextBlock_Fragment | FullBlock_SoundCloudTrackBlock_Fragment | FullBlock_StreamableVideoBlock_Fragment | FullBlock_SubscribeBlock_Fragment | FullBlock_TeaserGridBlock_Fragment | FullBlock_TeaserGridFlexBlock_Fragment | FullBlock_TeaserListBlock_Fragment | FullBlock_TeaserSlotsBlock_Fragment | FullBlock_TikTokVideoBlock_Fragment | FullBlock_TitleBlock_Fragment | FullBlock_TwitterTweetBlock_Fragment | FullBlock_UnknownBlock_Fragment | FullBlock_VimeoVideoBlock_Fragment | FullBlock_YouTubeVideoBlock_Fragment;
+export type FullBlockFragment = FullBlock_BildwurfAdBlock_Fragment | FullBlock_BlockTemplateBlock_Fragment | FullBlock_BreakBlock_Fragment | FullBlock_CommentBlock_Fragment | FullBlock_CrowdfundingBlock_Fragment | FullBlock_EventBlock_Fragment | FullBlock_FacebookPostBlock_Fragment | FullBlock_FacebookVideoBlock_Fragment | FullBlock_FlexBlock_Fragment | FullBlock_HtmlBlock_Fragment | FullBlock_IFrameBlock_Fragment | FullBlock_ImageBlock_Fragment | FullBlock_ImageGalleryBlock_Fragment | FullBlock_InstagramPostBlock_Fragment | FullBlock_ListicleBlock_Fragment | FullBlock_MailchimpFormBlock_Fragment | FullBlock_PolisConversationBlock_Fragment | FullBlock_PollBlock_Fragment | FullBlock_QuoteBlock_Fragment | FullBlock_RichTextBlock_Fragment | FullBlock_SoundCloudTrackBlock_Fragment | FullBlock_StreamableVideoBlock_Fragment | FullBlock_SubscribeBlock_Fragment | FullBlock_TeaserGridBlock_Fragment | FullBlock_TeaserGridFlexBlock_Fragment | FullBlock_TeaserListBlock_Fragment | FullBlock_TeaserSlotsBlock_Fragment | FullBlock_TikTokVideoBlock_Fragment | FullBlock_TitleBlock_Fragment | FullBlock_TwitterTweetBlock_Fragment | FullBlock_UnknownBlock_Fragment | FullBlock_VimeoVideoBlock_Fragment | FullBlock_YouTubeVideoBlock_Fragment;
 
 export type AddMailchimpContactMutationVariables = Types.Exact<{
   input: Types.MailchimpContactInput;
@@ -1035,6 +1152,9 @@ export const BlockWithoutTeaserFragmentDoc = gql`
   ... on FlexBlock {
     blockStyle: blockStyleName
   }
+  ... on BlockTemplateBlock {
+    blockStyle: blockStyleName
+  }
   ... on UnknownBlock {
     blockStyle: blockStyleName
   }
@@ -1211,6 +1331,36 @@ export const FullFlexBlockFragmentDoc = gql`
   }
 }
     `;
+export const FullBlockTemplateBlockFragmentDoc = gql`
+    fragment FullBlockTemplateBlock on BlockTemplateBlock {
+  disabled
+  blockStyle: blockStyleName
+  type
+  templateID
+  template {
+    id
+    name
+    blocks {
+      ...BlockWithoutTeaser
+      ... on TeaserGridFlexBlock {
+        ...FullTeaserGridFlexBlock
+      }
+      ... on TeaserGridBlock {
+        ...FullTeaserGridBlock
+      }
+      ... on TeaserListBlock {
+        ...FullTeaserListBlock
+      }
+      ... on TeaserSlotsBlock {
+        ...FullTeaserSlotsBlock
+      }
+      ... on FlexBlock {
+        ...FullFlexBlock
+      }
+    }
+  }
+}
+    `;
 export const FullBlockFragmentDoc = gql`
     fragment FullBlock on BlockContent {
   ...BlockWithoutTeaser
@@ -1228,6 +1378,9 @@ export const FullBlockFragmentDoc = gql`
   }
   ... on FlexBlock {
     ...FullFlexBlock
+  }
+  ... on BlockTemplateBlock {
+    ...FullBlockTemplateBlock
   }
 }
     `;
