@@ -77,10 +77,11 @@
     "loginWithLink": "Mit Link einloggen",
     "loginWithPassword": "Mit Passwort einloggen",
     "loginLinkSent": "Login-Link versendet",
+    "requestNewLinkIn": "Neuer Link in {seconds} s",
     "submit": "Einloggen",
     "useLinkInstead": "Stattdessen Login-Link per E-Mail",
     "verifyingCredentials": "Einen Moment bitte, die eingegebenen Anmeldedaten werden überprüft...",
-    "alertLoginLinkSent": "Falls ein Account unter der Email \"{email}\" besteht, sollte bald ein Login-Link in deinem Email Postfach sein. Dies kann einen Moment dauern. Bitte prüfe auch deinen Spam-Ordner.",
+    "alertLoginLinkSent": "Falls ein Account unter der Email \"{email}\" besteht, sollte bald ein Login-Link in deinem Email Postfach sein. Dies kann einen Moment dauern. Bitte prüfe auch deinen Spam-Ordner. Falls keine Email ankommt, kannst du in einer Minute einen neuen Link anfordern.",
     "totp": {
       "code": "Bestätigungscode (2FA)",
       "emailLoginDisabled": "Login per E-Mail-Link ist für dieses Konto nicht verfügbar. Falls ein Konto mit dieser Adresse existiert, melde dich bitte mit Passwort und Bestätigungscode an.",
