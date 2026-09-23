@@ -22,6 +22,7 @@ const letterSettingsSchema = z.object({
   webhookSigningKey: z.string().nullish().or(z.literal('')),
 
   autoSend: z.boolean().nullish(),
+  placeholderEmailContains: z.string().nullish().or(z.literal('')),
 });
 
 type IntegrationFormValues = z.infer<typeof letterSettingsSchema>;
@@ -94,6 +95,13 @@ export function LetterIntegrationForm() {
           type: 'checkbox',
           name: 'autoSend',
           label: t('integrations.letterSettings.autoSend'),
+        });
+
+        commonFields.push({
+          type: 'text',
+          name: 'placeholderEmailContains',
+          label: t('integrations.letterSettings.placeholderEmailContains'),
+          placeholder: '@placeholder.example.com',
         });
 
         return commonFields;

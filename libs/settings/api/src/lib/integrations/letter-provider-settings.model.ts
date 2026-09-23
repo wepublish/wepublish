@@ -45,6 +45,13 @@ export class SettingLetterProvider extends SettingProvider {
 
   @Field()
   autoSend!: boolean;
+
+  @Field({
+    nullable: true,
+    description:
+      'Email addresses containing this are placeholders, not real inboxes (e.g. @placeholder.example.com).',
+  })
+  placeholderEmailContains?: string;
 }
 
 @InputType()

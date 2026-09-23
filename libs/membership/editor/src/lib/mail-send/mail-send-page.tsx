@@ -5,6 +5,7 @@ import {
   LetterPrintSpectrum,
   MailAudienceInput,
   MailChannel,
+  MailEmailFilter,
   MailLogState,
   MailRecipientBase,
   MailSubscriptionState,
@@ -44,6 +45,8 @@ import {
   MdAdd,
   MdArrowBack,
   MdArrowForward,
+  MdCancel,
+  MdCheckCircle,
   MdEdit,
   MdSend,
 } from 'react-icons/md';
@@ -189,6 +192,9 @@ function MailSendPage() {
   );
   const [endedMode, setEndedMode] = useState<EndedMode>('days');
   const [endedPeriod, setEndedPeriod] = useState<DateRange | null>(null);
+  const [emailFilter, setEmailFilter] = useState<MailEmailFilter>(
+    MailEmailFilter.All
+  );
 
   const [channel, setChannel] = useState<MailChannel>(MailChannel.Mail);
   const [print, setPrint] = useState<PrintSettings>(DEFAULT_PRINT);
@@ -217,6 +223,7 @@ function MailSendPage() {
 
       return {
         base,
+        emailFilter,
         // Either an explicit period or the rolling window — never both, so the
         // backend does not have to guess which one the author meant.
         endedWithinDays: usePeriod ? undefined : endedWithinDays,
@@ -228,11 +235,12 @@ function MailSendPage() {
     }
 
     if (!isSubscriptionBase) {
-      return { base };
+      return { base, emailFilter };
     }
 
     return {
       base,
+      emailFilter,
       memberPlanIDs: memberPlanIDs.length ? memberPlanIDs : undefined,
       subscriptionState: subscriptionState ?? undefined,
       autoRenew: autoRenew === 'any' ? undefined : autoRenew === 'true',
@@ -249,6 +257,7 @@ function MailSendPage() {
     };
   }, [
     base,
+    emailFilter,
     isSubscriptionBase,
     isWinBackBase,
     endedWithinDays,
@@ -380,14 +389,17 @@ function MailSendPage() {
     });
   };
 
-  const recipientSummary = (action?: ReactElement) => (
+  const recipientSummary = ({
+    action,
+    showMissing = true,
+  }: { action?: ReactElement; showMissing?: boolean } = {}) => (
     <RecipientSummary
       loading={previewLoading}
       count={count}
       userCount={userCount}
       isLetter={isLetter}
       withoutAddressCount={withoutAddressCount}
-      missing={missing}
+      missing={showMissing ? missing : []}
       onShowRecipients={() => setRecipientsOpen(true)}
       action={action}
     />
@@ -401,11 +413,9 @@ function MailSendPage() {
         </ListViewHeader>
       </ListViewContainer>
 
-      {/* The preview lives beside the wizard rather than inside a step: once a
-          template is chosen it stays visible, so every later change — audience,
-          preview recipient, an edit in the template tab — is seen immediately.
-          The wizard column is a fixed width and the preview takes whatever is
-          left, so selecting a template never re-flows the wizard. */}
+      {/* The preview sits beside the wizard on the send step only, as the last
+          check before sending. The wizard column is a fixed width on every
+          step, so showing the preview never re-flows the wizard. */}
       <Box
         sx={{
           display: 'grid',
@@ -413,7 +423,10 @@ function MailSendPage() {
           alignItems: 'start',
           gridTemplateColumns: {
             xs: '1fr',
-            lg: `${WIZARD_WIDTH}px minmax(0, 1fr)`,
+            lg:
+              step === STEP_SEND ?
+                `${WIZARD_WIDTH}px minmax(0, 1fr)`
+              : `${WIZARD_WIDTH}px`,
           },
         }}
       >
@@ -469,17 +482,6 @@ function MailSendPage() {
                     {t('mailSend.createTemplate')}
                   </IconButton>
                 </div>
-
-                {missing.length > 0 && (
-                  <Message
-                    type="warning"
-                    style={{ marginTop: 12 }}
-                  >
-                    {t('mailSend.missingPlaceholders', {
-                      placeholders: missing.join(', '),
-                    })}
-                  </Message>
-                )}
               </Panel>
 
               <ChannelPanel
@@ -537,6 +539,38 @@ function MailSendPage() {
                         </Radio>
                       ))}
                     </RadioGroup>
+
+                    <MissingPlaceholdersWarning missing={missing} />
+                  </Form.Group>
+
+                  <Divider />
+                  <Form.Group>
+                    <Form.ControlLabel>
+                      {t('mailSend.emailFilter.label')}
+                    </Form.ControlLabel>
+                    <RadioGroup
+                      inline
+                      value={emailFilter}
+                      onChange={value =>
+                        setEmailFilter(value as MailEmailFilter)
+                      }
+                    >
+                      {[
+                        MailEmailFilter.All,
+                        MailEmailFilter.Placeholder,
+                        MailEmailFilter.Real,
+                      ].map(option => (
+                        <Radio
+                          key={option}
+                          value={option}
+                        >
+                          {t(`mailSend.emailFilter.${option}`)}
+                        </Radio>
+                      ))}
+                    </RadioGroup>
+                    <Form.HelpText>
+                      {t('mailSend.emailFilter.hint')}
+                    </Form.HelpText>
                   </Form.Group>
 
                   {isWinBackBase && (
@@ -834,7 +868,7 @@ function MailSendPage() {
                 </Form>
               </Panel>
 
-              {recipientSummary()}
+              {recipientSummary({ showMissing: false })}
 
               <StepNav
                 onBack={() => setStep(STEP_CONTENT)}
@@ -870,15 +904,17 @@ function MailSendPage() {
                 </Stack>
               </Panel>
 
-              {recipientSummary(
-                <Button
-                  appearance="primary"
-                  disabled={!canSend}
-                  onClick={() => setConfirmOpen(true)}
-                >
-                  <MdSend /> {t('mailSend.send')}
-                </Button>
-              )}
+              {recipientSummary({
+                action: (
+                  <Button
+                    appearance="primary"
+                    disabled={!canSend}
+                    onClick={() => setConfirmOpen(true)}
+                  >
+                    <MdSend /> {t('mailSend.send')}
+                  </Button>
+                ),
+              })}
 
               {jobId && <JobProgress jobId={jobId} />}
 
@@ -889,25 +925,27 @@ function MailSendPage() {
           )}
         </Box>
 
-        {/* Always occupied — an empty column would leave half the screen blank
-            and read as a broken layout. */}
-        <Box sx={{ position: 'sticky', top: 16, marginTop: 3, minWidth: 0 }}>
-          {templateId ?
-            <TemplatePreview
-              templateId={templateId}
-              audience={audience}
-              recipientCount={count}
-              channel={channel}
-              print={print}
-            />
-          : <Panel
-              bordered
-              header={t('mailSend.preview.title')}
-            >
-              <Message type="info">{t('mailSend.selectTemplateHint')}</Message>
-            </Panel>
-          }
-        </Box>
+        {step === STEP_SEND && (
+          <Box sx={{ position: 'sticky', top: 16, marginTop: 3, minWidth: 0 }}>
+            {templateId ?
+              <TemplatePreview
+                templateId={templateId}
+                audience={audience}
+                recipientCount={count}
+                channel={channel}
+                print={print}
+              />
+            : <Panel
+                bordered
+                header={t('mailSend.preview.title')}
+              >
+                <Message type="info">
+                  {t('mailSend.selectTemplateHint')}
+                </Message>
+              </Panel>
+            }
+          </Box>
+        )}
       </Box>
 
       <RecipientListModal
@@ -994,14 +1032,12 @@ function RecipientSummary({
           <span>
             {loading ?
               t('mailSend.counting')
-            : isLetter ?
-              t('mailSend.lettersCount', { count })
-            : count === userCount ?
-              t('mailSend.recipientsCount', { count })
-            : t('mailSend.recipientsCountPerPerson', {
-                count,
-                people: userCount,
-              })
+            : t(
+                isLetter ?
+                  'mailSend.lettersCount'
+                : 'mailSend.recipientsCountPerPerson',
+                { count, people: userCount }
+              )
             }
           </span>
           <Button
@@ -1028,17 +1064,28 @@ function RecipientSummary({
         </Message>
       )}
 
-      {missing.length > 0 && (
-        <Message
-          type="warning"
-          style={{ marginTop: 12 }}
-        >
-          {t('mailSend.missingPlaceholders', {
-            placeholders: missing.join(', '),
-          })}
-        </Message>
-      )}
+      <MissingPlaceholdersWarning missing={missing} />
     </Panel>
+  );
+}
+
+/** Placeholders the template uses that the chosen audience cannot fill. */
+function MissingPlaceholdersWarning({ missing }: { missing: string[] }) {
+  const { t } = useTranslation();
+
+  if (!missing.length) {
+    return null;
+  }
+
+  return (
+    <Message
+      type="warning"
+      style={{ marginTop: 12 }}
+    >
+      {t('mailSend.missingPlaceholders', {
+        placeholders: missing.join(', '),
+      })}
+    </Message>
   );
 }
 
@@ -1380,6 +1427,8 @@ function RecipientListModal({
   });
 
   const recipients = data?.mailSendRecipients.nodes ?? [];
+  // Only a letter needs an address; for a mail the column would be noise.
+  const isLetter = channel === MailChannel.Letter;
 
   return (
     <Modal
@@ -1407,11 +1456,23 @@ function RecipientListModal({
                 <TableCell>
                   <strong>{t('mailSend.recipientList.memberPlan')}</strong>
                 </TableCell>
+                {isLetter && (
+                  <TableCell align="center">
+                    <strong>{t('mailSend.recipientList.address')}</strong>
+                  </TableCell>
+                )}
               </TableRow>
             </TableHead>
             <TableBody>
               {recipients.map(recipient => (
-                <TableRow key={recipient.id}>
+                <TableRow
+                  key={recipient.id}
+                  sx={
+                    isLetter && !recipient.hasAddress ?
+                      { backgroundColor: 'rgba(244, 67, 54, 0.08)' }
+                    : undefined
+                  }
+                >
                   <TableCell>{recipient.email}</TableCell>
                   <TableCell>
                     {[recipient.firstName, recipient.name]
@@ -1419,6 +1480,22 @@ function RecipientListModal({
                       .join(' ') || '—'}
                   </TableCell>
                   <TableCell>{recipient.memberPlanName ?? '—'}</TableCell>
+                  {isLetter && (
+                    <TableCell align="center">
+                      {recipient.hasAddress ?
+                        <MdCheckCircle
+                          size={18}
+                          color="#4caf50"
+                          title={t('mailSend.recipientList.withAddress')}
+                        />
+                      : <MdCancel
+                          size={18}
+                          color="#f44336"
+                          title={t('mailSend.recipientList.withoutAddress')}
+                        />
+                      }
+                    </TableCell>
+                  )}
                 </TableRow>
               ))}
             </TableBody>

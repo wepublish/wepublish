@@ -4,7 +4,11 @@ import {
   MailSendJobRecipientState,
   PrismaClient,
 } from '@prisma/client';
-import { formatAddressLines, LetterAddress } from '@wepublish/letter/api';
+import {
+  canReceiveLetters,
+  formatAddressLines,
+  LetterAddress,
+} from '@wepublish/letter/api';
 import { CurrentUser, UserSession } from '@wepublish/authentication/api';
 import { Permissions } from '@wepublish/permissions/api';
 import { CanGetMailLogs, CanSendMailTemplates } from '@wepublish/permissions';
@@ -104,6 +108,7 @@ export class MailSendResolver {
       memberPlanName:
         (subscription?.memberPlan as { name?: string } | undefined)?.name ??
         null,
+      hasAddress: canReceiveLetters(user),
     }));
 
     return this.paginate(rows, totalCount, skip, boundedTake);
@@ -155,6 +160,7 @@ export class MailSendResolver {
                   | { name?: string }
                   | undefined
               )?.name ?? null,
+            hasAddress: canReceiveLetters(result.recipient.user),
           }
         : null,
     };

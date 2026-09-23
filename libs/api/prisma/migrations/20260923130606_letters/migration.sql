@@ -59,6 +59,7 @@ CREATE TABLE "settings.letterprovider" (
     "organisationId" TEXT,
     "webhookSigningKey" TEXT,
     "autoSend" BOOLEAN NOT NULL DEFAULT false,
+    "placeholderEmailContains" TEXT,
 
     CONSTRAINT "settings.letterprovider_pkey" PRIMARY KEY ("id")
 );

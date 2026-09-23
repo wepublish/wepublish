@@ -9,6 +9,7 @@ query LetterProviderSettings {
     modifiedAt
     name
     organisationId
+    placeholderEmailContains
     type
   }
 }
@@ -21,6 +22,7 @@ mutation UpdateLetterProviderSetting(
   $id: String!
   $name: String
   $organisationId: String
+  $placeholderEmailContains: String
   $webhookSigningKey: String
 ) {
   updateLetterProviderSetting(
@@ -31,6 +33,7 @@ mutation UpdateLetterProviderSetting(
     id: $id
     name: $name
     organisationId: $organisationId
+    placeholderEmailContains: $placeholderEmailContains
     webhookSigningKey: $webhookSigningKey
   ) {
     autoSend
@@ -42,6 +45,7 @@ mutation UpdateLetterProviderSetting(
     modifiedAt
     name
     organisationId
+    placeholderEmailContains
     type
   }
 }

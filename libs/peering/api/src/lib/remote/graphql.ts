@@ -1827,6 +1827,8 @@ export enum LoginStatus {
 export type MailAudienceInput = {
   autoRenew?: InputMaybe<Scalars['Boolean']>;
   base: MailRecipientBase;
+  /** Restrict to placeholder or real email addresses. Defaults to all. */
+  emailFilter?: InputMaybe<MailEmailFilter>;
   /** Win-back audience only: start of an explicit period the subscription ended in. */
   endedFrom?: InputMaybe<Scalars['DateTime']>;
   /** Win-back audience only: end of an explicit period the subscription ended in. */
@@ -1858,6 +1860,12 @@ export type MailAudienceInput = {
 export enum MailChannel {
   Letter = 'letter',
   Mail = 'mail'
+}
+
+export enum MailEmailFilter {
+  All = 'all',
+  Placeholder = 'placeholder',
+  Real = 'real'
 }
 
 export type MailLogFilter = {
@@ -2048,6 +2056,8 @@ export type MailSendRecipientModel = {
   __typename?: 'MailSendRecipientModel';
   email: Scalars['String'];
   firstName?: Maybe<Scalars['String']>;
+  /** Whether the user has a postal address a letter can be sent to. A letter send skips recipients without one. */
+  hasAddress: Scalars['Boolean'];
   /** Row identity. A user appears once per matching subscription, so this combines both. */
   id: Scalars['String'];
   memberPlanName?: Maybe<Scalars['String']>;
@@ -4000,6 +4010,7 @@ export type MutationUpdateLetterProviderSettingArgs = {
   id?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
   organisationId?: InputMaybe<Scalars['String']>;
+  placeholderEmailContains?: InputMaybe<Scalars['String']>;
   webhookSigningKey?: InputMaybe<Scalars['String']>;
 };
 
@@ -6575,6 +6586,8 @@ export type SettingLetterProvider = SettingProvider & {
   modifiedAt: Scalars['DateTime'];
   name?: Maybe<Scalars['String']>;
   organisationId?: Maybe<Scalars['String']>;
+  /** Email addresses containing this are placeholders, not real inboxes (e.g. @placeholder.example.com). */
+  placeholderEmailContains?: Maybe<Scalars['String']>;
   type: LetterProviderType;
 };
 

@@ -43,6 +43,16 @@ export enum MailSubscriptionState {
   deactivated = 'deactivated',
 }
 
+export enum MailEmailFilter {
+  all = 'all',
+  placeholder = 'placeholder',
+  real = 'real',
+}
+
+registerEnumType(MailEmailFilter, {
+  name: 'MailEmailFilter',
+});
+
 registerEnumType(MailRecipientBase, {
   name: 'MailRecipientBase',
   description: 'Base set of users a manual-send audience is drawn from.',
@@ -119,6 +129,13 @@ export class LetterPrintInput {
 export class MailAudienceInput {
   @Field(() => MailRecipientBase)
   base!: MailRecipientBase;
+
+  @Field(() => MailEmailFilter, {
+    nullable: true,
+    description:
+      'Restrict to placeholder or real email addresses. Defaults to all.',
+  })
+  emailFilter?: MailEmailFilter;
 
   @Field(() => [String], {
     nullable: true,
@@ -474,6 +491,12 @@ export class MailSendRecipientModel {
 
   @Field(() => String, { nullable: true })
   memberPlanName?: string | null;
+
+  @Field({
+    description:
+      'Whether the user has a postal address a letter can be sent to. A letter send skips recipients without one.',
+  })
+  hasAddress!: boolean;
 }
 
 @ObjectType()

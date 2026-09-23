@@ -2535,7 +2535,8 @@
         "clientSecret": "Client Secret",
         "organisationId": "Organisation ID",
         "webhookSigningKey": "Webhook Signing Key",
-        "autoSend": "Send letters automatically"
+        "autoSend": "Send letters automatically",
+        "placeholderEmailContains": "Placeholder email contains"
       },
       "mailSettings": {
         "type": "Type",
@@ -2973,7 +2974,6 @@
       "yes": "Yes",
       "no": "No",
       "counting": "Counting recipients …",
-      "recipientsCount": "{{count}} recipients",
       "send": "Send",
       "templateNeedsSubscription": "This template needs a subscription-based audience so its subscription placeholders can be filled.",
       "confirmTitle": "Send email",
@@ -3006,10 +3006,20 @@
         "loading": "Loading recipients …",
         "email": "Email",
         "name": "Name",
-        "memberPlan": "Member plan"
+        "memberPlan": "Member plan",
+        "address": "Address",
+        "withAddress": "Address present",
+        "withoutAddress": "No valid address – will be skipped"
       },
       "endedWithinDays": "Deactivated within the last … days",
       "endedWithinDaysHint": "Only subscriptions deactivated in this window.",
+      "emailFilter": {
+        "label": "Email address",
+        "all": "All",
+        "placeholder": "Placeholders only",
+        "real": "Real only",
+        "hint": "Placeholder addresses are defined in the letter integration."
+      },
       "endedWindow": {
         "label": "When the subscription was deactivated",
         "relative": "Last … days",
@@ -3039,7 +3049,7 @@
       "endsAt": "Subscription end",
       "from": "From",
       "to": "Until",
-      "lettersCount": "{{count}} letters",
+      "lettersCount": "{{count}} letters to {{people}} people",
       "confirmTextLetter": "Send this letter to {{count}} recipients?",
       "channel": {
         "label": "Delivery",

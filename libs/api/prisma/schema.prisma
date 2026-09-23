@@ -1832,7 +1832,8 @@ model SettingLetterProvider {
   organisationId    String?
   webhookSigningKey String?
 
-  autoSend Boolean @default(false)
+  autoSend                 Boolean @default(false)
+  placeholderEmailContains String?
 
   @@map("settings.letterprovider")
 }

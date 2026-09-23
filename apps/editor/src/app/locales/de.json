@@ -2455,7 +2455,8 @@
         "clientSecret": "Client Secret",
         "organisationId": "Organisations-ID",
         "webhookSigningKey": "Webhook Signing Key",
-        "autoSend": "Briefe automatisch versenden"
+        "autoSend": "Briefe automatisch versenden",
+        "placeholderEmailContains": "Platzhalter-E-Mail enthält"
       },
       "mailSettings": {
         "type": "Typ",
@@ -2934,7 +2935,6 @@
       "yes": "Ja",
       "no": "Nein",
       "counting": "Empfänger werden gezählt …",
-      "recipientsCount": "{{count}} Empfänger",
       "send": "Senden",
       "templateNeedsSubscription": "Diese Vorlage benötigt eine Abo-basierte Empfängergruppe, damit die Abo-Platzhalter gefüllt werden können.",
       "confirmTitle": "E-Mail senden",
@@ -2967,10 +2967,20 @@
         "loading": "Empfänger werden geladen …",
         "email": "E-Mail",
         "name": "Name",
-        "memberPlan": "Abo-Plan"
+        "memberPlan": "Abo-Plan",
+        "address": "Adresse",
+        "withAddress": "Adresse vorhanden",
+        "withoutAddress": "Keine gültige Adresse – wird nicht verschickt"
       },
       "endedWithinDays": "Deaktiviert innerhalb der letzten … Tage",
       "endedWithinDaysHint": "Nur Abos, die in diesem Zeitraum deaktiviert wurden.",
+      "emailFilter": {
+        "label": "E-Mail-Adresse",
+        "all": "Alle",
+        "placeholder": "Nur Platzhalter",
+        "real": "Nur echt",
+        "hint": "Platzhalter-Adressen werden in der Brief-Integration festgelegt."
+      },
       "endedWindow": {
         "label": "Zeitraum der Abo-Deaktivierung",
         "relative": "Letzte … Tage",
@@ -3000,7 +3010,7 @@
       "endsAt": "Abo-Ende",
       "from": "ab",
       "to": "bis",
-      "lettersCount": "{{count}} Briefe",
+      "lettersCount": "{{count}} Briefe an {{people}} Personen",
       "confirmTextLetter": "Diesen Brief an {{count}} Empfänger:innen senden?",
       "channel": {
         "label": "Versand",
