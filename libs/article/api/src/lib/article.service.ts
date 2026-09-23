@@ -3,7 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { Prisma, PrismaClient } from '@prisma/client';
+import { Article, Prisma, PrismaClient } from '@prisma/client';
 import {
   ArticleFilter,
   ArticleListArgs,
@@ -44,17 +44,16 @@ export class ArticleService {
 
   @PrimeDataLoader(ArticleDataloaderService)
   async getArticleBySlug(slug: string) {
-    return this.prisma.article.findFirst({
-      where: {
-        slug: {
-          equals: slug,
-          mode: 'insensitive',
-        },
-      },
-      orderBy: {
-        publishedAt: 'asc', // there might be an unpublished article with the same slug
-      },
-    });
+    const [article] = await this.prisma.$queryRaw<Article[]>`
+      SELECT *
+      FROM articles
+      WHERE LOWER(slug) = LOWER(${slug})
+      -- there might be an unpublished article with the same slug
+      ORDER BY "publishedAt" ASC
+      LIMIT 1
+    `;
+
+    return article ?? null;
   }
 
   @PrimeDataLoader(ArticleDataloaderService)

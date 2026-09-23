@@ -88,10 +88,17 @@ describe('ArticleService', () => {
   });
 
   it('should query an article by slug', async () => {
-    prismaMock.article.findFirst?.mockResolvedValue({});
-    await service.getArticleBySlug('1234');
+    prismaMock.$queryRaw.mockResolvedValue([{ id: '1234' }]);
+    const result = await service.getArticleBySlug('Some-Slug');
 
-    expect(prismaMock.article.findFirst?.mock.calls[0]).toMatchSnapshot();
+    expect(result).toEqual({ id: '1234' });
+    expect(prismaMock.$queryRaw.mock.calls[0]).toMatchSnapshot();
+  });
+
+  it('should return null when no article matches the slug', async () => {
+    prismaMock.$queryRaw.mockResolvedValue([]);
+
+    expect(await service.getArticleBySlug('missing')).toBeNull();
   });
 
   it('should query articles based on filter', async () => {

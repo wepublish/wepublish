@@ -240,17 +240,18 @@ exports[`ArticleService should publish a revision 1`] = `
 
 exports[`ArticleService should query an article by slug 1`] = `
 [
-  {
-    "orderBy": {
-      "publishedAt": "asc",
-    },
-    "where": {
-      "slug": {
-        "equals": "1234",
-        "mode": "insensitive",
-      },
-    },
-  },
+  [
+    "
+      SELECT *
+      FROM articles
+      WHERE LOWER(slug) = LOWER(",
+    ")
+      -- there might be an unpublished article with the same slug
+      ORDER BY "publishedAt" ASC
+      LIMIT 1
+    ",
+  ],
+  "Some-Slug",
 ]
 `;
 
