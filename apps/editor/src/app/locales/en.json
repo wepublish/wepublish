@@ -2926,8 +2926,8 @@
           "description": "Audience and filters"
         },
         "content": {
-          "title": "Mail content",
-          "description": "Template and preview"
+          "title": "Content & delivery",
+          "description": "Template, email or letter"
         },
         "send": {
           "title": "Send email",
@@ -3039,6 +3039,8 @@
       "endsAt": "Subscription end",
       "from": "From",
       "to": "Until",
+      "lettersCount": "{{count}} letters",
+      "confirmTextLetter": "Send this letter to {{count}} recipients?",
       "channel": {
         "label": "Delivery",
         "mail": "Email",

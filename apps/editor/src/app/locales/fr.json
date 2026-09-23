@@ -2820,8 +2820,8 @@
           "description": "Public et filtres"
         },
         "content": {
-          "title": "Contenu de l'e-mail",
-          "description": "Modèle et aperçu"
+          "title": "Contenu et envoi",
+          "description": "Modèle, e-mail ou lettre"
         },
         "send": {
           "title": "Envoyer l'e-mail",
@@ -2931,7 +2931,9 @@
       "startsAt": "Début de l'abonnement",
       "endsAt": "Fin de l'abonnement",
       "from": "À partir du",
-      "to": "Jusqu'au"
+      "to": "Jusqu'au",
+      "lettersCount": "{{count}} lettres",
+      "confirmTextLetter": "Envoyer cette lettre à {{count}} destinataires ?"
     },
     "mailLog": {
       "title": "E-mails envoyés",

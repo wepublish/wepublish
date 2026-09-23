@@ -533,7 +533,10 @@ export class MailSendPreviewModel {
 
 @ObjectType()
 export class MailSendRecipientPreview {
-  @Field(() => Int, { description: 'Number of mails that would be sent.' })
+  @Field(() => Int, {
+    description:
+      'Number of messages that would be sent over the given channel. A letter send reaches every person once, so it equals `userCount`.',
+  })
   count!: number;
 
   @Field(() => Int, {

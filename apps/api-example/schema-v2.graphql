@@ -2020,7 +2020,9 @@ type MailSendRecipientPreview {
   """
   allowsSubscriptionTemplates: Boolean!
 
-  """Number of mails that would be sent."""
+  """
+  Number of messages that would be sent over the given channel. A letter send reaches every person once, so it equals `userCount`.
+  """
   count: Int!
 
   """
@@ -4205,10 +4207,10 @@ type Query {
   mailSendPreview(input: MailSendPreviewInput!): MailSendPreviewModel!
 
   """Preview how many recipients an audience resolves to"""
-  mailSendRecipientPreview(audience: MailAudienceInput!): MailSendRecipientPreview!
+  mailSendRecipientPreview(audience: MailAudienceInput!, channel: MailChannel): MailSendRecipientPreview!
 
   """The concrete recipients an audience resolves to"""
-  mailSendRecipients(audience: MailAudienceInput!, skip: Int, take: Int): PaginatedMailSendRecipient!
+  mailSendRecipients(audience: MailAudienceInput!, channel: MailChannel, skip: Int, take: Int): PaginatedMailSendRecipient!
 
   """Return a single mail template, including its html and text body."""
   mailTemplate(id: String!): MailTemplateModel

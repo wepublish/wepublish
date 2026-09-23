@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { MailChannel, PrismaClient } from '@prisma/client';
 import { MailSendRecipientService } from './mail-send-recipient.service';
 import { MailRecipientBase, MailSubscriptionState } from './mail-send.model';
 import { matches } from './where-matcher';
@@ -331,6 +331,96 @@ describe('MailSendRecipientService', () => {
       );
 
       expect(recipients).toHaveLength(1);
+    });
+  });
+
+  describe('letters (one per person)', () => {
+    it('counts people instead of subscriptions', async () => {
+      const prisma = {
+        user: { count: jest.fn(async () => 11) },
+        subscription: { count: jest.fn(async () => 13) },
+      };
+      const service = makeService(prisma);
+
+      expect(
+        await service.count(
+          { base: MailRecipientBase.hasSubscription },
+          MailChannel.letter
+        )
+      ).toBe(11);
+      expect(prisma.subscription.count).not.toHaveBeenCalled();
+
+      expect(
+        await service.count(
+          { base: MailRecipientBase.hasSubscription },
+          MailChannel.mail
+        )
+      ).toBe(13);
+    });
+
+    it('resolves one recipient per user, bound to the first matching subscription', async () => {
+      const prisma = {
+        user: {
+          findMany: jest.fn(async () => [
+            { id: 'u1', subscriptions: [{ id: 's1' }] },
+            { id: 'u2', subscriptions: [{ id: 's3' }] },
+          ]),
+        },
+        subscription: { findMany: jest.fn() },
+      };
+
+      const recipients = await makeService(prisma).resolvePage(
+        { base: MailRecipientBase.hasSubscription, memberPlanIDs: ['p1'] },
+        0,
+        100,
+        MailChannel.letter
+      );
+
+      expect(prisma.subscription.findMany).not.toHaveBeenCalled();
+      expect(recipients.map(({ user }) => user.id)).toEqual(['u1', 'u2']);
+      expect(recipients[0].subscription?.id).toBe('s1');
+      expect((recipients[0].user as any).subscriptions).toBeUndefined();
+
+      const args = (prisma.user.findMany as jest.Mock).mock.calls[0][0];
+      expect(args.where.subscriptions.some).toEqual({
+        AND: [{ memberPlanID: { in: ['p1'] } }],
+      });
+      expect(args.include.subscriptions.take).toBe(1);
+      expect(args.include.subscriptions.where).toEqual(
+        args.where.subscriptions.some
+      );
+    });
+
+    it('binds no subscription for the user-based audiences', async () => {
+      const prisma = {
+        user: { findMany: jest.fn(async () => [{ id: 'u1' }]) },
+      };
+
+      const recipients = await makeService(prisma).resolvePage(
+        { base: MailRecipientBase.allUsers },
+        0,
+        100,
+        MailChannel.letter
+      );
+
+      expect(recipients[0].subscription).toBeUndefined();
+      const args = (prisma.user.findMany as jest.Mock).mock.calls[0][0];
+      expect(args.include.subscriptions).toBeUndefined();
+    });
+
+    it('counts people without an address, not subscriptions', async () => {
+      const prisma = {
+        user: { count: jest.fn(async () => 2) },
+        subscription: { count: jest.fn() },
+      };
+
+      expect(
+        await makeService(prisma).countWithoutAddress(
+          { base: MailRecipientBase.endedSubscription },
+          MailChannel.letter
+        )
+      ).toBe(2);
+      expect(prisma.subscription.count).not.toHaveBeenCalled();
     });
   });
 });

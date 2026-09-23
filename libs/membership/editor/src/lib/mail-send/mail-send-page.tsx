@@ -103,11 +103,16 @@ const DEFAULT_PRINT: PrintSettings = {
 type EndedMode = 'days' | 'period';
 type DateRange = [Date, Date];
 
-/** The three stages the author walks through: audience, content, send. */
-const STEP_AUDIENCE = 0;
-const STEP_CONTENT = 1;
+/**
+ * The three stages the author walks through: content, audience, send. Content
+ * comes first because it settles the medium, and the medium decides what the
+ * recipient count even means — a letter goes to a person, a mail to a
+ * subscription.
+ */
+const STEP_CONTENT = 0;
+const STEP_AUDIENCE = 1;
 const STEP_SEND = 2;
-const STEP_KEYS = ['audience', 'content', 'send'] as const;
+const STEP_KEYS = ['content', 'audience', 'send'] as const;
 
 /**
  * Width of the wizard column. Fixed rather than fluid so the steps keep their
@@ -191,7 +196,7 @@ function MailSendPage() {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [recipientsOpen, setRecipientsOpen] = useState(false);
   const [jobId, setJobId] = useState<string | null>(null);
-  const [step, setStep] = useState(STEP_AUDIENCE);
+  const [step, setStep] = useState(STEP_CONTENT);
 
   const { data: templateData, refetch: refetchTemplates } =
     useMailTemplateQuery(DEFAULT_QUERY_OPTIONS());
@@ -266,7 +271,7 @@ function MailSendPage() {
   const { data: previewData, loading: previewLoading } =
     useMailSendRecipientPreviewQuery({
       ...DEFAULT_QUERY_OPTIONS(),
-      variables: { audience },
+      variables: { audience, channel },
     });
 
   const [createJob, { loading: creating }] = useCreateMailSendJobMutation({
@@ -295,9 +300,10 @@ function MailSendPage() {
     },
   });
 
+  // Messages, not people: for a mail one person can match through several
+  // subscriptions and receives one each. A letter send is already collapsed to
+  // one per person by the API, so there `count === userCount`.
   const count = previewData?.mailSendRecipientPreview.count ?? 0;
-  // One person can match through several subscriptions and would then receive
-  // the mail more than once — say so rather than implying `count` people.
   const userCount = previewData?.mailSendRecipientPreview.userCount ?? 0;
   const allowsSubscriptionTemplates =
     previewData?.mailSendRecipientPreview.allowsSubscriptionTemplates ?? false;
@@ -335,9 +341,9 @@ function MailSendPage() {
     template => template.id === templateId
   )?.name;
 
-  // What each step has to produce before the next one makes sense: an audience
-  // with recipients, then a template to preview.
-  const stepComplete = [count > 0 && !previewLoading, !!templateId];
+  // What each step has to produce before the next one makes sense: a template
+  // to send, then an audience with recipients.
+  const stepComplete = [!!templateId, count > 0 && !previewLoading];
 
   // Once the job exists the wizard is done — stepping back would only offer
   // edits that can no longer affect the running send.
@@ -379,6 +385,8 @@ function MailSendPage() {
       loading={previewLoading}
       count={count}
       userCount={userCount}
+      isLetter={isLetter}
+      withoutAddressCount={withoutAddressCount}
       missing={missing}
       onShowRecipients={() => setRecipientsOpen(true)}
       action={action}
@@ -431,6 +439,62 @@ function MailSendPage() {
               </Step>
             ))}
           </Stepper>
+
+          {step === STEP_CONTENT && (
+            <>
+              <Panel
+                bordered
+                header={t('mailSend.template')}
+                style={{ marginTop: 16 }}
+              >
+                <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+                  <SelectPicker
+                    block
+                    data={(templateData?.mailTemplates ?? []).map(template => ({
+                      label: template.name,
+                      value: template.id,
+                    }))}
+                    value={templateId}
+                    onChange={setTemplateId}
+                    placeholder={t('mailSend.selectTemplate')}
+                    style={{ flex: 1, minWidth: 0 }}
+                  />
+                  <IconButton
+                    as={Link}
+                    to="/mailtemplates/create"
+                    target="_blank"
+                    appearance="ghost"
+                    icon={<MdAdd />}
+                  >
+                    {t('mailSend.createTemplate')}
+                  </IconButton>
+                </div>
+
+                {missing.length > 0 && (
+                  <Message
+                    type="warning"
+                    style={{ marginTop: 12 }}
+                  >
+                    {t('mailSend.missingPlaceholders', {
+                      placeholders: missing.join(', '),
+                    })}
+                  </Message>
+                )}
+              </Panel>
+
+              <ChannelPanel
+                channel={channel}
+                onChannelChange={setChannel}
+                print={print}
+                onPrintChange={setPrint}
+              />
+
+              <StepNav
+                onNext={() => setStep(STEP_AUDIENCE)}
+                nextDisabled={!stepComplete[STEP_CONTENT]}
+              />
+            </>
+          )}
 
           {step === STEP_AUDIENCE && (
             <>
@@ -773,66 +837,9 @@ function MailSendPage() {
               {recipientSummary()}
 
               <StepNav
-                onNext={() => setStep(STEP_CONTENT)}
-                nextDisabled={!stepComplete[STEP_AUDIENCE]}
-              />
-            </>
-          )}
-
-          {step === STEP_CONTENT && (
-            <>
-              <Panel
-                bordered
-                header={t('mailSend.template')}
-                style={{ marginTop: 16 }}
-              >
-                <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-                  <SelectPicker
-                    block
-                    data={(templateData?.mailTemplates ?? []).map(template => ({
-                      label: template.name,
-                      value: template.id,
-                    }))}
-                    value={templateId}
-                    onChange={setTemplateId}
-                    placeholder={t('mailSend.selectTemplate')}
-                    style={{ flex: 1, minWidth: 0 }}
-                  />
-                  <IconButton
-                    as={Link}
-                    to="/mailtemplates/create"
-                    target="_blank"
-                    appearance="ghost"
-                    icon={<MdAdd />}
-                  >
-                    {t('mailSend.createTemplate')}
-                  </IconButton>
-                </div>
-
-                {missing.length > 0 && (
-                  <Message
-                    type="warning"
-                    style={{ marginTop: 12 }}
-                  >
-                    {t('mailSend.missingPlaceholders', {
-                      placeholders: missing.join(', '),
-                    })}
-                  </Message>
-                )}
-              </Panel>
-
-              <ChannelPanel
-                channel={channel}
-                onChannelChange={setChannel}
-                print={print}
-                onPrintChange={setPrint}
-                withoutAddressCount={withoutAddressCount}
-              />
-
-              <StepNav
-                onBack={() => setStep(STEP_AUDIENCE)}
+                onBack={() => setStep(STEP_CONTENT)}
                 onNext={() => setStep(STEP_SEND)}
-                nextDisabled={!stepComplete[STEP_CONTENT]}
+                nextDisabled={!stepComplete[STEP_AUDIENCE]}
               />
             </>
           )}
@@ -863,17 +870,6 @@ function MailSendPage() {
                 </Stack>
               </Panel>
 
-              {isLetter && withoutAddressCount > 0 && (
-                <Message
-                  type="warning"
-                  style={{ marginTop: 16 }}
-                >
-                  {t('mailSend.channel.withoutAddress', {
-                    count: withoutAddressCount,
-                  })}
-                </Message>
-              )}
-
               {recipientSummary(
                 <Button
                   appearance="primary"
@@ -887,7 +883,7 @@ function MailSendPage() {
               {jobId && <JobProgress jobId={jobId} />}
 
               <StepNav
-                onBack={jobId ? undefined : () => setStep(STEP_CONTENT)}
+                onBack={jobId ? undefined : () => setStep(STEP_AUDIENCE)}
               />
             </>
           )}
@@ -918,6 +914,7 @@ function MailSendPage() {
         open={recipientsOpen}
         onClose={() => setRecipientsOpen(false)}
         audience={audience}
+        channel={channel}
         totalCount={count}
       />
 
@@ -929,7 +926,11 @@ function MailSendPage() {
         <Modal.Header>
           <Modal.Title>{t('mailSend.confirmTitle')}</Modal.Title>
         </Modal.Header>
-        <Modal.Body>{t('mailSend.confirmText', { count })}</Modal.Body>
+        <Modal.Body>
+          {t(isLetter ? 'mailSend.confirmTextLetter' : 'mailSend.confirmText', {
+            count,
+          })}
+        </Modal.Body>
         <Modal.Footer>
           <Button
             appearance="primary"
@@ -951,14 +952,17 @@ function MailSendPage() {
 }
 
 /**
- * How many recipients the current audience resolves to, plus the warning about
- * placeholders this audience cannot fill. Shown while choosing the audience and
- * again before sending; only the send step passes an `action`.
+ * How many messages the current audience resolves to, plus the warnings about
+ * placeholders this audience cannot fill and recipients a letter cannot reach.
+ * Shown while choosing the audience and again before sending; only the send step
+ * passes an `action`.
  */
 function RecipientSummary({
   loading,
   count,
   userCount,
+  isLetter,
+  withoutAddressCount,
   missing,
   onShowRecipients,
   action,
@@ -966,6 +970,8 @@ function RecipientSummary({
   loading: boolean;
   count: number;
   userCount: number;
+  isLetter: boolean;
+  withoutAddressCount: number;
   missing: string[];
   onShowRecipients: () => void;
   action?: ReactElement;
@@ -988,6 +994,8 @@ function RecipientSummary({
           <span>
             {loading ?
               t('mailSend.counting')
+            : isLetter ?
+              t('mailSend.lettersCount', { count })
             : count === userCount ?
               t('mailSend.recipientsCount', { count })
             : t('mailSend.recipientsCountPerPerson', {
@@ -1008,6 +1016,17 @@ function RecipientSummary({
 
         {action}
       </Stack>
+
+      {isLetter && withoutAddressCount > 0 && (
+        <Message
+          type="warning"
+          style={{ marginTop: 12 }}
+        >
+          {t('mailSend.channel.withoutAddress', {
+            count: withoutAddressCount,
+          })}
+        </Message>
+      )}
 
       {missing.length > 0 && (
         <Message
@@ -1080,13 +1099,11 @@ function ChannelPanel({
   onChannelChange,
   print,
   onPrintChange,
-  withoutAddressCount,
 }: {
   channel: MailChannel;
   onChannelChange: (channel: MailChannel) => void;
   print: PrintSettings;
   onPrintChange: (print: PrintSettings) => void;
-  withoutAddressCount: number;
 }) {
   const { t } = useTranslation();
   const isLetter = channel === MailChannel.Letter;
@@ -1114,17 +1131,6 @@ function ChannelPanel({
 
       {isLetter && (
         <>
-          {withoutAddressCount > 0 && (
-            <Message
-              type="warning"
-              style={{ marginTop: 12 }}
-            >
-              {t('mailSend.channel.withoutAddress', {
-                count: withoutAddressCount,
-              })}
-            </Message>
-          )}
-
           <MuiStack
             direction="row"
             flexWrap="wrap"
@@ -1223,11 +1229,11 @@ function TemplatePreview({
   // must not survive it.
   useEffect(() => {
     setRecipientId(null);
-  }, [audience]);
+  }, [audience, channel]);
 
   const { data: recipientData } = useMailSendRecipientsQuery({
     ...DEFAULT_QUERY_OPTIONS(),
-    variables: { audience, take: RECIPIENTS_PAGE_SIZE },
+    variables: { audience, channel, take: RECIPIENTS_PAGE_SIZE },
   });
 
   const isLetter = channel === MailChannel.Letter;
@@ -1344,11 +1350,13 @@ function RecipientListModal({
   open,
   onClose,
   audience,
+  channel,
   totalCount,
 }: {
   open: boolean;
   onClose: () => void;
   audience: MailAudienceInput;
+  channel: MailChannel;
   totalCount: number;
 }) {
   const { t } = useTranslation();
@@ -1358,13 +1366,14 @@ function RecipientListModal({
   // a page that no longer exists.
   useEffect(() => {
     setPage(1);
-  }, [audience]);
+  }, [audience, channel]);
 
   const { data, loading } = useMailSendRecipientsQuery({
     ...DEFAULT_QUERY_OPTIONS(),
     skip: !open,
     variables: {
       audience,
+      channel,
       skip: (page - 1) * RECIPIENTS_PAGE_SIZE,
       take: RECIPIENTS_PAGE_SIZE,
     },

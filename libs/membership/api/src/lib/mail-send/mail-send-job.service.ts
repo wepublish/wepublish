@@ -162,7 +162,10 @@ export class MailSendJobService {
   ): Promise<MailSendJob> {
     const template = await this.loadTemplate(input.mailTemplateId);
 
-    const totalCount = await this.recipientService.count(input.audience);
+    const totalCount = await this.recipientService.count(
+      input.audience,
+      input.channel
+    );
 
     const job = await this.prisma.mailSendJob.create({
       data: {
@@ -428,7 +431,8 @@ export class MailSendJobService {
       const recipients = await this.recipientService.resolvePage(
         audience,
         position,
-        BATCH_SIZE
+        BATCH_SIZE,
+        job.channel
       );
 
       if (recipients.length === 0) {
@@ -727,7 +731,8 @@ export class MailSendJobService {
     const template = await this.loadTemplate(input.mailTemplateId);
     const recipient = await this.findPreviewRecipient(
       input.audience,
-      input.recipientId
+      input.recipientId,
+      input.channel
     );
 
     if (!recipient) {
@@ -788,7 +793,8 @@ export class MailSendJobService {
    */
   private async findPreviewRecipient(
     audience: MailAudienceInput,
-    recipientId?: string | null
+    recipientId?: string | null,
+    channel?: MailChannel | null
   ): Promise<MailRecipient | null> {
     let skip = 0;
 
@@ -796,7 +802,8 @@ export class MailSendJobService {
       const page = await this.recipientService.resolvePage(
         audience,
         skip,
-        BATCH_SIZE
+        BATCH_SIZE,
+        channel
       );
 
       if (!page.length) {

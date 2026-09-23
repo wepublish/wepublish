@@ -20,8 +20,11 @@ fragment FullMailSendJob on MailSendJobModel {
   }
 }
 
-query MailSendRecipientPreview($audience: MailAudienceInput!) {
-  mailSendRecipientPreview(audience: $audience) {
+query MailSendRecipientPreview(
+  $audience: MailAudienceInput!
+  $channel: MailChannel
+) {
+  mailSendRecipientPreview(audience: $audience, channel: $channel) {
     count
     userCount
     withoutAddressCount
@@ -31,10 +34,16 @@ query MailSendRecipientPreview($audience: MailAudienceInput!) {
 
 query MailSendRecipients(
   $audience: MailAudienceInput!
+  $channel: MailChannel
   $skip: Int
   $take: Int
 ) {
-  mailSendRecipients(audience: $audience, skip: $skip, take: $take) {
+  mailSendRecipients(
+    audience: $audience
+    channel: $channel
+    skip: $skip
+    take: $take
+  ) {
     nodes {
       id
       userId

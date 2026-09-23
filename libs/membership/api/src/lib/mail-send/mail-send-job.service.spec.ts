@@ -458,6 +458,33 @@ describe('MailSendJobService', () => {
       expect(prisma.jobs[0].status).toBe('done');
     });
 
+    it('plans and queues a letter send once per person', async () => {
+      const prisma = fakePrisma();
+      const recipientService = recipientServiceFor(['u1']);
+
+      await makeService(
+        prisma,
+        { sendMail: jest.fn(async () => undefined) },
+        recipientService,
+        { sendLetter: jest.fn(async () => 'log-1') }
+      ).createJob(
+        { mailTemplateId: 'tpl-1', audience, channel: MailChannel.letter },
+        'editor-1'
+      );
+      await settle(prisma);
+
+      expect(recipientService.count).toHaveBeenCalledWith(
+        audience,
+        MailChannel.letter
+      );
+      expect(recipientService.resolvePage).toHaveBeenCalledWith(
+        audience,
+        0,
+        expect.any(Number),
+        MailChannel.letter
+      );
+    });
+
     it('records a letter that could not be posted and keeps going', async () => {
       const prisma = fakePrisma();
       const recipientService = recipientServiceFor(['u1', 'u2']);

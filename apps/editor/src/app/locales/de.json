@@ -2887,8 +2887,8 @@
           "description": "Empfängergruppe und Filter"
         },
         "content": {
-          "title": "E-Mail-Inhalt",
-          "description": "Vorlage und Vorschau"
+          "title": "Inhalt & Versandart",
+          "description": "Vorlage, E-Mail oder Brief"
         },
         "send": {
           "title": "E-Mail senden",
@@ -3000,6 +3000,8 @@
       "endsAt": "Abo-Ende",
       "from": "ab",
       "to": "bis",
+      "lettersCount": "{{count}} Briefe",
+      "confirmTextLetter": "Diesen Brief an {{count}} Empfänger:innen senden?",
       "channel": {
         "label": "Versand",
         "mail": "E-Mail",

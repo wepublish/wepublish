@@ -1,5 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma, PrismaClient, Subscription } from '@prisma/client';
+import {
+  MailChannel,
+  Prisma,
+  PrismaClient,
+  Subscription,
+} from '@prisma/client';
 import { UserWithAddress } from '@wepublish/letter/api';
 import {
   DEFAULT_ENDED_WITHIN_DAYS,
@@ -81,9 +86,15 @@ const WITHOUT_ADDRESS: Prisma.UserWhereInput = {
 /**
  * Resolves a manual-send audience into concrete recipients and counts.
  *
- * Dedup rule: a `hasSubscription` audience yields one recipient per matching
+ * Dedup rule: a subscription-based audience yields one recipient per matching
  * subscription (each bound to that subscription's data). Every other base
  * yields one recipient per user (subscription is undefined).
+ *
+ * A letter send collapses that to one recipient per person whatever the base
+ * is: two sheets of paper in the same letterbox saying the same thing are waste,
+ * where two mails in the same inbox are at worst noise. The recipient still
+ * carries a subscription — the first match — so subscription placeholders keep
+ * working.
  */
 @Injectable()
 export class MailSendRecipientService {
@@ -98,7 +109,16 @@ export class MailSendRecipientService {
    * address is present but unusable (an unrecognised country, say) is missing
    * from this number and shows up in the log instead.
    */
-  async countWithoutAddress(audience: MailAudienceInput): Promise<number> {
+  async countWithoutAddress(
+    audience: MailAudienceInput,
+    channel?: MailChannel | null
+  ): Promise<number> {
+    if (this.oncePerUser(channel)) {
+      return this.prisma.user.count({
+        where: { AND: [this.buildUserWhere(audience), WITHOUT_ADDRESS] },
+      });
+    }
+
     switch (audience.base) {
       case MailRecipientBase.allUsers:
         return this.prisma.user.count({ where: WITHOUT_ADDRESS });
@@ -134,6 +154,11 @@ export class MailSendRecipientService {
     }
   }
 
+  /** Whether a send over this channel reaches every person exactly once. */
+  oncePerUser(channel?: MailChannel | null): boolean {
+    return channel === MailChannel.letter;
+  }
+
   /** Whether recipients of this audience carry subscription data. */
   allowsSubscriptionTemplates(audience: MailAudienceInput): boolean {
     return (
@@ -144,7 +169,14 @@ export class MailSendRecipientService {
     );
   }
 
-  async count(audience: MailAudienceInput): Promise<number> {
+  async count(
+    audience: MailAudienceInput,
+    channel?: MailChannel | null
+  ): Promise<number> {
+    if (this.oncePerUser(channel)) {
+      return this.countUsers(audience);
+    }
+
     switch (audience.base) {
       case MailRecipientBase.allUsers:
         return this.prisma.user.count();
@@ -172,29 +204,11 @@ export class MailSendRecipientService {
    * subscriptions is two recipients — and receives two mails.
    */
   async countUsers(audience: MailAudienceInput): Promise<number> {
-    switch (audience.base) {
-      case MailRecipientBase.allUsers:
-        return this.prisma.user.count();
-
-      case MailRecipientBase.noActiveSubscription:
-        return this.prisma.user.count({
-          where: this.buildNoActiveSubscriptionWhere(),
-        });
-
-      case MailRecipientBase.hasSubscription:
-        return this.prisma.user.count({
-          where: {
-            subscriptions: { some: this.buildSubscriptionWhere(audience) },
-          },
-        });
-
-      case MailRecipientBase.endedSubscription:
-        return this.prisma.user.count({
-          where: {
-            subscriptions: { some: this.buildEndedSubscriptionWhere(audience) },
-          },
-        });
+    if (audience.base === MailRecipientBase.allUsers) {
+      return this.prisma.user.count();
     }
+
+    return this.prisma.user.count({ where: this.buildUserWhere(audience) });
   }
 
   /**
@@ -262,8 +276,13 @@ export class MailSendRecipientService {
   async resolvePage(
     audience: MailAudienceInput,
     skip: number,
-    take: number
+    take: number,
+    channel?: MailChannel | null
   ): Promise<MailRecipient[]> {
+    if (this.oncePerUser(channel)) {
+      return this.resolveUserPage(audience, skip, take);
+    }
+
     switch (audience.base) {
       case MailRecipientBase.allUsers: {
         const users = await this.prisma.user.findMany({
@@ -328,6 +347,93 @@ export class MailSendRecipientService {
             subscription: subscription as SubscriptionWithRelations,
           }));
       }
+    }
+  }
+
+  /**
+   * One recipient per person, in the same order the audience would otherwise
+   * produce. Subscription-based audiences still bind a subscription — the
+   * first one that matches — so the letter can name the plan.
+   */
+  private async resolveUserPage(
+    audience: MailAudienceInput,
+    skip: number,
+    take: number
+  ): Promise<MailRecipient[]> {
+    const include: Prisma.UserInclude = {
+      ...userInclude,
+      ...(this.subscriptionSelection(audience) ?? {}),
+    };
+
+    const users = (await this.prisma.user.findMany({
+      where: this.buildUserWhere(audience),
+      include,
+      skip,
+      take,
+      orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
+    })) as (UserWithAddress & {
+      subscriptions?: SubscriptionWithRelations[];
+    })[];
+
+    return users.map(({ subscriptions, ...user }) => ({
+      user: user as UserWithAddress,
+      subscription: subscriptions?.[0],
+    }));
+  }
+
+  /**
+   * The one matching subscription a per-person recipient is bound to, or
+   * nothing at all for the bases that carry no subscription.
+   */
+  private subscriptionSelection(
+    audience: MailAudienceInput
+  ): Prisma.UserInclude | null {
+    switch (audience.base) {
+      case MailRecipientBase.allUsers:
+      case MailRecipientBase.noActiveSubscription:
+        return null;
+
+      case MailRecipientBase.hasSubscription:
+        return {
+          subscriptions: {
+            where: this.buildSubscriptionWhere(audience),
+            include: subscriptionInclude,
+            orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
+            take: 1,
+          },
+        };
+
+      case MailRecipientBase.endedSubscription:
+        return {
+          subscriptions: {
+            where: this.buildEndedSubscriptionWhere(audience),
+            include: subscriptionInclude,
+            // Most recently ended first, like the per-subscription page.
+            orderBy: [{ paidUntil: 'desc' }, { id: 'asc' }],
+            take: 1,
+          },
+        };
+    }
+  }
+
+  /** The audience expressed as a filter on people rather than subscriptions. */
+  private buildUserWhere(audience: MailAudienceInput): Prisma.UserWhereInput {
+    switch (audience.base) {
+      case MailRecipientBase.allUsers:
+        return {};
+
+      case MailRecipientBase.noActiveSubscription:
+        return this.buildNoActiveSubscriptionWhere();
+
+      case MailRecipientBase.hasSubscription:
+        return {
+          subscriptions: { some: this.buildSubscriptionWhere(audience) },
+        };
+
+      case MailRecipientBase.endedSubscription:
+        return {
+          subscriptions: { some: this.buildEndedSubscriptionWhere(audience) },
+        };
     }
   }
 
