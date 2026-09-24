@@ -313,36 +313,43 @@ function UserSubscriptionsList({
     });
   }
 
-  const rows = useMemo<SubscriptionRow[]>(
-    () =>
-      [...(subscriptions ?? [])]
-        .sort(
-          (a, b) =>
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        )
-        .map(subscription => {
-          const periods: PeriodRow[] = [...subscription.periods]
-            .sort(
-              (a, b) =>
-                new Date(b.startsAt).getTime() - new Date(a.startsAt).getTime()
-            )
-            .map(period => ({
-              rowType: 'period',
-              id: period.id,
-              currency: subscription.currency,
-              period,
-            }));
+  const rows = useMemo<SubscriptionRow[]>(() => {
+    const isActive = (subscription: UserSubscriptionFragment) =>
+      getSubscriptionStatus(subscription).label ===
+      'userSubscriptionList.table.active';
+    const paidUntilTime = (subscription: UserSubscriptionFragment) =>
+      subscription.paidUntil ? new Date(subscription.paidUntil).getTime() : 0;
 
-          return {
-            rowType: 'subscription',
-            id: subscription.id,
-            subscription,
-            actionMarker: true as const,
-            ...(periods.length ? { children: periods } : {}),
-          };
-        }),
-    [subscriptions]
-  );
+    return [...(subscriptions ?? [])]
+      .sort(
+        (a, b) =>
+          // active subscriptions first, then by furthest paidUntil
+          Number(isActive(b)) - Number(isActive(a)) ||
+          paidUntilTime(b) - paidUntilTime(a) ||
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      )
+      .map(subscription => {
+        const periods: PeriodRow[] = [...subscription.periods]
+          .sort(
+            (a, b) =>
+              new Date(b.startsAt).getTime() - new Date(a.startsAt).getTime()
+          )
+          .map(period => ({
+            rowType: 'period',
+            id: period.id,
+            currency: subscription.currency,
+            period,
+          }));
+
+        return {
+          rowType: 'subscription',
+          id: subscription.id,
+          subscription,
+          actionMarker: true as const,
+          ...(periods.length ? { children: periods } : {}),
+        };
+      });
+  }, [subscriptions]);
 
   const [expandedRowKeys, setExpandedRowKeys] = useState<string[]>([]);
 
