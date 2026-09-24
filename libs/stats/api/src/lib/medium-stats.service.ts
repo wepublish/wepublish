@@ -13,6 +13,9 @@ import {
   MEDIUM_STATS_SCHEMA_VERSION,
   MediumAccountStats,
   MediumCommunityStats,
+  MediumAuditStats,
+  MediumAuditError,
+  MediumAuditActionCount,
   MediumEditorialStats,
   MediumIntegrationsStats,
   MediumNetworkStats,
@@ -70,6 +73,78 @@ export function sumInvoiceAmounts(
   return invoices.reduce((total, invoice) => total + invoice.amount, 0);
 }
 
+const ERROR_MESSAGE_MAX_LENGTH = 200;
+const TOP_ERROR_COUNT = 5;
+
+/**
+ * The first line of an error that says anything, capped.
+ *
+ * A Prisma failure carries its whole invocation including absolute paths from
+ * the machine it ran on. That is useful in the medium's own log and has no
+ * business travelling to One, so only the opening line goes — it is what makes
+ * the error recognisable, and the rest is the stack that produced it.
+ *
+ * The first NON-EMPTY line, because a Prisma message opens with a newline:
+ * taking line one literally returned the empty string for the single most
+ * common kind of failure, and every one of them was then dropped as unusable.
+ */
+export const summariseErrorMessage = (message: string): string => {
+  const line = message
+    .split('\n')
+    .map(part => part.trim())
+    .find(part => part.length > 0);
+
+  return (line ?? '').slice(0, ERROR_MESSAGE_MAX_LENGTH);
+};
+
+/**
+ * How much of the named-account work the single busiest account does.
+ *
+ * Token actions are left out: an integration is not a person, and counting it
+ * would make an automated newsroom look like a one-man operation. Null when
+ * nobody acted — a share of nothing is not zero concentration.
+ */
+export const busiestEditorShare = (
+  entries: readonly { _count: { _all: number } }[]
+): number | null => {
+  const counts = entries.map(entry => entry._count._all);
+  const total = counts.reduce((sum, count) => sum + count, 0);
+
+  if (total === 0) {
+    return null;
+  }
+
+  return Math.max(...counts) / total;
+};
+
+export const summariseErrors = (
+  entries: readonly {
+    errorMessage: string | null;
+    _count: { _all: number };
+  }[]
+): MediumAuditError[] => {
+  const merged = new Map<string, number>();
+
+  for (const entry of entries) {
+    if (!entry.errorMessage) {
+      continue;
+    }
+
+    const message = summariseErrorMessage(entry.errorMessage);
+
+    if (!message) {
+      continue;
+    }
+
+    merged.set(message, (merged.get(message) ?? 0) + entry._count._all);
+  }
+
+  return [...merged.entries()]
+    .map(([message, count]) => ({ message, count }))
+    .sort((a, b) => b.count - a.count || a.message.localeCompare(b.message))
+    .slice(0, TOP_ERROR_COUNT);
+};
+
 @Injectable()
 export class MediumStatsService {
   constructor(
@@ -89,6 +164,7 @@ export class MediumStatsService {
       membership,
       operations,
       editorial,
+      audit,
       community,
       mail,
       accounts,
@@ -100,6 +176,7 @@ export class MediumStatsService {
       this.membership(window),
       this.operations(),
       this.editorial(window),
+      this.audit(window),
       this.community(window),
       this.mail(window),
       this.accounts(window),
@@ -117,6 +194,7 @@ export class MediumStatsService {
       membership,
       operations,
       editorial,
+      audit,
       community,
       mail,
       accounts,
@@ -348,6 +426,119 @@ export class MediumStatsService {
       migrations,
       changelog,
     };
+  }
+
+  /**
+   * The audit trail in numbers. Every figure is guarded as a unit: an
+   * installation whose migration has not run has no `audit_logs` table, and a
+   * failing count here must not take the whole stats call down. `supported`
+   * tells the caller apart from a quiet medium — zero actions and no audit log
+   * look identical otherwise, and one of them is a finding while the other is
+   * not.
+   */
+  private async audit({ from, to }: StatsWindow): Promise<MediumAuditStats> {
+    const empty = {
+      supported: false,
+      actions: 0,
+      failedActions: 0,
+      activeEditors: 0,
+      impersonatedActions: 0,
+      topEditorShare: null,
+      actionsByType: [],
+      topErrors: [],
+      mutationUsage: [],
+    };
+
+    const inWindow = { createdAt: { gte: from, lte: to } };
+
+    // Deliberately a trailing 30 days rather than the window: the nightly
+    // capture asks for a single day, and "distinct people who worked today"
+    // collapses to zero every weekend. Thirty days is a state of the newsroom
+    // and survives bucketing to a week without lying.
+    const editorsFrom = new Date(to.getTime() - 30 * 24 * 60 * 60 * 1000);
+
+    try {
+      const [
+        actions,
+        failedActions,
+        impersonatedActions,
+        editors,
+        usage,
+        errors,
+        byActor,
+        byType,
+      ] = await Promise.all([
+        this.prisma.auditLog.count({ where: inWindow }),
+        this.prisma.auditLog.count({
+          where: { ...inWindow, success: false },
+        }),
+        this.prisma.auditLog.count({
+          where: { ...inWindow, impersonatedBy: { not: null } },
+        }),
+        this.prisma.auditLog.findMany({
+          where: {
+            createdAt: { gte: editorsFrom, lte: to },
+            userID: { not: null },
+          },
+          distinct: ['userID'],
+          select: { userID: true },
+        }),
+        this.prisma.auditLog.groupBy({
+          by: ['mutation'],
+          where: inWindow,
+          _count: { _all: true },
+        }),
+        this.prisma.auditLog.groupBy({
+          by: ['errorMessage'],
+          where: {
+            ...inWindow,
+            success: false,
+            errorMessage: { not: null },
+          },
+          _count: { _all: true },
+        }),
+        this.prisma.auditLog.groupBy({
+          by: ['userID'],
+          where: { ...inWindow, userID: { not: null } },
+          _count: { _all: true },
+        }),
+        this.prisma.auditLog.groupBy({
+          by: ['action'],
+          where: inWindow,
+          _count: { _all: true },
+        }),
+      ]);
+
+      return {
+        supported: true,
+        actions,
+        failedActions,
+        impersonatedActions,
+        activeEditors: editors.length,
+        topEditorShare: busiestEditorShare(byActor),
+        actionsByType: byType
+          .map(entry => ({
+            action: String(entry.action),
+            count: entry._count._all,
+          }))
+          .sort((a, b) => b.count - a.count),
+        topErrors: summariseErrors(errors),
+        mutationUsage: usage
+          .map(entry => ({
+            mutation: entry.mutation,
+            count: entry._count._all,
+          }))
+          .sort(
+            (a, b) => b.count - a.count || a.mutation.localeCompare(b.mutation)
+          ),
+      };
+    } catch (error) {
+      logger('medium-stats').warn(
+        `Could not read audit logs: ${(error as Error).message}`
+      );
+
+      return empty;
+    }
   }
 
   private async editorial({

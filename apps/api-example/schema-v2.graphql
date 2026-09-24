@@ -2273,6 +2273,19 @@ type MediumAccountStats {
   usersWithRole: Int!
 }
 
+type MediumAuditActionCount {
+  """create, update, delete or other."""
+  action: String!
+  count: Int!
+}
+
+type MediumAuditError {
+  count: Int!
+
+  """First line of the error, capped — enough to recognise it."""
+  message: String!
+}
+
 type MediumAuditLog {
   action: AuditLogAction!
   actorType: AuditLogActorType!
@@ -2322,6 +2335,47 @@ type MediumAuditLogPage {
   """
   supported: Boolean!
   totalCount: Int!
+}
+
+type MediumAuditStats {
+  """Permission gated editor actions in the window."""
+  actions: Int!
+
+  """How the actions split across create, update and delete."""
+  actionsByType: [MediumAuditActionCount!]!
+
+  """
+  Accounts that performed at least one action in the 30 days ending with the window. Deliberately NOT the window itself: a one-day window would drop to zero every weekend and the curve would be unreadable.
+  """
+  activeEditors: Int!
+
+  """
+  Of those, the ones the system refused. A rate worth acting on needs both numbers, so they travel together.
+  """
+  failedActions: Int!
+
+  """Actions performed while impersonating another account."""
+  impersonatedActions: Int!
+
+  """
+  How often each mutation was used in the window, most used first. Shows whether a shipped feature is actually being touched.
+  """
+  mutationUsage: [MediumMutationUsage!]!
+
+  """
+  False when this installation keeps no audit log, in which case every figure below is zero and must not be read as "nothing happened".
+  """
+  supported: Boolean!
+
+  """
+  Share of all named-account actions performed by the single busiest account. Five editors where one does 90 % looks identical to five balanced ones in activeEditors alone — this is what tells them apart. Null when nobody acted.
+  """
+  topEditorShare: Float
+
+  """
+  The errors editors ran into most often, worst first. Without this the error rate says something is wrong but never what, and the answer sits one filtered page away.
+  """
+  topErrors: [MediumAuditError!]!
 }
 
 type MediumChangelogAction {
@@ -2433,6 +2487,11 @@ type MediumMoneyStats {
   revenue: Int!
 }
 
+type MediumMutationUsage {
+  count: Int!
+  mutation: String!
+}
+
 type MediumNetworkStats {
   peersDisabled: Int!
   peersTotal: Int!
@@ -2455,6 +2514,7 @@ type MediumOperationsStats {
 
 type MediumStats {
   accounts: MediumAccountStats!
+  audit: MediumAuditStats!
   community: MediumCommunityStats!
   currency: String
   editorial: MediumEditorialStats!
