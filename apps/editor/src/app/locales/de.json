@@ -1337,7 +1337,8 @@
       "apps": "Apps",
       "mailSend": "E-Mail senden",
       "mailLog": "Gesendete E-Mails",
-      "communication": "Kommunikation"
+      "communication": "Kommunikation",
+      "newsletters": "Newsletter"
     },
     "navigation": {
       "overview": {
@@ -3177,6 +3178,252 @@
         "sentAt": "Gesendet am",
         "attempts": "Versuche",
         "empty": "Keine Einträge für diesen Filter."
+      }
+    },
+    "newsletter": {
+      "list": {
+        "title": "Newsletter",
+        "createNew": "Neue Ausgabe",
+        "name": "Titel",
+        "blocks": "Blöcke",
+        "modifiedAt": "Zuletzt geändert",
+        "mailchimp": "Mailchimp",
+        "openDraft": "Entwurf öffnen",
+        "draftExists": "Entwurf vorhanden",
+        "notPublished": "Nicht übertragen",
+        "delete": "Löschen"
+      },
+      "create": {
+        "title": "Neue Ausgabe anlegen",
+        "name": "Titel der Ausgabe",
+        "namePlaceholder": "z.B. Newsletter 21.8.2026",
+        "copyLatest": "Struktur von «{{title}}» übernehmen",
+        "create": "Anlegen"
+      },
+      "delete": {
+        "title": "Newsletter löschen",
+        "body": "Willst Du die Ausgabe «{{name}}» wirklich löschen?",
+        "delete": "Newsletter löschen"
+      },
+      "editor": {
+        "loading": "Wird geladen …",
+        "backToList": "Übersicht",
+        "preview": "Vorschau",
+        "openInMailchimp": "In Mailchimp öffnen",
+        "saving": "Wird gespeichert …",
+        "savedAt": "Gespeichert um {{time}}.",
+        "publishing": "Wird an Mailchimp übertragen …",
+        "publish": "An Mailchimp",
+        "publishFailed": "Die Übertragung an Mailchimp ist fehlgeschlagen.",
+        "campaignCreated": "Kampagne erstellt um {{time}}.",
+        "campaignUpdated": "Kampagne aktualisiert um {{time}}.",
+        "unsaved": "Nicht gespeichert",
+        "pushed": "An Mailchimp übertragen",
+        "notPushed": "Nicht an Mailchimp übertragen",
+        "changesNotPushed": "Änderungen nicht übertragen"
+      },
+      "canvas": {
+        "unknownBlock": "Unbekannter Block: {{type}}"
+      },
+      "categories": {
+        "articles": "Artikel",
+        "content": "Inhalt",
+        "header": "Kopfzeile",
+        "footer": "Fusszeile"
+      },
+      "blocks": {
+        "teaser": "Artikel-Teaser",
+        "rubric": "Rubrik-Balken",
+        "heading": "Titel",
+        "text": "Textblock",
+        "image": "Bild",
+        "panel": "Info-Box",
+        "button": "Button",
+        "meta": "Kopfzeile (Label / Datum)",
+        "divider": "Trennlinie",
+        "footer": "Fusszeile"
+      },
+      "fields": {
+        "preheader": "Vorschautext (erscheint neben dem Betreff)",
+        "text": "Text",
+        "footerLines": "Impressum: Text",
+        "footerLegal": "Rechtliches (Abmeldelink & Adresse)",
+        "footerTitle": "Impressum: Titel",
+        "gutter": "Einzug",
+        "gutterNone": "Keiner ({{px}})",
+        "gutterArticle": "Artikel ({{px}})",
+        "gutterIntro": "Intro ({{px}})",
+        "condition": "Dynamischer Inhalt (optional)",
+        "article": "Artikel",
+        "pickArticle": "Artikel wählen …",
+        "tag": "Tag",
+        "allTags": "Alle Tags",
+        "articleCount": "{{shown}} von {{total}} Artikeln",
+        "variant": "Darstellung",
+        "variantBig": "Gross (mit Bild)",
+        "variantShort": "Kurz",
+        "rubric": "Rubrik",
+        "heading": "Titel",
+        "image": "Bild",
+        "alt": "Alt-Text",
+        "imageHref": "Verlinkt auf (optional)",
+        "caption": "Bildlegende (optional)",
+        "title": "Titel",
+        "panelImage": "Bild links (optional)",
+        "linkLabel": "Link-Text (optional)",
+        "linkHref": "Link-Ziel (optional)",
+        "buttonLabel": "Beschriftung",
+        "buttonHref": "Ziel",
+        "metaLeft": "Links",
+        "metaRight": "Rechts"
+      },
+      "image": {
+        "cmsImage": "Bild aus der Mediathek ({{id}})",
+        "chooseFromLibrary": "Aus Mediathek wählen",
+        "remove": "Entfernen"
+      },
+      "prose": {
+        "bold": "F",
+        "boldTitle": "Fett (Strg/Cmd+B)",
+        "link": "Link",
+        "list": "Liste",
+        "mergeTag": "Merge-Tag",
+        "mergeTagTitle": "Mailchimp-Merge-Tag einfügen",
+        "applyLink": "Übernehmen",
+        "removeLink": "Entfernen",
+        "searchMergeTags": "Merge-Tag suchen …",
+        "loadingMergeTags": "Merge-Tags werden geladen …",
+        "noMergeTag": "Kein Merge-Tag gefunden.",
+        "hint": "Enter beginnt einen neuen Absatz. Merge-Tags werden erst von Mailchimp ersetzt — im Editor und in der Vorschau bleibt der Tag stehen."
+      },
+      "condition": {
+        "groupFields": "Kontaktfelder",
+        "groupInterests": "Interessengruppen",
+        "groupStored": "Im Dokument gespeichert",
+        "always": "Immer anzeigen (keine Bedingung)",
+        "is": "ist",
+        "isNot": "ist nicht",
+        "pickGroup": "Gruppe wählen …",
+        "value": "Wert",
+        "emptyValue": "Ohne Wert gilt keine Bedingung — der Block geht an alle Empfänger.",
+        "nothingToCompare": "Das Mailchimp-Publikum hat keine eigenen Kontaktfelder und keine Interessengruppen — es gibt nichts, worauf sich eine Bedingung beziehen könnte.",
+        "hint": "Mailchimp wertet die Bedingung erst beim Versand aus. Im Editor, in der Vorschau und im Mailchimp-Entwurf bleibt der Block sichtbar."
+      },
+      "report": {
+        "title": "Prüfung",
+        "problems_one": "{{count}} Problem",
+        "problems_other": "{{count}} Probleme",
+        "hints_one": "{{count}} Hinweis",
+        "hints_other": "{{count}} Hinweise",
+        "ok": "in Ordnung",
+        "size": "{{size}} von {{limit}} ({{percent}} %)",
+        "measuring": "Grösse wird bestimmt …",
+        "savedState": "gespeicherter Stand",
+        "required": {
+          "unsubscribe": "ein Abmeldelink",
+          "address": "die Postadresse"
+        },
+        "missingFooter": "In der Fusszeile fehlt {{what}}. Mailchimp verweigert den Versand einer Kampagne ohne diese Angabe.",
+        "missingArticles_one": "{{count}} Artikel wird vom CMS nicht mehr geliefert ({{ids}}). Die Übertragung an Mailchimp wird abgelehnt, bis der Teaser ersetzt oder entfernt ist.",
+        "missingArticles_other": "{{count}} Artikel werden vom CMS nicht mehr geliefert ({{ids}}). Die Übertragung an Mailchimp wird abgelehnt, bis die Teaser ersetzt oder entfernt sind.",
+        "missingImages_one": "{{count}} Bild wurde in der Mediathek nicht gefunden. Die Übertragung an Mailchimp wird abgelehnt, bis es ersetzt oder entfernt ist.",
+        "missingImages_other": "{{count}} Bilder wurden in der Mediathek nicht gefunden. Die Übertragung an Mailchimp wird abgelehnt, bis sie ersetzt oder entfernt sind.",
+        "sizeFailed": "Grösse konnte nicht bestimmt werden: {{error}}",
+        "clipped": "Gmail schneidet die Ausgabe ab und versteckt den Schluss — Impressum, Abmeldelink und Adresse — hinter «Nachricht gekürzt».",
+        "nearLimit": "Nahe an der Grenze. Beim Versand kommt Grösse dazu: Mailchimp setzt jedes Merge-Tag ein und ersetzt jeden Link durch eine längere Tracking-Adresse.",
+        "headroom": "Bis Gmail kürzt, sind noch {{free}} frei.",
+        "stale": "Die Änderungen seit dem Speichern sind nicht eingerechnet — Speichern rechnet neu."
+      },
+      "mergeTags": {
+        "groups": {
+          "system": "System-Tags",
+          "fields": "Kontaktfelder"
+        },
+        "audienceField": "Feld «{{tag}}» aus dem Mailchimp-Publikum.",
+        "unsub": {
+          "label": "Vom Newsletter abmelden",
+          "description": "Link auf das Abmeldeformular. Von Mailchimp in jeder Kampagne verlangt."
+        },
+        "listAddressHtml": {
+          "label": "Postadresse (formatiert)",
+          "description": "Postadresse des Publikums mit «Add us to your address book»-Link. Erfüllt die verlangte Adressangabe."
+        },
+        "listAddress": {
+          "label": "Postadresse",
+          "description": "Postadresse des Publikums als reiner Text. Erfüllt die verlangte Adressangabe."
+        },
+        "listAddressLine": {
+          "label": "Postadresse (einzeilig)",
+          "description": "Postadresse des Publikums als reiner Text auf einer Zeile. Erfüllt die verlangte Adressangabe."
+        },
+        "rewards": {
+          "label": "Referral-Badge",
+          "description": "Fügt das Referral-Badge ein. Im Gratis-Tarif von Mailchimp verlangt."
+        },
+        "updateProfile": {
+          "label": "Einstellungen ändern",
+          "description": "Link, über den ein Kontakt seine Einstellungen anpasst."
+        },
+        "archive": {
+          "label": "Im Browser ansehen",
+          "description": "Link auf die Browser-Version dieser Ausgabe."
+        },
+        "forward": {
+          "label": "An Bekannte weiterleiten",
+          "description": "Link auf das Weiterleitungsformular des Publikums."
+        },
+        "listSubscribe": {
+          "label": "Newsletter abonnieren",
+          "description": "Adresse des gehosteten Anmeldeformulars."
+        },
+        "aboutList": {
+          "label": "Über diese Liste",
+          "description": "Link auf die «About your list»-Seite."
+        },
+        "listUrl": {
+          "label": "Website",
+          "description": "Die im Publikum hinterlegte Website-Adresse."
+        },
+        "listAddressVcardHref": {
+          "label": "Adressbuch-Eintrag",
+          "description": "Adresse der vCard-Datei des Publikums."
+        },
+        "listAddressVcard": {
+          "label": "vCard-Link (fertig)",
+          "description": "«Add us to your address book»-Link auf die vCard."
+        },
+        "listDescription": {
+          "label": "Permission Reminder",
+          "description": "Die Erinnerung des Publikums, warum ein Kontakt diese Mail erhält."
+        },
+        "listCompany": {
+          "label": "Firmenname",
+          "description": "Name der Firma oder Organisation des Publikums."
+        },
+        "listName": {
+          "label": "Name des Publikums",
+          "description": "Name des Mailchimp-Publikums."
+        },
+        "listPhone": {
+          "label": "Telefonnummer",
+          "description": "Die im Publikum hinterlegte Telefonnummer."
+        },
+        "listUid": {
+          "label": "Publikums-ID",
+          "description": "Die eindeutige ID des Publikums."
+        },
+        "abuseEmail": {
+          "label": "Kontakt-E-Mail",
+          "description": "Die in den Fusszeilen-Angaben hinterlegte E-Mail-Adresse."
+        },
+        "email": {
+          "label": "E-Mail des Kontakts",
+          "description": "Die E-Mail-Adresse der Empfängerin."
+        },
+        "currentYear": {
+          "label": "Aktuelles Jahr",
+          "description": "Das laufende Jahr, vierstellig."
+        }
       }
     }
   }

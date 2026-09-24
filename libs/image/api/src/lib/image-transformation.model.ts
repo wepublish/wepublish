@@ -12,6 +12,18 @@ registerEnumType(ImageRotation, {
   name: 'ImageRotation',
 });
 
+export enum ImageOutputFormat {
+  Webp = 'webp',
+  Jpeg = 'jpeg',
+  Png = 'png',
+}
+
+registerEnumType(ImageOutputFormat, {
+  name: 'ImageOutputFormat',
+  description:
+    'Encoding of a transformed image. Defaults to WebP; JPEG is for consumers without a WebP decoder, e.g. Outlook.',
+});
+
 @InputType()
 export class ImageTransformation {
   @Field(() => Int, { nullable: true })
@@ -34,4 +46,7 @@ export class ImageTransformation {
 
   @Field(() => Boolean, { nullable: true })
   sharpen?: boolean | null;
+
+  @Field(() => ImageOutputFormat, { nullable: true })
+  format?: ImageOutputFormat | null;
 }

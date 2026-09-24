@@ -712,6 +712,16 @@ input CreateExternalAppInput {
   url: String!
 }
 
+input CreateNewsletterInput {
+  document: JSONObject
+
+  """
+  Start from a copy of this newsletter document instead of the built-in default.
+  """
+  fromNewsletterId: String
+  title: String!
+}
+
 type CreateSubscriptionInfo {
   discountCodeValid: Boolean
   discountPercent: Float
@@ -1499,6 +1509,15 @@ input ImageGalleryImageInput {
   imageID: String
 }
 
+"""
+Encoding of a transformed image. Defaults to WebP; JPEG is for consumers without a WebP decoder, e.g. Outlook.
+"""
+enum ImageOutputFormat {
+  Jpeg
+  Png
+  Webp
+}
+
 enum ImageRotation {
   Auto
   Rotate0
@@ -1514,6 +1533,7 @@ enum ImageSort {
 
 input ImageTransformation {
   blur: Boolean
+  format: ImageOutputFormat
   grayscale: Boolean
   height: Int
   negate: Boolean
@@ -2512,6 +2532,7 @@ type Mutation {
 
   """Creates a new navigation."""
   createNavigation(key: String!, links: [NavigationLinkInput!]!, name: String!): Navigation!
+  createNewsletter(input: CreateNewsletterInput!): Newsletter!
 
   """Creates an page."""
   createPage(blocks: [BlockContentInput!]!, description: String, hidden: Boolean!, imageID: String, properties: [PropertyInput!]!, seoDescription: String, seoTitle: String, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
@@ -2651,6 +2672,7 @@ type Mutation {
 
   """Deletes an existing navigation."""
   deleteNavigation(id: String!): Navigation!
+  deleteNewsletter(id: String!): Newsletter!
 
   """Deletes an page."""
   deletePage(id: String!): String!
@@ -2786,6 +2808,7 @@ type Mutation {
 
   """Publishes an article at the given time."""
   publishArticle(id: String!, publishedAt: DateTime!): Article!
+  publishNewsletterToMailchimp(id: String!): NewsletterPublishResult!
 
   """Publishes an page at the given time."""
   publishPage(id: String!, publishedAt: DateTime!): Page!
@@ -2943,6 +2966,7 @@ type Mutation {
 
   """Updates an existing navigation."""
   updateNavigation(id: String!, key: String!, links: [NavigationLinkInput!]!, name: String!): Navigation!
+  updateNewsletter(input: UpdateNewsletterInput!): Newsletter!
 
   """Updates an page."""
   updatePage(blocks: [BlockContentInput!]!, description: String, hidden: Boolean!, id: String!, imageID: String, properties: [PropertyInput!]!, seoDescription: String, seoTitle: String, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
@@ -3061,6 +3085,95 @@ enum NavigationLinkType {
   Article
   External
   Page
+}
+
+type Newsletter {
+  blockCount: Int!
+  createdAt: DateTime!
+
+  """The block document; see @wepublish/newsletter for its shape."""
+  document: JSONObject!
+  id: String!
+
+  """The CMS images the document references."""
+  images: [NewsletterImage!]!
+  mailchimpCampaignId: String
+  mailchimpCampaignWebId: Int
+
+  """Link to the draft in the Mailchimp admin, once published."""
+  mailchimpEditUrl: String
+  modifiedAt: DateTime!
+
+  """The articles the document teases, as the mail renders them."""
+  teaserArticles: [NewsletterArticle!]!
+  title: String!
+}
+
+type NewsletterArticle {
+  id: String!
+
+  """JPEG variant sized for the teaser column, for mail clients."""
+  imageUrl: String
+  lead: String
+  preTitle: String
+  publishedAt: DateTime
+  tags: [String!]!
+  title: String!
+  url: String!
+}
+
+type NewsletterCampaign {
+  editUrl: String!
+  id: String!
+  title: String!
+  webId: Int!
+}
+
+type NewsletterImage {
+  id: String!
+
+  """JPEG variant sized for the widest column it fills."""
+  url: String!
+}
+
+type NewsletterInterestCategory {
+  groups: [String!]!
+  title: String!
+}
+
+type NewsletterMergeField {
+  name: String!
+  tag: String!
+}
+
+type NewsletterMergeFieldCatalogue {
+  """Why the fields or the groups could not be loaded, if so."""
+  error: String
+  fields: [NewsletterMergeField!]!
+  interests: [NewsletterInterestCategory!]!
+}
+
+type NewsletterPreview {
+  html: String!
+  report: NewsletterReport!
+}
+
+type NewsletterPublishResult {
+  campaign: NewsletterCampaign!
+
+  """Whether a new draft was created rather than updated."""
+  created: Boolean!
+  report: NewsletterReport!
+}
+
+type NewsletterReport {
+  """UTF-8 bytes of the rendered HTML."""
+  bytes: Int!
+  missingArticles: [String!]!
+
+  """Required footer tags the HTML lacks: unsubscribe, address."""
+  missingFooter: [String!]!
+  missingImages: [String!]!
 }
 
 type NotificationConfirmation {
@@ -3315,6 +3428,12 @@ type PaginatedMailSendRecipient {
 
 type PaginatedMemberPlans {
   nodes: [MemberPlan!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type PaginatedNewsletters {
+  nodes: [Newsletter!]!
   pageInfo: PageInfo!
   totalCount: Int!
 }
@@ -4178,6 +4297,26 @@ type Query {
 
   "\n      Returns all new subscribers in a given timeframe.\n      Includes already deactivated ones.\n    "
   newSubscribers(end: DateTime, start: DateTime!): [DashboardSubscription!]!
+  newsletter(id: String!): Newsletter!
+
+  """Published articles the teaser picker offers, newest first."""
+  newsletterArticles(
+    """How many days back the article list reaches."""
+    days: Int! = 90
+    take: Int! = 500
+  ): [NewsletterArticle!]!
+
+  """CMS images by id, as the mail renders them."""
+  newsletterImages(ids: [String!]!): [NewsletterImage!]!
+  newsletterMergeFields: NewsletterMergeFieldCatalogue!
+
+  """
+  The stored newsletter rendered to the HTML Mailchimp would receive, with its size report.
+  """
+  newsletterPreview(id: String!): NewsletterPreview!
+
+  """Newsletters, most recently modified first."""
+  newsletters(skip: Int! = 0, take: Int! = 50): PaginatedNewsletters!
 
   """
   Returns the instance-wide notification confirmations. Requires authentication.
@@ -5284,6 +5423,12 @@ input UpdateCrowdfundingInput {
   id: String!
   memberPlans: [CreateCrowdfundingMemberPlan!]
   name: String
+}
+
+input UpdateNewsletterInput {
+  document: JSONObject
+  id: String!
+  title: String
 }
 
 input UpdateUserSubscriptionInput {

@@ -1338,7 +1338,8 @@
       "apps": "Apps",
       "mailSend": "Send email",
       "mailLog": "Sent emails",
-      "communication": "Communication"
+      "communication": "Communication",
+      "newsletters": "Newsletters"
     },
     "navigation": {
       "overview": {
@@ -3216,6 +3217,252 @@
         "sentAt": "Sent at",
         "attempts": "Attempts",
         "empty": "No entries for this filter."
+      }
+    },
+    "newsletter": {
+      "list": {
+        "title": "Newsletters",
+        "createNew": "New issue",
+        "name": "Title",
+        "blocks": "Blocks",
+        "modifiedAt": "Last modified",
+        "mailchimp": "Mailchimp",
+        "openDraft": "Open draft",
+        "draftExists": "Draft exists",
+        "notPublished": "Not transferred",
+        "delete": "Delete"
+      },
+      "create": {
+        "title": "Create a new issue",
+        "name": "Issue title",
+        "namePlaceholder": "e.g. Newsletter 21.8.2026",
+        "copyLatest": "Start from the structure of “{{title}}”",
+        "create": "Create"
+      },
+      "delete": {
+        "title": "Delete newsletter",
+        "body": "Do you really want to delete the issue “{{name}}”?",
+        "delete": "Delete newsletter"
+      },
+      "editor": {
+        "loading": "Loading …",
+        "backToList": "Overview",
+        "preview": "Preview",
+        "openInMailchimp": "Open in Mailchimp",
+        "saving": "Saving …",
+        "savedAt": "Saved at {{time}}.",
+        "publishing": "Transferring to Mailchimp …",
+        "publish": "To Mailchimp",
+        "publishFailed": "The transfer to Mailchimp failed.",
+        "campaignCreated": "Campaign created at {{time}}.",
+        "campaignUpdated": "Campaign updated at {{time}}.",
+        "unsaved": "Not saved",
+        "pushed": "Transferred to Mailchimp",
+        "notPushed": "Not transferred to Mailchimp",
+        "changesNotPushed": "Changes not transferred"
+      },
+      "canvas": {
+        "unknownBlock": "Unknown block: {{type}}"
+      },
+      "categories": {
+        "articles": "Articles",
+        "content": "Content",
+        "header": "Header",
+        "footer": "Footer"
+      },
+      "blocks": {
+        "teaser": "Article teaser",
+        "rubric": "Section bar",
+        "heading": "Heading",
+        "text": "Text block",
+        "image": "Image",
+        "panel": "Info box",
+        "button": "Button",
+        "meta": "Header row (label / date)",
+        "divider": "Divider",
+        "footer": "Footer"
+      },
+      "fields": {
+        "preheader": "Preview text (shown next to the subject)",
+        "text": "Text",
+        "footerLines": "Imprint: text",
+        "footerLegal": "Legal (unsubscribe link & address)",
+        "footerTitle": "Imprint: title",
+        "gutter": "Inset",
+        "gutterNone": "None ({{px}})",
+        "gutterArticle": "Article ({{px}})",
+        "gutterIntro": "Intro ({{px}})",
+        "condition": "Dynamic content (optional)",
+        "article": "Article",
+        "pickArticle": "Pick an article …",
+        "tag": "Tag",
+        "allTags": "All tags",
+        "articleCount": "{{shown}} of {{total}} articles",
+        "variant": "Layout",
+        "variantBig": "Large (with image)",
+        "variantShort": "Short",
+        "rubric": "Section",
+        "heading": "Heading",
+        "image": "Image",
+        "alt": "Alt text",
+        "imageHref": "Links to (optional)",
+        "caption": "Caption (optional)",
+        "title": "Title",
+        "panelImage": "Image on the left (optional)",
+        "linkLabel": "Link text (optional)",
+        "linkHref": "Link target (optional)",
+        "buttonLabel": "Label",
+        "buttonHref": "Target",
+        "metaLeft": "Left",
+        "metaRight": "Right"
+      },
+      "image": {
+        "cmsImage": "Image from the media library ({{id}})",
+        "chooseFromLibrary": "Choose from media library",
+        "remove": "Remove"
+      },
+      "prose": {
+        "bold": "B",
+        "boldTitle": "Bold (Ctrl/Cmd+B)",
+        "link": "Link",
+        "list": "List",
+        "mergeTag": "Merge tag",
+        "mergeTagTitle": "Insert a Mailchimp merge tag",
+        "applyLink": "Apply",
+        "removeLink": "Remove",
+        "searchMergeTags": "Search merge tags …",
+        "loadingMergeTags": "Loading merge tags …",
+        "noMergeTag": "No merge tag found.",
+        "hint": "Enter starts a new paragraph. Merge tags are only substituted by Mailchimp — the editor and the preview show the tag itself."
+      },
+      "condition": {
+        "groupFields": "Contact fields",
+        "groupInterests": "Interest groups",
+        "groupStored": "Stored in the document",
+        "always": "Always show (no condition)",
+        "is": "is",
+        "isNot": "is not",
+        "pickGroup": "Pick a group …",
+        "value": "Value",
+        "emptyValue": "Without a value there is no condition — the block goes to every recipient.",
+        "nothingToCompare": "The Mailchimp audience has no contact fields of its own and no interest groups — there is nothing a condition could refer to.",
+        "hint": "Mailchimp evaluates the condition at send time. The block stays visible in the editor, the preview and the Mailchimp draft."
+      },
+      "report": {
+        "title": "Checks",
+        "problems_one": "{{count}} problem",
+        "problems_other": "{{count}} problems",
+        "hints_one": "{{count}} note",
+        "hints_other": "{{count}} notes",
+        "ok": "all good",
+        "size": "{{size}} of {{limit}} ({{percent}} %)",
+        "measuring": "Measuring size …",
+        "savedState": "saved state",
+        "required": {
+          "unsubscribe": "an unsubscribe link",
+          "address": "the postal address"
+        },
+        "missingFooter": "The footer lacks {{what}}. Mailchimp refuses to send a campaign without it.",
+        "missingArticles_one": "{{count}} article is no longer delivered by the CMS ({{ids}}). The transfer to Mailchimp is refused until the teaser is replaced or removed.",
+        "missingArticles_other": "{{count}} articles are no longer delivered by the CMS ({{ids}}). The transfer to Mailchimp is refused until the teasers are replaced or removed.",
+        "missingImages_one": "{{count}} image was not found in the media library. The transfer to Mailchimp is refused until it is replaced or removed.",
+        "missingImages_other": "{{count}} images were not found in the media library. The transfer to Mailchimp is refused until they are replaced or removed.",
+        "sizeFailed": "The size could not be measured: {{error}}",
+        "clipped": "Gmail clips the issue and hides the end — imprint, unsubscribe link and address — behind “Message clipped”.",
+        "nearLimit": "Close to the limit. Sending adds size: Mailchimp substitutes every merge tag and rewrites every link into a longer tracking URL.",
+        "headroom": "{{free}} left before Gmail clips.",
+        "stale": "Changes since the last save are not included — saving measures again."
+      },
+      "mergeTags": {
+        "groups": {
+          "system": "System tags",
+          "fields": "Contact fields"
+        },
+        "audienceField": "Field “{{tag}}” of the Mailchimp audience.",
+        "unsub": {
+          "label": "Unsubscribe from the newsletter",
+          "description": "Link to the unsubscribe form. Required by Mailchimp in every campaign."
+        },
+        "listAddressHtml": {
+          "label": "Postal address (formatted)",
+          "description": "The audience's postal address with an “Add us to your address book” link. Satisfies the required address."
+        },
+        "listAddress": {
+          "label": "Postal address",
+          "description": "The audience's postal address as plain text. Satisfies the required address."
+        },
+        "listAddressLine": {
+          "label": "Postal address (one line)",
+          "description": "The audience's postal address as plain text on one line. Satisfies the required address."
+        },
+        "rewards": {
+          "label": "Referral badge",
+          "description": "Inserts the referral badge. Required on Mailchimp's free plan."
+        },
+        "updateProfile": {
+          "label": "Update preferences",
+          "description": "Link through which a contact updates their preferences."
+        },
+        "archive": {
+          "label": "View in browser",
+          "description": "Link to the browser version of this issue."
+        },
+        "forward": {
+          "label": "Forward to a friend",
+          "description": "Link to the audience's forwarding form."
+        },
+        "listSubscribe": {
+          "label": "Subscribe to the newsletter",
+          "description": "Address of the hosted signup form."
+        },
+        "aboutList": {
+          "label": "About this list",
+          "description": "Link to the “About your list” page."
+        },
+        "listUrl": {
+          "label": "Website",
+          "description": "The website address stored with the audience."
+        },
+        "listAddressVcardHref": {
+          "label": "Address book entry",
+          "description": "Address of the audience's vCard file."
+        },
+        "listAddressVcard": {
+          "label": "vCard link (ready-made)",
+          "description": "“Add us to your address book” link to the vCard."
+        },
+        "listDescription": {
+          "label": "Permission reminder",
+          "description": "The audience's reminder of why a contact receives this mail."
+        },
+        "listCompany": {
+          "label": "Company name",
+          "description": "Name of the audience's company or organisation."
+        },
+        "listName": {
+          "label": "Audience name",
+          "description": "Name of the Mailchimp audience."
+        },
+        "listPhone": {
+          "label": "Phone number",
+          "description": "The phone number stored with the audience."
+        },
+        "listUid": {
+          "label": "Audience ID",
+          "description": "The audience's unique ID."
+        },
+        "abuseEmail": {
+          "label": "Contact email",
+          "description": "The email address stored in the footer details."
+        },
+        "email": {
+          "label": "Contact's email",
+          "description": "The recipient's email address."
+        },
+        "currentYear": {
+          "label": "Current year",
+          "description": "The current year, four digits."
+        }
       }
     }
   }
