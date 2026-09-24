@@ -1,14 +1,17 @@
 {
-  "has_staging": false,
+  "has_staging": true,
+  "tdl": {
+    "production": "wepublish.cloud",
+    "staging": "wepublish.works"
+  },
   "website": {
     "production": {
-      "deployment": true,
-      "custom_domain": "https://wepublish.ch",
+      "deployment": false,
       "env": {},
       "secret_env": []
     },
     "staging": {
-      "deployment": false,
+      "deployment": true,
       "env": {},
       "secret_env": []
     },

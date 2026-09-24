@@ -185,7 +185,7 @@ Please review our [CONTRIBUTING.md](CONTRIBUTING.md) and [CODE_OF_CONDUCT.md](CO
 
 ## Demo
 
-- [Editor](https://editor-wepublish-site.wepublish.works)
+- [Editor](https://editor-demo.wepublish.works)
   - Admin:
     - username: `admin@wepublish.media`
     - password: `demoPassword123`
@@ -193,9 +193,8 @@ Please review our [CONTRIBUTING.md](CONTRIBUTING.md) and [CODE_OF_CONDUCT.md](CO
     - username: `editor@wepublish.media`
     - password: `demoPassword123`
 
-- [Website](https://wepublish-site.wepublish.works)
-- [API V1](https://api-wepublish-site.wepublish.works/v1)
-- [API Admin](https://api-wepublish-site.wepublish.works/v1/admin)
+- [Website](https://demo.wepublish.works)
+- [API](https://api-demo.wepublish.works/v1)
 
 ## Services & Offers
 
