@@ -2014,7 +2014,7 @@
         "title": {
           "activated": "Abonnement deaktivieren"
         },
-        "willBeDeactivated": "Das Abonnement wird am {{date, ccc PP p}} deaktiviert"
+        "willBeDeactivated": "Das Abonnement wird am {{date, ccc PP p}} deaktiviert. Grund: {{reason}}"
       },
       "editTitle": "Abonnement bearbeiten",
       "memberPlanMonthlyAmount": "Minimaler monatlicher Betrag ({{currency}})",

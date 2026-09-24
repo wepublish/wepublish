@@ -1965,7 +1965,7 @@
         "title": {
           "activated": "Désactiver l'abonnement"
         },
-        "willBeDeactivated": "L'abonnement sera désactivé le {{date, ccc PP p}}"
+        "willBeDeactivated": "L'abonnement sera désactivé le {{date, ccc PP p}}. Raison : {{reason}}"
       },
       "editTitle": "Modifier l'abonnement",
       "memberPlanMonthlyAmount": "Montant mensuel minimum ({{currency}})",

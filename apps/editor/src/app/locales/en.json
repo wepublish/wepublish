@@ -2081,7 +2081,7 @@
         "title": {
           "activated": "Deactivate subscription"
         },
-        "willBeDeactivated": "The subscription will be deactivated on {{date, ccc PP p}}"
+        "willBeDeactivated": "The subscription will be deactivated on {{date, ccc PP p}}. Reason: {{reason}}"
       },
       "editTitle": "Edit Subscription",
       "memberPlanMonthlyAmount": "Minimal Monthly Amount ({{currency}})",
