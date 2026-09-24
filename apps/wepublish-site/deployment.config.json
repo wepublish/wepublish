@@ -8,7 +8,7 @@
       "secret_env": []
     },
     "staging": {
-      "deployment": true,
+      "deployment": false,
       "env": {},
       "secret_env": []
     },
