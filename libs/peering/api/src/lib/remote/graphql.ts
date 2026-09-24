@@ -1640,6 +1640,18 @@ export type ImportArticleOptions = {
   importTags?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type ImportSubscriptionPeriodInput = {
+  /** Period amount in cents. */
+  amount: Scalars['Int'];
+  endsAt: Scalars['DateTime'];
+  invoiceDescription?: InputMaybe<Scalars['String']>;
+  /** Whether the invoice for this period was paid. */
+  paid: Scalars['Boolean'];
+  /** Payment date for a paid period; defaults to the period start. */
+  paidAt?: InputMaybe<Scalars['DateTime']>;
+  startsAt: Scalars['DateTime'];
+};
+
 export type ImportedEventFilter = {
   from?: InputMaybe<Scalars['String']>;
   location?: InputMaybe<Scalars['String']>;
@@ -2619,7 +2631,7 @@ export type Mutation = {
   deleteGoodie: Goodie;
   /** Deletes an existing image. */
   deleteImage: Scalars['String'];
-  /** Deletes an existing invoice. */
+  /** Deletes an existing invoice. A PAID invoice is billing history and is only deleted with cascade: true (removes its billing period and items along). */
   deleteInvoice: Invoice;
   /** Delete an existing mail template */
   deleteMailTemplate?: Maybe<Scalars['Boolean']>;
@@ -3393,6 +3405,7 @@ export type MutationDeleteImageArgs = {
 
 
 export type MutationDeleteInvoiceArgs = {
+  cascade?: InputMaybe<Scalars['Boolean']>;
   id: Scalars['String'];
 };
 
@@ -3565,12 +3578,14 @@ export type MutationImportPeerArticleArgs = {
 
 export type MutationImportSubscriptionArgs = {
   autoRenew: Scalars['Boolean'];
+  deactivationReason?: InputMaybe<SubscriptionDeactivationReason>;
   extendable: Scalars['Boolean'];
   memberPlanID: Scalars['String'];
   monthlyAmount: Scalars['Float'];
   paidUntil?: InputMaybe<Scalars['DateTime']>;
   paymentMethodID: Scalars['String'];
   paymentPeriodicity: PaymentPeriodicity;
+  periods?: InputMaybe<Array<ImportSubscriptionPeriodInput>>;
   properties: Array<PropertyInput>;
   skipMail?: InputMaybe<Scalars['Boolean']>;
   startsAt: Scalars['DateTime'];
