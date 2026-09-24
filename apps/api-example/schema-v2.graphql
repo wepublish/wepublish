@@ -1554,6 +1554,20 @@ input ImportArticleOptions {
   importTags: Boolean
 }
 
+input ImportSubscriptionPeriodInput {
+  """Period amount in cents."""
+  amount: Int!
+  endsAt: DateTime!
+  invoiceDescription: String
+
+  """Whether the invoice for this period was paid."""
+  paid: Boolean!
+
+  """Payment date for a paid period; defaults to the period start."""
+  paidAt: DateTime
+  startsAt: DateTime!
+}
+
 input ImportedEventFilter {
   from: String
   location: String
@@ -2764,12 +2778,22 @@ type Mutation {
   """Imports a subscription."""
   importSubscription(
     autoRenew: Boolean!
+
+    """
+    Import the subscription as already cancelled: a deactivation with this reason is created directly (date = paidUntil when in the future, else now) — no mail, no payment-provider call.
+    """
+    deactivationReason: SubscriptionDeactivationReason
     extendable: Boolean!
     memberPlanID: String!
     monthlyAmount: Float!
     paidUntil: DateTime
     paymentMethodID: String!
     paymentPeriodicity: PaymentPeriodicity!
+
+    """
+    Historical periods to import: one invoice + one subscription period is created per entry (paid entries with a back-dated paidAt). When given, replaces the single synthesized invoice/period.
+    """
+    periods: [ImportSubscriptionPeriodInput!]
     properties: [PropertyInput!]!
 
     """
