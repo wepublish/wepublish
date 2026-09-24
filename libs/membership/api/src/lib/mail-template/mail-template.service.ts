@@ -115,7 +115,7 @@ export class MailTemplateService {
   }
 
   /**
-   * Build the `{ user, optional, jwt }` data for a context, from a real
+   * Build the `{ user, optional, jwt, currentDate }` data for a context, from a real
    * subscription or sample. The JWT is ALWAYS generated for the current editor
    * (never the subscription's user) — a test mail must only ever contain a
    * login token for the person triggering it.

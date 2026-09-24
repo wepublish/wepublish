@@ -16,6 +16,7 @@ import {
 } from '@wepublish/website/api';
 import { BuilderMailchimpFormBlockProps } from '@wepublish/website/builder';
 import { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 export const isMailchimpFormBlock = (
   block: Pick<BlockContent, '__typename'>
@@ -81,6 +82,7 @@ export const MailchimpFormBlock = ({
   successPage,
 }: BuilderMailchimpFormBlockProps) => {
   const [addMailchimpContact] = useAddMailchimpContactMutation();
+  const { t } = useTranslation();
 
   const allInputs = useMemo(
     () => steps.flatMap(step => step.inputs).filter(input => !!input.name),
@@ -355,7 +357,7 @@ export const MailchimpFormBlock = ({
               disabled={isSubmitting}
               onClick={goBack}
             >
-              Zurück
+              {t('newsletter.back')}
             </Button>
           )}
 
@@ -370,7 +372,9 @@ export const MailchimpFormBlock = ({
             }}
             endIcon={isSubmitting ? <CircularProgress size={16} /> : undefined}
           >
-            {isLastStep ? submitButtonLabel || 'Abschliessen' : 'Weiter'}
+            {isLastStep ?
+              submitButtonLabel || t('newsletter.submit')
+            : t('newsletter.next')}
           </Button>
         </Actions>
       </Form>

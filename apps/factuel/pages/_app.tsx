@@ -37,7 +37,7 @@ import {
 } from '@wepublish/website/api';
 import { WebsiteBuilderProvider } from '@wepublish/website/builder';
 import { format, setDefaultOptions } from 'date-fns';
-import { de } from 'date-fns/locale';
+import { fr } from 'date-fns/locale';
 import { AppProps } from 'next/app';
 import Head from 'next/head';
 import Script from 'next/script';
@@ -46,11 +46,17 @@ import { useMemo } from 'react';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
+import frOverridden from '../locales/frOverridden.json';
+import { FactuelContentWrapper } from '../src/components/factuel-content-wrapper';
+import { FactuelFooter } from '../src/components/factuel-footer';
+import { FactuelNavbar } from '../src/components/factuel-navbar';
+
 setDefaultOptions({
-  locale: de,
+  locale: fr,
 });
 
-initWePublishTranslator();
+initWePublishTranslator(frOverridden).changeLanguage('fr');
+
 z.setErrorMap(zodI18nMap);
 
 const Spacer = styled('div')`
@@ -79,7 +85,7 @@ const NavBar = styled(NavbarContainer)`
 
 const dateFormatter = (date: Date, includeTime = true) =>
   includeTime ?
-    `${format(date, 'dd. MMMM yyyy')} um ${format(date, 'HH:mm')}`
+    `${format(date, 'dd. MMMM yyyy')} à ${format(date, 'HH:mm')}`
   : format(date, 'dd. MMMM yyyy');
 
 export type CustomAppProps = AppProps<{
@@ -96,7 +102,7 @@ function CustomApp({
   emotionCache,
   websiteSettings,
 }: CustomAppProps) {
-  const siteTitle = 'We.Publish';
+  const siteTitle = 'Courant';
 
   // Emotion cache from _document is not supplied when client side rendering
   // Compat removes certain warnings that are irrelevant to us
@@ -126,9 +132,12 @@ function CustomApp({
             <WebsiteBuilderProvider
               Head={Head}
               Script={Script}
+              ContentWrapper={FactuelContentWrapper}
+              Navbar={FactuelNavbar}
+              Footer={FactuelFooter}
               elements={{ Link: NextWepublishLink }}
               date={{ format: dateFormatter }}
-              meta={{ siteTitle }}
+              meta={{ siteTitle, locale: 'fr-CH' }}
             >
               <CssBaseline />
 

@@ -51,6 +51,7 @@ import fr from 'rsuite/locales/fr_FR';
 import { Base } from './base';
 import { Login } from './login';
 import { LoginJwt } from './loginJwt';
+import { LoginImpersonate } from './loginImpersonate';
 import { ResetPassword } from './resetPassword';
 import { ArticleEditor } from './routes/articles/articleEditor';
 import { ArticleList } from './routes/articles/articleList';
@@ -61,6 +62,7 @@ import { CommentRatingEditView } from './routes/commentRatings/commentRatingEdit
 import { CommentEditView } from './routes/comments/commentEditView';
 import { CommentList } from './routes/comments/commentList';
 import { Dashboard } from './routes/dashboard/dashboard';
+import { NotificationsPage } from './routes/notifications/notificationsPage';
 import { DocumentList } from './routes/documents/documentList';
 import { EventCreateView } from './routes/events/eventCreateView';
 import { EventEditView } from './routes/events/eventEditView';
@@ -259,6 +261,12 @@ export function App() {
           // Styles missing from v6 of rsuite
           :root {
             --rs-form-control-width: 100%;
+            --rs-form-group-direction: column;
+            --rs-form-group-spacing: var(--rs-spacing);
+          }
+
+          .rs-picker-toggle.rs-btn {
+            max-width: 100%;
           }
 
           .rs-grid-container-fluid,
@@ -287,6 +295,10 @@ export function App() {
               element={<LoginJwt />}
             />
             <Route
+              path="login/impersonate/:jwt"
+              element={<LoginImpersonate />}
+            />
+            <Route
               path="login/reset-password"
               element={<ResetPassword />}
             />
@@ -308,6 +320,14 @@ export function App() {
               element={
                 <Base>
                   <Dashboard />
+                </Base>
+              }
+            />
+            <Route
+              path="notifications"
+              element={
+                <Base>
+                  <NotificationsPage />
                 </Base>
               }
             />

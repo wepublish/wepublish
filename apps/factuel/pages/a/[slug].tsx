@@ -21,8 +21,10 @@ import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
 import { ComponentProps } from 'react';
+import { useTranslation } from 'react-i18next';
 
 export default function ArticleBySlugOrId() {
+  const { t } = useTranslation();
   const {
     query: { slug, id },
   } = useRouter();
@@ -49,7 +51,7 @@ export default function ArticleBySlugOrId() {
 
       {data?.article && (
         <ArticleWrapper>
-          <H3 component={'h2'}>Das könnte dich auch interessieren</H3>
+          <H3 component={'h2'}>{t('article.related')}</H3>
 
           <ArticleListContainer
             variables={{
@@ -67,7 +69,7 @@ export default function ArticleBySlugOrId() {
 
       {data?.article && !data?.article?.disableComments && (
         <ArticleWrapper>
-          <H3 component={'h2'}>Kommentare</H3>
+          <H3 component={'h2'}>{t('article.comments')}</H3>
           <CommentListContainer
             id={data!.article!.id}
             type={CommentItemType.Article}

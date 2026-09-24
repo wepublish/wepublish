@@ -1,5 +1,22 @@
 {
   "translation": {
+    "previewHandshake": {
+      "popupBlocked": "Das Vorschau-Fenster wurde vom Browser blockiert. Bitte Pop-ups für den Editor erlauben und erneut versuchen.",
+      "notResponding": "Das Vorschau-Fenster antwortet nicht. Die Anmeldung für die Vorschau ist möglicherweise fehlgeschlagen."
+    },
+    "oneChannel": {
+      "connected": "We.Publish Connector: verbunden",
+      "failing": "We.Publish Connector: Verbindung gestört",
+      "notConfigured": "We.Publish Connector: nicht konfiguriert",
+      "notConfiguredHint": "Diese Instanz sendet keine Daten an We.Publish.",
+      "lastSuccess": "Letzter erfolgreicher Kontakt: {{value}}",
+      "lastSuccessNever": "Letzter erfolgreicher Kontakt: nie",
+      "lastAttemptFailed": "Letzter Versuch: {{value}} – fehlgeschlagen: {{error}}",
+      "label": "We.Publish Connector",
+      "outageTitle": "We.Publish Connector antwortet nicht",
+      "outageText": "Seit {{value}} kein erfolgreicher Kontakt mehr. Statistiken und Nachrichten werden derzeit nicht mit We.Publish ausgetauscht.",
+      "outageTextNever": "Es gab noch nie erfolgreichen Kontakt. Bitte URL und Zugang des Connectors prüfen."
+    },
     "oneMessages": {
       "header": "Nachrichten vom We.Publish Team",
       "expand": "Ausklappen",
@@ -81,6 +98,7 @@
         "articlePreviewLinkDesc": "Vorschau-Links zeigen immer die neuesten Änderungen im Entwurf des Artikels an. Vorschau-Links funktionieren nicht mehr, nachdem der Artikel publiziert oder geplant wurde.",
         "articlePreviewLinkField": "Vorschau Link",
         "articlePreviewLinkHours": "Gültigkeitsdauer des Links",
+        "authorRole": "Funktion (z.B. Text, Bilder)",
         "authors": "Autor*innen",
         "back": "Zurück",
         "breakingNews": "Breaking News",
@@ -139,6 +157,7 @@
         "publishAtDateCheckbox": "Wähle ein anderes Datum für die online Verfügbarkeit",
         "publishDate": "Publikationsdatum",
         "published": "Publiziert",
+        "selectAuthor": "Autor*in wählen",
         "seoTitle": "SEO-Titel",
         "seoTitleHelpBlock": "Verwende einen SEO-optimierten Titel <2>SEO Guide</2>",
         "seoDescription": "SEO-Beschreibung",
@@ -573,6 +592,16 @@
       }
     },
     "cancel": "Abbrechen",
+    "changelog": {
+      "whatsNew": "Was ist neu",
+      "actionRequired": "Handlung erforderlich",
+      "done": "Erledigt",
+      "details": "Details",
+      "releasedAt": "Veröffentlicht am {{date, PP}}",
+      "completedAt": "Erledigt am {{date, PP}}",
+      "noEntries": "Noch keine Changelog-Einträge.",
+      "allCaughtUp": "Keine ungelesenen Changelog-Einträge."
+    },
     "chooseEditImage": {
       "chooseImage": "Bild wählen",
       "editImage": "Bild bearbeiten",
@@ -700,6 +729,8 @@
     "dashboard": {
       "activity": "Letzte Aktivitäten",
       "dashboard": "Dashboard",
+      "notifications": "Mitteilungen",
+      "showAllNotifications": "Alle anzeigen",
       "greeting": "Hallo, {{name}}!",
       "newArticle": "Neuer <0>Artikel</0> erstellt",
       "newAuthor": "Neuer <0>Author</0> erstellt",
@@ -975,6 +1006,11 @@
         "invalidCode": "Ungültiger Bestätigungscode. Bitte versuchen Sie es erneut.",
         "setupError": "Fehler beim Erstellen der 2FA-Einrichtung. Bitte versuchen Sie es erneut.",
         "setupSuccess": "Zwei-Faktor-Authentifizierung wurde erfolgreich aktiviert."
+      },
+      "impersonate": {
+        "pending": "Anmeldung als Benutzer läuft …",
+        "failed": "Die Anmeldung ist fehlgeschlagen. Der Link ist abgelaufen oder wurde bereits verwendet.",
+        "notAGrant": "Dieser Link ist kein gültiger Impersonations-Link."
       }
     },
     "resetPassword": {
@@ -1100,7 +1136,8 @@
         "long": "Lang",
         "weekday": "Wochentag",
         "time": "Zeit",
-        "dateTime": "Datum+Zeit"
+        "dateTime": "Datum+Zeit",
+        "year": "Jahr"
       },
       "amountFormat": {
         "display": "Mit Währung",
@@ -1128,6 +1165,7 @@
         "user_lastLogin": "Letzter Login",
         "user_createdAt": "Konto erstellt am",
         "jwt": "Login-Token (JWT)",
+        "currentDate": "Aktuelles Datum",
         "optional_subscription_id": "Abo-ID",
         "optional_subscription_monthlyAmount": "Monatlicher Betrag",
         "optional_subscription_periodAmount": "Betrag pro Periode",
@@ -1271,6 +1309,7 @@
       "pageTags": "Tags",
       "consents": "Konsens",
       "dashboard": "Dashboard",
+      "notifications": "Mitteilungen",
       "events": "Events",
       "eventTags": "Tags",
       "documentLibrary": "Dokumente",
@@ -1326,6 +1365,19 @@
         "selectPage": "Seite auswählen",
         "url": "URL"
       }
+    },
+    "notifications": {
+      "noTeamMessages": "Zurzeit keine Nachrichten vom We.Publish Team.",
+      "sourceTeam": "We.Publish Team",
+      "sourceChangelog": "Changelog",
+      "sourceJobLogs": "Job-Logs",
+      "markAsRead": "Als gelesen markieren",
+      "markAsDone": "Als erledigt markieren",
+      "confirmTitle": "Als erledigt markieren?",
+      "confirmMessage": "Damit bestätigen Sie für Ihr ganzes Team, dass «{{title}}» erledigt wurde. Der Hinweis verschwindet vom Dashboard.",
+      "confirmSuccess": "Danke! Die Aufgabe wurde als erledigt markiert.",
+      "loadMore": "Mehr anzeigen",
+      "sourceConnector": "We.Publish Connector"
     },
     "no": "Nein",
     "pageEditor": {
@@ -2457,7 +2509,7 @@
         "apiKey": "Mailchimp API Key",
         "listId": "Mailchimp Listen-/Zielgruppen-ID",
         "mergeFieldMappings": "Merge-Feld-Zuordnungen",
-        "mergeFieldHelp": "Bestimmt, welcher Wert in ein Mailchimp Merge-Feld geschrieben wird. Mehrere Ausdrücke mit | (ODER) kombinierbar – der erste Treffer gewinnt.\n\nVerfügbare Ausdrücke:\n• user.firstName / user.name – Vorname bzw. Nachname\n• slug:contains:wert – \"1\" wenn der Abo-Slug \"wert\" enthält\n• slug:contains_any:w1,w2 – \"1\" wenn einer der Werte enthalten ist\n• slug:equals:wert – \"1\" bei exakter Übereinstimmung\n• active_abo – \"1\" aktiv, \"-1\" abgelaufen, leer wenn kein Abo\n• active_abo_with_payment:slug:tage – wie active_abo, aber auch \"1\" wenn die letzte Zahlungsmethode \"slug\" ist und das Abo innerhalb der letzten \"tage\" Tage ablief\n• retarget:tage – \"1\" wenn das Abo innerhalb der letzten \"tage\" Tage ablief\n• static:wert – gibt immer \"wert\" zurück",
+        "mergeFieldHelp": "Bestimmt, welcher Wert in ein Mailchimp Merge-Feld geschrieben wird. Mehrere Ausdrücke mit | (ODER) kombinierbar – der erste Treffer gewinnt.\n\nVerfügbare Ausdrücke:\n• user.firstName / user.name – Vorname bzw. Nachname\n• slug:contains:wert – \"1\" wenn der Abo-Slug \"wert\" enthält\n• slug:contains_any:w1,w2 – \"1\" wenn einer der Werte enthalten ist\n• slug:equals:wert – \"1\" bei exakter Übereinstimmung\n• active_abo – \"1\" aktiv, \"-1\" abgelaufen, leer wenn kein Abo\n• active_abo_with_payment:slug:tage – wie active_abo, aber auch \"1\" wenn die letzte Zahlungsmethode \"slug\" ist und das Abo innerhalb der letzten \"tage\" Tage ablief\n• retarget:tage – \"1\" wenn das Abo innerhalb der letzten \"tage\" Tage ablief, \"-1\" bei allen übrigen ehemaligen Abonnent:innen, leer wenn kein Abo\n• static:wert – gibt immer \"wert\" zurück",
         "mergeFieldTag": "Merge-Feld-Tag (z.B. FNAME)",
         "mergeFieldExpression": "Ausdruck (z.B. user.firstName)",
         "addMergeField": "Merge-Feld hinzufügen",
@@ -2946,7 +2998,18 @@
         "loading": "Vorschau wird geladen …",
         "noRecipients": "Keine Empfänger:innen – bitte zuerst die Empfängergruppe anpassen."
       },
-      "recipientsCountPerPerson": "{{count}} Mails an {{people}} Personen"
+      "recipientsCountPerPerson": "{{count}} Mails an {{people}} Personen",
+      "endsAtHint": "Kündigungsdatum, sonst das Datum, bis zu dem bezahlt ist.",
+      "isPaid": "Bezahlt (aktuell gedeckt)",
+      "isPaidHint": "Karenzfristen werden nicht berücksichtigt.",
+      "isCanceled": "Gekündigt",
+      "isCanceledHint": "Enthält auch Kündigungen, die erst später wirksam werden.",
+      "hasReplacedSubscription": "Hat ein anderes Abo ersetzt (z. B. Upgrade)",
+      "hasReplacedSubscriptionHint": "Enthält auch Downgrades und Plan-Wechsel; manuelle oder importierte Änderungen werden nicht erkannt.",
+      "startsAt": "Abo-Beginn",
+      "endsAt": "Abo-Ende",
+      "from": "ab",
+      "to": "bis"
     },
     "mailLog": {
       "title": "Gesendete E-Mails",

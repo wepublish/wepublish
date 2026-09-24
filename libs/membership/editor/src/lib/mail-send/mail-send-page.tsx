@@ -46,6 +46,7 @@ import { Link } from 'react-router-dom';
 import {
   Button,
   CheckPicker,
+  DatePicker,
   DateRangePicker,
   Divider,
   Form,
@@ -148,6 +149,13 @@ function MailSendPage() {
   const [periodicity, setPeriodicity] = useState<PaymentPeriodicity | null>(
     null
   );
+  const [startsAtFrom, setStartsAtFrom] = useState<Date | null>(null);
+  const [startsAtTo, setStartsAtTo] = useState<Date | null>(null);
+  const [endsAtFrom, setEndsAtFrom] = useState<Date | null>(null);
+  const [endsAtTo, setEndsAtTo] = useState<Date | null>(null);
+  const [isPaid, setIsPaid] = useState<string>('any');
+  const [isCanceled, setIsCanceled] = useState<string>('any');
+  const [hasReplaced, setHasReplaced] = useState<string>('any');
   const [endedWithinDays, setEndedWithinDays] = useState(
     DEFAULT_ENDED_WITHIN_DAYS
   );
@@ -199,6 +207,14 @@ function MailSendPage() {
       autoRenew: autoRenew === 'any' ? undefined : autoRenew === 'true',
       paymentMethodID: paymentMethodID ?? undefined,
       paymentPeriodicity: periodicity ?? undefined,
+      startsAtFrom: startsAtFrom ? startsAtFrom.toISOString() : undefined,
+      startsAtTo: endOfDay(startsAtTo ?? undefined),
+      endsAtFrom: endsAtFrom ? endsAtFrom.toISOString() : undefined,
+      endsAtTo: endOfDay(endsAtTo ?? undefined),
+      isPaid: isPaid === 'any' ? undefined : isPaid === 'true',
+      isCanceled: isCanceled === 'any' ? undefined : isCanceled === 'true',
+      hasReplacedSubscription:
+        hasReplaced === 'any' ? undefined : hasReplaced === 'true',
     };
   }, [
     base,
@@ -212,6 +228,13 @@ function MailSendPage() {
     autoRenew,
     paymentMethodID,
     periodicity,
+    startsAtFrom,
+    startsAtTo,
+    endsAtFrom,
+    endsAtTo,
+    isPaid,
+    isCanceled,
+    hasReplaced,
   ]);
 
   const { data: previewData, loading: previewLoading } =
@@ -589,6 +612,120 @@ function MailSendPage() {
                           onChange={setPeriodicity}
                           placeholder={t('mailSend.any')}
                         />
+                      </Form.Group>
+
+                      <Form.Group>
+                        <Form.ControlLabel>
+                          {t('mailSend.startsAt')}
+                        </Form.ControlLabel>
+                        <div style={{ display: 'flex', gap: 12 }}>
+                          <DatePicker
+                            oneTap
+                            format="dd.MM.yyyy"
+                            placeholder={t('mailSend.from')}
+                            value={startsAtFrom}
+                            onChange={setStartsAtFrom}
+                            style={{ flex: 1 }}
+                          />
+                          <DatePicker
+                            oneTap
+                            format="dd.MM.yyyy"
+                            placeholder={t('mailSend.to')}
+                            value={startsAtTo}
+                            onChange={setStartsAtTo}
+                            style={{ flex: 1 }}
+                          />
+                        </div>
+                      </Form.Group>
+
+                      <Form.Group>
+                        <Form.ControlLabel>
+                          {t('mailSend.endsAt')}
+                        </Form.ControlLabel>
+                        <div style={{ display: 'flex', gap: 12 }}>
+                          <DatePicker
+                            oneTap
+                            format="dd.MM.yyyy"
+                            placeholder={t('mailSend.from')}
+                            value={endsAtFrom}
+                            onChange={setEndsAtFrom}
+                            style={{ flex: 1 }}
+                          />
+                          <DatePicker
+                            oneTap
+                            format="dd.MM.yyyy"
+                            placeholder={t('mailSend.to')}
+                            value={endsAtTo}
+                            onChange={setEndsAtTo}
+                            style={{ flex: 1 }}
+                          />
+                        </div>
+                        <Form.HelpText>
+                          {t('mailSend.endsAtHint')}
+                        </Form.HelpText>
+                      </Form.Group>
+
+                      <Form.Group>
+                        <Form.ControlLabel>
+                          {t('mailSend.isPaid')}
+                        </Form.ControlLabel>
+                        <SelectPicker
+                          block
+                          cleanable={false}
+                          searchable={false}
+                          data={[
+                            { label: t('mailSend.any'), value: 'any' },
+                            { label: t('mailSend.yes'), value: 'true' },
+                            { label: t('mailSend.no'), value: 'false' },
+                          ]}
+                          value={isPaid}
+                          onChange={value => setIsPaid(value ?? 'any')}
+                        />
+                        <Form.HelpText>
+                          {t('mailSend.isPaidHint')}
+                        </Form.HelpText>
+                      </Form.Group>
+
+                      <Form.Group>
+                        <Form.ControlLabel>
+                          {t('mailSend.isCanceled')}
+                        </Form.ControlLabel>
+                        <SelectPicker
+                          block
+                          cleanable={false}
+                          searchable={false}
+                          data={[
+                            { label: t('mailSend.any'), value: 'any' },
+                            { label: t('mailSend.yes'), value: 'true' },
+                            { label: t('mailSend.no'), value: 'false' },
+                          ]}
+                          value={isCanceled}
+                          onChange={value => setIsCanceled(value ?? 'any')}
+                        />
+                        <Form.HelpText>
+                          {t('mailSend.isCanceledHint')}
+                        </Form.HelpText>
+                      </Form.Group>
+
+                      <Form.Group>
+                        <Form.ControlLabel>
+                          {t('mailSend.hasReplacedSubscription')}
+                        </Form.ControlLabel>
+                        <SelectPicker
+                          block
+                          cleanable={false}
+                          searchable={false}
+                          data={[
+                            { label: t('mailSend.any'), value: 'any' },
+                            { label: t('mailSend.yes'), value: 'true' },
+                            { label: t('mailSend.no'), value: 'false' },
+                          ]}
+                          value={hasReplaced}
+                          onChange={value => setHasReplaced(value ?? 'any')}
+                        />
+                        <Form.HelpText>
+                          {t('mailSend.hasReplacedSubscriptionHint')}
+                        </Form.HelpText>
                       </Form.Group>
                     </>
                   )}

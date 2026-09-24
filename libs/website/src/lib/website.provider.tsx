@@ -39,6 +39,7 @@ import {
   ImageGalleryBlock,
   ImageSlider,
   InstagramPostBlock,
+  Lightbox,
   ListicleBlock,
   PolisConversationBlock,
   PollBlock,
@@ -143,7 +144,9 @@ import { FontStyleOptions } from '@mui/material/styles/createTypography';
 export type WebsiteProps = PropsWithChildren;
 
 const dateFormatter = (date: Date, includeTime = true) =>
-  includeTime ? format(date, 'dd.MM.yyyy HH:mm') : format(date, 'dd.MM.yyyy');
+  format(date, includeTime ? 'dd.MM.yyyy HH:mm' : 'dd.MM.yyyy', {
+    locale: (getDefaultOptions() as { locale: Locale }).locale,
+  });
 
 const globalStyles = (
   <GlobalStyles
@@ -320,6 +323,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({ children }) => (
           ContextBox,
           FocusTeaser,
           ImageSlider,
+          Lightbox,
           TeaserSlider,
           AlternatingTeaser,
           AlternatingTeaserGrid: AlternatingTeaserGridBlock,

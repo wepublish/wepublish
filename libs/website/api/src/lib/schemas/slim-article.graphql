@@ -1,0 +1,51 @@
+fragment SlimArticleRevision on ArticleRevision {
+  id
+  publishedAt
+  preTitle
+  title
+  lead
+  breaking
+  hideAuthor
+
+  authors {
+    role
+
+    author {
+      ...SlimAuthor
+    }
+  }
+
+  image {
+    ...SlimImage
+  }
+
+  properties {
+    ...FullProperty
+  }
+}
+
+fragment SlimArticle on Article {
+  id
+  publishedAt
+  url
+  slug
+  likes
+  disableComments
+
+  tags {
+    ...FullTag
+  }
+
+  latest {
+    ...SlimArticleRevision
+  }
+
+  paywall {
+    ...SlimPaywall
+  }
+
+  peerId
+  peer {
+    ...FullPeer
+  }
+}

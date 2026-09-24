@@ -19,7 +19,7 @@ interface TeaserSlotsConfigPanelProps {
   onChange: (config: TeaserSlotsAutofillConfigInput) => void;
 }
 
-const ConfigContainer = styled.div`
+const ConfigContainer = styled(Form)`
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -82,7 +82,7 @@ export function TeaserSlotsAutofillConfigPanel({
   const sortOptions = [{ label: 'Published date', value: 'PublishedAt' }];
 
   return (
-    <ConfigContainer>
+    <ConfigContainer fluid>
       <FormGroup>
         <Form.Label>{t('blocks.teaserSlots.autofillType')}</Form.Label>
         <SelectPicker

@@ -106,6 +106,7 @@ describe('ArticleService', () => {
         ids: ['12345'],
         peerId: '1234',
         includeHidden: false,
+        excludeHideAuthor: true,
         preTitle: 'preTitle',
         title: 'title',
         lead: 'lead',
@@ -192,6 +193,7 @@ describe('ArticleService', () => {
         excludeIds: ['1234'],
         peerId: '1234',
         includeHidden: false,
+        excludeHideAuthor: true,
         preTitle: 'preTitle',
         title: 'title',
         lead: 'lead',
@@ -232,6 +234,7 @@ describe('ArticleService', () => {
         ids: ['12345'],
         peerId: '1234',
         includeHidden: false,
+        excludeHideAuthor: true,
         preTitle: 'preTitle',
         title: 'title',
         lead: 'lead',
@@ -298,7 +301,10 @@ describe('ArticleService', () => {
         properties: [{ id: '123', key: 'key', value: 'value', public: true }],
         socialMediaAuthorIds: ['1234', '12345'],
         tagIds: ['1234', '12345'],
-        authorIds: ['1234', '12345'],
+        authors: [
+          { authorId: '1234', role: 'Text' },
+          { authorId: '12345', role: 'Bilder' },
+        ],
         blocks: [
           {
             title: {
@@ -335,7 +341,7 @@ describe('ArticleService', () => {
         properties: [],
         socialMediaAuthorIds: [],
         tagIds: [],
-        authorIds: [],
+        authors: [],
         blocks: [],
       },
       '1234'
@@ -364,7 +370,10 @@ describe('ArticleService', () => {
         properties: [{ id: '123', key: 'key', value: 'value', public: true }],
         socialMediaAuthorIds: ['1234', '12345'],
         tagIds: ['1234', '12345'],
-        authorIds: ['1234', '12345'],
+        authors: [
+          { authorId: '1234', role: 'Text' },
+          { authorId: '12345', role: 'Bilder' },
+        ],
         blocks: [
           {
             title: {
@@ -539,8 +548,18 @@ describe('ArticleService', () => {
       blocks: [{ title: { title: 'Old', lead: 'Old' } }],
       properties: [{ key: 'key', value: 'value', public: true }],
       authors: [
-        { authorId: 'author-1', revisionId: 'rev-old' },
-        { authorId: 'author-2', revisionId: 'rev-old' },
+        {
+          authorId: 'author-1',
+          revisionId: 'rev-old',
+          role: 'Text',
+          position: 0,
+        },
+        {
+          authorId: 'author-2',
+          revisionId: 'rev-old',
+          role: null,
+          position: 1,
+        },
       ],
       socialMediaAuthors: [{ authorId: 'sm-author-1', revisionId: 'rev-old' }],
       ...overrides,
@@ -620,7 +639,10 @@ describe('ArticleService', () => {
 
       expect(prismaMock.articleRevision.findUnique?.mock.calls[0][0]).toEqual({
         where: { id: 'rev-old' },
-        include: { authors: true, socialMediaAuthors: true },
+        include: {
+          authors: { orderBy: { position: 'asc' } },
+          socialMediaAuthors: true,
+        },
       });
       expect(prismaMock.article.update?.mock.calls[0]).toMatchSnapshot();
     });
@@ -653,8 +675,8 @@ describe('ArticleService', () => {
         { title: { title: 'Old', lead: 'Old' } },
       ]);
       expect(created.authors.createMany.data).toEqual([
-        { authorId: 'author-1' },
-        { authorId: 'author-2' },
+        { authorId: 'author-1', role: 'Text', position: 0 },
+        { authorId: 'author-2', role: null, position: 1 },
       ]);
       expect(created.socialMediaAuthors.createMany.data).toEqual([
         { authorId: 'sm-author-1' },
@@ -760,7 +782,7 @@ describe('ArticleService', () => {
             properties: [],
             socialMediaAuthorIds: [],
             tagIds: [],
-            authorIds: [],
+            authors: [],
             blocks: [],
           },
           '1234'

@@ -214,14 +214,17 @@ query Article($id: String!) {
       }
 
       authors {
-        name
-        slug
-        bio
-        jobTitle
-        image {
-          ...RemoteImage
+        role
+        author {
+          name
+          slug
+          bio
+          jobTitle
+          image {
+            ...RemoteImage
+          }
+          hideOnArticle
         }
-        hideOnArticle
       }
     }
   }

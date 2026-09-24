@@ -7,11 +7,7 @@ import {
   UserSession,
 } from '@wepublish/authentication/api';
 import { Permissions } from '@wepublish/permissions/api';
-import {
-  CanLoginAsOtherUser,
-  CanPreview,
-  CanSendJWTLogin,
-} from '@wepublish/permissions';
+import { CanPreview, CanSendJWTLogin } from '@wepublish/permissions';
 
 @Resolver()
 export class SessionResolver {
@@ -100,17 +96,6 @@ export class SessionResolver {
     await this.sessionService.sendJWTLogin(email);
 
     return email;
-  }
-
-  @Permissions(CanLoginAsOtherUser)
-  @Mutation(() => SessionWithToken, {
-    description: 'Returns a JWT that can be used to login as another user.',
-  })
-  async createJWTForUser(
-    @Args('userId') userId: string,
-    @Args('expiresInMinutes') expiresInMinutes: number
-  ) {
-    return this.sessionService.createJWTForUser(userId, expiresInMinutes);
   }
 
   @Permissions(CanPreview)

@@ -1,0 +1,34 @@
+fragment ChangelogEntry on ChangelogEntry {
+  id
+  name
+  releasedAt
+  title
+  lead
+  description
+  actionRequired
+  confirmedAt
+  confirmedByUserId
+}
+
+query ChangelogEntries(
+  $take: Int
+  $skip: Int
+  $filter: ChangelogEntryFilter
+  $locale: String
+) {
+  changelogEntries(take: $take, skip: $skip, filter: $filter, locale: $locale) {
+    nodes {
+      ...ChangelogEntry
+    }
+    totalCount
+    pageInfo {
+      hasNextPage
+    }
+  }
+}
+
+mutation ConfirmChangelogEntry($id: String!, $locale: String) {
+  confirmChangelogEntry(id: $id, locale: $locale) {
+    ...ChangelogEntry
+  }
+}

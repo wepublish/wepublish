@@ -1,5 +1,22 @@
 {
   "translation": {
+    "previewHandshake": {
+      "popupBlocked": "The preview window was blocked by the browser. Please allow pop-ups for the editor and try again.",
+      "notResponding": "The preview window is not responding. The preview login may have failed."
+    },
+    "oneChannel": {
+      "connected": "We.Publish connector: connected",
+      "failing": "We.Publish connector: connection disrupted",
+      "notConfigured": "We.Publish connector: not configured",
+      "notConfiguredHint": "This instance sends no data to We.Publish.",
+      "lastSuccess": "Last successful contact: {{value}}",
+      "lastSuccessNever": "Last successful contact: never",
+      "lastAttemptFailed": "Last attempt: {{value}} – failed: {{error}}",
+      "label": "We.Publish connector",
+      "outageTitle": "We.Publish connector is not responding",
+      "outageText": "No successful contact since {{value}}. Statistics and messages are currently not being exchanged with We.Publish.",
+      "outageTextNever": "There has never been successful contact. Please check the connector URL and credentials."
+    },
     "oneMessages": {
       "header": "Messages from the We.Publish team",
       "expand": "Expand",
@@ -81,6 +98,7 @@
         "articlePreviewLinkDesc": "Preview Links always shows the latest changes in the draft of the article. Preview Links stop working after you publish the article.",
         "articlePreviewLinkField": "Preview Link",
         "articlePreviewLinkHours": "Validity period of link",
+        "authorRole": "Role (e.g. Text, Photos)",
         "authors": "Authors",
         "back": "Back",
         "breakingNews": "Breaking News",
@@ -139,6 +157,7 @@
         "publishAtDateCheckbox": "Set a different date for online availibility",
         "publishDate": "Publish Date",
         "published": "Published",
+        "selectAuthor": "Select author",
         "seoTitle": "SEO Title",
         "seoTitleHelpBlock": "Please use an SEO-optimised title. <2>SEO Guide</2>",
         "seoDescription": "SEO Description",
@@ -571,6 +590,16 @@
       }
     },
     "cancel": "Cancel",
+    "changelog": {
+      "whatsNew": "What's new",
+      "actionRequired": "Action required",
+      "done": "Done",
+      "details": "Details",
+      "releasedAt": "Released on {{date, PP}}",
+      "completedAt": "Completed on {{date, PP}}",
+      "noEntries": "No changelog entries yet.",
+      "allCaughtUp": "No unread changelog entries."
+    },
     "chooseEditImage": {
       "chooseImage": "Choose Image",
       "editImage": "Edit Image",
@@ -699,6 +728,8 @@
     "dashboard": {
       "activity": "Latest Activity",
       "dashboard": "Dashboard",
+      "notifications": "Notifications",
+      "showAllNotifications": "Show all",
       "greeting": "Hello, {{name}}!",
       "newArticle": "New <0>article</0> added",
       "newAuthor": "New <0>author</0> added",
@@ -978,6 +1009,11 @@
         "invalidCode": "Invalid verification code. Please try again.",
         "setupError": "Failed to generate 2FA setup. Please try again.",
         "setupSuccess": "Two-factor authentication has been enabled successfully."
+      },
+      "impersonate": {
+        "pending": "Signing in as the user …",
+        "failed": "Sign-in failed. The link has expired or was already used.",
+        "notAGrant": "This link is not a valid impersonation link."
       }
     },
     "resetPassword": {
@@ -1132,6 +1168,7 @@
         "user_lastLogin": "Last login",
         "user_createdAt": "Account created",
         "jwt": "Login token (JWT)",
+        "currentDate": "Current date",
         "optional_subscription_id": "Subscription ID",
         "optional_subscription_monthlyAmount": "Monthly amount",
         "optional_subscription_periodAmount": "Amount per period",
@@ -1172,7 +1209,8 @@
         "long": "Long",
         "weekday": "Weekday",
         "time": "Time",
-        "dateTime": "Date+time"
+        "dateTime": "Date+time",
+        "year": "Year"
       },
       "amountFormat": {
         "display": "With currency",
@@ -1272,6 +1310,7 @@
       "pageTags": "Tags",
       "consents": "Consents",
       "dashboard": "Dashboard",
+      "notifications": "Notifications",
       "events": "Events",
       "eventTags": "Tags",
       "documentLibrary": "Documents",
@@ -1327,6 +1366,19 @@
         "selectPage": "Select Page",
         "url": "URL"
       }
+    },
+    "notifications": {
+      "noTeamMessages": "No messages from the We.Publish team right now.",
+      "sourceTeam": "We.Publish Team",
+      "sourceChangelog": "Changelog",
+      "sourceJobLogs": "Job logs",
+      "markAsRead": "Mark as read",
+      "markAsDone": "Mark as done",
+      "confirmTitle": "Mark as done?",
+      "confirmMessage": "This confirms for your whole team that \"{{title}}\" has been completed. The notice will disappear from the dashboard.",
+      "confirmSuccess": "Thanks! The task has been marked as done.",
+      "loadMore": "Load more",
+      "sourceConnector": "We.Publish Connector"
     },
     "no": "No",
     "pageEditor": {
@@ -2537,7 +2589,7 @@
         "apiKey": "Mailchimp API Key",
         "listId": "Mailchimp List/Audience ID",
         "mergeFieldMappings": "Merge Field Mappings",
-        "mergeFieldHelp": "Determines which value is written to a Mailchimp merge field. Combine multiple expressions with | (OR) – the first match wins.\n\nAvailable expressions:\n• user.firstName / user.name – first or last name\n• slug:contains:value – \"1\" if the subscription slug contains \"value\"\n• slug:contains_any:v1,v2 – \"1\" if any of the values is contained\n• slug:equals:value – \"1\" on exact match\n• active_abo – \"1\" active, \"-1\" expired, empty if no subscription\n• active_abo_with_payment:slug:days – like active_abo, but also \"1\" if the last payment method is \"slug\" and the subscription expired within the last \"days\" days\n• retarget:days – \"1\" if the subscription expired within the last \"days\" days\n• static:value – always returns \"value\"",
+        "mergeFieldHelp": "Determines which value is written to a Mailchimp merge field. Combine multiple expressions with | (OR) – the first match wins.\n\nAvailable expressions:\n• user.firstName / user.name – first or last name\n• slug:contains:value – \"1\" if the subscription slug contains \"value\"\n• slug:contains_any:v1,v2 – \"1\" if any of the values is contained\n• slug:equals:value – \"1\" on exact match\n• active_abo – \"1\" active, \"-1\" expired, empty if no subscription\n• active_abo_with_payment:slug:days – like active_abo, but also \"1\" if the last payment method is \"slug\" and the subscription expired within the last \"days\" days\n• retarget:days – \"1\" if the subscription expired within the last \"days\" days, \"-1\" for any other former subscriber, empty if no subscription\n• static:value – always returns \"value\"",
         "mergeFieldTag": "Merge Field Tag (e.g. FNAME)",
         "mergeFieldExpression": "Expression (e.g. user.firstName)",
         "addMergeField": "Add Merge Field",
@@ -2985,7 +3037,18 @@
         "loading": "Loading preview …",
         "noRecipients": "No recipients — adjust the audience first."
       },
-      "recipientsCountPerPerson": "{{count}} mails to {{people}} people"
+      "recipientsCountPerPerson": "{{count}} mails to {{people}} people",
+      "endsAtHint": "Cancellation date, otherwise the date paid up to.",
+      "isPaid": "Paid (currently covered)",
+      "isPaidHint": "Grace periods are not taken into account.",
+      "isCanceled": "Cancelled",
+      "isCanceledHint": "Also includes cancellations that only take effect later.",
+      "hasReplacedSubscription": "Replaced another subscription (e.g. upgrade)",
+      "hasReplacedSubscriptionHint": "Also includes downgrades and plan switches; manual or imported changes are not detected.",
+      "startsAt": "Subscription start",
+      "endsAt": "Subscription end",
+      "from": "From",
+      "to": "Until"
     },
     "mailLog": {
       "title": "Sent emails",

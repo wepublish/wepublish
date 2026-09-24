@@ -214,8 +214,10 @@ export const HeroTeaserWithTabbedContent = ({
   blocks,
   blockStyle,
   blockStyleByIndex,
+  randomizeTab,
 }: BuilderFlexBlockProps & {
   blockStyleByIndex: (index: number) => TsriLayoutType;
+  randomizeTab?: boolean;
 }) => {
   return (
     <FrontTopRow>
@@ -228,6 +230,7 @@ export const HeroTeaserWithTabbedContent = ({
         className={className}
         blocks={blocks.slice(1)}
         blockStyle={blockStyle}
+        randomizeTab={randomizeTab}
         blockStyleByIndex={(index: number) => blockStyleByIndex(index + 1)}
         cssByBlockStyle={(
           index: number,
