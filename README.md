@@ -187,10 +187,10 @@ Please review our [CONTRIBUTING.md](CONTRIBUTING.md) and [CODE_OF_CONDUCT.md](CO
 
 - [Editor](https://editor-demo.wepublish.works)
   - Admin:
-    - username: `admin@wepublish.media`
+    - username: `admin@example.com`
     - password: `demoPassword123`
   - Editor
-    - username: `editor@wepublish.media`
+    - username: `editor@example.com`
     - password: `demoPassword123`
 
 - [Website](https://demo.wepublish.works)
