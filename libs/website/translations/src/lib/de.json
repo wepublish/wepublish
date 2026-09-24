@@ -33,6 +33,7 @@
     },
     "continuation": "Nach {afterFirstPaymentPeriod} {formattedAmount} {renewalPeriodL}.",
     "cancellable": "Jederzeit kündbar",
+    "periodicity": "Zahlungsintervall",
     "captcha": "Captcha",
     "chooseSubscription": "Abo wählen",
     "choosePaymentMethod": "Zahlungsmethode wählen",

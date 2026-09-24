@@ -32,6 +32,7 @@
     },
     "continuation": "Après {afterFirstPaymentPeriod}, {formattedAmount} {renewalPeriodL}.",
     "cancellable": "Résiliable à tout moment",
+    "periodicity": "Intervalle de paiement",
     "captcha": "Captcha",
     "chooseSubscription": "Choisir un abonnement",
     "choosePaymentMethod": "Choisir le mode de paiement",
