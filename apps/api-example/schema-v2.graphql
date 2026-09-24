@@ -2658,8 +2658,10 @@ type Mutation {
   """Deletes an existing image."""
   deleteImage(id: String!): String!
 
-  """Deletes an existing invoice."""
-  deleteInvoice(id: String!): Invoice!
+  """
+  Deletes an existing invoice. A PAID invoice is billing history and is only deleted with cascade: true (removes its billing period and items along).
+  """
+  deleteInvoice(cascade: Boolean, id: String!): Invoice!
 
   """Delete an existing mail template"""
   deleteMailTemplate(id: String!): Boolean

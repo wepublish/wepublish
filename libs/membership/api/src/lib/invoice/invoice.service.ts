@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Inject,
   Injectable,
   InternalServerErrorException,
@@ -119,12 +120,43 @@ export class InvoiceService {
     });
   }
 
-  async deleteInvoice(id: string) {
-    return this.prisma.invoice.delete({
-      where: {
-        id,
-      },
-    });
+  async deleteInvoice(id: string, cascade = false) {
+    // A PAID invoice is billing history: deleting it also erases its billing
+    // period while subscription.paidUntil keeps claiming the coverage — so it
+    // is refused unless the caller explicitly passes cascade: true (used by
+    // bulk-import resets). Unpaid invoices delete freely; the periodic job
+    // recreates an open renewal invoice where one is still owed.
+    if (!cascade) {
+      const invoice = await this.prisma.invoice.findUnique({
+        where: { id },
+        select: { paidAt: true },
+      });
+
+      if (invoice?.paidAt) {
+        throw new BadRequestException(
+          'This invoice is paid billing history — pass cascade: true to delete it together with its billing period.'
+        );
+      }
+    }
+
+    // Delete dependents first: subscription periods reference the invoice with
+    // a RESTRICT relation (an invoice with a period was undeletable before),
+    // and items would otherwise be orphaned (their relation only SetNulls).
+    const [, , invoice] = await this.prisma.$transaction([
+      this.prisma.subscriptionPeriod.deleteMany({
+        where: { invoiceID: id },
+      }),
+      this.prisma.invoiceItem.deleteMany({
+        where: { invoiceId: id },
+      }),
+      this.prisma.invoice.delete({
+        where: {
+          id,
+        },
+      }),
+    ]);
+
+    return invoice;
   }
 
   @PrimeDataLoader(InvoiceDataloader)
