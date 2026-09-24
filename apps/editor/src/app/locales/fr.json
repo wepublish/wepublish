@@ -1328,7 +1328,8 @@
       "apps": "Apps",
       "mailSend": "Envoyer un e-mail",
       "mailLog": "E-mails envoyés",
-      "communication": "Communication"
+      "communication": "Communication",
+      "auditLog": "Journal d'audit"
     },
     "navigation": {
       "overview": {
@@ -3120,6 +3121,41 @@
         "sentAt": "Envoyé le",
         "attempts": "Tentatives",
         "empty": "Aucune entrée pour ce filtre."
+      }
+    },
+    "auditLogList": {
+      "overview": {
+        "title": "Journal d'audit",
+        "createdAt": "Horodatage",
+        "createdAtDate": "{{createdAtDate, ccc PP p}}",
+        "actor": "Acteur·rice",
+        "action": "Action",
+        "mutation": "Mutation",
+        "record": "Enregistrement",
+        "session": "Session",
+        "status": "Statut",
+        "succeeded": "Réussi",
+        "failed": "Échoué",
+        "filterBySession": "Filtrer par cette session",
+        "tokenActor": "Jeton API : {{name}}",
+        "impersonatedActor": "{{impersonator}} en tant que {{actor}}",
+        "unknownActor": "Inconnu",
+        "notSupported": "Cette installation ne tient pas de journal d'audit. Les entrées apparaîtront une fois la migration appliquée."
+      },
+      "filter": {
+        "searchPlaceholder": "Rechercher (mutation, enregistrement, e-mail …)",
+        "action": "Action",
+        "entity": "Type d'enregistrement",
+        "session": "ID de session",
+        "dateRange": "Période",
+        "failuresOnly": "Échecs uniquement",
+        "impersonatedOnly": "Usurpation uniquement"
+      },
+      "action": {
+        "create": "Créé",
+        "update": "Modifié",
+        "delete": "Supprimé",
+        "other": "Autre"
       }
     }
   }

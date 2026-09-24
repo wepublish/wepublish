@@ -1,0 +1,48 @@
+fragment FullAuditLog on AuditLog {
+  id
+  createdAt
+  mutation
+  action
+  entity
+  recordId
+  actorType
+  userID
+  userEmail
+  tokenName
+  sessionID
+  impersonatedBy
+  success
+  errorMessage
+}
+
+query AuditLogList(
+  $filter: AuditLogFilter
+  $cursorId: String
+  $take: Int
+  $skip: Int
+  $order: SortOrder
+  $sort: AuditLogSort
+) {
+  auditLogs(
+    filter: $filter
+    cursorId: $cursorId
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
+    nodes {
+      ...FullAuditLog
+    }
+
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+
+    totalCount
+    supported
+  }
+}
