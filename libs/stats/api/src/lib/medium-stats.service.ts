@@ -15,7 +15,6 @@ import {
   MediumCommunityStats,
   MediumAuditStats,
   MediumAuditError,
-  MediumAuditActionCount,
   MediumEditorialStats,
   MediumIntegrationsStats,
   MediumNetworkStats,
