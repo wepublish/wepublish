@@ -330,11 +330,14 @@ describe('MediumStatsService null tolerance', () => {
     expect(stats.operations.lastPeriodicJobAt).toEqual(executed);
   });
 
+  // Deliberately the literal and not the constant: a new block of figures has
+  // to change this line, which is where someone notices the version needs to
+  // move with it. Asserting the constant against itself would notice nothing.
   it('stamps the schema version and generation time', async () => {
     const now = new Date('2026-09-16T12:00:00.000Z');
     const stats = await makeService(makePrisma()).getMediumStats({ now });
 
-    expect(stats.schemaVersion).toBe(1);
+    expect(stats.schemaVersion).toBe(2);
     expect(stats.generatedAt).toBe(now);
     expect(stats.window.to).toBe(now);
   });

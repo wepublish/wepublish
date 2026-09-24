@@ -1,6 +1,14 @@
 import { Field, Float, Int, ObjectType } from '@nestjs/graphql';
 
-export const MEDIUM_STATS_SCHEMA_VERSION = 1;
+/**
+ * The contract version a medium announces, shown to operators as "an older one
+ * reports fewer figures". Raised whenever a release adds or removes a block, so
+ * that field can actually tell an updated medium from one that is behind.
+ *
+ * 2 — adds `audit`: editor actions, failures, active accounts, concentration,
+ *     impersonation, the action mix, the top errors and mutation usage.
+ */
+export const MEDIUM_STATS_SCHEMA_VERSION = 2;
 
 @ObjectType()
 export class MediumStatsWindow {
