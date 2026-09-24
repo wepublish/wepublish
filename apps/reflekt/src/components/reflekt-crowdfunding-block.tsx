@@ -194,7 +194,6 @@ export const ReflektCrowdfundingBlock = ({
     : 0;
   const currentPercent = Math.min(100, Math.max(0, progress));
   const allGoalsReached = hasReachedGoals && currentValue >= goalAmount;
-  const showLadder = hasReachedGoals && !allGoalsReached;
 
   const titleContent = (
     <Trans
@@ -219,18 +218,20 @@ export const ReflektCrowdfundingBlock = ({
       />
     : titleContent;
 
-  const daysContent =
-    daysRemaining != null ?
-      <Trans
-        i18nKey="crowdfunding.stats.daysRemaining"
-        values={{ days: daysRemaining }}
-      />
-    : null;
+  const renderDays = (days: number) => (
+    <Trans
+      i18nKey="crowdfunding.stats.daysRemaining"
+      values={{ days }}
+    />
+  );
+
+  const daysContent = daysRemaining != null ? renderDays(daysRemaining) : null;
+  const heroDaysContent = allGoalsReached ? renderDays(0) : daysContent;
 
   if (isHero) {
     return (
       <Wrapper>
-        {showLadder && (
+        {hasReachedGoals && (
           <HeroGoalMarkers>
             {reachedGoals.map(goal => (
               <HeroGoalMarker
@@ -247,8 +248,8 @@ export const ReflektCrowdfundingBlock = ({
         )}
 
         <HeroBar>
-          <HeroBarFill progress={showLadder ? reachedPercent : progress} />
-          {showLadder && (
+          <HeroBarFill progress={hasReachedGoals ? reachedPercent : progress} />
+          {hasReachedGoals && (
             <HeroBarCurrentGoalFill
               start={reachedPercent}
               end={currentPercent}
@@ -257,12 +258,12 @@ export const ReflektCrowdfundingBlock = ({
           <HeroBarTitle>{heroTitleContent}</HeroBarTitle>
         </HeroBar>
 
-        {daysContent && (
+        {heroDaysContent && (
           <HeroDays
             variant="caption"
             component="p"
           >
-            {daysContent}
+            {heroDaysContent}
           </HeroDays>
         )}
       </Wrapper>

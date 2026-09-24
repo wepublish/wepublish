@@ -2,7 +2,7 @@
   "crowdfunding": {
     "stats": {
       "progressOfGoal": "{type, select, Revenue {{current} von {goal} finanziert} other {{current} von {goal} Unterstützer:innen}}",
-      "allGoalsReached": "{type, select, Revenue {{current} von {goal} finanziert 🎉🎉!!} other {Danke allen {current} Unterstützer:innen 🎉🎉!!}}",
+      "allGoalsReached": "{type, select, Revenue {{current} von {goal} finanziert 🎉🎉!!} other {{current} von {goal} Unterstützer:innen}}",
       "daysRemaining": "{days, plural, =0 {Kampagne beendet} =1 {1 Tag verbleibt} other {{days} Tage verbleiben}}"
     }
   },
