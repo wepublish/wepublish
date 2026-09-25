@@ -6367,6 +6367,7 @@ export type SensitiveDataUser = BaseUser & {
   roleIDs: Array<Scalars['String']>;
   roles: Array<UserRole>;
   subscriptionCount: Scalars['Int'];
+  subscriptionOverview: Array<UserSubscriptionOverview>;
   /** Whether two-factor authentication is enabled for this user. */
   totpEnabled: Scalars['Boolean'];
   /** Whether this user is exempt from the two-factor authentication requirement. */
@@ -7314,7 +7315,24 @@ export enum UserSort {
   CreatedAt = 'CreatedAt',
   FirstName = 'FirstName',
   ModifiedAt = 'ModifiedAt',
-  Name = 'Name'
+  Name = 'Name',
+  SubscriptionCount = 'SubscriptionCount'
+}
+
+export type UserSubscriptionOverview = {
+  __typename?: 'UserSubscriptionOverview';
+  id: Scalars['String'];
+  memberPlanName: Scalars['String'];
+  /** Active means started and paid up, not merely not deactivated: imported subscriptions often expire without a deactivation. */
+  status: UserSubscriptionStatus;
+};
+
+export enum UserSubscriptionStatus {
+  Active = 'Active',
+  Deactivated = 'Deactivated',
+  Expired = 'Expired',
+  Planned = 'Planned',
+  Unpaid = 'Unpaid'
 }
 
 export type VersionInformation = {
