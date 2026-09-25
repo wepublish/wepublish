@@ -8,7 +8,7 @@ const defaultOptions = {} as const;
 export type OneChannelStatusQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type OneChannelStatusQuery = { __typename?: 'Query', oneChannelStatus: { __typename?: 'OneChannelStatus', state: Types.OneChannelConnectionState, oneUrl?: string | null, lastSuccessAt?: string | null, lastAttemptAt?: string | null, lastError?: string | null } };
+export type OneChannelStatusQuery = { __typename?: 'Query', oneChannelStatus: { __typename?: 'OneChannelStatus', state: Types.OneChannelConnectionState, oneUrl?: string | null, lastSuccessAt?: string | null, lastAttemptAt?: string | null, lastError?: string | null, unreachable: boolean } };
 
 
 export const OneChannelStatusDocument = gql`
@@ -19,6 +19,7 @@ export const OneChannelStatusDocument = gql`
     lastSuccessAt
     lastAttemptAt
     lastError
+    unreachable
   }
 }
     `;

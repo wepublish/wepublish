@@ -69,6 +69,11 @@ type PrismaStub = {
   settingAnalyticsProvider: { count: jest.Mock };
   mailLog: { count: jest.Mock };
   periodicJob: { findFirst: jest.Mock };
+  changelogEntry: {
+    count: jest.Mock;
+    findFirst: jest.Mock;
+    findMany: jest.Mock;
+  };
   image: { aggregate: jest.Mock };
   document: { aggregate: jest.Mock };
   subscription: { count: jest.Mock };
@@ -95,6 +100,11 @@ function makePrisma(): PrismaStub {
     },
     mailLog: { count: jest.fn().mockResolvedValue(0) },
     periodicJob: { findFirst: jest.fn().mockResolvedValue(null) },
+    changelogEntry: {
+      count: jest.fn().mockResolvedValue(0),
+      findFirst: jest.fn().mockResolvedValue(null),
+      findMany: jest.fn().mockResolvedValue([]),
+    },
     image: {
       aggregate: jest
         .fn()
@@ -225,12 +235,86 @@ describe('MediumStatsService null tolerance', () => {
     expect(stats.operations.imageCount).toBe(0);
   });
 
+  it('counts every mail, not just the campaign ones', async () => {
+    // Measured on a real medium: 1023 invoices and dunning mails in thirty days
+    // and not a single newsletter. The campaign sum said 0, which read as "no
+    // mail went out" — so the individual mails are counted in their own right.
+    const prisma = makePrisma();
+
+    prisma.mailLog.count.mockResolvedValue(1023);
+
+    const stats = await makeService(prisma).getMediumStats();
+
+    expect(stats.mail.total).toBe(1023);
+    expect(stats.mail.sends).toBe(0);
+  });
+
   it('reports a medium with no periodic job as not failing', async () => {
     const stats = await makeService(makePrisma()).getMediumStats();
 
     expect(stats.operations.periodicJobFailing).toBe(false);
     expect(stats.operations.lastPeriodicJobAt).toBeNull();
     expect(stats.operations.periodicJobTries).toBe(0);
+  });
+
+  it('does not call a run that succeeded on retry a failure', async () => {
+    // The editor dashboard grades this as a warning, not an error
+    // (`getSeverity`: finishedWithError + successfullyFinished). Reporting it
+    // as failing turned every recovered night into a red medium in One.
+    const prisma = makePrisma();
+    prisma.periodicJob.findFirst.mockResolvedValue({
+      executionTime: new Date('2026-09-21T02:00:00.000Z'),
+      finishedWithError: new Date('2026-09-21T02:05:00.000Z'),
+      successfullyFinished: new Date('2026-09-21T02:10:00.000Z'),
+      tries: 3,
+      error: 'timeout',
+    });
+
+    const stats = await makeService(prisma).getMediumStats();
+
+    expect(stats.operations.periodicJobFailing).toBe(false);
+    expect(stats.operations.periodicJobTries).toBe(3);
+  });
+
+  it('still calls a run that never got through a failure', async () => {
+    const prisma = makePrisma();
+    prisma.periodicJob.findFirst.mockResolvedValue({
+      executionTime: new Date('2026-09-21T02:00:00.000Z'),
+      finishedWithError: new Date('2026-09-21T02:05:00.000Z'),
+      successfullyFinished: null,
+      tries: 3,
+      error: 'timeout',
+    });
+
+    const stats = await makeService(prisma).getMediumStats();
+
+    expect(stats.operations.periodicJobFailing).toBe(true);
+  });
+
+  it('reports the last run that EXECUTED, not the newest row', async () => {
+    // A row that was scheduled and never ran would otherwise report "no job
+    // has ever run" and hide the very case where the job got stuck.
+    const prisma = makePrisma();
+    const executed = new Date('2026-09-19T02:00:00.000Z');
+    prisma.periodicJob.findFirst
+      .mockResolvedValueOnce({
+        executionTime: null,
+        finishedWithError: null,
+        successfullyFinished: null,
+        tries: 0,
+        error: null,
+      })
+      .mockResolvedValueOnce({
+        executionTime: executed,
+        finishedWithError: null,
+        successfullyFinished: executed,
+        tries: 1,
+        error: null,
+      });
+
+    const stats = await makeService(prisma).getMediumStats();
+
+    expect(stats.operations.lastPeriodicJobAt).toEqual(executed);
   });
 
   it('stamps the schema version and generation time', async () => {
@@ -345,5 +429,171 @@ describe('MediumStatsService storage', () => {
     const { operations } = await makeService(prisma).getMediumStats();
 
     expect(operations.storageBytes).toBe(900);
+  });
+});
+
+describe('MediumStatsService changelog actions', () => {
+  const released = new Date('2026-09-16T08:00:00.000Z');
+
+  async function operations(prisma: PrismaStub) {
+    const stats = await makeService(prisma).getMediumStats({});
+
+    return stats.operations.changelog;
+  }
+
+  it('reports nothing open when no action is required', async () => {
+    const prisma = makePrisma();
+
+    expect(await operations(prisma)).toEqual({
+      openActions: 0,
+      oldestOpenActionAt: null,
+    });
+  });
+
+  it('counts only unconfirmed action-required entries', async () => {
+    const prisma = makePrisma();
+    prisma.changelogEntry.count.mockResolvedValue(3);
+    prisma.changelogEntry.findFirst.mockResolvedValue({ releasedAt: released });
+
+    expect(await operations(prisma)).toEqual({
+      openActions: 3,
+      oldestOpenActionAt: released,
+    });
+
+    expect(prisma.changelogEntry.count).toHaveBeenCalledWith({
+      where: { actionRequired: true, confirmedAt: null },
+    });
+  });
+
+  it('takes the oldest open entry by release date', async () => {
+    const prisma = makePrisma();
+    prisma.changelogEntry.count.mockResolvedValue(1);
+    prisma.changelogEntry.findFirst.mockResolvedValue({ releasedAt: released });
+
+    await operations(prisma);
+
+    expect(prisma.changelogEntry.findFirst).toHaveBeenCalledWith({
+      where: { actionRequired: true, confirmedAt: null },
+      orderBy: { releasedAt: 'asc' },
+      select: { releasedAt: true },
+    });
+  });
+
+  it('survives a database without the changelog table', async () => {
+    const prisma = makePrisma();
+    prisma.changelogEntry.count.mockRejectedValue(new Error('no such table'));
+
+    expect(await operations(prisma)).toEqual({
+      openActions: 0,
+      oldestOpenActionAt: null,
+    });
+  });
+});
+
+describe('MediumStatsService.listChangelogActions', () => {
+  const released = new Date('2026-09-16T08:00:00.000Z');
+  const confirmed = new Date('2026-09-16T09:30:00.000Z');
+
+  it('lists informative entries too, flagged as no task', async () => {
+    const prisma = makePrisma();
+    prisma.changelogEntry.findMany = jest.fn().mockResolvedValue([
+      {
+        id: 'i1',
+        name: '20260916080000_news',
+        title: 'Just news',
+        actionRequired: false,
+        releasedAt: released,
+        confirmedAt: null,
+        confirmedBy: null,
+      },
+    ]);
+
+    const [entry] = await makeService(prisma).listChangelogActions();
+
+    expect(prisma.changelogEntry.findMany).toHaveBeenCalledWith(
+      expect.not.objectContaining({ where: expect.anything() })
+    );
+    expect(entry.actionRequired).toBe(false);
+  });
+
+  it('maps the confirming user to a name and an email', async () => {
+    const prisma = makePrisma();
+    prisma.changelogEntry.findMany = jest.fn().mockResolvedValue([
+      {
+        id: 'e1',
+        name: '20260916080000_entry',
+        title: 'Do the thing',
+        actionRequired: true,
+        releasedAt: released,
+        confirmedAt: confirmed,
+        confirmedBy: {
+          name: 'Muster',
+          firstName: 'Anna',
+          email: 'anna@example.ch',
+        },
+      },
+    ]);
+
+    const [action] = await makeService(prisma).listChangelogActions();
+
+    expect(action).toEqual({
+      id: 'e1',
+      name: '20260916080000_entry',
+      title: 'Do the thing',
+      actionRequired: true,
+      releasedAt: released,
+      confirmedAt: confirmed,
+      confirmedByName: 'Anna Muster',
+      confirmedByEmail: 'anna@example.ch',
+    });
+  });
+
+  it('reports an open action with no one attached', async () => {
+    const prisma = makePrisma();
+    prisma.changelogEntry.findMany = jest.fn().mockResolvedValue([
+      {
+        id: 'e2',
+        name: '20260916080000_open',
+        title: 'Still open',
+        actionRequired: true,
+        releasedAt: released,
+        confirmedAt: null,
+        confirmedBy: null,
+      },
+    ]);
+
+    const [action] = await makeService(prisma).listChangelogActions();
+
+    expect(action.confirmedAt).toBeNull();
+    expect(action.confirmedByName).toBeNull();
+    expect(action.confirmedByEmail).toBeNull();
+  });
+
+  it('falls back to the last name when no first name is set', async () => {
+    const prisma = makePrisma();
+    prisma.changelogEntry.findMany = jest.fn().mockResolvedValue([
+      {
+        id: 'e3',
+        name: '20260916080000_entry',
+        title: 'Do the thing',
+        actionRequired: true,
+        releasedAt: released,
+        confirmedAt: confirmed,
+        confirmedBy: { name: 'Muster', firstName: null, email: 'm@example.ch' },
+      },
+    ]);
+
+    const [action] = await makeService(prisma).listChangelogActions();
+
+    expect(action.confirmedByName).toBe('Muster');
+  });
+
+  it('answers empty when the changelog table is missing', async () => {
+    const prisma = makePrisma();
+    prisma.changelogEntry.findMany = jest
+      .fn()
+      .mockRejectedValue(new Error('no such table'));
+
+    expect(await makeService(prisma).listChangelogActions()).toEqual([]);
   });
 });

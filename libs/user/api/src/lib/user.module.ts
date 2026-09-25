@@ -27,6 +27,7 @@ import {
 import { UserResolver } from './user.resolver';
 import { HibpService } from './hibp.service';
 import { UserSubscriptionCountDataloader } from './user-subscription-count.dataloader';
+import { UserSubscriptionOverviewDataloader } from './user-subscription-overview.dataloader';
 
 @Module({
   imports: [PrismaModule, ImageModule, HttpModule, MailchimpContactModule],
@@ -42,6 +43,7 @@ import { UserSubscriptionCountDataloader } from './user-subscription-count.datal
     HasOptionalSensitiveDataUserResolver,
     HasOptionalSensitiveDataUserLcResolver,
     UserSubscriptionCountDataloader,
+    UserSubscriptionOverviewDataloader,
     UserService,
     SensitiveDataUserResolver,
     BaseUserResolver,

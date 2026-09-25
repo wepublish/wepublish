@@ -85,6 +85,27 @@ export class MediumMigrationSummary {
   lastMigrationFailed!: boolean;
 }
 
+/**
+ * Changelog entries that ask the medium to do something. Purely informative
+ * entries are never counted here — they need nobody's attention and would
+ * otherwise turn every release into an open task.
+ */
+@ObjectType()
+export class MediumChangelogStats {
+  @Field(() => Int, {
+    description:
+      'Action-required entries that nobody has confirmed yet. Informative entries are excluded.',
+  })
+  openActions!: number;
+
+  @Field(() => Date, {
+    nullable: true,
+    description:
+      'Release date of the longest-open action-required entry, or null when none is open.',
+  })
+  oldestOpenActionAt!: Date | null;
+}
+
 @ObjectType()
 export class MediumOperationsStats {
   @Field(() => Date, { nullable: true })
@@ -120,6 +141,9 @@ export class MediumOperationsStats {
 
   @Field(() => MediumMigrationSummary)
   migrations!: MediumMigrationSummary;
+
+  @Field(() => MediumChangelogStats)
+  changelog!: MediumChangelogStats;
 }
 
 @ObjectType()
@@ -166,6 +190,19 @@ export class MediumCommunityStats {
 
 @ObjectType()
 export class MediumMailStats {
+  /**
+   * Every individual mail handed to the provider in the window — invoices,
+   * dunning, password links and campaign mail alike.
+   *
+   * `sends` below counts something narrower: the sentCount of CAMPAIGN jobs. A
+   * medium that mails 1023 invoices and runs no newsletter reports `sends: 0`,
+   * which reads as "nothing was sent" when the opposite is true. The two are
+   * kept apart rather than merged, because "did the newsletter go out" and "how
+   * much mail did we send" are different questions.
+   */
+  @Field(() => Int)
+  total!: number;
+
   @Field(() => Int)
   sends!: number;
 
