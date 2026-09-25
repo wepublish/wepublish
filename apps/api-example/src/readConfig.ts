@@ -151,9 +151,17 @@ type SyncProvider = {
   id: string;
 };
 
+type LetterProvider = {
+  id: string;
+  type: string;
+  cloudflareAccountId?: string;
+  cloudflareApiToken?: string;
+};
+
 type Config = {
   general: General;
   mailProvider: MailProvider;
+  letterProvider?: LetterProvider;
   paymentProviders: PaymentProvider[];
   mediaServer: novaMediaServer;
   challenge: Turnstile | HCaptcha;

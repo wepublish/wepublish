@@ -1011,9 +1011,19 @@ interface SeedSubscriber {
   email: string;
   firstName: string;
   name: string;
+  /** Postal address; most subscribers have one, a few are left without. */
+  address?: SeedAddress;
   /** Why this row exists — printed after seeding as a quick test overview. */
   purpose: string;
   subscriptions: SeedSubscription[];
+}
+
+interface SeedAddress {
+  streetAddress: string;
+  streetAddressNumber: string;
+  zipCode: string;
+  city: string;
+  country: string;
 }
 
 const MONTHS_PER_PERIOD: Record<PaymentPeriodicity, number> = {
@@ -1036,6 +1046,13 @@ const SEED_SUBSCRIBERS: SeedSubscriber[] = [
     email: 'abo.aktiv.chf@wepublish.ch',
     firstName: 'Anna',
     name: 'Aktiv',
+    address: {
+      streetAddress: 'Bahnhofstrasse',
+      streetAddressNumber: '12',
+      zipCode: '8001',
+      city: 'Zürich',
+      country: 'CH',
+    },
     purpose: 'Active yearly CHF subscription, auto-renewing, invoice paid',
     subscriptions: [
       {
@@ -1055,6 +1072,13 @@ const SEED_SUBSCRIBERS: SeedSubscriber[] = [
     email: 'abo.aktiv.eur@wepublish.ch',
     firstName: 'Bruno',
     name: 'Monatlich',
+    address: {
+      streetAddress: 'Hauptstraße',
+      streetAddressNumber: '5',
+      zipCode: '10115',
+      city: 'Berlin',
+      country: 'DE',
+    },
     purpose: 'Active monthly EUR subscription, auto-renewing, invoice paid',
     subscriptions: [
       {
@@ -1074,6 +1098,13 @@ const SEED_SUBSCRIBERS: SeedSubscriber[] = [
     email: 'abo.mehrfach@wepublish.ch',
     firstName: 'Clara',
     name: 'Mehrfach',
+    address: {
+      streetAddress: 'Marktgasse',
+      streetAddressNumber: '27',
+      zipCode: '3011',
+      city: 'Bern',
+      country: 'CH',
+    },
     purpose:
       'Three subscriptions at once: two active across plans and currencies, one deactivated',
     subscriptions: [
@@ -1120,6 +1151,13 @@ const SEED_SUBSCRIBERS: SeedSubscriber[] = [
     email: 'abo.gekuendigt@wepublish.ch',
     firstName: 'Daniel',
     name: 'Gekündigt',
+    address: {
+      streetAddress: 'Rue du Rhône',
+      streetAddressNumber: '48',
+      zipCode: '1204',
+      city: 'Genève',
+      country: 'CH',
+    },
     purpose: 'Deactivated by the user — no active subscription left',
     subscriptions: [
       {
@@ -1143,6 +1181,13 @@ const SEED_SUBSCRIBERS: SeedSubscriber[] = [
     email: 'abo.chargeback@wepublish.ch',
     firstName: 'Elena',
     name: 'Rückbuchung',
+    address: {
+      streetAddress: 'Mariahilfer Straße',
+      streetAddressNumber: '101',
+      zipCode: '1060',
+      city: 'Wien',
+      country: 'AT',
+    },
     purpose: 'Deactivated after a chargeback',
     subscriptions: [
       {
@@ -1166,6 +1211,13 @@ const SEED_SUBSCRIBERS: SeedSubscriber[] = [
     email: 'abo.offene.rechnung@wepublish.ch',
     firstName: 'Fabio',
     name: 'Unbezahlt',
+    address: {
+      streetAddress: 'Via Nassa',
+      streetAddressNumber: '3',
+      zipCode: '6900',
+      city: 'Lugano',
+      country: 'CH',
+    },
     purpose:
       'Still active but the renewal invoice is open and overdue — deactivation is scheduled',
     subscriptions: [
@@ -1186,6 +1238,13 @@ const SEED_SUBSCRIBERS: SeedSubscriber[] = [
     email: 'abo.ausgelaufen@wepublish.ch',
     firstName: 'Lena',
     name: 'Ausgelaufen',
+    address: {
+      streetAddress: 'Steinenvorstadt',
+      streetAddressNumber: '9',
+      zipCode: '4051',
+      city: 'Basel',
+      country: 'CH',
+    },
     purpose:
       'Ran out without auto-renewal; the periodic job deactivated it at paidUntil. A win-back target.',
     subscriptions: [
@@ -1212,6 +1271,13 @@ const SEED_SUBSCRIBERS: SeedSubscriber[] = [
     email: 'abo.laeuft.ab@wepublish.ch',
     firstName: 'Gina',
     name: 'Ablauf',
+    address: {
+      streetAddress: 'Pilatusstrasse',
+      streetAddressNumber: '22',
+      zipCode: '6003',
+      city: 'Luzern',
+      country: 'CH',
+    },
     purpose:
       'Active without auto-renewal, ends in 10 days — target for renewal reminders',
     subscriptions: [
@@ -1252,6 +1318,13 @@ const SEED_SUBSCRIBERS: SeedSubscriber[] = [
     email: 'abo.lebenslang@wepublish.ch',
     firstName: 'Igor',
     name: 'Lebenslang',
+    address: {
+      streetAddress: 'Multergasse',
+      streetAddressNumber: '14',
+      zipCode: '9000',
+      city: 'St. Gallen',
+      country: 'CH',
+    },
     purpose: 'Lifetime subscription without a paid-until date',
     subscriptions: [
       {
@@ -1272,6 +1345,13 @@ const SEED_SUBSCRIBERS: SeedSubscriber[] = [
     email: 'abo.quartal@wepublish.ch',
     firstName: 'Jana',
     name: 'Quartal',
+    address: {
+      streetAddress: 'Rathausgasse',
+      streetAddressNumber: '7',
+      zipCode: '5000',
+      city: 'Aarau',
+      country: 'CH',
+    },
     purpose: 'Quarterly billing period, auto-renewing',
     subscriptions: [
       {
@@ -1354,6 +1434,17 @@ export async function seedSubscribers(prisma: PrismaClient) {
         totpExempt: true,
       },
     });
+
+    // Upsert so a re-seed also brings the address of existing users in line.
+    if (subscriber.address) {
+      await prisma.userAddress.upsert({
+        where: { userId: user.id },
+        update: subscriber.address,
+        create: { ...subscriber.address, userId: user.id },
+      });
+    } else {
+      await prisma.userAddress.deleteMany({ where: { userId: user.id } });
+    }
 
     for (const seed of subscriber.subscriptions) {
       const memberPlanID = planIdBySlug.get(seed.planSlug);

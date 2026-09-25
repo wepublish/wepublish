@@ -4,7 +4,7 @@ import {
   useMarkInvoiceAsPaidMutation,
   useMeQuery,
 } from '@wepublish/editor/api';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { LiaFileInvoiceSolid } from 'react-icons/lia';
 import { MdAccessTime, MdClose, MdContentCopy, MdDone } from 'react-icons/md';
@@ -107,6 +107,18 @@ function InvoiceListPanel({
   const { data: me } = useMeQuery({});
   const { t } = useTranslation();
   const [invoiceToPay, setInvoiceToPay] = useState<InvoiceFragment>();
+  // Rechnungsverlauf: latest first by default; the date column header toggles.
+  const [sortType, setSortType] = useState<'asc' | 'desc'>('desc');
+  const sortedInvoices = useMemo(() => {
+    const billingDate = (invoice: InvoiceFragment) =>
+      +new Date(invoice.dueAt ?? invoice.createdAt);
+
+    return [...(invoices ?? [])].sort((a, b) =>
+      sortType === 'asc' ?
+        billingDate(a) - billingDate(b)
+      : billingDate(b) - billingDate(a)
+    );
+  }, [invoices, sortType]);
   const { isVisible, toggle } = useColumnConfig(
     'subscription-invoices',
     CONFIG_COLUMNS
@@ -185,7 +197,10 @@ function InvoiceListPanel({
       <RTable
         autoHeight
         wordWrap="break-word"
-        data={invoices}
+        data={sortedInvoices}
+        sortColumn="dueAt"
+        sortType={sortType}
+        onSortColumn={(_, type) => setSortType(type ?? 'desc')}
       >
         {isVisible('id') && (
           <Column
@@ -226,11 +241,14 @@ function InvoiceListPanel({
         <Column
           width={100}
           resizable
+          sortable
         >
           <HeaderCell>{t('invoice.table.date')}</HeaderCell>
-          <RCell>
+          {/* dueAt = the billing date (imported history carries its real
+              period start there); createdAt would show the import moment. */}
+          <RCell dataKey="dueAt">
             {(rowData: RowDataType<InvoiceFragment>) =>
-              formatDate(rowData.createdAt)
+              formatDate(rowData.dueAt ?? rowData.createdAt)
             }
           </RCell>
         </Column>

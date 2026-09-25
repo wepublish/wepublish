@@ -2101,7 +2101,7 @@
         "title": {
           "activated": "Deactivate subscription"
         },
-        "willBeDeactivated": "The subscription will be deactivated on {{date, ccc PP p}}"
+        "willBeDeactivated": "The subscription will be deactivated on {{date, ccc PP p}}. Reason: {{reason}}"
       },
       "editTitle": "Edit Subscription",
       "memberPlanMonthlyAmount": "Minimal Monthly Amount ({{currency}})",
@@ -2142,12 +2142,30 @@
       "periodCreatedAt": "Created at {{date}}",
       "periodEndsAt": "until {{date}}",
       "periods": "Periods",
+      "periodRange": "Period",
       "periodStartsAt": "Starts at {{date}}",
       "subscriptionCreatedAt": "Created at {{date}}",
       "subscriptionIsAutoRenewed": "Subscription will be renewed automatically",
       "subscriptionStartsAt": "Subscription starts at {{date}}",
       "subscriptionTitle": "{{memberPlanName}} / No. {{subscriptionId}}",
-      "unexpectedErrorNoInvoice": "Unexpected error: invoice not available."
+      "unexpectedErrorNoInvoice": "Unexpected error: invoice not available.",
+      "table": {
+        "subscription": "Subscription",
+        "start": "Start",
+        "periodicity": "Payment interval",
+        "paidUntil": "Paid until",
+        "active": "Active",
+        "deactivated": "Deactivated",
+        "planned": "Planned",
+        "unpaid": "Unpaid",
+        "expired": "Expired",
+        "created": "Created",
+        "renewal": "Renewal",
+        "renewsAutomatically": "Automatic",
+        "expires": "Expires",
+        "confirmed": "Confirmed",
+        "perMonthSuffix": "/mo."
+      }
     },
     "blockStyles": {
       "style": "Style",
@@ -2181,7 +2199,7 @@
       "periodicityPricingNoPeriodicities": "Enable payment intervals in the payment settings first to configure interval-specific prices.",
       "periodicityPricingRequired": "At least one payment interval needs a minimum amount.",
       "periodicityPricingLabel": "Marketing label",
-      "periodicityPricingLabelHelpText": "Optional note shown for this payment interval on the subscribe page, e.g. \u201c2 months for free\u201d.",
+      "periodicityPricingLabelHelpText": "Optional note shown for this payment interval on the subscribe page, e.g. “2 months for free”.",
       "defaultPaymentPeriodicity": "Default payment interval",
       "defaultPaymentPeriodicityHelpText": "This payment interval is preselected on the subscribe page. Without a selection, the first configured interval is used.",
       "periodicityPricingDelta": "Discount compared to monthly price: {{delta}}",
@@ -2528,6 +2546,7 @@
       "trackingPixel": "Tracking Pixel",
       "analytics": "Hot & Trending Provider",
       "mailProvider": "Mail Provider",
+      "letterProvider": "Letter Provider",
       "back": "Back to Integrations",
       "unknown": "Unknown Integration",
       "notFound": "Integration not found",
@@ -2572,6 +2591,16 @@
         "bexioInvoiceTitleRenewalMembership": "Invoice Title (Renewal Membership)"
       },
       "placeholderSecret": "Unchanged (Hidden)",
+      "letterSettings": {
+        "type": "Type",
+        "environment": "Environment",
+        "clientId": "Client ID",
+        "clientSecret": "Client Secret",
+        "organisationId": "Organisation ID",
+        "webhookSigningKey": "Webhook Signing Key",
+        "autoSend": "Send letters automatically",
+        "placeholderEmailContains": "Placeholder email contains"
+      },
       "mailSettings": {
         "type": "Type",
         "fromAddress": "From Address",
@@ -2961,8 +2990,8 @@
           "description": "Audience and filters"
         },
         "content": {
-          "title": "Mail content",
-          "description": "Template and preview"
+          "title": "Content & delivery",
+          "description": "Template, email or letter"
         },
         "send": {
           "title": "Send email",
@@ -3041,10 +3070,20 @@
         "loading": "Loading recipients …",
         "email": "Email",
         "name": "Name",
-        "memberPlan": "Member plan"
+        "memberPlan": "Member plan",
+        "address": "Address",
+        "withAddress": "Address present",
+        "withoutAddress": "No valid address – will be skipped"
       },
       "endedWithinDays": "Deactivated within the last … days",
       "endedWithinDaysHint": "Only subscriptions deactivated in this window.",
+      "emailFilter": {
+        "label": "Email address",
+        "all": "All",
+        "placeholder": "Placeholders only",
+        "real": "Real only",
+        "hint": "Placeholder addresses are defined in the letter integration."
+      },
       "endedWindow": {
         "label": "When the subscription was deactivated",
         "relative": "Last … days",
@@ -3059,7 +3098,8 @@
         "firstRecipient": "First recipient",
         "hint": "How the mail looks for this person — with their real data.",
         "loading": "Loading preview …",
-        "noRecipients": "No recipients — adjust the audience first."
+        "noRecipients": "No recipients — adjust the audience first.",
+        "letterTitle": "Letter preview"
       },
       "recipientsCountPerPerson": "{{count}} mails to {{people}} people",
       "endsAtHint": "Cancellation date, otherwise the date paid up to.",
@@ -3072,7 +3112,40 @@
       "startsAt": "Subscription start",
       "endsAt": "Subscription end",
       "from": "From",
-      "to": "Until"
+      "to": "Until",
+      "lettersCount": "{{count}} letters to {{people}} people",
+      "confirmTextLetter": "Send this letter to {{count}} recipients?",
+      "channel": {
+        "label": "Delivery",
+        "mail": "Email",
+        "letter": "Letter",
+        "withoutAddress": "{{count}} of the recipients have no usable postal address and will be skipped."
+      },
+      "print": {
+        "addressPosition": {
+          "label": "Address window",
+          "left": "Left",
+          "right": "Right"
+        },
+        "deliveryProduct": {
+          "label": "Delivery",
+          "cheap": "Cheap (B-Post)",
+          "fast": "Fast (A-Post)",
+          "premium": "Premium",
+          "registered": "Registered",
+          "bulk": "Bulk"
+        },
+        "printMode": {
+          "label": "Print",
+          "simplex": "Single sided",
+          "duplex": "Double sided"
+        },
+        "printSpectrum": {
+          "label": "Colour",
+          "grayscale": "Grayscale",
+          "color": "Colour"
+        }
+      }
     },
     "mailLog": {
       "title": "Sent emails",
@@ -3092,7 +3165,8 @@
         "all": "All",
         "title": "Filter",
         "reset": "Reset filters",
-        "typeHint": "What set this send off."
+        "typeHint": "What set this send off.",
+        "channel": "Delivery"
       },
       "types": {
         "subscriptionFlow": "Subscription mailing",
@@ -3195,7 +3269,27 @@
           "name": "rejected",
           "meaning": "The mail was never sent. Either We.Publish could not hand it over (missing or wrong provider configuration), or the provider refused it up front: unverified sending domain (“unsigned”), address on the provider's suppression list after an earlier hard bounce or spam complaint, unsubscribed recipient, or the account's sending limit was reached.",
           "next": "The “Error” column names the reason — hover it for cause and remedy. Fix the cause and send again: nothing is retried automatically."
+        },
+        "dispatched": {
+          "name": "Dispatched",
+          "meaning": "The print vendor has printed the letter and handed it to the post.",
+          "next": "Nothing to do. The state changes to delivered once the post reports the delivery."
+        },
+        "undeliverable": {
+          "name": "Undeliverable",
+          "meaning": "The post could not deliver the letter and returned it.",
+          "next": "Check the address on the recipient and send the letter again."
+        },
+        "canceled": {
+          "name": "Canceled",
+          "meaning": "The letter was withdrawn before it was printed.",
+          "next": "Nothing to do. Nothing was printed and nothing was charged."
         }
+      },
+      "channel": "Delivery",
+      "channels": {
+        "mail": "Email",
+        "letter": "Letter"
       }
     },
     "userMail": {

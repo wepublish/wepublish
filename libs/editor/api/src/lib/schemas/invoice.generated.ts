@@ -5,7 +5,7 @@ import {RichtextJSONDocument} from '@wepublish/richtext';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
-export type InvoiceFragment = { __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Types.Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number, goodieId?: string | null, goodie?: { __typename?: 'Goodie', id: string, name: string } | null }> };
+export type InvoiceFragment = { __typename?: 'Invoice', id: string, total: number, dueAt: string, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Types.Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number, goodieId?: string | null, goodie?: { __typename?: 'Goodie', id: string, name: string } | null }> };
 
 export type InvoicesQueryVariables = Types.Exact<{
   cursorId?: Types.InputMaybe<Types.Scalars['String']>;
@@ -50,6 +50,7 @@ export const InvoiceFragmentDoc = gql`
       name
     }
   }
+  dueAt
   paidAt
   description
   mail

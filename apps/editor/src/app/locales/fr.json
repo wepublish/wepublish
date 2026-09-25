@@ -1985,7 +1985,7 @@
         "title": {
           "activated": "Désactiver l'abonnement"
         },
-        "willBeDeactivated": "L'abonnement sera désactivé le {{date, ccc PP p}}"
+        "willBeDeactivated": "L'abonnement sera désactivé le {{date, ccc PP p}}. Raison : {{reason}}"
       },
       "editTitle": "Modifier l'abonnement",
       "memberPlanMonthlyAmount": "Montant mensuel minimum ({{currency}})",
@@ -2026,12 +2026,30 @@
       "periodCreatedAt": "Créé le {{date}}",
       "periodEndsAt": "jusqu'à {{date}}",
       "periods": "Périodes",
+      "periodRange": "Période",
       "periodStartsAt": "Valable de {{date}}",
       "subscriptionCreatedAt": "Créé le {{date}}",
       "subscriptionIsAutoRenewed": "L'abonnement sera renouvelé automatiquement",
       "subscriptionStartsAt": "L'abonnement débute le {{date}}",
       "subscriptionTitle": "{{memberPlanName}} / N° {{subscriptionId}}",
-      "unexpectedErrorNoInvoice": "Erreur inattendue : facture inexistante."
+      "unexpectedErrorNoInvoice": "Erreur inattendue : facture inexistante.",
+      "table": {
+        "subscription": "Abonnement",
+        "start": "Début",
+        "periodicity": "Intervalle de paiement",
+        "paidUntil": "Payé jusqu’au",
+        "active": "Actif",
+        "deactivated": "Désactivé",
+        "planned": "Prévu",
+        "unpaid": "Impayé",
+        "expired": "Expiré",
+        "created": "Créé",
+        "renewal": "Renouvellement",
+        "renewsAutomatically": "Automatique",
+        "expires": "Expire",
+        "confirmed": "Confirmé",
+        "perMonthSuffix": "/mois"
+      }
     },
     "yes": "Oui",
     "memberplanForm": {
@@ -2054,9 +2072,9 @@
       "periodicityPricingNoPeriodicities": "Active d'abord des intervalles de paiement dans les paramètres de paiement pour configurer des prix spécifiques aux intervalles.",
       "periodicityPricingRequired": "Au moins un intervalle de paiement nécessite un montant minimal.",
       "periodicityPricingLabel": "Label marketing",
-      "periodicityPricingLabelHelpText": "Note facultative affich\u00e9e pour cet intervalle de paiement sur la page d\u2019abonnement, p.ex. \u00ab2 mois offerts\u00bb.",
-      "defaultPaymentPeriodicity": "Intervalle de paiement par d\u00e9faut",
-      "defaultPaymentPeriodicityHelpText": "Cet intervalle de paiement est pr\u00e9s\u00e9lectionn\u00e9 sur la page d\u2019abonnement. Sans s\u00e9lection, le premier intervalle configur\u00e9 est utilis\u00e9.",
+      "periodicityPricingLabelHelpText": "Note facultative affichée pour cet intervalle de paiement sur la page d’abonnement, p.ex. «2 mois offerts».",
+      "defaultPaymentPeriodicity": "Intervalle de paiement par défaut",
+      "defaultPaymentPeriodicityHelpText": "Cet intervalle de paiement est présélectionné sur la page d’abonnement. Sans sélection, le premier intervalle configuré est utilisé.",
       "periodicityPricingDelta": "Rabais par rapport au prix mensuel : {{delta}}",
       "periodicityPricingCustom": "Prix personnalisés",
       "periodicityPricingDerived": "À partir du prix mensuel",
@@ -2868,8 +2886,8 @@
           "description": "Public et filtres"
         },
         "content": {
-          "title": "Contenu de l'e-mail",
-          "description": "Modèle et aperçu"
+          "title": "Contenu et envoi",
+          "description": "Modèle, e-mail ou lettre"
         },
         "send": {
           "title": "Envoyer l'e-mail",
@@ -2948,10 +2966,20 @@
         "loading": "Chargement des destinataires …",
         "email": "E-mail",
         "name": "Nom",
-        "memberPlan": "Plan d’abonnement"
+        "memberPlan": "Plan d’abonnement",
+        "address": "Adresse",
+        "withAddress": "Adresse disponible",
+        "withoutAddress": "Pas d’adresse valide – ne sera pas envoyé"
       },
       "endedWithinDays": "Désactivé au cours des … derniers jours",
       "endedWithinDaysHint": "Uniquement les abonnements désactivés dans cette période.",
+      "emailFilter": {
+        "label": "Adresse e-mail",
+        "all": "Toutes",
+        "placeholder": "Uniquement les substituts",
+        "real": "Uniquement les réelles",
+        "hint": "Les adresses de substitution sont définies dans l’intégration courrier."
+      },
       "endedWindow": {
         "label": "Période de désactivation de l’abonnement",
         "relative": "Derniers … jours",
@@ -2979,7 +3007,9 @@
       "startsAt": "Début de l'abonnement",
       "endsAt": "Fin de l'abonnement",
       "from": "À partir du",
-      "to": "Jusqu'au"
+      "to": "Jusqu'au",
+      "lettersCount": "{{count}} lettres à {{people}} personnes",
+      "confirmTextLetter": "Envoyer cette lettre à {{count}} destinataires ?"
     },
     "mailLog": {
       "title": "E-mails envoyés",
