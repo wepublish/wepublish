@@ -2973,6 +2973,7 @@ export type MutationCreateCommentArgs = {
   itemType: CommentItemType;
   lead?: InputMaybe<Scalars['String']>;
   parentID?: InputMaybe<Scalars['String']>;
+  publish?: InputMaybe<Scalars['Boolean']>;
   tagIds?: InputMaybe<Array<Scalars['String']>>;
   text?: InputMaybe<Scalars['RichText']>;
 };
