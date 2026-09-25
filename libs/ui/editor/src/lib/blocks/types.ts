@@ -76,11 +76,12 @@ export interface SubscribeBlockValue extends BaseBlockValue {
   memberPlanIds: string[];
   memberPlanRenderSettings: SubscribeBlock['memberPlanRenderSettings'];
   fields: SubscribeBlockField[];
+  periodicityDisplay?: SubscribePeriodicityDisplay | null;
   showGoodies: boolean;
   showDiscountCodes: boolean;
   goodieMinValue?: number | null;
+  goodieMinValueAppliesToUpgrade: boolean;
   hideRepeatGoodieOnUpgrade: boolean;
-  periodicityDisplay?: SubscribePeriodicityDisplay | null;
 }
 
 export interface MailchimpFormInterestOptionValue {
@@ -567,11 +568,13 @@ export function mapBlockValueToBlockInput(
           memberPlanIds: block.value.memberPlanIds ?? [],
           memberPlanRenderSettings: block.value.memberPlanRenderSettings ?? [],
           fields: block.value.fields,
+          periodicityDisplay: block.value.periodicityDisplay,
           showGoodies: block.value.showGoodies,
           showDiscountCodes: block.value.showDiscountCodes,
           goodieMinValue: block.value.goodieMinValue ?? null,
+          goodieMinValueAppliesToUpgrade:
+            block.value.goodieMinValueAppliesToUpgrade,
           hideRepeatGoodieOnUpgrade: block.value.hideRepeatGoodieOnUpgrade,
-          periodicityDisplay: block.value.periodicityDisplay,
         },
       };
 
@@ -1252,10 +1255,12 @@ export function blockForQueryBlock(
           showGoodies: block.showGoodies ?? false,
           showDiscountCodes: block.showDiscountCodes ?? false,
           goodieMinValue: block.goodieMinValue ?? null,
+          goodieMinValueAppliesToUpgrade:
+            block.goodieMinValueAppliesToUpgrade ?? false,
           hideRepeatGoodieOnUpgrade: block.hideRepeatGoodieOnUpgrade ?? false,
           memberPlanIds: block.memberPlanIds ?? [],
-          memberPlanRenderSettings: block.memberPlanRenderSettings,
           periodicityDisplay: block.periodicityDisplay,
+          memberPlanRenderSettings: block.memberPlanRenderSettings,
         },
       };
 

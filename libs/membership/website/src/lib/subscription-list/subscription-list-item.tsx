@@ -227,9 +227,7 @@ export function SubscriptionListItem({
                 locale
               ),
               extendable,
-              periodUnit: t(
-                `subscription.periodUnit.${paymentPeriodicity || 'yearly'}`
-              ),
+              periodicity: paymentPeriodicity,
             })}
           </SubscriptionListItemMetaItem>
 

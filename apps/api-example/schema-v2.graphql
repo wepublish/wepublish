@@ -2478,9 +2478,6 @@ type MediumStatsWindow {
 
 type MemberPlan implements HasImage {
   active: Boolean!
-  amountPerMonthMax: Int
-  amountPerMonthMin: Int!
-  amountPerMonthTarget: Int
   availablePaymentMethods: [AvailablePaymentMethod!]!
   confirmationPage: Page
   confirmationPageId: String
@@ -2503,7 +2500,7 @@ type MemberPlan implements HasImage {
   migrateToTargetPaymentMethod: PaymentMethod
   migrateToTargetPaymentMethodID: String
   name: String!
-  periodicityPricing: [PeriodicityPrice!]
+  periodicityPricing: [PeriodicityPrice!]!
   productType: ProductType!
   shortDescription: RichText
   slug: String!
@@ -2584,7 +2581,7 @@ type Mutation {
   createBlockStyle(blocks: [EditorBlockType!]!, name: String!): BlockStyle!
 
   """Creates a comment for any user"""
-  createComment(itemID: String!, itemType: CommentItemType!, lead: String, parentID: String, tagIds: [String!], text: RichText): Comment!
+  createComment(itemID: String!, itemType: CommentItemType!, lead: String, parentID: String, publish: Boolean = false, tagIds: [String!], text: RichText): Comment!
 
   "\n      Create a new consent.\n    "
   createConsent(defaultValue: Boolean!, name: String!, slug: String!): Consent!
@@ -2623,7 +2620,7 @@ type Mutation {
   createMailTemplate(input: MailTemplateInput!): MailTemplateModel!
 
   """Creates a new memberplan."""
-  createMemberPlan(active: Boolean!, amountPerMonthMax: Int, amountPerMonthMin: Int!, amountPerMonthTarget: Int, availablePaymentMethods: [AvailablePaymentMethodInput!]!, confirmationPageId: String, currency: Currency!, defaultPaymentPeriodicity: PaymentPeriodicity, description: RichText, extendable: Boolean!, externalReward: String, failPageId: String, imageID: String, maxCount: Int, migrateToTargetPaymentMethodID: String, name: String!, periodicityPricing: [PeriodicityPriceInput!], productType: ProductType!, shortDescription: RichText, slug: String!, successPageId: String, tags: [String!]): MemberPlan!
+  createMemberPlan(active: Boolean!, availablePaymentMethods: [AvailablePaymentMethodInput!]!, confirmationPageId: String, currency: Currency!, defaultPaymentPeriodicity: PaymentPeriodicity, description: RichText, extendable: Boolean!, externalReward: String, failPageId: String, imageID: String, maxCount: Int, migrateToTargetPaymentMethodID: String, name: String!, periodicityPricing: [PeriodicityPriceInput!], productType: ProductType!, shortDescription: RichText, slug: String!, successPageId: String, tags: [String!]): MemberPlan!
 
   """Creates a new navigation."""
   createNavigation(key: String!, links: [NavigationLinkInput!]!, name: String!): Navigation!
@@ -3088,7 +3085,7 @@ type Mutation {
   updateMailTemplate(id: String!, input: MailTemplateInput!): MailTemplateModel!
 
   """Updates an existing memberplan."""
-  updateMemberPlan(active: Boolean, amountPerMonthMax: Int, amountPerMonthMin: Int, amountPerMonthTarget: Int, availablePaymentMethods: [AvailablePaymentMethodInput!], confirmationPageId: String, currency: Currency, defaultPaymentPeriodicity: PaymentPeriodicity, description: RichText, extendable: Boolean, externalReward: String, failPageId: String, id: String!, imageID: String, maxCount: Int, migrateToTargetPaymentMethodID: String, name: String, periodicityPricing: [PeriodicityPriceInput!], productType: ProductType, shortDescription: RichText, slug: String, successPageId: String, tags: [String!]): MemberPlan!
+  updateMemberPlan(active: Boolean, availablePaymentMethods: [AvailablePaymentMethodInput!], confirmationPageId: String, currency: Currency, defaultPaymentPeriodicity: PaymentPeriodicity, description: RichText, extendable: Boolean, externalReward: String, failPageId: String, id: String!, imageID: String, maxCount: Int, migrateToTargetPaymentMethodID: String, name: String, periodicityPricing: [PeriodicityPriceInput!], productType: ProductType, shortDescription: RichText, slug: String, successPageId: String, tags: [String!]): MemberPlan!
 
   """Updates an existing navigation."""
   updateNavigation(id: String!, key: String!, links: [NavigationLinkInput!]!, name: String!): Navigation!
@@ -4997,6 +4994,7 @@ type SubscribeBlock implements BaseBlock {
   disabled: Boolean
   fields: [SubscribeBlockField!]!
   goodieMinValue: Int
+  goodieMinValueAppliesToUpgrade: Boolean!
   hideRepeatGoodieOnUpgrade: Boolean!
   memberPlanIds: [String!]!
   memberPlanRenderSettings: [SubscribeBlockMemberPlanRenderSetting!]!
@@ -5022,6 +5020,7 @@ input SubscribeBlockInput {
   disabled: Boolean
   fields: [SubscribeBlockField!]! = [FirstName, Password, PasswordRepeated, Address]
   goodieMinValue: Int
+  goodieMinValueAppliesToUpgrade: Boolean! = false
   hideRepeatGoodieOnUpgrade: Boolean! = false
   memberPlanIds: [String!]! = []
   memberPlanRenderSettings: [SubscribeBlockMemberPlanRenderSettingInput!]!
@@ -5038,9 +5037,11 @@ input SubscribeBlockLayoutConfigInput {
   showInput: Boolean! = false
   type: SubscribeBlockRenderLayout!
   values: [Int!]
+  valuesByPeriodicity: [SubscribeBlockPeriodicityValuesInput!]
 }
 
 type SubscribeBlockLayoutNoneConfig implements SubscribeBlockLayoutConfig {
+  showInput: Boolean!
   type: SubscribeBlockRenderLayout!
 }
 
@@ -5048,6 +5049,7 @@ type SubscribeBlockLayoutPickerConfig implements SubscribeBlockLayoutConfig {
   showInput: Boolean!
   type: SubscribeBlockRenderLayout!
   values: [Int!]!
+  valuesByPeriodicity: [SubscribeBlockPeriodicityValues!]!
 }
 
 type SubscribeBlockLayoutSliderConfig implements SubscribeBlockLayoutConfig {
@@ -5067,6 +5069,16 @@ input SubscribeBlockMemberPlanRenderSettingInput {
   memberPlanId: String!
 }
 
+type SubscribeBlockPeriodicityValues {
+  periodicity: PaymentPeriodicity!
+  values: [Int!]!
+}
+
+input SubscribeBlockPeriodicityValuesInput {
+  periodicity: PaymentPeriodicity!
+  values: [Int!]!
+}
+
 enum SubscribeBlockRenderLayout {
   None
   Picker
@@ -5076,6 +5088,7 @@ enum SubscribeBlockRenderLayout {
 enum SubscribePeriodicityDisplay {
   Dropdown
   OfferCards
+  Toggle
 }
 
 type SubscriptionCreatedAction implements BaseAction & HasSubscriptionLc {

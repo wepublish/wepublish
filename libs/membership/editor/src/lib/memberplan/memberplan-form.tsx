@@ -282,7 +282,7 @@ export function MemberPlanForm({
                   setMemberPlan({ ...memberPlan, active });
                 }}
               />
-              <Form.Text>{t('memberPlanEdit.activeDescription')}</Form.Text>
+              <Text>{t('memberPlanEdit.activeDescription')}</Text>
             </ColTextAlignEnd>
 
             <Col xs={24}>
@@ -650,9 +650,9 @@ export function MemberPlanForm({
                             )
                           }
                         />
-                        <Form.Text>
+                        <Text>
                           {t('memberPlanEdit.autoRenewalDescription')}
-                        </Form.Text>
+                        </Text>
                       </Col>
 
                       {/* payment periodicity */}
@@ -703,12 +703,6 @@ export function MemberPlanForm({
                           placement="auto"
                         />
                       </Col>
-
-                      {availablePaymentMethods.length > 1 && (
-                        <Col xs={24}>
-                          <Divider />
-                        </Col>
-                      )}
                     </Row>
                   </Panel>
                 )}

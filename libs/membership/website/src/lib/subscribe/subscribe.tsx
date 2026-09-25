@@ -21,6 +21,7 @@ import {
   SubscribeMutationVariables,
   SubscribePeriodicityDisplay,
   UserAddressInput,
+  FullMemberPlanFragment,
 } from '@wepublish/website/api';
 import {
   BuilderSubscribeProps,
@@ -156,6 +157,10 @@ export const SubscribeNarrowSection = styled(SubscribeSection)`
   gap: ${({ theme }) => theme.spacing(1)};
 `;
 
+export const SubscribeOpenInvoicesNotice = styled('div')``;
+
+export const SubscribeExistingSubscriptionNotice = styled('div')``;
+
 export const clampMonthlyAmount = (amount: number, min: number, max?: number) =>
   Math.min(Math.max(amount, min), max ?? Number.MAX_SAFE_INTEGER);
 
@@ -216,6 +221,12 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   );
   const hasUserContext = hasUser || !!returningUserId;
 
+  const useOfferCards =
+    periodicityDisplay === SubscribePeriodicityDisplay.OfferCards;
+  const usePeriodicityToggle =
+    periodicityDisplay === SubscribePeriodicityDisplay.Toggle;
+  const usesMonthlyOnlyDisplay = !usePeriodicityToggle && !useOfferCards;
+
   /**
    * Done like this to avoid type errors due to z.ZodObject vs z.ZodEffect<z.ZodObject>.
    * [Fixed with Zod 4](https://github.com/colinhacks/zod/issues/2474)
@@ -260,15 +271,15 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
             const memberPlan = memberPlans.data?.memberPlans.nodes.find(
               mb => mb.id === data.memberPlanId
             );
+            const validatedPeriodicity =
+              usesMonthlyOnlyDisplay ?
+                PaymentPeriodicity.Monthly
+              : data.paymentPeriodicity;
 
             return (
               !memberPlan ||
-              calculatePeriodAmount(
-                data.monthlyAmount,
-                data.paymentPeriodicity
-              ) >=
-                getPeriodPriceRange(memberPlan, data.paymentPeriodicity)
-                  .amountMin
+              calculatePeriodAmount(data.monthlyAmount, validatedPeriodicity) >=
+                getPeriodPriceRange(memberPlan, validatedPeriodicity).amountMin
             );
           },
           {
@@ -276,12 +287,29 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
             path: ['monthlyAmount'],
           }
         )
+      ).refine(
+        data => {
+          const memberPlan = memberPlans.data?.memberPlans.nodes.find(
+            mb => mb.id === data.memberPlanId
+          );
+
+          return (
+            !memberPlan ||
+            usesMonthlyOnlyDisplay ||
+            getPlanPeriodicities(memberPlan).includes(data.paymentPeriodicity)
+          );
+        },
+        {
+          message: `Dieser Abo-Plan ist für dieses Zahlungsintervall nicht verfügbar.`,
+          path: ['memberPlanId'],
+        }
       ),
     [
       hasUserContext,
       loggedInSchema,
       loggedOutSchema,
       memberPlans.data?.memberPlans.nodes,
+      usesMonthlyOnlyDisplay,
     ]
   );
 
@@ -290,12 +318,14 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       memberPlans.data?.memberPlans.nodes.find(
         memberPlan => memberPlan.slug === defaults?.memberPlanSlug
       )
-    : memberPlans.data?.memberPlans.nodes.find(
-        memberPlan =>
-          memberPlan.id ===
-          memberPlanRenderSettings?.find(({ isDefault }) => isDefault)
-            ?.memberPlanId
-      )) ?? memberPlans.data?.memberPlans.nodes[0];
+    : undefined) ??
+    memberPlans.data?.memberPlans.nodes.find(
+      memberPlan =>
+        memberPlan.id ===
+        memberPlanRenderSettings?.find(({ isDefault }) => isDefault)
+          ?.memberPlanId
+    ) ??
+    memberPlans.data?.memberPlans.nodes[0];
 
   const defaultPaymentPeriodicity =
     (
@@ -408,18 +438,21 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     [availablePaymentMethodsForPeriodicity]
   );
 
-  const useOfferCards =
-    periodicityDisplay === SubscribePeriodicityDisplay.OfferCards;
+  const amountPeriodicity =
+    usesMonthlyOnlyDisplay ?
+      PaymentPeriodicity.Monthly
+    : selectedPaymentPeriodicity;
+
+  const requiredPeriodicity =
+    usesMonthlyOnlyDisplay ? undefined : selectedPaymentPeriodicity;
+
+  const selectedPlanUnavailable =
+    !!requiredPeriodicity &&
+    !useOfferCards &&
+    !!selectedMemberPlan &&
+    !getPlanPeriodicities(selectedMemberPlan).includes(requiredPeriodicity);
 
   const isDonation = selectedMemberPlan?.productType === ProductType.Donation;
-
-  const periodPriceRange = useMemo(
-    () =>
-      selectedMemberPlan ?
-        getPeriodPriceRange(selectedMemberPlan, selectedPaymentPeriodicity)
-      : null,
-    [selectedMemberPlan, selectedPaymentPeriodicity]
-  );
 
   const selectedRenderSetting = findMemberPlanRenderSetting(
     memberPlanRenderSettings,
@@ -427,12 +460,22 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   );
   const selectedLayout = selectedRenderSetting?.layout;
 
+  const periodPriceRange = useMemo(
+    () =>
+      selectedMemberPlan ?
+        getPeriodPriceRange(selectedMemberPlan, amountPeriodicity)
+      : null,
+    [selectedMemberPlan, amountPeriodicity]
+  );
+
+  const hasFixedPrice =
+    !!periodPriceRange &&
+    periodPriceRange.amountMax != null &&
+    periodPriceRange.amountMin === periodPriceRange.amountMax;
+
   const shouldHidePaymentAmount =
-    selectedLayout ? isFixedAmountLayout(selectedLayout)
-    : periodPriceRange ?
-      periodPriceRange.amountMin === periodPriceRange.amountMax
-    : selectedMemberPlan?.amountPerMonthMin ===
-      selectedMemberPlan?.amountPerMonthMax;
+    hasFixedPrice ||
+    (selectedLayout ? isFixedAmountLayout(selectedLayout) : !periodPriceRange);
 
   const discountPercent =
     subscribeInfo.data?.createSubscriptionInfo.discountPercent ?? 0;
@@ -463,7 +506,8 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     memberPlan: selectedMemberPlan?.name ?? '',
     extendable: selectedMemberPlan?.extendable ?? true,
     productType: selectedMemberPlan?.productType ?? ProductType.Subscription,
-    paymentPeriodicity: selectedPaymentPeriodicity,
+    // the text above the amount follows the denomination of the amount input
+    paymentPeriodicity: amountPeriodicity,
     monthlyAmount: watchedMonthlyAmount,
     currency: selectedMemberPlan?.currency ?? Currency.Chf,
     siteTitle,
@@ -528,22 +572,35 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     });
   }, console.warn);
 
-  useEffect(() => {
-    if (selectedMemberPlan) {
-      const { amountMin, amountTarget } = getPeriodPriceRange(
-        selectedMemberPlan,
-        selectedPaymentPeriodicity
-      );
+  const amountDefaultKey =
+    usesMonthlyOnlyDisplay ? selectedMemberPlanId : (
+      `${selectedMemberPlanId}:${amountPeriodicity}`
+    );
+  const appliedAmountDefaultKey = useRef<string | undefined>(undefined);
 
-      setValue<'monthlyAmount'>(
-        'monthlyAmount',
-        monthlyAmountFromPeriodAmount(
-          amountTarget || amountMin,
-          selectedPaymentPeriodicity
-        )
-      );
+  useEffect(() => {
+    if (
+      !selectedMemberPlan ||
+      appliedAmountDefaultKey.current === amountDefaultKey
+    ) {
+      return;
     }
-  }, [selectedMemberPlan, selectedPaymentPeriodicity, setValue]);
+
+    appliedAmountDefaultKey.current = amountDefaultKey;
+
+    const { amountMin, amountTarget } = getPeriodPriceRange(
+      selectedMemberPlan,
+      amountPeriodicity
+    );
+
+    setValue<'monthlyAmount'>(
+      'monthlyAmount',
+      monthlyAmountFromPeriodAmount(
+        amountTarget || amountMin,
+        amountPeriodicity
+      )
+    );
+  }, [amountDefaultKey, selectedMemberPlan, amountPeriodicity, setValue]);
 
   useEffect(() => {
     if (challenge.data?.challenge.challengeID) {
@@ -592,6 +649,32 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     selectedMemberPlan,
     setValue,
     selectedPaymentPeriodicity,
+  ]);
+
+  useEffect(() => {
+    if (useOfferCards || !requiredPeriodicity) {
+      return;
+    }
+
+    const offersPeriodicity = (memberPlan: FullMemberPlanFragment) =>
+      getPlanPeriodicities(memberPlan).includes(requiredPeriodicity);
+
+    if (selectedMemberPlan && offersPeriodicity(selectedMemberPlan)) {
+      return;
+    }
+
+    const fallback =
+      memberPlans.data?.memberPlans.nodes.find(offersPeriodicity);
+
+    if (fallback) {
+      setValue<'memberPlanId'>('memberPlanId', fallback.id);
+    }
+  }, [
+    useOfferCards,
+    requiredPeriodicity,
+    selectedMemberPlan,
+    memberPlans.data?.memberPlans.nodes,
+    setValue,
   ]);
 
   useEffect(() => {
@@ -644,23 +727,23 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     periodPriceRange ?
       monthlyAmountFromPeriodAmount(
         periodPriceRange.amountMin,
-        selectedPaymentPeriodicity
+        amountPeriodicity
       )
-    : (selectedMemberPlan?.amountPerMonthMin ?? 500);
+    : 500;
   const amountPerMonthMax =
     periodPriceRange?.amountMax != null ?
       monthlyAmountFromPeriodAmount(
         periodPriceRange.amountMax,
-        selectedPaymentPeriodicity
+        amountPeriodicity
       )
-    : (selectedMemberPlan?.amountPerMonthMax ?? undefined);
+    : undefined;
   const amountPerMonthTarget =
     periodPriceRange?.amountTarget != null ?
       monthlyAmountFromPeriodAmount(
         periodPriceRange.amountTarget,
-        selectedPaymentPeriodicity
+        amountPeriodicity
       )
-    : (selectedMemberPlan?.amountPerMonthTarget ?? undefined);
+    : undefined;
 
   return (
     <FormProvider {...form}>
@@ -681,27 +764,51 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
           </SubscribeSection>
         )}
 
-        <SubscribeSection area="memberPlans">
-          {(memberPlans.data?.memberPlans.nodes.length ?? 0) > 1 && (
-            <H5 component="h2">{t('subscribe.chooseSubscription')}</H5>
-          )}
-
+        <SubscribeSection area="notices">
           {hasOpenInvoices && (
-            <Alert severity="warning">
-              <Trans
-                i18nKey="subscribe.warning.openInvoices"
-                components={{ Link: <Link /> }}
-              />
-            </Alert>
+            <SubscribeOpenInvoicesNotice>
+              <Alert severity="warning">
+                <Trans
+                  i18nKey="subscribe.warning.openInvoices"
+                  components={{ Link: <Link /> }}
+                />
+              </Alert>
+            </SubscribeOpenInvoicesNotice>
           )}
 
           {alreadyHasSubscription && (
-            <Alert severity="warning">
-              <Trans
-                i18nKey="subscribe.warning.alreadyHasSubscription"
-                components={{ Link: <Link /> }}
-              />
-            </Alert>
+            <SubscribeExistingSubscriptionNotice>
+              <Alert severity="warning">
+                <Trans
+                  i18nKey="subscribe.warning.alreadyHasSubscription"
+                  components={{ Link: <Link /> }}
+                />
+              </Alert>
+            </SubscribeExistingSubscriptionNotice>
+          )}
+        </SubscribeSection>
+
+        {usePeriodicityToggle && (
+          <SubscribeSection area="periodicity">
+            <Controller
+              name={'paymentPeriodicity'}
+              control={control}
+              render={({ field }) => (
+                <PeriodicityPicker
+                  {...field}
+                  onChange={periodicity => field.onChange(periodicity)}
+                  periodicities={planPeriodicities}
+                  variant={usePeriodicityToggle ? 'toggle' : 'select'}
+                  memberPlan={selectedMemberPlan}
+                />
+              )}
+            />
+          </SubscribeSection>
+        )}
+
+        <SubscribeSection area="memberPlans">
+          {(memberPlans.data?.memberPlans.nodes.length ?? 0) > 1 && (
+            <H5 component="h2">{t('subscribe.chooseSubscription')}</H5>
           )}
 
           {useOfferCards ?
@@ -723,6 +830,11 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
                     );
                   }}
                   memberPlans={memberPlans.data?.memberPlans.nodes ?? []}
+                  memberPlanRenderSettings={memberPlanRenderSettings}
+                  amount={watchedMonthlyAmount}
+                  onAmountChange={monthlyAmount =>
+                    setValue<'monthlyAmount'>('monthlyAmount', monthlyAmount)
+                  }
                 />
               )}
             />
@@ -734,6 +846,13 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
                   {...field}
                   onChange={memberPlanId => field.onChange(memberPlanId)}
                   memberPlans={memberPlans.data?.memberPlans.nodes ?? []}
+                  paymentPeriodicity={amountPeriodicity}
+                  requiredPeriodicity={requiredPeriodicity}
+                  memberPlanRenderSettings={memberPlanRenderSettings}
+                  amount={watchedMonthlyAmount}
+                  onAmountChange={monthlyAmount =>
+                    setValue<'monthlyAmount'>('monthlyAmount', monthlyAmount)
+                  }
                 />
               )}
             />
@@ -746,23 +865,6 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
             />
           )}
         </SubscribeSection>
-
-        {!useOfferCards && (
-          <SubscribeSection area="periodicity">
-            <Controller
-              name={'paymentPeriodicity'}
-              control={control}
-              render={({ field }) => (
-                <PeriodicityPicker
-                  {...field}
-                  onChange={periodicity => field.onChange(periodicity)}
-                  periodicities={planPeriodicities}
-                  memberPlan={selectedMemberPlan}
-                />
-              )}
-            />
-          </SubscribeSection>
-        )}
 
         <SubscribeSection area="monthlyAmount">
           {!shouldHidePaymentAmount && (
@@ -795,9 +897,12 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
                       amountPerMonthMin={amountPerMonthMin}
                       amountPerMonthMax={amountPerMonthMax}
                       amountPerMonthTarget={amountPerMonthTarget}
-                      paymentPeriodicity={selectedPaymentPeriodicity}
                       currency={selectedMemberPlan?.currency ?? Currency.Chf}
-                      presetAmounts={getAmountPickerValues(selectedLayout)}
+                      paymentPeriodicity={amountPeriodicity}
+                      presetAmounts={getAmountPickerValues(
+                        selectedLayout,
+                        amountPeriodicity
+                      )}
                       showInput={showsAmountInput(selectedLayout)}
                     />
                   )}
@@ -810,8 +915,8 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
                       amountPerMonthMin={amountPerMonthMin}
                       amountPerMonthMax={amountPerMonthMax}
                       amountPerMonthTarget={amountPerMonthTarget}
-                      paymentPeriodicity={selectedPaymentPeriodicity}
                       currency={selectedMemberPlan?.currency ?? Currency.Chf}
+                      paymentPeriodicity={amountPeriodicity}
                       showInput={showsAmountInput(selectedLayout)}
                     />
                   )}
@@ -847,6 +952,21 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
                 />
               )}
             />
+
+            {!useOfferCards && !usePeriodicityToggle && (
+              <Controller
+                name={'paymentPeriodicity'}
+                control={control}
+                render={({ field }) => (
+                  <PeriodicityPicker
+                    {...field}
+                    onChange={periodicity => field.onChange(periodicity)}
+                    periodicities={planPeriodicities}
+                    memberPlan={selectedMemberPlan}
+                  />
+                )}
+              />
+            )}
 
             {!selectedAvailablePaymentMethod?.forceAutoRenewal &&
               selectedMemberPlan?.extendable && (
@@ -1021,7 +1141,8 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
               challenge.loading ||
               userInvoices.loading ||
               userSubscriptions.loading ||
-              loading
+              loading ||
+              selectedPlanUnavailable
             }
             type="submit"
             onClick={e => {

@@ -80,14 +80,16 @@ export type BuilderMemberPlanPickerProps = {
   onChange: (memberPlanId: string) => void;
   name?: string;
   value?: string;
+  paymentPeriodicity?: PaymentPeriodicity;
+  requiredPeriodicity?: PaymentPeriodicity;
+  memberPlanRenderSettings?: BuilderMemberPlanRenderSetting[];
+  amount?: number;
+  onAmountChange?: (monthlyAmount: number) => void;
 };
 
 export type BuilderMemberPlanItemProps = Pick<
   FullMemberPlanFragment,
   | 'slug'
-  | 'amountPerMonthMin'
-  | 'amountPerMonthMax'
-  | 'amountPerMonthTarget'
   | 'periodicityPricing'
   | 'currency'
   | 'extendable'
@@ -101,7 +103,14 @@ export type BuilderMemberPlanItemProps = Pick<
       'availablePaymentMethods' | 'defaultPaymentPeriodicity'
     >
   > &
-  RadioProps & { className?: string };
+  Omit<RadioProps, 'ref'> & { className?: string } & {
+    slug: string;
+    paymentPeriodicity?: PaymentPeriodicity;
+    showPeriodicity?: boolean;
+    amountLayout?: BuilderMemberPlanLayout;
+    amount?: number;
+    onAmountChange?: (monthlyAmount: number) => void;
+  };
 
 export type MemberPlanOffer = {
   memberPlanId: string;
@@ -114,10 +123,14 @@ export type BuilderMemberPlanOfferPickerProps = {
   onChange: (offer: MemberPlanOffer) => void;
   name?: string;
   value?: Partial<MemberPlanOffer>;
+  memberPlanRenderSettings?: BuilderMemberPlanRenderSetting[];
+  amount?: number;
+  onAmountChange?: (monthlyAmount: number) => void;
 };
 
 export type BuilderPeriodicityPickerProps = {
   periodicities: PaymentPeriodicity[] | undefined;
+  variant?: 'select' | 'toggle';
   memberPlan?: FullMemberPlanFragment | null;
   className?: string;
   onChange: (periodicitiy: PaymentPeriodicity) => void;
@@ -160,7 +173,6 @@ export type BuilderPaymentAmountPickerProps = {
   amountPerMonthMin: number;
   amountPerMonthMax?: number;
   amountPerMonthTarget: number | undefined;
-  paymentPeriodicity?: PaymentPeriodicity;
   currency: Currency;
   donate: boolean;
   onChange: (amount: number) => void;
@@ -170,6 +182,7 @@ export type BuilderPaymentAmountPickerProps = {
   className?: string;
   presetAmounts?: number[];
   showInput?: boolean;
+  paymentPeriodicity?: PaymentPeriodicity;
 };
 
 export type BuilderSubscribeProps<
@@ -245,6 +258,7 @@ export type BuilderUpgradeProps = {
   showGoodies?: boolean;
   showDiscountCodes?: boolean;
   goodieMinValue?: number | null;
+  goodieMinValueAppliesToUpgrade?: boolean;
   hideRepeatGoodieOnUpgrade?: boolean;
   className?: string;
   onUpgrade?: (

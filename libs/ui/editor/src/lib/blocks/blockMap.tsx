@@ -265,8 +265,8 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
     defaultValue: {
       blockStyle: undefined,
       memberPlanIds: [],
-      memberPlanRenderSettings: [],
       periodicityDisplay: null,
+      memberPlanRenderSettings: [],
       fields: [
         SubscribeBlockField.FirstName,
         SubscribeBlockField.Password,
@@ -276,6 +276,7 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
       showGoodies: false,
       showDiscountCodes: false,
       goodieMinValue: null,
+      goodieMinValueAppliesToUpgrade: false,
       hideRepeatGoodieOnUpgrade: false,
     },
     label: 'blocks.subscribe.label',

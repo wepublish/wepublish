@@ -29,6 +29,7 @@ export const SubscribeBlock = ({
   showGoodies,
   showDiscountCodes,
   goodieMinValue,
+  goodieMinValueAppliesToUpgrade,
   hideRepeatGoodieOnUpgrade,
   periodicityDisplay,
 }: BuilderSubscribeBlockProps) => {
@@ -131,8 +132,8 @@ export const SubscribeBlock = ({
             firstName: firstName as string | undefined,
             name: lastName as string | undefined,
             memberPlanSlug: memberPlanBySlug as string | undefined,
-            discountCode: discountCode as string | undefined,
             paymentPeriodicity: defaultPaymentPeriodicity,
+            discountCode: discountCode as string | undefined,
           }}
           fetchSubscribeInfo={fetchSubscribeInfo}
           subscribeInfo={subscribeInfo}
@@ -205,6 +206,7 @@ export const SubscribeBlock = ({
           showGoodies={showGoodies}
           showDiscountCodes={showDiscountCodes}
           goodieMinValue={goodieMinValue}
+          goodieMinValueAppliesToUpgrade={goodieMinValueAppliesToUpgrade}
           hideRepeatGoodieOnUpgrade={hideRepeatGoodieOnUpgrade}
           subscriptionToUpgrade={subscriptionToUpgrade}
           upgradeInfo={upgradeInfo}

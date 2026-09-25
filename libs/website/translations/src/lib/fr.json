@@ -30,9 +30,9 @@
     "memberplan": {
       "price": "{amountPerMonthMin, select, 0 {Gratuit} other {À partir de {monthlyPrice} {extendable, select, true {par mois} other {}}}}"
     },
+    "periodicity": "Intervalle de paiement",
     "continuation": "Après {afterFirstPaymentPeriod}, {formattedAmount} {renewalPeriodL}.",
     "cancellable": "Résiliable à tout moment",
-    "periodicity": "Intervalle de paiement",
     "captcha": "Captcha",
     "chooseSubscription": "Choisir un abonnement",
     "choosePaymentMethod": "Choisir le mode de paiement",
@@ -107,7 +107,7 @@
     "unpaid": "{type, select, Donation {Don} other {Abonnement}} impayé",
     "cancel": "Résilier {type, select, Donation {le don} other {l'abonnement}}",
     "cancelConfirmation": "{type, select, Donation {Toutes les factures ouvertes du don seront annulées.} other {L'abonnement ne sera pas renouvelé, mais restera valable jusqu'à sa date d'expiration. Toutes les factures ouvertes de l'abonnement seront annulées.}}",
-    "costs": "Coûte {amount} {extendable, select, true {par {periodUnit}} other {}}",
+    "costs": "Coûte {amount} {extendable, select, true {{periodicity, select, monthly {par mois} quarterly {par trimestre} biannual {par semestre} yearly {par an} biennial {par 2 ans} lifetime {une seule fois} other {}}} other {}}",
     "extendNow": "Prolonger maintenant",
     "extendBy": "Prolonger maintenant de {subscriptionDuration}",
     "extendEarly": "Prolonger {type, select, Donation {le don} other {l'abonnement}} à l'avance ?",
@@ -138,14 +138,6 @@
       "yearly": "1 an",
       "biennial": "2 ans",
       "lifetime": "toute la vie"
-    },
-    "periodUnit": {
-      "monthly": "mois",
-      "quarterly": "trimestre",
-      "biannual": "semestre",
-      "yearly": "an",
-      "biennial": "2 ans",
-      "lifetime": "à vie"
     },
     "paymentTimeline": {
       "monthly": "tous les mois",
