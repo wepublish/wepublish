@@ -422,6 +422,10 @@
         "selectMemberPlansSelectionHintAll": "Leave empty to display every active plan.",
         "selectFields": "User input fields",
         "selectFieldsSelectionHint": "Email & last name are always requested. Order does not matter",
+        "periodicityDisplay": "Payment interval display",
+        "periodicityDisplayDropdown": "Dropdown",
+        "periodicityDisplayOfferCards": "Offer cards",
+        "periodicityDisplayHint": "Offer cards show each payment interval as its own offer with a price tag (e.g. monthly / yearly subscription).",
         "goodiesHeading": "Goodies",
         "discountCodesHeading": "Discount codes",
         "showGoodies": "Show goodie selection",
@@ -429,6 +433,7 @@
         "goodieMinValue": {
           "label": "Require minimum payment amount to be eligible for a goodie:"
         },
+        "goodieMinValueAppliesToUpgrade": "Apply this minimum to upgrades too",
         "hideRepeatGoodieOnUpgrade": "Hide on upgrade when a goodie was already received",
         "periodicityDisplay": "Payment interval display",
         "periodicityDisplayDropdown": "Dropdown",
@@ -460,7 +465,7 @@
           "Narrow": "Narrow (2 tiles per row)",
           "Wide": "Wide (1 tile per row, large tiles)"
         },
-        "planAmountsTitle": "Minimum / target / maximum amount per month (in francs)",
+        "planAmountsTitle": "Minimum / target / maximum amount for the default payment interval (in francs)",
         "defaultPlanTitle": "Selected by default — this member plan is preselected after the page loads.",
         "defaultPlanLabel": "Default"
       },

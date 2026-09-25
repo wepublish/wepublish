@@ -15,6 +15,7 @@ import { CSS } from '@dnd-kit/utilities';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import {
+  PaymentPeriodicity,
   ProductType,
   SubscribeBlockField,
   SubscribeBlockLayoutPickerConfig,
@@ -85,6 +86,13 @@ const SettingLabel = styled('span', {
 
 const GoodieMinValueInput = styled(NumberInput)`
   max-width: 150px;
+`;
+
+const GoodieMinValueRow = styled('div')`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
 `;
 
 const GoodiesToggleRow = styled('div')`
@@ -217,6 +225,119 @@ const formatValues = (value: number[] | null | undefined) =>
 
 const formatPlanAmount = (amount: number | null | undefined) =>
   amount != null ? (amount / 100).toFixed(2) : '–';
+
+const PERIODICITY_ORDER = [
+  PaymentPeriodicity.Monthly,
+  PaymentPeriodicity.Quarterly,
+  PaymentPeriodicity.Biannual,
+  PaymentPeriodicity.Yearly,
+  PaymentPeriodicity.Biennial,
+  PaymentPeriodicity.Lifetime,
+];
+
+const PERIODICITY_MONTHS: Record<PaymentPeriodicity, number> = {
+  [PaymentPeriodicity.Monthly]: 1,
+  [PaymentPeriodicity.Quarterly]: 3,
+  [PaymentPeriodicity.Biannual]: 6,
+  [PaymentPeriodicity.Yearly]: 12,
+  [PaymentPeriodicity.Biennial]: 24,
+  [PaymentPeriodicity.Lifetime]: 1200,
+};
+
+type PlanForPeriodAmount = {
+  amountPerMonthMin: number;
+  amountPerMonthTarget?: number | null;
+  amountPerMonthMax?: number | null;
+  defaultPaymentPeriodicity?: PaymentPeriodicity | null;
+  periodicityPricing?: Array<{
+    periodicity: PaymentPeriodicity;
+    amountMin?: number | null;
+    amountTarget?: number | null;
+    amountMax?: number | null;
+  }> | null;
+  availablePaymentMethods?: Array<{
+    paymentPeriodicities: PaymentPeriodicity[];
+  }> | null;
+};
+
+const getPlanPeriodicities = (
+  plan: PlanForPeriodAmount
+): PaymentPeriodicity[] =>
+  PERIODICITY_ORDER.filter(periodicity =>
+    plan.availablePaymentMethods?.some(paymentMethod =>
+      paymentMethod.paymentPeriodicities.includes(periodicity)
+    )
+  );
+
+const getDefaultPeriodicity = (
+  plan: PlanForPeriodAmount
+): PaymentPeriodicity => {
+  const periodicities = getPlanPeriodicities(plan);
+
+  if (
+    plan.defaultPaymentPeriodicity &&
+    periodicities.includes(plan.defaultPaymentPeriodicity)
+  ) {
+    return plan.defaultPaymentPeriodicity;
+  }
+
+  return periodicities[0] ?? PaymentPeriodicity.Yearly;
+};
+
+const calculatePeriodAmount = (
+  monthlyAmount: number,
+  periodicity: PaymentPeriodicity
+) => Math.round(monthlyAmount * PERIODICITY_MONTHS[periodicity]);
+
+const getPeriodPriceRange = (
+  plan: PlanForPeriodAmount,
+  periodicity: PaymentPeriodicity
+) => {
+  const override =
+    periodicity === PaymentPeriodicity.Monthly ?
+      undefined
+    : plan.periodicityPricing?.find(price => price.periodicity === periodicity);
+
+  return {
+    amountMin:
+      override?.amountMin ??
+      calculatePeriodAmount(plan.amountPerMonthMin, periodicity),
+    amountTarget:
+      override?.amountTarget ??
+      (plan.amountPerMonthTarget != null ?
+        calculatePeriodAmount(plan.amountPerMonthTarget, periodicity)
+      : null),
+    amountMax:
+      override?.amountMax ??
+      (plan.amountPerMonthMax != null ?
+        calculatePeriodAmount(plan.amountPerMonthMax, periodicity)
+      : null),
+  };
+};
+
+const formatPlanDefaultPeriodicityAmounts = (
+  plan: PlanForPeriodAmount | undefined,
+  currency: string | null | undefined,
+  periodicityLabel: (periodicity: PaymentPeriodicity) => string
+) => {
+  if (!plan) {
+    return '';
+  }
+
+  const periodicity = getDefaultPeriodicity(plan);
+  const { amountMin, amountTarget, amountMax } = getPeriodPriceRange(
+    plan,
+    periodicity
+  );
+
+  const amounts = [amountMin, amountTarget, amountMax]
+    .map(formatPlanAmount)
+    .join(' / ');
+
+  return [currency, amounts, `(${periodicityLabel(periodicity)})`]
+    .filter(Boolean)
+    .join(' ');
+};
 
 export const SubscribeBlock = ({
   value,
@@ -525,6 +646,16 @@ export const SubscribeBlock = ({
     [onChange]
   );
 
+  const handleGoodieMinValueAppliesToUpgradeChange = useCallback(
+    (_value: unknown, checked: boolean) => {
+      onChange(current => ({
+        ...current,
+        goodieMinValueAppliesToUpgrade: checked,
+      }));
+    },
+    [onChange]
+  );
+
   return (
     <Panel bordered>
       <Content>
@@ -578,21 +709,14 @@ export const SubscribeBlock = ({
                           <PlanAmounts
                             title={t('blocks.subscribe.planAmountsTitle')}
                           >
-                            {[
+                            {formatPlanDefaultPeriodicityAmounts(
+                              memberPlanById.get(plan.memberPlanId),
                               memberPlanById.get(plan.memberPlanId)?.currency,
-                              [
-                                memberPlanById.get(plan.memberPlanId)
-                                  ?.amountPerMonthMin,
-                                memberPlanById.get(plan.memberPlanId)
-                                  ?.amountPerMonthTarget,
-                                memberPlanById.get(plan.memberPlanId)
-                                  ?.amountPerMonthMax,
-                              ]
-                                .map(formatPlanAmount)
-                                .join(' / '),
-                            ]
-                              .filter(Boolean)
-                              .join(' ')}
+                              periodicity =>
+                                t(
+                                  `memberPlanList.paymentPeriodicity.${periodicity}`
+                                )
+                            )}
                           </PlanAmounts>
 
                           <SelectPicker
@@ -747,15 +871,27 @@ export const SubscribeBlock = ({
             {t('blocks.subscribe.goodieMinValue.label')}
           </SettingLabel>
 
-          <GoodieMinValueInput
-            disabled={disabled || !value.showGoodies}
-            min={0}
-            step={1}
-            value={
-              value.goodieMinValue != null ? value.goodieMinValue / 100 : ''
-            }
-            onChange={handleGoodieMinValueChange}
-          />
+          <GoodieMinValueRow>
+            <GoodieMinValueInput
+              disabled={disabled || !value.showGoodies}
+              min={0}
+              step={1}
+              value={
+                value.goodieMinValue != null ? value.goodieMinValue / 100 : ''
+              }
+              onChange={handleGoodieMinValueChange}
+            />
+
+            <SmallCheckbox
+              checked={value.goodieMinValueAppliesToUpgrade}
+              disabled={
+                disabled || !value.showGoodies || value.goodieMinValue == null
+              }
+              onChange={handleGoodieMinValueAppliesToUpgradeChange}
+            >
+              {t('blocks.subscribe.goodieMinValueAppliesToUpgrade')}
+            </SmallCheckbox>
+          </GoodieMinValueRow>
         </div>
       </Content>
 
@@ -819,7 +955,6 @@ export const SubscribeBlock = ({
 
         <RadioGroup
           inline
-          appearance="picker"
           disabled={disabled}
           value={
             value.periodicityDisplay ?? SubscribePeriodicityDisplay.Dropdown
