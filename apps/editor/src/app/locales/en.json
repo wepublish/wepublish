@@ -2015,7 +2015,14 @@
         "createdAt": "Created",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
         "firstName": "First Name",
-        "inactiveSubscription": "{{name}} (inactive)",
+        "subscriptionStatus": {
+          "Active": "Active",
+          "Deactivated": "Deactivated",
+          "Planned": "Planned",
+          "Unpaid": "Unpaid",
+          "Expired": "Expired"
+        },
+        "subscriptionWithStatus": "{{name}} – {{status}}",
         "modifiedAt": "Last modified",
         "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
         "name": "Name",

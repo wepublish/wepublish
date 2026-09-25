@@ -22,7 +22,7 @@ export type FullUserFragment = { __typename?: 'SensitiveDataUser', id: string, c
 export type TinyUserFragment = { __typename?: 'SensitiveDataUser', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, active: boolean, lastLogin?: string | null, email: string, totpEnabled: boolean, subscriptionCount: number, roles: Array<(
     { __typename?: 'UserRole' }
     & FullUserRoleFragment
-  )>, subscriptionOverview: Array<{ __typename?: 'UserSubscriptionOverview', id: string, memberPlanName: string, active: boolean }> };
+  )>, subscriptionOverview: Array<{ __typename?: 'UserSubscriptionOverview', id: string, memberPlanName: string, status: Types.UserSubscriptionStatus }> };
 
 export type TinyUserListQueryVariables = Types.Exact<{
   filter?: Types.InputMaybe<Types.UserFilter>;
@@ -195,7 +195,7 @@ export const TinyUserFragmentDoc = gql`
   subscriptionOverview {
     id
     memberPlanName
-    active
+    status
   }
 }
     `;

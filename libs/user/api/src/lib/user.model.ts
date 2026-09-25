@@ -137,6 +137,18 @@ export class SensitiveDataUser extends BaseUser {
   roles!: UserRole[];
 }
 
+export enum UserSubscriptionStatus {
+  Active = 'Active',
+  Deactivated = 'Deactivated',
+  Planned = 'Planned',
+  Unpaid = 'Unpaid',
+  Expired = 'Expired',
+}
+
+registerEnumType(UserSubscriptionStatus, {
+  name: 'UserSubscriptionStatus',
+});
+
 @ObjectType()
 export class UserSubscriptionOverview {
   @Field()
@@ -145,11 +157,11 @@ export class UserSubscriptionOverview {
   @Field()
   memberPlanName!: string;
 
-  @Field({
+  @Field(() => UserSubscriptionStatus, {
     description:
-      'Whether the subscription has no deactivation or one that lies in the future.',
+      'Active means started and paid up, not merely not deactivated: imported subscriptions often expire without a deactivation.',
   })
-  active!: boolean;
+  status!: UserSubscriptionStatus;
 }
 
 @ObjectType()

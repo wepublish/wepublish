@@ -1899,7 +1899,14 @@
         "createdAt": "Créé",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
         "firstName": "Prénom",
-        "inactiveSubscription": "{{name}} (inactif)",
+        "subscriptionStatus": {
+          "Active": "Actif",
+          "Deactivated": "Désactivé",
+          "Planned": "Planifié",
+          "Unpaid": "Non payé",
+          "Expired": "Expiré"
+        },
+        "subscriptionWithStatus": "{{name}} – {{status}}",
         "modifiedAt": "Dernière modification",
         "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
         "name": "Nom",

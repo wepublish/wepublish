@@ -53,7 +53,7 @@ fragment TinyUser on SensitiveDataUser {
   subscriptionOverview {
     id
     memberPlanName
-    active
+    status
   }
 }
 
