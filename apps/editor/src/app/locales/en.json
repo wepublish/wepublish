@@ -321,6 +321,12 @@
       }
     },
     "blocks": {
+      "blockTemplate": {
+        "editTemplate": "Edit template",
+        "label": "Block Template",
+        "select": "Select a block template",
+        "useContent": "Use content"
+      },
       "crowdfunding": {
         "crowdfundingName": "Crowdfunding {{name}}",
         "edit": "Edit",
@@ -753,6 +759,11 @@
       "tomorrow": "Tomorrow"
     },
     "delete": "Delete",
+    "deleteBlockTemplateModal": {
+      "body": "Do you really want to delete the block template \"{{name}}\"?",
+      "deleteBtn": "Yes, delete",
+      "title": "Delete Block Template?"
+    },
     "deletePollModal": {
       "body": "Do you really want to delete the poll \"{{pollQuestion}}\"?",
       "deleteBtn": "Yes, delete",
@@ -1297,7 +1308,8 @@
         "polls": "Polls",
         "blockStyles": "Block Styling",
         "topMenu": "Content Blocks",
-        "crowdfundings": "Crowdfundings"
+        "crowdfundings": "Crowdfundings",
+        "blockTemplates": "Block Templates"
       },
       "commentRating": "Rating System",
       "comments": "Comments",
@@ -1402,6 +1414,7 @@
         "unpublished": "Unpublished"
       },
       "panels": {
+        "chooseBlock": "Choose Block",
         "close": "Close",
         "confirm": "Confirm",
         "createdAt": "{{createdAt, ccc PP p}}",
@@ -2131,6 +2144,26 @@
       "areYouSure": "Are you sure?",
       "areYouSureBody": "The style \"{{ blockStyle }}\" will be deleted permanently and can not be reversed.",
       "areYouSureConfirmation": "Delete style"
+    },
+    "blockTemplates": {
+      "list": {
+        "title": "Block Templates",
+        "newBlockTemplate": "New Block Template",
+        "name": "Name",
+        "noName": "No name",
+        "delete": "Delete"
+      },
+      "edit": {
+        "title": "Edit Block Template",
+        "name": "Name",
+        "back": "Back",
+        "backToList": "Back to list",
+        "noName": "No name",
+        "delete": "Delete",
+        "saved": "Saved",
+        "new": "New",
+        "editing": "Editing"
+      }
     },
     "yes": "Yes",
     "memberplanForm": {

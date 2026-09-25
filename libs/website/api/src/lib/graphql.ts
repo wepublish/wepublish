@@ -374,10 +374,11 @@ export type BildwurfAdBlockInput = {
   zoneID?: InputMaybe<Scalars['String']>;
 };
 
-export type BlockContent = BildwurfAdBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | FlexBlock | HtmlBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | MailchimpFormBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | StreamableVideoBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock;
+export type BlockContent = BildwurfAdBlock | BlockTemplateBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | FlexBlock | HtmlBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | MailchimpFormBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | StreamableVideoBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock;
 
 export type BlockContentInput = {
   bildwurfAd?: InputMaybe<BildwurfAdBlockInput>;
+  blockTemplate?: InputMaybe<BlockTemplateBlockInput>;
   comment?: InputMaybe<CommentBlockInput>;
   crowdfunding?: InputMaybe<CrowdfundingBlockInput>;
   embed?: InputMaybe<IFrameBlockInput>;
@@ -419,8 +420,45 @@ export type BlockStyle = {
   name: Scalars['String'];
 };
 
+export type BlockTemplate = HasBlockContent & {
+  __typename?: 'BlockTemplate';
+  blocks: Array<BlockContent>;
+  createdAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  modifiedAt: Scalars['DateTime'];
+  name: Scalars['String'];
+};
+
+export type BlockTemplateBlock = BaseBlock & {
+  __typename?: 'BlockTemplateBlock';
+  blockStyle?: Maybe<Scalars['String']>;
+  blockStyleName?: Maybe<Scalars['String']>;
+  disabled?: Maybe<Scalars['Boolean']>;
+  template?: Maybe<BlockTemplate>;
+  templateID: Scalars['String'];
+  type: BlockType;
+};
+
+export type BlockTemplateBlockInput = {
+  blockStyle?: InputMaybe<Scalars['String']>;
+  blockStyleName?: InputMaybe<Scalars['String']>;
+  disabled?: InputMaybe<Scalars['Boolean']>;
+  templateID: Scalars['String'];
+};
+
+export type BlockTemplateFilter = {
+  name?: InputMaybe<Scalars['String']>;
+};
+
+export enum BlockTemplateSort {
+  CreatedAt = 'CreatedAt',
+  ModifiedAt = 'ModifiedAt',
+  Name = 'Name'
+}
+
 export enum BlockType {
   BildwurfAd = 'BildwurfAd',
+  BlockTemplate = 'BlockTemplate',
   Comment = 'Comment',
   Crowdfunding = 'Crowdfunding',
   Embed = 'Embed',
@@ -999,6 +1037,7 @@ export type DocumentStorageUsage = {
 };
 
 export enum EditorBlockType {
+  BlockTemplate = 'BlockTemplate',
   Comment = 'Comment',
   Crowdfunding = 'Crowdfunding',
   Embed = 'Embed',
@@ -2504,6 +2543,8 @@ export type Mutation = {
   createBanner: Banner;
   /** Creates a new block style. */
   createBlockStyle: BlockStyle;
+  /** Creates a new block template. */
+  createBlockTemplate: BlockTemplate;
   /** Creates a comment for any user */
   createComment: Comment;
   /**
@@ -2593,6 +2634,8 @@ export type Mutation = {
   deleteBanner?: Maybe<Scalars['Boolean']>;
   /** Deletes an existing block style. */
   deleteBlockStyle: BlockStyle;
+  /** Deletes an existing block template. */
+  deleteBlockTemplate: BlockTemplate;
   /** Deletes a comment */
   deleteComment: Comment;
   /**
@@ -2762,6 +2805,8 @@ export type Mutation = {
   updateBanner: Banner;
   /** Updates an existing block style. */
   updateBlockStyle: BlockStyle;
+  /** Updates an existing block template. */
+  updateBlockTemplate: BlockTemplate;
   /** Updates an existing challenge provider setting. */
   updateChallengeProviderSetting: SettingChallengeProvider;
   /** Update any existing comment */
@@ -2964,6 +3009,12 @@ export type MutationCreateBannerArgs = {
 
 export type MutationCreateBlockStyleArgs = {
   blocks: Array<EditorBlockType>;
+  name: Scalars['String'];
+};
+
+
+export type MutationCreateBlockTemplateArgs = {
+  blocks: Array<BlockContentInput>;
   name: Scalars['String'];
 };
 
@@ -3329,6 +3380,11 @@ export type MutationDeleteBannerArgs = {
 
 
 export type MutationDeleteBlockStyleArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationDeleteBlockTemplateArgs = {
   id: Scalars['String'];
 };
 
@@ -3794,6 +3850,13 @@ export type MutationUpdateBlockStyleArgs = {
   blocks?: InputMaybe<Array<EditorBlockType>>;
   id: Scalars['String'];
   name?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationUpdateBlockTemplateArgs = {
+  blocks: Array<BlockContentInput>;
+  id: Scalars['String'];
+  name: Scalars['String'];
 };
 
 
@@ -4496,6 +4559,13 @@ export type PaginatedArticles = {
 export type PaginatedAuthors = {
   __typename?: 'PaginatedAuthors';
   nodes: Array<Author>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type PaginatedBlockTemplate = {
+  __typename?: 'PaginatedBlockTemplate';
+  nodes: Array<BlockTemplate>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
 };
@@ -5217,6 +5287,10 @@ export type Query = {
   banners: Array<Banner>;
   /** Returns a list of block styles. */
   blockStyles: Array<BlockStyle>;
+  /** Returns a single block template by ID. */
+  blockTemplate: BlockTemplate;
+  /** Returns a paginated list of block templates. */
+  blockTemplates: PaginatedBlockTemplate;
   /** This query generates a challenge which can be used to access protected endpoints. */
   challenge: Challenge;
   /** Returns a single challenge provider setting by id. */
@@ -5611,6 +5685,21 @@ export type QueryBannerArgs = {
 export type QueryBannersArgs = {
   skip: Scalars['Int'];
   take: Scalars['Int'];
+};
+
+
+export type QueryBlockTemplateArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QueryBlockTemplatesArgs = {
+  cursorId?: InputMaybe<Scalars['String']>;
+  filter?: InputMaybe<BlockTemplateFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: Scalars['Int'];
+  sort?: BlockTemplateSort;
+  take?: Scalars['Int'];
 };
 
 
@@ -7439,6 +7528,7 @@ export type YouTubeVideoBlockInput = {
     ],
     "BaseBlock": [
       "BildwurfAdBlock",
+      "BlockTemplateBlock",
       "BreakBlock",
       "CommentBlock",
       "CrowdfundingBlock",
@@ -7496,6 +7586,7 @@ export type YouTubeVideoBlockInput = {
     ],
     "BlockContent": [
       "BildwurfAdBlock",
+      "BlockTemplateBlock",
       "BreakBlock",
       "CommentBlock",
       "CrowdfundingBlock",
@@ -7539,6 +7630,7 @@ export type YouTubeVideoBlockInput = {
     ],
     "HasBlockContent": [
       "ArticleRevision",
+      "BlockTemplate",
       "PageRevision"
     ],
     "HasComment": [

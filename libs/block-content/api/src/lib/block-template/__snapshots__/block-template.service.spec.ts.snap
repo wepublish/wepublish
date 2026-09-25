@@ -1,0 +1,81 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`BlockTemplateService should create a block template 1`] = `
+[
+  {
+    "data": {
+      "blocks": [
+        {
+          "title": "Title",
+          "type": "title",
+        },
+      ],
+      "name": "Name",
+    },
+  },
+]
+`;
+
+exports[`BlockTemplateService should create a block template containing another block template 1`] = `
+[
+  {
+    "data": {
+      "blocks": [
+        {
+          "templateID": "other",
+          "type": "blockTemplate",
+        },
+      ],
+      "name": "Name",
+    },
+  },
+]
+`;
+
+exports[`BlockTemplateService should delete a block template 1`] = `
+[
+  {
+    "where": {
+      "id": "1234",
+    },
+  },
+]
+`;
+
+exports[`BlockTemplateService should update a block template 1`] = `
+[
+  {
+    "data": {
+      "blocks": [
+        {
+          "title": "Title",
+          "type": "title",
+        },
+      ],
+      "name": "Name",
+    },
+    "where": {
+      "id": "123",
+    },
+  },
+]
+`;
+
+exports[`BlockTemplateService should update a block template containing a non circular block template 1`] = `
+[
+  {
+    "data": {
+      "blocks": [
+        {
+          "templateID": "referenced",
+          "type": "blockTemplate",
+        },
+      ],
+      "name": "Name",
+    },
+    "where": {
+      "id": "123",
+    },
+  },
+]
+`;

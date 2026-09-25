@@ -98,6 +98,10 @@ import {
 } from './embed/streamable-block.model';
 import { FlexBlock, FlexBlockInput } from './flex/flex-block.model';
 import {
+  BlockTemplateBlock,
+  BlockTemplateBlockInput,
+} from './block-template/block-template.model';
+import {
   MailchimpFormBlock,
   MailchimpFormBlockInput,
 } from './mailchimp-form/mailchimp-form-block.model';
@@ -138,6 +142,7 @@ export const BlockContent = createUnionType({
       TeaserListBlock,
       TeaserSlotsBlock,
       FlexBlock,
+      BlockTemplateBlock,
     ] as const,
   resolveType: (value: BaseBlock<BlockType>) => {
     switch (value.type) {
@@ -203,6 +208,8 @@ export const BlockContent = createUnionType({
         return TeaserSlotsBlock.name;
       case BlockType.FlexBlock:
         return FlexBlock.name;
+      case BlockType.BlockTemplate:
+        return BlockTemplateBlock.name;
     }
 
     console.warn(`Block ${value.type} not implemented!`);
@@ -279,6 +286,8 @@ export class BlockContentInput {
   [BlockType.TeaserSlots]?: TeaserSlotsBlockInput;
   @Field(() => FlexBlockInput, { nullable: true })
   [BlockType.FlexBlock]?: FlexBlockInput;
+  @Field(() => BlockTemplateBlockInput, { nullable: true })
+  [BlockType.BlockTemplate]?: BlockTemplateBlockInput;
 }
 
 export function mapBlockUnionMap(

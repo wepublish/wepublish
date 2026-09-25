@@ -1,0 +1,202 @@
+fragment BlockTemplateContent on BlockContent {
+  ...BlockWithoutTeaser
+
+  ... on TeaserGridFlexBlock {
+    title
+    disabled
+    blockStyle
+    blockStyleName
+    type
+    flexTeasers {
+      alignment {
+        i
+        x
+        y
+        w
+        h
+        static
+      }
+
+      teaser {
+        ...FullTeaser
+      }
+    }
+  }
+
+  ... on TeaserGridBlock {
+    title
+    disabled
+    blockStyle
+    blockStyleName
+    type
+    teasers {
+      ...FullTeaser
+    }
+    numColumns
+  }
+
+  ... on TeaserListBlock {
+    title
+    disabled
+    blockStyle
+    blockStyleName
+    type
+    skip
+    take
+    sort
+    teaserType
+    filter {
+      tags
+      tagObjects {
+        id
+        tag
+      }
+    }
+    teasers {
+      ...FullTeaser
+    }
+  }
+
+  ... on TeaserSlotsBlock {
+    title
+    disabled
+    blockStyle
+    blockStyleName
+    type
+    autofillConfig {
+      enabled
+      filter {
+        tags
+        tagObjects {
+          id
+          tag
+        }
+      }
+      sort
+      teaserType
+    }
+    slots {
+      type
+      teaser {
+        __typename
+        ...FullTeaser
+      }
+    }
+    autofillTeasers {
+      ...FullTeaser
+    }
+  }
+
+  ... on FlexBlock {
+    disabled
+    blockStyle
+    blockStyleName
+    type
+    blocks {
+      alignment {
+        i
+        x
+        y
+        w
+        h
+        static
+      }
+      block {
+        __typename
+        ...BlockWithoutTeaser
+        ...NestedTeaserBlock
+
+        ... on BlockTemplateBlock {
+          ...NestedBlockTemplateBlock
+        }
+      }
+    }
+  }
+
+  ... on BlockTemplateBlock {
+    ...NestedBlockTemplateBlock
+  }
+}
+
+fragment NestedBlockTemplateBlock on BlockTemplateBlock {
+  disabled
+  blockStyle
+  blockStyleName
+  type
+  templateID
+  template {
+    id
+    createdAt
+    modifiedAt
+    name
+  }
+}
+
+fragment FullBlockTemplate on BlockTemplate {
+  id
+  createdAt
+  modifiedAt
+  name
+  blocks {
+    ...BlockTemplateContent
+  }
+}
+
+query BlockTemplateList(
+  $filter: BlockTemplateFilter
+  $cursorId: String
+  $take: Int
+  $skip: Int
+  $order: SortOrder
+  $sort: BlockTemplateSort
+) {
+  blockTemplates(
+    filter: $filter
+    cursorId: $cursorId
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
+    nodes {
+      ...FullBlockTemplate
+    }
+
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+
+    totalCount
+  }
+}
+
+query BlockTemplate($id: String!) {
+  blockTemplate(id: $id) {
+    ...FullBlockTemplate
+  }
+}
+
+mutation CreateBlockTemplate($name: String!, $blocks: [BlockContentInput!]!) {
+  createBlockTemplate(name: $name, blocks: $blocks) {
+    ...FullBlockTemplate
+  }
+}
+
+mutation UpdateBlockTemplate(
+  $id: String!
+  $name: String!
+  $blocks: [BlockContentInput!]!
+) {
+  updateBlockTemplate(id: $id, name: $name, blocks: $blocks) {
+    ...FullBlockTemplate
+  }
+}
+
+mutation DeleteBlockTemplate($id: String!) {
+  deleteBlockTemplate(id: $id) {
+    ...FullBlockTemplate
+  }
+}

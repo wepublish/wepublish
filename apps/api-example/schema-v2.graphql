@@ -332,10 +332,11 @@ input BildwurfAdBlockInput {
   zoneID: String
 }
 
-union BlockContent = BildwurfAdBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | FlexBlock | HTMLBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | MailchimpFormBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | StreamableVideoBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock
+union BlockContent = BildwurfAdBlock | BlockTemplateBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | FlexBlock | HTMLBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | MailchimpFormBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | StreamableVideoBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock
 
 input BlockContentInput {
   bildwurfAd: BildwurfAdBlockInput
+  blockTemplate: BlockTemplateBlockInput
   comment: CommentBlockInput
   crowdfunding: CrowdfundingBlockInput
   embed: IFrameBlockInput
@@ -376,8 +377,43 @@ type BlockStyle {
   name: String!
 }
 
+type BlockTemplate implements HasBlockContent {
+  blocks: [BlockContent!]!
+  createdAt: DateTime!
+  id: String!
+  modifiedAt: DateTime!
+  name: String!
+}
+
+type BlockTemplateBlock implements BaseBlock {
+  blockStyle: String
+  blockStyleName: String
+  disabled: Boolean
+  template: BlockTemplate
+  templateID: String!
+  type: BlockType!
+}
+
+input BlockTemplateBlockInput {
+  blockStyle: String
+  blockStyleName: String
+  disabled: Boolean
+  templateID: String!
+}
+
+input BlockTemplateFilter {
+  name: String
+}
+
+enum BlockTemplateSort {
+  CreatedAt
+  ModifiedAt
+  Name
+}
+
 enum BlockType {
   BildwurfAd
+  BlockTemplate
   Comment
   Crowdfunding
   Embed
@@ -941,6 +977,7 @@ type DocumentStorageUsage {
 }
 
 enum EditorBlockType {
+  BlockTemplate
   Comment
   Crowdfunding
   Embed
@@ -2468,6 +2505,9 @@ type Mutation {
   """Creates a new block style."""
   createBlockStyle(blocks: [EditorBlockType!]!, name: String!): BlockStyle!
 
+  """Creates a new block template."""
+  createBlockTemplate(blocks: [BlockContentInput!]!, name: String!): BlockTemplate!
+
   """Creates a comment for any user"""
   createComment(itemID: String!, itemType: CommentItemType!, lead: String, parentID: String, tagIds: [String!], text: RichText): Comment!
 
@@ -2611,6 +2651,9 @@ type Mutation {
 
   """Deletes an existing block style."""
   deleteBlockStyle(id: String!): BlockStyle!
+
+  """Deletes an existing block template."""
+  deleteBlockTemplate(id: String!): BlockTemplate!
 
   """Deletes a comment"""
   deleteComment(id: String!): Comment!
@@ -2895,6 +2938,9 @@ type Mutation {
 
   """Updates an existing block style."""
   updateBlockStyle(blocks: [EditorBlockType!], id: String!, name: String): BlockStyle!
+
+  """Updates an existing block template."""
+  updateBlockTemplate(blocks: [BlockContentInput!]!, id: String!, name: String!): BlockTemplate!
 
   """Updates an existing challenge provider setting."""
   updateChallengeProviderSetting(id: String, name: String, secret: String, siteKey: String): SettingChallengeProvider!
@@ -3237,6 +3283,12 @@ type PaginatedArticles {
 
 type PaginatedAuthors {
   nodes: [Author!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type PaginatedBlockTemplate {
+  nodes: [BlockTemplate!]!
   pageInfo: PageInfo!
   totalCount: Int!
 }
@@ -3919,6 +3971,30 @@ type Query {
 
   """Returns a list of block styles."""
   blockStyles: [BlockStyle!]!
+
+  """Returns a single block template by ID."""
+  blockTemplate(id: String!): BlockTemplate!
+
+  """Returns a paginated list of block templates."""
+  blockTemplates(
+    """Cursor for pagination"""
+    cursorId: String
+
+    """Filter for block templates"""
+    filter: BlockTemplateFilter
+
+    """Sort order"""
+    order: SortOrder = Ascending
+
+    """Number of items to skip"""
+    skip: Int! = 0
+
+    """Field to sort by"""
+    sort: BlockTemplateSort! = Name
+
+    """Number of items to fetch"""
+    take: Int! = 10
+  ): PaginatedBlockTemplate!
 
   """
   This query generates a challenge which can be used to access protected endpoints.

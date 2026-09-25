@@ -66,6 +66,7 @@ import {
   AlternatingTeaser,
   AlternatingTeaserSlotsBlock,
   FlexBlock,
+  BlockTemplateBlock,
 } from '@wepublish/block-content/website';
 import {
   Comment,
@@ -315,6 +316,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({ children }) => (
           StreamableVideo: StreamableVideoBlock,
           YouTubeVideo: YouTubeVideoBlock,
           FlexBlock,
+          BlockTemplate: BlockTemplateBlock,
         }}
         blockStyles={{
           Banner,

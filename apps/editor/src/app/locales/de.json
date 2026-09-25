@@ -324,6 +324,12 @@
       }
     },
     "blocks": {
+      "blockTemplate": {
+        "editTemplate": "Vorlage bearbeiten",
+        "label": "Blockvorlage",
+        "select": "Blockvorlage auswählen",
+        "useContent": "Inhalt übernehmen"
+      },
       "crowdfunding": {
         "edit": "Bearbeiten",
         "label": "Crowdfunding",
@@ -754,6 +760,11 @@
       "tomorrow": "Morgen"
     },
     "delete": "Löschen",
+    "deleteBlockTemplateModal": {
+      "body": "Willst Du die Block-Vorlage \"{{name}}\" wirklich löschen?",
+      "deleteBtn": "Ja, löschen",
+      "title": "Block-Vorlage löschen?"
+    },
     "deletePollModal": {
       "body": "Willst Du die Umfrage \"{{pollQuestion}}\" wirklich löschen?",
       "deleteBtn": "Ja, löschen",
@@ -1296,7 +1307,8 @@
         "polls": "Umfrage",
         "blockStyles": "Block Styling",
         "topMenu": "Inhalts-Blöcke",
-        "crowdfundings": "Crowdfundings"
+        "crowdfundings": "Crowdfundings",
+        "blockTemplates": "Blockvorlagen"
       },
       "commentRating": "Bewertungssystem",
       "comments": "Kommentare",
@@ -2055,6 +2067,26 @@
       "subscriptionStartsAt": "Abo startet am {{date}}",
       "subscriptionTitle": "{{memberPlanName}} / Nr. {{subscriptionId}}",
       "unexpectedErrorNoInvoice": "Unerwarteter Fehler: Rechnung nicht vorhanden."
+    },
+    "blockTemplates": {
+      "list": {
+        "title": "Blockvorlagen",
+        "newBlockTemplate": "Neue Blockvorlage",
+        "name": "Name",
+        "noName": "Kein Name",
+        "delete": "Löschen"
+      },
+      "edit": {
+        "title": "Blockvorlage bearbeiten",
+        "name": "Name",
+        "back": "Zurück",
+        "backToList": "Zurück zur Liste",
+        "noName": "Kein Name",
+        "delete": "Löschen",
+        "saved": "Gespeichert",
+        "new": "Neu",
+        "editing": "Bearbeiten"
+      }
     },
     "yes": "Ja",
     "memberplanForm": {

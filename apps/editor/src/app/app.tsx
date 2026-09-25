@@ -58,10 +58,16 @@ import { ArticleList } from './routes/articles/articleList';
 import { AudienceDashboard } from './routes/audience/audience-dashboard';
 import { AuthorList } from './routes/authors/authorList';
 import { BlockStyleList } from './routes/blockStyles/blockStyleList';
+import { BlockTemplateEditView } from './routes/blockTemplate/blockTemplateEditView';
+import { BlockTemplateList } from './routes/blockTemplate/blockTemplateList';
 import { CommentRatingEditView } from './routes/commentRatings/commentRatingEditView';
 import { CommentEditView } from './routes/comments/commentEditView';
 import { CommentList } from './routes/comments/commentList';
 import { Dashboard } from './routes/dashboard/dashboard';
+import { DiscountCodeCreateView } from './routes/discountCode/discountCodeCreateView';
+import { DiscountCodeEditView } from './routes/discountCode/discountCodeEditView';
+import { DiscountCodeList } from './routes/discountCode/discountCodeList';
+import { DiscountCodeUsageView } from './routes/discountCode/discountCodeUsageView';
 import { NotificationsPage } from './routes/notifications/notificationsPage';
 import { DocumentList } from './routes/documents/documentList';
 import { EventCreateView } from './routes/events/eventCreateView';
@@ -98,10 +104,6 @@ import { TokenList } from './routes/tokens/tokenList';
 import { UserRoleList } from './routes/userRoles/userRoleList';
 import { UserEditView } from './routes/users/userEditView';
 import { UserList } from './routes/users/userList';
-import { DiscountCodeCreateView } from './routes/discountCode/discountCodeCreateView';
-import { DiscountCodeEditView } from './routes/discountCode/discountCodeEditView';
-import { DiscountCodeList } from './routes/discountCode/discountCodeList';
-import { DiscountCodeUsageView } from './routes/discountCode/discountCodeUsageView';
 import { WebsiteSettingsItem } from './routes/website-settings/website-settings-item';
 import { WebsiteSettingsList } from './routes/website-settings/website-settings-list';
 import { SetNewPassword } from './setNewPassword';
@@ -470,6 +472,23 @@ export function App() {
                   <BlockStyleList />
                 </Base>
               }
+            />
+            {/* BlockTemplate Routes */}
+            <Route
+              path="block-content/templates"
+              element={
+                <Base>
+                  <BlockTemplateList />
+                </Base>
+              }
+            />
+            <Route
+              path="block-content/templates/create"
+              element={<BlockTemplateEditView />}
+            />
+            <Route
+              path="block-content/templates/edit/:id"
+              element={<BlockTemplateEditView />}
             />
 
             {/* Crowdfunding Routes */}

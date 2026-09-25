@@ -107,6 +107,7 @@ export interface BlockProps<V = any> {
   onChange: React.Dispatch<React.SetStateAction<V>>;
   autofocus?: boolean;
   disabled?: boolean;
+  onReplace?: (blocks: BlockListValue[]) => void;
 }
 
 export type BlockConstructorFn<V = any> = (props: BlockProps<V>) => JSX.Element;
@@ -143,6 +144,7 @@ export interface BlockListItemProps<T extends string = string, V = any> {
     index: number,
     value: React.SetStateAction<BlockListValue<T, V>>
   ) => void;
+  onReplace?: (index: number, blocks: BlockListValue[]) => void;
   onDelete: (index: number) => void;
   onMoveUp?: (index: number) => void;
   onMoveDown?: (index: number) => void;
@@ -158,6 +160,7 @@ export const BlockListItem = memo(function BlockListItem({
   disabled,
   children,
   onChange,
+  onReplace,
   onDelete,
   onMoveUp,
   onMoveDown,
@@ -180,6 +183,11 @@ export const BlockListItem = memo(function BlockListItem({
     [onChange, index]
   );
 
+  const handleReplace = useCallback(
+    (blocks: BlockListValue[]) => onReplace?.(index, blocks),
+    [onReplace, index]
+  );
+
   return (
     <ListItemWrapper
       value={value}
@@ -196,6 +204,7 @@ export const BlockListItem = memo(function BlockListItem({
       {children({
         value: value.value,
         onChange: handleValueChange,
+        onReplace: onReplace && handleReplace,
         autofocus,
         disabled,
         itemId,
@@ -249,6 +258,18 @@ export function BlockList<V extends BlockListValue>({
       });
     },
     [blockMap, onChange]
+  );
+
+  const handleReplace = useCallback(
+    (itemIndex: number, blocks: BlockListValue[]) => {
+      onChange((values: any) => {
+        const valuesCopy = values.slice();
+        valuesCopy.splice(itemIndex, 1, ...blocks);
+
+        return valuesCopy;
+      });
+    },
+    [onChange]
   );
 
   const handleRemove = useCallback(
@@ -321,6 +342,7 @@ export function BlockList<V extends BlockListValue>({
           icon={blockDef.icon}
           onDelete={handleRemove}
           onChange={handleItemChange}
+          onReplace={handleReplace}
           onMoveUp={hasPrevIndex ? handleMoveUp : undefined}
           onMoveDown={hasNextIndex ? handleMoveDown : undefined}
           autofocus={focusIndex === index}

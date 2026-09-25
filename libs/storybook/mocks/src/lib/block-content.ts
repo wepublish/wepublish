@@ -41,6 +41,7 @@ import {
   BlockWithAlignment,
   Maybe,
   BlockContent,
+  FullBlockTemplateBlockFragment,
 } from '@wepublish/website/api';
 import { mockImage } from './image';
 import { mockRichText } from './richtext';
@@ -804,6 +805,23 @@ export const mockTabbedContentTeaserSlots: MockTabbedContent = ({
   type: BlockType.FlexBlock,
   __typename: 'FlexBlock',
 });
+
+export const mockBlockTemplateBlock = ({
+  templateID = '1234-1234',
+  template = {
+    id: templateID,
+    name: 'Block Template',
+    blocks: [mockTitleBlock(), mockRichTextBlock()],
+  },
+}: Partial<FullBlockTemplateBlockFragment> = {}) =>
+  ({
+    type: BlockType.BlockTemplate,
+    __typename: 'BlockTemplateBlock',
+    blockStyle: null,
+    disabled: false,
+    templateID,
+    template,
+  }) as FullBlockTemplateBlockFragment;
 
 export const mockBlockContent: any = ({
   title = mockTitleBlock(),
