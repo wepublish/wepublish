@@ -89,12 +89,10 @@ const StyledInfoBox = styled(InfoBox)`
 `;
 
 const StickyPoll = styled('div')`
-  ${({ theme }) => css`
-    ${theme.breakpoints.up('md')} {
-      position: sticky;
-      top: ${theme.spacing(14)};
-    }
-  `}
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    position: sticky;
+    top: ${({ theme }) => theme.spacing(14)};
+  }
 `;
 
 const PollBlockStyled = styled(PollBlock)`

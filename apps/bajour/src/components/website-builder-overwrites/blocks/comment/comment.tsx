@@ -17,13 +17,8 @@ const bajourTags = {
 };
 
 const highlightModeration = (theme: Theme) => css`
-  > ${CommentHeader}
-    ${CommentName},
-    > ${CommentHeader}
-    ${CommentFlair},
-    > ${CommentHeader}
-    ${CommentAuthor},
-    > ${CommentContent} {
+  > ${CommentHeader} :is(${CommentName}, ${CommentFlair}, ${CommentAuthor}),
+  > ${CommentContent} {
     color: ${theme.palette.primary.main};
   }
 `;
