@@ -1,16 +1,15 @@
-import { FormControl, InputLabel, Select } from '@mui/material';
+import {
+  FormControl,
+  InputLabel,
+  Select,
+  ToggleButton,
+  ToggleButtonGroup,
+  lighten,
+} from '@mui/material';
 import styled from '@emotion/styled';
 import { PaymentPeriodicity } from '@wepublish/website/api';
-import {
-  BuilderPeriodicityPickerProps,
-  useWebsiteBuilder,
-} from '@wepublish/website/builder';
+import { BuilderPeriodicityPickerProps } from '@wepublish/website/builder';
 import { forwardRef, useEffect, useId } from 'react';
-import { formatCurrency } from '../formatters/format-currency';
-import {
-  getPeriodicityLabel,
-  getPeriodPriceRange,
-} from '../formatters/format-payment-period';
 import { formatRenewalPeriod } from '../formatters/format-renewal-period';
 import { useTranslation } from 'react-i18next';
 
@@ -18,16 +17,29 @@ export const PeriodicityPickerWrapper = styled(FormControl)`
   display: grid;
 `;
 
+export const PeriodicityToggleGroup = styled(ToggleButtonGroup)`
+  justify-self: center;
+
+  .MuiToggleButton-root.Mui-selected {
+    color: inherit;
+    border-color: ${({ theme }) => theme.palette.primary.main};
+    background-color: ${({ theme }) =>
+      lighten(theme.palette.primary.main, 0.85)};
+
+    &:hover {
+      background-color: ${({ theme }) =>
+        lighten(theme.palette.primary.main, 0.75)};
+    }
+  }
+`;
+
 export const PeriodicityPicker = forwardRef<
   HTMLButtonElement,
   BuilderPeriodicityPickerProps
 >(function PeriodicityPicker(
-  { periodicities, memberPlan, onChange, value, className, name },
+  { periodicities, onChange, value, className, name, variant = 'select' },
   ref
 ) {
-  const {
-    meta: { locale },
-  } = useWebsiteBuilder();
   const { t } = useTranslation();
   const id = useId();
   const show = periodicities && periodicities.length > 1;
@@ -42,26 +54,29 @@ export const PeriodicityPicker = forwardRef<
     return null;
   }
 
-  const formatOption = (period: PaymentPeriodicity): string => {
-    const base = formatRenewalPeriod(period);
-
-    if (!memberPlan) {
-      return base;
-    }
-
-    const priceRange = getPeriodPriceRange(memberPlan, period);
-    const isFixed =
-      priceRange.amountMax != null &&
-      priceRange.amountMax === priceRange.amountMin;
-    const price = `${isFixed ? '' : 'ab '}${formatCurrency(
-      priceRange.amountMin / 100,
-      memberPlan.currency,
-      locale
-    )}`;
-    const label = getPeriodicityLabel(memberPlan, period);
-
-    return `${base} – ${price}${label ? ` (${label})` : ''}`;
-  };
+  if (variant === 'toggle') {
+    return (
+      <PeriodicityToggleGroup
+        className={className}
+        exclusive
+        value={value ?? ''}
+        onChange={(_event, periodicity) => {
+          if (periodicity) {
+            onChange(periodicity as PaymentPeriodicity);
+          }
+        }}
+      >
+        {periodicities.map(period => (
+          <ToggleButton
+            key={period}
+            value={period}
+          >
+            {formatRenewalPeriod(period)}
+          </ToggleButton>
+        ))}
+      </PeriodicityToggleGroup>
+    );
+  }
 
   return (
     <PeriodicityPickerWrapper className={className}>
@@ -82,7 +97,7 @@ export const PeriodicityPicker = forwardRef<
               key={period}
               value={period}
             >
-              {formatOption(period)}
+              {formatRenewalPeriod(period)}
             </option>
           ))}
         </Select>

@@ -4860,9 +4860,11 @@ input SubscribeBlockLayoutConfigInput {
   showInput: Boolean! = false
   type: SubscribeBlockRenderLayout!
   values: [Int!]
+  valuesByPeriodicity: [SubscribeBlockPeriodicityValuesInput!]
 }
 
 type SubscribeBlockLayoutNoneConfig implements SubscribeBlockLayoutConfig {
+  showInput: Boolean!
   type: SubscribeBlockRenderLayout!
 }
 
@@ -4870,6 +4872,7 @@ type SubscribeBlockLayoutPickerConfig implements SubscribeBlockLayoutConfig {
   showInput: Boolean!
   type: SubscribeBlockRenderLayout!
   values: [Int!]!
+  valuesByPeriodicity: [SubscribeBlockPeriodicityValues!]!
 }
 
 type SubscribeBlockLayoutSliderConfig implements SubscribeBlockLayoutConfig {
@@ -4889,6 +4892,16 @@ input SubscribeBlockMemberPlanRenderSettingInput {
   memberPlanId: String!
 }
 
+type SubscribeBlockPeriodicityValues {
+  periodicity: PaymentPeriodicity!
+  values: [Int!]!
+}
+
+input SubscribeBlockPeriodicityValuesInput {
+  periodicity: PaymentPeriodicity!
+  values: [Int!]!
+}
+
 enum SubscribeBlockRenderLayout {
   None
   Picker
@@ -4898,6 +4911,7 @@ enum SubscribeBlockRenderLayout {
 enum SubscribePeriodicityDisplay {
   Dropdown
   OfferCards
+  Toggle
 }
 
 type SubscriptionCreatedAction implements BaseAction & HasSubscriptionLc {
