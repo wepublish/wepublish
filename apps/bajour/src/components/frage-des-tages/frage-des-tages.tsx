@@ -13,6 +13,7 @@ import {
 } from '@wepublish/website/api';
 import {
   BuilderCommentProps,
+  BuilderTeaserGridBlockProps,
   BuilderTeaserListBlockProps,
   Link,
 } from '@wepublish/website/builder';
@@ -41,6 +42,10 @@ const countComments = (comments: CommentWithChildren[] | []): number => {
 
 export const FrageDesTagesContainer = styled('div')`
   padding: ${({ theme }) => `${theme.spacing(1.5)}`};
+
+  && {
+    grid-column: -1/1;
+  }
 
   ${({ theme }) => css`
     ${theme.breakpoints.up('sm')} {
@@ -155,7 +160,7 @@ const ReadMoreButton = styled(Button)`
 export const FrageDesTages = ({
   teasers,
   className,
-}: BuilderTeaserListBlockProps) => {
+}: BuilderTeaserListBlockProps | BuilderTeaserGridBlockProps) => {
   const article = (teasers[0] as ArticleTeaser | undefined)?.article;
 
   const { data: commentsData } = useCommentListQuery({
