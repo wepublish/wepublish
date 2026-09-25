@@ -88,17 +88,10 @@ describe('ArticleService', () => {
   });
 
   it('should query an article by slug', async () => {
-    prismaMock.$queryRaw.mockResolvedValue([{ id: '1234' }]);
-    const result = await service.getArticleBySlug('Some-Slug');
+    prismaMock.article.findFirst?.mockResolvedValue({});
+    await service.getArticleBySlug('Some-Slug');
 
-    expect(result).toEqual({ id: '1234' });
-    expect(prismaMock.$queryRaw.mock.calls[0]).toMatchSnapshot();
-  });
-
-  it('should return null when no article matches the slug', async () => {
-    prismaMock.$queryRaw.mockResolvedValue([]);
-
-    expect(await service.getArticleBySlug('missing')).toBeNull();
+    expect(prismaMock.article.findFirst?.mock.calls[0]).toMatchSnapshot();
   });
 
   it('should query articles based on filter', async () => {
@@ -356,6 +349,69 @@ describe('ArticleService', () => {
 
     expect(prismaMock.articleTrackingPixels.createMany).not.toHaveBeenCalled();
   });
+
+  it('should lowercase the slug when creating an article', async () => {
+    prismaMock.article.create?.mockResolvedValue({
+      id: '1234',
+    } as Partial<Article>);
+
+    await service.createArticle(
+      {
+        slug: 'Some-Slug',
+        breaking: false,
+        disableComments: false,
+        hidden: false,
+        hideAuthor: false,
+        shared: false,
+        properties: [],
+        socialMediaAuthorIds: [],
+        tagIds: [],
+        authors: [],
+        blocks: [],
+      },
+      '1234'
+    );
+
+    expect(prismaMock.article.create?.mock.calls[0][0].data.slug).toBe(
+      'some-slug'
+    );
+  });
+
+  it.each([
+    ['Some-Slug', 'some-slug'],
+    [null, null],
+    [undefined, undefined],
+  ])(
+    'should normalize the slug %p to %p when updating an article',
+    async (slug, expected) => {
+      prismaMock.article.findUnique?.mockResolvedValue({
+        id: '123',
+        tags: [],
+      });
+
+      await service.updateArticle(
+        {
+          id: '123',
+          slug: slug as string | undefined,
+          breaking: false,
+          disableComments: false,
+          hidden: false,
+          hideAuthor: false,
+          shared: false,
+          properties: [],
+          socialMediaAuthorIds: [],
+          tagIds: [],
+          authors: [],
+          blocks: [],
+        },
+        '1234'
+      );
+
+      expect(prismaMock.article.update?.mock.calls[0][0].data.slug).toBe(
+        expected
+      );
+    }
+  );
 
   it('should update an article', async () => {
     prismaMock.article.findUnique?.mockResolvedValue({
