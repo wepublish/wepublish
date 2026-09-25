@@ -6,7 +6,7 @@ import {
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { formatCurrency } from '../formatters/format-currency';
-import { getPaymentPeriodicyMonths } from '../formatters/format-payment-period';
+import { calculatePeriodAmount } from '../formatters/format-payment-period';
 
 export const usePaymentText = ({
   type = 'button',
@@ -47,7 +47,7 @@ export const usePaymentText = ({
       paymentPeriod,
       paymentPeriodL: paymentPeriod.toLowerCase(),
       formattedAmount: formatCurrency(
-        (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity),
+        calculatePeriodAmount(monthlyAmount, paymentPeriodicity) / 100,
         currency,
         locale
       ),
@@ -104,7 +104,7 @@ export const useContinuationText = ({
         `subscription.renewalPeriod.${paymentPeriodicity || 'yearly'}`
       ).toLowerCase(),
       formattedAmount: formatCurrency(
-        (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity),
+        calculatePeriodAmount(monthlyAmount, paymentPeriodicity) / 100,
         currency,
         locale
       ),
@@ -139,7 +139,7 @@ export const useUpgradeText = ({
 
   return useMemo(() => {
     const fullAmount =
-      (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity);
+      calculatePeriodAmount(monthlyAmount, paymentPeriodicity) / 100;
 
     const amountAfterDiscount = Math.max(fullAmount - discount / 100, 0);
 

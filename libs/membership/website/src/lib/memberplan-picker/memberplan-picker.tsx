@@ -85,6 +85,8 @@ export const MemberPlanPicker = forwardRef<
                   currency={memberPlan.currency}
                   amountPerMonthMin={memberPlan.amountPerMonthMin}
                   amountPerMonthMax={memberPlan.amountPerMonthMax}
+                  amountPerMonthTarget={memberPlan.amountPerMonthTarget}
+                  periodicityPricing={memberPlan.periodicityPricing}
                   extendable={memberPlan.extendable}
                   shortDescription={memberPlan.shortDescription}
                   tags={memberPlan.tags}
@@ -96,7 +98,6 @@ export const MemberPlanPicker = forwardRef<
           ))}
         </MemberPlanPickerRadios>
       )}
-
       {selectedMemberPlan?.image && <Image image={selectedMemberPlan.image} />}
 
       {!!selectedMemberPlan?.description?.content?.length && (
