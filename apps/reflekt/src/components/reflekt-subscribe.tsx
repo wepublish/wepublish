@@ -12,6 +12,7 @@ import {
   SubscribeSection,
   TransactionFeeIcon,
   TransactionFeeWrapper,
+  getMonthlyEquivalentRange,
 } from '@wepublish/membership/website';
 import {
   FullMemberPlanFragment,
@@ -179,7 +180,8 @@ export const ReflektSubscribeBlock = (props: BuilderSubscribeBlockProps) => {
           ) &&
           filteredSubscriptions.some(
             sub =>
-              memberPlan.amountPerMonthMin > sub.memberPlan.amountPerMonthMin
+              getMonthlyEquivalentRange(memberPlan).amountPerMonthMin >
+              getMonthlyEquivalentRange(sub.memberPlan).amountPerMonthMin
           )
       ),
     [filteredSubscriptions, props.memberPlans]

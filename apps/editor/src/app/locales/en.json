@@ -2172,6 +2172,7 @@
       "periodicityPricingHelpText": "Set exact prices (min / target / max) per payment interval. Without custom prices the amount is derived from the monthly price. The discount compared to the derived monthly price is calculated automatically.",
       "periodicityPricingHelpTextNoMonthly": "Set the price for the whole period for each enabled payment interval: minimum amount (has to be paid at least), target amount (default in the payment form) and an optional maximum amount.",
       "periodicityPricingNoPeriodicities": "Enable payment intervals in the payment settings first to configure interval-specific prices.",
+      "periodicityPricingRequired": "At least one payment interval needs a minimum amount.",
       "periodicityPricingLabel": "Marketing label",
       "periodicityPricingLabelHelpText": "Optional note shown for this payment interval on the subscribe page, e.g. \u201c2 months for free\u201d.",
       "defaultPaymentPeriodicity": "Default payment interval",

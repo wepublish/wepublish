@@ -51,6 +51,7 @@ import {
 import styled from '@emotion/styled';
 import {
   getPaymentPeriodicyMonths,
+  getMonthlyEquivalentRange,
   getPeriodPriceRange,
   monthlyAmountFromPeriodAmount,
 } from '../formatters/format-payment-period';
@@ -106,18 +107,18 @@ export const Upgrade = ({
   const [error, setError] = useState<Error>();
   const callAction = useAsyncAction(setLoading, setError);
 
-  const availableMemberplans = useMemo(
-    () =>
+  const availableMemberplans = useMemo(() => {
+    const currentEquivalent = getMonthlyEquivalentRange(
+      subscriptionToUpgrade.memberPlan
+    ).amountPerMonthMin;
+
+    return (
       memberPlans.data?.memberPlans.nodes.filter(
         mb =>
-          mb.amountPerMonthMin >
-          subscriptionToUpgrade.memberPlan.amountPerMonthMin
-      ) ?? [],
-    [
-      memberPlans.data?.memberPlans.nodes,
-      subscriptionToUpgrade.memberPlan.amountPerMonthMin,
-    ]
-  );
+          getMonthlyEquivalentRange(mb).amountPerMonthMin > currentEquivalent
+      ) ?? []
+    );
+  }, [memberPlans.data?.memberPlans.nodes, subscriptionToUpgrade.memberPlan]);
 
   const { control, handleSubmit, watch, setValue, resetField } = useForm<
     z.infer<typeof upgradeSchema>
@@ -290,13 +291,41 @@ export const Upgrade = ({
     onSelect(selectedMemberPlan?.id, discountCode ?? undefined);
   }, [selectedMemberPlan?.id, discountCode, onSelect]);
 
-  const shouldHidePaymentAmount =
-    selectedLayout ?
-      isFixedAmountLayout(selectedLayout)
-    : selectedMemberPlan?.amountPerMonthMin ===
-      selectedMemberPlan?.amountPerMonthMax;
+  const periodPriceRange =
+    selectedMemberPlan ?
+      getPeriodPriceRange(
+        selectedMemberPlan,
+        subscriptionToUpgrade.paymentPeriodicity
+      )
+    : null;
 
-  const amountPerMonthMin = selectedMemberPlan?.amountPerMonthMin ?? 500;
+  const shouldHidePaymentAmount =
+    selectedLayout ? isFixedAmountLayout(selectedLayout)
+    : periodPriceRange ?
+      periodPriceRange.amountMin === periodPriceRange.amountMax
+    : true;
+
+  const amountPerMonthMin =
+    periodPriceRange ?
+      monthlyAmountFromPeriodAmount(
+        periodPriceRange.amountMin,
+        subscriptionToUpgrade.paymentPeriodicity
+      )
+    : 500;
+  const amountPerMonthMax =
+    periodPriceRange?.amountMax != null ?
+      monthlyAmountFromPeriodAmount(
+        periodPriceRange.amountMax,
+        subscriptionToUpgrade.paymentPeriodicity
+      )
+    : undefined;
+  const amountPerMonthTarget =
+    periodPriceRange?.amountTarget != null ?
+      monthlyAmountFromPeriodAmount(
+        periodPriceRange.amountTarget,
+        subscriptionToUpgrade.paymentPeriodicity
+      )
+    : undefined;
 
   return (
     <SubscribeWrapper
@@ -375,19 +404,15 @@ export const Upgrade = ({
                         clampMonthlyAmount(
                           +amount,
                           amountPerMonthMin,
-                          selectedMemberPlan?.amountPerMonthMax ?? undefined
+                          amountPerMonthMax
                         )
                       )
                     }
                     error={error}
                     donate={!!donate?.(selectedMemberPlan) || isDonation}
                     amountPerMonthMin={amountPerMonthMin}
-                    amountPerMonthMax={
-                      selectedMemberPlan?.amountPerMonthMax ?? undefined
-                    }
-                    amountPerMonthTarget={
-                      selectedMemberPlan?.amountPerMonthTarget ?? undefined
-                    }
+                    amountPerMonthMax={amountPerMonthMax}
+                    amountPerMonthTarget={amountPerMonthTarget}
                     currency={selectedMemberPlan?.currency ?? Currency.Chf}
                     presetAmounts={getAmountPickerValues(selectedLayout)}
                     showInput={showsAmountInput(selectedLayout)}
@@ -400,12 +425,8 @@ export const Upgrade = ({
                     error={error}
                     donate={!!donate?.(selectedMemberPlan) || isDonation}
                     amountPerMonthMin={amountPerMonthMin}
-                    amountPerMonthMax={
-                      selectedMemberPlan?.amountPerMonthMax ?? undefined
-                    }
-                    amountPerMonthTarget={
-                      selectedMemberPlan?.amountPerMonthTarget ?? undefined
-                    }
+                    amountPerMonthMax={amountPerMonthMax}
+                    amountPerMonthTarget={amountPerMonthTarget}
                     currency={selectedMemberPlan?.currency ?? Currency.Chf}
                     showInput={showsAmountInput(selectedLayout)}
                   />
