@@ -66,7 +66,7 @@ export const TeaserWrapper = styled('div')<FlexAlignment>`
   overflow: hidden;
   background-color: transparent;
   cursor: pointer;
-  container: teaser/inline-size;
+  contain: inline-size;
   display: grid;
   position: relative;
 

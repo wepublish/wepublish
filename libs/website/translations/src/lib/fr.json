@@ -36,6 +36,7 @@
     "chooseSubscription": "Choisir un abonnement",
     "choosePaymentMethod": "Choisir le mode de paiement",
     "greeting": "Bonjour {name}, bon retour parmi nous !",
+    "periodicity": "Intervalle de paiement",
     "spamProtection": "Protection anti-spam",
     "upgrade": {
       "infoTitle": "Votre mise à niveau",

@@ -264,6 +264,7 @@ fragment BlockWithoutTeaser on BlockContent {
     blockStyle
     blockStyleName
     memberPlanIds
+    periodicityDisplay
     memberPlanRenderSettings {
       isDefault
       memberPlanId
@@ -284,6 +285,7 @@ fragment BlockWithoutTeaser on BlockContent {
     showGoodies
     showDiscountCodes
     goodieMinValue
+    goodieMinValueAppliesToUpgrade
     hideRepeatGoodieOnUpgrade
     type
   }

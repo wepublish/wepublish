@@ -1,11 +1,12 @@
 import styled from '@emotion/styled';
 import { Container } from '@mui/material';
 
+import { FlexBlockHeroCrowdfundingWrapper } from './block-layouts/flex-block-hero-crowdfunding';
 import { FlexBlockHeroWrapper } from './block-layouts/flex-block-hero';
 
 export const MainSpacer = styled(Container)`
   display: grid;
-  gap: ${({ theme }) => theme.spacing(5)};
+  row-gap: ${({ theme }) => theme.spacing(5)};
 
   main > & {
     padding-top: calc(
@@ -13,7 +14,11 @@ export const MainSpacer = styled(Container)`
     );
   }
 
-  main > &:has(${FlexBlockHeroWrapper}) {
+  main
+    > &:is(
+      :has(${FlexBlockHeroWrapper}),
+      :has(${FlexBlockHeroCrowdfundingWrapper})
+    ) {
     padding-top: 0;
   }
 

@@ -8,6 +8,7 @@ import { MemberContextModule } from '../legacy/member-context.module';
 import { GoodieModule } from '../goodie/goodie.module';
 import { PaymentMethodModule, PaymentsModule } from '@wepublish/payment/api';
 import { DiscountCodeModule } from '../discountCode/discountCode.module';
+import { SettingModule } from '@wepublish/settings/api';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { DiscountCodeModule } from '../discountCode/discountCode.module';
     GoodieModule,
     PaymentsModule,
     DiscountCodeModule,
+    SettingModule,
   ],
   providers: [UpgradeSubscriptionResolver, UpgradeSubscriptionService],
 })
