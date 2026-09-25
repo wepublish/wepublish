@@ -60,8 +60,8 @@ export const BajourBlockRenderer = (props: BuilderBlockRendererProps) => {
   const extraBlockMap = useMemo(
     () =>
       cond([
-        [isOldRelatedArticles, block => <Fragment />],
         [isFrageDesTages, block => <FrageDesTages {...block} />],
+        [isOldRelatedArticles, block => <Fragment />],
         [isSearchSlider, block => <SearchSliderBlock {...block} />],
         [isBestOfWePublish, block => <BestOfWePublish {...block} />],
         [

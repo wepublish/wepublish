@@ -6,12 +6,7 @@ import {
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { formatCurrency } from '../formatters/format-currency';
-import {
-  calculatePeriodAmount,
-  formatAfterFirstPaymentPeriod,
-  formatPaymentPeriod,
-} from '../formatters/format-payment-period';
-import { formatRenewalPeriod } from '../formatters/format-renewal-period';
+import { calculatePeriodAmount } from '../formatters/format-payment-period';
 
 export const usePaymentText = ({
   type = 'button',
@@ -39,12 +34,18 @@ export const usePaymentText = ({
   const { t } = useTranslation();
 
   return useMemo(() => {
+    const paymentPeriod = t(
+      `subscription.paymentPeriod.${paymentPeriodicity || 'yearly'}`
+    );
+    const renewalPeriod = t(
+      `subscription.renewalPeriod.${paymentPeriodicity || 'yearly'}`
+    );
     const variables = {
       productType,
-      renewalPeriod: formatRenewalPeriod(paymentPeriodicity),
-      renewalPeriodL: formatRenewalPeriod(paymentPeriodicity).toLowerCase(),
-      paymentPeriod: formatPaymentPeriod(paymentPeriodicity),
-      paymentPeriodL: formatPaymentPeriod(paymentPeriodicity).toLowerCase(),
+      renewalPeriod,
+      renewalPeriodL: renewalPeriod.toLowerCase(),
+      paymentPeriod,
+      paymentPeriodL: paymentPeriod.toLowerCase(),
       formattedAmount: formatCurrency(
         calculatePeriodAmount(monthlyAmount, paymentPeriodicity) / 100,
         currency,
@@ -96,9 +97,12 @@ export const useContinuationText = ({
 
   return useMemo(() => {
     const variables = {
-      afterFirstPaymentPeriod:
-        formatAfterFirstPaymentPeriod(paymentPeriodicity),
-      renewalPeriodL: formatRenewalPeriod(paymentPeriodicity).toLowerCase(),
+      afterFirstPaymentPeriod: t(
+        `subscription.afterFirstPaymentPeriod.${paymentPeriodicity || 'yearly'}`
+      ).toLowerCase(),
+      renewalPeriodL: t(
+        `subscription.renewalPeriod.${paymentPeriodicity || 'yearly'}`
+      ).toLowerCase(),
       formattedAmount: formatCurrency(
         calculatePeriodAmount(monthlyAmount, paymentPeriodicity) / 100,
         currency,

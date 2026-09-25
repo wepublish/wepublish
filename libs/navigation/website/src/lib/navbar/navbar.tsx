@@ -122,12 +122,20 @@ export const NavbarLink = styled(Link)`
   }
 `;
 
-export const NavbarMain = styled('div')<{ isMenuOpen?: boolean }>`
+export const NavbarMain = styled('div')<{
+  isMenuOpen?: boolean;
+  hideMenu?: boolean;
+}>`
   display: grid;
   grid-template-columns: max-content 1fr;
   align-items: center;
   justify-self: start;
   gap: ${({ theme }) => theme.spacing(2)};
+  ${({ hideMenu }) =>
+    hideMenu &&
+    css`
+      min-height: var(--navbar-height, 52px);
+    `}
 
   ${({ isMenuOpen }) =>
     isMenuOpen &&
@@ -230,6 +238,7 @@ export interface ExtendedNavbarProps extends BuilderNavbarProps {
   isMenuOpen?: boolean;
   onMenuToggle?: (isOpen: boolean) => void;
   navPaperClassName?: string;
+  hideMenu?: boolean;
 }
 
 export function Navbar({
@@ -251,6 +260,7 @@ export function Navbar({
   navPaperClassName,
   navbarActions,
   paperActions,
+  hideMenu,
 }: ExtendedNavbarProps) {
   const [internalIsMenuOpen, setInternalMenuOpen] = useState(false);
 
@@ -306,30 +316,34 @@ export function Navbar({
         css={appBarStyles(isMenuOpen)}
       >
         <NavbarInnerWrapper>
-          <NavbarMain>
-            <NavbarIconButtonWrapper>
-              <IconButton
-                size="large"
-                aria-label="Menu"
-                onClick={toggleMenu}
-                color={'inherit'}
-              >
-                {!isMenuOpen && <MdMenu />}
-                {isMenuOpen && <MdClose />}
-              </IconButton>
-            </NavbarIconButtonWrapper>
-
-            {!!headerItems?.links.length && (
-              <NavbarLinks isMenuOpen={isMenuOpen}>
-                {headerItems.links.map((link, index) => (
-                  <NavbarLink
-                    key={index}
-                    href={navigationLinkToUrl(link)}
+          <NavbarMain hideMenu={hideMenu}>
+            {!hideMenu && (
+              <>
+                <NavbarIconButtonWrapper>
+                  <IconButton
+                    size="large"
+                    aria-label="Menu"
+                    onClick={toggleMenu}
+                    color={'inherit'}
                   >
-                    {link.label}
-                  </NavbarLink>
-                ))}
-              </NavbarLinks>
+                    {!isMenuOpen && <MdMenu />}
+                    {isMenuOpen && <MdClose />}
+                  </IconButton>
+                </NavbarIconButtonWrapper>
+
+                {!!headerItems?.links.length && (
+                  <NavbarLinks isMenuOpen={isMenuOpen}>
+                    {headerItems.links.map((link, index) => (
+                      <NavbarLink
+                        key={index}
+                        href={navigationLinkToUrl(link)}
+                      >
+                        {link.label}
+                      </NavbarLink>
+                    ))}
+                  </NavbarLinks>
+                )}
+              </>
             )}
           </NavbarMain>
 
@@ -369,27 +383,33 @@ export function Navbar({
               </Button>
             )}
 
-            {!hasRunningSubscription && !hasUnpaidInvoices && subscribeBtn && (
-              <Button
-                LinkComponent={Link}
-                sx={navbarButtonStyles}
-                size="medium"
-                {...subscribeBtn}
-              >
-                {t('navbar.subscribe')}
-              </Button>
-            )}
+            {!hideMenu &&
+              !hasRunningSubscription &&
+              !hasUnpaidInvoices &&
+              subscribeBtn && (
+                <Button
+                  LinkComponent={Link}
+                  sx={navbarButtonStyles}
+                  size="medium"
+                  {...subscribeBtn}
+                >
+                  {t('navbar.subscribe')}
+                </Button>
+              )}
 
-            {hasRunningSubscription && !hasUnpaidInvoices && profileBtn && (
-              <Button
-                LinkComponent={Link}
-                sx={navbarButtonStyles}
-                size="medium"
-                {...profileBtn}
-              >
-                {t('navbar.myAccount')}
-              </Button>
-            )}
+            {!hideMenu &&
+              hasRunningSubscription &&
+              !hasUnpaidInvoices &&
+              profileBtn && (
+                <Button
+                  LinkComponent={Link}
+                  sx={navbarButtonStyles}
+                  size="medium"
+                  {...profileBtn}
+                >
+                  {t('navbar.myAccount')}
+                </Button>
+              )}
           </NavbarActions>
         </NavbarInnerWrapper>
       </AppBar>
