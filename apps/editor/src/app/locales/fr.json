@@ -2862,8 +2862,8 @@
           "description": "Public et filtres"
         },
         "content": {
-          "title": "Contenu de l'e-mail",
-          "description": "Modèle et aperçu"
+          "title": "Contenu et envoi",
+          "description": "Modèle, e-mail ou lettre"
         },
         "send": {
           "title": "Envoyer l'e-mail",
@@ -2909,7 +2909,6 @@
       "yes": "Oui",
       "no": "Non",
       "counting": "Comptage des destinataires …",
-      "recipientsCount": "{{count}} destinataires",
       "send": "Envoyer",
       "templateNeedsSubscription": "Ce modèle nécessite un public basé sur les abonnements afin de remplir ses variables d'abonnement.",
       "confirmTitle": "Envoyer un e-mail",
@@ -2942,10 +2941,20 @@
         "loading": "Chargement des destinataires …",
         "email": "E-mail",
         "name": "Nom",
-        "memberPlan": "Plan d’abonnement"
+        "memberPlan": "Plan d’abonnement",
+        "address": "Adresse",
+        "withAddress": "Adresse disponible",
+        "withoutAddress": "Pas d’adresse valide – ne sera pas envoyé"
       },
       "endedWithinDays": "Désactivé au cours des … derniers jours",
       "endedWithinDaysHint": "Uniquement les abonnements désactivés dans cette période.",
+      "emailFilter": {
+        "label": "Adresse e-mail",
+        "all": "Toutes",
+        "placeholder": "Uniquement les substituts",
+        "real": "Uniquement les réelles",
+        "hint": "Les adresses de substitution sont définies dans l’intégration courrier."
+      },
       "endedWindow": {
         "label": "Période de désactivation de l’abonnement",
         "relative": "Derniers … jours",
@@ -2973,7 +2982,9 @@
       "startsAt": "Début de l'abonnement",
       "endsAt": "Fin de l'abonnement",
       "from": "À partir du",
-      "to": "Jusqu'au"
+      "to": "Jusqu'au",
+      "lettersCount": "{{count}} lettres à {{people}} personnes",
+      "confirmTextLetter": "Envoyer cette lettre à {{count}} destinataires ?"
     },
     "mailLog": {
       "title": "E-mails envoyés",

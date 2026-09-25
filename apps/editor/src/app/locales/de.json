@@ -2442,6 +2442,7 @@
       "paymentProvider": "Zahlungsanbieter",
       "trackingPixel": "Tracking Pixel",
       "mailProvider": "E-Mail Provider",
+      "letterProvider": "Brief-Provider",
       "back": "Zurück zu Integrationen",
       "unknown": "Unbekannte Integration",
       "notFound": "Integration nicht gefunden",
@@ -2486,6 +2487,16 @@
         "bexioInvoiceTitleRenewalMembership": "Rechnungstitel (Mitgliedschafts-Erneuerung)"
       },
       "placeholderSecret": "Unverändert (Versteckt)",
+      "letterSettings": {
+        "type": "Typ",
+        "environment": "Umgebung",
+        "clientId": "Client ID",
+        "clientSecret": "Client Secret",
+        "organisationId": "Organisations-ID",
+        "webhookSigningKey": "Webhook Signing Key",
+        "autoSend": "Briefe automatisch versenden",
+        "placeholderEmailContains": "Platzhalter-E-Mail enthält"
+      },
       "mailSettings": {
         "type": "Typ",
         "fromAddress": "Absender-Adresse",
@@ -2916,8 +2927,8 @@
           "description": "Empfängergruppe und Filter"
         },
         "content": {
-          "title": "E-Mail-Inhalt",
-          "description": "Vorlage und Vorschau"
+          "title": "Inhalt & Versandart",
+          "description": "Vorlage, E-Mail oder Brief"
         },
         "send": {
           "title": "E-Mail senden",
@@ -2963,7 +2974,6 @@
       "yes": "Ja",
       "no": "Nein",
       "counting": "Empfänger werden gezählt …",
-      "recipientsCount": "{{count}} Empfänger",
       "send": "Senden",
       "templateNeedsSubscription": "Diese Vorlage benötigt eine Abo-basierte Empfängergruppe, damit die Abo-Platzhalter gefüllt werden können.",
       "confirmTitle": "E-Mail senden",
@@ -2996,10 +3006,20 @@
         "loading": "Empfänger werden geladen …",
         "email": "E-Mail",
         "name": "Name",
-        "memberPlan": "Abo-Plan"
+        "memberPlan": "Abo-Plan",
+        "address": "Adresse",
+        "withAddress": "Adresse vorhanden",
+        "withoutAddress": "Keine gültige Adresse – wird nicht verschickt"
       },
       "endedWithinDays": "Deaktiviert innerhalb der letzten … Tage",
       "endedWithinDaysHint": "Nur Abos, die in diesem Zeitraum deaktiviert wurden.",
+      "emailFilter": {
+        "label": "E-Mail-Adresse",
+        "all": "Alle",
+        "placeholder": "Nur Platzhalter",
+        "real": "Nur echt",
+        "hint": "Platzhalter-Adressen werden in der Brief-Integration festgelegt."
+      },
       "endedWindow": {
         "label": "Zeitraum der Abo-Deaktivierung",
         "relative": "Letzte … Tage",
@@ -3014,7 +3034,8 @@
         "firstRecipient": "Erste:r Empfänger:in",
         "hint": "So sieht die Mail für diese Person aus – mit ihren echten Daten.",
         "loading": "Vorschau wird geladen …",
-        "noRecipients": "Keine Empfänger:innen – bitte zuerst die Empfängergruppe anpassen."
+        "noRecipients": "Keine Empfänger:innen – bitte zuerst die Empfängergruppe anpassen.",
+        "letterTitle": "Briefvorschau"
       },
       "recipientsCountPerPerson": "{{count}} Mails an {{people}} Personen",
       "endsAtHint": "Kündigungsdatum, sonst das Datum, bis zu dem bezahlt ist.",
@@ -3027,7 +3048,40 @@
       "startsAt": "Abo-Beginn",
       "endsAt": "Abo-Ende",
       "from": "ab",
-      "to": "bis"
+      "to": "bis",
+      "lettersCount": "{{count}} Briefe an {{people}} Personen",
+      "confirmTextLetter": "Diesen Brief an {{count}} Empfänger:innen senden?",
+      "channel": {
+        "label": "Versand",
+        "mail": "E-Mail",
+        "letter": "Brief",
+        "withoutAddress": "{{count}} der Empfänger:innen haben keine brauchbare Postadresse und werden übersprungen."
+      },
+      "print": {
+        "addressPosition": {
+          "label": "Adressfenster",
+          "left": "Links",
+          "right": "Rechts"
+        },
+        "deliveryProduct": {
+          "label": "Zustellung",
+          "cheap": "Günstig (B-Post)",
+          "fast": "Schnell (A-Post)",
+          "premium": "Premium",
+          "registered": "Eingeschrieben",
+          "bulk": "Massensendung"
+        },
+        "printMode": {
+          "label": "Druck",
+          "simplex": "Einseitig",
+          "duplex": "Beidseitig"
+        },
+        "printSpectrum": {
+          "label": "Farbe",
+          "grayscale": "Graustufen",
+          "color": "Farbig"
+        }
+      }
     },
     "mailLog": {
       "title": "Gesendete E-Mails",
@@ -3047,7 +3101,8 @@
         "all": "Alle",
         "title": "Filter",
         "reset": "Filter zurücksetzen",
-        "typeHint": "Wodurch der Versand angestossen wurde."
+        "typeHint": "Wodurch der Versand angestossen wurde.",
+        "channel": "Versand"
       },
       "types": {
         "subscriptionFlow": "Abo-Mailing",
@@ -3150,7 +3205,27 @@
           "name": "rejected — Abgewiesen",
           "meaning": "Die E-Mail wurde nie verschickt. Entweder konnte We.Publish sie nicht übergeben (fehlende oder falsche Anbieter-Konfiguration), oder der Anbieter hat sie von vornherein verweigert: nicht verifizierte Absenderdomain («unsigned»), Adresse auf der Sperrliste des Anbieters nach früherem Hard Bounce oder Spam-Beschwerde, abgemeldeter Empfänger, oder das Sendelimit des Kontos ist erreicht.",
           "next": "Die Spalte «Fehler» nennt den Grund – fahre mit der Maus darüber für Ursache und Behebung. Ursache beheben und erneut senden: automatisch wiederholt wird nichts."
+        },
+        "dispatched": {
+          "name": "Aufgegeben",
+          "meaning": "Der Druckdienstleister hat den Brief gedruckt und der Post übergeben.",
+          "next": "Nichts zu tun. Der Status wechselt auf zugestellt, sobald die Post die Zustellung meldet."
+        },
+        "undeliverable": {
+          "name": "Unzustellbar",
+          "meaning": "Die Post konnte den Brief nicht zustellen und hat ihn retourniert.",
+          "next": "Adresse der Empfängerin oder des Empfängers prüfen und den Brief erneut senden."
+        },
+        "canceled": {
+          "name": "Storniert",
+          "meaning": "Der Brief wurde zurückgezogen, bevor er gedruckt wurde.",
+          "next": "Nichts zu tun. Es wurde nichts gedruckt und nichts verrechnet."
         }
+      },
+      "channel": "Versand",
+      "channels": {
+        "mail": "E-Mail",
+        "letter": "Brief"
       }
     },
     "userMail": {

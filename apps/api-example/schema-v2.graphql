@@ -1673,6 +1673,46 @@ input KeyEnabledInput {
   key: String
 }
 
+"""Where the address window sits on the printed sheet."""
+enum LetterAddressPosition {
+  left
+  right
+}
+
+enum LetterDeliveryProduct {
+  bulk
+  cheap
+  fast
+  premium
+  registered
+}
+
+input LetterPrintInput {
+  addressPosition: LetterAddressPosition
+  deliveryProduct: LetterDeliveryProduct
+  printMode: LetterPrintMode
+  printSpectrum: LetterPrintSpectrum
+}
+
+enum LetterPrintMode {
+  duplex
+  simplex
+}
+
+enum LetterPrintSpectrum {
+  color
+  grayscale
+}
+
+enum LetterProviderEnvironment {
+  production
+  staging
+}
+
+enum LetterProviderType {
+  pingen
+}
+
 type ListicleBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
@@ -1713,6 +1753,9 @@ enum LoginStatus {
 input MailAudienceInput {
   autoRenew: Boolean
   base: MailRecipientBase!
+
+  """Restrict to placeholder or real email addresses. Defaults to all."""
+  emailFilter: MailEmailFilter
 
   """
   Win-back audience only: start of an explicit period the subscription ended in.
@@ -1771,7 +1814,20 @@ input MailAudienceInput {
   subscriptionState: MailSubscriptionState
 }
 
+"""Whether a send goes out as an email or as a printed letter."""
+enum MailChannel {
+  letter
+  mail
+}
+
+enum MailEmailFilter {
+  all
+  placeholder
+  real
+}
+
 input MailLogFilter {
+  channel: MailChannel
   mailSendJobId: String
   mailTemplateId: String
   recipientId: String
@@ -1780,6 +1836,9 @@ input MailLogFilter {
 }
 
 type MailLogModel {
+  """Letters only: the address the letter was sent to."""
+  address: String
+  channel: MailChannel!
   createdAt: DateTime!
 
   """Why a rejected mail could not be delivered."""
@@ -1788,6 +1847,9 @@ type MailLogModel {
   mailProviderID: String!
   mailSendJobId: String
   mailTemplate: MailLogTemplate!
+
+  """Letters only: id the print vendor assigned to the letter."""
+  providerLetterID: String
   recipient: MailLogRecipient!
   sentDate: DateTime!
   state: MailLogState!
@@ -1805,10 +1867,13 @@ type MailLogRecipient {
 enum MailLogState {
   accepted
   bounced
+  canceled
   deferred
   delivered
+  dispatched
   rejected
   submitted
+  undeliverable
 }
 
 type MailLogSyncModel {
@@ -1861,11 +1926,18 @@ enum MailSendAudience {
 
 input MailSendJobInput {
   audience: MailAudienceInput!
+
+  """Defaults to mail."""
+  channel: MailChannel
   mailTemplateId: String!
+
+  """Letter sends only. Ignored for mail."""
+  print: LetterPrintInput
 }
 
 type MailSendJobModel {
   audience: MailSendAudience!
+  channel: MailChannel!
   createdAt: DateTime!
   createdByUserId: String!
   error: String
@@ -1924,7 +1996,11 @@ enum MailSendJobState {
 
 input MailSendPreviewInput {
   audience: MailAudienceInput!
+
+  """Defaults to mail. A letter preview renders the pdf."""
+  channel: MailChannel
   mailTemplateId: String!
+  print: LetterPrintInput
 
   """
   Row id of the recipient to render for. Defaults to the first of the audience.
@@ -1933,7 +2009,13 @@ input MailSendPreviewInput {
 }
 
 type MailSendPreviewModel {
+  """Empty for a letter preview."""
   html: String!
+
+  """
+  Letter previews only: the rendered pdf, base64 encoded, exactly as it would be printed.
+  """
+  pdf: String
 
   """The recipient this preview was rendered for."""
   recipient: MailSendRecipientModel
@@ -1944,6 +2026,11 @@ type MailSendPreviewModel {
 type MailSendRecipientModel {
   email: String!
   firstName: String
+
+  """
+  Whether the user has a postal address a letter can be sent to. A letter send skips recipients without one.
+  """
+  hasAddress: Boolean!
 
   """
   Row identity. A user appears once per matching subscription, so this combines both.
@@ -1961,13 +2048,20 @@ type MailSendRecipientPreview {
   """
   allowsSubscriptionTemplates: Boolean!
 
-  """Number of mails that would be sent."""
+  """
+  Number of messages that would be sent over the given channel. A letter send reaches every person once, so it equals `userCount`.
+  """
   count: Int!
 
   """
   Number of distinct people reached. Lower than `count` when someone has several matching subscriptions.
   """
   userCount: Int!
+
+  """
+  How many of the recipients have no usable postal address and would be skipped by a letter send.
+  """
+  withoutAddressCount: Int!
 }
 
 enum MailSubscriptionState {
@@ -2969,6 +3063,23 @@ type Mutation {
 
   """Updates an existing invoice."""
   updateInvoice(currency: Currency, description: String, dueAt: DateTime, id: String!, items: [InvoiceItemInput!], mail: String, manuallySetAsPaidByUserId: String, scheduledDeactivationAt: DateTime, subscriptionID: String): Invoice!
+
+  """Updates an existing letter provider setting."""
+  updateLetterProviderSetting(
+    autoSend: Boolean
+    clientId: String
+    clientSecret: String
+    environment: LetterProviderEnvironment
+    id: String
+    name: String
+    organisationId: String
+
+    """
+    Email addresses containing this are placeholders, not real inboxes (e.g. @placeholder.example.com).
+    """
+    placeholderEmailContains: String
+    webhookSigningKey: String
+  ): SettingLetterProvider!
 
   """Updates an existing mail provider setting."""
   updateMailProviderSetting(apiKey: String, fromAddress: String, id: String, mailchimp_baseURL: String, mailgun_baseDomain: String, mailgun_mailDomain: String, name: String, replyToAddress: String, slack_webhookURL: String, smtp_host: String, smtp_port: Int, smtp_secure: Boolean, smtp_user: String, webhookEndpointSecret: String): SettingMailProvider!
@@ -4148,6 +4259,12 @@ type Query {
   """Returns a paginated list of invoices based on the filters given."""
   invoices(cursorId: String, filter: InvoiceFilter, order: SortOrder = Ascending, skip: Int = 0, sort: InvoiceSort = ModifiedAt, take: Int = 10): InvoiceConnection!
 
+  """Returns a single letter provider setting by id."""
+  letterProviderSetting(id: String!): SettingLetterProvider!
+
+  """Returns all letter provider settings."""
+  letterProviderSettings(filter: SettingLetterProviderFilter): [SettingLetterProvider!]!
+
   """Paginated list of sent mails"""
   mailLogs(filter: MailLogFilter, skip: Int, take: Int): PaginatedMailLog!
 
@@ -4172,10 +4289,10 @@ type Query {
   mailSendPreview(input: MailSendPreviewInput!): MailSendPreviewModel!
 
   """Preview how many recipients an audience resolves to"""
-  mailSendRecipientPreview(audience: MailAudienceInput!): MailSendRecipientPreview!
+  mailSendRecipientPreview(audience: MailAudienceInput!, channel: MailChannel): MailSendRecipientPreview!
 
   """The concrete recipients an audience resolves to"""
-  mailSendRecipients(audience: MailAudienceInput!, skip: Int, take: Int): PaginatedMailSendRecipient!
+  mailSendRecipients(audience: MailAudienceInput!, channel: MailChannel, skip: Int, take: Int): PaginatedMailSendRecipient!
 
   """Return a single mail template, including its html and text body."""
   mailTemplate(id: String!): MailTemplateModel
@@ -4632,6 +4749,30 @@ input SettingChallengeProviderFilter {
 
 input SettingFilter {
   name: String
+}
+
+type SettingLetterProvider implements SettingProvider {
+  autoSend: Boolean!
+  clientId: String
+  createdAt: DateTime!
+  environment: LetterProviderEnvironment!
+  id: String!
+  lastLoadedAt: DateTime!
+  modifiedAt: DateTime!
+  name: String
+  organisationId: String
+
+  """
+  Email addresses containing this are placeholders, not real inboxes (e.g. @placeholder.example.com).
+  """
+  placeholderEmailContains: String
+  type: LetterProviderType!
+}
+
+input SettingLetterProviderFilter {
+  id: String
+  name: String
+  type: LetterProviderType
 }
 
 type SettingMailProvider implements SettingProvider {
