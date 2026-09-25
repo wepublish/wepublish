@@ -50,6 +50,11 @@ fragment TinyUser on SensitiveDataUser {
     ...FullUserRole
   }
   subscriptionCount
+  subscriptionOverview {
+    id
+    memberPlanName
+    active
+  }
 }
 
 query TinyUserList(

@@ -138,6 +138,21 @@ export class SensitiveDataUser extends BaseUser {
 }
 
 @ObjectType()
+export class UserSubscriptionOverview {
+  @Field()
+  id!: string;
+
+  @Field()
+  memberPlanName!: string;
+
+  @Field({
+    description:
+      'Whether the subscription has no deactivation or one that lies in the future.',
+  })
+  active!: boolean;
+}
+
+@ObjectType()
 export class PaginatedSensitiveDataUsers extends PaginatedType(
   SensitiveDataUser
 ) {}
@@ -159,6 +174,7 @@ export enum UserSort {
   ModifiedAt = 'ModifiedAt',
   Name = 'Name',
   FirstName = 'FirstName',
+  SubscriptionCount = 'SubscriptionCount',
 }
 
 registerEnumType(UserSort, {

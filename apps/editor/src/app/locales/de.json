@@ -1944,6 +1944,7 @@
         "createdAt": "Erstellt",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
         "firstName": "Vorname",
+        "inactiveSubscription": "{{name}} (inaktiv)",
         "modifiedAt": "Zuletzt bearbeitet",
         "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
         "name": "Name",

@@ -2011,6 +2011,7 @@
         "createdAt": "Created",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
         "firstName": "First Name",
+        "inactiveSubscription": "{{name}} (inactive)",
         "modifiedAt": "Last modified",
         "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
         "name": "Name",
