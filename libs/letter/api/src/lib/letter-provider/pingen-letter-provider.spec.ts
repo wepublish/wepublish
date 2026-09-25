@@ -41,6 +41,7 @@ const config: SettingLetterProvider = {
   organisationId: 'org-id',
   webhookSigningKey: 'signing-key',
   autoSend: true,
+  placeholderEmailContains: null,
 };
 
 const recipient = {
