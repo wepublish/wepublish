@@ -1,6 +1,7 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { PrismaModule } from '@wepublish/nest-modules';
 import { PaywallDataloaderService } from './paywall-dataloader.service';
+import { PaywallMemberPlansDataloader } from './paywall-member-plans.dataloader';
 import { PaywallService } from './paywall.service';
 import { PaywallResolver } from './paywall.resolver';
 import {
@@ -13,6 +14,7 @@ import { MemberPlanModule } from '@wepublish/member-plan/api';
   imports: [PrismaModule, forwardRef(() => MemberPlanModule)],
   providers: [
     PaywallDataloaderService,
+    PaywallMemberPlansDataloader,
     PaywallService,
     PaywallResolver,
     HasPaywallResolver,

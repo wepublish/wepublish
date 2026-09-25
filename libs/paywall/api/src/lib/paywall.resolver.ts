@@ -7,6 +7,7 @@ import {
   Resolver,
 } from '@nestjs/graphql';
 import { PaywallDataloaderService } from './paywall-dataloader.service';
+import { PaywallMemberPlansDataloader } from './paywall-member-plans.dataloader';
 import {
   Paywall,
   PaywallBypass,
@@ -28,6 +29,7 @@ import { MemberPlan } from '@wepublish/member-plan/api';
 export class PaywallResolver {
   constructor(
     private paywallDataloader: PaywallDataloaderService,
+    private paywallMemberPlansDataloader: PaywallMemberPlansDataloader,
     private paywallService: PaywallService
   ) {}
 
@@ -71,7 +73,7 @@ export class PaywallResolver {
 
   @ResolveField(() => [MemberPlan])
   async memberPlans(@Parent() parent: PPaywall) {
-    return this.paywallService.getPaywallMemberplans(parent.id);
+    return this.paywallMemberPlansDataloader.load(parent.id);
   }
 
   @ResolveField(() => [PaywallBypass])
