@@ -1899,6 +1899,7 @@
         "createdAt": "Créé",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
         "firstName": "Prénom",
+        "inactiveSubscription": "{{name}} (inactif)",
         "modifiedAt": "Dernière modification",
         "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
         "name": "Nom",

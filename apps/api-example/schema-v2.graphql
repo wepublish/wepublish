@@ -4649,6 +4649,7 @@ type SensitiveDataUser implements BaseUser {
   roleIDs: [String!]!
   roles: [UserRole!]!
   subscriptionCount: Int!
+  subscriptionOverview: [UserSubscriptionOverview!]!
 
   """Whether two-factor authentication is enabled for this user."""
   totpEnabled: Boolean!
@@ -5596,6 +5597,16 @@ enum UserSort {
   FirstName
   ModifiedAt
   Name
+  SubscriptionCount
+}
+
+type UserSubscriptionOverview {
+  """
+  Whether the subscription has no deactivation or one that lies in the future.
+  """
+  active: Boolean!
+  id: String!
+  memberPlanName: String!
 }
 
 type VersionInformation {

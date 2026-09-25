@@ -39,6 +39,8 @@ import {
   Pagination,
   Table as RTable,
   toaster,
+  Tooltip,
+  Whisper,
 } from 'rsuite';
 import { RowDataType } from 'rsuite-table';
 
@@ -54,6 +56,8 @@ function mapColumFieldToGraphQLField(columnField: string): UserSort | null {
       return UserSort.Name;
     case 'firstName':
       return UserSort.FirstName;
+    case 'subscriptionCount':
+      return UserSort.SubscriptionCount;
     default:
       return null;
   }
@@ -143,6 +147,23 @@ function UserList() {
 
     // no subscription
     return <>{t('userList.overview.noSubscriptions')}</>;
+  }
+
+  function getSubscriptionTooltip(user: TinyUserFragment) {
+    return (
+      <Tooltip>
+        {user.subscriptionOverview.map(({ id, memberPlanName, active }) => (
+          <div key={id}>
+            {active ?
+              memberPlanName
+            : t('userList.overview.inactiveSubscription', {
+                name: memberPlanName,
+              })
+            }
+          </div>
+        ))}
+      </Tooltip>
+    );
   }
 
   const handleDeleteUser = async () => {
@@ -351,14 +372,28 @@ function UserList() {
             width={200}
             align="left"
             resizable
+            sortable
           >
             <HeaderCell>{t('userList.overview.subscriptions')}</HeaderCell>
-            <RCell>
-              {(rowData: RowDataType<TinyUserFragment>) => (
-                <div>
-                  {getSubscriptionCellView(rowData as TinyUserFragment)}
-                </div>
-              )}
+            <RCell dataKey="subscriptionCount">
+              {(rowData: RowDataType<TinyUserFragment>) => {
+                const user = rowData as TinyUserFragment;
+                const cell = <div>{getSubscriptionCellView(user)}</div>;
+
+                if (!user.subscriptionOverview.length) {
+                  return cell;
+                }
+
+                return (
+                  <Whisper
+                    placement="top"
+                    trigger="hover"
+                    speaker={getSubscriptionTooltip(user)}
+                  >
+                    {cell}
+                  </Whisper>
+                );
+              }}
             </RCell>
           </Column>
           <Column

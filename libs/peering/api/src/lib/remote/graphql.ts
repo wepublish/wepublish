@@ -6529,6 +6529,7 @@ export type SensitiveDataUser = BaseUser & {
   roleIDs: Array<Scalars['String']>;
   roles: Array<UserRole>;
   subscriptionCount: Scalars['Int'];
+  subscriptionOverview: Array<UserSubscriptionOverview>;
   /** Whether two-factor authentication is enabled for this user. */
   totpEnabled: Scalars['Boolean'];
   /** Whether this user is exempt from the two-factor authentication requirement. */
@@ -7505,8 +7506,17 @@ export enum UserSort {
   CreatedAt = 'CreatedAt',
   FirstName = 'FirstName',
   ModifiedAt = 'ModifiedAt',
-  Name = 'Name'
+  Name = 'Name',
+  SubscriptionCount = 'SubscriptionCount'
 }
+
+export type UserSubscriptionOverview = {
+  __typename?: 'UserSubscriptionOverview';
+  /** Whether the subscription has no deactivation or one that lies in the future. */
+  active: Scalars['Boolean'];
+  id: Scalars['String'];
+  memberPlanName: Scalars['String'];
+};
 
 export type VersionInformation = {
   __typename?: 'VersionInformation';

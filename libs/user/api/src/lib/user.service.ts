@@ -70,7 +70,6 @@ export class UserService {
     const [totalCount, users] = await Promise.all([
       this.prisma.user.count({
         where,
-        orderBy,
       }),
       this.prisma.user.findMany({
         where,
@@ -374,6 +373,13 @@ export const createUserOrder = (
       return {
         firstName: graphQLSortOrderToPrisma(sortOrder),
       };
+
+    case UserSort.SubscriptionCount:
+      // many users share the same count, tie-break on id for stable paging
+      return [
+        { subscriptions: { _count: graphQLSortOrderToPrisma(sortOrder) } },
+        { id: graphQLSortOrderToPrisma(sortOrder) },
+      ];
   }
 };
 
