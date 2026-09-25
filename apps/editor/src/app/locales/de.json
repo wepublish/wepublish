@@ -1944,7 +1944,14 @@
         "createdAt": "Erstellt",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
         "firstName": "Vorname",
-        "inactiveSubscription": "{{name}} (inaktiv)",
+        "subscriptionStatus": {
+          "Active": "Aktiv",
+          "Deactivated": "Deaktiviert",
+          "Planned": "Geplant",
+          "Unpaid": "Unbezahlt",
+          "Expired": "Abgelaufen"
+        },
+        "subscriptionWithStatus": "{{name}} – {{status}}",
         "modifiedAt": "Zuletzt bearbeitet",
         "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
         "name": "Name",

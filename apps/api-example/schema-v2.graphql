@@ -5399,12 +5399,21 @@ enum UserSort {
 }
 
 type UserSubscriptionOverview {
-  """
-  Whether the subscription has no deactivation or one that lies in the future.
-  """
-  active: Boolean!
   id: String!
   memberPlanName: String!
+
+  """
+  Active means started and paid up, not merely not deactivated: imported subscriptions often expire without a deactivation.
+  """
+  status: UserSubscriptionStatus!
+}
+
+enum UserSubscriptionStatus {
+  Active
+  Deactivated
+  Expired
+  Planned
+  Unpaid
 }
 
 type VersionInformation {

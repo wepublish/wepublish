@@ -7321,11 +7321,19 @@ export enum UserSort {
 
 export type UserSubscriptionOverview = {
   __typename?: 'UserSubscriptionOverview';
-  /** Whether the subscription has no deactivation or one that lies in the future. */
-  active: Scalars['Boolean'];
   id: Scalars['String'];
   memberPlanName: Scalars['String'];
+  /** Active means started and paid up, not merely not deactivated: imported subscriptions often expire without a deactivation. */
+  status: UserSubscriptionStatus;
 };
+
+export enum UserSubscriptionStatus {
+  Active = 'Active',
+  Deactivated = 'Deactivated',
+  Expired = 'Expired',
+  Planned = 'Planned',
+  Unpaid = 'Unpaid'
+}
 
 export type VersionInformation = {
   __typename?: 'VersionInformation';

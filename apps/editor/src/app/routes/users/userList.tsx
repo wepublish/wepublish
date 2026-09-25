@@ -152,14 +152,12 @@ function UserList() {
   function getSubscriptionTooltip(user: TinyUserFragment) {
     return (
       <Tooltip>
-        {user.subscriptionOverview.map(({ id, memberPlanName, active }) => (
+        {user.subscriptionOverview.map(({ id, memberPlanName, status }) => (
           <div key={id}>
-            {active ?
-              memberPlanName
-            : t('userList.overview.inactiveSubscription', {
-                name: memberPlanName,
-              })
-            }
+            {t('userList.overview.subscriptionWithStatus', {
+              name: memberPlanName,
+              status: t(`userList.overview.subscriptionStatus.${status}`),
+            })}
           </div>
         ))}
       </Tooltip>
