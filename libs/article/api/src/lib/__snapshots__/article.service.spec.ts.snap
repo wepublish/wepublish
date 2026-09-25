@@ -245,10 +245,7 @@ exports[`ArticleService should query an article by slug 1`] = `
       "publishedAt": "asc",
     },
     "where": {
-      "slug": {
-        "equals": "1234",
-        "mode": "insensitive",
-      },
+      "slug": "some-slug",
     },
   },
 ]
