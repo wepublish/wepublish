@@ -7,7 +7,10 @@ import {
 import { ModuleMetadata } from '@nestjs/common/interfaces';
 import { PrismaModule } from '@wepublish/nest-modules';
 import { StatsModule } from '@wepublish/stats/api';
+import { AuditLogModule } from '@wepublish/audit-log/api';
 import { MediumStatsResolver } from './medium-stats.resolver';
+import { MediumAuditLogResolver } from './medium-audit-log.resolver';
+import { MediumAuditLogService } from './medium-audit-log.service';
 import { ImpersonationResolver } from './impersonation.resolver';
 import { ImpersonationSearchService } from './impersonation.service';
 import { OneChannelStateService } from './one-channel-state.service';
@@ -44,7 +47,12 @@ export class OneModule {
     return {
       global: true,
       module: OneModule,
-      imports: [PrismaModule, StatsModule, ...(options.imports || [])],
+      imports: [
+        PrismaModule,
+        StatsModule,
+        AuditLogModule,
+        ...(options.imports || []),
+      ],
       providers: [
         ...this.createAsyncProviders(options),
         OneJwksClientService,
@@ -53,6 +61,8 @@ export class OneModule {
         OneChannelStateService,
         OneChannelStatusResolver,
         MediumStatsResolver,
+        MediumAuditLogResolver,
+        MediumAuditLogService,
         ImpersonationResolver,
         ImpersonationSearchService,
         OneClientService,

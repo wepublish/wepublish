@@ -2,6 +2,7 @@
 export * from './action.generated';
 export * from './article-without-blocks.generated';
 export * from './article.generated';
+export * from './audit-log.generated';
 export * from './auth.generated';
 export * from './author.generated';
 export * from './banner.generated';

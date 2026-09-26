@@ -1354,7 +1354,8 @@
       "apps": "Apps",
       "mailSend": "Send email",
       "mailLog": "Sent emails",
-      "communication": "Communication"
+      "communication": "Communication",
+      "auditLog": "Audit log"
     },
     "navigation": {
       "overview": {
@@ -3261,6 +3262,41 @@
         "sentAt": "Sent at",
         "attempts": "Attempts",
         "empty": "No entries for this filter."
+      }
+    },
+    "auditLogList": {
+      "overview": {
+        "title": "Audit log",
+        "createdAt": "Timestamp",
+        "createdAtDate": "{{createdAtDate, ccc PP p}}",
+        "actor": "Actor",
+        "action": "Action",
+        "mutation": "Mutation",
+        "record": "Record",
+        "session": "Session",
+        "status": "Status",
+        "succeeded": "Succeeded",
+        "failed": "Failed",
+        "filterBySession": "Filter by this session",
+        "tokenActor": "API token: {{name}}",
+        "impersonatedActor": "{{impersonator}} as {{actor}}",
+        "unknownActor": "Unknown",
+        "notSupported": "This installation does not keep an audit log. Entries will appear once the migration has been applied."
+      },
+      "filter": {
+        "searchPlaceholder": "Search (mutation, record, email …)",
+        "action": "Action",
+        "entity": "Record type",
+        "session": "Session ID",
+        "dateRange": "Date range",
+        "failuresOnly": "Failures only",
+        "impersonatedOnly": "Impersonation only"
+      },
+      "action": {
+        "create": "Created",
+        "update": "Updated",
+        "delete": "Deleted",
+        "other": "Other"
       }
     }
   }

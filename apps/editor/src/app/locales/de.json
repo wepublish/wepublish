@@ -1353,7 +1353,8 @@
       "apps": "Apps",
       "mailSend": "E-Mail senden",
       "mailLog": "Gesendete E-Mails",
-      "communication": "Kommunikation"
+      "communication": "Kommunikation",
+      "auditLog": "Audit-Log"
     },
     "navigation": {
       "overview": {
@@ -3222,6 +3223,41 @@
         "sentAt": "Gesendet am",
         "attempts": "Versuche",
         "empty": "Keine Einträge für diesen Filter."
+      }
+    },
+    "auditLogList": {
+      "overview": {
+        "title": "Audit-Log",
+        "createdAt": "Zeitpunkt",
+        "createdAtDate": "{{createdAtDate, ccc PP p}}",
+        "actor": "Akteur*in",
+        "action": "Aktion",
+        "mutation": "Mutation",
+        "record": "Datensatz",
+        "session": "Session",
+        "status": "Status",
+        "succeeded": "Erfolgreich",
+        "failed": "Fehlgeschlagen",
+        "filterBySession": "Nach dieser Session filtern",
+        "tokenActor": "API-Token: {{name}}",
+        "impersonatedActor": "{{impersonator}} als {{actor}}",
+        "unknownActor": "Unbekannt",
+        "notSupported": "Diese Installation führt kein Audit-Log. Sobald die Migration eingespielt ist, erscheinen hier die Einträge."
+      },
+      "filter": {
+        "searchPlaceholder": "Suchen (Mutation, Datensatz, E-Mail …)",
+        "action": "Aktion",
+        "entity": "Datensatztyp",
+        "session": "Session-ID",
+        "dateRange": "Zeitraum",
+        "failuresOnly": "Nur Fehlschläge",
+        "impersonatedOnly": "Nur Impersonation"
+      },
+      "action": {
+        "create": "Erstellt",
+        "update": "Geändert",
+        "delete": "Gelöscht",
+        "other": "Sonstige"
       }
     }
   }

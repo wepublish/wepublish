@@ -2274,3 +2274,41 @@ model OneChannelState {
 
   @@map("one_channel_state")
 }
+
+enum AuditLogAction {
+  create @map("create")
+  update @map("update")
+  delete @map("delete")
+  other  @map("other")
+}
+
+enum AuditLogActorType {
+  user  @map("user")
+  token @map("token")
+}
+
+model AuditLog {
+  id        String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+
+  mutation String
+  action   AuditLogAction
+  entity   String?
+  recordId String?
+
+  actorType      AuditLogActorType
+  userID         String?
+  userEmail      String?
+  tokenName      String?
+  sessionID      String?
+  impersonatedBy String?
+
+  success      Boolean @default(true)
+  errorMessage String?
+
+  @@index([createdAt])
+  @@index([userID, createdAt])
+  @@index([sessionID])
+  @@index([entity, recordId])
+  @@map("audit_logs")
+}

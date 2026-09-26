@@ -194,6 +194,58 @@ export type ArticleTeaserInput = {
   title?: InputMaybe<Scalars['String']>;
 };
 
+export type AuditLog = {
+  __typename?: 'AuditLog';
+  action: AuditLogAction;
+  actorType: AuditLogActorType;
+  createdAt: Scalars['DateTime'];
+  entity?: Maybe<Scalars['String']>;
+  errorMessage?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  impersonatedBy?: Maybe<Scalars['String']>;
+  mutation: Scalars['String'];
+  recordId?: Maybe<Scalars['String']>;
+  sessionID?: Maybe<Scalars['String']>;
+  success: Scalars['Boolean'];
+  tokenName?: Maybe<Scalars['String']>;
+  userEmail?: Maybe<Scalars['String']>;
+  userID?: Maybe<Scalars['String']>;
+};
+
+export enum AuditLogAction {
+  Create = 'create',
+  Delete = 'delete',
+  Other = 'other',
+  Update = 'update'
+}
+
+export enum AuditLogActorType {
+  Token = 'token',
+  User = 'user'
+}
+
+export type AuditLogFilter = {
+  actions?: InputMaybe<Array<AuditLogAction>>;
+  actorType?: InputMaybe<AuditLogActorType>;
+  entity?: InputMaybe<Scalars['String']>;
+  from?: InputMaybe<Scalars['DateTime']>;
+  /** Only entries where the actor was impersonating another user. */
+  impersonatedOnly?: InputMaybe<Scalars['Boolean']>;
+  mutation?: InputMaybe<Scalars['String']>;
+  recordId?: InputMaybe<Scalars['String']>;
+  /** Case insensitive search across mutation, entity, record id, user email and token name. */
+  search?: InputMaybe<Scalars['String']>;
+  sessionID?: InputMaybe<Scalars['String']>;
+  success?: InputMaybe<Scalars['Boolean']>;
+  to?: InputMaybe<Scalars['DateTime']>;
+  userEmail?: InputMaybe<Scalars['String']>;
+  userID?: InputMaybe<Scalars['String']>;
+};
+
+export enum AuditLogSort {
+  CreatedAt = 'CreatedAt'
+}
+
 export type Author = HasImage & HasOptionalPeerLc & {
   __typename?: 'Author';
   bio?: Maybe<Scalars['RichText']>;
@@ -2278,6 +2330,51 @@ export type MediumAccountStats = {
   usersLoggedIn: Scalars['Int'];
   usersTotal: Scalars['Int'];
   usersWithRole: Scalars['Int'];
+};
+
+export type MediumAuditLog = {
+  __typename?: 'MediumAuditLog';
+  action: AuditLogAction;
+  actorType: AuditLogActorType;
+  createdAt: Scalars['DateTime'];
+  entity?: Maybe<Scalars['String']>;
+  errorMessage?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  /** Set when the actor was impersonating another user. */
+  impersonatedBy?: Maybe<Scalars['String']>;
+  mutation: Scalars['String'];
+  recordId?: Maybe<Scalars['String']>;
+  sessionID?: Maybe<Scalars['String']>;
+  success: Scalars['Boolean'];
+  tokenName?: Maybe<Scalars['String']>;
+  userEmail?: Maybe<Scalars['String']>;
+  userID?: Maybe<Scalars['String']>;
+};
+
+export type MediumAuditLogFilter = {
+  actions?: InputMaybe<Array<AuditLogAction>>;
+  actorType?: InputMaybe<AuditLogActorType>;
+  entity?: InputMaybe<Scalars['String']>;
+  from?: InputMaybe<Scalars['DateTime']>;
+  impersonatedOnly?: InputMaybe<Scalars['Boolean']>;
+  mutation?: InputMaybe<Scalars['String']>;
+  recordId?: InputMaybe<Scalars['String']>;
+  /** Case insensitive search across mutation, entity, record id, user email and token name. */
+  search?: InputMaybe<Scalars['String']>;
+  /** Everything a single login session did. */
+  sessionID?: InputMaybe<Scalars['String']>;
+  success?: InputMaybe<Scalars['Boolean']>;
+  to?: InputMaybe<Scalars['DateTime']>;
+  userEmail?: InputMaybe<Scalars['String']>;
+  userID?: InputMaybe<Scalars['String']>;
+};
+
+export type MediumAuditLogPage = {
+  __typename?: 'MediumAuditLogPage';
+  nodes: Array<MediumAuditLog>;
+  /** False when this medium does not provide an audit log, in which case nodes is empty and totalCount is zero. */
+  supported: Scalars['Boolean'];
+  totalCount: Scalars['Int'];
 };
 
 export type MediumChangelogAction = {
@@ -4491,6 +4588,15 @@ export type PaginatedArticles = {
   totalCount: Scalars['Int'];
 };
 
+export type PaginatedAuditLogs = {
+  __typename?: 'PaginatedAuditLogs';
+  nodes: Array<AuditLog>;
+  pageInfo: PageInfo;
+  /** False when this installation does not provide an audit log, in which case nodes is empty and totalCount is zero. */
+  supported: Scalars['Boolean'];
+  totalCount: Scalars['Int'];
+};
+
 export type PaginatedAuthors = {
   __typename?: 'PaginatedAuthors';
   nodes: Array<Author>;
@@ -5224,6 +5330,8 @@ export type Query = {
   articleRevisions: PaginatedArticleRevisions;
   /** Returns a paginated list of articles based on the filters given. */
   articles: PaginatedArticles;
+  /** Returns a paginated list of audit log entries based on the filters given. */
+  auditLogs: PaginatedAuditLogs;
   /** Get an author by ID or slug */
   author?: Maybe<Author>;
   /** Get a paginated list of authors with optional filtering and sorting */
@@ -5386,6 +5494,7 @@ export type Query = {
   mailchimpSyncProgress?: Maybe<MailchimpSyncProgressType>;
   /** This query returns the user. */
   me?: Maybe<SensitiveDataUser>;
+  mediumAuditLogs: MediumAuditLogPage;
   mediumChangelogActions: Array<MediumChangelogAction>;
   mediumMigrations: Array<MediumMigration>;
   mediumStats: MediumStats;
@@ -5599,6 +5708,16 @@ export type QueryArticlesArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   sort?: InputMaybe<ArticleSort>;
   take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryAuditLogsArgs = {
+  cursorId?: InputMaybe<Scalars['String']>;
+  filter?: InputMaybe<AuditLogFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: Scalars['Int'];
+  sort?: AuditLogSort;
+  take?: Scalars['Int'];
 };
 
 
@@ -5945,6 +6064,13 @@ export type QueryMailchimpSyncErrorsArgs = {
 
 export type QueryMailchimpSyncProgressArgs = {
   configId: Scalars['String'];
+};
+
+
+export type QueryMediumAuditLogsArgs = {
+  filter?: InputMaybe<MediumAuditLogFilter>;
+  limit?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
 };
 
 

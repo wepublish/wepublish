@@ -159,6 +159,61 @@ input ArticleTeaserInput {
   title: String
 }
 
+type AuditLog {
+  action: AuditLogAction!
+  actorType: AuditLogActorType!
+  createdAt: DateTime!
+  entity: String
+  errorMessage: String
+  id: String!
+  impersonatedBy: String
+  mutation: String!
+  recordId: String
+  sessionID: String
+  success: Boolean!
+  tokenName: String
+  userEmail: String
+  userID: String
+}
+
+enum AuditLogAction {
+  create
+  delete
+  other
+  update
+}
+
+enum AuditLogActorType {
+  token
+  user
+}
+
+input AuditLogFilter {
+  actions: [AuditLogAction!]
+  actorType: AuditLogActorType
+  entity: String
+  from: DateTime
+
+  """Only entries where the actor was impersonating another user."""
+  impersonatedOnly: Boolean
+  mutation: String
+  recordId: String
+
+  """
+  Case insensitive search across mutation, entity, record id, user email and token name.
+  """
+  search: String
+  sessionID: String
+  success: Boolean
+  to: DateTime
+  userEmail: String
+  userID: String
+}
+
+enum AuditLogSort {
+  CreatedAt
+}
+
 type Author implements HasImage & HasOptionalPeerLc {
   bio: RichText
   createdAt: DateTime!
@@ -2218,6 +2273,111 @@ type MediumAccountStats {
   usersWithRole: Int!
 }
 
+type MediumAuditActionCount {
+  """create, update, delete or other."""
+  action: String!
+  count: Int!
+}
+
+type MediumAuditError {
+  count: Int!
+
+  """First line of the error, capped — enough to recognise it."""
+  message: String!
+}
+
+type MediumAuditLog {
+  action: AuditLogAction!
+  actorType: AuditLogActorType!
+  createdAt: DateTime!
+  entity: String
+  errorMessage: String
+  id: String!
+
+  """Set when the actor was impersonating another user."""
+  impersonatedBy: String
+  mutation: String!
+  recordId: String
+  sessionID: String
+  success: Boolean!
+  tokenName: String
+  userEmail: String
+  userID: String
+}
+
+input MediumAuditLogFilter {
+  actions: [AuditLogAction!]
+  actorType: AuditLogActorType
+  entity: String
+  from: DateTime
+  impersonatedOnly: Boolean
+  mutation: String
+  recordId: String
+
+  """
+  Case insensitive search across mutation, entity, record id, user email and token name.
+  """
+  search: String
+
+  """Everything a single login session did."""
+  sessionID: String
+  success: Boolean
+  to: DateTime
+  userEmail: String
+  userID: String
+}
+
+type MediumAuditLogPage {
+  nodes: [MediumAuditLog!]!
+
+  """
+  False when this medium does not provide an audit log, in which case nodes is empty and totalCount is zero.
+  """
+  supported: Boolean!
+  totalCount: Int!
+}
+
+type MediumAuditStats {
+  """Permission gated editor actions in the window."""
+  actions: Int!
+
+  """How the actions split across create, update and delete."""
+  actionsByType: [MediumAuditActionCount!]!
+
+  """
+  Accounts that performed at least one action in the 30 days ending with the window. Deliberately NOT the window itself: a one-day window would drop to zero every weekend and the curve would be unreadable.
+  """
+  activeEditors: Int!
+
+  """
+  Of those, the ones the system refused. A rate worth acting on needs both numbers, so they travel together.
+  """
+  failedActions: Int!
+
+  """Actions performed while impersonating another account."""
+  impersonatedActions: Int!
+
+  """
+  How often each mutation was used in the window, most used first. Shows whether a shipped feature is actually being touched.
+  """
+  mutationUsage: [MediumMutationUsage!]!
+
+  """
+  False when this installation keeps no audit log, in which case every figure below is zero and must not be read as "nothing happened".
+  """
+  supported: Boolean!
+
+  """
+  Share of all named-account actions performed by the single busiest account. Five editors where one does 90 % looks identical to five balanced ones in activeEditors alone — this is what tells them apart. Null when nobody acted.
+  """
+  topEditorShare: Float
+
+  """
+  The errors editors ran into most often, worst first. Without this the error rate says something is wrong but never what, and the answer sits one filtered page away.
+  """
+  topErrors: [MediumAuditError!]!
+}
+
 type MediumChangelogAction {
   """
   False for a purely informative entry, which is never counted as open or overdue.
@@ -2327,6 +2487,11 @@ type MediumMoneyStats {
   revenue: Int!
 }
 
+type MediumMutationUsage {
+  count: Int!
+  mutation: String!
+}
+
 type MediumNetworkStats {
   peersDisabled: Int!
   peersTotal: Int!
@@ -2349,6 +2514,7 @@ type MediumOperationsStats {
 
 type MediumStats {
   accounts: MediumAccountStats!
+  audit: MediumAuditStats!
   community: MediumCommunityStats!
   currency: String
   editorial: MediumEditorialStats!
@@ -3234,6 +3400,17 @@ type PaginatedArticles {
   totalCount: Int!
 }
 
+type PaginatedAuditLogs {
+  nodes: [AuditLog!]!
+  pageInfo: PageInfo!
+
+  """
+  False when this installation does not provide an audit log, in which case nodes is empty and totalCount is zero.
+  """
+  supported: Boolean!
+  totalCount: Int!
+}
+
 type PaginatedAuthors {
   nodes: [Author!]!
   pageInfo: PageInfo!
@@ -3924,6 +4101,29 @@ type Query {
   """Returns a paginated list of articles based on the filters given."""
   articles(cursorId: String, filter: ArticleFilter, order: SortOrder = Descending, skip: Int = 0, sort: ArticleSort = PublishedAt, take: Int = 10): PaginatedArticles!
 
+  """
+  Returns a paginated list of audit log entries based on the filters given.
+  """
+  auditLogs(
+    """Cursor for pagination"""
+    cursorId: String
+
+    """Filter for audit logs"""
+    filter: AuditLogFilter
+
+    """Sort order"""
+    order: SortOrder = Descending
+
+    """Number of items to skip"""
+    skip: Int! = 0
+
+    """Field to sort by"""
+    sort: AuditLogSort! = CreatedAt
+
+    """Number of items to fetch"""
+    take: Int! = 10
+  ): PaginatedAuditLogs!
+
   """Get an author by ID or slug"""
   author(id: String, slug: String): Author
 
@@ -4172,6 +4372,7 @@ type Query {
 
   """This query returns the user."""
   me: SensitiveDataUser
+  mediumAuditLogs(filter: MediumAuditLogFilter, limit: Int, skip: Int): MediumAuditLogPage!
   mediumChangelogActions(limit: Int): [MediumChangelogAction!]!
   mediumMigrations(limit: Int): [MediumMigration!]!
   mediumStats(from: DateTime, to: DateTime): MediumStats!

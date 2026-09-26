@@ -21,6 +21,7 @@ export type UserSession = {
   createdAt: Date;
   expiresAt: Date;
   token: string;
+  impersonatedBy?: string | null;
 };
 
 export type AuthSession = TokenSession | UserSession;
