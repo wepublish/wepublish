@@ -88,8 +88,6 @@ export const mockGoodie = ({
 export const mockMemberPlan = ({
   id = faker.string.nanoid(),
   image = mockImage(),
-  amountPerMonthMin = 500,
-  amountPerMonthTarget = 700,
   name = faker.commerce.productName(),
   slug = name,
   currency = Currency.Chf,
@@ -112,17 +110,23 @@ export const mockMemberPlan = ({
   confirmationPage = {
     url: 'https://example.com/confirmation',
   } as MemberPlan['confirmationPage'],
-  amountPerMonthMax = 1000,
   externalReward = 'https://example.com/mock-external-reward-url',
   goodies = [],
-  periodicityPricing = null,
+  periodicityPricing = [
+    {
+      __typename: 'PeriodicityPrice',
+      periodicity: PaymentPeriodicity.Monthly,
+      label: null,
+      amountMin: 500,
+      amountTarget: 700,
+      amountMax: 1000,
+    },
+  ],
   defaultPaymentPeriodicity = null,
 }: Partial<MemberPlan> = {}): MemberPlan & { active: boolean } => ({
   __typename: 'MemberPlan',
   id,
   image,
-  amountPerMonthMin,
-  amountPerMonthTarget,
   name,
   slug,
   description,
@@ -138,7 +142,6 @@ export const mockMemberPlan = ({
   successPage,
   failPage,
   confirmationPage,
-  amountPerMonthMax,
   externalReward,
   goodies,
   periodicityPricing,
@@ -164,7 +167,9 @@ export const mockSubscription = ({
   isActive = true,
   canExtend = false,
   memberPlan = mockMemberPlan(),
-  monthlyAmount = memberPlan.amountPerMonthMin,
+  monthlyAmount = memberPlan.periodicityPricing?.find(
+    price => price.periodicity === PaymentPeriodicity.Monthly
+  )?.amountMin ?? 500,
   paymentMethod = memberPlan.availablePaymentMethods[0].paymentMethods[0],
   paymentMethodID = paymentMethod.id,
   paymentPeriodicity = memberPlan.availablePaymentMethods[0]

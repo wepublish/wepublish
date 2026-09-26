@@ -83,17 +83,16 @@ export const formatPeriodUnit = cond([
   [(period: PaymentPeriodicity) => true, () => 'Jahr'],
 ]);
 
+export type PeriodicityPrice = {
+  periodicity: PaymentPeriodicity;
+  label?: string | null;
+  amountMin?: number | null;
+  amountTarget?: number | null;
+  amountMax?: number | null;
+};
+
 type MemberPlanPeriodicityPricing = {
-  amountPerMonthMin: number;
-  amountPerMonthTarget?: number | null;
-  amountPerMonthMax?: number | null;
-  periodicityPricing?: Array<{
-    periodicity: PaymentPeriodicity;
-    label?: string | null;
-    amountMin?: number | null;
-    amountTarget?: number | null;
-    amountMax?: number | null;
-  }> | null;
+  periodicityPricing?: PeriodicityPrice[] | null;
 };
 
 type MemberPlanWithPaymentMethods = MemberPlanPeriodicityPricing & {
@@ -167,6 +166,35 @@ export const getCheapestOffer = (
     );
 };
 
+const getBasePriceRow = (
+  rows: PeriodicityPrice[]
+): PeriodicityPrice | undefined => {
+  const monthly = rows.find(
+    row => row.periodicity === PaymentPeriodicity.Monthly
+  );
+
+  if (monthly?.amountMin != null) {
+    return monthly;
+  }
+
+  const priced = rows.filter(row => row.amountMin != null);
+  const nonLifetime = priced.filter(
+    row => row.periodicity !== PaymentPeriodicity.Lifetime
+  );
+  const candidates = nonLifetime.length ? nonLifetime : priced;
+
+  return candidates.reduce<PeriodicityPrice | undefined>((cheapest, row) => {
+    if (!cheapest) {
+      return row;
+    }
+
+    const perMonth = (candidate: PeriodicityPrice) =>
+      candidate.amountMin! / getPaymentPeriodicyMonths(candidate.periodicity);
+
+    return perMonth(row) < perMonth(cheapest) ? row : cheapest;
+  }, undefined);
+};
+
 export const getPeriodPriceRange = (
   memberPlan: MemberPlanPeriodicityPricing,
   periodicity: PaymentPeriodicity
@@ -175,23 +203,54 @@ export const getPeriodPriceRange = (
   amountTarget: number | null;
   amountMax: number | null;
 } => {
-  const override = memberPlan.periodicityPricing?.find(
-    price => price.periodicity === periodicity
-  );
+  const rows = memberPlan.periodicityPricing ?? [];
+  const row = rows.find(price => price.periodicity === periodicity);
+  const base = getBasePriceRow(rows);
 
-  const amountMin =
-    override?.amountMin ??
-    calculatePeriodAmount(memberPlan.amountPerMonthMin, periodicity);
-  const amountTarget =
-    override?.amountTarget ??
-    (memberPlan.amountPerMonthTarget != null ?
-      calculatePeriodAmount(memberPlan.amountPerMonthTarget, periodicity)
-    : null);
-  const amountMax =
-    override?.amountMax ??
-    (memberPlan.amountPerMonthMax != null ?
-      calculatePeriodAmount(memberPlan.amountPerMonthMax, periodicity)
-    : null);
+  const derive = (amount: number | null | undefined) =>
+    amount == null || !base ?
+      null
+    : calculatePeriodAmount(
+        monthlyAmountFromPeriodAmount(amount, base.periodicity),
+        periodicity
+      );
 
-  return { amountMin, amountTarget, amountMax };
+  return {
+    amountMin: row?.amountMin ?? derive(base?.amountMin) ?? 0,
+    amountTarget: row?.amountTarget ?? derive(base?.amountTarget),
+    amountMax: row?.amountMax ?? derive(base?.amountMax),
+  };
+};
+
+export const getMonthlyEquivalentRange = (
+  memberPlan: MemberPlanPeriodicityPricing
+): {
+  amountPerMonthMin: number;
+  amountPerMonthTarget: number | null;
+  amountPerMonthMax: number | null;
+  periodicity: PaymentPeriodicity;
+} => {
+  const rows = memberPlan.periodicityPricing ?? [];
+  const base = getBasePriceRow(rows);
+
+  if (!base) {
+    return {
+      amountPerMonthMin: 0,
+      amountPerMonthTarget: null,
+      amountPerMonthMax: null,
+      periodicity: PaymentPeriodicity.Monthly,
+    };
+  }
+
+  const perMonth = (amount: number | null | undefined) =>
+    amount != null ?
+      monthlyAmountFromPeriodAmount(amount, base.periodicity)
+    : null;
+
+  return {
+    amountPerMonthMin: perMonth(base.amountMin) ?? 0,
+    amountPerMonthTarget: perMonth(base.amountTarget),
+    amountPerMonthMax: perMonth(base.amountMax),
+    periodicity: base.periodicity,
+  };
 };

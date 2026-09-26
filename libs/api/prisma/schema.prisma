@@ -748,9 +748,6 @@ model MemberPlan {
   slateDescription               Json?
   active                         Boolean
   currency                       Currency
-  amountPerMonthMin              Float
-  amountPerMonthMax              Float?
-  amountPerMonthTarget           Float?
   periodicityPricing             MemberPlanPeriodicityPrice[]
   defaultPaymentPeriodicity      PaymentPeriodicity?
   availablePaymentMethods        AvailablePaymentMethod[]

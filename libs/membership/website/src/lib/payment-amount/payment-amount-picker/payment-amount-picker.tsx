@@ -4,12 +4,19 @@ import {
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { Currency, PaymentPeriodicity } from '@wepublish/website/api';
-import { forwardRef, PropsWithChildren, useState } from 'react';
+import {
+  forwardRef,
+  PropsWithChildren,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { formatCurrency } from '../../formatters/format-currency';
 import {
   calculatePeriodAmount,
+  getPaymentPeriodicyMonths,
   monthlyAmountFromPeriodAmount,
 } from '../../formatters/format-payment-period';
 import {
@@ -159,6 +166,7 @@ export const PaymentAmountPicker = forwardRef<
       snap,
       arrows,
       noInitialSelection,
+      showInput = true,
       paymentPeriodicity = PaymentPeriodicity.Monthly,
       name,
       error,
@@ -174,7 +182,7 @@ export const PaymentAmountPicker = forwardRef<
 
     const [hasInteracted, setHasInteracted] = useState(false);
     const showSelection = !noInitialSelection || hasInteracted;
-    const items = presetAmounts ?? [];
+    const items = useMemo(() => presetAmounts ?? [], [presetAmounts]);
     const periodValue = calculatePeriodAmount(value, paymentPeriodicity);
     const periodMin = calculatePeriodAmount(
       amountPerMonthMin,
@@ -187,10 +195,47 @@ export const PaymentAmountPicker = forwardRef<
           paymentPeriodicity
         )
       );
-    const isCustomValue =
-      snap ?
-        !snap.values.some(v => v * 100 === periodValue)
-      : !items.some(p => p === periodValue);
+    const isCustomValue = !items.some(p => p === periodValue);
+    const months = getPaymentPeriodicyMonths(paymentPeriodicity);
+    // snap values are configured per month and have to follow the shown period
+    const periodSnap =
+      snap && months !== 1 ?
+        {
+          values: snap.values.map(snapValue => snapValue * months),
+          threshold: snap.threshold * months,
+        }
+      : snap;
+
+    useEffect(() => {
+      if (showInput || !items.length) {
+        return;
+      }
+
+      // a kept selection may fall below the minimum of a newly chosen interval
+      if (!isCustomValue && periodValue >= periodMin) {
+        return;
+      }
+
+      const selectable = items.filter(item => item >= periodMin);
+      const candidates = selectable.length ? selectable : items;
+      const nearest = candidates.reduce((best, item) =>
+        Math.abs(item - periodValue) < Math.abs(best - periodValue) ?
+          item
+        : best
+      );
+
+      if (nearest !== periodValue) {
+        onChange(monthlyAmountFromPeriodAmount(nearest, paymentPeriodicity));
+      }
+    }, [
+      showInput,
+      items,
+      isCustomValue,
+      periodValue,
+      periodMin,
+      paymentPeriodicity,
+      onChange,
+    ]);
 
     return (
       <PaymentAmountPickerWrapper
@@ -224,32 +269,34 @@ export const PaymentAmountPicker = forwardRef<
           />
         ))}
 
-        <FormControlLabel
-          value={0}
-          control={
-            <PaymentAmountPickerItem
-              currency={currency}
-              checked={showSelection && isCustomValue}
-            >
-              <StyledCurrencyNumberSpinner
-                value={showSelection ? periodValue / 100 : undefined}
-                min={periodMin / 100}
-                snap={snap}
-                arrows={arrows}
-                helperText={`Min ${formatCurrency(periodMin / 100, currency, locale)}`}
-                onValueChange={v => {
-                  setHasInteracted(true);
-                  if (typeof v === 'number' && v >= 0) {
-                    handlePeriodAmountChange(v ? v * 100 : 0);
-                  } else {
-                    handlePeriodAmountChange(0);
-                  }
-                }}
-              />
-            </PaymentAmountPickerItem>
-          }
-          label={t('paymentAmountPicker.manual')}
-        />
+        {showInput && (
+          <FormControlLabel
+            value={0}
+            control={
+              <PaymentAmountPickerItem
+                currency={currency}
+                checked={showSelection && isCustomValue}
+              >
+                <StyledCurrencyNumberSpinner
+                  value={showSelection ? periodValue / 100 : undefined}
+                  min={periodMin / 100}
+                  snap={periodSnap}
+                  arrows={arrows}
+                  helperText={`Min ${formatCurrency(periodMin / 100, currency, locale)}`}
+                  onValueChange={v => {
+                    setHasInteracted(true);
+                    if (typeof v === 'number' && v >= 0) {
+                      handlePeriodAmountChange(v ? v * 100 : 0);
+                    } else {
+                      handlePeriodAmountChange(0);
+                    }
+                  }}
+                />
+              </PaymentAmountPickerItem>
+            }
+            label={t('paymentAmountPicker.manual')}
+          />
+        )}
       </PaymentAmountPickerWrapper>
     );
   }

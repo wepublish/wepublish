@@ -72,6 +72,33 @@ export const MultiplePlans: StoryObj<typeof MemberPlanOfferPicker> = {
   },
 };
 
+const longLabelMemberPlan = mockMemberPlan({
+  availablePaymentMethods: [
+    mockAvailablePaymentMethod({
+      paymentPeriodicities: [
+        PaymentPeriodicity.Monthly,
+        PaymentPeriodicity.Yearly,
+      ],
+    }),
+  ],
+  periodicityPricing: [
+    {
+      periodicity: PaymentPeriodicity.Yearly,
+      label: '2 Monate geschenkt! (Im Vergleich zu monatlicher Zahlung)',
+      amountMin: 20000,
+      amountTarget: 20000,
+      amountMax: null,
+    },
+  ],
+}) as FullMemberPlanFragment;
+
+export const LongMarketingLabel: StoryObj<typeof MemberPlanOfferPicker> = {
+  args: {
+    memberPlans: [longLabelMemberPlan],
+    onChange: action('onChange'),
+  },
+};
+
 export const Preselected: StoryObj<typeof MemberPlanOfferPicker> = {
   args: {
     memberPlans: [memberPlan],

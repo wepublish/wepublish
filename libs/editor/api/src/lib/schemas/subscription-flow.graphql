@@ -122,8 +122,6 @@ fragment MemberPlanRef on MemberPlan {
   id
   name
   productType
-  amountPerMonthMin
-  amountPerMonthMax
   availablePaymentMethods {
     ...FullAvailablePaymentMethod
   }

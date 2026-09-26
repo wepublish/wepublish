@@ -2436,9 +2436,6 @@ export type MediumStatsWindow = {
 export type MemberPlan = HasImage & {
   __typename?: 'MemberPlan';
   active: Scalars['Boolean'];
-  amountPerMonthMax?: Maybe<Scalars['Int']>;
-  amountPerMonthMin: Scalars['Int'];
-  amountPerMonthTarget?: Maybe<Scalars['Int']>;
   availablePaymentMethods: Array<AvailablePaymentMethod>;
   confirmationPage?: Maybe<Page>;
   confirmationPageId?: Maybe<Scalars['String']>;
@@ -2458,7 +2455,7 @@ export type MemberPlan = HasImage & {
   migrateToTargetPaymentMethod?: Maybe<PaymentMethod>;
   migrateToTargetPaymentMethodID?: Maybe<Scalars['String']>;
   name: Scalars['String'];
-  periodicityPricing?: Maybe<Array<PeriodicityPrice>>;
+  periodicityPricing: Array<PeriodicityPrice>;
   productType: ProductType;
   shortDescription?: Maybe<Scalars['RichText']>;
   slug: Scalars['String'];
@@ -2975,6 +2972,7 @@ export type MutationCreateCommentArgs = {
   itemType: CommentItemType;
   lead?: InputMaybe<Scalars['String']>;
   parentID?: InputMaybe<Scalars['String']>;
+  publish?: InputMaybe<Scalars['Boolean']>;
   tagIds?: InputMaybe<Array<Scalars['String']>>;
   text?: InputMaybe<Scalars['RichText']>;
 };
@@ -3066,9 +3064,6 @@ export type MutationCreateMailTemplateArgs = {
 
 export type MutationCreateMemberPlanArgs = {
   active: Scalars['Boolean'];
-  amountPerMonthMax?: InputMaybe<Scalars['Int']>;
-  amountPerMonthMin: Scalars['Int'];
-  amountPerMonthTarget?: InputMaybe<Scalars['Int']>;
   availablePaymentMethods: Array<AvailablePaymentMethodInput>;
   confirmationPageId?: InputMaybe<Scalars['String']>;
   currency: Currency;
@@ -3951,9 +3946,6 @@ export type MutationUpdateMailTemplateArgs = {
 
 export type MutationUpdateMemberPlanArgs = {
   active?: InputMaybe<Scalars['Boolean']>;
-  amountPerMonthMax?: InputMaybe<Scalars['Int']>;
-  amountPerMonthMin?: InputMaybe<Scalars['Int']>;
-  amountPerMonthTarget?: InputMaybe<Scalars['Int']>;
   availablePaymentMethods?: InputMaybe<Array<AvailablePaymentMethodInput>>;
   confirmationPageId?: InputMaybe<Scalars['String']>;
   currency?: InputMaybe<Currency>;
@@ -6390,6 +6382,7 @@ export type SensitiveDataUser = BaseUser & {
   roleIDs: Array<Scalars['String']>;
   roles: Array<UserRole>;
   subscriptionCount: Scalars['Int'];
+  subscriptionOverview: Array<UserSubscriptionOverview>;
   /** Whether two-factor authentication is enabled for this user. */
   totpEnabled: Scalars['Boolean'];
   /** Whether this user is exempt from the two-factor authentication requirement. */
@@ -6760,10 +6753,12 @@ export type SubscribeBlockLayoutConfigInput = {
   showInput?: Scalars['Boolean'];
   type: SubscribeBlockRenderLayout;
   values?: InputMaybe<Array<Scalars['Int']>>;
+  valuesByPeriodicity?: InputMaybe<Array<SubscribeBlockPeriodicityValuesInput>>;
 };
 
 export type SubscribeBlockLayoutNoneConfig = SubscribeBlockLayoutConfig & {
   __typename?: 'SubscribeBlockLayoutNoneConfig';
+  showInput: Scalars['Boolean'];
   type: SubscribeBlockRenderLayout;
 };
 
@@ -6772,6 +6767,7 @@ export type SubscribeBlockLayoutPickerConfig = SubscribeBlockLayoutConfig & {
   showInput: Scalars['Boolean'];
   type: SubscribeBlockRenderLayout;
   values: Array<Scalars['Int']>;
+  valuesByPeriodicity: Array<SubscribeBlockPeriodicityValues>;
 };
 
 export type SubscribeBlockLayoutSliderConfig = SubscribeBlockLayoutConfig & {
@@ -6793,6 +6789,17 @@ export type SubscribeBlockMemberPlanRenderSettingInput = {
   memberPlanId: Scalars['String'];
 };
 
+export type SubscribeBlockPeriodicityValues = {
+  __typename?: 'SubscribeBlockPeriodicityValues';
+  periodicity: PaymentPeriodicity;
+  values: Array<Scalars['Int']>;
+};
+
+export type SubscribeBlockPeriodicityValuesInput = {
+  periodicity: PaymentPeriodicity;
+  values: Array<Scalars['Int']>;
+};
+
 export enum SubscribeBlockRenderLayout {
   None = 'None',
   Picker = 'Picker',
@@ -6801,7 +6808,8 @@ export enum SubscribeBlockRenderLayout {
 
 export enum SubscribePeriodicityDisplay {
   Dropdown = 'Dropdown',
-  OfferCards = 'OfferCards'
+  OfferCards = 'OfferCards',
+  Toggle = 'Toggle'
 }
 
 export type SubscriptionCreatedAction = BaseAction & HasSubscriptionLc & {
@@ -7347,7 +7355,24 @@ export enum UserSort {
   CreatedAt = 'CreatedAt',
   FirstName = 'FirstName',
   ModifiedAt = 'ModifiedAt',
-  Name = 'Name'
+  Name = 'Name',
+  SubscriptionCount = 'SubscriptionCount'
+}
+
+export type UserSubscriptionOverview = {
+  __typename?: 'UserSubscriptionOverview';
+  id: Scalars['String'];
+  memberPlanName: Scalars['String'];
+  /** Active means started and paid up, not merely not deactivated: imported subscriptions often expire without a deactivation. */
+  status: UserSubscriptionStatus;
+};
+
+export enum UserSubscriptionStatus {
+  Active = 'Active',
+  Deactivated = 'Deactivated',
+  Expired = 'Expired',
+  Planned = 'Planned',
+  Unpaid = 'Unpaid'
 }
 
 export type VersionInformation = {

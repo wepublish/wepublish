@@ -94,10 +94,15 @@ function MemberPlanEdit() {
       availablePaymentMethods: [],
       description: undefined,
       currency: Currency.Chf,
-      amountPerMonthMin: 0,
-      amountPerMonthMax: null,
-      amountPerMonthTarget: null,
-      periodicityPricing: null,
+      periodicityPricing: [
+        {
+          periodicity: PaymentPeriodicity.Monthly,
+          label: null,
+          amountMin: 0,
+          amountTarget: null,
+          amountMax: null,
+        },
+      ],
       defaultPaymentPeriodicity: null,
       image: undefined,
       active: true,
@@ -159,19 +164,6 @@ function MemberPlanEdit() {
     slug: Schema.Types.StringType().isRequired(
       t('memberPlanEdit.slugRequired')
     ),
-    amountPerMonthMin: Schema.Types.NumberType()
-      .isRequired(t('memberPlanEdit.amountPerMonthMinRequired'))
-      .min(0, t('memberPlanEdit.amountPerMonthMinZero')),
-
-    amountPerMonthMax: Schema.Types.NumberType().min(
-      (memberPlan?.amountPerMonthMin || 0) / 100,
-      t('memberPlanEdit.maxPriceMustBeGreaterThanMin')
-    ),
-
-    amountPerMonthTarget: Schema.Types.NumberType().min(
-      ((memberPlan?.amountPerMonthMin || 0) + 1) / 100,
-      t('memberPlanEdit.targetPriceMustBeGreaterThanMin')
-    ),
     currency: Schema.Types.StringType().isRequired(
       t('memberPlanEdit.currencyRequired')
     ),
@@ -179,6 +171,71 @@ function MemberPlanEdit() {
 
   async function saveMemberPlan() {
     if (!memberPlan) {
+      return;
+    }
+
+    const prunedPricing = (memberPlan.periodicityPricing ?? []).filter(
+      price =>
+        availablePaymentMethods.some(({ value }) =>
+          value.paymentPeriodicities.includes(price.periodicity)
+        ) &&
+        (price.label != null || price.amountMin != null)
+    );
+
+    const pricedMonthlyRow = (memberPlan.periodicityPricing ?? []).find(
+      price =>
+        price.periodicity === PaymentPeriodicity.Monthly &&
+        price.amountMin != null
+    );
+
+    const periodicityPricing =
+      (
+        !prunedPricing.some(price => price.amountMin != null) &&
+        pricedMonthlyRow
+      ) ?
+        [
+          ...prunedPricing.filter(
+            price => price.periodicity !== PaymentPeriodicity.Monthly
+          ),
+          pricedMonthlyRow,
+        ]
+      : prunedPricing;
+
+    const hasInvalidRow = periodicityPricing.some(
+      price =>
+        price.amountMin != null &&
+        ((price.amountTarget != null &&
+          (price.amountTarget < price.amountMin ||
+            (price.amountMax != null &&
+              price.amountTarget > price.amountMax))) ||
+          (price.amountMax != null && price.amountMax < price.amountMin))
+    );
+
+    if (!periodicityPricing.some(price => price.amountMin != null)) {
+      toaster.push(
+        <Message
+          type="error"
+          showIcon
+          closable
+        >
+          {t('memberplanForm.periodicityPricingRequired')}
+        </Message>
+      );
+
+      return;
+    }
+
+    if (hasInvalidRow) {
+      toaster.push(
+        <Message
+          type="error"
+          showIcon
+          closable
+        >
+          {t('memberPlanEdit.targetPriceMustBeGreaterThanMin')}
+        </Message>
+      );
+
       return;
     }
 
@@ -196,37 +253,15 @@ function MemberPlanEdit() {
         paymentMethodIDs: value.paymentMethods.map(pm => pm.id),
       })),
       currency: memberPlan.currency,
-      amountPerMonthMin: memberPlan.amountPerMonthMin,
-      amountPerMonthMax: memberPlan.amountPerMonthMax,
-      amountPerMonthTarget: memberPlan.amountPerMonthTarget,
-      periodicityPricing:
-        memberPlan.periodicityPricing
-          ?.filter(
-            price =>
-              availablePaymentMethods.some(({ value }) =>
-                value.paymentPeriodicities.includes(price.periodicity)
-              ) &&
-              (price.periodicity === PaymentPeriodicity.Monthly ?
-                price.label != null
-              : price.label != null || price.amountMin != null)
-          )
-          .map(({ periodicity, label, amountMin, amountTarget, amountMax }) =>
-            periodicity === PaymentPeriodicity.Monthly ?
-              {
-                periodicity,
-                label,
-                amountMin: null,
-                amountTarget: null,
-                amountMax: null,
-              }
-            : {
-                periodicity,
-                label,
-                amountMin,
-                amountTarget,
-                amountMax,
-              }
-          ) ?? null,
+      periodicityPricing: periodicityPricing.map(
+        ({ periodicity, label, amountMin, amountTarget, amountMax }) => ({
+          periodicity,
+          label,
+          amountMin,
+          amountTarget,
+          amountMax,
+        })
+      ),
       defaultPaymentPeriodicity:
         (
           memberPlan.defaultPaymentPeriodicity &&
@@ -299,8 +334,6 @@ function MemberPlanEdit() {
         formValue={{
           name: memberPlan?.name,
           slug: memberPlan?.slug,
-          amountPerMonthMin: memberPlan?.amountPerMonthMin,
-          amountPerMonthMax: memberPlan?.amountPerMonthMax,
           currency: memberPlan?.currency,
         }}
       >

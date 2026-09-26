@@ -1,6 +1,7 @@
 import { PaymentPeriodicity } from '@prisma/client';
 import {
   calculatePeriodAmount,
+  getMonthlyEquivalentRange,
   getPeriodPriceRange,
   monthlyAmountFromPeriodAmount,
   periodicityPricingSchema,
@@ -72,20 +73,25 @@ describe('periodicityPricingSchema', () => {
     expect(result.success).toBe(true);
   });
 
-  it('rejects a monthly price entry', () => {
+  it('accepts a monthly price entry as the base price', () => {
     const result = periodicityPricingSchema.safeParse([
       { periodicity: PaymentPeriodicity.monthly, amountMin: 4500 },
     ]);
 
-    expect(result.success).toBe(false);
+    expect(result.success).toBe(true);
   });
 
-  it('accepts a label-only monthly entry', () => {
+  it('rejects an empty pricing list', () => {
+    expect(periodicityPricingSchema.safeParse([]).success).toBe(false);
+  });
+
+  it('rejects a pricing list without any amountMin', () => {
     const result = periodicityPricingSchema.safeParse([
       { periodicity: PaymentPeriodicity.monthly, label: 'Beliebteste Wahl' },
+      { periodicity: PaymentPeriodicity.yearly, label: 'Jahresabo' },
     ]);
 
-    expect(result.success).toBe(true);
+    expect(result.success).toBe(false);
   });
 
   it('accepts labels on price entries and label-only non-monthly entries', () => {
@@ -182,10 +188,13 @@ describe('periodicityPricingSchema', () => {
 
 describe('getPeriodPriceRange', () => {
   const memberPlan = {
-    amountPerMonthMin: 4000,
-    amountPerMonthTarget: 4500,
-    amountPerMonthMax: 6000,
     periodicityPricing: [
+      {
+        periodicity: PaymentPeriodicity.monthly,
+        amountMin: 4000,
+        amountTarget: 4500,
+        amountMax: 6000,
+      },
       {
         periodicity: PaymentPeriodicity.yearly,
         amountMin: 44000,
@@ -203,7 +212,7 @@ describe('getPeriodPriceRange', () => {
     });
   });
 
-  it('derives from the monthly amounts when not configured', () => {
+  it('derives unconfigured periodicities from the monthly row', () => {
     expect(
       getPeriodPriceRange(memberPlan, PaymentPeriodicity.quarterly)
     ).toEqual({
@@ -213,10 +222,24 @@ describe('getPeriodPriceRange', () => {
     });
   });
 
-  it('keeps optional amounts null when the plan has no target/max', () => {
+  it('treats the monthly row as the monthly price', () => {
+    expect(getPeriodPriceRange(memberPlan, PaymentPeriodicity.monthly)).toEqual(
+      {
+        amountMin: 4000,
+        amountTarget: 4500,
+        amountMax: 6000,
+      }
+    );
+  });
+
+  it('keeps optional amounts null when the base row has no target/max', () => {
     expect(
       getPeriodPriceRange(
-        { amountPerMonthMin: 4000, periodicityPricing: [] },
+        {
+          periodicityPricing: [
+            { periodicity: PaymentPeriodicity.monthly, amountMin: 4000 },
+          ],
+        },
         PaymentPeriodicity.yearly
       )
     ).toEqual({
@@ -226,13 +249,56 @@ describe('getPeriodPriceRange', () => {
     });
   });
 
-  it('never lets a monthly entry override the monthly amounts', () => {
+  it('derives from the cheapest priced row per month when no monthly row exists', () => {
     expect(
       getPeriodPriceRange(
         {
-          amountPerMonthMin: 4000,
           periodicityPricing: [
-            { periodicity: PaymentPeriodicity.monthly, amountMin: 9900 },
+            { periodicity: PaymentPeriodicity.yearly, amountMin: 45000 },
+            { periodicity: PaymentPeriodicity.biannual, amountMin: 24000 },
+          ],
+        },
+        PaymentPeriodicity.quarterly
+      )
+    ).toEqual({
+      amountMin: 11250,
+      amountTarget: null,
+      amountMax: null,
+    });
+  });
+
+  it('ignores lifetime rows as base unless they are the only priced rows', () => {
+    expect(
+      getPeriodPriceRange(
+        {
+          periodicityPricing: [
+            { periodicity: PaymentPeriodicity.lifetime, amountMin: 500000 },
+            { periodicity: PaymentPeriodicity.yearly, amountMin: 48000 },
+          ],
+        },
+        PaymentPeriodicity.monthly
+      ).amountMin
+    ).toBe(4000);
+
+    expect(
+      getPeriodPriceRange(
+        {
+          periodicityPricing: [
+            { periodicity: PaymentPeriodicity.lifetime, amountMin: 1200000 },
+          ],
+        },
+        PaymentPeriodicity.monthly
+      ).amountMin
+    ).toBe(1000);
+  });
+
+  it('ignores label-only rows when picking the base and derives their amounts', () => {
+    expect(
+      getPeriodPriceRange(
+        {
+          periodicityPricing: [
+            { periodicity: PaymentPeriodicity.monthly, label: 'Beliebt' },
+            { periodicity: PaymentPeriodicity.yearly, amountMin: 48000 },
           ],
         },
         PaymentPeriodicity.monthly
@@ -244,21 +310,44 @@ describe('getPeriodPriceRange', () => {
     });
   });
 
-  it('derives amounts for label-only entries', () => {
+  it('falls back to zero when no priced row exists', () => {
     expect(
-      getPeriodPriceRange(
-        {
-          amountPerMonthMin: 4000,
-          periodicityPricing: [
-            { periodicity: PaymentPeriodicity.yearly, label: 'Jahresabo' },
-          ],
-        },
-        PaymentPeriodicity.yearly
-      )
+      getPeriodPriceRange({ periodicityPricing: [] }, PaymentPeriodicity.yearly)
     ).toEqual({
-      amountMin: 48000,
+      amountMin: 0,
       amountTarget: null,
       amountMax: null,
     });
+  });
+});
+
+describe('getMonthlyEquivalentRange', () => {
+  it('passes the monthly row through', () => {
+    expect(
+      getMonthlyEquivalentRange({
+        periodicityPricing: [
+          {
+            periodicity: PaymentPeriodicity.monthly,
+            amountMin: 4000,
+            amountTarget: 4500,
+            amountMax: 6000,
+          },
+        ],
+      })
+    ).toEqual({
+      amountMin: 4000,
+      amountTarget: 4500,
+      amountMax: 6000,
+    });
+  });
+
+  it('derives the monthly equivalent from a yearly-only plan', () => {
+    expect(
+      getMonthlyEquivalentRange({
+        periodicityPricing: [
+          { periodicity: PaymentPeriodicity.yearly, amountMin: 50000 },
+        ],
+      }).amountMin
+    ).toBe(4167);
   });
 });

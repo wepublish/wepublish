@@ -52,24 +52,46 @@ function gatherGitContext(baseRef: string) {
     ':(exclude)apps/api-example/schema-v2.graphql',
   ];
 
-  const commitSubjects = git('log', '--format=- %s', `${baseRef}..HEAD`).trim();
+  const mergeBase = git('merge-base', baseRef, 'HEAD').trim();
+  const commitSubjects = git(
+    'log',
+    '--format=- %s',
+    `${mergeBase}..HEAD`
+  ).trim();
   const fileList = git(
     'diff',
     '--name-status',
-    `${baseRef}...HEAD`,
+    mergeBase,
     '--',
     '.',
     ...excludes
   ).trim();
-  let diff = git('diff', `${baseRef}...HEAD`, '--', '.', ...excludes);
+  const untrackedFiles = git(
+    'ls-files',
+    '--others',
+    '--exclude-standard',
+    '--',
+    '.',
+    ...excludes
+  ).trim();
+  let diff = git('diff', mergeBase, '--', '.', ...excludes);
+
+  if (!fileList && !untrackedFiles) {
+    return null;
+  }
 
   if (diff.length > MAX_DIFF_LENGTH) {
     diff = `${diff.slice(0, MAX_DIFF_LENGTH)}\n\n[diff truncated]`;
   }
 
+  const untrackedSection =
+    untrackedFiles ?
+      `\n\nNew untracked files (content not included):\n${untrackedFiles}`
+    : '';
+
   return {
-    commitSubjects: commitSubjects || '(no commits — uncommitted changes?)',
-    diff: `Changed files:\n${fileList}\n\n${diff}`,
+    commitSubjects: commitSubjects || '(no commits yet — uncommitted changes)',
+    diff: `Changed files:\n${fileList}${untrackedSection}\n\n${diff}`,
   };
 }
 
@@ -90,7 +112,16 @@ function ensureClaudeInstalled() {
 function runClaude(prompt: string): string {
   const result = spawnSync(
     'claude',
-    ['-p', '--output-format', 'json', '--max-turns', '3'],
+    [
+      '-p',
+      '--output-format',
+      'json',
+      '--max-turns',
+      '1',
+      '--tools',
+      '',
+      '--strict-mcp-config',
+    ],
     {
       input: prompt,
       encoding: 'utf-8',
@@ -144,7 +175,15 @@ export async function runGenerateChangelog() {
 
   const baseRef = resolveBaseRef(explicitBase);
   console.log(`Analyzing changes against ${baseRef}...`);
-  const { commitSubjects, diff } = gatherGitContext(baseRef);
+  const gitContext = gatherGitContext(baseRef);
+
+  if (!gitContext) {
+    console.log(`No changes found against ${baseRef}.`);
+    console.log('No changelog entry was created.');
+    return;
+  }
+
+  const { commitSubjects, diff } = gitContext;
 
   console.log('Asking Claude to write the changelog entry (en, de, fr)...');
   const reply = runClaude(buildGenerationPrompt(commitSubjects, diff));

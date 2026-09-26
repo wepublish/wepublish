@@ -16,6 +16,7 @@ import {
   BuilderMemberPlanItemProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
+import { getMonthlyEquivalentRange } from '@wepublish/membership/website';
 import { forwardRef } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -44,9 +45,6 @@ export const MemberPlanItem = forwardRef<
     name,
     slug,
     shortDescription,
-    amountPerMonthMax,
-    amountPerMonthMin,
-    amountPerMonthTarget,
     periodicityPricing,
     currency,
     extendable,
@@ -59,6 +57,9 @@ export const MemberPlanItem = forwardRef<
   const {
     meta: { locale },
   } = useWebsiteBuilder();
+  const { amountPerMonthMin, amountPerMonthMax } = getMonthlyEquivalentRange({
+    periodicityPricing,
+  });
   const radioGroup = useRadioGroup();
   const isChecked = props.checked ?? radioGroup?.value === id;
   const { t } = useTranslation();
@@ -78,12 +79,7 @@ export const MemberPlanItem = forwardRef<
 
   const hasInCardFreeInput = tags?.includes('inline-slider');
 
-  const memberPlan = {
-    amountPerMonthMin,
-    amountPerMonthTarget,
-    amountPerMonthMax,
-    periodicityPricing,
-  };
+  const memberPlan = { periodicityPricing };
 
   const yearlyPriceRange = getPeriodPriceRange(
     memberPlan,

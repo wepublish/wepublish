@@ -119,6 +119,10 @@ fragment FullSubscribeBlock on SubscribeBlock {
     layout {
       type
 
+      ... on SubscribeBlockLayoutNoneConfig {
+        showInput
+      }
+
       ... on SubscribeBlockLayoutSliderConfig {
         showInput
       }
@@ -126,6 +130,10 @@ fragment FullSubscribeBlock on SubscribeBlock {
       ... on SubscribeBlockLayoutPickerConfig {
         showInput
         values
+        valuesByPeriodicity {
+          periodicity
+          values
+        }
       }
     }
   }
