@@ -2274,3 +2274,17 @@ model OneChannelState {
 
   @@map("one_channel_state")
 }
+
+model Newsletter {
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  title    String
+  document Json
+
+  mailchimpCampaignId    String?
+  mailchimpCampaignWebId Int?
+
+  @@map("newsletters")
+}

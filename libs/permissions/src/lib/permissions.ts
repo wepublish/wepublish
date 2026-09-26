@@ -88,6 +88,43 @@ export const CanDeleteBanner: Permission = {
   deprecated: false,
 };
 
+export const CanGetNewsletter: Permission = {
+  id: 'CAN_GET_NEWSLETTER',
+  description: 'Allows to get newsletter',
+  deprecated: false,
+};
+
+export const CanGetNewsletters: Permission = {
+  id: 'CAN_GET_NEWSLETTERS',
+  description: 'Allows to get all newsletters',
+  deprecated: false,
+};
+
+export const CanCreateNewsletter: Permission = {
+  id: 'CAN_CREATE_NEWSLETTER',
+  description: 'Allows to create newsletter',
+  deprecated: false,
+};
+
+export const CanUpdateNewsletter: Permission = {
+  id: 'CAN_UPDATE_NEWSLETTER',
+  description: 'Allows to update newsletter',
+  deprecated: false,
+};
+
+export const CanDeleteNewsletter: Permission = {
+  id: 'CAN_DELETE_NEWSLETTER',
+  description: 'Allows to delete newsletters',
+  deprecated: false,
+};
+
+export const CanPublishNewsletter: Permission = {
+  id: 'CAN_PUBLISH_NEWSLETTER',
+  description:
+    'Allows to transfer a newsletter into a Mailchimp draft campaign',
+  deprecated: false,
+};
+
 export const CanCreateAuthor: Permission = {
   id: 'CAN_CREATE_AUTHOR',
   description: 'Allows to create authors',
@@ -1164,6 +1201,12 @@ export const AllPermissions: Permission[] = [
   CanCreateBanner,
   CanUpdateBanner,
   CanDeleteBanner,
+  CanGetNewsletter,
+  CanGetNewsletters,
+  CanCreateNewsletter,
+  CanUpdateNewsletter,
+  CanDeleteNewsletter,
+  CanPublishNewsletter,
   CanCreateAuthor,
   CanGetAuthor,
   CanGetAuthors,
@@ -1342,6 +1385,12 @@ export const EditorPermissions: Permission[] = [
   CanCreateBanner,
   CanUpdateBanner,
   CanDeleteBanner,
+  CanGetNewsletter,
+  CanGetNewsletters,
+  CanCreateNewsletter,
+  CanUpdateNewsletter,
+  CanDeleteNewsletter,
+  CanPublishNewsletter,
   CanCreateImage,
   CanGetImage,
   CanGetImages,

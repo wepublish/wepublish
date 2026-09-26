@@ -53,6 +53,10 @@ import {
   CanGetAuthors,
   CanGetBanner,
   CanGetBanners,
+  CanGetNewsletter,
+  CanGetNewsletters,
+  CanCreateNewsletter,
+  CanDeleteNewsletter,
   CanGetChallengeProviderSettings,
   CanGetCommentRatingSystem,
   CanGetComments,
@@ -157,6 +161,7 @@ import {
   MdSettings,
   MdSettingsInputAntenna,
   MdSignpost,
+  MdNewspaper,
   MdStar,
   MdStyle,
   MdTranslate,
@@ -762,6 +767,24 @@ export function Base({ children }: BaseProps) {
                     active={path === 'banners'}
                   >
                     {t('navbar.banners')}
+                  </Nav.Item>
+                </PermissionControl>
+
+                <PermissionControl
+                  qualifyingPermissions={[
+                    CanGetNewsletters.id,
+                    CanGetNewsletter.id,
+                    CanCreateNewsletter.id,
+                    CanDeleteNewsletter.id,
+                  ]}
+                >
+                  <Nav.Item
+                    as={NavLink}
+                    href="/newsletters"
+                    icon={<MdNewspaper />}
+                    active={path.startsWith('newsletters')}
+                  >
+                    {t('navbar.newsletters')}
                   </Nav.Item>
                 </PermissionControl>
 
