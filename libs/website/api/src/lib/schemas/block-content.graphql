@@ -112,11 +112,16 @@ fragment FullSubscribeBlock on SubscribeBlock {
   disabled
   blockStyle: blockStyleName
   memberPlanIds
+  periodicityDisplay
   memberPlanRenderSettings {
     isDefault
     memberPlanId
     layout {
       type
+
+      ... on SubscribeBlockLayoutNoneConfig {
+        showInput
+      }
 
       ... on SubscribeBlockLayoutSliderConfig {
         showInput
@@ -125,6 +130,10 @@ fragment FullSubscribeBlock on SubscribeBlock {
       ... on SubscribeBlockLayoutPickerConfig {
         showInput
         values
+        valuesByPeriodicity {
+          periodicity
+          values
+        }
       }
     }
   }
@@ -135,6 +144,7 @@ fragment FullSubscribeBlock on SubscribeBlock {
   showGoodies
   showDiscountCodes
   goodieMinValue
+  goodieMinValueAppliesToUpgrade
   hideRepeatGoodieOnUpgrade
 }
 

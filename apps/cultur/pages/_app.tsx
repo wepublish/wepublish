@@ -40,6 +40,7 @@ import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
 import { CulturBreakBlock } from '../src/components/cultur-break';
+import { CulturNavbar } from '../src/components/cultur-navbar';
 import { CulturTeaser } from '../src/components/cultur-teaser';
 import { Footer } from '../src/components/footer';
 import theme from '../src/theme';
@@ -124,6 +125,7 @@ function CustomApp({
               Head={Head}
               Script={Script}
               Footer={Footer}
+              Navbar={CulturNavbar}
               elements={{ Link: NextWepublishLink }}
               blocks={{
                 BaseTeaser: CulturTeaser,

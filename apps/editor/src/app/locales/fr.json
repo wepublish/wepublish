@@ -12,7 +12,10 @@
       "lastSuccess": "Dernier contact réussi : {{value}}",
       "lastSuccessNever": "Dernier contact réussi : jamais",
       "lastAttemptFailed": "Dernière tentative : {{value}} – échec : {{error}}",
-      "label": "Connecteur We.Publish"
+      "label": "Connecteur We.Publish",
+      "outageTitle": "Le connecteur We.Publish ne répond pas",
+      "outageText": "Aucun contact réussi depuis {{value}}. Les statistiques et les messages ne sont actuellement pas échangés avec We.Publish.",
+      "outageTextNever": "Il n’y a jamais eu de contact réussi. Veuillez vérifier l’URL et les accès du connecteur."
     },
     "oneMessages": {
       "header": "Messages de l'équipe We.Publish",
@@ -425,6 +428,15 @@
         "selectMemberPlansSelectionHintAll": "Sans sélection, tous les plans actifs sont affichés.",
         "selectFields": "Champs de saisie utilisateur",
         "selectFieldsSelectionHint": "L’email et le nom de famille sont toujours demandés. L’ordre n’a pas d’importance",
+        "periodicityDisplay": "Affichage des intervalles de paiement",
+        "periodicityDisplayDropdown": "Champ de sélection",
+        "periodicityDisplayOfferCards": "Une carte par intervalle",
+        "periodicityDisplayToggle": "Commutateur",
+        "periodicityDisplayDropdownHint": "Tous les prix sont affichés mensuellement – cartes, montant et montants proposés. L’intervalle se choisit plus bas avec le mode de paiement et détermine uniquement la fréquence de facturation.",
+        "periodicityDisplayOfferCardsHint": "Chaque offre comme carte distincte (plan × intervalle) avec son prix exact – idéal pour un ou deux plans.",
+        "periodicityDisplayToggleHint": "L’intervalle se choisit en haut comme première étape ; les cartes affichent le prix de cet intervalle.",
+        "periodicityDisplayDropdownIgnoredRows_one": "Remarque : le plan « {{plans}} » a des prix configurés pour des intervalles de paiement qui sont ignorés en mode « Champ de sélection ».",
+        "periodicityDisplayDropdownIgnoredRows_other": "Remarque : les plans « {{plans}} » ont des prix configurés pour des intervalles de paiement qui sont ignorés en mode « Champ de sélection ».",
         "goodiesHeading": "Goodies",
         "discountCodesHeading": "Codes de réduction",
         "showGoodies": "Afficher la sélection de goodies",
@@ -432,6 +444,7 @@
         "goodieMinValue": {
           "label": "Montant minimum du goodie :"
         },
+        "goodieMinValueAppliesToUpgrade": "Appliquer ce montant minimum aussi aux upgrades",
         "hideRepeatGoodieOnUpgrade": "Lors de l’upgrade : pas de nouveau goodie",
         "FirstName": "Prénom",
         "Birthday": "Date de naissance",
@@ -447,8 +460,14 @@
         },
         "renderStylesHeading": "Ordre et affichage des plans d’abonnement",
         "amountTileValues": {
-          "hint": "Montants des tuiles (en francs). Laisser vide pour les valeurs par défaut : 10, 15, 20.",
+          "hint": "Montants des tuiles par intervalle de paiement (en francs). Laisser vide pour les valeurs par défaut.",
+          "hintMonthly": "Montants des tuiles (en francs, par mois). Laisser vide pour les valeurs par défaut.",
           "placeholder": "p.ex. 10 15 20"
+        },
+        "fixedAmountHint": "Montant fixe : aucun champ de montant n’est affiché. Le montant cible du plan est facturé – si aucun n’est défini, le montant minimum. Les visiteurs ne peuvent donc pas payer davantage.",
+        "showInCardAmountInput": {
+          "label": "Saisie libre du montant dans la carte",
+          "title": "Au lieu d’un champ de montant séparé, chaque carte d’abonnement reçoit un champ dans lequel les visiteurs définissent eux-mêmes leur montant."
         },
         "showAmountInput": {
           "label": "Saisie libre du montant",
@@ -459,7 +478,7 @@
           "Narrow": "Étroit (2 tuiles par ligne)",
           "Wide": "Large (1 tuile par ligne, grandes tuiles)"
         },
-        "planAmountsTitle": "Montant minimum / cible / maximum par mois (en francs)",
+        "planAmountsTitle": "Montant minimum / cible / maximum",
         "defaultPlanTitle": "Sélectionné par défaut — ce plan est présélectionné après le chargement de la page.",
         "defaultPlanLabel": "Par défaut"
       },
@@ -589,6 +608,16 @@
       }
     },
     "cancel": "Annuler",
+    "changelog": {
+      "whatsNew": "Quoi de neuf",
+      "actionRequired": "Action requise",
+      "done": "Effectué",
+      "details": "Détails",
+      "releasedAt": "Publié le {{date, PP}}",
+      "completedAt": "Effectué le {{date, PP}}",
+      "noEntries": "Aucune entrée de changelog pour l'instant.",
+      "allCaughtUp": "Aucune entrée de changelog non lue."
+    },
     "chooseEditImage": {
       "chooseImage": "Choisir une image",
       "editImage": "Modifier l'image",
@@ -716,6 +745,8 @@
     "dashboard": {
       "activity": "Dernière activité",
       "dashboard": "Dashboard",
+      "notifications": "Notifications",
+      "showAllNotifications": "Tout afficher",
       "greeting": "Salut, {{name}}!",
       "newArticle": "Nouvel <0>article</0> créé",
       "newAuthor": "Nouvel <0>auteur</0> ajouté",
@@ -1236,7 +1267,7 @@
       "createMemberPlanHeader": "Créer un plan membre",
       "description": "Description",
       "shortDescription": "Brève description",
-      "editPaymentSetting": "Modifier les paramètres de paiement",
+      "editPaymentSetting": "Modifier les modes de paiement & périodicités",
       "forceAutoRenewal": "Forcer le renouvellement automatique",
       "loadingTitle": "Chargement",
       "name": "Nom",
@@ -1281,6 +1312,7 @@
       "pageTags": "Tags",
       "consents": "Consentement",
       "dashboard": "Dashboard",
+      "notifications": "Notifications",
       "events": "Events",
       "eventTags": "Tags",
       "documentLibrary": "Documents",
@@ -1337,6 +1369,19 @@
         "selectPage": "Sélectionner la page",
         "url": "URL"
       }
+    },
+    "notifications": {
+      "noTeamMessages": "Aucun message de l'équipe We.Publish pour le moment.",
+      "sourceTeam": "We.Publish Team",
+      "sourceChangelog": "Changelog",
+      "sourceJobLogs": "Job logs",
+      "markAsRead": "Marquer comme lu",
+      "markAsDone": "Marquer comme effectué",
+      "confirmTitle": "Marquer comme effectué ?",
+      "confirmMessage": "Vous confirmez ainsi pour toute votre équipe que « {{title}} » a été effectué. L'avis disparaîtra du tableau de bord.",
+      "confirmSuccess": "Merci ! La tâche a été marquée comme effectuée.",
+      "loadMore": "Afficher plus",
+      "sourceConnector": "We.Publish Connector"
     },
     "no": "Non",
     "pageEditor": {
@@ -1867,6 +1912,14 @@
         "createdAt": "Créé",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
         "firstName": "Prénom",
+        "subscriptionStatus": {
+          "Active": "Actif",
+          "Deactivated": "Désactivé",
+          "Planned": "Planifié",
+          "Unpaid": "Non payé",
+          "Expired": "Expiré"
+        },
+        "subscriptionWithStatus": "{{name}} – {{status}}",
         "modifiedAt": "Dernière modification",
         "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
         "name": "Nom",
@@ -1938,6 +1991,8 @@
       "editTitle": "Modifier l'abonnement",
       "memberPlanMonthlyAmount": "Montant mensuel minimum ({{currency}})",
       "monthlyAmount": "Montant mensuel",
+      "monthlyAmountEquivalent": "Correspond à {{currency}} {{amount}} par mois",
+      "periodAmount": "Montant par intervalle de paiement",
       "paidUntil": "Payé jusqu'à",
       "paymentMethod": "Mode de paiement",
       "renewNow": "Prolonger maintenant",
@@ -1994,13 +2049,35 @@
       "trialSubscriptionNotPossible": "Le plan d'abonnement doit rester extensible, car un renouvellement automatique est paramétré dans un paramètre de paiement. Tu peux bien sûr changer cela.",
       "migratePMTitle": "Migrer les abonnements vers le mode de paiement cible",
       "migratePMHelptext": "Migre les abonnements de ce plan vers un nouveau mode de paiement. Les abonnements qui sont encore débités automatiquement ne sont pas migrés. La migration n'a lieu que lorsqu'un utilisateur agit lui-même et veut par exemple payer une facture ouverte dans son profil ou prolonger un abonnement de manière anticipée.",
+      "periodicityPricing": "Prix par intervalle de paiement activé",
+      "periodicityPricingHelpText": "Définis des prix exacts (min / cible / max) par intervalle de paiement. Sans prix personnalisés, le montant est extrapolé à partir du prix mensuel. Le rabais par rapport au prix mensuel extrapolé est calculé automatiquement.",
+      "periodicityPricingHelpTextNoMonthly": "Définis pour chaque intervalle de paiement activé le prix de la période entière : montant minimal (à payer au minimum), montant cible (préréglage dans le formulaire de paiement) et, en option, montant maximal.",
+      "periodicityPricingNoPeriodicities": "Active d'abord des intervalles de paiement dans les paramètres de paiement pour configurer des prix spécifiques aux intervalles.",
+      "periodicityPricingRequired": "Au moins un intervalle de paiement nécessite un montant minimal.",
+      "periodicityPricingLabel": "Label marketing",
+      "periodicityPricingLabelHelpText": "Note facultative affich\u00e9e pour cet intervalle de paiement sur la page d\u2019abonnement, p.ex. \u00ab2 mois offerts\u00bb.",
+      "defaultPaymentPeriodicity": "Intervalle de paiement par d\u00e9faut",
+      "defaultPaymentPeriodicityHelpText": "Cet intervalle de paiement est pr\u00e9s\u00e9lectionn\u00e9 sur la page d\u2019abonnement. Sans s\u00e9lection, le premier intervalle configur\u00e9 est utilis\u00e9.",
+      "periodicityPricingDelta": "Rabais par rapport au prix mensuel : {{delta}}",
+      "periodicityPricingCustom": "Prix personnalisés",
+      "periodicityPricingDerived": "À partir du prix mensuel",
+      "periodicityPricingMinHelpText": "Le montant minimum est le prix effectif de l'abonnement qui doit être payé au minimum. Les utilisateur·trice·s peuvent toutefois payer volontairement davantage lors de la souscription.",
+      "periodicityPricingTargetHelpText": "Le montant cible définit le prix d'abonnement souhaité que les utilisateur·trice·s devraient payer. Il doit se situer entre le montant minimum et maximum et définit typiquement la valeur par défaut dans le formulaire de paiement.",
+      "periodicityPricingMaxHelpText": "Le montant maximum est le montant le plus élevé que les utilisateur·trice·s peuvent payer lors de la souscription.",
+      "periodicityPricingMin": "Montant minimal par période",
+      "periodicityPricingTarget": "Montant cible par période",
+      "periodicityPricingMax": "Montant maximal par période",
+      "redirectionsTitle": "Redirections",
       "confirmationPage": "Redirection vers la page en cas d'utilisateur existant (retargeting)",
       "confirmationPageHelptext": "Si l'identifiant de l'utilisateur est connu lors de la souscription d'un abonnement, la personne reçoit un e-mail pour payer l'abonnement. Cela pourrait être signalé sur cette page.",
       "productType": "Type de produit",
       "productTypeHelpText": "Choisissez si le plan doit être proposé comme abonnement ou don. ",
       "productTypeSubscription": "Abonnement",
       "productTypeDonation": "Don",
-      "amountPerMonthMaxHelpText": "Le montant maximum par mois qu'un utilisateur peut payer pour ce plan d'abonnement."
+      "amountPerMonthMaxHelpText": "Le montant maximum par mois qu'un utilisateur peut payer pour ce plan d'abonnement.",
+      "amountPerMonthTarget": "Montant cible / mois",
+      "amountPerMonthMinHelpText": "Le montant mensuel minimum est le prix effectif de l'abonnement qui doit être payé au minimum. Les utilisateur·trice·s peuvent toutefois payer volontairement davantage lors de la souscription.",
+      "amountPerMonthTargetHelpText": "Le montant mensuel cible définit le prix d'abonnement souhaité que les utilisateur·trice·s devraient payer. Il doit être supérieur au montant minimum et définit typiquement la valeur par défaut dans le formulaire de paiement."
     },
     "subscriptionEditView": {
       "additionalSettingsTitle": "Paramètres avancés",

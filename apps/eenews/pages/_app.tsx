@@ -54,7 +54,6 @@ import { EenewsInvoiceListItem } from '../src/components/eenews-invoice-list-ite
 import { EeNewsMemberPlanPicker } from '../src/components/eenews-memberplan-picker';
 import { EeNewsMemberPlanItem } from '../src/components/eenews-memberplan-picker-item';
 import { EenewsNavbar } from '../src/components/eenews-navbar';
-import { EeNewsSubscribe } from '../src/components/eenews-subscribe';
 import { EenewsSubscriptionListItem } from '../src/components/eenews-subscription-list-item';
 import { EenewsTagPage } from '../src/components/eenews-tag-page';
 import { ReviveScript } from '../src/components/revive-script';
@@ -166,7 +165,6 @@ function CustomApp({
               AuthorListItem={EenewsAuthorListItem}
               MemberPlanItem={EeNewsMemberPlanItem}
               MemberPlanPicker={EeNewsMemberPlanPicker}
-              Subscribe={EeNewsSubscribe}
               SubscriptionListItem={EenewsSubscriptionListItem}
               InvoiceListItem={EenewsInvoiceListItem}
               blocks={{

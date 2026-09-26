@@ -208,7 +208,7 @@ export class ImportPeerArticleService {
       data: {
         peerId,
         peerArticleId: articleId,
-        slug: article.slug,
+        slug: article.slug?.toLowerCase(),
 
         paywallId: null,
         shared: false,

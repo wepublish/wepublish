@@ -185,17 +185,16 @@ Please review our [CONTRIBUTING.md](CONTRIBUTING.md) and [CODE_OF_CONDUCT.md](CO
 
 ## Demo
 
-- [Editor](https://editor-wepublish-site.wepublish.works)
+- [Editor](https://editor-demo.wepublish.works)
   - Admin:
-    - username: `admin@wepublish.media`
+    - username: `admin@example.com`
     - password: `demoPassword123`
   - Editor
-    - username: `editor@wepublish.media`
+    - username: `editor@example.com`
     - password: `demoPassword123`
 
-- [Website](https://wepublish-site.wepublish.works)
-- [API V1](https://api-wepublish-site.wepublish.works/v1)
-- [API Admin](https://api-wepublish-site.wepublish.works/v1/admin)
+- [Website](https://demo.wepublish.works)
+- [API](https://api-demo.wepublish.works/v1)
 
 ## Services & Offers
 

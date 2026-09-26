@@ -94,7 +94,7 @@ function CommentList() {
   useEffect(() => {
     if (data?.comments?.nodes) {
       setComments(data.comments.nodes);
-      if (data.comments.totalCount + 9 < page * limit) {
+      if (Math.ceil(data.comments.totalCount / limit) < page) {
         setPage(1);
       }
     }

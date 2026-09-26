@@ -12,7 +12,10 @@
       "lastSuccess": "Letzter erfolgreicher Kontakt: {{value}}",
       "lastSuccessNever": "Letzter erfolgreicher Kontakt: nie",
       "lastAttemptFailed": "Letzter Versuch: {{value}} – fehlgeschlagen: {{error}}",
-      "label": "We.Publish Connector"
+      "label": "We.Publish Connector",
+      "outageTitle": "We.Publish Connector antwortet nicht",
+      "outageText": "Seit {{value}} kein erfolgreicher Kontakt mehr. Statistiken und Nachrichten werden derzeit nicht mit We.Publish ausgetauscht.",
+      "outageTextNever": "Es gab noch nie erfolgreichen Kontakt. Bitte URL und Zugang des Connectors prüfen."
     },
     "oneMessages": {
       "header": "Nachrichten vom We.Publish Team",
@@ -422,6 +425,15 @@
         "selectMemberPlansSelectionHintAll": "Ohne Auswahl werden alle aktiven Pläne angezeigt.",
         "selectFields": "Benutzer-Eingabefelder",
         "selectFieldsSelectionHint": "Email & Nachname wird immer abgefragt. Reihenfolge spielt keine Rolle",
+        "periodicityDisplay": "Zahlungsintervalle: Darstellung und Konfiguration",
+        "periodicityDisplayDropdown": "Auswahlfeld",
+        "periodicityDisplayOfferCards": "Pro Plan & Intervall eine Karte",
+        "periodicityDisplayToggle": "Umschalter",
+        "periodicityDisplayDropdownHint": "Alle Preise werden monatlich angezeigt – Karten, Betrag und Betragsvorschläge. Das Intervall wird weiter unten bei der Zahlungsmethode gewählt und bestimmt nur, wie oft verrechnet wird.",
+        "periodicityDisplayOfferCardsHint": "Jedes Angebot als eigene Karte. (Anzahl Karten ergibt sich aus: Summe aller Pläne × Zahlungsintervalle) – ideal für ein bis zwei Abo-Pläne.",
+        "periodicityDisplayToggleHint": "Das Zahlungsintervall wird im ersten Schritt gewählt; danach zeigen die Abo-Plan-Karten den Preis des gewählten Intervalls an.",
+        "periodicityDisplayDropdownIgnoredRows_one": "Hinweis: Für den Abo-Plan «{{plans}}» sind Preise für Zahlungsintervalle konfiguriert, die im Modus «Auswahlfeld» ignoriert werden.",
+        "periodicityDisplayDropdownIgnoredRows_other": "Hinweis: Für die Abo-Pläne «{{plans}}» sind Preise für Zahlungsintervalle konfiguriert, die im Modus «Auswahlfeld» ignoriert werden.",
         "goodiesHeading": "Goodies",
         "discountCodesHeading": "Rabattcodes",
         "showGoodies": "Goodie-Auswahl anzeigen",
@@ -429,6 +441,7 @@
         "goodieMinValue": {
           "label": "Goodie-Mindestbetrag:"
         },
+        "goodieMinValueAppliesToUpgrade": "Mindestbetrag auch bei Upgrades anwenden",
         "hideRepeatGoodieOnUpgrade": "Bei Upgrade: kein erneutes Goodie",
         "FirstName": "Vorname",
         "Birthday": "Geburtstag",
@@ -444,8 +457,14 @@
         },
         "renderStylesHeading": "Abo-Plan Reihenfolge und Darstellung",
         "amountTileValues": {
-          "hint": "Beträge der Kacheln (in Franken). Leer lassen für Standard: 10, 15, 20.",
+          "hint": "Beträge der Kacheln pro Zahlungsintervall (in Franken). Leer lassen für Standard-Werte.",
+          "hintMonthly": "Beträge der Kacheln (in Franken, pro Monat). Leer lassen für Standard-Werte.",
           "placeholder": "z.B. 10 15 20"
+        },
+        "fixedAmountHint": "Der konfigurierte Zielbetrag des Plans wird zum Fixpreis – ist keiner gesetzt, der Mindestbetrag.",
+        "showInCardAmountInput": {
+          "label": "Freie Betragseingabe in der Karte",
+          "title": "Statt eines separaten Betragsfelds erhält jede Abo-Karte ein Eingabefeld, in dem Besucher:innen ihren Betrag selbst festlegen."
         },
         "showAmountInput": {
           "label": "Freie Betragseingabe",
@@ -456,7 +475,7 @@
           "Narrow": "Schmal (2 Kacheln pro Zeile)",
           "Wide": "Breit (1 Kachel pro Zeile, grosse Kacheln)"
         },
-        "planAmountsTitle": "Minimal- / Ziel- / Maximalbetrag pro Monat (in Franken)",
+        "planAmountsTitle": "Minimal- / Ziel- / Maximalbetrag",
         "defaultPlanTitle": "Standardmässig ausgewählt — dieser Abo-Plan ist nach dem Laden der Seite vorausgewählt.",
         "defaultPlanLabel": "Standard"
       },
@@ -586,6 +605,16 @@
       }
     },
     "cancel": "Abbrechen",
+    "changelog": {
+      "whatsNew": "Was ist neu",
+      "actionRequired": "Handlung erforderlich",
+      "done": "Erledigt",
+      "details": "Details",
+      "releasedAt": "Veröffentlicht am {{date, PP}}",
+      "completedAt": "Erledigt am {{date, PP}}",
+      "noEntries": "Noch keine Changelog-Einträge.",
+      "allCaughtUp": "Keine ungelesenen Changelog-Einträge."
+    },
     "chooseEditImage": {
       "chooseImage": "Bild wählen",
       "editImage": "Bild bearbeiten",
@@ -713,6 +742,8 @@
     "dashboard": {
       "activity": "Letzte Aktivitäten",
       "dashboard": "Dashboard",
+      "notifications": "Mitteilungen",
+      "showAllNotifications": "Alle anzeigen",
       "greeting": "Hallo, {{name}}!",
       "newArticle": "Neuer <0>Artikel</0> erstellt",
       "newAuthor": "Neuer <0>Author</0> erstellt",
@@ -1237,7 +1268,7 @@
       "createMemberPlanHeader": "Erstelle Memberplan",
       "description": "Beschreibung",
       "shortDescription": "Kurze Beschreibung",
-      "editPaymentSetting": "Zahlungseinstellung bearbeiten",
+      "editPaymentSetting": "Zahlungsmethoden & Periodizitäten bearbeiten",
       "forceAutoRenewal": "Automatische Erneuerung erzwingen",
       "loadingTitle": "Lade",
       "name": "Name",
@@ -1291,6 +1322,7 @@
       "pageTags": "Tags",
       "consents": "Konsens",
       "dashboard": "Dashboard",
+      "notifications": "Mitteilungen",
       "events": "Events",
       "eventTags": "Tags",
       "documentLibrary": "Dokumente",
@@ -1346,6 +1378,19 @@
         "selectPage": "Seite auswählen",
         "url": "URL"
       }
+    },
+    "notifications": {
+      "noTeamMessages": "Zurzeit keine Nachrichten vom We.Publish Team.",
+      "sourceTeam": "We.Publish Team",
+      "sourceChangelog": "Changelog",
+      "sourceJobLogs": "Job-Logs",
+      "markAsRead": "Als gelesen markieren",
+      "markAsDone": "Als erledigt markieren",
+      "confirmTitle": "Als erledigt markieren?",
+      "confirmMessage": "Damit bestätigen Sie für Ihr ganzes Team, dass «{{title}}» erledigt wurde. Der Hinweis verschwindet vom Dashboard.",
+      "confirmSuccess": "Danke! Die Aufgabe wurde als erledigt markiert.",
+      "loadMore": "Mehr anzeigen",
+      "sourceConnector": "We.Publish Connector"
     },
     "no": "Nein",
     "pageEditor": {
@@ -1916,6 +1961,14 @@
         "createdAt": "Erstellt",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
         "firstName": "Vorname",
+        "subscriptionStatus": {
+          "Active": "Aktiv",
+          "Deactivated": "Deaktiviert",
+          "Planned": "Geplant",
+          "Unpaid": "Unbezahlt",
+          "Expired": "Abgelaufen"
+        },
+        "subscriptionWithStatus": "{{name}} – {{status}}",
         "modifiedAt": "Zuletzt bearbeitet",
         "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
         "name": "Name",
@@ -1987,6 +2040,8 @@
       "editTitle": "Abonnement bearbeiten",
       "memberPlanMonthlyAmount": "Minimaler monatlicher Betrag ({{currency}})",
       "monthlyAmount": "Monatlicher Betrag",
+      "monthlyAmountEquivalent": "Entspricht {{currency}} {{amount}} pro Monat",
+      "periodAmount": "Betrag pro Zahlungsintervall",
       "paidUntil": "Bezahlt bis",
       "paymentMethod": "Zahlungsmethode",
       "renewNow": "Jetzt verlängern",
@@ -2045,8 +2100,27 @@
       "migratePMHelptext": "Migriere die Abos dieses Planes zu einer neuen Zahlungsmethode. Abos, die noch automatisch abgebucht werden, werden nicht migriert. Die Migration findet erst dann statt, wenn ein User selbst tätig wird und in seinem Profil etwa eine offene Rechnung bezahlen will oder ein Abo frühzeitig verlängert.",
       "amountPerMonthTarget": "Ziel-Betrag / Monat",
       "amountPerMonthTargetHelpText": "Der monatliche Zielbetrag legt den gewünschten Abopreis fest, den die Benutzer:innen bezahlen sollten. Er muss höher als der Minimalbetrag sein und definiert typischerweise die Voreinstellung im Zahlungsformular.",
+      "periodicityPricing": "Preise pro aktiviertes Zahlungsintervall",
+      "periodicityPricingHelpText": "Setze exakte Preise (min / Ziel / max) pro Zahlungsintervall. Ohne eigene Preise wird der Betrag aus dem Monatspreis hochgerechnet. Der Rabatt gegenüber dem hochgerechneten Monatspreis wird automatisch berechnet.",
+      "periodicityPricingHelpTextNoMonthly": "Lege für jedes aktivierte Zahlungsintervall den Preis für die gesamte Periode fest: Minimalbetrag (muss mindestens bezahlt werden), Zielbetrag (Voreinstellung im Zahlungsformular) und optional Maximalbetrag.",
+      "periodicityPricingNoPeriodicities": "Aktiviere zuerst Zahlungsintervalle in den Zahlungseinstellungen, um intervall-spezifische Preise zu konfigurieren.",
+      "periodicityPricingRequired": "Mindestens ein Zahlungsintervall benötigt einen Minimalbetrag.",
+      "periodicityPricingLabel": "Marketing-Label",
+      "periodicityPricingLabelHelpText": "Optionaler Hinweis, der bei diesem Zahlungsintervall auf der Abo-Seite angezeigt wird, z.B. \u00ab2 Monate geschenkt\u00bb.",
+      "defaultPaymentPeriodicity": "Standard-Zahlungsintervall",
+      "defaultPaymentPeriodicityHelpText": "Dieses Zahlungsintervall ist auf der Abo-Seite vorausgew\u00e4hlt. Ohne Auswahl gilt das erste konfigurierte Intervall.",
+      "periodicityPricingDelta": "Rabatt gegenüber Monatspreis: {{delta}}",
+      "periodicityPricingCustom": "Eigene Preise",
+      "periodicityPricingDerived": "Aus Monatspreis",
+      "periodicityPricingMinHelpText": "Der minimale Betrag ist der eigentliche Abopreis, der mindestens bezahlt werden muss. Die Benutzer:innen können indes beim Aboabschluss freiwillig mehr bezahlen.",
+      "periodicityPricingTargetHelpText": "Der Zielbetrag legt den gewünschten Abopreis fest, den die Benutzer:innen bezahlen sollten. Er muss zwischen Minimal- und Maximalbetrag liegen und definiert typischerweise die Voreinstellung im Zahlungsformular.",
+      "periodicityPricingMaxHelpText": "Der maximale Betrag ist der Höchstbetrag, den die Benutzer:innen beim Aboabschluss bezahlen können.",
+      "periodicityPricingMin": "Minimalbetrag pro Periode",
+      "periodicityPricingTarget": "Zielbetrag pro Periode",
+      "periodicityPricingMax": "Maximalbetrag pro Periode",
       "amountPerMonthMinHelpText": "Der minimale monatliche Betrag ist der eigentliche Abopreis, der mindestens bezahlt werden muss. Die Benutzer:innen können indes beim Aboabschluss freiwillig mehr bezahlen.",
       "amountPerMonthMaxHelpText": "Der maximale monatliche Betrag ist der Höchstbetrag, den die Benutzer:innen beim Aboabschluss bezahlen können.",
+      "redirectionsTitle": "Weiterleitungen",
       "confirmationPage": "Weiterleitung zur Seite bei bestehendem User (Retargeting)",
       "confirmationPageHelptext": "Wenn beim Lösen eines Abos die User-ID bekannt ist, erhält die Person eine E-Mail, um das Abo zu bezahlen. Darauf könnte auf dieser Seite hingewiesen werden.",
       "productType": "Produkttyp",

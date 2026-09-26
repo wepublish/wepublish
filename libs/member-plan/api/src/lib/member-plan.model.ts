@@ -60,6 +60,31 @@ export class AvailablePaymentMethodInput extends OmitType(
   InputType
 ) {}
 
+@ObjectType()
+export class PeriodicityPrice {
+  @Field(() => PaymentPeriodicity)
+  periodicity!: PaymentPeriodicity;
+
+  @Field({ nullable: true })
+  label?: string;
+
+  @Field(() => Int, { nullable: true })
+  amountMin?: number;
+
+  @Field(() => Int, { nullable: true })
+  amountTarget?: number;
+
+  @Field(() => Int, { nullable: true })
+  amountMax?: number;
+}
+
+@InputType()
+export class PeriodicityPriceInput extends OmitType(
+  PeriodicityPrice,
+  [] as const,
+  InputType
+) {}
+
 @ObjectType({
   implements: () => [HasImage],
 })
@@ -88,14 +113,11 @@ export class MemberPlan extends HasImage {
   @Field(() => Currency)
   currency!: Currency;
 
-  @Field(() => Int)
-  amountPerMonthMin!: number;
+  @Field(() => [PeriodicityPrice])
+  periodicityPricing!: PeriodicityPrice[];
 
-  @Field(() => Int, { nullable: true })
-  amountPerMonthMax?: number;
-
-  @Field(() => Int, { nullable: true })
-  amountPerMonthTarget?: number;
+  @Field(() => PaymentPeriodicity, { nullable: true })
+  defaultPaymentPeriodicity?: PaymentPeriodicity;
 
   @Field(() => Int, { nullable: true })
   maxCount?: number;
@@ -162,9 +184,7 @@ export class CreateMemberPlanInput extends PickType(
     'shortDescription',
     'tags',
     'active',
-    'amountPerMonthMin',
-    'amountPerMonthMax',
-    'amountPerMonthTarget',
+    'defaultPaymentPeriodicity',
     'currency',
     'extendable',
     'productType',
@@ -179,6 +199,9 @@ export class CreateMemberPlanInput extends PickType(
 ) {
   @Field(() => [AvailablePaymentMethodInput])
   availablePaymentMethods!: AvailablePaymentMethodInput[];
+
+  @Field(() => [PeriodicityPriceInput], { nullable: true })
+  periodicityPricing?: PeriodicityPriceInput[];
 }
 
 @ArgsType()

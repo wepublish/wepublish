@@ -264,11 +264,16 @@ fragment BlockWithoutTeaser on BlockContent {
     blockStyle
     blockStyleName
     memberPlanIds
+    periodicityDisplay
     memberPlanRenderSettings {
       isDefault
       memberPlanId
       layout {
         type
+
+        ... on SubscribeBlockLayoutNoneConfig {
+          showInput
+        }
 
         ... on SubscribeBlockLayoutSliderConfig {
           showInput
@@ -277,6 +282,10 @@ fragment BlockWithoutTeaser on BlockContent {
         ... on SubscribeBlockLayoutPickerConfig {
           showInput
           values
+          valuesByPeriodicity {
+            periodicity
+            values
+          }
         }
       }
     }
@@ -284,6 +293,7 @@ fragment BlockWithoutTeaser on BlockContent {
     showGoodies
     showDiscountCodes
     goodieMinValue
+    goodieMinValueAppliesToUpgrade
     hideRepeatGoodieOnUpgrade
     type
   }

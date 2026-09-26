@@ -12,6 +12,7 @@ import {
   Upgrade,
 } from '@wepublish/website/builder';
 import { produce } from 'immer';
+import { getMonthlyEquivalentRange } from '../formatters/format-payment-period';
 import { sortBy } from 'ramda';
 import { useCallback, useMemo } from 'react';
 
@@ -33,7 +34,9 @@ export type UpgradeContainerProps = BuilderContainerProps &
 
 export const UpgradeContainer = ({
   filter = memberPlan => memberPlan,
-  sort = sortBy(memberPlan => memberPlan.amountPerMonthMin),
+  sort = sortBy(
+    memberPlan => getMonthlyEquivalentRange(memberPlan).amountPerMonthMin
+  ),
   upgradeSubscriptionId,
   ...props
 }: UpgradeContainerProps) => {

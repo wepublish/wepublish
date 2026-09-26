@@ -41,6 +41,7 @@ import {
   BlockWithAlignment,
   Maybe,
   BlockContent,
+  PaymentPeriodicity,
 } from '@wepublish/website/api';
 import { mockImage } from './image';
 import { mockRichText } from './richtext';
@@ -693,7 +694,18 @@ export const mockSubscribeBlock = ({
   fields = [],
   memberPlans = [
     mockMemberPlan(),
-    mockMemberPlan({ amountPerMonthMin: 10000, amountPerMonthTarget: 15000 }),
+    mockMemberPlan({
+      periodicityPricing: [
+        {
+          __typename: 'PeriodicityPrice',
+          periodicity: PaymentPeriodicity.Monthly,
+          label: null,
+          amountMin: 10000,
+          amountTarget: 15000,
+          amountMax: null,
+        },
+      ],
+    }),
   ],
   memberPlanIds = [memberPlans[0].id, memberPlans[1].id],
   memberPlanRenderSettings = memberPlanIds.map((memberPlanId, index) => ({
@@ -708,6 +720,7 @@ export const mockSubscribeBlock = ({
   showGoodies = false,
   showDiscountCodes = false,
   goodieMinValue = null,
+  goodieMinValueAppliesToUpgrade = false,
   hideRepeatGoodieOnUpgrade = false,
 }: Partial<SubscribeBlock> = {}): SubscribeBlock => ({
   type: BlockType.Subscribe,
@@ -722,6 +735,7 @@ export const mockSubscribeBlock = ({
   showGoodies,
   showDiscountCodes,
   goodieMinValue,
+  goodieMinValueAppliesToUpgrade,
   hideRepeatGoodieOnUpgrade,
 });
 export type MockTabbedContent = (args?: {

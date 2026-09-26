@@ -5,6 +5,7 @@ import {
   CommentAuthor,
   CommentContent,
   CommentFlair,
+  CommentHeader,
   CommentName,
 } from '@wepublish/comments/website';
 import { Tag } from '@wepublish/website/api';
@@ -16,16 +17,14 @@ const bajourTags = {
 };
 
 const highlightModeration = (theme: Theme) => css`
-  ${CommentName},
-  ${CommentFlair},
-  ${CommentAuthor},
-  ${CommentContent} {
+  > ${CommentHeader} :is(${CommentName}, ${CommentFlair}, ${CommentAuthor}),
+  > ${CommentContent} {
     color: ${theme.palette.primary.main};
   }
 `;
 
 const highlightSource = (theme: Theme) => css`
-  ${CommentFlair} {
+  > ${CommentHeader} ${CommentName} + ${CommentFlair} {
     color: ${theme.palette.primary.main};
   }
 `;
@@ -49,6 +48,7 @@ export const BajourComment = (props: BuilderCommentProps) => {
   return (
     <Comment
       {...props}
+      showDateWithFlair
       css={commentStyles}
     />
   );

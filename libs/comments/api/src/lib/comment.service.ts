@@ -108,6 +108,12 @@ const sortCommentsByRating = (
   });
 };
 
+const sortCommentsChronologically = (comments: DecoratedComment[]) => {
+  return [...comments].sort(
+    (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+  );
+};
+
 const sortComments = (
   comments: DecoratedComment[],
   sort: CommentSort,
@@ -153,10 +159,8 @@ const decorateComments = (
   ): DecoratedComment => ({
     ...comment,
     calculatedRatings: calculateRating(ratingSystemAnswers, comment.ratings),
-    children: sortComments(
-      (groupedComments[comment.id] ?? []).map(decorate),
-      sort,
-      order
+    children: sortCommentsChronologically(
+      (groupedComments[comment.id] ?? []).map(decorate)
     ),
   });
 
@@ -328,12 +332,13 @@ export class CommentService {
     text,
     lead,
     tagIds,
+    publish,
     ...input
   }: CreateCommentInput) {
     const comment = await this.prisma.comment.create({
       data: {
         ...input,
-        state: CommentState.approved,
+        state: publish ? CommentState.approved : CommentState.pendingApproval,
         authorType: CommentAuthorType.team,
         revisions: {
           create: {

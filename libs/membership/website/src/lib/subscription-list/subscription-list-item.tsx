@@ -16,6 +16,7 @@ import {
   MdTimelapse,
 } from 'react-icons/md';
 import { formatCurrency } from '../formatters/format-currency';
+import { calculatePeriodAmount } from '../formatters/format-payment-period';
 import { Modal } from '@wepublish/website/builder';
 import { Trans, useTranslation } from 'react-i18next';
 
@@ -220,8 +221,13 @@ export function SubscriptionListItem({
           <SubscriptionListItemMetaItem>
             <MdAttachMoney />
             {t('subscription.costs', {
-              amount: formatCurrency(monthlyAmount / 100, currency, locale),
+              amount: formatCurrency(
+                calculatePeriodAmount(monthlyAmount, paymentPeriodicity) / 100,
+                currency,
+                locale
+              ),
               extendable,
+              periodicity: paymentPeriodicity,
             })}
           </SubscriptionListItemMetaItem>
 
