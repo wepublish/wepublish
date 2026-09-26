@@ -26,6 +26,7 @@ import {
   ResetUserPasswordForm,
   Table,
   TableWrapper,
+  useListViewState,
 } from '@wepublish/ui/editor';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -64,7 +65,8 @@ function mapColumFieldToGraphQLField(columnField: string): UserSort | null {
 }
 
 function UserList() {
-  const [filter, setFilter] = useState<UserFilter>({});
+  const { filter, setFilter, sortField, sortOrder, setSort, limit, setLimit } =
+    useListViewState<UserFilter>('users', { defaultSortField: 'createdAt' });
 
   const [isResetUserPasswordOpen, setIsResetUserPasswordOpen] = useState(false);
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
@@ -72,9 +74,6 @@ function UserList() {
   const [currentUser, setCurrentUser] = useState<TinyUserFragment>();
 
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
-  const [sortField, setSortField] = useState('createdAt');
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   const [users, setUsers] = useState<TinyUserFragment[]>([]);
 
   const {
@@ -94,6 +93,7 @@ function UserList() {
 
   const updateFilter = (filter: UserFilter) => {
     setFilter(filter);
+    setPage(1);
     refetch();
   };
 
@@ -281,8 +281,8 @@ function UserList() {
           sortColumn={sortField}
           sortType={sortOrder}
           onSortColumn={(sortColumn, sortType) => {
-            setSortOrder(sortType!);
-            setSortField(sortColumn);
+            setSort(sortColumn, sortType ?? 'asc');
+            setPage(1);
           }}
         >
           <Column
@@ -475,7 +475,10 @@ function UserList() {
           total={data?.users.totalCount ?? 0}
           activePage={page}
           onChangePage={page => setPage(page)}
-          onChangeLimit={limit => setLimit(limit)}
+          onChangeLimit={limit => {
+            setLimit(limit);
+            setPage(1);
+          }}
         />
       </TableWrapper>
 

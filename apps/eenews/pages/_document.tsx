@@ -5,6 +5,8 @@ import {
 } from '@wepublish/utils/website';
 import { DocumentContext, Head, Html, Main, NextScript } from 'next/document';
 
+import theme from '../src/theme';
+
 export default function Document(props: DocumentProps) {
   return (
     <Html lang="de">
@@ -36,21 +38,28 @@ export default function Document(props: DocumentProps) {
 
         {/* Favicon definitions, generated with https://realfavicongenerator.net/ */}
         <link
+          rel="icon"
+          type="image/png"
+          href="/favicon-96x96.png"
+          sizes="96x96"
+        />
+        <link
+          rel="icon"
+          type="image/svg+xml"
+          href="/favicon.svg"
+        />
+        <link
+          rel="shortcut icon"
+          href="/favicon.ico"
+        />
+        <link
           rel="apple-touch-icon"
           sizes="180x180"
           href="/apple-touch-icon.png"
         />
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="32x32"
-          href="/favicon-32x32.png"
-        />
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="16x16"
-          href="/favicon-16x16.png"
+        <meta
+          name="apple-mobile-web-app-title"
+          content="EE News"
         />
         <link
           rel="manifest"
@@ -63,11 +72,11 @@ export default function Document(props: DocumentProps) {
         />
         <meta
           name="msapplication-TileColor"
-          content="#ffffff"
+          content={theme.palette.common.white}
         />
         <meta
           name="theme-color"
-          content="#ffffff"
+          content={theme.palette.common.white}
         />
 
         <DocumentHeadTags {...props} />
