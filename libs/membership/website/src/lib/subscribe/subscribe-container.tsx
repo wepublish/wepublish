@@ -69,7 +69,6 @@ export const SubscribeContainer = <
   });
 
   const memberPlanList = useMemberPlanListQuery({
-    fetchPolicy: 'cache-first',
     variables: {
       take: 50,
       filter: {
