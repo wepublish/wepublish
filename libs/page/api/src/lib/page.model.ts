@@ -212,6 +212,8 @@ export class PageFilter {
   title?: string;
   @Field({ nullable: true })
   description?: string;
+  @Field({ nullable: true })
+  slug?: string;
 
   @Field({ nullable: true })
   publicationDateFrom?: DateFilter;

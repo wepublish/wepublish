@@ -858,6 +858,7 @@
         "providers": "Fournisseurs",
         "publicationDate": "Date de publication",
         "reset": "Réinitialiser les filtres",
+        "slug": "Filtrer par slug",
         "title": "Filtrer par titre",
         "includeHiddenArticles": "Inclure cachés",
         "includeHiddenPages": "Inclure cachés"
@@ -1462,6 +1463,7 @@
         "pending": "En attente",
         "publicationDate": "Date de publication",
         "published": "Publié",
+        "slug": "Slug",
         "states": "Statut",
         "title": "Titre",
         "untitled": "Sans titre",
