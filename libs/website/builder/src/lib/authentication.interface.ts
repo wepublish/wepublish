@@ -24,6 +24,7 @@ export type BuilderLoginFormProps = {
     'data' | 'loading' | 'error'
   >;
   onSubmitLoginWithEmail: (email: string) => void;
+  loginLinkCooldownSeconds?: number;
 
   loginWithCredentials: Pick<
     MutationResult<LoginWithCredentialsMutation>,

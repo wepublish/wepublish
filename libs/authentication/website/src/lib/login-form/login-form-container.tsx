@@ -10,6 +10,7 @@ import {
 } from '@wepublish/website/builder';
 import { useCallback, useEffect, useState } from 'react';
 import { useUser } from '../session.context';
+import { useLoginLinkCooldown } from './login-link-cooldown';
 
 function isValidEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -31,6 +32,7 @@ export function LoginFormContainer({
   const { setToken } = useUser();
   const [otpRequired, setOtpRequired] = useState(false);
   const [totpRedirectToPassword, setTotpRedirectToPassword] = useState(false);
+  const [loginLinkCooldownSeconds, markLoginLinkSent] = useLoginLinkCooldown();
 
   // Check if redirected from a failed JWT login (2FA user)
   useEffect(() => {
@@ -43,7 +45,11 @@ export function LoginFormContainer({
     }
   }, []);
   const [checkLoginOtp] = useCheckLoginOtpLazyQuery();
-  const [loginWithEmail, withEmail] = useLoginWithEmailMutation();
+  const [loginWithEmail, withEmail] = useLoginWithEmailMutation({
+    onCompleted() {
+      markLoginLinkSent();
+    },
+  });
   const [loginWithCredentials, withCredentials] =
     useLoginWithCredentialsMutation({
       onCompleted(data) {
@@ -99,6 +105,7 @@ export function LoginFormContainer({
       loginWithCredentials={withCredentials}
       onSubmitLoginWithEmail={handleSubmitLoginWithEmail}
       loginWithEmail={withEmail}
+      loginLinkCooldownSeconds={loginLinkCooldownSeconds}
       defaults={defaults}
       disablePasswordLogin={disablePasswordLogin}
       otpRequired={otpRequired}
