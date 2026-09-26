@@ -657,7 +657,7 @@ export const NavbarInnerWrapper = styled(Toolbar, {
     `}
 `;
 
-const SubscribeBtn = styled(Link)`
+export const SubscribeBtn = styled(Link)`
   margin-left: auto;
 `;
 
