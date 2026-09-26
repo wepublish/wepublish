@@ -104,6 +104,7 @@ import { DiscountCodeList } from './routes/discountCode/discountCodeList';
 import { DiscountCodeUsageView } from './routes/discountCode/discountCodeUsageView';
 import { WebsiteSettingsItem } from './routes/website-settings/website-settings-item';
 import { WebsiteSettingsList } from './routes/website-settings/website-settings-list';
+import { Seed } from './routes/seed/seed';
 import { SetNewPassword } from './setNewPassword';
 
 const LogoutMutation = gql`
@@ -297,6 +298,10 @@ export function App() {
             <Route
               path="login/impersonate/:jwt"
               element={<LoginImpersonate />}
+            />
+            <Route
+              path="seed"
+              element={<Seed />}
             />
             <Route
               path="login/reset-password"
