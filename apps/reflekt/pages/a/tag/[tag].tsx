@@ -6,6 +6,7 @@ import {
   ArticleListDocument,
   getApiClient,
   NavigationListDocument,
+  PageDocument,
   PeerProfileDocument,
   TagDocument,
 } from '@wepublish/website/api';
@@ -94,6 +95,12 @@ export const getStaticProps = (async ({ params }) => {
     client.query({
       query: NavigationListDocument,
     }),
+      client.query({
+        query: PageDocument,
+        variables: {
+          slug: 'footer',
+        },
+      }),
     client.query({
       query: PeerProfileDocument,
     }),

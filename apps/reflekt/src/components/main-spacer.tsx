@@ -5,7 +5,7 @@ import { FlexBlockHeroWrapper } from './block-layouts/flex-block-hero';
 
 export const MainSpacer = styled(Container)`
   display: grid;
-  gap: ${({ theme }) => theme.spacing(5)};
+  row-gap: ${({ theme }) => theme.spacing(5)};
 
   main > & {
     padding-top: calc(

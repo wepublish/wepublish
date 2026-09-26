@@ -3,7 +3,7 @@ import { Typography } from '@mui/material';
 import { formatCurrency } from '@wepublish/membership/website';
 import { CrowdfundingGoalType, Currency } from '@wepublish/website/api';
 import { BuilderCrowdfundingBlockProps } from '@wepublish/website/builder';
-import { ElementType, useEffect, useState } from 'react';
+import { ElementType } from 'react';
 import { Trans } from 'react-i18next';
 
 import { euclidCircularB } from '../theme';
@@ -13,6 +13,20 @@ import { euclidCircularB } from '../theme';
 // Normalize to a single canonical apostrophe.
 const formatNumber = (value: number, locale = 'de-CH') =>
   new Intl.NumberFormat(locale).format(value).replace(/[’ʼ]/g, "'");
+
+const getDaysRemaining = (countSubscriptionsUntil?: string | null) => {
+  if (!countSubscriptionsUntil) {
+    return null;
+  }
+
+  const millisecondsPerDay = 1000 * 60 * 60 * 24;
+  const remaining = Math.ceil(
+    (new Date(countSubscriptionsUntil).getTime() - Date.now()) /
+      millisecondsPerDay
+  );
+
+  return Math.max(0, remaining);
+};
 
 const Wrapper = styled('div')`
   display: grid;
@@ -64,22 +78,7 @@ const BarLabel = styled('span')`
 export const ReflektCrowdfundingBlock = ({
   crowdfunding,
 }: BuilderCrowdfundingBlockProps) => {
-  const countSubscriptionsUntil = crowdfunding?.countSubscriptionsUntil;
-  const [daysRemaining, setDaysRemaining] = useState<number | null>(null);
-
-  useEffect(() => {
-    if (!countSubscriptionsUntil) {
-      setDaysRemaining(null);
-      return;
-    }
-
-    const millisecondsPerDay = 1000 * 60 * 60 * 24;
-    const remaining = Math.ceil(
-      (new Date(countSubscriptionsUntil).getTime() - Date.now()) /
-        millisecondsPerDay
-    );
-    setDaysRemaining(Math.max(0, remaining));
-  }, [countSubscriptionsUntil]);
+  const daysRemaining = getDaysRemaining(crowdfunding?.countSubscriptionsUntil);
 
   if (!crowdfunding) {
     return null;
@@ -122,6 +121,7 @@ export const ReflektCrowdfundingBlock = ({
         <Caption
           variant="caption"
           component="p"
+          suppressHydrationWarning
         >
           <Trans
             i18nKey="crowdfunding.stats.daysRemaining"

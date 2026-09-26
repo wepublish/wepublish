@@ -318,8 +318,10 @@ export const ReflektCrowdfundingMemberPlanItem = forwardRef<
   return (
     <ItemWrapper className={className}>
       <ItemImage
-        src={hasGoodie ? '/with_goodie.png' : '/no_goodie.png'}
+        src={hasGoodie ? '/with_goodie.webp' : '/no_goodie.webp'}
         alt=""
+        loading="lazy"
+        decoding="async"
       />
 
       <ItemCard>
