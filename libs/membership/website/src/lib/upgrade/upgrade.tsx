@@ -16,7 +16,6 @@ import { useEffect, useMemo, useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { formatCurrency, roundUpTo5Cents } from '../formatters/format-currency';
-import { getMonthlyEquivalentRange } from '../formatters/format-payment-period';
 
 import { ApolloError } from '@apollo/client';
 import { ApiAlert } from '@wepublish/errors/website';
@@ -52,6 +51,7 @@ import {
 import styled from '@emotion/styled';
 import {
   getPaymentPeriodicyMonths,
+  getMonthlyEquivalentRange,
   getPeriodPriceRange,
   monthlyAmountFromPeriodAmount,
 } from '../formatters/format-payment-period';
@@ -290,17 +290,44 @@ export const Upgrade = ({
     onSelect(selectedMemberPlan?.id, discountCode ?? undefined);
   }, [selectedMemberPlan?.id, discountCode, onSelect]);
 
-  const selectedRange =
+  const periodPriceRange =
     selectedMemberPlan ?
-      getMonthlyEquivalentRange(selectedMemberPlan)
-    : undefined;
+      getPeriodPriceRange(
+        selectedMemberPlan,
+        subscriptionToUpgrade.paymentPeriodicity
+      )
+    : null;
+
+  const hasFixedPrice =
+    !!periodPriceRange &&
+    periodPriceRange.amountMax != null &&
+    periodPriceRange.amountMin === periodPriceRange.amountMax;
 
   const shouldHidePaymentAmount =
-    selectedLayout ?
-      isFixedAmountLayout(selectedLayout)
-    : selectedRange?.amountPerMonthMin === selectedRange?.amountPerMonthMax;
+    hasFixedPrice ||
+    (selectedLayout ? isFixedAmountLayout(selectedLayout) : !periodPriceRange);
 
-  const amountPerMonthMin = selectedRange?.amountPerMonthMin ?? 500;
+  const amountPerMonthMin =
+    periodPriceRange ?
+      monthlyAmountFromPeriodAmount(
+        periodPriceRange.amountMin,
+        subscriptionToUpgrade.paymentPeriodicity
+      )
+    : 500;
+  const amountPerMonthMax =
+    periodPriceRange?.amountMax != null ?
+      monthlyAmountFromPeriodAmount(
+        periodPriceRange.amountMax,
+        subscriptionToUpgrade.paymentPeriodicity
+      )
+    : undefined;
+  const amountPerMonthTarget =
+    periodPriceRange?.amountTarget != null ?
+      monthlyAmountFromPeriodAmount(
+        periodPriceRange.amountTarget,
+        subscriptionToUpgrade.paymentPeriodicity
+      )
+    : undefined;
 
   return (
     <FormProvider {...form}>
@@ -385,21 +412,20 @@ export const Upgrade = ({
                           clampMonthlyAmount(
                             +amount,
                             amountPerMonthMin,
-                            selectedRange?.amountPerMonthMax ?? undefined
+                            amountPerMonthMax
                           )
                         )
                       }
                       error={error}
                       donate={!!donate?.(selectedMemberPlan) || isDonation}
                       amountPerMonthMin={amountPerMonthMin}
-                      amountPerMonthMax={
-                        selectedRange?.amountPerMonthMax ?? undefined
-                      }
-                      amountPerMonthTarget={
-                        selectedRange?.amountPerMonthTarget ?? undefined
-                      }
+                      amountPerMonthMax={amountPerMonthMax}
+                      amountPerMonthTarget={amountPerMonthTarget}
                       currency={selectedMemberPlan?.currency ?? Currency.Chf}
-                      presetAmounts={getAmountPickerValues(selectedLayout)}
+                      presetAmounts={getAmountPickerValues(
+                        selectedLayout,
+                        subscriptionToUpgrade.paymentPeriodicity
+                      )}
                       showInput={showsAmountInput(selectedLayout)}
                     />
                   )}
@@ -410,12 +436,8 @@ export const Upgrade = ({
                       error={error}
                       donate={!!donate?.(selectedMemberPlan) || isDonation}
                       amountPerMonthMin={amountPerMonthMin}
-                      amountPerMonthMax={
-                        selectedRange?.amountPerMonthMax ?? undefined
-                      }
-                      amountPerMonthTarget={
-                        selectedRange?.amountPerMonthTarget ?? undefined
-                      }
+                      amountPerMonthMax={amountPerMonthMax}
+                      amountPerMonthTarget={amountPerMonthTarget}
                       currency={selectedMemberPlan?.currency ?? Currency.Chf}
                       showInput={showsAmountInput(selectedLayout)}
                     />
