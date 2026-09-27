@@ -206,6 +206,7 @@
         "newArticle": "New Article",
         "notPublished": "Not yet published",
         "pending": "Pending",
+        "preTitle": "Pre-title",
         "publicationDate": "Publication date",
         "published": "Published",
         "states": "States",
@@ -858,6 +859,7 @@
         "providers": "Providers",
         "publicationDate": "Publication Date",
         "reset": "Reset Filter",
+        "slug": "Filter by slug",
         "title": "Filter by title",
         "includeHiddenArticles": "Include hidden",
         "includeHiddenPages": "Include hidden"
@@ -1470,6 +1472,7 @@
         "pending": "Pending",
         "publicationDate": "Publication date",
         "published": "Published",
+        "slug": "Slug",
         "states": "States",
         "title": "Title",
         "untitled": "Untitled",
@@ -1750,6 +1753,8 @@
       "showPendingWhenNotPublished": "Show a pending article or page even when not published yet.",
       "newArticlePeering": "Freshly created articles will be peered by default",
       "newArticlePaywall": "Freshly created articles will require a subscription by default",
+      "subscriptionPlans": "Subscription Plans",
+      "subscriptionUpgradeModel": "On upgrade, bill the full price difference (instead of the pro-rated remaining credit)",
       "warnings": {
         "activeSubscriptionsApiPublic": "Exposes subscriptions anonymized to the public.",
         "allowCommentEditing": "Allow users to edit their comments",
@@ -1770,7 +1775,8 @@
         "revenueApiPublic": "Exposes invoices anonymized to the public.",
         "showPendingWhenNotPublished": "This will expose pending articles & pages to the public (and thus also crawlers) eventhough they have never been published before.",
         "newArticlePeering": "Will not affect already created articles",
-        "newArticlePaywall": "Will not affect already created articles"
+        "newArticlePaywall": "Will not affect already created articles",
+        "subscriptionUpgradeModel": "When enabled, an upgrade always charges the difference between the new and current plan price, regardless of how much time is left in the current period. When disabled, only the unused (pro-rated) remainder of the current period is credited."
       }
     },
     "automaticMails": {

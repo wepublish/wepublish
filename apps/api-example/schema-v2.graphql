@@ -3290,6 +3290,7 @@ input PageFilter {
   publicationDateFrom: DateFilter
   publicationDateTo: DateFilter
   published: Boolean
+  slug: String
   tags: [String!]
   title: String
 }
@@ -4817,6 +4818,7 @@ enum SettingName {
   RESET_PASSWORD_JWT_EXPIRES_MIN
   SEND_LOGIN_JWT_EXPIRES_MIN
   SHOW_PENDING_WHEN_NOT_PUBLISHED
+  SUBSCRIPTION_UPGRADE_BILLS_FULL_DIFFERENCE
 }
 
 type SettingPaymentProvider implements SettingProvider {
