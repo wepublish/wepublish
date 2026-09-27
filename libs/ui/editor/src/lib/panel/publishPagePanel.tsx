@@ -72,7 +72,7 @@ function PublishPagePanel({
             message={t('pageEditor.panels.enterTitle')}
             messageType={InfoColor.warning}
           >
-            {metadata.title}
+            {metadata.title || '-'}
           </DescriptionListItemWithMessage>
 
           <DescriptionListItemWithMessage
@@ -80,8 +80,16 @@ function PublishPagePanel({
             message={t('pageEditor.panels.enterDescription')}
             messageType={InfoColor.warning}
           >
-            {metadata.description}
+            {metadata.description || '-'}
           </DescriptionListItemWithMessage>
+
+          <DescriptionListItem label={t('pageEditor.panels.seoTitle')}>
+            {metadata.seoTitle || '-'}
+          </DescriptionListItem>
+
+          <DescriptionListItem label={t('pageEditor.panels.seoDescription')}>
+            {metadata.seoDescription || '-'}
+          </DescriptionListItem>
 
           <DescriptionListItem label={t('pageEditor.panels.slug')}>
             {metadata.slug || '-'}

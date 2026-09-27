@@ -8,6 +8,7 @@ import {
 import {
   CanCreateDiscountCode,
   CanDeleteDiscountCode,
+  CanGetInvoices,
   CanUpdateDiscountCode,
 } from '@wepublish/permissions';
 import {
@@ -21,6 +22,8 @@ import {
   PaddedCell,
   Table,
   TableWrapper,
+  useAuthorisation,
+  useListViewState,
 } from '@wepublish/ui/editor';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -43,10 +46,12 @@ const { Column, HeaderCell, Cell: RCell } = RTable;
 
 function DiscountCodeList() {
   const { t } = useTranslation();
+  const canSeeUsages = useAuthorisation(CanGetInvoices.id);
+  const { sortField, sortOrder, setSort, limit, setLimit } = useListViewState(
+    'discountCodes',
+    { defaultSortField: '' }
+  );
   const [page, setPage] = useState<number>(1);
-  const [limit, setLimit] = useState<number>(10);
-  const [sortField, setSortField] = useState<DiscountCodesort>();
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
   const [discountCodeToDelete, setDiscountCodeToDelete] = useState<
     DiscountCode | undefined
@@ -56,7 +61,7 @@ function DiscountCodeList() {
     variables: {
       take: limit,
       skip: (page - 1) * limit,
-      sort: sortField,
+      sort: sortField ? (sortField as DiscountCodesort) : undefined,
       order: mapTableSortTypeToGraphQLSortOrder(sortOrder),
     },
   });
@@ -101,8 +106,8 @@ function DiscountCodeList() {
           sortColumn={sortField}
           sortType={sortOrder}
           onSortColumn={(sortColumn, sortType) => {
-            setSortOrder(sortType ?? 'asc');
-            setSortField(sortColumn as DiscountCodesort);
+            setSort(sortColumn, sortType ?? 'asc');
+            setPage(1);
           }}
         >
           <Column
@@ -153,6 +158,28 @@ function DiscountCodeList() {
           </Column>
 
           <Column
+            width={160}
+            resizable
+          >
+            <HeaderCell>{t('discountCode.overview.usage')}</HeaderCell>
+
+            <RCell>
+              {(rowData: RowDataType<DiscountCode>) => {
+                const usage = t('discountCode.overview.usageValue', {
+                  total: rowData.usageCount,
+                  paid: rowData.paidUsageCount,
+                });
+
+                if (!canSeeUsages) {
+                  return usage;
+                }
+
+                return <Link to={`usage/${rowData.id}`}>{usage}</Link>;
+              }}
+            </RCell>
+          </Column>
+
+          <Column
             width={150}
             resizable
           >
@@ -190,6 +217,7 @@ function DiscountCodeList() {
           </Column>
 
           <Column
+            width={50}
             resizable
             fixed="right"
           >
@@ -226,7 +254,10 @@ function DiscountCodeList() {
         total={data?.discountCodes?.totalCount ?? 0}
         activePage={page}
         onChangePage={page => setPage(page)}
-        onChangeLimit={limit => setLimit(limit)}
+        onChangeLimit={limit => {
+          setLimit(limit);
+          setPage(1);
+        }}
       />
 
       <Modal

@@ -2,6 +2,13 @@ import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { PrismaClient, User, UserEvent } from '@prisma/client';
 import { InvalidCredentialsError, NotActiveError } from './session.errors';
 import nanoid from 'nanoid/generate';
+import {
+  ImpersonationError,
+  assertDuration,
+  assertReason,
+  isImpersonationEnabled,
+  type ImpersonationClaims,
+} from './impersonation';
 import { UserAuthenticationService } from './user-authentication.service';
 import { JwtAuthenticationService } from './jwt-authentication.service';
 import { unselectPassword, UserSession } from '@wepublish/authentication/api';
@@ -89,6 +96,12 @@ export class SessionService {
   }
 
   async createSessionWithJWT(jwt: string, totpToken?: string) {
+    const grant = await this.jwtService.verifyImpersonationGrant(jwt);
+
+    if (grant) {
+      return this.redeemImpersonationGrant(grant);
+    }
+
     // Try preview audience first (1-min JWT from editor, skips TOTP)
     let isPreview = false;
     let user = null;
@@ -139,16 +152,138 @@ export class SessionService {
     }));
   }
 
-  async createUserSession(user: User) {
+  async createImpersonationGrant({
+    userId,
+    durationMinutes,
+    reason,
+    impersonatedBy,
+  }: {
+    userId: string;
+    durationMinutes: number;
+    reason: string;
+    impersonatedBy: string;
+  }) {
+    if (!isImpersonationEnabled(process.env)) {
+      throw new ImpersonationError('Impersonation is disabled for this medium');
+    }
+
+    const minutes = assertDuration(durationMinutes);
+    const checkedReason = assertReason(reason);
+    const actor = assertReason(impersonatedBy);
+
+    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+
+    if (!user) {
+      throw new ImpersonationError('Unknown user');
+    }
+
+    if (!user.active) {
+      throw new ImpersonationError('User is not active');
+    }
+
+    const jti = nanoid(IDAlphabet, 32);
+    const expiresAt = new Date(Date.now() + 60 * 1000);
+
+    await this.prisma.impersonationGrant.create({
+      data: { jti, expiresAt },
+    });
+
+    const token = await this.jwtService.generateImpersonationGrant({
+      userId,
+      durationMinutes: minutes,
+      impersonatedBy: actor,
+      reason: checkedReason,
+      jti,
+    });
+
+    return { token, expiresAt, durationMinutes: minutes, email: user.email };
+  }
+
+  private async redeemImpersonationGrant(claims: ImpersonationClaims) {
+    const redeemed = await this.prisma.impersonationGrant.updateMany({
+      where: { jti: claims.jti, redeemedAt: null },
+      data: { redeemedAt: new Date() },
+    });
+
+    if (redeemed.count !== 1) {
+      throw new InvalidCredentialsError();
+    }
+
+    const user = await this.prisma.user.findUnique({
+      where: { id: claims.userId },
+    });
+
+    if (!user) {
+      throw new InvalidCredentialsError();
+    }
+
+    if (!user.active) {
+      throw new NotActiveError();
+    }
+
+    return this.createUserSession(user, {
+      ttlMs: assertDuration(claims.durationMinutes) * 60 * 1000,
+      impersonatedBy: claims.impersonatedBy,
+      impersonationReason: claims.reason,
+    });
+  }
+
+  async listImpersonationSessions() {
+    return this.prisma.session.findMany({
+      where: {
+        impersonatedBy: { not: null },
+        expiresAt: { gt: new Date() },
+      },
+      select: {
+        id: true,
+        createdAt: true,
+        expiresAt: true,
+        impersonatedBy: true,
+        impersonationReason: true,
+        impersonatedAt: true,
+        user: { select: { id: true, email: true, name: true } },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  async revokeImpersonationSessions(ids?: string[]) {
+    const { count } = await this.prisma.session.deleteMany({
+      where: {
+        impersonatedBy: { not: null },
+        ...(ids?.length ? { id: { in: ids } } : {}),
+      },
+    });
+
+    return count;
+  }
+
+  async createUserSession(
+    user: User,
+    options?: {
+      ttlMs?: number;
+      impersonatedBy?: string;
+      impersonationReason?: string;
+    }
+  ) {
     const token = nanoid(IDAlphabet, 64);
 
-    const expiresAt = new Date(Date.now() + this.sessionTTL);
+    const expiresAt = new Date(
+      Date.now() + (options?.ttlMs ?? this.sessionTTL)
+    );
 
     const [{ createdAt }] = await Promise.all([
       this.prisma.session.create({
         data: {
           token,
           expiresAt,
+          ...(options?.impersonatedBy ?
+            {
+              impersonatedBy: options.impersonatedBy,
+              impersonationReason: options.impersonationReason,
+              impersonatedAt: new Date(),
+            }
+          : {}),
           user: {
             connect: {
               id: user.id,
@@ -168,6 +303,7 @@ export class SessionService {
       createdAt,
       expiresAt,
       totpEnabled: user.totpEnabled,
+      impersonated: !!options?.impersonatedBy,
     };
   }
 
@@ -314,30 +450,6 @@ export class SessionService {
     });
 
     return email;
-  }
-
-  async createJWTForUser(userId: string, expiresInMinutes: number) {
-    const TWO_YEARS_IN_MIN = 2 * 365 * 24 * 60;
-
-    if (expiresInMinutes > TWO_YEARS_IN_MIN) {
-      throw new BadRequestException(
-        `ExpiresInMinutes: ${expiresInMinutes} is too far in the future.`
-      );
-    }
-
-    const expiresAt = new Date(
-      new Date().getTime() + expiresInMinutes * 60 * 1000
-    );
-
-    const token = await this.jwtService.generateJWT({
-      id: userId,
-      expiresInMinutes,
-    });
-
-    return {
-      token,
-      expiresAt,
-    };
   }
 
   async createJWTForWebsiteLogin(userId: string) {

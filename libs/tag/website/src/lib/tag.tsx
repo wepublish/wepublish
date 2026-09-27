@@ -9,6 +9,7 @@ import { ArticleListWrapper } from '@wepublish/article/website';
 import { useMemo } from 'react';
 import { capitalize } from '@mui/material';
 import Head from 'next/head';
+import { useTranslation } from 'react-i18next';
 
 export const TagWrapper = styled(ContentWrapper)`
   ${({ theme }) => theme.breakpoints.up('md')} {
@@ -38,6 +39,7 @@ export function Tag({
     elements: { Alert, Pagination, H2 },
     blocks: { RichText },
   } = useWebsiteBuilder();
+  const { t } = useTranslation();
 
   const tag = tagData.data?.tag;
   const take = variables?.take ?? 1;
@@ -73,7 +75,7 @@ export function Tag({
       </TagTitleWrapper>
 
       {!articles.loading && !articles.data?.articles?.nodes.length && (
-        <Alert severity="info">Keine Artikel vorhanden</Alert>
+        <Alert severity="info">{t('article.noArticles')}</Alert>
       )}
 
       <ArticleList

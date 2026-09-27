@@ -13,6 +13,7 @@ import { deleteCookie, getCookie } from 'cookies-next';
 import { NextPageContext } from 'next';
 import { useRouter } from 'next/router';
 import { useEffect, useRef } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 
 const LoginWrapper = styled('div')`
   display: grid;
@@ -28,6 +29,7 @@ export default function Login({ sessionToken }: LoginProps) {
   const {
     elements: { H3, Link },
   } = useWebsiteBuilder();
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (sessionToken) {
@@ -48,14 +50,16 @@ export default function Login({ sessionToken }: LoginProps) {
 
   return (
     <LoginWrapper>
-      <H3 component="h1">Login für Abonnent*innen</H3>
+      <H3 component="h1">{t('login.title')}</H3>
 
       <Typography
         variant="body1"
         paragraph
       >
-        (Falls du noch keinen Account hast,{' '}
-        <Link href={'/signup'}>klicke hier.</Link>)
+        <Trans
+          i18nKey="login.noAccount"
+          components={{ Link: <Link href={'/signup'} /> }}
+        />
       </Typography>
 
       <LoginFormContainer

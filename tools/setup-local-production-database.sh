@@ -4,7 +4,7 @@ SOURCE_FILE_LOCAL='.env.local'
 SOURCE_FILE_TEMPLATE='.env'
 TMP_DIR=/tmp
 missing_config() {
-  echo "You need to set PRODUCTION_DUMP_WEB_URL=https://<htpasswed user>:<htpasswed password>@<dump url> in the <${SOURCE_FILE_LOCAL}> file!"
+  echo "You need to set PRODUCTION_DUMP_WEB_URL=https://<htpasswed user>:<htpasswed password>@<dump url> as environment variable or in the <${SOURCE_FILE_LOCAL}> file!"
   exit 99
 }
 
@@ -12,36 +12,29 @@ command -v curl >/dev/null || { echo "curl not found" >&2; exit 2; }
 command -v gzip >/dev/null || { echo "gzip not found" >&2; exit 2; }
 command -v psql >/dev/null || { echo "psql not found" >&2; exit 2; }
 
-if [[ ! -f $SOURCE_FILE_LOCAL ]]; then
-  missing_config
-fi
-
 load_env_file() {
   local file=$1
-  local override=${2:-false}
 
   [[ -f "$file" ]] || return 0
 
   while IFS='=' read -r key value; do
     [[ $key == '' || $key == \#* ]] && continue
     value=${value%$'\r'}
-    if [[ $override == true ]]; then
-      export "$key=$value"
-    elif [[ -z ${!key} ]]; then
+    if [[ -z ${!key} ]]; then
       export "$key=$value"
     fi
   done < "$file"
 }
 
+load_env_file "$SOURCE_FILE_LOCAL"
 load_env_file "$SOURCE_FILE_TEMPLATE"
-load_env_file "$SOURCE_FILE_LOCAL" true
 
 if [[ -z $PRODUCTION_DUMP_WEB_URL ]]; then
   missing_config
 fi
 
 if [[ -z $DATABASE_URL ]]; then
-  echo "DATABASE_URL is missing in ${SOURCE_FILE_LOCAL} or ${SOURCE_FILE_TEMPLATE}"
+  echo "DATABASE_URL is missing in the environment, ${SOURCE_FILE_LOCAL} or ${SOURCE_FILE_TEMPLATE}"
   exit 99
 fi
 DATABASE_URL=$(echo $DATABASE_URL | cut -d'?' -f1)
