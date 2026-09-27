@@ -57,10 +57,6 @@ query Event($id: String!) {
   }
 }
 
-query ImportedEventsIds {
-  importedEventsIds
-}
-
 mutation CreateEvent(
   $name: String!
   $lead: String

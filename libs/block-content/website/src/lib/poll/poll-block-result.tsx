@@ -1,6 +1,7 @@
 import { css } from '@mui/material';
 import styled from '@emotion/styled';
 import { PollAnswer } from '@wepublish/website/api';
+import { useTranslation } from 'react-i18next';
 
 export const PollBlockResultWrapper = styled('div')`
   display: grid;
@@ -75,6 +76,8 @@ export const PollBlockResult = ({
   const percentage: number | null =
     totalVotes ? (voteCount / totalVotes) * 100 : null;
 
+  const { t } = useTranslation();
+
   return (
     <PollBlockResultWrapper>
       <PollBlockResultInfo>
@@ -93,7 +96,7 @@ export const PollBlockResult = ({
           css={{ width: `${percentage}%` }}
         />
         <PollBlockVoteBarText highlight={highlight}>
-          {voteCount} Stimmen
+          {t('poll.totalVotes', { count: voteCount })}
         </PollBlockVoteBarText>
       </PollBlockVoteBar>
     </PollBlockResultWrapper>

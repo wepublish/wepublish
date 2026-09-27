@@ -382,6 +382,22 @@ const createSubscriptionFilter = (
   return {};
 };
 
+const createDiscountCodeFilter = (
+  filter: Partial<InvoiceFilter>
+): Prisma.InvoiceWhereInput => {
+  if (filter?.discountCodeId) {
+    return {
+      items: {
+        some: {
+          discountCodeId: filter.discountCodeId,
+        },
+      },
+    };
+  }
+
+  return {};
+};
+
 export const createInvoiceFilter = (
   filter: Partial<InvoiceFilter>
 ): Prisma.InvoiceWhereInput => ({
@@ -391,5 +407,6 @@ export const createInvoiceFilter = (
     createPaidAtFilter(filter),
     createCancelledAtFilter(filter),
     createSubscriptionFilter(filter),
+    createDiscountCodeFilter(filter),
   ],
 });

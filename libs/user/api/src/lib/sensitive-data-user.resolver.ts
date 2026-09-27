@@ -3,6 +3,7 @@ import {
   PaymentProviderCustomer,
   SensitiveDataUser,
   UserAddress,
+  UserSubscriptionOverview,
 } from './user.model';
 import { PrismaClient } from '@prisma/client';
 import { CurrentUser, UserSession } from '@wepublish/authentication/api';
@@ -10,13 +11,15 @@ import { UserRoleDataloader } from './user-role.dataloader';
 import { UserRole } from './user-role.model';
 import { User as PUser } from '@prisma/client';
 import { UserSubscriptionCountDataloader } from './user-subscription-count.dataloader';
+import { UserSubscriptionOverviewDataloader } from './user-subscription-overview.dataloader';
 
 @Resolver(() => SensitiveDataUser)
 export class SensitiveDataUserResolver {
   constructor(
     private prisma: PrismaClient,
     private userRoleDataloader: UserRoleDataloader,
-    private subscriptionCountDataloader: UserSubscriptionCountDataloader
+    private subscriptionCountDataloader: UserSubscriptionCountDataloader,
+    private subscriptionOverviewDataloader: UserSubscriptionOverviewDataloader
   ) {}
 
   @ResolveField(() => UserAddress, { nullable: true })
@@ -65,5 +68,10 @@ export class SensitiveDataUserResolver {
   @ResolveField(() => Int)
   public async subscriptionCount(@Parent() { id }: SensitiveDataUser) {
     return await this.subscriptionCountDataloader.load(id);
+  }
+
+  @ResolveField(() => [UserSubscriptionOverview])
+  public async subscriptionOverview(@Parent() { id }: SensitiveDataUser) {
+    return await this.subscriptionOverviewDataloader.load(id);
   }
 }

@@ -29,3 +29,4 @@ tools/removed_keys.json
 tsconfig.tsbuildinfo
 
 .claude/worktrees
+/plan.json

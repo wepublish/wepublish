@@ -18,6 +18,7 @@ import {
   PeerAvatar,
   Table,
   TableWrapper,
+  useListViewState,
 } from '@wepublish/ui/editor';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -71,11 +72,12 @@ function PeerArticleList() {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
+  const { filter, setFilter, sortField, sortOrder, setSort, limit, setLimit } =
+    useListViewState<PeerArticleFilter>('peerArticles', {
+      defaultSortField: 'publishedAt',
+    });
+
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
-  const [sortField, setSortField] = useState('publishedAt');
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
-  const [filter, setFilter] = useState<PeerArticleFilter>({});
   const [articleToImport, setArticleToImport] = useState<{
     peerId: string;
     articleId: string;
@@ -146,15 +148,18 @@ function PeerArticleList() {
           fields={['title', 'preTitle', 'lead', 'peerId', 'publicationDate']}
           filter={filter}
           isLoading={isLoading}
-          onSetFilter={setFilter}
+          onSetFilter={f => {
+            setFilter(f);
+            setPage(1);
+          }}
         />
       </ListViewContainer>
 
       <TableWrapper>
         <Table
           onSortColumn={(sortColumn, sortType) => {
-            setSortOrder(sortType ?? 'asc');
-            setSortField(sortColumn);
+            setSort(sortColumn, sortType ?? 'asc');
+            setPage(1);
           }}
           fillHeight
           loading={isLoading}
@@ -298,7 +303,10 @@ function PeerArticleList() {
           total={peerArticleListData?.peerArticles?.totalCount ?? 0}
           activePage={page}
           onChangePage={page => setPage(page)}
-          onChangeLimit={limit => setLimit(limit)}
+          onChangeLimit={limit => {
+            setLimit(limit);
+            setPage(1);
+          }}
         />
       </TableWrapper>
 

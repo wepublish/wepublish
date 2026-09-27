@@ -7,7 +7,7 @@
   },
   "teaser": {
     "author": {
-      "seperator": " und "
+      "lastSeperator": " und "
     },
     "meta": {
       "seperator": ", "

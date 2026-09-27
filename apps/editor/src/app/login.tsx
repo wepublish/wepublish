@@ -337,7 +337,7 @@ export function Login() {
             {totpSecret && (
               <>
                 <TotpDescription>{t('login.totp.manualEntry')}</TotpDescription>
-                <SecretCode>{totpSecret}</SecretCode>
+                <SecretCode data-sentry-mask>{totpSecret}</SecretCode>
               </>
             )}
 

@@ -4,8 +4,10 @@ import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { useEffect, useState } from 'react';
 
 import { useAdsContext } from '../context/ads-context';
+import { isReviveAvailable } from './revive-ad';
 
 const OVERLAY_KEY = 'adblock_overlay_dismissed_until';
+const BLOCK_CONFIRM_TIMEOUT_MS = 15000;
 
 const Backdrop = styled.div`
   position: fixed;
@@ -41,65 +43,63 @@ const Buttons = styled('div')`
   gap: ${({ theme }) => theme.spacing(3)};
 `;
 
-export const AdblockOverlay = () => {
-  const { adsDisabled } = useAdsContext();
-
-  return <>{!adsDisabled && <AdblockOverlayComponent />}</>;
+const isDismissed = () => {
+  try {
+    const dismissedUntil = localStorage.getItem(OVERLAY_KEY);
+    return !!dismissedUntil && Date.now() <= parseInt(dismissedUntil, 10);
+  } catch {
+    return true;
+  }
 };
 
-export const AdblockOverlayComponent = () => {
+export const AdblockOverlay = () => {
+  const { adsDisabled, reviveStatus, setReviveStatus } = useAdsContext();
   const [showOverlay, setShowOverlay] = useState(false);
   const {
     elements: { Button },
   } = useWebsiteBuilder();
 
   useEffect(() => {
+    if (reviveStatus !== 'pending') {
+      return;
+    }
     const timeout = setTimeout(() => {
-      const adElements = document.querySelectorAll('ins[data-revive-zoneid]');
-      if (!adElements.length) return;
-
-      let adBlocked = true;
-
-      adElements.forEach(el => {
-        const elAsHTMLElement = el as HTMLElement;
-        const isHidden =
-          elAsHTMLElement.offsetHeight === 0 ||
-          elAsHTMLElement.offsetParent === null ||
-          getComputedStyle(elAsHTMLElement).display === 'none';
-
-        if (isHidden) {
-          const wrapper = elAsHTMLElement.parentElement
-            ?.parentElement as HTMLElement | null;
-          if (wrapper) {
-            wrapper.style.display = 'none';
-          }
-        } else {
-          adBlocked = false;
-        }
-      });
-
-      const dismissedUntil = localStorage.getItem(OVERLAY_KEY);
-      const now = Date.now();
-      if (
-        adBlocked &&
-        (!dismissedUntil || now > parseInt(dismissedUntil, 10))
-      ) {
-        setShowOverlay(true);
-        document.body.style.overflow = 'hidden';
+      if (!isReviveAvailable()) {
+        setReviveStatus('blocked');
       }
-    }, 4200);
+    }, BLOCK_CONFIRM_TIMEOUT_MS);
 
     return () => clearTimeout(timeout);
-  }, []);
+  }, [reviveStatus, setReviveStatus]);
+
+  useEffect(() => {
+    if (adsDisabled || reviveStatus !== 'blocked' || isDismissed()) {
+      return;
+    }
+    setShowOverlay(true);
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [adsDisabled, reviveStatus]);
 
   const handleClose = () => {
-    const expireAt = Date.now() + 24 * 60 * 60 * 1000;
-    localStorage.setItem(OVERLAY_KEY, expireAt.toString());
+    try {
+      localStorage.setItem(
+        OVERLAY_KEY,
+        (Date.now() + 24 * 60 * 60 * 1000).toString()
+      );
+    } catch {
+      // storage unavailable, dismiss for this page view only
+    }
     setShowOverlay(false);
     document.body.style.overflow = '';
   };
 
-  if (!showOverlay) return null;
+  if (!showOverlay || adsDisabled) {
+    return null;
+  }
 
   return (
     <>

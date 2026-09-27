@@ -7,6 +7,7 @@ export * from './lib/authContext';
 export * from './lib/blocks';
 export * from './lib/hooks';
 export * from './lib/listView/column-configurator';
+export * from './lib/listView/list-columns';
 export * from './lib/listView/list-view';
 export * from './lib/listView/paginated-query-container';
 export * from './lib/listView/pagination';

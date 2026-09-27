@@ -779,6 +779,21 @@ const createTagsFilter = (
   return {};
 };
 
+const createSlugFilter = (
+  filter: Partial<PageFilter>
+): Prisma.PageWhereInput => {
+  if (filter?.slug) {
+    return {
+      slug: {
+        contains: filter.slug,
+        mode: 'insensitive',
+      },
+    };
+  }
+
+  return {};
+};
+
 const createHiddenFilter = (
   filter: Partial<PageFilter>
 ): Prisma.PageWhereInput => {
@@ -799,6 +814,7 @@ export const createPageFilter = (
     createPublicationDateFromFilter(filter),
     createPublicationDateToFilter(filter),
     createDescriptionFilter(filter),
+    createSlugFilter(filter),
     createTagsFilter(filter),
     createHiddenFilter(filter),
     {
