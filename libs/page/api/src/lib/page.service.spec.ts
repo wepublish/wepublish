@@ -83,6 +83,7 @@ describe('PageService', () => {
         includeHidden: false,
         title: 'title',
         description: 'description',
+        slug: 'slug',
         publicationDateFrom: {
           date: new Date('2025z-01-01'),
           comparison: DateFilterComparison.LowerThan,
@@ -116,6 +117,7 @@ describe('PageService', () => {
         includeHidden: false,
         title: 'title',
         description: 'description',
+        slug: 'slug',
         publicationDateFrom: {
           date: new Date('2025z-01-01'),
           comparison: DateFilterComparison.LowerThan,

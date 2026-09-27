@@ -14,6 +14,7 @@ import {
 } from '@wepublish/editor/api';
 import { CanPreview } from '@wepublish/permissions';
 import {
+  ColumnConfigurator,
   createCheckedPermissionComponent,
   DEFAULT_MAX_TABLE_PAGES,
   DEFAULT_TABLE_PAGE_SIZES,
@@ -31,6 +32,9 @@ import {
   StatusBadge,
   Table,
   TableWrapper,
+  ListColumn,
+  renderListColumns,
+  useColumnConfig,
   useListViewState,
 } from '@wepublish/ui/editor';
 import { useEffect, useMemo, useState } from 'react';
@@ -58,7 +62,7 @@ interface State {
   text: string;
 }
 
-const { Column, HeaderCell, Cell } = RTable;
+const { Column, HeaderCell } = RTable;
 
 enum ConfirmAction {
   Delete = 'delete',
@@ -135,11 +139,107 @@ function PageList() {
 
   const [createComment] = useCreateCommentMutation({});
 
+  const dataColumns = useMemo<ListColumn<FullPageFragment>[]>(
+    () => [
+      {
+        id: 'states',
+        label: t('pages.overview.states'),
+        width: 125,
+        alwaysVisible: true,
+        render: page => {
+          const states: State[] = [];
+
+          if (page.draft) {
+            states.push({ state: 'draft', text: t('pages.overview.draft') });
+          }
+          if (page.pending) {
+            states.push({
+              state: 'pending',
+              text: t('pages.overview.pending'),
+            });
+          }
+          if (page.published) {
+            states.push({
+              state: 'published',
+              text: t('pages.overview.published'),
+            });
+          }
+
+          return (
+            <StatusBadge states={states.map(st => st.state)}>
+              {states.map(st => st.text).join(' / ')}
+            </StatusBadge>
+          );
+        },
+      },
+      {
+        id: 'title',
+        label: t('pages.overview.title'),
+        width: 400,
+        alwaysVisible: true,
+        render: page => (
+          <Link to={`/pages/edit/${page.id}`}>
+            {page.latest.title || t('pages.overview.untitled')}
+          </Link>
+        ),
+      },
+      {
+        id: 'slug',
+        label: t('pages.overview.slug'),
+        width: 210,
+        dataKey: 'slug',
+        render: page => page.slug,
+      },
+      {
+        id: 'publishedAt',
+        label: t('pages.overview.publicationDate'),
+        width: 210,
+        sortable: true,
+        dataKey: 'publishedAt',
+        alwaysVisible: true,
+        render: page =>
+          page.published?.publishedAt ?
+            t('pageEditor.overview.publishedAt', {
+              publicationDate: new Date(page.published.publishedAt),
+            })
+          : page.pending?.publishedAt ?
+            t('pageEditor.overview.publishedAtIfPending', {
+              publishedAtIfPending: new Date(page.pending.publishedAt),
+            })
+          : t('pages.overview.notPublished'),
+      },
+      {
+        id: 'modifiedAt',
+        label: t('pages.overview.updated'),
+        width: 210,
+        sortable: true,
+        dataKey: 'modifiedAt',
+        alwaysVisible: true,
+        render: page =>
+          t('pageEditor.overview.modifiedAt', {
+            modificationDate: new Date(page.modifiedAt),
+          }),
+      },
+    ],
+    [t]
+  );
+
+  const { isVisible, toggle, configurableColumns } = useColumnConfig(
+    'pages',
+    dataColumns
+  );
+
   return (
     <>
       <ListViewContainer>
         <ListViewHeader>
           <h2>{t('pages.overview.pages')}</h2>
+
+          <ColumnConfigurator
+            columns={configurableColumns}
+            isVisible={isVisible}
+            onToggle={toggle}
+          />
         </ListViewHeader>
         <PermissionControl qualifyingPermissions={['CAN_CREATE_PAGE']}>
           <ListViewActions>
@@ -159,6 +259,7 @@ function PageList() {
           fields={[
             'title',
             'description',
+            'slug',
             'draft',
             'pending',
             'published',
@@ -190,95 +291,7 @@ function PageList() {
             setPage(1);
           }}
         >
-          <Column
-            width={125}
-            align="left"
-            resizable
-          >
-            <HeaderCell>{t('pages.overview.states')}</HeaderCell>
-            <Cell>
-              {(rowData: FullPageFragment) => {
-                const states: State[] = [];
-
-                if (rowData.draft)
-                  states.push({
-                    state: 'draft',
-                    text: t('pages.overview.draft'),
-                  });
-                if (rowData.pending)
-                  states.push({
-                    state: 'pending',
-                    text: t('pages.overview.pending'),
-                  });
-                if (rowData.published)
-                  states.push({
-                    state: 'published',
-                    text: t('pages.overview.published'),
-                  });
-
-                return (
-                  <StatusBadge states={states.map(st => st.state)}>
-                    {states.map(st => st.text).join(' / ')}
-                  </StatusBadge>
-                );
-              }}
-            </Cell>
-          </Column>
-
-          <Column
-            width={400}
-            align="left"
-            resizable
-          >
-            <HeaderCell>{t('pages.overview.title')}</HeaderCell>
-            <Cell>
-              {(rowData: FullPageFragment) => (
-                <Link to={`/pages/edit/${rowData.id}`}>
-                  {rowData.latest.title || t('pages.overview.untitled')}
-                </Link>
-              )}
-            </Cell>
-          </Column>
-
-          <Column
-            width={210}
-            align="left"
-            resizable
-            sortable
-          >
-            <HeaderCell>{t('pages.overview.publicationDate')}</HeaderCell>
-            <Cell dataKey="publishedAt">
-              {(pageRef: FullPageFragment) =>
-                pageRef.published?.publishedAt ?
-                  t('pageEditor.overview.publishedAt', {
-                    publicationDate: new Date(pageRef.published.publishedAt),
-                  })
-                : pageRef.pending?.publishedAt ?
-                  t('pageEditor.overview.publishedAtIfPending', {
-                    publishedAtIfPending: new Date(
-                      pageRef.pending?.publishedAt
-                    ),
-                  })
-                : t('pages.overview.notPublished')
-              }
-            </Cell>
-          </Column>
-
-          <Column
-            width={210}
-            align="left"
-            resizable
-            sortable
-          >
-            <HeaderCell>{t('pages.overview.updated')}</HeaderCell>
-            <Cell dataKey="modifiedAt">
-              {({ modifiedAt }: FullPageFragment) =>
-                t('pageEditor.overview.modifiedAt', {
-                  modificationDate: new Date(modifiedAt),
-                })
-              }
-            </Cell>
-          </Column>
+          {renderListColumns(dataColumns, isVisible)}
 
           <Column
             width={220}
