@@ -63,6 +63,7 @@ import {
   ReflektUnorderedList,
 } from '../src/components/reflekt-lists';
 import { ReflektLoginForm } from '../src/components/reflekt-login-form';
+import { ReflektMemberPlanOfferPicker } from '../src/components/reflekt-memberplan-offer-picker';
 import { ReflektMemberPlanPicker } from '../src/components/reflekt-memberplan-picker';
 import { ReflektMemberPlanItem } from '../src/components/reflekt-memberplan-picker-item';
 import { ReflektUpgrade } from '../src/components/reflekt-upgrade';
@@ -210,6 +211,7 @@ function CustomApp({
               Upgrade={ReflektUpgrade}
               GoodiePicker={ReflektGoodiePicker}
               MemberPlanPicker={ReflektMemberPlanPicker}
+              MemberPlanOfferPicker={ReflektMemberPlanOfferPicker}
               MemberPlanItem={ReflektMemberPlanItem}
               UserForm={ReflektUserForm}
               LoginForm={ReflektLoginForm}

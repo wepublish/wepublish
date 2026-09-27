@@ -9,6 +9,7 @@ import {
   CurrencyNumberSpinner,
   getPeriodPriceRange,
   isFixedAmountLayout,
+  MemberPlanOfferPickerRadios,
   MemberPlanPickerRadios,
   monthlyAmountFromPeriodAmount,
   showsAmountInput,
@@ -432,7 +433,8 @@ export const ReflektCrowdfundingMemberPlanItem = forwardRef<
 });
 
 const CrowdfundingSubscribeBlock = styled(StyledReflektSubscribeBlock)`
-  ${MemberPlanPickerRadios} {
+  ${MemberPlanPickerRadios},
+  ${MemberPlanOfferPickerRadios} {
     row-gap: ${({ theme }) => theme.spacing(8)};
     margin-top: ${({ theme }) => theme.spacing(10)};
     overflow: visible;
