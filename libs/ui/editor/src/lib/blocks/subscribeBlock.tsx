@@ -1320,34 +1320,6 @@ export const SubscribeBlock = ({
 
         <Hint>{t('blocks.subscribe.selectFieldsSelectionHint')}</Hint>
       </Content>
-
-      <Content>
-        <Heading>{t('blocks.subscribe.periodicityDisplay')}</Heading>
-
-        <RadioGroup
-          inline
-          disabled={disabled}
-          value={
-            value.periodicityDisplay ?? SubscribePeriodicityDisplay.Dropdown
-          }
-          onChange={periodicityDisplay =>
-            onChange(current => ({
-              ...current,
-              periodicityDisplay:
-                periodicityDisplay as SubscribePeriodicityDisplay,
-            }))
-          }
-        >
-          <Radio value={SubscribePeriodicityDisplay.Dropdown}>
-            {t('blocks.subscribe.periodicityDisplayDropdown')}
-          </Radio>
-          <Radio value={SubscribePeriodicityDisplay.OfferCards}>
-            {t('blocks.subscribe.periodicityDisplayOfferCards')}
-          </Radio>
-        </RadioGroup>
-
-        <Hint>{t('blocks.subscribe.periodicityDisplayHint')}</Hint>
-      </Content>
     </Panel>
   );
 };
