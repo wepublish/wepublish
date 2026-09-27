@@ -8,6 +8,7 @@ import {
 import { Page } from '@wepublish/page/website';
 import { BuilderPageProps } from '@wepublish/website/builder';
 
+import { FlexBlockHeroCrowdfundingWrapper } from './block-layouts/flex-block-hero-crowdfunding';
 import { FlexBlockHeroWrapper } from './block-layouts/flex-block-hero';
 import { CollapsibleContentWrapper } from './break-blocks/reflekt-collapsible-content';
 import { CollapsibleDownloadsWrapper } from './break-blocks/reflekt-collapsible-downloads';
@@ -35,7 +36,11 @@ const StyledReflektPage = styled(Page)`
     justify-content: center;
   }
 
-  & > .MuiContainer-root:has(${FlexBlockHeroWrapper}) {
+  &
+    > .MuiContainer-root:is(
+      :has(${FlexBlockHeroWrapper}),
+      :has(${FlexBlockHeroCrowdfundingWrapper})
+    ) {
     grid-template-columns: 1fr;
     justify-content: stretch;
   }
