@@ -1071,6 +1071,33 @@ export const CanDeleteMailProviderSettings: Permission = {
 };
 
 /**
+ * Letter Provider Settings
+ */
+export const CanGetLetterProviderSettings: Permission = {
+  id: 'CAN_GET_LETTER_PROVIDER_SETTINGS',
+  description: 'Allows to get letter provider settings',
+  deprecated: false,
+};
+
+export const CanCreateLetterProviderSettings: Permission = {
+  id: 'CAN_CREATE_LETTER_PROVIDER_SETTINGS',
+  description: 'Allows to create letter provider settings',
+  deprecated: false,
+};
+
+export const CanUpdateLetterProviderSettings: Permission = {
+  id: 'CAN_UPDATE_LETTER_PROVIDER_SETTINGS',
+  description: 'Allows to update letter provider settings',
+  deprecated: false,
+};
+
+export const CanDeleteLetterProviderSettings: Permission = {
+  id: 'CAN_DELETE_LETTER_PROVIDER_SETTINGS',
+  description: 'Allows to delete letter provider settings',
+  deprecated: false,
+};
+
+/**
  * Analytics Provider Settings Permissions
  */
 export const CanGetAnalyticsProviderSettings: Permission = {
@@ -1309,6 +1336,10 @@ export const AllPermissions: Permission[] = [
   CanCreateMailProviderSettings,
   CanUpdateMailProviderSettings,
   CanDeleteMailProviderSettings,
+  CanGetLetterProviderSettings,
+  CanCreateLetterProviderSettings,
+  CanUpdateLetterProviderSettings,
+  CanDeleteLetterProviderSettings,
   CanCreateExternalApp,
   CanUpdateExternalApp,
   CanDeleteExternalApp,

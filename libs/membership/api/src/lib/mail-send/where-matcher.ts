@@ -25,6 +25,8 @@ const OPERATORS = new Set([
   'lt',
   'in',
   'notIn',
+  'contains',
+  'mode',
   'is',
   'isNot',
   'none',
@@ -56,6 +58,15 @@ const matchesOperators = (value: unknown, condition: Where): boolean =>
         return (expected as unknown[]).includes(value);
       case 'notIn':
         return !(expected as unknown[]).includes(value);
+      case 'contains':
+        return (
+          typeof value === 'string' &&
+          (condition['mode'] === 'insensitive' ?
+            value.toLowerCase().includes((expected as string).toLowerCase())
+          : value.includes(expected as string))
+        );
+      case 'mode':
+        return true;
       case 'is':
         return expected === null ?
             value == null

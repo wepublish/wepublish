@@ -1,6 +1,10 @@
-import { PrismaClient } from '@prisma/client';
+import { MailChannel, PrismaClient } from '@prisma/client';
 import { MailSendRecipientService } from './mail-send-recipient.service';
-import { MailRecipientBase, MailSubscriptionState } from './mail-send.model';
+import {
+  MailEmailFilter,
+  MailRecipientBase,
+  MailSubscriptionState,
+} from './mail-send.model';
 import { matches } from './where-matcher';
 
 const makeService = (prisma: any) =>
@@ -331,6 +335,96 @@ describe('MailSendRecipientService', () => {
       );
 
       expect(recipients).toHaveLength(1);
+    });
+  });
+
+  describe('letters (one per person)', () => {
+    it('counts people instead of subscriptions', async () => {
+      const prisma = {
+        user: { count: jest.fn(async () => 11) },
+        subscription: { count: jest.fn(async () => 13) },
+      };
+      const service = makeService(prisma);
+
+      expect(
+        await service.count(
+          { base: MailRecipientBase.hasSubscription },
+          MailChannel.letter
+        )
+      ).toBe(11);
+      expect(prisma.subscription.count).not.toHaveBeenCalled();
+
+      expect(
+        await service.count(
+          { base: MailRecipientBase.hasSubscription },
+          MailChannel.mail
+        )
+      ).toBe(13);
+    });
+
+    it('resolves one recipient per user, bound to the first matching subscription', async () => {
+      const prisma = {
+        user: {
+          findMany: jest.fn(async () => [
+            { id: 'u1', subscriptions: [{ id: 's1' }] },
+            { id: 'u2', subscriptions: [{ id: 's3' }] },
+          ]),
+        },
+        subscription: { findMany: jest.fn() },
+      };
+
+      const recipients = await makeService(prisma).resolvePage(
+        { base: MailRecipientBase.hasSubscription, memberPlanIDs: ['p1'] },
+        0,
+        100,
+        MailChannel.letter
+      );
+
+      expect(prisma.subscription.findMany).not.toHaveBeenCalled();
+      expect(recipients.map(({ user }) => user.id)).toEqual(['u1', 'u2']);
+      expect(recipients[0].subscription?.id).toBe('s1');
+      expect((recipients[0].user as any).subscriptions).toBeUndefined();
+
+      const args = (prisma.user.findMany as jest.Mock).mock.calls[0][0];
+      expect(args.where.subscriptions.some).toEqual({
+        AND: [{ memberPlanID: { in: ['p1'] } }],
+      });
+      expect(args.include.subscriptions.take).toBe(1);
+      expect(args.include.subscriptions.where).toEqual(
+        args.where.subscriptions.some
+      );
+    });
+
+    it('binds no subscription for the user-based audiences', async () => {
+      const prisma = {
+        user: { findMany: jest.fn(async () => [{ id: 'u1' }]) },
+      };
+
+      const recipients = await makeService(prisma).resolvePage(
+        { base: MailRecipientBase.allUsers },
+        0,
+        100,
+        MailChannel.letter
+      );
+
+      expect(recipients[0].subscription).toBeUndefined();
+      const args = (prisma.user.findMany as jest.Mock).mock.calls[0][0];
+      expect(args.include.subscriptions).toBeUndefined();
+    });
+
+    it('counts people without an address, not subscriptions', async () => {
+      const prisma = {
+        user: { count: jest.fn(async () => 2) },
+        subscription: { count: jest.fn() },
+      };
+
+      expect(
+        await makeService(prisma).countWithoutAddress(
+          { base: MailRecipientBase.endedSubscription },
+          MailChannel.letter
+        )
+      ).toBe(2);
+      expect(prisma.subscription.count).not.toHaveBeenCalled();
     });
   });
 });
@@ -883,6 +977,102 @@ describe('audience filtering (semantics)', () => {
           ],
         })
       ).toBe(false);
+    });
+  });
+
+  describe('email filter', () => {
+    const usersWhereFor = async (
+      emailFilter: MailEmailFilter,
+      patterns: (string | null)[],
+      base = MailRecipientBase.allUsers
+    ) => {
+      const prisma = {
+        user: { count: jest.fn(async () => 0) },
+        subscription: { count: jest.fn(async () => 0) },
+        settingLetterProvider: {
+          findMany: jest.fn(async () =>
+            patterns.map(placeholderEmailContains => ({
+              placeholderEmailContains,
+            }))
+          ),
+        },
+      };
+
+      await makeService(prisma).count({ base, emailFilter });
+
+      return base === MailRecipientBase.allUsers ?
+          (prisma.user.count as jest.Mock).mock.calls[0][0].where
+        : (prisma.subscription.count as jest.Mock).mock.calls[0][0].where;
+    };
+
+    const placeholder = { email: 'test1234@Placeholder.neuewege.ch' };
+    const real = { email: 'jane@example.com' };
+
+    it('does not look up the settings when every address is allowed', async () => {
+      const prisma = {
+        user: { count: jest.fn(async () => 5) },
+        settingLetterProvider: { findMany: jest.fn() },
+      };
+
+      await makeService(prisma).count({
+        base: MailRecipientBase.allUsers,
+        emailFilter: MailEmailFilter.all,
+      });
+
+      expect(prisma.settingLetterProvider.findMany).not.toHaveBeenCalled();
+      expect(prisma.user.count).toHaveBeenCalledWith();
+    });
+
+    it('keeps only placeholder addresses, case-insensitively', async () => {
+      const where = await usersWhereFor(MailEmailFilter.placeholder, [
+        '@placeholder.neuewege.ch',
+      ]);
+
+      expect(matches(placeholder, where)).toBe(true);
+      expect(matches(real, where)).toBe(false);
+    });
+
+    it('matches the pattern anywhere in the address', async () => {
+      const where = await usersWhereFor(MailEmailFilter.placeholder, [
+        'placeholder',
+      ]);
+
+      expect(matches({ email: 'placeholder-42@neuewege.ch' }, where)).toBe(
+        true
+      );
+      expect(matches({ email: 'a@placeholder.neuewege.ch' }, where)).toBe(true);
+      expect(matches(real, where)).toBe(false);
+    });
+
+    it('keeps only real addresses', async () => {
+      const where = await usersWhereFor(MailEmailFilter.real, [
+        '@placeholder.neuewege.ch',
+      ]);
+
+      expect(matches(placeholder, where)).toBe(false);
+      expect(matches(real, where)).toBe(true);
+    });
+
+    it('treats every address as real without a configured pattern', async () => {
+      const placeholderWhere = await usersWhereFor(
+        MailEmailFilter.placeholder,
+        [null, '  ']
+      );
+      const realWhere = await usersWhereFor(MailEmailFilter.real, [null]);
+
+      expect(matches(placeholder, placeholderWhere)).toBe(false);
+      expect(matches(placeholder, realWhere)).toBe(true);
+    });
+
+    it('filters subscription audiences on the owner', async () => {
+      const where = await usersWhereFor(
+        MailEmailFilter.placeholder,
+        ['@placeholder.neuewege.ch'],
+        MailRecipientBase.hasSubscription
+      );
+
+      expect(matches({ user: placeholder }, where)).toBe(true);
+      expect(matches({ user: real }, where)).toBe(false);
     });
   });
 });
