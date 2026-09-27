@@ -34,10 +34,12 @@ import {
   formatArticleAuthors,
   Table,
   TableWrapper,
+  ListColumn,
+  renderListColumns,
   useColumnConfig,
   useListViewState,
 } from '@wepublish/ui/editor';
-import { ReactNode, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   MdAdd,
@@ -57,7 +59,7 @@ import {
 } from 'rsuite';
 import type { RowDataType } from 'rsuite-table';
 
-const { Column, HeaderCell, Cell } = RTable;
+const { Column, HeaderCell } = RTable;
 
 interface State {
   state: string;
@@ -85,17 +87,6 @@ function mapColumFieldToGraphQLField(columnField: string): ArticleSort | null {
 
 type ArticleListProps = {
   initialFilter?: ArticleFilter;
-};
-
-type ArticleColumn = {
-  id: string;
-  label: string;
-  width: number;
-  align?: 'left' | 'center' | 'right';
-  sortable?: boolean;
-  dataKey?: string;
-  alwaysVisible?: boolean;
-  render: (article: FullArticleFragment) => ReactNode;
 };
 
 function ArticleList({ initialFilter = {} }: ArticleListProps) {
@@ -150,7 +141,7 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
     return () => clearTimeout(timerID);
   }, [highlightedRowId]);
 
-  const dataColumns = useMemo<ArticleColumn[]>(
+  const dataColumns = useMemo<ListColumn<FullArticleFragment>[]>(
     () => [
       {
         id: 'states',
@@ -240,14 +231,9 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
     [t]
   );
 
-  const { isVisible, toggle } = useColumnConfig('articles', dataColumns);
-
-  const configurableColumns = useMemo(
-    () =>
-      dataColumns
-        .filter(column => !column.alwaysVisible)
-        .map(({ id, label }) => ({ id, label })),
-    [dataColumns]
+  const { isVisible, toggle, configurableColumns } = useColumnConfig(
+    'articles',
+    dataColumns
   );
 
   return (
@@ -316,22 +302,7 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
             setPage(1);
           }}
         >
-          {dataColumns
-            .filter(column => column.alwaysVisible || isVisible(column.id))
-            .map(column => (
-              <Column
-                key={column.id}
-                width={column.width}
-                align={column.align ?? 'left'}
-                resizable
-                sortable={column.sortable}
-              >
-                <HeaderCell>{column.label}</HeaderCell>
-                <Cell dataKey={column.dataKey}>
-                  {(rowData: FullArticleFragment) => column.render(rowData)}
-                </Cell>
-              </Column>
-            ))}
+          {renderListColumns(dataColumns, isVisible)}
 
           <Column
             width={220}
