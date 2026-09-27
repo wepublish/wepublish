@@ -98,6 +98,30 @@ export function getExtensionForMimeType(mimeType: string): string {
   return map[mimeType] ?? '';
 }
 
+const extensionToMimeType: Record<string, string> = {
+  '.pdf': 'application/pdf',
+  '.docx':
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  '.doc': 'application/msword',
+  '.xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  '.xls': 'application/vnd.ms-excel',
+  '.pptx':
+    'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+  '.ppt': 'application/vnd.ms-powerpoint',
+  '.odt': 'application/vnd.oasis.opendocument.text',
+  '.ods': 'application/vnd.oasis.opendocument.spreadsheet',
+  '.odp': 'application/vnd.oasis.opendocument.presentation',
+  '.csv': 'text/csv',
+  '.txt': 'text/plain',
+  '.json': 'application/json',
+  '.xml': 'application/xml',
+  '.zip': 'application/zip',
+};
+
+export function getMimeTypeForExtension(extension: string): string | undefined {
+  return extensionToMimeType[extension.toLowerCase()];
+}
+
 export class SupportedDocumentsValidator extends FileValidator {
   constructor() {
     super({});

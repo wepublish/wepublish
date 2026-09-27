@@ -50,6 +50,11 @@ fragment TinyUser on SensitiveDataUser {
     ...FullUserRole
   }
   subscriptionCount
+  subscriptionOverview {
+    id
+    memberPlanName
+    status
+  }
 }
 
 query TinyUserList(
@@ -209,8 +214,4 @@ mutation DeleteUser($id: String!) {
   deleteUser(id: $id) {
     ...FullUser
   }
-}
-
-mutation SendWebsiteLogin($email: String!) {
-  sendWebsiteLogin(email: $email)
 }

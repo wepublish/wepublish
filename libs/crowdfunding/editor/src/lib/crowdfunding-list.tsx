@@ -11,7 +11,7 @@ import {
 import { MdAdd, MdDelete } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { Table as RTable, Table } from 'rsuite';
+import { IconButton as RIconButton, Table as RTable, Table } from 'rsuite';
 import { RowDataType } from 'rsuite/esm/Table';
 import { Crowdfunding, useCrowdfundingsQuery } from '@wepublish/editor/api';
 import { CrowdfundingDeleteModal } from './crowdfunding-delete-modal';
@@ -36,13 +36,12 @@ function CrowdfundingList() {
 
         <ListViewActions>
           <Link to="create">
-            <IconButton
+            <RIconButton
               appearance="primary"
-              loading={false}
+              icon={<MdAdd />}
             >
-              <MdAdd />
               {t('crowdfunding.list.createNew')}
-            </IconButton>
+            </RIconButton>
           </Link>
         </ListViewActions>
       </ListViewContainer>

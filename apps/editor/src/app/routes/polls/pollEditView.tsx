@@ -163,6 +163,28 @@ function PollEditView() {
     }
   }
 
+  const updateOpensAt = (opensAt: Date | null) => {
+    if (!poll) {
+      return;
+    }
+
+    setPoll({
+      ...poll,
+      opensAt: opensAt?.toISOString() || new Date().toISOString(),
+    });
+  };
+
+  const updateClosedAt = (closedAt: Date | null) => {
+    if (!poll) {
+      return;
+    }
+
+    setPoll({
+      ...poll,
+      closedAt: closedAt?.toISOString(),
+    });
+  };
+
   return (
     <Form
       onSubmit={validationPassed => validationPassed && saveOrUpdate()}
@@ -209,17 +231,8 @@ function PollEditView() {
                 <DatePicker
                   value={poll?.opensAt ? new Date(poll.opensAt) : undefined}
                   format="yyyy-MM-dd HH:mm"
-                  onChange={(opensAt: Date | null) => {
-                    if (!poll) {
-                      return;
-                    }
-
-                    setPoll({
-                      ...poll,
-                      opensAt:
-                        opensAt?.toISOString() || new Date().toISOString(),
-                    });
-                  }}
+                  onSelect={updateOpensAt}
+                  onChange={updateOpensAt}
                 />
               </DateItem>
 
@@ -229,16 +242,8 @@ function PollEditView() {
                 <DatePicker
                   value={poll?.closedAt ? new Date(poll.closedAt) : undefined}
                   format="yyyy-MM-dd HH:mm"
-                  onChange={(closedAt: Date | null) => {
-                    if (!poll) {
-                      return;
-                    }
-
-                    setPoll({
-                      ...poll,
-                      closedAt: closedAt?.toISOString(),
-                    });
-                  }}
+                  onSelect={updateClosedAt}
+                  onChange={updateClosedAt}
                 />
               </DateItem>
             </DatesWrapper>

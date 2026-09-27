@@ -5,6 +5,16 @@
   "projectType": "library",
   "tags": [],
   "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/banner/website",
+        "tsConfig": "libs/banner/website/tsconfig.lib.json",
+        "main": "libs/banner/website/src/index.ts",
+        "rootDir": "."
+      }
+    },
     "lint": {
       "executor": "@nx/eslint:lint"
     },

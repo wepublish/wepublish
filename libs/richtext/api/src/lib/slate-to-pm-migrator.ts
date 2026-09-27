@@ -39,30 +39,53 @@ const slateToPm = (content: any): RichtextElements | [] => {
         return [];
       }
 
-      // No type (or link type) = text node
+      const formattingMarks = (leaf: any) =>
+        [
+          leaf.italic ? { type: 'italic' } : [],
+          leaf.bold ? { type: 'bold' } : [],
+          leaf.underline ? { type: 'underline' } : [],
+          leaf.strikethrough ? { type: 'strike' } : [],
+          leaf.subscript ? { type: 'subscript' } : [],
+          leaf.superscript ? { type: 'superscript' } : [],
+        ].flat();
+
+      if (isLink) {
+        const linkMark = {
+          type: 'link',
+          attrs: {
+            href: child.url,
+            // @TODO: target?
+            rel: 'noopener noreferrer nofollow',
+            class: null,
+          },
+        };
+
+        // Formatting (italic, bold, ...) lives on the link's text leaves, not on
+        // the link node itself, so emit one text node per leaf and keep its marks.
+        return (child.children ?? []).flatMap(
+          (leaf: any): RichtextElements | [] => {
+            const leafText = slateText(leaf);
+
+            if (leafText.length === 0) {
+              return [];
+            }
+
+            return {
+              type: 'text',
+              attrs: undefined,
+              text: leafText,
+              marks: [linkMark, ...formattingMarks(leaf)],
+            };
+          }
+        );
+      }
+
+      // No type = text node
       return {
         type: 'text',
         attrs: undefined,
         text,
-        marks: [
-          isLink ?
-            {
-              type: 'link',
-              attrs: {
-                href: child.url,
-                // @TODO: target?
-                rel: 'noopener noreferrer nofollow',
-                class: null,
-              },
-            }
-          : [],
-          child.italic ? { type: 'italic' } : [],
-          child.bold ? { type: 'bold' } : [],
-          child.underline ? { type: 'underline' } : [],
-          child.strikethrough ? { type: 'strike' } : [],
-          child.subscript ? { type: 'subscript' } : [],
-          child.superscript ? { type: 'superscript' } : [],
-        ].flat(),
+        marks: formattingMarks(child),
       };
     }
   );

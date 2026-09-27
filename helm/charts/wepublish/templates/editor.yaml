@@ -44,6 +44,8 @@ spec:
       app.kubernetes.io/instance: {{ .Release.Name }}
   template:
     metadata:
+      annotations:
+        checksum/env: {{ merge (deepCopy .Values.editor.env) .Values.deployment.env | toYaml | sha256sum }}
       labels:
         app.kubernetes.io/name: {{ include "helm.name" . }}-editor
         app.kubernetes.io/instance: {{ .Release.Name }}
@@ -91,7 +93,7 @@ spec:
             {{- end }}
           envFrom:
             - secretRef:
-                name: {{ include "helm.fullname" . }}-editor-environment-{{ .Release.Revision }}
+                name: {{ include "helm.fullname" . }}-editor-environment
             {{- if .Values.editor.envFromSecretRefName }}
             - secretRef:
                 name: {{ .Values.editor.envFromSecretRefName }}
@@ -131,9 +133,9 @@ spec:
 apiVersion: v1
 kind: Secret
 metadata:
-  name: {{ include "helm.fullname" . }}-editor-environment-{{ .Release.Revision }}
+  name: {{ include "helm.fullname" . }}-editor-environment
   labels:
-    app.kubernetes.io/name: {{ include "helm.fullname" . }}-editor-environment-{{ .Release.Revision }}
+    app.kubernetes.io/name: {{ include "helm.fullname" . }}-editor-environment
     helm.sh/chart: {{ include "helm.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}

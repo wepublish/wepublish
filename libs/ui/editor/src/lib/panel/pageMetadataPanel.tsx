@@ -72,6 +72,8 @@ export interface PageMetadata {
   readonly slug?: string;
   readonly title?: string;
   readonly description: string;
+  readonly seoTitle?: string;
+  readonly seoDescription?: string;
   readonly tags: string[];
   readonly defaultTags: Pick<Tag, 'id' | 'tag'>[];
   readonly url: string;
@@ -99,6 +101,8 @@ function PageMetadataPanel({
   const {
     title,
     description,
+    seoTitle,
+    seoDescription,
     slug,
     defaultTags,
     tags,
@@ -243,7 +247,6 @@ function PageMetadataPanel({
               label={t('pageEditor.panels.title')}
               disabled={!isAuthorized}
               value={title}
-              helpText={t('pageEditor.panels.titleHelpBlock')}
               onChange={title => onChange?.({ ...value, title })}
             />
 
@@ -254,8 +257,30 @@ function PageMetadataPanel({
               disabled={!isAuthorized}
               multiline
               value={description}
-              helpText={t('pageEditor.panels.descriptionHelpBlock')}
               onChange={description => onChange?.({ ...value, description })}
+            />
+
+            <DeferredTextField
+              controlId="pageSeoTitle"
+              name="seo-title"
+              label={t('pageEditor.panels.seoTitle')}
+              disabled={!isAuthorized}
+              value={seoTitle}
+              helpText={t('pageEditor.panels.seoTitleHelpBlock')}
+              onChange={seoTitle => onChange?.({ ...value, seoTitle })}
+            />
+
+            <DeferredTextField
+              controlId="pageSeoDescription"
+              name="seo-description"
+              label={t('pageEditor.panels.seoDescription')}
+              disabled={!isAuthorized}
+              multiline
+              value={seoDescription}
+              helpText={t('pageEditor.panels.seoDescriptionHelpBlock')}
+              onChange={seoDescription =>
+                onChange?.({ ...value, seoDescription })
+              }
             />
 
             <Form.Group controlId="pageTags">

@@ -33,11 +33,13 @@ import {
   FacebookVideoBlock,
   FocusTeaser,
   HtmlBlock,
+  MailchimpFormBlock,
   IFrameBlock,
   ImageBlock,
   ImageGalleryBlock,
   ImageSlider,
   InstagramPostBlock,
+  Lightbox,
   ListicleBlock,
   PolisConversationBlock,
   PollBlock,
@@ -86,6 +88,7 @@ import {
   InvoiceListItem,
   MemberPlanItem,
   GoodiePicker,
+  MemberPlanOfferPicker,
   MemberPlanPicker,
   PaymentAmountSlider,
   PaymentMethodPicker,
@@ -141,7 +144,9 @@ import { FontStyleOptions } from '@mui/material/styles/createTypography';
 export type WebsiteProps = PropsWithChildren;
 
 const dateFormatter = (date: Date, includeTime = true) =>
-  includeTime ? format(date, 'dd.MM.yyyy HH:mm') : format(date, 'dd.MM.yyyy');
+  format(date, includeTime ? 'dd.MM.yyyy HH:mm' : 'dd.MM.yyyy', {
+    locale: (getDefaultOptions() as { locale: Locale }).locale,
+  });
 
 const globalStyles = (
   <GlobalStyles
@@ -240,6 +245,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({ children }) => (
         GoodiePicker={GoodiePicker}
         MemberPlanPicker={MemberPlanPicker}
         MemberPlanItem={MemberPlanItem}
+        MemberPlanOfferPicker={MemberPlanOfferPicker}
         PeriodicityPicker={PeriodicityPicker}
         PaymentAmountSlider={PaymentAmountSlider}
         PaymentAmountPicker={PaymentAmountPicker}
@@ -285,6 +291,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({ children }) => (
           Comment: CommentBlock,
           Quote: QuoteBlock,
           HTML: HtmlBlock,
+          MailchimpForm: MailchimpFormBlock,
           Poll: PollBlock,
           Crowdfunding: CrowdfundingBlock,
           RichText: RichTextBlock,
@@ -316,6 +323,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({ children }) => (
           ContextBox,
           FocusTeaser,
           ImageSlider,
+          Lightbox,
           TeaserSlider,
           AlternatingTeaser,
           AlternatingTeaserGrid: AlternatingTeaserGridBlock,

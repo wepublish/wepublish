@@ -13,5 +13,6 @@ import { DashboardSubscriptionService } from './subscriptions/dashboard-subscrip
     DashboardInvoiceResolver,
     DashboardInvoiceService,
   ],
+  exports: [DashboardInvoiceService, DashboardSubscriptionService],
 })
 export class DashboardModule {}

@@ -8,6 +8,7 @@ import {
   MailLogStatus,
   MailProviderError,
   MailProviderMessageState,
+  MailProviderRecipientError,
   MailProviderTemplate,
   MailProviderTemplateContent,
   SendMailProps,
@@ -21,6 +22,24 @@ type MessageMetadata = NonNullable<mailchimp.MessagesMessage['metadata']>;
 /** The typings demand a `website` key that Mandrill neither needs nor reads. */
 const mailLogMetadata = (mailLogID: string): MessageMetadata =>
   ({ mail_log_id: mailLogID }) as unknown as MessageMetadata;
+
+/**
+ * Reject reasons that are about the one recipient of this message: their
+ * address bounces, they reported us, they unsubscribed, they sit on the
+ * rejection blacklist, the address is unusable. The rest of Mandrill's reasons
+ * (`invalid-sender`, `unsigned`, `test-mode-limit`, `rule`) describe the
+ * account or its configuration and would refuse every other message of the run
+ * just the same — as would any reason added after this list was written, which
+ * is why anything unknown counts as an account problem.
+ */
+const RECIPIENT_REJECT_REASONS = new Set([
+  'hard-bounce',
+  'soft-bounce',
+  'spam',
+  'unsub',
+  'custom',
+  'invalid',
+]);
 
 /**
  * The fields of Mandrill's template payload we consume. `templates/info` and
@@ -230,6 +249,10 @@ export class MailchimpMailProvider extends BaseMailProvider {
    * Mandrill answers a refused message with HTTP 200 and a per-recipient
    * `rejected`/`invalid` status — without this the mail would be logged as
    * submitted although the provider never accepted it.
+   *
+   * Refusals caused by the recipient are raised as
+   * {@link MailProviderRecipientError} so a batch send can skip that address
+   * instead of aborting; everything else stays a hard failure.
    */
   private throwOnRejectedRecipient(
     results: mailchimp.MessagesSendResponse[]
@@ -242,11 +265,20 @@ export class MailchimpMailProvider extends BaseMailProvider {
       return;
     }
 
-    throw new MailProviderError(
-      `Mandrill ${rejected.status} ${rejected.email}${
-        rejected.reject_reason ? `: ${rejected.reject_reason}` : ''
-      }`
-    );
+    const message = `Mandrill ${rejected.status} ${rejected.email}${
+      rejected.reject_reason ? `: ${rejected.reject_reason}` : ''
+    }`;
+
+    // An `invalid` status is by definition about the address itself; a
+    // `rejected` one only when its reason names the recipient.
+    const blameRecipient =
+      rejected.status === 'invalid' ||
+      (!!rejected.reject_reason &&
+        RECIPIENT_REJECT_REASONS.has(rejected.reject_reason));
+
+    throw blameRecipient ?
+        new MailProviderRecipientError(message)
+      : new MailProviderError(message);
   }
 
   private responseIsError<T>(response: T | AxiosError): response is AxiosError {

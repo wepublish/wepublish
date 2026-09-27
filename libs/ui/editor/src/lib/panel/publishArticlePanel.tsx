@@ -10,6 +10,7 @@ import {
   DescriptionListItemWithMessage,
   InfoColor,
 } from '../atoms';
+import { formatArticleAuthors } from './articleAuthorList';
 import { ArticleMetadata } from './articleMetadataPanel';
 
 export interface PublishArticlePanelProps {
@@ -110,12 +111,16 @@ function PublishArticlePanel({
             {metadata.seoTitle}
           </DescriptionListItemWithMessage>
 
+          <DescriptionListItem label={t('articleEditor.panels.seoDescription')}>
+            {metadata.seoDescription || '-'}
+          </DescriptionListItem>
+
           <DescriptionListItemWithMessage
             label={t('articleEditor.panels.authors')}
             message={t('articleEditor.panels.enterAuthors')}
             messageType={InfoColor.warning}
           >
-            {metadata.authors.map(e => e.name).join(', ')}
+            {formatArticleAuthors(metadata.authors)}
           </DescriptionListItemWithMessage>
 
           <DescriptionListItemWithMessage
