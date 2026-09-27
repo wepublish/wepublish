@@ -76,7 +76,7 @@ const subscribeGridAreas = (
 
 export const StyledReflektSubscribeBlock = styled(SubscribeBlock)`
   background-color: transparent;
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
   grid-template-areas: ${({ showGoodies, showDiscountCodes }) =>
     subscribeGridAreas(showGoodies, showDiscountCodes, false, false, false)};
 
