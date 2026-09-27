@@ -241,7 +241,7 @@ export function LoginJwt() {
           {totpSecret && (
             <>
               <TotpDescription>{t('login.totp.manualEntry')}</TotpDescription>
-              <SecretCode>{totpSecret}</SecretCode>
+              <SecretCode data-sentry-mask>{totpSecret}</SecretCode>
             </>
           )}
 

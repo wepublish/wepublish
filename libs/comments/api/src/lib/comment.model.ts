@@ -212,6 +212,9 @@ export class CreateCommentInput extends PickType(
 ) {
   @Field(type => [String], { nullable: true })
   tagIds?: string[];
+
+  @Field({ nullable: true, defaultValue: false })
+  publish?: boolean;
 }
 
 @ArgsType()

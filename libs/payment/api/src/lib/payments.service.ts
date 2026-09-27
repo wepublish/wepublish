@@ -20,6 +20,8 @@ import {
   PAYMENT_METHOD_CONFIG,
   PaymentMethodConfig,
 } from './payment-method/payment-method.config';
+import { ErrorCode } from '@wepublish/errors';
+import { logger } from '@wepublish/utils/api';
 
 interface CreatePaymentWithProvider {
   paymentMethodID: string;
@@ -161,7 +163,10 @@ export class PaymentsService {
       },
     });
     if (blockingPayment) {
-      throw new BadRequestException(blockingPayment.id);
+      logger('paymentsService').warn(
+        `Blocked duplicate payment attempt for invoice ${invoiceID}: payment ${blockingPayment.id} is still pending`
+      );
+      throw new BadRequestException(ErrorCode.PaymentAlreadyRunning);
     }
 
     return await this.createPaymentWithProvider({

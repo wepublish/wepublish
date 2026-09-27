@@ -15,6 +15,8 @@ export const allowedBlockTypes: AllowedBlockTypes = {
   [EditorBlockType.Image]: true,
   [EditorBlockType.Embed]: true,
   [EditorBlockType.RichText]: true,
+  [EditorBlockType.Crowdfunding]: true,
+  [EditorBlockType.LinkPageBreak]: true,
 };
 
 export function BlockSelectAndEditPanel({

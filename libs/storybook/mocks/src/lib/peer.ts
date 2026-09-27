@@ -42,6 +42,7 @@ export const mockPeer = ({
   slug,
   profile,
   isDisabled,
+  information: null,
   createdAt: new Date('2023-01-01').toISOString(),
   modifiedAt: new Date('2023-01-01').toISOString(),
   hostURL: 'https://example.com',

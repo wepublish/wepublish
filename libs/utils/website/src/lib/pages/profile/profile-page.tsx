@@ -145,7 +145,7 @@ function ProfilePage({ className, ...props }: ProfilePageProps) {
       <SubscriptionsWrapper className={className}>
         {hasUnpaidInvoices && (
           <SubscriptionListWrapper>
-            <H4 component={'h1'}>Offene Rechnungen</H4>
+            <H4 component={'h1'}>{t('invoice.openInvoices')}</H4>
 
             <UnpaidInvoiceListContainer
               filter={invoices =>
@@ -223,7 +223,7 @@ function ProfilePage({ className, ...props }: ProfilePageProps) {
       </SubscriptionsWrapper>
 
       <ProfileWrapper className={className}>
-        <H4 component={'h1'}>Profil</H4>
+        <H4 component={'h1'}>{t('navbar.profile')}</H4>
 
         <PersonalDataFormContainer {...props} />
 

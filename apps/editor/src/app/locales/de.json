@@ -1,5 +1,22 @@
 {
   "translation": {
+    "previewHandshake": {
+      "popupBlocked": "Das Vorschau-Fenster wurde vom Browser blockiert. Bitte Pop-ups für den Editor erlauben und erneut versuchen.",
+      "notResponding": "Das Vorschau-Fenster antwortet nicht. Die Anmeldung für die Vorschau ist möglicherweise fehlgeschlagen."
+    },
+    "oneChannel": {
+      "connected": "We.Publish Connector: verbunden",
+      "failing": "We.Publish Connector: Verbindung gestört",
+      "notConfigured": "We.Publish Connector: nicht konfiguriert",
+      "notConfiguredHint": "Diese Instanz sendet keine Daten an We.Publish.",
+      "lastSuccess": "Letzter erfolgreicher Kontakt: {{value}}",
+      "lastSuccessNever": "Letzter erfolgreicher Kontakt: nie",
+      "lastAttemptFailed": "Letzter Versuch: {{value}} – fehlgeschlagen: {{error}}",
+      "label": "We.Publish Connector",
+      "outageTitle": "We.Publish Connector antwortet nicht",
+      "outageText": "Seit {{value}} kein erfolgreicher Kontakt mehr. Statistiken und Nachrichten werden derzeit nicht mit We.Publish ausgetauscht.",
+      "outageTextNever": "Es gab noch nie erfolgreichen Kontakt. Bitte URL und Zugang des Connectors prüfen."
+    },
     "oneMessages": {
       "header": "Nachrichten vom We.Publish Team",
       "expand": "Ausklappen",
@@ -81,6 +98,7 @@
         "articlePreviewLinkDesc": "Vorschau-Links zeigen immer die neuesten Änderungen im Entwurf des Artikels an. Vorschau-Links funktionieren nicht mehr, nachdem der Artikel publiziert oder geplant wurde.",
         "articlePreviewLinkField": "Vorschau Link",
         "articlePreviewLinkHours": "Gültigkeitsdauer des Links",
+        "authorRole": "Funktion (z.B. Text, Bilder)",
         "authors": "Autor*innen",
         "back": "Zurück",
         "breakingNews": "Breaking News",
@@ -115,7 +133,6 @@
         "invalidImage": "Ungültiges Bild",
         "key": "Key",
         "lead": "Lead",
-        "leadHelpBlock": "Verwende einen SEO-optimierten Lead",
         "loading": "Laden ...",
         "loadMore": "Mehr laden",
         "noDataToDisplay": "Keine Daten zum Anzeigen",
@@ -140,8 +157,11 @@
         "publishAtDateCheckbox": "Wähle ein anderes Datum für die online Verfügbarkeit",
         "publishDate": "Publikationsdatum",
         "published": "Publiziert",
+        "selectAuthor": "Autor*in wählen",
         "seoTitle": "SEO-Titel",
         "seoTitleHelpBlock": "Verwende einen SEO-optimierten Titel <2>SEO Guide</2>",
+        "seoDescription": "SEO-Beschreibung",
+        "seoDescriptionHelpBlock": "Verwende eine SEO-optimierte Beschreibung",
         "sharedWithPeers": "Geteilt mit Peers",
         "slug": "Slug",
         "slugGuide": "Slug Guide",
@@ -191,6 +211,7 @@
         "pending": "Geplant",
         "publicationDate": "Publikationsdatum",
         "published": "Publiziert",
+        "preTitle": "Oberzeile",
         "states": "Status",
         "title": "Titel",
         "untitled": "Ohne Titel",
@@ -404,6 +425,15 @@
         "selectMemberPlansSelectionHintAll": "Ohne Auswahl werden alle aktiven Pläne angezeigt.",
         "selectFields": "Benutzer-Eingabefelder",
         "selectFieldsSelectionHint": "Email & Nachname wird immer abgefragt. Reihenfolge spielt keine Rolle",
+        "periodicityDisplay": "Zahlungsintervalle: Darstellung und Konfiguration",
+        "periodicityDisplayDropdown": "Auswahlfeld",
+        "periodicityDisplayOfferCards": "Pro Plan & Intervall eine Karte",
+        "periodicityDisplayToggle": "Umschalter",
+        "periodicityDisplayDropdownHint": "Alle Preise werden monatlich angezeigt – Karten, Betrag und Betragsvorschläge. Das Intervall wird weiter unten bei der Zahlungsmethode gewählt und bestimmt nur, wie oft verrechnet wird.",
+        "periodicityDisplayOfferCardsHint": "Jedes Angebot als eigene Karte. (Anzahl Karten ergibt sich aus: Summe aller Pläne × Zahlungsintervalle) – ideal für ein bis zwei Abo-Pläne.",
+        "periodicityDisplayToggleHint": "Das Zahlungsintervall wird im ersten Schritt gewählt; danach zeigen die Abo-Plan-Karten den Preis des gewählten Intervalls an.",
+        "periodicityDisplayDropdownIgnoredRows_one": "Hinweis: Für den Abo-Plan «{{plans}}» sind Preise für Zahlungsintervalle konfiguriert, die im Modus «Auswahlfeld» ignoriert werden.",
+        "periodicityDisplayDropdownIgnoredRows_other": "Hinweis: Für die Abo-Pläne «{{plans}}» sind Preise für Zahlungsintervalle konfiguriert, die im Modus «Auswahlfeld» ignoriert werden.",
         "goodiesHeading": "Goodies",
         "discountCodesHeading": "Rabattcodes",
         "showGoodies": "Goodie-Auswahl anzeigen",
@@ -411,6 +441,7 @@
         "goodieMinValue": {
           "label": "Goodie-Mindestbetrag:"
         },
+        "goodieMinValueAppliesToUpgrade": "Mindestbetrag auch bei Upgrades anwenden",
         "hideRepeatGoodieOnUpgrade": "Bei Upgrade: kein erneutes Goodie",
         "FirstName": "Vorname",
         "Birthday": "Geburtstag",
@@ -426,8 +457,14 @@
         },
         "renderStylesHeading": "Abo-Plan Reihenfolge und Darstellung",
         "amountTileValues": {
-          "hint": "Beträge der Kacheln (in Franken). Leer lassen für Standard: 10, 15, 20.",
+          "hint": "Beträge der Kacheln pro Zahlungsintervall (in Franken). Leer lassen für Standard-Werte.",
+          "hintMonthly": "Beträge der Kacheln (in Franken, pro Monat). Leer lassen für Standard-Werte.",
           "placeholder": "z.B. 10 15 20"
+        },
+        "fixedAmountHint": "Der konfigurierte Zielbetrag des Plans wird zum Fixpreis – ist keiner gesetzt, der Mindestbetrag.",
+        "showInCardAmountInput": {
+          "label": "Freie Betragseingabe in der Karte",
+          "title": "Statt eines separaten Betragsfelds erhält jede Abo-Karte ein Eingabefeld, in dem Besucher:innen ihren Betrag selbst festlegen."
         },
         "showAmountInput": {
           "label": "Freie Betragseingabe",
@@ -438,7 +475,7 @@
           "Narrow": "Schmal (2 Kacheln pro Zeile)",
           "Wide": "Breit (1 Kachel pro Zeile, grosse Kacheln)"
         },
-        "planAmountsTitle": "Minimal- / Ziel- / Maximalbetrag pro Monat (in Franken)",
+        "planAmountsTitle": "Minimal- / Ziel- / Maximalbetrag",
         "defaultPlanTitle": "Standardmässig ausgewählt — dieser Abo-Plan ist nach dem Laden der Seite vorausgewählt.",
         "defaultPlanLabel": "Standard"
       },
@@ -568,6 +605,16 @@
       }
     },
     "cancel": "Abbrechen",
+    "changelog": {
+      "whatsNew": "Was ist neu",
+      "actionRequired": "Handlung erforderlich",
+      "done": "Erledigt",
+      "details": "Details",
+      "releasedAt": "Veröffentlicht am {{date, PP}}",
+      "completedAt": "Erledigt am {{date, PP}}",
+      "noEntries": "Noch keine Changelog-Einträge.",
+      "allCaughtUp": "Keine ungelesenen Changelog-Einträge."
+    },
     "chooseEditImage": {
       "chooseImage": "Bild wählen",
       "editImage": "Bild bearbeiten",
@@ -695,6 +742,8 @@
     "dashboard": {
       "activity": "Letzte Aktivitäten",
       "dashboard": "Dashboard",
+      "notifications": "Mitteilungen",
+      "showAllNotifications": "Alle anzeigen",
       "greeting": "Hallo, {{name}}!",
       "newArticle": "Neuer <0>Artikel</0> erstellt",
       "newAuthor": "Neuer <0>Author</0> erstellt",
@@ -807,6 +856,7 @@
         "providers": "Anbieter",
         "publicationDate": "Publikationsdatum",
         "reset": "Filter zurücksetzen",
+        "slug": "Nach Slug filtern",
         "title": "Nach Titel filtern",
         "includeHiddenArticles": "Ausgeblendete Artikel",
         "includeHiddenPages": "Ausgeblendete Seiten"
@@ -970,6 +1020,11 @@
         "invalidCode": "Ungültiger Bestätigungscode. Bitte versuchen Sie es erneut.",
         "setupError": "Fehler beim Erstellen der 2FA-Einrichtung. Bitte versuchen Sie es erneut.",
         "setupSuccess": "Zwei-Faktor-Authentifizierung wurde erfolgreich aktiviert."
+      },
+      "impersonate": {
+        "pending": "Anmeldung als Benutzer läuft …",
+        "failed": "Die Anmeldung ist fehlgeschlagen. Der Link ist abgelaufen oder wurde bereits verwendet.",
+        "notAGrant": "Dieser Link ist kein gültiger Impersonations-Link."
       }
     },
     "resetPassword": {
@@ -1095,7 +1150,8 @@
         "long": "Lang",
         "weekday": "Wochentag",
         "time": "Zeit",
-        "dateTime": "Datum+Zeit"
+        "dateTime": "Datum+Zeit",
+        "year": "Jahr"
       },
       "amountFormat": {
         "display": "Mit Währung",
@@ -1123,6 +1179,7 @@
         "user_lastLogin": "Letzter Login",
         "user_createdAt": "Konto erstellt am",
         "jwt": "Login-Token (JWT)",
+        "currentDate": "Aktuelles Datum",
         "optional_subscription_id": "Abo-ID",
         "optional_subscription_monthlyAmount": "Monatlicher Betrag",
         "optional_subscription_periodAmount": "Betrag pro Periode",
@@ -1212,7 +1269,7 @@
       "createMemberPlanHeader": "Erstelle Memberplan",
       "description": "Beschreibung",
       "shortDescription": "Kurze Beschreibung",
-      "editPaymentSetting": "Zahlungseinstellung bearbeiten",
+      "editPaymentSetting": "Zahlungsmethoden & Periodizitäten bearbeiten",
       "forceAutoRenewal": "Automatische Erneuerung erzwingen",
       "loadingTitle": "Lade",
       "name": "Name",
@@ -1266,6 +1323,7 @@
       "pageTags": "Tags",
       "consents": "Konsens",
       "dashboard": "Dashboard",
+      "notifications": "Mitteilungen",
       "events": "Events",
       "eventTags": "Tags",
       "documentLibrary": "Dokumente",
@@ -1322,6 +1380,19 @@
         "url": "URL"
       }
     },
+    "notifications": {
+      "noTeamMessages": "Zurzeit keine Nachrichten vom We.Publish Team.",
+      "sourceTeam": "We.Publish Team",
+      "sourceChangelog": "Changelog",
+      "sourceJobLogs": "Job-Logs",
+      "markAsRead": "Als gelesen markieren",
+      "markAsDone": "Als erledigt markieren",
+      "confirmTitle": "Als erledigt markieren?",
+      "confirmMessage": "Damit bestätigen Sie für Ihr ganzes Team, dass «{{title}}» erledigt wurde. Der Hinweis verschwindet vom Dashboard.",
+      "confirmSuccess": "Danke! Die Aufgabe wurde als erledigt markiert.",
+      "loadMore": "Mehr anzeigen",
+      "sourceConnector": "We.Publish Connector"
+    },
     "no": "Nein",
     "pageEditor": {
       "validationFailedHeader": "Validierung fehlgeschlagen",
@@ -1353,9 +1424,13 @@
         "createdAt": "{{createdAt, ccc PP p}}",
         "chooseBlock": "Blocktyp wählen",
         "dateExplanationPopOver": "Dies kann verwendet werden, um auf Artikel zu verweisen, die zu einem späteren Zeitpunkt veröffentlicht werden sollen. Dies ist z. B. hilfreich, wenn Beiträge auf Sozialen Medien für den nächsten Morgen geplant werden.",
-        "description": "SEO Beschreibung",
-        "descriptionHelpBlock": "Verwende eine SEO-optimierte Beschreibung",
+        "description": "Beschreibung",
+        "descriptionHelpBlock": "Die Beschreibung, die auf der Seite angezeigt wird",
         "enterDescription": "Bitte SEO-Beschreibung hinzufügen",
+        "seoTitle": "SEO-Titel",
+        "seoTitleHelpBlock": "Verwende einen SEO-optimierten Titel",
+        "seoDescription": "SEO-Beschreibung",
+        "seoDescriptionHelpBlock": "Verwende eine SEO-optimierte Beschreibung",
         "enterImage": "Biite Bild hinzufügen",
         "enterSocialMediaDescription": "Bitte Beschreibung für Social Media eingeben",
         "enterSocialMediaTitle": "Bitte Titel für Social Media eingeben",
@@ -1382,8 +1457,8 @@
         "socialMediaImage": "Bild für Social Media",
         "socialMediaTitle": "Titel für Social Media",
         "tags": "Tags",
-        "title": "SEO-Titel",
-        "titleHelpBlock": "Verwende einen SEO-optimierten Titel",
+        "title": "Titel",
+        "titleHelpBlock": "Der Titel, der auf der Seite angezeigt wird",
         "updateDate": "Update-Datum",
         "updateDateWarning": "Das Update-Datum darf nicht vor dem Publikations-Datum liegen.",
         "url": "URL",
@@ -1400,6 +1475,7 @@
         "pending": "Geplant",
         "publicationDate": "Publikationsdatum",
         "published": "Publiziert",
+        "slug": "Slug",
         "states": "Status",
         "title": "Titel",
         "untitled": "Kein Titel",
@@ -1543,6 +1619,7 @@
     "pollAnswer": {
       "answerMissing": "Deine Antwort ist leer. Bitte gib einen Text ein.",
       "copyVoteUrl": "Kopiere Abstimmungs-Link",
+      "copyVoteUrlHint": "Die Abstimmungs-Links können nun direkt im Umfrage-Block des Artikels oder der Seite kopiert werden, in welchem die Umfrage verwendet wird.",
       "deleteBtn": "Löschen",
       "deleteModalBody": "Willst Du die Antwort \"{{answer}}\" unwiderruflich löschen? Die Umfrageresultate gehen dabei verloren.",
       "deleteModalTitle": "Löschen?",
@@ -1776,7 +1853,6 @@
         "createdAt": "Erstellt",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
         "deleted": "Gelöschte:r Benutzer:in",
-        "downloadCsv": "CSV herunterladen",
         "email": "Email",
         "memberPlan": "Member-Plan",
         "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
@@ -1890,6 +1966,14 @@
         "createdAt": "Erstellt",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
         "firstName": "Vorname",
+        "subscriptionStatus": {
+          "Active": "Aktiv",
+          "Deactivated": "Deaktiviert",
+          "Planned": "Geplant",
+          "Unpaid": "Unbezahlt",
+          "Expired": "Abgelaufen"
+        },
+        "subscriptionWithStatus": "{{name}} – {{status}}",
         "modifiedAt": "Zuletzt bearbeitet",
         "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
         "name": "Name",
@@ -1961,6 +2045,8 @@
       "editTitle": "Abonnement bearbeiten",
       "memberPlanMonthlyAmount": "Minimaler monatlicher Betrag ({{currency}})",
       "monthlyAmount": "Monatlicher Betrag",
+      "monthlyAmountEquivalent": "Entspricht {{currency}} {{amount}} pro Monat",
+      "periodAmount": "Betrag pro Zahlungsintervall",
       "paidUntil": "Bezahlt bis",
       "paymentMethod": "Zahlungsmethode",
       "renewNow": "Jetzt verlängern",
@@ -2019,8 +2105,27 @@
       "migratePMHelptext": "Migriere die Abos dieses Planes zu einer neuen Zahlungsmethode. Abos, die noch automatisch abgebucht werden, werden nicht migriert. Die Migration findet erst dann statt, wenn ein User selbst tätig wird und in seinem Profil etwa eine offene Rechnung bezahlen will oder ein Abo frühzeitig verlängert.",
       "amountPerMonthTarget": "Ziel-Betrag / Monat",
       "amountPerMonthTargetHelpText": "Der monatliche Zielbetrag legt den gewünschten Abopreis fest, den die Benutzer:innen bezahlen sollten. Er muss höher als der Minimalbetrag sein und definiert typischerweise die Voreinstellung im Zahlungsformular.",
+      "periodicityPricing": "Preise pro aktiviertes Zahlungsintervall",
+      "periodicityPricingHelpText": "Setze exakte Preise (min / Ziel / max) pro Zahlungsintervall. Ohne eigene Preise wird der Betrag aus dem Monatspreis hochgerechnet. Der Rabatt gegenüber dem hochgerechneten Monatspreis wird automatisch berechnet.",
+      "periodicityPricingHelpTextNoMonthly": "Lege für jedes aktivierte Zahlungsintervall den Preis für die gesamte Periode fest: Minimalbetrag (muss mindestens bezahlt werden), Zielbetrag (Voreinstellung im Zahlungsformular) und optional Maximalbetrag.",
+      "periodicityPricingNoPeriodicities": "Aktiviere zuerst Zahlungsintervalle in den Zahlungseinstellungen, um intervall-spezifische Preise zu konfigurieren.",
+      "periodicityPricingRequired": "Mindestens ein Zahlungsintervall benötigt einen Minimalbetrag.",
+      "periodicityPricingLabel": "Marketing-Label",
+      "periodicityPricingLabelHelpText": "Optionaler Hinweis, der bei diesem Zahlungsintervall auf der Abo-Seite angezeigt wird, z.B. \u00ab2 Monate geschenkt\u00bb.",
+      "defaultPaymentPeriodicity": "Standard-Zahlungsintervall",
+      "defaultPaymentPeriodicityHelpText": "Dieses Zahlungsintervall ist auf der Abo-Seite vorausgew\u00e4hlt. Ohne Auswahl gilt das erste konfigurierte Intervall.",
+      "periodicityPricingDelta": "Rabatt gegenüber Monatspreis: {{delta}}",
+      "periodicityPricingCustom": "Eigene Preise",
+      "periodicityPricingDerived": "Aus Monatspreis",
+      "periodicityPricingMinHelpText": "Der minimale Betrag ist der eigentliche Abopreis, der mindestens bezahlt werden muss. Die Benutzer:innen können indes beim Aboabschluss freiwillig mehr bezahlen.",
+      "periodicityPricingTargetHelpText": "Der Zielbetrag legt den gewünschten Abopreis fest, den die Benutzer:innen bezahlen sollten. Er muss zwischen Minimal- und Maximalbetrag liegen und definiert typischerweise die Voreinstellung im Zahlungsformular.",
+      "periodicityPricingMaxHelpText": "Der maximale Betrag ist der Höchstbetrag, den die Benutzer:innen beim Aboabschluss bezahlen können.",
+      "periodicityPricingMin": "Minimalbetrag pro Periode",
+      "periodicityPricingTarget": "Zielbetrag pro Periode",
+      "periodicityPricingMax": "Maximalbetrag pro Periode",
       "amountPerMonthMinHelpText": "Der minimale monatliche Betrag ist der eigentliche Abopreis, der mindestens bezahlt werden muss. Die Benutzer:innen können indes beim Aboabschluss freiwillig mehr bezahlen.",
       "amountPerMonthMaxHelpText": "Der maximale monatliche Betrag ist der Höchstbetrag, den die Benutzer:innen beim Aboabschluss bezahlen können.",
+      "redirectionsTitle": "Weiterleitungen",
       "confirmationPage": "Weiterleitung zur Seite bei bestehendem User (Retargeting)",
       "confirmationPageHelptext": "Wenn beim Lösen eines Abos die User-ID bekannt ist, erhält die Person eine E-Mail, um das Abo zu bezahlen. Darauf könnte auf dieser Seite hingewiesen werden.",
       "productType": "Produkttyp",
@@ -2115,6 +2220,13 @@
       }
     },
     "audienceFilter": {
+      "copyPermalink": "Permalink kopieren",
+      "permalinkCopied": "Permalink mit festem Zeitraum in die Zwischenablage kopiert",
+      "permalinkCopyFailed": "Permalink konnte nicht kopiert werden",
+      "permalinkHelpLabel": "Hinweise zum Permalink",
+      "permalinkHelpWhat": "Der Permalink ist ein Link auf genau diese Ansicht: Zeitraum, Abo-Pläne, ausgewählte Kennzahlen sowie Diagramm und Tabelle stecken alle in der Adresse.",
+      "permalinkHelpWhy": "So kannst du eine Auswertung im Team teilen oder als Lesezeichen ablegen, ohne die Filter jedes Mal neu zu setzen. Der Zeitraum wird als festes Datum gespeichert, damit der Link auch später noch dieselben Zahlen zeigt.",
+      "permalinkHelpExample": "Beispiel: «Letzter Monat» und den Abo-Plan «Jahresabo» wählen, Permalink kopieren und im Chat teilen – alle sehen genau diese Zahlen, auch nächste Woche noch.",
       "daily": "Täglich",
       "monthly": "Monatlich",
       "rangePickerPlaceholder": "von - bis",
@@ -2202,6 +2314,15 @@
         "highProbability": "Abo-Erneuerungen Stammkunden"
       }
     },
+    "audienceTableExport": {
+      "download": "Herunterladen",
+      "csv": "CSV (.csv)",
+      "xlsx": "Excel (.xlsx)",
+      "header": {
+        "renewedAndReplaced": "Erneuerte und ersetzte Abos",
+        "totalToBeRenewed": "Zu erneuernde Abos"
+      }
+    },
     "paywall": {
       "navbar": "Paywall",
       "form": {
@@ -2264,7 +2385,23 @@
         "validTo": "Gültig bis",
         "areYouSure": "Bist du sicher?",
         "areYouSureBody": "Der Rabattcode \"{{ discountCode }}\" wird unwiderruflich gelöscht.",
-        "areYouSureConfirmation": "Rabattcode löschen"
+        "areYouSureConfirmation": "Rabattcode löschen",
+        "usage": "Verwendet",
+        "usageValue": "{{total}} ({{paid}} bezahlt)"
+      },
+      "usage": {
+        "title": "Verwendungen von \"{{ discountCode }}\"",
+        "summary": "{{total}} Einlösungen, davon {{paid}} bezahlt",
+        "back": "Zurück zur Übersicht",
+        "date": "Datum",
+        "mail": "E-Mail",
+        "amount": "Betrag",
+        "status": "Status",
+        "paid": "Bezahlt",
+        "open": "Offen",
+        "canceled": "Storniert",
+        "subscription": "Abo",
+        "showSubscription": "Abo öffnen"
       }
     },
     "goodie": {
@@ -2299,8 +2436,13 @@
       "gracePeriodHelpText": "Wenn deine Webseite eine Paywall verwendet, können die Nutzer alle Inhalte auch bei unbezahlten Abos sofort oder weiterhin lesen - innerhalb der Zahlungsfrist. Dies ist etwa bei Banküberweisung nützlich.",
       "days": "Tage"
     },
+    "subscriptionsExport": {
+      "download": "Herunterladen",
+      "csv": "CSV (.csv)",
+      "xlsx": "Excel (.xlsx)"
+    },
     "audienceCsvBtn": {
-      "exportUsers": "CSV herunterladen"
+      "exportUsers": "Nutzer:innen herunterladen"
     },
     "search": "Suche",
     "integrations": {
@@ -2397,7 +2539,7 @@
         "apiKey": "Mailchimp API Key",
         "listId": "Mailchimp Listen-/Zielgruppen-ID",
         "mergeFieldMappings": "Merge-Feld-Zuordnungen",
-        "mergeFieldHelp": "Bestimmt, welcher Wert in ein Mailchimp Merge-Feld geschrieben wird. Mehrere Ausdrücke mit | (ODER) kombinierbar – der erste Treffer gewinnt.\n\nVerfügbare Ausdrücke:\n• user.firstName / user.name – Vorname bzw. Nachname\n• slug:contains:wert – \"1\" wenn der Abo-Slug \"wert\" enthält\n• slug:contains_any:w1,w2 – \"1\" wenn einer der Werte enthalten ist\n• slug:equals:wert – \"1\" bei exakter Übereinstimmung\n• active_abo – \"1\" aktiv, \"-1\" abgelaufen, leer wenn kein Abo\n• active_abo_with_payment:slug:tage – wie active_abo, aber auch \"1\" wenn die letzte Zahlungsmethode \"slug\" ist und das Abo innerhalb der letzten \"tage\" Tage ablief\n• retarget:tage – \"1\" wenn das Abo innerhalb der letzten \"tage\" Tage ablief\n• static:wert – gibt immer \"wert\" zurück",
+        "mergeFieldHelp": "Bestimmt, welcher Wert in ein Mailchimp Merge-Feld geschrieben wird. Mehrere Ausdrücke mit | (ODER) kombinierbar – der erste Treffer gewinnt.\n\nVerfügbare Ausdrücke:\n• user.firstName / user.name – Vorname bzw. Nachname\n• slug:contains:wert – \"1\" wenn der Abo-Slug \"wert\" enthält\n• slug:contains_any:w1,w2 – \"1\" wenn einer der Werte enthalten ist\n• slug:equals:wert – \"1\" bei exakter Übereinstimmung\n• active_abo – \"1\" aktiv, \"-1\" abgelaufen, leer wenn kein Abo\n• active_abo_with_payment:slug:tage – wie active_abo, aber auch \"1\" wenn die letzte Zahlungsmethode \"slug\" ist und das Abo innerhalb der letzten \"tage\" Tage ablief\n• retarget:tage – \"1\" wenn das Abo innerhalb der letzten \"tage\" Tage ablief, \"-1\" bei allen übrigen ehemaligen Abonnent:innen, leer wenn kein Abo\n• static:wert – gibt immer \"wert\" zurück",
         "mergeFieldTag": "Merge-Feld-Tag (z.B. FNAME)",
         "mergeFieldExpression": "Ausdruck (z.B. user.firstName)",
         "addMergeField": "Merge-Feld hinzufügen",
@@ -2886,7 +3028,18 @@
         "loading": "Vorschau wird geladen …",
         "noRecipients": "Keine Empfänger:innen – bitte zuerst die Empfängergruppe anpassen."
       },
-      "recipientsCountPerPerson": "{{count}} Mails an {{people}} Personen"
+      "recipientsCountPerPerson": "{{count}} Mails an {{people}} Personen",
+      "endsAtHint": "Kündigungsdatum, sonst das Datum, bis zu dem bezahlt ist.",
+      "isPaid": "Bezahlt (aktuell gedeckt)",
+      "isPaidHint": "Karenzfristen werden nicht berücksichtigt.",
+      "isCanceled": "Gekündigt",
+      "isCanceledHint": "Enthält auch Kündigungen, die erst später wirksam werden.",
+      "hasReplacedSubscription": "Hat ein anderes Abo ersetzt (z. B. Upgrade)",
+      "hasReplacedSubscriptionHint": "Enthält auch Downgrades und Plan-Wechsel; manuelle oder importierte Änderungen werden nicht erkannt.",
+      "startsAt": "Abo-Beginn",
+      "endsAt": "Abo-Ende",
+      "from": "ab",
+      "to": "bis"
     },
     "mailLog": {
       "title": "Gesendete E-Mails",

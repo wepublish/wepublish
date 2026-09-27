@@ -48,6 +48,15 @@ const AdImage = styled(Image)`
 
 const TsriAdvertiserContent = styled('div')``;
 
+const TsriAdvertiserName = styled('strong')`
+  display: block;
+  font-weight: 700;
+`;
+
+const TsriAdvertiserLabel = styled('div')`
+  font-weight: 500;
+`;
+
 function getFirstLink(author: FullAuthorFragment): string {
   const links = author.links;
   return links?.length ? links[0].url : '';
@@ -84,10 +93,17 @@ export default function TsriAdHeader({
 
           <TsriAdvertiserContent>
             {isPromo(advertiser) ?
-              <strong>Rubrik Kultur wird präsentiert von: </strong>
-            : <strong>Präsentiert von:</strong>}
-
-            <RichText richText={advertiser.bio} />
+              <>
+                <strong>Rubrik Kultur wird präsentiert von: </strong>
+                <RichText richText={advertiser.bio} />
+              </>
+            : <>
+                <TsriAdvertiserName>{advertiser.name}</TsriAdvertiserName>
+                <TsriAdvertiserLabel>
+                  Bezahlte Partnerschaft
+                </TsriAdvertiserLabel>
+              </>
+            }
           </TsriAdvertiserContent>
         </TsriAdvertiserContainer>
       ))}

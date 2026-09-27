@@ -30,7 +30,11 @@ if (sentryDSN) {
     tracePropagationTargets: [/^\//, apiEndpoint],
     integrations: [
       Sentry.browserTracingIntegration(),
-      Sentry.replayIntegration(),
+      Sentry.replayIntegration({
+        maskAllText: false,
+        blockAllMedia: false,
+        maskAllInputs: true,
+      }),
       Sentry.graphqlClientIntegration({ endpoints: [apiEndpoint] }),
     ],
     tracesSampleRate: 1.0,

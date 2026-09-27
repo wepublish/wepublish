@@ -56,6 +56,7 @@ export function AuthorPage({
       skip: ((page ?? 1) - 1) * take,
       filter: {
         authors: data?.author?.id ? [data?.author?.id] : [],
+        excludeHideAuthor: true,
       },
     }),
     [page, data?.author?.id]
@@ -162,6 +163,7 @@ export const getAuthorStaticProps: GetStaticProps = async ({ params }) => {
       skip: 0,
       filter: {
         authors: author.data?.author?.id ? [author.data.author.id] : [],
+        excludeHideAuthor: true,
       },
     },
   });

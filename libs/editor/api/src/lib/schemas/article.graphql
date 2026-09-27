@@ -1,91 +1,8 @@
-fragment FullArticleRevisionWithoutBlocks on ArticleRevision {
-  id
-  createdAt
-  publishedAt
-  archivedAt
-  preTitle
-  title
-  lead
-  seoTitle
-  canonicalUrl
-  hideAuthor
-  breaking
-  socialMediaTitle
-  socialMediaDescription
-
-  authors {
-    ...FullAuthor
-  }
-
-  socialMediaAuthors {
-    ...FullAuthor
-  }
-
-  image {
-    ...FullImage
-  }
-
-  socialMediaImage {
-    ...FullImage
-  }
-
-  properties {
-    key
-    value
-    public
-  }
-}
-
 fragment FullArticleRevision on ArticleRevision {
   ...FullArticleRevisionWithoutBlocks
 
   blocks {
     ...FullBlock
-  }
-}
-
-fragment ArticleWithoutBlocks on Article {
-  id
-  publishedAt
-  createdAt
-  modifiedAt
-  shared
-  hidden
-  disableComments
-  slug
-  likes
-  url
-  previewUrl
-  paywallId
-
-  latest {
-    ...FullArticleRevisionWithoutBlocks
-  }
-
-  draft {
-    id
-  }
-
-  pending {
-    id
-    publishedAt
-  }
-
-  published {
-    id
-    publishedAt
-  }
-
-  tags {
-    ...FullTag
-  }
-
-  peer {
-    ...FullPeer
-  }
-
-  trackingPixels {
-    ...FullTrackingPixel
   }
 }
 
@@ -123,8 +40,12 @@ query ArticleList(
         title
 
         authors {
-          id
-          name
+          role
+
+          author {
+            id
+            name
+          }
         }
       }
     }
@@ -141,7 +62,7 @@ query ArticleList(
 }
 
 mutation CreateArticle(
-  $authorIds: [String!]!
+  $authors: [ArticleRevisionAuthorInput!]!
   $blocks: [BlockContentInput!]!
   $breaking: Boolean!
   $canonicalUrl: String!
@@ -154,6 +75,7 @@ mutation CreateArticle(
   $preTitle: String
   $properties: [PropertyInput!]!
   $seoTitle: String
+  $seoDescription: String
   $shared: Boolean!
   $slug: String
   $socialMediaAuthorIds: [String!]!
@@ -165,7 +87,7 @@ mutation CreateArticle(
   $likes: Int!
 ) {
   createArticle(
-    authorIds: $authorIds
+    authors: $authors
     blocks: $blocks
     breaking: $breaking
     canonicalUrl: $canonicalUrl
@@ -178,6 +100,7 @@ mutation CreateArticle(
     preTitle: $preTitle
     properties: $properties
     seoTitle: $seoTitle
+    seoDescription: $seoDescription
     shared: $shared
     slug: $slug
     socialMediaAuthorIds: $socialMediaAuthorIds
@@ -194,7 +117,7 @@ mutation CreateArticle(
 
 mutation UpdateArticle(
   $id: String!
-  $authorIds: [String!]!
+  $authors: [ArticleRevisionAuthorInput!]!
   $blocks: [BlockContentInput!]!
   $breaking: Boolean!
   $canonicalUrl: String!
@@ -207,6 +130,7 @@ mutation UpdateArticle(
   $preTitle: String
   $properties: [PropertyInput!]!
   $seoTitle: String
+  $seoDescription: String
   $shared: Boolean!
   $slug: String
   $socialMediaAuthorIds: [String!]!
@@ -218,7 +142,7 @@ mutation UpdateArticle(
 ) {
   updateArticle(
     id: $id
-    authorIds: $authorIds
+    authors: $authors
     blocks: $blocks
     breaking: $breaking
     canonicalUrl: $canonicalUrl
@@ -231,6 +155,7 @@ mutation UpdateArticle(
     preTitle: $preTitle
     properties: $properties
     seoTitle: $seoTitle
+    seoDescription: $seoDescription
     shared: $shared
     slug: $slug
     socialMediaAuthorIds: $socialMediaAuthorIds

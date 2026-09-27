@@ -31,7 +31,6 @@ describe('SubscriptionFlowService', () => {
     slug: 'test-plan',
     description: 'Test Description',
     active: true,
-    amountPerMonthMin: 1000,
     availablePaymentMethods: [],
     createdAt: new Date(),
     modifiedAt: new Date(),

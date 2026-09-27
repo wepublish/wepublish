@@ -32,6 +32,7 @@ export interface ClientSettings {
 export enum LocalStorageKey {
   SessionToken = 'sessionToken',
   ImageListLayout = 'imageListLayout',
+  AudienceDashboardFilter = 'audienceDashboardFilter',
 }
 
 const authLink = new ApolloLink((operation, forward) => {

@@ -44,6 +44,9 @@ spec:
       app.kubernetes.io/instance: {{ .Release.Name }}
   template:
     metadata:
+      annotations:
+        checksum/config: {{ toYaml .Values.api.config | sha256sum }}
+        checksum/env: {{ merge (deepCopy .Values.api.env) .Values.deployment.env | toYaml | sha256sum }}
       labels:
         app.kubernetes.io/name: {{ include "helm.name" . }}-api
         app.kubernetes.io/instance: {{ .Release.Name }}
@@ -86,7 +89,7 @@ spec:
             - name: HOST_URL
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "helm.fullname" . }}-api-environment-{{ .Release.Revision }}
+                  name: {{ include "helm.fullname" . }}-api-environment
                   key: API_URL
             - name: CONFIG_FILE_PATH
               value: /wepublish/config/application.yaml
@@ -99,7 +102,7 @@ spec:
 
           envFrom:
             - secretRef:
-                name: {{ include "helm.fullname" . }}-api-environment-{{ .Release.Revision }}
+                name: {{ include "helm.fullname" . }}-api-environment
             {{- if .Values.api.envFromSecretRefName }}
             - secretRef:
                 name: {{ .Values.api.envFromSecretRefName }}
@@ -141,15 +144,15 @@ spec:
       volumes:
         - name: {{ include "helm.fullname" . }}-config
           configMap:
-            name: {{ include "helm.fullname" . }}-api-config-{{ .Release.Revision }}
+            name: {{ include "helm.fullname" . }}-api-config
 
 ---
 apiVersion: v1
 kind: Secret
 metadata:
-  name: {{ include "helm.fullname" . }}-api-environment-{{ .Release.Revision }}
+  name: {{ include "helm.fullname" . }}-api-environment
   labels:
-    app.kubernetes.io/name: {{ include "helm.fullname" . }}-api-environment-{{ .Release.Revision }}
+    app.kubernetes.io/name: {{ include "helm.fullname" . }}-api-environment
     helm.sh/chart: {{ include "helm.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
