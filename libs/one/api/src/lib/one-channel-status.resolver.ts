@@ -9,6 +9,8 @@ import {
 } from './one-channel-status.model';
 import { ONE_URL_TOKEN } from './one.tokens';
 
+export const OUTAGE_THRESHOLD_MS = 6 * 60 * 60 * 1000;
+
 @Resolver()
 export class OneChannelStatusResolver {
   constructor(
@@ -26,6 +28,7 @@ export class OneChannelStatusResolver {
         lastSuccessAt: null,
         lastAttemptAt: null,
         lastError: null,
+        unreachable: false,
       };
     }
 
@@ -42,6 +45,9 @@ export class OneChannelStatusResolver {
       lastSuccessAt,
       lastAttemptAt,
       lastError,
+      unreachable:
+        !lastSuccessAt ||
+        Date.now() - lastSuccessAt.getTime() > OUTAGE_THRESHOLD_MS,
     };
   }
 }

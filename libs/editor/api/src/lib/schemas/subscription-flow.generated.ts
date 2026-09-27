@@ -119,7 +119,7 @@ export type SubscriptionIntervalFragment = { __typename?: 'SubscriptionInterval'
 
 export type MailTemplateRefFragment = { __typename?: 'MailTemplateRef', id: string, name: string };
 
-export type MemberPlanRefFragment = { __typename?: 'MemberPlan', id: string, name: string, productType: Types.ProductType, amountPerMonthMin: number, amountPerMonthMax?: number | null, currency: Types.Currency, extendable: boolean, slug: string, availablePaymentMethods: Array<(
+export type MemberPlanRefFragment = { __typename?: 'MemberPlan', id: string, name: string, productType: Types.ProductType, currency: Types.Currency, extendable: boolean, slug: string, availablePaymentMethods: Array<(
     { __typename?: 'AvailablePaymentMethod' }
     & FullAvailablePaymentMethodFragment
   )> };
@@ -129,8 +129,6 @@ export const MemberPlanRefFragmentDoc = gql`
   id
   name
   productType
-  amountPerMonthMin
-  amountPerMonthMax
   availablePaymentMethods {
     ...FullAvailablePaymentMethod
   }

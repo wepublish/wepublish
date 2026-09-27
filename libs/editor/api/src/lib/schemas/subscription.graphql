@@ -150,7 +150,7 @@ query SubscriptionsAsCsv(
 mutation CreateSubscription(
   $autoRenew: Boolean!
   $extendable: Boolean!
-  $monthlyAmount: Int!
+  $monthlyAmount: Float!
   $paidUntil: DateTime
   $startsAt: DateTime!
   $paymentPeriodicity: PaymentPeriodicity!
@@ -179,7 +179,7 @@ mutation UpdateSubscription(
   $id: String!
   $autoRenew: Boolean
   $extendable: Boolean
-  $monthlyAmount: Int
+  $monthlyAmount: Float
   $paidUntil: DateTime
   $startsAt: DateTime
   $paymentPeriodicity: PaymentPeriodicity

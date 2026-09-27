@@ -481,7 +481,7 @@ export const NavPaperWrapper = styled('div', {
   shouldForwardProp: propName =>
     propName !== 'isMenuOpen' && propName !== 'isTransitioning',
 })<{ isMenuOpen: boolean; isTransitioning: boolean }>`
-  padding: calc(${theme.spacing(2)} + var(--navbar-height)) ${theme.spacing(2)}
+  padding: calc(${theme.spacing(2)} + ${NAVBAR_HEIGHT_PX}px) ${theme.spacing(2)}
     0 22.5px;
   background-color: ${theme.palette.primary.dark};
   color: ${theme.palette.common.white};
@@ -504,7 +504,7 @@ export const NavPaperWrapper = styled('div', {
 
   ${theme.breakpoints.up('md')} {
     row-gap: unset;
-    padding: calc(${theme.spacing(5)} + var(--navbar-height))
+    padding: calc(${theme.spacing(5)} + ${NAVBAR_HEIGHT_PX}px)
       ${theme.spacing(2)} 0 27px;
     grid-template-columns: 60px 1fr;
     grid-template-rows: min-content min-content;
@@ -662,7 +662,7 @@ export const NavbarInnerWrapper = styled(Toolbar, {
     `}
 `;
 
-const SubscribeBtn = styled(Link)`
+export const SubscribeBtn = styled(Link)`
   margin-left: auto;
 `;
 
@@ -686,7 +686,7 @@ export const ReflektNavbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
       hasUnpaidInvoices,
       loginBtn = { href: '/login' },
       profileBtn = { href: '/profile' },
-      subscribeBtn = { href: '/mitmachen' },
+      subscribeBtn = { href: '/crowdfunding' },
       isMenuOpen: controlledIsMenuOpen,
       onMenuToggle,
       navPaperClassName,
@@ -789,36 +789,6 @@ export const ReflektNavbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
     );
 
     useImperativeHandle(forwardRef, () => ref.current!, []);
-
-    useEffect(() => {
-      if (typeof ResizeObserver !== 'undefined') {
-        const observer = new ResizeObserver(() => {
-          handleResize();
-        });
-
-        if (!ref.current) {
-          return;
-        }
-
-        observer.observe(ref.current);
-
-        return () =>
-          ref?.current ? observer.unobserve(ref.current) : undefined;
-      }
-
-      window.addEventListener('resize', handleResize);
-
-      return () => window.removeEventListener('resize', handleResize);
-    }, [ref]);
-
-    function handleResize() {
-      if (ref?.current) {
-        ref.current.ownerDocument.documentElement.setAttribute(
-          'style',
-          `--navbar-height: ${ref.current.getBoundingClientRect().height}px`
-        );
-      }
-    }
 
     return (
       <NavbarWrapper

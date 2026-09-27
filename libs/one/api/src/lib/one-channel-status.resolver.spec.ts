@@ -71,4 +71,83 @@ describe('OneChannelStatusResolver', () => {
 
     expect(status.state).toBe(OneChannelConnectionState.Failing);
   });
+
+  describe('unreachable', () => {
+    const now = new Date('2026-09-16T12:00:00.000Z');
+
+    function hoursAgo(hours: number) {
+      return new Date(now.getTime() - hours * 60 * 60 * 1000);
+    }
+
+    beforeEach(() => {
+      jest.useFakeTimers().setSystemTime(now);
+    });
+
+    afterEach(() => {
+      jest.useRealTimers();
+    });
+
+    it('stays false while the connector is not configured', async () => {
+      const status = await makeResolver('').getOneChannelStatus();
+
+      expect(status.unreachable).toBe(false);
+    });
+
+    it('stays false shortly before the threshold', async () => {
+      state.getState.mockResolvedValue({
+        lastSuccessAt: hoursAgo(5),
+        lastAttemptAt: hoursAgo(5),
+        lastError: null,
+      });
+
+      const status = await makeResolver(
+        'https://one.wepublish.ch'
+      ).getOneChannelStatus();
+
+      expect(status.unreachable).toBe(false);
+    });
+
+    it('stays false for a failing attempt while a recent success exists', async () => {
+      state.getState.mockResolvedValue({
+        lastSuccessAt: hoursAgo(1),
+        lastAttemptAt: now,
+        lastError: 'ECONNREFUSED',
+      });
+
+      const status = await makeResolver(
+        'https://one.wepublish.ch'
+      ).getOneChannelStatus();
+
+      expect(status.state).toBe(OneChannelConnectionState.Failing);
+      expect(status.unreachable).toBe(false);
+    });
+
+    it('turns true once the threshold has passed', async () => {
+      state.getState.mockResolvedValue({
+        lastSuccessAt: hoursAgo(7),
+        lastAttemptAt: now,
+        lastError: 'ECONNREFUSED',
+      });
+
+      const status = await makeResolver(
+        'https://one.wepublish.ch'
+      ).getOneChannelStatus();
+
+      expect(status.unreachable).toBe(true);
+    });
+
+    it('turns true when there was never a successful contact', async () => {
+      state.getState.mockResolvedValue({
+        lastSuccessAt: null,
+        lastAttemptAt: null,
+        lastError: null,
+      });
+
+      const status = await makeResolver(
+        'https://one.wepublish.ch'
+      ).getOneChannelStatus();
+
+      expect(status.unreachable).toBe(true);
+    });
+  });
 });

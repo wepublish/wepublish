@@ -19,12 +19,27 @@ import {
   MediumMailStats,
   MediumMembershipStats,
   MediumMoneyStats,
+  MediumChangelogStats,
   MediumOperationsStats,
   MediumStats,
 } from './medium-stats.model';
 
 /** Hard cap on how many migration rows one call may return. */
 export const MIGRATION_LIST_LIMIT = 200;
+
+/** Hard cap on how many changelog actions one call may return. */
+export const CHANGELOG_ACTION_LIST_LIMIT = 200;
+
+export interface ChangelogAction {
+  id: string;
+  name: string;
+  title: string;
+  actionRequired: boolean;
+  releasedAt: Date;
+  confirmedAt: Date | null;
+  confirmedByName: string | null;
+  confirmedByEmail: string | null;
+}
 
 export const DEFAULT_WINDOW_DAYS = 30;
 
@@ -213,28 +228,115 @@ export class MediumStatsService {
     }
   }
 
-  private async operations(): Promise<MediumOperationsStats> {
-    const [job, images, documents, mailchimpSyncErrors, migrations] =
-      await Promise.all([
-        this.prisma.periodicJob.findFirst({ orderBy: { date: 'desc' } }),
-        this.prisma.image.aggregate({
-          _count: { _all: true },
-          _sum: { fileSize: true },
+  async listChangelogActions(
+    limit = CHANGELOG_ACTION_LIST_LIMIT
+  ): Promise<ChangelogAction[]> {
+    try {
+      const rows = await this.prisma.changelogEntry.findMany({
+        orderBy: { releasedAt: 'desc' },
+        take: Math.min(Math.max(limit, 1), CHANGELOG_ACTION_LIST_LIMIT),
+        select: {
+          id: true,
+          name: true,
+          title: true,
+          actionRequired: true,
+          releasedAt: true,
+          confirmedAt: true,
+          confirmedBy: { select: { name: true, firstName: true, email: true } },
+        },
+      });
+
+      return rows.map(({ confirmedBy, ...entry }) => ({
+        ...entry,
+        confirmedByName:
+          confirmedBy ?
+            [confirmedBy.firstName, confirmedBy.name].filter(Boolean).join(' ')
+          : null,
+        confirmedByEmail: confirmedBy?.email ?? null,
+      }));
+    } catch (error) {
+      logger('medium-stats').warn(
+        `Could not read changelog entries: ${(error as Error).message}`
+      );
+
+      return [];
+    }
+  }
+
+  private async changelogActions(): Promise<MediumChangelogStats> {
+    const where = { actionRequired: true, confirmedAt: null };
+
+    try {
+      const [openActions, oldest] = await Promise.all([
+        this.prisma.changelogEntry.count({ where }),
+        this.prisma.changelogEntry.findFirst({
+          where,
+          orderBy: { releasedAt: 'asc' },
+          select: { releasedAt: true },
         }),
-        this.prisma.document.aggregate({
-          _count: { _all: true },
-          _sum: { fileSize: true },
-        }),
-        this.prisma.mailchimpSyncError.count(),
-        this.migrations(),
       ]);
+
+      return {
+        openActions,
+        oldestOpenActionAt: oldest?.releasedAt ?? null,
+      };
+    } catch (error) {
+      // A CMS whose database predates the changelog tables must still answer
+      // the rest of the stats.
+      logger('medium-stats').warn(
+        `Could not read changelog entries: ${(error as Error).message}`
+      );
+
+      return { openActions: 0, oldestOpenActionAt: null };
+    }
+  }
+
+  private async operations(): Promise<MediumOperationsStats> {
+    const [
+      job,
+      lastExecuted,
+      images,
+      documents,
+      mailchimpSyncErrors,
+      migrations,
+      changelog,
+    ] = await Promise.all([
+      this.prisma.periodicJob.findFirst({ orderBy: { date: 'desc' } }),
+      // The newest run that actually executed. The newest ROW may be one
+      // that was scheduled and never ran, and reporting its empty
+      // executionTime as "no job has ever run" hides exactly the case where
+      // the job got stuck — the editor dashboard looks at the same thing
+      // (periodic-job-logs.tsx, `jobs.find(pj => !!pj.executionTime)`).
+      this.prisma.periodicJob.findFirst({
+        where: { executionTime: { not: null } },
+        orderBy: { date: 'desc' },
+      }),
+      this.prisma.image.aggregate({
+        _count: { _all: true },
+        _sum: { fileSize: true },
+      }),
+      this.prisma.document.aggregate({
+        _count: { _all: true },
+        _sum: { fileSize: true },
+      }),
+      this.prisma.mailchimpSyncError.count(),
+      this.migrations(),
+      this.changelogActions(),
+    ]);
 
     const imageBytes = images._sum.fileSize ?? 0;
     const documentBytes = documents._sum.fileSize ?? 0;
 
     return {
-      lastPeriodicJobAt: job?.executionTime ?? null,
-      periodicJobFailing: Boolean(job?.finishedWithError),
+      lastPeriodicJobAt: lastExecuted?.executionTime ?? null,
+      // Failing means it errored and never got through — a run that errored
+      // and then SUCCEEDED on a retry is a warning in the editor dashboard
+      // (`getSeverity`: finishedWithError + successfullyFinished => warning),
+      // not a failure, and it must not be one here either. Reporting the
+      // retry as a failure turned every recovered night into a red medium.
+      periodicJobFailing: Boolean(
+        job?.finishedWithError && !job?.successfullyFinished
+      ),
       periodicJobError: job?.error ?? null,
       periodicJobTries: job?.tries ?? 0,
       imageCount: images._count._all,
@@ -244,6 +346,7 @@ export class MediumStatsService {
       storageBytes: imageBytes + documentBytes,
       mailchimpSyncErrors,
       migrations,
+      changelog,
     };
   }
 
