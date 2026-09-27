@@ -8,8 +8,10 @@ import {
   calculatePeriodAmount,
   CurrencyNumberSpinner,
   getPeriodPriceRange,
+  isFixedAmountLayout,
   MemberPlanPickerRadios,
   monthlyAmountFromPeriodAmount,
+  showsAmountInput,
 } from '@wepublish/membership/website';
 import {
   BlockContent,
@@ -285,6 +287,13 @@ export const ReflektCrowdfundingMemberPlanItem = forwardRef<
     slug,
     shortDescription,
     periodicityPricing,
+    paymentPeriodicity,
+    showPeriodicity,
+    amountLayout,
+    amount,
+    onAmountChange,
+    availablePaymentMethods,
+    defaultPaymentPeriodicity,
     currency,
     extendable,
     goodies,
@@ -300,15 +309,14 @@ export const ReflektCrowdfundingMemberPlanItem = forwardRef<
   const isChecked = props.checked ?? radioGroup?.value === id;
   const radioInputRef = useRef<HTMLInputElement>(null);
   const form = useFormContext() as ReturnType<typeof useFormContext> | null;
-  const setValue = form?.setValue;
   const errors = form?.formState.errors;
-  const watchedMonthlyAmount = form?.watch('monthlyAmount');
 
   const { goodieMinValue, baselineMonthlyAmount } = useContext(
     CrowdfundingGoodieContext
   );
 
-  const hasFreePricing = tags?.includes('inline-slider');
+  const hasFreePricing =
+    isFixedAmountLayout(amountLayout) && showsAmountInput(amountLayout);
   const hasMinValue = amountPerMonthMin > 0;
 
   const memberPlan = { periodicityPricing };
@@ -346,16 +354,10 @@ export const ReflektCrowdfundingMemberPlanItem = forwardRef<
         )
       : 0;
 
-    if (watchedMonthlyAmount !== targetMonthlyAmount) {
-      setValue?.('monthlyAmount', targetMonthlyAmount);
+    if (amount !== targetMonthlyAmount) {
+      onAmountChange?.(targetMonthlyAmount);
     }
-  }, [
-    hasFreePricing,
-    isChecked,
-    freeAmountYearly,
-    watchedMonthlyAmount,
-    setValue,
-  ]);
+  }, [hasFreePricing, isChecked, freeAmountYearly, amount, onAmountChange]);
 
   return (
     <ItemWrapper className={className}>

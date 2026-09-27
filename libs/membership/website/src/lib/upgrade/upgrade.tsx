@@ -345,7 +345,11 @@ export const Upgrade = ({
                 {...field}
                 onChange={memberPlanId => field.onChange(memberPlanId)}
                 memberPlans={availableMemberplans}
-                alwaysShow
+                memberPlanRenderSettings={memberPlanRenderSettings}
+                amount={watchedMonthlyAmount}
+                onAmountChange={monthlyAmount =>
+                  setValue<'monthlyAmount'>('monthlyAmount', monthlyAmount)
+                }
               />
             )}
           />

@@ -4,8 +4,12 @@ import {
   MemberPlanPicker,
   MemberPlanPickerRadios,
 } from '@wepublish/membership/website';
-import { BuilderMemberPlanPickerProps } from '@wepublish/website/builder';
-import { forwardRef } from 'react';
+import { useSubscriptionsQuery } from '@wepublish/website/api';
+import {
+  BuilderMemberPlanPickerProps,
+  BuilderRouterContext,
+} from '@wepublish/website/builder';
+import { forwardRef, useContext } from 'react';
 
 export const StyledMemberPlanPicker = styled(MemberPlanPicker)`
   display: grid;
@@ -36,10 +40,23 @@ export const ReflektMemberPlanPicker = forwardRef<
   HTMLButtonElement,
   BuilderMemberPlanPickerProps
 >(function SortedMemberPlanPicker(props, ref) {
+  const {
+    query: { upgradeSubscriptionId },
+  } = useContext(BuilderRouterContext);
+  const { data } = useSubscriptionsQuery({
+    fetchPolicy: 'cache-only',
+    skip: !upgradeSubscriptionId,
+  });
+  const isUpgrade = !!data?.userSubscriptions.some(
+    subscription =>
+      subscription.isActive && subscription.id === upgradeSubscriptionId
+  );
+
   return (
     <div id="MemberPlans">
       <StyledMemberPlanPicker
         {...props}
+        alwaysShow={isUpgrade}
         ref={ref}
       />
     </div>

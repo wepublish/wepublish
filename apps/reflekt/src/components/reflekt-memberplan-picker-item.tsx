@@ -5,11 +5,13 @@ import {
   CurrencyNumberSpinner,
   formatCurrency,
   getPeriodPriceRange,
+  isFixedAmountLayout,
   MemberPlanItemContent,
   MemberPlanItemName,
   MemberPlanItemPicker,
   MemberPlanItemPrice,
   MemberPlanItemWrapper,
+  showsAmountInput,
 } from '@wepublish/membership/website';
 import { PaymentPeriodicity } from '@wepublish/website/api';
 import {
@@ -18,7 +20,7 @@ import {
 } from '@wepublish/website/builder';
 import { getMonthlyEquivalentRange } from '@wepublish/membership/website';
 import { forwardRef } from 'react';
-import { useFormContext, useWatch } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import { euclidCircularB, robotoMono } from '../theme';
@@ -46,6 +48,13 @@ export const MemberPlanItem = forwardRef<
     slug,
     shortDescription,
     periodicityPricing,
+    paymentPeriodicity,
+    showPeriodicity,
+    amountLayout,
+    amount,
+    onAmountChange,
+    availablePaymentMethods,
+    defaultPaymentPeriodicity,
     currency,
     extendable,
     goodies,
@@ -63,21 +72,14 @@ export const MemberPlanItem = forwardRef<
   const radioGroup = useRadioGroup();
   const isChecked = props.checked ?? radioGroup?.value === id;
   const { t } = useTranslation();
-  const form = useFormContext();
-  const control = form?.control;
-  const errors = form?.formState.errors;
-  const setValue = form?.setValue;
-
-  const monthlyAmount = useWatch({
-    control,
-    name: 'monthlyAmount',
-    disabled: !isChecked,
-  }) as number;
+  const errors = useFormContext()?.formState.errors;
+  const monthlyAmount = isChecked ? amount : undefined;
 
   const hasFixedAmount =
     amountPerMonthMax != null && amountPerMonthMax === amountPerMonthMin;
 
-  const hasInCardFreeInput = tags?.includes('inline-slider');
+  const hasInCardFreeInput =
+    isFixedAmountLayout(amountLayout) && showsAmountInput(amountLayout);
 
   const memberPlan = { periodicityPricing };
 
@@ -127,7 +129,7 @@ export const MemberPlanItem = forwardRef<
             value={(monthlyAmount ?? amountPerMonthMin) / 100}
             onValueChange={spinnerValue => {
               if (spinnerValue != null) {
-                setValue?.('monthlyAmount', Math.round(spinnerValue * 100));
+                onAmountChange?.(Math.round(spinnerValue * 100));
               }
             }}
             helperText={`Min ${formatCurrency(amountPerMonthMin / 100, currency, locale)}`}

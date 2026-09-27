@@ -80,7 +80,6 @@ export type BuilderMemberPlanPickerProps = {
   onChange: (memberPlanId: string) => void;
   name?: string;
   value?: string;
-  alwaysShow?: boolean;
   paymentPeriodicity?: PaymentPeriodicity;
   requiredPeriodicity?: PaymentPeriodicity;
   memberPlanRenderSettings?: BuilderMemberPlanRenderSetting[];
