@@ -6,7 +6,7 @@ describe('PaywallResolver', () => {
     const resolver = new PaywallResolver(
       {} as any,
       {} as any,
-      { deletePaywall: jest.fn().mockResolvedValue(deleted) } as any
+      { deletePaywall: vi.fn().mockResolvedValue(deleted) } as any
     );
 
     await expect(resolver.deletePaywall('paywall-1')).resolves.toEqual(deleted);

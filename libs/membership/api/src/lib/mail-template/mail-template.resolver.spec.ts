@@ -71,27 +71,27 @@ const mockTemplate2: MailTemplate = {
 
 const prismaServiceMock = {
   mailTemplate: {
-    findMany: jest.fn((): MailTemplate[] => [mockTemplate1, mockTemplate2]),
-    findUnique: jest.fn(async () => mockTemplate1),
-    create: jest.fn(async () => mockTemplate1),
-    update: jest.fn(async () => mockTemplate1),
-    delete: jest.fn(async () => mockTemplate1),
+    findMany: vi.fn((): MailTemplate[] => [mockTemplate1, mockTemplate2]),
+    findUnique: vi.fn(async () => mockTemplate1),
+    create: vi.fn(async () => mockTemplate1),
+    update: vi.fn(async () => mockTemplate1),
+    delete: vi.fn(async () => mockTemplate1),
   },
 };
 
 const mailProviderServiceMock = {
-  getName: jest.fn(async () => 'MockProvider'),
+  getName: vi.fn(async () => 'MockProvider'),
 };
 
 const mailContextMock = {
   mailProvider: mailProviderServiceMock as unknown as MailProvider,
-  getUsedTemplateIdentifiers: jest.fn((): string[] => [mockTemplate2.id]),
+  getUsedTemplateIdentifiers: vi.fn((): string[] => [mockTemplate2.id]),
 };
 
 const mailTemplateServiceMock = {
-  deleteMailTemplate: jest.fn(async () => undefined),
-  preview: jest.fn(async () => ({ subject: 's', html: 'h', text: undefined })),
-  sendTest: jest.fn(async () => undefined),
+  deleteMailTemplate: vi.fn(async () => undefined),
+  preview: vi.fn(async () => ({ subject: 's', html: 'h', text: undefined })),
+  sendTest: vi.fn(async () => undefined),
 };
 
 @Module({

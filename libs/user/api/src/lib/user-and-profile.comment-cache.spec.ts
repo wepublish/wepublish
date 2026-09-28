@@ -1,3 +1,4 @@
+import type { Mock } from 'vitest';
 import { Test } from '@nestjs/testing';
 import { Prisma, PrismaClient, User } from '@prisma/client';
 import { SessionCacheInvalidator } from '@wepublish/authentication/api';
@@ -33,12 +34,12 @@ const createDatabase = () => {
 
   const prisma = {
     image: {
-      create: jest.fn(async ({ data }: { data: { id: string } }) => {
+      create: vi.fn(async ({ data }: { data: { id: string } }) => {
         images.set(data.id, data);
 
         return data;
       }),
-      update: jest.fn(
+      update: vi.fn(
         async ({
           where,
           data,
@@ -65,7 +66,7 @@ const createDatabase = () => {
           return updated;
         }
       ),
-      delete: jest.fn(async ({ where }: { where: { id: string } }) => {
+      delete: vi.fn(async ({ where }: { where: { id: string } }) => {
         const image = images.get(where.id);
 
         if (!image) {
@@ -79,7 +80,7 @@ const createDatabase = () => {
       }),
     },
     user: {
-      update: jest.fn(
+      update: vi.fn(
         async ({
           where,
           data,
@@ -103,27 +104,27 @@ const createDatabase = () => {
 };
 
 const createPublicContentCache = () => ({
-  invalidate: jest.fn().mockResolvedValue(undefined),
-  invalidateDraft: jest.fn().mockResolvedValue(undefined),
-  invalidateComments: jest.fn().mockResolvedValue(undefined),
+  invalidate: vi.fn().mockResolvedValue(undefined),
+  invalidateDraft: vi.fn().mockResolvedValue(undefined),
+  invalidateComments: vi.fn().mockResolvedValue(undefined),
 });
 
 describe('profile image of a commenter', () => {
   const setup = () => {
     const database = createDatabase();
     const mediaAdapter = {
-      uploadImage: jest.fn().mockResolvedValue({ id: 'image-2' }),
-      deleteImage: jest.fn().mockResolvedValue(true),
+      uploadImage: vi.fn().mockResolvedValue({ id: 'image-2' }),
+      deleteImage: vi.fn().mockResolvedValue(true),
     };
     const publicContentCache = createPublicContentCache();
-    const sessionCache = { invalidate: jest.fn().mockResolvedValue(undefined) };
+    const sessionCache = { invalidate: vi.fn().mockResolvedValue(undefined) };
     const images = Object.assign(
       new ImageUploadService(
         database.prisma as unknown as PrismaClient,
         mediaAdapter as never,
         publicContentCache as unknown as PublicContentCacheInvalidator
       ),
-      { __DATALOADER__ImageDataloaderService: { prime: jest.fn() } }
+      { __DATALOADER__ImageDataloaderService: { prime: vi.fn() } }
     );
     const profile = new ProfileService(
       database.prisma as unknown as PrismaClient,
@@ -198,10 +199,10 @@ describe('UserService comment cache', () => {
   };
   let service: UserService;
   let prisma: {
-    user: { [method: string]: jest.Mock };
-    session: { deleteMany: jest.Mock };
-    comment: { findMany: jest.Mock };
-    article: { findMany: jest.Mock };
+    user: { [method: string]: Mock };
+    session: { deleteMany: Mock };
+    comment: { findMany: Mock };
+    article: { findMany: Mock };
   };
   let publicContentCache: ReturnType<typeof createPublicContentCache>;
 
@@ -209,13 +210,13 @@ describe('UserService comment cache', () => {
     publicContentCache = createPublicContentCache();
     prisma = {
       user: {
-        findUnique: jest.fn().mockResolvedValue(previous),
-        update: jest.fn(async ({ data }) => ({ ...previous, ...data })),
-        delete: jest.fn().mockResolvedValue(previous),
+        findUnique: vi.fn().mockResolvedValue(previous),
+        update: vi.fn(async ({ data }) => ({ ...previous, ...data })),
+        delete: vi.fn().mockResolvedValue(previous),
       },
-      session: { deleteMany: jest.fn().mockResolvedValue({ count: 0 }) },
-      comment: { findMany: jest.fn().mockResolvedValue([]) },
-      article: { findMany: jest.fn().mockResolvedValue([]) },
+      session: { deleteMany: vi.fn().mockResolvedValue({ count: 0 }) },
+      comment: { findMany: vi.fn().mockResolvedValue([]) },
+      article: { findMany: vi.fn().mockResolvedValue([]) },
     };
 
     const module = await Test.createTestingModule({
@@ -227,13 +228,13 @@ describe('UserService comment cache', () => {
         {
           provide: MailchimpContactService,
           useValue: {
-            updateContactEmail: jest.fn().mockResolvedValue(undefined),
+            updateContactEmail: vi.fn().mockResolvedValue(undefined),
           },
         },
-        { provide: UserDataloaderService, useValue: { prime: jest.fn() } },
+        { provide: UserDataloaderService, useValue: { prime: vi.fn() } },
         {
           provide: SessionCacheInvalidator,
-          useValue: { invalidate: jest.fn().mockResolvedValue(undefined) },
+          useValue: { invalidate: vi.fn().mockResolvedValue(undefined) },
         },
         {
           provide: PublicContentCacheInvalidator,

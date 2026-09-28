@@ -8,7 +8,7 @@ import { ArticleTagDataloader } from './article-tag.dataloader';
 
 describe('article tag cache', () => {
   let kv: KvTtlCacheService;
-  const prisma = { taggedArticles: { findMany: jest.fn() } };
+  const prisma = { taggedArticles: { findMany: vi.fn() } };
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({

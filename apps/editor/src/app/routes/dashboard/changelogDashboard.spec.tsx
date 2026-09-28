@@ -8,11 +8,12 @@ import {
   ChangelogDashboard,
 } from './changelogDashboard';
 
-// Partial mock: the UI library imports enums from the same module.
-vi.mock('@wepublish/editor/api', async importOriginal => ({
-  ...(await importOriginal<typeof import('@wepublish/editor/api')>()),
-  useChangelogEntriesQuery: vi.fn(),
-  useConfirmChangelogEntryMutation: () => [vi.fn(), { loading: false }],
+// The components call Apollo's hooks with generated documents, so the mock
+// sits at the Apollo boundary.
+vi.mock('@apollo/client/react', async importOriginal => ({
+  ...(await importOriginal<typeof import('@apollo/client/react')>()),
+  useQuery: vi.fn(),
+  useMutation: () => [vi.fn(), { loading: false }],
 }));
 
 vi.mock('react-i18next', () => ({

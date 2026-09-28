@@ -1,14 +1,14 @@
 import { TagService } from './tag.service';
 
 describe('TagService cache', () => {
-  const publicContentCache = { invalidate: jest.fn() };
+  const publicContentCache = { invalidate: vi.fn() };
   const tag = { id: 'tag-1' };
   const service = new TagService(
     {
       tag: {
-        create: jest.fn().mockResolvedValue(tag),
-        update: jest.fn().mockResolvedValue(tag),
-        delete: jest.fn().mockResolvedValue(tag),
+        create: vi.fn().mockResolvedValue(tag),
+        update: vi.fn().mockResolvedValue(tag),
+        delete: vi.fn().mockResolvedValue(tag),
       },
     } as any,
     publicContentCache as any
@@ -16,7 +16,7 @@ describe('TagService cache', () => {
 
   beforeEach(() => {
     Object.assign(service, {
-      __DATALOADER__TagDataloader: { prime: jest.fn() },
+      __DATALOADER__TagDataloader: { prime: vi.fn() },
     });
     publicContentCache.invalidate.mockReset().mockResolvedValue(undefined);
   });

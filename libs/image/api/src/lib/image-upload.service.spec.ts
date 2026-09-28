@@ -4,17 +4,17 @@ describe('ImageUploadService.replaceImage', () => {
   const setup = (uploadedId = 'image-2') => {
     const prisma = {
       image: {
-        update: jest.fn().mockResolvedValue({ id: uploadedId }),
-        delete: jest.fn(),
+        update: vi.fn().mockResolvedValue({ id: uploadedId }),
+        delete: vi.fn(),
       },
     };
     const mediaAdapter = {
-      uploadImage: jest.fn().mockResolvedValue({ id: uploadedId }),
-      deleteImage: jest.fn().mockResolvedValue(true),
+      uploadImage: vi.fn().mockResolvedValue({ id: uploadedId }),
+      deleteImage: vi.fn().mockResolvedValue(true),
     };
     const publicContentCache = {
-      invalidate: jest.fn().mockResolvedValue(undefined),
-      invalidateDraft: jest.fn().mockResolvedValue(undefined),
+      invalidate: vi.fn().mockResolvedValue(undefined),
+      invalidateDraft: vi.fn().mockResolvedValue(undefined),
     };
     const service = new ImageUploadService(
       prisma as any,

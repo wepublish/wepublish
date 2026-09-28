@@ -12,11 +12,11 @@ function fakeProvider(
 ): PaymentProvider {
   return {
     id,
-    webhookForPaymentIntent: jest.fn().mockResolvedValue({
+    webhookForPaymentIntent: vi.fn().mockResolvedValue({
       status: 200,
       paymentStates: [{ paymentID: 'payment-1', state: paymentState }],
     }),
-    updatePaymentWithIntentState: jest
+    updatePaymentWithIntentState: vi
       .fn()
       .mockResolvedValue(updatePaymentWithIntentStateResult),
   } as unknown as PaymentProvider;
@@ -24,13 +24,13 @@ function fakeProvider(
 
 function fakeResponse(): Response {
   const res = {} as Response;
-  res.status = jest.fn().mockReturnValue(res);
-  res.send = jest.fn().mockReturnValue(res);
+  res.status = vi.fn().mockReturnValue(res);
+  res.send = vi.fn().mockReturnValue(res);
   return res;
 }
 
 function fakeRequest(): Request {
-  return { get: jest.fn() } as unknown as Request;
+  return { get: vi.fn() } as unknown as Request;
 }
 
 describe('PaymentWebhookController.receiveWebhook', () => {
@@ -39,7 +39,7 @@ describe('PaymentWebhookController.receiveWebhook', () => {
       id: 'payment-1',
       invoiceID: 'invoice-1',
     });
-    const notifier = { notify: jest.fn().mockResolvedValue(undefined) };
+    const notifier = { notify: vi.fn().mockResolvedValue(undefined) };
     const config = { paymentProviders: [provider] } as PaymentMethodConfig;
     const controller = new PaymentWebhookController(
       config,
@@ -58,7 +58,7 @@ describe('PaymentWebhookController.receiveWebhook', () => {
       id: 'payment-1',
       invoiceID: 'invoice-1',
     });
-    const notifier = { notify: jest.fn().mockResolvedValue(undefined) };
+    const notifier = { notify: vi.fn().mockResolvedValue(undefined) };
     const config = { paymentProviders: [provider] } as PaymentMethodConfig;
     const controller = new PaymentWebhookController(
       config,
@@ -78,7 +78,7 @@ describe('PaymentWebhookController.receiveWebhook', () => {
       PaymentState.paid,
       undefined
     );
-    const notifier = { notify: jest.fn().mockResolvedValue(undefined) };
+    const notifier = { notify: vi.fn().mockResolvedValue(undefined) };
     const config = { paymentProviders: [provider] } as PaymentMethodConfig;
     const controller = new PaymentWebhookController(
       config,

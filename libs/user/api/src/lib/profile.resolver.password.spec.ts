@@ -3,8 +3,8 @@ import { ProfileResolver } from './profile.resolver';
 describe('ProfileResolver updatePassword', () => {
   it('keeps the session the reader changed the password in', async () => {
     const userService = {
-      validatePassword: jest.fn().mockResolvedValue(undefined),
-      updateUserPassword: jest.fn().mockResolvedValue({ id: 'user-1' }),
+      validatePassword: vi.fn().mockResolvedValue(undefined),
+      updateUserPassword: vi.fn().mockResolvedValue({ id: 'user-1' }),
     };
     const resolver = new ProfileResolver(userService as any, {} as any);
 

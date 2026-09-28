@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`BlockStylesService should create a block style 1`] = `
+exports[`BlockStylesService > should create a block style 1`] = `
 [
   {
     "data": {
@@ -13,7 +13,7 @@ exports[`BlockStylesService should create a block style 1`] = `
 ]
 `;
 
-exports[`BlockStylesService should delete a block style 1`] = `
+exports[`BlockStylesService > should delete a block style 1`] = `
 [
   {
     "where": {
@@ -23,7 +23,7 @@ exports[`BlockStylesService should delete a block style 1`] = `
 ]
 `;
 
-exports[`BlockStylesService should return all block styles 1`] = `
+exports[`BlockStylesService > should return all block styles 1`] = `
 [
   {
     "id": "123",
@@ -34,7 +34,7 @@ exports[`BlockStylesService should return all block styles 1`] = `
 ]
 `;
 
-exports[`BlockStylesService should update a block style 1`] = `
+exports[`BlockStylesService > should update a block style 1`] = `
 [
   {
     "data": {

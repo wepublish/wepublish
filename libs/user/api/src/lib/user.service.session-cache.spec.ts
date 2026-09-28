@@ -1,3 +1,4 @@
+import type { Mock } from 'vitest';
 import { Test } from '@nestjs/testing';
 import { PrismaClient } from '@prisma/client';
 import { SessionCacheInvalidator } from '@wepublish/authentication/api';
@@ -16,12 +17,12 @@ const user = {
 
 describe('UserService session cache', () => {
   let service: UserService;
-  let sessionCache: { invalidate: jest.Mock };
-  let sessions: { deleteMany: jest.Mock };
+  let sessionCache: { invalidate: Mock };
+  let sessions: { deleteMany: Mock };
 
   beforeEach(async () => {
-    sessionCache = { invalidate: jest.fn().mockResolvedValue(undefined) };
-    sessions = { deleteMany: jest.fn().mockResolvedValue({ count: 2 }) };
+    sessionCache = { invalidate: vi.fn().mockResolvedValue(undefined) };
+    sessions = { deleteMany: vi.fn().mockResolvedValue({ count: 2 }) };
 
     const module = await Test.createTestingModule({
       providers: [
@@ -30,37 +31,37 @@ describe('UserService session cache', () => {
           provide: PrismaClient,
           useValue: {
             user: {
-              update: jest.fn().mockResolvedValue(user),
-              delete: jest.fn().mockResolvedValue(user),
-              findUnique: jest.fn().mockResolvedValue(user),
-              findFirst: jest.fn().mockResolvedValue(null),
+              update: vi.fn().mockResolvedValue(user),
+              delete: vi.fn().mockResolvedValue(user),
+              findUnique: vi.fn().mockResolvedValue(user),
+              findFirst: vi.fn().mockResolvedValue(null),
             },
             session: sessions,
-            comment: { findMany: jest.fn().mockResolvedValue([]) },
+            comment: { findMany: vi.fn().mockResolvedValue([]) },
           },
         },
         {
           provide: MailContext,
           useValue: {
-            getUserTemplateId: jest.fn().mockResolvedValue('template-1'),
-            sendMail: jest.fn().mockResolvedValue(undefined),
+            getUserTemplateId: vi.fn().mockResolvedValue('template-1'),
+            sendMail: vi.fn().mockResolvedValue(undefined),
           },
         },
         {
           provide: HibpService,
-          useValue: { isPasswordPwned: jest.fn().mockResolvedValue(false) },
+          useValue: { isPasswordPwned: vi.fn().mockResolvedValue(false) },
         },
         {
           provide: MailchimpContactService,
           useValue: {
-            updateContactEmail: jest.fn().mockResolvedValue(undefined),
+            updateContactEmail: vi.fn().mockResolvedValue(undefined),
           },
         },
-        { provide: UserDataloaderService, useValue: { prime: jest.fn() } },
+        { provide: UserDataloaderService, useValue: { prime: vi.fn() } },
         { provide: SessionCacheInvalidator, useValue: sessionCache },
         {
           provide: PublicContentCacheInvalidator,
-          useValue: { invalidateComments: jest.fn() },
+          useValue: { invalidateComments: vi.fn() },
         },
       ],
     }).compile();

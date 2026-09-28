@@ -1,26 +1,71 @@
 {
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "targetDefaults": {
-    "build": {
-      "dependsOn": ["^build"],
-      "inputs": ["production", "^production"],
-      "cache": true
-    },
-    "lint": {
-      "inputs": ["default", "{workspaceRoot}/eslint.config.mjs"],
-      "cache": true
-    },
-    "test": {
-      "inputs": [
-        "default",
-        "^production",
-        "{workspaceRoot}/jest.preset.js",
-        "{workspaceRoot}/vitest.shared.ts",
-        "{workspaceRoot}/vitest.setup-tests.ts",
-        "{workspaceRoot}/vitest.emotion-serializer.ts"
-      ],
-      "cache": true
-    },
+    "build": [
+      {
+        "dependsOn": [
+          "^build"
+        ],
+        "inputs": [
+          "production",
+          "^production"
+        ],
+        "cache": true
+      },
+      {
+        "filter": {
+          "plugin": "@nx/next/plugin"
+        },
+        "configurations": {
+          "development": {}
+        }
+      }
+    ],
+    "lint": [
+      {
+        "inputs": [
+          "default",
+          "{workspaceRoot}/eslint.config.mjs"
+        ],
+        "cache": true
+      },
+      {
+        "filter": {
+          "plugin": "@nx/eslint/plugin"
+        },
+        "inputs": [
+          "default",
+          "^default",
+          "{workspaceRoot}/eslint.config.mjs",
+          "{workspaceRoot}/tools/eslint-rules/**/*"
+        ]
+      }
+    ],
+    "test": [
+      {
+        "inputs": [
+          "default",
+          "^production",
+          "{workspaceRoot}/vitest.shared.ts",
+          "{workspaceRoot}/vitest.setup-tests.ts",
+          "{workspaceRoot}/vitest.emotion-serializer.ts"
+        ],
+        "cache": true
+      },
+      {
+        "filter": {
+          "plugin": "@nx/vitest"
+        },
+        "options": {
+          "watch": false
+        },
+        "configurations": {
+          "ci": {
+            "coverage": true
+          }
+        }
+      }
+    ],
     "build-storybook": {
       "inputs": [
         "default",
@@ -37,8 +82,7 @@
     "server": {
       "cache": true
     },
-    "@nx/jest:jest": {
-      "inputs": ["default", "^production", "{workspaceRoot}/jest.preset.js"],
+    "@nx/js:tsc": {
       "cache": true,
       "dependsOn": [
         "^build"
@@ -53,27 +97,33 @@
         "filter": {
           "plugin": "@nx/next/plugin"
         },
-        "update": {
-          "updateSnapshot": true
+        "defaultConfiguration": "development",
+        "configurations": {
+          "development": {},
+          "production": {}
         }
       }
     ]
   },
   "namedInputs": {
-    "default": ["{projectRoot}/**/*", "sharedGlobals"],
+    "default": [
+      "{projectRoot}/**/*",
+      "sharedGlobals"
+    ],
     "production": [
       "default",
       "!{projectRoot}/eslint.config.mjs",
       "!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
       "!{projectRoot}/tsconfig.spec.json",
-      "!{projectRoot}/jest.config.[jt]s",
       "!{projectRoot}/vitest.config.[jt]s",
       "!{projectRoot}/.storybook/**/*",
       "!{projectRoot}/**/*.stories.@(js|jsx|ts|tsx|mdx)",
       "!{projectRoot}/src/test-setup.[jt]s",
       "!{projectRoot}/tsconfig.storybook.json"
     ],
-    "sharedGlobals": ["{workspaceRoot}/babel.config.json"]
+    "sharedGlobals": [
+      "{workspaceRoot}/babel.config.json"
+    ]
   },
   "generators": {
     "@nx/react": {
@@ -89,7 +139,7 @@
       "library": {
         "style": "@emotion/styled",
         "linter": "eslint",
-        "unitTestRunner": "jest"
+        "unitTestRunner": "vitest"
       }
     },
     "@nx/next": {
@@ -106,5 +156,148 @@
   "analytics": false,
   "migrate": {
     "agentic": true
-  }
+  },
+  "plugins": [
+    {
+      "plugin": "@nx/eslint/plugin",
+      "options": {
+        "targetName": "lint"
+      },
+      "include": [
+        "apps/api-example/**/*",
+        "apps/babanews/**/*",
+        "apps/bajour/**/*",
+        "apps/cultur/**/*",
+        "apps/demo/**/*",
+        "apps/editor/**/*",
+        "apps/eenews/**/*",
+        "apps/factuel/**/*",
+        "apps/fazetten/**/*",
+        "apps/flimmer/**/*",
+        "apps/ganzgraz/**/*",
+        "apps/gruppetto/**/*",
+        "apps/hauptstadt/**/*",
+        "apps/mannschaft/**/*",
+        "apps/media/**/*",
+        "apps/mediamakerscamp/**/*",
+        "apps/munotgloeggli/**/*",
+        "apps/neuewege/**/*",
+        "apps/onlinereports/**/*",
+        "apps/reflekt/**/*",
+        "apps/tsri/**/*",
+        "apps/website-example/**/*",
+        "apps/wepublish-site/**/*",
+        "apps/wnti/**/*",
+        "apps/zwoelf/**/*",
+        "libs/action/api/**/*",
+        "libs/ai/api/**/*",
+        "libs/ai/editor/**/*",
+        "libs/ai/website/**/*",
+        "libs/api/**/*",
+        "libs/article/api/**/*",
+        "libs/article/website/**/*",
+        "libs/authentication/api/**/*",
+        "libs/authentication/website/**/*",
+        "libs/author/api/**/*",
+        "libs/author/website/**/*",
+        "libs/banner/api/**/*",
+        "libs/banner/editor/**/*",
+        "libs/banner/website/**/*",
+        "libs/block-content/website/**/*",
+        "libs/challenge/api/**/*",
+        "libs/changelog/api/**/*",
+        "libs/comments/api/**/*",
+        "libs/comments/website/**/*",
+        "libs/consent/api/**/*",
+        "libs/consent/editor/**/*",
+        "libs/content/website/**/*",
+        "libs/crowdfunding/api/**/*",
+        "libs/crowdfunding/editor/**/*",
+        "libs/document/api/**/*",
+        "libs/editor/api/**/*",
+        "libs/errors/**/*",
+        "libs/errors/website/**/*",
+        "libs/event/api/**/*",
+        "libs/event/import/api/**/*",
+        "libs/event/import/editor/**/*",
+        "libs/event/website/**/*",
+        "libs/external-apps/api/**/*",
+        "libs/feed/website/**/*",
+        "libs/google-analytics/api/**/*",
+        "libs/health/api/**/*",
+        "libs/image/website/**/*",
+        "libs/kv-ttl-cache/api/**/*",
+        "libs/mail/api/**/*",
+        "libs/media/api/**/*",
+        "libs/media-transform-guard/api/**/*",
+        "libs/member-plan/api/**/*",
+        "libs/membership/api/**/*",
+        "libs/membership/editor/**/*",
+        "libs/membership/website/**/*",
+        "libs/navigation/api/**/*",
+        "libs/navigation/website/**/*",
+        "libs/nest-modules/**/*",
+        "libs/one/api/**/*",
+        "libs/page/api/**/*",
+        "libs/page/website/**/*",
+        "libs/payment/api/**/*",
+        "libs/payment/website/**/*",
+        "libs/paywall/api/**/*",
+        "libs/paywall/website/**/*",
+        "libs/peering/api/import/**/*",
+        "libs/peering/api/**/*",
+        "libs/peering/website/**/*",
+        "libs/permissions/api/**/*",
+        "libs/permissions/**/*",
+        "libs/phrase/api/**/*",
+        "libs/poll/api/**/*",
+        "libs/property/api/**/*",
+        "libs/richtext/api/**/*",
+        "libs/richtext/editor/**/*",
+        "libs/richtext/**/*",
+        "libs/richtext/website/**/*",
+        "libs/session/api/**/*",
+        "libs/settings/api/**/*",
+        "libs/settings/editor/**/*",
+        "libs/stats/api/**/*",
+        "libs/system-info/api/**/*",
+        "libs/tag/api/**/*",
+        "libs/tag/website/**/*",
+        "libs/tracking-pixel/api/**/*",
+        "libs/ui/editor/**/*",
+        "libs/ui/**/*",
+        "libs/user/api/**/*",
+        "libs/user/**/*",
+        "libs/user/website/**/*",
+        "libs/user-subscription/api/**/*",
+        "libs/utils/api/**/*",
+        "libs/utils/**/*",
+        "libs/utils/website/**/*",
+        "libs/versionInformation/api/**/*",
+        "libs/website/admin/**/*",
+        "libs/website/api/**/*",
+        "libs/website/builder/**/*",
+        "libs/website/**/*",
+        "libs/website/translations/**/*"
+      ]
+    },
+    {
+      "plugin": "@nx/vite/plugin",
+      "options": {
+        "devTargetName": "dev",
+        "typecheckTargetName": "typecheck",
+        "buildTargetName": "browser",
+        "serveTargetName": "serve",
+        "previewTargetName": "preview",
+        "serveStaticTargetName": "serve-static"
+      }
+    },
+    {
+      "plugin": "@nx/vitest",
+      "options": {
+        "testMode": "run",
+        "testTargetName": "test"
+      }
+    }
+  ]
 }

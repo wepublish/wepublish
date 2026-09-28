@@ -34,6 +34,13 @@ const renderWithTheme = (ui: ReactNode) =>
   );
 
 describe('PreviewUnavailable', () => {
+  // The handshake window is measured against performance.now(), which keeps
+  // counting across all files sharing a vitest worker - pin it so the pending
+  // state stays reachable no matter how long the suite has been running.
+  beforeEach(() => {
+    vi.spyOn(performance, 'now').mockReturnValue(0);
+  });
+
   afterEach(() => {
     window.history.replaceState(null, '', '/');
     Object.defineProperty(window, 'opener', {
@@ -43,6 +50,7 @@ describe('PreviewUnavailable', () => {
     });
     document.cookie = 'auth.token=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
     setPreviewHandshakeState('unknown');
+    vi.restoreAllMocks();
   });
 
   it('renders nothing without ?preview in the url', () => {

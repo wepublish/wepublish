@@ -1,7 +1,7 @@
 import { EventService } from './event.service';
 
 describe('EventService cache', () => {
-  const publicContentCache = { invalidate: jest.fn(), invalidateAt: jest.fn() };
+  const publicContentCache = { invalidate: vi.fn(), invalidateAt: vi.fn() };
   const event = {
     id: 'event-1',
     startsAt: new Date('2030-01-01T10:00:00.000Z'),
@@ -10,10 +10,10 @@ describe('EventService cache', () => {
   const service = new EventService(
     {
       event: {
-        findUnique: jest.fn().mockResolvedValue(event),
-        create: jest.fn().mockResolvedValue(event),
-        update: jest.fn().mockResolvedValue(event),
-        delete: jest.fn().mockResolvedValue(event),
+        findUnique: vi.fn().mockResolvedValue(event),
+        create: vi.fn().mockResolvedValue(event),
+        update: vi.fn().mockResolvedValue(event),
+        delete: vi.fn().mockResolvedValue(event),
       },
     } as any,
     publicContentCache as any
@@ -21,7 +21,7 @@ describe('EventService cache', () => {
 
   beforeEach(() => {
     Object.assign(service, {
-      __DATALOADER__EventDataloaderService: { prime: jest.fn() },
+      __DATALOADER__EventDataloaderService: { prime: vi.fn() },
     });
     publicContentCache.invalidate.mockReset().mockResolvedValue(undefined);
     publicContentCache.invalidateAt.mockReset();

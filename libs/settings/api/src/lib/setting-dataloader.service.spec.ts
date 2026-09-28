@@ -3,21 +3,30 @@ import { SettingDataloaderService } from './setting-dataloader.service';
 import { PrismaClient } from '@prisma/client';
 import DataLoader from 'dataloader';
 import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
+import type { Mock } from 'vitest';
 
-jest.mock('dataloader');
+vi.mock('dataloader', () => ({
+  default: vi.fn(function (this: any) {
+    this.prime = vi.fn();
+    this.load = vi.fn();
+    this.loadMany = vi.fn();
+    this.clear = vi.fn();
+    this.clearAll = vi.fn();
+  }),
+}));
 
 describe('SettingDataloaderService', () => {
   let service: SettingDataloaderService;
   let prismaMock: {
     setting: {
-      findMany: jest.Mock;
+      findMany: Mock;
     };
   };
 
   beforeEach(async () => {
     prismaMock = {
       setting: {
-        findMany: jest.fn(),
+        findMany: vi.fn(),
       },
     };
 
@@ -39,7 +48,7 @@ describe('SettingDataloaderService', () => {
 
   it('should prime', () => {
     // @ts-expect-error Mock so typings incorrectly
-    const dataloaderMock = DataLoader.mock.instances[0] as jest.fn;
+    const dataloaderMock = DataLoader.mock.instances[0] as any;
     service.prime('123', {} as any);
     expect(dataloaderMock.prime.mock.calls[0]).toMatchSnapshot();
   });
@@ -47,7 +56,7 @@ describe('SettingDataloaderService', () => {
   describe('load', () => {
     beforeEach(async () => {
       // @ts-expect-error mocked so typing doesn't work
-      DataLoader.mockImplementation((impl, opt) => {
+      DataLoader.mockImplementation(function (impl: any, opt: any) {
         return {
           load: (id: string) => impl([id]),
           loadMany: (ids: readonly string[]) => impl(ids),

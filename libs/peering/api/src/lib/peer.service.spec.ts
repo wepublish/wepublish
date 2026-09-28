@@ -1,3 +1,4 @@
+import type { Mock } from 'vitest';
 import { Test } from '@nestjs/testing';
 import { PrismaClient } from '@prisma/client';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
@@ -7,10 +8,10 @@ import { REMOTE_PEER_PROFILE_CACHE_NAMESPACE } from './peer-profile-cache';
 
 describe('PeerService', () => {
   let service: PeerService;
-  let kv: { resetNamespace: jest.Mock };
+  let kv: { resetNamespace: Mock };
 
   beforeEach(async () => {
-    kv = { resetNamespace: jest.fn().mockResolvedValue(undefined) };
+    kv = { resetNamespace: vi.fn().mockResolvedValue(undefined) };
     const peer = { id: 'peer-1', hostURL: 'https://peer.example' };
 
     const module = await Test.createTestingModule({
@@ -20,13 +21,13 @@ describe('PeerService', () => {
           provide: PrismaClient,
           useValue: {
             peer: {
-              create: jest.fn().mockResolvedValue(peer),
-              update: jest.fn().mockResolvedValue(peer),
-              delete: jest.fn().mockResolvedValue(peer),
+              create: vi.fn().mockResolvedValue(peer),
+              update: vi.fn().mockResolvedValue(peer),
+              delete: vi.fn().mockResolvedValue(peer),
             },
           },
         },
-        { provide: PeerDataloaderService, useValue: { prime: jest.fn() } },
+        { provide: PeerDataloaderService, useValue: { prime: vi.fn() } },
         { provide: KvTtlCacheService, useValue: kv },
       ],
     }).compile();

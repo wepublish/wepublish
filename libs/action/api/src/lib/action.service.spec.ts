@@ -9,28 +9,28 @@ describe('ActionService', () => {
   beforeEach(async () => {
     prismaMock = {
       article: {
-        findMany: jest.fn(),
+        findMany: vi.fn(),
       },
       page: {
-        findMany: jest.fn(),
+        findMany: vi.fn(),
       },
       comment: {
-        findMany: jest.fn(),
+        findMany: vi.fn(),
       },
       author: {
-        findMany: jest.fn(),
+        findMany: vi.fn(),
       },
       subscription: {
-        findMany: jest.fn(),
+        findMany: vi.fn(),
       },
       poll: {
-        findMany: jest.fn(),
+        findMany: vi.fn(),
       },
       user: {
-        findMany: jest.fn(),
+        findMany: vi.fn(),
       },
       event: {
-        findMany: jest.fn(),
+        findMany: vi.fn(),
       },
     };
 

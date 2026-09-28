@@ -44,15 +44,15 @@ describe('AgendaBaselService', () => {
         {
           provide: CACHE_MANAGER,
           useValue: {
-            get: jest.fn(),
-            set: jest.fn(),
+            get: vi.fn(),
+            set: vi.fn(),
           },
         },
         {
           provide: PrismaClient,
           useValue: {
             event: {
-              create: jest.fn().mockResolvedValue({
+              create: vi.fn().mockResolvedValue({
                 id: 'created-event-id',
               }),
             },
@@ -67,13 +67,13 @@ describe('AgendaBaselService', () => {
         {
           provide: ImageFetcherService,
           useValue: {
-            fetch: jest.fn(),
+            fetch: vi.fn(),
           },
         },
         {
           provide: MediaAdapter,
           useValue: {
-            uploadImageFromArrayBuffer: jest.fn().mockResolvedValue({
+            uploadImageFromArrayBuffer: vi.fn().mockResolvedValue({
               id: 'bar',
             }),
           },
@@ -86,7 +86,7 @@ describe('AgendaBaselService', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe('AgendaBaselService', () => {

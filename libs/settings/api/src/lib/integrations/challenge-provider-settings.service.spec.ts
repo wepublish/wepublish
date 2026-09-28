@@ -27,11 +27,11 @@ describe('ChallengeProviderSettingsService', () => {
       imports: [PrismaModule],
       providers: [
         ChallengeProviderSettingsService,
-        { provide: KvTtlCacheService, useValue: { resetNamespace: jest.fn() } },
-        { provide: ProviderSettingsChanged, useValue: { notify: jest.fn() } },
+        { provide: KvTtlCacheService, useValue: { resetNamespace: vi.fn() } },
+        { provide: ProviderSettingsChanged, useValue: { notify: vi.fn() } },
         {
           provide: ChallengeProviderSettingsDataloaderService,
-          useValue: { prime: jest.fn() },
+          useValue: { prime: vi.fn() },
         },
       ],
     }).compile();
@@ -42,10 +42,10 @@ describe('ChallengeProviderSettingsService', () => {
     );
   });
 
-  afterEach(() => jest.restoreAllMocks());
+  afterEach(() => vi.restoreAllMocks());
 
   test('lists only the providers that were not retired', async () => {
-    const findMany = jest
+    const findMany = vi
       .spyOn(prisma.settingChallengeProvider, 'findMany')
       .mockResolvedValue([existing]);
 
@@ -57,10 +57,10 @@ describe('ChallengeProviderSettingsService', () => {
   });
 
   test('ignores retired providers when guarding the last one', async () => {
-    jest
-      .spyOn(prisma.settingChallengeProvider, 'findUnique')
-      .mockResolvedValue(existing);
-    const count = jest
+    vi.spyOn(prisma.settingChallengeProvider, 'findUnique').mockResolvedValue(
+      existing
+    );
+    const count = vi
       .spyOn(prisma.settingChallengeProvider, 'count')
       .mockResolvedValue(1);
 

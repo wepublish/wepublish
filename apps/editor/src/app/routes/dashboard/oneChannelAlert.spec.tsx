@@ -7,10 +7,11 @@ import {
 
 import { OneChannelAlert } from './oneChannelAlert';
 
-// Partial mock: the UI library imports enums from the same module.
-vi.mock('@wepublish/editor/api', async importOriginal => ({
-  ...(await importOriginal<typeof import('@wepublish/editor/api')>()),
-  useOneChannelStatusQuery: vi.fn(),
+// The component calls Apollo's `useQuery` with a generated document, so the
+// mock sits at the Apollo boundary.
+vi.mock('@apollo/client/react', async importOriginal => ({
+  ...(await importOriginal<typeof import('@apollo/client/react')>()),
+  useQuery: vi.fn(),
 }));
 
 vi.mock('react-i18next', () => ({

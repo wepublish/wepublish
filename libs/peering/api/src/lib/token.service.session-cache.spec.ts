@@ -4,9 +4,9 @@ import { TokenService } from './token.service';
 
 describe('TokenService session cache', () => {
   it('clears cached sessions after a peer token is deleted', async () => {
-    const sessionCache = { invalidate: jest.fn().mockResolvedValue(undefined) };
+    const sessionCache = { invalidate: vi.fn().mockResolvedValue(undefined) };
     const prisma = {
-      token: { delete: jest.fn().mockResolvedValue({ id: 'token-1' }) },
+      token: { delete: vi.fn().mockResolvedValue({ id: 'token-1' }) },
     };
 
     await new TokenService(
