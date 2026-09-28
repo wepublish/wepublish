@@ -1,11 +1,16 @@
 import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
-import { PeriodicJob, PeriodicJobLogsDocument } from '@wepublish/editor/api';
+import {
+  FullPeriodicJobFragment,
+  PeriodicJobLogsDocument,
+} from '@wepublish/editor/api';
 import { NotificationItem, NotificationSeverity } from '@wepublish/ui/editor';
 import { ReactElement, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-function getSeverity(periodicJob: PeriodicJob): NotificationSeverity {
+function getSeverity(
+  periodicJob: FullPeriodicJobFragment
+): NotificationSeverity {
   if (periodicJob.finishedWithError && periodicJob.successfullyFinished) {
     return 'warning';
   }
@@ -81,7 +86,7 @@ export function usePeriodicJobNotifications({
    * If all jobs were successfully (no finished with error), return only first periodic job log entry.
    * Else return all job logs. This is meant to shorten the list in favor of UX.
    */
-  const jobs = useMemo<PeriodicJob[]>(() => {
+  const jobs = useMemo<FullPeriodicJobFragment[]>(() => {
     if (!data?.periodicJobLog?.length) {
       return [];
     }

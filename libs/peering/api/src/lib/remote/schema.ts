@@ -2,32 +2,29 @@
 import {RichtextJSONDocument} from '@wepublish/richtext';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: string;
-  String: string;
-  Boolean: boolean;
-  Int: number;
-  Float: number;
+  ID: { input: string; output: string; }
+  String: { input: string; output: string; }
+  Boolean: { input: boolean; output: boolean; }
+  Int: { input: number; output: number; }
+  Float: { input: number; output: number; }
   /** A hexadecimal color value (#RRGGBB) */
-  Color: string;
+  Color: { input: string; output: string; }
   /** A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
-  Date: string;
+  Date: { input: string; output: string; }
   /** A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format. */
-  DateTime: string;
+  DateTime: { input: string; output: string; }
   /** Setting Value */
-  GraphQLSettingValueType: any;
+  GraphQLSettingValueType: { input: unknown; output: unknown; }
   /** The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
-  JSONObject: any;
-  RichText: RichtextJSONDocument;
-  Slug: string;
+  JSONObject: { input: unknown; output: unknown; }
+  RichText: { input: RichtextJSONDocument; output: RichtextJSONDocument; }
+  Slug: { input: string; output: string; }
   /** The `Upload` scalar type represents a file upload. */
-  Upload: File;
+  Upload: { input: File; output: File; }
   /** A valid vote value */
-  VoteValue: any;
+  VoteValue: { input: unknown; output: unknown; }
 };
 
 export enum AiProviderType {
@@ -49,8 +46,8 @@ export enum ActionType {
 
 export type AllowedSettingVals = {
   __typename?: 'AllowedSettingVals';
-  boolChoice?: Maybe<Scalars['Boolean']>;
-  stringChoice?: Maybe<Array<Scalars['String']>>;
+  boolChoice?: Maybe<Scalars['Boolean']['output']>;
+  stringChoice?: Maybe<Array<Scalars['String']['output']>>;
 };
 
 export enum AnalyticsProviderType {
@@ -59,113 +56,113 @@ export enum AnalyticsProviderType {
 
 export type Article = HasOptionalPaywall & HasOptionalPeerLc & {
   __typename?: 'Article';
-  createdAt: Scalars['DateTime'];
-  disableComments: Scalars['Boolean'];
+  createdAt: Scalars['DateTime']['output'];
+  disableComments: Scalars['Boolean']['output'];
   draft?: Maybe<ArticleRevision>;
-  hidden: Scalars['Boolean'];
-  id: Scalars['String'];
+  hidden: Scalars['Boolean']['output'];
+  id: Scalars['String']['output'];
   latest: ArticleRevision;
-  likes: Scalars['Int'];
-  modifiedAt: Scalars['DateTime'];
+  likes: Scalars['Int']['output'];
+  modifiedAt: Scalars['DateTime']['output'];
   paywall?: Maybe<Paywall>;
-  paywallId?: Maybe<Scalars['String']>;
+  paywallId?: Maybe<Scalars['String']['output']>;
   peer?: Maybe<Peer>;
-  peerArticleId?: Maybe<Scalars['String']>;
-  peerId?: Maybe<Scalars['String']>;
+  peerArticleId?: Maybe<Scalars['String']['output']>;
+  peerId?: Maybe<Scalars['String']['output']>;
   pending?: Maybe<ArticleRevision>;
-  previewUrl: Scalars['String'];
+  previewUrl: Scalars['String']['output'];
   published?: Maybe<ArticleRevision>;
-  publishedAt?: Maybe<Scalars['DateTime']>;
-  shared: Scalars['Boolean'];
-  slug?: Maybe<Scalars['String']>;
+  publishedAt?: Maybe<Scalars['DateTime']['output']>;
+  shared: Scalars['Boolean']['output'];
+  slug?: Maybe<Scalars['String']['output']>;
   tags: Array<Tag>;
   trackingPixels: Array<TrackingPixel>;
-  url: Scalars['String'];
+  url: Scalars['String']['output'];
 };
 
 export type ArticleCreatedAction = BaseAction & HasArticleLc & {
   __typename?: 'ArticleCreatedAction';
   actionType: ActionType;
   article: Article;
-  articleId: Scalars['String'];
-  date: Scalars['DateTime'];
+  articleId: Scalars['String']['output'];
+  date: Scalars['DateTime']['output'];
 };
 
 export type ArticleFilter = {
   /** Only include articles that have every one of these tags */
-  allTagsIn?: InputMaybe<Array<Scalars['String']>>;
-  authors?: InputMaybe<Array<Scalars['String']>>;
-  body?: InputMaybe<Scalars['String']>;
-  draft?: InputMaybe<Scalars['Boolean']>;
-  excludeHideAuthor?: InputMaybe<Scalars['Boolean']>;
-  excludeIds?: InputMaybe<Array<Scalars['String']>>;
-  ids?: InputMaybe<Array<Scalars['String']>>;
-  includeHidden?: InputMaybe<Scalars['Boolean']>;
-  lead?: InputMaybe<Scalars['String']>;
-  peerId?: InputMaybe<Scalars['String']>;
-  pending?: InputMaybe<Scalars['Boolean']>;
-  preTitle?: InputMaybe<Scalars['String']>;
+  allTagsIn?: InputMaybe<Array<Scalars['String']['input']>>;
+  authors?: InputMaybe<Array<Scalars['String']['input']>>;
+  body?: InputMaybe<Scalars['String']['input']>;
+  draft?: InputMaybe<Scalars['Boolean']['input']>;
+  excludeHideAuthor?: InputMaybe<Scalars['Boolean']['input']>;
+  excludeIds?: InputMaybe<Array<Scalars['String']['input']>>;
+  ids?: InputMaybe<Array<Scalars['String']['input']>>;
+  includeHidden?: InputMaybe<Scalars['Boolean']['input']>;
+  lead?: InputMaybe<Scalars['String']['input']>;
+  peerId?: InputMaybe<Scalars['String']['input']>;
+  pending?: InputMaybe<Scalars['Boolean']['input']>;
+  preTitle?: InputMaybe<Scalars['String']['input']>;
   publicationDateFrom?: InputMaybe<DateFilter>;
   publicationDateTo?: InputMaybe<DateFilter>;
-  published?: InputMaybe<Scalars['Boolean']>;
-  shared?: InputMaybe<Scalars['Boolean']>;
-  tags?: InputMaybe<Array<Scalars['String']>>;
-  tagsNotIn?: InputMaybe<Array<Scalars['String']>>;
-  title?: InputMaybe<Scalars['String']>;
+  published?: InputMaybe<Scalars['Boolean']['input']>;
+  shared?: InputMaybe<Scalars['Boolean']['input']>;
+  tags?: InputMaybe<Array<Scalars['String']['input']>>;
+  tagsNotIn?: InputMaybe<Array<Scalars['String']['input']>>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type ArticleNavigationLink = BaseNavigationLink & HasArticle & {
   __typename?: 'ArticleNavigationLink';
   article: Article;
-  articleID: Scalars['String'];
-  createdAt: Scalars['DateTime'];
-  id: Scalars['String'];
-  label: Scalars['String'];
-  modifiedAt: Scalars['DateTime'];
+  articleID: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  label: Scalars['String']['output'];
+  modifiedAt: Scalars['DateTime']['output'];
   type: NavigationLinkType;
 };
 
 export type ArticleRevision = HasBlockContent & HasOptionalUserLc & {
   __typename?: 'ArticleRevision';
-  archivedAt?: Maybe<Scalars['DateTime']>;
+  archivedAt?: Maybe<Scalars['DateTime']['output']>;
   authors: Array<ArticleRevisionAuthor>;
   blocks: Array<BlockContent>;
-  breaking: Scalars['Boolean'];
-  canonicalUrl?: Maybe<Scalars['String']>;
-  createdAt: Scalars['DateTime'];
-  hideAuthor: Scalars['Boolean'];
-  id: Scalars['String'];
+  breaking: Scalars['Boolean']['output'];
+  canonicalUrl?: Maybe<Scalars['String']['output']>;
+  createdAt: Scalars['DateTime']['output'];
+  hideAuthor: Scalars['Boolean']['output'];
+  id: Scalars['String']['output'];
   image?: Maybe<Image>;
-  imageID?: Maybe<Scalars['String']>;
-  lead?: Maybe<Scalars['String']>;
-  preTitle?: Maybe<Scalars['String']>;
+  imageID?: Maybe<Scalars['String']['output']>;
+  lead?: Maybe<Scalars['String']['output']>;
+  preTitle?: Maybe<Scalars['String']['output']>;
   properties: Array<Property>;
-  publishedAt?: Maybe<Scalars['DateTime']>;
-  seoDescription?: Maybe<Scalars['String']>;
-  seoTitle?: Maybe<Scalars['String']>;
+  publishedAt?: Maybe<Scalars['DateTime']['output']>;
+  seoDescription?: Maybe<Scalars['String']['output']>;
+  seoTitle?: Maybe<Scalars['String']['output']>;
   socialMediaAuthors: Array<Author>;
-  socialMediaDescription?: Maybe<Scalars['String']>;
+  socialMediaDescription?: Maybe<Scalars['String']['output']>;
   socialMediaImage?: Maybe<Image>;
-  socialMediaImageID?: Maybe<Scalars['String']>;
-  socialMediaTitle?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
+  socialMediaImageID?: Maybe<Scalars['String']['output']>;
+  socialMediaTitle?: Maybe<Scalars['String']['output']>;
+  title?: Maybe<Scalars['String']['output']>;
   user?: Maybe<User>;
-  userId?: Maybe<Scalars['String']>;
+  userId?: Maybe<Scalars['String']['output']>;
 };
 
 export type ArticleRevisionAuthor = {
   __typename?: 'ArticleRevisionAuthor';
   author: Author;
-  role?: Maybe<Scalars['String']>;
+  role?: Maybe<Scalars['String']['output']>;
 };
 
 export type ArticleRevisionAuthorInput = {
-  authorId: Scalars['String'];
-  role?: InputMaybe<Scalars['String']>;
+  authorId: Scalars['String']['input'];
+  role?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type ArticleRevisionFilter = {
-  userId?: InputMaybe<Scalars['String']>;
+  userId?: InputMaybe<Scalars['String']['input']>;
 };
 
 export enum ArticleSort {
@@ -177,39 +174,39 @@ export enum ArticleSort {
 export type ArticleTeaser = BaseTeaser & HasImage & HasOptionalArticle & {
   __typename?: 'ArticleTeaser';
   article?: Maybe<Article>;
-  articleID?: Maybe<Scalars['String']>;
+  articleID?: Maybe<Scalars['String']['output']>;
   image?: Maybe<Image>;
-  imageID?: Maybe<Scalars['String']>;
-  lead?: Maybe<Scalars['String']>;
-  preTitle?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
-  type: Scalars['String'];
+  imageID?: Maybe<Scalars['String']['output']>;
+  lead?: Maybe<Scalars['String']['output']>;
+  preTitle?: Maybe<Scalars['String']['output']>;
+  title?: Maybe<Scalars['String']['output']>;
+  type: Scalars['String']['output'];
 };
 
 export type ArticleTeaserInput = {
-  articleID?: InputMaybe<Scalars['String']>;
-  imageID?: InputMaybe<Scalars['String']>;
-  lead?: InputMaybe<Scalars['String']>;
-  preTitle?: InputMaybe<Scalars['String']>;
-  title?: InputMaybe<Scalars['String']>;
+  articleID?: InputMaybe<Scalars['String']['input']>;
+  imageID?: InputMaybe<Scalars['String']['input']>;
+  lead?: InputMaybe<Scalars['String']['input']>;
+  preTitle?: InputMaybe<Scalars['String']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type AuditLog = {
   __typename?: 'AuditLog';
   action: AuditLogAction;
   actorType: AuditLogActorType;
-  createdAt: Scalars['DateTime'];
-  entity?: Maybe<Scalars['String']>;
-  errorMessage?: Maybe<Scalars['String']>;
-  id: Scalars['String'];
-  impersonatedBy?: Maybe<Scalars['String']>;
-  mutation: Scalars['String'];
-  recordId?: Maybe<Scalars['String']>;
-  sessionId?: Maybe<Scalars['String']>;
-  success: Scalars['Boolean'];
-  tokenName?: Maybe<Scalars['String']>;
-  userEmail?: Maybe<Scalars['String']>;
-  userId?: Maybe<Scalars['String']>;
+  createdAt: Scalars['DateTime']['output'];
+  entity?: Maybe<Scalars['String']['output']>;
+  errorMessage?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  impersonatedBy?: Maybe<Scalars['String']['output']>;
+  mutation: Scalars['String']['output'];
+  recordId?: Maybe<Scalars['String']['output']>;
+  sessionId?: Maybe<Scalars['String']['output']>;
+  success: Scalars['Boolean']['output'];
+  tokenName?: Maybe<Scalars['String']['output']>;
+  userEmail?: Maybe<Scalars['String']['output']>;
+  userId?: Maybe<Scalars['String']['output']>;
 };
 
 export enum AuditLogAction {
@@ -227,19 +224,19 @@ export enum AuditLogActorType {
 export type AuditLogFilter = {
   actions?: InputMaybe<Array<AuditLogAction>>;
   actorType?: InputMaybe<AuditLogActorType>;
-  entity?: InputMaybe<Scalars['String']>;
-  from?: InputMaybe<Scalars['DateTime']>;
+  entity?: InputMaybe<Scalars['String']['input']>;
+  from?: InputMaybe<Scalars['DateTime']['input']>;
   /** Only entries where the actor was impersonating another user. */
-  impersonatedOnly?: InputMaybe<Scalars['Boolean']>;
-  mutation?: InputMaybe<Scalars['String']>;
-  recordId?: InputMaybe<Scalars['String']>;
+  impersonatedOnly?: InputMaybe<Scalars['Boolean']['input']>;
+  mutation?: InputMaybe<Scalars['String']['input']>;
+  recordId?: InputMaybe<Scalars['String']['input']>;
   /** Case insensitive search across mutation, entity, record id, user email and token name. */
-  search?: InputMaybe<Scalars['String']>;
-  sessionId?: InputMaybe<Scalars['String']>;
-  success?: InputMaybe<Scalars['Boolean']>;
-  to?: InputMaybe<Scalars['DateTime']>;
-  userEmail?: InputMaybe<Scalars['String']>;
-  userId?: InputMaybe<Scalars['String']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sessionId?: InputMaybe<Scalars['String']['input']>;
+  success?: InputMaybe<Scalars['Boolean']['input']>;
+  to?: InputMaybe<Scalars['DateTime']['input']>;
+  userEmail?: InputMaybe<Scalars['String']['input']>;
+  userId?: InputMaybe<Scalars['String']['input']>;
 };
 
 export enum AuditLogSort {
@@ -248,48 +245,48 @@ export enum AuditLogSort {
 
 export type Author = HasImage & HasOptionalPeerLc & {
   __typename?: 'Author';
-  bio?: Maybe<Scalars['RichText']>;
-  createdAt: Scalars['DateTime'];
-  hideOnArticle: Scalars['Boolean'];
-  hideOnTeam: Scalars['Boolean'];
-  hideOnTeaser: Scalars['Boolean'];
-  id: Scalars['String'];
+  bio?: Maybe<Scalars['RichText']['output']>;
+  createdAt: Scalars['DateTime']['output'];
+  hideOnArticle: Scalars['Boolean']['output'];
+  hideOnTeam: Scalars['Boolean']['output'];
+  hideOnTeaser: Scalars['Boolean']['output'];
+  id: Scalars['String']['output'];
   image?: Maybe<Image>;
-  imageID?: Maybe<Scalars['String']>;
-  jobTitle?: Maybe<Scalars['String']>;
+  imageID?: Maybe<Scalars['String']['output']>;
+  jobTitle?: Maybe<Scalars['String']['output']>;
   links: Array<AuthorLink>;
-  modifiedAt: Scalars['DateTime'];
-  name: Scalars['String'];
+  modifiedAt: Scalars['DateTime']['output'];
+  name: Scalars['String']['output'];
   peer?: Maybe<Peer>;
-  peerId?: Maybe<Scalars['String']>;
-  slug: Scalars['Slug'];
+  peerId?: Maybe<Scalars['String']['output']>;
+  slug: Scalars['Slug']['output'];
   tags: Array<Tag>;
-  url: Scalars['String'];
+  url: Scalars['String']['output'];
 };
 
 export type AuthorCreatedAction = BaseAction & HasAuthor & {
   __typename?: 'AuthorCreatedAction';
   actionType: ActionType;
   author: Author;
-  authorId: Scalars['String'];
-  date: Scalars['DateTime'];
+  authorId: Scalars['String']['output'];
+  date: Scalars['DateTime']['output'];
 };
 
 export type AuthorFilter = {
-  hideOnTeam?: InputMaybe<Scalars['Boolean']>;
-  name?: InputMaybe<Scalars['String']>;
-  tagIds?: InputMaybe<Array<Scalars['String']>>;
+  hideOnTeam?: InputMaybe<Scalars['Boolean']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  tagIds?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 export type AuthorLink = {
   __typename?: 'AuthorLink';
-  title: Scalars['String'];
-  url: Scalars['String'];
+  title: Scalars['String']['output'];
+  url: Scalars['String']['output'];
 };
 
 export type AuthorLinkInput = {
-  title: Scalars['String'];
-  url: Scalars['String'];
+  title: Scalars['String']['input'];
+  url: Scalars['String']['input'];
 };
 
 /** Sorting options for authors */
@@ -301,45 +298,45 @@ export enum AuthorSort {
 
 export type AvailablePaymentMethod = {
   __typename?: 'AvailablePaymentMethod';
-  forceAutoRenewal: Scalars['Boolean'];
-  paymentMethodIDs: Array<Scalars['String']>;
+  forceAutoRenewal: Scalars['Boolean']['output'];
+  paymentMethodIDs: Array<Scalars['String']['output']>;
   paymentMethods: Array<PaymentMethod>;
   paymentPeriodicities: Array<PaymentPeriodicity>;
 };
 
 export type AvailablePaymentMethodInput = {
-  forceAutoRenewal: Scalars['Boolean'];
-  paymentMethodIDs: Array<Scalars['String']>;
+  forceAutoRenewal: Scalars['Boolean']['input'];
+  paymentMethodIDs: Array<Scalars['String']['input']>;
   paymentPeriodicities: Array<PaymentPeriodicity>;
 };
 
 export type Banner = {
   __typename?: 'Banner';
   actions?: Maybe<Array<BannerAction>>;
-  active: Scalars['Boolean'];
-  collapsible: Scalars['Boolean'];
-  cta?: Maybe<Scalars['String']>;
-  delay: Scalars['Int'];
-  embedUrl?: Maybe<Scalars['String']>;
-  hideForMinutes: Scalars['Int'];
-  html?: Maybe<Scalars['String']>;
-  id: Scalars['String'];
+  active: Scalars['Boolean']['output'];
+  collapsible: Scalars['Boolean']['output'];
+  cta?: Maybe<Scalars['String']['output']>;
+  delay: Scalars['Int']['output'];
+  embedUrl?: Maybe<Scalars['String']['output']>;
+  hideForMinutes: Scalars['Int']['output'];
+  html?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
   image?: Maybe<Image>;
-  imageId?: Maybe<Scalars['String']>;
+  imageId?: Maybe<Scalars['String']['output']>;
   showForLoginStatus: LoginStatus;
-  showOnArticles: Scalars['Boolean'];
+  showOnArticles: Scalars['Boolean']['output'];
   showOnPages?: Maybe<Array<PageModel>>;
-  text: Scalars['String'];
-  title: Scalars['String'];
+  text: Scalars['String']['output'];
+  title: Scalars['String']['output'];
 };
 
 export type BannerAction = {
   __typename?: 'BannerAction';
-  id: Scalars['String'];
-  label: Scalars['String'];
+  id: Scalars['String']['output'];
+  label: Scalars['String']['output'];
   role: BannerActionRole;
-  style: Scalars['String'];
-  url: Scalars['String'];
+  style: Scalars['String']['output'];
+  url: Scalars['String']['output'];
 };
 
 export enum BannerActionRole {
@@ -355,75 +352,75 @@ export enum BannerDocumentType {
 
 export type BaseAction = {
   actionType: ActionType;
-  date: Scalars['DateTime'];
+  date: Scalars['DateTime']['output'];
 };
 
 export type BaseBlock = {
-  blockStyle?: Maybe<Scalars['String']>;
-  blockStyleName?: Maybe<Scalars['String']>;
-  disabled?: Maybe<Scalars['Boolean']>;
+  blockStyle?: Maybe<Scalars['String']['output']>;
+  blockStyleName?: Maybe<Scalars['String']['output']>;
+  disabled?: Maybe<Scalars['Boolean']['output']>;
   type: BlockType;
 };
 
 export type BaseCrowdfundingGoal = {
-  amount: Scalars['Float'];
-  createdAt: Scalars['DateTime'];
-  description?: Maybe<Scalars['String']>;
-  id: Scalars['String'];
-  modifiedAt: Scalars['DateTime'];
-  title: Scalars['String'];
+  amount: Scalars['Float']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  description?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  modifiedAt: Scalars['DateTime']['output'];
+  title: Scalars['String']['output'];
 };
 
 export type BaseNavigationLink = {
-  createdAt: Scalars['DateTime'];
-  id: Scalars['String'];
-  label: Scalars['String'];
-  modifiedAt: Scalars['DateTime'];
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  label: Scalars['String']['output'];
+  modifiedAt: Scalars['DateTime']['output'];
   type: NavigationLinkType;
 };
 
 export type BaseTeaser = {
   image?: Maybe<Image>;
-  imageID?: Maybe<Scalars['String']>;
-  lead?: Maybe<Scalars['String']>;
-  preTitle?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
-  type: Scalars['String'];
+  imageID?: Maybe<Scalars['String']['output']>;
+  lead?: Maybe<Scalars['String']['output']>;
+  preTitle?: Maybe<Scalars['String']['output']>;
+  title?: Maybe<Scalars['String']['output']>;
+  type: Scalars['String']['output'];
 };
 
 export type BaseToken = {
-  createdAt: Scalars['DateTime'];
-  id: Scalars['String'];
-  modifiedAt: Scalars['DateTime'];
-  name: Scalars['String'];
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  modifiedAt: Scalars['DateTime']['output'];
+  name: Scalars['String']['output'];
 };
 
 export type BaseUser = {
-  active: Scalars['Boolean'];
-  firstName?: Maybe<Scalars['String']>;
-  flair?: Maybe<Scalars['String']>;
-  id: Scalars['String'];
+  active: Scalars['Boolean']['output'];
+  firstName?: Maybe<Scalars['String']['output']>;
+  flair?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
   image?: Maybe<Image>;
-  name: Scalars['String'];
+  name: Scalars['String']['output'];
   properties: Array<Property>;
-  roleIDs: Array<Scalars['String']>;
-  userImageID?: Maybe<Scalars['String']>;
+  roleIDs: Array<Scalars['String']['output']>;
+  userImageID?: Maybe<Scalars['String']['output']>;
 };
 
 export type BildwurfAdBlock = BaseBlock & {
   __typename?: 'BildwurfAdBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  blockStyleName?: Maybe<Scalars['String']>;
-  disabled?: Maybe<Scalars['Boolean']>;
+  blockStyle?: Maybe<Scalars['String']['output']>;
+  blockStyleName?: Maybe<Scalars['String']['output']>;
+  disabled?: Maybe<Scalars['Boolean']['output']>;
   type: BlockType;
-  zoneID?: Maybe<Scalars['String']>;
+  zoneID?: Maybe<Scalars['String']['output']>;
 };
 
 export type BildwurfAdBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  blockStyleName?: InputMaybe<Scalars['String']>;
-  disabled?: InputMaybe<Scalars['Boolean']>;
-  zoneID?: InputMaybe<Scalars['String']>;
+  blockStyle?: InputMaybe<Scalars['String']['input']>;
+  blockStyleName?: InputMaybe<Scalars['String']['input']>;
+  disabled?: InputMaybe<Scalars['Boolean']['input']>;
+  zoneID?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type BlockContent = BildwurfAdBlock | BlockTemplateBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | FlexBlock | HtmlBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | MailchimpFormBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | StreamableVideoBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock;
@@ -466,40 +463,40 @@ export type BlockContentInput = {
 export type BlockStyle = {
   __typename?: 'BlockStyle';
   blocks: Array<EditorBlockType>;
-  createdAt: Scalars['DateTime'];
-  id: Scalars['String'];
-  modifiedAt: Scalars['DateTime'];
-  name: Scalars['String'];
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  modifiedAt: Scalars['DateTime']['output'];
+  name: Scalars['String']['output'];
 };
 
 export type BlockTemplate = HasBlockContent & {
   __typename?: 'BlockTemplate';
   blocks: Array<BlockContent>;
-  createdAt: Scalars['DateTime'];
-  id: Scalars['String'];
-  modifiedAt: Scalars['DateTime'];
-  name: Scalars['String'];
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  modifiedAt: Scalars['DateTime']['output'];
+  name: Scalars['String']['output'];
 };
 
 export type BlockTemplateBlock = BaseBlock & {
   __typename?: 'BlockTemplateBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  blockStyleName?: Maybe<Scalars['String']>;
-  disabled?: Maybe<Scalars['Boolean']>;
+  blockStyle?: Maybe<Scalars['String']['output']>;
+  blockStyleName?: Maybe<Scalars['String']['output']>;
+  disabled?: Maybe<Scalars['Boolean']['output']>;
   template?: Maybe<BlockTemplate>;
-  templateId: Scalars['String'];
+  templateId: Scalars['String']['output'];
   type: BlockType;
 };
 
 export type BlockTemplateBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  blockStyleName?: InputMaybe<Scalars['String']>;
-  disabled?: InputMaybe<Scalars['Boolean']>;
-  templateId: Scalars['String'];
+  blockStyle?: InputMaybe<Scalars['String']['input']>;
+  blockStyleName?: InputMaybe<Scalars['String']['input']>;
+  disabled?: InputMaybe<Scalars['Boolean']['input']>;
+  templateId: Scalars['String']['input'];
 };
 
 export type BlockTemplateFilter = {
-  name?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']['input']>;
 };
 
 export enum BlockTemplateSort {
@@ -556,39 +553,39 @@ export type BlockWithAlignmentInput = {
 
 export type BreakBlock = BaseBlock & HasImage & {
   __typename?: 'BreakBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  blockStyleName?: Maybe<Scalars['String']>;
-  disabled?: Maybe<Scalars['Boolean']>;
-  hideButton?: Maybe<Scalars['Boolean']>;
+  blockStyle?: Maybe<Scalars['String']['output']>;
+  blockStyleName?: Maybe<Scalars['String']['output']>;
+  disabled?: Maybe<Scalars['Boolean']['output']>;
+  hideButton?: Maybe<Scalars['Boolean']['output']>;
   image?: Maybe<Image>;
-  imageID?: Maybe<Scalars['String']>;
-  linkTarget?: Maybe<Scalars['String']>;
-  linkText?: Maybe<Scalars['String']>;
-  linkURL?: Maybe<Scalars['String']>;
-  richText?: Maybe<Scalars['RichText']>;
-  text?: Maybe<Scalars['String']>;
+  imageID?: Maybe<Scalars['String']['output']>;
+  linkTarget?: Maybe<Scalars['String']['output']>;
+  linkText?: Maybe<Scalars['String']['output']>;
+  linkURL?: Maybe<Scalars['String']['output']>;
+  richText?: Maybe<Scalars['RichText']['output']>;
+  text?: Maybe<Scalars['String']['output']>;
   type: BlockType;
 };
 
 export type BreakBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  blockStyleName?: InputMaybe<Scalars['String']>;
-  disabled?: InputMaybe<Scalars['Boolean']>;
-  hideButton?: InputMaybe<Scalars['Boolean']>;
-  imageID?: InputMaybe<Scalars['String']>;
-  linkTarget?: InputMaybe<Scalars['String']>;
-  linkText?: InputMaybe<Scalars['String']>;
-  linkURL?: InputMaybe<Scalars['String']>;
-  richText?: InputMaybe<Scalars['RichText']>;
-  text?: InputMaybe<Scalars['String']>;
+  blockStyle?: InputMaybe<Scalars['String']['input']>;
+  blockStyleName?: InputMaybe<Scalars['String']['input']>;
+  disabled?: InputMaybe<Scalars['Boolean']['input']>;
+  hideButton?: InputMaybe<Scalars['Boolean']['input']>;
+  imageID?: InputMaybe<Scalars['String']['input']>;
+  linkTarget?: InputMaybe<Scalars['String']['input']>;
+  linkText?: InputMaybe<Scalars['String']['input']>;
+  linkURL?: InputMaybe<Scalars['String']['input']>;
+  richText?: InputMaybe<Scalars['RichText']['input']>;
+  text?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type CalculatedRating = {
   __typename?: 'CalculatedRating';
   answer: CommentRatingSystemAnswer;
-  count: Scalars['Int'];
-  mean: Scalars['Float'];
-  total: Scalars['Int'];
+  count: Scalars['Int']['output'];
+  mean: Scalars['Float']['output'];
+  total: Scalars['Int']['output'];
 };
 
 export enum CaptchaType {
@@ -598,15 +595,15 @@ export enum CaptchaType {
 
 export type Challenge = {
   __typename?: 'Challenge';
-  challenge?: Maybe<Scalars['String']>;
-  challengeID?: Maybe<Scalars['String']>;
+  challenge?: Maybe<Scalars['String']['output']>;
+  challengeID?: Maybe<Scalars['String']['output']>;
   type: CaptchaType;
-  validUntil?: Maybe<Scalars['Date']>;
+  validUntil?: Maybe<Scalars['Date']['output']>;
 };
 
 export type ChallengeInput = {
-  challengeID: Scalars['String'];
-  challengeSolution: Scalars['String'];
+  challengeID: Scalars['String']['input'];
+  challengeSolution: Scalars['String']['input'];
 };
 
 export enum ChallengeProviderType {
@@ -616,28 +613,28 @@ export enum ChallengeProviderType {
 
 export type ChangelogEntry = {
   __typename?: 'ChangelogEntry';
-  actionRequired: Scalars['Boolean'];
-  confirmedAt?: Maybe<Scalars['DateTime']>;
-  confirmedByUserId?: Maybe<Scalars['String']>;
-  createdAt: Scalars['DateTime'];
-  description?: Maybe<Scalars['String']>;
-  id: Scalars['String'];
-  lead: Scalars['String'];
-  modifiedAt: Scalars['DateTime'];
-  name: Scalars['String'];
-  releasedAt: Scalars['DateTime'];
-  title: Scalars['String'];
+  actionRequired: Scalars['Boolean']['output'];
+  confirmedAt?: Maybe<Scalars['DateTime']['output']>;
+  confirmedByUserId?: Maybe<Scalars['String']['output']>;
+  createdAt: Scalars['DateTime']['output'];
+  description?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  lead: Scalars['String']['output'];
+  modifiedAt: Scalars['DateTime']['output'];
+  name: Scalars['String']['output'];
+  releasedAt: Scalars['DateTime']['output'];
+  title: Scalars['String']['output'];
 };
 
 export type ChangelogEntryFilter = {
-  actionRequired?: InputMaybe<Scalars['Boolean']>;
-  confirmed?: InputMaybe<Scalars['Boolean']>;
+  actionRequired?: InputMaybe<Scalars['Boolean']['input']>;
+  confirmed?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type Chat = {
   __typename?: 'Chat';
-  chatId: Scalars['String'];
-  message: Scalars['String'];
+  chatId: Scalars['String']['output'];
+  message: Scalars['String']['output'];
 };
 
 export type Comment = HasOptionalUser & {
@@ -645,29 +642,29 @@ export type Comment = HasOptionalUser & {
   authorType: CommentAuthorType;
   calculatedRatings: Array<CalculatedRating>;
   children: Array<Comment>;
-  createdAt: Scalars['DateTime'];
-  featured?: Maybe<Scalars['Boolean']>;
+  createdAt: Scalars['DateTime']['output'];
+  featured?: Maybe<Scalars['Boolean']['output']>;
   guestUserImage?: Maybe<Image>;
-  guestUserImageID?: Maybe<Scalars['String']>;
-  guestUsername?: Maybe<Scalars['String']>;
-  id: Scalars['String'];
-  itemID: Scalars['String'];
+  guestUserImageID?: Maybe<Scalars['String']['output']>;
+  guestUsername?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  itemID: Scalars['String']['output'];
   itemType: CommentItemType;
-  lead?: Maybe<Scalars['String']>;
-  modifiedAt: Scalars['DateTime'];
+  lead?: Maybe<Scalars['String']['output']>;
+  modifiedAt: Scalars['DateTime']['output'];
   overriddenRatings: Array<OverriddenRating>;
   parentComment?: Maybe<Comment>;
-  parentID?: Maybe<Scalars['String']>;
+  parentID?: Maybe<Scalars['String']['output']>;
   rejectionReason?: Maybe<CommentRejectionReason>;
   revisions: Array<CommentRevision>;
-  source?: Maybe<Scalars['String']>;
+  source?: Maybe<Scalars['String']['output']>;
   state: CommentState;
   tags: Array<Tag>;
-  text?: Maybe<Scalars['RichText']>;
-  title?: Maybe<Scalars['String']>;
-  url: Scalars['String'];
+  text?: Maybe<Scalars['RichText']['output']>;
+  title?: Maybe<Scalars['String']['output']>;
+  url: Scalars['String']['output'];
   user?: Maybe<User>;
-  userID?: Maybe<Scalars['String']>;
+  userID?: Maybe<Scalars['String']['output']>;
   userRatings: Array<CommentRating>;
 };
 
@@ -680,31 +677,31 @@ export enum CommentAuthorType {
 
 export type CommentBlock = BaseBlock & {
   __typename?: 'CommentBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  blockStyleName?: Maybe<Scalars['String']>;
+  blockStyle?: Maybe<Scalars['String']['output']>;
+  blockStyleName?: Maybe<Scalars['String']['output']>;
   comments: Array<Comment>;
-  disabled?: Maybe<Scalars['Boolean']>;
+  disabled?: Maybe<Scalars['Boolean']['output']>;
   filter: CommentBlockFilter;
   type: BlockType;
 };
 
 export type CommentBlockFilter = {
   __typename?: 'CommentBlockFilter';
-  comments?: Maybe<Array<Scalars['String']>>;
-  item?: Maybe<Scalars['String']>;
-  tags?: Maybe<Array<Scalars['String']>>;
+  comments?: Maybe<Array<Scalars['String']['output']>>;
+  item?: Maybe<Scalars['String']['output']>;
+  tags?: Maybe<Array<Scalars['String']['output']>>;
 };
 
 export type CommentBlockFilterInput = {
-  comments?: InputMaybe<Array<Scalars['String']>>;
-  item?: InputMaybe<Scalars['String']>;
-  tags?: InputMaybe<Array<Scalars['String']>>;
+  comments?: InputMaybe<Array<Scalars['String']['input']>>;
+  item?: InputMaybe<Scalars['String']['input']>;
+  tags?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 export type CommentBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  blockStyleName?: InputMaybe<Scalars['String']>;
-  disabled?: InputMaybe<Scalars['Boolean']>;
+  blockStyle?: InputMaybe<Scalars['String']['input']>;
+  blockStyleName?: InputMaybe<Scalars['String']['input']>;
+  disabled?: InputMaybe<Scalars['Boolean']['input']>;
   filter: CommentBlockFilterInput;
 };
 
@@ -712,16 +709,16 @@ export type CommentCreatedAction = BaseAction & HasComment & {
   __typename?: 'CommentCreatedAction';
   actionType: ActionType;
   comment: Comment;
-  commentId: Scalars['String'];
-  date: Scalars['DateTime'];
+  commentId: Scalars['String']['output'];
+  date: Scalars['DateTime']['output'];
 };
 
 export type CommentFilter = {
-  item?: InputMaybe<Scalars['String']>;
-  itemID?: InputMaybe<Scalars['String']>;
+  item?: InputMaybe<Scalars['String']['input']>;
+  itemID?: InputMaybe<Scalars['String']['input']>;
   itemType?: InputMaybe<CommentItemType>;
   states?: InputMaybe<Array<CommentState>>;
-  tags?: InputMaybe<Array<Scalars['String']>>;
+  tags?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 export enum CommentItemType {
@@ -732,28 +729,28 @@ export enum CommentItemType {
 export type CommentRating = {
   __typename?: 'CommentRating';
   answer: CommentRatingSystemAnswer;
-  commentId: Scalars['String'];
-  createdAt: Scalars['DateTime'];
-  disabled?: Maybe<Scalars['Boolean']>;
-  fingerprint?: Maybe<Scalars['String']>;
-  id: Scalars['String'];
-  modifiedAt: Scalars['DateTime'];
-  userId?: Maybe<Scalars['String']>;
-  value: Scalars['Int'];
+  commentId: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  disabled?: Maybe<Scalars['Boolean']['output']>;
+  fingerprint?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  modifiedAt: Scalars['DateTime']['output'];
+  userId?: Maybe<Scalars['String']['output']>;
+  value: Scalars['Int']['output'];
 };
 
 export type CommentRatingSystem = {
   __typename?: 'CommentRatingSystem';
   answers: Array<CommentRatingSystemAnswer>;
-  id: Scalars['String'];
-  name?: Maybe<Scalars['String']>;
+  id: Scalars['String']['output'];
+  name?: Maybe<Scalars['String']['output']>;
 };
 
 export type CommentRatingSystemAnswer = {
   __typename?: 'CommentRatingSystemAnswer';
-  answer?: Maybe<Scalars['String']>;
-  id: Scalars['String'];
-  ratingSystemId: Scalars['String'];
+  answer?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  ratingSystemId: Scalars['String']['output'];
   type: RatingSystemType;
 };
 
@@ -764,16 +761,16 @@ export enum CommentRejectionReason {
 
 export type CommentRevision = {
   __typename?: 'CommentRevision';
-  createdAt: Scalars['DateTime'];
-  lead?: Maybe<Scalars['String']>;
-  text?: Maybe<Scalars['RichText']>;
-  title?: Maybe<Scalars['String']>;
+  createdAt: Scalars['DateTime']['output'];
+  lead?: Maybe<Scalars['String']['output']>;
+  text?: Maybe<Scalars['RichText']['output']>;
+  title?: Maybe<Scalars['String']['output']>;
 };
 
 export type CommentRevisionInput = {
-  lead?: InputMaybe<Scalars['String']>;
-  text?: InputMaybe<Scalars['RichText']>;
-  title?: InputMaybe<Scalars['String']>;
+  lead?: InputMaybe<Scalars['String']['input']>;
+  text?: InputMaybe<Scalars['RichText']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 export enum CommentSort {
@@ -791,120 +788,120 @@ export enum CommentState {
 
 export type Consent = {
   __typename?: 'Consent';
-  createdAt: Scalars['DateTime'];
-  defaultValue: Scalars['Boolean'];
-  id: Scalars['String'];
-  modifiedAt: Scalars['DateTime'];
-  name: Scalars['String'];
-  slug: Scalars['String'];
+  createdAt: Scalars['DateTime']['output'];
+  defaultValue: Scalars['Boolean']['output'];
+  id: Scalars['String']['output'];
+  modifiedAt: Scalars['DateTime']['output'];
+  name: Scalars['String']['output'];
+  slug: Scalars['String']['output'];
 };
 
 export type ConsentFilter = {
-  defaultValue?: InputMaybe<Scalars['Boolean']>;
-  name?: InputMaybe<Scalars['String']>;
-  slug?: InputMaybe<Scalars['String']>;
+  defaultValue?: InputMaybe<Scalars['Boolean']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  slug?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type CreateBannerActionInput = {
-  label: Scalars['String'];
+  label: Scalars['String']['input'];
   role: BannerActionRole;
-  style: Scalars['String'];
-  url: Scalars['String'];
+  style: Scalars['String']['input'];
+  url: Scalars['String']['input'];
 };
 
 export type CreateBannerInput = {
   actions?: InputMaybe<Array<CreateBannerActionInput>>;
-  active: Scalars['Boolean'];
-  collapsible: Scalars['Boolean'];
-  cta?: InputMaybe<Scalars['String']>;
-  delay: Scalars['Int'];
-  embedUrl?: InputMaybe<Scalars['String']>;
-  hideForMinutes: Scalars['Int'];
-  html?: InputMaybe<Scalars['String']>;
-  imageId?: InputMaybe<Scalars['String']>;
+  active: Scalars['Boolean']['input'];
+  collapsible: Scalars['Boolean']['input'];
+  cta?: InputMaybe<Scalars['String']['input']>;
+  delay: Scalars['Int']['input'];
+  embedUrl?: InputMaybe<Scalars['String']['input']>;
+  hideForMinutes: Scalars['Int']['input'];
+  html?: InputMaybe<Scalars['String']['input']>;
+  imageId?: InputMaybe<Scalars['String']['input']>;
   showForLoginStatus: LoginStatus;
-  showOnArticles: Scalars['Boolean'];
+  showOnArticles: Scalars['Boolean']['input'];
   showOnPages?: InputMaybe<Array<PageModelInput>>;
-  text: Scalars['String'];
-  title: Scalars['String'];
+  text: Scalars['String']['input'];
+  title: Scalars['String']['input'];
 };
 
 export type CreateCrowdfundingGoalInput = {
-  amount: Scalars['Float'];
-  description?: InputMaybe<Scalars['String']>;
-  title: Scalars['String'];
+  amount: Scalars['Float']['input'];
+  description?: InputMaybe<Scalars['String']['input']>;
+  title: Scalars['String']['input'];
 };
 
 export type CreateCrowdfundingInput = {
-  additionalRevenue?: InputMaybe<Scalars['Float']>;
-  countSubscriptionsFrom?: InputMaybe<Scalars['DateTime']>;
-  countSubscriptionsUntil?: InputMaybe<Scalars['DateTime']>;
+  additionalRevenue?: InputMaybe<Scalars['Float']['input']>;
+  countSubscriptionsFrom?: InputMaybe<Scalars['DateTime']['input']>;
+  countSubscriptionsUntil?: InputMaybe<Scalars['DateTime']['input']>;
   goalType: CrowdfundingGoalType;
   goals?: InputMaybe<Array<CreateCrowdfundingGoalInput>>;
   memberPlans?: InputMaybe<Array<CreateCrowdfundingMemberPlan>>;
-  name: Scalars['String'];
+  name: Scalars['String']['input'];
 };
 
 export type CreateCrowdfundingMemberPlan = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 export type CreateExternalAppInput = {
-  description?: InputMaybe<Scalars['String']>;
-  icon?: InputMaybe<Scalars['String']>;
-  name: Scalars['String'];
+  description?: InputMaybe<Scalars['String']['input']>;
+  icon?: InputMaybe<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
   target: ExternalAppsTarget;
-  url: Scalars['String'];
+  url: Scalars['String']['input'];
 };
 
 export type CreateSubscriptionInfo = {
   __typename?: 'CreateSubscriptionInfo';
-  discountCodeValid?: Maybe<Scalars['Boolean']>;
-  discountPercent?: Maybe<Scalars['Float']>;
+  discountCodeValid?: Maybe<Scalars['Boolean']['output']>;
+  discountPercent?: Maybe<Scalars['Float']['output']>;
 };
 
 export type Crowdfunding = {
   __typename?: 'Crowdfunding';
   activeGoal?: Maybe<CrowdfundingGoalWithProgress>;
-  additionalRevenue?: Maybe<Scalars['Float']>;
-  countSubscriptionsFrom?: Maybe<Scalars['DateTime']>;
-  countSubscriptionsUntil?: Maybe<Scalars['DateTime']>;
-  createdAt: Scalars['DateTime'];
+  additionalRevenue?: Maybe<Scalars['Float']['output']>;
+  countSubscriptionsFrom?: Maybe<Scalars['DateTime']['output']>;
+  countSubscriptionsUntil?: Maybe<Scalars['DateTime']['output']>;
+  createdAt: Scalars['DateTime']['output'];
   goalType: CrowdfundingGoalType;
   goals: Array<CrowdfundingGoal>;
-  id: Scalars['String'];
+  id: Scalars['String']['output'];
   memberPlans: Array<MemberPlan>;
-  modifiedAt: Scalars['DateTime'];
-  name: Scalars['String'];
-  revenue?: Maybe<Scalars['Float']>;
-  subscriptions?: Maybe<Scalars['Int']>;
+  modifiedAt: Scalars['DateTime']['output'];
+  name: Scalars['String']['output'];
+  revenue?: Maybe<Scalars['Float']['output']>;
+  subscriptions?: Maybe<Scalars['Int']['output']>;
 };
 
 export type CrowdfundingBlock = BaseBlock & HasOptionalCrowdfunding & {
   __typename?: 'CrowdfundingBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  blockStyleName?: Maybe<Scalars['String']>;
+  blockStyle?: Maybe<Scalars['String']['output']>;
+  blockStyleName?: Maybe<Scalars['String']['output']>;
   crowdfunding?: Maybe<Crowdfunding>;
-  crowdfundingId?: Maybe<Scalars['String']>;
-  disabled?: Maybe<Scalars['Boolean']>;
+  crowdfundingId?: Maybe<Scalars['String']['output']>;
+  disabled?: Maybe<Scalars['Boolean']['output']>;
   type: BlockType;
 };
 
 export type CrowdfundingBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  blockStyleName?: InputMaybe<Scalars['String']>;
-  crowdfundingId?: InputMaybe<Scalars['String']>;
-  disabled?: InputMaybe<Scalars['Boolean']>;
+  blockStyle?: InputMaybe<Scalars['String']['input']>;
+  blockStyleName?: InputMaybe<Scalars['String']['input']>;
+  crowdfundingId?: InputMaybe<Scalars['String']['input']>;
+  disabled?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type CrowdfundingGoal = BaseCrowdfundingGoal & {
   __typename?: 'CrowdfundingGoal';
-  amount: Scalars['Float'];
-  createdAt: Scalars['DateTime'];
-  description?: Maybe<Scalars['String']>;
-  id: Scalars['String'];
-  modifiedAt: Scalars['DateTime'];
-  title: Scalars['String'];
+  amount: Scalars['Float']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  description?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  modifiedAt: Scalars['DateTime']['output'];
+  title: Scalars['String']['output'];
 };
 
 export enum CrowdfundingGoalType {
@@ -914,13 +911,13 @@ export enum CrowdfundingGoalType {
 
 export type CrowdfundingGoalWithProgress = BaseCrowdfundingGoal & {
   __typename?: 'CrowdfundingGoalWithProgress';
-  amount: Scalars['Float'];
-  createdAt: Scalars['DateTime'];
-  description?: Maybe<Scalars['String']>;
-  id: Scalars['String'];
-  modifiedAt: Scalars['DateTime'];
-  progress?: Maybe<Scalars['Float']>;
-  title: Scalars['String'];
+  amount: Scalars['Float']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  description?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  modifiedAt: Scalars['DateTime']['output'];
+  progress?: Maybe<Scalars['Float']['output']>;
+  title: Scalars['String']['output'];
 };
 
 export enum Currency {
@@ -930,89 +927,89 @@ export enum Currency {
 
 export type CustomTeaser = BaseTeaser & HasImage & {
   __typename?: 'CustomTeaser';
-  contentUrl?: Maybe<Scalars['String']>;
+  contentUrl?: Maybe<Scalars['String']['output']>;
   image?: Maybe<Image>;
-  imageID?: Maybe<Scalars['String']>;
-  lead?: Maybe<Scalars['String']>;
-  openInNewTab?: Maybe<Scalars['Boolean']>;
-  preTitle?: Maybe<Scalars['String']>;
+  imageID?: Maybe<Scalars['String']['output']>;
+  lead?: Maybe<Scalars['String']['output']>;
+  openInNewTab?: Maybe<Scalars['Boolean']['output']>;
+  preTitle?: Maybe<Scalars['String']['output']>;
   properties?: Maybe<Array<Property>>;
-  title?: Maybe<Scalars['String']>;
-  type: Scalars['String'];
+  title?: Maybe<Scalars['String']['output']>;
+  type: Scalars['String']['output'];
 };
 
 export type CustomTeaserInput = {
-  contentUrl?: InputMaybe<Scalars['String']>;
-  imageID?: InputMaybe<Scalars['String']>;
-  lead?: InputMaybe<Scalars['String']>;
-  openInNewTab?: InputMaybe<Scalars['Boolean']>;
-  preTitle?: InputMaybe<Scalars['String']>;
+  contentUrl?: InputMaybe<Scalars['String']['input']>;
+  imageID?: InputMaybe<Scalars['String']['input']>;
+  lead?: InputMaybe<Scalars['String']['input']>;
+  openInNewTab?: InputMaybe<Scalars['Boolean']['input']>;
+  preTitle?: InputMaybe<Scalars['String']['input']>;
   properties?: InputMaybe<Array<PropertyInput>>;
-  title?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type DailyPredictedSubscriptionRenewalCount = {
   __typename?: 'DailyPredictedSubscriptionRenewalCount';
-  high: Scalars['Int'];
-  low: Scalars['Int'];
-  perDayHighProbability: Scalars['Int'];
-  perDayLowProbability: Scalars['Int'];
-  total: Scalars['Int'];
+  high: Scalars['Int']['output'];
+  low: Scalars['Int']['output'];
+  perDayHighProbability: Scalars['Int']['output'];
+  perDayLowProbability: Scalars['Int']['output'];
+  total: Scalars['Int']['output'];
 };
 
 export type DailySubscriptionStats = {
   __typename?: 'DailySubscriptionStats';
-  createdSubscriptionCount: Scalars['Int'];
+  createdSubscriptionCount: Scalars['Int']['output'];
   createdSubscriptionUsers: Array<DailySubscriptionStatsUser>;
-  date: Scalars['String'];
-  deactivatedSubscriptionCount: Scalars['Int'];
+  date: Scalars['String']['output'];
+  deactivatedSubscriptionCount: Scalars['Int']['output'];
   deactivatedSubscriptionUsers: Array<DailySubscriptionStatsUser>;
-  endingSubscriptionCount: Scalars['Int'];
+  endingSubscriptionCount: Scalars['Int']['output'];
   endingSubscriptionUsers: Array<DailySubscriptionStatsUser>;
-  overdueSubscriptionCount: Scalars['Int'];
+  overdueSubscriptionCount: Scalars['Int']['output'];
   overdueSubscriptionUsers: Array<DailySubscriptionStatsUser>;
   predictedSubscriptionRenewalCount: DailyPredictedSubscriptionRenewalCount;
   predictedSubscriptionRenewalUsersHighProbability: Array<DailySubscriptionStatsUser>;
   predictedSubscriptionRenewalUsersLowProbability: Array<DailySubscriptionStatsUser>;
-  renewedSubscriptionCount: Scalars['Int'];
+  renewedSubscriptionCount: Scalars['Int']['output'];
   renewedSubscriptionUsers: Array<DailySubscriptionStatsUser>;
-  replacedSubscriptionCount: Scalars['Int'];
+  replacedSubscriptionCount: Scalars['Int']['output'];
   replacedSubscriptionUsers: Array<DailySubscriptionStatsUser>;
-  totalActiveSubscriptionCount: Scalars['Int'];
+  totalActiveSubscriptionCount: Scalars['Int']['output'];
 };
 
 export type DailySubscriptionStatsUser = {
   __typename?: 'DailySubscriptionStatsUser';
-  email: Scalars['String'];
-  firstName?: Maybe<Scalars['String']>;
-  id: Scalars['String'];
-  name: Scalars['String'];
-  subscriptionID?: Maybe<Scalars['String']>;
+  email: Scalars['String']['output'];
+  firstName?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  subscriptionID?: Maybe<Scalars['String']['output']>;
 };
 
 export type DashboardInvoice = {
   __typename?: 'DashboardInvoice';
-  amount: Scalars['Int'];
-  dueAt: Scalars['DateTime'];
-  memberPlan?: Maybe<Scalars['String']>;
-  paidAt?: Maybe<Scalars['DateTime']>;
+  amount: Scalars['Int']['output'];
+  dueAt: Scalars['DateTime']['output'];
+  memberPlan?: Maybe<Scalars['String']['output']>;
+  paidAt?: Maybe<Scalars['DateTime']['output']>;
 };
 
 export type DashboardSubscription = {
   __typename?: 'DashboardSubscription';
-  deactivationDate?: Maybe<Scalars['DateTime']>;
-  endsAt?: Maybe<Scalars['DateTime']>;
-  memberPlan: Scalars['String'];
-  monthlyAmount: Scalars['Float'];
+  deactivationDate?: Maybe<Scalars['DateTime']['output']>;
+  endsAt?: Maybe<Scalars['DateTime']['output']>;
+  memberPlan: Scalars['String']['output'];
+  monthlyAmount: Scalars['Float']['output'];
   paymentPeriodicity: PaymentPeriodicity;
   reasonForDeactivation?: Maybe<SubscriptionDeactivationReason>;
-  renewsAt?: Maybe<Scalars['DateTime']>;
-  startsAt: Scalars['DateTime'];
+  renewsAt?: Maybe<Scalars['DateTime']['output']>;
+  startsAt: Scalars['DateTime']['output'];
 };
 
 export type DateFilter = {
   comparison: DateFilterComparison;
-  date?: InputMaybe<Scalars['DateTime']>;
+  date?: InputMaybe<Scalars['DateTime']['input']>;
 };
 
 export enum DateFilterComparison {
@@ -1025,30 +1022,30 @@ export enum DateFilterComparison {
 
 export type DeletePollVotesResult = {
   __typename?: 'DeletePollVotesResult';
-  count: Scalars['Int'];
+  count: Scalars['Int']['output'];
 };
 
 export type DiscountCode = HasMemberPlanLc & {
   __typename?: 'DiscountCode';
-  code: Scalars['String'];
-  createdAt: Scalars['DateTime'];
-  discountPercent: Scalars['Int'];
-  id: Scalars['String'];
+  code: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  discountPercent: Scalars['Int']['output'];
+  id: Scalars['String']['output'];
   memberPlan: MemberPlan;
-  memberPlanId: Scalars['String'];
-  modifiedAt: Scalars['DateTime'];
+  memberPlanId: Scalars['String']['output'];
+  modifiedAt: Scalars['DateTime']['output'];
   /** Number of redemptions of this discountCode on paid invoices. */
-  paidUsageCount: Scalars['Int'];
+  paidUsageCount: Scalars['Int']['output'];
   /** Number of times this discountCode was redeemed. */
-  usageCount: Scalars['Int'];
-  validFrom: Scalars['DateTime'];
-  validTo: Scalars['DateTime'];
+  usageCount: Scalars['Int']['output'];
+  validFrom: Scalars['DateTime']['output'];
+  validTo: Scalars['DateTime']['output'];
 };
 
 export type DiscountCodeFilter = {
-  from?: InputMaybe<Scalars['DateTime']>;
-  memberPlans?: InputMaybe<Array<Scalars['String']>>;
-  to?: InputMaybe<Scalars['DateTime']>;
+  from?: InputMaybe<Scalars['DateTime']['input']>;
+  memberPlans?: InputMaybe<Array<Scalars['String']['input']>>;
+  to?: InputMaybe<Scalars['DateTime']['input']>;
 };
 
 export enum DiscountCodesort {
@@ -1059,21 +1056,21 @@ export enum DiscountCodesort {
 
 export type Document = {
   __typename?: 'Document';
-  createdAt: Scalars['DateTime'];
-  description?: Maybe<Scalars['String']>;
-  extension: Scalars['String'];
-  fileSize: Scalars['Int'];
-  filename?: Maybe<Scalars['String']>;
-  id: Scalars['String'];
-  mimeType: Scalars['String'];
-  modifiedAt: Scalars['DateTime'];
-  thumbnailURL?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
-  url: Scalars['String'];
+  createdAt: Scalars['DateTime']['output'];
+  description?: Maybe<Scalars['String']['output']>;
+  extension: Scalars['String']['output'];
+  fileSize: Scalars['Int']['output'];
+  filename?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  mimeType: Scalars['String']['output'];
+  modifiedAt: Scalars['DateTime']['output'];
+  thumbnailURL?: Maybe<Scalars['String']['output']>;
+  title?: Maybe<Scalars['String']['output']>;
+  url: Scalars['String']['output'];
 };
 
 export type DocumentFilter = {
-  title?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 export enum DocumentSort {
@@ -1083,9 +1080,9 @@ export enum DocumentSort {
 
 export type DocumentStorageUsage = {
   __typename?: 'DocumentStorageUsage';
-  documentCount: Scalars['Int'];
-  limitBytes: Scalars['Float'];
-  usedBytes: Scalars['Float'];
+  documentCount: Scalars['Int']['output'];
+  limitBytes: Scalars['Float']['output'];
+  usedBytes: Scalars['Float']['output'];
 };
 
 export enum EditorBlockType {
@@ -1115,29 +1112,29 @@ export enum EditorBlockType {
 
 export type Event = {
   __typename?: 'Event';
-  createdAt: Scalars['DateTime'];
-  description?: Maybe<Scalars['RichText']>;
-  endsAt?: Maybe<Scalars['DateTime']>;
-  externalSourceId?: Maybe<Scalars['String']>;
-  externalSourceName?: Maybe<Scalars['String']>;
-  id: Scalars['String'];
+  createdAt: Scalars['DateTime']['output'];
+  description?: Maybe<Scalars['RichText']['output']>;
+  endsAt?: Maybe<Scalars['DateTime']['output']>;
+  externalSourceId?: Maybe<Scalars['String']['output']>;
+  externalSourceName?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
   image?: Maybe<Image>;
-  imageId?: Maybe<Scalars['String']>;
-  lead?: Maybe<Scalars['String']>;
-  location?: Maybe<Scalars['String']>;
-  modifiedAt: Scalars['DateTime'];
-  name: Scalars['String'];
-  startsAt: Scalars['DateTime'];
+  imageId?: Maybe<Scalars['String']['output']>;
+  lead?: Maybe<Scalars['String']['output']>;
+  location?: Maybe<Scalars['String']['output']>;
+  modifiedAt: Scalars['DateTime']['output'];
+  name: Scalars['String']['output'];
+  startsAt: Scalars['DateTime']['output'];
   status: EventStatus;
   tags?: Maybe<Array<Tag>>;
-  url: Scalars['String'];
+  url: Scalars['String']['output'];
 };
 
 export type EventBlock = BaseBlock & {
   __typename?: 'EventBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  blockStyleName?: Maybe<Scalars['String']>;
-  disabled?: Maybe<Scalars['Boolean']>;
+  blockStyle?: Maybe<Scalars['String']['output']>;
+  blockStyleName?: Maybe<Scalars['String']['output']>;
+  disabled?: Maybe<Scalars['Boolean']['output']>;
   events: Array<Event>;
   filter: EventBlockFilter;
   type: BlockType;
@@ -1145,53 +1142,53 @@ export type EventBlock = BaseBlock & {
 
 export type EventBlockFilter = {
   __typename?: 'EventBlockFilter';
-  events?: Maybe<Array<Scalars['String']>>;
-  tags?: Maybe<Array<Scalars['String']>>;
+  events?: Maybe<Array<Scalars['String']['output']>>;
+  tags?: Maybe<Array<Scalars['String']['output']>>;
 };
 
 export type EventBlockFilterInput = {
-  events?: InputMaybe<Array<Scalars['String']>>;
-  tags?: InputMaybe<Array<Scalars['String']>>;
+  events?: InputMaybe<Array<Scalars['String']['input']>>;
+  tags?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 export type EventBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  blockStyleName?: InputMaybe<Scalars['String']>;
-  disabled?: InputMaybe<Scalars['Boolean']>;
+  blockStyle?: InputMaybe<Scalars['String']['input']>;
+  blockStyleName?: InputMaybe<Scalars['String']['input']>;
+  disabled?: InputMaybe<Scalars['Boolean']['input']>;
   filter: EventBlockFilterInput;
 };
 
 export type EventCreatedAction = BaseAction & HasEventLc & {
   __typename?: 'EventCreatedAction';
   actionType: ActionType;
-  date: Scalars['DateTime'];
+  date: Scalars['DateTime']['output'];
   event: Event;
-  eventId: Scalars['String'];
+  eventId: Scalars['String']['output'];
 };
 
 export type EventFilter = {
-  from?: InputMaybe<Scalars['DateTime']>;
-  location?: InputMaybe<Scalars['String']>;
-  name?: InputMaybe<Scalars['String']>;
-  tags?: InputMaybe<Array<Scalars['String']>>;
-  to?: InputMaybe<Scalars['DateTime']>;
-  upcomingOnly?: InputMaybe<Scalars['Boolean']>;
+  from?: InputMaybe<Scalars['DateTime']['input']>;
+  location?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  tags?: InputMaybe<Array<Scalars['String']['input']>>;
+  to?: InputMaybe<Scalars['DateTime']['input']>;
+  upcomingOnly?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type EventFromSource = {
   __typename?: 'EventFromSource';
-  createdAt: Scalars['DateTime'];
-  description?: Maybe<Scalars['RichText']>;
-  endsAt?: Maybe<Scalars['DateTime']>;
-  externalSourceId?: Maybe<Scalars['String']>;
-  externalSourceName?: Maybe<Scalars['String']>;
-  id: Scalars['String'];
-  imageUrl?: Maybe<Scalars['String']>;
-  lead?: Maybe<Scalars['String']>;
-  location?: Maybe<Scalars['String']>;
-  modifiedAt: Scalars['DateTime'];
-  name: Scalars['String'];
-  startsAt: Scalars['DateTime'];
+  createdAt: Scalars['DateTime']['output'];
+  description?: Maybe<Scalars['RichText']['output']>;
+  endsAt?: Maybe<Scalars['DateTime']['output']>;
+  externalSourceId?: Maybe<Scalars['String']['output']>;
+  externalSourceName?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  imageUrl?: Maybe<Scalars['String']['output']>;
+  lead?: Maybe<Scalars['String']['output']>;
+  location?: Maybe<Scalars['String']['output']>;
+  modifiedAt: Scalars['DateTime']['output'];
+  name: Scalars['String']['output'];
+  startsAt: Scalars['DateTime']['output'];
   status: EventStatus;
 };
 
@@ -1212,46 +1209,46 @@ export enum EventStatus {
 export type EventTeaser = BaseTeaser & HasImage & HasOptionalEvent & {
   __typename?: 'EventTeaser';
   event?: Maybe<Event>;
-  eventID?: Maybe<Scalars['String']>;
+  eventID?: Maybe<Scalars['String']['output']>;
   image?: Maybe<Image>;
-  imageID?: Maybe<Scalars['String']>;
-  lead?: Maybe<Scalars['String']>;
-  preTitle?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
-  type: Scalars['String'];
+  imageID?: Maybe<Scalars['String']['output']>;
+  lead?: Maybe<Scalars['String']['output']>;
+  preTitle?: Maybe<Scalars['String']['output']>;
+  title?: Maybe<Scalars['String']['output']>;
+  type: Scalars['String']['output'];
 };
 
 export type EventTeaserInput = {
-  eventID?: InputMaybe<Scalars['String']>;
-  imageID?: InputMaybe<Scalars['String']>;
-  lead?: InputMaybe<Scalars['String']>;
-  preTitle?: InputMaybe<Scalars['String']>;
-  title?: InputMaybe<Scalars['String']>;
+  eventID?: InputMaybe<Scalars['String']['input']>;
+  imageID?: InputMaybe<Scalars['String']['input']>;
+  lead?: InputMaybe<Scalars['String']['input']>;
+  preTitle?: InputMaybe<Scalars['String']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type ExternalApp = {
   __typename?: 'ExternalApp';
-  createdAt: Scalars['DateTime'];
-  description?: Maybe<Scalars['String']>;
-  icon?: Maybe<Scalars['String']>;
-  id: Scalars['String'];
-  modifiedAt: Scalars['DateTime'];
-  name: Scalars['String'];
+  createdAt: Scalars['DateTime']['output'];
+  description?: Maybe<Scalars['String']['output']>;
+  icon?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  modifiedAt: Scalars['DateTime']['output'];
+  name: Scalars['String']['output'];
   target: ExternalAppsTarget;
-  url: Scalars['String'];
+  url: Scalars['String']['output'];
 };
 
 export type ExternalAppFilter = {
-  description?: InputMaybe<Scalars['String']>;
-  id?: InputMaybe<Scalars['String']>;
-  name?: InputMaybe<Scalars['String']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
   target?: InputMaybe<ExternalAppsTarget>;
 };
 
 export type ExternalAppToken = {
   __typename?: 'ExternalAppToken';
-  expiresAt: Scalars['DateTime'];
-  token: Scalars['String'];
+  expiresAt: Scalars['DateTime']['output'];
+  token: Scalars['String']['output'];
 };
 
 export enum ExternalAppsTarget {
@@ -1261,83 +1258,83 @@ export enum ExternalAppsTarget {
 
 export type ExternalNavigationLink = BaseNavigationLink & {
   __typename?: 'ExternalNavigationLink';
-  createdAt: Scalars['DateTime'];
-  id: Scalars['String'];
-  label: Scalars['String'];
-  modifiedAt: Scalars['DateTime'];
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  label: Scalars['String']['output'];
+  modifiedAt: Scalars['DateTime']['output'];
   type: NavigationLinkType;
-  url?: Maybe<Scalars['String']>;
+  url?: Maybe<Scalars['String']['output']>;
 };
 
 export type FacebookPostBlock = BaseBlock & {
   __typename?: 'FacebookPostBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  blockStyleName?: Maybe<Scalars['String']>;
-  disabled?: Maybe<Scalars['Boolean']>;
-  postID?: Maybe<Scalars['String']>;
+  blockStyle?: Maybe<Scalars['String']['output']>;
+  blockStyleName?: Maybe<Scalars['String']['output']>;
+  disabled?: Maybe<Scalars['Boolean']['output']>;
+  postID?: Maybe<Scalars['String']['output']>;
   type: BlockType;
-  userID?: Maybe<Scalars['String']>;
+  userID?: Maybe<Scalars['String']['output']>;
 };
 
 export type FacebookPostBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  blockStyleName?: InputMaybe<Scalars['String']>;
-  disabled?: InputMaybe<Scalars['Boolean']>;
-  postID?: InputMaybe<Scalars['String']>;
-  userID?: InputMaybe<Scalars['String']>;
+  blockStyle?: InputMaybe<Scalars['String']['input']>;
+  blockStyleName?: InputMaybe<Scalars['String']['input']>;
+  disabled?: InputMaybe<Scalars['Boolean']['input']>;
+  postID?: InputMaybe<Scalars['String']['input']>;
+  userID?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type FacebookVideoBlock = BaseBlock & {
   __typename?: 'FacebookVideoBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  blockStyleName?: Maybe<Scalars['String']>;
-  disabled?: Maybe<Scalars['Boolean']>;
+  blockStyle?: Maybe<Scalars['String']['output']>;
+  blockStyleName?: Maybe<Scalars['String']['output']>;
+  disabled?: Maybe<Scalars['Boolean']['output']>;
   type: BlockType;
-  userID?: Maybe<Scalars['String']>;
-  videoID?: Maybe<Scalars['String']>;
+  userID?: Maybe<Scalars['String']['output']>;
+  videoID?: Maybe<Scalars['String']['output']>;
 };
 
 export type FacebookVideoBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  blockStyleName?: InputMaybe<Scalars['String']>;
-  disabled?: InputMaybe<Scalars['Boolean']>;
-  userID?: InputMaybe<Scalars['String']>;
-  videoID?: InputMaybe<Scalars['String']>;
+  blockStyle?: InputMaybe<Scalars['String']['input']>;
+  blockStyleName?: InputMaybe<Scalars['String']['input']>;
+  disabled?: InputMaybe<Scalars['Boolean']['input']>;
+  userID?: InputMaybe<Scalars['String']['input']>;
+  videoID?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type FlexAlignment = {
   __typename?: 'FlexAlignment';
-  h: Scalars['Int'];
-  i: Scalars['String'];
-  static?: Maybe<Scalars['Boolean']>;
-  w: Scalars['Int'];
-  x: Scalars['Int'];
-  y: Scalars['Int'];
+  h: Scalars['Int']['output'];
+  i: Scalars['String']['output'];
+  static?: Maybe<Scalars['Boolean']['output']>;
+  w: Scalars['Int']['output'];
+  x: Scalars['Int']['output'];
+  y: Scalars['Int']['output'];
 };
 
 export type FlexAlignmentInput = {
-  h: Scalars['Int'];
-  i: Scalars['String'];
-  static?: InputMaybe<Scalars['Boolean']>;
-  w: Scalars['Int'];
-  x: Scalars['Int'];
-  y: Scalars['Int'];
+  h: Scalars['Int']['input'];
+  i: Scalars['String']['input'];
+  static?: InputMaybe<Scalars['Boolean']['input']>;
+  w: Scalars['Int']['input'];
+  x: Scalars['Int']['input'];
+  y: Scalars['Int']['input'];
 };
 
 export type FlexBlock = BaseBlock & {
   __typename?: 'FlexBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  blockStyleName?: Maybe<Scalars['String']>;
+  blockStyle?: Maybe<Scalars['String']['output']>;
+  blockStyleName?: Maybe<Scalars['String']['output']>;
   blocks: Array<BlockWithAlignment>;
-  disabled?: Maybe<Scalars['Boolean']>;
+  disabled?: Maybe<Scalars['Boolean']['output']>;
   type: BlockType;
 };
 
 export type FlexBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  blockStyleName?: InputMaybe<Scalars['String']>;
+  blockStyle?: InputMaybe<Scalars['String']['input']>;
+  blockStyleName?: InputMaybe<Scalars['String']['input']>;
   blocks: Array<BlockWithAlignmentInput>;
-  disabled?: InputMaybe<Scalars['Boolean']>;
+  disabled?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type FlexTeaser = {
@@ -1372,33 +1369,33 @@ export enum FontWeight {
 export type FullPoll = {
   __typename?: 'FullPoll';
   answers: Array<PollAnswer>;
-  closedAt?: Maybe<Scalars['DateTime']>;
+  closedAt?: Maybe<Scalars['DateTime']['output']>;
   externalVoteSources: Array<PollExternalVoteSource>;
-  id: Scalars['String'];
-  infoText?: Maybe<Scalars['RichText']>;
-  opensAt: Scalars['DateTime'];
-  question?: Maybe<Scalars['String']>;
+  id: Scalars['String']['output'];
+  infoText?: Maybe<Scalars['RichText']['output']>;
+  opensAt: Scalars['DateTime']['output'];
+  question?: Maybe<Scalars['String']['output']>;
 };
 
 export type Goodie = HasImage & {
   __typename?: 'Goodie';
-  active: Scalars['Boolean'];
-  availableStock?: Maybe<Scalars['Int']>;
-  createdAt: Scalars['DateTime'];
-  description?: Maybe<Scalars['RichText']>;
-  id: Scalars['String'];
+  active: Scalars['Boolean']['output'];
+  availableStock?: Maybe<Scalars['Int']['output']>;
+  createdAt: Scalars['DateTime']['output'];
+  description?: Maybe<Scalars['RichText']['output']>;
+  id: Scalars['String']['output'];
   image?: Maybe<Image>;
-  imageID?: Maybe<Scalars['String']>;
+  imageID?: Maybe<Scalars['String']['output']>;
   memberPlans: Array<MemberPlan>;
-  modifiedAt: Scalars['DateTime'];
-  name: Scalars['String'];
-  stock?: Maybe<Scalars['Int']>;
+  modifiedAt: Scalars['DateTime']['output'];
+  name: Scalars['String']['output'];
+  stock?: Maybe<Scalars['Int']['output']>;
 };
 
 export type GoodieFilter = {
-  active?: InputMaybe<Scalars['Boolean']>;
-  memberPlans?: InputMaybe<Array<Scalars['String']>>;
-  name?: InputMaybe<Scalars['String']>;
+  active?: InputMaybe<Scalars['Boolean']['input']>;
+  memberPlans?: InputMaybe<Array<Scalars['String']['input']>>;
+  name?: InputMaybe<Scalars['String']['input']>;
 };
 
 export enum GoodieSort {
@@ -1409,33 +1406,33 @@ export enum GoodieSort {
 
 export type HtmlBlock = BaseBlock & {
   __typename?: 'HTMLBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  blockStyleName?: Maybe<Scalars['String']>;
-  disabled?: Maybe<Scalars['Boolean']>;
-  html?: Maybe<Scalars['String']>;
+  blockStyle?: Maybe<Scalars['String']['output']>;
+  blockStyleName?: Maybe<Scalars['String']['output']>;
+  disabled?: Maybe<Scalars['Boolean']['output']>;
+  html?: Maybe<Scalars['String']['output']>;
   type: BlockType;
 };
 
 export type HtmlBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  blockStyleName?: InputMaybe<Scalars['String']>;
-  disabled?: InputMaybe<Scalars['Boolean']>;
-  html?: InputMaybe<Scalars['String']>;
+  blockStyle?: InputMaybe<Scalars['String']['input']>;
+  blockStyleName?: InputMaybe<Scalars['String']['input']>;
+  disabled?: InputMaybe<Scalars['Boolean']['input']>;
+  html?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type HasArticle = {
   article: Article;
-  articleID: Scalars['String'];
+  articleID: Scalars['String']['output'];
 };
 
 export type HasArticleLc = {
   article: Article;
-  articleId: Scalars['String'];
+  articleId: Scalars['String']['output'];
 };
 
 export type HasAuthor = {
   author: Author;
-  authorId: Scalars['String'];
+  authorId: Scalars['String']['output'];
 };
 
 export type HasBlockContent = {
@@ -1444,32 +1441,32 @@ export type HasBlockContent = {
 
 export type HasComment = {
   comment: Comment;
-  commentId: Scalars['String'];
+  commentId: Scalars['String']['output'];
 };
 
 export type HasEventLc = {
   event: Event;
-  eventId: Scalars['String'];
+  eventId: Scalars['String']['output'];
 };
 
 export type HasImage = {
   image?: Maybe<Image>;
-  imageID?: Maybe<Scalars['String']>;
+  imageID?: Maybe<Scalars['String']['output']>;
 };
 
 export type HasImageLc = {
   image?: Maybe<Image>;
-  imageId?: Maybe<Scalars['String']>;
+  imageId?: Maybe<Scalars['String']['output']>;
 };
 
 export type HasMemberPlan = {
   memberPlan: MemberPlan;
-  memberPlanID: Scalars['String'];
+  memberPlanID: Scalars['String']['output'];
 };
 
 export type HasMemberPlanLc = {
   memberPlan: MemberPlan;
-  memberPlanId: Scalars['String'];
+  memberPlanId: Scalars['String']['output'];
 };
 
 export type HasOneBlockContent = {
@@ -1478,139 +1475,139 @@ export type HasOneBlockContent = {
 
 export type HasOptionalArticle = {
   article?: Maybe<Article>;
-  articleID?: Maybe<Scalars['String']>;
+  articleID?: Maybe<Scalars['String']['output']>;
 };
 
 export type HasOptionalCrowdfunding = {
   crowdfunding?: Maybe<Crowdfunding>;
-  crowdfundingId?: Maybe<Scalars['String']>;
+  crowdfundingId?: Maybe<Scalars['String']['output']>;
 };
 
 export type HasOptionalEvent = {
   event?: Maybe<Event>;
-  eventID?: Maybe<Scalars['String']>;
+  eventID?: Maybe<Scalars['String']['output']>;
 };
 
 export type HasOptionalPage = {
   page?: Maybe<Page>;
-  pageID?: Maybe<Scalars['String']>;
+  pageID?: Maybe<Scalars['String']['output']>;
 };
 
 export type HasOptionalPaywall = {
   paywall?: Maybe<Paywall>;
-  paywallId?: Maybe<Scalars['String']>;
+  paywallId?: Maybe<Scalars['String']['output']>;
 };
 
 export type HasOptionalPeerLc = {
   peer?: Maybe<Peer>;
-  peerId?: Maybe<Scalars['String']>;
+  peerId?: Maybe<Scalars['String']['output']>;
 };
 
 export type HasOptionalPoll = {
   poll?: Maybe<FullPoll>;
-  pollId?: Maybe<Scalars['String']>;
+  pollId?: Maybe<Scalars['String']['output']>;
 };
 
 export type HasOptionalSubscription = {
   subscription?: Maybe<PublicSubscription>;
-  subscriptionID?: Maybe<Scalars['String']>;
+  subscriptionID?: Maybe<Scalars['String']['output']>;
 };
 
 export type HasOptionalUser = {
   user?: Maybe<User>;
-  userID?: Maybe<Scalars['String']>;
+  userID?: Maybe<Scalars['String']['output']>;
 };
 
 export type HasOptionalUserLc = {
   user?: Maybe<User>;
-  userId?: Maybe<Scalars['String']>;
+  userId?: Maybe<Scalars['String']['output']>;
 };
 
 export type HasPage = {
   page: Page;
-  pageID: Scalars['String'];
+  pageID: Scalars['String']['output'];
 };
 
 export type HasPageLc = {
   page: Page;
-  pageId: Scalars['String'];
+  pageId: Scalars['String']['output'];
 };
 
 export type HasPaymentMethod = {
   paymentMethod: PaymentMethod;
-  paymentMethodID: Scalars['String'];
+  paymentMethodID: Scalars['String']['output'];
 };
 
 export type HasPoll = {
   poll: FullPoll;
-  pollId: Scalars['String'];
+  pollId: Scalars['String']['output'];
 };
 
 export type HasSubscriptionLc = {
   subscription: PublicSubscription;
-  subscriptionId: Scalars['String'];
+  subscriptionId: Scalars['String']['output'];
 };
 
 export type HasUser = {
   user: User;
-  userID: Scalars['String'];
+  userID: Scalars['String']['output'];
 };
 
 export type HasUserLc = {
   user: User;
-  userId: Scalars['String'];
+  userId: Scalars['String']['output'];
 };
 
 export type IFrameBlock = BaseBlock & {
   __typename?: 'IFrameBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  blockStyleName?: Maybe<Scalars['String']>;
-  disabled?: Maybe<Scalars['Boolean']>;
-  height?: Maybe<Scalars['Int']>;
-  sandbox?: Maybe<Scalars['String']>;
-  styleCustom?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
+  blockStyle?: Maybe<Scalars['String']['output']>;
+  blockStyleName?: Maybe<Scalars['String']['output']>;
+  disabled?: Maybe<Scalars['Boolean']['output']>;
+  height?: Maybe<Scalars['Int']['output']>;
+  sandbox?: Maybe<Scalars['String']['output']>;
+  styleCustom?: Maybe<Scalars['String']['output']>;
+  title?: Maybe<Scalars['String']['output']>;
   type: BlockType;
-  url?: Maybe<Scalars['String']>;
-  width?: Maybe<Scalars['Int']>;
+  url?: Maybe<Scalars['String']['output']>;
+  width?: Maybe<Scalars['Int']['output']>;
 };
 
 export type IFrameBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  blockStyleName?: InputMaybe<Scalars['String']>;
-  disabled?: InputMaybe<Scalars['Boolean']>;
-  height?: InputMaybe<Scalars['Int']>;
-  sandbox?: InputMaybe<Scalars['String']>;
-  styleCustom?: InputMaybe<Scalars['String']>;
-  title?: InputMaybe<Scalars['String']>;
-  url?: InputMaybe<Scalars['String']>;
-  width?: InputMaybe<Scalars['Int']>;
+  blockStyle?: InputMaybe<Scalars['String']['input']>;
+  blockStyleName?: InputMaybe<Scalars['String']['input']>;
+  disabled?: InputMaybe<Scalars['Boolean']['input']>;
+  height?: InputMaybe<Scalars['Int']['input']>;
+  sandbox?: InputMaybe<Scalars['String']['input']>;
+  styleCustom?: InputMaybe<Scalars['String']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+  url?: InputMaybe<Scalars['String']['input']>;
+  width?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type Image = HasOptionalPeerLc & {
   __typename?: 'Image';
-  createdAt: Scalars['DateTime'];
-  description?: Maybe<Scalars['String']>;
-  extension: Scalars['String'];
-  fileSize: Scalars['Int'];
-  filename?: Maybe<Scalars['String']>;
-  focalPointX: Scalars['Float'];
-  focalPointY: Scalars['Float'];
-  format: Scalars['String'];
-  height: Scalars['Int'];
-  id: Scalars['String'];
-  license?: Maybe<Scalars['String']>;
-  link?: Maybe<Scalars['String']>;
-  mimeType: Scalars['String'];
-  modifiedAt: Scalars['DateTime'];
+  createdAt: Scalars['DateTime']['output'];
+  description?: Maybe<Scalars['String']['output']>;
+  extension: Scalars['String']['output'];
+  fileSize: Scalars['Int']['output'];
+  filename?: Maybe<Scalars['String']['output']>;
+  focalPointX: Scalars['Float']['output'];
+  focalPointY: Scalars['Float']['output'];
+  format: Scalars['String']['output'];
+  height: Scalars['Int']['output'];
+  id: Scalars['String']['output'];
+  license?: Maybe<Scalars['String']['output']>;
+  link?: Maybe<Scalars['String']['output']>;
+  mimeType: Scalars['String']['output'];
+  modifiedAt: Scalars['DateTime']['output'];
   peer?: Maybe<Peer>;
-  peerId?: Maybe<Scalars['String']>;
-  source?: Maybe<Scalars['String']>;
-  tags: Array<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
-  transformURL?: Maybe<Scalars['String']>;
-  url: Scalars['String'];
-  width: Scalars['Int'];
+  peerId?: Maybe<Scalars['String']['output']>;
+  source?: Maybe<Scalars['String']['output']>;
+  tags: Array<Scalars['String']['output']>;
+  title?: Maybe<Scalars['String']['output']>;
+  transformURL?: Maybe<Scalars['String']['output']>;
+  url: Scalars['String']['output'];
+  width: Scalars['Int']['output'];
 };
 
 
@@ -1620,56 +1617,56 @@ export type ImageTransformUrlArgs = {
 
 export type ImageBlock = BaseBlock & HasImage & {
   __typename?: 'ImageBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  blockStyleName?: Maybe<Scalars['String']>;
-  caption?: Maybe<Scalars['String']>;
-  disabled?: Maybe<Scalars['Boolean']>;
+  blockStyle?: Maybe<Scalars['String']['output']>;
+  blockStyleName?: Maybe<Scalars['String']['output']>;
+  caption?: Maybe<Scalars['String']['output']>;
+  disabled?: Maybe<Scalars['Boolean']['output']>;
   image?: Maybe<Image>;
-  imageID?: Maybe<Scalars['String']>;
-  linkUrl?: Maybe<Scalars['String']>;
+  imageID?: Maybe<Scalars['String']['output']>;
+  linkUrl?: Maybe<Scalars['String']['output']>;
   type: BlockType;
 };
 
 export type ImageBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  blockStyleName?: InputMaybe<Scalars['String']>;
-  caption?: InputMaybe<Scalars['String']>;
-  disabled?: InputMaybe<Scalars['Boolean']>;
-  imageID?: InputMaybe<Scalars['String']>;
-  linkUrl?: InputMaybe<Scalars['String']>;
+  blockStyle?: InputMaybe<Scalars['String']['input']>;
+  blockStyleName?: InputMaybe<Scalars['String']['input']>;
+  caption?: InputMaybe<Scalars['String']['input']>;
+  disabled?: InputMaybe<Scalars['Boolean']['input']>;
+  imageID?: InputMaybe<Scalars['String']['input']>;
+  linkUrl?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type ImageFilter = {
-  tags?: InputMaybe<Array<Scalars['String']>>;
-  title?: InputMaybe<Scalars['String']>;
+  tags?: InputMaybe<Array<Scalars['String']['input']>>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type ImageGalleryBlock = BaseBlock & {
   __typename?: 'ImageGalleryBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  blockStyleName?: Maybe<Scalars['String']>;
-  disabled?: Maybe<Scalars['Boolean']>;
+  blockStyle?: Maybe<Scalars['String']['output']>;
+  blockStyleName?: Maybe<Scalars['String']['output']>;
+  disabled?: Maybe<Scalars['Boolean']['output']>;
   images: Array<ImageGalleryImage>;
   type: BlockType;
 };
 
 export type ImageGalleryBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  blockStyleName?: InputMaybe<Scalars['String']>;
-  disabled?: InputMaybe<Scalars['Boolean']>;
+  blockStyle?: InputMaybe<Scalars['String']['input']>;
+  blockStyleName?: InputMaybe<Scalars['String']['input']>;
+  disabled?: InputMaybe<Scalars['Boolean']['input']>;
   images: Array<ImageGalleryImageInput>;
 };
 
 export type ImageGalleryImage = HasImage & {
   __typename?: 'ImageGalleryImage';
-  caption?: Maybe<Scalars['String']>;
+  caption?: Maybe<Scalars['String']['output']>;
   image?: Maybe<Image>;
-  imageID?: Maybe<Scalars['String']>;
+  imageID?: Maybe<Scalars['String']['output']>;
 };
 
 export type ImageGalleryImageInput = {
-  caption?: InputMaybe<Scalars['String']>;
-  imageID?: InputMaybe<Scalars['String']>;
+  caption?: InputMaybe<Scalars['String']['input']>;
+  imageID?: InputMaybe<Scalars['String']['input']>;
 };
 
 export enum ImageRotation {
@@ -1686,56 +1683,56 @@ export enum ImageSort {
 }
 
 export type ImageTransformation = {
-  blur?: InputMaybe<Scalars['Boolean']>;
-  grayscale?: InputMaybe<Scalars['Boolean']>;
-  height?: InputMaybe<Scalars['Int']>;
-  negate?: InputMaybe<Scalars['Boolean']>;
+  blur?: InputMaybe<Scalars['Boolean']['input']>;
+  grayscale?: InputMaybe<Scalars['Boolean']['input']>;
+  height?: InputMaybe<Scalars['Int']['input']>;
+  negate?: InputMaybe<Scalars['Boolean']['input']>;
   rotation?: InputMaybe<ImageRotation>;
-  sharpen?: InputMaybe<Scalars['Boolean']>;
-  width?: InputMaybe<Scalars['Int']>;
+  sharpen?: InputMaybe<Scalars['Boolean']['input']>;
+  width?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type ImpersonationGrantResult = {
   __typename?: 'ImpersonationGrantResult';
-  durationMinutes: Scalars['Int'];
-  email: Scalars['String'];
-  expiresAt: Scalars['DateTime'];
-  token: Scalars['String'];
+  durationMinutes: Scalars['Int']['output'];
+  email: Scalars['String']['output'];
+  expiresAt: Scalars['DateTime']['output'];
+  token: Scalars['String']['output'];
 };
 
 export type ImpersonationSessionInfo = {
   __typename?: 'ImpersonationSessionInfo';
-  createdAt: Scalars['DateTime'];
-  expiresAt: Scalars['DateTime'];
-  id: Scalars['String'];
-  impersonatedBy?: Maybe<Scalars['String']>;
-  impersonationReason?: Maybe<Scalars['String']>;
-  userEmail: Scalars['String'];
-  userId: Scalars['String'];
-  userName?: Maybe<Scalars['String']>;
+  createdAt: Scalars['DateTime']['output'];
+  expiresAt: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  impersonatedBy?: Maybe<Scalars['String']['output']>;
+  impersonationReason?: Maybe<Scalars['String']['output']>;
+  userEmail: Scalars['String']['output'];
+  userId: Scalars['String']['output'];
+  userName?: Maybe<Scalars['String']['output']>;
 };
 
 export type ImpersonationUser = {
   __typename?: 'ImpersonationUser';
-  active: Scalars['Boolean'];
-  email: Scalars['String'];
-  id: Scalars['String'];
-  name?: Maybe<Scalars['String']>;
-  roles: Array<Scalars['String']>;
+  active: Scalars['Boolean']['output'];
+  email: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  name?: Maybe<Scalars['String']['output']>;
+  roles: Array<Scalars['String']['output']>;
 };
 
 export type ImportArticleOptions = {
-  importAuthors?: InputMaybe<Scalars['Boolean']>;
-  importContentImages?: InputMaybe<Scalars['Boolean']>;
-  importTags?: InputMaybe<Scalars['Boolean']>;
+  importAuthors?: InputMaybe<Scalars['Boolean']['input']>;
+  importContentImages?: InputMaybe<Scalars['Boolean']['input']>;
+  importTags?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type ImportedEventFilter = {
-  from?: InputMaybe<Scalars['String']>;
-  location?: InputMaybe<Scalars['String']>;
-  name?: InputMaybe<Scalars['String']>;
-  providers?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  to?: InputMaybe<Scalars['String']>;
+  from?: InputMaybe<Scalars['String']['input']>;
+  location?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  providers?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  to?: InputMaybe<Scalars['String']['input']>;
 };
 
 export enum ImportedEventSort {
@@ -1747,75 +1744,75 @@ export enum ImportedEventSort {
 
 export type InstagramPostBlock = BaseBlock & {
   __typename?: 'InstagramPostBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  blockStyleName?: Maybe<Scalars['String']>;
-  disabled?: Maybe<Scalars['Boolean']>;
-  postID?: Maybe<Scalars['String']>;
+  blockStyle?: Maybe<Scalars['String']['output']>;
+  blockStyleName?: Maybe<Scalars['String']['output']>;
+  disabled?: Maybe<Scalars['Boolean']['output']>;
+  postID?: Maybe<Scalars['String']['output']>;
   type: BlockType;
 };
 
 export type InstagramPostBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  blockStyleName?: InputMaybe<Scalars['String']>;
-  disabled?: InputMaybe<Scalars['Boolean']>;
-  postID?: InputMaybe<Scalars['String']>;
+  blockStyle?: InputMaybe<Scalars['String']['input']>;
+  blockStyleName?: InputMaybe<Scalars['String']['input']>;
+  disabled?: InputMaybe<Scalars['Boolean']['input']>;
+  postID?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type Invoice = HasOptionalSubscription & {
   __typename?: 'Invoice';
-  canceledAt?: Maybe<Scalars['DateTime']>;
-  createdAt: Scalars['DateTime'];
+  canceledAt?: Maybe<Scalars['DateTime']['output']>;
+  createdAt: Scalars['DateTime']['output'];
   currency: Currency;
-  description?: Maybe<Scalars['String']>;
-  dueAt: Scalars['DateTime'];
-  id: Scalars['String'];
+  description?: Maybe<Scalars['String']['output']>;
+  dueAt: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
   items: Array<InvoiceItem>;
-  mail: Scalars['String'];
+  mail: Scalars['String']['output'];
   manuallySetAsPaidByUser?: Maybe<User>;
-  manuallySetAsPaidByUserId?: Maybe<Scalars['String']>;
-  modifiedAt: Scalars['DateTime'];
-  paidAt?: Maybe<Scalars['DateTime']>;
-  scheduledDeactivationAt: Scalars['DateTime'];
+  manuallySetAsPaidByUserId?: Maybe<Scalars['String']['output']>;
+  modifiedAt: Scalars['DateTime']['output'];
+  paidAt?: Maybe<Scalars['DateTime']['output']>;
+  scheduledDeactivationAt: Scalars['DateTime']['output'];
   subscription?: Maybe<PublicSubscription>;
-  subscriptionID?: Maybe<Scalars['String']>;
-  total: Scalars['Int'];
+  subscriptionID?: Maybe<Scalars['String']['output']>;
+  total: Scalars['Int']['output'];
 };
 
 export type InvoiceConnection = {
   __typename?: 'InvoiceConnection';
   nodes: Array<Invoice>;
   pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 export type InvoiceFilter = {
   canceledAt?: InputMaybe<DateFilter>;
-  discountCodeId?: InputMaybe<Scalars['String']>;
-  mail?: InputMaybe<Scalars['String']>;
+  discountCodeId?: InputMaybe<Scalars['String']['input']>;
+  mail?: InputMaybe<Scalars['String']['input']>;
   paidAt?: InputMaybe<DateFilter>;
-  subscriptionID?: InputMaybe<Scalars['String']>;
-  userID?: InputMaybe<Scalars['String']>;
+  subscriptionID?: InputMaybe<Scalars['String']['input']>;
+  userID?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type InvoiceItem = {
   __typename?: 'InvoiceItem';
-  amount: Scalars['Int'];
-  createdAt: Scalars['DateTime'];
-  description?: Maybe<Scalars['String']>;
+  amount: Scalars['Int']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  description?: Maybe<Scalars['String']['output']>;
   goodie?: Maybe<Goodie>;
-  goodieId?: Maybe<Scalars['String']>;
-  id: Scalars['String'];
-  modifiedAt: Scalars['DateTime'];
-  name: Scalars['String'];
-  quantity: Scalars['Int'];
-  total: Scalars['Int'];
+  goodieId?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  modifiedAt: Scalars['DateTime']['output'];
+  name: Scalars['String']['output'];
+  quantity: Scalars['Int']['output'];
+  total: Scalars['Int']['output'];
 };
 
 export type InvoiceItemInput = {
-  amount: Scalars['Int'];
-  description?: InputMaybe<Scalars['String']>;
-  name: Scalars['String'];
-  quantity: Scalars['Int'];
+  amount: Scalars['Int']['input'];
+  description?: InputMaybe<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
+  quantity: Scalars['Int']['input'];
 };
 
 export enum InvoiceSort {
@@ -1826,43 +1823,43 @@ export enum InvoiceSort {
 
 export type KeyEnabled = {
   __typename?: 'KeyEnabled';
-  enabled: Scalars['Boolean'];
-  key?: Maybe<Scalars['String']>;
+  enabled: Scalars['Boolean']['output'];
+  key?: Maybe<Scalars['String']['output']>;
 };
 
 export type KeyEnabledInput = {
-  enabled: Scalars['Boolean'];
-  key?: InputMaybe<Scalars['String']>;
+  enabled: Scalars['Boolean']['input'];
+  key?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type ListicleBlock = BaseBlock & {
   __typename?: 'ListicleBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  blockStyleName?: Maybe<Scalars['String']>;
-  disabled?: Maybe<Scalars['Boolean']>;
+  blockStyle?: Maybe<Scalars['String']['output']>;
+  blockStyleName?: Maybe<Scalars['String']['output']>;
+  disabled?: Maybe<Scalars['Boolean']['output']>;
   items: Array<ListicleItem>;
   type: BlockType;
 };
 
 export type ListicleBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  blockStyleName?: InputMaybe<Scalars['String']>;
-  disabled?: InputMaybe<Scalars['Boolean']>;
+  blockStyle?: InputMaybe<Scalars['String']['input']>;
+  blockStyleName?: InputMaybe<Scalars['String']['input']>;
+  disabled?: InputMaybe<Scalars['Boolean']['input']>;
   items: Array<ListicleItemInput>;
 };
 
 export type ListicleItem = HasImage & {
   __typename?: 'ListicleItem';
   image?: Maybe<Image>;
-  imageID?: Maybe<Scalars['String']>;
-  richText?: Maybe<Scalars['RichText']>;
-  title?: Maybe<Scalars['String']>;
+  imageID?: Maybe<Scalars['String']['output']>;
+  richText?: Maybe<Scalars['RichText']['output']>;
+  title?: Maybe<Scalars['String']['output']>;
 };
 
 export type ListicleItemInput = {
-  imageID?: InputMaybe<Scalars['String']>;
-  richText?: InputMaybe<Scalars['RichText']>;
-  title?: InputMaybe<Scalars['String']>;
+  imageID?: InputMaybe<Scalars['String']['input']>;
+  richText?: InputMaybe<Scalars['RichText']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 export enum LoginStatus {
@@ -1875,65 +1872,65 @@ export enum LoginStatus {
 }
 
 export type MailAudienceInput = {
-  autoRenew?: InputMaybe<Scalars['Boolean']>;
+  autoRenew?: InputMaybe<Scalars['Boolean']['input']>;
   base: MailRecipientBase;
   /** Win-back audience only: start of an explicit period the subscription ended in. */
-  endedFrom?: InputMaybe<Scalars['DateTime']>;
+  endedFrom?: InputMaybe<Scalars['DateTime']['input']>;
   /** Win-back audience only: end of an explicit period the subscription ended in. */
-  endedTo?: InputMaybe<Scalars['DateTime']>;
+  endedTo?: InputMaybe<Scalars['DateTime']['input']>;
   /** Win-back audience only: how far back an ended subscription may lie, in days. Ignored when an explicit period is given. */
-  endedWithinDays?: InputMaybe<Scalars['Int']>;
+  endedWithinDays?: InputMaybe<Scalars['Int']['input']>;
   /** Subscribers audience only: only subscriptions whose effective end (cancellation date, else paidUntil) is on or after this date. */
-  endsAtFrom?: InputMaybe<Scalars['DateTime']>;
+  endsAtFrom?: InputMaybe<Scalars['DateTime']['input']>;
   /** Subscribers audience only: only subscriptions whose effective end (cancellation date, else paidUntil) is on or before this date. */
-  endsAtTo?: InputMaybe<Scalars['DateTime']>;
+  endsAtTo?: InputMaybe<Scalars['DateTime']['input']>;
   /** Subscribers audience only: true keeps only subscriptions that replaced another one (typically an upgrade, but downgrades and lateral plan switches are included too, and manual or imported changes are not detected). */
-  hasReplacedSubscription?: InputMaybe<Scalars['Boolean']>;
+  hasReplacedSubscription?: InputMaybe<Scalars['Boolean']['input']>;
   /** Subscribers audience only: true keeps only subscriptions that have given notice, including cancellations that only take effect in the future; false keeps the rest. */
-  isCanceled?: InputMaybe<Scalars['Boolean']>;
+  isCanceled?: InputMaybe<Scalars['Boolean']['input']>;
   /** Subscribers audience only: true keeps only subscriptions that are currently paid up (started and paidUntil in the future); false keeps the rest. Grace periods are not considered. */
-  isPaid?: InputMaybe<Scalars['Boolean']>;
+  isPaid?: InputMaybe<Scalars['Boolean']['input']>;
   /** Restrict to subscriptions of these member plans. */
-  memberPlanIDs?: InputMaybe<Array<Scalars['String']>>;
-  paymentMethodID?: InputMaybe<Scalars['String']>;
+  memberPlanIDs?: InputMaybe<Array<Scalars['String']['input']>>;
+  paymentMethodID?: InputMaybe<Scalars['String']['input']>;
   paymentPeriodicity?: InputMaybe<PaymentPeriodicity>;
   /** Subscribers audience only: only subscriptions that started on or after this date. */
-  startsAtFrom?: InputMaybe<Scalars['DateTime']>;
+  startsAtFrom?: InputMaybe<Scalars['DateTime']['input']>;
   /** Subscribers audience only: only subscriptions that started on or before this date. */
-  startsAtTo?: InputMaybe<Scalars['DateTime']>;
+  startsAtTo?: InputMaybe<Scalars['DateTime']['input']>;
   subscriptionState?: InputMaybe<MailSubscriptionState>;
 };
 
 export type MailLogFilter = {
-  mailSendJobId?: InputMaybe<Scalars['String']>;
-  mailTemplateId?: InputMaybe<Scalars['String']>;
-  recipientId?: InputMaybe<Scalars['String']>;
+  mailSendJobId?: InputMaybe<Scalars['String']['input']>;
+  mailTemplateId?: InputMaybe<Scalars['String']['input']>;
+  recipientId?: InputMaybe<Scalars['String']['input']>;
   state?: InputMaybe<MailLogState>;
   type?: InputMaybe<MailLogType>;
 };
 
 export type MailLogModel = {
   __typename?: 'MailLogModel';
-  createdAt: Scalars['DateTime'];
+  createdAt: Scalars['DateTime']['output'];
   /** Why a rejected mail could not be delivered. */
-  error?: Maybe<Scalars['String']>;
-  id: Scalars['String'];
-  mailProviderID: Scalars['String'];
-  mailSendJobId?: Maybe<Scalars['String']>;
+  error?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  mailProviderID: Scalars['String']['output'];
+  mailSendJobId?: Maybe<Scalars['String']['output']>;
   mailTemplate: MailLogTemplate;
   recipient: MailLogRecipient;
-  sentDate: Scalars['DateTime'];
+  sentDate: Scalars['DateTime']['output'];
   state: MailLogState;
-  subject?: Maybe<Scalars['String']>;
+  subject?: Maybe<Scalars['String']['output']>;
   type?: Maybe<MailLogType>;
 };
 
 export type MailLogRecipient = {
   __typename?: 'MailLogRecipient';
-  email: Scalars['String'];
-  firstName?: Maybe<Scalars['String']>;
-  id: Scalars['String'];
-  name: Scalars['String'];
+  email: Scalars['String']['output'];
+  firstName?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  name: Scalars['String']['output'];
 };
 
 export enum MailLogState {
@@ -1948,15 +1945,15 @@ export enum MailLogState {
 export type MailLogSyncModel = {
   __typename?: 'MailLogSyncModel';
   /** Mails that were still in an open state and could be looked up at the provider. */
-  checked: Scalars['Int'];
+  checked: Scalars['Int']['output'];
   /** Mails whose state the provider reported differently. */
-  updated: Scalars['Int'];
+  updated: Scalars['Int']['output'];
 };
 
 export type MailLogTemplate = {
   __typename?: 'MailLogTemplate';
-  id: Scalars['String'];
-  name: Scalars['String'];
+  id: Scalars['String']['output'];
+  name: Scalars['String']['output'];
 };
 
 /** Origin of a sent mail. */
@@ -1969,7 +1966,7 @@ export enum MailLogType {
 
 export type MailProviderModel = {
   __typename?: 'MailProviderModel';
-  name: Scalars['String'];
+  name: Scalars['String']['output'];
 };
 
 export enum MailProviderType {
@@ -1996,43 +1993,43 @@ export enum MailSendAudience {
 
 export type MailSendJobInput = {
   audience: MailAudienceInput;
-  mailTemplateId: Scalars['String'];
+  mailTemplateId: Scalars['String']['input'];
 };
 
 export type MailSendJobModel = {
   __typename?: 'MailSendJobModel';
   audience: MailSendAudience;
-  createdAt: Scalars['DateTime'];
-  createdByUserId: Scalars['String'];
-  error?: Maybe<Scalars['String']>;
-  failedCount: Scalars['Int'];
-  finishedAt?: Maybe<Scalars['DateTime']>;
+  createdAt: Scalars['DateTime']['output'];
+  createdByUserId: Scalars['String']['output'];
+  error?: Maybe<Scalars['String']['output']>;
+  failedCount: Scalars['Int']['output'];
+  finishedAt?: Maybe<Scalars['DateTime']['output']>;
   /** Last sign of life of the worker processing this job. */
-  heartbeatAt?: Maybe<Scalars['DateTime']>;
-  id: Scalars['String'];
+  heartbeatAt?: Maybe<Scalars['DateTime']['output']>;
+  id: Scalars['String']['output'];
   mailTemplate?: Maybe<MailLogTemplate>;
-  mailTemplateId: Scalars['String'];
-  modifiedAt: Scalars['DateTime'];
+  mailTemplateId: Scalars['String']['output'];
+  modifiedAt: Scalars['DateTime']['output'];
   /** How often the job was picked up again after an interruption. */
-  resumeCount: Scalars['Int'];
+  resumeCount: Scalars['Int']['output'];
   /** Mails handed to the provider whose outcome never came back — left over after an interruption. Never re-sent on their own. */
-  sendingCount: Scalars['Int'];
-  sentCount: Scalars['Int'];
-  startedAt?: Maybe<Scalars['DateTime']>;
+  sendingCount: Scalars['Int']['output'];
+  sentCount: Scalars['Int']['output'];
+  startedAt?: Maybe<Scalars['DateTime']['output']>;
   status: MailSendJobState;
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 export type MailSendJobRecipientModel = {
   __typename?: 'MailSendJobRecipientModel';
-  attempts: Scalars['Int'];
-  error?: Maybe<Scalars['String']>;
-  id: Scalars['String'];
-  mailLogId?: Maybe<Scalars['String']>;
-  memberPlanName?: Maybe<Scalars['String']>;
+  attempts: Scalars['Int']['output'];
+  error?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  mailLogId?: Maybe<Scalars['String']['output']>;
+  memberPlanName?: Maybe<Scalars['String']['output']>;
   /** Position in the send queue. */
-  position: Scalars['Int'];
-  sentAt?: Maybe<Scalars['DateTime']>;
+  position: Scalars['Int']['output'];
+  sentAt?: Maybe<Scalars['DateTime']['output']>;
   state: MailSendJobRecipientState;
   user: MailLogRecipient;
 };
@@ -2055,40 +2052,40 @@ export enum MailSendJobState {
 
 export type MailSendPreviewInput = {
   audience: MailAudienceInput;
-  mailTemplateId: Scalars['String'];
+  mailTemplateId: Scalars['String']['input'];
   /** Row id of the recipient to render for. Defaults to the first of the audience. */
-  recipientId?: InputMaybe<Scalars['String']>;
+  recipientId?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type MailSendPreviewModel = {
   __typename?: 'MailSendPreviewModel';
-  html: Scalars['String'];
+  html: Scalars['String']['output'];
   /** The recipient this preview was rendered for. */
   recipient?: Maybe<MailSendRecipientModel>;
-  subject: Scalars['String'];
-  text?: Maybe<Scalars['String']>;
+  subject: Scalars['String']['output'];
+  text?: Maybe<Scalars['String']['output']>;
 };
 
 export type MailSendRecipientModel = {
   __typename?: 'MailSendRecipientModel';
-  email: Scalars['String'];
-  firstName?: Maybe<Scalars['String']>;
+  email: Scalars['String']['output'];
+  firstName?: Maybe<Scalars['String']['output']>;
   /** Row identity. A user appears once per matching subscription, so this combines both. */
-  id: Scalars['String'];
-  memberPlanName?: Maybe<Scalars['String']>;
-  name: Scalars['String'];
-  subscriptionId?: Maybe<Scalars['String']>;
-  userId: Scalars['String'];
+  id: Scalars['String']['output'];
+  memberPlanName?: Maybe<Scalars['String']['output']>;
+  name: Scalars['String']['output'];
+  subscriptionId?: Maybe<Scalars['String']['output']>;
+  userId: Scalars['String']['output'];
 };
 
 export type MailSendRecipientPreview = {
   __typename?: 'MailSendRecipientPreview';
   /** Whether recipients carry subscription data (subscription-context templates allowed). */
-  allowsSubscriptionTemplates: Scalars['Boolean'];
+  allowsSubscriptionTemplates: Scalars['Boolean']['output'];
   /** Number of mails that would be sent. */
-  count: Scalars['Int'];
+  count: Scalars['Int']['output'];
   /** Number of distinct people reached. Lower than `count` when someone has several matching subscriptions. */
-  userCount: Scalars['Int'];
+  userCount: Scalars['Int']['output'];
 };
 
 export enum MailSubscriptionState {
@@ -2110,61 +2107,61 @@ export enum MailTemplateContext {
 
 export type MailTemplateInput = {
   context?: InputMaybe<MailTemplateContext>;
-  description?: InputMaybe<Scalars['String']>;
-  htmlContent: Scalars['String'];
-  name: Scalars['String'];
-  subject: Scalars['String'];
-  textContent?: InputMaybe<Scalars['String']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  htmlContent: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  subject: Scalars['String']['input'];
+  textContent?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type MailTemplateModel = {
   __typename?: 'MailTemplateModel';
   context?: Maybe<MailTemplateContext>;
-  description?: Maybe<Scalars['String']>;
-  htmlContent: Scalars['String'];
-  id: Scalars['String'];
-  name: Scalars['String'];
-  status: Scalars['String'];
-  subject: Scalars['String'];
-  textContent?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']['output']>;
+  htmlContent: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  status: Scalars['String']['output'];
+  subject: Scalars['String']['output'];
+  textContent?: Maybe<Scalars['String']['output']>;
 };
 
 export type MailTemplatePreviewInput = {
   /** Mail type / context id, e.g. "renewal". */
-  contextId: Scalars['String'];
-  htmlContent: Scalars['String'];
-  subject: Scalars['String'];
+  contextId: Scalars['String']['input'];
+  htmlContent: Scalars['String']['input'];
+  subject: Scalars['String']['input'];
   /** Subscription to take sample data from. */
-  subscriptionId?: InputMaybe<Scalars['String']>;
-  textContent?: InputMaybe<Scalars['String']>;
+  subscriptionId?: InputMaybe<Scalars['String']['input']>;
+  textContent?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type MailTemplatePreviewModel = {
   __typename?: 'MailTemplatePreviewModel';
-  html: Scalars['String'];
-  subject: Scalars['String'];
-  text?: Maybe<Scalars['String']>;
+  html: Scalars['String']['output'];
+  subject: Scalars['String']['output'];
+  text?: Maybe<Scalars['String']['output']>;
 };
 
 export type MailTemplateRef = {
   __typename?: 'MailTemplateRef';
-  id: Scalars['String'];
-  name: Scalars['String'];
+  id: Scalars['String']['output'];
+  name: Scalars['String']['output'];
 };
 
 export type MailTemplateSubscriptionOption = {
   __typename?: 'MailTemplateSubscriptionOption';
-  id: Scalars['String'];
-  label: Scalars['String'];
+  id: Scalars['String']['output'];
+  label: Scalars['String']['output'];
 };
 
 export type MailchimpContactInput = {
-  email: Scalars['String'];
-  interests?: InputMaybe<Scalars['JSONObject']>;
-  listId: Scalars['String'];
-  mergeFields?: InputMaybe<Scalars['JSONObject']>;
+  email: Scalars['String']['input'];
+  interests?: InputMaybe<Scalars['JSONObject']['input']>;
+  listId: Scalars['String']['input'];
+  mergeFields?: InputMaybe<Scalars['JSONObject']['input']>;
   status: MailchimpContactStatus;
-  syncProviderId: Scalars['String'];
+  syncProviderId: Scalars['String']['input'];
 };
 
 export enum MailchimpContactStatus {
@@ -2174,81 +2171,81 @@ export enum MailchimpContactStatus {
 
 export type MailchimpFormBlock = BaseBlock & {
   __typename?: 'MailchimpFormBlock';
-  autoFocus: Scalars['Boolean'];
-  blockStyle?: Maybe<Scalars['String']>;
-  blockStyleName?: Maybe<Scalars['String']>;
-  buttonColor?: Maybe<Scalars['String']>;
-  buttonFontColor?: Maybe<Scalars['String']>;
-  disabled?: Maybe<Scalars['Boolean']>;
-  doubleOptIn?: Maybe<Scalars['Boolean']>;
-  interests: Array<Scalars['String']>;
-  listId?: Maybe<Scalars['String']>;
+  autoFocus: Scalars['Boolean']['output'];
+  blockStyle?: Maybe<Scalars['String']['output']>;
+  blockStyleName?: Maybe<Scalars['String']['output']>;
+  buttonColor?: Maybe<Scalars['String']['output']>;
+  buttonFontColor?: Maybe<Scalars['String']['output']>;
+  disabled?: Maybe<Scalars['Boolean']['output']>;
+  doubleOptIn?: Maybe<Scalars['Boolean']['output']>;
+  interests: Array<Scalars['String']['output']>;
+  listId?: Maybe<Scalars['String']['output']>;
   steps: Array<MailchimpFormStep>;
-  submitButtonLabel?: Maybe<Scalars['String']>;
+  submitButtonLabel?: Maybe<Scalars['String']['output']>;
   successPage?: Maybe<MailchimpFormSuccessPage>;
-  successUrl?: Maybe<Scalars['String']>;
-  syncProviderId?: Maybe<Scalars['String']>;
+  successUrl?: Maybe<Scalars['String']['output']>;
+  syncProviderId?: Maybe<Scalars['String']['output']>;
   type: BlockType;
 };
 
 export type MailchimpFormBlockInput = {
-  autoFocus?: Scalars['Boolean'];
-  blockStyle?: InputMaybe<Scalars['String']>;
-  blockStyleName?: InputMaybe<Scalars['String']>;
-  buttonColor?: InputMaybe<Scalars['String']>;
-  buttonFontColor?: InputMaybe<Scalars['String']>;
-  disabled?: InputMaybe<Scalars['Boolean']>;
-  doubleOptIn?: InputMaybe<Scalars['Boolean']>;
-  interests?: Array<Scalars['String']>;
-  listId?: InputMaybe<Scalars['String']>;
+  autoFocus?: Scalars['Boolean']['input'];
+  blockStyle?: InputMaybe<Scalars['String']['input']>;
+  blockStyleName?: InputMaybe<Scalars['String']['input']>;
+  buttonColor?: InputMaybe<Scalars['String']['input']>;
+  buttonFontColor?: InputMaybe<Scalars['String']['input']>;
+  disabled?: InputMaybe<Scalars['Boolean']['input']>;
+  doubleOptIn?: InputMaybe<Scalars['Boolean']['input']>;
+  interests?: Array<Scalars['String']['input']>;
+  listId?: InputMaybe<Scalars['String']['input']>;
   steps?: Array<MailchimpFormStepInput>;
-  submitButtonLabel?: InputMaybe<Scalars['String']>;
+  submitButtonLabel?: InputMaybe<Scalars['String']['input']>;
   successPage?: InputMaybe<MailchimpFormSuccessPageInput>;
-  successUrl?: InputMaybe<Scalars['String']>;
-  syncProviderId?: InputMaybe<Scalars['String']>;
+  successUrl?: InputMaybe<Scalars['String']['input']>;
+  syncProviderId?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type MailchimpFormFieldConfig = {
   __typename?: 'MailchimpFormFieldConfig';
-  defaultValue?: Maybe<Scalars['String']>;
-  description?: Maybe<Scalars['String']>;
-  inputType?: Maybe<Scalars['String']>;
-  label?: Maybe<Scalars['String']>;
-  name?: Maybe<Scalars['String']>;
+  defaultValue?: Maybe<Scalars['String']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
+  inputType?: Maybe<Scalars['String']['output']>;
+  label?: Maybe<Scalars['String']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
   options: Array<MailchimpFormInterestOption>;
   optionsLayout: MailchimpFormOptionsLayout;
-  required?: Maybe<Scalars['Boolean']>;
-  urlParam?: Maybe<Scalars['String']>;
-  value?: Maybe<Scalars['String']>;
+  required?: Maybe<Scalars['Boolean']['output']>;
+  urlParam?: Maybe<Scalars['String']['output']>;
+  value?: Maybe<Scalars['String']['output']>;
 };
 
 export type MailchimpFormFieldConfigInput = {
-  defaultValue?: InputMaybe<Scalars['String']>;
-  description?: InputMaybe<Scalars['String']>;
-  inputType?: InputMaybe<Scalars['String']>;
-  label?: InputMaybe<Scalars['String']>;
-  name?: InputMaybe<Scalars['String']>;
+  defaultValue?: InputMaybe<Scalars['String']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  inputType?: InputMaybe<Scalars['String']['input']>;
+  label?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
   options?: Array<MailchimpFormInterestOptionInput>;
   optionsLayout?: MailchimpFormOptionsLayout;
-  required?: InputMaybe<Scalars['Boolean']>;
-  urlParam?: InputMaybe<Scalars['String']>;
-  value?: InputMaybe<Scalars['String']>;
+  required?: InputMaybe<Scalars['Boolean']['input']>;
+  urlParam?: InputMaybe<Scalars['String']['input']>;
+  value?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type MailchimpFormInterestOption = HasImage & {
   __typename?: 'MailchimpFormInterestOption';
-  description?: Maybe<Scalars['String']>;
-  id: Scalars['String'];
+  description?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
   image?: Maybe<Image>;
-  imageID?: Maybe<Scalars['String']>;
-  name: Scalars['String'];
+  imageID?: Maybe<Scalars['String']['output']>;
+  name: Scalars['String']['output'];
 };
 
 export type MailchimpFormInterestOptionInput = {
-  description?: InputMaybe<Scalars['String']>;
-  id: Scalars['String'];
-  imageID?: InputMaybe<Scalars['String']>;
-  name: Scalars['String'];
+  description?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['String']['input'];
+  imageID?: InputMaybe<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
 };
 
 export enum MailchimpFormOptionsLayout {
@@ -2259,206 +2256,206 @@ export enum MailchimpFormOptionsLayout {
 export type MailchimpFormStep = {
   __typename?: 'MailchimpFormStep';
   inputs: Array<MailchimpFormFieldConfig>;
-  showIfInterestsFilled: Array<Scalars['String']>;
-  skipIfFieldsFilled: Array<Scalars['String']>;
-  skipIfInterestsFilled: Array<Scalars['String']>;
+  showIfInterestsFilled: Array<Scalars['String']['output']>;
+  skipIfFieldsFilled: Array<Scalars['String']['output']>;
+  skipIfInterestsFilled: Array<Scalars['String']['output']>;
 };
 
 export type MailchimpFormStepInput = {
   inputs?: Array<MailchimpFormFieldConfigInput>;
-  showIfInterestsFilled?: Array<Scalars['String']>;
-  skipIfFieldsFilled?: Array<Scalars['String']>;
-  skipIfInterestsFilled?: Array<Scalars['String']>;
+  showIfInterestsFilled?: Array<Scalars['String']['input']>;
+  skipIfFieldsFilled?: Array<Scalars['String']['input']>;
+  skipIfInterestsFilled?: Array<Scalars['String']['input']>;
 };
 
 export type MailchimpFormSuccessOption = {
   __typename?: 'MailchimpFormSuccessOption';
-  background: Scalars['String'];
-  label: Scalars['String'];
-  mergeFieldName?: Maybe<Scalars['String']>;
-  mergeFieldValue?: Maybe<Scalars['String']>;
-  url: Scalars['String'];
+  background: Scalars['String']['output'];
+  label: Scalars['String']['output'];
+  mergeFieldName?: Maybe<Scalars['String']['output']>;
+  mergeFieldValue?: Maybe<Scalars['String']['output']>;
+  url: Scalars['String']['output'];
 };
 
 export type MailchimpFormSuccessOptionInput = {
-  background: Scalars['String'];
-  label: Scalars['String'];
-  mergeFieldName?: InputMaybe<Scalars['String']>;
-  mergeFieldValue?: InputMaybe<Scalars['String']>;
-  url: Scalars['String'];
+  background: Scalars['String']['input'];
+  label: Scalars['String']['input'];
+  mergeFieldName?: InputMaybe<Scalars['String']['input']>;
+  mergeFieldValue?: InputMaybe<Scalars['String']['input']>;
+  url: Scalars['String']['input'];
 };
 
 export type MailchimpFormSuccessPage = {
   __typename?: 'MailchimpFormSuccessPage';
-  description?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']['output']>;
   options: Array<MailchimpFormSuccessOption>;
 };
 
 export type MailchimpFormSuccessPageInput = {
-  description?: InputMaybe<Scalars['String']>;
+  description?: InputMaybe<Scalars['String']['input']>;
   options?: Array<MailchimpFormSuccessOptionInput>;
 };
 
 export type MailchimpInterestGroup = {
   __typename?: 'MailchimpInterestGroup';
-  id: Scalars['String'];
-  name: Scalars['String'];
+  id: Scalars['String']['output'];
+  name: Scalars['String']['output'];
 };
 
 export type MailchimpList = {
   __typename?: 'MailchimpList';
-  id: Scalars['String'];
-  memberCount: Scalars['Int'];
-  name: Scalars['String'];
+  id: Scalars['String']['output'];
+  memberCount: Scalars['Int']['output'];
+  name: Scalars['String']['output'];
 };
 
 export type MailchimpMergeField = {
   __typename?: 'MailchimpMergeField';
-  name: Scalars['String'];
-  tag: Scalars['String'];
-  type: Scalars['String'];
+  name: Scalars['String']['output'];
+  tag: Scalars['String']['output'];
+  type: Scalars['String']['output'];
 };
 
 export type MailchimpSubscribeResult = {
   __typename?: 'MailchimpSubscribeResult';
-  error?: Maybe<Scalars['String']>;
-  success: Scalars['Boolean'];
+  error?: Maybe<Scalars['String']['output']>;
+  success: Scalars['Boolean']['output'];
 };
 
 export type MailchimpSyncDryRunChange = {
   __typename?: 'MailchimpSyncDryRunChange';
-  email: Scalars['String'];
-  interests: Scalars['JSONObject'];
-  isNew: Scalars['Boolean'];
-  mergeFields: Scalars['JSONObject'];
-  previousInterests?: Maybe<Scalars['JSONObject']>;
-  previousMergeFields?: Maybe<Scalars['JSONObject']>;
+  email: Scalars['String']['output'];
+  interests: Scalars['JSONObject']['output'];
+  isNew: Scalars['Boolean']['output'];
+  mergeFields: Scalars['JSONObject']['output'];
+  previousInterests?: Maybe<Scalars['JSONObject']['output']>;
+  previousMergeFields?: Maybe<Scalars['JSONObject']['output']>;
 };
 
 export type MailchimpSyncDryRunResult = {
   __typename?: 'MailchimpSyncDryRunResult';
   changes: Array<MailchimpSyncDryRunChange>;
-  skippedCount: Scalars['Int'];
-  totalUserCount: Scalars['Int'];
-  updatedCount: Scalars['Int'];
+  skippedCount: Scalars['Int']['output'];
+  totalUserCount: Scalars['Int']['output'];
+  updatedCount: Scalars['Int']['output'];
 };
 
 export type MailchimpSyncErrorList = {
   __typename?: 'MailchimpSyncErrorList';
   nodes: Array<MailchimpSyncErrorType>;
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 export type MailchimpSyncErrorType = {
   __typename?: 'MailchimpSyncErrorType';
-  createdAt: Scalars['DateTime'];
-  email: Scalars['String'];
-  errorMessage: Scalars['String'];
-  id: Scalars['String'];
-  statusCode?: Maybe<Scalars['Int']>;
-  syncProviderId: Scalars['String'];
-  userId: Scalars['String'];
+  createdAt: Scalars['DateTime']['output'];
+  email: Scalars['String']['output'];
+  errorMessage: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  statusCode?: Maybe<Scalars['Int']['output']>;
+  syncProviderId: Scalars['String']['output'];
+  userId: Scalars['String']['output'];
 };
 
 export type MailchimpSyncProgressType = {
   __typename?: 'MailchimpSyncProgressType';
-  errorMessage?: Maybe<Scalars['String']>;
-  errors: Scalars['Int'];
-  finishedAt?: Maybe<Scalars['DateTime']>;
-  processed: Scalars['Int'];
-  skipped: Scalars['Int'];
-  startedAt: Scalars['DateTime'];
-  status: Scalars['String'];
-  total: Scalars['Int'];
-  updated: Scalars['Int'];
+  errorMessage?: Maybe<Scalars['String']['output']>;
+  errors: Scalars['Int']['output'];
+  finishedAt?: Maybe<Scalars['DateTime']['output']>;
+  processed: Scalars['Int']['output'];
+  skipped: Scalars['Int']['output'];
+  startedAt: Scalars['DateTime']['output'];
+  status: Scalars['String']['output'];
+  total: Scalars['Int']['output'];
+  updated: Scalars['Int']['output'];
 };
 
 export type MediumAccountStats = {
   __typename?: 'MediumAccountStats';
-  activeSessions: Scalars['Int'];
-  adminCount: Scalars['Int'];
-  usersLoggedIn: Scalars['Int'];
-  usersTotal: Scalars['Int'];
-  usersWithRole: Scalars['Int'];
+  activeSessions: Scalars['Int']['output'];
+  adminCount: Scalars['Int']['output'];
+  usersLoggedIn: Scalars['Int']['output'];
+  usersTotal: Scalars['Int']['output'];
+  usersWithRole: Scalars['Int']['output'];
 };
 
 export type MediumAuditActionCount = {
   __typename?: 'MediumAuditActionCount';
   /** create, update, delete or other. */
-  action: Scalars['String'];
-  count: Scalars['Int'];
+  action: Scalars['String']['output'];
+  count: Scalars['Int']['output'];
 };
 
 export type MediumAuditError = {
   __typename?: 'MediumAuditError';
-  count: Scalars['Int'];
+  count: Scalars['Int']['output'];
   /** First line of the error, capped — enough to recognise it. */
-  message: Scalars['String'];
+  message: Scalars['String']['output'];
 };
 
 export type MediumAuditLog = {
   __typename?: 'MediumAuditLog';
   action: AuditLogAction;
   actorType: AuditLogActorType;
-  createdAt: Scalars['DateTime'];
-  entity?: Maybe<Scalars['String']>;
-  errorMessage?: Maybe<Scalars['String']>;
-  id: Scalars['String'];
+  createdAt: Scalars['DateTime']['output'];
+  entity?: Maybe<Scalars['String']['output']>;
+  errorMessage?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
   /** Set when the actor was impersonating another user. */
-  impersonatedBy?: Maybe<Scalars['String']>;
-  mutation: Scalars['String'];
-  recordId?: Maybe<Scalars['String']>;
-  sessionId?: Maybe<Scalars['String']>;
-  success: Scalars['Boolean'];
-  tokenName?: Maybe<Scalars['String']>;
-  userEmail?: Maybe<Scalars['String']>;
-  userId?: Maybe<Scalars['String']>;
+  impersonatedBy?: Maybe<Scalars['String']['output']>;
+  mutation: Scalars['String']['output'];
+  recordId?: Maybe<Scalars['String']['output']>;
+  sessionId?: Maybe<Scalars['String']['output']>;
+  success: Scalars['Boolean']['output'];
+  tokenName?: Maybe<Scalars['String']['output']>;
+  userEmail?: Maybe<Scalars['String']['output']>;
+  userId?: Maybe<Scalars['String']['output']>;
 };
 
 export type MediumAuditLogFilter = {
   actions?: InputMaybe<Array<AuditLogAction>>;
   actorType?: InputMaybe<AuditLogActorType>;
-  entity?: InputMaybe<Scalars['String']>;
-  from?: InputMaybe<Scalars['DateTime']>;
-  impersonatedOnly?: InputMaybe<Scalars['Boolean']>;
-  mutation?: InputMaybe<Scalars['String']>;
-  recordId?: InputMaybe<Scalars['String']>;
+  entity?: InputMaybe<Scalars['String']['input']>;
+  from?: InputMaybe<Scalars['DateTime']['input']>;
+  impersonatedOnly?: InputMaybe<Scalars['Boolean']['input']>;
+  mutation?: InputMaybe<Scalars['String']['input']>;
+  recordId?: InputMaybe<Scalars['String']['input']>;
   /** Case insensitive search across mutation, entity, record id, user email and token name. */
-  search?: InputMaybe<Scalars['String']>;
+  search?: InputMaybe<Scalars['String']['input']>;
   /** Everything a single login session did. */
-  sessionId?: InputMaybe<Scalars['String']>;
-  success?: InputMaybe<Scalars['Boolean']>;
-  to?: InputMaybe<Scalars['DateTime']>;
-  userEmail?: InputMaybe<Scalars['String']>;
-  userId?: InputMaybe<Scalars['String']>;
+  sessionId?: InputMaybe<Scalars['String']['input']>;
+  success?: InputMaybe<Scalars['Boolean']['input']>;
+  to?: InputMaybe<Scalars['DateTime']['input']>;
+  userEmail?: InputMaybe<Scalars['String']['input']>;
+  userId?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type MediumAuditLogPage = {
   __typename?: 'MediumAuditLogPage';
   nodes: Array<MediumAuditLog>;
   /** False when this medium does not provide an audit log, in which case nodes is empty and totalCount is zero. */
-  supported: Scalars['Boolean'];
-  totalCount: Scalars['Int'];
+  supported: Scalars['Boolean']['output'];
+  totalCount: Scalars['Int']['output'];
 };
 
 export type MediumAuditStats = {
   __typename?: 'MediumAuditStats';
   /** Permission gated editor actions in the window. */
-  actions: Scalars['Int'];
+  actions: Scalars['Int']['output'];
   /** How the actions split across create, update and delete. */
   actionsByType: Array<MediumAuditActionCount>;
   /** Accounts that performed at least one action in the 30 days ending with the window. Deliberately NOT the window itself: a one-day window would drop to zero every weekend and the curve would be unreadable. */
-  activeEditors: Scalars['Int'];
+  activeEditors: Scalars['Int']['output'];
   /** Of those, the ones the system refused. A rate worth acting on needs both numbers, so they travel together. */
-  failedActions: Scalars['Int'];
+  failedActions: Scalars['Int']['output'];
   /** Actions performed while impersonating another account. */
-  impersonatedActions: Scalars['Int'];
+  impersonatedActions: Scalars['Int']['output'];
   /** How often each mutation was used in the window, most used first. Shows whether a shipped feature is actually being touched. */
   mutationUsage: Array<MediumMutationUsage>;
   /** False when this installation keeps no audit log, in which case every figure below is zero and must not be read as "nothing happened". */
-  supported: Scalars['Boolean'];
+  supported: Scalars['Boolean']['output'];
   /** Share of all named-account actions performed by the single busiest account. Five editors where one does 90 % looks identical to five balanced ones in activeEditors alone — this is what tells them apart. Null when nobody acted. */
-  topEditorShare?: Maybe<Scalars['Float']>;
+  topEditorShare?: Maybe<Scalars['Float']['output']>;
   /** The errors editors ran into most often, worst first. Without this the error rate says something is wrong but never what, and the answer sits one filtered page away. */
   topErrors: Array<MediumAuditError>;
 };
@@ -2466,137 +2463,137 @@ export type MediumAuditStats = {
 export type MediumChangelogAction = {
   __typename?: 'MediumChangelogAction';
   /** False for a purely informative entry, which is never counted as open or overdue. */
-  actionRequired: Scalars['Boolean'];
+  actionRequired: Scalars['Boolean']['output'];
   /** Null while the action is still open. */
-  confirmedAt?: Maybe<Scalars['DateTime']>;
-  confirmedByEmail?: Maybe<Scalars['String']>;
-  confirmedByName?: Maybe<Scalars['String']>;
-  id: Scalars['String'];
-  name: Scalars['String'];
-  releasedAt: Scalars['DateTime'];
-  title: Scalars['String'];
+  confirmedAt?: Maybe<Scalars['DateTime']['output']>;
+  confirmedByEmail?: Maybe<Scalars['String']['output']>;
+  confirmedByName?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  releasedAt: Scalars['DateTime']['output'];
+  title: Scalars['String']['output'];
 };
 
 export type MediumChangelogStats = {
   __typename?: 'MediumChangelogStats';
   /** Release date of the longest-open action-required entry, or null when none is open. */
-  oldestOpenActionAt?: Maybe<Scalars['DateTime']>;
+  oldestOpenActionAt?: Maybe<Scalars['DateTime']['output']>;
   /** Action-required entries that nobody has confirmed yet. Informative entries are excluded. */
-  openActions: Scalars['Int'];
+  openActions: Scalars['Int']['output'];
 };
 
 export type MediumCommunityStats = {
   __typename?: 'MediumCommunityStats';
-  activePolls: Scalars['Int'];
-  commentsPendingModeration: Scalars['Int'];
-  commentsPublished: Scalars['Int'];
-  pollVotes: Scalars['Int'];
+  activePolls: Scalars['Int']['output'];
+  commentsPendingModeration: Scalars['Int']['output'];
+  commentsPublished: Scalars['Int']['output'];
+  pollVotes: Scalars['Int']['output'];
 };
 
 export type MediumDeactivationReasonCount = {
   __typename?: 'MediumDeactivationReasonCount';
-  count: Scalars['Int'];
-  reason: Scalars['String'];
+  count: Scalars['Int']['output'];
+  reason: Scalars['String']['output'];
 };
 
 export type MediumEditorialStats = {
   __typename?: 'MediumEditorialStats';
-  articleRevisionsCount: Scalars['Int'];
-  articlesCount: Scalars['Int'];
-  articlesPublished: Scalars['Int'];
-  authorsCount: Scalars['Int'];
-  lastPublishedAt?: Maybe<Scalars['DateTime']>;
-  pageRevisionsCount: Scalars['Int'];
-  pagesCount: Scalars['Int'];
-  pagesPublished: Scalars['Int'];
+  articleRevisionsCount: Scalars['Int']['output'];
+  articlesCount: Scalars['Int']['output'];
+  articlesPublished: Scalars['Int']['output'];
+  authorsCount: Scalars['Int']['output'];
+  lastPublishedAt?: Maybe<Scalars['DateTime']['output']>;
+  pageRevisionsCount: Scalars['Int']['output'];
+  pagesCount: Scalars['Int']['output'];
+  pagesPublished: Scalars['Int']['output'];
 };
 
 export type MediumIntegrationsStats = {
   __typename?: 'MediumIntegrationsStats';
-  analyticsProviders: Scalars['Int'];
-  mailProviders: Scalars['Int'];
-  paymentProviders: Scalars['Int'];
-  syncProviders: Scalars['Int'];
+  analyticsProviders: Scalars['Int']['output'];
+  mailProviders: Scalars['Int']['output'];
+  paymentProviders: Scalars['Int']['output'];
+  syncProviders: Scalars['Int']['output'];
 };
 
 export type MediumMailStats = {
   __typename?: 'MediumMailStats';
-  bounced: Scalars['Int'];
-  failures: Scalars['Int'];
-  lastCampaignAt?: Maybe<Scalars['DateTime']>;
-  rejected: Scalars['Int'];
-  sends: Scalars['Int'];
-  total: Scalars['Int'];
+  bounced: Scalars['Int']['output'];
+  failures: Scalars['Int']['output'];
+  lastCampaignAt?: Maybe<Scalars['DateTime']['output']>;
+  rejected: Scalars['Int']['output'];
+  sends: Scalars['Int']['output'];
+  total: Scalars['Int']['output'];
 };
 
 export type MediumMembershipStats = {
   __typename?: 'MediumMembershipStats';
-  activeSubscribers: Scalars['Int'];
-  deactivations: Scalars['Int'];
+  activeSubscribers: Scalars['Int']['output'];
+  deactivations: Scalars['Int']['output'];
   deactivationsByReason: Array<MediumDeactivationReasonCount>;
-  newSubscribers: Scalars['Int'];
+  newSubscribers: Scalars['Int']['output'];
 };
 
 export type MediumMigration = {
   __typename?: 'MediumMigration';
-  appliedStepsCount: Scalars['Int'];
-  error?: Maybe<Scalars['String']>;
-  finishedAt?: Maybe<Scalars['DateTime']>;
-  id: Scalars['String'];
-  name: Scalars['String'];
-  rolledBackAt?: Maybe<Scalars['DateTime']>;
-  startedAt: Scalars['DateTime'];
+  appliedStepsCount: Scalars['Int']['output'];
+  error?: Maybe<Scalars['String']['output']>;
+  finishedAt?: Maybe<Scalars['DateTime']['output']>;
+  id: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  rolledBackAt?: Maybe<Scalars['DateTime']['output']>;
+  startedAt: Scalars['DateTime']['output'];
   /** applied, failed, rolledBack or running */
-  state: Scalars['String'];
+  state: Scalars['String']['output'];
 };
 
 export type MediumMigrationSummary = {
   __typename?: 'MediumMigrationSummary';
-  applied: Scalars['Int'];
-  failed: Scalars['Int'];
-  lastAppliedAt?: Maybe<Scalars['DateTime']>;
+  applied: Scalars['Int']['output'];
+  failed: Scalars['Int']['output'];
+  lastAppliedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The newest migration did not complete. The schema is then in a state nobody designed. */
-  lastMigrationFailed: Scalars['Boolean'];
-  lastMigrationName?: Maybe<Scalars['String']>;
-  lastMigrationState?: Maybe<Scalars['String']>;
-  rolledBack: Scalars['Int'];
-  running: Scalars['Int'];
-  total: Scalars['Int'];
+  lastMigrationFailed: Scalars['Boolean']['output'];
+  lastMigrationName?: Maybe<Scalars['String']['output']>;
+  lastMigrationState?: Maybe<Scalars['String']['output']>;
+  rolledBack: Scalars['Int']['output'];
+  running: Scalars['Int']['output'];
+  total: Scalars['Int']['output'];
 };
 
 export type MediumMoneyStats = {
   __typename?: 'MediumMoneyStats';
-  atRisk: Scalars['Int'];
-  expectedRevenue: Scalars['Int'];
-  revenue: Scalars['Int'];
+  atRisk: Scalars['Int']['output'];
+  expectedRevenue: Scalars['Int']['output'];
+  revenue: Scalars['Int']['output'];
 };
 
 export type MediumMutationUsage = {
   __typename?: 'MediumMutationUsage';
-  count: Scalars['Int'];
-  mutation: Scalars['String'];
+  count: Scalars['Int']['output'];
+  mutation: Scalars['String']['output'];
 };
 
 export type MediumNetworkStats = {
   __typename?: 'MediumNetworkStats';
-  peersDisabled: Scalars['Int'];
-  peersTotal: Scalars['Int'];
+  peersDisabled: Scalars['Int']['output'];
+  peersTotal: Scalars['Int']['output'];
 };
 
 export type MediumOperationsStats = {
   __typename?: 'MediumOperationsStats';
   changelog: MediumChangelogStats;
-  documentBytes: Scalars['Float'];
-  documentCount: Scalars['Int'];
-  imageBytes: Scalars['Float'];
-  imageCount: Scalars['Int'];
-  lastPeriodicJobAt?: Maybe<Scalars['DateTime']>;
-  mailchimpSyncErrors: Scalars['Int'];
+  documentBytes: Scalars['Float']['output'];
+  documentCount: Scalars['Int']['output'];
+  imageBytes: Scalars['Float']['output'];
+  imageCount: Scalars['Int']['output'];
+  lastPeriodicJobAt?: Maybe<Scalars['DateTime']['output']>;
+  mailchimpSyncErrors: Scalars['Int']['output'];
   migrations: MediumMigrationSummary;
-  periodicJobError?: Maybe<Scalars['String']>;
-  periodicJobFailing: Scalars['Boolean'];
-  periodicJobTries: Scalars['Int'];
-  storageBytes: Scalars['Float'];
+  periodicJobError?: Maybe<Scalars['String']['output']>;
+  periodicJobFailing: Scalars['Boolean']['output'];
+  periodicJobTries: Scalars['Int']['output'];
+  storageBytes: Scalars['Float']['output'];
 };
 
 export type MediumStats = {
@@ -2604,63 +2601,63 @@ export type MediumStats = {
   accounts: MediumAccountStats;
   audit: MediumAuditStats;
   community: MediumCommunityStats;
-  currency?: Maybe<Scalars['String']>;
+  currency?: Maybe<Scalars['String']['output']>;
   editorial: MediumEditorialStats;
-  generatedAt: Scalars['DateTime'];
+  generatedAt: Scalars['DateTime']['output'];
   integrations: MediumIntegrationsStats;
   mail: MediumMailStats;
   membership: MediumMembershipStats;
   money: MediumMoneyStats;
   network: MediumNetworkStats;
   operations: MediumOperationsStats;
-  schemaVersion: Scalars['Int'];
+  schemaVersion: Scalars['Int']['output'];
   window: MediumStatsWindow;
 };
 
 export type MediumStatsWindow = {
   __typename?: 'MediumStatsWindow';
-  from: Scalars['DateTime'];
-  to: Scalars['DateTime'];
+  from: Scalars['DateTime']['output'];
+  to: Scalars['DateTime']['output'];
 };
 
 export type MemberPlan = HasImage & {
   __typename?: 'MemberPlan';
-  active: Scalars['Boolean'];
+  active: Scalars['Boolean']['output'];
   availablePaymentMethods: Array<AvailablePaymentMethod>;
   confirmationPage?: Maybe<Page>;
-  confirmationPageId?: Maybe<Scalars['String']>;
-  createdAt: Scalars['DateTime'];
+  confirmationPageId?: Maybe<Scalars['String']['output']>;
+  createdAt: Scalars['DateTime']['output'];
   currency: Currency;
   defaultPaymentPeriodicity?: Maybe<PaymentPeriodicity>;
-  description?: Maybe<Scalars['RichText']>;
-  extendable: Scalars['Boolean'];
-  externalReward?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['RichText']['output']>;
+  extendable: Scalars['Boolean']['output'];
+  externalReward?: Maybe<Scalars['String']['output']>;
   failPage?: Maybe<Page>;
-  failPageId?: Maybe<Scalars['String']>;
+  failPageId?: Maybe<Scalars['String']['output']>;
   /** Active goodies with remaining stock that can be chosen with this member plan. */
   goodies: Array<Goodie>;
-  id: Scalars['String'];
+  id: Scalars['String']['output'];
   image?: Maybe<Image>;
-  imageID?: Maybe<Scalars['String']>;
-  maxCount?: Maybe<Scalars['Int']>;
+  imageID?: Maybe<Scalars['String']['output']>;
+  maxCount?: Maybe<Scalars['Int']['output']>;
   migrateToTargetPaymentMethod?: Maybe<PaymentMethod>;
-  migrateToTargetPaymentMethodID?: Maybe<Scalars['String']>;
-  modifiedAt: Scalars['DateTime'];
-  name: Scalars['String'];
+  migrateToTargetPaymentMethodID?: Maybe<Scalars['String']['output']>;
+  modifiedAt: Scalars['DateTime']['output'];
+  name: Scalars['String']['output'];
   periodicityPricing: Array<PeriodicityPrice>;
   productType: ProductType;
-  shortDescription?: Maybe<Scalars['RichText']>;
-  slug: Scalars['String'];
+  shortDescription?: Maybe<Scalars['RichText']['output']>;
+  slug: Scalars['String']['output'];
   successPage?: Maybe<Page>;
-  successPageId?: Maybe<Scalars['String']>;
-  tags?: Maybe<Array<Scalars['String']>>;
+  successPageId?: Maybe<Scalars['String']['output']>;
+  tags?: Maybe<Array<Scalars['String']['output']>>;
 };
 
 export type MemberPlanFilter = {
-  active?: InputMaybe<Scalars['Boolean']>;
-  name?: InputMaybe<Scalars['String']>;
+  active?: InputMaybe<Scalars['Boolean']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
   productType?: InputMaybe<ProductType>;
-  tags?: InputMaybe<Array<Scalars['String']>>;
+  tags?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 export enum MemberPlanSort {
@@ -2784,14 +2781,14 @@ export type Mutation = {
   /** Allows authenticated users to create additional subscriptions */
   createUserSubscription: Payment;
   /** Allows guests and authenticated users to create additional subscriptions */
-  createUserSubscriptionWithConfirmation: Scalars['Boolean'];
+  createUserSubscriptionWithConfirmation: Scalars['Boolean']['output'];
   /** Deletes all sync errors for a config so all contacts will be retried. */
-  deleteAllMailchimpSyncErrors: Scalars['Boolean'];
+  deleteAllMailchimpSyncErrors: Scalars['Boolean']['output'];
   /** Deletes an article. */
-  deleteArticle: Scalars['String'];
+  deleteArticle: Scalars['String']['output'];
   /** Deletes an existing author. */
   deleteAuthor: Author;
-  deleteBanner?: Maybe<Scalars['Boolean']>;
+  deleteBanner?: Maybe<Scalars['Boolean']['output']>;
   /** Deletes an existing block style. */
   deleteBlockStyle: BlockStyle;
   /** Deletes an existing block template. */
@@ -2804,11 +2801,11 @@ export type Mutation = {
    *
    */
   deleteConsent: Consent;
-  deleteCrowdfunding?: Maybe<Scalars['Boolean']>;
+  deleteCrowdfunding?: Maybe<Scalars['Boolean']['output']>;
   /** Deletes an existing discountCode. */
   deleteDiscountCode: DiscountCode;
   /** Deletes an existing document. */
-  deleteDocument: Scalars['String'];
+  deleteDocument: Scalars['String']['output'];
   /** Deletes an existing event. */
   deleteEvent: Event;
   /** Deletes an external app. */
@@ -2816,19 +2813,19 @@ export type Mutation = {
   /** Deletes an existing goodie. */
   deleteGoodie: Goodie;
   /** Deletes an existing image. */
-  deleteImage: Scalars['String'];
+  deleteImage: Scalars['String']['output'];
   /** Deletes an existing invoice. */
   deleteInvoice: Invoice;
   /** Delete an existing mail template */
-  deleteMailTemplate?: Maybe<Scalars['Boolean']>;
+  deleteMailTemplate?: Maybe<Scalars['Boolean']['output']>;
   /** Deletes a single sync error so the contact will be retried. */
-  deleteMailchimpSyncError: Scalars['Boolean'];
+  deleteMailchimpSyncError: Scalars['Boolean']['output'];
   /** Deletes an existing memberplan. */
   deleteMemberPlan: MemberPlan;
   /** Deletes an existing navigation. */
   deleteNavigation: Navigation;
   /** Deletes an page. */
-  deletePage: Scalars['String'];
+  deletePage: Scalars['String']['output'];
   /** Deletes an existing payment method. */
   deletePaymentMethod: PaymentMethod;
   /** Deletes a payment provider setting. */
@@ -2836,7 +2833,7 @@ export type Mutation = {
   /** Deletes a paywall. */
   deletePaywall: Paywall;
   /** Deletes an existing peer. */
-  deletePeer: Scalars['String'];
+  deletePeer: Scalars['String']['output'];
   /** Deletes an existing poll. */
   deletePoll: FullPoll;
   /** Deletes an existing poll answer. */
@@ -2883,7 +2880,7 @@ export type Mutation = {
   /** Duplicates an page. */
   duplicatePage: Page;
   /** Enables two-factor authentication for the current user after verifying the TOTP token. */
-  enableTotp: Scalars['Boolean'];
+  enableTotp: Scalars['Boolean']['output'];
   /** Allows authenticated users to extend existing subscriptions */
   extendUserSubscription: Payment;
   /** Generates a TOTP setup for the current user. Returns a QR code and secret for authenticator app configuration. */
@@ -2894,9 +2891,9 @@ export type Mutation = {
    *       Also, uploads an image to WePublish Image library.
    *
    */
-  importEvent: Scalars['String'];
+  importEvent: Scalars['String']['output'];
   /** Import HTML/subject from the mail provider, overwriting local content */
-  importMailTemplatesFromProvider: Scalars['Int'];
+  importMailTemplatesFromProvider: Scalars['Int']['output'];
   /** Imports an article from a peer as a draft. */
   importPeerArticle: Article;
   /** Imports a subscription. */
@@ -2918,19 +2915,19 @@ export type Mutation = {
   /** Rejects a comment */
   rejectComment: Comment;
   /** Rebuilds the payment, tracking pixel, mail and challenge providers from their settings, so integration changes take effect without restarting the API. */
-  reloadProviders: Scalars['Boolean'];
+  reloadProviders: Scalars['Boolean']['output'];
   /** Renews a subscription. */
   renewSubscription: PublicSubscription;
   /** Requests the user to change the comment's content */
   requestChangesOnComment: Comment;
   /** Requests an email change. A confirmation link is sent to the current email address. */
-  requestEmailChange: Scalars['Boolean'];
+  requestEmailChange: Scalars['Boolean']['output'];
   /** Resets the password of a user. */
   resetPassword: SensitiveDataUser;
   /** Resets the password using a token from the password reset email. Does not create a session. */
-  resetPasswordWithToken: Scalars['Boolean'];
+  resetPasswordWithToken: Scalars['Boolean']['output'];
   /** Resets the two-factor authentication configuration for a user. The user will need to set up 2FA again on next login. */
-  resetUserTotp: Scalars['Boolean'];
+  resetUserTotp: Scalars['Boolean']['output'];
   /** Restores an older revision of an article as a new draft. */
   restoreArticleRevision: Article;
   /** Restores an older revision of a page as a new draft. */
@@ -2938,24 +2935,24 @@ export type Mutation = {
   /** Continue a send job that stopped early. Recipients already sent are skipped. */
   resumeMailSendJob: MailSendJobModel;
   /** This mutation revokes and deletes the active session. */
-  revokeActiveSession: Scalars['Boolean'];
-  revokeImpersonationSessions: Scalars['Int'];
+  revokeActiveSession: Scalars['Boolean']['output'];
+  revokeImpersonationSessions: Scalars['Int']['output'];
   /** This mutation sends a login link to the email if the user exists. Method will always return email address */
-  sendJWTLogin: Scalars['String'];
+  sendJWTLogin: Scalars['String']['output'];
   /** Manually send a mail template to a single user */
   sendMailTemplateToUser: MailSendJobModel;
   /** Sends a password reset email with a scoped JWT token. Always returns the email to prevent enumeration. */
-  sendPasswordResetEmail: Scalars['String'];
+  sendPasswordResetEmail: Scalars['String']['output'];
   /** Send a test mail for a draft template */
-  sendTestMailTemplate?: Maybe<Scalars['Boolean']>;
+  sendTestMailTemplate?: Maybe<Scalars['Boolean']['output']>;
   /** This mutation sends a login link to the email if the user exists. Method will always return email address */
-  sendWebsiteLogin: Scalars['String'];
+  sendWebsiteLogin: Scalars['String']['output'];
   /** Ask the mail provider for the current delivery state of mails that are still open. Complements the provider webhook, which is not reachable in local development. */
   syncMailLogStates: MailLogSyncModel;
   /** Sends a test email for the given event */
-  testSystemMail: Scalars['Boolean'];
+  testSystemMail: Scalars['Boolean']['output'];
   /** Triggers a mailchimp sync in the background. */
-  triggerMailchimpSync: Scalars['Boolean'];
+  triggerMailchimpSync: Scalars['Boolean']['output'];
   /** Unpublishes all revisions of an article. */
   unpublishArticle: Article;
   /** Unpublishes all revisions of an page. */
@@ -3079,70 +3076,70 @@ export type MutationAddMailchimpContactArgs = {
 
 export type MutationAddUserCommentArgs = {
   challenge?: InputMaybe<ChallengeInput>;
-  guestUsername?: InputMaybe<Scalars['String']>;
-  itemID: Scalars['String'];
+  guestUsername?: InputMaybe<Scalars['String']['input']>;
+  itemID: Scalars['String']['input'];
   itemType: CommentItemType;
-  parentID?: InputMaybe<Scalars['String']>;
-  text: Scalars['RichText'];
-  title?: InputMaybe<Scalars['String']>;
+  parentID?: InputMaybe<Scalars['String']['input']>;
+  text: Scalars['RichText']['input'];
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type MutationApproveCommentArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type MutationCancelMailSendJobArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type MutationCancelSubscriptionArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
   reason: SubscriptionDeactivationReason;
-  skipMail?: InputMaybe<Scalars['Boolean']>;
+  skipMail?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
 export type MutationCancelUserSubscriptionArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type MutationConfirmChangelogEntryArgs = {
-  id: Scalars['String'];
-  locale?: InputMaybe<Scalars['String']>;
+  id: Scalars['String']['input'];
+  locale?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type MutationConfirmEmailChangeArgs = {
-  newEmail: Scalars['String'];
+  newEmail: Scalars['String']['input'];
 };
 
 
 export type MutationConfirmNotificationArgs = {
-  itemId: Scalars['String'];
+  itemId: Scalars['String']['input'];
   source: NotificationSource;
 };
 
 
 export type MutationCreateAiSettingArgs = {
-  apiKey?: InputMaybe<Scalars['String']>;
-  id: Scalars['String'];
-  name?: InputMaybe<Scalars['String']>;
-  systemPrompt?: InputMaybe<Scalars['String']>;
+  apiKey?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['String']['input'];
+  name?: InputMaybe<Scalars['String']['input']>;
+  systemPrompt?: InputMaybe<Scalars['String']['input']>;
   type: AiProviderType;
-  webhookEndpointSecret?: InputMaybe<Scalars['String']>;
+  webhookEndpointSecret?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type MutationCreateAnalyticsProviderSettingArgs = {
-  articlePrefix?: InputMaybe<Scalars['String']>;
+  articlePrefix?: InputMaybe<Scalars['String']['input']>;
   credentials?: InputMaybe<SettingAnalyticsCredentialsInput>;
-  id: Scalars['String'];
-  name?: InputMaybe<Scalars['String']>;
-  property?: InputMaybe<Scalars['String']>;
+  id: Scalars['String']['input'];
+  name?: InputMaybe<Scalars['String']['input']>;
+  property?: InputMaybe<Scalars['String']['input']>;
   type: AnalyticsProviderType;
 };
 
@@ -3150,41 +3147,41 @@ export type MutationCreateAnalyticsProviderSettingArgs = {
 export type MutationCreateArticleArgs = {
   authors: Array<ArticleRevisionAuthorInput>;
   blocks: Array<BlockContentInput>;
-  breaking: Scalars['Boolean'];
-  canonicalUrl?: InputMaybe<Scalars['String']>;
-  disableComments: Scalars['Boolean'];
-  hidden: Scalars['Boolean'];
-  hideAuthor: Scalars['Boolean'];
-  imageID?: InputMaybe<Scalars['String']>;
-  lead?: InputMaybe<Scalars['String']>;
-  likes?: InputMaybe<Scalars['Int']>;
-  paywallId?: InputMaybe<Scalars['String']>;
-  preTitle?: InputMaybe<Scalars['String']>;
+  breaking: Scalars['Boolean']['input'];
+  canonicalUrl?: InputMaybe<Scalars['String']['input']>;
+  disableComments: Scalars['Boolean']['input'];
+  hidden: Scalars['Boolean']['input'];
+  hideAuthor: Scalars['Boolean']['input'];
+  imageID?: InputMaybe<Scalars['String']['input']>;
+  lead?: InputMaybe<Scalars['String']['input']>;
+  likes?: InputMaybe<Scalars['Int']['input']>;
+  paywallId?: InputMaybe<Scalars['String']['input']>;
+  preTitle?: InputMaybe<Scalars['String']['input']>;
   properties: Array<PropertyInput>;
-  seoDescription?: InputMaybe<Scalars['String']>;
-  seoTitle?: InputMaybe<Scalars['String']>;
-  shared: Scalars['Boolean'];
-  slug?: InputMaybe<Scalars['String']>;
-  socialMediaAuthorIds: Array<Scalars['String']>;
-  socialMediaDescription?: InputMaybe<Scalars['String']>;
-  socialMediaImageID?: InputMaybe<Scalars['String']>;
-  socialMediaTitle?: InputMaybe<Scalars['String']>;
-  tagIds: Array<Scalars['String']>;
-  title?: InputMaybe<Scalars['String']>;
+  seoDescription?: InputMaybe<Scalars['String']['input']>;
+  seoTitle?: InputMaybe<Scalars['String']['input']>;
+  shared: Scalars['Boolean']['input'];
+  slug?: InputMaybe<Scalars['String']['input']>;
+  socialMediaAuthorIds: Array<Scalars['String']['input']>;
+  socialMediaDescription?: InputMaybe<Scalars['String']['input']>;
+  socialMediaImageID?: InputMaybe<Scalars['String']['input']>;
+  socialMediaTitle?: InputMaybe<Scalars['String']['input']>;
+  tagIds: Array<Scalars['String']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type MutationCreateAuthorArgs = {
-  bio?: InputMaybe<Scalars['RichText']>;
-  hideOnArticle: Scalars['Boolean'];
-  hideOnTeam: Scalars['Boolean'];
-  hideOnTeaser: Scalars['Boolean'];
-  imageID?: InputMaybe<Scalars['String']>;
-  jobTitle?: InputMaybe<Scalars['String']>;
+  bio?: InputMaybe<Scalars['RichText']['input']>;
+  hideOnArticle: Scalars['Boolean']['input'];
+  hideOnTeam: Scalars['Boolean']['input'];
+  hideOnTeaser: Scalars['Boolean']['input'];
+  imageID?: InputMaybe<Scalars['String']['input']>;
+  jobTitle?: InputMaybe<Scalars['String']['input']>;
   links: Array<AuthorLinkInput>;
-  name: Scalars['String'];
-  slug: Scalars['Slug'];
-  tagIds: Array<Scalars['String']>;
+  name: Scalars['String']['input'];
+  slug: Scalars['Slug']['input'];
+  tagIds: Array<Scalars['String']['input']>;
 };
 
 
@@ -3195,31 +3192,31 @@ export type MutationCreateBannerArgs = {
 
 export type MutationCreateBlockStyleArgs = {
   blocks: Array<EditorBlockType>;
-  name: Scalars['String'];
+  name: Scalars['String']['input'];
 };
 
 
 export type MutationCreateBlockTemplateArgs = {
   blocks: Array<BlockContentInput>;
-  name: Scalars['String'];
+  name: Scalars['String']['input'];
 };
 
 
 export type MutationCreateCommentArgs = {
-  itemID: Scalars['String'];
+  itemID: Scalars['String']['input'];
   itemType: CommentItemType;
-  lead?: InputMaybe<Scalars['String']>;
-  parentID?: InputMaybe<Scalars['String']>;
-  publish?: InputMaybe<Scalars['Boolean']>;
-  tagIds?: InputMaybe<Array<Scalars['String']>>;
-  text?: InputMaybe<Scalars['RichText']>;
+  lead?: InputMaybe<Scalars['String']['input']>;
+  parentID?: InputMaybe<Scalars['String']['input']>;
+  publish?: InputMaybe<Scalars['Boolean']['input']>;
+  tagIds?: InputMaybe<Array<Scalars['String']['input']>>;
+  text?: InputMaybe<Scalars['RichText']['input']>;
 };
 
 
 export type MutationCreateConsentArgs = {
-  defaultValue: Scalars['Boolean'];
-  name: Scalars['String'];
-  slug: Scalars['String'];
+  defaultValue: Scalars['Boolean']['input'];
+  name: Scalars['String']['input'];
+  slug: Scalars['String']['input'];
 };
 
 
@@ -3229,24 +3226,24 @@ export type MutationCreateCrowdfundingArgs = {
 
 
 export type MutationCreateDiscountCodeArgs = {
-  code: Scalars['String'];
-  discountPercent: Scalars['Int'];
-  memberPlanId: Scalars['String'];
-  validFrom: Scalars['DateTime'];
-  validTo: Scalars['DateTime'];
+  code: Scalars['String']['input'];
+  discountPercent: Scalars['Int']['input'];
+  memberPlanId: Scalars['String']['input'];
+  validFrom: Scalars['DateTime']['input'];
+  validTo: Scalars['DateTime']['input'];
 };
 
 
 export type MutationCreateEventArgs = {
-  description?: InputMaybe<Scalars['RichText']>;
-  endsAt?: InputMaybe<Scalars['DateTime']>;
-  imageId?: InputMaybe<Scalars['String']>;
-  lead?: InputMaybe<Scalars['String']>;
-  location?: InputMaybe<Scalars['String']>;
-  name: Scalars['String'];
-  startsAt: Scalars['DateTime'];
+  description?: InputMaybe<Scalars['RichText']['input']>;
+  endsAt?: InputMaybe<Scalars['DateTime']['input']>;
+  imageId?: InputMaybe<Scalars['String']['input']>;
+  lead?: InputMaybe<Scalars['String']['input']>;
+  location?: InputMaybe<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
+  startsAt: Scalars['DateTime']['input'];
   status?: EventStatus;
-  tagIds?: InputMaybe<Array<Scalars['String']>>;
+  tagIds?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 
@@ -3256,37 +3253,37 @@ export type MutationCreateExternalAppArgs = {
 
 
 export type MutationCreateExternalAppTokenArgs = {
-  externalAppId: Scalars['String'];
+  externalAppId: Scalars['String']['input'];
 };
 
 
 export type MutationCreateGoodieArgs = {
-  active: Scalars['Boolean'];
-  description?: InputMaybe<Scalars['RichText']>;
-  imageID?: InputMaybe<Scalars['String']>;
-  memberPlanIDs: Array<Scalars['String']>;
-  name: Scalars['String'];
-  stock?: InputMaybe<Scalars['Int']>;
+  active: Scalars['Boolean']['input'];
+  description?: InputMaybe<Scalars['RichText']['input']>;
+  imageID?: InputMaybe<Scalars['String']['input']>;
+  memberPlanIDs: Array<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
+  stock?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 export type MutationCreateImpersonationGrantArgs = {
-  durationMinutes: Scalars['Int'];
-  impersonatedBy: Scalars['String'];
-  reason: Scalars['String'];
-  userId: Scalars['String'];
+  durationMinutes: Scalars['Int']['input'];
+  impersonatedBy: Scalars['String']['input'];
+  reason: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
 };
 
 
 export type MutationCreateInvoiceArgs = {
   currency: Currency;
-  description?: InputMaybe<Scalars['String']>;
-  dueAt: Scalars['DateTime'];
+  description?: InputMaybe<Scalars['String']['input']>;
+  dueAt: Scalars['DateTime']['input'];
   items: Array<InvoiceItemInput>;
-  mail: Scalars['String'];
-  manuallySetAsPaidByUserId?: InputMaybe<Scalars['String']>;
-  scheduledDeactivationAt: Scalars['DateTime'];
-  subscriptionID?: InputMaybe<Scalars['String']>;
+  mail: Scalars['String']['input'];
+  manuallySetAsPaidByUserId?: InputMaybe<Scalars['String']['input']>;
+  scheduledDeactivationAt: Scalars['DateTime']['input'];
+  subscriptionID?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -3301,49 +3298,49 @@ export type MutationCreateMailTemplateArgs = {
 
 
 export type MutationCreateMemberPlanArgs = {
-  active: Scalars['Boolean'];
+  active: Scalars['Boolean']['input'];
   availablePaymentMethods: Array<AvailablePaymentMethodInput>;
-  confirmationPageId?: InputMaybe<Scalars['String']>;
+  confirmationPageId?: InputMaybe<Scalars['String']['input']>;
   currency: Currency;
   defaultPaymentPeriodicity?: InputMaybe<PaymentPeriodicity>;
-  description?: InputMaybe<Scalars['RichText']>;
-  extendable: Scalars['Boolean'];
-  externalReward?: InputMaybe<Scalars['String']>;
-  failPageId?: InputMaybe<Scalars['String']>;
-  imageID?: InputMaybe<Scalars['String']>;
-  maxCount?: InputMaybe<Scalars['Int']>;
-  migrateToTargetPaymentMethodID?: InputMaybe<Scalars['String']>;
-  name: Scalars['String'];
+  description?: InputMaybe<Scalars['RichText']['input']>;
+  extendable: Scalars['Boolean']['input'];
+  externalReward?: InputMaybe<Scalars['String']['input']>;
+  failPageId?: InputMaybe<Scalars['String']['input']>;
+  imageID?: InputMaybe<Scalars['String']['input']>;
+  maxCount?: InputMaybe<Scalars['Int']['input']>;
+  migrateToTargetPaymentMethodID?: InputMaybe<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
   periodicityPricing?: InputMaybe<Array<PeriodicityPriceInput>>;
   productType: ProductType;
-  shortDescription?: InputMaybe<Scalars['RichText']>;
-  slug: Scalars['String'];
-  successPageId?: InputMaybe<Scalars['String']>;
-  tags?: InputMaybe<Array<Scalars['String']>>;
+  shortDescription?: InputMaybe<Scalars['RichText']['input']>;
+  slug: Scalars['String']['input'];
+  successPageId?: InputMaybe<Scalars['String']['input']>;
+  tags?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 
 export type MutationCreateNavigationArgs = {
-  key: Scalars['String'];
+  key: Scalars['String']['input'];
   links: Array<NavigationLinkInput>;
-  name: Scalars['String'];
+  name: Scalars['String']['input'];
 };
 
 
 export type MutationCreatePageArgs = {
   blocks: Array<BlockContentInput>;
-  description?: InputMaybe<Scalars['String']>;
-  hidden: Scalars['Boolean'];
-  imageID?: InputMaybe<Scalars['String']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  hidden: Scalars['Boolean']['input'];
+  imageID?: InputMaybe<Scalars['String']['input']>;
   properties: Array<PropertyInput>;
-  seoDescription?: InputMaybe<Scalars['String']>;
-  seoTitle?: InputMaybe<Scalars['String']>;
-  slug?: InputMaybe<Scalars['String']>;
-  socialMediaDescription?: InputMaybe<Scalars['String']>;
-  socialMediaImageID?: InputMaybe<Scalars['String']>;
-  socialMediaTitle?: InputMaybe<Scalars['String']>;
-  tagIds: Array<Scalars['String']>;
-  title?: InputMaybe<Scalars['String']>;
+  seoDescription?: InputMaybe<Scalars['String']['input']>;
+  seoTitle?: InputMaybe<Scalars['String']['input']>;
+  slug?: InputMaybe<Scalars['String']['input']>;
+  socialMediaDescription?: InputMaybe<Scalars['String']['input']>;
+  socialMediaImageID?: InputMaybe<Scalars['String']['input']>;
+  socialMediaTitle?: InputMaybe<Scalars['String']['input']>;
+  tagIds: Array<Scalars['String']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -3353,636 +3350,636 @@ export type MutationCreatePaymentFromInvoiceArgs = {
 
 
 export type MutationCreatePaymentFromSubscriptionArgs = {
-  failureURL?: InputMaybe<Scalars['String']>;
-  subscriptionId?: InputMaybe<Scalars['String']>;
-  successURL?: InputMaybe<Scalars['String']>;
+  failureURL?: InputMaybe<Scalars['String']['input']>;
+  subscriptionId?: InputMaybe<Scalars['String']['input']>;
+  successURL?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type MutationCreatePaymentMethodArgs = {
-  active: Scalars['Boolean'];
-  description: Scalars['String'];
-  gracePeriod: Scalars['Int'];
-  imageId?: InputMaybe<Scalars['String']>;
-  name: Scalars['String'];
-  paymentProviderID: Scalars['String'];
-  slug: Scalars['Slug'];
+  active: Scalars['Boolean']['input'];
+  description: Scalars['String']['input'];
+  gracePeriod: Scalars['Int']['input'];
+  imageId?: InputMaybe<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
+  paymentProviderID: Scalars['String']['input'];
+  slug: Scalars['Slug']['input'];
 };
 
 
 export type MutationCreatePaymentProviderSettingArgs = {
-  apiKey?: InputMaybe<Scalars['String']>;
-  bexio_accountId?: InputMaybe<Scalars['Float']>;
-  bexio_countryId?: InputMaybe<Scalars['Float']>;
-  bexio_invoiceMailBodyNewMembership?: InputMaybe<Scalars['String']>;
-  bexio_invoiceMailBodyRenewalMembership?: InputMaybe<Scalars['String']>;
-  bexio_invoiceMailSubjectNewMembership?: InputMaybe<Scalars['String']>;
-  bexio_invoiceMailSubjectRenewalMembership?: InputMaybe<Scalars['String']>;
-  bexio_invoiceTemplateNewMembership?: InputMaybe<Scalars['String']>;
-  bexio_invoiceTemplateRenewalMembership?: InputMaybe<Scalars['String']>;
-  bexio_invoiceTitleNewMembership?: InputMaybe<Scalars['String']>;
-  bexio_invoiceTitleRenewalMembership?: InputMaybe<Scalars['String']>;
-  bexio_markInvoiceAsOpen?: InputMaybe<Scalars['Boolean']>;
-  bexio_taxId?: InputMaybe<Scalars['Float']>;
-  bexio_unitId?: InputMaybe<Scalars['Float']>;
-  bexio_userId?: InputMaybe<Scalars['Float']>;
-  id: Scalars['String'];
-  mollie_apiBaseUrl?: InputMaybe<Scalars['String']>;
+  apiKey?: InputMaybe<Scalars['String']['input']>;
+  bexio_accountId?: InputMaybe<Scalars['Float']['input']>;
+  bexio_countryId?: InputMaybe<Scalars['Float']['input']>;
+  bexio_invoiceMailBodyNewMembership?: InputMaybe<Scalars['String']['input']>;
+  bexio_invoiceMailBodyRenewalMembership?: InputMaybe<Scalars['String']['input']>;
+  bexio_invoiceMailSubjectNewMembership?: InputMaybe<Scalars['String']['input']>;
+  bexio_invoiceMailSubjectRenewalMembership?: InputMaybe<Scalars['String']['input']>;
+  bexio_invoiceTemplateNewMembership?: InputMaybe<Scalars['String']['input']>;
+  bexio_invoiceTemplateRenewalMembership?: InputMaybe<Scalars['String']['input']>;
+  bexio_invoiceTitleNewMembership?: InputMaybe<Scalars['String']['input']>;
+  bexio_invoiceTitleRenewalMembership?: InputMaybe<Scalars['String']['input']>;
+  bexio_markInvoiceAsOpen?: InputMaybe<Scalars['Boolean']['input']>;
+  bexio_taxId?: InputMaybe<Scalars['Float']['input']>;
+  bexio_unitId?: InputMaybe<Scalars['Float']['input']>;
+  bexio_userId?: InputMaybe<Scalars['Float']['input']>;
+  id: Scalars['String']['input'];
+  mollie_apiBaseUrl?: InputMaybe<Scalars['String']['input']>;
   mollie_methods?: InputMaybe<Array<PaymentMethodMollie>>;
-  name?: InputMaybe<Scalars['String']>;
-  offSessionPayments?: InputMaybe<Scalars['Boolean']>;
-  payrexx_instancename?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  offSessionPayments?: InputMaybe<Scalars['Boolean']['input']>;
+  payrexx_instancename?: InputMaybe<Scalars['String']['input']>;
   payrexx_pm?: InputMaybe<Array<PayrexxPm>>;
   payrexx_psp?: InputMaybe<Array<PayrexxPsp>>;
-  payrexx_vatrate?: InputMaybe<Scalars['String']>;
+  payrexx_vatrate?: InputMaybe<Scalars['String']['input']>;
   stripe_methods?: InputMaybe<Array<StripePaymentMethod>>;
   type: PaymentProviderType;
-  webhookEndpointSecret?: InputMaybe<Scalars['String']>;
+  webhookEndpointSecret?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type MutationCreatePaywallArgs = {
-  active: Scalars['Boolean'];
-  alternativeSubscribeUrl?: InputMaybe<Scalars['String']>;
-  anyMemberPlan: Scalars['Boolean'];
-  bypassTokens: Array<Scalars['String']>;
-  circumventDescription?: InputMaybe<Scalars['RichText']>;
-  description?: InputMaybe<Scalars['RichText']>;
-  fadeout: Scalars['Boolean'];
-  hideContentAfter: Scalars['Int'];
-  memberPlanIds: Array<Scalars['String']>;
-  name?: InputMaybe<Scalars['String']>;
-  upgradeCircumventDescription?: InputMaybe<Scalars['RichText']>;
-  upgradeDescription?: InputMaybe<Scalars['RichText']>;
+  active: Scalars['Boolean']['input'];
+  alternativeSubscribeUrl?: InputMaybe<Scalars['String']['input']>;
+  anyMemberPlan: Scalars['Boolean']['input'];
+  bypassTokens: Array<Scalars['String']['input']>;
+  circumventDescription?: InputMaybe<Scalars['RichText']['input']>;
+  description?: InputMaybe<Scalars['RichText']['input']>;
+  fadeout: Scalars['Boolean']['input'];
+  hideContentAfter: Scalars['Int']['input'];
+  memberPlanIds: Array<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  upgradeCircumventDescription?: InputMaybe<Scalars['RichText']['input']>;
+  upgradeDescription?: InputMaybe<Scalars['RichText']['input']>;
 };
 
 
 export type MutationCreatePeerArgs = {
-  hostURL: Scalars['String'];
-  information?: InputMaybe<Scalars['RichText']>;
-  isDisabled?: InputMaybe<Scalars['Boolean']>;
-  name: Scalars['String'];
-  slug: Scalars['String'];
-  token: Scalars['String'];
+  hostURL: Scalars['String']['input'];
+  information?: InputMaybe<Scalars['RichText']['input']>;
+  isDisabled?: InputMaybe<Scalars['Boolean']['input']>;
+  name: Scalars['String']['input'];
+  slug: Scalars['String']['input'];
+  token: Scalars['String']['input'];
 };
 
 
 export type MutationCreatePollArgs = {
-  closedAt?: InputMaybe<Scalars['DateTime']>;
-  infoText?: InputMaybe<Scalars['RichText']>;
-  opensAt: Scalars['DateTime'];
-  question?: InputMaybe<Scalars['String']>;
+  closedAt?: InputMaybe<Scalars['DateTime']['input']>;
+  infoText?: InputMaybe<Scalars['RichText']['input']>;
+  opensAt: Scalars['DateTime']['input'];
+  question?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type MutationCreatePollAnswerArgs = {
-  answer?: InputMaybe<Scalars['String']>;
-  pollId: Scalars['String'];
+  answer?: InputMaybe<Scalars['String']['input']>;
+  pollId: Scalars['String']['input'];
 };
 
 
 export type MutationCreatePollExternalVoteSourceArgs = {
-  pollId: Scalars['String'];
-  source?: InputMaybe<Scalars['String']>;
+  pollId: Scalars['String']['input'];
+  source?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type MutationCreateRatingSystemAnswerArgs = {
-  answer?: InputMaybe<Scalars['String']>;
-  ratingSystemId: Scalars['String'];
+  answer?: InputMaybe<Scalars['String']['input']>;
+  ratingSystemId: Scalars['String']['input'];
   type: RatingSystemType;
 };
 
 
 export type MutationCreateSessionArgs = {
-  email: Scalars['String'];
-  password: Scalars['String'];
-  totpToken?: InputMaybe<Scalars['String']>;
+  email: Scalars['String']['input'];
+  password: Scalars['String']['input'];
+  totpToken?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type MutationCreateSessionWithJwtArgs = {
-  jwt: Scalars['String'];
-  totpToken?: InputMaybe<Scalars['String']>;
+  jwt: Scalars['String']['input'];
+  totpToken?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type MutationCreateSubscriptionArgs = {
-  autoRenew: Scalars['Boolean'];
-  extendable: Scalars['Boolean'];
-  memberPlanID: Scalars['String'];
-  monthlyAmount: Scalars['Float'];
-  paidUntil?: InputMaybe<Scalars['DateTime']>;
-  paymentMethodID: Scalars['String'];
+  autoRenew: Scalars['Boolean']['input'];
+  extendable: Scalars['Boolean']['input'];
+  memberPlanID: Scalars['String']['input'];
+  monthlyAmount: Scalars['Float']['input'];
+  paidUntil?: InputMaybe<Scalars['DateTime']['input']>;
+  paymentMethodID: Scalars['String']['input'];
   paymentPeriodicity: PaymentPeriodicity;
   properties: Array<PropertyInput>;
-  startsAt: Scalars['DateTime'];
-  userID: Scalars['String'];
+  startsAt: Scalars['DateTime']['input'];
+  userID: Scalars['String']['input'];
 };
 
 
 export type MutationCreateSubscriptionFlowArgs = {
-  autoRenewal: Array<Scalars['Boolean']>;
-  memberPlanId: Scalars['String'];
-  paymentMethodIds: Array<Scalars['String']>;
+  autoRenewal: Array<Scalars['Boolean']['input']>;
+  memberPlanId: Scalars['String']['input'];
+  paymentMethodIds: Array<Scalars['String']['input']>;
   periodicities: Array<PaymentPeriodicity>;
 };
 
 
 export type MutationCreateSubscriptionIntervalArgs = {
-  daysAwayFromEnding?: InputMaybe<Scalars['Int']>;
+  daysAwayFromEnding?: InputMaybe<Scalars['Int']['input']>;
   event: SubscriptionEvent;
-  mailTemplateId?: InputMaybe<Scalars['String']>;
-  subscriptionFlowId: Scalars['String'];
+  mailTemplateId?: InputMaybe<Scalars['String']['input']>;
+  subscriptionFlowId: Scalars['String']['input'];
 };
 
 
 export type MutationCreateTagArgs = {
-  color?: InputMaybe<Scalars['Color']>;
-  description?: InputMaybe<Scalars['RichText']>;
-  main?: Scalars['Boolean'];
-  tag?: InputMaybe<Scalars['String']>;
+  color?: InputMaybe<Scalars['Color']['input']>;
+  description?: InputMaybe<Scalars['RichText']['input']>;
+  main?: Scalars['Boolean']['input'];
+  tag?: InputMaybe<Scalars['String']['input']>;
   type: TagType;
 };
 
 
 export type MutationCreateTokenArgs = {
-  name: Scalars['String'];
+  name: Scalars['String']['input'];
 };
 
 
 export type MutationCreateTrackingPixelSettingArgs = {
-  id: Scalars['String'];
-  name?: InputMaybe<Scalars['String']>;
-  prolitteris_memberNr?: InputMaybe<Scalars['String']>;
-  prolitteris_onlyPaidContentAccess?: InputMaybe<Scalars['Boolean']>;
-  prolitteris_password?: InputMaybe<Scalars['String']>;
-  prolitteris_publisherInternalKeyDomain?: InputMaybe<Scalars['String']>;
-  prolitteris_usePublisherInternalKey?: InputMaybe<Scalars['Boolean']>;
-  prolitteris_username?: InputMaybe<Scalars['String']>;
+  id: Scalars['String']['input'];
+  name?: InputMaybe<Scalars['String']['input']>;
+  prolitteris_memberNr?: InputMaybe<Scalars['String']['input']>;
+  prolitteris_onlyPaidContentAccess?: InputMaybe<Scalars['Boolean']['input']>;
+  prolitteris_password?: InputMaybe<Scalars['String']['input']>;
+  prolitteris_publisherInternalKeyDomain?: InputMaybe<Scalars['String']['input']>;
+  prolitteris_usePublisherInternalKey?: InputMaybe<Scalars['Boolean']['input']>;
+  prolitteris_username?: InputMaybe<Scalars['String']['input']>;
   type: TrackingPixelProviderType;
 };
 
 
 export type MutationCreateUserArgs = {
-  active: Scalars['Boolean'];
+  active: Scalars['Boolean']['input'];
   address?: InputMaybe<UserAddressInput>;
-  birthday?: InputMaybe<Scalars['DateTime']>;
-  email: Scalars['String'];
-  emailVerifiedAt?: InputMaybe<Scalars['DateTime']>;
-  firstName?: InputMaybe<Scalars['String']>;
-  flair?: InputMaybe<Scalars['String']>;
-  name: Scalars['String'];
-  note?: InputMaybe<Scalars['String']>;
-  password?: InputMaybe<Scalars['String']>;
+  birthday?: InputMaybe<Scalars['DateTime']['input']>;
+  email: Scalars['String']['input'];
+  emailVerifiedAt?: InputMaybe<Scalars['DateTime']['input']>;
+  firstName?: InputMaybe<Scalars['String']['input']>;
+  flair?: InputMaybe<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
+  note?: InputMaybe<Scalars['String']['input']>;
+  password?: InputMaybe<Scalars['String']['input']>;
   properties: Array<PropertyInput>;
-  roleIDs: Array<Scalars['String']>;
-  skipMail?: InputMaybe<Scalars['Boolean']>;
-  totpExempt?: InputMaybe<Scalars['Boolean']>;
-  userImageID?: InputMaybe<Scalars['String']>;
+  roleIDs: Array<Scalars['String']['input']>;
+  skipMail?: InputMaybe<Scalars['Boolean']['input']>;
+  totpExempt?: InputMaybe<Scalars['Boolean']['input']>;
+  userImageID?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type MutationCreateUserConsentArgs = {
-  consentId: Scalars['String'];
-  userId: Scalars['String'];
-  value: Scalars['Boolean'];
+  consentId: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
+  value: Scalars['Boolean']['input'];
 };
 
 
 export type MutationCreateUserRoleArgs = {
-  description?: InputMaybe<Scalars['String']>;
-  name: Scalars['String'];
-  permissionIDs: Array<Scalars['String']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
+  permissionIDs: Array<Scalars['String']['input']>;
 };
 
 
 export type MutationCreateUserSubscriptionArgs = {
-  autoRenew: Scalars['Boolean'];
-  deactivateSubscriptionId?: InputMaybe<Scalars['String']>;
-  discountCode?: InputMaybe<Scalars['String']>;
-  failureURL?: InputMaybe<Scalars['String']>;
-  goodieId?: InputMaybe<Scalars['String']>;
-  memberPlanID?: InputMaybe<Scalars['String']>;
-  memberPlanSlug?: InputMaybe<Scalars['Slug']>;
-  monthlyAmount: Scalars['Float'];
-  paymentMethodID?: InputMaybe<Scalars['String']>;
-  paymentMethodSlug?: InputMaybe<Scalars['Slug']>;
+  autoRenew: Scalars['Boolean']['input'];
+  deactivateSubscriptionId?: InputMaybe<Scalars['String']['input']>;
+  discountCode?: InputMaybe<Scalars['String']['input']>;
+  failureURL?: InputMaybe<Scalars['String']['input']>;
+  goodieId?: InputMaybe<Scalars['String']['input']>;
+  memberPlanID?: InputMaybe<Scalars['String']['input']>;
+  memberPlanSlug?: InputMaybe<Scalars['Slug']['input']>;
+  monthlyAmount: Scalars['Float']['input'];
+  paymentMethodID?: InputMaybe<Scalars['String']['input']>;
+  paymentMethodSlug?: InputMaybe<Scalars['Slug']['input']>;
   paymentPeriodicity: PaymentPeriodicity;
   subscriptionProperties?: InputMaybe<Array<PropertyInput>>;
-  successURL?: InputMaybe<Scalars['String']>;
+  successURL?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type MutationCreateUserSubscriptionWithConfirmationArgs = {
-  autoRenew: Scalars['Boolean'];
-  discountCode?: InputMaybe<Scalars['String']>;
-  goodieId?: InputMaybe<Scalars['String']>;
-  memberPlanID?: InputMaybe<Scalars['String']>;
-  memberPlanSlug?: InputMaybe<Scalars['Slug']>;
-  monthlyAmount: Scalars['Float'];
-  paymentMethodID?: InputMaybe<Scalars['String']>;
-  paymentMethodSlug?: InputMaybe<Scalars['Slug']>;
+  autoRenew: Scalars['Boolean']['input'];
+  discountCode?: InputMaybe<Scalars['String']['input']>;
+  goodieId?: InputMaybe<Scalars['String']['input']>;
+  memberPlanID?: InputMaybe<Scalars['String']['input']>;
+  memberPlanSlug?: InputMaybe<Scalars['Slug']['input']>;
+  monthlyAmount: Scalars['Float']['input'];
+  paymentMethodID?: InputMaybe<Scalars['String']['input']>;
+  paymentMethodSlug?: InputMaybe<Scalars['Slug']['input']>;
   paymentPeriodicity: PaymentPeriodicity;
   subscriptionProperties?: InputMaybe<Array<PropertyInput>>;
-  userId?: InputMaybe<Scalars['String']>;
+  userId?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type MutationDeleteAllMailchimpSyncErrorsArgs = {
-  configId: Scalars['String'];
+  configId: Scalars['String']['input'];
 };
 
 
 export type MutationDeleteArticleArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type MutationDeleteAuthorArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type MutationDeleteBannerArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type MutationDeleteBlockStyleArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type MutationDeleteBlockTemplateArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type MutationDeleteCommentArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type MutationDeleteConsentArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type MutationDeleteCrowdfundingArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type MutationDeleteDiscountCodeArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type MutationDeleteDocumentArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type MutationDeleteEventArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type MutationDeleteExternalAppArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type MutationDeleteGoodieArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type MutationDeleteImageArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type MutationDeleteInvoiceArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type MutationDeleteMailTemplateArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type MutationDeleteMailchimpSyncErrorArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type MutationDeleteMemberPlanArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type MutationDeleteNavigationArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type MutationDeletePageArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type MutationDeletePaymentMethodArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type MutationDeletePaymentProviderSettingArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type MutationDeletePaywallArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type MutationDeletePeerArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type MutationDeletePollArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type MutationDeletePollAnswerArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type MutationDeletePollExternalVoteSourceArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type MutationDeletePollVotesArgs = {
-  ids: Array<Scalars['String']>;
+  ids: Array<Scalars['String']['input']>;
 };
 
 
 export type MutationDeleteRatingSystemAnswerArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type MutationDeleteSubscriptionArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type MutationDeleteSubscriptionFlowArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type MutationDeleteSubscriptionIntervalArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type MutationDeleteTagArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type MutationDeleteTokenArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type MutationDeleteTrackingPixelSettingArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type MutationDeleteUserArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type MutationDeleteUserConsentArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type MutationDeleteUserRoleArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type MutationDiscardArticleDraftArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type MutationDiscardPageDraftArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type MutationDislikeArticleArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type MutationDryRunMailchimpSyncArgs = {
-  id: Scalars['String'];
-  limit?: InputMaybe<Scalars['Int']>;
+  id: Scalars['String']['input'];
+  limit?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 export type MutationDuplicateArticleArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type MutationDuplicatePageArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type MutationEnableTotpArgs = {
-  totpToken: Scalars['String'];
+  totpToken: Scalars['String']['input'];
 };
 
 
 export type MutationExtendUserSubscriptionArgs = {
-  failureURL?: InputMaybe<Scalars['String']>;
-  subscriptionId: Scalars['String'];
-  successURL?: InputMaybe<Scalars['String']>;
+  failureURL?: InputMaybe<Scalars['String']['input']>;
+  subscriptionId: Scalars['String']['input'];
+  successURL?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type MutationGenerateTotpSetupArgs = {
-  website?: InputMaybe<Scalars['Boolean']>;
+  website?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
 export type MutationImportEventArgs = {
-  id: Scalars['String'];
-  source: Scalars['String'];
+  id: Scalars['String']['input'];
+  source: Scalars['String']['input'];
 };
 
 
 export type MutationImportPeerArticleArgs = {
-  articleId: Scalars['String'];
+  articleId: Scalars['String']['input'];
   options?: ImportArticleOptions;
-  peerId: Scalars['String'];
+  peerId: Scalars['String']['input'];
 };
 
 
 export type MutationImportSubscriptionArgs = {
-  autoRenew: Scalars['Boolean'];
-  extendable: Scalars['Boolean'];
-  memberPlanID: Scalars['String'];
-  monthlyAmount: Scalars['Float'];
-  paidUntil?: InputMaybe<Scalars['DateTime']>;
-  paymentMethodID: Scalars['String'];
+  autoRenew: Scalars['Boolean']['input'];
+  extendable: Scalars['Boolean']['input'];
+  memberPlanID: Scalars['String']['input'];
+  monthlyAmount: Scalars['Float']['input'];
+  paidUntil?: InputMaybe<Scalars['DateTime']['input']>;
+  paymentMethodID: Scalars['String']['input'];
   paymentPeriodicity: PaymentPeriodicity;
   properties: Array<PropertyInput>;
-  skipMail?: InputMaybe<Scalars['Boolean']>;
-  startsAt: Scalars['DateTime'];
-  userID: Scalars['String'];
+  skipMail?: InputMaybe<Scalars['Boolean']['input']>;
+  startsAt: Scalars['DateTime']['input'];
+  userID: Scalars['String']['input'];
 };
 
 
 export type MutationLikeArticleArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type MutationMarkInvoiceAsPaidArgs = {
-  id: Scalars['String'];
-  sendMail?: Scalars['Boolean'];
+  id: Scalars['String']['input'];
+  sendMail?: Scalars['Boolean']['input'];
 };
 
 
 export type MutationMarkNotificationReadArgs = {
-  itemId: Scalars['String'];
+  itemId: Scalars['String']['input'];
   source: NotificationSource;
 };
 
 
 export type MutationPublishArticleArgs = {
-  id: Scalars['String'];
-  publishedAt: Scalars['DateTime'];
+  id: Scalars['String']['input'];
+  publishedAt: Scalars['DateTime']['input'];
 };
 
 
 export type MutationPublishPageArgs = {
-  id: Scalars['String'];
-  publishedAt: Scalars['DateTime'];
+  id: Scalars['String']['input'];
+  publishedAt: Scalars['DateTime']['input'];
 };
 
 
 export type MutationRateCommentArgs = {
-  answerId: Scalars['String'];
-  commentId: Scalars['String'];
-  value: Scalars['Int'];
+  answerId: Scalars['String']['input'];
+  commentId: Scalars['String']['input'];
+  value: Scalars['Int']['input'];
 };
 
 
 export type MutationRegisterMemberArgs = {
   address?: InputMaybe<UserAddressInput>;
-  birthday?: InputMaybe<Scalars['DateTime']>;
+  birthday?: InputMaybe<Scalars['DateTime']['input']>;
   challengeAnswer: ChallengeInput;
-  email: Scalars['String'];
-  firstName?: InputMaybe<Scalars['String']>;
-  flair?: InputMaybe<Scalars['String']>;
-  name: Scalars['String'];
-  password?: InputMaybe<Scalars['String']>;
+  email: Scalars['String']['input'];
+  firstName?: InputMaybe<Scalars['String']['input']>;
+  flair?: InputMaybe<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
+  password?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type MutationRejectCommentArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
   rejectionReason: CommentRejectionReason;
 };
 
 
 export type MutationRenewSubscriptionArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type MutationRequestChangesOnCommentArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
   rejectionReason: CommentRejectionReason;
 };
 
 
 export type MutationRequestEmailChangeArgs = {
-  newEmail: Scalars['String'];
+  newEmail: Scalars['String']['input'];
 };
 
 
 export type MutationResetPasswordArgs = {
-  id: Scalars['String'];
-  password?: InputMaybe<Scalars['String']>;
+  id: Scalars['String']['input'];
+  password?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type MutationResetPasswordWithTokenArgs = {
-  password: Scalars['String'];
-  token: Scalars['String'];
+  password: Scalars['String']['input'];
+  token: Scalars['String']['input'];
 };
 
 
 export type MutationResetUserTotpArgs = {
-  userId: Scalars['String'];
+  userId: Scalars['String']['input'];
 };
 
 
 export type MutationRestoreArticleRevisionArgs = {
-  id: Scalars['String'];
-  revisionId: Scalars['String'];
+  id: Scalars['String']['input'];
+  revisionId: Scalars['String']['input'];
 };
 
 
 export type MutationRestorePageRevisionArgs = {
-  id: Scalars['String'];
-  revisionId: Scalars['String'];
+  id: Scalars['String']['input'];
+  revisionId: Scalars['String']['input'];
 };
 
 
 export type MutationResumeMailSendJobArgs = {
-  id: Scalars['String'];
-  retryUnfinished?: InputMaybe<Scalars['Boolean']>;
+  id: Scalars['String']['input'];
+  retryUnfinished?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
 export type MutationRevokeImpersonationSessionsArgs = {
-  ids?: InputMaybe<Array<Scalars['String']>>;
+  ids?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 
 export type MutationSendJwtLoginArgs = {
-  email: Scalars['String'];
+  email: Scalars['String']['input'];
 };
 
 
 export type MutationSendMailTemplateToUserArgs = {
-  templateId: Scalars['String'];
-  userId: Scalars['String'];
+  templateId: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
 };
 
 
 export type MutationSendPasswordResetEmailArgs = {
-  email: Scalars['String'];
+  email: Scalars['String']['input'];
 };
 
 
@@ -3992,12 +3989,12 @@ export type MutationSendTestMailTemplateArgs = {
 
 
 export type MutationSendWebsiteLoginArgs = {
-  email: Scalars['String'];
+  email: Scalars['String']['input'];
 };
 
 
 export type MutationSyncMailLogStatesArgs = {
-  limit?: InputMaybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -4007,78 +4004,78 @@ export type MutationTestSystemMailArgs = {
 
 
 export type MutationTriggerMailchimpSyncArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type MutationUnpublishArticleArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type MutationUnpublishPageArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type MutationUpdateAiSettingArgs = {
-  apiKey?: InputMaybe<Scalars['String']>;
-  id?: InputMaybe<Scalars['String']>;
-  name?: InputMaybe<Scalars['String']>;
-  systemPrompt?: InputMaybe<Scalars['String']>;
-  webhookEndpointSecret?: InputMaybe<Scalars['String']>;
+  apiKey?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  systemPrompt?: InputMaybe<Scalars['String']['input']>;
+  webhookEndpointSecret?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type MutationUpdateAnalyticsProviderSettingArgs = {
-  articlePrefix?: InputMaybe<Scalars['String']>;
+  articlePrefix?: InputMaybe<Scalars['String']['input']>;
   credentials?: InputMaybe<SettingAnalyticsCredentialsInput>;
-  id?: InputMaybe<Scalars['String']>;
-  name?: InputMaybe<Scalars['String']>;
-  property?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  property?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type MutationUpdateArticleArgs = {
   authors: Array<ArticleRevisionAuthorInput>;
   blocks: Array<BlockContentInput>;
-  breaking: Scalars['Boolean'];
-  canonicalUrl?: InputMaybe<Scalars['String']>;
-  disableComments: Scalars['Boolean'];
-  hidden: Scalars['Boolean'];
-  hideAuthor: Scalars['Boolean'];
-  id: Scalars['String'];
-  imageID?: InputMaybe<Scalars['String']>;
-  lead?: InputMaybe<Scalars['String']>;
-  likes?: InputMaybe<Scalars['Int']>;
-  paywallId?: InputMaybe<Scalars['String']>;
-  preTitle?: InputMaybe<Scalars['String']>;
+  breaking: Scalars['Boolean']['input'];
+  canonicalUrl?: InputMaybe<Scalars['String']['input']>;
+  disableComments: Scalars['Boolean']['input'];
+  hidden: Scalars['Boolean']['input'];
+  hideAuthor: Scalars['Boolean']['input'];
+  id: Scalars['String']['input'];
+  imageID?: InputMaybe<Scalars['String']['input']>;
+  lead?: InputMaybe<Scalars['String']['input']>;
+  likes?: InputMaybe<Scalars['Int']['input']>;
+  paywallId?: InputMaybe<Scalars['String']['input']>;
+  preTitle?: InputMaybe<Scalars['String']['input']>;
   properties: Array<PropertyInput>;
-  seoDescription?: InputMaybe<Scalars['String']>;
-  seoTitle?: InputMaybe<Scalars['String']>;
-  shared: Scalars['Boolean'];
-  slug?: InputMaybe<Scalars['String']>;
-  socialMediaAuthorIds: Array<Scalars['String']>;
-  socialMediaDescription?: InputMaybe<Scalars['String']>;
-  socialMediaImageID?: InputMaybe<Scalars['String']>;
-  socialMediaTitle?: InputMaybe<Scalars['String']>;
-  tagIds: Array<Scalars['String']>;
-  title?: InputMaybe<Scalars['String']>;
+  seoDescription?: InputMaybe<Scalars['String']['input']>;
+  seoTitle?: InputMaybe<Scalars['String']['input']>;
+  shared: Scalars['Boolean']['input'];
+  slug?: InputMaybe<Scalars['String']['input']>;
+  socialMediaAuthorIds: Array<Scalars['String']['input']>;
+  socialMediaDescription?: InputMaybe<Scalars['String']['input']>;
+  socialMediaImageID?: InputMaybe<Scalars['String']['input']>;
+  socialMediaTitle?: InputMaybe<Scalars['String']['input']>;
+  tagIds: Array<Scalars['String']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type MutationUpdateAuthorArgs = {
-  bio?: InputMaybe<Scalars['RichText']>;
-  hideOnArticle?: InputMaybe<Scalars['Boolean']>;
-  hideOnTeam?: InputMaybe<Scalars['Boolean']>;
-  hideOnTeaser?: InputMaybe<Scalars['Boolean']>;
-  id: Scalars['String'];
-  imageID?: InputMaybe<Scalars['String']>;
-  jobTitle?: InputMaybe<Scalars['String']>;
+  bio?: InputMaybe<Scalars['RichText']['input']>;
+  hideOnArticle?: InputMaybe<Scalars['Boolean']['input']>;
+  hideOnTeam?: InputMaybe<Scalars['Boolean']['input']>;
+  hideOnTeaser?: InputMaybe<Scalars['Boolean']['input']>;
+  id: Scalars['String']['input'];
+  imageID?: InputMaybe<Scalars['String']['input']>;
+  jobTitle?: InputMaybe<Scalars['String']['input']>;
   links?: InputMaybe<Array<AuthorLinkInput>>;
-  name?: InputMaybe<Scalars['String']>;
-  slug?: InputMaybe<Scalars['Slug']>;
-  tagIds?: InputMaybe<Array<Scalars['String']>>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  slug?: InputMaybe<Scalars['Slug']['input']>;
+  tagIds?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 
@@ -4089,45 +4086,45 @@ export type MutationUpdateBannerArgs = {
 
 export type MutationUpdateBlockStyleArgs = {
   blocks?: InputMaybe<Array<EditorBlockType>>;
-  id: Scalars['String'];
-  name?: InputMaybe<Scalars['String']>;
+  id: Scalars['String']['input'];
+  name?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type MutationUpdateBlockTemplateArgs = {
   blocks: Array<BlockContentInput>;
-  id: Scalars['String'];
-  name: Scalars['String'];
+  id: Scalars['String']['input'];
+  name: Scalars['String']['input'];
 };
 
 
 export type MutationUpdateChallengeProviderSettingArgs = {
-  id?: InputMaybe<Scalars['String']>;
-  name?: InputMaybe<Scalars['String']>;
-  secret?: InputMaybe<Scalars['String']>;
-  siteKey?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  secret?: InputMaybe<Scalars['String']['input']>;
+  siteKey?: InputMaybe<Scalars['String']['input']>;
   type?: InputMaybe<ChallengeProviderType>;
 };
 
 
 export type MutationUpdateCommentArgs = {
-  featured?: InputMaybe<Scalars['Boolean']>;
-  guestUserImageID?: InputMaybe<Scalars['String']>;
-  guestUsername?: InputMaybe<Scalars['String']>;
-  id: Scalars['String'];
+  featured?: InputMaybe<Scalars['Boolean']['input']>;
+  guestUserImageID?: InputMaybe<Scalars['String']['input']>;
+  guestUsername?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['String']['input'];
   ratingOverrides?: InputMaybe<Array<OverriddenRatingInput>>;
   revision?: InputMaybe<CommentRevisionInput>;
-  source?: InputMaybe<Scalars['String']>;
-  tagIds?: InputMaybe<Array<Scalars['String']>>;
-  userID?: InputMaybe<Scalars['String']>;
+  source?: InputMaybe<Scalars['String']['input']>;
+  tagIds?: InputMaybe<Array<Scalars['String']['input']>>;
+  userID?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type MutationUpdateConsentArgs = {
-  defaultValue?: InputMaybe<Scalars['Boolean']>;
-  id: Scalars['String'];
-  name?: InputMaybe<Scalars['String']>;
-  slug?: InputMaybe<Scalars['String']>;
+  defaultValue?: InputMaybe<Scalars['Boolean']['input']>;
+  id: Scalars['String']['input'];
+  name?: InputMaybe<Scalars['String']['input']>;
+  slug?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -4138,395 +4135,395 @@ export type MutationUpdateCrowdfundingArgs = {
 
 export type MutationUpdateCurrentUserArgs = {
   address?: InputMaybe<UserAddressInput>;
-  birthday?: InputMaybe<Scalars['DateTime']>;
+  birthday?: InputMaybe<Scalars['DateTime']['input']>;
   challengeAnswer?: InputMaybe<ChallengeInput>;
-  firstName?: InputMaybe<Scalars['String']>;
-  flair?: InputMaybe<Scalars['String']>;
-  name?: InputMaybe<Scalars['String']>;
-  password?: InputMaybe<Scalars['String']>;
+  firstName?: InputMaybe<Scalars['String']['input']>;
+  flair?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  password?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type MutationUpdateDiscountCodeArgs = {
-  code?: InputMaybe<Scalars['String']>;
-  discountPercent?: InputMaybe<Scalars['Int']>;
-  id: Scalars['String'];
-  memberPlanId?: InputMaybe<Scalars['String']>;
-  validFrom?: InputMaybe<Scalars['DateTime']>;
-  validTo?: InputMaybe<Scalars['DateTime']>;
+  code?: InputMaybe<Scalars['String']['input']>;
+  discountPercent?: InputMaybe<Scalars['Int']['input']>;
+  id: Scalars['String']['input'];
+  memberPlanId?: InputMaybe<Scalars['String']['input']>;
+  validFrom?: InputMaybe<Scalars['DateTime']['input']>;
+  validTo?: InputMaybe<Scalars['DateTime']['input']>;
 };
 
 
 export type MutationUpdateDocumentArgs = {
-  description?: InputMaybe<Scalars['String']>;
-  id: Scalars['String'];
-  title?: InputMaybe<Scalars['String']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['String']['input'];
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type MutationUpdateEventArgs = {
-  description?: InputMaybe<Scalars['RichText']>;
-  endsAt?: InputMaybe<Scalars['DateTime']>;
-  id: Scalars['String'];
-  imageId?: InputMaybe<Scalars['String']>;
-  lead?: InputMaybe<Scalars['String']>;
-  location?: InputMaybe<Scalars['String']>;
-  name?: InputMaybe<Scalars['String']>;
-  startsAt?: InputMaybe<Scalars['DateTime']>;
+  description?: InputMaybe<Scalars['RichText']['input']>;
+  endsAt?: InputMaybe<Scalars['DateTime']['input']>;
+  id: Scalars['String']['input'];
+  imageId?: InputMaybe<Scalars['String']['input']>;
+  lead?: InputMaybe<Scalars['String']['input']>;
+  location?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  startsAt?: InputMaybe<Scalars['DateTime']['input']>;
   status?: InputMaybe<EventStatus>;
-  tagIds?: InputMaybe<Array<Scalars['String']>>;
+  tagIds?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 
 export type MutationUpdateExternalAppArgs = {
-  description?: InputMaybe<Scalars['String']>;
-  icon?: InputMaybe<Scalars['String']>;
-  id: Scalars['String'];
-  name?: InputMaybe<Scalars['String']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  icon?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['String']['input'];
+  name?: InputMaybe<Scalars['String']['input']>;
   target?: InputMaybe<ExternalAppsTarget>;
-  url?: InputMaybe<Scalars['String']>;
+  url?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type MutationUpdateGoodieArgs = {
-  active?: InputMaybe<Scalars['Boolean']>;
-  description?: InputMaybe<Scalars['RichText']>;
-  id: Scalars['String'];
-  imageID?: InputMaybe<Scalars['String']>;
-  memberPlanIDs?: InputMaybe<Array<Scalars['String']>>;
-  name?: InputMaybe<Scalars['String']>;
-  stock?: InputMaybe<Scalars['Int']>;
+  active?: InputMaybe<Scalars['Boolean']['input']>;
+  description?: InputMaybe<Scalars['RichText']['input']>;
+  id: Scalars['String']['input'];
+  imageID?: InputMaybe<Scalars['String']['input']>;
+  memberPlanIDs?: InputMaybe<Array<Scalars['String']['input']>>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  stock?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 export type MutationUpdateImageArgs = {
-  description?: InputMaybe<Scalars['String']>;
-  filename?: InputMaybe<Scalars['String']>;
-  focalPointX?: InputMaybe<Scalars['Float']>;
-  focalPointY?: InputMaybe<Scalars['Float']>;
-  id: Scalars['String'];
-  license?: InputMaybe<Scalars['String']>;
-  link?: InputMaybe<Scalars['String']>;
-  source?: InputMaybe<Scalars['String']>;
-  tags?: InputMaybe<Array<Scalars['String']>>;
-  title?: InputMaybe<Scalars['String']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  filename?: InputMaybe<Scalars['String']['input']>;
+  focalPointX?: InputMaybe<Scalars['Float']['input']>;
+  focalPointY?: InputMaybe<Scalars['Float']['input']>;
+  id: Scalars['String']['input'];
+  license?: InputMaybe<Scalars['String']['input']>;
+  link?: InputMaybe<Scalars['String']['input']>;
+  source?: InputMaybe<Scalars['String']['input']>;
+  tags?: InputMaybe<Array<Scalars['String']['input']>>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type MutationUpdateInvoiceArgs = {
   currency?: InputMaybe<Currency>;
-  description?: InputMaybe<Scalars['String']>;
-  dueAt?: InputMaybe<Scalars['DateTime']>;
-  id: Scalars['String'];
+  description?: InputMaybe<Scalars['String']['input']>;
+  dueAt?: InputMaybe<Scalars['DateTime']['input']>;
+  id: Scalars['String']['input'];
   items?: InputMaybe<Array<InvoiceItemInput>>;
-  mail?: InputMaybe<Scalars['String']>;
-  manuallySetAsPaidByUserId?: InputMaybe<Scalars['String']>;
-  scheduledDeactivationAt?: InputMaybe<Scalars['DateTime']>;
-  subscriptionID?: InputMaybe<Scalars['String']>;
+  mail?: InputMaybe<Scalars['String']['input']>;
+  manuallySetAsPaidByUserId?: InputMaybe<Scalars['String']['input']>;
+  scheduledDeactivationAt?: InputMaybe<Scalars['DateTime']['input']>;
+  subscriptionID?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type MutationUpdateMailProviderSettingArgs = {
-  apiKey?: InputMaybe<Scalars['String']>;
-  fromAddress?: InputMaybe<Scalars['String']>;
-  id?: InputMaybe<Scalars['String']>;
-  mailchimp_baseURL?: InputMaybe<Scalars['String']>;
-  mailgun_baseDomain?: InputMaybe<Scalars['String']>;
-  mailgun_mailDomain?: InputMaybe<Scalars['String']>;
-  name?: InputMaybe<Scalars['String']>;
-  replyToAddress?: InputMaybe<Scalars['String']>;
-  slack_webhookURL?: InputMaybe<Scalars['String']>;
-  smtp_host?: InputMaybe<Scalars['String']>;
-  smtp_port?: InputMaybe<Scalars['Int']>;
-  smtp_secure?: InputMaybe<Scalars['Boolean']>;
-  smtp_user?: InputMaybe<Scalars['String']>;
+  apiKey?: InputMaybe<Scalars['String']['input']>;
+  fromAddress?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['String']['input']>;
+  mailchimp_baseURL?: InputMaybe<Scalars['String']['input']>;
+  mailgun_baseDomain?: InputMaybe<Scalars['String']['input']>;
+  mailgun_mailDomain?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  replyToAddress?: InputMaybe<Scalars['String']['input']>;
+  slack_webhookURL?: InputMaybe<Scalars['String']['input']>;
+  smtp_host?: InputMaybe<Scalars['String']['input']>;
+  smtp_port?: InputMaybe<Scalars['Int']['input']>;
+  smtp_secure?: InputMaybe<Scalars['Boolean']['input']>;
+  smtp_user?: InputMaybe<Scalars['String']['input']>;
   type?: InputMaybe<MailProviderType>;
-  webhookEndpointSecret?: InputMaybe<Scalars['String']>;
+  webhookEndpointSecret?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type MutationUpdateMailTemplateArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
   input: MailTemplateInput;
 };
 
 
 export type MutationUpdateMemberPlanArgs = {
-  active?: InputMaybe<Scalars['Boolean']>;
+  active?: InputMaybe<Scalars['Boolean']['input']>;
   availablePaymentMethods?: InputMaybe<Array<AvailablePaymentMethodInput>>;
-  confirmationPageId?: InputMaybe<Scalars['String']>;
+  confirmationPageId?: InputMaybe<Scalars['String']['input']>;
   currency?: InputMaybe<Currency>;
   defaultPaymentPeriodicity?: InputMaybe<PaymentPeriodicity>;
-  description?: InputMaybe<Scalars['RichText']>;
-  extendable?: InputMaybe<Scalars['Boolean']>;
-  externalReward?: InputMaybe<Scalars['String']>;
-  failPageId?: InputMaybe<Scalars['String']>;
-  id: Scalars['String'];
-  imageID?: InputMaybe<Scalars['String']>;
-  maxCount?: InputMaybe<Scalars['Int']>;
-  migrateToTargetPaymentMethodID?: InputMaybe<Scalars['String']>;
-  name?: InputMaybe<Scalars['String']>;
+  description?: InputMaybe<Scalars['RichText']['input']>;
+  extendable?: InputMaybe<Scalars['Boolean']['input']>;
+  externalReward?: InputMaybe<Scalars['String']['input']>;
+  failPageId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['String']['input'];
+  imageID?: InputMaybe<Scalars['String']['input']>;
+  maxCount?: InputMaybe<Scalars['Int']['input']>;
+  migrateToTargetPaymentMethodID?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
   periodicityPricing?: InputMaybe<Array<PeriodicityPriceInput>>;
   productType?: InputMaybe<ProductType>;
-  shortDescription?: InputMaybe<Scalars['RichText']>;
-  slug?: InputMaybe<Scalars['String']>;
-  successPageId?: InputMaybe<Scalars['String']>;
-  tags?: InputMaybe<Array<Scalars['String']>>;
+  shortDescription?: InputMaybe<Scalars['RichText']['input']>;
+  slug?: InputMaybe<Scalars['String']['input']>;
+  successPageId?: InputMaybe<Scalars['String']['input']>;
+  tags?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 
 export type MutationUpdateNavigationArgs = {
-  id: Scalars['String'];
-  key: Scalars['String'];
+  id: Scalars['String']['input'];
+  key: Scalars['String']['input'];
   links: Array<NavigationLinkInput>;
-  name: Scalars['String'];
+  name: Scalars['String']['input'];
 };
 
 
 export type MutationUpdatePageArgs = {
   blocks: Array<BlockContentInput>;
-  description?: InputMaybe<Scalars['String']>;
-  hidden: Scalars['Boolean'];
-  id: Scalars['String'];
-  imageID?: InputMaybe<Scalars['String']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  hidden: Scalars['Boolean']['input'];
+  id: Scalars['String']['input'];
+  imageID?: InputMaybe<Scalars['String']['input']>;
   properties: Array<PropertyInput>;
-  seoDescription?: InputMaybe<Scalars['String']>;
-  seoTitle?: InputMaybe<Scalars['String']>;
-  slug?: InputMaybe<Scalars['String']>;
-  socialMediaDescription?: InputMaybe<Scalars['String']>;
-  socialMediaImageID?: InputMaybe<Scalars['String']>;
-  socialMediaTitle?: InputMaybe<Scalars['String']>;
-  tagIds: Array<Scalars['String']>;
-  title?: InputMaybe<Scalars['String']>;
+  seoDescription?: InputMaybe<Scalars['String']['input']>;
+  seoTitle?: InputMaybe<Scalars['String']['input']>;
+  slug?: InputMaybe<Scalars['String']['input']>;
+  socialMediaDescription?: InputMaybe<Scalars['String']['input']>;
+  socialMediaImageID?: InputMaybe<Scalars['String']['input']>;
+  socialMediaTitle?: InputMaybe<Scalars['String']['input']>;
+  tagIds: Array<Scalars['String']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type MutationUpdatePasswordArgs = {
-  password: Scalars['String'];
-  passwordRepeated: Scalars['String'];
+  password: Scalars['String']['input'];
+  passwordRepeated: Scalars['String']['input'];
 };
 
 
 export type MutationUpdatePaymentMethodArgs = {
-  active?: InputMaybe<Scalars['Boolean']>;
-  description?: InputMaybe<Scalars['String']>;
-  gracePeriod?: InputMaybe<Scalars['Int']>;
-  id: Scalars['String'];
-  imageId?: InputMaybe<Scalars['String']>;
-  name?: InputMaybe<Scalars['String']>;
-  paymentProviderID?: InputMaybe<Scalars['String']>;
-  slug?: InputMaybe<Scalars['Slug']>;
+  active?: InputMaybe<Scalars['Boolean']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  gracePeriod?: InputMaybe<Scalars['Int']['input']>;
+  id: Scalars['String']['input'];
+  imageId?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  paymentProviderID?: InputMaybe<Scalars['String']['input']>;
+  slug?: InputMaybe<Scalars['Slug']['input']>;
 };
 
 
 export type MutationUpdatePaymentProviderSettingArgs = {
-  apiKey?: InputMaybe<Scalars['String']>;
-  bexio_accountId?: InputMaybe<Scalars['Float']>;
-  bexio_countryId?: InputMaybe<Scalars['Float']>;
-  bexio_invoiceMailBodyNewMembership?: InputMaybe<Scalars['String']>;
-  bexio_invoiceMailBodyRenewalMembership?: InputMaybe<Scalars['String']>;
-  bexio_invoiceMailSubjectNewMembership?: InputMaybe<Scalars['String']>;
-  bexio_invoiceMailSubjectRenewalMembership?: InputMaybe<Scalars['String']>;
-  bexio_invoiceTemplateNewMembership?: InputMaybe<Scalars['String']>;
-  bexio_invoiceTemplateRenewalMembership?: InputMaybe<Scalars['String']>;
-  bexio_invoiceTitleNewMembership?: InputMaybe<Scalars['String']>;
-  bexio_invoiceTitleRenewalMembership?: InputMaybe<Scalars['String']>;
-  bexio_markInvoiceAsOpen?: InputMaybe<Scalars['Boolean']>;
-  bexio_taxId?: InputMaybe<Scalars['Float']>;
-  bexio_unitId?: InputMaybe<Scalars['Float']>;
-  bexio_userId?: InputMaybe<Scalars['Float']>;
-  id?: InputMaybe<Scalars['String']>;
-  mollie_apiBaseUrl?: InputMaybe<Scalars['String']>;
+  apiKey?: InputMaybe<Scalars['String']['input']>;
+  bexio_accountId?: InputMaybe<Scalars['Float']['input']>;
+  bexio_countryId?: InputMaybe<Scalars['Float']['input']>;
+  bexio_invoiceMailBodyNewMembership?: InputMaybe<Scalars['String']['input']>;
+  bexio_invoiceMailBodyRenewalMembership?: InputMaybe<Scalars['String']['input']>;
+  bexio_invoiceMailSubjectNewMembership?: InputMaybe<Scalars['String']['input']>;
+  bexio_invoiceMailSubjectRenewalMembership?: InputMaybe<Scalars['String']['input']>;
+  bexio_invoiceTemplateNewMembership?: InputMaybe<Scalars['String']['input']>;
+  bexio_invoiceTemplateRenewalMembership?: InputMaybe<Scalars['String']['input']>;
+  bexio_invoiceTitleNewMembership?: InputMaybe<Scalars['String']['input']>;
+  bexio_invoiceTitleRenewalMembership?: InputMaybe<Scalars['String']['input']>;
+  bexio_markInvoiceAsOpen?: InputMaybe<Scalars['Boolean']['input']>;
+  bexio_taxId?: InputMaybe<Scalars['Float']['input']>;
+  bexio_unitId?: InputMaybe<Scalars['Float']['input']>;
+  bexio_userId?: InputMaybe<Scalars['Float']['input']>;
+  id?: InputMaybe<Scalars['String']['input']>;
+  mollie_apiBaseUrl?: InputMaybe<Scalars['String']['input']>;
   mollie_methods?: InputMaybe<Array<PaymentMethodMollie>>;
-  name?: InputMaybe<Scalars['String']>;
-  offSessionPayments?: InputMaybe<Scalars['Boolean']>;
-  payrexx_instancename?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  offSessionPayments?: InputMaybe<Scalars['Boolean']['input']>;
+  payrexx_instancename?: InputMaybe<Scalars['String']['input']>;
   payrexx_pm?: InputMaybe<Array<PayrexxPm>>;
   payrexx_psp?: InputMaybe<Array<PayrexxPsp>>;
-  payrexx_vatrate?: InputMaybe<Scalars['String']>;
+  payrexx_vatrate?: InputMaybe<Scalars['String']['input']>;
   stripe_methods?: InputMaybe<Array<StripePaymentMethod>>;
-  webhookEndpointSecret?: InputMaybe<Scalars['String']>;
+  webhookEndpointSecret?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type MutationUpdatePaywallArgs = {
-  active?: InputMaybe<Scalars['Boolean']>;
-  alternativeSubscribeUrl?: InputMaybe<Scalars['String']>;
-  anyMemberPlan?: InputMaybe<Scalars['Boolean']>;
-  bypassTokens?: InputMaybe<Array<Scalars['String']>>;
-  circumventDescription?: InputMaybe<Scalars['RichText']>;
-  description?: InputMaybe<Scalars['RichText']>;
-  fadeout?: InputMaybe<Scalars['Boolean']>;
-  hideContentAfter?: InputMaybe<Scalars['Int']>;
-  id: Scalars['String'];
-  memberPlanIds?: InputMaybe<Array<Scalars['String']>>;
-  name?: InputMaybe<Scalars['String']>;
-  upgradeCircumventDescription?: InputMaybe<Scalars['RichText']>;
-  upgradeDescription?: InputMaybe<Scalars['RichText']>;
+  active?: InputMaybe<Scalars['Boolean']['input']>;
+  alternativeSubscribeUrl?: InputMaybe<Scalars['String']['input']>;
+  anyMemberPlan?: InputMaybe<Scalars['Boolean']['input']>;
+  bypassTokens?: InputMaybe<Array<Scalars['String']['input']>>;
+  circumventDescription?: InputMaybe<Scalars['RichText']['input']>;
+  description?: InputMaybe<Scalars['RichText']['input']>;
+  fadeout?: InputMaybe<Scalars['Boolean']['input']>;
+  hideContentAfter?: InputMaybe<Scalars['Int']['input']>;
+  id: Scalars['String']['input'];
+  memberPlanIds?: InputMaybe<Array<Scalars['String']['input']>>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  upgradeCircumventDescription?: InputMaybe<Scalars['RichText']['input']>;
+  upgradeDescription?: InputMaybe<Scalars['RichText']['input']>;
 };
 
 
 export type MutationUpdatePeerArgs = {
-  hostURL?: InputMaybe<Scalars['String']>;
-  id: Scalars['String'];
-  information?: InputMaybe<Scalars['RichText']>;
-  isDisabled?: InputMaybe<Scalars['Boolean']>;
-  name?: InputMaybe<Scalars['String']>;
-  slug?: InputMaybe<Scalars['String']>;
-  token?: InputMaybe<Scalars['String']>;
+  hostURL?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['String']['input'];
+  information?: InputMaybe<Scalars['RichText']['input']>;
+  isDisabled?: InputMaybe<Scalars['Boolean']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  slug?: InputMaybe<Scalars['String']['input']>;
+  token?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type MutationUpdatePeerProfileArgs = {
-  callToActionImageID: Scalars['String'];
-  callToActionImageURL?: InputMaybe<Scalars['String']>;
-  callToActionText?: InputMaybe<Scalars['RichText']>;
-  callToActionURL: Scalars['String'];
-  logoID: Scalars['String'];
-  name: Scalars['String'];
-  squareLogoId: Scalars['String'];
-  themeColor: Scalars['Color'];
-  themeFontColor: Scalars['Color'];
+  callToActionImageID: Scalars['String']['input'];
+  callToActionImageURL?: InputMaybe<Scalars['String']['input']>;
+  callToActionText?: InputMaybe<Scalars['RichText']['input']>;
+  callToActionURL: Scalars['String']['input'];
+  logoID: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  squareLogoId: Scalars['String']['input'];
+  themeColor: Scalars['Color']['input'];
+  themeFontColor: Scalars['Color']['input'];
 };
 
 
 export type MutationUpdatePollArgs = {
   answers: Array<PollAnswerInput>;
-  closedAt?: InputMaybe<Scalars['DateTime']>;
+  closedAt?: InputMaybe<Scalars['DateTime']['input']>;
   externalVoteSources: Array<PollExternalVoteSourceInput>;
-  id: Scalars['String'];
-  infoText?: InputMaybe<Scalars['RichText']>;
-  opensAt?: InputMaybe<Scalars['DateTime']>;
-  question?: InputMaybe<Scalars['String']>;
+  id: Scalars['String']['input'];
+  infoText?: InputMaybe<Scalars['RichText']['input']>;
+  opensAt?: InputMaybe<Scalars['DateTime']['input']>;
+  question?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type MutationUpdateRatingSystemArgs = {
   answers?: InputMaybe<Array<UpdateCommentRatingSystemAnswerInput>>;
-  id: Scalars['String'];
-  name?: InputMaybe<Scalars['String']>;
+  id: Scalars['String']['input'];
+  name?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type MutationUpdateSettingArgs = {
   name: SettingName;
-  value?: InputMaybe<Scalars['GraphQLSettingValueType']>;
+  value?: InputMaybe<Scalars['GraphQLSettingValueType']['input']>;
 };
 
 
 export type MutationUpdateSubscriptionArgs = {
-  autoRenew?: InputMaybe<Scalars['Boolean']>;
-  extendable?: InputMaybe<Scalars['Boolean']>;
-  id: Scalars['String'];
-  memberPlanID?: InputMaybe<Scalars['String']>;
-  monthlyAmount?: InputMaybe<Scalars['Float']>;
-  paidUntil?: InputMaybe<Scalars['DateTime']>;
-  paymentMethodID?: InputMaybe<Scalars['String']>;
+  autoRenew?: InputMaybe<Scalars['Boolean']['input']>;
+  extendable?: InputMaybe<Scalars['Boolean']['input']>;
+  id: Scalars['String']['input'];
+  memberPlanID?: InputMaybe<Scalars['String']['input']>;
+  monthlyAmount?: InputMaybe<Scalars['Float']['input']>;
+  paidUntil?: InputMaybe<Scalars['DateTime']['input']>;
+  paymentMethodID?: InputMaybe<Scalars['String']['input']>;
   paymentPeriodicity?: InputMaybe<PaymentPeriodicity>;
   properties?: InputMaybe<Array<PropertyInput>>;
-  startsAt?: InputMaybe<Scalars['DateTime']>;
-  userID?: InputMaybe<Scalars['String']>;
+  startsAt?: InputMaybe<Scalars['DateTime']['input']>;
+  userID?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type MutationUpdateSubscriptionFlowArgs = {
-  autoRenewal?: InputMaybe<Array<Scalars['Boolean']>>;
-  id: Scalars['String'];
-  paymentMethodIds?: InputMaybe<Array<Scalars['String']>>;
+  autoRenewal?: InputMaybe<Array<Scalars['Boolean']['input']>>;
+  id: Scalars['String']['input'];
+  paymentMethodIds?: InputMaybe<Array<Scalars['String']['input']>>;
   periodicities?: InputMaybe<Array<PaymentPeriodicity>>;
 };
 
 
 export type MutationUpdateSubscriptionIntervalArgs = {
-  daysAwayFromEnding?: InputMaybe<Scalars['Int']>;
-  id: Scalars['String'];
-  mailTemplateId?: InputMaybe<Scalars['String']>;
+  daysAwayFromEnding?: InputMaybe<Scalars['Int']['input']>;
+  id: Scalars['String']['input'];
+  mailTemplateId?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type MutationUpdateSyncProviderSettingArgs = {
-  enabled?: InputMaybe<Scalars['Boolean']>;
-  id: Scalars['String'];
-  mailchimp_apiKey?: InputMaybe<Scalars['String']>;
-  mailchimp_defaultInterestGroupIds?: InputMaybe<Array<Scalars['String']>>;
-  mailchimp_extensions?: InputMaybe<Scalars['JSONObject']>;
-  mailchimp_interestGroupMappings?: InputMaybe<Array<Scalars['JSONObject']>>;
-  mailchimp_listId?: InputMaybe<Scalars['String']>;
-  mailchimp_mergeFieldMappings?: InputMaybe<Array<Scalars['JSONObject']>>;
-  name?: InputMaybe<Scalars['String']>;
+  enabled?: InputMaybe<Scalars['Boolean']['input']>;
+  id: Scalars['String']['input'];
+  mailchimp_apiKey?: InputMaybe<Scalars['String']['input']>;
+  mailchimp_defaultInterestGroupIds?: InputMaybe<Array<Scalars['String']['input']>>;
+  mailchimp_extensions?: InputMaybe<Scalars['JSONObject']['input']>;
+  mailchimp_interestGroupMappings?: InputMaybe<Array<Scalars['JSONObject']['input']>>;
+  mailchimp_listId?: InputMaybe<Scalars['String']['input']>;
+  mailchimp_mergeFieldMappings?: InputMaybe<Array<Scalars['JSONObject']['input']>>;
+  name?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type MutationUpdateSystemMailArgs = {
   event: UserEvent;
-  mailTemplateId?: InputMaybe<Scalars['String']>;
+  mailTemplateId?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type MutationUpdateTagArgs = {
-  color?: InputMaybe<Scalars['Color']>;
-  description?: InputMaybe<Scalars['RichText']>;
-  id: Scalars['String'];
-  main?: InputMaybe<Scalars['Boolean']>;
-  tag?: InputMaybe<Scalars['String']>;
+  color?: InputMaybe<Scalars['Color']['input']>;
+  description?: InputMaybe<Scalars['RichText']['input']>;
+  id: Scalars['String']['input'];
+  main?: InputMaybe<Scalars['Boolean']['input']>;
+  tag?: InputMaybe<Scalars['String']['input']>;
   type?: InputMaybe<TagType>;
 };
 
 
 export type MutationUpdateTrackingPixelSettingArgs = {
-  id?: InputMaybe<Scalars['String']>;
-  name?: InputMaybe<Scalars['String']>;
-  prolitteris_memberNr?: InputMaybe<Scalars['String']>;
-  prolitteris_onlyPaidContentAccess?: InputMaybe<Scalars['Boolean']>;
-  prolitteris_password?: InputMaybe<Scalars['String']>;
-  prolitteris_publisherInternalKeyDomain?: InputMaybe<Scalars['String']>;
-  prolitteris_usePublisherInternalKey?: InputMaybe<Scalars['Boolean']>;
-  prolitteris_username?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  prolitteris_memberNr?: InputMaybe<Scalars['String']['input']>;
+  prolitteris_onlyPaidContentAccess?: InputMaybe<Scalars['Boolean']['input']>;
+  prolitteris_password?: InputMaybe<Scalars['String']['input']>;
+  prolitteris_publisherInternalKeyDomain?: InputMaybe<Scalars['String']['input']>;
+  prolitteris_usePublisherInternalKey?: InputMaybe<Scalars['Boolean']['input']>;
+  prolitteris_username?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type MutationUpdateUserArgs = {
-  active?: InputMaybe<Scalars['Boolean']>;
+  active?: InputMaybe<Scalars['Boolean']['input']>;
   address?: InputMaybe<UserAddressInput>;
-  birthday?: InputMaybe<Scalars['DateTime']>;
-  email?: InputMaybe<Scalars['String']>;
-  emailVerifiedAt?: InputMaybe<Scalars['DateTime']>;
-  firstName?: InputMaybe<Scalars['String']>;
-  flair?: InputMaybe<Scalars['String']>;
-  id?: InputMaybe<Scalars['String']>;
-  name?: InputMaybe<Scalars['String']>;
-  note?: InputMaybe<Scalars['String']>;
+  birthday?: InputMaybe<Scalars['DateTime']['input']>;
+  email?: InputMaybe<Scalars['String']['input']>;
+  emailVerifiedAt?: InputMaybe<Scalars['DateTime']['input']>;
+  firstName?: InputMaybe<Scalars['String']['input']>;
+  flair?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  note?: InputMaybe<Scalars['String']['input']>;
   properties?: InputMaybe<Array<PropertyInput>>;
-  roleIDs?: InputMaybe<Array<Scalars['String']>>;
-  totpExempt?: InputMaybe<Scalars['Boolean']>;
-  userImageID?: InputMaybe<Scalars['String']>;
+  roleIDs?: InputMaybe<Array<Scalars['String']['input']>>;
+  totpExempt?: InputMaybe<Scalars['Boolean']['input']>;
+  userImageID?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type MutationUpdateUserCommentArgs = {
-  id: Scalars['String'];
-  lead?: InputMaybe<Scalars['String']>;
-  text?: InputMaybe<Scalars['RichText']>;
-  title?: InputMaybe<Scalars['String']>;
+  id: Scalars['String']['input'];
+  lead?: InputMaybe<Scalars['String']['input']>;
+  text?: InputMaybe<Scalars['RichText']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type MutationUpdateUserConsentArgs = {
-  id: Scalars['String'];
-  value: Scalars['Boolean'];
+  id: Scalars['String']['input'];
+  value: Scalars['Boolean']['input'];
 };
 
 
 export type MutationUpdateUserRoleArgs = {
-  description?: InputMaybe<Scalars['String']>;
-  id: Scalars['String'];
-  name?: InputMaybe<Scalars['String']>;
-  permissionIDs?: InputMaybe<Array<Scalars['String']>>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['String']['input'];
+  name?: InputMaybe<Scalars['String']['input']>;
+  permissionIDs?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 
 export type MutationUpdateUserSubscriptionArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
   input: UpdateUserSubscriptionInput;
 };
 
@@ -4536,78 +4533,78 @@ export type MutationUpdateWebsiteSettingsArgs = {
   analytics?: InputMaybe<WebsiteAnalyticsInput>;
   fonts?: InputMaybe<Array<WebsiteRemoteFontInput>>;
   mail?: InputMaybe<WebsiteMailInput>;
-  theme?: InputMaybe<Scalars['JSONObject']>;
+  theme?: InputMaybe<Scalars['JSONObject']['input']>;
 };
 
 
 export type MutationUpgradeUserSubscriptionArgs = {
-  discountCode?: InputMaybe<Scalars['String']>;
-  failureURL?: InputMaybe<Scalars['String']>;
-  goodieId?: InputMaybe<Scalars['String']>;
-  memberPlanId: Scalars['String'];
-  monthlyAmount: Scalars['Float'];
-  paymentMethodId: Scalars['String'];
-  subscriptionId: Scalars['String'];
-  successURL?: InputMaybe<Scalars['String']>;
+  discountCode?: InputMaybe<Scalars['String']['input']>;
+  failureURL?: InputMaybe<Scalars['String']['input']>;
+  goodieId?: InputMaybe<Scalars['String']['input']>;
+  memberPlanId: Scalars['String']['input'];
+  monthlyAmount: Scalars['Float']['input'];
+  paymentMethodId: Scalars['String']['input'];
+  subscriptionId: Scalars['String']['input'];
+  successURL?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type MutationUploadDocumentArgs = {
-  description?: InputMaybe<Scalars['String']>;
-  file: Scalars['Upload'];
-  filename?: InputMaybe<Scalars['String']>;
-  title?: InputMaybe<Scalars['String']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  file: Scalars['Upload']['input'];
+  filename?: InputMaybe<Scalars['String']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type MutationUploadImageArgs = {
-  description?: InputMaybe<Scalars['String']>;
-  file: Scalars['Upload'];
-  filename?: InputMaybe<Scalars['String']>;
-  focalPointX?: Scalars['Float'];
-  focalPointY?: Scalars['Float'];
-  license?: InputMaybe<Scalars['String']>;
-  link?: InputMaybe<Scalars['String']>;
-  source?: InputMaybe<Scalars['String']>;
-  tags: Array<Scalars['String']>;
-  title?: InputMaybe<Scalars['String']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  file: Scalars['Upload']['input'];
+  filename?: InputMaybe<Scalars['String']['input']>;
+  focalPointX?: Scalars['Float']['input'];
+  focalPointY?: Scalars['Float']['input'];
+  license?: InputMaybe<Scalars['String']['input']>;
+  link?: InputMaybe<Scalars['String']['input']>;
+  source?: InputMaybe<Scalars['String']['input']>;
+  tags: Array<Scalars['String']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type MutationUploadUserProfileImageArgs = {
-  description?: InputMaybe<Scalars['String']>;
-  file: Scalars['Upload'];
-  filename?: InputMaybe<Scalars['String']>;
-  focalPointX?: Scalars['Float'];
-  focalPointY?: Scalars['Float'];
-  license?: InputMaybe<Scalars['String']>;
-  link?: InputMaybe<Scalars['String']>;
-  source?: InputMaybe<Scalars['String']>;
-  tags: Array<Scalars['String']>;
-  title?: InputMaybe<Scalars['String']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  file: Scalars['Upload']['input'];
+  filename?: InputMaybe<Scalars['String']['input']>;
+  focalPointX?: Scalars['Float']['input'];
+  focalPointY?: Scalars['Float']['input'];
+  license?: InputMaybe<Scalars['String']['input']>;
+  link?: InputMaybe<Scalars['String']['input']>;
+  source?: InputMaybe<Scalars['String']['input']>;
+  tags: Array<Scalars['String']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type MutationVoteOnPollArgs = {
-  answerId: Scalars['String'];
+  answerId: Scalars['String']['input'];
 };
 
 export type Navigation = {
   __typename?: 'Navigation';
-  createdAt: Scalars['DateTime'];
-  id: Scalars['String'];
-  key: Scalars['String'];
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  key: Scalars['String']['output'];
   links: Array<BaseNavigationLink>;
-  modifiedAt: Scalars['DateTime'];
-  name: Scalars['String'];
+  modifiedAt: Scalars['DateTime']['output'];
+  name: Scalars['String']['output'];
 };
 
 export type NavigationLinkInput = {
-  articleID?: InputMaybe<Scalars['String']>;
-  label: Scalars['String'];
-  pageID?: InputMaybe<Scalars['String']>;
-  type: Scalars['String'];
-  url?: InputMaybe<Scalars['String']>;
+  articleID?: InputMaybe<Scalars['String']['input']>;
+  label: Scalars['String']['input'];
+  pageID?: InputMaybe<Scalars['String']['input']>;
+  type: Scalars['String']['input'];
+  url?: InputMaybe<Scalars['String']['input']>;
 };
 
 export enum NavigationLinkType {
@@ -4618,18 +4615,18 @@ export enum NavigationLinkType {
 
 export type NotificationConfirmation = {
   __typename?: 'NotificationConfirmation';
-  confirmedByUserId?: Maybe<Scalars['String']>;
-  createdAt: Scalars['DateTime'];
-  id: Scalars['String'];
-  itemId: Scalars['String'];
+  confirmedByUserId?: Maybe<Scalars['String']['output']>;
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  itemId: Scalars['String']['output'];
   source: NotificationSource;
 };
 
 export type NotificationRead = {
   __typename?: 'NotificationRead';
-  createdAt: Scalars['DateTime'];
-  id: Scalars['String'];
-  itemId: Scalars['String'];
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  itemId: Scalars['String']['output'];
   source: NotificationSource;
 };
 
@@ -4647,116 +4644,116 @@ export enum OneChannelConnectionState {
 
 export type OneChannelStatus = {
   __typename?: 'OneChannelStatus';
-  lastAttemptAt?: Maybe<Scalars['DateTime']>;
-  lastError?: Maybe<Scalars['String']>;
-  lastSuccessAt?: Maybe<Scalars['DateTime']>;
-  oneUrl?: Maybe<Scalars['String']>;
+  lastAttemptAt?: Maybe<Scalars['DateTime']['output']>;
+  lastError?: Maybe<Scalars['String']['output']>;
+  lastSuccessAt?: Maybe<Scalars['DateTime']['output']>;
+  oneUrl?: Maybe<Scalars['String']['output']>;
   state: OneChannelConnectionState;
   /** No successful heartbeat for longer than the outage threshold. Always false while the connector is not configured. */
-  unreachable: Scalars['Boolean'];
+  unreachable: Scalars['Boolean']['output'];
 };
 
 export type OverriddenRating = {
   __typename?: 'OverriddenRating';
-  answerId: Scalars['String'];
-  value?: Maybe<Scalars['Int']>;
+  answerId: Scalars['String']['output'];
+  value?: Maybe<Scalars['Int']['output']>;
 };
 
 export type OverriddenRatingInput = {
-  answerId: Scalars['String'];
-  value?: InputMaybe<Scalars['Int']>;
+  answerId: Scalars['String']['input'];
+  value?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type Page = {
   __typename?: 'Page';
-  createdAt: Scalars['DateTime'];
+  createdAt: Scalars['DateTime']['output'];
   draft?: Maybe<PageRevision>;
-  hidden: Scalars['Boolean'];
-  id: Scalars['String'];
+  hidden: Scalars['Boolean']['output'];
+  id: Scalars['String']['output'];
   latest: PageRevision;
-  modifiedAt: Scalars['DateTime'];
+  modifiedAt: Scalars['DateTime']['output'];
   pending?: Maybe<PageRevision>;
-  previewUrl: Scalars['String'];
+  previewUrl: Scalars['String']['output'];
   published?: Maybe<PageRevision>;
-  publishedAt?: Maybe<Scalars['DateTime']>;
-  slug?: Maybe<Scalars['String']>;
+  publishedAt?: Maybe<Scalars['DateTime']['output']>;
+  slug?: Maybe<Scalars['String']['output']>;
   tags: Array<Tag>;
-  url: Scalars['String'];
+  url: Scalars['String']['output'];
 };
 
 export type PageCreatedAction = BaseAction & HasPageLc & {
   __typename?: 'PageCreatedAction';
   actionType: ActionType;
-  date: Scalars['DateTime'];
+  date: Scalars['DateTime']['output'];
   page: Page;
-  pageId: Scalars['String'];
+  pageId: Scalars['String']['output'];
 };
 
 export type PageFilter = {
-  description?: InputMaybe<Scalars['String']>;
-  draft?: InputMaybe<Scalars['Boolean']>;
-  includeHidden?: InputMaybe<Scalars['Boolean']>;
-  pending?: InputMaybe<Scalars['Boolean']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  draft?: InputMaybe<Scalars['Boolean']['input']>;
+  includeHidden?: InputMaybe<Scalars['Boolean']['input']>;
+  pending?: InputMaybe<Scalars['Boolean']['input']>;
   publicationDateFrom?: InputMaybe<DateFilter>;
   publicationDateTo?: InputMaybe<DateFilter>;
-  published?: InputMaybe<Scalars['Boolean']>;
-  slug?: InputMaybe<Scalars['String']>;
-  tags?: InputMaybe<Array<Scalars['String']>>;
-  title?: InputMaybe<Scalars['String']>;
+  published?: InputMaybe<Scalars['Boolean']['input']>;
+  slug?: InputMaybe<Scalars['String']['input']>;
+  tags?: InputMaybe<Array<Scalars['String']['input']>>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type PageInfo = {
   __typename?: 'PageInfo';
-  endCursor?: Maybe<Scalars['String']>;
-  hasNextPage: Scalars['Boolean'];
-  hasPreviousPage: Scalars['Boolean'];
-  startCursor?: Maybe<Scalars['String']>;
+  endCursor?: Maybe<Scalars['String']['output']>;
+  hasNextPage: Scalars['Boolean']['output'];
+  hasPreviousPage: Scalars['Boolean']['output'];
+  startCursor?: Maybe<Scalars['String']['output']>;
 };
 
 export type PageModel = {
   __typename?: 'PageModel';
-  id: Scalars['String'];
+  id: Scalars['String']['output'];
 };
 
 export type PageModelInput = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 export type PageNavigationLink = BaseNavigationLink & HasPage & {
   __typename?: 'PageNavigationLink';
-  createdAt: Scalars['DateTime'];
-  id: Scalars['String'];
-  label: Scalars['String'];
-  modifiedAt: Scalars['DateTime'];
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  label: Scalars['String']['output'];
+  modifiedAt: Scalars['DateTime']['output'];
   page: Page;
-  pageID: Scalars['String'];
+  pageID: Scalars['String']['output'];
   type: NavigationLinkType;
 };
 
 export type PageRevision = HasBlockContent & HasOptionalUserLc & {
   __typename?: 'PageRevision';
-  archivedAt?: Maybe<Scalars['DateTime']>;
+  archivedAt?: Maybe<Scalars['DateTime']['output']>;
   blocks: Array<BlockContent>;
-  createdAt: Scalars['DateTime'];
-  description?: Maybe<Scalars['String']>;
-  id: Scalars['String'];
+  createdAt: Scalars['DateTime']['output'];
+  description?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
   image?: Maybe<Image>;
-  imageID?: Maybe<Scalars['String']>;
+  imageID?: Maybe<Scalars['String']['output']>;
   properties: Array<Property>;
-  publishedAt?: Maybe<Scalars['DateTime']>;
-  seoDescription?: Maybe<Scalars['String']>;
-  seoTitle?: Maybe<Scalars['String']>;
-  socialMediaDescription?: Maybe<Scalars['String']>;
+  publishedAt?: Maybe<Scalars['DateTime']['output']>;
+  seoDescription?: Maybe<Scalars['String']['output']>;
+  seoTitle?: Maybe<Scalars['String']['output']>;
+  socialMediaDescription?: Maybe<Scalars['String']['output']>;
   socialMediaImage?: Maybe<Image>;
-  socialMediaImageID?: Maybe<Scalars['String']>;
-  socialMediaTitle?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
+  socialMediaImageID?: Maybe<Scalars['String']['output']>;
+  socialMediaTitle?: Maybe<Scalars['String']['output']>;
+  title?: Maybe<Scalars['String']['output']>;
   user?: Maybe<User>;
-  userId?: Maybe<Scalars['String']>;
+  userId?: Maybe<Scalars['String']['output']>;
 };
 
 export type PageRevisionFilter = {
-  userId?: InputMaybe<Scalars['String']>;
+  userId?: InputMaybe<Scalars['String']['input']>;
 };
 
 export enum PageSort {
@@ -4768,35 +4765,35 @@ export enum PageSort {
 export type PageTeaser = BaseTeaser & HasImage & HasOptionalPage & {
   __typename?: 'PageTeaser';
   image?: Maybe<Image>;
-  imageID?: Maybe<Scalars['String']>;
-  lead?: Maybe<Scalars['String']>;
+  imageID?: Maybe<Scalars['String']['output']>;
+  lead?: Maybe<Scalars['String']['output']>;
   page?: Maybe<Page>;
-  pageID?: Maybe<Scalars['String']>;
-  preTitle?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
-  type: Scalars['String'];
+  pageID?: Maybe<Scalars['String']['output']>;
+  preTitle?: Maybe<Scalars['String']['output']>;
+  title?: Maybe<Scalars['String']['output']>;
+  type: Scalars['String']['output'];
 };
 
 export type PageTeaserInput = {
-  imageID?: InputMaybe<Scalars['String']>;
-  lead?: InputMaybe<Scalars['String']>;
-  pageID?: InputMaybe<Scalars['String']>;
-  preTitle?: InputMaybe<Scalars['String']>;
-  title?: InputMaybe<Scalars['String']>;
+  imageID?: InputMaybe<Scalars['String']['input']>;
+  lead?: InputMaybe<Scalars['String']['input']>;
+  pageID?: InputMaybe<Scalars['String']['input']>;
+  preTitle?: InputMaybe<Scalars['String']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type PaginatedArticleRevisions = {
   __typename?: 'PaginatedArticleRevisions';
   nodes: Array<ArticleRevision>;
   pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 export type PaginatedArticles = {
   __typename?: 'PaginatedArticles';
   nodes: Array<Article>;
   pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 export type PaginatedAuditLogs = {
@@ -4804,202 +4801,202 @@ export type PaginatedAuditLogs = {
   nodes: Array<AuditLog>;
   pageInfo: PageInfo;
   /** False when this installation does not provide an audit log, in which case nodes is empty and totalCount is zero. */
-  supported: Scalars['Boolean'];
-  totalCount: Scalars['Int'];
+  supported: Scalars['Boolean']['output'];
+  totalCount: Scalars['Int']['output'];
 };
 
 export type PaginatedAuthors = {
   __typename?: 'PaginatedAuthors';
   nodes: Array<Author>;
   pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 export type PaginatedBlockTemplate = {
   __typename?: 'PaginatedBlockTemplate';
   nodes: Array<BlockTemplate>;
   pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 export type PaginatedChangelogEntries = {
   __typename?: 'PaginatedChangelogEntries';
   nodes: Array<ChangelogEntry>;
   pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 export type PaginatedComments = {
   __typename?: 'PaginatedComments';
   nodes: Array<Comment>;
   pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 export type PaginatedDiscountCodes = {
   __typename?: 'PaginatedDiscountCodes';
   nodes: Array<DiscountCode>;
   pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 export type PaginatedDocuments = {
   __typename?: 'PaginatedDocuments';
   nodes: Array<Document>;
   pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 export type PaginatedEvents = {
   __typename?: 'PaginatedEvents';
   nodes: Array<Event>;
   pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 export type PaginatedEventsFromSources = {
   __typename?: 'PaginatedEventsFromSources';
   nodes: Array<EventFromSource>;
   pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 export type PaginatedGoodies = {
   __typename?: 'PaginatedGoodies';
   nodes: Array<Goodie>;
   pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 export type PaginatedImages = {
   __typename?: 'PaginatedImages';
   nodes: Array<Image>;
   pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 export type PaginatedMailLog = {
   __typename?: 'PaginatedMailLog';
   nodes: Array<MailLogModel>;
   pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 export type PaginatedMailSendJob = {
   __typename?: 'PaginatedMailSendJob';
   nodes: Array<MailSendJobModel>;
   pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 export type PaginatedMailSendJobRecipient = {
   __typename?: 'PaginatedMailSendJobRecipient';
   nodes: Array<MailSendJobRecipientModel>;
   pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 export type PaginatedMailSendRecipient = {
   __typename?: 'PaginatedMailSendRecipient';
   nodes: Array<MailSendRecipientModel>;
   pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 export type PaginatedMemberPlans = {
   __typename?: 'PaginatedMemberPlans';
   nodes: Array<MemberPlan>;
   pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 export type PaginatedPageRevisions = {
   __typename?: 'PaginatedPageRevisions';
   nodes: Array<PageRevision>;
   pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 export type PaginatedPages = {
   __typename?: 'PaginatedPages';
   nodes: Array<Page>;
   pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 export type PaginatedPeerArticles = {
   __typename?: 'PaginatedPeerArticles';
   nodes: Array<PeerArticle>;
   pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 export type PaginatedPollVotes = {
   __typename?: 'PaginatedPollVotes';
   nodes: Array<PollVote>;
   pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 export type PaginatedPolls = {
   __typename?: 'PaginatedPolls';
   nodes: Array<Poll>;
   pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 export type PaginatedSensitiveDataUsers = {
   __typename?: 'PaginatedSensitiveDataUsers';
   nodes: Array<SensitiveDataUser>;
   pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 export type PaginatedTags = {
   __typename?: 'PaginatedTags';
   nodes: Array<Tag>;
   pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 export type PaginatedUserRoles = {
   __typename?: 'PaginatedUserRoles';
   nodes: Array<UserRole>;
   pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 export type Payment = HasPaymentMethod & {
   __typename?: 'Payment';
-  id: Scalars['String'];
-  intentSecret: Scalars['String'];
+  id: Scalars['String']['output'];
+  intentSecret: Scalars['String']['output'];
   paymentMethod: PaymentMethod;
-  paymentMethodID: Scalars['String'];
+  paymentMethodID: Scalars['String']['output'];
   state: PaymentState;
 };
 
 export type PaymentFromInvoiceInput = {
-  failureURL?: InputMaybe<Scalars['String']>;
-  invoiceID: Scalars['String'];
-  paymentMethodID?: InputMaybe<Scalars['String']>;
-  paymentMethodSlug?: InputMaybe<Scalars['Slug']>;
-  successURL?: InputMaybe<Scalars['String']>;
+  failureURL?: InputMaybe<Scalars['String']['input']>;
+  invoiceID: Scalars['String']['input'];
+  paymentMethodID?: InputMaybe<Scalars['String']['input']>;
+  paymentMethodSlug?: InputMaybe<Scalars['Slug']['input']>;
+  successURL?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type PaymentMethod = HasImageLc & {
   __typename?: 'PaymentMethod';
-  active: Scalars['Boolean'];
-  createdAt: Scalars['DateTime'];
-  description: Scalars['String'];
-  gracePeriod: Scalars['Int'];
-  id: Scalars['String'];
+  active: Scalars['Boolean']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  description: Scalars['String']['output'];
+  gracePeriod: Scalars['Int']['output'];
+  id: Scalars['String']['output'];
   image?: Maybe<Image>;
-  imageId?: Maybe<Scalars['String']>;
-  modifiedAt: Scalars['DateTime'];
-  name: Scalars['String'];
+  imageId?: Maybe<Scalars['String']['output']>;
+  modifiedAt: Scalars['DateTime']['output'];
+  name: Scalars['String']['output'];
   paymentProvider?: Maybe<PaymentProvider>;
-  paymentProviderID: Scalars['String'];
-  slug: Scalars['Slug'];
+  paymentProviderID: Scalars['String']['output'];
+  slug: Scalars['Slug']['output'];
 };
 
 export enum PaymentMethodMollie {
@@ -5045,14 +5042,14 @@ export enum PaymentPeriodicity {
 
 export type PaymentProvider = {
   __typename?: 'PaymentProvider';
-  id: Scalars['String'];
-  name?: Maybe<Scalars['String']>;
+  id: Scalars['String']['output'];
+  name?: Maybe<Scalars['String']['output']>;
 };
 
 export type PaymentProviderCustomer = {
   __typename?: 'PaymentProviderCustomer';
-  customerID: Scalars['String'];
-  paymentProviderID: Scalars['String'];
+  customerID: Scalars['String']['output'];
+  paymentProviderID: Scalars['String']['output'];
 };
 
 export enum PaymentProviderType {
@@ -5157,178 +5154,178 @@ export enum PayrexxPsp {
 
 export type Paywall = {
   __typename?: 'Paywall';
-  active: Scalars['Boolean'];
-  alternativeSubscribeUrl?: Maybe<Scalars['String']>;
-  anyMemberPlan: Scalars['Boolean'];
+  active: Scalars['Boolean']['output'];
+  alternativeSubscribeUrl?: Maybe<Scalars['String']['output']>;
+  anyMemberPlan: Scalars['Boolean']['output'];
   bypasses: Array<PaywallBypass>;
-  circumventDescription?: Maybe<Scalars['RichText']>;
-  createdAt: Scalars['DateTime'];
-  description?: Maybe<Scalars['RichText']>;
-  fadeout: Scalars['Boolean'];
-  hideContentAfter: Scalars['Int'];
-  id: Scalars['String'];
+  circumventDescription?: Maybe<Scalars['RichText']['output']>;
+  createdAt: Scalars['DateTime']['output'];
+  description?: Maybe<Scalars['RichText']['output']>;
+  fadeout: Scalars['Boolean']['output'];
+  hideContentAfter: Scalars['Int']['output'];
+  id: Scalars['String']['output'];
   memberPlans: Array<MemberPlan>;
-  modifiedAt: Scalars['DateTime'];
-  name?: Maybe<Scalars['String']>;
-  upgradeCircumventDescription?: Maybe<Scalars['RichText']>;
-  upgradeDescription?: Maybe<Scalars['RichText']>;
+  modifiedAt: Scalars['DateTime']['output'];
+  name?: Maybe<Scalars['String']['output']>;
+  upgradeCircumventDescription?: Maybe<Scalars['RichText']['output']>;
+  upgradeDescription?: Maybe<Scalars['RichText']['output']>;
 };
 
 export type PaywallBypass = {
   __typename?: 'PaywallBypass';
-  createdAt: Scalars['DateTime'];
-  id: Scalars['String'];
-  modifiedAt: Scalars['DateTime'];
-  paywallId: Scalars['String'];
-  token: Scalars['String'];
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  modifiedAt: Scalars['DateTime']['output'];
+  paywallId: Scalars['String']['output'];
+  token: Scalars['String']['output'];
 };
 
 export type Peer = {
   __typename?: 'Peer';
-  createdAt: Scalars['DateTime'];
-  hostURL: Scalars['String'];
-  id: Scalars['String'];
-  information?: Maybe<Scalars['RichText']>;
-  isDisabled?: Maybe<Scalars['Boolean']>;
-  modifiedAt: Scalars['DateTime'];
-  name: Scalars['String'];
+  createdAt: Scalars['DateTime']['output'];
+  hostURL: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  information?: Maybe<Scalars['RichText']['output']>;
+  isDisabled?: Maybe<Scalars['Boolean']['output']>;
+  modifiedAt: Scalars['DateTime']['output'];
+  name: Scalars['String']['output'];
   profile?: Maybe<RemotePeerProfile>;
-  slug: Scalars['String'];
-  token: Scalars['String'];
+  slug: Scalars['String']['output'];
+  token: Scalars['String']['output'];
 };
 
 export type PeerArticle = HasOptionalPeerLc & {
   __typename?: 'PeerArticle';
-  createdAt: Scalars['DateTime'];
-  id: Scalars['String'];
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
   latest: PeerArticleRevision;
-  modifiedAt: Scalars['DateTime'];
+  modifiedAt: Scalars['DateTime']['output'];
   peer?: Maybe<Peer>;
-  peerId?: Maybe<Scalars['String']>;
-  publishedAt: Scalars['DateTime'];
-  slug?: Maybe<Scalars['String']>;
-  url: Scalars['String'];
+  peerId?: Maybe<Scalars['String']['output']>;
+  publishedAt: Scalars['DateTime']['output'];
+  slug?: Maybe<Scalars['String']['output']>;
+  url: Scalars['String']['output'];
 };
 
 export type PeerArticleFilter = {
   /** Only include articles that have every one of these tags */
-  allTagsIn?: InputMaybe<Array<Scalars['String']>>;
-  authors?: InputMaybe<Array<Scalars['String']>>;
-  body?: InputMaybe<Scalars['String']>;
-  excludeHideAuthor?: InputMaybe<Scalars['Boolean']>;
-  excludeIds?: InputMaybe<Array<Scalars['String']>>;
-  ids?: InputMaybe<Array<Scalars['String']>>;
-  lead?: InputMaybe<Scalars['String']>;
-  peerId?: InputMaybe<Scalars['String']>;
-  preTitle?: InputMaybe<Scalars['String']>;
+  allTagsIn?: InputMaybe<Array<Scalars['String']['input']>>;
+  authors?: InputMaybe<Array<Scalars['String']['input']>>;
+  body?: InputMaybe<Scalars['String']['input']>;
+  excludeHideAuthor?: InputMaybe<Scalars['Boolean']['input']>;
+  excludeIds?: InputMaybe<Array<Scalars['String']['input']>>;
+  ids?: InputMaybe<Array<Scalars['String']['input']>>;
+  lead?: InputMaybe<Scalars['String']['input']>;
+  peerId?: InputMaybe<Scalars['String']['input']>;
+  preTitle?: InputMaybe<Scalars['String']['input']>;
   publicationDateFrom?: InputMaybe<DateFilter>;
   publicationDateTo?: InputMaybe<DateFilter>;
-  tags?: InputMaybe<Array<Scalars['String']>>;
-  title?: InputMaybe<Scalars['String']>;
+  tags?: InputMaybe<Array<Scalars['String']['input']>>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type PeerArticleRevision = {
   __typename?: 'PeerArticleRevision';
-  id: Scalars['String'];
+  id: Scalars['String']['output'];
   image?: Maybe<PeerImage>;
-  lead?: Maybe<Scalars['String']>;
-  preTitle?: Maybe<Scalars['String']>;
-  seoTitle?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
+  lead?: Maybe<Scalars['String']['output']>;
+  preTitle?: Maybe<Scalars['String']['output']>;
+  seoTitle?: Maybe<Scalars['String']['output']>;
+  title?: Maybe<Scalars['String']['output']>;
 };
 
 export type PeerImage = {
   __typename?: 'PeerImage';
-  createdAt: Scalars['DateTime'];
-  description?: Maybe<Scalars['String']>;
-  extension: Scalars['String'];
-  fileSize: Scalars['Int'];
-  filename?: Maybe<Scalars['String']>;
-  focalPointX: Scalars['Float'];
-  focalPointY: Scalars['Float'];
-  format: Scalars['String'];
-  height: Scalars['Int'];
-  id: Scalars['String'];
-  l?: Maybe<Scalars['String']>;
-  lSquare?: Maybe<Scalars['String']>;
-  license?: Maybe<Scalars['String']>;
-  link?: Maybe<Scalars['String']>;
-  m?: Maybe<Scalars['String']>;
-  mSquare?: Maybe<Scalars['String']>;
-  mimeType: Scalars['String'];
-  modifiedAt: Scalars['DateTime'];
+  createdAt: Scalars['DateTime']['output'];
+  description?: Maybe<Scalars['String']['output']>;
+  extension: Scalars['String']['output'];
+  fileSize: Scalars['Int']['output'];
+  filename?: Maybe<Scalars['String']['output']>;
+  focalPointX: Scalars['Float']['output'];
+  focalPointY: Scalars['Float']['output'];
+  format: Scalars['String']['output'];
+  height: Scalars['Int']['output'];
+  id: Scalars['String']['output'];
+  l?: Maybe<Scalars['String']['output']>;
+  lSquare?: Maybe<Scalars['String']['output']>;
+  license?: Maybe<Scalars['String']['output']>;
+  link?: Maybe<Scalars['String']['output']>;
+  m?: Maybe<Scalars['String']['output']>;
+  mSquare?: Maybe<Scalars['String']['output']>;
+  mimeType: Scalars['String']['output'];
+  modifiedAt: Scalars['DateTime']['output'];
   peer?: Maybe<Peer>;
-  peerId?: Maybe<Scalars['String']>;
-  s?: Maybe<Scalars['String']>;
-  sSquare?: Maybe<Scalars['String']>;
-  source?: Maybe<Scalars['String']>;
-  tags: Array<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
-  url: Scalars['String'];
-  width: Scalars['Int'];
-  xl?: Maybe<Scalars['String']>;
-  xlSquare?: Maybe<Scalars['String']>;
-  xs?: Maybe<Scalars['String']>;
-  xsSquare?: Maybe<Scalars['String']>;
-  xxl?: Maybe<Scalars['String']>;
-  xxlSquare?: Maybe<Scalars['String']>;
-  xxs?: Maybe<Scalars['String']>;
-  xxsSquare?: Maybe<Scalars['String']>;
+  peerId?: Maybe<Scalars['String']['output']>;
+  s?: Maybe<Scalars['String']['output']>;
+  sSquare?: Maybe<Scalars['String']['output']>;
+  source?: Maybe<Scalars['String']['output']>;
+  tags: Array<Scalars['String']['output']>;
+  title?: Maybe<Scalars['String']['output']>;
+  url: Scalars['String']['output'];
+  width: Scalars['Int']['output'];
+  xl?: Maybe<Scalars['String']['output']>;
+  xlSquare?: Maybe<Scalars['String']['output']>;
+  xs?: Maybe<Scalars['String']['output']>;
+  xsSquare?: Maybe<Scalars['String']['output']>;
+  xxl?: Maybe<Scalars['String']['output']>;
+  xxlSquare?: Maybe<Scalars['String']['output']>;
+  xxs?: Maybe<Scalars['String']['output']>;
+  xxsSquare?: Maybe<Scalars['String']['output']>;
 };
 
 export type PeerProfile = {
   __typename?: 'PeerProfile';
   callToActionImage?: Maybe<Image>;
-  callToActionImageID?: Maybe<Scalars['String']>;
-  callToActionImageURL?: Maybe<Scalars['String']>;
-  callToActionText?: Maybe<Scalars['RichText']>;
-  callToActionURL: Scalars['String'];
-  hostURL: Scalars['String'];
+  callToActionImageID?: Maybe<Scalars['String']['output']>;
+  callToActionImageURL?: Maybe<Scalars['String']['output']>;
+  callToActionText?: Maybe<Scalars['RichText']['output']>;
+  callToActionURL: Scalars['String']['output'];
+  hostURL: Scalars['String']['output'];
   logo?: Maybe<Image>;
-  logoID?: Maybe<Scalars['String']>;
-  name: Scalars['String'];
+  logoID?: Maybe<Scalars['String']['output']>;
+  name: Scalars['String']['output'];
   squareLogo?: Maybe<Image>;
-  squareLogoId?: Maybe<Scalars['String']>;
-  themeColor: Scalars['Color'];
-  themeFontColor: Scalars['Color'];
-  websiteURL: Scalars['String'];
+  squareLogoId?: Maybe<Scalars['String']['output']>;
+  themeColor: Scalars['Color']['output'];
+  themeFontColor: Scalars['Color']['output'];
+  websiteURL: Scalars['String']['output'];
 };
 
 export type PeriodicJob = {
   __typename?: 'PeriodicJob';
-  createdAt: Scalars['DateTime'];
-  date: Scalars['DateTime'];
-  error?: Maybe<Scalars['String']>;
-  executionTime?: Maybe<Scalars['DateTime']>;
-  finishedWithError?: Maybe<Scalars['DateTime']>;
-  id: Scalars['String'];
-  modifiedAt: Scalars['DateTime'];
-  successfullyFinished?: Maybe<Scalars['DateTime']>;
-  tries: Scalars['Float'];
+  createdAt: Scalars['DateTime']['output'];
+  date: Scalars['DateTime']['output'];
+  error?: Maybe<Scalars['String']['output']>;
+  executionTime?: Maybe<Scalars['DateTime']['output']>;
+  finishedWithError?: Maybe<Scalars['DateTime']['output']>;
+  id: Scalars['String']['output'];
+  modifiedAt: Scalars['DateTime']['output'];
+  successfullyFinished?: Maybe<Scalars['DateTime']['output']>;
+  tries: Scalars['Float']['output'];
 };
 
 export type PeriodicityPrice = {
   __typename?: 'PeriodicityPrice';
-  amountMax?: Maybe<Scalars['Int']>;
-  amountMin?: Maybe<Scalars['Int']>;
-  amountTarget?: Maybe<Scalars['Int']>;
-  label?: Maybe<Scalars['String']>;
+  amountMax?: Maybe<Scalars['Int']['output']>;
+  amountMin?: Maybe<Scalars['Int']['output']>;
+  amountTarget?: Maybe<Scalars['Int']['output']>;
+  label?: Maybe<Scalars['String']['output']>;
   periodicity: PaymentPeriodicity;
 };
 
 export type PeriodicityPriceInput = {
-  amountMax?: InputMaybe<Scalars['Int']>;
-  amountMin?: InputMaybe<Scalars['Int']>;
-  amountTarget?: InputMaybe<Scalars['Int']>;
-  label?: InputMaybe<Scalars['String']>;
+  amountMax?: InputMaybe<Scalars['Int']['input']>;
+  amountMin?: InputMaybe<Scalars['Int']['input']>;
+  amountTarget?: InputMaybe<Scalars['Int']['input']>;
+  label?: InputMaybe<Scalars['String']['input']>;
   periodicity: PaymentPeriodicity;
 };
 
 export type Permission = {
   __typename?: 'Permission';
-  deprecated: Scalars['Boolean'];
-  description: Scalars['String'];
-  id: Scalars['String'];
+  deprecated: Scalars['Boolean']['output'];
+  description: Scalars['String']['output'];
+  id: Scalars['String']['output'];
 };
 
 export type Phrase = {
@@ -5339,92 +5336,92 @@ export type Phrase = {
 
 export type PolisConversationBlock = BaseBlock & {
   __typename?: 'PolisConversationBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  blockStyleName?: Maybe<Scalars['String']>;
-  conversationID?: Maybe<Scalars['String']>;
-  disabled?: Maybe<Scalars['Boolean']>;
+  blockStyle?: Maybe<Scalars['String']['output']>;
+  blockStyleName?: Maybe<Scalars['String']['output']>;
+  conversationID?: Maybe<Scalars['String']['output']>;
+  disabled?: Maybe<Scalars['Boolean']['output']>;
   type: BlockType;
 };
 
 export type PolisConversationBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  blockStyleName?: InputMaybe<Scalars['String']>;
-  conversationID?: InputMaybe<Scalars['String']>;
-  disabled?: InputMaybe<Scalars['Boolean']>;
+  blockStyle?: InputMaybe<Scalars['String']['input']>;
+  blockStyleName?: InputMaybe<Scalars['String']['input']>;
+  conversationID?: InputMaybe<Scalars['String']['input']>;
+  disabled?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type Poll = {
   __typename?: 'Poll';
-  closedAt?: Maybe<Scalars['DateTime']>;
-  id: Scalars['String'];
-  infoText?: Maybe<Scalars['RichText']>;
-  opensAt: Scalars['DateTime'];
-  question?: Maybe<Scalars['String']>;
+  closedAt?: Maybe<Scalars['DateTime']['output']>;
+  id: Scalars['String']['output'];
+  infoText?: Maybe<Scalars['RichText']['output']>;
+  opensAt: Scalars['DateTime']['output'];
+  question?: Maybe<Scalars['String']['output']>;
 };
 
 export type PollAnswer = {
   __typename?: 'PollAnswer';
-  answer?: Maybe<Scalars['String']>;
-  id: Scalars['String'];
-  pollId: Scalars['String'];
-  votes: Scalars['Int'];
+  answer?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  pollId: Scalars['String']['output'];
+  votes: Scalars['Int']['output'];
 };
 
 export type PollAnswerInVote = {
   __typename?: 'PollAnswerInVote';
-  answer: Scalars['String'];
-  id: Scalars['String'];
+  answer: Scalars['String']['output'];
+  id: Scalars['String']['output'];
 };
 
 export type PollAnswerInput = {
-  answer?: InputMaybe<Scalars['String']>;
-  id: Scalars['String'];
+  answer?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['String']['input'];
 };
 
 export type PollBlock = BaseBlock & HasOptionalPoll & {
   __typename?: 'PollBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  blockStyleName?: Maybe<Scalars['String']>;
-  disabled?: Maybe<Scalars['Boolean']>;
+  blockStyle?: Maybe<Scalars['String']['output']>;
+  blockStyleName?: Maybe<Scalars['String']['output']>;
+  disabled?: Maybe<Scalars['Boolean']['output']>;
   poll?: Maybe<FullPoll>;
-  pollId?: Maybe<Scalars['String']>;
+  pollId?: Maybe<Scalars['String']['output']>;
   type: BlockType;
 };
 
 export type PollBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  blockStyleName?: InputMaybe<Scalars['String']>;
-  disabled?: InputMaybe<Scalars['Boolean']>;
-  pollId?: InputMaybe<Scalars['String']>;
+  blockStyle?: InputMaybe<Scalars['String']['input']>;
+  blockStyleName?: InputMaybe<Scalars['String']['input']>;
+  disabled?: InputMaybe<Scalars['Boolean']['input']>;
+  pollId?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type PollExternalVote = {
   __typename?: 'PollExternalVote';
-  amount: Scalars['VoteValue'];
-  answerId: Scalars['String'];
-  id: Scalars['String'];
+  amount: Scalars['VoteValue']['output'];
+  answerId: Scalars['String']['output'];
+  id: Scalars['String']['output'];
 };
 
 export type PollExternalVoteInput = {
-  amount: Scalars['VoteValue'];
-  id: Scalars['String'];
+  amount: Scalars['VoteValue']['input'];
+  id: Scalars['String']['input'];
 };
 
 export type PollExternalVoteSource = {
   __typename?: 'PollExternalVoteSource';
-  id: Scalars['String'];
-  source?: Maybe<Scalars['String']>;
+  id: Scalars['String']['output'];
+  source?: Maybe<Scalars['String']['output']>;
   voteAmounts: Array<PollExternalVote>;
 };
 
 export type PollExternalVoteSourceInput = {
-  id: Scalars['String'];
-  source?: InputMaybe<Scalars['String']>;
+  id: Scalars['String']['input'];
+  source?: InputMaybe<Scalars['String']['input']>;
   voteAmounts: Array<PollExternalVoteInput>;
 };
 
 export type PollFilter = {
-  openOnly?: InputMaybe<Scalars['Boolean']>;
+  openOnly?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export enum PollSort {
@@ -5436,30 +5433,30 @@ export enum PollSort {
 export type PollStartedAction = BaseAction & HasPoll & {
   __typename?: 'PollStartedAction';
   actionType: ActionType;
-  date: Scalars['DateTime'];
+  date: Scalars['DateTime']['output'];
   poll: FullPoll;
-  pollId: Scalars['String'];
+  pollId: Scalars['String']['output'];
 };
 
 export type PollVote = {
   __typename?: 'PollVote';
   answer: PollAnswerInVote;
-  answerId: Scalars['String'];
-  createdAt: Scalars['DateTime'];
-  disabled: Scalars['Boolean'];
-  fingerprint?: Maybe<Scalars['String']>;
-  id: Scalars['String'];
-  pollId: Scalars['String'];
-  userId?: Maybe<Scalars['String']>;
+  answerId: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  disabled: Scalars['Boolean']['output'];
+  fingerprint?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  pollId: Scalars['String']['output'];
+  userId?: Maybe<Scalars['String']['output']>;
 };
 
 export type PollVoteFilter = {
-  answerIds?: InputMaybe<Array<Scalars['String']>>;
-  fingerprint?: InputMaybe<Scalars['String']>;
-  from?: InputMaybe<Scalars['DateTime']>;
-  pollId?: InputMaybe<Scalars['String']>;
-  to?: InputMaybe<Scalars['DateTime']>;
-  userId?: InputMaybe<Scalars['String']>;
+  answerIds?: InputMaybe<Array<Scalars['String']['input']>>;
+  fingerprint?: InputMaybe<Scalars['String']['input']>;
+  from?: InputMaybe<Scalars['DateTime']['input']>;
+  pollId?: InputMaybe<Scalars['String']['input']>;
+  to?: InputMaybe<Scalars['DateTime']['input']>;
+  userId?: InputMaybe<Scalars['String']['input']>;
 };
 
 export enum PollVoteSort {
@@ -5473,52 +5470,52 @@ export enum ProductType {
 
 export type Property = {
   __typename?: 'Property';
-  key: Scalars['String'];
-  public: Scalars['Boolean'];
-  value: Scalars['String'];
+  key: Scalars['String']['output'];
+  public: Scalars['Boolean']['output'];
+  value: Scalars['String']['output'];
 };
 
 export type PropertyInput = {
-  id?: InputMaybe<Scalars['String']>;
-  key: Scalars['String'];
-  public: Scalars['Boolean'];
-  value: Scalars['String'];
+  id?: InputMaybe<Scalars['String']['input']>;
+  key: Scalars['String']['input'];
+  public: Scalars['Boolean']['input'];
+  value: Scalars['String']['input'];
 };
 
 export type PublicSubscription = HasMemberPlan & HasPaymentMethod & HasUser & {
   __typename?: 'PublicSubscription';
-  autoRenew: Scalars['Boolean'];
-  canExtend: Scalars['Boolean'];
-  confirmed: Scalars['Boolean'];
-  createdAt: Scalars['DateTime'];
+  autoRenew: Scalars['Boolean']['output'];
+  canExtend: Scalars['Boolean']['output'];
+  confirmed: Scalars['Boolean']['output'];
+  createdAt: Scalars['DateTime']['output'];
   currency: Currency;
   deactivation?: Maybe<SubscriptionDeactivation>;
-  extendable: Scalars['Boolean'];
-  externalReward?: Maybe<Scalars['String']>;
+  extendable: Scalars['Boolean']['output'];
+  externalReward?: Maybe<Scalars['String']['output']>;
   goodie?: Maybe<Goodie>;
-  id: Scalars['String'];
-  isActive: Scalars['Boolean'];
+  id: Scalars['String']['output'];
+  isActive: Scalars['Boolean']['output'];
   memberPlan: MemberPlan;
-  memberPlanID: Scalars['String'];
-  modifiedAt: Scalars['DateTime'];
-  monthlyAmount: Scalars['Float'];
-  paidUntil?: Maybe<Scalars['DateTime']>;
+  memberPlanID: Scalars['String']['output'];
+  modifiedAt: Scalars['DateTime']['output'];
+  monthlyAmount: Scalars['Float']['output'];
+  paidUntil?: Maybe<Scalars['DateTime']['output']>;
   paymentMethod: PaymentMethod;
-  paymentMethodID: Scalars['String'];
+  paymentMethodID: Scalars['String']['output'];
   paymentPeriodicity: PaymentPeriodicity;
   periods: Array<SubscriptionPeriod>;
   properties: Array<Property>;
-  startsAt: Scalars['DateTime'];
-  url: Scalars['String'];
+  startsAt: Scalars['DateTime']['output'];
+  url: Scalars['String']['output'];
   user: User;
-  userID: Scalars['String'];
+  userID: Scalars['String']['output'];
 };
 
 export type PublicSubscriptionConnection = {
   __typename?: 'PublicSubscriptionConnection';
   nodes: Array<PublicSubscription>;
   pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 export type Query = {
@@ -5573,7 +5570,7 @@ export type Query = {
   /** Check the status of an invoice and update with information from the payment provider */
   checkInvoiceStatus: Invoice;
   /** Checks whether a given email requires a TOTP code for login. Always returns true to prevent user enumeration. */
-  checkLoginOtp: Scalars['Boolean'];
+  checkLoginOtp: Scalars['Boolean']['output'];
   /** Returns a comment by id. */
   comment: Comment;
   /** Returns a paginated list of comments based on the filters given. */
@@ -5621,7 +5618,7 @@ export type Query = {
    *       Returns a list of Importable Event Providers
    *
    */
-  eventProviders: Array<Scalars['String']>;
+  eventProviders: Array<Scalars['String']['output']>;
   /** Returns a paginated list of events based on the filters given. */
   events: PaginatedEvents;
   /**
@@ -5651,7 +5648,7 @@ export type Query = {
   image: Image;
   /** Returns a paginated list of images based on the filters given. */
   images: PaginatedImages;
-  impersonationEnabled: Scalars['Boolean'];
+  impersonationEnabled: Scalars['Boolean']['output'];
   impersonationSearchUsers: Array<ImpersonationUser>;
   impersonationSessions: Array<ImpersonationSessionInfo>;
   /**
@@ -5671,7 +5668,7 @@ export type Query = {
    *       Returns a list of external source ids of already imported events.
    *
    */
-  importedEventsIds: Array<Scalars['String']>;
+  importedEventsIds: Array<Scalars['String']['output']>;
   /** Returns a invoice by id. */
   invoice: Invoice;
   /** Returns a paginated list of invoices based on the filters given. */
@@ -5697,7 +5694,7 @@ export type Query = {
   /** Return a single mail template, including its html and text body. */
   mailTemplate?: Maybe<MailTemplateModel>;
   /** Placeholders a template uses that would render empty for the given send (empty = none missing) */
-  mailTemplateMissingPlaceholders: Array<Scalars['String']>;
+  mailTemplateMissingPlaceholders: Array<Scalars['String']['output']>;
   /** Render a draft mail template with a mail type's sample data */
   mailTemplatePreview: MailTemplatePreviewModel;
   /** Search subscriptions to use as sample data for previews/tests */
@@ -5833,7 +5830,7 @@ export type Query = {
   /** Returns a paginated list of subscriptions based on the filters given. */
   subscriptions: PublicSubscriptionConnection;
   /** Returns a paginated list of subscriptions based on the filters given. */
-  subscriptionsAsCsv: Scalars['String'];
+  subscriptionsAsCsv: Scalars['String']['output'];
   /** Returns a single sync provider setting by id. */
   syncProviderSetting: SettingSyncProvider;
   /** Returns all sync provider settings. */
@@ -5867,7 +5864,7 @@ export type Query = {
   userConsents: Array<UserConsent>;
   /** Get all invoices for the authenticated user */
   userInvoices: Array<Invoice>;
-  userPollVote?: Maybe<Scalars['String']>;
+  userPollVote?: Maybe<Scalars['String']['output']>;
   /** Returns a userrole by id. */
   userRole: UserRole;
   /** Returns a paginated list of userroles based on the filters given. */
@@ -5883,7 +5880,7 @@ export type Query = {
 
 
 export type QueryAiSettingArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
@@ -5893,7 +5890,7 @@ export type QueryAiSettingsArgs = {
 
 
 export type QueryAnalyticsProviderSettingArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
@@ -5903,90 +5900,90 @@ export type QueryAnalyticsProviderSettingsArgs = {
 
 
 export type QueryArticleArgs = {
-  id?: InputMaybe<Scalars['String']>;
-  slug?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['String']['input']>;
+  slug?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type QueryArticleRevisionArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type QueryArticleRevisionsArgs = {
-  articleId: Scalars['String'];
-  cursorId?: InputMaybe<Scalars['String']>;
+  articleId: Scalars['String']['input'];
+  cursorId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<ArticleRevisionFilter>;
   order?: InputMaybe<SortOrder>;
-  skip?: InputMaybe<Scalars['Int']>;
-  take?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 export type QueryArticlesArgs = {
-  cursorId?: InputMaybe<Scalars['String']>;
+  cursorId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<ArticleFilter>;
   order?: InputMaybe<SortOrder>;
-  skip?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<ArticleSort>;
-  take?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 export type QueryAuditLogsArgs = {
-  cursorId?: InputMaybe<Scalars['String']>;
+  cursorId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<AuditLogFilter>;
   order?: InputMaybe<SortOrder>;
-  skip?: Scalars['Int'];
+  skip?: Scalars['Int']['input'];
   sort?: AuditLogSort;
-  take?: Scalars['Int'];
+  take?: Scalars['Int']['input'];
 };
 
 
 export type QueryAuthorArgs = {
-  id?: InputMaybe<Scalars['String']>;
-  slug?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['String']['input']>;
+  slug?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type QueryAuthorsArgs = {
-  cursorId?: InputMaybe<Scalars['String']>;
+  cursorId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<AuthorFilter>;
   order?: InputMaybe<SortOrder>;
-  skip?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<AuthorSort>;
-  take?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 export type QueryBannerArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type QueryBannersArgs = {
-  skip: Scalars['Int'];
-  take: Scalars['Int'];
+  skip: Scalars['Int']['input'];
+  take: Scalars['Int']['input'];
 };
 
 
 export type QueryBlockTemplateArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type QueryBlockTemplatesArgs = {
-  cursorId?: InputMaybe<Scalars['String']>;
+  cursorId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<BlockTemplateFilter>;
   order?: InputMaybe<SortOrder>;
-  skip?: Scalars['Int'];
+  skip?: Scalars['Int']['input'];
   sort?: BlockTemplateSort;
-  take?: Scalars['Int'];
+  take?: Scalars['Int']['input'];
 };
 
 
 export type QueryChallengeProviderSettingArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
@@ -5997,39 +5994,39 @@ export type QueryChallengeProviderSettingsArgs = {
 
 export type QueryChangelogEntriesArgs = {
   filter?: InputMaybe<ChangelogEntryFilter>;
-  locale?: InputMaybe<Scalars['String']>;
-  skip?: Scalars['Int'];
-  take?: Scalars['Int'];
+  locale?: InputMaybe<Scalars['String']['input']>;
+  skip?: Scalars['Int']['input'];
+  take?: Scalars['Int']['input'];
 };
 
 
 export type QueryCheckInvoiceStatusArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type QueryCheckLoginOtpArgs = {
-  email: Scalars['String'];
+  email: Scalars['String']['input'];
 };
 
 
 export type QueryCommentArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type QueryCommentsArgs = {
-  cursorId?: InputMaybe<Scalars['String']>;
+  cursorId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<CommentFilter>;
   order?: InputMaybe<SortOrder>;
-  skip?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<CommentSort>;
-  take?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 export type QueryCommentsForItemArgs = {
-  itemId: Scalars['String'];
+  itemId: Scalars['String']['input'];
   itemType: CommentItemType;
   order?: InputMaybe<SortOrder>;
   sort?: InputMaybe<CommentSort>;
@@ -6037,7 +6034,7 @@ export type QueryCommentsForItemArgs = {
 
 
 export type QueryConsentArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
@@ -6047,76 +6044,76 @@ export type QueryConsentsArgs = {
 
 
 export type QueryCreateSubscriptionInfoArgs = {
-  discountCode?: InputMaybe<Scalars['String']>;
-  memberPlanId: Scalars['String'];
+  discountCode?: InputMaybe<Scalars['String']['input']>;
+  memberPlanId: Scalars['String']['input'];
 };
 
 
 export type QueryCrowdfundingArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type QueryDailySubscriptionStatsArgs = {
-  end?: InputMaybe<Scalars['DateTime']>;
-  memberPlanIds?: InputMaybe<Array<Scalars['String']>>;
-  start: Scalars['DateTime'];
+  end?: InputMaybe<Scalars['DateTime']['input']>;
+  memberPlanIds?: InputMaybe<Array<Scalars['String']['input']>>;
+  start: Scalars['DateTime']['input'];
 };
 
 
 export type QueryDiscountCodeArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type QueryDiscountCodesArgs = {
-  cursorId?: InputMaybe<Scalars['String']>;
+  cursorId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<DiscountCodeFilter>;
   order?: InputMaybe<SortOrder>;
-  skip?: Scalars['Int'];
+  skip?: Scalars['Int']['input'];
   sort?: DiscountCodesort;
-  take?: Scalars['Int'];
+  take?: Scalars['Int']['input'];
 };
 
 
 export type QueryDocumentArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type QueryDocumentsArgs = {
-  cursorId?: InputMaybe<Scalars['String']>;
+  cursorId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<DocumentFilter>;
   order?: InputMaybe<SortOrder>;
-  skip?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<DocumentSort>;
-  take?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 export type QueryEventArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type QueryEventsArgs = {
-  cursorId?: InputMaybe<Scalars['String']>;
+  cursorId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<EventFilter>;
   order?: InputMaybe<SortOrder>;
-  skip?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<EventSort>;
-  take?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 export type QueryExpectedRevenueArgs = {
-  end?: InputMaybe<Scalars['DateTime']>;
-  start: Scalars['DateTime'];
+  end?: InputMaybe<Scalars['DateTime']['input']>;
+  start: Scalars['DateTime']['input'];
 };
 
 
 export type QueryExternalAppArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
@@ -6126,49 +6123,49 @@ export type QueryExternalAppsArgs = {
 
 
 export type QueryGetImagesByTagArgs = {
-  tag: Scalars['String'];
+  tag: Scalars['String']['input'];
 };
 
 
 export type QueryGoodieArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type QueryGoodiesArgs = {
-  cursorId?: InputMaybe<Scalars['String']>;
+  cursorId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<GoodieFilter>;
   order?: InputMaybe<SortOrder>;
-  skip?: Scalars['Int'];
+  skip?: Scalars['Int']['input'];
   sort?: GoodieSort;
-  take?: Scalars['Int'];
+  take?: Scalars['Int']['input'];
 };
 
 
 export type QueryHotAndTrendingArgs = {
-  start?: InputMaybe<Scalars['DateTime']>;
-  take?: InputMaybe<Scalars['Int']>;
+  start?: InputMaybe<Scalars['DateTime']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 export type QueryImageArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type QueryImagesArgs = {
-  cursorId?: InputMaybe<Scalars['String']>;
+  cursorId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<ImageFilter>;
   order?: InputMaybe<SortOrder>;
-  skip?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<ImageSort>;
-  take?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 export type QueryImpersonationSearchUsersArgs = {
-  limit?: InputMaybe<Scalars['Int']>;
-  query: Scalars['String'];
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  query: Scalars['String']['input'];
 };
 
 
@@ -6179,37 +6176,37 @@ export type QueryImportedEventArgs = {
 
 export type QueryImportedEventsArgs = {
   filter?: InputMaybe<ImportedEventFilter>;
-  order?: InputMaybe<Scalars['Int']>;
-  skip?: InputMaybe<Scalars['Int']>;
+  order?: InputMaybe<Scalars['Int']['input']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<ImportedEventSort>;
-  take?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 export type QueryInvoiceArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type QueryInvoicesArgs = {
-  cursorId?: InputMaybe<Scalars['String']>;
+  cursorId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<InvoiceFilter>;
   order?: InputMaybe<SortOrder>;
-  skip?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<InvoiceSort>;
-  take?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 export type QueryMailLogsArgs = {
   filter?: InputMaybe<MailLogFilter>;
-  skip?: InputMaybe<Scalars['Int']>;
-  take?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 export type QueryMailProviderSettingArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
@@ -6219,21 +6216,21 @@ export type QueryMailProviderSettingsArgs = {
 
 
 export type QueryMailSendJobArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type QueryMailSendJobRecipientsArgs = {
-  jobId: Scalars['String'];
-  skip?: InputMaybe<Scalars['Int']>;
+  jobId: Scalars['String']['input'];
+  skip?: InputMaybe<Scalars['Int']['input']>;
   state?: InputMaybe<MailSendJobRecipientState>;
-  take?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 export type QueryMailSendJobsArgs = {
-  skip?: InputMaybe<Scalars['Int']>;
-  take?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -6249,19 +6246,19 @@ export type QueryMailSendRecipientPreviewArgs = {
 
 export type QueryMailSendRecipientsArgs = {
   audience: MailAudienceInput;
-  skip?: InputMaybe<Scalars['Int']>;
-  take?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 export type QueryMailTemplateArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type QueryMailTemplateMissingPlaceholdersArgs = {
-  templateId: Scalars['String'];
-  withSubscriptionData: Scalars['Boolean'];
+  templateId: Scalars['String']['input'];
+  withSubscriptionData: Scalars['Boolean']['input'];
 };
 
 
@@ -6271,133 +6268,133 @@ export type QueryMailTemplatePreviewArgs = {
 
 
 export type QueryMailTemplateSubscriptionsArgs = {
-  query?: InputMaybe<Scalars['String']>;
+  query?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type QueryMailchimpInterestGroupsArgs = {
-  configId: Scalars['String'];
-  listId: Scalars['String'];
+  configId: Scalars['String']['input'];
+  listId: Scalars['String']['input'];
 };
 
 
 export type QueryMailchimpListsArgs = {
-  configId: Scalars['String'];
+  configId: Scalars['String']['input'];
 };
 
 
 export type QueryMailchimpMergeFieldsArgs = {
-  configId: Scalars['String'];
-  listId: Scalars['String'];
+  configId: Scalars['String']['input'];
+  listId: Scalars['String']['input'];
 };
 
 
 export type QueryMailchimpSyncErrorsArgs = {
-  configId: Scalars['String'];
-  skip?: InputMaybe<Scalars['Int']>;
-  take?: InputMaybe<Scalars['Int']>;
+  configId: Scalars['String']['input'];
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 export type QueryMailchimpSyncProgressArgs = {
-  configId: Scalars['String'];
+  configId: Scalars['String']['input'];
 };
 
 
 export type QueryMediumAuditLogsArgs = {
   filter?: InputMaybe<MediumAuditLogFilter>;
-  limit?: InputMaybe<Scalars['Int']>;
-  skip?: InputMaybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 export type QueryMediumChangelogActionsArgs = {
-  limit?: InputMaybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 export type QueryMediumMigrationsArgs = {
-  limit?: InputMaybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 export type QueryMediumStatsArgs = {
-  from?: InputMaybe<Scalars['DateTime']>;
-  to?: InputMaybe<Scalars['DateTime']>;
+  from?: InputMaybe<Scalars['DateTime']['input']>;
+  to?: InputMaybe<Scalars['DateTime']['input']>;
 };
 
 
 export type QueryMemberPlanArgs = {
-  id?: InputMaybe<Scalars['String']>;
-  slug?: InputMaybe<Scalars['Slug']>;
+  id?: InputMaybe<Scalars['String']['input']>;
+  slug?: InputMaybe<Scalars['Slug']['input']>;
 };
 
 
 export type QueryMemberPlansArgs = {
-  cursorId?: InputMaybe<Scalars['String']>;
+  cursorId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<MemberPlanFilter>;
   order?: InputMaybe<SortOrder>;
-  skip?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<MemberPlanSort>;
-  take?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 export type QueryNavigationArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type QueryNewDeactivationsArgs = {
-  end?: InputMaybe<Scalars['DateTime']>;
-  start: Scalars['DateTime'];
+  end?: InputMaybe<Scalars['DateTime']['input']>;
+  start: Scalars['DateTime']['input'];
 };
 
 
 export type QueryNewSubscribersArgs = {
-  end?: InputMaybe<Scalars['DateTime']>;
-  start: Scalars['DateTime'];
+  end?: InputMaybe<Scalars['DateTime']['input']>;
+  start: Scalars['DateTime']['input'];
 };
 
 
 export type QueryPageArgs = {
-  id?: InputMaybe<Scalars['String']>;
-  slug?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['String']['input']>;
+  slug?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type QueryPageRevisionArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type QueryPageRevisionsArgs = {
-  cursorId?: InputMaybe<Scalars['String']>;
+  cursorId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<PageRevisionFilter>;
   order?: InputMaybe<SortOrder>;
-  pageId: Scalars['String'];
-  skip?: InputMaybe<Scalars['Int']>;
-  take?: InputMaybe<Scalars['Int']>;
+  pageId: Scalars['String']['input'];
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 export type QueryPagesArgs = {
-  cursorId?: InputMaybe<Scalars['String']>;
+  cursorId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<PageFilter>;
   order?: InputMaybe<SortOrder>;
-  skip?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<PageSort>;
-  take?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 export type QueryPaymentMethodArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type QueryPaymentProviderSettingArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
@@ -6407,28 +6404,28 @@ export type QueryPaymentProviderSettingsArgs = {
 
 
 export type QueryPaywallArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type QueryPeerArgs = {
-  id?: InputMaybe<Scalars['String']>;
-  slug?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['String']['input']>;
+  slug?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type QueryPeerArticlesArgs = {
   filter?: InputMaybe<PeerArticleFilter>;
   order?: InputMaybe<SortOrder>;
-  skip?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<ArticleSort>;
-  take?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 export type QueryPeriodicJobLogArgs = {
-  skip?: InputMaybe<Scalars['Int']>;
-  take?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -6436,77 +6433,77 @@ export type QueryPhraseArgs = {
   articleSort?: ArticleSort;
   order?: SortOrder;
   pageSort?: PageSort;
-  query: Scalars['String'];
-  skip?: Scalars['Int'];
-  take?: Scalars['Int'];
+  query: Scalars['String']['input'];
+  skip?: Scalars['Int']['input'];
+  take?: Scalars['Int']['input'];
 };
 
 
 export type QueryPollArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type QueryPollVotesArgs = {
-  cursorId?: InputMaybe<Scalars['String']>;
+  cursorId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<PollVoteFilter>;
   order?: InputMaybe<SortOrder>;
-  skip?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<PollVoteSort>;
-  take?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 export type QueryPollsArgs = {
-  cursorId?: InputMaybe<Scalars['String']>;
+  cursorId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<PollFilter>;
   order?: InputMaybe<SortOrder>;
-  skip?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<PollSort>;
-  take?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 export type QueryPrimaryBannerArgs = {
-  documentId: Scalars['String'];
+  documentId: Scalars['String']['input'];
   documentType: BannerDocumentType;
-  hasPaywallBypass: Scalars['Boolean'];
-  hasSubscription: Scalars['Boolean'];
-  loggedIn: Scalars['Boolean'];
+  hasPaywallBypass: Scalars['Boolean']['input'];
+  hasSubscription: Scalars['Boolean']['input'];
+  loggedIn: Scalars['Boolean']['input'];
 };
 
 
 export type QueryPromptHtmlArgs = {
-  chatId?: InputMaybe<Scalars['String']>;
-  query: Scalars['String'];
+  chatId?: InputMaybe<Scalars['String']['input']>;
+  query: Scalars['String']['input'];
 };
 
 
 export type QueryRemotePeerProfileArgs = {
-  hostURL: Scalars['String'];
-  token: Scalars['String'];
+  hostURL: Scalars['String']['input'];
+  token: Scalars['String']['input'];
 };
 
 
 export type QueryRenewingSubscribersArgs = {
-  end?: InputMaybe<Scalars['DateTime']>;
-  start: Scalars['DateTime'];
+  end?: InputMaybe<Scalars['DateTime']['input']>;
+  start: Scalars['DateTime']['input'];
 };
 
 
 export type QueryRevenueArgs = {
-  end?: InputMaybe<Scalars['DateTime']>;
-  start: Scalars['DateTime'];
+  end?: InputMaybe<Scalars['DateTime']['input']>;
+  start: Scalars['DateTime']['input'];
 };
 
 
 export type QuerySettingArgs = {
-  name: Scalars['String'];
+  name: Scalars['String']['input'];
 };
 
 
 export type QuerySettingByIdArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
@@ -6516,51 +6513,51 @@ export type QuerySettingsArgs = {
 
 
 export type QuerySubscriptionArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type QuerySubscriptionFlowsArgs = {
-  defaultFlowOnly: Scalars['Boolean'];
-  memberPlanId?: InputMaybe<Scalars['String']>;
+  defaultFlowOnly: Scalars['Boolean']['input'];
+  memberPlanId?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type QuerySubscriptionsArgs = {
-  cursorId?: InputMaybe<Scalars['String']>;
+  cursorId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<SubscriptionFilter>;
   order?: InputMaybe<SortOrder>;
-  skip?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<SubscriptionSort>;
-  take?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 export type QuerySubscriptionsAsCsvArgs = {
-  activeAt?: InputMaybe<Scalars['DateTime']>;
-  autoRenew?: InputMaybe<Scalars['Boolean']>;
+  activeAt?: InputMaybe<Scalars['DateTime']['input']>;
+  autoRenew?: InputMaybe<Scalars['Boolean']['input']>;
   cancellationDateFrom?: InputMaybe<DateFilter>;
   cancellationDateTo?: InputMaybe<DateFilter>;
   deactivationDateFrom?: InputMaybe<DateFilter>;
   deactivationDateTo?: InputMaybe<DateFilter>;
-  deactivationReason?: InputMaybe<Scalars['String']>;
-  extendable?: InputMaybe<Scalars['Boolean']>;
-  memberPlanID?: InputMaybe<Scalars['String']>;
+  deactivationReason?: InputMaybe<Scalars['String']['input']>;
+  extendable?: InputMaybe<Scalars['Boolean']['input']>;
+  memberPlanID?: InputMaybe<Scalars['String']['input']>;
   paidUntilFrom?: InputMaybe<DateFilter>;
   paidUntilTo?: InputMaybe<DateFilter>;
-  paymentMethodID?: InputMaybe<Scalars['String']>;
+  paymentMethodID?: InputMaybe<Scalars['String']['input']>;
   paymentPeriodicity?: InputMaybe<PaymentPeriodicity>;
   startsAtFrom?: InputMaybe<DateFilter>;
   startsAtTo?: InputMaybe<DateFilter>;
-  subscriptionIDs?: InputMaybe<Array<Scalars['String']>>;
-  userHasAddress?: InputMaybe<Scalars['Boolean']>;
-  userID?: InputMaybe<Scalars['String']>;
-  userIDs?: InputMaybe<Array<Scalars['String']>>;
+  subscriptionIDs?: InputMaybe<Array<Scalars['String']['input']>>;
+  userHasAddress?: InputMaybe<Scalars['Boolean']['input']>;
+  userID?: InputMaybe<Scalars['String']['input']>;
+  userIDs?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 
 export type QuerySyncProviderSettingArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
@@ -6570,24 +6567,24 @@ export type QuerySyncProviderSettingsArgs = {
 
 
 export type QueryTagArgs = {
-  id?: InputMaybe<Scalars['String']>;
-  tag?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['String']['input']>;
+  tag?: InputMaybe<Scalars['String']['input']>;
   type?: InputMaybe<TagType>;
 };
 
 
 export type QueryTagsArgs = {
-  cursorId?: InputMaybe<Scalars['String']>;
+  cursorId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<TagFilter>;
   order?: InputMaybe<SortOrder>;
-  skip?: Scalars['Int'];
+  skip?: Scalars['Int']['input'];
   sort?: TagSort;
-  take?: Scalars['Int'];
+  take?: Scalars['Int']['input'];
 };
 
 
 export type QueryTrackingPixelSettingArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
@@ -6597,77 +6594,77 @@ export type QueryTrackingPixelSettingsArgs = {
 
 
 export type QueryUpgradeUserSubscriptionInfoArgs = {
-  discountCode?: InputMaybe<Scalars['String']>;
-  memberPlanId: Scalars['String'];
-  subscriptionId: Scalars['String'];
+  discountCode?: InputMaybe<Scalars['String']['input']>;
+  memberPlanId: Scalars['String']['input'];
+  subscriptionId: Scalars['String']['input'];
 };
 
 
 export type QueryUserArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type QueryUserConsentArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type QueryUserConsentsArgs = {
-  name?: InputMaybe<Scalars['String']>;
-  slug?: InputMaybe<Scalars['String']>;
-  value?: InputMaybe<Scalars['Boolean']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  slug?: InputMaybe<Scalars['String']['input']>;
+  value?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
 export type QueryUserPollVoteArgs = {
-  pollId: Scalars['String'];
+  pollId: Scalars['String']['input'];
 };
 
 
 export type QueryUserRoleArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 export type QueryUserRolesArgs = {
-  cursorId?: InputMaybe<Scalars['String']>;
+  cursorId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<UserRoleFilter>;
   order?: InputMaybe<SortOrder>;
-  skip?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<UserRoleSort>;
-  take?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 export type QueryUsersArgs = {
-  cursorId?: InputMaybe<Scalars['String']>;
+  cursorId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<UserFilter>;
   order?: InputMaybe<SortOrder>;
-  skip?: Scalars['Int'];
+  skip?: Scalars['Int']['input'];
   sort?: UserSort;
-  take?: Scalars['Int'];
+  take?: Scalars['Int']['input'];
 };
 
 export type QuoteBlock = BaseBlock & HasImage & {
   __typename?: 'QuoteBlock';
-  author?: Maybe<Scalars['String']>;
-  blockStyle?: Maybe<Scalars['String']>;
-  blockStyleName?: Maybe<Scalars['String']>;
-  disabled?: Maybe<Scalars['Boolean']>;
+  author?: Maybe<Scalars['String']['output']>;
+  blockStyle?: Maybe<Scalars['String']['output']>;
+  blockStyleName?: Maybe<Scalars['String']['output']>;
+  disabled?: Maybe<Scalars['Boolean']['output']>;
   image?: Maybe<Image>;
-  imageID?: Maybe<Scalars['String']>;
-  quote?: Maybe<Scalars['String']>;
+  imageID?: Maybe<Scalars['String']['output']>;
+  quote?: Maybe<Scalars['String']['output']>;
   type: BlockType;
 };
 
 export type QuoteBlockInput = {
-  author?: InputMaybe<Scalars['String']>;
-  blockStyle?: InputMaybe<Scalars['String']>;
-  blockStyleName?: InputMaybe<Scalars['String']>;
-  disabled?: InputMaybe<Scalars['Boolean']>;
-  imageID?: InputMaybe<Scalars['String']>;
-  quote?: InputMaybe<Scalars['String']>;
+  author?: InputMaybe<Scalars['String']['input']>;
+  blockStyle?: InputMaybe<Scalars['String']['input']>;
+  blockStyleName?: InputMaybe<Scalars['String']['input']>;
+  disabled?: InputMaybe<Scalars['Boolean']['input']>;
+  imageID?: InputMaybe<Scalars['String']['input']>;
+  quote?: InputMaybe<Scalars['String']['input']>;
 };
 
 export enum RatingSystemType {
@@ -6683,190 +6680,190 @@ export type Registration = {
 export type RemotePeerProfile = {
   __typename?: 'RemotePeerProfile';
   callToActionImage?: Maybe<PeerImage>;
-  callToActionImageID?: Maybe<Scalars['String']>;
-  callToActionImageURL?: Maybe<Scalars['String']>;
-  callToActionText?: Maybe<Scalars['RichText']>;
-  callToActionURL: Scalars['String'];
-  hostURL: Scalars['String'];
+  callToActionImageID?: Maybe<Scalars['String']['output']>;
+  callToActionImageURL?: Maybe<Scalars['String']['output']>;
+  callToActionText?: Maybe<Scalars['RichText']['output']>;
+  callToActionURL: Scalars['String']['output'];
+  hostURL: Scalars['String']['output'];
   logo?: Maybe<PeerImage>;
-  logoID?: Maybe<Scalars['String']>;
-  name: Scalars['String'];
+  logoID?: Maybe<Scalars['String']['output']>;
+  name: Scalars['String']['output'];
   squareLogo?: Maybe<PeerImage>;
-  squareLogoId?: Maybe<Scalars['String']>;
-  themeColor: Scalars['Color'];
-  themeFontColor: Scalars['Color'];
-  websiteURL: Scalars['String'];
+  squareLogoId?: Maybe<Scalars['String']['output']>;
+  themeColor: Scalars['Color']['output'];
+  themeFontColor: Scalars['Color']['output'];
+  websiteURL: Scalars['String']['output'];
 };
 
 export type RichTextBlock = BaseBlock & {
   __typename?: 'RichTextBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  blockStyleName?: Maybe<Scalars['String']>;
-  disabled?: Maybe<Scalars['Boolean']>;
-  richText?: Maybe<Scalars['RichText']>;
+  blockStyle?: Maybe<Scalars['String']['output']>;
+  blockStyleName?: Maybe<Scalars['String']['output']>;
+  disabled?: Maybe<Scalars['Boolean']['output']>;
+  richText?: Maybe<Scalars['RichText']['output']>;
   type: BlockType;
 };
 
 export type RichTextBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  blockStyleName?: InputMaybe<Scalars['String']>;
-  disabled?: InputMaybe<Scalars['Boolean']>;
-  richText?: InputMaybe<Scalars['RichText']>;
+  blockStyle?: InputMaybe<Scalars['String']['input']>;
+  blockStyleName?: InputMaybe<Scalars['String']['input']>;
+  disabled?: InputMaybe<Scalars['Boolean']['input']>;
+  richText?: InputMaybe<Scalars['RichText']['input']>;
 };
 
 export type SendTestMailTemplateInput = {
-  contextId: Scalars['String'];
-  htmlContent: Scalars['String'];
-  subject: Scalars['String'];
-  subscriptionId?: InputMaybe<Scalars['String']>;
-  textContent?: InputMaybe<Scalars['String']>;
+  contextId: Scalars['String']['input'];
+  htmlContent: Scalars['String']['input'];
+  subject: Scalars['String']['input'];
+  subscriptionId?: InputMaybe<Scalars['String']['input']>;
+  textContent?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type SensitiveDataUser = BaseUser & {
   __typename?: 'SensitiveDataUser';
-  active: Scalars['Boolean'];
+  active: Scalars['Boolean']['output'];
   address?: Maybe<UserAddress>;
-  birthday?: Maybe<Scalars['DateTime']>;
-  createdAt: Scalars['DateTime'];
-  email: Scalars['String'];
-  emailVerifiedAt?: Maybe<Scalars['DateTime']>;
-  firstName?: Maybe<Scalars['String']>;
-  flair?: Maybe<Scalars['String']>;
-  id: Scalars['String'];
+  birthday?: Maybe<Scalars['DateTime']['output']>;
+  createdAt: Scalars['DateTime']['output'];
+  email: Scalars['String']['output'];
+  emailVerifiedAt?: Maybe<Scalars['DateTime']['output']>;
+  firstName?: Maybe<Scalars['String']['output']>;
+  flair?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
   image?: Maybe<Image>;
-  lastLogin?: Maybe<Scalars['DateTime']>;
-  modifiedAt: Scalars['DateTime'];
-  name: Scalars['String'];
-  note?: Maybe<Scalars['String']>;
+  lastLogin?: Maybe<Scalars['DateTime']['output']>;
+  modifiedAt: Scalars['DateTime']['output'];
+  name: Scalars['String']['output'];
+  note?: Maybe<Scalars['String']['output']>;
   paymentProviderCustomers?: Maybe<Array<PaymentProviderCustomer>>;
-  pendingEmail?: Maybe<Scalars['String']>;
-  permissions: Array<Scalars['String']>;
+  pendingEmail?: Maybe<Scalars['String']['output']>;
+  permissions: Array<Scalars['String']['output']>;
   properties: Array<Property>;
-  roleIDs: Array<Scalars['String']>;
+  roleIDs: Array<Scalars['String']['output']>;
   roles: Array<UserRole>;
-  subscriptionCount: Scalars['Int'];
+  subscriptionCount: Scalars['Int']['output'];
   subscriptionOverview: Array<UserSubscriptionOverview>;
   /** Whether two-factor authentication is enabled for this user. */
-  totpEnabled: Scalars['Boolean'];
+  totpEnabled: Scalars['Boolean']['output'];
   /** Whether this user is exempt from the two-factor authentication requirement. */
-  totpExempt: Scalars['Boolean'];
-  userImageID?: Maybe<Scalars['String']>;
+  totpExempt: Scalars['Boolean']['output'];
+  userImageID?: Maybe<Scalars['String']['output']>;
 };
 
 export type SessionWithToken = {
   __typename?: 'SessionWithToken';
-  createdAt: Scalars['DateTime'];
-  expiresAt: Scalars['DateTime'];
+  createdAt: Scalars['DateTime']['output'];
+  expiresAt: Scalars['DateTime']['output'];
   /** Whether this session was created by redeeming an impersonation grant from the One dashboard. Clients must never treat an ordinary JWT login as impersonation. */
-  impersonated: Scalars['Boolean'];
-  token: Scalars['String'];
+  impersonated: Scalars['Boolean']['output'];
+  token: Scalars['String']['output'];
   /** Whether the user has two-factor authentication enabled. If true and the user is an admin, the client must verify TOTP before proceeding. */
-  totpEnabled: Scalars['Boolean'];
+  totpEnabled: Scalars['Boolean']['output'];
   user: SensitiveDataUser;
 };
 
 export type SessionWithTokenWithoutUser = {
   __typename?: 'SessionWithTokenWithoutUser';
-  createdAt: Scalars['DateTime'];
-  expiresAt: Scalars['DateTime'];
-  token: Scalars['String'];
+  createdAt: Scalars['DateTime']['output'];
+  expiresAt: Scalars['DateTime']['output'];
+  token: Scalars['String']['output'];
 };
 
 export type Setting = {
   __typename?: 'Setting';
-  id: Scalars['String'];
+  id: Scalars['String']['output'];
   name: SettingName;
   settingRestriction?: Maybe<SettingRestriction>;
-  value?: Maybe<Scalars['GraphQLSettingValueType']>;
+  value?: Maybe<Scalars['GraphQLSettingValueType']['output']>;
 };
 
 export type SettingAiProvider = SettingProvider & {
   __typename?: 'SettingAIProvider';
-  createdAt: Scalars['DateTime'];
-  id: Scalars['String'];
-  lastLoadedAt: Scalars['DateTime'];
-  modifiedAt: Scalars['DateTime'];
-  name?: Maybe<Scalars['String']>;
-  systemPrompt?: Maybe<Scalars['String']>;
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  lastLoadedAt: Scalars['DateTime']['output'];
+  modifiedAt: Scalars['DateTime']['output'];
+  name?: Maybe<Scalars['String']['output']>;
+  systemPrompt?: Maybe<Scalars['String']['output']>;
   type: AiProviderType;
 };
 
 export type SettingAiProviderFilter = {
-  id?: InputMaybe<Scalars['String']>;
-  name?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
   type?: InputMaybe<AiProviderType>;
 };
 
 export type SettingAnalyticsCredentialsInput = {
-  client_email: Scalars['String'];
-  client_id: Scalars['String'];
-  private_key: Scalars['String'];
-  private_key_id: Scalars['String'];
-  project_id: Scalars['String'];
-  type: Scalars['String'];
+  client_email: Scalars['String']['input'];
+  client_id: Scalars['String']['input'];
+  private_key: Scalars['String']['input'];
+  private_key_id: Scalars['String']['input'];
+  project_id: Scalars['String']['input'];
+  type: Scalars['String']['input'];
 };
 
 export type SettingAnalyticsProvider = SettingProvider & {
   __typename?: 'SettingAnalyticsProvider';
-  articlePrefix?: Maybe<Scalars['String']>;
-  createdAt: Scalars['DateTime'];
-  id: Scalars['String'];
-  lastLoadedAt: Scalars['DateTime'];
-  modifiedAt: Scalars['DateTime'];
-  name?: Maybe<Scalars['String']>;
-  property?: Maybe<Scalars['String']>;
+  articlePrefix?: Maybe<Scalars['String']['output']>;
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  lastLoadedAt: Scalars['DateTime']['output'];
+  modifiedAt: Scalars['DateTime']['output'];
+  name?: Maybe<Scalars['String']['output']>;
+  property?: Maybe<Scalars['String']['output']>;
   type: AnalyticsProviderType;
 };
 
 export type SettingAnalyticsProviderFilter = {
-  id?: InputMaybe<Scalars['String']>;
-  name?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
   type?: InputMaybe<AnalyticsProviderType>;
 };
 
 export type SettingChallengeProvider = SettingProvider & {
   __typename?: 'SettingChallengeProvider';
-  createdAt: Scalars['DateTime'];
-  id: Scalars['String'];
-  lastLoadedAt: Scalars['DateTime'];
-  modifiedAt: Scalars['DateTime'];
-  name?: Maybe<Scalars['String']>;
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  lastLoadedAt: Scalars['DateTime']['output'];
+  modifiedAt: Scalars['DateTime']['output'];
+  name?: Maybe<Scalars['String']['output']>;
   type: ChallengeProviderType;
 };
 
 export type SettingChallengeProviderFilter = {
-  id?: InputMaybe<Scalars['String']>;
-  name?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
   type?: InputMaybe<ChallengeProviderType>;
 };
 
 export type SettingFilter = {
-  name?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type SettingMailProvider = SettingProvider & {
   __typename?: 'SettingMailProvider';
-  createdAt: Scalars['DateTime'];
-  fromAddress?: Maybe<Scalars['String']>;
-  id: Scalars['String'];
-  lastLoadedAt: Scalars['DateTime'];
-  mailchimp_baseURL?: Maybe<Scalars['String']>;
-  mailgun_baseDomain?: Maybe<Scalars['String']>;
-  mailgun_mailDomain?: Maybe<Scalars['String']>;
-  modifiedAt: Scalars['DateTime'];
-  name?: Maybe<Scalars['String']>;
-  replyToAddress?: Maybe<Scalars['String']>;
-  slack_webhookURL?: Maybe<Scalars['String']>;
-  smtp_host?: Maybe<Scalars['String']>;
-  smtp_port?: Maybe<Scalars['Int']>;
-  smtp_secure?: Maybe<Scalars['Boolean']>;
-  smtp_user?: Maybe<Scalars['String']>;
+  createdAt: Scalars['DateTime']['output'];
+  fromAddress?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  lastLoadedAt: Scalars['DateTime']['output'];
+  mailchimp_baseURL?: Maybe<Scalars['String']['output']>;
+  mailgun_baseDomain?: Maybe<Scalars['String']['output']>;
+  mailgun_mailDomain?: Maybe<Scalars['String']['output']>;
+  modifiedAt: Scalars['DateTime']['output'];
+  name?: Maybe<Scalars['String']['output']>;
+  replyToAddress?: Maybe<Scalars['String']['output']>;
+  slack_webhookURL?: Maybe<Scalars['String']['output']>;
+  smtp_host?: Maybe<Scalars['String']['output']>;
+  smtp_port?: Maybe<Scalars['Int']['output']>;
+  smtp_secure?: Maybe<Scalars['Boolean']['output']>;
+  smtp_user?: Maybe<Scalars['String']['output']>;
   type: MailProviderType;
 };
 
 export type SettingMailProviderFilter = {
-  id?: InputMaybe<Scalars['String']>;
-  name?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
   type?: InputMaybe<MailProviderType>;
 };
 
@@ -6895,109 +6892,109 @@ export enum SettingName {
 
 export type SettingPaymentProvider = SettingProvider & {
   __typename?: 'SettingPaymentProvider';
-  bexio_accountId?: Maybe<Scalars['Float']>;
-  bexio_countryId?: Maybe<Scalars['Float']>;
-  bexio_invoiceMailBodyNewMembership?: Maybe<Scalars['String']>;
-  bexio_invoiceMailBodyRenewalMembership?: Maybe<Scalars['String']>;
-  bexio_invoiceMailSubjectNewMembership?: Maybe<Scalars['String']>;
-  bexio_invoiceMailSubjectRenewalMembership?: Maybe<Scalars['String']>;
-  bexio_invoiceTemplateNewMembership?: Maybe<Scalars['String']>;
-  bexio_invoiceTemplateRenewalMembership?: Maybe<Scalars['String']>;
-  bexio_invoiceTitleNewMembership?: Maybe<Scalars['String']>;
-  bexio_invoiceTitleRenewalMembership?: Maybe<Scalars['String']>;
-  bexio_markInvoiceAsOpen?: Maybe<Scalars['Boolean']>;
-  bexio_taxId?: Maybe<Scalars['Float']>;
-  bexio_unitId?: Maybe<Scalars['Float']>;
-  bexio_userId?: Maybe<Scalars['Float']>;
-  createdAt: Scalars['DateTime'];
-  deletedAt?: Maybe<Scalars['DateTime']>;
-  id: Scalars['String'];
-  lastLoadedAt: Scalars['DateTime'];
-  modifiedAt: Scalars['DateTime'];
-  mollie_apiBaseUrl?: Maybe<Scalars['String']>;
+  bexio_accountId?: Maybe<Scalars['Float']['output']>;
+  bexio_countryId?: Maybe<Scalars['Float']['output']>;
+  bexio_invoiceMailBodyNewMembership?: Maybe<Scalars['String']['output']>;
+  bexio_invoiceMailBodyRenewalMembership?: Maybe<Scalars['String']['output']>;
+  bexio_invoiceMailSubjectNewMembership?: Maybe<Scalars['String']['output']>;
+  bexio_invoiceMailSubjectRenewalMembership?: Maybe<Scalars['String']['output']>;
+  bexio_invoiceTemplateNewMembership?: Maybe<Scalars['String']['output']>;
+  bexio_invoiceTemplateRenewalMembership?: Maybe<Scalars['String']['output']>;
+  bexio_invoiceTitleNewMembership?: Maybe<Scalars['String']['output']>;
+  bexio_invoiceTitleRenewalMembership?: Maybe<Scalars['String']['output']>;
+  bexio_markInvoiceAsOpen?: Maybe<Scalars['Boolean']['output']>;
+  bexio_taxId?: Maybe<Scalars['Float']['output']>;
+  bexio_unitId?: Maybe<Scalars['Float']['output']>;
+  bexio_userId?: Maybe<Scalars['Float']['output']>;
+  createdAt: Scalars['DateTime']['output'];
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  id: Scalars['String']['output'];
+  lastLoadedAt: Scalars['DateTime']['output'];
+  modifiedAt: Scalars['DateTime']['output'];
+  mollie_apiBaseUrl?: Maybe<Scalars['String']['output']>;
   mollie_methods?: Maybe<Array<PaymentMethodMollie>>;
-  name?: Maybe<Scalars['String']>;
-  offSessionPayments?: Maybe<Scalars['Boolean']>;
-  payrexx_instancename?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']['output']>;
+  offSessionPayments?: Maybe<Scalars['Boolean']['output']>;
+  payrexx_instancename?: Maybe<Scalars['String']['output']>;
   payrexx_pm?: Maybe<Array<PayrexxPm>>;
   payrexx_psp?: Maybe<Array<PayrexxPsp>>;
-  payrexx_vatrate?: Maybe<Scalars['String']>;
+  payrexx_vatrate?: Maybe<Scalars['String']['output']>;
   stripe_methods?: Maybe<Array<StripePaymentMethod>>;
   type: PaymentProviderType;
 };
 
 export type SettingPaymentProviderFilter = {
-  id?: InputMaybe<Scalars['String']>;
-  name?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
   type?: InputMaybe<PaymentProviderType>;
 };
 
 export type SettingProvider = {
-  createdAt: Scalars['DateTime'];
-  id: Scalars['String'];
-  lastLoadedAt: Scalars['DateTime'];
-  modifiedAt: Scalars['DateTime'];
-  name?: Maybe<Scalars['String']>;
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  lastLoadedAt: Scalars['DateTime']['output'];
+  modifiedAt: Scalars['DateTime']['output'];
+  name?: Maybe<Scalars['String']['output']>;
 };
 
 export type SettingRestriction = {
   __typename?: 'SettingRestriction';
   allowedValues?: Maybe<AllowedSettingVals>;
-  inputLength?: Maybe<Scalars['Int']>;
-  maxValue?: Maybe<Scalars['Int']>;
-  minValue?: Maybe<Scalars['Int']>;
+  inputLength?: Maybe<Scalars['Int']['output']>;
+  maxValue?: Maybe<Scalars['Int']['output']>;
+  minValue?: Maybe<Scalars['Int']['output']>;
 };
 
 export type SettingSyncProvider = SettingProvider & {
   __typename?: 'SettingSyncProvider';
-  createdAt: Scalars['DateTime'];
-  enabled?: Maybe<Scalars['Boolean']>;
-  id: Scalars['String'];
-  lastLoadedAt: Scalars['DateTime'];
-  lastSyncAt?: Maybe<Scalars['DateTime']>;
-  lastSyncError?: Maybe<Scalars['String']>;
-  mailchimp_defaultInterestGroupIds?: Maybe<Array<Scalars['String']>>;
-  mailchimp_extensions?: Maybe<Scalars['JSONObject']>;
-  mailchimp_interestGroupMappings?: Maybe<Array<Scalars['JSONObject']>>;
-  mailchimp_listId?: Maybe<Scalars['String']>;
-  mailchimp_mergeFieldMappings?: Maybe<Array<Scalars['JSONObject']>>;
-  modifiedAt: Scalars['DateTime'];
-  name?: Maybe<Scalars['String']>;
+  createdAt: Scalars['DateTime']['output'];
+  enabled?: Maybe<Scalars['Boolean']['output']>;
+  id: Scalars['String']['output'];
+  lastLoadedAt: Scalars['DateTime']['output'];
+  lastSyncAt?: Maybe<Scalars['DateTime']['output']>;
+  lastSyncError?: Maybe<Scalars['String']['output']>;
+  mailchimp_defaultInterestGroupIds?: Maybe<Array<Scalars['String']['output']>>;
+  mailchimp_extensions?: Maybe<Scalars['JSONObject']['output']>;
+  mailchimp_interestGroupMappings?: Maybe<Array<Scalars['JSONObject']['output']>>;
+  mailchimp_listId?: Maybe<Scalars['String']['output']>;
+  mailchimp_mergeFieldMappings?: Maybe<Array<Scalars['JSONObject']['output']>>;
+  modifiedAt: Scalars['DateTime']['output'];
+  name?: Maybe<Scalars['String']['output']>;
   type: SyncProviderType;
 };
 
 export type SettingSyncProviderFilter = {
-  enabled?: InputMaybe<Scalars['Boolean']>;
-  id?: InputMaybe<Scalars['String']>;
-  name?: InputMaybe<Scalars['String']>;
+  enabled?: InputMaybe<Scalars['Boolean']['input']>;
+  id?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
   type?: InputMaybe<SyncProviderType>;
 };
 
 export type SettingTrackingPixelFilter = {
-  id?: InputMaybe<Scalars['String']>;
-  name?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
   type?: InputMaybe<TrackingPixelProviderType>;
 };
 
 export type SettingTrackingPixelProvider = SettingProvider & {
   __typename?: 'SettingTrackingPixelProvider';
-  createdAt: Scalars['DateTime'];
-  deletedAt?: Maybe<Scalars['DateTime']>;
-  id: Scalars['String'];
-  lastLoadedAt: Scalars['DateTime'];
-  modifiedAt: Scalars['DateTime'];
-  name?: Maybe<Scalars['String']>;
-  prolitteris_memberNr?: Maybe<Scalars['String']>;
-  prolitteris_onlyPaidContentAccess?: Maybe<Scalars['Boolean']>;
-  prolitteris_publisherInternalKeyDomain?: Maybe<Scalars['String']>;
-  prolitteris_usePublisherInternalKey?: Maybe<Scalars['Boolean']>;
-  prolitteris_username?: Maybe<Scalars['String']>;
+  createdAt: Scalars['DateTime']['output'];
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  id: Scalars['String']['output'];
+  lastLoadedAt: Scalars['DateTime']['output'];
+  modifiedAt: Scalars['DateTime']['output'];
+  name?: Maybe<Scalars['String']['output']>;
+  prolitteris_memberNr?: Maybe<Scalars['String']['output']>;
+  prolitteris_onlyPaidContentAccess?: Maybe<Scalars['Boolean']['output']>;
+  prolitteris_publisherInternalKeyDomain?: Maybe<Scalars['String']['output']>;
+  prolitteris_usePublisherInternalKey?: Maybe<Scalars['Boolean']['output']>;
+  prolitteris_username?: Maybe<Scalars['String']['output']>;
   type: TrackingPixelProviderType;
 };
 
 export type SingleEventFilter = {
-  id: Scalars['String'];
-  source: Scalars['String'];
+  id: Scalars['String']['input'];
+  source: Scalars['String']['input'];
 };
 
 export enum SortOrder {
@@ -7007,41 +7004,41 @@ export enum SortOrder {
 
 export type SoundCloudTrackBlock = BaseBlock & {
   __typename?: 'SoundCloudTrackBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  blockStyleName?: Maybe<Scalars['String']>;
-  disabled?: Maybe<Scalars['Boolean']>;
-  trackID?: Maybe<Scalars['String']>;
+  blockStyle?: Maybe<Scalars['String']['output']>;
+  blockStyleName?: Maybe<Scalars['String']['output']>;
+  disabled?: Maybe<Scalars['Boolean']['output']>;
+  trackID?: Maybe<Scalars['String']['output']>;
   type: BlockType;
 };
 
 export type SoundCloudTrackBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  blockStyleName?: InputMaybe<Scalars['String']>;
-  disabled?: InputMaybe<Scalars['Boolean']>;
-  trackID?: InputMaybe<Scalars['String']>;
+  blockStyle?: InputMaybe<Scalars['String']['input']>;
+  blockStyleName?: InputMaybe<Scalars['String']['input']>;
+  disabled?: InputMaybe<Scalars['Boolean']['input']>;
+  trackID?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type Stats = {
   __typename?: 'Stats';
-  articlesCount: Scalars['Int'];
-  authorsCount: Scalars['Int'];
-  firstArticleDate?: Maybe<Scalars['DateTime']>;
+  articlesCount: Scalars['Int']['output'];
+  authorsCount: Scalars['Int']['output'];
+  firstArticleDate?: Maybe<Scalars['DateTime']['output']>;
 };
 
 export type StreamableVideoBlock = BaseBlock & {
   __typename?: 'StreamableVideoBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  blockStyleName?: Maybe<Scalars['String']>;
-  disabled?: Maybe<Scalars['Boolean']>;
+  blockStyle?: Maybe<Scalars['String']['output']>;
+  blockStyleName?: Maybe<Scalars['String']['output']>;
+  disabled?: Maybe<Scalars['Boolean']['output']>;
   type: BlockType;
-  videoID?: Maybe<Scalars['String']>;
+  videoID?: Maybe<Scalars['String']['output']>;
 };
 
 export type StreamableVideoBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  blockStyleName?: InputMaybe<Scalars['String']>;
-  disabled?: InputMaybe<Scalars['Boolean']>;
-  videoID?: InputMaybe<Scalars['String']>;
+  blockStyle?: InputMaybe<Scalars['String']['input']>;
+  blockStyleName?: InputMaybe<Scalars['String']['input']>;
+  disabled?: InputMaybe<Scalars['Boolean']['input']>;
+  videoID?: InputMaybe<Scalars['String']['input']>;
 };
 
 export enum StripePaymentMethod {
@@ -7071,19 +7068,19 @@ export enum StripePaymentMethod {
 
 export type SubscribeBlock = BaseBlock & {
   __typename?: 'SubscribeBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  blockStyleName?: Maybe<Scalars['String']>;
-  disabled?: Maybe<Scalars['Boolean']>;
+  blockStyle?: Maybe<Scalars['String']['output']>;
+  blockStyleName?: Maybe<Scalars['String']['output']>;
+  disabled?: Maybe<Scalars['Boolean']['output']>;
   fields: Array<SubscribeBlockField>;
-  goodieMinValue?: Maybe<Scalars['Int']>;
-  goodieMinValueAppliesToUpgrade: Scalars['Boolean'];
-  hideRepeatGoodieOnUpgrade: Scalars['Boolean'];
-  memberPlanIds: Array<Scalars['String']>;
+  goodieMinValue?: Maybe<Scalars['Int']['output']>;
+  goodieMinValueAppliesToUpgrade: Scalars['Boolean']['output'];
+  hideRepeatGoodieOnUpgrade: Scalars['Boolean']['output'];
+  memberPlanIds: Array<Scalars['String']['output']>;
   memberPlanRenderSettings: Array<SubscribeBlockMemberPlanRenderSetting>;
   memberPlans: Array<MemberPlan>;
   periodicityDisplay?: Maybe<SubscribePeriodicityDisplay>;
-  showDiscountCodes: Scalars['Boolean'];
-  showGoodies: Scalars['Boolean'];
+  showDiscountCodes: Scalars['Boolean']['output'];
+  showGoodies: Scalars['Boolean']['output'];
   type: BlockType;
 };
 
@@ -7097,18 +7094,18 @@ export enum SubscribeBlockField {
 }
 
 export type SubscribeBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  blockStyleName?: InputMaybe<Scalars['String']>;
-  disabled?: InputMaybe<Scalars['Boolean']>;
+  blockStyle?: InputMaybe<Scalars['String']['input']>;
+  blockStyleName?: InputMaybe<Scalars['String']['input']>;
+  disabled?: InputMaybe<Scalars['Boolean']['input']>;
   fields?: Array<SubscribeBlockField>;
-  goodieMinValue?: InputMaybe<Scalars['Int']>;
-  goodieMinValueAppliesToUpgrade?: Scalars['Boolean'];
-  hideRepeatGoodieOnUpgrade?: Scalars['Boolean'];
-  memberPlanIds?: Array<Scalars['String']>;
+  goodieMinValue?: InputMaybe<Scalars['Int']['input']>;
+  goodieMinValueAppliesToUpgrade?: Scalars['Boolean']['input'];
+  hideRepeatGoodieOnUpgrade?: Scalars['Boolean']['input'];
+  memberPlanIds?: Array<Scalars['String']['input']>;
   memberPlanRenderSettings: Array<SubscribeBlockMemberPlanRenderSettingInput>;
   periodicityDisplay?: InputMaybe<SubscribePeriodicityDisplay>;
-  showDiscountCodes?: Scalars['Boolean'];
-  showGoodies?: Scalars['Boolean'];
+  showDiscountCodes?: Scalars['Boolean']['input'];
+  showGoodies?: Scalars['Boolean']['input'];
 };
 
 export type SubscribeBlockLayoutConfig = {
@@ -7116,54 +7113,54 @@ export type SubscribeBlockLayoutConfig = {
 };
 
 export type SubscribeBlockLayoutConfigInput = {
-  showInput?: Scalars['Boolean'];
+  showInput?: Scalars['Boolean']['input'];
   type: SubscribeBlockRenderLayout;
-  values?: InputMaybe<Array<Scalars['Int']>>;
+  values?: InputMaybe<Array<Scalars['Int']['input']>>;
   valuesByPeriodicity?: InputMaybe<Array<SubscribeBlockPeriodicityValuesInput>>;
 };
 
 export type SubscribeBlockLayoutNoneConfig = SubscribeBlockLayoutConfig & {
   __typename?: 'SubscribeBlockLayoutNoneConfig';
-  showInput: Scalars['Boolean'];
+  showInput: Scalars['Boolean']['output'];
   type: SubscribeBlockRenderLayout;
 };
 
 export type SubscribeBlockLayoutPickerConfig = SubscribeBlockLayoutConfig & {
   __typename?: 'SubscribeBlockLayoutPickerConfig';
-  showInput: Scalars['Boolean'];
+  showInput: Scalars['Boolean']['output'];
   type: SubscribeBlockRenderLayout;
-  values: Array<Scalars['Int']>;
+  values: Array<Scalars['Int']['output']>;
   valuesByPeriodicity: Array<SubscribeBlockPeriodicityValues>;
 };
 
 export type SubscribeBlockLayoutSliderConfig = SubscribeBlockLayoutConfig & {
   __typename?: 'SubscribeBlockLayoutSliderConfig';
-  showInput: Scalars['Boolean'];
+  showInput: Scalars['Boolean']['output'];
   type: SubscribeBlockRenderLayout;
 };
 
 export type SubscribeBlockMemberPlanRenderSetting = {
   __typename?: 'SubscribeBlockMemberPlanRenderSetting';
-  isDefault: Scalars['Boolean'];
+  isDefault: Scalars['Boolean']['output'];
   layout: SubscribeBlockLayoutConfig;
-  memberPlanId: Scalars['String'];
+  memberPlanId: Scalars['String']['output'];
 };
 
 export type SubscribeBlockMemberPlanRenderSettingInput = {
-  isDefault?: Scalars['Boolean'];
+  isDefault?: Scalars['Boolean']['input'];
   layout: SubscribeBlockLayoutConfigInput;
-  memberPlanId: Scalars['String'];
+  memberPlanId: Scalars['String']['input'];
 };
 
 export type SubscribeBlockPeriodicityValues = {
   __typename?: 'SubscribeBlockPeriodicityValues';
   periodicity: PaymentPeriodicity;
-  values: Array<Scalars['Int']>;
+  values: Array<Scalars['Int']['output']>;
 };
 
 export type SubscribeBlockPeriodicityValuesInput = {
   periodicity: PaymentPeriodicity;
-  values: Array<Scalars['Int']>;
+  values: Array<Scalars['Int']['input']>;
 };
 
 export enum SubscribeBlockRenderLayout {
@@ -7181,14 +7178,14 @@ export enum SubscribePeriodicityDisplay {
 export type SubscriptionCreatedAction = BaseAction & HasSubscriptionLc & {
   __typename?: 'SubscriptionCreatedAction';
   actionType: ActionType;
-  date: Scalars['DateTime'];
+  date: Scalars['DateTime']['output'];
   subscription: PublicSubscription;
-  subscriptionId: Scalars['String'];
+  subscriptionId: Scalars['String']['output'];
 };
 
 export type SubscriptionDeactivation = {
   __typename?: 'SubscriptionDeactivation';
-  date: Scalars['DateTime'];
+  date: Scalars['DateTime']['output'];
   reason: SubscriptionDeactivationReason;
 };
 
@@ -7212,58 +7209,58 @@ export enum SubscriptionEvent {
 }
 
 export type SubscriptionFilter = {
-  activeAt?: InputMaybe<Scalars['DateTime']>;
-  autoRenew?: InputMaybe<Scalars['Boolean']>;
+  activeAt?: InputMaybe<Scalars['DateTime']['input']>;
+  autoRenew?: InputMaybe<Scalars['Boolean']['input']>;
   cancellationDateFrom?: InputMaybe<DateFilter>;
   cancellationDateTo?: InputMaybe<DateFilter>;
   deactivationDateFrom?: InputMaybe<DateFilter>;
   deactivationDateTo?: InputMaybe<DateFilter>;
-  deactivationReason?: InputMaybe<Scalars['String']>;
-  extendable?: InputMaybe<Scalars['Boolean']>;
-  memberPlanID?: InputMaybe<Scalars['String']>;
+  deactivationReason?: InputMaybe<Scalars['String']['input']>;
+  extendable?: InputMaybe<Scalars['Boolean']['input']>;
+  memberPlanID?: InputMaybe<Scalars['String']['input']>;
   paidUntilFrom?: InputMaybe<DateFilter>;
   paidUntilTo?: InputMaybe<DateFilter>;
-  paymentMethodID?: InputMaybe<Scalars['String']>;
+  paymentMethodID?: InputMaybe<Scalars['String']['input']>;
   paymentPeriodicity?: InputMaybe<PaymentPeriodicity>;
   startsAtFrom?: InputMaybe<DateFilter>;
   startsAtTo?: InputMaybe<DateFilter>;
-  subscriptionIDs?: InputMaybe<Array<Scalars['String']>>;
-  userHasAddress?: InputMaybe<Scalars['Boolean']>;
-  userID?: InputMaybe<Scalars['String']>;
-  userIDs?: InputMaybe<Array<Scalars['String']>>;
+  subscriptionIDs?: InputMaybe<Array<Scalars['String']['input']>>;
+  userHasAddress?: InputMaybe<Scalars['Boolean']['input']>;
+  userID?: InputMaybe<Scalars['String']['input']>;
+  userIDs?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 export type SubscriptionFlowModel = {
   __typename?: 'SubscriptionFlowModel';
-  autoRenewal: Array<Scalars['Boolean']>;
-  default: Scalars['Boolean'];
-  id: Scalars['String'];
+  autoRenewal: Array<Scalars['Boolean']['output']>;
+  default: Scalars['Boolean']['output'];
+  id: Scalars['String']['output'];
   intervals: Array<SubscriptionInterval>;
   memberPlan?: Maybe<MemberPlan>;
-  numberOfSubscriptions: Scalars['Int'];
+  numberOfSubscriptions: Scalars['Int']['output'];
   paymentMethods: Array<PaymentMethod>;
   periodicities: Array<PaymentPeriodicity>;
 };
 
 export type SubscriptionInterval = {
   __typename?: 'SubscriptionInterval';
-  daysAwayFromEnding?: Maybe<Scalars['Int']>;
+  daysAwayFromEnding?: Maybe<Scalars['Int']['output']>;
   event: SubscriptionEvent;
-  id: Scalars['String'];
+  id: Scalars['String']['output'];
   mailTemplate?: Maybe<MailTemplateRef>;
 };
 
 export type SubscriptionPeriod = {
   __typename?: 'SubscriptionPeriod';
-  amount: Scalars['Float'];
-  createdAt: Scalars['DateTime'];
-  endsAt: Scalars['DateTime'];
-  id: Scalars['String'];
-  invoiceID: Scalars['String'];
-  isPaid: Scalars['Boolean'];
-  modifiedAt: Scalars['DateTime'];
+  amount: Scalars['Float']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  endsAt: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  invoiceID: Scalars['String']['output'];
+  isPaid: Scalars['Boolean']['output'];
+  modifiedAt: Scalars['DateTime']['output'];
   paymentPeriodicity: PaymentPeriodicity;
-  startsAt: Scalars['DateTime'];
+  startsAt: Scalars['DateTime']['output'];
 };
 
 export enum SubscriptionSort {
@@ -7283,18 +7280,18 @@ export type SystemMailModel = {
 
 export type Tag = {
   __typename?: 'Tag';
-  color?: Maybe<Scalars['Color']>;
-  description?: Maybe<Scalars['RichText']>;
-  id: Scalars['String'];
-  main: Scalars['Boolean'];
-  tag?: Maybe<Scalars['String']>;
+  color?: Maybe<Scalars['Color']['output']>;
+  description?: Maybe<Scalars['RichText']['output']>;
+  id: Scalars['String']['output'];
+  main: Scalars['Boolean']['output'];
+  tag?: Maybe<Scalars['String']['output']>;
   type: TagType;
-  url: Scalars['String'];
+  url: Scalars['String']['output'];
 };
 
 export type TagFilter = {
-  tag?: InputMaybe<Scalars['String']>;
-  tags?: InputMaybe<Array<Scalars['String']>>;
+  tag?: InputMaybe<Scalars['String']['input']>;
+  tags?: InputMaybe<Array<Scalars['String']['input']>>;
   type?: InputMaybe<TagType>;
 };
 
@@ -7317,40 +7314,40 @@ export type Teaser = ArticleTeaser | CustomTeaser | EventTeaser | PageTeaser;
 
 export type TeaserGridBlock = BaseBlock & {
   __typename?: 'TeaserGridBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  blockStyleName?: Maybe<Scalars['String']>;
-  disabled?: Maybe<Scalars['Boolean']>;
-  numColumns: Scalars['Int'];
+  blockStyle?: Maybe<Scalars['String']['output']>;
+  blockStyleName?: Maybe<Scalars['String']['output']>;
+  disabled?: Maybe<Scalars['Boolean']['output']>;
+  numColumns: Scalars['Int']['output'];
   teasers: Array<Maybe<Teaser>>;
-  title?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']['output']>;
   type: BlockType;
 };
 
 export type TeaserGridBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  blockStyleName?: InputMaybe<Scalars['String']>;
-  disabled?: InputMaybe<Scalars['Boolean']>;
-  numColumns: Scalars['Int'];
+  blockStyle?: InputMaybe<Scalars['String']['input']>;
+  blockStyleName?: InputMaybe<Scalars['String']['input']>;
+  disabled?: InputMaybe<Scalars['Boolean']['input']>;
+  numColumns: Scalars['Int']['input'];
   teasers: Array<InputMaybe<TeaserInput>>;
-  title?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type TeaserGridFlexBlock = BaseBlock & {
   __typename?: 'TeaserGridFlexBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  blockStyleName?: Maybe<Scalars['String']>;
-  disabled?: Maybe<Scalars['Boolean']>;
+  blockStyle?: Maybe<Scalars['String']['output']>;
+  blockStyleName?: Maybe<Scalars['String']['output']>;
+  disabled?: Maybe<Scalars['Boolean']['output']>;
   flexTeasers: Array<FlexTeaser>;
-  title?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']['output']>;
   type: BlockType;
 };
 
 export type TeaserGridFlexBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  blockStyleName?: InputMaybe<Scalars['String']>;
-  disabled?: InputMaybe<Scalars['Boolean']>;
+  blockStyle?: InputMaybe<Scalars['String']['input']>;
+  blockStyleName?: InputMaybe<Scalars['String']['input']>;
+  disabled?: InputMaybe<Scalars['Boolean']['input']>;
   flexTeasers: Array<FlexTeaserInput>;
-  title?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type TeaserInput = {
@@ -7362,39 +7359,39 @@ export type TeaserInput = {
 
 export type TeaserListBlock = BaseBlock & {
   __typename?: 'TeaserListBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  blockStyleName?: Maybe<Scalars['String']>;
-  disabled?: Maybe<Scalars['Boolean']>;
+  blockStyle?: Maybe<Scalars['String']['output']>;
+  blockStyleName?: Maybe<Scalars['String']['output']>;
+  disabled?: Maybe<Scalars['Boolean']['output']>;
   filter: TeaserListBlockFilter;
-  skip?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']['output']>;
   sort?: Maybe<TeaserListBlockSort>;
-  take?: Maybe<Scalars['Int']>;
+  take?: Maybe<Scalars['Int']['output']>;
   teaserType: TeaserType;
   teasers: Array<Maybe<Teaser>>;
-  title?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']['output']>;
   type: BlockType;
 };
 
 export type TeaserListBlockFilter = {
   __typename?: 'TeaserListBlockFilter';
   tagObjects: Array<Tag>;
-  tags?: Maybe<Array<Scalars['String']>>;
+  tags?: Maybe<Array<Scalars['String']['output']>>;
 };
 
 export type TeaserListBlockFilterInput = {
-  tags?: InputMaybe<Array<Scalars['String']>>;
+  tags?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 export type TeaserListBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  blockStyleName?: InputMaybe<Scalars['String']>;
-  disabled?: InputMaybe<Scalars['Boolean']>;
+  blockStyle?: InputMaybe<Scalars['String']['input']>;
+  blockStyleName?: InputMaybe<Scalars['String']['input']>;
+  disabled?: InputMaybe<Scalars['Boolean']['input']>;
   filter: TeaserListBlockFilterInput;
-  skip?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<TeaserListBlockSort>;
-  take?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
   teaserType: TeaserType;
-  title?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 export enum TeaserListBlockSort {
@@ -7421,10 +7418,10 @@ export enum TeaserSlotType {
 
 export type TeaserSlotsAutofillConfig = BaseBlock & {
   __typename?: 'TeaserSlotsAutofillConfig';
-  blockStyle?: Maybe<Scalars['String']>;
-  blockStyleName?: Maybe<Scalars['String']>;
-  disabled?: Maybe<Scalars['Boolean']>;
-  enabled: Scalars['Boolean'];
+  blockStyle?: Maybe<Scalars['String']['output']>;
+  blockStyleName?: Maybe<Scalars['String']['output']>;
+  disabled?: Maybe<Scalars['Boolean']['output']>;
+  enabled: Scalars['Boolean']['output'];
   filter?: Maybe<TeaserListBlockFilter>;
   sort?: Maybe<TeaserListBlockSort>;
   teaserType?: Maybe<TeaserType>;
@@ -7432,7 +7429,7 @@ export type TeaserSlotsAutofillConfig = BaseBlock & {
 };
 
 export type TeaserSlotsAutofillConfigInput = {
-  enabled: Scalars['Boolean'];
+  enabled: Scalars['Boolean']['input'];
   filter?: InputMaybe<TeaserListBlockFilterInput>;
   sort?: InputMaybe<TeaserListBlockSort>;
   teaserType?: InputMaybe<TeaserType>;
@@ -7442,22 +7439,22 @@ export type TeaserSlotsBlock = BaseBlock & {
   __typename?: 'TeaserSlotsBlock';
   autofillConfig: TeaserSlotsAutofillConfig;
   autofillTeasers: Array<Teaser>;
-  blockStyle?: Maybe<Scalars['String']>;
-  blockStyleName?: Maybe<Scalars['String']>;
-  disabled?: Maybe<Scalars['Boolean']>;
+  blockStyle?: Maybe<Scalars['String']['output']>;
+  blockStyleName?: Maybe<Scalars['String']['output']>;
+  disabled?: Maybe<Scalars['Boolean']['output']>;
   slots: Array<TeaserSlot>;
   teasers: Array<Maybe<Teaser>>;
-  title?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']['output']>;
   type: BlockType;
 };
 
 export type TeaserSlotsBlockInput = {
   autofillConfig: TeaserSlotsAutofillConfigInput;
-  blockStyle?: InputMaybe<Scalars['String']>;
-  blockStyleName?: InputMaybe<Scalars['String']>;
-  disabled?: InputMaybe<Scalars['Boolean']>;
+  blockStyle?: InputMaybe<Scalars['String']['input']>;
+  blockStyleName?: InputMaybe<Scalars['String']['input']>;
+  disabled?: InputMaybe<Scalars['Boolean']['input']>;
   slots: Array<TeaserSlotInput>;
-  title?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 export enum TeaserType {
@@ -7469,80 +7466,80 @@ export enum TeaserType {
 
 export type TikTokVideoBlock = BaseBlock & {
   __typename?: 'TikTokVideoBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  blockStyleName?: Maybe<Scalars['String']>;
-  disabled?: Maybe<Scalars['Boolean']>;
+  blockStyle?: Maybe<Scalars['String']['output']>;
+  blockStyleName?: Maybe<Scalars['String']['output']>;
+  disabled?: Maybe<Scalars['Boolean']['output']>;
   type: BlockType;
-  userID?: Maybe<Scalars['String']>;
-  videoID?: Maybe<Scalars['String']>;
+  userID?: Maybe<Scalars['String']['output']>;
+  videoID?: Maybe<Scalars['String']['output']>;
 };
 
 export type TikTokVideoBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  blockStyleName?: InputMaybe<Scalars['String']>;
-  disabled?: InputMaybe<Scalars['Boolean']>;
-  userID?: InputMaybe<Scalars['String']>;
-  videoID?: InputMaybe<Scalars['String']>;
+  blockStyle?: InputMaybe<Scalars['String']['input']>;
+  blockStyleName?: InputMaybe<Scalars['String']['input']>;
+  disabled?: InputMaybe<Scalars['Boolean']['input']>;
+  userID?: InputMaybe<Scalars['String']['input']>;
+  videoID?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type TitleBlock = BaseBlock & {
   __typename?: 'TitleBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  blockStyleName?: Maybe<Scalars['String']>;
-  disabled?: Maybe<Scalars['Boolean']>;
-  lead?: Maybe<Scalars['String']>;
-  preTitle?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
+  blockStyle?: Maybe<Scalars['String']['output']>;
+  blockStyleName?: Maybe<Scalars['String']['output']>;
+  disabled?: Maybe<Scalars['Boolean']['output']>;
+  lead?: Maybe<Scalars['String']['output']>;
+  preTitle?: Maybe<Scalars['String']['output']>;
+  title?: Maybe<Scalars['String']['output']>;
   type: BlockType;
 };
 
 export type TitleBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  blockStyleName?: InputMaybe<Scalars['String']>;
-  disabled?: InputMaybe<Scalars['Boolean']>;
-  lead?: InputMaybe<Scalars['String']>;
-  preTitle?: InputMaybe<Scalars['String']>;
-  title?: InputMaybe<Scalars['String']>;
+  blockStyle?: InputMaybe<Scalars['String']['input']>;
+  blockStyleName?: InputMaybe<Scalars['String']['input']>;
+  disabled?: InputMaybe<Scalars['Boolean']['input']>;
+  lead?: InputMaybe<Scalars['String']['input']>;
+  preTitle?: InputMaybe<Scalars['String']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type Token = BaseToken & {
   __typename?: 'Token';
-  createdAt: Scalars['DateTime'];
-  id: Scalars['String'];
-  modifiedAt: Scalars['DateTime'];
-  name: Scalars['String'];
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  modifiedAt: Scalars['DateTime']['output'];
+  name: Scalars['String']['output'];
 };
 
 export type TokenWithSecret = BaseToken & {
   __typename?: 'TokenWithSecret';
-  createdAt: Scalars['DateTime'];
-  id: Scalars['String'];
-  modifiedAt: Scalars['DateTime'];
-  name: Scalars['String'];
-  token: Scalars['String'];
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  modifiedAt: Scalars['DateTime']['output'];
+  name: Scalars['String']['output'];
+  token: Scalars['String']['output'];
 };
 
 export type TotpSetup = {
   __typename?: 'TotpSetup';
   /** Base32 encoded TOTP secret */
-  secret: Scalars['String'];
+  secret: Scalars['String']['output'];
   /** OTPAuth URI for authenticator apps */
-  uri: Scalars['String'];
+  uri: Scalars['String']['output'];
 };
 
 export type TrackingPixel = {
   __typename?: 'TrackingPixel';
-  error?: Maybe<Scalars['String']>;
-  id: Scalars['String'];
-  pixelUid?: Maybe<Scalars['String']>;
+  error?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  pixelUid?: Maybe<Scalars['String']['output']>;
   trackingPixelMethod: TrackingPixelMethod;
-  uri?: Maybe<Scalars['String']>;
+  uri?: Maybe<Scalars['String']['output']>;
 };
 
 export type TrackingPixelMethod = {
   __typename?: 'TrackingPixelMethod';
-  id: Scalars['String'];
-  trackingPixelProviderID: Scalars['String'];
+  id: Scalars['String']['output'];
+  trackingPixelProviderID: Scalars['String']['output'];
   trackingPixelProviderType: TrackingPixelProviderType;
 };
 
@@ -7552,134 +7549,134 @@ export enum TrackingPixelProviderType {
 
 export type TwitterTweetBlock = BaseBlock & {
   __typename?: 'TwitterTweetBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  blockStyleName?: Maybe<Scalars['String']>;
-  disabled?: Maybe<Scalars['Boolean']>;
-  tweetID?: Maybe<Scalars['String']>;
+  blockStyle?: Maybe<Scalars['String']['output']>;
+  blockStyleName?: Maybe<Scalars['String']['output']>;
+  disabled?: Maybe<Scalars['Boolean']['output']>;
+  tweetID?: Maybe<Scalars['String']['output']>;
   type: BlockType;
-  userID?: Maybe<Scalars['String']>;
+  userID?: Maybe<Scalars['String']['output']>;
 };
 
 export type TwitterTweetBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  blockStyleName?: InputMaybe<Scalars['String']>;
-  disabled?: InputMaybe<Scalars['Boolean']>;
-  tweetID?: InputMaybe<Scalars['String']>;
-  userID?: InputMaybe<Scalars['String']>;
+  blockStyle?: InputMaybe<Scalars['String']['input']>;
+  blockStyleName?: InputMaybe<Scalars['String']['input']>;
+  disabled?: InputMaybe<Scalars['Boolean']['input']>;
+  tweetID?: InputMaybe<Scalars['String']['input']>;
+  userID?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type UnknownBlock = {
   __typename?: 'UnknownBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  blockStyleName?: Maybe<Scalars['String']>;
-  disabled?: Maybe<Scalars['Boolean']>;
+  blockStyle?: Maybe<Scalars['String']['output']>;
+  blockStyleName?: Maybe<Scalars['String']['output']>;
+  disabled?: Maybe<Scalars['Boolean']['output']>;
   type: BlockType;
 };
 
 export type UpdateBannerInput = {
   actions?: InputMaybe<Array<CreateBannerActionInput>>;
-  active: Scalars['Boolean'];
-  collapsible: Scalars['Boolean'];
-  cta?: InputMaybe<Scalars['String']>;
-  delay: Scalars['Int'];
-  embedUrl?: InputMaybe<Scalars['String']>;
-  hideForMinutes: Scalars['Int'];
-  html?: InputMaybe<Scalars['String']>;
-  id: Scalars['String'];
-  imageId?: InputMaybe<Scalars['String']>;
+  active: Scalars['Boolean']['input'];
+  collapsible: Scalars['Boolean']['input'];
+  cta?: InputMaybe<Scalars['String']['input']>;
+  delay: Scalars['Int']['input'];
+  embedUrl?: InputMaybe<Scalars['String']['input']>;
+  hideForMinutes: Scalars['Int']['input'];
+  html?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['String']['input'];
+  imageId?: InputMaybe<Scalars['String']['input']>;
   showForLoginStatus: LoginStatus;
-  showOnArticles: Scalars['Boolean'];
+  showOnArticles: Scalars['Boolean']['input'];
   showOnPages?: InputMaybe<Array<PageModelInput>>;
-  text: Scalars['String'];
-  title: Scalars['String'];
+  text: Scalars['String']['input'];
+  title: Scalars['String']['input'];
 };
 
 export type UpdateCommentRatingSystemAnswerInput = {
-  answer?: InputMaybe<Scalars['String']>;
-  id: Scalars['String'];
+  answer?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['String']['input'];
   type?: InputMaybe<RatingSystemType>;
 };
 
 export type UpdateCrowdfundingInput = {
-  additionalRevenue?: InputMaybe<Scalars['Float']>;
-  countSubscriptionsFrom?: InputMaybe<Scalars['DateTime']>;
-  countSubscriptionsUntil?: InputMaybe<Scalars['DateTime']>;
+  additionalRevenue?: InputMaybe<Scalars['Float']['input']>;
+  countSubscriptionsFrom?: InputMaybe<Scalars['DateTime']['input']>;
+  countSubscriptionsUntil?: InputMaybe<Scalars['DateTime']['input']>;
   goalType?: InputMaybe<CrowdfundingGoalType>;
   goals?: InputMaybe<Array<CreateCrowdfundingGoalInput>>;
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
   memberPlans?: InputMaybe<Array<CreateCrowdfundingMemberPlan>>;
-  name?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type UpdateUserSubscriptionInput = {
-  autoRenew: Scalars['Boolean'];
-  id: Scalars['String'];
-  memberPlanID: Scalars['String'];
-  monthlyAmount: Scalars['Float'];
-  paymentMethodID: Scalars['String'];
+  autoRenew: Scalars['Boolean']['input'];
+  id: Scalars['String']['input'];
+  memberPlanID: Scalars['String']['input'];
+  monthlyAmount: Scalars['Float']['input'];
+  paymentMethodID: Scalars['String']['input'];
   paymentPeriodicity: PaymentPeriodicity;
 };
 
 export type UpgradeSubscription = {
   __typename?: 'UpgradeSubscription';
-  discountAmount: Scalars['Float'];
-  discountCodeValid?: Maybe<Scalars['Boolean']>;
-  discountPercent?: Maybe<Scalars['Float']>;
+  discountAmount: Scalars['Float']['output'];
+  discountCodeValid?: Maybe<Scalars['Boolean']['output']>;
+  discountPercent?: Maybe<Scalars['Float']['output']>;
 };
 
 export type User = BaseUser & {
   __typename?: 'User';
-  active: Scalars['Boolean'];
-  firstName?: Maybe<Scalars['String']>;
-  flair?: Maybe<Scalars['String']>;
-  id: Scalars['String'];
+  active: Scalars['Boolean']['output'];
+  firstName?: Maybe<Scalars['String']['output']>;
+  flair?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
   image?: Maybe<Image>;
-  name: Scalars['String'];
-  note?: Maybe<Scalars['String']>;
+  name: Scalars['String']['output'];
+  note?: Maybe<Scalars['String']['output']>;
   properties: Array<Property>;
-  roleIDs: Array<Scalars['String']>;
-  userImageID?: Maybe<Scalars['String']>;
+  roleIDs: Array<Scalars['String']['output']>;
+  userImageID?: Maybe<Scalars['String']['output']>;
 };
 
 export type UserAddress = {
   __typename?: 'UserAddress';
-  city?: Maybe<Scalars['String']>;
-  company?: Maybe<Scalars['String']>;
-  country?: Maybe<Scalars['String']>;
-  streetAddress?: Maybe<Scalars['String']>;
-  streetAddress2?: Maybe<Scalars['String']>;
-  streetAddress2Number?: Maybe<Scalars['String']>;
-  streetAddressNumber?: Maybe<Scalars['String']>;
-  zipCode?: Maybe<Scalars['String']>;
+  city?: Maybe<Scalars['String']['output']>;
+  company?: Maybe<Scalars['String']['output']>;
+  country?: Maybe<Scalars['String']['output']>;
+  streetAddress?: Maybe<Scalars['String']['output']>;
+  streetAddress2?: Maybe<Scalars['String']['output']>;
+  streetAddress2Number?: Maybe<Scalars['String']['output']>;
+  streetAddressNumber?: Maybe<Scalars['String']['output']>;
+  zipCode?: Maybe<Scalars['String']['output']>;
 };
 
 export type UserAddressInput = {
-  city?: InputMaybe<Scalars['String']>;
-  company?: InputMaybe<Scalars['String']>;
-  country?: InputMaybe<Scalars['String']>;
-  streetAddress?: InputMaybe<Scalars['String']>;
-  streetAddress2?: InputMaybe<Scalars['String']>;
-  streetAddress2Number?: InputMaybe<Scalars['String']>;
-  streetAddressNumber?: InputMaybe<Scalars['String']>;
-  zipCode?: InputMaybe<Scalars['String']>;
+  city?: InputMaybe<Scalars['String']['input']>;
+  company?: InputMaybe<Scalars['String']['input']>;
+  country?: InputMaybe<Scalars['String']['input']>;
+  streetAddress?: InputMaybe<Scalars['String']['input']>;
+  streetAddress2?: InputMaybe<Scalars['String']['input']>;
+  streetAddress2Number?: InputMaybe<Scalars['String']['input']>;
+  streetAddressNumber?: InputMaybe<Scalars['String']['input']>;
+  zipCode?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type UserConsent = {
   __typename?: 'UserConsent';
   consent: Consent;
-  createdAt: Scalars['DateTime'];
-  id: Scalars['String'];
-  modifiedAt: Scalars['DateTime'];
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  modifiedAt: Scalars['DateTime']['output'];
   user: User;
-  value: Scalars['Boolean'];
+  value: Scalars['Boolean']['output'];
 };
 
 export type UserCreatedAction = BaseAction & HasUserLc & {
   __typename?: 'UserCreatedAction';
   actionType: ActionType;
-  date: Scalars['DateTime'];
+  date: Scalars['DateTime']['output'];
   user: User;
-  userId: Scalars['String'];
+  userId: Scalars['String']['output'];
 };
 
 export enum UserEvent {
@@ -7691,25 +7688,25 @@ export enum UserEvent {
 }
 
 export type UserFilter = {
-  name?: InputMaybe<Scalars['String']>;
-  text?: InputMaybe<Scalars['String']>;
-  userRole?: InputMaybe<Array<Scalars['String']>>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  text?: InputMaybe<Scalars['String']['input']>;
+  userRole?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 export type UserRole = {
   __typename?: 'UserRole';
-  createdAt: Scalars['DateTime'];
-  description?: Maybe<Scalars['String']>;
-  id: Scalars['String'];
-  modifiedAt: Scalars['DateTime'];
-  name: Scalars['String'];
-  permissionIDs: Array<Scalars['String']>;
+  createdAt: Scalars['DateTime']['output'];
+  description?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  modifiedAt: Scalars['DateTime']['output'];
+  name: Scalars['String']['output'];
+  permissionIDs: Array<Scalars['String']['output']>;
   permissions: Array<Permission>;
-  systemRole: Scalars['Boolean'];
+  systemRole: Scalars['Boolean']['output'];
 };
 
 export type UserRoleFilter = {
-  name?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']['input']>;
 };
 
 export enum UserRoleSort {
@@ -7727,8 +7724,8 @@ export enum UserSort {
 
 export type UserSubscriptionOverview = {
   __typename?: 'UserSubscriptionOverview';
-  id: Scalars['String'];
-  memberPlanName: Scalars['String'];
+  id: Scalars['String']['output'];
+  memberPlanName: Scalars['String']['output'];
   /** Active means started and paid up, not merely not deactivated: imported subscriptions often expire without a deactivation. */
   status: UserSubscriptionStatus;
 };
@@ -7743,23 +7740,23 @@ export enum UserSubscriptionStatus {
 
 export type VersionInformation = {
   __typename?: 'VersionInformation';
-  version: Scalars['String'];
+  version: Scalars['String']['output'];
 };
 
 export type VimeoVideoBlock = BaseBlock & {
   __typename?: 'VimeoVideoBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  blockStyleName?: Maybe<Scalars['String']>;
-  disabled?: Maybe<Scalars['Boolean']>;
+  blockStyle?: Maybe<Scalars['String']['output']>;
+  blockStyleName?: Maybe<Scalars['String']['output']>;
+  disabled?: Maybe<Scalars['Boolean']['output']>;
   type: BlockType;
-  videoID?: Maybe<Scalars['String']>;
+  videoID?: Maybe<Scalars['String']['output']>;
 };
 
 export type VimeoVideoBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  blockStyleName?: InputMaybe<Scalars['String']>;
-  disabled?: InputMaybe<Scalars['Boolean']>;
-  videoID?: InputMaybe<Scalars['String']>;
+  blockStyle?: InputMaybe<Scalars['String']['input']>;
+  blockStyleName?: InputMaybe<Scalars['String']['input']>;
+  disabled?: InputMaybe<Scalars['Boolean']['input']>;
+  videoID?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type WebsiteAds = {
@@ -7797,13 +7794,13 @@ export type WebsiteMailInput = {
 
 export type WebsiteRemoteFont = {
   __typename?: 'WebsiteRemoteFont';
-  name: Scalars['String'];
+  name: Scalars['String']['output'];
   style: Array<FontStyle>;
   weight: Array<FontWeight>;
 };
 
 export type WebsiteRemoteFontInput = {
-  name: Scalars['String'];
+  name: Scalars['String']['input'];
   style: Array<FontStyle>;
   weight: Array<FontWeight>;
 };
@@ -7814,23 +7811,23 @@ export type WebsiteSettings = {
   analytics: WebsiteAnalytics;
   fonts: Array<WebsiteRemoteFont>;
   mail: WebsiteMail;
-  theme: Scalars['JSONObject'];
+  theme: Scalars['JSONObject']['output'];
 };
 
 export type YouTubeVideoBlock = BaseBlock & {
   __typename?: 'YouTubeVideoBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  blockStyleName?: Maybe<Scalars['String']>;
-  disabled?: Maybe<Scalars['Boolean']>;
+  blockStyle?: Maybe<Scalars['String']['output']>;
+  blockStyleName?: Maybe<Scalars['String']['output']>;
+  disabled?: Maybe<Scalars['Boolean']['output']>;
   type: BlockType;
-  videoID?: Maybe<Scalars['String']>;
+  videoID?: Maybe<Scalars['String']['output']>;
 };
 
 export type YouTubeVideoBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  blockStyleName?: InputMaybe<Scalars['String']>;
-  disabled?: InputMaybe<Scalars['Boolean']>;
-  videoID?: InputMaybe<Scalars['String']>;
+  blockStyle?: InputMaybe<Scalars['String']['input']>;
+  blockStyleName?: InputMaybe<Scalars['String']['input']>;
+  disabled?: InputMaybe<Scalars['Boolean']['input']>;
+  videoID?: InputMaybe<Scalars['String']['input']>;
 };
 
 

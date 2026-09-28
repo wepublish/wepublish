@@ -408,7 +408,6 @@ export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {
         y: 0,
         w: 4,
         h: 4,
-        static: false,
       },
       block: null,
     };

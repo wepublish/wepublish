@@ -34,7 +34,7 @@ import {
 import { WebsiteProvider } from '@wepublish/website';
 import { previewLink } from '@wepublish/website/admin';
 import {
-  SessionWithTokenWithoutUser,
+  FullSessionWithTokenWithoutUserFragment,
   WebsiteSettingsFragment,
   createWithApiClient,
 } from '@wepublish/website/api';
@@ -113,7 +113,7 @@ const NavBar = styled(NavbarContainer)`
 `;
 
 export type CustomAppProps = AppProps<{
-  sessionToken?: SessionWithTokenWithoutUser;
+  sessionToken?: FullSessionWithTokenWithoutUserFragment;
 }> & {
   emotionCache?: EmotionCache;
   websiteSettings?: WebsiteSettingsFragment;

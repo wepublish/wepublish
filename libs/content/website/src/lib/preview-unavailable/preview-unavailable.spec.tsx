@@ -4,7 +4,7 @@ import {
   SessionTokenContext,
   setPreviewHandshakeState,
 } from '@wepublish/authentication/website';
-import { SensitiveDataUser } from '@wepublish/website/api';
+import { FullSensitiveDataUserFragment } from '@wepublish/website/api';
 import { WebsiteBuilderProvider } from '@wepublish/website/builder';
 import { ComponentProps, PropsWithChildren, ReactNode } from 'react';
 
@@ -134,7 +134,9 @@ describe('PreviewUnavailable', () => {
   it('shows the login hint directly when the user lacks the preview permission', () => {
     window.history.replaceState(null, '', '/a/foobar?preview');
     document.cookie = 'auth.token=some-token';
-    const user = { permissions: [] } as unknown as SensitiveDataUser;
+    const user = {
+      permissions: [],
+    } as unknown as FullSensitiveDataUserFragment;
 
     renderWithTheme(
       <SessionTokenContext.Provider

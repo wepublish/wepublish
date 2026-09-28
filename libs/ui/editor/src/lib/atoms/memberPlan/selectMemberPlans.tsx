@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
-  MemberPlan,
+  FullMemberPlanFragment,
   MemberPlanListDocument,
   MemberPlanSort,
   SortOrder,
@@ -31,7 +31,7 @@ interface SelectMemberPlansProps {
   className?: string;
   disabled?: boolean;
   name?: string;
-  defaultMemberPlans: Pick<MemberPlan, 'id' | 'name'>[];
+  defaultMemberPlans: Pick<FullMemberPlanFragment, 'id' | 'name'>[];
   selectedMemberPlans?: string[] | null;
   setSelectedMemberPlans(memberplans: string[]): void;
 }

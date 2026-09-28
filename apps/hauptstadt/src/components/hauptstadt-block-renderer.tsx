@@ -3,7 +3,7 @@ import {
   isTeaserGridBlock,
 } from '@wepublish/block-content/website';
 import {
-  BlockContent,
+  FullBlockFragment,
   FullTeaserGridBlockFragment,
 } from '@wepublish/website/api';
 import { BuilderBlockRendererProps } from '@wepublish/website/builder';
@@ -17,7 +17,7 @@ export const HauptstadtBlockRenderer = (props: BuilderBlockRendererProps) => {
   // and we want to show them as small teasers instead of big teasers
   const isOldRelatedArticles = useCallback(
     (
-      block: Partial<Pick<BlockContent, '__typename'>>
+      block: Partial<Pick<FullBlockFragment, '__typename'>>
     ): block is FullTeaserGridBlockFragment =>
       allPass([
         isTeaserGridBlock,

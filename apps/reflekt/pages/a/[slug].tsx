@@ -2,7 +2,6 @@ import { CombinedGraphQLErrors } from '@apollo/client';
 import { ArticleContainer } from '@wepublish/article/website';
 import { getApiUrl,revalidateFor } from '@wepublish/utils/website';
 import {
-  addClientCacheToProps,
   ArticleDocument,
   ArticleListDocument,
   CommentListDocument,
@@ -10,6 +9,7 @@ import {
   getApiClient,
   NavigationListDocument,
   PeerProfileDocument,
+  addClientCacheToProps,
 } from '@wepublish/website/api';
 import { GetStaticProps } from 'next';
 import { useRouter } from 'next/router';

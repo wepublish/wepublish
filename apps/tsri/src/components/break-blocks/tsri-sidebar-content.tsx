@@ -1,7 +1,10 @@
 import styled from '@emotion/styled';
 import { css, Theme, Typography, useTheme } from '@mui/material';
 import { hasBlockStyle, isBreakBlock } from '@wepublish/block-content/website';
-import { BlockContent, FullBreakBlockFragment } from '@wepublish/website/api';
+import {
+  FullBlockFragment,
+  FullBreakBlockFragment,
+} from '@wepublish/website/api';
 import {
   BuilderBreakBlockProps,
   Button,
@@ -139,7 +142,7 @@ const sidebarContentWrapperStyles = (
 `;
 
 export const isTsriSidebarContent = (
-  block: Partial<Pick<BlockContent, '__typename'>>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is FullBreakBlockFragment =>
   allPass([hasBlockStyle(TsriBreakBlockType.SidebarContent), isBreakBlock])(
     block

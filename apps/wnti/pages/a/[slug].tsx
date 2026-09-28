@@ -21,6 +21,7 @@ import {
   getApiClient,
   NavigationListDocument,
   PeerProfileDocument,
+  addClientCacheToProps,
 } from '@wepublish/website/api';
 import { GetStaticProps } from 'next';
 import { useRouter } from 'next/router';

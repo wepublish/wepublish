@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { FlexAlignment } from '@wepublish/website/api';
+import { FullFlexAlignmentFragment } from '@wepublish/website/api';
 import { BuilderTeaserSlotsBlockProps } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
 
@@ -13,11 +13,12 @@ export const isTeaserSlotsHeroTeaser = allPass([
   },
 ]);
 
-export const alignmentForTeaserBlock = (index: number): FlexAlignment => {
+export const alignmentForTeaserBlock = (
+  index: number
+): FullFlexAlignmentFragment => {
   const alignment = {
     __typename: 'FlexAlignment' as const,
     i: index.toString(),
-    static: false,
     h: 1, // how many rows high
     w: 12, // how many columns wide
     x: 0, // starting column - 1

@@ -4,7 +4,7 @@ import type { useQuery } from '@apollo/client/react';
 import {
   ArticleListQuery,
   ArticleListQueryVariables,
-  Tag,
+  FullTagFragment,
   TagQuery,
 } from '@wepublish/website/api';
 
@@ -23,5 +23,5 @@ export type BuilderTagProps = {
 };
 
 export type BuilderTagSEOProps = {
-  tag: Tag;
+  tag: FullTagFragment;
 };

@@ -21,6 +21,7 @@ import {
   getApiClient,
   NavigationListDocument,
   PeerProfileDocument,
+  addClientCacheToProps,
 } from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';

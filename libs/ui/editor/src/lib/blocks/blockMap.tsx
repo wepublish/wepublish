@@ -366,7 +366,6 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
             y: 0,
             w: 3,
             h: 6,
-            static: false,
           },
           block: null,
         },

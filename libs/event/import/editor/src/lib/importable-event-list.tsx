@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import {
-  Event,
+  FullEventFragment,
   ImportEventDocument,
   ImportedEventFilter,
   ImportedEventListDocument,
@@ -171,7 +171,9 @@ export default function ImportableEventListView() {
             resizable
           >
             <HeaderCell>{t('event.list.name')}</HeaderCell>
-            <Cell>{(rowData: RowDataType<Event>) => rowData.name}</Cell>
+            <Cell>
+              {(rowData: RowDataType<FullEventFragment>) => rowData.name}
+            </Cell>
           </Column>
 
           <Column
@@ -180,7 +182,7 @@ export default function ImportableEventListView() {
           >
             <HeaderCell>{t('event.list.startsAtHeader')}</HeaderCell>
             <Cell>
-              {(rowData: RowDataType<Event>) => (
+              {(rowData: RowDataType<FullEventFragment>) => (
                 <EventStartsAtView startsAt={rowData.startsAt} />
               )}
             </Cell>
@@ -192,7 +194,7 @@ export default function ImportableEventListView() {
           >
             <HeaderCell>{t('event.list.endsAtHeader')}</HeaderCell>
             <Cell>
-              {(rowData: RowDataType<Event>) => (
+              {(rowData: RowDataType<FullEventFragment>) => (
                 <EventEndsAtView endsAt={rowData.endsAt} />
               )}
             </Cell>
@@ -204,7 +206,9 @@ export default function ImportableEventListView() {
           >
             <HeaderCell>{t('event.list.source')}</HeaderCell>
             <Cell>
-              {(rowData: RowDataType<Event>) => rowData.externalSourceName}
+              {(rowData: RowDataType<FullEventFragment>) =>
+                rowData.externalSourceName
+              }
             </Cell>
           </Column>
 
@@ -214,7 +218,7 @@ export default function ImportableEventListView() {
           >
             <HeaderCell>{t('event.list.source')}</HeaderCell>
             <Cell>
-              {(rowData: RowDataType<Event>) =>
+              {(rowData: RowDataType<FullEventFragment>) =>
                 alreadyImported && alreadyImported.includes(rowData.id) ?
                   <Button
                     appearance="ghost"

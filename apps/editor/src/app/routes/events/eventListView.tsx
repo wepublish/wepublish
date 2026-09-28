@@ -1,8 +1,8 @@
 import { useQuery } from '@apollo/client/react';
 import {
-  Event,
   EventFilter,
   EventListDocument,
+  FullEventFragment,
   TagType,
 } from '@wepublish/editor/api';
 import {
@@ -77,7 +77,9 @@ function EventListView() {
   const { filter, setFilter, limit, setLimit } =
     useListViewState<EventFilter>('events');
   const { t } = useTranslation();
-  const [eventDelete, setEventDelete] = useState<Event | undefined>(undefined);
+  const [eventDelete, setEventDelete] = useState<FullEventFragment | undefined>(
+    undefined
+  );
   const [page, setPage] = useState<number>(1);
 
   const eventListVariables = {
@@ -148,7 +150,7 @@ function EventListView() {
           >
             <HeaderCell>{t('event.list.name')}</HeaderCell>
             <Cell>
-              {(rowData: RowDataType<Event>) => (
+              {(rowData: RowDataType<FullEventFragment>) => (
                 <Link to={`/events/edit/${rowData.id}`}>{rowData.name}</Link>
               )}
             </Cell>
@@ -160,7 +162,7 @@ function EventListView() {
           >
             <HeaderCell>{t('event.list.startsAtHeader')}</HeaderCell>
             <Cell>
-              {(rowData: RowDataType<Event>) => (
+              {(rowData: RowDataType<FullEventFragment>) => (
                 <EventStartsAtView startsAt={rowData.startsAt} />
               )}
             </Cell>
@@ -172,7 +174,7 @@ function EventListView() {
           >
             <HeaderCell>{t('event.list.endsAtHeader')}</HeaderCell>
             <Cell>
-              {(rowData: RowDataType<Event>) => (
+              {(rowData: RowDataType<FullEventFragment>) => (
                 <EventEndsAtView endsAt={rowData.endsAt} />
               )}
             </Cell>
@@ -184,7 +186,9 @@ function EventListView() {
           >
             <HeaderCell>{t('event.list.source')}</HeaderCell>
             <Cell>
-              {(rowData: RowDataType<Event>) => rowData.externalSourceName}
+              {(rowData: RowDataType<FullEventFragment>) =>
+                rowData.externalSourceName
+              }
             </Cell>
           </Column>
 
@@ -194,14 +198,14 @@ function EventListView() {
               align={'center'}
               style={{ padding: '5px 0' }}
             >
-              {(event: RowDataType<Event>) => (
+              {(event: RowDataType<FullEventFragment>) => (
                 <IconButton
                   icon={<MdDelete />}
                   color="red"
                   appearance="ghost"
                   circle
                   size="sm"
-                  onClick={() => setEventDelete(event as Event)}
+                  onClick={() => setEventDelete(event as FullEventFragment)}
                 />
               )}
             </Cell>

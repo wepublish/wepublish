@@ -1,8 +1,8 @@
 import { Meta, StoryObj } from '@storybook/nextjs-vite';
 import {
   BaseNavigationLink,
+  FullNavigationFragment,
   MeDocument,
-  Navigation,
   NavigationLinkType,
 } from '@wepublish/website/api';
 import { Navbar } from './navbar';
@@ -216,7 +216,7 @@ const navigations = [
       },
     ],
   },
-] as Navigation[];
+] as FullNavigationFragment[];
 
 const logo = mockImage();
 

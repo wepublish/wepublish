@@ -1,5 +1,5 @@
 import {
-  BlockContent,
+  FullBlockFragment,
   FullTeaserSlotsBlockFragment,
 } from '@wepublish/website/api';
 import {
@@ -11,7 +11,7 @@ import { css } from '@mui/material';
 import styled from '@emotion/styled';
 
 export const isTeaserSlotsBlock = (
-  block: Partial<Pick<BlockContent, '__typename'>>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is FullTeaserSlotsBlockFragment =>
   block.__typename === 'TeaserSlotsBlock';
 

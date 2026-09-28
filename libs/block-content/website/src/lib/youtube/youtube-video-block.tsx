@@ -1,13 +1,13 @@
 import styled from '@emotion/styled';
 import {
-  BlockContent,
+  FullBlockFragment,
   FullYouTubeVideoBlockFragment,
 } from '@wepublish/website/api';
 import { BuilderYouTubeVideoBlockProps } from '@wepublish/website/builder';
 import ReactPlayer from 'react-player';
 
 export const isYouTubeVideoBlock = (
-  block: Partial<Pick<BlockContent, '__typename'>>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is FullYouTubeVideoBlockFragment =>
   block.__typename === 'YouTubeVideoBlock';
 

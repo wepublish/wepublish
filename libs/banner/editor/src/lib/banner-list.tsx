@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client/react';
-import { Banner, BannersDocument } from '@wepublish/editor/api';
+import { BannersDocument, FullBannerFragment } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
   IconButton,
@@ -23,9 +23,9 @@ const { Column, HeaderCell, Cell: RCell } = RTable;
 
 function BannerList() {
   const { t } = useTranslation();
-  const [bannerDelete, setBannerDelete] = useState<Banner | undefined>(
-    undefined
-  );
+  const [bannerDelete, setBannerDelete] = useState<
+    FullBannerFragment | undefined
+  >(undefined);
 
   const { data, loading, error, refetch } = useQuery(BannersDocument, {
     variables: {
@@ -72,7 +72,7 @@ function BannerList() {
           >
             <HeaderCell>{t('banner.list.title')}</HeaderCell>
             <RCell>
-              {(rowData: RowDataType<Banner>) => (
+              {(rowData: RowDataType<FullBannerFragment>) => (
                 <Link to={`/banners/edit/${rowData.id}`}>{rowData.title}</Link>
               )}
             </RCell>
@@ -83,7 +83,9 @@ function BannerList() {
           >
             <HeaderCell>{t('banner.list.text')}</HeaderCell>
             <RCell>
-              {(rowData: RowDataType<Banner>) => (rowData as Banner).text}
+              {(rowData: RowDataType<FullBannerFragment>) =>
+                (rowData as FullBannerFragment).text
+              }
             </RCell>
           </Column>
           <Column
@@ -92,8 +94,8 @@ function BannerList() {
           >
             <HeaderCell>{t('banner.list.active')}</HeaderCell>
             <RCell>
-              {(rowData: RowDataType<Banner>) =>
-                (rowData as Banner).active ? '✓' : '⨯'
+              {(rowData: RowDataType<FullBannerFragment>) =>
+                (rowData as FullBannerFragment).active ? '✓' : '⨯'
               }
             </RCell>
           </Column>
@@ -103,9 +105,9 @@ function BannerList() {
           >
             <HeaderCell>{t('banner.form.showForLoginStatus')}</HeaderCell>
             <RCell>
-              {(rowData: RowDataType<Banner>) =>
+              {(rowData: RowDataType<FullBannerFragment>) =>
                 t(
-                  `banner.form.loginStatus.${(rowData as Banner).showForLoginStatus}`
+                  `banner.form.loginStatus.${(rowData as FullBannerFragment).showForLoginStatus}`
                 )
               }
             </RCell>
@@ -116,14 +118,14 @@ function BannerList() {
           >
             <HeaderCell align={'center'}>{t('banner.list.delete')}</HeaderCell>
             <PaddedCell align={'center'}>
-              {(banner: RowDataType<Banner>) => (
+              {(banner: RowDataType<FullBannerFragment>) => (
                 <IconButton
                   icon={<MdDelete />}
                   circle
                   appearance="ghost"
                   color="red"
                   size="sm"
-                  onClick={() => setBannerDelete(banner as Banner)}
+                  onClick={() => setBannerDelete(banner as FullBannerFragment)}
                 />
               )}
             </PaddedCell>

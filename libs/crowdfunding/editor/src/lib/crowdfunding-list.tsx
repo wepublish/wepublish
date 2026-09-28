@@ -14,7 +14,10 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { IconButton as RIconButton, Table as RTable, Table } from 'rsuite';
 import { RowDataType } from 'rsuite/esm/Table';
-import { Crowdfunding, CrowdfundingsDocument } from '@wepublish/editor/api';
+import {
+  CrowdfundingsDocument,
+  FullCrowdfundingFragment,
+} from '@wepublish/editor/api';
 import { CrowdfundingDeleteModal } from './crowdfunding-delete-modal';
 
 const { Column, HeaderCell, Cell: RCell } = RTable;
@@ -23,7 +26,7 @@ function CrowdfundingList() {
   const { t } = useTranslation();
 
   const [crowdfundingDelete, setCrowdfundingDelete] = useState<
-    Crowdfunding | undefined
+    FullCrowdfundingFragment | undefined
   >(undefined);
 
   const { data, loading, error, refetch } = useQuery(CrowdfundingsDocument, {});
@@ -59,9 +62,9 @@ function CrowdfundingList() {
           >
             <HeaderCell>{t('crowdfunding.list.name')}</HeaderCell>
             <RCell>
-              {(rowData: RowDataType<Crowdfunding>) => (
+              {(rowData: RowDataType<FullCrowdfundingFragment>) => (
                 <Link to={`/crowdfundings/edit/${rowData.id}`}>
-                  {rowData.name || 'Crowdfunding ohne Namen'}
+                  {rowData.name || 'FullCrowdfundingFragment ohne Namen'}
                 </Link>
               )}
             </RCell>
@@ -77,7 +80,7 @@ function CrowdfundingList() {
             </HeaderCell>
 
             <PaddedCell align={'center'}>
-              {(crowdfunding: RowDataType<Crowdfunding>) => (
+              {(crowdfunding: RowDataType<FullCrowdfundingFragment>) => (
                 <IconButton
                   icon={<MdDelete />}
                   circle
@@ -85,7 +88,9 @@ function CrowdfundingList() {
                   color="red"
                   size="sm"
                   onClick={() =>
-                    setCrowdfundingDelete(crowdfunding as Crowdfunding)
+                    setCrowdfundingDelete(
+                      crowdfunding as FullCrowdfundingFragment
+                    )
                   }
                 />
               )}

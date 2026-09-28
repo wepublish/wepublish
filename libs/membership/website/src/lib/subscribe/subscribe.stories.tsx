@@ -13,7 +13,7 @@ import { wait } from '@wepublish/testing';
 import {
   Currency,
   FullMemberPlanFragment,
-  PaymentMethod,
+  FullPaymentMethodFragment,
   PaymentPeriodicity,
   ProductType,
   SubscribeBlockRenderLayout,
@@ -333,7 +333,7 @@ const changeMemberPlan =
   };
 
 const changePaymentMethod =
-  (paymentMethod: PaymentMethod): NonNullable<StoryObj['play']> =>
+  (paymentMethod: FullPaymentMethodFragment): NonNullable<StoryObj['play']> =>
   async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 

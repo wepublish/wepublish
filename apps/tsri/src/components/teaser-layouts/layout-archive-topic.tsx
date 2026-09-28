@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { isFilledTeaser } from '@wepublish/block-content/website';
-import { FlexAlignment } from '@wepublish/website/api';
+import { FullFlexAlignmentFragment } from '@wepublish/website/api';
 import {
   BuilderTeaserSlotsBlockProps,
   useWebsiteBuilder,
@@ -42,11 +42,12 @@ export const teaserBlockStyleByIndex = (index: number): TsriTeaserType => {
   }
 };
 
-export const alignmentForTeaserBlock = (index: number): FlexAlignment => {
+export const alignmentForTeaserBlock = (
+  index: number
+): FullFlexAlignmentFragment => {
   const alignment = {
     __typename: 'FlexAlignment' as const,
     i: index.toString(),
-    static: false,
     h: 1, // how many rows high
     w: 1, // how many columns wide
     x: 0, // starting column - 1
@@ -69,7 +70,7 @@ export const TeaserSlotsArchiveTopic = ({
   alignmentForTeaserBlock,
 }: BuilderTeaserSlotsBlockProps & {
   teaserBlockStyleByIndex: (index: number) => TsriTeaserType;
-  alignmentForTeaserBlock: (index: number) => FlexAlignment;
+  alignmentForTeaserBlock: (index: number) => FullFlexAlignmentFragment;
 }) => {
   const {
     blocks: { Teaser },

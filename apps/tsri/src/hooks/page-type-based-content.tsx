@@ -1,13 +1,13 @@
 import { useQuery } from '@apollo/client/react';
 import {
   ArticleDocument,
-  ArticleRevision,
-  Event,
   EventDocument,
+  FullArticleRevisionFragment,
+  FullEventFragment,
+  FullPageRevisionFragment,
+  FullTagFragment,
   PageDocument,
-  PageRevision,
   PhraseDocument,
-  Tag,
   TagDocument,
   TagType,
 } from '@wepublish/website/api';
@@ -16,10 +16,10 @@ import { useRouter } from 'next/router';
 import { useMemo } from 'react';
 
 export type PageTypeBasedProps = {
-  Page?: Pick<PageRevision, 'title'>;
-  Article?: Pick<ArticleRevision, 'preTitle'>;
-  ArticleList?: Pick<Tag, 'tag'>;
-  Event?: Pick<Event, 'name'>;
+  Page?: Pick<FullPageRevisionFragment, 'title'>;
+  Article?: Pick<FullArticleRevisionFragment, 'preTitle'>;
+  ArticleList?: Pick<FullTagFragment, 'tag'>;
+  Event?: Pick<FullEventFragment, 'name'>;
   Search?: {
     phrase: string;
     totalCount: number;

@@ -4,7 +4,7 @@ import {
   isTeaserListBlock,
 } from '@wepublish/block-content/website';
 import {
-  BlockContent,
+  FullBlockFragment,
   FullTeaserGridBlockFragment,
 } from '@wepublish/website/api';
 import {
@@ -48,7 +48,7 @@ export const BajourBlockRenderer = (props: BuilderBlockRendererProps) => {
   // This allows us to show predefined related articles & enhance it with automatic generated once.
   const isOldRelatedArticles = useCallback(
     (
-      block: Partial<Pick<BlockContent, '__typename'>>
+      block: Partial<Pick<FullBlockFragment, '__typename'>>
     ): block is FullTeaserGridBlockFragment =>
       allPass([
         isTeaserGridBlock,

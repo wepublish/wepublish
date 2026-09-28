@@ -12,7 +12,8 @@ import {
 import { ApiAlert } from '@wepublish/errors/website';
 import {
   Currency,
-  PaymentMethod,
+  FullMemberPlanFragment,
+  FullPaymentMethodFragment,
   PaymentPeriodicity,
   ProductType,
   RegisterMutationVariables,
@@ -20,7 +21,6 @@ import {
   SubscribeMutationVariables,
   SubscribePeriodicityDisplay,
   UserAddressInput,
-  FullMemberPlanFragment,
 } from '@wepublish/website/api';
 import {
   BuilderSubscribeProps,
@@ -433,7 +433,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     () =>
       (availablePaymentMethodsForPeriodicity.flatMap(
         ({ paymentMethods }) => paymentMethods
-      ) as PaymentMethod[]) ?? [],
+      ) as FullPaymentMethodFragment[]) ?? [],
     [availablePaymentMethodsForPeriodicity]
   );
 

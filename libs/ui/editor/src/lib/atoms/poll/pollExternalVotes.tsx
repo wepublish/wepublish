@@ -3,10 +3,10 @@ import styled from '@emotion/styled';
 import {
   CreatePollExternalVoteSourceDocument,
   DeletePollExternalVoteSourceDocument,
-  FullPoll,
+  FullPollFragment,
   PollAnswer,
   PollExternalVote,
-  PollExternalVoteSource,
+  PollExternalVoteSourceFragment,
 } from '@wepublish/editor/api';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -30,10 +30,10 @@ const Row = styled(RRow)`
 `;
 
 interface ExternalVoteTableProps {
-  poll: FullPoll | undefined;
+  poll: FullPollFragment | undefined;
   loading: boolean;
-  onPollChange(poll: FullPoll): void;
-  onClickDeleteBtn(voteSource: PollExternalVoteSource): void;
+  onPollChange(poll: FullPollFragment): void;
+  onClickDeleteBtn(voteSource: PollExternalVoteSourceFragment): void;
 }
 
 export function ExternalVoteTable({
@@ -49,7 +49,7 @@ export function ExternalVoteTable({
 
   function changeSource(
     answer: PollAnswer,
-    externalVoteSource: PollExternalVoteSource,
+    externalVoteSource: PollExternalVoteSourceFragment,
     newAmount: string | number
   ) {
     if (!poll) {
@@ -93,7 +93,9 @@ export function ExternalVoteTable({
       >
         <Table.HeaderCell>{answer.answer}</Table.HeaderCell>
         <Table.Cell>
-          {(externalVoteSource: RowDataType<PollExternalVoteSource>) => (
+          {(
+            externalVoteSource: RowDataType<PollExternalVoteSourceFragment>
+          ) => (
             <NumberInput
               value={
                 externalVoteSource.voteAmounts?.find(
@@ -104,7 +106,7 @@ export function ExternalVoteTable({
               onChange={(newValue: string | number | null) => {
                 changeSource(
                   answer,
-                  externalVoteSource as PollExternalVoteSource,
+                  externalVoteSource as PollExternalVoteSourceFragment,
                   newValue ?? 0
                 );
               }}
@@ -134,11 +136,11 @@ export function ExternalVoteTable({
       <Table.Column>
         <Table.HeaderCell>{t('delete')}</Table.HeaderCell>
         <Table.Cell>
-          {(voteSource: RowDataType<PollExternalVoteSource>) => (
+          {(voteSource: RowDataType<PollExternalVoteSourceFragment>) => (
             <IconButton
               icon={<MdDelete />}
               onClick={() =>
-                onClickDeleteBtn(voteSource as PollExternalVoteSource)
+                onClickDeleteBtn(voteSource as PollExternalVoteSourceFragment)
               }
             />
           )}
@@ -149,9 +151,9 @@ export function ExternalVoteTable({
 }
 
 interface AddSourceProps {
-  poll: FullPoll | undefined;
+  poll: FullPollFragment | undefined;
   setLoading(loading: boolean): void;
-  onPollChange(poll: FullPoll): void;
+  onPollChange(poll: FullPollFragment): void;
 }
 
 export function AddSource({ poll, setLoading, onPollChange }: AddSourceProps) {
@@ -219,7 +221,7 @@ export function AddSource({ poll, setLoading, onPollChange }: AddSourceProps) {
       return;
     }
 
-    const updatedPoll: FullPoll = {
+    const updatedPoll: FullPollFragment = {
       ...poll,
       externalVoteSources: [...(poll.externalVoteSources ?? []), source],
     };
@@ -250,11 +252,11 @@ export function AddSource({ poll, setLoading, onPollChange }: AddSourceProps) {
 }
 
 interface DeleteModalProps {
-  poll: FullPoll | undefined;
-  sourceToDelete: PollExternalVoteSource | undefined;
+  poll: FullPollFragment | undefined;
+  sourceToDelete: PollExternalVoteSourceFragment | undefined;
   openModal: boolean;
   closeModal(): void;
-  onPollChange(poll: FullPoll): void;
+  onPollChange(poll: FullPollFragment): void;
 }
 
 export function DeleteModal({
@@ -289,7 +291,7 @@ export function DeleteModal({
       return;
     }
 
-    const updatedPoll: FullPoll = {
+    const updatedPoll: FullPollFragment = {
       ...poll,
       externalVoteSources: poll.externalVoteSources.filter(
         tmpSource => tmpSource.id !== source.id
@@ -329,15 +331,15 @@ export function DeleteModal({
 }
 
 interface PollExternalVotesProps {
-  poll?: FullPoll;
-  onPollChange(poll: FullPoll): void;
+  poll?: FullPollFragment;
+  onPollChange(poll: FullPollFragment): void;
 }
 export function PollExternalVotes({
   poll,
   onPollChange,
 }: PollExternalVotesProps) {
   const [sourceToDelete, setSourceToDelete] = useState<
-    PollExternalVoteSource | undefined
+    PollExternalVoteSourceFragment | undefined
   >(undefined);
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
@@ -348,7 +350,7 @@ export function PollExternalVotes({
         poll={poll}
         loading={loading}
         onPollChange={onPollChange}
-        onClickDeleteBtn={(voteSource: PollExternalVoteSource) => {
+        onClickDeleteBtn={(voteSource: PollExternalVoteSourceFragment) => {
           setOpenModal(true);
           setSourceToDelete(voteSource);
         }}

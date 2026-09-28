@@ -1,9 +1,9 @@
 import {
-  Image,
+  FullImageFragment,
+  FullSensitiveDataUserFragment,
   RegisterMutationVariables,
   UpdatePasswordMutationVariables,
   UpdateUserMutationVariables,
-  SensitiveDataUser,
 } from '@wepublish/website/api';
 import { ChangeEvent } from 'react';
 import { OptionalKeysOf } from 'type-fest';
@@ -27,7 +27,7 @@ export type BuilderUserFormProps<
 };
 
 export type BuilderImageUploadProps = {
-  image?: Image | null;
+  image?: FullImageFragment | null;
   onUpload: (image: ChangeEvent<HTMLInputElement> | null) => void;
   className?: string;
 };
@@ -56,7 +56,7 @@ export type BuilderPersonalDataFormProps<
       birthday: z.ZodDate | z.ZodOptional<z.ZodDate>;
     }>
   >;
-  user: SensitiveDataUser;
+  user: FullSensitiveDataUserFragment;
   className?: string;
   onUpdate?: (
     data: UpdateUserMutationVariables & Partial<UpdatePasswordMutationVariables>

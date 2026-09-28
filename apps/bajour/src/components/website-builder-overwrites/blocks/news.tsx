@@ -11,7 +11,7 @@ import {
   selectTeaserUrl,
 } from '@wepublish/block-content/website';
 import {
-  BlockContent,
+  FullBlockFragment,
   FullTeaserListBlockFragment,
   GetImagesByTagDocument,
 } from '@wepublish/website/api';
@@ -26,7 +26,7 @@ import { allPass } from 'ramda';
 import { MdEast } from 'react-icons/md';
 
 export const isNewsTeasers = (
-  block: Partial<Pick<BlockContent, '__typename'>>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is FullTeaserListBlockFragment =>
   allPass([hasBlockStyle('News'), isTeaserListBlock])(block);
 

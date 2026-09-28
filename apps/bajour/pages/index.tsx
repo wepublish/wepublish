@@ -4,7 +4,6 @@ import { ContentWidthProvider } from '@wepublish/content/website';
 import { PageContainer } from '@wepublish/page/website';
 import { getApiUrl,revalidateFor } from '@wepublish/utils/website';
 import {
-  addClientCacheToProps,
   CommentListDocument,
   CommentSort,
   FullTeaserListBlockFragment,
@@ -16,6 +15,8 @@ import {
   PeerProfileDocument,
   SettingListDocument,
   SortOrder,
+  addClientCacheToProps,
+  getApiClient,
 } from '@wepublish/website/api';
 import { LinkContext } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';

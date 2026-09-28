@@ -7,7 +7,7 @@ import {
   isTeaserListBlock,
 } from '@wepublish/block-content/website';
 import {
-  BlockContent,
+  FullBlockFragment,
   FullTeaserGridBlockFragment,
   FullTeaserListBlockFragment,
 } from '@wepublish/website/api';
@@ -23,7 +23,7 @@ import { BlueBox } from '../components/blue-box';
 import { NewsTeaser } from '../custom-teasers/news';
 
 export const isNewsTeasers = (
-  block: Partial<Pick<BlockContent, '__typename'>>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is FullTeaserGridBlockFragment | FullTeaserListBlockFragment =>
   allPass([hasBlockStyle('News'), isTeaserListBlock])(block);
 

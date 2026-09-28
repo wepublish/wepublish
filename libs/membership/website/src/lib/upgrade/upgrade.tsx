@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Currency,
-  PaymentMethod,
+  FullPaymentMethodFragment,
   PaymentPeriodicity,
   ProductType,
   UpgradeMutationVariables,
@@ -190,7 +190,7 @@ export const Upgrade = ({
     () =>
       (selectedMemberPlan?.availablePaymentMethods?.flatMap(
         ({ paymentMethods }) => paymentMethods
-      ) as PaymentMethod[]) ?? [],
+      ) as FullPaymentMethodFragment[]) ?? [],
     [selectedMemberPlan?.availablePaymentMethods]
   );
 
