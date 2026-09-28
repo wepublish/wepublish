@@ -2,29 +2,30 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaClient } from '@prisma/client';
 import { NavigationService } from './navigation.service';
 import { NavigationDataloaderService } from './navigation-dataloader.service';
+import type { Mock } from 'vitest';
 
 describe('NavigationService', () => {
   let service: NavigationService;
   let navigationDataloaderService: {
-    [method in keyof NavigationDataloaderService]?: jest.Mock;
+    [method in keyof NavigationDataloaderService]?: Mock;
   };
   let prismaMock: any;
 
   beforeEach(async () => {
     navigationDataloaderService = {
-      load: jest.fn(),
+      load: vi.fn(),
     };
 
     prismaMock = {
       navigation: {
-        findUnique: jest.fn(),
-        findMany: jest.fn(),
-        create: jest.fn(),
-        delete: jest.fn(),
-        update: jest.fn(),
+        findUnique: vi.fn(),
+        findMany: vi.fn(),
+        create: vi.fn(),
+        delete: vi.fn(),
+        update: vi.fn(),
       },
       navigationLink: {
-        deleteMany: jest.fn(),
+        deleteMany: vi.fn(),
       },
     };
 

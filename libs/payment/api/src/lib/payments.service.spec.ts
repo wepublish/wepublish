@@ -10,7 +10,7 @@ import { Intent, PaymentProvider } from './payment-provider/payment-provider';
 function fakeProvider(id: string): PaymentProvider {
   return {
     id,
-    createIntent: jest.fn().mockResolvedValue({
+    createIntent: vi.fn().mockResolvedValue({
       intentID: '999',
       intentSecret: 'secret',
       intentData: '{}',
@@ -36,12 +36,12 @@ describe('PaymentsService.createPaymentWithProvider', () => {
 
     const prisma = {
       paymentMethod: {
-        findUnique: jest
+        findUnique: vi
           .fn()
           .mockResolvedValue({ ...resolvedMethod, active: true }),
       },
       subscription: {
-        update: jest.fn().mockResolvedValue({
+        update: vi.fn().mockResolvedValue({
           id: 'sub-1',
           monthlyAmount: 500,
           currency: Currency.CHF,
@@ -53,17 +53,17 @@ describe('PaymentsService.createPaymentWithProvider', () => {
         }),
       },
       payment: {
-        create: jest.fn().mockImplementation(async ({ data }: any) => ({
+        create: vi.fn().mockImplementation(async ({ data }: any) => ({
           id: 'payment-1',
           ...data,
         })),
-        update: jest.fn().mockImplementation(async ({ data }: any) => ({
+        update: vi.fn().mockImplementation(async ({ data }: any) => ({
           id: 'payment-1',
           ...data,
         })),
       },
       paymentProviderCustomer: {
-        findFirst: jest.fn().mockResolvedValue(null),
+        findFirst: vi.fn().mockResolvedValue(null),
       },
     };
 

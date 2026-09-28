@@ -7,67 +7,68 @@ import { ArticleSort } from './article.model';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { TrackingPixelService } from '@wepublish/tracking-pixel/api';
 import { mapBlockUnionMap } from '@wepublish/block-content/api';
+import type { Mock } from 'vitest';
 
-jest.mock('@wepublish/block-content/api');
+vi.mock('@wepublish/block-content/api');
 
 describe('ArticleService', () => {
   let service: ArticleService;
   let prismaMock: {
-    $queryRaw: jest.Mock;
+    $queryRaw: Mock;
     articleTrackingPixels: {
-      [method in keyof PrismaClient['articleTrackingPixels']]?: jest.Mock;
+      [method in keyof PrismaClient['articleTrackingPixels']]?: Mock;
     };
-    article: { [method in keyof PrismaClient['article']]?: jest.Mock };
+    article: { [method in keyof PrismaClient['article']]?: Mock };
     articleRevision: {
-      [method in keyof PrismaClient['articleRevision']]?: jest.Mock;
+      [method in keyof PrismaClient['articleRevision']]?: Mock;
     };
     taggedArticles: {
-      [method in keyof PrismaClient['taggedArticles']]?: jest.Mock;
+      [method in keyof PrismaClient['taggedArticles']]?: Mock;
     };
   };
-  let trackingPixelMock: { [method in keyof TrackingPixelService]?: jest.Mock };
+  let trackingPixelMock: { [method in keyof TrackingPixelService]?: Mock };
 
   beforeAll(() => {
-    jest.useFakeTimers();
-    jest.setSystemTime(new Date('2023-01-01'));
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2023-01-01'));
   });
 
   afterAll(() => {
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   beforeEach(async () => {
     prismaMock = {
-      $queryRaw: jest.fn(),
+      $queryRaw: vi.fn(),
       article: {
-        count: jest.fn(),
-        findMany: jest.fn(),
-        findFirst: jest.fn(),
-        findUnique: jest.fn(),
-        delete: jest.fn(),
-        create: jest.fn(),
-        update: jest.fn(),
+        count: vi.fn(),
+        findMany: vi.fn(),
+        findFirst: vi.fn(),
+        findUnique: vi.fn(),
+        delete: vi.fn(),
+        create: vi.fn(),
+        update: vi.fn(),
       },
       articleRevision: {
-        updateMany: jest.fn(),
-        update: jest.fn(),
-        findUnique: jest.fn(),
-        findFirst: jest.fn(),
-        findMany: jest.fn(),
-        count: jest.fn(),
+        updateMany: vi.fn(),
+        update: vi.fn(),
+        findUnique: vi.fn(),
+        findFirst: vi.fn(),
+        findMany: vi.fn(),
+        count: vi.fn(),
       },
       articleTrackingPixels: {
-        createMany: jest.fn(),
-        findMany: jest.fn(),
+        createMany: vi.fn(),
+        findMany: vi.fn(),
       },
       taggedArticles: {
-        findMany: jest.fn(),
+        findMany: vi.fn(),
       },
     };
 
     trackingPixelMock = {
-      addMissingArticleTrackingPixels: jest.fn(),
-      getArticlePixels: jest.fn(),
+      addMissingArticleTrackingPixels: vi.fn(),
+      getArticlePixels: vi.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -78,7 +79,7 @@ describe('ArticleService', () => {
         {
           provide: ArticleDataloaderService,
           useValue: {
-            prime: jest.fn(),
+            prime: vi.fn(),
           },
         },
       ],
@@ -322,7 +323,7 @@ describe('ArticleService', () => {
       prismaMock.articleTrackingPixels.createMany?.mock.calls[0]
     ).toMatchSnapshot();
     // make sure mapBlockUnionMap is called
-    expect((mapBlockUnionMap as jest.Mock).mock.calls[0]).toMatchSnapshot();
+    expect((mapBlockUnionMap as Mock).mock.calls[0]).toMatchSnapshot();
   });
 
   it('should not create tracking pixels for peer articles', async () => {
@@ -452,7 +453,7 @@ describe('ArticleService', () => {
     expect(prismaMock.article.findUnique?.mock.calls[0]).toMatchSnapshot();
     expect(prismaMock.article.update?.mock.calls[0]).toMatchSnapshot();
     // make sure mapBlockUnionMap is called
-    expect((mapBlockUnionMap as jest.Mock).mock.calls[0]).toMatchSnapshot();
+    expect((mapBlockUnionMap as Mock).mock.calls[0]).toMatchSnapshot();
   });
 
   it('should delete an article', async () => {

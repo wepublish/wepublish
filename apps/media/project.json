@@ -41,18 +41,11 @@
       }
     },
     "test": {
-      "executor": "nx:run-commands",
+      "executor": "@nx/vitest:test",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "command": "vitest run --passWithNoTests --config {projectRoot}/vitest.config.ts"
-      },
-      "configurations": {
-        "ci": {
-          "command": "vitest run --passWithNoTests --coverage --config {projectRoot}/vitest.config.ts"
-        },
-        "update": {
-          "command": "vitest run --passWithNoTests --update --config {projectRoot}/vitest.config.ts"
-        }
+        "configFile": "{projectRoot}/vitest.config.ts",
+        "watch": false
       }
     }
   }

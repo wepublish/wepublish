@@ -21,19 +21,19 @@ const mockTemplate2: UserFlowMail = {
 
 const prismaServiceMock = {
   userFlowMail: {
-    findMany: jest.fn((): UserFlowMail[] => [mockTemplate1, mockTemplate2]),
-    findUnique: jest.fn(
+    findMany: vi.fn((): UserFlowMail[] => [mockTemplate1, mockTemplate2]),
+    findUnique: vi.fn(
       ({ where: { event } }): UserFlowMail =>
         [mockTemplate1, mockTemplate2].find(m => m.event === event)!
     ),
-    update: jest.fn((): void => undefined),
+    update: vi.fn((): void => undefined),
   },
 };
 
 const mailContestMock = {
-  getUserTemplateId: jest.fn((): string => 'test-template'),
-  sendComposedMail: jest.fn(() => ({ subject: '' })),
-  sendMail: jest.fn((): void => undefined),
+  getUserTemplateId: vi.fn((): string => 'test-template'),
+  sendComposedMail: vi.fn(() => ({ subject: '' })),
+  sendMail: vi.fn((): void => undefined),
 };
 
 const FAKE_USER: User = {

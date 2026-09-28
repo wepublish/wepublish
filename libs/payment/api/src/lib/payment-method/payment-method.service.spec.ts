@@ -6,24 +6,25 @@ import {
   UpdatePaymentMethodInput,
 } from './payment-method.model';
 import { PrismaClient } from '@prisma/client';
+import type { Mock } from 'vitest';
 
 describe('PaymentMethodService', () => {
   let service: PaymentMethodService;
-  let dataloader: { [method in keyof PaymentMethodDataloader]?: jest.Mock };
+  let dataloader: { [method in keyof PaymentMethodDataloader]?: Mock };
   let prismaMock: any;
 
   beforeEach(async () => {
     prismaMock = {
       paymentMethod: {
-        findMany: jest.fn(),
-        create: jest.fn(),
-        update: jest.fn(),
-        delete: jest.fn(),
+        findMany: vi.fn(),
+        create: vi.fn(),
+        update: vi.fn(),
+        delete: vi.fn(),
       },
     };
 
     dataloader = {
-      prime: jest.fn(),
+      prime: vi.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({

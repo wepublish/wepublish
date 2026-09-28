@@ -1,4 +1,356 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`BannerService > findMany > should return null if no banner found 1`] = `
+[
+  {
+    "where": {
+      "OR": [
+        {
+          "showForLoginStatus": "UNSUBSCRIBED",
+        },
+        {
+          "showForLoginStatus": "LOGGED_IN",
+        },
+        {
+          "showForLoginStatus": "ALL",
+        },
+      ],
+      "active": true,
+      "showOnArticles": true,
+    },
+  },
+]
+`;
+
+exports[`BannerService > findMany > should return the first active banner for { documentType: +0, loggedIn: false, hasSubscription: false, hasPaywallBypass: false } 1`] = `
+{
+  "active": true,
+  "collapsible": true,
+  "createdAt": 2023-01-01T00:00:00.000Z,
+  "cta": null,
+  "delay": 0,
+  "embedUrl": null,
+  "hideForMinutes": 1440,
+  "html": null,
+  "id": "1",
+  "imageId": null,
+  "modifiedAt": 2023-01-01T00:00:00.000Z,
+  "showForLoginStatus": "LOGGED_OUT",
+  "showOnArticles": true,
+  "showOnPages": [
+    {
+      "id": "1",
+      "title": "Page 1",
+    },
+    {
+      "id": "2",
+      "title": "Page 2",
+    },
+  ],
+  "text": "Test Banner Text",
+  "title": "Test Banner",
+}
+`;
+
+exports[`BannerService > findMany > should return the first active banner for { documentType: +0, loggedIn: false, hasSubscription: false, hasPaywallBypass: false } 2`] = `
+[
+  {
+    "where": {
+      "OR": [
+        {
+          "showForLoginStatus": "LOGGED_OUT",
+        },
+        {
+          "showForLoginStatus": "UNSUBSCRIBED",
+        },
+        {
+          "showForLoginStatus": "ALL",
+        },
+      ],
+      "active": true,
+      "showOnPages": {
+        "some": {
+          "id": "1",
+        },
+      },
+    },
+  },
+]
+`;
+
+exports[`BannerService > findMany > should return the first active banner for { documentType: +0, loggedIn: true, hasSubscription: false, hasPaywallBypass: false } 1`] = `
+{
+  "active": true,
+  "collapsible": true,
+  "createdAt": 2023-01-01T00:00:00.000Z,
+  "cta": null,
+  "delay": 0,
+  "embedUrl": null,
+  "hideForMinutes": 1440,
+  "html": null,
+  "id": "1",
+  "imageId": null,
+  "modifiedAt": 2023-01-01T00:00:00.000Z,
+  "showForLoginStatus": "UNSUBSCRIBED",
+  "showOnArticles": true,
+  "showOnPages": [
+    {
+      "id": "1",
+      "title": "Page 1",
+    },
+    {
+      "id": "2",
+      "title": "Page 2",
+    },
+  ],
+  "text": "Test Banner Text",
+  "title": "Test Banner",
+}
+`;
+
+exports[`BannerService > findMany > should return the first active banner for { documentType: +0, loggedIn: true, hasSubscription: false, hasPaywallBypass: false } 2`] = `
+[
+  {
+    "where": {
+      "OR": [
+        {
+          "showForLoginStatus": "UNSUBSCRIBED",
+        },
+        {
+          "showForLoginStatus": "LOGGED_IN",
+        },
+        {
+          "showForLoginStatus": "ALL",
+        },
+      ],
+      "active": true,
+      "showOnPages": {
+        "some": {
+          "id": "1",
+        },
+      },
+    },
+  },
+]
+`;
+
+exports[`BannerService > findMany > should return the first active banner for { documentType: +0, loggedIn: true, hasSubscription: true, hasPaywallBypass: true } 1`] = `
+{
+  "active": true,
+  "collapsible": true,
+  "createdAt": 2023-01-01T00:00:00.000Z,
+  "cta": null,
+  "delay": 0,
+  "embedUrl": null,
+  "hideForMinutes": 1440,
+  "html": null,
+  "id": "1",
+  "imageId": null,
+  "modifiedAt": 2023-01-01T00:00:00.000Z,
+  "showForLoginStatus": "PAYWALL_BYPASSED",
+  "showOnArticles": true,
+  "showOnPages": [
+    {
+      "id": "1",
+      "title": "Page 1",
+    },
+    {
+      "id": "2",
+      "title": "Page 2",
+    },
+  ],
+  "text": "Test Banner Text",
+  "title": "Test Banner",
+}
+`;
+
+exports[`BannerService > findMany > should return the first active banner for { documentType: +0, loggedIn: true, hasSubscription: true, hasPaywallBypass: true } 2`] = `
+[
+  {
+    "where": {
+      "OR": [
+        {
+          "showForLoginStatus": "PAYWALL_BYPASSED",
+        },
+        {
+          "showForLoginStatus": "SUBSCRIBED",
+        },
+        {
+          "showForLoginStatus": "LOGGED_IN",
+        },
+        {
+          "showForLoginStatus": "ALL",
+        },
+      ],
+      "active": true,
+      "showOnPages": {
+        "some": {
+          "id": "1",
+        },
+      },
+    },
+  },
+]
+`;
+
+exports[`BannerService > findMany > should return the first active banner for { documentType: 1, loggedIn: false, hasSubscription: false, hasPaywallBypass: false } 1`] = `
+{
+  "active": true,
+  "collapsible": true,
+  "createdAt": 2023-01-01T00:00:00.000Z,
+  "cta": null,
+  "delay": 0,
+  "embedUrl": null,
+  "hideForMinutes": 1440,
+  "html": null,
+  "id": "1",
+  "imageId": null,
+  "modifiedAt": 2023-01-01T00:00:00.000Z,
+  "showForLoginStatus": "LOGGED_OUT",
+  "showOnArticles": true,
+  "showOnPages": [
+    {
+      "id": "1",
+      "title": "Page 1",
+    },
+    {
+      "id": "2",
+      "title": "Page 2",
+    },
+  ],
+  "text": "Test Banner Text",
+  "title": "Test Banner",
+}
+`;
+
+exports[`BannerService > findMany > should return the first active banner for { documentType: 1, loggedIn: false, hasSubscription: false, hasPaywallBypass: false } 2`] = `
+[
+  {
+    "where": {
+      "OR": [
+        {
+          "showForLoginStatus": "LOGGED_OUT",
+        },
+        {
+          "showForLoginStatus": "UNSUBSCRIBED",
+        },
+        {
+          "showForLoginStatus": "ALL",
+        },
+      ],
+      "active": true,
+      "showOnArticles": true,
+    },
+  },
+]
+`;
+
+exports[`BannerService > findMany > should return the first active banner for { documentType: 1, loggedIn: true, hasSubscription: false, hasPaywallBypass: false } 1`] = `
+{
+  "active": true,
+  "collapsible": true,
+  "createdAt": 2023-01-01T00:00:00.000Z,
+  "cta": null,
+  "delay": 0,
+  "embedUrl": null,
+  "hideForMinutes": 1440,
+  "html": null,
+  "id": "1",
+  "imageId": null,
+  "modifiedAt": 2023-01-01T00:00:00.000Z,
+  "showForLoginStatus": "UNSUBSCRIBED",
+  "showOnArticles": true,
+  "showOnPages": [
+    {
+      "id": "1",
+      "title": "Page 1",
+    },
+    {
+      "id": "2",
+      "title": "Page 2",
+    },
+  ],
+  "text": "Test Banner Text",
+  "title": "Test Banner",
+}
+`;
+
+exports[`BannerService > findMany > should return the first active banner for { documentType: 1, loggedIn: true, hasSubscription: false, hasPaywallBypass: false } 2`] = `
+[
+  {
+    "where": {
+      "OR": [
+        {
+          "showForLoginStatus": "UNSUBSCRIBED",
+        },
+        {
+          "showForLoginStatus": "LOGGED_IN",
+        },
+        {
+          "showForLoginStatus": "ALL",
+        },
+      ],
+      "active": true,
+      "showOnArticles": true,
+    },
+  },
+]
+`;
+
+exports[`BannerService > findMany > should return the first active banner for { documentType: 1, loggedIn: true, hasSubscription: true, hasPaywallBypass: true } 1`] = `
+{
+  "active": true,
+  "collapsible": true,
+  "createdAt": 2023-01-01T00:00:00.000Z,
+  "cta": null,
+  "delay": 0,
+  "embedUrl": null,
+  "hideForMinutes": 1440,
+  "html": null,
+  "id": "1",
+  "imageId": null,
+  "modifiedAt": 2023-01-01T00:00:00.000Z,
+  "showForLoginStatus": "PAYWALL_BYPASSED",
+  "showOnArticles": true,
+  "showOnPages": [
+    {
+      "id": "1",
+      "title": "Page 1",
+    },
+    {
+      "id": "2",
+      "title": "Page 2",
+    },
+  ],
+  "text": "Test Banner Text",
+  "title": "Test Banner",
+}
+`;
+
+exports[`BannerService > findMany > should return the first active banner for { documentType: 1, loggedIn: true, hasSubscription: true, hasPaywallBypass: true } 2`] = `
+[
+  {
+    "where": {
+      "OR": [
+        {
+          "showForLoginStatus": "PAYWALL_BYPASSED",
+        },
+        {
+          "showForLoginStatus": "SUBSCRIBED",
+        },
+        {
+          "showForLoginStatus": "LOGGED_IN",
+        },
+        {
+          "showForLoginStatus": "ALL",
+        },
+      ],
+      "active": true,
+      "showOnArticles": true,
+    },
+  },
+]
+`;
 
 exports[`BannerService findMany should return null if no banner found 1`] = `
 [

@@ -2,31 +2,32 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaClient } from '@prisma/client';
 import { BlockStylesDataloaderService } from './block-styles-dataloader.service';
 import { BlockStylesService } from './block-styles.service';
+import type { Mock } from 'vitest';
 
 describe('BlockStylesService', () => {
   let service: BlockStylesService;
   let prismaMock: {
-    blockStyle: { [method in keyof PrismaClient['blockStyle']]?: jest.Mock };
+    blockStyle: { [method in keyof PrismaClient['blockStyle']]?: Mock };
   };
 
   beforeAll(() => {
-    jest.useFakeTimers();
-    jest.setSystemTime(new Date('2023-01-01'));
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2023-01-01'));
   });
 
   afterAll(() => {
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   beforeEach(async () => {
     prismaMock = {
       blockStyle: {
-        count: jest.fn(),
-        findMany: jest.fn(),
-        findUnique: jest.fn(),
-        delete: jest.fn(),
-        create: jest.fn(),
-        update: jest.fn(),
+        count: vi.fn(),
+        findMany: vi.fn(),
+        findUnique: vi.fn(),
+        delete: vi.fn(),
+        create: vi.fn(),
+        update: vi.fn(),
       },
     };
 
@@ -37,7 +38,7 @@ describe('BlockStylesService', () => {
         {
           provide: BlockStylesDataloaderService,
           useValue: {
-            prime: jest.fn(),
+            prime: vi.fn(),
           },
         },
       ],

@@ -1,4 +1,40 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`AuthorDataloaderService > load > should load many 1`] = `
+[
+  {
+    "where": {
+      "id": {
+        "in": [
+          "123",
+          "321",
+        ],
+      },
+    },
+  },
+]
+`;
+
+exports[`AuthorDataloaderService > load > should load one 1`] = `
+[
+  {
+    "where": {
+      "id": {
+        "in": [
+          "123",
+        ],
+      },
+    },
+  },
+]
+`;
+
+exports[`AuthorDataloaderService > should prime 1`] = `
+[
+  "123",
+  {},
+]
+`;
 
 exports[`AuthorDataloaderService load should load many 1`] = `
 [

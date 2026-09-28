@@ -5,31 +5,32 @@ import { EventDataloaderService } from './event-dataloader.service';
 import { SortOrder } from '@wepublish/utils/api';
 import { EventSort } from './event.model';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
+import type { Mock } from 'vitest';
 
 describe('EventService', () => {
   let service: EventService;
   let prismaMock: {
-    event: { [method in keyof PrismaClient['event']]?: jest.Mock };
+    event: { [method in keyof PrismaClient['event']]?: Mock };
   };
 
   beforeAll(() => {
-    jest.useFakeTimers();
-    jest.setSystemTime(new Date('2023-01-01'));
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2023-01-01'));
   });
 
   afterAll(() => {
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   beforeEach(async () => {
     prismaMock = {
       event: {
-        count: jest.fn(),
-        findMany: jest.fn(),
-        findUnique: jest.fn(),
-        delete: jest.fn(),
-        create: jest.fn(),
-        update: jest.fn(),
+        count: vi.fn(),
+        findMany: vi.fn(),
+        findUnique: vi.fn(),
+        delete: vi.fn(),
+        create: vi.fn(),
+        update: vi.fn(),
       },
     };
 
@@ -40,7 +41,7 @@ describe('EventService', () => {
         {
           provide: EventDataloaderService,
           useValue: {
-            prime: jest.fn(),
+            prime: vi.fn(),
           },
         },
       ],

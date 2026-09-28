@@ -12,71 +12,72 @@ import {
   MemberPlanDataloader,
   MemberPlanService,
 } from '@wepublish/member-plan/api';
+import type { Mock } from 'vitest';
 
 describe('UserSubscriptionService', () => {
   let service: UserSubscriptionService;
 
   let prismaMock: {
-    discountCode: { findUnique: jest.Mock };
-    paymentMethod: { findFirst: jest.Mock };
-    subscription: { findUnique: jest.Mock };
+    discountCode: { findUnique: Mock };
+    paymentMethod: { findFirst: Mock };
+    subscription: { findUnique: Mock };
   };
 
   let memberContextMock: {
-    validateInputParamsCreateSubscription: jest.Mock;
-    validateSubscriptionPaymentConfiguration: jest.Mock;
-    processSubscriptionProperties: jest.Mock;
-    createSubscription: jest.Mock;
-    deactivateSubscription: jest.Mock;
+    validateInputParamsCreateSubscription: Mock;
+    validateSubscriptionPaymentConfiguration: Mock;
+    processSubscriptionProperties: Mock;
+    createSubscription: Mock;
+    deactivateSubscription: Mock;
   };
 
   let memberPlanDataloaderMock: {
-    load: jest.Mock;
+    load: Mock;
   };
 
   let discountCodeDataloaderMock: {
-    prime: jest.Mock;
+    prime: Mock;
   };
 
   let paymentsMock: {
-    createPaymentWithProvider: jest.Mock;
+    createPaymentWithProvider: Mock;
   };
 
   beforeAll(() => {
-    jest.useFakeTimers();
-    jest.setSystemTime(new Date('2025-01-01'));
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2025-01-01'));
   });
 
   afterAll(() => {
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   beforeAll(async () => {
     prismaMock = {
-      discountCode: { findUnique: jest.fn() },
+      discountCode: { findUnique: vi.fn() },
       paymentMethod: {
-        findFirst: jest.fn().mockResolvedValue({ id: 'paymentMethodId' }),
+        findFirst: vi.fn().mockResolvedValue({ id: 'paymentMethodId' }),
       },
-      subscription: { findUnique: jest.fn() },
+      subscription: { findUnique: vi.fn() },
     };
 
     memberContextMock = {
-      validateInputParamsCreateSubscription: jest
+      validateInputParamsCreateSubscription: vi
         .fn()
         .mockResolvedValue(undefined),
-      validateSubscriptionPaymentConfiguration: jest
+      validateSubscriptionPaymentConfiguration: vi
         .fn()
         .mockResolvedValue(undefined),
-      processSubscriptionProperties: jest.fn().mockResolvedValue([]),
-      createSubscription: jest.fn().mockResolvedValue({
+      processSubscriptionProperties: vi.fn().mockResolvedValue([]),
+      createSubscription: vi.fn().mockResolvedValue({
         subscription: { id: 'subscriptionId' },
         invoice: { id: 'invoiceId' },
       }),
-      deactivateSubscription: jest.fn().mockResolvedValue(undefined),
+      deactivateSubscription: vi.fn().mockResolvedValue(undefined),
     };
 
     memberPlanDataloaderMock = {
-      load: jest.fn().mockResolvedValue({
+      load: vi.fn().mockResolvedValue({
         id: 'memberPlanId',
         active: true,
         extendable: true,
@@ -87,11 +88,11 @@ describe('UserSubscriptionService', () => {
     };
 
     discountCodeDataloaderMock = {
-      prime: jest.fn(),
+      prime: vi.fn(),
     };
 
     paymentsMock = {
-      createPaymentWithProvider: jest.fn().mockResolvedValue({}),
+      createPaymentWithProvider: vi.fn().mockResolvedValue({}),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -106,12 +107,12 @@ describe('UserSubscriptionService', () => {
         { provide: MemberPlanDataloader, useValue: memberPlanDataloaderMock },
         {
           provide: MemberPlanService,
-          useValue: { getMemberPlanBySlug: jest.fn() },
+          useValue: { getMemberPlanBySlug: vi.fn() },
         },
         { provide: PaymentsService, useValue: paymentsMock },
         {
           provide: GoodieService,
-          useValue: { getValidGoodie: jest.fn() },
+          useValue: { getValidGoodie: vi.fn() },
         },
         { provide: PrismaClient, useValue: prismaMock },
       ],
@@ -121,7 +122,7 @@ describe('UserSubscriptionService', () => {
   });
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     memberContextMock.validateInputParamsCreateSubscription.mockResolvedValue(
       undefined
     );

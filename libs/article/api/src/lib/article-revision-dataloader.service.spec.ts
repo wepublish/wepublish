@@ -2,30 +2,39 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaClient } from '@prisma/client';
 import DataLoader from 'dataloader';
 import { ArticleRevisionDataloaderService } from './article-revision-dataloader.service';
+import type { Mock } from 'vitest';
 
-jest.mock('dataloader');
+vi.mock('dataloader', () => ({
+  default: vi.fn(function (this: any) {
+    this.prime = vi.fn();
+    this.load = vi.fn();
+    this.loadMany = vi.fn();
+    this.clear = vi.fn();
+    this.clearAll = vi.fn();
+  }),
+}));
 
 describe('ArticleRevisionDataloaderService', () => {
   let service: ArticleRevisionDataloaderService;
   let prismaMock: {
     article: {
-      findMany: jest.Mock;
+      findMany: Mock;
     };
   };
 
   beforeAll(() => {
-    jest.useFakeTimers();
-    jest.setSystemTime(new Date('2023-01-01'));
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2023-01-01'));
   });
 
   afterAll(() => {
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   beforeEach(async () => {
     prismaMock = {
       article: {
-        findMany: jest.fn(),
+        findMany: vi.fn(),
       },
     };
 
@@ -46,7 +55,7 @@ describe('ArticleRevisionDataloaderService', () => {
 
   it('should prime', () => {
     // @ts-expect-error Mock so typings incorrectly
-    const dataloaderMock = DataLoader.mock.instances[0] as jest.fn;
+    const dataloaderMock = DataLoader.mock.instances[0] as any;
     service.prime('123', {} as any);
     expect(dataloaderMock.prime.mock.calls[0]).toMatchSnapshot();
   });
@@ -54,7 +63,7 @@ describe('ArticleRevisionDataloaderService', () => {
   describe('load', () => {
     beforeEach(async () => {
       // @ts-expect-error mocked so typing doesn't work
-      DataLoader.mockImplementation((impl, opt) => {
+      DataLoader.mockImplementation(function (impl: any, opt: any) {
         return {
           load: (id: string) => impl([id]),
           loadMany: (ids: readonly string[]) => impl(ids),

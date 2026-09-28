@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`AuthenticationService should return a token session 1`] = `
+exports[`AuthenticationService > should return a token session 1`] = `
 {
   "id": "1234-1234",
   "name": "Foo Token",
@@ -10,7 +10,7 @@ exports[`AuthenticationService should return a token session 1`] = `
 }
 `;
 
-exports[`AuthenticationService should return a token session 2`] = `
+exports[`AuthenticationService > should return a token session 2`] = `
 [
   {
     "where": {
@@ -20,7 +20,7 @@ exports[`AuthenticationService should return a token session 2`] = `
 ]
 `;
 
-exports[`AuthenticationService should return a token session 3`] = `
+exports[`AuthenticationService > should return a token session 3`] = `
 [
   {
     "where": {
@@ -35,7 +35,7 @@ exports[`AuthenticationService should return a token session 3`] = `
 ]
 `;
 
-exports[`AuthenticationService should return a user session 1`] = `
+exports[`AuthenticationService > should return a user session 1`] = `
 {
   "createdAt": undefined,
   "expiresAt": undefined,
@@ -49,7 +49,7 @@ exports[`AuthenticationService should return a user session 1`] = `
 }
 `;
 
-exports[`AuthenticationService should return a user session 2`] = `
+exports[`AuthenticationService > should return a user session 2`] = `
 [
   {
     "include": {
@@ -88,7 +88,7 @@ exports[`AuthenticationService should return a user session 2`] = `
 ]
 `;
 
-exports[`AuthenticationService should return a user session 3`] = `
+exports[`AuthenticationService > should return a user session 3`] = `
 [
   {
     "where": {
@@ -100,7 +100,7 @@ exports[`AuthenticationService should return a user session 3`] = `
 ]
 `;
 
-exports[`AuthenticationService should return null if user can't be found 1`] = `
+exports[`AuthenticationService > should return null if user can't be found 1`] = `
 [
   {
     "include": {
@@ -139,4 +139,4 @@ exports[`AuthenticationService should return null if user can't be found 1`] = `
 ]
 `;
 
-exports[`AuthenticationService should return null if user can't be found 2`] = `undefined`;
+exports[`AuthenticationService > should return null if user can't be found 2`] = `undefined`;

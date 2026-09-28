@@ -2,21 +2,30 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaClient } from '@prisma/client';
 import DataLoader from 'dataloader';
 import { NavigationDataloaderService } from './navigation-dataloader.service';
+import type { Mock } from 'vitest';
 
-jest.mock('dataloader');
+vi.mock('dataloader', () => ({
+  default: vi.fn(function (this: any) {
+    this.prime = vi.fn();
+    this.load = vi.fn();
+    this.loadMany = vi.fn();
+    this.clear = vi.fn();
+    this.clearAll = vi.fn();
+  }),
+}));
 
 describe('NavigationDataloaderService', () => {
   let service: NavigationDataloaderService;
   let prismaMock: {
     navigation: {
-      findMany: jest.Mock;
+      findMany: Mock;
     };
   };
 
   beforeEach(async () => {
     prismaMock = {
       navigation: {
-        findMany: jest.fn(),
+        findMany: vi.fn(),
       },
     };
 
@@ -37,7 +46,7 @@ describe('NavigationDataloaderService', () => {
 
   it('should prime', () => {
     // @ts-expect-error Mock so typings incorrectly
-    const dataloaderMock = DataLoader.mock.instances[0] as jest.fn;
+    const dataloaderMock = DataLoader.mock.instances[0] as any;
     service.prime('123', {} as any);
     expect(dataloaderMock.prime.mock.calls[0]).toMatchSnapshot();
   });
@@ -45,7 +54,7 @@ describe('NavigationDataloaderService', () => {
   describe('load', () => {
     beforeEach(async () => {
       // @ts-expect-error mocked so typing doesn't work
-      DataLoader.mockImplementation((impl, opt) => {
+      DataLoader.mockImplementation(function (impl: any, opt: any) {
         return {
           load: (id: string) => impl([id]),
           loadMany: (ids: readonly string[]) => impl(ids),
