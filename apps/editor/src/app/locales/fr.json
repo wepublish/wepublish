@@ -3360,7 +3360,6 @@
     "seoPreviews": {
       "info": "Aperçus approximatifs basés sur les paramètres actuels. Les plateformes déterminent l'affichage final et peuvent raccourcir les textes ou recadrer les images.",
       "pageIgnoresSeoFields": "Le site n'utilise actuellement pas le titre SEO ni la description SEO des pages. Les aperçus montrent ce qui est réellement utilisé.",
-      "noImage": "Pas d'image",
       "google": "Recherche Google",
       "googleTitleTooLong": "Plus de {{limit}} caractères, Google le raccourcira probablement",
       "facebook": "Facebook",
@@ -3370,8 +3369,7 @@
       "xLarge": "X (Twitter) – carte avec grande image",
       "xLargeUsed": "utilisée par le site",
       "xSummary": "X (Twitter) – carte résumé",
-      "xSummaryUnused": "pour comparaison, n'est pas utilisée par le site",
-      "xFrom": "De {{domain}}"
+      "xSummaryUnused": "pour comparaison, n'est pas utilisée par le site"
     },
     "seoAnalysis": {
       "title": "Analyse SEO",

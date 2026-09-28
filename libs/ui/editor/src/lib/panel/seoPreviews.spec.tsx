@@ -85,7 +85,7 @@ describe('SeoPreviews', () => {
   test('shows placeholders without an image', () => {
     render(<SeoPreviews data={{ ...data, image: undefined }} />);
 
-    expect(screen.getAllByText('seoPreviews.noImage').length).toBe(6);
+    expect(screen.getAllByText('No image').length).toBe(5);
   });
 
   test('warns about long google titles and ignored page fields', () => {

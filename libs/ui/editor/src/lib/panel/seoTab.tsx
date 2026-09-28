@@ -61,7 +61,6 @@ export function SeoTab({
         data={previewData}
         siteName={profile?.name}
         favicon={profile?.squareLogo ?? profile?.logo}
-        accentColor={profile?.themeColor}
       />
 
       <SeoSuggestions

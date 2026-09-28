@@ -3453,7 +3453,6 @@
     "seoPreviews": {
       "info": "Approximate previews based on the current settings. The platforms decide the final look and may shorten texts or crop images.",
       "pageIgnoresSeoFields": "The website currently does not use the SEO title and SEO description of pages. The previews show what is actually used.",
-      "noImage": "No image",
       "google": "Google search",
       "googleTitleTooLong": "Longer than {{limit}} characters, Google will likely shorten it",
       "facebook": "Facebook",
@@ -3463,8 +3462,7 @@
       "xLarge": "X (Twitter) – large image card",
       "xLargeUsed": "used by the website",
       "xSummary": "X (Twitter) – summary card",
-      "xSummaryUnused": "for comparison, not used by the website",
-      "xFrom": "From {{domain}}"
+      "xSummaryUnused": "for comparison, not used by the website"
     },
     "seoAnalysis": {
       "title": "SEO analysis",
