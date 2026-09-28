@@ -1218,6 +1218,8 @@ model User {
   changelogConfirmations    ChangelogEntry[]
   notificationReads         NotificationRead[]
   notificationConfirmations NotificationConfirmation[]
+  emailQuality              UserEmailQuality?
+  emailQualityEvents        EmailQualityEvent[]
 
   @@index([createdAt])
   @@map("users")
@@ -2311,4 +2313,90 @@ model AuditLog {
   @@index([sessionId])
   @@index([entity, recordId])
   @@map("audit_logs")
+}
+
+// Ordered best -> worst. unresponsive and suspect are evaluated later, the
+// values exist so that adding those rules needs no migration.
+enum EmailQualityLevel {
+  confirmed     @map("confirmed")
+  unknown       @map("unknown")
+  unresponsive  @map("unresponsive")
+  suspect       @map("suspect")
+  undeliverable @map("undeliverable")
+  blocked       @map("blocked")
+  placeholder   @map("placeholder")
+}
+
+enum EmailQualityEventType {
+  placeholderDetected @map("placeholderDetected")
+  hardBounce          @map("hardBounce")
+  softBounce          @map("softBounce")
+  rejected            @map("rejected")
+  spamComplaint       @map("spamComplaint")
+  unsubscribed        @map("unsubscribed")
+  delivered           @map("delivered")
+  opened              @map("opened")
+  clicked             @map("clicked")
+  jwtLogin            @map("jwtLogin")
+  emailConfirmed      @map("emailConfirmed")
+  manualConfirmed     @map("manualConfirmed")
+  manualInvalid       @map("manualInvalid")
+  manualReset         @map("manualReset")
+  manualNote          @map("manualNote")
+}
+
+enum EmailQualityEventSource {
+  send      @map("send")
+  webhook   @map("webhook")
+  poll      @map("poll")
+  session   @map("session")
+  user      @map("user")
+  editor    @map("editor")
+  backfill  @map("backfill")
+  evaluator @map("evaluator")
+}
+
+/// Append-only evidence about how usable an email address is.
+model EmailQualityEvent {
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  occurredAt DateTime @db.Timestamptz(3)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  /// Lowercased address the evidence is about. After an email change the old
+  /// events no longer apply.
+  email  String
+  type   EmailQualityEventType
+  source EmailQualityEventSource
+  /// Reject reason, bounce diagnosis or an editor note. Never raw payloads.
+  detail String?
+
+  mailLogId   String?
+  createdById String?
+
+  @@unique([mailLogId, type])
+  @@index([userId, email, occurredAt])
+  @@map("email_quality_events")
+}
+
+/// Level derived from the events. Users without a row count as unknown.
+model UserEmailQuality {
+  userId String @id
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  /// Address the level was computed for.
+  email  String
+  level  EmailQualityLevel
+  reason String
+  since  DateTime          @db.Timestamptz(3)
+
+  /// Set by an editor, wins until newer negative evidence arrives.
+  manualLevel     EmailQualityLevel?
+  lastEvaluatedAt DateTime           @db.Timestamptz(3)
+  modifiedAt      DateTime           @updatedAt @db.Timestamptz(3)
+
+  @@index([level])
+  @@map("user_email_quality")
 }
