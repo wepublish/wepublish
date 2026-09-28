@@ -21,7 +21,23 @@ import { SettingName, SettingsService } from '@wepublish/settings/api';
 const roundUpTo5Cents = (amount: number) =>
   (Math.ceil((amount / 100) * 20) / 20) * 100;
 
-const leftoverSubscriptionPeriodAmount = (periods: SubscriptionPeriod[]) => {
+// TEMPORARY (remove once reflekt's imported subscription periods are sanitized):
+// the reflekt v3 import stored the MONTHLY amount in period.amount instead of the
+// period total. Correct only that exact fingerprint (amount === monthlyAmount) so
+// the upgrade credit reflects what the member actually paid; genuine discounted or
+// custom period amounts (amount !== monthlyAmount) are left untouched.
+const effectivePeriodAmount = (
+  period: SubscriptionPeriod,
+  monthlyAmount: number
+) =>
+  period.amount === monthlyAmount ?
+    calculateAmountForPeriodicity(monthlyAmount, period.paymentPeriodicity)
+  : period.amount;
+
+const leftoverSubscriptionPeriodAmount = (
+  periods: SubscriptionPeriod[],
+  monthlyAmount: number
+) => {
   const today = startOfDay(new Date());
 
   const discountAmount = periods.reduce((discount, period) => {
@@ -35,14 +51,25 @@ const leftoverSubscriptionPeriodAmount = (periods: SubscriptionPeriod[]) => {
     const leftoverDays = differenceInDays(end, today);
     const leftoverPercentage = leftoverDays / totalDurationInDays;
 
-    return discount + roundUpTo5Cents(period.amount * leftoverPercentage);
+    return (
+      discount +
+      roundUpTo5Cents(
+        effectivePeriodAmount(period, monthlyAmount) * leftoverPercentage
+      )
+    );
   }, 0);
 
   return discountAmount;
 };
 
-const fullSubscriptionPeriodAmount = (periods: SubscriptionPeriod[]) =>
-  periods.reduce((total, period) => total + period.amount, 0);
+const fullSubscriptionPeriodAmount = (
+  periods: SubscriptionPeriod[],
+  monthlyAmount: number
+) =>
+  periods.reduce(
+    (total, period) => total + effectivePeriodAmount(period, monthlyAmount),
+    0
+  );
 
 @Injectable()
 export class UpgradeSubscriptionService {
@@ -206,7 +233,10 @@ export class UpgradeSubscriptionService {
     const calculatePeriodCredit = await this.resolvePeriodCreditCalculator();
     const leftoverDiscount =
       oldSubscriptionPeriods.length ?
-        calculatePeriodCredit(oldSubscriptionPeriods)
+        calculatePeriodCredit(
+          oldSubscriptionPeriods,
+          oldSubscription.monthlyAmount
+        )
       : 0;
 
     let discountCodeId: string | undefined = undefined;
@@ -308,17 +338,21 @@ export class UpgradeSubscriptionService {
     memberPlanId: string;
     discountCode?: string;
   }) {
-    const { oldSubscriptionPeriods } = await this.validateForUpgrade({
-      memberPlanId,
-      subscriptionId,
-      paymentMethodId: null,
-      userId,
-    });
+    const { oldSubscription, oldSubscriptionPeriods } =
+      await this.validateForUpgrade({
+        memberPlanId,
+        subscriptionId,
+        paymentMethodId: null,
+        userId,
+      });
 
     const calculatePeriodCredit = await this.resolvePeriodCreditCalculator();
     const discountAmount =
       oldSubscriptionPeriods.length ?
-        calculatePeriodCredit(oldSubscriptionPeriods)
+        calculatePeriodCredit(
+          oldSubscriptionPeriods,
+          oldSubscription.monthlyAmount
+        )
       : 0;
 
     if (!discountCode) {

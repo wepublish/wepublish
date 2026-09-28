@@ -50,7 +50,8 @@ const fullWidthMainSpacer = (theme: Theme) => css`
   ${theme.breakpoints.up('md')} {
     main > .MuiContainer-root {
       max-width: initial;
-      padding: 0;
+      padding-left: 0;
+      padding-right: 0;
     }
   }
 `;
