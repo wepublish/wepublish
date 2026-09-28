@@ -1838,6 +1838,26 @@ model SettingLetterProvider {
   @@map("settings.letterprovider")
 }
 
+enum PdfRendererType {
+  cloudflare
+}
+
+model SettingPdfRenderer {
+  id           String   @id
+  createdAt    DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt   DateTime @updatedAt @db.Timestamptz(3)
+  lastLoadedAt DateTime @default(now()) @db.Timestamptz(3)
+
+  type PdfRendererType
+  name String?
+
+  cloudflare_accountId String?
+  cloudflare_apiToken  String?
+  timeoutMs            Int?
+
+  @@map("settings.pdfrenderer")
+}
+
 enum LetterAddressPosition {
   left
   right

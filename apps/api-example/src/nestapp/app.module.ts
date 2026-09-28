@@ -8,6 +8,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { HttpModule, HttpService } from '@nestjs/axios';
 import {
   LetterProviderType,
+  PdfRendererType,
   MailProviderType,
   PaymentProviderType,
   PrismaClient,
@@ -300,18 +301,21 @@ import { readConfig } from '../readConfig';
           });
         }
 
+        const pdfRenderer = new CloudflarePdfRenderer({
+          id: configFile.pdfRenderer?.id ?? 'cloudflare',
+          prisma,
+          kv,
+          fallback: {
+            accountId: config.get('CLOUDFLARE_ACCOUNT_ID'),
+            apiToken: config.get('CLOUDFLARE_API_TOKEN'),
+          },
+        });
+
+        await pdfRenderer.initDatabaseConfiguration(PdfRendererType.cloudflare);
+
         return {
           letterProvider,
-          pdfRenderer: new CloudflarePdfRenderer({
-            accountId:
-              letterProviderRaw?.cloudflareAccountId ??
-              config.get('CLOUDFLARE_ACCOUNT_ID') ??
-              '',
-            apiToken:
-              letterProviderRaw?.cloudflareApiToken ??
-              config.get('CLOUDFLARE_API_TOKEN') ??
-              '',
-          }),
+          pdfRenderer,
         };
       },
       inject: [ConfigService, PrismaClient, KvTtlCacheService],

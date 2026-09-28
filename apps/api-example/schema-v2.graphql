@@ -3072,6 +3072,9 @@ type Mutation {
   """Updates a paywall."""
   updatePaywall(active: Boolean, alternativeSubscribeUrl: String, anyMemberPlan: Boolean, bypassTokens: [String!], circumventDescription: RichText, description: RichText, fadeout: Boolean, hideContentAfter: Int, id: String!, memberPlanIds: [String!], name: String, upgradeCircumventDescription: RichText, upgradeDescription: RichText): Paywall!
 
+  """Updates an existing pdf renderer setting."""
+  updatePdfRendererSetting(cloudflare_accountId: String, cloudflare_apiToken: String, id: String, name: String, timeoutMs: Int): SettingPdfRenderer!
+
   """Updates an existing peer."""
   updatePeer(hostURL: String, id: String!, information: RichText, isDisabled: Boolean, name: String, slug: String, token: String): Peer!
 
@@ -3684,6 +3687,10 @@ type PaywallBypass {
   modifiedAt: DateTime!
   paywallId: String!
   token: String!
+}
+
+enum PdfRendererType {
+  cloudflare
 }
 
 type Peer {
@@ -4340,6 +4347,12 @@ type Query {
   """Returns a list of paywalls based on the filters given."""
   paywalls: [Paywall!]!
 
+  """Returns a single pdf renderer setting by id."""
+  pdfRendererSetting(id: String!): SettingPdfRenderer!
+
+  """Returns all pdf renderer settings."""
+  pdfRendererSettings(filter: SettingPdfRendererFilter): [SettingPdfRenderer!]!
+
   """
   This query takes either the ID or the slug and returns the peer profile.
   """
@@ -4802,6 +4815,23 @@ input SettingPaymentProviderFilter {
   id: String
   name: String
   type: PaymentProviderType
+}
+
+type SettingPdfRenderer implements SettingProvider {
+  cloudflare_accountId: String
+  createdAt: DateTime!
+  id: String!
+  lastLoadedAt: DateTime!
+  modifiedAt: DateTime!
+  name: String
+  timeoutMs: Int
+  type: PdfRendererType!
+}
+
+input SettingPdfRendererFilter {
+  id: String
+  name: String
+  type: PdfRendererType
 }
 
 interface SettingProvider {
