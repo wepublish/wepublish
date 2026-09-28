@@ -1182,6 +1182,9 @@
         "user_lastLogin": "Last login",
         "user_createdAt": "Account created",
         "jwt": "Login token (JWT)",
+        "purl": "Personal login link",
+        "purlCode": "Personal login code",
+        "purlQr": "Personal login QR code",
         "currentDate": "Current date",
         "optional_subscription_id": "Subscription ID",
         "optional_subscription_monthlyAmount": "Monthly amount",
@@ -1734,6 +1737,19 @@
       "guestPollVote": "Allow guest votes on polls",
       "login": "Login",
       "loginMinutes": "Email-Login token validity period",
+      "loginCodeMaxUses": "Personal login link: maximum uses",
+      "loginCodeValidDays": "Personal login link: validity period",
+      "loginCodeSecondFactor": "Personal login link: second factor",
+      "placeholderEmailPatterns": "Placeholder email addresses (patterns)",
+      "loginCodeSecondFactorOptions": {
+        "none": "None",
+        "postalCode": "Postal code",
+        "city": "City",
+        "firstName": "First name",
+        "lastName": "Last name"
+      },
+      "loginCodeUses": "uses",
+      "days": "days",
       "memberships": "Memberships",
       "minutes": "minutes",
       "ms": "milliseconds",
@@ -1767,6 +1783,10 @@
         "invoiceFrequency": "The interval in days between invoice reminder attempts.",
         "invoiceReminders": "How many times we will remind user to pay the subscription (once per day).",
         "loginMinutes": "How long (in minutes) the link sent via email to create account will be valid. Defaults to one week (10080 / 60 / 24).",
+        "loginCodeMaxUses": "How often a personal login link (letter code, {{purl}}) may be used before it expires. Default: 5.",
+        "loginCodeValidDays": "How many days a personal login link stays valid. Default: 90.",
+        "loginCodeSecondFactor": "Detail from the letter that is asked for in addition when someone who logged in with a login link stores a real email address (only for accounts with a placeholder email). Protects against guessed codes – postal code recommended. After 5 failed attempts the session is ended.",
+        "placeholderEmailPatterns": "Comma-separated text patterns, e.g. @placeholder.example.org. Accounts whose email contains one of the patterns count as placeholders: no email is sent to them and their sessions stay restricted until a real address is confirmed.",
         "newDeactivationsApiPublic": "Exposes subscriptions anonymized to the public.",
         "newSubscriptionsApiPublic": "Exposes subscriptions anonymized to the public.",
         "passwordToken": "How long (in minutes) the link sent via email to reset password will be valid. Defaults to one day (1440 / 60 / 24).",
@@ -1899,6 +1919,7 @@
         "login_link": "Login link",
         "password_reset": "Password reset",
         "email_change": "Email address changed",
+        "email_verification": "Email address confirmed",
         "test_mail": "Test mail"
       },
       "eventInfo": {
@@ -1921,6 +1942,11 @@
           "short": "Confirm the new address.",
           "description": "Goes to the new address when someone changes their email address. The change only takes effect after the confirmation.",
           "example": "«Please confirm your new email address.»"
+        },
+        "email_verification": {
+          "short": "Confirm the current address.",
+          "description": "Goes to the current address when someone verifies it, for example after logging in with a personal link from a letter.",
+          "example": "«Please confirm your email address.»"
         },
         "test_mail": {
           "short": "For your own tests only.",
@@ -2000,6 +2026,17 @@
       "passwordChangeSuccess": "Password successfuly changed!",
       "passwordHeader": "Passwords & Access",
       "totpHeader": "Two-Factor Authentication",
+      "loginCode": {
+        "header": "Personal login link",
+        "status": "Valid until {{expiresAt}} · {{usesRemaining}} of {{maxUses}} uses left · last used: {{lastUsedAt}}",
+        "never": "never",
+        "none": "No personal login link has been issued for this user yet. One is created automatically the first time a mail or letter containing {{purl}} is sent.",
+        "revoke": "Revoke",
+        "reissue": "Reissue",
+        "issued": "New code (shown once):",
+        "secondFactorAvailable": "Second factor “{{factor}}” is on file for this user.",
+        "secondFactorMissing": "Second factor “{{factor}}” is missing for this user – without it they cannot store an email address."
+      },
       "totpEnabled": "Two-factor authentication is enabled for this user.",
       "totpDisabled": "Two-factor authentication is not yet configured. The user will be prompted to set it up on their next editor login.",
       "totpExemptInfo": "This user is exempt from the two-factor authentication requirement.",

@@ -45,6 +45,7 @@ import {
   KvTtlCacheModule,
   KvTtlCacheService,
 } from '@wepublish/kv-ttl-cache/api';
+import { LoginCodeModule, LoginCodeService } from '@wepublish/login-code/api';
 import {
   BaseMailProvider,
   MailchimpMailProvider,
@@ -153,12 +154,21 @@ import { readConfig } from '../readConfig';
     }),
     AuthorModule,
     PrismaModule,
+    LoginCodeModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: (config: ConfigService) => ({
+        websiteURL: config.get('WEBSITE_URL') || 'http://localhost:3000',
+      }),
+      inject: [ConfigService],
+      global: true,
+    }),
     MailsModule.registerAsync({
       imports: [ConfigModule, PrismaModule, KvTtlCacheModule],
       useFactory: async (
         config: ConfigService,
         prisma: PrismaClient,
-        kv: KvTtlCacheService
+        kv: KvTtlCacheService,
+        loginCodeService: LoginCodeService
       ) => {
         const configFile = await readConfig(
           config.getOrThrow('CONFIG_FILE_PATH')
@@ -248,6 +258,7 @@ import { readConfig } from '../readConfig';
 
         return {
           mailProvider,
+          purlProvider: loginCodeService,
           jwtGenerator: (userId: string) =>
             generateJWT({
               id: userId,
@@ -258,7 +269,12 @@ import { readConfig } from '../readConfig';
             }),
         };
       },
-      inject: [ConfigService, PrismaClient, KvTtlCacheService],
+      inject: [
+        ConfigService,
+        PrismaClient,
+        KvTtlCacheService,
+        LoginCodeService,
+      ],
       global: true,
     }),
     TrackingPixelsModule.registerAsync({

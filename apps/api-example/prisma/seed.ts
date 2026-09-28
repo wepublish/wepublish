@@ -1451,6 +1451,10 @@ const SEED_LOGIN_URL = `${
   process.env.WEBSITE_URL ?? 'http://localhost:4200'
 }/login?jwt={{jwt}}`;
 
+const SEED_CONFIRM_EMAIL_URL = `${
+  process.env.WEBSITE_URL ?? 'http://localhost:4200'
+}/confirm-email?token={{jwt}}`;
+
 const mailDocument = (body: string) => `<!doctype html>
 <html lang="de">
   <head>
@@ -1534,15 +1538,31 @@ Letzte Anmeldung: {{user_lastLogin_dateTime}}`,
     subject: 'Bestätige deine neue E-Mail-Adresse',
     htmlContent: mailDocument(`    <p>Hallo {{user_firstName}}</p>
     <p>Du möchtest künftig <strong>{{optional_newEmail}}</strong> verwenden.</p>
-    <p><a href="${SEED_LOGIN_URL}">Änderung bestätigen</a></p>
+    <p><a href="${SEED_CONFIRM_EMAIL_URL}">Änderung bestätigen</a></p>
     <p>Bis zur Bestätigung bleibt {{user_email}} aktiv.</p>`),
     textContent: `Hallo {{user_firstName}}
 
 Du möchtest künftig {{optional_newEmail}} verwenden.
 
-Änderung bestätigen: ${SEED_LOGIN_URL}
+Änderung bestätigen: ${SEED_CONFIRM_EMAIL_URL}
 
 Bis zur Bestätigung bleibt {{user_email}} aktiv.`,
+  },
+  {
+    id: 'seed-email-verification',
+    name: 'E-Mail-Adresse bestätigen',
+    description:
+      'Bestätigung der aktuellen Adresse, z.B. nach dem Login per Brief.',
+    context: MailTemplateContext.emailChange,
+    subject: 'Bestätige deine E-Mail-Adresse',
+    htmlContent: mailDocument(`    <p>Hallo {{user_firstName}}</p>
+    <p>Bitte bestätige, dass <strong>{{optional_newEmail}}</strong> deine E-Mail-Adresse ist.</p>
+    <p><a href="${SEED_CONFIRM_EMAIL_URL}">E-Mail-Adresse bestätigen</a></p>`),
+    textContent: `Hallo {{user_firstName}}
+
+Bitte bestätige, dass {{optional_newEmail}} deine E-Mail-Adresse ist.
+
+E-Mail-Adresse bestätigen: ${SEED_CONFIRM_EMAIL_URL}`,
   },
   {
     id: 'seed-subscription-confirmed',

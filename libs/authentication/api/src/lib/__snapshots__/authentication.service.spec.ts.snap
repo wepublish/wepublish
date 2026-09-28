@@ -37,13 +37,17 @@ exports[`AuthenticationService should return a token session 3`] = `
 
 exports[`AuthenticationService should return a user session 1`] = `
 {
-  "createdAt": undefined,
+  "createdAt": 2026-01-01T00:00:00.000Z,
   "expiresAt": undefined,
   "id": undefined,
+  "origin": "password",
+  "placeholderEmail": false,
+  "restricted": false,
   "roles": [],
   "token": undefined,
   "type": "user",
   "user": {
+    "email": "test@example.com",
     "id": "12345",
   },
 }
@@ -72,6 +76,7 @@ exports[`AuthenticationService should return a user session 2`] = `
           "paymentProviderCustomers": true,
           "pendingEmail": true,
           "pendingEmailAt": true,
+          "pendingEmailTokenHash": false,
           "properties": true,
           "roleIDs": true,
           "totpEnabled": true,
@@ -123,6 +128,7 @@ exports[`AuthenticationService should return null if user can't be found 1`] = `
           "paymentProviderCustomers": true,
           "pendingEmail": true,
           "pendingEmailAt": true,
+          "pendingEmailTokenHash": false,
           "properties": true,
           "roleIDs": true,
           "totpEnabled": true,

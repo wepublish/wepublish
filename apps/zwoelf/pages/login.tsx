@@ -36,7 +36,8 @@ export default function Login({ sessionToken }: LoginProps) {
   if (hasUser && typeof window !== 'undefined') {
     const intendedRoute = getCookie(IntendedRouteStorageKey)?.toString();
     deleteCookie(IntendedRouteStorageKey);
-    const route = intendedRoute ?? '/after-login';
+    const route =
+      router.query?.loginCode ? '/welcome' : (intendedRoute ?? '/after-login');
 
     router.replace(route);
   }
@@ -49,6 +50,8 @@ export default function Login({ sessionToken }: LoginProps) {
         defaults={{
           email: router.query?.mail as string | undefined,
           requirePassword: !!router.query?.requirePassword,
+          loginCode: router.query?.loginCode as string | undefined,
+          useLoginCode: !!router.query?.loginCode,
         }}
       />
     </LoginWrapper>

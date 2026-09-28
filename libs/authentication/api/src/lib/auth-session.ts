@@ -1,4 +1,4 @@
-import { User, UserRole } from '@prisma/client';
+import { SessionOrigin, User, UserRole } from '@prisma/client';
 
 export enum AuthSessionType {
   User = 'user',
@@ -21,6 +21,9 @@ export type UserSession = {
   createdAt: Date;
   expiresAt: Date;
   token: string;
+  origin: SessionOrigin;
+  restricted: boolean;
+  placeholderEmail: boolean;
 };
 
 export type AuthSession = TokenSession | UserSession;

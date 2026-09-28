@@ -663,19 +663,17 @@ export class MailSendJobService {
     }
 
     const optionalData = await this.buildOptionalData(template, recipient);
-    const jwt = await this.mailContext.jwtGenerator(recipient.user.id);
     const composed = composeMail(
       {
         subject: template.subject,
         htmlContent: template.htmlContent,
         textContent: template.textContent,
       },
-      {
-        user: recipient.user,
-        optional: optionalData,
-        jwt,
-        currentDate: new Date(),
-      }
+      await this.mailContext.buildMailData({
+        recipient: recipient.user,
+        optionalData,
+        mode: 'preview',
+      })
     );
 
     return {

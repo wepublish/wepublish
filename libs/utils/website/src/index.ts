@@ -16,6 +16,11 @@ export * from './lib/pages/subscribe-page';
 export * from './lib/pages/search-page';
 export * from './lib/pages/tag-page';
 export * from './lib/pages/document-page';
+export * from './lib/pages/confirm-email-page';
+export * from './lib/with-restricted-session-redirect';
+export * from './lib/handle-login-code';
+export * from './lib/pages/login-code-page';
+export * from './lib/pages/welcome/welcome-page';
 
 export * from './lib/routed-admin-bar';
 export * from './lib/with-jwt-handler';

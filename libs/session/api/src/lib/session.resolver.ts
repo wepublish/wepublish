@@ -1,17 +1,60 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { SessionService } from './session.service';
-import { SessionWithToken } from './session.model';
+import { SessionInfo, SessionWithToken } from './session.model';
 import {
+  Authenticated,
   CurrentUser,
   Public,
+  RequestFingerprint,
   UserSession,
 } from '@wepublish/authentication/api';
+import { ChallengeInput } from '@wepublish/challenge/api';
+import {
+  LoginCodeSecondFactorService,
+  SecondFactorUser,
+} from '@wepublish/login-code/api';
 import { Permissions } from '@wepublish/permissions/api';
 import { CanPreview, CanSendJWTLogin } from '@wepublish/permissions';
 
+type RestrictableSession = { restricted: boolean; user: SecondFactorUser };
+
 @Resolver()
 export class SessionResolver {
-  constructor(private sessionService: SessionService) {}
+  constructor(
+    private sessionService: SessionService,
+    private secondFactorService: LoginCodeSecondFactorService
+  ) {}
+
+  private async maskRestricted<T extends RestrictableSession>(
+    session: T
+  ): Promise<T> {
+    if (!session.restricted) {
+      return session;
+    }
+
+    return {
+      ...session,
+      user: await this.secondFactorService.mask(session.user),
+    };
+  }
+
+  @Authenticated()
+  @Query(() => SessionInfo, {
+    description:
+      'Origin and restriction state of the current session. Restricted sessions may only complete onboarding.',
+  })
+  async currentSession(
+    @CurrentUser() session: UserSession
+  ): Promise<SessionInfo> {
+    return {
+      origin: session.origin,
+      restricted: session.restricted,
+      placeholderEmail: session.placeholderEmail,
+      secondFactor: await this.secondFactorService.getFactor(),
+      createdAt: session.createdAt,
+      expiresAt: session.expiresAt,
+    };
+  }
 
   @Public()
   @Query(() => Boolean, {
@@ -29,10 +72,34 @@ export class SessionResolver {
     @Args('password') password: string,
     @Args('totpToken', { nullable: true }) totpToken?: string
   ) {
-    return this.sessionService.createSessionWithEmailAndPassword(
-      email,
-      password,
-      totpToken
+    return this.maskRestricted(
+      await this.sessionService.createSessionWithEmailAndPassword(
+        email,
+        password,
+        totpToken
+      )
+    );
+  }
+
+  @Public()
+  @Mutation(() => SessionWithToken, {
+    description:
+      'Logs in with a personal login code (PURL). Limited uses, expiring and revocable; rate limited per client.',
+  })
+  async createSessionWithLoginCode(
+    @Args('code') code: string,
+    @RequestFingerprint() fingerprint: string | null,
+    @Args('totpToken', { nullable: true }) totpToken?: string,
+    @Args('challengeAnswer', { nullable: true, type: () => ChallengeInput })
+    challengeAnswer?: ChallengeInput
+  ) {
+    return this.maskRestricted(
+      await this.sessionService.createSessionWithLoginCode(
+        code,
+        totpToken,
+        fingerprint,
+        challengeAnswer
+      )
     );
   }
 
@@ -42,7 +109,9 @@ export class SessionResolver {
     @Args('jwt') jwt: string,
     @Args('totpToken', { nullable: true }) totpToken?: string
   ) {
-    return this.sessionService.createSessionWithJWT(jwt, totpToken);
+    return this.maskRestricted(
+      await this.sessionService.createSessionWithJWT(jwt, totpToken)
+    );
   }
 
   @Public()
