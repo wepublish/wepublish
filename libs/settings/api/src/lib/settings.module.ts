@@ -21,6 +21,12 @@ import { TrackingPixelSettingsProviderDataloaderService } from './integrations/t
 import { MailProviderSettingsResolver } from './integrations/mail-provider-settings.resolver';
 import { MailProviderSettingsService } from './integrations/mail-provider-settings.service';
 import { MailProviderSettingsDataloaderService } from './integrations/mail-provider-settings-dataloader.service';
+import { LetterProviderSettingsResolver } from './integrations/letter-provider-settings.resolver';
+import { LetterProviderSettingsService } from './integrations/letter-provider-settings.service';
+import { LetterProviderSettingsDataloaderService } from './integrations/letter-provider-settings-dataloader.service';
+import { PdfRendererSettingsResolver } from './integrations/pdf-renderer-settings.resolver';
+import { PdfRendererSettingsService } from './integrations/pdf-renderer-settings.service';
+import { PdfRendererSettingsDataloaderService } from './integrations/pdf-renderer-settings-dataloader.service';
 import { AnalyticsProviderSettingsResolver } from './integrations/analytics-provider-settings.resolver';
 import { AnalyticsProviderSettingsService } from './integrations/analytics-provider-settings.service';
 import { AnalyticsProviderSettingsDataloaderService } from './integrations/analytics-provider-settings-dataloader.service';
@@ -52,6 +58,12 @@ import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
     MailProviderSettingsResolver,
     MailProviderSettingsService,
     MailProviderSettingsDataloaderService,
+    LetterProviderSettingsResolver,
+    LetterProviderSettingsService,
+    LetterProviderSettingsDataloaderService,
+    PdfRendererSettingsResolver,
+    PdfRendererSettingsService,
+    PdfRendererSettingsDataloaderService,
     AnalyticsProviderSettingsResolver,
     AnalyticsProviderSettingsService,
     AnalyticsProviderSettingsDataloaderService,
@@ -73,6 +85,10 @@ import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
     TrackingPixelSettingsProviderDataloaderService,
     MailProviderSettingsService,
     MailProviderSettingsDataloaderService,
+    LetterProviderSettingsService,
+    LetterProviderSettingsDataloaderService,
+    PdfRendererSettingsService,
+    PdfRendererSettingsDataloaderService,
     AnalyticsProviderSettingsService,
     AnalyticsProviderSettingsDataloaderService,
     SyncProviderSettingsService,

@@ -1181,6 +1181,9 @@
         "user_lastLogin": "Dernière connexion",
         "user_createdAt": "Compte créé le",
         "jwt": "Jeton de connexion (JWT)",
+        "purl": "Lien de connexion personnel",
+        "purlCode": "Code de connexion personnel",
+        "purlQr": "Code QR de connexion personnel",
         "currentDate": "Date en cours",
         "optional_subscription_id": "ID d'abonnement",
         "optional_subscription_monthlyAmount": "Montant mensuel",
@@ -1687,6 +1690,19 @@
       "guestPollVote": "Autoriser les votes anonymes dans les sondages",
       "login": "Login",
       "loginMinutes": "Durée de validité du token de l'email d'authentification",
+      "loginCodeMaxUses": "Lien de connexion personnel : utilisations maximales",
+      "loginCodeValidDays": "Lien de connexion personnel : durée de validité",
+      "loginCodeSecondFactor": "Lien de connexion personnel : deuxième facteur",
+      "placeholderEmailPatterns": "Adresses e-mail de substitution (motifs)",
+      "loginCodeSecondFactorOptions": {
+        "none": "Aucun",
+        "postalCode": "Code postal",
+        "city": "Localité",
+        "firstName": "Prénom",
+        "lastName": "Nom"
+      },
+      "loginCodeUses": "utilisations",
+      "days": "jours",
       "minutes": "minutes",
       "ms": "millisecondes",
       "passwordToken": "Durée de validité du jeton de réinitialisation du mot de passe et de l'email",
@@ -1706,6 +1722,10 @@
         "guestPollVote": "Autoriser les votes des utilisateurs·trices non authentifié·e·s pour les sondages.",
         "invoiceReminders": "Nombre de rappels de paiement par facture Délai entre les rappels de paiement — jours",
         "loginMinutes": "Durée de validité du token de connexion par email — minutes.",
+        "loginCodeMaxUses": "Nombre d’utilisations d’un lien de connexion personnel (code par courrier, {{purl}}) avant expiration. Par défaut : 5.",
+        "loginCodeValidDays": "Nombre de jours pendant lesquels un lien de connexion personnel reste valable. Par défaut : 90.",
+        "loginCodeSecondFactor": "Information figurant sur le courrier, demandée en plus lorsqu’une personne connectée via un lien de connexion enregistre une véritable adresse e-mail (uniquement pour les comptes avec e-mail de substitution). Protège contre les codes devinés – code postal recommandé. Après 5 échecs, la session est terminée.",
+        "placeholderEmailPatterns": "Motifs de texte séparés par des virgules, p. ex. @substitution.exemple.org. Les comptes dont l’adresse e-mail contient l’un des motifs sont considérés comme des substituts : aucun e-mail ne leur est envoyé et leurs sessions restent limitées jusqu’à la confirmation d’une véritable adresse. S’applique en plus du motif du prestataire de courrier.",
         "passwordToken": "Durée de validité du token pour la réinitialisation du mot de passe par email — minutes.",
         "peerToken": "Expiration du peering (en cas d’erreur lors du peering d’un article, la tentative de peering s’arrête après la durée définie ci-après) — millisecondes",
         "subscriptionUpgradeModel": "Lorsque cette option est activée, une mise à niveau facture toujours la différence entre le prix du nouveau plan et celui du plan actuel, quel que soit le temps restant dans la période en cours. Lorsqu'elle est désactivée, seul le solde restant (au prorata) non utilisé de la période en cours est crédité."
@@ -1885,6 +1905,17 @@
       "passwordChangeSuccess": "Le mot de passe a été changé avec succès !",
       "passwordHeader": "Mots de passe & accès",
       "totpHeader": "Authentification à deux facteurs",
+      "loginCode": {
+        "header": "Lien de connexion personnel",
+        "status": "Valable jusqu’au {{expiresAt}} · {{usesRemaining}} utilisations restantes sur {{maxUses}} · dernière utilisation : {{lastUsedAt}}",
+        "never": "jamais",
+        "none": "Aucun lien de connexion personnel n’a encore été émis pour cette personne. Il est créé automatiquement lors du premier envoi d’un e-mail ou d’un courrier contenant {{purl}}.",
+        "revoke": "Révoquer",
+        "reissue": "Réémettre",
+        "issued": "Nouveau code (affiché une seule fois) :",
+        "secondFactorAvailable": "Le deuxième facteur « {{factor}} » est renseigné pour cette personne.",
+        "secondFactorMissing": "Le deuxième facteur « {{factor}} » manque pour cette personne – sans cette information, elle ne peut pas enregistrer d’adresse e-mail."
+      },
       "totpEnabled": "L'authentification à deux facteurs est activée pour cet utilisateur.",
       "totpDisabled": "L'authentification à deux facteurs n'est pas encore configurée. L'utilisateur sera invité à la configurer lors de sa prochaine connexion à l'éditeur.",
       "totpExemptInfo": "Cet utilisateur est exempté de l'exigence d'authentification à deux facteurs.",
@@ -2400,6 +2431,7 @@
       "paymentProvider": "Fournisseur de paiement",
       "trackingPixel": "Pixel de suivi",
       "mailProvider": "Fournisseur de messagerie",
+      "pdfRenderer": "Moteur de rendu PDF",
       "back": "Retour aux intégrations",
       "unknown": "Intégration inconnue",
       "notFound": "Intégration non trouvée",
@@ -2444,6 +2476,12 @@
         "bexioInvoiceTitleRenewalMembership": "Titre de la facture (Renouvellement d'adhésion)"
       },
       "placeholderSecret": "Inchangé (Masqué)",
+      "pdfRendererSettings": {
+        "type": "Type",
+        "cloudflareAccountId": "ID de compte Cloudflare",
+        "cloudflareApiToken": "Jeton d'API Cloudflare",
+        "timeoutMs": "Délai d'attente (ms)"
+      },
       "mailSettings": {
         "type": "Type",
         "fromAddress": "Adresse de l'expéditeur",
@@ -2837,6 +2875,7 @@
         "login_link": "Lien de connexion",
         "password_reset": "Réinitialisation du mot de passe",
         "email_change": "Adresse e-mail modifiée",
+        "email_verification": "Adresse e-mail confirmée",
         "test_mail": "E-mail de test"
       },
       "eventInfo": {
@@ -2860,6 +2899,11 @@
           "description": "Part à la nouvelle adresse lorsque quelqu’un modifie son adresse e-mail. Le changement n’est effectif qu’après confirmation.",
           "example": "« Merci de confirmer votre nouvelle adresse e-mail. »"
         },
+        "email_verification": {
+          "short": "Confirmer l’adresse actuelle.",
+          "description": "Part à l’adresse actuelle lorsque quelqu’un la confirme, par exemple après une connexion avec un lien personnel reçu par courrier.",
+          "example": "« Merci de confirmer votre adresse e-mail. »"
+        },
         "test_mail": {
           "short": "Uniquement pour vos tests.",
           "description": "N’est jamais envoyé automatiquement aux lectrices et lecteurs. Utilisez ce modèle pour tester vous-même l’envoi.",
@@ -2874,8 +2918,8 @@
           "description": "Public et filtres"
         },
         "content": {
-          "title": "Contenu de l'e-mail",
-          "description": "Modèle et aperçu"
+          "title": "Contenu et envoi",
+          "description": "Modèle, e-mail ou lettre"
         },
         "send": {
           "title": "Envoyer l'e-mail",
@@ -2921,7 +2965,6 @@
       "yes": "Oui",
       "no": "Non",
       "counting": "Comptage des destinataires …",
-      "recipientsCount": "{{count}} destinataires",
       "send": "Envoyer",
       "templateNeedsSubscription": "Ce modèle nécessite un public basé sur les abonnements afin de remplir ses variables d'abonnement.",
       "confirmTitle": "Envoyer un e-mail",
@@ -2954,10 +2997,20 @@
         "loading": "Chargement des destinataires …",
         "email": "E-mail",
         "name": "Nom",
-        "memberPlan": "Plan d’abonnement"
+        "memberPlan": "Plan d’abonnement",
+        "address": "Adresse",
+        "withAddress": "Adresse disponible",
+        "withoutAddress": "Pas d’adresse valide – ne sera pas envoyé"
       },
       "endedWithinDays": "Désactivé au cours des … derniers jours",
       "endedWithinDaysHint": "Uniquement les abonnements désactivés dans cette période.",
+      "emailFilter": {
+        "label": "Adresse e-mail",
+        "all": "Toutes",
+        "placeholder": "Uniquement les substituts",
+        "real": "Uniquement les réelles",
+        "hint": "Les adresses de substitution sont définies dans l’intégration courrier."
+      },
       "endedWindow": {
         "label": "Période de désactivation de l’abonnement",
         "relative": "Derniers … jours",
@@ -2985,7 +3038,9 @@
       "startsAt": "Début de l'abonnement",
       "endsAt": "Fin de l'abonnement",
       "from": "À partir du",
-      "to": "Jusqu'au"
+      "to": "Jusqu'au",
+      "lettersCount": "{{count}} lettres à {{people}} personnes",
+      "confirmTextLetter": "Envoyer cette lettre à {{count}} destinataires ?"
     },
     "mailLog": {
       "title": "E-mails envoyés",

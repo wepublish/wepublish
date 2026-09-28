@@ -1,0 +1,37 @@
+query PdfRendererSettings {
+  pdfRendererSettings {
+    cloudflare_accountId
+    createdAt
+    id
+    lastLoadedAt
+    modifiedAt
+    name
+    timeoutMs
+    type
+  }
+}
+
+mutation UpdatePdfRendererSetting(
+  $cloudflare_accountId: String
+  $cloudflare_apiToken: String
+  $id: String!
+  $name: String
+  $timeoutMs: Int
+) {
+  updatePdfRendererSetting(
+    cloudflare_accountId: $cloudflare_accountId
+    cloudflare_apiToken: $cloudflare_apiToken
+    id: $id
+    name: $name
+    timeoutMs: $timeoutMs
+  ) {
+    cloudflare_accountId
+    createdAt
+    id
+    lastLoadedAt
+    modifiedAt
+    name
+    timeoutMs
+    type
+  }
+}

@@ -110,6 +110,10 @@ GuardedSubscription.getInitialProps = async (ctx: NextPageContext) => {
 
   await handleJwtLogin(ctx, client, !!process.env.HTTP_ONLY_COOKIE);
 
+  if (ctx.res?.headersSent) {
+    return {};
+  }
+
   const sessionProps = await getSessionTokenProps(ctx);
 
   if (sessionProps.sessionToken) {

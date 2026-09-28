@@ -6,6 +6,10 @@ import {
   useCreateUserMutation,
   UserAddress,
   useResetUserTotpMutation,
+  LoginCodeSecondFactor,
+  useReissueUserLoginCodeMutation,
+  useRevokeUserLoginCodeMutation,
+  useUserLoginCodeQuery,
   useUpdateUserMutation,
   useUserQuery,
   useUserRoleListQuery,
@@ -221,6 +225,20 @@ function UserEditView() {
 
   const [resetUserTotp, { loading: isResettingTotp }] =
     useResetUserTotpMutation();
+  const canManageLoginCodes = useAuthorisation('CAN_MANAGE_USER_LOGIN_CODES');
+  const { data: loginCodeData, refetch: refetchLoginCode } =
+    useUserLoginCodeQuery({
+      variables: { userId: user?.id ?? '' },
+      skip: !user?.id || !canManageLoginCodes,
+    });
+  const [revokeUserLoginCode, { loading: isRevokingLoginCode }] =
+    useRevokeUserLoginCodeMutation();
+  const [reissueUserLoginCode, { loading: isReissuingLoginCode }] =
+    useReissueUserLoginCodeMutation();
+  const [issuedLoginCode, setIssuedLoginCode] = useState<{
+    code: string;
+    purl: string;
+  } | null>(null);
 
   /**
    * Function to update address object
@@ -877,6 +895,109 @@ function UserEditView() {
                   </Row>
                 </Panel>
                 {/* two-factor authentication */}
+                {user && canManageLoginCodes && (
+                  <Panel
+                    bordered
+                    header={t('userCreateOrEditView.loginCode.header')}
+                  >
+                    <Row gutter={10}>
+                      <Col xs={24}>
+                        <p style={{ marginBottom: 12 }}>
+                          {loginCodeData?.userLoginCode ?
+                            t('userCreateOrEditView.loginCode.status', {
+                              usesRemaining:
+                                loginCodeData.userLoginCode.usesRemaining,
+                              maxUses: loginCodeData.userLoginCode.maxUses,
+                              expiresAt: new Date(
+                                loginCodeData.userLoginCode.expiresAt
+                              ).toLocaleDateString(),
+                              lastUsedAt:
+                                loginCodeData.userLoginCode.lastUsedAt ?
+                                  new Date(
+                                    loginCodeData.userLoginCode.lastUsedAt
+                                  ).toLocaleString()
+                                : t('userCreateOrEditView.loginCode.never'),
+                            })
+                          : t('userCreateOrEditView.loginCode.none')}
+                        </p>
+
+                        {loginCodeData?.userLoginCode &&
+                          loginCodeData.userLoginCode.secondFactor !==
+                            LoginCodeSecondFactor.None && (
+                            <p style={{ marginBottom: 12 }}>
+                              {t(
+                                (
+                                  loginCodeData.userLoginCode
+                                    .secondFactorAvailable
+                                ) ?
+                                  'userCreateOrEditView.loginCode.secondFactorAvailable'
+                                : 'userCreateOrEditView.loginCode.secondFactorMissing',
+                                {
+                                  factor: t(
+                                    `settingList.loginCodeSecondFactorOptions.${loginCodeData.userLoginCode.secondFactor}`
+                                  ),
+                                }
+                              )}
+                            </p>
+                          )}
+
+                        <RButton
+                          appearance="ghost"
+                          disabled={
+                            !loginCodeData?.userLoginCode || isRevokingLoginCode
+                          }
+                          style={{ marginBottom: 16, marginRight: 8 }}
+                          onClick={async () => {
+                            await revokeUserLoginCode({
+                              variables: { userId: user.id },
+                            });
+                            setIssuedLoginCode(null);
+                            await refetchLoginCode();
+                          }}
+                        >
+                          {t('userCreateOrEditView.loginCode.revoke')}
+                        </RButton>
+
+                        <RButton
+                          appearance="primary"
+                          disabled={isReissuingLoginCode}
+                          style={{ marginBottom: 16 }}
+                          onClick={async () => {
+                            const result = await reissueUserLoginCode({
+                              variables: { userId: user.id },
+                            });
+
+                            if (result.data?.reissueUserLoginCode) {
+                              setIssuedLoginCode({
+                                code: result.data.reissueUserLoginCode.code,
+                                purl: result.data.reissueUserLoginCode.purl,
+                              });
+                            }
+
+                            await refetchLoginCode();
+                          }}
+                        >
+                          {t('userCreateOrEditView.loginCode.reissue')}
+                        </RButton>
+
+                        {issuedLoginCode && (
+                          <Message
+                            type="info"
+                            showIcon
+                          >
+                            {t('userCreateOrEditView.loginCode.issued')}{' '}
+                            <strong>{issuedLoginCode.code}</strong>
+                            <br />
+                            <a href={issuedLoginCode.purl}>
+                              {issuedLoginCode.purl}
+                            </a>
+                          </Message>
+                        )}
+                      </Col>
+                    </Row>
+                  </Panel>
+                )}
+
                 {user && canResetTotp && (
                   <Panel
                     bordered

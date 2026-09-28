@@ -9,6 +9,16 @@ mailProvider:
   fromAddress: no-reply@wepublish.local
   # SMTP defaults to localhost:1025 (Mailpit). docker-compose overrides the
   # host to `mailpit` via the MAIL_SMTP_HOST env var on the api service.
+letterProvider:
+  id: pingen # Settings are stored per id in settings.letterprovider
+  type: pingen # allowed is pingen
+  # Credentials are configured in the editor under /integrations/letter.
+pdfRenderer:
+  id: cloudflare # Settings are stored per id in settings.pdfrenderer
+  type: cloudflare # allowed is cloudflare
+  # Credentials are configured in the editor under /integrations/pdf-renderer.
+  # Falls back to the CLOUDFLARE_ACCOUNT_ID and CLOUDFLARE_API_TOKEN env vars
+  # when not set there.
 paymentProviders:
   - type: payrexx # Allowed are stripe-checkout / stripe / payrexx / bexio
     id: payrexx # Required for stripe-checkout / stripe / payrexx /bexio

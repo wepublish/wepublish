@@ -3,6 +3,7 @@ import { PrismaClient } from '@prisma/client';
 import { TestingModule, Test } from '@nestjs/testing';
 import { AuthenticationService } from './authentication.service';
 import { AuthSession, AuthSessionType } from './auth-session';
+import { createKvMock, KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 
 describe('AuthenticationService', () => {
   let service: AuthenticationService;
@@ -11,11 +12,19 @@ describe('AuthenticationService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [PrismaModule],
-      providers: [AuthenticationService],
+      providers: [
+        AuthenticationService,
+        { provide: KvTtlCacheService, useValue: createKvMock() },
+      ],
     }).compile();
 
     prisma = module.get<PrismaClient>(PrismaClient);
     service = module.get<AuthenticationService>(AuthenticationService);
+
+    jest
+      .spyOn(prisma.settingLetterProvider, 'findMany')
+      .mockResolvedValue([] as any);
+    jest.spyOn(prisma.setting, 'findUnique').mockResolvedValue(null as any);
   });
 
   it('should return a token session', async () => {
@@ -41,8 +50,11 @@ describe('AuthenticationService', () => {
     const sessionSpy = jest.spyOn(prisma.session, 'findFirst').mockReturnValue(
       Promise.resolve({
         userID: '12345',
+        origin: 'password',
+        createdAt: new Date('2026-01-01T00:00:00.000Z'),
         user: {
           id: '12345',
+          email: 'test@example.com',
         },
       }) as any
     );
@@ -80,10 +92,26 @@ describe('AuthenticationService', () => {
     const session = {
       type: AuthSessionType.User,
       expiresAt: future,
+      user: { active: true },
     } as AuthSession;
 
     const result = service.isSessionValid(session);
     expect(result).toBeTruthy();
+  });
+
+  it('should return that the session is invalid if the user is inactive', () => {
+    const today = new Date();
+    const future = new Date(today);
+    future.setDate(future.getDate() + 5000);
+
+    const session = {
+      type: AuthSessionType.User,
+      expiresAt: future,
+      user: { active: false },
+    } as AuthSession;
+
+    const result = service.isSessionValid(session);
+    expect(result).toBeFalsy();
   });
 
   it("should return that the session is valid if it's a token session", () => {
@@ -103,6 +131,7 @@ describe('AuthenticationService', () => {
     const session = {
       type: AuthSessionType.User,
       expiresAt: past,
+      user: { active: true },
     } as AuthSession;
 
     const result = service.isSessionValid(session);

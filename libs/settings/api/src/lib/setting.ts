@@ -14,6 +14,10 @@ export enum SettingName {
   ALLOW_GUEST_POLL_VOTING = 'allowGuestPollVoting',
   SEND_LOGIN_JWT_EXPIRES_MIN = 'sendLoginJwtExpiresMin',
   RESET_PASSWORD_JWT_EXPIRES_MIN = 'resetPasswordJwtExpiresMin',
+  LOGIN_CODE_MAX_USES = 'loginCodeMaxUses',
+  LOGIN_CODE_VALID_DAYS = 'loginCodeValidDays',
+  LOGIN_CODE_SECOND_FACTOR = 'loginCodeSecondFactor',
+  PLACEHOLDER_EMAIL_PATTERNS = 'placeholderEmailPatterns',
   PEERING_TIMEOUT_MS = 'peeringTimeoutInMs',
   MAIL_PROVIDER_NAME = 'mailProviderName',
 

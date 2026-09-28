@@ -7,6 +7,8 @@ import { ScheduleModule } from '@nestjs/schedule';
 
 import { HttpModule, HttpService } from '@nestjs/axios';
 import {
+  LetterProviderType,
+  PdfRendererType,
   MailProviderType,
   PaymentProviderType,
   PrismaClient,
@@ -18,6 +20,14 @@ import { V0Module } from '@wepublish/ai/api';
 import { NovaMediaAdapter } from '@wepublish/api';
 import { ArticleModule, HotAndTrendingModule } from '@wepublish/article/api';
 import { AuthenticationModule } from '@wepublish/authentication/api';
+import {
+  BaseLetterProvider,
+  CloudflarePdfRenderer,
+  FakeLetterProvider,
+  LettersModule,
+  PingenLetterProvider,
+} from '@wepublish/letter/api';
+import { LoginCodeModule, LoginCodeService } from '@wepublish/login-code/api';
 import { AuthorModule } from '@wepublish/author/api';
 import { BannerApiModule } from '@wepublish/banner/api';
 import { BlockContentModule } from '@wepublish/block-content/api';
@@ -153,12 +163,21 @@ import { readConfig } from '../readConfig';
     }),
     AuthorModule,
     PrismaModule,
+    LoginCodeModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: (config: ConfigService) => ({
+        websiteURL: config.get('WEBSITE_URL') || 'http://localhost:3000',
+      }),
+      inject: [ConfigService],
+      global: true,
+    }),
     MailsModule.registerAsync({
       imports: [ConfigModule, PrismaModule, KvTtlCacheModule],
       useFactory: async (
         config: ConfigService,
         prisma: PrismaClient,
-        kv: KvTtlCacheService
+        kv: KvTtlCacheService,
+        loginCodeService: LoginCodeService
       ) => {
         const configFile = await readConfig(
           config.getOrThrow('CONFIG_FILE_PATH')
@@ -248,6 +267,7 @@ import { readConfig } from '../readConfig';
 
         return {
           mailProvider,
+          purlProvider: loginCodeService,
           jwtGenerator: (userId: string) =>
             generateJWT({
               id: userId,
@@ -256,6 +276,62 @@ import { readConfig } from '../readConfig';
               audience: websiteURL,
               expiresInMinutes: jwtExpires,
             }),
+        };
+      },
+      inject: [
+        ConfigService,
+        PrismaClient,
+        KvTtlCacheService,
+        LoginCodeService,
+      ],
+      global: true,
+    }),
+    LettersModule.registerAsync({
+      imports: [ConfigModule, PrismaModule, KvTtlCacheModule],
+      useFactory: async (
+        config: ConfigService,
+        prisma: PrismaClient,
+        kv: KvTtlCacheService
+      ) => {
+        const configFile = await readConfig(
+          config.getOrThrow('CONFIG_FILE_PATH')
+        );
+        const letterProviderRaw = configFile.letterProvider;
+        let letterProvider: BaseLetterProvider;
+
+        if (letterProviderRaw?.type === 'pingen') {
+          letterProvider = new PingenLetterProvider({
+            id: letterProviderRaw.id,
+            prisma,
+            kv,
+          });
+
+          await letterProvider.initDatabaseConfiguration(
+            LetterProviderType.pingen
+          );
+        } else {
+          letterProvider = new FakeLetterProvider({
+            id: letterProviderRaw?.id ?? 'fakeLetter',
+            prisma,
+            kv,
+          });
+        }
+
+        const pdfRenderer = new CloudflarePdfRenderer({
+          id: configFile.pdfRenderer?.id ?? 'cloudflare',
+          prisma,
+          kv,
+          fallback: {
+            accountId: config.get('CLOUDFLARE_ACCOUNT_ID'),
+            apiToken: config.get('CLOUDFLARE_API_TOKEN'),
+          },
+        });
+
+        await pdfRenderer.initDatabaseConfiguration(PdfRendererType.cloudflare);
+
+        return {
+          letterProvider,
+          pdfRenderer,
         };
       },
       inject: [ConfigService, PrismaClient, KvTtlCacheService],

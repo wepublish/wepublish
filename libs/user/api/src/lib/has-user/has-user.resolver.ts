@@ -1,5 +1,11 @@
 import { Parent, ResolveField, Resolver } from '@nestjs/graphql';
 import {
+  AuthSession,
+  AuthSessionType,
+  CurrentUser,
+} from '@wepublish/authentication/api';
+import { LoginCodeSecondFactorService } from '@wepublish/login-code/api';
+import {
   HasUser,
   HasUserLc,
   HasOptionalUser,
@@ -10,11 +16,15 @@ import { UserDataloaderService } from '../user-dataloader.service';
 
 @Resolver(() => HasUser)
 export class HasUserResolver {
-  constructor(private dataloader: UserDataloaderService) {}
+  constructor(
+    private dataloader: UserDataloaderService,
+    private secondFactorService: LoginCodeSecondFactorService
+  ) {}
 
   @ResolveField(() => User, { nullable: true })
-  public user(
-    @Parent() block: HasOptionalUser | HasUser | HasOptionalUserLc | HasUserLc
+  public async user(
+    @Parent() block: HasOptionalUser | HasUser | HasOptionalUserLc | HasUserLc,
+    @CurrentUser() session: AuthSession | null
   ) {
     const id =
       'userId' in block ? block.userId
@@ -25,7 +35,15 @@ export class HasUserResolver {
       return null;
     }
 
-    return this.dataloader.load(id);
+    const user = await this.dataloader.load(id);
+    const ownRestrictedSession =
+      session?.type === AuthSessionType.User &&
+      session.restricted &&
+      session.user.id === id;
+
+    return user && ownRestrictedSession ?
+        this.secondFactorService.mask(user)
+      : user;
   }
 }
 

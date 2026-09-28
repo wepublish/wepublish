@@ -1179,6 +1179,9 @@
         "user_lastLogin": "Letzter Login",
         "user_createdAt": "Konto erstellt am",
         "jwt": "Login-Token (JWT)",
+        "purl": "Persönlicher Login-Link",
+        "purlCode": "Persönlicher Login-Code",
+        "purlQr": "Persönlicher Login-QR-Code",
         "currentDate": "Aktuelles Datum",
         "optional_subscription_id": "Abo-ID",
         "optional_subscription_monthlyAmount": "Monatlicher Betrag",
@@ -1731,6 +1734,19 @@
       "guestPollVote": "Erlaube Gast-Abstimmungen bei Umfragen",
       "login": "Login",
       "loginMinutes": "Gültigkeitsdauer Email-Login-Token",
+      "loginCodeMaxUses": "Persönlicher Login-Link: maximale Verwendungen",
+      "loginCodeValidDays": "Persönlicher Login-Link: Gültigkeitsdauer",
+      "loginCodeSecondFactor": "Persönlicher Login-Link: zweiter Faktor",
+      "placeholderEmailPatterns": "Platzhalter-E-Mail-Adressen (Muster)",
+      "loginCodeSecondFactorOptions": {
+        "none": "Keiner",
+        "postalCode": "Postleitzahl",
+        "city": "Ort",
+        "firstName": "Vorname",
+        "lastName": "Nachname"
+      },
+      "loginCodeUses": "Verwendungen",
+      "days": "Tage",
       "minutes": "Minuten",
       "ms": "Milisekunden",
       "passwordToken": "Gültigkeitsdauer Email-Passwort-Reset-Token",
@@ -1752,6 +1768,10 @@
         "guestPollVote": "Erlaube Gastbesuchern (nicht eingeloggt), an Umfragen teilzunehmen.",
         "invoiceReminders": "Wie oft wird der Benutzer daran erinnert, das Abonnement zu bezahlen (einmal pro Tag).",
         "loginMinutes": "Wie lange (in Minuten) ist der per E-Mail gesendete Link zum Erstellen eines Kontos gültig. Die Standardeinstellung ist eine Woche (10080 / 60 / 24).",
+        "loginCodeMaxUses": "Wie oft ein persönlicher Login-Link (Brief-Code, {{purl}}) verwendet werden darf, bevor er erlischt. Standard: 5.",
+        "loginCodeValidDays": "Wie viele Tage ein persönlicher Login-Link gültig bleibt. Standard: 90.",
+        "loginCodeSecondFactor": "Angabe aus dem Brief, die zusätzlich abgefragt wird, wenn jemand nach dem Login per Login-Link eine echte E-Mail-Adresse hinterlegt (nur bei Konten mit Platzhalter-E-Mail). Schützt vor erratenen Codes – Postleitzahl empfohlen. Nach 5 Fehlversuchen wird die Sitzung beendet.",
+        "placeholderEmailPatterns": "Kommagetrennte Textmuster, z. B. @platzhalter.zwoelf.ch. Konten, deren E-Mail-Adresse eines der Muster enthält, gelten als Platzhalter: an sie wird keine E-Mail versendet, und ihre Sitzungen bleiben eingeschränkt, bis eine echte Adresse bestätigt ist. Gilt zusätzlich zum Muster des Brief-Anbieters.",
         "passwordToken": "Wie lange (in Minuten) der per E-Mail gesendete Link zum Zurücksetzen des Passworts gültig ist. Die Standardeinstellung ist ein Tag (1440 / 60 / 24).",
         "peerToken": "Zeit in Millisekunden, nach der wir nicht mehr versuchen, Peer-Artikel abzurufen. Der Standardwert ist 3 Sekunden.",
         "newArticlePeering": "Beeinflusst nicht schon erstellte Artikel",
@@ -1933,6 +1953,17 @@
       "passwordChangeSuccess": "Passwort erfolgreich geändert!",
       "passwordHeader": "Passwörter & Zugänge",
       "totpHeader": "Zwei-Faktor-Authentifizierung",
+      "loginCode": {
+        "header": "Persönlicher Login-Link",
+        "status": "Gültig bis {{expiresAt}} · noch {{usesRemaining}} von {{maxUses}} Verwendungen · zuletzt genutzt: {{lastUsedAt}}",
+        "never": "nie",
+        "none": "Für diese Person wurde noch kein persönlicher Login-Link ausgestellt. Er entsteht automatisch beim ersten Versand einer Mail oder eines Briefs mit {{purl}}.",
+        "revoke": "Widerrufen",
+        "reissue": "Neu ausstellen",
+        "issued": "Neuer Code (wird nur einmal angezeigt):",
+        "secondFactorAvailable": "Zweiter Faktor «{{factor}}» ist bei dieser Person hinterlegt.",
+        "secondFactorMissing": "Zweiter Faktor «{{factor}}» fehlt bei dieser Person – ohne diese Angabe kann sie keine E-Mail-Adresse hinterlegen."
+      },
       "totpEnabled": "Zwei-Faktor-Authentifizierung ist für diesen Benutzer aktiviert.",
       "totpDisabled": "Zwei-Faktor-Authentifizierung ist noch nicht eingerichtet. Der Benutzer wird beim nächsten Editor-Login aufgefordert, diese einzurichten.",
       "totpExemptInfo": "Dieser Benutzer ist von der Zwei-Faktor-Authentifizierungspflicht befreit.",
@@ -2454,6 +2485,8 @@
       "paymentProvider": "Zahlungsanbieter",
       "trackingPixel": "Tracking Pixel",
       "mailProvider": "E-Mail Provider",
+      "letterProvider": "Brief-Provider",
+      "pdfRenderer": "PDF-Renderer",
       "back": "Zurück zu Integrationen",
       "unknown": "Unbekannte Integration",
       "notFound": "Integration nicht gefunden",
@@ -2498,6 +2531,22 @@
         "bexioInvoiceTitleRenewalMembership": "Rechnungstitel (Mitgliedschafts-Erneuerung)"
       },
       "placeholderSecret": "Unverändert (Versteckt)",
+      "pdfRendererSettings": {
+        "type": "Typ",
+        "cloudflareAccountId": "Cloudflare Account-ID",
+        "cloudflareApiToken": "Cloudflare API-Token",
+        "timeoutMs": "Timeout (ms)"
+      },
+      "letterSettings": {
+        "type": "Typ",
+        "environment": "Umgebung",
+        "clientId": "Client ID",
+        "clientSecret": "Client Secret",
+        "organisationId": "Organisations-ID",
+        "webhookSigningKey": "Webhook Signing Key",
+        "autoSend": "Briefe automatisch versenden",
+        "placeholderEmailContains": "Platzhalter-E-Mail enthält"
+      },
       "mailSettings": {
         "type": "Typ",
         "fromAddress": "Absender-Adresse",
@@ -2891,6 +2940,7 @@
         "login_link": "Login-Link",
         "password_reset": "Passwort zurücksetzen",
         "email_change": "E-Mail-Adresse geändert",
+        "email_verification": "E-Mail-Adresse bestätigt",
         "test_mail": "Testmail"
       },
       "eventInfo": {
@@ -2914,6 +2964,11 @@
           "description": "Geht an die neue Adresse, wenn jemand seine E-Mail-Adresse ändert. Die Änderung gilt erst nach der Bestätigung.",
           "example": "«Bitte bestätigen Sie Ihre neue E-Mail-Adresse.»"
         },
+        "email_verification": {
+          "short": "Aktuelle Adresse bestätigen.",
+          "description": "Geht an die aktuelle Adresse, wenn jemand sie bestätigt – zum Beispiel nach dem Login mit einem persönlichen Link aus einem Brief.",
+          "example": "«Bitte bestätigen Sie Ihre E-Mail-Adresse.»"
+        },
         "test_mail": {
           "short": "Nur für Ihre eigenen Tests.",
           "description": "Wird nie automatisch an Leser*innen verschickt. Diese Vorlage nutzen Sie, um den Mailversand selber auszuprobieren.",
@@ -2928,8 +2983,8 @@
           "description": "Empfängergruppe und Filter"
         },
         "content": {
-          "title": "E-Mail-Inhalt",
-          "description": "Vorlage und Vorschau"
+          "title": "Inhalt & Versandart",
+          "description": "Vorlage, E-Mail oder Brief"
         },
         "send": {
           "title": "E-Mail senden",
@@ -2975,7 +3030,6 @@
       "yes": "Ja",
       "no": "Nein",
       "counting": "Empfänger werden gezählt …",
-      "recipientsCount": "{{count}} Empfänger",
       "send": "Senden",
       "templateNeedsSubscription": "Diese Vorlage benötigt eine Abo-basierte Empfängergruppe, damit die Abo-Platzhalter gefüllt werden können.",
       "confirmTitle": "E-Mail senden",
@@ -3008,10 +3062,20 @@
         "loading": "Empfänger werden geladen …",
         "email": "E-Mail",
         "name": "Name",
-        "memberPlan": "Abo-Plan"
+        "memberPlan": "Abo-Plan",
+        "address": "Adresse",
+        "withAddress": "Adresse vorhanden",
+        "withoutAddress": "Keine gültige Adresse – wird nicht verschickt"
       },
       "endedWithinDays": "Deaktiviert innerhalb der letzten … Tage",
       "endedWithinDaysHint": "Nur Abos, die in diesem Zeitraum deaktiviert wurden.",
+      "emailFilter": {
+        "label": "E-Mail-Adresse",
+        "all": "Alle",
+        "placeholder": "Nur Platzhalter",
+        "real": "Nur echt",
+        "hint": "Platzhalter-Adressen werden in der Brief-Integration festgelegt."
+      },
       "endedWindow": {
         "label": "Zeitraum der Abo-Deaktivierung",
         "relative": "Letzte … Tage",
@@ -3026,7 +3090,8 @@
         "firstRecipient": "Erste:r Empfänger:in",
         "hint": "So sieht die Mail für diese Person aus – mit ihren echten Daten.",
         "loading": "Vorschau wird geladen …",
-        "noRecipients": "Keine Empfänger:innen – bitte zuerst die Empfängergruppe anpassen."
+        "noRecipients": "Keine Empfänger:innen – bitte zuerst die Empfängergruppe anpassen.",
+        "letterTitle": "Briefvorschau"
       },
       "recipientsCountPerPerson": "{{count}} Mails an {{people}} Personen",
       "endsAtHint": "Kündigungsdatum, sonst das Datum, bis zu dem bezahlt ist.",
@@ -3039,7 +3104,40 @@
       "startsAt": "Abo-Beginn",
       "endsAt": "Abo-Ende",
       "from": "ab",
-      "to": "bis"
+      "to": "bis",
+      "lettersCount": "{{count}} Briefe an {{people}} Personen",
+      "confirmTextLetter": "Diesen Brief an {{count}} Empfänger:innen senden?",
+      "channel": {
+        "label": "Versand",
+        "mail": "E-Mail",
+        "letter": "Brief",
+        "withoutAddress": "{{count}} der Empfänger:innen haben keine brauchbare Postadresse und werden übersprungen."
+      },
+      "print": {
+        "addressPosition": {
+          "label": "Adressfenster",
+          "left": "Links",
+          "right": "Rechts"
+        },
+        "deliveryProduct": {
+          "label": "Zustellung",
+          "cheap": "Günstig (B-Post)",
+          "fast": "Schnell (A-Post)",
+          "premium": "Premium",
+          "registered": "Eingeschrieben",
+          "bulk": "Massensendung"
+        },
+        "printMode": {
+          "label": "Druck",
+          "simplex": "Einseitig",
+          "duplex": "Beidseitig"
+        },
+        "printSpectrum": {
+          "label": "Farbe",
+          "grayscale": "Graustufen",
+          "color": "Farbig"
+        }
+      }
     },
     "mailLog": {
       "title": "Gesendete E-Mails",
@@ -3059,7 +3157,8 @@
         "all": "Alle",
         "title": "Filter",
         "reset": "Filter zurücksetzen",
-        "typeHint": "Wodurch der Versand angestossen wurde."
+        "typeHint": "Wodurch der Versand angestossen wurde.",
+        "channel": "Versand"
       },
       "types": {
         "subscriptionFlow": "Abo-Mailing",
@@ -3162,7 +3261,27 @@
           "name": "rejected — Abgewiesen",
           "meaning": "Die E-Mail wurde nie verschickt. Entweder konnte We.Publish sie nicht übergeben (fehlende oder falsche Anbieter-Konfiguration), oder der Anbieter hat sie von vornherein verweigert: nicht verifizierte Absenderdomain («unsigned»), Adresse auf der Sperrliste des Anbieters nach früherem Hard Bounce oder Spam-Beschwerde, abgemeldeter Empfänger, oder das Sendelimit des Kontos ist erreicht.",
           "next": "Die Spalte «Fehler» nennt den Grund – fahre mit der Maus darüber für Ursache und Behebung. Ursache beheben und erneut senden: automatisch wiederholt wird nichts."
+        },
+        "dispatched": {
+          "name": "Aufgegeben",
+          "meaning": "Der Druckdienstleister hat den Brief gedruckt und der Post übergeben.",
+          "next": "Nichts zu tun. Der Status wechselt auf zugestellt, sobald die Post die Zustellung meldet."
+        },
+        "undeliverable": {
+          "name": "Unzustellbar",
+          "meaning": "Die Post konnte den Brief nicht zustellen und hat ihn retourniert.",
+          "next": "Adresse der Empfängerin oder des Empfängers prüfen und den Brief erneut senden."
+        },
+        "canceled": {
+          "name": "Storniert",
+          "meaning": "Der Brief wurde zurückgezogen, bevor er gedruckt wurde.",
+          "next": "Nichts zu tun. Es wurde nichts gedruckt und nichts verrechnet."
         }
+      },
+      "channel": "Versand",
+      "channels": {
+        "mail": "E-Mail",
+        "letter": "Brief"
       }
     },
     "userMail": {

@@ -1,4 +1,37 @@
 {
+  "welcome": {
+    "title": "Bienvenue",
+    "intro": "Vous êtes connecté·e. Nous vérifions d’abord votre adresse e-mail pour que vous puissiez vous connecter à l’avenir sans courrier.",
+    "introPlaceholder": "Vous êtes connecté·e. Aucune adresse e-mail n’est encore enregistrée pour votre compte – indiquez-la d’abord pour pouvoir vous connecter à l’avenir sans courrier.",
+    "continue": "Continuer",
+    "toProfile": "Aller directement au profil",
+    "emailTitle": "Votre adresse e-mail",
+    "emailPlaceholderInfo": "Nous vous enverrons un e-mail de confirmation à cette adresse.",
+    "emailLabel": "Adresse e-mail",
+    "emailSubmit": "Envoyer l’e-mail de confirmation",
+    "emailVerifyInfo": "Nous avons enregistré {{email}}. Confirmez que cette adresse est correcte.",
+    "emailVerify": "Confirmer l’adresse",
+    "emailChange": "Utiliser une autre adresse",
+    "skip": "Passer",
+    "emailSentTitle": "Veuillez confirmer votre adresse e-mail",
+    "emailSent": "Nous avons envoyé un e-mail à {{email}}. Cliquez sur le lien qu’il contient – cette page continuera automatiquement.",
+    "resend": "Renvoyer",
+    "passwordTitle": "Définir un mot de passe (facultatif)",
+    "passwordInfo": "Avec un mot de passe, vous pourrez vous connecter à l’avenir sans lien de connexion.",
+    "password": "Mot de passe",
+    "passwordRepeat": "Répéter le mot de passe",
+    "passwordSubmit": "Enregistrer le mot de passe",
+    "redirecting": "Un instant, vous êtes redirigé·e …",
+    "secondFactorInfo": "Par sécurité, nous avons encore besoin d’une information figurant sur votre courrier.",
+    "secondFactor": {
+      "postalCode": "Code postal",
+      "city": "Localité",
+      "firstName": "Prénom",
+      "lastName": "Nom"
+    },
+    "secondFactorInvalid": "Cette information ne correspond pas à nos données. Vérifiez-la et réessayez.",
+    "tooManyAttempts": "Trop de tentatives. Reconnectez-vous plus tard avec votre lien de connexion."
+  },
   "navbar": {
     "subscribe": "Devenir membre",
     "unpaid": "Impayé",
@@ -73,6 +106,15 @@
     }
   },
   "login": {
+    "code": {
+      "label": "Code de connexion",
+      "helper": "Le code figurant dans votre courrier, p. ex. ABCDE-FGHJK",
+      "submit": "Se connecter",
+      "haveCode": "J’ai un code de connexion",
+      "backToLogin": "Retour à la connexion",
+      "invalid": "Ce code est invalide ou expiré.",
+      "challengeRequired": "Trop de tentatives – demandez plutôt un lien de connexion par e-mail ou réessayez plus tard."
+    },
     "email": "E-mail",
     "password": "Mot de passe",
     "loginWithLink": "Se connecter avec un lien",
@@ -185,6 +227,7 @@
     "emailChangeRequested": "Un e-mail de confirmation a été envoyé à votre adresse e-mail actuelle. Cliquez sur le lien dans l'e-mail pour confirmer la modification.",
     "pendingEmailChange": "La modification vers {email} est en attente de confirmation. Veuillez vérifier votre boîte de réception.",
     "emailChangeConfirmed": "Votre adresse e-mail a été modifiée avec succès.",
+    "emailConfirmedLogin": "Se connecter maintenant",
     "emailChangeExpired": "La confirmation a expiré. Veuillez demander à nouveau la modification.",
     "activeSubscriptions": "{type, select, Donation {Dons actifs} other {Abonnements actifs}}",
     "cancelledSubscriptions": "Abonnements résiliés et dons inactifs",

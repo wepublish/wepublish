@@ -68,11 +68,25 @@ const autofocus = (node: HTMLElement | null) => {
   inputNode?.focus();
 };
 
+const formatLoginCodeInput = (value: string) => {
+  const canonical = value
+    .toUpperCase()
+    .replace(/[^0-9A-Z]/g, '')
+    .slice(0, 10);
+
+  return canonical.length > 5 ?
+      `${canonical.slice(0, 5)}-${canonical.slice(5)}`
+    : canonical;
+};
+
 export function LoginForm({
   loginWithCredentials,
   onSubmitLoginWithCredentials,
   loginWithEmail,
   onSubmitLoginWithEmail,
+  loginWithCode,
+  onSubmitLoginWithCode,
+  codeChallengeRequired,
   defaults,
   disablePasswordLogin,
   otpRequired,
@@ -84,6 +98,13 @@ export function LoginForm({
     elements: { Alert, TextField },
   } = useWebsiteBuilder();
   const { t } = useTranslation();
+  const [useLoginCode, setUseLoginCode] = useState(!!defaults?.useLoginCode);
+  const [loginCode, setLoginCode] = useState(
+    formatLoginCodeInput(defaults?.loginCode ?? '')
+  );
+  const [loginCodeTotp, setLoginCodeTotp] = useState('');
+  const codeTotpRequired =
+    !!loginWithCode?.error?.message.includes('TOTP_REQUIRED');
 
   type FormInput = z.infer<typeof loginFormSchema>;
   const { handleSubmit, control, watch, setValue } = useForm<FormInput>({
@@ -152,6 +173,72 @@ export function LoginForm({
   const switchToLinkLogin = () => {
     setValue('requirePassword', false);
   };
+
+  if (useLoginCode && onSubmitLoginWithCode) {
+    const codeError =
+      loginWithCode?.error && !codeTotpRequired ?
+        loginWithCode.error.message
+      : null;
+
+    return (
+      <LoginFormWrapper className={className}>
+        <LoginFormForm
+          onSubmit={event => {
+            event.preventDefault();
+            onSubmitLoginWithCode(loginCode, loginCodeTotp || undefined);
+          }}
+        >
+          <TextField
+            value={loginCode}
+            onChange={event =>
+              setLoginCode(formatLoginCodeInput(event.target.value))
+            }
+            autoComplete="one-time-code"
+            type="text"
+            fullWidth
+            label={t('login.code.label')}
+            helperText={t('login.code.helper')}
+            inputRef={autofocus}
+          />
+
+          {codeTotpRequired && (
+            <TextField
+              value={loginCodeTotp}
+              onChange={event => setLoginCodeTotp(event.target.value)}
+              autoComplete="one-time-code"
+              type="text"
+              fullWidth
+              label={t('login.totp.code')}
+            />
+          )}
+
+          {codeChallengeRequired && (
+            <Alert severity="warning">
+              {t('login.code.challengeRequired')}
+            </Alert>
+          )}
+
+          {codeError && (
+            <Alert severity="error">{t('login.code.invalid')}</Alert>
+          )}
+
+          <LoginFormButton
+            disabled={loginWithCode?.loading || loginCode.length < 11}
+            type="submit"
+          >
+            {t('login.code.submit')}
+          </LoginFormButton>
+        </LoginFormForm>
+
+        <Button
+          variant="text"
+          onClick={() => setUseLoginCode(false)}
+        >
+          {t('login.code.backToLogin')}
+        </Button>
+      </LoginFormWrapper>
+    );
+  }
 
   return (
     <LoginFormWrapper className={className}>
@@ -273,6 +360,15 @@ export function LoginForm({
           }
         </LoginFormActions>
       </LoginFormForm>
+
+      {onSubmitLoginWithCode && (
+        <Button
+          variant="text"
+          onClick={() => setUseLoginCode(true)}
+        >
+          {t('login.code.haveCode')}
+        </Button>
+      )}
     </LoginFormWrapper>
   );
 }

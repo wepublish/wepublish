@@ -1182,6 +1182,9 @@
         "user_lastLogin": "Last login",
         "user_createdAt": "Account created",
         "jwt": "Login token (JWT)",
+        "purl": "Personal login link",
+        "purlCode": "Personal login code",
+        "purlQr": "Personal login QR code",
         "currentDate": "Current date",
         "optional_subscription_id": "Subscription ID",
         "optional_subscription_monthlyAmount": "Monthly amount",
@@ -1734,6 +1737,19 @@
       "guestPollVote": "Allow guest votes on polls",
       "login": "Login",
       "loginMinutes": "Email-Login token validity period",
+      "loginCodeMaxUses": "Personal login link: maximum uses",
+      "loginCodeValidDays": "Personal login link: validity period",
+      "loginCodeSecondFactor": "Personal login link: second factor",
+      "placeholderEmailPatterns": "Placeholder email addresses (patterns)",
+      "loginCodeSecondFactorOptions": {
+        "none": "None",
+        "postalCode": "Postal code",
+        "city": "City",
+        "firstName": "First name",
+        "lastName": "Last name"
+      },
+      "loginCodeUses": "uses",
+      "days": "days",
       "memberships": "Memberships",
       "minutes": "minutes",
       "ms": "milliseconds",
@@ -1767,6 +1783,10 @@
         "invoiceFrequency": "The interval in days between invoice reminder attempts.",
         "invoiceReminders": "How many times we will remind user to pay the subscription (once per day).",
         "loginMinutes": "How long (in minutes) the link sent via email to create account will be valid. Defaults to one week (10080 / 60 / 24).",
+        "loginCodeMaxUses": "How often a personal login link (letter code, {{purl}}) may be used before it expires. Default: 5.",
+        "loginCodeValidDays": "How many days a personal login link stays valid. Default: 90.",
+        "loginCodeSecondFactor": "Detail from the letter that is asked for in addition when someone who logged in with a login link stores a real email address (only for accounts with a placeholder email). Protects against guessed codes – postal code recommended. After 5 failed attempts the session is ended.",
+        "placeholderEmailPatterns": "Comma-separated text patterns, e.g. @placeholder.example.org. Accounts whose email contains one of the patterns count as placeholders: no email is sent to them and their sessions stay restricted until a real address is confirmed. Applies in addition to the letter provider pattern.",
         "newDeactivationsApiPublic": "Exposes subscriptions anonymized to the public.",
         "newSubscriptionsApiPublic": "Exposes subscriptions anonymized to the public.",
         "passwordToken": "How long (in minutes) the link sent via email to reset password will be valid. Defaults to one day (1440 / 60 / 24).",
@@ -1899,6 +1919,7 @@
         "login_link": "Login link",
         "password_reset": "Password reset",
         "email_change": "Email address changed",
+        "email_verification": "Email address confirmed",
         "test_mail": "Test mail"
       },
       "eventInfo": {
@@ -1921,6 +1942,11 @@
           "short": "Confirm the new address.",
           "description": "Goes to the new address when someone changes their email address. The change only takes effect after the confirmation.",
           "example": "«Please confirm your new email address.»"
+        },
+        "email_verification": {
+          "short": "Confirm the current address.",
+          "description": "Goes to the current address when someone verifies it, for example after logging in with a personal link from a letter.",
+          "example": "«Please confirm your email address.»"
         },
         "test_mail": {
           "short": "For your own tests only.",
@@ -2000,6 +2026,17 @@
       "passwordChangeSuccess": "Password successfuly changed!",
       "passwordHeader": "Passwords & Access",
       "totpHeader": "Two-Factor Authentication",
+      "loginCode": {
+        "header": "Personal login link",
+        "status": "Valid until {{expiresAt}} · {{usesRemaining}} of {{maxUses}} uses left · last used: {{lastUsedAt}}",
+        "never": "never",
+        "none": "No personal login link has been issued for this user yet. One is created automatically the first time a mail or letter containing {{purl}} is sent.",
+        "revoke": "Revoke",
+        "reissue": "Reissue",
+        "issued": "New code (shown once):",
+        "secondFactorAvailable": "Second factor “{{factor}}” is on file for this user.",
+        "secondFactorMissing": "Second factor “{{factor}}” is missing for this user – without it they cannot store an email address."
+      },
       "totpEnabled": "Two-factor authentication is enabled for this user.",
       "totpDisabled": "Two-factor authentication is not yet configured. The user will be prompted to set it up on their next editor login.",
       "totpExemptInfo": "This user is exempt from the two-factor authentication requirement.",
@@ -2534,6 +2571,8 @@
       "trackingPixel": "Tracking Pixel",
       "analytics": "Hot & Trending Provider",
       "mailProvider": "Mail Provider",
+      "letterProvider": "Letter Provider",
+      "pdfRenderer": "PDF Renderer",
       "back": "Back to Integrations",
       "unknown": "Unknown Integration",
       "notFound": "Integration not found",
@@ -2578,6 +2617,22 @@
         "bexioInvoiceTitleRenewalMembership": "Invoice Title (Renewal Membership)"
       },
       "placeholderSecret": "Unchanged (Hidden)",
+      "pdfRendererSettings": {
+        "type": "Type",
+        "cloudflareAccountId": "Cloudflare Account ID",
+        "cloudflareApiToken": "Cloudflare API Token",
+        "timeoutMs": "Timeout (ms)"
+      },
+      "letterSettings": {
+        "type": "Type",
+        "environment": "Environment",
+        "clientId": "Client ID",
+        "clientSecret": "Client Secret",
+        "organisationId": "Organisation ID",
+        "webhookSigningKey": "Webhook Signing Key",
+        "autoSend": "Send letters automatically",
+        "placeholderEmailContains": "Placeholder email contains"
+      },
       "mailSettings": {
         "type": "Type",
         "fromAddress": "From Address",
@@ -2967,8 +3022,8 @@
           "description": "Audience and filters"
         },
         "content": {
-          "title": "Mail content",
-          "description": "Template and preview"
+          "title": "Content & delivery",
+          "description": "Template, email or letter"
         },
         "send": {
           "title": "Send email",
@@ -3014,7 +3069,6 @@
       "yes": "Yes",
       "no": "No",
       "counting": "Counting recipients …",
-      "recipientsCount": "{{count}} recipients",
       "send": "Send",
       "templateNeedsSubscription": "This template needs a subscription-based audience so its subscription placeholders can be filled.",
       "confirmTitle": "Send email",
@@ -3047,10 +3101,20 @@
         "loading": "Loading recipients …",
         "email": "Email",
         "name": "Name",
-        "memberPlan": "Member plan"
+        "memberPlan": "Member plan",
+        "address": "Address",
+        "withAddress": "Address present",
+        "withoutAddress": "No valid address – will be skipped"
       },
       "endedWithinDays": "Deactivated within the last … days",
       "endedWithinDaysHint": "Only subscriptions deactivated in this window.",
+      "emailFilter": {
+        "label": "Email address",
+        "all": "All",
+        "placeholder": "Placeholders only",
+        "real": "Real only",
+        "hint": "Placeholder addresses are defined in the letter integration."
+      },
       "endedWindow": {
         "label": "When the subscription was deactivated",
         "relative": "Last … days",
@@ -3065,7 +3129,8 @@
         "firstRecipient": "First recipient",
         "hint": "How the mail looks for this person — with their real data.",
         "loading": "Loading preview …",
-        "noRecipients": "No recipients — adjust the audience first."
+        "noRecipients": "No recipients — adjust the audience first.",
+        "letterTitle": "Letter preview"
       },
       "recipientsCountPerPerson": "{{count}} mails to {{people}} people",
       "endsAtHint": "Cancellation date, otherwise the date paid up to.",
@@ -3078,7 +3143,40 @@
       "startsAt": "Subscription start",
       "endsAt": "Subscription end",
       "from": "From",
-      "to": "Until"
+      "to": "Until",
+      "lettersCount": "{{count}} letters to {{people}} people",
+      "confirmTextLetter": "Send this letter to {{count}} recipients?",
+      "channel": {
+        "label": "Delivery",
+        "mail": "Email",
+        "letter": "Letter",
+        "withoutAddress": "{{count}} of the recipients have no usable postal address and will be skipped."
+      },
+      "print": {
+        "addressPosition": {
+          "label": "Address window",
+          "left": "Left",
+          "right": "Right"
+        },
+        "deliveryProduct": {
+          "label": "Delivery",
+          "cheap": "Cheap (B-Post)",
+          "fast": "Fast (A-Post)",
+          "premium": "Premium",
+          "registered": "Registered",
+          "bulk": "Bulk"
+        },
+        "printMode": {
+          "label": "Print",
+          "simplex": "Single sided",
+          "duplex": "Double sided"
+        },
+        "printSpectrum": {
+          "label": "Colour",
+          "grayscale": "Grayscale",
+          "color": "Colour"
+        }
+      }
     },
     "mailLog": {
       "title": "Sent emails",
@@ -3098,7 +3196,8 @@
         "all": "All",
         "title": "Filter",
         "reset": "Reset filters",
-        "typeHint": "What set this send off."
+        "typeHint": "What set this send off.",
+        "channel": "Delivery"
       },
       "types": {
         "subscriptionFlow": "Subscription mailing",
@@ -3201,7 +3300,27 @@
           "name": "rejected",
           "meaning": "The mail was never sent. Either We.Publish could not hand it over (missing or wrong provider configuration), or the provider refused it up front: unverified sending domain (“unsigned”), address on the provider's suppression list after an earlier hard bounce or spam complaint, unsubscribed recipient, or the account's sending limit was reached.",
           "next": "The “Error” column names the reason — hover it for cause and remedy. Fix the cause and send again: nothing is retried automatically."
+        },
+        "dispatched": {
+          "name": "Dispatched",
+          "meaning": "The print vendor has printed the letter and handed it to the post.",
+          "next": "Nothing to do. The state changes to delivered once the post reports the delivery."
+        },
+        "undeliverable": {
+          "name": "Undeliverable",
+          "meaning": "The post could not deliver the letter and returned it.",
+          "next": "Check the address on the recipient and send the letter again."
+        },
+        "canceled": {
+          "name": "Canceled",
+          "meaning": "The letter was withdrawn before it was printed.",
+          "next": "Nothing to do. Nothing was printed and nothing was charged."
         }
+      },
+      "channel": "Delivery",
+      "channels": {
+        "mail": "Email",
+        "letter": "Letter"
       }
     },
     "userMail": {

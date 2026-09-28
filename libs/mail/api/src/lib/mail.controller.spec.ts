@@ -19,6 +19,10 @@ describe('MailController', () => {
       [method in keyof PrismaClient['mailTemplate']]?: jest.Mock;
     };
     user: { [method in keyof PrismaClient['user']]?: jest.Mock };
+    settingLetterProvider: {
+      [method in keyof PrismaClient['settingLetterProvider']]?: jest.Mock;
+    };
+    setting: { [method in keyof PrismaClient['setting']]?: jest.Mock };
   };
 
   const mockMailTemplate1: MailTemplate = {
@@ -66,6 +70,7 @@ describe('MailController', () => {
     note: null,
     pendingEmail: null,
     pendingEmailAt: null,
+    pendingEmailTokenHash: null,
     totpSecret: null,
     totpEnabled: false,
     totpExempt: false,
@@ -86,6 +91,12 @@ describe('MailController', () => {
       },
       user: {
         findUnique: jest.fn(),
+      },
+      settingLetterProvider: {
+        findMany: jest.fn(async () => []),
+      },
+      setting: {
+        findUnique: jest.fn(async () => null),
       },
     };
 

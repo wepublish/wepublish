@@ -4,6 +4,7 @@ import {
   SettingName,
   useSettingsListQuery,
   useUpdateSettingMutation,
+  LoginCodeSecondFactor,
 } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
@@ -26,6 +27,7 @@ import {
   Form,
   Grid,
   IconButton,
+  Input,
   InputGroup,
   NumberInput,
   Modal,
@@ -33,6 +35,7 @@ import {
   Panel as RPanel,
   Row,
   Schema,
+  SelectPicker,
   toaster,
   Toggle,
   Tooltip,
@@ -144,6 +147,26 @@ function SettingList() {
       value: 0,
       name: SettingName.ResetPasswordJwtExpiresMin,
       label: 'settingList.passwordToken',
+    },
+    [SettingName.LoginCodeMaxUses]: {
+      value: 0,
+      name: SettingName.LoginCodeMaxUses,
+      label: 'settingList.loginCodeMaxUses',
+    },
+    [SettingName.LoginCodeValidDays]: {
+      value: 0,
+      name: SettingName.LoginCodeValidDays,
+      label: 'settingList.loginCodeValidDays',
+    },
+    [SettingName.LoginCodeSecondFactor]: {
+      value: LoginCodeSecondFactor.None,
+      name: SettingName.LoginCodeSecondFactor,
+      label: 'settingList.loginCodeSecondFactor',
+    },
+    [SettingName.PlaceholderEmailPatterns]: {
+      value: '',
+      name: SettingName.PlaceholderEmailPatterns,
+      label: 'settingList.placeholderEmailPatterns',
     },
     [SettingName.PeeringTimeoutMs]: {
       value: 0,
@@ -288,6 +311,38 @@ function SettingList() {
   const { NumberType } = Schema.Types;
 
   const validationModel = Schema.Model({
+    [SettingName.LoginCodeMaxUses]: NumberType()
+      .isRequired(t('errorMessages.required'))
+      .range(
+        settings[SettingName.LoginCodeMaxUses].settingRestriction?.minValue ??
+          1,
+        settings[SettingName.LoginCodeMaxUses].settingRestriction?.maxValue ??
+          100,
+        t('errorMessages.invalidRange', {
+          min:
+            settings[SettingName.LoginCodeMaxUses].settingRestriction
+              ?.minValue ?? 1,
+          max:
+            settings[SettingName.LoginCodeMaxUses].settingRestriction
+              ?.maxValue ?? 100,
+        })
+      ),
+    [SettingName.LoginCodeValidDays]: NumberType()
+      .isRequired(t('errorMessages.required'))
+      .range(
+        settings[SettingName.LoginCodeValidDays].settingRestriction?.minValue ??
+          1,
+        settings[SettingName.LoginCodeValidDays].settingRestriction?.maxValue ??
+          365,
+        t('errorMessages.invalidRange', {
+          min:
+            settings[SettingName.LoginCodeValidDays].settingRestriction
+              ?.minValue ?? 1,
+          max:
+            settings[SettingName.LoginCodeValidDays].settingRestriction
+              ?.maxValue ?? 365,
+        })
+      ),
     [SettingName.SendLoginJwtExpiresMin]: NumberType()
       .isRequired(t('errorMessages.required'))
       .range(
@@ -885,6 +940,139 @@ function SettingList() {
                               {t('settingList.minutes')}
                             </InputGroupAddon>
                           </InputGroup>
+                        </Form.Group>
+
+                        <Form.Group controlId={SettingName.LoginCodeMaxUses}>
+                          <Form.Label>
+                            {t(settings[SettingName.LoginCodeMaxUses].label)}
+                            <SettingInfo
+                              text={t('settingList.warnings.loginCodeMaxUses')}
+                            />
+                          </Form.Label>
+
+                          <InputGroup>
+                            <FormControl
+                              name={SettingName.LoginCodeMaxUses}
+                              accepter={NumberInput}
+                              value={
+                                settings[SettingName.LoginCodeMaxUses].value
+                              }
+                              onChange={(value: string) => {
+                                setSetting({
+                                  ...settings[SettingName.LoginCodeMaxUses],
+                                  value: +value,
+                                });
+                              }}
+                            />
+                            <InputGroupAddon>
+                              {t('settingList.loginCodeUses')}
+                            </InputGroupAddon>
+                          </InputGroup>
+                        </Form.Group>
+
+                        <Form.Group controlId={SettingName.LoginCodeValidDays}>
+                          <Form.Label>
+                            {t(settings[SettingName.LoginCodeValidDays].label)}
+                            <SettingInfo
+                              text={t(
+                                'settingList.warnings.loginCodeValidDays'
+                              )}
+                            />
+                          </Form.Label>
+
+                          <InputGroup>
+                            <FormControl
+                              name={SettingName.LoginCodeValidDays}
+                              accepter={NumberInput}
+                              value={
+                                settings[SettingName.LoginCodeValidDays].value
+                              }
+                              onChange={(value: string) => {
+                                setSetting({
+                                  ...settings[SettingName.LoginCodeValidDays],
+                                  value: +value,
+                                });
+                              }}
+                            />
+                            <InputGroupAddon>
+                              {t('settingList.days')}
+                            </InputGroupAddon>
+                          </InputGroup>
+                        </Form.Group>
+
+                        <Form.Group
+                          controlId={SettingName.LoginCodeSecondFactor}
+                        >
+                          <Form.Label>
+                            {t(
+                              settings[SettingName.LoginCodeSecondFactor].label
+                            )}
+                            <SettingInfo
+                              text={t(
+                                'settingList.warnings.loginCodeSecondFactor'
+                              )}
+                            />
+                          </Form.Label>
+
+                          <FormControl
+                            name={SettingName.LoginCodeSecondFactor}
+                            accepter={SelectPicker}
+                            searchable={false}
+                            cleanable={false}
+                            block
+                            data={Object.values(LoginCodeSecondFactor).map(
+                              value => ({
+                                value,
+                                label: t(
+                                  `settingList.loginCodeSecondFactorOptions.${value}`
+                                ),
+                              })
+                            )}
+                            value={
+                              settings[SettingName.LoginCodeSecondFactor].value
+                            }
+                            onChange={(value: unknown) => {
+                              setSetting({
+                                ...settings[SettingName.LoginCodeSecondFactor],
+                                value:
+                                  (value as LoginCodeSecondFactor | null) ??
+                                  LoginCodeSecondFactor.None,
+                              });
+                            }}
+                          />
+                        </Form.Group>
+
+                        <Form.Group
+                          controlId={SettingName.PlaceholderEmailPatterns}
+                        >
+                          <Form.Label>
+                            {t(
+                              settings[SettingName.PlaceholderEmailPatterns]
+                                .label
+                            )}
+                            <SettingInfo
+                              text={t(
+                                'settingList.warnings.placeholderEmailPatterns'
+                              )}
+                            />
+                          </Form.Label>
+
+                          <FormControl
+                            name={SettingName.PlaceholderEmailPatterns}
+                            accepter={Input}
+                            value={
+                              settings[SettingName.PlaceholderEmailPatterns]
+                                .value ?? ''
+                            }
+                            onChange={(value: string) => {
+                              setSetting({
+                                ...settings[
+                                  SettingName.PlaceholderEmailPatterns
+                                ],
+                                value,
+                              });
+                            }}
+                          />
                         </Form.Group>
 
                         <Form.Group

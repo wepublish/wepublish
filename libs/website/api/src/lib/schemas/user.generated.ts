@@ -35,7 +35,7 @@ export type FullUserFragment = (
 );
 
 export type FullSensitiveDataUserFragment = (
-  { __typename?: 'SensitiveDataUser', permissions: Array<string>, birthday?: string | null, email: string, pendingEmail?: string | null, totpEnabled: boolean, address?: (
+  { __typename?: 'SensitiveDataUser', emailVerifiedAt?: string | null, permissions: Array<string>, birthday?: string | null, email: string, pendingEmail?: string | null, totpEnabled: boolean, address?: (
     { __typename?: 'UserAddress' }
     & FullAddressFragment
   ) | null, paymentProviderCustomers?: Array<(
@@ -49,7 +49,12 @@ export type FullAddressFragment = { __typename?: 'UserAddress', company?: string
 
 export type FullSessionWithTokenWithoutUserFragment = { __typename?: 'SessionWithTokenWithoutUser', token: string, expiresAt: string, createdAt: string };
 
-export type FullSessionWithTokenFragment = { __typename?: 'SessionWithToken', token: string, expiresAt: string, createdAt: string };
+export type FullSessionWithTokenFragment = { __typename?: 'SessionWithToken', token: string, expiresAt: string, createdAt: string, origin: Types.SessionOrigin, restricted: boolean };
+
+export type CurrentSessionQueryVariables = Types.Exact<{ [key: string]: never; }>;
+
+
+export type CurrentSessionQuery = { __typename?: 'Query', currentSession: { __typename?: 'SessionInfo', origin: Types.SessionOrigin, restricted: boolean, placeholderEmail: boolean, secondFactor: Types.LoginCodeSecondFactor, createdAt: string, expiresAt: string } };
 
 export type MeQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
@@ -120,7 +125,6 @@ export type UpdateUserMutationVariables = Types.Exact<{
   firstName?: Types.InputMaybe<Types.Scalars['String']>;
   flair?: Types.InputMaybe<Types.Scalars['String']>;
   name?: Types.InputMaybe<Types.Scalars['String']>;
-  password?: Types.InputMaybe<Types.Scalars['String']>;
   address?: Types.InputMaybe<Types.UserAddressInput>;
   birthday?: Types.InputMaybe<Types.Scalars['DateTime']>;
 }>;
@@ -144,6 +148,7 @@ export type UpdatePasswordMutation = { __typename?: 'Mutation', updatePassword: 
 
 export type RequestEmailChangeMutationVariables = Types.Exact<{
   newEmail: Types.Scalars['String'];
+  secondFactor?: Types.InputMaybe<Types.Scalars['String']>;
 }>;
 
 
@@ -161,8 +166,13 @@ export type EnableTotpMutationVariables = Types.Exact<{
 
 export type EnableTotpMutation = { __typename?: 'Mutation', enableTotp: boolean };
 
+export type RequestEmailVerificationMutationVariables = Types.Exact<{ [key: string]: never; }>;
+
+
+export type RequestEmailVerificationMutation = { __typename?: 'Mutation', requestEmailVerification: boolean };
+
 export type ConfirmEmailChangeMutationVariables = Types.Exact<{
-  newEmail: Types.Scalars['String'];
+  token: Types.Scalars['String'];
 }>;
 
 
@@ -188,6 +198,18 @@ export type UploadImageMutation = { __typename?: 'Mutation', uploadUserProfileIm
     { __typename?: 'SensitiveDataUser' }
     & FullSensitiveDataUserFragment
   ) | null };
+
+export type LoginWithCodeMutationVariables = Types.Exact<{
+  code: Types.Scalars['String'];
+  totpToken?: Types.InputMaybe<Types.Scalars['String']>;
+  challengeAnswer?: Types.InputMaybe<Types.ChallengeInput>;
+}>;
+
+
+export type LoginWithCodeMutation = { __typename?: 'Mutation', createSessionWithLoginCode: (
+    { __typename?: 'SessionWithToken' }
+    & FullSessionWithTokenFragment
+  ) };
 
 export const FullBaseUserFragmentDoc = gql`
     fragment FullBaseUser on BaseUser {
@@ -228,6 +250,7 @@ export const FullPaymentProviderCustomerFragmentDoc = gql`
     `;
 export const FullSensitiveDataUserFragmentDoc = gql`
     fragment FullSensitiveDataUser on SensitiveDataUser {
+  emailVerifiedAt
   ...FullBaseUser
   permissions
   birthday
@@ -254,8 +277,49 @@ export const FullSessionWithTokenFragmentDoc = gql`
   token
   expiresAt
   createdAt
+  origin
+  restricted
 }
     `;
+export const CurrentSessionDocument = gql`
+    query CurrentSession {
+  currentSession {
+    origin
+    restricted
+    placeholderEmail
+    secondFactor
+    createdAt
+    expiresAt
+  }
+}
+    `;
+
+/**
+ * __useCurrentSessionQuery__
+ *
+ * To run a query within a React component, call `useCurrentSessionQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCurrentSessionQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCurrentSessionQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useCurrentSessionQuery(baseOptions?: Apollo.QueryHookOptions<CurrentSessionQuery, CurrentSessionQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<CurrentSessionQuery, CurrentSessionQueryVariables>(CurrentSessionDocument, options);
+      }
+export function useCurrentSessionLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CurrentSessionQuery, CurrentSessionQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<CurrentSessionQuery, CurrentSessionQueryVariables>(CurrentSessionDocument, options);
+        }
+export type CurrentSessionQueryHookResult = ReturnType<typeof useCurrentSessionQuery>;
+export type CurrentSessionLazyQueryHookResult = ReturnType<typeof useCurrentSessionLazyQuery>;
+export type CurrentSessionQueryResult = Apollo.QueryResult<CurrentSessionQuery, CurrentSessionQueryVariables>;
 export const MeDocument = gql`
     query Me {
   me {
@@ -495,12 +559,11 @@ export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
 export const UpdateUserDocument = gql`
-    mutation UpdateUser($firstName: String, $flair: String, $name: String, $password: String, $address: UserAddressInput, $birthday: DateTime) {
+    mutation UpdateUser($firstName: String, $flair: String, $name: String, $address: UserAddressInput, $birthday: DateTime) {
   updateCurrentUser(
     name: $name
     firstName: $firstName
     flair: $flair
-    password: $password
     address: $address
     birthday: $birthday
   ) {
@@ -534,7 +597,6 @@ export type UpdateUserMutationFn = Apollo.MutationFunction<UpdateUserMutation, U
  *      firstName: // value for 'firstName'
  *      flair: // value for 'flair'
  *      name: // value for 'name'
- *      password: // value for 'password'
  *      address: // value for 'address'
  *      birthday: // value for 'birthday'
  *   },
@@ -590,8 +652,8 @@ export type UpdatePasswordMutationHookResult = ReturnType<typeof useUpdatePasswo
 export type UpdatePasswordMutationResult = Apollo.MutationResult<UpdatePasswordMutation>;
 export type UpdatePasswordMutationOptions = Apollo.BaseMutationOptions<UpdatePasswordMutation, UpdatePasswordMutationVariables>;
 export const RequestEmailChangeDocument = gql`
-    mutation RequestEmailChange($newEmail: String!) {
-  requestEmailChange(newEmail: $newEmail)
+    mutation RequestEmailChange($newEmail: String!, $secondFactor: String) {
+  requestEmailChange(newEmail: $newEmail, secondFactor: $secondFactor)
 }
     `;
 export type RequestEmailChangeMutationFn = Apollo.MutationFunction<RequestEmailChangeMutation, RequestEmailChangeMutationVariables>;
@@ -610,6 +672,7 @@ export type RequestEmailChangeMutationFn = Apollo.MutationFunction<RequestEmailC
  * const [requestEmailChangeMutation, { data, loading, error }] = useRequestEmailChangeMutation({
  *   variables: {
  *      newEmail: // value for 'newEmail'
+ *      secondFactor: // value for 'secondFactor'
  *   },
  * });
  */
@@ -684,9 +747,39 @@ export function useEnableTotpMutation(baseOptions?: Apollo.MutationHookOptions<E
 export type EnableTotpMutationHookResult = ReturnType<typeof useEnableTotpMutation>;
 export type EnableTotpMutationResult = Apollo.MutationResult<EnableTotpMutation>;
 export type EnableTotpMutationOptions = Apollo.BaseMutationOptions<EnableTotpMutation, EnableTotpMutationVariables>;
+export const RequestEmailVerificationDocument = gql`
+    mutation RequestEmailVerification {
+  requestEmailVerification
+}
+    `;
+export type RequestEmailVerificationMutationFn = Apollo.MutationFunction<RequestEmailVerificationMutation, RequestEmailVerificationMutationVariables>;
+
+/**
+ * __useRequestEmailVerificationMutation__
+ *
+ * To run a mutation, you first call `useRequestEmailVerificationMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRequestEmailVerificationMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [requestEmailVerificationMutation, { data, loading, error }] = useRequestEmailVerificationMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useRequestEmailVerificationMutation(baseOptions?: Apollo.MutationHookOptions<RequestEmailVerificationMutation, RequestEmailVerificationMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RequestEmailVerificationMutation, RequestEmailVerificationMutationVariables>(RequestEmailVerificationDocument, options);
+      }
+export type RequestEmailVerificationMutationHookResult = ReturnType<typeof useRequestEmailVerificationMutation>;
+export type RequestEmailVerificationMutationResult = Apollo.MutationResult<RequestEmailVerificationMutation>;
+export type RequestEmailVerificationMutationOptions = Apollo.BaseMutationOptions<RequestEmailVerificationMutation, RequestEmailVerificationMutationVariables>;
 export const ConfirmEmailChangeDocument = gql`
-    mutation ConfirmEmailChange($newEmail: String!) {
-  confirmEmailChange(newEmail: $newEmail) {
+    mutation ConfirmEmailChange($token: String!) {
+  confirmEmailChange(token: $token) {
     ...FullSensitiveDataUser
   }
 }
@@ -714,7 +807,7 @@ export type ConfirmEmailChangeMutationFn = Apollo.MutationFunction<ConfirmEmailC
  * @example
  * const [confirmEmailChangeMutation, { data, loading, error }] = useConfirmEmailChangeMutation({
  *   variables: {
- *      newEmail: // value for 'newEmail'
+ *      token: // value for 'token'
  *   },
  * });
  */
@@ -785,3 +878,42 @@ export function useUploadImageMutation(baseOptions?: Apollo.MutationHookOptions<
 export type UploadImageMutationHookResult = ReturnType<typeof useUploadImageMutation>;
 export type UploadImageMutationResult = Apollo.MutationResult<UploadImageMutation>;
 export type UploadImageMutationOptions = Apollo.BaseMutationOptions<UploadImageMutation, UploadImageMutationVariables>;
+export const LoginWithCodeDocument = gql`
+    mutation LoginWithCode($code: String!, $totpToken: String, $challengeAnswer: ChallengeInput) {
+  createSessionWithLoginCode(
+    code: $code
+    totpToken: $totpToken
+    challengeAnswer: $challengeAnswer
+  ) {
+    ...FullSessionWithToken
+  }
+}
+    ${FullSessionWithTokenFragmentDoc}`;
+export type LoginWithCodeMutationFn = Apollo.MutationFunction<LoginWithCodeMutation, LoginWithCodeMutationVariables>;
+
+/**
+ * __useLoginWithCodeMutation__
+ *
+ * To run a mutation, you first call `useLoginWithCodeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useLoginWithCodeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [loginWithCodeMutation, { data, loading, error }] = useLoginWithCodeMutation({
+ *   variables: {
+ *      code: // value for 'code'
+ *      totpToken: // value for 'totpToken'
+ *      challengeAnswer: // value for 'challengeAnswer'
+ *   },
+ * });
+ */
+export function useLoginWithCodeMutation(baseOptions?: Apollo.MutationHookOptions<LoginWithCodeMutation, LoginWithCodeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<LoginWithCodeMutation, LoginWithCodeMutationVariables>(LoginWithCodeDocument, options);
+      }
+export type LoginWithCodeMutationHookResult = ReturnType<typeof useLoginWithCodeMutation>;
+export type LoginWithCodeMutationResult = Apollo.MutationResult<LoginWithCodeMutation>;
+export type LoginWithCodeMutationOptions = Apollo.BaseMutationOptions<LoginWithCodeMutation, LoginWithCodeMutationVariables>;

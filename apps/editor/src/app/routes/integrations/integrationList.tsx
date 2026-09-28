@@ -10,9 +10,11 @@ import {
   CanGetAISettings,
   CanGetAnalyticsProviderSettings,
   CanGetChallengeProviderSettings,
+  CanGetLetterProviderSettings,
   CanGetMailchimpSyncSettings,
   CanGetMailProviderSettings,
   CanGetPaymentProviderSettings,
+  CanGetPdfRendererSettings,
   CanGetTrackingPixelSettings,
 } from '@wepublish/permissions';
 import { PermissionControl } from '@wepublish/ui/editor';
@@ -21,6 +23,8 @@ import {
   MdAnalytics,
   MdCreditCard,
   MdEmail,
+  MdMarkunreadMailbox,
+  MdPictureAsPdf,
   MdSecurity,
   MdSmartToy,
   MdSync,
@@ -35,6 +39,7 @@ import mailChimpLogo from './assets/mailchimp.webp';
 import mailgunLogo from './assets/mailgun.svg';
 import mollieLogo from './assets/mollie.webp';
 import payrexxLogo from './assets/payrexx.webp';
+import pingenLogo from './assets/pingen.svg';
 import proLitterisLogo from './assets/proLitteris.svg';
 import slackLogo from './assets/slack.webp';
 import stripeLogo from './assets/stripe.svg';
@@ -109,6 +114,20 @@ export function IntegrationList() {
       path: '/integrations/mail',
       icon: MdEmail,
       logos: [mailgunLogo, mailChimpLogo, slackLogo],
+    },
+    {
+      title: t('integrations.letterProvider'),
+      permission: CanGetLetterProviderSettings.id,
+      path: '/integrations/letter',
+      icon: MdMarkunreadMailbox,
+      logos: [pingenLogo],
+    },
+    {
+      title: t('integrations.pdfRenderer'),
+      permission: CanGetPdfRendererSettings.id,
+      path: '/integrations/pdf-renderer',
+      icon: MdPictureAsPdf,
+      logos: [cloudflareLogo],
     },
     {
       title: t('integrations.analytics'),

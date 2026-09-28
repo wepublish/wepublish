@@ -1,6 +1,7 @@
 import { MutationResult, QueryResult } from '@apollo/client';
 import {
   ChallengeQuery,
+  LoginWithCodeMutation,
   LoginWithCredentialsMutation,
   LoginWithEmailMutation,
   RegisterMutation,
@@ -15,9 +16,18 @@ export type BuilderLoginFormProps = {
   defaults?: Partial<{
     email: string;
     requirePassword: boolean;
+    loginCode: string;
+    useLoginCode: boolean;
   }>;
 
   disablePasswordLogin?: boolean;
+
+  loginWithCode?: Pick<
+    MutationResult<LoginWithCodeMutation>,
+    'data' | 'loading' | 'error'
+  >;
+  onSubmitLoginWithCode?: (code: string, totpToken?: string) => void;
+  codeChallengeRequired?: boolean;
 
   loginWithEmail: Pick<
     MutationResult<LoginWithEmailMutation>,

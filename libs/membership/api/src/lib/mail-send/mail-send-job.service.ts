@@ -1,5 +1,6 @@
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import {
+  MailChannel,
   MailSendAudience,
   MailSendJob,
   MailSendJobRecipient,
@@ -10,12 +11,27 @@ import {
   PrismaClient,
 } from '@prisma/client';
 import { randomUUID } from 'crypto';
-import { composeMail, MailContext, mailLogType } from '@wepublish/mail/api';
+import {
+  MailContext,
+  composeMail,
+  mailLogType,
+  templateUsesJwt,
+} from '@wepublish/mail/api';
+import {
+  canReceiveLetters,
+  LetterContext,
+  LetterPrintSettings,
+  toLetterAddress,
+} from '@wepublish/letter/api';
 import {
   assembleMailData,
   MailTemplateContextId,
 } from '../mail-template/mail-template-data';
-import { MailAudienceInput, MailRecipientBase } from './mail-send.model';
+import {
+  LetterPrintInput,
+  MailAudienceInput,
+  MailRecipientBase,
+} from './mail-send.model';
 import {
   MailRecipient,
   MailSendRecipientService,
@@ -50,6 +66,23 @@ const INTERRUPTED_ERROR = 'Job was interrupted and will be continued.';
 const ABANDONED_ERROR =
   'Job was interrupted repeatedly and stopped. Continue it manually to send the remaining mails.';
 
+/** What a letter send falls back to when the editor picks no print options. */
+const DEFAULT_PRINT: LetterPrintSettings = {
+  addressPosition: 'left',
+  deliveryProduct: 'cheap',
+  printMode: 'simplex',
+  printSpectrum: 'grayscale',
+};
+
+function printSettings(print?: LetterPrintInput | null): LetterPrintSettings {
+  return {
+    addressPosition: print?.addressPosition ?? DEFAULT_PRINT.addressPosition,
+    deliveryProduct: print?.deliveryProduct ?? DEFAULT_PRINT.deliveryProduct,
+    printMode: print?.printMode ?? DEFAULT_PRINT.printMode,
+    printSpectrum: print?.printSpectrum ?? DEFAULT_PRINT.printSpectrum,
+  };
+}
+
 export interface MailSendJobCounts {
   total: number;
   sent: number;
@@ -66,6 +99,7 @@ export class MailSendJobService {
   constructor(
     private prisma: PrismaClient,
     private mailContext: MailContext,
+    private letterContext: LetterContext,
     private recipientService: MailSendRecipientService
   ) {}
 
@@ -81,7 +115,10 @@ export class MailSendJobService {
   ): Promise<MailSendJob> {
     const template = await this.loadTemplate(templateId);
 
-    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      include: { address: true },
+    });
 
     if (!user) {
       throw new BadRequestException('User not found.');
@@ -108,7 +145,7 @@ export class MailSendJobService {
     const [entry] = job.recipients;
 
     if (await this.claimRecipient(entry.id)) {
-      await this.deliver(job.id, template, entry, { user });
+      await this.deliver(job, template, entry, { user });
     }
 
     return this.finish(job.id);
@@ -120,18 +157,28 @@ export class MailSendJobService {
    * as a safety net.
    */
   async createJob(
-    input: { mailTemplateId: string; audience: MailAudienceInput },
+    input: {
+      mailTemplateId: string;
+      audience: MailAudienceInput;
+      channel?: MailChannel | null;
+      print?: LetterPrintInput | null;
+    },
     currentUserId: string
   ): Promise<MailSendJob> {
     const template = await this.loadTemplate(input.mailTemplateId);
 
-    const totalCount = await this.recipientService.count(input.audience);
+    const totalCount = await this.recipientService.count(
+      input.audience,
+      input.channel
+    );
 
     const job = await this.prisma.mailSendJob.create({
       data: {
         mailTemplateId: template.id,
         createdByUserId: currentUserId,
         audience: this.audienceFor(input.audience),
+        channel: input.channel ?? MailChannel.mail,
+        ...printSettings(input.print),
         status: MailSendJobState.queued,
         totalCount,
         recipientFilter: input.audience as unknown as Prisma.InputJsonValue,
@@ -347,7 +394,7 @@ export class MailSendJobService {
 
     try {
       await this.buildQueue(job);
-      await this.sendQueue(jobId, template);
+      await this.sendQueue(job, template);
     } catch (error) {
       // Whatever went wrong here is about the job, not about one recipient:
       // leave the remaining recipients pending so it can be continued.
@@ -389,7 +436,8 @@ export class MailSendJobService {
       const recipients = await this.recipientService.resolvePage(
         audience,
         position,
-        BATCH_SIZE
+        BATCH_SIZE,
+        job.channel
       );
 
       if (recipients.length === 0) {
@@ -425,9 +473,10 @@ export class MailSendJobService {
 
   /** Work through the pending recipients until none are left or the job stops. */
   private async sendQueue(
-    jobId: string,
+    job: MailSendJob,
     template: MailTemplate
   ): Promise<void> {
+    const jobId = job.id;
     let processed = 0;
 
     for (;;) {
@@ -469,7 +518,7 @@ export class MailSendJobService {
           continue;
         }
 
-        await this.deliver(jobId, template, entry, recipient);
+        await this.deliver(job, template, entry, recipient);
 
         if (++processed % PROGRESS_EVERY === 0) {
           await this.writeProgress(jobId);
@@ -481,29 +530,62 @@ export class MailSendJobService {
   }
 
   /**
-   * Send one queued mail and record the outcome on its queue row. Never throws:
-   * a recipient that cannot be reached must not stop the rest of the job.
+   * Send one queued message and record the outcome on its queue row. Never
+   * throws: a recipient that cannot be reached must not stop the rest of the
+   * job. Which medium is used is the job's decision — everything else about a
+   * send is the same either way.
    */
   private async deliver(
-    jobId: string,
+    job: Pick<
+      MailSendJob,
+      | 'id'
+      | 'channel'
+      | 'addressPosition'
+      | 'deliveryProduct'
+      | 'printMode'
+      | 'printSpectrum'
+    >,
     template: MailTemplate,
     entry: Pick<MailSendJobRecipient, 'id'>,
     recipient: MailRecipient
   ): Promise<void> {
     const mailLogId = randomUUID();
+    const isLetter = job.channel === MailChannel.letter;
 
     try {
       const optionalData = await this.buildOptionalData(template, recipient);
 
-      await this.mailContext.sendMail({
-        mailTemplateId: template.id,
-        recipient: recipient.user,
-        optionalData,
-        mailType: mailLogType.Manual,
-        mailSendJobId: jobId,
-        mailLogId,
-        isRetry: false,
-      });
+      if (isLetter) {
+        await this.letterContext.sendLetter({
+          mailTemplateId: template.id,
+          recipient: recipient.user,
+          data: await this.mailContext.buildMailData({
+            recipient: recipient.user,
+            optionalData,
+            mode: 'send',
+            purlOrigin: 'letter',
+            mintJwt: templateUsesJwt(template),
+          }),
+          print: {
+            addressPosition: job.addressPosition,
+            deliveryProduct: job.deliveryProduct,
+            printMode: job.printMode,
+            printSpectrum: job.printSpectrum,
+          },
+          mailSendJobId: job.id,
+          mailLogId,
+        });
+      } else {
+        await this.mailContext.sendMail({
+          mailTemplateId: template.id,
+          recipient: recipient.user,
+          optionalData,
+          mailType: mailLogType.Manual,
+          mailSendJobId: job.id,
+          mailLogId,
+          isRetry: false,
+        });
+      }
 
       await this.markRecipient(entry.id, MailSendJobRecipientState.sent, {
         mailLogId,
@@ -519,7 +601,9 @@ export class MailSendJobService {
       });
 
       this.logger.warn(
-        `Job ${jobId}: failed to mail ${recipient.user.email}: ${message}`
+        `Job ${job.id}: failed to ${isLetter ? 'post to' : 'mail'} ${
+          recipient.user.email
+        }: ${message}`
       );
     }
   }
@@ -646,16 +730,20 @@ export class MailSendJobService {
     mailTemplateId: string;
     audience: MailAudienceInput;
     recipientId?: string | null;
+    channel?: MailChannel | null;
+    print?: LetterPrintInput | null;
   }): Promise<{
     subject: string;
     html: string;
     text?: string;
+    pdf?: string;
     recipient: MailRecipient | null;
   }> {
     const template = await this.loadTemplate(input.mailTemplateId);
     const recipient = await this.findPreviewRecipient(
       input.audience,
-      input.recipientId
+      input.recipientId,
+      input.channel
     );
 
     if (!recipient) {
@@ -663,19 +751,45 @@ export class MailSendJobService {
     }
 
     const optionalData = await this.buildOptionalData(template, recipient);
-    const jwt = await this.mailContext.jwtGenerator(recipient.user.id);
+
+    if (input.channel === MailChannel.letter) {
+      if (!canReceiveLetters(recipient.user)) {
+        throw new BadRequestException(
+          `${recipient.user.email} has no usable postal address.`
+        );
+      }
+
+      const pdf = await this.letterContext.renderLetter({
+        template: { htmlContent: template.htmlContent },
+        addressPosition: printSettings(input.print).addressPosition,
+        data: await this.mailContext.buildMailData({
+          recipient: recipient.user,
+          optionalData,
+          mode: 'preview',
+          purlOrigin: 'letter',
+        }),
+        recipient: toLetterAddress(recipient.user),
+      });
+
+      return {
+        subject: template.subject,
+        html: '',
+        pdf: pdf.toString('base64'),
+        recipient,
+      };
+    }
+
     const composed = composeMail(
       {
         subject: template.subject,
         htmlContent: template.htmlContent,
         textContent: template.textContent,
       },
-      {
-        user: recipient.user,
-        optional: optionalData,
-        jwt,
-        currentDate: new Date(),
-      }
+      await this.mailContext.buildMailData({
+        recipient: recipient.user,
+        optionalData,
+        mode: 'preview',
+      })
     );
 
     return {
@@ -693,7 +807,8 @@ export class MailSendJobService {
    */
   private async findPreviewRecipient(
     audience: MailAudienceInput,
-    recipientId?: string | null
+    recipientId?: string | null,
+    channel?: MailChannel | null
   ): Promise<MailRecipient | null> {
     let skip = 0;
 
@@ -701,7 +816,8 @@ export class MailSendJobService {
       const page = await this.recipientService.resolvePage(
         audience,
         skip,
-        BATCH_SIZE
+        BATCH_SIZE,
+        channel
       );
 
       if (!page.length) {
