@@ -3175,6 +3175,97 @@
         "attempts": "Tentatives",
         "empty": "Aucune entrée pour ce filtre."
       }
+    },
+    "seoChecklist": {
+      "navbar": "SEO",
+      "title": "Liste de contrôle SEO",
+      "description": "Un aperçu de ce que We.Publish gère automatiquement pour les moteurs de recherche et de ce qui requiert votre attention. Les vérifications sont effectuées sur le site en ligne.",
+      "websiteUrl": "Site web",
+      "refresh": "Vérifier à nouveau",
+      "open": "Ouvrir",
+      "copyUrl": "Copier l'URL",
+      "detail": "Détails",
+      "status": {
+        "Ok": "OK",
+        "Warning": "Avertissement",
+        "Error": "Erreur",
+        "Info": "Info"
+      },
+      "kinds": {
+        "Manual": {
+          "title": "Action requise",
+          "description": "Étapes à effectuer en dehors de We.Publish."
+        },
+        "Verifiable": {
+          "title": "Vérifié automatiquement",
+          "description": "Ces vérifications sont effectuées sur votre site web et vos paramètres."
+        },
+        "Automatic": {
+          "title": "Géré automatiquement",
+          "description": "We.Publish s'en occupe pour chaque article et chaque page."
+        }
+      },
+      "checks": {
+        "Robots": {
+          "title": "Indexation (robots.txt)",
+          "description": "Le fichier robots.txt indique aux moteurs de recherche quelles parties du site ils peuvent explorer.",
+          "Ok": "Les moteurs de recherche sont autorisés à explorer le site.",
+          "Error": "Le fichier robots.txt n'a pas pu être chargé ou bloque tous les moteurs de recherche."
+        },
+        "RobotsSitemap": {
+          "title": "Sitemap dans robots.txt",
+          "description": "Référencer le sitemap dans robots.txt aide les moteurs de recherche à trouver tous les articles.",
+          "detail": "Sitemap référencé",
+          "Ok": "Le fichier robots.txt référence le sitemap de ce site.",
+          "Warning": "Le fichier robots.txt ne référence pas le sitemap de ce site. Veuillez contacter le support We.Publish pour le corriger."
+        },
+        "Sitemap": {
+          "title": "Sitemap",
+          "description": "Le sitemap est généré automatiquement et contient les derniers articles et pages.",
+          "detail": "Nombre d'URL",
+          "Ok": "Le sitemap est accessible et valide.",
+          "Error": "Le sitemap n'a pas pu être chargé ou n'est pas valide."
+        },
+        "NewsSitemap": {
+          "title": "Sitemap Google News",
+          "description": "Les articles du sitemap sont complétés par des métadonnées Google News.",
+          "Ok": "Le sitemap contient des entrées Google News.",
+          "Info": "Aucune entrée Google News n'a été trouvée dans le sitemap."
+        },
+        "Canonical": {
+          "title": "URL canoniques",
+          "description": "Chaque article indique son URL canonique. Vous pouvez la remplacer par article dans les paramètres de l'article.",
+          "Ok": "Le dernier article indique une URL canonique.",
+          "Warning": "Aucune URL canonique n'a été trouvée sur le dernier article.",
+          "Info": "Il n'y a pas encore d'article publié à vérifier."
+        },
+        "StructuredData": {
+          "title": "Données structurées (NewsArticle)",
+          "description": "Les articles contiennent des données structurées NewsArticle (JSON-LD) avec titre, auteur·e·s, dates et images.",
+          "Ok": "Le dernier article contient des données structurées NewsArticle.",
+          "Warning": "Aucune donnée structurée NewsArticle n'a été trouvée sur le dernier article.",
+          "Info": "Il n'y a pas encore d'article publié à vérifier."
+        },
+        "NoindexHidden": {
+          "title": "Contenu masqué",
+          "description": "Utilisez l'option « masqué » pour exclure certains articles ou pages des moteurs de recherche.",
+          "Info": "Les articles et pages masqués sont marqués noindex et exclus du sitemap."
+        },
+        "PublicationMetadata": {
+          "title": "Nom et logo de la publication",
+          "description": "Le nom et le logo de la publication sont gérés dans le profil de peering.",
+          "detail": "Manquant",
+          "action": "Modifier le profil",
+          "Ok": "Le nom et le logo de la publication sont définis.",
+          "Warning": "Le nom ou le logo de la publication manque."
+        },
+        "SearchConsole": {
+          "title": "Google Search Console",
+          "description": "Ajoutez le site comme propriété de domaine dans Google Search Console, validez-le via DNS et soumettez l'URL du sitemap ci-dessous sous « Sitemaps ».",
+          "action": "Ouvrir Search Console",
+          "Info": "Cette étape doit être effectuée une fois par la publication dans Google Search Console."
+        }
+      }
     }
   }
 }

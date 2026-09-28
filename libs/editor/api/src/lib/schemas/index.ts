@@ -37,6 +37,7 @@ export * from './peer.generated';
 export * from './periodic-job.generated';
 export * from './permissions.generated';
 export * from './poll.generated';
+export * from './seo-checklist.generated';
 export * from './settings.generated';
 export * from './settings.integrations.ai.generated';
 export * from './settings.integrations.analytics.generated';

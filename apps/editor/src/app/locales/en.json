@@ -3268,6 +3268,97 @@
         "attempts": "Attempts",
         "empty": "No entries for this filter."
       }
+    },
+    "seoChecklist": {
+      "navbar": "SEO",
+      "title": "SEO checklist",
+      "description": "An overview of what We.Publish handles for search engines automatically and what needs your attention. Checks are run against the live website.",
+      "websiteUrl": "Website",
+      "refresh": "Check again",
+      "open": "Open",
+      "copyUrl": "Copy URL",
+      "detail": "Details",
+      "status": {
+        "Ok": "OK",
+        "Warning": "Warning",
+        "Error": "Error",
+        "Info": "Info"
+      },
+      "kinds": {
+        "Manual": {
+          "title": "Action required",
+          "description": "Steps that have to be done outside of We.Publish."
+        },
+        "Verifiable": {
+          "title": "Automatically verified",
+          "description": "These checks are run against your website and settings."
+        },
+        "Automatic": {
+          "title": "Handled automatically",
+          "description": "We.Publish takes care of these for every article and page."
+        }
+      },
+      "checks": {
+        "Robots": {
+          "title": "Indexing (robots.txt)",
+          "description": "robots.txt tells search engines which parts of the website they may crawl.",
+          "Ok": "Search engines are allowed to crawl the website.",
+          "Error": "robots.txt could not be loaded or blocks all search engines."
+        },
+        "RobotsSitemap": {
+          "title": "Sitemap in robots.txt",
+          "description": "Referencing the sitemap in robots.txt helps search engines find all articles.",
+          "detail": "Referenced sitemap",
+          "Ok": "robots.txt references the sitemap of this website.",
+          "Warning": "robots.txt does not reference the sitemap of this website. Please contact We.Publish support to correct it."
+        },
+        "Sitemap": {
+          "title": "Sitemap",
+          "description": "The sitemap is generated automatically and lists the latest articles and pages.",
+          "detail": "Number of URLs",
+          "Ok": "The sitemap is reachable and valid.",
+          "Error": "The sitemap could not be loaded or is invalid."
+        },
+        "NewsSitemap": {
+          "title": "Google News sitemap",
+          "description": "Articles in the sitemap are annotated with Google News metadata.",
+          "Ok": "The sitemap contains Google News entries.",
+          "Info": "No Google News entries were found in the sitemap."
+        },
+        "Canonical": {
+          "title": "Canonical URLs",
+          "description": "Every article declares its canonical URL. You can override it per article in the article settings.",
+          "Ok": "The latest article declares a canonical URL.",
+          "Warning": "No canonical URL was found on the latest article.",
+          "Info": "There is no published article to check yet."
+        },
+        "StructuredData": {
+          "title": "Structured data (NewsArticle)",
+          "description": "Articles contain NewsArticle structured data (JSON-LD) with headline, authors, dates and images.",
+          "Ok": "The latest article contains NewsArticle structured data.",
+          "Warning": "No NewsArticle structured data was found on the latest article.",
+          "Info": "There is no published article to check yet."
+        },
+        "NoindexHidden": {
+          "title": "Hidden content",
+          "description": "Use the \"hidden\" option to keep single articles or pages out of search engines.",
+          "Info": "Hidden articles and pages are marked as noindex and excluded from the sitemap."
+        },
+        "PublicationMetadata": {
+          "title": "Publication name and logo",
+          "description": "The name and logo of the publication are maintained in the peering profile.",
+          "detail": "Missing",
+          "action": "Edit profile",
+          "Ok": "Publication name and logo are set.",
+          "Warning": "The publication name or logo is missing."
+        },
+        "SearchConsole": {
+          "title": "Google Search Console",
+          "description": "Add the website as a domain property in Google Search Console, verify it via DNS and submit the sitemap URL below under \"Sitemaps\".",
+          "action": "Open Search Console",
+          "Info": "This has to be done once by the publisher in Google Search Console."
+        }
+      }
     }
   }
 }

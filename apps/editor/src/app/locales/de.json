@@ -3229,6 +3229,97 @@
         "attempts": "Versuche",
         "empty": "Keine Einträge für diesen Filter."
       }
+    },
+    "seoChecklist": {
+      "navbar": "SEO",
+      "title": "SEO-Checkliste",
+      "description": "Eine Übersicht, was We.Publish für Suchmaschinen automatisch erledigt und wo Sie aktiv werden müssen. Die Prüfungen laufen gegen die Live-Website.",
+      "websiteUrl": "Website",
+      "refresh": "Erneut prüfen",
+      "open": "Öffnen",
+      "copyUrl": "URL kopieren",
+      "detail": "Details",
+      "status": {
+        "Ok": "OK",
+        "Warning": "Warnung",
+        "Error": "Fehler",
+        "Info": "Info"
+      },
+      "kinds": {
+        "Manual": {
+          "title": "Handlungsbedarf",
+          "description": "Schritte, die ausserhalb von We.Publish erledigt werden müssen."
+        },
+        "Verifiable": {
+          "title": "Automatisch geprüft",
+          "description": "Diese Prüfungen laufen gegen Ihre Website und Einstellungen."
+        },
+        "Automatic": {
+          "title": "Automatisch erledigt",
+          "description": "Darum kümmert sich We.Publish bei jedem Artikel und jeder Seite."
+        }
+      },
+      "checks": {
+        "Robots": {
+          "title": "Indexierung (robots.txt)",
+          "description": "Die robots.txt teilt Suchmaschinen mit, welche Bereiche der Website sie crawlen dürfen.",
+          "Ok": "Suchmaschinen dürfen die Website crawlen.",
+          "Error": "Die robots.txt konnte nicht geladen werden oder blockiert alle Suchmaschinen."
+        },
+        "RobotsSitemap": {
+          "title": "Sitemap in robots.txt",
+          "description": "Ein Verweis auf die Sitemap in der robots.txt hilft Suchmaschinen, alle Artikel zu finden.",
+          "detail": "Verwiesene Sitemap",
+          "Ok": "Die robots.txt verweist auf die Sitemap dieser Website.",
+          "Warning": "Die robots.txt verweist nicht auf die Sitemap dieser Website. Bitte kontaktieren Sie den We.Publish-Support, um dies zu korrigieren."
+        },
+        "Sitemap": {
+          "title": "Sitemap",
+          "description": "Die Sitemap wird automatisch erstellt und enthält die neuesten Artikel und Seiten.",
+          "detail": "Anzahl URLs",
+          "Ok": "Die Sitemap ist erreichbar und gültig.",
+          "Error": "Die Sitemap konnte nicht geladen werden oder ist ungültig."
+        },
+        "NewsSitemap": {
+          "title": "Google-News-Sitemap",
+          "description": "Artikel in der Sitemap werden mit Google-News-Metadaten ergänzt.",
+          "Ok": "Die Sitemap enthält Google-News-Einträge.",
+          "Info": "In der Sitemap wurden keine Google-News-Einträge gefunden."
+        },
+        "Canonical": {
+          "title": "Canonical-URLs",
+          "description": "Jeder Artikel gibt seine kanonische URL an. Sie können sie pro Artikel in den Artikeleinstellungen überschreiben.",
+          "Ok": "Der neueste Artikel gibt eine kanonische URL an.",
+          "Warning": "Beim neuesten Artikel wurde keine kanonische URL gefunden.",
+          "Info": "Es gibt noch keinen publizierten Artikel zum Prüfen."
+        },
+        "StructuredData": {
+          "title": "Strukturierte Daten (NewsArticle)",
+          "description": "Artikel enthalten strukturierte Daten (JSON-LD) vom Typ NewsArticle mit Titel, Autor:innen, Daten und Bildern.",
+          "Ok": "Der neueste Artikel enthält strukturierte NewsArticle-Daten.",
+          "Warning": "Beim neuesten Artikel wurden keine strukturierten NewsArticle-Daten gefunden.",
+          "Info": "Es gibt noch keinen publizierten Artikel zum Prüfen."
+        },
+        "NoindexHidden": {
+          "title": "Versteckte Inhalte",
+          "description": "Mit der Option «versteckt» halten Sie einzelne Artikel oder Seiten aus Suchmaschinen heraus.",
+          "Info": "Versteckte Artikel und Seiten werden als noindex markiert und nicht in die Sitemap aufgenommen."
+        },
+        "PublicationMetadata": {
+          "title": "Name und Logo der Publikation",
+          "description": "Name und Logo der Publikation werden im Peering-Profil gepflegt.",
+          "detail": "Fehlt",
+          "action": "Profil bearbeiten",
+          "Ok": "Name und Logo der Publikation sind gesetzt.",
+          "Warning": "Der Name oder das Logo der Publikation fehlt."
+        },
+        "SearchConsole": {
+          "title": "Google Search Console",
+          "description": "Fügen Sie die Website als Domain-Property in der Google Search Console hinzu, bestätigen Sie sie per DNS und reichen Sie die untenstehende Sitemap-URL unter «Sitemaps» ein.",
+          "action": "Search Console öffnen",
+          "Info": "Dies muss einmalig von der Publikation in der Google Search Console erledigt werden."
+        }
+      }
     }
   }
 }

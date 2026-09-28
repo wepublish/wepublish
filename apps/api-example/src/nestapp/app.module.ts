@@ -94,6 +94,7 @@ import { GraphQLRichText, SlateToPmMigrator } from '@wepublish/richtext/api';
 import { SessionModule } from '@wepublish/session/api';
 import { OneModule } from '@wepublish/one/api';
 import {
+  SeoChecklistModule,
   SettingModule,
   SettingName,
   WebsiteSettingsModule,
@@ -617,6 +618,7 @@ import { readConfig } from '../readConfig';
     }),
     PaywallModule,
     WebsiteSettingsModule,
+    SeoChecklistModule,
   ],
   exports: ['SYSTEM_INFO_KEY'],
   providers: [

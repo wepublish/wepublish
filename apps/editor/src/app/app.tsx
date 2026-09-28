@@ -104,6 +104,7 @@ import { DiscountCodeList } from './routes/discountCode/discountCodeList';
 import { DiscountCodeUsageView } from './routes/discountCode/discountCodeUsageView';
 import { WebsiteSettingsItem } from './routes/website-settings/website-settings-item';
 import { WebsiteSettingsList } from './routes/website-settings/website-settings-list';
+import { SeoChecklist } from './routes/seo/seo-checklist';
 import { SetNewPassword } from './setNewPassword';
 
 const LogoutMutation = gql`
@@ -1187,6 +1188,14 @@ export function App() {
               element={
                 <Base>
                   <WebsiteSettingsItem />
+                </Base>
+              }
+            />
+            <Route
+              path="settings/seo"
+              element={
+                <Base>
+                  <SeoChecklist />
                 </Base>
               }
             />

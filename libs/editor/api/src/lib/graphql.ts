@@ -5477,6 +5477,8 @@ export type Query = {
    *
    */
   revenue: Array<DashboardInvoice>;
+  /** Returns a checklist of the SEO setup of the website. */
+  seoChecklist: SeoChecklist;
   /**
    *
    *       Returns a single setting by name.
@@ -6389,6 +6391,48 @@ export type SensitiveDataUser = BaseUser & {
   /** Whether this user is exempt from the two-factor authentication requirement. */
   totpExempt: Scalars['Boolean'];
   userImageID?: Maybe<Scalars['String']>;
+};
+
+export type SeoCheck = {
+  __typename?: 'SeoCheck';
+  detail?: Maybe<Scalars['String']>;
+  id: SeoCheckId;
+  kind: SeoCheckKind;
+  status: SeoCheckStatus;
+  url?: Maybe<Scalars['String']>;
+};
+
+export enum SeoCheckId {
+  Canonical = 'Canonical',
+  NewsSitemap = 'NewsSitemap',
+  NoindexHidden = 'NoindexHidden',
+  PublicationMetadata = 'PublicationMetadata',
+  Robots = 'Robots',
+  RobotsSitemap = 'RobotsSitemap',
+  SearchConsole = 'SearchConsole',
+  Sitemap = 'Sitemap',
+  StructuredData = 'StructuredData'
+}
+
+export enum SeoCheckKind {
+  Automatic = 'Automatic',
+  Manual = 'Manual',
+  Verifiable = 'Verifiable'
+}
+
+export enum SeoCheckStatus {
+  Error = 'Error',
+  Info = 'Info',
+  Ok = 'Ok',
+  Warning = 'Warning'
+}
+
+export type SeoChecklist = {
+  __typename?: 'SeoChecklist';
+  checks: Array<SeoCheck>;
+  robotsUrl: Scalars['String'];
+  sitemapUrl: Scalars['String'];
+  websiteUrl: Scalars['String'];
 };
 
 export type SessionWithToken = {

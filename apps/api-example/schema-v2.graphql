@@ -4284,6 +4284,9 @@ type Query {
   "\n      Returns the revenue generated for the time period given.\n      Only includes paid invoices that have not been manually paid.\n    "
   revenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!
 
+  """Returns a checklist of the SEO setup of the website."""
+  seoChecklist: SeoChecklist!
+
   "\n      Returns a single setting by name.\n    "
   setting(name: String!): Setting!
 
@@ -4504,6 +4507,46 @@ type SensitiveDataUser implements BaseUser {
   """
   totpExempt: Boolean!
   userImageID: String
+}
+
+type SeoCheck {
+  detail: String
+  id: SeoCheckId!
+  kind: SeoCheckKind!
+  status: SeoCheckStatus!
+  url: String
+}
+
+enum SeoCheckId {
+  Canonical
+  NewsSitemap
+  NoindexHidden
+  PublicationMetadata
+  Robots
+  RobotsSitemap
+  SearchConsole
+  Sitemap
+  StructuredData
+}
+
+enum SeoCheckKind {
+  Automatic
+  Manual
+  Verifiable
+}
+
+enum SeoCheckStatus {
+  Error
+  Info
+  Ok
+  Warning
+}
+
+type SeoChecklist {
+  checks: [SeoCheck!]!
+  robotsUrl: String!
+  sitemapUrl: String!
+  websiteUrl: String!
 }
 
 type SessionWithToken {

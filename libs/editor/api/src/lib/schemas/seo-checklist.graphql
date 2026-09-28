@@ -1,0 +1,14 @@
+query SeoChecklist {
+  seoChecklist {
+    websiteUrl
+    sitemapUrl
+    robotsUrl
+    checks {
+      id
+      kind
+      status
+      detail
+      url
+    }
+  }
+}
