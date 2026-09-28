@@ -64,15 +64,15 @@ export default function Login({ sessionToken }: LoginProps) {
   return (
     <LoginWrapper>
       <H3 component="h1">Login für Abonnent*innen</H3>
-
       <Typography
         variant="body1"
-        paragraph
+        sx={{
+          marginBottom: '16px',
+        }}
       >
         (Falls du noch keinen Account hast,{' '}
         <Link href={'/signup'}>klicke hier.</Link>)
       </Typography>
-
       <LoginFormContainer
         defaults={{
           email: router.query?.mail as string | undefined,

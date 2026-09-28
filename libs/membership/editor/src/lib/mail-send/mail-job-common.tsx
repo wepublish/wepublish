@@ -167,6 +167,9 @@ export function ResumeJobButton({
                 variant="caption"
                 display="block"
                 style={{ color: '#8e8e93', lineHeight: 1.35, marginLeft: 34 }}
+                sx={{
+                  display: 'block',
+                }}
               >
                 {t('mailJobs.retryUnfinishedHint')}
               </Typography>

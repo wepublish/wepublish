@@ -423,6 +423,9 @@ function MailTemplateEdit() {
                           whiteSpace: 'normal',
                           lineHeight: 1.35,
                         }}
+                        sx={{
+                          display: 'block',
+                        }}
                       >
                         {(item as { description?: string }).description}
                       </Typography>
@@ -433,6 +436,9 @@ function MailTemplateEdit() {
                   variant="caption"
                   display="block"
                   style={{ marginTop: 4, color: '#8e8e93' }}
+                  sx={{
+                    display: 'block',
+                  }}
                 >
                   {t('mailTemplates.edit.purposeHint')}
                 </Typography>
@@ -523,6 +529,9 @@ function MailTemplateEdit() {
             variant="caption"
             display="block"
             style={{ marginTop: 8, color: '#8e8e93' }}
+            sx={{
+              display: 'block',
+            }}
           >
             {t(
               'mailTemplates.edit.testRecipientHint',
@@ -670,6 +679,9 @@ function MailTemplateEdit() {
                   variant="caption"
                   display="block"
                   style={{ marginBottom: 6, color: '#8e8e93' }}
+                  sx={{
+                    display: 'block',
+                  }}
                 >
                   {t(
                     'mailTemplates.edit.textContentReadonlyHint',
