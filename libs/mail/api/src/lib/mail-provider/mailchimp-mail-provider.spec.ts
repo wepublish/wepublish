@@ -1,4 +1,5 @@
 import bodyParser from 'body-parser';
+import crypto from 'crypto';
 import nock from 'nock';
 import { MailLogState } from '@prisma/client';
 import { createKvMock } from '@wepublish/kv-ttl-cache/api';
@@ -178,6 +179,48 @@ describe('MailchimpMailProvider', () => {
       const error = await rejectionError({ status: 'rejected' });
 
       expect(error).not.toBeInstanceOf(MailProviderRecipientError);
+    });
+  });
+
+  describe('webhookForSendMail', () => {
+    const url = 'https://api.example.com/mail-webhooks/mailchimp';
+    const body = {
+      mandrill_events: JSON.stringify([
+        { event: 'hard_bounce', msg: { metadata: { mail_log_id: 'log-1' } } },
+      ]),
+    };
+    // Mandrill signs the webhook url followed by every POST key and value
+    const sign = (secret: string) =>
+      crypto
+        .createHmac('sha1', secret)
+        .update(url + 'mandrill_events' + body.mandrill_events)
+        .digest('base64');
+    const request = (signature: string) =>
+      ({
+        method: 'POST',
+        headers: { 'x-mandrill-signature': signature, host: 'api.example.com' },
+        originalUrl: '/mail-webhooks/mailchimp',
+        body,
+      }) as any;
+
+    it('refuses a webhook with a wrong signature', async () => {
+      await expect(
+        (await makeProvider()).webhookForSendMail({
+          req: request(sign('not-the-secret')),
+        })
+      ).rejects.toThrow('Webhook signature failed');
+    });
+
+    it('accepts a correctly signed webhook', async () => {
+      // the test provider has no webhookEndpointSecret, so it signs with ''
+      await expect(
+        (await makeProvider()).webhookForSendMail({ req: request(sign('')) })
+      ).resolves.toEqual([
+        expect.objectContaining({
+          mailLogID: 'log-1',
+          state: MailLogState.bounced,
+        }),
+      ]);
     });
   });
 
