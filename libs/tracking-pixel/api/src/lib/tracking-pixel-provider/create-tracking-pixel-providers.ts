@@ -27,6 +27,7 @@ export const loadTrackingPixelProviders = async (
   deps: TrackingPixelProviderDeps
 ): Promise<TrackingPixelProvider[]> => {
   const rows = await deps.prisma.settingTrackingPixel.findMany({
+    where: { deletedAt: null },
     orderBy: { id: 'asc' },
   });
 

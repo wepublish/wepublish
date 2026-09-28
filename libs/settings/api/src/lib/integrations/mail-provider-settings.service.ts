@@ -50,7 +50,7 @@ export class MailProviderSettingsService {
     filter?: SettingMailProviderFilter
   ): Promise<SettingMailProvider[]> {
     const data = await this.prisma.settingMailProvider.findMany({
-      where: filter,
+      where: { ...filter, deletedAt: null },
       orderBy: {
         createdAt: 'desc',
       },
@@ -144,7 +144,11 @@ export class MailProviderSettingsService {
       );
     }
 
-    if ((await this.prisma.settingMailProvider.count()) === 1) {
+    if (
+      (await this.prisma.settingMailProvider.count({
+        where: { deletedAt: null },
+      })) === 1
+    ) {
       throw new BadRequestException(
         `Mail provider ${id} is the only one configured and cannot be deleted. ` +
           `Create a replacement first, or change its type instead.`

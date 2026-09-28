@@ -10,6 +10,8 @@ import { readConfig } from '../readConfig';
 
 export const PROVIDER_REGISTRY_RECONCILED = 'providerRegistryReconciled';
 
+const DEFAULT_CHALLENGE_PROVIDER_ID = 'default-turnstile';
+
 const PAYMENT_TYPES: Record<string, PaymentProviderType> = {
   payrexx: PaymentProviderType.PAYREXX,
   'payrexx-subscription': PaymentProviderType.PAYREXX_SUBSCRIPTION,
@@ -112,6 +114,20 @@ export const reconcileProviderRegistry = async (
     );
   }
 
+  await retireAllBut(
+    prisma,
+    'settingMailProvider',
+    configFile.mailProvider?.id,
+    logger
+  );
+
+  await retireAllBut(
+    prisma,
+    'settingChallengeProvider',
+    configFile.challenge?.id ?? DEFAULT_CHALLENGE_PROVIDER_ID,
+    logger
+  );
+
   const sessionTTLDays = configFile.general?.sessionTTLDays;
 
   if (typeof sessionTTLDays === 'number' && sessionTTLDays > 0) {
@@ -167,6 +183,36 @@ const upsertProvider = async (
     create: { id, name: id, type },
     update: {},
   });
+};
+
+type SingleProviderDelegate = {
+  findUnique: (args: { where: { id: string } }) => Promise<unknown>;
+  updateMany: (args: {
+    where: { id: { not: string }; deletedAt: null };
+    data: { deletedAt: Date };
+  }) => Promise<{ count: number }>;
+};
+
+const retireAllBut = async (
+  prisma: PrismaClient,
+  delegate: 'settingMailProvider' | 'settingChallengeProvider',
+  id: string | undefined,
+  logger: Logger
+): Promise<void> => {
+  const providers = prisma[delegate] as unknown as SingleProviderDelegate;
+
+  if (!id || !(await providers.findUnique({ where: { id } }))) {
+    return;
+  }
+
+  const { count } = await providers.updateMany({
+    where: { id: { not: id }, deletedAt: null },
+    data: { deletedAt: new Date() },
+  });
+
+  if (count) {
+    logger.log(`Retired ${count} ${delegate} row(s), keeping ${id} active`);
+  }
 };
 
 const markReconciled = (prisma: PrismaClient) =>

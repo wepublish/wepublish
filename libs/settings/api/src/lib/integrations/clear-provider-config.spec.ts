@@ -28,6 +28,7 @@ describe('clearProviderConfig', () => {
     expect(Object.keys(patch)).not.toContain('type');
     expect(Object.keys(patch)).not.toContain('name');
     expect(Object.keys(patch)).not.toContain('lastLoadedAt');
+    expect(Object.keys(patch)).not.toContain('deletedAt');
   });
 
   test('refuses a model it does not know', () => {

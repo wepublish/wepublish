@@ -334,52 +334,54 @@ const PROVIDER_IDS: Record<PaymentProviderType, string> = {
   [PaymentProviderType.NO_CHARGE]: 'no-charge',
 };
 
-async function seedProviders(prisma: PrismaClient) {
-  if ((await prisma.settingPaymentProvider.count()) === 0) {
-    await prisma.settingPaymentProvider.createMany({
-      data: DEFAULT_PAYMENT_PROVIDERS.map(type => ({
-        id: PROVIDER_IDS[type],
-        name: PROVIDER_IDS[type],
-        type,
-      })),
-    });
+export async function seedProviders(prisma: PrismaClient) {
+  const existing = await Promise.all([
+    prisma.settingPaymentProvider.count(),
+    prisma.settingMailProvider.count(),
+    prisma.settingChallengeProvider.count(),
+    prisma.settingTrackingPixel.count(),
+    prisma.settingSyncProvider.count(),
+  ]);
+
+  if (existing.some(count => count > 0)) {
+    return;
   }
 
-  if ((await prisma.settingMailProvider.count()) === 0) {
-    await prisma.settingMailProvider.create({
-      data: { id: 'smtp', name: 'SMTP', type: MailProviderType.SMTP },
-    });
-  }
+  await prisma.settingPaymentProvider.createMany({
+    data: DEFAULT_PAYMENT_PROVIDERS.map(type => ({
+      id: PROVIDER_IDS[type],
+      name: PROVIDER_IDS[type],
+      type,
+    })),
+  });
 
-  if ((await prisma.settingChallengeProvider.count()) === 0) {
-    await prisma.settingChallengeProvider.create({
-      data: {
-        id: 'turnstile',
-        name: 'Cloudflare Turnstile',
-        type: ChallengeProviderType.TURNSTILE,
-      },
-    });
-  }
+  await prisma.settingMailProvider.create({
+    data: { id: 'smtp', name: 'SMTP', type: MailProviderType.SMTP },
+  });
 
-  if ((await prisma.settingTrackingPixel.count()) === 0) {
-    await prisma.settingTrackingPixel.create({
-      data: {
-        id: 'prolitteris',
-        name: 'ProLitteris',
-        type: TrackingPixelProviderType.prolitteris,
-      },
-    });
-  }
+  await prisma.settingChallengeProvider.create({
+    data: {
+      id: 'turnstile',
+      name: 'Cloudflare Turnstile',
+      type: ChallengeProviderType.TURNSTILE,
+    },
+  });
 
-  if ((await prisma.settingSyncProvider.count()) === 0) {
-    await prisma.settingSyncProvider.create({
-      data: {
-        id: 'mailchimp-sync',
-        name: 'Mailchimp',
-        type: SyncProviderType.MAILCHIMP,
-      },
-    });
-  }
+  await prisma.settingTrackingPixel.create({
+    data: {
+      id: 'prolitteris',
+      name: 'ProLitteris',
+      type: TrackingPixelProviderType.prolitteris,
+    },
+  });
+
+  await prisma.settingSyncProvider.create({
+    data: {
+      id: 'mailchimp-sync',
+      name: 'Mailchimp',
+      type: SyncProviderType.MAILCHIMP,
+    },
+  });
 }
 
 export async function seed(prisma: PrismaClient) {

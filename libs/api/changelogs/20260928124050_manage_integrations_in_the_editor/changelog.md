@@ -14,7 +14,7 @@ Until now, which providers existed was fixed in a configuration file that only y
 
 **Removing an integration is deliberately gentle**
 
-A removed provider disappears from the lists, so nothing new can be set up with it — but it keeps running in the background. A payment that is still being processed is not cut off, and an invoice from last year still shows the provider that took the money. Add the same provider back later and its configuration is exactly as you left it.
+A removed provider disappears from the lists and is no longer offered: readers can no longer pick its payment method for a new subscription, and a removed tracking pixel is no longer added to new articles. What already exists keeps working — a payment that is still being processed is not cut off, existing subscriptions keep renewing, articles keep their tracking pixels, and an invoice from last year still shows the provider that took the money. Add the same provider back later and its configuration is exactly as you left it.
 
 **Switching a type clears the configuration**
 

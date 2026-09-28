@@ -13,7 +13,7 @@ Jusqu’ici, la liste des prestataires disponibles était figée dans un fichier
 
 **Le retrait est volontairement prudent**
 
-Un prestataire retiré disparaît des listes, de sorte que plus rien de nouveau ne peut être configuré avec lui — mais il continue de fonctionner en arrière-plan. Un paiement en cours de traitement n’est pas interrompu, et une facture de l’an dernier affiche toujours le prestataire qui a encaissé. Si vous le rajoutez plus tard, sa configuration est intacte.
+Un prestataire retiré disparaît des listes et n’est plus proposé : son moyen de paiement ne peut plus être choisi pour un nouvel abonnement, et un pixel de suivi retiré n’est plus ajouté aux nouveaux articles. Ce qui existe déjà continue de fonctionner — un paiement en cours de traitement n’est pas interrompu, les abonnements existants continuent de se renouveler, les articles gardent leurs pixels de suivi, et une facture de l’an dernier affiche toujours le prestataire qui a encaissé. Si vous le rajoutez plus tard, sa configuration est intacte.
 
 **Changer de type efface la configuration**
 

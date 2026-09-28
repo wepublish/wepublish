@@ -28,8 +28,8 @@ const sendProps = {
   recipient: 'user@example.com',
   replyToAddress: 'dev@wepublish.ch',
   subject: 'Your login link',
-  message: 'Open https://example.com/login?token=abc',
-  messageHtml: '<p>Open https://example.com/login?token=abc</p>',
+  message: 'Open https://example.com/articles/1',
+  messageHtml: '<p>Open https://example.com/articles/1</p>',
 };
 
 describe('LogMailProvider', () => {
@@ -48,8 +48,8 @@ describe('LogMailProvider', () => {
       to: 'user@example.com',
       replyTo: 'dev@wepublish.ch',
       subject: 'Your login link',
-      body: 'Open https://example.com/login?token=abc',
-      links: ['https://example.com/login?token=abc'],
+      body: 'Open https://example.com/articles/1',
+      links: ['https://example.com/articles/1'],
     });
   });
 
@@ -60,7 +60,7 @@ describe('LogMailProvider', () => {
     await provider.sendMail({ ...sendProps, message: undefined });
 
     expect(info.mock.calls[0][0]).toMatchObject({
-      body: 'Open https://example.com/login?token=abc',
+      body: 'Open https://example.com/articles/1',
     });
   });
 
@@ -83,6 +83,25 @@ describe('LogMailProvider', () => {
     });
   });
 
+  it('blanks the login token in the logged body and links', async () => {
+    const provider = await makeProvider();
+    const info = jest.spyOn(provider['log'], 'info').mockImplementation();
+
+    await provider.sendMail({
+      ...sendProps,
+      message: `Log in: https://example.com/login?jwt=${jwt}&next=/abo`,
+      messageHtml: undefined,
+    });
+
+    const [payload] = info.mock.calls[0];
+
+    expect(JSON.stringify(payload)).not.toContain(jwt);
+    expect(payload).toMatchObject({
+      body: 'Log in: https://example.com/login?jwt=[redacted]&next=/abo',
+      links: ['https://example.com/login?jwt=[redacted]&next=/abo'],
+    });
+  });
+
   it('takes its name from the configuration', async () => {
     const provider = await makeProvider();
 
@@ -90,7 +109,15 @@ describe('LogMailProvider', () => {
   });
 });
 
+const jwt = 'eyJhbGciOiJFZERTQSJ9.eyJzdWIiOiJ1c2VyLTEifQ.c2lnbmF0dXJlLWJ5dGVz';
+
 describe('readableBody', () => {
+  it('blanks a token that is not part of a link', () => {
+    expect(readableBody({ message: `Your code is ${jwt}.` })).toBe(
+      'Your code is [redacted].'
+    );
+  });
+
   it('keeps plain text as it is', () => {
     expect(readableBody({ message: 'Hello there' })).toBe('Hello there');
   });
@@ -117,13 +144,13 @@ describe('extractLinks', () => {
   it('collects the links, which is what the log is read for', () => {
     const messageHtml =
       '<html xmlns="http://www.w3.org/1999/xhtml">' +
-      '<a href="https://example.com/login?token=abc">Log in</a>' +
+      '<a href="https://example.com/login">Log in</a>' +
       '<img src="https://example.com/logo.png"></html>';
 
     // The namespace and the logo are links too, and they would crowd out the
     // one link the log is opened for.
     expect(extractLinks({ messageHtml })).toEqual([
-      'https://example.com/login?token=abc',
+      'https://example.com/login',
     ]);
   });
 
@@ -131,6 +158,15 @@ describe('extractLinks', () => {
     expect(extractLinks({ message: 'Open https://example.com/x now' })).toEqual(
       ['https://example.com/x']
     );
+  });
+
+  it('blanks the value of a token parameter', () => {
+    const messageHtml =
+      '<a href="https://example.com/reset?token=abc123&lang=de">Reset</a>';
+
+    expect(extractLinks({ messageHtml })).toEqual([
+      'https://example.com/reset?token=[redacted]&lang=de',
+    ]);
   });
 
   it('reports each link once', () => {

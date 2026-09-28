@@ -8,6 +8,7 @@ const PRESERVED_COLUMNS = [
   'name',
   'type',
   'enabled',
+  'deletedAt',
 ];
 
 export const clearProviderConfig = (

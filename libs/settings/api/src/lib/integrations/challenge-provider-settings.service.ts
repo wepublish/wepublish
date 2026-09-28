@@ -42,7 +42,7 @@ export class ChallengeProviderSettingsService {
     filter?: SettingChallengeProviderFilter
   ): Promise<SettingChallengeProvider[]> {
     const data = await this.prisma.settingChallengeProvider.findMany({
-      where: filter,
+      where: { ...filter, deletedAt: null },
       orderBy: {
         createdAt: 'desc',
       },
@@ -143,7 +143,11 @@ export class ChallengeProviderSettingsService {
       );
     }
 
-    if ((await this.prisma.settingChallengeProvider.count()) === 1) {
+    if (
+      (await this.prisma.settingChallengeProvider.count({
+        where: { deletedAt: null },
+      })) === 1
+    ) {
       throw new BadRequestException(
         `Challenge provider ${id} is the only one configured and cannot be ` +
           `deleted: signup and comment forms would lose their captcha. ` +

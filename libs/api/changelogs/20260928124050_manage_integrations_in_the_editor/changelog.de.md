@@ -13,7 +13,7 @@ Bisher stand in einer Konfigurationsdatei, welche Anbieter es überhaupt gibt; �
 
 **Entfernen ist bewusst behutsam**
 
-Ein entfernter Anbieter verschwindet aus den Listen, sodass nichts Neues mehr damit eingerichtet werden kann — im Hintergrund läuft er aber weiter. Eine Zahlung, die gerade verarbeitet wird, bricht nicht ab, und eine Rechnung von letztem Jahr zeigt weiterhin den Anbieter, über den das Geld kam. Fügst du denselben Anbieter später wieder hinzu, ist seine Konfiguration unverändert vorhanden.
+Ein entfernter Anbieter verschwindet aus den Listen und wird nicht mehr angeboten: Seine Zahlungsart lässt sich für ein neues Abo nicht mehr wählen, und ein entferntes Tracking-Pixel wird neuen Artikeln nicht mehr hinzugefügt. Was schon besteht, läuft weiter — eine Zahlung, die gerade verarbeitet wird, bricht nicht ab, bestehende Abos verlängern sich weiter, Artikel behalten ihre Tracking-Pixel, und eine Rechnung von letztem Jahr zeigt weiterhin den Anbieter, über den das Geld kam. Fügst du denselben Anbieter später wieder hinzu, ist seine Konfiguration unverändert vorhanden.
 
 **Ein Typwechsel löscht die Konfiguration**
 

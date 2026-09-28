@@ -28,6 +28,7 @@ export const loadChallengeProvider = async (
   deps: ChallengeProviderDeps
 ): Promise<ChallengeProvider | null> => {
   const row = await deps.prisma.settingChallengeProvider.findFirst({
+    where: { deletedAt: null },
     orderBy: { id: 'asc' },
   });
 

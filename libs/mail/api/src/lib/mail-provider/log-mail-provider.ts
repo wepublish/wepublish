@@ -11,6 +11,13 @@ import {
 export const LOG_MAIL_BODY_MAX_LENGTH = 2000;
 export const LOG_MAIL_MAX_LINKS = 20;
 
+const REDACTED = '[redacted]';
+
+const redactSecrets = (text: string): string =>
+  text
+    .replace(/([?&](?:jwt|token)=)[^&#\s"'<>]+/gi, `$1${REDACTED}`)
+    .replace(/eyJ[\w-]+\.[\w-]+\.[\w-]+/g, REDACTED);
+
 export const readableBody = (props: {
   message?: string;
   messageHtml?: string;
@@ -23,7 +30,7 @@ export const readableBody = (props: {
       .replace(/&nbsp;/g, ' ')
       .replace(/&amp;/g, '&');
 
-  const collapsed = text.replace(/\s+/g, ' ').trim();
+  const collapsed = redactSecrets(text.replace(/\s+/g, ' ').trim());
 
   return collapsed.length > LOG_MAIL_BODY_MAX_LENGTH ?
       `${collapsed.slice(0, LOG_MAIL_BODY_MAX_LENGTH)}…`
@@ -41,7 +48,10 @@ export const extractLinks = (props: {
 
   // Only what a reader would click: an xmlns declaration and an image source
   // are links too, and they crowd out the one link the log is opened for.
-  return [...new Set([...hrefs, ...plain])].slice(0, LOG_MAIL_MAX_LINKS);
+  return [...new Set([...hrefs, ...plain].map(redactSecrets))].slice(
+    0,
+    LOG_MAIL_MAX_LINKS
+  );
 };
 
 export class LogMailProvider extends BaseMailProvider {

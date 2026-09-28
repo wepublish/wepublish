@@ -48,6 +48,7 @@ export const loadMailProvider = async (
   deps: MailProviderDeps
 ): Promise<BaseMailProvider | null> => {
   const row = await deps.prisma.settingMailProvider.findFirst({
+    where: { deletedAt: null },
     orderBy: { id: 'asc' },
   });
 

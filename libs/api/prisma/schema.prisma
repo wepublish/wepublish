@@ -1781,6 +1781,7 @@ model SettingMailProvider {
   lastLoadedAt DateTime @default(now()) @db.Timestamptz(3)
 
   type                  MailProviderType
+  deletedAt             DateTime?        @db.Timestamptz(3)
   name                  String?
   fromAddress           String?
   replyToAddress        String?
@@ -2015,9 +2016,10 @@ model SettingChallengeProvider {
   lastLoadedAt DateTime @default(now()) @db.Timestamptz(3)
   name         String?
 
-  type    ChallengeProviderType
-  secret  String?
-  siteKey String?
+  type      ChallengeProviderType
+  deletedAt DateTime?             @db.Timestamptz(3)
+  secret    String?
+  siteKey   String?
 
   @@map("settings.challengeprovider")
 }

@@ -101,4 +101,29 @@ describe('MailProviderSettingsService', () => {
       'is the only one configured'
     );
   });
+  test('lists only the providers that were not retired', async () => {
+    const findMany = jest
+      .spyOn(prisma.settingMailProvider, 'findMany')
+      .mockResolvedValue([existing]);
+
+    await service.mailProviderSettingsList({ type: 'SMTP' } as never);
+
+    expect(findMany).toHaveBeenCalledWith(
+      expect.objectContaining({ where: { type: 'SMTP', deletedAt: null } })
+    );
+  });
+
+  test('ignores retired providers when guarding the last one', async () => {
+    jest
+      .spyOn(prisma.settingMailProvider, 'findUnique')
+      .mockResolvedValue(existing);
+    const count = jest
+      .spyOn(prisma.settingMailProvider, 'count')
+      .mockResolvedValue(1);
+
+    await expect(service.deleteMailProviderSetting('mail')).rejects.toThrow(
+      'is the only one configured'
+    );
+    expect(count).toHaveBeenCalledWith({ where: { deletedAt: null } });
+  });
 });
