@@ -1,4 +1,3 @@
-import { ApolloError } from '@apollo/client';
 import { Meta } from '@storybook/nextjs-vite';
 import { FullNavigationFragment, Navigation } from '@wepublish/website/api';
 import { Footer } from './footer';
@@ -289,9 +288,7 @@ export const WithError = {
       navigations: null,
     },
     loading: false,
-    error: new ApolloError({
-      errorMessage: 'Foobar',
-    }),
+    error: new Error('Foobar'),
     slug: 'main',
     categorySlugs: [['guides', 'fokusthema'], ['about']],
     wepublishLogo: 'light',

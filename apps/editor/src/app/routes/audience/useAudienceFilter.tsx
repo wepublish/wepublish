@@ -1,10 +1,8 @@
-import { LazyQueryExecFunction } from '@apollo/client';
+import type { useLazyQuery } from '@apollo/client/react';
 import {
   DailySubscriptionStatsQuery,
-  Exact,
-  InputMaybe,
+  DailySubscriptionStatsQueryVariables,
   LocalStorageKey,
-  Scalars,
 } from '@wepublish/editor/api';
 import { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
 import { useLocation, useSearchParams } from 'react-router-dom';
@@ -26,13 +24,9 @@ import {
 } from './audience-filter-params';
 
 interface UseAudienceFilterProps {
-  fetchStats: LazyQueryExecFunction<
+  fetchStats: useLazyQuery.ExecFunction<
     DailySubscriptionStatsQuery,
-    Exact<{
-      start: Scalars['DateTime'];
-      end?: InputMaybe<Scalars['DateTime']>;
-      memberPlanIds?: InputMaybe<Array<Scalars['String']> | Scalars['String']>;
-    }>
+    DailySubscriptionStatsQueryVariables
   >;
   initialDateRange?: DateRangePresetKey;
   persist?: boolean;
@@ -109,7 +103,6 @@ export function useAudienceFilter({
           end: dateRange[1].toISOString(),
           memberPlanIds,
         },
-        fetchPolicy: 'cache-first',
       });
       return {
         dateRange,

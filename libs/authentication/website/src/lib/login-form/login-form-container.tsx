@@ -1,3 +1,4 @@
+import { useLazyQuery, useMutation } from '@apollo/client/react';
 import {
   useCheckLoginOtpLazyQuery,
   useLoginWithCredentialsMutation,

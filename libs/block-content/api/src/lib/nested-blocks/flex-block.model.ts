@@ -3,6 +3,7 @@ import { BaseBlock } from '../base-block.model';
 import { BlockType } from '../block-type.model';
 import type { BlockContentInput } from '../block-content.model';
 import { HasOneBlockContent, BlockContent } from '../block-content.model';
+import * as blockContentModel from '../block-content.model';
 
 @ObjectType()
 export class FlexAlignmentBlocks {
@@ -50,8 +51,7 @@ export class NestedBlockInput extends OmitType(
   @Field(() => FlexAlignmentBlocksInput)
   alignment!: FlexAlignmentBlocksInput;
 
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  @Field(() => require('../block-content.model').BlockContentInput, {
+  @Field(() => blockContentModel.BlockContentInput, {
     nullable: true,
   })
   block!: BlockContentInput | null;

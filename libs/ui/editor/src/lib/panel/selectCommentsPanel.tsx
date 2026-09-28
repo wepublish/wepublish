@@ -1,10 +1,9 @@
-import { ApolloError } from '@apollo/client';
+import { useLazyQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
   CommentBlockCommentFragment,
   FullCommentFragment,
   TagType,
-  useCommentListLazyQuery,
 } from '@wepublish/editor/api';
 import { toPlaintext } from '@wepublish/richtext';
 import { TFunction } from 'i18next';
@@ -63,7 +62,7 @@ const PermissionControlWrapper = styled(Table.Cell)`
   padding: 6px 0;
 `;
 
-const onErrorToast = (error: ApolloError) => {
+const onErrorToast = (error: Error) => {
   if (error?.message) {
     toaster.push(
       <RMessage
@@ -124,12 +123,12 @@ export function SelectCommentPanel({
           comments: commentFilter || [],
         },
         (data?.comments.nodes.filter(({ id }) => commentFilter?.includes(id)) ??
-          []) as CommentBlockCommentFragment[]
+          []) as unknown as CommentBlockCommentFragment[]
       );
     } else {
       onSelect(
         { item: itemId, tags: tagFilter || [] },
-        (data?.comments.nodes ?? []) as CommentBlockCommentFragment[]
+        (data?.comments.nodes ?? []) as unknown as CommentBlockCommentFragment[]
       );
     }
   };

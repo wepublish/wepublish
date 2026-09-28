@@ -1,4 +1,4 @@
-import { ApolloError } from '@apollo/client';
+import { useLazyQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { Poll, usePollsLazyQuery } from '@wepublish/editor/api';
 import { useEffect, useState } from 'react';
@@ -51,7 +51,7 @@ const DrawerBody = styled(Drawer.Body)`
   padding: 24px;
 `;
 
-const onErrorToast = (error: ApolloError) => {
+const onErrorToast = (error: Error) => {
   if (error?.message) {
     toaster.push(
       <Message

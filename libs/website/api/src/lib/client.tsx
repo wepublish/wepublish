@@ -1,21 +1,19 @@
+/// <reference path="../apollo-upload-client.d.ts" />
 import {
   ApolloClient,
   ApolloLink,
-  ApolloProvider,
-  DefaultOptions,
-  from,
   InMemoryCache,
   InMemoryCacheConfig,
   NormalizedCacheObject,
-  split,
   TypePolicies,
 } from '@apollo/client';
+import { ApolloProvider } from '@apollo/client/react';
 import { BatchHttpLink } from '@apollo/client/link/batch-http';
 import { mergeDeepRight } from 'ramda';
 import possibleTypes from './graphql';
 
 import { ComponentType, createElement, memo, useMemo } from 'react';
-import { createUploadLink } from 'apollo-upload-client';
+import UploadHttpLink from 'apollo-upload-client/UploadHttpLink.mjs';
 import { absoluteUrlToRelative } from './absolute-url-to-relative';
 import { omitDisabledBlocks } from './omit-disabled-blocks';
 import { omitSensitiveData } from './omit-sensitive-data';
@@ -32,13 +30,15 @@ declare global {
   }
 }
 
-let CACHED_CLIENT: ApolloClient<NormalizedCacheObject>;
+let CACHED_CLIENT: ApolloClient;
 
 const isFile = (value: unknown): boolean =>
   Boolean(
     (typeof File !== 'undefined' && value instanceof File) ||
       (typeof Blob !== 'undefined' && value instanceof Blob) ||
-      (value && typeof value === 'object' && Object.values(value).some(isFile))
+      (typeof value === 'object' &&
+        value !== null &&
+        Object.values(value).some(isFile))
   );
 
 const SSR_FETCH_TIMEOUT_MS = Number(process.env.SSR_FETCH_TIMEOUT_MS) || 10_000;
@@ -67,9 +67,9 @@ const createApiClient = (
     : {};
 
   // If operation is uploading a file, use the upload link, else use the batch http
-  const httpLink = split(
+  const httpLink = ApolloLink.split(
     ({ variables }) => isFile(variables),
-    createUploadLink({
+    new UploadHttpLink({
       uri: `${apiUrl}/v1`,
       ...ssrFetchOptions,
     }),
@@ -81,9 +81,13 @@ const createApiClient = (
     })
   );
 
-  const link = from([...links, httpLink]);
+  const link = ApolloLink.from([...links, httpLink]);
 
-  let defaultOptions: DefaultOptions = {
+  // Apollo Client 4 wants non-default `errorPolicy` defaults declared via
+  // `ApolloClient.DeclareDefaultOptions` module augmentation, but that changes
+  // the generic arity of every hook and breaks the codegen output. The cast
+  // keeps the AC3 behaviour (errors delivered alongside data) type-silently.
+  let defaultOptions = {
     query: {
       errorPolicy: 'all',
     },
@@ -91,7 +95,7 @@ const createApiClient = (
       fetchPolicy: 'cache-and-network',
       errorPolicy: 'all',
     },
-  };
+  } as unknown as ApolloClient.DefaultOptions;
 
   if (typeof window === 'undefined') {
     defaultOptions = {
@@ -103,11 +107,12 @@ const createApiClient = (
         fetchPolicy: 'network-only',
         errorPolicy: 'all',
       },
-    };
+    } as unknown as ApolloClient.DefaultOptions;
   }
 
   return new ApolloClient({
     link,
+
     cache: new InMemoryCache({
       possibleTypes: possibleTypes.possibleTypes,
       ...cacheConfig,
@@ -124,6 +129,7 @@ const createApiClient = (
         )
       ) as TypePolicies,
     }).restore(cache ?? {}),
+
     ssrMode: typeof window === 'undefined',
     assumeImmutableResults: true,
     ssrForceFetchDelay: 100,
@@ -143,7 +149,7 @@ export const getApiClient = (
     : CACHED_CLIENT;
 
   if (cache) {
-    const existingCache = client.extract();
+    const existingCache = client.extract() as NormalizedCacheObject;
     const data = mergeDeepRight(existingCache, cache) as NormalizedCacheObject;
 
     client.cache.restore(data);
@@ -197,7 +203,7 @@ export const createWithApiClient =
     });
 
 export function addClientCacheToProps<P extends object>(
-  client: ApolloClient<NormalizedCacheObject>,
+  client: ApolloClient,
   pageProps: P
 ) {
   return {

@@ -1,4 +1,4 @@
-import { ApolloError } from '@apollo/client';
+import { useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
   FullPoll,
@@ -165,7 +165,7 @@ export function AddSource({ poll, setLoading, onPollChange }: AddSourceProps) {
     setLoading(loading);
   }, [loading]);
 
-  const onErrorToast = (error: ApolloError) => {
+  const onErrorToast = (error: Error) => {
     toaster.push(
       <Message
         type="error"

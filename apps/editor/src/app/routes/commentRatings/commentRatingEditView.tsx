@@ -1,4 +1,4 @@
-import { ApolloError } from '@apollo/client';
+import { useLazyQuery, useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
   CommentRatingSystemAnswer,
@@ -57,7 +57,7 @@ const P = styled.p`
   gap: 8px;
 `;
 
-const showErrors = (error: ApolloError): void => {
+const showErrors = (error: Error): void => {
   toaster.push(
     <Message
       type="error"

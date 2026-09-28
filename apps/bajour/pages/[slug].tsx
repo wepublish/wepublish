@@ -1,3 +1,4 @@
+import { CombinedGraphQLErrors } from '@apollo/client';
 import { PageContainer } from '@wepublish/page/website';
 import { getApiUrl } from '@wepublish/utils/website';
 import {
@@ -37,7 +38,8 @@ export const getStaticPaths = () => ({
 });
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const { slug, id } = params || {};
+  const slug = params?.slug?.toString();
+  const id = params?.id?.toString();
   const client = getApiClient(getApiUrl(), []);
 
   const [page] = await Promise.all([
@@ -56,9 +58,9 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     }),
   ]);
 
-  const is404 = page.errors?.find(
-    ({ extensions }) => extensions?.status === 404
-  );
+  const is404 =
+    CombinedGraphQLErrors.is(page.error) &&
+    page.error.errors.find(({ extensions }) => extensions?.status === 404);
 
   if (is404) {
     return {

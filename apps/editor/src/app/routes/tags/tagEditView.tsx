@@ -1,4 +1,4 @@
-import { ApolloError } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client/react';
 import {
   MutationUpdateTagArgs,
   useTagQuery,
@@ -16,7 +16,7 @@ import { Form, Message, Schema, toaster } from 'rsuite';
 
 import { TagForm } from './tagForm';
 
-const onErrorToast = (error: ApolloError) => {
+const onErrorToast = (error: Error) => {
   toaster.push(
     <Message
       type="error"

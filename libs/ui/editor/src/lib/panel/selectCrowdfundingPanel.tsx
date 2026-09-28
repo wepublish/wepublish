@@ -1,4 +1,4 @@
-import { ApolloError } from '@apollo/client';
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { Crowdfunding, useCrowdfundingsQuery } from '@wepublish/editor/api';
 import { useTranslation } from 'react-i18next';
@@ -13,7 +13,7 @@ const DrawerBody = styled(Drawer.Body)`
   padding: 24px;
 `;
 
-const onErrorToast = (error: ApolloError) => {
+const onErrorToast = (error: Error) => {
   if (error?.message) {
     toaster.push(
       <Message
@@ -98,7 +98,9 @@ export function SelectCrowdfundingPanel({
                     circle
                     size="xs"
                     onClick={() => {
-                      onSelect(rowData as Crowdfunding);
+                      onSelect(
+                        rowData as CrowdfundingBlockValue['crowdfunding']
+                      );
                       onClose();
                     }}
                   />

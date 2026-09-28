@@ -1,6 +1,6 @@
-import { ApolloError } from '@apollo/client';
-import { usePaywallListQuery } from '@wepublish/editor/api';
-import { useMemo } from 'react';
+import { useQuery } from '@apollo/client/react';
+import { PaywallListDocument } from '@wepublish/editor/api';
+import { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Message, SelectPicker, toaster } from 'rsuite';
 
@@ -17,7 +17,7 @@ interface SelectPaywallsProps {
  * Error handling
  * @param error
  */
-const showErrors = (error: ApolloError): void => {
+const showErrors = (error: Error): void => {
   toaster.push(
     <Message
       type="error"

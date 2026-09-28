@@ -1,4 +1,5 @@
-import { MockedProvider, MockedResponse } from '@apollo/client/testing';
+import { MockLink } from '@apollo/client/testing';
+import { MockedProvider } from '@apollo/client/testing/react';
 import { render, screen, waitFor } from '@testing-library/react';
 import { SessionTokenContext } from '@wepublish/authentication/website';
 import { LoginWithJwtDocument } from '@wepublish/website/api';
@@ -13,7 +14,7 @@ const session = {
   createdAt: new Date('2026-01-01').toISOString(),
 };
 
-const loginMock = (jwt: string): MockedResponse => ({
+const loginMock = (jwt: string): MockLink.MockedResponse => ({
   request: {
     query: LoginWithJwtDocument,
     variables: { jwt },
@@ -37,7 +38,7 @@ const renderHandler = ({
   mocks = [],
 }: {
   hasUser?: boolean;
-  mocks?: MockedResponse[];
+  mocks?: MockLink.MockedResponse[];
 } = {}) => {
   const setToken = vi.fn().mockResolvedValue(undefined);
   const contextValue = [null, hasUser, setToken] as SessionContextValue;

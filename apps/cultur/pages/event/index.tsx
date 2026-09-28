@@ -1,3 +1,4 @@
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { Checkbox, FormControlLabel, FormGroup } from '@mui/material';
 import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
@@ -5,15 +6,14 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { EventListContainer } from '@wepublish/event/website';
 import { getApiUrl } from '@wepublish/utils/website';
 import {
-  addClientCacheToProps,
   EventListDocument,
   EventListQueryVariables,
   EventSort,
-  getApiClient,
   NavigationListDocument,
   PeerProfileDocument,
   SortOrder,
-  useEventListQuery,
+  addClientCacheToProps,
+  getApiClient,
 } from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';

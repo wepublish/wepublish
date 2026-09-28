@@ -1,6 +1,7 @@
 import 'rsuite/dist/rsuite.css';
 
-import { gql, useMutation } from '@apollo/client';
+import { gql } from '@apollo/client';
+import { useMutation } from '@apollo/client/react';
 import { css, Global } from '@emotion/react';
 import {
   BannerList,

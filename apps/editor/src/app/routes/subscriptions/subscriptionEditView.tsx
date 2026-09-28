@@ -1,4 +1,4 @@
-import { ApolloError } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { Alert } from '@mui/material';
 import {
@@ -512,7 +512,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
           showIcon
           closable
         >
-          {t('toast.updateError', { error: (e as ApolloError)?.message })}
+          {t('toast.updateError', { error: (e as Error)?.message })}
         </Message>,
         { duration: 6000 }
       );

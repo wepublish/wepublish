@@ -1,7 +1,7 @@
 import type { Mock } from 'vitest';
+import { useQuery } from '@apollo/client/react';
 import { render, screen } from '@testing-library/react';
 import type { ChangelogEntryFragment } from '@wepublish/editor/api';
-import { useChangelogEntriesQuery } from '@wepublish/editor/api';
 
 import {
   ChangelogActionRequired,
@@ -23,7 +23,7 @@ vi.mock('react-i18next', () => ({
   }),
 }));
 
-const mockedUseChangelogEntriesQuery = useChangelogEntriesQuery as Mock;
+const mockedUseQuery = useQuery as Mock;
 
 const entry = (
   overrides: Partial<ChangelogEntryFragment> = {}
@@ -44,7 +44,7 @@ const mockQuery = (
   nodes: ChangelogEntryFragment[] | undefined,
   loading = false
 ) => {
-  mockedUseChangelogEntriesQuery.mockReturnValue({
+  mockedUseQuery.mockReturnValue({
     data:
       nodes ?
         {
@@ -61,7 +61,7 @@ const mockQuery = (
 };
 
 beforeEach(() => {
-  mockedUseChangelogEntriesQuery.mockReset();
+  mockedUseQuery.mockReset();
 });
 
 describe('ChangelogDashboard', () => {

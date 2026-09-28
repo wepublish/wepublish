@@ -1,3 +1,4 @@
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { TeaserWrapper } from '@wepublish/block-content/website';
 import { useHotAndTrendingQuery } from '@wepublish/website/api';

@@ -1,16 +1,17 @@
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { EventListContainer } from '@wepublish/event/website';
 import { getApiUrl } from '@wepublish/utils/website';
-import { EventSort, SortOrder } from '@wepublish/website/api';
 import {
-  addClientCacheToProps,
   EventListDocument,
   EventListQueryVariables,
-  getApiClient,
+  EventSort,
   NavigationListDocument,
   PeerProfileDocument,
-  useEventListQuery,
+  SortOrder,
+  addClientCacheToProps,
+  getApiClient,
 } from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';

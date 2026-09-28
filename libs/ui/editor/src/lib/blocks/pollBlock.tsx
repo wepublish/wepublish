@@ -1,3 +1,4 @@
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { usePollQuery } from '@wepublish/editor/api';
 import { useEffect, useState } from 'react';

@@ -1,7 +1,6 @@
-import { ApolloError } from '@apollo/client';
+import { useMutation } from '@apollo/client/react';
 import {
   MutationCreateDiscountCodeArgs,
-  useCreateDiscountCodeMutation,
 } from '@wepublish/editor/api';
 import { CanCreateDiscountCode } from '@wepublish/permissions';
 import {
@@ -15,7 +14,7 @@ import { Form, Message, Schema, toaster } from 'rsuite';
 
 import { DiscountCodeForm } from './discountCodeForm';
 
-const onErrorToast = (error: ApolloError) => {
+const onErrorToast = (error: Error) => {
   toaster.push(
     <Message
       type="error"
@@ -49,10 +48,11 @@ const DiscountCodeCreateView = () => {
           }
         }
       },
-    });
+    }
+  );
 
   const loading = updateLoading;
-  const onSubmit = () => createDiscountCode({ variables: discountCode });
+  const onSubmit = () => createDiscountCode({ variables: discountCode! });
 
   const { StringType, DateType, NumberType } = Schema.Types;
   const validationModel = Schema.Model({

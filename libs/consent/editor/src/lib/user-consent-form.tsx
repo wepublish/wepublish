@@ -1,5 +1,4 @@
-import { ApolloError } from '@apollo/client';
-import { useUserListQuery } from '@wepublish/editor/api';
+import { useQuery } from '@apollo/client/react';
 import {
   MutationCreateUserConsentArgs,
   MutationUpdateUserConsentArgs,
@@ -26,7 +25,7 @@ type UserConsentFormProps = {
   onChange: (changes: Partial<UserConsentFormData>) => void;
 };
 
-const onErrorToast = (error: ApolloError) => {
+const onErrorToast = (error: Error) => {
   toaster.push(
     <Message
       type="error"

@@ -1,4 +1,5 @@
-import { MutationResult, QueryResult } from '@apollo/client';
+import type { OperationVariables } from '@apollo/client';
+import type { useMutation, useQuery } from '@apollo/client/react';
 import {
   ChallengeQuery,
   LoginWithCredentialsMutation,
@@ -20,13 +21,13 @@ export type BuilderLoginFormProps = {
   disablePasswordLogin?: boolean;
 
   loginWithEmail: Pick<
-    MutationResult<LoginWithEmailMutation>,
+    useMutation.Result<LoginWithEmailMutation>,
     'data' | 'loading' | 'error'
   >;
   onSubmitLoginWithEmail: (email: string) => void;
 
   loginWithCredentials: Pick<
-    MutationResult<LoginWithCredentialsMutation>,
+    useMutation.Result<LoginWithCredentialsMutation>,
     'data' | 'loading' | 'error'
   >;
   onSubmitLoginWithCredentials: (
@@ -69,9 +70,12 @@ export type BuilderRegistrationFormProps<
       emailRepeated: z.ZodString | z.ZodOptional<z.ZodString>;
     }>
   >;
-  challenge: Pick<QueryResult<ChallengeQuery>, 'data' | 'loading' | 'error'>;
+  challenge: Pick<
+    useQuery.Result<ChallengeQuery, OperationVariables, 'complete' | 'empty'>,
+    'data' | 'loading' | 'error'
+  >;
   register: Pick<
-    MutationResult<RegisterMutation>,
+    useMutation.Result<RegisterMutation>,
     'data' | 'loading' | 'error'
   >;
   className?: string;

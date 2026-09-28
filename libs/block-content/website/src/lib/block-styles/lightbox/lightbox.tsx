@@ -235,6 +235,7 @@ export const Lightbox = ({
           key={currentIndex}
           caption={current.caption}
           image={current.image}
+          linkUrl={null}
         />
 
         <LightboxCounter aria-live="polite">

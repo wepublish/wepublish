@@ -1,3 +1,4 @@
+import { useMutation, useQuery } from '@apollo/client/react';
 import {
   CreateCrowdfundingGoalInput,
   CrowdfundingGoal,
@@ -11,9 +12,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { CrowdfundingForm } from './crowdfunding-form';
 import { SingleViewTitle } from '@wepublish/ui/editor';
 import { Form, Message, Schema, toaster } from 'rsuite';
-import { ApolloError } from '@apollo/client';
 
-const showError = (error: ApolloError): void => {
+const showError = (error: Error): void => {
   toaster.push(
     <Message
       type="error"

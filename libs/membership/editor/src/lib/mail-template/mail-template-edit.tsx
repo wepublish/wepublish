@@ -1,5 +1,6 @@
+import { useLazyQuery, useMutation } from '@apollo/client/react';
 import { Typography } from '@mui/material';
-import { useApolloClient } from '@apollo/client';
+import { useApolloClient } from '@apollo/client/react';
 import {
   MailTemplateContext,
   MailTemplatePreviewDocument,

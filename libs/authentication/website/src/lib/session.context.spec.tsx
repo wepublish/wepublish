@@ -1,11 +1,15 @@
-import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
+import { ApolloClient, InMemoryCache, HttpLink } from '@apollo/client';
+import { ApolloProvider } from '@apollo/client/react';
 import { act, renderHook } from '@testing-library/react';
 import { PropsWithChildren } from 'react';
 
 import { SessionTokenContext, useUser } from './session.context';
 
 describe('useUser', () => {
-  const client = new ApolloClient({ cache: new InMemoryCache() });
+  const client = new ApolloClient({
+    cache: new InMemoryCache(),
+    link: new HttpLink({}),
+  });
   const setToken = vi.fn().mockResolvedValue(undefined);
 
   const wrapper = ({ children }: PropsWithChildren) => (
