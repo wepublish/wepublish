@@ -388,7 +388,7 @@ export type BlockTemplateContent_YouTubeVideoBlock_Fragment = (
 
 export type BlockTemplateContentFragment = BlockTemplateContent_BildwurfAdBlock_Fragment | BlockTemplateContent_BlockTemplateBlock_Fragment | BlockTemplateContent_BreakBlock_Fragment | BlockTemplateContent_CommentBlock_Fragment | BlockTemplateContent_CrowdfundingBlock_Fragment | BlockTemplateContent_EventBlock_Fragment | BlockTemplateContent_FacebookPostBlock_Fragment | BlockTemplateContent_FacebookVideoBlock_Fragment | BlockTemplateContent_FlexBlock_Fragment | BlockTemplateContent_HtmlBlock_Fragment | BlockTemplateContent_IFrameBlock_Fragment | BlockTemplateContent_ImageBlock_Fragment | BlockTemplateContent_ImageGalleryBlock_Fragment | BlockTemplateContent_InstagramPostBlock_Fragment | BlockTemplateContent_ListicleBlock_Fragment | BlockTemplateContent_MailchimpFormBlock_Fragment | BlockTemplateContent_PolisConversationBlock_Fragment | BlockTemplateContent_PollBlock_Fragment | BlockTemplateContent_QuoteBlock_Fragment | BlockTemplateContent_RichTextBlock_Fragment | BlockTemplateContent_SoundCloudTrackBlock_Fragment | BlockTemplateContent_StreamableVideoBlock_Fragment | BlockTemplateContent_SubscribeBlock_Fragment | BlockTemplateContent_TeaserGridBlock_Fragment | BlockTemplateContent_TeaserGridFlexBlock_Fragment | BlockTemplateContent_TeaserListBlock_Fragment | BlockTemplateContent_TeaserSlotsBlock_Fragment | BlockTemplateContent_TikTokVideoBlock_Fragment | BlockTemplateContent_TitleBlock_Fragment | BlockTemplateContent_TwitterTweetBlock_Fragment | BlockTemplateContent_UnknownBlock_Fragment | BlockTemplateContent_VimeoVideoBlock_Fragment | BlockTemplateContent_YouTubeVideoBlock_Fragment;
 
-export type NestedBlockTemplateBlockFragment = { __typename?: 'BlockTemplateBlock', disabled?: boolean | null, blockStyle?: string | null, blockStyleName?: string | null, type: Types.BlockType, templateID: string, template?: { __typename?: 'BlockTemplate', id: string, createdAt: string, modifiedAt: string, name: string } | null };
+export type NestedBlockTemplateBlockFragment = { __typename?: 'BlockTemplateBlock', disabled?: boolean | null, blockStyle?: string | null, blockStyleName?: string | null, type: Types.BlockType, templateId: string, template?: { __typename?: 'BlockTemplate', id: string, createdAt: string, modifiedAt: string, name: string } | null };
 
 export type FullBlockTemplateFragment = { __typename?: 'BlockTemplate', id: string, createdAt: string, modifiedAt: string, name: string, blocks: Array<(
     { __typename?: 'BildwurfAdBlock' }
@@ -555,7 +555,7 @@ export const NestedBlockTemplateBlockFragmentDoc = gql`
   blockStyle
   blockStyleName
   type
-  templateID
+  templateId
   template {
     id
     createdAt

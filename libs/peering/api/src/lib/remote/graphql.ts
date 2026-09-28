@@ -436,7 +436,7 @@ export type BlockTemplateBlock = BaseBlock & {
   blockStyleName?: Maybe<Scalars['String']>;
   disabled?: Maybe<Scalars['Boolean']>;
   template?: Maybe<BlockTemplate>;
-  templateID: Scalars['String'];
+  templateId: Scalars['String'];
   type: BlockType;
 };
 
@@ -444,7 +444,7 @@ export type BlockTemplateBlockInput = {
   blockStyle?: InputMaybe<Scalars['String']>;
   blockStyleName?: InputMaybe<Scalars['String']>;
   disabled?: InputMaybe<Scalars['Boolean']>;
-  templateID: Scalars['String'];
+  templateId: Scalars['String'];
 };
 
 export type BlockTemplateFilter = {

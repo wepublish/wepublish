@@ -588,7 +588,7 @@ fragment FullBlockTemplateBlock on BlockTemplateBlock {
   disabled
   blockStyle: blockStyleName
   type
-  templateID
+  templateId
 
   template {
     id

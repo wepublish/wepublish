@@ -947,7 +947,7 @@ export function mapBlockValueToBlockInput(
     case EditorBlockType.BlockTemplate: {
       return {
         blockTemplate: {
-          templateID: block.value.template?.id ?? '',
+          templateId: block.value.template?.id ?? '',
           blockStyle: block.value.blockStyle,
           disabled: block.value.disabled,
         },

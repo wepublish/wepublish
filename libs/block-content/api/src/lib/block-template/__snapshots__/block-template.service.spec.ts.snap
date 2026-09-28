@@ -22,7 +22,7 @@ exports[`BlockTemplateService should create a block template containing another 
     "data": {
       "blocks": [
         {
-          "templateID": "other",
+          "templateId": "other",
           "type": "blockTemplate",
         },
       ],
@@ -67,7 +67,7 @@ exports[`BlockTemplateService should update a block template containing a non ci
     "data": {
       "blocks": [
         {
-          "templateID": "referenced",
+          "templateId": "referenced",
           "type": "blockTemplate",
         },
       ],

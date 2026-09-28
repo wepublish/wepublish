@@ -113,6 +113,6 @@ export class BlockTemplateBlockResolver {
       return block.template;
     }
 
-    return this.blockTemplates.load(block.templateID);
+    return this.blockTemplates.load(block.templateId);
   }
 }

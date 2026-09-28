@@ -401,7 +401,6 @@ function SettingList() {
                 <IconButton
                   icon={<MdCancel />}
                   onClick={() => handleCancel()}
-                  className="actionButton"
                   type="reset"
                   size="lg"
                   appearance="default"
@@ -412,7 +411,6 @@ function SettingList() {
                 {/* save btn */}
                 <IconButton
                   icon={<MdSave />}
-                  className="actionButton"
                   type="submit"
                   size="lg"
                   appearance="primary"

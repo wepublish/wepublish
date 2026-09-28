@@ -123,7 +123,7 @@ fragment NestedBlockTemplateBlock on BlockTemplateBlock {
   blockStyle
   blockStyleName
   type
-  templateID
+  templateId
   template {
     id
     createdAt

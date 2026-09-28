@@ -115,7 +115,7 @@ export class BlockTemplateBlock extends BaseBlock<
   typeof BlockType.BlockTemplate
 > {
   @Field()
-  templateID!: string;
+  templateId!: string;
 
   @Field(() => BlockTemplate, { nullable: true })
   template?: BlockTemplate;

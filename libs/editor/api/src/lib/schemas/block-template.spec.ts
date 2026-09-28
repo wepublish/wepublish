@@ -154,7 +154,7 @@ describe('block template fragments', () => {
       contentSelections[CONTENT_FLEX_BLOCKS],
     ].forEach(selection =>
       expect(selection?.['BlockTemplateBlock']).toEqual(
-        expect.arrayContaining(['templateID', 'template'])
+        expect.arrayContaining(['templateId', 'template'])
       )
     );
   });

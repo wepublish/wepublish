@@ -482,7 +482,7 @@ export type FullTeaserSlotsBlockFragment = { __typename?: 'TeaserSlotsBlock', ti
     & FullTeaser_PageTeaser_Fragment
   ) | null> };
 
-export type FullBlockTemplateBlockFragment = { __typename?: 'BlockTemplateBlock', disabled?: boolean | null, type: Types.BlockType, templateID: string, blockStyle?: string | null, template?: { __typename?: 'BlockTemplate', id: string, name: string, blocks: Array<(
+export type FullBlockTemplateBlockFragment = { __typename?: 'BlockTemplateBlock', disabled?: boolean | null, type: Types.BlockType, templateId: string, blockStyle?: string | null, template?: { __typename?: 'BlockTemplate', id: string, name: string, blocks: Array<(
       { __typename?: 'BildwurfAdBlock' }
       & BlockWithoutTeaser_BildwurfAdBlock_Fragment
     ) | (
@@ -1345,7 +1345,7 @@ export const FullBlockTemplateBlockFragmentDoc = gql`
   disabled
   blockStyle: blockStyleName
   type
-  templateID
+  templateId
   template {
     id
     name

@@ -18,6 +18,7 @@ import {
   BlockValue,
   createCheckedPermissionComponent,
   EditorTemplate,
+  IconButton,
   mapBlockValueToBlockInput,
   NavigationBar,
   PermissionControl,
@@ -50,10 +51,6 @@ const Tag = styled(RTag, {
   shouldForwardProp: prop => prop !== 'stateColor',
 })<{ stateColor: string }>`
   background-color: ${({ stateColor }) => stateColor};
-`;
-
-const IconButton = styled(RIconButton)`
-  margin-left: 10px;
 `;
 
 const NameInput = styled(TypographicTextArea)``;
@@ -183,7 +180,7 @@ function BlockTemplateEditView() {
         />,
         { placement: 'bottomEnd' }
       );
-      await Promise.all([refetch({ id: blockTemplateId })]);
+      await refetch({ id: blockTemplateId });
     } else {
       const { data } = await createBlockTemplate({ variables: input });
       if (data) {
@@ -244,7 +241,6 @@ function BlockTemplateEditView() {
                   qualifyingPermissions={[CanCreateBlockTemplate.id]}
                 >
                   <IconButton
-                    className="actionButton"
                     size="lg"
                     icon={<MdSave />}
                     disabled={isDisabled}
@@ -258,7 +254,6 @@ function BlockTemplateEditView() {
                 >
                   <Badge className={hasChanged ? 'unsaved' : 'saved'}>
                     <IconButton
-                      className="actionButton"
                       size="lg"
                       icon={<MdSave />}
                       disabled={isDisabled}

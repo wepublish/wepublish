@@ -5,8 +5,8 @@ import { BlockType } from '../block-type.model';
 import { BlockTemplateDataloaderService } from './block-template-dataloader.service';
 import { BlockTemplateService } from './block-template.service';
 
-const templateBlock = (templateID: string): BlockContentInput => ({
-  [BlockType.BlockTemplate]: { templateID },
+const templateBlock = (templateId: string): BlockContentInput => ({
+  [BlockType.BlockTemplate]: { templateId },
 });
 
 const flexBlock = (...blocks: BlockContentInput[]): BlockContentInput => ({
@@ -18,9 +18,9 @@ const flexBlock = (...blocks: BlockContentInput[]): BlockContentInput => ({
   },
 });
 
-const storedTemplateBlock = (templateID: string) => ({
+const storedTemplateBlock = (templateId: string) => ({
   type: BlockType.BlockTemplate,
-  templateID,
+  templateId,
 });
 
 const storedFlexBlock = (...blocks: unknown[]) => ({

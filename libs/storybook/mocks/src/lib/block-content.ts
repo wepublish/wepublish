@@ -821,9 +821,9 @@ export const mockTabbedContentTeaserSlots: MockTabbedContent = ({
 });
 
 export const mockBlockTemplateBlock = ({
-  templateID = '1234-1234',
+  templateId = '1234-1234',
   template = {
-    id: templateID,
+    id: templateId,
     name: 'Block Template',
     blocks: [mockTitleBlock(), mockRichTextBlock()],
   },
@@ -833,7 +833,7 @@ export const mockBlockTemplateBlock = ({
     __typename: 'BlockTemplateBlock',
     blockStyle: null,
     disabled: false,
-    templateID,
+    templateId,
     template,
   }) as FullBlockTemplateBlockFragment;
 

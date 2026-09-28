@@ -115,8 +115,8 @@ export class BlockTemplateService {
     return blocks.map(mapBlockUnionMap) as unknown as Prisma.InputJsonValue;
   }
 
-  private async assertNoCircularReference(id: string, templateIDs: string[]) {
-    let referencedIDs = new Set(templateIDs);
+  private async assertNoCircularReference(id: string, templateIds: string[]) {
+    let referencedIDs = new Set(templateIds);
     const visitedIDs = new Set<string>();
 
     while (referencedIDs.size) {
@@ -199,7 +199,7 @@ function getInputTemplateIDs(blocks: BlockContentInput[]): string[] {
     const templateBlock = block[BlockType.BlockTemplate];
 
     if (templateBlock) {
-      return [templateBlock.templateID];
+      return [templateBlock.templateId];
     }
 
     const nestedBlocks = block[BlockType.FlexBlock]?.blocks
@@ -212,7 +212,7 @@ function getInputTemplateIDs(blocks: BlockContentInput[]): string[] {
 
 type StoredBlock = {
   type?: BlockType;
-  templateID?: string;
+  templateId?: string;
   blocks?: ({ block?: StoredBlock } | null)[];
 };
 
@@ -223,7 +223,7 @@ function getStoredTemplateIDs(blocks: unknown): string[] {
 
   return (blocks as (StoredBlock | null)[]).flatMap(block => {
     if (block?.type === BlockType.BlockTemplate) {
-      return block.templateID ? [block.templateID] : [];
+      return block.templateId ? [block.templateId] : [];
     }
 
     if (block?.type === BlockType.FlexBlock) {

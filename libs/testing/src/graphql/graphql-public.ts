@@ -435,7 +435,7 @@ export type BlockTemplateBlock = BaseBlock & {
   blockStyleName?: Maybe<Scalars['String']>;
   disabled?: Maybe<Scalars['Boolean']>;
   template?: Maybe<BlockTemplate>;
-  templateID: Scalars['String'];
+  templateId: Scalars['String'];
   type: BlockType;
 };
 
@@ -443,7 +443,7 @@ export type BlockTemplateBlockInput = {
   blockStyle?: InputMaybe<Scalars['String']>;
   blockStyleName?: InputMaybe<Scalars['String']>;
   disabled?: InputMaybe<Scalars['Boolean']>;
-  templateID: Scalars['String'];
+  templateId: Scalars['String'];
 };
 
 export type BlockTemplateFilter = {
@@ -4456,6 +4456,7 @@ export type PageFilter = {
   publicationDateFrom?: InputMaybe<DateFilter>;
   publicationDateTo?: InputMaybe<DateFilter>;
   published?: InputMaybe<Scalars['Boolean']>;
+  slug?: InputMaybe<Scalars['String']>;
   tags?: InputMaybe<Array<Scalars['String']>>;
   title?: InputMaybe<Scalars['String']>;
 };

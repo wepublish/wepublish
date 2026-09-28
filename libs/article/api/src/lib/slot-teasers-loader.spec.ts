@@ -279,10 +279,10 @@ const mockManualTeaserSlotsBlock = (articleID: string) =>
     type: BlockType.TeaserSlots,
   }) as unknown as BaseBlock<BlockType>;
 
-const mockBlockTemplateBlock = (templateID: string) =>
+const mockBlockTemplateBlock = (templateId: string) =>
   ({
     type: BlockType.BlockTemplate,
-    templateID,
+    templateId,
   }) as unknown as BaseBlock<BlockType>;
 
 let mockTemplates: Record<string, { id: string; blocks: unknown[] }> = {};

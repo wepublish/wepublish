@@ -210,11 +210,11 @@ export class SlotTeasersLoader {
 
     if (isBlockTemplateBlock(block)) {
       // circular templates are prevented when saving, this is just a safeguard
-      if (visitedTemplateIDs.includes(block.templateID)) {
+      if (visitedTemplateIDs.includes(block.templateId)) {
         return { ...block, template: null } as unknown as BlockTemplateBlock;
       }
 
-      const template = await this.blockTemplates.load(block.templateID);
+      const template = await this.blockTemplates.load(block.templateId);
 
       if (!template) {
         return block;
@@ -225,7 +225,7 @@ export class SlotTeasersLoader {
           (template.blocks as unknown as BaseBlock<BlockType>[]).map(nested =>
             this.expandBlockTemplates(nested, [
               ...visitedTemplateIDs,
-              block.templateID,
+              block.templateId,
             ])
           )
         )
