@@ -95,7 +95,7 @@ export const withJwtHandler = <P extends object>(
 
     const refreshStore = useCallback(
       () =>
-        client.resetStore().catch(err => {
+        client.refetchQueries({ include: 'active' }).catch(err => {
           console.warn(
             '[jwt] refreshing the store after login failed:',
             err?.message ?? err

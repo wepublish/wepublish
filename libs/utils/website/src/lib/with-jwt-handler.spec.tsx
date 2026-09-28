@@ -147,12 +147,13 @@ describe('withJwtHandler', () => {
     });
 
     it('keeps the login when refreshing the store fails afterwards', async () => {
-      const resetStore = vi
-        .spyOn(ApolloClient.prototype, 'resetStore')
-        .mockRejectedValue(
-          new Error(
-            'Store reset while query was in flight (not completed in link chain)'
-          )
+      const refetchQueries = vi
+        .spyOn(ApolloClient.prototype, 'refetchQueries')
+        .mockImplementation(() =>
+          Object.assign(Promise.reject(new Error('Refetch failed')), {
+            queries: [],
+            results: [],
+          })
         );
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
@@ -166,7 +167,7 @@ describe('withJwtHandler', () => {
       sendMessage(opener, { previewJwt: 'preview-token' });
 
       await waitFor(() => {
-        expect(resetStore).toHaveBeenCalled();
+        expect(refetchQueries).toHaveBeenCalledWith({ include: 'active' });
       });
       await new Promise(resolve => setTimeout(resolve, 0));
 
@@ -175,7 +176,7 @@ describe('withJwtHandler', () => {
       );
       expect(getPreviewHandshakeState()).toBe('succeeded');
 
-      resetStore.mockRestore();
+      refetchQueries.mockRestore();
       warn.mockRestore();
     });
 
