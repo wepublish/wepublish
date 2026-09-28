@@ -114,6 +114,17 @@ const seedSettings = (prisma: PrismaClient) =>
     }),
     prisma.setting.upsert({
       where: {
+        name: SettingName.PLACEHOLDER_EMAIL_PATTERNS,
+      },
+      update: {},
+      create: {
+        name: SettingName.PLACEHOLDER_EMAIL_PATTERNS,
+        value: '',
+        settingRestriction: { inputLength: 1000 },
+      },
+    }),
+    prisma.setting.upsert({
+      where: {
         name: SettingName.MAKE_NEW_SUBSCRIBERS_API_PUBLIC,
       },
       update: {},

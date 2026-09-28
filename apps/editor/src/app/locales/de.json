@@ -1737,6 +1737,7 @@
       "loginCodeMaxUses": "Persönlicher Login-Link: maximale Verwendungen",
       "loginCodeValidDays": "Persönlicher Login-Link: Gültigkeitsdauer",
       "loginCodeSecondFactor": "Persönlicher Login-Link: zweiter Faktor",
+      "placeholderEmailPatterns": "Platzhalter-E-Mail-Adressen (Muster)",
       "loginCodeSecondFactorOptions": {
         "none": "Keiner",
         "postalCode": "Postleitzahl",
@@ -1770,6 +1771,7 @@
         "loginCodeMaxUses": "Wie oft ein persönlicher Login-Link (Brief-Code, {{purl}}) verwendet werden darf, bevor er erlischt. Standard: 5.",
         "loginCodeValidDays": "Wie viele Tage ein persönlicher Login-Link gültig bleibt. Standard: 90.",
         "loginCodeSecondFactor": "Angabe aus dem Brief, die zusätzlich abgefragt wird, wenn jemand nach dem Login per Login-Link eine echte E-Mail-Adresse hinterlegt (nur bei Konten mit Platzhalter-E-Mail). Schützt vor erratenen Codes – Postleitzahl empfohlen. Nach 5 Fehlversuchen wird die Sitzung beendet.",
+        "placeholderEmailPatterns": "Kommagetrennte Textmuster, z. B. @platzhalter.zwoelf.ch. Konten, deren E-Mail-Adresse eines der Muster enthält, gelten als Platzhalter: an sie wird keine E-Mail versendet, und ihre Sitzungen bleiben eingeschränkt, bis eine echte Adresse bestätigt ist. Gilt zusätzlich zum Muster des Brief-Anbieters.",
         "passwordToken": "Wie lange (in Minuten) der per E-Mail gesendete Link zum Zurücksetzen des Passworts gültig ist. Die Standardeinstellung ist ein Tag (1440 / 60 / 24).",
         "peerToken": "Zeit in Millisekunden, nach der wir nicht mehr versuchen, Peer-Artikel abzurufen. Der Standardwert ist 3 Sekunden.",
         "newArticlePeering": "Beeinflusst nicht schon erstellte Artikel",

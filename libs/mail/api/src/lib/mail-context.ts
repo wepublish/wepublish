@@ -6,7 +6,10 @@ import { MailController, MailControllerConfig } from './mail.controller';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 import { SecretCrypto } from '@wepublish/settings/api';
 import { composeMail, MailTemplateContent } from './mail-renderer';
-import { matchesPlaceholderEmail } from '@wepublish/utils/api';
+import {
+  loadPlaceholderEmailPatterns,
+  matchesPlaceholderEmail,
+} from '@wepublish/utils/api';
 import {
   BuildMailDataOptions,
   EMPTY_PURL_DATA,
@@ -177,17 +180,7 @@ export class MailContext implements MailContextInterface {
     return this.kv.getOrLoadNs(
       'placeholder-email',
       'patterns',
-      async () => {
-        const settings = await this.prisma.settingLetterProvider.findMany({
-          select: { placeholderEmailContains: true },
-        });
-
-        return settings
-          .map(({ placeholderEmailContains }) =>
-            placeholderEmailContains?.trim()
-          )
-          .filter((pattern): pattern is string => !!pattern);
-      },
+      () => loadPlaceholderEmailPatterns(this.prisma),
       60
     );
   }

@@ -1,4 +1,4 @@
-import { renderQrSvg } from '@wepublish/template/api';
+import { renderQrSvg } from '@wepublish/utils/api';
 
 export interface PurlData {
   purl: string;

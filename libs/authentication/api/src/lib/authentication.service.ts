@@ -4,7 +4,10 @@ import { AuthSessionType, AuthSession } from './auth-session';
 import { unselectPassword } from './unselect-password';
 import { addPredefinedPermissions } from '@wepublish/permissions/api';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
-import { matchesPlaceholderEmail } from '@wepublish/utils/api';
+import {
+  loadPlaceholderEmailPatterns,
+  matchesPlaceholderEmail,
+} from '@wepublish/utils/api';
 import { isSessionRestricted } from './session-restriction';
 
 @Injectable()
@@ -18,17 +21,7 @@ export class AuthenticationService {
     return this.kv.getOrLoadNs(
       'placeholder-email',
       'patterns',
-      async () => {
-        const settings = await this.prisma.settingLetterProvider.findMany({
-          select: { placeholderEmailContains: true },
-        });
-
-        return settings
-          .map(({ placeholderEmailContains }) =>
-            placeholderEmailContains?.trim()
-          )
-          .filter((pattern): pattern is string => !!pattern);
-      },
+      () => loadPlaceholderEmailPatterns(this.prisma),
       60
     );
   }

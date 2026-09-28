@@ -27,6 +27,7 @@ import {
   Form,
   Grid,
   IconButton,
+  Input,
   InputGroup,
   NumberInput,
   Modal,
@@ -161,6 +162,11 @@ function SettingList() {
       value: LoginCodeSecondFactor.None,
       name: SettingName.LoginCodeSecondFactor,
       label: 'settingList.loginCodeSecondFactor',
+    },
+    [SettingName.PlaceholderEmailPatterns]: {
+      value: '',
+      name: SettingName.PlaceholderEmailPatterns,
+      label: 'settingList.placeholderEmailPatterns',
     },
     [SettingName.PeeringTimeoutMs]: {
       value: 0,
@@ -1031,6 +1037,39 @@ function SettingList() {
                                 value:
                                   (value as LoginCodeSecondFactor | null) ??
                                   LoginCodeSecondFactor.None,
+                              });
+                            }}
+                          />
+                        </Form.Group>
+
+                        <Form.Group
+                          controlId={SettingName.PlaceholderEmailPatterns}
+                        >
+                          <Form.Label>
+                            {t(
+                              settings[SettingName.PlaceholderEmailPatterns]
+                                .label
+                            )}
+                            <SettingInfo
+                              text={t(
+                                'settingList.warnings.placeholderEmailPatterns'
+                              )}
+                            />
+                          </Form.Label>
+
+                          <FormControl
+                            name={SettingName.PlaceholderEmailPatterns}
+                            accepter={Input}
+                            value={
+                              settings[SettingName.PlaceholderEmailPatterns]
+                                .value ?? ''
+                            }
+                            onChange={(value: string) => {
+                              setSetting({
+                                ...settings[
+                                  SettingName.PlaceholderEmailPatterns
+                                ],
+                                value,
                               });
                             }}
                           />

@@ -1,3 +1,4 @@
+import { loadPlaceholderEmailPatterns } from '@wepublish/utils/api';
 import { Injectable } from '@nestjs/common';
 import {
   MailChannel,
@@ -467,13 +468,7 @@ export class MailSendRecipientService {
       return null;
     }
 
-    const settings = await this.prisma.settingLetterProvider.findMany({
-      select: { placeholderEmailContains: true },
-    });
-
-    const patterns = settings
-      .map(({ placeholderEmailContains }) => placeholderEmailContains?.trim())
-      .filter((pattern): pattern is string => !!pattern);
+    const patterns = await loadPlaceholderEmailPatterns(this.prisma);
 
     if (audience.emailFilter === MailEmailFilter.placeholder) {
       return {

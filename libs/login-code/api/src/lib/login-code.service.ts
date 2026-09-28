@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { PrismaClient, UserLoginCode } from '@prisma/client';
 import { PurlData, PurlOrigin, PurlProvider } from '@wepublish/mail/api';
 import { SecretCrypto, SettingName } from '@wepublish/settings/api';
-import { renderQrSvg } from '@wepublish/template/api';
+import { renderQrSvg } from '@wepublish/utils/api';
 import { addDays } from 'date-fns';
 import {
   LOGIN_CODE_MODULE_OPTIONS,

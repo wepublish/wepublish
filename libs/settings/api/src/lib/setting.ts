@@ -17,6 +17,7 @@ export enum SettingName {
   LOGIN_CODE_MAX_USES = 'loginCodeMaxUses',
   LOGIN_CODE_VALID_DAYS = 'loginCodeValidDays',
   LOGIN_CODE_SECOND_FACTOR = 'loginCodeSecondFactor',
+  PLACEHOLDER_EMAIL_PATTERNS = 'placeholderEmailPatterns',
   PEERING_TIMEOUT_MS = 'peeringTimeoutInMs',
   MAIL_PROVIDER_NAME = 'mailProviderName',
 

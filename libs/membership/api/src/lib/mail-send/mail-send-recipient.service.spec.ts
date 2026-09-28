@@ -989,6 +989,7 @@ describe('audience filtering (semantics)', () => {
       const prisma = {
         user: { count: jest.fn(async () => 0) },
         subscription: { count: jest.fn(async () => 0) },
+        setting: { findUnique: jest.fn(async () => null) },
         settingLetterProvider: {
           findMany: jest.fn(async () =>
             patterns.map(placeholderEmailContains => ({
@@ -1012,6 +1013,7 @@ describe('audience filtering (semantics)', () => {
       const prisma = {
         user: { count: jest.fn(async () => 5) },
         settingLetterProvider: { findMany: jest.fn() },
+        setting: { findUnique: jest.fn() },
       };
 
       await makeService(prisma).count({

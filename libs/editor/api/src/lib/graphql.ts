@@ -6724,6 +6724,7 @@ export enum SettingName {
   NewArticlePaywall = 'NEW_ARTICLE_PAYWALL',
   NewArticlePeering = 'NEW_ARTICLE_PEERING',
   PeeringTimeoutMs = 'PEERING_TIMEOUT_MS',
+  PlaceholderEmailPatterns = 'PLACEHOLDER_EMAIL_PATTERNS',
   ResetPasswordJwtExpiresMin = 'RESET_PASSWORD_JWT_EXPIRES_MIN',
   SendLoginJwtExpiresMin = 'SEND_LOGIN_JWT_EXPIRES_MIN',
   ShowPendingWhenNotPublished = 'SHOW_PENDING_WHEN_NOT_PUBLISHED',

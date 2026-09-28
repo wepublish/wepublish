@@ -24,6 +24,7 @@ describe('AuthenticationService', () => {
     jest
       .spyOn(prisma.settingLetterProvider, 'findMany')
       .mockResolvedValue([] as any);
+    jest.spyOn(prisma.setting, 'findUnique').mockResolvedValue(null as any);
   });
 
   it('should return a token session', async () => {
