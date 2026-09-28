@@ -21,7 +21,6 @@ exports[`SettingList > renders successfully 1`] = `
         class="emotion-4 emotion-5"
       >
         <button
-          class="actionButton rs-btn-icon rs-btn"
           data-appearance="default"
           data-disabled="true"
           data-placement="start"
@@ -57,7 +56,6 @@ exports[`SettingList > renders successfully 1`] = `
           </span>
         </button>
         <button
-          class="actionButton rs-btn-icon rs-btn"
           data-appearance="primary"
           data-disabled="true"
           data-placement="start"
