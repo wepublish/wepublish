@@ -1,3 +1,4 @@
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { Box, CircularProgress, Typography } from '@mui/material';
 import { useExternalAppQuery } from '@wepublish/editor/api';

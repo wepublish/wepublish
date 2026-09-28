@@ -1,3 +1,4 @@
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { usePeerProfileQuery } from '@wepublish/editor/api';
 import { useTranslation } from 'react-i18next';

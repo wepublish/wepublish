@@ -1,13 +1,14 @@
+import type { MockedResult } from './mocked-result';
 import { SubscribeBlockContext } from '@wepublish/block-content/website';
 import { ComponentProps, ComponentType } from 'react';
 import { action } from 'storybook/actions';
 import {
-  CreateSubscriptionInfoQueryResult,
-  RegisterMutationResult,
-  ResubscribeMutationResult,
-  SubscribeMutationResult,
-  UpgradeMutationResult,
-  UpgradeSubscriptionInfoQueryResult,
+  CreateSubscriptionInfoQuery,
+  RegisterMutation,
+  ResubscribeMutation,
+  SubscribeMutation,
+  UpgradeMutation,
+  UpgradeSubscriptionInfoQuery,
 } from '@wepublish/website/api';
 
 type SubscribeDecoratorProps = Partial<
@@ -19,18 +20,12 @@ type SubscribeDecoratorProps = Partial<
     | 'redirectPages'
     | 'stripeClientSecret'
   > & {
-    resubscribeResult: Pick<ResubscribeMutationResult, 'data' | 'error'>;
-    subscribeResult: Pick<SubscribeMutationResult, 'data' | 'error'>;
-    registerResult: Pick<RegisterMutationResult, 'data' | 'error'>;
-    upgradeResult: Pick<UpgradeMutationResult, 'data' | 'error'>;
-    upgradeInfoResult: Pick<
-      UpgradeSubscriptionInfoQueryResult,
-      'data' | 'error'
-    >;
-    subscribeInfoResult: Pick<
-      CreateSubscriptionInfoQueryResult,
-      'data' | 'error'
-    >;
+    resubscribeResult: MockedResult<ResubscribeMutation>;
+    subscribeResult: MockedResult<SubscribeMutation>;
+    registerResult: MockedResult<RegisterMutation>;
+    upgradeResult: MockedResult<UpgradeMutation>;
+    upgradeInfoResult: MockedResult<UpgradeSubscriptionInfoQuery>;
+    subscribeInfoResult: MockedResult<CreateSubscriptionInfoQuery>;
   }
 >;
 

@@ -1,3 +1,4 @@
+import { useLazyQuery, useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
   Button as MuiButton,
@@ -268,7 +269,7 @@ function PageEditor() {
   const [
     loadRevisionPreview,
     { data: previewData, loading: isPreviewLoading },
-  ] = usePageRevisionPreviewLazyQuery({ errorPolicy: 'all' });
+  ] = useLazyQuery(PageRevisionPreviewDocument, { errorPolicy: 'all' });
 
   function handlePreviewRevision(revisionId: string) {
     setPreviewRevisionId(revisionId);

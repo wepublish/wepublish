@@ -1,4 +1,4 @@
-import { ApolloError } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client/react';
 import {
   FullConsentFragment,
   MutationCreateConsentArgs,
@@ -30,7 +30,7 @@ export const ConsentEditView = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
-  const onErrorToast = (error: ApolloError, slug?: string) => {
+  const onErrorToast = (error: Error, slug?: string) => {
     if (error.message.includes('Unique constraint')) {
       toaster.push(
         <Message

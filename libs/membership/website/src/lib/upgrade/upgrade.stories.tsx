@@ -1,4 +1,3 @@
-import { ApolloError } from '@apollo/client';
 import { action } from 'storybook/actions';
 import { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { expect, fn, userEvent, within } from 'storybook/test';
@@ -215,9 +214,7 @@ export const WithUpgradeError: StoryObj<typeof Upgrade> = {
     onUpgrade: (...args: unknown[]) => {
       action('onUpgrade')(args);
 
-      throw new ApolloError({
-        errorMessage: 'Something went wrong.',
-      });
+      throw new Error('Something went wrong.');
     },
   },
   play: async ctx => {

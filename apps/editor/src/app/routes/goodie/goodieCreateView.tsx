@@ -1,7 +1,6 @@
-import { ApolloError } from '@apollo/client';
+import { useMutation } from '@apollo/client/react';
 import {
   MutationCreateGoodieArgs,
-  useCreateGoodieMutation,
 } from '@wepublish/editor/api';
 import { CanCreateGoodie } from '@wepublish/permissions';
 import {
@@ -15,7 +14,7 @@ import { Form, Message, Schema, toaster } from 'rsuite';
 
 import { GoodieForm } from './goodieForm';
 
-const onErrorToast = (error: ApolloError) => {
+const onErrorToast = (error: Error) => {
   toaster.push(
     <Message
       type="error"
@@ -49,9 +48,9 @@ const GoodieCreateView = () => {
         } else {
           navigate(`./../edit/${data.createGoodie.id}`);
         }
-      }
-    },
-  });
+      },
+    }
+  );
 
   const loading = updateLoading;
   const onSubmit = () => createGoodie({ variables: goodie });

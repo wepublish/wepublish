@@ -165,7 +165,7 @@ export function WepArticle({
 
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
 
-  const article = data?.article as ArticleType | undefined;
+  const article = data?.article;
 
   return (
     <ArticleWrapper
@@ -178,7 +178,7 @@ export function WepArticle({
 
       {!article && !loading && <ContentUnavailable />}
 
-      {article && <ArticleSEO article={article} />}
+      {article && <ArticleSEO article={article as ArticleType} />}
 
       {article && (
         <Blocks

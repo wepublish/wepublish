@@ -1,7 +1,7 @@
 import { ApolloLink, DefaultContext } from '@apollo/client';
 import { AuthTokenStorageKey } from '@wepublish/authentication/website';
 import { getCookie } from 'cookies-next';
-import { Observable } from 'zen-observable-ts';
+import { from, mergeMap, Observable } from 'rxjs';
 
 export const authLink = new ApolloLink((operation, forward) => {
   const { token: cookieToken } = JSON.parse(
@@ -64,34 +64,11 @@ export const ssrAuthLink = (
     return chainOperation(promise, forward);
   });
 
-// Some zen-observables helpers, apollo soon switches to rxjs which has those built in
+// Apollo Client 4 links are rxjs based
 
-function fromPromise<T>(promise: Promise<T>): Observable<T> {
-  return new Observable<T>(observer => {
-    promise
-      .then(value => {
-        observer.next(value);
-        observer.complete();
-      })
-      .catch(err => observer.error(err));
-  });
-}
-
-// your function
 function chainOperation<T, R>(
   promise: Promise<T>,
   forward: (op: T) => Observable<R>
 ): Observable<R> {
-  return new Observable<R>(observer => {
-    fromPromise(promise).subscribe({
-      next: op => {
-        forward(op).subscribe({
-          next: val => observer.next(val),
-          error: err => observer.error(err),
-          complete: () => observer.complete(),
-        });
-      },
-      error: err => observer.error(err),
-    });
-  });
+  return from(promise).pipe(mergeMap(op => forward(op)));
 }

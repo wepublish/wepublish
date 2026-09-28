@@ -1,5 +1,5 @@
-import { ApolloError } from '@apollo/client';
-import { Poll, usePollsQuery } from '@wepublish/editor/api';
+import { useQuery } from '@apollo/client/react';
+import { Poll, PollsDocument } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
   CreatePollBtn,
@@ -32,7 +32,7 @@ import { RowDataType } from 'rsuite-table';
 
 const { Column, HeaderCell, Cell: RCell } = RTable;
 
-const onErrorToast = (error: ApolloError) => {
+const onErrorToast = (error: Error) => {
   if (error?.message) {
     toaster.push(
       <Message
@@ -58,8 +58,13 @@ function PollList() {
       take: limit,
       skip: (page - 1) * limit,
     },
-    onError: onErrorToast,
   });
+
+  useEffect(() => {
+    if (error) {
+      onErrorToast(error);
+    }
+  }, [error]);
 
   /**
    * Refetch data

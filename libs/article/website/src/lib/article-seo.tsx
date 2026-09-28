@@ -95,7 +95,7 @@ export const getArticleSEO = (article: Article) => {
         '@context': 'https://schema.org',
         '@type': 'Person',
         image:
-          (firstAuthor?.image as FullImageFragment)?.s ??
+          (firstAuthor?.image as unknown as FullImageFragment)?.s ??
           firstAuthor?.image?.url,
         jobTitle: firstAuthor?.jobTitle,
         name: firstAuthor?.name,

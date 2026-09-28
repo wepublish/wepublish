@@ -17,7 +17,6 @@ import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { formatCurrency, roundUpTo5Cents } from '../formatters/format-currency';
 
-import { ApolloError } from '@apollo/client';
 import { ApiAlert } from '@wepublish/errors/website';
 import { FormHelperText } from '@mui/material';
 import { MdCheck, MdError } from 'react-icons/md';
@@ -565,7 +564,7 @@ export const Upgrade = ({
 
         {error && (
           <ApiAlert
-            error={error as ApolloError}
+            error={error as Error}
             severity="error"
           />
         )}

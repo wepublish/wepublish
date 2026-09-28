@@ -1,4 +1,3 @@
-import { ApolloError } from '@apollo/client';
 import { Meta, StoryObj } from '@storybook/nextjs-vite';
 import {
   BaseNavigationLink,
@@ -390,9 +389,7 @@ export const WithError = {
       navigations: null,
     },
     loading: false,
-    error: new ApolloError({
-      errorMessage: 'Foobar',
-    }),
+    error: new Error('Foobar'),
   },
 };
 

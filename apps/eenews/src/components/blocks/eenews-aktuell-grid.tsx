@@ -1,3 +1,4 @@
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { Typography } from '@mui/material';
 import { isFilledTeaser } from '@wepublish/block-content/website';

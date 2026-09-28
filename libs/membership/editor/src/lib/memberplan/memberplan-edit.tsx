@@ -1,4 +1,4 @@
-import { ApolloError } from '@apollo/client';
+import { useLazyQuery, useMutation, useQuery } from '@apollo/client/react';
 import {
   CreateMemberPlanMutationVariables,
   Currency,
@@ -27,7 +27,7 @@ import { Form, Message, Schema, toaster } from 'rsuite';
 import { MemberPlanForm } from './memberplan-form';
 import { usePaymentMethodListQuery } from '@wepublish/editor/api';
 
-const showErrors = (error: ApolloError): void => {
+const showErrors = (error: Error): void => {
   toaster.push(
     <Message
       type="error"

@@ -1,4 +1,4 @@
-import { Article } from '@wepublish/website/api';
+import { Article, SlimArticleFragment } from '@wepublish/website/api';
 import type { Feed, Item } from 'feed';
 import { getArticleSEO } from '@wepublish/article/website';
 import { isRichTextBlock } from '@wepublish/block-content/website';
@@ -28,8 +28,9 @@ export const generateFeed =
     },
     'generator'
   >) =>
-  async (articles: Article[]) => {
-    const items = articles.map(async (article): Promise<Item> => {
+  async (articles: (Article | SlimArticleFragment)[]) => {
+    const items = articles.map(async (slimArticle): Promise<Item> => {
+      const article = slimArticle as Article;
       const seo = getArticleSEO(article);
 
       const content = await toHtml({

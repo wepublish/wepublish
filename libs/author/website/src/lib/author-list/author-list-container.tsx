@@ -1,4 +1,5 @@
-import { useAuthorListQuery } from '@wepublish/website/api';
+import { useQuery } from '@apollo/client/react';
+import { AuthorListDocument } from '@wepublish/website/api';
 import {
   BuilderAuthorListProps,
   BuilderContainerProps,

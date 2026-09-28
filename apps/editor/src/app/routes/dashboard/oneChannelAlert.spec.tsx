@@ -1,9 +1,7 @@
 import type { Mock } from 'vitest';
+import { useQuery } from '@apollo/client/react';
 import { render, screen } from '@testing-library/react';
-import {
-  OneChannelConnectionState,
-  useOneChannelStatusQuery,
-} from '@wepublish/editor/api';
+import { OneChannelConnectionState } from '@wepublish/editor/api';
 
 import { OneChannelAlert } from './oneChannelAlert';
 
@@ -21,7 +19,7 @@ vi.mock('react-i18next', () => ({
   }),
 }));
 
-const mockedUseOneChannelStatusQuery = useOneChannelStatusQuery as Mock;
+const mockedUseQuery = useQuery as Mock;
 
 const mockStatus = (
   status: {
@@ -30,7 +28,7 @@ const mockStatus = (
     lastSuccessAt?: string | null;
   } | null
 ) => {
-  mockedUseOneChannelStatusQuery.mockReturnValue({
+  mockedUseQuery.mockReturnValue({
     data:
       status ?
         {

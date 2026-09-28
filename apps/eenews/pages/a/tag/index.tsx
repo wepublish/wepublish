@@ -1,18 +1,18 @@
-import { ApolloError, ApolloQueryResult } from '@apollo/client';
+import { useQuery } from '@apollo/client/react';
 import { getApiUrl } from '@wepublish/utils/website';
 import {
-  addClientCacheToProps,
   ArticleListDocument,
   ArticleListQuery,
   ArticleListQueryVariables,
-  getApiClient,
   NavigationListDocument,
   PeerProfileDocument,
   TagListDocument,
   TagListQuery,
   TagQuery,
-  useArticleListQuery,
+  addClientCacheToProps,
+  getApiClient,
 } from '@wepublish/website/api';
+import { BuilderTagProps } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
 import { z } from 'zod';
@@ -29,7 +29,7 @@ const pageSchema = z.object({
 type ApolloResult<T> = {
   data: T | undefined;
   loading: boolean;
-  error: ApolloError | undefined;
+  error: Error | undefined;
 };
 
 function toApolloResult<T>(
@@ -68,10 +68,8 @@ export default function DossierIndex({
 
   return (
     <EenewsTagPage
-      tag={tagResult as unknown as ApolloQueryResult<TagQuery>}
-      articles={
-        articlesResult as unknown as ApolloQueryResult<ArticleListQuery>
-      }
+      tag={tagResult as BuilderTagProps['tag']}
+      articles={articlesResult as BuilderTagProps['articles']}
       variables={variables}
       onVariablesChange={next => {
         const nextPage =

@@ -1,3 +1,4 @@
+import { useQuery } from '@apollo/client/react';
 import { NextPageContext } from 'next';
 import { useRouter } from 'next/router';
 import { ssrAuthLink } from '../auth-link';

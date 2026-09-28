@@ -1,9 +1,8 @@
-import { ApolloError } from '@apollo/client';
+import { useQuery } from '@apollo/client/react';
 import {
   Event,
   EventFilter,
   TagType,
-  useEventListQuery,
 } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
@@ -58,7 +57,7 @@ export function EventEndsAtView({
   return <>{t('event.list.endsAtNone')}</>;
 }
 
-const onErrorToast = (error: ApolloError) => {
+const onErrorToast = (error: Error) => {
   if (error?.message) {
     toaster.push(
       <Message
@@ -92,8 +91,13 @@ function EventListView() {
     refetch,
   } = useEventListQuery({
     variables: eventListVariables,
-    onError: onErrorToast,
   });
+
+  useEffect(() => {
+    if (error) {
+      onErrorToast(error);
+    }
+  }, [error]);
 
   useEffect(() => {
     refetch(eventListVariables);

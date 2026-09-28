@@ -90,7 +90,7 @@ export const CountrySelect = forwardRef<
       )}
       renderInput={params => {
         const option = countryOptions.find(
-          ({ label }) => label === params.inputProps.value
+          ({ label }) => label === params.slotProps.htmlInput.value
         );
 
         return (
@@ -99,23 +99,25 @@ export const CountrySelect = forwardRef<
             label={t('user.form.country')}
             error={error}
             helperText={helperText}
-            InputProps={{
-              ...params.InputProps,
-              startAdornment: !!option && (
-                <InputAdornment position="start">
-                  <img
-                    loading="lazy"
-                    width="20"
-                    srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.webp 2x`}
-                    src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.webp`}
-                    alt={option.label}
-                  />
-                </InputAdornment>
-              ),
-            }}
-            inputProps={{
-              ...params.inputProps,
-              autoComplete: 'nothing', // disable autocomplete and autofill
+            slotProps={{
+              input: {
+                ...params.slotProps.input,
+                startAdornment: !!option && (
+                  <InputAdornment position="start">
+                    <img
+                      loading="lazy"
+                      width="20"
+                      srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.webp 2x`}
+                      src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.webp`}
+                      alt={option.label}
+                    />
+                  </InputAdornment>
+                ),
+              },
+              htmlInput: {
+                ...params.slotProps.htmlInput,
+                autoComplete: 'nothing', // disable autocomplete and autofill
+              },
             }}
           />
         );

@@ -1,4 +1,4 @@
-import { ApolloError } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client/react';
 import {
   TinyUserFragment,
   useDeleteUserMutation,
@@ -184,7 +184,7 @@ function UserList() {
       setConfirmationDialogOpen(false);
       refetch();
     } catch (e) {
-      if (e instanceof ApolloError) {
+      if (e instanceof Error) {
         if (e.message.includes('Foreign key constraint')) {
           toaster.push(
             <Message

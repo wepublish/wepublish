@@ -1,10 +1,10 @@
+import { CombinedGraphQLErrors } from '@apollo/client';
 import { ArticleContainer } from '@wepublish/article/website';
 import { revalidateFor, getApiUrl } from '@wepublish/utils/website';
 import {
   addClientCacheToProps,
   ArticleDocument,
   ArticleListDocument,
-  CommentItemType,
   CommentListDocument,
   getApiClient,
   NavigationListDocument,
@@ -38,7 +38,8 @@ const externalArticleRedirects: Record<string, string> = {
 };
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const { id, slug } = params || {};
+  const id = params?.id?.toString();
+  const slug = params?.slug?.toString();
 
   if (typeof slug === 'string' && externalArticleRedirects[slug]) {
     return {
@@ -67,9 +68,9 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     }),
   ]);
 
-  const is404 = article.errors?.find(
-    ({ extensions }) => extensions?.status === 404
-  );
+  const is404 =
+    CombinedGraphQLErrors.is(article.error) &&
+    article.error.errors.find(({ extensions }) => extensions?.status === 404);
 
   if (is404) {
     return {
@@ -93,7 +94,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         query: CommentListDocument,
         variables: {
           itemId: article.data.article.id,
-          itemType: CommentItemType.Article,
         },
       }),
     ]);

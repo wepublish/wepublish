@@ -101,7 +101,6 @@
     "@testing-library/react": "16.1.0",
     "@tiptap/extension-collaboration": "^3.13.0",
     "@tiptap/y-tiptap": "^3.0.1",
-    "@types/apollo-upload-client": "^14.1.0",
     "@types/cors": "~2.8.12",
     "@types/cron": "^2.0.1",
     "@types/email-templates": "^8.0.3",
@@ -216,7 +215,7 @@
     }
   },
   "dependencies": {
-    "@apollo/client": "^3.12.8",
+    "@apollo/client": "^4.3.1",
     "@apollo/gateway": "^2.14.4",
     "@apollo/server": "^5.5.1",
     "@apollo/subgraph": "^2.15.1",
@@ -289,7 +288,7 @@
     "@uiw/react-codemirror": "^4.25.10",
     "@uiw/react-color": "^2.10.1",
     "abort-controller": "^3.0.0",
-    "apollo-upload-client": "^16.0.0",
+    "apollo-upload-client": "^20.0.0",
     "async": "^3.2.6",
     "axios": "^1.0.0",
     "bexio": "^3.6.1",

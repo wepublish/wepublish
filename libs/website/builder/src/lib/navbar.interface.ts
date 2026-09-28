@@ -1,10 +1,18 @@
-import { QueryResult } from '@apollo/client';
+import type { OperationVariables } from '@apollo/client';
+import type { useQuery } from '@apollo/client/react';
 import { ButtonProps } from '@wepublish/ui';
 import { FullImageFragment, NavigationListQuery } from '@wepublish/website/api';
 import { PropsWithChildren, ReactNode } from 'react';
 
 export type BuilderNavbarProps = PropsWithChildren<
-  Pick<QueryResult<NavigationListQuery>, 'data' | 'loading' | 'error'> & {
+  Pick<
+    useQuery.Result<
+      NavigationListQuery,
+      OperationVariables,
+      'complete' | 'empty'
+    >,
+    'data' | 'loading' | 'error'
+  > & {
     className?: string;
     slug: string;
     iconSlug?: string;

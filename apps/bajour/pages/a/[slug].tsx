@@ -1,3 +1,5 @@
+import { useQuery } from '@apollo/client/react';
+import { CombinedGraphQLErrors } from '@apollo/client';
 import styled from '@emotion/styled';
 import { css } from '@mui/material';
 import {
@@ -13,7 +15,6 @@ import { Comment } from '@wepublish/comments/website';
 import { ContentWrapper } from '@wepublish/content/website';
 import { revalidateFor, getApiUrl } from '@wepublish/utils/website';
 import {
-  addClientCacheToProps,
   Article as ArticleType,
   ArticleDocument,
   ArticleListDocument,
@@ -21,7 +22,6 @@ import {
   CommentItemType,
   CommentListDocument,
   CommentSort,
-  getApiClient,
   HotAndTrendingDocument,
   NavigationListDocument,
   PeerProfileDocument,
@@ -29,7 +29,8 @@ import {
   SettingListDocument,
   SortOrder,
   Tag,
-  useArticleQuery,
+  addClientCacheToProps,
+  getApiClient,
 } from '@wepublish/website/api';
 import {
   BuilderArticleListProps,
@@ -185,7 +186,8 @@ export const getStaticPaths = () => ({
 });
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const { id, slug } = params || {};
+  const id = params?.id?.toString();
+  const slug = params?.slug?.toString();
   const client = getApiClient(getApiUrl(), []);
 
   const [article] = await Promise.all([
@@ -213,9 +215,9 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     }),
   ]);
 
-  const is404 = article.errors?.find(
-    ({ extensions }) => extensions?.status === 404
-  );
+  const is404 =
+    CombinedGraphQLErrors.is(article.error) &&
+    article.error.errors.find(({ extensions }) => extensions?.status === 404);
 
   if (is404) {
     return {
@@ -249,10 +251,11 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       client.query({
         query: PrimaryBannerDocument,
         variables: {
-          document: {
-            type: BannerDocumentType.Article,
-            id: article.data.article.id,
-          },
+          documentType: BannerDocumentType.Article,
+          documentId: article.data.article.id,
+          loggedIn: false,
+          hasSubscription: false,
+          hasPaywallBypass: false,
         },
       }),
     ]);

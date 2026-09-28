@@ -1,6 +1,7 @@
+import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { css } from '@mui/material';
-import { useApolloClient } from '@apollo/client';
+import { useApolloClient } from '@apollo/client/react';
 import { ContentWrapper } from '@wepublish/content/website';
 import {
   InvoiceListContainer,

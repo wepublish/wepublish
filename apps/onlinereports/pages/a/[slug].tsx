@@ -1,3 +1,5 @@
+import { useQuery } from '@apollo/client/react';
+import { CombinedGraphQLErrors } from '@apollo/client';
 import styled from '@emotion/styled';
 import {
   ArticleContainer,
@@ -6,21 +8,19 @@ import {
 import { CommentListContainer } from '@wepublish/comments/website';
 import { revalidateFor, getApiUrl } from '@wepublish/utils/website';
 import {
-  addClientCacheToProps,
   ArticleDocument,
   ArticleListDocument,
   ArticleSort,
   CommentItemType,
   CommentListDocument,
-  getApiClient,
   NavigationListDocument,
   PeerProfileDocument,
   SortOrder,
   Tag,
   TagListDocument,
   TagType,
-  useArticleQuery,
-  useTagListQuery,
+  addClientCacheToProps,
+  getApiClient,
 } from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';
@@ -115,7 +115,8 @@ export const getStaticPaths = () => ({
 });
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const { id, slug } = params || {};
+  const id = params?.id?.toString();
+  const slug = params?.slug?.toString();
   const client = getApiClient(getApiUrl(), []);
 
   const [article] = await Promise.all([
@@ -134,9 +135,9 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     }),
   ]);
 
-  const is404 = article.errors?.find(
-    ({ extensions }) => extensions?.status === 404
-  );
+  const is404 =
+    CombinedGraphQLErrors.is(article.error) &&
+    article.error.errors.find(({ extensions }) => extensions?.status === 404);
 
   if (is404) {
     return {

@@ -1,4 +1,4 @@
-import { ApolloError, ApolloQueryResult } from '@apollo/client';
+import { useMutation } from '@apollo/client/react';
 import {
   Crowdfunding,
   CrowdfundingsQuery,
@@ -12,10 +12,10 @@ import { Button, Message, Modal, toaster } from 'rsuite';
 type DeleteCrowdfundingProps = {
   crowdfunding: Crowdfunding | undefined;
   onClose(): void;
-  onDelete(): Promise<ApolloQueryResult<CrowdfundingsQuery>>;
+  onDelete(): Promise<unknown>;
 };
 
-const onErrorToast = (error: ApolloError) => {
+const onErrorToast = (error: Error) => {
   toaster.push(
     <Message
       type="error"

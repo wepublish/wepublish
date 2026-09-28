@@ -1,4 +1,3 @@
-import { ApolloError } from '@apollo/client';
 import { action } from 'storybook/actions';
 import { useArgs, useReducer } from 'storybook/preview-api';
 import { Meta, StoryObj } from '@storybook/nextjs-vite';
@@ -129,9 +128,7 @@ export const CommentingWithError: StoryObj = {
   args: {
     ...Commenting.args,
     add: {
-      error: new ApolloError({
-        errorMessage: 'Something went wrong.',
-      }),
+      error: new Error('Something went wrong.'),
     },
   },
   play: async ctx => {
@@ -157,9 +154,7 @@ export const EditingWithError: StoryObj = {
   args: {
     ...Editing.args,
     edit: {
-      error: new ApolloError({
-        errorMessage: 'Something went wrong.',
-      }),
+      error: new Error('Something went wrong.'),
     },
   },
   play: async ctx => {

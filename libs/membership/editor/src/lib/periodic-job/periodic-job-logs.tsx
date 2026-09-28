@@ -1,3 +1,4 @@
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { PeriodicJob, usePeriodicJobLogsQuery } from '@wepublish/editor/api';
 import { NotificationItem, NotificationSeverity } from '@wepublish/ui/editor';

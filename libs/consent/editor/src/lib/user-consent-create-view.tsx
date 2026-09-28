@@ -1,7 +1,6 @@
-import { ApolloError } from '@apollo/client';
+import { useMutation } from '@apollo/client/react';
 import {
   MutationCreateUserConsentArgs,
-  useCreateUserConsentMutation,
 } from '@wepublish/editor/api';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -11,7 +10,7 @@ import { Form, Message, Schema, toaster } from 'rsuite';
 import { SingleViewTitle } from '@wepublish/ui/editor';
 import { UserConsentForm } from './user-consent-form';
 
-const onErrorToast = (error: ApolloError, slug?: string) => {
+const onErrorToast = (error: Error, slug?: string) => {
   if (error.message.includes('Unique constraint')) {
     toaster.push(
       <Message
