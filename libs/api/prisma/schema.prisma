@@ -1763,6 +1763,7 @@ enum MailProviderType {
   MAILCHIMP @map("mailchimp")
   SLACK     @map("slack")
   SMTP      @map("smtp")
+  LOG       @map("log")
 }
 
 model SettingMailProvider {

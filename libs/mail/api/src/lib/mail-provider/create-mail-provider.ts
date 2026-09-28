@@ -2,6 +2,7 @@ import { MailProviderType, PrismaClient } from '@prisma/client';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 import bodyParser from 'body-parser';
 import { BaseMailProvider } from './base-mail-provider';
+import { LogMailProvider } from './log-mail-provider';
 import { MailchimpMailProvider } from './mailchimp-mail-provider';
 import { MailgunMailProvider } from './mailgun-mail-provider';
 import { SlackMailProvider } from './slack-mail-provider';
@@ -36,6 +37,8 @@ export const createMailProvider = (
       return new SlackMailProvider({ id, prisma, kv });
     case MailProviderType.SMTP:
       return new SmtpMailProvider({ id, prisma, kv });
+    case MailProviderType.LOG:
+      return new LogMailProvider({ id, prisma, kv });
     default:
       throw new Error(`Unknown mail provider type defined: ${type}`);
   }

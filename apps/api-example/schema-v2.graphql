@@ -1825,6 +1825,7 @@ type MailProviderModel {
 }
 
 enum MailProviderType {
+  LOG
   MAILCHIMP
   MAILGUN
   SLACK

@@ -4,6 +4,7 @@ export * from './lib/mail-provider/mailgun-mail-provider';
 export * from './lib/mail-provider/mailchimp-mail-provider';
 export * from './lib/mail-provider/smtp-mail-provider';
 export * from './lib/mail-provider/slack-mail-provider';
+export * from './lib/mail-provider/log-mail-provider';
 export * from './lib/mail-provider/create-mail-provider';
 export * from './lib/mail-provider/fake-mail-provider';
 

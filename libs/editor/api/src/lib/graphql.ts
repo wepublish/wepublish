@@ -1882,6 +1882,7 @@ export type MailProviderModel = {
 };
 
 export enum MailProviderType {
+  Log = 'LOG',
   Mailchimp = 'MAILCHIMP',
   Mailgun = 'MAILGUN',
   Slack = 'SLACK',
