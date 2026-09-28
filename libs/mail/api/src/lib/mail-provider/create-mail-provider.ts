@@ -44,7 +44,6 @@ export const createMailProvider = (
 export const loadMailProvider = async (
   deps: MailProviderDeps
 ): Promise<BaseMailProvider | null> => {
-  // A singleton: whichever row exists is the active one.
   const row = await deps.prisma.settingMailProvider.findFirst({
     orderBy: { id: 'asc' },
   });

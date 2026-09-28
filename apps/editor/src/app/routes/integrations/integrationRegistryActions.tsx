@@ -11,11 +11,6 @@ export type ProviderTypeOption = {
   value: string;
 };
 
-/**
- * Removing a provider is a soft delete: the row stays and the provider keeps
- * being instantiated, so payments already under way still resolve. Only the
- * lists forget about it.
- */
 export function DeleteIntegrationButton({
   id,
   mutation,
@@ -85,10 +80,6 @@ export function DeleteIntegrationButton({
   );
 }
 
-/**
- * Adding a provider whose id was removed before brings the old row back with
- * its configuration untouched, which is worth saying out loud.
- */
 export function AddIntegrationButton({
   types,
   mutation,
@@ -122,7 +113,6 @@ export function AddIntegrationButton({
     try {
       const { data } = await create({ variables: { id, type, name: id } });
 
-      // A row that predates this call is one that was deleted and is now back.
       const created = Object.values(data ?? {})[0] as
         | { createdAt?: string }
         | undefined;
@@ -221,12 +211,6 @@ export function AddIntegrationButton({
   );
 }
 
-/**
- * Some integrations are looked up by an id that is fixed in the API — the AI
- * provider under `v0`, analytics under `google-analytics`. There is nothing to
- * choose when creating one, and an id of the operator's choosing would simply
- * never be read, so this creates that one row and nothing else.
- */
 export function CreateFixedIntegrationButton({
   id,
   type,

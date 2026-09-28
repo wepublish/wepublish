@@ -204,8 +204,6 @@ import { reconcileProviderRegistry } from './reconcile-provider-registry';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (config: ConfigService) => {
-        // Only the fallback for when the setting row is missing; the live
-        // value is the SESSION_TTL_DAYS setting, read per session.
         const MS_PER_DAY = 24 * 60 * 60 * 1000;
         const sessionTTL = MS_PER_DAY * 7;
         const jwtPrivateKey = (config.get('JWT_PRIVATE_KEY') || '').replace(

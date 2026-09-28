@@ -52,8 +52,6 @@ describe('MailProviderSettingsService', () => {
       .spyOn(prisma.settingMailProvider, 'update')
       .mockResolvedValue(existing);
 
-    // The form still carries the old provider's fields when the type is
-    // switched, so the payload deliberately contains Mailgun values.
     await service.updateMailProviderSetting({
       id: 'mail',
       type: 'SMTP',
@@ -67,7 +65,6 @@ describe('MailProviderSettingsService', () => {
 
     expect(data['type']).toBe('SMTP');
     expect(data['name']).toBe('Local SMTP');
-    // Not one of them may survive as a setting of an SMTP provider.
     expect(data['apiKey']).toBeNull();
     expect(data['mailgun_mailDomain']).toBeNull();
     expect(data['mailgun_baseDomain']).toBeNull();

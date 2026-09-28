@@ -28,19 +28,6 @@ const SYNC_TYPES: Record<string, SyncProviderType> = {
   mailchimp: SyncProviderType.MAILCHIMP,
 };
 
-/**
- * Hands the provider registry over from the config file to the database, once.
- *
- * Until now the YAML decided which providers existed and the tables were only
- * a side effect of that — which means a provider dropped from the YAML left its
- * row behind. Reading the tables from now on would put those back on offer, so
- * the first boot after the upgrade marks whatever the YAML no longer lists as
- * deleted and records that it has done so. They keep running, as deleted
- * providers do; they are simply no longer offered.
- *
- * Once every environment has booted once, the registry blocks can be deleted
- * from the config files and this can go with them.
- */
 export const reconcileProviderRegistry = async (
   prisma: PrismaClient,
   configFilePath: string | undefined
@@ -79,8 +66,6 @@ export const reconcileProviderRegistry = async (
     .map(provider => provider.id)
     .filter(Boolean);
 
-  // An empty section means the deployment never configured that kind of
-  // provider, not that it wants every one of them retired.
   if (paymentIds.length) {
     const { count } = await prisma.settingPaymentProvider.updateMany({
       where: { id: { notIn: paymentIds }, deletedAt: null },
@@ -127,8 +112,6 @@ export const reconcileProviderRegistry = async (
     );
   }
 
-  // The session lifetime moves the same way: whatever the config file said is
-  // what the installation keeps, rather than silently dropping to the default.
   const sessionTTLDays = configFile.general?.sessionTTLDays;
 
   if (typeof sessionTTLDays === 'number' && sessionTTLDays > 0) {
@@ -145,7 +128,6 @@ export const reconcileProviderRegistry = async (
     logger.log(`Took the session lifetime of ${sessionTTLDays} day(s) over`);
   }
 
-  // Sync providers were never instantiated from the YAML, only seeded from it.
   for (const provider of configFile.syncProviders ?? []) {
     await upsertProvider(
       prisma,
@@ -180,8 +162,6 @@ const upsertProvider = async (
     return;
   }
 
-  // The three delegates take different enums for `type`, so they only line up
-  // behind a shape that says what this function actually uses.
   await (prisma[delegate] as unknown as ProviderDelegate).upsert({
     where: { id },
     create: { id, name: id, type },

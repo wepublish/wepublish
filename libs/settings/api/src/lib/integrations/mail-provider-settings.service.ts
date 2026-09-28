@@ -107,18 +107,10 @@ export class MailProviderSettingsService {
       Object.entries(updateData).filter(([_, value]) => value !== undefined)
     );
 
-    // Switching type makes every stored credential meaningless and, worse,
-    // silently wrong: a Mailgun key left behind on a provider that now claims
-    // to be SMTP. Clear the whole configuration and keep only what this call
-    // supplies.
     const typeChanged =
       filteredUpdateData['type'] !== undefined &&
       filteredUpdateData['type'] !== existingSetting.type;
 
-    // Only the type and the display name survive. The form still carries the
-    // old provider's fields when the type is switched, so merging the payload
-    // over the cleared columns would put the very credentials back that this
-    // is meant to remove.
     const data =
       typeChanged ?
         {

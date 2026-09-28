@@ -43,8 +43,6 @@ export class TrackingPixelProviderSettingsService {
   async trackingPixelSettingsList(
     filter?: SettingTrackingPixelFilter
   ): Promise<SettingTrackingPixel[]> {
-    // A deleted provider is gone from the lists; that is the entire effect of
-    // deleting one.
     const data = await this.prisma.settingTrackingPixel.findMany({
       where: { ...filter, deletedAt: null },
       orderBy: {
@@ -75,9 +73,6 @@ export class TrackingPixelProviderSettingsService {
   ): Promise<SettingTrackingPixel> {
     const output = this.encryptSecretsIfPresent(input);
 
-    // Deleting only hides a provider, so adding one back is an undelete rather
-    // than a name clash. The configuration it had is left exactly as it was —
-    // the row comes back the way the operator left it.
     const returnValue = await this.prisma.settingTrackingPixel.upsert({
       where: { id: output.id },
       create: output,
@@ -150,11 +145,6 @@ export class TrackingPixelProviderSettingsService {
     return returnValue;
   }
 
-  /**
-   * Pixels already reported are the record a collecting society bills against,
-   * which is why deleting is a soft delete. Removing a provider that is still
-   * reporting is worth knowing about all the same.
-   */
   private async countUsage(id: string): Promise<number> {
     const method = await this.prisma.trackingPixelMethod.findUnique({
       where: { trackingPixelProviderID: id },

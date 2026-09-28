@@ -45,8 +45,6 @@ export class PaymentProviderSettingsService {
   async paymentProviderSettingsList(
     filter?: SettingPaymentProviderFilter
   ): Promise<SettingPaymentProvider[]> {
-    // A deleted provider is gone from the lists; that is the entire effect of
-    // deleting one.
     const data = await this.prisma.settingPaymentProvider.findMany({
       where: { ...filter, deletedAt: null },
       orderBy: {
@@ -77,9 +75,6 @@ export class PaymentProviderSettingsService {
   ): Promise<SettingPaymentProvider> {
     const output = this.encryptSecretsIfPresent(input);
 
-    // Deleting only hides a provider, so adding one back is an undelete rather
-    // than a name clash. The configuration it had is left exactly as it was —
-    // the row comes back the way the operator left it.
     const returnValue = await this.prisma.settingPaymentProvider.upsert({
       where: { id: output.id },
       create: output,
@@ -160,12 +155,6 @@ export class PaymentProviderSettingsService {
     return returnValue;
   }
 
-  /**
-   * Payment methods reference their provider by id, and subscriptions,
-   * payments and invoices all hang off those — which is why deleting is a soft
-   * delete. An operator removing a provider that still carries live traffic is
-   * worth knowing about all the same.
-   */
   private async countUsage(id: string): Promise<number> {
     const paymentMethods = await this.prisma.paymentMethod.findMany({
       where: { paymentProviderID: id },

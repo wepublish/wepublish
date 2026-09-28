@@ -67,8 +67,6 @@ export const createPaymentProvider = (
 export const loadPaymentProviders = async (
   deps: PaymentProviderDeps
 ): Promise<PaymentProvider[]> => {
-  // Soft-deleted providers are loaded too: a payment taken through one still
-  // has webhooks to deliver and an invoice to render.
   const rows = await deps.prisma.settingPaymentProvider.findMany({
     orderBy: { id: 'asc' },
   });

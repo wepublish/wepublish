@@ -24,8 +24,6 @@ export class AnalyticsProviderSettingsService {
   >(data: T): Omit<T, 'credentials'> & { credentials?: string | null } {
     const { credentials, ...rest } = data;
 
-    // Left out entirely: keep whatever is stored. Encrypting `undefined` would
-    // throw, and writing null would silently drop a working credential.
     if (credentials === undefined) {
       return rest;
     }
@@ -75,9 +73,6 @@ export class AnalyticsProviderSettingsService {
   ): Promise<SettingAnalyticsProvider> {
     const output = this.encryptSecretsIfPresent(input);
 
-    // The API looks this provider up under a fixed id, so creating one is
-    // really "make sure the row exists" — and must not fail on a second try
-    // or overwrite what is already configured.
     const returnValue = await this.prisma.settingAnalyticsProvider.upsert({
       where: { id: output.id },
       create: output,

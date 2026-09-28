@@ -334,10 +334,6 @@ const PROVIDER_IDS: Record<PaymentProviderType, string> = {
   [PaymentProviderType.NO_CHARGE]: 'no-charge',
 };
 
-// The provider tables are the registry, so seeding them is what makes a fresh
-// install usable at all. Each table is only touched while it is still empty:
-// re-running the seed must never resurrect a provider somebody deleted in the
-// editor.
 async function seedProviders(prisma: PrismaClient) {
   if ((await prisma.settingPaymentProvider.count()) === 0) {
     await prisma.settingPaymentProvider.createMany({
@@ -350,10 +346,6 @@ async function seedProviders(prisma: PrismaClient) {
   }
 
   if ((await prisma.settingMailProvider.count()) === 0) {
-    // SMTP rather than a hosted provider: it is the only one that works
-    // without credentials, and docker-compose already points MAIL_SMTP_HOST at
-    // Mailpit. SmtpMailProvider falls back to those env vars when the columns
-    // are null, so the row stays empty on purpose.
     await prisma.settingMailProvider.create({
       data: { id: 'smtp', name: 'SMTP', type: MailProviderType.SMTP },
     });

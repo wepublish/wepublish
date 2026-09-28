@@ -1,12 +1,3 @@
-# Boot-time switches only.
-#
-# Which mail, payment, challenge, tracking pixel and sync providers exist is no
-# longer configured here: the `settings.*provider` tables are the registry and
-# the editor's integrations page maintains them. A fresh database gets a usable
-# set from the seed, and `reloadProviders` applies changes without a restart.
-#
-# What is left cannot be resolved at runtime, because each value is baked into
-# an object that is built once when the process starts.
 general:
   apolloPlayground: true
   apolloIntrospection: true

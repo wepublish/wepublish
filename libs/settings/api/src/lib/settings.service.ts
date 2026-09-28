@@ -25,10 +25,6 @@ export class SettingsService {
       },
     });
 
-    // The table is a general key/value store, but the API exposes it through a
-    // curated enum. A row the enum does not know — bookkeeping, or a setting
-    // that was retired — cannot be serialised, and one of them would fail the
-    // whole query rather than just itself.
     return data.filter(setting => KNOWN_SETTING_NAMES.has(setting.name));
   }
 

@@ -117,7 +117,6 @@ export interface GenericIntegrationFormProps<
     | ((setting: TSetting) => FieldDefinition<TFormValues>[]);
   getLogo?: (setting: TSetting) => string | undefined;
 
-  /** Rendered next to Save — used for removing a provider that may be removed. */
   renderActions?: (setting: TSetting) => ReactNode;
 }
 
@@ -156,8 +155,6 @@ export function SingleGenericIntegrationForm<
     reValidateMode: 'onChange',
   });
 
-  // Switching type wipes the stored configuration, so it is confirmed rather
-  // than merely saved.
   const [pendingTypeChange, setPendingTypeChange] = useState<z.infer<
     typeof schema
   > | null>(null);

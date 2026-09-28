@@ -27,7 +27,6 @@ export const createChallengeProvider = (
 export const loadChallengeProvider = async (
   deps: ChallengeProviderDeps
 ): Promise<ChallengeProvider | null> => {
-  // A singleton: whichever row exists is the active one.
   const row = await deps.prisma.settingChallengeProvider.findFirst({
     orderBy: { id: 'asc' },
   });

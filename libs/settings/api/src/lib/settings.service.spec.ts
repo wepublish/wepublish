@@ -77,13 +77,10 @@ describe('SettingsService', () => {
       {
         ...known,
         id: '2',
-        // Internal bookkeeping, or a setting that has since been retired.
         name: 'providerRegistryReconciled',
       },
     ]);
 
-    // One unrepresentable row must not fail the whole query — that would take
-    // the settings page down entirely.
     await expect(service.settingsList()).resolves.toEqual([known]);
   });
 

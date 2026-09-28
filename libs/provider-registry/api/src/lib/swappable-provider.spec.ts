@@ -34,8 +34,6 @@ describe('createSwappableProvider', () => {
       () => new Greeter('Hello')
     );
 
-    // Private fields throw when `this` is the proxy, so a method that reads one
-    // proves the binding is right.
     const detached = provider.greet;
 
     expect(detached('world')).toBe('Hello, world');

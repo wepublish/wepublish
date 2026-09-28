@@ -44,10 +44,6 @@ export class SessionService {
     private totpService: TotpService
   ) {}
 
-  /**
-   * Read per session rather than captured at boot, so changing the lifetime in
-   * the editor applies to the next login instead of the next deployment.
-   */
   private async sessionTtlMs(): Promise<number> {
     const days = await this.settingsService
       .settingByName(SettingName.SESSION_TTL_DAYS)

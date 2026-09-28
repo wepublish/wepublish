@@ -29,22 +29,12 @@ interface GenericIntegrationListProps<
   query: DocumentNode;
   dataKey: string;
 
-  /**
-   * Only the kinds of provider an installation may have several of can be
-   * added and removed. Mail and challenge are singletons: there the type is
-   * switched on the one row that exists.
-   */
   registry?: {
     createMutation: DocumentNode;
     deleteMutation: DocumentNode;
     types: ProviderTypeOption[];
   };
 
-  /**
-   * For integrations the API reads under an id fixed in code. There is only
-   * ever this one row, so the only thing the UI can offer is to create it when
-   * it has gone missing.
-   */
   fixedProvider?: {
     id: string;
     type: string;

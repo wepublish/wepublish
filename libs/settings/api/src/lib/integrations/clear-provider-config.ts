@@ -1,10 +1,5 @@
 import { Prisma } from '@prisma/client';
 
-/**
- * Columns that identify or track a provider row rather than configure it.
- * Everything else on a provider table is credentials or provider-specific
- * settings, which must not survive a type change.
- */
 const PRESERVED_COLUMNS = [
   'id',
   'createdAt',
@@ -15,12 +10,6 @@ const PRESERVED_COLUMNS = [
   'enabled',
 ];
 
-/**
- * A patch that nulls every configuration column of a provider table.
- *
- * Derived from the schema rather than hand-listed: a credential added to the
- * model later is cleared without anyone having to remember this file.
- */
 export const clearProviderConfig = (
   modelName: string
 ): Record<string, null> => {

@@ -1709,10 +1709,6 @@ async function seedSettings(prisma: PrismaClient) {
     update: {},
   });
 
-  // Exactly one mail provider may exist, so this only fills an empty table —
-  // a database seeded before the registry moved keeps whatever it has. SMTP
-  // because it actually delivers: docker-compose points MAIL_SMTP_HOST at
-  // Mailpit and SmtpMailProvider falls back to it.
   const mailprovider =
     (await prisma.settingMailProvider.count()) === 0 ?
       prisma.settingMailProvider.create({

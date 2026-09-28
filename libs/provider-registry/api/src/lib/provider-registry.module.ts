@@ -24,11 +24,6 @@ export type ProviderRegistryModuleAsyncOptions = {
   ) => ProviderRegistryBootstrap | Promise<ProviderRegistryBootstrap>;
 };
 
-/**
- * Registered once, at the root. It is global on purpose: the modules that
- * consume providers inject the service from their own factories, and importing
- * this module again would give each of them a registry of its own.
- */
 @Global()
 @Module({
   imports: [PrismaModule, KvTtlCacheModule, HttpModule],

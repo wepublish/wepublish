@@ -26,8 +26,6 @@ export const createTrackingPixelProvider = (
 export const loadTrackingPixelProviders = async (
   deps: TrackingPixelProviderDeps
 ): Promise<TrackingPixelProvider[]> => {
-  // Soft-deleted providers are loaded too: pixels already reported keep
-  // resolving against the provider that reported them.
   const rows = await deps.prisma.settingTrackingPixel.findMany({
     orderBy: { id: 'asc' },
   });

@@ -146,8 +146,6 @@ describe('PaymentProviderSettingsService', () => {
       name: 'Payrexx',
     } as never);
 
-    // Without this the saved change would sit in the database until the next
-    // deployment.
     expect(providerSettingsChanged.notify).toHaveBeenCalled();
   });
 });

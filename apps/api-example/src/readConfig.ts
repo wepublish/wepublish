@@ -9,7 +9,6 @@ type General = {
   apolloIntrospection: boolean;
   urlAdapter: 'default' | 'hauptstadt' | 'wepublish-site';
 
-  /** Migrated into the SESSION_TTL_DAYS setting on first boot; see reconcileProviderRegistry. */
   sessionTTLDays?: number;
 };
 
@@ -155,11 +154,6 @@ type Config = {
   general: General;
   mediaServer: novaMediaServer;
 
-  /**
-   * The provider registry lives in the `settings.*provider` tables. These
-   * sections are read once, by reconcileProviderRegistry, to hand a deployment
-   * that still has them over to the database — after which they can go.
-   */
   mailProvider?: MailProvider;
   paymentProviders?: PaymentProvider[];
   challenge?: Turnstile | HCaptcha;
