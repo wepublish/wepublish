@@ -19,12 +19,18 @@ npm run watch                # Start all services (API, editor, media, website)
 
 | Service | URL | Description |
 |---------|-----|-------------|
-| API | http://localhost:4000 | GraphQL API (NestJS) |
-| Editor | http://localhost:3000 | Admin CMS UI (Vite SPA) |
+| API | http://localhost:4000 | GraphQL API (NestJS) — the `api-example` app |
+| Editor | http://localhost:3000 | Admin CMS UI — Vite dev server, client-rendered |
 | Website | http://localhost:4200 | Example website frontend |
 | Media | http://localhost:4100 | Media/image server |
 | PGAdmin | http://localhost:8000 | Database admin UI |
 | MinIO | http://localhost:9001 | S3 storage console |
+
+`docker-compose.yml` also defines `mailpit` for catching outbound mail locally,
+and a `migration` service used by the full-stack `npm run try` path.
+
+This table is the canonical one. For *when* to start these services and in what
+order, see [dev-environment.md](../.claude/docs/dev-environment.md).
 
 ## Watch Individual Services
 
@@ -64,16 +70,21 @@ npm run test-u               # All tests with snapshot update
 nx test <project-name>       # Test a specific library/app
 ```
 
-Two runners: **Jest** for NestJS `libs/*/api`, **Vitest** for everything else
-(website, editor, ui, utils). Check for `jest.config.ts` vs `vitest.config.ts`
-in the project before writing a test. See `.claude/docs/testing.md`.
+Two runners are in play and they are **not** interchangeable — read
+[testing.md](../.claude/docs/testing.md) before writing a test. For which of
+these to run before claiming a change is done, see
+[verification.md](../.claude/docs/verification.md).
 
 ## Linting & Formatting
 
 ```bash
 npm run lint                 # ESLint across all projects
-npm run prettier             # Format all source files
 ```
+
+**Do not run Prettier manually.** A Husky `pre-commit` hook runs
+`pretty-quick --staged`. The `npm run prettier` script exists for tooling, but
+invoking it by hand reformats the whole repo and buries your change in an
+unrelated diff.
 
 ## Building
 

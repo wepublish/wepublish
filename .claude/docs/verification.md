@@ -10,7 +10,7 @@ because you wrote it.
 ## The gate
 
 Before claiming any code change is complete, run **lint + test for the affected
-projects**, plus a **typecheck** if you touched `apps/`.
+projects**, then **typecheck what you touched**.
 
 ```bash
 # 1. Lint + test everything your change touches (fast — Nx caches)
@@ -21,10 +21,19 @@ npx nx affected -t lint test --base=origin/development
 ```
 
 ```bash
-# 2. Typecheck — ONLY if you touched apps/. Not covered by lint or test.
+# 2a. Libs — typecheck through the build target
+npx nx build <project>                    # e.g. membership-api
+
+# 2b. Apps — not covered by lint, test, or any build target
 npx tsc -p ./apps/<app> --noEmit          # single app
 bash ./tools/typecheck-websites.sh        # all apps, as CI runs it
 ```
+
+`nx build <project>` runs `tsc` across the whole library rather than only the
+files a spec happens to import, so it is what catches a type error in a file no
+test reaches — including a **stale generated client**. If `@prisma/client` is
+missing fields you just added to `schema.prisma`, run `npx prisma generate`.
+When a lib has no `build` target, add one where it makes sense.
 
 If `--uncommitted` returns nothing but you know you changed files, you have
 probably already staged or committed them — use `--base=origin/development`.

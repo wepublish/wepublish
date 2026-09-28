@@ -1,8 +1,9 @@
 # Running the Dev Environment
 
-Command reference and env vars live in `.ai/development.md`. **This file is about
-agent discipline** — which processes are long-running, what order they start in,
-and what must never happen during setup.
+Command reference and env vars live in
+[.ai/development.md](../../.ai/development.md). **This file is about agent
+discipline** — which processes are long-running, what order they start in, and
+what must never happen during setup.
 
 ## The one rule that matters
 
@@ -45,22 +46,14 @@ To run one service, still bring up Docker and migrate first, then
 
 ## Which URL is which
 
-| Service | URL | Notes |
-| --- | --- | --- |
-| API (GraphQL) | http://localhost:4000 | `api-example` |
-| Editor | http://localhost:3000 | Vite dev server, client-rendered |
-| Media | http://localhost:4100 | |
-| Website example | http://localhost:4200 | |
-| PGAdmin | http://localhost:8000 | |
-| MinIO console | http://localhost:9001 | S3-compatible storage |
-
-`docker-compose.yml` also defines `mailpit` for catching outbound mail locally,
-and a `migration` service used by the full-stack `npm run try` path.
+Ports and what each service is: the **Local Service URLs** table in
+[.ai/development.md](../../.ai/development.md). Do not restate it here — one
+table, one place.
 
 ## Handling common requests
 
-- **"Start everything"** → `npm run dev`, backgrounded. Report the URLs above once
-  the services are up.
+- **"Start everything"** → `npm run dev`, backgrounded. Report the service URLs
+  once the services are up.
 - **"Start just the API"** → `npm run start:docker`, then `npm run migrate`, then
   `npm run watch:api-example`.
 - **"Reset my database"** → **destructive, and there is no script for it.** The
@@ -82,7 +75,7 @@ and a `migration` service used by the full-stack `npm run try` path.
   `schema-v2.graphql`. Start the API to regenerate it, then `npm run generate-api`.
   See [gotchas.md](gotchas.md).
 - **"Is my setup healthy?"** → `docker ps` (database + storage up?), then check the
-  ports above. Do not start services to answer this.
+  service ports. Do not start services to answer this.
 
 ## Guardrails
 
