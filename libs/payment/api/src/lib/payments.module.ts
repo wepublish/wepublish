@@ -9,12 +9,18 @@ import {
   PaymentWebhookController,
   PaymentWebhookMiddleware,
 } from './payment.webhook';
+import { InvoicePaidNotifier } from './invoice-paid.listener';
 
 @Module({
   imports: [PrismaModule, PaymentMethodModule],
-  providers: [PaymentsService, PaymentDataloader, PaymentsResolver],
+  providers: [
+    PaymentsService,
+    PaymentDataloader,
+    PaymentsResolver,
+    InvoicePaidNotifier,
+  ],
   controllers: [PaymentWebhookController],
-  exports: [PaymentsService, PaymentDataloader],
+  exports: [PaymentsService, PaymentDataloader, InvoicePaidNotifier],
 })
 export class PaymentsModule {
   configure(consumer: MiddlewareConsumer) {

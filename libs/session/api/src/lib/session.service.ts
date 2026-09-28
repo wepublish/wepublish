@@ -17,8 +17,8 @@ import { SettingName, SettingsService } from '@wepublish/settings/api';
 import { Validator } from './validator';
 import { UserService } from '@wepublish/user/api';
 import {
-  FIFTEEN_MINUTES_IN_MILLISECONDS,
   logger,
+  ONE_MINUTE_IN_MILLISECONDS,
   USER_PROPERTY_LAST_LOGIN_LINK_SEND,
 } from '@wepublish/utils/api';
 import { JwtService } from './jwt.service';
@@ -323,10 +323,10 @@ export class SessionService {
     if (
       lastSendTimeStamp &&
       parseInt(lastSendTimeStamp.value) >
-        Date.now() - FIFTEEN_MINUTES_IN_MILLISECONDS
+        Date.now() - ONE_MINUTE_IN_MILLISECONDS
     ) {
       logger('mutation.public').warn(
-        'User with ID %s requested Login Link multiple times in 15 min time window',
+        'User with ID %s requested Login Link multiple times in one minute time window',
         user.id
       );
 

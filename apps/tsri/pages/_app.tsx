@@ -45,6 +45,7 @@ import deOverriden from '../locales/deOverriden.json';
 import { TsriFlexBlock } from '../src/components/block-layouts/tsri-base-flex-block';
 import { TsriBreakBlock } from '../src/components/break-blocks/tsri-base-break-block';
 import { TsriContextBox } from '../src/components/break-blocks/tsri-context-box';
+import { TsriRenderElement } from '../src/components/richtext/tsri-render-element';
 import { TsriBaseTeaserSlots } from '../src/components/teaser-layouts/tsri-base-teaser-slots';
 import { TsriBaseTeaser } from '../src/components/teasers/tsri-base-teaser';
 import { TsriArticle } from '../src/components/tsri-article';
@@ -178,6 +179,7 @@ function CustomApp({
               Tag={TsriTag}
               CommentList={TsriCommentList}
               elements={{ Link: TsriNextWepublishLink }}
+              richtext={{ RenderElement: TsriRenderElement }}
               blocks={{
                 BaseTeaser: TsriBaseTeaser,
                 TeaserSlots: TsriBaseTeaserSlots,

@@ -15,6 +15,7 @@ import {
 } from '@prisma/client';
 import { SentryGlobalFilter, SentryModule } from '@sentry/nestjs/setup';
 import { ActionModule } from '@wepublish/action/api';
+import { AuditLogModule } from '@wepublish/audit-log/api';
 import { V0Module } from '@wepublish/ai/api';
 import { NovaMediaAdapter } from '@wepublish/api';
 import { ArticleModule, HotAndTrendingModule } from '@wepublish/article/api';
@@ -65,6 +66,7 @@ import {
   DashboardModule,
   InvoiceModule,
   MembershipModule,
+  RenewalMailModule,
   SubscriptionModule,
   UpgradeSubscriptionModule,
   GoodieModule,
@@ -491,6 +493,7 @@ import { readConfig } from '../readConfig';
     GoodieModule,
     DiscountCodeModule,
     DashboardModule,
+    RenewalMailModule,
     AuthenticationModule,
 
     // Register SessionModule after AuthenticationModule
@@ -547,6 +550,7 @@ import { readConfig } from '../readConfig';
       }),
     }),
     PermissionModule,
+    AuditLogModule,
     ChangelogModule,
     ConsentModule,
     DocumentModule,

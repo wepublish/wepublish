@@ -586,6 +586,12 @@ export const CanGetSettings: Permission = {
   deprecated: false,
 };
 
+export const CanGetAuditLogs: Permission = {
+  id: 'CAN_GET_AUDIT_LOGS',
+  description: 'Allows to read the audit log',
+  deprecated: false,
+};
+
 export const CanUpdateSettings: Permission = {
   id: 'CAN_UPDATE_SETTINGS',
   description: 'Allows to update settings',
@@ -1354,6 +1360,7 @@ export const AllPermissions: Permission[] = [
   CanRunMailchimpSync,
   CanGetWebsiteSettings,
   CanUpdateWebsiteSettings,
+  CanGetAuditLogs,
 ];
 
 export const EditorPermissions: Permission[] = [
