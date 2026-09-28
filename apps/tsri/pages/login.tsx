@@ -7,8 +7,10 @@ import {
   useUser,
 } from '@wepublish/authentication/website';
 import { getApiUrl, handleJwtLogin } from '@wepublish/utils/website';
-import { SessionWithTokenWithoutUser } from '@wepublish/website/api';
-import { getApiClient } from '@wepublish/website/api';
+import {
+  SessionWithTokenWithoutUser,
+  getApiClient,
+} from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { deleteCookie, getCookie, setCookie } from 'cookies-next';
 import { add } from 'date-fns';
@@ -63,15 +65,15 @@ export default function Login({ sessionToken }: LoginProps) {
   return (
     <LoginWrapper>
       <H3 component="h1">Login für Member</H3>
-
       <Typography
         variant="body1"
-        paragraph
+        sx={{
+          marginBottom: '16px',
+        }}
       >
         (Falls du noch keinen Account hast,{' '}
         <Link href={'/mitmachen'}>klicke hier.</Link>)
       </Typography>
-
       <LoginFormContainer
         defaults={{
           email: router.query?.mail as string | undefined,

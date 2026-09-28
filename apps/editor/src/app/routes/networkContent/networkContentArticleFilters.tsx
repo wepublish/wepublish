@@ -7,7 +7,7 @@ import {
   Select,
   TextField,
 } from '@mui/material';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { format } from 'date-fns';
@@ -53,18 +53,20 @@ export function NetworkContentArticleFilters({
           label={t('networkContentPage.searchLabel')}
           value={filters.search}
           onChange={e => updateFilter({ search: e.target.value })}
-          InputProps={{
-            endAdornment:
-              filters.search ?
-                <InputAdornment position="end">
-                  <IconButton
-                    size="small"
-                    onClick={() => updateFilter({ search: '' })}
-                  >
-                    <MdClear />
-                  </IconButton>
-                </InputAdornment>
-              : undefined,
+          slotProps={{
+            input: {
+              endAdornment:
+                filters.search ?
+                  <InputAdornment position="end">
+                    <IconButton
+                      size="small"
+                      onClick={() => updateFilter({ search: '' })}
+                    >
+                      <MdClear />
+                    </IconButton>
+                  </InputAdornment>
+                : undefined,
+            },
           }}
         />
 

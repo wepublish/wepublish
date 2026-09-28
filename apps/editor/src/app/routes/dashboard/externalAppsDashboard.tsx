@@ -10,7 +10,6 @@ import {
 } from '@mui/material';
 import {
   ExternalAppsTarget,
-  useExternalAppsQuery,
 } from '@wepublish/editor/api';
 import { useTranslation } from 'react-i18next';
 import { MdExtension } from 'react-icons/md';
@@ -68,9 +67,11 @@ export function ExternalAppsDashboard() {
   if (loading) {
     return (
       <Box
-        p={3}
-        display="flex"
-        justifyContent="center"
+        sx={{
+          p: 3,
+          display: 'flex',
+          justifyContent: 'center',
+        }}
       >
         <CircularProgress />
       </Box>
@@ -80,8 +81,10 @@ export function ExternalAppsDashboard() {
   if (error) {
     return (
       <Box
-        p={3}
-        color="error.main"
+        sx={{
+          p: 3,
+          color: 'error.main',
+        }}
       >
         {error.message}
       </Box>
@@ -107,10 +110,7 @@ export function ExternalAppsDashboard() {
     >
       {apps.map(app => (
         <Grid
-          item
-          xs={12}
-          sm={6}
-          md={4}
+          size={{ xs: 12, sm: 6, md: 4 }}
           key={app.id}
         >
           <Card
@@ -127,7 +127,7 @@ export function ExternalAppsDashboard() {
               }}
               sx={{ height: '100%' }}
             >
-              <AppBox p={2}>
+              <AppBox sx={{ p: 2 }}>
                 <AppIconBox style={{ color: '#ea726e' }}>
                   <AppIcon iconName={app.icon} />
                 </AppIconBox>

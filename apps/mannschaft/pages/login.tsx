@@ -67,25 +67,26 @@ export default function Login({ sessionToken }: LoginProps) {
   return (
     <LoginWrapper>
       <H3 component="h1">Login für Abonnent*innen</H3>
-
       <Typography
         variant="h6"
-        paragraph
+        sx={{
+          marginBottom: '16px',
+        }}
       >
         «MAIL-LOGIN»: Beim ersten Login kannst du dich mit deiner bei uns
         hinterlegten E-Mail-Adresse (ohne Passwort) anmelden. Lege danach ein
         Passwort in deinem Nutzerprofil fest für zukünftiges Einloggen unter
         «LOGIN MIT PASSWORT»
       </Typography>
-
       <Typography
         variant="body1"
-        paragraph
+        sx={{
+          marginBottom: '16px',
+        }}
       >
         Du hast noch kein Abo und möchtest LGBTIQ-Journalismus unterstützen?
         <Link href={'/mitmachen'}> Hier kannst du dein Abo wählen.</Link>
       </Typography>
-
       <LoginFormContainer
         defaults={{
           email: router.query?.mail as string | undefined,

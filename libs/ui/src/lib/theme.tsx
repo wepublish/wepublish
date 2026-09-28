@@ -7,7 +7,9 @@ import {
   useTheme,
   ThemeOptions,
 } from '@mui/material';
-import { TypographyStyleOptions } from '@mui/material/styles/createTypography';
+import { TypographyStyle } from '@mui/material/styles';
+
+type TypographyStyleOptions = TypographyStyle;
 import {
   Breakpoint,
   createBreakpoints,

@@ -34,11 +34,13 @@ export function ExternalAppIframeView() {
   if (loading) {
     return (
       <Box
-        p={3}
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        height="100%"
+        sx={{
+          p: 3,
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100%',
+        }}
       >
         <CircularProgress />
       </Box>
@@ -47,7 +49,11 @@ export function ExternalAppIframeView() {
 
   if (error || !data?.externalApp) {
     return (
-      <Box p={3}>
+      <Box
+        sx={{
+          p: 3,
+        }}
+      >
         <Typography color="error">
           {error?.message ||
             t('externalApps.notFound', {

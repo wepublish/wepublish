@@ -909,7 +909,9 @@ function SyncProviderSettingCard({
           <Typography
             variant="h5"
             component={HeaderWrapper}
-            marginBottom={2}
+            sx={{
+              marginBottom: 2,
+            }}
           >
             {setting.name || setting.type || 'Sync Provider'}
             <HeaderLogo

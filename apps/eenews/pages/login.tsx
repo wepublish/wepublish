@@ -71,7 +71,9 @@ export default function Login({ sessionToken }: LoginProps) {
 
         <Typography
           variant="body1"
-          paragraph
+          sx={{
+            marginBottom: '16px',
+          }}
         >
           (Falls du noch keinen Account hast,{' '}
           <Link href={'/signup'}>klicke hier.</Link>)
