@@ -599,7 +599,17 @@
         "optionUrl": "URL",
         "optionMergeFieldName": "Merge field name",
         "optionMergeFieldValue": "Merge field value",
-        "addSuccessOption": "Add option"
+        "addSuccessOption": "Add option",
+        "multipleLists": "Multiple lists",
+        "listReferenceHelp": "Merge fields and interests are loaded from this list. Interests are only submitted if readers select this list.",
+        "lists": "Selectable lists",
+        "listsLayout": "Display as",
+        "listsLayoutList": "List",
+        "listsLayoutGrid": "Grid with cards",
+        "listName": "Name",
+        "listDescription": "Description",
+        "listImage": "Image (optional)",
+        "addList": "Add list"
       }
     },
     "cancel": "Cancel",

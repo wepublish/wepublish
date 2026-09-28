@@ -12,9 +12,13 @@ import {
   BlockContent,
   FullMailchimpFormBlockFragment,
   MailchimpContactStatus,
+  MailchimpFormListsLayout,
   useAddMailchimpContactMutation,
 } from '@wepublish/website/api';
-import { BuilderMailchimpFormBlockProps } from '@wepublish/website/builder';
+import {
+  BuilderMailchimpFormBlockProps,
+  Image,
+} from '@wepublish/website/builder';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -47,7 +51,147 @@ const Options = styled('div')`
   gap: ${({ theme }) => theme.spacing(1)};
 `;
 
+export const MailchimpFormLists = styled('div')`
+  display: flex;
+  flex-direction: column;
+  gap: ${({ theme }) => theme.spacing(1)};
+`;
+
+export const MailchimpFormListItem = styled('label')`
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing(2)};
+  cursor: pointer;
+`;
+
+export const MailchimpFormListItemImage = styled(Image)`
+  width: 64px;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: ${({ theme }) => theme.shape.borderRadius}px;
+`;
+
+export const MailchimpFormListGrid = styled('div')`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: ${({ theme }) => theme.spacing(2)};
+`;
+
+export const MailchimpFormListCard = styled('label')<{ isSelected: boolean }>`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid
+    ${({ theme, isSelected }) =>
+      isSelected ? theme.palette.primary.main : theme.palette.divider};
+  border-radius: ${({ theme }) => theme.shape.borderRadius}px;
+  background-color: ${({ theme }) => theme.palette.background.paper};
+
+  &:focus-within {
+    outline: 2px solid ${({ theme }) => theme.palette.primary.main};
+    outline-offset: 2px;
+  }
+`;
+
+export const MailchimpFormListCardImage = styled(Image)`
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+`;
+
+export const MailchimpFormListCardContent = styled('div')`
+  display: flex;
+  flex-direction: column;
+  gap: ${({ theme }) => theme.spacing(0.5)};
+  padding: ${({ theme }) => theme.spacing(2)};
+  padding-right: ${({ theme }) => theme.spacing(6)};
+`;
+
+export const MailchimpFormListCardCheckbox = styled(Checkbox)`
+  position: absolute;
+  top: ${({ theme }) => theme.spacing(1)};
+  right: ${({ theme }) => theme.spacing(1)};
+  background-color: ${({ theme }) => theme.palette.background.paper};
+
+  &:hover {
+    background-color: ${({ theme }) => theme.palette.background.paper};
+  }
+`;
+
 type Step = FullMailchimpFormBlockFragment['steps'][number];
+type List = FullMailchimpFormBlockFragment['lists'][number];
+
+type MailchimpFormListSelectionProps = {
+  lists: List[];
+  layout: MailchimpFormListsLayout;
+  selected: string[];
+  onChange: (listId: string, checked: boolean) => void;
+};
+
+const MailchimpFormListSelection = ({
+  lists,
+  layout,
+  selected,
+  onChange,
+}: MailchimpFormListSelectionProps) => {
+  if (layout === MailchimpFormListsLayout.Grid) {
+    return (
+      <MailchimpFormListGrid>
+        {lists.map(list => {
+          const isSelected = selected.includes(list.listId);
+
+          return (
+            <MailchimpFormListCard
+              key={list.listId}
+              isSelected={isSelected}
+            >
+              {list.image && <MailchimpFormListCardImage image={list.image} />}
+
+              <MailchimpFormListCardContent>
+                <Typography variant="subtitle1">{list.name}</Typography>
+                {list.description && (
+                  <Typography variant="body2">{list.description}</Typography>
+                )}
+              </MailchimpFormListCardContent>
+
+              <MailchimpFormListCardCheckbox
+                checked={isSelected}
+                onChange={event => onChange(list.listId, event.target.checked)}
+              />
+            </MailchimpFormListCard>
+          );
+        })}
+      </MailchimpFormListGrid>
+    );
+  }
+
+  return (
+    <MailchimpFormLists>
+      {lists.map(list => (
+        <MailchimpFormListItem key={list.listId}>
+          <Checkbox
+            checked={selected.includes(list.listId)}
+            onChange={event => onChange(list.listId, event.target.checked)}
+          />
+
+          {list.image ?
+            <MailchimpFormListItemImage image={list.image} />
+          : <span />}
+
+          <div>
+            <Typography variant="subtitle1">{list.name}</Typography>
+            {list.description && (
+              <Typography variant="body2">{list.description}</Typography>
+            )}
+          </div>
+        </MailchimpFormListItem>
+      ))}
+    </MailchimpFormLists>
+  );
+};
 
 const getQueryParam = (name?: string | null): string | null => {
   if (!name || typeof window === 'undefined') {
@@ -72,6 +216,9 @@ export const MailchimpFormBlock = ({
   syncProviderId,
   listId,
   interests: presetInterests,
+  multipleLists,
+  listsLayout,
+  lists,
   autoFocus,
   doubleOptIn,
   buttonColor,
@@ -102,6 +249,7 @@ export const MailchimpFormBlock = ({
   );
 
   const [interests, setInterests] = useState<string[]>([]);
+  const [selectedLists, setSelectedLists] = useState<string[]>([]);
   const [currentStep, setCurrentStep] = useState(0);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -197,11 +345,23 @@ export const MailchimpFormBlock = ({
     );
   };
 
+  const handleListChange = (id: string, checked: boolean) => {
+    setSelectedLists(current =>
+      checked ? [...current, id] : current.filter(value => value !== id)
+    );
+  };
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (!syncProviderId || !listId) {
+    if (!syncProviderId || (multipleLists ? !lists.length : !listId)) {
       setError('Form is not configured.');
+
+      return;
+    }
+
+    if (multipleLists && !selectedLists.length) {
+      setError(t('newsletter.noListSelected'));
 
       return;
     }
@@ -223,21 +383,30 @@ export const MailchimpFormBlock = ({
         })
     );
 
+    const interestsInput = Object.fromEntries(
+      allInterests.map(interest => [interest, true])
+    );
+
     try {
       const result = await addMailchimpContact({
         variables: {
           input: {
             syncProviderId,
-            listId,
             email: formData['EMAIL'],
             status:
               doubleOptIn ?
                 MailchimpContactStatus.Pending
               : MailchimpContactStatus.Subscribed,
             mergeFields,
-            interests: Object.fromEntries(
-              allInterests.map(interest => [interest, true])
-            ),
+            ...(multipleLists ?
+              {
+                lists: selectedLists.map(selectedListId => ({
+                  listId: selectedListId,
+                  interests:
+                    selectedListId === listId ? interestsInput : undefined,
+                })),
+              }
+            : { listId, interests: interestsInput }),
           },
         },
       });
@@ -348,6 +517,15 @@ export const MailchimpFormBlock = ({
             />
           );
         })}
+
+        {multipleLists && isFirstStep && !!lists.length && (
+          <MailchimpFormListSelection
+            lists={lists}
+            layout={listsLayout}
+            selected={selectedLists}
+            onChange={handleListChange}
+          />
+        )}
 
         <Actions>
           {!isFirstStep && (

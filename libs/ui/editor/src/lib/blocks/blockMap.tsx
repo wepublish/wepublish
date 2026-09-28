@@ -1,5 +1,6 @@
 import {
   EditorBlockType,
+  MailchimpFormListsLayout,
   SubscribeBlockField,
   TeaserListBlockSort,
   TeaserSlotType,
@@ -290,6 +291,9 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
       syncProviderId: null,
       listId: null,
       interests: [],
+      multipleLists: false,
+      listsLayout: MailchimpFormListsLayout.List,
+      lists: [],
       autoFocus: true,
       doubleOptIn: true,
       buttonColor: '#ffd60a',

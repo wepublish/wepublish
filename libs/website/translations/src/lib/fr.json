@@ -94,7 +94,8 @@
   "newsletter": {
     "back": "Retour",
     "next": "Suivant",
-    "submit": "Terminer"
+    "submit": "Terminer",
+    "noListSelected": "Veuillez sélectionner au moins une newsletter."
   },
   "crowdfunding": {
     "goal": "{type, select, Revenue {Déjà <bold>{revenue}</bold> financés} other {Déjà <bold>{subscriptions, number}</bold> {subscriptions, plural, =1 {personne abonnée} other {personnes abonnées}}}}"

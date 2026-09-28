@@ -601,7 +601,17 @@
         "optionUrl": "URL",
         "optionMergeFieldName": "Merge-Feld Name",
         "optionMergeFieldValue": "Merge-Feld Wert",
-        "addSuccessOption": "Option hinzufügen"
+        "addSuccessOption": "Option hinzufügen",
+        "multipleLists": "Mehrere Listen",
+        "listReferenceHelp": "Merge-Felder und Interessen werden aus dieser Liste geladen. Interessen werden nur übermittelt, wenn Leser:innen diese Liste auswählen.",
+        "lists": "Auswählbare Listen",
+        "listsLayout": "Darstellung",
+        "listsLayoutList": "Liste",
+        "listsLayoutGrid": "Raster mit Karten",
+        "listName": "Name",
+        "listDescription": "Beschreibung",
+        "listImage": "Bild (optional)",
+        "addList": "Liste hinzufügen"
       }
     },
     "cancel": "Abbrechen",

@@ -604,7 +604,17 @@
         "optionUrl": "URL",
         "optionMergeFieldName": "Nom du merge field",
         "optionMergeFieldValue": "Valeur du merge field",
-        "addSuccessOption": "Ajouter une option"
+        "addSuccessOption": "Ajouter une option",
+        "multipleLists": "Plusieurs listes",
+        "listReferenceHelp": "Les champs de fusion et les intérêts sont chargés depuis cette liste. Les intérêts ne sont transmis que si les lecteurs sélectionnent cette liste.",
+        "lists": "Listes sélectionnables",
+        "listsLayout": "Affichage",
+        "listsLayoutList": "Liste",
+        "listsLayoutGrid": "Grille de cartes",
+        "listName": "Nom",
+        "listDescription": "Description",
+        "listImage": "Image (facultative)",
+        "addList": "Ajouter une liste"
       }
     },
     "cancel": "Annuler",

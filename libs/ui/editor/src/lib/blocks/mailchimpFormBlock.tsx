@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import {
+  MailchimpFormListsLayout,
   useMailchimpInterestGroupsQuery,
   useMailchimpListsQuery,
   useMailchimpMergeFieldsQuery,
@@ -10,20 +11,27 @@ import { useTranslation } from 'react-i18next';
 import { MdAddCircle, MdDelete } from 'react-icons/md';
 import {
   Divider,
+  Drawer,
   IconButton,
   Input,
   InputGroup,
   InputPicker,
   Panel as RPanel,
+  Radio,
+  RadioGroup,
   SelectPicker,
   TagPicker,
   Toggle,
 } from 'rsuite';
 
 import { BlockProps } from '../atoms/blockList';
+import { ChooseEditImage } from '../atoms/chooseEditImage';
+import { ImageEditPanel } from '../panel/imageEditPanel';
+import { ImageSelectPanel } from '../panel/imageSelectPanel';
 import {
   MailchimpFormBlockValue,
   MailchimpFormFieldConfigValue,
+  MailchimpFormListValue,
   MailchimpFormStepValue,
   MailchimpFormSuccessOptionValue,
 } from './types';
@@ -82,6 +90,18 @@ const ToggleRow = styled.div`
   gap: 8px;
 `;
 
+const ListRow = styled.div`
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: 12px;
+`;
+
+const ListImageWrapper = styled.div`
+  display: grid;
+  overflow: hidden;
+  height: 120px;
+`;
+
 const INPUT_TYPES = ['text', 'email', 'hidden', 'groups'];
 
 const emptyInput = (): MailchimpFormFieldConfigValue => ({
@@ -102,6 +122,140 @@ const emptyStep = (): MailchimpFormStepValue => ({
   showIfInterestsFilled: [],
   inputs: [emptyInput()],
 });
+
+const emptyList = (): MailchimpFormListValue => ({
+  listId: '',
+  name: '',
+  description: null,
+  image: null,
+});
+
+type MailchimpFormListItemProps = {
+  value: MailchimpFormListValue;
+  listOptions: { value: string; label: string }[];
+  listsLoading: boolean;
+  disabled?: boolean;
+  onChange: (patch: Partial<MailchimpFormListValue>) => void;
+  onRemove: () => void;
+};
+
+function MailchimpFormListItem({
+  value,
+  listOptions,
+  listsLoading,
+  disabled,
+  onChange,
+  onRemove,
+}: MailchimpFormListItemProps) {
+  const { t } = useTranslation();
+  const [isChooseModalOpen, setChooseModalOpen] = useState(false);
+  const [isEditModalOpen, setEditModalOpen] = useState(false);
+
+  return (
+    <ItemPanel bordered>
+      <ItemHeader>
+        <Heading>{value.name || '—'}</Heading>
+        <IconButton
+          size="xs"
+          icon={<MdDelete />}
+          disabled={disabled}
+          onClick={onRemove}
+        />
+      </ItemHeader>
+
+      <ListRow>
+        <Field>
+          <Label>{t('blocks.mailchimpForm.listImage')}</Label>
+          <ListImageWrapper>
+            <ChooseEditImage
+              image={value.image}
+              disabled={!!disabled}
+              minHeight={120}
+              maxHeight={120}
+              openChooseModalOpen={() => setChooseModalOpen(true)}
+              openEditModalOpen={() => setEditModalOpen(true)}
+              removeImage={() => onChange({ image: null })}
+            />
+          </ListImageWrapper>
+        </Field>
+
+        <Field>
+          <Row>
+            <Field>
+              <Label>{t('blocks.mailchimpForm.list')}</Label>
+              <SelectPicker
+                block
+                cleanable={false}
+                disabled={disabled}
+                loading={listsLoading}
+                data={listOptions}
+                value={value.listId || null}
+                onChange={listId =>
+                  onChange({
+                    listId: listId ?? '',
+                    name:
+                      value.name ||
+                      listOptions.find(option => option.value === listId)
+                        ?.label ||
+                      '',
+                  })
+                }
+                placeholder={t('blocks.mailchimpForm.listPlaceholder')}
+              />
+            </Field>
+            <Field>
+              <Label>{t('blocks.mailchimpForm.listName')}</Label>
+              <Input
+                disabled={disabled}
+                value={value.name}
+                onChange={name => onChange({ name })}
+              />
+            </Field>
+          </Row>
+
+          <Field>
+            <Label>{t('blocks.mailchimpForm.listDescription')}</Label>
+            <Input
+              as="textarea"
+              rows={2}
+              disabled={disabled}
+              value={value.description ?? ''}
+              onChange={description => onChange({ description })}
+            />
+          </Field>
+        </Field>
+      </ListRow>
+
+      <Drawer
+        open={isChooseModalOpen}
+        size="sm"
+        onClose={() => setChooseModalOpen(false)}
+      >
+        <ImageSelectPanel
+          onClose={() => setChooseModalOpen(false)}
+          onSelect={image => {
+            setChooseModalOpen(false);
+            onChange({ image });
+          }}
+        />
+      </Drawer>
+
+      {value.image && (
+        <Drawer
+          open={isEditModalOpen}
+          size="sm"
+          onClose={() => setEditModalOpen(false)}
+        >
+          <ImageEditPanel
+            id={value.image.id}
+            onClose={() => setEditModalOpen(false)}
+            onSave={() => setEditModalOpen(false)}
+          />
+        </Drawer>
+      )}
+    </ItemPanel>
+  );
+}
 
 const emptySuccessOption = (): MailchimpFormSuccessOptionValue => ({
   label: '',
@@ -232,7 +386,7 @@ export function MailchimpFormBlock({
               data={providerOptions}
               value={value.syncProviderId ?? null}
               onChange={syncProviderId =>
-                update({ syncProviderId, listId: null })
+                update({ syncProviderId, listId: null, lists: [] })
               }
               placeholder={t('blocks.mailchimpForm.syncProviderPlaceholder')}
             />
@@ -250,8 +404,20 @@ export function MailchimpFormBlock({
               onChange={listId => update({ listId })}
               placeholder={t('blocks.mailchimpForm.listPlaceholder')}
             />
+            {value.multipleLists && (
+              <HelpText>{t('blocks.mailchimpForm.listReferenceHelp')}</HelpText>
+            )}
           </Field>
         </Row>
+
+        <ToggleRow>
+          <Toggle
+            disabled={disabled}
+            checked={value.multipleLists}
+            onChange={multipleLists => update({ multipleLists })}
+          />
+          <Label>{t('blocks.mailchimpForm.multipleLists')}</Label>
+        </ToggleRow>
 
         <Field>
           <Label>{t('blocks.mailchimpForm.interests')}</Label>
@@ -317,6 +483,64 @@ export function MailchimpFormBlock({
           </Row>
         </Row>
       </Panel>
+
+      {value.multipleLists && (
+        <Panel
+          bordered
+          header={t('blocks.mailchimpForm.lists')}
+        >
+          <Field>
+            <Label>{t('blocks.mailchimpForm.listsLayout')}</Label>
+            <RadioGroup
+              inline
+              disabled={disabled}
+              value={value.listsLayout}
+              onChange={listsLayout =>
+                update({
+                  listsLayout: listsLayout as MailchimpFormListsLayout,
+                })
+              }
+            >
+              <Radio value={MailchimpFormListsLayout.List}>
+                {t('blocks.mailchimpForm.listsLayoutList')}
+              </Radio>
+              <Radio value={MailchimpFormListsLayout.Grid}>
+                {t('blocks.mailchimpForm.listsLayoutGrid')}
+              </Radio>
+            </RadioGroup>
+          </Field>
+
+          {value.lists.map((list, listIndex) => (
+            <MailchimpFormListItem
+              key={listIndex}
+              value={list}
+              listOptions={listOptions}
+              listsLoading={listsLoading}
+              disabled={disabled || !value.syncProviderId}
+              onChange={patch =>
+                update({
+                  lists: value.lists.map((l, i) =>
+                    i === listIndex ? { ...l, ...patch } : l
+                  ),
+                })
+              }
+              onRemove={() =>
+                update({
+                  lists: value.lists.filter((_, i) => i !== listIndex),
+                })
+              }
+            />
+          ))}
+
+          <IconButton
+            icon={<MdAddCircle />}
+            disabled={disabled || !value.syncProviderId}
+            onClick={() => update({ lists: [...value.lists, emptyList()] })}
+          >
+            {t('blocks.mailchimpForm.addList')}
+          </IconButton>
+        </Panel>
+      )}
 
       <Panel
         bordered

@@ -16,12 +16,24 @@ registerEnumType(MailchimpContactStatus, {
 });
 
 @InputType()
+export class MailchimpContactListInput {
+  @Field()
+  listId!: string;
+
+  @Field(() => GraphQLJSONObject, { nullable: true })
+  interests?: Record<string, boolean>;
+}
+
+@InputType()
 export class MailchimpContactInput {
   @Field()
   syncProviderId!: string;
 
-  @Field()
-  listId!: string;
+  @Field({ nullable: true })
+  listId?: string;
+
+  @Field(() => [MailchimpContactListInput], { nullable: true })
+  lists?: MailchimpContactListInput[];
 
   @Field()
   email!: string;

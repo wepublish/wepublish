@@ -154,6 +154,16 @@ fragment FullMailchimpFormBlock on MailchimpFormBlock {
   syncProviderId
   listId
   interests
+  multipleLists
+  listsLayout
+  lists {
+    listId
+    name
+    description
+    image {
+      ...FullImage
+    }
+  }
   autoFocus
   doubleOptIn
   buttonColor
