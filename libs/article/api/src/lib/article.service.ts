@@ -46,10 +46,7 @@ export class ArticleService {
   async getArticleBySlug(slug: string) {
     return this.prisma.article.findFirst({
       where: {
-        slug: {
-          equals: slug,
-          mode: 'insensitive',
-        },
+        slug: slug.toLowerCase(),
       },
       orderBy: {
         publishedAt: 'asc', // there might be an unpublished article with the same slug
@@ -133,7 +130,7 @@ export class ArticleService {
       data: {
         paywallId,
         likes,
-        slug,
+        slug: slug && slug.toLowerCase(),
         shared,
         hidden,
         disableComments,
@@ -214,7 +211,7 @@ export class ArticleService {
       where: { id },
       data: {
         likes,
-        slug,
+        slug: slug && slug.toLowerCase(),
         paywallId,
         shared,
         hidden,

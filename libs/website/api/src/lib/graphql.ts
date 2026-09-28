@@ -951,7 +951,7 @@ export type DashboardSubscription = {
   deactivationDate?: Maybe<Scalars['DateTime']>;
   endsAt?: Maybe<Scalars['DateTime']>;
   memberPlan: Scalars['String'];
-  monthlyAmount: Scalars['Int'];
+  monthlyAmount: Scalars['Float'];
   paymentPeriodicity: PaymentPeriodicity;
   reasonForDeactivation?: Maybe<SubscriptionDeactivationReason>;
   renewsAt?: Maybe<Scalars['DateTime']>;
@@ -2475,13 +2475,11 @@ export type MediumStatsWindow = {
 export type MemberPlan = HasImage & {
   __typename?: 'MemberPlan';
   active: Scalars['Boolean'];
-  amountPerMonthMax?: Maybe<Scalars['Int']>;
-  amountPerMonthMin: Scalars['Int'];
-  amountPerMonthTarget?: Maybe<Scalars['Int']>;
   availablePaymentMethods: Array<AvailablePaymentMethod>;
   confirmationPage?: Maybe<Page>;
   confirmationPageId?: Maybe<Scalars['String']>;
   currency: Currency;
+  defaultPaymentPeriodicity?: Maybe<PaymentPeriodicity>;
   description?: Maybe<Scalars['RichText']>;
   extendable: Scalars['Boolean'];
   externalReward?: Maybe<Scalars['String']>;
@@ -2496,6 +2494,7 @@ export type MemberPlan = HasImage & {
   migrateToTargetPaymentMethod?: Maybe<PaymentMethod>;
   migrateToTargetPaymentMethodID?: Maybe<Scalars['String']>;
   name: Scalars['String'];
+  periodicityPricing: Array<PeriodicityPrice>;
   productType: ProductType;
   shortDescription?: Maybe<Scalars['RichText']>;
   slug: Scalars['String'];
@@ -3024,6 +3023,7 @@ export type MutationCreateCommentArgs = {
   itemType: CommentItemType;
   lead?: InputMaybe<Scalars['String']>;
   parentID?: InputMaybe<Scalars['String']>;
+  publish?: InputMaybe<Scalars['Boolean']>;
   tagIds?: InputMaybe<Array<Scalars['String']>>;
   text?: InputMaybe<Scalars['RichText']>;
 };
@@ -3115,12 +3115,10 @@ export type MutationCreateMailTemplateArgs = {
 
 export type MutationCreateMemberPlanArgs = {
   active: Scalars['Boolean'];
-  amountPerMonthMax?: InputMaybe<Scalars['Int']>;
-  amountPerMonthMin: Scalars['Int'];
-  amountPerMonthTarget?: InputMaybe<Scalars['Int']>;
   availablePaymentMethods: Array<AvailablePaymentMethodInput>;
   confirmationPageId?: InputMaybe<Scalars['String']>;
   currency: Currency;
+  defaultPaymentPeriodicity?: InputMaybe<PaymentPeriodicity>;
   description?: InputMaybe<Scalars['RichText']>;
   extendable: Scalars['Boolean'];
   externalReward?: InputMaybe<Scalars['String']>;
@@ -3129,6 +3127,7 @@ export type MutationCreateMemberPlanArgs = {
   maxCount?: InputMaybe<Scalars['Int']>;
   migrateToTargetPaymentMethodID?: InputMaybe<Scalars['String']>;
   name: Scalars['String'];
+  periodicityPricing?: InputMaybe<Array<PeriodicityPriceInput>>;
   productType: ProductType;
   shortDescription?: InputMaybe<Scalars['RichText']>;
   slug: Scalars['String'];
@@ -3254,7 +3253,7 @@ export type MutationCreateSubscriptionArgs = {
   autoRenew: Scalars['Boolean'];
   extendable: Scalars['Boolean'];
   memberPlanID: Scalars['String'];
-  monthlyAmount: Scalars['Int'];
+  monthlyAmount: Scalars['Float'];
   paidUntil?: InputMaybe<Scalars['DateTime']>;
   paymentMethodID: Scalars['String'];
   paymentPeriodicity: PaymentPeriodicity;
@@ -3335,7 +3334,7 @@ export type MutationCreateUserSubscriptionArgs = {
   goodieId?: InputMaybe<Scalars['String']>;
   memberPlanID?: InputMaybe<Scalars['String']>;
   memberPlanSlug?: InputMaybe<Scalars['Slug']>;
-  monthlyAmount: Scalars['Int'];
+  monthlyAmount: Scalars['Float'];
   paymentMethodID?: InputMaybe<Scalars['String']>;
   paymentMethodSlug?: InputMaybe<Scalars['Slug']>;
   paymentPeriodicity: PaymentPeriodicity;
@@ -3350,7 +3349,7 @@ export type MutationCreateUserSubscriptionWithConfirmationArgs = {
   goodieId?: InputMaybe<Scalars['String']>;
   memberPlanID?: InputMaybe<Scalars['String']>;
   memberPlanSlug?: InputMaybe<Scalars['Slug']>;
-  monthlyAmount: Scalars['Int'];
+  monthlyAmount: Scalars['Float'];
   paymentMethodID?: InputMaybe<Scalars['String']>;
   paymentMethodSlug?: InputMaybe<Scalars['Slug']>;
   paymentPeriodicity: PaymentPeriodicity;
@@ -3609,7 +3608,7 @@ export type MutationImportSubscriptionArgs = {
   autoRenew: Scalars['Boolean'];
   extendable: Scalars['Boolean'];
   memberPlanID: Scalars['String'];
-  monthlyAmount: Scalars['Int'];
+  monthlyAmount: Scalars['Float'];
   paidUntil?: InputMaybe<Scalars['DateTime']>;
   paymentMethodID: Scalars['String'];
   paymentPeriodicity: PaymentPeriodicity;
@@ -4010,12 +4009,10 @@ export type MutationUpdateMailTemplateArgs = {
 
 export type MutationUpdateMemberPlanArgs = {
   active?: InputMaybe<Scalars['Boolean']>;
-  amountPerMonthMax?: InputMaybe<Scalars['Int']>;
-  amountPerMonthMin?: InputMaybe<Scalars['Int']>;
-  amountPerMonthTarget?: InputMaybe<Scalars['Int']>;
   availablePaymentMethods?: InputMaybe<Array<AvailablePaymentMethodInput>>;
   confirmationPageId?: InputMaybe<Scalars['String']>;
   currency?: InputMaybe<Currency>;
+  defaultPaymentPeriodicity?: InputMaybe<PaymentPeriodicity>;
   description?: InputMaybe<Scalars['RichText']>;
   extendable?: InputMaybe<Scalars['Boolean']>;
   externalReward?: InputMaybe<Scalars['String']>;
@@ -4025,6 +4022,7 @@ export type MutationUpdateMemberPlanArgs = {
   maxCount?: InputMaybe<Scalars['Int']>;
   migrateToTargetPaymentMethodID?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
+  periodicityPricing?: InputMaybe<Array<PeriodicityPriceInput>>;
   productType?: InputMaybe<ProductType>;
   shortDescription?: InputMaybe<Scalars['RichText']>;
   slug?: InputMaybe<Scalars['String']>;
@@ -4177,7 +4175,7 @@ export type MutationUpdateSubscriptionArgs = {
   extendable?: InputMaybe<Scalars['Boolean']>;
   id: Scalars['String'];
   memberPlanID?: InputMaybe<Scalars['String']>;
-  monthlyAmount?: InputMaybe<Scalars['Int']>;
+  monthlyAmount?: InputMaybe<Scalars['Float']>;
   paidUntil?: InputMaybe<Scalars['DateTime']>;
   paymentMethodID?: InputMaybe<Scalars['String']>;
   paymentPeriodicity?: InputMaybe<PaymentPeriodicity>;
@@ -4303,7 +4301,7 @@ export type MutationUpgradeUserSubscriptionArgs = {
   failureURL?: InputMaybe<Scalars['String']>;
   goodieId?: InputMaybe<Scalars['String']>;
   memberPlanId: Scalars['String'];
-  monthlyAmount: Scalars['Int'];
+  monthlyAmount: Scalars['Float'];
   paymentMethodId: Scalars['String'];
   subscriptionId: Scalars['String'];
   successURL?: InputMaybe<Scalars['String']>;
@@ -4458,6 +4456,7 @@ export type PageFilter = {
   publicationDateFrom?: InputMaybe<DateFilter>;
   publicationDateTo?: InputMaybe<DateFilter>;
   published?: InputMaybe<Scalars['Boolean']>;
+  slug?: InputMaybe<Scalars['String']>;
   tags?: InputMaybe<Array<Scalars['String']>>;
   title?: InputMaybe<Scalars['String']>;
 };
@@ -5055,6 +5054,23 @@ export type PeriodicJob = {
   tries: Scalars['Float'];
 };
 
+export type PeriodicityPrice = {
+  __typename?: 'PeriodicityPrice';
+  amountMax?: Maybe<Scalars['Int']>;
+  amountMin?: Maybe<Scalars['Int']>;
+  amountTarget?: Maybe<Scalars['Int']>;
+  label?: Maybe<Scalars['String']>;
+  periodicity: PaymentPeriodicity;
+};
+
+export type PeriodicityPriceInput = {
+  amountMax?: InputMaybe<Scalars['Int']>;
+  amountMin?: InputMaybe<Scalars['Int']>;
+  amountTarget?: InputMaybe<Scalars['Int']>;
+  label?: InputMaybe<Scalars['String']>;
+  periodicity: PaymentPeriodicity;
+};
+
 export type Permission = {
   __typename?: 'Permission';
   deprecated: Scalars['Boolean'];
@@ -5232,7 +5248,7 @@ export type PublicSubscription = HasMemberPlan & HasPaymentMethod & HasUser & {
   memberPlan: MemberPlan;
   memberPlanID: Scalars['String'];
   modifiedAt: Scalars['DateTime'];
-  monthlyAmount: Scalars['Int'];
+  monthlyAmount: Scalars['Float'];
   paidUntil?: Maybe<Scalars['DateTime']>;
   paymentMethod: PaymentMethod;
   paymentMethodID: Scalars['String'];
@@ -6456,6 +6472,7 @@ export type SensitiveDataUser = BaseUser & {
   roleIDs: Array<Scalars['String']>;
   roles: Array<UserRole>;
   subscriptionCount: Scalars['Int'];
+  subscriptionOverview: Array<UserSubscriptionOverview>;
   /** Whether two-factor authentication is enabled for this user. */
   totpEnabled: Scalars['Boolean'];
   /** Whether this user is exempt from the two-factor authentication requirement. */
@@ -6598,7 +6615,8 @@ export enum SettingName {
   PeeringTimeoutMs = 'PEERING_TIMEOUT_MS',
   ResetPasswordJwtExpiresMin = 'RESET_PASSWORD_JWT_EXPIRES_MIN',
   SendLoginJwtExpiresMin = 'SEND_LOGIN_JWT_EXPIRES_MIN',
-  ShowPendingWhenNotPublished = 'SHOW_PENDING_WHEN_NOT_PUBLISHED'
+  ShowPendingWhenNotPublished = 'SHOW_PENDING_WHEN_NOT_PUBLISHED',
+  SubscriptionUpgradeBillsFullDifference = 'SUBSCRIPTION_UPGRADE_BILLS_FULL_DIFFERENCE'
 }
 
 export type SettingPaymentProvider = SettingProvider & {
@@ -6782,10 +6800,12 @@ export type SubscribeBlock = BaseBlock & {
   disabled?: Maybe<Scalars['Boolean']>;
   fields: Array<SubscribeBlockField>;
   goodieMinValue?: Maybe<Scalars['Int']>;
+  goodieMinValueAppliesToUpgrade: Scalars['Boolean'];
   hideRepeatGoodieOnUpgrade: Scalars['Boolean'];
   memberPlanIds: Array<Scalars['String']>;
   memberPlanRenderSettings: Array<SubscribeBlockMemberPlanRenderSetting>;
   memberPlans: Array<MemberPlan>;
+  periodicityDisplay?: Maybe<SubscribePeriodicityDisplay>;
   showDiscountCodes: Scalars['Boolean'];
   showGoodies: Scalars['Boolean'];
   type: BlockType;
@@ -6806,9 +6826,11 @@ export type SubscribeBlockInput = {
   disabled?: InputMaybe<Scalars['Boolean']>;
   fields?: Array<SubscribeBlockField>;
   goodieMinValue?: InputMaybe<Scalars['Int']>;
+  goodieMinValueAppliesToUpgrade?: Scalars['Boolean'];
   hideRepeatGoodieOnUpgrade?: Scalars['Boolean'];
   memberPlanIds?: Array<Scalars['String']>;
   memberPlanRenderSettings: Array<SubscribeBlockMemberPlanRenderSettingInput>;
+  periodicityDisplay?: InputMaybe<SubscribePeriodicityDisplay>;
   showDiscountCodes?: Scalars['Boolean'];
   showGoodies?: Scalars['Boolean'];
 };
@@ -6821,10 +6843,12 @@ export type SubscribeBlockLayoutConfigInput = {
   showInput?: Scalars['Boolean'];
   type: SubscribeBlockRenderLayout;
   values?: InputMaybe<Array<Scalars['Int']>>;
+  valuesByPeriodicity?: InputMaybe<Array<SubscribeBlockPeriodicityValuesInput>>;
 };
 
 export type SubscribeBlockLayoutNoneConfig = SubscribeBlockLayoutConfig & {
   __typename?: 'SubscribeBlockLayoutNoneConfig';
+  showInput: Scalars['Boolean'];
   type: SubscribeBlockRenderLayout;
 };
 
@@ -6833,6 +6857,7 @@ export type SubscribeBlockLayoutPickerConfig = SubscribeBlockLayoutConfig & {
   showInput: Scalars['Boolean'];
   type: SubscribeBlockRenderLayout;
   values: Array<Scalars['Int']>;
+  valuesByPeriodicity: Array<SubscribeBlockPeriodicityValues>;
 };
 
 export type SubscribeBlockLayoutSliderConfig = SubscribeBlockLayoutConfig & {
@@ -6854,10 +6879,27 @@ export type SubscribeBlockMemberPlanRenderSettingInput = {
   memberPlanId: Scalars['String'];
 };
 
+export type SubscribeBlockPeriodicityValues = {
+  __typename?: 'SubscribeBlockPeriodicityValues';
+  periodicity: PaymentPeriodicity;
+  values: Array<Scalars['Int']>;
+};
+
+export type SubscribeBlockPeriodicityValuesInput = {
+  periodicity: PaymentPeriodicity;
+  values: Array<Scalars['Int']>;
+};
+
 export enum SubscribeBlockRenderLayout {
   None = 'None',
   Picker = 'Picker',
   Slider = 'Slider'
+}
+
+export enum SubscribePeriodicityDisplay {
+  Dropdown = 'Dropdown',
+  OfferCards = 'OfferCards',
+  Toggle = 'Toggle'
 }
 
 export type SubscriptionCreatedAction = BaseAction & HasSubscriptionLc & {
@@ -7297,7 +7339,7 @@ export type UpdateUserSubscriptionInput = {
   autoRenew: Scalars['Boolean'];
   id: Scalars['String'];
   memberPlanID: Scalars['String'];
-  monthlyAmount: Scalars['Int'];
+  monthlyAmount: Scalars['Float'];
   paymentMethodID: Scalars['String'];
   paymentPeriodicity: PaymentPeriodicity;
 };
@@ -7403,7 +7445,24 @@ export enum UserSort {
   CreatedAt = 'CreatedAt',
   FirstName = 'FirstName',
   ModifiedAt = 'ModifiedAt',
-  Name = 'Name'
+  Name = 'Name',
+  SubscriptionCount = 'SubscriptionCount'
+}
+
+export type UserSubscriptionOverview = {
+  __typename?: 'UserSubscriptionOverview';
+  id: Scalars['String'];
+  memberPlanName: Scalars['String'];
+  /** Active means started and paid up, not merely not deactivated: imported subscriptions often expire without a deactivation. */
+  status: UserSubscriptionStatus;
+};
+
+export enum UserSubscriptionStatus {
+  Active = 'Active',
+  Deactivated = 'Deactivated',
+  Expired = 'Expired',
+  Planned = 'Planned',
+  Unpaid = 'Unpaid'
 }
 
 export type VersionInformation = {

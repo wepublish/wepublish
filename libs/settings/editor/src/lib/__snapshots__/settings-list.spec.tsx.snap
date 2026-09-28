@@ -849,6 +849,85 @@ exports[`SettingList > renders successfully 1`] = `
                 </div>
               </div>
             </div>
+            <div
+              class="rs-col rs-col-xs-24"
+            >
+              <div
+                class="emotion-6 emotion-7 rs-panel rs-panel-bordered"
+              >
+                <div
+                  class="rs-panel-header"
+                >
+                  <div
+                    class="rs-panel-title"
+                  >
+                    settingList.subscriptionPlans
+                  </div>
+                </div>
+                <div
+                  class="rs-panel-body rs-scroll-view rs-scroll-view-custom-scrollbar"
+                  data-testid="scroll-view"
+                >
+                  <div
+                    class="rs-form-stack rs-form-stack-vertical rs-form-stack-fluid"
+                  >
+                    <div
+                      class="rs-form-group"
+                      role="group"
+                    >
+                      <label
+                        class="rs-form-control-label"
+                        for="SUBSCRIPTION_UPGRADE_BILLS_FULL_DIFFERENCE"
+                        id="SUBSCRIPTION_UPGRADE_BILLS_FULL_DIFFERENCE-label"
+                      >
+                        settingList.subscriptionUpgradeModel
+                        <div
+                          class="emotion-8 emotion-9"
+                        >
+                          <svg
+                            fill="currentColor"
+                            height="1em"
+                            stroke="currentColor"
+                            stroke-width="0"
+                            viewBox="0 0 24 24"
+                            width="1em"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M0 0h24v24H0z"
+                              fill="none"
+                            />
+                            <path
+                              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
+                            />
+                          </svg>
+                        </div>
+                      </label>
+                      <label
+                        class="rs-toggle"
+                        data-checked="false"
+                        data-disabled="false"
+                        data-loading="false"
+                        data-placement="end"
+                        data-size="md"
+                      >
+                        <input
+                          aria-checked="false"
+                          aria-disabled="false"
+                          aria-label="OFF"
+                          class="rs-toggle-input"
+                          role="switch"
+                          type="checkbox"
+                        />
+                        <span
+                          class="rs-toggle-track"
+                        />
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         <div
@@ -1445,8 +1524,8 @@ exports[`SettingList > renders successfully 1`] = `
                       data-testid="picker"
                     >
                       <div
-                        aria-controls="rs-_r_50_-listbox"
-                        aria-describedby="rs-_r_50_-describe"
+                        aria-controls="rs-_r_5b_-listbox"
+                        aria-describedby="rs-_r_5b_-describe"
                         aria-disabled="false"
                         aria-expanded="false"
                         aria-haspopup="listbox"
@@ -1456,7 +1535,7 @@ exports[`SettingList > renders successfully 1`] = `
                         data-cleanable="true"
                         data-disabled="false"
                         data-has-value="false"
-                        id="rs-_r_50_"
+                        id="rs-_r_5b_"
                         role="combobox"
                         tabindex="0"
                       >
@@ -1464,7 +1543,7 @@ exports[`SettingList > renders successfully 1`] = `
                           class="rs-picker-toggle-stack rs-stack"
                         >
                           <div
-                            class="rs-stack-item rs-box-_r_54_"
+                            class="rs-stack-item rs-box-_r_5f_"
                             data-rs="box"
                             overflow="hidden"
                           >
@@ -1480,13 +1559,13 @@ exports[`SettingList > renders successfully 1`] = `
                             <span
                               class="rs-picker-toggle-placeholder"
                               data-testid="picker-describe"
-                              id="rs-_r_50_-describe"
+                              id="rs-_r_5b_-describe"
                             >
                               Select
                             </span>
                           </div>
                           <div
-                            class="rs-picker-toggle-indicator rs-stack-item rs-box-_r_55_"
+                            class="rs-picker-toggle-indicator rs-stack-item rs-box-_r_5g_"
                             data-rs="box"
                           >
                             <svg

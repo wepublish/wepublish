@@ -883,7 +883,7 @@ type DashboardSubscription {
   deactivationDate: DateTime
   endsAt: DateTime
   memberPlan: String!
-  monthlyAmount: Int!
+  monthlyAmount: Float!
   paymentPeriodicity: PaymentPeriodicity!
   reasonForDeactivation: SubscriptionDeactivationReason
   renewsAt: DateTime
@@ -2407,13 +2407,11 @@ type MediumStatsWindow {
 
 type MemberPlan implements HasImage {
   active: Boolean!
-  amountPerMonthMax: Int
-  amountPerMonthMin: Int!
-  amountPerMonthTarget: Int
   availablePaymentMethods: [AvailablePaymentMethod!]!
   confirmationPage: Page
   confirmationPageId: String
   currency: Currency!
+  defaultPaymentPeriodicity: PaymentPeriodicity
   description: RichText
   extendable: Boolean!
   externalReward: String
@@ -2431,6 +2429,7 @@ type MemberPlan implements HasImage {
   migrateToTargetPaymentMethod: PaymentMethod
   migrateToTargetPaymentMethodID: String
   name: String!
+  periodicityPricing: [PeriodicityPrice!]!
   productType: ProductType!
   shortDescription: RichText
   slug: String!
@@ -2509,7 +2508,7 @@ type Mutation {
   createBlockTemplate(blocks: [BlockContentInput!]!, name: String!): BlockTemplate!
 
   """Creates a comment for any user"""
-  createComment(itemID: String!, itemType: CommentItemType!, lead: String, parentID: String, tagIds: [String!], text: RichText): Comment!
+  createComment(itemID: String!, itemType: CommentItemType!, lead: String, parentID: String, publish: Boolean = false, tagIds: [String!], text: RichText): Comment!
 
   "\n      Create a new consent.\n    "
   createConsent(defaultValue: Boolean!, name: String!, slug: String!): Consent!
@@ -2548,7 +2547,7 @@ type Mutation {
   createMailTemplate(input: MailTemplateInput!): MailTemplateModel!
 
   """Creates a new memberplan."""
-  createMemberPlan(active: Boolean!, amountPerMonthMax: Int, amountPerMonthMin: Int!, amountPerMonthTarget: Int, availablePaymentMethods: [AvailablePaymentMethodInput!]!, confirmationPageId: String, currency: Currency!, description: RichText, extendable: Boolean!, externalReward: String, failPageId: String, imageID: String, maxCount: Int, migrateToTargetPaymentMethodID: String, name: String!, productType: ProductType!, shortDescription: RichText, slug: String!, successPageId: String, tags: [String!]): MemberPlan!
+  createMemberPlan(active: Boolean!, availablePaymentMethods: [AvailablePaymentMethodInput!]!, confirmationPageId: String, currency: Currency!, defaultPaymentPeriodicity: PaymentPeriodicity, description: RichText, extendable: Boolean!, externalReward: String, failPageId: String, imageID: String, maxCount: Int, migrateToTargetPaymentMethodID: String, name: String!, periodicityPricing: [PeriodicityPriceInput!], productType: ProductType!, shortDescription: RichText, slug: String!, successPageId: String, tags: [String!]): MemberPlan!
 
   """Creates a new navigation."""
   createNavigation(key: String!, links: [NavigationLinkInput!]!, name: String!): Navigation!
@@ -2588,7 +2587,7 @@ type Mutation {
   createSessionWithJWT(jwt: String!, totpToken: String): SessionWithToken!
 
   """Creates a new subscription."""
-  createSubscription(autoRenew: Boolean!, extendable: Boolean!, memberPlanID: String!, monthlyAmount: Int!, paidUntil: DateTime, paymentMethodID: String!, paymentPeriodicity: PaymentPeriodicity!, properties: [PropertyInput!]!, startsAt: DateTime!, userID: String!): PublicSubscription!
+  createSubscription(autoRenew: Boolean!, extendable: Boolean!, memberPlanID: String!, monthlyAmount: Float!, paidUntil: DateTime, paymentMethodID: String!, paymentPeriodicity: PaymentPeriodicity!, properties: [PropertyInput!]!, startsAt: DateTime!, userID: String!): PublicSubscription!
 
   """Create a new subscription flow"""
   createSubscriptionFlow(autoRenewal: [Boolean!]!, memberPlanId: String!, paymentMethodIds: [String!]!, periodicities: [PaymentPeriodicity!]!): [SubscriptionFlowModel!]!
@@ -2632,12 +2631,12 @@ type Mutation {
   createUserRole(description: String, name: String!, permissionIDs: [String!]!): UserRole!
 
   """Allows authenticated users to create additional subscriptions"""
-  createUserSubscription(autoRenew: Boolean!, deactivateSubscriptionId: String, discountCode: String, failureURL: String, goodieId: String, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Int!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], successURL: String): Payment!
+  createUserSubscription(autoRenew: Boolean!, deactivateSubscriptionId: String, discountCode: String, failureURL: String, goodieId: String, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Float!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], successURL: String): Payment!
 
   """
   Allows guests and authenticated users to create additional subscriptions
   """
-  createUserSubscriptionWithConfirmation(autoRenew: Boolean!, discountCode: String, goodieId: String, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Int!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], userId: String): Boolean!
+  createUserSubscriptionWithConfirmation(autoRenew: Boolean!, discountCode: String, goodieId: String, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Float!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], userId: String): Boolean!
 
   """Deletes all sync errors for a config so all contacts will be retried."""
   deleteAllMailchimpSyncErrors(configId: String!): Boolean!
@@ -2802,7 +2801,7 @@ type Mutation {
     autoRenew: Boolean!
     extendable: Boolean!
     memberPlanID: String!
-    monthlyAmount: Int!
+    monthlyAmount: Float!
     paidUntil: DateTime
     paymentMethodID: String!
     paymentPeriodicity: PaymentPeriodicity!
@@ -2985,7 +2984,7 @@ type Mutation {
   updateMailTemplate(id: String!, input: MailTemplateInput!): MailTemplateModel!
 
   """Updates an existing memberplan."""
-  updateMemberPlan(active: Boolean, amountPerMonthMax: Int, amountPerMonthMin: Int, amountPerMonthTarget: Int, availablePaymentMethods: [AvailablePaymentMethodInput!], confirmationPageId: String, currency: Currency, description: RichText, extendable: Boolean, externalReward: String, failPageId: String, id: String!, imageID: String, maxCount: Int, migrateToTargetPaymentMethodID: String, name: String, productType: ProductType, shortDescription: RichText, slug: String, successPageId: String, tags: [String!]): MemberPlan!
+  updateMemberPlan(active: Boolean, availablePaymentMethods: [AvailablePaymentMethodInput!], confirmationPageId: String, currency: Currency, defaultPaymentPeriodicity: PaymentPeriodicity, description: RichText, extendable: Boolean, externalReward: String, failPageId: String, id: String!, imageID: String, maxCount: Int, migrateToTargetPaymentMethodID: String, name: String, periodicityPricing: [PeriodicityPriceInput!], productType: ProductType, shortDescription: RichText, slug: String, successPageId: String, tags: [String!]): MemberPlan!
 
   """Updates an existing navigation."""
   updateNavigation(id: String!, key: String!, links: [NavigationLinkInput!]!, name: String!): Navigation!
@@ -3023,7 +3022,7 @@ type Mutation {
   updateSetting(name: SettingName!, value: GraphQLSettingValueType): Setting!
 
   """Updates an existing subscription."""
-  updateSubscription(autoRenew: Boolean, extendable: Boolean, id: String!, memberPlanID: String, monthlyAmount: Int, paidUntil: DateTime, paymentMethodID: String, paymentPeriodicity: PaymentPeriodicity, properties: [PropertyInput!], startsAt: DateTime, userID: String): PublicSubscription!
+  updateSubscription(autoRenew: Boolean, extendable: Boolean, id: String!, memberPlanID: String, monthlyAmount: Float, paidUntil: DateTime, paymentMethodID: String, paymentPeriodicity: PaymentPeriodicity, properties: [PropertyInput!], startsAt: DateTime, userID: String): PublicSubscription!
 
   """Update an existing subscription flow"""
   updateSubscriptionFlow(autoRenewal: [Boolean!], id: String!, paymentMethodIds: [String!], periodicities: [PaymentPeriodicity!]): [SubscriptionFlowModel!]!
@@ -3069,7 +3068,7 @@ type Mutation {
   updateWebsiteSettings(ads: WebsiteAdsInput, analytics: WebsiteAnalyticsInput, fonts: [WebsiteRemoteFontInput!], mail: WebsiteMailInput, theme: JSONObject): WebsiteSettings!
 
   """"""
-  upgradeUserSubscription(discountCode: String, failureURL: String, goodieId: String, memberPlanId: String!, monthlyAmount: Int!, paymentMethodId: String!, subscriptionId: String!, successURL: String): Payment!
+  upgradeUserSubscription(discountCode: String, failureURL: String, goodieId: String, memberPlanId: String!, monthlyAmount: Float!, paymentMethodId: String!, subscriptionId: String!, successURL: String): Payment!
 
   """Uploads a new document."""
   uploadDocument(description: String, file: Upload!, filename: String, title: String): Document!
@@ -3190,6 +3189,7 @@ input PageFilter {
   publicationDateFrom: DateFilter
   publicationDateTo: DateFilter
   published: Boolean
+  slug: String
   tags: [String!]
   title: String
 }
@@ -3745,6 +3745,22 @@ type PeriodicJob {
   tries: Float!
 }
 
+type PeriodicityPrice {
+  amountMax: Int
+  amountMin: Int
+  amountTarget: Int
+  label: String
+  periodicity: PaymentPeriodicity!
+}
+
+input PeriodicityPriceInput {
+  amountMax: Int
+  amountMin: Int
+  amountTarget: Int
+  label: String
+  periodicity: PaymentPeriodicity!
+}
+
 type Permission {
   deprecated: Boolean!
   description: String!
@@ -3909,7 +3925,7 @@ type PublicSubscription implements HasMemberPlan & HasPaymentMethod & HasUser {
   memberPlan: MemberPlan!
   memberPlanID: String!
   modifiedAt: DateTime!
-  monthlyAmount: Int!
+  monthlyAmount: Float!
   paidUntil: DateTime
   paymentMethod: PaymentMethod!
   paymentMethodID: String!
@@ -4554,6 +4570,7 @@ type SensitiveDataUser implements BaseUser {
   roleIDs: [String!]!
   roles: [UserRole!]!
   subscriptionCount: Int!
+  subscriptionOverview: [UserSubscriptionOverview!]!
 
   """Whether two-factor authentication is enabled for this user."""
   totpEnabled: Boolean!
@@ -4700,6 +4717,7 @@ enum SettingName {
   RESET_PASSWORD_JWT_EXPIRES_MIN
   SEND_LOGIN_JWT_EXPIRES_MIN
   SHOW_PENDING_WHEN_NOT_PUBLISHED
+  SUBSCRIPTION_UPGRADE_BILLS_FULL_DIFFERENCE
 }
 
 type SettingPaymentProvider implements SettingProvider {
@@ -4877,10 +4895,12 @@ type SubscribeBlock implements BaseBlock {
   disabled: Boolean
   fields: [SubscribeBlockField!]!
   goodieMinValue: Int
+  goodieMinValueAppliesToUpgrade: Boolean!
   hideRepeatGoodieOnUpgrade: Boolean!
   memberPlanIds: [String!]!
   memberPlanRenderSettings: [SubscribeBlockMemberPlanRenderSetting!]!
   memberPlans: [MemberPlan!]!
+  periodicityDisplay: SubscribePeriodicityDisplay
   showDiscountCodes: Boolean!
   showGoodies: Boolean!
   type: BlockType!
@@ -4901,9 +4921,11 @@ input SubscribeBlockInput {
   disabled: Boolean
   fields: [SubscribeBlockField!]! = [FirstName, Password, PasswordRepeated, Address]
   goodieMinValue: Int
+  goodieMinValueAppliesToUpgrade: Boolean! = false
   hideRepeatGoodieOnUpgrade: Boolean! = false
   memberPlanIds: [String!]! = []
   memberPlanRenderSettings: [SubscribeBlockMemberPlanRenderSettingInput!]!
+  periodicityDisplay: SubscribePeriodicityDisplay
   showDiscountCodes: Boolean! = false
   showGoodies: Boolean! = false
 }
@@ -4916,9 +4938,11 @@ input SubscribeBlockLayoutConfigInput {
   showInput: Boolean! = false
   type: SubscribeBlockRenderLayout!
   values: [Int!]
+  valuesByPeriodicity: [SubscribeBlockPeriodicityValuesInput!]
 }
 
 type SubscribeBlockLayoutNoneConfig implements SubscribeBlockLayoutConfig {
+  showInput: Boolean!
   type: SubscribeBlockRenderLayout!
 }
 
@@ -4926,6 +4950,7 @@ type SubscribeBlockLayoutPickerConfig implements SubscribeBlockLayoutConfig {
   showInput: Boolean!
   type: SubscribeBlockRenderLayout!
   values: [Int!]!
+  valuesByPeriodicity: [SubscribeBlockPeriodicityValues!]!
 }
 
 type SubscribeBlockLayoutSliderConfig implements SubscribeBlockLayoutConfig {
@@ -4945,10 +4970,26 @@ input SubscribeBlockMemberPlanRenderSettingInput {
   memberPlanId: String!
 }
 
+type SubscribeBlockPeriodicityValues {
+  periodicity: PaymentPeriodicity!
+  values: [Int!]!
+}
+
+input SubscribeBlockPeriodicityValuesInput {
+  periodicity: PaymentPeriodicity!
+  values: [Int!]!
+}
+
 enum SubscribeBlockRenderLayout {
   None
   Picker
   Slider
+}
+
+enum SubscribePeriodicityDisplay {
+  Dropdown
+  OfferCards
+  Toggle
 }
 
 type SubscriptionCreatedAction implements BaseAction & HasSubscriptionLc {
@@ -5366,7 +5407,7 @@ input UpdateUserSubscriptionInput {
   autoRenew: Boolean!
   id: String!
   memberPlanID: String!
-  monthlyAmount: Int!
+  monthlyAmount: Float!
   paymentMethodID: String!
   paymentPeriodicity: PaymentPeriodicity!
 }
@@ -5470,6 +5511,25 @@ enum UserSort {
   FirstName
   ModifiedAt
   Name
+  SubscriptionCount
+}
+
+type UserSubscriptionOverview {
+  id: String!
+  memberPlanName: String!
+
+  """
+  Active means started and paid up, not merely not deactivated: imported subscriptions often expire without a deactivation.
+  """
+  status: UserSubscriptionStatus!
+}
+
+enum UserSubscriptionStatus {
+  Active
+  Deactivated
+  Expired
+  Planned
+  Unpaid
 }
 
 type VersionInformation {
