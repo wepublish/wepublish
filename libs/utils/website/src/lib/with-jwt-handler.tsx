@@ -168,6 +168,7 @@ export const withJwtHandler = <P extends object>(
 
           await refreshStore();
         }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (err: any) {
         setError(
           err?.message?.includes('TOTP_REQUIRED') ?

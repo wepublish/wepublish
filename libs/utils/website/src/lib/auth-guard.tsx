@@ -6,12 +6,7 @@ import {
 import { setCookie } from 'cookies-next';
 import { add } from 'date-fns';
 import { useRouter } from 'next/router';
-import {
-  ComponentType,
-  createElement,
-  Fragment,
-  PropsWithChildren,
-} from 'react';
+import { ComponentType, createElement, PropsWithChildren } from 'react';
 
 const AuthGuard = ({ children }: PropsWithChildren) => {
   const router = useRouter();
@@ -28,10 +23,10 @@ const AuthGuard = ({ children }: PropsWithChildren) => {
   }
 
   if (hasUser) {
-    return <>{children}</>;
+    return children;
   }
 
-  return <Fragment />;
+  return null;
 };
 
 export const withAuthGuard = <P extends object>(Cmp: ComponentType<P>) =>

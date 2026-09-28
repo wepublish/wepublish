@@ -154,6 +154,7 @@ describe('withJwtHandler', () => {
             'Store reset while query was in flight (not completed in link chain)'
           )
         );
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
       const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
       const opener = { postMessage: vi.fn() };
       setOpener(opener);
