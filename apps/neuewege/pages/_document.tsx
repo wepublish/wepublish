@@ -5,6 +5,19 @@ import {
 } from '@wepublish/utils/website';
 import { DocumentContext, Head, Html, Main, NextScript } from 'next/document';
 
+// The live site's stylesheets (byte-identical) and the subscribe form's
+// additions, in one cascade layer: their order among each other stays as in
+// the legacy clone, and the unlayered emotion/MUI styles of the we.publish
+// components (login, signup, profile) win over them. Loaded by the browser
+// rather than bundled, as Next's css-loader drops the `layer()` of @import.
+const LEGACY_STYLES = [
+  '/static/css/live-global.css',
+  '/static/css/live-modules.css',
+  '/static/css/subscribe-form.css',
+]
+  .map(href => `@import url('${href}') layer(legacy);`)
+  .join('\n');
+
 export default function Document(props: DocumentProps) {
   return (
     <Html lang="de">
@@ -62,6 +75,11 @@ export default function Document(props: DocumentProps) {
         <link
           rel="manifest"
           href="/site.webmanifest"
+        />
+
+        <style
+          id="legacy-styles"
+          dangerouslySetInnerHTML={{ __html: LEGACY_STYLES }}
         />
 
         <DocumentHeadTags {...props} />
