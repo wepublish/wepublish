@@ -1,41 +1,15 @@
+# Boot-time switches only.
+#
+# Which mail, payment, challenge, tracking pixel and sync providers exist is no
+# longer configured here: the `settings.*provider` tables are the registry and
+# the editor's integrations page maintains them. A fresh database gets a usable
+# set from the seed, and `reloadProviders` applies changes without a restart.
+#
+# What is left cannot be resolved at runtime, because each value is baked into
+# an object that is built once when the process starts.
 general:
   apolloPlayground: true
   apolloIntrospection: true
-  bcryptHashCostFactor: 12
   urlAdapter: default
-mailProvider:
-  id: mailchimp # allowed is mailchimp/mailgun/slackmail/smtp
-  type: mailchimp # allowed mailchimp/mailgun/slackmail/smtp
-  fromAddress: no-reply@wepublish.local
-  # SMTP defaults to localhost:1025 (Mailpit). docker-compose overrides the
-  # host to `mailpit` via the MAIL_SMTP_HOST env var on the api service.
-paymentProviders:
-  - type: payrexx # Allowed are stripe-checkout / stripe / payrexx / bexio
-    id: payrexx # Required for stripe-checkout / stripe / payrexx /bexio
-  - type: stripe
-    id: stripe
-  - type: stripe-checkout
-    id: stripe-checkout
-  - type: mollie
-    id: mollie
-  - type: payrexx-subscription
-    id: payrexx-subscription
-  - type: bexio
-    id: bexio
-  - type: no-charge
-    id: no-charge
-challenge:
-  type: turnstile
-  id: 'turnstile'
-trackingPixelProviders:
-  - type: prolitteris
-    id: prolitteris
 mediaServer:
-  type: 'nova'
   quality: 1
-syncProviders:
-  - type: mailchimp
-    id: mailchimp-sync
-v0:
-  type: VO
-  id: v0

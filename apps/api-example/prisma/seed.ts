@@ -1709,15 +1709,21 @@ async function seedSettings(prisma: PrismaClient) {
     update: {},
   });
 
-  const mailprovider = prisma.settingMailProvider.upsert(
-    upsert({
-      id: 'slackmail',
-      name: 'Slackmail',
-      type: MailProviderType.SLACK,
-      fromAddress: 'dev@wepublish.ch',
-      slack_webhookURL: 'https://slackmail.com',
-    })
-  );
+  // Exactly one mail provider may exist, so this only fills an empty table —
+  // a database seeded before the registry moved keeps whatever it has. SMTP
+  // because it actually delivers: docker-compose points MAIL_SMTP_HOST at
+  // Mailpit and SmtpMailProvider falls back to it.
+  const mailprovider =
+    (await prisma.settingMailProvider.count()) === 0 ?
+      prisma.settingMailProvider.create({
+        data: {
+          id: 'smtp',
+          name: 'SMTP',
+          type: MailProviderType.SMTP,
+          fromAddress: 'dev@wepublish.ch',
+        },
+      })
+    : Promise.resolve(null);
 
   const payrexx = prisma.settingPaymentProvider.upsert(
     upsert({

@@ -2457,6 +2457,12 @@ type Mutation {
   """
   confirmNotification(itemId: String!, source: NotificationSource!): NotificationConfirmation!
 
+  """Creates a new AI provider setting."""
+  createAISetting(apiKey: String, id: String!, name: String, systemPrompt: String, type: AIProviderType!, webhookEndpointSecret: String): SettingAIProvider!
+
+  """Creates a new analytics provider setting."""
+  createAnalyticsProviderSetting(articlePrefix: String, credentials: SettingAnalyticsCredentialsInput, id: String!, name: String, property: String, type: AnalyticsProviderType!): SettingAnalyticsProvider!
+
   """Creates an article."""
   createArticle(authors: [ArticleRevisionAuthorInput!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, imageID: String, lead: String, likes: Int, paywallId: String, preTitle: String, properties: [PropertyInput!]!, seoDescription: String, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
 
@@ -2526,6 +2532,9 @@ type Mutation {
   """Creates a new payment method."""
   createPaymentMethod(active: Boolean!, description: String!, gracePeriod: Int!, imageId: String, name: String!, paymentProviderID: String!, slug: Slug!): PaymentMethod!
 
+  """Creates a new payment provider setting."""
+  createPaymentProviderSetting(apiKey: String, bexio_accountId: Float, bexio_countryId: Float, bexio_invoiceMailBodyNewMembership: String, bexio_invoiceMailBodyRenewalMembership: String, bexio_invoiceMailSubjectNewMembership: String, bexio_invoiceMailSubjectRenewalMembership: String, bexio_invoiceTemplateNewMembership: String, bexio_invoiceTemplateRenewalMembership: String, bexio_invoiceTitleNewMembership: String, bexio_invoiceTitleRenewalMembership: String, bexio_markInvoiceAsOpen: Boolean, bexio_taxId: Float, bexio_unitId: Float, bexio_userId: Float, id: String!, mollie_apiBaseUrl: String, mollie_methods: [PaymentMethodMollie!], name: String, offSessionPayments: Boolean, payrexx_instancename: String, payrexx_pm: [PayrexxPM!], payrexx_psp: [PayrexxPSP!], payrexx_vatrate: String, stripe_methods: [StripePaymentMethod!], type: PaymentProviderType!, webhookEndpointSecret: String): SettingPaymentProvider!
+
   """Creates a paywall."""
   createPaywall(active: Boolean!, alternativeSubscribeUrl: String, anyMemberPlan: Boolean!, bypassTokens: [String!]!, circumventDescription: RichText, description: RichText, fadeout: Boolean!, hideContentAfter: Int!, memberPlanIds: [String!]!, name: String, upgradeCircumventDescription: RichText, upgradeDescription: RichText): Paywall!
 
@@ -2560,6 +2569,9 @@ type Mutation {
 
   """Creates a token and returns it's secret once."""
   createToken(name: String!): TokenWithSecret!
+
+  """Creates a new tracking pixel setting."""
+  createTrackingPixelSetting(id: String!, name: String, prolitteris_memberNr: String, prolitteris_onlyPaidContentAccess: Boolean, prolitteris_password: String, prolitteris_publisherInternalKeyDomain: String, prolitteris_usePublisherInternalKey: Boolean, prolitteris_username: String, type: TrackingPixelProviderType!): SettingTrackingPixelProvider!
 
   """Creates a new user."""
   createUser(
@@ -2657,6 +2669,9 @@ type Mutation {
   """Deletes an existing payment method."""
   deletePaymentMethod(id: String!): PaymentMethod!
 
+  """Deletes a payment provider setting."""
+  deletePaymentProviderSetting(id: String!): SettingPaymentProvider!
+
   """Deletes a paywall."""
   deletePaywall(id: String!): Paywall!
 
@@ -2692,6 +2707,9 @@ type Mutation {
 
   """Deletes a token."""
   deleteToken(id: String!): Token!
+
+  """Deletes a tracking pixel setting."""
+  deleteTrackingPixelSetting(id: String!): SettingTrackingPixelProvider!
 
   """Deletes an existing user."""
   deleteUser(id: String!): SensitiveDataUser!
@@ -2802,6 +2820,11 @@ type Mutation {
   """Rejects a comment"""
   rejectComment(id: String!, rejectionReason: CommentRejectionReason!): Comment!
 
+  """
+  Rebuilds the payment, tracking pixel, mail and challenge providers from their settings, so integration changes take effect without restarting the API.
+  """
+  reloadProviders: Boolean!
+
   """Renews a subscription."""
   renewSubscription(id: String!): PublicSubscription!
 
@@ -2896,7 +2919,7 @@ type Mutation {
   updateBlockStyle(blocks: [EditorBlockType!], id: String!, name: String): BlockStyle!
 
   """Updates an existing challenge provider setting."""
-  updateChallengeProviderSetting(id: String, name: String, secret: String, siteKey: String): SettingChallengeProvider!
+  updateChallengeProviderSetting(id: String, name: String, secret: String, siteKey: String, type: ChallengeProviderType): SettingChallengeProvider!
 
   """Update any existing comment"""
   updateComment(featured: Boolean, guestUserImageID: String, guestUsername: String, id: String!, ratingOverrides: [OverriddenRatingInput!], revision: CommentRevisionInput, source: String, tagIds: [String!], userID: String): Comment!
@@ -2932,7 +2955,7 @@ type Mutation {
   updateInvoice(currency: Currency, description: String, dueAt: DateTime, id: String!, items: [InvoiceItemInput!], mail: String, manuallySetAsPaidByUserId: String, scheduledDeactivationAt: DateTime, subscriptionID: String): Invoice!
 
   """Updates an existing mail provider setting."""
-  updateMailProviderSetting(apiKey: String, fromAddress: String, id: String, mailchimp_baseURL: String, mailgun_baseDomain: String, mailgun_mailDomain: String, name: String, replyToAddress: String, slack_webhookURL: String, smtp_host: String, smtp_port: Int, smtp_secure: Boolean, smtp_user: String, webhookEndpointSecret: String): SettingMailProvider!
+  updateMailProviderSetting(apiKey: String, fromAddress: String, id: String, mailchimp_baseURL: String, mailgun_baseDomain: String, mailgun_mailDomain: String, name: String, replyToAddress: String, slack_webhookURL: String, smtp_host: String, smtp_port: Int, smtp_secure: Boolean, smtp_user: String, type: MailProviderType, webhookEndpointSecret: String): SettingMailProvider!
 
   """Update an existing mail template"""
   updateMailTemplate(id: String!, input: MailTemplateInput!): MailTemplateModel!
@@ -4640,6 +4663,7 @@ enum SettingName {
   PEERING_TIMEOUT_MS
   RESET_PASSWORD_JWT_EXPIRES_MIN
   SEND_LOGIN_JWT_EXPIRES_MIN
+  SESSION_TTL_DAYS
   SHOW_PENDING_WHEN_NOT_PUBLISHED
   SUBSCRIPTION_UPGRADE_BILLS_FULL_DIFFERENCE
 }
@@ -4660,6 +4684,7 @@ type SettingPaymentProvider implements SettingProvider {
   bexio_unitId: Float
   bexio_userId: Float
   createdAt: DateTime!
+  deletedAt: DateTime
   id: String!
   lastLoadedAt: DateTime!
   modifiedAt: DateTime!
@@ -4728,6 +4753,7 @@ input SettingTrackingPixelFilter {
 
 type SettingTrackingPixelProvider implements SettingProvider {
   createdAt: DateTime!
+  deletedAt: DateTime
   id: String!
   lastLoadedAt: DateTime!
   modifiedAt: DateTime!

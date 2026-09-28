@@ -1016,6 +1016,13 @@ export const CanDeletePaymentProviderSettings: Permission = {
   deprecated: false,
 };
 
+export const CanReloadProviders: Permission = {
+  id: 'CAN_RELOAD_PROVIDERS',
+  description:
+    'Allows to apply integration changes to the running API without a restart',
+  deprecated: false,
+};
+
 /**
  * Tracking Pixel Settings
  */
@@ -1301,6 +1308,7 @@ export const AllPermissions: Permission[] = [
   CanCreatePaymentProviderSettings,
   CanUpdatePaymentProviderSettings,
   CanDeletePaymentProviderSettings,
+  CanReloadProviders,
   CanGetTrackingPixelSettings,
   CanCreateTrackingPixelSettings,
   CanUpdateTrackingPixelSettings,

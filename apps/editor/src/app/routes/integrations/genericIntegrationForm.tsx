@@ -12,7 +12,7 @@ import {
 import { SettingProvider } from '@wepublish/editor/api';
 import { Textarea } from '@wepublish/ui/editor';
 import { DocumentNode } from 'graphql';
-import { ComponentType, useMemo } from 'react';
+import { ComponentType, ReactNode, useMemo, useState } from 'react';
 import { Controller, FieldValues, Path, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import {
@@ -20,6 +20,7 @@ import {
   CheckPicker,
   Form,
   Message,
+  Modal,
   SelectPicker,
   toaster,
 } from 'rsuite';
@@ -115,6 +116,9 @@ export interface GenericIntegrationFormProps<
     | FieldDefinition<TFormValues>[]
     | ((setting: TSetting) => FieldDefinition<TFormValues>[]);
   getLogo?: (setting: TSetting) => string | undefined;
+
+  /** Rendered next to Save — used for removing a provider that may be removed. */
+  renderActions?: (setting: TSetting) => ReactNode;
 }
 
 export function SingleGenericIntegrationForm<
@@ -126,6 +130,7 @@ export function SingleGenericIntegrationForm<
   mutation,
   fields,
   getLogo,
+  renderActions,
 }: GenericIntegrationFormProps<TSetting, TFormValues>) {
   const { t } = useTranslation();
 
@@ -151,7 +156,13 @@ export function SingleGenericIntegrationForm<
     reValidateMode: 'onChange',
   });
 
-  const onSubmit = handleSubmit(async formData => {
+  // Switching type wipes the stored configuration, so it is confirmed rather
+  // than merely saved.
+  const [pendingTypeChange, setPendingTypeChange] = useState<z.infer<
+    typeof schema
+  > | null>(null);
+
+  const save = async (formData: z.infer<typeof schema>) => {
     try {
       await updateSettings({
         variables: {
@@ -170,6 +181,17 @@ export function SingleGenericIntegrationForm<
 
       console.error(e);
     }
+  };
+
+  const onSubmit = handleSubmit(async formData => {
+    const nextType = (formData as { type?: string }).type;
+
+    if (nextType && setting.type && nextType !== setting.type) {
+      setPendingTypeChange(formData);
+      return;
+    }
+
+    await save(formData);
   });
 
   const logo = getLogo?.(setting);
@@ -319,9 +341,47 @@ export function SingleGenericIntegrationForm<
 
               {t('save')}
             </Button>
+
+            {renderActions?.(setting)}
           </CardActions>
         </Card>
       </Form.Stack>
+
+      <Modal
+        open={!!pendingTypeChange}
+        onClose={() => setPendingTypeChange(null)}
+      >
+        <Modal.Header>
+          <Modal.Title>{t('integrations.typeChangeTitle')}</Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body>{t('integrations.typeChangeWarning')}</Modal.Body>
+
+        <Modal.Footer>
+          <Button
+            variant="text"
+            onClick={() => setPendingTypeChange(null)}
+          >
+            {t('integrations.cancel')}
+          </Button>
+
+          <Button
+            variant="contained"
+            color="error"
+            disabled={updating}
+            onClick={async () => {
+              const formData = pendingTypeChange;
+              setPendingTypeChange(null);
+
+              if (formData) {
+                await save(formData);
+              }
+            }}
+          >
+            {t('integrations.typeChangeConfirm')}
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </Form>
   );
 }

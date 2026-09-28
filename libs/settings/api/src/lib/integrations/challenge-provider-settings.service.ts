@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaClient, SettingChallengeProvider } from '@prisma/client';
 import {
   CreateSettingChallengeProviderInput,
@@ -9,13 +13,16 @@ import { PrimeDataLoader } from '@wepublish/utils/api';
 import { ChallengeProviderSettingsDataloaderService } from './challenge-provider-settings-dataloader.service';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 import { SecretCrypto } from './secrets-crypto';
+import { ProviderSettingsChanged } from './provider-settings-changed';
+import { clearProviderConfig } from './clear-provider-config';
 
 @Injectable()
 export class ChallengeProviderSettingsService {
   private readonly crypto = new SecretCrypto();
   constructor(
     private prisma: PrismaClient,
-    private kv: KvTtlCacheService
+    private kv: KvTtlCacheService,
+    private providerSettingsChanged: ProviderSettingsChanged
   ) {}
 
   private encryptSecretsIfPresent<T extends { secret?: string | null }>(
@@ -68,7 +75,9 @@ export class ChallengeProviderSettingsService {
     const returnValue = await this.prisma.settingChallengeProvider.create({
       data,
     });
+
     await this.kv.resetNamespace('settings:challenge');
+    await this.providerSettingsChanged.notify('Challenge provider');
     return returnValue;
   }
 
@@ -94,11 +103,36 @@ export class ChallengeProviderSettingsService {
       Object.entries(updateData).filter(([_, value]) => value !== undefined)
     );
 
+    // Switching type makes every stored credential meaningless and, worse,
+    // silently wrong: an hCaptcha secret left behind on a provider that now
+    // claims to be Turnstile. Clear the whole configuration and keep only what
+    // this call supplies.
+    const typeChanged =
+      filteredUpdateData['type'] !== undefined &&
+      filteredUpdateData['type'] !== existingSetting.type;
+
+    // Only the type and the display name survive. The form still carries the
+    // old provider's fields when the type is switched, so merging the payload
+    // over the cleared columns would put the very credentials back that this
+    // is meant to remove.
+    const updatePayload =
+      typeChanged ?
+        {
+          ...clearProviderConfig('SettingChallengeProvider'),
+          type: filteredUpdateData['type'],
+          ...('name' in filteredUpdateData ?
+            { name: filteredUpdateData['name'] }
+          : {}),
+        }
+      : filteredUpdateData;
+
     const returnValue = await this.prisma.settingChallengeProvider.update({
       where: { id },
-      data: filteredUpdateData,
+      data: updatePayload,
     });
+
     await this.kv.resetNamespace('settings:challenge');
+    await this.providerSettingsChanged.notify('Challenge provider');
     return returnValue;
   }
 
@@ -117,10 +151,20 @@ export class ChallengeProviderSettingsService {
       );
     }
 
+    if ((await this.prisma.settingChallengeProvider.count()) === 1) {
+      throw new BadRequestException(
+        `Challenge provider ${id} is the only one configured and cannot be ` +
+          `deleted: signup and comment forms would lose their captcha. ` +
+          `Create a replacement first, or change its type instead.`
+      );
+    }
+
     const returnValue = await this.prisma.settingChallengeProvider.delete({
       where: { id },
     });
+
     await this.kv.resetNamespace('settings:challenge');
+    await this.providerSettingsChanged.notify('Challenge provider');
     return returnValue;
   }
 }

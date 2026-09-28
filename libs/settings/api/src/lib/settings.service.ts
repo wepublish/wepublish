@@ -8,6 +8,9 @@ import {
 import { checkSettingRestrictions } from './settings-utils';
 import { PrimeDataLoader } from '@wepublish/utils/api';
 import { SettingDataloaderService } from './setting-dataloader.service';
+import { SettingName } from './setting';
+
+const KNOWN_SETTING_NAMES = new Set<string>(Object.values(SettingName));
 
 @Injectable()
 export class SettingsService {
@@ -21,7 +24,12 @@ export class SettingsService {
         createdAt: 'desc',
       },
     });
-    return data;
+
+    // The table is a general key/value store, but the API exposes it through a
+    // curated enum. A row the enum does not know — bookkeeping, or a setting
+    // that was retired — cannot be serialised, and one of them would fail the
+    // whole query rather than just itself.
+    return data.filter(setting => KNOWN_SETTING_NAMES.has(setting.name));
   }
 
   @PrimeDataLoader(SettingDataloaderService, 'name')

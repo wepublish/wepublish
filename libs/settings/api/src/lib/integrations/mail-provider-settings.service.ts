@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaClient, SettingMailProvider } from '@prisma/client';
 import {
   CreateSettingMailProviderInput,
@@ -9,6 +13,8 @@ import { PrimeDataLoader } from '@wepublish/utils/api';
 import { MailProviderSettingsDataloaderService } from './mail-provider-settings-dataloader.service';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 import { SecretCrypto } from './secrets-crypto';
+import { ProviderSettingsChanged } from './provider-settings-changed';
+import { clearProviderConfig } from './clear-provider-config';
 
 @Injectable()
 export class MailProviderSettingsService {
@@ -16,7 +22,8 @@ export class MailProviderSettingsService {
 
   constructor(
     private prisma: PrismaClient,
-    private kv: KvTtlCacheService
+    private kv: KvTtlCacheService,
+    private providerSettingsChanged: ProviderSettingsChanged
   ) {}
 
   private encryptSecretsIfPresent<
@@ -74,7 +81,9 @@ export class MailProviderSettingsService {
     const returnValue = await this.prisma.settingMailProvider.create({
       data: output,
     });
+
     await this.kv.resetNamespace('settings:mailprovider');
+    await this.providerSettingsChanged.notify('Mail provider');
     return returnValue;
   }
 
@@ -98,11 +107,36 @@ export class MailProviderSettingsService {
       Object.entries(updateData).filter(([_, value]) => value !== undefined)
     );
 
+    // Switching type makes every stored credential meaningless and, worse,
+    // silently wrong: a Mailgun key left behind on a provider that now claims
+    // to be SMTP. Clear the whole configuration and keep only what this call
+    // supplies.
+    const typeChanged =
+      filteredUpdateData['type'] !== undefined &&
+      filteredUpdateData['type'] !== existingSetting.type;
+
+    // Only the type and the display name survive. The form still carries the
+    // old provider's fields when the type is switched, so merging the payload
+    // over the cleared columns would put the very credentials back that this
+    // is meant to remove.
+    const data =
+      typeChanged ?
+        {
+          ...clearProviderConfig('SettingMailProvider'),
+          type: filteredUpdateData['type'],
+          ...('name' in filteredUpdateData ?
+            { name: filteredUpdateData['name'] }
+          : {}),
+        }
+      : filteredUpdateData;
+
     const returnValue = await this.prisma.settingMailProvider.update({
       where: { id },
-      data: filteredUpdateData,
+      data,
     });
+
     await this.kv.resetNamespace('settings:mailprovider');
+    await this.providerSettingsChanged.notify('Mail provider');
     return returnValue;
   }
 
@@ -118,10 +152,19 @@ export class MailProviderSettingsService {
       );
     }
 
+    if ((await this.prisma.settingMailProvider.count()) === 1) {
+      throw new BadRequestException(
+        `Mail provider ${id} is the only one configured and cannot be deleted. ` +
+          `Create a replacement first, or change its type instead.`
+      );
+    }
+
     const returnValue = await this.prisma.settingMailProvider.delete({
       where: { id },
     });
+
     await this.kv.resetNamespace('settings:mailprovider');
+    await this.providerSettingsChanged.notify('Mail provider');
     return returnValue;
   }
 }

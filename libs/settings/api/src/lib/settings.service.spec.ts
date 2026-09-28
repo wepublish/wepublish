@@ -37,16 +37,16 @@ describe('SettingsService', () => {
     const mockSettings: Setting[] = [
       {
         id: '1',
-        name: 'setting1',
-        value: 'value1',
+        name: SettingName.ALLOW_GUEST_COMMENTING,
+        value: true,
         createdAt: new Date('1/1/2020'),
         modifiedAt: new Date('2/1/2020'),
         settingRestriction: null,
       },
       {
         id: '2',
-        name: 'setting2',
-        value: 'value2',
+        name: SettingName.COMMENT_CHAR_LIMIT,
+        value: 1000,
         createdAt: new Date('1/1/2020'),
         modifiedAt: new Date('2/1/2020'),
         settingRestriction: null,
@@ -60,6 +60,31 @@ describe('SettingsService', () => {
     const result = await service.settingsList();
     expect(result).toMatchSnapshot();
     expect(mockFunction.mock.calls[0][0]).toMatchSnapshot();
+  });
+
+  test('drops rows the exposed enum cannot represent', async () => {
+    const known: Setting = {
+      id: '1',
+      name: SettingName.ALLOW_GUEST_COMMENTING,
+      value: true,
+      createdAt: new Date('1/1/2020'),
+      modifiedAt: new Date('2/1/2020'),
+      settingRestriction: null,
+    };
+
+    jest.spyOn(prisma.setting, 'findMany').mockResolvedValue([
+      known,
+      {
+        ...known,
+        id: '2',
+        // Internal bookkeeping, or a setting that has since been retired.
+        name: 'providerRegistryReconciled',
+      },
+    ]);
+
+    // One unrepresentable row must not fail the whole query — that would take
+    // the settings page down entirely.
+    await expect(service.settingsList()).resolves.toEqual([known]);
   });
 
   test('should fetch a single setting by ID', async () => {

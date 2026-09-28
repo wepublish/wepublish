@@ -62,8 +62,14 @@ export class AISettingsService {
     input: CreateSettingAIProviderInput
   ): Promise<SettingAIProvider> {
     const data = this.encryptSecretsIfPresent(input);
-    const returnValue = await this.prisma.settingAIProvider.create({
-      data,
+
+    // The API looks this provider up under a fixed id, so creating one is
+    // really "make sure the row exists" — and must not fail on a second try
+    // or overwrite what is already configured.
+    const returnValue = await this.prisma.settingAIProvider.upsert({
+      where: { id: data.id },
+      create: data,
+      update: {},
     });
     await this.kv.resetNamespace('settings:ai');
     return returnValue;

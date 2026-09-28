@@ -43,6 +43,7 @@ export * from './settings.integrations.analytics.generated';
 export * from './settings.integrations.challenge.generated';
 export * from './settings.integrations.mail.generated';
 export * from './settings.integrations.payment.generated';
+export * from './settings.integrations.reload.generated';
 export * from './settings.integrations.syncProvider.generated';
 export * from './settings.integrations.trackingPixel.generated';
 export * from './settings.website.generated';

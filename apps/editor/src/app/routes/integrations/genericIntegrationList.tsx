@@ -12,16 +12,54 @@ import {
   GenericIntegrationFormProps,
   SingleGenericIntegrationForm,
 } from './genericIntegrationForm';
+import {
+  AddIntegrationButton,
+  CreateFixedIntegrationButton,
+  DeleteIntegrationButton,
+  ProviderTypeOption,
+} from './integrationRegistryActions';
 
 interface GenericIntegrationListProps<
   TSetting extends SettingProvider & { type?: string },
   TFormValues extends FieldValues,
-> extends Omit<GenericIntegrationFormProps<TSetting, TFormValues>, 'setting'> {
+> extends Omit<
+    GenericIntegrationFormProps<TSetting, TFormValues>,
+    'setting' | 'renderActions'
+  > {
   query: DocumentNode;
   dataKey: string;
+
+  /**
+   * Only the kinds of provider an installation may have several of can be
+   * added and removed. Mail and challenge are singletons: there the type is
+   * switched on the one row that exists.
+   */
+  registry?: {
+    createMutation: DocumentNode;
+    deleteMutation: DocumentNode;
+    types: ProviderTypeOption[];
+  };
+
+  /**
+   * For integrations the API reads under an id fixed in code. There is only
+   * ever this one row, so the only thing the UI can offer is to create it when
+   * it has gone missing.
+   */
+  fixedProvider?: {
+    id: string;
+    type: string;
+    name: string;
+    createMutation: DocumentNode;
+  };
 }
 
 const StyledInputGroup = styled(InputGroup)`
+  margin-bottom: 20px;
+`;
+
+const Toolbar = styled.div`
+  display: flex;
+  justify-content: flex-end;
   margin-bottom: 20px;
 `;
 
@@ -37,6 +75,8 @@ export function GenericIntegrationList<
 >({
   query,
   dataKey,
+  registry,
+  fixedProvider,
   ...formProps
 }: GenericIntegrationListProps<TSetting, TFormValues>) {
   const { t } = useTranslation();
@@ -72,14 +112,43 @@ export function GenericIntegrationList<
     return <Message type="error">{error.message}</Message>;
   }
 
+  const addButton = registry && (
+    <AddIntegrationButton
+      types={registry.types}
+      mutation={registry.createMutation}
+      refetchQuery={query}
+      existingIds={settings?.map(setting => setting.id) ?? []}
+    />
+  );
+
   if (!settings?.length) {
     return (
-      <Message type="warning">{t('integrations.noSettingsFound')}</Message>
+      <>
+        <Message type="warning">{t('integrations.noSettingsFound')}</Message>
+
+        {(addButton || fixedProvider) && (
+          <Toolbar>
+            {addButton}
+
+            {fixedProvider && (
+              <CreateFixedIntegrationButton
+                id={fixedProvider.id}
+                type={fixedProvider.type}
+                name={fixedProvider.name}
+                mutation={fixedProvider.createMutation}
+                refetchQuery={query}
+              />
+            )}
+          </Toolbar>
+        )}
+      </>
     );
   }
 
   return (
     <>
+      {addButton && <Toolbar>{addButton}</Toolbar>}
+
       {settings?.length > 3 && (
         <StyledInputGroup>
           <InputGroup.Addon>
@@ -100,6 +169,17 @@ export function GenericIntegrationList<
           <SingleGenericIntegrationForm
             key={setting.id}
             setting={setting}
+            renderActions={
+              registry ?
+                current => (
+                  <DeleteIntegrationButton
+                    id={current.id}
+                    mutation={registry.deleteMutation}
+                    refetchQuery={query}
+                  />
+                )
+              : undefined
+            }
             {...formProps}
           />
         ))}

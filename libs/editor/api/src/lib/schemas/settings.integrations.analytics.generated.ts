@@ -21,6 +21,15 @@ export type UpdateAnalyticsProviderSettingMutationVariables = Types.Exact<{
 
 export type UpdateAnalyticsProviderSettingMutation = { __typename?: 'Mutation', updateAnalyticsProviderSetting: { __typename?: 'SettingAnalyticsProvider', id: string, createdAt: string, modifiedAt: string, lastLoadedAt: string, type: Types.AnalyticsProviderType, name?: string | null, articlePrefix?: string | null, property?: string | null } };
 
+export type CreateAnalyticsProviderSettingMutationVariables = Types.Exact<{
+  id: Types.Scalars['String'];
+  type: Types.AnalyticsProviderType;
+  name?: Types.InputMaybe<Types.Scalars['String']>;
+}>;
+
+
+export type CreateAnalyticsProviderSettingMutation = { __typename?: 'Mutation', createAnalyticsProviderSetting: { __typename?: 'SettingAnalyticsProvider', createdAt: string, id: string, lastLoadedAt: string, modifiedAt: string, name?: string | null, type: Types.AnalyticsProviderType } };
+
 
 export const SettingsIntegrationsAnalyticsDocument = gql`
     query SettingsIntegrationsAnalytics {
@@ -113,3 +122,43 @@ export function useUpdateAnalyticsProviderSettingMutation(baseOptions?: Apollo.M
 export type UpdateAnalyticsProviderSettingMutationHookResult = ReturnType<typeof useUpdateAnalyticsProviderSettingMutation>;
 export type UpdateAnalyticsProviderSettingMutationResult = Apollo.MutationResult<UpdateAnalyticsProviderSettingMutation>;
 export type UpdateAnalyticsProviderSettingMutationOptions = Apollo.BaseMutationOptions<UpdateAnalyticsProviderSettingMutation, UpdateAnalyticsProviderSettingMutationVariables>;
+export const CreateAnalyticsProviderSettingDocument = gql`
+    mutation CreateAnalyticsProviderSetting($id: String!, $type: AnalyticsProviderType!, $name: String) {
+  createAnalyticsProviderSetting(id: $id, type: $type, name: $name) {
+    createdAt
+    id
+    lastLoadedAt
+    modifiedAt
+    name
+    type
+  }
+}
+    `;
+export type CreateAnalyticsProviderSettingMutationFn = Apollo.MutationFunction<CreateAnalyticsProviderSettingMutation, CreateAnalyticsProviderSettingMutationVariables>;
+
+/**
+ * __useCreateAnalyticsProviderSettingMutation__
+ *
+ * To run a mutation, you first call `useCreateAnalyticsProviderSettingMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateAnalyticsProviderSettingMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createAnalyticsProviderSettingMutation, { data, loading, error }] = useCreateAnalyticsProviderSettingMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      type: // value for 'type'
+ *      name: // value for 'name'
+ *   },
+ * });
+ */
+export function useCreateAnalyticsProviderSettingMutation(baseOptions?: Apollo.MutationHookOptions<CreateAnalyticsProviderSettingMutation, CreateAnalyticsProviderSettingMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateAnalyticsProviderSettingMutation, CreateAnalyticsProviderSettingMutationVariables>(CreateAnalyticsProviderSettingDocument, options);
+      }
+export type CreateAnalyticsProviderSettingMutationHookResult = ReturnType<typeof useCreateAnalyticsProviderSettingMutation>;
+export type CreateAnalyticsProviderSettingMutationResult = Apollo.MutationResult<CreateAnalyticsProviderSettingMutation>;
+export type CreateAnalyticsProviderSettingMutationOptions = Apollo.BaseMutationOptions<CreateAnalyticsProviderSettingMutation, CreateAnalyticsProviderSettingMutationVariables>;

@@ -1795,6 +1795,7 @@ model SettingTrackingPixel {
   modifiedAt                             DateTime                  @updatedAt @db.Timestamptz(3)
   lastLoadedAt                           DateTime                  @default(now()) @db.Timestamptz(3)
   type                                   TrackingPixelProviderType
+  deletedAt                              DateTime?                 @db.Timestamptz(3)
   name                                   String?
   prolitteris_memberNr                   String?
   prolitteris_username                   String?
@@ -1959,6 +1960,7 @@ model SettingPaymentProvider {
   lastLoadedAt DateTime @default(now()) @db.Timestamptz(3)
 
   type                  PaymentProviderType
+  deletedAt             DateTime?           @db.Timestamptz(3)
   name                  String?
   offSessionPayments    Boolean?
   webhookEndpointSecret String? // Payrexx webhookApiKey
