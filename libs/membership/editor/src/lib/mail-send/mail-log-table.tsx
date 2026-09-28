@@ -70,6 +70,9 @@ function FilterField({
         variant="caption"
         display="block"
         style={{ marginBottom: 4, fontWeight: 600 }}
+        sx={{
+          display: 'block',
+        }}
       >
         {label}
       </Typography>
@@ -79,6 +82,9 @@ function FilterField({
           variant="caption"
           display="block"
           style={{ marginTop: 4, color: '#8e8e93', lineHeight: 1.35 }}
+          sx={{
+            display: 'block',
+          }}
         >
           {hint}
         </Typography>
@@ -296,6 +302,9 @@ export function MailLogTable() {
                       color: '#8e8e93',
                       whiteSpace: 'normal',
                       lineHeight: 1.35,
+                    }}
+                    sx={{
+                      display: 'block',
                     }}
                   >
                     {(item as MailTypeOption).description}

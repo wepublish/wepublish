@@ -9,7 +9,6 @@ import {
   Typography,
 } from '@mui/material';
 import {
-  useWebsiteSettingsQuery,
   WebsiteSettings,
 } from '@wepublish/editor/api';
 import { CanGetAISettings } from '@wepublish/permissions';
@@ -204,7 +203,6 @@ export const WebsiteSettingsList = () => {
   return (
     <WebsiteSettingsListWrapper>
       <Title>{t('websiteSettings.list.title')}</Title>
-
       {settings.map(category => (
         <PermissionControl
           key={category.title}
@@ -218,7 +216,9 @@ export const WebsiteSettingsList = () => {
               <Typography
                 variant="h6"
                 component={CardTitle}
-                marginBottom={2}
+                sx={{
+                  marginBottom: 2,
+                }}
               >
                 {category.icon}
                 {category.title}
@@ -236,7 +236,13 @@ export const WebsiteSettingsList = () => {
               ))}
 
               {!!category.faulyIntegrations.length &&
-                !!category.enabledIntegrations.length && <Box pt={1} />}
+                !!category.enabledIntegrations.length && (
+                  <Box
+                    sx={{
+                      pt: 1,
+                    }}
+                  />
+                )}
 
               {category.enabledIntegrations.map((integration, index) => (
                 <Typography
@@ -250,7 +256,13 @@ export const WebsiteSettingsList = () => {
               ))}
 
               {!!category.enabledIntegrations.length &&
-                !!category.disabledIntegrations.length && <Box pt={1} />}
+                !!category.disabledIntegrations.length && (
+                  <Box
+                    sx={{
+                      pt: 1,
+                    }}
+                  />
+                )}
 
               {category.disabledIntegrations.map((integration, index) => (
                 <Typography

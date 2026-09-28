@@ -429,6 +429,9 @@ function MailSendPage() {
                               whiteSpace: 'normal',
                               lineHeight: 1.35,
                             }}
+                            sx={{
+                              display: 'block',
+                            }}
                           >
                             {t(`mailSend.base.${option}Hint`)}
                           </Typography>
@@ -970,8 +973,10 @@ function StepNav({
     <MuiStack
       direction="row"
       spacing={1.5}
-      justifyContent="flex-end"
-      sx={{ marginTop: 2 }}
+      sx={{
+        justifyContent: 'flex-end',
+        marginTop: 2,
+      }}
     >
       {onBack && (
         <MuiButton
@@ -1091,6 +1096,9 @@ function TemplatePreview({
               variant="caption"
               display="block"
               style={{ color: '#8e8e93', marginTop: 4 }}
+              sx={{
+                display: 'block',
+              }}
             >
               {t('mailSend.preview.hint')}
             </Typography>
