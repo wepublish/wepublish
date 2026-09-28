@@ -2486,6 +2486,7 @@
       "trackingPixel": "Tracking Pixel",
       "mailProvider": "E-Mail Provider",
       "letterProvider": "Brief-Provider",
+      "pdfRenderer": "PDF-Renderer",
       "back": "Zurück zu Integrationen",
       "unknown": "Unbekannte Integration",
       "notFound": "Integration nicht gefunden",
@@ -2530,6 +2531,12 @@
         "bexioInvoiceTitleRenewalMembership": "Rechnungstitel (Mitgliedschafts-Erneuerung)"
       },
       "placeholderSecret": "Unverändert (Versteckt)",
+      "pdfRendererSettings": {
+        "type": "Typ",
+        "cloudflareAccountId": "Cloudflare Account-ID",
+        "cloudflareApiToken": "Cloudflare API-Token",
+        "timeoutMs": "Timeout (ms)"
+      },
       "letterSettings": {
         "type": "Typ",
         "environment": "Umgebung",

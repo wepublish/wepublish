@@ -10,3 +10,5 @@ export * from './lib/letter.webhook';
 export * from './lib/letters-module-options';
 export * from './lib/letters.module';
 export * from './lib/pdf/pdf-renderer';
+export * from './lib/pdf/base-pdf-renderer';
+export * from './lib/pdf/cloudflare-pdf-renderer';

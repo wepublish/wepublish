@@ -14,6 +14,7 @@ import {
   CanGetMailchimpSyncSettings,
   CanGetMailProviderSettings,
   CanGetPaymentProviderSettings,
+  CanGetPdfRendererSettings,
   CanGetTrackingPixelSettings,
 } from '@wepublish/permissions';
 import { PermissionControl } from '@wepublish/ui/editor';
@@ -23,6 +24,7 @@ import {
   MdCreditCard,
   MdEmail,
   MdMarkunreadMailbox,
+  MdPictureAsPdf,
   MdSecurity,
   MdSmartToy,
   MdSync,
@@ -119,6 +121,13 @@ export function IntegrationList() {
       path: '/integrations/letter',
       icon: MdMarkunreadMailbox,
       logos: [pingenLogo],
+    },
+    {
+      title: t('integrations.pdfRenderer'),
+      permission: CanGetPdfRendererSettings.id,
+      path: '/integrations/pdf-renderer',
+      icon: MdPictureAsPdf,
+      logos: [cloudflareLogo],
     },
     {
       title: t('integrations.analytics'),

@@ -45,6 +45,7 @@ export * from './settings.integrations.challenge.generated';
 export * from './settings.integrations.letter.generated';
 export * from './settings.integrations.mail.generated';
 export * from './settings.integrations.payment.generated';
+export * from './settings.integrations.pdfRenderer.generated';
 export * from './settings.integrations.syncProvider.generated';
 export * from './settings.integrations.trackingPixel.generated';
 export * from './settings.website.generated';

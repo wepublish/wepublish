@@ -2904,6 +2904,8 @@ export type Mutation = {
   updatePaymentProviderSetting: SettingPaymentProvider;
   /** Updates a paywall. */
   updatePaywall: Paywall;
+  /** Updates an existing pdf renderer setting. */
+  updatePdfRendererSetting: SettingPdfRenderer;
   /** Updates an existing peer. */
   updatePeer: Peer;
   /** Updates the peer profile of the current media. */
@@ -4185,6 +4187,15 @@ export type MutationUpdatePaywallArgs = {
 };
 
 
+export type MutationUpdatePdfRendererSettingArgs = {
+  cloudflare_accountId?: InputMaybe<Scalars['String']>;
+  cloudflare_apiToken?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  timeoutMs?: InputMaybe<Scalars['Int']>;
+};
+
+
 export type MutationUpdatePeerArgs = {
   hostURL?: InputMaybe<Scalars['String']>;
   id: Scalars['String'];
@@ -4986,6 +4997,10 @@ export type PaywallBypass = {
   token: Scalars['String'];
 };
 
+export enum PdfRendererType {
+  Cloudflare = 'cloudflare'
+}
+
 export type Peer = {
   __typename?: 'Peer';
   createdAt: Scalars['DateTime'];
@@ -5571,6 +5586,10 @@ export type Query = {
   paywall: Paywall;
   /** Returns a list of paywalls based on the filters given. */
   paywalls: Array<Paywall>;
+  /** Returns a single pdf renderer setting by id. */
+  pdfRendererSetting: SettingPdfRenderer;
+  /** Returns all pdf renderer settings. */
+  pdfRendererSettings: Array<SettingPdfRenderer>;
   /** This query takes either the ID or the slug and returns the peer profile. */
   peer?: Maybe<Peer>;
   /** Returns a paginated list of peer articles based on the filters given. */
@@ -6195,6 +6214,16 @@ export type QueryPaywallArgs = {
 };
 
 
+export type QueryPdfRendererSettingArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QueryPdfRendererSettingsArgs = {
+  filter?: InputMaybe<SettingPdfRendererFilter>;
+};
+
+
 export type QueryPeerArgs = {
   id?: InputMaybe<Scalars['String']>;
   slug?: InputMaybe<Scalars['String']>;
@@ -6767,6 +6796,24 @@ export type SettingPaymentProviderFilter = {
   id?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
   type?: InputMaybe<PaymentProviderType>;
+};
+
+export type SettingPdfRenderer = SettingProvider & {
+  __typename?: 'SettingPdfRenderer';
+  cloudflare_accountId?: Maybe<Scalars['String']>;
+  createdAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  lastLoadedAt: Scalars['DateTime'];
+  modifiedAt: Scalars['DateTime'];
+  name?: Maybe<Scalars['String']>;
+  timeoutMs?: Maybe<Scalars['Int']>;
+  type: PdfRendererType;
+};
+
+export type SettingPdfRendererFilter = {
+  id?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  type?: InputMaybe<PdfRendererType>;
 };
 
 export type SettingProvider = {
@@ -7919,6 +7966,7 @@ export type YouTubeVideoBlockInput = {
       "SettingLetterProvider",
       "SettingMailProvider",
       "SettingPaymentProvider",
+      "SettingPdfRenderer",
       "SettingSyncProvider",
       "SettingTrackingPixelProvider"
     ],

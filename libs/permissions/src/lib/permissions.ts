@@ -1105,6 +1105,33 @@ export const CanDeleteLetterProviderSettings: Permission = {
 };
 
 /**
+ * PDF Renderer Settings
+ */
+export const CanGetPdfRendererSettings: Permission = {
+  id: 'CAN_GET_PDF_RENDERER_SETTINGS',
+  description: 'Allows to get pdf renderer settings',
+  deprecated: false,
+};
+
+export const CanCreatePdfRendererSettings: Permission = {
+  id: 'CAN_CREATE_PDF_RENDERER_SETTINGS',
+  description: 'Allows to create pdf renderer settings',
+  deprecated: false,
+};
+
+export const CanUpdatePdfRendererSettings: Permission = {
+  id: 'CAN_UPDATE_PDF_RENDERER_SETTINGS',
+  description: 'Allows to update pdf renderer settings',
+  deprecated: false,
+};
+
+export const CanDeletePdfRendererSettings: Permission = {
+  id: 'CAN_DELETE_PDF_RENDERER_SETTINGS',
+  description: 'Allows to delete pdf renderer settings',
+  deprecated: false,
+};
+
+/**
  * Analytics Provider Settings Permissions
  */
 export const CanGetAnalyticsProviderSettings: Permission = {
@@ -1348,6 +1375,10 @@ export const AllPermissions: Permission[] = [
   CanCreateLetterProviderSettings,
   CanUpdateLetterProviderSettings,
   CanDeleteLetterProviderSettings,
+  CanGetPdfRendererSettings,
+  CanCreatePdfRendererSettings,
+  CanUpdatePdfRendererSettings,
+  CanDeletePdfRendererSettings,
   CanCreateExternalApp,
   CanUpdateExternalApp,
   CanDeleteExternalApp,
