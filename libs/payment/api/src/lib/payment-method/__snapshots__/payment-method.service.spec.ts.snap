@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`PaymentMethodService should create a payment method 1`] = `
+exports[`PaymentMethodService > should create a payment method 1`] = `
 [
   {
     "data": {
@@ -15,7 +15,7 @@ exports[`PaymentMethodService should create a payment method 1`] = `
 ]
 `;
 
-exports[`PaymentMethodService should delete a payment method by id 1`] = `
+exports[`PaymentMethodService > should delete a payment method by id 1`] = `
 [
   {
     "where": {
@@ -25,7 +25,7 @@ exports[`PaymentMethodService should delete a payment method by id 1`] = `
 ]
 `;
 
-exports[`PaymentMethodService should get payment methods 1`] = `
+exports[`PaymentMethodService > should get payment methods 1`] = `
 [
   {
     "orderBy": {
@@ -35,7 +35,7 @@ exports[`PaymentMethodService should get payment methods 1`] = `
 ]
 `;
 
-exports[`PaymentMethodService should update a payment method 1`] = `
+exports[`PaymentMethodService > should update a payment method 1`] = `
 [
   {
     "data": {

@@ -8,12 +8,12 @@ import {
 
 import { PeriodicJobsLog } from './periodic-job-logs';
 
-// Partial mock: the UI library imports enums from the same module.
-vi.mock('@wepublish/editor/api', async importOriginal => ({
-  ...(await importOriginal<typeof import('@wepublish/editor/api')>()),
-  usePeriodicJobLogsQuery: vi.fn(),
-  useNotificationConfirmationsQuery: vi.fn(),
-  useConfirmNotificationMutation: () => [vi.fn(), { loading: false }],
+// The component calls Apollo's `useQuery` with a generated document, so the
+// mock sits at the Apollo boundary and dispatches on the document it is given.
+vi.mock('@apollo/client/react', async importOriginal => ({
+  ...(await importOriginal<typeof import('@apollo/client/react')>()),
+  useQuery: vi.fn(),
+  useMutation: () => [vi.fn(), { loading: false }],
 }));
 
 vi.mock('react-i18next', () => ({

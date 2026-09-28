@@ -7,34 +7,37 @@ import {
 } from './google-analytics.service';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 import { createKvMock } from '@wepublish/kv-ttl-cache/api';
+import type { Mock } from 'vitest';
 
-const runReportSpy = jest.fn();
+const runReportSpy = vi.fn();
 
-jest.mock('@google-analytics/data', () => ({
-  BetaAnalyticsDataClient: jest.fn().mockImplementation(() => ({
-    runReport: runReportSpy,
-    close: jest.fn(),
-  })),
+vi.mock('@google-analytics/data', () => ({
+  BetaAnalyticsDataClient: vi.fn().mockImplementation(function () {
+    return {
+      runReport: runReportSpy,
+      close: vi.fn(),
+    };
+  }),
 }));
 
 describe('GoogleAnalyticsService', () => {
   let config: GoogleAnalyticsConfig;
   let service: GoogleAnalyticsService;
   let prismaMock: {
-    article: { [method in keyof PrismaClient['article']]?: jest.Mock };
+    article: { [method in keyof PrismaClient['article']]?: Mock };
   };
 
   beforeAll(() => {
-    jest.useFakeTimers();
-    jest.setSystemTime(new Date('2023-01-01'));
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2023-01-01'));
   });
 
   afterAll(() => {
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   beforeEach(async () => {
@@ -46,12 +49,12 @@ describe('GoogleAnalyticsService', () => {
 
     prismaMock = {
       article: {
-        count: jest.fn(),
-        findMany: jest.fn(),
-        findUnique: jest.fn(),
-        delete: jest.fn(),
-        create: jest.fn(),
-        update: jest.fn(),
+        count: vi.fn(),
+        findMany: vi.fn(),
+        findUnique: vi.fn(),
+        delete: vi.fn(),
+        create: vi.fn(),
+        update: vi.fn(),
       },
     };
 
@@ -118,7 +121,7 @@ describe('GoogleAnalyticsService', () => {
     await service.getMostViewedArticles({});
 
     // Advance past the 5-minute cooldown
-    jest.setSystemTime(new Date('2023-01-01T00:06:00'));
+    vi.setSystemTime(new Date('2023-01-01T00:06:00'));
 
     runReportSpy.mockReturnValue(Promise.resolve([{ rows: [] }]));
     prismaMock.article.findMany?.mockReturnValue([]);
@@ -128,7 +131,7 @@ describe('GoogleAnalyticsService', () => {
     expect(result).toHaveLength(0);
 
     // Reset time for other tests
-    jest.setSystemTime(new Date('2023-01-01'));
+    vi.setSystemTime(new Date('2023-01-01'));
   });
 
   it('should reset consecutive failures on success', async () => {

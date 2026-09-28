@@ -122,8 +122,8 @@ const paymentMethodsQuery = `
 `;
 
 const mockPrismaClient = {
-  subscription: { count: jest.fn().mockResolvedValue(0) },
-  paymentMethod: { findMany: jest.fn().mockResolvedValue([]) },
+  subscription: { count: vi.fn().mockResolvedValue(0) },
+  paymentMethod: { findMany: vi.fn().mockResolvedValue([]) },
 } as unknown as PrismaClient;
 
 describe('Subscription Flow Resolver', () => {
@@ -145,13 +145,13 @@ describe('Subscription Flow Resolver', () => {
           {
             provide: SubscriptionFlowService,
             useValue: {
-              getFlows: jest.fn().mockResolvedValue([]),
-              createFlow: jest.fn().mockResolvedValue([]),
-              updateFlow: jest.fn().mockResolvedValue([]),
-              deleteFlow: jest.fn().mockResolvedValue([]),
-              createInterval: jest.fn().mockResolvedValue([]),
-              updateInterval: jest.fn().mockResolvedValue([]),
-              deleteInterval: jest.fn().mockResolvedValue([]),
+              getFlows: vi.fn().mockResolvedValue([]),
+              createFlow: vi.fn().mockResolvedValue([]),
+              updateFlow: vi.fn().mockResolvedValue([]),
+              deleteFlow: vi.fn().mockResolvedValue([]),
+              createInterval: vi.fn().mockResolvedValue([]),
+              updateInterval: vi.fn().mockResolvedValue([]),
+              deleteInterval: vi.fn().mockResolvedValue([]),
             },
           },
           {
@@ -374,10 +374,10 @@ describe('Subscription Flow Resolver', () => {
           {
             provide: SubscriptionFlowService,
             useValue: {
-              getFlows: jest.fn(),
-              createFlow: jest.fn(),
-              updateFlow: jest.fn(),
-              deleteFlow: jest.fn(),
+              getFlows: vi.fn(),
+              createFlow: vi.fn(),
+              updateFlow: vi.fn(),
+              deleteFlow: vi.fn(),
             },
           },
           {
@@ -397,9 +397,9 @@ describe('Subscription Flow Resolver', () => {
 
     it('includes number of subscriptions', async () => {
       const mockFlows = [mockSubscriptionFlow];
-      jest
-        .spyOn(subscriptionFlowService, 'getFlows')
-        .mockResolvedValue(mockFlows as any);
+      vi.spyOn(subscriptionFlowService, 'getFlows').mockResolvedValue(
+        mockFlows as any
+      );
 
       const response = await resolver.subscriptionFlows(false, 'plan-1');
       expect(response.length).toEqual(1);
@@ -417,22 +417,23 @@ describe('Subscription Flow Resolver', () => {
         default: false,
       };
 
-      jest
-        .spyOn(subscriptionFlowService, 'getFlows')
+      vi.spyOn(subscriptionFlowService, 'getFlows')
         .mockResolvedValueOnce([mockFlow1] as any) // First call
         .mockResolvedValueOnce([mockFlow1, mockFlow2] as any) // After create
         .mockResolvedValueOnce([mockFlow1, mockFlow2] as any) // After update
         .mockResolvedValueOnce([mockFlow1] as any); // After delete
 
-      jest
-        .spyOn(subscriptionFlowService, 'createFlow')
-        .mockResolvedValue([mockFlow1, mockFlow2] as any);
-      jest
-        .spyOn(subscriptionFlowService, 'updateFlow')
-        .mockResolvedValue([mockFlow1, mockFlow2] as any);
-      jest
-        .spyOn(subscriptionFlowService, 'deleteFlow')
-        .mockResolvedValue([mockFlow1] as any);
+      vi.spyOn(subscriptionFlowService, 'createFlow').mockResolvedValue([
+        mockFlow1,
+        mockFlow2,
+      ] as any);
+      vi.spyOn(subscriptionFlowService, 'updateFlow').mockResolvedValue([
+        mockFlow1,
+        mockFlow2,
+      ] as any);
+      vi.spyOn(subscriptionFlowService, 'deleteFlow').mockResolvedValue([
+        mockFlow1,
+      ] as any);
 
       // Test initial state
       expect(

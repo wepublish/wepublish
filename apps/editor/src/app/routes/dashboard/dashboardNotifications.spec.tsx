@@ -26,10 +26,12 @@ const item = (id: string, severity: NotificationSeverity) => (
   />
 );
 
-vi.mock('@wepublish/editor/api', async importOriginal => ({
-  ...(await importOriginal<typeof import('@wepublish/editor/api')>()),
-  useNotificationReadsQuery: () => ({ data: { notificationReads: [] } }),
-  useMarkNotificationReadMutation: () => [vi.fn()],
+// The panel calls Apollo's hooks with generated documents, so the mock sits at
+// the Apollo boundary.
+vi.mock('@apollo/client/react', async importOriginal => ({
+  ...(await importOriginal<typeof import('@apollo/client/react')>()),
+  useQuery: () => ({ data: { notificationReads: [] } }),
+  useMutation: () => [vi.fn(), { loading: false }],
 }));
 
 vi.mock('@wepublish/membership/editor', () => ({

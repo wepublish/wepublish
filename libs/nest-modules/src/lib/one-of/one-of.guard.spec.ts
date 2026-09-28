@@ -43,13 +43,13 @@ describe('OneOfGuard', () => {
     moduleRef = module.get<ModuleRef>(ModuleRef);
     guard = new OneOfGuard(reflector, moduleRef);
 
-    jest.spyOn(moduleRef, 'get').mockImplementation((guardReference: any) => {
+    vi.spyOn(moduleRef, 'get').mockImplementation((guardReference: any) => {
       return new guardReference();
     });
   });
 
   it('should return false if no guards are set', async () => {
-    const reflectorSpy = jest
+    const reflectorSpy = vi
       .spyOn(reflector, 'getAllAndMerge')
       .mockReturnValue([]);
     const mockContext = {
@@ -63,7 +63,7 @@ describe('OneOfGuard', () => {
   });
 
   it('should return true if the guard returns true', async () => {
-    const spy = jest
+    const spy = vi
       .spyOn(reflector, 'getAllAndMerge')
       .mockReturnValue([MockTrueGuard]);
     const mockContext = {
@@ -77,7 +77,7 @@ describe('OneOfGuard', () => {
   });
 
   it('should return true if one of the guards returns true', async () => {
-    const spy = jest
+    const spy = vi
       .spyOn(reflector, 'getAllAndMerge')
       .mockReturnValue([MockFalseGuard, MockTrueGuard]);
     const mockContext = {
@@ -91,7 +91,7 @@ describe('OneOfGuard', () => {
   });
 
   it('should return false no guard returns true', async () => {
-    const spy = jest
+    const spy = vi
       .spyOn(reflector, 'getAllAndMerge')
       .mockReturnValue([MockFalseGuard]);
     const mockContext = {
@@ -105,7 +105,7 @@ describe('OneOfGuard', () => {
   });
 
   it('should return false if the guard throws unauthorized', async () => {
-    const spy = jest
+    const spy = vi
       .spyOn(reflector, 'getAllAndMerge')
       .mockReturnValue([MockThrowGuard]);
     const mockContext = {

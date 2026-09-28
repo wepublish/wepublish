@@ -6,47 +6,48 @@ import { DateFilterComparison, SortOrder } from '@wepublish/utils/api';
 import { PageSort } from './page.model';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { mapBlockUnionMap } from '@wepublish/block-content/api';
+import type { Mock } from 'vitest';
 
-jest.mock('@wepublish/block-content/api');
+vi.mock('@wepublish/block-content/api');
 
 describe('PageService', () => {
   let service: PageService;
   let prismaMock: {
-    $queryRaw: jest.Mock;
-    page: { [method in keyof PrismaClient['page']]?: jest.Mock };
+    $queryRaw: Mock;
+    page: { [method in keyof PrismaClient['page']]?: Mock };
     pageRevision: {
-      [method in keyof PrismaClient['pageRevision']]?: jest.Mock;
+      [method in keyof PrismaClient['pageRevision']]?: Mock;
     };
   };
 
   beforeAll(() => {
-    jest.useFakeTimers();
-    jest.setSystemTime(new Date('2023-01-01'));
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2023-01-01'));
   });
 
   afterAll(() => {
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   beforeEach(async () => {
     prismaMock = {
-      $queryRaw: jest.fn(),
+      $queryRaw: vi.fn(),
       page: {
-        count: jest.fn(),
-        findMany: jest.fn(),
-        findFirst: jest.fn(),
-        findUnique: jest.fn(),
-        delete: jest.fn(),
-        create: jest.fn(),
-        update: jest.fn(),
+        count: vi.fn(),
+        findMany: vi.fn(),
+        findFirst: vi.fn(),
+        findUnique: vi.fn(),
+        delete: vi.fn(),
+        create: vi.fn(),
+        update: vi.fn(),
       },
       pageRevision: {
-        updateMany: jest.fn(),
-        update: jest.fn(),
-        findUnique: jest.fn(),
-        findFirst: jest.fn(),
-        findMany: jest.fn(),
-        count: jest.fn(),
+        updateMany: vi.fn(),
+        update: vi.fn(),
+        findUnique: vi.fn(),
+        findFirst: vi.fn(),
+        findMany: vi.fn(),
+        count: vi.fn(),
       },
     };
 
@@ -57,7 +58,7 @@ describe('PageService', () => {
         {
           provide: PageDataloaderService,
           useValue: {
-            prime: jest.fn(),
+            prime: vi.fn(),
           },
         },
       ],
@@ -185,7 +186,7 @@ describe('PageService', () => {
 
     expect(prismaMock.page.create?.mock.calls[0]).toMatchSnapshot();
     // make sure mapBlockUnionMap is called
-    expect((mapBlockUnionMap as jest.Mock).mock.calls[0]).toMatchSnapshot();
+    expect((mapBlockUnionMap as Mock).mock.calls[0]).toMatchSnapshot();
   });
 
   it('should update an page', async () => {
@@ -218,7 +219,7 @@ describe('PageService', () => {
     expect(prismaMock.page.findUnique?.mock.calls[0]).toMatchSnapshot();
     expect(prismaMock.page.update?.mock.calls[0]).toMatchSnapshot();
     // make sure mapBlockUnionMap is called
-    expect((mapBlockUnionMap as jest.Mock).mock.calls[0]).toMatchSnapshot();
+    expect((mapBlockUnionMap as Mock).mock.calls[0]).toMatchSnapshot();
   });
 
   it('should delete an page', async () => {

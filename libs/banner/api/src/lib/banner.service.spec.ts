@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { Banner, LoginStatus, PrismaClient } from '@prisma/client';
 import { BannerService } from './banner.service';
 import { BannerDocumentType } from './banner.model';
+import type { Mock } from 'vitest';
 
 describe('BannerService', () => {
   let service: BannerService;
@@ -39,12 +40,12 @@ describe('BannerService', () => {
           provide: PrismaClient,
           useValue: {
             banner: {
-              findUnique: jest.fn(),
-              findMany: jest.fn(),
-              findFirst: jest.fn(),
-              create: jest.fn(),
-              update: jest.fn(),
-              delete: jest.fn(),
+              findUnique: vi.fn(),
+              findMany: vi.fn(),
+              findFirst: vi.fn(),
+              create: vi.fn(),
+              update: vi.fn(),
+              delete: vi.fn(),
             },
           },
         },
@@ -61,12 +62,12 @@ describe('BannerService', () => {
 
   describe('findOne', () => {
     it('should return a banner', async () => {
-      jest.spyOn(prisma.banner, 'findUnique').mockResolvedValue(banner);
+      vi.spyOn(prisma.banner, 'findUnique').mockResolvedValue(banner);
       expect(await service.findOne('1')).toEqual(banner);
     });
 
     it('should return null if banner not found', async () => {
-      jest.spyOn(prisma.banner, 'findUnique').mockResolvedValue(null);
+      vi.spyOn(prisma.banner, 'findUnique').mockResolvedValue(null);
       expect(await service.findOne('1')).toBeNull();
     });
   });
@@ -74,7 +75,7 @@ describe('BannerService', () => {
   describe('findAll', () => {
     it('should return an array of banners', async () => {
       const banners = [banner];
-      jest.spyOn(prisma.banner, 'findMany').mockResolvedValue(banners);
+      vi.spyOn(prisma.banner, 'findMany').mockResolvedValue(banners);
       expect(await service.findAll({ skip: 0, take: 10 })).toEqual(banners);
     });
   });
@@ -119,7 +120,7 @@ describe('BannerService', () => {
         hasPaywallBypass: true,
       },
     ])('should return the first active banner for %o', async values => {
-      jest.spyOn(prisma.banner, 'findMany').mockResolvedValue([
+      vi.spyOn(prisma.banner, 'findMany').mockResolvedValue([
         banner,
         {
           ...banner,
@@ -149,13 +150,11 @@ describe('BannerService', () => {
           ...values,
         })
       ).toMatchSnapshot();
-      expect(
-        (prisma.banner.findMany as jest.Mock).mock.calls[0]
-      ).toMatchSnapshot();
+      expect((prisma.banner.findMany as Mock).mock.calls[0]).toMatchSnapshot();
     });
 
     it('should return null if no banner found', async () => {
-      jest.spyOn(prisma.banner, 'findMany').mockResolvedValue([]);
+      vi.spyOn(prisma.banner, 'findMany').mockResolvedValue([]);
       expect(
         await service.findFirst({
           documentType: BannerDocumentType.ARTICLE,
@@ -166,9 +165,7 @@ describe('BannerService', () => {
         })
       ).toBeFalsy();
 
-      expect(
-        (prisma.banner.findMany as jest.Mock).mock.calls[0]
-      ).toMatchSnapshot();
+      expect((prisma.banner.findMany as Mock).mock.calls[0]).toMatchSnapshot();
     });
 
     it('should return null if document type is neither ARTICLE nor PAGE', async () => {
@@ -188,12 +185,12 @@ describe('BannerService', () => {
 
   describe('findPages', () => {
     it('should return an array of pages associated with the banner', async () => {
-      jest.spyOn(prisma.banner, 'findUnique').mockResolvedValue(banner);
+      vi.spyOn(prisma.banner, 'findUnique').mockResolvedValue(banner);
       expect(await service.findPages('1')).toEqual(pages);
     });
 
     it('should return an empty array if banner not found', async () => {
-      jest.spyOn(prisma.banner, 'findUnique').mockResolvedValue(null);
+      vi.spyOn(prisma.banner, 'findUnique').mockResolvedValue(null);
       expect(await service.findPages('1')).toEqual([]);
     });
   });
@@ -213,7 +210,7 @@ describe('BannerService', () => {
         collapsible: true,
         hideForMinutes: 24 * 60,
       };
-      jest.spyOn(prisma.banner, 'create').mockResolvedValue(banner);
+      vi.spyOn(prisma.banner, 'create').mockResolvedValue(banner);
       expect(await service.create(createBannerInput)).toEqual(banner);
     });
   });
@@ -235,14 +232,14 @@ describe('BannerService', () => {
         collapsible: true,
         hideForMinutes: 24 * 60,
       };
-      jest.spyOn(prisma.banner, 'update').mockResolvedValue(updatedBanner);
+      vi.spyOn(prisma.banner, 'update').mockResolvedValue(updatedBanner);
       expect(await service.update(updateBannerInput)).toEqual(updatedBanner);
     });
   });
 
   describe('delete', () => {
     it('should delete a banner', async () => {
-      jest.spyOn(prisma.banner, 'delete').mockResolvedValue(banner);
+      vi.spyOn(prisma.banner, 'delete').mockResolvedValue(banner);
       expect(await service.delete('1')).toBeUndefined();
     });
   });

@@ -19,7 +19,7 @@ describe('SettingsService', () => {
         {
           provide: SettingDataloaderService,
           useValue: {
-            prime: jest.fn(),
+            prime: vi.fn(),
           },
         },
       ],
@@ -53,7 +53,7 @@ describe('SettingsService', () => {
       },
     ];
 
-    const mockFunction = jest
+    const mockFunction = vi
       .spyOn(prisma.setting, 'findMany')
       .mockResolvedValue(mockSettings);
 
@@ -94,7 +94,7 @@ describe('SettingsService', () => {
       settingRestriction: null,
     };
 
-    const mockFunction = jest
+    const mockFunction = vi
       .spyOn(prisma.setting, 'findUnique')
       .mockResolvedValue(mockSetting);
 
@@ -123,8 +123,8 @@ describe('SettingsService', () => {
       },
     };
 
-    jest.spyOn(prisma.setting, 'findUnique').mockResolvedValue(updatedSetting);
-    jest.spyOn(prisma.setting, 'update').mockResolvedValue(updatedSetting);
+    vi.spyOn(prisma.setting, 'findUnique').mockResolvedValue(updatedSetting);
+    vi.spyOn(prisma.setting, 'update').mockResolvedValue(updatedSetting);
 
     const result = await service.updateSetting(updateInput);
     expect(result).toMatchSnapshot({

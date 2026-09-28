@@ -19,7 +19,7 @@ describe('AuthenticationService', () => {
   });
 
   it('should return a token session', async () => {
-    const tokenSpy = jest.spyOn(prisma.token, 'findFirst').mockReturnValue(
+    const tokenSpy = vi.spyOn(prisma.token, 'findFirst').mockReturnValue(
       Promise.resolve({
         id: '1234-1234',
         name: 'Foo Token',
@@ -27,7 +27,7 @@ describe('AuthenticationService', () => {
         roleIDs: ['1234', '12345'],
       }) as any
     );
-    const userRoleSpy = jest
+    const userRoleSpy = vi
       .spyOn(prisma.userRole, 'findMany')
       .mockReturnValue(Promise.resolve([]) as any);
 
@@ -38,7 +38,7 @@ describe('AuthenticationService', () => {
   });
 
   it('should return a user session', async () => {
-    const sessionSpy = jest.spyOn(prisma.session, 'findFirst').mockReturnValue(
+    const sessionSpy = vi.spyOn(prisma.session, 'findFirst').mockReturnValue(
       Promise.resolve({
         userID: '12345',
         user: {
@@ -46,7 +46,7 @@ describe('AuthenticationService', () => {
         },
       }) as any
     );
-    const userRoleSpy = jest
+    const userRoleSpy = vi
       .spyOn(prisma.userRole, 'findMany')
       .mockReturnValue(Promise.resolve([]) as any);
 
@@ -57,12 +57,12 @@ describe('AuthenticationService', () => {
   });
 
   it("should return null if user can't be found", async () => {
-    const sessionSpy = jest.spyOn(prisma.session, 'findFirst').mockReturnValue(
+    const sessionSpy = vi.spyOn(prisma.session, 'findFirst').mockReturnValue(
       Promise.resolve({
         userID: '12345',
       }) as any
     );
-    const userRoleSpy = jest
+    const userRoleSpy = vi
       .spyOn(prisma.userRole, 'findMany')
       .mockReturnValue(Promise.resolve([]) as any);
 
