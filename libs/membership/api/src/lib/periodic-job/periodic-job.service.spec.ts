@@ -10,8 +10,12 @@ import { add, startOfDay, sub } from 'date-fns';
 import { Action } from '../subscription-event-dictionary/subscription-event-dictionary.type';
 import { SubscriptionService } from './subscription.service';
 import { PeriodicJobService } from './periodic-job.service';
-import { PaymentsService } from '@wepublish/payment/api';
-import { MailContext } from '@wepublish/mail/api';
+import { InvoicePaidNotifier, PaymentsService } from '@wepublish/payment/api';
+import {
+  MailContext,
+  MailProviderError,
+  MailProviderRecipientError,
+} from '@wepublish/mail/api';
 
 const createMockPrisma = () => ({
   subscriptionFlow: {
@@ -170,6 +174,10 @@ const createMockPaymentsService = () => ({
   getProviders: jest.fn().mockReturnValue([]),
 });
 
+const createMockInvoicePaidNotifier = () => ({
+  notify: jest.fn().mockResolvedValue(undefined),
+});
+
 describe('PeriodicJobService', () => {
   let service: PeriodicJobService;
   let mockPrisma: ReturnType<typeof createMockPrisma>;
@@ -178,12 +186,14 @@ describe('PeriodicJobService', () => {
   >;
   let mockMailContext: ReturnType<typeof createMockMailContext>;
   let mockPaymentsService: ReturnType<typeof createMockPaymentsService>;
+  let mockInvoicePaidNotifier: ReturnType<typeof createMockInvoicePaidNotifier>;
 
   beforeEach(async () => {
     mockPrisma = createMockPrisma();
     mockSubscriptionController = createMockSubscriptionController();
     mockMailContext = createMockMailContext();
     mockPaymentsService = createMockPaymentsService();
+    mockInvoicePaidNotifier = createMockInvoicePaidNotifier();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -192,6 +202,10 @@ describe('PeriodicJobService', () => {
         { provide: SubscriptionService, useValue: mockSubscriptionController },
         { provide: MailContext, useValue: mockMailContext },
         { provide: PaymentsService, useValue: mockPaymentsService },
+        {
+          provide: InvoicePaidNotifier,
+          useValue: mockInvoicePaidNotifier,
+        },
       ],
     }).compile();
 
@@ -334,6 +348,9 @@ describe('PeriodicJobService', () => {
     expect(
       mockSubscriptionController.deactivateSubscription
     ).not.toHaveBeenCalled();
+
+    expect(mockInvoicePaidNotifier.notify).toHaveBeenCalledWith('inv-1');
+    expect(mockMailContext.sendComposedMail).not.toHaveBeenCalled();
   });
 
   it('charge invoice onsession', async () => {
@@ -470,6 +487,81 @@ describe('PeriodicJobService', () => {
     // The custom mail sending is triggered through MailController internally.
     // The test verifies the subscription query was made for custom events.
     expect(mockPrisma.subscription.findMany).toHaveBeenCalled();
+  });
+
+  describe('a mail the provider refuses', () => {
+    const customMailSubscription = () => ({
+      id: 'sub-1',
+      memberPlanID: 'plan-yearly',
+      paymentMethodID: 'payrexx-subscription',
+      paymentPeriodicity: PaymentPeriodicity.yearly,
+      paidUntil: add(new Date(), { days: 15 }),
+      autoRenew: true,
+      monthlyAmount: 200,
+      currency: Currency.CHF,
+      deactivation: null,
+      user: {
+        id: 'user-1',
+        name: 'test user',
+        email: 'bea.bregante@bluewin.ch',
+      },
+      memberPlan: { name: 'yearly' },
+    });
+
+    const successfulRuns = () =>
+      mockPrisma.periodicJob.update.mock.calls.filter(
+        ([{ data }]: any) => data.successfullyFinished
+      );
+
+    it('lets the run finish when only that one recipient is at fault', async () => {
+      mockPrisma.subscription.findMany.mockResolvedValue([
+        customMailSubscription(),
+      ]);
+      mockMailContext.sendComposedMail.mockRejectedValue(
+        new MailProviderRecipientError(
+          'Mandrill rejected bea.bregante@bluewin.ch: spam'
+        )
+      );
+
+      await expect(service.execute()).resolves.toBeUndefined();
+
+      expect(successfulRuns()).toHaveLength(1);
+    });
+
+    it('records the refusal on the mail log so it is not lost', async () => {
+      mockPrisma.subscription.findMany.mockResolvedValue([
+        customMailSubscription(),
+      ]);
+      mockMailContext.sendComposedMail.mockRejectedValue(
+        new MailProviderRecipientError(
+          'Mandrill rejected bea.bregante@bluewin.ch: spam'
+        )
+      );
+
+      await service.execute();
+
+      expect(mockPrisma.mailLog.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({
+            state: 'rejected',
+            error: 'Mandrill rejected bea.bregante@bluewin.ch: spam',
+          }),
+        })
+      );
+    });
+
+    it('still fails the run when the provider itself refuses to send', async () => {
+      mockPrisma.subscription.findMany.mockResolvedValue([
+        customMailSubscription(),
+      ]);
+      mockMailContext.sendComposedMail.mockRejectedValue(
+        new MailProviderError('Mandrill rejected sender@example.com: unsigned')
+      );
+
+      await expect(service.execute()).rejects.toThrow('unsigned');
+
+      expect(successfulRuns()).toHaveLength(0);
+    });
   });
 
   it('Periodic after error rerun', async () => {

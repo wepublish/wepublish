@@ -1,7 +1,10 @@
 import styled from '@emotion/styled';
 import { css } from '@mui/material';
 import { ArticleListWrapper } from '@wepublish/article/website';
-import { BreakBlockWrapper } from '@wepublish/block-content/website';
+import {
+  BreakBlockWrapper,
+  LightboxWrapper,
+} from '@wepublish/block-content/website';
 import {
   EventBlockWrapper,
   ImageBlockWrapper,
@@ -48,7 +51,13 @@ export const HauptstadtContentWrapper = styled(ContentWrapperStyled)`
           grid-column: 7/31;
         }
 
-        & > :is(${ImageBlockWrapper}, ${SliderWrapper}, ${EventBlockWrapper}) {
+        &
+          > :is(
+            ${ImageBlockWrapper},
+              ${SliderWrapper},
+              ${LightboxWrapper},
+              ${EventBlockWrapper}
+          ) {
           grid-column: 4/34;
         }
 
@@ -67,7 +76,13 @@ export const HauptstadtContentWrapper = styled(ContentWrapperStyled)`
           grid-column: 10/28;
         }
 
-        & > :is(${ImageBlockWrapper}, ${SliderWrapper}, ${EventBlockWrapper}) {
+        &
+          > :is(
+            ${ImageBlockWrapper},
+              ${SliderWrapper},
+              ${LightboxWrapper},
+              ${EventBlockWrapper}
+          ) {
           grid-column: 7/31;
         }
 
@@ -82,7 +97,13 @@ export const HauptstadtContentWrapper = styled(ContentWrapperStyled)`
           grid-column: 12/26;
         }
 
-        & > :is(${ImageBlockWrapper}, ${SliderWrapper}, ${EventBlockWrapper}) {
+        &
+          > :is(
+            ${ImageBlockWrapper},
+              ${SliderWrapper},
+              ${LightboxWrapper},
+              ${EventBlockWrapper}
+          ) {
           grid-column: 9/29;
         }
 

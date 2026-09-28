@@ -14,6 +14,7 @@ import {
 } from '@prisma/client';
 import { SentryGlobalFilter, SentryModule } from '@sentry/nestjs/setup';
 import { ActionModule } from '@wepublish/action/api';
+import { AuditLogModule } from '@wepublish/audit-log/api';
 import { V0Module } from '@wepublish/ai/api';
 import { NovaMediaAdapter } from '@wepublish/api';
 import { ArticleModule, HotAndTrendingModule } from '@wepublish/article/api';
@@ -22,6 +23,7 @@ import { AuthorModule } from '@wepublish/author/api';
 import { BannerApiModule } from '@wepublish/banner/api';
 import { BlockContentModule } from '@wepublish/block-content/api';
 import { ChallengeModule } from '@wepublish/challenge/api';
+import { ChangelogModule } from '@wepublish/changelog/api';
 import { CommentModule } from '@wepublish/comments/api';
 import { ConsentModule } from '@wepublish/consent/api';
 import { CrowdfundingModule } from '@wepublish/crowdfunding/api';
@@ -56,6 +58,7 @@ import {
   DashboardModule,
   InvoiceModule,
   MembershipModule,
+  RenewalMailModule,
   SubscriptionModule,
   UpgradeSubscriptionModule,
   GoodieModule,
@@ -91,6 +94,7 @@ import { PhraseModule } from '@wepublish/phrase/api';
 import { PollModule } from '@wepublish/poll/api';
 import { GraphQLRichText, SlateToPmMigrator } from '@wepublish/richtext/api';
 import { SessionModule } from '@wepublish/session/api';
+import { OneModule } from '@wepublish/one/api';
 import {
   SettingModule,
   SettingName,
@@ -433,6 +437,7 @@ import { readConfig } from '../readConfig';
     GoodieModule,
     DiscountCodeModule,
     DashboardModule,
+    RenewalMailModule,
     AuthenticationModule,
 
     // Register SessionModule after AuthenticationModule
@@ -479,7 +484,18 @@ import { readConfig } from '../readConfig';
         };
       },
     }),
+
+    OneModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        oneURL: config.get('WEP_ONE_URL') || '',
+        hostURL: config.get('HOST_URL') || 'http://localhost:4000',
+      }),
+    }),
     PermissionModule,
+    AuditLogModule,
+    ChangelogModule,
     ConsentModule,
     DocumentModule,
     StatsModule,
@@ -560,8 +576,8 @@ import { readConfig } from '../readConfig';
     CrowdfundingModule,
     ImportPeerArticleModule,
     URLAdapterModule.registerAsync({
-      imports: [ConfigModule],
-      useFactory: async (config: ConfigService) => {
+      imports: [ConfigModule, PrismaModule],
+      useFactory: async (config: ConfigService, prisma: PrismaClient) => {
         const configFile = await readConfig(
           config.getOrThrow('CONFIG_FILE_PATH')
         );
@@ -569,7 +585,8 @@ import { readConfig } from '../readConfig';
         let urlAdapter: URLAdapter;
         if (configFile.general.urlAdapter === 'hauptstadt') {
           urlAdapter = new HauptstadtURLAdapter(
-            config.getOrThrow('WEBSITE_URL')
+            config.getOrThrow('WEBSITE_URL'),
+            prisma
           );
         } else if (configFile.general.urlAdapter === 'wepublish-site') {
           urlAdapter = new WepublishSiteURLAdapter();
@@ -579,7 +596,7 @@ import { readConfig } from '../readConfig';
 
         return urlAdapter;
       },
-      inject: [ConfigService],
+      inject: [ConfigService, PrismaClient],
     }),
     MediaAdapterModule.registerAsync({
       imports: [ConfigModule],

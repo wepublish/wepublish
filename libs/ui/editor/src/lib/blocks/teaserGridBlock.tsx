@@ -132,7 +132,7 @@ export function SortableTeaser({
       style={{
         transform: CSS.Transform.toString(transform),
         transition,
-        zIndex: isDragging ? 1 : undefined,
+        zIndex: isDragging ? 1 : 0,
         cursor: isDragging ? 'grabbing' : undefined,
         position: 'relative',
       }}

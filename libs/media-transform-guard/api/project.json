@@ -5,6 +5,17 @@
   "projectType": "library",
   "tags": [],
   "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/media-transform-guard/api",
+        "tsConfig": "libs/media-transform-guard/api/tsconfig.lib.json",
+        "packageJson": "libs/media-transform-guard/api/package.json",
+        "main": "libs/media-transform-guard/api/src/index.ts",
+        "rootDir": "."
+      }
+    },
     "lint": {
       "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"]

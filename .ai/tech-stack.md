@@ -64,4 +64,5 @@ Architecture, conventions and local dev live in `.ai/`; rules and workflow in
 @.claude/docs/code-style.md
 @.claude/docs/infrastructure.md
 @.claude/docs/external-services.md
+@.claude/docs/type-checking.md
 @.claude/docs/commit-rules.md

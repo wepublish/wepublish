@@ -6,6 +6,9 @@ fragment FullDiscountCode on DiscountCode {
   code
   discountPercent
 
+  usageCount
+  paidUsageCount
+
   validFrom
   validTo
 
@@ -94,5 +97,34 @@ mutation UpdateDiscountCode(
 mutation DeleteDiscountCode($id: String!) {
   deleteDiscountCode(id: $id) {
     ...FullDiscountCode
+  }
+}
+
+query DiscountCodeUsages(
+  $discountCodeId: String!
+  $take: Int
+  $skip: Int
+  $sort: InvoiceSort
+  $order: SortOrder
+) {
+  invoices(
+    filter: { discountCodeId: $discountCodeId }
+    take: $take
+    skip: $skip
+    sort: $sort
+    order: $order
+  ) {
+    nodes {
+      id
+      createdAt
+      mail
+      total
+      currency
+      paidAt
+      canceledAt
+      subscriptionID
+    }
+
+    totalCount
   }
 }

@@ -8,12 +8,20 @@ import {
 } from '@wepublish/website/api';
 import {
   BuilderPollBlockProps,
+  BuilderRouterContext,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { useEffect, useMemo, useState } from 'react';
+import {
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  useSyncExternalStore,
+} from 'react';
 import { PollBlockResult } from './poll-block-result';
 import { usePollBlock } from './poll-block.context';
 import { H4 } from '@wepublish/ui';
+import { Trans, useTranslation } from 'react-i18next';
 
 export const isPollBlock = (
   block: Pick<BlockContent, '__typename'>
@@ -41,6 +49,12 @@ export const PollBlockMeta = styled('div')`
   color: ${({ theme }) => theme.palette.text.disabled};
 `;
 
+const subscribeToStorage = (onChange: () => void) => {
+  window.addEventListener('storage', onChange);
+
+  return () => window.removeEventListener('storage', onChange);
+};
+
 export const PollBlock = ({ poll, className }: BuilderPollBlockProps) => {
   const { vote, fetchUserVote, canVoteAnonymously, getAnonymousVote } =
     usePollBlock();
@@ -59,10 +73,20 @@ export const PollBlock = ({ poll, className }: BuilderPollBlockProps) => {
 
   const { hasUser } = useUser();
   const {
+    query: { answerId: autoVoteAnswerId },
+  } = useContext(BuilderRouterContext);
+  const {
     elements: { Button, H4, Alert },
     blocks: { RichText },
     date,
   } = useWebsiteBuilder();
+  const { t } = useTranslation();
+
+  const anonymousVote = useSyncExternalStore(
+    subscribeToStorage,
+    () => (poll && canVoteAnonymously ? getAnonymousVote(poll.id) : null),
+    () => null
+  );
 
   const combinedVotes = useMemo(() => {
     const total: Record<string, number> = {};
@@ -106,6 +130,27 @@ export const PollBlock = ({ poll, className }: BuilderPollBlockProps) => {
     }
   }, [fetchUserVote, poll, hasUser]);
 
+  useEffect(() => {
+    if (
+      !poll ||
+      typeof autoVoteAnswerId !== 'string' ||
+      !poll.answers.some(answer => answer.id === autoVoteAnswerId)
+    ) {
+      return;
+    }
+
+    setVoteResult({
+      loading: true,
+    });
+
+    vote({ variables: { answerId: autoVoteAnswerId } }, poll.id).then(result =>
+      setVoteResult({
+        ...result,
+        loading: false,
+      })
+    );
+  }, [autoVoteAnswerId, poll, vote]);
+
   if (!poll) {
     return null;
   }
@@ -115,11 +160,11 @@ export const PollBlock = ({ poll, className }: BuilderPollBlockProps) => {
   const userVote =
     voteResult?.data?.voteOnPoll?.answerId ??
     loggedInVote?.data?.userPollVote ??
-    (canVoteAnonymously ? getAnonymousVote(poll.id) : undefined);
+    anonymousVote;
   const hasVoted = !!(
     loggedInVote?.data?.userPollVote ??
     voteResult?.data?.voteOnPoll ??
-    (canVoteAnonymously && getAnonymousVote(poll.id))
+    anonymousVote
   );
 
   return (
@@ -189,20 +234,29 @@ export const PollBlock = ({ poll, className }: BuilderPollBlockProps) => {
       )}
 
       <PollBlockMeta>
-        {totalVotes} Stimmen
+        {t('poll.totalVotes', { count: totalVotes })}
+
         {poll.closedAt && isOpen && (
           <>
             {' '}
-            &ndash; Schliesst am{' '}
-            <time
-              suppressHydrationWarning
-              dateTime={poll.closedAt}
-            >
-              {date.format(new Date(poll.closedAt))}
-            </time>
+            &ndash;
+            <Trans
+              i18nKey="poll.closesAt"
+              values={{
+                date: date.format(new Date(poll.closedAt)),
+              }}
+              components={{
+                time: (
+                  <time
+                    suppressHydrationWarning
+                    dateTime={poll.closedAt}
+                  />
+                ),
+              }}
+            />
           </>
         )}
-        {!isOpen && <> &ndash; Abstimmung beendet.</>}
+        {!isOpen && <> &ndash; {t('poll.closed')}</>}
       </PollBlockMeta>
     </PollBlockWrapper>
   );

@@ -20,6 +20,9 @@ import {
   PAYMENT_METHOD_CONFIG,
   PaymentMethodConfig,
 } from './payment-method/payment-method.config';
+import { InvoicePaidNotifier } from './invoice-paid.listener';
+import { ErrorCode } from '@wepublish/errors';
+import { logger } from '@wepublish/utils/api';
 
 interface CreatePaymentWithProvider {
   paymentMethodID: string;
@@ -38,7 +41,8 @@ export class PaymentsService {
   constructor(
     private prisma: PrismaClient,
     @Inject(PAYMENT_METHOD_CONFIG)
-    private config: PaymentMethodConfig
+    private config: PaymentMethodConfig,
+    private invoicePaidNotifier: InvoicePaidNotifier
   ) {}
 
   getProviders() {
@@ -161,7 +165,10 @@ export class PaymentsService {
       },
     });
     if (blockingPayment) {
-      throw new BadRequestException(blockingPayment.id);
+      logger('paymentsService').warn(
+        `Blocked duplicate payment attempt for invoice ${invoiceID}: payment ${blockingPayment.id} is still pending`
+      );
+      throw new BadRequestException(ErrorCode.PaymentAlreadyRunning);
     }
 
     return await this.createPaymentWithProvider({
@@ -376,6 +383,7 @@ export class PaymentsService {
         await paymentProvider.updatePaymentWithIntentState({
           intentState,
         });
+        await this.invoicePaidNotifier.notify(updatedPayment.invoiceID);
       }
     }
 

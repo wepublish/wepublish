@@ -72,7 +72,7 @@ const StyledBanner = styled(Banner)`
       bottom: ${({ theme }) => theme.spacing(1)};
     }
 
-    ${BannerImage}, ${BannerTitle}, ${BannerText}, ${BannerCloseButton}, [data-role='CANCEL'], ${BannerCtaText} {
+    ${BannerContent}, ${BannerImage}, ${BannerTitle}, ${BannerText}, ${BannerCloseButton}, [data-role='CANCEL'], ${BannerCtaText} {
       display: none;
     }
 

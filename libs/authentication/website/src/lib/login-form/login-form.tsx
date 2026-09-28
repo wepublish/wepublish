@@ -1,5 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Checkbox, FormControlLabel } from '@mui/material';
 import styled from '@emotion/styled';
 import {
   BuilderLoginFormProps,
@@ -9,7 +8,7 @@ import {
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { useTranslation } from 'react-i18next';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export const LoginFormWrapper = styled('div')`
   display: grid;
@@ -26,6 +25,23 @@ export const LoginFormForm = styled('form')`
 
 export const LoginFormButton = styled(Button)`
   justify-self: flex-end;
+`;
+
+/**
+ * Secondary actions that switch the login method. Kept separate from
+ * {@link LoginFormButton} so themes can style the primary action without
+ * flattening the hierarchy between the two.
+ */
+export const LoginFormSecondaryButton = styled(Button)`
+  justify-self: flex-end;
+`;
+
+export const LoginFormActions = styled('div')`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: ${({ theme }) => theme.spacing(1)};
 `;
 
 const withEmailFormSchema = z.object({
@@ -57,6 +73,7 @@ export function LoginForm({
   onSubmitLoginWithCredentials,
   loginWithEmail,
   onSubmitLoginWithEmail,
+  loginLinkCooldownSeconds = 0,
   defaults,
   disablePasswordLogin,
   otpRequired,
@@ -81,6 +98,10 @@ export function LoginForm({
     mode: 'onSubmit',
     reValidateMode: 'onBlur',
   });
+
+  // Only autofocus the password once the reader actively chose password login,
+  // otherwise the email stays the first field to fill in.
+  const [autofocusPassword, setAutofocusPassword] = useState(false);
 
   const emailValue = watch('email');
 
@@ -121,23 +142,20 @@ export function LoginForm({
     (!loginWithPassword && loginWithEmail.loading) ||
     (loginWithPassword && loginWithCredentials.loading);
   const awaitingLoginConfirmed = loginWithPassword && loading;
+  // With 2FA the login link is not an option, so there is nothing to go back to.
+  const canSwitchToLinkLogin = !totpRedirectToPassword;
+
+  const switchToPasswordLogin = () => {
+    setAutofocusPassword(true);
+    setValue('requirePassword', true);
+  };
+
+  const switchToLinkLogin = () => {
+    setValue('requirePassword', false);
+  };
 
   return (
     <LoginFormWrapper className={className}>
-      {!disablePasswordLogin && (
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={loginWithPassword}
-              onChange={event =>
-                setValue('requirePassword', event.target.checked)
-              }
-            />
-          }
-          label="Login mit Passwort"
-        />
-      )}
-
       <LoginFormForm onSubmit={onSubmit}>
         <Controller
           name={'email'}
@@ -148,7 +166,7 @@ export function LoginForm({
               autoComplete="email"
               type={'email'}
               fullWidth
-              label={'Email'}
+              label={t('login.email')}
               error={!!error}
               helperText={error?.message}
               inputRef={autofocus}
@@ -156,7 +174,7 @@ export function LoginForm({
           )}
         />
 
-        {watch('requirePassword') && (
+        {loginWithPassword && (
           <Controller
             name={'password'}
             control={control}
@@ -166,15 +184,16 @@ export function LoginForm({
                 autoComplete="current-password"
                 type={'password'}
                 fullWidth
-                label={'Passwort'}
+                label={t('login.password')}
                 error={!!error}
                 helperText={error?.message}
+                inputRef={autofocusPassword ? autofocus : undefined}
               />
             )}
           />
         )}
 
-        {watch('requirePassword') && otpRequired && (
+        {loginWithPassword && otpRequired && (
           <Controller
             name={'totpToken'}
             control={control}
@@ -197,32 +216,65 @@ export function LoginForm({
         )}
 
         {awaitingLoginConfirmed && (
-          <Alert severity="info">
-            Einen Moment bitte, die eingegebenen Anmeldedaten werden
-            überprüft...
-          </Alert>
+          <Alert severity="info">{t('login.verifyingCredentials')}</Alert>
         )}
 
         {error && <Alert severity="error">{error.message}</Alert>}
 
         {loginLinkSent && (
           <Alert severity="success">
-            {t('login.alertLoginLinkSent', {
-              email: loginWithEmail.data?.sendWebsiteLogin,
-            })}
+            <span data-sentry-mask>
+              {t('login.alertLoginLinkSent', {
+                email: loginWithEmail.data?.sendWebsiteLogin,
+              })}
+            </span>
           </Alert>
         )}
 
-        <LoginFormButton
-          disabled={loading || loginLinkSent}
-          type="submit"
-          onClick={onSubmit}
-        >
-          {!loginWithPassword &&
-            (loginLinkSent ? 'Login-Link versendet' : 'Login-Link anfordern')}
+        <LoginFormActions>
+          {loginWithPassword ?
+            <>
+              {canSwitchToLinkLogin && (
+                <LoginFormSecondaryButton
+                  variant="text"
+                  type="button"
+                  onClick={switchToLinkLogin}
+                >
+                  {t('login.useLinkInstead')}
+                </LoginFormSecondaryButton>
+              )}
 
-          {loginWithPassword && 'Login'}
-        </LoginFormButton>
+              <LoginFormButton
+                disabled={loading}
+                type="submit"
+              >
+                {t('login.submit')}
+              </LoginFormButton>
+            </>
+          : <>
+              {!disablePasswordLogin && (
+                <LoginFormSecondaryButton
+                  variant="outlined"
+                  type="button"
+                  onClick={switchToPasswordLogin}
+                >
+                  {t('login.loginWithPassword')}
+                </LoginFormSecondaryButton>
+              )}
+
+              <LoginFormButton
+                disabled={loading || loginLinkCooldownSeconds > 0}
+                type="submit"
+              >
+                {loginLinkCooldownSeconds > 0 ?
+                  t('login.requestNewLinkIn', {
+                    seconds: loginLinkCooldownSeconds,
+                  })
+                : t('login.loginWithLink')}
+              </LoginFormButton>
+            </>
+          }
+        </LoginFormActions>
       </LoginFormForm>
     </LoginFormWrapper>
   );

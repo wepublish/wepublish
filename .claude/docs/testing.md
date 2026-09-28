@@ -14,7 +14,14 @@ Exceptions that look like backend but are Vitest: `libs/document/api`,
 
 **Always check for `jest.config.ts` vs `vitest.config.ts` in the project root
 before writing a test.** NestJS stays on Jest until its next major release —
-do not "helpfully" migrate a Jest project to Vitest.
+do not "helpfully" migrate a Jest project to Vitest, and never give a NestJS lib
+a `vitest.config.ts`. Vitest transpiles with esbuild, which does not emit
+`design:paramtypes` decorator metadata, so Nest constructor injection (e.g.
+`constructor(private prisma: PrismaClient)`) silently resolves to `undefined` in
+`Test.createTestingModule`, and code-first GraphQL fields without an explicit
+type function fail. When setting up a new NestJS lib, copy the Jest setup from
+`libs/consent/api` (`jest.config.ts`, the `project.json` test target and
+`tsconfig.spec.json`).
 
 ## Test-driven development is mandatory
 
@@ -111,8 +118,19 @@ describe('ArticleService', () => {
 });
 ```
 
+Mocks are **not** auto-cleared between tests — add `jest.clearAllMocks()` to
+`beforeEach` whenever a mock outlives a single test.
+
 Cover resolvers, services, guards and permission checks. Permission and paywall
 logic is security-relevant — test the **deny** path, not just the allow path.
+
+Resolver specs go one level up, as a full GraphQL e2e: `GraphQLModule.forRoot`
+with `autoSchemaFile: true` driven by `supertest` against the Nest app (see
+`libs/consent/api/.../consent.resolver.spec.ts`). Note that `@Permissions` and
+`@Authenticated` are metadata-only without the globally registered guard, so
+operations run **unguarded** in these tests — asserting a deny path here proves
+nothing. When a resolver uses `@CurrentUser()`, inject a fake session through
+the GraphQL `context` option.
 
 ### Website libs (Vitest + Storybook)
 

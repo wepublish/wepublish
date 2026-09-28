@@ -1,66 +1,8 @@
-fragment FullPageRevisionWithoutBlocks on PageRevision {
-  id
-  createdAt
-  publishedAt
-  archivedAt
-  title
-  description
-  socialMediaTitle
-  socialMediaDescription
-
-  image {
-    ...FullImage
-  }
-
-  socialMediaImage {
-    ...FullImage
-  }
-
-  properties {
-    key
-    value
-    public
-  }
-}
-
 fragment FullPageRevision on PageRevision {
   ...FullPageRevisionWithoutBlocks
 
   blocks {
     ...FullBlock
-  }
-}
-
-fragment PageWithoutBlocks on Page {
-  id
-  publishedAt
-  createdAt
-  modifiedAt
-  slug
-  url
-  previewUrl
-  hidden
-
-  tags {
-    ...FullTag
-  }
-
-  latest {
-    ...FullPageRevisionWithoutBlocks
-  }
-
-  draft {
-    id
-  }
-
-  pending {
-    id
-    publishedAt
-  }
-
-  published {
-    id
-    publishedAt
   }
 }
 
@@ -100,6 +42,8 @@ mutation CreatePage(
   $blocks: [BlockContentInput!]!
   $imageID: String
   $description: String
+  $seoTitle: String
+  $seoDescription: String
   $properties: [PropertyInput!]!
   $slug: String
   $hidden: Boolean = false
@@ -113,6 +57,8 @@ mutation CreatePage(
     blocks: $blocks
     imageID: $imageID
     description: $description
+    seoTitle: $seoTitle
+    seoDescription: $seoDescription
     properties: $properties
     slug: $slug
     hidden: $hidden
@@ -131,6 +77,8 @@ mutation UpdatePage(
   $blocks: [BlockContentInput!]!
   $imageID: String
   $description: String
+  $seoTitle: String
+  $seoDescription: String
   $properties: [PropertyInput!]!
   $slug: String
   $hidden: Boolean = false
@@ -145,6 +93,8 @@ mutation UpdatePage(
     blocks: $blocks
     imageID: $imageID
     description: $description
+    seoTitle: $seoTitle
+    seoDescription: $seoDescription
     properties: $properties
     slug: $slug
     hidden: $hidden

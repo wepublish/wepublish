@@ -2,11 +2,13 @@ import { MockedProvider as MockedProviderBase } from '@apollo/client/testing';
 import '@testing-library/jest-dom/vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import {
+  PaywallListDocument,
   SettingName,
   SettingsListDocument,
   SettingsListQuery,
   UpdateSettingDocument,
 } from '@wepublish/editor/api';
+import { toaster } from 'rsuite';
 import {
   AuthContext,
   actWait,
@@ -69,16 +71,31 @@ const updateSettingMock = {
   }),
 };
 
+const paywallListMock = {
+  request: {
+    query: PaywallListDocument,
+  },
+  result: () => ({
+    data: { paywalls: [] },
+  }),
+};
+
 describe('SettingList', () => {
   beforeAll(() => {
     vi.spyOn(v2Client, 'getApiClientV2').mockReturnValue(undefined as any);
+  });
+
+  // toasts arm dismiss timers that outlive the test environment on slow
+  // runners ("window is not defined" after teardown) — clear them per test
+  afterEach(() => {
+    toaster.clear();
   });
 
   test('renders successfully', async () => {
     const { baseElement, asFragment } = render(
       <AuthContext.Provider value={sessionWithPermissions}>
         <MockedProvider
-          mocks={[settingsListMock, updateSettingMock]}
+          mocks={[settingsListMock, updateSettingMock, paywallListMock]}
           addTypename={false}
         >
           <BrowserRouter>
@@ -98,7 +115,7 @@ describe('SettingList', () => {
     render(
       <AuthContext.Provider value={sessionWithPermissions}>
         <MockedProvider
-          mocks={[settingsListMock, updateSettingMock]}
+          mocks={[settingsListMock, updateSettingMock, paywallListMock]}
           addTypename={false}
         >
           <BrowserRouter>

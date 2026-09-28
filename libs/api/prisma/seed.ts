@@ -190,6 +190,17 @@ const seedSettings = (prisma: PrismaClient) =>
         settingRestriction: { allowedValues: { boolChoice: true } },
       },
     }),
+    prisma.setting.upsert({
+      where: {
+        name: SettingName.SUBSCRIPTION_UPGRADE_BILLS_FULL_DIFFERENCE,
+      },
+      update: {},
+      create: {
+        name: SettingName.SUBSCRIPTION_UPGRADE_BILLS_FULL_DIFFERENCE,
+        value: false,
+        settingRestriction: { allowedValues: { boolChoice: true } },
+      },
+    }),
 
     prisma.settingAIProvider.upsert({
       where: {

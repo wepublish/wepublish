@@ -81,6 +81,7 @@ import {
   CanGetPeerArticles,
   CanGetPeers,
   CanGetPoll,
+  CanGetAuditLogs,
   CanGetSettings,
   CanGetSubscription,
   CanGetSubscriptionFlows,
@@ -143,6 +144,7 @@ import {
   MdMail,
   MdMoney,
   MdMultilineChart,
+  MdNotificationsNone,
   MdOutgoingMail,
   MdSend,
   MdOutlineGridView,
@@ -153,6 +155,7 @@ import {
   MdPower,
   MdQueryStats,
   MdSell,
+  MdHistory,
   MdSettings,
   MdSettingsInputAntenna,
   MdSignpost,
@@ -170,8 +173,6 @@ import {
   Sidebar as RSidebar,
   Sidenav as RSidenav,
 } from 'rsuite';
-
-import { OneMessages } from './oneMessages/oneMessages';
 
 export interface BaseProps {
   children?: ReactNode;
@@ -287,6 +288,15 @@ export function Base({ children }: BaseProps) {
                     active={path === 'dashboard' || path === ''}
                   >
                     {t('navbar.dashboard')}
+                  </Nav.Item>
+
+                  <Nav.Item
+                    as={NavLink}
+                    href="/notifications"
+                    icon={<MdNotificationsNone />}
+                    active={path === 'notifications'}
+                  >
+                    {t('navbar.notifications')}
                   </Nav.Item>
 
                   <PermissionControl
@@ -1119,12 +1129,27 @@ export function Base({ children }: BaseProps) {
                     CanGetUserRole.id,
                     CanCreateUserRole.id,
                     CanDeleteUserRole.id,
+                    CanGetAuditLogs.id,
                   ]}
                 >
                   <Nav.Menu
                     icon={<MdSettings />}
                     title={t('navbar.settings')}
                   >
+                    {/* AUDIT LOG */}
+                    <PermissionControl
+                      qualifyingPermissions={[CanGetAuditLogs.id]}
+                    >
+                      <Nav.Item
+                        as={NavLink}
+                        href="/audit-log"
+                        active={path === 'audit-log'}
+                        icon={<MdHistory />}
+                      >
+                        {t('navbar.auditLog')}
+                      </Nav.Item>
+                    </PermissionControl>
+
                     {/* DIVERSE SETTINGS */}
                     <PermissionControl
                       qualifyingPermissions={[
@@ -1198,7 +1223,6 @@ export function Base({ children }: BaseProps) {
                     </PermissionControl>
                   </Nav.Menu>
                 </PermissionControl>
-                <Version />
               </Navigation>
             </RSidenav.Body>
           </Sidenav>
@@ -1260,11 +1284,10 @@ export function Base({ children }: BaseProps) {
               </Nav.Menu>
             </Nav>
           </Navbar>
+
+          <Version />
         </Sidebar>
-        <ChildrenContainer>
-          <OneMessages />
-          {children}
-        </ChildrenContainer>
+        <ChildrenContainer>{children}</ChildrenContainer>
       </Container>
     </Wrapper>
   );

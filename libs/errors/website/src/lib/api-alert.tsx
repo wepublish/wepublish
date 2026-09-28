@@ -1,4 +1,5 @@
 import { Alert, NoSsr } from '@mui/material';
+import { ErrorCode } from '@wepublish/errors';
 import {
   BuilderApiAlertProps,
   useWebsiteBuilder,
@@ -14,6 +15,8 @@ export function translateApolloErrorMessage(
   switch (errorMessage) {
     case ErrorMessage.EmailAlreadyInUse:
       return 'Es besteht bereits ein Konto mit dieser E-mail.';
+    case ErrorCode.PaymentAlreadyRunning:
+      return 'Es läuft bereits eine Zahlung für diese Rechnung. Bitte warte mindestens eine Minute, bevor du es erneut versuchst.';
   }
 
   return errorMessage;

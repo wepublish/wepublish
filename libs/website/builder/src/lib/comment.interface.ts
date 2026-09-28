@@ -119,6 +119,7 @@ export type BuilderCommentProps = PropsWithChildren<
     className?: string;
     showContent?: boolean;
     includeAnchor?: boolean;
+    showDateWithFlair?: boolean;
   }
 >;
 
