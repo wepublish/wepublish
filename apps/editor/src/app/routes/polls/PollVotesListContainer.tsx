@@ -1,11 +1,11 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import {
-  PollVoteListQueryResult,
+  DeletePollVotesDocument,
+  PollDocument,
+  PollVoteListDocument,
+  PollVoteListQueryVariables,
   PollVoteSort,
   SortOrder as SortOrderV2,
-  useDeletePollVotesMutation,
-  usePollQuery,
-  usePollVoteListQuery,
 } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
@@ -18,21 +18,22 @@ import { PollVoteList } from './PollVoteList';
 
 function PollVoteListContainer() {
   const { pollId } = useParams();
-  const { state, variables } =
-    usePaginatedQueryContainer<PollVoteListQueryResult>({
-      filter: { pollId },
-      limit: 100,
-      sortMapper: createOptionalMapper({ createdAt: PollVoteSort.CreatedAt }),
-      orderMapper: createOptionalMapper({
-        desc: SortOrderV2.Descending,
-        asc: SortOrderV2.Ascending,
-      }),
-    });
+  const { state, variables } = usePaginatedQueryContainer<{
+    variables: PollVoteListQueryVariables;
+  }>({
+    filter: { pollId },
+    limit: 100,
+    sortMapper: createOptionalMapper({ createdAt: PollVoteSort.CreatedAt }),
+    orderMapper: createOptionalMapper({
+      desc: SortOrderV2.Descending,
+      asc: SortOrderV2.Ascending,
+    }),
+  });
 
-  const listQuery = usePollVoteListQuery({
+  const listQuery = useQuery(PollVoteListDocument, {
     variables,
   });
-  const [deletePollVotes] = useDeletePollVotesMutation({});
+  const [deletePollVotes] = useMutation(DeletePollVotesDocument, {});
 
   const handleDeletePollVotes = async (selectedItems: string[]) => {
     try {
@@ -42,7 +43,7 @@ function PollVoteListContainer() {
     }
   };
 
-  const pollQuery = usePollQuery({
+  const pollQuery = useQuery(PollDocument, {
     variables: { id: pollId! },
   });
 

@@ -2,9 +2,15 @@ import { useMutation } from '@apollo/client/react';
 import {
   FullMemberPlanFragment,
   FullPaymentFragment,
-  usePayInvoiceMutation,
-  useSubscribeMutation,
-  useUpgradeMutation,
+  PayInvoiceDocument,
+  PayInvoiceMutation,
+  PayInvoiceMutationVariables,
+  SubscribeDocument,
+  SubscribeMutation,
+  SubscribeMutationVariables,
+  UpgradeDocument,
+  UpgradeMutation,
+  UpgradeMutationVariables,
 } from '@wepublish/website/api';
 import { useCallback, useState } from 'react';
 import { RedirectPages } from './payment-form';
@@ -29,7 +35,7 @@ export const useSubscribe = (
   const [stripeClientSecret, setStripeClientSecret] = useState<string>();
   const [redirectPages, setRedirectPages] = useState<RedirectPages>();
 
-  const [result] = useSubscribeMutation({
+  const [result] = useMutation(SubscribeDocument, {
     ...params[0],
   });
 
@@ -88,7 +94,7 @@ export const useUpgrade = (
   const [stripeClientSecret, setStripeClientSecret] = useState<string>();
   const [redirectPages, setRedirectPages] = useState<RedirectPages>();
 
-  const [result] = useUpgradeMutation({
+  const [result] = useMutation(UpgradeDocument, {
     ...params[0],
   });
 
@@ -150,7 +156,7 @@ export const usePayInvoice = (
   const [stripeClientSecret, setStripeClientSecret] = useState<string>();
   const [redirectPages, setRedirectPages] = useState<RedirectPages>();
 
-  const [result] = usePayInvoiceMutation({
+  const [result] = useMutation(PayInvoiceDocument, {
     ...params[0],
   });
 

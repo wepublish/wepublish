@@ -7,7 +7,7 @@ import {
   selectTeaserTitle,
   selectTeaserUrl,
 } from '@wepublish/block-content/website';
-import { useStatsQuery } from '@wepublish/website/api';
+import { StatsDocument } from '@wepublish/website/api';
 import {
   BuilderTeaserGridBlockProps,
   useWebsiteBuilder,
@@ -198,7 +198,7 @@ const LinkWrapper = styled('div')`
 `;
 
 export const Archive = ({ teasers }: BuilderTeaserGridBlockProps) => {
-  const { data } = useStatsQuery();
+  const { data } = useQuery(StatsDocument);
   const [currentTeaser, setCurrentTeaser] = useState(teasers[2]);
 
   const title = currentTeaser && selectTeaserTitle(currentTeaser);

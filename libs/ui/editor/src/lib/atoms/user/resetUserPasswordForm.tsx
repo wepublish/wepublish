@@ -18,7 +18,7 @@ export function ResetUserPasswordForm({
   const [password, setPassword] = useState('');
 
   const [resetUserPassword, { loading: isUpdating, error: updateError }] =
-    useResetUserPasswordMutation();
+    useMutation(ResetUserPasswordDocument);
 
   const isDisabled = isUpdating;
 

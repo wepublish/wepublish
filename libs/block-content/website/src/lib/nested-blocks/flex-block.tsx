@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import {
   BlockContent,
+  FlexAlignment,
   FullBlockFragment,
   FullFlexBlockFragment,
 } from '@wepublish/website/api';
@@ -9,7 +10,6 @@ import {
   BuilderFlexBlockProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { FlexAlignment } from '@wepublish/website/api';
 import { css } from '@emotion/react';
 
 export const FlexBlockWrapper = styled('div')`
@@ -40,7 +40,7 @@ export const BlockWithAlignment = styled('div')<FlexAlignment>`
 `;
 
 export const isFlexBlock = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is FullFlexBlockFragment => {
   return block.__typename === 'FlexBlock';
 };

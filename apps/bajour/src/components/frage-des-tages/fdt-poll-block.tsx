@@ -3,10 +3,10 @@ import styled from '@emotion/styled';
 import { css } from '@mui/material';
 import { PollBlockProvider } from '@wepublish/block-content/website';
 import {
+  ArticleDocument,
   CommentItemType,
   CommentSort,
   SortOrder,
-  useArticleQuery,
 } from '@wepublish/website/api';
 import { BuilderPollBlockProps } from '@wepublish/website/builder';
 import { useRouter } from 'next/router';
@@ -118,7 +118,7 @@ export const FdtPollBlock = ({ poll }: BuilderPollBlockProps) => {
     query: { slug },
   } = useRouter();
 
-  const { data: articleData } = useArticleQuery({
+  const { data: articleData } = useQuery(ArticleDocument, {
     fetchPolicy: 'cache-only',
     variables: {
       slug: slug as string,

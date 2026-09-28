@@ -14,7 +14,7 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { IconButton as RIconButton, Table as RTable, Table } from 'rsuite';
 import { RowDataType } from 'rsuite/esm/Table';
-import { Crowdfunding, useCrowdfundingsQuery } from '@wepublish/editor/api';
+import { Crowdfunding, CrowdfundingsDocument } from '@wepublish/editor/api';
 import { CrowdfundingDeleteModal } from './crowdfunding-delete-modal';
 
 const { Column, HeaderCell, Cell: RCell } = RTable;
@@ -26,7 +26,7 @@ function CrowdfundingList() {
     Crowdfunding | undefined
   >(undefined);
 
-  const { data, loading, error, refetch } = useCrowdfundingsQuery({});
+  const { data, loading, error, refetch } = useQuery(CrowdfundingsDocument, {});
 
   return (
     <>

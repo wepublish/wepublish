@@ -1,5 +1,6 @@
 import { useLazyQuery } from '@apollo/client/react';
 import {
+  EventListDocument,
   FullEventFragment,
   TagType,
 } from '@wepublish/editor/api';
@@ -66,9 +67,14 @@ export function SelectEventPanel({
   const [limit, setLimit] = useState<number>(10);
   const { t } = useTranslation();
 
-  const [fetchEvents, { data, loading }] = useEventListLazyQuery({
-    onError: onErrorToast,
-  });
+  const [fetchEvents, { data, loading, error: eventListError }] =
+    useLazyQuery(EventListDocument);
+
+  useEffect(() => {
+    if (eventListError) {
+      onErrorToast(eventListError);
+    }
+  }, [eventListError]);
 
   const saveSelection = () => {
     if (allowCherryPicking) {

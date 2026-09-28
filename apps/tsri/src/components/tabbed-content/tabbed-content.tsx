@@ -307,7 +307,7 @@ export const TabbedContent = ({
 };
 
 export const isTabbedContentBlockStyle = (
-  block: Pick<BlockContent, '__typename' | 'blockStyle'>
+  block: Partial<Pick<BlockContent, '__typename' | 'blockStyle'>>
 ): block is FullFlexBlockFragment =>
   allPass([
     isFlexBlock,

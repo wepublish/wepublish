@@ -1,6 +1,6 @@
 import { useLazyQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
-import { Poll, usePollsLazyQuery } from '@wepublish/editor/api';
+import { Poll, PollsDocument } from '@wepublish/editor/api';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAddCircle } from 'react-icons/md';
@@ -81,9 +81,14 @@ export function SelectPollPanel({
   const [limit, setLimit] = useState<number>(10);
   const { t } = useTranslation();
 
-  const [fetchPolls, { data, loading }] = usePollsLazyQuery({
-    onError: onErrorToast,
-  });
+  const [fetchPolls, { data, loading, error: pollsError }] =
+    useLazyQuery(PollsDocument);
+
+  useEffect(() => {
+    if (pollsError) {
+      onErrorToast(pollsError);
+    }
+  }, [pollsError]);
 
   useEffect(() => {
     fetchPolls({

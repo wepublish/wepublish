@@ -28,6 +28,36 @@ import { BlockListValue } from '../atoms/blockList';
 import { ListValue } from '../atoms/listInput';
 import { TeaserMetadataProperty } from '../panel/teaserEditPanel';
 
+/**
+ * The FullTeaser fragment does not select `__typename`, so the generated
+ * union lacks a discriminant even though Apollo Client always adds the
+ * field to the response data at runtime. The per-variant fragment types are
+ * not emitted anymore either, so they get narrowed out of the combined union
+ * by the field that is unique to each variant.
+ */
+type FullTeaser_ArticleTeaser_Fragment = Extract<
+  FullTeaserFragment,
+  { article: unknown }
+>;
+type FullTeaser_CustomTeaser_Fragment = Extract<
+  FullTeaserFragment,
+  { contentUrl: unknown }
+>;
+type FullTeaser_EventTeaser_Fragment = Extract<
+  FullTeaserFragment,
+  { event: unknown }
+>;
+type FullTeaser_PageTeaser_Fragment = Extract<
+  FullTeaserFragment,
+  { page: unknown }
+>;
+
+type FullTeaserFragmentWithTypename =
+  | (FullTeaser_ArticleTeaser_Fragment & { __typename: 'ArticleTeaser' })
+  | (FullTeaser_CustomTeaser_Fragment & { __typename: 'CustomTeaser' })
+  | (FullTeaser_EventTeaser_Fragment & { __typename: 'EventTeaser' })
+  | (FullTeaser_PageTeaser_Fragment & { __typename: 'PageTeaser' });
+
 export interface BaseBlockValue {
   blockStyle?: string | null;
   disabled?: boolean | null;
@@ -1329,17 +1359,24 @@ export function blockForQueryBlock(
           take: block.take ?? 6,
           sort: block.sort,
           teaserType: block.teaserType ?? TeaserType.Article,
-          teasers: block.teasers.map((teaser, index) => [
-            `${index}`,
-            {
-              ...teaser,
-              type:
-                teaser?.__typename === 'ArticleTeaser' ? TeaserType.Article
-                : teaser?.__typename === 'PageTeaser' ? TeaserType.Page
-                : teaser?.__typename === 'EventTeaser' ? TeaserType.Event
-                : TeaserType.Custom,
-            } as Teaser,
-          ]),
+          teasers: block.teasers.map((rawTeaser, index) => {
+            const teaser = rawTeaser as
+              | FullTeaserFragmentWithTypename
+              | null
+              | undefined;
+
+            return [
+              `${index}`,
+              {
+                ...teaser,
+                type:
+                  teaser?.__typename === 'ArticleTeaser' ? TeaserType.Article
+                  : teaser?.__typename === 'PageTeaser' ? TeaserType.Page
+                  : teaser?.__typename === 'EventTeaser' ? TeaserType.Event
+                  : TeaserType.Custom,
+              } as Teaser,
+            ];
+          }),
         },
       };
 
@@ -1502,8 +1539,10 @@ export function blockForQueryBlock(
 }
 
 const mapTeaserToQueryTeaser = (
-  teaser: FullTeaserFragment | null | undefined
+  rawTeaser: FullTeaserFragment | null | undefined
 ): Teaser | null => {
+  const teaser = rawTeaser as FullTeaserFragmentWithTypename | null | undefined;
+
   if (!teaser) {
     return null;
   }

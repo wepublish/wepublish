@@ -1,5 +1,6 @@
 import { useMutation } from '@apollo/client/react';
 import {
+  CreateUserConsentDocument,
   MutationCreateUserConsentArgs,
 } from '@wepublish/editor/api';
 import { useState } from 'react';
@@ -49,26 +50,29 @@ export const UserConsentCreateView = () => {
 
   const [shouldClose, setShouldClose] = useState(false);
 
-  const [createUserConsent, { loading }] = useCreateUserConsentMutation({
-    onError: error => onErrorToast(error, userConsent.userId),
-    onCompleted: consent => {
-      toaster.push(
-        <Message
-          type="success"
-          showIcon
-          closable
-          duration={3000}
-        >
-          {t('toast.createdSuccess')}
-        </Message>
-      );
-      if (shouldClose) {
-        navigate(closePath);
-      } else {
-        navigate(`/userConsents/edit/${consent.createUserConsent?.id}`);
-      }
-    },
-  });
+  const [createUserConsent, { loading }] = useMutation(
+    CreateUserConsentDocument,
+    {
+      onError: error => onErrorToast(error, userConsent.userId),
+      onCompleted: consent => {
+        toaster.push(
+          <Message
+            type="success"
+            showIcon
+            closable
+            duration={3000}
+          >
+            {t('toast.createdSuccess')}
+          </Message>
+        );
+        if (shouldClose) {
+          navigate(closePath);
+        } else {
+          navigate(`/userConsents/edit/${consent.createUserConsent?.id}`);
+        }
+      },
+    }
+  );
 
   const onSubmit = () => {
     createUserConsent({

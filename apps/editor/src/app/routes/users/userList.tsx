@@ -1,12 +1,12 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import {
+  DeleteUserDocument,
+  ResetUserTotpDocument,
   TinyUserFragment,
-  useDeleteUserMutation,
-  useResetUserTotpMutation,
+  TinyUserListDocument,
   UserFilter,
   UserRole,
   UserSort,
-  useTinyUserListQuery,
 } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
@@ -81,7 +81,7 @@ function UserList() {
     refetch,
     loading: isLoading,
     error: userListQueryError,
-  } = useTinyUserListQuery({
+  } = useQuery(TinyUserListDocument, {
     variables: {
       filter: filter || undefined,
       take: limit,
@@ -107,9 +107,13 @@ function UserList() {
     });
   }, [filter, page, limit, sortOrder, sortField, refetch]);
 
-  const [deleteUser, { loading: isDeleting }] = useDeleteUserMutation({});
-  const [resetUserTotp, { loading: isResettingTotp }] =
-    useResetUserTotpMutation();
+  const [deleteUser, { loading: isDeleting }] = useMutation(
+    DeleteUserDocument,
+    {}
+  );
+  const [resetUserTotp, { loading: isResettingTotp }] = useMutation(
+    ResetUserTotpDocument
+  );
 
   const { t } = useTranslation();
 

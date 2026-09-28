@@ -1,6 +1,7 @@
 import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
-import { Crowdfunding, useCrowdfundingsQuery } from '@wepublish/editor/api';
+import { Crowdfunding, CrowdfundingsDocument } from '@wepublish/editor/api';
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAddCircle } from 'react-icons/md';
 import { Button, Drawer, IconButton, Message, Table, toaster } from 'rsuite';
@@ -46,9 +47,17 @@ export function SelectCrowdfundingPanel({
 }: SelectCrowdfundingPanelProps) {
   const { t } = useTranslation();
 
-  const { data, loading } = useCrowdfundingsQuery({
-    onError: onErrorToast,
-  });
+  const {
+    data,
+    loading,
+    error: crowdfundingsError,
+  } = useQuery(CrowdfundingsDocument);
+
+  useEffect(() => {
+    if (crowdfundingsError) {
+      onErrorToast(crowdfundingsError);
+    }
+  }, [crowdfundingsError]);
 
   return (
     <>

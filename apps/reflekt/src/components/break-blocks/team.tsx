@@ -21,7 +21,7 @@ import { ReflektBlockStyles } from '../block-styles/reflekt-block-styles';
 import { ReflektBreakBlockButton } from './reflekt-break-block-button';
 
 export const isTeamBreakBlock = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is BuilderBreakBlockProps =>
   allPass([isBreakBlock, hasBlockStyle(ReflektBlockStyles.Team)])(block);
 

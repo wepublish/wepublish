@@ -4,10 +4,7 @@ import {
   setPreviewHandshakeState,
   useUser,
 } from '@wepublish/authentication/website';
-import {
-  useLoginWithJwtMutation,
-  SessionWithTokenWithoutUser,
-} from '@wepublish/website/api';
+import { LoginWithJwtDocument } from '@wepublish/website/api';
 import styled from '@emotion/styled';
 import {
   ComponentType,
@@ -83,7 +80,7 @@ export const withJwtHandler = <P extends object>(
 ) =>
   memo<P>(props => {
     const client = useApolloClient();
-    const [loginWithJwt] = useLoginWithJwtMutation();
+    const [loginWithJwt] = useMutation(LoginWithJwtDocument);
     const { setToken, hasUser } = useUser();
     const { t } = useTranslation();
 
@@ -102,9 +99,12 @@ export const withJwtHandler = <P extends object>(
         loginWithJwt({ variables: { jwt } })
           .then(async result => {
             if (result?.data?.createSessionWithJWT) {
-              await setToken(
-                result.data.createSessionWithJWT as SessionWithTokenWithoutUser
-              );
+              await setToken({
+                __typename: 'SessionWithTokenWithoutUser',
+                token: result.data.createSessionWithJWT.token,
+                expiresAt: result.data.createSessionWithJWT.expiresAt,
+                createdAt: result.data.createSessionWithJWT.createdAt,
+              });
 
               if (options?.fromPreview) {
                 setPreviewHandshakeState('succeeded');
@@ -148,9 +148,12 @@ export const withJwtHandler = <P extends object>(
         });
 
         if (result?.data?.createSessionWithJWT) {
-          await setToken(
-            result.data.createSessionWithJWT as SessionWithTokenWithoutUser
-          );
+          await setToken({
+            __typename: 'SessionWithTokenWithoutUser',
+            token: result.data.createSessionWithJWT.token,
+            expiresAt: result.data.createSessionWithJWT.expiresAt,
+            createdAt: result.data.createSessionWithJWT.createdAt,
+          });
           setShowTotpPrompt(false);
           setPendingJwt(null);
           setPreviewHandshakeState('succeeded');

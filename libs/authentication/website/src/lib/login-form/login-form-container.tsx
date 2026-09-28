@@ -1,8 +1,8 @@
 import { useLazyQuery, useMutation } from '@apollo/client/react';
 import {
-  useCheckLoginOtpLazyQuery,
-  useLoginWithCredentialsMutation,
-  useLoginWithEmailMutation,
+  CheckLoginOtpDocument,
+  LoginWithCredentialsDocument,
+  LoginWithEmailDocument,
 } from '@wepublish/website/api';
 import {
   BuilderContainerProps,
@@ -43,18 +43,21 @@ export function LoginFormContainer({
       }
     }
   }, []);
-  const [checkLoginOtp] = useCheckLoginOtpLazyQuery();
-  const [loginWithEmail, withEmail] = useLoginWithEmailMutation();
-  const [loginWithCredentials, withCredentials] =
-    useLoginWithCredentialsMutation({
+  const [checkLoginOtp] = useLazyQuery(CheckLoginOtpDocument);
+  const [loginWithEmail, withEmail] = useMutation(LoginWithEmailDocument);
+  const [loginWithCredentials, withCredentials] = useMutation(
+    LoginWithCredentialsDocument,
+    {
       onCompleted(data) {
         setToken({
+          __typename: 'SessionWithTokenWithoutUser',
           createdAt: data.createSession.createdAt,
           expiresAt: data.createSession.expiresAt,
           token: data.createSession.token,
         });
       },
-    });
+    }
+  );
 
   const handleEmailChange = useCallback(
     (email: string) => {

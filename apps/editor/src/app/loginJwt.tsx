@@ -1,10 +1,10 @@
 import { useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  CreateSessionWithJwtDocument,
+  EnableTotpDocument,
+  GenerateTotpSetupDocument,
   LocalStorageKey,
-  useCreateSessionWithJwtMutation,
-  useEnableTotpMutation,
-  useGenerateTotpSetupMutation,
 } from '@wepublish/editor/api';
 import {
   AuthDispatchActionType,
@@ -78,10 +78,12 @@ export function LoginJwt() {
   const authDispatch = useContext(AuthDispatchContext);
   const { t } = useTranslation();
 
-  const [authenticateWithJWT] = useCreateSessionWithJwtMutation();
-  const [generateTotpSetup, { loading: loadingSetup }] =
-    useGenerateTotpSetupMutation();
-  const [enableTotp, { loading: loadingEnable }] = useEnableTotpMutation();
+  const [authenticateWithJWT] = useMutation(CreateSessionWithJwtDocument);
+  const [generateTotpSetup, { loading: loadingSetup }] = useMutation(
+    GenerateTotpSetupDocument
+  );
+  const [enableTotp, { loading: loadingEnable }] =
+    useMutation(EnableTotpDocument);
 
   const [step, setStep] = useState<'loading' | 'totp-setup'>('loading');
   const [email, setEmail] = useState('');

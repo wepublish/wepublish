@@ -1,6 +1,6 @@
 import { useMutation } from '@apollo/client/react';
 import { CircularProgress, IconButton, Typography } from '@mui/material';
-import { useImportPeerArticleMutation } from '@wepublish/editor/api';
+import { ImportPeerArticleDocument } from '@wepublish/editor/api';
 import { ListViewContainer, ListViewHeader } from '@wepublish/ui/editor';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -80,13 +80,15 @@ export function NetworkContentPage() {
     null
   );
 
-  const [importPeerArticle, { loading: importing }] =
-    useImportPeerArticleMutation({
+  const [importPeerArticle, { loading: importing }] = useMutation(
+    ImportPeerArticleDocument,
+    {
       onCompleted(data) {
         setArticleToImport(undefined);
         navigate(`/articles/edit/${data.importPeerArticle.id}`);
       },
-    });
+    }
+  );
 
   const handleConfirmImport = () => {
     if (!articleToImport) return;

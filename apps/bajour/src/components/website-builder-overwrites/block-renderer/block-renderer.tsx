@@ -48,7 +48,7 @@ export const BajourBlockRenderer = (props: BuilderBlockRendererProps) => {
   // This allows us to show predefined related articles & enhance it with automatic generated once.
   const isOldRelatedArticles = useCallback(
     (
-      block: Pick<BlockContent, '__typename'>
+      block: Partial<Pick<BlockContent, '__typename'>>
     ): block is FullTeaserGridBlockFragment =>
       allPass([
         isTeaserGridBlock,

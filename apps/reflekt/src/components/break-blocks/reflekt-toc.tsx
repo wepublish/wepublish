@@ -46,7 +46,7 @@ export const TocDetails = styled(Typography)`
 `;
 
 export const isToc = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is BuilderBreakBlockProps =>
   allPass([hasBlockStyle(ReflektBlockStyles.TableOfContents), isBreakBlock])(
     block

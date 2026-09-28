@@ -70,7 +70,7 @@ export default function EventList() {
     [from, page, to, upcomingOnly]
   );
 
-  const { data } = useEventListQuery({
+  const { data } = useQuery(EventListDocument, {
     fetchPolicy: 'cache-only',
     variables,
   });

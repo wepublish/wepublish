@@ -14,7 +14,7 @@ import { ReflektBlockStyles } from './block-styles/reflekt-block-styles';
 import { BlockSibling } from './block-siblings';
 
 export const isTitleBlock = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is TitleBlockType => block.__typename === 'TitleBlock';
 
 export const TitleBlockWrapper = styled('div', {

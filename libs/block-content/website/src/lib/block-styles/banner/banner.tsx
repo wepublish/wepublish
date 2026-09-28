@@ -34,6 +34,6 @@ export const Banner = ({
 };
 
 export const isBannerBlockStyle = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is FullBreakBlockFragment =>
   allPass([hasBlockStyle('Banner'), isBreakBlock])(block);

@@ -48,7 +48,7 @@ const MannschaftContentBoxWrapper = styled('div')`
 `;
 
 export const isContentBoxBlock = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is
   | FullImageBlockFragment
   | FullRichTextBlockFragment

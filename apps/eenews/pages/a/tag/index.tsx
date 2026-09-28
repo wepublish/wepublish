@@ -55,7 +55,7 @@ export default function DossierIndex({
     filter: whitelistTagIds.length ? { tags: whitelistTagIds } : undefined,
   };
 
-  const articlesQuery = useArticleListQuery({
+  const articlesQuery = useQuery(ArticleListDocument, {
     fetchPolicy: 'cache-and-network',
     variables,
   });

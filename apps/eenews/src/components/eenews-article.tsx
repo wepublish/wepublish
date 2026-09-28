@@ -4,10 +4,10 @@ import { Typography } from '@mui/material';
 import { Blocks, QuoteBlockWrapper } from '@wepublish/block-content/website';
 import { CommentListContainer } from '@wepublish/comments/website';
 import {
+  ArticleListDocument,
   CommentItemType,
   FullBlockFragment,
   FullTeaserFragment,
-  useArticleListQuery,
 } from '@wepublish/website/api';
 import {
   BuilderArticleProps,
@@ -260,7 +260,7 @@ export const EenewsArticle = ({
   const article = data?.article;
   const firstTagId = article?.tags?.[0]?.id;
 
-  const { data: relatedData } = useArticleListQuery({
+  const { data: relatedData } = useQuery(ArticleListDocument, {
     skip: !firstTagId,
     variables: {
       filter: {
@@ -439,6 +439,7 @@ export const EenewsArticle = ({
                   blockStyle="RelatedGrid"
                   numColumns={3}
                   alignment={{
+                    __typename: 'FlexAlignment',
                     i: String(idx),
                     x: 0,
                     y: 0,

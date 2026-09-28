@@ -2,6 +2,7 @@ import { useLazyQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
   CommentBlockCommentFragment,
+  CommentListDocument,
   FullCommentFragment,
   TagType,
 } from '@wepublish/editor/api';
@@ -109,9 +110,14 @@ export function SelectCommentPanel({
   const [limit, setLimit] = useState<number>(10);
   const { t } = useTranslation();
 
-  const [fetchComments, { data, loading }] = useCommentListLazyQuery({
-    onError: onErrorToast,
-  });
+  const [fetchComments, { data, loading, error: commentListError }] =
+    useLazyQuery(CommentListDocument);
+
+  useEffect(() => {
+    if (commentListError) {
+      onErrorToast(commentListError);
+    }
+  }, [commentListError]);
 
   const getUsername = useMemo(() => commentUsernameGenerator(t), [t]);
 

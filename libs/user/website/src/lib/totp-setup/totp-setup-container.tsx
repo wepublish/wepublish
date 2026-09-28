@@ -1,8 +1,8 @@
 import { useMutation } from '@apollo/client/react';
 import { useUser } from '@wepublish/authentication/website';
 import {
-  useEnableTotpMutation,
-  useGenerateTotpSetupMutation,
+  EnableTotpDocument,
+  GenerateTotpSetupDocument,
 } from '@wepublish/website/api';
 import { BuilderContainerProps } from '@wepublish/website/builder';
 import { useCallback } from 'react';
@@ -12,8 +12,8 @@ export type TotpSetupContainerProps = BuilderContainerProps;
 
 export function TotpSetupContainer({ className }: TotpSetupContainerProps) {
   const { user } = useUser();
-  const [generateTotpSetup] = useGenerateTotpSetupMutation();
-  const [enableTotp] = useEnableTotpMutation();
+  const [generateTotpSetup] = useMutation(GenerateTotpSetupDocument);
+  const [enableTotp] = useMutation(EnableTotpDocument);
 
   const handleSetup = useCallback(async () => {
     // website: true is hardcoded in the GraphQL operation

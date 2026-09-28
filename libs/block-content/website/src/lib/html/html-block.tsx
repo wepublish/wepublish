@@ -4,7 +4,7 @@ import { BlockContent, FullHtmlBlockFragment } from '@wepublish/website/api';
 import InnerHTML from 'dangerously-set-html-content';
 
 export const isHtmlBlock = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is FullHtmlBlockFragment => block.__typename === 'HTMLBlock';
 
 export const HtmlBlockWrapper = styled('div')``;

@@ -17,7 +17,7 @@ export const HauptstadtBlockRenderer = (props: BuilderBlockRendererProps) => {
   // and we want to show them as small teasers instead of big teasers
   const isOldRelatedArticles = useCallback(
     (
-      block: Pick<BlockContent, '__typename'>
+      block: Partial<Pick<BlockContent, '__typename'>>
     ): block is FullTeaserGridBlockFragment =>
       allPass([
         isTeaserGridBlock,

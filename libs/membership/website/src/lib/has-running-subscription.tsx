@@ -1,11 +1,11 @@
 import { useQuery } from '@apollo/client/react';
 import { useUser } from '@wepublish/authentication/website';
-import { useSubscriptionsQuery } from '@wepublish/website/api';
+import { SubscriptionsDocument } from '@wepublish/website/api';
 import { useMemo } from 'react';
 
 export const useHasRunningSubscription = () => {
   const { hasUser } = useUser();
-  const { data } = useSubscriptionsQuery({
+  const { data } = useQuery(SubscriptionsDocument, {
     fetchPolicy: 'cache-first',
     skip: !hasUser,
   });

@@ -2,8 +2,8 @@ import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
   BlockStyle,
+  BlockStylesDocument,
   EditorBlockType,
-  useBlockStylesQuery,
 } from '@wepublish/editor/api';
 import nanoid from 'nanoid';
 import React, {
@@ -370,7 +370,7 @@ function ListItemWrapper({
   onStyleChange,
 }: ListItemWrapperProps) {
   const { t } = useTranslation();
-  const { data } = useBlockStylesQuery();
+  const { data } = useQuery(BlockStylesDocument);
 
   const stylesForBlock = useMemo(
     () =>

@@ -88,7 +88,14 @@ describe('SettingList', () => {
       </AuthContext.Provider>
     );
 
-    await actWait();
+    // Apollo Client 4 delivers the first result a tick later than v3, so wait
+    // for rendered content instead of a fixed tick — otherwise the snapshot
+    // captures an empty fragment.
+    await waitFor(() =>
+      expect(
+        screen.getByText('settingList.guestCommenting')
+      ).toBeInTheDocument()
+    );
 
     expect(baseElement).toBeTruthy();
     expect(asFragment()).toMatchSnapshot();

@@ -85,7 +85,7 @@ export const SearchPage = ({
     data: phraseData,
     loading,
     error,
-  } = usePhraseQuery({
+  } = useQuery(PhraseDocument, {
     skip: !phraseQuery,
     variables: {
       query: phraseQuery!,

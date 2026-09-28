@@ -1,5 +1,6 @@
 import { useMutation } from '@apollo/client/react';
 import {
+  CreateTagDocument,
   MutationCreateTagArgs,
   TagType,
 } from '@wepublish/editor/api';
@@ -44,14 +45,17 @@ const TagCreateView = ({ type }: TagCreateViewProps) => {
   const [shouldClose, setShouldClose] = useState(false);
   const closePath = './..';
 
-  const [createTag, { loading: createLoading }] = useCreateTagMutation({
-    onError: onErrorToast,
-    onCompleted: data => {
-      if (data.createTag) {
-        if (shouldClose) {
-          navigate(`./..`);
-        } else {
-          navigate(`./../edit/${data.createTag.id}`);
+  const [createTag, { loading: createLoading }] = useMutation(
+    CreateTagDocument,
+    {
+      onError: onErrorToast,
+      onCompleted: data => {
+        if (data.createTag) {
+          if (shouldClose) {
+            navigate(`./..`);
+          } else {
+            navigate(`./../edit/${data.createTag.id}`);
+          }
         }
       },
     }

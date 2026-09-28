@@ -2,11 +2,11 @@ import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { alpha, Typography, useTheme } from '@mui/material';
 import {
+  ArticleListDocument,
   FullNavigationFragment,
   FullTeaserFragment,
-  useArticleListQuery,
-  useNavigationListQuery,
-  useTagListQuery,
+  NavigationListDocument,
+  TagListDocument,
 } from '@wepublish/website/api';
 import {
   BuilderTagProps,
@@ -214,7 +214,7 @@ const TopicFilterChip = ({
   isActive,
   label,
 }: TopicFilterChipProps) => {
-  const { data } = useArticleListQuery({
+  const { data } = useQuery(ArticleListDocument, {
     fetchPolicy: 'cache-first',
     variables: {
       take: 1,
@@ -261,7 +261,7 @@ export const EenewsTagPage = ({
   const take = variables?.take ?? 25;
   const skip = variables?.skip ?? 0;
 
-  const { data: navData } = useNavigationListQuery({
+  const { data: navData } = useQuery(NavigationListDocument, {
     fetchPolicy: 'cache-first',
   });
   const dossierNav = navData?.navigations?.find(n => n.key === 'mega-dossiers');
@@ -269,7 +269,7 @@ export const EenewsTagPage = ({
     dossierNav && (isListingRoot || isTopicPage || isDossierPage)
   );
 
-  const { data: tagListData } = useTagListQuery({
+  const { data: tagListData } = useQuery(TagListDocument, {
     fetchPolicy: 'cache-first',
     variables: { take: 100 },
   });
@@ -307,7 +307,7 @@ export const EenewsTagPage = ({
     : isDossierPage ? currentTagSlug
     : undefined;
 
-  const filteredArticles = useArticleListQuery({
+  const filteredArticles = useQuery(ArticleListDocument, {
     skip: !isIntersection,
     fetchPolicy: 'cache-first',
     variables: {
@@ -452,6 +452,7 @@ export const EenewsTagPage = ({
                     }
                     numColumns={3}
                     alignment={{
+                      __typename: 'FlexAlignment',
                       i: String(idx),
                       x: 0,
                       y: 0,

@@ -7,7 +7,7 @@ import { BuilderFacebookVideoBlockProps } from '@wepublish/website/builder';
 import ReactPlayer from 'react-player';
 
 export const isFacebookVideoBlock = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is FullFacebookVideoBlockFragment =>
   block.__typename === 'FacebookVideoBlock';
 

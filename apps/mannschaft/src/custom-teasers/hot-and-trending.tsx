@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { TeaserWrapper } from '@wepublish/block-content/website';
-import { useHotAndTrendingQuery } from '@wepublish/website/api';
+import { HotAndTrendingDocument } from '@wepublish/website/api';
 import {
   BuilderTeaserProps,
   useWebsiteBuilder,
@@ -60,7 +60,7 @@ export const HotAndTrendingTeaser = ({
     return now.toISOString();
   }, []);
 
-  const { data } = useHotAndTrendingQuery({
+  const { data } = useQuery(HotAndTrendingDocument, {
     variables: {
       take: 5,
       start: yesterday,

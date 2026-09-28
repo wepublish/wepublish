@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client/react';
 import {
+  ArticleListDocument,
   SlimArticleFragment,
-  useArticleListQuery,
 } from '@wepublish/website/api';
 import {
   BuilderArticleListProps,
@@ -23,7 +23,7 @@ export function ArticleListContainer({
   filter,
 }: ArticleListContainerProps) {
   const { ArticleList } = useWebsiteBuilder();
-  const { data, loading, error } = useArticleListQuery({
+  const { data, loading, error } = useQuery(ArticleListDocument, {
     variables,
   });
 

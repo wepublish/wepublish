@@ -139,7 +139,7 @@ const sidebarContentWrapperStyles = (
 `;
 
 export const isTsriSidebarContent = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is FullBreakBlockFragment =>
   allPass([hasBlockStyle(TsriBreakBlockType.SidebarContent), isBreakBlock])(
     block

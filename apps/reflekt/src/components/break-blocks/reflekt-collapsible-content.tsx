@@ -40,7 +40,7 @@ export const ExpandIcon = styled(MdArrowDownward)`
 `;
 
 export const isCollapsibleContent = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is BuilderBreakBlockProps =>
   allPass([hasBlockStyle(ReflektBlockStyles.CollapsibleContent), isBreakBlock])(
     block

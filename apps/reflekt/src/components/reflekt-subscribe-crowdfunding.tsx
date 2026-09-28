@@ -9,7 +9,7 @@ import {
   CurrencyNumberSpinner,
   MemberPlanPickerRadios,
 } from '@wepublish/membership/website';
-import { BlockContent, useSubscriptionsQuery } from '@wepublish/website/api';
+import { BlockContent, SubscriptionsDocument } from '@wepublish/website/api';
 import {
   BuilderMemberPlanItemProps,
   BuilderRouterContext,
@@ -44,7 +44,7 @@ const CrowdfundingGoodieContext = createContext<CrowdfundingGoodieConfig>({
 });
 
 export const isCrowdFundingSubscribe = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is BuilderSubscribeBlockProps =>
   allPass([hasBlockStyle(ReflektBlockStyles.CrowdFunding), isSubscribeBlock])(
     block
@@ -322,7 +322,6 @@ export const ReflektCrowdfundingMemberPlanItem = forwardRef<
         src={hasGoodie ? '/with_goodie.png' : '/no_goodie.png'}
         alt=""
       />
-
       <ItemCard>
         <ItemAmountArea>
           {hasFreePricing && (
@@ -379,7 +378,11 @@ export const ReflektCrowdfundingMemberPlanItem = forwardRef<
           name={name}
           disableRipple={true}
           {...props}
-          inputRef={radioInputRef}
+          slotProps={{
+            input: {
+              ref: radioInputRef,
+            },
+          }}
         />
       </ItemCard>
     </ItemWrapper>
@@ -401,7 +404,7 @@ export const ReflektSubscribeCrowdfunding = (
     query: { upgradeSubscriptionId },
   } = useContext(BuilderRouterContext);
 
-  const { data } = useSubscriptionsQuery({
+  const { data } = useQuery(SubscriptionsDocument, {
     fetchPolicy: 'cache-only',
     skip: !upgradeSubscriptionId,
   });

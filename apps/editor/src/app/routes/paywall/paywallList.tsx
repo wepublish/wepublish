@@ -1,8 +1,8 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import {
+  DeletePaywallDocument,
   Paywall,
-  useDeletePaywallMutation,
-  usePaywallListQuery,
+  PaywallListDocument,
 } from '@wepublish/editor/api';
 import {
   CanCreatePaywall,
@@ -39,8 +39,8 @@ function PaywallList() {
     undefined
   );
 
-  const { data, loading, refetch } = usePaywallListQuery({});
-  const [deletePaywall] = useDeletePaywallMutation({
+  const { data, loading, refetch } = useQuery(PaywallListDocument, {});
+  const [deletePaywall] = useMutation(DeletePaywallDocument, {
     onCompleted() {
       refetch();
     },

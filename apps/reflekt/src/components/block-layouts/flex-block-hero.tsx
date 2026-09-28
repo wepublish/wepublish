@@ -404,7 +404,7 @@ const HeroPosterVideoCell = ({
 };
 
 export const isFlexBlockHero = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is FlexBlockType => {
   return allPass([
     hasBlockStyle(ReflektBlockStyles.FlexBlockHero),

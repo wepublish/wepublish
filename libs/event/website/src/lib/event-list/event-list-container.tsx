@@ -15,7 +15,7 @@ export function EventListContainer({
   onVariablesChange,
 }: EventListContainerProps) {
   const { EventList } = useWebsiteBuilder();
-  const { data, loading, error } = useEventListQuery({
+  const { data, loading, error } = useQuery(EventListDocument, {
     variables,
   });
 

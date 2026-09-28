@@ -20,7 +20,7 @@ import { allPass, anyPass } from 'ramda';
 import { HighlightTeaser } from '../custom-teasers/highlight';
 
 export const isHighlightTeasers = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is FullTeaserGridBlockFragment | FullTeaserListBlockFragment =>
   allPass([
     hasBlockStyle('Highlight'),

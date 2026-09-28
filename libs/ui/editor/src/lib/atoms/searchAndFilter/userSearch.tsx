@@ -45,7 +45,7 @@ export function UserSearch({
     loading,
     error,
     refetch,
-  } = useUserListQuery({
+  } = useQuery(UserListDocument, {
     variables: {
       take: 100,
       filter: {

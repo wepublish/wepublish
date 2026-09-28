@@ -40,9 +40,14 @@ export function SelectPaywall({
 }: SelectPaywallsProps) {
   const { t } = useTranslation();
 
-  const { data: paywallsData } = usePaywallListQuery({
-    onError: showErrors,
-  });
+  const { data: paywallsData, error: paywallListError } =
+    useQuery(PaywallListDocument);
+
+  useEffect(() => {
+    if (paywallListError) {
+      showErrors(paywallListError);
+    }
+  }, [paywallListError]);
 
   /**
    * Prepare available paywalls

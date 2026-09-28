@@ -14,7 +14,7 @@ import { useMemo } from 'react';
 import { isFilledTeaser } from './teaser-grid-block';
 
 export const isTeaserGridFlexBlock = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is FullTeaserGridFlexBlockFragment =>
   block.__typename === 'TeaserGridFlexBlock';
 

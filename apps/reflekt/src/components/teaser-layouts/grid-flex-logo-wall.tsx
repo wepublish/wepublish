@@ -16,7 +16,7 @@ import { useMemo } from 'react';
 import { ReflektBlockStyles } from '../block-styles/reflekt-block-styles';
 
 export const isGridFlexLogoWall = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is BuilderTeaserGridFlexBlockProps =>
   allPass([
     isTeaserGridFlexBlock,

@@ -1,13 +1,13 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  CreatePaymentMethodDocument,
   FullImageFragment,
   FullPaymentMethodFragment,
   FullPaymentProviderFragment,
-  useCreatePaymentMethodMutation,
-  usePaymentMethodQuery,
-  usePaymentProviderListQuery,
-  useUpdatePaymentMethodMutation,
+  PaymentMethodDocument,
+  PaymentProviderListDocument,
+  UpdatePaymentMethodDocument,
 } from '@wepublish/editor/api';
 import { slugify } from '@wepublish/utils';
 import { useEffect, useState } from 'react';
@@ -76,7 +76,7 @@ function PaymentMethodEditPanel({
     data,
     loading: isLoading,
     error: loadError,
-  } = usePaymentMethodQuery({
+  } = useQuery(PaymentMethodDocument, {
     variables: { id: id! },
     skip: id === undefined,
   });
@@ -85,13 +85,13 @@ function PaymentMethodEditPanel({
     data: paymentProviderData,
     loading: isLoadingPaymentProvider,
     error: loadPaymentProviderError,
-  } = usePaymentProviderListQuery({});
+  } = useQuery(PaymentProviderListDocument, {});
 
   const [createPaymentMethod, { loading: isCreating, error: createError }] =
-    useCreatePaymentMethodMutation();
+    useMutation(CreatePaymentMethodDocument);
 
   const [updatePaymentMethod, { loading: isUpdating, error: updateError }] =
-    useUpdatePaymentMethodMutation();
+    useMutation(UpdatePaymentMethodDocument);
 
   const isDisabled =
     isLoading ||

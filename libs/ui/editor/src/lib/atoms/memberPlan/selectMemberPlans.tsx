@@ -2,6 +2,7 @@ import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
   MemberPlan,
+  MemberPlanListDocument,
   MemberPlanSort,
   SortOrder,
 } from '@wepublish/editor/api';
@@ -69,7 +70,11 @@ export function SelectMemberPlans({
     );
   };
 
-  const { data: memberplansData, refetch } = useMemberPlanListQuery({
+  const {
+    data: memberplansData,
+    error: memberPlanListError,
+    refetch,
+  } = useQuery(MemberPlanListDocument, {
     variables: {
       sort: MemberPlanSort.CreatedAt,
       order: SortOrder.Ascending,

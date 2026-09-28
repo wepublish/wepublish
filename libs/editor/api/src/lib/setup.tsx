@@ -11,7 +11,7 @@ import { RemoveTypenameFromVariablesLink } from '@apollo/client/link/remove-type
 import UploadHttpLink from 'apollo-upload-client/UploadHttpLink.mjs';
 
 import { ComponentType, createElement, memo } from 'react';
-import possibleTypes from './graphql';
+import possibleTypes from './possible-types';
 
 export enum ElementID {
   Settings = 'settings',

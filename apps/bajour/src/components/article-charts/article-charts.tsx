@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client/react';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import { useHotAndTrendingQuery } from '@wepublish/website/api';
+import { HotAndTrendingDocument } from '@wepublish/website/api';
 import { Image, Link, useWebsiteBuilder } from '@wepublish/website/builder';
 
 const ArticleChartsWrapper = styled('article')`
@@ -78,7 +78,7 @@ const uppercase = css`
 `;
 
 export const ArticleCharts = () => {
-  const { data } = useHotAndTrendingQuery({
+  const { data } = useQuery(HotAndTrendingDocument, {
     variables: {
       take: 4,
     },

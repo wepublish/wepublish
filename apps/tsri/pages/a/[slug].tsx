@@ -77,7 +77,7 @@ export default function ArticleBySlugOrId() {
     query: { slug, id },
   } = useRouter();
 
-  const { data } = useArticleQuery({
+  const { data } = useQuery(ArticleDocument, {
     fetchPolicy: 'cache-only',
     variables: {
       slug: slug as string,

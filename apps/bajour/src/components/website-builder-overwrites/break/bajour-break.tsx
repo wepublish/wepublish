@@ -29,7 +29,7 @@ export const BajourBreakBlock = styled(BreakBlock)`
 `;
 
 export const isLightBreak = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is FullBreakBlockFragment =>
   allPass([hasBlockStyle('Light'), isBreakBlock])(block);
 
@@ -39,7 +39,7 @@ export const BajourLightBreakBlock = styled(BajourBreakBlock)`
 `;
 
 export const isSponsoredBreak = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is FullBreakBlockFragment =>
   allPass([hasBlockStyle('Sponsored'), isBreakBlock])(block);
 

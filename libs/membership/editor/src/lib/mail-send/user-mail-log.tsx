@@ -7,10 +7,10 @@ import {
   TableHead,
   TableRow,
 } from '@mui/material';
-import { useMailLogsQuery } from '@wepublish/editor/api';
+import { MailLogsDocument } from '@wepublish/editor/api';
 import { useTranslation } from 'react-i18next';
 import { Message } from 'rsuite';
-import { DEFAULT_QUERY_OPTIONS } from '../common';
+import { useShowErrors } from '../common';
 import { formatDateTime, MailLogStateTag } from './mail-log-common';
 
 interface UserMailLogPanelProps {
@@ -21,10 +21,10 @@ interface UserMailLogPanelProps {
 export function UserMailLogPanel({ userId }: UserMailLogPanelProps) {
   const { t } = useTranslation();
 
-  const { data } = useMailLogsQuery({
-    ...DEFAULT_QUERY_OPTIONS(),
+  const { data, error } = useQuery(MailLogsDocument, {
     variables: { filter: { recipientId: userId }, take: 20 },
   });
+  useShowErrors(error);
 
   const logs = data?.mailLogs.nodes ?? [];
 
