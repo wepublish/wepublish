@@ -21,10 +21,7 @@ import {
 import { CommentListWrapper } from '@wepublish/comments/website';
 import { ContentWrapper } from '@wepublish/content/website';
 import { SubscribeWrapper } from '@wepublish/membership/website';
-import {
-  Article as ArticleType,
-  FullBlockFragment,
-} from '@wepublish/website/api';
+import { FullBlockFragment } from '@wepublish/website/api';
 import {
   BuilderArticleProps,
   PeerInformation,
@@ -176,7 +173,7 @@ export function WepArticle({
     >
       {isDesktop && articleGlobalStyles}
 
-      {article && <ArticleSEO article={article as ArticleType} />}
+      {article && <ArticleSEO article={article} />}
 
       {article && (
         <Blocks

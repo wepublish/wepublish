@@ -15,20 +15,19 @@ import { Comment } from '@wepublish/comments/website';
 import { ContentWrapper } from '@wepublish/content/website';
 import { getApiUrl } from '@wepublish/utils/website';
 import {
-  Article as ArticleType,
   ArticleDocument,
   ArticleListDocument,
   BannerDocumentType,
   CommentItemType,
   CommentListDocument,
   CommentSort,
+  FullTagFragment,
   HotAndTrendingDocument,
   NavigationListDocument,
   PeerProfileDocument,
   PrimaryBannerDocument,
   SettingListDocument,
   SortOrder,
-  Tag,
   addClientCacheToProps,
   getApiClient,
 } from '@wepublish/website/api';
@@ -112,7 +111,7 @@ export default function ArticleBySlugOrId() {
         {isSearchSlider && data?.article ?
           <SearchSlider
             key={data.article.id}
-            article={data.article as ArticleType}
+            article={data.article}
             includeSEO
           />
         : <>
@@ -232,7 +231,9 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         query: ArticleListDocument,
         variables: {
           filter: {
-            tags: article.data.article.tags.map((tag: Tag) => tag.id),
+            tags: article.data.article.tags.map(
+              (tag: FullTagFragment) => tag.id
+            ),
           },
           take: 4,
         },

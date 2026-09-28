@@ -1,7 +1,7 @@
 import { css } from '@mui/material';
 import styled from '@emotion/styled';
 import {
-  BlockContent,
+  FullBlockFragment,
   FullFlexTeaserFragment,
   FullTeaserGridFlexBlockFragment,
 } from '@wepublish/website/api';
@@ -14,7 +14,7 @@ import { useMemo } from 'react';
 import { isFilledTeaser } from './teaser-grid-block';
 
 export const isTeaserGridFlexBlock = (
-  block: Partial<Pick<BlockContent, '__typename'>>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is FullTeaserGridFlexBlockFragment =>
   block.__typename === 'TeaserGridFlexBlock';
 

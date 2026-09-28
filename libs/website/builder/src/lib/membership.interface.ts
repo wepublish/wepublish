@@ -3,24 +3,24 @@ import type { useLazyQuery, useQuery } from '@apollo/client/react';
 import { RadioProps } from '@mui/material';
 import {
   ChallengeQuery,
+  CreateSubscriptionInfoQuery,
+  CreateSubscriptionInfoQueryVariables,
+  Currency,
   FullGoodieFragment,
-  FullSubscribeBlockFragment,
   FullInvoiceFragment,
   FullMemberPlanFragment,
+  FullPaymentMethodFragment,
+  FullSubscribeBlockFragment,
   FullSubscriptionFragment,
   InvoicesQuery,
   MemberPlanListQuery,
-  PaymentMethod,
   PaymentPeriodicity,
   RegisterMutationVariables,
   SubscribeMutationVariables,
   SubscribePeriodicityDisplay,
   SubscriptionsQuery,
-  Currency,
   UpgradeMutationVariables,
   UpgradeSubscriptionInfoQuery,
-  CreateSubscriptionInfoQuery,
-  CreateSubscriptionInfoQueryVariables,
 } from '@wepublish/website/api';
 import { BuilderRegistrationFormProps } from './authentication.interface';
 import { BuilderUserFormFields } from './user.interface';
@@ -143,7 +143,7 @@ export type BuilderPeriodicityPickerProps = {
 };
 
 export type BuilderPaymentMethodPickerProps = {
-  paymentMethods: PaymentMethod[] | undefined;
+  paymentMethods: FullPaymentMethodFragment[] | undefined;
   className?: string;
   onChange: (paymentMethodId: string) => void;
   name?: string;

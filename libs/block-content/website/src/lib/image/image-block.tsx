@@ -1,6 +1,9 @@
 import styled from '@emotion/styled';
 import { Typography } from '@mui/material';
-import { BlockContent, FullImageBlockFragment } from '@wepublish/website/api';
+import {
+  FullBlockFragment,
+  FullImageBlockFragment,
+} from '@wepublish/website/api';
 import {
   BuilderImageBlockProps,
   Image,
@@ -18,7 +21,7 @@ declare module 'react' {
 }
 
 export const isImageBlock = (
-  block: Partial<Pick<BlockContent, '__typename'>>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is FullImageBlockFragment => block.__typename === 'ImageBlock';
 
 export const ImageBlockWrapper = styled('figure')`

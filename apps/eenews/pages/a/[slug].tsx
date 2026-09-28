@@ -2,13 +2,13 @@ import { CombinedGraphQLErrors } from '@apollo/client';
 import { ArticleContainer } from '@wepublish/article/website';
 import { getApiUrl } from '@wepublish/utils/website';
 import {
-  addClientCacheToProps,
   ArticleDocument,
   ArticleListDocument,
-  getApiClient,
+  FullTagFragment,
   NavigationListDocument,
   PeerProfileDocument,
-  Tag,
+  addClientCacheToProps,
+  getApiClient,
 } from '@wepublish/website/api';
 import { GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
@@ -59,7 +59,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       query: ArticleListDocument,
       variables: {
         filter: {
-          tags: article.data.article.tags.map((tag: Tag) => tag.id),
+          tags: article.data.article.tags.map((tag: FullTagFragment) => tag.id),
         },
         take: 4,
       },

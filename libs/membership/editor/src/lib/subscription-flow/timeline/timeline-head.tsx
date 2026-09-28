@@ -1,6 +1,6 @@
 import { TableCell } from '@mui/material';
 import styled from '@emotion/styled';
-import { SubscriptionInterval } from '@wepublish/editor/api';
+import { SubscriptionIntervalFragment } from '@wepublish/editor/api';
 import { useAuthorisation } from '@wepublish/ui/editor';
 import { useContext, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -10,7 +10,7 @@ import { SubscriptionClientContext } from '../graphql-client-context';
 
 interface FlowHeadProps {
   days: (number | null | undefined)[];
-  intervals: SubscriptionInterval[];
+  intervals: SubscriptionIntervalFragment[];
 }
 
 const PopoverBody = styled('div')`

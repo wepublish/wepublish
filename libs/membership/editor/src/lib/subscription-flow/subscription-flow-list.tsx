@@ -21,7 +21,7 @@ import {
   MemberPlanListDocument,
   SubscriptionEvent,
   SubscriptionFlowsDocument,
-  SubscriptionInterval,
+  SubscriptionIntervalFragment,
   TinyMailTemplateFragment,
   UpdateSubscriptionFlowDocument,
   UpdateSubscriptionIntervalDocument,
@@ -80,12 +80,12 @@ export interface UserActionEvent {
   subscriptionEventKey: UserActionEvents;
 }
 
-export interface UserActionInterval extends SubscriptionInterval {
+export interface UserActionInterval extends SubscriptionIntervalFragment {
   event: UserActionEvents;
   daysAwayFromEnding: null;
 }
 
-export interface NonUserActionInterval extends SubscriptionInterval {
+export interface NonUserActionInterval extends SubscriptionIntervalFragment {
   event: NonUserActionEvents;
   daysAwayFromEnding: number;
 }
@@ -111,7 +111,9 @@ const eventColors: Record<string, IntervalColoring> = {
   [SubscriptionEvent.DeactivationUnpaid]: { bg: 'orange', fg: 'white' },
 };
 
-export interface DecoratedSubscriptionInterval<T extends SubscriptionInterval> {
+export interface DecoratedSubscriptionInterval<
+  T extends SubscriptionIntervalFragment,
+> {
   subscriptionFlowId: string;
   title: string;
   object: T;
@@ -229,12 +231,12 @@ function SubscriptionFlowTable({
     });
   }, [t]);
 
-  const intervals: SubscriptionInterval[] = useMemo(() => {
+  const intervals: SubscriptionIntervalFragment[] = useMemo(() => {
     if (!subscriptionFlows) {
       return [];
     }
 
-    let intervals: SubscriptionInterval[] = [];
+    let intervals: SubscriptionIntervalFragment[] = [];
     for (const flow of subscriptionFlows.subscriptionFlows) {
       intervals = intervals.concat(flow.intervals);
     }
@@ -246,7 +248,7 @@ function SubscriptionFlowTable({
     // Take existing intervals, maybe insert new day, drop all empty days, always show zero day and sort ascending
     const days = intervals
       .map(i => i.daysAwayFromEnding)
-      .concat([newDay, 0])
+      .concat([newDay ?? null, 0])
       .filter((interval): interval is number => interval != null)
       .sort((a, b) => a - b);
 

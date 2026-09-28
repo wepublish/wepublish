@@ -1,7 +1,7 @@
 import { AuthTokenStorageKey } from '@wepublish/authentication/website';
 import {
+  FullSessionWithTokenWithoutUserFragment,
   LoginWithJwtDocument,
-  SessionWithTokenWithoutUser,
 } from '@wepublish/website/api';
 import { ApolloClient, CombinedGraphQLErrors } from '@apollo/client';
 import { setCookie } from 'cookies-next';
@@ -54,7 +54,7 @@ export async function handleJwtLogin(
         token: data.createSessionWithJWT.token,
         expiresAt: data.createSessionWithJWT.expiresAt,
         createdAt: data.createSessionWithJWT.createdAt,
-      } satisfies SessionWithTokenWithoutUser),
+      } satisfies FullSessionWithTokenWithoutUserFragment),
       {
         req: ctx.req,
         res: ctx.res,

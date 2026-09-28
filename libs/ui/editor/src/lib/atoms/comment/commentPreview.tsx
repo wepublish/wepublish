@@ -1,5 +1,5 @@
 import {
-  CommentRevision,
+  CommentRevisionFragment,
   CommentRevisionInput,
   FullCommentFragment,
 } from '@wepublish/editor/api';
@@ -24,7 +24,7 @@ import { CreateCommentBtn } from './createCommentBtn';
 export function CommentRevisionView({
   revision,
 }: {
-  revision: CommentRevision | undefined;
+  revision: CommentRevisionFragment | undefined;
 }) {
   const { t } = useTranslation();
   if (!revision) {

@@ -4,7 +4,6 @@ import {
   PeerInformation,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { Article as ArticleType } from '@wepublish/website/api';
 import { ArticleListWrapper } from './article-list/article-list';
 import { CommentListWrapper } from '@wepublish/comments/website';
 import {
@@ -98,7 +97,7 @@ export function Article({
       {!article && !loading && <PreviewUnavailable />}
       {article && <PreviewStatusBanner />}
 
-      {article && <ArticleSEO article={article as ArticleType} />}
+      {article && <ArticleSEO article={article} />}
 
       {article && (
         <Blocks

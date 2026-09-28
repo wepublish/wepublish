@@ -2866,6 +2866,7 @@ export type SlimArticleFragment = {
   slug: string | null;
   likes: number;
   disableComments: boolean;
+  hidden: boolean;
   peerId: string | null;
   tags: Array<{ __typename: 'Tag' } & FullTagFragment>;
   latest: { __typename: 'ArticleRevision' } & SlimArticleRevisionFragment;
@@ -2890,6 +2891,7 @@ export type SlimPageFragment = {
   modifiedAt: string;
   url: string;
   slug: string | null;
+  hidden: boolean;
   tags: Array<{ __typename: 'Tag' } & FullTagFragment>;
   latest: { __typename: 'PageRevision' } & SlimPageRevisionFragment;
 };
@@ -4546,6 +4548,7 @@ export const SlimArticleFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
           { kind: 'Field', name: { kind: 'Name', value: 'likes' } },
           { kind: 'Field', name: { kind: 'Name', value: 'disableComments' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hidden' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'tags' },
@@ -20947,6 +20950,7 @@ export const FullArticleTeaserFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
           { kind: 'Field', name: { kind: 'Name', value: 'likes' } },
           { kind: 'Field', name: { kind: 'Name', value: 'disableComments' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hidden' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'tags' },
@@ -21351,6 +21355,7 @@ export const SlimPageFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
           { kind: 'Field', name: { kind: 'Name', value: 'url' } },
           { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hidden' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'tags' },
@@ -22282,6 +22287,7 @@ export const FullPageTeaserFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
           { kind: 'Field', name: { kind: 'Name', value: 'url' } },
           { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hidden' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'tags' },
@@ -23778,6 +23784,7 @@ export const FullTeaserFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
           { kind: 'Field', name: { kind: 'Name', value: 'likes' } },
           { kind: 'Field', name: { kind: 'Name', value: 'disableComments' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hidden' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'tags' },
@@ -23951,6 +23958,7 @@ export const FullTeaserFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
           { kind: 'Field', name: { kind: 'Name', value: 'url' } },
           { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hidden' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'tags' },
@@ -25053,6 +25061,7 @@ export const FullFlexTeaserFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
           { kind: 'Field', name: { kind: 'Name', value: 'likes' } },
           { kind: 'Field', name: { kind: 'Name', value: 'disableComments' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hidden' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'tags' },
@@ -25334,6 +25343,7 @@ export const FullFlexTeaserFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
           { kind: 'Field', name: { kind: 'Name', value: 'url' } },
           { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hidden' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'tags' },
@@ -26465,6 +26475,7 @@ export const FullTeaserGridFlexBlockFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
           { kind: 'Field', name: { kind: 'Name', value: 'likes' } },
           { kind: 'Field', name: { kind: 'Name', value: 'disableComments' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hidden' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'tags' },
@@ -26746,6 +26757,7 @@ export const FullTeaserGridFlexBlockFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
           { kind: 'Field', name: { kind: 'Name', value: 'url' } },
           { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hidden' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'tags' },
@@ -27881,6 +27893,7 @@ export const FullTeaserGridBlockFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
           { kind: 'Field', name: { kind: 'Name', value: 'likes' } },
           { kind: 'Field', name: { kind: 'Name', value: 'disableComments' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hidden' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'tags' },
@@ -28162,6 +28175,7 @@ export const FullTeaserGridBlockFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
           { kind: 'Field', name: { kind: 'Name', value: 'url' } },
           { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hidden' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'tags' },
@@ -29267,6 +29281,7 @@ export const FullTeaserListBlockFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
           { kind: 'Field', name: { kind: 'Name', value: 'likes' } },
           { kind: 'Field', name: { kind: 'Name', value: 'disableComments' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hidden' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'tags' },
@@ -29548,6 +29563,7 @@ export const FullTeaserListBlockFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
           { kind: 'Field', name: { kind: 'Name', value: 'url' } },
           { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hidden' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'tags' },
@@ -30643,6 +30659,7 @@ export const FullTeaserSlotsBlockFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
           { kind: 'Field', name: { kind: 'Name', value: 'likes' } },
           { kind: 'Field', name: { kind: 'Name', value: 'disableComments' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hidden' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'tags' },
@@ -30924,6 +30941,7 @@ export const FullTeaserSlotsBlockFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
           { kind: 'Field', name: { kind: 'Name', value: 'url' } },
           { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hidden' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'tags' },
@@ -33714,6 +33732,7 @@ export const FullFlexBlockFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
           { kind: 'Field', name: { kind: 'Name', value: 'likes' } },
           { kind: 'Field', name: { kind: 'Name', value: 'disableComments' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hidden' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'tags' },
@@ -33936,6 +33955,7 @@ export const FullFlexBlockFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
           { kind: 'Field', name: { kind: 'Name', value: 'url' } },
           { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hidden' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'tags' },
@@ -37381,6 +37401,7 @@ export const FullBlockTemplateBlockFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
           { kind: 'Field', name: { kind: 'Name', value: 'likes' } },
           { kind: 'Field', name: { kind: 'Name', value: 'disableComments' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hidden' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'tags' },
@@ -37603,6 +37624,7 @@ export const FullBlockTemplateBlockFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
           { kind: 'Field', name: { kind: 'Name', value: 'url' } },
           { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hidden' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'tags' },
@@ -41211,6 +41233,7 @@ export const FullBlockFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
           { kind: 'Field', name: { kind: 'Name', value: 'likes' } },
           { kind: 'Field', name: { kind: 'Name', value: 'disableComments' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hidden' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'tags' },
@@ -41433,6 +41456,7 @@ export const FullBlockFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
           { kind: 'Field', name: { kind: 'Name', value: 'url' } },
           { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hidden' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'tags' },
@@ -46238,6 +46262,7 @@ export const FullArticleRevisionFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
           { kind: 'Field', name: { kind: 'Name', value: 'likes' } },
           { kind: 'Field', name: { kind: 'Name', value: 'disableComments' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hidden' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'tags' },
@@ -46460,6 +46485,7 @@ export const FullArticleRevisionFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
           { kind: 'Field', name: { kind: 'Name', value: 'url' } },
           { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hidden' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'tags' },
@@ -50320,6 +50346,7 @@ export const FullArticleFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
           { kind: 'Field', name: { kind: 'Name', value: 'likes' } },
           { kind: 'Field', name: { kind: 'Name', value: 'disableComments' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hidden' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'tags' },
@@ -50542,6 +50569,7 @@ export const FullArticleFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
           { kind: 'Field', name: { kind: 'Name', value: 'url' } },
           { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hidden' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'tags' },
@@ -57576,6 +57604,7 @@ export const FullPageRevisionFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
           { kind: 'Field', name: { kind: 'Name', value: 'likes' } },
           { kind: 'Field', name: { kind: 'Name', value: 'disableComments' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hidden' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'tags' },
@@ -57798,6 +57827,7 @@ export const FullPageRevisionFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
           { kind: 'Field', name: { kind: 'Name', value: 'url' } },
           { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hidden' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'tags' },
@@ -61613,6 +61643,7 @@ export const FullPageFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
           { kind: 'Field', name: { kind: 'Name', value: 'likes' } },
           { kind: 'Field', name: { kind: 'Name', value: 'disableComments' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hidden' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'tags' },
@@ -61792,6 +61823,7 @@ export const FullPageFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
           { kind: 'Field', name: { kind: 'Name', value: 'url' } },
           { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hidden' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'tags' },
@@ -64611,6 +64643,7 @@ export const HotAndTrendingDocument = {
           { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
           { kind: 'Field', name: { kind: 'Name', value: 'likes' } },
           { kind: 'Field', name: { kind: 'Name', value: 'disableComments' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hidden' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'tags' },
@@ -65241,6 +65274,7 @@ export const ArticleDocument = {
           { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
           { kind: 'Field', name: { kind: 'Name', value: 'likes' } },
           { kind: 'Field', name: { kind: 'Name', value: 'disableComments' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hidden' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'tags' },
@@ -68007,6 +68041,7 @@ export const ArticleDocument = {
           { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
           { kind: 'Field', name: { kind: 'Name', value: 'url' } },
           { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hidden' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'tags' },
@@ -69642,6 +69677,7 @@ export const ArticleListDocument = {
           { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
           { kind: 'Field', name: { kind: 'Name', value: 'likes' } },
           { kind: 'Field', name: { kind: 'Name', value: 'disableComments' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hidden' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'tags' },
@@ -70377,6 +70413,7 @@ export const FullArticleListDocument = {
           { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
           { kind: 'Field', name: { kind: 'Name', value: 'likes' } },
           { kind: 'Field', name: { kind: 'Name', value: 'disableComments' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hidden' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'tags' },
@@ -73143,6 +73180,7 @@ export const FullArticleListDocument = {
           { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
           { kind: 'Field', name: { kind: 'Name', value: 'url' } },
           { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hidden' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'tags' },
@@ -74669,6 +74707,7 @@ export const LikeArticleDocument = {
           { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
           { kind: 'Field', name: { kind: 'Name', value: 'likes' } },
           { kind: 'Field', name: { kind: 'Name', value: 'disableComments' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hidden' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'tags' },
@@ -77435,6 +77474,7 @@ export const LikeArticleDocument = {
           { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
           { kind: 'Field', name: { kind: 'Name', value: 'url' } },
           { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hidden' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'tags' },
@@ -78958,6 +78998,7 @@ export const DislikeArticleDocument = {
           { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
           { kind: 'Field', name: { kind: 'Name', value: 'likes' } },
           { kind: 'Field', name: { kind: 'Name', value: 'disableComments' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hidden' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'tags' },
@@ -81724,6 +81765,7 @@ export const DislikeArticleDocument = {
           { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
           { kind: 'Field', name: { kind: 'Name', value: 'url' } },
           { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hidden' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'tags' },
@@ -99179,6 +99221,7 @@ export const PageDocument = {
           { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
           { kind: 'Field', name: { kind: 'Name', value: 'url' } },
           { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hidden' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'tags' },
@@ -101953,6 +101996,7 @@ export const PageDocument = {
           { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
           { kind: 'Field', name: { kind: 'Name', value: 'likes' } },
           { kind: 'Field', name: { kind: 'Name', value: 'disableComments' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hidden' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'tags' },
@@ -103392,6 +103436,7 @@ export const PageListDocument = {
           { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
           { kind: 'Field', name: { kind: 'Name', value: 'url' } },
           { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hidden' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'tags' },
@@ -104891,6 +104936,7 @@ export const PhraseDocument = {
           { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
           { kind: 'Field', name: { kind: 'Name', value: 'likes' } },
           { kind: 'Field', name: { kind: 'Name', value: 'disableComments' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hidden' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'tags' },
@@ -104962,6 +105008,7 @@ export const PhraseDocument = {
           { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
           { kind: 'Field', name: { kind: 'Name', value: 'url' } },
           { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hidden' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'tags' },

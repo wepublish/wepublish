@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client/react';
-import { Poll, PollsDocument } from '@wepublish/editor/api';
+import { FullPollFragment, PollsDocument } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
   CreatePollBtn,
@@ -49,7 +49,9 @@ const onErrorToast = (error: Error) => {
 
 function PollList() {
   const { t } = useTranslation();
-  const [pollDelete, setPollDelete] = useState<Poll | undefined>(undefined);
+  const [pollDelete, setPollDelete] = useState<FullPollFragment | undefined>(
+    undefined
+  );
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(10);
 
@@ -99,7 +101,7 @@ function PollList() {
           <Column width={50}>
             <HeaderCell>{t('pollList.state')}</HeaderCell>
             <RCell>
-              {(rowData: RowDataType<Poll>) => (
+              {(rowData: RowDataType<FullPollFragment>) => (
                 <PollStateIndication
                   closedAt={rowData.closedAt}
                   opensAt={rowData.opensAt}
@@ -114,7 +116,7 @@ function PollList() {
           >
             <HeaderCell>{t('pollList.question')}</HeaderCell>
             <RCell>
-              {(rowData: RowDataType<Poll>) => (
+              {(rowData: RowDataType<FullPollFragment>) => (
                 <Link to={`/polls/edit/${rowData.id}`}>
                   {rowData.question || t('pollList.noQuestion')}
                 </Link>
@@ -128,8 +130,8 @@ function PollList() {
           >
             <HeaderCell>{t('pollList.opensAt')}</HeaderCell>
             <RCell>
-              {(rowData: RowDataType<Poll>) => (
-                <PollOpensAtView poll={rowData as Poll} />
+              {(rowData: RowDataType<FullPollFragment>) => (
+                <PollOpensAtView poll={rowData as FullPollFragment} />
               )}
             </RCell>
           </Column>
@@ -140,8 +142,8 @@ function PollList() {
           >
             <HeaderCell>{t('pollList.closedAt')}</HeaderCell>
             <RCell>
-              {(rowData: RowDataType<Poll>) => (
-                <PollClosedAtView poll={rowData as Poll} />
+              {(rowData: RowDataType<FullPollFragment>) => (
+                <PollClosedAtView poll={rowData as FullPollFragment} />
               )}
             </RCell>
           </Column>
@@ -152,14 +154,14 @@ function PollList() {
           >
             <HeaderCell align={'center'}>{t('pollList.delete')}</HeaderCell>
             <PaddedCell align={'center'}>
-              {(poll: RowDataType<Poll>) => (
+              {(poll: RowDataType<FullPollFragment>) => (
                 <IconButton
                   icon={<MdDelete />}
                   circle
                   appearance="ghost"
                   color="red"
                   size="sm"
-                  onClick={() => setPollDelete(poll as Poll)}
+                  onClick={() => setPollDelete(poll as FullPollFragment)}
                 />
               )}
             </PaddedCell>
@@ -171,7 +173,7 @@ function PollList() {
           >
             <HeaderCell align={'center'}>{t('pollList.showVotes')}</HeaderCell>
             <PaddedCell align={'center'}>
-              {(poll: RowDataType<Poll>) => (
+              {(poll: RowDataType<FullPollFragment>) => (
                 <Button
                   appearance={'primary'}
                   href={`/polls/votes/${poll?.id}`}

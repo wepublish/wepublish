@@ -2,7 +2,7 @@ import { useMutation, useQuery } from '@apollo/client/react';
 import {
   CreateCrowdfundingGoalInput,
   CrowdfundingDocument,
-  CrowdfundingGoal,
+  FullCrowdfundingGoalFragment,
   UpdateCrowdfundingDocument,
   UpdateCrowdfundingInput,
 } from '@wepublish/editor/api';
@@ -105,7 +105,7 @@ export const EditCrowdfundingForm = () => {
   };
 
   const removeIdAndTypename = (goal: CreateCrowdfundingGoalInput) => {
-    const { id, ...goalCleaned } = goal as CrowdfundingGoal;
+    const { id, ...goalCleaned } = goal as FullCrowdfundingGoalFragment;
     return goalCleaned;
   };
 

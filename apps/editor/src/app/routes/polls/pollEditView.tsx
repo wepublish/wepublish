@@ -1,10 +1,10 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
-  FullPoll,
+  FullPollFragment,
   PollDocument,
   PollExternalVote,
-  PollExternalVoteSource,
+  PollExternalVoteSourceFragment,
   UpdatePollDocument,
 } from '@wepublish/editor/api';
 import { RichtextJSONDocument } from '@wepublish/richtext';
@@ -45,7 +45,7 @@ const DateItem = styled.div``;
 function PollEditView() {
   const params = useParams();
   const navigate = useNavigate();
-  const [poll, setPoll] = useState<FullPoll | undefined>(undefined);
+  const [poll, setPoll] = useState<FullPollFragment | undefined>(undefined);
   const [close, setClose] = useState<boolean>(false);
   const closePath = '/polls';
 
@@ -138,7 +138,7 @@ function PollEditView() {
     const closedAt =
       poll.closedAt ? new Date(poll.closedAt).toISOString() : null;
     const externalSources = poll.externalVoteSources?.map(
-      (voteSource: PollExternalVoteSource) => ({
+      (voteSource: PollExternalVoteSourceFragment) => ({
         ...voteSource,
         __typename: undefined,
         voteAmounts: voteSource.voteAmounts?.map(
@@ -190,7 +190,7 @@ function PollEditView() {
 
     setPoll({
       ...poll,
-      closedAt: closedAt?.toISOString(),
+      closedAt: closedAt?.toISOString() ?? null,
     });
   };
 
@@ -265,7 +265,7 @@ function PollEditView() {
         >
           <PollAnswers
             poll={poll}
-            onPollChange={(poll: FullPoll) => {
+            onPollChange={(poll: FullPollFragment) => {
               setPoll(poll);
             }}
           />
@@ -295,7 +295,7 @@ function PollEditView() {
         >
           <PollExternalVotes
             poll={poll}
-            onPollChange={(poll: FullPoll) => {
+            onPollChange={(poll: FullPollFragment) => {
               setPoll(poll);
             }}
           />

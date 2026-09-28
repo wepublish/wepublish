@@ -3,8 +3,8 @@ import {
   CommentItemType,
   FullAuthorFragment,
   FullImageFragment,
+  FullTagFragment,
   FullTrackingPixelFragment,
-  Tag,
   TagType,
 } from '@wepublish/editor/api';
 import { slugify } from '@wepublish/utils';
@@ -108,7 +108,7 @@ export interface ArticleMetadata {
   readonly seoDescription: string;
   readonly authors: ArticleAuthor[];
   readonly tags: string[];
-  readonly defaultTags: Pick<Tag, 'id' | 'tag'>[];
+  readonly defaultTags: Pick<FullTagFragment, 'id' | 'tag'>[];
   readonly url: string;
   readonly properties: ArticleMetadataProperty[];
   readonly canonicalUrl: string;

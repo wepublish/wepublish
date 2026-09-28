@@ -30,9 +30,9 @@ import {
 import { WebsiteProvider } from '@wepublish/website';
 import { previewLink } from '@wepublish/website/admin';
 import {
-  createWithApiClient,
-  SessionWithTokenWithoutUser,
+  FullSessionWithTokenWithoutUserFragment,
   WebsiteSettingsFragment,
+  createWithApiClient,
 } from '@wepublish/website/api';
 import { WebsiteBuilderProvider } from '@wepublish/website/builder';
 import { format, setDefaultOptions } from 'date-fns';
@@ -168,7 +168,7 @@ const AdvertisementPlacer = styled('div')`
 `;
 
 export type CustomAppProps = AppProps<{
-  sessionToken?: SessionWithTokenWithoutUser;
+  sessionToken?: FullSessionWithTokenWithoutUserFragment;
 }> & {
   emotionCache?: EmotionCache;
   websiteSettings?: WebsiteSettingsFragment;

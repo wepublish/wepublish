@@ -1,12 +1,12 @@
 import styled from '@emotion/styled';
 import { BuilderTikTokVideoBlockProps } from '@wepublish/website/builder';
 import {
-  BlockContent,
+  FullBlockFragment,
   FullTikTokVideoBlockFragment,
 } from '@wepublish/website/api';
 
 export const isTikTokVideoBlock = (
-  block: Partial<Pick<BlockContent, '__typename'>>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is FullTikTokVideoBlockFragment =>
   block.__typename === 'TikTokVideoBlock';
 

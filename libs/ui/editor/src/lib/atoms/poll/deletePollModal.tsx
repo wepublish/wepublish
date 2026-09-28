@@ -1,11 +1,11 @@
 import { useMutation } from '@apollo/client/react';
-import { DeletePollDocument, Poll } from '@wepublish/editor/api';
+import { DeletePollDocument, FullPollFragment } from '@wepublish/editor/api';
 import { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
 import { Button, Message, Modal, toaster } from 'rsuite';
 
 interface DeletePollProps {
-  poll?: Poll;
+  poll?: FullPollFragment;
   onClose(): void;
   onDelete(): Promise<unknown>;
 }

@@ -1,11 +1,11 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import {
   DeleteUserDocument,
+  FullUserRoleFragment,
   ResetUserTotpDocument,
   TinyUserFragment,
   TinyUserListDocument,
   UserFilter,
-  UserRole,
   UserSort,
 } from '@wepublish/editor/api';
 import {
@@ -365,7 +365,9 @@ function UserList() {
             <HeaderCell>{t('userCreateOrEditView.userRoles')}</HeaderCell>
             <RCell dataKey="roles">
               {(rowData: RowDataType<TinyUserFragment>) =>
-                rowData.roles?.map((r: UserRole) => r.name).join(', ')
+                rowData.roles
+                  ?.map((r: FullUserRoleFragment) => r.name)
+                  .join(', ')
               }
             </RCell>
           </Column>

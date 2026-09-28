@@ -2,10 +2,10 @@ import styled from '@emotion/styled';
 import { css, IconButton, LinearProgress, Theme, Tooltip } from '@mui/material';
 import { formatCurrency } from '@wepublish/membership/website';
 import {
-  BlockContent,
-  FullCrowdfundingBlockFragment,
   CrowdfundingGoalType,
   Currency,
+  FullBlockFragment,
+  FullCrowdfundingBlockFragment,
 } from '@wepublish/website/api';
 import {
   BuilderCrowdfundingBlockProps,
@@ -16,7 +16,7 @@ import { MdOutlineInfo } from 'react-icons/md';
 import { formatNumber } from './format-number';
 
 export const isCrowdfundingBlock = (
-  block: Partial<Pick<BlockContent, '__typename'>>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is FullCrowdfundingBlockFragment =>
   block.__typename === 'CrowdfundingBlock';
 

@@ -7,7 +7,7 @@ import {
   TeaserGridBlockWrapper,
 } from '@wepublish/block-content/website';
 import {
-  BlockContent,
+  FullBlockFragment,
   FullTeaserFragment,
   FullTeaserGridBlockFragment,
   FullTeaserListBlockFragment,
@@ -21,7 +21,7 @@ import {
 import { allPass, anyPass, compose, insert } from 'ramda';
 
 export const isHotAndTrendingTeasers = (
-  block: Partial<Pick<BlockContent, '__typename'>>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is FullTeaserGridBlockFragment | FullTeaserListBlockFragment =>
   allPass([
     hasBlockStyle('Hot & Trending'),
