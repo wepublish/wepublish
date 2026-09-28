@@ -51,6 +51,8 @@ const defaultCreatePaymentIntentProps: CreatePaymentIntentProps = {
     canceledAt: null,
     scheduledDeactivationAt: new Date(),
     manuallySetAsPaidByUserId: null,
+    renewalSuccessMailSentAt: null,
+    suppressRenewalSuccessMail: false,
     currency: 'EUR',
     subscriptionID: '1',
   },

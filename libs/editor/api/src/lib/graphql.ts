@@ -3710,6 +3710,7 @@ export type MutationLikeArticleArgs = {
 
 export type MutationMarkInvoiceAsPaidArgs = {
   id: Scalars['String'];
+  sendMail?: Scalars['Boolean'];
 };
 
 

@@ -2942,7 +2942,7 @@ type Mutation {
   likeArticle(id: String!): Article!
 
   """Marks an invoice as paid."""
-  markInvoiceAsPaid(id: String!): Invoice!
+  markInvoiceAsPaid(id: String!, sendMail: Boolean! = true): Invoice!
 
   """
   Marks a notification as read for the current user. Requires authentication.
