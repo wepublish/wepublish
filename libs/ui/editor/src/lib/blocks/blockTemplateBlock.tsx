@@ -1,8 +1,9 @@
 import styled from '@emotion/styled';
+import { useQuery } from '@apollo/client/react';
 import {
+  BlockTemplateDocument,
+  BlockTemplateListDocument,
   FullBlockFragment,
-  useBlockTemplateListQuery,
-  useBlockTemplateQuery,
 } from '@wepublish/editor/api';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -67,7 +68,7 @@ export const BlockTemplateBlock = ({
   const blockMap = BlockMap as BlockMapType;
   const [isConfirmOpen, setConfirmOpen] = useState(false);
 
-  const { data, loading, refetch } = useBlockTemplateListQuery({
+  const { data, loading, refetch } = useQuery(BlockTemplateListDocument, {
     variables: { take: 100 },
     fetchPolicy: 'cache-and-network',
   });
@@ -77,7 +78,7 @@ export const BlockTemplateBlock = ({
     [data?.blockTemplates.nodes]
   );
 
-  const { data: templateData } = useBlockTemplateQuery({
+  const { data: templateData } = useQuery(BlockTemplateDocument, {
     variables: { id: template?.id ?? '' },
     skip: !template?.id,
     fetchPolicy: 'cache-and-network',

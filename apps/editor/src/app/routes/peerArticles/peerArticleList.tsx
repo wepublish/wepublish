@@ -3,10 +3,10 @@ import styled from '@emotion/styled';
 import {
   ArticleSort,
   ImportArticleOptions,
-  PeerArticle,
+  ImportPeerArticleDocument,
   PeerArticleFilter,
-  useImportPeerArticleMutation,
-  usePeerArticleListQuery,
+  PeerArticleListDocument,
+  SlimPeerArticleFragment,
 } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
@@ -21,7 +21,7 @@ import {
   TableWrapper,
   useListViewState,
 } from '@wepublish/ui/editor';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -102,7 +102,7 @@ function PeerArticleList() {
   );
 
   const [importPeerArticle, { loading: importingInProgress, error, reset }] =
-    useImportPeerArticleMutation({
+    useMutation(ImportPeerArticleDocument, {
       onCompleted(data) {
         toaster.push(
           <Message
@@ -119,22 +119,28 @@ function PeerArticleList() {
       },
     });
 
-  const { data: peerArticleListData, loading: isLoading } =
-    usePeerArticleListQuery({
-      variables: listVariables,
-      onError(error) {
-        toaster.push(
-          <Message
-            type="error"
-            showIcon
-            closable
-          >
-            {error.message}
-          </Message>,
-          { duration: 0 }
-        );
-      },
-    });
+  const {
+    data: peerArticleListData,
+    loading: isLoading,
+    error: peerArticleListError,
+  } = useQuery(PeerArticleListDocument, {
+    variables: listVariables,
+  });
+
+  useEffect(() => {
+    if (peerArticleListError) {
+      toaster.push(
+        <Message
+          type="error"
+          showIcon
+          closable
+        >
+          {peerArticleListError.message}
+        </Message>,
+        { duration: 0 }
+      );
+    }
+  }, [peerArticleListError]);
 
   const peerArticles = peerArticleListData?.peerArticles.nodes;
 
@@ -175,7 +181,7 @@ function PeerArticleList() {
           >
             <HeaderCell>{t('peerArticles.title')}</HeaderCell>
             <Cell>
-              {(rowData: PeerArticle) => (
+              {(rowData: SlimPeerArticleFragment) => (
                 <a
                   href={rowData.url}
                   target="_blank"
@@ -194,7 +200,7 @@ function PeerArticleList() {
           >
             <HeaderCell>{t('peerArticles.lead')}</HeaderCell>
             <Cell>
-              {(rowData: PeerArticle) =>
+              {(rowData: SlimPeerArticleFragment) =>
                 rowData.latest.lead || t('articles.overview.untitled')
               }
             </Cell>
@@ -208,7 +214,7 @@ function PeerArticleList() {
           >
             <HeaderCell>{t('peerArticles.publishedAt')}</HeaderCell>
             <Cell dataKey="publishedAt">
-              {(rowData: PeerArticle) =>
+              {(rowData: SlimPeerArticleFragment) =>
                 t('peerArticles.publicationDate', {
                   publicationDate: new Date(rowData.publishedAt),
                 })
@@ -223,7 +229,7 @@ function PeerArticleList() {
           >
             <HeaderCell>{t('peerArticles.peer')}</HeaderCell>
             <Cell dataKey="peer">
-              {(rowData: PeerArticle) => (
+              {(rowData: SlimPeerArticleFragment) => (
                 <PeerAvatar peer={rowData.peer}>
                   <div>{rowData.peer?.name}</div>
                 </PeerAvatar>
@@ -239,7 +245,7 @@ function PeerArticleList() {
             <HeaderCell>{t('peerArticles.articleImage')}</HeaderCell>
 
             <Cell>
-              {(rowData: PeerArticle) =>
+              {(rowData: SlimPeerArticleFragment) =>
                 rowData.latest.image?.url ?
                   <Whisper
                     placement="left"
@@ -270,7 +276,7 @@ function PeerArticleList() {
           >
             <HeaderCell>{null}</HeaderCell>
             <Cell>
-              {(rowData: PeerArticle) => (
+              {(rowData: SlimPeerArticleFragment) => (
                 <Button
                   appearance="primary"
                   size="xs"

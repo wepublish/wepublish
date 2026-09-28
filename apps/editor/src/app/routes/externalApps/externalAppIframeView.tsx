@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { Box, CircularProgress, Typography } from '@mui/material';
-import { useExternalAppQuery } from '@wepublish/editor/api';
+import { ExternalAppDocument } from '@wepublish/editor/api';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 
@@ -27,7 +27,7 @@ export function ExternalAppIframeView() {
   const { id } = useParams<{ id: string }>();
   const { t } = useTranslation();
 
-  const { data, loading, error } = useExternalAppQuery({
+  const { data, loading, error } = useQuery(ExternalAppDocument, {
     variables: { externalAppId: id! },
     skip: !id,
   });

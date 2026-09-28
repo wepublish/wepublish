@@ -11,7 +11,7 @@ export type AuthorContainerProps = IdOrSlug & BuilderContainerProps;
 
 export function AuthorContainer({ id, slug, className }: AuthorContainerProps) {
   const { Author } = useWebsiteBuilder();
-  const { data, loading, error } = useAuthorQuery({
+  const { data, loading, error } = useQuery(AuthorDocument, {
     variables: {
       id,
       slug,

@@ -1,12 +1,12 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import {
   CreateCrowdfundingGoalInput,
+  CrowdfundingDocument,
   CrowdfundingGoal,
+  UpdateCrowdfundingDocument,
   UpdateCrowdfundingInput,
-  useCrowdfundingQuery,
-  useUpdateCrowdfundingMutation,
 } from '@wepublish/editor/api';
-import { useReducer, useState } from 'react';
+import { useEffect, useReducer, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { CrowdfundingForm } from './crowdfunding-form';
@@ -48,14 +48,27 @@ export const EditCrowdfundingForm = () => {
     }
   );
 
-  useCrowdfundingQuery({
-    variables: {
-      id: id!,
-    },
-    skip: !id,
-    onError: showError,
-    onCompleted: data => setCrowdfunding(data.crowdfunding),
-  });
+  const { data: crowdfundingData, error: crowdfundingError } = useQuery(
+    CrowdfundingDocument,
+    {
+      variables: {
+        id: id!,
+      },
+      skip: !id,
+    }
+  );
+
+  useEffect(() => {
+    if (crowdfundingError) {
+      showError(crowdfundingError);
+    }
+  }, [crowdfundingError]);
+
+  useEffect(() => {
+    if (crowdfundingData) {
+      setCrowdfunding(crowdfundingData.crowdfunding);
+    }
+  }, [crowdfundingData]);
 
   const { StringType } = Schema.Types;
   const validationModel = Schema.Model({
@@ -64,16 +77,19 @@ export const EditCrowdfundingForm = () => {
 
   const [shouldClose, setShouldClose] = useState(false);
 
-  const [updateCrowdfunding, { loading }] = useUpdateCrowdfundingMutation({
-    onError: showError,
-    onCompleted: data => {
-      setCrowdfunding(data.updateCrowdfunding);
+  const [updateCrowdfunding, { loading }] = useMutation(
+    UpdateCrowdfundingDocument,
+    {
+      onError: showError,
+      onCompleted: data => {
+        setCrowdfunding(data.updateCrowdfunding);
 
-      if (shouldClose) {
-        navigate(closePath);
-      }
-    },
-  });
+        if (shouldClose) {
+          navigate(closePath);
+        }
+      },
+    }
+  );
 
   const onSubmit = () => {
     const processedCrowdfunding = {

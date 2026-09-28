@@ -18,7 +18,7 @@ import { anchorId } from '../anchor-id';
 import { ReflektBlockStyles } from '../block-styles/reflekt-block-styles';
 
 export const isTeaserSlotsCredits = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is BuilderTeaserSlotsBlockProps =>
   allPass([
     isTeaserSlotsBlock,
@@ -33,6 +33,7 @@ export const alignmentForTeaserBlock = (
   const rowIndex = Math.floor(index / numColumns);
 
   return {
+    __typename: 'FlexAlignment' as const,
     i: index.toString(),
     static: false,
     h: 2,

@@ -49,7 +49,12 @@ export async function handleJwtLogin(
 
     setCookie(
       AuthTokenStorageKey,
-      JSON.stringify(data.createSessionWithJWT as SessionWithTokenWithoutUser),
+      JSON.stringify({
+        __typename: 'SessionWithTokenWithoutUser',
+        token: data.createSessionWithJWT.token,
+        expiresAt: data.createSessionWithJWT.expiresAt,
+        createdAt: data.createSessionWithJWT.createdAt,
+      } satisfies SessionWithTokenWithoutUser),
       {
         req: ctx.req,
         res: ctx.res,

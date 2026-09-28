@@ -11,7 +11,7 @@ import {
 } from './tsri-sidebar-content';
 
 export const isTsriSidebarContentAltColor = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is FullBreakBlockFragment => {
   const retVal = allPass([
     hasBlockStyle(TsriBreakBlockType.SidebarContentAltColor),

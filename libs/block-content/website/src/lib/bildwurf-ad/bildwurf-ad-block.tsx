@@ -11,7 +11,7 @@ import {
 } from '@wepublish/website/builder';
 
 export const isBildwurfAdBlock = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is FullBildwurfAdBlockFragment =>
   block.__typename === 'BildwurfAdBlock';
 

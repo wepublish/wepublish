@@ -29,7 +29,7 @@ export enum TsriFlexBlockType {
 }
 
 export const isFlexBlockSmallRowGapsWithShortNews = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is FullFlexBlockFragment =>
   allPass([
     hasBlockStyle(TsriFlexBlockType.SmallRowGapsWithShortNews),

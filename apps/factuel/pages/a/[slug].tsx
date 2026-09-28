@@ -33,7 +33,7 @@ export default function ArticleBySlugOrId() {
     elements: { H3 },
   } = useWebsiteBuilder();
 
-  const { data } = useArticleQuery({
+  const { data } = useQuery(ArticleDocument, {
     fetchPolicy: 'cache-only',
     variables: {
       slug: slug as string,

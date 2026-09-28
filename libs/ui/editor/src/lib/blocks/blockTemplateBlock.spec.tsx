@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom/vitest';
 
-import { MockedProvider } from '@apollo/client/testing';
+import { MockedProvider } from '@apollo/client/testing/react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import {
   BlockStylesDocument,
@@ -17,12 +17,30 @@ import { BlockTemplateBlockValue, BlockValue } from './types';
 const useBlockTemplateListQuery = vi.fn();
 const useBlockTemplateQuery = vi.fn();
 
-vi.mock('@wepublish/editor/api', async importOriginal => ({
-  ...((await importOriginal()) as object),
-  useBlockTemplateListQuery: (...args: unknown[]) =>
-    useBlockTemplateListQuery(...args),
-  useBlockTemplateQuery: (...args: unknown[]) => useBlockTemplateQuery(...args),
-}));
+const operationName = (document: unknown) =>
+  (document as { definitions?: { name?: { value?: string } }[] })
+    ?.definitions?.[0]?.name?.value;
+
+vi.mock('@apollo/client/react', async importOriginal => {
+  const actual = (await importOriginal()) as Record<string, unknown>;
+
+  return {
+    ...actual,
+    useQuery: (document: unknown, options?: unknown) => {
+      switch (operationName(document)) {
+        case 'BlockTemplateList':
+          return useBlockTemplateListQuery(options);
+        case 'BlockTemplate':
+          return useBlockTemplateQuery(options);
+        default:
+          return (actual.useQuery as (...args: unknown[]) => unknown)(
+            document,
+            options
+          );
+      }
+    },
+  };
+});
 
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({

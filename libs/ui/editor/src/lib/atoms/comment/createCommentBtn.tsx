@@ -55,7 +55,7 @@ export function CreateCommentBtn({
     );
   };
 
-  const [createComment] = useCreateCommentMutation({
+  const [createComment] = useMutation(CreateCommentDocument, {
     onError,
   });
 

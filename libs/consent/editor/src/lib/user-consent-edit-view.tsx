@@ -2,10 +2,10 @@ import { useMutation, useQuery } from '@apollo/client/react';
 import {
   FullUserConsentFragment,
   MutationUpdateUserConsentArgs,
-  useUpdateUserConsentMutation,
-  useUserConsentQuery,
+  UpdateUserConsentDocument,
+  UserConsentDocument,
 } from '@wepublish/editor/api';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Form, Message, Schema, toaster } from 'rsuite';
@@ -60,20 +60,31 @@ export const UserConsentEditView = () => {
 
   const [shouldClose, setShouldClose] = useState<boolean>(false);
 
-  const { loading: dataLoading } = useUserConsentQuery({
+  const {
+    loading: dataLoading,
+    data: userConsentData,
+    error: userConsentError,
+  } = useQuery(UserConsentDocument, {
     variables: {
       id: userConsentId,
     },
-    onError: onErrorToast,
-    onCompleted: data => {
-      if (data.userConsent) {
-        setUserConsent(mapApiDataToInput(data.userConsent));
-      }
-    },
   });
 
-  const [updateUserConsent, { loading: updateLoading }] =
-    useUpdateUserConsentMutation({
+  useEffect(() => {
+    if (userConsentError) {
+      onErrorToast(userConsentError);
+    }
+  }, [userConsentError]);
+
+  useEffect(() => {
+    if (userConsentData?.userConsent) {
+      setUserConsent(mapApiDataToInput(userConsentData.userConsent));
+    }
+  }, [userConsentData]);
+
+  const [updateUserConsent, { loading: updateLoading }] = useMutation(
+    UpdateUserConsentDocument,
+    {
       onError: error => onErrorToast(error, 'userConsent.consent.slug'),
       onCompleted: data => {
         toaster.push(
@@ -93,7 +104,8 @@ export const UserConsentEditView = () => {
           setUserConsent(mapApiDataToInput(data.updateUserConsent));
         }
       },
-    });
+    }
+  );
 
   const onSubmit = () => {
     updateUserConsent({

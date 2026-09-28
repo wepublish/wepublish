@@ -8,7 +8,7 @@ import { Typography } from '@mui/material';
 import { ComponentType } from 'react';
 
 export const isTitleBlock = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is FullTitleBlockFragment => block.__typename === 'TitleBlock';
 
 export const TitleBlockWrapper = styled('div')`

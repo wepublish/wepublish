@@ -2,7 +2,7 @@ import { useQuery } from '@apollo/client/react';
 import {
   FullUserRoleFragment,
   LocalStorageKey,
-  useMeQuery,
+  MeDocument,
 } from '@wepublish/editor/api';
 import {
   createContext,
@@ -72,7 +72,7 @@ export interface AuthProviderProps {
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const { data, loading, refetch, error } = useMeQuery();
+  const { data, loading, refetch, error } = useQuery(MeDocument);
   const [state, dispatch] = useReducer(authReducer, {});
 
   const isPageActive = usePageVisibility();

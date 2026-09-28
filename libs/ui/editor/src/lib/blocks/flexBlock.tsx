@@ -402,6 +402,7 @@ export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {
   const handleAddNestedBlock = () => {
     const newBlock: FlexBlockWithAlignment = {
       alignment: {
+        __typename: 'FlexAlignment',
         i: nanoid(),
         x: 0,
         y: 0,
@@ -423,9 +424,10 @@ export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {
   };
 
   const handleLayoutChange = (layout: FlexAlignment[]) => {
-    const newBlocks = layout.map(v => ({
+    const newBlocks: FlexBlockWithAlignment[] = layout.map(v => ({
       block: blocks.find(block => v.i === block.alignment.i)?.block,
       alignment: {
+        __typename: 'FlexAlignment',
         i: v.i,
         x: v.x,
         y: v.y,
@@ -439,21 +441,24 @@ export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {
   };
 
   const handlePinNestedBlock = (index: string) => {
-    const newBlocks = blocks.map(({ block, alignment }) => {
-      return alignment.i === index ?
-          {
-            block,
-            alignment: {
-              i: alignment.i,
-              x: alignment.x,
-              y: alignment.y,
-              w: alignment.w,
-              h: alignment.h,
-              static: !alignment.static,
-            },
-          }
-        : { block, alignment };
-    });
+    const newBlocks: FlexBlockWithAlignment[] = blocks.map(
+      ({ block, alignment }) => {
+        return alignment.i === index ?
+            {
+              block,
+              alignment: {
+                __typename: 'FlexAlignment',
+                i: alignment.i,
+                x: alignment.x,
+                y: alignment.y,
+                w: alignment.w,
+                h: alignment.h,
+                static: !alignment.static,
+              },
+            }
+          : { block, alignment };
+      }
+    );
 
     onChange({ ...value, blocks: newBlocks });
   };

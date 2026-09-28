@@ -2,8 +2,8 @@ import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
   InvoiceFragment,
-  useMarkInvoiceAsPaidMutation,
-  useMeQuery,
+  MarkInvoiceAsPaidDocument,
+  MeDocument,
 } from '@wepublish/editor/api';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -121,7 +121,7 @@ function InvoiceListPanel({
   disabled,
   onInvoicePaid,
 }: InvoiceListPanelProps) {
-  const { data: me } = useMeQuery({});
+  const { data: me } = useQuery(MeDocument, {});
   const { t } = useTranslation();
   const [invoiceToPay, setInvoiceToPay] = useState<InvoiceFragment>();
   const [doNotSendMail, setDoNotSendMail] = useState(false);
@@ -242,7 +242,7 @@ function InvoiceListPanel({
     columns
   );
 
-  const [markInvoiceAsPaid] = useMarkInvoiceAsPaidMutation();
+  const [markInvoiceAsPaid] = useMutation(MarkInvoiceAsPaidDocument);
 
   function closePayModal() {
     setInvoiceToPay(undefined);

@@ -27,7 +27,7 @@ function BannerList() {
     undefined
   );
 
-  const { data, loading, error, refetch } = useBannersQuery({
+  const { data, loading, error, refetch } = useQuery(BannersDocument, {
     variables: {
       take: 100,
       skip: 0,

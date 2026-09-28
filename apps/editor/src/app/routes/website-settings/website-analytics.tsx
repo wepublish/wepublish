@@ -13,8 +13,8 @@ import {
   Typography,
 } from '@mui/material';
 import {
-  useUpdateWebsiteSettingsMutation,
-  useWebsiteSettingsLazyQuery,
+  UpdateWebsiteSettingsDocument,
+  WebsiteSettingsDocument,
 } from '@wepublish/editor/api';
 import { Controller, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
@@ -78,9 +78,10 @@ export const Explainer = styled.p`
 
 export const WebsiteAnalytics = () => {
   const { t } = useTranslation();
-  const [loadSettings] = useWebsiteSettingsLazyQuery();
-  const [updateWebsiteSettings, { loading: saving }] =
-    useUpdateWebsiteSettingsMutation({
+  const [loadSettings] = useLazyQuery(WebsiteSettingsDocument);
+  const [updateWebsiteSettings, { loading: saving }] = useMutation(
+    UpdateWebsiteSettingsDocument,
+    {
       onCompleted: () => {
         toaster.push(
           <Message

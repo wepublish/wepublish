@@ -9,21 +9,18 @@ import { getSessionTokenProps } from '../../../get-session-token-props';
 import { handleJwtLogin } from '../../../handle-jwt-login';
 import { ComponentProps } from 'react';
 import {
+  InvoicesDocument,
+  MeDocument,
+  SubscriptionsDocument,
   SubscriptionsQuery,
-  useSubscriptionsQuery,
+  addClientCacheToProps,
+  getApiClient,
 } from '@wepublish/website/api';
 import { ContentWrapper } from '@wepublish/content/website';
 import {
   SubscriptionListContainer,
   InvoiceListContainer,
 } from '@wepublish/membership/website';
-import {
-  getApiClient,
-  MeDocument,
-  SubscriptionsDocument,
-  InvoicesDocument,
-  addClientCacheToProps,
-} from '@wepublish/website/api';
 import { Link, useWebsiteBuilder } from '@wepublish/website/builder';
 import { fetch404 } from '../../../fetch-404';
 import { useTranslation } from 'react-i18next';
@@ -59,7 +56,7 @@ function SubscriptionPage() {
   } = useWebsiteBuilder();
   const { t } = useTranslation();
 
-  const { data } = useSubscriptionsQuery({
+  const { data } = useQuery(SubscriptionsDocument, {
     fetchPolicy: 'cache-only',
   });
   const subscription = data?.userSubscriptions.find(sub => sub.id === id);
@@ -128,7 +125,7 @@ GuardedSubscription.getInitialProps = async (ctx: NextPageContext) => {
 
     if (
       !subscriptions.error &&
-      !subscriptions.data.userSubscriptions.find(
+      !subscriptions.data?.userSubscriptions.find(
         subscription => subscription.id === ctx.query.id
       )
     ) {

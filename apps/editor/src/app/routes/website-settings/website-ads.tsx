@@ -12,8 +12,8 @@ import {
   Typography,
 } from '@mui/material';
 import {
-  useUpdateWebsiteSettingsMutation,
-  useWebsiteSettingsLazyQuery,
+  UpdateWebsiteSettingsDocument,
+  WebsiteSettingsDocument,
 } from '@wepublish/editor/api';
 import { Controller, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
@@ -40,9 +40,10 @@ const adsSchema = z.object({
 
 export const WebsiteAds = () => {
   const { t } = useTranslation();
-  const [loadSettings] = useWebsiteSettingsLazyQuery();
-  const [updateWebsiteSettings, { loading: saving }] =
-    useUpdateWebsiteSettingsMutation({
+  const [loadSettings] = useLazyQuery(WebsiteSettingsDocument);
+  const [updateWebsiteSettings, { loading: saving }] = useMutation(
+    UpdateWebsiteSettingsDocument,
+    {
       onCompleted: () => {
         toaster.push(
           <Message
@@ -67,7 +68,8 @@ export const WebsiteAds = () => {
           </Message>
         );
       },
-    });
+    }
+  );
 
   const {
     control,
@@ -115,9 +117,7 @@ export const WebsiteAds = () => {
           {t('websiteSettings.backToOverview')}
         </Button>
       </Link>
-
       <h3>{t('websiteSettings.ads.sparkLoop.title')}</h3>
-
       <Controller
         name="sparkLoop.enabled"
         control={control}
@@ -153,7 +153,6 @@ export const WebsiteAds = () => {
           </div>
         )}
       />
-
       <Controller
         name="sparkLoop.key"
         control={control}
@@ -203,7 +202,6 @@ export const WebsiteAds = () => {
           : <></>
         }
       />
-
       <Box>
         <Button
           type="submit"

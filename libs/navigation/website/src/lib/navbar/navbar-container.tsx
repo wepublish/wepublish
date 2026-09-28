@@ -4,8 +4,8 @@ import {
   useHasUnpaidInvoices,
 } from '@wepublish/membership/website';
 import {
-  useNavigationListQuery,
-  usePeerProfileQuery,
+  NavigationListDocument,
+  PeerProfileDocument,
 } from '@wepublish/website/api';
 import {
   BuilderContainerProps,
@@ -45,8 +45,8 @@ export function NavbarContainer({
   children,
 }: NavbarContainerProps) {
   const { Navbar } = useWebsiteBuilder();
-  const { data, loading, error } = useNavigationListQuery();
-  const { data: peerInfoData } = usePeerProfileQuery();
+  const { data, loading, error } = useQuery(NavigationListDocument);
+  const { data: peerInfoData } = useQuery(PeerProfileDocument);
   const hasUnpaidInvoices = useHasUnpaidInvoices();
   const hasRunningSubscription = useHasRunningSubscription();
 

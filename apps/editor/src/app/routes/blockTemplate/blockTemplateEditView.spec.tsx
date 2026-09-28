@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom/vitest';
 
-import { MockedProvider } from '@apollo/client/testing';
+import { MockedProvider } from '@apollo/client/testing/react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
@@ -13,14 +13,34 @@ const useBlockTemplateListQuery = vi.fn();
 const updateBlockTemplate = vi.fn();
 const refetch = vi.fn();
 
-vi.mock('@wepublish/editor/api', async importOriginal => ({
-  ...((await importOriginal()) as object),
-  useBlockTemplateQuery: (...args: unknown[]) => useBlockTemplateQuery(...args),
-  useBlockTemplateListQuery: (...args: unknown[]) =>
-    useBlockTemplateListQuery(...args),
-  useCreateBlockTemplateMutation: () => [vi.fn(), {}],
-  useUpdateBlockTemplateMutation: () => [updateBlockTemplate, {}],
-}));
+const operationName = (document: unknown) =>
+  (document as { definitions?: { name?: { value?: string } }[] })
+    ?.definitions?.[0]?.name?.value;
+
+vi.mock('@apollo/client/react', async importOriginal => {
+  const actual = (await importOriginal()) as Record<string, unknown>;
+
+  return {
+    ...actual,
+    useQuery: (document: unknown, options?: unknown) => {
+      switch (operationName(document)) {
+        case 'BlockTemplate':
+          return useBlockTemplateQuery(options);
+        case 'BlockTemplateList':
+          return useBlockTemplateListQuery(options);
+        default:
+          return (actual.useQuery as (...args: unknown[]) => unknown)(
+            document,
+            options
+          );
+      }
+    },
+    useMutation: (document: unknown) =>
+      operationName(document) === 'UpdateBlockTemplate' ?
+        [updateBlockTemplate, {}]
+      : [vi.fn(), {}],
+  };
+});
 
 vi.mock('@wepublish/ui/editor', async importOriginal => ({
   ...((await importOriginal()) as object),

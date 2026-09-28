@@ -44,7 +44,7 @@ export default function AuthorList() {
     [page]
   );
 
-  const { data } = useAuthorListQuery({
+  const { data } = useQuery(AuthorListDocument, {
     fetchPolicy: 'cache-only',
     variables,
   });

@@ -6,7 +6,7 @@ import {
   selectArticleAuthors,
 } from '@wepublish/article/website';
 import { ShareWrapper } from '@wepublish/ui';
-import { useCommentListQuery } from '@wepublish/website/api';
+import { CommentListDocument } from '@wepublish/website/api';
 import {
   BuilderArticleAuthorsProps,
   useWebsiteBuilder,
@@ -102,7 +102,7 @@ export function OnlineReportsArticleAuthors({
     elements: { Image, Link },
   } = useWebsiteBuilder();
 
-  const { data } = useCommentListQuery({
+  const { data } = useQuery(CommentListDocument, {
     fetchPolicy: 'cache-only',
     variables: {
       itemId: article.id,

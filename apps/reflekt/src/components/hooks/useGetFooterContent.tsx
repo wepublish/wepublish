@@ -6,7 +6,7 @@ export type FooterContent = {
 } | null;
 
 export const useGetFooterContent = (): FooterContent => {
-  const { data: pageData } = usePageQuery({
+  const { data: pageData } = useQuery(PageDocument, {
     fetchPolicy: 'cache-first',
     variables: {
       slug: 'footer',

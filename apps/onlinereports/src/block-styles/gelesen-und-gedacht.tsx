@@ -18,7 +18,7 @@ import { BlueBox } from '../components/blue-box';
 import { GelesenUndGedachtTeaserContent } from '../custom-teasers/gelesen-und-gedacht';
 
 export const isGelesenUndGedacthTeasers = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is FullTeaserGridBlockFragment | FullTeaserListBlockFragment =>
   allPass([hasBlockStyle('Gelesen und Gedacht'), isTeaserListBlock])(block);
 

@@ -5,11 +5,11 @@ import { useUser } from './session.context';
 export const useRegister = () => {
   const { setToken, hasUser } = useUser();
 
-  const challenge = useChallengeQuery({
+  const challenge = useQuery(ChallengeDocument, {
     skip: hasUser,
   });
 
-  const register = useRegisterMutation({
+  const register = useMutation(RegisterDocument, {
     onError: () => challenge.refetch(),
     onCompleted(data) {
       if (data.registerMember.session) {

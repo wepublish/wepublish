@@ -56,7 +56,7 @@ export function StandaloneArticlePage({
     elements: { H4 },
   } = useWebsiteBuilder();
 
-  const { data } = useArticleQuery({
+  const { data } = useQuery(ArticleDocument, {
     fetchPolicy: 'cache-only',
     variables: {
       slug,

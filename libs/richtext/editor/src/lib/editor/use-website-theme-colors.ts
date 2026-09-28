@@ -28,7 +28,7 @@ type WebsiteTheme = {
 };
 
 export function useWebsiteThemeColors() {
-  const { data } = useWebsiteSettingsQuery({
+  const { data } = useQuery(WebsiteSettingsDocument, {
     fetchPolicy: 'cache-and-network',
   });
 

@@ -44,6 +44,7 @@ export const teaserBlockStyleByIndex = (index: number): TsriTeaserType => {
 
 export const alignmentForTeaserBlock = (index: number): FlexAlignment => {
   const alignment = {
+    __typename: 'FlexAlignment' as const,
     i: index.toString(),
     static: false,
     h: 1, // how many rows high

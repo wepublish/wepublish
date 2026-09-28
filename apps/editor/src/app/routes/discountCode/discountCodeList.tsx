@@ -1,10 +1,10 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  DeleteDiscountCodeDocument,
   DiscountCode,
+  DiscountCodeListDocument,
   DiscountCodesort,
-  useDeleteDiscountCodeMutation,
-  useDiscountCodeListQuery,
 } from '@wepublish/editor/api';
 import {
   CanCreateDiscountCode,
@@ -58,7 +58,7 @@ function DiscountCodeList() {
     DiscountCode | undefined
   >(undefined);
 
-  const { data, loading, refetch } = useDiscountCodeListQuery({
+  const { data, loading, refetch } = useQuery(DiscountCodeListDocument, {
     variables: {
       take: limit,
       skip: (page - 1) * limit,
@@ -66,7 +66,7 @@ function DiscountCodeList() {
       order: mapTableSortTypeToGraphQLSortOrder(sortOrder),
     },
   });
-  const [deleteDiscountCode] = useDeleteDiscountCodeMutation({
+  const [deleteDiscountCode] = useMutation(DeleteDiscountCodeDocument, {
     onCompleted() {
       refetch();
     },

@@ -16,15 +16,15 @@ import { CSS } from '@dnd-kit/utilities';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import {
+  MemberPlanListDocument,
   PaymentPeriodicity,
   ProductType,
   SubscribeBlockField,
-  SubscribeBlockLayoutPickerConfig,
   SubscribeBlockLayoutNoneConfig,
+  SubscribeBlockLayoutPickerConfig,
   SubscribeBlockLayoutSliderConfig,
   SubscribeBlockRenderLayout,
   SubscribePeriodicityDisplay,
-  useMemberPlanListQuery,
 } from '@wepublish/editor/api';
 import { Fragment, ReactNode, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -451,7 +451,7 @@ export const SubscribeBlock = ({
     useSensor(PointerSensor, { activationConstraint: { distance: 4 } })
   );
 
-  const { data, loading } = useMemberPlanListQuery({
+  const { data, loading } = useQuery(MemberPlanListDocument, {
     variables: {
       take: 200,
       filter: {
@@ -537,6 +537,7 @@ export const SubscribeBlock = ({
 
               return (
                 existingSetting ?? {
+                  __typename: 'SubscribeBlockMemberPlanRenderSetting',
                   memberPlanId,
                   isDefault: !hasDefault,
                   layout: {

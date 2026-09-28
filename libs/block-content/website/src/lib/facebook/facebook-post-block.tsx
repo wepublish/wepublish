@@ -6,7 +6,7 @@ import {
 import { BuilderFacebookPostBlockProps } from '@wepublish/website/builder';
 
 export const isFacebookPostBlock = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is FullFacebookPostBlockFragment =>
   block.__typename === 'FacebookPostBlock';
 

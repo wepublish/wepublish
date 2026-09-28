@@ -201,7 +201,7 @@ export function useAllNetworkClients() {
 }
 
 export function usePeerMatching() {
-  const { data: peerData, loading } = usePeerListQuery({
+  const { data: peerData, loading } = useQuery(PeerListDocument, {
     errorPolicy: 'ignore',
   });
 

@@ -7,7 +7,7 @@
 import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { css } from '@mui/material';
-import { usePeerProfileQuery } from '@wepublish/website/api';
+import { PeerProfileDocument } from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 
 export const PrintLogoWrapper = styled('div')`
@@ -30,7 +30,7 @@ const imageStyles = () => css`
 `;
 
 export const PrintLogo = () => {
-  const { data: peerInfoData } = usePeerProfileQuery();
+  const { data: peerInfoData } = useQuery(PeerProfileDocument);
   const logo = peerInfoData?.peerProfile.logo;
 
   const {

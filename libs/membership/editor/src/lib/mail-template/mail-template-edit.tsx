@@ -2,16 +2,16 @@ import { useLazyQuery, useMutation } from '@apollo/client/react';
 import { Typography } from '@mui/material';
 import { useApolloClient } from '@apollo/client/react';
 import {
+  CreateMailTemplateDocument,
+  MailTemplateByIdDocument,
   MailTemplateContext,
   MailTemplatePreviewDocument,
   MailTemplatePreviewInput,
   MailTemplatePreviewQuery,
   MailTemplatePreviewQueryVariables,
-  useCreateMailTemplateMutation,
-  useMailTemplateByIdLazyQuery,
-  useMailTemplateSubscriptionsLazyQuery,
-  useSendTestMailTemplateMutation,
-  useUpdateMailTemplateMutation,
+  MailTemplateSubscriptionsDocument,
+  SendTestMailTemplateDocument,
+  UpdateMailTemplateDocument,
 } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
@@ -113,24 +113,28 @@ function MailTemplateEdit() {
   const [previewHtml, setPreviewHtml] = useState<string | null>(null);
   const [previewSubject, setPreviewSubject] = useState('');
 
-  const [loadTemplate] = useMailTemplateByIdLazyQuery({
+  const [loadTemplate] = useLazyQuery(MailTemplateByIdDocument, {
     fetchPolicy: 'network-only',
   });
-  const [createMailTemplate] = useCreateMailTemplateMutation(
+  const [createMailTemplate] = useMutation(
+    CreateMailTemplateDocument,
     DEFAULT_MUTATION_OPTIONS(t)
   );
-  const [updateMailTemplate] = useUpdateMailTemplateMutation(
+  const [updateMailTemplate] = useMutation(
+    UpdateMailTemplateDocument,
     DEFAULT_MUTATION_OPTIONS(t)
   );
   const client = useApolloClient();
   const [previewLoading, setPreviewLoading] = useState(false);
   const [previewError, setPreviewError] = useState<string | null>(null);
   const [previewOpen, setPreviewOpen] = useState(false);
-  const [sendTest, { loading: testLoading }] = useSendTestMailTemplateMutation(
+  const [sendTest, { loading: testLoading }] = useMutation(
+    SendTestMailTemplateDocument,
     DEFAULT_MUTATION_OPTIONS(t)
   );
-  const [searchSubscriptions, { data: subscriptionData }] =
-    useMailTemplateSubscriptionsLazyQuery();
+  const [searchSubscriptions, { data: subscriptionData }] = useLazyQuery(
+    MailTemplateSubscriptionsDocument
+  );
 
   useEffect(() => {
     if (!isEdit) {
@@ -300,8 +304,8 @@ function MailTemplateEdit() {
       if (error) {
         throw error;
       }
-      setPreviewSubject(data.mailTemplatePreview.subject);
-      setPreviewHtml(data.mailTemplatePreview.html);
+      setPreviewSubject(data!.mailTemplatePreview.subject);
+      setPreviewHtml(data!.mailTemplatePreview.html);
       setPreviewOpen(true);
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
@@ -367,7 +371,6 @@ function MailTemplateEdit() {
           </Button>
         </ButtonGroup>
       </Stack>
-
       {/* The two tiles stick together as one header row so the preview
           controls stay reachable while scrolling the editor. */}
       <div
@@ -418,7 +421,6 @@ function MailTemplateEdit() {
                       <div>{label}</div>
                       <Typography
                         variant="caption"
-                        display="block"
                         style={{
                           color: '#8e8e93',
                           whiteSpace: 'normal',
@@ -435,7 +437,6 @@ function MailTemplateEdit() {
                 />
                 <Typography
                   variant="caption"
-                  display="block"
                   style={{ marginTop: 4, color: '#8e8e93' }}
                   sx={{
                     display: 'block',
@@ -528,7 +529,6 @@ function MailTemplateEdit() {
 
           <Typography
             variant="caption"
-            display="block"
             style={{ marginTop: 8, color: '#8e8e93' }}
             sx={{
               display: 'block',
@@ -551,7 +551,6 @@ function MailTemplateEdit() {
           )}
         </Panel>
       </div>
-
       <div
         style={{
           display: 'flex',
@@ -678,7 +677,6 @@ function MailTemplateEdit() {
               >
                 <Typography
                   variant="caption"
-                  display="block"
                   style={{ marginBottom: 6, color: '#8e8e93' }}
                   sx={{
                     display: 'block',
@@ -704,7 +702,6 @@ function MailTemplateEdit() {
           </div>
         </div>
       </div>
-
       <Modal
         open={previewOpen}
         onClose={() => setPreviewOpen(false)}

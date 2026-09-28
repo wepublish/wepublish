@@ -29,7 +29,7 @@ export const CollapsibleDownloadsWrapper = styled(CollapsibleContentWrapper)`
 `;
 
 export const isCollapsibleDownloads = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is BuilderBreakBlockProps =>
   allPass([
     hasBlockStyle(ReflektBlockStyles.CollapsibleDownloads),

@@ -2,12 +2,12 @@ import { useLazyQuery, useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
   CommentRatingSystemAnswer,
+  CreateRatingSystemAnswerDocument,
+  DeleteRatingSystemAnswerDocument,
   FullCommentRatingSystemFragment,
+  RatingSystemDocument,
   RatingSystemType,
-  useCreateRatingSystemAnswerMutation,
-  useDeleteRatingSystemAnswerMutation,
-  useRatingSystemLazyQuery,
-  useUpdateRatingSystemMutation,
+  UpdateRatingSystemDocument,
 } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
@@ -77,15 +77,24 @@ function CommentRatingEditView() {
 
   const [t] = useTranslation();
 
-  const [fetchRatingSystem, { loading: isFetching }] = useRatingSystemLazyQuery(
-    {
-      onError: showErrors,
-      onCompleted: data => setRatingSystem(data.ratingSystem),
-    }
-  );
+  const [fetchRatingSystem, { loading: isFetching, data, error }] =
+    useLazyQuery(RatingSystemDocument);
 
-  const [addAnswer, { loading: isAdding }] =
-    useCreateRatingSystemAnswerMutation({
+  useEffect(() => {
+    if (error) {
+      showErrors(error);
+    }
+  }, [error]);
+
+  useEffect(() => {
+    if (data) {
+      setRatingSystem(data.ratingSystem);
+    }
+  }, [data]);
+
+  const [addAnswer, { loading: isAdding }] = useMutation(
+    CreateRatingSystemAnswerDocument,
+    {
       onCompleted: ({ createRatingSystemAnswer }) => {
         setRatingSystem(old =>
           old ?
@@ -96,10 +105,12 @@ function CommentRatingEditView() {
           : null
         );
       },
-    });
+    }
+  );
 
-  const [deleteAnswer, { loading: isDeleting }] =
-    useDeleteRatingSystemAnswerMutation({
+  const [deleteAnswer, { loading: isDeleting }] = useMutation(
+    DeleteRatingSystemAnswerDocument,
+    {
       onError: showErrors,
       onCompleted: data => {
         setRatingSystem(old =>
@@ -113,9 +124,11 @@ function CommentRatingEditView() {
           : null
         );
       },
-    });
+    }
+  );
 
-  const [updateAnswer, { loading: isUpdating }] = useUpdateRatingSystemMutation(
+  const [updateAnswer, { loading: isUpdating }] = useMutation(
+    UpdateRatingSystemDocument,
     {
       onError: showErrors,
       onCompleted: () =>
@@ -143,7 +156,7 @@ function CommentRatingEditView() {
           {
             ...old,
             answers: old.answers.map(a =>
-              answerId === a.id ? { ...a, answer, type } : a
+              answerId === a.id ? { ...a, answer: answer ?? null, type } : a
             ),
           }
         : null

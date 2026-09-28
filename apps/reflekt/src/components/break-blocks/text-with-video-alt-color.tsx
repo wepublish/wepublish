@@ -21,7 +21,7 @@ import { ReflektBlockStyles } from '../block-styles/reflekt-block-styles';
 import { BreakBlockVideo, classifyBreakVideo } from './break-block-video';
 
 export const isTextWithVideoAltColorBreakBlock = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is BuilderBreakBlockProps =>
   allPass([
     isBreakBlock,

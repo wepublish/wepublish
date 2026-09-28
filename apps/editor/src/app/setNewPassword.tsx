@@ -1,6 +1,6 @@
 import { useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
-import { useResetPasswordWithTokenMutation } from '@wepublish/editor/api';
+import { ResetPasswordWithTokenDocument } from '@wepublish/editor/api';
 import { LoginTemplate } from '@wepublish/ui/editor';
 import React, { FormEvent, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -46,7 +46,9 @@ export function SetNewPassword() {
   const passwordInputRef = useRef<HTMLInputElement>(null);
   const { t } = useTranslation();
 
-  const [resetPassword, { loading }] = useResetPasswordWithTokenMutation();
+  const [resetPassword, { loading }] = useMutation(
+    ResetPasswordWithTokenDocument
+  );
 
   useEffect(() => {
     passwordInputRef.current?.focus();

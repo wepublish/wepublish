@@ -6,7 +6,7 @@ import {
 import { BuilderPolisConversationBlockProps } from '@wepublish/website/builder';
 
 export const isPolisConversationBlock = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is FullPolisConversationBlockFragment =>
   block.__typename === 'PolisConversationBlock';
 

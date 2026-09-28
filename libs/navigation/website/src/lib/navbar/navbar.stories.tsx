@@ -1,6 +1,7 @@
 import { Meta, StoryObj } from '@storybook/nextjs-vite';
 import {
   BaseNavigationLink,
+  MeDocument,
   Navigation,
   NavigationLinkType,
 } from '@wepublish/website/api';
@@ -13,7 +14,6 @@ import React from 'react';
 import { userEvent, within } from 'storybook/test';
 import { wait } from '@wepublish/testing';
 import { mockUser } from '@wepublish/storybook/mocks';
-import { MeDocument } from '@wepublish/website/api';
 
 const navigations = [
   {

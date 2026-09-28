@@ -1,14 +1,14 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import React from 'react';
 import {
+  BannerDocument,
   CreateBannerActionInput,
   FullImageFragment,
   LoginStatus,
+  UpdateBannerDocument,
   UpdateBannerInput,
-  useBannerQuery,
-  useUpdateBannerMutation,
 } from '@wepublish/editor/api';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { BannerForm } from './banner-form';
@@ -38,15 +38,18 @@ export const EditBannerForm = () => {
     //tags: []
   });
 
-  useBannerQuery({
+  const { data: bannerData } = useQuery(BannerDocument, {
     variables: {
       id: id!,
     },
     skip: !id,
-    onCompleted: data => {
-      setBanner({ imageId: data.banner.image?.id, ...data.banner });
-    },
   });
+
+  useEffect(() => {
+    if (bannerData) {
+      setBanner({ imageId: bannerData.banner.image?.id, ...bannerData.banner });
+    }
+  }, [bannerData]);
 
   const { StringType } = Schema.Types;
   const validationModel = Schema.Model({
@@ -56,7 +59,7 @@ export const EditBannerForm = () => {
 
   const [shouldClose, setShouldClose] = useState(false);
 
-  const [updateBanner, { loading }] = useUpdateBannerMutation({
+  const [updateBanner, { loading }] = useMutation(UpdateBannerDocument, {
     onError: error => {
       console.log(error);
     },

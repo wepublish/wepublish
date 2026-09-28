@@ -37,7 +37,7 @@ import {
 } from '../onlinereports-base-teaser';
 
 export const IsAktuelleBildTeasers = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is FullTeaserGridBlockFragment | FullTeaserListBlockFragment =>
   allPass([hasBlockStyle('Aktuelle Bild'), isTeaserListBlock])(block);
 

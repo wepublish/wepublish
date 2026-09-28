@@ -1,11 +1,11 @@
 import { useQuery } from '@apollo/client/react';
 import { useUser } from '@wepublish/authentication/website';
-import { useInvoicesQuery } from '@wepublish/website/api';
+import { InvoicesDocument } from '@wepublish/website/api';
 import { useMemo } from 'react';
 
 export const useHasUnpaidInvoices = () => {
   const { hasUser } = useUser();
-  const { data } = useInvoicesQuery({
+  const { data } = useQuery(InvoicesDocument, {
     fetchPolicy: 'cache-first',
     skip: !hasUser,
   });

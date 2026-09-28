@@ -16,16 +16,16 @@ export const isAlternatingTeaser = (props: BuilderTeaserProps) =>
   isAlternating(props);
 
 export const isAlternatingTeaserGridBlockStyle = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is FullTeaserGridBlockFragment =>
   allPass([isAlternating, isTeaserGridBlock])(block);
 
 export const isAlternatingTeaserListBlockStyle = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is FullTeaserListBlockFragment =>
   allPass([isAlternating, isTeaserListBlock])(block);
 
 export const isAlternatingTeaserSlotsBlockStyle = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is FullTeaserSlotsBlockFragment =>
   allPass([isAlternating, isTeaserSlotsBlock])(block);

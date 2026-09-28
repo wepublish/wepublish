@@ -16,7 +16,7 @@ import { MdOutlineInfo } from 'react-icons/md';
 import { formatNumber } from './format-number';
 
 export const isCrowdfundingBlock = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is FullCrowdfundingBlockFragment =>
   block.__typename === 'CrowdfundingBlock';
 

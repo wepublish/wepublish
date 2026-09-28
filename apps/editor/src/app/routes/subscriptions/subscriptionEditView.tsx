@@ -2,6 +2,8 @@ import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { Alert } from '@mui/material';
 import {
+  CancelSubscriptionDocument,
+  CreateSubscriptionDocument,
   Currency,
   DeactivationFragment,
   FullMemberPlanFragment,
@@ -9,18 +11,16 @@ import {
   FullSubscriptionFragment,
   FullUserFragment,
   InvoiceFragment,
+  InvoicesDocument,
+  MemberPlanListDocument,
+  PaymentMethodListDocument,
   PaymentPeriodicity,
   PropertyInput,
+  RenewSubscriptionDocument,
   SubscriptionDeactivationReason,
-  useCancelSubscriptionMutation,
-  useCreateSubscriptionMutation,
-  useInvoicesQuery,
-  useMemberPlanListQuery,
-  usePaymentMethodListQuery,
-  useRenewSubscriptionMutation,
-  useSubscriptionQuery,
-  useUpdateSubscriptionMutation,
-  useUserQuery,
+  SubscriptionDocument,
+  UpdateSubscriptionDocument,
+  UserDocument,
 } from '@wepublish/editor/api';
 import {
   ALL_PAYMENT_PERIODICITIES,
@@ -185,7 +185,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
     loading: isLoading,
     error: loadError,
     refetch: reloadSubscription,
-  } = useSubscriptionQuery({
+  } = useQuery(SubscriptionDocument, {
     variables: { id: id! },
     skip: id === undefined,
   });
@@ -195,7 +195,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
     loading: isLoadingInvoices,
     error: loadErrorInvoices,
     refetch: reloadInvoices,
-  } = useInvoicesQuery({
+  } = useQuery(InvoicesDocument, {
     variables: {
       take: 100,
       filter: {
@@ -274,7 +274,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
     data: memberPlanData,
     loading: isMemberPlanLoading,
     error: loadMemberPlanError,
-  } = useMemberPlanListQuery({
+  } = useQuery(MemberPlanListDocument, {
     variables: {
       take: 100, // TODO: Pagination
     },
@@ -284,22 +284,25 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
     data: paymentMethodData,
     loading: isPaymentMethodLoading,
     error: paymentMethodLoadError,
-  } = usePaymentMethodListQuery({});
+  } = useQuery(PaymentMethodListDocument, {});
 
-  const [updateSubscription, { loading: isUpdating }] =
-    useUpdateSubscriptionMutation();
+  const [updateSubscription, { loading: isUpdating }] = useMutation(
+    UpdateSubscriptionDocument
+  );
   const [cancelSubscription, { loading: isCancel, error: cancelError }] =
-    useCancelSubscriptionMutation();
+    useMutation(CancelSubscriptionDocument);
 
-  const [createSubscription, { loading: isCreating }] =
-    useCreateSubscriptionMutation();
-  const [renewSubscription, { error: renewalError }] =
-    useRenewSubscriptionMutation();
+  const [createSubscription, { loading: isCreating }] = useMutation(
+    CreateSubscriptionDocument
+  );
+  const [renewSubscription, { error: renewalError }] = useMutation(
+    RenewSubscriptionDocument
+  );
 
   /**
    * fetch edited user from api
    */
-  const { data: editedUserData } = useUserQuery({
+  const { data: editedUserData } = useQuery(UserDocument, {
     variables: { id: editedUserId! },
     skip: editedUserId === undefined,
   });

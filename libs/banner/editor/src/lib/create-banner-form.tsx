@@ -2,9 +2,9 @@ import { useMutation } from '@apollo/client/react';
 import React from 'react';
 import {
   CreateBannerActionInput,
+  CreateBannerDocument,
   CreateBannerInput,
   FullImageFragment,
-  useCreateBannerMutation,
   LoginStatus,
 } from '@wepublish/editor/api';
 import { useState } from 'react';
@@ -39,7 +39,7 @@ export const CreateBannerForm = () => {
 
   const [shouldClose, setShouldClose] = useState(false);
 
-  const [createBanner, { loading }] = useCreateBannerMutation({
+  const [createBanner, { loading }] = useMutation(CreateBannerDocument, {
     onError: error => {
       console.log(error);
     },
