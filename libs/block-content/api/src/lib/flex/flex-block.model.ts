@@ -1,8 +1,7 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-
 import { Field, InputType, ObjectType, OmitType } from '@nestjs/graphql';
 import { BaseBlock } from '../base-block.model';
 import { BlockType } from '../block-type.model';
+import * as blockContentModel from '../block-content.model';
 import type {
   BlockContentInput,
   BlockContent,
@@ -11,7 +10,7 @@ import type {
 import { FlexAlignment, FlexAlignmentInput } from './flex-alignment.model';
 
 @ObjectType({
-  implements: () => [require('../block-content.model').HasOneBlockContent],
+  implements: () => [blockContentModel.HasOneBlockContent],
 })
 export class BlockWithAlignment implements HasOneBlockContent {
   @Field(() => FlexAlignment)
@@ -29,7 +28,7 @@ export class BlockWithAlignmentInput extends OmitType(
   @Field(() => FlexAlignmentInput)
   alignment!: FlexAlignmentInput;
 
-  @Field(() => require('../block-content.model').BlockContentInput, {
+  @Field(() => blockContentModel.BlockContentInput, {
     nullable: true,
   })
   block?: BlockContentInput;

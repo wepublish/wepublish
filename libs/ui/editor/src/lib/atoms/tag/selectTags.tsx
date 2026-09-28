@@ -1,4 +1,5 @@
-import { ApolloError, useApolloClient } from '@apollo/client';
+import { useQuery } from '@apollo/client/react';
+import { useApolloClient } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
   SortOrder,
@@ -8,7 +9,6 @@ import {
   TagQueryVariables,
   TagSort,
   TagType,
-  useTagListQuery,
 } from '@wepublish/editor/api';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -126,7 +126,7 @@ export function SelectTags({
    * Error handling
    * @param error
    */
-  const showErrors = (error: ApolloError): void => {
+  const showErrors = (error: Error): void => {
     toaster.push(
       <Message
         type="error"
@@ -154,8 +154,13 @@ export function SelectTags({
       take,
       skip: (page - 1) * take,
     },
-    onError: showErrors,
   });
+
+  useEffect(() => {
+    if (tagListError) {
+      showErrors(tagListError);
+    }
+  }, [tagListError]);
 
   /**
    * Prepare available tags

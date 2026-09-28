@@ -1,4 +1,5 @@
-import { useEventQuery } from '@wepublish/website/api';
+import { useQuery } from '@apollo/client/react';
+import { EventDocument } from '@wepublish/website/api';
 import {
   BuilderContainerProps,
   useWebsiteBuilder,

@@ -1,3 +1,4 @@
+import { useLazyQuery, useMutation, useQuery } from '@apollo/client/react';
 import { useRegister, useUser } from '@wepublish/authentication/website';
 
 import { PropsWithChildren } from 'react';

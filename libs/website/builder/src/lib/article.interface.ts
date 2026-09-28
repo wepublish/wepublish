@@ -1,4 +1,5 @@
-import { QueryResult } from '@apollo/client';
+import type { OperationVariables } from '@apollo/client';
+import type { useQuery } from '@apollo/client/react';
 
 import {
   Article,
@@ -10,7 +11,10 @@ import {
 import { PropsWithChildren } from 'react';
 
 export type BuilderArticleProps = PropsWithChildren<
-  Pick<QueryResult<ArticleQuery>, 'data' | 'loading' | 'error'> & {
+  Pick<
+    useQuery.Result<ArticleQuery, OperationVariables, 'complete' | 'empty'>,
+    'data' | 'loading' | 'error'
+  > & {
     showPaywall: boolean;
     hideContent: boolean;
     className?: string;
@@ -27,7 +31,7 @@ export type BuilderArticleMetaProps = {
 };
 
 export type BuilderArticleListProps = Pick<
-  QueryResult<ArticleListQuery>,
+  useQuery.Result<ArticleListQuery, OperationVariables, 'complete' | 'empty'>,
   'data' | 'loading' | 'error'
 > & {
   className?: string;

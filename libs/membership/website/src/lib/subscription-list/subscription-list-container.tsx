@@ -1,3 +1,4 @@
+import { useMutation, useQuery } from '@apollo/client/react';
 import { StripeElement, StripePayment } from '@wepublish/payment/website';
 import {
   InvoicesDocument,
@@ -118,7 +119,12 @@ export function SubscriptionListContainer({
 }
 
 const useCancelSubscriptionMutationWithCacheUpdate = (
-  ...params: Parameters<typeof useCancelSubscriptionMutation>
+  ...params: [
+    options?: useMutation.Options<
+      CancelSubscriptionMutation,
+      CancelSubscriptionMutationVariables
+    >,
+  ]
 ) =>
   useCancelSubscriptionMutation({
     ...params[0],

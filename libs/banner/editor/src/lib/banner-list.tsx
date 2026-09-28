@@ -1,4 +1,5 @@
-import { Banner, useBannersQuery } from '@wepublish/editor/api';
+import { useQuery } from '@apollo/client/react';
+import { Banner, BannersDocument } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
   IconButton,
@@ -9,7 +10,7 @@ import {
   Table,
   TableWrapper,
 } from '@wepublish/ui/editor';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdDelete } from 'react-icons/md';
 import { Link } from 'react-router-dom';
@@ -31,10 +32,13 @@ function BannerList() {
       take: 100,
       skip: 0,
     },
-    onError: () => {
-      console.log(error);
-    },
   });
+
+  useEffect(() => {
+    if (error) {
+      console.log(error);
+    }
+  }, [error]);
 
   return (
     <>

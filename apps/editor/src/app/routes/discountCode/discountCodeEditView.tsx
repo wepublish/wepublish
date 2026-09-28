@@ -1,4 +1,4 @@
-import { ApolloError } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client/react';
 import {
   FullDiscountCodeFragment,
   MutationUpdateDiscountCodeArgs,
@@ -17,7 +17,7 @@ import { Form, Message, Schema, toaster } from 'rsuite';
 
 import { DiscountCodeForm } from './discountCodeForm';
 
-const onErrorToast = (error: ApolloError) => {
+const onErrorToast = (error: Error) => {
   toaster.push(
     <Message
       type="error"

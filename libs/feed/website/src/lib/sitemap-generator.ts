@@ -1,5 +1,10 @@
 import { getArticleSEO } from '@wepublish/article/website';
-import { Article, Page } from '@wepublish/website/api';
+import {
+  Article,
+  Page,
+  SlimArticleFragment,
+  SlimPageFragment,
+} from '@wepublish/website/api';
 import { escape } from 'lodash';
 
 const SITEMAP_MAX_ENTRIES = 49999;
@@ -12,7 +17,11 @@ export type SitemapConfig = {
 
 export const generateSitemap =
   ({ lang = 'de', title, siteUrl }: SitemapConfig) =>
-  (articles: Article[], pages: Page[], pageUrls: string[]) => {
+  (
+    articles: (Article | SlimArticleFragment)[],
+    pages: (Page | SlimPageFragment)[],
+    pageUrls: string[]
+  ) => {
     if (
       articles.length + pages.length + pageUrls.length >
       SITEMAP_MAX_ENTRIES
@@ -54,7 +63,7 @@ export const generateSitemap =
 
         ${articles
           .map(article => {
-            const seo = getArticleSEO(article);
+            const seo = getArticleSEO(article as Article);
 
             return `
             <url>

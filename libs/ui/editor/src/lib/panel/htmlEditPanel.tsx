@@ -1,3 +1,4 @@
+import { useLazyQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { getApiClientV2, usePromptHtmlLazyQuery } from '@wepublish/editor/api';
 import { useCallback, useState } from 'react';

@@ -1,6 +1,5 @@
 import { Meta } from '@storybook/nextjs-vite';
 import { Banner } from './banner';
-import { ApolloError } from '@apollo/client';
 import { mockImage } from '@wepublish/storybook/mocks';
 
 const banner = {
@@ -36,9 +35,7 @@ export const WithError = {
   args: {
     data: undefined,
     loading: false,
-    error: new ApolloError({
-      errorMessage: 'Foobar',
-    }),
+    error: new Error('Foobar'),
   },
 };
 

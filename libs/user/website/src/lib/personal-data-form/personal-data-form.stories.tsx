@@ -1,4 +1,3 @@
-import { ApolloError } from '@apollo/client';
 import { action } from 'storybook/actions';
 import { useArgs } from 'storybook/preview-api';
 import { Meta, StoryObj } from '@storybook/nextjs-vite';
@@ -427,9 +426,7 @@ export const WithUpdateError: StoryObj = {
     onUpdate: (...args: unknown[]) => {
       action('onUpdate')(args);
 
-      throw new ApolloError({
-        errorMessage: 'Foobar',
-      });
+      throw new Error('Foobar');
     },
   },
   play: Filled.play,

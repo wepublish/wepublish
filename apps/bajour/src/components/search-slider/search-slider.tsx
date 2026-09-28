@@ -1,3 +1,4 @@
+import { useQuery } from '@apollo/client/react';
 import 'keen-slider/keen-slider.min.css';
 
 import styled from '@emotion/styled';

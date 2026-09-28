@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 import * as stories from './comment-editor.stories';
 import { composeStories } from '@storybook/react';
-import { MockedProvider } from '@apollo/client/testing';
+import { MockedProvider } from '@apollo/client/testing/react';
 
 // Compose stories
 const storiesCmp = composeStories(stories);

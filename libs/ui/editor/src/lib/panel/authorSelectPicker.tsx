@@ -1,4 +1,4 @@
-import { ApolloError } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
   AuthorListDocument,
@@ -32,7 +32,7 @@ export interface AuthorSelectPickerProps {
  * Error handling
  * @param error
  */
-const showErrors = (error: ApolloError): void => {
+const showErrors = (error: Error): void => {
   toaster.push(
     <Message
       type="error"

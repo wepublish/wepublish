@@ -12,7 +12,6 @@ import {
 } from '@wepublish/website/api';
 import { SubscribeContainer } from './subscribe-container';
 import * as registrationFormStories from './subscribe.stories';
-import { ApolloError } from '@apollo/client';
 import { useUser } from '@wepublish/authentication/website';
 import {
   mockAvailablePaymentMethod,
@@ -318,9 +317,7 @@ export const WithChallengeError: StoryObj<typeof SubscribeContainer> = {
             query: ChallengeDocument,
           },
           result: {
-            errors: [
-              new ApolloError({ errorMessage: 'Something went wrong.' }),
-            ],
+            errors: [new Error('Something went wrong.')],
           },
         },
       ],

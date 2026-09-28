@@ -1,4 +1,5 @@
-import { ApolloError } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client/react';
+import { useEffect } from 'react';
 import { IconButton, Message, Table as RTable, toaster } from 'rsuite';
 import { MdAdd, MdDelete } from 'react-icons/md';
 import { Link } from 'react-router-dom';
@@ -19,7 +20,7 @@ import { RowDataType } from 'rsuite-table';
 
 const { Column, HeaderCell, Cell } = RTable;
 
-const onErrorToast = (error: ApolloError) => {
+const onErrorToast = (error: Error) => {
   toaster.push(
     <Message
       type="error"

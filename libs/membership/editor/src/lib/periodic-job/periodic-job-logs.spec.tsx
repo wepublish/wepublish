@@ -1,4 +1,5 @@
 import type { Mock } from 'vitest';
+import { useQuery } from '@apollo/client/react';
 import { render, screen } from '@testing-library/react';
 import type { PeriodicJob } from '@wepublish/editor/api';
 import {
@@ -23,9 +24,14 @@ vi.mock('react-i18next', () => ({
   }),
 }));
 
-const mockedUsePeriodicJobLogsQuery = usePeriodicJobLogsQuery as Mock;
-const mockedUseNotificationConfirmationsQuery =
-  useNotificationConfirmationsQuery as Mock;
+const mockedUseQuery = useQuery as Mock;
+
+// Results keyed by the document each query is issued with.
+const queryResults = new Map<unknown, unknown>();
+
+const setQueryResult = (document: unknown, result: unknown) => {
+  queryResults.set(document, result);
+};
 
 const now = new Date().toISOString();
 

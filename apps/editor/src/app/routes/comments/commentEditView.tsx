@@ -1,4 +1,4 @@
-import { ApolloError } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
   CommentRevisionInput,
@@ -44,7 +44,7 @@ const FlexItem = styled(RCol)`
   margin-top: 10px;
 `;
 
-const showErrors = (error: ApolloError): void => {
+const showErrors = (error: Error): void => {
   toaster.push(
     <Message
       type="error"

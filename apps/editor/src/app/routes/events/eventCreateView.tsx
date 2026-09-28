@@ -1,8 +1,7 @@
-import { ApolloError } from '@apollo/client';
+import { useMutation } from '@apollo/client/react';
 import {
   FullImageFragment,
   MutationCreateEventArgs,
-  useCreateEventMutation,
 } from '@wepublish/editor/api';
 import { SingleViewTitle } from '@wepublish/ui/editor';
 import { useState } from 'react';
@@ -12,7 +11,7 @@ import { Form, Message, Schema, toaster } from 'rsuite';
 
 import { EventForm } from './eventForm';
 
-const onErrorToast = (error: ApolloError) => {
+const onErrorToast = (error: Error) => {
   toaster.push(
     <Message
       type="error"

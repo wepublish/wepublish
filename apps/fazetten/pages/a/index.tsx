@@ -1,12 +1,12 @@
+import { useQuery } from '@apollo/client/react';
 import { ArticleListContainer } from '@wepublish/article/website';
 import { getApiUrl } from '@wepublish/utils/website';
 import {
-  addClientCacheToProps,
   ArticleListDocument,
-  getApiClient,
   NavigationListDocument,
   PeerProfileDocument,
-  useArticleListQuery,
+  addClientCacheToProps,
+  getApiClient,
 } from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';

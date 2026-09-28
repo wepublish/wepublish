@@ -4,6 +4,7 @@
  * on screen and only appears when the page is printed.
  */
 
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { css } from '@mui/material';
 import { usePeerProfileQuery } from '@wepublish/website/api';

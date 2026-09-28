@@ -1,8 +1,6 @@
 import { ApolloClient, InMemoryCache } from '@apollo/client';
-import {
-  MockLink,
-  MockedProvider as MockedProviderBase,
-} from '@apollo/client/testing';
+import { MockLink } from '@apollo/client/testing';
+import { MockedProvider as MockedProviderBase } from '@apollo/client/testing/react';
 import '@testing-library/jest-dom/vitest';
 import { format } from 'date-fns';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';

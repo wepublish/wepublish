@@ -1,4 +1,4 @@
-import { ApolloError } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client/react';
 import {
   FullEventFragment,
   FullImageFragment,
@@ -14,7 +14,7 @@ import { Form, Message, Schema, toaster } from 'rsuite';
 
 import { EventForm } from './eventForm';
 
-const onErrorToast = (error: ApolloError) => {
+const onErrorToast = (error: Error) => {
   toaster.push(
     <Message
       type="error"

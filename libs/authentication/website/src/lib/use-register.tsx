@@ -1,4 +1,5 @@
-import { useChallengeQuery, useRegisterMutation } from '@wepublish/website/api';
+import { useMutation, useQuery } from '@apollo/client/react';
+import { ChallengeDocument, RegisterDocument } from '@wepublish/website/api';
 import { useUser } from './session.context';
 
 export const useRegister = () => {

@@ -1,7 +1,6 @@
-import { ApolloError } from '@apollo/client';
+import { useMutation } from '@apollo/client/react';
 import {
   MutationCreatePaywallArgs,
-  useCreatePaywallMutation,
 } from '@wepublish/editor/api';
 import { CanCreatePaywall } from '@wepublish/permissions';
 import {
@@ -15,7 +14,7 @@ import { Form, Message, Schema, toaster } from 'rsuite';
 
 import { PaywallForm } from './paywallForm';
 
-const onErrorToast = (error: ApolloError) => {
+const onErrorToast = (error: Error) => {
   toaster.push(
     <Message
       type="error"
@@ -56,9 +55,9 @@ const PaywallCreateView = () => {
         } else {
           navigate(`./../edit/${data.createPaywall.id}`);
         }
-      }
-    },
-  });
+      },
+    }
+  );
 
   const loading = updateLoading;
   const onSubmit = () => createPaywall({ variables: paywall });
