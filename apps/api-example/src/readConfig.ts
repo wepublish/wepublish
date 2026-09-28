@@ -7,9 +7,9 @@ import { TrackingPixelProvider } from '@wepublish/tracking-pixel/api';
 type General = {
   apolloPlayground: boolean;
   apolloIntrospection: boolean;
-  bcryptHashCostFactor: number;
   urlAdapter: 'default' | 'hauptstadt' | 'wepublish-site';
-  sessionTTLDays: number;
+
+  sessionTTLDays?: number;
 };
 
 type MailProvider = {
@@ -96,7 +96,6 @@ type noCharge = {
 };
 
 type novaMediaServer = {
-  type: 'nova';
   quality: number;
 };
 
@@ -153,11 +152,12 @@ type SyncProvider = {
 
 type Config = {
   general: General;
-  mailProvider: MailProvider;
-  paymentProviders: PaymentProvider[];
   mediaServer: novaMediaServer;
-  challenge: Turnstile | HCaptcha;
-  trackingPixelProviders: TrackingPixels[];
+
+  mailProvider?: MailProvider;
+  paymentProviders?: PaymentProvider[];
+  challenge?: Turnstile | HCaptcha;
+  trackingPixelProviders?: TrackingPixels[];
   syncProviders?: SyncProvider[];
   v0?: V0;
 };

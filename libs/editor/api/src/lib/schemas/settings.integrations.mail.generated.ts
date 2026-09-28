@@ -11,6 +11,7 @@ export type MailProviderSettingsQueryVariables = Types.Exact<{ [key: string]: ne
 export type MailProviderSettingsQuery = { __typename?: 'Query', mailProviderSettings: Array<{ __typename?: 'SettingMailProvider', createdAt: string, fromAddress?: string | null, id: string, lastLoadedAt: string, mailchimp_baseURL?: string | null, mailgun_baseDomain?: string | null, mailgun_mailDomain?: string | null, modifiedAt: string, name?: string | null, replyToAddress?: string | null, slack_webhookURL?: string | null, smtp_host?: string | null, smtp_port?: number | null, smtp_secure?: boolean | null, smtp_user?: string | null, type: Types.MailProviderType }> };
 
 export type UpdateMailProviderSettingMutationVariables = Types.Exact<{
+  type?: Types.InputMaybe<Types.MailProviderType>;
   apiKey?: Types.InputMaybe<Types.Scalars['String']>;
   fromAddress?: Types.InputMaybe<Types.Scalars['String']>;
   id: Types.Scalars['String'];
@@ -81,8 +82,9 @@ export type MailProviderSettingsQueryHookResult = ReturnType<typeof useMailProvi
 export type MailProviderSettingsLazyQueryHookResult = ReturnType<typeof useMailProviderSettingsLazyQuery>;
 export type MailProviderSettingsQueryResult = Apollo.QueryResult<MailProviderSettingsQuery, MailProviderSettingsQueryVariables>;
 export const UpdateMailProviderSettingDocument = gql`
-    mutation UpdateMailProviderSetting($apiKey: String, $fromAddress: String, $id: String!, $mailchimp_baseURL: String, $mailgun_baseDomain: String, $mailgun_mailDomain: String, $name: String, $replyToAddress: String, $slack_webhookURL: String, $smtp_host: String, $smtp_port: Int, $smtp_secure: Boolean, $smtp_user: String, $webhookEndpointSecret: String) {
+    mutation UpdateMailProviderSetting($type: MailProviderType, $apiKey: String, $fromAddress: String, $id: String!, $mailchimp_baseURL: String, $mailgun_baseDomain: String, $mailgun_mailDomain: String, $name: String, $replyToAddress: String, $slack_webhookURL: String, $smtp_host: String, $smtp_port: Int, $smtp_secure: Boolean, $smtp_user: String, $webhookEndpointSecret: String) {
   updateMailProviderSetting(
+    type: $type
     apiKey: $apiKey
     fromAddress: $fromAddress
     id: $id
@@ -132,6 +134,7 @@ export type UpdateMailProviderSettingMutationFn = Apollo.MutationFunction<Update
  * @example
  * const [updateMailProviderSettingMutation, { data, loading, error }] = useUpdateMailProviderSettingMutation({
  *   variables: {
+ *      type: // value for 'type'
  *      apiKey: // value for 'apiKey'
  *      fromAddress: // value for 'fromAddress'
  *      id: // value for 'id'

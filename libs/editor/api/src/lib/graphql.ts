@@ -1934,6 +1934,7 @@ export type MailProviderModel = {
 };
 
 export enum MailProviderType {
+  Log = 'LOG',
   Mailchimp = 'MAILCHIMP',
   Mailgun = 'MAILGUN',
   Slack = 'SLACK',
@@ -2636,6 +2637,10 @@ export type Mutation = {
   confirmEmailChange: SensitiveDataUser;
   /** Confirms a notification for the whole instance, recording who confirmed it. Requires authentication. */
   confirmNotification: NotificationConfirmation;
+  /** Creates a new AI provider setting. */
+  createAISetting: SettingAiProvider;
+  /** Creates a new analytics provider setting. */
+  createAnalyticsProviderSetting: SettingAnalyticsProvider;
   /** Creates an article. */
   createArticle: Article;
   /** Creates a new author. */
@@ -2684,6 +2689,8 @@ export type Mutation = {
   createPaymentFromSubscription?: Maybe<Payment>;
   /** Creates a new payment method. */
   createPaymentMethod: PaymentMethod;
+  /** Creates a new payment provider setting. */
+  createPaymentProviderSetting: SettingPaymentProvider;
   /** Creates a paywall. */
   createPaywall: Paywall;
   /** Creates a new peer. */
@@ -2708,6 +2715,8 @@ export type Mutation = {
   createTag: Tag;
   /** Creates a token and returns it's secret once. */
   createToken: TokenWithSecret;
+  /** Creates a new tracking pixel setting. */
+  createTrackingPixelSetting: SettingTrackingPixelProvider;
   /** Creates a new user. */
   createUser: SensitiveDataUser;
   /**
@@ -2767,6 +2776,8 @@ export type Mutation = {
   deletePage: Scalars['String'];
   /** Deletes an existing payment method. */
   deletePaymentMethod: PaymentMethod;
+  /** Deletes a payment provider setting. */
+  deletePaymentProviderSetting: SettingPaymentProvider;
   /** Deletes a paywall. */
   deletePaywall: Paywall;
   /** Deletes an existing peer. */
@@ -2791,6 +2802,8 @@ export type Mutation = {
   deleteTag: Tag;
   /** Deletes a token. */
   deleteToken: Token;
+  /** Deletes a tracking pixel setting. */
+  deleteTrackingPixelSetting: SettingTrackingPixelProvider;
   /** Deletes an existing user. */
   deleteUser: SensitiveDataUser;
   /**
@@ -2849,6 +2862,8 @@ export type Mutation = {
   registerMember: Registration;
   /** Rejects a comment */
   rejectComment: Comment;
+  /** Rebuilds the payment, tracking pixel, mail and challenge providers from their settings, so integration changes take effect without restarting the API. */
+  reloadProviders: Scalars['Boolean'];
   /** Renews a subscription. */
   renewSubscription: PublicSubscription;
   /** Requests the user to change the comment's content */
@@ -3052,6 +3067,26 @@ export type MutationConfirmEmailChangeArgs = {
 export type MutationConfirmNotificationArgs = {
   itemId: Scalars['String'];
   source: NotificationSource;
+};
+
+
+export type MutationCreateAiSettingArgs = {
+  apiKey?: InputMaybe<Scalars['String']>;
+  id: Scalars['String'];
+  name?: InputMaybe<Scalars['String']>;
+  systemPrompt?: InputMaybe<Scalars['String']>;
+  type: AiProviderType;
+  webhookEndpointSecret?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationCreateAnalyticsProviderSettingArgs = {
+  articlePrefix?: InputMaybe<Scalars['String']>;
+  credentials?: InputMaybe<SettingAnalyticsCredentialsInput>;
+  id: Scalars['String'];
+  name?: InputMaybe<Scalars['String']>;
+  property?: InputMaybe<Scalars['String']>;
+  type: AnalyticsProviderType;
 };
 
 
@@ -3272,6 +3307,37 @@ export type MutationCreatePaymentMethodArgs = {
 };
 
 
+export type MutationCreatePaymentProviderSettingArgs = {
+  apiKey?: InputMaybe<Scalars['String']>;
+  bexio_accountId?: InputMaybe<Scalars['Float']>;
+  bexio_countryId?: InputMaybe<Scalars['Float']>;
+  bexio_invoiceMailBodyNewMembership?: InputMaybe<Scalars['String']>;
+  bexio_invoiceMailBodyRenewalMembership?: InputMaybe<Scalars['String']>;
+  bexio_invoiceMailSubjectNewMembership?: InputMaybe<Scalars['String']>;
+  bexio_invoiceMailSubjectRenewalMembership?: InputMaybe<Scalars['String']>;
+  bexio_invoiceTemplateNewMembership?: InputMaybe<Scalars['String']>;
+  bexio_invoiceTemplateRenewalMembership?: InputMaybe<Scalars['String']>;
+  bexio_invoiceTitleNewMembership?: InputMaybe<Scalars['String']>;
+  bexio_invoiceTitleRenewalMembership?: InputMaybe<Scalars['String']>;
+  bexio_markInvoiceAsOpen?: InputMaybe<Scalars['Boolean']>;
+  bexio_taxId?: InputMaybe<Scalars['Float']>;
+  bexio_unitId?: InputMaybe<Scalars['Float']>;
+  bexio_userId?: InputMaybe<Scalars['Float']>;
+  id: Scalars['String'];
+  mollie_apiBaseUrl?: InputMaybe<Scalars['String']>;
+  mollie_methods?: InputMaybe<Array<PaymentMethodMollie>>;
+  name?: InputMaybe<Scalars['String']>;
+  offSessionPayments?: InputMaybe<Scalars['Boolean']>;
+  payrexx_instancename?: InputMaybe<Scalars['String']>;
+  payrexx_pm?: InputMaybe<Array<PayrexxPm>>;
+  payrexx_psp?: InputMaybe<Array<PayrexxPsp>>;
+  payrexx_vatrate?: InputMaybe<Scalars['String']>;
+  stripe_methods?: InputMaybe<Array<StripePaymentMethod>>;
+  type: PaymentProviderType;
+  webhookEndpointSecret?: InputMaybe<Scalars['String']>;
+};
+
+
 export type MutationCreatePaywallArgs = {
   active: Scalars['Boolean'];
   alternativeSubscribeUrl?: InputMaybe<Scalars['String']>;
@@ -3379,6 +3445,19 @@ export type MutationCreateTagArgs = {
 
 export type MutationCreateTokenArgs = {
   name: Scalars['String'];
+};
+
+
+export type MutationCreateTrackingPixelSettingArgs = {
+  id: Scalars['String'];
+  name?: InputMaybe<Scalars['String']>;
+  prolitteris_memberNr?: InputMaybe<Scalars['String']>;
+  prolitteris_onlyPaidContentAccess?: InputMaybe<Scalars['Boolean']>;
+  prolitteris_password?: InputMaybe<Scalars['String']>;
+  prolitteris_publisherInternalKeyDomain?: InputMaybe<Scalars['String']>;
+  prolitteris_usePublisherInternalKey?: InputMaybe<Scalars['Boolean']>;
+  prolitteris_username?: InputMaybe<Scalars['String']>;
+  type: TrackingPixelProviderType;
 };
 
 
@@ -3552,6 +3631,11 @@ export type MutationDeletePaymentMethodArgs = {
 };
 
 
+export type MutationDeletePaymentProviderSettingArgs = {
+  id: Scalars['String'];
+};
+
+
 export type MutationDeletePaywallArgs = {
   id: Scalars['String'];
 };
@@ -3608,6 +3692,11 @@ export type MutationDeleteTagArgs = {
 
 
 export type MutationDeleteTokenArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationDeleteTrackingPixelSettingArgs = {
   id: Scalars['String'];
 };
 
@@ -3942,6 +4031,7 @@ export type MutationUpdateChallengeProviderSettingArgs = {
   name?: InputMaybe<Scalars['String']>;
   secret?: InputMaybe<Scalars['String']>;
   siteKey?: InputMaybe<Scalars['String']>;
+  type?: InputMaybe<ChallengeProviderType>;
 };
 
 
@@ -4075,6 +4165,7 @@ export type MutationUpdateMailProviderSettingArgs = {
   smtp_port?: InputMaybe<Scalars['Int']>;
   smtp_secure?: InputMaybe<Scalars['Boolean']>;
   smtp_user?: InputMaybe<Scalars['String']>;
+  type?: InputMaybe<MailProviderType>;
   webhookEndpointSecret?: InputMaybe<Scalars['String']>;
 };
 
@@ -6696,6 +6787,7 @@ export enum SettingName {
   PeeringTimeoutMs = 'PEERING_TIMEOUT_MS',
   ResetPasswordJwtExpiresMin = 'RESET_PASSWORD_JWT_EXPIRES_MIN',
   SendLoginJwtExpiresMin = 'SEND_LOGIN_JWT_EXPIRES_MIN',
+  SessionTtlDays = 'SESSION_TTL_DAYS',
   ShowPendingWhenNotPublished = 'SHOW_PENDING_WHEN_NOT_PUBLISHED',
   SubscriptionUpgradeBillsFullDifference = 'SUBSCRIPTION_UPGRADE_BILLS_FULL_DIFFERENCE'
 }
@@ -6717,6 +6809,7 @@ export type SettingPaymentProvider = SettingProvider & {
   bexio_unitId?: Maybe<Scalars['Float']>;
   bexio_userId?: Maybe<Scalars['Float']>;
   createdAt: Scalars['DateTime'];
+  deletedAt?: Maybe<Scalars['DateTime']>;
   id: Scalars['String'];
   lastLoadedAt: Scalars['DateTime'];
   modifiedAt: Scalars['DateTime'];
@@ -6788,6 +6881,7 @@ export type SettingTrackingPixelFilter = {
 export type SettingTrackingPixelProvider = SettingProvider & {
   __typename?: 'SettingTrackingPixelProvider';
   createdAt: Scalars['DateTime'];
+  deletedAt?: Maybe<Scalars['DateTime']>;
   id: Scalars['String'];
   lastLoadedAt: Scalars['DateTime'];
   modifiedAt: Scalars['DateTime'];
