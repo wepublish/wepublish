@@ -23,6 +23,7 @@
       "@wepublish/ai/editor": ["libs/ai/editor/src/index.ts"],
       "@wepublish/ai/website": ["libs/ai/website/src/index.ts"],
       "@wepublish/api": ["libs/api/src/index.ts"],
+      "@wepublish/audit-log/api": ["libs/audit-log/api/src/index.ts"],
       "@wepublish/api/seed": ["libs/api/prisma/seed.ts"],
       "@wepublish/article/api": ["libs/article/api/src/index.ts"],
       "@wepublish/article/website": ["libs/article/website/src/index.ts"],
