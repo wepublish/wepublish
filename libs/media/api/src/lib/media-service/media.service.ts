@@ -246,10 +246,15 @@ export class MediaService {
         sharpInstance.grayscale(transformations.grayscale);
       }
 
-      const transformedImage = sharpInstance.webp({
-        quality: transformations.quality,
-        effort,
-      });
+      const format = transformations.format ?? 'webp';
+      const transformedImage =
+        format === 'jpeg' ?
+          sharpInstance.jpeg({
+            quality: transformations.quality,
+            mozjpeg: true,
+          })
+        : format === 'png' ? sharpInstance.png()
+        : sharpInstance.webp({ quality: transformations.quality, effort });
 
       const { data: transformedBuffer, info } = await transformedImage.toBuffer(
         { resolveWithObject: true }
@@ -265,7 +270,7 @@ export class MediaService {
           uri,
           transformedBuffer,
           info.size,
-          { 'Content-Type': `image/webp` }
+          { 'Content-Type': `image/${format}` }
         );
       } else {
         exists = false;
@@ -275,7 +280,7 @@ export class MediaService {
           uri,
           transformedBuffer,
           info.size,
-          { 'Content-Type': `image/webp` }
+          { 'Content-Type': `image/${format}` }
         );
       }
       return { uri, exists };

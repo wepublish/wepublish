@@ -1,0 +1,131 @@
+fragment NewsletterArticle on NewsletterArticle {
+  id
+  title
+  preTitle
+  lead
+  url
+  imageUrl
+  publishedAt
+  tags
+}
+
+fragment NewsletterImage on NewsletterImage {
+  id
+  url
+}
+
+fragment NewsletterReport on NewsletterReport {
+  bytes
+  missingFooter
+  missingArticles
+  missingImages
+}
+
+fragment NewsletterSummary on Newsletter {
+  id
+  createdAt
+  modifiedAt
+  title
+  blockCount
+  mailchimpCampaignId
+  mailchimpCampaignWebId
+  mailchimpEditUrl
+}
+
+fragment FullNewsletter on Newsletter {
+  ...NewsletterSummary
+  document
+  teaserArticles {
+    ...NewsletterArticle
+  }
+  images {
+    ...NewsletterImage
+  }
+}
+
+query Newsletters($take: Int, $skip: Int) {
+  newsletters(take: $take, skip: $skip) {
+    nodes {
+      ...NewsletterSummary
+    }
+    totalCount
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+    }
+  }
+}
+
+query Newsletter($id: String!) {
+  newsletter(id: $id) {
+    ...FullNewsletter
+  }
+}
+
+query NewsletterPreview($id: String!) {
+  newsletterPreview(id: $id) {
+    html
+    report {
+      ...NewsletterReport
+    }
+  }
+}
+
+query NewsletterArticles($days: Int, $take: Int) {
+  newsletterArticles(days: $days, take: $take) {
+    ...NewsletterArticle
+  }
+}
+
+query NewsletterImages($ids: [String!]!) {
+  newsletterImages(ids: $ids) {
+    ...NewsletterImage
+  }
+}
+
+query NewsletterMergeFields {
+  newsletterMergeFields {
+    fields {
+      tag
+      name
+    }
+    interests {
+      title
+      groups
+    }
+    error
+  }
+}
+
+mutation CreateNewsletter($input: CreateNewsletterInput!) {
+  createNewsletter(input: $input) {
+    ...FullNewsletter
+  }
+}
+
+mutation UpdateNewsletter($input: UpdateNewsletterInput!) {
+  updateNewsletter(input: $input) {
+    ...NewsletterSummary
+  }
+}
+
+mutation DeleteNewsletter($id: String!) {
+  deleteNewsletter(id: $id) {
+    id
+  }
+}
+
+mutation PublishNewsletterToMailchimp($id: String!) {
+  publishNewsletterToMailchimp(id: $id) {
+    created
+    campaign {
+      id
+      webId
+      title
+      editUrl
+    }
+    report {
+      ...NewsletterReport
+    }
+  }
+}

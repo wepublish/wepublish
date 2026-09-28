@@ -12,6 +12,12 @@
 - Mailgun
 - Mailchimp
 
+Two distinct Mailchimp integrations exist: the transactional **mail provider**
+(Mandrill, `MailchimpMailProvider`) and the Marketing API **sync provider**
+(`SettingSyncProvider`, key + audience stored in the DB). The newsletter
+editor (`libs/newsletter`, see its README) publishes draft campaigns through
+the sync provider's credentials; it never sends.
+
 ## Analytics Provider
 
 - Google Analytics

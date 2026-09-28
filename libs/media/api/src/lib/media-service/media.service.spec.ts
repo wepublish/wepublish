@@ -1,7 +1,11 @@
 import { Logger } from '@nestjs/common';
 import sharp from 'sharp';
 import { Readable } from 'stream';
-import { TransformationsDto } from '@wepublish/media-transform-guard';
+import {
+  signImageTransformations,
+  TransformationsDto,
+} from '@wepublish/media-transform-guard';
+import { generateKeyPair } from 'jose';
 import { JwksClientService } from '../authentication/jwks-client.service';
 import { StorageClient } from '../storage-client/storage-client.service';
 import { MediaService, MediaServiceConfig } from './media.service';
@@ -138,16 +142,17 @@ class FakeStorage {
   }
 }
 
-const createService = () => {
+const createService = (
+  jwksClient: Pick<JwksClientService, 'getPublicKey'> = {
+    getPublicKey: async () => {
+      throw new Error('The public key must not be needed');
+    },
+  }
+) => {
   const storage = new FakeStorage();
   const config: MediaServiceConfig = {
     uploadBucket: UPLOAD_BUCKET,
     transformationBucket: TRANSFORMATION_BUCKET,
-  };
-  const jwksClient = {
-    getPublicKey: async () => {
-      throw new Error('The public key must not be needed');
-    },
   };
 
   const service = new MediaService(
@@ -423,6 +428,36 @@ describe('MediaService images', () => {
 
     expect(storage.contentTypeOf(TRANSFORMATION_BUCKET, uri)).toBe(
       'image/webp'
+    );
+  });
+
+  it('stores a transformation as jpeg when the format asks for it', async () => {
+    const { privateKey, publicKey } = await generateKeyPair('EdDSA');
+    const { service, storage } = createService({
+      getPublicKey: async () => publicKey,
+    });
+    await service.saveImage('image-1', await createImage());
+
+    const transformations = {
+      format: 'jpeg',
+      quality: 80,
+    } as TransformationsDto;
+    const sig = await signImageTransformations(
+      privateKey,
+      'image-1',
+      transformations
+    );
+
+    const { uri } = await service.getImageUri('image-1', {
+      ...transformations,
+      sig,
+    } as TransformationsDto);
+
+    expect(storage.contentTypeOf(TRANSFORMATION_BUCKET, uri)).toBe(
+      'image/jpeg'
+    );
+    expect(uri).not.toBe(
+      (await service.getImageUri('image-1', {} as TransformationsDto)).uri
     );
   });
 

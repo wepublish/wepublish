@@ -252,6 +252,10 @@ export class NovaMediaAdapter implements MediaAdapter {
     // Max quality is 80 so 1 => 80
     queryParameters.push(`quality=${Math.ceil(this.config.quality * 80)}`);
 
+    if (transformations?.format) {
+      queryParameters.push(`format=${transformations.format}`);
+    }
+
     const transformationsDto = this.parseTransformations(queryParameters);
 
     const privateKey = await this.privateKeyPromise;

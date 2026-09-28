@@ -71,6 +71,7 @@ import {
   URLAdapterModule,
   WepublishSiteURLAdapter,
 } from '@wepublish/nest-modules';
+import { NewsletterModule } from '@wepublish/newsletter/api';
 import { PageModule } from '@wepublish/page/api';
 import {
   BexioPaymentProvider,
@@ -568,6 +569,7 @@ import { readConfig } from '../readConfig';
       inject: [GoogleAnalyticsService],
     }),
     BannerApiModule,
+    NewsletterModule,
     VersionInformationModule,
     CrowdfundingModule,
     ImportPeerArticleModule,

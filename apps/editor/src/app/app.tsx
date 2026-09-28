@@ -34,6 +34,7 @@ import {
   MemberPlanEdit,
   SubscriptionFlowList,
 } from '@wepublish/membership/editor';
+import { NewsletterEditor, NewsletterList } from '@wepublish/newsletter/editor';
 import { SettingList } from '@wepublish/settings/editor';
 import {
   AuthContext,
@@ -737,6 +738,19 @@ export function App() {
                   <EditBannerForm />
                 </Base>
               }
+            />
+            {/* Newsletter Routes */}
+            <Route
+              path="newsletters"
+              element={
+                <Base>
+                  <NewsletterList />
+                </Base>
+              }
+            />
+            <Route
+              path="newsletters/edit/:id"
+              element={<NewsletterEditor />}
             />
             {/* Authors Routes */}
             <Route

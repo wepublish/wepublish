@@ -14,6 +14,7 @@ export const TransformationsSchema = z
   .object({
     sig: z.coerce.string(),
     quality: z.coerce.number(),
+    format: z.enum(['webp', 'jpeg', 'png']),
     negate: z.coerce.boolean(),
     grayscale: z.coerce.boolean(),
     sharpen: z.coerce.boolean(),
