@@ -6,9 +6,8 @@ import {
   isFlexBlock,
 } from '@wepublish/block-content/website';
 import {
-  BlockContent,
-  FlexAlignment,
   FullBlockFragment,
+  FullFlexAlignmentFragment,
   FullFlexBlockFragment,
 } from '@wepublish/website/api';
 import {
@@ -29,7 +28,7 @@ export enum TsriFlexBlockType {
 }
 
 export const isFlexBlockSmallRowGapsWithShortNews = (
-  block: Partial<Pick<BlockContent, '__typename'>>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is FullFlexBlockFragment =>
   allPass([
     hasBlockStyle(TsriFlexBlockType.SmallRowGapsWithShortNews),
@@ -119,7 +118,7 @@ export const FlexBlockSmallRowGapsWithShortNews = ({
         : run.entries.map(entry => (
             <BlockWithAlignment
               key={sortedBlocks.indexOf(entry)}
-              {...(entry.alignment as FlexAlignment)}
+              {...(entry.alignment as FullFlexAlignmentFragment)}
             >
               {renderEntry(entry)}
             </BlockWithAlignment>

@@ -1,11 +1,14 @@
 import { useMutation } from '@apollo/client/react';
-import { Banner, DeleteBannerDocument } from '@wepublish/editor/api';
+import {
+  DeleteBannerDocument,
+  FullBannerFragment,
+} from '@wepublish/editor/api';
 import { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
 import { Button, Message, Modal, toaster } from 'rsuite';
 
 type DeleteBannerProps = {
-  banner: Banner | undefined;
+  banner: FullBannerFragment | undefined;
   onClose(): void;
   onDelete(): Promise<unknown>;
 };

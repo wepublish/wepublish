@@ -1,12 +1,12 @@
 import styled from '@emotion/styled';
 import {
-  BlockContent,
+  FullBlockFragment,
   FullPolisConversationBlockFragment,
 } from '@wepublish/website/api';
 import { BuilderPolisConversationBlockProps } from '@wepublish/website/builder';
 
 export const isPolisConversationBlock = (
-  block: Partial<Pick<BlockContent, '__typename'>>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is FullPolisConversationBlockFragment =>
   block.__typename === 'PolisConversationBlock';
 

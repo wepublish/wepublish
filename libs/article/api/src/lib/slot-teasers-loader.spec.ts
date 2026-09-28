@@ -13,7 +13,10 @@ import {
 } from '@wepublish/block-content/api';
 import { EventService } from '@wepublish/event/api';
 import { ArticleService } from './article.service';
-import { ArticleTeaser, TeaserSlotsBlock } from '@wepublish/website/api';
+import {
+  FullArticleTeaserFragment,
+  FullTeaserSlotsBlockFragment,
+} from '@wepublish/website/api';
 import nanoid from 'nanoid';
 
 /*
@@ -196,7 +199,7 @@ const mockArticleTeaser = ({ articleID = 'mock_article_id' } = {}) =>
   ({
     type: TeaserType.Article,
     articleID,
-  }) as unknown as ArticleTeaser;
+  }) as unknown as FullArticleTeaserFragment;
 
 const revisionBlocks: BaseBlock<BlockType>[] = [
   mockFlexBlock({
@@ -283,11 +286,11 @@ describe('SlotTeasersLoader', () => {
     service = await module.resolve<SlotTeasersLoader>(SlotTeasersLoader);
   });
 
-  const extractTeasers = (block: TeaserSlotsBlock): string[] => {
+  const extractTeasers = (block: FullTeaserSlotsBlockFragment): string[] => {
     const teaserIds: string[] = [];
     for (const t of block.teasers) {
       if (t && t.type === TeaserType.Article) {
-        const teaser = t as ArticleTeaser;
+        const teaser = t as FullArticleTeaserFragment;
         const id = teaser.article?.id || teaser.articleID;
         if (id) {
           teaserIds.push(id);
@@ -311,7 +314,7 @@ describe('SlotTeasersLoader', () => {
     }
 
     if (isTeaserSlotsBlock(block)) {
-      return extractTeasers(block as unknown as TeaserSlotsBlock);
+      return extractTeasers(block as unknown as FullTeaserSlotsBlockFragment);
     }
 
     return [];

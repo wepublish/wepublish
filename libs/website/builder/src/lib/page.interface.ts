@@ -1,6 +1,6 @@
 import type { OperationVariables } from '@apollo/client';
 import type { useQuery } from '@apollo/client/react';
-import { Page, PageQuery } from '@wepublish/website/api';
+import { FullPageFragment, PageQuery } from '@wepublish/website/api';
 import { PropsWithChildren } from 'react';
 
 export enum PageType {
@@ -32,5 +32,5 @@ export type BuilderPageProps = PropsWithChildren<
 >;
 
 export type BuilderPageSEOProps = {
-  page: Page;
+  page: FullPageFragment;
 };

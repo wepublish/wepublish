@@ -4,10 +4,9 @@ import { ContentWidthProvider } from '@wepublish/content/website';
 import { PageContainer } from '@wepublish/page/website';
 import { getApiUrl } from '@wepublish/utils/website';
 import {
-  addClientCacheToProps,
   CommentListDocument,
   CommentSort,
-  getApiClient,
+  FullTeaserListBlockFragment,
   HotAndTrendingDocument,
   NavigationListDocument,
   PageDocument,
@@ -15,7 +14,8 @@ import {
   PeerProfileDocument,
   SettingListDocument,
   SortOrder,
-  TeaserListBlock,
+  addClientCacheToProps,
+  getApiClient,
 } from '@wepublish/website/api';
 import { LinkContext } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';
@@ -101,7 +101,7 @@ export const getStaticProps: GetStaticProps = async () => {
 
   const fdTTeaser = page.data?.page?.latest.blocks.find(block => {
     return isFrageDesTages(block);
-  }) as TeaserListBlock | undefined;
+  }) as FullTeaserListBlockFragment | undefined;
 
   if (fdTTeaser && fdTTeaser.teasers[0]) {
     let id: string | undefined;

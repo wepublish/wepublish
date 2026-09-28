@@ -1,5 +1,9 @@
 import styled from '@emotion/styled';
-import { FullImageFragment, Tag, TagType } from '@wepublish/editor/api';
+import {
+  FullImageFragment,
+  FullTagFragment,
+  TagType,
+} from '@wepublish/editor/api';
 import { SetStateAction, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdListAlt, MdSettings, MdShare } from 'react-icons/md';
@@ -75,7 +79,7 @@ export interface PageMetadata {
   readonly seoTitle?: string;
   readonly seoDescription?: string;
   readonly tags: string[];
-  readonly defaultTags: Pick<Tag, 'id' | 'tag'>[];
+  readonly defaultTags: Pick<FullTagFragment, 'id' | 'tag'>[];
   readonly url: string;
   readonly properties: PageMetadataProperty[];
   readonly image?: FullImageFragment;

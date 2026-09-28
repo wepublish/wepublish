@@ -1,6 +1,9 @@
 import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
-import { Crowdfunding, CrowdfundingsDocument } from '@wepublish/editor/api';
+import {
+  CrowdfundingsDocument,
+  FullCrowdfundingFragment,
+} from '@wepublish/editor/api';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAddCircle } from 'react-icons/md';
@@ -90,7 +93,7 @@ export function SelectCrowdfundingPanel({
           >
             <Table.HeaderCell>{t('blocks.crowdfunding.name')}</Table.HeaderCell>
             <Table.Cell>
-              {(rowData: RowDataType<Crowdfunding>) => rowData.name}
+              {(rowData: RowDataType<FullCrowdfundingFragment>) => rowData.name}
             </Table.Cell>
           </Table.Column>
 
@@ -99,7 +102,7 @@ export function SelectCrowdfundingPanel({
               {t('blocks.crowdfunding.select')}
             </Table.HeaderCell>
             <Table.Cell align="center">
-              {(rowData: RowDataType<Crowdfunding>) => (
+              {(rowData: RowDataType<FullCrowdfundingFragment>) => (
                 <IconButtonTooltip caption={t('blocks.crowdfunding.select')}>
                   <IconButton
                     icon={<MdAddCircle />}

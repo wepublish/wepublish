@@ -4,17 +4,17 @@ import type { RichtextJSONDocument } from '@wepublish/richtext';
 import {
   AddCommentMutation,
   AddCommentMutationVariables,
-  CalculatedRating,
   ChallengeQuery,
   CommentListQuery,
   CommentListQueryVariables,
   CommentWithoutNestingFragment,
   EditCommentMutation,
   EditCommentMutationVariables,
+  FullCalculatedRatingFragment,
   FullCommentFragment,
   FullCommentRatingFragment,
-  CommentRatingSystem,
-  OverriddenRating,
+  FullRatingSystemFragment,
+  FullOverriddenRatingFragment,
 } from '@wepublish/website/api';
 import { Dispatch, PropsWithChildren } from 'react';
 
@@ -86,7 +86,7 @@ export type BuilderCommentListItemProps = (CommentWithoutNestingFragment & {
   children?: CommentWithoutNestingFragment[] | null;
 }) & {
   className?: string;
-  ratingSystem: CommentRatingSystem;
+  ratingSystem: FullRatingSystemFragment;
   signUpUrl: string;
   commentDepth?: number;
   maxCommentDepth?: number;
@@ -165,8 +165,8 @@ export type BuilderCommentEditorProps = {
 
 export type BuilderCommentRatingsProps = {
   commentId: string;
-  ratingSystem: CommentRatingSystem;
+  ratingSystem: FullRatingSystemFragment;
   userRatings: FullCommentRatingFragment[];
-  calculatedRatings: CalculatedRating[];
-  overriddenRatings: OverriddenRating[];
+  calculatedRatings: FullCalculatedRatingFragment[];
+  overriddenRatings: FullOverriddenRatingFragment[];
 };

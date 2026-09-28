@@ -8,17 +8,17 @@ import {
   FullCrowdfundingFragment,
   FullEventFragment,
   FullImageFragment,
-  FullPoll,
+  FullPollFragment,
+  SubscribeBlock,
+  FullTagFragment,
   FullTeaserFragment,
   PageWithoutBlocksFragment,
-  SubscribeBlock,
   SubscribeBlockField,
   SubscribePeriodicityDisplay,
-  Tag,
   TeaserInput,
   TeaserListBlockSort,
-  TeaserSlotsAutofillConfigInput,
   TeaserSlotType,
+  TeaserSlotsAutofillConfigInput,
   TeaserType,
 } from '@wepublish/editor/api';
 import type { RichtextJSONDocument } from '@wepublish/richtext';
@@ -167,7 +167,7 @@ export interface MailchimpFormBlockValue extends BaseBlockValue {
 }
 
 export interface PollBlockValue extends BaseBlockValue {
-  poll: Pick<FullPoll, 'id' | 'question'> | null | undefined;
+  poll: Pick<FullPollFragment, 'id' | 'question'> | null | undefined;
 }
 
 export interface CrowdfundingBlockValue extends BaseBlockValue {
@@ -376,7 +376,7 @@ export interface TeaserListBlockValue extends BaseBlockValue {
   title?: string | null;
   filter: {
     tags?: string[] | null;
-    tagObjects: Pick<Tag, 'id' | 'tag'>[];
+    tagObjects: Pick<FullTagFragment, 'id' | 'tag'>[];
   };
   teaserType: TeaserType;
   skip: number;

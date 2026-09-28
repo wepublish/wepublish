@@ -1,12 +1,15 @@
 import styled from '@emotion/styled';
-import { BlockContent, FullIFrameBlockFragment } from '@wepublish/website/api';
+import {
+  FullBlockFragment,
+  FullIFrameBlockFragment,
+} from '@wepublish/website/api';
 import { BuilderIFrameBlockProps } from '@wepublish/website/builder';
 import { css } from '@emotion/react';
 import { useMemo } from 'react';
 import IframeResizer from '@iframe-resizer/react';
 
 export const isIFrameBlock = (
-  block: Partial<Pick<BlockContent, '__typename'>>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is FullIFrameBlockFragment => block.__typename === 'IFrameBlock';
 
 export const IFrameBlockWrapper = styled('div')``;

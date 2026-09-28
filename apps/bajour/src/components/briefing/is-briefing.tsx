@@ -3,7 +3,7 @@ import {
   isTeaserGridBlock,
 } from '@wepublish/block-content/website';
 import {
-  BlockContent,
+  FullBlockFragment,
   FullTeaserGridBlockFragment,
 } from '@wepublish/website/api';
 import { allPass, anyPass } from 'ramda';
@@ -16,33 +16,33 @@ export enum BriefingType {
 }
 
 export const isBaselBriefingIgnoringBlockType = (
-  block: Pick<BlockContent, 'blockStyle'>
+  block: Partial<Pick<FullBlockFragment, 'blockStyle'>>
 ) => hasBlockStyle(BriefingType.BaselBriefing)(block);
 
 export const isBaselBriefing = (
-  block: Partial<Pick<BlockContent, '__typename'>>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is FullTeaserGridBlockFragment =>
   allPass([isBaselBriefingIgnoringBlockType, isTeaserGridBlock])(block);
 
 export const isFCBBriefing = (
-  block: Partial<Pick<BlockContent, '__typename'>>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is FullTeaserGridBlockFragment =>
   allPass([hasBlockStyle(BriefingType.FCBBriefing), isTeaserGridBlock])(block);
 
 export const isFasnachtsBriefing = (
-  block: Partial<Pick<BlockContent, '__typename'>>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is FullTeaserGridBlockFragment =>
   allPass([hasBlockStyle(BriefingType.FasnachtsBriefing), isTeaserGridBlock])(
     block
   );
 
 export const isEscBriefing = (
-  block: Partial<Pick<BlockContent, '__typename'>>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is FullTeaserGridBlockFragment =>
   allPass([hasBlockStyle(BriefingType.EscBriefing), isTeaserGridBlock])(block);
 
 export const isAnyBriefing = (
-  block: Partial<Pick<BlockContent, '__typename'>>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is FullTeaserGridBlockFragment =>
   anyPass([isBaselBriefing, isFCBBriefing, isFasnachtsBriefing, isEscBriefing])(
     block

@@ -5,7 +5,7 @@ import {
   setPreviewHandshakeState,
 } from '@wepublish/authentication/website';
 import { CanPreview } from '@wepublish/permissions';
-import { SensitiveDataUser } from '@wepublish/website/api';
+import { FullSensitiveDataUserFragment } from '@wepublish/website/api';
 import { WebsiteBuilderProvider } from '@wepublish/website/builder';
 import { ComponentProps, ReactNode } from 'react';
 
@@ -24,7 +24,10 @@ const renderBanner = (ui: ReactNode = <PreviewStatusBanner />) =>
     </ThemeProvider>
   );
 
-const withUser = (user: SensitiveDataUser | null, hasUser: boolean) => (
+const withUser = (
+  user: FullSensitiveDataUserFragment | null,
+  hasUser: boolean
+) => (
   <SessionTokenContext.Provider
     value={[user, hasUser, vi.fn().mockResolvedValue(undefined)]}
   >
@@ -54,7 +57,7 @@ describe('PreviewStatusBanner', () => {
     window.history.replaceState(null, '', '/a/foobar?preview');
     const user = {
       permissions: [CanPreview.id],
-    } as unknown as SensitiveDataUser;
+    } as unknown as FullSensitiveDataUserFragment;
 
     const { container } = renderBanner(withUser(user, true));
 
@@ -95,7 +98,9 @@ describe('PreviewStatusBanner', () => {
   it('shows the published-version hint when the user lacks the preview permission', () => {
     window.history.replaceState(null, '', '/a/foobar?preview');
     document.cookie = 'auth.token=some-token';
-    const user = { permissions: [] } as unknown as SensitiveDataUser;
+    const user = {
+      permissions: [],
+    } as unknown as FullSensitiveDataUserFragment;
 
     renderBanner(withUser(user, true));
 

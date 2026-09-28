@@ -1,7 +1,7 @@
 import { ImageList, ImageListItem, Typography } from '@mui/material';
 import styled from '@emotion/styled';
 import {
-  BlockContent,
+  FullBlockFragment,
   FullImageGalleryBlockFragment,
 } from '@wepublish/website/api';
 import {
@@ -12,7 +12,7 @@ import { ImageBlockCaption, ImageBlockSource } from '../image/image-block';
 import { Trans } from 'react-i18next';
 
 export const isImageGalleryBlock = (
-  block: Partial<Pick<BlockContent, '__typename'>>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is FullImageGalleryBlockFragment =>
   block.__typename === 'ImageGalleryBlock';
 

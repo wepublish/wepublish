@@ -2,8 +2,8 @@ import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
   CreateUserRoleDocument,
+  FullPermissionFragment,
   FullUserRoleFragment,
-  Permission,
   PermissionListDocument,
   UpdateUserRoleDocument,
   UserRoleDocument,
@@ -45,8 +45,10 @@ function UserRoleEditPanel({ id, onClose, onSave }: UserRoleEditPanelProps) {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [systemRole, setSystemRole] = useState(false);
-  const [permissions, setPermissions] = useState<Permission[]>([]);
-  const [allPermissions, setAllPermissions] = useState<Permission[]>([]);
+  const [permissions, setPermissions] = useState<FullPermissionFragment[]>([]);
+  const [allPermissions, setAllPermissions] = useState<
+    FullPermissionFragment[]
+  >([]);
 
   const {
     data,

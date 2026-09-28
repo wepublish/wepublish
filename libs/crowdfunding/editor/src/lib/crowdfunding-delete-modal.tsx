@@ -1,7 +1,7 @@
 import { useMutation } from '@apollo/client/react';
 import {
-  Crowdfunding,
   DeleteCrowdfundingDocument,
+  FullCrowdfundingFragment,
 } from '@wepublish/editor/api';
 import { TFunction } from 'i18next';
 import React from 'react';
@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { Button, Message, Modal, toaster } from 'rsuite';
 
 type DeleteCrowdfundingProps = {
-  crowdfunding: Crowdfunding | undefined;
+  crowdfunding: FullCrowdfundingFragment | undefined;
   onClose(): void;
   onDelete(): Promise<unknown>;
 };

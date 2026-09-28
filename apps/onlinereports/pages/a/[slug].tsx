@@ -13,10 +13,10 @@ import {
   ArticleSort,
   CommentItemType,
   CommentListDocument,
+  FullTagFragment,
   NavigationListDocument,
   PeerProfileDocument,
   SortOrder,
-  Tag,
   TagListDocument,
   TagType,
   addClientCacheToProps,
@@ -83,7 +83,9 @@ export default function ArticleBySlugOrId() {
               order: SortOrder.Descending,
               take: nrOfRecentArticles + 1,
               filter: {
-                tagsNotIn: tags.data.tags.nodes.map((tag: Tag) => tag.id),
+                tagsNotIn: tags.data.tags.nodes.map(
+                  (tag: FullTagFragment) => tag.id
+                ),
               },
             }}
             filter={articles =>
@@ -167,7 +169,9 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
           filter: {
             tagsNotIn:
               tagsToExclude.data ?
-                tagsToExclude.data.tags.nodes.map((tag: Tag) => tag.id)
+                tagsToExclude.data.tags.nodes.map(
+                  (tag: FullTagFragment) => tag.id
+                )
               : [],
           },
         },

@@ -1,47 +1,46 @@
 import {
   BlockType,
-  BreakBlock,
-  EventBlock,
-  FullBlockFragment,
-  ImageBlock,
-  PollBlock,
-  QuoteBlock,
-  RichTextBlock,
-  TitleBlock,
-  HtmlBlock,
-  ListicleBlock,
-  ListicleItem,
-  CommentBlock,
-  BildwurfAdBlock,
-  FacebookPostBlock,
-  FacebookVideoBlock,
-  InstagramPostBlock,
-  TikTokVideoBlock,
-  VimeoVideoBlock,
-  StreamableVideoBlock,
-  YouTubeVideoBlock,
-  SoundCloudTrackBlock,
-  TwitterTweetBlock,
-  PolisConversationBlock,
-  IFrameBlock,
-  ImageGalleryBlock,
-  TeaserType,
-  FullEventTeaserFragment,
-  FullPageTeaserFragment,
-  FullArticleTeaserFragment,
-  FullTeaserListBlockFragment,
-  FullTeaserGridBlockFragment,
-  CustomTeaser,
-  FullTeaserGridFlexBlockFragment,
-  FlexAlignment,
-  CrowdfundingBlock,
-  SubscribeBlock,
-  SubscribeBlockRenderLayout,
-  FlexBlock,
   BlockWithAlignment,
+  CustomTeaser,
+  FullArticleTeaserFragment,
+  FullBildwurfAdBlockFragment,
+  FullBlockFragment,
+  FullBreakBlockFragment,
+  FullCommentBlockFragment,
+  FullCrowdfundingBlockFragment,
+  FullEventBlockFragment,
+  FullEventTeaserFragment,
+  FullFacebookPostBlockFragment,
+  FullFacebookVideoBlockFragment,
+  FullFlexAlignmentFragment,
+  FullFlexBlockFragment,
+  FullHtmlBlockFragment,
+  FullIFrameBlockFragment,
+  FullImageBlockFragment,
+  FullImageGalleryBlockFragment,
+  FullInstagramPostBlockFragment,
+  FullListicleBlockFragment,
+  FullPageTeaserFragment,
+  FullPolisConversationBlockFragment,
+  FullPollBlockFragment,
+  FullQuoteBlockFragment,
+  FullRichTextBlockFragment,
+  FullSoundCloudTrackBlockFragment,
+  FullStreamableVideoBlockFragment,
+  FullSubscribeBlockFragment,
+  FullTeaserGridBlockFragment,
+  FullTeaserGridFlexBlockFragment,
+  FullTeaserListBlockFragment,
+  FullTikTokVideoBlockFragment,
+  FullTitleBlockFragment,
+  FullTwitterTweetBlockFragment,
+  FullVimeoVideoBlockFragment,
+  FullYouTubeVideoBlockFragment,
+  ListicleItem,
   Maybe,
-  BlockContent,
   PaymentPeriodicity,
+  SubscribeBlockRenderLayout,
+  TeaserType,
 } from '@wepublish/website/api';
 import { mockImage } from './image';
 import { mockRichText } from './richtext';
@@ -58,7 +57,7 @@ export const mockTitleBlock = ({
   title = 'Title Block',
   lead = 'Lead',
   preTitle = 'Pre-Title',
-}: Partial<TitleBlock> = {}): TitleBlock => ({
+}: Partial<FullTitleBlockFragment> = {}): FullTitleBlockFragment => ({
   type: BlockType.Title,
   __typename: 'TitleBlock',
   blockStyle: null,
@@ -72,7 +71,7 @@ export const mockTitleBlock = ({
 export const mockImageBlock = ({
   image = mockImage(),
   linkUrl = null,
-}: Partial<ImageBlock> = {}): ImageBlock => ({
+}: Partial<FullImageBlockFragment> = {}): FullImageBlockFragment => ({
   type: BlockType.Image,
   __typename: 'ImageBlock',
   blockStyle: null,
@@ -86,7 +85,7 @@ export const mockImageBlock = ({
 
 export const mockRichTextBlock = ({
   richText = mockRichText(),
-}: Partial<RichTextBlock> = {}): RichTextBlock => ({
+}: Partial<FullRichTextBlockFragment> = {}): FullRichTextBlockFragment => ({
   type: BlockType.RichText,
   __typename: 'RichTextBlock',
   blockStyle: null,
@@ -99,7 +98,7 @@ export const mockQuoteBlock = ({
   image = mockImage(),
   author = 'John Doe',
   quote = 'This is a quote that is very long so that we can make sure that linebreaks correctly happen.',
-}: Partial<QuoteBlock> = {}): QuoteBlock => ({
+}: Partial<FullQuoteBlockFragment> = {}): FullQuoteBlockFragment => ({
   type: BlockType.Quote,
   __typename: 'QuoteBlock',
   blockStyle: null,
@@ -119,7 +118,7 @@ export const mockBreakBlock = ({
   linkText = 'Button Text',
   linkURL = 'https://example.com',
   text = 'Foobar',
-}: Partial<BreakBlock> = {}): BreakBlock => ({
+}: Partial<FullBreakBlockFragment> = {}): FullBreakBlockFragment => ({
   type: BlockType.LinkPageBreak,
   __typename: 'BreakBlock',
   blockStyle: null,
@@ -137,7 +136,7 @@ export const mockBreakBlock = ({
 
 export const mockPollBlock = ({
   poll = mockPoll(),
-}: Partial<PollBlock> = {}): PollBlock => ({
+}: Partial<FullPollBlockFragment> = {}): FullPollBlockFragment => ({
   type: BlockType.Poll,
   __typename: 'PollBlock',
   blockStyle: null,
@@ -155,7 +154,7 @@ export const mockEventBlock = ({
     mockEvent(),
     mockEvent(),
   ],
-}: Partial<EventBlock> = {}): EventBlock => ({
+}: Partial<FullEventBlockFragment> = {}): FullEventBlockFragment => ({
   type: BlockType.Event,
   __typename: 'EventBlock',
   blockStyle: null,
@@ -188,7 +187,7 @@ export const mockHTMLBlock = ({
       script.parentNode.appendChild(window.__niceDiv);
   })(document.currentScript);
  </script>`,
-}: Partial<HtmlBlock> = {}): HtmlBlock => ({
+}: Partial<FullHtmlBlockFragment> = {}): FullHtmlBlockFragment => ({
   type: BlockType.Html,
   __typename: 'HTMLBlock',
   blockStyle: null,
@@ -218,7 +217,7 @@ export const mockListicleBlock = ({
       title: 'Foobaz',
     },
   ] as ListicleItem[],
-}: Partial<ListicleBlock> = {}): ListicleBlock => ({
+}: Partial<FullListicleBlockFragment> = {}): FullListicleBlockFragment => ({
   type: BlockType.Listicle,
   __typename: 'ListicleBlock',
   blockStyle: null,
@@ -229,7 +228,7 @@ export const mockListicleBlock = ({
 
 export const mockCommentBlock = ({
   comments = [mockComment(), mockComment(), mockComment()],
-}: Partial<CommentBlock> = {}): CommentBlock => ({
+}: Partial<FullCommentBlockFragment> = {}): FullCommentBlockFragment => ({
   type: BlockType.Comment,
   __typename: 'CommentBlock',
   blockStyle: null,
@@ -245,7 +244,7 @@ export const mockCommentBlock = ({
 
 export const mockCrowdfundingBlock = ({
   crowdfunding = mockCrowdfunding(),
-}: Partial<CrowdfundingBlock> = {}) => ({
+}: Partial<FullCrowdfundingBlockFragment> = {}) => ({
   type: BlockType.Crowdfunding,
   __typename: 'CrowdfundingBlock',
   blockStyle: null,
@@ -256,7 +255,7 @@ export const mockCrowdfundingBlock = ({
 
 export const mockBildwurfBlock = ({
   zoneID = '77348',
-}: Partial<BildwurfAdBlock> = {}): BildwurfAdBlock => ({
+}: Partial<FullBildwurfAdBlockFragment> = {}): FullBildwurfAdBlockFragment => ({
   type: BlockType.BildwurfAd,
   __typename: 'BildwurfAdBlock',
   blockStyle: null,
@@ -268,7 +267,7 @@ export const mockBildwurfBlock = ({
 export const mockFacebookPostBlock = ({
   postID = 'pfbid02JcJeoMg7KasRL8dNjgRJJDFiU8YzeBzEeGeXtqpsE2bnTmeH2y6LRsu7RnmhkPxel',
   userID = 'ladolcekita',
-}: Partial<FacebookPostBlock> = {}): FacebookPostBlock => ({
+}: Partial<FullFacebookPostBlockFragment> = {}): FullFacebookPostBlockFragment => ({
   type: BlockType.FacebookPost,
   __typename: 'FacebookPostBlock',
   blockStyle: null,
@@ -281,7 +280,7 @@ export const mockFacebookPostBlock = ({
 export const mockFacebookVideoBlock = ({
   userID = '100064959061177',
   videoID = '1310370486335266',
-}: Partial<FacebookVideoBlock> = {}): FacebookVideoBlock => ({
+}: Partial<FullFacebookVideoBlockFragment> = {}): FullFacebookVideoBlockFragment => ({
   type: BlockType.FacebookVideo,
   __typename: 'FacebookVideoBlock',
   blockStyle: null,
@@ -293,7 +292,7 @@ export const mockFacebookVideoBlock = ({
 
 export const mockInstagramPostBlock = ({
   postID = 'CvACOxxIqT2',
-}: Partial<InstagramPostBlock> = {}): InstagramPostBlock => ({
+}: Partial<FullInstagramPostBlockFragment> = {}): FullInstagramPostBlockFragment => ({
   type: BlockType.InstagramPost,
   __typename: 'InstagramPostBlock',
   blockStyle: null,
@@ -305,7 +304,7 @@ export const mockInstagramPostBlock = ({
 export const mockTikTokVideoBlock = ({
   userID = 'scout2015',
   videoID = '6718335390845095173',
-}: Partial<TikTokVideoBlock> = {}): TikTokVideoBlock => ({
+}: Partial<FullTikTokVideoBlockFragment> = {}): FullTikTokVideoBlockFragment => ({
   type: BlockType.TikTokVideo,
   __typename: 'TikTokVideoBlock',
   blockStyle: null,
@@ -317,7 +316,7 @@ export const mockTikTokVideoBlock = ({
 
 export const mockVimeoVideoBlock = ({
   videoID = '104626862',
-}: Partial<VimeoVideoBlock> = {}): VimeoVideoBlock => ({
+}: Partial<FullVimeoVideoBlockFragment> = {}): FullVimeoVideoBlockFragment => ({
   type: BlockType.VimeoVideo,
   __typename: 'VimeoVideoBlock',
   blockStyle: null,
@@ -328,7 +327,7 @@ export const mockVimeoVideoBlock = ({
 
 export const mockStreamableVideoBlock = ({
   videoID = 'abc123',
-}: Partial<StreamableVideoBlock> = {}): StreamableVideoBlock => ({
+}: Partial<FullStreamableVideoBlockFragment> = {}): FullStreamableVideoBlockFragment => ({
   type: BlockType.StreamableVideo,
   __typename: 'StreamableVideoBlock',
   blockStyle: null,
@@ -339,7 +338,7 @@ export const mockStreamableVideoBlock = ({
 
 export const mockYouTubeVideoBlock = ({
   videoID = 'CCOdQsZa15o',
-}: Partial<YouTubeVideoBlock> = {}): YouTubeVideoBlock => ({
+}: Partial<FullYouTubeVideoBlockFragment> = {}): FullYouTubeVideoBlockFragment => ({
   type: BlockType.YouTubeVideo,
   __typename: 'YouTubeVideoBlock',
   blockStyle: null,
@@ -350,7 +349,7 @@ export const mockYouTubeVideoBlock = ({
 
 export const mockSoundCloudTrackBlock = ({
   trackID = '744469711',
-}: Partial<SoundCloudTrackBlock> = {}): SoundCloudTrackBlock => ({
+}: Partial<FullSoundCloudTrackBlockFragment> = {}): FullSoundCloudTrackBlockFragment => ({
   type: BlockType.SoundCloudTrack,
   __typename: 'SoundCloudTrackBlock',
   blockStyle: null,
@@ -362,7 +361,7 @@ export const mockSoundCloudTrackBlock = ({
 export const mockTwitterTweetBlock = ({
   userID = 'WePublish_media',
   tweetID = '1600079498845863937',
-}: Partial<TwitterTweetBlock> = {}): TwitterTweetBlock => ({
+}: Partial<FullTwitterTweetBlockFragment> = {}): FullTwitterTweetBlockFragment => ({
   type: BlockType.TwitterTweet,
   __typename: 'TwitterTweetBlock',
   blockStyle: null,
@@ -374,7 +373,7 @@ export const mockTwitterTweetBlock = ({
 
 export const mockPolisConversationBlock = ({
   conversationID = '744469711',
-}: Partial<PolisConversationBlock> = {}): PolisConversationBlock => ({
+}: Partial<FullPolisConversationBlockFragment> = {}): FullPolisConversationBlockFragment => ({
   type: BlockType.PolisConversation,
   __typename: 'PolisConversationBlock',
   blockStyle: null,
@@ -390,7 +389,7 @@ export const mockIFrameBlock = ({
   height = 314,
   styleCustom = 'background: #aaa; padding: 50px;',
   sandbox = '',
-}: Partial<IFrameBlock> = {}): IFrameBlock => ({
+}: Partial<FullIFrameBlockFragment> = {}): FullIFrameBlockFragment => ({
   type: BlockType.Embed,
   __typename: 'IFrameBlock',
   blockStyle: null,
@@ -422,7 +421,7 @@ export const mockImageGalleryBlock = ({
       caption: 'Foobaz',
     },
   ],
-}: Partial<ImageGalleryBlock> = {}): ImageGalleryBlock => ({
+}: Partial<FullImageGalleryBlockFragment> = {}): FullImageGalleryBlockFragment => ({
   type: BlockType.ImageGallery,
   __typename: 'ImageGalleryBlock',
   blockStyle: null,
@@ -641,10 +640,9 @@ export const mockTeaserSlotsBlock = ({
 });
 
 export const mockFlexAlignment = (
-  props: Omit<FlexAlignment, 'static' | 'i'>
-): FlexAlignment => ({
+  props: Omit<FullFlexAlignmentFragment, 'static' | 'i'>
+): FullFlexAlignmentFragment => ({
   __typename: 'FlexAlignment',
-  static: false,
   i: nanoid(),
   ...props,
 });
@@ -722,7 +720,7 @@ export const mockSubscribeBlock = ({
   goodieMinValue = null,
   goodieMinValueAppliesToUpgrade = false,
   hideRepeatGoodieOnUpgrade = false,
-}: Partial<SubscribeBlock> = {}): SubscribeBlock => ({
+}: Partial<FullSubscribeBlockFragment> = {}): FullSubscribeBlockFragment => ({
   type: BlockType.Subscribe,
   __typename: 'SubscribeBlock',
   blockStyle: null,
@@ -741,7 +739,7 @@ export const mockSubscribeBlock = ({
 export type MockTabbedContent = (args?: {
   blockStyle?: string;
   blocks?: BlockWithAlignment[];
-}) => FlexBlock;
+}) => FullFlexBlockFragment;
 export const mockTabbedContentTeaserSlots: MockTabbedContent = ({
   blockStyle = 'TabbedContent',
   blocks = [
@@ -751,10 +749,10 @@ export const mockTabbedContentTeaserSlots: MockTabbedContent = ({
         w: 0,
         x: 0,
         y: 0,
-      }) as FlexAlignment,
+      }) as FullFlexAlignmentFragment,
       block: mockTeaserSlotsBlock({
         title: 'First Tab',
-      }) as Maybe<BlockContent> | undefined,
+      }) as Maybe<FullBlockFragment> | undefined,
     },
     {
       alignment: mockFlexAlignment({
@@ -762,10 +760,10 @@ export const mockTabbedContentTeaserSlots: MockTabbedContent = ({
         w: 0,
         x: 0,
         y: 0,
-      }) as FlexAlignment,
+      }) as FullFlexAlignmentFragment,
       block: mockTeaserSlotsBlock({
         title: 'Second Tab',
-      }) as Maybe<BlockContent> | undefined,
+      }) as Maybe<FullBlockFragment> | undefined,
     },
     {
       alignment: mockFlexAlignment({
@@ -773,10 +771,10 @@ export const mockTabbedContentTeaserSlots: MockTabbedContent = ({
         w: 0,
         x: 0,
         y: 0,
-      }) as FlexAlignment,
+      }) as FullFlexAlignmentFragment,
       block: mockTeaserSlotsBlock({
         title: 'Third Tab',
-      }) as Maybe<BlockContent> | undefined,
+      }) as Maybe<FullBlockFragment> | undefined,
     },
     {
       alignment: mockFlexAlignment({
@@ -784,10 +782,10 @@ export const mockTabbedContentTeaserSlots: MockTabbedContent = ({
         w: 0,
         x: 0,
         y: 0,
-      }) as FlexAlignment,
+      }) as FullFlexAlignmentFragment,
       block: mockTeaserSlotsBlock({
         title: 'Fourth Tab',
-      }) as Maybe<BlockContent> | undefined,
+      }) as Maybe<FullBlockFragment> | undefined,
     },
     {
       alignment: mockFlexAlignment({
@@ -795,10 +793,10 @@ export const mockTabbedContentTeaserSlots: MockTabbedContent = ({
         w: 0,
         x: 0,
         y: 0,
-      }) as FlexAlignment,
+      }) as FullFlexAlignmentFragment,
       block: mockTeaserSlotsBlock({
         title: 'Fifth Tab',
-      }) as Maybe<BlockContent> | undefined,
+      }) as Maybe<FullBlockFragment> | undefined,
     },
     {
       alignment: mockFlexAlignment({
@@ -806,13 +804,13 @@ export const mockTabbedContentTeaserSlots: MockTabbedContent = ({
         w: 0,
         x: 0,
         y: 0,
-      }) as FlexAlignment,
+      }) as FullFlexAlignmentFragment,
       block: mockTeaserSlotsBlock({
         title: 'Sixth Tab',
-      }) as Maybe<BlockContent> | undefined,
+      }) as Maybe<FullBlockFragment> | undefined,
     },
   ],
-}: Partial<FlexBlock> = {}): FlexBlock => ({
+}: Partial<FullFlexBlockFragment> = {}): FullFlexBlockFragment => ({
   blockStyle,
   blocks,
   type: BlockType.FlexBlock,

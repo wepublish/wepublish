@@ -5,7 +5,7 @@ import {
   isTeaserListBlock,
 } from '@wepublish/block-content/website';
 import {
-  BlockContent,
+  FullBlockFragment,
   FullTeaserGridBlockFragment,
   FullTeaserListBlockFragment,
 } from '@wepublish/website/api';
@@ -22,7 +22,7 @@ import {
 } from './teaser-overwrite.style';
 
 export const isSmallTeaser = (
-  block: Partial<Pick<BlockContent, '__typename'>>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is FullTeaserGridBlockFragment | FullTeaserListBlockFragment =>
   allPass([
     hasBlockStyle('Kleine Teaser'),

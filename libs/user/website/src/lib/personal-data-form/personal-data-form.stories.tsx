@@ -2,7 +2,7 @@ import { action } from 'storybook/actions';
 import { useArgs } from 'storybook/preview-api';
 import { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { userEvent, within } from 'storybook/test';
-import { User } from '@wepublish/website/api';
+import { FullUserFragment } from '@wepublish/website/api';
 import { ComponentProps } from 'react';
 import z from 'zod';
 import { PersonalDataForm } from './personal-data-form';
@@ -26,12 +26,12 @@ const mockUser = {
   paymentProviderCustomers: [],
   properties: [],
   permissions: [],
-} as User;
+} as FullUserFragment;
 
 const mockUserWithPendingEmail = {
   ...mockUser,
   pendingEmail: 'new-email@mail.com',
-} as User;
+} as FullUserFragment;
 
 const Render = () => {
   const [args, updateArgs] = useArgs();

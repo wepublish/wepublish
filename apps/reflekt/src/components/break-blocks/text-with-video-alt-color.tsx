@@ -9,7 +9,7 @@ import {
   isBreakBlock,
   RichTextBlockWrapper,
 } from '@wepublish/block-content/website';
-import { BlockContent } from '@wepublish/website/api';
+import { FullBlockFragment } from '@wepublish/website/api';
 import {
   BuilderBreakBlockProps,
   useWebsiteBuilder,
@@ -27,7 +27,7 @@ import {
 import { ReflektBlockStyles } from '../block-styles/reflekt-block-styles';
 
 export const isTextWithVideoAltColorBreakBlock = (
-  block: Partial<Pick<BlockContent, '__typename'>>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is BuilderBreakBlockProps =>
   allPass([
     isBreakBlock,

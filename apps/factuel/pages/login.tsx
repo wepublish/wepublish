@@ -7,7 +7,7 @@ import {
 } from '@wepublish/authentication/website';
 import { getApiUrl, handleJwtLogin } from '@wepublish/utils/website';
 import {
-  SessionWithTokenWithoutUser,
+  FullSessionWithTokenWithoutUserFragment,
   getApiClient,
 } from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
@@ -22,7 +22,7 @@ const LoginWrapper = styled('div')`
   justify-content: center;
 `;
 
-type LoginProps = { sessionToken?: SessionWithTokenWithoutUser };
+type LoginProps = { sessionToken?: FullSessionWithTokenWithoutUserFragment };
 
 export default function Login({ sessionToken }: LoginProps) {
   const { hasUser, setToken } = useUser();

@@ -10,7 +10,7 @@ import {
   isTeaserListBlock,
 } from '../../teaser/teaser-list-block';
 import {
-  BlockContent,
+  FullBlockFragment,
   FullTeaserListBlockFragment,
   FullTeaserSlotsBlockFragment,
 } from '@wepublish/website/api';
@@ -132,7 +132,7 @@ export const FocusTeaser = ({
 };
 
 export const isFocusTeaserBlockStyle = (
-  block: Partial<Pick<BlockContent, '__typename'>>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is FullTeaserListBlockFragment | FullTeaserSlotsBlockFragment =>
   allPass([
     hasBlockStyle('Focus'),

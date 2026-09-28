@@ -20,9 +20,9 @@ import {
   ArticleListDocument,
   CommentItemType,
   CommentListDocument,
+  FullTagFragment,
   NavigationListDocument,
   PeerProfileDocument,
-  Tag,
   addClientCacheToProps,
   getApiClient,
 } from '@wepublish/website/api';
@@ -255,7 +255,7 @@ const createArticleGetStaticProps =
           query: ArticleListDocument,
           variables: {
             filter: {
-              tags: articleData.tags.map((tag: Tag) => tag.id),
+              tags: articleData.tags.map((tag: FullTagFragment) => tag.id),
             },
             take: 4,
           },

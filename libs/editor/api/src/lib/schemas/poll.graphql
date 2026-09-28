@@ -102,6 +102,7 @@ mutation CreatePollAnswer($pollId: String!, $answer: String) {
     answer
     id
     pollId
+    votes
   }
 }
 

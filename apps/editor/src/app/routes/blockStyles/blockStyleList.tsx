@@ -1,11 +1,11 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
-  BlockStyle,
   BlockStylesDocument,
   CreateBlockStyleDocument,
   DeleteBlockStyleDocument,
   EditorBlockType,
+  FullBlockStyleFragment,
   UpdateBlockStyleDocument,
 } from '@wepublish/editor/api';
 import {
@@ -66,16 +66,19 @@ enum BlockStyleListActionType {
 }
 
 type BlockStyleListActions =
-  | { type: BlockStyleListActionType.Set; payload: Record<string, BlockStyle> }
-  | { type: BlockStyleListActionType.Create; payload: BlockStyle }
+  | {
+      type: BlockStyleListActionType.Set;
+      payload: Record<string, FullBlockStyleFragment>;
+    }
+  | { type: BlockStyleListActionType.Create; payload: FullBlockStyleFragment }
   | {
       type: BlockStyleListActionType.Update;
-      payload: BlockStyle;
+      payload: FullBlockStyleFragment;
     }
   | { type: BlockStyleListActionType.Delete; payload: { id: string } };
 
 const mapBlockStyleToFormValue = (
-  blockStyles: BlockStyle[] | null | undefined
+  blockStyles: FullBlockStyleFragment[] | null | undefined
 ) =>
   blockStyles?.reduce(
     (obj, node) => {
@@ -83,11 +86,11 @@ const mapBlockStyleToFormValue = (
 
       return obj;
     },
-    {} as Record<string, BlockStyle>
+    {} as Record<string, FullBlockStyleFragment>
   ) ?? {};
 
 const blockStyleFormValueReducer = (
-  state: Record<string, BlockStyle>,
+  state: Record<string, FullBlockStyleFragment>,
   action: BlockStyleListActions
 ): typeof state => {
   switch (action.type) {
