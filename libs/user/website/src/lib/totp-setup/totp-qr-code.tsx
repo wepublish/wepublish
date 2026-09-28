@@ -45,7 +45,10 @@ export function TotpQrCode({ uri }: { uri: string }) {
 
   return (
     <Wrapper>
-      <div ref={ref} />
+      <div
+        ref={ref}
+        data-sentry-block
+      />
     </Wrapper>
   );
 }

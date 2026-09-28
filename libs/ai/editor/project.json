@@ -5,6 +5,16 @@
   "projectType": "library",
   "tags": [],
   "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/ai/editor",
+        "tsConfig": "libs/ai/editor/tsconfig.lib.json",
+        "main": "libs/ai/editor/src/index.ts",
+        "rootDir": "."
+      }
+    },
     "lint": {
       "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"]

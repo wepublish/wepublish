@@ -19,6 +19,9 @@ export const unselectPassword: Record<
     | 'articleRevisions'
     | 'pageRevisions'
     | 'mailchimpSyncErrors'
+    | 'changelogConfirmations'
+    | 'notificationReads'
+    | 'notificationConfirmations'
   >,
   boolean
 > = {

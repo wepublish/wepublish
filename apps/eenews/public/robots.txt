@@ -3,4 +3,4 @@ User-agent: *
 Allow: /
 
 
-Sitemap: https://wepublish.ch/api/sitemap
+Sitemap: https://ee-news.ch/api/sitemap

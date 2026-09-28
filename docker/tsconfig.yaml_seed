@@ -3,7 +3,10 @@
   "files": [
       "api/prisma/run-seed.ts",
       "settings/api/src/lib/setting.ts",
-      "api/prisma/seed.ts"
+      "api/prisma/seed.ts",
+      "changelog/run-sync-changelogs.ts",
+      "changelog/sync-changelogs.ts",
+      "changelog/parse-changelog-markdown.ts"
       ],
   "compilerOptions": {
     "outDir": "./dist",

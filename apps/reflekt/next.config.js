@@ -145,6 +145,11 @@ const nextConfig = {
           '/a/zuercher-unternehmer-war-pokerchef-der-gluecksspielmafia',
         permanent: true,
       },
+      {
+        source: '/mitmachen',
+        destination: '/crowdfunding',
+        permanent: false,
+      },
     ];
   },
 };
@@ -156,5 +161,11 @@ const plugins = [
 ];
 
 module.exports = withSentryConfig(composePlugins(...plugins)(nextConfig), {
-  silent: true,
+  // `silent: true` suppresses info, warn AND error, so a failed sourcemap
+  // upload leaves no trace in the build log. Keep the plugin loud.
+  silent: false,
+  // Upload all client chunks, not just static/chunks/pages + static/chunks/app.
+  // Shared chunks hold most of our app code; framework/polyfills/webpack chunks
+  // stay excluded by the plugin's own ignore list.
+  widenClientFileUpload: true,
 });

@@ -2,6 +2,7 @@ import {
   ArgsType,
   Field,
   InputType,
+  Float,
   Int,
   ObjectType,
   OmitType,
@@ -96,7 +97,7 @@ export class PublicSubscription
   @Field(() => PaymentPeriodicity)
   paymentPeriodicity!: PaymentPeriodicity;
 
-  @Field(() => Int)
+  @Field(() => Float)
   monthlyAmount!: number;
 
   @Field(() => Boolean)
@@ -220,6 +221,8 @@ export class CancelPublicSubscriptionInput extends PickType(
 
 @InputType()
 export class SubscriptionFilter {
+  @Field(() => Date, { nullable: true })
+  activeAt?: Date;
   @Field(() => DateFilter, { nullable: true })
   startsAtFrom?: DateFilter;
   @Field(() => DateFilter, { nullable: true })

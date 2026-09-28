@@ -4,7 +4,7 @@ import {
   useMarkInvoiceAsPaidMutation,
   useMeQuery,
 } from '@wepublish/editor/api';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { LiaFileInvoiceSolid } from 'react-icons/lia';
 import { MdAccessTime, MdClose, MdContentCopy, MdDone } from 'react-icons/md';
@@ -24,6 +24,7 @@ import { RowDataType } from 'rsuite/esm/Table';
 
 import { createCheckedPermissionComponent } from '../atoms';
 import { ColumnConfigurator } from '../listView/column-configurator';
+import { ListColumn, renderListColumns } from '../listView/list-columns';
 import { useColumnConfig } from '../listView/use-column-config';
 
 const { Column, HeaderCell, Cell: RCell } = RTable;
@@ -80,16 +81,6 @@ const PanelHeader = styled('div')`
   gap: 8px;
 `;
 
-const CONFIG_COLUMNS = [
-  { id: 'id' },
-  { id: 'date', alwaysVisible: true },
-  { id: 'description', alwaysVisible: true },
-  { id: 'total', alwaysVisible: true },
-  { id: 'goodie' },
-  { id: 'status', alwaysVisible: true },
-  { id: 'action', alwaysVisible: true },
-] as const;
-
 export interface SubscriptionPeriodRef {
   invoiceID: string;
   startsAt: string;
@@ -135,9 +126,119 @@ function InvoiceListPanel({
   const [doNotSendMail, setDoNotSendMail] = useState(false);
   const offersMailOptOut =
     invoiceToPay ? shouldOfferMailOptOut(periods, invoiceToPay.id) : true;
-  const { isVisible, toggle } = useColumnConfig(
+  const columns = useMemo<ListColumn<InvoiceFragment>[]>(
+    () => [
+      {
+        id: 'id',
+        label: t('invoice.invoiceNo'),
+        width: 110,
+        render: invoice => (
+          <Whisper
+            placement="top"
+            trigger="hover"
+            speaker={<Tooltip>{invoice.id}</Tooltip>}
+          >
+            <IdButton
+              type="button"
+              onClick={() => {
+                navigator.clipboard.writeText(invoice.id);
+                toaster.push(
+                  <Notification
+                    type="success"
+                    header={t('invoice.table.idCopied')}
+                    duration={2000}
+                  />,
+                  { placement: 'topEnd' }
+                );
+              }}
+            >
+              {invoice.id.slice(0, 4)}…
+              <MdContentCopy />
+            </IdButton>
+          </Whisper>
+        ),
+      },
+      {
+        id: 'date',
+        label: t('invoice.table.date'),
+        width: 100,
+        alwaysVisible: true,
+        render: invoice => formatDate(invoice.createdAt),
+      },
+      {
+        id: 'description',
+        label: t('invoice.table.description'),
+        flexGrow: 1,
+        minWidth: 160,
+        resizable: false,
+        alwaysVisible: true,
+        render: invoice => invoice.description,
+      },
+      {
+        id: 'total',
+        label: t('invoice.total'),
+        width: 110,
+        alwaysVisible: true,
+        render: invoice =>
+          `${(invoice.total / 100).toFixed(2)} ${invoice.currency}`,
+      },
+      {
+        id: 'goodie',
+        label: t('invoice.table.goodie'),
+        width: 140,
+        render: invoice => {
+          const goodieItem = findGoodieItem(invoice);
+
+          return goodieItem?.goodie?.name ?? goodieItem?.name ?? '—';
+        },
+      },
+      {
+        id: 'status',
+        label: t('invoice.table.status'),
+        width: 80,
+        alwaysVisible: true,
+        render: invoice => {
+          const status =
+            invoice.paidAt ?
+              {
+                title: `${t('invoice.paidAt')} ${formatDate(invoice.paidAt)}`,
+                color: '#22c55e',
+                icon: <MdDone />,
+              }
+            : invoice.canceledAt ?
+              {
+                title: `${t('invoice.canceledAt')} ${formatDate(invoice.canceledAt)}`,
+                color: '#ef4444',
+                icon: <MdClose />,
+              }
+            : {
+                title: t('invoice.unpaid'),
+                color: '#eab308',
+                icon: <MdAccessTime />,
+              };
+
+          return (
+            <Whisper
+              placement="top"
+              trigger="hover"
+              speaker={<Tooltip>{status.title}</Tooltip>}
+            >
+              <InvoiceIconWrapper>
+                <InvoiceIcon />
+
+                <StatusPill pillColor={status.color}>{status.icon}</StatusPill>
+              </InvoiceIconWrapper>
+            </Whisper>
+          );
+        },
+      },
+    ],
+    [t]
+  );
+
+  const { isVisible, toggle, configurableColumns } = useColumnConfig(
     'subscription-invoices',
-    CONFIG_COLUMNS
+    columns
   );
 
   const [markInvoiceAsPaid] = useMarkInvoiceAsPaidMutation();
@@ -178,10 +279,7 @@ function InvoiceListPanel({
       {t('invoice.panel.invoiceHistory')}
 
       <ColumnConfigurator
-        columns={[
-          { id: 'id', label: t('invoice.invoiceNo') },
-          { id: 'goodie', label: t('invoice.table.goodie') },
-        ]}
+        columns={configurableColumns}
         isVisible={isVisible}
         onToggle={toggle}
       />
@@ -222,134 +320,7 @@ function InvoiceListPanel({
         wordWrap="break-word"
         data={invoices}
       >
-        {isVisible('id') && (
-          <Column
-            width={110}
-            resizable
-          >
-            <HeaderCell>{t('invoice.invoiceNo')}</HeaderCell>
-            <RCell>
-              {(rowData: RowDataType<InvoiceFragment>) => (
-                <Whisper
-                  placement="top"
-                  trigger="hover"
-                  speaker={<Tooltip>{rowData.id}</Tooltip>}
-                >
-                  <IdButton
-                    type="button"
-                    onClick={() => {
-                      navigator.clipboard.writeText(rowData.id);
-                      toaster.push(
-                        <Notification
-                          type="success"
-                          header={t('invoice.table.idCopied')}
-                          duration={2000}
-                        />,
-                        { placement: 'topEnd' }
-                      );
-                    }}
-                  >
-                    {rowData.id.slice(0, 4)}…
-                    <MdContentCopy />
-                  </IdButton>
-                </Whisper>
-              )}
-            </RCell>
-          </Column>
-        )}
-
-        <Column
-          width={100}
-          resizable
-        >
-          <HeaderCell>{t('invoice.table.date')}</HeaderCell>
-          <RCell>
-            {(rowData: RowDataType<InvoiceFragment>) =>
-              formatDate(rowData.createdAt)
-            }
-          </RCell>
-        </Column>
-
-        <Column
-          flexGrow={1}
-          minWidth={160}
-        >
-          <HeaderCell>{t('invoice.table.description')}</HeaderCell>
-          <RCell dataKey="description" />
-        </Column>
-
-        <Column
-          width={110}
-          resizable
-        >
-          <HeaderCell>{t('invoice.total')}</HeaderCell>
-          <RCell>
-            {(rowData: RowDataType<InvoiceFragment>) =>
-              `${(rowData.total / 100).toFixed(2)} ${rowData.currency}`
-            }
-          </RCell>
-        </Column>
-
-        {isVisible('goodie') && (
-          <Column
-            width={140}
-            resizable
-          >
-            <HeaderCell>{t('invoice.table.goodie')}</HeaderCell>
-            <RCell>
-              {(rowData: RowDataType<InvoiceFragment>) => {
-                const goodieItem = findGoodieItem(rowData as InvoiceFragment);
-
-                return goodieItem?.goodie?.name ?? goodieItem?.name ?? '—';
-              }}
-            </RCell>
-          </Column>
-        )}
-
-        <Column
-          width={80}
-          resizable
-        >
-          <HeaderCell>{t('invoice.table.status')}</HeaderCell>
-          <RCell>
-            {(rowData: RowDataType<InvoiceFragment>) => {
-              const status =
-                rowData.paidAt ?
-                  {
-                    title: `${t('invoice.paidAt')} ${formatDate(rowData.paidAt)}`,
-                    color: '#22c55e',
-                    icon: <MdDone />,
-                  }
-                : rowData.canceledAt ?
-                  {
-                    title: `${t('invoice.canceledAt')} ${formatDate(rowData.canceledAt)}`,
-                    color: '#ef4444',
-                    icon: <MdClose />,
-                  }
-                : {
-                    title: t('invoice.unpaid'),
-                    color: '#eab308',
-                    icon: <MdAccessTime />,
-                  };
-
-              return (
-                <Whisper
-                  placement="top"
-                  trigger="hover"
-                  speaker={<Tooltip>{status.title}</Tooltip>}
-                >
-                  <InvoiceIconWrapper>
-                    <InvoiceIcon />
-
-                    <StatusPill pillColor={status.color}>
-                      {status.icon}
-                    </StatusPill>
-                  </InvoiceIconWrapper>
-                </Whisper>
-              );
-            }}
-          </RCell>
-        </Column>
+        {renderListColumns(columns, isVisible)}
 
         <Column width={160}>
           <HeaderCell>{t('invoice.table.action')}</HeaderCell>

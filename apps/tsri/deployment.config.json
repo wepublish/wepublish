@@ -21,8 +21,7 @@
       "deployment": true,
       "env": {
         "MAILCHIMP_SERVER_PREFIX": "us9"
-      },
-      "secret_env": ["MAILCHIMP_API_KEY"]
+      }
     }
   }
 }

@@ -61,9 +61,12 @@ type ArticleCreatedAction implements BaseAction & HasArticleLc {
 }
 
 input ArticleFilter {
+  """Only include articles that have every one of these tags"""
+  allTagsIn: [String!]
   authors: [String!]
   body: String
   draft: Boolean
+  excludeHideAuthor: Boolean
   excludeIds: [String!]
   ids: [String!]
   includeHidden: Boolean
@@ -92,7 +95,7 @@ type ArticleNavigationLink implements BaseNavigationLink & HasArticle {
 
 type ArticleRevision implements HasBlockContent & HasOptionalUserLc {
   archivedAt: DateTime
-  authors: [Author!]!
+  authors: [ArticleRevisionAuthor!]!
   blocks: [BlockContent!]!
   breaking: Boolean!
   canonicalUrl: String
@@ -105,6 +108,7 @@ type ArticleRevision implements HasBlockContent & HasOptionalUserLc {
   preTitle: String
   properties: [Property!]!
   publishedAt: DateTime
+  seoDescription: String
   seoTitle: String
   socialMediaAuthors: [Author!]!
   socialMediaDescription: String
@@ -114,6 +118,16 @@ type ArticleRevision implements HasBlockContent & HasOptionalUserLc {
   title: String
   user: User
   userId: String
+}
+
+type ArticleRevisionAuthor {
+  author: Author!
+  role: String
+}
+
+input ArticleRevisionAuthorInput {
+  authorId: String!
+  role: String
 }
 
 input ArticleRevisionFilter {
@@ -143,6 +157,61 @@ input ArticleTeaserInput {
   lead: String
   preTitle: String
   title: String
+}
+
+type AuditLog {
+  action: AuditLogAction!
+  actorType: AuditLogActorType!
+  createdAt: DateTime!
+  entity: String
+  errorMessage: String
+  id: String!
+  impersonatedBy: String
+  mutation: String!
+  recordId: String
+  sessionId: String
+  success: Boolean!
+  tokenName: String
+  userEmail: String
+  userId: String
+}
+
+enum AuditLogAction {
+  create
+  delete
+  other
+  update
+}
+
+enum AuditLogActorType {
+  token
+  user
+}
+
+input AuditLogFilter {
+  actions: [AuditLogAction!]
+  actorType: AuditLogActorType
+  entity: String
+  from: DateTime
+
+  """Only entries where the actor was impersonating another user."""
+  impersonatedOnly: Boolean
+  mutation: String
+  recordId: String
+
+  """
+  Case insensitive search across mutation, entity, record id, user email and token name.
+  """
+  search: String
+  sessionId: String
+  success: Boolean
+  to: DateTime
+  userEmail: String
+  userId: String
+}
+
+enum AuditLogSort {
+  CreatedAt
 }
 
 type Author implements HasImage & HasOptionalPeerLc {
@@ -318,7 +387,7 @@ input BildwurfAdBlockInput {
   zoneID: String
 }
 
-union BlockContent = BildwurfAdBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | FlexBlock | HTMLBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | StreamableVideoBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock
+union BlockContent = BildwurfAdBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | FlexBlock | HTMLBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | MailchimpFormBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | StreamableVideoBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock
 
 input BlockContentInput {
   bildwurfAd: BildwurfAdBlockInput
@@ -335,6 +404,7 @@ input BlockContentInput {
   instagramPost: InstagramPostBlockInput
   linkPageBreak: BreakBlockInput
   listicle: ListicleBlockInput
+  mailchimpForm: MailchimpFormBlockInput
   polisConversation: PolisConversationBlockInput
   poll: PollBlockInput
   quote: QuoteBlockInput
@@ -376,6 +446,7 @@ enum BlockType {
   InstagramPost
   LinkPageBreak
   Listicle
+  MailchimpForm
   PolisConversation
   Poll
   Quote
@@ -459,6 +530,25 @@ input ChallengeInput {
 enum ChallengeProviderType {
   HCAPTCHA
   TURNSTILE
+}
+
+type ChangelogEntry {
+  actionRequired: Boolean!
+  confirmedAt: DateTime
+  confirmedByUserId: String
+  createdAt: DateTime!
+  description: String
+  id: String!
+  lead: String!
+  modifiedAt: DateTime!
+  name: String!
+  releasedAt: DateTime!
+  title: String!
+}
+
+input ChangelogEntryFilter {
+  actionRequired: Boolean
+  confirmed: Boolean
 }
 
 type Chat {
@@ -812,7 +902,7 @@ type DashboardSubscription {
   deactivationDate: DateTime
   endsAt: DateTime
   memberPlan: String!
-  monthlyAmount: Int!
+  monthlyAmount: Float!
   paymentPeriodicity: PaymentPeriodicity!
   reasonForDeactivation: SubscriptionDeactivationReason
   renewsAt: DateTime
@@ -854,6 +944,12 @@ type DiscountCode implements HasMemberPlanLc {
   memberPlan: MemberPlan!
   memberPlanId: String!
   modifiedAt: DateTime!
+
+  """Number of redemptions of this discountCode on paid invoices."""
+  paidUsageCount: Int!
+
+  """Number of times this discountCode was redeemed."""
+  usageCount: Int!
   validFrom: DateTime!
   validTo: DateTime!
 }
@@ -910,6 +1006,7 @@ enum EditorBlockType {
   ImageGallery
   LinkPageBreak
   Listicle
+  MailchimpForm
   Poll
   Quote
   RichText
@@ -1480,6 +1577,32 @@ input ImageTransformation {
   width: Int
 }
 
+type ImpersonationGrantResult {
+  durationMinutes: Int!
+  email: String!
+  expiresAt: DateTime!
+  token: String!
+}
+
+type ImpersonationSessionInfo {
+  createdAt: DateTime!
+  expiresAt: DateTime!
+  id: String!
+  impersonatedBy: String
+  impersonationReason: String
+  userEmail: String!
+  userId: String!
+  userName: String
+}
+
+type ImpersonationUser {
+  active: Boolean!
+  email: String!
+  id: String!
+  name: String
+  roles: [String!]!
+}
+
 input ImportArticleOptions {
   importAuthors: Boolean
   importContentImages: Boolean
@@ -1543,6 +1666,7 @@ type InvoiceConnection {
 
 input InvoiceFilter {
   canceledAt: DateFilter
+  discountCodeId: String
   mail: String
   paidAt: DateFilter
   subscriptionID: String
@@ -1646,10 +1770,45 @@ input MailAudienceInput {
   """
   endedWithinDays: Int
 
+  """
+  Subscribers audience only: only subscriptions whose effective end (cancellation date, else paidUntil) is on or after this date.
+  """
+  endsAtFrom: DateTime
+
+  """
+  Subscribers audience only: only subscriptions whose effective end (cancellation date, else paidUntil) is on or before this date.
+  """
+  endsAtTo: DateTime
+
+  """
+  Subscribers audience only: true keeps only subscriptions that replaced another one (typically an upgrade, but downgrades and lateral plan switches are included too, and manual or imported changes are not detected).
+  """
+  hasReplacedSubscription: Boolean
+
+  """
+  Subscribers audience only: true keeps only subscriptions that have given notice, including cancellations that only take effect in the future; false keeps the rest.
+  """
+  isCanceled: Boolean
+
+  """
+  Subscribers audience only: true keeps only subscriptions that are currently paid up (started and paidUntil in the future); false keeps the rest. Grace periods are not considered.
+  """
+  isPaid: Boolean
+
   """Restrict to subscriptions of these member plans."""
   memberPlanIDs: [String!]
   paymentMethodID: String
   paymentPeriodicity: PaymentPeriodicity
+
+  """
+  Subscribers audience only: only subscriptions that started on or after this date.
+  """
+  startsAtFrom: DateTime
+
+  """
+  Subscribers audience only: only subscriptions that started on or before this date.
+  """
+  startsAtTo: DateTime
   subscriptionState: MailSubscriptionState
 }
 
@@ -1916,6 +2075,131 @@ type MailTemplateSubscriptionOption {
   label: String!
 }
 
+input MailchimpContactInput {
+  email: String!
+  interests: JSONObject
+  listId: String!
+  mergeFields: JSONObject
+  status: MailchimpContactStatus!
+  syncProviderId: String!
+}
+
+enum MailchimpContactStatus {
+  Pending
+  Subscribed
+}
+
+type MailchimpFormBlock implements BaseBlock {
+  autoFocus: Boolean!
+  blockStyle: String
+  blockStyleName: String
+  buttonColor: String
+  buttonFontColor: String
+  disabled: Boolean
+  doubleOptIn: Boolean
+  interests: [String!]!
+  listId: String
+  steps: [MailchimpFormStep!]!
+  submitButtonLabel: String
+  successPage: MailchimpFormSuccessPage
+  successUrl: String
+  syncProviderId: String
+  type: BlockType!
+}
+
+input MailchimpFormBlockInput {
+  autoFocus: Boolean! = true
+  blockStyle: String
+  blockStyleName: String
+  buttonColor: String
+  buttonFontColor: String
+  disabled: Boolean
+  doubleOptIn: Boolean
+  interests: [String!]! = []
+  listId: String
+  steps: [MailchimpFormStepInput!]! = []
+  submitButtonLabel: String
+  successPage: MailchimpFormSuccessPageInput
+  successUrl: String
+  syncProviderId: String
+}
+
+type MailchimpFormFieldConfig {
+  defaultValue: String
+  description: String
+  inputType: String
+  label: String
+  name: String
+  options: [MailchimpFormInterestOption!]!
+  required: Boolean
+  urlParam: String
+  value: String
+}
+
+input MailchimpFormFieldConfigInput {
+  defaultValue: String
+  description: String
+  inputType: String
+  label: String
+  name: String
+  options: [MailchimpFormInterestOptionInput!]! = []
+  required: Boolean
+  urlParam: String
+  value: String
+}
+
+type MailchimpFormInterestOption {
+  description: String
+  id: String!
+  name: String!
+}
+
+input MailchimpFormInterestOptionInput {
+  description: String
+  id: String!
+  name: String!
+}
+
+type MailchimpFormStep {
+  inputs: [MailchimpFormFieldConfig!]!
+  showIfInterestsFilled: [String!]!
+  skipIfFieldsFilled: [String!]!
+  skipIfInterestsFilled: [String!]!
+}
+
+input MailchimpFormStepInput {
+  inputs: [MailchimpFormFieldConfigInput!]! = []
+  showIfInterestsFilled: [String!]! = []
+  skipIfFieldsFilled: [String!]! = []
+  skipIfInterestsFilled: [String!]! = []
+}
+
+type MailchimpFormSuccessOption {
+  background: String!
+  label: String!
+  mergeFieldName: String
+  mergeFieldValue: String
+  url: String!
+}
+
+input MailchimpFormSuccessOptionInput {
+  background: String!
+  label: String!
+  mergeFieldName: String
+  mergeFieldValue: String
+  url: String!
+}
+
+type MailchimpFormSuccessPage {
+  description: String
+  options: [MailchimpFormSuccessOption!]!
+}
+
+input MailchimpFormSuccessPageInput {
+  description: String
+  options: [MailchimpFormSuccessOptionInput!]! = []
+}
+
 type MailchimpInterestGroup {
   id: String!
   name: String!
@@ -1931,6 +2215,11 @@ type MailchimpMergeField {
   name: String!
   tag: String!
   type: String!
+}
+
+type MailchimpSubscribeResult {
+  error: String
+  success: Boolean!
 }
 
 type MailchimpSyncDryRunChange {
@@ -1976,15 +2265,282 @@ type MailchimpSyncProgressType {
   updated: Int!
 }
 
+type MediumAccountStats {
+  activeSessions: Int!
+  adminCount: Int!
+  usersLoggedIn: Int!
+  usersTotal: Int!
+  usersWithRole: Int!
+}
+
+type MediumAuditActionCount {
+  """create, update, delete or other."""
+  action: String!
+  count: Int!
+}
+
+type MediumAuditError {
+  count: Int!
+
+  """First line of the error, capped — enough to recognise it."""
+  message: String!
+}
+
+type MediumAuditLog {
+  action: AuditLogAction!
+  actorType: AuditLogActorType!
+  createdAt: DateTime!
+  entity: String
+  errorMessage: String
+  id: String!
+
+  """Set when the actor was impersonating another user."""
+  impersonatedBy: String
+  mutation: String!
+  recordId: String
+  sessionId: String
+  success: Boolean!
+  tokenName: String
+  userEmail: String
+  userId: String
+}
+
+input MediumAuditLogFilter {
+  actions: [AuditLogAction!]
+  actorType: AuditLogActorType
+  entity: String
+  from: DateTime
+  impersonatedOnly: Boolean
+  mutation: String
+  recordId: String
+
+  """
+  Case insensitive search across mutation, entity, record id, user email and token name.
+  """
+  search: String
+
+  """Everything a single login session did."""
+  sessionId: String
+  success: Boolean
+  to: DateTime
+  userEmail: String
+  userId: String
+}
+
+type MediumAuditLogPage {
+  nodes: [MediumAuditLog!]!
+
+  """
+  False when this medium does not provide an audit log, in which case nodes is empty and totalCount is zero.
+  """
+  supported: Boolean!
+  totalCount: Int!
+}
+
+type MediumAuditStats {
+  """Permission gated editor actions in the window."""
+  actions: Int!
+
+  """How the actions split across create, update and delete."""
+  actionsByType: [MediumAuditActionCount!]!
+
+  """
+  Accounts that performed at least one action in the 30 days ending with the window. Deliberately NOT the window itself: a one-day window would drop to zero every weekend and the curve would be unreadable.
+  """
+  activeEditors: Int!
+
+  """
+  Of those, the ones the system refused. A rate worth acting on needs both numbers, so they travel together.
+  """
+  failedActions: Int!
+
+  """Actions performed while impersonating another account."""
+  impersonatedActions: Int!
+
+  """
+  How often each mutation was used in the window, most used first. Shows whether a shipped feature is actually being touched.
+  """
+  mutationUsage: [MediumMutationUsage!]!
+
+  """
+  False when this installation keeps no audit log, in which case every figure below is zero and must not be read as "nothing happened".
+  """
+  supported: Boolean!
+
+  """
+  Share of all named-account actions performed by the single busiest account. Five editors where one does 90 % looks identical to five balanced ones in activeEditors alone — this is what tells them apart. Null when nobody acted.
+  """
+  topEditorShare: Float
+
+  """
+  The errors editors ran into most often, worst first. Without this the error rate says something is wrong but never what, and the answer sits one filtered page away.
+  """
+  topErrors: [MediumAuditError!]!
+}
+
+type MediumChangelogAction {
+  """
+  False for a purely informative entry, which is never counted as open or overdue.
+  """
+  actionRequired: Boolean!
+
+  """Null while the action is still open."""
+  confirmedAt: DateTime
+  confirmedByEmail: String
+  confirmedByName: String
+  id: String!
+  name: String!
+  releasedAt: DateTime!
+  title: String!
+}
+
+type MediumChangelogStats {
+  """
+  Release date of the longest-open action-required entry, or null when none is open.
+  """
+  oldestOpenActionAt: DateTime
+
+  """
+  Action-required entries that nobody has confirmed yet. Informative entries are excluded.
+  """
+  openActions: Int!
+}
+
+type MediumCommunityStats {
+  activePolls: Int!
+  commentsPendingModeration: Int!
+  commentsPublished: Int!
+  pollVotes: Int!
+}
+
+type MediumDeactivationReasonCount {
+  count: Int!
+  reason: String!
+}
+
+type MediumEditorialStats {
+  articleRevisionsCount: Int!
+  articlesCount: Int!
+  articlesPublished: Int!
+  authorsCount: Int!
+  lastPublishedAt: DateTime
+  pageRevisionsCount: Int!
+  pagesCount: Int!
+  pagesPublished: Int!
+}
+
+type MediumIntegrationsStats {
+  analyticsProviders: Int!
+  mailProviders: Int!
+  paymentProviders: Int!
+  syncProviders: Int!
+}
+
+type MediumMailStats {
+  bounced: Int!
+  failures: Int!
+  lastCampaignAt: DateTime
+  rejected: Int!
+  sends: Int!
+  total: Int!
+}
+
+type MediumMembershipStats {
+  activeSubscribers: Int!
+  deactivations: Int!
+  deactivationsByReason: [MediumDeactivationReasonCount!]!
+  newSubscribers: Int!
+}
+
+type MediumMigration {
+  appliedStepsCount: Int!
+  error: String
+  finishedAt: DateTime
+  id: String!
+  name: String!
+  rolledBackAt: DateTime
+  startedAt: DateTime!
+
+  """applied, failed, rolledBack or running"""
+  state: String!
+}
+
+type MediumMigrationSummary {
+  applied: Int!
+  failed: Int!
+  lastAppliedAt: DateTime
+
+  """
+  The newest migration did not complete. The schema is then in a state nobody designed.
+  """
+  lastMigrationFailed: Boolean!
+  lastMigrationName: String
+  lastMigrationState: String
+  rolledBack: Int!
+  running: Int!
+  total: Int!
+}
+
+type MediumMoneyStats {
+  atRisk: Int!
+  expectedRevenue: Int!
+  revenue: Int!
+}
+
+type MediumMutationUsage {
+  count: Int!
+  mutation: String!
+}
+
+type MediumNetworkStats {
+  peersDisabled: Int!
+  peersTotal: Int!
+}
+
+type MediumOperationsStats {
+  changelog: MediumChangelogStats!
+  documentBytes: Float!
+  documentCount: Int!
+  imageBytes: Float!
+  imageCount: Int!
+  lastPeriodicJobAt: DateTime
+  mailchimpSyncErrors: Int!
+  migrations: MediumMigrationSummary!
+  periodicJobError: String
+  periodicJobFailing: Boolean!
+  periodicJobTries: Int!
+  storageBytes: Float!
+}
+
+type MediumStats {
+  accounts: MediumAccountStats!
+  audit: MediumAuditStats!
+  community: MediumCommunityStats!
+  currency: String
+  editorial: MediumEditorialStats!
+  generatedAt: DateTime!
+  integrations: MediumIntegrationsStats!
+  mail: MediumMailStats!
+  membership: MediumMembershipStats!
+  money: MediumMoneyStats!
+  network: MediumNetworkStats!
+  operations: MediumOperationsStats!
+  schemaVersion: Int!
+  window: MediumStatsWindow!
+}
+
+type MediumStatsWindow {
+  from: DateTime!
+  to: DateTime!
+}
+
 type MemberPlan implements HasImage {
   active: Boolean!
-  amountPerMonthMax: Int
-  amountPerMonthMin: Int!
-  amountPerMonthTarget: Int
   availablePaymentMethods: [AvailablePaymentMethod!]!
   confirmationPage: Page
   confirmationPageId: String
   currency: Currency!
+  defaultPaymentPeriodicity: PaymentPeriodicity
   description: RichText
   extendable: Boolean!
   externalReward: String
@@ -2002,6 +2558,7 @@ type MemberPlan implements HasImage {
   migrateToTargetPaymentMethod: PaymentMethod
   migrateToTargetPaymentMethodID: String
   name: String!
+  periodicityPricing: [PeriodicityPrice!]!
   productType: ProductType!
   shortDescription: RichText
   slug: String!
@@ -2023,6 +2580,9 @@ enum MemberPlanSort {
 }
 
 type Mutation {
+  """Subscribes a contact to a Mailchimp list."""
+  addMailchimpContact(input: MailchimpContactInput!): MailchimpSubscribeResult!
+
   """Adds a new comment made by you."""
   addUserComment(challenge: ChallengeInput, guestUsername: String, itemID: String!, itemType: CommentItemType!, parentID: String, text: RichText!, title: String): Comment!
 
@@ -2050,11 +2610,21 @@ type Mutation {
   """
   cancelUserSubscription(id: String!): PublicSubscription
 
+  """
+  Confirms that the manual action required by a changelog entry has been completed. Requires the permission to update settings.
+  """
+  confirmChangelogEntry(id: String!, locale: String): ChangelogEntry!
+
   """Confirms a pending email change for the logged-in user."""
   confirmEmailChange(newEmail: String!): SensitiveDataUser!
 
+  """
+  Confirms a notification for the whole instance, recording who confirmed it. Requires authentication.
+  """
+  confirmNotification(itemId: String!, source: NotificationSource!): NotificationConfirmation!
+
   """Creates an article."""
-  createArticle(authorIds: [String!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, imageID: String, lead: String, likes: Int, paywallId: String, preTitle: String, properties: [PropertyInput!]!, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
+  createArticle(authors: [ArticleRevisionAuthorInput!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, imageID: String, lead: String, likes: Int, paywallId: String, preTitle: String, properties: [PropertyInput!]!, seoDescription: String, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
 
   """Creates a new author."""
   createAuthor(bio: RichText, hideOnArticle: Boolean!, hideOnTeam: Boolean!, hideOnTeaser: Boolean!, imageID: String, jobTitle: String, links: [AuthorLinkInput!]!, name: String!, slug: Slug!, tagIds: [String!]!): Author!
@@ -2064,7 +2634,7 @@ type Mutation {
   createBlockStyle(blocks: [EditorBlockType!]!, name: String!): BlockStyle!
 
   """Creates a comment for any user"""
-  createComment(itemID: String!, itemType: CommentItemType!, lead: String, parentID: String, tagIds: [String!], text: RichText): Comment!
+  createComment(itemID: String!, itemType: CommentItemType!, lead: String, parentID: String, publish: Boolean = false, tagIds: [String!], text: RichText): Comment!
 
   "\n      Create a new consent.\n    "
   createConsent(defaultValue: Boolean!, name: String!, slug: String!): Consent!
@@ -2088,12 +2658,10 @@ type Mutation {
 
   """Creates a new goodie."""
   createGoodie(active: Boolean!, description: RichText, imageID: String, memberPlanIDs: [String!]!, name: String!, stock: Int): Goodie!
+  createImpersonationGrant(durationMinutes: Int!, impersonatedBy: String!, reason: String!, userId: String!): ImpersonationGrantResult!
 
   """Creates a new invoice."""
   createInvoice(currency: Currency!, description: String, dueAt: DateTime!, items: [InvoiceItemInput!]!, mail: String!, manuallySetAsPaidByUserId: String, scheduledDeactivationAt: DateTime!, subscriptionID: String): Invoice!
-
-  """Returns a JWT that can be used to login as another user."""
-  createJWTForUser(expiresInMinutes: Float!, userId: String!): SessionWithToken!
 
   """Returns a JWT that is valid for 1min for the current logged in user."""
   createJWTForWebsiteLogin: SessionWithToken!
@@ -2105,13 +2673,13 @@ type Mutation {
   createMailTemplate(input: MailTemplateInput!): MailTemplateModel!
 
   """Creates a new memberplan."""
-  createMemberPlan(active: Boolean!, amountPerMonthMax: Int, amountPerMonthMin: Int!, amountPerMonthTarget: Int, availablePaymentMethods: [AvailablePaymentMethodInput!]!, confirmationPageId: String, currency: Currency!, description: RichText, extendable: Boolean!, externalReward: String, failPageId: String, imageID: String, maxCount: Int, migrateToTargetPaymentMethodID: String, name: String!, productType: ProductType!, shortDescription: RichText, slug: String!, successPageId: String, tags: [String!]): MemberPlan!
+  createMemberPlan(active: Boolean!, availablePaymentMethods: [AvailablePaymentMethodInput!]!, confirmationPageId: String, currency: Currency!, defaultPaymentPeriodicity: PaymentPeriodicity, description: RichText, extendable: Boolean!, externalReward: String, failPageId: String, imageID: String, maxCount: Int, migrateToTargetPaymentMethodID: String, name: String!, periodicityPricing: [PeriodicityPriceInput!], productType: ProductType!, shortDescription: RichText, slug: String!, successPageId: String, tags: [String!]): MemberPlan!
 
   """Creates a new navigation."""
   createNavigation(key: String!, links: [NavigationLinkInput!]!, name: String!): Navigation!
 
   """Creates an page."""
-  createPage(blocks: [BlockContentInput!]!, description: String, hidden: Boolean!, imageID: String, properties: [PropertyInput!]!, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
+  createPage(blocks: [BlockContentInput!]!, description: String, hidden: Boolean!, imageID: String, properties: [PropertyInput!]!, seoDescription: String, seoTitle: String, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
 
   """
   This mutation allows to create payment by taking an input of type PaymentFromInvoiceInput.
@@ -2145,7 +2713,7 @@ type Mutation {
   createSessionWithJWT(jwt: String!, totpToken: String): SessionWithToken!
 
   """Creates a new subscription."""
-  createSubscription(autoRenew: Boolean!, extendable: Boolean!, memberPlanID: String!, monthlyAmount: Int!, paidUntil: DateTime, paymentMethodID: String!, paymentPeriodicity: PaymentPeriodicity!, properties: [PropertyInput!]!, startsAt: DateTime!, userID: String!): PublicSubscription!
+  createSubscription(autoRenew: Boolean!, extendable: Boolean!, memberPlanID: String!, monthlyAmount: Float!, paidUntil: DateTime, paymentMethodID: String!, paymentPeriodicity: PaymentPeriodicity!, properties: [PropertyInput!]!, startsAt: DateTime!, userID: String!): PublicSubscription!
 
   """Create a new subscription flow"""
   createSubscriptionFlow(autoRenewal: [Boolean!]!, memberPlanId: String!, paymentMethodIds: [String!]!, periodicities: [PaymentPeriodicity!]!): [SubscriptionFlowModel!]!
@@ -2189,12 +2757,12 @@ type Mutation {
   createUserRole(description: String, name: String!, permissionIDs: [String!]!): UserRole!
 
   """Allows authenticated users to create additional subscriptions"""
-  createUserSubscription(autoRenew: Boolean!, deactivateSubscriptionId: String, discountCode: String, failureURL: String, goodieId: String, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Int!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], successURL: String): Payment!
+  createUserSubscription(autoRenew: Boolean!, deactivateSubscriptionId: String, discountCode: String, failureURL: String, goodieId: String, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Float!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], successURL: String): Payment!
 
   """
   Allows guests and authenticated users to create additional subscriptions
   """
-  createUserSubscriptionWithConfirmation(autoRenew: Boolean!, discountCode: String, goodieId: String, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Int!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], userId: String): Boolean!
+  createUserSubscriptionWithConfirmation(autoRenew: Boolean!, discountCode: String, goodieId: String, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Float!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], userId: String): Boolean!
 
   """Deletes all sync errors for a config so all contacts will be retried."""
   deleteAllMailchimpSyncErrors(configId: String!): Boolean!
@@ -2356,7 +2924,7 @@ type Mutation {
     autoRenew: Boolean!
     extendable: Boolean!
     memberPlanID: String!
-    monthlyAmount: Int!
+    monthlyAmount: Float!
     paidUntil: DateTime
     paymentMethodID: String!
     paymentPeriodicity: PaymentPeriodicity!
@@ -2375,6 +2943,11 @@ type Mutation {
 
   """Marks an invoice as paid."""
   markInvoiceAsPaid(id: String!, sendMail: Boolean! = true): Invoice!
+
+  """
+  Marks a notification as read for the current user. Requires authentication.
+  """
+  markNotificationRead(itemId: String!, source: NotificationSource!): NotificationRead!
 
   """Publishes an article at the given time."""
   publishArticle(id: String!, publishedAt: DateTime!): Article!
@@ -2432,6 +3005,7 @@ type Mutation {
 
   """This mutation revokes and deletes the active session."""
   revokeActiveSession: Boolean!
+  revokeImpersonationSessions(ids: [String!]): Int!
 
   """
   This mutation sends a login link to the email if the user exists. Method will always return email address
@@ -2478,7 +3052,7 @@ type Mutation {
   updateAnalyticsProviderSetting(articlePrefix: String, credentials: SettingAnalyticsCredentialsInput, id: String, name: String, property: String): SettingAnalyticsProvider!
 
   """Updates an article."""
-  updateArticle(authorIds: [String!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, id: String!, imageID: String, lead: String, likes: Int, paywallId: String, preTitle: String, properties: [PropertyInput!]!, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
+  updateArticle(authors: [ArticleRevisionAuthorInput!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, id: String!, imageID: String, lead: String, likes: Int, paywallId: String, preTitle: String, properties: [PropertyInput!]!, seoDescription: String, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
 
   """Updates an existing author."""
   updateAuthor(bio: RichText, hideOnArticle: Boolean, hideOnTeam: Boolean, hideOnTeaser: Boolean, id: String!, imageID: String, jobTitle: String, links: [AuthorLinkInput!], name: String, slug: Slug, tagIds: [String!]): Author!
@@ -2530,13 +3104,13 @@ type Mutation {
   updateMailTemplate(id: String!, input: MailTemplateInput!): MailTemplateModel!
 
   """Updates an existing memberplan."""
-  updateMemberPlan(active: Boolean, amountPerMonthMax: Int, amountPerMonthMin: Int, amountPerMonthTarget: Int, availablePaymentMethods: [AvailablePaymentMethodInput!], confirmationPageId: String, currency: Currency, description: RichText, extendable: Boolean, externalReward: String, failPageId: String, id: String!, imageID: String, maxCount: Int, migrateToTargetPaymentMethodID: String, name: String, productType: ProductType, shortDescription: RichText, slug: String, successPageId: String, tags: [String!]): MemberPlan!
+  updateMemberPlan(active: Boolean, availablePaymentMethods: [AvailablePaymentMethodInput!], confirmationPageId: String, currency: Currency, defaultPaymentPeriodicity: PaymentPeriodicity, description: RichText, extendable: Boolean, externalReward: String, failPageId: String, id: String!, imageID: String, maxCount: Int, migrateToTargetPaymentMethodID: String, name: String, periodicityPricing: [PeriodicityPriceInput!], productType: ProductType, shortDescription: RichText, slug: String, successPageId: String, tags: [String!]): MemberPlan!
 
   """Updates an existing navigation."""
   updateNavigation(id: String!, key: String!, links: [NavigationLinkInput!]!, name: String!): Navigation!
 
   """Updates an page."""
-  updatePage(blocks: [BlockContentInput!]!, description: String, hidden: Boolean!, id: String!, imageID: String, properties: [PropertyInput!]!, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
+  updatePage(blocks: [BlockContentInput!]!, description: String, hidden: Boolean!, id: String!, imageID: String, properties: [PropertyInput!]!, seoDescription: String, seoTitle: String, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
 
   """
   This mutation allows to update the user's password by entering the new password. The repeated new password gives an error if the passwords don't match or if the user is not authenticated.
@@ -2568,7 +3142,7 @@ type Mutation {
   updateSetting(name: SettingName!, value: GraphQLSettingValueType): Setting!
 
   """Updates an existing subscription."""
-  updateSubscription(autoRenew: Boolean, extendable: Boolean, id: String!, memberPlanID: String, monthlyAmount: Int, paidUntil: DateTime, paymentMethodID: String, paymentPeriodicity: PaymentPeriodicity, properties: [PropertyInput!], startsAt: DateTime, userID: String): PublicSubscription!
+  updateSubscription(autoRenew: Boolean, extendable: Boolean, id: String!, memberPlanID: String, monthlyAmount: Float, paidUntil: DateTime, paymentMethodID: String, paymentPeriodicity: PaymentPeriodicity, properties: [PropertyInput!], startsAt: DateTime, userID: String): PublicSubscription!
 
   """Update an existing subscription flow"""
   updateSubscriptionFlow(autoRenewal: [Boolean!], id: String!, paymentMethodIds: [String!], periodicities: [PaymentPeriodicity!]): [SubscriptionFlowModel!]!
@@ -2614,7 +3188,7 @@ type Mutation {
   updateWebsiteSettings(ads: WebsiteAdsInput, analytics: WebsiteAnalyticsInput, fonts: [WebsiteRemoteFontInput!], mail: WebsiteMailInput, theme: JSONObject): WebsiteSettings!
 
   """"""
-  upgradeUserSubscription(discountCode: String, failureURL: String, goodieId: String, memberPlanId: String!, monthlyAmount: Int!, paymentMethodId: String!, subscriptionId: String!, successURL: String): Payment!
+  upgradeUserSubscription(discountCode: String, failureURL: String, goodieId: String, memberPlanId: String!, monthlyAmount: Float!, paymentMethodId: String!, subscriptionId: String!, successURL: String): Payment!
 
   """Uploads a new document."""
   uploadDocument(description: String, file: Upload!, filename: String, title: String): Document!
@@ -2652,6 +3226,46 @@ enum NavigationLinkType {
   Article
   External
   Page
+}
+
+type NotificationConfirmation {
+  confirmedByUserId: String
+  createdAt: DateTime!
+  id: String!
+  itemId: String!
+  source: NotificationSource!
+}
+
+type NotificationRead {
+  createdAt: DateTime!
+  id: String!
+  itemId: String!
+  source: NotificationSource!
+}
+
+enum NotificationSource {
+  CHANGELOG
+  ONE_MESSAGE
+  PERIODIC_JOB
+}
+
+enum OneChannelConnectionState {
+  Connected
+  Failing
+  NotConfigured
+}
+
+type OneChannelStatus {
+  lastAttemptAt: DateTime
+  lastError: String
+  lastSuccessAt: DateTime
+  oneUrl: String
+  state: OneChannelConnectionState!
+
+  """
+  No successful heartbeat for longer than the outage threshold. Always false while the connector is not configured.
+  """
+  unreachable: Boolean!
 }
 
 type OverriddenRating {
@@ -2695,6 +3309,7 @@ input PageFilter {
   publicationDateFrom: DateFilter
   publicationDateTo: DateFilter
   published: Boolean
+  slug: String
   tags: [String!]
   title: String
 }
@@ -2734,6 +3349,8 @@ type PageRevision implements HasBlockContent & HasOptionalUserLc {
   imageID: String
   properties: [Property!]!
   publishedAt: DateTime
+  seoDescription: String
+  seoTitle: String
   socialMediaDescription: String
   socialMediaImage: Image
   socialMediaImageID: String
@@ -2784,8 +3401,25 @@ type PaginatedArticles {
   totalCount: Int!
 }
 
+type PaginatedAuditLogs {
+  nodes: [AuditLog!]!
+  pageInfo: PageInfo!
+
+  """
+  False when this installation does not provide an audit log, in which case nodes is empty and totalCount is zero.
+  """
+  supported: Boolean!
+  totalCount: Int!
+}
+
 type PaginatedAuthors {
   nodes: [Author!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type PaginatedChangelogEntries {
+  nodes: [ChangelogEntry!]!
   pageInfo: PageInfo!
   totalCount: Int!
 }
@@ -3144,8 +3778,11 @@ type PeerArticle implements HasOptionalPeerLc {
 }
 
 input PeerArticleFilter {
+  """Only include articles that have every one of these tags"""
+  allTagsIn: [String!]
   authors: [String!]
   body: String
+  excludeHideAuthor: Boolean
   excludeIds: [String!]
   ids: [String!]
   lead: String
@@ -3231,6 +3868,22 @@ type PeriodicJob {
   modifiedAt: DateTime!
   successfullyFinished: DateTime
   tries: Float!
+}
+
+type PeriodicityPrice {
+  amountMax: Int
+  amountMin: Int
+  amountTarget: Int
+  label: String
+  periodicity: PaymentPeriodicity!
+}
+
+input PeriodicityPriceInput {
+  amountMax: Int
+  amountMin: Int
+  amountTarget: Int
+  label: String
+  periodicity: PaymentPeriodicity!
 }
 
 type Permission {
@@ -3397,7 +4050,7 @@ type PublicSubscription implements HasMemberPlan & HasPaymentMethod & HasUser {
   memberPlan: MemberPlan!
   memberPlanID: String!
   modifiedAt: DateTime!
-  monthlyAmount: Int!
+  monthlyAmount: Float!
   paidUntil: DateTime
   paymentMethod: PaymentMethod!
   paymentMethodID: String!
@@ -3449,6 +4102,29 @@ type Query {
   """Returns a paginated list of articles based on the filters given."""
   articles(cursorId: String, filter: ArticleFilter, order: SortOrder = Descending, skip: Int = 0, sort: ArticleSort = PublishedAt, take: Int = 10): PaginatedArticles!
 
+  """
+  Returns a paginated list of audit log entries based on the filters given.
+  """
+  auditLogs(
+    """Cursor for pagination"""
+    cursorId: String
+
+    """Filter for audit logs"""
+    filter: AuditLogFilter
+
+    """Sort order"""
+    order: SortOrder = Descending
+
+    """Number of items to skip"""
+    skip: Int! = 0
+
+    """Field to sort by"""
+    sort: AuditLogSort! = CreatedAt
+
+    """Number of items to fetch"""
+    take: Int! = 10
+  ): PaginatedAuditLogs!
+
   """Get an author by ID or slug"""
   author(id: String, slug: String): Author
 
@@ -3470,6 +4146,25 @@ type Query {
 
   """Returns all challenge provider settings."""
   challengeProviderSettings(filter: SettingChallengeProviderFilter): [SettingChallengeProvider!]!
+
+  """
+  Returns the changelog entries of this instance, newest first. Requires authentication.
+  """
+  changelogEntries(
+    """Filter for changelog entries"""
+    filter: ChangelogEntryFilter
+
+    """
+    Locale (de, en, fr) for localized title, lead and description; falls back to the default content
+    """
+    locale: String
+
+    """Number of items to skip"""
+    skip: Int! = 0
+
+    """Number of items to fetch"""
+    take: Int! = 10
+  ): PaginatedChangelogEntries!
 
   """
   Check the status of an invoice and update with information from the payment provider
@@ -3596,6 +4291,9 @@ type Query {
 
   """Returns a paginated list of images based on the filters given."""
   images(cursorId: String, filter: ImageFilter, order: SortOrder = Descending, skip: Int = 0, sort: ImageSort = ModifiedAt, take: Int = 10): PaginatedImages!
+  impersonationEnabled: Boolean!
+  impersonationSearchUsers(limit: Int, query: String!): [ImpersonationUser!]!
+  impersonationSessions: [ImpersonationSessionInfo!]!
 
   "\n      Returns a more detailed version of a single importable event, by id and source.\n    "
   importedEvent(filter: SingleEventFilter!): EventFromSource!
@@ -3675,6 +4373,10 @@ type Query {
 
   """This query returns the user."""
   me: SensitiveDataUser
+  mediumAuditLogs(filter: MediumAuditLogFilter, limit: Int, skip: Int): MediumAuditLogPage!
+  mediumChangelogActions(limit: Int): [MediumChangelogAction!]!
+  mediumMigrations(limit: Int): [MediumMigration!]!
+  mediumStats(from: DateTime, to: DateTime): MediumStats!
 
   """Returns a memberplan by id or slug."""
   memberPlan(id: String, slug: Slug): MemberPlan!
@@ -3693,6 +4395,17 @@ type Query {
 
   "\n      Returns all new subscribers in a given timeframe.\n      Includes already deactivated ones.\n    "
   newSubscribers(end: DateTime, start: DateTime!): [DashboardSubscription!]!
+
+  """
+  Returns the instance-wide notification confirmations. Requires authentication.
+  """
+  notificationConfirmations: [NotificationConfirmation!]!
+
+  """
+  Returns the current user's read notifications. Requires authentication.
+  """
+  notificationReads: [NotificationRead!]!
+  oneChannelStatus: OneChannelStatus!
 
   """Returns an page by id or slug."""
   page(id: String, slug: String): Page!
@@ -3792,7 +4505,7 @@ type Query {
   subscriptions(cursorId: String, filter: SubscriptionFilter, order: SortOrder = Ascending, skip: Int = 0, sort: SubscriptionSort = ModifiedAt, take: Int = 10): PublicSubscriptionConnection!
 
   """Returns a paginated list of subscriptions based on the filters given."""
-  subscriptionsAsCsv(autoRenew: Boolean, cancellationDateFrom: DateFilter, cancellationDateTo: DateFilter, deactivationDateFrom: DateFilter, deactivationDateTo: DateFilter, deactivationReason: String, extendable: Boolean, memberPlanID: String, paidUntilFrom: DateFilter, paidUntilTo: DateFilter, paymentMethodID: String, paymentPeriodicity: PaymentPeriodicity, startsAtFrom: DateFilter, startsAtTo: DateFilter, subscriptionIDs: [String!], userHasAddress: Boolean, userID: String, userIDs: [String!]): String!
+  subscriptionsAsCsv(activeAt: DateTime, autoRenew: Boolean, cancellationDateFrom: DateFilter, cancellationDateTo: DateFilter, deactivationDateFrom: DateFilter, deactivationDateTo: DateFilter, deactivationReason: String, extendable: Boolean, memberPlanID: String, paidUntilFrom: DateFilter, paidUntilTo: DateFilter, paymentMethodID: String, paymentPeriodicity: PaymentPeriodicity, startsAtFrom: DateFilter, startsAtTo: DateFilter, subscriptionIDs: [String!], userHasAddress: Boolean, userID: String, userIDs: [String!]): String!
 
   """Returns a single sync provider setting by id."""
   syncProviderSetting(id: String!): SettingSyncProvider!
@@ -3982,6 +4695,7 @@ type SensitiveDataUser implements BaseUser {
   roleIDs: [String!]!
   roles: [UserRole!]!
   subscriptionCount: Int!
+  subscriptionOverview: [UserSubscriptionOverview!]!
 
   """Whether two-factor authentication is enabled for this user."""
   totpEnabled: Boolean!
@@ -3996,6 +4710,11 @@ type SensitiveDataUser implements BaseUser {
 type SessionWithToken {
   createdAt: DateTime!
   expiresAt: DateTime!
+
+  """
+  Whether this session was created by redeeming an impersonation grant from the One dashboard. Clients must never treat an ordinary JWT login as impersonation.
+  """
+  impersonated: Boolean!
   token: String!
 
   """
@@ -4123,6 +4842,7 @@ enum SettingName {
   RESET_PASSWORD_JWT_EXPIRES_MIN
   SEND_LOGIN_JWT_EXPIRES_MIN
   SHOW_PENDING_WHEN_NOT_PUBLISHED
+  SUBSCRIPTION_UPGRADE_BILLS_FULL_DIFFERENCE
 }
 
 type SettingPaymentProvider implements SettingProvider {
@@ -4300,10 +5020,12 @@ type SubscribeBlock implements BaseBlock {
   disabled: Boolean
   fields: [SubscribeBlockField!]!
   goodieMinValue: Int
+  goodieMinValueAppliesToUpgrade: Boolean!
   hideRepeatGoodieOnUpgrade: Boolean!
   memberPlanIds: [String!]!
   memberPlanRenderSettings: [SubscribeBlockMemberPlanRenderSetting!]!
   memberPlans: [MemberPlan!]!
+  periodicityDisplay: SubscribePeriodicityDisplay
   showDiscountCodes: Boolean!
   showGoodies: Boolean!
   type: BlockType!
@@ -4324,9 +5046,11 @@ input SubscribeBlockInput {
   disabled: Boolean
   fields: [SubscribeBlockField!]! = [FirstName, Password, PasswordRepeated, Address]
   goodieMinValue: Int
+  goodieMinValueAppliesToUpgrade: Boolean! = false
   hideRepeatGoodieOnUpgrade: Boolean! = false
   memberPlanIds: [String!]! = []
   memberPlanRenderSettings: [SubscribeBlockMemberPlanRenderSettingInput!]!
+  periodicityDisplay: SubscribePeriodicityDisplay
   showDiscountCodes: Boolean! = false
   showGoodies: Boolean! = false
 }
@@ -4339,9 +5063,11 @@ input SubscribeBlockLayoutConfigInput {
   showInput: Boolean! = false
   type: SubscribeBlockRenderLayout!
   values: [Int!]
+  valuesByPeriodicity: [SubscribeBlockPeriodicityValuesInput!]
 }
 
 type SubscribeBlockLayoutNoneConfig implements SubscribeBlockLayoutConfig {
+  showInput: Boolean!
   type: SubscribeBlockRenderLayout!
 }
 
@@ -4349,6 +5075,7 @@ type SubscribeBlockLayoutPickerConfig implements SubscribeBlockLayoutConfig {
   showInput: Boolean!
   type: SubscribeBlockRenderLayout!
   values: [Int!]!
+  valuesByPeriodicity: [SubscribeBlockPeriodicityValues!]!
 }
 
 type SubscribeBlockLayoutSliderConfig implements SubscribeBlockLayoutConfig {
@@ -4368,10 +5095,26 @@ input SubscribeBlockMemberPlanRenderSettingInput {
   memberPlanId: String!
 }
 
+type SubscribeBlockPeriodicityValues {
+  periodicity: PaymentPeriodicity!
+  values: [Int!]!
+}
+
+input SubscribeBlockPeriodicityValuesInput {
+  periodicity: PaymentPeriodicity!
+  values: [Int!]!
+}
+
 enum SubscribeBlockRenderLayout {
   None
   Picker
   Slider
+}
+
+enum SubscribePeriodicityDisplay {
+  Dropdown
+  OfferCards
+  Toggle
 }
 
 type SubscriptionCreatedAction implements BaseAction & HasSubscriptionLc {
@@ -4406,6 +5149,7 @@ enum SubscriptionEvent {
 }
 
 input SubscriptionFilter {
+  activeAt: DateTime
   autoRenew: Boolean
   cancellationDateFrom: DateFilter
   cancellationDateTo: DateFilter
@@ -4788,7 +5532,7 @@ input UpdateUserSubscriptionInput {
   autoRenew: Boolean!
   id: String!
   memberPlanID: String!
-  monthlyAmount: Int!
+  monthlyAmount: Float!
   paymentMethodID: String!
   paymentPeriodicity: PaymentPeriodicity!
 }
@@ -4892,6 +5636,25 @@ enum UserSort {
   FirstName
   ModifiedAt
   Name
+  SubscriptionCount
+}
+
+type UserSubscriptionOverview {
+  id: String!
+  memberPlanName: String!
+
+  """
+  Active means started and paid up, not merely not deactivated: imported subscriptions often expire without a deactivation.
+  """
+  status: UserSubscriptionStatus!
+}
+
+enum UserSubscriptionStatus {
+  Active
+  Deactivated
+  Expired
+  Planned
+  Unpaid
 }
 
 type VersionInformation {

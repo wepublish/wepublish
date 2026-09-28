@@ -33,9 +33,9 @@ export const selectTeaserAuthors = (teaser: FullTeaserFragment) => {
     }
 
     case 'ArticleTeaser': {
-      return teaser.article?.latest.authors.filter(
-        author => !author.hideOnTeaser
-      );
+      return teaser.article?.latest.authors
+        .filter(({ author }) => !author.hideOnTeaser)
+        .map(({ author }) => author);
     }
 
     case 'EventTeaser':
@@ -66,7 +66,7 @@ export const TeaserWrapper = styled('div')<FlexAlignment>`
   overflow: hidden;
   background-color: transparent;
   cursor: pointer;
-  container: teaser/inline-size;
+  contain: inline-size;
   display: grid;
   position: relative;
 

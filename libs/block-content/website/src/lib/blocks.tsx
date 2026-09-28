@@ -7,6 +7,7 @@ import {
   BuilderEventBlockProps,
   BuilderFlexBlockProps,
   BuilderHTMLBlockProps,
+  BuilderMailchimpFormBlockProps,
   BuilderListicleBlockProps,
   BuilderPollBlockProps,
   BuilderQuoteBlockProps,
@@ -18,6 +19,7 @@ import {
 import { isFlexBlock } from './nested-blocks/flex-block';
 import { isHtmlBlock } from './html/html-block';
 import { isSubscribeBlock } from './subscribe/subscribe-block';
+import { isMailchimpFormBlock } from './mailchimp-form/mailchimp-form-block';
 import { isImageBlock } from './image/image-block';
 import { isQuoteBlock } from './quote/quote-block';
 import { isRichTextBlock } from './richtext/richtext-block';
@@ -47,6 +49,7 @@ import { memo } from 'react';
 import { isTeaserListBlock } from './teaser/teaser-list-block';
 import { isTeaserSliderBlockStyle } from './block-styles/teaser-slider/teaser-slider';
 import { isImageSliderBlockStyle } from './block-styles/image-slider/image-slider';
+import { isLightboxBlockStyle } from './block-styles/lightbox/is-lightbox';
 import { isFocusTeaserBlockStyle } from './block-styles/focus-teaser/focus-teaser';
 import { isContextBoxBlockStyle } from './block-styles/context-box/context-box';
 import { isBannerBlockStyle } from './block-styles/banner/banner';
@@ -85,6 +88,15 @@ export const BlockRenderer = memo(
     }
 
     const blockStylesCond = cond([
+      [
+        isLightboxBlockStyle,
+        block => (
+          <blockStyles.Lightbox
+            {...block}
+            className={className}
+          />
+        ),
+      ],
       [
         isImageSliderBlockStyle,
         block => (
@@ -399,6 +411,15 @@ export const BlockRenderer = memo(
           block => (
             <blocks.Subscribe
               {...(block as BuilderSubscribeBlockProps)}
+              className={className}
+            />
+          ),
+        ],
+        [
+          isMailchimpFormBlock,
+          block => (
+            <blocks.MailchimpForm
+              {...(block as BuilderMailchimpFormBlockProps)}
               className={className}
             />
           ),

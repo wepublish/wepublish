@@ -4,6 +4,7 @@ import { userEvent, within } from 'storybook/test';
 import { mockPoll, mockPollBlock } from '@wepublish/storybook/mocks';
 import {
   WithPollBlockDecorators,
+  WithRouterDecorator,
   WithUserDecorator,
 } from '@wepublish/storybook';
 import { PollBlock } from './poll-block';
@@ -22,26 +23,28 @@ export const Default: StoryObj = {
   decorators: [WithPollBlockDecorators({})],
 };
 
+const votingDecorators = [
+  WithUserDecorator({} as any),
+  WithPollBlockDecorators({
+    fetchUserVoteResult: {
+      data: {
+        userPollVote: null,
+      },
+    },
+    voteResult: {
+      data: {
+        voteOnPoll: {
+          answerId: pollBlock.poll!.answers[0].id,
+          pollId: pollBlock.poll!.id,
+        },
+      },
+    },
+  }),
+];
+
 export const Voting: StoryObj = {
   ...Default,
-  decorators: [
-    WithUserDecorator({} as any),
-    WithPollBlockDecorators({
-      fetchUserVoteResult: {
-        data: {
-          userPollVote: null,
-        },
-      },
-      voteResult: {
-        data: {
-          voteOnPoll: {
-            answerId: pollBlock.poll!.answers[0].id,
-            pollId: pollBlock.poll!.id,
-          },
-        },
-      },
-    }),
-  ],
+  decorators: votingDecorators,
 };
 
 export const VotingPlay: StoryObj = {
@@ -153,4 +156,14 @@ export const WithError: StoryObj = {
 
 export const WithoutPoll: StoryObj = {
   args: {},
+};
+
+export const AutoVote: StoryObj = {
+  ...Default,
+  decorators: [
+    ...votingDecorators,
+    WithRouterDecorator({
+      query: { answerId: pollBlock.poll!.answers[0].id },
+    }),
+  ],
 };

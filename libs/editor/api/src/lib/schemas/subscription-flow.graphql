@@ -122,20 +122,10 @@ fragment MemberPlanRef on MemberPlan {
   id
   name
   productType
-  amountPerMonthMin
-  amountPerMonthMax
   availablePaymentMethods {
     ...FullAvailablePaymentMethod
   }
   currency
   extendable
   slug
-}
-
-fragment FullAvailablePaymentMethod on AvailablePaymentMethod {
-  paymentMethods {
-    ...FullPaymentMethod
-  }
-  paymentPeriodicities
-  forceAutoRenewal
 }

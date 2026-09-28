@@ -1,7 +1,20 @@
-import { ProfilePage } from '@wepublish/utils/website';
+import { ProfilePage, withAuthGuard } from '@wepublish/utils/website';
+import { NextPage } from 'next';
 
-export default function Profile() {
-  return <ProfilePage />;
+import { EenewsPageShell } from '../../src/components/eenews-page-shell';
+import { EenewsProfile } from '../../src/components/eenews-profile';
+
+function Profile() {
+  return (
+    <EenewsPageShell>
+      <EenewsProfile />
+    </EenewsPageShell>
+  );
 }
 
-Profile.getInitialProps = ProfilePage.getInitialProps;
+const GuardedProfile = withAuthGuard(Profile) as NextPage;
+GuardedProfile.getInitialProps = (
+  ProfilePage as unknown as NextPage
+).getInitialProps;
+
+export default GuardedProfile;

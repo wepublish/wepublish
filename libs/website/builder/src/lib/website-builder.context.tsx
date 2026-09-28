@@ -40,6 +40,7 @@ import {
   BuilderFacebookPostBlockProps,
   BuilderFacebookVideoBlockProps,
   BuilderHTMLBlockProps,
+  BuilderMailchimpFormBlockProps,
   BuilderIFrameBlockProps,
   BuilderImageBlockProps,
   BuilderImageGalleryBlockProps,
@@ -89,6 +90,7 @@ import {
   BuilderInvoiceListProps,
   BuilderMemberPlanItemProps,
   BuilderGoodiePickerProps,
+  BuilderMemberPlanOfferPickerProps,
   BuilderMemberPlanPickerProps,
   BuilderPaymentAmountSliderProps,
   BuilderPaymentMethodPickerProps,
@@ -183,6 +185,7 @@ export type WebsiteBuilderProps = {
   GoodiePicker: ComponentType<BuilderGoodiePickerProps>;
   MemberPlanPicker: ComponentType<BuilderMemberPlanPickerProps>;
   MemberPlanItem: ComponentType<BuilderMemberPlanItemProps>;
+  MemberPlanOfferPicker: ComponentType<BuilderMemberPlanOfferPickerProps>;
   PaymentAmountSlider: ComponentType<BuilderPaymentAmountSliderProps>;
   PaymentAmountPicker: ComponentType<BuilderPaymentAmountPickerProps>;
   PaymentMethodPicker: ComponentType<BuilderPaymentMethodPickerProps>;
@@ -235,6 +238,7 @@ export type WebsiteBuilderProps = {
     RichText: ComponentType<BuilderRichTextBlockProps>;
     HTML: ComponentType<BuilderHTMLBlockProps>;
     Subscribe: ComponentType<BuilderSubscribeBlockProps>;
+    MailchimpForm: ComponentType<BuilderMailchimpFormBlockProps>;
     FacebookPost: ComponentType<BuilderFacebookPostBlockProps>;
     FacebookVideo: ComponentType<BuilderFacebookVideoBlockProps>;
     InstagramPost: ComponentType<BuilderInstagramPostBlockProps>;
@@ -296,6 +300,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   GoodiePicker: NoComponent,
   MemberPlanPicker: NoComponent,
   MemberPlanItem: NoComponent,
+  MemberPlanOfferPicker: NoComponent,
   PaymentAmountSlider: NoComponent,
   PaymentAmountPicker: NoComponent,
   PaymentMethodPicker: NoComponent,
@@ -377,6 +382,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
     RichText: NoComponent,
     HTML: NoComponent,
     Subscribe: NoComponent,
+    MailchimpForm: NoComponent,
     FacebookPost: NoComponent,
     FacebookVideo: NoComponent,
     InstagramPost: NoComponent,
@@ -405,6 +411,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
 
   blockStyles: {
     ImageSlider: NoComponent,
+    Lightbox: NoComponent,
     TeaserSlider: NoComponent,
     AlternatingTeaser: NoComponent,
     AlternatingTeaserGrid: NoComponent,

@@ -264,11 +264,16 @@ fragment BlockWithoutTeaser on BlockContent {
     blockStyle
     blockStyleName
     memberPlanIds
+    periodicityDisplay
     memberPlanRenderSettings {
       isDefault
       memberPlanId
       layout {
         type
+
+        ... on SubscribeBlockLayoutNoneConfig {
+          showInput
+        }
 
         ... on SubscribeBlockLayoutSliderConfig {
           showInput
@@ -277,6 +282,10 @@ fragment BlockWithoutTeaser on BlockContent {
         ... on SubscribeBlockLayoutPickerConfig {
           showInput
           values
+          valuesByPeriodicity {
+            periodicity
+            values
+          }
         }
       }
     }
@@ -284,8 +293,55 @@ fragment BlockWithoutTeaser on BlockContent {
     showGoodies
     showDiscountCodes
     goodieMinValue
+    goodieMinValueAppliesToUpgrade
     hideRepeatGoodieOnUpgrade
     type
+  }
+
+  ... on MailchimpFormBlock {
+    disabled
+    blockStyle
+    blockStyleName
+    type
+    syncProviderId
+    listId
+    interests
+    autoFocus
+    doubleOptIn
+    buttonColor
+    buttonFontColor
+    submitButtonLabel
+    successUrl
+    steps {
+      skipIfFieldsFilled
+      skipIfInterestsFilled
+      showIfInterestsFilled
+      inputs {
+        inputType
+        name
+        label
+        description
+        required
+        urlParam
+        defaultValue
+        value
+        options {
+          id
+          name
+          description
+        }
+      }
+    }
+    successPage {
+      description
+      options {
+        label
+        background
+        url
+        mergeFieldName
+        mergeFieldValue
+      }
+    }
   }
 }
 

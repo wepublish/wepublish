@@ -5,7 +5,7 @@ import {
   PAYMENT_METHOD_CONFIG,
 } from '@wepublish/payment/api';
 import { InvoiceDataloader } from './invoice.dataloader';
-import { InvoiceService } from './invoice.service';
+import { createInvoiceFilter, InvoiceService } from './invoice.service';
 
 describe('InvoiceService.checkInvoiceStatus', () => {
   it('notifies that the invoice is paid after checking its payments', async () => {
@@ -106,5 +106,25 @@ describe('InvoiceService.markInvoiceAsPaid', () => {
     expect(paidUpdate.data.paidAt).toBeInstanceOf(Date);
     expect(paidUpdate.data.suppressRenewalSuccessMail).toBe(true);
     expect(invoicePaidNotifier.notify).not.toHaveBeenCalled();
+  });
+});
+
+describe('createInvoiceFilter', () => {
+  it('filters invoices containing an item with the given discount code', () => {
+    expect(
+      createInvoiceFilter({ discountCodeId: 'code-a' }).AND
+    ).toContainEqual({
+      items: {
+        some: {
+          discountCodeId: 'code-a',
+        },
+      },
+    });
+  });
+
+  it('does not restrict items when no discount code is given', () => {
+    expect(createInvoiceFilter({ mail: 'foo@example.com' }).AND).not.toEqual(
+      expect.arrayContaining([expect.objectContaining({ items: {} })])
+    );
   });
 });

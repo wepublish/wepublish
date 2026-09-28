@@ -19,6 +19,7 @@ import {
   FullSoundCloudTrackBlockFragment,
   FullStreamableVideoBlockFragment,
   FullSubscribeBlockFragment,
+  FullMailchimpFormBlockFragment,
   FullTeaserGridFlexBlockFragment,
   FullTeaserListBlockFragment,
   FullTeaserSlotsBlockFragment,
@@ -63,6 +64,8 @@ export type BuilderEventBlockProps = WithBlockProps<FullEventBlockFragment>;
 export type BuilderRichTextBlockProps =
   WithBlockProps<FullRichTextBlockFragment>;
 export type BuilderHTMLBlockProps = WithBlockProps<FullHtmlBlockFragment>;
+export type BuilderMailchimpFormBlockProps =
+  WithBlockProps<FullMailchimpFormBlockFragment>;
 export type BuilderFacebookPostBlockProps =
   WithBlockProps<FullFacebookPostBlockFragment>;
 export type BuilderFacebookVideoBlockProps =

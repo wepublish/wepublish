@@ -7,4 +7,5 @@ Detailed guidance is split into topic files:
 @.claude/docs/external-services.md
 @.claude/docs/code-style.md
 @.claude/docs/testing.md
+@.claude/docs/type-checking.md
 @.claude/docs/commit-rules.md

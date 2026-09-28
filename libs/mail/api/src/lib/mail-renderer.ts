@@ -276,6 +276,9 @@ export function deriveDateFormats(
       hour: '2-digit',
       minute: '2-digit',
     });
+    derived[`${key}_year`] = formatDate(value, {
+      year: 'numeric',
+    });
   }
 
   return derived;

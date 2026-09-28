@@ -22,6 +22,18 @@ import {
 } from '@wepublish/utils/api';
 import { mapBlockUnionMap } from '@wepublish/block-content/api';
 import { TrackingPixelService } from '@wepublish/tracking-pixel/api';
+import { uniqBy } from 'ramda';
+
+export const mapArticleRevisionAuthors = (
+  authors: { authorId: string; role?: string | null }[]
+): Prisma.ArticleRevisionAuthorCreateManyRevisionInput[] =>
+  uniqBy(({ authorId }) => authorId, authors).map(
+    ({ authorId, role }, position) => ({
+      authorId,
+      role: role?.trim() || null,
+      position,
+    })
+  );
 
 @Injectable()
 export class ArticleService {
@@ -34,10 +46,7 @@ export class ArticleService {
   async getArticleBySlug(slug: string) {
     return this.prisma.article.findFirst({
       where: {
-        slug: {
-          equals: slug,
-          mode: 'insensitive',
-        },
+        slug: slug.toLowerCase(),
       },
       orderBy: {
         publishedAt: 'asc', // there might be an unpublished article with the same slug
@@ -105,7 +114,7 @@ export class ArticleService {
       hidden,
       likes,
       disableComments,
-      authorIds,
+      authors,
       socialMediaAuthorIds,
       tagIds,
       properties,
@@ -121,7 +130,7 @@ export class ArticleService {
       data: {
         paywallId,
         likes,
-        slug,
+        slug: slug && slug.toLowerCase(),
         shared,
         hidden,
         disableComments,
@@ -141,7 +150,7 @@ export class ArticleService {
             properties: properties as any,
             authors: {
               createMany: {
-                data: authorIds.map(authorId => ({ authorId })),
+                data: mapArticleRevisionAuthors(authors),
               },
             },
             socialMediaAuthors: {
@@ -176,7 +185,7 @@ export class ArticleService {
       paywallId,
       hidden,
       disableComments,
-      authorIds,
+      authors,
       socialMediaAuthorIds,
       tagIds,
       properties,
@@ -202,7 +211,7 @@ export class ArticleService {
       where: { id },
       data: {
         likes,
-        slug,
+        slug: slug && slug.toLowerCase(),
         paywallId,
         shared,
         hidden,
@@ -224,7 +233,7 @@ export class ArticleService {
             properties: properties as any,
             authors: {
               createMany: {
-                data: authorIds.map(authorId => ({ authorId })),
+                data: mapArticleRevisionAuthors(authors),
               },
             },
             socialMediaAuthors: {
@@ -400,7 +409,7 @@ export class ArticleService {
             createdAt: 'desc',
           },
           include: {
-            authors: true,
+            authors: { orderBy: { position: 'asc' } },
             socialMediaAuthors: true,
           },
         },
@@ -447,7 +456,7 @@ export class ArticleService {
             properties: properties as any,
             authors: {
               createMany: {
-                data: authors.map(({ authorId }) => ({ authorId })),
+                data: mapArticleRevisionAuthors(authors),
               },
             },
             socialMediaAuthors: {
@@ -538,7 +547,7 @@ export class ArticleService {
     const revision = await this.prisma.articleRevision.findUnique({
       where: { id: revisionId },
       include: {
-        authors: true,
+        authors: { orderBy: { position: 'asc' } },
         socialMediaAuthors: true,
       },
     });
@@ -583,7 +592,7 @@ export class ArticleService {
             properties: properties as any,
             authors: {
               createMany: {
-                data: authors.map(({ authorId }) => ({ authorId })),
+                data: mapArticleRevisionAuthors(authors),
               },
             },
             socialMediaAuthors: {
@@ -995,14 +1004,32 @@ const createTagsFilter = (
   return {};
 };
 
+const createAllTagsInFilter = (
+  filter: Partial<ArticleFilter>
+): Prisma.ArticleWhereInput => {
+  if (filter?.allTagsIn?.length) {
+    return {
+      AND: filter.allTagsIn.map(tagId => ({
+        tags: {
+          some: {
+            tagId,
+          },
+        },
+      })),
+    };
+  }
+
+  return {};
+};
+
 const createTagsNotInFilter = (
   filter: Partial<ArticleFilter>
 ): Prisma.ArticleWhereInput => {
   if (filter?.tagsNotIn?.length) {
     const hasNotTags = {
-      some: {
+      none: {
         tagId: {
-          notIn: filter.tagsNotIn,
+          in: filter.tagsNotIn,
         },
       },
     } satisfies Prisma.TaggedArticlesListRelationFilter;
@@ -1072,6 +1099,45 @@ const createHiddenFilter = (
   };
 };
 
+const createExcludeHideAuthorFilter = (
+  filter: Partial<ArticleFilter>
+): Prisma.ArticleWhereInput => {
+  if (filter?.excludeHideAuthor) {
+    const hideAuthorFilter: Prisma.ArticleRevisionWhereInput = {
+      hideAuthor: false,
+    };
+
+    return {
+      ArticleRevisionPublished:
+        filter?.published ?
+          {
+            articleRevision: hideAuthorFilter,
+          }
+        : undefined,
+      ArticleRevisionDraft:
+        filter?.draft ?
+          {
+            articleRevision: hideAuthorFilter,
+          }
+        : undefined,
+      ArticleRevisionPending:
+        filter?.pending ?
+          {
+            articleRevision: hideAuthorFilter,
+          }
+        : undefined,
+      revisions:
+        !filter?.draft && !filter?.published && !filter?.pending ?
+          {
+            some: hideAuthorFilter,
+          }
+        : undefined,
+    };
+  }
+
+  return {};
+};
+
 const createPeerIdFilter = (
   filter: Partial<ArticleFilter>
 ): Prisma.ArticleWhereInput => {
@@ -1113,9 +1179,11 @@ export const createArticleFilter = (
     createLeadFilter(filter),
     createSharedFilter(filter),
     createTagsFilter(filter),
+    createAllTagsInFilter(filter),
     createTagsNotInFilter(filter),
     createAuthorFilter(filter),
     createHiddenFilter(filter),
+    createExcludeHideAuthorFilter(filter),
     createPeerIdFilter(filter),
     createExcludeIdsFilter(filter),
   ].filter(c => !isEmptyWhere(c));

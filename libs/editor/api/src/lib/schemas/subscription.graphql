@@ -104,6 +104,7 @@ query Subscription($id: String!) {
 }
 
 query SubscriptionsAsCsv(
+  $activeAt: DateTime
   $autoRenew: Boolean
   $userHasAddress: Boolean
   $extendable: Boolean
@@ -124,6 +125,7 @@ query SubscriptionsAsCsv(
   $paymentPeriodicity: PaymentPeriodicity
 ) {
   subscriptionsAsCsv(
+    activeAt: $activeAt
     autoRenew: $autoRenew
     userHasAddress: $userHasAddress
     extendable: $extendable
@@ -154,7 +156,7 @@ query SubscriptionsAsCsv(
 mutation CreateSubscription(
   $autoRenew: Boolean!
   $extendable: Boolean!
-  $monthlyAmount: Int!
+  $monthlyAmount: Float!
   $paidUntil: DateTime
   $startsAt: DateTime!
   $paymentPeriodicity: PaymentPeriodicity!
@@ -183,7 +185,7 @@ mutation UpdateSubscription(
   $id: String!
   $autoRenew: Boolean
   $extendable: Boolean
-  $monthlyAmount: Int
+  $monthlyAmount: Float
   $paidUntil: DateTime
   $startsAt: DateTime
   $paymentPeriodicity: PaymentPeriodicity

@@ -23,6 +23,7 @@
       "@wepublish/ai/editor": ["libs/ai/editor/src/index.ts"],
       "@wepublish/ai/website": ["libs/ai/website/src/index.ts"],
       "@wepublish/api": ["libs/api/src/index.ts"],
+      "@wepublish/audit-log/api": ["libs/audit-log/api/src/index.ts"],
       "@wepublish/api/seed": ["libs/api/prisma/seed.ts"],
       "@wepublish/article/api": ["libs/article/api/src/index.ts"],
       "@wepublish/article/website": ["libs/article/website/src/index.ts"],
@@ -40,6 +41,7 @@
         "libs/block-content/website/src/index.ts"
       ],
       "@wepublish/challenge/api": ["libs/challenge/api/src/index.ts"],
+      "@wepublish/changelog/api": ["libs/changelog/api/src/index.ts"],
       "@wepublish/comments/api": ["libs/comments/api/src/index.ts"],
       "@wepublish/comments/website": ["libs/comments/website/src/index.ts"],
       "@wepublish/consent/api": ["libs/consent/api/src/index.ts"],
@@ -81,6 +83,7 @@
       "@wepublish/navigation/api": ["libs/navigation/api/src/index.ts"],
       "@wepublish/navigation/website": ["libs/navigation/website/src/index.ts"],
       "@wepublish/nest-modules": ["libs/nest-modules/src/index.ts"],
+      "@wepublish/one/api": ["libs/one/api/src/index.ts"],
       "@wepublish/page/api": ["libs/page/api/src/index.ts"],
       "@wepublish/page/website": ["libs/page/website/src/index.ts"],
       "@wepublish/payment/api": ["libs/payment/api/src/index.ts"],

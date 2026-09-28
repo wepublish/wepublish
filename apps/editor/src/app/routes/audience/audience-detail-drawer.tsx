@@ -15,7 +15,7 @@ import { Button, Col, Drawer, Nav, Row, Sidenav, Table } from 'rsuite';
 
 import { AudienceCsvBtn } from './audience-csv-btn';
 import { AggregatedUsers, AudienceStatsComputed } from './useAudience';
-import { TimeResolution } from './useAudienceFilter';
+import { TimeResolution } from './audience-filter-params';
 
 const { Cell, Column, HeaderCell } = Table;
 const { Body, Header } = Sidenav;

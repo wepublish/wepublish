@@ -19,8 +19,11 @@ const SendIcon = styled(MdSend)`
   margin-right: 5px;
 `;
 
-const Button = styled(RButton)`
-  margin-left: 20px;
+const ButtonWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  flex-wrap: wrap;
 `;
 
 interface CreateOrUpdateuserPasswordProps {
@@ -95,22 +98,24 @@ export function EditUserPassword({
     if (user) {
       return (
         <Form.Group>
-          <RButton
-            appearance="primary"
-            onClick={() => setIsResetUserPasswordOpen(true)}
-          >
-            <ReplayIcon />
-            {t('userCreateOrEditView.resetPassword')}
-          </RButton>
-          <Button
-            appearance="primary"
-            color="red"
-            disabled={isDisabled || !user.email || !user.active}
-            onClick={() => setSendLoginModalOpen(true)}
-          >
-            <SendIcon />
-            {t('userCreateOrEditView.sendWebsiteLogin')}
-          </Button>
+          <ButtonWrapper>
+            <RButton
+              appearance="primary"
+              onClick={() => setIsResetUserPasswordOpen(true)}
+            >
+              <ReplayIcon />
+              {t('userCreateOrEditView.resetPassword')}
+            </RButton>
+            <RButton
+              appearance="primary"
+              color="red"
+              disabled={isDisabled || !user.email || !user.active}
+              onClick={() => setSendLoginModalOpen(true)}
+            >
+              <SendIcon />
+              {t('userCreateOrEditView.sendWebsiteLogin')}
+            </RButton>
+          </ButtonWrapper>
         </Form.Group>
       );
     }

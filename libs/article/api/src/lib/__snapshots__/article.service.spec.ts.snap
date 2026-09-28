@@ -15,9 +15,13 @@ exports[`ArticleService should create an article 1`] = `
               "data": [
                 {
                   "authorId": "1234",
+                  "position": 0,
+                  "role": "Text",
                 },
                 {
                   "authorId": "12345",
+                  "position": 1,
+                  "role": "Bilder",
                 },
               ],
             },
@@ -241,10 +245,7 @@ exports[`ArticleService should query an article by slug 1`] = `
       "publishedAt": "asc",
     },
     "where": {
-      "slug": {
-        "equals": "1234",
-        "mode": "insensitive",
-      },
+      "slug": "some-slug",
     },
   },
 ]
@@ -419,6 +420,24 @@ exports[`ArticleService should query articles based on filter 2`] = `
         },
         {
           "hidden": false,
+        },
+        {
+          "ArticleRevisionDraft": {
+            "articleRevision": {
+              "hideAuthor": false,
+            },
+          },
+          "ArticleRevisionPending": {
+            "articleRevision": {
+              "hideAuthor": false,
+            },
+          },
+          "ArticleRevisionPublished": {
+            "articleRevision": {
+              "hideAuthor": false,
+            },
+          },
+          "revisions": undefined,
         },
         {
           "peerId": "1234",
@@ -623,6 +642,24 @@ exports[`ArticleService should query articles based on filter 3`] = `
         },
         {
           "hidden": false,
+        },
+        {
+          "ArticleRevisionDraft": {
+            "articleRevision": {
+              "hideAuthor": false,
+            },
+          },
+          "ArticleRevisionPending": {
+            "articleRevision": {
+              "hideAuthor": false,
+            },
+          },
+          "ArticleRevisionPublished": {
+            "articleRevision": {
+              "hideAuthor": false,
+            },
+          },
+          "revisions": undefined,
         },
         {
           "peerId": "1234",
@@ -861,6 +898,24 @@ exports[`ArticleService should query articles based on full text search 2`] = `
           "hidden": false,
         },
         {
+          "ArticleRevisionDraft": {
+            "articleRevision": {
+              "hideAuthor": false,
+            },
+          },
+          "ArticleRevisionPending": {
+            "articleRevision": {
+              "hideAuthor": false,
+            },
+          },
+          "ArticleRevisionPublished": {
+            "articleRevision": {
+              "hideAuthor": false,
+            },
+          },
+          "revisions": undefined,
+        },
+        {
           "peerId": "1234",
         },
         {
@@ -1066,6 +1121,24 @@ exports[`ArticleService should query articles based on full text search 3`] = `
           "hidden": false,
         },
         {
+          "ArticleRevisionDraft": {
+            "articleRevision": {
+              "hideAuthor": false,
+            },
+          },
+          "ArticleRevisionPending": {
+            "articleRevision": {
+              "hideAuthor": false,
+            },
+          },
+          "ArticleRevisionPublished": {
+            "articleRevision": {
+              "hideAuthor": false,
+            },
+          },
+          "revisions": undefined,
+        },
+        {
           "peerId": "1234",
         },
         {
@@ -1235,6 +1308,16 @@ exports[`ArticleService should query articles on all revisions 2`] = `
           "hidden": false,
         },
         {
+          "ArticleRevisionDraft": undefined,
+          "ArticleRevisionPending": undefined,
+          "ArticleRevisionPublished": undefined,
+          "revisions": {
+            "some": {
+              "hideAuthor": false,
+            },
+          },
+        },
+        {
           "peerId": "1234",
         },
         {
@@ -1345,6 +1428,16 @@ exports[`ArticleService should query articles on all revisions 3`] = `
         },
         {
           "hidden": false,
+        },
+        {
+          "ArticleRevisionDraft": undefined,
+          "ArticleRevisionPending": undefined,
+          "ArticleRevisionPublished": undefined,
+          "revisions": {
+            "some": {
+              "hideAuthor": false,
+            },
+          },
         },
         {
           "peerId": "1234",
@@ -1507,9 +1600,13 @@ exports[`ArticleService should update an article 2`] = `
               "data": [
                 {
                   "authorId": "1234",
+                  "position": 0,
+                  "role": "Text",
                 },
                 {
                   "authorId": "12345",
+                  "position": 1,
+                  "role": "Bilder",
                 },
               ],
             },
@@ -1610,9 +1707,13 @@ exports[`ArticleService version history should restore a revision as a new draft
               "data": [
                 {
                   "authorId": "author-1",
+                  "position": 0,
+                  "role": "Text",
                 },
                 {
                   "authorId": "author-2",
+                  "position": 1,
+                  "role": null,
                 },
               ],
             },

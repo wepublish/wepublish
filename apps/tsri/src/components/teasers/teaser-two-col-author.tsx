@@ -101,5 +101,15 @@ export const TeaserTwoColAuthor = styled(TsriTeaser)`
     & ${TeaserTime} {
       display: none;
     }
+
+    & [data-authors-hidden] ${TeaserTime} {
+      display: inline;
+      padding: calc(var(--tw, 100cqw) * 0.0065) calc(var(--tw, 100cqw) * 0.015);
+      color: ${({ theme }) => theme.palette.common.white};
+      background-color: ${({ theme }) => theme.palette.common.black};
+      font-size: calc(var(--tw, 100cqw) * 0.0253125) !important;
+      line-height: calc(var(--tw, 100cqw) * 0.0253125) !important;
+      font-weight: 700 !important;
+    }
   }
 `;
