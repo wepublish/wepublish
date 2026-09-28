@@ -1,6 +1,10 @@
+import { ApolloClient } from '@apollo/client';
 import { MockedProvider, MockedResponse } from '@apollo/client/testing';
 import { render, screen, waitFor } from '@testing-library/react';
-import { SessionTokenContext } from '@wepublish/authentication/website';
+import {
+  getPreviewHandshakeState,
+  SessionTokenContext,
+} from '@wepublish/authentication/website';
 import { LoginWithJwtDocument } from '@wepublish/website/api';
 import { ComponentProps } from 'react';
 
@@ -67,9 +71,18 @@ const setOpener = (opener: unknown) => {
   });
 };
 
+const setParent = (parent: unknown) => {
+  Object.defineProperty(window, 'parent', {
+    value: parent,
+    configurable: true,
+    writable: true,
+  });
+};
+
 describe('withJwtHandler', () => {
   afterEach(() => {
     setOpener(null);
+    setParent(window);
     window.history.replaceState(null, '', '/');
   });
 
@@ -133,6 +146,38 @@ describe('withJwtHandler', () => {
       });
     });
 
+    it('keeps the login when refreshing the store fails afterwards', async () => {
+      const resetStore = vi
+        .spyOn(ApolloClient.prototype, 'resetStore')
+        .mockRejectedValue(
+          new Error(
+            'Store reset while query was in flight (not completed in link chain)'
+          )
+        );
+      const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      const opener = { postMessage: vi.fn() };
+      setOpener(opener);
+
+      const { setToken } = renderHandler({
+        mocks: [loginMock('preview-token')],
+      });
+
+      sendMessage(opener, { previewJwt: 'preview-token' });
+
+      await waitFor(() => {
+        expect(resetStore).toHaveBeenCalled();
+      });
+      await new Promise(resolve => setTimeout(resolve, 0));
+
+      expect(setToken).toHaveBeenCalledWith(
+        expect.objectContaining({ token: 'session-token' })
+      );
+      expect(getPreviewHandshakeState()).toBe('succeeded');
+
+      resetStore.mockRestore();
+      warn.mockRestore();
+    });
+
     it('ignores tokens sent from windows other than the opener', async () => {
       const opener = { postMessage: vi.fn() };
       setOpener(opener);
@@ -150,6 +195,43 @@ describe('withJwtHandler', () => {
         '*'
       );
       expect(setToken).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('embedded in the editor (iframe handshake)', () => {
+    it('acknowledges a token from the parent frame and logs in with it', async () => {
+      window.history.replaceState(null, '', '/?preview');
+      const parent = { postMessage: vi.fn() };
+      setParent(parent);
+
+      const { setToken } = renderHandler({
+        mocks: [loginMock('preview-token')],
+      });
+
+      sendMessage(parent, { previewJwt: 'preview-token' });
+
+      expect(parent.postMessage).toHaveBeenCalledWith(
+        'preview-jwt-received',
+        '*'
+      );
+
+      await waitFor(() => {
+        expect(setToken).toHaveBeenCalledWith(
+          expect.objectContaining({ token: 'session-token' })
+        );
+      });
+    });
+
+    it('does not ping the parent frame when no preview was requested', () => {
+      vi.useFakeTimers();
+      const parent = { postMessage: vi.fn() };
+      setParent(parent);
+
+      renderHandler();
+      vi.advanceTimersByTime(1_000);
+      vi.useRealTimers();
+
+      expect(parent.postMessage).not.toHaveBeenCalled();
     });
   });
 

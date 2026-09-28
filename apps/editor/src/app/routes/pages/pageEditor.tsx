@@ -49,9 +49,12 @@ import { useTranslation } from 'react-i18next';
 import {
   MdCloudUpload,
   MdDeleteOutline,
+  MdDesktopWindows,
+  MdEdit,
   MdHistory,
   MdIntegrationInstructions,
   MdKeyboardBackspace,
+  MdPhoneIphone,
   MdRemoveRedEye,
   MdSave,
 } from 'react-icons/md';
@@ -67,12 +70,16 @@ import {
   toaster,
 } from 'rsuite';
 
-import { openPreviewWindow } from '../../openPreview';
+import { PreviewFrame } from '../../previewFrame';
 
 const EditorContent = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
+
+  &[hidden] {
+    display: none;
+  }
 `;
 
 const TeaserOverviewWrapper = styled.div`
@@ -87,6 +94,11 @@ const IconButtonMargins = styled(RIconButton)`
 
 const IconButtonMTop = styled(RIconButton)`
   margin-top: 4px;
+`;
+
+const PreviewActions = styled.div`
+  display: flex;
+  gap: 10px;
 `;
 
 const IconButton = styled(RIconButton)`
@@ -147,6 +159,8 @@ function PageEditor() {
   const [restoringRevisionId, setRestoringRevisionId] = useState<string | null>(
     null
   );
+  const [isPreviewOpen, setPreviewOpen] = useState(false);
+  const [isMobilePreview, setMobilePreview] = useState(false);
 
   const [publishedAt, setPublishedAt] = useState<Date>();
   const [metadata, setMetadata] = useState<PageMetadata>({
@@ -275,6 +289,10 @@ function PageEditor() {
 
   const [hasChanged, setChanged] = useState(false);
   const unsavedChangesDialog = useUnsavedChangesDialog(hasChanged);
+
+  const previewUrl = pageData?.page?.previewUrl;
+  const isPreviewDisabled = hasChanged || !id || !canPreview || !previewUrl;
+  const showPreview = isPreviewOpen && !isPreviewDisabled;
 
   const isAuthorized = useAuthorisation('CAN_CREATE_PAGE');
 
@@ -712,54 +730,67 @@ function PageEditor() {
               }
               rightChildren={
                 <PermissionControl qualifyingPermissions={[CanPreview.id]}>
-                  <IconButtonMTop
-                    className="actionButton"
-                    disabled={hasChanged || !id || !canPreview}
-                    size="lg"
-                    icon={<MdRemoveRedEye />}
-                    onClick={() => {
-                      const result = openPreviewWindow(
-                        pageData!.page.previewUrl,
-                        {
-                          createToken: async () => {
-                            const { data: jwtData } = await createJWT();
-
-                            return jwtData?.createJWTForWebsiteLogin?.token;
-                          },
-                          onSilence: () =>
-                            toaster.push(
-                              <Message
-                                type="warning"
-                                showIcon
-                                closable
-                              >
-                                {t('previewHandshake.notResponding')}
-                              </Message>
-                            ),
+                  <PreviewActions>
+                    {showPreview && (
+                      <IconButtonMTop
+                        className="actionButton"
+                        size="lg"
+                        icon={
+                          isMobilePreview ?
+                            <MdDesktopWindows />
+                          : <MdPhoneIphone />
                         }
-                      );
+                        onClick={() => setMobilePreview(mobile => !mobile)}
+                      >
+                        {isMobilePreview ?
+                          t('preview.desktop')
+                        : t('preview.mobile')}
+                      </IconButtonMTop>
+                    )}
 
-                      if (result === 'popup-blocked') {
-                        toaster.push(
-                          <Message
-                            type="warning"
-                            showIcon
-                            closable
-                          >
-                            {t('previewHandshake.popupBlocked')}
-                          </Message>
-                        );
-                      }
-                    }}
-                  >
-                    {t('pageEditor.overview.preview')}
-                  </IconButtonMTop>
+                    <IconButtonMTop
+                      className="actionButton"
+                      disabled={isPreviewDisabled}
+                      size="lg"
+                      icon={showPreview ? <MdEdit /> : <MdRemoveRedEye />}
+                      onClick={() => setPreviewOpen(!showPreview)}
+                    >
+                      {showPreview ?
+                        t('preview.backToEditor')
+                      : t('pageEditor.overview.preview')}
+                    </IconButtonMTop>
+                  </PreviewActions>
                 </PermissionControl>
               }
             />
           }
         >
-          <EditorContent>
+          {showPreview && previewUrl && (
+            <PreviewFrame
+              key={pageData?.page?.latest.id}
+              previewUrl={previewUrl}
+              mobile={isMobilePreview}
+              title={t('pageEditor.overview.preview')}
+              createToken={async () => {
+                const { data: jwtData } = await createJWT();
+
+                return jwtData?.createJWTForWebsiteLogin?.token;
+              }}
+              onSilence={() =>
+                toaster.push(
+                  <Message
+                    type="warning"
+                    showIcon
+                    closable
+                  >
+                    {t('previewHandshake.notResponding')}
+                  </Message>
+                )
+              }
+            />
+          )}
+
+          <EditorContent hidden={showPreview}>
             <EditorValidationProvider runAllRef={validateAll}>
               <TeaserOverviewWrapper>
                 <TeaserOverviewPanel

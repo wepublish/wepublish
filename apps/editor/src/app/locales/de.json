@@ -1,5 +1,10 @@
 {
   "translation": {
+    "preview": {
+      "backToEditor": "Editor",
+      "mobile": "Mobil",
+      "desktop": "Desktop"
+    },
     "previewHandshake": {
       "popupBlocked": "Das Vorschau-Fenster wurde vom Browser blockiert. Bitte Pop-ups für den Editor erlauben und erneut versuchen.",
       "notResponding": "Das Vorschau-Fenster antwortet nicht. Die Anmeldung für die Vorschau ist möglicherweise fehlgeschlagen."

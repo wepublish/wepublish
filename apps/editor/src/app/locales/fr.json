@@ -1,5 +1,10 @@
 {
   "translation": {
+    "preview": {
+      "backToEditor": "Éditeur",
+      "mobile": "Mobile",
+      "desktop": "Bureau"
+    },
     "previewHandshake": {
       "popupBlocked": "La fenêtre d'aperçu a été bloquée par le navigateur. Veuillez autoriser les pop-ups pour l'éditeur et réessayer.",
       "notResponding": "La fenêtre d'aperçu ne répond pas. La connexion à l'aperçu a peut-être échoué."
