@@ -21,51 +21,12 @@ const nextConfig = {
     API_URL: process.env.API_URL || '',
     SENTRY_DSN: process.env.SENTRY_DSN || undefined,
   },
-  webpack(config, { webpack }) {
-    /**
-     * SVGR support, previously provided by the removed `nx.svgr` option
-     * @see https://nx.dev/technologies/react/next/recipes/next-config-setup
-     */
-    config.module.rules.push({
-      test: /\.svg$/,
-      issuer: { not: /\.(css|scss|sass)$/ },
-      resourceQuery: {
-        not: [/url/],
-      },
-      use: [
-        {
-          loader: require.resolve('@svgr/webpack'),
-          options: {
-            svgo: false,
-            titleProp: true,
-            ref: true,
-          },
-        },
-        {
-          loader: require.resolve('url-loader'),
-          options: {
-            limit: 10000,
-            name: '[name].[hash:7].[ext]',
-          },
-        },
-      ],
-    });
-
-    /**
-     * Tells Apollo turn run in production mode
-     * @see https://www.apollographql.com/docs/react/development-testing/reducing-bundle-size
-     */
-    config.plugins.push(
-      new webpack.DefinePlugin({
-        'globalThis.__DEV__': false,
-      })
-    );
-
-    if (process.env.ANALYZE_BUNDLE_CONCAT === 'false') {
-      config.optimization.concatenateModules = false;
-    }
-
-    return config;
+  turbopack: {
+    // SVGs are imported as URLs only; the one SVG that was used as a React
+    // component is now a .tsx component, so no SVGR loader is needed. Apollo's
+    // `globalThis.__DEV__` define is likewise gone: Apollo Client 4 selects its
+    // dev/production build through package export conditions.
+    root: join(__dirname, '../../../../../'),
   },
   async redirects() {
     return [
@@ -141,7 +102,17 @@ const nextConfig = {
       '**/node_modules/uglify-js',
     ],
   },
-  transpilePackages: ['react-tweet', '@faker-js/faker'],
+  // Emotion and MUI must go through a single compilation pipeline, otherwise
+  // Turbopack can resolve `@emotion/react` twice (CJS for MUI's styled engine,
+  // ESM for the app's `@emotion/styled`) and the theme context server-renders
+  // empty, e.g. `theme.breakpoints` undefined.
+  transpilePackages: [
+    'react-tweet',
+    '@faker-js/faker',
+    '@emotion/react',
+    '@emotion/styled',
+    '@mui/styled-engine',
+  ],
 };
 
 module.exports = nextConfig;

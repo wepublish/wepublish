@@ -11,8 +11,7 @@
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
-        "outputPath": "dist/apps/munotgloeggli",
-        "webpack": true
+        "outputPath": "dist/apps/munotgloeggli"
       },
       "configurations": {
         "development": {
@@ -26,8 +25,7 @@
       "defaultConfiguration": "development",
       "options": {
         "buildTarget": "munotgloeggli:build",
-        "dev": true,
-        "webpack": true
+        "dev": true
       },
       "configurations": {
         "development": {
@@ -47,8 +45,6 @@
       }
     },
     "test": {
-      "executor": "nx:run-commands",
-      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
         "command": "vitest run --passWithNoTests --config {projectRoot}/vitest.config.ts"
       },
