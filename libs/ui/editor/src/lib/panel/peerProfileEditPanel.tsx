@@ -5,8 +5,7 @@ import {
   Maybe,
   PeerProfileDocument,
   PeerProfileQuery,
-  usePeerProfileQuery,
-  useUpdatePeerProfileMutation,
+  UpdatePeerProfileDocument,
 } from '@wepublish/editor/api';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -85,12 +84,14 @@ function PeerInfoEditPanel({ onClose, onSave }: ImageEditPanelProps) {
     data,
     loading: isLoading,
     error: fetchError,
-  } = usePeerProfileQuery({});
+  } = useQuery(PeerProfileDocument, {});
 
-  const [updateSettings, { loading: isSaving, error: saveError }] =
-    useUpdatePeerProfileMutation({
+  const [updateSettings, { loading: isSaving, error: saveError }] = useMutation(
+    UpdatePeerProfileDocument,
+    {
       refetchQueries: [getOperationNameFromDocument(PeerProfileDocument)],
-    });
+    }
+  );
   const isDisabled = isLoading || isSaving || !isAuthorized;
 
   const { t } = useTranslation();

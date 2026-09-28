@@ -11,7 +11,7 @@ export type EventContainerProps = {
 
 export function EventContainer({ id, className }: EventContainerProps) {
   const { Event } = useWebsiteBuilder();
-  const { data, loading, error } = useEventQuery({
+  const { data, loading, error } = useQuery(EventDocument, {
     variables: {
       id,
     },

@@ -24,7 +24,7 @@ import {
 } from './teaser-overwrite.style';
 
 export const isWideTeaser = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is FullTeaserGridBlockFragment | FullTeaserListBlockFragment =>
   allPass([
     hasBlockStyle('Breite Teaser'),

@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
-import { usePeerProfileQuery } from '@wepublish/editor/api';
+import { PeerProfileDocument } from '@wepublish/editor/api';
 import { useTranslation } from 'react-i18next';
 import { MdContentCopy } from 'react-icons/md';
 import {
@@ -24,7 +24,7 @@ export function usePollAnswerVoteUrl(): (
   answerId: string
 ) => string | undefined {
   const documentUrl = useDocumentUrl();
-  const { data } = usePeerProfileQuery();
+  const { data } = useQuery(PeerProfileDocument);
   const websiteUrl = data?.peerProfile?.websiteURL;
 
   return (answerId: string) => {

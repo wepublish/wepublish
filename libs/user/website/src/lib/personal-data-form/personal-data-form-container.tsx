@@ -1,12 +1,12 @@
 import { useMutation } from '@apollo/client/react';
 import { useUser } from '@wepublish/authentication/website';
 import {
+  RequestEmailChangeDocument,
+  UpdatePasswordDocument,
   UpdatePasswordMutationVariables,
+  UpdateUserDocument,
   UpdateUserMutationVariables,
-  useRequestEmailChangeMutation,
-  useUpdatePasswordMutation,
-  useUpdateUserMutation,
-  useUploadImageMutation,
+  UploadImageDocument,
 } from '@wepublish/website/api';
 import {
   BuilderContainerProps,
@@ -27,10 +27,10 @@ export function PersonalDataFormContainer<
   const { PersonalDataForm } = useWebsiteBuilder();
   const { user } = useUser();
 
-  const [uploadImage] = useUploadImageMutation();
-  const [updatePassword] = useUpdatePasswordMutation();
-  const [updateUser] = useUpdateUserMutation();
-  const [requestEmailChange] = useRequestEmailChangeMutation();
+  const [uploadImage] = useMutation(UploadImageDocument);
+  const [updatePassword] = useMutation(UpdatePasswordDocument);
+  const [updateUser] = useMutation(UpdateUserDocument);
+  const [requestEmailChange] = useMutation(RequestEmailChangeDocument);
 
   const handleOnImageUpload = useCallback(
     async (input: ChangeEvent<HTMLInputElement> | null) => {

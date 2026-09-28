@@ -24,7 +24,7 @@ import { useEffect, useRef } from 'react';
 import { ReflektBlockStyles } from '../block-styles/reflekt-block-styles';
 
 export const isFlexBlockFullsizeImage = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is BuilderFlexBlockProps => {
   return allPass([
     hasBlockStyle(ReflektBlockStyles.FlexBlockFullsizeImage),

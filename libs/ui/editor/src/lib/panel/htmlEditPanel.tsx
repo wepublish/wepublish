@@ -1,6 +1,6 @@
 import { useLazyQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
-import { getApiClientV2, usePromptHtmlLazyQuery } from '@wepublish/editor/api';
+import { PromptHtmlDocument, getApiClientV2 } from '@wepublish/editor/api';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAutoFixHigh } from 'react-icons/md';
@@ -56,11 +56,13 @@ export function HtmlEditPanel({
   const { t } = useTranslation();
 
   const [prompt, setPrompt] = useState('');
-  const [promptHTML, { loading: thinking, error, data: v0Data }] =
-    usePromptHtmlLazyQuery({
+  const [promptHTML, { loading: thinking, error, data: v0Data }] = useLazyQuery(
+    PromptHtmlDocument,
+    {
       fetchPolicy: 'no-cache',
       client: getApiClientV2(),
-    });
+    }
+  );
 
   const onGenerateHTML = useCallback(
     async (query: string) => {

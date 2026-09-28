@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
-import { FullImageFragment, useImageListQuery } from '@wepublish/editor/api';
+import { FullImageFragment, ImageListDocument } from '@wepublish/editor/api';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdFileUpload, MdSearch } from 'react-icons/md';
@@ -73,7 +73,7 @@ function ImageSelectPanel({ onClose, onSelect }: ImageSelectPanelProps) {
     data,
     fetchMore,
     loading: isLoading,
-  } = useImageListQuery({
+  } = useQuery(ImageListDocument, {
     variables: {
       filter,
       take: ImagesPerPage,
@@ -118,6 +118,7 @@ function ImageSelectPanel({ onClose, onSelect }: ImageSelectPanelProps) {
         if (!fetchMoreResult) return prev;
 
         return {
+          __typename: 'Query',
           images: {
             ...fetchMoreResult.images,
             nodes: [...prev.images.nodes, ...fetchMoreResult.images.nodes],

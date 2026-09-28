@@ -1,11 +1,10 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import {
+  DeleteMemberPlanDocument,
   FullMemberPlanFragment,
   MemberPlanListDocument,
   MemberPlanListQuery,
   MemberPlanSort,
-  useDeleteMemberPlanMutation,
-  useMemberPlanListQuery,
 } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
@@ -81,10 +80,13 @@ function MemberPlanList() {
     [filter, sortField, sortOrder]
   );
 
-  const { data, loading: isLoading } = useMemberPlanListQuery({ variables });
+  const { data, loading: isLoading } = useQuery(MemberPlanListDocument, {
+    variables,
+  });
 
-  const [deleteMemberPlan, { loading: isDeleting }] =
-    useDeleteMemberPlanMutation();
+  const [deleteMemberPlan, { loading: isDeleting }] = useMutation(
+    DeleteMemberPlanDocument
+  );
 
   useEffect(() => {
     if (data?.memberPlans?.nodes) {
@@ -286,6 +288,7 @@ function MemberPlanList() {
                   cache.writeQuery<MemberPlanListQuery>({
                     query: MemberPlanListDocument,
                     data: {
+                      __typename: 'Query',
                       memberPlans: {
                         ...query.memberPlans,
                         nodes: query.memberPlans.nodes.filter(

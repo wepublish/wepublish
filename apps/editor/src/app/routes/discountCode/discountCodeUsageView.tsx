@@ -1,10 +1,10 @@
 import { useQuery } from '@apollo/client/react';
 import {
   Currency,
+  DiscountCodeDocument,
+  DiscountCodeUsagesDocument,
   DiscountCodeUsagesQuery,
   InvoiceSort,
-  useDiscountCodeQuery,
-  useDiscountCodeUsagesQuery,
 } from '@wepublish/editor/api';
 import { CanGetInvoices } from '@wepublish/permissions';
 import {
@@ -42,13 +42,13 @@ function DiscountCodeUsageView() {
   const [limit, setLimit] = useState<number>(10);
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
-  const { data: discountCodeData } = useDiscountCodeQuery({
+  const { data: discountCodeData } = useQuery(DiscountCodeDocument, {
     variables: {
       id: id as string,
     },
   });
 
-  const { data, loading } = useDiscountCodeUsagesQuery({
+  const { data, loading } = useQuery(DiscountCodeUsagesDocument, {
     variables: {
       discountCodeId: id as string,
       take: limit,

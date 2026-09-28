@@ -13,7 +13,7 @@ import {
 import {
   BlockContent,
   FullTeaserListBlockFragment,
-  useGetImagesByTagQuery,
+  GetImagesByTagDocument,
 } from '@wepublish/website/api';
 import {
   BuilderTeaserListBlockProps,
@@ -26,7 +26,7 @@ import { allPass } from 'ramda';
 import { MdEast } from 'react-icons/md';
 
 export const isNewsTeasers = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is FullTeaserListBlockFragment =>
   allPass([hasBlockStyle('News'), isTeaserListBlock])(block);
 
@@ -41,7 +41,7 @@ export const NewsBlock = ({
     elements: { H2 },
   } = useWebsiteBuilder();
 
-  const { data: imagesData } = useGetImagesByTagQuery({
+  const { data: imagesData } = useQuery(GetImagesByTagDocument, {
     variables: { tag: 'news-filler' },
   });
 

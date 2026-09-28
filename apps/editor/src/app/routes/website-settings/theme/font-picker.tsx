@@ -168,7 +168,6 @@ export const FontPicker = memo(
             )),
             document.head
           )}
-
           <Autocomplete
             options={FONTS}
             getOptionLabel={option => option.family}
@@ -180,6 +179,7 @@ export const FontPicker = memo(
               }
 
               onChange({
+                __typename: 'WebsiteRemoteFont',
                 name: newValue.family,
                 weight: getSupportedWeights(newValue),
                 style: getSupportedStyles(newValue),
@@ -189,7 +189,7 @@ export const FontPicker = memo(
             renderOption={({ key, ...optionProps }, option) => (
               <FontListItem
                 key={key}
-                optionKey={key ?? option.family}
+                optionKey={key != null ? String(key) : option.family}
                 optionProps={optionProps}
                 option={option}
                 onVisible={loadFont}
@@ -200,16 +200,20 @@ export const FontPicker = memo(
                 {...params}
                 name={name}
                 size="small"
-                inputProps={{
-                  ...params.inputProps,
-                  style: {
-                    ...params.inputProps?.style,
-                    ...(value ? { fontFamily: value } : {}),
-                  },
-                }}
                 ref={ref}
                 error={!!error}
                 helperText={error?.message}
+                slotProps={{
+                  ...params.slotProps,
+
+                  htmlInput: {
+                    ...params.slotProps.htmlInput,
+                    style: {
+                      ...params.slotProps.htmlInput?.style,
+                      ...(value ? { fontFamily: value } : {}),
+                    },
+                  },
+                }}
               />
             )}
             sx={{ width: '100%' }}

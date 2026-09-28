@@ -24,22 +24,21 @@ import {
   Typography,
 } from '@mui/material';
 import {
+  DeleteAllMailchimpSyncErrorsDocument,
+  DeleteMailchimpSyncErrorDocument,
+  DryRunMailchimpSyncDocument,
   DryRunMailchimpSyncMutation,
+  MailchimpInterestGroupsDocument,
+  MailchimpListsDocument,
+  MailchimpMergeFieldsDocument,
+  MailchimpSyncErrorsDocument,
+  MailchimpSyncProgressDocument,
+  MemberPlanListDocument,
+  PaymentMethodListDocument,
   SyncProviderSettingsDocument,
   SyncProviderSettingsQuery,
-  useDeleteAllMailchimpSyncErrorsMutation,
-  useDeleteMailchimpSyncErrorMutation,
-  useDryRunMailchimpSyncMutation,
-  useMailchimpInterestGroupsLazyQuery,
-  useMailchimpListsLazyQuery,
-  useMailchimpMergeFieldsLazyQuery,
-  useMailchimpSyncErrorsQuery,
-  useMailchimpSyncProgressQuery,
-  useMemberPlanListQuery,
-  usePaymentMethodListQuery,
-  useSyncProviderSettingsQuery,
-  useTriggerMailchimpSyncMutation,
-  useUpdateSyncProviderSettingMutation,
+  TriggerMailchimpSyncDocument,
+  UpdateSyncProviderSettingDocument,
 } from '@wepublish/editor/api';
 import { useCallback, useEffect, useState } from 'react';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
@@ -524,7 +523,7 @@ function MergeFieldExpressionEditor({
 
 export function MailchimpSyncIntegrationForm() {
   const { t } = useTranslation();
-  const { data, loading, error } = useSyncProviderSettingsQuery();
+  const { data, loading, error } = useQuery(SyncProviderSettingsDocument);
 
   if (loading) return <Loader center />;
   if (error) return <Message type="error">{error.message}</Message>;
@@ -606,7 +605,7 @@ function SyncProviderSettingCard({
     null
   );
 
-  const { data: progressData } = useMailchimpSyncProgressQuery({
+  const { data: progressData } = useQuery(MailchimpSyncProgressDocument, {
     variables: { configId: setting.id },
     pollInterval: syncing ? 2000 : 0,
     fetchPolicy: 'no-cache',
@@ -616,26 +615,30 @@ function SyncProviderSettingCard({
   const syncProgress =
     syncing ? (progressData?.mailchimpSyncProgress ?? null) : null;
 
-  const [updateSettings, { loading: updating }] =
-    useUpdateSyncProviderSettingMutation({
+  const [updateSettings, { loading: updating }] = useMutation(
+    UpdateSyncProviderSettingDocument,
+    {
       refetchQueries: [{ query: SyncProviderSettingsDocument }],
-    });
+    }
+  );
 
-  const [triggerSync] = useTriggerMailchimpSyncMutation();
-  const [dryRunSync] = useDryRunMailchimpSyncMutation();
+  const [triggerSync] = useMutation(TriggerMailchimpSyncDocument);
+  const [dryRunSync] = useMutation(DryRunMailchimpSyncDocument);
 
   const [syncErrorsSkip, setSyncErrorsSkip] = useState(0);
-  const { data: syncErrorsData, refetch: refetchErrors } =
-    useMailchimpSyncErrorsQuery({
+  const { data: syncErrorsData, refetch: refetchErrors } = useQuery(
+    MailchimpSyncErrorsDocument,
+    {
       variables: { configId: setting.id, take: 10, skip: syncErrorsSkip },
       skip: !setting.enabled,
-    });
-  const [deleteError] = useDeleteMailchimpSyncErrorMutation();
-  const [deleteAllErrors] = useDeleteAllMailchimpSyncErrorsMutation();
+    }
+  );
+  const [deleteError] = useMutation(DeleteMailchimpSyncErrorDocument);
+  const [deleteAllErrors] = useMutation(DeleteAllMailchimpSyncErrorsDocument);
 
   const syncErrors = syncErrorsData?.mailchimpSyncErrors;
 
-  const { data: memberPlanData } = useMemberPlanListQuery({
+  const { data: memberPlanData } = useQuery(MemberPlanListDocument, {
     variables: { take: 200 },
   });
   const memberPlanSlugs = (memberPlanData?.memberPlans?.nodes ?? []).map(p => ({
@@ -643,17 +646,20 @@ function SyncProviderSettingCard({
     name: p.name,
   }));
 
-  const { data: paymentMethodData } = usePaymentMethodListQuery();
+  const { data: paymentMethodData } = useQuery(PaymentMethodListDocument);
   const paymentMethodSlugs = (paymentMethodData?.paymentMethods ?? []).map(
     p => ({ slug: p.slug, name: p.name })
   );
 
-  const [fetchLists, { data: listsData, loading: listsLoading }] =
-    useMailchimpListsLazyQuery();
-  const [fetchMergeFields, { data: mergeFieldsData }] =
-    useMailchimpMergeFieldsLazyQuery();
-  const [fetchInterestGroups, { data: interestGroupsData }] =
-    useMailchimpInterestGroupsLazyQuery();
+  const [fetchLists, { data: listsData, loading: listsLoading }] = useLazyQuery(
+    MailchimpListsDocument
+  );
+  const [fetchMergeFields, { data: mergeFieldsData }] = useLazyQuery(
+    MailchimpMergeFieldsDocument
+  );
+  const [fetchInterestGroups, { data: interestGroupsData }] = useLazyQuery(
+    MailchimpInterestGroupsDocument
+  );
 
   const availableLists = listsData?.mailchimpLists ?? [];
   const availableMergeFields = mergeFieldsData?.mailchimpMergeFields ?? [];
@@ -690,9 +696,11 @@ function SyncProviderSettingCard({
       enabled: setting.enabled ?? false,
       mailchimp_apiKey: '',
       mailchimp_listId: setting.mailchimp_listId ?? '',
-      mailchimp_mergeFieldMappings: setting.mailchimp_mergeFieldMappings ?? [],
+      mailchimp_mergeFieldMappings: (setting.mailchimp_mergeFieldMappings ??
+        []) as SyncProviderFormValues['mailchimp_mergeFieldMappings'],
       mailchimp_interestGroupMappings:
-        setting.mailchimp_interestGroupMappings ?? [],
+        (setting.mailchimp_interestGroupMappings ??
+          []) as SyncProviderFormValues['mailchimp_interestGroupMappings'],
       mailchimp_defaultInterestGroupIds:
         setting.mailchimp_defaultInterestGroupIds ?? [],
       mailchimp_extensions: {
@@ -788,7 +796,7 @@ function SyncProviderSettingCard({
         <Message type="success">{t('integrations.updateSuccess')}</Message>
       );
     } catch (e: any) {
-      const detail = e?.graphQLErrors?.[0]?.message ?? e?.message ?? String(e);
+      const detail = errorDetail(e);
       toaster.push(
         <Message
           type="error"
@@ -810,8 +818,7 @@ function SyncProviderSettingCard({
             await saveSettings(formData);
             resolve(true);
           } catch (e: any) {
-            const detail =
-              e?.graphQLErrors?.[0]?.message ?? e?.message ?? String(e);
+            const detail = errorDetail(e);
             toaster.push(
               <Message
                 type="error"
@@ -879,7 +886,7 @@ function SyncProviderSettingCard({
       setSyncSeq(s => s + 1);
       setSyncing(true);
     } catch (e: any) {
-      const detail = e?.graphQLErrors?.[0]?.message ?? e?.message ?? String(e);
+      const detail = errorDetail(e);
       toaster.push(
         <Message
           type="error"
@@ -902,7 +909,7 @@ function SyncProviderSettingCard({
       });
       setDryRunResult(data?.dryRunMailchimpSync ?? null);
     } catch (e: any) {
-      const detail = e?.graphQLErrors?.[0]?.message ?? e?.message ?? String(e);
+      const detail = errorDetail(e);
       toaster.push(
         <Message
           type="error"
@@ -1356,7 +1363,6 @@ function SyncProviderSettingCard({
                     label={t(
                       'integrations.mailchimpSyncSettings.clickTracking.pathSegmentIndex'
                     )}
-                    InputProps={{ inputProps: { min: 0, max: 10 } }}
                     value={value ?? 2}
                     onChange={e =>
                       onChange(parseInt(e.target.value || '0', 10))
@@ -1364,6 +1370,9 @@ function SyncProviderSettingCard({
                     helperText={t(
                       'integrations.mailchimpSyncSettings.clickTracking.pathSegmentIndexHelp'
                     )}
+                    slotProps={{
+                      input: { inputProps: { min: 0, max: 10 } },
+                    }}
                   />
                 )}
               />
@@ -1433,7 +1442,6 @@ function SyncProviderSettingCard({
                     label={t(
                       'integrations.mailchimpSyncSettings.clickTracking.lookbackHours'
                     )}
-                    InputProps={{ inputProps: { min: 1, max: 720 } }}
                     value={value ?? 30}
                     onChange={e =>
                       onChange(parseInt(e.target.value || '0', 10))
@@ -1441,6 +1449,9 @@ function SyncProviderSettingCard({
                     helperText={t(
                       'integrations.mailchimpSyncSettings.clickTracking.lookbackHoursHelp'
                     )}
+                    slotProps={{
+                      input: { inputProps: { min: 1, max: 720 } },
+                    }}
                   />
                 )}
               />
@@ -1525,7 +1536,9 @@ function SyncProviderSettingCard({
             placeholder={t('integrations.mailchimpSyncSettings.allUsers')}
             label={t('integrations.mailchimpSyncSettings.dryRunLimit')}
             sx={{ width: 130 }}
-            InputProps={{ inputProps: { min: 1 } }}
+            slotProps={{
+              input: { inputProps: { min: 1 } },
+            }}
           />
 
           <Button
@@ -1635,6 +1648,11 @@ function SyncProviderSettingCard({
                         change.interests || {}
                       ).filter(([key]) => mappedInterestIds.has(key));
 
+                      const previousMergeFields = (change.previousMergeFields ??
+                        {}) as Record<string, unknown>;
+                      const previousInterests = (change.previousInterests ??
+                        {}) as Record<string, unknown>;
+
                       const mergeFieldLabel = (tag: string) => {
                         const mf = availableMergeFields.find(
                           f => f.tag === tag
@@ -1707,7 +1725,7 @@ function SyncProviderSettingCard({
                                         <strong>{mergeFieldLabel(key)}:</strong>{' '}
                                         {formatChange(
                                           value,
-                                          change.previousMergeFields?.[key]
+                                          previousMergeFields[key]
                                         )}
                                       </div>
                                     );
@@ -1726,7 +1744,7 @@ function SyncProviderSettingCard({
                                         <strong>{mergeFieldLabel(key)}:</strong>{' '}
                                         {formatChange(
                                           value,
-                                          change.previousMergeFields?.[key]
+                                          previousMergeFields[key]
                                         )}
                                       </div>
                                     );
@@ -1750,7 +1768,7 @@ function SyncProviderSettingCard({
                                           <strong>{interestLabel(key)}:</strong>{' '}
                                           {formatChange(
                                             value,
-                                            change.previousInterests?.[key]
+                                            previousInterests[key]
                                           )}
                                         </div>
                                       );
@@ -1769,7 +1787,7 @@ function SyncProviderSettingCard({
                                           <strong>{interestLabel(key)}:</strong>{' '}
                                           {formatChange(
                                             value,
-                                            change.previousInterests?.[key]
+                                            previousInterests[key]
                                           )}
                                         </div>
                                       );
@@ -1795,7 +1813,6 @@ function SyncProviderSettingCard({
           </CardContent>
         )}
       </Form>
-
       {syncErrors && (
         <CardContent>
           <SectionTitle variant="h6">

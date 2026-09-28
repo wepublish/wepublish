@@ -31,7 +31,7 @@ export const omitDisabledBlocks: Exclude<
   BlockTemplate: {
     fields: {
       blocks: {
-        merge: (_, blocks: BlockContent[]) => {
+        merge: (_, blocks: MergedBlock[]) => {
           return blocks.filter(block => !block.disabled);
         },
       },

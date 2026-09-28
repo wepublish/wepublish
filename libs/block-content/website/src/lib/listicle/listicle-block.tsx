@@ -11,7 +11,7 @@ import {
 } from '@wepublish/website/api';
 
 export const isListicleBlock = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is FullListicleBlockFragment => block.__typename === 'ListicleBlock';
 
 export const ListicleBlockWrapper = styled('div')`

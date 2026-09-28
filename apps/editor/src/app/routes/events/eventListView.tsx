@@ -2,6 +2,7 @@ import { useQuery } from '@apollo/client/react';
 import {
   Event,
   EventFilter,
+  EventListDocument,
   TagType,
 } from '@wepublish/editor/api';
 import {
@@ -89,7 +90,8 @@ function EventListView() {
     data,
     loading: isLoading,
     refetch,
-  } = useEventListQuery({
+    error,
+  } = useQuery(EventListDocument, {
     variables: eventListVariables,
   });
 

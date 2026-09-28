@@ -9,21 +9,21 @@ import {
   DialogTitle as MuiDialogTitle,
 } from '@mui/material';
 import {
+  ArticleDocument,
+  ArticleRevisionListDocument,
+  ArticleRevisionPreviewDocument,
+  CreateArticleDocument,
   CreateArticleMutationVariables,
+  CreateJwtForWebsiteLoginDocument,
+  DiscardArticleDraftDocument,
   EditorBlockType,
   FullAuthorFragment,
   FullImageFragment,
+  PublishArticleDocument,
+  RestoreArticleRevisionDocument,
   SettingName,
-  useArticleQuery,
-  useArticleRevisionListQuery,
-  useArticleRevisionPreviewLazyQuery,
-  useCreateArticleMutation,
-  useCreateJwtForWebsiteLoginMutation,
-  useDiscardArticleDraftMutation,
-  usePublishArticleMutation,
-  useRestoreArticleRevisionMutation,
-  useSettingsListQuery,
-  useUpdateArticleMutation,
+  SettingsListDocument,
+  UpdateArticleDocument,
 } from '@wepublish/editor/api';
 import { CanPreview } from '@wepublish/permissions';
 import { RichtextElements, RichtextJSONDocument } from '@wepublish/richtext';
@@ -175,19 +175,19 @@ function ArticleEditor() {
   const [
     createArticle,
     { data: createData, loading: isCreating, error: createError },
-  ] = useCreateArticleMutation();
+  ] = useMutation(CreateArticleDocument);
   const [updateArticle, { loading: isUpdating, error: updateError }] =
-    useUpdateArticleMutation({});
+    useMutation(UpdateArticleDocument, {});
   const [autosaveArticle, { loading: isAutosaving, error: autosaveError }] =
-    useUpdateArticleMutation({});
+    useMutation(UpdateArticleDocument, {});
   const [publishArticle, { loading: isPublishing, error: publishError }] =
-    usePublishArticleMutation({});
+    useMutation(PublishArticleDocument, {});
   const [
     restoreArticleRevision,
     { loading: isRestoring, error: restoreError },
-  ] = useRestoreArticleRevisionMutation({});
+  ] = useMutation(RestoreArticleRevisionDocument, {});
   const [discardArticleDraft, { loading: isDiscarding, error: discardError }] =
-    useDiscardArticleDraftMutation({});
+    useMutation(DiscardArticleDraftDocument, {});
 
   const [isMetaDrawerOpen, setMetaDrawerOpen] = useState(false);
   const [isPublishDialogOpen, setPublishDialogOpen] = useState(false);
@@ -235,23 +235,25 @@ function ArticleEditor() {
     trackingPixels: undefined,
   });
 
-  useSettingsListQuery({
-    onCompleted(data) {
+  const { data: settingsData } = useQuery(SettingsListDocument);
+
+  useEffect(() => {
+    if (settingsData) {
       setMetadata(meta => ({
         ...meta,
         shared:
           meta.shared ??
-          !!data.settings.find(
+          !!settingsData.settings.find(
             setting => setting.name === SettingName.NewArticlePeering
           )?.value,
         paywall:
           meta.paywall ??
-          data.settings.find(
+          (settingsData.settings.find(
             setting => setting.name === SettingName.NewArticlePaywall
-          )?.value,
+          )?.value as string | null | undefined),
       }));
-    },
-  });
+    }
+  }, [settingsData]);
 
   const isNew = id === undefined;
   const [blocks, setBlocks] = useState<BlockValue[]>(
@@ -264,12 +266,12 @@ function ArticleEditor() {
     data: articleData,
     refetch,
     loading: isLoading,
-  } = useArticleQuery({
+  } = useQuery(ArticleDocument, {
     errorPolicy: 'all',
     variables: { id: articleID! },
     skip: !articleID,
   });
-  const [createJWT] = useCreateJwtForWebsiteLoginMutation({
+  const [createJWT] = useMutation(CreateJwtForWebsiteLoginDocument, {
     errorPolicy: 'none',
     fetchPolicy: 'no-cache',
   });
@@ -279,7 +281,7 @@ function ArticleEditor() {
     refetch: refetchRevisions,
     fetchMore: fetchMoreRevisions,
     loading: isRevisionsLoading,
-  } = useArticleRevisionListQuery({
+  } = useQuery(ArticleRevisionListDocument, {
     errorPolicy: 'all',
     fetchPolicy: 'cache-and-network',
     notifyOnNetworkStatusChange: true,

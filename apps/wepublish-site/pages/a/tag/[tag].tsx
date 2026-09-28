@@ -1,15 +1,13 @@
 import { useQuery } from '@apollo/client/react';
 import { getApiUrl } from '@wepublish/utils/website';
 import {
-  addClientCacheToProps,
   ArticleListDocument,
-  getApiClient,
   NavigationListDocument,
   PeerProfileDocument,
   TagDocument,
   TagType,
-  useArticleListQuery,
-  useTagQuery,
+  addClientCacheToProps,
+  getApiClient,
 } from '@wepublish/website/api';
 import { Tag } from '@wepublish/website/builder';
 import { produce } from 'immer';
@@ -35,14 +33,14 @@ export default function TagPage({
 
   const variables = { take, skip: (page - 1) * take };
 
-  const tagData = useTagQuery({
+  const tagData = useQuery(TagDocument, {
     variables: {
       tag,
       type: TagType.Article,
     },
   });
 
-  const articles = useArticleListQuery({
+  const articles = useQuery(ArticleListDocument, {
     skip: !tagData.data?.tag?.id,
     variables: {
       ...variables,
@@ -95,7 +93,7 @@ export const getStaticPaths = () => ({
 });
 
 export const getStaticProps = (async ({ params }) => {
-  const { tag } = params || {};
+  const tag = params!.tag!.toString();
   const client = getApiClient(getApiUrl(), []);
 
   const tagResult = await client.query({
@@ -106,7 +104,7 @@ export const getStaticProps = (async ({ params }) => {
     },
   });
 
-  if (tagResult.error || !tagResult.data.tag) {
+  if (tagResult.error || !tagResult.data?.tag) {
     return {
       notFound: true,
       revalidate: 1,

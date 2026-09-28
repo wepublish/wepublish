@@ -1,11 +1,11 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  DeleteTagDocument,
   Tag,
+  TagListDocument,
   TagListQueryVariables,
   TagType,
-  useDeleteTagMutation,
-  useTagListQuery,
 } from '@wepublish/editor/api';
 import {
   CanCreateTag,
@@ -75,10 +75,10 @@ function TagList({ type }: TagListProps) {
     skip: (page - 1) * limit,
   } as TagListQueryVariables;
 
-  const { data, loading, refetch } = useTagListQuery({
+  const { data, loading, refetch } = useQuery(TagListDocument, {
     variables: tagListVariables,
   });
-  const [deleteTag] = useDeleteTagMutation({
+  const [deleteTag] = useMutation(DeleteTagDocument, {
     onCompleted() {
       refetch();
     },

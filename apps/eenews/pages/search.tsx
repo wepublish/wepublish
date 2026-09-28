@@ -5,10 +5,9 @@ import { articleToTeaser } from '@wepublish/article/website';
 import { SearchPageGetServerSideProps } from '@wepublish/utils/website';
 import {
   FullArticleTeaserFragment,
-  Page,
-  PageTeaser,
+  FullPageTeaserFragment,
+  PhraseDocument,
   TeaserType,
-  usePhraseQuery,
 } from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { InferGetServerSidePropsType } from 'next';
@@ -32,7 +31,9 @@ const SearchForm = styled('form')`
   grid-template-columns: 1fr max-content;
 `;
 
-const pageToTeaser = (page: Page): PageTeaser => ({
+const pageToTeaser = (
+  page: FullPageTeaserFragment['page']
+): FullPageTeaserFragment => ({
   __typename: 'PageTeaser',
   type: TeaserType.Page,
   page,
@@ -73,7 +74,7 @@ export default function Search({
     data: phraseData,
     loading,
     error,
-  } = usePhraseQuery({
+  } = useQuery(PhraseDocument, {
     skip: !phraseQuery,
     variables: {
       query: phraseQuery ?? '',
@@ -97,7 +98,7 @@ export default function Search({
       articleToTeaser(node as FullArticleTeaserFragment['article'])
     );
     const pageTeasers = phraseData.phrase.pages.nodes.map(node =>
-      pageToTeaser(node as Page)
+      pageToTeaser(node as FullPageTeaserFragment['page'])
     );
 
     return [...articleTeasers, ...pageTeasers];

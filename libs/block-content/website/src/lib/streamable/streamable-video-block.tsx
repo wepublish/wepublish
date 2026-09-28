@@ -8,7 +8,7 @@ import React, { useEffect, useState } from 'react';
 import ReactPlayer from 'react-player';
 
 export const isStreamableVideoBlock = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is FullStreamableVideoBlockFragment =>
   block.__typename === 'StreamableVideoBlock';
 

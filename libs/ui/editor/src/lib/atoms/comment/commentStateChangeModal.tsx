@@ -1,13 +1,13 @@
 import { useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  ApproveCommentDocument,
   CommentRejectionReason,
   CommentRevision,
   CommentState,
   FullCommentFragment,
-  useApproveCommentMutation,
-  useRejectCommentMutation,
-  useRequestChangesOnCommentMutation,
+  RejectCommentDocument,
+  RequestChangesOnCommentDocument,
 } from '@wepublish/editor/api';
 import { toPlaintext } from '@wepublish/richtext';
 import { useEffect, useMemo, useState } from 'react';
@@ -87,13 +87,13 @@ export function CommentStateChangeModal({
     useState<CommentRejectionReason>();
 
   const [approveComment, { loading: isApproving, error: errorApprove }] =
-    useApproveCommentMutation();
+    useMutation(ApproveCommentDocument);
   const [
     requestChanges,
     { loading: isRequestingChanges, error: errorRequestingChanges },
-  ] = useRequestChangesOnCommentMutation();
+  ] = useMutation(RequestChangesOnCommentDocument);
   const [rejectComment, { loading: isRejecting, error: errorRejecting }] =
-    useRejectCommentMutation();
+    useMutation(RejectCommentDocument);
 
   useEffect(() => {
     const error =

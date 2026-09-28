@@ -1,5 +1,8 @@
 import { useMutation } from '@apollo/client/react';
-import { MutationCreatePaywallArgs } from '@wepublish/editor/api';
+import {
+  CreatePaywallDocument,
+  MutationCreatePaywallArgs,
+} from '@wepublish/editor/api';
 import { CanCreatePaywall } from '@wepublish/permissions';
 import {
   createCheckedPermissionComponent,
@@ -44,18 +47,21 @@ const PaywallCreateView = () => {
     hideContentAfter: 3,
   }));
 
-  const [createPaywall, { loading: updateLoading }] = useCreatePaywallMutation({
-    onError: onErrorToast,
-    onCompleted: data => {
-      if (data.createPaywall) {
-        if (shouldClose) {
-          navigate(`./..`);
-        } else {
-          navigate(`./../edit/${data.createPaywall.id}`);
+  const [createPaywall, { loading: updateLoading }] = useMutation(
+    CreatePaywallDocument,
+    {
+      onError: onErrorToast,
+      onCompleted: data => {
+        if (data.createPaywall) {
+          if (shouldClose) {
+            navigate(`./..`);
+          } else {
+            navigate(`./../edit/${data.createPaywall.id}`);
+          }
         }
-      }
-    },
-  });
+      },
+    }
+  );
 
   const loading = updateLoading;
   const onSubmit = () => createPaywall({ variables: paywall });

@@ -24,7 +24,7 @@ export function FooterContainer({
   wepublishLogo = 'light',
 }: FooterContainerProps) {
   const { Footer } = useWebsiteBuilder();
-  const { data, loading, error } = useNavigationListQuery({
+  const { data, loading, error } = useQuery(NavigationListDocument, {
     fetchPolicy: 'cache-first',
   });
 

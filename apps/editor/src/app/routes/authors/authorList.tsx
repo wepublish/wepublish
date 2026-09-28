@@ -1,10 +1,10 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  AuthorListDocument,
   AuthorSort,
+  DeleteAuthorDocument,
   FullAuthorFragment,
-  useAuthorListQuery,
-  useDeleteAuthorMutation,
 } from '@wepublish/editor/api';
 import {
   AuthorEditPanel,
@@ -109,7 +109,7 @@ function AuthorList() {
     data,
     loading: isLoading,
     refetch: authorListRefetch,
-  } = useAuthorListQuery({
+  } = useQuery(AuthorListDocument, {
     variables: authorListQueryVariables,
   });
 
@@ -125,7 +125,10 @@ function AuthorList() {
     authorListQueryVariables,
   ]);
 
-  const [deleteAuthor, { loading: isDeleting }] = useDeleteAuthorMutation({});
+  const [deleteAuthor, { loading: isDeleting }] = useMutation(
+    DeleteAuthorDocument,
+    {}
+  );
 
   useEffect(() => {
     if (isCreateRoute) {

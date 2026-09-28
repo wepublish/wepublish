@@ -1,9 +1,6 @@
 import { useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
-import {
-  TokenListDocument,
-  useCreateTokenMutation,
-} from '@wepublish/editor/api';
+import { CreateTokenDocument, TokenListDocument } from '@wepublish/editor/api';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -30,7 +27,7 @@ function TokenGeneratePanel({ onClose }: TokenGeneratePanelProps) {
   const [name, setName] = useState('');
 
   const [createToken, { data, loading: isCreating, error: createError }] =
-    useCreateTokenMutation({
+    useMutation(CreateTokenDocument, {
       refetchQueries: [getOperationNameFromDocument(TokenListDocument)],
     });
 

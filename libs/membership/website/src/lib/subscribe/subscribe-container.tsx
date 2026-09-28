@@ -2,12 +2,12 @@ import { useLazyQuery, useMutation, useQuery } from '@apollo/client/react';
 import { useRegister, useUser } from '@wepublish/authentication/website';
 import { PaymentForm, useSubscribe } from '@wepublish/payment/website';
 import {
+  CreateSubscriptionInfoDocument,
   FullMemberPlanFragment,
-  useCreateSubscriptionInfoLazyQuery,
-  useInvoicesQuery,
-  useMemberPlanListQuery,
-  useResubscribeMutation,
-  useSubscriptionsQuery,
+  InvoicesDocument,
+  MemberPlanListDocument,
+  ResubscribeDocument,
+  SubscriptionsDocument,
 } from '@wepublish/website/api';
 import {
   BuilderContainerProps,
@@ -62,14 +62,14 @@ export const SubscribeContainer = <
   const { hasUser } = useUser();
   const { Subscribe } = useWebsiteBuilder();
 
-  const userSubscriptions = useSubscriptionsQuery({
+  const userSubscriptions = useQuery(SubscriptionsDocument, {
     skip: !hasUser,
   });
-  const userInvoices = useInvoicesQuery({
+  const userInvoices = useQuery(InvoicesDocument, {
     skip: !hasUser,
   });
 
-  const memberPlanList = useMemberPlanListQuery({
+  const memberPlanList = useQuery(MemberPlanListDocument, {
     variables: {
       take: 50,
       filter: {
@@ -78,13 +78,15 @@ export const SubscribeContainer = <
     },
   });
 
-  const [resubscribe] = useResubscribeMutation({});
+  const [resubscribe] = useMutation(ResubscribeDocument, {});
 
   const [subscribe, redirectPages, stripeClientSecret] = useSubscribe();
-  const [fetchSubscribeInfo, subscribeInfo] =
-    useCreateSubscriptionInfoLazyQuery({
+  const [fetchSubscribeInfo, subscribeInfo] = useLazyQuery(
+    CreateSubscriptionInfoDocument,
+    {
       fetchPolicy: 'cache-first',
-    });
+    }
+  );
   const {
     register: [register],
     challenge,
@@ -128,17 +130,17 @@ export const SubscribeContainer = <
             },
           });
 
-          if (result.errors) {
-            throw result.errors;
+          if (result.error) {
+            throw result.error;
           }
         }}
         onSubscribeWithRegister={async formData => {
-          const { errors: registerErrors } = await register({
+          const { error: registerError } = await register({
             variables: formData.register,
           });
 
-          if (registerErrors) {
-            throw registerErrors;
+          if (registerError) {
+            throw registerError;
           }
 
           const selectedMemberplan =
@@ -152,8 +154,8 @@ export const SubscribeContainer = <
             },
           });
 
-          if (result.errors) {
-            throw result.errors;
+          if (result.error) {
+            throw result.error;
           }
         }}
         onResubscribe={async formData => {

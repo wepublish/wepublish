@@ -1,5 +1,6 @@
 import { useMutation } from '@apollo/client/react';
 import {
+  CreateConsentDocument,
   MutationCreateConsentArgs,
 } from '@wepublish/editor/api';
 import { useState } from 'react';
@@ -49,7 +50,7 @@ export const ConsentCreateView = () => {
 
   const [shouldClose, setShouldClose] = useState(false);
 
-  const [createConsent, { loading }] = useCreateConsentMutation({
+  const [createConsent, { loading }] = useMutation(CreateConsentDocument, {
     onError: error => onErrorToast(error, consent.slug),
     onCompleted: consent => {
       toaster.push(

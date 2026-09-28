@@ -43,7 +43,7 @@ export function AuthorPage({
   const { query, replace } = useRouter();
   const { page, slug } = pageSchema.parse(query);
 
-  const { data } = useAuthorQuery({
+  const { data } = useQuery(AuthorDocument, {
     fetchPolicy: 'cache-only',
     variables: {
       slug,
@@ -62,7 +62,7 @@ export function AuthorPage({
     [page, data?.author?.id]
   );
 
-  const { data: articleListData } = useArticleListQuery({
+  const { data: articleListData } = useQuery(ArticleListDocument, {
     fetchPolicy: 'cache-only',
     variables,
   });

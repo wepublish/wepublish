@@ -23,7 +23,7 @@ import { BlueBox } from '../components/blue-box';
 import { NewsTeaser } from '../custom-teasers/news';
 
 export const isNewsTeasers = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is FullTeaserGridBlockFragment | FullTeaserListBlockFragment =>
   allPass([hasBlockStyle('News'), isTeaserListBlock])(block);
 

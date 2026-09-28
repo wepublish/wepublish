@@ -2,12 +2,11 @@ import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
   AuthorListDocument,
+  CreateAuthorDocument,
   FullAuthorFragment,
-  useAuthorListQuery,
-  useCreateAuthorMutation,
 } from '@wepublish/editor/api';
 import { slugify } from '@wepublish/utils';
-import { ReactNode, useMemo, useState } from 'react';
+import { ReactNode, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Message, SelectPicker, toaster } from 'rsuite';
 
@@ -56,12 +55,20 @@ export function AuthorSelectPicker({
   const { t } = useTranslation();
   const [authorsFilter, setAuthorsFilter] = useState('');
 
-  const { data: authorsData } = useAuthorListQuery({
-    variables: { filter: authorsFilter || undefined, take: 10 },
-    onError: showErrors,
-  });
+  const { data: authorsData, error: authorListError } = useQuery(
+    AuthorListDocument,
+    {
+      variables: { filter: authorsFilter || undefined, take: 10 },
+    }
+  );
 
-  const [createAuthor] = useCreateAuthorMutation({
+  useEffect(() => {
+    if (authorListError) {
+      showErrors(authorListError);
+    }
+  }, [authorListError]);
+
+  const [createAuthor] = useMutation(CreateAuthorDocument, {
     refetchQueries: [getOperationNameFromDocument(AuthorListDocument)],
     onError: showErrors,
   });

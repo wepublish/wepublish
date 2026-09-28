@@ -20,7 +20,7 @@ export function UserCheckPicker({ list, onChange }: UserCheckPickerProps) {
     take: 10,
   };
 
-  const { data } = useUserListQuery({
+  const { data } = useQuery(UserListDocument, {
     variables: usersVariables,
   });
 

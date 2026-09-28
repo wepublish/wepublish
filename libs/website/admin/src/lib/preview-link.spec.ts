@@ -20,7 +20,7 @@ const getPreviewHeader = () =>
     const terminatingLink = new ApolloLink(operation => {
       resolve(operation.getContext().headers.preview);
 
-      return Observable.of({ data: { __typename: 'Query' } });
+      return of({ data: { __typename: 'Query' } });
     });
 
     // Apollo Client 4 requires the executing client as a third argument.

@@ -1,13 +1,13 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  CreatePeerDocument,
   FullRemotePeerProfileFragment,
+  PeerDocument,
   PeerListDocument,
   PeerListQuery,
-  useCreatePeerMutation,
-  usePeerQuery,
-  useRemotePeerProfileQuery,
-  useUpdatePeerMutation,
+  RemotePeerProfileDocument,
+  UpdatePeerDocument,
 } from '@wepublish/editor/api';
 import { RichtextJSONDocument, toPlaintext } from '@wepublish/richtext';
 import { slugify } from '@wepublish/utils';
@@ -83,18 +83,23 @@ function PeerEditPanel({ id, hostURL, onClose, onSave }: PeerEditPanelProps) {
     data,
     loading: isLoading,
     error: loadError,
-  } = usePeerQuery({
+  } = useQuery(PeerDocument, {
     variables: { id: id! },
     skip: !id,
   });
 
-  const [createPeer, { loading: isCreating, error: createError }] =
-    useCreatePeerMutation({});
+  const [createPeer, { loading: isCreating, error: createError }] = useMutation(
+    CreatePeerDocument,
+    {}
+  );
 
-  const [updatePeer, { loading: isUpdating, error: updateError }] =
-    useUpdatePeerMutation({});
+  const [updatePeer, { loading: isUpdating, error: updateError }] = useMutation(
+    UpdatePeerDocument,
+    {}
+  );
 
-  const { refetch: fetchRemote } = useRemotePeerProfileQuery({
+  const { refetch: fetchRemote } = useQuery(RemotePeerProfileDocument, {
+    variables: { hostURL: '', token: '' },
     skip: true,
   });
 
@@ -190,6 +195,7 @@ function PeerEditPanel({ id, hostURL, onClose, onSave }: PeerEditPanelProps) {
           cache.writeQuery<PeerListQuery>({
             query: PeerListDocument,
             data: {
+              __typename: 'Query',
               peers: [data.createPeer, ...query.peers],
             },
           });

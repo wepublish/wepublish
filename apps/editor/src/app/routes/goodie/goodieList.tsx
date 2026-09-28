@@ -1,9 +1,9 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import {
+  DeleteGoodieDocument,
   Goodie,
+  GoodieListDocument,
   GoodieSort,
-  useDeleteGoodieMutation,
-  useGoodieListQuery,
 } from '@wepublish/editor/api';
 import {
   CanCreateGoodie,
@@ -49,7 +49,7 @@ function GoodieList() {
     undefined
   );
 
-  const { data, loading, refetch } = useGoodieListQuery({
+  const { data, loading, refetch } = useQuery(GoodieListDocument, {
     variables: {
       take: limit,
       skip: (page - 1) * limit,
@@ -57,7 +57,7 @@ function GoodieList() {
       order: mapTableSortTypeToGraphQLSortOrder(sortOrder),
     },
   });
-  const [deleteGoodie] = useDeleteGoodieMutation({
+  const [deleteGoodie] = useMutation(DeleteGoodieDocument, {
     onCompleted() {
       refetch();
     },

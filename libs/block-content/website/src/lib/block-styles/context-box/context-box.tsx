@@ -91,6 +91,6 @@ export const ContextBox = ({
 };
 
 export const isContextBoxBlockStyle = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is FullBreakBlockFragment =>
   allPass([hasBlockStyle('ContextBox'), isBreakBlock])(block);

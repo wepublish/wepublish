@@ -10,8 +10,8 @@ import {
   Tabs,
 } from '@mui/material';
 import {
-  useUpdateWebsiteSettingsMutation,
-  useWebsiteSettingsLazyQuery,
+  UpdateWebsiteSettingsDocument,
+  WebsiteSettingsDocument,
 } from '@wepublish/editor/api';
 import { minimalTheme } from '@wepublish/ui';
 import { memo, PropsWithChildren, useState } from 'react';
@@ -64,9 +64,10 @@ function a11yProps(index: number) {
 export const WebsiteTheme = memo(() => {
   const { t } = useTranslation();
 
-  const [loadSettings, { loading }] = useWebsiteSettingsLazyQuery();
-  const [updateWebsiteSettings, { loading: saving }] =
-    useUpdateWebsiteSettingsMutation({
+  const [loadSettings, { loading }] = useLazyQuery(WebsiteSettingsDocument);
+  const [updateWebsiteSettings, { loading: saving }] = useMutation(
+    UpdateWebsiteSettingsDocument,
+    {
       onCompleted: () => {
         toaster.push(
           <Message
@@ -91,7 +92,8 @@ export const WebsiteTheme = memo(() => {
           </Message>
         );
       },
-    });
+    }
+  );
 
   const [activeTab, setActiveTab] = useState<number>(0);
   const handleChange = (

@@ -81,19 +81,43 @@ const revisionListQueryResult = {
   fetchMore: vi.fn(),
 };
 
-vi.mock('@wepublish/editor/api', async importOriginal => ({
-  ...((await importOriginal()) as object),
-  useArticleQuery: () => articleQueryResult,
-  useArticleRevisionListQuery: () => revisionListQueryResult,
-  useArticleRevisionPreviewLazyQuery: () => [vi.fn(), { data: undefined }],
-  useSettingsListQuery: () => ({}),
-  useCreateJwtForWebsiteLoginMutation: () => [vi.fn()],
-  useCreateArticleMutation: () => useFakeMutation(),
-  useUpdateArticleMutation: () => useFakeMutation(true),
-  usePublishArticleMutation: () => useFakeMutation(),
-  useRestoreArticleRevisionMutation: () => useFakeMutation(),
-  useDiscardArticleDraftMutation: () => useFakeMutation(),
-}));
+// The editor drives Apollo through the generated documents, so the fakes are
+// picked by operation name. Importing the documents here would deadlock: they
+// live in a module that itself imports the module being mocked.
+const operationName = (document: unknown) =>
+  (
+    document as {
+      definitions?: {
+        kind: string;
+        name?: { value: string };
+      }[];
+    }
+  )?.definitions?.find(definition => definition.kind === 'OperationDefinition')
+    ?.name?.value;
+
+vi.mock('@apollo/client/react', async importOriginal => {
+  const actual = await importOriginal<typeof import('@apollo/client/react')>();
+
+  return {
+    ...actual,
+    useQuery: (document: unknown) => {
+      switch (operationName(document)) {
+        case 'Article':
+          return articleQueryResult;
+
+        case 'ArticleRevisionList':
+          return revisionListQueryResult;
+
+        default:
+          return {};
+      }
+    },
+    useLazyQuery: () => [vi.fn(), { data: undefined }],
+    // Only the update is kept in flight; the rest resolve immediately.
+    useMutation: (document: unknown) =>
+      useFakeMutation(operationName(document) === 'UpdateArticle'),
+  };
+});
 
 const blockListProps = vi.hoisted(() => ({ disabled: [] as boolean[] }));
 

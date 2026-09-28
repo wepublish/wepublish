@@ -6,7 +6,7 @@ import { useMemo } from 'react';
 import IframeResizer from '@iframe-resizer/react';
 
 export const isIFrameBlock = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is FullIFrameBlockFragment => block.__typename === 'IFrameBlock';
 
 export const IFrameBlockWrapper = styled('div')``;

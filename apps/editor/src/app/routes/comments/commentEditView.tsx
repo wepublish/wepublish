@@ -1,12 +1,12 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  CommentDocument,
   CommentRevisionInput,
   FullCommentFragment,
+  RatingSystemDocument,
   TagType,
-  useCommentQuery,
-  useRatingSystemQuery,
-  useUpdateCommentMutation,
+  UpdateCommentDocument,
 } from '@wepublish/editor/api';
 import {
   CommentDeleteBtn,
@@ -114,20 +114,37 @@ const CommentEditView = memo(() => {
   // where the tag list is handled
   const [selectedTags, setSelectedTags] = useState<string[] | null>(null);
 
-  const { data: commentData, loading: loadingComment } = useCommentQuery({
+  const {
+    data: commentData,
+    loading: loadingComment,
+    error: commentError,
+  } = useQuery(CommentDocument, {
     variables: {
       id: commentId,
     },
-    onError: showErrors,
   });
 
-  const { data: ratingSystem, loading: loadingRatingSystem } =
-    useRatingSystemQuery({
-      onError: showErrors,
-    });
+  const {
+    data: ratingSystem,
+    loading: loadingRatingSystem,
+    error: ratingSystemError,
+  } = useQuery(RatingSystemDocument);
 
-  const [updateCommentMutation, { loading: updatingComment }] =
-    useUpdateCommentMutation({
+  useEffect(() => {
+    if (commentError) {
+      showErrors(commentError);
+    }
+  }, [commentError]);
+
+  useEffect(() => {
+    if (ratingSystemError) {
+      showErrors(ratingSystemError);
+    }
+  }, [ratingSystemError]);
+
+  const [updateCommentMutation, { loading: updatingComment }] = useMutation(
+    UpdateCommentDocument,
+    {
       onCompleted: () =>
         toaster.push(
           <Message
@@ -140,7 +157,8 @@ const CommentEditView = memo(() => {
           </Message>
         ),
       onError: showErrors,
-    });
+    }
+  );
 
   // compute loading state
   const loading = updatingComment || loadingComment || loadingRatingSystem;
@@ -291,7 +309,7 @@ const CommentEditView = memo(() => {
                             setComment({
                               ...comment,
                               state,
-                              rejectionReason,
+                              rejectionReason: rejectionReason ?? null,
                             });
                           }}
                         />
@@ -411,8 +429,13 @@ const CommentEditView = memo(() => {
                                         oldOverride.answerId ===
                                         override.answerId
                                       ) ?
-                                        { answerId: override.answerId, value }
+                                        {
+                                          __typename: 'OverriddenRating',
+                                          answerId: override.answerId,
+                                          value,
+                                        }
                                       : {
+                                          __typename: 'OverriddenRating',
                                           answerId: oldOverride.answerId,
                                           value: oldOverride.value,
                                         }

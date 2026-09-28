@@ -11,7 +11,7 @@ import {
 } from '@dnd-kit/core';
 import styled from '@emotion/styled';
 import { Chip, Collapse, css, Typography } from '@mui/material';
-import { TeaserType, useBlockStylesQuery } from '@wepublish/editor/api';
+import { BlockStylesDocument, TeaserType } from '@wepublish/editor/api';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -349,7 +349,7 @@ export function TeaserOverviewPanel({
     });
   }, []);
 
-  const { data: blockStylesData } = useBlockStylesQuery();
+  const { data: blockStylesData } = useQuery(BlockStylesDocument);
   const blockStyleNames = useMemo(() => {
     const map = new Map<string, string>();
     for (const style of blockStylesData?.blockStyles ?? []) {

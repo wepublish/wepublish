@@ -2,7 +2,7 @@ import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { Typography } from '@mui/material';
 import { InvoiceListContainer } from '@wepublish/membership/website';
-import { FullInvoiceFragment, useInvoicesQuery } from '@wepublish/website/api';
+import { FullInvoiceFragment, InvoicesDocument } from '@wepublish/website/api';
 import { Link } from '@wepublish/website/builder';
 import { MdChevronLeft } from 'react-icons/md';
 
@@ -39,7 +39,7 @@ const formatDeadline = (raw: string | null | undefined): string => {
 };
 
 export const OpenInvoicesCard = () => {
-  const { data, loading } = useInvoicesQuery();
+  const { data, loading } = useQuery(InvoicesDocument);
   const unpaid = (data?.userInvoices ?? []).filter(isUnpaid);
 
   if (!loading && unpaid.length === 0) {
@@ -110,7 +110,7 @@ const ClearText = styled(Typography)`
 `;
 
 export const EenewsOpenInvoices = () => {
-  const { data, loading } = useInvoicesQuery();
+  const { data, loading } = useQuery(InvoicesDocument);
   const unpaid = (data?.userInvoices ?? []).filter(isUnpaid);
   const allClear = !loading && unpaid.length === 0;
 

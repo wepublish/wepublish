@@ -11,7 +11,7 @@ import {
 import { allPass, anyPass } from 'ramda';
 
 export const isFrageDesTages = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is FullTeaserListBlockFragment | FullTeaserGridBlockFragment =>
   allPass([
     hasBlockStyle('FrageDesTages'),

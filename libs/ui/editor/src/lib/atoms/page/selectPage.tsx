@@ -42,7 +42,11 @@ export function SelectPage({
    * Loading page
    */
 
-  const { data: pageData, refetch } = usePageListQuery({
+  const {
+    data: pageData,
+    error: pageListError,
+    refetch,
+  } = useQuery(PageListDocument, {
     variables: {
       sort: PageSort.PublishedAt,
       order: SortOrder.Ascending,

@@ -132,7 +132,7 @@ export const FocusTeaser = ({
 };
 
 export const isFocusTeaserBlockStyle = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is FullTeaserListBlockFragment | FullTeaserSlotsBlockFragment =>
   allPass([
     hasBlockStyle('Focus'),

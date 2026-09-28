@@ -6,7 +6,7 @@ import {
 } from '@wepublish/website/builder';
 
 export const isCommentBlock = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is FullCommentBlockFragment => block.__typename === 'CommentBlock';
 
 export const CommentBlockWrapper = styled('article')`

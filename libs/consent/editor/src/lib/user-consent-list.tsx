@@ -12,9 +12,9 @@ import {
   TableWrapper,
 } from '@wepublish/ui/editor';
 import {
-  useUserConsentsQuery,
-  useDeleteUserConsentMutation,
+  DeleteUserConsentDocument,
   UserConsent,
+  UserConsentsDocument,
 } from '@wepublish/editor/api';
 import { RowDataType } from 'rsuite-table';
 
@@ -50,11 +50,15 @@ const consentValues = [
 export function UserConsentList(props: UserConsentListProps) {
   const { t } = useTranslation();
 
-  const { loading, data, refetch } = useUserConsentsQuery({
-    onError: onErrorToast,
-  });
+  const { loading, data, refetch, error } = useQuery(UserConsentsDocument);
 
-  const [deleteUserConsent] = useDeleteUserConsentMutation({
+  useEffect(() => {
+    if (error) {
+      onErrorToast(error);
+    }
+  }, [error]);
+
+  const [deleteUserConsent] = useMutation(DeleteUserConsentDocument, {
     onError: onErrorToast,
     onCompleted: () => {
       toaster.push(

@@ -10,7 +10,7 @@ import {
 } from '@wepublish/website/builder';
 
 export const isBreakBlock = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is FullBreakBlockFragment => block.__typename === 'BreakBlock';
 
 export const BreakBlockWrapper = styled('div')`

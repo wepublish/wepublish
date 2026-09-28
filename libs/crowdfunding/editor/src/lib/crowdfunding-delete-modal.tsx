@@ -1,8 +1,7 @@
 import { useMutation } from '@apollo/client/react';
 import {
   Crowdfunding,
-  CrowdfundingsQuery,
-  useDeleteCrowdfundingMutation,
+  DeleteCrowdfundingDocument,
 } from '@wepublish/editor/api';
 import { TFunction } from 'i18next';
 import React from 'react';
@@ -48,7 +47,7 @@ export function CrowdfundingDeleteModal({
 }: DeleteCrowdfundingProps) {
   const { t } = useTranslation();
 
-  const [deleteCrowdfundingMutation] = useDeleteCrowdfundingMutation({
+  const [deleteCrowdfundingMutation] = useMutation(DeleteCrowdfundingDocument, {
     onError: onErrorToast,
     onCompleted: onCompletedToast(t),
   });

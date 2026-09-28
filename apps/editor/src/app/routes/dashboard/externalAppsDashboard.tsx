@@ -10,6 +10,7 @@ import {
   Typography,
 } from '@mui/material';
 import {
+  ExternalAppsDocument,
   ExternalAppsTarget,
 } from '@wepublish/editor/api';
 import { useTranslation } from 'react-i18next';
@@ -61,7 +62,7 @@ function AppIcon({ iconName }: AppIconProps) {
 export function ExternalAppsDashboard() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { data, loading, error } = useExternalAppsQuery({
+  const { data, loading, error } = useQuery(ExternalAppsDocument, {
     fetchPolicy: 'cache-and-network',
   });
 

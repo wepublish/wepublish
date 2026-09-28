@@ -1,12 +1,11 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  DeleteDocumentDocument,
   DocumentListDocument,
   DocumentListQuery,
+  DocumentStorageUsageDocument,
   FullDocumentFragment,
-  useDeleteDocumentMutation,
-  useDocumentListQuery,
-  useDocumentStorageUsageQuery,
 } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
@@ -100,11 +99,12 @@ function DocumentList() {
     data,
     refetch,
     loading: isLoading,
-  } = useDocumentListQuery({
+  } = useQuery(DocumentListDocument, {
     variables: listVariables,
   });
 
-  const [deleteDocument, { loading: isDeleting }] = useDeleteDocumentMutation(
+  const [deleteDocument, { loading: isDeleting }] = useMutation(
+    DeleteDocumentDocument,
     {}
   );
 
@@ -112,7 +112,7 @@ function DocumentList() {
     data: storageData,
     error: storageError,
     refetch: refetchStorage,
-  } = useDocumentStorageUsageQuery();
+  } = useQuery(DocumentStorageUsageDocument);
   if (storageError) {
     console.error('DocumentStorageUsage query error:', storageError);
   }
@@ -472,6 +472,7 @@ function DocumentList() {
                   cache.writeQuery<DocumentListQuery>({
                     query: DocumentListDocument,
                     data: {
+                      __typename: 'Query',
                       documents: {
                         ...query.documents,
                         nodes: query.documents.nodes.filter(

@@ -7,7 +7,7 @@ import { BuilderSoundCloudTrackBlockProps } from '@wepublish/website/builder';
 import ReactPlayer from 'react-player';
 
 export const isSoundCloudTrackBlock = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is FullSoundCloudTrackBlockFragment =>
   block.__typename === 'SoundCloudTrackBlock';
 

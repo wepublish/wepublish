@@ -1,11 +1,11 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  DeleteSubscriptionDocument,
   SubscriptionFilter,
+  SubscriptionListDocument,
   SubscriptionSort,
   TinySubscriptionFragment,
-  useDeleteSubscriptionMutation,
-  useSubscriptionListQuery,
 } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
@@ -125,7 +125,7 @@ function SubscriptionList() {
     data,
     refetch,
     loading: isLoading,
-  } = useSubscriptionListQuery({
+  } = useQuery(SubscriptionListDocument, {
     variables: {
       filter,
       take: limit,
@@ -145,8 +145,9 @@ function SubscriptionList() {
     });
   }, [filter, page, limit, sortOrder, sortField]);
 
-  const [deleteSubscription, { loading: isDeleting }] =
-    useDeleteSubscriptionMutation();
+  const [deleteSubscription, { loading: isDeleting }] = useMutation(
+    DeleteSubscriptionDocument
+  );
 
   const { t } = useTranslation();
 

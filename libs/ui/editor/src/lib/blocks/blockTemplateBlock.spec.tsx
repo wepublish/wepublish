@@ -14,15 +14,33 @@ import { BlockMap } from './blockMap';
 import { BlockTemplateBlock } from './blockTemplateBlock';
 import { BlockTemplateBlockValue, BlockValue } from './types';
 
-const useBlockTemplateListQuery = vi.fn();
-const useBlockTemplateQuery = vi.fn();
+const blockTemplateListQueryMock = vi.fn();
+const blockTemplateQueryMock = vi.fn();
 
-vi.mock('@wepublish/editor/api', async importOriginal => ({
-  ...((await importOriginal()) as object),
-  useBlockTemplateListQuery: (...args: unknown[]) =>
-    useBlockTemplateListQuery(...args),
-  useBlockTemplateQuery: (...args: unknown[]) => useBlockTemplateQuery(...args),
-}));
+const operationName = (document: unknown) =>
+  (document as { definitions?: { name?: { value?: string } }[] })
+    ?.definitions?.[0]?.name?.value;
+
+vi.mock('@apollo/client/react', async importOriginal => {
+  const actual = (await importOriginal()) as Record<string, unknown>;
+
+  return {
+    ...actual,
+    useQuery: (document: unknown, options?: unknown) => {
+      switch (operationName(document)) {
+        case 'BlockTemplateList':
+          return blockTemplateListQueryMock(options);
+        case 'BlockTemplate':
+          return blockTemplateQueryMock(options);
+        default:
+          return (actual.useQuery as (...args: unknown[]) => unknown)(
+            document,
+            options
+          );
+      }
+    },
+  };
+});
 
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
@@ -72,13 +90,13 @@ const mockQuery = ({
 } = {}) => {
   const refetch = vi.fn();
 
-  useBlockTemplateListQuery.mockReturnValue({
+  blockTemplateListQueryMock.mockReturnValue({
     data: { blockTemplates: { nodes: templates } },
     loading,
     refetch,
   });
 
-  useBlockTemplateQuery.mockImplementation(({ skip }: { skip?: boolean }) => ({
+  blockTemplateQueryMock.mockImplementation(({ skip }: { skip?: boolean }) => ({
     data: skip ? undefined : { blockTemplate: selected },
   }));
 

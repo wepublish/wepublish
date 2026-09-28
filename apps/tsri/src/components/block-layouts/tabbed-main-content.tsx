@@ -9,7 +9,7 @@ import { TsriLayoutType } from '../teaser-layouts/tsri-layout';
 import { TsriTabbedContentType } from './tsri-base-tabbed-content';
 
 export const isTabbedMainContent = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is FullFlexBlockFragment =>
   allPass([
     hasBlockStyle(TsriTabbedContentType.TabbedMainContent),

@@ -28,7 +28,7 @@ import { reflektSliderControls } from '../reflekt-slider-controls';
 import { TeaserWrapper } from '../teasers/reflekt-teaser';
 
 export const isTeaserSlotsTopic = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is BuilderTeaserSlotsBlockProps =>
   allPass([
     isTeaserSlotsBlock,

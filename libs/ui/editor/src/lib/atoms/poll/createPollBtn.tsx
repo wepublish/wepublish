@@ -8,7 +8,7 @@ import { IconButton, Message, toaster } from 'rsuite';
 
 export function CreatePollBtn() {
   const [createPollMutation, { data: newPoll, loading }] =
-    useCreatePollMutation();
+    useMutation(CreatePollDocument);
   const navigate = useNavigate();
   const { t } = useTranslation();
 
