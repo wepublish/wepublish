@@ -140,7 +140,7 @@ import { readConfig } from '../readConfig';
           introspection:
             process.env.NODE_ENV !== 'production' &&
             configFile.general.apolloIntrospection,
-          playground: configFile.general.apolloPlayground,
+          graphiql: configFile.general.apolloPlayground,
           allowBatchedHttpRequests: true,
           inheritResolversFromInterfaces: true,
           csrfPrevention: false,
