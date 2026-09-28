@@ -16,9 +16,28 @@ import {
   MAILS_MODULE_OPTIONS,
   MailsModuleOptions,
 } from './mails-module-options';
-import { PrismaClient } from '@prisma/client';
+import { MailLogState, PrismaClient } from '@prisma/client';
 
 export const MAIL_WEBHOOK_PATH_PREFIX = 'mail-webhooks';
+
+// Partial: letter states (neuewege) never arrive through this webhook
+const MAIL_LOG_STATE_RANK: Partial<Record<MailLogState, number>> = {
+  [MailLogState.submitted]: 0,
+  [MailLogState.accepted]: 1,
+  [MailLogState.deferred]: 2,
+  [MailLogState.delivered]: 3,
+  [MailLogState.bounced]: 4,
+  [MailLogState.rejected]: 4,
+};
+
+/**
+ * Provider events arrive out of order and get retried: a late `send` must not
+ * turn a bounced mail back into a delivered one. A state only moves forward.
+ */
+export const shouldUpdateMailLogState = (
+  current: MailLogState,
+  next: MailLogState
+) => (MAIL_LOG_STATE_RANK[next] ?? 0) >= (MAIL_LOG_STATE_RANK[current] ?? 0);
 
 @Controller(MAIL_WEBHOOK_PATH_PREFIX)
 export class MailWebhookController {
@@ -66,6 +85,10 @@ export class MailWebhookController {
 
         if (!mailLog) {
           continue; // TODO: handle missing mailLog
+        }
+
+        if (!shouldUpdateMailLogState(mailLog.state, mailLogStatus.state)) {
+          continue;
         }
 
         await this.prisma.mailLog.update({
