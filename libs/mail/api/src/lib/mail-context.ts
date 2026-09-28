@@ -1,11 +1,20 @@
 import { PrismaClient, SettingMailProvider, UserEvent } from '@prisma/client';
 import { BaseMailProvider } from './mail-provider/base-mail-provider';
 
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { MailController, MailControllerConfig } from './mail.controller';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 import { SecretCrypto } from '@wepublish/settings/api';
 import { composeMail, MailTemplateContent } from './mail-renderer';
+import { matchesPlaceholderEmail } from '@wepublish/utils/api';
+import {
+  BuildMailDataOptions,
+  EMPTY_PURL_DATA,
+  MailData,
+  PurlProvider,
+  SAMPLE_PURL_DATA,
+  sanitizeRecipient,
+} from './mail-data';
 
 export interface SendComposedMailProps {
   readonly mailTemplateId: string;
@@ -107,20 +116,91 @@ export interface MailContextProps {
   readonly prisma: PrismaClient;
   readonly kv: KvTtlCacheService;
   readonly jwtGenerator: (userId: string) => Promise<string>;
+  readonly purlProvider?: PurlProvider;
 }
 
 @Injectable()
 export class MailContext implements MailContextInterface {
+  private logger = new Logger('MailContext');
+
   mailProvider: BaseMailProvider;
   prisma: PrismaClient;
   kv: KvTtlCacheService;
   jwtGenerator: (userId: string) => Promise<string>;
+  purlProvider?: PurlProvider;
 
   constructor(props: MailContextProps) {
     this.mailProvider = props.mailProvider;
     this.prisma = props.prisma;
     this.kv = props.kv;
     this.jwtGenerator = props.jwtGenerator;
+    this.purlProvider = props.purlProvider;
+  }
+
+  async buildMailData({
+    recipient,
+    optionalData,
+    jwtOverride,
+    mode,
+    purlOrigin = 'mail',
+    mintJwt = true,
+  }: BuildMailDataOptions): Promise<MailData> {
+    const user = sanitizeRecipient(recipient) as Record<string, unknown> & {
+      id: string;
+    };
+    const jwt =
+      jwtOverride ?? (mintJwt ? await this.jwtGenerator(user.id) : '');
+
+    let purl = SAMPLE_PURL_DATA;
+
+    if (mode === 'send') {
+      if (this.purlProvider) {
+        purl = await this.purlProvider.purlFor(user.id, purlOrigin);
+      } else {
+        this.logger.warn(
+          'No PurlProvider configured; {{purl}} placeholders render empty.'
+        );
+        purl = EMPTY_PURL_DATA;
+      }
+    }
+
+    return {
+      user,
+      optional: optionalData,
+      jwt,
+      currentDate: new Date(),
+      ...purl,
+    };
+  }
+
+  async getPlaceholderEmailPatterns(): Promise<string[]> {
+    return this.kv.getOrLoadNs(
+      'placeholder-email',
+      'patterns',
+      async () => {
+        const settings = await this.prisma.settingLetterProvider.findMany({
+          select: { placeholderEmailContains: true },
+        });
+
+        return settings
+          .map(({ placeholderEmailContains }) =>
+            placeholderEmailContains?.trim()
+          )
+          .filter((pattern): pattern is string => !!pattern);
+      },
+      60
+    );
+  }
+
+  async isPlaceholderEmail(email: string | null | undefined): Promise<boolean> {
+    if (!email) {
+      return false;
+    }
+
+    return matchesPlaceholderEmail(
+      email,
+      await this.getPlaceholderEmailPatterns()
+    );
   }
 
   async sendMail(

@@ -1,4 +1,37 @@
 {
+  "welcome": {
+    "title": "Willkommen",
+    "intro": "Du bist jetzt angemeldet. Als Erstes prüfen wir kurz deine E-Mail-Adresse, damit du dich künftig auch ohne Brief anmelden kannst.",
+    "introPlaceholder": "Du bist jetzt angemeldet. Für dein Konto ist noch keine E-Mail-Adresse hinterlegt – bitte gib sie als Erstes an, damit du dich künftig auch ohne Brief anmelden kannst.",
+    "continue": "Weiter",
+    "toProfile": "Direkt zum Profil",
+    "emailTitle": "Deine E-Mail-Adresse",
+    "emailPlaceholderInfo": "Wir senden dir eine Bestätigungs-E-Mail an diese Adresse.",
+    "emailLabel": "E-Mail-Adresse",
+    "emailSubmit": "Bestätigungs-E-Mail senden",
+    "emailVerifyInfo": "Wir haben {{email}} für dich hinterlegt. Bestätige kurz, dass diese Adresse stimmt.",
+    "emailVerify": "Adresse bestätigen",
+    "emailChange": "Andere Adresse verwenden",
+    "skip": "Überspringen",
+    "emailSentTitle": "Bitte bestätige deine E-Mail-Adresse",
+    "emailSent": "Wir haben eine E-Mail an {{email}} gesendet. Klicke auf den Link darin – diese Seite geht dann automatisch weiter.",
+    "resend": "Erneut senden",
+    "passwordTitle": "Passwort setzen (optional)",
+    "passwordInfo": "Mit einem Passwort kannst du dich künftig auch ohne Login-Link anmelden.",
+    "password": "Passwort",
+    "passwordRepeat": "Passwort wiederholen",
+    "passwordSubmit": "Passwort speichern",
+    "redirecting": "Einen Moment, du wirst weitergeleitet …",
+    "secondFactorInfo": "Zur Sicherheit brauchen wir noch eine Angabe, die auf deinem Brief steht.",
+    "secondFactor": {
+      "postalCode": "Postleitzahl",
+      "city": "Ort",
+      "firstName": "Vorname",
+      "lastName": "Nachname"
+    },
+    "secondFactorInvalid": "Diese Angabe stimmt nicht mit unseren Daten überein. Bitte prüfe sie und versuche es erneut.",
+    "tooManyAttempts": "Zu viele Fehlversuche. Bitte melde dich später erneut mit deinem Login-Link an."
+  },
   "navbar": {
     "subscribe": "Member werden",
     "unpaid": "Offene",
@@ -76,6 +109,15 @@
     }
   },
   "login": {
+    "code": {
+      "label": "Login-Code",
+      "helper": "Der Code aus deinem Brief, z.B. ABCDE-FGHJK",
+      "submit": "Anmelden",
+      "haveCode": "Ich habe einen Login-Code",
+      "backToLogin": "Zurück zur Anmeldung",
+      "invalid": "Dieser Code ist ungültig oder abgelaufen.",
+      "challengeRequired": "Zu viele Versuche – bitte fordere stattdessen einen Login-Link per E-Mail an oder versuche es später erneut."
+    },
     "email": "Email",
     "password": "Passwort",
     "loginWithLink": "Mit Link einloggen",
@@ -188,6 +230,7 @@
     "emailChangeRequested": "Eine Bestätigungs-E-Mail wurde an deine aktuelle E-Mail-Adresse gesendet. Bitte klicke auf den Link in der E-Mail, um die Änderung zu bestätigen.",
     "pendingEmailChange": "Eine Änderung zu {email} wartet auf Bestätigung. Bitte prüfe deinen Posteingang.",
     "emailChangeConfirmed": "Deine E-Mail-Adresse wurde erfolgreich geändert.",
+    "emailConfirmedLogin": "Jetzt anmelden",
     "emailChangeExpired": "Die Bestätigung ist abgelaufen. Bitte beantrage die Änderung erneut.",
     "activeSubscriptions": "Aktive {type, select, Donation {Spenden} other {Abos}}",
     "cancelledSubscriptions": "Gekündigte Abos & Inaktive Spenden",

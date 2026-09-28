@@ -76,8 +76,8 @@ const nextConfig = {
       },
     ];
   },
-  headers: async () =>
-    process.env.NODE_ENV === 'production' ?
+  headers: async () => [
+    ...(process.env.NODE_ENV === 'production' ?
       [
         {
           source: '/:path*',
@@ -125,7 +125,25 @@ const nextConfig = {
           ],
         },
       ]
-    : [],
+    : []),
+    {
+      source: '/:path*',
+      headers: [
+        { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+      ],
+    },
+    ...[
+      '/login',
+      '/confirm-email',
+      '/welcome',
+      '/l/:path*',
+      '/profile',
+      '/profile/:path*',
+    ].map(source => ({
+      source,
+      headers: [{ key: 'Referrer-Policy', value: 'no-referrer' }],
+    })),
+  ],
   experimental: {
     scrollRestoration: true,
   },

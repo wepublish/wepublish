@@ -776,7 +776,7 @@ model MemberPlan {
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
   name                           String
-  slug                           String                   @unique
+  slug                           String                       @unique
   tags                           String[]
   shortDescription               Json?
   slateShortDescription          Json?
@@ -787,11 +787,11 @@ model MemberPlan {
   periodicityPricing             MemberPlanPeriodicityPrice[]
   defaultPaymentPeriodicity      PaymentPeriodicity?
   availablePaymentMethods        AvailablePaymentMethod[]
-  migrateToTargetPaymentMethod   PaymentMethod?           @relation("PaymentMethodMigration", fields: [migrateToTargetPaymentMethodID], references: [id])
+  migrateToTargetPaymentMethod   PaymentMethod?               @relation("PaymentMethodMigration", fields: [migrateToTargetPaymentMethodID], references: [id])
   migrateToTargetPaymentMethodID String?
-  extendable                     Boolean                  @default(true)
+  extendable                     Boolean                      @default(true)
   maxCount                       Int?
-  productType                    ProductType              @default(Subscription)
+  productType                    ProductType                  @default(Subscription)
   externalReward                 String?
 
   imageID String?
@@ -1065,11 +1065,21 @@ model Token {
   @@map("tokens")
 }
 
+enum SessionOrigin {
+  password
+  jwt
+  purl
+  preview
+  impersonation
+  register
+}
+
 model Session {
-  id        String   @id @default(dbgenerated("gen_random_uuid()"))
-  createdAt DateTime @default(now()) @db.Timestamptz(3)
-  expiresAt DateTime @db.Timestamptz(3)
-  token     String   @unique
+  id        String        @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt DateTime      @default(now()) @db.Timestamptz(3)
+  expiresAt DateTime      @db.Timestamptz(3)
+  token     String        @unique
+  origin    SessionOrigin @default(password)
 
   impersonatedBy      String?
   impersonationReason String?
@@ -1089,12 +1099,36 @@ model ImpersonationGrant {
   id        String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt DateTime @default(now()) @db.Timestamptz(3)
 
-  jti       String    @unique
-  expiresAt DateTime  @db.Timestamptz(3)
+  jti        String    @unique
+  expiresAt  DateTime  @db.Timestamptz(3)
   redeemedAt DateTime? @db.Timestamptz(3)
 
   @@index([expiresAt])
   @@map("impersonation_grants")
+}
+
+model UserLoginCode {
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  codeHash      String @unique
+  codeEncrypted String
+
+  expiresAt     DateTime  @db.Timestamptz(3)
+  maxUses       Int
+  usesRemaining Int
+  lastUsedAt    DateTime? @db.Timestamptz(3)
+  revokedAt     DateTime? @db.Timestamptz(3)
+  revokedBy     String?
+  issuedBy      String?
+
+  @@index([userId])
+  @@index([expiresAt])
+  @@map("user_login_codes")
 }
 
 model SubscriptionPeriod {
@@ -1213,27 +1247,28 @@ model PaymentProviderCustomer {
 }
 
 model User {
-  id              String    @id @default(dbgenerated("gen_random_uuid()"))
-  createdAt       DateTime  @default(now()) @db.Timestamptz(3)
-  modifiedAt      DateTime  @updatedAt @db.Timestamptz(3)
-  birthday        DateTime? @db.Date
-  email           String    @unique
-  emailVerifiedAt DateTime? @db.Timestamptz(3)
-  pendingEmail    String?
-  pendingEmailAt  DateTime? @db.Timestamptz(3)
-  name            String
-  firstName       String?
-  flair           String?
-  password        String
-  active          Boolean
-  lastLogin       DateTime? @db.Timestamptz(3)
-  roleIDs         String[]
-  totpSecret      String?
-  totpEnabled     Boolean   @default(false)
-  totpExempt      Boolean   @default(false)
-  userImageID     String?
-  userImage       Image?    @relation(fields: [userImageID], references: [id])
-  note            String?
+  id                    String    @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt             DateTime  @default(now()) @db.Timestamptz(3)
+  modifiedAt            DateTime  @updatedAt @db.Timestamptz(3)
+  birthday              DateTime? @db.Date
+  email                 String    @unique
+  emailVerifiedAt       DateTime? @db.Timestamptz(3)
+  pendingEmail          String?
+  pendingEmailAt        DateTime? @db.Timestamptz(3)
+  pendingEmailTokenHash String?   @unique
+  name                  String
+  firstName             String?
+  flair                 String?
+  password              String
+  active                Boolean
+  lastLogin             DateTime? @db.Timestamptz(3)
+  roleIDs               String[]
+  totpSecret            String?
+  totpEnabled           Boolean   @default(false)
+  totpExempt            Boolean   @default(false)
+  userImageID           String?
+  userImage             Image?    @relation(fields: [userImageID], references: [id])
+  note                  String?
 
   address                  UserAddress?
   properties               Json                      @default("[]")
@@ -1254,6 +1289,7 @@ model User {
   changelogConfirmations    ChangelogEntry[]
   notificationReads         NotificationRead[]
   notificationConfirmations NotificationConfirmation[]
+  loginCodes                UserLoginCode[]
 
   @@index([createdAt])
   @@map("users")
@@ -1488,6 +1524,7 @@ enum UserEvent {
   LOGIN_LINK
   TEST_MAIL
   EMAIL_CHANGE
+  EMAIL_VERIFICATION
 }
 
 model UserFlowMail {

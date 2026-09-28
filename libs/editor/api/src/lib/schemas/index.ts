@@ -21,6 +21,7 @@ export * from './goodie.generated';
 export * from './image.generated';
 export * from './imported-events.generated';
 export * from './invoice.generated';
+export * from './login-code.generated';
 export * from './mail-log.generated';
 export * from './mail-send.generated';
 export * from './mail-template.generated';

@@ -1815,6 +1815,15 @@ export type ListicleItemInput = {
   title?: InputMaybe<Scalars['String']>;
 };
 
+/** Attribute printed on the letter that a restricted session must confirm before it can claim the account with a real email address. */
+export enum LoginCodeSecondFactor {
+  City = 'city',
+  FirstName = 'firstName',
+  LastName = 'lastName',
+  None = 'none',
+  PostalCode = 'postalCode'
+}
+
 export enum LoginStatus {
   All = 'ALL',
   LoggedIn = 'LOGGED_IN',
@@ -2571,7 +2580,7 @@ export type Mutation = {
   cancelUserSubscription?: Maybe<PublicSubscription>;
   /** Confirms that the manual action required by a changelog entry has been completed. Requires the permission to update settings. */
   confirmChangelogEntry: ChangelogEntry;
-  /** Confirms a pending email change for the logged-in user. */
+  /** Confirms a pending email change with the token from the confirmation email. */
   confirmEmailChange: SensitiveDataUser;
   /** Confirms a notification for the whole instance, recording who confirmed it. Requires authentication. */
   confirmNotification: NotificationConfirmation;
@@ -2637,6 +2646,8 @@ export type Mutation = {
   createRatingSystemAnswer: CommentRatingSystemAnswer;
   createSession: SessionWithToken;
   createSessionWithJWT: SessionWithToken;
+  /** Logs in with a personal login code (PURL). Limited uses, expiring and revocable; rate limited per client. */
+  createSessionWithLoginCode: SessionWithToken;
   /** Creates a new subscription. */
   createSubscription: PublicSubscription;
   /** Create a new subscription flow */
@@ -2786,14 +2797,18 @@ export type Mutation = {
   rateComment: Comment;
   /** This mutation registers a new member by providing name, email, and other required information. */
   registerMember: Registration;
+  /** Revokes existing personal login links of a user and issues a new one. The code is returned exactly once. */
+  reissueUserLoginCode: UserLoginCodeIssue;
   /** Rejects a comment */
   rejectComment: Comment;
   /** Renews a subscription. */
   renewSubscription: PublicSubscription;
   /** Requests the user to change the comment's content */
   requestChangesOnComment: Comment;
-  /** Requests an email change. A confirmation link is sent to the current email address. */
+  /** Requests an email change. A confirmation link is sent to the new email address. A restricted session must also confirm the configured second factor from the letter. */
   requestEmailChange: Scalars['Boolean'];
+  /** Sends a confirmation link to the current email address to verify it. */
+  requestEmailVerification: Scalars['Boolean'];
   /** Resets the password of a user. */
   resetPassword: SensitiveDataUser;
   /** Resets the password using a token from the password reset email. Does not create a session. */
@@ -2809,6 +2824,8 @@ export type Mutation = {
   /** This mutation revokes and deletes the active session. */
   revokeActiveSession: Scalars['Boolean'];
   revokeImpersonationSessions: Scalars['Int'];
+  /** Revokes all personal login links of a user. */
+  revokeUserLoginCode: Scalars['Boolean'];
   /** This mutation sends a login link to the email if the user exists. Method will always return email address */
   sendJWTLogin: Scalars['String'];
   /** Manually send a mail template to a single user */
@@ -2986,7 +3003,7 @@ export type MutationConfirmChangelogEntryArgs = {
 
 
 export type MutationConfirmEmailChangeArgs = {
-  newEmail: Scalars['String'];
+  token: Scalars['String'];
 };
 
 
@@ -3275,6 +3292,13 @@ export type MutationCreateSessionArgs = {
 
 export type MutationCreateSessionWithJwtArgs = {
   jwt: Scalars['String'];
+  totpToken?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationCreateSessionWithLoginCodeArgs = {
+  challengeAnswer?: InputMaybe<ChallengeInput>;
+  code: Scalars['String'];
   totpToken?: InputMaybe<Scalars['String']>;
 };
 
@@ -3691,6 +3715,11 @@ export type MutationRegisterMemberArgs = {
 };
 
 
+export type MutationReissueUserLoginCodeArgs = {
+  userId: Scalars['String'];
+};
+
+
 export type MutationRejectCommentArgs = {
   id: Scalars['String'];
   rejectionReason: CommentRejectionReason;
@@ -3710,6 +3739,7 @@ export type MutationRequestChangesOnCommentArgs = {
 
 export type MutationRequestEmailChangeArgs = {
   newEmail: Scalars['String'];
+  secondFactor?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -3750,6 +3780,11 @@ export type MutationResumeMailSendJobArgs = {
 
 export type MutationRevokeImpersonationSessionsArgs = {
   ids?: InputMaybe<Array<Scalars['String']>>;
+};
+
+
+export type MutationRevokeUserLoginCodeArgs = {
+  userId: Scalars['String'];
 };
 
 
@@ -3914,11 +3949,9 @@ export type MutationUpdateCrowdfundingArgs = {
 export type MutationUpdateCurrentUserArgs = {
   address?: InputMaybe<UserAddressInput>;
   birthday?: InputMaybe<Scalars['DateTime']>;
-  challengeAnswer?: InputMaybe<ChallengeInput>;
   firstName?: InputMaybe<Scalars['String']>;
   flair?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
-  password?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -5363,6 +5396,8 @@ export type Query = {
   crowdfunding: Crowdfunding;
   /** Returns a list of crowdfundings. */
   crowdfundings: Array<Crowdfunding>;
+  /** Origin and restriction state of the current session. Restricted sessions may only complete onboarding. */
+  currentSession: SessionInfo;
   /**
    *
    *       Returns daily stats in a given timeframe.
@@ -5635,6 +5670,8 @@ export type Query = {
   userConsents: Array<UserConsent>;
   /** Get all invoices for the authenticated user */
   userInvoices: Array<Invoice>;
+  /** The current personal login link of a user, without the code itself. */
+  userLoginCode?: Maybe<UserLoginCodeStatus>;
   userPollVote?: Maybe<Scalars['String']>;
   /** Returns a userrole by id. */
   userRole: UserRole;
@@ -6368,6 +6405,11 @@ export type QueryUserConsentsArgs = {
 };
 
 
+export type QueryUserLoginCodeArgs = {
+  userId: Scalars['String'];
+};
+
+
 export type QueryUserPollVoteArgs = {
   pollId: Scalars['String'];
 };
@@ -6501,12 +6543,36 @@ export type SensitiveDataUser = BaseUser & {
   userImageID?: Maybe<Scalars['String']>;
 };
 
+export type SessionInfo = {
+  __typename?: 'SessionInfo';
+  createdAt: Scalars['DateTime'];
+  expiresAt: Scalars['DateTime'];
+  origin: SessionOrigin;
+  placeholderEmail: Scalars['Boolean'];
+  restricted: Scalars['Boolean'];
+  /** Attribute from the letter a restricted session must confirm when it claims the account with a real email address. */
+  secondFactor: LoginCodeSecondFactor;
+};
+
+export enum SessionOrigin {
+  Impersonation = 'impersonation',
+  Jwt = 'jwt',
+  Password = 'password',
+  Preview = 'preview',
+  Purl = 'purl',
+  Register = 'register'
+}
+
 export type SessionWithToken = {
   __typename?: 'SessionWithToken';
   createdAt: Scalars['DateTime'];
   expiresAt: Scalars['DateTime'];
   /** Whether this session was created by redeeming an impersonation grant from the One dashboard. Clients must never treat an ordinary JWT login as impersonation. */
   impersonated: Scalars['Boolean'];
+  /** How this session was created. */
+  origin: SessionOrigin;
+  /** Whether this session is limited to onboarding until a real email address has been confirmed. */
+  restricted: Scalars['Boolean'];
   token: Scalars['String'];
   /** Whether the user has two-factor authentication enabled. If true and the user is an admin, the client must verify TOTP before proceeding. */
   totpEnabled: Scalars['Boolean'];
@@ -6646,6 +6712,9 @@ export enum SettingName {
   AllowGuestCommentRating = 'ALLOW_GUEST_COMMENT_RATING',
   AllowGuestPollVoting = 'ALLOW_GUEST_POLL_VOTING',
   CommentCharLimit = 'COMMENT_CHAR_LIMIT',
+  LoginCodeMaxUses = 'LOGIN_CODE_MAX_USES',
+  LoginCodeSecondFactor = 'LOGIN_CODE_SECOND_FACTOR',
+  LoginCodeValidDays = 'LOGIN_CODE_VALID_DAYS',
   MailProviderName = 'MAIL_PROVIDER_NAME',
   MakeActiveSubscribersApiPublic = 'MAKE_ACTIVE_SUBSCRIBERS_API_PUBLIC',
   MakeExpectedRevenueApiPublic = 'MAKE_EXPECTED_REVENUE_API_PUBLIC',
@@ -7452,6 +7521,7 @@ export type UserCreatedAction = BaseAction & HasUserLc & {
 export enum UserEvent {
   AccountCreation = 'ACCOUNT_CREATION',
   EmailChange = 'EMAIL_CHANGE',
+  EmailVerification = 'EMAIL_VERIFICATION',
   LoginLink = 'LOGIN_LINK',
   PasswordReset = 'PASSWORD_RESET',
   TestMail = 'TEST_MAIL'
@@ -7461,6 +7531,28 @@ export type UserFilter = {
   name?: InputMaybe<Scalars['String']>;
   text?: InputMaybe<Scalars['String']>;
   userRole?: InputMaybe<Array<Scalars['String']>>;
+};
+
+export type UserLoginCodeIssue = {
+  __typename?: 'UserLoginCodeIssue';
+  code: Scalars['String'];
+  purl: Scalars['String'];
+  status: UserLoginCodeStatus;
+};
+
+export type UserLoginCodeStatus = {
+  __typename?: 'UserLoginCodeStatus';
+  createdAt: Scalars['DateTime'];
+  expiresAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  issuedBy?: Maybe<Scalars['String']>;
+  lastUsedAt?: Maybe<Scalars['DateTime']>;
+  maxUses: Scalars['Float'];
+  revokedAt?: Maybe<Scalars['DateTime']>;
+  secondFactor: LoginCodeSecondFactor;
+  /** Whether the user record holds the attribute the configured second factor asks for. */
+  secondFactorAvailable: Scalars['Boolean'];
+  usesRemaining: Scalars['Float'];
 };
 
 export type UserRole = {

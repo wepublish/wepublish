@@ -3,6 +3,7 @@ import { UpgradeSubscription } from './upgrade-subscription.model';
 import {
   Authenticated,
   CurrentUser,
+  RequiresFullSession,
   UserSession,
 } from '@wepublish/authentication/api';
 import { UpgradeSubscriptionService } from './upgrade-subscription.service';
@@ -12,7 +13,7 @@ import { Payment } from '@wepublish/payment/api';
 export class UpgradeSubscriptionResolver {
   constructor(private upgradeSubscriptionService: UpgradeSubscriptionService) {}
 
-  @Authenticated()
+  @RequiresFullSession()
   @Mutation(() => Payment, {
     description: ``,
   })

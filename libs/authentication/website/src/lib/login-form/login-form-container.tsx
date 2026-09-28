@@ -1,5 +1,6 @@
 import {
   useCheckLoginOtpLazyQuery,
+  useLoginWithCodeMutation,
   useLoginWithCredentialsMutation,
   useLoginWithEmailMutation,
 } from '@wepublish/website/api';
@@ -31,6 +32,19 @@ export function LoginFormContainer({
   const { setToken } = useUser();
   const [otpRequired, setOtpRequired] = useState(false);
   const [totpRedirectToPassword, setTotpRedirectToPassword] = useState(false);
+  const [codeChallengeRequired, setCodeChallengeRequired] = useState(false);
+  const [loginWithCode, withCode] = useLoginWithCodeMutation({
+    onCompleted(data) {
+      setToken({
+        createdAt: data.createSessionWithLoginCode.createdAt,
+        expiresAt: data.createSessionWithLoginCode.expiresAt,
+        token: data.createSessionWithLoginCode.token,
+      });
+    },
+    onError(error) {
+      setCodeChallengeRequired(error.message.includes('CHALLENGE_REQUIRED'));
+    },
+  });
 
   // Check if redirected from a failed JWT login (2FA user)
   useEffect(() => {
@@ -97,6 +111,17 @@ export function LoginFormContainer({
         }
       }}
       loginWithCredentials={withCredentials}
+      loginWithCode={withCode}
+      codeChallengeRequired={codeChallengeRequired}
+      onSubmitLoginWithCode={async (code, totpToken) => {
+        const result = await loginWithCode({
+          variables: { code, totpToken },
+        }).catch(() => null);
+
+        if (result?.data?.createSessionWithLoginCode && afterLoginCallback) {
+          afterLoginCallback();
+        }
+      }}
       onSubmitLoginWithEmail={handleSubmitLoginWithEmail}
       loginWithEmail={withEmail}
       defaults={defaults}

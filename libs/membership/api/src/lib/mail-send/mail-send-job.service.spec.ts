@@ -1,5 +1,25 @@
 import { BadRequestException } from '@nestjs/common';
 import { MailContext, mailLogType } from '@wepublish/mail/api';
+
+const defaultBuildMailData = jest.fn(
+  async ({
+    recipient,
+    optionalData,
+    jwtOverride,
+  }: {
+    recipient: Record<string, unknown>;
+    optionalData: Record<string, unknown>;
+    jwtOverride?: string;
+  }) => ({
+    user: recipient,
+    optional: optionalData,
+    jwt: jwtOverride ?? 'test-jwt-token',
+    currentDate: new Date(),
+    purl: '',
+    purlCode: '',
+    purlQr: '',
+  })
+);
 import { LetterContext } from '@wepublish/letter/api';
 import {
   LetterAddressPosition,
@@ -21,7 +41,10 @@ const makeService = (
 ) =>
   new MailSendJobService(
     prisma as PrismaClient,
-    mailContext as unknown as MailContext,
+    {
+      buildMailData: defaultBuildMailData,
+      ...mailContext,
+    } as unknown as MailContext,
     letterContext as unknown as LetterContext,
     recipientService as MailSendRecipientService
   );
