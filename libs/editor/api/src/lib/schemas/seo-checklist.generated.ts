@@ -5,28 +5,54 @@ import {RichtextJSONDocument} from '@wepublish/richtext';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
+export type SeoChecklistItemFragment = { __typename?: 'SeoChecklistItem', itemId: string, completedAt: string, completedBy?: string | null };
+
 export type SeoChecklistQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type SeoChecklistQuery = { __typename?: 'Query', seoChecklist: { __typename?: 'SeoChecklist', websiteUrl: string, sitemapUrl: string, robotsUrl: string, checks: Array<{ __typename?: 'SeoCheck', id: Types.SeoCheckId, kind: Types.SeoCheckKind, status: Types.SeoCheckStatus, detail?: string | null, url?: string | null }> } };
+export type SeoChecklistQuery = { __typename?: 'Query', seoChecklist: { __typename?: 'SeoChecklist', websiteUrl: string, sitemapUrl: string, rssFeedUrl: string, atomFeedUrl: string, jsonFeedUrl: string, checks: Array<{ __typename?: 'SeoCheck', id: Types.SeoCheckId, status: Types.SeoCheckStatus, detail?: string | null, url?: string | null }>, completedItems: Array<(
+      { __typename?: 'SeoChecklistItem' }
+      & SeoChecklistItemFragment
+    )> } };
+
+export type UpdateSeoChecklistItemMutationVariables = Types.Exact<{
+  itemId: Types.Scalars['String'];
+  completed: Types.Scalars['Boolean'];
+}>;
 
 
+export type UpdateSeoChecklistItemMutation = { __typename?: 'Mutation', updateSeoChecklistItem: Array<(
+    { __typename?: 'SeoChecklistItem' }
+    & SeoChecklistItemFragment
+  )> };
+
+export const SeoChecklistItemFragmentDoc = gql`
+    fragment SeoChecklistItem on SeoChecklistItem {
+  itemId
+  completedAt
+  completedBy
+}
+    `;
 export const SeoChecklistDocument = gql`
     query SeoChecklist {
   seoChecklist {
     websiteUrl
     sitemapUrl
-    robotsUrl
+    rssFeedUrl
+    atomFeedUrl
+    jsonFeedUrl
     checks {
       id
-      kind
       status
       detail
       url
     }
+    completedItems {
+      ...SeoChecklistItem
+    }
   }
 }
-    `;
+    ${SeoChecklistItemFragmentDoc}`;
 
 /**
  * __useSeoChecklistQuery__
@@ -54,3 +80,37 @@ export function useSeoChecklistLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
 export type SeoChecklistQueryHookResult = ReturnType<typeof useSeoChecklistQuery>;
 export type SeoChecklistLazyQueryHookResult = ReturnType<typeof useSeoChecklistLazyQuery>;
 export type SeoChecklistQueryResult = Apollo.QueryResult<SeoChecklistQuery, SeoChecklistQueryVariables>;
+export const UpdateSeoChecklistItemDocument = gql`
+    mutation UpdateSeoChecklistItem($itemId: String!, $completed: Boolean!) {
+  updateSeoChecklistItem(itemId: $itemId, completed: $completed) {
+    ...SeoChecklistItem
+  }
+}
+    ${SeoChecklistItemFragmentDoc}`;
+export type UpdateSeoChecklistItemMutationFn = Apollo.MutationFunction<UpdateSeoChecklistItemMutation, UpdateSeoChecklistItemMutationVariables>;
+
+/**
+ * __useUpdateSeoChecklistItemMutation__
+ *
+ * To run a mutation, you first call `useUpdateSeoChecklistItemMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateSeoChecklistItemMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateSeoChecklistItemMutation, { data, loading, error }] = useUpdateSeoChecklistItemMutation({
+ *   variables: {
+ *      itemId: // value for 'itemId'
+ *      completed: // value for 'completed'
+ *   },
+ * });
+ */
+export function useUpdateSeoChecklistItemMutation(baseOptions?: Apollo.MutationHookOptions<UpdateSeoChecklistItemMutation, UpdateSeoChecklistItemMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateSeoChecklistItemMutation, UpdateSeoChecklistItemMutationVariables>(UpdateSeoChecklistItemDocument, options);
+      }
+export type UpdateSeoChecklistItemMutationHookResult = ReturnType<typeof useUpdateSeoChecklistItemMutation>;
+export type UpdateSeoChecklistItemMutationResult = Apollo.MutationResult<UpdateSeoChecklistItemMutation>;
+export type UpdateSeoChecklistItemMutationOptions = Apollo.BaseMutationOptions<UpdateSeoChecklistItemMutation, UpdateSeoChecklistItemMutationVariables>;

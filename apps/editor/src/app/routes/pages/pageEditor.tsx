@@ -25,11 +25,11 @@ import {
   blockForQueryBlock,
   BlockList,
   BlockMap,
-  blocksToPlaintext,
   BlockValue,
   createCheckedPermissionComponent,
   DocumentUrlProvider,
   EditorTemplate,
+  getSeoBlockContext,
   EditorValidationProvider,
   mapBlockValueToBlockInput,
   NavigationBar,
@@ -177,7 +177,7 @@ function PageEditor() {
   const [blocks, setBlocks] = useState<BlockValue[]>([]);
 
   const seoContext = useMemo(
-    () => (isMetaDrawerOpen ? { body: blocksToPlaintext(blocks) } : undefined),
+    () => (isMetaDrawerOpen ? getSeoBlockContext(blocks) : undefined),
     [blocks, isMetaDrawerOpen]
   );
 

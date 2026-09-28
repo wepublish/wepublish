@@ -1,6 +1,8 @@
 ---
 title: SEO-Checkliste
-lead: Eine neue SEO-Checkliste unter Einstellungen zeigt, was We.Publish für Suchmaschinen automatisch erledigt und was Sie noch tun müssen.
+lead: Eine neue SEO-Checkliste unter Einstellungen führt Sie durch Google Search Console, Sitemaps und Feeds, Inhalte und die Darstellung geteilter Artikel. Der Fortschritt Ihres Teams wird gespeichert.
 ---
 
-Die Checkliste (Einstellungen → SEO) prüft Ihre Live-Website auf eine erreichbare robots.txt, die Sitemap, Google-News-Einträge, kanonische URLs und strukturierte NewsArticle-Daten. Ausserdem wird geprüft, ob Name und Logo der Publikation gesetzt sind. Schritte, die ausserhalb von We.Publish erledigt werden müssen, etwa das Einreichen der Sitemap in der Google Search Console, sind separat aufgeführt.
+- Jeder Schritt enthält eine kurze Erklärung und, wo sinnvoll, einen direkten Link, etwa zur Google Search Console oder zum Google News Publisher Center.
+- Haken Sie erledigte Schritte ab. Die Checkliste zeigt für das ganze Team, wer einen Schritt wann erledigt hat.
+- Einige Punkte werden automatisch gegen Ihre Live-Website geprüft: die Sitemap, Google-News-Einträge, der RSS-Feed, kanonische URLs und strukturierte Daten des neuesten Artikels sowie Name und Logo Ihrer Publikation.

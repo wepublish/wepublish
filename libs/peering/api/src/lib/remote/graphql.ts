@@ -58,6 +58,21 @@ export enum AnalyticsProviderType {
   Google = 'GOOGLE'
 }
 
+export type AnalyzeSeoContentInput = {
+  body?: InputMaybe<Scalars['String']>;
+  lead?: InputMaybe<Scalars['String']>;
+  /** Language the findings should be written in, e.g. "de". */
+  locale: Scalars['String'];
+  seoDescription?: InputMaybe<Scalars['String']>;
+  seoTitle?: InputMaybe<Scalars['String']>;
+  slug?: InputMaybe<Scalars['String']>;
+  socialMediaDescription?: InputMaybe<Scalars['String']>;
+  socialMediaTitle?: InputMaybe<Scalars['String']>;
+  stats: SeoContentStatsInput;
+  title?: InputMaybe<Scalars['String']>;
+  type: SeoMetadataContentType;
+};
+
 export type Article = HasOptionalPaywall & HasOptionalPeerLc & {
   __typename?: 'Article';
   createdAt: Scalars['DateTime'];
@@ -2823,6 +2838,8 @@ export type Mutation = {
   updatePoll: FullPoll;
   /** Update the comment rating system. */
   updateRatingSystem: CommentRatingSystem;
+  /** Marks an SEO checklist item as done or not done and returns all completed items. */
+  updateSeoChecklistItem: Array<SeoChecklistItem>;
   /** Updates an existing setting. */
   updateSetting: Setting;
   /** Updates an existing subscription. */
@@ -4109,6 +4126,12 @@ export type MutationUpdateRatingSystemArgs = {
 };
 
 
+export type MutationUpdateSeoChecklistItemArgs = {
+  completed: Scalars['Boolean'];
+  itemId: Scalars['String'];
+};
+
+
 export type MutationUpdateSettingArgs = {
   name: SettingName;
   value?: InputMaybe<Scalars['GraphQLSettingValueType']>;
@@ -5225,6 +5248,8 @@ export type Query = {
   analyticsProviderSetting: SettingAnalyticsProvider;
   /** Returns all analytics provider settings. */
   analyticsProviderSettings: Array<SettingAnalyticsProvider>;
+  /** Analyzes an article or page for SEO optimization potential using AI. */
+  analyzeSeoContent: SeoContentAnalysis;
   /** Returns an article by id or slug. */
   article: Article;
   /** Returns a single article revision including its full content. */
@@ -5581,6 +5606,11 @@ export type QueryAnalyticsProviderSettingArgs = {
 
 export type QueryAnalyticsProviderSettingsArgs = {
   filter?: InputMaybe<SettingAnalyticsProviderFilter>;
+};
+
+
+export type QueryAnalyzeSeoContentArgs = {
+  input: AnalyzeSeoContentInput;
 };
 
 
@@ -6412,27 +6442,16 @@ export type SeoCheck = {
   __typename?: 'SeoCheck';
   detail?: Maybe<Scalars['String']>;
   id: SeoCheckId;
-  kind: SeoCheckKind;
   status: SeoCheckStatus;
   url?: Maybe<Scalars['String']>;
 };
 
 export enum SeoCheckId {
-  Canonical = 'Canonical',
+  ArticleMarkup = 'ArticleMarkup',
+  Feed = 'Feed',
   NewsSitemap = 'NewsSitemap',
-  NoindexHidden = 'NoindexHidden',
   PublicationMetadata = 'PublicationMetadata',
-  Robots = 'Robots',
-  RobotsSitemap = 'RobotsSitemap',
-  SearchConsole = 'SearchConsole',
-  Sitemap = 'Sitemap',
-  StructuredData = 'StructuredData'
-}
-
-export enum SeoCheckKind {
-  Automatic = 'Automatic',
-  Manual = 'Manual',
-  Verifiable = 'Verifiable'
+  Sitemap = 'Sitemap'
 }
 
 export enum SeoCheckStatus {
@@ -6444,11 +6463,61 @@ export enum SeoCheckStatus {
 
 export type SeoChecklist = {
   __typename?: 'SeoChecklist';
+  atomFeedUrl: Scalars['String'];
   checks: Array<SeoCheck>;
-  robotsUrl: Scalars['String'];
+  completedItems: Array<SeoChecklistItem>;
+  jsonFeedUrl: Scalars['String'];
+  rssFeedUrl: Scalars['String'];
   sitemapUrl: Scalars['String'];
   websiteUrl: Scalars['String'];
 };
+
+export type SeoChecklistItem = {
+  __typename?: 'SeoChecklistItem';
+  completedAt: Scalars['DateTime'];
+  completedBy?: Maybe<Scalars['String']>;
+  itemId: Scalars['String'];
+};
+
+export type SeoContentAnalysis = {
+  __typename?: 'SeoContentAnalysis';
+  findings: Array<SeoFinding>;
+  summary: Scalars['String'];
+};
+
+export type SeoContentStatsInput = {
+  hasShareImage: Scalars['Boolean'];
+  headingCount: Scalars['Int'];
+  imageCount: Scalars['Int'];
+  imagesWithoutDescription: Scalars['Int'];
+  linkCount: Scalars['Int'];
+  wordCount: Scalars['Int'];
+};
+
+export type SeoFinding = {
+  __typename?: 'SeoFinding';
+  category: SeoFindingCategory;
+  message: Scalars['String'];
+  severity: SeoFindingSeverity;
+  suggestion?: Maybe<Scalars['String']>;
+};
+
+export enum SeoFindingCategory {
+  Content = 'Content',
+  Description = 'Description',
+  Images = 'Images',
+  Links = 'Links',
+  Readability = 'Readability',
+  Social = 'Social',
+  Structure = 'Structure',
+  Title = 'Title'
+}
+
+export enum SeoFindingSeverity {
+  High = 'High',
+  Low = 'Low',
+  Medium = 'Medium'
+}
 
 export enum SeoMetadataContentType {
   Article = 'Article',

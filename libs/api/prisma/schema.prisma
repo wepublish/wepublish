@@ -1218,6 +1218,7 @@ model User {
   changelogConfirmations    ChangelogEntry[]
   notificationReads         NotificationRead[]
   notificationConfirmations NotificationConfirmation[]
+  seoChecklistItems         SeoChecklistItem[]
 
   @@index([createdAt])
   @@map("users")
@@ -2220,6 +2221,18 @@ model NotificationConfirmation {
 
   @@unique([source, itemId])
   @@map("notifications.confirmations")
+}
+
+model SeoChecklistItem {
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  itemId            String  @unique
+  completedByUserId String?
+  completedBy       User?   @relation(fields: [completedByUserId], references: [id], onDelete: SetNull)
+
+  @@map("seo.checklist_items")
 }
 
 model ChangelogEntry {

@@ -32,11 +32,11 @@ import {
   blockForQueryBlock,
   BlockList,
   BlockMap,
-  blocksToPlaintext,
   BlockValue,
   createCheckedPermissionComponent,
   DocumentUrlProvider,
   EditorTemplate,
+  getSeoBlockContext,
   InfoData,
   ListicleBlockListValue,
   mapBlockValueToBlockInput,
@@ -229,7 +229,7 @@ function ArticleEditor() {
   );
 
   const seoContext = useMemo(
-    () => (isMetaDrawerOpen ? { body: blocksToPlaintext(blocks) } : undefined),
+    () => (isMetaDrawerOpen ? getSeoBlockContext(blocks) : undefined),
     [blocks, isMetaDrawerOpen]
   );
 

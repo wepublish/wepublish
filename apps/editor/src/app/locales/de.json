@@ -3233,91 +3233,156 @@
     "seoChecklist": {
       "navbar": "SEO",
       "title": "SEO-Checkliste",
-      "description": "Eine Übersicht, was We.Publish für Suchmaschinen automatisch erledigt und wo Sie aktiv werden müssen. Die Prüfungen laufen gegen die Live-Website.",
+      "description": "Praktische Schritte, damit Ihre Inhalte gut gefunden werden und beim Teilen gut aussehen. Punkte mit Status werden automatisch gegen Ihre Live-Website geprüft.",
       "websiteUrl": "Website",
       "refresh": "Erneut prüfen",
-      "open": "Öffnen",
       "copyUrl": "URL kopieren",
       "detail": "Details",
+      "progress": "{{done}} von {{total}} erledigt",
+      "completedBy": "Erledigt von {{name}} am {{date}}",
+      "completedAt": "Erledigt am {{date}}",
       "status": {
         "Ok": "OK",
         "Warning": "Warnung",
         "Error": "Fehler",
         "Info": "Info"
       },
-      "kinds": {
-        "Manual": {
-          "title": "Handlungsbedarf",
-          "description": "Schritte, die ausserhalb von We.Publish erledigt werden müssen."
+      "checkStatus": {
+        "Ok": "Geprüft",
+        "Warning": "Handlungsbedarf",
+        "Error": "Funktioniert nicht",
+        "Info": "Nicht verfügbar"
+      },
+      "sections": {
+        "searchConsole": {
+          "title": "Google Search Console",
+          "description": "Das kostenlose Tool von Google, das zeigt, wie Ihre Website in der Suche abschneidet."
         },
-        "Verifiable": {
-          "title": "Automatisch geprüft",
-          "description": "Diese Prüfungen laufen gegen Ihre Website und Einstellungen."
+        "sitemapsFeeds": {
+          "title": "Sitemaps und Feeds",
+          "description": "Wie Suchmaschinen und Aggregatoren Ihre Artikel finden."
         },
-        "Automatic": {
-          "title": "Automatisch erledigt",
-          "description": "Darum kümmert sich We.Publish bei jedem Artikel und jeder Seite."
+        "content": {
+          "title": "Inhalte",
+          "description": "Gewohnheiten, die Artikel leichter auffindbar und verständlich machen."
+        },
+        "presentation": {
+          "title": "Darstellung und Teilen",
+          "description": "Wie Ihre Inhalte in Suchergebnissen, sozialen Medien und Messengern aussehen."
+        },
+        "automatic": {
+          "title": "Erledigt We.Publish",
+          "description": "Technische Grundlagen, um die sich We.Publish automatisch kümmert."
         }
       },
-      "checks": {
-        "Robots": {
-          "title": "Indexierung (robots.txt)",
-          "description": "Die robots.txt teilt Suchmaschinen mit, welche Bereiche der Website sie crawlen dürfen.",
-          "Ok": "Suchmaschinen dürfen die Website crawlen.",
-          "Error": "Die robots.txt konnte nicht geladen werden oder blockiert alle Suchmaschinen."
+      "items": {
+        "gsc-verify": {
+          "title": "Website in der Google Search Console bestätigen",
+          "description": "Fügen Sie Ihre Domain als «Domain»-Property hinzu und bestätigen Sie sie mit einem DNS-Eintrag. So erhalten Sie Indexierungs- und Leistungsdaten für alle Subdomains.",
+          "action": "Search Console öffnen"
         },
-        "RobotsSitemap": {
-          "title": "Sitemap in robots.txt",
-          "description": "Ein Verweis auf die Sitemap in der robots.txt hilft Suchmaschinen, alle Artikel zu finden.",
-          "detail": "Verwiesene Sitemap",
-          "Ok": "Die robots.txt verweist auf die Sitemap dieser Website.",
-          "Warning": "Die robots.txt verweist nicht auf die Sitemap dieser Website. Bitte kontaktieren Sie den We.Publish-Support, um dies zu korrigieren."
+        "gsc-sitemap": {
+          "title": "Sitemap einreichen",
+          "description": "Reichen Sie unter «Sitemaps» einmalig die untenstehende Sitemap-URL ein. Google prüft sie danach regelmässig auf neue Artikel.",
+          "action": "Search Console öffnen"
         },
-        "Sitemap": {
+        "gsc-pages": {
+          "title": "Indexierungsbericht regelmässig prüfen",
+          "description": "Der Bericht «Seiten» zeigt, welche Seiten nicht indexiert sind und warum. Schauen Sie ihn monatlich an und beheben Sie wiederkehrende Probleme.",
+          "action": "Search Console öffnen"
+        },
+        "gsc-performance": {
+          "title": "Aus Suchanfragen lernen",
+          "description": "Der Bericht «Leistung» zeigt die Suchanfragen, über die Leserinnen und Leser zu Ihnen finden. Nutzen Sie ihn, um Themen und Formulierungen zu finden, nach denen gesucht wird.",
+          "action": "Search Console öffnen"
+        },
+        "gsc-inspect": {
+          "title": "Indexierung wichtiger Artikel beantragen",
+          "description": "Prüfen Sie wichtige Artikel mit der «URL-Prüfung» und beantragen Sie nach dem Publizieren oder grösseren Updates die Indexierung.",
+          "action": "Search Console öffnen"
+        },
+        "sitemap": {
           "title": "Sitemap",
-          "description": "Die Sitemap wird automatisch erstellt und enthält die neuesten Artikel und Seiten.",
-          "detail": "Anzahl URLs",
-          "Ok": "Die Sitemap ist erreichbar und gültig.",
-          "Error": "Die Sitemap konnte nicht geladen werden oder ist ungültig."
+          "description": "Die Sitemap wird automatisch erstellt und listet Ihre neuesten Artikel und Seiten für Suchmaschinen auf.",
+          "detail": "Anzahl URLs"
         },
-        "NewsSitemap": {
-          "title": "Google-News-Sitemap",
-          "description": "Artikel in der Sitemap werden mit Google-News-Metadaten ergänzt.",
-          "Ok": "Die Sitemap enthält Google-News-Einträge.",
-          "Info": "In der Sitemap wurden keine Google-News-Einträge gefunden."
+        "news-sitemap": {
+          "title": "Google-News-Einträge",
+          "description": "Artikel in der Sitemap enthalten Google-News-Metadaten. Das hilft, in Google News und bei «Top-Meldungen» zu erscheinen."
         },
-        "Canonical": {
-          "title": "Canonical-URLs",
-          "description": "Jeder Artikel gibt seine kanonische URL an. Sie können sie pro Artikel in den Artikeleinstellungen überschreiben.",
-          "Ok": "Der neueste Artikel gibt eine kanonische URL an.",
-          "Warning": "Beim neuesten Artikel wurde keine kanonische URL gefunden.",
-          "Info": "Es gibt noch keinen publizierten Artikel zum Prüfen."
+        "feeds": {
+          "title": "RSS-, Atom- und JSON-Feeds",
+          "description": "Über Feeds können News-Aggregatoren, Feedreader und Newsletter-Tools Ihre Artikel übernehmen. Geben Sie die RSS-URL an Aggregatoren weiter, in denen Sie erscheinen möchten."
         },
-        "StructuredData": {
-          "title": "Strukturierte Daten (NewsArticle)",
-          "description": "Artikel enthalten strukturierte Daten (JSON-LD) vom Typ NewsArticle mit Titel, Autor:innen, Daten und Bildern.",
-          "Ok": "Der neueste Artikel enthält strukturierte NewsArticle-Daten.",
-          "Warning": "Beim neuesten Artikel wurden keine strukturierten NewsArticle-Daten gefunden.",
-          "Info": "Es gibt noch keinen publizierten Artikel zum Prüfen."
+        "publisher-center": {
+          "title": "Im Google News Publisher Center registrieren",
+          "description": "Erfassen Sie Publikation, Logo und Rubriken im Publisher Center, um zu steuern, wie Sie in Google News erscheinen.",
+          "action": "Publisher Center öffnen"
         },
-        "NoindexHidden": {
-          "title": "Versteckte Inhalte",
-          "description": "Mit der Option «versteckt» halten Sie einzelne Artikel oder Seiten aus Suchmaschinen heraus.",
-          "Info": "Versteckte Artikel und Seiten werden als noindex markiert und nicht in die Sitemap aufgenommen."
+        "seo-titles": {
+          "title": "Präzise SEO-Titel schreiben",
+          "description": "Nennen Sie das Hauptthema zuerst und bleiben Sie unter etwa 60 Zeichen. Beschreiben Sie, worum es geht, statt nur anzuteasern."
         },
-        "PublicationMetadata": {
+        "meta-descriptions": {
+          "title": "Meta-Beschreibungen schreiben",
+          "description": "Fassen Sie den Artikel in ein bis zwei Sätzen zusammen (etwa 150 Zeichen). Ohne Beschreibung wird der Lead oder der erste Absatz verwendet."
+        },
+        "structure": {
+          "title": "Längere Texte strukturieren",
+          "description": "Verwenden Sie einen klaren Lead, Zwischentitel und kurze Absätze. Das hilft Leserinnen, Lesern und Suchmaschinen, den Inhalt zu verstehen."
+        },
+        "internal-links": {
+          "title": "Verwandte Artikel verlinken",
+          "description": "Verlinken Sie frühere Berichte und Hintergrundartikel. Interne Links führen Leserinnen und Leser tiefer und helfen Suchmaschinen, ältere Inhalte zu finden."
+        },
+        "stable-slugs": {
+          "title": "Slugs kurz und stabil halten",
+          "description": "Verwenden Sie einen kurzen Slug mit dem Hauptthema und ändern Sie ihn nach dem Publizieren nicht mehr, sonst gehen bestehende Links und Rankings verloren."
+        },
+        "author-pages": {
+          "title": "Autorenseiten pflegen",
+          "description": "Autorenseiten mit Name, Bild und kurzer Biografie zeigen, wer hinter Ihrem Journalismus steht, und schaffen Vertrauen.",
+          "action": "Autor:innen bearbeiten"
+        },
+        "update-evergreen": {
+          "title": "Zeitlose Inhalte aktualisieren",
+          "description": "Aktualisieren Sie Erklärstücke und Ratgeber regelmässig, statt fast gleiche Artikel neu zu publizieren. Weisen Sie im Text auf Updates hin."
+        },
+        "share-images": {
+          "title": "Für jeden Artikel ein Teilen-Bild setzen",
+          "description": "Wählen Sie ein aussagekräftiges Bild im Querformat (mindestens 1200 px breit). Es wird in sozialen Medien, Messengern und in Google Discover angezeigt."
+        },
+        "image-descriptions": {
+          "title": "Bilder beschreiben",
+          "description": "Die Bildbeschreibung wird als Alternativtext verwendet. Beschreiben Sie, was zu sehen ist; das hilft der Barrierefreiheit und der Bildersuche.",
+          "action": "Bildbibliothek öffnen"
+        },
+        "social-texts": {
+          "title": "Social-Media-Texte nutzen",
+          "description": "Ein eigener Social-Media-Titel und eine eigene Beschreibung dürfen persönlicher formuliert sein als die SEO-Texte, ohne reisserisch zu werden."
+        },
+        "preview-before-publishing": {
+          "title": "Vorschauen vor dem Publizieren prüfen",
+          "description": "Der Reiter «SEO» in den Artikeleinstellungen zeigt, wie der Artikel in Google, in sozialen Medien und in Messengern aussieht."
+        },
+        "publication-profile": {
           "title": "Name und Logo der Publikation",
-          "description": "Name und Logo der Publikation werden im Peering-Profil gepflegt.",
+          "description": "Name und Logo Ihrer Publikation werden im Peering-Profil gepflegt und in Vorschauen und strukturierten Daten verwendet.",
           "detail": "Fehlt",
-          "action": "Profil bearbeiten",
-          "Ok": "Name und Logo der Publikation sind gesetzt.",
-          "Warning": "Der Name oder das Logo der Publikation fehlt."
+          "action": "Profil bearbeiten"
         },
-        "SearchConsole": {
-          "title": "Google Search Console",
-          "description": "Fügen Sie die Website als Domain-Property in der Google Search Console hinzu, bestätigen Sie sie per DNS und reichen Sie die untenstehende Sitemap-URL unter «Sitemaps» ein.",
-          "action": "Search Console öffnen",
-          "Info": "Dies muss einmalig von der Publikation in der Google Search Console erledigt werden."
+        "article-markup": {
+          "title": "Kanonische URLs und strukturierte Daten",
+          "description": "Jeder Artikel gibt seine kanonische URL an und enthält strukturierte NewsArticle-Daten (JSON-LD). Geprüft wird Ihr neuester Artikel.",
+          "detail": "Fehlt"
+        },
+        "canonical-urls": {
+          "title": "Inhalte aus anderen Quellen",
+          "description": "Wurde ein Artikel zuerst anderswo publiziert, setzen Sie die kanonische URL in den Artikeleinstellungen, damit Suchmaschinen das Original anerkennen."
+        },
+        "hidden-noindex": {
+          "title": "Versteckte Inhalte",
+          "description": "Versteckte Artikel und Seiten werden als noindex markiert und nicht in die Sitemap aufgenommen, damit Suchmaschinen sie nicht anzeigen."
         }
       }
     },
@@ -3341,6 +3406,55 @@
         "socialMediaTitle": "Social-Media-Titel",
         "socialMediaDescription": "Social-Media-Beschreibung",
         "slug": "Slug"
+      }
+    },
+    "seoTab": {
+      "title": "SEO"
+    },
+    "seoPreviews": {
+      "info": "Ungefähre Vorschauen anhand der aktuellen Einstellungen. Die Plattformen bestimmen die endgültige Darstellung und können Texte kürzen oder Bilder zuschneiden.",
+      "pageIgnoresSeoFields": "Die Website verwendet SEO-Titel und SEO-Beschreibung von Seiten derzeit nicht. Die Vorschauen zeigen, was tatsächlich verwendet wird.",
+      "noImage": "Kein Bild",
+      "google": "Google-Suche",
+      "googleTitleTooLong": "Länger als {{limit}} Zeichen, Google kürzt ihn wahrscheinlich",
+      "facebook": "Facebook",
+      "linkedIn": "LinkedIn",
+      "whatsApp": "WhatsApp",
+      "discord": "Discord",
+      "xLarge": "X (Twitter) – Karte mit grossem Bild",
+      "xLargeUsed": "wird von der Website verwendet",
+      "xSummary": "X (Twitter) – Zusammenfassungskarte",
+      "xSummaryUnused": "zum Vergleich, wird von der Website nicht verwendet",
+      "xFrom": "Von {{domain}}"
+    },
+    "seoAnalysis": {
+      "title": "SEO-Analyse",
+      "description": "Lassen Sie die KI Inhalt und Metadaten auf Optimierungspotenzial prüfen. Es wird nichts geändert.",
+      "analyze": "Inhalt analysieren",
+      "reanalyze": "Erneut analysieren",
+      "notEnoughContent": "Fügen Sie zuerst einen Titel oder Inhalt hinzu.",
+      "noFindings": "Kein Optimierungspotenzial gefunden.",
+      "disclaimer": "Die KI kann Fehler machen. Verstehen Sie die Hinweise als Vorschläge.",
+      "stats": {
+        "wordCount": "Wörter",
+        "headingCount": "Zwischentitel",
+        "linkCount": "Links",
+        "imagesWithoutDescription": "Bilder ohne Beschreibung"
+      },
+      "severity": {
+        "High": "Hoch",
+        "Medium": "Mittel",
+        "Low": "Niedrig"
+      },
+      "category": {
+        "Title": "Titel",
+        "Description": "Beschreibung",
+        "Content": "Inhalt",
+        "Structure": "Struktur",
+        "Readability": "Lesbarkeit",
+        "Links": "Links",
+        "Images": "Bilder",
+        "Social": "Social Media"
       }
     }
   }

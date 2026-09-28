@@ -18,6 +18,7 @@ import {
   MdSettings,
   MdShare,
   MdTrackChanges,
+  MdTravelExplore,
 } from 'react-icons/md';
 import {
   Badge,
@@ -48,12 +49,12 @@ import {
   useListInputState,
 } from '../atoms';
 import TrackingPixels from '../atoms/tracking/tracking-pixels';
-import { MetaDataType } from '../blocks';
+import { MetaDataType, SeoBlockContext } from '../blocks';
 import { ArticleAuthor, ArticleAuthorList } from './articleAuthorList';
 import { AuthorCheckPicker } from './authorCheckPicker';
 import { ImageEditPanel } from './imageEditPanel';
 import { ImageSelectPanel } from './imageSelectPanel';
-import { SeoSuggestions } from './seoSuggestions';
+import { SeoTab } from './seoTab';
 
 const { Item } = RNav;
 
@@ -138,7 +139,7 @@ export interface ArticleMetadataPanelProps {
   readonly peerId: string | null | undefined;
   readonly value: ArticleMetadata;
   readonly infoData: InfoData;
-  readonly seoContext?: { readonly body: string };
+  readonly seoContext?: SeoBlockContext;
 
   onClose?(): void;
   onChange?(value: ArticleMetadata): void;
@@ -360,20 +361,6 @@ function ArticleMetadataPanel({
               onChange={lead => onChange?.({ ...value, lead })}
             />
 
-            <SeoSuggestions
-              type={SeoMetadataContentType.Article}
-              context={{ title, lead, body: seoContext?.body }}
-              value={{
-                seoTitle,
-                seoDescription,
-                socialMediaTitle,
-                socialMediaDescription,
-                slug,
-              }}
-              disabled={!isAuthorized}
-              onApply={suggestions => onChange?.({ ...value, ...suggestions })}
-            />
-
             <DeferredTextField
               controlId="articleSeoTitle"
               name="seo-title"
@@ -580,6 +567,28 @@ function ArticleMetadataPanel({
             </Group>
           </RForm.Stack>
         );
+      case MetaDataType.Seo:
+        return (
+          <SeoTab
+            type={SeoMetadataContentType.Article}
+            metadata={{
+              title,
+              lead,
+              seoTitle,
+              seoDescription,
+              socialMediaTitle,
+              socialMediaDescription,
+              canonicalUrl,
+              url: value.url,
+              image,
+              socialMediaImage,
+              slug,
+            }}
+            seoContext={seoContext}
+            disabled={!isAuthorized}
+            onApply={suggestions => onChange?.({ ...value, ...suggestions })}
+          />
+        );
       case MetaDataType.Properties:
         return (
           <RForm.Stack fluid>
@@ -690,6 +699,12 @@ function ArticleMetadataPanel({
             icon={<MdShare />}
           >
             {t('articleEditor.panels.socialMedia')}
+          </Item>
+          <Item
+            eventKey={MetaDataType.Seo}
+            icon={<MdTravelExplore />}
+          >
+            {t('seoTab.title')}
           </Item>
           <Item
             eventKey={MetaDataType.Properties}

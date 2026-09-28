@@ -1,14 +1,4 @@
-import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
-
-export enum SeoCheckKind {
-  Automatic = 'automatic',
-  Verifiable = 'verifiable',
-  Manual = 'manual',
-}
-
-registerEnumType(SeoCheckKind, {
-  name: 'SeoCheckKind',
-});
+import { ArgsType, Field, ObjectType, registerEnumType } from '@nestjs/graphql';
 
 export enum SeoCheckStatus {
   Ok = 'ok',
@@ -22,15 +12,11 @@ registerEnumType(SeoCheckStatus, {
 });
 
 export enum SeoCheckId {
-  Robots = 'robots',
-  RobotsSitemap = 'robotsSitemap',
   Sitemap = 'sitemap',
   NewsSitemap = 'newsSitemap',
-  Canonical = 'canonical',
-  StructuredData = 'structuredData',
-  NoindexHidden = 'noindexHidden',
+  Feed = 'feed',
+  ArticleMarkup = 'articleMarkup',
   PublicationMetadata = 'publicationMetadata',
-  SearchConsole = 'searchConsole',
 }
 
 registerEnumType(SeoCheckId, {
@@ -41,9 +27,6 @@ registerEnumType(SeoCheckId, {
 export class SeoCheck {
   @Field(() => SeoCheckId)
   id!: SeoCheckId;
-
-  @Field(() => SeoCheckKind)
-  kind!: SeoCheckKind;
 
   @Field(() => SeoCheckStatus)
   status!: SeoCheckStatus;
@@ -56,6 +39,18 @@ export class SeoCheck {
 }
 
 @ObjectType()
+export class SeoChecklistItem {
+  @Field()
+  itemId!: string;
+
+  @Field()
+  completedAt!: Date;
+
+  @Field({ nullable: true })
+  completedBy?: string;
+}
+
+@ObjectType()
 export class SeoChecklist {
   @Field()
   websiteUrl!: string;
@@ -64,8 +59,26 @@ export class SeoChecklist {
   sitemapUrl!: string;
 
   @Field()
-  robotsUrl!: string;
+  rssFeedUrl!: string;
+
+  @Field()
+  atomFeedUrl!: string;
+
+  @Field()
+  jsonFeedUrl!: string;
 
   @Field(() => [SeoCheck])
   checks!: SeoCheck[];
+
+  @Field(() => [SeoChecklistItem])
+  completedItems!: SeoChecklistItem[];
+}
+
+@ArgsType()
+export class UpdateSeoChecklistItemArgs {
+  @Field()
+  itemId!: string;
+
+  @Field()
+  completed!: boolean;
 }

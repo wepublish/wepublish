@@ -3,6 +3,8 @@ import { V0Resolver } from './v0.resolver';
 import { V0ClientService } from './v0-client.service';
 import { SeoMetadataResolver } from './seo-metadata.resolver';
 import { SeoMetadataService } from './seo-metadata.service';
+import { SeoAnalysisResolver } from './seo-analysis.resolver';
+import { SeoAnalysisService } from './seo-analysis.service';
 
 @Module({
   providers: [
@@ -10,6 +12,8 @@ import { SeoMetadataService } from './seo-metadata.service';
     V0Resolver,
     SeoMetadataService,
     SeoMetadataResolver,
+    SeoAnalysisService,
+    SeoAnalysisResolver,
   ],
   exports: [V0Resolver],
 })

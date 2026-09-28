@@ -58,7 +58,7 @@ Rules:
 Respond with a single JSON object in a \`\`\`json code block and nothing else, using exactly these keys:
 {"seoTitle": string | null, "seoDescription": string | null, "socialMediaTitle": string | null, "socialMediaDescription": string | null, "slug": string | null}`;
 
-const truncate = (value: string | undefined, max: number) =>
+export const truncate = (value: string | undefined, max: number) =>
   value?.trim().slice(0, max) ?? '';
 
 export const extractJson = (chat: ChatsCreateResponse): unknown => {

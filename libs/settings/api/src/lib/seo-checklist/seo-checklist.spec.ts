@@ -1,14 +1,11 @@
 import {
-  deriveSeoChecklist,
-  parseRobots,
-  SeoChecklistInput,
+  deriveSeoChecks,
+  getSeoUrls,
+  SEO_CHECKLIST_ITEM_ID,
+  SeoChecksInput,
   SeoProbeResult,
 } from './seo-checklist';
-import {
-  SeoCheckId,
-  SeoCheckKind,
-  SeoCheckStatus,
-} from './seo-checklist.model';
+import { SeoCheckId, SeoCheckStatus } from './seo-checklist.model';
 
 const ok = (body: string): SeoProbeResult => ({
   reachable: true,
@@ -27,58 +24,31 @@ const articleHtml = `<html><head>
 <script type="application/ld+json">{"@context":"http://schema.org","@type":"NewsArticle","headline":"Foo"}</script>
 </head></html>`;
 
-const baseInput: SeoChecklistInput = {
+const baseInput: SeoChecksInput = {
   websiteUrl: 'https://example.com',
-  robots: ok(
-    'User-agent: *\nAllow: /\n\nSitemap: https://example.com/api/sitemap'
-  ),
   sitemap: ok(sitemap),
+  rssFeed: ok(
+    '<?xml version="1.0"?><rss version="2.0"><channel></channel></rss>'
+  ),
   latestArticleUrl: 'https://example.com/a/foo',
   latestArticle: ok(articleHtml),
   publication: { name: 'Example', hasLogo: true },
 };
 
-const getCheck = (input: SeoChecklistInput, id: SeoCheckId) =>
-  deriveSeoChecklist(input).checks.find(check => check.id === id);
+const getCheck = (input: SeoChecksInput, id: SeoCheckId) =>
+  deriveSeoChecks(input).find(check => check.id === id);
 
-describe('deriveSeoChecklist', () => {
+describe('deriveSeoChecks', () => {
   test('reports a healthy setup', () => {
-    const checklist = deriveSeoChecklist(baseInput);
-
-    expect(checklist.sitemapUrl).toBe('https://example.com/api/sitemap');
-    expect(checklist.robotsUrl).toBe('https://example.com/robots.txt');
     expect(
-      checklist.checks
-        .filter(check => check.kind !== SeoCheckKind.Manual)
-        .filter(check => check.id !== SeoCheckId.NoindexHidden)
-        .map(check => [check.id, check.status])
+      deriveSeoChecks(baseInput).map(check => [check.id, check.status])
     ).toEqual([
-      [SeoCheckId.Robots, SeoCheckStatus.Ok],
-      [SeoCheckId.RobotsSitemap, SeoCheckStatus.Ok],
       [SeoCheckId.Sitemap, SeoCheckStatus.Ok],
       [SeoCheckId.NewsSitemap, SeoCheckStatus.Ok],
-      [SeoCheckId.Canonical, SeoCheckStatus.Ok],
-      [SeoCheckId.StructuredData, SeoCheckStatus.Ok],
+      [SeoCheckId.Feed, SeoCheckStatus.Ok],
+      [SeoCheckId.ArticleMarkup, SeoCheckStatus.Ok],
       [SeoCheckId.PublicationMetadata, SeoCheckStatus.Ok],
     ]);
-  });
-
-  test('classifies checks by kind', () => {
-    const kinds = Object.fromEntries(
-      deriveSeoChecklist(baseInput).checks.map(check => [check.id, check.kind])
-    );
-
-    expect(kinds).toEqual({
-      [SeoCheckId.Robots]: SeoCheckKind.Verifiable,
-      [SeoCheckId.RobotsSitemap]: SeoCheckKind.Verifiable,
-      [SeoCheckId.Sitemap]: SeoCheckKind.Verifiable,
-      [SeoCheckId.NewsSitemap]: SeoCheckKind.Verifiable,
-      [SeoCheckId.Canonical]: SeoCheckKind.Automatic,
-      [SeoCheckId.StructuredData]: SeoCheckKind.Automatic,
-      [SeoCheckId.NoindexHidden]: SeoCheckKind.Automatic,
-      [SeoCheckId.PublicationMetadata]: SeoCheckKind.Verifiable,
-      [SeoCheckId.SearchConsole]: SeoCheckKind.Manual,
-    });
   });
 
   test('detects the existing sitemap and counts its urls', () => {
@@ -118,76 +88,28 @@ describe('deriveSeoChecklist', () => {
     ).toBe(SeoCheckStatus.Error);
   });
 
-  test('errors when robots.txt blocks all crawlers', () => {
-    const input = {
-      ...baseInput,
-      robots: ok('User-agent: *\nDisallow: /'),
-    };
-
-    expect(getCheck(input, SeoCheckId.Robots)).toMatchObject({
-      status: SeoCheckStatus.Error,
-      detail: 'Disallow: /',
+  test('detects the existing rss feed', () => {
+    expect(getCheck(baseInput, SeoCheckId.Feed)).toMatchObject({
+      status: SeoCheckStatus.Ok,
+      url: 'https://example.com/api/rss-feed',
     });
   });
 
-  test('does not flag partial disallow rules', () => {
-    const input = {
-      ...baseInput,
-      robots: ok(
-        'User-agent: *\nDisallow: /*?*\nDisallow: /archive/\n\nUser-agent: BadBot\nDisallow: /\nSitemap: https://example.com/api/sitemap'
-      ),
-    };
+  test('warns when the rss feed is missing or invalid', () => {
+    expect(
+      getCheck(
+        { ...baseInput, rssFeed: { reachable: false, error: 'ECONNREFUSED' } },
+        SeoCheckId.Feed
+      )
+    ).toMatchObject({ status: SeoCheckStatus.Warning, detail: 'ECONNREFUSED' });
 
-    expect(getCheck(input, SeoCheckId.Robots)?.status).toBe(SeoCheckStatus.Ok);
+    expect(
+      getCheck({ ...baseInput, rssFeed: ok('<html></html>') }, SeoCheckId.Feed)
+        ?.status
+    ).toBe(SeoCheckStatus.Warning);
   });
 
-  test('warns when robots.txt points to a sitemap on another host', () => {
-    const input = {
-      ...baseInput,
-      robots: ok(
-        'User-agent: *\nAllow: /\nSitemap: https://wepublish.ch/api/sitemap'
-      ),
-    };
-
-    expect(getCheck(input, SeoCheckId.RobotsSitemap)).toMatchObject({
-      status: SeoCheckStatus.Warning,
-      detail: 'https://wepublish.ch/api/sitemap',
-    });
-  });
-
-  test('warns when robots.txt has no sitemap line', () => {
-    const input = { ...baseInput, robots: ok('User-agent: *\nAllow: /') };
-
-    expect(getCheck(input, SeoCheckId.RobotsSitemap)?.status).toBe(
-      SeoCheckStatus.Warning
-    );
-  });
-
-  test('errors when the website is unreachable', () => {
-    const unreachable: SeoProbeResult = {
-      reachable: false,
-      error: 'ECONNREFUSED',
-    };
-    const input = {
-      ...baseInput,
-      robots: unreachable,
-      sitemap: unreachable,
-      latestArticle: unreachable,
-    };
-
-    expect(getCheck(input, SeoCheckId.Robots)).toMatchObject({
-      status: SeoCheckStatus.Error,
-      detail: 'ECONNREFUSED',
-    });
-    expect(getCheck(input, SeoCheckId.Sitemap)?.status).toBe(
-      SeoCheckStatus.Error
-    );
-    expect(getCheck(input, SeoCheckId.Canonical)?.status).toBe(
-      SeoCheckStatus.Warning
-    );
-  });
-
-  test('warns when the article page lacks canonical or NewsArticle markup', () => {
+  test('lists missing article markup', () => {
     const input = {
       ...baseInput,
       latestArticle: ok(
@@ -195,23 +117,32 @@ describe('deriveSeoChecklist', () => {
       ),
     };
 
-    expect(getCheck(input, SeoCheckId.Canonical)?.status).toBe(
-      SeoCheckStatus.Warning
-    );
-    expect(getCheck(input, SeoCheckId.StructuredData)?.status).toBe(
-      SeoCheckStatus.Warning
-    );
+    expect(getCheck(input, SeoCheckId.ArticleMarkup)).toMatchObject({
+      status: SeoCheckStatus.Warning,
+      detail: 'canonical, NewsArticle',
+      url: 'https://example.com/a/foo',
+    });
+  });
+
+  test('warns when the latest article is unreachable', () => {
+    expect(
+      getCheck(
+        {
+          ...baseInput,
+          latestArticle: { reachable: true, status: 500, body: '' },
+        },
+        SeoCheckId.ArticleMarkup
+      )
+    ).toMatchObject({ status: SeoCheckStatus.Warning, detail: 'HTTP 500' });
   });
 
   test('reports article markup as info without a published article', () => {
-    const input = { ...baseInput, latestArticleUrl: null, latestArticle: null };
-
-    expect(getCheck(input, SeoCheckId.Canonical)?.status).toBe(
-      SeoCheckStatus.Info
-    );
-    expect(getCheck(input, SeoCheckId.StructuredData)?.status).toBe(
-      SeoCheckStatus.Info
-    );
+    expect(
+      getCheck(
+        { ...baseInput, latestArticleUrl: null, latestArticle: null },
+        SeoCheckId.ArticleMarkup
+      )?.status
+    ).toBe(SeoCheckStatus.Info);
   });
 
   test('warns about missing publication name and logo', () => {
@@ -229,35 +160,25 @@ describe('deriveSeoChecklist', () => {
       )?.status
     ).toBe(SeoCheckStatus.Warning);
   });
+});
 
-  test('search console is always a manual step pointing to the sitemap', () => {
-    expect(getCheck(baseInput, SeoCheckId.SearchConsole)).toMatchObject({
-      kind: SeoCheckKind.Manual,
-      status: SeoCheckStatus.Info,
-      url: 'https://example.com/api/sitemap',
+describe('getSeoUrls', () => {
+  test('builds the sitemap and feed urls without double slashes', () => {
+    expect(getSeoUrls('https://example.com/')).toEqual({
+      sitemapUrl: 'https://example.com/api/sitemap',
+      rssFeedUrl: 'https://example.com/api/rss-feed',
+      atomFeedUrl: 'https://example.com/api/atom-feed',
+      jsonFeedUrl: 'https://example.com/api/json-feed',
     });
-  });
-
-  test('handles trailing slashes in the website url', () => {
-    expect(
-      deriveSeoChecklist({ ...baseInput, websiteUrl: 'https://example.com/' })
-        .sitemapUrl
-    ).toBe('https://example.com/api/sitemap');
   });
 });
 
-describe('parseRobots', () => {
-  test('groups consecutive user-agents and collects sitemaps', () => {
-    expect(
-      parseRobots(
-        '# comment\nUser-agent: a\nUser-agent: B\nDisallow: /x\nUser-agent: c\nDisallow:\nSitemap: https://example.com/s'
-      )
-    ).toEqual({
-      groups: [
-        { userAgents: ['a', 'b'], disallows: ['/x'] },
-        { userAgents: ['c'], disallows: [''] },
-      ],
-      sitemaps: ['https://example.com/s'],
-    });
+describe('SEO_CHECKLIST_ITEM_ID', () => {
+  test.each(['gsc-verify', 'shareImages'])('accepts %s', id => {
+    expect(SEO_CHECKLIST_ITEM_ID.test(id)).toBe(true);
+  });
+
+  test.each(['', 'a b', '<script>', 'x'.repeat(65)])('rejects %s', id => {
+    expect(SEO_CHECKLIST_ITEM_ID.test(id)).toBe(false);
   });
 });

@@ -28,6 +28,22 @@ enum AnalyticsProviderType {
   GOOGLE
 }
 
+input AnalyzeSeoContentInput {
+  body: String
+  lead: String
+
+  """Language the findings should be written in, e.g. "de"."""
+  locale: String!
+  seoDescription: String
+  seoTitle: String
+  slug: String
+  socialMediaDescription: String
+  socialMediaTitle: String
+  stats: SeoContentStatsInput!
+  title: String
+  type: SeoMetadataContentType!
+}
+
 type Article implements HasOptionalPaywall & HasOptionalPeerLc {
   createdAt: DateTime!
   disableComments: Boolean!
@@ -2979,6 +2995,11 @@ type Mutation {
   """Update the comment rating system."""
   updateRatingSystem(answers: [UpdateCommentRatingSystemAnswerInput!], id: String!, name: String): CommentRatingSystem!
 
+  """
+  Marks an SEO checklist item as done or not done and returns all completed items.
+  """
+  updateSeoChecklistItem(completed: Boolean!, itemId: String!): [SeoChecklistItem!]!
+
   """Updates an existing setting."""
   updateSetting(name: SettingName!, value: GraphQLSettingValueType): Setting!
 
@@ -3918,6 +3939,9 @@ type Query {
   """Returns all analytics provider settings."""
   analyticsProviderSettings(filter: SettingAnalyticsProviderFilter): [SettingAnalyticsProvider!]!
 
+  """Analyzes an article or page for SEO optimization potential using AI."""
+  analyzeSeoContent(input: AnalyzeSeoContentInput!): SeoContentAnalysis!
+
   """Returns an article by id or slug."""
   article(id: String, slug: String): Article!
 
@@ -4522,27 +4546,16 @@ type SensitiveDataUser implements BaseUser {
 type SeoCheck {
   detail: String
   id: SeoCheckId!
-  kind: SeoCheckKind!
   status: SeoCheckStatus!
   url: String
 }
 
 enum SeoCheckId {
-  Canonical
+  ArticleMarkup
+  Feed
   NewsSitemap
-  NoindexHidden
   PublicationMetadata
-  Robots
-  RobotsSitemap
-  SearchConsole
   Sitemap
-  StructuredData
-}
-
-enum SeoCheckKind {
-  Automatic
-  Manual
-  Verifiable
 }
 
 enum SeoCheckStatus {
@@ -4553,10 +4566,57 @@ enum SeoCheckStatus {
 }
 
 type SeoChecklist {
+  atomFeedUrl: String!
   checks: [SeoCheck!]!
-  robotsUrl: String!
+  completedItems: [SeoChecklistItem!]!
+  jsonFeedUrl: String!
+  rssFeedUrl: String!
   sitemapUrl: String!
   websiteUrl: String!
+}
+
+type SeoChecklistItem {
+  completedAt: DateTime!
+  completedBy: String
+  itemId: String!
+}
+
+type SeoContentAnalysis {
+  findings: [SeoFinding!]!
+  summary: String!
+}
+
+input SeoContentStatsInput {
+  hasShareImage: Boolean!
+  headingCount: Int!
+  imageCount: Int!
+  imagesWithoutDescription: Int!
+  linkCount: Int!
+  wordCount: Int!
+}
+
+type SeoFinding {
+  category: SeoFindingCategory!
+  message: String!
+  severity: SeoFindingSeverity!
+  suggestion: String
+}
+
+enum SeoFindingCategory {
+  Content
+  Description
+  Images
+  Links
+  Readability
+  Social
+  Structure
+  Title
+}
+
+enum SeoFindingSeverity {
+  High
+  Low
+  Medium
 }
 
 enum SeoMetadataContentType {

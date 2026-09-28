@@ -14,3 +14,15 @@ query GenerateSeoMetadata($input: GenerateSeoMetadataInput!) {
     slug
   }
 }
+
+query AnalyzeSeoContent($input: AnalyzeSeoContentInput!) {
+  analyzeSeoContent(input: $input) {
+    summary
+    findings {
+      severity
+      category
+      message
+      suggestion
+    }
+  }
+}

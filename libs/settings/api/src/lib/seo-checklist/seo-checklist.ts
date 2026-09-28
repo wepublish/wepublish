@@ -1,19 +1,13 @@
-import {
-  SeoCheck,
-  SeoCheckId,
-  SeoCheckKind,
-  SeoCheckStatus,
-  SeoChecklist,
-} from './seo-checklist.model';
+import { SeoCheck, SeoCheckId, SeoCheckStatus } from './seo-checklist.model';
 
 export type SeoProbeResult =
   | { reachable: true; status: number; body: string }
   | { reachable: false; error: string };
 
-export type SeoChecklistInput = {
+export type SeoChecksInput = {
   websiteUrl: string;
-  robots: SeoProbeResult;
   sitemap: SeoProbeResult;
+  rssFeed: SeoProbeResult;
   latestArticleUrl: string | null;
   latestArticle: SeoProbeResult | null;
   publication: { name?: string | null; hasLogo: boolean } | null;
@@ -22,13 +16,18 @@ export type SeoChecklistInput = {
 export const NEWS_SITEMAP_NAMESPACE =
   'http://www.google.com/schemas/sitemap-news/0.9';
 
-export const getSitemapUrl = (websiteUrl: string) =>
-  `${trimTrailingSlash(websiteUrl)}/api/sitemap`;
-
-export const getRobotsUrl = (websiteUrl: string) =>
-  `${trimTrailingSlash(websiteUrl)}/robots.txt`;
-
 const trimTrailingSlash = (url: string) => url.replace(/\/+$/, '');
+
+export const getSeoUrls = (websiteUrl: string) => {
+  const base = trimTrailingSlash(websiteUrl);
+
+  return {
+    sitemapUrl: `${base}/api/sitemap`,
+    rssFeedUrl: `${base}/api/rss-feed`,
+    atomFeedUrl: `${base}/api/atom-feed`,
+    jsonFeedUrl: `${base}/api/json-feed`,
+  };
+};
 
 const isOk = (
   probe: SeoProbeResult | null
@@ -38,144 +37,13 @@ const isOk = (
 const describeFailure = (probe: SeoProbeResult) =>
   'error' in probe ? probe.error : `HTTP ${probe.status}`;
 
-const getHost = (url: string) => {
-  try {
-    return new URL(url).host;
-  } catch {
-    return null;
-  }
-};
-
-type RobotsGroup = { userAgents: string[]; disallows: string[] };
-
-export const parseRobots = (robots: string) => {
-  const groups: RobotsGroup[] = [];
-  const sitemaps: string[] = [];
-  let current: RobotsGroup | null = null;
-  let lastWasUserAgent = false;
-
-  for (const rawLine of robots.split(/\r?\n/)) {
-    const line = rawLine.replace(/#.*$/, '').trim();
-
-    if (!line) {
-      continue;
-    }
-
-    const separator = line.indexOf(':');
-
-    if (separator === -1) {
-      continue;
-    }
-
-    const key = line.slice(0, separator).trim().toLowerCase();
-    const value = line.slice(separator + 1).trim();
-
-    if (key === 'sitemap') {
-      sitemaps.push(value);
-      continue;
-    }
-
-    if (key === 'user-agent') {
-      if (!current || !lastWasUserAgent) {
-        current = { userAgents: [], disallows: [] };
-        groups.push(current);
-      }
-
-      current.userAgents.push(value.toLowerCase());
-      lastWasUserAgent = true;
-      continue;
-    }
-
-    lastWasUserAgent = false;
-
-    if (key === 'disallow' && current) {
-      current.disallows.push(value);
-    }
-  }
-
-  return { groups, sitemaps };
-};
-
-const checkRobots = (input: SeoChecklistInput): SeoCheck[] => {
-  const robotsUrl = getRobotsUrl(input.websiteUrl);
-
-  if (!isOk(input.robots)) {
-    return [
-      {
-        id: SeoCheckId.Robots,
-        kind: SeoCheckKind.Verifiable,
-        status: SeoCheckStatus.Error,
-        detail: describeFailure(input.robots),
-        url: robotsUrl,
-      },
-      {
-        id: SeoCheckId.RobotsSitemap,
-        kind: SeoCheckKind.Verifiable,
-        status: SeoCheckStatus.Warning,
-        url: robotsUrl,
-      },
-    ];
-  }
-
-  const { groups, sitemaps } = parseRobots(input.robots.body);
-  const blocksEverything = groups.some(
-    group =>
-      group.userAgents.some(agent => agent === '*' || agent === 'googlebot') &&
-      group.disallows.includes('/')
-  );
-
-  const websiteHost = getHost(input.websiteUrl);
-  const foreignSitemap = sitemaps.find(
-    sitemap => getHost(sitemap) !== websiteHost
-  );
-
-  let sitemapCheck: SeoCheck;
-
-  if (!sitemaps.length) {
-    sitemapCheck = {
-      id: SeoCheckId.RobotsSitemap,
-      kind: SeoCheckKind.Verifiable,
-      status: SeoCheckStatus.Warning,
-      url: robotsUrl,
-    };
-  } else if (foreignSitemap) {
-    sitemapCheck = {
-      id: SeoCheckId.RobotsSitemap,
-      kind: SeoCheckKind.Verifiable,
-      status: SeoCheckStatus.Warning,
-      detail: foreignSitemap,
-      url: robotsUrl,
-    };
-  } else {
-    sitemapCheck = {
-      id: SeoCheckId.RobotsSitemap,
-      kind: SeoCheckKind.Verifiable,
-      status: SeoCheckStatus.Ok,
-      detail: sitemaps.join(', '),
-      url: robotsUrl,
-    };
-  }
-
-  return [
-    {
-      id: SeoCheckId.Robots,
-      kind: SeoCheckKind.Verifiable,
-      status: blocksEverything ? SeoCheckStatus.Error : SeoCheckStatus.Ok,
-      detail: blocksEverything ? 'Disallow: /' : undefined,
-      url: robotsUrl,
-    },
-    sitemapCheck,
-  ];
-};
-
-const checkSitemap = (input: SeoChecklistInput): SeoCheck[] => {
-  const sitemapUrl = getSitemapUrl(input.websiteUrl);
+const checkSitemap = (input: SeoChecksInput): SeoCheck[] => {
+  const { sitemapUrl } = getSeoUrls(input.websiteUrl);
 
   if (!isOk(input.sitemap) || !input.sitemap.body.includes('<urlset')) {
     return [
       {
         id: SeoCheckId.Sitemap,
-        kind: SeoCheckKind.Verifiable,
         status: SeoCheckStatus.Error,
         detail:
           isOk(input.sitemap) ? 'No <urlset> found' : (
@@ -185,7 +53,6 @@ const checkSitemap = (input: SeoChecklistInput): SeoCheck[] => {
       },
       {
         id: SeoCheckId.NewsSitemap,
-        kind: SeoCheckKind.Verifiable,
         status: SeoCheckStatus.Info,
         url: sitemapUrl,
       },
@@ -198,18 +65,32 @@ const checkSitemap = (input: SeoChecklistInput): SeoCheck[] => {
   return [
     {
       id: SeoCheckId.Sitemap,
-      kind: SeoCheckKind.Verifiable,
       status: SeoCheckStatus.Ok,
       detail: `${urlCount}`,
       url: sitemapUrl,
     },
     {
       id: SeoCheckId.NewsSitemap,
-      kind: SeoCheckKind.Verifiable,
       status: hasNews ? SeoCheckStatus.Ok : SeoCheckStatus.Info,
       url: sitemapUrl,
     },
   ];
+};
+
+const checkFeed = (input: SeoChecksInput): SeoCheck => {
+  const { rssFeedUrl } = getSeoUrls(input.websiteUrl);
+  const valid =
+    isOk(input.rssFeed) && /<(rss|feed)[\s>]/.test(input.rssFeed.body);
+
+  return {
+    id: SeoCheckId.Feed,
+    status: valid ? SeoCheckStatus.Ok : SeoCheckStatus.Warning,
+    detail:
+      valid ? undefined
+      : isOk(input.rssFeed) ? 'No <rss> found'
+      : describeFailure(input.rssFeed),
+    url: rssFeedUrl,
+  };
 };
 
 const hasCanonical = (html: string) =>
@@ -229,68 +110,36 @@ const hasNewsArticleJsonLd = (html: string) => {
   return false;
 };
 
-const checkArticleMarkup = (input: SeoChecklistInput): SeoCheck[] => {
-  const url = input.latestArticleUrl ?? undefined;
-
+const checkArticleMarkup = (input: SeoChecksInput): SeoCheck => {
   if (!input.latestArticleUrl || !input.latestArticle) {
-    return [
-      {
-        id: SeoCheckId.Canonical,
-        kind: SeoCheckKind.Automatic,
-        status: SeoCheckStatus.Info,
-      },
-      {
-        id: SeoCheckId.StructuredData,
-        kind: SeoCheckKind.Automatic,
-        status: SeoCheckStatus.Info,
-      },
-    ];
+    return { id: SeoCheckId.ArticleMarkup, status: SeoCheckStatus.Info };
   }
+
+  const url = input.latestArticleUrl;
 
   if (!isOk(input.latestArticle)) {
-    const detail = describeFailure(input.latestArticle);
-
-    return [
-      {
-        id: SeoCheckId.Canonical,
-        kind: SeoCheckKind.Automatic,
-        status: SeoCheckStatus.Warning,
-        detail,
-        url,
-      },
-      {
-        id: SeoCheckId.StructuredData,
-        kind: SeoCheckKind.Automatic,
-        status: SeoCheckStatus.Warning,
-        detail,
-        url,
-      },
-    ];
+    return {
+      id: SeoCheckId.ArticleMarkup,
+      status: SeoCheckStatus.Warning,
+      detail: describeFailure(input.latestArticle),
+      url,
+    };
   }
 
-  return [
-    {
-      id: SeoCheckId.Canonical,
-      kind: SeoCheckKind.Automatic,
-      status:
-        hasCanonical(input.latestArticle.body) ?
-          SeoCheckStatus.Ok
-        : SeoCheckStatus.Warning,
-      url,
-    },
-    {
-      id: SeoCheckId.StructuredData,
-      kind: SeoCheckKind.Automatic,
-      status:
-        hasNewsArticleJsonLd(input.latestArticle.body) ?
-          SeoCheckStatus.Ok
-        : SeoCheckStatus.Warning,
-      url,
-    },
-  ];
+  const missing = [
+    !hasCanonical(input.latestArticle.body) && 'canonical',
+    !hasNewsArticleJsonLd(input.latestArticle.body) && 'NewsArticle',
+  ].filter((value): value is string => !!value);
+
+  return {
+    id: SeoCheckId.ArticleMarkup,
+    status: missing.length ? SeoCheckStatus.Warning : SeoCheckStatus.Ok,
+    detail: missing.length ? missing.join(', ') : undefined,
+    url,
+  };
 };
 
-const checkPublication = (input: SeoChecklistInput): SeoCheck => {
+const checkPublication = (input: SeoChecksInput): SeoCheck => {
   const missing = [
     !input.publication?.name?.trim() && 'name',
     !input.publication?.hasLogo && 'logo',
@@ -298,35 +147,16 @@ const checkPublication = (input: SeoChecklistInput): SeoCheck => {
 
   return {
     id: SeoCheckId.PublicationMetadata,
-    kind: SeoCheckKind.Verifiable,
     status: missing.length ? SeoCheckStatus.Warning : SeoCheckStatus.Ok,
     detail: missing.length ? missing.join(', ') : undefined,
   };
 };
 
-export const deriveSeoChecklist = (input: SeoChecklistInput): SeoChecklist => {
-  const sitemapUrl = getSitemapUrl(input.websiteUrl);
+export const deriveSeoChecks = (input: SeoChecksInput): SeoCheck[] => [
+  ...checkSitemap(input),
+  checkFeed(input),
+  checkArticleMarkup(input),
+  checkPublication(input),
+];
 
-  return {
-    websiteUrl: input.websiteUrl,
-    sitemapUrl,
-    robotsUrl: getRobotsUrl(input.websiteUrl),
-    checks: [
-      ...checkRobots(input),
-      ...checkSitemap(input),
-      ...checkArticleMarkup(input),
-      {
-        id: SeoCheckId.NoindexHidden,
-        kind: SeoCheckKind.Automatic,
-        status: SeoCheckStatus.Info,
-      },
-      checkPublication(input),
-      {
-        id: SeoCheckId.SearchConsole,
-        kind: SeoCheckKind.Manual,
-        status: SeoCheckStatus.Info,
-        url: sitemapUrl,
-      },
-    ],
-  };
-};
+export const SEO_CHECKLIST_ITEM_ID = /^[a-zA-Z0-9-]{1,64}$/;

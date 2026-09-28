@@ -3179,91 +3179,156 @@
     "seoChecklist": {
       "navbar": "SEO",
       "title": "Liste de contrôle SEO",
-      "description": "Un aperçu de ce que We.Publish gère automatiquement pour les moteurs de recherche et de ce qui requiert votre attention. Les vérifications sont effectuées sur le site en ligne.",
+      "description": "Des étapes pratiques pour que vos contenus soient faciles à trouver et bien présentés lorsqu'ils sont partagés. Les points avec un statut sont vérifiés automatiquement sur votre site en ligne.",
       "websiteUrl": "Site web",
       "refresh": "Vérifier à nouveau",
-      "open": "Ouvrir",
       "copyUrl": "Copier l'URL",
       "detail": "Détails",
+      "progress": "{{done}} sur {{total}} effectués",
+      "completedBy": "Effectué par {{name}} le {{date}}",
+      "completedAt": "Effectué le {{date}}",
       "status": {
         "Ok": "OK",
         "Warning": "Avertissement",
         "Error": "Erreur",
         "Info": "Info"
       },
-      "kinds": {
-        "Manual": {
-          "title": "Action requise",
-          "description": "Étapes à effectuer en dehors de We.Publish."
+      "checkStatus": {
+        "Ok": "Vérifié",
+        "Warning": "À traiter",
+        "Error": "Ne fonctionne pas",
+        "Info": "Non disponible"
+      },
+      "sections": {
+        "searchConsole": {
+          "title": "Google Search Console",
+          "description": "L'outil gratuit de Google qui montre les performances de votre site dans la recherche."
         },
-        "Verifiable": {
-          "title": "Vérifié automatiquement",
-          "description": "Ces vérifications sont effectuées sur votre site web et vos paramètres."
+        "sitemapsFeeds": {
+          "title": "Sitemaps et flux",
+          "description": "Comment les moteurs de recherche et les agrégateurs trouvent vos articles."
         },
-        "Automatic": {
-          "title": "Géré automatiquement",
-          "description": "We.Publish s'en occupe pour chaque article et chaque page."
+        "content": {
+          "title": "Contenu",
+          "description": "Des habitudes qui rendent les articles plus faciles à trouver et à comprendre."
+        },
+        "presentation": {
+          "title": "Présentation et partage",
+          "description": "L'apparence de vos contenus dans les résultats de recherche, sur les réseaux sociaux et dans les messageries."
+        },
+        "automatic": {
+          "title": "Géré par We.Publish",
+          "description": "Les bases techniques prises en charge automatiquement."
         }
       },
-      "checks": {
-        "Robots": {
-          "title": "Indexation (robots.txt)",
-          "description": "Le fichier robots.txt indique aux moteurs de recherche quelles parties du site ils peuvent explorer.",
-          "Ok": "Les moteurs de recherche sont autorisés à explorer le site.",
-          "Error": "Le fichier robots.txt n'a pas pu être chargé ou bloque tous les moteurs de recherche."
+      "items": {
+        "gsc-verify": {
+          "title": "Valider votre site dans Google Search Console",
+          "description": "Ajoutez votre domaine comme propriété « Domaine » et validez-le avec un enregistrement DNS. Vous obtenez ainsi les données d'indexation et de performance pour tous les sous-domaines.",
+          "action": "Ouvrir Search Console"
         },
-        "RobotsSitemap": {
-          "title": "Sitemap dans robots.txt",
-          "description": "Référencer le sitemap dans robots.txt aide les moteurs de recherche à trouver tous les articles.",
-          "detail": "Sitemap référencé",
-          "Ok": "Le fichier robots.txt référence le sitemap de ce site.",
-          "Warning": "Le fichier robots.txt ne référence pas le sitemap de ce site. Veuillez contacter le support We.Publish pour le corriger."
+        "gsc-sitemap": {
+          "title": "Soumettre le sitemap",
+          "description": "Sous « Sitemaps », soumettez une fois l'URL du sitemap ci-dessous. Google le consulte ensuite régulièrement pour trouver les nouveaux articles.",
+          "action": "Ouvrir Search Console"
         },
-        "Sitemap": {
+        "gsc-pages": {
+          "title": "Vérifier régulièrement le rapport d'indexation",
+          "description": "Le rapport « Pages » indique quelles pages ne sont pas indexées et pourquoi. Consultez-le chaque mois et corrigez les problèmes récurrents.",
+          "action": "Ouvrir Search Console"
+        },
+        "gsc-performance": {
+          "title": "Apprendre des requêtes de recherche",
+          "description": "Le rapport « Performances » montre les requêtes qui amènent vos lecteurs. Utilisez-le pour trouver les sujets et les formulations recherchés.",
+          "action": "Ouvrir Search Console"
+        },
+        "gsc-inspect": {
+          "title": "Demander l'indexation des articles importants",
+          "description": "Utilisez « Inspection de l'URL » pour vérifier un article important et demander son indexation après la publication ou une mise à jour importante.",
+          "action": "Ouvrir Search Console"
+        },
+        "sitemap": {
           "title": "Sitemap",
-          "description": "Le sitemap est généré automatiquement et contient les derniers articles et pages.",
-          "detail": "Nombre d'URL",
-          "Ok": "Le sitemap est accessible et valide.",
-          "Error": "Le sitemap n'a pas pu être chargé ou n'est pas valide."
+          "description": "Le sitemap est généré automatiquement et liste vos derniers articles et pages pour les moteurs de recherche.",
+          "detail": "Nombre d'URL"
         },
-        "NewsSitemap": {
-          "title": "Sitemap Google News",
-          "description": "Les articles du sitemap sont complétés par des métadonnées Google News.",
-          "Ok": "Le sitemap contient des entrées Google News.",
-          "Info": "Aucune entrée Google News n'a été trouvée dans le sitemap."
+        "news-sitemap": {
+          "title": "Entrées Google News",
+          "description": "Les articles du sitemap contiennent des métadonnées Google News, ce qui les aide à apparaître dans Google News et « À la une »."
         },
-        "Canonical": {
-          "title": "URL canoniques",
-          "description": "Chaque article indique son URL canonique. Vous pouvez la remplacer par article dans les paramètres de l'article.",
-          "Ok": "Le dernier article indique une URL canonique.",
-          "Warning": "Aucune URL canonique n'a été trouvée sur le dernier article.",
-          "Info": "Il n'y a pas encore d'article publié à vérifier."
+        "feeds": {
+          "title": "Flux RSS, Atom et JSON",
+          "description": "Les flux permettent aux agrégateurs, lecteurs de flux et outils de newsletter de reprendre vos articles. Communiquez l'URL RSS aux agrégateurs où vous souhaitez apparaître."
         },
-        "StructuredData": {
-          "title": "Données structurées (NewsArticle)",
-          "description": "Les articles contiennent des données structurées NewsArticle (JSON-LD) avec titre, auteur·e·s, dates et images.",
-          "Ok": "Le dernier article contient des données structurées NewsArticle.",
-          "Warning": "Aucune donnée structurée NewsArticle n'a été trouvée sur le dernier article.",
-          "Info": "Il n'y a pas encore d'article publié à vérifier."
+        "publisher-center": {
+          "title": "Vous inscrire au Google News Publisher Center",
+          "description": "Ajoutez votre publication, votre logo et vos rubriques dans le Publisher Center pour contrôler votre présence dans Google News.",
+          "action": "Ouvrir Publisher Center"
         },
-        "NoindexHidden": {
-          "title": "Contenu masqué",
-          "description": "Utilisez l'option « masqué » pour exclure certains articles ou pages des moteurs de recherche.",
-          "Info": "Les articles et pages masqués sont marqués noindex et exclus du sitemap."
+        "seo-titles": {
+          "title": "Rédiger des titres SEO précis",
+          "description": "Placez le sujet principal en premier et restez sous environ 60 caractères. Décrivez le contenu de l'article plutôt que de simplement l'annoncer."
         },
-        "PublicationMetadata": {
+        "meta-descriptions": {
+          "title": "Rédiger des méta-descriptions",
+          "description": "Résumez l'article en une ou deux phrases (environ 150 caractères). Sans description, le chapeau ou le premier paragraphe est utilisé."
+        },
+        "structure": {
+          "title": "Structurer les textes longs",
+          "description": "Utilisez un chapeau clair, des intertitres et des paragraphes courts. Cela aide les lecteurs et les moteurs de recherche à comprendre le contenu."
+        },
+        "internal-links": {
+          "title": "Lier les articles connexes",
+          "description": "Liez les articles précédents et de contexte. Les liens internes aident les lecteurs à approfondir et les moteurs de recherche à trouver les contenus plus anciens."
+        },
+        "stable-slugs": {
+          "title": "Garder des slugs courts et stables",
+          "description": "Utilisez un slug court avec le sujet principal et ne le modifiez plus après la publication, sinon les liens et le référencement existants sont perdus."
+        },
+        "author-pages": {
+          "title": "Soigner les pages auteur",
+          "description": "Des pages auteur avec nom, photo et courte biographie montrent qui fait votre journalisme et renforcent la confiance.",
+          "action": "Modifier les auteur·e·s"
+        },
+        "update-evergreen": {
+          "title": "Mettre à jour les contenus intemporels",
+          "description": "Mettez régulièrement à jour les articles explicatifs et guides plutôt que de publier des quasi-doublons. Signalez les mises à jour dans le texte."
+        },
+        "share-images": {
+          "title": "Définir une image de partage pour chaque article",
+          "description": "Choisissez une image parlante au format paysage (au moins 1200 px de large). Elle s'affiche sur les réseaux sociaux, les messageries et Google Discover."
+        },
+        "image-descriptions": {
+          "title": "Décrire vos images",
+          "description": "La description de l'image sert de texte alternatif. Décrivez ce qui est visible : cela aide l'accessibilité et la recherche d'images.",
+          "action": "Ouvrir la bibliothèque d'images"
+        },
+        "social-texts": {
+          "title": "Utiliser les textes pour les réseaux sociaux",
+          "description": "Un titre et une description propres aux réseaux sociaux peuvent être plus personnels que les textes SEO, sans devenir racoleurs."
+        },
+        "preview-before-publishing": {
+          "title": "Vérifier les aperçus avant publication",
+          "description": "L'onglet « SEO » des paramètres de l'article montre à quoi il ressemble dans Google, sur les réseaux sociaux et dans les messageries."
+        },
+        "publication-profile": {
           "title": "Nom et logo de la publication",
-          "description": "Le nom et le logo de la publication sont gérés dans le profil de peering.",
+          "description": "Le nom et le logo de votre publication sont gérés dans le profil de peering et utilisés dans les aperçus et les données structurées.",
           "detail": "Manquant",
-          "action": "Modifier le profil",
-          "Ok": "Le nom et le logo de la publication sont définis.",
-          "Warning": "Le nom ou le logo de la publication manque."
+          "action": "Modifier le profil"
         },
-        "SearchConsole": {
-          "title": "Google Search Console",
-          "description": "Ajoutez le site comme propriété de domaine dans Google Search Console, validez-le via DNS et soumettez l'URL du sitemap ci-dessous sous « Sitemaps ».",
-          "action": "Ouvrir Search Console",
-          "Info": "Cette étape doit être effectuée une fois par la publication dans Google Search Console."
+        "article-markup": {
+          "title": "URL canoniques et données structurées",
+          "description": "Chaque article indique son URL canonique et contient des données structurées NewsArticle (JSON-LD). La vérification porte sur votre dernier article.",
+          "detail": "Manquant"
+        },
+        "canonical-urls": {
+          "title": "Contenus provenant d'autres sources",
+          "description": "Si un article a d'abord été publié ailleurs, indiquez l'URL canonique dans les paramètres de l'article afin que les moteurs de recherche reconnaissent l'original."
+        },
+        "hidden-noindex": {
+          "title": "Contenu masqué",
+          "description": "Les articles et pages masqués sont marqués noindex et exclus du sitemap, afin que les moteurs de recherche ne les affichent pas."
         }
       }
     },
@@ -3287,6 +3352,55 @@
         "socialMediaTitle": "Titre pour les réseaux sociaux",
         "socialMediaDescription": "Description pour les réseaux sociaux",
         "slug": "Slug"
+      }
+    },
+    "seoTab": {
+      "title": "SEO"
+    },
+    "seoPreviews": {
+      "info": "Aperçus approximatifs basés sur les paramètres actuels. Les plateformes déterminent l'affichage final et peuvent raccourcir les textes ou recadrer les images.",
+      "pageIgnoresSeoFields": "Le site n'utilise actuellement pas le titre SEO ni la description SEO des pages. Les aperçus montrent ce qui est réellement utilisé.",
+      "noImage": "Pas d'image",
+      "google": "Recherche Google",
+      "googleTitleTooLong": "Plus de {{limit}} caractères, Google le raccourcira probablement",
+      "facebook": "Facebook",
+      "linkedIn": "LinkedIn",
+      "whatsApp": "WhatsApp",
+      "discord": "Discord",
+      "xLarge": "X (Twitter) – carte avec grande image",
+      "xLargeUsed": "utilisée par le site",
+      "xSummary": "X (Twitter) – carte résumé",
+      "xSummaryUnused": "pour comparaison, n'est pas utilisée par le site",
+      "xFrom": "De {{domain}}"
+    },
+    "seoAnalysis": {
+      "title": "Analyse SEO",
+      "description": "Laissez l'IA examiner le contenu et les métadonnées pour trouver des possibilités d'optimisation. Rien n'est modifié.",
+      "analyze": "Analyser le contenu",
+      "reanalyze": "Analyser à nouveau",
+      "notEnoughContent": "Ajoutez d'abord un titre ou du contenu.",
+      "noFindings": "Aucune possibilité d'optimisation trouvée.",
+      "disclaimer": "L'IA peut se tromper. Considérez les remarques comme des suggestions.",
+      "stats": {
+        "wordCount": "Mots",
+        "headingCount": "Intertitres",
+        "linkCount": "Liens",
+        "imagesWithoutDescription": "Images sans description"
+      },
+      "severity": {
+        "High": "Élevée",
+        "Medium": "Moyenne",
+        "Low": "Faible"
+      },
+      "category": {
+        "Title": "Titre",
+        "Description": "Description",
+        "Content": "Contenu",
+        "Structure": "Structure",
+        "Readability": "Lisibilité",
+        "Links": "Liens",
+        "Images": "Images",
+        "Social": "Réseaux sociaux"
       }
     }
   }

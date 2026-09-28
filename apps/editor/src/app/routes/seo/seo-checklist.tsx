@@ -4,18 +4,30 @@ import {
   Alert,
   Button,
   Card,
-  CardActions,
   CardContent,
+  CardHeader,
+  Checkbox,
+  Chip,
   CircularProgress,
+  IconButton,
+  LinearProgress,
+  Tooltip,
   Typography,
 } from '@mui/material';
 import {
   SeoCheck,
-  SeoCheckKind,
+  SeoCheckId,
+  SeoChecklistDocument,
+  SeoChecklistItemFragment,
+  SeoChecklistQuery,
   SeoCheckStatus,
   useSeoChecklistQuery,
+  useUpdateSeoChecklistItemMutation,
 } from '@wepublish/editor/api';
-import { createCheckedPermissionComponent } from '@wepublish/ui/editor';
+import {
+  createCheckedPermissionComponent,
+  useAuthorisation,
+} from '@wepublish/ui/editor';
 import { useTranslation } from 'react-i18next';
 import {
   MdCheck,
@@ -28,66 +40,193 @@ import {
 } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 
-const SeoChecklistWrapper = styled.div`
+type SeoChecklistData = SeoChecklistQuery['seoChecklist'];
+type SeoUrlKey = keyof Pick<
+  SeoChecklistData,
+  'sitemapUrl' | 'rssFeedUrl' | 'atomFeedUrl' | 'jsonFeedUrl'
+>;
+
+export interface SeoChecklistEntry {
+  readonly id: string;
+  readonly check?: SeoCheckId;
+  readonly info?: boolean;
+  readonly urls?: SeoUrlKey[];
+  readonly link?: string;
+  readonly internalLink?: string;
+}
+
+export interface SeoChecklistSection {
+  readonly id: string;
+  readonly items: SeoChecklistEntry[];
+}
+
+const SEARCH_CONSOLE = 'https://search.google.com/search-console';
+
+export const SEO_CHECKLIST: SeoChecklistSection[] = [
+  {
+    id: 'searchConsole',
+    items: [
+      { id: 'gsc-verify', link: SEARCH_CONSOLE },
+      { id: 'gsc-sitemap', urls: ['sitemapUrl'], link: SEARCH_CONSOLE },
+      { id: 'gsc-pages', link: SEARCH_CONSOLE },
+      { id: 'gsc-performance', link: SEARCH_CONSOLE },
+      { id: 'gsc-inspect', link: SEARCH_CONSOLE },
+    ],
+  },
+  {
+    id: 'sitemapsFeeds',
+    items: [
+      { id: 'sitemap', check: SeoCheckId.Sitemap, urls: ['sitemapUrl'] },
+      { id: 'news-sitemap', check: SeoCheckId.NewsSitemap },
+      {
+        id: 'feeds',
+        check: SeoCheckId.Feed,
+        urls: ['rssFeedUrl', 'atomFeedUrl', 'jsonFeedUrl'],
+      },
+      {
+        id: 'publisher-center',
+        link: 'https://publishercenter.google.com',
+      },
+    ],
+  },
+  {
+    id: 'content',
+    items: [
+      { id: 'seo-titles' },
+      { id: 'meta-descriptions' },
+      { id: 'structure' },
+      { id: 'internal-links' },
+      { id: 'stable-slugs' },
+      { id: 'author-pages', internalLink: '/authors' },
+      { id: 'update-evergreen' },
+    ],
+  },
+  {
+    id: 'presentation',
+    items: [
+      { id: 'share-images' },
+      { id: 'image-descriptions', internalLink: '/images' },
+      { id: 'social-texts' },
+      { id: 'preview-before-publishing' },
+      {
+        id: 'publication-profile',
+        check: SeoCheckId.PublicationMetadata,
+        internalLink: '/peering/profile/edit',
+      },
+    ],
+  },
+  {
+    id: 'automatic',
+    items: [
+      { id: 'article-markup', check: SeoCheckId.ArticleMarkup },
+      { id: 'canonical-urls', info: true },
+      { id: 'hidden-noindex', info: true },
+    ],
+  },
+];
+
+export const isEntryDone = (
+  entry: SeoChecklistEntry,
+  checks: Pick<SeoCheck, 'id' | 'status'>[],
+  completedIds: Set<string>
+) => {
+  if (entry.info) {
+    return true;
+  }
+
+  if (entry.check) {
+    return (
+      checks.find(check => check.id === entry.check)?.status ===
+      SeoCheckStatus.Ok
+    );
+  }
+
+  return completedIds.has(entry.id);
+};
+
+export const getSeoChecklistProgress = (
+  sections: SeoChecklistSection[],
+  checks: Pick<SeoCheck, 'id' | 'status'>[],
+  completedItems: Pick<SeoChecklistItemFragment, 'itemId'>[]
+) => {
+  const completedIds = new Set(completedItems.map(item => item.itemId));
+  const entries = sections.flatMap(section => section.items);
+
+  return {
+    done: entries.filter(entry => isEntryDone(entry, checks, completedIds))
+      .length,
+    total: entries.length,
+  };
+};
+
+const Wrapper = styled.div`
   display: grid;
-  grid-template-columns: 1fr;
   gap: 24px;
-
-  ${({ theme }) => theme.breakpoints.up('md')} {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  ${({ theme }) => theme.breakpoints.up('lg')} {
-    grid-template-columns: repeat(3, 1fr);
-  }
+  max-width: 960px;
 `;
 
-const FullWidth = styled.div`
-  grid-column: -1/1;
-`;
-
-const Header = styled(FullWidth)`
+const Header = styled.div`
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   gap: 16px;
 `;
 
-const CardTitle = styled.div`
+const Items = styled.ul`
+  list-style: none;
+  margin: 0;
+  padding: 0;
   display: grid;
-  grid-template-columns: max-content 1fr;
+  gap: 12px;
+`;
+
+const ItemRow = styled.li`
+  display: grid;
+  grid-template-columns: 42px 1fr;
+  gap: 8px;
+  align-items: start;
+`;
+
+const ItemMarker = styled.div`
+  display: grid;
+  place-items: center;
+  height: 42px;
+`;
+
+const ItemBody = styled.div`
+  display: grid;
+  gap: 4px;
+  padding-top: 9px;
+`;
+
+const ItemTitle = styled.div`
+  display: flex;
+  flex-wrap: wrap;
   gap: 8px;
   align-items: center;
+  font-weight: 600;
 `;
 
-const Detail = styled.code`
-  overflow-wrap: anywhere;
+const UrlRow = styled.div`
+  display: flex;
+  gap: 4px;
+  align-items: center;
+
+  code {
+    overflow-wrap: anywhere;
+  }
 `;
 
-const KIND_ORDER = [
-  SeoCheckKind.Manual,
-  SeoCheckKind.Verifiable,
-  SeoCheckKind.Automatic,
-];
+const ItemActions = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+`;
 
-const EXTERNAL_LINKS: Partial<Record<SeoCheck['id'], string>> = {
-  SearchConsole: 'https://search.google.com/search-console',
-};
-
-const INTERNAL_LINKS: Partial<Record<SeoCheck['id'], string>> = {
-  PublicationMetadata: '/peering/profile/edit',
-};
-
-export const groupSeoChecks = (checks: SeoCheck[]) =>
-  KIND_ORDER.map(kind => ({
-    kind,
-    checks: checks.filter(check => check.kind === kind),
-  })).filter(group => group.checks.length);
-
-const StatusIcon = ({ status }: { status: SeoCheckStatus }) => {
+const StatusIcon = ({ status }: { status?: SeoCheckStatus }) => {
   const theme = useTheme();
   const { t } = useTranslation();
-  const label = t(`seoChecklist.status.${status}`);
+  const label = t(`seoChecklist.status.${status ?? SeoCheckStatus.Info}`);
 
   switch (status) {
     case SeoCheckStatus.Ok:
@@ -125,127 +264,165 @@ const StatusIcon = ({ status }: { status: SeoCheckStatus }) => {
   }
 };
 
-const SeoCheckCard = ({ check }: { check: SeoCheck }) => {
-  const { t } = useTranslation();
-  const externalLink = EXTERNAL_LINKS[check.id];
-  const internalLink = INTERNAL_LINKS[check.id];
-
-  const hasActions = !!(check.url || externalLink || internalLink);
+const ChecklistItem = ({
+  entry,
+  data,
+  completed,
+  canUpdate,
+  updating,
+  onToggle,
+}: {
+  entry: SeoChecklistEntry;
+  data: SeoChecklistData;
+  completed?: SeoChecklistItemFragment;
+  canUpdate: boolean;
+  updating: boolean;
+  onToggle(completed: boolean): void;
+}) => {
+  const { t, i18n } = useTranslation();
+  const check = entry.check && data.checks.find(c => c.id === entry.check);
+  const key = `seoChecklist.items.${entry.id}`;
 
   return (
-    <Card
-      variant="outlined"
-      sx={{ display: 'flex', flexFlow: 'column' }}
-      data-testid={`seo-check-${check.id}`}
-      data-status={check.status}
-    >
-      <CardContent sx={{ flex: 1 }}>
-        <Typography
-          variant="h6"
-          component={CardTitle}
-          marginBottom={1}
-        >
-          <StatusIcon status={check.status} />
-          {t(`seoChecklist.checks.${check.id}.title`)}
-        </Typography>
+    <ItemRow data-testid={`seo-item-${entry.id}`}>
+      <ItemMarker>
+        {entry.check || entry.info ?
+          <StatusIcon status={check ? check.status : undefined} />
+        : <Checkbox
+            checked={!!completed}
+            disabled={!canUpdate || updating}
+            onChange={event => onToggle(event.target.checked)}
+            inputProps={{ 'aria-label': t(`${key}.title`) }}
+          />
+        }
+      </ItemMarker>
 
-        <Typography
-          variant="body2"
-          marginBottom={1}
-        >
-          {t(`seoChecklist.checks.${check.id}.${check.status}`)}
-        </Typography>
+      <ItemBody>
+        <ItemTitle>
+          {t(`${key}.title`)}
+          {check && (
+            <Chip
+              size="small"
+              variant="outlined"
+              label={t(`seoChecklist.checkStatus.${check.status}`)}
+            />
+          )}
+        </ItemTitle>
 
         <Typography
           variant="body2"
           color="text.secondary"
         >
-          {t(`seoChecklist.checks.${check.id}.description`)}
+          {t(`${key}.description`)}
         </Typography>
 
-        {check.detail && (
-          <Typography
-            variant="body2"
-            marginTop={1}
-          >
-            {t([
-              `seoChecklist.checks.${check.id}.detail`,
-              'seoChecklist.detail',
-            ])}
-            : <Detail>{check.detail}</Detail>
+        {check?.detail && (
+          <Typography variant="body2">
+            {t([`${key}.detail`, 'seoChecklist.detail'])}:{' '}
+            <code>{check.detail}</code>
           </Typography>
         )}
 
-        {check.url && (
-          <Typography
-            variant="body2"
-            marginTop={1}
-          >
-            <Detail>{check.url}</Detail>
-          </Typography>
-        )}
-      </CardContent>
+        {entry.urls?.map(urlKey => (
+          <UrlRow key={urlKey}>
+            <code>{data[urlKey]}</code>
+            <Tooltip title={t('seoChecklist.copyUrl')}>
+              <IconButton
+                size="small"
+                aria-label={t('seoChecklist.copyUrl')}
+                onClick={() => navigator.clipboard.writeText(data[urlKey])}
+              >
+                <MdContentCopy />
+              </IconButton>
+            </Tooltip>
+          </UrlRow>
+        ))}
 
-      {hasActions && (
-        <CardActions>
-          {check.url && (
-            <>
+        {(entry.link || entry.internalLink) && (
+          <ItemActions>
+            {entry.link && (
               <Button
                 size="small"
-                href={check.url}
+                href={entry.link}
                 target="_blank"
                 rel="noreferrer"
                 startIcon={<MdOpenInNew />}
               >
-                {t('seoChecklist.open')}
+                {t(`${key}.action`)}
               </Button>
+            )}
 
-              <Button
-                size="small"
-                startIcon={<MdContentCopy />}
-                onClick={() => navigator.clipboard.writeText(check.url ?? '')}
-              >
-                {t('seoChecklist.copyUrl')}
-              </Button>
-            </>
-          )}
+            {entry.internalLink && (
+              <Link to={entry.internalLink}>
+                <Button size="small">{t(`${key}.action`)}</Button>
+              </Link>
+            )}
+          </ItemActions>
+        )}
 
-          {externalLink && (
-            <Button
-              size="small"
-              href={externalLink}
-              target="_blank"
-              rel="noreferrer"
-              startIcon={<MdOpenInNew />}
-            >
-              {t(`seoChecklist.checks.${check.id}.action`)}
-            </Button>
-          )}
-
-          {internalLink && (
-            <Link to={internalLink}>
-              <Button size="small">
-                {t(`seoChecklist.checks.${check.id}.action`)}
-              </Button>
-            </Link>
-          )}
-        </CardActions>
-      )}
-    </Card>
+        {completed && (
+          <Typography
+            variant="caption"
+            color="text.secondary"
+          >
+            {t(
+              completed.completedBy ?
+                'seoChecklist.completedBy'
+              : 'seoChecklist.completedAt',
+              {
+                name: completed.completedBy,
+                date: new Date(completed.completedAt).toLocaleDateString(
+                  i18n.language
+                ),
+              }
+            )}
+          </Typography>
+        )}
+      </ItemBody>
+    </ItemRow>
   );
 };
 
 function SeoChecklist() {
   const { t } = useTranslation();
+  const canUpdate = !!useAuthorisation('CAN_UPDATE_SETTINGS');
+
   const { data, loading, error, refetch } = useSeoChecklistQuery({
     fetchPolicy: 'cache-and-network',
     notifyOnNetworkStatusChange: true,
   });
 
-  const groups = groupSeoChecks(data?.seoChecklist.checks ?? []);
+  const [updateItem, { loading: updating, error: updateError }] =
+    useUpdateSeoChecklistItemMutation({
+      update: (cache, { data: result }) => {
+        if (!result) {
+          return;
+        }
+
+        cache.updateQuery<SeoChecklistQuery>(
+          { query: SeoChecklistDocument },
+          previous =>
+            previous && {
+              seoChecklist: {
+                ...previous.seoChecklist,
+                completedItems: result.updateSeoChecklistItem,
+              },
+            }
+        );
+      },
+    });
+
+  const checklist = data?.seoChecklist;
+  const progress =
+    checklist &&
+    getSeoChecklistProgress(
+      SEO_CHECKLIST,
+      checklist.checks,
+      checklist.completedItems
+    );
 
   return (
-    <SeoChecklistWrapper>
+    <Wrapper>
       <Header>
         <div>
           <h3>{t('seoChecklist.title')}</h3>
@@ -256,13 +433,13 @@ function SeoChecklist() {
             {t('seoChecklist.description')}
           </Typography>
 
-          {data && (
+          {checklist && (
             <Typography
               variant="body2"
               marginTop={1}
             >
               {t('seoChecklist.websiteUrl')}:{' '}
-              <Detail>{data.seoChecklist.websiteUrl}</Detail>
+              <code>{checklist.websiteUrl}</code>
             </Typography>
           )}
         </div>
@@ -277,55 +454,74 @@ function SeoChecklist() {
         </Button>
       </Header>
 
-      {error && (
-        <FullWidth>
-          <Alert severity="error">{error.message}</Alert>
-        </FullWidth>
+      {progress && (
+        <div>
+          <Typography variant="body2">
+            {t('seoChecklist.progress', progress)}
+          </Typography>
+          <LinearProgress
+            variant="determinate"
+            value={(progress.done / progress.total) * 100}
+          />
+        </div>
       )}
 
-      {groups.map(group => (
-        <SeoChecklistGroup
-          key={group.kind}
-          kind={group.kind}
-          checks={group.checks}
-        />
-      ))}
-    </SeoChecklistWrapper>
+      {(error || updateError) && (
+        <Alert severity="error">{(error ?? updateError)?.message}</Alert>
+      )}
+
+      {checklist &&
+        SEO_CHECKLIST.map(section => {
+          const sectionProgress = getSeoChecklistProgress(
+            [section],
+            checklist.checks,
+            checklist.completedItems
+          );
+
+          return (
+            <Card
+              key={section.id}
+              variant="outlined"
+              data-testid={`seo-section-${section.id}`}
+            >
+              <CardHeader
+                title={t(`seoChecklist.sections.${section.id}.title`)}
+                subheader={t(`seoChecklist.sections.${section.id}.description`)}
+                action={
+                  <Chip
+                    size="small"
+                    label={t('seoChecklist.progress', sectionProgress)}
+                  />
+                }
+              />
+
+              <CardContent>
+                <Items>
+                  {section.items.map(entry => (
+                    <ChecklistItem
+                      key={entry.id}
+                      entry={entry}
+                      data={checklist}
+                      completed={checklist.completedItems.find(
+                        item => item.itemId === entry.id
+                      )}
+                      canUpdate={canUpdate}
+                      updating={updating}
+                      onToggle={completed =>
+                        updateItem({
+                          variables: { itemId: entry.id, completed },
+                        })
+                      }
+                    />
+                  ))}
+                </Items>
+              </CardContent>
+            </Card>
+          );
+        })}
+    </Wrapper>
   );
 }
-
-const SeoChecklistGroup = ({
-  kind,
-  checks,
-}: {
-  kind: SeoCheckKind;
-  checks: SeoCheck[];
-}) => {
-  const { t } = useTranslation();
-
-  return (
-    <>
-      <FullWidth>
-        <Typography variant="h5">
-          {t(`seoChecklist.kinds.${kind}.title`)}
-        </Typography>
-        <Typography
-          variant="body2"
-          color="text.secondary"
-        >
-          {t(`seoChecklist.kinds.${kind}.description`)}
-        </Typography>
-      </FullWidth>
-
-      {checks.map(check => (
-        <SeoCheckCard
-          key={check.id}
-          check={check}
-        />
-      ))}
-    </>
-  );
-};
 
 const CheckedPermissionComponent = createCheckedPermissionComponent([
   'CAN_GET_SETTINGS',

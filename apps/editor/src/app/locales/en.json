@@ -3272,91 +3272,156 @@
     "seoChecklist": {
       "navbar": "SEO",
       "title": "SEO checklist",
-      "description": "An overview of what We.Publish handles for search engines automatically and what needs your attention. Checks are run against the live website.",
+      "description": "Practical steps to make your content easy to find and good-looking when shared. Items marked with a status are checked automatically against your live website.",
       "websiteUrl": "Website",
       "refresh": "Check again",
-      "open": "Open",
       "copyUrl": "Copy URL",
       "detail": "Details",
+      "progress": "{{done}} of {{total}} done",
+      "completedBy": "Done by {{name}} on {{date}}",
+      "completedAt": "Done on {{date}}",
       "status": {
         "Ok": "OK",
         "Warning": "Warning",
         "Error": "Error",
         "Info": "Info"
       },
-      "kinds": {
-        "Manual": {
-          "title": "Action required",
-          "description": "Steps that have to be done outside of We.Publish."
+      "checkStatus": {
+        "Ok": "Verified",
+        "Warning": "Needs attention",
+        "Error": "Not working",
+        "Info": "Not available"
+      },
+      "sections": {
+        "searchConsole": {
+          "title": "Google Search Console",
+          "description": "Google's free tool to see how your website performs in search."
         },
-        "Verifiable": {
-          "title": "Automatically verified",
-          "description": "These checks are run against your website and settings."
+        "sitemapsFeeds": {
+          "title": "Sitemaps and feeds",
+          "description": "How search engines and aggregators discover your articles."
         },
-        "Automatic": {
-          "title": "Handled automatically",
-          "description": "We.Publish takes care of these for every article and page."
+        "content": {
+          "title": "Content",
+          "description": "Habits that make articles easier to find and understand."
+        },
+        "presentation": {
+          "title": "Presentation and sharing",
+          "description": "How your content looks in search results, on social media and in messengers."
+        },
+        "automatic": {
+          "title": "Handled by We.Publish",
+          "description": "Technical basics that are taken care of automatically."
         }
       },
-      "checks": {
-        "Robots": {
-          "title": "Indexing (robots.txt)",
-          "description": "robots.txt tells search engines which parts of the website they may crawl.",
-          "Ok": "Search engines are allowed to crawl the website.",
-          "Error": "robots.txt could not be loaded or blocks all search engines."
+      "items": {
+        "gsc-verify": {
+          "title": "Verify your website in Google Search Console",
+          "description": "Add your domain as a \"Domain\" property and verify it with a DNS record. This gives you access to indexing and performance data for all subdomains.",
+          "action": "Open Search Console"
         },
-        "RobotsSitemap": {
-          "title": "Sitemap in robots.txt",
-          "description": "Referencing the sitemap in robots.txt helps search engines find all articles.",
-          "detail": "Referenced sitemap",
-          "Ok": "robots.txt references the sitemap of this website.",
-          "Warning": "robots.txt does not reference the sitemap of this website. Please contact We.Publish support to correct it."
+        "gsc-sitemap": {
+          "title": "Submit the sitemap",
+          "description": "Under \"Sitemaps\", submit the sitemap URL below once. Google then checks it regularly for new articles.",
+          "action": "Open Search Console"
         },
-        "Sitemap": {
+        "gsc-pages": {
+          "title": "Check the indexing report regularly",
+          "description": "The \"Pages\" report shows which pages are not indexed and why. Look at it monthly and fix recurring problems.",
+          "action": "Open Search Console"
+        },
+        "gsc-performance": {
+          "title": "Learn from search queries",
+          "description": "The \"Performance\" report shows the queries that bring readers to you. Use it to find topics and wording your readers search for.",
+          "action": "Open Search Console"
+        },
+        "gsc-inspect": {
+          "title": "Request indexing for important articles",
+          "description": "Use \"URL inspection\" to check an important article and request indexing after publishing or larger updates.",
+          "action": "Open Search Console"
+        },
+        "sitemap": {
           "title": "Sitemap",
-          "description": "The sitemap is generated automatically and lists the latest articles and pages.",
-          "detail": "Number of URLs",
-          "Ok": "The sitemap is reachable and valid.",
-          "Error": "The sitemap could not be loaded or is invalid."
+          "description": "The sitemap is generated automatically and lists your latest articles and pages for search engines.",
+          "detail": "Number of URLs"
         },
-        "NewsSitemap": {
-          "title": "Google News sitemap",
-          "description": "Articles in the sitemap are annotated with Google News metadata.",
-          "Ok": "The sitemap contains Google News entries.",
-          "Info": "No Google News entries were found in the sitemap."
+        "news-sitemap": {
+          "title": "Google News entries",
+          "description": "Articles in the sitemap carry Google News metadata, which helps them appear in Google News and \"Top stories\"."
         },
-        "Canonical": {
-          "title": "Canonical URLs",
-          "description": "Every article declares its canonical URL. You can override it per article in the article settings.",
-          "Ok": "The latest article declares a canonical URL.",
-          "Warning": "No canonical URL was found on the latest article.",
-          "Info": "There is no published article to check yet."
+        "feeds": {
+          "title": "RSS, Atom and JSON feeds",
+          "description": "Feeds let news aggregators, feed readers and newsletter tools pick up your articles. Share the RSS URL with aggregators you want to appear in."
         },
-        "StructuredData": {
-          "title": "Structured data (NewsArticle)",
-          "description": "Articles contain NewsArticle structured data (JSON-LD) with headline, authors, dates and images.",
-          "Ok": "The latest article contains NewsArticle structured data.",
-          "Warning": "No NewsArticle structured data was found on the latest article.",
-          "Info": "There is no published article to check yet."
+        "publisher-center": {
+          "title": "Register in the Google News Publisher Center",
+          "description": "Add your publication, logo and sections in the Publisher Center to control how you appear in Google News.",
+          "action": "Open Publisher Center"
         },
-        "NoindexHidden": {
-          "title": "Hidden content",
-          "description": "Use the \"hidden\" option to keep single articles or pages out of search engines.",
-          "Info": "Hidden articles and pages are marked as noindex and excluded from the sitemap."
+        "seo-titles": {
+          "title": "Write specific SEO titles",
+          "description": "Put the main topic first and stay below about 60 characters. Describe what the article is about instead of teasing."
         },
-        "PublicationMetadata": {
+        "meta-descriptions": {
+          "title": "Write meta descriptions",
+          "description": "Summarize the article in one or two sentences (about 150 characters). Without one, the lead or first paragraph is used."
+        },
+        "structure": {
+          "title": "Structure longer texts",
+          "description": "Use a clear lead, subheadings and short paragraphs. This helps readers and search engines understand the content."
+        },
+        "internal-links": {
+          "title": "Link related articles",
+          "description": "Link to earlier coverage and background articles. Internal links help readers go deeper and search engines find older content."
+        },
+        "stable-slugs": {
+          "title": "Keep slugs short and stable",
+          "description": "Use a short slug with the main topic and do not change it after publishing, as existing links and rankings would be lost."
+        },
+        "author-pages": {
+          "title": "Maintain author pages",
+          "description": "Author pages with name, image and a short bio show who is behind your journalism and build trust.",
+          "action": "Edit authors"
+        },
+        "update-evergreen": {
+          "title": "Update evergreen content",
+          "description": "Update explainers and guides regularly instead of publishing near-duplicates. Mention updates in the text."
+        },
+        "share-images": {
+          "title": "Set a share image for every article",
+          "description": "Choose a meaningful image in landscape format (at least 1200 px wide). It is shown on social media, messengers and in Google Discover."
+        },
+        "image-descriptions": {
+          "title": "Describe your images",
+          "description": "The image description is used as alternative text. Describe what is visible; this helps accessibility and image search.",
+          "action": "Open image library"
+        },
+        "social-texts": {
+          "title": "Use social media texts",
+          "description": "A separate social media title and description can be more conversational than the SEO texts, without becoming clickbait."
+        },
+        "preview-before-publishing": {
+          "title": "Check the previews before publishing",
+          "description": "The \"SEO\" tab in the article settings shows how the article looks in Google, on social media and in messengers."
+        },
+        "publication-profile": {
           "title": "Publication name and logo",
-          "description": "The name and logo of the publication are maintained in the peering profile.",
+          "description": "The name and logo of your publication are maintained in the peering profile and used in previews and structured data.",
           "detail": "Missing",
-          "action": "Edit profile",
-          "Ok": "Publication name and logo are set.",
-          "Warning": "The publication name or logo is missing."
+          "action": "Edit profile"
         },
-        "SearchConsole": {
-          "title": "Google Search Console",
-          "description": "Add the website as a domain property in Google Search Console, verify it via DNS and submit the sitemap URL below under \"Sitemaps\".",
-          "action": "Open Search Console",
-          "Info": "This has to be done once by the publisher in Google Search Console."
+        "article-markup": {
+          "title": "Canonical URLs and structured data",
+          "description": "Every article declares its canonical URL and contains NewsArticle structured data (JSON-LD). This is checked on your latest article.",
+          "detail": "Missing"
+        },
+        "canonical-urls": {
+          "title": "Content from other sources",
+          "description": "If an article was first published elsewhere, set the canonical URL in the article settings so search engines credit the original."
+        },
+        "hidden-noindex": {
+          "title": "Hidden content",
+          "description": "Hidden articles and pages are marked as noindex and left out of the sitemap, so search engines do not show them."
         }
       }
     },
@@ -3380,6 +3445,55 @@
         "socialMediaTitle": "Social media title",
         "socialMediaDescription": "Social media description",
         "slug": "Slug"
+      }
+    },
+    "seoTab": {
+      "title": "SEO"
+    },
+    "seoPreviews": {
+      "info": "Approximate previews based on the current settings. The platforms decide the final look and may shorten texts or crop images.",
+      "pageIgnoresSeoFields": "The website currently does not use the SEO title and SEO description of pages. The previews show what is actually used.",
+      "noImage": "No image",
+      "google": "Google search",
+      "googleTitleTooLong": "Longer than {{limit}} characters, Google will likely shorten it",
+      "facebook": "Facebook",
+      "linkedIn": "LinkedIn",
+      "whatsApp": "WhatsApp",
+      "discord": "Discord",
+      "xLarge": "X (Twitter) – large image card",
+      "xLargeUsed": "used by the website",
+      "xSummary": "X (Twitter) – summary card",
+      "xSummaryUnused": "for comparison, not used by the website",
+      "xFrom": "From {{domain}}"
+    },
+    "seoAnalysis": {
+      "title": "SEO analysis",
+      "description": "Let the AI review the content and metadata for optimization potential. Nothing is changed.",
+      "analyze": "Analyze content",
+      "reanalyze": "Analyze again",
+      "notEnoughContent": "Add a title or content first.",
+      "noFindings": "No optimization potential found.",
+      "disclaimer": "The AI may make mistakes. Use the findings as suggestions.",
+      "stats": {
+        "wordCount": "Words",
+        "headingCount": "Subheadings",
+        "linkCount": "Links",
+        "imagesWithoutDescription": "Images without description"
+      },
+      "severity": {
+        "High": "High",
+        "Medium": "Medium",
+        "Low": "Low"
+      },
+      "category": {
+        "Title": "Title",
+        "Description": "Description",
+        "Content": "Content",
+        "Structure": "Structure",
+        "Readability": "Readability",
+        "Links": "Links",
+        "Images": "Images",
+        "Social": "Social media"
       }
     }
   }
