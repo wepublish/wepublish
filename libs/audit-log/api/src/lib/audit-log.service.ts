@@ -20,16 +20,16 @@ export const createAuditLogFilter = (
     ];
   }
 
-  if (filter.userID) {
-    where.userID = filter.userID;
+  if (filter.userId) {
+    where.userId = filter.userId;
   }
 
   if (filter.userEmail) {
     where.userEmail = { contains: filter.userEmail, mode: 'insensitive' };
   }
 
-  if (filter.sessionID) {
-    where.sessionID = filter.sessionID;
+  if (filter.sessionId) {
+    where.sessionId = filter.sessionId;
   }
 
   if (filter.entity) {

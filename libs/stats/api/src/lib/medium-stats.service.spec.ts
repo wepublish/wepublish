@@ -624,8 +624,8 @@ describe('MediumStatsService audit', () => {
       .mockResolvedValueOnce(9)
       .mockResolvedValueOnce(4);
     prisma.auditLog.findMany.mockResolvedValue([
-      { userID: 'a' },
-      { userID: 'b' },
+      { userId: 'a' },
+      { userId: 'b' },
     ]);
     prisma.auditLog.groupBy.mockResolvedValue([
       { mutation: 'updateArticle', _count: { _all: 70 } },
@@ -669,7 +669,7 @@ describe('MediumStatsService audit', () => {
 
     const editorQuery = prisma.auditLog.findMany.mock.calls[0][0];
 
-    expect(editorQuery.distinct).toEqual(['userID']);
+    expect(editorQuery.distinct).toEqual(['userId']);
     expect(editorQuery.where.createdAt.gte).toEqual(
       new Date('2026-08-17T23:59:59.999Z')
     );
@@ -834,8 +834,8 @@ describe('MediumStatsService concentration and action mix', () => {
       .mockResolvedValueOnce([])
       .mockResolvedValueOnce([])
       .mockResolvedValueOnce([
-        { userID: 'a', _count: { _all: 80 } },
-        { userID: 'b', _count: { _all: 20 } },
+        { userId: 'a', _count: { _all: 80 } },
+        { userId: 'b', _count: { _all: 20 } },
       ])
       .mockResolvedValueOnce([
         { action: 'update', _count: { _all: 70 } },
@@ -858,6 +858,6 @@ describe('MediumStatsService concentration and action mix', () => {
 
     const actorQuery = prisma.auditLog.groupBy.mock.calls[2][0];
 
-    expect(actorQuery.where.userID).toEqual({ not: null });
+    expect(actorQuery.where.userId).toEqual({ not: null });
   });
 });

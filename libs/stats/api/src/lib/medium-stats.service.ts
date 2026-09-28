@@ -477,10 +477,10 @@ export class MediumStatsService {
         this.prisma.auditLog.findMany({
           where: {
             createdAt: { gte: editorsFrom, lte: to },
-            userID: { not: null },
+            userId: { not: null },
           },
-          distinct: ['userID'],
-          select: { userID: true },
+          distinct: ['userId'],
+          select: { userId: true },
         }),
         this.prisma.auditLog.groupBy({
           by: ['mutation'],
@@ -497,8 +497,8 @@ export class MediumStatsService {
           _count: { _all: true },
         }),
         this.prisma.auditLog.groupBy({
-          by: ['userID'],
-          where: { ...inWindow, userID: { not: null } },
+          by: ['userId'],
+          where: { ...inWindow, userId: { not: null } },
           _count: { _all: true },
         }),
         this.prisma.auditLog.groupBy({

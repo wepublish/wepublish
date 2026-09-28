@@ -23,10 +23,10 @@ import {
 type Actor = Pick<
   Prisma.AuditLogCreateInput,
   | 'actorType'
-  | 'userID'
+  | 'userId'
   | 'userEmail'
   | 'tokenName'
-  | 'sessionID'
+  | 'sessionId'
   | 'impersonatedBy'
 >;
 
@@ -34,10 +34,10 @@ export const describeActor = (session: AuthSession | undefined): Actor => {
   if (session?.type === AuthSessionType.Token) {
     return {
       actorType: AuditLogActorType.token,
-      userID: null,
+      userId: null,
       userEmail: null,
       tokenName: session.name,
-      sessionID: session.id,
+      sessionId: session.id,
       impersonatedBy: null,
     };
   }
@@ -45,20 +45,20 @@ export const describeActor = (session: AuthSession | undefined): Actor => {
   if (session?.type === AuthSessionType.User) {
     return {
       actorType: AuditLogActorType.user,
-      userID: session.user.id,
+      userId: session.user.id,
       userEmail: session.user.email,
       tokenName: null,
-      sessionID: session.id,
+      sessionId: session.id,
       impersonatedBy: session.impersonatedBy ?? null,
     };
   }
 
   return {
     actorType: AuditLogActorType.user,
-    userID: null,
+    userId: null,
     userEmail: null,
     tokenName: null,
-    sessionID: null,
+    sessionId: null,
     impersonatedBy: null,
   };
 };

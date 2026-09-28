@@ -6,10 +6,10 @@ fragment FullAuditLog on AuditLog {
   entity
   recordId
   actorType
-  userID
+  userId
   userEmail
   tokenName
-  sessionID
+  sessionId
   impersonatedBy
   success
   errorMessage

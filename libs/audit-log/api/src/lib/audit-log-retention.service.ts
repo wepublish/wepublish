@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { logger } from '@wepublish/utils/api';
 import { AuditLogService } from './audit-log.service';
@@ -11,10 +12,13 @@ const MS_PER_DAY = 24 * 60 * 60 * 1000;
 
 @Injectable()
 export class AuditLogRetentionService {
-  constructor(private auditLogService: AuditLogService) {}
+  constructor(
+    private auditLogService: AuditLogService,
+    private config: ConfigService
+  ) {}
 
   get retentionDays() {
-    const configured = Number(process.env['AUDIT_LOG_RETENTION_DAYS']);
+    const configured = Number(this.config.get('AUDIT_LOG_RETENTION_DAYS'));
 
     return Number.isFinite(configured) && configured > 0 ?
         configured

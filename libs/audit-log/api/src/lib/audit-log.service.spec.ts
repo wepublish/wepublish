@@ -19,8 +19,8 @@ describe('createAuditLogFilter', () => {
   });
 
   it('matches a session exactly', () => {
-    expect(createAuditLogFilter({ sessionID: 'session-1' })).toEqual({
-      sessionID: 'session-1',
+    expect(createAuditLogFilter({ sessionId: 'session-1' })).toEqual({
+      sessionId: 'session-1',
     });
   });
 

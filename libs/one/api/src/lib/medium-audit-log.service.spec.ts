@@ -23,7 +23,7 @@ describe('MediumAuditLogService', () => {
       supported: true,
     });
 
-    const result = await service.listAuditLogs({ sessionID: 'session-1' });
+    const result = await service.listAuditLogs({ sessionId: 'session-1' });
 
     expect(result).toEqual({
       nodes: [{ id: 'a' }],
@@ -31,7 +31,7 @@ describe('MediumAuditLogService', () => {
       supported: true,
     });
     expect(auditLogService.getAuditLogsSafe).toHaveBeenCalledWith(
-      expect.objectContaining({ filter: { sessionID: 'session-1' } })
+      expect.objectContaining({ filter: { sessionId: 'session-1' } })
     );
   });
 

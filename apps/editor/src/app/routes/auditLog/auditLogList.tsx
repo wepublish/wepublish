@@ -201,9 +201,9 @@ function AuditLogList() {
           />
 
           <Input
-            value={filter.sessionID ?? ''}
+            value={filter.sessionId ?? ''}
             placeholder={t('auditLogList.filter.session')}
-            onChange={value => updateFilter({ sessionID: value || undefined })}
+            onChange={value => updateFilter({ sessionId: value || undefined })}
             style={{ width: 240 }}
           />
 
@@ -342,16 +342,16 @@ function AuditLogList() {
           >
             <HeaderCell>{t('auditLogList.overview.session')}</HeaderCell>
             <RCell>
-              {({ sessionID }: RowDataType<FullAuditLogFragment>) =>
-                sessionID ?
+              {({ sessionId }: RowDataType<FullAuditLogFragment>) =>
+                sessionId ?
                   <IconButtonTooltip
                     caption={t('auditLogList.overview.filterBySession')}
                   >
                     <Monospace
-                      onClick={() => updateFilter({ sessionID })}
+                      onClick={() => updateFilter({ sessionId })}
                       role="button"
                     >
-                      {sessionID.slice(0, 8)}… <MdFilterAlt />
+                      {sessionId.slice(0, 8)}… <MdFilterAlt />
                     </Monospace>
                   </IconButtonTooltip>
                 : <Muted>—</Muted>

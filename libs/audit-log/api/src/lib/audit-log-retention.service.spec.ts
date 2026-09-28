@@ -4,23 +4,29 @@ import {
   MAX_BATCHES_PER_RUN,
   RETENTION_BATCH_SIZE,
 } from './audit-log-retention.service';
+import { ConfigService } from '@nestjs/config';
 import { AuditLogService } from './audit-log.service';
 
 describe('AuditLogRetentionService', () => {
   let service: AuditLogRetentionService;
   let auditLogService: { deleteOlderThan: jest.Mock };
+  let configured: string | undefined;
+
+  const withRetention = (value: string | undefined) => {
+    configured = value;
+  };
 
   beforeEach(() => {
     jest.clearAllMocks();
-    delete process.env['AUDIT_LOG_RETENTION_DAYS'];
+    configured = undefined;
     auditLogService = { deleteOlderThan: jest.fn().mockResolvedValue(0) };
-    service = new AuditLogRetentionService(
-      auditLogService as unknown as AuditLogService
-    );
-  });
 
-  afterEach(() => {
-    delete process.env['AUDIT_LOG_RETENTION_DAYS'];
+    const config = { get: jest.fn(() => configured) };
+
+    service = new AuditLogRetentionService(
+      auditLogService as unknown as AuditLogService,
+      config as unknown as ConfigService
+    );
   });
 
   describe('retentionDays', () => {
@@ -29,29 +35,29 @@ describe('AuditLogRetentionService', () => {
     });
 
     it('takes a configured value', () => {
-      process.env['AUDIT_LOG_RETENTION_DAYS'] = '30';
+      withRetention('30');
 
       expect(service.retentionDays).toBe(30);
     });
 
     it('ignores a non numeric value', () => {
-      process.env['AUDIT_LOG_RETENTION_DAYS'] = 'forever';
+      withRetention('forever');
 
       expect(service.retentionDays).toBe(DEFAULT_RETENTION_DAYS);
     });
 
     it('ignores a zero or negative value', () => {
-      process.env['AUDIT_LOG_RETENTION_DAYS'] = '0';
+      withRetention('0');
       expect(service.retentionDays).toBe(DEFAULT_RETENTION_DAYS);
 
-      process.env['AUDIT_LOG_RETENTION_DAYS'] = '-5';
+      withRetention('-5');
       expect(service.retentionDays).toBe(DEFAULT_RETENTION_DAYS);
     });
   });
 
   describe('cutoffDate', () => {
     it('is the retention window before now', () => {
-      process.env['AUDIT_LOG_RETENTION_DAYS'] = '10';
+      withRetention('10');
       const now = new Date('2026-09-24T00:00:00.000Z');
 
       expect(service.cutoffDate(now).toISOString()).toBe(

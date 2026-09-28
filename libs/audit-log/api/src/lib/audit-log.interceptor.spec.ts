@@ -57,10 +57,10 @@ describe('describeActor', () => {
   it('describes a user session', () => {
     expect(describeActor(userSession)).toEqual({
       actorType: AuditLogActorType.user,
-      userID: 'user-1',
+      userId: 'user-1',
       userEmail: 'editor@example.com',
       tokenName: null,
-      sessionID: 'session-1',
+      sessionId: 'session-1',
       impersonatedBy: null,
     });
   });
@@ -69,7 +69,7 @@ describe('describeActor', () => {
     expect(
       describeActor({ ...userSession, impersonatedBy: 'admin-9' })
     ).toMatchObject({
-      userID: 'user-1',
+      userId: 'user-1',
       impersonatedBy: 'admin-9',
     });
   });
@@ -85,18 +85,18 @@ describe('describeActor', () => {
       })
     ).toEqual({
       actorType: AuditLogActorType.token,
-      userID: null,
+      userId: null,
       userEmail: null,
       tokenName: 'Peering Token',
-      sessionID: 'token-1',
+      sessionId: 'token-1',
       impersonatedBy: null,
     });
   });
 
   it('describes an absent session without throwing', () => {
     expect(describeActor(undefined)).toMatchObject({
-      userID: null,
-      sessionID: null,
+      userId: null,
+      sessionId: null,
     });
   });
 });
@@ -140,8 +140,8 @@ describe('AuditLogInterceptor', () => {
         action: AuditLogAction.update,
         entity: 'Article',
         recordId: 'article-1',
-        userID: 'user-1',
-        sessionID: 'session-1',
+        userId: 'user-1',
+        sessionId: 'session-1',
         success: true,
       })
     );

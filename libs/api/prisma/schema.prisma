@@ -2280,18 +2280,18 @@ model AuditLog {
   recordId String?
 
   actorType      AuditLogActorType
-  userID         String?
+  userId         String?
   userEmail      String?
   tokenName      String?
-  sessionID      String?
+  sessionId      String?
   impersonatedBy String?
 
   success      Boolean @default(true)
   errorMessage String?
 
   @@index([createdAt])
-  @@index([userID, createdAt])
-  @@index([sessionID])
+  @@index([userId, createdAt])
+  @@index([sessionId])
   @@index([entity, recordId])
   @@map("audit_logs")
 }

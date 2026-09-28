@@ -206,11 +206,11 @@ export type AuditLog = {
   impersonatedBy?: Maybe<Scalars['String']>;
   mutation: Scalars['String'];
   recordId?: Maybe<Scalars['String']>;
-  sessionID?: Maybe<Scalars['String']>;
+  sessionId?: Maybe<Scalars['String']>;
   success: Scalars['Boolean'];
   tokenName?: Maybe<Scalars['String']>;
   userEmail?: Maybe<Scalars['String']>;
-  userID?: Maybe<Scalars['String']>;
+  userId?: Maybe<Scalars['String']>;
 };
 
 export enum AuditLogAction {
@@ -236,11 +236,11 @@ export type AuditLogFilter = {
   recordId?: InputMaybe<Scalars['String']>;
   /** Case insensitive search across mutation, entity, record id, user email and token name. */
   search?: InputMaybe<Scalars['String']>;
-  sessionID?: InputMaybe<Scalars['String']>;
+  sessionId?: InputMaybe<Scalars['String']>;
   success?: InputMaybe<Scalars['Boolean']>;
   to?: InputMaybe<Scalars['DateTime']>;
   userEmail?: InputMaybe<Scalars['String']>;
-  userID?: InputMaybe<Scalars['String']>;
+  userId?: InputMaybe<Scalars['String']>;
 };
 
 export enum AuditLogSort {
@@ -2333,6 +2333,20 @@ export type MediumAccountStats = {
   usersWithRole: Scalars['Int'];
 };
 
+export type MediumAuditActionCount = {
+  __typename?: 'MediumAuditActionCount';
+  /** create, update, delete or other. */
+  action: Scalars['String'];
+  count: Scalars['Int'];
+};
+
+export type MediumAuditError = {
+  __typename?: 'MediumAuditError';
+  count: Scalars['Int'];
+  /** First line of the error, capped — enough to recognise it. */
+  message: Scalars['String'];
+};
+
 export type MediumAuditLog = {
   __typename?: 'MediumAuditLog';
   action: AuditLogAction;
@@ -2345,11 +2359,11 @@ export type MediumAuditLog = {
   impersonatedBy?: Maybe<Scalars['String']>;
   mutation: Scalars['String'];
   recordId?: Maybe<Scalars['String']>;
-  sessionID?: Maybe<Scalars['String']>;
+  sessionId?: Maybe<Scalars['String']>;
   success: Scalars['Boolean'];
   tokenName?: Maybe<Scalars['String']>;
   userEmail?: Maybe<Scalars['String']>;
-  userID?: Maybe<Scalars['String']>;
+  userId?: Maybe<Scalars['String']>;
 };
 
 export type MediumAuditLogFilter = {
@@ -2363,11 +2377,11 @@ export type MediumAuditLogFilter = {
   /** Case insensitive search across mutation, entity, record id, user email and token name. */
   search?: InputMaybe<Scalars['String']>;
   /** Everything a single login session did. */
-  sessionID?: InputMaybe<Scalars['String']>;
+  sessionId?: InputMaybe<Scalars['String']>;
   success?: InputMaybe<Scalars['Boolean']>;
   to?: InputMaybe<Scalars['DateTime']>;
   userEmail?: InputMaybe<Scalars['String']>;
-  userID?: InputMaybe<Scalars['String']>;
+  userId?: InputMaybe<Scalars['String']>;
 };
 
 export type MediumAuditLogPage = {
@@ -2376,6 +2390,28 @@ export type MediumAuditLogPage = {
   /** False when this medium does not provide an audit log, in which case nodes is empty and totalCount is zero. */
   supported: Scalars['Boolean'];
   totalCount: Scalars['Int'];
+};
+
+export type MediumAuditStats = {
+  __typename?: 'MediumAuditStats';
+  /** Permission gated editor actions in the window. */
+  actions: Scalars['Int'];
+  /** How the actions split across create, update and delete. */
+  actionsByType: Array<MediumAuditActionCount>;
+  /** Accounts that performed at least one action in the 30 days ending with the window. Deliberately NOT the window itself: a one-day window would drop to zero every weekend and the curve would be unreadable. */
+  activeEditors: Scalars['Int'];
+  /** Of those, the ones the system refused. A rate worth acting on needs both numbers, so they travel together. */
+  failedActions: Scalars['Int'];
+  /** Actions performed while impersonating another account. */
+  impersonatedActions: Scalars['Int'];
+  /** How often each mutation was used in the window, most used first. Shows whether a shipped feature is actually being touched. */
+  mutationUsage: Array<MediumMutationUsage>;
+  /** False when this installation keeps no audit log, in which case every figure below is zero and must not be read as "nothing happened". */
+  supported: Scalars['Boolean'];
+  /** Share of all named-account actions performed by the single busiest account. Five editors where one does 90 % looks identical to five balanced ones in activeEditors alone — this is what tells them apart. Null when nobody acted. */
+  topEditorShare?: Maybe<Scalars['Float']>;
+  /** The errors editors ran into most often, worst first. Without this the error rate says something is wrong but never what, and the answer sits one filtered page away. */
+  topErrors: Array<MediumAuditError>;
 };
 
 export type MediumChangelogAction = {
@@ -2486,6 +2522,12 @@ export type MediumMoneyStats = {
   revenue: Scalars['Int'];
 };
 
+export type MediumMutationUsage = {
+  __typename?: 'MediumMutationUsage';
+  count: Scalars['Int'];
+  mutation: Scalars['String'];
+};
+
 export type MediumNetworkStats = {
   __typename?: 'MediumNetworkStats';
   peersDisabled: Scalars['Int'];
@@ -2511,6 +2553,7 @@ export type MediumOperationsStats = {
 export type MediumStats = {
   __typename?: 'MediumStats';
   accounts: MediumAccountStats;
+  audit: MediumAuditStats;
   community: MediumCommunityStats;
   currency?: Maybe<Scalars['String']>;
   editorial: MediumEditorialStats;

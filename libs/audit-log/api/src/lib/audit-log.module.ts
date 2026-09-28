@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { PrismaModule } from '@wepublish/nest-modules';
 import { AuditLogRetentionService } from './audit-log-retention.service';
@@ -7,7 +8,7 @@ import { AuditLogResolver } from './audit-log.resolver';
 import { AuditLogService } from './audit-log.service';
 
 @Module({
-  imports: [PrismaModule],
+  imports: [PrismaModule, ConfigModule],
   providers: [
     AuditLogService,
     AuditLogResolver,

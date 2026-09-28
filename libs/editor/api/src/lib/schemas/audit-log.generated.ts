@@ -5,7 +5,7 @@ import {RichtextJSONDocument} from '@wepublish/richtext';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
-export type FullAuditLogFragment = { __typename?: 'AuditLog', id: string, createdAt: string, mutation: string, action: Types.AuditLogAction, entity?: string | null, recordId?: string | null, actorType: Types.AuditLogActorType, userID?: string | null, userEmail?: string | null, tokenName?: string | null, sessionID?: string | null, impersonatedBy?: string | null, success: boolean, errorMessage?: string | null };
+export type FullAuditLogFragment = { __typename?: 'AuditLog', id: string, createdAt: string, mutation: string, action: Types.AuditLogAction, entity?: string | null, recordId?: string | null, actorType: Types.AuditLogActorType, userId?: string | null, userEmail?: string | null, tokenName?: string | null, sessionId?: string | null, impersonatedBy?: string | null, success: boolean, errorMessage?: string | null };
 
 export type AuditLogListQueryVariables = Types.Exact<{
   filter?: Types.InputMaybe<Types.AuditLogFilter>;
@@ -31,10 +31,10 @@ export const FullAuditLogFragmentDoc = gql`
   entity
   recordId
   actorType
-  userID
+  userId
   userEmail
   tokenName
-  sessionID
+  sessionId
   impersonatedBy
   success
   errorMessage

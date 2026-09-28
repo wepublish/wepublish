@@ -25,7 +25,7 @@ export class MediumAuditLog {
   actorType!: AuditLogActorType;
 
   @Field(() => String, { nullable: true })
-  userID!: string | null;
+  userId!: string | null;
 
   @Field(() => String, { nullable: true })
   userEmail!: string | null;
@@ -34,7 +34,7 @@ export class MediumAuditLog {
   tokenName!: string | null;
 
   @Field(() => String, { nullable: true })
-  sessionID!: string | null;
+  sessionId!: string | null;
 
   @Field(() => String, {
     nullable: true,
@@ -59,7 +59,7 @@ export class MediumAuditLogFilter {
   search?: string;
 
   @Field(() => String, { nullable: true })
-  userID?: string;
+  userId?: string;
 
   @Field(() => String, { nullable: true })
   userEmail?: string;
@@ -68,7 +68,7 @@ export class MediumAuditLogFilter {
     nullable: true,
     description: 'Everything a single login session did.',
   })
-  sessionID?: string;
+  sessionId?: string;
 
   @Field(() => String, { nullable: true })
   entity?: string;

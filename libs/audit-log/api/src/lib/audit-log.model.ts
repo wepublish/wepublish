@@ -36,7 +36,7 @@ export class AuditLog {
   actorType!: AuditLogActorType;
 
   @Field(() => String, { nullable: true })
-  userID!: string | null;
+  userId!: string | null;
 
   @Field(() => String, { nullable: true })
   userEmail!: string | null;
@@ -45,7 +45,7 @@ export class AuditLog {
   tokenName!: string | null;
 
   @Field(() => String, { nullable: true })
-  sessionID!: string | null;
+  sessionId!: string | null;
 
   @Field(() => String, { nullable: true })
   impersonatedBy!: string | null;
@@ -76,13 +76,13 @@ export class AuditLogFilter {
   search?: string;
 
   @Field(() => String, { nullable: true })
-  userID?: string;
+  userId?: string;
 
   @Field(() => String, { nullable: true })
   userEmail?: string;
 
   @Field(() => String, { nullable: true })
-  sessionID?: string;
+  sessionId?: string;
 
   @Field(() => String, { nullable: true })
   entity?: string;

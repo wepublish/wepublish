@@ -169,11 +169,11 @@ type AuditLog {
   impersonatedBy: String
   mutation: String!
   recordId: String
-  sessionID: String
+  sessionId: String
   success: Boolean!
   tokenName: String
   userEmail: String
-  userID: String
+  userId: String
 }
 
 enum AuditLogAction {
@@ -203,11 +203,11 @@ input AuditLogFilter {
   Case insensitive search across mutation, entity, record id, user email and token name.
   """
   search: String
-  sessionID: String
+  sessionId: String
   success: Boolean
   to: DateTime
   userEmail: String
-  userID: String
+  userId: String
 }
 
 enum AuditLogSort {
@@ -2298,11 +2298,11 @@ type MediumAuditLog {
   impersonatedBy: String
   mutation: String!
   recordId: String
-  sessionID: String
+  sessionId: String
   success: Boolean!
   tokenName: String
   userEmail: String
-  userID: String
+  userId: String
 }
 
 input MediumAuditLogFilter {
@@ -2320,11 +2320,11 @@ input MediumAuditLogFilter {
   search: String
 
   """Everything a single login session did."""
-  sessionID: String
+  sessionId: String
   success: Boolean
   to: DateTime
   userEmail: String
-  userID: String
+  userId: String
 }
 
 type MediumAuditLogPage {
