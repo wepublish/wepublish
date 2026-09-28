@@ -3266,6 +3266,28 @@
           "Info": "Cette étape doit être effectuée une fois par la publication dans Google Search Console."
         }
       }
+    },
+    "seoSuggestions": {
+      "title": "Suggestions SEO",
+      "description": "Générez des suggestions de métadonnées pour la recherche et les réseaux sociaux à partir du contenu. Rien n'est modifié tant que vous n'appliquez pas une suggestion.",
+      "generate": "Générer des suggestions",
+      "regenerate": "Générer à nouveau",
+      "notEnoughContent": "Ajoutez d'abord un titre, un chapeau ou du contenu.",
+      "review": "Vérifiez et modifiez les suggestions avant de les appliquer. L'IA peut se tromper.",
+      "current": "Actuel",
+      "empty": "(vide)",
+      "apply": "Appliquer",
+      "replace": "Remplacer",
+      "applied": "Appliqué",
+      "applyToEmpty": "Appliquer aux champs vides",
+      "discard": "Ignorer",
+      "fields": {
+        "seoTitle": "Titre SEO",
+        "seoDescription": "Description SEO",
+        "socialMediaTitle": "Titre pour les réseaux sociaux",
+        "socialMediaDescription": "Description pour les réseaux sociaux",
+        "slug": "Slug"
+      }
     }
   }
 }

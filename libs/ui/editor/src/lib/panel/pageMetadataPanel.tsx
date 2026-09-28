@@ -1,5 +1,10 @@
 import styled from '@emotion/styled';
-import { FullImageFragment, Tag, TagType } from '@wepublish/editor/api';
+import {
+  FullImageFragment,
+  SeoMetadataContentType,
+  Tag,
+  TagType,
+} from '@wepublish/editor/api';
 import { SetStateAction, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdListAlt, MdSettings, MdShare } from 'react-icons/md';
@@ -29,6 +34,7 @@ import { MetaDataType } from '../blocks';
 import { generateID, isFunctionalUpdate } from '../utility';
 import { ImageEditPanel } from './imageEditPanel';
 import { ImageSelectPanel } from './imageSelectPanel';
+import { SeoSuggestions } from './seoSuggestions';
 
 const Nav = styled(RNav)`
   margin-bottom: 20px;
@@ -87,6 +93,7 @@ export interface PageMetadata {
 
 export interface PageMetadataPanelProps {
   readonly value: PageMetadata;
+  readonly seoContext?: { readonly body: string };
 
   onClose?(): void;
 
@@ -95,6 +102,7 @@ export interface PageMetadataPanelProps {
 
 function PageMetadataPanel({
   value,
+  seoContext,
   onClose,
   onChange,
 }: PageMetadataPanelProps) {
@@ -258,6 +266,20 @@ function PageMetadataPanel({
               multiline
               value={description}
               onChange={description => onChange?.({ ...value, description })}
+            />
+
+            <SeoSuggestions
+              type={SeoMetadataContentType.Page}
+              context={{ title, lead: description, body: seoContext?.body }}
+              value={{
+                seoTitle,
+                seoDescription,
+                socialMediaTitle,
+                socialMediaDescription,
+                slug,
+              }}
+              disabled={!isAuthorized}
+              onApply={suggestions => onChange?.({ ...value, ...suggestions })}
             />
 
             <DeferredTextField

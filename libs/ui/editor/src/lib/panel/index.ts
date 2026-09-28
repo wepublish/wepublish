@@ -36,3 +36,4 @@ export * from './userCheckPicker';
 export * from './userRoleEditPanel';
 export * from './userSubscriptionDeactivatePanel';
 export * from './versionHistoryPanel';
+export * from './seoSuggestions';

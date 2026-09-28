@@ -3320,6 +3320,28 @@
           "Info": "Dies muss einmalig von der Publikation in der Google Search Console erledigt werden."
         }
       }
+    },
+    "seoSuggestions": {
+      "title": "SEO-Vorschläge",
+      "description": "Erstellen Sie anhand des Inhalts Vorschläge für Such- und Social-Media-Metadaten. Es wird nichts geändert, bis Sie einen Vorschlag übernehmen.",
+      "generate": "Vorschläge erstellen",
+      "regenerate": "Erneut erstellen",
+      "notEnoughContent": "Fügen Sie zuerst einen Titel, Lead oder Inhalt hinzu.",
+      "review": "Prüfen und bearbeiten Sie die Vorschläge, bevor Sie sie übernehmen. Die KI kann Fehler machen.",
+      "current": "Aktuell",
+      "empty": "(leer)",
+      "apply": "Übernehmen",
+      "replace": "Ersetzen",
+      "applied": "Übernommen",
+      "applyToEmpty": "In leere Felder übernehmen",
+      "discard": "Verwerfen",
+      "fields": {
+        "seoTitle": "SEO-Titel",
+        "seoDescription": "SEO-Beschreibung",
+        "socialMediaTitle": "Social-Media-Titel",
+        "socialMediaDescription": "Social-Media-Beschreibung",
+        "slug": "Slug"
+      }
     }
   }
 }

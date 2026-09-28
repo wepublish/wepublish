@@ -4,3 +4,13 @@ query PromptHTML($query: String!, $chatId: String) {
     message
   }
 }
+
+query GenerateSeoMetadata($input: GenerateSeoMetadataInput!) {
+  generateSeoMetadata(input: $input) {
+    seoTitle
+    seoDescription
+    socialMediaTitle
+    socialMediaDescription
+    slug
+  }
+}

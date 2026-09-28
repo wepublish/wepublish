@@ -1290,6 +1290,13 @@ export type FullPoll = {
   question?: Maybe<Scalars['String']>;
 };
 
+export type GenerateSeoMetadataInput = {
+  body?: InputMaybe<Scalars['String']>;
+  lead?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']>;
+  type: SeoMetadataContentType;
+};
+
 export type Goodie = HasImage & {
   __typename?: 'Goodie';
   active: Scalars['Boolean'];
@@ -5307,6 +5314,8 @@ export type Query = {
   externalApp: ExternalApp;
   /** Returns all external apps. Requires authentication. */
   externalApps: Array<ExternalApp>;
+  /** Generates SEO metadata suggestions for an article or page using AI. */
+  generateSeoMetadata: SeoMetadataSuggestion;
   /** Returns images by tag. */
   getImagesByTag: Array<Image>;
   /** Returns a goodie by id. */
@@ -5770,6 +5779,11 @@ export type QueryExternalAppArgs = {
 
 export type QueryExternalAppsArgs = {
   filter?: InputMaybe<ExternalAppFilter>;
+};
+
+
+export type QueryGenerateSeoMetadataArgs = {
+  input: GenerateSeoMetadataInput;
 };
 
 
@@ -6434,6 +6448,20 @@ export type SeoChecklist = {
   robotsUrl: Scalars['String'];
   sitemapUrl: Scalars['String'];
   websiteUrl: Scalars['String'];
+};
+
+export enum SeoMetadataContentType {
+  Article = 'Article',
+  Page = 'Page'
+}
+
+export type SeoMetadataSuggestion = {
+  __typename?: 'SeoMetadataSuggestion';
+  seoDescription?: Maybe<Scalars['String']>;
+  seoTitle?: Maybe<Scalars['String']>;
+  slug?: Maybe<Scalars['String']>;
+  socialMediaDescription?: Maybe<Scalars['String']>;
+  socialMediaTitle?: Maybe<Scalars['String']>;
 };
 
 export type SessionWithToken = {

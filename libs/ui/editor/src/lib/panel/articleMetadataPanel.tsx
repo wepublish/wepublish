@@ -4,6 +4,7 @@ import {
   FullAuthorFragment,
   FullImageFragment,
   FullTrackingPixelFragment,
+  SeoMetadataContentType,
   Tag,
   TagType,
 } from '@wepublish/editor/api';
@@ -52,6 +53,7 @@ import { ArticleAuthor, ArticleAuthorList } from './articleAuthorList';
 import { AuthorCheckPicker } from './authorCheckPicker';
 import { ImageEditPanel } from './imageEditPanel';
 import { ImageSelectPanel } from './imageSelectPanel';
+import { SeoSuggestions } from './seoSuggestions';
 
 const { Item } = RNav;
 
@@ -136,6 +138,7 @@ export interface ArticleMetadataPanelProps {
   readonly peerId: string | null | undefined;
   readonly value: ArticleMetadata;
   readonly infoData: InfoData;
+  readonly seoContext?: { readonly body: string };
 
   onClose?(): void;
   onChange?(value: ArticleMetadata): void;
@@ -146,6 +149,7 @@ function ArticleMetadataPanel({
   peerId,
   value,
   infoData,
+  seoContext,
   onClose,
   onChange,
 }: ArticleMetadataPanelProps) {
@@ -354,6 +358,20 @@ function ArticleMetadataPanel({
               rows={5}
               value={lead}
               onChange={lead => onChange?.({ ...value, lead })}
+            />
+
+            <SeoSuggestions
+              type={SeoMetadataContentType.Article}
+              context={{ title, lead, body: seoContext?.body }}
+              value={{
+                seoTitle,
+                seoDescription,
+                socialMediaTitle,
+                socialMediaDescription,
+                slug,
+              }}
+              disabled={!isAuthorized}
+              onApply={suggestions => onChange?.({ ...value, ...suggestions })}
             />
 
             <DeferredTextField

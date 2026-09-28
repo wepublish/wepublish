@@ -3359,6 +3359,28 @@
           "Info": "This has to be done once by the publisher in Google Search Console."
         }
       }
+    },
+    "seoSuggestions": {
+      "title": "SEO suggestions",
+      "description": "Generate suggestions for search and social media metadata based on the content. Nothing is changed until you apply a suggestion.",
+      "generate": "Generate suggestions",
+      "regenerate": "Generate again",
+      "notEnoughContent": "Add a title, lead or content first.",
+      "review": "Review and edit the suggestions before applying them. The AI may make mistakes.",
+      "current": "Current",
+      "empty": "(empty)",
+      "apply": "Apply",
+      "replace": "Replace",
+      "applied": "Applied",
+      "applyToEmpty": "Apply to empty fields",
+      "discard": "Discard",
+      "fields": {
+        "seoTitle": "SEO title",
+        "seoDescription": "SEO description",
+        "socialMediaTitle": "Social media title",
+        "socialMediaDescription": "Social media description",
+        "slug": "Slug"
+      }
     }
   }
 }

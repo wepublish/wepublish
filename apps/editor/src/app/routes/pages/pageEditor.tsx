@@ -25,6 +25,7 @@ import {
   blockForQueryBlock,
   BlockList,
   BlockMap,
+  blocksToPlaintext,
   BlockValue,
   createCheckedPermissionComponent,
   DocumentUrlProvider,
@@ -44,7 +45,13 @@ import {
   VersionHistory,
   VersionHistoryRevision,
 } from '@wepublish/ui/editor';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   MdCloudUpload,
@@ -168,6 +175,11 @@ function PageEditor() {
 
   const isNew = id === undefined;
   const [blocks, setBlocks] = useState<BlockValue[]>([]);
+
+  const seoContext = useMemo(
+    () => (isMetaDrawerOpen ? { body: blocksToPlaintext(blocks) } : undefined),
+    [blocks, isMetaDrawerOpen]
+  );
 
   const pageID = id || createData?.createPage.id;
 
@@ -787,6 +799,7 @@ function PageEditor() {
         onClose={() => setMetaDrawerOpen(false)}
       >
         <PageMetadataPanel
+          seoContext={seoContext}
           value={metadata}
           onClose={() => {
             handleSave();

@@ -13,6 +13,13 @@ export type PromptHtmlQueryVariables = Types.Exact<{
 
 export type PromptHtmlQuery = { __typename?: 'Query', promptHTML: { __typename?: 'Chat', chatId: string, message: string } };
 
+export type GenerateSeoMetadataQueryVariables = Types.Exact<{
+  input: Types.GenerateSeoMetadataInput;
+}>;
+
+
+export type GenerateSeoMetadataQuery = { __typename?: 'Query', generateSeoMetadata: { __typename?: 'SeoMetadataSuggestion', seoTitle?: string | null, seoDescription?: string | null, socialMediaTitle?: string | null, socialMediaDescription?: string | null, slug?: string | null } };
+
 
 export const PromptHtmlDocument = gql`
     query PromptHTML($query: String!, $chatId: String) {
@@ -51,3 +58,42 @@ export function usePromptHtmlLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions
 export type PromptHtmlQueryHookResult = ReturnType<typeof usePromptHtmlQuery>;
 export type PromptHtmlLazyQueryHookResult = ReturnType<typeof usePromptHtmlLazyQuery>;
 export type PromptHtmlQueryResult = Apollo.QueryResult<PromptHtmlQuery, PromptHtmlQueryVariables>;
+export const GenerateSeoMetadataDocument = gql`
+    query GenerateSeoMetadata($input: GenerateSeoMetadataInput!) {
+  generateSeoMetadata(input: $input) {
+    seoTitle
+    seoDescription
+    socialMediaTitle
+    socialMediaDescription
+    slug
+  }
+}
+    `;
+
+/**
+ * __useGenerateSeoMetadataQuery__
+ *
+ * To run a query within a React component, call `useGenerateSeoMetadataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGenerateSeoMetadataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGenerateSeoMetadataQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useGenerateSeoMetadataQuery(baseOptions: Apollo.QueryHookOptions<GenerateSeoMetadataQuery, GenerateSeoMetadataQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GenerateSeoMetadataQuery, GenerateSeoMetadataQueryVariables>(GenerateSeoMetadataDocument, options);
+      }
+export function useGenerateSeoMetadataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GenerateSeoMetadataQuery, GenerateSeoMetadataQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GenerateSeoMetadataQuery, GenerateSeoMetadataQueryVariables>(GenerateSeoMetadataDocument, options);
+        }
+export type GenerateSeoMetadataQueryHookResult = ReturnType<typeof useGenerateSeoMetadataQuery>;
+export type GenerateSeoMetadataLazyQueryHookResult = ReturnType<typeof useGenerateSeoMetadataLazyQuery>;
+export type GenerateSeoMetadataQueryResult = Apollo.QueryResult<GenerateSeoMetadataQuery, GenerateSeoMetadataQueryVariables>;

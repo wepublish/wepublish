@@ -1216,6 +1216,13 @@ type FullPoll {
   question: String
 }
 
+input GenerateSeoMetadataInput {
+  body: String
+  lead: String
+  title: String
+  type: SeoMetadataContentType!
+}
+
 type Goodie implements HasImage {
   active: Boolean!
   availableStock: Int
@@ -4056,6 +4063,9 @@ type Query {
   """Returns all external apps. Requires authentication."""
   externalApps(filter: ExternalAppFilter): [ExternalApp!]!
 
+  """Generates SEO metadata suggestions for an article or page using AI."""
+  generateSeoMetadata(input: GenerateSeoMetadataInput!): SeoMetadataSuggestion!
+
   """Returns images by tag."""
   getImagesByTag(tag: String!): [Image!]!
 
@@ -4547,6 +4557,19 @@ type SeoChecklist {
   robotsUrl: String!
   sitemapUrl: String!
   websiteUrl: String!
+}
+
+enum SeoMetadataContentType {
+  Article
+  Page
+}
+
+type SeoMetadataSuggestion {
+  seoDescription: String
+  seoTitle: String
+  slug: String
+  socialMediaDescription: String
+  socialMediaTitle: String
 }
 
 type SessionWithToken {

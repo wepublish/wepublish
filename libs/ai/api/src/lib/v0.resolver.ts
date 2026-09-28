@@ -1,98 +1,20 @@
 import { Args, Query, Resolver } from '@nestjs/graphql';
 import { Chat, PromptHTMLArgs } from './v0.model';
-import { ChatsCreateResponse, createClient } from 'v0-sdk';
+import { ChatsCreateResponse } from 'v0-sdk';
 import { Permissions } from '@wepublish/permissions/api';
 import { CanCreateArticle, CanCreatePage } from '@wepublish/permissions';
 import { BadRequestException } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
-import { SecretCrypto } from '@wepublish/settings/api';
-
-type V0Settings = { apiKey: string | null; systemPrompt: string | null };
-
-class V0Config {
-  private readonly ttl = 21600; // 6h
-  private readonly crypto = new SecretCrypto();
-
-  constructor(
-    private readonly prisma: PrismaClient,
-    private readonly kv: KvTtlCacheService,
-    private readonly id: string
-  ) {}
-
-  private async loadV0(): Promise<V0Settings> {
-    await this.prisma.settingAIProvider.update({
-      where: { id: this.id },
-      data: { lastLoadedAt: new Date() },
-    });
-    const config = await this.prisma.settingAIProvider.findUnique({
-      where: { id: this.id },
-      select: { apiKey: true, systemPrompt: true },
-    });
-
-    let decryptedApiKey: string | null = null;
-    if (config?.apiKey) {
-      try {
-        decryptedApiKey = this.crypto.decrypt(config.apiKey);
-      } catch (e) {
-        console.error(e);
-        throw new Error(`Failed to decrypt API key for AI setting ${this.id}`);
-      }
-    }
-
-    return {
-      apiKey: decryptedApiKey,
-      systemPrompt: config?.systemPrompt ?? null,
-    };
-  }
-
-  async getV0(): Promise<V0Settings> {
-    return this.kv.getOrLoadNs<V0Settings>(
-      'settings:ai',
-      `${this.id}`,
-      () => this.loadV0(),
-      this.ttl
-    );
-  }
-
-  async apiKey(): Promise<string | null> {
-    return (await this.getV0()).apiKey;
-  }
-
-  async systemPrompt(): Promise<string | null> {
-    return (await this.getV0()).systemPrompt;
-  }
-}
+import { V0ClientService } from './v0-client.service';
 
 @Resolver()
 export class V0Resolver {
-  private async getV0Client() {
-    const config = new V0Config(this.prisma, this.kv, 'v0');
-    const apiKey = await config.apiKey();
-
-    if (!apiKey) {
-      throw new Error('V0 API key required');
-    }
-
-    return createClient({
-      apiKey,
-    });
-  }
-
-  constructor(
-    private prisma: PrismaClient,
-    private kv: KvTtlCacheService
-  ) {}
+  constructor(private v0Client: V0ClientService) {}
 
   @Permissions(CanCreateArticle, CanCreatePage)
   @Query(() => Chat)
   async promptHTML(@Args() { query, chatId }: PromptHTMLArgs): Promise<Chat> {
-    const v0 = await this.getV0Client();
-    const config = new V0Config(this.prisma, this.kv, 'v0');
-    let systemPrompt = await config.systemPrompt();
-    if (!systemPrompt) {
-      systemPrompt = '';
-    }
+    const v0 = await this.v0Client.getClient();
+    const systemPrompt = await this.v0Client.getSystemPrompt();
 
     const chat =
       !chatId ?
