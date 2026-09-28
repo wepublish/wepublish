@@ -18,6 +18,20 @@ function normalizePath(href) {
   return path.length > 1 ? path.replace(/\/$/, '') : path;
 }
 
+// "/<slug>" as a path on this site. The slug comes from the URL
+// (router.query) or from CMS data, so it must not be able to leave the site:
+// a leading "//" or "\" (browsers read "/\" as "//") would make the link
+// protocol-relative (e.g. "//evil.com"), and URL parsing drops tabs and
+// newlines anywhere ("/\t/evil.com"). Everything else is kept as is: legacy
+// slugs contain dots and percent-encoded umlauts.
+export function localPath(slug) {
+  const path = String(slug ?? '')
+    .replace(/[\t\n\r]/g, '')
+    .replace(/^[/\\]+/, '');
+
+  return `/${path}`;
+}
+
 // the new target of a moved legacy path, or undefined if it stays as it is
 export function externalTarget(href) {
   if (!href) {

@@ -5,7 +5,7 @@ import Router, { useRouter } from 'next/router';
 import React from 'react';
 
 import { iconSrc } from '../lib/icons';
-import { externalTarget } from '../lib/links';
+import { externalTarget, localPath } from '../lib/links';
 import * as S from '../lib/styles';
 
 // bundle function `re`: builds "/<slug>?search=<search>" from the current
@@ -17,7 +17,7 @@ function useLinkHref(query = {}) {
   const slug = has('slug') ? query.slug : router.query.slug;
   const params = search ? `?search=${encodeURIComponent(search)}` : '';
 
-  return `/${slug || ''}${params}`.replace('//', '/');
+  return `${localPath(slug)}${params}`;
 }
 
 // bundle function `ie`: next/link (shallow) around <span><a/></span>
