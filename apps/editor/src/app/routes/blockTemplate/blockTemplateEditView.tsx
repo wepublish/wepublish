@@ -69,10 +69,6 @@ function BlockTemplateEditView() {
   const [blocks, setBlocks] = useState<BlockValue[]>(
     isNew ? initialBlocks : []
   );
-  const [tagTitle, setTagTitle] = useState(
-    isNew ? t('blockTemplates.edit.new') : t('blockTemplates.edit.editing')
-  );
-  const [stateColor, setStateColor] = useState<StateColor>(StateColor.none);
 
   const [
     createBlockTemplate,
@@ -138,18 +134,10 @@ function BlockTemplateEditView() {
     setBlocks((blocks as FullBlockFragment[]).map(blockForQueryBlock));
   }, [blockTemplateData]);
 
-  useEffect(() => {
-    if (isNew) {
-      setTagTitle(t('blockTemplates.edit.new'));
-      setStateColor(StateColor.none);
-    } else if (hasChanged) {
-      setTagTitle(t('blockTemplates.edit.editing'));
-      setStateColor(StateColor.draft);
-    } else {
-      setTagTitle(t('blockTemplates.edit.saved'));
-      setStateColor(StateColor.published);
-    }
-  }, [isNew, t, hasChanged]);
+  const [tagTitle, stateColor] =
+    isNew ? [t('blockTemplates.edit.new'), StateColor.none]
+    : hasChanged ? [t('blockTemplates.edit.editing'), StateColor.draft]
+    : [t('blockTemplates.edit.saved'), StateColor.published];
 
   function createInput(): CreateBlockTemplateMutationVariables {
     return {
