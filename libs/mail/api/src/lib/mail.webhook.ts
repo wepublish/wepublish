@@ -5,6 +5,7 @@ import {
   Logger,
   NestMiddleware,
   NotFoundException,
+  Optional,
   Param,
   Req,
   Res,
@@ -16,7 +17,16 @@ import {
   MAILS_MODULE_OPTIONS,
   MailsModuleOptions,
 } from './mails-module-options';
-import { MailLogState, PrismaClient } from '@prisma/client';
+import {
+  EmailQualityEventSource,
+  MailLogState,
+  PrismaClient,
+} from '@prisma/client';
+import {
+  EMAIL_QUALITY_RECORDER,
+  EmailQualityRecorder,
+  recordEmailQualitySafely,
+} from './email-quality-recorder';
 
 export const MAIL_WEBHOOK_PATH_PREFIX = 'mail-webhooks';
 
@@ -46,7 +56,10 @@ export class MailWebhookController {
   constructor(
     private prisma: PrismaClient,
     @Inject(MAILS_MODULE_OPTIONS)
-    private config: MailsModuleOptions
+    private config: MailsModuleOptions,
+    @Optional()
+    @Inject(EMAIL_QUALITY_RECORDER)
+    private emailQualityRecorder?: EmailQualityRecorder
   ) {}
 
   @Public()
@@ -87,19 +100,31 @@ export class MailWebhookController {
           continue; // TODO: handle missing mailLog
         }
 
-        if (!shouldUpdateMailLogState(mailLog.state, mailLogStatus.state)) {
-          continue;
+        if (
+          mailLogStatus.state &&
+          shouldUpdateMailLogState(mailLog.state, mailLogStatus.state)
+        ) {
+          await this.prisma.mailLog.update({
+            where: { id: mailLog.id },
+            data: {
+              subject: mailLog.subject,
+              mailProviderID: mailLog.mailProviderID,
+              state: mailLogStatus.state,
+              mailData: mailLogStatus.mailData,
+            },
+          });
         }
 
-        await this.prisma.mailLog.update({
-          where: { id: mailLog.id },
-          data: {
-            subject: mailLog.subject,
-            mailProviderID: mailLog.mailProviderID,
-            state: mailLogStatus.state,
-            mailData: mailLogStatus.mailData,
-          },
-        });
+        if (mailLogStatus.qualitySignals?.length) {
+          await recordEmailQualitySafely(this.emailQualityRecorder, recorder =>
+            recorder.recordMailSignals({
+              mailLogId: mailLog.id,
+              userId: mailLog.recipientID,
+              signals: mailLogStatus.qualitySignals!,
+              source: EmailQualityEventSource.webhook,
+            })
+          );
+        }
       }
     } catch (error) {
       this.logger.error(

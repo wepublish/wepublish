@@ -4,7 +4,13 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { differenceInMinutes } from 'date-fns';
-import { Prisma, PrismaClient, UserEvent } from '@prisma/client';
+import {
+  EmailQualityEventSource,
+  EmailQualityEventType,
+  Prisma,
+  PrismaClient,
+  UserEvent,
+} from '@prisma/client';
 import { hash as argon2Hash } from '@node-rs/argon2';
 import { Validator } from '@wepublish/user';
 import { unselectPassword } from '@wepublish/authentication/api';
@@ -26,6 +32,7 @@ import {
   MailchimpContactService,
   MailContext,
   mailLogType,
+  recordEmailQualitySafely,
 } from '@wepublish/mail/api';
 import * as crypto from 'crypto';
 import { HibpService } from './hibp.service';
@@ -343,6 +350,20 @@ export class UserService {
       updatedUser.id,
       user.email,
       updatedUser.email
+    );
+
+    // the confirmation link reached the new address
+    await recordEmailQualitySafely(
+      this.mailContext.emailQualityRecorder,
+      recorder =>
+        recorder.recordUserSignal({
+          userId: updatedUser.id,
+          signal: {
+            type: EmailQualityEventType.emailConfirmed,
+            email: updatedUser.email,
+          },
+          source: EmailQualityEventSource.user,
+        })
     );
 
     return updatedUser;

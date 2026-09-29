@@ -3,7 +3,7 @@ import crypto from 'crypto';
 import mailchimp from '@mailchimp/mailchimp_transactional';
 import { AxiosError } from 'axios';
 
-import { MailLogState } from '@prisma/client';
+import { EmailQualityEventType, MailLogState } from '@prisma/client';
 import {
   MailLogStatus,
   MailProviderError,
@@ -11,6 +11,7 @@ import {
   MailProviderRecipientError,
   MailProviderTemplate,
   MailProviderTemplateContent,
+  MailQualitySignal,
   SendMailProps,
   SendMailResult,
   WebhookForSendMailProps,
@@ -105,6 +106,83 @@ function mapMandrillEventToMailLogState(event: string): MailLogState | null {
   }
 }
 
+/** What a webhook event says about the recipient's address, besides the delivery state. */
+function mapMandrillEventToQualityType(
+  event: string
+): EmailQualityEventType | null {
+  switch (event) {
+    case 'hard_bounce':
+      return EmailQualityEventType.hardBounce;
+    case 'soft_bounce':
+      return EmailQualityEventType.softBounce;
+    case 'reject':
+      return EmailQualityEventType.rejected;
+    case 'spam':
+      return EmailQualityEventType.spamComplaint;
+    case 'unsub':
+      return EmailQualityEventType.unsubscribed;
+    case 'open':
+      return EmailQualityEventType.opened;
+    case 'click':
+      return EmailQualityEventType.clicked;
+    default:
+      return null;
+  }
+}
+
+type MandrillMessageInfo = {
+  email?: string;
+  state?: string;
+  opens?: number;
+  clicks?: number;
+  bounce_description?: string;
+  diag?: string;
+};
+
+/** What a polled message tells about the recipient's address. */
+function mapMandrillInfoToQualitySignals(
+  info: MandrillMessageInfo
+): MailQualitySignal[] {
+  const signal = (
+    type: EmailQualityEventType,
+    detail?: string | null
+  ): MailQualitySignal => ({
+    type,
+    email: info.email,
+    detail: detail ?? null,
+  });
+  const diagnosis = info.bounce_description || info.diag || null;
+  const signals: MailQualitySignal[] = [];
+
+  switch (info.state) {
+    case 'bounced':
+      signals.push(signal(EmailQualityEventType.hardBounce, diagnosis));
+      break;
+    case 'soft-bounced':
+      signals.push(signal(EmailQualityEventType.softBounce, diagnosis));
+      break;
+    case 'invalid':
+      signals.push(signal(EmailQualityEventType.rejected, 'invalid'));
+      break;
+    case 'spam':
+      signals.push(signal(EmailQualityEventType.spamComplaint));
+      break;
+    case 'unsub':
+      signals.push(signal(EmailQualityEventType.unsubscribed));
+      break;
+  }
+
+  if ((info.opens ?? 0) > 0) {
+    signals.push(signal(EmailQualityEventType.opened));
+  }
+
+  if ((info.clicks ?? 0) > 0) {
+    signals.push(signal(EmailQualityEventType.clicked));
+  }
+
+  return signals;
+}
+
 export class MailchimpMailProvider extends BaseMailProvider {
   constructor(props: MailProviderProps) {
     super(props);
@@ -164,15 +242,35 @@ export class MailchimpMailProvider extends BaseMailProvider {
 
     for (const mandrillEvent of mandrillEvents) {
       const state = mapMandrillEventToMailLogState(mandrillEvent.event);
+      const qualityType = mapMandrillEventToQualityType(mandrillEvent.event);
       const mailLogID = mandrillEvent?.msg?.metadata?.mail_log_id;
 
-      if (state !== null && mailLogID !== undefined) {
-        mailLogStatuses.push({
-          state,
-          mailLogID,
-          mailData: JSON.stringify(mandrillEvent),
-        });
+      if ((state === null && qualityType === null) || mailLogID === undefined) {
+        continue;
       }
+
+      mailLogStatuses.push({
+        state,
+        mailLogID,
+        mailData: JSON.stringify(mandrillEvent),
+        qualitySignals:
+          qualityType ?
+            [
+              {
+                type: qualityType,
+                email: mandrillEvent.msg?.email,
+                detail:
+                  mandrillEvent.msg?.bounce_description ||
+                  mandrillEvent.msg?.diag ||
+                  null,
+                occurredAt:
+                  typeof mandrillEvent.ts === 'number' ?
+                    new Date(mandrillEvent.ts * 1000)
+                  : undefined,
+              },
+            ]
+          : [],
+      });
     }
 
     return mailLogStatuses;
@@ -239,6 +337,9 @@ export class MailchimpMailProvider extends BaseMailProvider {
         providerMessageID,
         state,
         mailData: JSON.stringify(response),
+        qualitySignals: mapMandrillInfoToQualitySignals(
+          response as MandrillMessageInfo
+        ),
       });
     }
 
@@ -277,7 +378,12 @@ export class MailchimpMailProvider extends BaseMailProvider {
         RECIPIENT_REJECT_REASONS.has(rejected.reject_reason));
 
     throw blameRecipient ?
-        new MailProviderRecipientError(message)
+        new MailProviderRecipientError(
+          message,
+          rejected.status === 'invalid' ?
+            'invalid'
+          : (rejected.reject_reason ?? undefined)
+        )
       : new MailProviderError(message);
   }
 

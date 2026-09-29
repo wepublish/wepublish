@@ -5,6 +5,7 @@ import {
   PrismaClient,
 } from '@prisma/client';
 import { SettingName, SettingsService } from '@wepublish/settings/api';
+import { EmailQualityRecorder, MailQualitySignal } from '@wepublish/mail/api';
 import {
   DEFAULT_EMAIL_QUALITY_CONFIG,
   EmailQualityConfig,
@@ -24,8 +25,14 @@ export type RecordEmailQualityEvent = {
   createdById?: string | null;
 };
 
+/**
+ * Security scanners follow every link of a mail within seconds of its
+ * delivery. A click that early is no sign of a human reading it.
+ */
+export const SCANNER_CLICK_WINDOW_MS = 60 * 1000;
+
 @Injectable()
-export class EmailQualityService {
+export class EmailQualityService implements EmailQualityRecorder {
   private logger = new Logger('EmailQualityService');
 
   constructor(
@@ -82,6 +89,73 @@ export class EmailQualityService {
     for (const userId of emailByUser.keys()) {
       await this.recompute(userId);
     }
+  }
+
+  async recordMailSignals({
+    mailLogId,
+    userId,
+    signals,
+    source,
+  }: {
+    mailLogId: string;
+    userId?: string;
+    signals: MailQualitySignal[];
+    source: EmailQualityEventSource;
+  }) {
+    if (!signals.length) {
+      return;
+    }
+
+    const mailLog = await this.prisma.mailLog.findUnique({
+      where: { id: mailLogId },
+      select: { recipientID: true, sentDate: true },
+    });
+    const recipientId = userId ?? mailLog?.recipientID;
+
+    if (!recipientId) {
+      return;
+    }
+
+    await this.record(
+      signals.map(signal => {
+        const occurredAt = signal.occurredAt ?? new Date();
+        const probableScanner =
+          signal.type === EmailQualityEventType.clicked &&
+          !!mailLog &&
+          occurredAt.getTime() - mailLog.sentDate.getTime() <
+            SCANNER_CLICK_WINDOW_MS;
+
+        return {
+          userId: recipientId,
+          // a click too early to be human still shows the mail arrived
+          type: probableScanner ? EmailQualityEventType.opened : signal.type,
+          source,
+          email: signal.email,
+          occurredAt,
+          detail: probableScanner ? 'probableScannerClick' : signal.detail,
+          mailLogId,
+        };
+      })
+    );
+  }
+
+  async recordUserSignal({
+    userId,
+    signal,
+    source,
+  }: {
+    userId: string;
+    signal: MailQualitySignal;
+    source: EmailQualityEventSource;
+  }) {
+    await this.record({
+      userId,
+      type: signal.type,
+      source,
+      email: signal.email,
+      occurredAt: signal.occurredAt,
+      detail: signal.detail,
+    });
   }
 
   async recompute(userId: string, config?: EmailQualityConfig) {
