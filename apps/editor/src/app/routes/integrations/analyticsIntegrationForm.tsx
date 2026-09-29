@@ -2,6 +2,8 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { lighten } from '@mui/material';
 import {
+  AnalyticsProviderType,
+  CreateAnalyticsProviderSettingDocument,
   SettingAnalyticsProvider,
   SettingsIntegrationsAnalyticsDocument,
   UpdateAnalyticsProviderSettingDocument,
@@ -138,6 +140,12 @@ export function AnalyticsIntegrationForm() {
       mutation={UpdateAnalyticsProviderSettingDocument}
       dataKey="analyticsProviderSettings"
       schema={analyticsSettingsSchema}
+      fixedProvider={{
+        id: 'google-analytics',
+        type: AnalyticsProviderType.Google,
+        name: 'Google Analytics',
+        createMutation: CreateAnalyticsProviderSettingDocument,
+      }}
       getLogo={() => googleLogo}
       fields={[
         {

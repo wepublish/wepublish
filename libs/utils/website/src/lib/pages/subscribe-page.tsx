@@ -7,6 +7,7 @@ import { useSubscriptionsQuery } from '@wepublish/website/api';
 import { MemberPlanListQueryVariables } from '@wepublish/website/api';
 import { useUser } from '@wepublish/authentication/website';
 import {
+  getMonthlyEquivalentRange,
   SubscribeContainer,
   UpgradeContainer,
 } from '@wepublish/membership/website';
@@ -76,9 +77,9 @@ export function SubscribePage(props: SubscribePageProps) {
             if (additionalMemberPlans === 'upsell' && preselectedMemberPlan) {
               return parentFiltered.filter(
                 memberPlan =>
-                  memberPlan.amountPerMonthMin >=
-                    preselectedMemberPlan.amountPerMonthMin ||
-                  memberPlan === preselectedMemberPlan
+                  getMonthlyEquivalentRange(memberPlan).amountPerMonthMin >=
+                    getMonthlyEquivalentRange(preselectedMemberPlan)
+                      .amountPerMonthMin || memberPlan === preselectedMemberPlan
               );
             }
 
@@ -110,9 +111,9 @@ export function SubscribePage(props: SubscribePageProps) {
             if (additionalMemberPlans === 'upsell' && preselectedMemberPlan) {
               return parentFiltered.filter(
                 memberPlan =>
-                  memberPlan.amountPerMonthMin >=
-                    preselectedMemberPlan.amountPerMonthMin ||
-                  memberPlan === preselectedMemberPlan
+                  getMonthlyEquivalentRange(memberPlan).amountPerMonthMin >=
+                    getMonthlyEquivalentRange(preselectedMemberPlan)
+                      .amountPerMonthMin || memberPlan === preselectedMemberPlan
               );
             }
 

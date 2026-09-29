@@ -1,4 +1,4 @@
-import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Float, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { UpgradeSubscription } from './upgrade-subscription.model';
 import {
   Authenticated,
@@ -21,7 +21,7 @@ export class UpgradeSubscriptionResolver {
     @Args('subscriptionId') subscriptionId: string,
     @Args('memberPlanId') memberPlanId: string,
     @Args('monthlyAmount', {
-      type: () => Int,
+      type: () => Float,
     })
     monthlyAmount: number,
     @Args('paymentMethodId') paymentMethodId: string,

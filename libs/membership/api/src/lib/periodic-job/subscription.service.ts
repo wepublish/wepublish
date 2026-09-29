@@ -19,10 +19,18 @@ import {
   SubscriptionPeriod,
   User,
 } from '@prisma/client';
-import { PaymentProvider, PaymentsService } from '@wepublish/payment/api';
+import {
+  InvoicePaidNotifier,
+  PaymentProvider,
+  PaymentsService,
+} from '@wepublish/payment/api';
 import { add, endOfDay, startOfDay, sub } from 'date-fns';
 import { Action } from '../subscription-event-dictionary/subscription-event-dictionary.type';
-import { logger, mapPaymentPeriodToMonths } from '@wepublish/utils/api';
+import {
+  calculatePeriodAmount,
+  logger,
+  mapPaymentPeriodToMonths,
+} from '@wepublish/utils/api';
 
 export type SubscriptionControllerConfig = {
   subscription: Subscription;
@@ -47,7 +55,8 @@ interface PeriodBounds {
 export class SubscriptionService {
   constructor(
     private prismaService: PrismaClient,
-    private payments: PaymentsService
+    private payments: PaymentsService,
+    private invoicePaidNotifier: InvoicePaidNotifier
   ) {}
 
   public async getActiveSubscriptionsWithoutInvoice(
@@ -307,9 +316,10 @@ export class SubscriptionService {
     },
     deactivationDate: Date
   ) {
-    const amount =
-      subscription.monthlyAmount *
-      mapPaymentPeriodToMonths(subscription.paymentPeriodicity);
+    const amount = calculatePeriodAmount(
+      subscription.monthlyAmount,
+      subscription.paymentPeriodicity
+    );
     const description = `${subscription.paymentPeriodicity} renewal of subscription ${subscription.memberPlan.name}`;
 
     return this.prismaService.invoice.create({
@@ -541,6 +551,8 @@ export class SubscriptionService {
         );
       }
     }
+
+    await this.invoicePaidNotifier.notify(invoice.id);
   }
 
   /**

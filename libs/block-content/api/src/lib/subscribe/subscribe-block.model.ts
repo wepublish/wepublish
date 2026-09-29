@@ -10,6 +10,7 @@ import {
 import { BaseBlock } from '../base-block.model';
 import { BlockType } from '../block-type.model';
 import { MemberPlan } from '@wepublish/member-plan/api';
+import { PaymentPeriodicity } from '@prisma/client';
 
 export enum SubscribeBlockField {
   FirstName = 'firstName',
@@ -22,6 +23,16 @@ export enum SubscribeBlockField {
 
 registerEnumType(SubscribeBlockField, {
   name: 'SubscribeBlockField',
+});
+
+export enum SubscribePeriodicityDisplay {
+  Dropdown = 'dropdown',
+  OfferCards = 'offerCards',
+  Toggle = 'toggle',
+}
+
+registerEnumType(SubscribePeriodicityDisplay, {
+  name: 'SubscribePeriodicityDisplay',
 });
 
 export enum SubscribeBlockRenderLayout {
@@ -58,6 +69,9 @@ export class SubscribeBlockLayoutConfig {
 })
 export class SubscribeBlockLayoutNoneConfig extends SubscribeBlockLayoutConfig {
   override type!: SubscribeBlockRenderLayout.None;
+
+  @Field({ defaultValue: false })
+  showInput!: boolean;
 }
 
 @ObjectType({
@@ -70,6 +84,22 @@ export class SubscribeBlockLayoutSliderConfig extends SubscribeBlockLayoutConfig
   showInput!: boolean;
 }
 
+@ObjectType()
+export class SubscribeBlockPeriodicityValues {
+  @Field(() => PaymentPeriodicity)
+  periodicity!: PaymentPeriodicity;
+
+  @Field(() => [Int])
+  values!: number[];
+}
+
+@InputType()
+export class SubscribeBlockPeriodicityValuesInput extends OmitType(
+  SubscribeBlockPeriodicityValues,
+  [] as const,
+  InputType
+) {}
+
 @ObjectType({
   implements: () => [SubscribeBlockLayoutConfig],
 })
@@ -81,6 +111,9 @@ export class SubscribeBlockLayoutPickerConfig extends SubscribeBlockLayoutConfig
 
   @Field(() => [Int])
   values!: number[];
+
+  @Field(() => [SubscribeBlockPeriodicityValues], { defaultValue: [] })
+  valuesByPeriodicity!: SubscribeBlockPeriodicityValues[];
 }
 
 @InputType()
@@ -95,6 +128,10 @@ export class SubscribeBlockLayoutConfigInput extends OmitType(
   // For picker
   @Field(() => [Int], { nullable: true })
   values?: number[];
+
+  // For picker: amounts per payment interval
+  @Field(() => [SubscribeBlockPeriodicityValuesInput], { nullable: true })
+  valuesByPeriodicity?: SubscribeBlockPeriodicityValuesInput[];
 }
 
 @ObjectType()
@@ -136,6 +173,8 @@ export class SubscribeBlock extends BaseBlock<typeof BlockType.Subscribe> {
   @Field(() => [String], { defaultValue: [] })
   memberPlanIds?: string[];
 
+  @Field(() => SubscribePeriodicityDisplay, { nullable: true })
+  periodicityDisplay?: SubscribePeriodicityDisplay;
   @Field(() => [SubscribeBlockMemberPlanRenderSetting], { defaultValue: [] })
   memberPlanRenderSettings?: SubscribeBlockMemberPlanRenderSetting[];
 
@@ -146,6 +185,8 @@ export class SubscribeBlock extends BaseBlock<typeof BlockType.Subscribe> {
   showGoodies!: boolean;
   @Field(() => Int, { nullable: true })
   goodieMinValue?: number;
+  @Field(() => Boolean, { defaultValue: false })
+  goodieMinValueAppliesToUpgrade!: boolean;
   @Field(() => Boolean, { defaultValue: false })
   hideRepeatGoodieOnUpgrade!: boolean;
 

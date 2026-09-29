@@ -20,6 +20,15 @@ export type UpdateSettingsIntegrationsAiMutationVariables = Types.Exact<{
 
 export type UpdateSettingsIntegrationsAiMutation = { __typename?: 'Mutation', updateAISetting: { __typename?: 'SettingAIProvider', createdAt: string, id: string, lastLoadedAt: string, modifiedAt: string, name?: string | null, systemPrompt?: string | null, type: Types.AiProviderType } };
 
+export type CreateAiSettingMutationVariables = Types.Exact<{
+  id: Types.Scalars['String'];
+  type: Types.AiProviderType;
+  name?: Types.InputMaybe<Types.Scalars['String']>;
+}>;
+
+
+export type CreateAiSettingMutation = { __typename?: 'Mutation', createAISetting: { __typename?: 'SettingAIProvider', createdAt: string, id: string, lastLoadedAt: string, modifiedAt: string, name?: string | null, systemPrompt?: string | null, type: Types.AiProviderType } };
+
 
 export const SettingsIntegrationsAiDocument = gql`
     query SettingsIntegrationsAI {
@@ -108,3 +117,44 @@ export function useUpdateSettingsIntegrationsAiMutation(baseOptions?: Apollo.Mut
 export type UpdateSettingsIntegrationsAiMutationHookResult = ReturnType<typeof useUpdateSettingsIntegrationsAiMutation>;
 export type UpdateSettingsIntegrationsAiMutationResult = Apollo.MutationResult<UpdateSettingsIntegrationsAiMutation>;
 export type UpdateSettingsIntegrationsAiMutationOptions = Apollo.BaseMutationOptions<UpdateSettingsIntegrationsAiMutation, UpdateSettingsIntegrationsAiMutationVariables>;
+export const CreateAiSettingDocument = gql`
+    mutation CreateAISetting($id: String!, $type: AIProviderType!, $name: String) {
+  createAISetting(id: $id, type: $type, name: $name) {
+    createdAt
+    id
+    lastLoadedAt
+    modifiedAt
+    name
+    systemPrompt
+    type
+  }
+}
+    `;
+export type CreateAiSettingMutationFn = Apollo.MutationFunction<CreateAiSettingMutation, CreateAiSettingMutationVariables>;
+
+/**
+ * __useCreateAiSettingMutation__
+ *
+ * To run a mutation, you first call `useCreateAiSettingMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateAiSettingMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createAiSettingMutation, { data, loading, error }] = useCreateAiSettingMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      type: // value for 'type'
+ *      name: // value for 'name'
+ *   },
+ * });
+ */
+export function useCreateAiSettingMutation(baseOptions?: Apollo.MutationHookOptions<CreateAiSettingMutation, CreateAiSettingMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateAiSettingMutation, CreateAiSettingMutationVariables>(CreateAiSettingDocument, options);
+      }
+export type CreateAiSettingMutationHookResult = ReturnType<typeof useCreateAiSettingMutation>;
+export type CreateAiSettingMutationResult = Apollo.MutationResult<CreateAiSettingMutation>;
+export type CreateAiSettingMutationOptions = Apollo.BaseMutationOptions<CreateAiSettingMutation, CreateAiSettingMutationVariables>;

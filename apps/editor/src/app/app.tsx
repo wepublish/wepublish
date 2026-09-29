@@ -63,6 +63,7 @@ import { CommentEditView } from './routes/comments/commentEditView';
 import { CommentList } from './routes/comments/commentList';
 import { Dashboard } from './routes/dashboard/dashboard';
 import { NotificationsPage } from './routes/notifications/notificationsPage';
+import { AuditLogList } from './routes/auditLog/auditLogList';
 import { DocumentList } from './routes/documents/documentList';
 import { EventCreateView } from './routes/events/eventCreateView';
 import { EventEditView } from './routes/events/eventEditView';
@@ -328,6 +329,14 @@ export function App() {
               element={
                 <Base>
                   <NotificationsPage />
+                </Base>
+              }
+            />
+            <Route
+              path="audit-log"
+              element={
+                <Base>
+                  <AuditLogList />
                 </Base>
               }
             />

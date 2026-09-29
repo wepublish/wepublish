@@ -135,6 +135,11 @@ function SettingList() {
       name: SettingName.AllowGuestCommentRating,
       label: 'settingList.allowGuestCommentRating',
     },
+    [SettingName.SessionTtlDays]: {
+      value: 7,
+      name: SettingName.SessionTtlDays,
+      label: 'settingList.sessionTtlDays',
+    },
     [SettingName.SendLoginJwtExpiresMin]: {
       value: 0,
       name: SettingName.SendLoginJwtExpiresMin,
@@ -204,6 +209,11 @@ function SettingList() {
       value: false,
       name: SettingName.NewArticlePeering,
       label: 'settingList.newArticlePeering',
+    },
+    [SettingName.SubscriptionUpgradeBillsFullDifference]: {
+      value: false,
+      name: SettingName.SubscriptionUpgradeBillsFullDifference,
+      label: 'settingList.subscriptionUpgradeModel',
     },
   } as Record<SettingName, SettingWithLabel>);
 
@@ -283,6 +293,21 @@ function SettingList() {
   const { NumberType } = Schema.Types;
 
   const validationModel = Schema.Model({
+    [SettingName.SessionTtlDays]: NumberType()
+      .isRequired(t('errorMessages.required'))
+      .range(
+        settings[SettingName.SessionTtlDays].settingRestriction?.minValue ?? 1,
+        settings[SettingName.SessionTtlDays].settingRestriction?.maxValue ??
+          365,
+        t('errorMessages.invalidRange', {
+          min:
+            settings[SettingName.SessionTtlDays].settingRestriction?.minValue ??
+            1,
+          max:
+            settings[SettingName.SessionTtlDays].settingRestriction?.maxValue ??
+            365,
+        })
+      ),
     [SettingName.SendLoginJwtExpiresMin]: NumberType()
       .isRequired(t('errorMessages.required'))
       .range(
@@ -786,6 +811,54 @@ function SettingList() {
                       </Form.Stack>
                     </Panel>
                   </Col>
+
+                  <Col xs={24}>
+                    <Panel
+                      bordered
+                      header={t('settingList.subscriptionPlans')}
+                    >
+                      <Form.Stack fluid>
+                        <Form.Group
+                          controlId={
+                            SettingName.SubscriptionUpgradeBillsFullDifference
+                          }
+                        >
+                          <Form.Label>
+                            {t(
+                              settings[
+                                SettingName
+                                  .SubscriptionUpgradeBillsFullDifference
+                              ].label
+                            )}
+                            <SettingInfo
+                              text={t(
+                                'settingList.warnings.subscriptionUpgradeModel'
+                              )}
+                            />
+                          </Form.Label>
+
+                          <Toggle
+                            disabled={isDisabled}
+                            checked={
+                              settings[
+                                SettingName
+                                  .SubscriptionUpgradeBillsFullDifference
+                              ].value
+                            }
+                            onChange={checked =>
+                              setSetting({
+                                ...settings[
+                                  SettingName
+                                    .SubscriptionUpgradeBillsFullDifference
+                                ],
+                                value: checked,
+                              })
+                            }
+                          />
+                        </Form.Group>
+                      </Form.Stack>
+                    </Panel>
+                  </Col>
                 </Row>
               </Col>
 
@@ -799,6 +872,32 @@ function SettingList() {
                       header={t('settingList.login')}
                     >
                       <Form.Stack fluid>
+                        <Form.Group controlId={SettingName.SessionTtlDays}>
+                          <Form.Label>
+                            {t(settings[SettingName.SessionTtlDays].label)}
+                            <SettingInfo
+                              text={t('settingList.warnings.sessionTtlDays')}
+                            />
+                          </Form.Label>
+
+                          <InputGroup>
+                            <FormControl
+                              name={SettingName.SessionTtlDays}
+                              accepter={NumberInput}
+                              value={settings[SettingName.SessionTtlDays].value}
+                              onChange={(value: string) => {
+                                setSetting({
+                                  ...settings[SettingName.SessionTtlDays],
+                                  value: +value,
+                                });
+                              }}
+                            />
+                            <InputGroupAddon>
+                              {t('settingList.days')}
+                            </InputGroupAddon>
+                          </InputGroup>
+                        </Form.Group>
+
                         <Form.Group
                           controlId={SettingName.SendLoginJwtExpiresMin}
                         >

@@ -206,6 +206,7 @@
         "newArticle": "New Article",
         "notPublished": "Not yet published",
         "pending": "Pending",
+        "preTitle": "Pre-title",
         "publicationDate": "Publication date",
         "published": "Published",
         "states": "States",
@@ -422,6 +423,15 @@
         "selectMemberPlansSelectionHintAll": "Leave empty to display every active plan.",
         "selectFields": "User input fields",
         "selectFieldsSelectionHint": "Email & last name are always requested. Order does not matter",
+        "periodicityDisplay": "Payment interval display",
+        "periodicityDisplayDropdown": "Select field",
+        "periodicityDisplayOfferCards": "One card per interval",
+        "periodicityDisplayToggle": "Toggle",
+        "periodicityDisplayDropdownHint": "All prices are shown monthly – cards, amount and preset amounts. The interval is chosen further down next to the payment method and only determines how often it is billed.",
+        "periodicityDisplayOfferCardsHint": "Every offer as its own card (plan × interval) with its exact price – best for one or two plans.",
+        "periodicityDisplayToggleHint": "The interval is chosen on top as the first step; the cards show that interval’s price.",
+        "periodicityDisplayDropdownIgnoredRows_one": "Note: the plan “{{plans}}” has prices configured for payment intervals that are ignored in “Select field” mode.",
+        "periodicityDisplayDropdownIgnoredRows_other": "Note: the plans “{{plans}}” have prices configured for payment intervals that are ignored in “Select field” mode.",
         "goodiesHeading": "Goodies",
         "discountCodesHeading": "Discount codes",
         "showGoodies": "Show goodie selection",
@@ -429,6 +439,7 @@
         "goodieMinValue": {
           "label": "Require minimum payment amount to be eligible for a goodie:"
         },
+        "goodieMinValueAppliesToUpgrade": "Apply this minimum to upgrades too",
         "hideRepeatGoodieOnUpgrade": "Hide on upgrade when a goodie was already received",
         "FirstName": "First name",
         "Birthday": "Birthday",
@@ -444,8 +455,14 @@
         },
         "renderStylesHeading": "Subscription plan order and rendering",
         "amountTileValues": {
-          "hint": "Tile amounts",
+          "hint": "Tile amounts per payment interval (in francs). Leave empty for default values.",
+          "hintMonthly": "Tile amounts (in francs, per month). Leave empty for default values.",
           "placeholder": "e.g. 10 15 20"
+        },
+        "fixedAmountHint": "Fixed amount: no amount field is shown. The plan’s target amount is charged – if none is set, the minimum amount. Visitors therefore cannot pay more.",
+        "showInCardAmountInput": {
+          "label": "Free amount input inside the card",
+          "title": "Instead of a separate amount field, every plan card gets an input in which visitors set their own amount."
         },
         "showAmountInput": {
           "label": "Free amount input",
@@ -456,7 +473,7 @@
           "Narrow": "Narrow (2 tiles per row)",
           "Wide": "Wide (1 tile per row, large tiles)"
         },
-        "planAmountsTitle": "Minimum / target / maximum amount per month (in francs)",
+        "planAmountsTitle": "Minimum / target / maximum amount",
         "defaultPlanTitle": "Selected by default — this member plan is preselected after the page loads.",
         "defaultPlanLabel": "Default"
       },
@@ -842,6 +859,7 @@
         "providers": "Providers",
         "publicationDate": "Publication Date",
         "reset": "Reset Filter",
+        "slug": "Filter by slug",
         "title": "Filter by title",
         "includeHiddenArticles": "Include hidden",
         "includeHiddenPages": "Include hidden"
@@ -951,8 +969,10 @@
     "invoice": {
       "areYouSure": "Are you sure?",
       "canceledAt": "Cancelled at",
+      "doNotSendMail": "Do not send a payment confirmation to the member",
       "invoiceNo": "Invoice No.",
       "manuallyPaidModalBody": "The invoice is marked as paid even though no payment has been received from the user. You should discuss your intention with the accountant.",
+      "noMailForFirstPeriod": "No payment confirmation will be sent, because this is the first period of the subscription.",
       "paidAt": "Paid at",
       "panel": {
         "invoiceHistory": "Invoice history",
@@ -1252,7 +1272,7 @@
       "createMemberPlanHeader": "Create Memberplan",
       "description": "Description",
       "shortDescription": "Short description",
-      "editPaymentSetting": "Edit payment setting",
+      "editPaymentSetting": "Edit payment methods & periodicities",
       "forceAutoRenewal": "Force Auto Renew",
       "loadingTitle": "Loading",
       "name": "Name",
@@ -1338,7 +1358,8 @@
       "apps": "Apps",
       "mailSend": "Send email",
       "mailLog": "Sent emails",
-      "communication": "Communication"
+      "communication": "Communication",
+      "auditLog": "Audit log"
     },
     "navigation": {
       "overview": {
@@ -1454,6 +1475,7 @@
         "pending": "Pending",
         "publicationDate": "Publication date",
         "published": "Published",
+        "slug": "Slug",
         "states": "States",
         "title": "Title",
         "untitled": "Untitled",
@@ -1734,6 +1756,8 @@
       "showPendingWhenNotPublished": "Show a pending article or page even when not published yet.",
       "newArticlePeering": "Freshly created articles will be peered by default",
       "newArticlePaywall": "Freshly created articles will require a subscription by default",
+      "subscriptionPlans": "Subscription Plans",
+      "subscriptionUpgradeModel": "On upgrade, bill the full price difference (instead of the pro-rated remaining credit)",
       "warnings": {
         "activeSubscriptionsApiPublic": "Exposes subscriptions anonymized to the public.",
         "allowCommentEditing": "Allow users to edit their comments",
@@ -1754,8 +1778,11 @@
         "revenueApiPublic": "Exposes invoices anonymized to the public.",
         "showPendingWhenNotPublished": "This will expose pending articles & pages to the public (and thus also crawlers) eventhough they have never been published before.",
         "newArticlePeering": "Will not affect already created articles",
-        "newArticlePaywall": "Will not affect already created articles"
-      }
+        "newArticlePaywall": "Will not affect already created articles",
+        "subscriptionUpgradeModel": "When enabled, an upgrade always charges the difference between the new and current plan price, regardless of how much time is left in the current period. When disabled, only the unused (pro-rated) remainder of the current period is credited.",
+        "sessionTtlDays": "How long a login stays valid before signing in again is required. Applies from the next login; sessions already open keep their lifetime."
+      },
+      "sessionTtlDays": "Session lifetime"
     },
     "automaticMails": {
       "title": "Automatic emails",
@@ -1820,7 +1847,7 @@
         },
         "renewal_success": {
           "short": "The renewal worked.",
-          "description": "Goes out when a subscription renews automatically and the amount was collected successfully.",
+          "description": "Goes out as soon as a subscription renewal is paid – whether the amount was collected automatically, paid by the person themselves or marked as paid manually by the editorial team. It does not go out for the first period of a new subscription.",
           "example": "«Your subscription continues – many thanks.»"
         },
         "renewal_failed": {
@@ -2011,6 +2038,14 @@
         "createdAt": "Created",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
         "firstName": "First Name",
+        "subscriptionStatus": {
+          "Active": "Active",
+          "Deactivated": "Deactivated",
+          "Planned": "Planned",
+          "Unpaid": "Unpaid",
+          "Expired": "Expired"
+        },
+        "subscriptionWithStatus": "{{name}} – {{status}}",
         "modifiedAt": "Last modified",
         "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
         "name": "Name",
@@ -2082,6 +2117,8 @@
       "editTitle": "Edit Subscription",
       "memberPlanMonthlyAmount": "Minimal Monthly Amount ({{currency}})",
       "monthlyAmount": "Monthly amount",
+      "monthlyAmountEquivalent": "Equals {{currency}} {{amount}} per month",
+      "periodAmount": "Amount per payment interval",
       "paidUntil": "Paid Until",
       "paymentMethod": "Payment Method",
       "renewNow": "Renew now",
@@ -2149,8 +2186,27 @@
       "migratePMHelptext": "Migrate the subscriptions of this plan to a new Payment Method. Subscriptions that are still debited automatically will not be migrated. The migration only takes place when a user takes action themselves and wants to pay an open invoice in their profile or renew a subscription early.",
       "amountPerMonthTarget": "Target amount / month",
       "amountPerMonthTargetHelpText": "The monthly target amount defines the desired memberplan price that users should pay. It must be higher than the minimum amount and typically defines the default setting in the payment form.",
+      "periodicityPricing": "Prices per enabled payment interval",
+      "periodicityPricingHelpText": "Set exact prices (min / target / max) per payment interval. Without custom prices the amount is derived from the monthly price. The discount compared to the derived monthly price is calculated automatically.",
+      "periodicityPricingHelpTextNoMonthly": "Set the price for the whole period for each enabled payment interval: minimum amount (has to be paid at least), target amount (default in the payment form) and an optional maximum amount.",
+      "periodicityPricingNoPeriodicities": "Enable payment intervals in the payment settings first to configure interval-specific prices.",
+      "periodicityPricingRequired": "At least one payment interval needs a minimum amount.",
+      "periodicityPricingLabel": "Marketing label",
+      "periodicityPricingLabelHelpText": "Optional note shown for this payment interval on the subscribe page, e.g. \u201c2 months for free\u201d.",
+      "defaultPaymentPeriodicity": "Default payment interval",
+      "defaultPaymentPeriodicityHelpText": "This payment interval is preselected on the subscribe page. Without a selection, the first configured interval is used.",
+      "periodicityPricingDelta": "Discount compared to monthly price: {{delta}}",
+      "periodicityPricingCustom": "Custom prices",
+      "periodicityPricingDerived": "From monthly price",
+      "periodicityPricingMinHelpText": "The minimum amount is the actual memberplan price that must be paid as a minimum. However, users can voluntarily pay more when subscribing.",
+      "periodicityPricingTargetHelpText": "The target amount defines the desired memberplan price that users should pay. It must be between the minimum and maximum amount and typically defines the default setting in the payment form.",
+      "periodicityPricingMaxHelpText": "The maximum amount is the highest amount users can pay when subscribing.",
+      "periodicityPricingMin": "Minimum amount per period",
+      "periodicityPricingTarget": "Target amount per period",
+      "periodicityPricingMax": "Maximum amount per period",
       "amountPerMonthMinHelpText": "The minimum monthly amount is the actual memberplan price that must be paid as a minimum. However, users can voluntarily pay more when subscribing.",
       "amountPerMonthMaxHelpText": "The maximum monthly amount is the highest amount users can pay when subscribing.",
+      "redirectionsTitle": "Redirects",
       "confirmationPage": "Redirect to page for existing users (retargeting)",
       "confirmationPageHelptext": "If the user ID is known when a subscription is ordered, the person will receive an e-mail to pay for the subscription. This could be indicated on this page.",
       "productType": "Product type",
@@ -2659,7 +2715,20 @@
           "lookbackHours": "Lookback (hours)",
           "lookbackHoursHelp": "How far back to scan campaigns (default: 30)."
         }
-      }
+      },
+      "typeChangeTitle": "Really change the type?",
+      "typeChangeWarning": "Changing the type deletes this integration’s entire configuration, including every stored credential. This cannot be undone.",
+      "typeChangeConfirm": "Change type and delete configuration",
+      "deleteTitle": "Remove integration?",
+      "deleteWarning": "The integration disappears from the lists but keeps running, so anything already under way — a payment in flight, for instance — is not cut off. Add it back later and its configuration is still there, unchanged.",
+      "deleteConfirm": "Remove",
+      "restored": "This integration already existed and was restored unchanged.",
+      "cancel": "Cancel",
+      "add": "Add integration",
+      "addType": "Type",
+      "addId": "Identifier",
+      "addIdHelp": "The unique identifier the integration is addressed by. It also appears in webhook URLs and cannot be changed later.",
+      "addIdTaken": "This identifier is already taken."
     },
     "websiteSettings": {
       "backToOverview": "Back to overview",
@@ -3298,6 +3367,41 @@
         "sentAt": "Sent at",
         "attempts": "Attempts",
         "empty": "No entries for this filter."
+      }
+    },
+    "auditLogList": {
+      "overview": {
+        "title": "Audit log",
+        "createdAt": "Timestamp",
+        "createdAtDate": "{{createdAtDate, ccc PP p}}",
+        "actor": "Actor",
+        "action": "Action",
+        "mutation": "Mutation",
+        "record": "Record",
+        "session": "Session",
+        "status": "Status",
+        "succeeded": "Succeeded",
+        "failed": "Failed",
+        "filterBySession": "Filter by this session",
+        "tokenActor": "API token: {{name}}",
+        "impersonatedActor": "{{impersonator}} as {{actor}}",
+        "unknownActor": "Unknown",
+        "notSupported": "This installation does not keep an audit log. Entries will appear once the migration has been applied."
+      },
+      "filter": {
+        "searchPlaceholder": "Search (mutation, record, email …)",
+        "action": "Action",
+        "entity": "Record type",
+        "session": "Session ID",
+        "dateRange": "Date range",
+        "failuresOnly": "Failures only",
+        "impersonatedOnly": "Impersonation only"
+      },
+      "action": {
+        "create": "Created",
+        "update": "Updated",
+        "delete": "Deleted",
+        "other": "Other"
       }
     }
   }

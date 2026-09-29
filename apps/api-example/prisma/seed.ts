@@ -900,7 +900,9 @@ async function seedMemberPlans(prisma: PrismaClient) {
       slateDescription: getText(),
       slateShortDescription: getText(),
       slug: MEMBER_PLAN_SLUGS.chfYearly,
-      amountPerMonthMin: 1000,
+      periodicityPricing: {
+        create: { periodicity: 'monthly', amountMin: 1000 },
+      },
       extendable: true,
       currency: 'CHF',
       availablePaymentMethods: {
@@ -922,7 +924,9 @@ async function seedMemberPlans(prisma: PrismaClient) {
       slateDescription: getText(),
       slateShortDescription: getText(),
       slug: MEMBER_PLAN_SLUGS.eurMonthly,
-      amountPerMonthMin: 2000,
+      periodicityPricing: {
+        create: { periodicity: 'monthly', amountMin: 2000 },
+      },
       extendable: true,
       currency: 'EUR',
       availablePaymentMethods: {
@@ -946,7 +950,9 @@ async function seedMemberPlans(prisma: PrismaClient) {
       slateDescription: getText(),
       slateShortDescription: getText(),
       slug: MEMBER_PLAN_SLUGS.chfMonthly,
-      amountPerMonthMin: 500,
+      periodicityPricing: {
+        create: { periodicity: 'monthly', amountMin: 500 },
+      },
       extendable: true,
       currency: 'CHF',
       availablePaymentMethods: {
@@ -1794,15 +1800,17 @@ async function seedSettings(prisma: PrismaClient) {
     update: {},
   });
 
-  const mailprovider = prisma.settingMailProvider.upsert(
-    upsert({
-      id: 'slackmail',
-      name: 'Slackmail',
-      type: MailProviderType.SLACK,
-      fromAddress: 'dev@wepublish.ch',
-      slack_webhookURL: 'https://slackmail.com',
-    })
-  );
+  const mailprovider =
+    (await prisma.settingMailProvider.count()) === 0 ?
+      prisma.settingMailProvider.create({
+        data: {
+          id: 'smtp',
+          name: 'SMTP',
+          type: MailProviderType.SMTP,
+          fromAddress: 'dev@wepublish.ch',
+        },
+      })
+    : Promise.resolve(null);
 
   const payrexx = prisma.settingPaymentProvider.upsert(
     upsert({

@@ -2,6 +2,7 @@
 export * from './action.generated';
 export * from './article-without-blocks.generated';
 export * from './article.generated';
+export * from './audit-log.generated';
 export * from './auth.generated';
 export * from './author.generated';
 export * from './banner.generated';
@@ -45,6 +46,7 @@ export * from './settings.integrations.letter.generated';
 export * from './settings.integrations.mail.generated';
 export * from './settings.integrations.payment.generated';
 export * from './settings.integrations.pdfRenderer.generated';
+export * from './settings.integrations.reload.generated';
 export * from './settings.integrations.syncProvider.generated';
 export * from './settings.integrations.trackingPixel.generated';
 export * from './settings.website.generated';
