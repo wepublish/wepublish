@@ -58,12 +58,10 @@ import { useTranslation } from 'react-i18next';
 import {
   MdCloudUpload,
   MdDeleteOutline,
-  MdDesktopWindows,
   MdEdit,
   MdHistory,
   MdIntegrationInstructions,
   MdKeyboardBackspace,
-  MdPhoneIphone,
   MdRemoveRedEye,
   MdSave,
 } from 'react-icons/md';
@@ -79,9 +77,17 @@ import {
   toaster,
 } from 'rsuite';
 
-import { PreviewFrame } from '../../previewFrame';
+import {
+  PreviewControls,
+  PreviewDevice,
+  PreviewFrame,
+} from '../../previewFrame';
 
 const IconButtonMarginTop = styled(RIconButton)`
+  margin-top: 4px;
+`;
+
+const PreviewControlsMarginTop = styled(PreviewControls)`
   margin-top: 4px;
 `;
 
@@ -190,7 +196,7 @@ function ArticleEditor() {
     null
   );
   const [isPreviewOpen, setPreviewOpen] = useState(false);
-  const [isMobilePreview, setMobilePreview] = useState(false);
+  const [previewDevice, setPreviewDevice] = useState<PreviewDevice>('desktop');
 
   const [publishedAt, setPublishedAt] = useState<Date>();
 
@@ -759,6 +765,7 @@ function ArticleEditor() {
           <Tag stateColor={stateColor}>{tagTitle}</Tag>
         </Legend>
         <EditorTemplate
+          maxWidth={showPreview ? '80vw' : undefined}
           navigationChildren={
             <NavigationBar
               leftChildren={
@@ -892,20 +899,12 @@ function ArticleEditor() {
               rightChildren={
                 <PermissionControl qualifyingPermissions={[CanPreview.id]}>
                   <PreviewActions>
-                    {showPreview && (
-                      <IconButtonMarginTop
-                        size="lg"
-                        icon={
-                          isMobilePreview ?
-                            <MdDesktopWindows />
-                          : <MdPhoneIphone />
-                        }
-                        onClick={() => setMobilePreview(mobile => !mobile)}
-                      >
-                        {isMobilePreview ?
-                          t('preview.desktop')
-                        : t('preview.mobile')}
-                      </IconButtonMarginTop>
+                    {showPreview && previewUrl && (
+                      <PreviewControlsMarginTop
+                        device={previewDevice}
+                        onDeviceChange={setPreviewDevice}
+                        previewUrl={previewUrl}
+                      />
                     )}
 
                     <IconButtonMarginTop
@@ -928,7 +927,7 @@ function ArticleEditor() {
             <PreviewFrame
               key={articleData?.article?.latest.id}
               previewUrl={previewUrl}
-              mobile={isMobilePreview}
+              device={previewDevice}
               title={t('articleEditor.overview.preview')}
               createToken={async () => {
                 const { data: jwtData } = await createJWT();

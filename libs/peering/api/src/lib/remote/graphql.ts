@@ -1000,6 +1000,7 @@ export type DocumentStorageUsage = {
 };
 
 export enum EditorBlockType {
+  BlockTemplate = 'BlockTemplate',
   Comment = 'Comment',
   Crowdfunding = 'Crowdfunding',
   Embed = 'Embed',

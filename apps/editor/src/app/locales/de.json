@@ -3,7 +3,12 @@
     "preview": {
       "backToEditor": "Editor",
       "mobile": "Mobil",
-      "desktop": "Desktop"
+      "desktop": "Desktop",
+      "tablet": "Tablet",
+      "copyUrl": "Vorschau-URL kopieren",
+      "urlCopied": "Vorschau-URL in die Zwischenablage kopiert",
+      "urlCopyFailed": "Vorschau-URL konnte nicht kopiert werden",
+      "loading": "Vorschau wird geladen …"
     },
     "previewHandshake": {
       "popupBlocked": "Das Vorschau-Fenster wurde vom Browser blockiert. Bitte Pop-ups für den Editor erlauben und erneut versuchen.",

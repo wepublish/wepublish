@@ -3,7 +3,12 @@
     "preview": {
       "backToEditor": "Editor",
       "mobile": "Mobile",
-      "desktop": "Desktop"
+      "desktop": "Desktop",
+      "tablet": "Tablet",
+      "copyUrl": "Copy preview URL",
+      "urlCopied": "Preview URL copied to clipboard",
+      "urlCopyFailed": "Preview URL could not be copied",
+      "loading": "Loading preview …"
     },
     "previewHandshake": {
       "popupBlocked": "The preview window was blocked by the browser. Please allow pop-ups for the editor and try again.",

@@ -3,7 +3,12 @@
     "preview": {
       "backToEditor": "Éditeur",
       "mobile": "Mobile",
-      "desktop": "Bureau"
+      "desktop": "Bureau",
+      "tablet": "Tablette",
+      "copyUrl": "Copier l'URL d'aperçu",
+      "urlCopied": "URL d'aperçu copiée dans le presse-papiers",
+      "urlCopyFailed": "L'URL d'aperçu n'a pas pu être copiée",
+      "loading": "Chargement de l'aperçu …"
     },
     "previewHandshake": {
       "popupBlocked": "La fenêtre d'aperçu a été bloquée par le navigateur. Veuillez autoriser les pop-ups pour l'éditeur et réessayer.",
