@@ -146,6 +146,7 @@ describe('BlockTemplateEditView', () => {
     );
 
     fireEvent.click(screen.getByRole('button', { name: /save/i }));
+    fireEvent.click(await screen.findByRole('button', { name: 'confirm' }));
 
     expect(
       await screen.findByDisplayValue('Header Template')

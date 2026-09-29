@@ -326,7 +326,9 @@
         "editTemplate": "Edit template",
         "label": "Block Template",
         "select": "Select a block template",
-        "useContent": "Use content"
+        "useContent": "Use content",
+        "useContentConfirmMessage": "The template's content will be copied here, so you can edit it freely. From then on, this block is no longer linked to the template, and later changes to the template won't show up here.",
+        "useContentConfirmTitle": "Use template content?"
       },
       "crowdfunding": {
         "crowdfundingName": "Crowdfunding {{name}}",
@@ -2183,7 +2185,8 @@
         "newBlockTemplate": "New Block Template",
         "name": "Name",
         "noName": "No name",
-        "delete": "Delete"
+        "delete": "Delete",
+        "info": "Block templates are defined once and can then be used in any number of articles and pages. When you update a template, all articles and pages using it show the new content right away."
       },
       "edit": {
         "title": "Edit Block Template",
@@ -2194,7 +2197,9 @@
         "delete": "Delete",
         "saved": "Saved",
         "new": "New",
-        "editing": "Editing"
+        "editing": "Editing",
+        "saveConfirmMessage": "Saving updates this template's content right away in every article and page that uses it, including published ones.",
+        "saveConfirmTitle": "Save template?"
       }
     },
     "yes": "Yes",

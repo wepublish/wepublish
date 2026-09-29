@@ -329,7 +329,9 @@
         "editTemplate": "Vorlage bearbeiten",
         "label": "Blockvorlage",
         "select": "Blockvorlage auswählen",
-        "useContent": "Inhalt übernehmen"
+        "useContent": "Inhalt übernehmen",
+        "useContentConfirmMessage": "Der Inhalt der Vorlage wird hierher kopiert, damit Sie ihn frei bearbeiten können. Danach ist dieser Block nicht mehr mit der Vorlage verknüpft und spätere Änderungen an der Vorlage erscheinen hier nicht mehr.",
+        "useContentConfirmTitle": "Inhalt der Vorlage übernehmen?"
       },
       "crowdfunding": {
         "edit": "Bearbeiten",
@@ -2106,7 +2108,8 @@
         "newBlockTemplate": "Neue Blockvorlage",
         "name": "Name",
         "noName": "Kein Name",
-        "delete": "Löschen"
+        "delete": "Löschen",
+        "info": "Blockvorlagen werden einmal erstellt und können dann in beliebig vielen Artikeln und Seiten verwendet werden. Wird eine Vorlage geändert, zeigen alle Artikel und Seiten, die sie verwenden, sofort den neuen Inhalt."
       },
       "edit": {
         "title": "Blockvorlage bearbeiten",
@@ -2117,7 +2120,9 @@
         "delete": "Löschen",
         "saved": "Gespeichert",
         "new": "Neu",
-        "editing": "Bearbeiten"
+        "editing": "Bearbeiten",
+        "saveConfirmMessage": "Beim Speichern wird der Inhalt dieser Vorlage sofort in allen Artikeln und Seiten aktualisiert, die sie verwenden, auch in bereits veröffentlichten.",
+        "saveConfirmTitle": "Vorlage speichern?"
       }
     },
     "yes": "Ja",

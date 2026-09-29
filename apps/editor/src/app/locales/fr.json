@@ -332,7 +332,9 @@
         "editTemplate": "Modifier le modèle",
         "label": "Modèle de bloc",
         "select": "Sélectionner un modèle de bloc",
-        "useContent": "Utiliser le contenu"
+        "useContent": "Utiliser le contenu",
+        "useContentConfirmMessage": "Le contenu du modèle sera copié ici afin que vous puissiez le modifier librement. Ce bloc ne sera ensuite plus lié au modèle et les modifications ultérieures du modèle n'apparaîtront plus ici.",
+        "useContentConfirmTitle": "Utiliser le contenu du modèle ?"
       },
       "crowdfunding": {
         "edit": "Modifier",
@@ -2058,7 +2060,8 @@
         "newBlockTemplate": "Nouveau modèle de bloc",
         "name": "Nom",
         "noName": "Pas de nom",
-        "delete": "Supprimer"
+        "delete": "Supprimer",
+        "info": "Les modèles de blocs sont définis une seule fois et peuvent ensuite être utilisés dans autant d'articles et de pages que vous le souhaitez. Lorsqu'un modèle est modifié, tous les articles et pages qui l'utilisent affichent immédiatement le nouveau contenu."
       },
       "edit": {
         "title": "Modifier le modèle de bloc",
@@ -2069,7 +2072,9 @@
         "delete": "Supprimer",
         "saved": "Enregistré",
         "new": "Nouveau",
-        "editing": "Modification"
+        "editing": "Modification",
+        "saveConfirmMessage": "L'enregistrement met immédiatement à jour le contenu de ce modèle dans tous les articles et pages qui l'utilisent, y compris ceux déjà publiés.",
+        "saveConfirmTitle": "Enregistrer le modèle ?"
       }
     },
     "yes": "Oui",

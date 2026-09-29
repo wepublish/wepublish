@@ -4,7 +4,7 @@ import {
   useBlockTemplateListQuery,
   useBlockTemplateQuery,
 } from '@wepublish/editor/api';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdEdit, MdOutput, MdRefresh } from 'react-icons/md';
 import {
@@ -15,6 +15,7 @@ import {
 } from 'rsuite';
 
 import { BlockMapType, BlockProps } from '../atoms/blockList';
+import { ConfirmActionModal } from '../atoms/notification/confirmActionModal';
 import { BlockMap } from './blockMap';
 import { blockForQueryBlock, BlockTemplateBlockValue } from './types';
 
@@ -64,6 +65,7 @@ export const BlockTemplateBlock = ({
 }: BlockProps<BlockTemplateBlockValue>) => {
   const { t } = useTranslation();
   const blockMap = BlockMap as BlockMapType;
+  const [isConfirmOpen, setConfirmOpen] = useState(false);
 
   const { data, loading, refetch } = useBlockTemplateListQuery({
     variables: { take: 100 },
@@ -137,7 +139,7 @@ export const BlockTemplateBlock = ({
           <IconButton
             icon={<MdOutput />}
             disabled={disabled || !onReplace || !blocks.length}
-            onClick={() => onReplace?.(blocks)}
+            onClick={() => setConfirmOpen(true)}
           >
             {t('blocks.blockTemplate.useContent')}
           </IconButton>
@@ -174,6 +176,18 @@ export const BlockTemplateBlock = ({
               );
             })}
         </Preview>
+      )}
+
+      {isConfirmOpen && (
+        <ConfirmActionModal
+          title={t('blocks.blockTemplate.useContentConfirmTitle')}
+          message={t('blocks.blockTemplate.useContentConfirmMessage')}
+          onConfirm={() => {
+            setConfirmOpen(false);
+            onReplace?.(blocks);
+          }}
+          onClose={() => setConfirmOpen(false)}
+        />
       )}
     </Wrapper>
   );

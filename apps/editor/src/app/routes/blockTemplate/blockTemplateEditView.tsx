@@ -16,6 +16,7 @@ import {
   BlockList,
   BlockMap,
   BlockValue,
+  ConfirmActionModal,
   createCheckedPermissionComponent,
   EditorTemplate,
   mapBlockValueToBlockInput,
@@ -64,6 +65,7 @@ function BlockTemplateEditView() {
   const isNew = id === undefined;
 
   const [hasChanged, setChanged] = useState(false);
+  const [isSaveConfirmOpen, setSaveConfirmOpen] = useState(false);
   const [name, setName] = useState('');
   const [blocks, setBlocks] = useState<BlockValue[]>(
     isNew ? initialBlocks : []
@@ -244,7 +246,7 @@ function BlockTemplateEditView() {
                       size="lg"
                       icon={<MdSave />}
                       disabled={isDisabled}
-                      onClick={() => handleSave()}
+                      onClick={() => setSaveConfirmOpen(true)}
                     >
                       {t('save')}
                     </IconButton>
@@ -262,6 +264,18 @@ function BlockTemplateEditView() {
           onChange={handleChange}
         />
       </EditorTemplate>
+
+      {isSaveConfirmOpen && (
+        <ConfirmActionModal
+          title={t('blockTemplates.edit.saveConfirmTitle')}
+          message={t('blockTemplates.edit.saveConfirmMessage')}
+          onConfirm={() => {
+            setSaveConfirmOpen(false);
+            handleSave();
+          }}
+          onClose={() => setSaveConfirmOpen(false)}
+        />
+      )}
     </FieldSet>
   );
 }
