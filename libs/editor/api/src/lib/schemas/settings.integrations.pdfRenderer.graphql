@@ -12,6 +12,7 @@ query PdfRendererSettings {
 }
 
 mutation UpdatePdfRendererSetting(
+  $type: PdfRendererType
   $cloudflare_accountId: String
   $cloudflare_apiToken: String
   $id: String!
@@ -19,6 +20,7 @@ mutation UpdatePdfRendererSetting(
   $timeoutMs: Int
 ) {
   updatePdfRendererSetting(
+    type: $type
     cloudflare_accountId: $cloudflare_accountId
     cloudflare_apiToken: $cloudflare_apiToken
     id: $id
@@ -33,5 +35,26 @@ mutation UpdatePdfRendererSetting(
     name
     timeoutMs
     type
+  }
+}
+
+mutation CreatePdfRendererSetting(
+  $id: String!
+  $type: PdfRendererType!
+  $name: String
+) {
+  createPdfRendererSetting(id: $id, type: $type, name: $name) {
+    createdAt
+    id
+    lastLoadedAt
+    modifiedAt
+    name
+    type
+  }
+}
+
+mutation DeletePdfRendererSetting($id: String!) {
+  deletePdfRendererSetting(id: $id) {
+    id
   }
 }

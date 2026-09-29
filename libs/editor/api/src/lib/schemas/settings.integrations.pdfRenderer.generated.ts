@@ -11,6 +11,7 @@ export type PdfRendererSettingsQueryVariables = Types.Exact<{ [key: string]: nev
 export type PdfRendererSettingsQuery = { __typename?: 'Query', pdfRendererSettings: Array<{ __typename?: 'SettingPdfRenderer', cloudflare_accountId?: string | null, createdAt: string, id: string, lastLoadedAt: string, modifiedAt: string, name?: string | null, timeoutMs?: number | null, type: Types.PdfRendererType }> };
 
 export type UpdatePdfRendererSettingMutationVariables = Types.Exact<{
+  type?: Types.InputMaybe<Types.PdfRendererType>;
   cloudflare_accountId?: Types.InputMaybe<Types.Scalars['String']>;
   cloudflare_apiToken?: Types.InputMaybe<Types.Scalars['String']>;
   id: Types.Scalars['String'];
@@ -20,6 +21,22 @@ export type UpdatePdfRendererSettingMutationVariables = Types.Exact<{
 
 
 export type UpdatePdfRendererSettingMutation = { __typename?: 'Mutation', updatePdfRendererSetting: { __typename?: 'SettingPdfRenderer', cloudflare_accountId?: string | null, createdAt: string, id: string, lastLoadedAt: string, modifiedAt: string, name?: string | null, timeoutMs?: number | null, type: Types.PdfRendererType } };
+
+export type CreatePdfRendererSettingMutationVariables = Types.Exact<{
+  id: Types.Scalars['String'];
+  type: Types.PdfRendererType;
+  name?: Types.InputMaybe<Types.Scalars['String']>;
+}>;
+
+
+export type CreatePdfRendererSettingMutation = { __typename?: 'Mutation', createPdfRendererSetting: { __typename?: 'SettingPdfRenderer', createdAt: string, id: string, lastLoadedAt: string, modifiedAt: string, name?: string | null, type: Types.PdfRendererType } };
+
+export type DeletePdfRendererSettingMutationVariables = Types.Exact<{
+  id: Types.Scalars['String'];
+}>;
+
+
+export type DeletePdfRendererSettingMutation = { __typename?: 'Mutation', deletePdfRendererSetting: { __typename?: 'SettingPdfRenderer', id: string } };
 
 
 export const PdfRendererSettingsDocument = gql`
@@ -64,8 +81,9 @@ export type PdfRendererSettingsQueryHookResult = ReturnType<typeof usePdfRendere
 export type PdfRendererSettingsLazyQueryHookResult = ReturnType<typeof usePdfRendererSettingsLazyQuery>;
 export type PdfRendererSettingsQueryResult = Apollo.QueryResult<PdfRendererSettingsQuery, PdfRendererSettingsQueryVariables>;
 export const UpdatePdfRendererSettingDocument = gql`
-    mutation UpdatePdfRendererSetting($cloudflare_accountId: String, $cloudflare_apiToken: String, $id: String!, $name: String, $timeoutMs: Int) {
+    mutation UpdatePdfRendererSetting($type: PdfRendererType, $cloudflare_accountId: String, $cloudflare_apiToken: String, $id: String!, $name: String, $timeoutMs: Int) {
   updatePdfRendererSetting(
+    type: $type
     cloudflare_accountId: $cloudflare_accountId
     cloudflare_apiToken: $cloudflare_apiToken
     id: $id
@@ -98,6 +116,7 @@ export type UpdatePdfRendererSettingMutationFn = Apollo.MutationFunction<UpdateP
  * @example
  * const [updatePdfRendererSettingMutation, { data, loading, error }] = useUpdatePdfRendererSettingMutation({
  *   variables: {
+ *      type: // value for 'type'
  *      cloudflare_accountId: // value for 'cloudflare_accountId'
  *      cloudflare_apiToken: // value for 'cloudflare_apiToken'
  *      id: // value for 'id'
@@ -113,3 +132,76 @@ export function useUpdatePdfRendererSettingMutation(baseOptions?: Apollo.Mutatio
 export type UpdatePdfRendererSettingMutationHookResult = ReturnType<typeof useUpdatePdfRendererSettingMutation>;
 export type UpdatePdfRendererSettingMutationResult = Apollo.MutationResult<UpdatePdfRendererSettingMutation>;
 export type UpdatePdfRendererSettingMutationOptions = Apollo.BaseMutationOptions<UpdatePdfRendererSettingMutation, UpdatePdfRendererSettingMutationVariables>;
+export const CreatePdfRendererSettingDocument = gql`
+    mutation CreatePdfRendererSetting($id: String!, $type: PdfRendererType!, $name: String) {
+  createPdfRendererSetting(id: $id, type: $type, name: $name) {
+    createdAt
+    id
+    lastLoadedAt
+    modifiedAt
+    name
+    type
+  }
+}
+    `;
+export type CreatePdfRendererSettingMutationFn = Apollo.MutationFunction<CreatePdfRendererSettingMutation, CreatePdfRendererSettingMutationVariables>;
+
+/**
+ * __useCreatePdfRendererSettingMutation__
+ *
+ * To run a mutation, you first call `useCreatePdfRendererSettingMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreatePdfRendererSettingMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createPdfRendererSettingMutation, { data, loading, error }] = useCreatePdfRendererSettingMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      type: // value for 'type'
+ *      name: // value for 'name'
+ *   },
+ * });
+ */
+export function useCreatePdfRendererSettingMutation(baseOptions?: Apollo.MutationHookOptions<CreatePdfRendererSettingMutation, CreatePdfRendererSettingMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreatePdfRendererSettingMutation, CreatePdfRendererSettingMutationVariables>(CreatePdfRendererSettingDocument, options);
+      }
+export type CreatePdfRendererSettingMutationHookResult = ReturnType<typeof useCreatePdfRendererSettingMutation>;
+export type CreatePdfRendererSettingMutationResult = Apollo.MutationResult<CreatePdfRendererSettingMutation>;
+export type CreatePdfRendererSettingMutationOptions = Apollo.BaseMutationOptions<CreatePdfRendererSettingMutation, CreatePdfRendererSettingMutationVariables>;
+export const DeletePdfRendererSettingDocument = gql`
+    mutation DeletePdfRendererSetting($id: String!) {
+  deletePdfRendererSetting(id: $id) {
+    id
+  }
+}
+    `;
+export type DeletePdfRendererSettingMutationFn = Apollo.MutationFunction<DeletePdfRendererSettingMutation, DeletePdfRendererSettingMutationVariables>;
+
+/**
+ * __useDeletePdfRendererSettingMutation__
+ *
+ * To run a mutation, you first call `useDeletePdfRendererSettingMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeletePdfRendererSettingMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deletePdfRendererSettingMutation, { data, loading, error }] = useDeletePdfRendererSettingMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeletePdfRendererSettingMutation(baseOptions?: Apollo.MutationHookOptions<DeletePdfRendererSettingMutation, DeletePdfRendererSettingMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeletePdfRendererSettingMutation, DeletePdfRendererSettingMutationVariables>(DeletePdfRendererSettingDocument, options);
+      }
+export type DeletePdfRendererSettingMutationHookResult = ReturnType<typeof useDeletePdfRendererSettingMutation>;
+export type DeletePdfRendererSettingMutationResult = Apollo.MutationResult<DeletePdfRendererSettingMutation>;
+export type DeletePdfRendererSettingMutationOptions = Apollo.BaseMutationOptions<DeletePdfRendererSettingMutation, DeletePdfRendererSettingMutationVariables>;

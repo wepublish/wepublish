@@ -59,6 +59,6 @@ export class CreateSettingPdfRendererInput extends OmitType(
 
 @ArgsType()
 export class UpdateSettingPdfRendererInput extends PartialType(
-  OmitType(CreateSettingPdfRendererInput, ['type'] as const, ArgsType),
+  CreateSettingPdfRendererInput,
   ArgsType
 ) {}

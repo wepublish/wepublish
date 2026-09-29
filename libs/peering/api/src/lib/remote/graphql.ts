@@ -2752,6 +2752,8 @@ export type Mutation = {
   createInvoice: Invoice;
   /** Returns a JWT that is valid for 1min for the current logged in user. */
   createJWTForWebsiteLogin: SessionWithToken;
+  /** Creates a new letter provider setting. */
+  createLetterProviderSetting: SettingLetterProvider;
   /** Start a background job sending a template to a filtered audience */
   createMailSendJob: MailSendJobModel;
   /** Create a new mail template */
@@ -2772,6 +2774,8 @@ export type Mutation = {
   createPaymentProviderSetting: SettingPaymentProvider;
   /** Creates a paywall. */
   createPaywall: Paywall;
+  /** Creates a new pdf renderer setting. */
+  createPdfRendererSetting: SettingPdfRenderer;
   /** Creates a new peer. */
   createPeer: Peer;
   /** Creates a new poll. */
@@ -2843,6 +2847,8 @@ export type Mutation = {
   deleteImage: Scalars['String'];
   /** Deletes an existing invoice. */
   deleteInvoice: Invoice;
+  /** Deletes an existing letter provider setting. */
+  deleteLetterProviderSetting: SettingLetterProvider;
   /** Delete an existing mail template */
   deleteMailTemplate?: Maybe<Scalars['Boolean']>;
   /** Deletes a single sync error so the contact will be retried. */
@@ -2859,6 +2865,8 @@ export type Mutation = {
   deletePaymentProviderSetting: SettingPaymentProvider;
   /** Deletes a paywall. */
   deletePaywall: Paywall;
+  /** Deletes an existing pdf renderer setting. */
+  deletePdfRendererSetting: SettingPdfRenderer;
   /** Deletes an existing peer. */
   deletePeer: Scalars['String'];
   /** Deletes an existing poll. */
@@ -2941,7 +2949,7 @@ export type Mutation = {
   registerMember: Registration;
   /** Rejects a comment */
   rejectComment: Comment;
-  /** Rebuilds the payment, tracking pixel, mail and challenge providers from their settings, so integration changes take effect without restarting the API. */
+  /** Rebuilds the payment, tracking pixel, mail, challenge, letter and pdf renderer providers from their settings, so integration changes take effect without restarting the API. */
   reloadProviders: Scalars['Boolean'];
   /** Renews a subscription. */
   renewSubscription: PublicSubscription;
@@ -3310,6 +3318,20 @@ export type MutationCreateInvoiceArgs = {
 };
 
 
+export type MutationCreateLetterProviderSettingArgs = {
+  autoSend?: InputMaybe<Scalars['Boolean']>;
+  clientId?: InputMaybe<Scalars['String']>;
+  clientSecret?: InputMaybe<Scalars['String']>;
+  environment?: InputMaybe<LetterProviderEnvironment>;
+  id: Scalars['String'];
+  name?: InputMaybe<Scalars['String']>;
+  organisationId?: InputMaybe<Scalars['String']>;
+  placeholderEmailContains?: InputMaybe<Scalars['String']>;
+  type: LetterProviderType;
+  webhookSigningKey?: InputMaybe<Scalars['String']>;
+};
+
+
 export type MutationCreateMailSendJobArgs = {
   input: MailSendJobInput;
 };
@@ -3434,6 +3456,16 @@ export type MutationCreatePaywallArgs = {
   name?: InputMaybe<Scalars['String']>;
   upgradeCircumventDescription?: InputMaybe<Scalars['RichText']>;
   upgradeDescription?: InputMaybe<Scalars['RichText']>;
+};
+
+
+export type MutationCreatePdfRendererSettingArgs = {
+  cloudflare_accountId?: InputMaybe<Scalars['String']>;
+  cloudflare_apiToken?: InputMaybe<Scalars['String']>;
+  id: Scalars['String'];
+  name?: InputMaybe<Scalars['String']>;
+  timeoutMs?: InputMaybe<Scalars['Int']>;
+  type: PdfRendererType;
 };
 
 
@@ -3684,6 +3716,11 @@ export type MutationDeleteInvoiceArgs = {
 };
 
 
+export type MutationDeleteLetterProviderSettingArgs = {
+  id: Scalars['String'];
+};
+
+
 export type MutationDeleteMailTemplateArgs = {
   id: Scalars['String'];
 };
@@ -3720,6 +3757,11 @@ export type MutationDeletePaymentProviderSettingArgs = {
 
 
 export type MutationDeletePaywallArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationDeletePdfRendererSettingArgs = {
   id: Scalars['String'];
 };
 
@@ -4243,6 +4285,7 @@ export type MutationUpdateLetterProviderSettingArgs = {
   name?: InputMaybe<Scalars['String']>;
   organisationId?: InputMaybe<Scalars['String']>;
   placeholderEmailContains?: InputMaybe<Scalars['String']>;
+  type?: InputMaybe<LetterProviderType>;
   webhookSigningKey?: InputMaybe<Scalars['String']>;
 };
 
@@ -4393,6 +4436,7 @@ export type MutationUpdatePdfRendererSettingArgs = {
   id?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
   timeoutMs?: InputMaybe<Scalars['Int']>;
+  type?: InputMaybe<PdfRendererType>;
 };
 
 

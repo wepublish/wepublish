@@ -5,6 +5,8 @@ import {
   CommentState,
   Prisma,
   MailProviderType,
+  LetterProviderType,
+  PdfRendererType,
   PaymentProviderType,
   PayrexxPM,
   PayrexxPSP,
@@ -1812,6 +1814,26 @@ async function seedSettings(prisma: PrismaClient) {
       })
     : Promise.resolve(null);
 
+  const letterProvider =
+    (await prisma.settingLetterProvider.count()) === 0 ?
+      prisma.settingLetterProvider.create({
+        data: { id: 'pingen', name: 'Pingen', type: LetterProviderType.pingen },
+      })
+    : Promise.resolve(null);
+
+  // Credentials fall back to the CLOUDFLARE_ACCOUNT_ID and CLOUDFLARE_API_TOKEN
+  // env vars, so this works without configuring it in the editor.
+  const pdfRenderer =
+    (await prisma.settingPdfRenderer.count()) === 0 ?
+      prisma.settingPdfRenderer.create({
+        data: {
+          id: 'cloudflare',
+          name: 'Cloudflare',
+          type: PdfRendererType.cloudflare,
+        },
+      })
+    : Promise.resolve(null);
+
   const payrexx = prisma.settingPaymentProvider.upsert(
     upsert({
       id: 'payrexx',
@@ -1982,6 +2004,8 @@ async function seedSettings(prisma: PrismaClient) {
 
   await Promise.all([
     mailprovider,
+    letterProvider,
+    pdfRenderer,
     payrexx,
     payrexxSubscription,
     stripe,

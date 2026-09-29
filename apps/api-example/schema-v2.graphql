@@ -2767,6 +2767,24 @@ type Mutation {
   """Returns a JWT that is valid for 1min for the current logged in user."""
   createJWTForWebsiteLogin: SessionWithToken!
 
+  """Creates a new letter provider setting."""
+  createLetterProviderSetting(
+    autoSend: Boolean
+    clientId: String
+    clientSecret: String
+    environment: LetterProviderEnvironment
+    id: String!
+    name: String
+    organisationId: String
+
+    """
+    Email addresses containing this are placeholders, not real inboxes (e.g. @placeholder.example.com).
+    """
+    placeholderEmailContains: String
+    type: LetterProviderType!
+    webhookSigningKey: String
+  ): SettingLetterProvider!
+
   """Start a background job sending a template to a filtered audience"""
   createMailSendJob(input: MailSendJobInput!): MailSendJobModel!
 
@@ -2798,6 +2816,9 @@ type Mutation {
 
   """Creates a paywall."""
   createPaywall(active: Boolean!, alternativeSubscribeUrl: String, anyMemberPlan: Boolean!, bypassTokens: [String!]!, circumventDescription: RichText, description: RichText, fadeout: Boolean!, hideContentAfter: Int!, memberPlanIds: [String!]!, name: String, upgradeCircumventDescription: RichText, upgradeDescription: RichText): Paywall!
+
+  """Creates a new pdf renderer setting."""
+  createPdfRendererSetting(cloudflare_accountId: String, cloudflare_apiToken: String, id: String!, name: String, timeoutMs: Int, type: PdfRendererType!): SettingPdfRenderer!
 
   """Creates a new peer."""
   createPeer(hostURL: String!, information: RichText, isDisabled: Boolean, name: String!, slug: String!, token: String!): Peer!
@@ -2912,6 +2933,9 @@ type Mutation {
   """Deletes an existing invoice."""
   deleteInvoice(id: String!): Invoice!
 
+  """Deletes an existing letter provider setting."""
+  deleteLetterProviderSetting(id: String!): SettingLetterProvider!
+
   """Delete an existing mail template"""
   deleteMailTemplate(id: String!): Boolean
 
@@ -2935,6 +2959,9 @@ type Mutation {
 
   """Deletes a paywall."""
   deletePaywall(id: String!): Paywall!
+
+  """Deletes an existing pdf renderer setting."""
+  deletePdfRendererSetting(id: String!): SettingPdfRenderer!
 
   """Deletes an existing peer."""
   deletePeer(id: String!): String!
@@ -3082,7 +3109,7 @@ type Mutation {
   rejectComment(id: String!, rejectionReason: CommentRejectionReason!): Comment!
 
   """
-  Rebuilds the payment, tracking pixel, mail and challenge providers from their settings, so integration changes take effect without restarting the API.
+  Rebuilds the payment, tracking pixel, mail, challenge, letter and pdf renderer providers from their settings, so integration changes take effect without restarting the API.
   """
   reloadProviders: Boolean!
 
@@ -3229,6 +3256,7 @@ type Mutation {
     Email addresses containing this are placeholders, not real inboxes (e.g. @placeholder.example.com).
     """
     placeholderEmailContains: String
+    type: LetterProviderType
     webhookSigningKey: String
   ): SettingLetterProvider!
 
@@ -3262,7 +3290,7 @@ type Mutation {
   updatePaywall(active: Boolean, alternativeSubscribeUrl: String, anyMemberPlan: Boolean, bypassTokens: [String!], circumventDescription: RichText, description: RichText, fadeout: Boolean, hideContentAfter: Int, id: String!, memberPlanIds: [String!], name: String, upgradeCircumventDescription: RichText, upgradeDescription: RichText): Paywall!
 
   """Updates an existing pdf renderer setting."""
-  updatePdfRendererSetting(cloudflare_accountId: String, cloudflare_apiToken: String, id: String, name: String, timeoutMs: Int): SettingPdfRenderer!
+  updatePdfRendererSetting(cloudflare_accountId: String, cloudflare_apiToken: String, id: String, name: String, timeoutMs: Int, type: PdfRendererType): SettingPdfRenderer!
 
   """Updates an existing peer."""
   updatePeer(hostURL: String, id: String!, information: RichText, isDisabled: Boolean, name: String, slug: String, token: String): Peer!

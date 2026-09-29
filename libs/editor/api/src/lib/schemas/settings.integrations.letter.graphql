@@ -15,6 +15,7 @@ query LetterProviderSettings {
 }
 
 mutation UpdateLetterProviderSetting(
+  $type: LetterProviderType
   $autoSend: Boolean
   $clientId: String
   $clientSecret: String
@@ -26,6 +27,7 @@ mutation UpdateLetterProviderSetting(
   $webhookSigningKey: String
 ) {
   updateLetterProviderSetting(
+    type: $type
     autoSend: $autoSend
     clientId: $clientId
     clientSecret: $clientSecret
@@ -47,5 +49,26 @@ mutation UpdateLetterProviderSetting(
     organisationId
     placeholderEmailContains
     type
+  }
+}
+
+mutation CreateLetterProviderSetting(
+  $id: String!
+  $type: LetterProviderType!
+  $name: String
+) {
+  createLetterProviderSetting(id: $id, type: $type, name: $name) {
+    createdAt
+    id
+    lastLoadedAt
+    modifiedAt
+    name
+    type
+  }
+}
+
+mutation DeleteLetterProviderSetting($id: String!) {
+  deleteLetterProviderSetting(id: $id) {
+    id
   }
 }

@@ -1,10 +1,13 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import {
+  CanCreateLetterProviderSettings,
+  CanDeleteLetterProviderSettings,
   CanGetLetterProviderSettings,
   CanUpdateLetterProviderSettings,
 } from '@wepublish/permissions';
 import { Permissions } from '@wepublish/permissions/api';
 import {
+  CreateSettingLetterProviderInput,
   SettingLetterProvider,
   UpdateSettingLetterProviderInput,
   SettingLetterProviderFilter,
@@ -41,6 +44,17 @@ export class LetterProviderSettingsResolver {
     return this.letterProviderSettingsDataloader.load(id);
   }
 
+  @Permissions(CanCreateLetterProviderSettings)
+  @Mutation(returns => SettingLetterProvider, {
+    name: 'createLetterProviderSetting',
+    description: 'Creates a new letter provider setting.',
+  })
+  createLetterProviderSetting(@Args() input: CreateSettingLetterProviderInput) {
+    return this.letterProviderSettingsService.createLetterProviderSetting(
+      input
+    );
+  }
+
   @Permissions(CanUpdateLetterProviderSettings)
   @Mutation(returns => SettingLetterProvider, {
     name: 'updateLetterProviderSetting',
@@ -50,5 +64,14 @@ export class LetterProviderSettingsResolver {
     return this.letterProviderSettingsService.updateLetterProviderSetting(
       input
     );
+  }
+
+  @Permissions(CanDeleteLetterProviderSettings)
+  @Mutation(returns => SettingLetterProvider, {
+    name: 'deleteLetterProviderSetting',
+    description: 'Deletes an existing letter provider setting.',
+  })
+  deleteLetterProviderSetting(@Args('id') id: string) {
+    return this.letterProviderSettingsService.deleteLetterProviderSetting(id);
   }
 }

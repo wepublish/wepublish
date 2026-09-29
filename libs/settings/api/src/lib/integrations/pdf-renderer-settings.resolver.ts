@@ -1,10 +1,13 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import {
+  CanCreatePdfRendererSettings,
+  CanDeletePdfRendererSettings,
   CanGetPdfRendererSettings,
   CanUpdatePdfRendererSettings,
 } from '@wepublish/permissions';
 import { Permissions } from '@wepublish/permissions/api';
 import {
+  CreateSettingPdfRendererInput,
   SettingPdfRenderer,
   UpdateSettingPdfRendererInput,
   SettingPdfRendererFilter,
@@ -39,6 +42,15 @@ export class PdfRendererSettingsResolver {
     return this.pdfRendererSettingsDataloader.load(id);
   }
 
+  @Permissions(CanCreatePdfRendererSettings)
+  @Mutation(returns => SettingPdfRenderer, {
+    name: 'createPdfRendererSetting',
+    description: 'Creates a new pdf renderer setting.',
+  })
+  createPdfRendererSetting(@Args() input: CreateSettingPdfRendererInput) {
+    return this.pdfRendererSettingsService.createPdfRendererSetting(input);
+  }
+
   @Permissions(CanUpdatePdfRendererSettings)
   @Mutation(returns => SettingPdfRenderer, {
     name: 'updatePdfRendererSetting',
@@ -46,5 +58,14 @@ export class PdfRendererSettingsResolver {
   })
   updatePdfRendererSetting(@Args() input: UpdateSettingPdfRendererInput) {
     return this.pdfRendererSettingsService.updatePdfRendererSetting(input);
+  }
+
+  @Permissions(CanDeletePdfRendererSettings)
+  @Mutation(returns => SettingPdfRenderer, {
+    name: 'deletePdfRendererSetting',
+    description: 'Deletes an existing pdf renderer setting.',
+  })
+  deletePdfRendererSetting(@Args('id') id: string) {
+    return this.pdfRendererSettingsService.deletePdfRendererSetting(id);
   }
 }

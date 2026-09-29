@@ -1,4 +1,6 @@
 import {
+  CreateLetterProviderSettingDocument,
+  DeleteLetterProviderSettingDocument,
   LetterProviderEnvironment,
   LetterProviderSettingsDocument,
   LetterProviderType,
@@ -35,6 +37,14 @@ export function LetterIntegrationForm() {
       query={LetterProviderSettingsDocument}
       mutation={UpdateLetterProviderSettingDocument}
       dataKey="letterProviderSettings"
+      registry={{
+        createMutation: CreateLetterProviderSettingDocument,
+        deleteMutation: DeleteLetterProviderSettingDocument,
+        types: Object.values(LetterProviderType).map(value => ({
+          label: value,
+          value,
+        })),
+      }}
       schema={letterSettingsSchema}
       fields={setting => {
         const commonFields: FieldDefinition<IntegrationFormValues>[] = [
@@ -46,7 +56,6 @@ export function LetterIntegrationForm() {
               label: v,
               value: v,
             })),
-            disabled: true,
           },
           {
             type: 'text',

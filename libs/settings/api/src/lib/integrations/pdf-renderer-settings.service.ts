@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaClient, SettingPdfRenderer } from '@prisma/client';
 import {
   CreateSettingPdfRendererInput,
@@ -9,6 +13,8 @@ import { PrimeDataLoader } from '@wepublish/utils/api';
 import { PdfRendererSettingsDataloaderService } from './pdf-renderer-settings-dataloader.service';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 import { SecretCrypto } from './secrets-crypto';
+import { ProviderSettingsChanged } from './provider-settings-changed';
+import { clearProviderConfig } from './clear-provider-config';
 
 export const PDF_RENDERER_SETTINGS_NAMESPACE = 'settings:pdfrenderer';
 
@@ -18,7 +24,8 @@ export class PdfRendererSettingsService {
 
   constructor(
     private prisma: PrismaClient,
-    private kv: KvTtlCacheService
+    private kv: KvTtlCacheService,
+    private providerSettingsChanged: ProviderSettingsChanged
   ) {}
 
   private encryptSecretsIfPresent<
@@ -75,6 +82,7 @@ export class PdfRendererSettingsService {
       data: output,
     });
     await this.kv.resetNamespace(PDF_RENDERER_SETTINGS_NAMESPACE);
+    await this.providerSettingsChanged.notify('Pdf renderer');
     return returnValue;
   }
 
@@ -98,11 +106,27 @@ export class PdfRendererSettingsService {
       Object.entries(updateData).filter(([_, value]) => value !== undefined)
     );
 
+    const typeChanged =
+      filteredUpdateData['type'] !== undefined &&
+      filteredUpdateData['type'] !== existingSetting.type;
+
+    const data =
+      typeChanged ?
+        {
+          ...clearProviderConfig('SettingPdfRenderer'),
+          type: filteredUpdateData['type'],
+          ...('name' in filteredUpdateData ?
+            { name: filteredUpdateData['name'] }
+          : {}),
+        }
+      : filteredUpdateData;
+
     const returnValue = await this.prisma.settingPdfRenderer.update({
       where: { id },
-      data: filteredUpdateData,
+      data,
     });
     await this.kv.resetNamespace(PDF_RENDERER_SETTINGS_NAMESPACE);
+    await this.providerSettingsChanged.notify('Pdf renderer');
     return returnValue;
   }
 
@@ -118,10 +142,18 @@ export class PdfRendererSettingsService {
       );
     }
 
+    if ((await this.prisma.settingPdfRenderer.count()) === 1) {
+      throw new BadRequestException(
+        `Pdf renderer ${id} is the only one configured and cannot be deleted. ` +
+          `Create a replacement first, or change its type instead.`
+      );
+    }
+
     const returnValue = await this.prisma.settingPdfRenderer.delete({
       where: { id },
     });
     await this.kv.resetNamespace(PDF_RENDERER_SETTINGS_NAMESPACE);
+    await this.providerSettingsChanged.notify('Pdf renderer');
     return returnValue;
   }
 }

@@ -45,7 +45,19 @@ const matchesOperators = (value: unknown, condition: Where): boolean =>
       case 'equals':
         return compare(value, expected);
       case 'not':
-        return !compare(value, expected);
+        // A nested filter (`not: { contains }`) inherits the outer `mode`,
+        // as Prisma's does. NULL never matches: `x NOT ILIKE …` is unknown.
+        return (
+            expected === null ||
+              expected instanceof Date ||
+              typeof expected !== 'object'
+          ) ?
+            !compare(value, expected)
+          : value != null &&
+              !matchesOperators(value, {
+                ...(expected as Where),
+                ...(condition['mode'] ? { mode: condition['mode'] } : {}),
+              });
       case 'gte':
         return value != null && (value as any) >= (expected as any);
       case 'gt':

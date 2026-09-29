@@ -481,9 +481,17 @@ export class MailSendRecipientService {
       })),
     };
 
+    // `email` is non-null, so the complement is a plain negated match. The
+    // outer `mode` also applies inside `not`: this compiles to `NOT ILIKE`.
+    const isReal: Prisma.UserWhereInput = {
+      AND: patterns.map(pattern => ({
+        email: { mode: 'insensitive', not: { contains: pattern } },
+      })),
+    };
+
     return audience.emailFilter === MailEmailFilter.placeholder ?
         isPlaceholder
-      : { NOT: isPlaceholder };
+      : isReal;
   }
 
   /** The audience expressed as a filter on people rather than subscriptions. */

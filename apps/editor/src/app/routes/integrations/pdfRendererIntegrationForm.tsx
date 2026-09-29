@@ -1,4 +1,6 @@
 import {
+  CreatePdfRendererSettingDocument,
+  DeletePdfRendererSettingDocument,
   PdfRendererSettingsDocument,
   PdfRendererType,
   SettingPdfRenderer,
@@ -30,6 +32,14 @@ export function PdfRendererIntegrationForm() {
       query={PdfRendererSettingsDocument}
       mutation={UpdatePdfRendererSettingDocument}
       dataKey="pdfRendererSettings"
+      registry={{
+        createMutation: CreatePdfRendererSettingDocument,
+        deleteMutation: DeletePdfRendererSettingDocument,
+        types: Object.values(PdfRendererType).map(value => ({
+          label: value,
+          value,
+        })),
+      }}
       schema={pdfRendererSettingsSchema}
       fields={setting => {
         const commonFields: FieldDefinition<IntegrationFormValues>[] = [
@@ -41,7 +51,6 @@ export function PdfRendererIntegrationForm() {
               label: v,
               value: v,
             })),
-            disabled: true,
           },
           {
             type: 'text',
