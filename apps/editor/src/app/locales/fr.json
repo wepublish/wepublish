@@ -1289,6 +1289,10 @@
     },
     "memberPlanList": {
       "action": "Actions",
+      "created": "Créé",
+      "createdAt": "{{createdAt, ccc PP p}}",
+      "modified": "Dernière modification",
+      "modifiedAt": "{{modifiedAt, ccc PP p}}",
       "createNew": "Nouveau plan membre",
       "deleteModalTitle": "Supprimer le plan membre",
       "name": "Nom",

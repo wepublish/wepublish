@@ -2580,6 +2580,7 @@ export type MemberPlan = HasImage & {
   availablePaymentMethods: Array<AvailablePaymentMethod>;
   confirmationPage?: Maybe<Page>;
   confirmationPageId?: Maybe<Scalars['String']>;
+  createdAt: Scalars['DateTime'];
   currency: Currency;
   defaultPaymentPeriodicity?: Maybe<PaymentPeriodicity>;
   description?: Maybe<Scalars['RichText']>;
@@ -2595,6 +2596,7 @@ export type MemberPlan = HasImage & {
   maxCount?: Maybe<Scalars['Int']>;
   migrateToTargetPaymentMethod?: Maybe<PaymentMethod>;
   migrateToTargetPaymentMethodID?: Maybe<Scalars['String']>;
+  modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
   periodicityPricing: Array<PeriodicityPrice>;
   productType: ProductType;
