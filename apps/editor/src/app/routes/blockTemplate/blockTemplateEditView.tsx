@@ -18,7 +18,6 @@ import {
   BlockValue,
   createCheckedPermissionComponent,
   EditorTemplate,
-  IconButton,
   mapBlockValueToBlockInput,
   NavigationBar,
   PermissionControl,
@@ -33,7 +32,7 @@ import { MdKeyboardBackspace, MdSave } from 'react-icons/md';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import {
   Badge,
-  IconButton as RIconButton,
+  IconButton,
   Message,
   Notification,
   Tag as RTag,
@@ -199,7 +198,7 @@ function BlockTemplateEditView() {
           <NavigationBar
             leftChildren={
               <Link to="/block-content/templates">
-                <RIconButton
+                <IconButton
                   size="lg"
                   icon={<MdKeyboardBackspace />}
                   onClick={e => {
@@ -207,7 +206,7 @@ function BlockTemplateEditView() {
                   }}
                 >
                   {t('blockTemplates.edit.backToList')}
-                </RIconButton>
+                </IconButton>
               </Link>
             }
             centerChildren={
