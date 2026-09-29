@@ -1,5 +1,16 @@
+import 'keen-slider/keen-slider.min.css';
+
 import styled from '@emotion/styled';
-import { useEffect, useState } from 'react';
+import { useKeenSlider } from 'keen-slider/react';
+import {
+  DOMAttributes,
+  useCallback,
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   MdFilterNone,
@@ -70,6 +81,12 @@ export const LightboxStage = styled('div')`
   display: grid;
 `;
 
+export const LightboxSlides = styled('div')``;
+
+export const LightboxSlide = styled('div')`
+  display: grid;
+`;
+
 export const LightboxWrapper = styled('section')<{ fullscreen: boolean }>`
   display: grid;
   --lightbox-image-height: 350px;
@@ -93,6 +110,15 @@ export const LightboxWrapper = styled('section')<{ fullscreen: boolean }>`
 
       ${LightboxStage} {
         min-height: 0;
+        grid-template-rows: minmax(0, 1fr);
+      }
+
+      ${LightboxSlides} {
+        height: 100%;
+        min-height: 0;
+      }
+
+      ${LightboxSlide} {
         grid-template-rows: minmax(0, 1fr);
       }
 
@@ -180,47 +206,116 @@ export const LightboxArrow = styled('button')`
   }
 `;
 
+const pixelSwipeThreshold = 50;
+
 export const Lightbox = ({
   images,
+  dragDisabled = false,
+  animationDisabled = true,
+  dragAnimationDisabled = false,
   className,
 }: BuilderBlockStyleProps['Lightbox']) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentSlide, setCurrentSlide] = useState(0);
   const [fullscreen, setFullscreen] = useState(false);
+  const historyId = useId();
   const { t } = useTranslation();
 
-  const count = images.length;
-  const current = images[Math.min(currentIndex, count - 1)];
+  const swipeStart = useRef<number | null>(null);
 
-  const prev = () => setCurrentIndex(index => (index - 1 + count) % count);
-  const next = () => setCurrentIndex(index => (index + 1) % count);
+  const count = images.length;
+  const multiple = count > 1;
+
+  const [ref, sliderRef] = useKeenSlider({
+    loop: multiple,
+    drag: multiple && !dragDisabled && !dragAnimationDisabled,
+    defaultAnimation: animationDisabled ? { duration: 0 } : undefined,
+    slideChanged(slider) {
+      setCurrentSlide(slider.track.details.rel);
+    },
+  });
+
+  const swipeWithoutAnimation = useMemo(
+    () =>
+      (multiple && !dragDisabled && dragAnimationDisabled ?
+        {
+          onPointerDown: event => (swipeStart.current = event.clientX),
+          onPointerUp: event => {
+            if (swipeStart.current == null) {
+              return;
+            }
+
+            const distance = event.clientX - swipeStart.current;
+            swipeStart.current = null;
+
+            if (distance <= -pixelSwipeThreshold) {
+              sliderRef.current?.next();
+            }
+
+            if (distance >= pixelSwipeThreshold) {
+              sliderRef.current?.prev();
+            }
+          },
+          onPointerCancel: () => (swipeStart.current = null),
+          onDragStart: event => event.preventDefault(),
+        }
+      : {}) satisfies Partial<DOMAttributes<HTMLDivElement>>,
+    [dragAnimationDisabled, dragDisabled, multiple, sliderRef]
+  );
+
+  const openFullscreen = () => {
+    window.history.pushState({ lightbox: historyId }, '');
+    setFullscreen(true);
+  };
+
+  const closeFullscreen = useCallback(() => {
+    if (window.history.state?.lightbox === historyId) {
+      window.history.back();
+      return;
+    }
+
+    setFullscreen(false);
+  }, [historyId]);
+
+  useEffect(() => {
+    // keen-slider only measures on window resize
+    const frame = requestAnimationFrame(() => sliderRef.current?.update());
+    return () => cancelAnimationFrame(frame);
+  }, [sliderRef, fullscreen]);
 
   useEffect(() => {
     if (!fullscreen) {
       return;
     }
 
+    const onPopState = (event: PopStateEvent) => {
+      event.stopImmediatePropagation();
+      setFullscreen(false);
+    };
+
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
-        setFullscreen(false);
+        closeFullscreen();
       }
 
       if (event.key === 'ArrowLeft') {
-        setCurrentIndex(index => (index - 1 + count) % count);
+        sliderRef.current?.prev();
       }
 
       if (event.key === 'ArrowRight') {
-        setCurrentIndex(index => (index + 1) % count);
+        sliderRef.current?.next();
       }
     };
 
+    window.addEventListener('popstate', onPopState, { capture: true });
     document.addEventListener('keydown', onKeyDown);
 
     return () => {
+      window.removeEventListener('popstate', onPopState, { capture: true });
       document.removeEventListener('keydown', onKeyDown);
     };
-  }, [fullscreen, count]);
+  }, [fullscreen, closeFullscreen, sliderRef]);
 
-  if (!current) {
+  if (!count) {
     return null;
   }
 
@@ -231,22 +326,35 @@ export const Lightbox = ({
       data-fullscreen={fullscreen}
     >
       <LightboxStage>
-        <LightboxImage
-          key={currentIndex}
-          caption={current.caption}
-          image={current.image}
-        />
+        <LightboxSlides
+          ref={ref}
+          className="keen-slider"
+          {...swipeWithoutAnimation}
+        >
+          {images.map((image, index) => (
+            <LightboxSlide
+              key={index}
+              className="keen-slider__slide"
+            >
+              <LightboxImage
+                caption={image.caption}
+                image={image.image}
+              />
+            </LightboxSlide>
+          ))}
+        </LightboxSlides>
 
         <LightboxCounter aria-live="polite">
           <MdFilterNone size={20} />
+
           <span>
-            {currentIndex + 1} / {count}
+            {currentSlide + 1} / {count}
           </span>
         </LightboxCounter>
 
         <LightboxFullscreenButton
           type="button"
-          onClick={() => setFullscreen(value => !value)}
+          onClick={fullscreen ? closeFullscreen : openFullscreen}
           aria-label={
             fullscreen ? t('lightbox.exitFullscreen') : t('lightbox.fullscreen')
           }
@@ -256,11 +364,11 @@ export const Lightbox = ({
           : <MdFullscreen size={24} />}
         </LightboxFullscreenButton>
 
-        {count > 1 && (
+        {multiple && (
           <>
             <LightboxArrow
               type="button"
-              onClick={prev}
+              onClick={() => sliderRef.current?.prev()}
               aria-label={t('lightbox.previous')}
             >
               <MdArrowBackIosNew size={22} />
@@ -268,7 +376,7 @@ export const Lightbox = ({
 
             <LightboxArrow
               type="button"
-              onClick={next}
+              onClick={() => sliderRef.current?.next()}
               aria-label={t('lightbox.next')}
             >
               <MdArrowForwardIos size={22} />
