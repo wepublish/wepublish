@@ -2454,6 +2454,9 @@
         "type": "Type",
         "cloudflareAccountId": "ID de compte Cloudflare",
         "cloudflareApiToken": "Jeton d'API Cloudflare",
+        "gotenbergUrl": "URL de Gotenberg",
+        "gotenbergUsername": "Nom d'utilisateur Gotenberg",
+        "gotenbergPassword": "Mot de passe Gotenberg",
         "timeoutMs": "Délai d'attente (ms)"
       },
       "mailSettings": {

@@ -3461,6 +3461,9 @@ export type MutationCreatePaywallArgs = {
 export type MutationCreatePdfRendererSettingArgs = {
   cloudflare_accountId?: InputMaybe<Scalars['String']>;
   cloudflare_apiToken?: InputMaybe<Scalars['String']>;
+  gotenberg_password?: InputMaybe<Scalars['String']>;
+  gotenberg_url?: InputMaybe<Scalars['String']>;
+  gotenberg_username?: InputMaybe<Scalars['String']>;
   id: Scalars['String'];
   name?: InputMaybe<Scalars['String']>;
   timeoutMs?: InputMaybe<Scalars['Int']>;
@@ -4432,6 +4435,9 @@ export type MutationUpdatePaywallArgs = {
 export type MutationUpdatePdfRendererSettingArgs = {
   cloudflare_accountId?: InputMaybe<Scalars['String']>;
   cloudflare_apiToken?: InputMaybe<Scalars['String']>;
+  gotenberg_password?: InputMaybe<Scalars['String']>;
+  gotenberg_url?: InputMaybe<Scalars['String']>;
+  gotenberg_username?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
   timeoutMs?: InputMaybe<Scalars['Int']>;
@@ -5250,7 +5256,8 @@ export type PaywallBypass = {
 };
 
 export enum PdfRendererType {
-  Cloudflare = 'cloudflare'
+  Cloudflare = 'cloudflare',
+  Gotenberg = 'gotenberg'
 }
 
 export type Peer = {
@@ -7039,6 +7046,8 @@ export type SettingPdfRenderer = SettingProvider & {
   __typename?: 'SettingPdfRenderer';
   cloudflare_accountId?: Maybe<Scalars['String']>;
   createdAt: Scalars['DateTime'];
+  gotenberg_url?: Maybe<Scalars['String']>;
+  gotenberg_username?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   lastLoadedAt: Scalars['DateTime'];
   modifiedAt: Scalars['DateTime'];

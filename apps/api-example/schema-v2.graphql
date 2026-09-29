@@ -2818,7 +2818,7 @@ type Mutation {
   createPaywall(active: Boolean!, alternativeSubscribeUrl: String, anyMemberPlan: Boolean!, bypassTokens: [String!]!, circumventDescription: RichText, description: RichText, fadeout: Boolean!, hideContentAfter: Int!, memberPlanIds: [String!]!, name: String, upgradeCircumventDescription: RichText, upgradeDescription: RichText): Paywall!
 
   """Creates a new pdf renderer setting."""
-  createPdfRendererSetting(cloudflare_accountId: String, cloudflare_apiToken: String, id: String!, name: String, timeoutMs: Int, type: PdfRendererType!): SettingPdfRenderer!
+  createPdfRendererSetting(cloudflare_accountId: String, cloudflare_apiToken: String, gotenberg_password: String, gotenberg_url: String, gotenberg_username: String, id: String!, name: String, timeoutMs: Int, type: PdfRendererType!): SettingPdfRenderer!
 
   """Creates a new peer."""
   createPeer(hostURL: String!, information: RichText, isDisabled: Boolean, name: String!, slug: String!, token: String!): Peer!
@@ -3290,7 +3290,7 @@ type Mutation {
   updatePaywall(active: Boolean, alternativeSubscribeUrl: String, anyMemberPlan: Boolean, bypassTokens: [String!], circumventDescription: RichText, description: RichText, fadeout: Boolean, hideContentAfter: Int, id: String!, memberPlanIds: [String!], name: String, upgradeCircumventDescription: RichText, upgradeDescription: RichText): Paywall!
 
   """Updates an existing pdf renderer setting."""
-  updatePdfRendererSetting(cloudflare_accountId: String, cloudflare_apiToken: String, id: String, name: String, timeoutMs: Int, type: PdfRendererType): SettingPdfRenderer!
+  updatePdfRendererSetting(cloudflare_accountId: String, cloudflare_apiToken: String, gotenberg_password: String, gotenberg_url: String, gotenberg_username: String, id: String, name: String, timeoutMs: Int, type: PdfRendererType): SettingPdfRenderer!
 
   """Updates an existing peer."""
   updatePeer(hostURL: String, id: String!, information: RichText, isDisabled: Boolean, name: String, slug: String, token: String): Peer!
@@ -3920,6 +3920,7 @@ type PaywallBypass {
 
 enum PdfRendererType {
   cloudflare
+  gotenberg
 }
 
 type Peer {
@@ -5093,6 +5094,8 @@ input SettingPaymentProviderFilter {
 type SettingPdfRenderer implements SettingProvider {
   cloudflare_accountId: String
   createdAt: DateTime!
+  gotenberg_url: String
+  gotenberg_username: String
   id: String!
   lastLoadedAt: DateTime!
   modifiedAt: DateTime!

@@ -8,19 +8,22 @@ const defaultOptions = {} as const;
 export type PdfRendererSettingsQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type PdfRendererSettingsQuery = { __typename?: 'Query', pdfRendererSettings: Array<{ __typename?: 'SettingPdfRenderer', cloudflare_accountId?: string | null, createdAt: string, id: string, lastLoadedAt: string, modifiedAt: string, name?: string | null, timeoutMs?: number | null, type: Types.PdfRendererType }> };
+export type PdfRendererSettingsQuery = { __typename?: 'Query', pdfRendererSettings: Array<{ __typename?: 'SettingPdfRenderer', cloudflare_accountId?: string | null, createdAt: string, gotenberg_url?: string | null, gotenberg_username?: string | null, id: string, lastLoadedAt: string, modifiedAt: string, name?: string | null, timeoutMs?: number | null, type: Types.PdfRendererType }> };
 
 export type UpdatePdfRendererSettingMutationVariables = Types.Exact<{
   type?: Types.InputMaybe<Types.PdfRendererType>;
   cloudflare_accountId?: Types.InputMaybe<Types.Scalars['String']>;
   cloudflare_apiToken?: Types.InputMaybe<Types.Scalars['String']>;
+  gotenberg_url?: Types.InputMaybe<Types.Scalars['String']>;
+  gotenberg_username?: Types.InputMaybe<Types.Scalars['String']>;
+  gotenberg_password?: Types.InputMaybe<Types.Scalars['String']>;
   id: Types.Scalars['String'];
   name?: Types.InputMaybe<Types.Scalars['String']>;
   timeoutMs?: Types.InputMaybe<Types.Scalars['Int']>;
 }>;
 
 
-export type UpdatePdfRendererSettingMutation = { __typename?: 'Mutation', updatePdfRendererSetting: { __typename?: 'SettingPdfRenderer', cloudflare_accountId?: string | null, createdAt: string, id: string, lastLoadedAt: string, modifiedAt: string, name?: string | null, timeoutMs?: number | null, type: Types.PdfRendererType } };
+export type UpdatePdfRendererSettingMutation = { __typename?: 'Mutation', updatePdfRendererSetting: { __typename?: 'SettingPdfRenderer', cloudflare_accountId?: string | null, createdAt: string, gotenberg_url?: string | null, gotenberg_username?: string | null, id: string, lastLoadedAt: string, modifiedAt: string, name?: string | null, timeoutMs?: number | null, type: Types.PdfRendererType } };
 
 export type CreatePdfRendererSettingMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
@@ -44,6 +47,8 @@ export const PdfRendererSettingsDocument = gql`
   pdfRendererSettings {
     cloudflare_accountId
     createdAt
+    gotenberg_url
+    gotenberg_username
     id
     lastLoadedAt
     modifiedAt
@@ -81,17 +86,22 @@ export type PdfRendererSettingsQueryHookResult = ReturnType<typeof usePdfRendere
 export type PdfRendererSettingsLazyQueryHookResult = ReturnType<typeof usePdfRendererSettingsLazyQuery>;
 export type PdfRendererSettingsQueryResult = Apollo.QueryResult<PdfRendererSettingsQuery, PdfRendererSettingsQueryVariables>;
 export const UpdatePdfRendererSettingDocument = gql`
-    mutation UpdatePdfRendererSetting($type: PdfRendererType, $cloudflare_accountId: String, $cloudflare_apiToken: String, $id: String!, $name: String, $timeoutMs: Int) {
+    mutation UpdatePdfRendererSetting($type: PdfRendererType, $cloudflare_accountId: String, $cloudflare_apiToken: String, $gotenberg_url: String, $gotenberg_username: String, $gotenberg_password: String, $id: String!, $name: String, $timeoutMs: Int) {
   updatePdfRendererSetting(
     type: $type
     cloudflare_accountId: $cloudflare_accountId
     cloudflare_apiToken: $cloudflare_apiToken
+    gotenberg_url: $gotenberg_url
+    gotenberg_username: $gotenberg_username
+    gotenberg_password: $gotenberg_password
     id: $id
     name: $name
     timeoutMs: $timeoutMs
   ) {
     cloudflare_accountId
     createdAt
+    gotenberg_url
+    gotenberg_username
     id
     lastLoadedAt
     modifiedAt
@@ -119,6 +129,9 @@ export type UpdatePdfRendererSettingMutationFn = Apollo.MutationFunction<UpdateP
  *      type: // value for 'type'
  *      cloudflare_accountId: // value for 'cloudflare_accountId'
  *      cloudflare_apiToken: // value for 'cloudflare_apiToken'
+ *      gotenberg_url: // value for 'gotenberg_url'
+ *      gotenberg_username: // value for 'gotenberg_username'
+ *      gotenberg_password: // value for 'gotenberg_password'
  *      id: // value for 'id'
  *      name: // value for 'name'
  *      timeoutMs: // value for 'timeoutMs'

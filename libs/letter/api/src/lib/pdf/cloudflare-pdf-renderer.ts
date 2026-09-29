@@ -44,62 +44,20 @@ export class CloudflarePdfRenderer extends BasePdfRenderer {
       );
     }
 
-    let response: Response;
-
-    try {
-      response = await fetch(`${API_BASE}/${accountId}/browser-rendering/pdf`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${apiToken}`,
-          'Content-Type': 'application/json',
+    return this.fetchPdf(`${API_BASE}/${accountId}/browser-rendering/pdf`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${apiToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        html,
+        pdfOptions: {
+          printBackground: true,
+          preferCSSPageSize: true,
         },
-        body: JSON.stringify({
-          html,
-          pdfOptions: {
-            printBackground: true,
-            preferCSSPageSize: true,
-          },
-        }),
-        signal: AbortSignal.timeout(timeoutMs),
-      });
-    } catch (error) {
-      throw new PdfRendererError(
-        `Could not reach the pdf renderer: ${(error as Error).message}`
-      );
-    }
-
-    if (!response.ok) {
-      throw new PdfRendererError(await this.describeFailure(response));
-    }
-
-    const pdf = Buffer.from(await response.arrayBuffer());
-
-    // A json body where a pdf is expected means the endpoint reported a problem
-    // with a 200, which would otherwise be printed and posted as a broken file.
-    if (!pdf.subarray(0, 5).toString('latin1').startsWith('%PDF-')) {
-      throw new PdfRendererError(
-        `The pdf renderer did not return a pdf: ${pdf
-          .subarray(0, 200)
-          .toString('utf8')}`
-      );
-    }
-
-    return pdf;
-  }
-
-  private async describeFailure(response: Response): Promise<string> {
-    const retryAfter = response.headers.get('retry-after');
-    const body = await response.text().catch(() => '');
-    const reason =
-      response.status === 429 ?
-        `the rate limit was reached${
-          retryAfter ? `, retry after ${retryAfter}s` : ''
-        }`
-      : `status ${response.status}`;
-
-    return `The pdf renderer refused the request (${reason}): ${body.slice(
-      0,
-      300
-    )}`;
+      }),
+      signal: AbortSignal.timeout(timeoutMs),
+    });
   }
 }

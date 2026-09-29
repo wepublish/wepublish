@@ -13,4 +13,5 @@ export * from './lib/letters.module';
 export * from './lib/pdf/pdf-renderer';
 export * from './lib/pdf/base-pdf-renderer';
 export * from './lib/pdf/cloudflare-pdf-renderer';
+export * from './lib/pdf/gotenberg-pdf-renderer';
 export * from './lib/pdf/create-pdf-renderer';

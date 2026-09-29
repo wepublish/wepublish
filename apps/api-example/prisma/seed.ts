@@ -1821,15 +1821,16 @@ async function seedSettings(prisma: PrismaClient) {
       })
     : Promise.resolve(null);
 
-  // Credentials fall back to the CLOUDFLARE_ACCOUNT_ID and CLOUDFLARE_API_TOKEN
-  // env vars, so this works without configuring it in the editor.
+  // The url falls back to the GOTENBERG_URL env var (the gotenberg service in
+  // docker-compose), so this works without configuring it in the editor.
+  // Switch the type to cloudflare in the editor to render there instead.
   const pdfRenderer =
     (await prisma.settingPdfRenderer.count()) === 0 ?
       prisma.settingPdfRenderer.create({
         data: {
-          id: 'cloudflare',
-          name: 'Cloudflare',
-          type: PdfRendererType.cloudflare,
+          id: 'gotenberg',
+          name: 'Gotenberg',
+          type: PdfRendererType.gotenberg,
         },
       })
     : Promise.resolve(null);

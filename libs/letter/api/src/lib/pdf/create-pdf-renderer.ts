@@ -2,6 +2,7 @@ import { PdfRendererType, PrismaClient } from '@prisma/client';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 import { BasePdfRenderer } from './base-pdf-renderer';
 import { CloudflarePdfRenderer } from './cloudflare-pdf-renderer';
+import { GotenbergPdfRenderer } from './gotenberg-pdf-renderer';
 
 export type PdfRendererDeps = {
   prisma: PrismaClient;
@@ -22,6 +23,17 @@ export const createPdfRenderer = (
         fallback: {
           accountId: process.env['CLOUDFLARE_ACCOUNT_ID'],
           apiToken: process.env['CLOUDFLARE_API_TOKEN'],
+        },
+      });
+    case PdfRendererType.gotenberg:
+      return new GotenbergPdfRenderer({
+        id,
+        prisma,
+        kv,
+        fallback: {
+          url: process.env['GOTENBERG_URL'],
+          username: process.env['GOTENBERG_USERNAME'],
+          password: process.env['GOTENBERG_PASSWORD'],
         },
       });
     default:

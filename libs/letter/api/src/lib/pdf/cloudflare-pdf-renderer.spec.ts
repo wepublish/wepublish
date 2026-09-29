@@ -35,6 +35,9 @@ const config: SettingPdfRenderer = {
   name: 'Cloudflare',
   cloudflare_accountId: 'account-1',
   cloudflare_apiToken: 'token-1',
+  gotenberg_url: null,
+  gotenberg_username: null,
+  gotenberg_password: null,
   timeoutMs: null,
 };
 

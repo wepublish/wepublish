@@ -2589,6 +2589,9 @@
         "type": "Type",
         "cloudflareAccountId": "Cloudflare Account ID",
         "cloudflareApiToken": "Cloudflare API Token",
+        "gotenbergUrl": "Gotenberg URL",
+        "gotenbergUsername": "Gotenberg Username",
+        "gotenbergPassword": "Gotenberg Password",
         "timeoutMs": "Timeout (ms)"
       },
       "letterSettings": {

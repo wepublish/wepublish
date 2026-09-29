@@ -31,18 +31,23 @@ export class PdfRendererSettingsService {
   private encryptSecretsIfPresent<
     T extends {
       cloudflare_apiToken?: string | null;
+      gotenberg_password?: string | null;
     },
   >(data: T): T {
-    if (
-      typeof data.cloudflare_apiToken === 'string' &&
-      data.cloudflare_apiToken.length > 0
-    ) {
-      return {
-        ...data,
-        cloudflare_apiToken: this.crypto.encrypt(data.cloudflare_apiToken),
-      };
+    const encrypted = { ...data };
+
+    for (const field of [
+      'cloudflare_apiToken',
+      'gotenberg_password',
+    ] as const) {
+      const value = data[field];
+
+      if (typeof value === 'string' && value.length > 0) {
+        encrypted[field] = this.crypto.encrypt(value) as T[typeof field];
+      }
     }
-    return data;
+
+    return encrypted;
   }
 
   @PrimeDataLoader(PdfRendererSettingsDataloaderService, 'id')
