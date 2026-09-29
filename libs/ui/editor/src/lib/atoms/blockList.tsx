@@ -38,6 +38,8 @@ export const BlockStyleIconWrapper = styled.div`
   flex-direction: column;
   margin-left: 10px;
   gap: 8px;
+  position: absolute;
+  left: 100%;
 `;
 
 const Icon = styled.div`
@@ -83,11 +85,14 @@ export const LeftButtonsWrapper = styled.div`
   display: flex;
   flex-direction: column;
   margin-right: 10px;
+  position: absolute;
+  right: 100%;
 `;
 
 export const ListItem = styled.div`
   display: flex;
   width: 100%;
+  position: relative;
 `;
 
 const AddButton = styled.div`

@@ -3,8 +3,7 @@ import { ReactNode } from 'react';
 
 const Children = styled.div`
   display: flex;
-  width: 100%;
-  max-width: 1220px;
+  width: 80%;
 `;
 
 const ChildrenWrapper = styled.div`
