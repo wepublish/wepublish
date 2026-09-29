@@ -63,7 +63,15 @@ export class SettingLetterProviderFilter extends PartialType(
 @ArgsType()
 export class CreateSettingLetterProviderInput extends OmitType(
   SettingLetterProvider,
-  ['id', 'type', 'createdAt', 'lastLoadedAt', 'modifiedAt'] as const,
+  [
+    'id',
+    'type',
+    'environment',
+    'autoSend',
+    'createdAt',
+    'lastLoadedAt',
+    'modifiedAt',
+  ] as const,
   ArgsType
 ) {
   @Field()
@@ -71,6 +79,12 @@ export class CreateSettingLetterProviderInput extends OmitType(
 
   @Field(type => LetterProviderType)
   type!: LetterProviderType;
+
+  @Field(type => LetterProviderEnvironment, { nullable: true })
+  environment?: LetterProviderEnvironment;
+
+  @Field({ nullable: true })
+  autoSend?: boolean;
 
   @Field({ nullable: true })
   clientSecret?: string;
@@ -81,6 +95,6 @@ export class CreateSettingLetterProviderInput extends OmitType(
 
 @ArgsType()
 export class UpdateSettingLetterProviderInput extends PartialType(
-  OmitType(CreateSettingLetterProviderInput, ['type'] as const, ArgsType),
+  CreateSettingLetterProviderInput,
   ArgsType
 ) {}

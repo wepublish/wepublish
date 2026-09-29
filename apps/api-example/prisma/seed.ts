@@ -5,6 +5,8 @@ import {
   CommentState,
   Prisma,
   MailProviderType,
+  LetterProviderType,
+  PdfRendererType,
   PaymentProviderType,
   PayrexxPM,
   PayrexxPSP,
@@ -1800,15 +1802,38 @@ async function seedSettings(prisma: PrismaClient) {
     update: {},
   });
 
-  const mailprovider = prisma.settingMailProvider.upsert(
-    upsert({
-      id: 'slackmail',
-      name: 'Slackmail',
-      type: MailProviderType.SLACK,
-      fromAddress: 'dev@wepublish.ch',
-      slack_webhookURL: 'https://slackmail.com',
-    })
-  );
+  const mailprovider =
+    (await prisma.settingMailProvider.count()) === 0 ?
+      prisma.settingMailProvider.create({
+        data: {
+          id: 'smtp',
+          name: 'SMTP',
+          type: MailProviderType.SMTP,
+          fromAddress: 'dev@wepublish.ch',
+        },
+      })
+    : Promise.resolve(null);
+
+  const letterProvider =
+    (await prisma.settingLetterProvider.count()) === 0 ?
+      prisma.settingLetterProvider.create({
+        data: { id: 'pingen', name: 'Pingen', type: LetterProviderType.pingen },
+      })
+    : Promise.resolve(null);
+
+  // The url falls back to the GOTENBERG_URL env var (the gotenberg service in
+  // docker-compose), so this works without configuring it in the editor.
+  // Switch the type to cloudflare in the editor to render there instead.
+  const pdfRenderer =
+    (await prisma.settingPdfRenderer.count()) === 0 ?
+      prisma.settingPdfRenderer.create({
+        data: {
+          id: 'gotenberg',
+          name: 'Gotenberg',
+          type: PdfRendererType.gotenberg,
+        },
+      })
+    : Promise.resolve(null);
 
   const payrexx = prisma.settingPaymentProvider.upsert(
     upsert({
@@ -1980,6 +2005,8 @@ async function seedSettings(prisma: PrismaClient) {
 
   await Promise.all([
     mailprovider,
+    letterProvider,
+    pdfRenderer,
     payrexx,
     payrexxSubscription,
     stripe,

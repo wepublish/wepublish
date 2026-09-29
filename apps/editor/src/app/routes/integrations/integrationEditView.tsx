@@ -7,6 +7,7 @@ import {
   CanGetMailchimpSyncSettings,
   CanGetMailProviderSettings,
   CanGetPaymentProviderSettings,
+  CanGetPdfRendererSettings,
   CanGetTrackingPixelSettings,
   Permission,
 } from '@wepublish/permissions';
@@ -22,6 +23,7 @@ import { LetterIntegrationForm } from './letterIntegrationForm';
 import { MailchimpSyncIntegrationForm } from './mailchimpSyncIntegrationForm';
 import { MailIntegrationForm } from './mailIntegrationForm';
 import { PaymentIntegrationForm } from './paymentIntegrationForm';
+import { PdfRendererIntegrationForm } from './pdfRendererIntegrationForm';
 import { TrackingPixelIntegrationForm } from './trackingPixelIntegrationForm';
 
 const useIntegrationTitle = (type: string | undefined) => {
@@ -42,6 +44,8 @@ const useIntegrationTitle = (type: string | undefined) => {
       return t('integrations.mailProvider');
     case 'letter':
       return t('integrations.letterProvider');
+    case 'pdf-renderer':
+      return t('integrations.pdfRenderer');
     case 'mailchimp-sync':
       return t('integrations.mailchimpSync');
     default:
@@ -65,6 +69,8 @@ const getPermission = (type: string | undefined): Permission | undefined => {
       return CanGetMailProviderSettings;
     case 'letter':
       return CanGetLetterProviderSettings;
+    case 'pdf-renderer':
+      return CanGetPdfRendererSettings;
     case 'mailchimp-sync':
       return CanGetMailchimpSyncSettings;
     default:
@@ -91,6 +97,8 @@ export function IntegrationEditView() {
         return <MailIntegrationForm />;
       case 'letter':
         return <LetterIntegrationForm />;
+      case 'pdf-renderer':
+        return <PdfRendererIntegrationForm />;
       case 'tracking-pixel':
         return <TrackingPixelIntegrationForm />;
       case 'analytics':

@@ -475,21 +475,23 @@ export class MailSendRecipientService {
       .map(({ placeholderEmailContains }) => placeholderEmailContains?.trim())
       .filter((pattern): pattern is string => !!pattern);
 
-    if (audience.emailFilter === MailEmailFilter.placeholder) {
-      return {
-        OR: patterns.map(pattern => ({
-          email: { contains: pattern, mode: 'insensitive' },
-        })),
-      };
-    }
-
-    // The complement spelled out per pattern instead of `NOT`: `email` is
-    // required, so there is no NULL case to lose.
-    return {
-      AND: patterns.map(pattern => ({
-        email: { not: { contains: pattern, mode: 'insensitive' } },
+    const isPlaceholder: Prisma.UserWhereInput = {
+      OR: patterns.map(pattern => ({
+        email: { contains: pattern, mode: 'insensitive' },
       })),
     };
+
+    // `email` is non-null, so the complement is a plain negated match. The
+    // outer `mode` also applies inside `not`: this compiles to `NOT ILIKE`.
+    const isReal: Prisma.UserWhereInput = {
+      AND: patterns.map(pattern => ({
+        email: { mode: 'insensitive', not: { contains: pattern } },
+      })),
+    };
+
+    return audience.emailFilter === MailEmailFilter.placeholder ?
+        isPlaceholder
+      : isReal;
   }
 
   /** The audience expressed as a filter on people rather than subscriptions. */

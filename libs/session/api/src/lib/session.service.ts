@@ -44,6 +44,18 @@ export class SessionService {
     private totpService: TotpService
   ) {}
 
+  private async sessionTtlMs(): Promise<number> {
+    const days = await this.settingsService
+      .settingByName(SettingName.SESSION_TTL_DAYS)
+      .catch(() => null);
+
+    const value = Number(days?.value);
+
+    return Number.isFinite(value) && value > 0 ?
+        value * 24 * 60 * 60 * 1000
+      : this.sessionTTL;
+  }
+
   /**
    * Checks if a given email requires TOTP during login.
    * Returns true if the user has TOTP enabled or if the user doesn't exist
@@ -269,7 +281,7 @@ export class SessionService {
     const token = nanoid(IDAlphabet, 64);
 
     const expiresAt = new Date(
-      Date.now() + (options?.ttlMs ?? this.sessionTTL)
+      Date.now() + (options?.ttlMs ?? (await this.sessionTtlMs()))
     );
 
     const [{ createdAt }] = await Promise.all([

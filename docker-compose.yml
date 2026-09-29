@@ -33,6 +33,7 @@ services:
       MAIL_SMTP_HOST: mailpit
       MAIL_SMTP_PORT: '1025'
       MAIL_SMTP_FROM: no-reply@wepublish.local
+      GOTENBERG_URL: http://gotenberg:3000
     env_file: .env
     volumes:
       - ./apps/api-example/src/default.yaml:/config.yaml
@@ -40,6 +41,7 @@ services:
       - database
       - migration
       - mailpit
+      - gotenberg
     networks:
       - app-tier
   mailpit:
@@ -49,6 +51,13 @@ services:
       # SMTP endpoint (providers connect here) + web UI to read caught mails.
       - '127.0.0.1:1025:1025'
       - '127.0.0.1:8025:8025'
+    networks:
+      - app-tier
+  gotenberg:
+    image: gotenberg/gotenberg:8
+    ports:
+      # Pdf renderer for letters; the api reaches it as http://gotenberg:3000.
+      - '127.0.0.1:3030:3000'
     networks:
       - app-tier
   editor:

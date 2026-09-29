@@ -1022,6 +1022,13 @@ export const CanDeletePaymentProviderSettings: Permission = {
   deprecated: false,
 };
 
+export const CanReloadProviders: Permission = {
+  id: 'CAN_RELOAD_PROVIDERS',
+  description:
+    'Allows to apply integration changes to the running API without a restart',
+  deprecated: false,
+};
+
 /**
  * Tracking Pixel Settings
  */
@@ -1100,6 +1107,33 @@ export const CanUpdateLetterProviderSettings: Permission = {
 export const CanDeleteLetterProviderSettings: Permission = {
   id: 'CAN_DELETE_LETTER_PROVIDER_SETTINGS',
   description: 'Allows to delete letter provider settings',
+  deprecated: false,
+};
+
+/**
+ * PDF Renderer Settings
+ */
+export const CanGetPdfRendererSettings: Permission = {
+  id: 'CAN_GET_PDF_RENDERER_SETTINGS',
+  description: 'Allows to get pdf renderer settings',
+  deprecated: false,
+};
+
+export const CanCreatePdfRendererSettings: Permission = {
+  id: 'CAN_CREATE_PDF_RENDERER_SETTINGS',
+  description: 'Allows to create pdf renderer settings',
+  deprecated: false,
+};
+
+export const CanUpdatePdfRendererSettings: Permission = {
+  id: 'CAN_UPDATE_PDF_RENDERER_SETTINGS',
+  description: 'Allows to update pdf renderer settings',
+  deprecated: false,
+};
+
+export const CanDeletePdfRendererSettings: Permission = {
+  id: 'CAN_DELETE_PDF_RENDERER_SETTINGS',
+  description: 'Allows to delete pdf renderer settings',
   deprecated: false,
 };
 
@@ -1334,6 +1368,7 @@ export const AllPermissions: Permission[] = [
   CanCreatePaymentProviderSettings,
   CanUpdatePaymentProviderSettings,
   CanDeletePaymentProviderSettings,
+  CanReloadProviders,
   CanGetTrackingPixelSettings,
   CanCreateTrackingPixelSettings,
   CanUpdateTrackingPixelSettings,
@@ -1346,6 +1381,10 @@ export const AllPermissions: Permission[] = [
   CanCreateLetterProviderSettings,
   CanUpdateLetterProviderSettings,
   CanDeleteLetterProviderSettings,
+  CanGetPdfRendererSettings,
+  CanCreatePdfRendererSettings,
+  CanUpdatePdfRendererSettings,
+  CanDeletePdfRendererSettings,
   CanCreateExternalApp,
   CanUpdateExternalApp,
   CanDeleteExternalApp,

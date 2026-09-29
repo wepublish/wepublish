@@ -2009,6 +2009,7 @@ export type MailProviderModel = {
 };
 
 export enum MailProviderType {
+  Log = 'LOG',
   Mailchimp = 'MAILCHIMP',
   Mailgun = 'MAILGUN',
   Slack = 'SLACK',
@@ -2726,6 +2727,10 @@ export type Mutation = {
   confirmEmailChange: SensitiveDataUser;
   /** Confirms a notification for the whole instance, recording who confirmed it. Requires authentication. */
   confirmNotification: NotificationConfirmation;
+  /** Creates a new AI provider setting. */
+  createAISetting: SettingAiProvider;
+  /** Creates a new analytics provider setting. */
+  createAnalyticsProviderSetting: SettingAnalyticsProvider;
   /** Runs the invoice creation and charging steps of the daily periodic job on demand, without affecting the job run log. Requires an editor session and is additionally password protected. */
   createAndChargeInvoices: Scalars['Boolean'];
   /** Creates an article. */
@@ -2760,6 +2765,8 @@ export type Mutation = {
   createInvoice: Invoice;
   /** Returns a JWT that is valid for 1min for the current logged in user. */
   createJWTForWebsiteLogin: SessionWithToken;
+  /** Creates a new letter provider setting. */
+  createLetterProviderSetting: SettingLetterProvider;
   /** Start a background job sending a template to a filtered audience */
   createMailSendJob: MailSendJobModel;
   /** Create a new mail template */
@@ -2776,8 +2783,12 @@ export type Mutation = {
   createPaymentFromSubscription?: Maybe<Payment>;
   /** Creates a new payment method. */
   createPaymentMethod: PaymentMethod;
+  /** Creates a new payment provider setting. */
+  createPaymentProviderSetting: SettingPaymentProvider;
   /** Creates a paywall. */
   createPaywall: Paywall;
+  /** Creates a new pdf renderer setting. */
+  createPdfRendererSetting: SettingPdfRenderer;
   /** Creates a new peer. */
   createPeer: Peer;
   /** Creates a new poll. */
@@ -2800,6 +2811,8 @@ export type Mutation = {
   createTag: Tag;
   /** Creates a token and returns it's secret once. */
   createToken: TokenWithSecret;
+  /** Creates a new tracking pixel setting. */
+  createTrackingPixelSetting: SettingTrackingPixelProvider;
   /** Creates a new user. */
   createUser: SensitiveDataUser;
   /**
@@ -2847,6 +2860,8 @@ export type Mutation = {
   deleteImage: Scalars['String'];
   /** Deletes an existing invoice. A PAID invoice is billing history and is only deleted with cascade: true (removes its billing period and items along). */
   deleteInvoice: Invoice;
+  /** Deletes an existing letter provider setting. */
+  deleteLetterProviderSetting: SettingLetterProvider;
   /** Delete an existing mail template */
   deleteMailTemplate?: Maybe<Scalars['Boolean']>;
   /** Deletes a single sync error so the contact will be retried. */
@@ -2859,8 +2874,12 @@ export type Mutation = {
   deletePage: Scalars['String'];
   /** Deletes an existing payment method. */
   deletePaymentMethod: PaymentMethod;
+  /** Deletes a payment provider setting. */
+  deletePaymentProviderSetting: SettingPaymentProvider;
   /** Deletes a paywall. */
   deletePaywall: Paywall;
+  /** Deletes an existing pdf renderer setting. */
+  deletePdfRendererSetting: SettingPdfRenderer;
   /** Deletes an existing peer. */
   deletePeer: Scalars['String'];
   /** Deletes an existing poll. */
@@ -2883,6 +2902,8 @@ export type Mutation = {
   deleteTag: Tag;
   /** Deletes a token. */
   deleteToken: Token;
+  /** Deletes a tracking pixel setting. */
+  deleteTrackingPixelSetting: SettingTrackingPixelProvider;
   /** Deletes an existing user. */
   deleteUser: SensitiveDataUser;
   /**
@@ -2941,6 +2962,8 @@ export type Mutation = {
   registerMember: Registration;
   /** Rejects a comment */
   rejectComment: Comment;
+  /** Rebuilds the payment, tracking pixel, mail, challenge, letter and pdf renderer providers from their settings, so integration changes take effect without restarting the API. */
+  reloadProviders: Scalars['Boolean'];
   /** Renews a subscription. */
   renewSubscription: PublicSubscription;
   /** Requests the user to change the comment's content */
@@ -3043,6 +3066,8 @@ export type Mutation = {
   updatePaymentProviderSetting: SettingPaymentProvider;
   /** Updates a paywall. */
   updatePaywall: Paywall;
+  /** Updates an existing pdf renderer setting. */
+  updatePdfRendererSetting: SettingPdfRenderer;
   /** Updates an existing peer. */
   updatePeer: Peer;
   /** Updates the peer profile of the current media. */
@@ -3148,6 +3173,26 @@ export type MutationConfirmEmailChangeArgs = {
 export type MutationConfirmNotificationArgs = {
   itemId: Scalars['String'];
   source: NotificationSource;
+};
+
+
+export type MutationCreateAiSettingArgs = {
+  apiKey?: InputMaybe<Scalars['String']>;
+  id: Scalars['String'];
+  name?: InputMaybe<Scalars['String']>;
+  systemPrompt?: InputMaybe<Scalars['String']>;
+  type: AiProviderType;
+  webhookEndpointSecret?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationCreateAnalyticsProviderSettingArgs = {
+  articlePrefix?: InputMaybe<Scalars['String']>;
+  credentials?: InputMaybe<SettingAnalyticsCredentialsInput>;
+  id: Scalars['String'];
+  name?: InputMaybe<Scalars['String']>;
+  property?: InputMaybe<Scalars['String']>;
+  type: AnalyticsProviderType;
 };
 
 
@@ -3293,6 +3338,20 @@ export type MutationCreateInvoiceArgs = {
 };
 
 
+export type MutationCreateLetterProviderSettingArgs = {
+  autoSend?: InputMaybe<Scalars['Boolean']>;
+  clientId?: InputMaybe<Scalars['String']>;
+  clientSecret?: InputMaybe<Scalars['String']>;
+  environment?: InputMaybe<LetterProviderEnvironment>;
+  id: Scalars['String'];
+  name?: InputMaybe<Scalars['String']>;
+  organisationId?: InputMaybe<Scalars['String']>;
+  placeholderEmailContains?: InputMaybe<Scalars['String']>;
+  type: LetterProviderType;
+  webhookSigningKey?: InputMaybe<Scalars['String']>;
+};
+
+
 export type MutationCreateMailSendJobArgs = {
   input: MailSendJobInput;
 };
@@ -3373,6 +3432,37 @@ export type MutationCreatePaymentMethodArgs = {
 };
 
 
+export type MutationCreatePaymentProviderSettingArgs = {
+  apiKey?: InputMaybe<Scalars['String']>;
+  bexio_accountId?: InputMaybe<Scalars['Float']>;
+  bexio_countryId?: InputMaybe<Scalars['Float']>;
+  bexio_invoiceMailBodyNewMembership?: InputMaybe<Scalars['String']>;
+  bexio_invoiceMailBodyRenewalMembership?: InputMaybe<Scalars['String']>;
+  bexio_invoiceMailSubjectNewMembership?: InputMaybe<Scalars['String']>;
+  bexio_invoiceMailSubjectRenewalMembership?: InputMaybe<Scalars['String']>;
+  bexio_invoiceTemplateNewMembership?: InputMaybe<Scalars['String']>;
+  bexio_invoiceTemplateRenewalMembership?: InputMaybe<Scalars['String']>;
+  bexio_invoiceTitleNewMembership?: InputMaybe<Scalars['String']>;
+  bexio_invoiceTitleRenewalMembership?: InputMaybe<Scalars['String']>;
+  bexio_markInvoiceAsOpen?: InputMaybe<Scalars['Boolean']>;
+  bexio_taxId?: InputMaybe<Scalars['Float']>;
+  bexio_unitId?: InputMaybe<Scalars['Float']>;
+  bexio_userId?: InputMaybe<Scalars['Float']>;
+  id: Scalars['String'];
+  mollie_apiBaseUrl?: InputMaybe<Scalars['String']>;
+  mollie_methods?: InputMaybe<Array<PaymentMethodMollie>>;
+  name?: InputMaybe<Scalars['String']>;
+  offSessionPayments?: InputMaybe<Scalars['Boolean']>;
+  payrexx_instancename?: InputMaybe<Scalars['String']>;
+  payrexx_pm?: InputMaybe<Array<PayrexxPm>>;
+  payrexx_psp?: InputMaybe<Array<PayrexxPsp>>;
+  payrexx_vatrate?: InputMaybe<Scalars['String']>;
+  stripe_methods?: InputMaybe<Array<StripePaymentMethod>>;
+  type: PaymentProviderType;
+  webhookEndpointSecret?: InputMaybe<Scalars['String']>;
+};
+
+
 export type MutationCreatePaywallArgs = {
   active: Scalars['Boolean'];
   alternativeSubscribeUrl?: InputMaybe<Scalars['String']>;
@@ -3386,6 +3476,19 @@ export type MutationCreatePaywallArgs = {
   name?: InputMaybe<Scalars['String']>;
   upgradeCircumventDescription?: InputMaybe<Scalars['RichText']>;
   upgradeDescription?: InputMaybe<Scalars['RichText']>;
+};
+
+
+export type MutationCreatePdfRendererSettingArgs = {
+  cloudflare_accountId?: InputMaybe<Scalars['String']>;
+  cloudflare_apiToken?: InputMaybe<Scalars['String']>;
+  gotenberg_password?: InputMaybe<Scalars['String']>;
+  gotenberg_url?: InputMaybe<Scalars['String']>;
+  gotenberg_username?: InputMaybe<Scalars['String']>;
+  id: Scalars['String'];
+  name?: InputMaybe<Scalars['String']>;
+  timeoutMs?: InputMaybe<Scalars['Int']>;
+  type: PdfRendererType;
 };
 
 
@@ -3480,6 +3583,19 @@ export type MutationCreateTagArgs = {
 
 export type MutationCreateTokenArgs = {
   name: Scalars['String'];
+};
+
+
+export type MutationCreateTrackingPixelSettingArgs = {
+  id: Scalars['String'];
+  name?: InputMaybe<Scalars['String']>;
+  prolitteris_memberNr?: InputMaybe<Scalars['String']>;
+  prolitteris_onlyPaidContentAccess?: InputMaybe<Scalars['Boolean']>;
+  prolitteris_password?: InputMaybe<Scalars['String']>;
+  prolitteris_publisherInternalKeyDomain?: InputMaybe<Scalars['String']>;
+  prolitteris_usePublisherInternalKey?: InputMaybe<Scalars['Boolean']>;
+  prolitteris_username?: InputMaybe<Scalars['String']>;
+  type: TrackingPixelProviderType;
 };
 
 
@@ -3624,6 +3740,11 @@ export type MutationDeleteInvoiceArgs = {
 };
 
 
+export type MutationDeleteLetterProviderSettingArgs = {
+  id: Scalars['String'];
+};
+
+
 export type MutationDeleteMailTemplateArgs = {
   id: Scalars['String'];
 };
@@ -3654,7 +3775,17 @@ export type MutationDeletePaymentMethodArgs = {
 };
 
 
+export type MutationDeletePaymentProviderSettingArgs = {
+  id: Scalars['String'];
+};
+
+
 export type MutationDeletePaywallArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationDeletePdfRendererSettingArgs = {
   id: Scalars['String'];
 };
 
@@ -3710,6 +3841,11 @@ export type MutationDeleteTagArgs = {
 
 
 export type MutationDeleteTokenArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationDeleteTrackingPixelSettingArgs = {
   id: Scalars['String'];
 };
 
@@ -4051,6 +4187,7 @@ export type MutationUpdateChallengeProviderSettingArgs = {
   name?: InputMaybe<Scalars['String']>;
   secret?: InputMaybe<Scalars['String']>;
   siteKey?: InputMaybe<Scalars['String']>;
+  type?: InputMaybe<ChallengeProviderType>;
 };
 
 
@@ -4179,6 +4316,7 @@ export type MutationUpdateLetterProviderSettingArgs = {
   name?: InputMaybe<Scalars['String']>;
   organisationId?: InputMaybe<Scalars['String']>;
   placeholderEmailContains?: InputMaybe<Scalars['String']>;
+  type?: InputMaybe<LetterProviderType>;
   webhookSigningKey?: InputMaybe<Scalars['String']>;
 };
 
@@ -4197,6 +4335,7 @@ export type MutationUpdateMailProviderSettingArgs = {
   smtp_port?: InputMaybe<Scalars['Int']>;
   smtp_secure?: InputMaybe<Scalars['Boolean']>;
   smtp_user?: InputMaybe<Scalars['String']>;
+  type?: InputMaybe<MailProviderType>;
   webhookEndpointSecret?: InputMaybe<Scalars['String']>;
 };
 
@@ -4319,6 +4458,19 @@ export type MutationUpdatePaywallArgs = {
   name?: InputMaybe<Scalars['String']>;
   upgradeCircumventDescription?: InputMaybe<Scalars['RichText']>;
   upgradeDescription?: InputMaybe<Scalars['RichText']>;
+};
+
+
+export type MutationUpdatePdfRendererSettingArgs = {
+  cloudflare_accountId?: InputMaybe<Scalars['String']>;
+  cloudflare_apiToken?: InputMaybe<Scalars['String']>;
+  gotenberg_password?: InputMaybe<Scalars['String']>;
+  gotenberg_url?: InputMaybe<Scalars['String']>;
+  gotenberg_username?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  timeoutMs?: InputMaybe<Scalars['Int']>;
+  type?: InputMaybe<PdfRendererType>;
 };
 
 
@@ -4656,6 +4808,7 @@ export type PageFilter = {
   publicationDateFrom?: InputMaybe<DateFilter>;
   publicationDateTo?: InputMaybe<DateFilter>;
   published?: InputMaybe<Scalars['Boolean']>;
+  slug?: InputMaybe<Scalars['String']>;
   tags?: InputMaybe<Array<Scalars['String']>>;
   title?: InputMaybe<Scalars['String']>;
 };
@@ -5130,6 +5283,11 @@ export type PaywallBypass = {
   paywallId: Scalars['String'];
   token: Scalars['String'];
 };
+
+export enum PdfRendererType {
+  Cloudflare = 'cloudflare',
+  Gotenberg = 'gotenberg'
+}
 
 export type Peer = {
   __typename?: 'Peer';
@@ -5717,6 +5875,10 @@ export type Query = {
   paywall: Paywall;
   /** Returns a list of paywalls based on the filters given. */
   paywalls: Array<Paywall>;
+  /** Returns a single pdf renderer setting by id. */
+  pdfRendererSetting: SettingPdfRenderer;
+  /** Returns all pdf renderer settings. */
+  pdfRendererSettings: Array<SettingPdfRenderer>;
   /** This query takes either the ID or the slug and returns the peer profile. */
   peer?: Maybe<Peer>;
   /** Returns a paginated list of peer articles based on the filters given. */
@@ -6356,6 +6518,16 @@ export type QueryPaywallArgs = {
 };
 
 
+export type QueryPdfRendererSettingArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QueryPdfRendererSettingsArgs = {
+  filter?: InputMaybe<SettingPdfRendererFilter>;
+};
+
+
 export type QueryPeerArgs = {
   id?: InputMaybe<Scalars['String']>;
   slug?: InputMaybe<Scalars['String']>;
@@ -6855,6 +7027,7 @@ export enum SettingName {
   PeeringTimeoutMs = 'PEERING_TIMEOUT_MS',
   ResetPasswordJwtExpiresMin = 'RESET_PASSWORD_JWT_EXPIRES_MIN',
   SendLoginJwtExpiresMin = 'SEND_LOGIN_JWT_EXPIRES_MIN',
+  SessionTtlDays = 'SESSION_TTL_DAYS',
   ShowPendingWhenNotPublished = 'SHOW_PENDING_WHEN_NOT_PUBLISHED',
   SubscriptionUpgradeBillsFullDifference = 'SUBSCRIPTION_UPGRADE_BILLS_FULL_DIFFERENCE'
 }
@@ -6876,6 +7049,7 @@ export type SettingPaymentProvider = SettingProvider & {
   bexio_unitId?: Maybe<Scalars['Float']>;
   bexio_userId?: Maybe<Scalars['Float']>;
   createdAt: Scalars['DateTime'];
+  deletedAt?: Maybe<Scalars['DateTime']>;
   id: Scalars['String'];
   lastLoadedAt: Scalars['DateTime'];
   modifiedAt: Scalars['DateTime'];
@@ -6895,6 +7069,26 @@ export type SettingPaymentProviderFilter = {
   id?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
   type?: InputMaybe<PaymentProviderType>;
+};
+
+export type SettingPdfRenderer = SettingProvider & {
+  __typename?: 'SettingPdfRenderer';
+  cloudflare_accountId?: Maybe<Scalars['String']>;
+  createdAt: Scalars['DateTime'];
+  gotenberg_url?: Maybe<Scalars['String']>;
+  gotenberg_username?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  lastLoadedAt: Scalars['DateTime'];
+  modifiedAt: Scalars['DateTime'];
+  name?: Maybe<Scalars['String']>;
+  timeoutMs?: Maybe<Scalars['Int']>;
+  type: PdfRendererType;
+};
+
+export type SettingPdfRendererFilter = {
+  id?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  type?: InputMaybe<PdfRendererType>;
 };
 
 export type SettingProvider = {
@@ -6947,6 +7141,7 @@ export type SettingTrackingPixelFilter = {
 export type SettingTrackingPixelProvider = SettingProvider & {
   __typename?: 'SettingTrackingPixelProvider';
   createdAt: Scalars['DateTime'];
+  deletedAt?: Maybe<Scalars['DateTime']>;
   id: Scalars['String'];
   lastLoadedAt: Scalars['DateTime'];
   modifiedAt: Scalars['DateTime'];

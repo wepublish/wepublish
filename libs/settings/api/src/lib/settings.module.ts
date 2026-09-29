@@ -4,6 +4,7 @@ import { PrismaModule } from '@wepublish/nest-modules';
 
 import { SettingsResolver } from './settings.resolver';
 import { SettingsService } from './settings.service';
+import { ProviderSettingsChanged } from './integrations/provider-settings-changed';
 import { GraphQLSettingValueType } from './settings.model';
 import { SettingDataloaderService } from './setting-dataloader.service';
 import { AISettingsResolver } from './integrations/ai-settings.resolver';
@@ -24,6 +25,9 @@ import { MailProviderSettingsDataloaderService } from './integrations/mail-provi
 import { LetterProviderSettingsResolver } from './integrations/letter-provider-settings.resolver';
 import { LetterProviderSettingsService } from './integrations/letter-provider-settings.service';
 import { LetterProviderSettingsDataloaderService } from './integrations/letter-provider-settings-dataloader.service';
+import { PdfRendererSettingsResolver } from './integrations/pdf-renderer-settings.resolver';
+import { PdfRendererSettingsService } from './integrations/pdf-renderer-settings.service';
+import { PdfRendererSettingsDataloaderService } from './integrations/pdf-renderer-settings-dataloader.service';
 import { AnalyticsProviderSettingsResolver } from './integrations/analytics-provider-settings.resolver';
 import { AnalyticsProviderSettingsService } from './integrations/analytics-provider-settings.service';
 import { AnalyticsProviderSettingsDataloaderService } from './integrations/analytics-provider-settings-dataloader.service';
@@ -35,6 +39,7 @@ import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
 @Module({
   imports: [PrismaModule, KvTtlCacheModule],
   providers: [
+    ProviderSettingsChanged,
     SettingsGuard,
     SettingsResolver,
     SettingsService,
@@ -58,6 +63,9 @@ import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
     LetterProviderSettingsResolver,
     LetterProviderSettingsService,
     LetterProviderSettingsDataloaderService,
+    PdfRendererSettingsResolver,
+    PdfRendererSettingsService,
+    PdfRendererSettingsDataloaderService,
     AnalyticsProviderSettingsResolver,
     AnalyticsProviderSettingsService,
     AnalyticsProviderSettingsDataloaderService,
@@ -81,6 +89,8 @@ import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
     MailProviderSettingsDataloaderService,
     LetterProviderSettingsService,
     LetterProviderSettingsDataloaderService,
+    PdfRendererSettingsService,
+    PdfRendererSettingsDataloaderService,
     AnalyticsProviderSettingsService,
     AnalyticsProviderSettingsDataloaderService,
     SyncProviderSettingsService,

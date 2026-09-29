@@ -1053,6 +1053,17 @@ describe('audience filtering (semantics)', () => {
       expect(matches(real, where)).toBe(true);
     });
 
+    it('excludes an address matching any of several patterns from real', async () => {
+      const where = await usersWhereFor(MailEmailFilter.real, [
+        '@other.ch',
+        '@placeholder.neuewege.ch',
+      ]);
+
+      expect(matches(placeholder, where)).toBe(false);
+      expect(matches({ email: 'a@OTHER.ch' }, where)).toBe(false);
+      expect(matches(real, where)).toBe(true);
+    });
+
     it('treats every address as real without a configured pattern', async () => {
       const placeholderWhere = await usersWhereFor(
         MailEmailFilter.placeholder,

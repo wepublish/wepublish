@@ -1779,8 +1779,10 @@
         "showPendingWhenNotPublished": "This will expose pending articles & pages to the public (and thus also crawlers) eventhough they have never been published before.",
         "newArticlePeering": "Will not affect already created articles",
         "newArticlePaywall": "Will not affect already created articles",
-        "subscriptionUpgradeModel": "When enabled, an upgrade always charges the difference between the new and current plan price, regardless of how much time is left in the current period. When disabled, only the unused (pro-rated) remainder of the current period is credited."
-      }
+        "subscriptionUpgradeModel": "When enabled, an upgrade always charges the difference between the new and current plan price, regardless of how much time is left in the current period. When disabled, only the unused (pro-rated) remainder of the current period is credited.",
+        "sessionTtlDays": "How long a login stays valid before signing in again is required. Applies from the next login; sessions already open keep their lifetime."
+      },
+      "sessionTtlDays": "Session lifetime"
     },
     "automaticMails": {
       "title": "Automatic emails",
@@ -2556,6 +2558,7 @@
       "analytics": "Hot & Trending Provider",
       "mailProvider": "Mail Provider",
       "letterProvider": "Letter Provider",
+      "pdfRenderer": "PDF Renderer",
       "back": "Back to Integrations",
       "unknown": "Unknown Integration",
       "notFound": "Integration not found",
@@ -2600,6 +2603,15 @@
         "bexioInvoiceTitleRenewalMembership": "Invoice Title (Renewal Membership)"
       },
       "placeholderSecret": "Unchanged (Hidden)",
+      "pdfRendererSettings": {
+        "type": "Type",
+        "cloudflareAccountId": "Cloudflare Account ID",
+        "cloudflareApiToken": "Cloudflare API Token",
+        "gotenbergUrl": "Gotenberg URL",
+        "gotenbergUsername": "Gotenberg Username",
+        "gotenbergPassword": "Gotenberg Password",
+        "timeoutMs": "Timeout (ms)"
+      },
       "letterSettings": {
         "type": "Type",
         "environment": "Environment",
@@ -2724,7 +2736,20 @@
           "lookbackHours": "Lookback (hours)",
           "lookbackHoursHelp": "How far back to scan campaigns (default: 30)."
         }
-      }
+      },
+      "typeChangeTitle": "Really change the type?",
+      "typeChangeWarning": "Changing the type deletes this integration’s entire configuration, including every stored credential. This cannot be undone.",
+      "typeChangeConfirm": "Change type and delete configuration",
+      "deleteTitle": "Remove integration?",
+      "deleteWarning": "The integration disappears from the lists but keeps running, so anything already under way — a payment in flight, for instance — is not cut off. Add it back later and its configuration is still there, unchanged.",
+      "deleteConfirm": "Remove",
+      "restored": "This integration already existed and was restored unchanged.",
+      "cancel": "Cancel",
+      "add": "Add integration",
+      "addType": "Type",
+      "addId": "Identifier",
+      "addIdHelp": "The unique identifier the integration is addressed by. It also appears in webhook URLs and cannot be changed later.",
+      "addIdTaken": "This identifier is already taken."
     },
     "websiteSettings": {
       "backToOverview": "Back to overview",

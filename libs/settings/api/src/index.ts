@@ -30,6 +30,10 @@ export * from './lib/integrations/letter-provider-settings.model';
 export * from './lib/integrations/letter-provider-settings.service';
 export * from './lib/integrations/letter-provider-settings.resolver';
 export * from './lib/integrations/letter-provider-settings-dataloader.service';
+export * from './lib/integrations/pdf-renderer-settings.model';
+export * from './lib/integrations/pdf-renderer-settings.service';
+export * from './lib/integrations/pdf-renderer-settings.resolver';
+export * from './lib/integrations/pdf-renderer-settings-dataloader.service';
 export * from './lib/integrations/secrets-crypto';
 
 export * from './lib/integrations/sync-provider-settings.model';
@@ -41,3 +45,4 @@ export * from './lib/website-settings/website-settings.module';
 export * from './lib/website-settings/website-settings.model';
 export * from './lib/website-settings/website-settings.service';
 export * from './lib/website-settings/website-settings.resolver';
+export * from './lib/integrations/provider-settings-changed';

@@ -1711,8 +1711,10 @@
         "loginMinutes": "Durée de validité du token de connexion par email — minutes.",
         "passwordToken": "Durée de validité du token pour la réinitialisation du mot de passe par email — minutes.",
         "peerToken": "Expiration du peering (en cas d’erreur lors du peering d’un article, la tentative de peering s’arrête après la durée définie ci-après) — millisecondes",
-        "subscriptionUpgradeModel": "Lorsque cette option est activée, une mise à niveau facture toujours la différence entre le prix du nouveau plan et celui du plan actuel, quel que soit le temps restant dans la période en cours. Lorsqu'elle est désactivée, seul le solde restant (au prorata) non utilisé de la période en cours est crédité."
-      }
+        "subscriptionUpgradeModel": "Lorsque cette option est activée, une mise à niveau facture toujours la différence entre le prix du nouveau plan et celui du plan actuel, quel que soit le temps restant dans la période en cours. Lorsqu'elle est désactivée, seul le solde restant (au prorata) non utilisé de la période en cours est crédité.",
+        "sessionTtlDays": "Combien de temps une connexion reste valable avant de devoir se reconnecter. S’applique dès la prochaine connexion ; les sessions ouvertes gardent leur durée."
+      },
+      "sessionTtlDays": "Durée de validité de la connexion"
     },
     "automaticMails": {
       "title": "E-mails automatiques",
@@ -2421,6 +2423,7 @@
       "paymentProvider": "Fournisseur de paiement",
       "trackingPixel": "Pixel de suivi",
       "mailProvider": "Fournisseur de messagerie",
+      "pdfRenderer": "Moteur de rendu PDF",
       "back": "Retour aux intégrations",
       "unknown": "Intégration inconnue",
       "notFound": "Intégration non trouvée",
@@ -2465,6 +2468,15 @@
         "bexioInvoiceTitleRenewalMembership": "Titre de la facture (Renouvellement d'adhésion)"
       },
       "placeholderSecret": "Inchangé (Masqué)",
+      "pdfRendererSettings": {
+        "type": "Type",
+        "cloudflareAccountId": "ID de compte Cloudflare",
+        "cloudflareApiToken": "Jeton d'API Cloudflare",
+        "gotenbergUrl": "URL de Gotenberg",
+        "gotenbergUsername": "Nom d'utilisateur Gotenberg",
+        "gotenbergPassword": "Mot de passe Gotenberg",
+        "timeoutMs": "Délai d'attente (ms)"
+      },
       "mailSettings": {
         "type": "Type",
         "fromAddress": "Adresse de l'expéditeur",
@@ -2579,7 +2591,20 @@
           "lookbackHours": "Période (heures)",
           "lookbackHoursHelp": "Jusqu'où analyser les campagnes (par défaut : 30)."
         }
-      }
+      },
+      "typeChangeTitle": "Changer vraiment le type ?",
+      "typeChangeWarning": "Changer le type supprime toute la configuration de cette intégration, y compris les identifiants enregistrés. Cette action est irréversible.",
+      "typeChangeConfirm": "Changer le type et supprimer la configuration",
+      "deleteTitle": "Retirer l’intégration ?",
+      "deleteWarning": "L’intégration disparaît des listes mais continue de fonctionner, afin de ne pas interrompre ce qui est en cours — un paiement en traitement, par exemple. Si vous la rajoutez plus tard, sa configuration est toujours là, inchangée.",
+      "deleteConfirm": "Retirer",
+      "restored": "Cette intégration existait déjà et a été restaurée telle quelle.",
+      "cancel": "Annuler",
+      "add": "Ajouter une intégration",
+      "addType": "Type",
+      "addId": "Identifiant",
+      "addIdHelp": "L’identifiant unique sous lequel l’intégration est appelée. Il figure aussi dans les URL de webhook et ne peut plus être modifié ensuite.",
+      "addIdTaken": "Cet identifiant est déjà utilisé."
     },
     "websiteSettings": {
       "backToOverview": "Retour à la vue d’ensemble",

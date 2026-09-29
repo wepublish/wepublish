@@ -12,6 +12,14 @@
 - Mailgun
 - Mailchimp
 
+## PDF Renderer
+
+Renders letters to pdf. One `settings.pdfrenderer` row; editors switch by its
+`type` (which clears the other type's credentials).
+
+- Gotenberg (self-hosted, the default; `gotenberg` service in docker-compose)
+- Cloudflare Browser Rendering
+
 ## Analytics Provider
 
 - Google Analytics

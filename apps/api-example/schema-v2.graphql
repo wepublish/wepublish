@@ -1959,6 +1959,7 @@ type MailProviderModel {
 }
 
 enum MailProviderType {
+  LOG
   MAILCHIMP
   MAILGUN
   SLACK
@@ -2731,6 +2732,12 @@ type Mutation {
   """
   confirmNotification(itemId: String!, source: NotificationSource!): NotificationConfirmation!
 
+  """Creates a new AI provider setting."""
+  createAISetting(apiKey: String, id: String!, name: String, systemPrompt: String, type: AIProviderType!, webhookEndpointSecret: String): SettingAIProvider!
+
+  """Creates a new analytics provider setting."""
+  createAnalyticsProviderSetting(articlePrefix: String, credentials: SettingAnalyticsCredentialsInput, id: String!, name: String, property: String, type: AnalyticsProviderType!): SettingAnalyticsProvider!
+
   """
   Runs the invoice creation and charging steps of the daily periodic job on demand, without affecting the job run log. Requires an editor session and is additionally password protected.
   """
@@ -2779,6 +2786,24 @@ type Mutation {
   """Returns a JWT that is valid for 1min for the current logged in user."""
   createJWTForWebsiteLogin: SessionWithToken!
 
+  """Creates a new letter provider setting."""
+  createLetterProviderSetting(
+    autoSend: Boolean
+    clientId: String
+    clientSecret: String
+    environment: LetterProviderEnvironment
+    id: String!
+    name: String
+    organisationId: String
+
+    """
+    Email addresses containing this are placeholders, not real inboxes (e.g. @placeholder.example.com).
+    """
+    placeholderEmailContains: String
+    type: LetterProviderType!
+    webhookSigningKey: String
+  ): SettingLetterProvider!
+
   """Start a background job sending a template to a filtered audience"""
   createMailSendJob(input: MailSendJobInput!): MailSendJobModel!
 
@@ -2805,8 +2830,14 @@ type Mutation {
   """Creates a new payment method."""
   createPaymentMethod(active: Boolean!, description: String!, gracePeriod: Int!, imageId: String, name: String!, paymentProviderID: String!, slug: Slug!): PaymentMethod!
 
+  """Creates a new payment provider setting."""
+  createPaymentProviderSetting(apiKey: String, bexio_accountId: Float, bexio_countryId: Float, bexio_invoiceMailBodyNewMembership: String, bexio_invoiceMailBodyRenewalMembership: String, bexio_invoiceMailSubjectNewMembership: String, bexio_invoiceMailSubjectRenewalMembership: String, bexio_invoiceTemplateNewMembership: String, bexio_invoiceTemplateRenewalMembership: String, bexio_invoiceTitleNewMembership: String, bexio_invoiceTitleRenewalMembership: String, bexio_markInvoiceAsOpen: Boolean, bexio_taxId: Float, bexio_unitId: Float, bexio_userId: Float, id: String!, mollie_apiBaseUrl: String, mollie_methods: [PaymentMethodMollie!], name: String, offSessionPayments: Boolean, payrexx_instancename: String, payrexx_pm: [PayrexxPM!], payrexx_psp: [PayrexxPSP!], payrexx_vatrate: String, stripe_methods: [StripePaymentMethod!], type: PaymentProviderType!, webhookEndpointSecret: String): SettingPaymentProvider!
+
   """Creates a paywall."""
   createPaywall(active: Boolean!, alternativeSubscribeUrl: String, anyMemberPlan: Boolean!, bypassTokens: [String!]!, circumventDescription: RichText, description: RichText, fadeout: Boolean!, hideContentAfter: Int!, memberPlanIds: [String!]!, name: String, upgradeCircumventDescription: RichText, upgradeDescription: RichText): Paywall!
+
+  """Creates a new pdf renderer setting."""
+  createPdfRendererSetting(cloudflare_accountId: String, cloudflare_apiToken: String, gotenberg_password: String, gotenberg_url: String, gotenberg_username: String, id: String!, name: String, timeoutMs: Int, type: PdfRendererType!): SettingPdfRenderer!
 
   """Creates a new peer."""
   createPeer(hostURL: String!, information: RichText, isDisabled: Boolean, name: String!, slug: String!, token: String!): Peer!
@@ -2839,6 +2870,9 @@ type Mutation {
 
   """Creates a token and returns it's secret once."""
   createToken(name: String!): TokenWithSecret!
+
+  """Creates a new tracking pixel setting."""
+  createTrackingPixelSetting(id: String!, name: String, prolitteris_memberNr: String, prolitteris_onlyPaidContentAccess: Boolean, prolitteris_password: String, prolitteris_publisherInternalKeyDomain: String, prolitteris_usePublisherInternalKey: Boolean, prolitteris_username: String, type: TrackingPixelProviderType!): SettingTrackingPixelProvider!
 
   """Creates a new user."""
   createUser(
@@ -2920,6 +2954,9 @@ type Mutation {
   """
   deleteInvoice(cascade: Boolean, id: String!): Invoice!
 
+  """Deletes an existing letter provider setting."""
+  deleteLetterProviderSetting(id: String!): SettingLetterProvider!
+
   """Delete an existing mail template"""
   deleteMailTemplate(id: String!): Boolean
 
@@ -2938,8 +2975,14 @@ type Mutation {
   """Deletes an existing payment method."""
   deletePaymentMethod(id: String!): PaymentMethod!
 
+  """Deletes a payment provider setting."""
+  deletePaymentProviderSetting(id: String!): SettingPaymentProvider!
+
   """Deletes a paywall."""
   deletePaywall(id: String!): Paywall!
+
+  """Deletes an existing pdf renderer setting."""
+  deletePdfRendererSetting(id: String!): SettingPdfRenderer!
 
   """Deletes an existing peer."""
   deletePeer(id: String!): String!
@@ -2973,6 +3016,9 @@ type Mutation {
 
   """Deletes a token."""
   deleteToken(id: String!): Token!
+
+  """Deletes a tracking pixel setting."""
+  deleteTrackingPixelSetting(id: String!): SettingTrackingPixelProvider!
 
   """Deletes an existing user."""
   deleteUser(id: String!): SensitiveDataUser!
@@ -3093,6 +3139,11 @@ type Mutation {
   """Rejects a comment"""
   rejectComment(id: String!, rejectionReason: CommentRejectionReason!): Comment!
 
+  """
+  Rebuilds the payment, tracking pixel, mail, challenge, letter and pdf renderer providers from their settings, so integration changes take effect without restarting the API.
+  """
+  reloadProviders: Boolean!
+
   """Renews a subscription."""
   renewSubscription(id: String!): PublicSubscription!
 
@@ -3192,7 +3243,7 @@ type Mutation {
   updateBlockStyle(blocks: [EditorBlockType!], id: String!, name: String): BlockStyle!
 
   """Updates an existing challenge provider setting."""
-  updateChallengeProviderSetting(id: String, name: String, secret: String, siteKey: String): SettingChallengeProvider!
+  updateChallengeProviderSetting(id: String, name: String, secret: String, siteKey: String, type: ChallengeProviderType): SettingChallengeProvider!
 
   """Update any existing comment"""
   updateComment(featured: Boolean, guestUserImageID: String, guestUsername: String, id: String!, ratingOverrides: [OverriddenRatingInput!], revision: CommentRevisionInput, source: String, tagIds: [String!], userID: String): Comment!
@@ -3241,11 +3292,12 @@ type Mutation {
     Email addresses containing this are placeholders, not real inboxes (e.g. @placeholder.example.com).
     """
     placeholderEmailContains: String
+    type: LetterProviderType
     webhookSigningKey: String
   ): SettingLetterProvider!
 
   """Updates an existing mail provider setting."""
-  updateMailProviderSetting(apiKey: String, fromAddress: String, id: String, mailchimp_baseURL: String, mailgun_baseDomain: String, mailgun_mailDomain: String, name: String, replyToAddress: String, slack_webhookURL: String, smtp_host: String, smtp_port: Int, smtp_secure: Boolean, smtp_user: String, webhookEndpointSecret: String): SettingMailProvider!
+  updateMailProviderSetting(apiKey: String, fromAddress: String, id: String, mailchimp_baseURL: String, mailgun_baseDomain: String, mailgun_mailDomain: String, name: String, replyToAddress: String, slack_webhookURL: String, smtp_host: String, smtp_port: Int, smtp_secure: Boolean, smtp_user: String, type: MailProviderType, webhookEndpointSecret: String): SettingMailProvider!
 
   """Update an existing mail template"""
   updateMailTemplate(id: String!, input: MailTemplateInput!): MailTemplateModel!
@@ -3272,6 +3324,9 @@ type Mutation {
 
   """Updates a paywall."""
   updatePaywall(active: Boolean, alternativeSubscribeUrl: String, anyMemberPlan: Boolean, bypassTokens: [String!], circumventDescription: RichText, description: RichText, fadeout: Boolean, hideContentAfter: Int, id: String!, memberPlanIds: [String!], name: String, upgradeCircumventDescription: RichText, upgradeDescription: RichText): Paywall!
+
+  """Updates an existing pdf renderer setting."""
+  updatePdfRendererSetting(cloudflare_accountId: String, cloudflare_apiToken: String, gotenberg_password: String, gotenberg_url: String, gotenberg_username: String, id: String, name: String, timeoutMs: Int, type: PdfRendererType): SettingPdfRenderer!
 
   """Updates an existing peer."""
   updatePeer(hostURL: String, id: String!, information: RichText, isDisabled: Boolean, name: String, slug: String, token: String): Peer!
@@ -3897,6 +3952,11 @@ type PaywallBypass {
   modifiedAt: DateTime!
   paywallId: String!
   token: String!
+}
+
+enum PdfRendererType {
+  cloudflare
+  gotenberg
 }
 
 type Peer {
@@ -4593,6 +4653,12 @@ type Query {
   """Returns a list of paywalls based on the filters given."""
   paywalls: [Paywall!]!
 
+  """Returns a single pdf renderer setting by id."""
+  pdfRendererSetting(id: String!): SettingPdfRenderer!
+
+  """Returns all pdf renderer settings."""
+  pdfRendererSettings(filter: SettingPdfRendererFilter): [SettingPdfRenderer!]!
+
   """
   This query takes either the ID or the slug and returns the peer profile.
   """
@@ -5018,6 +5084,7 @@ enum SettingName {
   PEERING_TIMEOUT_MS
   RESET_PASSWORD_JWT_EXPIRES_MIN
   SEND_LOGIN_JWT_EXPIRES_MIN
+  SESSION_TTL_DAYS
   SHOW_PENDING_WHEN_NOT_PUBLISHED
   SUBSCRIPTION_UPGRADE_BILLS_FULL_DIFFERENCE
 }
@@ -5038,6 +5105,7 @@ type SettingPaymentProvider implements SettingProvider {
   bexio_unitId: Float
   bexio_userId: Float
   createdAt: DateTime!
+  deletedAt: DateTime
   id: String!
   lastLoadedAt: DateTime!
   modifiedAt: DateTime!
@@ -5057,6 +5125,25 @@ input SettingPaymentProviderFilter {
   id: String
   name: String
   type: PaymentProviderType
+}
+
+type SettingPdfRenderer implements SettingProvider {
+  cloudflare_accountId: String
+  createdAt: DateTime!
+  gotenberg_url: String
+  gotenberg_username: String
+  id: String!
+  lastLoadedAt: DateTime!
+  modifiedAt: DateTime!
+  name: String
+  timeoutMs: Int
+  type: PdfRendererType!
+}
+
+input SettingPdfRendererFilter {
+  id: String
+  name: String
+  type: PdfRendererType
 }
 
 interface SettingProvider {
@@ -5106,6 +5193,7 @@ input SettingTrackingPixelFilter {
 
 type SettingTrackingPixelProvider implements SettingProvider {
   createdAt: DateTime!
+  deletedAt: DateTime
   id: String!
   lastLoadedAt: DateTime!
   modifiedAt: DateTime!

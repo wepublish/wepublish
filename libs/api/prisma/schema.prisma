@@ -1807,6 +1807,7 @@ enum MailProviderType {
   MAILCHIMP @map("mailchimp")
   SLACK     @map("slack")
   SMTP      @map("smtp")
+  LOG       @map("log")
 }
 
 model SettingMailProvider {
@@ -1816,6 +1817,7 @@ model SettingMailProvider {
   lastLoadedAt DateTime @default(now()) @db.Timestamptz(3)
 
   type                  MailProviderType
+  deletedAt             DateTime?        @db.Timestamptz(3)
   name                  String?
   fromAddress           String?
   replyToAddress        String?
@@ -1863,6 +1865,30 @@ model SettingLetterProvider {
   @@map("settings.letterprovider")
 }
 
+enum PdfRendererType {
+  cloudflare
+  gotenberg
+}
+
+model SettingPdfRenderer {
+  id           String   @id
+  createdAt    DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt   DateTime @updatedAt @db.Timestamptz(3)
+  lastLoadedAt DateTime @default(now()) @db.Timestamptz(3)
+
+  type PdfRendererType
+  name String?
+
+  cloudflare_accountId String?
+  cloudflare_apiToken  String?
+  gotenberg_url        String?
+  gotenberg_username   String?
+  gotenberg_password   String?
+  timeoutMs            Int?
+
+  @@map("settings.pdfrenderer")
+}
+
 enum LetterAddressPosition {
   left
   right
@@ -1892,6 +1918,7 @@ model SettingTrackingPixel {
   modifiedAt                             DateTime                  @updatedAt @db.Timestamptz(3)
   lastLoadedAt                           DateTime                  @default(now()) @db.Timestamptz(3)
   type                                   TrackingPixelProviderType
+  deletedAt                              DateTime?                 @db.Timestamptz(3)
   name                                   String?
   prolitteris_memberNr                   String?
   prolitteris_username                   String?
@@ -2056,6 +2083,7 @@ model SettingPaymentProvider {
   lastLoadedAt DateTime @default(now()) @db.Timestamptz(3)
 
   type                  PaymentProviderType
+  deletedAt             DateTime?           @db.Timestamptz(3)
   name                  String?
   offSessionPayments    Boolean?
   webhookEndpointSecret String? // Payrexx webhookApiKey
@@ -2101,9 +2129,10 @@ model SettingChallengeProvider {
   lastLoadedAt DateTime @default(now()) @db.Timestamptz(3)
   name         String?
 
-  type    ChallengeProviderType
-  secret  String?
-  siteKey String?
+  type      ChallengeProviderType
+  deletedAt DateTime?             @db.Timestamptz(3)
+  secret    String?
+  siteKey   String?
 
   @@map("settings.challengeprovider")
 }
