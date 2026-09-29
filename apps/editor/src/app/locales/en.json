@@ -2566,6 +2566,7 @@
         "psp": "Payment Service Providers",
         "type": "Type",
         "vatRate": "VAT Rate",
+        "declineRenewals": "Decline renewals (simulate failed recurring payments)",
         "webhookEndpointSecret": "Webhook Endpoint Secret",
         "bexioUserId": "Bexio User ID",
         "bexioCountryId": "Bexio Country ID",

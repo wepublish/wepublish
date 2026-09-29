@@ -1825,6 +1825,7 @@ enum PaymentProviderType {
   BEXIO                @map("bexio")
   MOLLIE               @map("mollie")
   NO_CHARGE            @map("no-charge")
+  SIMULATED            @map("simulated")
 }
 
 enum PayrexxPSP {
@@ -1982,6 +1983,7 @@ model SettingPaymentProvider {
   payrexx_psp          PayrexxPSP[]
   payrexx_pm           PayrexxPM[]
   payrexx_vatrate      Decimal?     @db.Decimal(5, 4)
+  simulated_declineRenewals Boolean  @default(false)
 
   bexio_userId                              Int?
   bexio_countryId                           Int?
