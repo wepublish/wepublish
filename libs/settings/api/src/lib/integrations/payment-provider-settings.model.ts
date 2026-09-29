@@ -63,6 +63,10 @@ export class SettingPaymentProvider extends SettingProvider {
   @Field({ nullable: true })
   payrexx_vatrate?: string;
 
+  // Simulated provider: renewals (charges of a stored customer) come back declined.
+  @Field(type => Boolean, { nullable: true })
+  simulated_declineRenewals?: boolean;
+
   @Field(type => Number, { nullable: true })
   bexio_userId?: number;
 

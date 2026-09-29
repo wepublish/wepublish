@@ -8,7 +8,7 @@ const defaultOptions = {} as const;
 export type PaymentProviderSettingsQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type PaymentProviderSettingsQuery = { __typename?: 'Query', paymentProviderSettings: Array<{ __typename?: 'SettingPaymentProvider', deletedAt?: string | null, bexio_accountId?: number | null, bexio_countryId?: number | null, bexio_invoiceMailBodyNewMembership?: string | null, bexio_invoiceMailBodyRenewalMembership?: string | null, bexio_invoiceMailSubjectNewMembership?: string | null, bexio_invoiceMailSubjectRenewalMembership?: string | null, bexio_invoiceTemplateNewMembership?: string | null, bexio_invoiceTemplateRenewalMembership?: string | null, bexio_invoiceTitleNewMembership?: string | null, bexio_invoiceTitleRenewalMembership?: string | null, bexio_markInvoiceAsOpen?: boolean | null, bexio_taxId?: number | null, bexio_unitId?: number | null, bexio_userId?: number | null, createdAt: string, id: string, lastLoadedAt: string, modifiedAt: string, mollie_apiBaseUrl?: string | null, mollie_methods?: Array<Types.PaymentMethodMollie> | null, name?: string | null, offSessionPayments?: boolean | null, payrexx_instancename?: string | null, payrexx_pm?: Array<Types.PayrexxPm> | null, payrexx_psp?: Array<Types.PayrexxPsp> | null, payrexx_vatrate?: string | null, stripe_methods?: Array<Types.StripePaymentMethod> | null, type: Types.PaymentProviderType }> };
+export type PaymentProviderSettingsQuery = { __typename?: 'Query', paymentProviderSettings: Array<{ __typename?: 'SettingPaymentProvider', deletedAt?: string | null, bexio_accountId?: number | null, bexio_countryId?: number | null, bexio_invoiceMailBodyNewMembership?: string | null, bexio_invoiceMailBodyRenewalMembership?: string | null, bexio_invoiceMailSubjectNewMembership?: string | null, bexio_invoiceMailSubjectRenewalMembership?: string | null, bexio_invoiceTemplateNewMembership?: string | null, bexio_invoiceTemplateRenewalMembership?: string | null, bexio_invoiceTitleNewMembership?: string | null, bexio_invoiceTitleRenewalMembership?: string | null, bexio_markInvoiceAsOpen?: boolean | null, bexio_taxId?: number | null, bexio_unitId?: number | null, bexio_userId?: number | null, createdAt: string, id: string, lastLoadedAt: string, modifiedAt: string, mollie_apiBaseUrl?: string | null, mollie_methods?: Array<Types.PaymentMethodMollie> | null, name?: string | null, offSessionPayments?: boolean | null, payrexx_instancename?: string | null, payrexx_pm?: Array<Types.PayrexxPm> | null, payrexx_psp?: Array<Types.PayrexxPsp> | null, payrexx_vatrate?: string | null, simulated_declineRenewals?: boolean | null, stripe_methods?: Array<Types.StripePaymentMethod> | null, type: Types.PaymentProviderType }> };
 
 export type UpdatePaymentProviderSettingMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
@@ -35,12 +35,13 @@ export type UpdatePaymentProviderSettingMutationVariables = Types.Exact<{
   payrexx_pm?: Types.InputMaybe<Array<Types.PayrexxPm> | Types.PayrexxPm>;
   payrexx_psp?: Types.InputMaybe<Array<Types.PayrexxPsp> | Types.PayrexxPsp>;
   payrexx_vatrate?: Types.InputMaybe<Types.Scalars['String']>;
+  simulated_declineRenewals?: Types.InputMaybe<Types.Scalars['Boolean']>;
   stripe_methods?: Types.InputMaybe<Array<Types.StripePaymentMethod> | Types.StripePaymentMethod>;
   webhookEndpointSecret?: Types.InputMaybe<Types.Scalars['String']>;
 }>;
 
 
-export type UpdatePaymentProviderSettingMutation = { __typename?: 'Mutation', updatePaymentProviderSetting: { __typename?: 'SettingPaymentProvider', bexio_accountId?: number | null, bexio_countryId?: number | null, bexio_invoiceMailBodyNewMembership?: string | null, bexio_invoiceMailBodyRenewalMembership?: string | null, bexio_invoiceMailSubjectNewMembership?: string | null, bexio_invoiceMailSubjectRenewalMembership?: string | null, bexio_invoiceTemplateNewMembership?: string | null, bexio_invoiceTemplateRenewalMembership?: string | null, bexio_invoiceTitleNewMembership?: string | null, bexio_invoiceTitleRenewalMembership?: string | null, bexio_markInvoiceAsOpen?: boolean | null, bexio_taxId?: number | null, bexio_unitId?: number | null, bexio_userId?: number | null, createdAt: string, id: string, lastLoadedAt: string, modifiedAt: string, mollie_apiBaseUrl?: string | null, mollie_methods?: Array<Types.PaymentMethodMollie> | null, name?: string | null, offSessionPayments?: boolean | null, payrexx_instancename?: string | null, payrexx_pm?: Array<Types.PayrexxPm> | null, payrexx_psp?: Array<Types.PayrexxPsp> | null, payrexx_vatrate?: string | null, stripe_methods?: Array<Types.StripePaymentMethod> | null, type: Types.PaymentProviderType } };
+export type UpdatePaymentProviderSettingMutation = { __typename?: 'Mutation', updatePaymentProviderSetting: { __typename?: 'SettingPaymentProvider', bexio_accountId?: number | null, bexio_countryId?: number | null, bexio_invoiceMailBodyNewMembership?: string | null, bexio_invoiceMailBodyRenewalMembership?: string | null, bexio_invoiceMailSubjectNewMembership?: string | null, bexio_invoiceMailSubjectRenewalMembership?: string | null, bexio_invoiceTemplateNewMembership?: string | null, bexio_invoiceTemplateRenewalMembership?: string | null, bexio_invoiceTitleNewMembership?: string | null, bexio_invoiceTitleRenewalMembership?: string | null, bexio_markInvoiceAsOpen?: boolean | null, bexio_taxId?: number | null, bexio_unitId?: number | null, bexio_userId?: number | null, createdAt: string, id: string, lastLoadedAt: string, modifiedAt: string, mollie_apiBaseUrl?: string | null, mollie_methods?: Array<Types.PaymentMethodMollie> | null, name?: string | null, offSessionPayments?: boolean | null, payrexx_instancename?: string | null, payrexx_pm?: Array<Types.PayrexxPm> | null, payrexx_psp?: Array<Types.PayrexxPsp> | null, payrexx_vatrate?: string | null, simulated_declineRenewals?: boolean | null, stripe_methods?: Array<Types.StripePaymentMethod> | null, type: Types.PaymentProviderType } };
 
 export type CreatePaymentProviderSettingMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
@@ -89,6 +90,7 @@ export const PaymentProviderSettingsDocument = gql`
     payrexx_pm
     payrexx_psp
     payrexx_vatrate
+    simulated_declineRenewals
     stripe_methods
     type
   }
@@ -122,7 +124,7 @@ export type PaymentProviderSettingsQueryHookResult = ReturnType<typeof usePaymen
 export type PaymentProviderSettingsLazyQueryHookResult = ReturnType<typeof usePaymentProviderSettingsLazyQuery>;
 export type PaymentProviderSettingsQueryResult = Apollo.QueryResult<PaymentProviderSettingsQuery, PaymentProviderSettingsQueryVariables>;
 export const UpdatePaymentProviderSettingDocument = gql`
-    mutation UpdatePaymentProviderSetting($id: String!, $apiKey: String, $bexio_accountId: Float, $bexio_countryId: Float, $bexio_invoiceMailBodyNewMembership: String, $bexio_invoiceMailBodyRenewalMembership: String, $bexio_invoiceMailSubjectNewMembership: String, $bexio_invoiceMailSubjectRenewalMembership: String, $bexio_invoiceTemplateNewMembership: String, $bexio_invoiceTemplateRenewalMembership: String, $bexio_invoiceTitleNewMembership: String, $bexio_invoiceTitleRenewalMembership: String, $bexio_markInvoiceAsOpen: Boolean, $bexio_taxId: Float, $bexio_unitId: Float, $bexio_userId: Float, $mollie_apiBaseUrl: String, $mollie_methods: [PaymentMethodMollie!], $name: String, $offSessionPayments: Boolean, $payrexx_instancename: String, $payrexx_pm: [PayrexxPM!], $payrexx_psp: [PayrexxPSP!], $payrexx_vatrate: String, $stripe_methods: [StripePaymentMethod!], $webhookEndpointSecret: String) {
+    mutation UpdatePaymentProviderSetting($id: String!, $apiKey: String, $bexio_accountId: Float, $bexio_countryId: Float, $bexio_invoiceMailBodyNewMembership: String, $bexio_invoiceMailBodyRenewalMembership: String, $bexio_invoiceMailSubjectNewMembership: String, $bexio_invoiceMailSubjectRenewalMembership: String, $bexio_invoiceTemplateNewMembership: String, $bexio_invoiceTemplateRenewalMembership: String, $bexio_invoiceTitleNewMembership: String, $bexio_invoiceTitleRenewalMembership: String, $bexio_markInvoiceAsOpen: Boolean, $bexio_taxId: Float, $bexio_unitId: Float, $bexio_userId: Float, $mollie_apiBaseUrl: String, $mollie_methods: [PaymentMethodMollie!], $name: String, $offSessionPayments: Boolean, $payrexx_instancename: String, $payrexx_pm: [PayrexxPM!], $payrexx_psp: [PayrexxPSP!], $payrexx_vatrate: String, $simulated_declineRenewals: Boolean, $stripe_methods: [StripePaymentMethod!], $webhookEndpointSecret: String) {
   updatePaymentProviderSetting(
     id: $id
     apiKey: $apiKey
@@ -148,6 +150,7 @@ export const UpdatePaymentProviderSettingDocument = gql`
     payrexx_pm: $payrexx_pm
     payrexx_psp: $payrexx_psp
     payrexx_vatrate: $payrexx_vatrate
+    simulated_declineRenewals: $simulated_declineRenewals
     stripe_methods: $stripe_methods
     webhookEndpointSecret: $webhookEndpointSecret
   ) {
@@ -177,6 +180,7 @@ export const UpdatePaymentProviderSettingDocument = gql`
     payrexx_pm
     payrexx_psp
     payrexx_vatrate
+    simulated_declineRenewals
     stripe_methods
     type
   }
@@ -221,6 +225,7 @@ export type UpdatePaymentProviderSettingMutationFn = Apollo.MutationFunction<Upd
  *      payrexx_pm: // value for 'payrexx_pm'
  *      payrexx_psp: // value for 'payrexx_psp'
  *      payrexx_vatrate: // value for 'payrexx_vatrate'
+ *      simulated_declineRenewals: // value for 'simulated_declineRenewals'
  *      stripe_methods: // value for 'stripe_methods'
  *      webhookEndpointSecret: // value for 'webhookEndpointSecret'
  *   },
