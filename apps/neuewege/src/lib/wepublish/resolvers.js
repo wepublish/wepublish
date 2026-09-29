@@ -477,7 +477,14 @@ async function RouterQuery({ path }) {
     : { route: null };
   if (!slug) return route(null);
 
-  const article = (await wepublishQuery(ARTICLE_BY_SLUG, { slug }))?.article;
+  // Drupal paths with umlauts were imported as their percent-encoded form
+  // (e.g. `z%c3%bcrich`), but Next hands the route over decoded.
+  const encodedSlug = encodeURIComponent(slug);
+  const article =
+    (await wepublishQuery(ARTICLE_BY_SLUG, { slug }))?.article ||
+    (encodedSlug !== slug ?
+      (await wepublishQuery(ARTICLE_BY_SLUG, { slug: encodedSlug }))?.article
+    : null);
   if (article) return route(await articleEntity(article));
 
   const page = (await wepublishQuery(PAGE_BY_SLUG, { slug }))?.page;
