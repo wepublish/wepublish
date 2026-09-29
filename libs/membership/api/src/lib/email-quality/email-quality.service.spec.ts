@@ -23,6 +23,12 @@ const makeService = ({
     userEmailQuality: {
       upsert: jest.fn(async ({ create }) => create),
     },
+    mailLog: {
+      findUnique: jest.fn(async () => ({
+        recipientID: 'user-1',
+        sentDate: new Date('2026-09-28T10:00:00Z'),
+      })),
+    },
   };
   const settings = {
     settingByName: jest.fn(async () => {
@@ -157,5 +163,97 @@ describe('EmailQualityService', () => {
         }),
       })
     );
+  });
+
+  describe('recordMailSignals', () => {
+    const sentDate = new Date('2026-09-28T10:00:00Z');
+    const at = (seconds: number) =>
+      new Date(sentDate.getTime() + seconds * 1000);
+
+    it('finds the recipient through the mail log', async () => {
+      const { prisma, service } = makeService();
+
+      await service.recordMailSignals({
+        mailLogId: 'log-1',
+        signals: [
+          {
+            type: EmailQualityEventType.hardBounce,
+            email: 'jane@example.com',
+            detail: 'bad_mailbox',
+          },
+        ],
+        source: EmailQualityEventSource.webhook,
+      });
+
+      expect(prisma.emailQualityEvent.createMany).toHaveBeenCalledWith({
+        data: [
+          expect.objectContaining({
+            userId: 'user-1',
+            mailLogId: 'log-1',
+            type: EmailQualityEventType.hardBounce,
+            detail: 'bad_mailbox',
+            source: EmailQualityEventSource.webhook,
+          }),
+        ],
+        skipDuplicates: true,
+      });
+    });
+
+    it('takes a click seconds after sending for a link scanner', async () => {
+      const { prisma, service } = makeService();
+
+      await service.recordMailSignals({
+        mailLogId: 'log-1',
+        signals: [
+          { type: EmailQualityEventType.clicked, occurredAt: at(5) },
+          { type: EmailQualityEventType.clicked, occurredAt: at(600) },
+        ],
+        source: EmailQualityEventSource.webhook,
+      });
+
+      const [{ data }] = (prisma.emailQualityEvent.createMany as jest.Mock).mock
+        .calls[0];
+
+      expect(data.map(({ type, detail }: any) => ({ type, detail }))).toEqual([
+        { type: EmailQualityEventType.opened, detail: 'probableScannerClick' },
+        { type: EmailQualityEventType.clicked, detail: null },
+      ]);
+    });
+
+    it('drops evidence for a mail whose recipient is gone', async () => {
+      const { prisma, service } = makeService();
+      prisma.mailLog.findUnique.mockResolvedValueOnce(null as any);
+
+      await service.recordMailSignals({
+        mailLogId: 'gone',
+        signals: [{ type: EmailQualityEventType.hardBounce }],
+        source: EmailQualityEventSource.webhook,
+      });
+
+      expect(prisma.emailQualityEvent.createMany).not.toHaveBeenCalled();
+    });
+  });
+
+  it('records user evidence for the given address', async () => {
+    const { prisma, service } = makeService();
+
+    await service.recordUserSignal({
+      userId: 'user-1',
+      signal: {
+        type: EmailQualityEventType.emailConfirmed,
+        email: 'New@Example.com',
+      },
+      source: EmailQualityEventSource.user,
+    });
+
+    expect(prisma.emailQualityEvent.createMany).toHaveBeenCalledWith({
+      data: [
+        expect.objectContaining({
+          type: EmailQualityEventType.emailConfirmed,
+          email: 'new@example.com',
+        }),
+      ],
+      skipDuplicates: true,
+    });
   });
 });

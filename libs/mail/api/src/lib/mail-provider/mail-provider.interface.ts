@@ -1,4 +1,8 @@
-import { MailLogState, MailProviderType } from '@prisma/client';
+import {
+  EmailQualityEventType,
+  MailLogState,
+  MailProviderType,
+} from '@prisma/client';
 import { NextHandleFunction } from 'connect';
 import express from 'express';
 
@@ -15,10 +19,22 @@ export interface SendMailProps {
   messageHtml?: string;
 }
 
+/** Evidence about the recipient's address a provider reports for a mail. */
+export interface MailQualitySignal {
+  type: EmailQualityEventType;
+  /** Recipient address as the provider reports it. */
+  email?: string;
+  /** Reject reason or bounce diagnosis. */
+  detail?: string | null;
+  occurredAt?: Date;
+}
+
 export interface MailLogStatus {
   mailLogID: string;
-  state: MailLogState;
+  /** Null for events that say something about the address but do not change the delivery state, like opens or complaints. */
+  state: MailLogState | null;
   mailData?: string;
+  qualitySignals?: MailQualitySignal[];
 }
 
 export interface SendMailResult {
@@ -35,6 +51,7 @@ export interface MailProviderMessageState {
   state: MailLogState;
   /** Raw provider payload, stored for diagnosis. */
   mailData?: string;
+  qualitySignals?: MailQualitySignal[];
 }
 
 export enum MailTemplateStatus {
@@ -66,7 +83,15 @@ export class MailProviderError extends Error {}
  * job may record the miss and carry on. Everything else stays a plain
  * {@link MailProviderError} and has to bring the batch down.
  */
-export class MailProviderRecipientError extends MailProviderError {}
+export class MailProviderRecipientError extends MailProviderError {
+  constructor(
+    message: string,
+    /** The provider's reason, e.g. `hard-bounce`, `spam` or `invalid`. */
+    readonly reason?: string
+  ) {
+    super(message);
+  }
+}
 
 export interface MailProvider {
   readonly id: string;

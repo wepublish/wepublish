@@ -1,4 +1,8 @@
-import { MailLogState, PrismaClient } from '@prisma/client';
+import {
+  EmailQualityEventType,
+  MailLogState,
+  PrismaClient,
+} from '@prisma/client';
 import { MailContext } from '@wepublish/mail/api';
 import { MailLogSyncService } from './mail-log-sync.service';
 
@@ -16,11 +20,13 @@ const makeService = (
   const findMany = jest.fn(async () => logs);
   const update = jest.fn(async (args: any) => args);
   const prisma = { mailLog: { findMany, update } };
+  const recordMailSignals = jest.fn(async () => undefined);
   const mailContext = {
     mailProvider:
       providerPresent ?
-        { getMessageStates, getName: async () => 'Mailchimp' }
+        { id: 'mailchimp', getMessageStates, getName: async () => 'Mailchimp' }
       : undefined,
+    emailQualityRecorder: { recordMailSignals, recordUserSignal: jest.fn() },
   };
 
   return {
@@ -30,6 +36,7 @@ const makeService = (
     ),
     findMany,
     update,
+    recordMailSignals,
   };
 };
 
@@ -83,6 +90,7 @@ describe('MailLogSyncService', () => {
             ],
           },
           mailProviderMessageID: { not: null },
+          mailProviderID: 'mailchimp',
         },
       })
     );
@@ -164,5 +172,74 @@ describe('MailLogSyncService', () => {
     expect(findMany).toHaveBeenCalledWith(
       expect.objectContaining({ take: 500 })
     );
+  });
+
+  it('only asks about mails the current provider sent', async () => {
+    const { service, findMany } = makeService(
+      [],
+      jest.fn(async () => [])
+    );
+
+    await service.syncOpenStates();
+
+    expect(findMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({ mailProviderID: 'mailchimp' }),
+      })
+    );
+  });
+
+  it('reports what the polled state says about the address', async () => {
+    const signal = {
+      type: EmailQualityEventType.hardBounce,
+      email: 'jane@example.com',
+    };
+    const { service, recordMailSignals } = makeService(
+      [
+        {
+          id: 'log1',
+          state: MailLogState.submitted,
+          mailProviderMessageID: 'm1',
+          recipientID: 'user-1',
+        } as any,
+      ],
+      jest.fn(async () => [
+        {
+          providerMessageID: 'm1',
+          state: MailLogState.bounced,
+          qualitySignals: [signal],
+        },
+      ])
+    );
+
+    await service.syncOpenStates();
+
+    expect(recordMailSignals).toHaveBeenCalledWith({
+      mailLogId: 'log1',
+      userId: 'user-1',
+      signals: [signal],
+      source: 'poll',
+    });
+  });
+
+  it('does not move a mail back to an earlier state', async () => {
+    const { service, update } = makeService(
+      [
+        {
+          id: 'log1',
+          state: MailLogState.deferred,
+          mailProviderMessageID: 'm1',
+        },
+      ],
+      jest.fn(async () => [
+        { providerMessageID: 'm1', state: MailLogState.submitted },
+      ])
+    );
+
+    await expect(service.syncOpenStates()).resolves.toEqual({
+      checked: 1,
+      updated: 0,
+    });
+    expect(update).not.toHaveBeenCalled();
   });
 });

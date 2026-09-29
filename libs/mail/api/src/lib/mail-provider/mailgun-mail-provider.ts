@@ -1,4 +1,4 @@
-import { MailLogState } from '@prisma/client';
+import { EmailQualityEventType, MailLogState } from '@prisma/client';
 import crypto from 'crypto';
 import FormData from 'form-data';
 import Mailgun from 'mailgun.js';
@@ -6,6 +6,7 @@ import {
   MailLogStatus,
   MailProviderTemplate,
   MailProviderTemplateContent,
+  MailQualitySignal,
   SendMailProps,
   SendMailResult,
   WebhookForSendMailProps,
@@ -28,6 +29,63 @@ function mapMailgunEventToMailLogState(event: string): MailLogState | null {
       return MailLogState.bounced;
     case 'rejected':
       return MailLogState.rejected;
+    default:
+      return null;
+  }
+}
+
+type MailgunEventData = {
+  event?: string;
+  severity?: string;
+  reason?: string;
+  recipient?: string;
+  timestamp?: number;
+  'delivery-status'?: { description?: string; message?: string };
+};
+
+/** What an event says about the recipient's address, besides the delivery state. */
+function mapMailgunEventToQualitySignal(
+  data: MailgunEventData
+): MailQualitySignal | null {
+  const signal = (
+    type: EmailQualityEventType,
+    detail?: string | null
+  ): MailQualitySignal => ({
+    type,
+    email: data.recipient,
+    detail: detail ?? null,
+    occurredAt:
+      typeof data.timestamp === 'number' ?
+        new Date(data.timestamp * 1000)
+      : undefined,
+  });
+
+  switch (data.event) {
+    case 'failed': {
+      const diagnosis =
+        data['delivery-status']?.description ||
+        data['delivery-status']?.message ||
+        data.reason ||
+        null;
+
+      // temporary failures are retried by Mailgun and may still get through
+      return signal(
+        data.severity === 'permanent' ?
+          EmailQualityEventType.hardBounce
+        : EmailQualityEventType.softBounce,
+        diagnosis
+      );
+    }
+    case 'rejected':
+      return signal(EmailQualityEventType.rejected, data.reason);
+    case 'complained':
+      return signal(EmailQualityEventType.spamComplaint);
+    case 'unsubscribed':
+      return signal(EmailQualityEventType.unsubscribed);
+    case 'opened':
+      return signal(EmailQualityEventType.opened);
+    case 'clicked':
+      return signal(EmailQualityEventType.clicked);
     default:
       return null;
   }
@@ -66,7 +124,7 @@ export class MailgunMailProvider extends BaseMailProvider {
       !timestamp ||
       !token ||
       !signature ||
-      !this.verifyWebhookSignature({ timestamp, token, signature })
+      !(await this.verifyWebhookSignature({ timestamp, token, signature }))
     ) {
       throw new Error('Webhook signature failed');
     }
@@ -81,13 +139,15 @@ export class MailgunMailProvider extends BaseMailProvider {
 
     const mailLogStatuses: MailLogStatus[] = [];
     const state = mapMailgunEventToMailLogState(body['event-data'].event);
+    const signal = mapMailgunEventToQualitySignal(body['event-data']);
     const mailLogID = body['event-data']['user-variables'].mail_log_id;
 
-    if (state !== null && mailLogID !== undefined) {
+    if ((state !== null || signal) && mailLogID !== undefined) {
       mailLogStatuses.push({
         state,
         mailLogID,
         mailData: JSON.stringify(body['event-data']),
+        qualitySignals: signal ? [signal] : [],
       });
     }
 

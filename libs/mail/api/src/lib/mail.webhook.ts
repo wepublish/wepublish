@@ -5,6 +5,7 @@ import {
   Logger,
   NestMiddleware,
   NotFoundException,
+  Optional,
   Param,
   Req,
   Res,
@@ -16,9 +17,37 @@ import {
   MAILS_MODULE_OPTIONS,
   MailsModuleOptions,
 } from './mails-module-options';
-import { PrismaClient } from '@prisma/client';
+import {
+  EmailQualityEventSource,
+  MailLogState,
+  PrismaClient,
+} from '@prisma/client';
+import {
+  EMAIL_QUALITY_RECORDER,
+  EmailQualityRecorder,
+  recordEmailQualitySafely,
+} from './email-quality-recorder';
 
 export const MAIL_WEBHOOK_PATH_PREFIX = 'mail-webhooks';
+
+// Partial: letter states (neuewege) never arrive through this webhook
+const MAIL_LOG_STATE_RANK: Partial<Record<MailLogState, number>> = {
+  [MailLogState.submitted]: 0,
+  [MailLogState.accepted]: 1,
+  [MailLogState.deferred]: 2,
+  [MailLogState.delivered]: 3,
+  [MailLogState.bounced]: 4,
+  [MailLogState.rejected]: 4,
+};
+
+/**
+ * Provider events arrive out of order and get retried: a late `send` must not
+ * turn a bounced mail back into a delivered one. A state only moves forward.
+ */
+export const shouldUpdateMailLogState = (
+  current: MailLogState,
+  next: MailLogState
+) => (MAIL_LOG_STATE_RANK[next] ?? 0) >= (MAIL_LOG_STATE_RANK[current] ?? 0);
 
 @Controller(MAIL_WEBHOOK_PATH_PREFIX)
 export class MailWebhookController {
@@ -27,7 +56,10 @@ export class MailWebhookController {
   constructor(
     private prisma: PrismaClient,
     @Inject(MAILS_MODULE_OPTIONS)
-    private config: MailsModuleOptions
+    private config: MailsModuleOptions,
+    @Optional()
+    @Inject(EMAIL_QUALITY_RECORDER)
+    private emailQualityRecorder?: EmailQualityRecorder
   ) {}
 
   @Public()
@@ -68,15 +100,31 @@ export class MailWebhookController {
           continue; // TODO: handle missing mailLog
         }
 
-        await this.prisma.mailLog.update({
-          where: { id: mailLog.id },
-          data: {
-            subject: mailLog.subject,
-            mailProviderID: mailLog.mailProviderID,
-            state: mailLogStatus.state,
-            mailData: mailLogStatus.mailData,
-          },
-        });
+        if (
+          mailLogStatus.state &&
+          shouldUpdateMailLogState(mailLog.state, mailLogStatus.state)
+        ) {
+          await this.prisma.mailLog.update({
+            where: { id: mailLog.id },
+            data: {
+              subject: mailLog.subject,
+              mailProviderID: mailLog.mailProviderID,
+              state: mailLogStatus.state,
+              mailData: mailLogStatus.mailData,
+            },
+          });
+        }
+
+        if (mailLogStatus.qualitySignals?.length) {
+          await recordEmailQualitySafely(this.emailQualityRecorder, recorder =>
+            recorder.recordMailSignals({
+              mailLogId: mailLog.id,
+              userId: mailLog.recipientID,
+              signals: mailLogStatus.qualitySignals!,
+              source: EmailQualityEventSource.webhook,
+            })
+          );
+        }
       }
     } catch (error) {
       this.logger.error(

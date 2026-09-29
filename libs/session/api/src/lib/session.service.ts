@@ -1,5 +1,11 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
-import { PrismaClient, User, UserEvent } from '@prisma/client';
+import {
+  EmailQualityEventSource,
+  EmailQualityEventType,
+  PrismaClient,
+  User,
+  UserEvent,
+} from '@prisma/client';
 import { InvalidCredentialsError, NotActiveError } from './session.errors';
 import nanoid from 'nanoid/generate';
 import {
@@ -12,7 +18,11 @@ import {
 import { UserAuthenticationService } from './user-authentication.service';
 import { JwtAuthenticationService } from './jwt-authentication.service';
 import { unselectPassword, UserSession } from '@wepublish/authentication/api';
-import { MailContext, mailLogType } from '@wepublish/mail/api';
+import {
+  MailContext,
+  mailLogType,
+  recordEmailQualitySafely,
+} from '@wepublish/mail/api';
 import { SettingName, SettingsService } from '@wepublish/settings/api';
 import { Validator } from './validator';
 import { UserService } from '@wepublish/user/api';
@@ -137,7 +147,25 @@ export class SessionService {
       await this.totpService.verifyUserTotp(user.id, totpToken);
     }
 
-    return this.createUserSession(user);
+    const session = await this.createUserSession(user);
+
+    // Website login links only ever travel by mail, so redeeming one proves
+    // the address reaches its owner. Editor previews do not.
+    if (!isPreview) {
+      const { id, email } = user;
+
+      await recordEmailQualitySafely(
+        this.mailContext.emailQualityRecorder,
+        recorder =>
+          recorder.recordUserSignal({
+            userId: id,
+            signal: { type: EmailQualityEventType.jwtLogin, email },
+            source: EmailQualityEventSource.session,
+          })
+      );
+    }
+
+    return session;
   }
 
   async revokeSession(session: UserSession | null) {

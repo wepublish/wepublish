@@ -1,6 +1,7 @@
 import bodyParser from 'body-parser';
+import crypto from 'crypto';
 import nock from 'nock';
-import { MailLogState } from '@prisma/client';
+import { EmailQualityEventType, MailLogState } from '@prisma/client';
 import { createKvMock } from '@wepublish/kv-ttl-cache/api';
 import { MailchimpMailProvider } from './mailchimp-mail-provider';
 import {
@@ -142,12 +143,14 @@ describe('MailchimpMailProvider', () => {
       expect(error.message).toBe(
         `Mandrill rejected user@example.com: ${reject_reason}`
       );
+      expect((error as MailProviderRecipientError).reason).toBe(reject_reason);
     });
 
     it('blames only the recipient for an unusable address', async () => {
       const error = await rejectionError({ status: 'invalid' });
 
       expect(error).toBeInstanceOf(MailProviderRecipientError);
+      expect((error as MailProviderRecipientError).reason).toBe('invalid');
     });
 
     // These would refuse every other message of the run just the same, so they
@@ -178,6 +181,134 @@ describe('MailchimpMailProvider', () => {
       const error = await rejectionError({ status: 'rejected' });
 
       expect(error).not.toBeInstanceOf(MailProviderRecipientError);
+    });
+  });
+
+  describe('webhookForSendMail', () => {
+    const url = 'https://api.example.com/mail-webhooks/mailchimp';
+    const body = {
+      mandrill_events: JSON.stringify([
+        { event: 'hard_bounce', msg: { metadata: { mail_log_id: 'log-1' } } },
+      ]),
+    };
+    // Mandrill signs the webhook url followed by every POST key and value
+    const sign = (secret: string) =>
+      crypto
+        .createHmac('sha1', secret)
+        .update(url + 'mandrill_events' + body.mandrill_events)
+        .digest('base64');
+    const request = (signature: string) =>
+      ({
+        method: 'POST',
+        headers: { 'x-mandrill-signature': signature, host: 'api.example.com' },
+        originalUrl: '/mail-webhooks/mailchimp',
+        body,
+      }) as any;
+
+    it('refuses a webhook with a wrong signature', async () => {
+      await expect(
+        (await makeProvider()).webhookForSendMail({
+          req: request(sign('not-the-secret')),
+        })
+      ).rejects.toThrow('Webhook signature failed');
+    });
+
+    const signedRequest = (events: unknown[]) => {
+      const mandrill_events = JSON.stringify(events);
+
+      return {
+        method: 'POST',
+        headers: {
+          'x-mandrill-signature': crypto
+            .createHmac('sha1', '')
+            .update(url + 'mandrill_events' + mandrill_events)
+            .digest('base64'),
+          host: 'api.example.com',
+        },
+        originalUrl: '/mail-webhooks/mailchimp',
+        body: { mandrill_events },
+      } as any;
+    };
+    const msg = {
+      email: 'user@example.com',
+      metadata: { mail_log_id: 'log-1' },
+    };
+
+    it('tells hard and soft bounces apart and keeps the diagnosis', async () => {
+      const statuses = await (
+        await makeProvider()
+      ).webhookForSendMail({
+        req: signedRequest([
+          {
+            event: 'hard_bounce',
+            ts: 1790000000,
+            msg: { ...msg, bounce_description: 'bad_mailbox' },
+          },
+          { event: 'soft_bounce', msg: { ...msg, diag: '452 mailbox full' } },
+        ]),
+      });
+
+      expect(statuses.map(({ state }) => state)).toEqual([
+        MailLogState.bounced,
+        MailLogState.bounced,
+      ]);
+      expect(statuses.map(({ qualitySignals }) => qualitySignals)).toEqual([
+        [
+          {
+            type: EmailQualityEventType.hardBounce,
+            email: 'user@example.com',
+            detail: 'bad_mailbox',
+            occurredAt: new Date(1790000000 * 1000),
+          },
+        ],
+        [
+          expect.objectContaining({
+            type: EmailQualityEventType.softBounce,
+            detail: '452 mailbox full',
+          }),
+        ],
+      ]);
+    });
+
+    it.each([
+      ['spam', EmailQualityEventType.spamComplaint],
+      ['unsub', EmailQualityEventType.unsubscribed],
+      ['open', EmailQualityEventType.opened],
+      ['click', EmailQualityEventType.clicked],
+    ])(
+      'reports %s without touching the delivery state',
+      async (event, type) => {
+        const [status] = await (
+          await makeProvider()
+        ).webhookForSendMail({
+          req: signedRequest([{ event, msg }]),
+        });
+
+        expect(status.state).toBeNull();
+        expect(status.qualitySignals).toEqual([
+          expect.objectContaining({ type, email: 'user@example.com' }),
+        ]);
+      }
+    );
+
+    it('drops events that say nothing', async () => {
+      await expect(
+        (await makeProvider()).webhookForSendMail({
+          req: signedRequest([{ event: 'whitelist', msg }]),
+        })
+      ).resolves.toEqual([]);
+    });
+
+    it('accepts a correctly signed webhook', async () => {
+      // the test provider has no webhookEndpointSecret, so it signs with ''
+      await expect(
+        (await makeProvider()).webhookForSendMail({ req: request(sign('')) })
+      ).resolves.toEqual([
+        expect.objectContaining({
+          mailLogID: 'log-1',
+          state: MailLogState.bounced,
+        }),
+      ]);
     });
   });
 
@@ -220,12 +351,58 @@ describe('MailchimpMailProvider', () => {
       const states = await (await makeProvider()).getMessageStates(['msg-1']);
 
       expect(states).toEqual([
-        {
+        expect.objectContaining({
           providerMessageID: 'msg-1',
           state: expected,
           mailData: JSON.stringify(infoReply(mandrillState)),
-        },
+        }),
       ]);
+    });
+
+    it.each([
+      ['bounced', EmailQualityEventType.hardBounce, null],
+      ['soft-bounced', EmailQualityEventType.softBounce, null],
+      ['invalid', EmailQualityEventType.rejected, 'invalid'],
+      ['spam', EmailQualityEventType.spamComplaint, null],
+      ['unsub', EmailQualityEventType.unsubscribed, null],
+    ])(
+      'reports what state %s says about the address',
+      async (mandrillState, type, detail) => {
+        nock(MANDRILL)
+          .post('/api/1.0/messages/info')
+          .reply(200, infoReply(mandrillState));
+
+        const [state] = await (
+          await makeProvider()
+        ).getMessageStates(['msg-1']);
+
+        expect(state.qualitySignals).toEqual([
+          { type, email: 'user@example.com', detail },
+        ]);
+      }
+    );
+
+    it('reports opens and clicks it has seen', async () => {
+      nock(MANDRILL)
+        .post('/api/1.0/messages/info')
+        .reply(200, { ...infoReply('sent'), opens: 2, clicks: 1 });
+
+      const [state] = await (await makeProvider()).getMessageStates(['msg-1']);
+
+      expect(state.qualitySignals?.map(({ type }) => type)).toEqual([
+        EmailQualityEventType.opened,
+        EmailQualityEventType.clicked,
+      ]);
+    });
+
+    it('reports nothing about a plainly delivered mail', async () => {
+      nock(MANDRILL)
+        .post('/api/1.0/messages/info')
+        .reply(200, infoReply('sent'));
+
+      const [state] = await (await makeProvider()).getMessageStates(['msg-1']);
+
+      expect(state.qualitySignals).toEqual([]);
     });
 
     it('skips a state it does not know instead of guessing', async () => {
