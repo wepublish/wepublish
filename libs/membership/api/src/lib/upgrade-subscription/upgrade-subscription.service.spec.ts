@@ -4,7 +4,10 @@ import { UpgradeSubscriptionService } from './upgrade-subscription.service';
 
 import { MemberContextService } from '../legacy/member-context.service';
 import { GoodieService } from '../goodie/goodie.service';
-import { PaymentsService } from '@wepublish/payment/api';
+import {
+  isPaymentMethodRetired,
+  PaymentsService,
+} from '@wepublish/payment/api';
 import { DiscountCodeService } from '../discountCode/discountCode.service';
 import { SettingsService } from '@wepublish/settings/api';
 
@@ -19,6 +22,9 @@ describe('UpgradeSubscriptionService', () => {
       update: jest.Mock;
     };
     memberPlan: {
+      findUnique: jest.Mock;
+    };
+    paymentMethod: {
       findUnique: jest.Mock;
     };
   };
@@ -60,6 +66,9 @@ describe('UpgradeSubscriptionService', () => {
         update: jest.fn(),
       },
       memberPlan: {
+        findUnique: jest.fn(),
+      },
+      paymentMethod: {
         findUnique: jest.fn(),
       },
     };
@@ -412,6 +421,47 @@ describe('UpgradeSubscriptionService', () => {
   });
 
   describe('unhappy path', () => {
+    it('should throw an error if the payment method belongs to a deleted provider', async () => {
+      prismaMock.subscription.findUnique.mockResolvedValue({
+        id: 'subscriptionId',
+        userID: 'userId',
+        memberPlanID: 'oldMemberPlanId',
+        currency: Currency.CHF,
+        paymentPeriodicity: PaymentPeriodicity.yearly,
+        periods: [],
+      });
+      prismaMock.memberPlan.findUnique.mockResolvedValue({
+        id: 'memberPlanId',
+        currency: Currency.CHF,
+        availablePaymentMethods: [
+          {
+            paymentMethodIDs: ['paymentMethodId'],
+            paymentPeriodicities: [PaymentPeriodicity.yearly],
+            forceAutoRenewal: false,
+          },
+        ],
+      });
+      prismaMock.paymentMethod.findUnique.mockResolvedValue({
+        id: 'paymentMethodId',
+        paymentProviderID: 'mollie',
+      });
+      jest.mocked(isPaymentMethodRetired).mockResolvedValueOnce(true);
+
+      await expect(
+        service.upgradeSubscription({
+          subscriptionId: 'subscriptionId',
+          memberPlanId: 'memberPlanId',
+          paymentMethodId: 'paymentMethodId',
+          userId: 'userId',
+          monthlyAmount: 80,
+        })
+      ).rejects.toThrow('is no longer offered');
+      expect(isPaymentMethodRetired).toHaveBeenCalledWith(prismaMock, {
+        id: 'paymentMethodId',
+        paymentProviderID: 'mollie',
+      });
+    });
+
     it('should throw an error if the subscription can not be found', async () => {
       prismaMock.subscription.findUnique.mockResolvedValue(null);
 

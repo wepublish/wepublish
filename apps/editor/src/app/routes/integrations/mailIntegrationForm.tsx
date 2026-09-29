@@ -69,7 +69,6 @@ export function MailIntegrationForm() {
               label: v,
               value: v,
             })),
-            disabled: true,
           },
           {
             type: 'text',

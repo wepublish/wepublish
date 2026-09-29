@@ -194,6 +194,58 @@ export type ArticleTeaserInput = {
   title?: InputMaybe<Scalars['String']>;
 };
 
+export type AuditLog = {
+  __typename?: 'AuditLog';
+  action: AuditLogAction;
+  actorType: AuditLogActorType;
+  createdAt: Scalars['DateTime'];
+  entity?: Maybe<Scalars['String']>;
+  errorMessage?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  impersonatedBy?: Maybe<Scalars['String']>;
+  mutation: Scalars['String'];
+  recordId?: Maybe<Scalars['String']>;
+  sessionId?: Maybe<Scalars['String']>;
+  success: Scalars['Boolean'];
+  tokenName?: Maybe<Scalars['String']>;
+  userEmail?: Maybe<Scalars['String']>;
+  userId?: Maybe<Scalars['String']>;
+};
+
+export enum AuditLogAction {
+  Create = 'create',
+  Delete = 'delete',
+  Other = 'other',
+  Update = 'update'
+}
+
+export enum AuditLogActorType {
+  Token = 'token',
+  User = 'user'
+}
+
+export type AuditLogFilter = {
+  actions?: InputMaybe<Array<AuditLogAction>>;
+  actorType?: InputMaybe<AuditLogActorType>;
+  entity?: InputMaybe<Scalars['String']>;
+  from?: InputMaybe<Scalars['DateTime']>;
+  /** Only entries where the actor was impersonating another user. */
+  impersonatedOnly?: InputMaybe<Scalars['Boolean']>;
+  mutation?: InputMaybe<Scalars['String']>;
+  recordId?: InputMaybe<Scalars['String']>;
+  /** Case insensitive search across mutation, entity, record id, user email and token name. */
+  search?: InputMaybe<Scalars['String']>;
+  sessionId?: InputMaybe<Scalars['String']>;
+  success?: InputMaybe<Scalars['Boolean']>;
+  to?: InputMaybe<Scalars['DateTime']>;
+  userEmail?: InputMaybe<Scalars['String']>;
+  userId?: InputMaybe<Scalars['String']>;
+};
+
+export enum AuditLogSort {
+  CreatedAt = 'CreatedAt'
+}
+
 export type Author = HasImage & HasOptionalPeerLc & {
   __typename?: 'Author';
   bio?: Maybe<Scalars['RichText']>;
@@ -1957,6 +2009,7 @@ export type MailProviderModel = {
 };
 
 export enum MailProviderType {
+  Log = 'LOG',
   Mailchimp = 'MAILCHIMP',
   Mailgun = 'MAILGUN',
   Slack = 'SLACK',
@@ -2370,6 +2423,87 @@ export type MediumAccountStats = {
   usersWithRole: Scalars['Int'];
 };
 
+export type MediumAuditActionCount = {
+  __typename?: 'MediumAuditActionCount';
+  /** create, update, delete or other. */
+  action: Scalars['String'];
+  count: Scalars['Int'];
+};
+
+export type MediumAuditError = {
+  __typename?: 'MediumAuditError';
+  count: Scalars['Int'];
+  /** First line of the error, capped — enough to recognise it. */
+  message: Scalars['String'];
+};
+
+export type MediumAuditLog = {
+  __typename?: 'MediumAuditLog';
+  action: AuditLogAction;
+  actorType: AuditLogActorType;
+  createdAt: Scalars['DateTime'];
+  entity?: Maybe<Scalars['String']>;
+  errorMessage?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  /** Set when the actor was impersonating another user. */
+  impersonatedBy?: Maybe<Scalars['String']>;
+  mutation: Scalars['String'];
+  recordId?: Maybe<Scalars['String']>;
+  sessionId?: Maybe<Scalars['String']>;
+  success: Scalars['Boolean'];
+  tokenName?: Maybe<Scalars['String']>;
+  userEmail?: Maybe<Scalars['String']>;
+  userId?: Maybe<Scalars['String']>;
+};
+
+export type MediumAuditLogFilter = {
+  actions?: InputMaybe<Array<AuditLogAction>>;
+  actorType?: InputMaybe<AuditLogActorType>;
+  entity?: InputMaybe<Scalars['String']>;
+  from?: InputMaybe<Scalars['DateTime']>;
+  impersonatedOnly?: InputMaybe<Scalars['Boolean']>;
+  mutation?: InputMaybe<Scalars['String']>;
+  recordId?: InputMaybe<Scalars['String']>;
+  /** Case insensitive search across mutation, entity, record id, user email and token name. */
+  search?: InputMaybe<Scalars['String']>;
+  /** Everything a single login session did. */
+  sessionId?: InputMaybe<Scalars['String']>;
+  success?: InputMaybe<Scalars['Boolean']>;
+  to?: InputMaybe<Scalars['DateTime']>;
+  userEmail?: InputMaybe<Scalars['String']>;
+  userId?: InputMaybe<Scalars['String']>;
+};
+
+export type MediumAuditLogPage = {
+  __typename?: 'MediumAuditLogPage';
+  nodes: Array<MediumAuditLog>;
+  /** False when this medium does not provide an audit log, in which case nodes is empty and totalCount is zero. */
+  supported: Scalars['Boolean'];
+  totalCount: Scalars['Int'];
+};
+
+export type MediumAuditStats = {
+  __typename?: 'MediumAuditStats';
+  /** Permission gated editor actions in the window. */
+  actions: Scalars['Int'];
+  /** How the actions split across create, update and delete. */
+  actionsByType: Array<MediumAuditActionCount>;
+  /** Accounts that performed at least one action in the 30 days ending with the window. Deliberately NOT the window itself: a one-day window would drop to zero every weekend and the curve would be unreadable. */
+  activeEditors: Scalars['Int'];
+  /** Of those, the ones the system refused. A rate worth acting on needs both numbers, so they travel together. */
+  failedActions: Scalars['Int'];
+  /** Actions performed while impersonating another account. */
+  impersonatedActions: Scalars['Int'];
+  /** How often each mutation was used in the window, most used first. Shows whether a shipped feature is actually being touched. */
+  mutationUsage: Array<MediumMutationUsage>;
+  /** False when this installation keeps no audit log, in which case every figure below is zero and must not be read as "nothing happened". */
+  supported: Scalars['Boolean'];
+  /** Share of all named-account actions performed by the single busiest account. Five editors where one does 90 % looks identical to five balanced ones in activeEditors alone — this is what tells them apart. Null when nobody acted. */
+  topEditorShare?: Maybe<Scalars['Float']>;
+  /** The errors editors ran into most often, worst first. Without this the error rate says something is wrong but never what, and the answer sits one filtered page away. */
+  topErrors: Array<MediumAuditError>;
+};
+
 export type MediumChangelogAction = {
   __typename?: 'MediumChangelogAction';
   /** False for a purely informative entry, which is never counted as open or overdue. */
@@ -2478,6 +2612,12 @@ export type MediumMoneyStats = {
   revenue: Scalars['Int'];
 };
 
+export type MediumMutationUsage = {
+  __typename?: 'MediumMutationUsage';
+  count: Scalars['Int'];
+  mutation: Scalars['String'];
+};
+
 export type MediumNetworkStats = {
   __typename?: 'MediumNetworkStats';
   peersDisabled: Scalars['Int'];
@@ -2503,6 +2643,7 @@ export type MediumOperationsStats = {
 export type MediumStats = {
   __typename?: 'MediumStats';
   accounts: MediumAccountStats;
+  audit: MediumAuditStats;
   community: MediumCommunityStats;
   currency?: Maybe<Scalars['String']>;
   editorial: MediumEditorialStats;
@@ -2586,6 +2727,10 @@ export type Mutation = {
   confirmEmailChange: SensitiveDataUser;
   /** Confirms a notification for the whole instance, recording who confirmed it. Requires authentication. */
   confirmNotification: NotificationConfirmation;
+  /** Creates a new AI provider setting. */
+  createAISetting: SettingAiProvider;
+  /** Creates a new analytics provider setting. */
+  createAnalyticsProviderSetting: SettingAnalyticsProvider;
   /** Runs the invoice creation and charging steps of the daily periodic job on demand, without affecting the job run log. Requires an editor session and is additionally password protected. */
   createAndChargeInvoices: Scalars['Boolean'];
   /** Creates an article. */
@@ -2636,6 +2781,8 @@ export type Mutation = {
   createPaymentFromSubscription?: Maybe<Payment>;
   /** Creates a new payment method. */
   createPaymentMethod: PaymentMethod;
+  /** Creates a new payment provider setting. */
+  createPaymentProviderSetting: SettingPaymentProvider;
   /** Creates a paywall. */
   createPaywall: Paywall;
   /** Creates a new peer. */
@@ -2660,6 +2807,8 @@ export type Mutation = {
   createTag: Tag;
   /** Creates a token and returns it's secret once. */
   createToken: TokenWithSecret;
+  /** Creates a new tracking pixel setting. */
+  createTrackingPixelSetting: SettingTrackingPixelProvider;
   /** Creates a new user. */
   createUser: SensitiveDataUser;
   /**
@@ -2719,6 +2868,8 @@ export type Mutation = {
   deletePage: Scalars['String'];
   /** Deletes an existing payment method. */
   deletePaymentMethod: PaymentMethod;
+  /** Deletes a payment provider setting. */
+  deletePaymentProviderSetting: SettingPaymentProvider;
   /** Deletes a paywall. */
   deletePaywall: Paywall;
   /** Deletes an existing peer. */
@@ -2743,6 +2894,8 @@ export type Mutation = {
   deleteTag: Tag;
   /** Deletes a token. */
   deleteToken: Token;
+  /** Deletes a tracking pixel setting. */
+  deleteTrackingPixelSetting: SettingTrackingPixelProvider;
   /** Deletes an existing user. */
   deleteUser: SensitiveDataUser;
   /**
@@ -2801,6 +2954,8 @@ export type Mutation = {
   registerMember: Registration;
   /** Rejects a comment */
   rejectComment: Comment;
+  /** Rebuilds the payment, tracking pixel, mail and challenge providers from their settings, so integration changes take effect without restarting the API. */
+  reloadProviders: Scalars['Boolean'];
   /** Renews a subscription. */
   renewSubscription: PublicSubscription;
   /** Requests the user to change the comment's content */
@@ -3008,6 +3163,26 @@ export type MutationConfirmEmailChangeArgs = {
 export type MutationConfirmNotificationArgs = {
   itemId: Scalars['String'];
   source: NotificationSource;
+};
+
+
+export type MutationCreateAiSettingArgs = {
+  apiKey?: InputMaybe<Scalars['String']>;
+  id: Scalars['String'];
+  name?: InputMaybe<Scalars['String']>;
+  systemPrompt?: InputMaybe<Scalars['String']>;
+  type: AiProviderType;
+  webhookEndpointSecret?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationCreateAnalyticsProviderSettingArgs = {
+  articlePrefix?: InputMaybe<Scalars['String']>;
+  credentials?: InputMaybe<SettingAnalyticsCredentialsInput>;
+  id: Scalars['String'];
+  name?: InputMaybe<Scalars['String']>;
+  property?: InputMaybe<Scalars['String']>;
+  type: AnalyticsProviderType;
 };
 
 
@@ -3233,6 +3408,37 @@ export type MutationCreatePaymentMethodArgs = {
 };
 
 
+export type MutationCreatePaymentProviderSettingArgs = {
+  apiKey?: InputMaybe<Scalars['String']>;
+  bexio_accountId?: InputMaybe<Scalars['Float']>;
+  bexio_countryId?: InputMaybe<Scalars['Float']>;
+  bexio_invoiceMailBodyNewMembership?: InputMaybe<Scalars['String']>;
+  bexio_invoiceMailBodyRenewalMembership?: InputMaybe<Scalars['String']>;
+  bexio_invoiceMailSubjectNewMembership?: InputMaybe<Scalars['String']>;
+  bexio_invoiceMailSubjectRenewalMembership?: InputMaybe<Scalars['String']>;
+  bexio_invoiceTemplateNewMembership?: InputMaybe<Scalars['String']>;
+  bexio_invoiceTemplateRenewalMembership?: InputMaybe<Scalars['String']>;
+  bexio_invoiceTitleNewMembership?: InputMaybe<Scalars['String']>;
+  bexio_invoiceTitleRenewalMembership?: InputMaybe<Scalars['String']>;
+  bexio_markInvoiceAsOpen?: InputMaybe<Scalars['Boolean']>;
+  bexio_taxId?: InputMaybe<Scalars['Float']>;
+  bexio_unitId?: InputMaybe<Scalars['Float']>;
+  bexio_userId?: InputMaybe<Scalars['Float']>;
+  id: Scalars['String'];
+  mollie_apiBaseUrl?: InputMaybe<Scalars['String']>;
+  mollie_methods?: InputMaybe<Array<PaymentMethodMollie>>;
+  name?: InputMaybe<Scalars['String']>;
+  offSessionPayments?: InputMaybe<Scalars['Boolean']>;
+  payrexx_instancename?: InputMaybe<Scalars['String']>;
+  payrexx_pm?: InputMaybe<Array<PayrexxPm>>;
+  payrexx_psp?: InputMaybe<Array<PayrexxPsp>>;
+  payrexx_vatrate?: InputMaybe<Scalars['String']>;
+  stripe_methods?: InputMaybe<Array<StripePaymentMethod>>;
+  type: PaymentProviderType;
+  webhookEndpointSecret?: InputMaybe<Scalars['String']>;
+};
+
+
 export type MutationCreatePaywallArgs = {
   active: Scalars['Boolean'];
   alternativeSubscribeUrl?: InputMaybe<Scalars['String']>;
@@ -3340,6 +3546,19 @@ export type MutationCreateTagArgs = {
 
 export type MutationCreateTokenArgs = {
   name: Scalars['String'];
+};
+
+
+export type MutationCreateTrackingPixelSettingArgs = {
+  id: Scalars['String'];
+  name?: InputMaybe<Scalars['String']>;
+  prolitteris_memberNr?: InputMaybe<Scalars['String']>;
+  prolitteris_onlyPaidContentAccess?: InputMaybe<Scalars['Boolean']>;
+  prolitteris_password?: InputMaybe<Scalars['String']>;
+  prolitteris_publisherInternalKeyDomain?: InputMaybe<Scalars['String']>;
+  prolitteris_usePublisherInternalKey?: InputMaybe<Scalars['Boolean']>;
+  prolitteris_username?: InputMaybe<Scalars['String']>;
+  type: TrackingPixelProviderType;
 };
 
 
@@ -3514,6 +3733,11 @@ export type MutationDeletePaymentMethodArgs = {
 };
 
 
+export type MutationDeletePaymentProviderSettingArgs = {
+  id: Scalars['String'];
+};
+
+
 export type MutationDeletePaywallArgs = {
   id: Scalars['String'];
 };
@@ -3570,6 +3794,11 @@ export type MutationDeleteTagArgs = {
 
 
 export type MutationDeleteTokenArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationDeleteTrackingPixelSettingArgs = {
   id: Scalars['String'];
 };
 
@@ -3674,6 +3903,7 @@ export type MutationLikeArticleArgs = {
 
 export type MutationMarkInvoiceAsPaidArgs = {
   id: Scalars['String'];
+  sendMail?: Scalars['Boolean'];
 };
 
 
@@ -3910,6 +4140,7 @@ export type MutationUpdateChallengeProviderSettingArgs = {
   name?: InputMaybe<Scalars['String']>;
   secret?: InputMaybe<Scalars['String']>;
   siteKey?: InputMaybe<Scalars['String']>;
+  type?: InputMaybe<ChallengeProviderType>;
 };
 
 
@@ -4056,6 +4287,7 @@ export type MutationUpdateMailProviderSettingArgs = {
   smtp_port?: InputMaybe<Scalars['Int']>;
   smtp_secure?: InputMaybe<Scalars['Boolean']>;
   smtp_user?: InputMaybe<Scalars['String']>;
+  type?: InputMaybe<MailProviderType>;
   webhookEndpointSecret?: InputMaybe<Scalars['String']>;
 };
 
@@ -4515,6 +4747,7 @@ export type PageFilter = {
   publicationDateFrom?: InputMaybe<DateFilter>;
   publicationDateTo?: InputMaybe<DateFilter>;
   published?: InputMaybe<Scalars['Boolean']>;
+  slug?: InputMaybe<Scalars['String']>;
   tags?: InputMaybe<Array<Scalars['String']>>;
   title?: InputMaybe<Scalars['String']>;
 };
@@ -4610,6 +4843,15 @@ export type PaginatedArticles = {
   __typename?: 'PaginatedArticles';
   nodes: Array<Article>;
   pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type PaginatedAuditLogs = {
+  __typename?: 'PaginatedAuditLogs';
+  nodes: Array<AuditLog>;
+  pageInfo: PageInfo;
+  /** False when this installation does not provide an audit log, in which case nodes is empty and totalCount is zero. */
+  supported: Scalars['Boolean'];
   totalCount: Scalars['Int'];
 };
 
@@ -5346,6 +5588,8 @@ export type Query = {
   articleRevisions: PaginatedArticleRevisions;
   /** Returns a paginated list of articles based on the filters given. */
   articles: PaginatedArticles;
+  /** Returns a paginated list of audit log entries based on the filters given. */
+  auditLogs: PaginatedAuditLogs;
   /** Get an author by ID or slug */
   author?: Maybe<Author>;
   /** Get a paginated list of authors with optional filtering and sorting */
@@ -5512,6 +5756,7 @@ export type Query = {
   mailchimpSyncProgress?: Maybe<MailchimpSyncProgressType>;
   /** This query returns the user. */
   me?: Maybe<SensitiveDataUser>;
+  mediumAuditLogs: MediumAuditLogPage;
   mediumChangelogActions: Array<MediumChangelogAction>;
   mediumMigrations: Array<MediumMigration>;
   mediumStats: MediumStats;
@@ -5725,6 +5970,16 @@ export type QueryArticlesArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   sort?: InputMaybe<ArticleSort>;
   take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryAuditLogsArgs = {
+  cursorId?: InputMaybe<Scalars['String']>;
+  filter?: InputMaybe<AuditLogFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: Scalars['Int'];
+  sort?: AuditLogSort;
+  take?: Scalars['Int'];
 };
 
 
@@ -6083,6 +6338,13 @@ export type QueryMailchimpSyncErrorsArgs = {
 
 export type QueryMailchimpSyncProgressArgs = {
   configId: Scalars['String'];
+};
+
+
+export type QueryMediumAuditLogsArgs = {
+  filter?: InputMaybe<MediumAuditLogFilter>;
+  limit?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -6685,6 +6947,7 @@ export enum SettingName {
   PeeringTimeoutMs = 'PEERING_TIMEOUT_MS',
   ResetPasswordJwtExpiresMin = 'RESET_PASSWORD_JWT_EXPIRES_MIN',
   SendLoginJwtExpiresMin = 'SEND_LOGIN_JWT_EXPIRES_MIN',
+  SessionTtlDays = 'SESSION_TTL_DAYS',
   ShowPendingWhenNotPublished = 'SHOW_PENDING_WHEN_NOT_PUBLISHED',
   SubscriptionUpgradeBillsFullDifference = 'SUBSCRIPTION_UPGRADE_BILLS_FULL_DIFFERENCE'
 }
@@ -6706,6 +6969,7 @@ export type SettingPaymentProvider = SettingProvider & {
   bexio_unitId?: Maybe<Scalars['Float']>;
   bexio_userId?: Maybe<Scalars['Float']>;
   createdAt: Scalars['DateTime'];
+  deletedAt?: Maybe<Scalars['DateTime']>;
   id: Scalars['String'];
   lastLoadedAt: Scalars['DateTime'];
   modifiedAt: Scalars['DateTime'];
@@ -6777,6 +7041,7 @@ export type SettingTrackingPixelFilter = {
 export type SettingTrackingPixelProvider = SettingProvider & {
   __typename?: 'SettingTrackingPixelProvider';
   createdAt: Scalars['DateTime'];
+  deletedAt?: Maybe<Scalars['DateTime']>;
   id: Scalars['String'];
   lastLoadedAt: Scalars['DateTime'];
   modifiedAt: Scalars['DateTime'];

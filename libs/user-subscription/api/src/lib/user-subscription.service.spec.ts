@@ -18,8 +18,9 @@ describe('UserSubscriptionService', () => {
 
   let prismaMock: {
     discountCode: { findUnique: jest.Mock };
-    paymentMethod: { findFirst: jest.Mock };
-    subscription: { findUnique: jest.Mock };
+    paymentMethod: { findFirst: jest.Mock; findUnique: jest.Mock };
+    subscription: { findUnique: jest.Mock; update: jest.Mock };
+    settingPaymentProvider: { findMany: jest.Mock };
   };
 
   let memberContextMock: {
@@ -28,6 +29,7 @@ describe('UserSubscriptionService', () => {
     processSubscriptionProperties: jest.Mock;
     createSubscription: jest.Mock;
     deactivateSubscription: jest.Mock;
+    handleSubscriptionChange: jest.Mock;
   };
 
   let memberPlanDataloaderMock: {
@@ -40,6 +42,7 @@ describe('UserSubscriptionService', () => {
 
   let paymentsMock: {
     createPaymentWithProvider: jest.Mock;
+    getProviders: jest.Mock;
   };
 
   beforeAll(() => {
@@ -56,8 +59,10 @@ describe('UserSubscriptionService', () => {
       discountCode: { findUnique: jest.fn() },
       paymentMethod: {
         findFirst: jest.fn().mockResolvedValue({ id: 'paymentMethodId' }),
+        findUnique: jest.fn(),
       },
-      subscription: { findUnique: jest.fn() },
+      subscription: { findUnique: jest.fn(), update: jest.fn() },
+      settingPaymentProvider: { findMany: jest.fn().mockResolvedValue([]) },
     };
 
     memberContextMock = {
@@ -73,6 +78,7 @@ describe('UserSubscriptionService', () => {
         invoice: { id: 'invoiceId' },
       }),
       deactivateSubscription: jest.fn().mockResolvedValue(undefined),
+      handleSubscriptionChange: jest.fn().mockResolvedValue({}),
     };
 
     memberPlanDataloaderMock = {
@@ -92,6 +98,7 @@ describe('UserSubscriptionService', () => {
 
     paymentsMock = {
       createPaymentWithProvider: jest.fn().mockResolvedValue({}),
+      getProviders: jest.fn().mockReturnValue([]),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -145,6 +152,7 @@ describe('UserSubscriptionService', () => {
       id: 'paymentMethodId',
     });
     paymentsMock.createPaymentWithProvider.mockResolvedValue({});
+    prismaMock.settingPaymentProvider.findMany.mockResolvedValue([]);
   });
 
   describe('createSubscription', () => {
@@ -218,6 +226,21 @@ describe('UserSubscriptionService', () => {
     });
 
     describe('unhappy path', () => {
+      it('should throw if the payment method belongs to a deleted provider', async () => {
+        prismaMock.paymentMethod.findFirst.mockResolvedValue({
+          id: 'paymentMethodId',
+          paymentProviderID: 'mollie',
+        });
+        prismaMock.settingPaymentProvider.findMany.mockResolvedValue([
+          { id: 'mollie' },
+        ]);
+
+        await expect(
+          service.createSubscription('userId', baseArgs)
+        ).rejects.toThrow('is no longer offered');
+        expect(memberContextMock.createSubscription).not.toHaveBeenCalled();
+      });
+
       it('should throw if discountCode is not found', async () => {
         prismaMock.discountCode.findUnique.mockResolvedValue(null);
 
@@ -256,6 +279,65 @@ describe('UserSubscriptionService', () => {
           })
         ).rejects.toMatchSnapshot();
       });
+    });
+  });
+
+  describe('updateSubscription', () => {
+    const paymentMethods: Record<string, object> = {
+      currentPm: { id: 'currentPm', paymentProviderID: 'mollie' },
+      otherPm: { id: 'otherPm', paymentProviderID: 'mollie' },
+    };
+
+    const input = {
+      memberPlanID: 'memberPlanId',
+      paymentPeriodicity: PaymentPeriodicity.monthly,
+      monthlyAmount: 100,
+      autoRenew: true,
+      userID: 'userId',
+    };
+
+    beforeEach(() => {
+      prismaMock.subscription.findUnique.mockResolvedValue({
+        id: 'subscriptionId',
+        userID: 'userId',
+        paymentMethodID: 'currentPm',
+        paymentPeriodicity: PaymentPeriodicity.monthly,
+        extendable: true,
+        deactivation: null,
+      });
+      prismaMock.subscription.update.mockResolvedValue({
+        id: 'subscriptionId',
+      });
+      prismaMock.paymentMethod.findUnique.mockImplementation(
+        async ({ where }: { where: { id: string } }) =>
+          paymentMethods[where.id] ?? null
+      );
+      prismaMock.settingPaymentProvider.findMany.mockResolvedValue([
+        { id: 'mollie' },
+      ]);
+    });
+
+    it('refuses to switch to a payment method of a deleted provider', async () => {
+      await expect(
+        service.updateSubscription('subscriptionId', {
+          ...input,
+          paymentMethodID: 'otherPm',
+        })
+      ).rejects.toThrow('is no longer offered');
+      expect(prismaMock.subscription.update).not.toHaveBeenCalled();
+    });
+
+    it('still updates a subscription that keeps its payment method', async () => {
+      await service.updateSubscription('subscriptionId', {
+        ...input,
+        paymentMethodID: 'currentPm',
+      });
+
+      expect(prismaMock.subscription.update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({ paymentMethodID: 'currentPm' }),
+        })
+      );
     });
   });
 });

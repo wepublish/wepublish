@@ -40,6 +40,7 @@ exports[`AuthenticationService should return a user session 1`] = `
   "createdAt": undefined,
   "expiresAt": undefined,
   "id": undefined,
+  "impersonatedBy": undefined,
   "roles": [],
   "token": undefined,
   "type": "user",
