@@ -31,7 +31,7 @@ import {
   UnionToIntersection,
   ValueConstructor,
 } from '../utility';
-import { AddBlockInput } from './addBlockInput';
+import { AddBlockInput, MenuItem } from './addBlockInput';
 
 export const BlockStyleIconWrapper = styled.div`
   display: flex;
@@ -218,6 +218,38 @@ export const BlockListItem = memo(function BlockListItem({
   );
 });
 
+interface AddBlockButtonProps {
+  index: number;
+  menuItems: MenuItem[];
+  onAdd: (index: number, type: string) => void;
+  subtle?: boolean;
+  disabled?: boolean;
+}
+
+const AddBlockButton = memo(function AddBlockButton({
+  index,
+  menuItems,
+  onAdd,
+  subtle,
+  disabled,
+}: AddBlockButtonProps) {
+  const handleMenuItemClick = useCallback(
+    ({ id }: MenuItem) => onAdd(index, id),
+    [onAdd, index]
+  );
+
+  return (
+    <AddBlockInputWrapper>
+      <AddBlockInput
+        menuItems={menuItems}
+        onMenuItemClick={handleMenuItemClick}
+        subtle={subtle}
+        disabled={disabled}
+      />
+    </AddBlockInputWrapper>
+  );
+});
+
 export interface BlockListProps<V extends BlockListValue>
   extends BlockProps<V[]> {
   blockMap: BlockMapForValue<V>;
@@ -314,22 +346,25 @@ export function BlockList<V extends BlockListValue>({
     [handleMoveIndex]
   );
 
+  const menuItems = useMemo(
+    () =>
+      Object.entries(blockMap).map(([type, { icon, label }]) => ({
+        id: type,
+        icon,
+        label,
+      })),
+    [blockMap]
+  );
+
   function addButtonForIndex(index: number) {
     return (
-      <AddBlockInputWrapper>
-        <AddBlockInput
-          menuItems={Object.entries(blockMap).map(
-            ([type, { icon, label }]) => ({
-              id: type,
-              icon,
-              label,
-            })
-          )}
-          onMenuItemClick={({ id }: { id: string }) => handleAdd(index, id)}
-          subtle={index !== values.length || disabled}
-          disabled={disabled}
-        />
-      </AddBlockInputWrapper>
+      <AddBlockButton
+        index={index}
+        menuItems={menuItems}
+        onAdd={handleAdd}
+        subtle={index !== values.length || disabled}
+        disabled={disabled}
+      />
     );
   }
 

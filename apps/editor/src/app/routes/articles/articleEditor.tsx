@@ -53,7 +53,7 @@ import {
   VersionHistory,
   VersionHistoryRevision,
 } from '@wepublish/ui/editor';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   MdCloudUpload,
@@ -77,11 +77,13 @@ import {
   toaster,
 } from 'rsuite';
 
+import { LastSavedAt } from '../../lastSavedAt';
 import {
   PreviewControls,
   PreviewDevice,
   PreviewFrame,
 } from '../../previewFrame';
+import { useAutosave } from '../../useAutosave';
 
 const IconButtonMarginTop = styled(RIconButton)`
   margin-top: 4px;
@@ -172,6 +174,8 @@ function ArticleEditor() {
     { data: createData, loading: isCreating, error: createError },
   ] = useCreateArticleMutation();
   const [updateArticle, { loading: isUpdating, error: updateError }] =
+    useUpdateArticleMutation({});
+  const [autosaveArticle, { loading: isAutosaving, error: autosaveError }] =
     useUpdateArticleMutation({});
   const [publishArticle, { loading: isPublishing, error: publishError }] =
     usePublishArticleMutation({});
@@ -339,7 +343,7 @@ function ArticleEditor() {
     : undefined;
 
   const isNotFound = articleData && !articleData.article;
-  const isDisabled =
+  const isBusy =
     isLoading ||
     isCreating ||
     isUpdating ||
@@ -347,6 +351,8 @@ function ArticleEditor() {
     isRestoring ||
     isDiscarding ||
     isNotFound;
+  // Autosaving must not disable the blocks, as that would blur whatever the user is typing in.
+  const isDisabled = isBusy || isAutosaving;
   const canPreview = Boolean(
     articleData?.article?.draft ||
       articleData?.article?.published ||
@@ -354,6 +360,8 @@ function ArticleEditor() {
   );
 
   const [hasChanged, setChanged] = useState(false);
+  const changeVersion = useRef(0);
+  const skipRepopulate = useRef(false);
 
   const unsavedChangesDialog = useUnsavedChangesDialog(hasChanged);
 
@@ -366,13 +374,14 @@ function ArticleEditor() {
   const handleChange = useCallback(
     (blocks: React.SetStateAction<BlockValue[]>) => {
       setBlocks(blocks);
+      changeVersion.current++;
       setChanged(true);
     },
     []
   );
 
   useEffect(() => {
-    if (articleData?.article && !hasChanged) {
+    if (articleData?.article && !hasChanged && !skipRepopulate.current) {
       const {
         latest,
         shared,
@@ -470,6 +479,7 @@ function ArticleEditor() {
     const error =
       createError?.message ??
       updateError?.message ??
+      autosaveError?.message ??
       publishError?.message ??
       restoreError?.message ??
       discardError?.message;
@@ -484,7 +494,14 @@ function ArticleEditor() {
           {error}
         </Message>
       );
-  }, [createError, updateError, publishError, restoreError, discardError]);
+  }, [
+    createError,
+    updateError,
+    autosaveError,
+    publishError,
+    restoreError,
+    discardError,
+  ]);
 
   async function handleDiscardDraft() {
     if (!articleID) {
@@ -496,6 +513,8 @@ function ArticleEditor() {
     });
 
     if (data) {
+      skipRepopulate.current = false;
+      markSaved();
       setChanged(false);
       await Promise.all([refetch({ id: articleID }), reloadRevisions()]);
 
@@ -524,6 +543,8 @@ function ArticleEditor() {
 
       if (data) {
         // Let the article query repopulate the editor with the restored draft.
+        skipRepopulate.current = false;
+        markSaved();
         setChanged(false);
         await Promise.all([refetch({ id: articleID }), reloadRevisions()]);
 
@@ -653,6 +674,8 @@ function ArticleEditor() {
     if (articleID) {
       await updateArticle({ variables: { id: articleID, ...input } });
 
+      skipRepopulate.current = false;
+      markSaved();
       setChanged(false);
       toaster.push(
         <Notification
@@ -680,6 +703,43 @@ function ArticleEditor() {
     }
   }
 
+  async function handleAutosave() {
+    if (!articleID) {
+      return;
+    }
+
+    const version = changeVersion.current;
+    const { data } = await autosaveArticle({
+      variables: { id: articleID, ...createInput() },
+    });
+
+    if (!data) {
+      return;
+    }
+
+    skipRepopulate.current = true;
+
+    if (version === changeVersion.current) {
+      setChanged(false);
+    }
+
+    toaster.push(
+      <Notification
+        type="success"
+        header={t('articleEditor.overview.draftAutosaved')}
+        duration={2000}
+      />,
+      { placement: 'bottomEnd' }
+    );
+    await reloadRevisions();
+  }
+
+  const { markSaved } = useAutosave({
+    enabled: !isDisabled && !!articleID,
+    hasChanged,
+    onAutosave: handleAutosave,
+  });
+
   async function handlePublish(publishedAt: Date) {
     if (!metadata.slug) {
       toaster.push(
@@ -701,6 +761,8 @@ function ArticleEditor() {
       });
 
       if (data) {
+        skipRepopulate.current = false;
+        markSaved();
         const { data: publishData } = await publishArticle({
           variables: {
             id: articleID,
@@ -887,6 +949,8 @@ function ArticleEditor() {
                       </PermissionControl>
                     </PermissionControl>
                   }
+
+                  <LastSavedAt date={articleData?.article?.latest.createdAt} />
                 </CenterChildren>
               }
               rightChildren={
@@ -947,7 +1011,7 @@ function ArticleEditor() {
                 itemId={articleID}
                 value={blocks}
                 onChange={handleChange}
-                disabled={isLoading || isDisabled || !isAuthorized}
+                disabled={isBusy || !isAuthorized}
                 blockMap={BlockMap}
               />
             </DocumentUrlProvider>
@@ -971,6 +1035,7 @@ function ArticleEditor() {
           }}
           onChange={value => {
             setMetadata(value);
+            changeVersion.current++;
             setChanged(true);
           }}
         />
