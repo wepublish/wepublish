@@ -98,6 +98,7 @@ function BlockTemplateEditView() {
     },
     []
   );
+
   useEffect(() => {
     const error = createError?.message ?? updateError?.message;
     if (error)
