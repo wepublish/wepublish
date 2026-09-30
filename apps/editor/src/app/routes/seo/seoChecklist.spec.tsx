@@ -10,7 +10,7 @@ import {
   SeoChecklist,
 } from './seoChecklist';
 
-const { queryResult, updateItem, auth } = vi.hoisted(() => ({
+const { queryResult, updateItem, mutationResult, auth } = vi.hoisted(() => ({
   queryResult: {
     data: undefined as unknown,
     loading: false,
@@ -18,16 +18,18 @@ const { queryResult, updateItem, auth } = vi.hoisted(() => ({
     refetch: vi.fn(),
   },
   updateItem: vi.fn(),
+  mutationResult: {
+    loading: false,
+    error: undefined,
+    variables: undefined as { itemId: string } | undefined,
+  },
   auth: { canUpdate: true },
 }));
 
 vi.mock('@wepublish/editor/api', async importOriginal => ({
   ...(await importOriginal<typeof import('@wepublish/editor/api')>()),
   useSeoChecklistQuery: () => queryResult,
-  useUpdateSeoChecklistItemMutation: () => [
-    updateItem,
-    { loading: false, error: undefined },
-  ],
+  useUpdateSeoChecklistItemMutation: () => [updateItem, mutationResult],
 }));
 
 vi.mock('@wepublish/ui/editor', async importOriginal => ({
@@ -84,6 +86,8 @@ const renderChecklist = () =>
 describe('SeoChecklist', () => {
   beforeEach(() => {
     updateItem.mockReset();
+    mutationResult.loading = false;
+    mutationResult.variables = undefined;
     auth.canUpdate = true;
     queryResult.error = undefined;
     queryResult.loading = false;
@@ -151,6 +155,22 @@ describe('SeoChecklist', () => {
     expect(updateItem).toHaveBeenNthCalledWith(2, {
       variables: { itemId: 'gsc-verify', completed: false },
     });
+  });
+
+  test('only disables the checkbox that is being saved', () => {
+    mutationResult.loading = true;
+    mutationResult.variables = { itemId: 'gsc-sitemap' };
+
+    renderChecklist();
+
+    const checkbox = (id: string) =>
+      within(screen.getByTestId(`seo-item-${id}`)).getByRole(
+        'checkbox'
+      ) as HTMLInputElement;
+
+    expect(checkbox('gsc-sitemap').disabled).toBe(true);
+    expect(checkbox('gsc-verify').disabled).toBe(false);
+    expect(checkbox('seo-titles').disabled).toBe(false);
   });
 
   test('disables checkboxes without permission to update settings', () => {

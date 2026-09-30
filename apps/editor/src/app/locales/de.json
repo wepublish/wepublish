@@ -3306,8 +3306,8 @@
       "copyUrl": "URL kopieren",
       "detail": "Details",
       "progress": "{{done}} von {{total}} erledigt",
-      "completedBy": "Erledigt von {{name}} am {{date}}",
-      "completedAt": "Erledigt am {{date}}",
+      "completedBy": "Abgehakt von {{name}} am {{date}}",
+      "completedAt": "Abgehakt am {{date}}",
       "guide": {
         "show": "So gelingt es",
         "good": "Gutes Beispiel",

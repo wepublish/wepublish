@@ -3251,8 +3251,8 @@
       "copyUrl": "Copier l'URL",
       "detail": "Détails",
       "progress": "{{done}} sur {{total}} effectués",
-      "completedBy": "Effectué par {{name}} le {{date}}",
-      "completedAt": "Effectué le {{date}}",
+      "completedBy": "Coché par {{name}} le {{date}}",
+      "completedAt": "Coché le {{date}}",
       "guide": {
         "show": "Comment bien le rédiger",
         "good": "Bon exemple",

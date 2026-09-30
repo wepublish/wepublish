@@ -3344,8 +3344,8 @@
       "copyUrl": "Copy URL",
       "detail": "Details",
       "progress": "{{done}} of {{total}} done",
-      "completedBy": "Done by {{name}} on {{date}}",
-      "completedAt": "Done on {{date}}",
+      "completedBy": "Checked by {{name}} on {{date}}",
+      "completedAt": "Checked on {{date}}",
       "guide": {
         "show": "How to write it",
         "good": "Good example",

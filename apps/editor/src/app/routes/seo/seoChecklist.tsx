@@ -500,13 +500,13 @@ const ChecklistSection = ({
   section,
   checklist,
   canUpdate,
-  updating,
+  updatingId,
   onToggle,
 }: {
   section: SeoChecklistSection;
   checklist?: SeoChecklistData;
   canUpdate: boolean;
-  updating: boolean;
+  updatingId?: string;
   onToggle(itemId: string, completed: boolean): void;
 }) => {
   const { t } = useTranslation();
@@ -547,7 +547,7 @@ const ChecklistSection = ({
                 item => item.itemId === entry.id
               )}
               canUpdate={canUpdate}
-              updating={updating}
+              updating={updatingId === entry.id}
               onToggle={completed => onToggle(entry.id, completed)}
             />
           ))}
@@ -566,25 +566,27 @@ function SeoChecklist() {
     notifyOnNetworkStatusChange: true,
   });
 
-  const [updateItem, { loading: updating, error: updateError }] =
-    useUpdateSeoChecklistItemMutation({
-      update: (cache, { data: result }) => {
-        if (!result) {
-          return;
-        }
+  const [
+    updateItem,
+    { loading: updating, error: updateError, variables: updateVariables },
+  ] = useUpdateSeoChecklistItemMutation({
+    update: (cache, { data: result }) => {
+      if (!result) {
+        return;
+      }
 
-        cache.updateQuery<SeoChecklistQuery>(
-          { query: SeoChecklistDocument },
-          previous =>
-            previous && {
-              seoChecklist: {
-                ...previous.seoChecklist,
-                completedItems: result.updateSeoChecklistItem,
-              },
-            }
-        );
-      },
-    });
+      cache.updateQuery<SeoChecklistQuery>(
+        { query: SeoChecklistDocument },
+        previous =>
+          previous && {
+            seoChecklist: {
+              ...previous.seoChecklist,
+              completedItems: result.updateSeoChecklistItem,
+            },
+          }
+      );
+    },
+  });
 
   const checklist = data?.seoChecklist;
   const initialLoading = !checklist && loading;
@@ -602,7 +604,7 @@ function SeoChecklist() {
       section={section}
       checklist={checklist}
       canUpdate={canUpdate}
-      updating={updating}
+      updatingId={updating ? updateVariables?.itemId : undefined}
       onToggle={(itemId, completed) =>
         updateItem({ variables: { itemId, completed } })
       }

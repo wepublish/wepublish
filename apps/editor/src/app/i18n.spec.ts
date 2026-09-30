@@ -14,7 +14,7 @@ describe('initI18N', () => {
         name: 'WePublish Admin',
         date: '9/30/2026',
       })
-    ).toBe('Done by WePublish Admin on 9/30/2026');
+    ).toBe('Checked by WePublish Admin on 9/30/2026');
   });
 
   test('keeps formatting dates', () => {
