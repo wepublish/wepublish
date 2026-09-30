@@ -8,7 +8,12 @@ import {
 } from '@wepublish/editor/api';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdAddCircle, MdDelete } from 'react-icons/md';
+import {
+  MdAddCircle,
+  MdArrowDownward,
+  MdArrowUpward,
+  MdDelete,
+} from 'react-icons/md';
 import {
   Divider,
   Drawer,
@@ -83,6 +88,11 @@ const ItemHeader = styled.div`
   gap: 8px;
 `;
 
+const ItemActionsWrapper = styled.div`
+  display: flex;
+  gap: 4px;
+`;
+
 const ToggleRow = styled.div`
   display: flex;
   align-items: center;
@@ -100,6 +110,69 @@ const OptionImageWrapper = styled.div`
 `;
 
 const INPUT_TYPES = ['text', 'email', 'hidden', 'groups'];
+
+const moveItem = <T,>(items: T[], from: number, to: number): T[] => {
+  if (to < 0 || to >= items.length) {
+    return items;
+  }
+
+  const next = [...items];
+  const [item] = next.splice(from, 1);
+  next.splice(to, 0, item);
+
+  return next;
+};
+
+const swapIndex = (index: number, a: number, b: number) =>
+  index === a ? b
+  : index === b ? a
+  : index;
+
+type ItemActionsProps = {
+  disabled?: boolean;
+  onMoveUp?: () => void;
+  onMoveDown?: () => void;
+  onRemove: () => void;
+};
+
+function ItemActions({
+  disabled,
+  onMoveUp,
+  onMoveDown,
+  onRemove,
+}: ItemActionsProps) {
+  const { t } = useTranslation();
+
+  return (
+    <ItemActionsWrapper>
+      {onMoveUp && (
+        <IconButton
+          size="xs"
+          icon={<MdArrowUpward />}
+          aria-label={t('blocks.mailchimpForm.moveUp')}
+          disabled={disabled}
+          onClick={onMoveUp}
+        />
+      )}
+      {onMoveDown && (
+        <IconButton
+          size="xs"
+          icon={<MdArrowDownward />}
+          aria-label={t('blocks.mailchimpForm.moveDown')}
+          disabled={disabled}
+          onClick={onMoveDown}
+        />
+      )}
+      <IconButton
+        size="xs"
+        icon={<MdDelete />}
+        aria-label={t('blocks.mailchimpForm.remove')}
+        disabled={disabled}
+        onClick={onRemove}
+      />
+    </ItemActionsWrapper>
+  );
+}
 
 const emptyInput = (): MailchimpFormFieldConfigValue => ({
   inputType: 'text',
@@ -133,6 +206,8 @@ type MailchimpFormInterestOptionItemProps = {
   interestOptions: { value: string; label: string }[];
   disabled?: boolean;
   onChange: (patch: Partial<MailchimpFormInterestOptionValue>) => void;
+  onMoveUp?: () => void;
+  onMoveDown?: () => void;
   onRemove: () => void;
 };
 
@@ -141,6 +216,8 @@ function MailchimpFormInterestOptionItem({
   interestOptions,
   disabled,
   onChange,
+  onMoveUp,
+  onMoveDown,
   onRemove,
 }: MailchimpFormInterestOptionItemProps) {
   const { t } = useTranslation();
@@ -151,11 +228,11 @@ function MailchimpFormInterestOptionItem({
     <ItemPanel bordered>
       <ItemHeader>
         <Heading>{value.name || '—'}</Heading>
-        <IconButton
-          size="xs"
-          icon={<MdDelete />}
+        <ItemActions
           disabled={disabled}
-          onClick={onRemove}
+          onMoveUp={onMoveUp}
+          onMoveDown={onMoveDown}
+          onRemove={onRemove}
         />
       </ItemHeader>
 
@@ -282,6 +359,19 @@ export function MailchimpFormBlock({
       }
       return next;
     });
+
+  const remapAdvanced = (
+    remap: (stepIndex: number, inputIndex: number) => [number, number]
+  ) =>
+    setAdvancedInputs(
+      current =>
+        new Set(
+          [...current].map(key => {
+            const [stepIndex, inputIndex] = key.split('-').map(Number);
+            return remap(stepIndex, inputIndex).join('-');
+          })
+        )
+    );
 
   const update = (patch: Partial<MailchimpFormBlockValue>) =>
     onChange(current => ({ ...current, ...patch }));
@@ -482,6 +572,11 @@ export function MailchimpFormBlock({
               ),
             });
 
+          const moveStep = (to: number) => {
+            update({ steps: moveItem(value.steps, stepIndex, to) });
+            remapAdvanced((s, i) => [swapIndex(s, stepIndex, to), i]);
+          };
+
           return (
             <ItemPanel
               key={stepIndex}
@@ -491,11 +586,17 @@ export function MailchimpFormBlock({
                 <Heading>
                   {t('blocks.mailchimpForm.step', { number: stepIndex + 1 })}
                 </Heading>
-                <IconButton
-                  size="xs"
-                  icon={<MdDelete />}
+                <ItemActions
                   disabled={disabled}
-                  onClick={() =>
+                  onMoveUp={
+                    stepIndex > 0 ? () => moveStep(stepIndex - 1) : undefined
+                  }
+                  onMoveDown={
+                    stepIndex < value.steps.length - 1 ?
+                      () => moveStep(stepIndex + 1)
+                    : undefined
+                  }
+                  onRemove={() =>
                     update({
                       steps: value.steps.filter((_, i) => i !== stepIndex),
                     })
@@ -566,6 +667,16 @@ export function MailchimpFormBlock({
                     ),
                   });
 
+                const moveInput = (to: number) => {
+                  updateStep({
+                    inputs: moveItem(step.inputs, inputIndex, to),
+                  });
+                  remapAdvanced((s, i) => [
+                    s,
+                    s === stepIndex ? swapIndex(i, inputIndex, to) : i,
+                  ]);
+                };
+
                 const advancedKey = `${stepIndex}-${inputIndex}`;
                 const showAdvanced = advancedInputs.has(advancedKey);
 
@@ -576,11 +687,19 @@ export function MailchimpFormBlock({
                   >
                     <ItemHeader>
                       <Heading>{input.name || input.label || '—'}</Heading>
-                      <IconButton
-                        size="xs"
-                        icon={<MdDelete />}
+                      <ItemActions
                         disabled={disabled}
-                        onClick={() =>
+                        onMoveUp={
+                          inputIndex > 0 ?
+                            () => moveInput(inputIndex - 1)
+                          : undefined
+                        }
+                        onMoveDown={
+                          inputIndex < step.inputs.length - 1 ?
+                            () => moveInput(inputIndex + 1)
+                          : undefined
+                        }
+                        onRemove={() =>
                           updateStep({
                             inputs: step.inputs.filter(
                               (_, i) => i !== inputIndex
@@ -780,6 +899,30 @@ export function MailchimpFormBlock({
                                   i === optionIndex ? { ...o, ...patch } : o
                                 ),
                               })
+                            }
+                            onMoveUp={
+                              optionIndex > 0 ?
+                                () =>
+                                  updateInput({
+                                    options: moveItem(
+                                      input.options,
+                                      optionIndex,
+                                      optionIndex - 1
+                                    ),
+                                  })
+                              : undefined
+                            }
+                            onMoveDown={
+                              optionIndex < input.options.length - 1 ?
+                                () =>
+                                  updateInput({
+                                    options: moveItem(
+                                      input.options,
+                                      optionIndex,
+                                      optionIndex + 1
+                                    ),
+                                  })
+                              : undefined
                             }
                             onRemove={() =>
                               updateInput({
