@@ -325,6 +325,14 @@
       }
     },
     "blocks": {
+      "blockTemplate": {
+        "editTemplate": "Vorlage bearbeiten",
+        "label": "Blockvorlage",
+        "select": "Blockvorlage auswählen",
+        "useContent": "Inhalt übernehmen",
+        "useContentConfirmMessage": "Der Inhalt der Vorlage wird hierher kopiert, damit Sie ihn frei bearbeiten können. Danach ist dieser Block nicht mehr mit der Vorlage verknüpft und spätere Änderungen an der Vorlage erscheinen hier nicht mehr.",
+        "useContentConfirmTitle": "Inhalt der Vorlage übernehmen?"
+      },
       "crowdfunding": {
         "edit": "Bearbeiten",
         "label": "Crowdfunding",
@@ -771,6 +779,11 @@
       "tomorrow": "Morgen"
     },
     "delete": "Löschen",
+    "deleteBlockTemplateModal": {
+      "body": "Willst Du die Block-Vorlage \"{{name}}\" wirklich löschen?",
+      "deleteBtn": "Ja, löschen",
+      "title": "Block-Vorlage löschen?"
+    },
     "deletePollModal": {
       "body": "Willst Du die Umfrage \"{{pollQuestion}}\" wirklich löschen?",
       "deleteBtn": "Ja, löschen",
@@ -1316,7 +1329,8 @@
         "polls": "Umfrage",
         "blockStyles": "Block Styling",
         "topMenu": "Inhalts-Blöcke",
-        "crowdfundings": "Crowdfundings"
+        "crowdfundings": "Crowdfundings",
+        "blockTemplates": "Blockvorlagen"
       },
       "commentRating": "Bewertungssystem",
       "comments": "Kommentare",
@@ -2094,6 +2108,29 @@
       "subscriptionStartsAt": "Abo startet am {{date}}",
       "subscriptionTitle": "{{memberPlanName}} / Nr. {{subscriptionId}}",
       "unexpectedErrorNoInvoice": "Unerwarteter Fehler: Rechnung nicht vorhanden."
+    },
+    "blockTemplates": {
+      "list": {
+        "title": "Blockvorlagen",
+        "newBlockTemplate": "Neue Blockvorlage",
+        "name": "Name",
+        "noName": "Kein Name",
+        "delete": "Löschen",
+        "info": "Blockvorlagen werden einmal erstellt und können dann in beliebig vielen Artikeln und Seiten verwendet werden. Wird eine Vorlage geändert, zeigen alle Artikel und Seiten, die sie verwenden, sofort den neuen Inhalt."
+      },
+      "edit": {
+        "title": "Blockvorlage bearbeiten",
+        "name": "Name",
+        "back": "Zurück",
+        "backToList": "Zurück zur Liste",
+        "noName": "Kein Name",
+        "delete": "Löschen",
+        "saved": "Gespeichert",
+        "new": "Neu",
+        "editing": "Bearbeiten",
+        "saveConfirmMessage": "Beim Speichern wird der Inhalt dieser Vorlage sofort in allen Artikeln und Seiten aktualisiert, die sie verwenden, auch in bereits veröffentlichten.",
+        "saveConfirmTitle": "Vorlage speichern?"
+      }
     },
     "yes": "Ja",
     "memberplanForm": {

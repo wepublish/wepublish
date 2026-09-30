@@ -586,7 +586,6 @@ function PageEditor() {
               leftChildren={
                 <Link to="/pages">
                   <IconButtonMargins
-                    className="actionButton"
                     size="lg"
                     icon={<MdKeyboardBackspace />}
                     onClick={e => {
@@ -601,7 +600,6 @@ function PageEditor() {
                 <CenterChildren>
                   <RIconButton
                     icon={<MdIntegrationInstructions />}
-                    className="actionButton"
                     size="lg"
                     disabled={isDisabled}
                     onClick={() => setMetaDrawerOpen(true)}
@@ -615,7 +613,6 @@ function PageEditor() {
                         qualifyingPermissions={['CAN_GET_PAGE']}
                       >
                         <IconButton
-                          className="actionButton"
                           icon={<MdHistory />}
                           size="lg"
                           disabled={isDisabled}
@@ -636,7 +633,6 @@ function PageEditor() {
                           qualifyingPermissions={['CAN_CREATE_PAGE']}
                         >
                           <IconButton
-                            className="actionButton"
                             icon={<MdDeleteOutline />}
                             size="lg"
                             disabled={isDisabled}
@@ -654,7 +650,6 @@ function PageEditor() {
                       qualifyingPermissions={['CAN_CREATE_PAGE']}
                     >
                       <IconButton
-                        className="actionButton"
                         size="lg"
                         icon={<MdSave />}
                         disabled={isDisabled}
@@ -668,7 +663,6 @@ function PageEditor() {
                     >
                       <Badge className={hasChanged ? 'unsaved' : 'saved'}>
                         <IconButton
-                          className="actionButton"
                           size="lg"
                           icon={<MdSave />}
                           disabled={isDisabled}
@@ -691,7 +685,6 @@ function PageEditor() {
                           }
                         >
                           <IconButton
-                            className="actionButton"
                             size="lg"
                             icon={<MdCloudUpload />}
                             disabled={isDisabled}
@@ -713,7 +706,6 @@ function PageEditor() {
               rightChildren={
                 <PermissionControl qualifyingPermissions={[CanPreview.id]}>
                   <IconButtonMTop
-                    className="actionButton"
                     disabled={hasChanged || !id || !canPreview}
                     size="lg"
                     icon={<MdRemoveRedEye />}

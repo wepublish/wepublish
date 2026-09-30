@@ -328,13 +328,22 @@
       }
     },
     "blocks": {
+      "blockTemplate": {
+        "editTemplate": "Modifier le modèle",
+        "label": "Modèle de bloc",
+        "select": "Sélectionner un modèle de bloc",
+        "useContent": "Utiliser le contenu",
+        "useContentConfirmMessage": "Le contenu du modèle sera copié ici afin que vous puissiez le modifier librement. Ce bloc ne sera ensuite plus lié au modèle et les modifications ultérieures du modèle n'apparaîtront plus ici.",
+        "useContentConfirmTitle": "Utiliser le contenu du modèle ?"
+      },
       "crowdfunding": {
         "edit": "Modifier",
         "label": "Crowdfunding",
         "title": "Sélectionner le crowdfunding",
         "name": "Nom du crowdfunding",
         "select": "Sélectionner",
-        "open": "Ouvrir"
+        "open": "Ouvrir",
+        "blockTemplates": "Modèles de blocs"
       },
       "comment": {
         "cherryPick": "Select specific comments",
@@ -774,6 +783,11 @@
       "tomorrow": "Demain"
     },
     "delete": "Supprimer",
+    "deleteBlockTemplateModal": {
+      "body": "Veux-tu vraiment supprimer le modèle de bloc \"{{name}}\"?",
+      "deleteBtn": "Oui, supprimer",
+      "title": "Supprimer le modèle de bloc?"
+    },
     "deletePollModal": {
       "body": "Veux-tu vraiment supprimer le sondage \"{{pollQuestion}}\"?",
       "deleteBtn": "Oui, supprimer",
@@ -1413,6 +1427,7 @@
         "unpublished": "Non publié"
       },
       "panels": {
+        "chooseBlock": "Choisir le bloc",
         "close": "Fermer",
         "confirm": "Confirmer",
         "createdAt": "{{createdAt, ccc PP p}}",
@@ -2043,6 +2058,29 @@
       "subscriptionStartsAt": "L'abonnement débute le {{date}}",
       "subscriptionTitle": "{{memberPlanName}} / N° {{subscriptionId}}",
       "unexpectedErrorNoInvoice": "Erreur inattendue : facture inexistante."
+    },
+    "blockTemplates": {
+      "list": {
+        "title": "Modèles de blocs",
+        "newBlockTemplate": "Nouveau modèle de bloc",
+        "name": "Nom",
+        "noName": "Pas de nom",
+        "delete": "Supprimer",
+        "info": "Les modèles de blocs sont définis une seule fois et peuvent ensuite être utilisés dans autant d'articles et de pages que vous le souhaitez. Lorsqu'un modèle est modifié, tous les articles et pages qui l'utilisent affichent immédiatement le nouveau contenu."
+      },
+      "edit": {
+        "title": "Modifier le modèle de bloc",
+        "name": "Nom",
+        "back": "Retour",
+        "backToList": "Retour à la liste",
+        "noName": "Pas de nom",
+        "delete": "Supprimer",
+        "saved": "Enregistré",
+        "new": "Nouveau",
+        "editing": "Modification",
+        "saveConfirmMessage": "L'enregistrement met immédiatement à jour le contenu de ce modèle dans tous les articles et pages qui l'utilisent, y compris ceux déjà publiés.",
+        "saveConfirmTitle": "Enregistrer le modèle ?"
+      }
     },
     "yes": "Oui",
     "memberplanForm": {
