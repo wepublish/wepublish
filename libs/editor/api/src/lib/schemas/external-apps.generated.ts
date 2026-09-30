@@ -62,6 +62,13 @@ export type DeleteExternalAppMutation = { __typename?: 'Mutation', deleteExterna
     & ExternalAppFragment
   ) };
 
+export type CreateExternalAppTokenMutationVariables = Types.Exact<{
+  externalAppId: Types.Scalars['String'];
+}>;
+
+
+export type CreateExternalAppTokenMutation = { __typename?: 'Mutation', createExternalAppToken: { __typename?: 'ExternalAppToken', token: string, expiresAt: string } };
+
 export const ExternalAppFragmentDoc = gql`
     fragment ExternalApp on ExternalApp {
   createdAt
@@ -255,3 +262,37 @@ export function useDeleteExternalAppMutation(baseOptions?: Apollo.MutationHookOp
 export type DeleteExternalAppMutationHookResult = ReturnType<typeof useDeleteExternalAppMutation>;
 export type DeleteExternalAppMutationResult = Apollo.MutationResult<DeleteExternalAppMutation>;
 export type DeleteExternalAppMutationOptions = Apollo.BaseMutationOptions<DeleteExternalAppMutation, DeleteExternalAppMutationVariables>;
+export const CreateExternalAppTokenDocument = gql`
+    mutation CreateExternalAppToken($externalAppId: String!) {
+  createExternalAppToken(externalAppId: $externalAppId) {
+    token
+    expiresAt
+  }
+}
+    `;
+export type CreateExternalAppTokenMutationFn = Apollo.MutationFunction<CreateExternalAppTokenMutation, CreateExternalAppTokenMutationVariables>;
+
+/**
+ * __useCreateExternalAppTokenMutation__
+ *
+ * To run a mutation, you first call `useCreateExternalAppTokenMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateExternalAppTokenMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createExternalAppTokenMutation, { data, loading, error }] = useCreateExternalAppTokenMutation({
+ *   variables: {
+ *      externalAppId: // value for 'externalAppId'
+ *   },
+ * });
+ */
+export function useCreateExternalAppTokenMutation(baseOptions?: Apollo.MutationHookOptions<CreateExternalAppTokenMutation, CreateExternalAppTokenMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateExternalAppTokenMutation, CreateExternalAppTokenMutationVariables>(CreateExternalAppTokenDocument, options);
+      }
+export type CreateExternalAppTokenMutationHookResult = ReturnType<typeof useCreateExternalAppTokenMutation>;
+export type CreateExternalAppTokenMutationResult = Apollo.MutationResult<CreateExternalAppTokenMutation>;
+export type CreateExternalAppTokenMutationOptions = Apollo.BaseMutationOptions<CreateExternalAppTokenMutation, CreateExternalAppTokenMutationVariables>;
