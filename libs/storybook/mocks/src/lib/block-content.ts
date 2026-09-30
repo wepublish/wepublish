@@ -41,6 +41,7 @@ import {
   BlockWithAlignment,
   Maybe,
   BlockContent,
+  FullBlockTemplateBlockFragment,
   PaymentPeriodicity,
   MailchimpFormBlock,
   MailchimpFormFieldConfig,
@@ -949,6 +950,23 @@ export const mockTabbedContentTeaserSlots: MockTabbedContent = ({
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const mockBlockTemplateBlock = ({
+  templateId = '1234-1234',
+  template = {
+    id: templateId,
+    name: 'Block Template',
+    blocks: [mockTitleBlock(), mockRichTextBlock()],
+  },
+}: Partial<FullBlockTemplateBlockFragment> = {}) =>
+  ({
+    type: BlockType.BlockTemplate,
+    __typename: 'BlockTemplateBlock',
+    blockStyle: null,
+    disabled: false,
+    templateId,
+    template,
+  }) as FullBlockTemplateBlockFragment;
+
 export const mockBlockContent: any = ({
   title = mockTitleBlock(),
   image = mockImageBlock(),

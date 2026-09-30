@@ -24,7 +24,7 @@ import {
   mailLogType,
   MailProviderRecipientError,
 } from '@wepublish/mail/api';
-import { PaymentsService } from '@wepublish/payment/api';
+import { InvoicePaidNotifier, PaymentsService } from '@wepublish/payment/api';
 import {
   add,
   addDays,
@@ -61,7 +61,8 @@ export class PeriodicJobService {
     private prismaService: PrismaClient,
     private mailContext: MailContext,
     private subscriptionController: SubscriptionService,
-    private payments: PaymentsService
+    private payments: PaymentsService,
+    private invoicePaidNotifier: InvoicePaidNotifier
   ) {}
 
   getJobLog(take: number, skip?: number) {
@@ -432,25 +433,33 @@ export class PeriodicJobService {
       eventsRenewal
     );
 
-    if (mailAction.action) {
-      const user = Object.assign({}, invoiceToCharge.subscription.user);
-      const { subscription, items, subscriptionPeriods, ...invoice } =
-        invoiceToCharge;
-
-      await this.sendTemplateMail(
-        mailAction.action,
-        user,
-        periodicJobRunObject.isRetry,
-        {
-          errorCode: mailAction.errorCode,
-          invoice,
-          subscriptionPeriods,
-          items,
-          subscription,
-        },
-        periodicJobRunObject.date
-      );
+    if (!mailAction.action) {
+      return;
     }
+
+    if (mailAction.action.type === SubscriptionEvent.RENEWAL_SUCCESS) {
+      await this.invoicePaidNotifier.notify(invoiceToCharge.id);
+
+      return;
+    }
+
+    const user = Object.assign({}, invoiceToCharge.subscription.user);
+    const { subscription, items, subscriptionPeriods, ...invoice } =
+      invoiceToCharge;
+
+    await this.sendTemplateMail(
+      mailAction.action,
+      user,
+      periodicJobRunObject.isRetry,
+      {
+        errorCode: mailAction.errorCode,
+        invoice,
+        subscriptionPeriods,
+        items,
+        subscription,
+      },
+      periodicJobRunObject.date
+    );
   }
 
   private async checkInvoiceState(

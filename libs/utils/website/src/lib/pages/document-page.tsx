@@ -118,21 +118,19 @@ export const documentGetInitialProps = async (
   const originalRenderPage = ctx.renderPage;
   ctx.renderPage = options => {
     const opts =
-      typeof options === 'function' ? { enhanceApp: options } : (options ?? {});
+      typeof options === 'function' ?
+        { enhanceComponent: options }
+      : (options ?? {});
 
     return originalRenderPage({
       ...opts,
       enhanceApp: App => {
-        const Enhanced = opts.enhanceApp ? opts.enhanceApp(App as any) : App;
+        const Enhanced = opts.enhanceApp ? opts.enhanceApp(App) : App;
 
         return function AppWithSettings(props) {
-          return (
-            <Enhanced
-              {...(props as any)}
-              websiteSettings={websiteSettings}
-              publicEnv={publicEnv}
-            />
-          );
+          const appProps = { ...props, websiteSettings, publicEnv };
+
+          return <Enhanced {...appProps} />;
         } as typeof App;
       },
     });

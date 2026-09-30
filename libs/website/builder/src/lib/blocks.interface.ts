@@ -2,6 +2,7 @@ import {
   FullImageGalleryBlockFragment,
   FullBreakBlockFragment,
   FullTitleBlockFragment,
+  FullBlockTemplateBlockFragment,
   FullFlexBlockFragment,
   FullBildwurfAdBlockFragment,
   FullCrowdfundingBlockFragment,
@@ -54,6 +55,8 @@ export type BlockProps = {
 type WithBlockProps<T> = Omit<T, 'type'> & BlockProps;
 
 export type BuilderFlexBlockProps = WithBlockProps<FullFlexBlockFragment>;
+export type BuilderBlockTemplateBlockProps =
+  WithBlockProps<FullBlockTemplateBlockFragment>;
 export type BuilderTitleBlockProps = WithBlockProps<FullTitleBlockFragment>;
 export type BuilderBreakBlockProps = WithBlockProps<FullBreakBlockFragment>;
 export type BuilderImageBlockProps = WithBlockProps<FullImageBlockFragment>;

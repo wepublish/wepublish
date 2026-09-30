@@ -8,7 +8,7 @@ const defaultOptions = {} as const;
 export type PaymentProviderSettingsQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type PaymentProviderSettingsQuery = { __typename?: 'Query', paymentProviderSettings: Array<{ __typename?: 'SettingPaymentProvider', bexio_accountId?: number | null, bexio_countryId?: number | null, bexio_invoiceMailBodyNewMembership?: string | null, bexio_invoiceMailBodyRenewalMembership?: string | null, bexio_invoiceMailSubjectNewMembership?: string | null, bexio_invoiceMailSubjectRenewalMembership?: string | null, bexio_invoiceTemplateNewMembership?: string | null, bexio_invoiceTemplateRenewalMembership?: string | null, bexio_invoiceTitleNewMembership?: string | null, bexio_invoiceTitleRenewalMembership?: string | null, bexio_markInvoiceAsOpen?: boolean | null, bexio_taxId?: number | null, bexio_unitId?: number | null, bexio_userId?: number | null, createdAt: string, id: string, lastLoadedAt: string, modifiedAt: string, mollie_apiBaseUrl?: string | null, mollie_methods?: Array<Types.PaymentMethodMollie> | null, name?: string | null, offSessionPayments?: boolean | null, payrexx_instancename?: string | null, payrexx_pm?: Array<Types.PayrexxPm> | null, payrexx_psp?: Array<Types.PayrexxPsp> | null, payrexx_vatrate?: string | null, stripe_methods?: Array<Types.StripePaymentMethod> | null, type: Types.PaymentProviderType }> };
+export type PaymentProviderSettingsQuery = { __typename?: 'Query', paymentProviderSettings: Array<{ __typename?: 'SettingPaymentProvider', deletedAt?: string | null, bexio_accountId?: number | null, bexio_countryId?: number | null, bexio_invoiceMailBodyNewMembership?: string | null, bexio_invoiceMailBodyRenewalMembership?: string | null, bexio_invoiceMailSubjectNewMembership?: string | null, bexio_invoiceMailSubjectRenewalMembership?: string | null, bexio_invoiceTemplateNewMembership?: string | null, bexio_invoiceTemplateRenewalMembership?: string | null, bexio_invoiceTitleNewMembership?: string | null, bexio_invoiceTitleRenewalMembership?: string | null, bexio_markInvoiceAsOpen?: boolean | null, bexio_taxId?: number | null, bexio_unitId?: number | null, bexio_userId?: number | null, createdAt: string, id: string, lastLoadedAt: string, modifiedAt: string, mollie_apiBaseUrl?: string | null, mollie_methods?: Array<Types.PaymentMethodMollie> | null, name?: string | null, offSessionPayments?: boolean | null, payrexx_instancename?: string | null, payrexx_pm?: Array<Types.PayrexxPm> | null, payrexx_psp?: Array<Types.PayrexxPsp> | null, payrexx_vatrate?: string | null, stripe_methods?: Array<Types.StripePaymentMethod> | null, type: Types.PaymentProviderType }> };
 
 export type UpdatePaymentProviderSettingMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
@@ -42,10 +42,27 @@ export type UpdatePaymentProviderSettingMutationVariables = Types.Exact<{
 
 export type UpdatePaymentProviderSettingMutation = { __typename?: 'Mutation', updatePaymentProviderSetting: { __typename?: 'SettingPaymentProvider', bexio_accountId?: number | null, bexio_countryId?: number | null, bexio_invoiceMailBodyNewMembership?: string | null, bexio_invoiceMailBodyRenewalMembership?: string | null, bexio_invoiceMailSubjectNewMembership?: string | null, bexio_invoiceMailSubjectRenewalMembership?: string | null, bexio_invoiceTemplateNewMembership?: string | null, bexio_invoiceTemplateRenewalMembership?: string | null, bexio_invoiceTitleNewMembership?: string | null, bexio_invoiceTitleRenewalMembership?: string | null, bexio_markInvoiceAsOpen?: boolean | null, bexio_taxId?: number | null, bexio_unitId?: number | null, bexio_userId?: number | null, createdAt: string, id: string, lastLoadedAt: string, modifiedAt: string, mollie_apiBaseUrl?: string | null, mollie_methods?: Array<Types.PaymentMethodMollie> | null, name?: string | null, offSessionPayments?: boolean | null, payrexx_instancename?: string | null, payrexx_pm?: Array<Types.PayrexxPm> | null, payrexx_psp?: Array<Types.PayrexxPsp> | null, payrexx_vatrate?: string | null, stripe_methods?: Array<Types.StripePaymentMethod> | null, type: Types.PaymentProviderType } };
 
+export type CreatePaymentProviderSettingMutationVariables = Types.Exact<{
+  id: Types.Scalars['String'];
+  type: Types.PaymentProviderType;
+  name?: Types.InputMaybe<Types.Scalars['String']>;
+}>;
+
+
+export type CreatePaymentProviderSettingMutation = { __typename?: 'Mutation', createPaymentProviderSetting: { __typename?: 'SettingPaymentProvider', createdAt: string, deletedAt?: string | null, id: string, lastLoadedAt: string, modifiedAt: string, name?: string | null, type: Types.PaymentProviderType } };
+
+export type DeletePaymentProviderSettingMutationVariables = Types.Exact<{
+  id: Types.Scalars['String'];
+}>;
+
+
+export type DeletePaymentProviderSettingMutation = { __typename?: 'Mutation', deletePaymentProviderSetting: { __typename?: 'SettingPaymentProvider', deletedAt?: string | null, id: string } };
+
 
 export const PaymentProviderSettingsDocument = gql`
     query PaymentProviderSettings {
   paymentProviderSettings {
+    deletedAt
     bexio_accountId
     bexio_countryId
     bexio_invoiceMailBodyNewMembership
@@ -216,3 +233,78 @@ export function useUpdatePaymentProviderSettingMutation(baseOptions?: Apollo.Mut
 export type UpdatePaymentProviderSettingMutationHookResult = ReturnType<typeof useUpdatePaymentProviderSettingMutation>;
 export type UpdatePaymentProviderSettingMutationResult = Apollo.MutationResult<UpdatePaymentProviderSettingMutation>;
 export type UpdatePaymentProviderSettingMutationOptions = Apollo.BaseMutationOptions<UpdatePaymentProviderSettingMutation, UpdatePaymentProviderSettingMutationVariables>;
+export const CreatePaymentProviderSettingDocument = gql`
+    mutation CreatePaymentProviderSetting($id: String!, $type: PaymentProviderType!, $name: String) {
+  createPaymentProviderSetting(id: $id, type: $type, name: $name) {
+    createdAt
+    deletedAt
+    id
+    lastLoadedAt
+    modifiedAt
+    name
+    type
+  }
+}
+    `;
+export type CreatePaymentProviderSettingMutationFn = Apollo.MutationFunction<CreatePaymentProviderSettingMutation, CreatePaymentProviderSettingMutationVariables>;
+
+/**
+ * __useCreatePaymentProviderSettingMutation__
+ *
+ * To run a mutation, you first call `useCreatePaymentProviderSettingMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreatePaymentProviderSettingMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createPaymentProviderSettingMutation, { data, loading, error }] = useCreatePaymentProviderSettingMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      type: // value for 'type'
+ *      name: // value for 'name'
+ *   },
+ * });
+ */
+export function useCreatePaymentProviderSettingMutation(baseOptions?: Apollo.MutationHookOptions<CreatePaymentProviderSettingMutation, CreatePaymentProviderSettingMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreatePaymentProviderSettingMutation, CreatePaymentProviderSettingMutationVariables>(CreatePaymentProviderSettingDocument, options);
+      }
+export type CreatePaymentProviderSettingMutationHookResult = ReturnType<typeof useCreatePaymentProviderSettingMutation>;
+export type CreatePaymentProviderSettingMutationResult = Apollo.MutationResult<CreatePaymentProviderSettingMutation>;
+export type CreatePaymentProviderSettingMutationOptions = Apollo.BaseMutationOptions<CreatePaymentProviderSettingMutation, CreatePaymentProviderSettingMutationVariables>;
+export const DeletePaymentProviderSettingDocument = gql`
+    mutation DeletePaymentProviderSetting($id: String!) {
+  deletePaymentProviderSetting(id: $id) {
+    deletedAt
+    id
+  }
+}
+    `;
+export type DeletePaymentProviderSettingMutationFn = Apollo.MutationFunction<DeletePaymentProviderSettingMutation, DeletePaymentProviderSettingMutationVariables>;
+
+/**
+ * __useDeletePaymentProviderSettingMutation__
+ *
+ * To run a mutation, you first call `useDeletePaymentProviderSettingMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeletePaymentProviderSettingMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deletePaymentProviderSettingMutation, { data, loading, error }] = useDeletePaymentProviderSettingMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeletePaymentProviderSettingMutation(baseOptions?: Apollo.MutationHookOptions<DeletePaymentProviderSettingMutation, DeletePaymentProviderSettingMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeletePaymentProviderSettingMutation, DeletePaymentProviderSettingMutationVariables>(DeletePaymentProviderSettingDocument, options);
+      }
+export type DeletePaymentProviderSettingMutationHookResult = ReturnType<typeof useDeletePaymentProviderSettingMutation>;
+export type DeletePaymentProviderSettingMutationResult = Apollo.MutationResult<DeletePaymentProviderSettingMutation>;
+export type DeletePaymentProviderSettingMutationOptions = Apollo.BaseMutationOptions<DeletePaymentProviderSettingMutation, DeletePaymentProviderSettingMutationVariables>;

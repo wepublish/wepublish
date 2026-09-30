@@ -1,5 +1,6 @@
 query PaymentProviderSettings {
   paymentProviderSettings {
+    deletedAt
     bexio_accountId
     bexio_countryId
     bexio_invoiceMailBodyNewMembership
@@ -115,5 +116,28 @@ mutation UpdatePaymentProviderSetting(
     payrexx_vatrate
     stripe_methods
     type
+  }
+}
+
+mutation CreatePaymentProviderSetting(
+  $id: String!
+  $type: PaymentProviderType!
+  $name: String
+) {
+  createPaymentProviderSetting(id: $id, type: $type, name: $name) {
+    createdAt
+    deletedAt
+    id
+    lastLoadedAt
+    modifiedAt
+    name
+    type
+  }
+}
+
+mutation DeletePaymentProviderSetting($id: String!) {
+  deletePaymentProviderSetting(id: $id) {
+    deletedAt
+    id
   }
 }

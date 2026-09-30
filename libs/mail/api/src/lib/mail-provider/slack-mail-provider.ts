@@ -1,9 +1,5 @@
-import {
-  MailProviderProps,
-  BaseMailProvider,
-  SendMailProps,
-  SendMailResult,
-} from '@wepublish/mail/api';
+import { MailProviderProps, BaseMailProvider } from './base-mail-provider';
+import { SendMailProps, SendMailResult } from './mail-provider.interface';
 import fetch from 'cross-fetch';
 
 export class SlackMailProvider extends BaseMailProvider {
@@ -23,7 +19,7 @@ export class SlackMailProvider extends BaseMailProvider {
         `SlackMailProvider <${this.id}>: slack_webhookURL is not configured, skipping mail to ${props.recipient}`
       );
 
-      return;
+      return {};
     }
 
     const message = {
