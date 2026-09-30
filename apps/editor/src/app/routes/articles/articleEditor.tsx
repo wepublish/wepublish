@@ -972,6 +972,7 @@ function ArticleEditor() {
           articleID={articleID}
           value={metadata}
           infoData={infoData}
+          onSave={() => handleSave()}
           onClose={() => {
             handleSave();
             setMetaDrawerOpen(false);

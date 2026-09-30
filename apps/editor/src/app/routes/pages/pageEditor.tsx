@@ -823,6 +823,7 @@ function PageEditor() {
         <PageMetadataPanel
           seoContext={seoContext}
           value={metadata}
+          onSave={() => handleSave()}
           onClose={() => {
             handleSave();
             setMetaDrawerOpen(false);

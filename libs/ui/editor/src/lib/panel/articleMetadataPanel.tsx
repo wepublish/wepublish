@@ -141,6 +141,7 @@ export interface ArticleMetadataPanelProps {
   readonly infoData: InfoData;
   readonly seoContext?: SeoBlockContext;
 
+  onSave?(): void;
   onClose?(): void;
   onChange?(value: ArticleMetadata): void;
 }
@@ -151,6 +152,7 @@ function ArticleMetadataPanel({
   value,
   infoData,
   seoContext,
+  onSave,
   onClose,
   onChange,
 }: ArticleMetadataPanelProps) {
@@ -672,6 +674,11 @@ function ArticleMetadataPanel({
 
         <Drawer.Actions>
           <PermissionControl qualifyingPermissions={['CAN_CREATE_ARTICLE']}>
+            {onSave && (
+              <Button onClick={() => !canonicalUrlError && onSave()}>
+                {t('save')}
+              </Button>
+            )}
             <Button
               appearance="primary"
               type="submit"

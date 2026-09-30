@@ -100,6 +100,7 @@ export interface PageMetadataPanelProps {
   readonly value: PageMetadata;
   readonly seoContext?: SeoBlockContext;
 
+  onSave?(): void;
   onClose?(): void;
 
   onChange?(value: PageMetadata): void;
@@ -108,6 +109,7 @@ export interface PageMetadataPanelProps {
 function PageMetadataPanel({
   value,
   seoContext,
+  onSave,
   onClose,
   onChange,
 }: PageMetadataPanelProps) {
@@ -422,6 +424,7 @@ function PageMetadataPanel({
 
         <Drawer.Actions>
           <PermissionControl qualifyingPermissions={['CAN_CREATE_PAGE']}>
+            {onSave && <Button onClick={() => onSave()}>{t('save')}</Button>}
             <Button
               appearance="primary"
               onClick={() => onClose?.()}
