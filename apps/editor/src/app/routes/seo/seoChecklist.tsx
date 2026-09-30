@@ -32,6 +32,7 @@ import {
   createCheckedPermissionComponent,
   useAuthorisation,
 } from '@wepublish/ui/editor';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   MdCheck,
@@ -566,27 +567,26 @@ function SeoChecklist() {
     notifyOnNetworkStatusChange: true,
   });
 
-  const [
-    updateItem,
-    { loading: updating, error: updateError, variables: updateVariables },
-  ] = useUpdateSeoChecklistItemMutation({
-    update: (cache, { data: result }) => {
-      if (!result) {
-        return;
-      }
+  const [updatingId, setUpdatingId] = useState<string>();
+  const [updateItem, { loading: updating, error: updateError }] =
+    useUpdateSeoChecklistItemMutation({
+      update: (cache, { data: result }) => {
+        if (!result) {
+          return;
+        }
 
-      cache.updateQuery<SeoChecklistQuery>(
-        { query: SeoChecklistDocument },
-        previous =>
-          previous && {
-            seoChecklist: {
-              ...previous.seoChecklist,
-              completedItems: result.updateSeoChecklistItem,
-            },
-          }
-      );
-    },
-  });
+        cache.updateQuery<SeoChecklistQuery>(
+          { query: SeoChecklistDocument },
+          previous =>
+            previous && {
+              seoChecklist: {
+                ...previous.seoChecklist,
+                completedItems: result.updateSeoChecklistItem,
+              },
+            }
+        );
+      },
+    });
 
   const checklist = data?.seoChecklist;
   const initialLoading = !checklist && loading;
@@ -604,10 +604,11 @@ function SeoChecklist() {
       section={section}
       checklist={checklist}
       canUpdate={canUpdate}
-      updatingId={updating ? updateVariables?.itemId : undefined}
-      onToggle={(itemId, completed) =>
-        updateItem({ variables: { itemId, completed } })
-      }
+      updatingId={updating ? updatingId : undefined}
+      onToggle={(itemId, completed) => {
+        setUpdatingId(itemId);
+        updateItem({ variables: { itemId, completed } });
+      }}
     />
   ));
 

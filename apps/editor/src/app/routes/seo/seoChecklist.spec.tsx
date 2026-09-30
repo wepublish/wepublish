@@ -21,7 +21,6 @@ const { queryResult, updateItem, mutationResult, auth } = vi.hoisted(() => ({
   mutationResult: {
     loading: false,
     error: undefined,
-    variables: undefined as { itemId: string } | undefined,
   },
   auth: { canUpdate: true },
 }));
@@ -87,7 +86,6 @@ describe('SeoChecklist', () => {
   beforeEach(() => {
     updateItem.mockReset();
     mutationResult.loading = false;
-    mutationResult.variables = undefined;
     auth.canUpdate = true;
     queryResult.error = undefined;
     queryResult.loading = false;
@@ -158,8 +156,9 @@ describe('SeoChecklist', () => {
   });
 
   test('only disables the checkbox that is being saved', () => {
-    mutationResult.loading = true;
-    mutationResult.variables = { itemId: 'gsc-sitemap' };
+    updateItem.mockImplementation(() => {
+      mutationResult.loading = true;
+    });
 
     renderChecklist();
 
@@ -167,6 +166,8 @@ describe('SeoChecklist', () => {
       within(screen.getByTestId(`seo-item-${id}`)).getByRole(
         'checkbox'
       ) as HTMLInputElement;
+
+    fireEvent.click(checkbox('gsc-sitemap'));
 
     expect(checkbox('gsc-sitemap').disabled).toBe(true);
     expect(checkbox('gsc-verify').disabled).toBe(false);
