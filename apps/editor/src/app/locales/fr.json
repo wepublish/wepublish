@@ -2432,6 +2432,7 @@
         "psp": "Prestataires de services de paiement",
         "type": "Type",
         "vatRate": "Taux de TVA",
+        "declineRenewals": "Refuser les renouvellements (simuler des paiements récurrents échoués)",
         "webhookEndpointSecret": "Secret du point de terminaison du webhook",
         "bexioUserId": "ID utilisateur Bexio",
         "bexioCountryId": "ID pays Bexio",
