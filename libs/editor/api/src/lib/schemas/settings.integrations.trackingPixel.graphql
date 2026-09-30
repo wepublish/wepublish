@@ -1,5 +1,6 @@
 query TrackingPixelSettings {
   trackingPixelSettings {
+    deletedAt
     createdAt
     id
     lastLoadedAt
@@ -45,5 +46,28 @@ mutation UpdateTrackingPixelSetting(
     prolitteris_usePublisherInternalKey
     prolitteris_username
     type
+  }
+}
+
+mutation CreateTrackingPixelSetting(
+  $id: String!
+  $type: TrackingPixelProviderType!
+  $name: String
+) {
+  createTrackingPixelSetting(id: $id, type: $type, name: $name) {
+    createdAt
+    deletedAt
+    id
+    lastLoadedAt
+    modifiedAt
+    name
+    type
+  }
+}
+
+mutation DeleteTrackingPixelSetting($id: String!) {
+  deleteTrackingPixelSetting(id: $id) {
+    deletedAt
+    id
   }
 }

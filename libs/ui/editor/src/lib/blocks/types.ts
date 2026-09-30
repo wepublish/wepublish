@@ -10,6 +10,7 @@ import {
   FullImageFragment,
   FullPoll,
   FullTeaserFragment,
+  NestedBlockTemplateBlockFragment,
   PageWithoutBlocksFragment,
   SubscribeBlock,
   SubscribeBlockField,
@@ -184,6 +185,10 @@ export type FlexBlockWithAlignment = {
 
 export interface FlexBlockValue extends BaseBlockValue {
   blocks: Array<FlexBlockWithAlignment>;
+}
+
+export interface BlockTemplateBlockValue extends BaseBlockValue {
+  template?: NestedBlockTemplateBlockFragment['template'];
 }
 
 export enum EmbedType {
@@ -481,6 +486,10 @@ export type FlexBlockListValue = BlockListValue<
   EditorBlockType.FlexBlock,
   FlexBlockValue
 >;
+export type BlockTemplateListValue = BlockListValue<
+  EditorBlockType.BlockTemplate,
+  BlockTemplateBlockValue
+>;
 
 export type BlockValue =
   | TitleBlockListValue
@@ -503,7 +512,8 @@ export type BlockValue =
   | CommentBlockListValue
   | EventBlockListValue
   | TeaserListBlockListValue
-  | FlexBlockListValue;
+  | FlexBlockListValue
+  | BlockTemplateListValue;
 
 export function mapBlockValueToBlockInput(
   block: BlockValue
@@ -934,6 +944,15 @@ export function mapBlockValueToBlockInput(
       };
 
       return { flexBlock };
+    }
+    case EditorBlockType.BlockTemplate: {
+      return {
+        blockTemplate: {
+          templateId: block.value.template?.id ?? '',
+          blockStyle: block.value.blockStyle,
+          disabled: block.value.disabled,
+        },
+      };
     }
   }
 }
@@ -1447,6 +1466,17 @@ export function blockForQueryBlock(
                 blockForQueryBlock(block as FullBlockFragment)
               : undefined,
           })),
+        },
+      };
+
+    case 'BlockTemplateBlock':
+      return {
+        key,
+        type: EditorBlockType.BlockTemplate,
+        value: {
+          disabled: block.disabled,
+          blockStyle: block.blockStyle,
+          template: block.template,
         },
       };
 

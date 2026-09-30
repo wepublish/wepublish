@@ -43,3 +43,4 @@ export * from './lib/seo-checklist/seo-checklist.model';
 export * from './lib/seo-checklist/seo-checklist';
 export * from './lib/seo-checklist/seo-checklist.service';
 export * from './lib/seo-checklist/seo-checklist.resolver';
+export * from './lib/integrations/provider-settings-changed';

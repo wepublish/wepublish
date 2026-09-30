@@ -749,7 +749,6 @@ function ArticleEditor() {
                 <Link to="/articles">
                   <RIconButton
                     size="lg"
-                    className="actionButton"
                     icon={<MdKeyboardBackspace />}
                     onClick={e => {
                       if (!unsavedChangesDialog()) e.preventDefault();
@@ -765,7 +764,6 @@ function ArticleEditor() {
                     icon={<MdIntegrationInstructions />}
                     size="lg"
                     disabled={isDisabled}
-                    className="actionButton"
                     onClick={() => {
                       syncFirstTitleBlockWithMetadata();
                       setMetaDrawerOpen(true);
@@ -780,7 +778,6 @@ function ArticleEditor() {
                         qualifyingPermissions={['CAN_GET_ARTICLE']}
                       >
                         <IconButton
-                          className="actionButton"
                           icon={<MdHistory />}
                           size="lg"
                           disabled={isDisabled}
@@ -802,7 +799,6 @@ function ArticleEditor() {
                             qualifyingPermissions={['CAN_CREATE_ARTICLE']}
                           >
                             <IconButton
-                              className="actionButton"
                               icon={<MdDeleteOutline />}
                               size="lg"
                               disabled={isDisabled}
@@ -820,7 +816,6 @@ function ArticleEditor() {
                       qualifyingPermissions={['CAN_CREATE_ARTICLE']}
                     >
                       <IconButton
-                        className="actionButton"
                         size="lg"
                         icon={<MdSave />}
                         disabled={isDisabled}
@@ -834,7 +829,6 @@ function ArticleEditor() {
                     >
                       <Badge className={hasChanged ? 'unsaved' : 'saved'}>
                         <IconButton
-                          className="actionButton"
                           size="lg"
                           icon={<MdSave />}
                           disabled={isDisabled}
@@ -857,7 +851,6 @@ function ArticleEditor() {
                           }
                         >
                           <IconButton
-                            className="actionButton"
                             size="lg"
                             icon={<MdCloudUpload />}
                             disabled={isDisabled}

@@ -21,6 +21,7 @@ import {
   UpdateInvoiceInput,
 } from './invoice.model';
 import {
+  InvoicePaidNotifier,
   PAYMENT_METHOD_CONFIG,
   PaymentMethodConfig,
 } from '@wepublish/payment/api';
@@ -30,7 +31,8 @@ export class InvoiceService {
   constructor(
     private prisma: PrismaClient,
     @Inject(PAYMENT_METHOD_CONFIG)
-    private paymentMethodConfig: PaymentMethodConfig
+    private paymentMethodConfig: PaymentMethodConfig,
+    private invoicePaidNotifier: InvoicePaidNotifier
   ) {}
 
   @PrimeDataLoader(InvoiceDataloader)
@@ -128,7 +130,7 @@ export class InvoiceService {
   }
 
   @PrimeDataLoader(InvoiceDataloader)
-  async markInvoiceAsPaid(id: string, userId: string) {
+  async markInvoiceAsPaid(id: string, userId: string, sendMail = true) {
     const invoice = await this.prisma.invoice.findUnique({
       where: {
         id,
@@ -173,16 +175,23 @@ export class InvoiceService {
       },
     });
 
-    return this.prisma.invoice.update({
+    const invoiceMarkedAsPaid = await this.prisma.invoice.update({
       where: { id },
       data: {
         manuallySetAsPaidByUserId: userId,
         paidAt: new Date(),
+        ...(sendMail ? {} : { suppressRenewalSuccessMail: true }),
       },
       include: {
         items: true,
       },
     });
+
+    if (sendMail) {
+      await this.invoicePaidNotifier.notify(id);
+    }
+
+    return invoiceMarkedAsPaid;
   }
 
   @PrimeDataLoader(InvoiceDataloader)
@@ -269,6 +278,8 @@ export class InvoiceService {
         intentState,
       });
     }
+
+    await this.invoicePaidNotifier.notify(id);
 
     // FIXME: We need to implement a way to wait for all the database
     //  event hooks to finish before we return data. Will be solved in WPC-498
