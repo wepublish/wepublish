@@ -133,6 +133,11 @@ const titleBlockValue = (key: string, title: string): BlockValue => ({
 const useContentButton = () =>
   screen.getByRole('button', { name: 'blocks.blockTemplate.useContent' });
 
+const useContent = () => {
+  fireEvent.click(useContentButton());
+  fireEvent.click(screen.getByRole('button', { name: 'confirm' }));
+};
+
 beforeEach(() => {
   vi.clearAllMocks();
   mockQuery();
@@ -174,7 +179,7 @@ describe('BlockTemplateBlock', () => {
       ).not.toBeInTheDocument();
 
       // using the content still takes over hidden blocks (as hidden)
-      fireEvent.click(useContentButton());
+      useContent();
       const [blocks] = onReplace.mock.calls[0] as [BlockValue[]];
       expect(blocks.map(({ value }) => value.disabled)).toEqual([false, true]);
     });
@@ -227,7 +232,7 @@ describe('BlockTemplateBlock', () => {
     it('should hand the converted blocks to onReplace', () => {
       const { onReplace } = renderBlock();
 
-      fireEvent.click(useContentButton());
+      useContent();
 
       expect(onReplace).toHaveBeenCalledTimes(1);
 
@@ -242,10 +247,28 @@ describe('BlockTemplateBlock', () => {
       expect(blocks[1].value).toMatchObject({ title: 'Second Title' });
     });
 
-    it('should give every replaced block its own key', () => {
+    it('should ask for confirmation before replacing', () => {
       const { onReplace } = renderBlock();
 
       fireEvent.click(useContentButton());
+
+      expect(onReplace).not.toHaveBeenCalled();
+      expect(screen.getByRole('alertdialog')).toBeInTheDocument();
+    });
+
+    it('should not replace anything when the confirmation is cancelled', () => {
+      const { onReplace } = renderBlock();
+
+      fireEvent.click(useContentButton());
+      fireEvent.click(screen.getByRole('button', { name: 'cancel' }));
+
+      expect(onReplace).not.toHaveBeenCalled();
+    });
+
+    it('should give every replaced block its own key', () => {
+      const { onReplace } = renderBlock();
+
+      useContent();
 
       const [blocks] = onReplace.mock.calls[0] as [BlockValue[]];
       const keys = blocks.map(({ key }) => key);
@@ -283,7 +306,7 @@ describe('BlockTemplateBlock', () => {
       expect(useContentButton()).toBeEnabled();
       expect(screen.getByDisplayValue('First Title')).toBeDisabled();
 
-      fireEvent.click(useContentButton());
+      useContent();
 
       expect(
         screen.queryByRole('button', {
@@ -306,7 +329,7 @@ describe('BlockTemplateBlock', () => {
         />
       );
 
-      fireEvent.click(useContentButton());
+      useContent();
 
       const titles = screen
         .getAllByDisplayValue(/^(Before|First Title|Second Title|After)$/)
