@@ -77,6 +77,7 @@ import {
   toaster,
 } from 'rsuite';
 
+import { LastSavedAt } from '../../lastSavedAt';
 import {
   PreviewControls,
   PreviewDevice,
@@ -936,6 +937,8 @@ function ArticleEditor() {
                       </PermissionControl>
                     </PermissionControl>
                   }
+
+                  <LastSavedAt date={articleData?.article?.latest.createdAt} />
                 </CenterChildren>
               }
               rightChildren={

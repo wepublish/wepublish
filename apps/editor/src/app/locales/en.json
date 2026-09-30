@@ -1,5 +1,6 @@
 {
   "translation": {
+    "lastSavedAt": "Last saved {{date, ccc PP pp}}",
     "preview": {
       "backToEditor": "Editor",
       "mobile": "Mobile",
