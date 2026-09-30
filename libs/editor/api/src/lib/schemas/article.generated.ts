@@ -7,30 +7,35 @@ import { FullAuthorFragment } from './author.generated';
 import { FullPeerFragment, FullRemotePeerProfileFragment } from './peer.generated';
 import { FullPeerImageFragment, FullImageFragment, ImageUrLsFragment } from './image.generated';
 import { FullTagFragment } from './tag.generated';
-import { FullBlock_BildwurfAdBlock_Fragment, FullBlock_BreakBlock_Fragment, FullBlock_CommentBlock_Fragment, FullBlock_CrowdfundingBlock_Fragment, FullBlock_EventBlock_Fragment, FullBlock_FacebookPostBlock_Fragment, FullBlock_FacebookVideoBlock_Fragment, FullBlock_FlexBlock_Fragment, FullBlock_HtmlBlock_Fragment, FullBlock_IFrameBlock_Fragment, FullBlock_ImageBlock_Fragment, FullBlock_ImageGalleryBlock_Fragment, FullBlock_InstagramPostBlock_Fragment, FullBlock_ListicleBlock_Fragment, FullBlock_MailchimpFormBlock_Fragment, FullBlock_PolisConversationBlock_Fragment, FullBlock_PollBlock_Fragment, FullBlock_QuoteBlock_Fragment, FullBlock_RichTextBlock_Fragment, FullBlock_SoundCloudTrackBlock_Fragment, FullBlock_StreamableVideoBlock_Fragment, FullBlock_SubscribeBlock_Fragment, FullBlock_TeaserGridBlock_Fragment, FullBlock_TeaserGridFlexBlock_Fragment, FullBlock_TeaserListBlock_Fragment, FullBlock_TeaserSlotsBlock_Fragment, FullBlock_TikTokVideoBlock_Fragment, FullBlock_TitleBlock_Fragment, FullBlock_TwitterTweetBlock_Fragment, FullBlock_UnknownBlock_Fragment, FullBlock_VimeoVideoBlock_Fragment, FullBlock_YouTubeVideoBlock_Fragment, BlockWithoutTeaser_BildwurfAdBlock_Fragment, BlockWithoutTeaser_BreakBlock_Fragment, BlockWithoutTeaser_CommentBlock_Fragment, BlockWithoutTeaser_CrowdfundingBlock_Fragment, BlockWithoutTeaser_EventBlock_Fragment, BlockWithoutTeaser_FacebookPostBlock_Fragment, BlockWithoutTeaser_FacebookVideoBlock_Fragment, BlockWithoutTeaser_FlexBlock_Fragment, BlockWithoutTeaser_HtmlBlock_Fragment, BlockWithoutTeaser_IFrameBlock_Fragment, BlockWithoutTeaser_ImageBlock_Fragment, BlockWithoutTeaser_ImageGalleryBlock_Fragment, BlockWithoutTeaser_InstagramPostBlock_Fragment, BlockWithoutTeaser_ListicleBlock_Fragment, BlockWithoutTeaser_MailchimpFormBlock_Fragment, BlockWithoutTeaser_PolisConversationBlock_Fragment, BlockWithoutTeaser_PollBlock_Fragment, BlockWithoutTeaser_QuoteBlock_Fragment, BlockWithoutTeaser_RichTextBlock_Fragment, BlockWithoutTeaser_SoundCloudTrackBlock_Fragment, BlockWithoutTeaser_StreamableVideoBlock_Fragment, BlockWithoutTeaser_SubscribeBlock_Fragment, BlockWithoutTeaser_TeaserGridBlock_Fragment, BlockWithoutTeaser_TeaserGridFlexBlock_Fragment, BlockWithoutTeaser_TeaserListBlock_Fragment, BlockWithoutTeaser_TeaserSlotsBlock_Fragment, BlockWithoutTeaser_TikTokVideoBlock_Fragment, BlockWithoutTeaser_TitleBlock_Fragment, BlockWithoutTeaser_TwitterTweetBlock_Fragment, BlockWithoutTeaser_UnknownBlock_Fragment, BlockWithoutTeaser_VimeoVideoBlock_Fragment, BlockWithoutTeaser_YouTubeVideoBlock_Fragment, FullTeaser_ArticleTeaser_Fragment, FullTeaser_CustomTeaser_Fragment, FullTeaser_EventTeaser_Fragment, FullTeaser_PageTeaser_Fragment } from './block.generated';
+import { FullBlock_BildwurfAdBlock_Fragment, FullBlock_BlockTemplateBlock_Fragment, FullBlock_BreakBlock_Fragment, FullBlock_CommentBlock_Fragment, FullBlock_CrowdfundingBlock_Fragment, FullBlock_EventBlock_Fragment, FullBlock_FacebookPostBlock_Fragment, FullBlock_FacebookVideoBlock_Fragment, FullBlock_FlexBlock_Fragment, FullBlock_HtmlBlock_Fragment, FullBlock_IFrameBlock_Fragment, FullBlock_ImageBlock_Fragment, FullBlock_ImageGalleryBlock_Fragment, FullBlock_InstagramPostBlock_Fragment, FullBlock_ListicleBlock_Fragment, FullBlock_MailchimpFormBlock_Fragment, FullBlock_PolisConversationBlock_Fragment, FullBlock_PollBlock_Fragment, FullBlock_QuoteBlock_Fragment, FullBlock_RichTextBlock_Fragment, FullBlock_SoundCloudTrackBlock_Fragment, FullBlock_StreamableVideoBlock_Fragment, FullBlock_SubscribeBlock_Fragment, FullBlock_TeaserGridBlock_Fragment, FullBlock_TeaserGridFlexBlock_Fragment, FullBlock_TeaserListBlock_Fragment, FullBlock_TeaserSlotsBlock_Fragment, FullBlock_TikTokVideoBlock_Fragment, FullBlock_TitleBlock_Fragment, FullBlock_TwitterTweetBlock_Fragment, FullBlock_UnknownBlock_Fragment, FullBlock_VimeoVideoBlock_Fragment, FullBlock_YouTubeVideoBlock_Fragment, BlockWithoutTeaser_BildwurfAdBlock_Fragment, BlockWithoutTeaser_BlockTemplateBlock_Fragment, BlockWithoutTeaser_BreakBlock_Fragment, BlockWithoutTeaser_CommentBlock_Fragment, BlockWithoutTeaser_CrowdfundingBlock_Fragment, BlockWithoutTeaser_EventBlock_Fragment, BlockWithoutTeaser_FacebookPostBlock_Fragment, BlockWithoutTeaser_FacebookVideoBlock_Fragment, BlockWithoutTeaser_FlexBlock_Fragment, BlockWithoutTeaser_HtmlBlock_Fragment, BlockWithoutTeaser_IFrameBlock_Fragment, BlockWithoutTeaser_ImageBlock_Fragment, BlockWithoutTeaser_ImageGalleryBlock_Fragment, BlockWithoutTeaser_InstagramPostBlock_Fragment, BlockWithoutTeaser_ListicleBlock_Fragment, BlockWithoutTeaser_MailchimpFormBlock_Fragment, BlockWithoutTeaser_PolisConversationBlock_Fragment, BlockWithoutTeaser_PollBlock_Fragment, BlockWithoutTeaser_QuoteBlock_Fragment, BlockWithoutTeaser_RichTextBlock_Fragment, BlockWithoutTeaser_SoundCloudTrackBlock_Fragment, BlockWithoutTeaser_StreamableVideoBlock_Fragment, BlockWithoutTeaser_SubscribeBlock_Fragment, BlockWithoutTeaser_TeaserGridBlock_Fragment, BlockWithoutTeaser_TeaserGridFlexBlock_Fragment, BlockWithoutTeaser_TeaserListBlock_Fragment, BlockWithoutTeaser_TeaserSlotsBlock_Fragment, BlockWithoutTeaser_TikTokVideoBlock_Fragment, BlockWithoutTeaser_TitleBlock_Fragment, BlockWithoutTeaser_TwitterTweetBlock_Fragment, BlockWithoutTeaser_UnknownBlock_Fragment, BlockWithoutTeaser_VimeoVideoBlock_Fragment, BlockWithoutTeaser_YouTubeVideoBlock_Fragment, FullTeaser_ArticleTeaser_Fragment, FullTeaser_CustomTeaser_Fragment, FullTeaser_EventTeaser_Fragment, FullTeaser_PageTeaser_Fragment, NestedTeaserBlock_BildwurfAdBlock_Fragment, NestedTeaserBlock_BlockTemplateBlock_Fragment, NestedTeaserBlock_BreakBlock_Fragment, NestedTeaserBlock_CommentBlock_Fragment, NestedTeaserBlock_CrowdfundingBlock_Fragment, NestedTeaserBlock_EventBlock_Fragment, NestedTeaserBlock_FacebookPostBlock_Fragment, NestedTeaserBlock_FacebookVideoBlock_Fragment, NestedTeaserBlock_FlexBlock_Fragment, NestedTeaserBlock_HtmlBlock_Fragment, NestedTeaserBlock_IFrameBlock_Fragment, NestedTeaserBlock_ImageBlock_Fragment, NestedTeaserBlock_ImageGalleryBlock_Fragment, NestedTeaserBlock_InstagramPostBlock_Fragment, NestedTeaserBlock_ListicleBlock_Fragment, NestedTeaserBlock_MailchimpFormBlock_Fragment, NestedTeaserBlock_PolisConversationBlock_Fragment, NestedTeaserBlock_PollBlock_Fragment, NestedTeaserBlock_QuoteBlock_Fragment, NestedTeaserBlock_RichTextBlock_Fragment, NestedTeaserBlock_SoundCloudTrackBlock_Fragment, NestedTeaserBlock_StreamableVideoBlock_Fragment, NestedTeaserBlock_SubscribeBlock_Fragment, NestedTeaserBlock_TeaserGridBlock_Fragment, NestedTeaserBlock_TeaserGridFlexBlock_Fragment, NestedTeaserBlock_TeaserListBlock_Fragment, NestedTeaserBlock_TeaserSlotsBlock_Fragment, NestedTeaserBlock_TikTokVideoBlock_Fragment, NestedTeaserBlock_TitleBlock_Fragment, NestedTeaserBlock_TwitterTweetBlock_Fragment, NestedTeaserBlock_UnknownBlock_Fragment, NestedTeaserBlock_VimeoVideoBlock_Fragment, NestedTeaserBlock_YouTubeVideoBlock_Fragment } from './block.generated';
 import { FullEventFragment } from './events.generated';
 import { CommentBlockCommentFragment, CommentUserFragment } from './comment.generated';
 import { FullPollFragment } from './poll.generated';
 import { FullTrackingPixelFragment, FullTrackingPixelMethodFragment } from './tracking-pixel.generated';
 import { PageWithoutBlocksFragment, FullPageRevisionWithoutBlocksFragment } from './page-without-blocks.generated';
+import { NestedBlockTemplateBlockFragment } from './block-template.generated';
 import { gql } from '@apollo/client';
 import { FullArticleRevisionWithoutBlocksFragmentDoc, ArticleWithoutBlocksFragmentDoc } from './article-without-blocks.generated';
 import { FullAuthorFragmentDoc } from './author.generated';
 import { FullPeerFragmentDoc, FullRemotePeerProfileFragmentDoc } from './peer.generated';
 import { FullPeerImageFragmentDoc, FullImageFragmentDoc, ImageUrLsFragmentDoc } from './image.generated';
 import { FullTagFragmentDoc } from './tag.generated';
-import { FullBlockFragmentDoc, BlockWithoutTeaserFragmentDoc, FullTeaserFragmentDoc } from './block.generated';
+import { FullBlockFragmentDoc, BlockWithoutTeaserFragmentDoc, FullTeaserFragmentDoc, NestedTeaserBlockFragmentDoc } from './block.generated';
 import { FullEventFragmentDoc } from './events.generated';
 import { CommentBlockCommentFragmentDoc, CommentUserFragmentDoc } from './comment.generated';
 import { FullPollFragmentDoc } from './poll.generated';
 import { FullTrackingPixelFragmentDoc, FullTrackingPixelMethodFragmentDoc } from './tracking-pixel.generated';
 import { PageWithoutBlocksFragmentDoc, FullPageRevisionWithoutBlocksFragmentDoc } from './page-without-blocks.generated';
+import { NestedBlockTemplateBlockFragmentDoc } from './block-template.generated';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type FullArticleRevisionFragment = (
   { __typename?: 'ArticleRevision', blocks: Array<(
     { __typename?: 'BildwurfAdBlock' }
     & FullBlock_BildwurfAdBlock_Fragment
+  ) | (
+    { __typename?: 'BlockTemplateBlock' }
+    & FullBlock_BlockTemplateBlock_Fragment
   ) | (
     { __typename?: 'BreakBlock' }
     & FullBlock_BreakBlock_Fragment
@@ -473,7 +478,9 @@ ${CommentUserFragmentDoc}
 ${FullPollFragmentDoc}
 ${FullTeaserFragmentDoc}
 ${PageWithoutBlocksFragmentDoc}
-${FullPageRevisionWithoutBlocksFragmentDoc}`;
+${FullPageRevisionWithoutBlocksFragmentDoc}
+${NestedTeaserBlockFragmentDoc}
+${NestedBlockTemplateBlockFragmentDoc}`;
 export type CreateArticleMutationFn = Apollo.MutationFunction<CreateArticleMutation, CreateArticleMutationVariables>;
 
 /**
@@ -573,7 +580,9 @@ ${CommentUserFragmentDoc}
 ${FullPollFragmentDoc}
 ${FullTeaserFragmentDoc}
 ${PageWithoutBlocksFragmentDoc}
-${FullPageRevisionWithoutBlocksFragmentDoc}`;
+${FullPageRevisionWithoutBlocksFragmentDoc}
+${NestedTeaserBlockFragmentDoc}
+${NestedBlockTemplateBlockFragmentDoc}`;
 export type UpdateArticleMutationFn = Apollo.MutationFunction<UpdateArticleMutation, UpdateArticleMutationVariables>;
 
 /**
@@ -649,7 +658,9 @@ ${CommentUserFragmentDoc}
 ${FullPollFragmentDoc}
 ${FullTeaserFragmentDoc}
 ${PageWithoutBlocksFragmentDoc}
-${FullPageRevisionWithoutBlocksFragmentDoc}`;
+${FullPageRevisionWithoutBlocksFragmentDoc}
+${NestedTeaserBlockFragmentDoc}
+${NestedBlockTemplateBlockFragmentDoc}`;
 export type PublishArticleMutationFn = Apollo.MutationFunction<PublishArticleMutation, PublishArticleMutationVariables>;
 
 /**
@@ -704,7 +715,9 @@ ${CommentUserFragmentDoc}
 ${FullPollFragmentDoc}
 ${FullTeaserFragmentDoc}
 ${PageWithoutBlocksFragmentDoc}
-${FullPageRevisionWithoutBlocksFragmentDoc}`;
+${FullPageRevisionWithoutBlocksFragmentDoc}
+${NestedTeaserBlockFragmentDoc}
+${NestedBlockTemplateBlockFragmentDoc}`;
 export type UnpublishArticleMutationFn = Apollo.MutationFunction<UnpublishArticleMutation, UnpublishArticleMutationVariables>;
 
 /**
@@ -844,7 +857,9 @@ ${ArticleWithoutBlocksFragmentDoc}
 ${FullTrackingPixelFragmentDoc}
 ${FullTrackingPixelMethodFragmentDoc}
 ${PageWithoutBlocksFragmentDoc}
-${FullPageRevisionWithoutBlocksFragmentDoc}`;
+${FullPageRevisionWithoutBlocksFragmentDoc}
+${NestedTeaserBlockFragmentDoc}
+${NestedBlockTemplateBlockFragmentDoc}`;
 
 /**
  * __useArticleRevisionPreviewQuery__
@@ -900,7 +915,9 @@ ${CommentUserFragmentDoc}
 ${FullPollFragmentDoc}
 ${FullTeaserFragmentDoc}
 ${PageWithoutBlocksFragmentDoc}
-${FullPageRevisionWithoutBlocksFragmentDoc}`;
+${FullPageRevisionWithoutBlocksFragmentDoc}
+${NestedTeaserBlockFragmentDoc}
+${NestedBlockTemplateBlockFragmentDoc}`;
 export type RestoreArticleRevisionMutationFn = Apollo.MutationFunction<RestoreArticleRevisionMutation, RestoreArticleRevisionMutationVariables>;
 
 /**
@@ -955,7 +972,9 @@ ${CommentUserFragmentDoc}
 ${FullPollFragmentDoc}
 ${FullTeaserFragmentDoc}
 ${PageWithoutBlocksFragmentDoc}
-${FullPageRevisionWithoutBlocksFragmentDoc}`;
+${FullPageRevisionWithoutBlocksFragmentDoc}
+${NestedTeaserBlockFragmentDoc}
+${NestedBlockTemplateBlockFragmentDoc}`;
 export type DiscardArticleDraftMutationFn = Apollo.MutationFunction<DiscardArticleDraftMutation, DiscardArticleDraftMutationVariables>;
 
 /**
@@ -1009,7 +1028,9 @@ ${CommentUserFragmentDoc}
 ${FullPollFragmentDoc}
 ${FullTeaserFragmentDoc}
 ${PageWithoutBlocksFragmentDoc}
-${FullPageRevisionWithoutBlocksFragmentDoc}`;
+${FullPageRevisionWithoutBlocksFragmentDoc}
+${NestedTeaserBlockFragmentDoc}
+${NestedBlockTemplateBlockFragmentDoc}`;
 export type DuplicateArticleMutationFn = Apollo.MutationFunction<DuplicateArticleMutation, DuplicateArticleMutationVariables>;
 
 /**
@@ -1063,7 +1084,9 @@ ${CommentUserFragmentDoc}
 ${FullPollFragmentDoc}
 ${FullTeaserFragmentDoc}
 ${PageWithoutBlocksFragmentDoc}
-${FullPageRevisionWithoutBlocksFragmentDoc}`;
+${FullPageRevisionWithoutBlocksFragmentDoc}
+${NestedTeaserBlockFragmentDoc}
+${NestedBlockTemplateBlockFragmentDoc}`;
 
 /**
  * __useArticleQuery__

@@ -24,6 +24,7 @@ export type InvoicesQuery = { __typename?: 'Query', invoices: { __typename?: 'In
 
 export type MarkInvoiceAsPaidMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
+  sendMail?: Types.InputMaybe<Types.Scalars['Boolean']>;
 }>;
 
 
@@ -115,8 +116,8 @@ export type InvoicesQueryHookResult = ReturnType<typeof useInvoicesQuery>;
 export type InvoicesLazyQueryHookResult = ReturnType<typeof useInvoicesLazyQuery>;
 export type InvoicesQueryResult = Apollo.QueryResult<InvoicesQuery, InvoicesQueryVariables>;
 export const MarkInvoiceAsPaidDocument = gql`
-    mutation MarkInvoiceAsPaid($id: String!) {
-  markInvoiceAsPaid(id: $id) {
+    mutation MarkInvoiceAsPaid($id: String!, $sendMail: Boolean) {
+  markInvoiceAsPaid(id: $id, sendMail: $sendMail) {
     ...Invoice
   }
 }
@@ -137,6 +138,7 @@ export type MarkInvoiceAsPaidMutationFn = Apollo.MutationFunction<MarkInvoiceAsP
  * const [markInvoiceAsPaidMutation, { data, loading, error }] = useMarkInvoiceAsPaidMutation({
  *   variables: {
  *      id: // value for 'id'
+ *      sendMail: // value for 'sendMail'
  *   },
  * });
  */

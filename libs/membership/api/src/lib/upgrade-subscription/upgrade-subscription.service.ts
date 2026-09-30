@@ -13,7 +13,10 @@ import {
 import { differenceInDays, endOfDay, startOfDay } from 'date-fns';
 import { MemberContextService } from '../legacy/member-context.service';
 import { GoodieService } from '../goodie/goodie.service';
-import { PaymentsService } from '@wepublish/payment/api';
+import {
+  isPaymentMethodRetired,
+  PaymentsService,
+} from '@wepublish/payment/api';
 import { DiscountCodeService } from '../discountCode/discountCode.service';
 import { calculateAmountForPeriodicity } from '../legacy/member-context';
 import { SettingName, SettingsService } from '@wepublish/settings/api';
@@ -137,6 +140,21 @@ export class UpgradeSubscriptionService {
       throw new BadRequestException(
         `New memberplan with id ${memberPlanId} does not support the same currency as memberplan with id ${oldSubscription.memberPlanID}`
       );
+    }
+
+    if (paymentMethodId) {
+      const paymentMethod = await this.prisma.paymentMethod.findUnique({
+        where: { id: paymentMethodId },
+      });
+
+      if (
+        paymentMethod &&
+        (await isPaymentMethodRetired(this.prisma, paymentMethod))
+      ) {
+        throw new BadRequestException(
+          `PaymentMethod ${paymentMethodId} is no longer offered`
+        );
+      }
     }
 
     const paymentMethods =

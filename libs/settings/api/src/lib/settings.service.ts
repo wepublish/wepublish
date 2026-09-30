@@ -8,6 +8,9 @@ import {
 import { checkSettingRestrictions } from './settings-utils';
 import { PrimeDataLoader } from '@wepublish/utils/api';
 import { SettingDataloaderService } from './setting-dataloader.service';
+import { SettingName } from './setting';
+
+const KNOWN_SETTING_NAMES = new Set<string>(Object.values(SettingName));
 
 @Injectable()
 export class SettingsService {
@@ -21,7 +24,8 @@ export class SettingsService {
         createdAt: 'desc',
       },
     });
-    return data;
+
+    return data.filter(setting => KNOWN_SETTING_NAMES.has(setting.name));
   }
 
   @PrimeDataLoader(SettingDataloaderService, 'name')

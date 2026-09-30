@@ -23,7 +23,7 @@ import { createReadStream } from 'fs';
 import { seed as rootSeed } from '../../../libs/api/prisma/seed';
 import { NovaMediaAdapter } from '../../../libs/api/src/lib/media/novaMediaAdapter';
 import { capitalize } from '@mui/material';
-import { NavigationLinkType } from 'libs/navigation/api/src/lib/navigation.model';
+import { NavigationLinkType } from '../../../libs/navigation/api/src/lib/navigation.model';
 import {
   TeaserGridFlexBlock,
   TeaserType,
@@ -1709,15 +1709,17 @@ async function seedSettings(prisma: PrismaClient) {
     update: {},
   });
 
-  const mailprovider = prisma.settingMailProvider.upsert(
-    upsert({
-      id: 'slackmail',
-      name: 'Slackmail',
-      type: MailProviderType.SLACK,
-      fromAddress: 'dev@wepublish.ch',
-      slack_webhookURL: 'https://slackmail.com',
-    })
-  );
+  const mailprovider =
+    (await prisma.settingMailProvider.count()) === 0 ?
+      prisma.settingMailProvider.create({
+        data: {
+          id: 'smtp',
+          name: 'SMTP',
+          type: MailProviderType.SMTP,
+          fromAddress: 'dev@wepublish.ch',
+        },
+      })
+    : Promise.resolve(null);
 
   const payrexx = prisma.settingPaymentProvider.upsert(
     upsert({

@@ -12,6 +12,7 @@ export type SettingsIntegrationsChallengeQuery = { __typename?: 'Query', challen
 
 export type UpdateSettingsIntegrationsChallengeMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
+  type?: Types.InputMaybe<Types.ChallengeProviderType>;
   name?: Types.InputMaybe<Types.Scalars['String']>;
   secret?: Types.InputMaybe<Types.Scalars['String']>;
   siteKey?: Types.InputMaybe<Types.Scalars['String']>;
@@ -61,9 +62,10 @@ export type SettingsIntegrationsChallengeQueryHookResult = ReturnType<typeof use
 export type SettingsIntegrationsChallengeLazyQueryHookResult = ReturnType<typeof useSettingsIntegrationsChallengeLazyQuery>;
 export type SettingsIntegrationsChallengeQueryResult = Apollo.QueryResult<SettingsIntegrationsChallengeQuery, SettingsIntegrationsChallengeQueryVariables>;
 export const UpdateSettingsIntegrationsChallengeDocument = gql`
-    mutation UpdateSettingsIntegrationsChallenge($id: String!, $name: String, $secret: String, $siteKey: String) {
+    mutation UpdateSettingsIntegrationsChallenge($id: String!, $type: ChallengeProviderType, $name: String, $secret: String, $siteKey: String) {
   updateChallengeProviderSetting(
     id: $id
+    type: $type
     name: $name
     secret: $secret
     siteKey: $siteKey
@@ -93,6 +95,7 @@ export type UpdateSettingsIntegrationsChallengeMutationFn = Apollo.MutationFunct
  * const [updateSettingsIntegrationsChallengeMutation, { data, loading, error }] = useUpdateSettingsIntegrationsChallengeMutation({
  *   variables: {
  *      id: // value for 'id'
+ *      type: // value for 'type'
  *      name: // value for 'name'
  *      secret: // value for 'secret'
  *      siteKey: // value for 'siteKey'

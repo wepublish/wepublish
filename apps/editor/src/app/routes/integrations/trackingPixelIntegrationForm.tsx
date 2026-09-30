@@ -1,4 +1,6 @@
 import {
+  CreateTrackingPixelSettingDocument,
+  DeleteTrackingPixelSettingDocument,
   SettingTrackingPixelProvider,
   TrackingPixelProviderType,
   TrackingPixelSettingsDocument,
@@ -37,6 +39,14 @@ export function TrackingPixelIntegrationForm() {
       mutation={UpdateTrackingPixelSettingDocument}
       dataKey="trackingPixelSettings"
       schema={trackingPixelSettingsSchema}
+      registry={{
+        createMutation: CreateTrackingPixelSettingDocument,
+        deleteMutation: DeleteTrackingPixelSettingDocument,
+        types: Object.values(TrackingPixelProviderType).map(value => ({
+          label: value,
+          value,
+        })),
+      }}
       getLogo={setting => {
         switch (setting.type) {
           case TrackingPixelProviderType.Prolitteris:

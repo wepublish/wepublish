@@ -8,7 +8,7 @@ const defaultOptions = {} as const;
 export type TrackingPixelSettingsQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type TrackingPixelSettingsQuery = { __typename?: 'Query', trackingPixelSettings: Array<{ __typename?: 'SettingTrackingPixelProvider', createdAt: string, id: string, lastLoadedAt: string, modifiedAt: string, name?: string | null, prolitteris_memberNr?: string | null, prolitteris_onlyPaidContentAccess?: boolean | null, prolitteris_publisherInternalKeyDomain?: string | null, prolitteris_usePublisherInternalKey?: boolean | null, prolitteris_username?: string | null, type: Types.TrackingPixelProviderType }> };
+export type TrackingPixelSettingsQuery = { __typename?: 'Query', trackingPixelSettings: Array<{ __typename?: 'SettingTrackingPixelProvider', deletedAt?: string | null, createdAt: string, id: string, lastLoadedAt: string, modifiedAt: string, name?: string | null, prolitteris_memberNr?: string | null, prolitteris_onlyPaidContentAccess?: boolean | null, prolitteris_publisherInternalKeyDomain?: string | null, prolitteris_usePublisherInternalKey?: boolean | null, prolitteris_username?: string | null, type: Types.TrackingPixelProviderType }> };
 
 export type UpdateTrackingPixelSettingMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
@@ -24,10 +24,27 @@ export type UpdateTrackingPixelSettingMutationVariables = Types.Exact<{
 
 export type UpdateTrackingPixelSettingMutation = { __typename?: 'Mutation', updateTrackingPixelSetting: { __typename?: 'SettingTrackingPixelProvider', createdAt: string, id: string, lastLoadedAt: string, modifiedAt: string, name?: string | null, prolitteris_memberNr?: string | null, prolitteris_onlyPaidContentAccess?: boolean | null, prolitteris_publisherInternalKeyDomain?: string | null, prolitteris_usePublisherInternalKey?: boolean | null, prolitteris_username?: string | null, type: Types.TrackingPixelProviderType } };
 
+export type CreateTrackingPixelSettingMutationVariables = Types.Exact<{
+  id: Types.Scalars['String'];
+  type: Types.TrackingPixelProviderType;
+  name?: Types.InputMaybe<Types.Scalars['String']>;
+}>;
+
+
+export type CreateTrackingPixelSettingMutation = { __typename?: 'Mutation', createTrackingPixelSetting: { __typename?: 'SettingTrackingPixelProvider', createdAt: string, deletedAt?: string | null, id: string, lastLoadedAt: string, modifiedAt: string, name?: string | null, type: Types.TrackingPixelProviderType } };
+
+export type DeleteTrackingPixelSettingMutationVariables = Types.Exact<{
+  id: Types.Scalars['String'];
+}>;
+
+
+export type DeleteTrackingPixelSettingMutation = { __typename?: 'Mutation', deleteTrackingPixelSetting: { __typename?: 'SettingTrackingPixelProvider', deletedAt?: string | null, id: string } };
+
 
 export const TrackingPixelSettingsDocument = gql`
     query TrackingPixelSettings {
   trackingPixelSettings {
+    deletedAt
     createdAt
     id
     lastLoadedAt
@@ -128,3 +145,78 @@ export function useUpdateTrackingPixelSettingMutation(baseOptions?: Apollo.Mutat
 export type UpdateTrackingPixelSettingMutationHookResult = ReturnType<typeof useUpdateTrackingPixelSettingMutation>;
 export type UpdateTrackingPixelSettingMutationResult = Apollo.MutationResult<UpdateTrackingPixelSettingMutation>;
 export type UpdateTrackingPixelSettingMutationOptions = Apollo.BaseMutationOptions<UpdateTrackingPixelSettingMutation, UpdateTrackingPixelSettingMutationVariables>;
+export const CreateTrackingPixelSettingDocument = gql`
+    mutation CreateTrackingPixelSetting($id: String!, $type: TrackingPixelProviderType!, $name: String) {
+  createTrackingPixelSetting(id: $id, type: $type, name: $name) {
+    createdAt
+    deletedAt
+    id
+    lastLoadedAt
+    modifiedAt
+    name
+    type
+  }
+}
+    `;
+export type CreateTrackingPixelSettingMutationFn = Apollo.MutationFunction<CreateTrackingPixelSettingMutation, CreateTrackingPixelSettingMutationVariables>;
+
+/**
+ * __useCreateTrackingPixelSettingMutation__
+ *
+ * To run a mutation, you first call `useCreateTrackingPixelSettingMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateTrackingPixelSettingMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createTrackingPixelSettingMutation, { data, loading, error }] = useCreateTrackingPixelSettingMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      type: // value for 'type'
+ *      name: // value for 'name'
+ *   },
+ * });
+ */
+export function useCreateTrackingPixelSettingMutation(baseOptions?: Apollo.MutationHookOptions<CreateTrackingPixelSettingMutation, CreateTrackingPixelSettingMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateTrackingPixelSettingMutation, CreateTrackingPixelSettingMutationVariables>(CreateTrackingPixelSettingDocument, options);
+      }
+export type CreateTrackingPixelSettingMutationHookResult = ReturnType<typeof useCreateTrackingPixelSettingMutation>;
+export type CreateTrackingPixelSettingMutationResult = Apollo.MutationResult<CreateTrackingPixelSettingMutation>;
+export type CreateTrackingPixelSettingMutationOptions = Apollo.BaseMutationOptions<CreateTrackingPixelSettingMutation, CreateTrackingPixelSettingMutationVariables>;
+export const DeleteTrackingPixelSettingDocument = gql`
+    mutation DeleteTrackingPixelSetting($id: String!) {
+  deleteTrackingPixelSetting(id: $id) {
+    deletedAt
+    id
+  }
+}
+    `;
+export type DeleteTrackingPixelSettingMutationFn = Apollo.MutationFunction<DeleteTrackingPixelSettingMutation, DeleteTrackingPixelSettingMutationVariables>;
+
+/**
+ * __useDeleteTrackingPixelSettingMutation__
+ *
+ * To run a mutation, you first call `useDeleteTrackingPixelSettingMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteTrackingPixelSettingMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteTrackingPixelSettingMutation, { data, loading, error }] = useDeleteTrackingPixelSettingMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteTrackingPixelSettingMutation(baseOptions?: Apollo.MutationHookOptions<DeleteTrackingPixelSettingMutation, DeleteTrackingPixelSettingMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteTrackingPixelSettingMutation, DeleteTrackingPixelSettingMutationVariables>(DeleteTrackingPixelSettingDocument, options);
+      }
+export type DeleteTrackingPixelSettingMutationHookResult = ReturnType<typeof useDeleteTrackingPixelSettingMutation>;
+export type DeleteTrackingPixelSettingMutationResult = Apollo.MutationResult<DeleteTrackingPixelSettingMutation>;
+export type DeleteTrackingPixelSettingMutationOptions = Apollo.BaseMutationOptions<DeleteTrackingPixelSettingMutation, DeleteTrackingPixelSettingMutationVariables>;

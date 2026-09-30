@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { PrismaClient, SettingTrackingPixel } from '@prisma/client';
 import {
   CreateSettingTrackingPixelProviderInput,
@@ -9,13 +9,19 @@ import { PrimeDataLoader } from '@wepublish/utils/api';
 import { TrackingPixelSettingsProviderDataloaderService } from './tracking-pixel-settings-provider-dataloader.service';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 import { SecretCrypto } from './secrets-crypto';
+import { ProviderSettingsChanged } from './provider-settings-changed';
+import * as Sentry from '@sentry/nestjs';
 
 @Injectable()
 export class TrackingPixelProviderSettingsService {
   private readonly crypto = new SecretCrypto();
+  private readonly logger = new Logger(
+    TrackingPixelProviderSettingsService.name
+  );
   constructor(
     private prisma: PrismaClient,
-    private kv: KvTtlCacheService
+    private kv: KvTtlCacheService,
+    private providerSettingsChanged: ProviderSettingsChanged
   ) {}
 
   private encryptSecretsIfPresent<
@@ -38,7 +44,7 @@ export class TrackingPixelProviderSettingsService {
     filter?: SettingTrackingPixelFilter
   ): Promise<SettingTrackingPixel[]> {
     const data = await this.prisma.settingTrackingPixel.findMany({
-      where: filter,
+      where: { ...filter, deletedAt: null },
       orderBy: {
         createdAt: 'desc',
       },
@@ -66,10 +72,14 @@ export class TrackingPixelProviderSettingsService {
     input: CreateSettingTrackingPixelProviderInput
   ): Promise<SettingTrackingPixel> {
     const output = this.encryptSecretsIfPresent(input);
-    const returnValue = await this.prisma.settingTrackingPixel.create({
-      data: output,
+
+    const returnValue = await this.prisma.settingTrackingPixel.upsert({
+      where: { id: output.id },
+      create: output,
+      update: { deletedAt: null },
     });
     await this.kv.resetNamespace('settings:tracking-pixel');
+    await this.providerSettingsChanged.notify('Tracking pixel provider');
     return returnValue;
   }
 
@@ -99,6 +109,7 @@ export class TrackingPixelProviderSettingsService {
       data: filteredUpdateData,
     });
     await this.kv.resetNamespace('settings:tracking-pixel');
+    await this.providerSettingsChanged.notify('Tracking pixel provider');
     return returnValue;
   }
 
@@ -114,10 +125,38 @@ export class TrackingPixelProviderSettingsService {
       );
     }
 
-    const returnValue = await this.prisma.settingTrackingPixel.delete({
+    const usage = await this.countUsage(id);
+
+    if (usage) {
+      const message =
+        `Tracking pixel provider ${id} was deleted while still used by ${usage} article pixel(s). ` +
+        `It keeps running so existing records stay intact, but it is no longer offered.`;
+
+      this.logger.warn(message);
+      Sentry.captureMessage(message, 'warning');
+    }
+
+    const returnValue = await this.prisma.settingTrackingPixel.update({
       where: { id },
+      data: { deletedAt: new Date() },
     });
     await this.kv.resetNamespace('settings:tracking-pixel');
+    await this.providerSettingsChanged.notify('Tracking pixel provider');
     return returnValue;
+  }
+
+  private async countUsage(id: string): Promise<number> {
+    const method = await this.prisma.trackingPixelMethod.findUnique({
+      where: { trackingPixelProviderID: id },
+      select: { id: true },
+    });
+
+    if (!method) {
+      return 0;
+    }
+
+    return this.prisma.articleTrackingPixels.count({
+      where: { tackingPixelMethodID: method.id },
+    });
   }
 }

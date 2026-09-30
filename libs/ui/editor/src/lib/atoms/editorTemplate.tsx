@@ -5,7 +5,7 @@ const Children = styled('div', {
   shouldForwardProp: propName => propName !== 'maxWidth',
 })<{ maxWidth: string }>`
   display: flex;
-  width: 100%;
+  width: 80%;
   max-width: ${({ maxWidth }) => maxWidth};
 `;
 

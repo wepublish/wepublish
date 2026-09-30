@@ -642,7 +642,6 @@ export const NavbarInnerWrapper = styled(Toolbar, {
   navbarState: NavbarState[];
   isMenuOpen?: boolean;
 }>`
-
   ${({ isMenuOpen }) =>
     isMenuOpen &&
     css`
