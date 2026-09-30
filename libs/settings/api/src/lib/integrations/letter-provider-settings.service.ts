@@ -1,5 +1,13 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaClient, SettingLetterProvider } from '@prisma/client';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import {
+  LetterProviderEnvironment,
+  PrismaClient,
+  SettingLetterProvider,
+} from '@prisma/client';
 import {
   CreateSettingLetterProviderInput,
   UpdateSettingLetterProviderInput,
@@ -9,6 +17,8 @@ import { PrimeDataLoader } from '@wepublish/utils/api';
 import { LetterProviderSettingsDataloaderService } from './letter-provider-settings-dataloader.service';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 import { SecretCrypto } from './secrets-crypto';
+import { ProviderSettingsChanged } from './provider-settings-changed';
+import { clearProviderConfig } from './clear-provider-config';
 
 @Injectable()
 export class LetterProviderSettingsService {
@@ -16,7 +26,8 @@ export class LetterProviderSettingsService {
 
   constructor(
     private prisma: PrismaClient,
-    private kv: KvTtlCacheService
+    private kv: KvTtlCacheService,
+    private providerSettingsChanged: ProviderSettingsChanged
   ) {}
 
   private encryptSecretsIfPresent<
@@ -81,6 +92,7 @@ export class LetterProviderSettingsService {
       data: output,
     });
     await this.kv.resetNamespace('settings:letterprovider');
+    await this.providerSettingsChanged.notify('Letter provider');
     return returnValue;
   }
 
@@ -104,11 +116,30 @@ export class LetterProviderSettingsService {
       Object.entries(updateData).filter(([_, value]) => value !== undefined)
     );
 
+    const typeChanged =
+      filteredUpdateData['type'] !== undefined &&
+      filteredUpdateData['type'] !== existingSetting.type;
+
+    const data =
+      typeChanged ?
+        {
+          ...clearProviderConfig('SettingLetterProvider'),
+          // Not nullable, so reset to their defaults instead of cleared.
+          environment: LetterProviderEnvironment.staging,
+          autoSend: false,
+          type: filteredUpdateData['type'],
+          ...('name' in filteredUpdateData ?
+            { name: filteredUpdateData['name'] }
+          : {}),
+        }
+      : filteredUpdateData;
+
     const returnValue = await this.prisma.settingLetterProvider.update({
       where: { id },
-      data: filteredUpdateData,
+      data,
     });
     await this.kv.resetNamespace('settings:letterprovider');
+    await this.providerSettingsChanged.notify('Letter provider');
     return returnValue;
   }
 
@@ -126,10 +157,18 @@ export class LetterProviderSettingsService {
       );
     }
 
+    if ((await this.prisma.settingLetterProvider.count()) === 1) {
+      throw new BadRequestException(
+        `Letter provider ${id} is the only one configured and cannot be deleted. ` +
+          `Create a replacement first, or change its type instead.`
+      );
+    }
+
     const returnValue = await this.prisma.settingLetterProvider.delete({
       where: { id },
     });
     await this.kv.resetNamespace('settings:letterprovider');
+    await this.providerSettingsChanged.notify('Letter provider');
     return returnValue;
   }
 }

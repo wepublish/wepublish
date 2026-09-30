@@ -11,6 +11,7 @@ export type LetterProviderSettingsQueryVariables = Types.Exact<{ [key: string]: 
 export type LetterProviderSettingsQuery = { __typename?: 'Query', letterProviderSettings: Array<{ __typename?: 'SettingLetterProvider', autoSend: boolean, clientId?: string | null, createdAt: string, environment: Types.LetterProviderEnvironment, id: string, lastLoadedAt: string, modifiedAt: string, name?: string | null, organisationId?: string | null, placeholderEmailContains?: string | null, type: Types.LetterProviderType }> };
 
 export type UpdateLetterProviderSettingMutationVariables = Types.Exact<{
+  type?: Types.InputMaybe<Types.LetterProviderType>;
   autoSend?: Types.InputMaybe<Types.Scalars['Boolean']>;
   clientId?: Types.InputMaybe<Types.Scalars['String']>;
   clientSecret?: Types.InputMaybe<Types.Scalars['String']>;
@@ -24,6 +25,22 @@ export type UpdateLetterProviderSettingMutationVariables = Types.Exact<{
 
 
 export type UpdateLetterProviderSettingMutation = { __typename?: 'Mutation', updateLetterProviderSetting: { __typename?: 'SettingLetterProvider', autoSend: boolean, clientId?: string | null, createdAt: string, environment: Types.LetterProviderEnvironment, id: string, lastLoadedAt: string, modifiedAt: string, name?: string | null, organisationId?: string | null, placeholderEmailContains?: string | null, type: Types.LetterProviderType } };
+
+export type CreateLetterProviderSettingMutationVariables = Types.Exact<{
+  id: Types.Scalars['String'];
+  type: Types.LetterProviderType;
+  name?: Types.InputMaybe<Types.Scalars['String']>;
+}>;
+
+
+export type CreateLetterProviderSettingMutation = { __typename?: 'Mutation', createLetterProviderSetting: { __typename?: 'SettingLetterProvider', createdAt: string, id: string, lastLoadedAt: string, modifiedAt: string, name?: string | null, type: Types.LetterProviderType } };
+
+export type DeleteLetterProviderSettingMutationVariables = Types.Exact<{
+  id: Types.Scalars['String'];
+}>;
+
+
+export type DeleteLetterProviderSettingMutation = { __typename?: 'Mutation', deleteLetterProviderSetting: { __typename?: 'SettingLetterProvider', id: string } };
 
 
 export const LetterProviderSettingsDocument = gql`
@@ -71,8 +88,9 @@ export type LetterProviderSettingsQueryHookResult = ReturnType<typeof useLetterP
 export type LetterProviderSettingsLazyQueryHookResult = ReturnType<typeof useLetterProviderSettingsLazyQuery>;
 export type LetterProviderSettingsQueryResult = Apollo.QueryResult<LetterProviderSettingsQuery, LetterProviderSettingsQueryVariables>;
 export const UpdateLetterProviderSettingDocument = gql`
-    mutation UpdateLetterProviderSetting($autoSend: Boolean, $clientId: String, $clientSecret: String, $environment: LetterProviderEnvironment, $id: String!, $name: String, $organisationId: String, $placeholderEmailContains: String, $webhookSigningKey: String) {
+    mutation UpdateLetterProviderSetting($type: LetterProviderType, $autoSend: Boolean, $clientId: String, $clientSecret: String, $environment: LetterProviderEnvironment, $id: String!, $name: String, $organisationId: String, $placeholderEmailContains: String, $webhookSigningKey: String) {
   updateLetterProviderSetting(
+    type: $type
     autoSend: $autoSend
     clientId: $clientId
     clientSecret: $clientSecret
@@ -112,6 +130,7 @@ export type UpdateLetterProviderSettingMutationFn = Apollo.MutationFunction<Upda
  * @example
  * const [updateLetterProviderSettingMutation, { data, loading, error }] = useUpdateLetterProviderSettingMutation({
  *   variables: {
+ *      type: // value for 'type'
  *      autoSend: // value for 'autoSend'
  *      clientId: // value for 'clientId'
  *      clientSecret: // value for 'clientSecret'
@@ -131,3 +150,76 @@ export function useUpdateLetterProviderSettingMutation(baseOptions?: Apollo.Muta
 export type UpdateLetterProviderSettingMutationHookResult = ReturnType<typeof useUpdateLetterProviderSettingMutation>;
 export type UpdateLetterProviderSettingMutationResult = Apollo.MutationResult<UpdateLetterProviderSettingMutation>;
 export type UpdateLetterProviderSettingMutationOptions = Apollo.BaseMutationOptions<UpdateLetterProviderSettingMutation, UpdateLetterProviderSettingMutationVariables>;
+export const CreateLetterProviderSettingDocument = gql`
+    mutation CreateLetterProviderSetting($id: String!, $type: LetterProviderType!, $name: String) {
+  createLetterProviderSetting(id: $id, type: $type, name: $name) {
+    createdAt
+    id
+    lastLoadedAt
+    modifiedAt
+    name
+    type
+  }
+}
+    `;
+export type CreateLetterProviderSettingMutationFn = Apollo.MutationFunction<CreateLetterProviderSettingMutation, CreateLetterProviderSettingMutationVariables>;
+
+/**
+ * __useCreateLetterProviderSettingMutation__
+ *
+ * To run a mutation, you first call `useCreateLetterProviderSettingMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateLetterProviderSettingMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createLetterProviderSettingMutation, { data, loading, error }] = useCreateLetterProviderSettingMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      type: // value for 'type'
+ *      name: // value for 'name'
+ *   },
+ * });
+ */
+export function useCreateLetterProviderSettingMutation(baseOptions?: Apollo.MutationHookOptions<CreateLetterProviderSettingMutation, CreateLetterProviderSettingMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateLetterProviderSettingMutation, CreateLetterProviderSettingMutationVariables>(CreateLetterProviderSettingDocument, options);
+      }
+export type CreateLetterProviderSettingMutationHookResult = ReturnType<typeof useCreateLetterProviderSettingMutation>;
+export type CreateLetterProviderSettingMutationResult = Apollo.MutationResult<CreateLetterProviderSettingMutation>;
+export type CreateLetterProviderSettingMutationOptions = Apollo.BaseMutationOptions<CreateLetterProviderSettingMutation, CreateLetterProviderSettingMutationVariables>;
+export const DeleteLetterProviderSettingDocument = gql`
+    mutation DeleteLetterProviderSetting($id: String!) {
+  deleteLetterProviderSetting(id: $id) {
+    id
+  }
+}
+    `;
+export type DeleteLetterProviderSettingMutationFn = Apollo.MutationFunction<DeleteLetterProviderSettingMutation, DeleteLetterProviderSettingMutationVariables>;
+
+/**
+ * __useDeleteLetterProviderSettingMutation__
+ *
+ * To run a mutation, you first call `useDeleteLetterProviderSettingMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteLetterProviderSettingMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteLetterProviderSettingMutation, { data, loading, error }] = useDeleteLetterProviderSettingMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteLetterProviderSettingMutation(baseOptions?: Apollo.MutationHookOptions<DeleteLetterProviderSettingMutation, DeleteLetterProviderSettingMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteLetterProviderSettingMutation, DeleteLetterProviderSettingMutationVariables>(DeleteLetterProviderSettingDocument, options);
+      }
+export type DeleteLetterProviderSettingMutationHookResult = ReturnType<typeof useDeleteLetterProviderSettingMutation>;
+export type DeleteLetterProviderSettingMutationResult = Apollo.MutationResult<DeleteLetterProviderSettingMutation>;
+export type DeleteLetterProviderSettingMutationOptions = Apollo.BaseMutationOptions<DeleteLetterProviderSettingMutation, DeleteLetterProviderSettingMutationVariables>;

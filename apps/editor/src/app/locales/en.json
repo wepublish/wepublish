@@ -2558,6 +2558,7 @@
       "analytics": "Hot & Trending Provider",
       "mailProvider": "Mail Provider",
       "letterProvider": "Letter Provider",
+      "pdfRenderer": "PDF Renderer",
       "back": "Back to Integrations",
       "unknown": "Unknown Integration",
       "notFound": "Integration not found",
@@ -2602,6 +2603,15 @@
         "bexioInvoiceTitleRenewalMembership": "Invoice Title (Renewal Membership)"
       },
       "placeholderSecret": "Unchanged (Hidden)",
+      "pdfRendererSettings": {
+        "type": "Type",
+        "cloudflareAccountId": "Cloudflare Account ID",
+        "cloudflareApiToken": "Cloudflare API Token",
+        "gotenbergUrl": "Gotenberg URL",
+        "gotenbergUsername": "Gotenberg Username",
+        "gotenbergPassword": "Gotenberg Password",
+        "timeoutMs": "Timeout (ms)"
+      },
       "letterSettings": {
         "type": "Type",
         "environment": "Environment",

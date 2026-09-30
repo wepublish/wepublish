@@ -150,16 +150,8 @@ type SyncProvider = {
   id: string;
 };
 
-type LetterProvider = {
-  id: string;
-  type: string;
-  cloudflareAccountId?: string;
-  cloudflareApiToken?: string;
-};
-
 type Config = {
   general: General;
-  letterProvider?: LetterProvider;
   mediaServer: novaMediaServer;
 
   mailProvider?: MailProvider;

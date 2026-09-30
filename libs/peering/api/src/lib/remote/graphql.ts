@@ -2766,6 +2766,8 @@ export type Mutation = {
   createInvoice: Invoice;
   /** Returns a JWT that is valid for 1min for the current logged in user. */
   createJWTForWebsiteLogin: SessionWithToken;
+  /** Creates a new letter provider setting. */
+  createLetterProviderSetting: SettingLetterProvider;
   /** Start a background job sending a template to a filtered audience */
   createMailSendJob: MailSendJobModel;
   /** Create a new mail template */
@@ -2786,6 +2788,8 @@ export type Mutation = {
   createPaymentProviderSetting: SettingPaymentProvider;
   /** Creates a paywall. */
   createPaywall: Paywall;
+  /** Creates a new pdf renderer setting. */
+  createPdfRendererSetting: SettingPdfRenderer;
   /** Creates a new peer. */
   createPeer: Peer;
   /** Creates a new poll. */
@@ -2857,6 +2861,8 @@ export type Mutation = {
   deleteImage: Scalars['String'];
   /** Deletes an existing invoice. A PAID invoice is billing history and is only deleted with cascade: true (removes its billing period and items along). */
   deleteInvoice: Invoice;
+  /** Deletes an existing letter provider setting. */
+  deleteLetterProviderSetting: SettingLetterProvider;
   /** Delete an existing mail template */
   deleteMailTemplate?: Maybe<Scalars['Boolean']>;
   /** Deletes a single sync error so the contact will be retried. */
@@ -2873,6 +2879,8 @@ export type Mutation = {
   deletePaymentProviderSetting: SettingPaymentProvider;
   /** Deletes a paywall. */
   deletePaywall: Paywall;
+  /** Deletes an existing pdf renderer setting. */
+  deletePdfRendererSetting: SettingPdfRenderer;
   /** Deletes an existing peer. */
   deletePeer: Scalars['String'];
   /** Deletes an existing poll. */
@@ -2955,7 +2963,7 @@ export type Mutation = {
   registerMember: Registration;
   /** Rejects a comment */
   rejectComment: Comment;
-  /** Rebuilds the payment, tracking pixel, mail and challenge providers from their settings, so integration changes take effect without restarting the API. */
+  /** Rebuilds the payment, tracking pixel, mail, challenge, letter and pdf renderer providers from their settings, so integration changes take effect without restarting the API. */
   reloadProviders: Scalars['Boolean'];
   /** Renews a subscription. */
   renewSubscription: PublicSubscription;
@@ -3059,6 +3067,8 @@ export type Mutation = {
   updatePaymentProviderSetting: SettingPaymentProvider;
   /** Updates a paywall. */
   updatePaywall: Paywall;
+  /** Updates an existing pdf renderer setting. */
+  updatePdfRendererSetting: SettingPdfRenderer;
   /** Updates an existing peer. */
   updatePeer: Peer;
   /** Updates the peer profile of the current media. */
@@ -3329,6 +3339,20 @@ export type MutationCreateInvoiceArgs = {
 };
 
 
+export type MutationCreateLetterProviderSettingArgs = {
+  autoSend?: InputMaybe<Scalars['Boolean']>;
+  clientId?: InputMaybe<Scalars['String']>;
+  clientSecret?: InputMaybe<Scalars['String']>;
+  environment?: InputMaybe<LetterProviderEnvironment>;
+  id: Scalars['String'];
+  name?: InputMaybe<Scalars['String']>;
+  organisationId?: InputMaybe<Scalars['String']>;
+  placeholderEmailContains?: InputMaybe<Scalars['String']>;
+  type: LetterProviderType;
+  webhookSigningKey?: InputMaybe<Scalars['String']>;
+};
+
+
 export type MutationCreateMailSendJobArgs = {
   input: MailSendJobInput;
 };
@@ -3453,6 +3477,19 @@ export type MutationCreatePaywallArgs = {
   name?: InputMaybe<Scalars['String']>;
   upgradeCircumventDescription?: InputMaybe<Scalars['RichText']>;
   upgradeDescription?: InputMaybe<Scalars['RichText']>;
+};
+
+
+export type MutationCreatePdfRendererSettingArgs = {
+  cloudflare_accountId?: InputMaybe<Scalars['String']>;
+  cloudflare_apiToken?: InputMaybe<Scalars['String']>;
+  gotenberg_password?: InputMaybe<Scalars['String']>;
+  gotenberg_url?: InputMaybe<Scalars['String']>;
+  gotenberg_username?: InputMaybe<Scalars['String']>;
+  id: Scalars['String'];
+  name?: InputMaybe<Scalars['String']>;
+  timeoutMs?: InputMaybe<Scalars['Int']>;
+  type: PdfRendererType;
 };
 
 
@@ -3704,6 +3741,11 @@ export type MutationDeleteInvoiceArgs = {
 };
 
 
+export type MutationDeleteLetterProviderSettingArgs = {
+  id: Scalars['String'];
+};
+
+
 export type MutationDeleteMailTemplateArgs = {
   id: Scalars['String'];
 };
@@ -3740,6 +3782,11 @@ export type MutationDeletePaymentProviderSettingArgs = {
 
 
 export type MutationDeletePaywallArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationDeletePdfRendererSettingArgs = {
   id: Scalars['String'];
 };
 
@@ -4270,6 +4317,7 @@ export type MutationUpdateLetterProviderSettingArgs = {
   name?: InputMaybe<Scalars['String']>;
   organisationId?: InputMaybe<Scalars['String']>;
   placeholderEmailContains?: InputMaybe<Scalars['String']>;
+  type?: InputMaybe<LetterProviderType>;
   webhookSigningKey?: InputMaybe<Scalars['String']>;
 };
 
@@ -4411,6 +4459,19 @@ export type MutationUpdatePaywallArgs = {
   name?: InputMaybe<Scalars['String']>;
   upgradeCircumventDescription?: InputMaybe<Scalars['RichText']>;
   upgradeDescription?: InputMaybe<Scalars['RichText']>;
+};
+
+
+export type MutationUpdatePdfRendererSettingArgs = {
+  cloudflare_accountId?: InputMaybe<Scalars['String']>;
+  cloudflare_apiToken?: InputMaybe<Scalars['String']>;
+  gotenberg_password?: InputMaybe<Scalars['String']>;
+  gotenberg_url?: InputMaybe<Scalars['String']>;
+  gotenberg_username?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  timeoutMs?: InputMaybe<Scalars['Int']>;
+  type?: InputMaybe<PdfRendererType>;
 };
 
 
@@ -5224,6 +5285,11 @@ export type PaywallBypass = {
   token: Scalars['String'];
 };
 
+export enum PdfRendererType {
+  Cloudflare = 'cloudflare',
+  Gotenberg = 'gotenberg'
+}
+
 export type Peer = {
   __typename?: 'Peer';
   createdAt: Scalars['DateTime'];
@@ -5810,6 +5876,10 @@ export type Query = {
   paywall: Paywall;
   /** Returns a list of paywalls based on the filters given. */
   paywalls: Array<Paywall>;
+  /** Returns a single pdf renderer setting by id. */
+  pdfRendererSetting: SettingPdfRenderer;
+  /** Returns all pdf renderer settings. */
+  pdfRendererSettings: Array<SettingPdfRenderer>;
   /** This query takes either the ID or the slug and returns the peer profile. */
   peer?: Maybe<Peer>;
   /** Returns a paginated list of peer articles based on the filters given. */
@@ -6449,6 +6519,16 @@ export type QueryPaywallArgs = {
 };
 
 
+export type QueryPdfRendererSettingArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QueryPdfRendererSettingsArgs = {
+  filter?: InputMaybe<SettingPdfRendererFilter>;
+};
+
+
 export type QueryPeerArgs = {
   id?: InputMaybe<Scalars['String']>;
   slug?: InputMaybe<Scalars['String']>;
@@ -6990,6 +7070,26 @@ export type SettingPaymentProviderFilter = {
   id?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
   type?: InputMaybe<PaymentProviderType>;
+};
+
+export type SettingPdfRenderer = SettingProvider & {
+  __typename?: 'SettingPdfRenderer';
+  cloudflare_accountId?: Maybe<Scalars['String']>;
+  createdAt: Scalars['DateTime'];
+  gotenberg_url?: Maybe<Scalars['String']>;
+  gotenberg_username?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  lastLoadedAt: Scalars['DateTime'];
+  modifiedAt: Scalars['DateTime'];
+  name?: Maybe<Scalars['String']>;
+  timeoutMs?: Maybe<Scalars['Int']>;
+  type: PdfRendererType;
+};
+
+export type SettingPdfRendererFilter = {
+  id?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  type?: InputMaybe<PdfRendererType>;
 };
 
 export type SettingProvider = {
@@ -8491,6 +8591,7 @@ export const PeerProfile = gql`
       "SettingLetterProvider",
       "SettingMailProvider",
       "SettingPaymentProvider",
+      "SettingPdfRenderer",
       "SettingSyncProvider",
       "SettingTrackingPixelProvider"
     ],

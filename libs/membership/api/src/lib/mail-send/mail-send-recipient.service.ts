@@ -483,11 +483,11 @@ export class MailSendRecipientService {
       };
     }
 
-    // The complement spelled out per pattern instead of `NOT`: `email` is
-    // required, so there is no NULL case to lose.
+    // `email` is non-null, so the complement is a plain negated match. The
+    // outer `mode` also applies inside `not`: this compiles to `NOT ILIKE`.
     return {
       AND: patterns.map(pattern => ({
-        email: { not: { contains: pattern, mode: 'insensitive' } },
+        email: { mode: 'insensitive', not: { contains: pattern } },
       })),
     };
   }
