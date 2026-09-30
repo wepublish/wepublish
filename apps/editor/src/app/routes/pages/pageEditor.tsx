@@ -147,6 +147,8 @@ function PageEditor() {
   ] = useCreatePageMutation();
   const [updatePage, { loading: isUpdating, error: updateError }] =
     useUpdatePageMutation();
+  const [autosavePage, { loading: isAutosaving, error: autosaveError }] =
+    useUpdatePageMutation();
   const [publishPage, { loading: isPublishing, error: publishError }] =
     usePublishPageMutation({});
   const [restorePageRevision, { loading: isRestoring, error: restoreError }] =
@@ -281,7 +283,7 @@ function PageEditor() {
   const { t } = useTranslation();
 
   const isNotFound = pageData && !pageData.page;
-  const isDisabled =
+  const isBusy =
     isLoading ||
     isCreating ||
     isUpdating ||
@@ -289,6 +291,8 @@ function PageEditor() {
     isRestoring ||
     isDiscarding ||
     isNotFound;
+  // Autosaving must not disable the blocks, as that would blur whatever the user is typing in.
+  const isDisabled = isBusy || isAutosaving;
   const canPreview = Boolean(
     pageData?.page?.draft ||
       pageData?.page?.published ||
@@ -385,6 +389,7 @@ function PageEditor() {
     const error =
       createError?.message ??
       updateError?.message ??
+      autosaveError?.message ??
       publishError?.message ??
       restoreError?.message ??
       discardError?.message;
@@ -399,7 +404,14 @@ function PageEditor() {
           {error}
         </Message>
       );
-  }, [createError, updateError, publishError, restoreError, discardError]);
+  }, [
+    createError,
+    updateError,
+    autosaveError,
+    publishError,
+    restoreError,
+    discardError,
+  ]);
 
   async function handleDiscardDraft() {
     if (!pageID) {
@@ -558,7 +570,7 @@ function PageEditor() {
     }
 
     const version = changeVersion.current;
-    const { data } = await updatePage({
+    const { data } = await autosavePage({
       variables: { id: pageID, ...createInput() },
     });
 
@@ -846,7 +858,7 @@ function PageEditor() {
                 <BlockList
                   value={blocks}
                   onChange={handleChange}
-                  disabled={isDisabled || !isAuthorized}
+                  disabled={isBusy || !isAuthorized}
                   blockMap={BlockMap}
                 />
               </DocumentUrlProvider>
