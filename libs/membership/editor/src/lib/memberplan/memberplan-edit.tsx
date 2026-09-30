@@ -91,6 +91,9 @@ function MemberPlanEdit() {
   useEffect(() => {
     const initMemberPlan = memberPlanData?.memberPlan || {
       id: 'dummy-id',
+      // Placeholders like the id: never sent, the api sets both on save.
+      createdAt: new Date().toISOString(),
+      modifiedAt: new Date().toISOString(),
       availablePaymentMethods: [],
       description: undefined,
       currency: Currency.Chf,

@@ -13,6 +13,7 @@ import { V0Module } from '@wepublish/ai/api';
 import { NovaMediaAdapter } from '@wepublish/api';
 import { ArticleModule, HotAndTrendingModule } from '@wepublish/article/api';
 import { AuthenticationModule } from '@wepublish/authentication/api';
+import { LettersModule } from '@wepublish/letter/api';
 import { AuthorModule } from '@wepublish/author/api';
 import { BannerApiModule } from '@wepublish/banner/api';
 import { BlockContentModule } from '@wepublish/block-content/api';
@@ -173,6 +174,18 @@ import { reconcileProviderRegistry } from './reconcile-provider-registry';
         };
       },
       inject: [ConfigService, PrismaClient, ProviderRegistryService],
+      global: true,
+    }),
+    LettersModule.registerAsync({
+      useFactory: async (registry: ProviderRegistryService) => {
+        await registry.ensureLoaded();
+
+        return {
+          letterProvider: registry.letterProvider,
+          pdfRenderer: registry.pdfRenderer,
+        };
+      },
+      inject: [ProviderRegistryService],
       global: true,
     }),
     TrackingPixelsModule.registerAsync({

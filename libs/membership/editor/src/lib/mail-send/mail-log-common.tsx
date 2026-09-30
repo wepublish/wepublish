@@ -1,5 +1,5 @@
 import { Typography } from '@mui/material';
-import { MailLogState, MailLogType } from '@wepublish/editor/api';
+import { MailChannel, MailLogState, MailLogType } from '@wepublish/editor/api';
 import { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
 import { MdHelpOutline } from 'react-icons/md';
@@ -13,6 +13,11 @@ const STATE_COLORS: Record<MailLogState, 'green' | 'yellow' | 'red' | 'blue'> =
     [MailLogState.Deferred]: 'yellow',
     [MailLogState.Bounced]: 'red',
     [MailLogState.Rejected]: 'red',
+    // Letter-only. A letter is handed to a print vendor, so it passes through
+    // states a mail has no equivalent for.
+    [MailLogState.Dispatched]: 'blue',
+    [MailLogState.Undeliverable]: 'red',
+    [MailLogState.Canceled]: 'yellow',
   };
 
 /**
@@ -22,10 +27,13 @@ const STATE_COLORS: Record<MailLogState, 'green' | 'yellow' | 'red' | 'blue'> =
 const STATE_ORDER: MailLogState[] = [
   MailLogState.Submitted,
   MailLogState.Accepted,
+  MailLogState.Dispatched,
   MailLogState.Delivered,
   MailLogState.Deferred,
   MailLogState.Bounced,
+  MailLogState.Undeliverable,
   MailLogState.Rejected,
+  MailLogState.Canceled,
 ];
 
 /**
@@ -287,4 +295,39 @@ export function formatDateTime(value?: string | null): string {
     dateStyle: 'medium',
     timeStyle: 'short',
   });
+}
+
+/**
+ * The medium a log entry went out through. A letter also shows the address it
+ * was sent to — on an envelope that is what tells two letters apart, where a
+ * mail has its subject line.
+ */
+export function MailLogChannelCell({
+  channel,
+  address,
+}: {
+  channel: MailChannel;
+  address?: string | null;
+}) {
+  const { t } = useTranslation();
+
+  return (
+    <Stack
+      direction="column"
+      alignItems="flex-start"
+      spacing={2}
+    >
+      <Tag color={channel === MailChannel.Letter ? 'violet' : 'cyan'}>
+        {t(`mailLog.channels.${channel}`)}
+      </Tag>
+      {address && (
+        <Typography
+          variant="caption"
+          style={{ color: '#8e8e93' }}
+        >
+          {address}
+        </Typography>
+      )}
+    </Stack>
+  );
 }
