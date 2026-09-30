@@ -9,7 +9,7 @@ import {
 } from '@testing-library/react';
 import {
   EditorBlockType,
-  MailchimpFormListsLayout,
+  MailchimpFormOptionsLayout,
   MailchimpInterestGroupsDocument,
   MailchimpListsDocument,
   MailchimpMergeFieldsDocument,
@@ -19,7 +19,11 @@ import { SetStateAction, useState } from 'react';
 
 import { BlockMap } from './blockMap';
 import { MailchimpFormBlock } from './mailchimpFormBlock';
-import { MailchimpFormBlockValue } from './types';
+import {
+  MailchimpFormBlockValue,
+  MailchimpFormFieldConfigValue,
+  MailchimpFormInterestOptionValue,
+} from './types';
 
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
@@ -69,7 +73,22 @@ const mocks: MockedResponse[] = [
   {
     request: { query: MailchimpInterestGroupsDocument },
     ...anyVariables,
-    result: { data: { mailchimpInterestGroups: [] } },
+    result: {
+      data: {
+        mailchimpInterestGroups: [
+          {
+            __typename: 'MailchimpInterestGroup',
+            id: 'interest-daily',
+            name: 'Daily Briefing',
+          },
+          {
+            __typename: 'MailchimpInterestGroup',
+            id: 'interest-weekly',
+            name: 'Weekly Culture',
+          },
+        ],
+      },
+    },
   },
 ];
 
@@ -111,7 +130,7 @@ const renderBlock = (value: Partial<MailchimpFormBlockValue> = {}) => {
 const waitForQueries = () =>
   act(() => new Promise(resolve => setTimeout(resolve, 0)));
 
-const openListPicker = async (field: HTMLElement) => {
+const openPicker = async (field: HTMLElement) => {
   await waitForQueries();
 
   await act(async () => {
@@ -119,70 +138,100 @@ const openListPicker = async (field: HTMLElement) => {
   });
 };
 
-const getMultipleListsToggle = () =>
-  screen
-    .getByText('blocks.mailchimpForm.multipleLists')
-    .parentElement!.querySelector('input')!;
+const groupsInput = (
+  input: Partial<MailchimpFormFieldConfigValue> = {}
+): MailchimpFormFieldConfigValue => ({
+  inputType: 'groups',
+  name: null,
+  label: 'Newsletters',
+  description: null,
+  required: false,
+  urlParam: null,
+  defaultValue: null,
+  value: null,
+  optionsLayout: MailchimpFormOptionsLayout.List,
+  options: [],
+  ...input,
+});
+
+const renderWithGroupsInput = (
+  input: Partial<MailchimpFormFieldConfigValue> = {},
+  block: Partial<MailchimpFormBlockValue> = {}
+) =>
+  renderBlock({
+    listId: 'list-daily',
+    steps: [
+      {
+        skipIfFieldsFilled: [],
+        skipIfInterestsFilled: [],
+        showIfInterestsFilled: [],
+        inputs: [groupsInput(input)],
+      },
+    ],
+    ...block,
+  });
+
+const getOptions = (value: MailchimpFormBlockValue) =>
+  value.steps[0].inputs[0].options;
+
+const emptyOption: MailchimpFormInterestOptionValue = {
+  id: '',
+  name: '',
+  description: null,
+  image: null,
+};
 
 describe('MailchimpFormBlock', () => {
-  it('should default to a single list', () => {
-    expect(defaultValue).toMatchObject({
-      multipleLists: false,
-      listsLayout: MailchimpFormListsLayout.List,
-      lists: [],
-    });
+  it('should default to the list layout for new inputs', () => {
+    expect(defaultValue).not.toHaveProperty('multipleLists');
+    expect(defaultValue).not.toHaveProperty('lists');
+    expect(defaultValue.steps[0].inputs[0].optionsLayout).toBe(
+      MailchimpFormOptionsLayout.List
+    );
   });
 
-  it('should not show the lists panel if multiple lists is disabled', () => {
+  it('should not offer selecting multiple lists', () => {
     renderBlock();
 
+    expect(screen.queryByText('blocks.mailchimpForm.multipleLists')).toBeNull();
     expect(screen.queryByText('blocks.mailchimpForm.lists')).toBeNull();
     expect(screen.queryByText('blocks.mailchimpForm.addList')).toBeNull();
-    expect(
-      screen.queryByText('blocks.mailchimpForm.listReferenceHelp')
-    ).toBeNull();
   });
 
-  it('should show the lists panel after enabling multiple lists', () => {
-    const latest = renderBlock();
+  it('should only show the layout for groups inputs', () => {
+    renderBlock();
 
-    fireEvent.click(getMultipleListsToggle());
-
-    expect(latest.value.multipleLists).toBe(true);
-    expect(screen.getByText('blocks.mailchimpForm.lists')).toBeTruthy();
-    expect(screen.getByText('blocks.mailchimpForm.addList')).toBeTruthy();
-    expect(
-      screen.getByText('blocks.mailchimpForm.listReferenceHelp')
-    ).toBeTruthy();
+    expect(screen.queryByText('blocks.mailchimpForm.optionsLayout')).toBeNull();
   });
 
   it('should switch the layout between list and grid', () => {
-    const latest = renderBlock({ multipleLists: true });
+    const latest = renderWithGroupsInput();
 
     fireEvent.click(
-      screen.getByLabelText('blocks.mailchimpForm.listsLayoutGrid')
+      screen.getByLabelText('blocks.mailchimpForm.optionsLayoutGrid')
     );
-    expect(latest.value.listsLayout).toBe(MailchimpFormListsLayout.Grid);
+    expect(latest.value.steps[0].inputs[0].optionsLayout).toBe(
+      MailchimpFormOptionsLayout.Grid
+    );
 
     fireEvent.click(
-      screen.getByLabelText('blocks.mailchimpForm.listsLayoutList')
+      screen.getByLabelText('blocks.mailchimpForm.optionsLayoutList')
     );
-    expect(latest.value.listsLayout).toBe(MailchimpFormListsLayout.List);
+    expect(latest.value.steps[0].inputs[0].optionsLayout).toBe(
+      MailchimpFormOptionsLayout.List
+    );
   });
 
-  it('should add, edit and remove lists', () => {
-    const latest = renderBlock({ multipleLists: true });
+  it('should add, edit and remove interest options', () => {
+    const latest = renderWithGroupsInput();
 
-    fireEvent.click(screen.getByText('blocks.mailchimpForm.addList'));
-    fireEvent.click(screen.getByText('blocks.mailchimpForm.addList'));
+    fireEvent.click(screen.getByText('blocks.mailchimpForm.addInterestOption'));
+    fireEvent.click(screen.getByText('blocks.mailchimpForm.addInterestOption'));
 
-    expect(latest.value.lists).toEqual([
-      { listId: '', name: '', description: null, image: null },
-      { listId: '', name: '', description: null, image: null },
-    ]);
+    expect(getOptions(latest.value)).toEqual([emptyOption, emptyOption]);
 
     const [firstName, secondName] = screen.getAllByText(
-      'blocks.mailchimpForm.listName'
+      'blocks.mailchimpForm.interestOptionName'
     );
     fireEvent.change(firstName.parentElement!.querySelector('input')!, {
       target: { value: 'Daily Briefing' },
@@ -192,7 +241,7 @@ describe('MailchimpFormBlock', () => {
     });
 
     const [firstDescription] = screen.getAllByText(
-      'blocks.mailchimpForm.listDescription'
+      'blocks.mailchimpForm.interestOptionDescription'
     );
     fireEvent.change(
       firstDescription.parentElement!.querySelector('textarea')!,
@@ -201,7 +250,7 @@ describe('MailchimpFormBlock', () => {
       }
     );
 
-    expect(latest.value.lists).toMatchObject([
+    expect(getOptions(latest.value)).toMatchObject([
       { name: 'Daily Briefing', description: 'Every morning' },
       { name: 'Weekly Culture', description: null },
     ]);
@@ -209,64 +258,81 @@ describe('MailchimpFormBlock', () => {
     const firstItem = screen.getByText('Daily Briefing').closest('.rs-panel')!;
     fireEvent.click(within(firstItem as HTMLElement).getAllByRole('button')[0]);
 
-    expect(latest.value.lists).toMatchObject([{ name: 'Weekly Culture' }]);
+    expect(getOptions(latest.value)).toMatchObject([
+      { name: 'Weekly Culture' },
+    ]);
   });
 
-  it('should prefill the name with the name of the picked Mailchimp list', async () => {
-    const latest = renderBlock({
-      multipleLists: true,
-      lists: [{ listId: '', name: '', description: null, image: null }],
-    });
+  it('should prefill the name with the name of the picked interest', async () => {
+    const latest = renderWithGroupsInput({ options: [emptyOption] });
 
-    const listLabels = screen.getAllByText('blocks.mailchimpForm.list');
-    const itemPicker = listLabels[listLabels.length - 1].parentElement!;
+    const itemPicker = screen.getByText(
+      'blocks.mailchimpForm.interestOption'
+    ).parentElement!;
 
-    await openListPicker(itemPicker);
+    await openPicker(itemPicker);
 
     fireEvent.click(
       await screen.findByRole('option', { name: 'Weekly Culture' })
     );
 
     await waitFor(() =>
-      expect(latest.value.lists).toMatchObject([
-        { listId: 'list-weekly', name: 'Weekly Culture' },
+      expect(getOptions(latest.value)).toMatchObject([
+        { id: 'interest-weekly', name: 'Weekly Culture' },
       ])
     );
   });
 
-  it('should not overwrite a custom name when picking a Mailchimp list', async () => {
-    const latest = renderBlock({
-      multipleLists: true,
-      lists: [
-        { listId: '', name: 'My newsletter', description: null, image: null },
-      ],
+  it('should not overwrite a custom name when picking an interest', async () => {
+    const latest = renderWithGroupsInput({
+      options: [{ ...emptyOption, name: 'My newsletter' }],
     });
 
-    const listLabels = screen.getAllByText('blocks.mailchimpForm.list');
-    const itemPicker = listLabels[listLabels.length - 1].parentElement!;
+    const itemPicker = screen.getByText(
+      'blocks.mailchimpForm.interestOption'
+    ).parentElement!;
 
-    await openListPicker(itemPicker);
+    await openPicker(itemPicker);
 
     fireEvent.click(
       await screen.findByRole('option', { name: 'Daily Briefing' })
     );
 
     await waitFor(() =>
-      expect(latest.value.lists).toMatchObject([
-        { listId: 'list-daily', name: 'My newsletter' },
+      expect(getOptions(latest.value)).toMatchObject([
+        { id: 'interest-daily', name: 'My newsletter' },
       ])
     );
   });
 
-  it('should not allow adding lists without a Mailchimp account', () => {
-    const latest = renderBlock({ multipleLists: true, syncProviderId: null });
+  it('should explain what a groups input is for', () => {
+    renderWithGroupsInput();
 
-    const addButton = screen
-      .getByText('blocks.mailchimpForm.addList')
-      .closest('button')!;
-    fireEvent.click(addButton);
+    expect(
+      screen.getByText('blocks.mailchimpForm.inputTypeGroupsHelp')
+    ).toBeTruthy();
+    expect(
+      screen.getByText('blocks.mailchimpForm.inputLabelGroupsHelp')
+    ).toBeTruthy();
+    expect(screen.queryByText('blocks.mailchimpForm.inputName')).toBeNull();
+    expect(
+      screen.queryByText('blocks.mailchimpForm.interestOptionsNoList')
+    ).toBeNull();
+  });
 
-    expect(addButton.disabled).toBe(true);
-    expect(latest.value.lists).toEqual([]);
+  it('should label the input types in a readable way', () => {
+    renderWithGroupsInput();
+
+    expect(
+      screen.getByText('blocks.mailchimpForm.inputTypes.groups')
+    ).toBeTruthy();
+  });
+
+  it('should hint to select a list before interests can be picked', () => {
+    renderWithGroupsInput({}, { listId: null });
+
+    expect(
+      screen.getByText('blocks.mailchimpForm.interestOptionsNoList')
+    ).toBeTruthy();
   });
 });

@@ -2023,16 +2023,10 @@ type MailTemplateSubscriptionOption {
 input MailchimpContactInput {
   email: String!
   interests: JSONObject
-  listId: String
-  lists: [MailchimpContactListInput!]
+  listId: String!
   mergeFields: JSONObject
   status: MailchimpContactStatus!
   syncProviderId: String!
-}
-
-input MailchimpContactListInput {
-  interests: JSONObject
-  listId: String!
 }
 
 enum MailchimpContactStatus {
@@ -2050,9 +2044,6 @@ type MailchimpFormBlock implements BaseBlock {
   doubleOptIn: Boolean
   interests: [String!]!
   listId: String
-  lists: [MailchimpFormList!]!
-  listsLayout: MailchimpFormListsLayout!
-  multipleLists: Boolean!
   steps: [MailchimpFormStep!]!
   submitButtonLabel: String
   successPage: MailchimpFormSuccessPage
@@ -2071,9 +2062,6 @@ input MailchimpFormBlockInput {
   doubleOptIn: Boolean
   interests: [String!]! = []
   listId: String
-  lists: [MailchimpFormListInput!]! = []
-  listsLayout: MailchimpFormListsLayout! = List
-  multipleLists: Boolean! = false
   steps: [MailchimpFormStepInput!]! = []
   submitButtonLabel: String
   successPage: MailchimpFormSuccessPageInput
@@ -2088,6 +2076,7 @@ type MailchimpFormFieldConfig {
   label: String
   name: String
   options: [MailchimpFormInterestOption!]!
+  optionsLayout: MailchimpFormOptionsLayout!
   required: Boolean
   urlParam: String
   value: String
@@ -2100,39 +2089,28 @@ input MailchimpFormFieldConfigInput {
   label: String
   name: String
   options: [MailchimpFormInterestOptionInput!]! = []
+  optionsLayout: MailchimpFormOptionsLayout! = List
   required: Boolean
   urlParam: String
   value: String
 }
 
-type MailchimpFormInterestOption {
+type MailchimpFormInterestOption implements HasImage {
   description: String
   id: String!
+  image: Image
+  imageID: String
   name: String!
 }
 
 input MailchimpFormInterestOptionInput {
   description: String
   id: String!
-  name: String!
-}
-
-type MailchimpFormList implements HasImage {
-  description: String
-  image: Image
   imageID: String
-  listId: String!
   name: String!
 }
 
-input MailchimpFormListInput {
-  description: String
-  imageID: String
-  listId: String!
-  name: String!
-}
-
-enum MailchimpFormListsLayout {
+enum MailchimpFormOptionsLayout {
   Grid
   List
 }

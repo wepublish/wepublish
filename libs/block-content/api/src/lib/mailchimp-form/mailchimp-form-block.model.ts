@@ -10,21 +10,21 @@ import { BlockType } from '../block-type.model';
 import { HasImage } from '../../../../../image/api/src/lib/has-image/has-image.model';
 import { Image } from '../../../../../image/api/src/lib/image.model';
 
-export enum MailchimpFormListsLayout {
+export enum MailchimpFormOptionsLayout {
   List = 'list',
   Grid = 'grid',
 }
 
-registerEnumType(MailchimpFormListsLayout, {
-  name: 'MailchimpFormListsLayout',
+registerEnumType(MailchimpFormOptionsLayout, {
+  name: 'MailchimpFormOptionsLayout',
 });
 
 @ObjectType({
   implements: () => [HasImage],
 })
-export class MailchimpFormList implements HasImage {
+export class MailchimpFormInterestOption implements HasImage {
   @Field()
-  listId!: string;
+  id!: string;
 
   @Field()
   name!: string;
@@ -37,33 +37,14 @@ export class MailchimpFormList implements HasImage {
 }
 
 @InputType()
-export class MailchimpFormListInput extends OmitType(
-  MailchimpFormList,
+export class MailchimpFormInterestOptionInput extends OmitType(
+  MailchimpFormInterestOption,
   ['image'] as const,
   InputType
 ) {
   @Field({ nullable: true })
   override imageID?: string;
 }
-
-@ObjectType()
-export class MailchimpFormInterestOption {
-  @Field()
-  id!: string;
-
-  @Field()
-  name!: string;
-
-  @Field({ nullable: true })
-  description?: string;
-}
-
-@InputType()
-export class MailchimpFormInterestOptionInput extends OmitType(
-  MailchimpFormInterestOption,
-  [] as const,
-  InputType
-) {}
 
 @ObjectType()
 export class MailchimpFormFieldConfig {
@@ -90,6 +71,11 @@ export class MailchimpFormFieldConfig {
 
   @Field({ nullable: true })
   value?: string;
+
+  @Field(() => MailchimpFormOptionsLayout, {
+    defaultValue: MailchimpFormOptionsLayout.List,
+  })
+  optionsLayout!: MailchimpFormOptionsLayout;
 
   @Field(() => [MailchimpFormInterestOption], { defaultValue: [] })
   options!: MailchimpFormInterestOption[];
@@ -189,17 +175,6 @@ export class MailchimpFormBlock extends BaseBlock<
   @Field(() => [String], { defaultValue: [] })
   interests!: string[];
 
-  @Field({ defaultValue: false })
-  multipleLists!: boolean;
-
-  @Field(() => MailchimpFormListsLayout, {
-    defaultValue: MailchimpFormListsLayout.List,
-  })
-  listsLayout!: MailchimpFormListsLayout;
-
-  @Field(() => [MailchimpFormList], { defaultValue: [] })
-  lists!: MailchimpFormList[];
-
   @Field({ defaultValue: true })
   autoFocus!: boolean;
 
@@ -228,12 +203,9 @@ export class MailchimpFormBlock extends BaseBlock<
 @InputType()
 export class MailchimpFormBlockInput extends OmitType(
   MailchimpFormBlock,
-  ['type', 'steps', 'successPage', 'lists'] as const,
+  ['type', 'steps', 'successPage'] as const,
   InputType
 ) {
-  @Field(() => [MailchimpFormListInput], { defaultValue: [] })
-  lists!: MailchimpFormListInput[];
-
   @Field(() => [MailchimpFormStepInput], { defaultValue: [] })
   steps!: MailchimpFormStepInput[];
 

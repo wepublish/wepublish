@@ -1,11 +1,11 @@
 import { Meta, StoryObj } from '@storybook/nextjs-vite';
 import {
   AddMailchimpContactDocument,
-  MailchimpFormListsLayout,
+  MailchimpFormOptionsLayout,
 } from '@wepublish/website/api';
 import {
   mockMailchimpFormBlock,
-  mockMultipleListsMailchimpFormBlock,
+  mockInterestsMailchimpFormBlock,
 } from '@wepublish/storybook/mocks';
 import { MailchimpFormBlock } from './mailchimp-form-block';
 
@@ -42,14 +42,16 @@ export const Default: Story = {
   args: mockMailchimpFormBlock(),
 };
 
-export const MultipleListsAsList: Story = {
-  args: mockMultipleListsMailchimpFormBlock({
-    listsLayout: MailchimpFormListsLayout.List,
-  }),
+export const InterestsAsList: Story = {
+  args: mockInterestsMailchimpFormBlock(
+    {},
+    { optionsLayout: MailchimpFormOptionsLayout.List }
+  ),
 };
 
-export const MultipleListsAsGrid: Story = {
-  args: mockMultipleListsMailchimpFormBlock({
-    listsLayout: MailchimpFormListsLayout.Grid,
-  }),
+export const InterestsAsGrid: Story = {
+  args: mockInterestsMailchimpFormBlock(
+    {},
+    { optionsLayout: MailchimpFormOptionsLayout.Grid }
+  ),
 };

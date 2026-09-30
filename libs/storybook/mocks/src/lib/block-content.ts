@@ -43,8 +43,9 @@ import {
   BlockContent,
   PaymentPeriodicity,
   MailchimpFormBlock,
-  MailchimpFormList,
-  MailchimpFormListsLayout,
+  MailchimpFormFieldConfig,
+  MailchimpFormInterestOption,
+  MailchimpFormOptionsLayout,
   Image,
 } from '@wepublish/website/api';
 import { mockImage } from './image';
@@ -743,27 +744,49 @@ export const mockSubscribeBlock = ({
   goodieMinValueAppliesToUpgrade,
   hideRepeatGoodieOnUpgrade,
 });
-export const mockMailchimpFormList = ({
-  listId = nanoid(),
+export const mockMailchimpFormInterestOption = ({
+  id = nanoid(),
   name = 'Daily Briefing',
   description = 'The most important news every morning.',
   image = mockImage() as Maybe<Image>,
-}: Partial<MailchimpFormList> = {}): MailchimpFormList => ({
-  __typename: 'MailchimpFormList',
-  listId,
+}: Partial<MailchimpFormInterestOption> = {}): MailchimpFormInterestOption => ({
+  __typename: 'MailchimpFormInterestOption',
+  id,
   name,
   description,
   image,
   imageID: image?.id,
 });
 
+export const mockMailchimpFormFieldConfig = ({
+  inputType = 'email',
+  name = 'EMAIL',
+  label = 'Email',
+  description = null,
+  required = true,
+  urlParam = null,
+  defaultValue = null,
+  value = null,
+  optionsLayout = MailchimpFormOptionsLayout.List,
+  options = [],
+}: Partial<MailchimpFormFieldConfig> = {}): MailchimpFormFieldConfig => ({
+  __typename: 'MailchimpFormFieldConfig',
+  inputType,
+  name,
+  label,
+  description,
+  required,
+  urlParam,
+  defaultValue,
+  value,
+  optionsLayout,
+  options,
+});
+
 export const mockMailchimpFormBlock = ({
   syncProviderId = 'sync-provider',
   listId = 'list-daily',
   interests = [],
-  multipleLists = false,
-  listsLayout = MailchimpFormListsLayout.List,
-  lists = [],
   autoFocus = false,
   doubleOptIn = true,
   buttonColor = null,
@@ -777,20 +800,7 @@ export const mockMailchimpFormBlock = ({
       skipIfFieldsFilled: [],
       skipIfInterestsFilled: [],
       showIfInterestsFilled: [],
-      inputs: [
-        {
-          __typename: 'MailchimpFormFieldConfig',
-          inputType: 'email',
-          name: 'EMAIL',
-          label: 'Email',
-          description: null,
-          required: true,
-          urlParam: null,
-          defaultValue: null,
-          value: null,
-          options: [],
-        },
-      ],
+      inputs: [mockMailchimpFormFieldConfig()],
     },
   ],
 }: Partial<MailchimpFormBlock> = {}): MailchimpFormBlock => ({
@@ -802,9 +812,6 @@ export const mockMailchimpFormBlock = ({
   syncProviderId,
   listId,
   interests,
-  multipleLists,
-  listsLayout,
-  lists,
   autoFocus,
   doubleOptIn,
   buttonColor,
@@ -815,24 +822,47 @@ export const mockMailchimpFormBlock = ({
   steps,
 });
 
-export const mockMultipleListsMailchimpFormBlock = (
-  block: Partial<MailchimpFormBlock> = {}
-): MailchimpFormBlock =>
-  mockMailchimpFormBlock({
-    multipleLists: true,
-    lists: [
-      mockMailchimpFormList({ listId: 'list-daily' }),
-      mockMailchimpFormList({
-        listId: 'list-weekly',
+export const mockMailchimpFormInterestsInput = (
+  input: Partial<MailchimpFormFieldConfig> = {}
+): MailchimpFormFieldConfig =>
+  mockMailchimpFormFieldConfig({
+    inputType: 'groups',
+    name: null,
+    label: 'Newsletters',
+    required: false,
+    options: [
+      mockMailchimpFormInterestOption({ id: 'interest-daily' }),
+      mockMailchimpFormInterestOption({
+        id: 'interest-weekly',
         name: 'Weekly Culture',
         description: 'Exhibitions, concerts and books of the week.',
       }),
-      mockMailchimpFormList({
-        listId: 'list-local',
+      mockMailchimpFormInterestOption({
+        id: 'interest-local',
         name: 'Local News',
         description: null,
         image: null,
       }),
+    ],
+    ...input,
+  });
+
+export const mockInterestsMailchimpFormBlock = (
+  block: Partial<MailchimpFormBlock> = {},
+  interestsInput: Partial<MailchimpFormFieldConfig> = {}
+): MailchimpFormBlock =>
+  mockMailchimpFormBlock({
+    steps: [
+      {
+        __typename: 'MailchimpFormStep',
+        skipIfFieldsFilled: [],
+        skipIfInterestsFilled: [],
+        showIfInterestsFilled: [],
+        inputs: [
+          mockMailchimpFormFieldConfig(),
+          mockMailchimpFormInterestsInput(interestsInput),
+        ],
+      },
     ],
     ...block,
   });

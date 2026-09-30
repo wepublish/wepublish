@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import mailchimp from '@mailchimp/mailchimp_marketing';
 import { createHash } from 'crypto';
 import {
@@ -16,23 +16,6 @@ export class MailchimpSubscribeService {
   ) {}
 
   async addContact(input: MailchimpContactInput): Promise<void> {
-    if (input.lists && !input.lists.length) {
-      throw new BadRequestException(
-        'At least one newsletter has to be selected'
-      );
-    }
-
-    const lists = [
-      ...(input.listId ?
-        [{ listId: input.listId, interests: input.interests }]
-      : []),
-      ...(input.lists ?? []),
-    ];
-
-    if (!lists.length) {
-      throw new BadRequestException('No Mailchimp list given');
-    }
-
     const setting = await this.syncProviderSettingsService.syncProviderSetting(
       input.syncProviderId
     );
@@ -54,16 +37,12 @@ export class MailchimpSubscribeService {
       .update(input.email.toLowerCase())
       .digest('hex');
 
-    await Promise.all(
-      lists.map(list =>
-        mailchimp.lists.setListMember(list.listId, subscriberHash, {
-          email_address: input.email,
-          status_if_new: input.status,
-          status: input.status,
-          merge_fields: input.mergeFields ?? {},
-          interests: list.interests ?? {},
-        })
-      )
-    );
+    await mailchimp.lists.setListMember(input.listId, subscriberHash, {
+      email_address: input.email,
+      status_if_new: input.status,
+      status: input.status,
+      merge_fields: input.mergeFields ?? {},
+      interests: input.interests ?? {},
+    });
   }
 }

@@ -2070,16 +2070,10 @@ export type MailTemplateSubscriptionOption = {
 export type MailchimpContactInput = {
   email: Scalars['String'];
   interests?: InputMaybe<Scalars['JSONObject']>;
-  listId?: InputMaybe<Scalars['String']>;
-  lists?: InputMaybe<Array<MailchimpContactListInput>>;
+  listId: Scalars['String'];
   mergeFields?: InputMaybe<Scalars['JSONObject']>;
   status: MailchimpContactStatus;
   syncProviderId: Scalars['String'];
-};
-
-export type MailchimpContactListInput = {
-  interests?: InputMaybe<Scalars['JSONObject']>;
-  listId: Scalars['String'];
 };
 
 export enum MailchimpContactStatus {
@@ -2098,9 +2092,6 @@ export type MailchimpFormBlock = BaseBlock & {
   doubleOptIn?: Maybe<Scalars['Boolean']>;
   interests: Array<Scalars['String']>;
   listId?: Maybe<Scalars['String']>;
-  lists: Array<MailchimpFormList>;
-  listsLayout: MailchimpFormListsLayout;
-  multipleLists: Scalars['Boolean'];
   steps: Array<MailchimpFormStep>;
   submitButtonLabel?: Maybe<Scalars['String']>;
   successPage?: Maybe<MailchimpFormSuccessPage>;
@@ -2119,9 +2110,6 @@ export type MailchimpFormBlockInput = {
   doubleOptIn?: InputMaybe<Scalars['Boolean']>;
   interests?: Array<Scalars['String']>;
   listId?: InputMaybe<Scalars['String']>;
-  lists?: Array<MailchimpFormListInput>;
-  listsLayout?: MailchimpFormListsLayout;
-  multipleLists?: Scalars['Boolean'];
   steps?: Array<MailchimpFormStepInput>;
   submitButtonLabel?: InputMaybe<Scalars['String']>;
   successPage?: InputMaybe<MailchimpFormSuccessPageInput>;
@@ -2137,6 +2125,7 @@ export type MailchimpFormFieldConfig = {
   label?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   options: Array<MailchimpFormInterestOption>;
+  optionsLayout: MailchimpFormOptionsLayout;
   required?: Maybe<Scalars['Boolean']>;
   urlParam?: Maybe<Scalars['String']>;
   value?: Maybe<Scalars['String']>;
@@ -2149,41 +2138,29 @@ export type MailchimpFormFieldConfigInput = {
   label?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
   options?: Array<MailchimpFormInterestOptionInput>;
+  optionsLayout?: MailchimpFormOptionsLayout;
   required?: InputMaybe<Scalars['Boolean']>;
   urlParam?: InputMaybe<Scalars['String']>;
   value?: InputMaybe<Scalars['String']>;
 };
 
-export type MailchimpFormInterestOption = {
+export type MailchimpFormInterestOption = HasImage & {
   __typename?: 'MailchimpFormInterestOption';
   description?: Maybe<Scalars['String']>;
   id: Scalars['String'];
+  image?: Maybe<Image>;
+  imageID?: Maybe<Scalars['String']>;
   name: Scalars['String'];
 };
 
 export type MailchimpFormInterestOptionInput = {
   description?: InputMaybe<Scalars['String']>;
   id: Scalars['String'];
-  name: Scalars['String'];
-};
-
-export type MailchimpFormList = HasImage & {
-  __typename?: 'MailchimpFormList';
-  description?: Maybe<Scalars['String']>;
-  image?: Maybe<Image>;
-  imageID?: Maybe<Scalars['String']>;
-  listId: Scalars['String'];
-  name: Scalars['String'];
-};
-
-export type MailchimpFormListInput = {
-  description?: InputMaybe<Scalars['String']>;
   imageID?: InputMaybe<Scalars['String']>;
-  listId: Scalars['String'];
   name: Scalars['String'];
 };
 
-export enum MailchimpFormListsLayout {
+export enum MailchimpFormOptionsLayout {
   Grid = 'Grid',
   List = 'List'
 }
@@ -8021,7 +7998,7 @@ export const PeerProfile = gql`
       "ImageBlock",
       "ImageGalleryImage",
       "ListicleItem",
-      "MailchimpFormList",
+      "MailchimpFormInterestOption",
       "MemberPlan",
       "PageTeaser",
       "QuoteBlock"

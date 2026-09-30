@@ -4,7 +4,6 @@ import {
   Button,
   Checkbox,
   CircularProgress,
-  FormControlLabel,
   TextField,
   Typography,
 } from '@mui/material';
@@ -12,7 +11,7 @@ import {
   BlockContent,
   FullMailchimpFormBlockFragment,
   MailchimpContactStatus,
-  MailchimpFormListsLayout,
+  MailchimpFormOptionsLayout,
   useAddMailchimpContactMutation,
 } from '@wepublish/website/api';
 import {
@@ -51,13 +50,13 @@ const Options = styled('div')`
   gap: ${({ theme }) => theme.spacing(1)};
 `;
 
-export const MailchimpFormLists = styled('div')`
+export const MailchimpFormOptions = styled('div')`
   display: flex;
   flex-direction: column;
   gap: ${({ theme }) => theme.spacing(1)};
 `;
 
-export const MailchimpFormListItem = styled('label')`
+export const MailchimpFormOptionItem = styled('label')`
   display: grid;
   grid-template-columns: auto auto 1fr;
   align-items: center;
@@ -65,20 +64,20 @@ export const MailchimpFormListItem = styled('label')`
   cursor: pointer;
 `;
 
-export const MailchimpFormListItemImage = styled(Image)`
+export const MailchimpFormOptionItemImage = styled(Image)`
   width: 64px;
   aspect-ratio: 1;
   object-fit: cover;
   border-radius: ${({ theme }) => theme.shape.borderRadius}px;
 `;
 
-export const MailchimpFormListGrid = styled('div')`
+export const MailchimpFormOptionGrid = styled('div')`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: ${({ theme }) => theme.spacing(2)};
 `;
 
-export const MailchimpFormListCard = styled('label')<{ isSelected: boolean }>`
+export const MailchimpFormOptionCard = styled('label')<{ isSelected: boolean }>`
   position: relative;
   display: flex;
   flex-direction: column;
@@ -96,13 +95,13 @@ export const MailchimpFormListCard = styled('label')<{ isSelected: boolean }>`
   }
 `;
 
-export const MailchimpFormListCardImage = styled(Image)`
+export const MailchimpFormOptionCardImage = styled(Image)`
   width: 100%;
   aspect-ratio: 16 / 9;
   object-fit: cover;
 `;
 
-export const MailchimpFormListCardContent = styled('div')`
+export const MailchimpFormOptionCardContent = styled('div')`
   display: flex;
   flex-direction: column;
   gap: ${({ theme }) => theme.spacing(0.5)};
@@ -110,7 +109,7 @@ export const MailchimpFormListCardContent = styled('div')`
   padding-right: ${({ theme }) => theme.spacing(6)};
 `;
 
-export const MailchimpFormListCardCheckbox = styled(Checkbox)`
+export const MailchimpFormOptionCardCheckbox = styled(Checkbox)`
   position: absolute;
   top: ${({ theme }) => theme.spacing(1)};
   right: ${({ theme }) => theme.spacing(1)};
@@ -122,74 +121,76 @@ export const MailchimpFormListCardCheckbox = styled(Checkbox)`
 `;
 
 type Step = FullMailchimpFormBlockFragment['steps'][number];
-type List = FullMailchimpFormBlockFragment['lists'][number];
+type InterestOption = Step['inputs'][number]['options'][number];
 
-type MailchimpFormListSelectionProps = {
-  lists: List[];
-  layout: MailchimpFormListsLayout;
+type MailchimpFormOptionSelectionProps = {
+  options: InterestOption[];
+  layout: MailchimpFormOptionsLayout;
   selected: string[];
-  onChange: (listId: string, checked: boolean) => void;
+  onChange: (id: string, checked: boolean) => void;
 };
 
-const MailchimpFormListSelection = ({
-  lists,
+const MailchimpFormOptionSelection = ({
+  options,
   layout,
   selected,
   onChange,
-}: MailchimpFormListSelectionProps) => {
-  if (layout === MailchimpFormListsLayout.Grid) {
+}: MailchimpFormOptionSelectionProps) => {
+  if (layout === MailchimpFormOptionsLayout.Grid) {
     return (
-      <MailchimpFormListGrid>
-        {lists.map(list => {
-          const isSelected = selected.includes(list.listId);
+      <MailchimpFormOptionGrid>
+        {options.map(option => {
+          const isSelected = selected.includes(option.id);
 
           return (
-            <MailchimpFormListCard
-              key={list.listId}
+            <MailchimpFormOptionCard
+              key={option.id}
               isSelected={isSelected}
             >
-              {list.image && <MailchimpFormListCardImage image={list.image} />}
+              {option.image && (
+                <MailchimpFormOptionCardImage image={option.image} />
+              )}
 
-              <MailchimpFormListCardContent>
-                <Typography variant="subtitle1">{list.name}</Typography>
-                {list.description && (
-                  <Typography variant="body2">{list.description}</Typography>
+              <MailchimpFormOptionCardContent>
+                <Typography variant="subtitle1">{option.name}</Typography>
+                {option.description && (
+                  <Typography variant="body2">{option.description}</Typography>
                 )}
-              </MailchimpFormListCardContent>
+              </MailchimpFormOptionCardContent>
 
-              <MailchimpFormListCardCheckbox
+              <MailchimpFormOptionCardCheckbox
                 checked={isSelected}
-                onChange={event => onChange(list.listId, event.target.checked)}
+                onChange={event => onChange(option.id, event.target.checked)}
               />
-            </MailchimpFormListCard>
+            </MailchimpFormOptionCard>
           );
         })}
-      </MailchimpFormListGrid>
+      </MailchimpFormOptionGrid>
     );
   }
 
   return (
-    <MailchimpFormLists>
-      {lists.map(list => (
-        <MailchimpFormListItem key={list.listId}>
+    <MailchimpFormOptions>
+      {options.map(option => (
+        <MailchimpFormOptionItem key={option.id}>
           <Checkbox
-            checked={selected.includes(list.listId)}
-            onChange={event => onChange(list.listId, event.target.checked)}
+            checked={selected.includes(option.id)}
+            onChange={event => onChange(option.id, event.target.checked)}
           />
 
-          {list.image ?
-            <MailchimpFormListItemImage image={list.image} />
+          {option.image ?
+            <MailchimpFormOptionItemImage image={option.image} />
           : <span />}
 
           <div>
-            <Typography variant="subtitle1">{list.name}</Typography>
-            {list.description && (
-              <Typography variant="body2">{list.description}</Typography>
+            <Typography variant="subtitle1">{option.name}</Typography>
+            {option.description && (
+              <Typography variant="body2">{option.description}</Typography>
             )}
           </div>
-        </MailchimpFormListItem>
+        </MailchimpFormOptionItem>
       ))}
-    </MailchimpFormLists>
+    </MailchimpFormOptions>
   );
 };
 
@@ -216,9 +217,6 @@ export const MailchimpFormBlock = ({
   syncProviderId,
   listId,
   interests: presetInterests,
-  multipleLists,
-  listsLayout,
-  lists,
   autoFocus,
   doubleOptIn,
   buttonColor,
@@ -249,7 +247,6 @@ export const MailchimpFormBlock = ({
   );
 
   const [interests, setInterests] = useState<string[]>([]);
-  const [selectedLists, setSelectedLists] = useState<string[]>([]);
   const [currentStep, setCurrentStep] = useState(0);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -345,23 +342,24 @@ export const MailchimpFormBlock = ({
     );
   };
 
-  const handleListChange = (id: string, checked: boolean) => {
-    setSelectedLists(current =>
-      checked ? [...current, id] : current.filter(value => value !== id)
-    );
-  };
-
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (!syncProviderId || (multipleLists ? !lists.length : !listId)) {
+    if (!syncProviderId || !listId) {
       setError('Form is not configured.');
 
       return;
     }
 
-    if (multipleLists && !selectedLists.length) {
-      setError(t('newsletter.noListSelected'));
+    const hasMissingInterests = steps[currentStep].inputs.some(
+      input =>
+        input.inputType === 'groups' &&
+        input.required &&
+        !input.options.some(option => interests.includes(option.id))
+    );
+
+    if (hasMissingInterests) {
+      setError(t('newsletter.noInterestSelected'));
 
       return;
     }
@@ -397,16 +395,9 @@ export const MailchimpFormBlock = ({
               doubleOptIn ?
                 MailchimpContactStatus.Pending
               : MailchimpContactStatus.Subscribed,
+            listId,
             mergeFields,
-            ...(multipleLists ?
-              {
-                lists: selectedLists.map(selectedListId => ({
-                  listId: selectedListId,
-                  interests:
-                    selectedListId === listId ? interestsInput : undefined,
-                })),
-              }
-            : { listId, interests: interestsInput }),
+            interests: interestsInput,
           },
         },
       });
@@ -482,20 +473,12 @@ export const MailchimpFormBlock = ({
                 {input.description && (
                   <Typography variant="body2">{input.description}</Typography>
                 )}
-                {input.options.map(option => (
-                  <FormControlLabel
-                    key={option.id}
-                    control={
-                      <Checkbox
-                        checked={interests.includes(option.id)}
-                        onChange={event =>
-                          handleInterestChange(option.id, event.target.checked)
-                        }
-                      />
-                    }
-                    label={option.name}
-                  />
-                ))}
+                <MailchimpFormOptionSelection
+                  options={input.options}
+                  layout={input.optionsLayout}
+                  selected={interests}
+                  onChange={handleInterestChange}
+                />
               </div>
             );
           }
@@ -517,15 +500,6 @@ export const MailchimpFormBlock = ({
             />
           );
         })}
-
-        {multipleLists && isFirstStep && !!lists.length && (
-          <MailchimpFormListSelection
-            lists={lists}
-            layout={listsLayout}
-            selected={selectedLists}
-            onChange={handleListChange}
-          />
-        )}
 
         <Actions>
           {!isFirstStep && (

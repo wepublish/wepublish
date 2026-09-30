@@ -10,7 +10,7 @@ import {
   FullImageFragment,
   FullPoll,
   FullTeaserFragment,
-  MailchimpFormListsLayout,
+  MailchimpFormOptionsLayout,
   PageWithoutBlocksFragment,
   SubscribeBlock,
   SubscribeBlockField,
@@ -89,6 +89,7 @@ export interface MailchimpFormInterestOptionValue {
   id: string;
   name: string;
   description?: string | null;
+  image?: FullImageFragment | null;
 }
 
 export interface MailchimpFormFieldConfigValue {
@@ -100,6 +101,7 @@ export interface MailchimpFormFieldConfigValue {
   urlParam?: string | null;
   defaultValue?: string | null;
   value?: string | null;
+  optionsLayout: MailchimpFormOptionsLayout;
   options: MailchimpFormInterestOptionValue[];
 }
 
@@ -123,20 +125,10 @@ export interface MailchimpFormSuccessPageValue {
   options: MailchimpFormSuccessOptionValue[];
 }
 
-export interface MailchimpFormListValue {
-  listId: string;
-  name: string;
-  description?: string | null;
-  image?: FullImageFragment | null;
-}
-
 export interface MailchimpFormBlockValue extends BaseBlockValue {
   syncProviderId?: string | null;
   listId?: string | null;
   interests: string[];
-  multipleLists: boolean;
-  listsLayout: MailchimpFormListsLayout;
-  lists: MailchimpFormListValue[];
   autoFocus: boolean;
   doubleOptIn?: boolean | null;
   buttonColor?: string | null;
@@ -597,14 +589,6 @@ export function mapBlockValueToBlockInput(
           syncProviderId: block.value.syncProviderId,
           listId: block.value.listId,
           interests: block.value.interests ?? [],
-          multipleLists: block.value.multipleLists ?? false,
-          listsLayout: block.value.listsLayout ?? MailchimpFormListsLayout.List,
-          lists: (block.value.lists ?? []).map(list => ({
-            listId: list.listId,
-            name: list.name,
-            description: list.description,
-            imageID: list.image?.id,
-          })),
           autoFocus: block.value.autoFocus ?? true,
           doubleOptIn: block.value.doubleOptIn,
           buttonColor: block.value.buttonColor,
@@ -624,10 +608,13 @@ export function mapBlockValueToBlockInput(
               urlParam: input.urlParam,
               defaultValue: input.defaultValue,
               value: input.value,
+              optionsLayout:
+                input.optionsLayout ?? MailchimpFormOptionsLayout.List,
               options: input.options.map(option => ({
                 id: option.id,
                 name: option.name,
                 description: option.description,
+                imageID: option.image?.id,
               })),
             })),
           })),
@@ -1293,14 +1280,6 @@ export function blockForQueryBlock(
           syncProviderId: block.syncProviderId ?? null,
           listId: block.listId ?? null,
           interests: block.interests ?? [],
-          multipleLists: block.multipleLists ?? false,
-          listsLayout: block.listsLayout ?? MailchimpFormListsLayout.List,
-          lists: (block.lists ?? []).map(list => ({
-            listId: list.listId,
-            name: list.name,
-            description: list.description ?? null,
-            image: list.image ?? null,
-          })),
           autoFocus: block.autoFocus ?? true,
           doubleOptIn: block.doubleOptIn ?? null,
           buttonColor: block.buttonColor ?? null,
@@ -1320,10 +1299,13 @@ export function blockForQueryBlock(
               urlParam: input.urlParam ?? null,
               defaultValue: input.defaultValue ?? null,
               value: input.value ?? null,
+              optionsLayout:
+                input.optionsLayout ?? MailchimpFormOptionsLayout.List,
               options: (input.options ?? []).map(option => ({
                 id: option.id,
                 name: option.name,
                 description: option.description ?? null,
+                image: option.image ?? null,
               })),
             })),
           })),

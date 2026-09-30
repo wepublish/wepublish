@@ -10,11 +10,12 @@ import {
   AddMailchimpContactDocument,
   MailchimpContactStatus,
   MailchimpFormBlock as MailchimpFormBlockType,
-  MailchimpFormListsLayout,
+  MailchimpFormOptionsLayout,
 } from '@wepublish/website/api';
 import {
+  mockInterestsMailchimpFormBlock,
   mockMailchimpFormBlock,
-  mockMultipleListsMailchimpFormBlock,
+  mockMailchimpFormFieldConfig,
 } from '@wepublish/storybook/mocks';
 import i18next from 'i18next';
 import * as stories from './mailchimp-form-block.stories';
@@ -68,7 +69,7 @@ const submit = async () => {
   });
 };
 
-const getListCheckbox = (name: string) =>
+const getInterestCheckbox = (name: string) =>
   screen.getByRole('checkbox', { name: new RegExp(name) });
 
 describe('Mailchimp Form Block', () => {
@@ -78,14 +79,14 @@ describe('Mailchimp Form Block', () => {
     });
   });
 
-  describe('single list', () => {
-    it('should not render any list selection', () => {
+  describe('without interests', () => {
+    it('should not render any interest selection', () => {
       renderBlock(mockMailchimpFormBlock());
 
       expect(screen.queryAllByRole('checkbox')).toHaveLength(0);
     });
 
-    it('should subscribe to the configured list', async () => {
+    it('should subscribe to the configured list with the preset interests', async () => {
       const { result } = renderBlock(
         mockMailchimpFormBlock({ interests: ['interest-1'] })
       );
@@ -99,34 +100,39 @@ describe('Mailchimp Form Block', () => {
           syncProviderId: 'sync-provider',
           email: 'reader@example.com',
           status: MailchimpContactStatus.Pending,
-          mergeFields: {},
           listId: 'list-daily',
+          mergeFields: {},
           interests: { 'interest-1': true },
         },
       });
     });
 
-    it('should ignore configured lists if multiple lists is disabled', () => {
-      renderBlock(
-        mockMultipleListsMailchimpFormBlock({ multipleLists: false })
-      );
+    it('should show a configuration error if no list is configured', async () => {
+      const { result } = renderBlock(mockMailchimpFormBlock({ listId: null }));
 
-      expect(screen.queryAllByRole('checkbox')).toHaveLength(0);
+      fillEmail();
+      await submit();
+
+      expect(screen.getByRole('alert').textContent).toContain(
+        'Form is not configured.'
+      );
+      expect(result).not.toHaveBeenCalled();
     });
   });
 
-  describe('multiple lists', () => {
-    it.each([MailchimpFormListsLayout.List, MailchimpFormListsLayout.Grid])(
-      'should render every list with name, description and image as %s',
-      listsLayout => {
+  describe('interests', () => {
+    it.each([MailchimpFormOptionsLayout.List, MailchimpFormOptionsLayout.Grid])(
+      'should render every interest with name, description and image as %s',
+      optionsLayout => {
         const { container } = renderBlock(
-          mockMultipleListsMailchimpFormBlock({ listsLayout })
+          mockInterestsMailchimpFormBlock({}, { optionsLayout })
         );
 
+        expect(screen.getByText('Newsletters')).toBeTruthy();
         expect(screen.getAllByRole('checkbox')).toHaveLength(3);
-        expect(getListCheckbox('Daily Briefing')).toBeTruthy();
-        expect(getListCheckbox('Weekly Culture')).toBeTruthy();
-        expect(getListCheckbox('Local News')).toBeTruthy();
+        expect(getInterestCheckbox('Daily Briefing')).toBeTruthy();
+        expect(getInterestCheckbox('Weekly Culture')).toBeTruthy();
+        expect(getInterestCheckbox('Local News')).toBeTruthy();
         expect(
           screen.getByText('The most important news every morning.')
         ).toBeTruthy();
@@ -137,12 +143,14 @@ describe('Mailchimp Form Block', () => {
       }
     );
 
-    it.each([MailchimpFormListsLayout.List, MailchimpFormListsLayout.Grid])(
-      'should toggle a list by clicking on it as %s',
-      listsLayout => {
-        renderBlock(mockMultipleListsMailchimpFormBlock({ listsLayout }));
+    it.each([MailchimpFormOptionsLayout.List, MailchimpFormOptionsLayout.Grid])(
+      'should toggle an interest by clicking on it as %s',
+      optionsLayout => {
+        renderBlock(mockInterestsMailchimpFormBlock({}, { optionsLayout }));
 
-        const checkbox = getListCheckbox('Weekly Culture') as HTMLInputElement;
+        const checkbox = getInterestCheckbox(
+          'Weekly Culture'
+        ) as HTMLInputElement;
         expect(checkbox.checked).toBe(false);
 
         fireEvent.click(screen.getByText('Weekly Culture'));
@@ -153,137 +161,93 @@ describe('Mailchimp Form Block', () => {
       }
     );
 
-    it('should render the lists right before the submit button', () => {
-      renderBlock(mockMultipleListsMailchimpFormBlock());
+    it('should subscribe to the configured list with the selected and preset interests', async () => {
+      const { result } = renderBlock(
+        mockInterestsMailchimpFormBlock({
+          interests: ['interest-preset'],
+          doubleOptIn: false,
+        })
+      );
 
-      const email = screen.getByRole('textbox', { name: /email/i });
-      const checkboxes = screen.getAllByRole('checkbox');
-      const button = screen.getByRole('button');
+      fillEmail();
+      fireEvent.click(getInterestCheckbox('Weekly Culture'));
+      fireEvent.click(getInterestCheckbox('Daily Briefing'));
+      await submit();
 
-      for (const checkbox of checkboxes) {
-        expect(
-          email.compareDocumentPosition(checkbox) &
-            Node.DOCUMENT_POSITION_FOLLOWING
-        ).toBeTruthy();
-        expect(
-          checkbox.compareDocumentPosition(button) &
-            Node.DOCUMENT_POSITION_FOLLOWING
-        ).toBeTruthy();
-      }
+      await waitFor(() => expect(result).toHaveBeenCalledTimes(1));
+      expect(result).toHaveBeenCalledWith({
+        input: {
+          syncProviderId: 'sync-provider',
+          email: 'reader@example.com',
+          status: MailchimpContactStatus.Subscribed,
+          listId: 'list-daily',
+          mergeFields: {},
+          interests: {
+            'interest-preset': true,
+            'interest-weekly': true,
+            'interest-daily': true,
+          },
+        },
+      });
     });
 
-    it('should require at least one list to be selected', async () => {
-      const { result } = renderBlock(mockMultipleListsMailchimpFormBlock());
+    it('should not submit an interest that was deselected again', async () => {
+      const { result } = renderBlock(mockInterestsMailchimpFormBlock());
+
+      fillEmail();
+      fireEvent.click(getInterestCheckbox('Daily Briefing'));
+      fireEvent.click(getInterestCheckbox('Daily Briefing'));
+      await submit();
+
+      await waitFor(() => expect(result).toHaveBeenCalledTimes(1));
+      expect(result).toHaveBeenCalledWith(
+        expect.objectContaining({
+          input: expect.objectContaining({ interests: {} }),
+        })
+      );
+    });
+
+    it('should allow submitting without interests if not required', async () => {
+      const { result } = renderBlock(mockInterestsMailchimpFormBlock());
+
+      fillEmail();
+      await submit();
+
+      await waitFor(() => expect(result).toHaveBeenCalledTimes(1));
+    });
+
+    it('should require at least one interest if required', async () => {
+      const { result } = renderBlock(
+        mockInterestsMailchimpFormBlock({}, { required: true })
+      );
 
       fillEmail();
       await submit();
 
       expect(screen.getByRole('alert').textContent).toContain(
-        i18next.t('newsletter.noListSelected')
+        i18next.t('newsletter.noInterestSelected')
       );
       expect(result).not.toHaveBeenCalled();
     });
 
-    it('should clear the error once a list is selected and submitted', async () => {
-      const { result } = renderBlock(mockMultipleListsMailchimpFormBlock());
+    it('should clear the error once an interest is selected and submitted', async () => {
+      const { result } = renderBlock(
+        mockInterestsMailchimpFormBlock({}, { required: true })
+      );
 
       fillEmail();
       await submit();
       expect(screen.queryByRole('alert')).toBeTruthy();
 
-      fireEvent.click(getListCheckbox('Local News'));
+      fireEvent.click(getInterestCheckbox('Local News'));
       await submit();
 
       await waitFor(() => expect(result).toHaveBeenCalledTimes(1));
       expect(screen.queryByRole('alert')).toBeNull();
     });
 
-    it('should not submit a list that was deselected again', async () => {
-      const { result } = renderBlock(mockMultipleListsMailchimpFormBlock());
-
-      fillEmail();
-      fireEvent.click(getListCheckbox('Daily Briefing'));
-      fireEvent.click(getListCheckbox('Daily Briefing'));
-      await submit();
-
-      expect(result).not.toHaveBeenCalled();
-      expect(screen.queryByRole('alert')).toBeTruthy();
-    });
-
-    it('should subscribe to all selected lists and send interests only to the reference list', async () => {
-      const { result } = renderBlock(
-        mockMultipleListsMailchimpFormBlock({
-          listId: 'list-daily',
-          interests: ['interest-1'],
-          doubleOptIn: false,
-        })
-      );
-
-      fillEmail();
-      fireEvent.click(getListCheckbox('Weekly Culture'));
-      fireEvent.click(getListCheckbox('Daily Briefing'));
-      await submit();
-
-      await waitFor(() => expect(result).toHaveBeenCalledTimes(1));
-
-      const [{ input }] = result.mock.calls[0] as unknown as [
-        { input: Record<string, unknown> },
-      ];
-
-      expect(input).toEqual({
-        syncProviderId: 'sync-provider',
-        email: 'reader@example.com',
-        status: MailchimpContactStatus.Subscribed,
-        mergeFields: {},
-        lists: [
-          { listId: 'list-weekly', interests: undefined },
-          { listId: 'list-daily', interests: { 'interest-1': true } },
-        ],
-      });
-      expect(input).not.toHaveProperty('listId');
-      expect(input).not.toHaveProperty('interests');
-    });
-
-    it('should not send interests if the reference list is not selected', async () => {
-      const { result } = renderBlock(
-        mockMultipleListsMailchimpFormBlock({
-          listId: 'list-daily',
-          interests: ['interest-1'],
-        })
-      );
-
-      fillEmail();
-      fireEvent.click(getListCheckbox('Local News'));
-      await submit();
-
-      await waitFor(() => expect(result).toHaveBeenCalledTimes(1));
-      expect(result).toHaveBeenCalledWith(
-        expect.objectContaining({
-          input: expect.objectContaining({
-            lists: [{ listId: 'list-local', interests: undefined }],
-          }),
-        })
-      );
-    });
-
-    it('should show a configuration error if no lists are configured', async () => {
-      const { result } = renderBlock(
-        mockMultipleListsMailchimpFormBlock({ lists: [] })
-      );
-
-      expect(screen.queryAllByRole('checkbox')).toHaveLength(0);
-
-      fillEmail();
-      await submit();
-
-      expect(screen.getByRole('alert').textContent).toContain(
-        'Form is not configured.'
-      );
-      expect(result).not.toHaveBeenCalled();
-    });
-
-    it('should only show the lists on the first step', async () => {
-      const block = mockMultipleListsMailchimpFormBlock();
+    it('should show steps depending on the selected interests', async () => {
+      const block = mockInterestsMailchimpFormBlock();
       const { result } = renderBlock({
         ...block,
         steps: [
@@ -292,27 +256,21 @@ describe('Mailchimp Form Block', () => {
             __typename: 'MailchimpFormStep',
             skipIfFieldsFilled: [],
             skipIfInterestsFilled: [],
-            showIfInterestsFilled: [],
+            showIfInterestsFilled: ['interest-weekly'],
             inputs: [
-              {
-                __typename: 'MailchimpFormFieldConfig',
+              mockMailchimpFormFieldConfig({
                 inputType: 'text',
                 name: 'FNAME',
                 label: 'First name',
-                description: null,
                 required: false,
-                urlParam: null,
-                defaultValue: null,
-                value: null,
-                options: [],
-              },
+              }),
             ],
           },
         ],
       });
 
       fillEmail();
-      fireEvent.click(getListCheckbox('Weekly Culture'));
+      fireEvent.click(getInterestCheckbox('Weekly Culture'));
       await submit();
 
       await waitFor(() => expect(result).toHaveBeenCalledTimes(1));
@@ -333,7 +291,7 @@ describe('Mailchimp Form Block', () => {
         expect.objectContaining({
           input: expect.objectContaining({
             mergeFields: { FNAME: 'Jane' },
-            lists: [{ listId: 'list-weekly', interests: undefined }],
+            interests: { 'interest-weekly': true },
           }),
         })
       );
