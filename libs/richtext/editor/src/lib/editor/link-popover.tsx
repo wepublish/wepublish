@@ -234,13 +234,14 @@ export function LinkPopover({ open, anchorEl, onClose }: LinkPopoverProps) {
         if (e.key === 'Escape') {
           onClose();
         }
+
+        if (e.key === 'Enter' && e.target instanceof HTMLInputElement) {
+          e.preventDefault();
+          onSubmit();
+        }
       }}
     >
-      <Form
-        component="form"
-        noValidate
-        onSubmit={onSubmit}
-      >
+      <Form>
         <Typography
           variant="subtitle1"
           component={Title}
@@ -438,10 +439,10 @@ export function LinkPopover({ open, anchorEl, onClose }: LinkPopoverProps) {
 
           <Button
             fullWidth
-            type="submit"
             variant="contained"
             disableElevation
             disabled={!formState.isValid}
+            onClick={onSubmit}
           >
             {t('save')}
           </Button>
