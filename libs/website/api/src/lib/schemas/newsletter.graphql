@@ -1,0 +1,33 @@
+fragment FullMyNewsletterList on MyNewsletterList {
+  id
+  name
+  slug
+  description
+  lockedText
+  lockedLinkUrl
+  status
+}
+
+query MyNewsletterLists {
+  myNewsletterLists {
+    ...FullMyNewsletterList
+  }
+}
+
+mutation SubscribeToNewsletterList($listId: String!) {
+  subscribeToNewsletterList(listId: $listId) {
+    ...FullMyNewsletterList
+  }
+}
+
+mutation UnsubscribeFromNewsletterList($listId: String!) {
+  unsubscribeFromNewsletterList(listId: $listId) {
+    ...FullMyNewsletterList
+  }
+}
+
+mutation ConfirmNewsletterSubscription($token: String!) {
+  confirmNewsletterSubscription(token: $token) {
+    ...FullMyNewsletterList
+  }
+}

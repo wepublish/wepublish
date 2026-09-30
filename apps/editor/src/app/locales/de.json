@@ -1321,7 +1321,100 @@
       },
       "title": "Abo Pläne"
     },
+    "newsletter": {
+      "overview": {
+        "title": "Newsletter-Listen",
+        "create": "Neue Liste",
+        "active": "Aktiv",
+        "name": "Name",
+        "slug": "Slug",
+        "access": "Zugang",
+        "subscribersOnly": "Nur Abonnenten",
+        "everyone": "Alle",
+        "autoSubscribe": "Automatisch",
+        "deleteTitle": "Bist du sicher?",
+        "deleteBody": "Die Liste \"{{list}}\" wird mit allen An- und Abmeldungen unwiderruflich gelöscht.",
+        "deleteConfirm": "Liste löschen"
+      },
+      "tabs": {
+        "settings": "Einstellungen",
+        "subscribers": "Abonnenten"
+      },
+      "form": {
+        "createTitle": "Newsletter-Liste erstellen",
+        "editTitle": "Newsletter-Liste \"{{list}}\" bearbeiten",
+        "general": "Allgemein",
+        "active": "Aktiv",
+        "activeHelp": "Inaktive Listen sind im Mitgliederbereich unsichtbar und nehmen keine Anmeldungen an.",
+        "name": "Name",
+        "slug": "Slug",
+        "description": "Beschreibung",
+        "nameRequired": "Bitte einen Namen eingeben.",
+        "slugRequired": "Bitte einen Slug eingeben.",
+        "access": "Zugang",
+        "requiresSubscription": "Nur für Abonnenten",
+        "requiresSubscriptionHelp": "Nur Personen mit einem aktiven Abo der gewählten Abo-Pläne können sich anmelden und erhalten den Newsletter.",
+        "anyMemberPlan": "Jedes aktive Abo",
+        "memberPlans": "Abo-Pläne",
+        "memberPlansRequired": "Bitte mindestens einen Abo-Plan wählen oder «Jedes aktive Abo» einschalten.",
+        "autoSubscribe": "Bei neuem Abo automatisch hinzufügen",
+        "autoSubscribeHelp": "Neue Abonnenten werden automatisch angemeldet. Wer sich abgemeldet hat, wird nicht erneut hinzugefügt.",
+        "lockedDisplay": "Anzeige für Personen ohne Abo",
+        "lockedDisplayHelp": "So erscheint die Liste im Mitgliederbereich für Personen ohne passendes Abo.",
+        "lockedDisplayTeaser": "Ausgegraut mit Werbetext",
+        "lockedDisplayHidden": "Ausblenden",
+        "lockedText": "Werbetext",
+        "lockedLinkUrl": "Link für «Jetzt abonnieren»",
+        "lockedLinkUrlPlaceholder": "/mitmachen (Standard)"
+      },
+      "backfill": {
+        "title": "Bestehende Abonnenten",
+        "button": "Bestehende Abonnenten jetzt hinzufügen",
+        "help": "Meldet alle Personen mit einem aktiven, passenden Abo an. Wer sich abgemeldet hat, wird übersprungen.",
+        "confirmTitle": "Bestehende Abonnenten hinzufügen?",
+        "confirmBody": "Alle Personen mit einem aktiven, passenden Abo werden sofort angemeldet. Wer sich abgemeldet hat, wird nicht hinzugefügt.",
+        "confirm": "Jetzt hinzufügen",
+        "success": "{{count}} Personen hinzugefügt."
+      },
+      "subscribers": {
+        "reAdd": "Wieder hinzufügen",
+        "actions": "Aktion",
+        "filterAll": "Alle ({{count}})",
+        "filterSubscribed": "Bestätigt ({{count}})",
+        "filterPending": "Ausstehend ({{count}})",
+        "filterUnsubscribed": "Abgemeldet ({{count}})",
+        "searchPlaceholder": "Name oder E-Mail suchen",
+        "add": "Benutzer hinzufügen",
+        "addTitle": "Benutzer hinzufügen",
+        "addUser": "Benutzer suchen",
+        "addConfirm": "Hinzufügen",
+        "added": "Benutzer hinzugefügt.",
+        "addedNotReceiving": "Benutzer hinzugefügt. Ohne passendes Abo erhält die Person den Newsletter erst, wenn sie ein Abo abschliesst.",
+        "reAddTitle": "Abgemeldete Person erneut hinzufügen?",
+        "reAddBody": "Diese Person wurde am {{date}} abgemeldet. Nur erneut hinzufügen, wenn sie das ausdrücklich wünscht.",
+        "reAddConfirm": "Trotzdem hinzufügen",
+        "removed": "Benutzer entfernt.",
+        "remove": "Entfernen",
+        "name": "Name",
+        "email": "E-Mail",
+        "status": "Status",
+        "source": "Quelle",
+        "subscribedAt": "Angemeldet am",
+        "unsubscribedAt": "Abgemeldet am",
+        "receiving": "Erhält aktuell",
+        "receivingYes": "Ja",
+        "receivingNo": "Nein",
+        "statusSubscribed": "Bestätigt",
+        "statusPending": "Ausstehend",
+        "statusUnsubscribed": "Abgemeldet",
+        "sourceSelf": "Selbst",
+        "sourceAuto": "Automatisch",
+        "sourceEditor": "Redaktion"
+      }
+    },
     "navbar": {
+      "newsletter": "Newsletter",
+      "newsletterLists": "Listen",
       "articles": "Artikel",
       "authors": "Autor*innen",
       "banners": "Banner",
@@ -1740,6 +1833,8 @@
     "save": "Speichern",
     "saveAndClose": "Speichern & Schliessen",
     "settingList": {
+      "newsletter": "Newsletter",
+      "newsletterDoubleOptIn": "Double Opt-in für Newsletter",
       "allowGuestCommentRating": "Erlaube Gast-Bewertungen von Kommentaren",
       "comments": "Kommentare",
       "sessionTtlDays": "Gültigkeitsdauer der Anmeldung",
@@ -1765,6 +1860,7 @@
       "subscriptionPlans": "Abo-Pläne",
       "subscriptionUpgradeModel": "Beim Upgrade die volle Preisdifferenz verrechnen (statt des anteiligen Restguthabens)",
       "warnings": {
+        "newsletterDoubleOptIn": "Wer sich im Mitgliederbereich zum ersten Mal für einen Newsletter anmeldet, muss die Anmeldung per E-Mail bestätigen. Die Bestätigung gilt danach für alle Listen. Automatische Anmeldungen durch ein Abo und Anmeldungen durch die Redaktion brauchen keine Bestätigung. Unter «Kommunikation › Automatische Mails» muss dafür eine Vorlage für «Newsletter-Anmeldung bestätigen» zugewiesen sein.",
         "askOperators": "Achtung: Das Ändern einer oder mehrerer Einstellungen kann die Website zum abstürzen bringen oder andere unvorhersehbare Folgen haben. Falls es Unsicherheiten gibt, wendet euch an eure Operators. Falls nicht, einfach fortfahren.",
         "guestCommenting": "Erlaube Gastbesuchern (nicht eingeloggt), Kommentare zu schreiben und zu veröffentlichen.",
         "guestCommentRating": "Erlaube (nicht eingeloggten) Gastbesuchern, die Kommentare anderer Personen zu bewerten.",
@@ -2944,6 +3040,7 @@
       "sendTest": "Test an mich",
       "testSent": "Test-E-Mail an Sie verschickt",
       "events": {
+        "newsletter_confirmation": "Newsletter-Anmeldung bestätigen",
         "account_creation": "Registrierung",
         "login_link": "Login-Link",
         "password_reset": "Passwort zurücksetzen",
@@ -2951,6 +3048,11 @@
         "test_mail": "Testmail"
       },
       "eventInfo": {
+        "newsletter_confirmation": {
+          "short": "Double Opt-in für Newsletter.",
+          "description": "Geht raus, wenn sich jemand bei eingeschaltetem Double Opt-in zum ersten Mal für einen Newsletter anmeldet. Der Bestätigungslink muss auf /profile?confirmNewsletter= mit dem Platzhalter optional_confirmToken zeigen. Bitte keinen jwt-Parameter anhängen: Wer nicht angemeldet ist, meldet sich an und landet danach wieder auf der Bestätigung. Zusätzlich verfügbar: optional_newsletterList_name.",
+          "example": "«Bitte bestätigen Sie Ihre Newsletter-Anmeldung.»"
+        },
         "account_creation": {
           "short": "Neues Konto wurde erstellt.",
           "description": "Geht raus, sobald sich eine Person neu registriert oder beim Abo-Kauf ein Konto erhält.",

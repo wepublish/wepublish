@@ -32,6 +32,8 @@ export enum SettingName {
   SHOW_PENDING_WHEN_NOT_PUBLISHED = 'showPendingWhenNotPublished',
 
   SUBSCRIPTION_UPGRADE_BILLS_FULL_DIFFERENCE = 'subscriptionUpgradeBillsFullDifference',
+
+  NEWSLETTER_DOUBLE_OPT_IN = 'newsletterDoubleOptIn',
 }
 
 export type CreateSettingArgs<T> = Omit<Setting<T>, 'id'>;

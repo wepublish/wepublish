@@ -1183,6 +1183,42 @@ export const CanUpdateWebsiteSettings: Permission = {
   deprecated: false,
 };
 
+export const CanGetNewsletterLists: Permission = {
+  id: 'CAN_GET_NEWSLETTER_LISTS',
+  description: 'Allows to get newsletter lists',
+  deprecated: false,
+};
+
+export const CanCreateNewsletterList: Permission = {
+  id: 'CAN_CREATE_NEWSLETTER_LIST',
+  description: 'Allows to create a newsletter list',
+  deprecated: false,
+};
+
+export const CanUpdateNewsletterList: Permission = {
+  id: 'CAN_UPDATE_NEWSLETTER_LIST',
+  description: 'Allows to update a newsletter list',
+  deprecated: false,
+};
+
+export const CanDeleteNewsletterList: Permission = {
+  id: 'CAN_DELETE_NEWSLETTER_LIST',
+  description: 'Allows to delete a newsletter list',
+  deprecated: false,
+};
+
+export const CanGetNewsletterSubscribers: Permission = {
+  id: 'CAN_GET_NEWSLETTER_SUBSCRIBERS',
+  description: 'Allows to get the subscribers of a newsletter list',
+  deprecated: false,
+};
+
+export const CanUpdateNewsletterSubscribers: Permission = {
+  id: 'CAN_UPDATE_NEWSLETTER_SUBSCRIBERS',
+  description: 'Allows to add and remove subscribers of a newsletter list',
+  deprecated: false,
+};
+
 export const AllPermissions: Permission[] = [
   CanGetCrowdfunding,
   CanGetCrowdfundings,
@@ -1363,6 +1399,12 @@ export const AllPermissions: Permission[] = [
   CanGetWebsiteSettings,
   CanUpdateWebsiteSettings,
   CanGetAuditLogs,
+  CanGetNewsletterLists,
+  CanCreateNewsletterList,
+  CanUpdateNewsletterList,
+  CanDeleteNewsletterList,
+  CanGetNewsletterSubscribers,
+  CanUpdateNewsletterSubscribers,
 ];
 
 export const EditorPermissions: Permission[] = [
@@ -1434,6 +1476,10 @@ export const EditorPermissions: Permission[] = [
   CanPreview,
   CanGetWebsiteSettings,
   CanUpdateWebsiteSettings,
+  CanGetNewsletterLists,
+  CanCreateNewsletterList,
+  CanUpdateNewsletterList,
+  CanDeleteNewsletterList,
 ];
 
 export const PeerPermissions: Permission[] = [

@@ -11,6 +11,7 @@ export * from './event.generated';
 export * from './image.generated';
 export * from './membership.generated';
 export * from './navigations.generated';
+export * from './newsletter.generated';
 export * from './page.generated';
 export * from './paywall.generated';
 export * from './peer.generated';

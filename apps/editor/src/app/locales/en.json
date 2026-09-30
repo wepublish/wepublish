@@ -1322,7 +1322,100 @@
       },
       "title": "Memberplans"
     },
+    "newsletter": {
+      "overview": {
+        "title": "Newsletter lists",
+        "create": "New list",
+        "active": "Active",
+        "name": "Name",
+        "slug": "Slug",
+        "access": "Access",
+        "subscribersOnly": "Subscribers only",
+        "everyone": "Everyone",
+        "autoSubscribe": "Automatic",
+        "deleteTitle": "Are you sure?",
+        "deleteBody": "The list \"{{list}}\" and all of its sign-ups and opt-outs will be deleted permanently.",
+        "deleteConfirm": "Delete list"
+      },
+      "tabs": {
+        "settings": "Settings",
+        "subscribers": "Subscribers"
+      },
+      "form": {
+        "createTitle": "Create newsletter list",
+        "editTitle": "Edit newsletter list \"{{list}}\"",
+        "general": "General",
+        "active": "Active",
+        "activeHelp": "Inactive lists are hidden in the member area and accept no sign-ups.",
+        "name": "Name",
+        "slug": "Slug",
+        "description": "Description",
+        "nameRequired": "Please enter a name.",
+        "slugRequired": "Please enter a slug.",
+        "access": "Access",
+        "requiresSubscription": "Subscribers only",
+        "requiresSubscriptionHelp": "Only people with an active subscription on one of the selected plans can sign up and receive the newsletter.",
+        "anyMemberPlan": "Any active subscription",
+        "memberPlans": "Subscription plans",
+        "memberPlansRequired": "Select at least one subscription plan or switch on «Any active subscription».",
+        "autoSubscribe": "Add automatically on new subscriptions",
+        "autoSubscribeHelp": "New subscribers are signed up automatically. People who unsubscribed are never added again.",
+        "lockedDisplay": "Display for people without a subscription",
+        "lockedDisplayHelp": "How the list appears in the member area for people without a qualifying subscription.",
+        "lockedDisplayTeaser": "Greyed out with promotion text",
+        "lockedDisplayHidden": "Hidden",
+        "lockedText": "Promotion text",
+        "lockedLinkUrl": "Link for «Subscribe now»",
+        "lockedLinkUrlPlaceholder": "/mitmachen (default)"
+      },
+      "backfill": {
+        "title": "Existing subscribers",
+        "button": "Add existing subscribers now",
+        "help": "Signs up everyone with an active, qualifying subscription. People who unsubscribed are skipped.",
+        "confirmTitle": "Add existing subscribers?",
+        "confirmBody": "Everyone with an active, qualifying subscription is signed up right away. People who unsubscribed are not added.",
+        "confirm": "Add now",
+        "success": "{{count}} people added."
+      },
+      "subscribers": {
+        "reAdd": "Add again",
+        "actions": "Action",
+        "filterAll": "All ({{count}})",
+        "filterSubscribed": "Confirmed ({{count}})",
+        "filterPending": "Pending ({{count}})",
+        "filterUnsubscribed": "Unsubscribed ({{count}})",
+        "searchPlaceholder": "Search name or email",
+        "add": "Add user",
+        "addTitle": "Add user",
+        "addUser": "Search user",
+        "addConfirm": "Add",
+        "added": "User added.",
+        "addedNotReceiving": "User added. Without a qualifying subscription they only receive the newsletter once they subscribe.",
+        "reAddTitle": "Add an unsubscribed person again?",
+        "reAddBody": "This person unsubscribed on {{date}}. Only add them again if they explicitly asked for it.",
+        "reAddConfirm": "Add anyway",
+        "removed": "User removed.",
+        "remove": "Remove",
+        "name": "Name",
+        "email": "Email",
+        "status": "Status",
+        "source": "Source",
+        "subscribedAt": "Signed up",
+        "unsubscribedAt": "Unsubscribed",
+        "receiving": "Currently receiving",
+        "receivingYes": "Yes",
+        "receivingNo": "No",
+        "statusSubscribed": "Confirmed",
+        "statusPending": "Pending",
+        "statusUnsubscribed": "Unsubscribed",
+        "sourceSelf": "Self",
+        "sourceAuto": "Automatic",
+        "sourceEditor": "Editorial team"
+      }
+    },
     "navbar": {
+      "newsletter": "Newsletter",
+      "newsletterLists": "Lists",
       "articles": "Articles",
       "authors": "Authors",
       "banners": "Banners",
@@ -1738,6 +1831,8 @@
     "save": "Save",
     "saveAndClose": "Save & Close",
     "settingList": {
+      "newsletter": "Newsletter",
+      "newsletterDoubleOptIn": "Double opt-in for newsletters",
       "activeSubscriptionsApiPublic": "Make the active subscriptions API accessible by the public",
       "allowCommentEditing": "Allow comment editing",
       "allowGuestCommentRating": "Allow guest ratings on comments",
@@ -1774,6 +1869,7 @@
       "subscriptionPlans": "Subscription Plans",
       "subscriptionUpgradeModel": "On upgrade, bill the full price difference (instead of the pro-rated remaining credit)",
       "warnings": {
+        "newsletterDoubleOptIn": "When someone signs up for a newsletter in the member area for the first time, they have to confirm by email. The confirmation then applies to all lists. Automatic sign-ups through a subscription and sign-ups by the editorial team need no confirmation. Assign a template to «Confirm newsletter sign-up» under «Communication › Automatic emails».",
         "activeSubscriptionsApiPublic": "Exposes subscriptions anonymized to the public.",
         "allowCommentEditing": "Allow users to edit their comments",
         "askOperators": "Warning: changing one or more of the settings may break the page or have other unpredictable consequences. If you are unsure, please try talking to the operators first. If you are sure, feel free to continue.",
@@ -1915,6 +2011,7 @@
       "sendTest": "Send test to me",
       "testSent": "Test email sent to you",
       "events": {
+        "newsletter_confirmation": "Confirm newsletter sign-up",
         "account_creation": "Registration",
         "login_link": "Login link",
         "password_reset": "Password reset",
@@ -1922,6 +2019,11 @@
         "test_mail": "Test mail"
       },
       "eventInfo": {
+        "newsletter_confirmation": {
+          "short": "Double opt-in for newsletters.",
+          "description": "Sent when double opt-in is switched on and someone signs up for a newsletter for the first time. The confirmation link must point to /profile?confirmNewsletter= with the placeholder optional_confirmToken. Do not add a jwt parameter: people who are not logged in log in and are then taken back to the confirmation. Also available: optional_newsletterList_name.",
+          "example": "«Please confirm your newsletter sign-up.»"
+        },
         "account_creation": {
           "short": "A new account was created.",
           "description": "Goes out as soon as a person registers or gets an account while buying a subscription.",

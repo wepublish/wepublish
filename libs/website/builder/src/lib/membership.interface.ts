@@ -9,6 +9,7 @@ import {
   FullSubscriptionFragment,
   InvoicesQuery,
   MemberPlanListQuery,
+  MyNewsletterListsQuery,
   PaymentMethod,
   PaymentPeriodicity,
   RegisterMutationVariables,
@@ -63,6 +64,16 @@ export type BuilderInvoiceListProps = Pick<
 > & {
   className?: string;
   onPay?: (invoiceId: string, paymentMethodId: string) => Promise<void>;
+};
+
+export type BuilderNewsletterListProps = Pick<
+  QueryResult<MyNewsletterListsQuery>,
+  'data' | 'loading' | 'error'
+> & {
+  className?: string;
+  subscribeUrl: string;
+  onSubscribe: (listId: string) => Promise<void>;
+  onUnsubscribe: (listId: string) => Promise<void>;
 };
 
 export type BuilderGoodiePickerProps = {

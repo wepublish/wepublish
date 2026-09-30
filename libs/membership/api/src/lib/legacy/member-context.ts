@@ -93,10 +93,15 @@ export interface MemberContextInterface {
   ): Promise<Subscription>;
 }
 
+export interface NewsletterAutoSubscriber {
+  autoSubscribe(userId: string, memberPlanId: string): Promise<void>;
+}
+
 export interface MemberContextProps {
   readonly prisma: PrismaClient;
   readonly paymentProviders: PaymentProvider[];
   readonly mailContext: MailContext;
+  readonly newsletter?: NewsletterAutoSubscriber;
 }
 
 export function getNextDateForPeriodicity(
@@ -133,11 +138,29 @@ export class MemberContext implements MemberContextInterface {
 
   mailContext: MailContext;
 
+  newsletter?: NewsletterAutoSubscriber;
+
   constructor(props: MemberContextProps) {
     this.paymentProviders = props.paymentProviders;
     this.prisma = props.prisma;
 
     this.mailContext = props.mailContext;
+    this.newsletter = props.newsletter;
+  }
+
+  private async autoSubscribeToNewsletters({
+    userID,
+    memberPlanID,
+  }: Subscription) {
+    try {
+      await this.newsletter?.autoSubscribe(userID, memberPlanID);
+    } catch (error) {
+      logger('memberContext').error(
+        error as Error,
+        'Could not add user %s to the automatic newsletter lists',
+        userID
+      );
+    }
   }
 
   async handleSubscriptionChange({
@@ -852,6 +875,8 @@ export class MemberContext implements MemberContextInterface {
       throw new InternalServerErrorException();
     }
 
+    await this.autoSubscribeToNewsletters(subscription);
+
     const invoice = await this.renewSubscriptionForUser({
       subscription,
       discount,
@@ -1008,6 +1033,8 @@ export class MemberContext implements MemberContextInterface {
       );
       throw new InternalServerErrorException();
     }
+
+    await this.autoSubscribeToNewsletters(subscription);
 
     if (startsAt < now || paidUntil) {
       const endsAt =

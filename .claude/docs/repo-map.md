@@ -73,3 +73,4 @@ Do not import from another project's internals; import from its entry point.
 | Change admin UI | `libs/<domain>/editor` |
 | Tenant-specific look | `apps/<tenant>` theme / Builder override |
 | Payment/email/analytics integration | `libs/payment`, `libs/mail`, `libs/google-analytics` — see [external-services.md](external-services.md) |
+| Newsletter lists & subscribers | `libs/membership/{api,editor}/src/lib/newsletter`, `libs/membership/website/src/lib/newsletter-list` — inside membership, not a separate lib, because eligibility reuses `isActiveSubscription` and `MemberContext` auto-subscribes |

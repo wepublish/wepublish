@@ -136,4 +136,25 @@ describe('SettingList', () => {
       ).toBeInTheDocument();
     });
   });
+
+  test('renders the newsletter double opt-in setting', async () => {
+    render(
+      <AuthContext.Provider value={sessionWithPermissions}>
+        <MockedProvider
+          mocks={[settingsListMock, updateSettingMock, paywallListMock]}
+          addTypename={false}
+        >
+          <BrowserRouter>
+            <SettingList />
+          </BrowserRouter>
+        </MockedProvider>
+      </AuthContext.Provider>
+    );
+
+    await actWait();
+
+    expect(
+      screen.getByText('settingList.newsletterDoubleOptIn')
+    ).toBeInTheDocument();
+  });
 });

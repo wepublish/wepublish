@@ -215,6 +215,11 @@ function SettingList() {
       name: SettingName.SubscriptionUpgradeBillsFullDifference,
       label: 'settingList.subscriptionUpgradeModel',
     },
+    [SettingName.NewsletterDoubleOptIn]: {
+      value: false,
+      name: SettingName.NewsletterDoubleOptIn,
+      label: 'settingList.newsletterDoubleOptIn',
+    },
   } as Record<SettingName, SettingWithLabel>);
 
   useEffect(() => {
@@ -849,6 +854,43 @@ function SettingList() {
                                   SettingName
                                     .SubscriptionUpgradeBillsFullDifference
                                 ],
+                                value: checked,
+                              })
+                            }
+                          />
+                        </Form.Group>
+                      </Form.Stack>
+                    </Panel>
+                  </Col>
+
+                  <Col xs={24}>
+                    <Panel
+                      bordered
+                      header={t('settingList.newsletter')}
+                    >
+                      <Form.Stack fluid>
+                        <Form.Group
+                          controlId={SettingName.NewsletterDoubleOptIn}
+                        >
+                          <Form.Label>
+                            {t(
+                              settings[SettingName.NewsletterDoubleOptIn].label
+                            )}
+                            <SettingInfo
+                              text={t(
+                                'settingList.warnings.newsletterDoubleOptIn'
+                              )}
+                            />
+                          </Form.Label>
+
+                          <Toggle
+                            disabled={isDisabled}
+                            checked={
+                              settings[SettingName.NewsletterDoubleOptIn].value
+                            }
+                            onChange={checked =>
+                              setSetting({
+                                ...settings[SettingName.NewsletterDoubleOptIn],
                                 value: checked,
                               })
                             }

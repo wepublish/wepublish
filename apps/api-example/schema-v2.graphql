@@ -2621,11 +2621,21 @@ type Mutation {
   """Subscribes a contact to a Mailchimp list."""
   addMailchimpContact(input: MailchimpContactInput!): MailchimpSubscribeResult!
 
+  """
+  Adds a user to a newsletter list. Re-adding a user who unsubscribed requires force.
+  """
+  addNewsletterSubscriber(force: Boolean! = false, listId: String!, userId: String!): NewsletterSubscriber!
+
   """Adds a new comment made by you."""
   addUserComment(challenge: ChallengeInput, guestUsername: String, itemID: String!, itemType: CommentItemType!, parentID: String, text: RichText!, title: String): Comment!
 
   """Approves a comment"""
   approveComment(id: String!): Comment!
+
+  """
+  Adds every user with a qualifying subscription to a subscriber-only newsletter list and returns how many were added.
+  """
+  backfillNewsletterList(id: String!): Int!
 
   """
   Stop a running send job. Unsent recipients stay open and can be continued.
@@ -2655,6 +2665,11 @@ type Mutation {
 
   """Confirms a pending email change for the logged-in user."""
   confirmEmailChange(newEmail: String!): SensitiveDataUser!
+
+  """
+  Confirms the newsletter double opt-in with the token from the confirmation mail.
+  """
+  confirmNewsletterSubscription(token: String!): [MyNewsletterList!]!
 
   """
   Confirms a notification for the whole instance, recording who confirmed it. Requires authentication.
@@ -2724,6 +2739,9 @@ type Mutation {
 
   """Creates a new navigation."""
   createNavigation(key: String!, links: [NavigationLinkInput!]!, name: String!): Navigation!
+
+  """Creates a newsletter list."""
+  createNewsletterList(active: Boolean, anyMemberPlan: Boolean, autoSubscribe: Boolean, description: String, lockedDisplay: NewsletterListLockedDisplay, lockedLinkUrl: String, lockedText: String, memberPlanIds: [String!], name: String!, requiresSubscription: Boolean, slug: String!): NewsletterList!
 
   """Creates an page."""
   createPage(blocks: [BlockContentInput!]!, description: String, hidden: Boolean!, imageID: String, properties: [PropertyInput!]!, seoDescription: String, seoTitle: String, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
@@ -2872,6 +2890,9 @@ type Mutation {
 
   """Deletes an existing navigation."""
   deleteNavigation(id: String!): Navigation!
+
+  """Deletes a newsletter list including all of its subscribers."""
+  deleteNewsletterList(id: String!): NewsletterList!
 
   """Deletes an page."""
   deletePage(id: String!): String!
@@ -3035,6 +3056,9 @@ type Mutation {
   """
   reloadProviders: Boolean!
 
+  """Removes a user from a newsletter list. The opt-out is kept."""
+  removeNewsletterSubscriber(listId: String!, userId: String!): NewsletterSubscriber!
+
   """Renews a subscription."""
   renewSubscription(id: String!): PublicSubscription!
 
@@ -3095,6 +3119,9 @@ type Mutation {
   """
   sendWebsiteLogin(email: String!): String!
 
+  """Subscribes the current user to a newsletter list."""
+  subscribeToNewsletterList(listId: String!): MyNewsletterList!
+
   """
   Ask the mail provider for the current delivery state of mails that are still open. Complements the provider webhook, which is not reachable in local development.
   """
@@ -3111,6 +3138,9 @@ type Mutation {
 
   """Unpublishes all revisions of an page."""
   unpublishPage(id: String!): Page!
+
+  """Unsubscribes the current user from a newsletter list."""
+  unsubscribeFromNewsletterList(listId: String!): MyNewsletterList!
 
   """Updates an existing AI provider setting."""
   updateAISetting(apiKey: String, id: String, name: String, systemPrompt: String, webhookEndpointSecret: String): SettingAIProvider!
@@ -3178,6 +3208,9 @@ type Mutation {
 
   """Updates an existing navigation."""
   updateNavigation(id: String!, key: String!, links: [NavigationLinkInput!]!, name: String!): Navigation!
+
+  """Updates a newsletter list."""
+  updateNewsletterList(active: Boolean, anyMemberPlan: Boolean, autoSubscribe: Boolean, description: String, id: String!, lockedDisplay: NewsletterListLockedDisplay, lockedLinkUrl: String, lockedText: String, memberPlanIds: [String!], name: String, requiresSubscription: Boolean, slug: String): NewsletterList!
 
   """Updates an page."""
   updatePage(blocks: [BlockContentInput!]!, description: String, hidden: Boolean!, id: String!, imageID: String, properties: [PropertyInput!]!, seoDescription: String, seoTitle: String, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
@@ -3275,6 +3308,16 @@ type Mutation {
   voteOnPoll(answerId: String!): PollVote
 }
 
+type MyNewsletterList {
+  description: String
+  id: String!
+  lockedLinkUrl: String
+  lockedText: String
+  name: String!
+  slug: String!
+  status: NewsletterListUserStatus!
+}
+
 type Navigation {
   createdAt: DateTime!
   id: String!
@@ -3296,6 +3339,72 @@ enum NavigationLinkType {
   Article
   External
   Page
+}
+
+type NewsletterList {
+  active: Boolean!
+  anyMemberPlan: Boolean!
+  autoSubscribe: Boolean!
+  createdAt: DateTime!
+  description: String
+  id: String!
+  lockedDisplay: NewsletterListLockedDisplay!
+  lockedLinkUrl: String
+  lockedText: String
+  memberPlans: [MemberPlan!]!
+  modifiedAt: DateTime!
+  name: String!
+  requiresSubscription: Boolean!
+  slug: String!
+}
+
+enum NewsletterListLockedDisplay {
+  hidden
+  teaser
+}
+
+enum NewsletterListUserStatus {
+  LOCKED
+  NOT_SUBSCRIBED
+  PAUSED
+  PENDING
+  SUBSCRIBED
+}
+
+type NewsletterSubscriber {
+  confirmedAt: DateTime
+  createdAt: DateTime!
+  id: String!
+  modifiedAt: DateTime!
+  receiving: Boolean!
+  source: NewsletterSubscriberSource!
+  status: NewsletterSubscriberStatus!
+  subscribedAt: DateTime!
+  unsubscribedAt: DateTime
+  user: SensitiveDataUser!
+}
+
+type NewsletterSubscriberCounts {
+  pending: Int!
+  subscribed: Int!
+  unsubscribed: Int!
+}
+
+input NewsletterSubscriberFilter {
+  q: String
+  status: NewsletterSubscriberStatus
+}
+
+enum NewsletterSubscriberSource {
+  auto
+  editor
+  self
+}
+
+enum NewsletterSubscriberStatus {
+  PENDING
+  SUBSCRIBED
+  UNSUBSCRIBED
 }
 
 type NotificationConfirmation {
@@ -3568,6 +3677,12 @@ type PaginatedMailSendRecipient {
 
 type PaginatedMemberPlans {
   nodes: [MemberPlan!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type PaginatedNewsletterSubscribers {
+  nodes: [NewsletterSubscriber!]!
   pageInfo: PageInfo!
   totalCount: Int!
 }
@@ -4484,6 +4599,11 @@ type Query {
   """Returns a paginated list of memberplans based on the filters given."""
   memberPlans(cursorId: String, filter: MemberPlanFilter, order: SortOrder = Ascending, skip: Int = 0, sort: MemberPlanSort = ModifiedAt, take: Int = 10): PaginatedMemberPlans!
 
+  """
+  Returns the newsletter lists the current user can see, with their subscription status.
+  """
+  myNewsletterLists: [MyNewsletterList!]!
+
   """Returns a navigation by id."""
   navigation(id: String!): Navigation!
 
@@ -4495,6 +4615,23 @@ type Query {
 
   "\n      Returns all new subscribers in a given timeframe.\n      Includes already deactivated ones.\n    "
   newSubscribers(end: DateTime, start: DateTime!): [DashboardSubscription!]!
+
+  """Returns a newsletter list by id."""
+  newsletterList(id: String!): NewsletterList!
+
+  """Returns all newsletter lists."""
+  newsletterLists: [NewsletterList!]!
+
+  """Returns the entry of a user on a newsletter list, if there is one."""
+  newsletterSubscriber(listId: String!, userId: String!): NewsletterSubscriber
+
+  """
+  Returns how many subscribers of a newsletter list are subscribed, pending or unsubscribed.
+  """
+  newsletterSubscriberCounts(listId: String!): NewsletterSubscriberCounts!
+
+  """Returns a paginated list of the subscribers of a newsletter list."""
+  newsletterSubscribers(filter: NewsletterSubscriberFilter, listId: String!, skip: Int! = 0, take: Int! = 25): PaginatedNewsletterSubscribers!
 
   """
   Returns the instance-wide notification confirmations. Requires authentication.
@@ -4936,6 +5073,7 @@ enum SettingName {
   MAKE_NEW_SUBSCRIBERS_API_PUBLIC
   MAKE_RENEWING_SUBSCRIBERS_API_PUBLIC
   MAKE_REVENUE_API_PUBLIC
+  NEWSLETTER_DOUBLE_OPT_IN
   NEW_ARTICLE_PAYWALL
   NEW_ARTICLE_PEERING
   PEERING_TIMEOUT_MS
@@ -5704,6 +5842,7 @@ enum UserEvent {
   ACCOUNT_CREATION
   EMAIL_CHANGE
   LOGIN_LINK
+  NEWSLETTER_CONFIRMATION
   PASSWORD_RESET
   TEST_MAIL
 }
