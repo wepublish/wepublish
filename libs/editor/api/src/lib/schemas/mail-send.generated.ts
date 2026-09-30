@@ -5,30 +5,32 @@ import {RichtextJSONDocument} from '@wepublish/richtext';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
-export type FullMailSendJobFragment = { __typename?: 'MailSendJobModel', id: string, createdAt: string, modifiedAt: string, status: Types.MailSendJobState, audience: Types.MailSendAudience, totalCount: number, sentCount: number, failedCount: number, sendingCount: number, resumeCount: number, startedAt?: string | null, finishedAt?: string | null, heartbeatAt?: string | null, error?: string | null, mailTemplate?: { __typename?: 'MailLogTemplate', id: string, name: string } | null };
+export type FullMailSendJobFragment = { __typename?: 'MailSendJobModel', id: string, createdAt: string, modifiedAt: string, status: Types.MailSendJobState, audience: Types.MailSendAudience, channel: Types.MailChannel, totalCount: number, sentCount: number, failedCount: number, sendingCount: number, resumeCount: number, startedAt?: string | null, finishedAt?: string | null, heartbeatAt?: string | null, error?: string | null, mailTemplate?: { __typename?: 'MailLogTemplate', id: string, name: string } | null };
 
 export type MailSendRecipientPreviewQueryVariables = Types.Exact<{
   audience: Types.MailAudienceInput;
+  channel?: Types.InputMaybe<Types.MailChannel>;
 }>;
 
 
-export type MailSendRecipientPreviewQuery = { __typename?: 'Query', mailSendRecipientPreview: { __typename?: 'MailSendRecipientPreview', count: number, userCount: number, allowsSubscriptionTemplates: boolean } };
+export type MailSendRecipientPreviewQuery = { __typename?: 'Query', mailSendRecipientPreview: { __typename?: 'MailSendRecipientPreview', count: number, userCount: number, withoutAddressCount: number, allowsSubscriptionTemplates: boolean } };
 
 export type MailSendRecipientsQueryVariables = Types.Exact<{
   audience: Types.MailAudienceInput;
+  channel?: Types.InputMaybe<Types.MailChannel>;
   skip?: Types.InputMaybe<Types.Scalars['Int']>;
   take?: Types.InputMaybe<Types.Scalars['Int']>;
 }>;
 
 
-export type MailSendRecipientsQuery = { __typename?: 'Query', mailSendRecipients: { __typename?: 'PaginatedMailSendRecipient', totalCount: number, nodes: Array<{ __typename?: 'MailSendRecipientModel', id: string, userId: string, email: string, name: string, firstName?: string | null, subscriptionId?: string | null, memberPlanName?: string | null }>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean } } };
+export type MailSendRecipientsQuery = { __typename?: 'Query', mailSendRecipients: { __typename?: 'PaginatedMailSendRecipient', totalCount: number, nodes: Array<{ __typename?: 'MailSendRecipientModel', id: string, userId: string, email: string, name: string, firstName?: string | null, subscriptionId?: string | null, memberPlanName?: string | null, hasAddress: boolean }>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type MailSendPreviewQueryVariables = Types.Exact<{
   input: Types.MailSendPreviewInput;
 }>;
 
 
-export type MailSendPreviewQuery = { __typename?: 'Query', mailSendPreview: { __typename?: 'MailSendPreviewModel', subject: string, html: string, recipient?: { __typename?: 'MailSendRecipientModel', id: string, email: string, name: string, firstName?: string | null, memberPlanName?: string | null } | null } };
+export type MailSendPreviewQuery = { __typename?: 'Query', mailSendPreview: { __typename?: 'MailSendPreviewModel', subject: string, html: string, pdf?: string | null, recipient?: { __typename?: 'MailSendRecipientModel', id: string, email: string, name: string, firstName?: string | null, memberPlanName?: string | null } | null } };
 
 export type MailTemplateMissingPlaceholdersQueryVariables = Types.Exact<{
   templateId: Types.Scalars['String'];
@@ -118,6 +120,7 @@ export const FullMailSendJobFragmentDoc = gql`
   modifiedAt
   status
   audience
+  channel
   totalCount
   sentCount
   failedCount
@@ -134,10 +137,11 @@ export const FullMailSendJobFragmentDoc = gql`
 }
     `;
 export const MailSendRecipientPreviewDocument = gql`
-    query MailSendRecipientPreview($audience: MailAudienceInput!) {
-  mailSendRecipientPreview(audience: $audience) {
+    query MailSendRecipientPreview($audience: MailAudienceInput!, $channel: MailChannel) {
+  mailSendRecipientPreview(audience: $audience, channel: $channel) {
     count
     userCount
+    withoutAddressCount
     allowsSubscriptionTemplates
   }
 }
@@ -156,6 +160,7 @@ export const MailSendRecipientPreviewDocument = gql`
  * const { data, loading, error } = useMailSendRecipientPreviewQuery({
  *   variables: {
  *      audience: // value for 'audience'
+ *      channel: // value for 'channel'
  *   },
  * });
  */
@@ -171,8 +176,13 @@ export type MailSendRecipientPreviewQueryHookResult = ReturnType<typeof useMailS
 export type MailSendRecipientPreviewLazyQueryHookResult = ReturnType<typeof useMailSendRecipientPreviewLazyQuery>;
 export type MailSendRecipientPreviewQueryResult = Apollo.QueryResult<MailSendRecipientPreviewQuery, MailSendRecipientPreviewQueryVariables>;
 export const MailSendRecipientsDocument = gql`
-    query MailSendRecipients($audience: MailAudienceInput!, $skip: Int, $take: Int) {
-  mailSendRecipients(audience: $audience, skip: $skip, take: $take) {
+    query MailSendRecipients($audience: MailAudienceInput!, $channel: MailChannel, $skip: Int, $take: Int) {
+  mailSendRecipients(
+    audience: $audience
+    channel: $channel
+    skip: $skip
+    take: $take
+  ) {
     nodes {
       id
       userId
@@ -181,6 +191,7 @@ export const MailSendRecipientsDocument = gql`
       firstName
       subscriptionId
       memberPlanName
+      hasAddress
     }
     totalCount
     pageInfo {
@@ -204,6 +215,7 @@ export const MailSendRecipientsDocument = gql`
  * const { data, loading, error } = useMailSendRecipientsQuery({
  *   variables: {
  *      audience: // value for 'audience'
+ *      channel: // value for 'channel'
  *      skip: // value for 'skip'
  *      take: // value for 'take'
  *   },
@@ -225,6 +237,7 @@ export const MailSendPreviewDocument = gql`
   mailSendPreview(input: $input) {
     subject
     html
+    pdf
     recipient {
       id
       email

@@ -42,6 +42,7 @@ export * from './settings.generated';
 export * from './settings.integrations.ai.generated';
 export * from './settings.integrations.analytics.generated';
 export * from './settings.integrations.challenge.generated';
+export * from './settings.integrations.letter.generated';
 export * from './settings.integrations.mail.generated';
 export * from './settings.integrations.payment.generated';
 export * from './settings.integrations.reload.generated';

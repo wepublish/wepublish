@@ -26,6 +26,10 @@ export * from './lib/integrations/mail-provider-settings.model';
 export * from './lib/integrations/mail-provider-settings.service';
 export * from './lib/integrations/mail-provider-settings.resolver';
 export * from './lib/integrations/mail-provider-settings-dataloader.service';
+export * from './lib/integrations/letter-provider-settings.model';
+export * from './lib/integrations/letter-provider-settings.service';
+export * from './lib/integrations/letter-provider-settings.resolver';
+export * from './lib/integrations/letter-provider-settings-dataloader.service';
 export * from './lib/integrations/secrets-crypto';
 
 export * from './lib/integrations/sync-provider-settings.model';
