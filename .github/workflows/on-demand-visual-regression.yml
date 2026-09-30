@@ -1,0 +1,173 @@
+name: Visual regression
+
+on:
+  workflow_dispatch:
+    inputs:
+      media:
+        description: 'eg. "hauptstadt" or "hauptstadt, tsri", "all"'
+        required: true
+        default: 'all'
+        type: string
+      baseline:
+        description: 'Baseline branch/tag/commit hash.'
+        required: true
+        default: 'master'
+        type: string
+      current:
+        description: 'Current branch/tag/commit hash'
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: visual-regression
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    name: Resolve media and commits
+    runs-on: ubuntu-latest
+    outputs:
+      media: ${{ steps.media.outputs.media }}
+      baseline: ${{ steps.commits.outputs.baseline }}
+      current: ${{ steps.commits.outputs.current }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Resolve media
+        id: media
+        env:
+          MEDIA: ${{ inputs.media }}
+        run: |
+          cd deployment/visual-regression
+          AVAILABLE=$(find . -maxdepth 1 -name '*-scripts' -printf '%f\n' \
+            | sed 's/-scripts$//' | grep -v '^shared$' | sort)
+          echo "Available media:"
+          echo "$AVAILABLE" | sed 's/^/  - /'
+
+          if [ "$(printf '%s' "$MEDIA" | tr -d '[:space:]')" = "all" ]; then
+            SELECTED="$AVAILABLE"
+          else
+            SELECTED=$(printf '%s' "$MEDIA" | tr ',' '\n' | tr -d ' \t\r' | { grep -v '^$' || true; } | sort -u)
+          fi
+
+          if [ -z "$SELECTED" ]; then
+            echo "::error::No medium selected."
+            exit 1
+          fi
+
+          while read -r MEDIUM; do
+            if ! printf '%s\n' "$AVAILABLE" | grep -qxF "$MEDIUM"; then
+              echo "::error::Unknown medium '${MEDIUM}'. Expected a folder 'deployment/visual-regression/${MEDIUM}-scripts'."
+              exit 1
+            fi
+          done <<< "$SELECTED"
+
+          echo "Selected: $(printf '%s' "$SELECTED" | tr '\n' ' ')"
+          echo "media=$(printf '%s\n' "$SELECTED" | jq -R . | jq -cs .)" >> "$GITHUB_OUTPUT"
+
+      - name: Resolve commits
+        id: commits
+        env:
+          BASELINE: ${{ inputs.baseline }}
+          CURRENT: ${{ inputs.current }}
+          DEFAULT_CURRENT: ${{ github.sha }}
+        run: |
+          resolve() {
+            REF="$(printf '%s' "$1" | tr -d '[:space:]')"
+            for CANDIDATE in "refs/remotes/origin/${REF}" "$REF"; do
+              if SHA=$(git rev-parse --verify --quiet "${CANDIDATE}^{commit}"); then
+                printf '%s' "$SHA"
+                return 0
+              fi
+            done
+            if git fetch --no-tags origin "$REF" >/dev/null 2>&1 \
+              && SHA=$(git rev-parse --verify --quiet 'FETCH_HEAD^{commit}'); then
+              printf '%s' "$SHA"
+              return 0
+            fi
+            echo "::error::Could not resolve '${1}' to a commit." >&2
+            return 1
+          }
+
+          BASELINE_SHA=$(resolve "$BASELINE")
+          CURRENT_SHA=$(resolve "${CURRENT:-$DEFAULT_CURRENT}")
+
+          if [ "$BASELINE_SHA" = "$CURRENT_SHA" ]; then
+            echo "::error::Baseline and current resolve to the same commit (${BASELINE_SHA})"
+            exit 1
+          fi
+
+          echo "baseline: $BASELINE_SHA ($(git log -1 --format='%s' "$BASELINE_SHA"))"
+          echo "current:  $CURRENT_SHA ($(git log -1 --format='%s' "$CURRENT_SHA"))"
+          echo "baseline=$BASELINE_SHA" >> "$GITHUB_OUTPUT"
+          echo "current=$CURRENT_SHA" >> "$GITHUB_OUTPUT"
+
+  visual-regression:
+    name: ${{ matrix.medium }}
+    needs: prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    strategy:
+      fail-fast: false
+      matrix:
+        medium: ${{ fromJson(needs.prepare.outputs.media) }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run visual regression
+        working-directory: deployment/visual-regression
+        env:
+          MEDIUM: ${{ matrix.medium }}
+          BASELINE_COMMIT_HASH: ${{ needs.prepare.outputs.baseline }}
+          CURRENT_COMMIT_HASH: ${{ needs.prepare.outputs.current }}
+          USERNAME: # todo
+          PASSWORD: # todo
+          JWT_PUBLIC_KEY: |
+            -----BEGIN PUBLIC KEY-----
+            MCowBQYDK2VwAyEA93mjXbSful1W9nAVHuYHdRfgKEF+pvkwm4/5P27J4RA=
+            -----END PUBLIC KEY-----
+          JWT_PRIVATE_KEY: |
+            -----BEGIN PRIVATE KEY-----
+            MC4CAQAwBQYDK2VwBCIEIJWbdZ23hpurtFiEpnulSfJ1U4TwbkiDWmbGZSDVx3nR
+            -----END PRIVATE KEY-----
+          NODE_OPTIONS: '--max-old-space-size=4096'
+        run: |
+          if [ -z "$USERNAME" ] || [ -z "$PASSWORD" ]; then
+            echo "::error::FILES_WEPUBLISH_USERNAME / FILES_WEPUBLISH_PASSWORD are not configured. They are needed to download the ${MEDIUM} database dump from files.wepublish.cloud."
+            exit 1
+          fi
+          export JWT_PUBLIC_KEY="${JWT_PUBLIC_KEY:-$DEFAULT_JWT_PUBLIC_KEY}"
+          export JWT_PRIVATE_KEY="${JWT_PRIVATE_KEY:-$DEFAULT_JWT_PRIVATE_KEY}"
+          node test.js
+
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-regression-${{ matrix.medium }}
+          path: deployment/visual-regression/${{ matrix.medium }}/artifacts
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Upload logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-regression-${{ matrix.medium }}-logs
+          path: deployment/visual-regression/${{ matrix.medium }}/logs
+          if-no-files-found: warn
+          retention-days: 14
