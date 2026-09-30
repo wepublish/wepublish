@@ -98,7 +98,6 @@ export const SEO_CHECKLIST: SeoChecklistSection[] = [
       { id: 'internal-links' },
       { id: 'stable-slugs' },
       { id: 'author-pages', internalLink: '/authors' },
-      { id: 'update-evergreen' },
     ],
   },
   {

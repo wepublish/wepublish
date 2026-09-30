@@ -3344,10 +3344,6 @@
           "description": "Autorenseiten mit Name, Bild und kurzer Biografie zeigen, wer hinter Ihrem Journalismus steht, und schaffen Vertrauen.",
           "action": "Autor:innen bearbeiten"
         },
-        "update-evergreen": {
-          "title": "Zeitlose Inhalte aktualisieren",
-          "description": "Aktualisieren Sie Erklärstücke und Ratgeber regelmässig, statt fast gleiche Artikel neu zu publizieren. Weisen Sie im Text auf Updates hin."
-        },
         "share-images": {
           "title": "Für jeden Artikel ein Teilen-Bild setzen",
           "description": "Wählen Sie ein aussagekräftiges Bild im Querformat (mindestens 1200 px breit). Es wird in sozialen Medien, Messengern und in Google Discover angezeigt."

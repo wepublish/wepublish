@@ -3290,10 +3290,6 @@
           "description": "Des pages auteur avec nom, photo et courte biographie montrent qui fait votre journalisme et renforcent la confiance.",
           "action": "Modifier les auteur·e·s"
         },
-        "update-evergreen": {
-          "title": "Mettre à jour les contenus intemporels",
-          "description": "Mettez régulièrement à jour les articles explicatifs et guides plutôt que de publier des quasi-doublons. Signalez les mises à jour dans le texte."
-        },
         "share-images": {
           "title": "Définir une image de partage pour chaque article",
           "description": "Choisissez une image parlante au format paysage (au moins 1200 px de large). Elle s'affiche sur les réseaux sociaux, les messageries et Google Discover."

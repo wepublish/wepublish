@@ -3383,10 +3383,6 @@
           "description": "Author pages with name, image and a short bio show who is behind your journalism and build trust.",
           "action": "Edit authors"
         },
-        "update-evergreen": {
-          "title": "Update evergreen content",
-          "description": "Update explainers and guides regularly instead of publishing near-duplicates. Mention updates in the text."
-        },
         "share-images": {
           "title": "Set a share image for every article",
           "description": "Choose a meaningful image in landscape format (at least 1200 px wide). It is shown on social media, messengers and in Google Discover."
