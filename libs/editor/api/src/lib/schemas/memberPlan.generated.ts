@@ -14,7 +14,7 @@ export type FullAvailablePaymentMethodFragment = { __typename?: 'AvailablePaymen
     & FullPaymentMethodFragment
   )> };
 
-export type FullMemberPlanFragment = { __typename?: 'MemberPlan', id: string, name: string, description?: RichtextJSONDocument | null, shortDescription?: RichtextJSONDocument | null, slug: string, active: boolean, productType: Types.ProductType, tags?: Array<string> | null, externalReward?: string | null, currency: Types.Currency, extendable: boolean, maxCount?: number | null, migrateToTargetPaymentMethodID?: string | null, defaultPaymentPeriodicity?: Types.PaymentPeriodicity | null, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, periodicityPricing: Array<{ __typename?: 'PeriodicityPrice', periodicity: Types.PaymentPeriodicity, label?: string | null, amountMin?: number | null, amountTarget?: number | null, amountMax?: number | null }>, image?: (
+export type FullMemberPlanFragment = { __typename?: 'MemberPlan', id: string, createdAt: string, modifiedAt: string, name: string, description?: RichtextJSONDocument | null, shortDescription?: RichtextJSONDocument | null, slug: string, active: boolean, productType: Types.ProductType, tags?: Array<string> | null, externalReward?: string | null, currency: Types.Currency, extendable: boolean, maxCount?: number | null, migrateToTargetPaymentMethodID?: string | null, defaultPaymentPeriodicity?: Types.PaymentPeriodicity | null, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, periodicityPricing: Array<{ __typename?: 'PeriodicityPrice', periodicity: Types.PaymentPeriodicity, label?: string | null, amountMin?: number | null, amountTarget?: number | null, amountMax?: number | null }>, image?: (
     { __typename?: 'Image' }
     & FullImageFragment
   ) | null, availablePaymentMethods: Array<(
@@ -126,6 +126,8 @@ export const FullAvailablePaymentMethodFragmentDoc = gql`
 export const FullMemberPlanFragmentDoc = gql`
     fragment FullMemberPlan on MemberPlan {
   id
+  createdAt
+  modifiedAt
   name
   description
   shortDescription

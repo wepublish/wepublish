@@ -2648,6 +2648,7 @@ type MemberPlan implements HasImage {
   availablePaymentMethods: [AvailablePaymentMethod!]!
   confirmationPage: Page
   confirmationPageId: String
+  createdAt: DateTime!
   currency: Currency!
   defaultPaymentPeriodicity: PaymentPeriodicity
   description: RichText
@@ -2666,6 +2667,7 @@ type MemberPlan implements HasImage {
   maxCount: Int
   migrateToTargetPaymentMethod: PaymentMethod
   migrateToTargetPaymentMethodID: String
+  modifiedAt: DateTime!
   name: String!
   periodicityPricing: [PeriodicityPrice!]!
   productType: ProductType!
