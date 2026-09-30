@@ -112,7 +112,7 @@ function ProfilePage({ className, ...props }: ProfilePageProps) {
           });
         });
     }
-  }, [router.query.confirmEmailChange, confirmEmailChange, router]);
+  }, [router.query.confirmEmailChange, confirmEmailChange, router, client]);
 
   const { data: subscriptonData } = useSubscriptionsQuery({
     fetchPolicy: 'cache-only',

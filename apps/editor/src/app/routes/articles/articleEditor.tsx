@@ -58,6 +58,7 @@ import { useTranslation } from 'react-i18next';
 import {
   MdCloudUpload,
   MdDeleteOutline,
+  MdEdit,
   MdHistory,
   MdIntegrationInstructions,
   MdKeyboardBackspace,
@@ -76,10 +77,31 @@ import {
   toaster,
 } from 'rsuite';
 
-import { openPreviewWindow } from '../../openPreview';
+import {
+  PreviewControls,
+  PreviewDevice,
+  PreviewFrame,
+} from '../../previewFrame';
 
 const IconButtonMarginTop = styled(RIconButton)`
   margin-top: 4px;
+`;
+
+const PreviewControlsMarginTop = styled(PreviewControls)`
+  margin-top: 4px;
+`;
+
+const PreviewActions = styled.div`
+  display: flex;
+  gap: 10px;
+`;
+
+const EditorContent = styled.div`
+  width: 100%;
+
+  &[hidden] {
+    display: none;
+  }
 `;
 
 const IconButton = styled(RIconButton)`
@@ -173,6 +195,8 @@ function ArticleEditor() {
   const [restoringRevisionId, setRestoringRevisionId] = useState<string | null>(
     null
   );
+  const [isPreviewOpen, setPreviewOpen] = useState(false);
+  const [previewDevice, setPreviewDevice] = useState<PreviewDevice>('desktop');
 
   const [publishedAt, setPublishedAt] = useState<Date>();
 
@@ -332,6 +356,10 @@ function ArticleEditor() {
   const [hasChanged, setChanged] = useState(false);
 
   const unsavedChangesDialog = useUnsavedChangesDialog(hasChanged);
+
+  const previewUrl = articleData?.article?.previewUrl;
+  const isPreviewDisabled = hasChanged || !id || !canPreview || !previewUrl;
+  const showPreview = isPreviewOpen && !isPreviewDisabled;
 
   const isAuthorized = useAuthorisation('CAN_CREATE_ARTICLE');
 
@@ -737,6 +765,7 @@ function ArticleEditor() {
           <Tag stateColor={stateColor}>{tagTitle}</Tag>
         </Legend>
         <EditorTemplate
+          maxWidth={showPreview ? '80vw' : undefined}
           navigationChildren={
             <NavigationBar
               leftChildren={
@@ -862,61 +891,67 @@ function ArticleEditor() {
               }
               rightChildren={
                 <PermissionControl qualifyingPermissions={[CanPreview.id]}>
-                  <IconButtonMarginTop
-                    disabled={hasChanged || !id || !canPreview}
-                    size="lg"
-                    icon={<MdRemoveRedEye />}
-                    onClick={() => {
-                      const result = openPreviewWindow(
-                        articleData!.article.previewUrl,
-                        {
-                          createToken: async () => {
-                            const { data: jwtData } = await createJWT();
+                  <PreviewActions>
+                    {showPreview && previewUrl && (
+                      <PreviewControlsMarginTop
+                        device={previewDevice}
+                        onDeviceChange={setPreviewDevice}
+                        previewUrl={previewUrl}
+                      />
+                    )}
 
-                            return jwtData?.createJWTForWebsiteLogin?.token;
-                          },
-                          onSilence: () =>
-                            toaster.push(
-                              <Message
-                                type="warning"
-                                showIcon
-                                closable
-                              >
-                                {t('previewHandshake.notResponding')}
-                              </Message>
-                            ),
-                        }
-                      );
-
-                      if (result === 'popup-blocked') {
-                        toaster.push(
-                          <Message
-                            type="warning"
-                            showIcon
-                            closable
-                          >
-                            {t('previewHandshake.popupBlocked')}
-                          </Message>
-                        );
-                      }
-                    }}
-                  >
-                    {t('articleEditor.overview.preview')}
-                  </IconButtonMarginTop>
+                    <IconButtonMarginTop
+                      disabled={isPreviewDisabled}
+                      size="lg"
+                      icon={showPreview ? <MdEdit /> : <MdRemoveRedEye />}
+                      onClick={() => setPreviewOpen(!showPreview)}
+                    >
+                      {showPreview ?
+                        t('preview.backToEditor')
+                      : t('articleEditor.overview.preview')}
+                    </IconButtonMarginTop>
+                  </PreviewActions>
                 </PermissionControl>
               }
             />
           }
         >
-          <DocumentUrlProvider documentUrl={articleData?.article?.url}>
-            <BlockList
-              itemId={articleID}
-              value={blocks}
-              onChange={handleChange}
-              disabled={isLoading || isDisabled || !isAuthorized}
-              blockMap={BlockMap}
+          {showPreview && previewUrl && (
+            <PreviewFrame
+              key={articleData?.article?.latest.id}
+              previewUrl={previewUrl}
+              device={previewDevice}
+              title={t('articleEditor.overview.preview')}
+              createToken={async () => {
+                const { data: jwtData } = await createJWT();
+
+                return jwtData?.createJWTForWebsiteLogin?.token;
+              }}
+              onSilence={() =>
+                toaster.push(
+                  <Message
+                    type="warning"
+                    showIcon
+                    closable
+                  >
+                    {t('previewHandshake.notResponding')}
+                  </Message>
+                )
+              }
             />
-          </DocumentUrlProvider>
+          )}
+
+          <EditorContent hidden={showPreview}>
+            <DocumentUrlProvider documentUrl={articleData?.article?.url}>
+              <BlockList
+                itemId={articleID}
+                value={blocks}
+                onChange={handleChange}
+                disabled={isLoading || isDisabled || !isAuthorized}
+                blockMap={BlockMap}
+              />
+            </DocumentUrlProvider>
+          </EditorContent>
         </EditorTemplate>
       </FieldSet>
 

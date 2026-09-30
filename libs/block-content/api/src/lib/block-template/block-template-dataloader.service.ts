@@ -6,7 +6,9 @@ import DataLoader from 'dataloader';
 @Injectable({
   scope: Scope.REQUEST,
 })
-export class BlockTemplateDataloaderService implements Primeable<BlockTemplate> {
+export class BlockTemplateDataloaderService
+  implements Primeable<BlockTemplate>
+{
   private dataloader = new DataLoader<string, BlockTemplate | null>(
     async (ids: readonly string[]) =>
       createOptionalsArray(
