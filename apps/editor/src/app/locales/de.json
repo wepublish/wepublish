@@ -1290,6 +1290,10 @@
     },
     "memberPlanList": {
       "action": "Aktionen",
+      "created": "Erstellt",
+      "createdAt": "{{createdAt, ccc PP p}}",
+      "modified": "Zuletzt bearbeitet",
+      "modifiedAt": "{{modifiedAt, ccc PP p}}",
       "createNew": "Neuer Memberplan",
       "deleteModalTitle": "Memberplan löschen",
       "editFlow": "Kommunikationsfluss bearbeiten",
