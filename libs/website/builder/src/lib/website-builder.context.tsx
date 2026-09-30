@@ -89,6 +89,7 @@ import {
 import {
   BuilderInvoiceListItemProps,
   BuilderInvoiceListProps,
+  BuilderNewsletterListProps,
   BuilderMemberPlanItemProps,
   BuilderGoodiePickerProps,
   BuilderMemberPlanOfferPickerProps,
@@ -180,6 +181,7 @@ export type WebsiteBuilderProps = {
   PersonalDataForm: ComponentType<BuilderPersonalDataFormProps>;
   UserForm: ComponentType<BuilderUserFormProps>;
   SubscriptionList: ComponentType<BuilderSubscriptionListProps>;
+  NewsletterList: ComponentType<BuilderNewsletterListProps>;
   SubscriptionListItem: ComponentType<BuilderSubscriptionListItemProps>;
   InvoiceList: ComponentType<BuilderInvoiceListProps>;
   InvoiceListItem: ComponentType<BuilderInvoiceListItemProps>;
@@ -293,6 +295,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   Navbar: NoComponent,
   Footer: NoComponent,
   SubscriptionList: NoComponent,
+  NewsletterList: NoComponent,
   SubscriptionListItem: NoComponent,
   InvoiceList: NoComponent,
   InvoiceListItem: NoComponent,

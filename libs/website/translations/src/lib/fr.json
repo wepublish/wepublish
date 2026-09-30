@@ -95,7 +95,16 @@
   "newsletter": {
     "back": "Retour",
     "next": "Suivant",
-    "submit": "Terminer"
+    "submit": "Terminer",
+    "title": "Newsletter",
+    "pendingConfirmation": "Veuillez confirmer votre inscription. Nous vous avons envoyé un e-mail.",
+    "resendConfirmation": "Renvoyer l'e-mail",
+    "lockedDefault": "Cette newsletter est réservée aux abonnées et abonnés.",
+    "subscribeToUnlock": "S'abonner maintenant",
+    "confirmed": "Votre inscription à la newsletter est confirmée.",
+    "intro": "Choisissez ici les newsletters que vous souhaitez recevoir par e-mail. Vous pouvez vous désinscrire à tout moment.",
+    "recipient": "Les newsletters sont envoyées à {email}.",
+    "pausedNotice": "En pause – vous recevrez à nouveau cette newsletter avec un abonnement correspondant."
   },
   "crowdfunding": {
     "goal": "{type, select, Revenue {Déjà <bold>{revenue}</bold> financés} other {Déjà <bold>{subscriptions, number}</bold> {subscriptions, plural, =1 {personne abonnée} other {personnes abonnées}}}}"

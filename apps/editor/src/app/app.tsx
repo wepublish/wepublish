@@ -32,6 +32,9 @@ import {
   MailTemplateEdit,
   MailTemplateList,
   MemberPlanEdit,
+  NewsletterListCreateView,
+  NewsletterListEditView,
+  NewsletterListOverview,
   SubscriptionFlowList,
 } from '@wepublish/membership/editor';
 import { SettingList } from '@wepublish/settings/editor';
@@ -1007,6 +1010,31 @@ export function App() {
               element={
                 <Base>
                   <GoodieCreateView />
+                </Base>
+              }
+            />
+            {/* Newsletter Routes */}
+            <Route
+              path="newsletters"
+              element={
+                <Base>
+                  <NewsletterListOverview />
+                </Base>
+              }
+            />
+            <Route
+              path="newsletters/create"
+              element={
+                <Base>
+                  <NewsletterListCreateView />
+                </Base>
+              }
+            />
+            <Route
+              path="newsletters/edit/:id"
+              element={
+                <Base>
+                  <NewsletterListEditView />
                 </Base>
               }
             />

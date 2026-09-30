@@ -22,6 +22,7 @@ export const unselectPassword: Record<
     | 'changelogConfirmations'
     | 'notificationReads'
     | 'notificationConfirmations'
+    | 'newsletterSubscribers'
   >,
   boolean
 > = {
@@ -36,6 +37,7 @@ export const unselectPassword: Record<
   emailVerifiedAt: true,
   pendingEmail: true,
   pendingEmailAt: true,
+  newsletterConfirmedAt: true,
   name: true,
   firstName: true,
   flair: true,

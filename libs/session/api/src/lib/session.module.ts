@@ -22,6 +22,7 @@ import { TotpService } from './totp.service';
 import { TotpResolver } from './totp.resolver';
 import { WebsiteTokenController } from './website-token.controller';
 import {
+  AUDIENCE_JWT_SERVICE,
   SCOPED_JWT_VERIFIER,
   ScopedJwtGuard,
 } from '@wepublish/authentication/api';
@@ -52,12 +53,21 @@ export class SessionModule {
       global: true,
       module: SessionModule,
       imports: options.imports || [],
-      exports: [SessionService, JwtService, ScopedJwtGuard],
+      exports: [
+        SessionService,
+        JwtService,
+        ScopedJwtGuard,
+        AUDIENCE_JWT_SERVICE,
+      ],
       controllers: [JwksController, WebsiteTokenController],
       providers: [
         ...this.createAsyncProviders(options),
         {
           provide: SCOPED_JWT_VERIFIER,
+          useExisting: JwtService,
+        },
+        {
+          provide: AUDIENCE_JWT_SERVICE,
           useExisting: JwtService,
         },
         ScopedJwtGuard,

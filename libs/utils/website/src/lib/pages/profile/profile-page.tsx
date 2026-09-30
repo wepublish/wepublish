@@ -18,6 +18,7 @@ import {
   addClientCacheToProps,
   getApiClient,
   MeDocument,
+  MyNewsletterListsDocument,
   NavigationListDocument,
   InvoicesDocument,
   SubscriptionsDocument,
@@ -36,6 +37,7 @@ import { ssrAuthLink } from '../../auth-link';
 import { getSessionTokenProps } from '../../get-session-token-props';
 
 import { getApiUrl } from '../../api-url';
+import { ProfileNewsletter } from './profile-newsletter';
 
 const SubscriptionsWrapper = styled('div')`
   display: flex;
@@ -222,6 +224,8 @@ function ProfilePage({ className, ...props }: ProfilePageProps) {
         </SubscriptionListWrapper>
       </SubscriptionsWrapper>
 
+      <ProfileNewsletter className={className} />
+
       <ProfileWrapper className={className}>
         <H4 component={'h1'}>{t('navbar.profile')}</H4>
 
@@ -264,6 +268,9 @@ GuardedProfile.getInitialProps = async (ctx: NextPageContext) => {
       }),
       client.query({
         query: SubscriptionsDocument,
+      }),
+      client.query({
+        query: MyNewsletterListsDocument,
       }),
     ]);
   }

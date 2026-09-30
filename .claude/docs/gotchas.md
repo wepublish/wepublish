@@ -141,6 +141,37 @@ zone. Jest projects do **not** get this setup file — set the zone yourself the
 
 ---
 
+### ⚠️ The editor locale files are not safe to rewrite with `JSON.parse`/`stringify`
+
+`apps/editor/src/app/locales/{de,en,fr}.json` contain duplicate keys (e.g.
+`settingList.sessionTtlDays` twice in `de.json`) and `«`-style escapes.
+Loading and re-serialising a file silently drops the first duplicate and
+rewrites the escapes — verified on 2026-09-30, the round-trip changed 14 lines in
+`de.json` that had nothing to do with the edit.
+
+Insert new keys textually at a known anchor line instead, then check the result
+still parses. `libs/website/translations` round-trips cleanly.
+
+Nothing guards this — a regression here is silent.
+
+---
+
+### ⚠️ `membership-api` cannot import `@wepublish/session/api`
+
+`libs/membership/api` compiles with `noImplicitReturns` and
+`noPropertyAccessFromIndexSignature`; `libs/session/api` does not. Because path
+aliases point at source, importing `JwtService` pulls `session.service.ts` and
+`totp.service.ts` into membership's typecheck and fails `tsc` and ts-jest with
+TS7030/TS4111 errors in files you did not touch.
+
+Inject `AUDIENCE_JWT_SERVICE` from `@wepublish/authentication/api` instead;
+`SessionModule` binds it to `JwtService` the same way it binds
+`SCOPED_JWT_VERIFIER`.
+
+Pinned by `libs/session/api/src/lib/session.module.spec.ts`.
+
+---
+
 ## Adding an entry
 
 Keep the house style: a future agent must be able to tell *why* the obvious

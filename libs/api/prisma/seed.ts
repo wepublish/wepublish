@@ -220,6 +220,18 @@ const seedSettings = (prisma: PrismaClient) =>
       },
     }),
 
+    prisma.setting.upsert({
+      where: {
+        name: SettingName.NEWSLETTER_DOUBLE_OPT_IN,
+      },
+      update: {},
+      create: {
+        name: SettingName.NEWSLETTER_DOUBLE_OPT_IN,
+        value: false,
+        settingRestriction: { allowedValues: { boolChoice: true } },
+      },
+    }),
+
     prisma.settingAIProvider.upsert({
       where: {
         id: 'v0',

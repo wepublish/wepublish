@@ -1,4 +1,4 @@
-import { act, render } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import * as stories from './personal-data-form.stories';
 import { composeStories } from '@storybook/react';
 
@@ -14,5 +14,17 @@ describe('Registration Form', () => {
         await act(() => Component.play?.({ canvasElement: container }));
       }
     });
+  });
+
+  it('explains that the password only needs to be filled in to change it', () => {
+    const { OnlyPassword } = storiesCmp;
+
+    render(<OnlyPassword />);
+
+    expect(
+      screen.getByText(
+        'Nur ausfüllen, wenn Sie das Passwort ändern möchten. Ansonsten leer lassen.'
+      )
+    ).toBeTruthy();
   });
 });

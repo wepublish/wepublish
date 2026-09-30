@@ -2661,10 +2661,14 @@ export type Mutation = {
   __typename?: 'Mutation';
   /** Subscribes a contact to a Mailchimp list. */
   addMailchimpContact: MailchimpSubscribeResult;
+  /** Adds a user to a newsletter list. Re-adding a user who unsubscribed requires force. */
+  addNewsletterSubscriber: NewsletterSubscriber;
   /** Adds a new comment made by you. */
   addUserComment: Comment;
   /** Approves a comment */
   approveComment: Comment;
+  /** Adds every user with a qualifying subscription to a subscriber-only newsletter list and returns how many were added. */
+  backfillNewsletterList: Scalars['Int'];
   /** Stop a running send job. Unsent recipients stay open and can be continued. */
   cancelMailSendJob: MailSendJobModel;
   /** Cancels a subscription. */
@@ -2675,6 +2679,8 @@ export type Mutation = {
   confirmChangelogEntry: ChangelogEntry;
   /** Confirms a pending email change for the logged-in user. */
   confirmEmailChange: SensitiveDataUser;
+  /** Confirms the newsletter double opt-in with the token from the confirmation mail. */
+  confirmNewsletterSubscription: Array<MyNewsletterList>;
   /** Confirms a notification for the whole instance, recording who confirmed it. Requires authentication. */
   confirmNotification: NotificationConfirmation;
   /** Creates a new AI provider setting. */
@@ -2723,6 +2729,8 @@ export type Mutation = {
   createMemberPlan: MemberPlan;
   /** Creates a new navigation. */
   createNavigation: Navigation;
+  /** Creates a newsletter list. */
+  createNewsletterList: NewsletterList;
   /** Creates an page. */
   createPage: Page;
   /** This mutation allows to create payment by taking an input of type PaymentFromInvoiceInput. */
@@ -2816,6 +2824,8 @@ export type Mutation = {
   deleteMemberPlan: MemberPlan;
   /** Deletes an existing navigation. */
   deleteNavigation: Navigation;
+  /** Deletes a newsletter list including all of its subscribers. */
+  deleteNewsletterList: NewsletterList;
   /** Deletes an page. */
   deletePage: Scalars['String'];
   /** Deletes an existing payment method. */
@@ -2908,6 +2918,8 @@ export type Mutation = {
   rejectComment: Comment;
   /** Rebuilds the payment, tracking pixel, mail and challenge providers from their settings, so integration changes take effect without restarting the API. */
   reloadProviders: Scalars['Boolean'];
+  /** Removes a user from a newsletter list. The opt-out is kept. */
+  removeNewsletterSubscriber: NewsletterSubscriber;
   /** Renews a subscription. */
   renewSubscription: PublicSubscription;
   /** Requests the user to change the comment's content */
@@ -2939,6 +2951,8 @@ export type Mutation = {
   sendTestMailTemplate?: Maybe<Scalars['Boolean']>;
   /** This mutation sends a login link to the email if the user exists. Method will always return email address */
   sendWebsiteLogin: Scalars['String'];
+  /** Subscribes the current user to a newsletter list. */
+  subscribeToNewsletterList: MyNewsletterList;
   /** Ask the mail provider for the current delivery state of mails that are still open. Complements the provider webhook, which is not reachable in local development. */
   syncMailLogStates: MailLogSyncModel;
   /** Sends a test email for the given event */
@@ -2949,6 +2963,8 @@ export type Mutation = {
   unpublishArticle: Article;
   /** Unpublishes all revisions of an page. */
   unpublishPage: Page;
+  /** Unsubscribes the current user from a newsletter list. */
+  unsubscribeFromNewsletterList: MyNewsletterList;
   /** Updates an existing AI provider setting. */
   updateAISetting: SettingAiProvider;
   /** Updates an existing analytics provider setting. */
@@ -2998,6 +3014,8 @@ export type Mutation = {
   updateMemberPlan: MemberPlan;
   /** Updates an existing navigation. */
   updateNavigation: Navigation;
+  /** Updates a newsletter list. */
+  updateNewsletterList: NewsletterList;
   /** Updates an page. */
   updatePage: Page;
   /** This mutation allows to update the user's password by entering the new password. The repeated new password gives an error if the passwords don't match or if the user is not authenticated. */
@@ -3066,6 +3084,13 @@ export type MutationAddMailchimpContactArgs = {
 };
 
 
+export type MutationAddNewsletterSubscriberArgs = {
+  force?: Scalars['Boolean'];
+  listId: Scalars['String'];
+  userId: Scalars['String'];
+};
+
+
 export type MutationAddUserCommentArgs = {
   challenge?: InputMaybe<ChallengeInput>;
   guestUsername?: InputMaybe<Scalars['String']>;
@@ -3078,6 +3103,11 @@ export type MutationAddUserCommentArgs = {
 
 
 export type MutationApproveCommentArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationBackfillNewsletterListArgs = {
   id: Scalars['String'];
 };
 
@@ -3107,6 +3137,11 @@ export type MutationConfirmChangelogEntryArgs = {
 
 export type MutationConfirmEmailChangeArgs = {
   newEmail: Scalars['String'];
+};
+
+
+export type MutationConfirmNewsletterSubscriptionArgs = {
+  token: Scalars['String'];
 };
 
 
@@ -3316,6 +3351,21 @@ export type MutationCreateNavigationArgs = {
   key: Scalars['String'];
   links: Array<NavigationLinkInput>;
   name: Scalars['String'];
+};
+
+
+export type MutationCreateNewsletterListArgs = {
+  active?: InputMaybe<Scalars['Boolean']>;
+  anyMemberPlan?: InputMaybe<Scalars['Boolean']>;
+  autoSubscribe?: InputMaybe<Scalars['Boolean']>;
+  description?: InputMaybe<Scalars['String']>;
+  lockedDisplay?: InputMaybe<NewsletterListLockedDisplay>;
+  lockedLinkUrl?: InputMaybe<Scalars['String']>;
+  lockedText?: InputMaybe<Scalars['String']>;
+  memberPlanIds?: InputMaybe<Array<Scalars['String']>>;
+  name: Scalars['String'];
+  requiresSubscription?: InputMaybe<Scalars['Boolean']>;
+  slug: Scalars['String'];
 };
 
 
@@ -3678,6 +3728,11 @@ export type MutationDeleteNavigationArgs = {
 };
 
 
+export type MutationDeleteNewsletterListArgs = {
+  id: Scalars['String'];
+};
+
+
 export type MutationDeletePageArgs = {
   id: Scalars['String'];
 };
@@ -3903,6 +3958,12 @@ export type MutationRejectCommentArgs = {
 };
 
 
+export type MutationRemoveNewsletterSubscriberArgs = {
+  listId: Scalars['String'];
+  userId: Scalars['String'];
+};
+
+
 export type MutationRenewSubscriptionArgs = {
   id: Scalars['String'];
 };
@@ -3985,6 +4046,11 @@ export type MutationSendWebsiteLoginArgs = {
 };
 
 
+export type MutationSubscribeToNewsletterListArgs = {
+  listId: Scalars['String'];
+};
+
+
 export type MutationSyncMailLogStatesArgs = {
   limit?: InputMaybe<Scalars['Int']>;
 };
@@ -4007,6 +4073,11 @@ export type MutationUnpublishArticleArgs = {
 
 export type MutationUnpublishPageArgs = {
   id: Scalars['String'];
+};
+
+
+export type MutationUnsubscribeFromNewsletterListArgs = {
+  listId: Scalars['String'];
 };
 
 
@@ -4269,6 +4340,22 @@ export type MutationUpdateNavigationArgs = {
   key: Scalars['String'];
   links: Array<NavigationLinkInput>;
   name: Scalars['String'];
+};
+
+
+export type MutationUpdateNewsletterListArgs = {
+  active?: InputMaybe<Scalars['Boolean']>;
+  anyMemberPlan?: InputMaybe<Scalars['Boolean']>;
+  autoSubscribe?: InputMaybe<Scalars['Boolean']>;
+  description?: InputMaybe<Scalars['String']>;
+  id: Scalars['String'];
+  lockedDisplay?: InputMaybe<NewsletterListLockedDisplay>;
+  lockedLinkUrl?: InputMaybe<Scalars['String']>;
+  lockedText?: InputMaybe<Scalars['String']>;
+  memberPlanIds?: InputMaybe<Array<Scalars['String']>>;
+  name?: InputMaybe<Scalars['String']>;
+  requiresSubscription?: InputMaybe<Scalars['Boolean']>;
+  slug?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -4581,6 +4668,17 @@ export type MutationVoteOnPollArgs = {
   answerId: Scalars['String'];
 };
 
+export type MyNewsletterList = {
+  __typename?: 'MyNewsletterList';
+  description?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  lockedLinkUrl?: Maybe<Scalars['String']>;
+  lockedText?: Maybe<Scalars['String']>;
+  name: Scalars['String'];
+  slug: Scalars['String'];
+  status: NewsletterListUserStatus;
+};
+
 export type Navigation = {
   __typename?: 'Navigation';
   createdAt: Scalars['DateTime'];
@@ -4603,6 +4701,75 @@ export enum NavigationLinkType {
   Article = 'Article',
   External = 'External',
   Page = 'Page'
+}
+
+export type NewsletterList = {
+  __typename?: 'NewsletterList';
+  active: Scalars['Boolean'];
+  anyMemberPlan: Scalars['Boolean'];
+  autoSubscribe: Scalars['Boolean'];
+  createdAt: Scalars['DateTime'];
+  description?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  lockedDisplay: NewsletterListLockedDisplay;
+  lockedLinkUrl?: Maybe<Scalars['String']>;
+  lockedText?: Maybe<Scalars['String']>;
+  memberPlans: Array<MemberPlan>;
+  modifiedAt: Scalars['DateTime'];
+  name: Scalars['String'];
+  requiresSubscription: Scalars['Boolean'];
+  slug: Scalars['String'];
+};
+
+export enum NewsletterListLockedDisplay {
+  Hidden = 'hidden',
+  Teaser = 'teaser'
+}
+
+export enum NewsletterListUserStatus {
+  Locked = 'LOCKED',
+  NotSubscribed = 'NOT_SUBSCRIBED',
+  Paused = 'PAUSED',
+  Pending = 'PENDING',
+  Subscribed = 'SUBSCRIBED'
+}
+
+export type NewsletterSubscriber = {
+  __typename?: 'NewsletterSubscriber';
+  confirmedAt?: Maybe<Scalars['DateTime']>;
+  createdAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  modifiedAt: Scalars['DateTime'];
+  receiving: Scalars['Boolean'];
+  source: NewsletterSubscriberSource;
+  status: NewsletterSubscriberStatus;
+  subscribedAt: Scalars['DateTime'];
+  unsubscribedAt?: Maybe<Scalars['DateTime']>;
+  user: SensitiveDataUser;
+};
+
+export type NewsletterSubscriberCounts = {
+  __typename?: 'NewsletterSubscriberCounts';
+  pending: Scalars['Int'];
+  subscribed: Scalars['Int'];
+  unsubscribed: Scalars['Int'];
+};
+
+export type NewsletterSubscriberFilter = {
+  q?: InputMaybe<Scalars['String']>;
+  status?: InputMaybe<NewsletterSubscriberStatus>;
+};
+
+export enum NewsletterSubscriberSource {
+  Auto = 'auto',
+  Editor = 'editor',
+  Self = 'self'
+}
+
+export enum NewsletterSubscriberStatus {
+  Pending = 'PENDING',
+  Subscribed = 'SUBSCRIBED',
+  Unsubscribed = 'UNSUBSCRIBED'
 }
 
 export type NotificationConfirmation = {
@@ -4898,6 +5065,13 @@ export type PaginatedMailSendRecipient = {
 export type PaginatedMemberPlans = {
   __typename?: 'PaginatedMemberPlans';
   nodes: Array<MemberPlan>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type PaginatedNewsletterSubscribers = {
+  __typename?: 'PaginatedNewsletterSubscribers';
+  nodes: Array<NewsletterSubscriber>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
 };
@@ -5713,6 +5887,8 @@ export type Query = {
   memberPlan: MemberPlan;
   /** Returns a paginated list of memberplans based on the filters given. */
   memberPlans: PaginatedMemberPlans;
+  /** Returns the newsletter lists the current user can see, with their subscription status. */
+  myNewsletterLists: Array<MyNewsletterList>;
   /** Returns a navigation by id. */
   navigation: Navigation;
   /** Returns a list of navigations. */
@@ -5731,6 +5907,16 @@ export type Query = {
    *
    */
   newSubscribers: Array<DashboardSubscription>;
+  /** Returns a newsletter list by id. */
+  newsletterList: NewsletterList;
+  /** Returns all newsletter lists. */
+  newsletterLists: Array<NewsletterList>;
+  /** Returns the entry of a user on a newsletter list, if there is one. */
+  newsletterSubscriber?: Maybe<NewsletterSubscriber>;
+  /** Returns how many subscribers of a newsletter list are subscribed, pending or unsubscribed. */
+  newsletterSubscriberCounts: NewsletterSubscriberCounts;
+  /** Returns a paginated list of the subscribers of a newsletter list. */
+  newsletterSubscribers: PaginatedNewsletterSubscribers;
   /** Returns the instance-wide notification confirmations. Requires authentication. */
   notificationConfirmations: Array<NotificationConfirmation>;
   /** Returns the current user's read notifications. Requires authentication. */
@@ -6349,6 +6535,30 @@ export type QueryNewSubscribersArgs = {
 };
 
 
+export type QueryNewsletterListArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QueryNewsletterSubscriberArgs = {
+  listId: Scalars['String'];
+  userId: Scalars['String'];
+};
+
+
+export type QueryNewsletterSubscriberCountsArgs = {
+  listId: Scalars['String'];
+};
+
+
+export type QueryNewsletterSubscribersArgs = {
+  filter?: InputMaybe<NewsletterSubscriberFilter>;
+  listId: Scalars['String'];
+  skip?: Scalars['Int'];
+  take?: Scalars['Int'];
+};
+
+
 export type QueryPageArgs = {
   id?: InputMaybe<Scalars['String']>;
   slug?: InputMaybe<Scalars['String']>;
@@ -6872,6 +7082,7 @@ export enum SettingName {
   MakeNewSubscribersApiPublic = 'MAKE_NEW_SUBSCRIBERS_API_PUBLIC',
   MakeRenewingSubscribersApiPublic = 'MAKE_RENEWING_SUBSCRIBERS_API_PUBLIC',
   MakeRevenueApiPublic = 'MAKE_REVENUE_API_PUBLIC',
+  NewsletterDoubleOptIn = 'NEWSLETTER_DOUBLE_OPT_IN',
   NewArticlePaywall = 'NEW_ARTICLE_PAYWALL',
   NewArticlePeering = 'NEW_ARTICLE_PEERING',
   PeeringTimeoutMs = 'PEERING_TIMEOUT_MS',
@@ -7675,6 +7886,7 @@ export enum UserEvent {
   AccountCreation = 'ACCOUNT_CREATION',
   EmailChange = 'EMAIL_CHANGE',
   LoginLink = 'LOGIN_LINK',
+  NewsletterConfirmation = 'NEWSLETTER_CONFIRMATION',
   PasswordReset = 'PASSWORD_RESET',
   TestMail = 'TEST_MAIL'
 }

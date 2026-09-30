@@ -1,0 +1,174 @@
+fragment FullNewsletterList on NewsletterList {
+  id
+  createdAt
+  modifiedAt
+  name
+  slug
+  description
+  active
+  requiresSubscription
+  anyMemberPlan
+  autoSubscribe
+  lockedDisplay
+  lockedText
+  lockedLinkUrl
+
+  memberPlans {
+    id
+    name
+  }
+}
+
+fragment FullNewsletterSubscriber on NewsletterSubscriber {
+  id
+  source
+  status
+  receiving
+  subscribedAt
+  confirmedAt
+  unsubscribedAt
+
+  user {
+    id
+    name
+    firstName
+    email
+  }
+}
+
+query NewsletterLists {
+  newsletterLists {
+    ...FullNewsletterList
+  }
+}
+
+query NewsletterList($id: String!) {
+  newsletterList(id: $id) {
+    ...FullNewsletterList
+  }
+}
+
+mutation CreateNewsletterList(
+  $name: String!
+  $slug: String!
+  $description: String
+  $active: Boolean
+  $requiresSubscription: Boolean
+  $anyMemberPlan: Boolean
+  $autoSubscribe: Boolean
+  $lockedDisplay: NewsletterListLockedDisplay
+  $lockedText: String
+  $lockedLinkUrl: String
+  $memberPlanIds: [String!]
+) {
+  createNewsletterList(
+    name: $name
+    slug: $slug
+    description: $description
+    active: $active
+    requiresSubscription: $requiresSubscription
+    anyMemberPlan: $anyMemberPlan
+    autoSubscribe: $autoSubscribe
+    lockedDisplay: $lockedDisplay
+    lockedText: $lockedText
+    lockedLinkUrl: $lockedLinkUrl
+    memberPlanIds: $memberPlanIds
+  ) {
+    ...FullNewsletterList
+  }
+}
+
+mutation UpdateNewsletterList(
+  $id: String!
+  $name: String
+  $slug: String
+  $description: String
+  $active: Boolean
+  $requiresSubscription: Boolean
+  $anyMemberPlan: Boolean
+  $autoSubscribe: Boolean
+  $lockedDisplay: NewsletterListLockedDisplay
+  $lockedText: String
+  $lockedLinkUrl: String
+  $memberPlanIds: [String!]
+) {
+  updateNewsletterList(
+    id: $id
+    name: $name
+    slug: $slug
+    description: $description
+    active: $active
+    requiresSubscription: $requiresSubscription
+    anyMemberPlan: $anyMemberPlan
+    autoSubscribe: $autoSubscribe
+    lockedDisplay: $lockedDisplay
+    lockedText: $lockedText
+    lockedLinkUrl: $lockedLinkUrl
+    memberPlanIds: $memberPlanIds
+  ) {
+    ...FullNewsletterList
+  }
+}
+
+mutation DeleteNewsletterList($id: String!) {
+  deleteNewsletterList(id: $id) {
+    id
+  }
+}
+
+mutation BackfillNewsletterList($id: String!) {
+  backfillNewsletterList(id: $id)
+}
+
+query NewsletterSubscribers(
+  $listId: String!
+  $filter: NewsletterSubscriberFilter
+  $take: Int
+  $skip: Int
+) {
+  newsletterSubscribers(
+    listId: $listId
+    filter: $filter
+    take: $take
+    skip: $skip
+  ) {
+    nodes {
+      ...FullNewsletterSubscriber
+    }
+    totalCount
+    pageInfo {
+      hasPreviousPage
+      hasNextPage
+    }
+  }
+}
+
+query NewsletterSubscriberCounts($listId: String!) {
+  newsletterSubscriberCounts(listId: $listId) {
+    subscribed
+    pending
+    unsubscribed
+  }
+}
+
+query NewsletterSubscriber($listId: String!, $userId: String!) {
+  newsletterSubscriber(listId: $listId, userId: $userId) {
+    ...FullNewsletterSubscriber
+  }
+}
+
+mutation AddNewsletterSubscriber(
+  $listId: String!
+  $userId: String!
+  $force: Boolean
+) {
+  addNewsletterSubscriber(listId: $listId, userId: $userId, force: $force) {
+    ...FullNewsletterSubscriber
+  }
+}
+
+mutation RemoveNewsletterSubscriber($listId: String!, $userId: String!) {
+  removeNewsletterSubscriber(listId: $listId, userId: $userId) {
+    ...FullNewsletterSubscriber
+  }
+}

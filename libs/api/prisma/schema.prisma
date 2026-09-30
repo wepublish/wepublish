@@ -786,6 +786,8 @@ model MemberPlan {
   discountCodes DiscountCode[]
   goodies       Goodie[]
 
+  newsletterLists NewsletterListMemberPlan[]
+
   @@index([name])
   @@map("member.plans")
 }
@@ -1207,6 +1209,8 @@ model User {
   userImage       Image?    @relation(fields: [userImageID], references: [id])
   note            String?
 
+  newsletterConfirmedAt DateTime? @db.Timestamptz(3)
+
   address                  UserAddress?
   properties               Json                      @default("[]")
   paymentProviderCustomers PaymentProviderCustomer[]
@@ -1226,6 +1230,7 @@ model User {
   changelogConfirmations    ChangelogEntry[]
   notificationReads         NotificationRead[]
   notificationConfirmations NotificationConfirmation[]
+  newsletterSubscribers     NewsletterSubscriber[]
 
   @@index([createdAt])
   @@map("users")
@@ -1460,6 +1465,7 @@ enum UserEvent {
   LOGIN_LINK
   TEST_MAIL
   EMAIL_CHANGE
+  NEWSLETTER_CONFIRMATION
 }
 
 model UserFlowMail {
@@ -2336,4 +2342,74 @@ model AuditLog {
   @@index([sessionId])
   @@index([entity, recordId])
   @@map("audit_logs")
+}
+
+enum NewsletterListLockedDisplay {
+  hidden @map("hidden")
+  teaser @map("teaser")
+}
+
+enum NewsletterSubscriberSource {
+  self   @map("self")
+  auto   @map("auto")
+  editor @map("editor")
+}
+
+model NewsletterList {
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  name        String
+  slug        String  @unique
+  description String?
+  active      Boolean @default(true)
+
+  requiresSubscription Boolean                    @default(false)
+  anyMemberPlan        Boolean                    @default(false)
+  autoSubscribe        Boolean                    @default(true)
+  memberPlans          NewsletterListMemberPlan[]
+
+  lockedDisplay NewsletterListLockedDisplay @default(teaser)
+  lockedText    String?
+  lockedLinkUrl String?
+
+  subscribers NewsletterSubscriber[]
+
+  @@map("newsletter_lists")
+}
+
+model NewsletterListMemberPlan {
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  list   NewsletterList @relation(fields: [listId], references: [id], onDelete: Cascade)
+  listId String
+
+  memberPlan   MemberPlan @relation(fields: [memberPlanId], references: [id], onDelete: Cascade)
+  memberPlanId String
+
+  @@id([listId, memberPlanId])
+  @@map("newsletter_list_member_plans")
+}
+
+model NewsletterSubscriber {
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  list   NewsletterList @relation(fields: [listId], references: [id], onDelete: Cascade)
+  listId String
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+
+  source         NewsletterSubscriberSource
+  subscribedAt   DateTime                   @db.Timestamptz(3)
+  confirmedAt    DateTime?                  @db.Timestamptz(3)
+  unsubscribedAt DateTime?                  @db.Timestamptz(3)
+
+  @@unique([userId, listId])
+  @@index([listId])
+  @@map("newsletter_subscribers")
 }

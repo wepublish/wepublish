@@ -9,3 +9,6 @@ export * from './lib/memberplan/memberplan-edit';
 export * from './lib/system-mail/system-mail-section';
 export * from './lib/subscription-flow/subscription-flow-list';
 export * from './lib/periodic-job/periodic-job-logs';
+export * from './lib/newsletter/newsletter-list-overview';
+export * from './lib/newsletter/newsletter-list-create-view';
+export * from './lib/newsletter/newsletter-list-edit-view';

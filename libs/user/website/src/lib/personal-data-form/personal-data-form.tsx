@@ -227,7 +227,7 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
                     css={passwordNoteStyles(theme)}
                     gutterBottom={false}
                   >
-                    {t('user.passwordChangeWarning')}
+                    {t('user.passwordWarning')}
                   </Paragraph>
 
                   <TextField

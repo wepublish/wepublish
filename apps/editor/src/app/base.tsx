@@ -66,6 +66,7 @@ import {
   CanGetImage,
   CanGetImages,
   CanGetMailLogs,
+  CanGetNewsletterLists,
   CanGetMailProviderSettings,
   CanGetMailTemplates,
   CanGetMemberPlan,
@@ -148,6 +149,7 @@ import {
   MdMail,
   MdMoney,
   MdMultilineChart,
+  MdNewspaper,
   MdNotificationsNone,
   MdOutgoingMail,
   MdOutlineGridView,
@@ -1001,6 +1003,26 @@ export function Base({ children }: BaseProps) {
                         {t('navbar.mailLog')}
                       </Nav.Item>
                     </PermissionControl>
+                  </Nav.Menu>
+                </PermissionControl>
+
+                {/* NEWSLETTER */}
+                <PermissionControl
+                  qualifyingPermissions={[CanGetNewsletterLists.id]}
+                >
+                  <Nav.Menu
+                    eventKey={'newsletter'}
+                    title={t('navbar.newsletter')}
+                    icon={<MdNewspaper />}
+                  >
+                    <Nav.Item
+                      as={NavLink}
+                      href="/newsletters"
+                      active={path === 'newsletters'}
+                      icon={<MdNewspaper />}
+                    >
+                      {t('navbar.newsletterLists')}
+                    </Nav.Item>
                   </Nav.Menu>
                 </PermissionControl>
 

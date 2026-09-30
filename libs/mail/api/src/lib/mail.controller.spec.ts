@@ -66,6 +66,7 @@ describe('MailController', () => {
     note: null,
     pendingEmail: null,
     pendingEmailAt: null,
+    newsletterConfirmedAt: null,
     totpSecret: null,
     totpEnabled: false,
     totpExempt: false,

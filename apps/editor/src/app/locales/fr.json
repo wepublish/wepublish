@@ -1329,7 +1329,100 @@
       },
       "title": "Plans membres"
     },
+    "newsletter": {
+      "overview": {
+        "title": "Listes de newsletters",
+        "create": "Nouvelle liste",
+        "active": "Active",
+        "name": "Nom",
+        "slug": "Slug",
+        "access": "Accès",
+        "subscribersOnly": "Abonnés uniquement",
+        "everyone": "Tout le monde",
+        "autoSubscribe": "Automatique",
+        "deleteTitle": "Êtes-vous sûr·e ?",
+        "deleteBody": "La liste \"{{list}}\" sera supprimée définitivement avec toutes ses inscriptions et désinscriptions.",
+        "deleteConfirm": "Supprimer la liste"
+      },
+      "tabs": {
+        "settings": "Paramètres",
+        "subscribers": "Abonnés"
+      },
+      "form": {
+        "createTitle": "Créer une liste de newsletter",
+        "editTitle": "Modifier la liste de newsletter \"{{list}}\"",
+        "general": "Général",
+        "active": "Active",
+        "activeHelp": "Les listes inactives sont masquées dans l'espace membre et n'acceptent aucune inscription.",
+        "name": "Nom",
+        "slug": "Slug",
+        "description": "Description",
+        "nameRequired": "Veuillez saisir un nom.",
+        "slugRequired": "Veuillez saisir un slug.",
+        "access": "Accès",
+        "requiresSubscription": "Abonnés uniquement",
+        "requiresSubscriptionHelp": "Seules les personnes ayant un abonnement actif à l'un des plans sélectionnés peuvent s'inscrire et recevoir la newsletter.",
+        "anyMemberPlan": "Tout abonnement actif",
+        "memberPlans": "Plans d'abonnement",
+        "memberPlansRequired": "Sélectionnez au moins un plan d'abonnement ou activez «Tout abonnement actif».",
+        "autoSubscribe": "Ajouter automatiquement lors d'un nouvel abonnement",
+        "autoSubscribeHelp": "Les nouveaux abonnés sont inscrits automatiquement. Les personnes désinscrites ne sont jamais ajoutées à nouveau.",
+        "lockedDisplay": "Affichage pour les personnes sans abonnement",
+        "lockedDisplayHelp": "Apparence de la liste dans l'espace membre pour les personnes sans abonnement correspondant.",
+        "lockedDisplayTeaser": "Grisée avec texte promotionnel",
+        "lockedDisplayHidden": "Masquée",
+        "lockedText": "Texte promotionnel",
+        "lockedLinkUrl": "Lien pour «S'abonner maintenant»",
+        "lockedLinkUrlPlaceholder": "/mitmachen (par défaut)"
+      },
+      "backfill": {
+        "title": "Abonnés existants",
+        "button": "Ajouter les abonnés existants maintenant",
+        "help": "Inscrit toutes les personnes ayant un abonnement actif correspondant. Les personnes désinscrites sont ignorées.",
+        "confirmTitle": "Ajouter les abonnés existants ?",
+        "confirmBody": "Toutes les personnes ayant un abonnement actif correspondant sont inscrites immédiatement. Les personnes désinscrites ne sont pas ajoutées.",
+        "confirm": "Ajouter maintenant",
+        "success": "{{count}} personnes ajoutées."
+      },
+      "subscribers": {
+        "reAdd": "Ajouter à nouveau",
+        "actions": "Action",
+        "filterAll": "Tous ({{count}})",
+        "filterSubscribed": "Confirmés ({{count}})",
+        "filterPending": "En attente ({{count}})",
+        "filterUnsubscribed": "Désinscrits ({{count}})",
+        "searchPlaceholder": "Rechercher un nom ou un e-mail",
+        "add": "Ajouter un utilisateur",
+        "addTitle": "Ajouter un utilisateur",
+        "addUser": "Rechercher un utilisateur",
+        "addConfirm": "Ajouter",
+        "added": "Utilisateur ajouté.",
+        "addedNotReceiving": "Utilisateur ajouté. Sans abonnement correspondant, la personne ne recevra la newsletter qu'après avoir souscrit un abonnement.",
+        "reAddTitle": "Ajouter à nouveau une personne désinscrite ?",
+        "reAddBody": "Cette personne s'est désinscrite le {{date}}. Ne l'ajoutez à nouveau que si elle l'a expressément demandé.",
+        "reAddConfirm": "Ajouter quand même",
+        "removed": "Utilisateur retiré.",
+        "remove": "Retirer",
+        "name": "Nom",
+        "email": "E-mail",
+        "status": "Statut",
+        "source": "Source",
+        "subscribedAt": "Inscrit le",
+        "unsubscribedAt": "Désinscrit le",
+        "receiving": "Reçoit actuellement",
+        "receivingYes": "Oui",
+        "receivingNo": "Non",
+        "statusSubscribed": "Confirmé",
+        "statusPending": "En attente",
+        "statusUnsubscribed": "Désinscrit",
+        "sourceSelf": "Soi-même",
+        "sourceAuto": "Automatique",
+        "sourceEditor": "Rédaction"
+      }
+    },
     "navbar": {
+      "newsletter": "Newsletter",
+      "newsletterLists": "Listes",
       "articles": "Articles",
       "authors": "Auteurs/Autrices",
       "commentRating": "Rating System",
@@ -1707,6 +1800,8 @@
     "save": "Sauvegarder",
     "saveAndClose": "Sauvegarder & fermer",
     "settingList": {
+      "newsletter": "Newsletter",
+      "newsletterDoubleOptIn": "Double opt-in pour les newsletters",
       "allowGuestCommentRating": "Autoriser les évaluations anonymes des commentaires",
       "comments": "Commentaires",
       "days": "jours",
@@ -1728,6 +1823,7 @@
       "subscriptionPlans": "Plans d'abonnement",
       "subscriptionUpgradeModel": "Lors d'une mise à niveau, facturer la différence de prix complète (au lieu du crédit restant au prorata)",
       "warnings": {
+        "newsletterDoubleOptIn": "Lorsqu'une personne s'inscrit pour la première fois à une newsletter dans l'espace membre, elle doit confirmer par e-mail. La confirmation vaut ensuite pour toutes les listes. Les inscriptions automatiques par un abonnement et celles effectuées par la rédaction ne nécessitent pas de confirmation. Attribuez un modèle à «Confirmer l'inscription à la newsletter» sous «Communication › E-mails automatiques».",
         "askOperators": "Attention : la modification d'un ou de plusieurs des paramètres peut entraîner la rupture de la page ou avoir d'autres conséquences imprévisibles. En cas de doute, il est conseillé de consulter les opérateurs. Dans le cas contraire, vous pouvez continuer.",
         "guestCommenting": "Autoriser les commentaires des utilisateurs·trices non authentifiés·e·s.",
         "guestCommentRating": "Autoriser les votes des utilisateurs·trices non authentifiés·e·s sur les commentaires.",
@@ -2899,6 +2995,7 @@
       "sendTest": "M’envoyer un test",
       "testSent": "E-mail de test envoyé",
       "events": {
+        "newsletter_confirmation": "Confirmer l'inscription à la newsletter",
         "account_creation": "Inscription",
         "login_link": "Lien de connexion",
         "password_reset": "Réinitialisation du mot de passe",
@@ -2906,6 +3003,11 @@
         "test_mail": "E-mail de test"
       },
       "eventInfo": {
+        "newsletter_confirmation": {
+          "short": "Double opt-in pour les newsletters.",
+          "description": "Envoyé lorsque le double opt-in est activé et qu'une personne s'inscrit pour la première fois à une newsletter. Le lien de confirmation doit pointer vers /profile?confirmNewsletter= avec l'espace réservé optional_confirmToken. N'ajoutez pas de paramètre jwt : les personnes non connectées se connectent puis reviennent à la confirmation. Également disponible : optional_newsletterList_name.",
+          "example": "«Veuillez confirmer votre inscription à la newsletter.»"
+        },
         "account_creation": {
           "short": "Un nouveau compte a été créé.",
           "description": "Part dès qu’une personne s’inscrit ou obtient un compte lors de l’achat d’un abonnement.",
