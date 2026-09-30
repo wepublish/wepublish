@@ -372,7 +372,7 @@ function ArticleMetadataPanel({
                 <Trans i18nKey={'articleEditor.panels.seoTitleHelpBlock'}>
                   text{' '}
                   <a
-                    href="https://wepublish.ch/just-another-page/"
+                    href="/settings/seo"
                     target="_blank"
                     rel="noreferrer"
                   >

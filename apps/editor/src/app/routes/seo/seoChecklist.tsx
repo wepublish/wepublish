@@ -71,8 +71,8 @@ export const SEO_CHECKLIST: SeoChecklistSection[] = [
       { id: 'gsc-sitemap', urls: ['sitemapUrl'] },
       { id: 'gsc-pages' },
       { id: 'gsc-performance' },
-      { id: 'gsc-inspect' },
-    ].map(item => ({ ...item, link: SEARCH_CONSOLE }) as SeoChecklistEntry),
+      { id: 'gsc-inspect', link: SEARCH_CONSOLE },
+    ],
   },
   {
     id: 'sitemapsFeeds',
