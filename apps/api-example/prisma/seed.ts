@@ -879,6 +879,14 @@ async function seedPaymentMethods(prisma: PrismaClient) {
         paymentProviderID: 'stripe',
         active: true,
       },
+      {
+        id: 'simulated',
+        name: 'Simulated payment',
+        slug: 'simulated',
+        description: 'Pick the outcome on a checkout page; no money moves.',
+        paymentProviderID: 'simulated',
+        active: true,
+      },
     ],
   });
 }
@@ -910,7 +918,7 @@ async function seedMemberPlans(prisma: PrismaClient) {
       availablePaymentMethods: {
         create: {
           forceAutoRenewal: true,
-          paymentMethodIDs: ['payrexx'],
+          paymentMethodIDs: ['payrexx', 'simulated'],
           paymentPeriodicities: ['yearly'],
         },
       },
@@ -934,7 +942,7 @@ async function seedMemberPlans(prisma: PrismaClient) {
       availablePaymentMethods: {
         create: {
           forceAutoRenewal: false,
-          paymentMethodIDs: ['stripe'],
+          paymentMethodIDs: ['stripe', 'simulated'],
           paymentPeriodicities: ['yearly', 'monthly'],
         },
       },
@@ -960,7 +968,7 @@ async function seedMemberPlans(prisma: PrismaClient) {
       availablePaymentMethods: {
         create: {
           forceAutoRenewal: false,
-          paymentMethodIDs: ['payrexx', 'stripe'],
+          paymentMethodIDs: ['payrexx', 'stripe', 'simulated'],
           paymentPeriodicities: ['monthly', 'quarterly'],
         },
       },
@@ -1946,6 +1954,17 @@ async function seedSettings(prisma: PrismaClient) {
     })
   );
 
+  // Stays inside We.Publish: the checkout page lets you pick the outcome, and
+  // renewals are charged straight away.
+  const simulated = prisma.settingPaymentProvider.upsert(
+    upsert({
+      id: 'simulated',
+      type: PaymentProviderType.SIMULATED,
+      name: 'Simulated',
+      offSessionPayments: true,
+    })
+  );
+
   const turnstile = prisma.settingChallengeProvider.upsert(
     upsert({
       id: 'turnstile',
@@ -2014,6 +2033,7 @@ async function seedSettings(prisma: PrismaClient) {
     mollie,
     bexio,
     noCharge,
+    simulated,
     turnstile,
     prolitteris,
     v0,
