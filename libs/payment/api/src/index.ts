@@ -11,6 +11,7 @@ export * from './lib/payments.service';
 export * from './lib/payment.dataloader';
 export * from './lib/payments.module';
 export * from './lib/payment.model';
+export * from './lib/invoice-paid.listener';
 
 export * from './lib/payrexx/gateway-client';
 export * from './lib/payrexx/transaction-client';
@@ -28,3 +29,5 @@ export * from './lib/payment-method/payment-method.dataloader';
 export { PaymentMethod } from './lib/payment-method/payment-method.model';
 
 export * from './lib/payment.webhook';
+export * from './lib/payment-provider/create-payment-providers';
+export * from './lib/payment-provider/retired-payment-providers';

@@ -586,6 +586,12 @@ export const CanGetSettings: Permission = {
   deprecated: false,
 };
 
+export const CanGetAuditLogs: Permission = {
+  id: 'CAN_GET_AUDIT_LOGS',
+  description: 'Allows to read the audit log',
+  deprecated: false,
+};
+
 export const CanUpdateSettings: Permission = {
   id: 'CAN_UPDATE_SETTINGS',
   description: 'Allows to update settings',
@@ -1038,6 +1044,13 @@ export const CanDeletePaymentProviderSettings: Permission = {
   deprecated: false,
 };
 
+export const CanReloadProviders: Permission = {
+  id: 'CAN_RELOAD_PROVIDERS',
+  description:
+    'Allows to apply integration changes to the running API without a restart',
+  deprecated: false,
+};
+
 /**
  * Tracking Pixel Settings
  */
@@ -1326,6 +1339,7 @@ export const AllPermissions: Permission[] = [
   CanCreatePaymentProviderSettings,
   CanUpdatePaymentProviderSettings,
   CanDeletePaymentProviderSettings,
+  CanReloadProviders,
   CanGetTrackingPixelSettings,
   CanCreateTrackingPixelSettings,
   CanUpdateTrackingPixelSettings,
@@ -1348,6 +1362,7 @@ export const AllPermissions: Permission[] = [
   CanRunMailchimpSync,
   CanGetWebsiteSettings,
   CanUpdateWebsiteSettings,
+  CanGetAuditLogs,
 ];
 
 export const EditorPermissions: Permission[] = [

@@ -50,7 +50,7 @@ export type SubscriptionQueryVariables = Types.Exact<{
 
 
 export type SubscriptionQuery = { __typename?: 'Query', subscription: (
-    { __typename?: 'PublicSubscription' }
+    { __typename?: 'PublicSubscription', periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, invoiceID: string, startsAt: string }> }
     & FullSubscriptionFragment
   ) };
 
@@ -302,6 +302,11 @@ export const SubscriptionDocument = gql`
     query Subscription($id: String!) {
   subscription(id: $id) {
     ...FullSubscription
+    periods {
+      id
+      invoiceID
+      startsAt
+    }
   }
 }
     ${FullSubscriptionFragmentDoc}

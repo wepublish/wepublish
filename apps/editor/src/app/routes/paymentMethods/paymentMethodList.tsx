@@ -22,7 +22,13 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdDelete } from 'react-icons/md';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
-import { Button, Drawer, Modal, Table as RTable } from 'rsuite';
+import {
+  Button,
+  Drawer,
+  IconButton as RIconButton,
+  Modal,
+  Table as RTable,
+} from 'rsuite';
 import { RowDataType } from 'rsuite-table';
 
 const { Column, HeaderCell, Cell: RCell } = RTable;
@@ -91,13 +97,13 @@ function PaymentMethodList() {
         >
           <ListViewActions>
             <Link to="/paymentmethods/create">
-              <IconButton
+              <RIconButton
                 appearance="primary"
                 disabled={isLoading}
-                icon={<MdAdd />}
               >
+                <MdAdd />
                 {t('paymentMethodList.createNew')}
-              </IconButton>
+              </RIconButton>
             </Link>
           </ListViewActions>
         </PermissionControl>

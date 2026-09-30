@@ -69,6 +69,7 @@ import { DiscountCodeEditView } from './routes/discountCode/discountCodeEditView
 import { DiscountCodeList } from './routes/discountCode/discountCodeList';
 import { DiscountCodeUsageView } from './routes/discountCode/discountCodeUsageView';
 import { NotificationsPage } from './routes/notifications/notificationsPage';
+import { AuditLogList } from './routes/auditLog/auditLogList';
 import { DocumentList } from './routes/documents/documentList';
 import { EventCreateView } from './routes/events/eventCreateView';
 import { EventEditView } from './routes/events/eventEditView';
@@ -330,6 +331,14 @@ export function App() {
               element={
                 <Base>
                   <NotificationsPage />
+                </Base>
+              }
+            />
+            <Route
+              path="audit-log"
+              element={
+                <Base>
+                  <AuditLogList />
                 </Base>
               }
             />

@@ -23,9 +23,15 @@ export type BuilderSliderConfig = {
   origin?: 'auto' | 'center' | number;
 };
 
+export type BuilderLightboxConfig = {
+  dragDisabled?: boolean;
+  animationDisabled?: boolean;
+  dragAnimationDisabled?: boolean;
+};
+
 export type BuilderBlockStyleProps = {
   ImageSlider: BuilderImageGalleryBlockProps & BuilderSliderConfig;
-  Lightbox: BuilderImageGalleryBlockProps;
+  Lightbox: BuilderImageGalleryBlockProps & BuilderLightboxConfig;
   TeaserSlider: (
     | BuilderTeaserListBlockProps
     | BuilderTeaserGridBlockProps

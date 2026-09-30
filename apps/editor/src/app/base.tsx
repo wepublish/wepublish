@@ -82,6 +82,7 @@ import {
   CanGetPeerArticles,
   CanGetPeers,
   CanGetPoll,
+  CanGetAuditLogs,
   CanGetSettings,
   CanGetSubscription,
   CanGetSubscriptionFlows,
@@ -158,6 +159,7 @@ import {
   MdQueryStats,
   MdSell,
   MdSend,
+  MdHistory,
   MdSettings,
   MdSettingsInputAntenna,
   MdSignpost,
@@ -1147,12 +1149,27 @@ export function Base({ children }: BaseProps) {
                     CanGetUserRole.id,
                     CanCreateUserRole.id,
                     CanDeleteUserRole.id,
+                    CanGetAuditLogs.id,
                   ]}
                 >
                   <Nav.Menu
                     icon={<MdSettings />}
                     title={t('navbar.settings')}
                   >
+                    {/* AUDIT LOG */}
+                    <PermissionControl
+                      qualifyingPermissions={[CanGetAuditLogs.id]}
+                    >
+                      <Nav.Item
+                        as={NavLink}
+                        href="/audit-log"
+                        active={path === 'audit-log'}
+                        icon={<MdHistory />}
+                      >
+                        {t('navbar.auditLog')}
+                      </Nav.Item>
+                    </PermissionControl>
+
                     {/* DIVERSE SETTINGS */}
                     <PermissionControl
                       qualifyingPermissions={[

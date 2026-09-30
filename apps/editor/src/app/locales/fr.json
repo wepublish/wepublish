@@ -983,8 +983,10 @@
     "invoice": {
       "areYouSure": "Êtes-vous sûr·e ?",
       "canceledAt": "Annulé le",
+      "doNotSendMail": "Ne pas envoyer de confirmation de paiement au membre",
       "invoiceNo": "Facture n°",
       "manuallyPaidModalBody": "La facture est marquée comme payée, bien qu'aucun paiement n'ait été effectué par l'utilisateur·trice. Veuillez vous adresser au comptable pour discuter de ce cas de figure.",
+      "noMailForFirstPeriod": "Aucune confirmation de paiement ne sera envoyée, car il s'agit de la première période de l'abonnement.",
       "paidAt": "Payée le",
       "panel": {
         "invoiceHistory": "Historique de facturation",
@@ -1360,7 +1362,8 @@
       "apps": "Apps",
       "mailSend": "Envoyer un e-mail",
       "mailLog": "E-mails envoyés",
-      "communication": "Communication"
+      "communication": "Communication",
+      "auditLog": "Journal d'audit"
     },
     "navigation": {
       "overview": {
@@ -1723,8 +1726,10 @@
         "loginMinutes": "Durée de validité du token de connexion par email — minutes.",
         "passwordToken": "Durée de validité du token pour la réinitialisation du mot de passe par email — minutes.",
         "peerToken": "Expiration du peering (en cas d’erreur lors du peering d’un article, la tentative de peering s’arrête après la durée définie ci-après) — millisecondes",
-        "subscriptionUpgradeModel": "Lorsque cette option est activée, une mise à niveau facture toujours la différence entre le prix du nouveau plan et celui du plan actuel, quel que soit le temps restant dans la période en cours. Lorsqu'elle est désactivée, seul le solde restant (au prorata) non utilisé de la période en cours est crédité."
-      }
+        "subscriptionUpgradeModel": "Lorsque cette option est activée, une mise à niveau facture toujours la différence entre le prix du nouveau plan et celui du plan actuel, quel que soit le temps restant dans la période en cours. Lorsqu'elle est désactivée, seul le solde restant (au prorata) non utilisé de la période en cours est crédité.",
+        "sessionTtlDays": "Combien de temps une connexion reste valable avant de devoir se reconnecter. S’applique dès la prochaine connexion ; les sessions ouvertes gardent leur durée."
+      },
+      "sessionTtlDays": "Durée de validité de la connexion"
     },
     "automaticMails": {
       "title": "E-mails automatiques",
@@ -1789,7 +1794,7 @@
         },
         "renewal_success": {
           "short": "Le renouvellement a fonctionné.",
-          "description": "Part lorsqu’un abonnement est renouvelé automatiquement et que le montant a été encaissé avec succès.",
+          "description": "Part dès que le renouvellement d’un abonnement est payé – que le montant ait été encaissé automatiquement, payé par la personne elle-même ou marqué comme payé manuellement par la rédaction. Ne part pas pour la première période d’un nouvel abonnement.",
           "example": "« Votre abonnement continue – merci beaucoup. »"
         },
         "renewal_failed": {
@@ -2596,7 +2601,20 @@
           "lookbackHours": "Période (heures)",
           "lookbackHoursHelp": "Jusqu'où analyser les campagnes (par défaut : 30)."
         }
-      }
+      },
+      "typeChangeTitle": "Changer vraiment le type ?",
+      "typeChangeWarning": "Changer le type supprime toute la configuration de cette intégration, y compris les identifiants enregistrés. Cette action est irréversible.",
+      "typeChangeConfirm": "Changer le type et supprimer la configuration",
+      "deleteTitle": "Retirer l’intégration ?",
+      "deleteWarning": "L’intégration disparaît des listes mais continue de fonctionner, afin de ne pas interrompre ce qui est en cours — un paiement en traitement, par exemple. Si vous la rajoutez plus tard, sa configuration est toujours là, inchangée.",
+      "deleteConfirm": "Retirer",
+      "restored": "Cette intégration existait déjà et a été restaurée telle quelle.",
+      "cancel": "Annuler",
+      "add": "Ajouter une intégration",
+      "addType": "Type",
+      "addId": "Identifiant",
+      "addIdHelp": "L’identifiant unique sous lequel l’intégration est appelée. Il figure aussi dans les URL de webhook et ne peut plus être modifié ensuite.",
+      "addIdTaken": "Cet identifiant est déjà utilisé."
     },
     "websiteSettings": {
       "backToOverview": "Retour à la vue d’ensemble",
@@ -3212,6 +3230,41 @@
         "sentAt": "Envoyé le",
         "attempts": "Tentatives",
         "empty": "Aucune entrée pour ce filtre."
+      }
+    },
+    "auditLogList": {
+      "overview": {
+        "title": "Journal d'audit",
+        "createdAt": "Horodatage",
+        "createdAtDate": "{{createdAtDate, ccc PP p}}",
+        "actor": "Acteur·rice",
+        "action": "Action",
+        "mutation": "Mutation",
+        "record": "Enregistrement",
+        "session": "Session",
+        "status": "Statut",
+        "succeeded": "Réussi",
+        "failed": "Échoué",
+        "filterBySession": "Filtrer par cette session",
+        "tokenActor": "Jeton API : {{name}}",
+        "impersonatedActor": "{{impersonator}} en tant que {{actor}}",
+        "unknownActor": "Inconnu",
+        "notSupported": "Cette installation ne tient pas de journal d'audit. Les entrées apparaîtront une fois la migration appliquée."
+      },
+      "filter": {
+        "searchPlaceholder": "Rechercher (mutation, enregistrement, e-mail …)",
+        "action": "Action",
+        "entity": "Type d'enregistrement",
+        "session": "ID de session",
+        "dateRange": "Période",
+        "failuresOnly": "Échecs uniquement",
+        "impersonatedOnly": "Usurpation uniquement"
+      },
+      "action": {
+        "create": "Créé",
+        "update": "Modifié",
+        "delete": "Supprimé",
+        "other": "Autre"
       }
     }
   }

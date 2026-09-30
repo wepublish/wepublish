@@ -508,6 +508,14 @@ model Invoice {
   items                     InvoiceItem[]
   manuallySetAsPaidByUserId String?
   currency                  Currency
+  // When the RENEWAL_SUCCESS mail for this invoice went out. Claimed
+  // atomically so the webhook, the nightly job and the admin path can never
+  // send it twice.
+  renewalSuccessMailSentAt   DateTime? @db.Timestamptz(3)
+
+  // Set when an admin marked the invoice as paid and explicitly asked for no
+  // mail. Blocks every later path from sending one.
+  suppressRenewalSuccessMail Boolean   @default(false)
 
   subscriptionID String?
   subscription   Subscription? @relation(fields: [subscriptionID], references: [id], onDelete: SetNull)
@@ -1775,6 +1783,7 @@ enum MailProviderType {
   MAILCHIMP @map("mailchimp")
   SLACK     @map("slack")
   SMTP      @map("smtp")
+  LOG       @map("log")
 }
 
 model SettingMailProvider {
@@ -1784,6 +1793,7 @@ model SettingMailProvider {
   lastLoadedAt DateTime @default(now()) @db.Timestamptz(3)
 
   type                  MailProviderType
+  deletedAt             DateTime?        @db.Timestamptz(3)
   name                  String?
   fromAddress           String?
   replyToAddress        String?
@@ -1807,6 +1817,7 @@ model SettingTrackingPixel {
   modifiedAt                             DateTime                  @updatedAt @db.Timestamptz(3)
   lastLoadedAt                           DateTime                  @default(now()) @db.Timestamptz(3)
   type                                   TrackingPixelProviderType
+  deletedAt                              DateTime?                 @db.Timestamptz(3)
   name                                   String?
   prolitteris_memberNr                   String?
   prolitteris_username                   String?
@@ -1971,6 +1982,7 @@ model SettingPaymentProvider {
   lastLoadedAt DateTime @default(now()) @db.Timestamptz(3)
 
   type                  PaymentProviderType
+  deletedAt             DateTime?           @db.Timestamptz(3)
   name                  String?
   offSessionPayments    Boolean?
   webhookEndpointSecret String? // Payrexx webhookApiKey
@@ -2016,9 +2028,10 @@ model SettingChallengeProvider {
   lastLoadedAt DateTime @default(now()) @db.Timestamptz(3)
   name         String?
 
-  type    ChallengeProviderType
-  secret  String?
-  siteKey String?
+  type      ChallengeProviderType
+  deletedAt DateTime?             @db.Timestamptz(3)
+  secret    String?
+  siteKey   String?
 
   @@map("settings.challengeprovider")
 }
@@ -2285,4 +2298,42 @@ model OneChannelState {
   lastSuccessAt DateTime? @db.Timestamptz(3)
 
   @@map("one_channel_state")
+}
+
+enum AuditLogAction {
+  create @map("create")
+  update @map("update")
+  delete @map("delete")
+  other  @map("other")
+}
+
+enum AuditLogActorType {
+  user  @map("user")
+  token @map("token")
+}
+
+model AuditLog {
+  id        String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+
+  mutation String
+  action   AuditLogAction
+  entity   String?
+  recordId String?
+
+  actorType      AuditLogActorType
+  userId         String?
+  userEmail      String?
+  tokenName      String?
+  sessionId      String?
+  impersonatedBy String?
+
+  success      Boolean @default(true)
+  errorMessage String?
+
+  @@index([createdAt])
+  @@index([userId, createdAt])
+  @@index([sessionId])
+  @@index([entity, recordId])
+  @@map("audit_logs")
 }

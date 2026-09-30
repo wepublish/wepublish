@@ -25,17 +25,17 @@ exports[`SettingsService should list settings 1`] = `
     "createdAt": 2020-01-01T00:00:00.000Z,
     "id": "1",
     "modifiedAt": 2020-02-01T00:00:00.000Z,
-    "name": "setting1",
+    "name": "allowGuestCommenting",
     "settingRestriction": null,
-    "value": "value1",
+    "value": true,
   },
   {
     "createdAt": 2020-01-01T00:00:00.000Z,
     "id": "2",
     "modifiedAt": 2020-02-01T00:00:00.000Z,
-    "name": "setting2",
+    "name": "commentCharLimit",
     "settingRestriction": null,
-    "value": "value2",
+    "value": 1000,
   },
 ]
 `;
