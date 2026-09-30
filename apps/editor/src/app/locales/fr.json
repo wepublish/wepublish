@@ -3414,6 +3414,45 @@
     "seoTab": {
       "title": "SEO"
     },
+    "seoDocumentChecklist": {
+      "title": "Liste de contrôle pour ce contenu",
+      "reasons": {
+        "seo-titles": {
+          "missing": "Aucun titre SEO défini. Le titre est utilisé à la place.",
+          "tooLong": "Le titre SEO dépasse {{limit}} caractères et risque d'être tronqué dans Google."
+        },
+        "meta-descriptions": {
+          "missing": "Aucune méta-description définie. Le chapeau ou le premier paragraphe est utilisé à la place.",
+          "tooLong": "La méta-description dépasse {{limit}} caractères et risque d'être tronquée dans Google."
+        },
+        "structure": {
+          "missing": "Ce texte long n'a pas d'intertitres.",
+          "short": "Texte court, les intertitres sont facultatifs."
+        },
+        "internal-links": {
+          "missing": "Le texte ne contient aucun lien.",
+          "unknown": "Le contenu n'a pas pu être vérifié."
+        },
+        "stable-slugs": {
+          "missing": "Aucun slug défini.",
+          "tooLong": "Le slug dépasse {{limit}} caractères."
+        },
+        "share-images": {
+          "missing": "Aucune image de partage définie et le contenu ne contient aucune image.",
+          "tooSmall": "L'image de partage fait moins de {{limit}} px de large."
+        },
+        "image-descriptions": {
+          "missing": "{{count}} image(s) sans description.",
+          "none": "Le contenu ne contient aucune image."
+        },
+        "social-texts": {
+          "missing": "Aucun texte pour les réseaux sociaux. Les textes SEO sont utilisés à la place."
+        },
+        "preview-before-publishing": {
+          "below": "Les aperçus sont affichés en bas de cet onglet."
+        }
+      }
+    },
     "seoPreviews": {
       "info": "Aperçus approximatifs basés sur les paramètres actuels. Les plateformes déterminent l'affichage final et peuvent raccourcir les textes ou recadrer les images.",
       "pageIgnoresSeoFields": "Le site n'utilise actuellement pas le titre SEO ni la description SEO des pages. Les aperçus montrent ce qui est réellement utilisé.",

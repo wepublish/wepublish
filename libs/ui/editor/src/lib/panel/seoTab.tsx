@@ -6,6 +6,7 @@ import {
 
 import { SeoBlockContext } from '../blocks/blocksToPlaintext';
 import { SeoAnalysis } from './seoAnalysis';
+import { SeoDocumentChecklist } from './seoDocumentChecklist';
 import { getSeoPreviewData, SeoPreviewMetadata } from './seoPreviewData';
 import { SeoPreviews } from './seoPreviews';
 import { AppliedSeoSuggestions, SeoSuggestions } from './seoSuggestions';
@@ -57,10 +58,10 @@ export function SeoTab({
 
   return (
     <SeoTabWrapper>
-      <SeoPreviews
-        data={previewData}
-        siteName={profile?.name}
-        favicon={profile?.squareLogo ?? profile?.logo}
+      <SeoDocumentChecklist
+        metadata={seoFields}
+        stats={seoContext?.stats}
+        shareImage={previewData.image}
       />
 
       <SeoSuggestions
@@ -78,6 +79,12 @@ export function SeoTab({
         stats={seoContext?.stats}
         hasShareImage={!!previewData.image}
         disabled={disabled}
+      />
+
+      <SeoPreviews
+        data={previewData}
+        siteName={profile?.name}
+        favicon={profile?.squareLogo ?? profile?.logo}
       />
     </SeoTabWrapper>
   );

@@ -3507,6 +3507,45 @@
     "seoTab": {
       "title": "SEO"
     },
+    "seoDocumentChecklist": {
+      "title": "Checklist for this content",
+      "reasons": {
+        "seo-titles": {
+          "missing": "No SEO title set. The title is used instead.",
+          "tooLong": "The SEO title is longer than {{limit}} characters and may be cut off in Google."
+        },
+        "meta-descriptions": {
+          "missing": "No meta description set. The lead or first paragraph is used instead.",
+          "tooLong": "The meta description is longer than {{limit}} characters and may be cut off in Google."
+        },
+        "structure": {
+          "missing": "This longer text has no subheadings.",
+          "short": "Short text, subheadings are optional."
+        },
+        "internal-links": {
+          "missing": "The text contains no links.",
+          "unknown": "The content could not be checked."
+        },
+        "stable-slugs": {
+          "missing": "No slug set.",
+          "tooLong": "The slug is longer than {{limit}} characters."
+        },
+        "share-images": {
+          "missing": "No share image set and the content contains no image.",
+          "tooSmall": "The share image is narrower than {{limit}} px."
+        },
+        "image-descriptions": {
+          "missing": "{{count}} image(s) without a description.",
+          "none": "The content contains no images."
+        },
+        "social-texts": {
+          "missing": "No social media texts set. The SEO texts are used instead."
+        },
+        "preview-before-publishing": {
+          "below": "The previews are shown at the bottom of this tab."
+        }
+      }
+    },
     "seoPreviews": {
       "info": "Approximate previews based on the current settings. The platforms decide the final look and may shorten texts or crop images.",
       "pageIgnoresSeoFields": "The website currently does not use the SEO title and SEO description of pages. The previews show what is actually used.",

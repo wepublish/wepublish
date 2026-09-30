@@ -3469,6 +3469,45 @@
     "seoTab": {
       "title": "SEO"
     },
+    "seoDocumentChecklist": {
+      "title": "Checkliste für diesen Inhalt",
+      "reasons": {
+        "seo-titles": {
+          "missing": "Kein SEO-Titel gesetzt. Stattdessen wird der Titel verwendet.",
+          "tooLong": "Der SEO-Titel ist länger als {{limit}} Zeichen und wird in Google eventuell abgeschnitten."
+        },
+        "meta-descriptions": {
+          "missing": "Keine Meta-Beschreibung gesetzt. Stattdessen wird der Lead oder der erste Absatz verwendet.",
+          "tooLong": "Die Meta-Beschreibung ist länger als {{limit}} Zeichen und wird in Google eventuell abgeschnitten."
+        },
+        "structure": {
+          "missing": "Dieser längere Text hat keine Zwischentitel.",
+          "short": "Kurzer Text, Zwischentitel sind optional."
+        },
+        "internal-links": {
+          "missing": "Der Text enthält keine Links.",
+          "unknown": "Der Inhalt konnte nicht geprüft werden."
+        },
+        "stable-slugs": {
+          "missing": "Kein Slug gesetzt.",
+          "tooLong": "Der Slug ist länger als {{limit}} Zeichen."
+        },
+        "share-images": {
+          "missing": "Kein Teilen-Bild gesetzt und der Inhalt enthält kein Bild.",
+          "tooSmall": "Das Teilen-Bild ist schmaler als {{limit}} px."
+        },
+        "image-descriptions": {
+          "missing": "{{count}} Bild(er) ohne Beschreibung.",
+          "none": "Der Inhalt enthält keine Bilder."
+        },
+        "social-texts": {
+          "missing": "Keine Social-Media-Texte gesetzt. Stattdessen werden die SEO-Texte verwendet."
+        },
+        "preview-before-publishing": {
+          "below": "Die Vorschauen werden unten in diesem Tab angezeigt."
+        }
+      }
+    },
     "seoPreviews": {
       "info": "Ungefähre Vorschauen anhand der aktuellen Einstellungen. Die Plattformen bestimmen die endgültige Darstellung und können Texte kürzen oder Bilder zuschneiden.",
       "pageIgnoresSeoFields": "Die Website verwendet SEO-Titel und SEO-Beschreibung von Seiten derzeit nicht. Die Vorschauen zeigen, was tatsächlich verwendet wird.",
