@@ -4,6 +4,7 @@ import {
   FullAuthorFragment,
   FullImageFragment,
   FullTrackingPixelFragment,
+  SeoMetadataContentType,
   Tag,
   TagType,
 } from '@wepublish/editor/api';
@@ -17,6 +18,7 @@ import {
   MdSettings,
   MdShare,
   MdTrackChanges,
+  MdTravelExplore,
 } from 'react-icons/md';
 import {
   Badge,
@@ -47,11 +49,12 @@ import {
   useListInputState,
 } from '../atoms';
 import TrackingPixels from '../atoms/tracking/tracking-pixels';
-import { MetaDataType } from '../blocks';
+import { MetaDataType, SeoBlockContext } from '../blocks';
 import { ArticleAuthor, ArticleAuthorList } from './articleAuthorList';
 import { AuthorCheckPicker } from './authorCheckPicker';
 import { ImageEditPanel } from './imageEditPanel';
 import { ImageSelectPanel } from './imageSelectPanel';
+import { SeoTab } from './seoTab';
 
 const { Item } = RNav;
 
@@ -136,7 +139,9 @@ export interface ArticleMetadataPanelProps {
   readonly peerId: string | null | undefined;
   readonly value: ArticleMetadata;
   readonly infoData: InfoData;
+  readonly seoContext?: SeoBlockContext;
 
+  onSave?(): void;
   onClose?(): void;
   onChange?(value: ArticleMetadata): void;
 }
@@ -146,6 +151,8 @@ function ArticleMetadataPanel({
   peerId,
   value,
   infoData,
+  seoContext,
+  onSave,
   onClose,
   onChange,
 }: ArticleMetadataPanelProps) {
@@ -367,7 +374,7 @@ function ArticleMetadataPanel({
                 <Trans i18nKey={'articleEditor.panels.seoTitleHelpBlock'}>
                   text{' '}
                   <a
-                    href="https://wepublish.ch/just-another-page/"
+                    href="/settings/seo"
                     target="_blank"
                     rel="noreferrer"
                   >
@@ -562,6 +569,28 @@ function ArticleMetadataPanel({
             </Group>
           </RForm.Stack>
         );
+      case MetaDataType.Seo:
+        return (
+          <SeoTab
+            type={SeoMetadataContentType.Article}
+            metadata={{
+              title,
+              lead,
+              seoTitle,
+              seoDescription,
+              socialMediaTitle,
+              socialMediaDescription,
+              canonicalUrl,
+              url: value.url,
+              image,
+              socialMediaImage,
+              slug,
+            }}
+            seoContext={seoContext}
+            disabled={!isAuthorized}
+            onApply={suggestions => onChange?.({ ...value, ...suggestions })}
+          />
+        );
       case MetaDataType.Properties:
         return (
           <RForm.Stack fluid>
@@ -645,6 +674,11 @@ function ArticleMetadataPanel({
 
         <Drawer.Actions>
           <PermissionControl qualifyingPermissions={['CAN_CREATE_ARTICLE']}>
+            {onSave && (
+              <Button onClick={() => !canonicalUrlError && onSave()}>
+                {t('save')}
+              </Button>
+            )}
             <Button
               appearance="primary"
               type="submit"
@@ -672,6 +706,12 @@ function ArticleMetadataPanel({
             icon={<MdShare />}
           >
             {t('articleEditor.panels.socialMedia')}
+          </Item>
+          <Item
+            eventKey={MetaDataType.Seo}
+            icon={<MdTravelExplore />}
+          >
+            {t('seoTab.title')}
           </Item>
           <Item
             eventKey={MetaDataType.Properties}

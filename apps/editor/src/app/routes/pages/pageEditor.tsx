@@ -30,6 +30,7 @@ import {
   DocumentUrlProvider,
   EditorTemplate,
   EditorValidationProvider,
+  getSeoBlockContext,
   mapBlockValueToBlockInput,
   NavigationBar,
   PageMetadata,
@@ -44,7 +45,13 @@ import {
   VersionHistory,
   VersionHistoryRevision,
 } from '@wepublish/ui/editor';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   MdCloudUpload,
@@ -188,6 +195,11 @@ function PageEditor() {
 
   const isNew = id === undefined;
   const [blocks, setBlocks] = useState<BlockValue[]>([]);
+
+  const seoContext = useMemo(
+    () => (isMetaDrawerOpen ? getSeoBlockContext(blocks) : undefined),
+    [blocks, isMetaDrawerOpen]
+  );
 
   const pageID = id || createData?.createPage.id;
 
@@ -809,7 +821,9 @@ function PageEditor() {
         onClose={() => setMetaDrawerOpen(false)}
       >
         <PageMetadataPanel
+          seoContext={seoContext}
           value={metadata}
+          onSave={() => handleSave()}
           onClose={() => {
             handleSave();
             setMetaDrawerOpen(false);

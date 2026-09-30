@@ -36,6 +36,7 @@ import {
   createCheckedPermissionComponent,
   DocumentUrlProvider,
   EditorTemplate,
+  getSeoBlockContext,
   InfoData,
   ListicleBlockListValue,
   mapBlockValueToBlockInput,
@@ -53,7 +54,7 @@ import {
   VersionHistory,
   VersionHistoryRevision,
 } from '@wepublish/ui/editor';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   MdCloudUpload,
@@ -249,6 +250,11 @@ function ArticleEditor() {
   const isNew = id === undefined;
   const [blocks, setBlocks] = useState<BlockValue[]>(
     isNew ? InitialArticleBlocks : []
+  );
+
+  const seoContext = useMemo(
+    () => (isMetaDrawerOpen ? getSeoBlockContext(blocks) : undefined),
+    [blocks, isMetaDrawerOpen]
   );
 
   const articleID = id || createData?.createArticle.id;
@@ -961,10 +967,12 @@ function ArticleEditor() {
         onClose={() => setMetaDrawerOpen(false)}
       >
         <ArticleMetadataPanel
+          seoContext={seoContext}
           peerId={articleData?.article.peer?.id}
           articleID={articleID}
           value={metadata}
           infoData={infoData}
+          onSave={() => handleSave()}
           onClose={() => {
             handleSave();
             setMetaDrawerOpen(false);

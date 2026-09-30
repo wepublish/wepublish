@@ -1,8 +1,20 @@
 import { DynamicModule, Module, ModuleMetadata } from '@nestjs/common';
 import { V0Resolver } from './v0.resolver';
+import { V0ClientService } from './v0-client.service';
+import { SeoMetadataResolver } from './seo-metadata.resolver';
+import { SeoMetadataService } from './seo-metadata.service';
+import { SeoAnalysisResolver } from './seo-analysis.resolver';
+import { SeoAnalysisService } from './seo-analysis.service';
 
 @Module({
-  providers: [V0Resolver],
+  providers: [
+    V0ClientService,
+    V0Resolver,
+    SeoMetadataService,
+    SeoMetadataResolver,
+    SeoAnalysisService,
+    SeoAnalysisResolver,
+  ],
   exports: [V0Resolver],
 })
 export class V0Module {

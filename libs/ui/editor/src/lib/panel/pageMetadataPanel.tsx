@@ -1,8 +1,18 @@
 import styled from '@emotion/styled';
-import { FullImageFragment, Tag, TagType } from '@wepublish/editor/api';
+import {
+  FullImageFragment,
+  SeoMetadataContentType,
+  Tag,
+  TagType,
+} from '@wepublish/editor/api';
 import { SetStateAction, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdListAlt, MdSettings, MdShare } from 'react-icons/md';
+import {
+  MdListAlt,
+  MdSettings,
+  MdShare,
+  MdTravelExplore,
+} from 'react-icons/md';
 import {
   Button,
   Drawer,
@@ -25,10 +35,11 @@ import {
   SelectTags,
   useAuthorisation,
 } from '../atoms';
-import { MetaDataType } from '../blocks';
+import { MetaDataType, SeoBlockContext } from '../blocks';
 import { generateID, isFunctionalUpdate } from '../utility';
 import { ImageEditPanel } from './imageEditPanel';
 import { ImageSelectPanel } from './imageSelectPanel';
+import { SeoTab } from './seoTab';
 
 const Nav = styled(RNav)`
   margin-bottom: 20px;
@@ -87,7 +98,9 @@ export interface PageMetadata {
 
 export interface PageMetadataPanelProps {
   readonly value: PageMetadata;
+  readonly seoContext?: SeoBlockContext;
 
+  onSave?(): void;
   onClose?(): void;
 
   onChange?(value: PageMetadata): void;
@@ -95,6 +108,8 @@ export interface PageMetadataPanelProps {
 
 function PageMetadataPanel({
   value,
+  seoContext,
+  onSave,
   onClose,
   onChange,
 }: PageMetadataPanelProps) {
@@ -324,6 +339,27 @@ function PageMetadataPanel({
             </Form.Group>
           </Form.Stack>
         );
+      case MetaDataType.Seo:
+        return (
+          <SeoTab
+            type={SeoMetadataContentType.Page}
+            metadata={{
+              title,
+              lead: description,
+              seoTitle,
+              seoDescription,
+              socialMediaTitle,
+              socialMediaDescription,
+              url: value.url,
+              image,
+              socialMediaImage,
+              slug,
+            }}
+            seoContext={seoContext}
+            disabled={!isAuthorized}
+            onApply={suggestions => onChange?.({ ...value, ...suggestions })}
+          />
+        );
       case MetaDataType.Properties:
         return (
           <Form.Stack fluid>
@@ -388,6 +424,7 @@ function PageMetadataPanel({
 
         <Drawer.Actions>
           <PermissionControl qualifyingPermissions={['CAN_CREATE_PAGE']}>
+            {onSave && <Button onClick={() => onSave()}>{t('save')}</Button>}
             <Button
               appearance="primary"
               onClick={() => onClose?.()}
@@ -415,6 +452,12 @@ function PageMetadataPanel({
             icon={<MdShare />}
           >
             {t('articleEditor.panels.socialMedia')}
+          </RNav.Item>
+          <RNav.Item
+            eventKey={MetaDataType.Seo}
+            icon={<MdTravelExplore />}
+          >
+            {t('seoTab.title')}
           </RNav.Item>
           <RNav.Item
             eventKey={MetaDataType.Properties}
