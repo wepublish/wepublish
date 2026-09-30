@@ -3314,11 +3314,6 @@
           "title": "RSS-, Atom- und JSON-Feeds",
           "description": "Über Feeds können News-Aggregatoren, Feedreader und Newsletter-Tools Ihre Artikel übernehmen. Geben Sie die RSS-URL an Aggregatoren weiter, in denen Sie erscheinen möchten."
         },
-        "publisher-center": {
-          "title": "Im Google News Publisher Center registrieren",
-          "description": "Erfassen Sie Publikation, Logo und Rubriken im Publisher Center, um zu steuern, wie Sie in Google News erscheinen.",
-          "action": "Publisher Center öffnen"
-        },
         "seo-titles": {
           "title": "Präzise SEO-Titel schreiben",
           "description": "Nennen Sie das Hauptthema zuerst und bleiben Sie unter etwa 60 Zeichen. Beschreiben Sie, worum es geht, statt nur anzuteasern."

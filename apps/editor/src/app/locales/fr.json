@@ -3260,11 +3260,6 @@
           "title": "Flux RSS, Atom et JSON",
           "description": "Les flux permettent aux agrégateurs, lecteurs de flux et outils de newsletter de reprendre vos articles. Communiquez l'URL RSS aux agrégateurs où vous souhaitez apparaître."
         },
-        "publisher-center": {
-          "title": "Vous inscrire au Google News Publisher Center",
-          "description": "Ajoutez votre publication, votre logo et vos rubriques dans le Publisher Center pour contrôler votre présence dans Google News.",
-          "action": "Ouvrir Publisher Center"
-        },
         "seo-titles": {
           "title": "Rédiger des titres SEO précis",
           "description": "Placez le sujet principal en premier et restez sous environ 60 caractères. Décrivez le contenu de l'article plutôt que de simplement l'annoncer."

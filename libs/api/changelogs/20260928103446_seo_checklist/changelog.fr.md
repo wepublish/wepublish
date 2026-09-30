@@ -1,6 +1,7 @@
 ---
 title: Liste de contrôle SEO
 lead: Une nouvelle liste de contrôle SEO dans les paramètres vous guide à travers Google Search Console, les sitemaps et flux, les contenus et la présentation des articles partagés. La progression de votre équipe est enregistrée.
+actionRequired: true
 ---
 
 - Chaque étape comprend une courte explication et, si utile, un lien direct, par exemple vers Google Search Console ou le Google News Publisher Center.

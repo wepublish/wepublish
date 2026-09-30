@@ -66,12 +66,12 @@ export const SEO_CHECKLIST: SeoChecklistSection[] = [
   {
     id: 'searchConsole',
     items: [
-      { id: 'gsc-verify', link: SEARCH_CONSOLE },
-      { id: 'gsc-sitemap', urls: ['sitemapUrl'], link: SEARCH_CONSOLE },
-      { id: 'gsc-pages', link: SEARCH_CONSOLE },
-      { id: 'gsc-performance', link: SEARCH_CONSOLE },
-      { id: 'gsc-inspect', link: SEARCH_CONSOLE },
-    ],
+      { id: 'gsc-verify' },
+      { id: 'gsc-sitemap', urls: ['sitemapUrl'] },
+      { id: 'gsc-pages' },
+      { id: 'gsc-performance' },
+      { id: 'gsc-inspect' },
+    ].map(item => ({ ...item, link: SEARCH_CONSOLE }) as SeoChecklistEntry),
   },
   {
     id: 'sitemapsFeeds',
@@ -82,10 +82,6 @@ export const SEO_CHECKLIST: SeoChecklistSection[] = [
         id: 'feeds',
         check: SeoCheckId.Feed,
         urls: ['rssFeedUrl', 'atomFeedUrl', 'jsonFeedUrl'],
-      },
-      {
-        id: 'publisher-center',
-        link: 'https://publishercenter.google.com',
       },
     ],
   },

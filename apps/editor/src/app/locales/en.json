@@ -3353,11 +3353,6 @@
           "title": "RSS, Atom and JSON feeds",
           "description": "Feeds let news aggregators, feed readers and newsletter tools pick up your articles. Share the RSS URL with aggregators you want to appear in."
         },
-        "publisher-center": {
-          "title": "Register in the Google News Publisher Center",
-          "description": "Add your publication, logo and sections in the Publisher Center to control how you appear in Google News.",
-          "action": "Open Publisher Center"
-        },
         "seo-titles": {
           "title": "Write specific SEO titles",
           "description": "Put the main topic first and stay below about 60 characters. Describe what the article is about instead of teasing."

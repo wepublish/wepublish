@@ -1,7 +1,7 @@
 ---
 title: SEO checklist
 lead: A new SEO checklist under Settings guides you through Google Search Console, sitemaps and feeds, content and the presentation of shared articles. Your team's progress is saved.
-actionRequired: false
+actionRequired: true
 ---
 
 - Each step comes with a short explanation and, where useful, a direct link, for example to Google Search Console or the Google News Publisher Center.
