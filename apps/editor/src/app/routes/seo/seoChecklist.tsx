@@ -11,6 +11,7 @@ import {
   CircularProgress,
   IconButton,
   LinearProgress,
+  Skeleton,
   Tooltip,
   Typography,
 } from '@mui/material';
@@ -156,15 +157,33 @@ export const getSeoChecklistProgress = (
 
 const Wrapper = styled.div`
   display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 24px;
+  align-items: start;
+  max-width: 1120px;
+`;
+
+const Content = styled.div`
+  display: grid;
   gap: 24px;
   max-width: 960px;
 `;
 
-const Header = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 16px;
+const Actions = styled.div`
+  position: sticky;
+  top: 0;
+  z-index: 1;
+`;
+
+const RefreshButton = styled(Button)`
+  white-space: nowrap;
+`;
+
+const Placeholder = styled.div`
+  display: grid;
+  gap: 24px;
+  opacity: 0.5;
+  pointer-events: none;
 `;
 
 const Items = styled.ul`
@@ -268,24 +287,30 @@ const ChecklistItem = ({
   onToggle,
 }: {
   entry: SeoChecklistEntry;
-  data: SeoChecklistData;
+  data?: SeoChecklistData;
   completed?: SeoChecklistItemFragment;
   canUpdate: boolean;
   updating: boolean;
   onToggle(completed: boolean): void;
 }) => {
   const { t, i18n } = useTranslation();
-  const check = entry.check && data.checks.find(c => c.id === entry.check);
+  const check = entry.check && data?.checks.find(c => c.id === entry.check);
   const key = `seoChecklist.items.${entry.id}`;
 
   return (
     <ItemRow data-testid={`seo-item-${entry.id}`}>
       <ItemMarker>
-        {entry.check || entry.info ?
+        {(entry.check || entry.info) && !data ?
+          <Skeleton
+            variant="circular"
+            width={24}
+            height={24}
+          />
+        : entry.check || entry.info ?
           <StatusIcon status={check ? check.status : undefined} />
         : <Checkbox
             checked={!!completed}
-            disabled={!canUpdate || updating}
+            disabled={!data || !canUpdate || updating}
             onChange={event => onToggle(event.target.checked)}
             inputProps={{ 'aria-label': t(`${key}.title`) }}
           />
@@ -318,20 +343,21 @@ const ChecklistItem = ({
           </Typography>
         )}
 
-        {entry.urls?.map(urlKey => (
-          <UrlRow key={urlKey}>
-            <code>{data[urlKey]}</code>
-            <Tooltip title={t('seoChecklist.copyUrl')}>
-              <IconButton
-                size="small"
-                aria-label={t('seoChecklist.copyUrl')}
-                onClick={() => navigator.clipboard.writeText(data[urlKey])}
-              >
-                <MdContentCopy />
-              </IconButton>
-            </Tooltip>
-          </UrlRow>
-        ))}
+        {data &&
+          entry.urls?.map(urlKey => (
+            <UrlRow key={urlKey}>
+              <code>{data[urlKey]}</code>
+              <Tooltip title={t('seoChecklist.copyUrl')}>
+                <IconButton
+                  size="small"
+                  aria-label={t('seoChecklist.copyUrl')}
+                  onClick={() => navigator.clipboard.writeText(data[urlKey])}
+                >
+                  <MdContentCopy />
+                </IconButton>
+              </Tooltip>
+            </UrlRow>
+          ))}
 
         {(entry.link || entry.internalLink) && (
           <ItemActions>
@@ -378,6 +404,67 @@ const ChecklistItem = ({
   );
 };
 
+const ChecklistSection = ({
+  section,
+  checklist,
+  canUpdate,
+  updating,
+  onToggle,
+}: {
+  section: SeoChecklistSection;
+  checklist?: SeoChecklistData;
+  canUpdate: boolean;
+  updating: boolean;
+  onToggle(itemId: string, completed: boolean): void;
+}) => {
+  const { t } = useTranslation();
+
+  return (
+    <Card
+      variant="outlined"
+      data-testid={`seo-section-${section.id}`}
+    >
+      <CardHeader
+        title={t(`seoChecklist.sections.${section.id}.title`)}
+        subheader={t(`seoChecklist.sections.${section.id}.description`)}
+        action={
+          checklist ?
+            <Chip
+              size="small"
+              label={t(
+                'seoChecklist.progress',
+                getSeoChecklistProgress(
+                  [section],
+                  checklist.checks,
+                  checklist.completedItems
+                )
+              )}
+            />
+          : <Skeleton width={48} />
+        }
+      />
+
+      <CardContent>
+        <Items>
+          {section.items.map(entry => (
+            <ChecklistItem
+              key={entry.id}
+              entry={entry}
+              data={checklist}
+              completed={checklist?.completedItems.find(
+                item => item.itemId === entry.id
+              )}
+              canUpdate={canUpdate}
+              updating={updating}
+              onToggle={completed => onToggle(entry.id, completed)}
+            />
+          ))}
+        </Items>
+      </CardContent>
+    </Card>
+  );
+};
+
 function SeoChecklist() {
   const { t } = useTranslation();
   const canUpdate = !!useAuthorisation('CAN_UPDATE_SETTINGS');
@@ -408,6 +495,7 @@ function SeoChecklist() {
     });
 
   const checklist = data?.seoChecklist;
+  const initialLoading = !checklist && loading;
   const progress =
     checklist &&
     getSeoChecklistProgress(
@@ -416,9 +504,22 @@ function SeoChecklist() {
       checklist.completedItems
     );
 
+  const sections = SEO_CHECKLIST.map(section => (
+    <ChecklistSection
+      key={section.id}
+      section={section}
+      checklist={checklist}
+      canUpdate={canUpdate}
+      updating={updating}
+      onToggle={(itemId, completed) =>
+        updateItem({ variables: { itemId, completed } })
+      }
+    />
+  ));
+
   return (
     <Wrapper>
-      <Header>
+      <Content>
         <div>
           <h3>{t('seoChecklist.title')}</h3>
           <Typography
@@ -439,81 +540,46 @@ function SeoChecklist() {
           )}
         </div>
 
-        <Button
+        {progress && (
+          <div>
+            <Typography variant="body2">
+              {t('seoChecklist.progress', progress)}
+            </Typography>
+            <LinearProgress
+              variant="determinate"
+              value={(progress.done / progress.total) * 100}
+            />
+          </div>
+        )}
+
+        {initialLoading && <LinearProgress />}
+
+        {(error || updateError) && (
+          <Alert severity="error">{(error ?? updateError)?.message}</Alert>
+        )}
+
+        {checklist && sections}
+
+        {initialLoading && (
+          <Placeholder
+            aria-busy="true"
+            data-testid="seo-checklist-placeholder"
+          >
+            {sections}
+          </Placeholder>
+        )}
+      </Content>
+
+      <Actions>
+        <RefreshButton
           variant="outlined"
           disabled={loading}
           startIcon={loading ? <CircularProgress size={16} /> : <MdRefresh />}
           onClick={() => refetch()}
         >
           {t('seoChecklist.refresh')}
-        </Button>
-      </Header>
-
-      {progress && (
-        <div>
-          <Typography variant="body2">
-            {t('seoChecklist.progress', progress)}
-          </Typography>
-          <LinearProgress
-            variant="determinate"
-            value={(progress.done / progress.total) * 100}
-          />
-        </div>
-      )}
-
-      {(error || updateError) && (
-        <Alert severity="error">{(error ?? updateError)?.message}</Alert>
-      )}
-
-      {checklist &&
-        SEO_CHECKLIST.map(section => {
-          const sectionProgress = getSeoChecklistProgress(
-            [section],
-            checklist.checks,
-            checklist.completedItems
-          );
-
-          return (
-            <Card
-              key={section.id}
-              variant="outlined"
-              data-testid={`seo-section-${section.id}`}
-            >
-              <CardHeader
-                title={t(`seoChecklist.sections.${section.id}.title`)}
-                subheader={t(`seoChecklist.sections.${section.id}.description`)}
-                action={
-                  <Chip
-                    size="small"
-                    label={t('seoChecklist.progress', sectionProgress)}
-                  />
-                }
-              />
-
-              <CardContent>
-                <Items>
-                  {section.items.map(entry => (
-                    <ChecklistItem
-                      key={entry.id}
-                      entry={entry}
-                      data={checklist}
-                      completed={checklist.completedItems.find(
-                        item => item.itemId === entry.id
-                      )}
-                      canUpdate={canUpdate}
-                      updating={updating}
-                      onToggle={completed =>
-                        updateItem({
-                          variables: { itemId: entry.id, completed },
-                        })
-                      }
-                    />
-                  ))}
-                </Items>
-              </CardContent>
-            </Card>
-          );
-        })}
+        </RefreshButton>
+      </Actions>
     </Wrapper>
   );
 }

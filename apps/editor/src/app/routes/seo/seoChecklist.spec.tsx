@@ -8,7 +8,7 @@ import {
   isEntryDone,
   SEO_CHECKLIST,
   SeoChecklist,
-} from './seo-checklist';
+} from './seoChecklist';
 
 const { queryResult, updateItem, auth } = vi.hoisted(() => ({
   queryResult: {
@@ -86,6 +86,7 @@ describe('SeoChecklist', () => {
     updateItem.mockReset();
     auth.canUpdate = true;
     queryResult.error = undefined;
+    queryResult.loading = false;
     queryResult.data = {
       seoChecklist: {
         websiteUrl: 'https://example.com',
@@ -184,6 +185,31 @@ describe('SeoChecklist', () => {
     renderChecklist();
 
     expect(screen.getByText('Forbidden')).toBeTruthy();
+    expect(screen.queryByTestId('seo-checklist-placeholder')).toBe(null);
+  });
+
+  test('shows a greyed out placeholder while loading', () => {
+    queryResult.data = undefined;
+    queryResult.loading = true;
+
+    renderChecklist();
+
+    expect(screen.getByTestId('seo-checklist-placeholder')).toBeTruthy();
+
+    for (const section of SEO_CHECKLIST) {
+      expect(screen.getByTestId(`seo-section-${section.id}`)).toBeTruthy();
+    }
+
+    const verify = within(screen.getByTestId('seo-item-gsc-verify')).getByRole(
+      'checkbox'
+    ) as HTMLInputElement;
+
+    expect(verify.disabled).toBe(true);
+    expect(verify.checked).toBe(false);
+    expect(
+      within(screen.getByTestId('seo-item-feeds')).queryByRole('checkbox')
+    ).toBe(null);
+    expect(screen.queryByText(/^seoChecklist\.progress:/)).toBe(null);
   });
 });
 
