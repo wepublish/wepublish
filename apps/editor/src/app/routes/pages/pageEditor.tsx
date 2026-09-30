@@ -73,6 +73,7 @@ import {
   PreviewDevice,
   PreviewFrame,
 } from '../../previewFrame';
+import { useAutosave } from '../../useAutosave';
 
 const EditorContent = styled.div`
   display: flex;
@@ -294,6 +295,8 @@ function PageEditor() {
   );
 
   const [hasChanged, setChanged] = useState(false);
+  const changeVersion = useRef(0);
+  const skipRepopulate = useRef(false);
   const unsavedChangesDialog = useUnsavedChangesDialog(hasChanged);
 
   const previewUrl = pageData?.page?.previewUrl;
@@ -305,13 +308,14 @@ function PageEditor() {
   const handleChange = useCallback(
     (blocks: React.SetStateAction<BlockValue[]>) => {
       setBlocks(blocks);
+      changeVersion.current++;
       setChanged(true);
     },
     []
   );
 
   useEffect(() => {
-    if (pageData?.page && !hasChanged) {
+    if (pageData?.page && !hasChanged && !skipRepopulate.current) {
       const { latest, tags, hidden, slug, url } = pageData.page;
       const {
         title,
@@ -406,6 +410,8 @@ function PageEditor() {
     });
 
     if (data) {
+      skipRepopulate.current = false;
+      markSaved();
       setChanged(false);
       await Promise.all([refetch({ id: pageID }), reloadRevisions()]);
 
@@ -434,6 +440,8 @@ function PageEditor() {
 
       if (data) {
         // Let the page query repopulate the editor with the restored draft.
+        skipRepopulate.current = false;
+        markSaved();
         setChanged(false);
         await Promise.all([refetch({ id: pageID }), reloadRevisions()]);
 
@@ -513,6 +521,8 @@ function PageEditor() {
     if (pageID) {
       await updatePage({ variables: { id: pageID, ...input } });
 
+      skipRepopulate.current = false;
+      markSaved();
       setChanged(false);
       toaster.push(
         <Notification
@@ -541,6 +551,43 @@ function PageEditor() {
     }
   }
 
+  async function handleAutosave() {
+    if (!pageID || !validateAll.current().ok) {
+      return;
+    }
+
+    const version = changeVersion.current;
+    const { data } = await updatePage({
+      variables: { id: pageID, ...createInput() },
+    });
+
+    if (!data) {
+      return;
+    }
+
+    skipRepopulate.current = true;
+
+    if (version === changeVersion.current) {
+      setChanged(false);
+    }
+
+    toaster.push(
+      <Notification
+        type="success"
+        header={t('pageEditor.overview.pageDraftAutosaved')}
+        duration={2000}
+      />,
+      { placement: 'bottomEnd' }
+    );
+    await reloadRevisions();
+  }
+
+  const { markSaved } = useAutosave({
+    enabled: !isDisabled && !!pageID,
+    hasChanged,
+    onAutosave: handleAutosave,
+  });
+
   async function handlePublish(publishedAt: Date) {
     if (!runEditorValidation('publish')) {
       return;
@@ -551,6 +598,8 @@ function PageEditor() {
       });
 
       if (data) {
+        skipRepopulate.current = false;
+        markSaved();
         const { data: publishData } = await publishPage({
           variables: {
             id: pageID,
@@ -816,6 +865,7 @@ function PageEditor() {
           }}
           onChange={value => {
             setMetadata(value);
+            changeVersion.current++;
             setChanged(true);
           }}
         />
