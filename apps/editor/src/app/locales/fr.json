@@ -3253,6 +3253,11 @@
       "progress": "{{done}} sur {{total}} effectués",
       "completedBy": "Effectué par {{name}} le {{date}}",
       "completedAt": "Effectué le {{date}}",
+      "guide": {
+        "show": "Comment bien le rédiger",
+        "good": "Bon exemple",
+        "bad": "Exemple faible"
+      },
       "status": {
         "Ok": "OK",
         "Warning": "Avertissement",
@@ -3328,11 +3333,35 @@
         },
         "seo-titles": {
           "title": "Rédiger des titres SEO précis",
-          "description": "Placez le sujet principal en premier et restez sous environ 60 caractères. Décrivez le contenu de l'article plutôt que de simplement l'annoncer."
+          "description": "Placez le sujet principal en premier et restez sous environ 60 caractères. Décrivez le contenu de l'article plutôt que de simplement l'annoncer.",
+          "guide": {
+            "tips": {
+              "topicFirst": "Commencez par le sujet principal, les mots que les lecteurs taperaient dans Google, p. ex. un lieu, une personne ou un événement.",
+              "length": "Visez 50 à 60 caractères. Google tronque les titres plus longs, et le nom de la publication prend aussi de la place.",
+              "specific": "Soyez concret : qui, quoi, où. « Conseil de ville de Berne » fonctionne mieux que « Politique ».",
+              "noClickbait": "Dites de quoi parle l'article au lieu de simplement l'annoncer. Les lecteurs qui se sentent trompés partent vite, et Google le remarque.",
+              "unique": "Donnez à chaque article son propre titre. Les articles de suivi ont besoin d'un titre qui montre ce qui est nouveau.",
+              "siteName": "N'ajoutez pas le nom de la publication, il est ajouté automatiquement."
+            },
+            "good": "Berne adopte 20 km de nouvelles pistes cyclables",
+            "bad": "Vous ne croirez jamais ce que le Conseil de ville vient de décider"
+          }
         },
         "meta-descriptions": {
           "title": "Rédiger des méta-descriptions",
-          "description": "Résumez l'article en une ou deux phrases (environ 150 caractères). Sans description, le chapeau ou le premier paragraphe est utilisé."
+          "description": "Résumez l'article en une ou deux phrases (environ 150 caractères). Sans description, le chapeau ou le premier paragraphe est utilisé.",
+          "guide": {
+            "tips": {
+              "summarize": "Résumez l'information clé de l'article en une ou deux phrases complètes.",
+              "length": "Visez 120 à 158 caractères. Les descriptions plus longues sont tronquées dans Google.",
+              "addToTitle": "Ajoutez des informations absentes du titre au lieu de le répéter.",
+              "details": "Donnez des détails concrets comme des chiffres, des lieux et des dates, et écrivez à la voix active.",
+              "forPeople": "Écrivez pour des personnes, pas pour les moteurs de recherche : pas de listes de mots-clés ni de répétitions.",
+              "fallback": "Google affiche parfois son propre extrait, mais une bonne description augmente nettement les chances que la vôtre soit utilisée."
+            },
+            "good": "Le plan prévoit 20 km de nouvelles pistes cyclables d'ici 2027 pour 12 millions de francs. Les opposants envisagent un référendum.",
+            "bad": "Tout sur le plan vélo ici. Vélo, pistes cyclables, Berne, Conseil de ville, actualités."
+          }
         },
         "structure": {
           "title": "Structurer les textes longs",

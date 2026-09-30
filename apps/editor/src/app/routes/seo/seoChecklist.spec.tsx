@@ -171,8 +171,8 @@ describe('SeoChecklist', () => {
     renderChecklist();
 
     expect(
-      within(screen.getByTestId('seo-item-gsc-verify'))
-        .getByText('seoChecklist.items.gsc-verify.action')
+      within(screen.getByTestId('seo-item-gsc-inspect'))
+        .getByText('seoChecklist.items.gsc-inspect.action')
         .closest('a')
         ?.getAttribute('href')
     ).toBe('https://search.google.com/search-console');
@@ -210,6 +210,37 @@ describe('SeoChecklist', () => {
       within(screen.getByTestId('seo-item-feeds')).queryByRole('checkbox')
     ).toBe(null);
     expect(screen.queryByText(/^seoChecklist\.progress:/)).toBe(null);
+  });
+
+  test('shows a writing guide for SEO titles and meta descriptions', () => {
+    renderChecklist();
+
+    for (const id of ['seo-titles', 'meta-descriptions']) {
+      const item = within(screen.getByTestId(`seo-item-${id}`));
+      const toggle = item.getByRole('button', {
+        name: 'seoChecklist.guide.show',
+      });
+
+      expect(toggle.getAttribute('aria-expanded')).toBe('false');
+      fireEvent.click(toggle);
+      expect(toggle.getAttribute('aria-expanded')).toBe('true');
+
+      expect(
+        item.getAllByText(
+          new RegExp(`^seoChecklist\\.items\\.${id}\\.guide\\.tips\\.`)
+        ).length
+      ).toBeGreaterThan(2);
+      expect(
+        item.getByText(`seoChecklist.items.${id}.guide.good`)
+      ).toBeTruthy();
+      expect(item.getByText(`seoChecklist.items.${id}.guide.bad`)).toBeTruthy();
+    }
+
+    expect(
+      within(screen.getByTestId('seo-item-structure')).queryByRole('button', {
+        name: 'seoChecklist.guide.show',
+      })
+    ).toBe(null);
   });
 });
 

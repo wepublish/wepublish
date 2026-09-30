@@ -3346,6 +3346,11 @@
       "progress": "{{done}} of {{total}} done",
       "completedBy": "Done by {{name}} on {{date}}",
       "completedAt": "Done on {{date}}",
+      "guide": {
+        "show": "How to write it",
+        "good": "Good example",
+        "bad": "Weak example"
+      },
       "status": {
         "Ok": "OK",
         "Warning": "Warning",
@@ -3421,11 +3426,35 @@
         },
         "seo-titles": {
           "title": "Write specific SEO titles",
-          "description": "Put the main topic first and stay below about 60 characters. Describe what the article is about instead of teasing."
+          "description": "Put the main topic first and stay below about 60 characters. Describe what the article is about instead of teasing.",
+          "guide": {
+            "tips": {
+              "topicFirst": "Start with the main topic, the words readers would type into Google, e.g. a place, person or event.",
+              "length": "Aim for 50–60 characters. Google cuts off longer titles, and the publication name takes up part of the space.",
+              "specific": "Be concrete: who, what, where. \"Bern city council\" works better than \"Politics\".",
+              "noClickbait": "Say what the article is about instead of teasing. Readers who feel tricked leave quickly, and Google notices.",
+              "unique": "Give every article its own title. Follow-up stories need a title that shows what is new.",
+              "siteName": "Do not add the publication name, it is appended automatically."
+            },
+            "good": "Bern city council approves 20 km of new bike lanes",
+            "bad": "You won't believe what the city council just decided"
+          }
         },
         "meta-descriptions": {
           "title": "Write meta descriptions",
-          "description": "Summarize the article in one or two sentences (about 150 characters). Without one, the lead or first paragraph is used."
+          "description": "Summarize the article in one or two sentences (about 150 characters). Without one, the lead or first paragraph is used.",
+          "guide": {
+            "tips": {
+              "summarize": "Summarize the key fact of the article in one or two full sentences.",
+              "length": "Aim for 120–158 characters. Longer descriptions are cut off in Google.",
+              "addToTitle": "Add information the title does not have instead of repeating it.",
+              "details": "Use concrete details such as numbers, places and dates, and write in active voice.",
+              "forPeople": "Write for people, not search engines: no keyword lists or repeated phrases.",
+              "fallback": "Google sometimes shows its own excerpt, but a good description makes it much more likely yours is used."
+            },
+            "good": "The city council's new plan adds 20 km of bike lanes by 2027 and costs 12 million francs. Opponents are considering a referendum.",
+            "bad": "Read all about the cycling plan here. Cycling, bike lanes, Bern, city council, news."
+          }
         },
         "structure": {
           "title": "Structure longer texts",

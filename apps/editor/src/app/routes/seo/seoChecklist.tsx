@@ -1,6 +1,9 @@
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
   Alert,
   Button,
   Card,
@@ -34,6 +37,7 @@ import {
   MdCheck,
   MdClose,
   MdContentCopy,
+  MdExpandMore,
   MdInfoOutline,
   MdOpenInNew,
   MdRefresh,
@@ -54,6 +58,7 @@ export interface SeoChecklistEntry {
   readonly urls?: SeoUrlKey[];
   readonly link?: string;
   readonly internalLink?: string;
+  readonly guide?: string[];
 }
 
 export interface SeoChecklistSection {
@@ -89,8 +94,28 @@ export const SEO_CHECKLIST: SeoChecklistSection[] = [
   {
     id: 'content',
     items: [
-      { id: 'seo-titles' },
-      { id: 'meta-descriptions' },
+      {
+        id: 'seo-titles',
+        guide: [
+          'topicFirst',
+          'length',
+          'specific',
+          'noClickbait',
+          'unique',
+          'siteName',
+        ],
+      },
+      {
+        id: 'meta-descriptions',
+        guide: [
+          'summarize',
+          'length',
+          'addToTitle',
+          'details',
+          'forPeople',
+          'fallback',
+        ],
+      },
       { id: 'structure' },
       { id: 'internal-links' },
       { id: 'stable-slugs' },
@@ -231,6 +256,20 @@ const UrlRow = styled.div`
   }
 `;
 
+const GuideTips = styled.ul`
+  margin: 0 0 12px;
+  padding-left: 20px;
+  display: grid;
+  gap: 4px;
+`;
+
+const GuideExample = styled.div`
+  display: grid;
+  grid-template-columns: 20px 1fr;
+  gap: 8px;
+  align-items: start;
+`;
+
 const ItemActions = styled.div`
   display: flex;
   flex-wrap: wrap;
@@ -276,6 +315,57 @@ const StatusIcon = ({ status }: { status?: SeoCheckStatus }) => {
         />
       );
   }
+};
+
+const WritingGuide = ({ entry }: { entry: SeoChecklistEntry }) => {
+  const theme = useTheme();
+  const { t } = useTranslation();
+  const key = `seoChecklist.items.${entry.id}.guide`;
+
+  return (
+    <Accordion
+      disableGutters
+      variant="outlined"
+    >
+      <AccordionSummary expandIcon={<MdExpandMore />}>
+        <Typography variant="body2">{t('seoChecklist.guide.show')}</Typography>
+      </AccordionSummary>
+
+      <AccordionDetails>
+        <GuideTips>
+          {entry.guide?.map(tip => (
+            <Typography
+              key={tip}
+              component="li"
+              variant="body2"
+            >
+              {t(`${key}.tips.${tip}`)}
+            </Typography>
+          ))}
+        </GuideTips>
+
+        <GuideExample>
+          <MdCheck
+            size={20}
+            aria-label={t('seoChecklist.guide.good')}
+            color={theme.palette.success.main}
+          />
+          <Typography variant="body2">
+            <q>{t(`${key}.good`)}</q>
+          </Typography>
+
+          <MdClose
+            size={20}
+            aria-label={t('seoChecklist.guide.bad')}
+            color={theme.palette.error.main}
+          />
+          <Typography variant="body2">
+            <q>{t(`${key}.bad`)}</q>
+          </Typography>
+        </GuideExample>
+      </AccordionDetails>
+    </Accordion>
+  );
 };
 
 const ChecklistItem = ({
@@ -335,6 +425,8 @@ const ChecklistItem = ({
         >
           {t(`${key}.description`)}
         </Typography>
+
+        {entry.guide && <WritingGuide entry={entry} />}
 
         {check?.detail && (
           <Typography variant="body2">

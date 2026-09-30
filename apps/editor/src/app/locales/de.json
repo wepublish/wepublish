@@ -3308,6 +3308,11 @@
       "progress": "{{done}} von {{total}} erledigt",
       "completedBy": "Erledigt von {{name}} am {{date}}",
       "completedAt": "Erledigt am {{date}}",
+      "guide": {
+        "show": "So gelingt es",
+        "good": "Gutes Beispiel",
+        "bad": "Schwaches Beispiel"
+      },
       "status": {
         "Ok": "OK",
         "Warning": "Warnung",
@@ -3383,11 +3388,35 @@
         },
         "seo-titles": {
           "title": "Präzise SEO-Titel schreiben",
-          "description": "Nennen Sie das Hauptthema zuerst und bleiben Sie unter etwa 60 Zeichen. Beschreiben Sie, worum es geht, statt nur anzuteasern."
+          "description": "Nennen Sie das Hauptthema zuerst und bleiben Sie unter etwa 60 Zeichen. Beschreiben Sie, worum es geht, statt nur anzuteasern.",
+          "guide": {
+            "tips": {
+              "topicFirst": "Beginnen Sie mit dem Hauptthema, also den Wörtern, die Leserinnen und Leser bei Google eingeben würden, z. B. ein Ort, eine Person oder ein Ereignis.",
+              "length": "Bleiben Sie bei 50–60 Zeichen. Google schneidet längere Titel ab, und der Name der Publikation braucht ebenfalls Platz.",
+              "specific": "Seien Sie konkret: wer, was, wo. «Berner Stadtrat» funktioniert besser als «Politik».",
+              "noClickbait": "Sagen Sie, worum es geht, statt nur anzuteasern. Wer sich getäuscht fühlt, springt schnell ab, und Google bemerkt das.",
+              "unique": "Geben Sie jedem Artikel einen eigenen Titel. Folgeartikel brauchen einen Titel, der zeigt, was neu ist.",
+              "siteName": "Fügen Sie den Namen der Publikation nicht hinzu, er wird automatisch angehängt."
+            },
+            "good": "Berner Stadtrat beschliesst 20 km neue Velowege",
+            "bad": "Sie werden nicht glauben, was der Stadtrat entschieden hat"
+          }
         },
         "meta-descriptions": {
           "title": "Meta-Beschreibungen schreiben",
-          "description": "Fassen Sie den Artikel in ein bis zwei Sätzen zusammen (etwa 150 Zeichen). Ohne Beschreibung wird der Lead oder der erste Absatz verwendet."
+          "description": "Fassen Sie den Artikel in ein bis zwei Sätzen zusammen (etwa 150 Zeichen). Ohne Beschreibung wird der Lead oder der erste Absatz verwendet.",
+          "guide": {
+            "tips": {
+              "summarize": "Fassen Sie die Kernaussage des Artikels in ein bis zwei ganzen Sätzen zusammen.",
+              "length": "Bleiben Sie bei 120–158 Zeichen. Längere Beschreibungen werden in Google abgeschnitten.",
+              "addToTitle": "Ergänzen Sie Informationen, die nicht im Titel stehen, statt ihn zu wiederholen.",
+              "details": "Nennen Sie konkrete Details wie Zahlen, Orte und Daten, und schreiben Sie aktiv.",
+              "forPeople": "Schreiben Sie für Menschen, nicht für Suchmaschinen: keine Stichwortlisten oder Wiederholungen.",
+              "fallback": "Google zeigt manchmal einen eigenen Ausschnitt, mit einer guten Beschreibung wird aber viel eher Ihre verwendet."
+            },
+            "good": "Das neue Velokonzept des Stadtrats sieht bis 2027 20 km neue Velowege vor und kostet 12 Millionen Franken. Die Gegner prüfen ein Referendum.",
+            "bad": "Hier lesen Sie alles zum Velokonzept. Velo, Velowege, Bern, Stadtrat, News."
+          }
         },
         "structure": {
           "title": "Längere Texte strukturieren",
