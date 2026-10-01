@@ -85,6 +85,7 @@ describe('MailSendResolver', () => {
     const recipientService = {
       count: jest.fn(async () => 12),
       countUsers: jest.fn(async () => 10),
+      countWithoutAddress: jest.fn(async () => 3),
       allowsSubscriptionTemplates: jest.fn(() => true),
     };
 
@@ -97,6 +98,7 @@ describe('MailSendResolver', () => {
     expect(preview).toEqual({
       count: 12,
       userCount: 10,
+      withoutAddressCount: 3,
       allowsSubscriptionTemplates: true,
     });
   });
