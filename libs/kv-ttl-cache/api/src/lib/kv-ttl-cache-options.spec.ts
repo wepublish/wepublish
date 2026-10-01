@@ -11,6 +11,9 @@ describe('createKvTtlCacheOptions', () => {
     expect(options.ttl).toBe(600000);
     expect(store.store).toBeInstanceOf(LruMap);
     expect((store.store as LruMap<string, unknown>).maxSize).toBe(50000);
+    expect((store.store as LruMap<string, unknown>).maxBytes).toBe(
+      32 * 1024 * 1024
+    );
   });
 
   it('keeps dates and hands out copies of cached values', async () => {

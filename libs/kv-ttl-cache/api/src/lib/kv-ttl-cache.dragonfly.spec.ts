@@ -3,6 +3,7 @@ import { createClient } from '@keyv/redis';
 import { Test, TestingModule } from '@nestjs/testing';
 import { KvTtlCacheModule } from './kv-ttl-cache.module';
 import { KvTtlCacheService } from './kv-ttl-cache.service';
+import { INTEGRATION_NAMESPACES } from './kv-ttl-cache.testing';
 
 const adminUrl = process.env['REDIS_TEST_ADMIN_URL'];
 
@@ -94,21 +95,42 @@ describe.skipIf(!adminUrl)('KvTtlCacheModule on Dragonfly', () => {
     ).resolves.toBe('new');
   });
 
-  it('keeps cached values out of Dragonfly', async () => {
+  it('shares page data between api instances through Dragonfly', async () => {
+    const loading = await createApiInstance();
+    const reading = await createApiInstance();
+    const expiresAt = new Date('2030-01-01T00:00:00.000Z');
+    const loader = vi.fn();
+
+    await loading.getOrLoadNs('navigations', 'main', () => ({ expiresAt }), 60);
+
+    await expect(
+      reading.getOrLoadNs('navigations', 'main', loader, 60)
+    ).resolves.toEqual({ expiresAt });
+    expect(loader).not.toHaveBeenCalled();
+  });
+
+  it('never stores integration settings in Dragonfly', async () => {
     const service = await createApiInstance();
 
-    await service.getOrLoadNs(
-      'settings:paymentprovider',
-      'value-probe',
-      () => ({ apiKey: 'sk_live_secret' }),
-      60
-    );
+    for (const namespace of INTEGRATION_NAMESPACES) {
+      await service.getOrLoadNs(
+        namespace,
+        'value-probe',
+        () => ({ id: 'provider', value: 'sk_live_secret' }),
+        60
+      );
+    }
 
     const keys = await admin.keys(`${user}:*`);
     const values = await Promise.all(keys.map(key => admin.get(key)));
 
     expect(keys).toContain(`${user}::nsv:settings:paymentprovider`);
-    expect(keys.every(key => key.startsWith(`${user}::nsv:`))).toBe(true);
+    expect(keys.some(key => key.includes('settings:'))).toBe(true);
+    expect(
+      keys
+        .filter(key => key.includes('settings:'))
+        .every(key => key.startsWith(`${user}::nsv:`))
+    ).toBe(true);
     expect(values.some(value => value?.includes('sk_live_secret'))).toBe(false);
   });
 

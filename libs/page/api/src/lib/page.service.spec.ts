@@ -1,7 +1,9 @@
+import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
 import { Test, TestingModule } from '@nestjs/testing';
 import { PageService } from './page.service';
 import { Page, PrismaClient, TaggedPages } from '@prisma/client';
 import { PageDataloaderService } from './page-dataloader.service';
+import { PublicContentCacheInvalidator } from '@wepublish/kv-ttl-cache/api';
 import { DateFilterComparison, SortOrder } from '@wepublish/utils/api';
 import { PageSort } from './page.model';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
@@ -11,6 +13,7 @@ jest.mock('@wepublish/block-content/api');
 
 describe('PageService', () => {
   let service: PageService;
+  let publicContentCache: { invalidate: jest.Mock; invalidateDraft: jest.Mock };
   let prismaMock: {
     $queryRaw: jest.Mock;
     page: { [method in keyof PrismaClient['page']]?: jest.Mock };
@@ -50,10 +53,20 @@ describe('PageService', () => {
       },
     };
 
+    publicContentCache = {
+      invalidate: jest.fn().mockResolvedValue(undefined),
+      invalidateDraft: jest.fn().mockResolvedValue(undefined),
+    };
+
     const module: TestingModule = await Test.createTestingModule({
+      imports: [KvTtlCacheModule],
       providers: [
         PageService,
         { provide: PrismaClient, useValue: prismaMock },
+        {
+          provide: PublicContentCacheInvalidator,
+          useValue: publicContentCache,
+        },
         {
           provide: PageDataloaderService,
           useValue: {
@@ -566,5 +579,74 @@ describe('PageService', () => {
         await service.unpublishPage('1234');
       }).rejects.toThrow(NotFoundException);
     });
+  });
+
+  it.each([
+    ['publishing', () => service.publishPage('1234', new Date('2025-01-01'))],
+    ['unpublishing', () => service.unpublishPage('1234')],
+    ['deleting', () => service.deletePage('1234')],
+  ])('clears cached graphql answers after %s a page', async (_, change) => {
+    prismaMock.page.findUnique?.mockResolvedValue({
+      id: '1234',
+      revisions: [{ id: '1234-1234' }],
+    });
+    prismaMock.page.update?.mockResolvedValue({ id: '1234', revisions: [] });
+
+    await change();
+
+    expect(publicContentCache.invalidate).toHaveBeenCalledWith('pages');
+  });
+
+  it('clears cached answers after updating a published page', async () => {
+    prismaMock.page.findUnique?.mockResolvedValue({
+      id: '1234',
+      publishedAt: new Date('2022-01-01'),
+      tags: [],
+    });
+
+    await service.updatePage(
+      { id: '1234', tagIds: [], blocks: [] } as any,
+      '1'
+    );
+
+    expect(publicContentCache.invalidate).toHaveBeenCalledWith('pages');
+  });
+
+  it.each([
+    [
+      'creating a page',
+      () => service.createPage({ tagIds: [], blocks: [] } as any, '1'),
+    ],
+    [
+      'updating an unpublished page',
+      () =>
+        service.updatePage({ id: '1234', tagIds: [], blocks: [] } as any, '1'),
+    ],
+    ['duplicating a page', () => service.duplicatePage('1234', '1')],
+    [
+      'restoring a page revision',
+      () => service.restorePageRevision('1234', 'revision-1', '1'),
+    ],
+    ['discarding a page draft', () => service.discardPageDraft('1234')],
+  ])('clears only cached pages after %s', async (_, change) => {
+    prismaMock.page.findUnique?.mockResolvedValue({
+      id: '1234',
+      publishedAt: null,
+      tags: [],
+      revisions: [{ id: 'revision-1', properties: [] }],
+    });
+    prismaMock.page.create?.mockResolvedValue({ id: '1234' });
+    prismaMock.page.update?.mockResolvedValue({ id: '1234' });
+    prismaMock.pageRevision.findUnique?.mockResolvedValue({
+      id: 'revision-1',
+      pageId: '1234',
+      properties: [],
+    });
+    prismaMock.pageRevision.findFirst?.mockResolvedValue({ id: 'revision-2' });
+
+    await change();
+
+    expect(publicContentCache.invalidateDraft).toHaveBeenCalledWith('pages');
+    expect(publicContentCache.invalidate).not.toHaveBeenCalled();
   });
 });

@@ -1,3 +1,4 @@
+import { PublicContentCacheInvalidator } from '@wepublish/kv-ttl-cache/api';
 import {
   BadRequestException,
   Injectable,
@@ -21,7 +22,10 @@ import {
 
 @Injectable()
 export class EventService {
-  constructor(private prisma: PrismaClient) {}
+  constructor(
+    private prisma: PrismaClient,
+    private publicContentCache: PublicContentCacheInvalidator
+  ) {}
 
   @PrimeDataLoader(EventDataloaderService)
   async getEvents({
@@ -95,7 +99,7 @@ export class EventService {
 
     validateEvent({ ...oldEvent, ...input });
 
-    return this.prisma.event.update({
+    const result = await this.prisma.event.update({
       where: {
         id,
       },
@@ -126,13 +130,16 @@ export class EventService {
           : undefined,
       },
     });
+    await this.publicContentCache.invalidate();
+
+    return result;
   }
 
   @PrimeDataLoader(EventDataloaderService)
   async createEvent({ tagIds, description, ...input }: CreateEventInput) {
     validateEvent(input);
 
-    return this.prisma.event.create({
+    const result = await this.prisma.event.create({
       data: {
         ...input,
         description: description as any,
@@ -146,14 +153,20 @@ export class EventService {
           : undefined,
       },
     });
+    await this.publicContentCache.invalidate();
+
+    return result;
   }
 
   async deleteEvent(id: string) {
-    return this.prisma.event.delete({
+    const result = await this.prisma.event.delete({
       where: {
         id,
       },
     });
+    await this.publicContentCache.invalidate();
+
+    return result;
   }
 }
 

@@ -10,6 +10,14 @@ import {
   sessionCacheKey,
 } from './session-cache';
 
+const withoutToken = <T extends { token: string }>(
+  session: T | null
+): Omit<T, 'token'> | null =>
+  session &&
+  (Object.fromEntries(
+    Object.entries(session).filter(([key]) => key !== 'token')
+  ) as Omit<T, 'token'>);
+
 @Injectable()
 export class AuthenticationService {
   constructor(
@@ -17,22 +25,26 @@ export class AuthenticationService {
     private kv: KvTtlCacheService
   ) {}
 
-  public getUserSession(token: string): Promise<AuthSession | null> {
-    return this.kv.getOrLoadNs(
+  public async getUserSession(token: string): Promise<AuthSession | null> {
+    const session = await this.kv.getOrLoadNs(
       SESSION_CACHE_NAMESPACE,
       sessionCacheKey('user', token),
-      () => this.loadUserSession(token),
+      async () => withoutToken(await this.loadUserSession(token)),
       SESSION_CACHE_TTL_SECONDS
     );
+
+    return session && ({ ...session, token } as AuthSession);
   }
 
-  public getPeerSession(token: string): Promise<AuthSession | null> {
-    return this.kv.getOrLoadNs(
+  public async getPeerSession(token: string): Promise<AuthSession | null> {
+    const session = await this.kv.getOrLoadNs(
       SESSION_CACHE_NAMESPACE,
       sessionCacheKey('peer', token),
-      () => this.loadPeerSession(token),
+      async () => withoutToken(await this.loadPeerSession(token)),
       SESSION_CACHE_TTL_SECONDS
     );
+
+    return session && ({ ...session, token } as AuthSession);
   }
 
   private async loadUserSession(token: string): Promise<AuthSession | null> {

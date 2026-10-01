@@ -30,6 +30,7 @@ describe('MemberPlanService cache', () => {
     periodicityPricing: [],
   };
   let service: MemberPlanService;
+  let kv: KvTtlCacheService;
   let prisma: {
     memberPlan: {
       findMany: Mock;
@@ -57,10 +58,8 @@ describe('MemberPlanService cache', () => {
       imports: [KvTtlCacheModule],
     }).compile();
 
-    service = new MemberPlanService(
-      prisma as unknown as PrismaClient,
-      module.get(KvTtlCacheService)
-    );
+    kv = module.get(KvTtlCacheService);
+    service = new MemberPlanService(prisma as unknown as PrismaClient, kv);
     Object.assign(service, {
       [`__DATALOADER__${MemberPlanDataloader.name}`]: { prime: vi.fn() },
     });
@@ -104,4 +103,20 @@ describe('MemberPlanService cache', () => {
 
     expect(prisma.memberPlan.findMany).toHaveBeenCalledTimes(2);
   });
+
+  it.each<[string, () => Promise<unknown>]>([
+    ['updated', () => service.updateMemberPlan({ id: 'plan-1', name: 'Abo' })],
+    ['deleted', () => service.deleteMemberPlan('plan-1')],
+  ])(
+    'loads the member plans of paywalls again after one was %s',
+    async (_, change) => {
+      const loader = vi.fn().mockResolvedValue([memberPlan]);
+
+      await kv.getOrLoadNs('content:paywalls', 'member-plans:pw-1', loader, 60);
+      await change();
+      await kv.getOrLoadNs('content:paywalls', 'member-plans:pw-1', loader, 60);
+
+      expect(loader).toHaveBeenCalledTimes(2);
+    }
+  );
 });

@@ -1,3 +1,4 @@
+import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ArticleService, createArticleFilter } from './article.service';
 import { Article, PrismaClient, TaggedArticles } from '@prisma/client';
@@ -7,6 +8,7 @@ import { ArticleSort } from './article.model';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { TrackingPixelService } from '@wepublish/tracking-pixel/api';
 import { mapBlockUnionMap } from '@wepublish/block-content/api';
+import { PublicContentCacheInvalidator } from '@wepublish/kv-ttl-cache/api';
 
 jest.mock('@wepublish/block-content/api');
 
@@ -26,6 +28,7 @@ describe('ArticleService', () => {
     };
   };
   let trackingPixelMock: { [method in keyof TrackingPixelService]?: jest.Mock };
+  let publicContentCache: { invalidate: jest.Mock; invalidateDraft: jest.Mock };
 
   beforeAll(() => {
     jest.useFakeTimers();
@@ -65,16 +68,26 @@ describe('ArticleService', () => {
       },
     };
 
+    publicContentCache = {
+      invalidate: jest.fn().mockResolvedValue(undefined),
+      invalidateDraft: jest.fn().mockResolvedValue(undefined),
+    };
+
     trackingPixelMock = {
       addMissingArticleTrackingPixels: jest.fn(),
       getArticlePixels: jest.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({
+      imports: [KvTtlCacheModule],
       providers: [
         ArticleService,
         { provide: PrismaClient, useValue: prismaMock },
         { provide: TrackingPixelService, useValue: trackingPixelMock },
+        {
+          provide: PublicContentCacheInvalidator,
+          useValue: publicContentCache,
+        },
         {
           provide: ArticleDataloaderService,
           useValue: {
@@ -559,6 +572,113 @@ describe('ArticleService', () => {
 
     expect(prismaMock.article.update?.mock.calls[0]).toMatchSnapshot();
     expect(prismaMock.articleRevision.update?.mock.calls[0]).toMatchSnapshot();
+  });
+
+  it.each([
+    [
+      'publishing',
+      () => service.publishArticle('1234', new Date('2025-01-01')),
+    ],
+    ['unpublishing', () => service.unpublishArticle('1234')],
+    ['deleting', () => service.deleteArticle('1234')],
+  ])('clears cached graphql answers after %s a article', async (_, change) => {
+    prismaMock.article.findUnique?.mockResolvedValue({
+      id: '1234',
+      revisions: [{ id: '1234-1234' }],
+    });
+    prismaMock.article.update?.mockResolvedValue({ id: '1234', revisions: [] });
+
+    await change();
+
+    expect(publicContentCache.invalidate).toHaveBeenCalledWith('articles');
+  });
+
+  it('clears cached answers after updating a published article', async () => {
+    prismaMock.article.findUnique?.mockResolvedValue({
+      id: '1234',
+      publishedAt: new Date('2022-01-01'),
+      tags: [],
+    });
+
+    await service.updateArticle(
+      {
+        id: '1234',
+        tagIds: [],
+        authors: [],
+        socialMediaAuthorIds: [],
+        blocks: [],
+      } as any,
+      '1'
+    );
+
+    expect(publicContentCache.invalidate).toHaveBeenCalledWith('articles');
+  });
+
+  it.each([
+    [
+      'creating an article',
+      () =>
+        service.createArticle(
+          {
+            tagIds: [],
+            authors: [],
+            socialMediaAuthorIds: [],
+            blocks: [],
+          } as any,
+          '1'
+        ),
+    ],
+    [
+      'updating an unpublished article',
+      () =>
+        service.updateArticle(
+          {
+            id: '1234',
+            tagIds: [],
+            authors: [],
+            socialMediaAuthorIds: [],
+            blocks: [],
+          } as any,
+          '1'
+        ),
+    ],
+    ['duplicating an article', () => service.duplicateArticle('1234', '1')],
+    [
+      'restoring an article revision',
+      () => service.restoreArticleRevision('1234', 'revision-1', '1'),
+    ],
+    ['discarding an article draft', () => service.discardArticleDraft('1234')],
+  ])('clears only cached articles after %s', async (_, change) => {
+    prismaMock.article.findUnique?.mockResolvedValue({
+      id: '1234',
+      publishedAt: null,
+      tags: [],
+      revisions: [
+        {
+          id: 'revision-1',
+          properties: [],
+          authors: [],
+          socialMediaAuthors: [],
+        },
+      ],
+    });
+    prismaMock.article.create?.mockResolvedValue({ id: '1234' });
+    prismaMock.article.update?.mockResolvedValue({ id: '1234' });
+    prismaMock.articleRevision.findUnique?.mockResolvedValue({
+      id: 'revision-1',
+      articleId: '1234',
+      properties: [],
+      authors: [],
+      socialMediaAuthors: [],
+    });
+    prismaMock.articleRevision.findFirst?.mockResolvedValue({
+      id: 'revision-2',
+    });
+
+    await change();
+
+    expect(publicContentCache.invalidateDraft).toHaveBeenCalledWith('articles');
+    expect(publicContentCache.invalidate).not.toHaveBeenCalled();
   });
 
   it('should like an article', async () => {

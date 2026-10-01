@@ -1,3 +1,4 @@
+import { PublicContentCacheInvalidator } from '@wepublish/kv-ttl-cache/api';
 import { Injectable } from '@nestjs/common';
 import { MediaAdapter } from './media-adapter';
 import { PrismaClient } from '@prisma/client';
@@ -22,7 +23,8 @@ export type UploadImage = Pick<
 export class ImageUploadService {
   constructor(
     private prisma: PrismaClient,
-    private mediaAdapter: MediaAdapter
+    private mediaAdapter: MediaAdapter,
+    private publicContentCache: PublicContentCacheInvalidator
   ) {}
 
   @PrimeDataLoader(ImageDataloaderService)
@@ -57,7 +59,7 @@ export class ImageUploadService {
     } = uploadImageInput;
     const { id, ...image } = await this.mediaAdapter.uploadImage(file);
 
-    return this.prisma.image.update({
+    const result = await this.prisma.image.update({
       where: {
         id: imageId,
       },
@@ -75,11 +77,15 @@ export class ImageUploadService {
         focalPointY,
       },
     });
+    await this.publicContentCache.invalidate('images');
+
+    return result;
   }
 
   async deleteImage(imageId: string) {
     await this.mediaAdapter.deleteImage(imageId);
     await this.prisma.image.delete({ where: { id: imageId } });
+    await this.publicContentCache.invalidate('images');
 
     return imageId;
   }

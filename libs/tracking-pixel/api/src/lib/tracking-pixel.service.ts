@@ -1,8 +1,16 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Prisma, PrismaClient } from '@prisma/client';
+import {
+  KvTtlCacheService,
+  contentCacheNamespace,
+} from '@wepublish/kv-ttl-cache/api';
 import { TrackingPixelProvider } from './tracking-pixel-provider/tracking-pixel-provider';
 
 export const TRACKING_PIXEL_MODULE_OPTIONS = 'TRACKING_PIXEL_MODULE_OPTIONS';
+
+const CHECKED_NAMESPACE = 'tracking-pixels';
+const CHECKED_TTL_SECONDS = 24 * 60 * 60;
+const RETRY_FAILED_SECONDS = 15 * 60;
 
 export interface TrackingPixelModuleOptions {
   trackingPixelProviders: TrackingPixelProvider[];
@@ -13,7 +21,8 @@ export class TrackingPixelService {
   constructor(
     private prisma: PrismaClient,
     @Inject(TRACKING_PIXEL_MODULE_OPTIONS)
-    private config: TrackingPixelModuleOptions
+    private config: TrackingPixelModuleOptions,
+    private kv: KvTtlCacheService
   ) {}
 
   async getArticlePixels(
@@ -60,6 +69,23 @@ export class TrackingPixelService {
   }
 
   async addMissingArticleTrackingPixels(articleId: string) {
+    const providers = this.config.trackingPixelProviders;
+
+    if (!providers.length) {
+      return;
+    }
+
+    const checkedKey = `${providers
+      .map(provider => provider.id)
+      .sort()
+      .join(',')}:${articleId}`;
+
+    if (await this.kv.getNs<boolean>(CHECKED_NAMESPACE, checkedKey)) {
+      return;
+    }
+
+    let failed = false;
+    let changed = false;
     const trackingPixels = await this.prisma.articleTrackingPixels.findMany({
       where: {
         articleId,
@@ -79,6 +105,8 @@ export class TrackingPixelService {
       if (matchingPixel && !matchingPixel.error) {
         continue;
       }
+
+      changed = true;
 
       const trackingPixelMethod = await this.prisma.trackingPixelMethod.upsert({
         where: {
@@ -114,6 +142,7 @@ export class TrackingPixelService {
           },
         });
       } catch (error: any) {
+        failed = true;
         await this.prisma.articleTrackingPixels.create({
           data: {
             articleId,
@@ -125,5 +154,19 @@ export class TrackingPixelService {
         });
       }
     }
+
+    if (changed) {
+      await this.kv.delNs(
+        contentCacheNamespace('articles'),
+        `tracking-pixels:${articleId}`
+      );
+    }
+
+    await this.kv.setNs(
+      CHECKED_NAMESPACE,
+      checkedKey,
+      true,
+      failed ? RETRY_FAILED_SECONDS : CHECKED_TTL_SECONDS
+    );
   }
 }

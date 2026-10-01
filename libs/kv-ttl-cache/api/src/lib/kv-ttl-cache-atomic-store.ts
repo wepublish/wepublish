@@ -8,6 +8,7 @@ import { readFileSync } from 'fs';
 export const KV_ATOMIC_STORE = Symbol('KV_ATOMIC_STORE');
 
 const CONNECTION_TIMEOUT_MS = 1000;
+const UNAVAILABLE_RETRY_MS = 5000;
 
 const logger = new Logger('KvTtlCache');
 
@@ -19,6 +20,8 @@ export type KvTtlCacheEnv = {
 };
 
 export interface KvAtomicStore {
+  readonly shared: boolean;
+  isAvailable(): boolean;
   setIfAbsent(key: string, value: string, ttlMs?: number): Promise<boolean>;
   getRaw(key: string): Promise<string | undefined>;
   setRaw(key: string, value: string, ttlMs?: number): Promise<void>;
@@ -29,7 +32,12 @@ export interface KvAtomicStore {
 type MemoryEntry = { value: string; expiresAt?: number };
 
 export class MemoryAtomicStore implements KvAtomicStore {
+  readonly shared: boolean = false;
   private entries = new Map<string, MemoryEntry>();
+
+  isAvailable() {
+    return true;
+  }
 
   async setIfAbsent(key: string, value: string, ttlMs?: number) {
     if (this.read(key) !== undefined) {
@@ -78,7 +86,14 @@ export class MemoryAtomicStore implements KvAtomicStore {
 }
 
 export class DragonflyAtomicStore implements KvAtomicStore {
+  readonly shared = true;
+  private unavailableUntil = 0;
+
   constructor(readonly adapter: KeyvRedis<unknown>) {}
+
+  isAvailable() {
+    return Date.now() >= this.unavailableUntil;
+  }
 
   async setIfAbsent(key: string, value: string, ttlMs?: number) {
     const reply = await this.send([
@@ -120,15 +135,20 @@ export class DragonflyAtomicStore implements KvAtomicStore {
   }
 
   private async send(command: string[]): Promise<unknown> {
+    if (!this.isAvailable()) {
+      return undefined;
+    }
+
     try {
       const client = (await this.adapter.getClient()) as RedisClientType;
 
       return (await client.sendCommand(command)) ?? null;
     } catch (error) {
+      this.unavailableUntil = Date.now() + UNAVAILABLE_RETRY_MS;
       logger.error(
-        `Dragonfly unavailable, namespace resets stay local to this replica: ${
-          error instanceof Error ? error.message : String(error)
-        }`
+        `Dragonfly unavailable, caching on this replica only for the next ${
+          UNAVAILABLE_RETRY_MS / 1000
+        } s: ${error instanceof Error ? error.message : String(error)}`
       );
 
       return undefined;
@@ -198,7 +218,7 @@ export function createKvAtomicStore(
 
   keyv.on('error', (error: unknown) => {
     logger.error(
-      `Dragonfly unavailable, namespace resets stay local to this replica: ${
+      `Dragonfly unavailable, caching on this replica only: ${
         error instanceof Error ? error.message : String(error)
       }`
     );

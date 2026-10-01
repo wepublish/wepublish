@@ -165,6 +165,37 @@ describe('AuthenticationService', () => {
       expect(key).not.toContain('secret-token');
     });
 
+    it('leaves the token out of the cached user session but still returns it', async () => {
+      jest
+        .spyOn(prisma.session, 'findFirst')
+        .mockResolvedValue(userSession as any);
+      jest.spyOn(prisma.userRole, 'findMany').mockResolvedValue([]);
+      const cacheSpy = jest.spyOn(kv, 'getOrLoadNs');
+
+      const session = await service.getUserSession('secret-token');
+      const cached = await cacheSpy.mock.calls[0][2]();
+
+      expect(session?.token).toBe('secret-token');
+      expect(JSON.stringify(cached)).not.toContain('secret-token');
+    });
+
+    it('leaves the token out of the cached peer session but still returns it', async () => {
+      jest.spyOn(prisma.token, 'findFirst').mockResolvedValue({
+        id: 'token-1',
+        name: 'Peer',
+        token: 'secret-token',
+        roleIDs: [],
+      } as any);
+      jest.spyOn(prisma.userRole, 'findMany').mockResolvedValue([]);
+      const cacheSpy = jest.spyOn(kv, 'getOrLoadNs');
+
+      const session = await service.getPeerSession('secret-token');
+      const cached = await cacheSpy.mock.calls[0][2]();
+
+      expect(session?.token).toBe('secret-token');
+      expect(JSON.stringify(cached)).not.toContain('secret-token');
+    });
+
     it('caches peer sessions apart from user sessions', async () => {
       jest.spyOn(prisma.token, 'findFirst').mockResolvedValue({
         id: 'token-1',

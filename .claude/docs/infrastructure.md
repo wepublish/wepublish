@@ -23,14 +23,14 @@
 
 ## Dragonfly (shared cache)
 
-`dragonfly01.wepublish.cloud:6379` (TLS via our internal CA, `/wepublish/ca.crt`
-in the api and website images) serves all media. Terraform in
-`application-configuration` creates a user `wepublish-<app>-<env>` per medium and
-sets `REDIS_URL`, `REDIS_KEY_PREFIX` and `NODE_EXTRA_CA_CERTS` on api and website
-pods. Media are separated by key prefix ([gotchas.md](gotchas.md));
-`docker/dragonfly/users.acl` mirrors that locally. In production the api refuses
-`redis://` and verifies Dragonfly against that CA; `KvTtlCacheModule` keeps
-values in memory and stores only namespace versions there.
+`dragonfly01.wepublish.cloud:6379` (TLS, internal CA `/wepublish/ca.crt`)
+serves all media. Terraform in `application-configuration` creates a user
+`wepublish-<app>-<env>` per medium and sets `REDIS_URL`, `REDIS_KEY_PREFIX` and
+`NODE_EXTRA_CA_CERTS` on api and website pods; media are separated by key
+prefix ([gotchas.md](gotchas.md)), mirrored locally by `docker/dragonfly/users.acl`.
+In production the api refuses `redis://` and verifies Dragonfly against the CA.
+It holds page data, articles/pages/authors/images, sessions (without token) and
+anonymous GraphQL answers — never integration settings.
 
 ## Migration flow
 

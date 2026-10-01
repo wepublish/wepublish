@@ -47,6 +47,56 @@ describe('MemoryAtomicStore', () => {
   });
 });
 
+describe('DragonflyAtomicStore', () => {
+  const createStore = (sendCommand: ReturnType<typeof vi.fn>) =>
+    new DragonflyAtomicStore({
+      namespace: 'wepublish-demo',
+      createKeyPrefix: (key: string, namespace: string) =>
+        `${namespace}::${key}`,
+      getClient: async () => ({ sendCommand }),
+    } as unknown as ConstructorParameters<typeof DragonflyAtomicStore>[0]);
+
+  beforeEach(() => {
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it('is shared between replicas, unlike memory', () => {
+    expect(createStore(vi.fn()).shared).toBe(true);
+    expect(new MemoryAtomicStore().shared).toBe(false);
+  });
+
+  it('stops asking Dragonfly for five seconds after a failure', async () => {
+    const sendCommand = vi.fn().mockRejectedValue(new Error('ECONNREFUSED'));
+    const store = createStore(sendCommand);
+
+    await expect(store.getRaw('nsv:settings')).resolves.toBeUndefined();
+    vi.advanceTimersByTime(4999);
+    await store.getRaw('nsv:settings');
+    await store.setRaw('nsv:settings', 'v2');
+
+    expect(sendCommand).toHaveBeenCalledTimes(1);
+    expect(store.isAvailable()).toBe(false);
+  });
+
+  it('asks Dragonfly again once the five seconds are over', async () => {
+    const sendCommand = vi
+      .fn()
+      .mockRejectedValueOnce(new Error('ECONNREFUSED'))
+      .mockResolvedValue('v1');
+    const store = createStore(sendCommand);
+
+    await store.getRaw('nsv:settings');
+    vi.advanceTimersByTime(5000);
+
+    await expect(store.getRaw('nsv:settings')).resolves.toBe('v1');
+    expect(store.isAvailable()).toBe(true);
+  });
+});
+
 describe('createKvAtomicStore', () => {
   const stores: KvAtomicStore[] = [];
 

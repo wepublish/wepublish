@@ -1,5 +1,13 @@
+const sizeOf = (key: unknown, value: unknown) =>
+  String(key).length + (typeof value === 'string' ? value.length : 0);
+
 export class LruMap<K, V> extends Map<K, V> {
-  constructor(readonly maxSize: number) {
+  bytes = 0;
+
+  constructor(
+    readonly maxSize: number,
+    readonly maxBytes = Number.POSITIVE_INFINITY
+  ) {
     super();
   }
 
@@ -16,13 +24,36 @@ export class LruMap<K, V> extends Map<K, V> {
   }
 
   override set(key: K, value: V): this {
-    super.delete(key);
-    super.set(key, value);
+    this.delete(key);
 
-    while (this.size > this.maxSize) {
-      super.delete(super.keys().next().value as K);
+    const size = sizeOf(key, value);
+
+    if (size > this.maxBytes) {
+      return this;
+    }
+
+    super.set(key, value);
+    this.bytes += size;
+
+    while (this.size > this.maxSize || this.bytes > this.maxBytes) {
+      this.delete(super.keys().next().value as K);
     }
 
     return this;
+  }
+
+  override delete(key: K): boolean {
+    if (!super.has(key)) {
+      return false;
+    }
+
+    this.bytes -= sizeOf(key, super.get(key));
+
+    return super.delete(key);
+  }
+
+  override clear(): void {
+    super.clear();
+    this.bytes = 0;
   }
 }

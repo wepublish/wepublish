@@ -1,11 +1,18 @@
 import { createCache } from 'cache-manager';
 import { KvTtlCacheService } from './kv-ttl-cache.service';
 import { KvAtomicStore, MemoryAtomicStore } from './kv-ttl-cache-atomic-store';
+import { FakeDragonfly, INTEGRATION_NAMESPACES } from './kv-ttl-cache.testing';
 
 const createReplica = (atomic: KvAtomicStore) =>
   new KvTtlCacheService(createCache(), atomic);
 
 class UnavailableAtomicStore implements KvAtomicStore {
+  readonly shared = true;
+
+  isAvailable() {
+    return false;
+  }
+
   async setIfAbsent() {
     return true;
   }
@@ -26,6 +33,16 @@ class UnavailableAtomicStore implements KvAtomicStore {
     return;
   }
 }
+
+const twoReplicas = () => {
+  const dragonfly = new FakeDragonfly();
+
+  return {
+    dragonfly,
+    first: createReplica(dragonfly),
+    second: createReplica(dragonfly),
+  };
+};
 
 describe('KvTtlCacheService', () => {
   afterEach(() => {
@@ -113,27 +130,204 @@ describe('KvTtlCacheService', () => {
 
       expect(loader).toHaveBeenCalledTimes(1);
     });
+  });
 
-    it('never puts cached values into the shared store', async () => {
-      const atomic = new MemoryAtomicStore();
-      const writes = [
-        vi.spyOn(atomic, 'setIfAbsent'),
-        vi.spyOn(atomic, 'setRaw'),
-      ];
+  describe('getOrLoadManyNs', () => {
+    it('loads only the keys no replica has cached yet, in one call', async () => {
+      const { first, second } = twoReplicas();
+      const loader = vi.fn(async (ids: string[]) => ids.map(id => ({ id })));
 
-      await createReplica(atomic).getOrLoadNs(
-        'settings:paymentprovider',
-        'stripe',
-        () => ({ apiKey: 'sk_live_secret' }),
+      await first.getOrLoadManyNs('content:articles', ['a', 'b'], loader, 60);
+      const result = await second.getOrLoadManyNs(
+        'content:articles',
+        ['b', 'c', 'a'],
+        loader,
         60
       );
 
-      const written = writes.flatMap(spy =>
-        spy.mock.calls.map(call => JSON.stringify(call))
+      expect(result).toEqual([{ id: 'b' }, { id: 'c' }, { id: 'a' }]);
+      expect(loader.mock.calls).toEqual([[['a', 'b']], [['c']]]);
+    });
+
+    it('returns null for keys the loader did not find and asks again next time', async () => {
+      const { first } = twoReplicas();
+      const loader = vi.fn(async (ids: string[]) => ids.map(() => null));
+
+      await expect(
+        first.getOrLoadManyNs('content:articles', ['missing'], loader, 60)
+      ).resolves.toEqual([null]);
+      await first.getOrLoadManyNs('content:articles', ['missing'], loader, 60);
+
+      expect(loader).toHaveBeenCalledTimes(2);
+    });
+
+    it('keeps keys with different prefixes apart', async () => {
+      const { first } = twoReplicas();
+
+      await first.getOrLoadManyNs(
+        'content:articles',
+        ['a'],
+        async ids => ids.map(id => `article ${id}`),
+        60,
+        'id:'
+      );
+      const revisions = await first.getOrLoadManyNs(
+        'content:articles',
+        ['a'],
+        async ids => ids.map(id => `revisions of ${id}`),
+        60,
+        'revisions:'
       );
 
-      expect(written.length).toBeGreaterThan(0);
-      expect(written.some(call => call.includes('sk_live_secret'))).toBe(false);
+      expect(revisions).toEqual(['revisions of a']);
+    });
+
+    it('does not call the loader when every key is cached', async () => {
+      const { first } = twoReplicas();
+      const loader = vi.fn(async (ids: string[]) => ids.map(id => ({ id })));
+
+      await first.getOrLoadManyNs('content:articles', ['a'], loader, 60);
+      await first.getOrLoadManyNs('content:articles', ['a'], loader, 60);
+
+      expect(loader).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('shared values', () => {
+    it('lets another replica use a value without loading it again', async () => {
+      const { first, second } = twoReplicas();
+      const loader = vi.fn();
+
+      await first.getOrLoadNs('navigations', 'main', () => ({ id: 'n1' }), 60);
+
+      await expect(
+        second.getOrLoadNs('navigations', 'main', loader, 60)
+      ).resolves.toEqual({ id: 'n1' });
+      expect(loader).not.toHaveBeenCalled();
+    });
+
+    it('keeps dates when another replica reads the value', async () => {
+      const { first, second } = twoReplicas();
+      const expiresAt = new Date('2030-01-01T00:00:00.000Z');
+
+      await first.getOrLoadNs(
+        'auth:sessions',
+        'hash',
+        () => ({ expiresAt }),
+        30
+      );
+      const session = await second.getOrLoadNs<{ expiresAt: Date }>(
+        'auth:sessions',
+        'hash',
+        vi.fn(),
+        30
+      );
+
+      expect(session.expiresAt).toEqual(expiresAt);
+      expect(session.expiresAt).toBeInstanceOf(Date);
+    });
+
+    it('lets another replica read a value stored with setNs', async () => {
+      const { first, second } = twoReplicas();
+
+      await first.setNs('graphql:responses', 'query', { data: { a: 1 } }, 60);
+
+      await expect(second.getNs('graphql:responses', 'query')).resolves.toEqual(
+        { data: { a: 1 } }
+      );
+    });
+
+    it.each(INTEGRATION_NAMESPACES)(
+      'never puts %s values into Dragonfly',
+      async namespace => {
+        const { dragonfly, first } = twoReplicas();
+
+        await first.getOrLoadNs(
+          namespace,
+          'provider',
+          () => ({ id: 'provider', value: 'sk_live_secret' }),
+          60
+        );
+        await first.setNs(namespace, 'other', { value: 'sk_live_secret' }, 60);
+
+        expect(dragonfly.written.length).toBeGreaterThan(0);
+        expect(JSON.stringify(dragonfly.written)).not.toContain(
+          'sk_live_secret'
+        );
+      }
+    );
+
+    it('keeps a value with a secret field out of Dragonfly but still caches it', async () => {
+      const { dragonfly, first } = twoReplicas();
+      const loader = vi
+        .fn()
+        .mockResolvedValue({ mailchimp: { apiKey: 'sk_live_secret' } });
+
+      await first.getOrLoadNs('website-settings', 'all', loader, 60);
+      await first.getOrLoadNs('website-settings', 'all', loader, 60);
+
+      expect(JSON.stringify(dragonfly.written)).not.toContain('sk_live_secret');
+      expect(loader).toHaveBeenCalledTimes(1);
+    });
+
+    it('keeps values over 256 KB on the replica', async () => {
+      const { dragonfly, first } = twoReplicas();
+      const loader = vi.fn().mockResolvedValue('x'.repeat(300 * 1024));
+
+      await first.getOrLoadNs('crowdfunding', 'subscriptions', loader, 60);
+      await first.getOrLoadNs('crowdfunding', 'subscriptions', loader, 60);
+
+      expect(dragonfly.written.some(([key]) => key.startsWith('val:'))).toBe(
+        false
+      );
+      expect(loader).toHaveBeenCalledTimes(1);
+    });
+
+    it('asks Dragonfly for a value at most every two seconds', async () => {
+      vi.useFakeTimers();
+      const { dragonfly, first, second } = twoReplicas();
+      const reads = vi.spyOn(dragonfly, 'getRaw');
+      const valueReads = () =>
+        reads.mock.calls.filter(([key]) => key.startsWith('val:')).length;
+
+      await first.getOrLoadNs('navigations', 'main', () => 'nav', 60);
+      reads.mockClear();
+      await second.getOrLoadNs('navigations', 'main', vi.fn(), 60);
+      await second.getOrLoadNs('navigations', 'main', vi.fn(), 60);
+
+      expect(valueReads()).toBe(1);
+
+      vi.advanceTimersByTime(2001);
+      await second.getOrLoadNs('navigations', 'main', vi.fn(), 60);
+
+      expect(valueReads()).toBe(2);
+    });
+
+    it('does not put empty results into Dragonfly', async () => {
+      const { dragonfly, first } = twoReplicas();
+
+      await first.getOrLoadNs('auth:sessions', 'unknown', () => null, 30);
+      await first.getOrLoadNs('auth:sessions', 'missing', () => undefined, 30);
+
+      expect(dragonfly.written.some(([key]) => key.startsWith('val:'))).toBe(
+        false
+      );
+    });
+
+    it('shares nothing when no Dragonfly is configured', async () => {
+      const memory = new MemoryAtomicStore();
+      const writes = vi.spyOn(memory, 'setRaw');
+
+      await createReplica(memory).getOrLoadNs(
+        'navigations',
+        'main',
+        () => 1,
+        60
+      );
+
+      expect(writes.mock.calls.some(([key]) => key.startsWith('val:'))).toBe(
+        false
+      );
     });
   });
 });

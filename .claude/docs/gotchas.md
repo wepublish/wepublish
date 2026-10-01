@@ -143,54 +143,65 @@ zone. Jest projects do **not** get this setup file — set the zone yourself the
 
 ### ⚠️ Every Dragonfly key must start with `REDIS_KEY_PREFIX`
 
-All media share database 0; a medium's user may only touch keys `<prefix>:*` /
-`{<prefix>}:*` (BullMQ) — anything else is `NOPERM`. `-@dangerous` alone is not
-enough: `CLIENT PAUSE`/`KILL`, `DFLY` (`@admin`), `SCRIPT FLUSH` and
-`SCAN`/`RANDOMKEY` reach other media, so the rule also has `-@admin -client
--script -function -memory -pubsub -scan -randomkey -dbsize` (verified on v2.0.0,
-2026-10-01). `$<db>` alone does not stop `FLUSHALL`.
+All media share database 0; a medium's user may only touch `<prefix>:*` /
+`{<prefix>}:*` — anything else is `NOPERM`. `-@dangerous` is not enough:
+`CLIENT PAUSE`/`KILL`, `DFLY`, `SCRIPT FLUSH`, `SCAN`/`RANDOMKEY` reach other
+media, hence `-@admin -client -script -function -memory -pubsub -scan -randomkey
+-dbsize` (verified on v2.0.0, 2026-10-01).
 
-**Load-bearing:** `docker/dragonfly/users.acl` must match the rule in
-`application-configuration` (`redisacl_user` in `modules/wepublish_app/dragonfly.tf`). Pinned by
+**Load-bearing:** `docker/dragonfly/users.acl` must match `redisacl_user` in
+`application-configuration` (`modules/wepublish_app/dragonfly.tf`). Pinned by
 `kv-ttl-cache.dragonfly.spec.ts` (runs in CI against Dragonfly).
 
 ---
 
-### ⚠️ `KvTtlCacheModule` builds `CACHE_MANAGER` itself
+### ⚠️ `KvTtlCacheModule` builds `CACHE_MANAGER` itself; only listed namespaces leave the process
 
 Not `CacheModule.register`: `@nestjs/cache-manager` checks `store instanceof
-Keyv`, which fails under Vitest (ESM vs CJS `keyv`) and crashes with *"Cannot read
-properties of undefined (reading 'includes')"*. Values stay in memory, but Keyv
-still JSON-serializes them there: `kv-ttl-cache-serializer.ts` keeps `Date`s
-(without it they come back as strings), `Decimal`/`BigInt`/`Map` do not survive.
-See the [lib README](../../libs/kv-ttl-cache/api/README.md).
+Keyv`, which fails under Vitest (ESM vs CJS `keyv`) with *"Cannot read
+properties of undefined (reading 'includes')"*. Only `SHARED_NAMESPACES` go to
+Dragonfly; integration settings (`settings:*`) must never be added (startup
+throws). Values are JSON: `kv-ttl-cache-serializer.ts` keeps `Date`s,
+`Decimal`/`BigInt`/`Map` do not survive. See the
+[lib README](../../libs/kv-ttl-cache/api/README.md).
 
-Pinned by `kv-ttl-cache-options.spec.ts` and `kv-ttl-cache-serializer.spec.ts`.
+Pinned by `kv-ttl-cache-shared-namespaces.spec.ts`,
+`kv-ttl-cache.service.spec.ts` and `kv-ttl-cache-serializer.spec.ts`.
 
 ---
 
 ### ⚠️ A new write path must clear the cache it changes
 
-Sessions (`AuthenticationService`, 30 s), settings, website settings,
-navigations, peer profiles, member plans and the primary banner (5 min) are
-read through `KvTtlCacheService`. Every service that writes them calls
-`kv.resetNamespace(...)` or, for anything that ends up in a session (user, role,
-session, peer token), `SessionCacheInvalidator.invalidate()`. A write that
-skips this shows stale data until the TTL runs out — after a role change, for
-example, for up to 30 s.
+Sessions (30 s), page data, articles, pages, authors, images and anonymous
+GraphQL answers (5 min) are cached — for logged-in requests too. Writers call
+`kv.resetNamespace(...)`, `SessionCacheInvalidator` (user, role, session, peer
+token) or `PublicContentCacheInvalidator` (`invalidate` for public changes,
+`invalidateDraft` for drafts, `invalidateComments`); otherwise stale data shows
+until the TTL ends, in the editor as well. A field joins `CACHEABLE_QUERIES`
+only if its anonymous answer is the same for every visitor; see the
+[lib README](../../libs/kv-ttl-cache/api/README.md).
 
-Pinned by the `*session-cache*` specs and the `cache` blocks in the services'
-specs; a brand-new write path is not covered until you add its test.
+Pinned by the `*session-cache*`, `*.cache.spec.ts` and `*content-cache*` specs;
+a new write path needs its own test.
 
 ---
 
 ### ⚠️ nx loads `.env` into every task, tests included
 
 `.env` sets `REDIS_URL` and nx passes it into tests (verified 2026-10-01), so
-`jest.setup.ts` and `vitest.setup-tests.ts` delete it — tests must not share the
-dev Dragonfly.
+`jest.setup.ts` and `vitest.setup-tests.ts` delete it. Pinned for Vitest by
+`kv-ttl-cache.module.spec.ts`; nothing guards the Jest side.
 
-Pinned for Vitest by `kv-ttl-cache.module.spec.ts`; nothing guards the Jest side.
+---
+
+### ⚠️ BullMQ on our Dragonfly needs three things
+
+Verified with bullmq 6.3.11 on v2.0.0 (2026-10-01): Dragonfly must run with
+`--lock_on_hashtags` (else *"script tried accessing undeclared key"*), the
+queue `prefix` must be `{<REDIS_KEY_PREFIX>}`, and a node-redis `connection`
+must drop `name` in `duplicate()` — the worker's `CLIENT SETNAME` is denied by
+`-client`, and Dragonfly cannot allow single subcommands. The flag is not in
+`docker-compose.yml`; check dragonfly01 first. Nothing guards this.
 
 ---
 

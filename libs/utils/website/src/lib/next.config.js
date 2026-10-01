@@ -124,6 +124,33 @@ const nextConfig = {
             },
           ],
         },
+        {
+          source: '/login',
+          headers: [
+            {
+              key: 'cache-control',
+              value: 'no-store',
+            },
+          ],
+        },
+        {
+          source: '/mitmachen',
+          headers: [
+            {
+              key: 'cache-control',
+              value: 'no-store',
+            },
+          ],
+        },
+        {
+          source: '/api/:path*',
+          headers: [
+            {
+              key: 'cache-control',
+              value: 'no-store',
+            },
+          ],
+        },
       ]
     : [],
   experimental: {

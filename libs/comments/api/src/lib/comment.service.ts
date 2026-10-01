@@ -26,6 +26,7 @@ import {
   NotAuthorisedError,
 } from '@wepublish/api';
 import { ChallengeService } from '@wepublish/challenge/api';
+import { PublicContentCacheInvalidator } from '@wepublish/kv-ttl-cache/api';
 import { SettingName, SettingsService } from '@wepublish/settings/api';
 import { UserSession } from '@wepublish/authentication/api';
 import { CalculatedRating } from './rating-system/rating-system.model';
@@ -187,7 +188,8 @@ export class CommentService {
   constructor(
     private prisma: PrismaClient,
     private settingsService: SettingsService,
-    private challengeService: ChallengeService
+    private challengeService: ChallengeService,
+    private publicContentCache: PublicContentCacheInvalidator
   ) {}
 
   async getAdminCommennts({
@@ -353,6 +355,7 @@ export class CommentService {
         },
       },
     });
+    await this.publicContentCache.invalidateComments();
 
     return this.getComment(comment.id);
   }
@@ -443,16 +446,20 @@ export class CommentService {
         },
       },
     });
+    await this.publicContentCache.invalidateComments();
 
     return this.getComment(comment.id);
   }
 
-  deleteComment(id: string) {
-    return this.prisma.comment.delete({
+  async deleteComment(id: string) {
+    const deleted = await this.prisma.comment.delete({
       where: {
         id,
       },
     });
+    await this.publicContentCache.invalidateComments();
+
+    return deleted;
   }
 
   async takeActionOnComment(
@@ -463,6 +470,7 @@ export class CommentService {
       where: { id },
       data: input,
     });
+    await this.publicContentCache.invalidateComments();
 
     return this.getComment(id);
   }
@@ -535,6 +543,7 @@ export class CommentService {
           : CommentState.pendingApproval,
       },
     });
+    await this.publicContentCache.invalidateComments();
 
     return this.getComment(comment.id);
   }
@@ -591,6 +600,7 @@ export class CommentService {
           : CommentState.pendingApproval,
       },
     });
+    await this.publicContentCache.invalidateComments();
 
     return this.getComment(updatedComment.id);
   }

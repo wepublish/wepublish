@@ -1,3 +1,4 @@
+import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
 import {
   DynamicModule,
   Global,
@@ -32,7 +33,7 @@ export interface TrackingPixelsAsyncOptions
 
 @Global()
 @Module({
-  imports: [PrismaModule],
+  imports: [PrismaModule, KvTtlCacheModule],
   providers: [TrackingPixelService, TrackingPixelDataloader],
   exports: [TrackingPixelService, TrackingPixelDataloader],
 })

@@ -13,6 +13,7 @@ import {
   ListicleItemInput,
 } from '@wepublish/block-content/api';
 import { ImageFetcherService, MediaAdapter } from '@wepublish/image/api';
+import { PublicContentCacheInvalidator } from '@wepublish/kv-ttl-cache/api';
 import { createSafeHostUrl, remote } from '@wepublish/peering/api';
 import { DateFilter, PrimeDataLoader } from '@wepublish/utils/api';
 import { GraphQLClient } from 'graphql-request';
@@ -50,7 +51,8 @@ export class ImportPeerArticleService {
   constructor(
     private prisma: PrismaClient,
     private imageFetcher: ImageFetcherService,
-    private mediaAdapter: MediaAdapter
+    private mediaAdapter: MediaAdapter,
+    private publicContentCache: PublicContentCacheInvalidator
   ) {}
 
   async getArticles({
@@ -239,6 +241,8 @@ export class ImportPeerArticleService {
         },
       },
     });
+    await this.publicContentCache.invalidateDraft('articles');
+    await this.publicContentCache.invalidate('authors');
 
     return created;
   }

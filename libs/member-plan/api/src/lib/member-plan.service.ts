@@ -16,7 +16,10 @@ import {
   UpdateMemberPlanInput,
 } from './member-plan.model';
 import { MemberPlanDataloader } from './member-plan.dataloader';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import {
+  KvTtlCacheService,
+  contentCacheNamespace,
+} from '@wepublish/kv-ttl-cache/api';
 
 const CACHE_NAMESPACE = 'member-plans';
 const CACHE_TTL_SECONDS = 300;
@@ -202,7 +205,7 @@ export class MemberPlanService {
         periodicityPricing: true,
       },
     });
-    await this.kv.resetNamespace(CACHE_NAMESPACE);
+    await this.forgetMemberPlans();
 
     return memberPlan;
   }
@@ -253,7 +256,7 @@ export class MemberPlanService {
         periodicityPricing: true,
       },
     });
-    await this.kv.resetNamespace(CACHE_NAMESPACE);
+    await this.forgetMemberPlans();
 
     return memberPlan;
   }
@@ -264,9 +267,16 @@ export class MemberPlanService {
         id,
       },
     });
-    await this.kv.resetNamespace(CACHE_NAMESPACE);
+    await this.forgetMemberPlans();
 
     return memberPlan;
+  }
+
+  private async forgetMemberPlans() {
+    await Promise.all([
+      this.kv.resetNamespace(CACHE_NAMESPACE),
+      this.kv.resetNamespace(contentCacheNamespace('paywalls')),
+    ]);
   }
 }
 
