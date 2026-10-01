@@ -1,7 +1,5 @@
 import { useMutation } from '@apollo/client/react';
-import {
-  MutationCreateGoodieArgs,
-} from '@wepublish/editor/api';
+import { MutationCreateGoodieArgs } from '@wepublish/editor/api';
 import { CanCreateGoodie } from '@wepublish/permissions';
 import {
   createCheckedPermissionComponent,
@@ -48,9 +46,9 @@ const GoodieCreateView = () => {
         } else {
           navigate(`./../edit/${data.createGoodie.id}`);
         }
-      },
-    }
-  );
+      }
+    },
+  });
 
   const loading = updateLoading;
   const onSubmit = () => createGoodie({ variables: goodie });

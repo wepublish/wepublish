@@ -1,8 +1,5 @@
 import { useMutation } from '@apollo/client/react';
-import {
-  MutationCreateTagArgs,
-  TagType,
-} from '@wepublish/editor/api';
+import { MutationCreateTagArgs, TagType } from '@wepublish/editor/api';
 import { CanCreateTag } from '@wepublish/permissions';
 import {
   createCheckedPermissionComponent,
@@ -53,9 +50,9 @@ const TagCreateView = ({ type }: TagCreateViewProps) => {
         } else {
           navigate(`./../edit/${data.createTag.id}`);
         }
-      },
-    }
-  );
+      }
+    },
+  });
 
   const loading = createLoading;
   const onSubmit = () => createTag({ variables: tag });

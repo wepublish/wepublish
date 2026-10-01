@@ -97,13 +97,6 @@ export function useAudienceFilter({
         return action;
       }
 
-      fetchStats({
-        variables: {
-          start: dateRange[0].toISOString(),
-          end: dateRange[1].toISOString(),
-          memberPlanIds,
-        },
-      });
       return {
         dateRange,
         memberPlanIds,
@@ -115,9 +108,23 @@ export function useAudienceFilter({
     }
   );
 
+  // Reducers run during render, and Apollo Client 4 throws when a lazy query
+  // is executed in that phase, so the fetch has to live in an effect.
+  const { dateRange, memberPlanIds } = audienceApiFilter;
+
   useEffect(() => {
-    setAudienceApiFilter({});
-  }, [setAudienceApiFilter]);
+    if (!dateRange || dateRange.length < 2) {
+      return;
+    }
+
+    fetchStats({
+      variables: {
+        start: dateRange[0].toISOString(),
+        end: dateRange[1].toISOString(),
+        memberPlanIds,
+      },
+    });
+  }, [dateRange, memberPlanIds, fetchStats]);
 
   const filterState = useMemo<AudienceFilterState>(
     () => ({
