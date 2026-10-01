@@ -1,7 +1,17 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
+
+/**
+ * `block-content.model` is required lazily on purpose. A static
+ * `import` of it here would close the import cycle between the two modules,
+ * which makes webpack initialize `block-content.model` first. Its
+ * `emitDecoratorMetadata` output then reads `FlexBlockInput` eagerly while this
+ * module is still in its temporal dead zone, throwing
+ * "Cannot access 'FlexBlockInput' before initialization" at boot.
+ */
+
 import { Field, InputType, ObjectType, OmitType } from '@nestjs/graphql';
 import { BaseBlock } from '../base-block.model';
 import { BlockType } from '../block-type.model';
-import * as blockContentModel from '../block-content.model';
 import type {
   BlockContentInput,
   BlockContent,
@@ -10,7 +20,7 @@ import type {
 import { FlexAlignment, FlexAlignmentInput } from './flex-alignment.model';
 
 @ObjectType({
-  implements: () => [blockContentModel.HasOneBlockContent],
+  implements: () => [require('../block-content.model').HasOneBlockContent],
 })
 export class BlockWithAlignment implements HasOneBlockContent {
   @Field(() => FlexAlignment)
@@ -28,7 +38,7 @@ export class BlockWithAlignmentInput extends OmitType(
   @Field(() => FlexAlignmentInput)
   alignment!: FlexAlignmentInput;
 
-  @Field(() => blockContentModel.BlockContentInput, {
+  @Field(() => require('../block-content.model').BlockContentInput, {
     nullable: true,
   })
   block?: BlockContentInput;
