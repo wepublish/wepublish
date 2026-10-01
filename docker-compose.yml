@@ -33,6 +33,8 @@ services:
       MAIL_SMTP_HOST: mailpit
       MAIL_SMTP_PORT: '1025'
       MAIL_SMTP_FROM: no-reply@wepublish.local
+      REDIS_URL: redis://wepublish-local:wepublish-local@dragonfly:6379/0
+      REDIS_KEY_PREFIX: wepublish-local
     env_file: .env
     volumes:
       - ./apps/api-example/src/default.yaml:/config.yaml
@@ -40,6 +42,21 @@ services:
       - database
       - migration
       - mailpit
+      - dragonfly
+    networks:
+      - app-tier
+  dragonfly:
+    image: docker.dragonflydb.io/dragonflydb/dragonfly:v2.0.0
+    # Same version and ACL rules as dragonfly01.wepublish.cloud: each medium's
+    # user may only touch keys starting with its own name. See docker/dragonfly/users.acl.
+    command:
+      - --aclfile=/etc/dragonfly/users.acl
+      - --proactor_threads=2
+      - --maxmemory=1gb
+    ports:
+      - '127.0.0.1:6379:6379'
+    volumes:
+      - ./docker/dragonfly/users.acl:/etc/dragonfly/users.acl:ro
     networks:
       - app-tier
   mailpit:

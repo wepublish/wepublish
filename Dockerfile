@@ -75,6 +75,7 @@ COPY --chown=1001:0 --from=build-website /wepublish/dist/apps/${NEXT_PROJECT}/.n
 COPY --chown=1001:0 version /wepublish/apps/${NEXT_PROJECT}/public/deployed_version
 COPY --chown=1001:0 --from=build-website /wepublish/secrets_name.list /wepublish/secrets_name.list
 COPY --chown=1001:0 --from=build-website /wepublish/deployment/map-secrets.js /wepublish/map-secrets.js
+COPY --chown=1001:0 libs/api/prisma/ca.crt /wepublish/ca.crt
 RUN printf '{"serverPath":"/wepublish/apps/%s/server.js"}' "${NEXT_PROJECT}" > /wepublish/startup-config.json && \
     chmod -R g=u /wepublish
 

@@ -1,16 +1,23 @@
-import { Module } from '@nestjs/common';
+import { Inject, Module, OnModuleDestroy } from '@nestjs/common';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { createCache, type Cache } from 'cache-manager';
 import { KvTtlCacheService } from './kv-ttl-cache.service';
-import { CacheModule } from '@nestjs/cache-manager';
+import { createKvTtlCacheOptions } from './kv-ttl-cache-options';
 
 @Module({
-  imports: [
-    CacheModule.register({
-      isGlobal: false,
-      ttl: 600000, // 10 minutes default (callers override per entry)
-      max: 50000,
-    }),
+  providers: [
+    {
+      provide: CACHE_MANAGER,
+      useFactory: () => createCache(createKvTtlCacheOptions()),
+    },
+    KvTtlCacheService,
   ],
-  providers: [KvTtlCacheService],
   exports: [KvTtlCacheService],
 })
-export class KvTtlCacheModule {}
+export class KvTtlCacheModule implements OnModuleDestroy {
+  constructor(@Inject(CACHE_MANAGER) private readonly cache: Cache) {}
+
+  async onModuleDestroy() {
+    await this.cache.disconnect();
+  }
+}

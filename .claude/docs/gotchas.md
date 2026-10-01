@@ -141,6 +141,43 @@ zone. Jest projects do **not** get this setup file — set the zone yourself the
 
 ---
 
+### ⚠️ Every Dragonfly key must start with `REDIS_KEY_PREFIX`
+
+All media share database 0; a medium's user may only touch keys `<prefix>:*` /
+`{<prefix>}:*` (BullMQ) — anything else is `NOPERM`. `-@dangerous` alone is not
+enough: `CLIENT PAUSE`/`KILL`, `DFLY` (`@admin`), `SCRIPT FLUSH` and
+`SCAN`/`RANDOMKEY` reach other media, so the rule also has `-@admin -client
+-script -function -memory -pubsub -scan -randomkey -dbsize` (verified on v2.0.0,
+2026-10-01). `$<db>` alone does not stop `FLUSHALL`.
+
+**Load-bearing:** `docker/dragonfly/users.acl` must match the rule in
+`application-configuration` (`redisacl_user` in `modules/wepublish_app/dragonfly.tf`). Pinned by
+`kv-ttl-cache.dragonfly.spec.ts` (runs in CI against Dragonfly).
+
+---
+
+### ⚠️ `KvTtlCacheModule` builds `CACHE_MANAGER` itself
+
+Not `CacheModule.register`: `@nestjs/cache-manager` checks `store instanceof
+Keyv`, which fails under Vitest (ESM vs CJS `keyv`) and crashes with *"Cannot read
+properties of undefined (reading 'includes')"*. Values are JSON — `Date`s survive
+via `kv-ttl-cache-serializer.ts`, `Decimal`/`BigInt`/`Map` do not. See the
+[lib README](../../libs/kv-ttl-cache/api/README.md).
+
+Pinned by `kv-ttl-cache.module.spec.ts` and `kv-ttl-cache-serializer.spec.ts`.
+
+---
+
+### ⚠️ nx loads `.env` into every task, tests included
+
+`.env` sets `REDIS_URL` and nx passes it into tests (verified 2026-10-01), so
+`jest.setup.ts` and `vitest.setup-tests.ts` delete it — tests must not share the
+dev Dragonfly.
+
+Pinned for Vitest by `kv-ttl-cache.module.spec.ts`; nothing guards the Jest side.
+
+---
+
 ## Adding an entry
 
 Keep the house style: a future agent must be able to tell *why* the obvious

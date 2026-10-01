@@ -21,6 +21,15 @@
 - Multi-stage Dockerfile for all production builds (API, editor, website, media, migration, storybook)
 - **MinIO** as S3-compatible object storage for media in local dev
 
+## Dragonfly (shared cache)
+
+`dragonfly01.wepublish.cloud:6379` (TLS via our internal CA, `/wepublish/ca.crt`
+in the api and website images) serves all media. Terraform in
+`application-configuration` creates a user `wepublish-<app>-<env>` per medium and
+sets `REDIS_URL`, `REDIS_KEY_PREFIX` and `NODE_EXTRA_CA_CERTS` on api and website
+pods. Media are separated by key prefix ([gotchas.md](gotchas.md));
+`docker/dragonfly/users.acl` mirrors that locally.
+
 ## Migration flow
 
 The migration container (and `npm run migrate` locally) runs three steps in order:
