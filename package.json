@@ -299,6 +299,7 @@
     "bexio": "^3.6.1",
     "body-parser": "^1.19.0",
     "browser-image-compression": "^1.0.16",
+    "bullmq": "^6.3.11",
     "cache-manager": "^7.2.4",
     "cookies-next": "^5.1.0",
     "core-js": "3.36.1",
