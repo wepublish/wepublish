@@ -6,25 +6,31 @@ settings, crowdfunding sums and similar lookups.
 
 ## Stores
 
-| Environment | Store |
+Cached values always stay in process memory (an LRU store of at most 50 000
+entries), so secrets and personal data never leave the replica. Dragonfly only
+holds the namespace versions that make a `resetNamespace` visible to every
+replica.
+
+| Environment | Namespace versions |
 | --- | --- |
-| `REDIS_URL` unset (unit tests, dev without Docker) | in-memory, per process |
-| `REDIS_URL` + `REDIS_KEY_PREFIX` | Dragonfly, shared by every api replica |
+| `REDIS_URL` unset (unit tests, dev without Docker) | in memory: a reset only affects this replica |
+| `REDIS_URL` + `REDIS_KEY_PREFIX` | Dragonfly key `<REDIS_KEY_PREFIX>::nsv:<namespace>`, created with `SET NX` |
 | `REDIS_URL` without `REDIS_KEY_PREFIX` | refuses to start |
 
-With Dragonfly, keys are stored as `<REDIS_KEY_PREFIX>::<key>`, which the
-per-medium ACL on dragonfly01 requires. A `resetNamespace` in one replica is seen
-by all of them.
+A replica re-reads a namespace version at most every 2 seconds, so a reset on
+one replica reaches the others within 2 s; the replica that reset sees it
+immediately.
 
-If Dragonfly is unreachable, every lookup is a cache miss: the loader runs, the
-error is logged (`Dragonfly cache unavailable, falling back to the loader`) and
-the next call tries to connect again. Requests do not fail and do not queue.
+If Dragonfly is unreachable, caching keeps working in memory with the last known
+versions and resets stay local; the error is logged (`Dragonfly unavailable,
+namespace resets stay local to this replica`) and the next refresh tries again.
+Requests do not fail and do not queue.
 
-Values are stored as JSON. `Date`s are restored as `Date`s; `Decimal`, `BigInt`,
-`Map`, `Set` and class instances are not — cache plain data.
-
-In production `REDIS_URL` is a `rediss://` URL; the TLS certificate is signed by
-our internal CA, which Node trusts through `NODE_EXTRA_CA_CERTS=/wepublish/ca.crt`.
+In production (`NODE_ENV=production`) `REDIS_URL` must be `rediss://`, and the
+certificate is verified (`rejectUnauthorized`, Node's hostname check) against
+the internal CA read from `NODE_EXTRA_CA_CERTS` — the same `/wepublish/ca.crt`
+the database uses. A `redis://` URL or a missing CA file stops the api at
+startup.
 
 ## Running unit tests
 

@@ -31,8 +31,8 @@ docker (database + storage + dragonfly)  →  prisma migrate + seed  →  servic
 Skipping a step fails in a way that looks like an application bug:
 
 - **No Docker** → Prisma cannot reach Postgres; `migrate` fails on connect.
-  Without Dragonfly the API still works, but logs "Dragonfly cache unavailable"
-  and every cache lookup runs its loader.
+  Without Dragonfly the API still works and caches in memory, but logs
+  "Dragonfly unavailable" and namespace resets stay local to the replica.
 - **No migrate** → the API boots against a schema that does not match the client,
   and resolvers fail at query time rather than at boot.
 

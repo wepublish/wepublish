@@ -41,21 +41,24 @@ describe('KvTtlCacheModule', () => {
     expect(loader).toHaveBeenCalledTimes(1);
   });
 
-  it('treats an unreachable Dragonfly as a cache miss and logs it', async () => {
+  it('keeps serving cached values while Dragonfly is unreachable and logs it', async () => {
     process.env['REDIS_URL'] = 'redis://wepublish-test:secret@127.0.0.1:1/0';
     process.env['REDIS_KEY_PREFIX'] = 'wepublish-test';
     const logged = vi
       .spyOn(Logger.prototype, 'error')
       .mockImplementation(() => undefined);
     const service = await createService();
+    const loader = vi.fn().mockResolvedValue('loaded');
     const startedAt = Date.now();
 
-    await expect(service.getOrLoad('key', () => 'loaded', 60)).resolves.toBe(
-      'loaded'
-    );
-    await expect(service.getOrLoad('key', () => 'again', 60)).resolves.toBe(
-      'again'
-    );
+    await expect(
+      service.getOrLoadNs('settings', 'stripe', loader, 60)
+    ).resolves.toBe('loaded');
+    await expect(
+      service.getOrLoadNs('settings', 'stripe', loader, 60)
+    ).resolves.toBe('loaded');
+
+    expect(loader).toHaveBeenCalledTimes(1);
     expect(Date.now() - startedAt).toBeLessThan(500);
     expect(logged).toHaveBeenCalled();
   });

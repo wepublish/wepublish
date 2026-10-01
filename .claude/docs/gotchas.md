@@ -160,11 +160,11 @@ enough: `CLIENT PAUSE`/`KILL`, `DFLY` (`@admin`), `SCRIPT FLUSH` and
 
 Not `CacheModule.register`: `@nestjs/cache-manager` checks `store instanceof
 Keyv`, which fails under Vitest (ESM vs CJS `keyv`) and crashes with *"Cannot read
-properties of undefined (reading 'includes')"*. Values are JSON — `Date`s survive
-via `kv-ttl-cache-serializer.ts`, `Decimal`/`BigInt`/`Map` do not. See the
+properties of undefined (reading 'includes')"*. Values stay in memory; only
+namespace versions go to Dragonfly. See the
 [lib README](../../libs/kv-ttl-cache/api/README.md).
 
-Pinned by `kv-ttl-cache.module.spec.ts` and `kv-ttl-cache-serializer.spec.ts`.
+Pinned by `kv-ttl-cache.module.spec.ts`.
 
 ---
 

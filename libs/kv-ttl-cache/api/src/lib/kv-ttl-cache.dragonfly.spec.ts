@@ -77,62 +77,39 @@ describe.skipIf(!adminUrl)('KvTtlCacheModule on Dragonfly', () => {
     process.env = originalEnv;
   });
 
-  it('shares cached values between api instances and keeps dates', async () => {
-    const first = await createApiInstance();
-    const second = await createApiInstance();
-    const value = {
-      id: 'stripe',
-      modifiedAt: new Date('2026-01-02T03:04:05.000Z'),
-    };
-    const loader = vi.fn();
+  it('invalidates a namespace for every api instance within two seconds', async () => {
+    const editing = await createApiInstance();
+    const reading = await createApiInstance();
 
-    await first.getOrLoad('shared:stripe', () => value, 60);
-    const cached = await second.getOrLoad<typeof value>(
-      'shared:stripe',
-      loader,
-      60
-    );
-
-    expect(loader).not.toHaveBeenCalled();
-    expect(cached).toEqual(value);
-    expect(cached.modifiedAt).toBeInstanceOf(Date);
-  });
-
-  it('invalidates a namespace for every api instance', async () => {
-    const first = await createApiInstance();
-    const second = await createApiInstance();
-
-    await first.getOrLoadNs(
-      'settings:paymentprovider',
-      'stripe',
-      () => 'old',
-      60
-    );
     await expect(
-      second.getOrLoadNs(
-        'settings:paymentprovider',
-        'stripe',
-        () => 'unused',
-        60
-      )
+      reading.getOrLoadNs('settings:paymentprovider', 'stripe', () => 'old', 60)
     ).resolves.toBe('old');
 
     await new Promise(resolve => setTimeout(resolve, 5));
-    await first.resetNamespace('settings:paymentprovider');
+    await editing.resetNamespace('settings:paymentprovider');
+    await new Promise(resolve => setTimeout(resolve, 2100));
 
     await expect(
-      second.getOrLoadNs('settings:paymentprovider', 'stripe', () => 'new', 60)
+      reading.getOrLoadNs('settings:paymentprovider', 'stripe', () => 'new', 60)
     ).resolves.toBe('new');
   });
 
-  it('stores every key under the prefix', async () => {
+  it('keeps cached values out of Dragonfly', async () => {
     const service = await createApiInstance();
 
-    await service.set('prefix-probe', 1, 60);
+    await service.getOrLoadNs(
+      'settings:paymentprovider',
+      'value-probe',
+      () => ({ apiKey: 'sk_live_secret' }),
+      60
+    );
 
-    await expect(admin.keys('*prefix-probe*')).resolves.toEqual([
-      `${user}::prefix-probe`,
-    ]);
+    const keys = await admin.keys(`${user}:*`);
+    const values = await Promise.all(keys.map(key => admin.get(key)));
+
+    expect(keys).toContain(`${user}::nsv:settings:paymentprovider`);
+    expect(keys.every(key => key.startsWith(`${user}::nsv:`))).toBe(true);
+    expect(values.some(value => value?.includes('sk_live_secret'))).toBe(false);
   });
 
   it('is refused anything outside its prefix, like on dragonfly01', async () => {

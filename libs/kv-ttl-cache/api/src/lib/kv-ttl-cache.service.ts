@@ -1,16 +1,31 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Optional } from '@nestjs/common';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import type { Cache } from 'cache-manager';
+import {
+  KV_ATOMIC_STORE,
+  KvAtomicStore,
+  MemoryAtomicStore,
+} from './kv-ttl-cache-atomic-store';
+
+const VERSION_REFRESH_MS = 2000;
+
+type KnownVersion = { version: string; checkedAt: number };
 
 @Injectable()
 export class KvTtlCacheService {
   private inFlight = new Map<string, Promise<unknown>>();
   private nsVersionInFlight = new Map<string, Promise<string>>();
+  private knownVersions = new Map<string, KnownVersion>();
 
-  constructor(@Inject(CACHE_MANAGER) private cache: Cache) {}
+  constructor(
+    @Inject(CACHE_MANAGER) private cache: Cache,
+    @Optional()
+    @Inject(KV_ATOMIC_STORE)
+    private atomic: KvAtomicStore = new MemoryAtomicStore()
+  ) {}
 
   private versionKey(namespace: string): string {
-    return `ns:${namespace}:version`;
+    return `nsv:${namespace}`;
   }
 
   private namespacedKey(
@@ -23,10 +38,10 @@ export class KvTtlCacheService {
 
   async getNamespaceVersion(namespace: string): Promise<string> {
     const vk = this.versionKey(namespace);
+    const known = this.knownVersions.get(vk);
 
-    const cached = await this.cache.get<string>(vk);
-    if (cached) {
-      return cached;
+    if (known && Date.now() - known.checkedAt < VERSION_REFRESH_MS) {
+      return known.version;
     }
 
     const existing = this.nsVersionInFlight.get(vk);
@@ -35,20 +50,34 @@ export class KvTtlCacheService {
     }
 
     const p = (async () => {
-      const version = Date.now().toString(36);
-      await this.cache.set(vk, version);
+      const shared =
+        (await this.atomic.getRaw(vk)) ??
+        (await this.createSharedVersion(vk, known?.version));
 
-      return version;
+      this.knownVersions.set(vk, { version: shared, checkedAt: Date.now() });
+
+      return shared;
     })().finally(() => this.nsVersionInFlight.delete(vk));
 
     this.nsVersionInFlight.set(vk, p);
     return p;
   }
 
+  private async createSharedVersion(
+    vk: string,
+    localVersion: string | undefined
+  ): Promise<string> {
+    const version = localVersion ?? Date.now().toString(36);
+    await this.atomic.setIfAbsent(vk, version);
+
+    return (await this.atomic.getRaw(vk)) ?? version;
+  }
+
   async resetNamespace(namespace: string): Promise<void> {
     const vk = this.versionKey(namespace);
     const newVersion = Date.now().toString(36);
-    await this.cache.set(vk, newVersion);
+    await this.atomic.setRaw(vk, newVersion);
+    this.knownVersions.set(vk, { version: newVersion, checkedAt: Date.now() });
 
     for (const k of this.inFlight.keys()) {
       if (k.startsWith(`ns:${namespace}:`)) {

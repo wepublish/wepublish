@@ -28,7 +28,9 @@ in the api and website images) serves all media. Terraform in
 `application-configuration` creates a user `wepublish-<app>-<env>` per medium and
 sets `REDIS_URL`, `REDIS_KEY_PREFIX` and `NODE_EXTRA_CA_CERTS` on api and website
 pods. Media are separated by key prefix ([gotchas.md](gotchas.md));
-`docker/dragonfly/users.acl` mirrors that locally.
+`docker/dragonfly/users.acl` mirrors that locally. In production the api refuses
+`redis://` and verifies Dragonfly against that CA; `KvTtlCacheModule` keeps
+values in memory and stores only namespace versions there.
 
 ## Migration flow
 
