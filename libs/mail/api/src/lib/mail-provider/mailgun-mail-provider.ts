@@ -66,7 +66,7 @@ export class MailgunMailProvider extends BaseMailProvider {
       !timestamp ||
       !token ||
       !signature ||
-      !this.verifyWebhookSignature({ timestamp, token, signature })
+      !(await this.verifyWebhookSignature({ timestamp, token, signature }))
     ) {
       throw new Error('Webhook signature failed');
     }

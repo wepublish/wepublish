@@ -150,11 +150,11 @@ export class MailchimpMailProvider extends BaseMailProvider {
     }
 
     if (
-      !this.verifyWebhookSignature({
+      !(await this.verifyWebhookSignature({
         signature: req.headers['x-mandrill-signature'],
         url: `https://${req.headers.host}${req.originalUrl}`,
         params: req.body,
-      })
+      }))
     ) {
       throw new Error('Webhook signature failed');
     }
