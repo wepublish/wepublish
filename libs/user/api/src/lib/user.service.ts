@@ -7,7 +7,10 @@ import { differenceInMinutes } from 'date-fns';
 import { Prisma, PrismaClient, UserEvent } from '@prisma/client';
 import { hash as argon2Hash } from '@node-rs/argon2';
 import { Validator } from '@wepublish/user';
-import { unselectPassword } from '@wepublish/authentication/api';
+import {
+  SessionCacheInvalidator,
+  unselectPassword,
+} from '@wepublish/authentication/api';
 import {
   getMaxTake,
   graphQLSortOrderToPrisma,
@@ -36,7 +39,8 @@ export class UserService {
     private prisma: PrismaClient,
     private mailContext: MailContext,
     private hibpService: HibpService,
-    private mailchimpContactService: MailchimpContactService
+    private mailchimpContactService: MailchimpContactService,
+    private sessionCache: SessionCacheInvalidator
   ) {}
 
   @PrimeDataLoader(UserDataloaderService)
@@ -101,13 +105,16 @@ export class UserService {
   }
 
   async updateUserPassword(userId: string, password: string) {
-    return this.prisma.user.update({
+    const user = await this.prisma.user.update({
       where: { id: userId },
       data: {
         password: await this.hashPassword(password),
       },
       select: unselectPassword,
     });
+    await this.sessionCache.invalidate();
+
+    return user;
   }
 
   private async hashPassword(password: string) {
@@ -215,6 +222,7 @@ export class UserService {
       },
       select: unselectPassword,
     });
+    await this.sessionCache.invalidate();
 
     if (previousUserEmail) {
       await this.mailchimpContactService.updateContactEmail(
@@ -228,12 +236,15 @@ export class UserService {
   }
 
   async deleteUser(id: string) {
-    return this.prisma.user.delete({
+    const user = await this.prisma.user.delete({
       where: {
         id,
       },
       select: unselectPassword,
     });
+    await this.sessionCache.invalidate();
+
+    return user;
   }
 
   @PrimeDataLoader(UserDataloaderService)
@@ -242,7 +253,7 @@ export class UserService {
       await this.validatePassword(password);
     }
 
-    return this.prisma.user.update({
+    const user = await this.prisma.user.update({
       where: { id },
       data: {
         password: await this.hashPassword(
@@ -251,6 +262,9 @@ export class UserService {
       },
       select: unselectPassword,
     });
+    await this.sessionCache.invalidate();
+
+    return user;
   }
 
   private static readonly EMAIL_CHANGE_EXPIRY_MINUTES = 60;
@@ -278,6 +292,7 @@ export class UserService {
       },
       select: unselectPassword,
     });
+    await this.sessionCache.invalidate();
 
     const mailTemplateId = await this.mailContext.getUserTemplateId(
       UserEvent.EMAIL_CHANGE,
@@ -322,6 +337,7 @@ export class UserService {
         where: { id: userId },
         data: { pendingEmail: null, pendingEmailAt: null },
       });
+      await this.sessionCache.invalidate();
 
       throw new BadRequestException(
         'Email change request has expired. Please request a new change.'
@@ -338,6 +354,7 @@ export class UserService {
       },
       select: unselectPassword,
     });
+    await this.sessionCache.invalidate();
 
     await this.mailchimpContactService.updateContactEmail(
       updatedUser.id,

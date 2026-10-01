@@ -1,5 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
+import { SessionCacheInvalidator } from '@wepublish/authentication/api';
 import * as OTPAuth from 'otpauth';
 import {
   createCipheriv,
@@ -33,7 +34,10 @@ export class TotpService {
   // Replay protection: track used TOTP codes per user
   private usedCodes = new Map<string, { code: string; usedAt: number }[]>();
 
-  constructor(private prisma: PrismaClient) {
+  constructor(
+    private prisma: PrismaClient,
+    private sessionCache: SessionCacheInvalidator
+  ) {
     const appSecretKey = process.env.APP_SECRET_KEY;
 
     if (!appSecretKey) {
@@ -163,6 +167,7 @@ export class TotpService {
       where: { id: userId },
       data: { totpSecret: this.encrypt(secret) },
     });
+    await this.sessionCache.invalidate();
 
     return { secret, uri };
   }
@@ -205,6 +210,7 @@ export class TotpService {
       where: { id: userId },
       data: { totpEnabled: true },
     });
+    await this.sessionCache.invalidate();
 
     return true;
   }
@@ -253,6 +259,7 @@ export class TotpService {
         totpEnabled: false,
       },
     });
+    await this.sessionCache.invalidate();
 
     return true;
   }

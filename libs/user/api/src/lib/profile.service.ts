@@ -1,13 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { ImageUploadService, UploadImageInput } from '@wepublish/image/api';
 import { PrismaClient, User } from '@prisma/client';
-import { unselectPassword } from '@wepublish/authentication/api';
+import {
+  SessionCacheInvalidator,
+  unselectPassword,
+} from '@wepublish/authentication/api';
 
 @Injectable()
 export class ProfileService {
   constructor(
     readonly prisma: PrismaClient,
-    readonly imageService: ImageUploadService
+    readonly imageService: ImageUploadService,
+    private sessionCache: SessionCacheInvalidator
   ) {}
 
   async uploadUserProfileImage(
@@ -37,7 +41,7 @@ export class ProfileService {
       await this.imageService.deleteImage(user.userImageID);
     }
 
-    return this.prisma.user.update({
+    const updatedUser = await this.prisma.user.update({
       where: {
         id: user.id,
       },
@@ -46,5 +50,8 @@ export class ProfileService {
       },
       select: unselectPassword,
     });
+    await this.sessionCache.invalidate();
+
+    return updatedUser;
   }
 }

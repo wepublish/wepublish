@@ -1,6 +1,7 @@
 import { Inject, Injectable, Optional } from '@nestjs/common';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import type { Cache } from 'cache-manager';
+import { randomBytes } from 'crypto';
 import {
   KV_ATOMIC_STORE,
   KvAtomicStore,
@@ -8,6 +9,9 @@ import {
 } from './kv-ttl-cache-atomic-store';
 
 const VERSION_REFRESH_MS = 2000;
+
+const newVersion = () =>
+  `${Date.now().toString(36)}${randomBytes(4).toString('hex')}`;
 
 type KnownVersion = { version: string; checkedAt: number };
 
@@ -67,7 +71,7 @@ export class KvTtlCacheService {
     vk: string,
     localVersion: string | undefined
   ): Promise<string> {
-    const version = localVersion ?? Date.now().toString(36);
+    const version = localVersion ?? newVersion();
     await this.atomic.setIfAbsent(vk, version);
 
     return (await this.atomic.getRaw(vk)) ?? version;
@@ -75,9 +79,9 @@ export class KvTtlCacheService {
 
   async resetNamespace(namespace: string): Promise<void> {
     const vk = this.versionKey(namespace);
-    const newVersion = Date.now().toString(36);
-    await this.atomic.setRaw(vk, newVersion);
-    this.knownVersions.set(vk, { version: newVersion, checkedAt: Date.now() });
+    const version = newVersion();
+    await this.atomic.setRaw(vk, version);
+    this.knownVersions.set(vk, { version, checkedAt: Date.now() });
 
     for (const k of this.inFlight.keys()) {
       if (k.startsWith(`ns:${namespace}:`)) {

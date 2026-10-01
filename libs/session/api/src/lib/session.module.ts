@@ -22,6 +22,7 @@ import { TotpService } from './totp.service';
 import { TotpResolver } from './totp.resolver';
 import { WebsiteTokenController } from './website-token.controller';
 import {
+  SessionCacheModule,
   SCOPED_JWT_VERIFIER,
   ScopedJwtGuard,
 } from '@wepublish/authentication/api';
@@ -43,7 +44,13 @@ export interface SessionModuleAsyncOptions
 }
 
 @Module({
-  imports: [PrismaModule, UserModule, ChallengeModule, SettingModule],
+  imports: [
+    PrismaModule,
+    UserModule,
+    ChallengeModule,
+    SettingModule,
+    SessionCacheModule,
+  ],
   exports: [SessionService, JwtService, SCOPED_JWT_VERIFIER, ScopedJwtGuard],
 })
 export class SessionModule {

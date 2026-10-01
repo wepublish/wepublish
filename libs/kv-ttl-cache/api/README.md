@@ -17,6 +17,10 @@ replica.
 | `REDIS_URL` + `REDIS_KEY_PREFIX` | Dragonfly key `<REDIS_KEY_PREFIX>::nsv:<namespace>`, created with `SET NX` |
 | `REDIS_URL` without `REDIS_KEY_PREFIX` | refuses to start |
 
+Keyv still serializes values in memory: `Date`s come back as `Date`s through
+`kv-ttl-cache-serializer.ts`, and every read returns a copy; `Decimal`,
+`BigInt`, `Map`, `Set` and class instances do not survive — cache plain data.
+
 A replica re-reads a namespace version at most every 2 seconds, so a reset on
 one replica reaches the others within 2 s; the replica that reset sees it
 immediately.

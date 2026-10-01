@@ -3,12 +3,39 @@ import { PrismaClient } from '@prisma/client';
 import { AuthSessionType, AuthSession } from './auth-session';
 import { unselectPassword } from './unselect-password';
 import { addPredefinedPermissions } from '@wepublish/permissions/api';
+import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import {
+  SESSION_CACHE_NAMESPACE,
+  SESSION_CACHE_TTL_SECONDS,
+  sessionCacheKey,
+} from './session-cache';
 
 @Injectable()
 export class AuthenticationService {
-  constructor(private prisma: PrismaClient) {}
+  constructor(
+    private prisma: PrismaClient,
+    private kv: KvTtlCacheService
+  ) {}
 
-  public async getUserSession(token: string): Promise<AuthSession | null> {
+  public getUserSession(token: string): Promise<AuthSession | null> {
+    return this.kv.getOrLoadNs(
+      SESSION_CACHE_NAMESPACE,
+      sessionCacheKey('user', token),
+      () => this.loadUserSession(token),
+      SESSION_CACHE_TTL_SECONDS
+    );
+  }
+
+  public getPeerSession(token: string): Promise<AuthSession | null> {
+    return this.kv.getOrLoadNs(
+      SESSION_CACHE_NAMESPACE,
+      sessionCacheKey('peer', token),
+      () => this.loadPeerSession(token),
+      SESSION_CACHE_TTL_SECONDS
+    );
+  }
+
+  private async loadUserSession(token: string): Promise<AuthSession | null> {
     const session = await this.prisma.session.findFirst({
       where: {
         token,
@@ -44,7 +71,7 @@ export class AuthenticationService {
     return null;
   }
 
-  public async getPeerSession(token: string): Promise<AuthSession | null> {
+  private async loadPeerSession(token: string): Promise<AuthSession | null> {
     const tokenMatch = await this.prisma.token.findFirst({
       where: {
         token,

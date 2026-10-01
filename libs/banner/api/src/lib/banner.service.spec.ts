@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { Banner, LoginStatus, PrismaClient } from '@prisma/client';
 import { BannerService } from './banner.service';
 import { BannerDocumentType } from './banner.model';
+import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
 
 describe('BannerService', () => {
   let service: BannerService;
@@ -33,6 +34,7 @@ describe('BannerService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [KvTtlCacheModule],
       providers: [
         BannerService,
         {
@@ -245,5 +247,72 @@ describe('BannerService', () => {
       jest.spyOn(prisma.banner, 'delete').mockResolvedValue(banner);
       expect(await service.delete('1')).toBeUndefined();
     });
+  });
+
+  describe('cache', () => {
+    const args = {
+      documentType: BannerDocumentType.ARTICLE,
+      documentId: 'article-1',
+      loggedIn: false,
+      hasSubscription: false,
+      hasPaywallBypass: false,
+    };
+
+    it('serves the primary banner from the cache', async () => {
+      const findMany = jest
+        .spyOn(prisma.banner, 'findMany')
+        .mockResolvedValue([banner]);
+
+      await service.findFirst(args);
+      const second = await service.findFirst(args);
+
+      expect(findMany).toHaveBeenCalledTimes(1);
+      expect(second?.id).toBe('1');
+    });
+
+    it('remembers that there is no banner', async () => {
+      const findMany = jest
+        .spyOn(prisma.banner, 'findMany')
+        .mockResolvedValue([]);
+
+      await service.findFirst(args);
+      const second = await service.findFirst(args);
+
+      expect(findMany).toHaveBeenCalledTimes(1);
+      expect(second).toBeUndefined();
+    });
+
+    it('caches the primary banner per audience', async () => {
+      const findMany = jest
+        .spyOn(prisma.banner, 'findMany')
+        .mockResolvedValue([banner]);
+
+      await service.findFirst(args);
+      await service.findFirst({ ...args, loggedIn: true });
+
+      expect(findMany).toHaveBeenCalledTimes(2);
+    });
+
+    it.each([
+      ['created', () => service.create({ title: 'New', actions: [] } as never)],
+      ['updated', () => service.update({ id: '1', actions: [] } as never)],
+      ['deleted', () => service.delete('1')],
+    ])(
+      'loads the primary banner again after a banner was %s',
+      async (_, change) => {
+        const findMany = jest
+          .spyOn(prisma.banner, 'findMany')
+          .mockResolvedValue([banner]);
+        jest.spyOn(prisma.banner, 'create').mockResolvedValue(banner);
+        jest.spyOn(prisma.banner, 'update').mockResolvedValue(banner);
+        jest.spyOn(prisma.banner, 'delete').mockResolvedValue(banner);
+
+        await service.findFirst(args);
+        await change();
+        await service.findFirst(args);
+
+        expect(findMany).toHaveBeenCalledTimes(2);
+      }
+    );
   });
 });

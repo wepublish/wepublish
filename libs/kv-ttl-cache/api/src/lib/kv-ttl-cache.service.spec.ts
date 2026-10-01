@@ -54,6 +54,18 @@ describe('KvTtlCacheService', () => {
       ).resolves.toBe('other-replica');
     });
 
+    it('changes the version even when reset in the same millisecond', async () => {
+      vi.useFakeTimers();
+      const replica = createReplica(new MemoryAtomicStore());
+      const before = await replica.getNamespaceVersion('settings');
+
+      await replica.resetNamespace('settings');
+
+      await expect(replica.getNamespaceVersion('settings')).resolves.not.toBe(
+        before
+      );
+    });
+
     it('applies its own reset immediately', async () => {
       vi.useFakeTimers();
       const replica = createReplica(new MemoryAtomicStore());

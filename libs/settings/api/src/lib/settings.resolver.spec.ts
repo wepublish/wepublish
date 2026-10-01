@@ -6,6 +6,7 @@ import { ApolloDriverConfig, ApolloDriver } from '@nestjs/apollo';
 import { PrismaModule } from '@wepublish/nest-modules';
 import { SettingsResolver } from './settings.resolver';
 import { SettingsService } from './settings.service';
+import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
 import { GraphQLSettingValueType } from './settings.model';
 import { SettingDataloaderService } from './setting-dataloader.service';
 
@@ -139,6 +140,7 @@ jest.mock('@prisma/client', () => {
       path: '/',
       cache: 'bounded',
     }),
+    KvTtlCacheModule,
     PrismaModule,
   ],
   providers: [

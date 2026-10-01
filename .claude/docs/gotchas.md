@@ -160,11 +160,27 @@ enough: `CLIENT PAUSE`/`KILL`, `DFLY` (`@admin`), `SCRIPT FLUSH` and
 
 Not `CacheModule.register`: `@nestjs/cache-manager` checks `store instanceof
 Keyv`, which fails under Vitest (ESM vs CJS `keyv`) and crashes with *"Cannot read
-properties of undefined (reading 'includes')"*. Values stay in memory; only
-namespace versions go to Dragonfly. See the
-[lib README](../../libs/kv-ttl-cache/api/README.md).
+properties of undefined (reading 'includes')"*. Values stay in memory, but Keyv
+still JSON-serializes them there: `kv-ttl-cache-serializer.ts` keeps `Date`s
+(without it they come back as strings), `Decimal`/`BigInt`/`Map` do not survive.
+See the [lib README](../../libs/kv-ttl-cache/api/README.md).
 
-Pinned by `kv-ttl-cache.module.spec.ts`.
+Pinned by `kv-ttl-cache-options.spec.ts` and `kv-ttl-cache-serializer.spec.ts`.
+
+---
+
+### ⚠️ A new write path must clear the cache it changes
+
+Sessions (`AuthenticationService`, 30 s), settings, website settings,
+navigations, peer profiles, member plans and the primary banner (5 min) are
+read through `KvTtlCacheService`. Every service that writes them calls
+`kv.resetNamespace(...)` or, for anything that ends up in a session (user, role,
+session, peer token), `SessionCacheInvalidator.invalidate()`. A write that
+skips this shows stale data until the TTL runs out — after a role change, for
+example, for up to 30 s.
+
+Pinned by the `*session-cache*` specs and the `cache` blocks in the services'
+specs; a brand-new write path is not covered until you add its test.
 
 ---
 
