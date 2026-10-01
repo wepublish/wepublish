@@ -1,7 +1,5 @@
 import { useMutation } from '@apollo/client/react';
-import {
-  MutationCreatePaywallArgs,
-} from '@wepublish/editor/api';
+import { MutationCreatePaywallArgs } from '@wepublish/editor/api';
 import { CanCreatePaywall } from '@wepublish/permissions';
 import {
   createCheckedPermissionComponent,
@@ -55,9 +53,9 @@ const PaywallCreateView = () => {
         } else {
           navigate(`./../edit/${data.createPaywall.id}`);
         }
-      },
-    }
-  );
+      }
+    },
+  });
 
   const loading = updateLoading;
   const onSubmit = () => createPaywall({ variables: paywall });
