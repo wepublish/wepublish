@@ -7,10 +7,26 @@
 - Payrexx
 - Bexio
 
+- Simulated (`simulated` type) — no external service: `createIntent` sends the
+  customer to a checkout page served by the API at
+  `/payment-webhooks/<providerId>`, where Pay / Decline / Cancel post back
+  through the normal webhook path. With `offSessionPayments`, renewals are
+  charged straight away — or declined when "Decline renewals"
+  (`simulated_declineRenewals`) is ticked, to test failed recurring payments. For dev, review apps and tests; it has no guard, so
+  never configure it on a production deployment.
+
 ## Email Provider
 
 - Mailgun
 - Mailchimp
+
+## PDF Renderer
+
+Renders letters to pdf. One `settings.pdfrenderer` row; editors switch by its
+`type` (which clears the other type's credentials).
+
+- Gotenberg (self-hosted, the default; `gotenberg` service in docker-compose)
+- Cloudflare Browser Rendering
 
 ## Analytics Provider
 

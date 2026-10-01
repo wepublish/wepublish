@@ -1,6 +1,14 @@
 import { BadRequestException } from '@nestjs/common';
 import { MailContext, mailLogType } from '@wepublish/mail/api';
-import { PrismaClient } from '@prisma/client';
+import { LetterContext } from '@wepublish/letter/api';
+import {
+  LetterAddressPosition,
+  LetterDeliveryProduct,
+  LetterPrintMode,
+  LetterPrintSpectrum,
+  MailChannel,
+  PrismaClient,
+} from '@prisma/client';
 import { MailSendJobService } from './mail-send-job.service';
 import { MailSendRecipientService } from './mail-send-recipient.service';
 import { MailRecipientBase } from './mail-send.model';
@@ -8,11 +16,13 @@ import { MailRecipientBase } from './mail-send.model';
 const makeService = (
   prisma: any,
   mailContext: any = { sendMail: jest.fn() },
-  recipientService: any = {}
+  recipientService: any = {},
+  letterContext: any = { sendLetter: jest.fn(), renderLetter: jest.fn() }
 ) =>
   new MailSendJobService(
     prisma as PrismaClient,
     mailContext as unknown as MailContext,
+    letterContext as unknown as LetterContext,
     recipientService as MailSendRecipientService
   );
 
@@ -406,6 +416,119 @@ describe('MailSendJobService', () => {
 
       expect(mailContext.sendMail).toHaveBeenCalledTimes(2);
       expect(prisma.jobs[0].status).toBe('done');
+    });
+  });
+
+  describe('letter channel', () => {
+    it('posts letters instead of mails and records the print options', async () => {
+      const prisma = fakePrisma();
+      const recipientService = recipientServiceFor(['u1', 'u2']);
+      const mailContext = { sendMail: jest.fn(async () => undefined) };
+      const letterContext = { sendLetter: jest.fn(async () => 'log-1') };
+
+      await makeService(
+        prisma,
+        mailContext,
+        recipientService,
+        letterContext
+      ).createJob(
+        {
+          mailTemplateId: 'tpl-1',
+          audience,
+          channel: MailChannel.letter,
+          print: { deliveryProduct: LetterDeliveryProduct.fast },
+        },
+        'editor-1'
+      );
+      await settle(prisma);
+
+      expect(mailContext.sendMail).not.toHaveBeenCalled();
+      expect(letterContext.sendLetter).toHaveBeenCalledTimes(2);
+      expect(letterContext.sendLetter).toHaveBeenCalledWith(
+        expect.objectContaining({
+          print: {
+            // The one option the send chose; the rest fall back to the defaults.
+            deliveryProduct: LetterDeliveryProduct.fast,
+            addressPosition: LetterAddressPosition.left,
+            printMode: LetterPrintMode.simplex,
+            printSpectrum: LetterPrintSpectrum.grayscale,
+          },
+        })
+      );
+      expect(prisma.jobs[0].status).toBe('done');
+    });
+
+    it('plans and queues a letter send once per person', async () => {
+      const prisma = fakePrisma();
+      const recipientService = recipientServiceFor(['u1']);
+
+      await makeService(
+        prisma,
+        { sendMail: jest.fn(async () => undefined) },
+        recipientService,
+        { sendLetter: jest.fn(async () => 'log-1') }
+      ).createJob(
+        { mailTemplateId: 'tpl-1', audience, channel: MailChannel.letter },
+        'editor-1'
+      );
+      await settle(prisma);
+
+      expect(recipientService.count).toHaveBeenCalledWith(
+        audience,
+        MailChannel.letter
+      );
+      expect(recipientService.resolvePage).toHaveBeenCalledWith(
+        audience,
+        0,
+        expect.any(Number),
+        MailChannel.letter
+      );
+    });
+
+    it('records a letter that could not be posted and keeps going', async () => {
+      const prisma = fakePrisma();
+      const recipientService = recipientServiceFor(['u1', 'u2']);
+      const letterContext = {
+        sendLetter: jest
+          .fn()
+          .mockRejectedValueOnce(new Error('no postal address'))
+          .mockResolvedValue('log-2'),
+      };
+
+      await makeService(
+        prisma,
+        { sendMail: jest.fn() },
+        recipientService,
+        letterContext
+      ).createJob(
+        { mailTemplateId: 'tpl-1', audience, channel: MailChannel.letter },
+        'editor-1'
+      );
+      await settle(prisma);
+
+      expect(prisma.entries.map((entry: any) => entry.state)).toEqual([
+        'failed',
+        'sent',
+      ]);
+      expect(prisma.entries[0].error).toBe('no postal address');
+    });
+
+    it('defaults to mail when no channel is chosen', async () => {
+      const prisma = fakePrisma();
+      const recipientService = recipientServiceFor(['u1']);
+      const mailContext = { sendMail: jest.fn(async () => undefined) };
+      const letterContext = { sendLetter: jest.fn() };
+
+      await makeService(
+        prisma,
+        mailContext,
+        recipientService,
+        letterContext
+      ).createJob({ mailTemplateId: 'tpl-1', audience }, 'editor-1');
+      await settle(prisma);
+
+      expect(mailContext.sendMail).toHaveBeenCalledTimes(1);
+      expect(letterContext.sendLetter).not.toHaveBeenCalled();
     });
   });
 

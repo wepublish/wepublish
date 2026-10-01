@@ -1,0 +1,146 @@
+/* The /abos subscribe form (components/subscribe-form.js): only what the
+   live stylesheets have no rule for. Scoped to .subscribe-form so the ported
+   Drupal webforms (Kontakt, Newsletter) keep their live look. */
+
+/* the two-column row (Name | Vorname): each field half the width */
+.subscribe-form .layout--two-col > .input__wrapper--text {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+/* the free-amount slider: a thin grey line and a round thumb like the radio
+   icons. The line is the input's background across its full width, while
+   the thumb only travels the padded content box, so it stops a little inside
+   both ends of the line. */
+.subscribe-form .amount-slider {
+  display: block;
+}
+
+.subscribe-form .amount-slider__value {
+  display: block;
+  margin-bottom: 0.4em;
+}
+
+.subscribe-form input[type='range'] {
+  -webkit-appearance: none;
+  appearance: none;
+  box-sizing: border-box;
+  height: 1.2em;
+  margin: 0 0 1em;
+  padding: 0 0.6em;
+  background: linear-gradient(#a6a6a6, #a6a6a6) center / 100% 2px no-repeat;
+  cursor: pointer;
+}
+
+/* the native tracks stay invisible, as tall as the thumb */
+.subscribe-form input[type='range']::-webkit-slider-runnable-track {
+  height: 1.2em;
+  background: transparent;
+}
+
+.subscribe-form input[type='range']::-moz-range-track {
+  height: 1.2em;
+  background: transparent;
+}
+
+.subscribe-form input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  box-sizing: border-box;
+  width: 1.2em;
+  height: 1.2em;
+  border: 0.15em solid #000;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.subscribe-form input[type='range']::-moz-range-thumb {
+  box-sizing: border-box;
+  width: 1.2em;
+  height: 1.2em;
+  border: 0.15em solid #000;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.subscribe-form input[type='range']:focus-visible {
+  outline: none;
+}
+
+.subscribe-form input[type='range']:focus-visible::-webkit-slider-thumb {
+  background: #000;
+}
+
+.subscribe-form input[type='range']:focus-visible::-moz-range-thumb {
+  background: #000;
+}
+
+/* the country combobox (components/country-select.js), closed like the
+   form's selects: value on a .4rem underline, the down arrow on the right */
+.subscribe-form .country-select__input {
+  width: 100%;
+  padding: 0;
+  border: none;
+  border-bottom: 0.4rem solid #000;
+  border-radius: 0;
+  background-color: #fff;
+}
+
+.subscribe-form .country-select__input + * {
+  position: absolute;
+  right: 0;
+  bottom: 0.7rem;
+  height: 1em;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* open: about seven rows, the rest scrolls */
+.subscribe-form .country-select__list {
+  position: absolute;
+  z-index: 2;
+  top: 100%;
+  left: 0;
+  right: 0;
+  max-height: 10.5em;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+  background: #fff;
+  border: 0.2rem solid #000;
+  border-top: none;
+}
+
+.subscribe-form .country-select__option,
+.subscribe-form .country-select__empty {
+  padding: 0.1em 0.4em;
+  line-height: 1.3;
+}
+
+.subscribe-form .country-select__option {
+  cursor: pointer;
+}
+
+.subscribe-form .country-select__option.active {
+  background: #000;
+  color: #fff;
+}
+
+.subscribe-form .country-select__option[aria-selected='true']:not(.active) {
+  text-decoration: underline;
+}
+
+/* a rule between the neighbouring countries and the rest */
+.subscribe-form .country-select__option.last-preferred {
+  border-bottom: 0.2rem solid #000;
+}
+
+.subscribe-form .country-select__empty {
+  opacity: 0.4;
+}
+
+/* while open the list shows the focus; the browser ring would clash with it */
+.subscribe-form .country-select__input[aria-expanded='true'] {
+  outline: none;
+}

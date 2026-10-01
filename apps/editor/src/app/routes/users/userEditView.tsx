@@ -56,18 +56,38 @@ const Grid = styled(RGrid)`
   padding-right: 0px;
 `;
 
+/* constant width across both states, sized for the wider label
+   ("Öffentlich"); the visible pill is the inner .rs-toggle-track -
+   the root label is inline, where min-width has no effect */
 const Toggle = styled(RToggle)`
-  max-width: 70px;
-  min-width: 70px;
+  .rs-toggle-track {
+    min-width: 105px;
+  }
 `;
 
-const InputW60 = styled(Input)`
-  width: 60%;
+/* && beats rsuite's .rs-input { width: 100% } regardless of sheet order */
+const PropertyValueInput = styled(Input)`
+  && {
+    width: 220px;
+  }
 `;
 
-const InputW40 = styled(Input)`
-  width: 40%;
-  margin-right: 10px;
+const PropertyKeyInput = styled(Input)`
+  && {
+    width: 140px;
+    margin-right: 10px;
+  }
+`;
+
+/* the ListInput's inner panel stretches to the full row width, pushing the
+   delete icon to the far end - fit-content shrinks it to its content even
+   if a descendant asks for 100%; the outer container keeps its full width */
+const PropertiesListWrapper = styled.div`
+  .rs-panel {
+    width: fit-content;
+    max-width: 100%;
+    flex: 0 0 auto;
+  }
 `;
 
 const FlexRow = styled.div`
@@ -86,13 +106,19 @@ const ColTextAlign = styled(Col)`
 const UserFormGrid = styled(RGrid)`
   width: 100%;
   padding-left: 0px;
-  height: calc(100vh - 160px);
-  overflow-y: scroll;
 `;
 
+/* inside the fluid form the group stretches to the remaining row width,
+   pushing the delete icon away - keep it as wide as the toggle only */
 const FormGroup = styled(Form.Group)`
   padding-top: 6px;
   padding-left: 8px;
+
+  && {
+    width: fit-content;
+    flex: 0 0 auto;
+    margin-bottom: 0;
+  }
 `;
 
 export interface UserProperty {
@@ -491,7 +517,7 @@ function UserEditView() {
                         </Form.Label>
                         <Form.Control
                           name="firstName"
-                          value={firstName || undefined}
+                          value={firstName ?? ''}
                           disabled={isDisabled}
                           onChange={(value: string) => {
                             setFirstName(value);
@@ -547,7 +573,7 @@ function UserEditView() {
                           isoWeek
                           format="dd.MM.yyyy"
                           limitEndYear={0}
-                          value={birthday}
+                          value={birthday ?? null}
                           disabled={isDisabled}
                           onChange={value => {
                             setBirthday(value as Date);
@@ -564,7 +590,7 @@ function UserEditView() {
                         </Form.Label>
                         <Form.Control
                           name="flair"
-                          value={flair}
+                          value={flair ?? ''}
                           disabled={isDisabled}
                           onChange={(value: string) => setFlair(value)}
                         />
@@ -771,8 +797,13 @@ function UserEditView() {
                     </Col>
                   </Row>
                 </RPanel>
+              </RGrid>
+            </Col>
+            {/* roles, security + communication */}
+            <Col xs={12}>
+              <Grid fluid>
                 {/* roles */}
-                <Panel
+                <RPanel
                   bordered
                   header={t('userCreateOrEditView.userRoles')}
                 >
@@ -802,64 +833,7 @@ function UserEditView() {
                       </Form.Group>
                     </Col>
                   </Row>
-                </Panel>
-                {/* properties */}
-                <Panel
-                  bordered
-                  header={t('userCreateOrEditView.properties')}
-                >
-                  <Row gutter={10}>
-                    <Col xs={24}>
-                      <Form.Group controlId="userProperties">
-                        <Form.Label>
-                          {t('articleEditor.panels.properties')}
-                        </Form.Label>
-                        <ListInput
-                          value={metaDataProperties}
-                          onChange={propertiesItemInput =>
-                            setMetadataProperties(propertiesItemInput)
-                          }
-                          defaultValue={{ key: '', value: '', public: true }}
-                        >
-                          {({ value, onChange }) => (
-                            <FlexRow>
-                              <InputW40
-                                placeholder={t('articleEditor.panels.key')}
-                                value={value.key}
-                                onChange={propertyKey =>
-                                  onChange({ ...value, key: propertyKey })
-                                }
-                                data-testid="propertyKey"
-                              />
-                              <InputW60
-                                placeholder={t('articleEditor.panels.value')}
-                                value={value.value}
-                                onChange={propertyValue =>
-                                  onChange({ ...value, value: propertyValue })
-                                }
-                                data-testid="propertyValue"
-                              />
-                              <FormGroup controlId="articleProperty">
-                                <Toggle
-                                  checkedChildren={t(
-                                    'articleEditor.panels.public'
-                                  )}
-                                  unCheckedChildren={t(
-                                    'articleEditor.panels.private'
-                                  )}
-                                  checked={value.public}
-                                  onChange={isPublic =>
-                                    onChange({ ...value, public: isPublic })
-                                  }
-                                />
-                              </FormGroup>
-                            </FlexRow>
-                          )}
-                        </ListInput>
-                      </Form.Group>
-                    </Col>
-                  </Row>
-                </Panel>
+                </RPanel>
                 {/* password */}
                 <Panel
                   bordered
@@ -988,50 +962,104 @@ function UserEditView() {
                     </Row>
                   </Panel>
                 )}
-              </RGrid>
+                {/* properties */}
+                <Panel
+                  bordered
+                  header={t('userCreateOrEditView.properties')}
+                >
+                  <Row gutter={10}>
+                    <Col xs={24}>
+                      <Form.Group controlId="userProperties">
+                        <PropertiesListWrapper>
+                          <ListInput
+                            value={metaDataProperties}
+                            onChange={propertiesItemInput =>
+                              setMetadataProperties(propertiesItemInput)
+                            }
+                            defaultValue={{ key: '', value: '', public: true }}
+                          >
+                            {({ value, onChange }) => (
+                              <FlexRow>
+                                <PropertyKeyInput
+                                  placeholder={t('articleEditor.panels.key')}
+                                  value={value.key}
+                                  onChange={propertyKey =>
+                                    onChange({ ...value, key: propertyKey })
+                                  }
+                                  data-testid="propertyKey"
+                                />
+                                <PropertyValueInput
+                                  placeholder={t('articleEditor.panels.value')}
+                                  value={value.value}
+                                  onChange={propertyValue =>
+                                    onChange({ ...value, value: propertyValue })
+                                  }
+                                  data-testid="propertyValue"
+                                />
+                                <FormGroup controlId="articleProperty">
+                                  <Toggle
+                                    checkedChildren={t(
+                                      'articleEditor.panels.public'
+                                    )}
+                                    unCheckedChildren={t(
+                                      'articleEditor.panels.private'
+                                    )}
+                                    checked={value.public}
+                                    onChange={isPublic =>
+                                      onChange({ ...value, public: isPublic })
+                                    }
+                                  />
+                                </FormGroup>
+                              </FlexRow>
+                            )}
+                          </ListInput>
+                        </PropertiesListWrapper>
+                      </Form.Group>
+                    </Col>
+                  </Row>
+                </Panel>
+              </Grid>
             </Col>
-            {/* subscriptions + sent-mail history + manual mail sending */}
-            {(subscriptionData?.subscriptions.nodes ||
-              (isEditRoute && userId)) && (
-              <Col xs={12}>
-                <Grid fluid>
-                  {subscriptionData?.subscriptions.nodes && (
-                    <RPanel
-                      bordered
-                      header={t('userCreateOrEditView.subscriptionsHeader')}
-                    >
-                      <UserSubscriptionsList
-                        subscriptions={subscriptionData.subscriptions.nodes}
-                        userId={user?.id}
-                      />
-                    </RPanel>
-                  )}
-                  {isEditRoute && userId && (
-                    <>
-                      <RPanel
-                        bordered
-                        header={t('userMail.logTitle')}
-                        style={
-                          subscriptionData?.subscriptions.nodes ?
-                            { marginTop: 16 }
-                          : undefined
-                        }
-                      >
-                        <UserMailLogPanel userId={userId} />
-                      </RPanel>
-                      <RPanel
-                        bordered
-                        header={t('userMail.sendTitle')}
-                        style={{ marginTop: 16 }}
-                      >
-                        <SendMailToUserPanel userId={userId} />
-                      </RPanel>
-                    </>
-                  )}
-                </Grid>
-              </Col>
-            )}
           </Row>
+
+          {/* subscriptions */}
+          {subscriptionData?.subscriptions.nodes && (
+            <Row gutter={10}>
+              <Col xs={24}>
+                <Panel
+                  bordered
+                  header={t('userCreateOrEditView.subscriptionsHeader')}
+                >
+                  <UserSubscriptionsList
+                    subscriptions={subscriptionData.subscriptions.nodes}
+                    userId={user?.id}
+                  />
+                </Panel>
+              </Col>
+            </Row>
+          )}
+
+          {/* manual mail sending + sent-mail history */}
+          {isEditRoute && userId && (
+            <Row gutter={10}>
+              <Col xs={12}>
+                <Panel
+                  bordered
+                  header={t('userMail.sendTitle')}
+                >
+                  <SendMailToUserPanel userId={userId} />
+                </Panel>
+              </Col>
+              <Col xs={12}>
+                <Panel
+                  bordered
+                  header={t('userMail.logTitle')}
+                >
+                  <UserMailLogPanel userId={userId} />
+                </Panel>
+              </Col>
+            </Row>
+          )}
         </UserFormGrid>
       </Form>
 

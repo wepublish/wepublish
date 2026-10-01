@@ -5,6 +5,19 @@ import {
 } from '@wepublish/utils/website';
 import { DocumentContext, Head, Html, Main, NextScript } from 'next/document';
 
+// The live site's stylesheets (byte-identical) and the subscribe form's
+// additions, in one cascade layer: their order among each other stays as in
+// the legacy clone, and the unlayered emotion/MUI styles of the we.publish
+// components (login, signup, profile) win over them. Loaded by the browser
+// rather than bundled, as Next's css-loader drops the `layer()` of @import.
+const LEGACY_STYLES = [
+  '/static/css/live-global.css',
+  '/static/css/live-modules.css',
+  '/static/css/subscribe-form.css',
+]
+  .map(href => `@import url('${href}') layer(legacy);`)
+  .join('\n');
+
 export default function Document(props: DocumentProps) {
   return (
     <Html lang="de">
@@ -36,38 +49,37 @@ export default function Document(props: DocumentProps) {
 
         {/* Favicon definitions, generated with https://realfavicongenerator.net/ */}
         <link
+          rel="icon"
+          type="image/png"
+          href="/favicon-96x96.png"
+          sizes="96x96"
+        />
+        <link
+          rel="icon"
+          type="image/svg+xml"
+          href="/favicon.svg"
+        />
+        <link
+          rel="shortcut icon"
+          href="/favicon.ico"
+        />
+        <link
           rel="apple-touch-icon"
           sizes="180x180"
           href="/apple-touch-icon.png"
         />
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="32x32"
-          href="/favicon-32x32.png"
-        />
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="16x16"
-          href="/favicon-16x16.png"
+        <meta
+          name="apple-mobile-web-app-title"
+          content="Neue Wege"
         />
         <link
           rel="manifest"
           href="/site.webmanifest"
         />
-        <link
-          rel="mask-icon"
-          href="/safari-pinned-tab.svg"
-          color="#000000"
-        />
-        <meta
-          name="msapplication-TileColor"
-          content="#ffffff"
-        />
-        <meta
-          name="theme-color"
-          content="#ffffff"
+
+        <style
+          id="legacy-styles"
+          dangerouslySetInnerHTML={{ __html: LEGACY_STYLES }}
         />
 
         <DocumentHeadTags {...props} />

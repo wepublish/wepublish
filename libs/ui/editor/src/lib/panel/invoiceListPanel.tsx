@@ -126,6 +126,18 @@ function InvoiceListPanel({
   const [doNotSendMail, setDoNotSendMail] = useState(false);
   const offersMailOptOut =
     invoiceToPay ? shouldOfferMailOptOut(periods, invoiceToPay.id) : true;
+  // Rechnungsverlauf: latest first by default; the date column header toggles.
+  const [sortType, setSortType] = useState<'asc' | 'desc'>('desc');
+  const sortedInvoices = useMemo(() => {
+    const billingDate = (invoice: InvoiceFragment) =>
+      +new Date(invoice.dueAt ?? invoice.createdAt);
+
+    return [...(invoices ?? [])].sort((a, b) =>
+      sortType === 'asc' ?
+        billingDate(a) - billingDate(b)
+      : billingDate(b) - billingDate(a)
+    );
+  }, [invoices, sortType]);
   const columns = useMemo<ListColumn<InvoiceFragment>[]>(
     () => [
       {
@@ -163,7 +175,11 @@ function InvoiceListPanel({
         label: t('invoice.table.date'),
         width: 100,
         alwaysVisible: true,
-        render: invoice => formatDate(invoice.createdAt),
+        sortable: true,
+        // dueAt = the billing date (imported history carries its real period
+        // start there); createdAt would show the import moment.
+        dataKey: 'dueAt',
+        render: invoice => formatDate(invoice.dueAt ?? invoice.createdAt),
       },
       {
         id: 'description',
@@ -318,7 +334,10 @@ function InvoiceListPanel({
       <RTable
         autoHeight
         wordWrap="break-word"
-        data={invoices}
+        data={sortedInvoices}
+        sortColumn="dueAt"
+        sortType={sortType}
+        onSortColumn={(_, type) => setSortType(type ?? 'desc')}
       >
         {renderListColumns(columns, isVisible)}
 

@@ -1,4 +1,1 @@
-export {
-  FourOhFourPage as default,
-  getFourOhFourStaticProps as getStaticProps,
-} from '@wepublish/utils/website';
+export { default } from '../src/components/NotFoundPage';

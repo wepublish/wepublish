@@ -18,7 +18,7 @@ export const getSitemap = async (req: NextApiRequest): Promise<string> => {
 
   const generate = generateSitemap({
     siteUrl,
-    title: 'We.Publish',
+    title: 'Neue Wege',
   });
   const client = getApiClient(getApiUrl(), [], {
     typePolicies: {},
@@ -46,12 +46,6 @@ export const getSitemap = async (req: NextApiRequest): Promise<string> => {
   return generate(
     articleData.articles.nodes ?? [],
     pageData.pages.nodes ?? [],
-    [
-      `${siteUrl}/author`,
-      `${siteUrl}/event`,
-      `${siteUrl}/login`,
-      `${siteUrl}/signup`,
-      `${siteUrl}/mitmachen`,
-    ]
+    [`${siteUrl}/login`, `${siteUrl}/signup`]
   );
 };

@@ -179,6 +179,33 @@ export class CreatePublicSubscriptionInput extends PickType(
   override paymentMethodID!: string;
 }
 
+@InputType()
+export class ImportSubscriptionPeriodInput {
+  @Field()
+  startsAt!: Date;
+
+  @Field()
+  endsAt!: Date;
+
+  @Field(() => Int, { description: 'Period amount in cents.' })
+  amount!: number;
+
+  @Field(() => Boolean, {
+    description: 'Whether the invoice for this period was paid.',
+  })
+  paid!: boolean;
+
+  @Field({
+    nullable: true,
+    description:
+      'Payment date for a paid period; defaults to the period start.',
+  })
+  paidAt?: Date;
+
+  @Field({ nullable: true })
+  invoiceDescription?: string;
+}
+
 @ArgsType()
 export class ImportPublicSubscriptionInput extends OmitType(
   CreatePublicSubscriptionInput,
@@ -191,6 +218,20 @@ export class ImportPublicSubscriptionInput extends OmitType(
       'When true, suppress any subscription / invoice mail dispatched as part of this import. Useful for bulk migrations.',
   })
   skipMail?: boolean;
+
+  @Field(() => [ImportSubscriptionPeriodInput], {
+    nullable: true,
+    description:
+      'Historical periods to import: one invoice + one subscription period is created per entry (paid entries with a back-dated paidAt). When given, replaces the single synthesized invoice/period.',
+  })
+  periods?: ImportSubscriptionPeriodInput[];
+
+  @Field(() => SubscriptionDeactivationReason, {
+    nullable: true,
+    description:
+      'Import the subscription as already cancelled: a deactivation with this reason is created directly (date = paidUntil when in the future, else now) — no mail, no payment-provider call.',
+  })
+  deactivationReason?: SubscriptionDeactivationReason;
 }
 
 @ArgsType()
