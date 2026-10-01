@@ -141,7 +141,10 @@ describe('GraphqlResponseCachePlugin', () => {
     ['an Authorization header', { headers: { authorization: 'Bearer s1' } }],
     ['an access_token in the url', { search: 'access_token=s1' }],
     ['an access_token in the body', { body: { access_token: 's1' } }],
-    ['a preview header', { headers: { preview: 'true' } }],
+    [
+      'a login and a preview header',
+      { headers: { authorization: 'Bearer s1', preview: 'true' } },
+    ],
   ])('never caches a request with %s', async (_, request) => {
     const api = await start();
 
@@ -215,6 +218,16 @@ describe('GraphqlResponseCachePlugin', () => {
     } finally {
       vi.useRealTimers();
     }
+  });
+
+  it('ignores a preview header without a login, since only editors can preview', async () => {
+    const api = await start();
+
+    await api.query(ARTICLE, { headers: { preview: 'true' } });
+    await api.query(ARTICLE, { headers: { preview: 'anything' } });
+    await api.query(ARTICLE);
+
+    expect(api.calls.article).toBe(1);
   });
 
   it('never caches a query that is not on the list', async () => {
@@ -361,4 +374,59 @@ describe('PublicContentCacheInvalidator', () => {
       draftsBefore
     );
   });
+
+  it('clears content and answers again at a scheduled publication time', async () => {
+    vi.useFakeTimers();
+    const { kv, invalidator } = setup();
+    const loader = vi.fn().mockResolvedValue({ id: 'a' });
+    const before = await kv.getNamespaceVersion(PUBLIC_CONTENT_NAMESPACE);
+
+    invalidator.invalidateAt(new Date(Date.now() + 30_000), 'articles');
+    await kv.getOrLoadNs('content:articles', 'a', loader, 300);
+    await vi.advanceTimersByTimeAsync(33_000);
+    await kv.getOrLoadNs('content:articles', 'a', loader, 300);
+
+    expect(loader).toHaveBeenCalledTimes(2);
+    await expect(
+      kv.getNamespaceVersion(PUBLIC_CONTENT_NAMESPACE)
+    ).resolves.not.toBe(before);
+  });
+
+  it('does not schedule publication times in the past', async () => {
+    vi.useFakeTimers();
+    const { invalidator } = setup();
+    const invalidate = vi.spyOn(invalidator, 'invalidate');
+
+    invalidator.invalidateAt(new Date(Date.now() - 1000), 'articles');
+    await vi.advanceTimersByTimeAsync(60_000);
+
+    expect(invalidate).not.toHaveBeenCalled();
+  });
+
+  it('clears cached navigations', async () => {
+    const { kv, invalidator } = setup();
+    const before = await kv.getNamespaceVersion('navigations');
+
+    await invalidator.invalidateNavigations();
+
+    await expect(kv.getNamespaceVersion('navigations')).resolves.not.toBe(
+      before
+    );
+  });
+
+  it.each([
+    [false, 'keeps'],
+    [true, 'retires'],
+  ])(
+    'with removed=%s it %s article and page answers when comments change',
+    async (removed, _) => {
+      const { kv, invalidator } = setup();
+      const before = await kv.getNamespaceVersion(PUBLIC_CONTENT_NAMESPACE);
+
+      await invalidator.invalidateComments(removed);
+
+      const after = await kv.getNamespaceVersion(PUBLIC_CONTENT_NAMESPACE);
+      expect(after !== before).toBe(removed);
+    }
+  );
 });

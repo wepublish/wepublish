@@ -109,6 +109,31 @@ describe.skipIf(!adminUrl)('KvTtlCacheModule on Dragonfly', () => {
     expect(loader).not.toHaveBeenCalled();
   });
 
+  it('shares a batch of content in one MGET under the production ACL', async () => {
+    const loading = await createApiInstance();
+    const reading = await createApiInstance();
+    const loader = vi.fn();
+
+    await loading.getOrLoadManyNs(
+      'content:articles',
+      ['a1', 'a2'],
+      async ids => ids.map(id => ({ id })),
+      60,
+      'id:'
+    );
+
+    await expect(
+      reading.getOrLoadManyNs(
+        'content:articles',
+        ['a2', 'a1'],
+        loader,
+        60,
+        'id:'
+      )
+    ).resolves.toEqual([{ id: 'a2' }, { id: 'a1' }]);
+    expect(loader).not.toHaveBeenCalled();
+  });
+
   it('never stores integration settings in Dragonfly', async () => {
     const service = await createApiInstance();
 

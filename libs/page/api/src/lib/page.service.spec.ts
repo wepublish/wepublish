@@ -13,7 +13,12 @@ jest.mock('@wepublish/block-content/api');
 
 describe('PageService', () => {
   let service: PageService;
-  let publicContentCache: { invalidate: jest.Mock; invalidateDraft: jest.Mock };
+  let publicContentCache: {
+    invalidate: jest.Mock;
+    invalidateDraft: jest.Mock;
+    invalidateAt: jest.Mock;
+    invalidateNavigations: jest.Mock;
+  };
   let prismaMock: {
     $queryRaw: jest.Mock;
     page: { [method in keyof PrismaClient['page']]?: jest.Mock };
@@ -56,6 +61,8 @@ describe('PageService', () => {
     publicContentCache = {
       invalidate: jest.fn().mockResolvedValue(undefined),
       invalidateDraft: jest.fn().mockResolvedValue(undefined),
+      invalidateAt: jest.fn(),
+      invalidateNavigations: jest.fn().mockResolvedValue(undefined),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -595,6 +602,30 @@ describe('PageService', () => {
     await change();
 
     expect(publicContentCache.invalidate).toHaveBeenCalledWith('pages');
+  });
+
+  it('schedules a clear for the moment a page goes live', async () => {
+    const publishedAt = new Date('2023-01-01T00:00:20.000Z');
+    prismaMock.page.findUnique?.mockResolvedValue({
+      id: '1234',
+      revisions: [{ id: '1234-1234' }],
+    });
+    prismaMock.page.update?.mockResolvedValue({ id: '1234' });
+
+    await service.publishPage('1234', publishedAt);
+
+    expect(publicContentCache.invalidateAt).toHaveBeenCalledWith(
+      publishedAt,
+      'pages'
+    );
+  });
+
+  it('clears cached navigations after deleting a page', async () => {
+    prismaMock.page.findUnique?.mockResolvedValue({ id: '1234' });
+
+    await service.deletePage('1234');
+
+    expect(publicContentCache.invalidateNavigations).toHaveBeenCalled();
   });
 
   it('clears cached answers after updating a published page', async () => {

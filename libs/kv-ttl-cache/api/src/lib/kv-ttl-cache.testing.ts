@@ -13,14 +13,39 @@ export const INTEGRATION_NAMESPACES = [
 export class FakeDragonfly extends MemoryAtomicStore {
   override readonly shared = true;
   written: Array<[string, string]> = [];
+  down = false;
+
+  override isAvailable() {
+    return !this.down;
+  }
+
+  override async ping() {
+    return !this.down;
+  }
 
   override async setIfAbsent(key: string, value: string, ttlMs?: number) {
+    if (this.down) {
+      return true;
+    }
+
     this.written.push([key, value]);
 
     return super.setIfAbsent(key, value, ttlMs);
   }
 
+  override async getRaw(key: string) {
+    return this.down ? undefined : super.getRaw(key);
+  }
+
+  override async getManyRaw(keys: string[]) {
+    return this.down ? keys.map(() => undefined) : super.getManyRaw(keys);
+  }
+
   override async setRaw(key: string, value: string, ttlMs?: number) {
+    if (this.down) {
+      return false;
+    }
+
     this.written.push([key, value]);
 
     return super.setRaw(key, value, ttlMs);

@@ -20,6 +20,7 @@ describe('PeerService', () => {
           provide: PrismaClient,
           useValue: {
             peer: {
+              create: jest.fn().mockResolvedValue(peer),
               update: jest.fn().mockResolvedValue(peer),
               delete: jest.fn().mockResolvedValue(peer),
             },
@@ -31,6 +32,19 @@ describe('PeerService', () => {
     }).compile();
 
     service = module.get(PeerService);
+  });
+
+  it('forgets cached peers after a peer was created, a lookup may have cached it as missing', async () => {
+    await service.createPeer({
+      name: 'Peer',
+      slug: 'peer',
+      hostURL: 'https://peer.example',
+      token: 'peer-token',
+    } as never);
+
+    expect(kv.resetNamespace).toHaveBeenCalledWith(
+      REMOTE_PEER_PROFILE_CACHE_NAMESPACE
+    );
   });
 
   it('forgets cached remote profiles after a peer was changed', async () => {

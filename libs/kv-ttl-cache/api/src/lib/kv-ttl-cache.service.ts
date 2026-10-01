@@ -1,4 +1,10 @@
-import { Inject, Injectable, Logger, Optional } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  Logger,
+  OnModuleDestroy,
+  Optional,
+} from '@nestjs/common';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import type { Cache } from 'cache-manager';
 import { randomBytes } from 'crypto';
@@ -17,6 +23,8 @@ import {
 } from './kv-ttl-cache-shared-namespaces';
 
 const VERSION_REFRESH_MS = 2000;
+const RESYNC_INTERVAL_MS = 5000;
+const REPLICAS_CAUGHT_UP_MS = 3000;
 const MAX_SHARED_VALUE_CHARS = 256 * 1024;
 
 const logger = new Logger('KvTtlCache');
@@ -27,10 +35,13 @@ const newVersion = () =>
 type KnownVersion = { version: string; checkedAt: number };
 
 @Injectable()
-export class KvTtlCacheService {
+export class KvTtlCacheService implements OnModuleDestroy {
   private inFlight = new Map<string, Promise<unknown>>();
   private nsVersionInFlight = new Map<string, Promise<string>>();
   private knownVersions = new Map<string, KnownVersion>();
+  private unsyncedVersions = new Map<string, string>();
+  private release = process.env['APP_RELEASE_ID'] || 'dev';
+  private resyncTimer?: ReturnType<typeof setInterval>;
   private reportedSecrets = new Set<string>();
 
   constructor(
@@ -66,6 +77,19 @@ export class KvTtlCacheService {
     }
 
     const p = (async () => {
+      const unsynced = this.unsyncedVersions.get(vk);
+
+      if (unsynced) {
+        await this.resyncVersions();
+
+        this.knownVersions.set(vk, {
+          version: unsynced,
+          checkedAt: Date.now(),
+        });
+
+        return unsynced;
+      }
+
       const shared =
         (await this.atomic.getRaw(vk)) ??
         (await this.createSharedVersion(vk, known?.version));
@@ -89,11 +113,54 @@ export class KvTtlCacheService {
     return (await this.atomic.getRaw(vk)) ?? version;
   }
 
+  onModuleDestroy() {
+    clearInterval(this.resyncTimer);
+  }
+
+  private async writeVersion(vk: string): Promise<void> {
+    const version = newVersion();
+
+    if (await this.atomic.setRaw(vk, version)) {
+      this.unsyncedVersions.delete(vk);
+    } else {
+      this.unsyncedVersions.set(vk, version);
+      this.resyncTimer ??= setInterval(
+        () => void this.resyncVersions(),
+        RESYNC_INTERVAL_MS
+      );
+      this.resyncTimer.unref?.();
+    }
+
+    this.knownVersions.set(vk, { version, checkedAt: Date.now() });
+  }
+
+  private async resyncVersions(): Promise<void> {
+    const resynced: string[] = [];
+
+    for (const [vk, version] of [...this.unsyncedVersions]) {
+      if (await this.atomic.setRaw(vk, version)) {
+        this.unsyncedVersions.delete(vk);
+        resynced.push(vk);
+      }
+    }
+
+    if (!this.unsyncedVersions.size) {
+      clearInterval(this.resyncTimer);
+      this.resyncTimer = undefined;
+    }
+
+    if (resynced.length) {
+      setTimeout(() => {
+        for (const vk of resynced) {
+          void this.writeVersion(vk);
+        }
+      }, REPLICAS_CAUGHT_UP_MS).unref?.();
+    }
+  }
+
   async resetNamespace(namespace: string): Promise<void> {
     const vk = this.versionKey(namespace);
-    const version = newVersion();
-    await this.atomic.setRaw(vk, version);
-    this.knownVersions.set(vk, { version, checkedAt: Date.now() });
+    await this.writeVersion(vk);
 
     for (const k of this.inFlight.keys()) {
       if (k.startsWith(`ns:${namespace}:`)) {
@@ -189,8 +256,9 @@ export class KvTtlCacheService {
     ttlSeconds: number,
     keyPrefix = ''
   ): Promise<Array<T | null>> {
-    const cached = await Promise.all(
-      keys.map(key => this.getNs<T>(namespace, `${keyPrefix}${key}`))
+    const cached = await this.getManyNs<T>(
+      namespace,
+      keys.map(key => `${keyPrefix}${key}`)
     );
     const missing = keys.filter(
       (_, index) => cached[index] === undefined || cached[index] === null
@@ -215,6 +283,53 @@ export class KvTtlCacheService {
 
     return keys.map(
       (key, index) => cached[index] ?? loadedByKey.get(key) ?? null
+    );
+  }
+
+  private async getManyNs<T>(
+    namespace: string,
+    keys: string[]
+  ): Promise<Array<T | undefined>> {
+    if (!this.isShared(namespace)) {
+      return Promise.all(keys.map(key => this.getNs<T>(namespace, key)));
+    }
+
+    const version = await this.getNamespaceVersion(namespace);
+    const fullKeys = keys.map(key =>
+      this.namespacedKey(namespace, version, key)
+    );
+    const values = await Promise.all(
+      fullKeys.map(fullKey => this.cache.get<T>(fullKey))
+    );
+    const remote = fullKeys.filter(
+      (_, index) => values[index] === undefined || values[index] === null
+    );
+
+    if (!remote.length) {
+      return values;
+    }
+
+    const texts = await this.atomic.getManyRaw(
+      remote.map(fullKey => this.sharedKey(fullKey))
+    );
+    const remoteValues = new Map<string, T>();
+
+    await Promise.all(
+      remote.map(async (fullKey, index) => {
+        const text = texts[index];
+
+        if (text === undefined) {
+          return;
+        }
+
+        const value = deserializeCacheValue<T>(text);
+        remoteValues.set(fullKey, value);
+        await this.cache.set(fullKey, value as any, VERSION_REFRESH_MS);
+      })
+    );
+
+    return fullKeys.map(
+      (fullKey, index) => values[index] ?? remoteValues.get(fullKey)
     );
   }
 
@@ -260,7 +375,7 @@ export class KvTtlCacheService {
   }
 
   private sharedKey(fullKey: string): string {
-    return `val:${fullKey}`;
+    return `val:${this.release}:${fullKey}`;
   }
 
   private async readShared<T>(fullKey: string): Promise<T | undefined> {

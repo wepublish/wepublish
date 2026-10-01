@@ -32,7 +32,8 @@ Skipping a step fails in a way that looks like an application bug:
 
 - **No Docker** → Prisma cannot reach Postgres; `migrate` fails on connect.
   Without Dragonfly the API still works and caches in memory, but logs
-  "Dragonfly unavailable" and namespace resets stay local to the replica.
+  "Dragonfly unavailable" and namespace resets stay local to the replica. The
+  compose `api` (production image, would need `rediss://`) runs without it.
 - **No migrate** → the API boots against a schema that does not match the client,
   and resolvers fail at query time rather than at boot.
 

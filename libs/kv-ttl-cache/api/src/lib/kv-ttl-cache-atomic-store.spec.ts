@@ -1,3 +1,4 @@
+import { Logger } from '@nestjs/common';
 import type { RedisClientType } from '@keyv/redis';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
@@ -80,6 +81,35 @@ describe('DragonflyAtomicStore', () => {
 
     expect(sendCommand).toHaveBeenCalledTimes(1);
     expect(store.isAvailable()).toBe(false);
+  });
+
+  it('gives up on a command Dragonfly does not answer within 500 ms', async () => {
+    const sendCommand = vi.fn(() => new Promise(() => undefined));
+    const store = createStore(sendCommand);
+
+    const reply = store.getRaw('nsv:settings');
+    await vi.advanceTimersByTimeAsync(500);
+
+    await expect(reply).resolves.toBeUndefined();
+    expect(store.isAvailable()).toBe(false);
+  });
+
+  it('logs an outage once, not once per command that was in flight', async () => {
+    const logged = vi
+      .spyOn(Logger.prototype, 'error')
+      .mockImplementation(() => undefined);
+    const store = createStore(
+      vi.fn().mockRejectedValue(new Error('The client is offline'))
+    );
+
+    await Promise.all([
+      store.getRaw('nsv:a'),
+      store.getRaw('nsv:b'),
+      store.getManyRaw(['val:a', 'val:b']),
+    ]);
+
+    expect(logged).toHaveBeenCalledTimes(1);
+    logged.mockRestore();
   });
 
   it('asks Dragonfly again once the five seconds are over', async () => {

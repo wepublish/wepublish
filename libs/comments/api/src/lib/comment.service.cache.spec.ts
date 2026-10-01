@@ -109,4 +109,58 @@ describe('comment cache', () => {
 
     expect(publicContentCache.invalidateComments).toHaveBeenCalled();
   });
+
+  it.each<[string, () => Promise<unknown>]>([
+    [
+      'an editor changes a comment',
+      () => comments.updateAdminComment({ id: 'comment-1' } as any),
+    ],
+    ['a comment is deleted', () => comments.deleteComment('comment-1')],
+    [
+      'a comment is rejected',
+      () =>
+        comments.takeActionOnComment('comment-1', {
+          state: CommentState.rejected,
+          rejectionReason: 'spam',
+        } as any),
+    ],
+    [
+      'a reader changes a comment',
+      () => comments.updateUserComment({ id: 'comment-1' } as any, session),
+    ],
+  ])(
+    'also clears article and page answers after %s, since comment blocks show it',
+    async (_, change) => {
+      await change();
+
+      expect(publicContentCache.invalidateComments).toHaveBeenCalledWith(true);
+    }
+  );
+
+  it.each<[string, () => Promise<unknown>]>([
+    [
+      'a comment is approved',
+      () =>
+        comments.takeActionOnComment('comment-1', {
+          state: CommentState.approved,
+          rejectionReason: null,
+        }),
+    ],
+    [
+      'a reader writes a comment',
+      () =>
+        comments.addUserComment(
+          {
+            itemID: 'article-1',
+            itemType: 'article',
+            text: { type: 'doc', content: [] },
+          } as any,
+          session
+        ),
+    ],
+  ])('clears only comment answers after %s', async (_, change) => {
+    await change();
+
+    expect(publicContentCache.invalidateComments).toHaveBeenCalledWith(false);
+  });
 });

@@ -161,12 +161,14 @@ Not `CacheModule.register`: `@nestjs/cache-manager` checks `store instanceof
 Keyv`, which fails under Vitest (ESM vs CJS `keyv`) with *"Cannot read
 properties of undefined (reading 'includes')"*. Only `SHARED_NAMESPACES` go to
 Dragonfly; integration settings (`settings:*`) must never be added (startup
-throws). Values are JSON: `kv-ttl-cache-serializer.ts` keeps `Date`s,
-`Decimal`/`BigInt`/`Map` do not survive. See the
+throws). Values are JSON even in memory (master kept live objects):
+`kv-ttl-cache-serializer.ts` keeps `Date`s and Prisma `Decimal`s
+(`payrexx_vatrate.toNumber()`); `BigInt`/`Map` do not survive. See the
 [lib README](../../libs/kv-ttl-cache/api/README.md).
 
 Pinned by `kv-ttl-cache-shared-namespaces.spec.ts`,
-`kv-ttl-cache.service.spec.ts` and `kv-ttl-cache-serializer.spec.ts`.
+`kv-ttl-cache.service.spec.ts`, `kv-ttl-cache-serializer.spec.ts` and
+`kv-ttl-cache-options.spec.ts`.
 
 ---
 
@@ -190,7 +192,9 @@ a new write path needs its own test.
 
 `.env` sets `REDIS_URL` and nx passes it into tests (verified 2026-10-01), so
 `jest.setup.ts` and `vitest.setup-tests.ts` delete it. Pinned for Vitest by
-`kv-ttl-cache.module.spec.ts`; nothing guards the Jest side.
+`kv-ttl-cache.module.spec.ts`; nothing guards the Jest side. The built api
+loads `.env` too (`ConfigModule.forRoot()`), so to run it without Dragonfly set
+`REDIS_URL=` (empty) instead of unsetting it.
 
 ---
 

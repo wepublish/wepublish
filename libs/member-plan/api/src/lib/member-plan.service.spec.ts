@@ -4,6 +4,8 @@ import { PaymentPeriodicity, PrismaClient } from '@prisma/client';
 import {
   KvTtlCacheModule,
   KvTtlCacheService,
+  PUBLIC_CONTENT_NAMESPACE,
+  PublicContentCacheInvalidator,
 } from '@wepublish/kv-ttl-cache/api';
 import { MemberPlanService } from './member-plan.service';
 import { MemberPlanDataloader } from './member-plan.dataloader';
@@ -59,7 +61,11 @@ describe('MemberPlanService cache', () => {
     }).compile();
 
     kv = module.get(KvTtlCacheService);
-    service = new MemberPlanService(prisma as unknown as PrismaClient, kv);
+    service = new MemberPlanService(
+      prisma as unknown as PrismaClient,
+      kv,
+      new PublicContentCacheInvalidator(kv)
+    );
     Object.assign(service, {
       [`__DATALOADER__${MemberPlanDataloader.name}`]: { prime: vi.fn() },
     });
@@ -119,4 +125,14 @@ describe('MemberPlanService cache', () => {
       expect(loader).toHaveBeenCalledTimes(2);
     }
   );
+
+  it('retires anonymous answers after a member plan changed', async () => {
+    const before = await kv.getNamespaceVersion(PUBLIC_CONTENT_NAMESPACE);
+
+    await service.updateMemberPlan({ id: 'plan-1', name: 'Abo' });
+
+    await expect(
+      kv.getNamespaceVersion(PUBLIC_CONTENT_NAMESPACE)
+    ).resolves.not.toBe(before);
+  });
 });

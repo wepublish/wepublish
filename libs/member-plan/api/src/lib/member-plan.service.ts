@@ -18,7 +18,7 @@ import {
 import { MemberPlanDataloader } from './member-plan.dataloader';
 import {
   KvTtlCacheService,
-  contentCacheNamespace,
+  PublicContentCacheInvalidator,
 } from '@wepublish/kv-ttl-cache/api';
 
 const CACHE_NAMESPACE = 'member-plans';
@@ -28,7 +28,8 @@ const CACHE_TTL_SECONDS = 300;
 export class MemberPlanService {
   constructor(
     private prisma: PrismaClient,
-    private kv: KvTtlCacheService
+    private kv: KvTtlCacheService,
+    private publicContentCache: PublicContentCacheInvalidator
   ) {}
 
   @PrimeDataLoader(MemberPlanDataloader)
@@ -273,10 +274,8 @@ export class MemberPlanService {
   }
 
   private async forgetMemberPlans() {
-    await Promise.all([
-      this.kv.resetNamespace(CACHE_NAMESPACE),
-      this.kv.resetNamespace(contentCacheNamespace('paywalls')),
-    ]);
+    await this.kv.resetNamespace(CACHE_NAMESPACE);
+    await this.publicContentCache.invalidate('paywalls');
   }
 }
 

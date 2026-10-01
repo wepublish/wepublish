@@ -62,4 +62,30 @@ describe('KvTtlCacheModule', () => {
     expect(Date.now() - startedAt).toBeLessThan(500);
     expect(logged).toHaveBeenCalled();
   });
+
+  it('warns at boot when REDIS_URL is missing in production', async () => {
+    delete process.env['REDIS_URL'];
+    process.env['NODE_ENV'] = 'production';
+    const warned = vi
+      .spyOn(Logger.prototype, 'warn')
+      .mockImplementation(() => undefined);
+
+    await createService();
+
+    expect(warned).toHaveBeenCalledWith(expect.stringContaining('REDIS_URL'));
+  });
+
+  it('reports at boot when Dragonfly cannot be reached', async () => {
+    process.env['REDIS_URL'] = 'redis://wepublish-test:secret@127.0.0.1:1/0';
+    process.env['REDIS_KEY_PREFIX'] = 'wepublish-test';
+    const failed = vi
+      .spyOn(Logger.prototype, 'error')
+      .mockImplementation(() => undefined);
+
+    await createService();
+
+    expect(failed).toHaveBeenCalledWith(
+      expect.stringContaining('not reachable at boot')
+    );
+  });
 });

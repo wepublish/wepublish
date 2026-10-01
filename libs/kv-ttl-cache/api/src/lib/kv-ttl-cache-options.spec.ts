@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client';
 import { Keyv } from 'keyv';
 import { createCache } from 'cache-manager';
 import { createKvTtlCacheOptions } from './kv-ttl-cache-options';
@@ -27,5 +28,24 @@ describe('createKvTtlCacheOptions', () => {
     expect(first?.expiresAt).toBeInstanceOf(Date);
     expect(first).toEqual(value);
     expect(first).not.toBe(second);
+  });
+
+  it('keeps decimals of cached payment provider settings usable', async () => {
+    const cache = createCache(createKvTtlCacheOptions());
+
+    await cache.set(
+      'payrexx',
+      { payrexx_vatrate: new Prisma.Decimal('0.081') },
+      60000
+    );
+    const first = await cache.get<{ payrexx_vatrate: Prisma.Decimal }>(
+      'payrexx'
+    );
+    const second = await cache.get<{ payrexx_vatrate: Prisma.Decimal }>(
+      'payrexx'
+    );
+
+    expect(first?.payrexx_vatrate.toNumber()).toBe(0.081);
+    expect(second?.payrexx_vatrate.toNumber()).toBe(0.081);
   });
 });

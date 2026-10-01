@@ -315,6 +315,7 @@ export class ArticleService {
       },
     });
     await this.publicContentCache.invalidate('articles');
+    await this.publicContentCache.invalidateNavigations();
 
     return deleted;
   }
@@ -381,6 +382,8 @@ export class ArticleService {
       },
     });
     await this.publicContentCache.invalidate('articles');
+    this.publicContentCache.invalidateAt(publishedAt, 'articles');
+    this.publicContentCache.invalidateAt(articlePublishedAt, 'articles');
 
     return published;
   }

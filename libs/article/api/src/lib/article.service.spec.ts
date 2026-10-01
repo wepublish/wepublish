@@ -28,7 +28,12 @@ describe('ArticleService', () => {
     };
   };
   let trackingPixelMock: { [method in keyof TrackingPixelService]?: jest.Mock };
-  let publicContentCache: { invalidate: jest.Mock; invalidateDraft: jest.Mock };
+  let publicContentCache: {
+    invalidate: jest.Mock;
+    invalidateDraft: jest.Mock;
+    invalidateAt: jest.Mock;
+    invalidateNavigations: jest.Mock;
+  };
 
   beforeAll(() => {
     jest.useFakeTimers();
@@ -71,6 +76,8 @@ describe('ArticleService', () => {
     publicContentCache = {
       invalidate: jest.fn().mockResolvedValue(undefined),
       invalidateDraft: jest.fn().mockResolvedValue(undefined),
+      invalidateAt: jest.fn(),
+      invalidateNavigations: jest.fn().mockResolvedValue(undefined),
     };
 
     trackingPixelMock = {
@@ -591,6 +598,30 @@ describe('ArticleService', () => {
     await change();
 
     expect(publicContentCache.invalidate).toHaveBeenCalledWith('articles');
+  });
+
+  it('schedules a clear for the moment a article goes live', async () => {
+    const publishedAt = new Date('2023-01-01T00:00:20.000Z');
+    prismaMock.article.findUnique?.mockResolvedValue({
+      id: '1234',
+      revisions: [{ id: '1234-1234' }],
+    });
+    prismaMock.article.update?.mockResolvedValue({ id: '1234' });
+
+    await service.publishArticle('1234', publishedAt);
+
+    expect(publicContentCache.invalidateAt).toHaveBeenCalledWith(
+      publishedAt,
+      'articles'
+    );
+  });
+
+  it('clears cached navigations after deleting a article', async () => {
+    prismaMock.article.findUnique?.mockResolvedValue({ id: '1234' });
+
+    await service.deleteArticle('1234');
+
+    expect(publicContentCache.invalidateNavigations).toHaveBeenCalled();
   });
 
   it('clears cached answers after updating a published article', async () => {

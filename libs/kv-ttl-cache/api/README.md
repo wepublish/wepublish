@@ -12,7 +12,7 @@ Whether a namespace's values go to Dragonfly is decided by one list,
 
 | Namespace | Values |
 | --- | --- |
-| listed (`auth:sessions`, `settings`, `website-settings`, `navigations`, `banners`, `member-plans`, `peer-profile`, `peering:remote-profiles`, `crowdfunding`, `ga4`, `graphql:responses`, `content:articles`, `content:pages`, `content:authors`, `content:images`, `content:paywalls`, `tracking-pixels`) | Dragonfly key `<REDIS_KEY_PREFIX>::val:ns:<namespace>:v<version>:<key>`, plus a 2 s copy in memory |
+| listed (`auth:sessions`, `settings`, `website-settings`, `navigations`, `banners`, `member-plans`, `peer-profile`, `peering:remote-profiles`, `crowdfunding`, `ga4`, `graphql:responses`, `content:articles`, `content:pages`, `content:authors`, `content:images`, `content:paywalls`, `tracking-pixels`) | Dragonfly key `<REDIS_KEY_PREFIX>::val:<APP_RELEASE_ID or dev>:ns:<namespace>:v<version>:<key>` (pods of different releases never read each other's values, but share versions), plus a 2 s copy in memory |
 | everything else, including all integration settings (`settings:paymentprovider`, `settings:mailprovider`, …) | process memory only |
 
 Integration secrets never reach Dragonfly, enforced three ways:
@@ -36,17 +36,25 @@ in-memory namespaces, the 2 s copies and the fallback below.
 | `REDIS_URL` + `REDIS_KEY_PREFIX` | namespace versions in `<REDIS_KEY_PREFIX>::nsv:<namespace>` (created with `SET NX`), listed namespaces shared |
 | `REDIS_URL` without `REDIS_KEY_PREFIX` | refuses to start |
 
-Values are serialized by `kv-ttl-cache-serializer.ts`: `Date`s come back as
-`Date`s and every read returns a copy; `Decimal`, `BigInt`, `Map`, `Set` and
-class instances do not survive — cache plain data.
+Values are serialized by `kv-ttl-cache-serializer.ts`, in memory too: `Date`s
+and Prisma `Decimal`s (e.g. `payrexx_vatrate`) come back as such and every read
+returns a copy; `BigInt`, `Map`, `Set` and other class instances do not survive
+— cache plain data.
 
 A replica re-reads a namespace version at most every 2 seconds, so a reset on
 one replica reaches the others within 2 s; the replica that reset sees it
 immediately.
 
-If a Dragonfly command fails, the replica caches in memory only and does not
-ask Dragonfly again for 5 s (`Dragonfly unavailable, caching on this replica
-only …` is logged). Requests do not fail, queue or wait for a timeout.
+If a Dragonfly command fails or does not answer within 500 ms, the replica
+caches in memory only and does not ask Dragonfly again for 5 s (`Dragonfly
+unavailable, caching on this replica only …` is logged at most once per 5 s, not
+per command). Requests do not fail or queue. A reset that could not be written is
+kept and written again every 5 s until Dragonfly takes it, then once more 3 s
+later (another replica may have created an older version meanwhile), so no
+replica falls back to the older version.
+Batches (`getOrLoadManyNs`) read Dragonfly with one `MGET`. At boot the module
+pings Dragonfly and logs an error if it is unreachable (wrong password, ACL user
+or CA), and warns in production when `REDIS_URL` is missing.
 
 ## Published content
 
@@ -62,7 +70,9 @@ per-user. Writers call `PublicContentCacheInvalidator`:
 | --- | --- | --- |
 | `invalidate(...contents)` | those content caches + anonymous answers, and the answers again 3 s later (another replica may have built one from content that was stale for up to 2 s) | publish, unpublish, delete, updates of published articles/pages; authors, tags, events, paywalls, image updates/deletes, event import |
 | `invalidateDraft(...contents)` | only those content caches | create, update of unpublished, duplicate, restore, discard; peer import |
-| `invalidateComments()` | answers containing `commentsForItem` / `ratingSystem` | every comment write except ratings, rating system changes |
+| `invalidateComments(removed)` | answers containing `commentsForItem` / `ratingSystem`; with `removed` also all anonymous answers (comment blocks inside articles/pages) | create/approve (`false`), edit/reject/delete (`true`); rating system changes; not ratings |
+| `invalidateAt(time, ...contents)` | `invalidate(...contents)` at that time (+2 s) | publish with a future `publishedAt` (the watchers only look 70 s ahead once a minute) |
+| `invalidateNavigations()` | cached navigations and their links | article/page delete (links cascade) |
 
 Scheduled content goes live without a write (views compare `publishedAt` with
 `CURRENT_TIMESTAMP`), so `ArticlePublicationWatcher` / `PagePublicationWatcher`
@@ -78,9 +88,9 @@ write.
 `TrackingPixelService.addMissingArticleTrackingPixels` (run on every `article`
 query) remembers per article and provider set that the pixels are complete for
 24 h, retries a failed pixel at most every 15 min, and deletes the article's
-cached pixel rows when it changed them. Member plan writes also clear
-`content:paywalls` (paywall member plans embed them); paywall bypasses are never
-cached.
+cached pixel rows when it changed them. Member plan writes call
+`invalidate('paywalls')` (paywall member plans embed them) and payment method
+writes `invalidate()`; paywall bypasses are never cached.
 
 ## GraphQL answers
 
@@ -88,7 +98,8 @@ cached.
 answers a repeated query from `graphql:responses` for 5 min when:
 
 - the request carries no login (`Authorization` header, `access_token` in url or
-  body) and no `preview` header — so nothing per-user is ever cached;
+  body) — so nothing per-user is ever cached; a `preview` header is ignored
+  without a login (preview needs `CanPreview`) and skips the cache with one;
 - every root field is in `CACHEABLE_QUERIES` — `challenge`, `me` and everything
   else unlisted always run;
 - it is a query and the answer has no errors.

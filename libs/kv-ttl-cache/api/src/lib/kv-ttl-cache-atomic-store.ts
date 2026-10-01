@@ -9,6 +9,26 @@ export const KV_ATOMIC_STORE = Symbol('KV_ATOMIC_STORE');
 
 const CONNECTION_TIMEOUT_MS = 1000;
 const UNAVAILABLE_RETRY_MS = 5000;
+const COMMAND_TIMEOUT_MS = 500;
+
+const withTimeout = <T>(promise: Promise<T>, ms: number) =>
+  new Promise<T>((resolve, reject) => {
+    const timer = setTimeout(
+      () => reject(new Error(`Dragonfly did not answer within ${ms} ms`)),
+      ms
+    );
+
+    promise.then(
+      value => {
+        clearTimeout(timer);
+        resolve(value);
+      },
+      error => {
+        clearTimeout(timer);
+        reject(error);
+      }
+    );
+  });
 
 const logger = new Logger('KvTtlCache');
 
@@ -22,9 +42,11 @@ export type KvTtlCacheEnv = {
 export interface KvAtomicStore {
   readonly shared: boolean;
   isAvailable(): boolean;
+  ping(): Promise<boolean>;
   setIfAbsent(key: string, value: string, ttlMs?: number): Promise<boolean>;
   getRaw(key: string): Promise<string | undefined>;
-  setRaw(key: string, value: string, ttlMs?: number): Promise<void>;
+  getManyRaw(keys: string[]): Promise<Array<string | undefined>>;
+  setRaw(key: string, value: string, ttlMs?: number): Promise<boolean>;
   delRaw(key: string): Promise<void>;
   disconnect(): Promise<void>;
 }
@@ -36,6 +58,10 @@ export class MemoryAtomicStore implements KvAtomicStore {
   private entries = new Map<string, MemoryEntry>();
 
   isAvailable() {
+    return true;
+  }
+
+  async ping() {
     return true;
   }
 
@@ -53,8 +79,14 @@ export class MemoryAtomicStore implements KvAtomicStore {
     return this.read(key);
   }
 
+  async getManyRaw(keys: string[]) {
+    return keys.map(key => this.read(key));
+  }
+
   async setRaw(key: string, value: string, ttlMs?: number) {
     this.write(key, value, ttlMs);
+
+    return true;
   }
 
   async delRaw(key: string) {
@@ -95,6 +127,10 @@ export class DragonflyAtomicStore implements KvAtomicStore {
     return Date.now() >= this.unavailableUntil;
   }
 
+  async ping() {
+    return (await this.send(['PING'])) === 'PONG';
+  }
+
   async setIfAbsent(key: string, value: string, ttlMs?: number) {
     const reply = await this.send([
       'SET',
@@ -113,13 +149,25 @@ export class DragonflyAtomicStore implements KvAtomicStore {
     return typeof reply === 'string' ? reply : undefined;
   }
 
+  async getManyRaw(keys: string[]) {
+    const reply = await this.send(['MGET', ...keys.map(key => this.key(key))]);
+
+    return keys.map((_, index) => {
+      const value = Array.isArray(reply) ? reply[index] : undefined;
+
+      return typeof value === 'string' ? value : undefined;
+    });
+  }
+
   async setRaw(key: string, value: string, ttlMs?: number) {
-    await this.send([
+    const reply = await this.send([
       'SET',
       this.key(key),
       value,
       ...(ttlMs ? ['PX', String(ttlMs)] : []),
     ]);
+
+    return reply === 'OK';
   }
 
   async delRaw(key: string) {
@@ -140,11 +188,23 @@ export class DragonflyAtomicStore implements KvAtomicStore {
     }
 
     try {
-      const client = (await this.adapter.getClient()) as RedisClientType;
+      const client = (await withTimeout(
+        this.adapter.getClient(),
+        COMMAND_TIMEOUT_MS
+      )) as RedisClientType;
 
-      return (await client.sendCommand(command)) ?? null;
+      return (
+        (await withTimeout(client.sendCommand(command), COMMAND_TIMEOUT_MS)) ??
+        null
+      );
     } catch (error) {
+      const wasAvailable = this.isAvailable();
       this.unavailableUntil = Date.now() + UNAVAILABLE_RETRY_MS;
+
+      if (!wasAvailable) {
+        return undefined;
+      }
+
       logger.error(
         `Dragonfly unavailable, caching on this replica only for the next ${
           UNAVAILABLE_RETRY_MS / 1000
@@ -216,7 +276,14 @@ export function createKvAtomicStore(
     }
   );
 
+  let lastConnectionError = 0;
+
   keyv.on('error', (error: unknown) => {
+    if (Date.now() - lastConnectionError < UNAVAILABLE_RETRY_MS) {
+      return;
+    }
+
+    lastConnectionError = Date.now();
     logger.error(
       `Dragonfly unavailable, caching on this replica only: ${
         error instanceof Error ? error.message : String(error)

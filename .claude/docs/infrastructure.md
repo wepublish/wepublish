@@ -30,7 +30,8 @@ serves all media. Terraform in `application-configuration` creates a user
 prefix ([gotchas.md](gotchas.md)), mirrored locally by `docker/dragonfly/users.acl`.
 In production the api refuses `redis://` and verifies Dragonfly against the CA.
 It holds page data, articles/pages/authors/images, sessions (without token) and
-anonymous GraphQL answers — never integration settings.
+anonymous GraphQL answers — never integration settings. Run it with
+`--cache_mode=true`: when full it otherwise rejects writes, cache resets included.
 
 ## Migration flow
 

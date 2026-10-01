@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client';
 import {
   deserializeCacheValue,
   serializeCacheValue,
@@ -43,6 +44,19 @@ describe('kv-ttl-cache serializer', () => {
 
     expect(result.at).toBeInstanceOf(Date);
     expect(Number.isNaN(result.at.getTime())).toBe(true);
+  });
+
+  it('keeps Prisma decimals as decimals, like the payrexx vat rate', () => {
+    const setting = { payrexx_vatrate: new Prisma.Decimal('0.081') };
+
+    const cached = roundTrip(setting);
+
+    expect(Prisma.Decimal.isDecimal(cached.payrexx_vatrate)).toBe(true);
+    expect(cached.payrexx_vatrate.toNumber()).toBe(0.081);
+  });
+
+  it('does not turn decimal-like strings into decimals', () => {
+    expect(roundTrip({ amount: '0.081' })).toEqual({ amount: '0.081' });
   });
 
   it('round trips plain JSON values unchanged', () => {

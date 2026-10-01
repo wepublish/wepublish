@@ -33,8 +33,7 @@ services:
       MAIL_SMTP_HOST: mailpit
       MAIL_SMTP_PORT: '1025'
       MAIL_SMTP_FROM: no-reply@wepublish.local
-      REDIS_URL: redis://wepublish-local:wepublish-local@dragonfly:6379/0
-      REDIS_KEY_PREFIX: wepublish-local
+      REDIS_URL: ''
     env_file: .env
     volumes:
       - ./apps/api-example/src/default.yaml:/config.yaml
@@ -42,7 +41,6 @@ services:
       - database
       - migration
       - mailpit
-      - dragonfly
     networks:
       - app-tier
   dragonfly:
@@ -53,6 +51,7 @@ services:
       - --aclfile=/etc/dragonfly/users.acl
       - --proactor_threads=2
       - --maxmemory=1gb
+      - --cache_mode=true
     ports:
       - '127.0.0.1:6379:6379'
     volumes:

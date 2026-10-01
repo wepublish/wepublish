@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, OnModuleDestroy } from '@nestjs/common';
 import { Plugin } from '@nestjs/apollo';
 import {
   HeaderMap,
@@ -9,6 +9,7 @@ import {
 import type { FormattedExecutionResult } from 'graphql';
 import { createHash } from 'crypto';
 import { KvTtlCacheService } from './kv-ttl-cache.service';
+import { PublicationTimers } from './publication-timers';
 
 export const PUBLIC_CONTENT_NAMESPACE = 'graphql:content';
 export const PUBLIC_COMMENTS_NAMESPACE = 'graphql:comments';
@@ -26,6 +27,8 @@ export const contentCacheNamespace = (content: PublicContent) =>
 export const CONTENT_CACHE_TTL_SECONDS = 300;
 
 const REPLICAS_CAUGHT_UP_MS = 3000;
+const LONGEST_SCHEDULE_MS = 24 * 60 * 60 * 1000;
+const NAVIGATIONS_NAMESPACE = 'navigations';
 
 const RESPONSE_NAMESPACE = 'graphql:responses';
 const RESPONSE_TTL_SECONDS = 300;
@@ -115,8 +118,33 @@ const asksOnlyCacheableQueries = asksOnly(CACHEABLE_QUERIES);
 const asksOnlySameForEveryoneQueries = asksOnly(SAME_FOR_EVERYONE_QUERIES);
 
 @Injectable()
-export class PublicContentCacheInvalidator {
+export class PublicContentCacheInvalidator implements OnModuleDestroy {
+  private timers = new Map<string, PublicationTimers>();
+
   constructor(@Inject(KvTtlCacheService) private kv: KvTtlCacheService) {}
+
+  onModuleDestroy() {
+    for (const timers of this.timers.values()) {
+      timers.clear();
+    }
+  }
+
+  invalidateAt(at: Date, ...contents: PublicContent[]) {
+    const wait = at.getTime() - Date.now();
+
+    if (wait <= 0 || wait > LONGEST_SCHEDULE_MS) {
+      return;
+    }
+
+    const key = [...contents].sort().join(',');
+    const timers = this.timers.get(key) ?? new PublicationTimers();
+    this.timers.set(key, timers);
+    timers.schedule([at], () => this.invalidate(...contents));
+  }
+
+  invalidateNavigations() {
+    return this.kv.resetNamespace(NAVIGATIONS_NAMESPACE);
+  }
 
   async invalidate(...contents: PublicContent[]) {
     await this.invalidateDraft(...contents);
@@ -135,8 +163,12 @@ export class PublicContentCacheInvalidator {
     );
   }
 
-  invalidateComments() {
-    return this.kv.resetNamespace(PUBLIC_COMMENTS_NAMESPACE);
+  async invalidateComments(removed = false) {
+    await this.kv.resetNamespace(PUBLIC_COMMENTS_NAMESPACE);
+
+    if (removed) {
+      await this.invalidate();
+    }
   }
 }
 
@@ -152,11 +184,12 @@ export class GraphqlResponseCachePlugin implements ApolloServerPlugin<Context> {
 
     return {
       async responseForOperation(requestContext) {
-        if (isPreview(requestContext)) {
+        const anonymous = isAnonymous(requestContext);
+
+        if (!anonymous && isPreview(requestContext)) {
           return null;
         }
 
-        const anonymous = isAnonymous(requestContext);
         const readable =
           anonymous ?
             asksOnlyCacheableQueries(requestContext)

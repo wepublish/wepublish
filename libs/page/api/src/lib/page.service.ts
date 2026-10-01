@@ -232,6 +232,7 @@ export class PageService {
       },
     });
     await this.publicContentCache.invalidate('pages');
+    await this.publicContentCache.invalidateNavigations();
 
     return deleted;
   }
@@ -298,6 +299,8 @@ export class PageService {
       },
     });
     await this.publicContentCache.invalidate('pages');
+    this.publicContentCache.invalidateAt(publishedAt, 'pages');
+    this.publicContentCache.invalidateAt(pagePublishedAt, 'pages');
 
     return published;
   }

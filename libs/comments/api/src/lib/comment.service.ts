@@ -355,7 +355,7 @@ export class CommentService {
         },
       },
     });
-    await this.publicContentCache.invalidateComments();
+    await this.publicContentCache.invalidateComments(false);
 
     return this.getComment(comment.id);
   }
@@ -446,7 +446,7 @@ export class CommentService {
         },
       },
     });
-    await this.publicContentCache.invalidateComments();
+    await this.publicContentCache.invalidateComments(true);
 
     return this.getComment(comment.id);
   }
@@ -457,7 +457,7 @@ export class CommentService {
         id,
       },
     });
-    await this.publicContentCache.invalidateComments();
+    await this.publicContentCache.invalidateComments(true);
 
     return deleted;
   }
@@ -470,7 +470,9 @@ export class CommentService {
       where: { id },
       data: input,
     });
-    await this.publicContentCache.invalidateComments();
+    await this.publicContentCache.invalidateComments(
+      input.state !== CommentState.approved
+    );
 
     return this.getComment(id);
   }
@@ -543,7 +545,7 @@ export class CommentService {
           : CommentState.pendingApproval,
       },
     });
-    await this.publicContentCache.invalidateComments();
+    await this.publicContentCache.invalidateComments(false);
 
     return this.getComment(comment.id);
   }
@@ -600,7 +602,7 @@ export class CommentService {
           : CommentState.pendingApproval,
       },
     });
-    await this.publicContentCache.invalidateComments();
+    await this.publicContentCache.invalidateComments(true);
 
     return this.getComment(updatedComment.id);
   }

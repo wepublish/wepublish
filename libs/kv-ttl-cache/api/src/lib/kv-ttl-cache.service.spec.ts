@@ -13,6 +13,10 @@ class UnavailableAtomicStore implements KvAtomicStore {
     return false;
   }
 
+  async ping() {
+    return false;
+  }
+
   async setIfAbsent() {
     return true;
   }
@@ -21,8 +25,12 @@ class UnavailableAtomicStore implements KvAtomicStore {
     return undefined;
   }
 
+  async getManyRaw(keys: string[]) {
+    return keys.map(() => undefined);
+  }
+
   async setRaw() {
-    return;
+    return false;
   }
 
   async delRaw() {
@@ -94,6 +102,60 @@ describe('KvTtlCacheService', () => {
       await expect(
         replica.getOrLoadNs('settings', 'stripe', () => 'new', 60)
       ).resolves.toBe('new');
+    });
+
+    it('keeps a reset made while Dragonfly was down and shares it once it is back', async () => {
+      vi.useFakeTimers();
+      const { dragonfly, first, second } = twoReplicas();
+
+      await first.getOrLoadNs('content:articles', 'a', () => 'old', 300);
+      await second.getOrLoadNs('content:articles', 'a', () => 'old', 300);
+      vi.advanceTimersByTime(5);
+
+      dragonfly.down = true;
+      await first.resetNamespace('content:articles');
+      dragonfly.down = false;
+      vi.advanceTimersByTime(2001);
+
+      await expect(
+        first.getOrLoadNs('content:articles', 'a', () => 'new', 300)
+      ).resolves.toBe('new');
+      await expect(
+        second.getOrLoadNs('content:articles', 'a', () => 'new', 300)
+      ).resolves.toBe('new');
+    });
+
+    it('writes a reset made during an outage once Dragonfly is back, without waiting for a request', async () => {
+      vi.useFakeTimers();
+      const dragonfly = new FakeDragonfly();
+      const replica = createReplica(dragonfly);
+      const before = await replica.getNamespaceVersion('content:articles');
+
+      dragonfly.down = true;
+      await replica.resetNamespace('content:articles');
+      dragonfly.down = false;
+      await vi.advanceTimersByTimeAsync(5000);
+
+      const shared = await dragonfly.getRaw('nsv:content:articles');
+      expect(shared).toBeDefined();
+      expect(shared).not.toBe(before);
+    });
+
+    it('resets again shortly after a late write, for replicas that read old content in between', async () => {
+      vi.useFakeTimers();
+      const dragonfly = new FakeDragonfly();
+      const replica = createReplica(dragonfly);
+
+      dragonfly.down = true;
+      await replica.resetNamespace('graphql:content');
+      dragonfly.down = false;
+      await vi.advanceTimersByTimeAsync(5000);
+      const written = await dragonfly.getRaw('nsv:graphql:content');
+      await vi.advanceTimersByTimeAsync(3000);
+
+      await expect(dragonfly.getRaw('nsv:graphql:content')).resolves.not.toBe(
+        written
+      );
     });
 
     it('sees a reset by another replica within two seconds', async () => {
@@ -180,6 +242,32 @@ describe('KvTtlCacheService', () => {
       );
 
       expect(revisions).toEqual(['revisions of a']);
+    });
+
+    it('reads a batch from Dragonfly in one round trip', async () => {
+      const { dragonfly, first, second } = twoReplicas();
+      const loader = async (ids: string[]) => ids.map(id => ({ id }));
+
+      await first.getOrLoadManyNs(
+        'content:articles',
+        ['a', 'b', 'c'],
+        loader,
+        60
+      );
+      const many = vi.spyOn(dragonfly, 'getManyRaw');
+      const single = vi.spyOn(dragonfly, 'getRaw');
+      const result = await second.getOrLoadManyNs(
+        'content:articles',
+        ['a', 'b', 'c'],
+        vi.fn(),
+        60
+      );
+
+      expect(result).toEqual([{ id: 'a' }, { id: 'b' }, { id: 'c' }]);
+      expect(many).toHaveBeenCalledTimes(1);
+      expect(
+        single.mock.calls.filter(([key]) => key.startsWith('val:'))
+      ).toHaveLength(0);
     });
 
     it('does not call the loader when every key is cached', async () => {
@@ -312,6 +400,30 @@ describe('KvTtlCacheService', () => {
       expect(dragonfly.written.some(([key]) => key.startsWith('val:'))).toBe(
         false
       );
+    });
+
+    it('does not share values between releases, but shares their resets', async () => {
+      vi.useFakeTimers();
+      const dragonfly = new FakeDragonfly();
+      vi.stubEnv('APP_RELEASE_ID', 'release-1');
+      const oldPod = createReplica(dragonfly);
+      vi.stubEnv('APP_RELEASE_ID', 'release-2');
+      const newPod = createReplica(dragonfly);
+      vi.unstubAllEnvs();
+      const loader = vi.fn().mockResolvedValue('new shape');
+
+      await oldPod.getOrLoadNs('content:articles', 'a', () => 'old shape', 60);
+
+      await expect(
+        newPod.getOrLoadNs('content:articles', 'a', loader, 60)
+      ).resolves.toBe('new shape');
+
+      vi.advanceTimersByTime(5);
+      await oldPod.resetNamespace('content:articles');
+      vi.advanceTimersByTime(2001);
+      await newPod.getOrLoadNs('content:articles', 'a', loader, 60);
+
+      expect(loader).toHaveBeenCalledTimes(2);
     });
 
     it('shares nothing when no Dragonfly is configured', async () => {

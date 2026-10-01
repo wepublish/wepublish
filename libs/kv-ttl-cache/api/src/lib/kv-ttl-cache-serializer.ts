@@ -1,12 +1,19 @@
+import { Prisma } from '@prisma/client';
+
 const DATE_TAG = '$kvDate';
+const DECIMAL_TAG = '$kvDecimal';
 
 type TaggedDate = { [DATE_TAG]: string | null };
+type TaggedDecimal = { [DECIMAL_TAG]: string };
 
-const isTaggedDate = (value: unknown): value is TaggedDate =>
+const isTagged = <T extends string>(
+  value: unknown,
+  tag: T
+): value is Record<T, unknown> =>
   typeof value === 'object' &&
   value !== null &&
   Object.keys(value).length === 1 &&
-  DATE_TAG in value;
+  tag in value;
 
 export function serializeCacheValue(value: unknown): string {
   return JSON.stringify(
@@ -18,7 +25,13 @@ export function serializeCacheValue(value: unknown): string {
         return {
           [DATE_TAG]:
             Number.isNaN(original.getTime()) ? null : original.toISOString(),
-        };
+        } satisfies TaggedDate;
+      }
+
+      if (Prisma.Decimal.isDecimal(original)) {
+        return {
+          [DECIMAL_TAG]: original.toString(),
+        } satisfies TaggedDecimal;
       }
 
       return jsonValue;
@@ -28,8 +41,12 @@ export function serializeCacheValue(value: unknown): string {
 
 export function deserializeCacheValue<T>(text: string): T {
   return JSON.parse(text, (_key, value) => {
-    if (isTaggedDate(value)) {
-      return new Date(value[DATE_TAG] ?? Number.NaN);
+    if (isTagged(value, DATE_TAG)) {
+      return new Date((value as TaggedDate)[DATE_TAG] ?? Number.NaN);
+    }
+
+    if (isTagged(value, DECIMAL_TAG)) {
+      return new Prisma.Decimal((value as TaggedDecimal)[DECIMAL_TAG]);
     }
 
     return value;

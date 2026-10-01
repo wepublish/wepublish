@@ -52,12 +52,15 @@ export class PeerService {
 
   @PrimeDataLoader(PeerDataloaderService)
   async createPeer({ information, ...input }: CreatePeerInput) {
-    return this.prisma.peer.create({
+    const peer = await this.prisma.peer.create({
       data: {
         ...input,
         information: information as any,
       },
     });
+    await this.kv.resetNamespace(REMOTE_PEER_PROFILE_CACHE_NAMESPACE);
+
+    return peer;
   }
 
   @PrimeDataLoader(PeerDataloaderService)
