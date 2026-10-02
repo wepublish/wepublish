@@ -222,6 +222,24 @@ CommonJS (Next `import()`s it unbundled) and is reached via two spellings of
 
 ---
 
+### ⚠️ Unpublished articles must answer 200, never 404 — the preview needs that page
+
+The editor preview (iframe or window, `?preview`) opens the article's public
+URL and only then logs in and fetches the draft in the browser
+(`with-jwt-handler.tsx`). A 404 for "no visible version" renders the 404 page
+instead, and the preview of every never-published article goes blank
+(customers have hit preview regressions repeatedly). Visitors get
+[`ContentUnavailable`](../../libs/content/website/src/lib/preview-unavailable/content-unavailable.tsx)
+instead: `noindex` plus a note, never shown with `?preview`, admin-bar preview
+mode or a login that may preview. The API likewise keeps returning unpublished
+articles to anonymous callers (external draft readers).
+
+Pinned by `content-unavailable.spec.tsx` and `preview-unavailable.spec.tsx`;
+verified end to end 2026-10-02 (24 browser cases incl. hauptstadt, iframe,
+popup, session cookie, `SHOW_PENDING_WHEN_NOT_PUBLISHED`).
+
+---
+
 ### ⚠️ Next never re-renders a stale page for a prefetch, so the page lock expires early
 
 [`page-cache.js`](../../libs/utils/website/src/lib/page-cache/page-cache.js)

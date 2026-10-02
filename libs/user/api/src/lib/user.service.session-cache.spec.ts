@@ -16,9 +16,11 @@ const user = {
 describe('UserService session cache', () => {
   let service: UserService;
   let sessionCache: { invalidate: jest.Mock };
+  let sessions: { deleteMany: jest.Mock };
 
   beforeEach(async () => {
     sessionCache = { invalidate: jest.fn().mockResolvedValue(undefined) };
+    sessions = { deleteMany: jest.fn().mockResolvedValue({ count: 2 }) };
 
     const module = await Test.createTestingModule({
       providers: [
@@ -32,6 +34,7 @@ describe('UserService session cache', () => {
               findUnique: jest.fn().mockResolvedValue(user),
               findFirst: jest.fn().mockResolvedValue(null),
             },
+            session: sessions,
           },
         },
         {
@@ -82,5 +85,41 @@ describe('UserService session cache', () => {
     await change();
 
     expect(sessionCache.invalidate).toHaveBeenCalled();
+  });
+
+  describe('after a password change', () => {
+    it('ends the other sessions of a user who changed their own password, keeping the one they did it in', async () => {
+      await service.updateUserPassword('user-1', 'a-new-Password-123', {
+        keepSessionId: 'session-1',
+      });
+
+      expect(sessions.deleteMany).toHaveBeenCalledWith({
+        where: { userID: 'user-1', id: { not: 'session-1' } },
+      });
+    });
+
+    it('ends every session of a user who reset the password with a link', async () => {
+      await service.updateUserPassword('user-1', 'a-new-Password-123');
+
+      expect(sessions.deleteMany).toHaveBeenCalledWith({
+        where: { userID: 'user-1' },
+      });
+    });
+
+    it('ends every session of a user whose password an editor reset', async () => {
+      await service.resetPassword('user-1');
+
+      expect(sessions.deleteMany).toHaveBeenCalledWith({
+        where: { userID: 'user-1' },
+      });
+    });
+
+    it('ends the sessions before clearing the session cache, so no replica serves them again', async () => {
+      await service.updateUserPassword('user-1', 'a-new-Password-123');
+
+      expect(sessions.deleteMany.mock.invocationCallOrder[0]).toBeLessThan(
+        sessionCache.invalidate.mock.invocationCallOrder[0]
+      );
+    });
   });
 });

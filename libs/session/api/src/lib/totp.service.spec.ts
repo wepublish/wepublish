@@ -162,6 +162,20 @@ describe('TotpService across replicas', () => {
     );
   });
 
+  it('remembers a used code by its time step, so Dragonfly keys carry no code material', async () => {
+    const kv = sharedDragonfly();
+    const { a } = replicas(kv);
+    const step = Math.floor(Date.now() / 30_000);
+
+    await a.verifyUserTotp('user-1', totp.generate());
+
+    expect(kv.claim.mock.calls.map(([name]) => name)).toEqual([
+      expect.stringMatching(
+        new RegExp(`^totp-used:user-1:(${step - 1}|${step}|${step + 1})$`)
+      ),
+    ]);
+  });
+
   it('never sends the code itself to Dragonfly', async () => {
     const kv = sharedDragonfly();
     const { a } = replicas(kv);

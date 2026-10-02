@@ -5,6 +5,7 @@ import {
 } from '@wepublish/authentication/api';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 import { createCache } from 'cache-manager';
+import * as OTPAuth from 'otpauth';
 import { TotpService } from './totp.service';
 import { SessionService } from './session.service';
 
@@ -69,16 +70,21 @@ describe('session cache after authentication changes', () => {
 
   it('clears cached sessions after enabling two-factor authentication', async () => {
     const service = totp();
-    await service.setupTotp('user-1', 'user@example.com');
+    const { secret } = await service.setupTotp('user-1', 'user@example.com');
     const encryptedSecret = prisma.user.update.mock.calls[0][0].data.totpSecret;
     prisma.user.findUnique.mockResolvedValue({
       totpSecret: encryptedSecret,
       totpEnabled: false,
     });
-    jest.spyOn(service, 'verifyToken').mockReturnValue(true);
     sessionCache.invalidate.mockClear();
+    const code = new OTPAuth.TOTP({
+      algorithm: 'SHA1',
+      digits: 6,
+      period: 30,
+      secret: OTPAuth.Secret.fromBase32(secret),
+    }).generate();
 
-    await service.enableTotp('user-1', '123456');
+    await service.enableTotp('user-1', code);
 
     expect(sessionCache.invalidate).toHaveBeenCalled();
   });

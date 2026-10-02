@@ -104,7 +104,11 @@ export class UserService {
     };
   }
 
-  async updateUserPassword(userId: string, password: string) {
+  async updateUserPassword(
+    userId: string,
+    password: string,
+    { keepSessionId }: { keepSessionId?: string } = {}
+  ) {
     const user = await this.prisma.user.update({
       where: { id: userId },
       data: {
@@ -112,9 +116,19 @@ export class UserService {
       },
       select: unselectPassword,
     });
+    await this.endSessions(userId, keepSessionId);
     await this.sessionCache.invalidate();
 
     return user;
+  }
+
+  private async endSessions(userId: string, keepSessionId?: string) {
+    await this.prisma.session.deleteMany({
+      where: {
+        userID: userId,
+        ...(keepSessionId ? { id: { not: keepSessionId } } : {}),
+      },
+    });
   }
 
   private async hashPassword(password: string) {
@@ -262,6 +276,7 @@ export class UserService {
       },
       select: unselectPassword,
     });
+    await this.endSessions(id);
     await this.sessionCache.invalidate();
 
     return user;

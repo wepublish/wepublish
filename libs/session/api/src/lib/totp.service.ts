@@ -23,8 +23,8 @@ const LOCKOUT_DURATION_MS = 15 * 60 * 1000; // 15 minutes
 const USED_CODE_TTL_MS = 90 * 1000; // 90 seconds (3 TOTP periods)
 
 const failedAttemptsName = (userId: string) => `totp-failures:${userId}`;
-const usedCodeName = (userId: string, token: string) =>
-  `totp-used:${createHash('sha256').update(`${userId}:${token}`).digest('hex')}`;
+const usedStepName = (userId: string, step: number) =>
+  `totp-used:${userId}:${step}`;
 
 @Injectable()
 export class TotpService {
@@ -36,8 +36,8 @@ export class TotpService {
     { count: number; lockedUntil?: number }
   >();
 
-  // Replay protection: track used TOTP codes per user
-  private usedCodes = new Map<string, { code: string; usedAt: number }[]>();
+  // Replay protection: track used TOTP time steps per user
+  private usedSteps = new Map<string, { step: number; usedAt: number }[]>();
 
   constructor(
     private prisma: PrismaClient,
@@ -142,28 +142,34 @@ export class TotpService {
     await this.kv.forgetCount(failedAttemptsName(userId));
   }
 
-  private async checkReplay(userId: string, token: string) {
+  private async markStepUsed(userId: string, step: number) {
     const now = Date.now();
-    const codes = this.usedCodes.get(userId) || [];
+    const steps = (this.usedSteps.get(userId) ?? []).filter(
+      used => now - used.usedAt < USED_CODE_TTL_MS
+    );
+    const usedHere = steps.some(used => used.step === step);
 
-    // Clean expired entries
-    const valid = codes.filter(c => now - c.usedAt < USED_CODE_TTL_MS);
+    if (!usedHere) {
+      steps.push({ step, usedAt: now });
+      this.usedSteps.set(userId, steps);
+    }
 
     if (
-      valid.some(c => c.code === token) ||
-      (await this.kv.claim(usedCodeName(userId, token), USED_CODE_TTL_MS)) ===
+      usedHere ||
+      (await this.kv.claim(usedStepName(userId, step), USED_CODE_TTL_MS)) ===
         false
     ) {
       throw new BadRequestException(
         'This verification code has already been used. Wait for a new code.'
       );
     }
-
-    valid.push({ code: token, usedAt: now });
-    this.usedCodes.set(userId, valid);
   }
 
   verifyToken(secret: string, token: string): boolean {
+    return this.matchingStep(secret, token) !== undefined;
+  }
+
+  private matchingStep(secret: string, token: string): number | undefined {
     const totp = new OTPAuth.TOTP({
       algorithm: TOTP_ALGORITHM,
       digits: TOTP_DIGITS,
@@ -172,7 +178,8 @@ export class TotpService {
     });
 
     const delta = totp.validate({ token, window: 1 });
-    return delta !== null;
+
+    return delta === null ? undefined : totp.counter() + delta;
   }
 
   async setupTotp(userId: string, email: string, website?: boolean) {
@@ -221,14 +228,13 @@ export class TotpService {
     }
 
     await this.reserveAttempt(userId);
-    await this.checkReplay(userId, token);
+    const step = this.matchingStep(this.decrypt(user.totpSecret), token);
 
-    const decryptedSecret = this.decrypt(user.totpSecret);
-
-    if (!this.verifyToken(decryptedSecret, token)) {
+    if (step === undefined) {
       throw new BadRequestException('Invalid verification code.');
     }
 
+    await this.markStepUsed(userId, step);
     await this.clearFailedAttempts(userId);
 
     await this.prisma.user.update({
@@ -254,14 +260,13 @@ export class TotpService {
       );
     }
 
-    await this.checkReplay(userId, token);
+    const step = this.matchingStep(this.decrypt(user.totpSecret), token);
 
-    const decryptedSecret = this.decrypt(user.totpSecret);
-
-    if (!this.verifyToken(decryptedSecret, token)) {
+    if (step === undefined) {
       throw new BadRequestException('Invalid verification code.');
     }
 
+    await this.markStepUsed(userId, step);
     await this.clearFailedAttempts(userId);
     return true;
   }

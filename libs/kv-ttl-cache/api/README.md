@@ -198,7 +198,7 @@ released, they expire. `increment(name, ttlMs)` / `count(name)` /
 `forgetCount(name)` keep a counter in `<REDIS_KEY_PREFIX>::count:<name>`
 (`INCR`, then `PEXPIRE`, so the window restarts with every increment;
 `undefined` without Dragonfly). `TotpService` uses both: a code is refused once
-`lock:totp-used:<sha256(user:code)>` exists (90 s), and every attempt is counted
+`lock:totp-used:<user>:<time step>` exists (90 s; the step, not the code, so no code material is stored), and every attempt is counted
 in `count:totp-failures:<user>` before the code is checked (15 min, reset on
 success), so parallel guesses beyond 5 are refused on every replica; the
 per-replica maps stay as fallback.
