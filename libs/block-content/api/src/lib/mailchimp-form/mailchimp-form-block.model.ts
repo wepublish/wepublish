@@ -1,9 +1,28 @@
-import { Field, InputType, ObjectType, OmitType } from '@nestjs/graphql';
+import {
+  Field,
+  InputType,
+  ObjectType,
+  OmitType,
+  registerEnumType,
+} from '@nestjs/graphql';
 import { BaseBlock } from '../base-block.model';
 import { BlockType } from '../block-type.model';
+import { HasImage } from '../../../../../image/api/src/lib/has-image/has-image.model';
+import { Image } from '../../../../../image/api/src/lib/image.model';
 
-@ObjectType()
-export class MailchimpFormInterestOption {
+export enum MailchimpFormOptionsLayout {
+  List = 'list',
+  Grid = 'grid',
+}
+
+registerEnumType(MailchimpFormOptionsLayout, {
+  name: 'MailchimpFormOptionsLayout',
+});
+
+@ObjectType({
+  implements: () => [HasImage],
+})
+export class MailchimpFormInterestOption implements HasImage {
   @Field()
   id!: string;
 
@@ -12,14 +31,20 @@ export class MailchimpFormInterestOption {
 
   @Field({ nullable: true })
   description?: string;
+
+  imageID?: string;
+  image?: Image;
 }
 
 @InputType()
 export class MailchimpFormInterestOptionInput extends OmitType(
   MailchimpFormInterestOption,
-  [] as const,
+  ['image'] as const,
   InputType
-) {}
+) {
+  @Field({ nullable: true })
+  override imageID?: string;
+}
 
 @ObjectType()
 export class MailchimpFormFieldConfig {
@@ -46,6 +71,11 @@ export class MailchimpFormFieldConfig {
 
   @Field({ nullable: true })
   value?: string;
+
+  @Field(() => MailchimpFormOptionsLayout, {
+    defaultValue: MailchimpFormOptionsLayout.List,
+  })
+  optionsLayout!: MailchimpFormOptionsLayout;
 
   @Field(() => [MailchimpFormInterestOption], { defaultValue: [] })
   options!: MailchimpFormInterestOption[];
