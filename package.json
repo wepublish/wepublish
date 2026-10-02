@@ -259,6 +259,7 @@
     "@node-rs/bcrypt": "^1.10.7",
     "@prisma/adapter-pg": "7.5.0",
     "@prisma/client": "7.5.0",
+    "@puckeditor/core": "^0.23.0",
     "@react-email/components": "^1.0.12",
     "@react-email/render": "^2.1.0",
     "@sentry/nestjs": "^11.4.0",

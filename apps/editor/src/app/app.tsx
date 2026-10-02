@@ -35,6 +35,11 @@ import {
   MemberPlanEdit,
   SubscriptionFlowList,
 } from '@wepublish/membership/editor';
+import {
+  NewsletterCampaignEditor,
+  NewsletterCampaignList,
+  NewsletterCampaignPreview,
+} from '@wepublish/newsletter/editor';
 import { SettingList } from '@wepublish/settings/editor';
 import {
   AuthContext,
@@ -742,6 +747,23 @@ export function App() {
                   <NavigationList />
                 </Base>
               }
+            />
+            {/* Newsletter Routes */}
+            <Route
+              path="newsletter"
+              element={
+                <Base>
+                  <NewsletterCampaignList />
+                </Base>
+              }
+            />
+            <Route
+              path="newsletter/edit/:id"
+              element={<NewsletterCampaignEditor />}
+            />
+            <Route
+              path="newsletter/preview/:id"
+              element={<NewsletterCampaignPreview />}
             />
             <Route
               path="banners"
